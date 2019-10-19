@@ -23,8 +23,8 @@ class GalaxyFit(fit.DataFit):
         )
 
         super(GalaxyFit, self).__init__(
-            data=galaxy_data._image_1d,
-            noise_map=galaxy_data._noise_map_1d,
+            data=galaxy_data.image.in_1d,
+            noise_map=galaxy_data.noise_map.in_1d,
             mask=galaxy_data._mask_1d,
             model_data=_model_data_1d,
         )

@@ -782,7 +782,7 @@ class TestJacobian(object):
             shape_2d=(100, 100), pixel_scales=0.05, sub_size=1
         )
 
-        jacobian = sie.lensing_jacobian_from_grid(grid=grid)
+        jacobian = sie.jacobian_from_grid(grid=grid)
 
         A_12 = jacobian[0][1]
         A_21 = jacobian[1][0]
@@ -795,7 +795,7 @@ class TestJacobian(object):
             shape_2d=(100, 100), pixel_scales=0.05, sub_size=2
         )
 
-        jacobian = sie.lensing_jacobian_from_grid(grid=grid)
+        jacobian = sie.jacobian_from_grid(grid=grid)
 
         A_12 = jacobian[0][1]
         A_21 = jacobian[1][0]
@@ -803,6 +803,7 @@ class TestJacobian(object):
         mean_error = np.mean(A_12.in_1d - A_21.in_1d)
 
         assert mean_error < 1e-4
+
 
 class TestMagnification(object):
 
@@ -907,11 +908,11 @@ class TestMagnification(object):
 
 def critical_curve_via_magnification_from_mass_profile_and_grid(mass_profile, grid):
 
-    magnification_2d = mass_profile.magnification_from_grid(grid=grid).in_2d
+    magnification = mass_profile.magnification_from_grid(grid=grid)
 
-    inverse_magnification_2d = 1 / magnification_2d
+    inverse_magnification = 1 / magnification
 
-    critical_curves_indices = measure.find_contours(inverse_magnification_2d, 0)
+    critical_curves_indices = measure.find_contours(inverse_magnification.in_2d, 0)
 
     no_critical_curves = len(critical_curves_indices)
     contours = []
@@ -923,8 +924,8 @@ def critical_curve_via_magnification_from_mass_profile_and_grid(mass_profile, gr
         contour_x, contour_y = contours[jj].T
         pixel_coord = np.stack((contour_x, contour_y), axis=-1)
 
-        critical_curve = grid.mask.geometry.grid_arcsec_from_grid_pixels_1d_for_marching_squares(
-            grid_pixels_1d=pixel_coord, shape=magnification_2d.shape
+        critical_curve = grid.geometry.grid_arcsec_from_grid_pixels_1d_for_marching_squares(
+            grid_pixels_1d=pixel_coord, shape_2d=magnification.sub_shape_2d
         )
 
         critical_curves.append(critical_curve)
@@ -1492,7 +1493,7 @@ class TestGridsBinning:
             shape_2d=(10, 10), pixel_scales=0.05, sub_size=2
         )
 
-        jacobian = sie.lensing_jacobian_from_grid(grid=grid)
+        jacobian = sie.jacobian_from_grid(grid=grid)
 
         jacobian_1st_pixel_binned_up = (
             jacobian[0][0][0]
@@ -1502,7 +1503,7 @@ class TestGridsBinning:
         ) / 4
 
         assert jacobian[0][0].in_2d_binned.shape == (10, 10)
-        assert jacobian[0][0].in_2d.shape == (20, 20)
+        assert jacobian[0][0].sub_shape_2d == (20, 20)
         assert jacobian[0][0].in_1d_binned[0] == pytest.approx(
             jacobian_1st_pixel_binned_up, 1e-4
         )

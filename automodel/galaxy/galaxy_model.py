@@ -1,7 +1,8 @@
 import inspect
 
-import autofit as af
+from autofit.mapper.prior_model.prior_model import PriorModel
 
+from automodel import exc
 from automodel.galaxy import Galaxy
 from automodel.profiles import light_profiles
 from automodel.profiles import mass_profiles
@@ -37,7 +38,7 @@ def is_mass_profile_class(cls):
     return inspect.isclass(cls) and issubclass(cls, mass_profiles.MassProfile)
 
 
-class GalaxyModel(af.PriorModel):
+class GalaxyModel(PriorModel):
     """
     @DynamicAttrs
     """
@@ -117,12 +118,12 @@ class GalaxyModel(af.PriorModel):
                     profile_model.phi = phi
 
         if pixelization is not None and regularization is None:
-            raise af.exc.PriorException(
+            raise exc.PriorException(
                 "If the galaxy prior has a pixelization, it must also have a "
                 "regularization."
             )
         if pixelization is None and regularization is not None:
-            raise af.exc.PriorException(
+            raise exc.PriorException(
                 "If the galaxy prior has a regularization, it must also have a "
                 "pixelization."
             )

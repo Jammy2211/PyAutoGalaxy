@@ -67,16 +67,15 @@ class GalaxyFitData(object):
             Grids of (y,x) Cartesian coordinates which map over the masked 1D fit data_type array's pixels (includes an \
             grid, sub-grid, etc.)
         """
+        self.mask = mask
         self.galaxy_data = galaxy_data
         self.mapping = mask.mapping
         self.pixel_scales = galaxy_data.pixel_scales
 
-        self._image_1d = mask.mapping.array_from_array_2d(array_2d=galaxy_data.image)
-        self._noise_map_1d = mask.mapping.array_from_array_2d(
-            array_2d=galaxy_data.noise_map
-        )
-        self.signal_to_noise_map_1d = self._image_1d / self._noise_map_1d
-        self._mask_1d = mask.mapping.array_from_array_2d(array_2d=mask)
+        self.image = aa.array_masked.manual_2d(array=galaxy_data.image.in_2d, mask=mask.mask_sub_1)
+        self.noise_map = aa.array_masked.manual_2d(array=galaxy_data.noise_map.in_2d, mask=mask.mask_sub_1)
+
+        self.signal_to_noise_map = self.image / self.noise_map
 
         self.sub_size = mask.sub_size
 
@@ -89,8 +88,6 @@ class GalaxyFitData(object):
             self.grid = self.grid.new_grid_with_interpolator(
                 pixel_scale_interpolation_grid=pixel_scale_interpolation_grid
             )
-
-        self.mask = mask
 
         if all(
             not element
@@ -129,51 +126,26 @@ class GalaxyFitData(object):
         self.use_deflections_y = use_deflections_y
         self.use_deflections_x = use_deflections_x
 
-    def image(self):
-        return self.galaxy_data.image
-
-    def noise_map(self):
-        return self.galaxy_data.noise_map
-
-    def __array_finalize__(self, obj):
-        super(GalaxyFitData, self).__array_finalize__(obj)
-        if isinstance(obj, GalaxyFitData):
-            self.galaxy_data = obj.galaxy_data
-            self.pixel_scales = obj.pixel_scales
-            self.mask = obj.mask
-            self._image_1d = obj._image_1d
-            self._noise_map_1d = obj._noise_map_1d
-            self._mask_1d = obj._mask_1d
-            self.sub_size = obj.sub_size
-            self.pixel_scale_interpolation_grid = obj.pixel_scale_interpolation_grid
-            self.grid = obj.grid
-            self.use_image = obj.use_image
-            self.use_convergence = obj.use_convergence
-            self.use_potential = obj.use_potential
-            self.use_deflections_y = obj.use_deflections_y
-            self.use_deflections_x = obj.use_deflections_x
-
     def profile_quantity_from_galaxies(self, galaxies):
 
         if self.use_image:
-            return sum(
+            profile_image = sum(
                 map(lambda g: g.profile_image_from_grid(grid=self.grid), galaxies)
             )
+            return self.grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=profile_image)
         elif self.use_convergence:
-            return sum(map(lambda g: g.convergence_from_grid(grid=self.grid), galaxies))
+            convergence = sum(map(lambda g: g.convergence_from_grid(grid=self.grid), galaxies))
+            return self.grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=convergence)
         elif self.use_potential:
-            return sum(map(lambda g: g.potential_from_grid(grid=self.grid), galaxies))
+            potential = sum(map(lambda g: g.potential_from_grid(grid=self.grid), galaxies))
+            return self.grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=potential)
         elif self.use_deflections_y:
-            return sum(
+            deflections_y = sum(
                 map(lambda g: g.deflections_from_grid(grid=self.grid), galaxies)
             )[:, 0]
+            return self.grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=deflections_y)
         elif self.use_deflections_x:
-            return sum(
+            deflections_x = sum(
                 map(lambda g: g.deflections_from_grid(grid=self.grid), galaxies)
             )[:, 1]
-
-    def mask(self):
-        if return_in_2d:
-            return self.mask
-        else:
-            return self._mask_1d
+            return self.grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=deflections_x)

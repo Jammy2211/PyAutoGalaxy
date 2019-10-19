@@ -167,7 +167,7 @@ class TestPointMass(object):
 
         deflections = point_mass.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
 
 class TestCoredPowerLaw(object):
@@ -657,29 +657,29 @@ class TestCoredPowerLaw(object):
 
         convergence = cored_power_law.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         potential = cored_power_law.potential_from_grid(grid=grid)
 
-        assert potential.in_2d.shape == (2, 2)
+        assert potential.shape_2d == (2, 2)
 
         deflections = cored_power_law.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
         cored_power_law = am.mp.SphericalCoredPowerLaw()
 
         convergence = cored_power_law.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         potential = cored_power_law.potential_from_grid(grid=grid)
 
-        assert potential.in_2d.shape == (2, 2)
+        assert potential.shape_2d == (2, 2)
 
         deflections = cored_power_law.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
 
 class TestPowerLaw(object):
@@ -1028,29 +1028,29 @@ class TestPowerLaw(object):
 
         convergence = power_law.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         potential = power_law.potential_from_grid(grid=grid)
 
-        assert potential.in_2d.shape == (2, 2)
+        assert potential.shape_2d == (2, 2)
 
         deflections = power_law.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
         power_law = am.mp.SphericalPowerLaw()
 
         convergence = power_law.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         potential = power_law.potential_from_grid(grid=grid)
 
-        assert potential.in_2d.shape == (2, 2)
+        assert potential.shape_2d == (2, 2)
 
         deflections = power_law.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
 
 class TestCoredIsothermal(object):
@@ -1431,29 +1431,29 @@ class TestCoredIsothermal(object):
 
         convergence = cored_isothermal.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         potential = cored_isothermal.potential_from_grid(grid=grid)
 
-        assert potential.in_2d.shape == (2, 2)
+        assert potential.shape_2d == (2, 2)
 
         deflections = cored_isothermal.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
         cored_isothermal = am.mp.SphericalCoredIsothermal()
 
         convergence = cored_isothermal.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         potential = cored_isothermal.potential_from_grid(grid=grid)
 
-        assert potential.in_2d.shape == (2, 2)
+        assert potential.shape_2d == (2, 2)
 
         deflections = cored_isothermal.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
 
 class TestIsothermal(object):
@@ -1769,26 +1769,26 @@ class TestIsothermal(object):
 
         convergence = isothermal.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         potential = isothermal.potential_from_grid(grid=grid)
 
-        assert potential.in_2d.shape == (2, 2)
+        assert potential.shape_2d == (2, 2)
 
         deflections = isothermal.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
         isothermal = am.mp.SphericalIsothermal()
 
         convergence = isothermal.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         potential = isothermal.potential_from_grid(grid=grid)
 
-        assert potential.in_2d.shape == (2, 2)
+        assert potential.shape_2d == (2, 2)
 
         deflections = isothermal.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)

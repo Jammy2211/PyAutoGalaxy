@@ -181,15 +181,15 @@ class TestMassSheet(object):
 
         convergence = mass_sheet.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         potential = mass_sheet.potential_from_grid(grid=grid)
 
-        assert potential.in_2d.shape == (2, 2)
+        assert potential.shape_2d == (2, 2)
 
         deflections = mass_sheet.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
 
 class TestExternalShear(object):
@@ -247,12 +247,12 @@ class TestExternalShear(object):
 
         convergence = shear.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         potential = shear.potential_from_grid(grid=grid)
 
-        assert potential.in_2d.shape == (2, 2)
+        assert potential.shape_2d == (2, 2)
 
         deflections = shear.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)

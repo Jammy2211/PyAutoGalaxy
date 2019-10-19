@@ -24,3 +24,7 @@ class PlottingException(Exception):
 
 class UnitsException(Exception):
     pass
+
+
+class PriorException(Exception):
+    pass

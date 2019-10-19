@@ -201,13 +201,13 @@ class TestGaussian:
 
         image = gaussian.profile_image_from_grid(grid=grid)
 
-        assert image.in_2d.shape == (2, 2)
+        assert image.shape_2d == (2, 2)
 
         gaussian = am.lp.SphericalGaussian()
 
         image = gaussian.profile_image_from_grid(grid=grid)
 
-        assert image.in_2d.shape == (2, 2)
+        assert image.shape_2d == (2, 2)
 
 
 class TestSersic:
@@ -389,13 +389,13 @@ class TestSersic:
 
         image = sersic.profile_image_from_grid(grid=grid)
 
-        assert image.in_2d.shape == (2, 2)
+        assert image.shape_2d == (2, 2)
 
         sersic = am.lp.SphericalSersic()
 
         image = sersic.profile_image_from_grid(grid=grid)
 
-        assert image.in_2d.shape == (2, 2)
+        assert image.shape_2d == (2, 2)
 
 
 class TestExponential:
@@ -537,13 +537,13 @@ class TestExponential:
 
         image = exponential.profile_image_from_grid(grid=grid)
 
-        assert image.in_2d.shape == (2, 2)
+        assert image.shape_2d == (2, 2)
 
         exponential = am.lp.SphericalExponential()
 
         image = exponential.profile_image_from_grid(grid=grid)
 
-        assert image.in_2d.shape == (2, 2)
+        assert image.shape_2d == (2, 2)
 
 
 class TestDevVaucouleurs:
@@ -686,13 +686,13 @@ class TestDevVaucouleurs:
 
         image = dev_vaucouleurs.profile_image_from_grid(grid=grid)
 
-        assert image.in_2d.shape == (2, 2)
+        assert image.shape_2d == (2, 2)
 
         dev_vaucouleurs = am.lp.SphericalDevVaucouleurs()
 
         image = dev_vaucouleurs.profile_image_from_grid(grid=grid)
 
-        assert image.in_2d.shape == (2, 2)
+        assert image.shape_2d == (2, 2)
 
 
 class TestCoreSersic(object):
@@ -852,13 +852,13 @@ class TestCoreSersic(object):
 
         image = core_sersic.profile_image_from_grid(grid=grid)
 
-        assert image.in_2d.shape == (2, 2)
+        assert image.shape_2d == (2, 2)
 
         core_sersic = am.lp.SphericalCoreSersic()
 
         image = core_sersic.profile_image_from_grid(grid=grid)
 
-        assert image.in_2d.shape == (2, 2)
+        assert image.shape_2d == (2, 2)
 
 
 def luminosity_from_radius_and_profile(radius, profile):

@@ -317,7 +317,7 @@ def plot_galaxy_data_array(
         )
 
     aa.plot_array(
-        array=galaxy_data.image(return_in_2d=True),
+        array=galaxy_data.image.in_2d,
         mask_overlay=mask,
         positions=positions,
         as_subplot=as_subplot,

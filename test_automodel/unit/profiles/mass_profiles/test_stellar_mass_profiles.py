@@ -351,7 +351,7 @@ class TestSersic(object):
 
         convergence = sersic.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         # potential = sersic.potential_from_grid(
         #     grid=grid)
@@ -360,13 +360,13 @@ class TestSersic(object):
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
         sersic = am.mp.SphericalSersic()
 
         convergence = sersic.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         # potential = sersic.potential_from_grid(
         #     grid=grid)
@@ -375,7 +375,7 @@ class TestSersic(object):
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
 
 class TestExponential(object):
@@ -673,7 +673,7 @@ class TestExponential(object):
 
         convergence = exponential.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         # potential = exponential.potential_from_grid(
         #     grid=grid)
@@ -682,13 +682,13 @@ class TestExponential(object):
 
         deflections = exponential.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
         exponential = am.mp.SphericalExponential()
 
         convergence = exponential.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         # potential = exponential.potential_from_grid(
         #     grid=grid)
@@ -697,7 +697,7 @@ class TestExponential(object):
 
         deflections = exponential.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
 
 class TestDevVaucouleurs(object):
@@ -979,7 +979,7 @@ class TestDevVaucouleurs(object):
 
         convergence = dev_vaucouleurs.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         # potential = dev_vaucouleurs.potential_from_grid(
         #     grid=grid)
@@ -988,13 +988,13 @@ class TestDevVaucouleurs(object):
 
         deflections = dev_vaucouleurs.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
         dev_vaucouleurs = am.mp.SphericalDevVaucouleurs()
 
         convergence = dev_vaucouleurs.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         # potential = dev_vaucouleurs.potential_from_grid(
         #     grid=grid)
@@ -1003,7 +1003,7 @@ class TestDevVaucouleurs(object):
 
         deflections = dev_vaucouleurs.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
 
 class TestSersicMassRadialGradient(object):
@@ -1443,7 +1443,7 @@ class TestSersicMassRadialGradient(object):
 
         convergence = sersic.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         # potential = sersic.potential_from_grid(
         #     grid=grid)
@@ -1452,13 +1452,13 @@ class TestSersicMassRadialGradient(object):
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)
 
         sersic = am.mp.SphericalSersicRadialGradient()
 
         convergence = sersic.convergence_from_grid(grid=grid)
 
-        assert convergence.in_2d.shape == (2, 2)
+        assert convergence.shape_2d == (2, 2)
 
         # potential = sersic.potential_from_grid(
         #     grid=grid)
@@ -1467,4 +1467,4 @@ class TestSersicMassRadialGradient(object):
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
-        assert deflections.in_2d.shape == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2, 2)

@@ -1,10 +1,11 @@
-import automodel as am
+
 import numpy as np
 import pytest
 
-
-from test import mock_galaxy
+import autoarray as aa
+import automodel as am
 from automodel import exc
+from test_automodel.mock import mock_galaxy
 
 
 class TestGalaxyFitData(object):
@@ -15,14 +16,16 @@ class TestGalaxyFitData(object):
         )
 
         assert galaxy_fit_data.pixel_scales == (1.0, 1.0)
-        assert (galaxy_fit_data.image(return_masked=False) == np.ones((7, 7))).all()
+        assert (galaxy_fit_data.galaxy_data.image.in_2d == np.ones((7, 7))).all()
         assert (
-            galaxy_fit_data.noise_map(return_masked=False) == 2.0 * np.ones((7, 7))
+            galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
 
-        assert (galaxy_fit_data._image_1d == np.ones(9)).all()
-        assert (galaxy_fit_data._noise_map_1d == 2.0 * np.ones(9)).all()
-        assert (galaxy_fit_data._mask_1d == np.full(fill_value=False, shape=(9))).all()
+        print(galaxy_fit_data.image)
+
+
+        assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
+        assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
 
         assert (
             galaxy_fit_data.mask
@@ -40,7 +43,7 @@ class TestGalaxyFitData(object):
         ).all()
 
         assert (
-            galaxy_fit_data.image(return_in_2d=True)
+            galaxy_fit_data.image.in_2d
             == np.array(
                 [
                     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -55,7 +58,7 @@ class TestGalaxyFitData(object):
         ).all()
 
         assert (
-            galaxy_fit_data.noise_map(return_in_2d=True)
+            galaxy_fit_data.noise_map.in_2d
             == np.array(
                 [
                     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -79,7 +82,7 @@ class TestGalaxyFitData(object):
 
     def test__pixel_scale_interpolation_grid(self, image_7x7, sub_mask_7x7):
 
-        noise_map = aa.Scaled(sub_array_1d=2.0 * np.ones((7, 7)), pixel_scales=3.0)
+        noise_map = aa.array.full(fill_value=2.0, shape_2d=(7,7), pixel_scales=3.0)
         gal_data_7x7 = am.GalaxyData(
             image=image_7x7, noise_map=noise_map, pixel_scales=3.0
         )
@@ -103,14 +106,13 @@ class TestGalaxyFitData(object):
         )
 
         assert galaxy_fit_data.pixel_scales == (1.0, 1.0)
-        assert (galaxy_fit_data.image(return_masked=False) == np.ones((7, 7))).all()
+        assert (galaxy_fit_data.galaxy_data.image.in_2d == np.ones((7, 7))).all()
         assert (
-            galaxy_fit_data.noise_map(return_masked=False) == 2.0 * np.ones((7, 7))
+            galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
 
-        assert (galaxy_fit_data._image_1d == np.ones(9)).all()
-        assert (galaxy_fit_data._noise_map_1d == 2.0 * np.ones(9)).all()
-        assert (galaxy_fit_data._mask_1d == np.full(fill_value=False, shape=(9))).all()
+        assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
+        assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
 
         assert (
             galaxy_fit_data.mask
@@ -128,7 +130,7 @@ class TestGalaxyFitData(object):
         ).all()
 
         assert (
-            galaxy_fit_data.image(return_in_2d=True)
+            galaxy_fit_data.image.in_2d
             == np.array(
                 [
                     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -143,7 +145,7 @@ class TestGalaxyFitData(object):
         ).all()
 
         assert (
-            galaxy_fit_data.noise_map(return_in_2d=True)
+            galaxy_fit_data.noise_map.in_2d
             == np.array(
                 [
                     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -161,10 +163,10 @@ class TestGalaxyFitData(object):
 
         image = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
 
-        assert (image == np.ones(9)).all()
+        assert (image.in_1d_binned == np.ones(9)).all()
 
         galaxy = am.Galaxy(
-            redshift=0.5, light=am.light_profiles.SphericalSersic(intensity=1.0)
+            redshift=0.5, light=am.lp.SphericalSersic(intensity=1.0)
         )
 
         image_gal = galaxy.profile_image_from_grid(grid=galaxy_fit_data.grid)
@@ -180,14 +182,13 @@ class TestGalaxyFitData(object):
         )
 
         assert galaxy_fit_data.pixel_scales == (1.0, 1.0)
-        assert (galaxy_fit_data.image(return_masked=False) == np.ones((7, 7))).all()
+        assert (galaxy_fit_data.galaxy_data.image.in_2d == np.ones((7, 7))).all()
         assert (
-            galaxy_fit_data.noise_map(return_masked=False) == 2.0 * np.ones((7, 7))
+            galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
 
-        assert (galaxy_fit_data._image_1d == np.ones(9)).all()
-        assert (galaxy_fit_data._noise_map_1d == 2.0 * np.ones(9)).all()
-        assert (galaxy_fit_data._mask_1d == np.full(fill_value=False, shape=(9))).all()
+        assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
+        assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
 
         assert (
             galaxy_fit_data.mask
@@ -205,7 +206,7 @@ class TestGalaxyFitData(object):
         ).all()
 
         assert (
-            galaxy_fit_data.image(return_in_2d=True)
+            galaxy_fit_data.image.in_2d
             == np.array(
                 [
                     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -220,7 +221,7 @@ class TestGalaxyFitData(object):
         ).all()
 
         assert (
-            galaxy_fit_data.noise_map(return_in_2d=True)
+            galaxy_fit_data.noise_map.in_2d
             == np.array(
                 [
                     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -238,10 +239,10 @@ class TestGalaxyFitData(object):
 
         convergence = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
 
-        assert (convergence == np.ones(9)).all()
+        assert (convergence.in_1d_binned == np.ones(9)).all()
 
         galaxy = am.Galaxy(
-            redshift=0.5, mass=am.mass_profiles.SphericalIsothermal(einstein_radius=1.0)
+            redshift=0.5, mass=am.mp.SphericalIsothermal(einstein_radius=1.0)
         )
 
         convergence_gal = galaxy.convergence_from_grid(grid=galaxy_fit_data.grid)
@@ -259,14 +260,13 @@ class TestGalaxyFitData(object):
         )
 
         assert galaxy_fit_data.pixel_scales == (1.0, 1.0)
-        assert (galaxy_fit_data.image(return_masked=False) == np.ones((7, 7))).all()
+        assert (galaxy_fit_data.galaxy_data.image.in_2d == np.ones((7, 7))).all()
         assert (
-            galaxy_fit_data.noise_map(return_masked=False) == 2.0 * np.ones((7, 7))
+            galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
 
-        assert (galaxy_fit_data._image_1d == np.ones(9)).all()
-        assert (galaxy_fit_data._noise_map_1d == 2.0 * np.ones(9)).all()
-        assert (galaxy_fit_data._mask_1d == np.full(fill_value=False, shape=(9))).all()
+        assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
+        assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
 
         assert (
             galaxy_fit_data.mask
@@ -284,7 +284,7 @@ class TestGalaxyFitData(object):
         ).all()
 
         assert (
-            galaxy_fit_data.image(return_in_2d=True)
+            galaxy_fit_data.image.in_2d
             == np.array(
                 [
                     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -299,7 +299,7 @@ class TestGalaxyFitData(object):
         ).all()
 
         assert (
-            galaxy_fit_data.noise_map(return_in_2d=True)
+            galaxy_fit_data.noise_map.in_2d
             == np.array(
                 [
                     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -317,10 +317,10 @@ class TestGalaxyFitData(object):
 
         potential = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
 
-        assert (potential == np.ones(9)).all()
+        assert (potential.in_1d_binned == np.ones(9)).all()
 
         galaxy = am.Galaxy(
-            redshift=0.5, mass=am.mass_profiles.SphericalIsothermal(einstein_radius=1.0)
+            redshift=0.5, mass=am.mp.SphericalIsothermal(einstein_radius=1.0)
         )
 
         potential_gal = galaxy.potential_from_grid(grid=galaxy_fit_data.grid)
@@ -335,14 +335,13 @@ class TestGalaxyFitData(object):
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_y=True
         )
         assert galaxy_fit_data.pixel_scales == (1.0, 1.0)
-        assert (galaxy_fit_data.image(return_masked=False) == np.ones((7, 7))).all()
+        assert (galaxy_fit_data.galaxy_data.image.in_2d == np.ones((7, 7))).all()
         assert (
-            galaxy_fit_data.noise_map(return_masked=False) == 2.0 * np.ones((7, 7))
+            galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
 
-        assert (galaxy_fit_data._image_1d == np.ones(9)).all()
-        assert (galaxy_fit_data._noise_map_1d == 2.0 * np.ones(9)).all()
-        assert (galaxy_fit_data._mask_1d == np.full(fill_value=False, shape=(9))).all()
+        assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
+        assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
 
         assert (
             galaxy_fit_data.mask
@@ -360,7 +359,7 @@ class TestGalaxyFitData(object):
         ).all()
 
         assert (
-            galaxy_fit_data.image(return_in_2d=True)
+            galaxy_fit_data.image.in_2d
             == np.array(
                 [
                     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -375,7 +374,7 @@ class TestGalaxyFitData(object):
         ).all()
 
         assert (
-            galaxy_fit_data.noise_map(return_in_2d=True)
+            galaxy_fit_data.noise_map.in_2d
             == np.array(
                 [
                     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -395,10 +394,10 @@ class TestGalaxyFitData(object):
             galaxies=[galaxy]
         )
 
-        assert (deflections_y == np.ones(9)).all()
+        assert (deflections_y.in_1d_binned == np.ones(9)).all()
 
         galaxy = am.Galaxy(
-            redshift=0.5, mass=am.mass_profiles.SphericalIsothermal(einstein_radius=1.0)
+            redshift=0.5, mass=am.mp.SphericalIsothermal(einstein_radius=1.0)
         )
 
         deflections_gal = galaxy.deflections_from_grid(grid=galaxy_fit_data.grid)
@@ -417,7 +416,7 @@ class TestGalaxyFitData(object):
             galaxies=[galaxy]
         )
 
-        assert (deflections_gal[:, 0] == deflections_gd).all()
+        assert (deflections_gal[:, 0] == deflections_gd.in_1d_binned).all()
 
     def test__gal_data_7x7_deflections_x(self, gal_data_7x7, sub_mask_7x7):
 
@@ -426,14 +425,13 @@ class TestGalaxyFitData(object):
         )
 
         assert galaxy_fit_data.pixel_scales == (1.0, 1.0)
-        assert (galaxy_fit_data.image(return_masked=False) == np.ones((7, 7))).all()
+        assert (galaxy_fit_data.galaxy_data.image.in_2d == np.ones((7, 7))).all()
         assert (
-            galaxy_fit_data.noise_map(return_masked=False) == 2.0 * np.ones((7, 7))
+            galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
 
-        assert (galaxy_fit_data._image_1d == np.ones(9)).all()
-        assert (galaxy_fit_data._noise_map_1d == 2.0 * np.ones(9)).all()
-        assert (galaxy_fit_data._mask_1d == np.full(fill_value=False, shape=(9))).all()
+        assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
+        assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
 
         assert (
             galaxy_fit_data.mask
@@ -451,7 +449,7 @@ class TestGalaxyFitData(object):
         ).all()
 
         assert (
-            galaxy_fit_data.image(return_in_2d=True)
+            galaxy_fit_data.image.in_2d
             == np.array(
                 [
                     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -466,7 +464,7 @@ class TestGalaxyFitData(object):
         ).all()
 
         assert (
-            galaxy_fit_data.noise_map(return_in_2d=True)
+            galaxy_fit_data.noise_map.in_2d
             == np.array(
                 [
                     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -486,10 +484,10 @@ class TestGalaxyFitData(object):
             galaxies=[galaxy]
         )
 
-        assert (deflections_x == np.ones(9)).all()
+        assert (deflections_x.in_1d_binned == np.ones(9)).all()
 
         galaxy = am.Galaxy(
-            redshift=0.5, mass=am.mass_profiles.SphericalIsothermal(einstein_radius=1.0)
+            redshift=0.5, mass=am.mp.SphericalIsothermal(einstein_radius=1.0)
         )
 
         deflections_gal = galaxy.deflections_from_grid(grid=galaxy_fit_data.grid)
@@ -508,21 +506,21 @@ class TestGalaxyFitData(object):
             galaxies=[galaxy]
         )
 
-        assert (deflections_gal[:, 1] == deflections_gd).all()
+        assert (deflections_gal[:, 1] == deflections_gd.in_1d_binned).all()
 
-    def test__no_use_method__raises_exception(self, image_7x7, sub_mask_7x7):
+    def test__no_use_method__raises_exception(self, image_7x7, noise_map_7x7, sub_mask_7x7):
 
         gal_data_7x7 = am.GalaxyData(
-            image=image_7x7, noise_map=2.0 * np.ones((7, 7)), pixel_scales=3.0
+            image=image_7x7, noise_map=noise_map_7x7, pixel_scales=3.0
         )
 
         with pytest.raises(exc.GalaxyException):
             am.GalaxyFitData(galaxy_data=gal_data_7x7, mask=sub_mask_7x7)
 
-    def test__multiple_use_methods__raises_exception(self, image_7x7, sub_mask_7x7):
+    def test__multiple_use_methods__raises_exception(self, image_7x7, noise_map_7x7, sub_mask_7x7):
 
         gal_data_7x7 = am.GalaxyData(
-            image=image_7x7, noise_map=2.0 * np.ones((7, 7)), pixel_scales=3.0
+            image=image_7x7, noise_map=noise_map_7x7, pixel_scales=3.0
         )
 
         with pytest.raises(exc.GalaxyException):

@@ -1,11 +1,5 @@
 import numpy as np
 
-from autoarray.mapping import (
-    reshape_returned_sub_array_from_grid,
-    reshape_returned_grid_from_grid,
-)
-
-
 class MockGalaxy(object):
     def __init__(self, value, shape=1):
         self.value = value
