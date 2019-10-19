@@ -1,6 +1,8 @@
 import numpy as np
 import pytest
 
+import autoarray as aa
+from autoarray.structures import grids
 import automodel as am
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
@@ -95,7 +97,7 @@ class TestSersic(object):
             mass_to_light_ratio=1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=np.array([[0.0, 1.5]])
+            grid=aa.grid.manual_2d([[[0.0, 1.5]]])
         ) == pytest.approx(4.90657319276, 1e-3)
 
         sersic = am.mp.SphericalSersic(
@@ -106,7 +108,7 @@ class TestSersic(object):
             mass_to_light_ratio=1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=np.array([[0.0, 1.5]])
+            grid=aa.grid.manual_2d([[[0.0, 1.5]]])
         ) == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
         sersic = am.mp.SphericalSersic(
@@ -117,7 +119,7 @@ class TestSersic(object):
             mass_to_light_ratio=2.0,
         )
         assert sersic.convergence_from_grid(
-            grid=np.array([[0.0, 1.5]])
+            grid=aa.grid.manual_2d([[[0.0, 1.5]]])
         ) == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
         sersic = am.mp.EllipticalSersic(
@@ -340,7 +342,7 @@ class TestSersic(object):
         assert (interp_deflections_manual_y == interp_deflections[:, 0]).all()
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
-    def test__reshape_decorators(self):
+    def test__outputs_are_autoarrays(self):
         grid = aa.grid.uniform(
             shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
         )
@@ -662,7 +664,7 @@ class TestExponential(object):
         assert (interp_deflections_manual_y == interp_deflections[:, 0]).all()
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
-    def test__reshape_decorators(self):
+    def test__outputs_are_autoarrays(self):
         grid = aa.grid.uniform(
             shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
         )
@@ -968,7 +970,7 @@ class TestDevVaucouleurs(object):
         assert (interp_deflections_manual_y == interp_deflections[:, 0]).all()
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
-    def test__reshape_decorators(self):
+    def test__outputs_are_autoarrays(self):
         grid = aa.grid.uniform(
             shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
         )
@@ -1119,7 +1121,7 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_gradient=-1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=np.array([[1.5, 0.0]])
+            grid=aa.grid.manual_2d([[[1.5, 0.0]]])
         ) == pytest.approx(0.75 * 4.90657319276, 1e-3)
 
         sersic = am.mp.EllipticalSersicRadialGradient(
@@ -1132,7 +1134,7 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_gradient=-1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=np.array([[1.5, 0.0]])
+            grid=aa.grid.manual_2d([[[1.5, 0.0]]])
         ) == pytest.approx(2.0 * 0.75 * 4.90657319276, 1e-3)
 
         sersic = am.mp.EllipticalSersicRadialGradient(
@@ -1145,7 +1147,7 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_gradient=-1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=np.array([[1.5, 0.0]])
+            grid=aa.grid.manual_2d([[[1.5, 0.0]]])
         ) == pytest.approx(2.0 * 0.75 * 4.90657319276, 1e-3)
 
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = ((0.5*1.41)/2.0)**-1.0 = 2.836
@@ -1432,7 +1434,7 @@ class TestSersicMassRadialGradient(object):
         assert (interp_deflections_manual_y == interp_deflections[:, 0]).all()
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
-    def test__reshape_decorators(self):
+    def test__outputs_are_autoarrays(self):
         grid = aa.grid.uniform(
             shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
         )
