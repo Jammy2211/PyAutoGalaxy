@@ -8,7 +8,7 @@ import typing_inspect
 
 from decorator import decorator
 
-from automodel import cosmology_util
+from automodel.util import cosmology_util
 from automodel import exc
 
 

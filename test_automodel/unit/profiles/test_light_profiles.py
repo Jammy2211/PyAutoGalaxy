@@ -7,7 +7,7 @@ import scipy.special
 
 import autofit as af
 import automodel as am
-from test_automodel.unit.mock.model import mock_cosmology
+from test_automodel.mock import mock_cosmology
 
 
 @pytest.fixture(autouse=True)
