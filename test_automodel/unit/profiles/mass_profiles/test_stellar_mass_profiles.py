@@ -8,7 +8,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 class TestSersic(object):
     def test__constructor_and_units(self):
-        sersic = am.mass_profiles.EllipticalSersic(
+        sersic = am.mp.EllipticalSersic(
             centre=(1.0, 2.0),
             axis_ratio=0.5,
             phi=45.0,
@@ -48,7 +48,7 @@ class TestSersic(object):
         assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
         assert sersic.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
 
-        sersic = am.mass_profiles.SphericalSersic(
+        sersic = am.mp.SphericalSersic(
             centre=(1.0, 2.0),
             intensity=1.0,
             effective_radius=0.6,
@@ -87,7 +87,7 @@ class TestSersic(object):
         assert sersic.elliptical_effective_radius == 0.6
 
     def test__convergence_correct_values(self):
-        sersic = am.mass_profiles.SphericalSersic(
+        sersic = am.mp.SphericalSersic(
             centre=(0.0, 0.0),
             intensity=3.0,
             effective_radius=2.0,
@@ -98,7 +98,7 @@ class TestSersic(object):
             grid=np.array([[0.0, 1.5]])
         ) == pytest.approx(4.90657319276, 1e-3)
 
-        sersic = am.mass_profiles.SphericalSersic(
+        sersic = am.mp.SphericalSersic(
             centre=(0.0, 0.0),
             intensity=6.0,
             effective_radius=2.0,
@@ -109,7 +109,7 @@ class TestSersic(object):
             grid=np.array([[0.0, 1.5]])
         ) == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
-        sersic = am.mass_profiles.SphericalSersic(
+        sersic = am.mp.SphericalSersic(
             centre=(0.0, 0.0),
             intensity=3.0,
             effective_radius=2.0,
@@ -120,7 +120,7 @@ class TestSersic(object):
             grid=np.array([[0.0, 1.5]])
         ) == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
-        sersic = am.mass_profiles.EllipticalSersic(
+        sersic = am.mp.EllipticalSersic(
             centre=(0.0, 0.0),
             axis_ratio=0.5,
             phi=0.0,
@@ -130,11 +130,11 @@ class TestSersic(object):
             mass_to_light_ratio=1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=np.array([[1.0, 0.0]])
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
         ) == pytest.approx(5.38066670129, 1e-3)
 
     def test__deflections_correct_values(self):
-        sersic = am.mass_profiles.EllipticalSersic(
+        sersic = am.mp.EllipticalSersic(
             centre=(-0.4, -0.2),
             axis_ratio=0.8,
             phi=110.0,
@@ -143,11 +143,11 @@ class TestSersic(object):
             sersic_index=2.0,
             mass_to_light_ratio=1.0,
         )
-        deflections = sersic.deflections_from_grid(grid=np.array([[0.1625, 0.1625]]))
+        deflections = sersic.deflections_from_grid(grid=aa.grid.manual_2d([[[0.1625, 0.1625]]]))
         assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.79374, 1e-3)
 
-        sersic = am.mass_profiles.EllipticalSersic(
+        sersic = am.mp.EllipticalSersic(
             centre=(-0.4, -0.2),
             axis_ratio=0.8,
             phi=110.0,
@@ -157,7 +157,7 @@ class TestSersic(object):
             mass_to_light_ratio=1.0,
         )
         deflections = sersic.deflections_from_grid(
-            grid=np.array([[0.1625, 0.1625], [0.1625, 0.1625]])
+            grid=aa.grid.manual_2d([[[0.1625, 0.1625], [0.1625, 0.1625]]])
         )
         assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.79374, 1e-3)
@@ -165,56 +165,56 @@ class TestSersic(object):
         assert deflections[1, 1] == pytest.approx(0.79374, 1e-3)
 
     def test__surfce_density__change_geometry(self):
-        sersic_0 = am.mass_profiles.SphericalSersic(centre=(0.0, 0.0))
-        sersic_1 = am.mass_profiles.SphericalSersic(centre=(1.0, 1.0))
+        sersic_0 = am.mp.SphericalSersic(centre=(0.0, 0.0))
+        sersic_1 = am.mp.SphericalSersic(centre=(1.0, 1.0))
         assert sersic_0.convergence_from_grid(
-            grid=np.array([[1.0, 1.0]])
-        ) == sersic_1.convergence_from_grid(grid=np.array([[0.0, 0.0]]))
+            grid=aa.grid.manual_2d([[[1.0, 1.0]]])
+        ) == sersic_1.convergence_from_grid(grid=aa.grid.manual_2d([[[0.0, 0.0]]]))
 
-        sersic_0 = am.mass_profiles.SphericalSersic(centre=(0.0, 0.0))
-        sersic_1 = am.mass_profiles.SphericalSersic(centre=(0.0, 0.0))
+        sersic_0 = am.mp.SphericalSersic(centre=(0.0, 0.0))
+        sersic_1 = am.mp.SphericalSersic(centre=(0.0, 0.0))
         assert sersic_0.convergence_from_grid(
-            grid=np.array([[1.0, 0.0]])
-        ) == sersic_1.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+        ) == sersic_1.convergence_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]]))
 
-        sersic_0 = am.mass_profiles.EllipticalSersic(
+        sersic_0 = am.mp.EllipticalSersic(
             centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0
         )
-        sersic_1 = am.mass_profiles.EllipticalSersic(
+        sersic_1 = am.mp.EllipticalSersic(
             centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0
         )
         assert sersic_0.convergence_from_grid(
-            grid=np.array([[1.0, 0.0]])
-        ) == sersic_1.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+        ) == sersic_1.convergence_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]]))
 
     def test__deflections__change_geometry(self):
-        sersic_0 = am.mass_profiles.SphericalSersic(centre=(0.0, 0.0))
-        sersic_1 = am.mass_profiles.SphericalSersic(centre=(1.0, 1.0))
-        deflections_0 = sersic_0.deflections_from_grid(grid=np.array([[1.0, 1.0]]))
-        deflections_1 = sersic_1.deflections_from_grid(grid=np.array([[0.0, 0.0]]))
+        sersic_0 = am.mp.SphericalSersic(centre=(0.0, 0.0))
+        sersic_1 = am.mp.SphericalSersic(centre=(1.0, 1.0))
+        deflections_0 = sersic_0.deflections_from_grid(grid=aa.grid.manual_2d([[[1.0, 1.0]]]))
+        deflections_1 = sersic_1.deflections_from_grid(grid=aa.grid.manual_2d([[[0.0, 0.0]]]))
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
 
-        sersic_0 = am.mass_profiles.SphericalSersic(centre=(0.0, 0.0))
-        sersic_1 = am.mass_profiles.SphericalSersic(centre=(0.0, 0.0))
-        deflections_0 = sersic_0.deflections_from_grid(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = sersic_1.deflections_from_grid(grid=np.array([[0.0, 1.0]]))
+        sersic_0 = am.mp.SphericalSersic(centre=(0.0, 0.0))
+        sersic_1 = am.mp.SphericalSersic(centre=(0.0, 0.0))
+        deflections_0 = sersic_0.deflections_from_grid(grid=aa.grid.manual_2d([[[1.0, 0.0]]]))
+        deflections_1 = sersic_1.deflections_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]]))
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
-        sersic_0 = am.mass_profiles.EllipticalSersic(
+        sersic_0 = am.mp.EllipticalSersic(
             centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0
         )
-        sersic_1 = am.mass_profiles.EllipticalSersic(
+        sersic_1 = am.mp.EllipticalSersic(
             centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0
         )
-        deflections_0 = sersic_0.deflections_from_grid(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = sersic_1.deflections_from_grid(grid=np.array([[0.0, 1.0]]))
+        deflections_0 = sersic_0.deflections_from_grid(grid=aa.grid.manual_2d([[[1.0, 0.0]]]))
+        deflections_1 = sersic_1.deflections_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]]))
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
     def test__spherical_and_elliptical_identical(self):
-        elliptical = am.mass_profiles.EllipticalSersic(
+        elliptical = am.mp.EllipticalSersic(
             centre=(0.0, 0.0),
             axis_ratio=1.0,
             phi=0.0,
@@ -224,7 +224,7 @@ class TestSersic(object):
             mass_to_light_ratio=1.0,
         )
 
-        spherical = am.mass_profiles.SphericalSersic(
+        spherical = am.mp.SphericalSersic(
             centre=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
@@ -233,19 +233,19 @@ class TestSersic(object):
         )
 
         assert (
-            ellipticam.convergence_from_grid(grid=grid)
-            == sphericam.convergence_from_grid(grid=grid)
+            elliptical.convergence_from_grid(grid=grid)
+            == spherical.convergence_from_grid(grid=grid)
         ).all()
-        # assert ellipticam.potential_from_grid(grid=grid) == sphericam.potential_from_grid(grid=grid)
+        # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
         np.testing.assert_almost_equal(
-            ellipticam.deflections_from_grid(grid=grid),
-            sphericam.deflections_from_grid(grid=grid),
+            elliptical.deflections_from_grid(grid=grid),
+            spherical.deflections_from_grid(grid=grid),
         )
 
     def test__deflections_of_elliptical_profile__use_interpolate_and_cache_decorators(
         self
     ):
-        sersic = am.mass_profiles.EllipticalSersic(
+        sersic = am.mp.EllipticalSersic(
             centre=(-0.7, 0.5),
             axis_ratio=0.8,
             phi=110.0,
@@ -265,16 +265,16 @@ class TestSersic(object):
             ]
         )
 
-        mask = aa.Mask(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.Grid.from_mask(mask=mask)
+        grid = aa.grid_masked.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = am.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -295,7 +295,7 @@ class TestSersic(object):
     def test__deflections_of_spherical_profile__use_interpolate_and_cache_decorators(
         self
     ):
-        sersic = am.mass_profiles.SphericalSersic(
+        sersic = am.mp.SphericalSersic(
             centre=(-0.7, 0.5),
             intensity=5.0,
             effective_radius=0.2,
@@ -313,16 +313,16 @@ class TestSersic(object):
             ]
         )
 
-        mask = aa.Mask(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.Grid.from_mask(mask=mask)
+        grid = aa.grid_masked.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = am.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -345,7 +345,7 @@ class TestSersic(object):
             shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
         )
 
-        sersic = am.mass_profiles.EllipticalSersic()
+        sersic = am.mp.EllipticalSersic()
 
         convergence = sersic.convergence_from_grid(grid=grid)
 
@@ -360,7 +360,7 @@ class TestSersic(object):
 
         assert deflections.in_2d.shape == (2, 2, 2)
 
-        sersic = am.mass_profiles.SphericalSersic()
+        sersic = am.mp.SphericalSersic()
 
         convergence = sersic.convergence_from_grid(grid=grid)
 
@@ -378,7 +378,7 @@ class TestSersic(object):
 
 class TestExponential(object):
     def test__constructor_and_units(self):
-        exponential = am.mass_profiles.EllipticalExponential(
+        exponential = am.mp.EllipticalExponential(
             centre=(1.0, 2.0),
             axis_ratio=0.5,
             phi=45.0,
@@ -417,7 +417,7 @@ class TestExponential(object):
         assert exponential.sersic_constant == pytest.approx(1.67838, 1e-3)
         assert exponential.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
 
-        exponential = am.mass_profiles.SphericalExponential(
+        exponential = am.mp.SphericalExponential(
             centre=(1.0, 2.0),
             intensity=1.0,
             effective_radius=0.6,
@@ -455,7 +455,7 @@ class TestExponential(object):
         assert exponential.elliptical_effective_radius == 0.6
 
     def test__convergence_correct_values(self):
-        exponential = am.mass_profiles.EllipticalExponential(
+        exponential = am.mp.EllipticalExponential(
             axis_ratio=0.5,
             phi=0.0,
             intensity=3.0,
@@ -463,10 +463,10 @@ class TestExponential(object):
             mass_to_light_ratio=1.0,
         )
         assert exponential.convergence_from_grid(
-            grid=np.array([[1.0, 0.0]])
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
         ) == pytest.approx(4.9047, 1e-3)
 
-        exponential = am.mass_profiles.EllipticalExponential(
+        exponential = am.mp.EllipticalExponential(
             axis_ratio=0.5,
             phi=90.0,
             intensity=2.0,
@@ -474,10 +474,10 @@ class TestExponential(object):
             mass_to_light_ratio=1.0,
         )
         assert exponential.convergence_from_grid(
-            grid=np.array([[0.0, 1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         ) == pytest.approx(4.8566, 1e-3)
 
-        exponential = am.mass_profiles.EllipticalExponential(
+        exponential = am.mp.EllipticalExponential(
             axis_ratio=0.5,
             phi=90.0,
             intensity=4.0,
@@ -485,10 +485,10 @@ class TestExponential(object):
             mass_to_light_ratio=1.0,
         )
         assert exponential.convergence_from_grid(
-            grid=np.array([[0.0, 1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         ) == pytest.approx(2.0 * 4.8566, 1e-3)
 
-        exponential = am.mass_profiles.EllipticalExponential(
+        exponential = am.mp.EllipticalExponential(
             axis_ratio=0.5,
             phi=90.0,
             intensity=2.0,
@@ -496,10 +496,10 @@ class TestExponential(object):
             mass_to_light_ratio=2.0,
         )
         assert exponential.convergence_from_grid(
-            grid=np.array([[0.0, 1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         ) == pytest.approx(2.0 * 4.8566, 1e-3)
 
-        exponential = am.mass_profiles.EllipticalExponential(
+        exponential = am.mp.EllipticalExponential(
             axis_ratio=0.5,
             phi=90.0,
             intensity=2.0,
@@ -507,11 +507,11 @@ class TestExponential(object):
             mass_to_light_ratio=1.0,
         )
         assert exponential.convergence_from_grid(
-            grid=np.array([[0.0, 1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         ) == pytest.approx(4.8566, 1e-3)
 
     def test__deflections_correct_values(self):
-        exponential = am.mass_profiles.EllipticalExponential(
+        exponential = am.mp.EllipticalExponential(
             centre=(-0.4, -0.2),
             axis_ratio=0.8,
             phi=110.0,
@@ -520,12 +520,12 @@ class TestExponential(object):
             mass_to_light_ratio=1.0,
         )
         deflections = exponential.deflections_from_grid(
-            grid=np.array([[0.1625, 0.1625]])
+            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
         )
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.62569, 1e-3)
 
-        exponential = am.mass_profiles.EllipticalExponential(
+        exponential = am.mp.EllipticalExponential(
             centre=(-0.4, -0.2),
             axis_ratio=0.8,
             phi=110.0,
@@ -534,13 +534,13 @@ class TestExponential(object):
             mass_to_light_ratio=1.0,
         )
         deflections = exponential.deflections_from_grid(
-            grid=np.array([[0.1625, 0.1625]])
+            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
         )
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.62569, 1e-3)
 
     def test__spherical_and_elliptical_identical(self):
-        elliptical = am.mass_profiles.EllipticalExponential(
+        elliptical = am.mp.EllipticalExponential(
             centre=(0.0, 0.0),
             axis_ratio=1.0,
             phi=0.0,
@@ -549,7 +549,7 @@ class TestExponential(object):
             mass_to_light_ratio=1.0,
         )
 
-        spherical = am.mass_profiles.SphericalExponential(
+        spherical = am.mp.SphericalExponential(
             centre=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
@@ -557,19 +557,19 @@ class TestExponential(object):
         )
 
         assert (
-            ellipticam.convergence_from_grid(grid=grid)
-            == sphericam.convergence_from_grid(grid=grid)
+            elliptical.convergence_from_grid(grid=grid)
+            == spherical.convergence_from_grid(grid=grid)
         ).all()
-        # assert ellipticam.potential_from_grid(grid=grid) == sphericam.potential_from_grid(grid=grid)
+        # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
         np.testing.assert_almost_equal(
-            ellipticam.deflections_from_grid(grid=grid),
-            sphericam.deflections_from_grid(grid=grid),
+            elliptical.deflections_from_grid(grid=grid),
+            spherical.deflections_from_grid(grid=grid),
         )
 
     def test__deflections_of_elliptical_profile__use_interpolate_and_cache_decorators(
         self
     ):
-        exponential = am.mass_profiles.EllipticalExponential(
+        exponential = am.mp.EllipticalExponential(
             centre=(-0.7, 0.5),
             axis_ratio=0.8,
             phi=110.0,
@@ -588,16 +588,16 @@ class TestExponential(object):
             ]
         )
 
-        mask = aa.Mask(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.Grid.from_mask(mask=mask)
+        grid = aa.grid_masked.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = exponential.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = am.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -618,7 +618,7 @@ class TestExponential(object):
     def test__deflections_of_spherical_profile__use_interpolate_and_cache_decorators(
         self
     ):
-        exponential = am.mass_profiles.SphericalExponential(
+        exponential = am.mp.SphericalExponential(
             centre=(-0.7, 0.5),
             intensity=5.0,
             effective_radius=0.2,
@@ -635,16 +635,16 @@ class TestExponential(object):
             ]
         )
 
-        mask = aa.Mask(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.Grid.from_mask(mask=mask)
+        grid = aa.grid_masked.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = exponential.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = am.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -667,7 +667,7 @@ class TestExponential(object):
             shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
         )
 
-        exponential = am.mass_profiles.EllipticalExponential()
+        exponential = am.mp.EllipticalExponential()
 
         convergence = exponential.convergence_from_grid(grid=grid)
 
@@ -682,7 +682,7 @@ class TestExponential(object):
 
         assert deflections.in_2d.shape == (2, 2, 2)
 
-        exponential = am.mass_profiles.SphericalExponential()
+        exponential = am.mp.SphericalExponential()
 
         convergence = exponential.convergence_from_grid(grid=grid)
 
@@ -700,7 +700,7 @@ class TestExponential(object):
 
 class TestDevVaucouleurs(object):
     def test__constructor_and_units(self):
-        dev_vaucouleurs = am.mass_profiles.EllipticalDevVaucouleurs(
+        dev_vaucouleurs = am.mp.EllipticalDevVaucouleurs(
             centre=(1.0, 2.0),
             axis_ratio=0.5,
             phi=45.0,
@@ -739,7 +739,7 @@ class TestDevVaucouleurs(object):
         assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
         assert dev_vaucouleurs.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
 
-        dev_vaucouleurs = am.mass_profiles.SphericalDevVaucouleurs(
+        dev_vaucouleurs = am.mp.SphericalDevVaucouleurs(
             centre=(1.0, 2.0),
             intensity=1.0,
             effective_radius=0.6,
@@ -777,62 +777,62 @@ class TestDevVaucouleurs(object):
         assert dev_vaucouleurs.elliptical_effective_radius == 0.6
 
     def test__convergence_correct_values(self):
-        dev = am.mass_profiles.EllipticalDevVaucouleurs(
+        dev = am.mp.EllipticalDevVaucouleurs(
             axis_ratio=0.5,
             phi=0.0,
             intensity=3.0,
             effective_radius=2.0,
             mass_to_light_ratio=1.0,
         )
-        assert dev.convergence_from_grid(grid=np.array([[1.0, 0.0]])) == pytest.approx(
+        assert dev.convergence_from_grid(grid=aa.grid.manual_2d([[[1.0, 0.0]]])) == pytest.approx(
             5.6697, 1e-3
         )
 
-        dev = am.mass_profiles.EllipticalDevVaucouleurs(
+        dev = am.mp.EllipticalDevVaucouleurs(
             axis_ratio=0.5,
             phi=90.0,
             intensity=2.0,
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
         )
-        assert dev.convergence_from_grid(grid=np.array([[0.0, 1.0]])) == pytest.approx(
+        assert dev.convergence_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]])) == pytest.approx(
             7.4455, 1e-3
         )
 
-        dev = am.mass_profiles.EllipticalDevVaucouleurs(
+        dev = am.mp.EllipticalDevVaucouleurs(
             axis_ratio=0.5,
             phi=90.0,
             intensity=4.0,
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
         )
-        assert dev.convergence_from_grid(grid=np.array([[0.0, 1.0]])) == pytest.approx(
+        assert dev.convergence_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]])) == pytest.approx(
             2.0 * 7.4455, 1e-3
         )
 
-        dev = am.mass_profiles.EllipticalDevVaucouleurs(
+        dev = am.mp.EllipticalDevVaucouleurs(
             axis_ratio=0.5,
             phi=90.0,
             intensity=2.0,
             effective_radius=3.0,
             mass_to_light_ratio=2.0,
         )
-        assert dev.convergence_from_grid(grid=np.array([[0.0, 1.0]])) == pytest.approx(
+        assert dev.convergence_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]])) == pytest.approx(
             2.0 * 7.4455, 1e-3
         )
 
-        sersic = am.mass_profiles.SphericalDevVaucouleurs(
+        sersic = am.mp.SphericalDevVaucouleurs(
             centre=(0.0, 0.0),
             intensity=1.0,
             effective_radius=0.6,
             mass_to_light_ratio=1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=np.array([[0.0, 1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         ) == pytest.approx(0.351797, 1e-3)
 
     def test__deflections_correct_values(self):
-        dev = am.mass_profiles.EllipticalDevVaucouleurs(
+        dev = am.mp.EllipticalDevVaucouleurs(
             centre=(0.4, 0.2),
             axis_ratio=0.9,
             phi=10.0,
@@ -840,12 +840,12 @@ class TestDevVaucouleurs(object):
             effective_radius=0.8,
             mass_to_light_ratio=3.0,
         )
-        deflections = dev.deflections_from_grid(grid=np.array([[0.1625, 0.1625]]))
+        deflections = dev.deflections_from_grid(grid=aa.grid.manual_2d([[[0.1625, 0.1625]]]))
         assert deflections[0, 0] == pytest.approx(-24.528, 1e-3)
         assert deflections[0, 1] == pytest.approx(-3.37605, 1e-3)
 
     def test__spherical_and_elliptical_identical(self):
-        elliptical = am.mass_profiles.EllipticalDevVaucouleurs(
+        elliptical = am.mp.EllipticalDevVaucouleurs(
             centre=(0.0, 0.0),
             axis_ratio=1.0,
             phi=0.0,
@@ -854,7 +854,7 @@ class TestDevVaucouleurs(object):
             mass_to_light_ratio=1.0,
         )
 
-        spherical = am.mass_profiles.SphericalDevVaucouleurs(
+        spherical = am.mp.SphericalDevVaucouleurs(
             centre=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
@@ -862,20 +862,20 @@ class TestDevVaucouleurs(object):
         )
 
         assert (
-            ellipticam.convergence_from_grid(grid=grid)
-            == sphericam.convergence_from_grid(grid=grid)
+            elliptical.convergence_from_grid(grid=grid)
+            == spherical.convergence_from_grid(grid=grid)
         ).all()
-        # assert ellipticam.potential_from_grid(grid=grid) == sphericam.potential_from_grid(grid=grid)
+        # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
 
         np.testing.assert_almost_equal(
-            ellipticam.deflections_from_grid(grid=grid),
-            sphericam.deflections_from_grid(grid=grid),
+            elliptical.deflections_from_grid(grid=grid),
+            spherical.deflections_from_grid(grid=grid),
         )
 
     def test__deflections_of_elliptical_profile__use_interpolate_and_cache_decorators(
         self
     ):
-        dev = am.mass_profiles.EllipticalDevVaucouleurs(
+        dev = am.mp.EllipticalDevVaucouleurs(
             centre=(-0.7, 0.5),
             axis_ratio=0.8,
             phi=110.0,
@@ -894,16 +894,16 @@ class TestDevVaucouleurs(object):
             ]
         )
 
-        mask = aa.Mask(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.Grid.from_mask(mask=mask)
+        grid = aa.grid_masked.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = dev.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = am.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -924,7 +924,7 @@ class TestDevVaucouleurs(object):
     def test__deflections_of_spherical_profile__use_interpolate_and_cache_decorators(
         self
     ):
-        dev = am.mass_profiles.SphericalDevVaucouleurs(
+        dev = am.mp.SphericalDevVaucouleurs(
             centre=(-0.7, 0.5),
             intensity=5.0,
             effective_radius=0.2,
@@ -941,16 +941,16 @@ class TestDevVaucouleurs(object):
             ]
         )
 
-        mask = aa.Mask(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.Grid.from_mask(mask=mask)
+        grid = aa.grid_masked.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = dev.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = am.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -973,7 +973,7 @@ class TestDevVaucouleurs(object):
             shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
         )
 
-        dev_vaucouleurs = am.mass_profiles.EllipticalDevVaucouleurs()
+        dev_vaucouleurs = am.mp.EllipticalDevVaucouleurs()
 
         convergence = dev_vaucouleurs.convergence_from_grid(grid=grid)
 
@@ -988,7 +988,7 @@ class TestDevVaucouleurs(object):
 
         assert deflections.in_2d.shape == (2, 2, 2)
 
-        dev_vaucouleurs = am.mass_profiles.SphericalDevVaucouleurs()
+        dev_vaucouleurs = am.mp.SphericalDevVaucouleurs()
 
         convergence = dev_vaucouleurs.convergence_from_grid(grid=grid)
 
@@ -1006,7 +1006,7 @@ class TestDevVaucouleurs(object):
 
 class TestSersicMassRadialGradient(object):
     def test__constructor_and_units(self):
-        sersic = am.mass_profiles.EllipticalSersicRadialGradient(
+        sersic = am.mp.EllipticalSersicRadialGradient(
             centre=(1.0, 2.0),
             axis_ratio=0.5,
             phi=45.0,
@@ -1050,7 +1050,7 @@ class TestSersicMassRadialGradient(object):
         assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
         assert sersic.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
 
-        sersic = am.mass_profiles.SphericalSersicRadialGradient(
+        sersic = am.mp.SphericalSersicRadialGradient(
             centre=(1.0, 2.0),
             intensity=1.0,
             effective_radius=0.6,
@@ -1094,7 +1094,7 @@ class TestSersicMassRadialGradient(object):
 
     def test__convergence_correct_values(self):
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1/0.6)**-1.0 = 0.6
-        sersic = am.mass_profiles.EllipticalSersicRadialGradient(
+        sersic = am.mp.EllipticalSersicRadialGradient(
             centre=(0.0, 0.0),
             axis_ratio=1.0,
             phi=0.0,
@@ -1105,11 +1105,11 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_gradient=1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=np.array([[0.0, 1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         ) == pytest.approx(0.6 * 0.351797, 1e-3)
 
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1.5/2.0)**1.0 = 0.75
-        sersic = am.mass_profiles.EllipticalSersicRadialGradient(
+        sersic = am.mp.EllipticalSersicRadialGradient(
             axis_ratio=1.0,
             phi=0.0,
             intensity=3.0,
@@ -1122,7 +1122,7 @@ class TestSersicMassRadialGradient(object):
             grid=np.array([[1.5, 0.0]])
         ) == pytest.approx(0.75 * 4.90657319276, 1e-3)
 
-        sersic = am.mass_profiles.EllipticalSersicRadialGradient(
+        sersic = am.mp.EllipticalSersicRadialGradient(
             axis_ratio=1.0,
             phi=0.0,
             intensity=6.0,
@@ -1135,7 +1135,7 @@ class TestSersicMassRadialGradient(object):
             grid=np.array([[1.5, 0.0]])
         ) == pytest.approx(2.0 * 0.75 * 4.90657319276, 1e-3)
 
-        sersic = am.mass_profiles.EllipticalSersicRadialGradient(
+        sersic = am.mp.EllipticalSersicRadialGradient(
             axis_ratio=1.0,
             phi=0.0,
             intensity=3.0,
@@ -1149,7 +1149,7 @@ class TestSersicMassRadialGradient(object):
         ) == pytest.approx(2.0 * 0.75 * 4.90657319276, 1e-3)
 
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = ((0.5*1.41)/2.0)**-1.0 = 2.836
-        sersic = am.mass_profiles.EllipticalSersicRadialGradient(
+        sersic = am.mp.EllipticalSersicRadialGradient(
             axis_ratio=0.5,
             phi=0.0,
             intensity=3.0,
@@ -1159,11 +1159,11 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_gradient=1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=np.array([[1.0, 0.0]])
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
         ) == pytest.approx(2.836879 * 5.38066670129, abs=2e-01)
 
     def test__deflections_correct_values(self):
-        sersic = am.mass_profiles.EllipticalSersicRadialGradient(
+        sersic = am.mp.EllipticalSersicRadialGradient(
             centre=(-0.4, -0.2),
             axis_ratio=0.8,
             phi=110.0,
@@ -1173,11 +1173,11 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_ratio=1.0,
             mass_to_light_gradient=1.0,
         )
-        deflections = sersic.deflections_from_grid(grid=np.array([[0.1625, 0.1625]]))
+        deflections = sersic.deflections_from_grid(grid=aa.grid.manual_2d([[[0.1625, 0.1625]]]))
         assert deflections[0, 0] == pytest.approx(3.60324873535244, 1e-3)
         assert deflections[0, 1] == pytest.approx(2.3638898009652, 1e-3)
 
-        sersic = am.mass_profiles.EllipticalSersicRadialGradient(
+        sersic = am.mp.EllipticalSersicRadialGradient(
             centre=(-0.4, -0.2),
             axis_ratio=0.8,
             phi=110.0,
@@ -1187,12 +1187,12 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_ratio=1.0,
             mass_to_light_gradient=-1.0,
         )
-        deflections = sersic.deflections_from_grid(grid=np.array([[0.1625, 0.1625]]))
+        deflections = sersic.deflections_from_grid(grid=aa.grid.manual_2d([[[0.1625, 0.1625]]]))
         assert deflections[0, 0] == pytest.approx(0.97806399756448, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.725459334118341, 1e-3)
 
     def test__compare_to_sersic(self):
-        sersic = am.mass_profiles.EllipticalSersicRadialGradient(
+        sersic = am.mp.EllipticalSersicRadialGradient(
             centre=(-0.4, -0.2),
             axis_ratio=0.8,
             phi=110.0,
@@ -1203,10 +1203,10 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_gradient=0.0,
         )
         sersic_deflections = sersic.deflections_from_grid(
-            grid=np.array([[0.1625, 0.1625]])
+            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
         )
 
-        exponential = am.mass_profiles.EllipticalExponential(
+        exponential = am.mp.EllipticalExponential(
             centre=(-0.4, -0.2),
             axis_ratio=0.8,
             phi=110.0,
@@ -1215,7 +1215,7 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_ratio=1.0,
         )
         exponential_deflections = exponential.deflections_from_grid(
-            grid=np.array([[0.1625, 0.1625]])
+            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
         )
 
         assert (
@@ -1229,7 +1229,7 @@ class TestSersicMassRadialGradient(object):
             == pytest.approx(0.62569, 1e-3)
         )
 
-        sersic = am.mass_profiles.EllipticalSersicRadialGradient(
+        sersic = am.mp.EllipticalSersicRadialGradient(
             centre=(0.4, 0.2),
             axis_ratio=0.9,
             phi=10.0,
@@ -1240,10 +1240,10 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_gradient=0.0,
         )
         sersic_deflections = sersic.deflections_from_grid(
-            grid=np.array([[0.1625, 0.1625]])
+            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
         )
 
-        dev = am.mass_profiles.EllipticalDevVaucouleurs(
+        dev = am.mp.EllipticalDevVaucouleurs(
             centre=(0.4, 0.2),
             axis_ratio=0.9,
             phi=10.0,
@@ -1252,7 +1252,7 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_ratio=3.0,
         )
 
-        dev_deflections = dev.deflections_from_grid(grid=np.array([[0.1625, 0.1625]]))
+        dev_deflections = dev.deflections_from_grid(grid=aa.grid.manual_2d([[[0.1625, 0.1625]]]))
 
         assert (
             sersic_deflections[0, 0]
@@ -1265,7 +1265,7 @@ class TestSersicMassRadialGradient(object):
             == pytest.approx(-3.37605, 1e-3)
         )
 
-        sersic_grad = am.mass_profiles.EllipticalSersicRadialGradient(
+        sersic_grad = am.mp.EllipticalSersicRadialGradient(
             centre=(-0.4, -0.2),
             axis_ratio=0.8,
             phi=110.0,
@@ -1276,10 +1276,10 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_gradient=0.0,
         )
         sersic_grad_deflections = sersic_grad.deflections_from_grid(
-            grid=np.array([[0.1625, 0.1625]])
+            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
         )
 
-        sersic = am.mass_profiles.EllipticalSersic(
+        sersic = am.mp.EllipticalSersic(
             centre=(-0.4, -0.2),
             axis_ratio=0.8,
             phi=110.0,
@@ -1289,7 +1289,7 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_ratio=1.0,
         )
         sersic_deflections = sersic.deflections_from_grid(
-            grid=np.array([[0.1625, 0.1625]])
+            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
         )
 
         assert (
@@ -1304,7 +1304,7 @@ class TestSersicMassRadialGradient(object):
         )
 
     def test__spherical_and_elliptical_identical(self):
-        elliptical = am.mass_profiles.EllipticalSersicRadialGradient(
+        elliptical = am.mp.EllipticalSersicRadialGradient(
             centre=(0.0, 0.0),
             axis_ratio=1.0,
             phi=0.0,
@@ -1314,7 +1314,7 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_ratio=1.0,
             mass_to_light_gradient=1.0,
         )
-        spherical = am.mass_profiles.EllipticalSersicRadialGradient(
+        spherical = am.mp.EllipticalSersicRadialGradient(
             centre=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
@@ -1323,19 +1323,19 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_gradient=1.0,
         )
         assert (
-            ellipticam.convergence_from_grid(grid=grid)
-            == sphericam.convergence_from_grid(grid=grid)
+            elliptical.convergence_from_grid(grid=grid)
+            == spherical.convergence_from_grid(grid=grid)
         ).all()
-        # assert ellipticam.potential_from_grid(grid=grid) == sphericam.potential_from_grid(grid=grid)
+        # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
         assert (
-            ellipticam.deflections_from_grid(grid=grid)
-            == sphericam.deflections_from_grid(grid=grid)
+            elliptical.deflections_from_grid(grid=grid)
+            == spherical.deflections_from_grid(grid=grid)
         ).all()
 
     def test__deflections_of_elliptical_profile__use_interpolate_and_cache_decorators(
         self
     ):
-        sersic = am.mass_profiles.EllipticalSersicRadialGradient(
+        sersic = am.mp.EllipticalSersicRadialGradient(
             centre=(-0.7, 0.5),
             axis_ratio=0.8,
             phi=110.0,
@@ -1356,16 +1356,16 @@ class TestSersicMassRadialGradient(object):
             ]
         )
 
-        mask = aa.Mask(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.Grid.from_mask(mask=mask)
+        grid = aa.grid_masked.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = am.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1386,7 +1386,7 @@ class TestSersicMassRadialGradient(object):
     def test__deflections_of_spherical_profile__use_interpolate_and_cache_decorators(
         self
     ):
-        sersic = am.mass_profiles.SphericalSersicRadialGradient(
+        sersic = am.mp.SphericalSersicRadialGradient(
             centre=(-0.7, 0.5),
             intensity=5.0,
             effective_radius=0.2,
@@ -1405,16 +1405,16 @@ class TestSersicMassRadialGradient(object):
             ]
         )
 
-        mask = aa.Mask(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.Grid.from_mask(mask=mask)
+        grid = aa.grid_masked.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = am.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1437,7 +1437,7 @@ class TestSersicMassRadialGradient(object):
             shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
         )
 
-        sersic = am.mass_profiles.EllipticalSersicRadialGradient()
+        sersic = am.mp.EllipticalSersicRadialGradient()
 
         convergence = sersic.convergence_from_grid(grid=grid)
 
@@ -1452,7 +1452,7 @@ class TestSersicMassRadialGradient(object):
 
         assert deflections.in_2d.shape == (2, 2, 2)
 
-        sersic = am.mass_profiles.SphericalSersicRadialGradient()
+        sersic = am.mp.SphericalSersicRadialGradient()
 
         convergence = sersic.convergence_from_grid(grid=grid)
 

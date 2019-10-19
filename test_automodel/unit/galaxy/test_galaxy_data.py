@@ -90,7 +90,7 @@ class TestGalaxyFitData(object):
             use_image=True,
         )
 
-        grid = aa.Grid.from_mask(mask=sub_mask_7x7)
+        grid = aa.grid_masked.from_mask(mask=sub_mask_7x7)
         new_grid = grid.new_grid_with_interpolator(pixel_scale_interpolation_grid=1.0)
         assert (gal_data_7x7.grid == new_grid).all()
         assert (gal_data_7x7.grid.interpolator.vtx == new_grid.interpolator.vtx).all()

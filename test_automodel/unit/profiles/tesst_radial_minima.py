@@ -230,16 +230,16 @@ class TestPowerLaw(object):
             ]
         )
 
-        mask = aa.Mask(mask, pixel_scales=1.0)
+        mask = aa.mask.manual(mask, pixel_scales=1.0)
 
-        grid = aa.Grid.from_mask(mask=mask)
+        grid = aa.grid_masked.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = power_law.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = am.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -264,8 +264,8 @@ class TestCoredIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        convergence_1 = cored_isothermam.convergence_from_grid(grid=grid_01)
-        convergence_0 = cored_isothermam.convergence_from_grid(
+        convergence_1 = cored_isothermal.convergence_from_grid(grid=grid_01)
+        convergence_0 = cored_isothermal.convergence_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
@@ -274,8 +274,8 @@ class TestCoredIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        convergence_1 = cored_isothermam.convergence_from_grid(grid=grid_22)
-        convergence_0 = cored_isothermam.convergence_from_grid(
+        convergence_1 = cored_isothermal.convergence_from_grid(grid=grid_22)
+        convergence_0 = cored_isothermal.convergence_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
@@ -284,8 +284,8 @@ class TestCoredIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        convergence_1 = cored_isothermam.convergence_from_grid(grid=grid_01)
-        convergence_0 = cored_isothermam.convergence_from_grid(
+        convergence_1 = cored_isothermal.convergence_from_grid(grid=grid_01)
+        convergence_0 = cored_isothermal.convergence_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
@@ -294,8 +294,8 @@ class TestCoredIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        convergence_1 = cored_isothermam.convergence_from_grid(grid=grid_22)
-        convergence_0 = cored_isothermam.convergence_from_grid(
+        convergence_1 = cored_isothermal.convergence_from_grid(grid=grid_22)
+        convergence_0 = cored_isothermal.convergence_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
@@ -304,8 +304,8 @@ class TestCoredIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        potential_1 = cored_isothermam.potential_from_grid(grid=grid_01)
-        potential_0 = cored_isothermam.potential_from_grid(
+        potential_1 = cored_isothermal.potential_from_grid(grid=grid_01)
+        potential_0 = cored_isothermal.potential_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
@@ -314,8 +314,8 @@ class TestCoredIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        potential_1 = cored_isothermam.potential_from_grid(grid=grid_22)
-        potential_0 = cored_isothermam.potential_from_grid(
+        potential_1 = cored_isothermal.potential_from_grid(grid=grid_22)
+        potential_0 = cored_isothermal.potential_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
@@ -324,8 +324,8 @@ class TestCoredIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        potential_1 = cored_isothermam.potential_from_grid(grid=grid_01)
-        potential_0 = cored_isothermam.potential_from_grid(
+        potential_1 = cored_isothermal.potential_from_grid(grid=grid_01)
+        potential_0 = cored_isothermal.potential_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
@@ -334,8 +334,8 @@ class TestCoredIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        potential_1 = cored_isothermam.potential_from_grid(grid=grid_22)
-        potential_0 = cored_isothermam.potential_from_grid(
+        potential_1 = cored_isothermal.potential_from_grid(grid=grid_22)
+        potential_0 = cored_isothermal.potential_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
@@ -344,8 +344,8 @@ class TestCoredIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        deflections_1 = cored_isothermam.deflections_from_grid(grid=grid_01)
-        deflections_0 = cored_isothermam.deflections_from_grid(
+        deflections_1 = cored_isothermal.deflections_from_grid(grid=grid_01)
+        deflections_0 = cored_isothermal.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -354,8 +354,8 @@ class TestCoredIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        deflections_1 = cored_isothermam.deflections_from_grid(grid=grid_22)
-        deflections_0 = cored_isothermam.deflections_from_grid(
+        deflections_1 = cored_isothermal.deflections_from_grid(grid=grid_22)
+        deflections_0 = cored_isothermal.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -364,8 +364,8 @@ class TestCoredIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        deflections_1 = cored_isothermam.deflections_from_grid(grid=grid_01)
-        deflections_0 = cored_isothermam.deflections_from_grid(
+        deflections_1 = cored_isothermal.deflections_from_grid(grid=grid_01)
+        deflections_0 = cored_isothermal.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -374,8 +374,8 @@ class TestCoredIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        deflections_1 = cored_isothermam.deflections_from_grid(grid=grid_22)
-        deflections_0 = cored_isothermam.deflections_from_grid(
+        deflections_1 = cored_isothermal.deflections_from_grid(grid=grid_22)
+        deflections_0 = cored_isothermal.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -387,8 +387,8 @@ class TestIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        convergence_1 = isothermam.convergence_from_grid(grid=grid_01)
-        convergence_0 = isothermam.convergence_from_grid(
+        convergence_1 = isothermal.convergence_from_grid(grid=grid_01)
+        convergence_0 = isothermal.convergence_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
@@ -397,8 +397,8 @@ class TestIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        convergence_1 = isothermam.convergence_from_grid(grid=grid_22)
-        convergence_0 = isothermam.convergence_from_grid(
+        convergence_1 = isothermal.convergence_from_grid(grid=grid_22)
+        convergence_0 = isothermal.convergence_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
@@ -407,8 +407,8 @@ class TestIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        convergence_1 = isothermam.convergence_from_grid(grid=grid_01)
-        convergence_0 = isothermam.convergence_from_grid(
+        convergence_1 = isothermal.convergence_from_grid(grid=grid_01)
+        convergence_0 = isothermal.convergence_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
@@ -417,8 +417,8 @@ class TestIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        convergence_1 = isothermam.convergence_from_grid(grid=grid_22)
-        convergence_0 = isothermam.convergence_from_grid(
+        convergence_1 = isothermal.convergence_from_grid(grid=grid_22)
+        convergence_0 = isothermal.convergence_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
@@ -427,8 +427,8 @@ class TestIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        potential_1 = isothermam.potential_from_grid(grid=grid_01)
-        potential_0 = isothermam.potential_from_grid(
+        potential_1 = isothermal.potential_from_grid(grid=grid_01)
+        potential_0 = isothermal.potential_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
@@ -437,8 +437,8 @@ class TestIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        potential_1 = isothermam.potential_from_grid(grid=grid_22)
-        potential_0 = isothermam.potential_from_grid(
+        potential_1 = isothermal.potential_from_grid(grid=grid_22)
+        potential_0 = isothermal.potential_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
@@ -447,8 +447,8 @@ class TestIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        potential_1 = isothermam.potential_from_grid(grid=grid_01)
-        potential_0 = isothermam.potential_from_grid(
+        potential_1 = isothermal.potential_from_grid(grid=grid_01)
+        potential_0 = isothermal.potential_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
@@ -457,8 +457,8 @@ class TestIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        potential_1 = isothermam.potential_from_grid(grid=grid_22)
-        potential_0 = isothermam.potential_from_grid(
+        potential_1 = isothermal.potential_from_grid(grid=grid_22)
+        potential_0 = isothermal.potential_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
@@ -467,8 +467,8 @@ class TestIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        deflections_1 = isothermam.deflections_from_grid(grid=grid_01)
-        deflections_0 = isothermam.deflections_from_grid(
+        deflections_1 = isothermal.deflections_from_grid(grid=grid_01)
+        deflections_0 = isothermal.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -477,8 +477,8 @@ class TestIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        deflections_1 = isothermam.deflections_from_grid(grid=grid_22)
-        deflections_0 = isothermam.deflections_from_grid(
+        deflections_1 = isothermal.deflections_from_grid(grid=grid_22)
+        deflections_0 = isothermal.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -487,8 +487,8 @@ class TestIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        deflections_1 = isothermam.deflections_from_grid(grid=grid_01)
-        deflections_0 = isothermam.deflections_from_grid(
+        deflections_1 = isothermal.deflections_from_grid(grid=grid_01)
+        deflections_0 = isothermal.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -497,8 +497,8 @@ class TestIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        deflections_1 = isothermam.deflections_from_grid(grid=grid_22)
-        deflections_0 = isothermam.deflections_from_grid(
+        deflections_1 = isothermal.deflections_from_grid(grid=grid_22)
+        deflections_0 = isothermal.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -954,16 +954,16 @@ class TestSersicMassRadialGradient(object):
             ]
         )
 
-        mask = aa.Mask(mask, pixel_scales=1.0)
+        mask = aa.mask.manual(mask, pixel_scales=1.0)
 
-        grid = aa.Grid.from_mask(mask=mask)
+        grid = aa.grid_masked.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = am.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 

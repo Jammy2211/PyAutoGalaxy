@@ -20,7 +20,7 @@ class TestRectangular:
             ]
         )
 
-        mask = aa.Mask(array_2d=mask, pixel_scales=1.0, sub_size=1)
+        mask = aa.mask.manual(array_2d=mask, pixel_scales=1.0, sub_size=1)
 
         # Source-plane comprises 5 grid, so 5 masked_image pixels traced to the pix-plane.
 
@@ -102,7 +102,7 @@ class TestRectangular:
             ]
         )
 
-        mask = aa.Mask(array_2d=mask, pixel_scales=1.0, sub_size=1)
+        mask = aa.mask.manual(array_2d=mask, pixel_scales=1.0, sub_size=1)
 
         # There is no sub-grid, so our grid are just the masked_image grid (note the NumPy weighted_data structure
         # ensures this has no sub-gridding)
@@ -202,7 +202,7 @@ class TestRectangular:
             ]
         )
 
-        mask = aa.Mask(array_2d=mask, pixel_scales=2.0, sub_size=2)
+        mask = aa.mask.manual(array_2d=mask, pixel_scales=2.0, sub_size=2)
 
         # Assume a 2x2 sub-grid, so each of our 5 masked_image-pixels are split into 4.
         # The grid below is unphysical in that the (0.0, 0.0) terms on the end of each sub-grid probably couldn't
@@ -300,7 +300,7 @@ class TestRectangular:
             ]
         )
 
-        mask = aa.Mask(array_2d=mask, pixel_scales=1.0, sub_size=1)
+        mask = aa.mask.manual(array_2d=mask, pixel_scales=1.0, sub_size=1)
 
         grid = aa.Grid(
             sub_grid_1d=np.array(
@@ -362,7 +362,7 @@ class TestRectangular:
 class TestVoronoiMagnification:
     def test__3x3_simple_grid(self):
 
-        mask = aa.Mask(
+        mask = aa.mask.manual(
             array_2d=np.array(
                 [[False, False, False], [False, False, False], [False, False, False]]
             ),
@@ -452,7 +452,7 @@ class TestVoronoiMagnification:
 
     def test__3x3_simple_grid__include_mask(self):
 
-        mask = aa.Mask(
+        mask = aa.mask.manual(
             array_2d=np.array(
                 [[True, False, True], [False, False, False], [True, False, True]]
             ),
@@ -518,7 +518,7 @@ class TestVoronoiMagnification:
 
     def test__3x3_simple_grid__include_mask_and_sub_grid(self):
 
-        mask = aa.Mask(
+        mask = aa.mask.manual(
             array_2d=np.array(
                 [[True, False, True], [False, False, False], [True, False, True]]
             ),
@@ -607,7 +607,7 @@ class TestVoronoiMagnification:
 
     def test__3x3_simple_grid__include_mask_with_offset_centre(self):
 
-        mask = aa.Mask(
+        mask = aa.mask.manual(
             array_2d=np.array(
                 [
                     [True, True, True, False, True],

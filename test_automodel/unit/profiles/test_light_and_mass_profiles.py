@@ -144,17 +144,17 @@ class TestSersic(object):
         )
 
         assert (
-            ellipticam.profile_image_from_grid(grid=grid)
-            == sphericam.profile_image_from_grid(grid=grid)
+            elliptical.profile_image_from_grid(grid=grid)
+            == spherical.profile_image_from_grid(grid=grid)
         ).all()
         assert (
-            ellipticam.convergence_from_grid(grid=grid)
-            == sphericam.convergence_from_grid(grid=grid)
+            elliptical.convergence_from_grid(grid=grid)
+            == spherical.convergence_from_grid(grid=grid)
         ).all()
-        # assert (ellipticam.potential_from_grid(grid=grid) == sphericam.potential_from_grid(grid=grid)).all()
+        # assert (elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)).all()
         np.testing.assert_almost_equal(
-            ellipticam.deflections_from_grid(grid=grid),
-            sphericam.deflections_from_grid(grid=grid),
+            elliptical.deflections_from_grid(grid=grid),
+            spherical.deflections_from_grid(grid=grid),
         )
 
 
@@ -282,17 +282,17 @@ class TestExponential(object):
         )
 
         assert (
-            ellipticam.profile_image_from_grid(grid=grid)
-            == sphericam.profile_image_from_grid(grid=grid)
+            elliptical.profile_image_from_grid(grid=grid)
+            == spherical.profile_image_from_grid(grid=grid)
         ).all()
         assert (
-            ellipticam.convergence_from_grid(grid=grid)
-            == sphericam.convergence_from_grid(grid=grid)
+            elliptical.convergence_from_grid(grid=grid)
+            == spherical.convergence_from_grid(grid=grid)
         ).all()
-        # assert ellipticam.potential_from_grid(grid=grid) == sphericam.potential_from_grid(grid=grid)
+        # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
         np.testing.assert_almost_equal(
-            ellipticam.deflections_from_grid(grid=grid),
-            sphericam.deflections_from_grid(grid=grid),
+            elliptical.deflections_from_grid(grid=grid),
+            spherical.deflections_from_grid(grid=grid),
         )
 
 
@@ -420,17 +420,17 @@ class TestDevVaucouleurs(object):
         )
 
         assert (
-            ellipticam.profile_image_from_grid(grid=grid)
-            == sphericam.profile_image_from_grid(grid=grid)
+            elliptical.profile_image_from_grid(grid=grid)
+            == spherical.profile_image_from_grid(grid=grid)
         ).all()
         assert (
-            ellipticam.convergence_from_grid(grid=grid)
-            == sphericam.convergence_from_grid(grid=grid)
+            elliptical.convergence_from_grid(grid=grid)
+            == spherical.convergence_from_grid(grid=grid)
         ).all()
-        # assert ellipticam.potential_from_grid(grid=grid) == sphericam.potential_from_grid(grid=grid)
+        # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
         np.testing.assert_almost_equal(
-            ellipticam.deflections_from_grid(grid=grid),
-            sphericam.deflections_from_grid(grid=grid),
+            elliptical.deflections_from_grid(grid=grid),
+            spherical.deflections_from_grid(grid=grid),
         )
 
 
@@ -576,15 +576,15 @@ class TestSersicRadialGradient(object):
         )
 
         assert (
-            ellipticam.profile_image_from_grid(grid=grid)
-            == sphericam.profile_image_from_grid(grid=grid)
+            elliptical.profile_image_from_grid(grid=grid)
+            == spherical.profile_image_from_grid(grid=grid)
         ).all()
         assert (
-            ellipticam.convergence_from_grid(grid=grid)
-            == sphericam.convergence_from_grid(grid=grid)
+            elliptical.convergence_from_grid(grid=grid)
+            == spherical.convergence_from_grid(grid=grid)
         ).all()
-        # assert ellipticam.potential_from_grid(grid=grid) == sphericam.potential_from_grid(grid=grid)
+        # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
         np.testing.assert_almost_equal(
-            ellipticam.deflections_from_grid(grid=grid),
-            sphericam.deflections_from_grid(grid=grid),
+            elliptical.deflections_from_grid(grid=grid),
+            spherical.deflections_from_grid(grid=grid),
         )

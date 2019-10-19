@@ -23,7 +23,7 @@ def make_image():
 
 @pytest.fixture(name="mask")
 def make_mask():
-    return aa.Mask.circular(shape=((3, 3)), pixel_scales=0.1, radius_arcsec=0.1)
+    return aa.mask.manual.circular(shape=((3, 3)), pixel_scales=0.1, radius_arcsec=0.1)
 
 
 @pytest.fixture(name="galaxy_light")

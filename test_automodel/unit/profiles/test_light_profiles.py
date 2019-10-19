@@ -105,7 +105,7 @@ class TestGaussian:
             centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, intensity=1.0, sigma=1.0
         )
         assert gaussian.profile_image_from_grid(
-            grid=np.array([[0.0, 1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         ) == pytest.approx(0.24197, 1e-2)
 
         gaussian = am.lp.EllipticalGaussian(
@@ -113,7 +113,7 @@ class TestGaussian:
         )
 
         assert gaussian.profile_image_from_grid(
-            grid=np.array([[0.0, 1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         ) == pytest.approx(2.0 * 0.24197, 1e-2)
 
         gaussian = am.lp.EllipticalGaussian(
@@ -121,7 +121,7 @@ class TestGaussian:
         )
 
         assert gaussian.profile_image_from_grid(
-            grid=np.array([[0.0, 1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         ) == pytest.approx(0.1760, 1e-2)
 
         gaussian = am.lp.EllipticalGaussian(
@@ -137,14 +137,14 @@ class TestGaussian:
             centre=(1.0, 1.0), axis_ratio=1.0, phi=0.0, intensity=1.0, sigma=1.0
         )
         assert gaussian.profile_image_from_grid(
-            grid=np.array([[1.0, 0.0]])
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
         ) == pytest.approx(0.24197, 1e-2)
 
         gaussian = am.lp.EllipticalGaussian(
             centre=(0.0, 0.0), axis_ratio=0.5, phi=0.0, intensity=1.0, sigma=1.0
         )
         assert gaussian.profile_image_from_grid(
-            grid=np.array([[1.0, 0.0]])
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
         ) == pytest.approx(0.05399, 1e-2)
 
         gaussian_0 = am.lp.EllipticalGaussian(
@@ -310,7 +310,7 @@ class TestSersic:
             sersic_index=2.0,
         )
         assert sersic.profile_image_from_grid(
-            grid=np.array([[1.0, 0.0]])
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
         ) == pytest.approx(5.38066670129, 1e-3)
 
     def test__intensity_from_grid__change_geometry(self):
@@ -331,8 +331,8 @@ class TestSersic:
         )
 
         assert sersic_0.profile_image_from_grid(
-            grid=np.array([[0.0, 1.0]])
-        ) == sersic_1.profile_image_from_grid(grid=np.array([[1.0, 0.0]]))
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+        ) == sersic_1.profile_image_from_grid(grid=aa.grid.manual_2d([[[1.0, 0.0]]]))
 
     def test__spherical_and_elliptical_match(self):
         elliptical = am.lp.EllipticalSersic(
@@ -484,21 +484,21 @@ class TestExponential:
             axis_ratio=0.5, phi=0.0, intensity=3.0, effective_radius=2.0
         )
         assert exponential.profile_image_from_grid(
-            grid=np.array([[1.0, 0.0]])
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
         ) == pytest.approx(4.9047, 1e-3)
 
         exponential = am.lp.EllipticalExponential(
             axis_ratio=0.5, phi=90.0, intensity=2.0, effective_radius=3.0
         )
         assert exponential.profile_image_from_grid(
-            grid=np.array([[0.0, 1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         ) == pytest.approx(4.8566, 1e-3)
 
         exponential = am.lp.EllipticalExponential(
             axis_ratio=0.5, phi=90.0, intensity=4.0, effective_radius=3.0
         )
         assert exponential.profile_image_from_grid(
-            grid=np.array([[0.0, 1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         ) == pytest.approx(2.0 * 4.8566, 1e-3)
 
     def test__intensity_from_grid__change_geometry(self):
@@ -511,8 +511,8 @@ class TestExponential:
         )
 
         assert exponential_0.profile_image_from_grid(
-            grid=np.array([[0.0, 1.0]])
-        ) == exponential_1.profile_image_from_grid(grid=np.array([[1.0, 0.0]]))
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+        ) == exponential_1.profile_image_from_grid(grid=aa.grid.manual_2d([[[1.0, 0.0]]]))
 
     def test__spherical_and_elliptical_match(self):
         elliptical = am.lp.EllipticalExponential(
@@ -632,7 +632,7 @@ class TestDevVaucouleurs:
             axis_ratio=0.5, phi=0.0, intensity=3.0, effective_radius=2.0
         )
         assert dev_vaucouleurs.profile_image_from_grid(
-            grid=np.array([[1.0, 0.0]])
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
         ) == pytest.approx(5.6697, 1e-3)
 
         dev_vaucouleurs = am.lp.EllipticalDevVaucouleurs(
@@ -640,14 +640,14 @@ class TestDevVaucouleurs:
         )
 
         assert dev_vaucouleurs.profile_image_from_grid(
-            grid=np.array([[0.0, 1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         ) == pytest.approx(7.4455, 1e-3)
 
         dev_vaucouleurs = am.lp.EllipticalDevVaucouleurs(
             axis_ratio=0.5, phi=90.0, intensity=4.0, effective_radius=3.0
         )
         assert dev_vaucouleurs.profile_image_from_grid(
-            grid=np.array([[0.0, 1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         ) == pytest.approx(2.0 * 7.4455, 1e-3)
 
     def test__intensity_from_grid__change_geometry(self):
@@ -660,8 +660,8 @@ class TestDevVaucouleurs:
         )
 
         assert dev_vaucouleurs_0.profile_image_from_grid(
-            grid=np.array([[0.0, 1.0]])
-        ) == dev_vaucouleurs_1.profile_image_from_grid(grid=np.array([[1.0, 0.0]]))
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+        ) == dev_vaucouleurs_1.profile_image_from_grid(grid=aa.grid.manual_2d([[[1.0, 0.0]]]))
 
     def test__spherical_and_elliptical_match(self):
         elliptical = am.lp.EllipticalDevVaucouleurs(
