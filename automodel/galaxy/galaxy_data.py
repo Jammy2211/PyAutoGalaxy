@@ -72,8 +72,8 @@ class GalaxyFitData(object):
         self.mapping = mask.mapping
         self.pixel_scales = galaxy_data.pixel_scales
 
-        self.image = aa.array_masked.manual_2d(array=galaxy_data.image.in_2d, mask=mask.mask_sub_1)
-        self.noise_map = aa.array_masked.manual_2d(array=galaxy_data.noise_map.in_2d, mask=mask.mask_sub_1)
+        self.image = mask.mapping.array_from_array_1d(array_1d=galaxy_data.image)
+        self.noise_map = mask.mapping.array_from_array_1d(array_1d=galaxy_data.noise_map)
 
         self.signal_to_noise_map = self.image / self.noise_map
 
