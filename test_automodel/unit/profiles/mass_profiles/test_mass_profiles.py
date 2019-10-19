@@ -1,12 +1,11 @@
+import autoarray as aa
 import automodel as am
 import math
 from skimage import measure
 import numpy as np
 import pytest
 
-import autofit as af
-
-from test import mock_cosmology
+from test_automodel.mock import mock_cosmology
 
 
 @pytest.fixture(autouse=True)
@@ -14,7 +13,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    af.conf.instance = af.conf.default
+    aa.conf.instance = aa.conf.default
 
 
 class TestEinsteinRadiusMass(object):
@@ -24,7 +23,7 @@ class TestEinsteinRadiusMass(object):
 
         cosmology = mock_cosmology.MockCosmology(kpc_per_arcsec=2.0)
 
-        sis_arcsec = am.mass_profiles.SphericalIsothermal(
+        sis_arcsec = am.mp.SphericalIsothermal(
             centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
             einstein_radius=am.dim.Length(2.0, "arcsec"),
         )
@@ -42,7 +41,7 @@ class TestEinsteinRadiusMass(object):
         )
         assert radius == pytest.approx(4.0, 1e-4)
 
-        sis_kpc = am.mass_profiles.SphericalIsothermal(
+        sis_kpc = am.mp.SphericalIsothermal(
             centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
             einstein_radius=am.dim.Length(2.0, "kpc"),
         )
@@ -58,7 +57,7 @@ class TestEinsteinRadiusMass(object):
         )
         assert radius == pytest.approx(1.0, 1e-4)
 
-        nfw_arcsec = am.mass_profiles.SphericalNFW(
+        nfw_arcsec = am.mp.SphericalNFW(
             centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
             kappa_s=0.5,
             scale_radius=am.dim.Length(5.0, "arcsec"),
@@ -79,7 +78,7 @@ class TestEinsteinRadiusMass(object):
         )
         assert radius == pytest.approx(2.0 * 2.76386, 1e-4)
 
-        nfw_kpc = am.mass_profiles.SphericalNFW(
+        nfw_kpc = am.mp.SphericalNFW(
             centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
             kappa_s=0.5,
             scale_radius=am.dim.Length(5.0, "kpc"),
@@ -104,7 +103,7 @@ class TestEinsteinRadiusMass(object):
             kpc_per_arcsec=2.0, critical_surface_density=2.0
         )
 
-        sis_arcsec = am.mass_profiles.SphericalIsothermal(
+        sis_arcsec = am.mp.SphericalIsothermal(
             centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
             einstein_radius=am.dim.Length(1.0, "arcsec"),
         )
@@ -122,7 +121,7 @@ class TestEinsteinRadiusMass(object):
         )
         assert mass == pytest.approx(2.0 * np.pi, 1e-4)
 
-        sis_kpc = am.mass_profiles.SphericalIsothermal(
+        sis_kpc = am.mp.SphericalIsothermal(
             centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
             einstein_radius=am.dim.Length(2.0, "kpc"),
         )
@@ -140,7 +139,7 @@ class TestEinsteinRadiusMass(object):
         )
         assert mass == pytest.approx(2.0 * np.pi, 1e-4)
 
-        nfw_arcsec = am.mass_profiles.SphericalNFW(
+        nfw_arcsec = am.mp.SphericalNFW(
             centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
             kappa_s=0.5,
             scale_radius=am.dim.Length(5.0, "arcsec"),
@@ -159,7 +158,7 @@ class TestEinsteinRadiusMass(object):
         )
         assert mass == pytest.approx(2.0 * np.pi * 2.76386 ** 2.0, 1e-4)
 
-        nfw_kpc = am.mass_profiles.SphericalNFW(
+        nfw_kpc = am.mp.SphericalNFW(
             centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
             kappa_s=0.5,
             scale_radius=am.dim.Length(5.0, "kpc"),
@@ -205,7 +204,7 @@ class TestMassWithinCircle(object):
         self
     ):
 
-        sis = am.mass_profiles.SphericalIsothermal(einstein_radius=2.0)
+        sis = am.mp.SphericalIsothermal(einstein_radius=2.0)
 
         radius = am.dim.Length(2.0, "arcsec")
 
@@ -217,7 +216,7 @@ class TestMassWithinCircle(object):
         )
         assert math.pi * sis.einstein_radius * radius == pytest.approx(mass, 1e-3)
 
-        sis = am.mass_profiles.SphericalIsothermal(einstein_radius=4.0)
+        sis = am.mp.SphericalIsothermal(einstein_radius=4.0)
 
         radius = am.dim.Length(4.0, "arcsec")
 
@@ -231,7 +230,7 @@ class TestMassWithinCircle(object):
 
     def test__mass_in_angular_units__singular_isothermal__compare_to_grid(self):
 
-        sis = am.mass_profiles.SphericalIsothermal(einstein_radius=2.0)
+        sis = am.mp.SphericalIsothermal(einstein_radius=2.0)
 
         radius = am.dim.Length(1.0, "arcsec")
 
@@ -256,7 +255,7 @@ class TestMassWithinCircle(object):
 
         # arcsec -> arcsec
 
-        sis_arcsec = am.mass_profiles.SphericalIsothermal(
+        sis_arcsec = am.mp.SphericalIsothermal(
             centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
             einstein_radius=am.dim.Length(2.0, "arcsec"),
         )
@@ -306,7 +305,7 @@ class TestMassWithinCircle(object):
 
         # kpc -> kpc
 
-        sis_kpc = am.mass_profiles.SphericalIsothermal(
+        sis_kpc = am.mp.SphericalIsothermal(
             centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
             einstein_radius=am.dim.Length(2.0, "kpc"),
         )
@@ -360,7 +359,7 @@ class TestMassWithinCircle(object):
 
         cosmology = mock_cosmology.MockCosmology(critical_surface_density=2.0)
 
-        sis = am.mass_profiles.SphericalIsothermal(einstein_radius=2.0)
+        sis = am.mp.SphericalIsothermal(einstein_radius=2.0)
         radius = am.dim.Length(2.0, "arcsec")
 
         mass = sis.mass_within_circle_in_units(
@@ -396,7 +395,7 @@ class TestMassWithinEllipse(object):
         self
     ):
 
-        sis = am.mass_profiles.SphericalIsothermal(einstein_radius=2.0)
+        sis = am.mp.SphericalIsothermal(einstein_radius=2.0)
 
         radius = am.dim.Length(2.0)
         mass_circle = sis.mass_within_circle_in_units(
@@ -413,7 +412,7 @@ class TestMassWithinEllipse(object):
         )
         assert mass_circle == mass_ellipse
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             einstein_radius=2.0, axis_ratio=0.5, phi=0.0
         )
         radius = am.dim.Length(2.0)
@@ -435,7 +434,7 @@ class TestMassWithinEllipse(object):
         self
     ):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             einstein_radius=2.0, axis_ratio=0.5, phi=0.0
         )
 
@@ -463,7 +462,7 @@ class TestMassWithinEllipse(object):
 
         # arcsec -> arcsec
 
-        sie_arcsec = am.mass_profiles.SphericalIsothermal(
+        sie_arcsec = am.mp.SphericalIsothermal(
             centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
             einstein_radius=am.dim.Length(2.0, "arcsec"),
         )
@@ -516,7 +515,7 @@ class TestMassWithinEllipse(object):
 
         # kpc -> kpc
 
-        sie_kpc = am.mass_profiles.SphericalIsothermal(
+        sie_kpc = am.mp.SphericalIsothermal(
             centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
             einstein_radius=am.dim.Length(2.0, "kpc"),
         )
@@ -567,7 +566,7 @@ class TestMassWithinEllipse(object):
 
         cosmology = mock_cosmology.MockCosmology(critical_surface_density=2.0)
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             einstein_radius=2.0, axis_ratio=0.5, phi=0.0
         )
 
@@ -608,7 +607,7 @@ class TestDensityBetweenAnnuli(object):
         )
 
         einstein_radius = 1.0
-        sis_arcsec = am.mass_profiles.SphericalIsothermal(
+        sis_arcsec = am.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=einstein_radius
         )
 
@@ -681,7 +680,7 @@ class TestDensityBetweenAnnuli(object):
             kpc_per_arcsec=2.0, critical_surface_density=2.0
         )
 
-        nfw = am.mass_profiles.EllipticalNFW(
+        nfw = am.mp.EllipticalNFW(
             centre=(0.0, 0.0), axis_ratio=0.8, phi=45.0, kappa_s=1.0
         )
 
@@ -719,7 +718,7 @@ class TestDensityBetweenAnnuli(object):
 class TestDeflectionsViaPotential(object):
     def test__compare_sis_deflections_via_potential_and_calculation(self):
 
-        sis = am.mass_profiles.SphericalIsothermal(
+        sis = am.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0
         )
 
@@ -731,13 +730,13 @@ class TestDeflectionsViaPotential(object):
 
         deflections_via_potential = sis.deflections_via_potential_from_grid(grid=grid)
 
-        mean_error = np.mean(deflections_via_potential - deflections_via_calculation)
+        mean_error = np.mean(deflections_via_potential.in_1d - deflections_via_calculation.in_1d)
 
         assert mean_error < 1e-4
 
     def test__compare_sie_at_phi_45__deflections_via_potential_and_calculation(self):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=45.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
@@ -749,13 +748,13 @@ class TestDeflectionsViaPotential(object):
 
         deflections_via_potential = sie.deflections_via_potential_from_grid(grid=grid)
 
-        mean_error = np.mean(deflections_via_potential - deflections_via_calculation)
+        mean_error = np.mean(deflections_via_potential.in_1d - deflections_via_calculation.in_1d)
 
         assert mean_error < 1e-4
 
     def test__compare_sie_at_phi_0__deflections_via_potential_and_calculation(self):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
@@ -767,15 +766,15 @@ class TestDeflectionsViaPotential(object):
 
         deflections_via_potential = sie.deflections_via_potential_from_grid(grid=grid)
 
-        mean_error = np.mean(deflections_via_potential - deflections_via_calculation)
+        mean_error = np.mean(deflections_via_potential.in_1d - deflections_via_calculation.in_1d)
 
         assert mean_error < 1e-4
 
 
-class TestJacobianandMagnification(object):
+class TestJacobian(object):
     def test__jacobian_components(self):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
@@ -788,7 +787,7 @@ class TestJacobianandMagnification(object):
         A_12 = jacobian[0][1]
         A_21 = jacobian[1][0]
 
-        mean_error = np.mean(A_12 - A_21)
+        mean_error = np.mean(A_12.in_1d - A_21.in_1d)
 
         assert mean_error < 1e-4
 
@@ -801,13 +800,15 @@ class TestJacobianandMagnification(object):
         A_12 = jacobian[0][1]
         A_21 = jacobian[1][0]
 
-        mean_error = np.mean(A_12 - A_21)
+        mean_error = np.mean(A_12.in_1d - A_21.in_1d)
 
         assert mean_error < 1e-4
+
+class TestMagnification(object):
 
     def test__compare_magnification_from_eigen_values_and_from_determinant(self):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
@@ -826,12 +827,12 @@ class TestJacobianandMagnification(object):
         )
 
         mean_error = np.mean(
-            magnification_via_determinant - magnification_via_eigen_values
+            magnification_via_determinant.in_1d - magnification_via_eigen_values.in_1d
         )
 
         assert mean_error < 1e-4
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
@@ -850,7 +851,7 @@ class TestJacobianandMagnification(object):
         )
 
         mean_error = np.mean(
-            magnification_via_determinant - magnification_via_eigen_values
+            magnification_via_determinant.in_1d - magnification_via_eigen_values.in_1d
         )
 
         assert mean_error < 1e-4
@@ -859,7 +860,7 @@ class TestJacobianandMagnification(object):
         self
     ):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
@@ -878,7 +879,7 @@ class TestJacobianandMagnification(object):
         )
 
         mean_error = np.mean(
-            magnification_via_determinant - magnification_via_convergence_and_shear
+            magnification_via_determinant.in_1d - magnification_via_convergence_and_shear.in_1d
         )
 
         assert mean_error < 1e-4
@@ -898,7 +899,7 @@ class TestJacobianandMagnification(object):
         )
 
         mean_error = np.mean(
-            magnification_via_determinant - magnification_via_convergence_and_shear
+            magnification_via_determinant.in_1d - magnification_via_convergence_and_shear.in_1d
         )
 
         assert mean_error < 1e-4
@@ -955,7 +956,7 @@ def caustics_via_magnification_from_mass_profile_and_grid(mass_profile, grid):
 class TestConvergenceViajacobian(object):
     def test__compare_sis_convergence_via_jacobian_and_calculation(self):
 
-        sis = am.mass_profiles.SphericalIsothermal(
+        sis = am.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0
         )
 
@@ -982,7 +983,7 @@ class TestConvergenceViajacobian(object):
 
     def test__compare_sie_at_phi_45__convergence_via_jacobian_and_calculation(self):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=45.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
@@ -994,7 +995,7 @@ class TestConvergenceViajacobian(object):
 
         convergence_via_jacobian = sie.convergence_via_jacobian_from_grid(grid=grid)
 
-        mean_error = np.mean(convergence_via_jacobian - convergence_via_calculation)
+        mean_error = np.mean(convergence_via_jacobian.in_1d - convergence_via_calculation.in_1d)
 
         assert mean_error < 1e-1
 
@@ -1004,7 +1005,7 @@ class TestCriticalCurvesAndCaustics(object):
         self
     ):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
@@ -1030,7 +1031,7 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__tangential_critical_curve_radii__spherical_isothermal(self):
 
-        sis = am.mass_profiles.SphericalIsothermal(
+        sis = am.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0
         )
 
@@ -1051,7 +1052,7 @@ class TestCriticalCurvesAndCaustics(object):
             x_critical_tangential ** 2 + y_critical_tangential ** 2
         ) == pytest.approx(sis.einstein_radius ** 2, 5e-1)
 
-        sis = am.mass_profiles.SphericalIsothermal(
+        sis = am.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0
         )
 
@@ -1074,7 +1075,7 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__tangential_critical_curve_centres__spherical_isothermal(self):
 
-        sis = am.mass_profiles.SphericalIsothermal(
+        sis = am.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0
         )
 
@@ -1106,7 +1107,7 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.01 < y_centre < 0.01
         assert -0.01 < x_centre < 0.01
 
-        sis = am.mass_profiles.SphericalIsothermal(
+        sis = am.mp.SphericalIsothermal(
             centre=(0.5, 1.0), einstein_radius=2.0
         )
 
@@ -1126,7 +1127,7 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__radial_critical_curve_centres__spherical_isothermal(self):
 
-        sis = am.mass_profiles.SphericalIsothermal(
+        sis = am.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0
         )
 
@@ -1158,7 +1159,7 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.01 < y_centre < 0.01
         assert -0.01 < x_centre < 0.01
 
-        sis = am.mass_profiles.SphericalIsothermal(
+        sis = am.mp.SphericalIsothermal(
             centre=(0.5, 1.0), einstein_radius=2.0
         )
 
@@ -1178,7 +1179,7 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__tangential_caustic_centres__spherical_isothermal(self):
 
-        sis = am.mass_profiles.SphericalIsothermal(
+        sis = am.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0
         )
 
@@ -1210,7 +1211,7 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.01 < y_centre < 0.01
         assert -0.01 < x_centre < 0.01
 
-        sis = am.mass_profiles.SphericalIsothermal(
+        sis = am.mp.SphericalIsothermal(
             centre=(0.5, 1.0), einstein_radius=2.0
         )
 
@@ -1230,7 +1231,7 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__radial_caustics_radii__spherical_isothermal(self):
 
-        sis = am.mass_profiles.SphericalIsothermal(
+        sis = am.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0
         )
 
@@ -1253,7 +1254,7 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__radial_caustic_centres__spherical_isothermal(self):
 
-        sis = am.mass_profiles.SphericalIsothermal(
+        sis = am.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0
         )
 
@@ -1285,7 +1286,7 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.09 < y_centre < 0.09
         assert -0.09 < x_centre < 0.09
 
-        sis = am.mass_profiles.SphericalIsothermal(
+        sis = am.mp.SphericalIsothermal(
             centre=(0.5, 1.0), einstein_radius=2.0
         )
 
@@ -1307,7 +1308,7 @@ class TestCriticalCurvesAndCaustics(object):
         self
     ):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
         )
 
@@ -1349,7 +1350,7 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__compare_radial_critical_curves_from_magnification_and_eigen_values(self):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
         )
 
@@ -1373,7 +1374,7 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__compare_tangential_caustic_from_magnification_and_eigen_values(self):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
         )
 
@@ -1415,7 +1416,7 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__compare_radial_caustic_from_magnification_and_eigen_values__grid(self):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
         )
 
@@ -1452,10 +1453,10 @@ class TestCriticalCurvesAndCaustics(object):
         )
 
 
-class TestBinneGrids:
+class TestGridsBinning:
     def deflections_via_potential(self):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
@@ -1483,7 +1484,7 @@ class TestBinneGrids:
 
     def test__jacobian(self):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
@@ -1519,7 +1520,7 @@ class TestBinneGrids:
 
     def test__shear_via_jacobian(self):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
@@ -1553,7 +1554,7 @@ class TestBinneGrids:
 
     def test__tangential_eigen_values(self):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
@@ -1587,7 +1588,7 @@ class TestBinneGrids:
 
     def test__radial_eigen_values(self):
 
-        sie = am.mass_profiles.EllipticalIsothermal(
+        sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 

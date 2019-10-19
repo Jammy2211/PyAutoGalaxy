@@ -4,8 +4,6 @@ from scipy.optimize import root_scalar
 from astropy import cosmology as cosmo
 from skimage import measure
 
-
-import autofit as af
 from automodel import dimensions as dim
 from automodel.util import text_util
 from automodel.profiles import geometry_profiles
@@ -550,7 +548,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         )
 
         summary += [
-            af.text_util.label_value_and_unit_string(
+            text_util.label_value_and_unit_string(
                 label=prefix + "einstein_radius",
                 value=einstein_radius,
                 unit=unit_length,
@@ -567,7 +565,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         )
 
         summary += [
-            af.text_util.label_value_and_unit_string(
+            text_util.label_value_and_unit_string(
                 label=prefix + "einstein_mass",
                 value=einstein_mass,
                 unit=unit_mass,
