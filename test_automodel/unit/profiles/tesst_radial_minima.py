@@ -71,32 +71,32 @@ class TestExponential:
 
         exponential = am.EllipticalExponential(centre=(0.0, 0.0))
 
-        image_1 = exponentiam.profile_image_from_grid(grid=grid_01)
-        image_0 = exponentiam.profile_image_from_grid(
+        image_1 = exponential.profile_image_from_grid(grid=grid_01)
+        image_0 = exponential.profile_image_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
         exponential = am.EllipticalExponential(centre=(1.0, 1.0))
 
-        image_1 = exponentiam.profile_image_from_grid(grid=grid_22)
-        image_0 = exponentiam.profile_image_from_grid(
+        image_1 = exponential.profile_image_from_grid(grid=grid_22)
+        image_0 = exponential.profile_image_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
         exponential = am.SphericalExponential(centre=(0.0, 0.0))
 
-        image_1 = exponentiam.profile_image_from_grid(grid=grid_01)
-        image_0 = exponentiam.profile_image_from_grid(
+        image_1 = exponential.profile_image_from_grid(grid=grid_01)
+        image_0 = exponential.profile_image_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
         exponential = am.SphericalExponential(centre=(1.0, 1.0))
 
-        image_1 = exponentiam.profile_image_from_grid(grid=grid_22)
-        image_0 = exponentiam.profile_image_from_grid(
+        image_1 = exponential.profile_image_from_grid(grid=grid_22)
+        image_0 = exponential.profile_image_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert image_0 == pytest.approx(image_1, 1.0e-4)
@@ -740,64 +740,64 @@ class TestExponential(object):
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         exponential = am.EllipticalExponential(centre=(0.0, 0.0))
 
-        convergence_1 = exponentiam.convergence_from_grid(grid=grid_01)
-        convergence_0 = exponentiam.convergence_from_grid(
+        convergence_1 = exponential.convergence_from_grid(grid=grid_01)
+        convergence_0 = exponential.convergence_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
         exponential = am.EllipticalExponential(centre=(1.0, 1.0))
 
-        convergence_1 = exponentiam.convergence_from_grid(grid=grid_22)
-        convergence_0 = exponentiam.convergence_from_grid(
+        convergence_1 = exponential.convergence_from_grid(grid=grid_22)
+        convergence_0 = exponential.convergence_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
         exponential = am.SphericalExponential(centre=(0.0, 0.0))
 
-        convergence_1 = exponentiam.convergence_from_grid(grid=grid_01)
-        convergence_0 = exponentiam.convergence_from_grid(
+        convergence_1 = exponential.convergence_from_grid(grid=grid_01)
+        convergence_0 = exponential.convergence_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
         exponential = am.SphericalExponential(centre=(1.0, 1.0))
 
-        convergence_1 = exponentiam.convergence_from_grid(grid=grid_22)
-        convergence_0 = exponentiam.convergence_from_grid(
+        convergence_1 = exponential.convergence_from_grid(grid=grid_22)
+        convergence_0 = exponential.convergence_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
         exponential = am.EllipticalExponential(centre=(0.0, 0.0))
 
-        deflections_1 = exponentiam.deflections_from_grid(grid=grid_01)
-        deflections_0 = exponentiam.deflections_from_grid(
+        deflections_1 = exponential.deflections_from_grid(grid=grid_01)
+        deflections_0 = exponential.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         exponential = am.EllipticalExponential(centre=(1.0, 1.0))
 
-        deflections_1 = exponentiam.deflections_from_grid(grid=grid_22)
-        deflections_0 = exponentiam.deflections_from_grid(
+        deflections_1 = exponential.deflections_from_grid(grid=grid_22)
+        deflections_0 = exponential.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         exponential = am.SphericalExponential(centre=(0.0, 0.0))
 
-        deflections_1 = exponentiam.deflections_from_grid(grid=grid_01)
-        deflections_0 = exponentiam.deflections_from_grid(
+        deflections_1 = exponential.deflections_from_grid(grid=grid_01)
+        deflections_0 = exponential.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         exponential = am.SphericalExponential(centre=(1.0, 1.0))
 
-        deflections_1 = exponentiam.deflections_from_grid(grid=grid_22)
-        deflections_0 = exponentiam.deflections_from_grid(
+        deflections_1 = exponential.deflections_from_grid(grid=grid_22)
+        deflections_0 = exponential.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)

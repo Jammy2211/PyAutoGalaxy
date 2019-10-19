@@ -62,7 +62,7 @@ def test__individual_images_are_output(
         output_format="png",
     )
 
-    assert galaxy_plotter_path + "galaxy_potentiam.png" in plot_patch.paths
+    assert galaxy_plotter_path + "galaxy_potential.png" in plot_patch.paths
 
     am.galaxy_plotters.plot_deflections_y(
         galaxy=gal_x1_lp_x1_mp,
@@ -155,7 +155,7 @@ def test__individual_galaxy_quantities__all_are_output(
         output_format="png",
     )
 
-    assert galaxy_plotter_path + "galaxy_individual_potentiam.png" in plot_patch.paths
+    assert galaxy_plotter_path + "galaxy_individual_potential.png" in plot_patch.paths
 
     am.galaxy_plotters.plot_deflections_y_subplot(
         galaxy=gal_x1_lp_x1_mp,

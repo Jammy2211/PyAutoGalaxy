@@ -2,8 +2,8 @@ import numpy as np
 from astropy import cosmology as cosmo
 from scipy.integrate import quad
 
-import autofit as af
-from PyAutoModel.automodel import dimensions as dim
+import autoarray as aa
+from automodel import dimensions as dim
 from automodel.util import text_util
 from automodel.profiles import geometry_profiles
 
@@ -77,7 +77,7 @@ class LightProfile(object):
 class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
     """Generic class for an elliptical light profiles"""
 
-    @af.map_types
+    @dim.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -256,7 +256,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
 
 class EllipticalGaussian(EllipticalLightProfile):
-    @af.map_types
+    @dim.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -317,7 +317,7 @@ class EllipticalGaussian(EllipticalLightProfile):
 
 
 class SphericalGaussian(EllipticalGaussian):
-    @af.map_types
+    @dim.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -341,7 +341,7 @@ class SphericalGaussian(EllipticalGaussian):
 
 
 class AbstractEllipticalSersic(EllipticalLightProfile):
-    @af.map_types
+    @dim.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -429,7 +429,7 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
 
 class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
 
-    @af.map_types
+    @dim.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -508,7 +508,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
 
 
 class SphericalSersic(EllipticalSersic):
-    @af.map_types
+    @dim.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -540,7 +540,7 @@ class SphericalSersic(EllipticalSersic):
 
 
 class EllipticalExponential(EllipticalSersic):
-    @af.map_types
+    @dim.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -577,7 +577,7 @@ class EllipticalExponential(EllipticalSersic):
 
 
 class SphericalExponential(EllipticalExponential):
-    @af.map_types
+    @dim.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -607,7 +607,7 @@ class SphericalExponential(EllipticalExponential):
 
 
 class EllipticalDevVaucouleurs(EllipticalSersic):
-    @af.map_types
+    @dim.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -644,7 +644,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
 
 
 class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
-    @af.map_types
+    @dim.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -674,7 +674,7 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
 
 
 class EllipticalCoreSersic(EllipticalSersic):
-    @af.map_types
+    @dim.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -798,7 +798,7 @@ class EllipticalCoreSersic(EllipticalSersic):
 
 
 class SphericalCoreSersic(EllipticalCoreSersic):
-    @af.map_types
+    @dim.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),

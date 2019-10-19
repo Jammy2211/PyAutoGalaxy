@@ -168,9 +168,9 @@ class TestAbstractNFW(object):
         )
 
         nfw_arcsec = am.mass_profiles.SphericalNFW(
-            centre=(am.Length(0.0, "arcsec"), am.Length(0.0, "arcsec")),
+            centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
             kappa_s=1.0,
-            scale_radius=am.Length(1.0, "arcsec"),
+            scale_radius=am.dim.Length(1.0, "arcsec"),
         )
 
         rho = nfw_arcsec.rho_at_scale_radius_for_units(
@@ -232,9 +232,9 @@ class TestAbstractNFW(object):
         assert rho == pytest.approx(0.25 / 4.0, 1e-3)
 
         nfw_kpc = am.mass_profiles.SphericalNFW(
-            centre=(am.Length(0.0, "kpc"), am.Length(0.0, "kpc")),
+            centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
             kappa_s=1.0,
-            scale_radius=am.Length(1.0, "kpc"),
+            scale_radius=am.dim.Length(1.0, "kpc"),
         )
 
         cosmology = mock_cosmology.MockCosmology(
@@ -355,9 +355,9 @@ class TestAbstractNFW(object):
 
     def test__radius_at_200__different_length_units_include_conversions(self):
         nfw_arcsec = am.mass_profiles.SphericalNFW(
-            centre=(am.Length(0.0, "arcsec"), am.Length(0.0, "arcsec")),
+            centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
             kappa_s=1.0,
-            scale_radius=am.Length(1.0, "arcsec"),
+            scale_radius=am.dim.Length(1.0, "arcsec"),
         )
 
         cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=0.2, kpc_per_arcsec=5.0)
@@ -394,9 +394,9 @@ class TestAbstractNFW(object):
         assert radius_200 == 2.0 * concentration * 1.0
 
         nfw_kpc = am.mass_profiles.SphericalNFW(
-            centre=(am.Length(0.0, "kpc"), am.Length(0.0, "kpc")),
+            centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
             kappa_s=1.0,
-            scale_radius=am.Length(1.0, "kpc"),
+            scale_radius=am.dim.Length(1.0, "kpc"),
         )
 
         cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=0.2, kpc_per_arcsec=5.0)
@@ -612,8 +612,8 @@ class TestAbstractNFW(object):
 
         nfw = am.mass_profiles.SphericalTruncatedNFW(
             kappa_s=0.5,
-            scale_radius=am.Length(3.0, "kpc"),
-            truncation_radius=am.Length(7.0, "kpc"),
+            scale_radius=am.dim.Length(3.0, "kpc"),
+            truncation_radius=am.dim.Length(7.0, "kpc"),
         )
 
         rho = nfw.rho_at_scale_radius_for_units(
@@ -758,8 +758,8 @@ class TestGeneralizedNFW(object):
         )
 
         assert gnfw.centre == (1.0, 2.0)
-        assert isinstance(gnfw.centre[0], am.Length)
-        assert isinstance(gnfw.centre[1], am.Length)
+        assert isinstance(gnfw.centre[0], am.dim.Length)
+        assert isinstance(gnfw.centre[1], am.dim.Length)
         assert gnfw.centre[0].unit == "arcsec"
         assert gnfw.centre[1].unit == "arcsec"
 
@@ -776,7 +776,7 @@ class TestGeneralizedNFW(object):
         assert isinstance(gnfw.inner_slope, float)
 
         assert gnfw.scale_radius == 10.0
-        assert isinstance(gnfw.scale_radius, am.Length)
+        assert isinstance(gnfw.scale_radius, am.dim.Length)
         assert gnfw.scale_radius.unit_length == "arcsec"
 
     # def test__coord_func_x_above_1(self):
@@ -1003,7 +1003,7 @@ class TestGeneralizedNFW(object):
         # potential = gnfw.potential_from_grid(
         #     grid=grid)
         #
-        # assert potentiam.in_2d.shape == (2, 2)
+        # assert potential.in_2d.shape == (2, 2)
         #
         # deflections = gnfw.deflections_from_grid(
         #     grid=grid)
@@ -1018,7 +1018,7 @@ class TestGeneralizedNFW(object):
 
         potential = gnfw.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = gnfw.deflections_from_grid(grid=grid)
 
@@ -1033,8 +1033,8 @@ class TestTruncatedNFW(object):
         )
 
         assert truncated_nfw.centre == (1.0, 2.0)
-        assert isinstance(truncated_nfw.centre[0], am.Length)
-        assert isinstance(truncated_nfw.centre[1], am.Length)
+        assert isinstance(truncated_nfw.centre[0], am.dim.Length)
+        assert isinstance(truncated_nfw.centre[1], am.dim.Length)
         assert truncated_nfw.centre[0].unit == "arcsec"
         assert truncated_nfw.centre[1].unit == "arcsec"
 
@@ -1051,11 +1051,11 @@ class TestTruncatedNFW(object):
         assert isinstance(truncated_nfw.inner_slope, float)
 
         assert truncated_nfw.scale_radius == 10.0
-        assert isinstance(truncated_nfw.scale_radius, am.Length)
+        assert isinstance(truncated_nfw.scale_radius, am.dim.Length)
         assert truncated_nfw.scale_radius.unit_length == "arcsec"
 
         assert truncated_nfw.truncation_radius == 2.0
-        assert isinstance(truncated_nfw.truncation_radius, am.Length)
+        assert isinstance(truncated_nfw.truncation_radius, am.dim.Length)
         assert truncated_nfw.truncation_radius.unit_length == "arcsec"
 
     def test__convergence_correct_values(self):
@@ -1280,7 +1280,7 @@ class TestTruncatedNFW(object):
         )
 
         summary_text = nfw.summarize_in_units(
-            radii=[am.Length(10.0), am.Length(500.0)],
+            radii=[am.dim.Length(10.0), am.dim.Length(500.0)],
             prefix="nfw_",
             unit_length="kpc",
             unit_mass="solMass",
@@ -1359,7 +1359,7 @@ class TestTruncatedNFW(object):
 
         potential = truncated_nfw.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = truncated_nfw.deflections_from_grid(grid=grid)
 
@@ -1374,8 +1374,8 @@ class TestTruncatedNFWChallenge(object):
         )
 
         assert truncated_nfw.centre == (1.0, 2.0)
-        assert isinstance(truncated_nfw.centre[0], am.Length)
-        assert isinstance(truncated_nfw.centre[1], am.Length)
+        assert isinstance(truncated_nfw.centre[0], am.dim.Length)
+        assert isinstance(truncated_nfw.centre[1], am.dim.Length)
         assert truncated_nfw.centre[0].unit == "arcsec"
         assert truncated_nfw.centre[1].unit == "arcsec"
 
@@ -1392,13 +1392,13 @@ class TestTruncatedNFWChallenge(object):
         assert isinstance(truncated_nfw.inner_slope, float)
 
         assert truncated_nfw.scale_radius == 10.0
-        assert isinstance(truncated_nfw.scale_radius, am.Length)
+        assert isinstance(truncated_nfw.scale_radius, am.dim.Length)
         assert truncated_nfw.scale_radius.unit_length == "arcsec"
 
         assert truncated_nfw.truncation_radius == pytest.approx(
             2.0 * 189.26967095554755, 1.0e-4
         )
-        assert isinstance(truncated_nfw.truncation_radius, am.Length)
+        assert isinstance(truncated_nfw.truncation_radius, am.dim.Length)
         assert truncated_nfw.truncation_radius.unit_length == "arcsec"
 
 
@@ -1456,8 +1456,8 @@ class TestTruncatedNFWMassToConcentration(object):
         assert isinstance(truncated_nfw_mass.kappa_s, float)
 
         assert truncated_nfw_mass.centre == (1.0, 2.0)
-        assert isinstance(truncated_nfw_mass.centre[0], am.Length)
-        assert isinstance(truncated_nfw_mass.centre[1], am.Length)
+        assert isinstance(truncated_nfw_mass.centre[0], am.dim.Length)
+        assert isinstance(truncated_nfw_mass.centre[1], am.dim.Length)
         assert truncated_nfw_mass.centre[0].unit == "arcsec"
         assert truncated_nfw_mass.centre[1].unit == "arcsec"
 
@@ -1471,13 +1471,13 @@ class TestTruncatedNFWMassToConcentration(object):
         assert isinstance(truncated_nfw_mass.inner_slope, float)
 
         assert truncated_nfw_mass.scale_radius == pytest.approx(0.193017, 1.0e-4)
-        assert isinstance(truncated_nfw_mass.scale_radius, am.Length)
+        assert isinstance(truncated_nfw_mass.scale_radius, am.dim.Length)
         assert truncated_nfw_mass.scale_radius.unit_length == "arcsec"
 
         assert truncated_nfw_mass.truncation_radius == pytest.approx(
             33.1428053449, 1.0e-4
         )
-        assert isinstance(truncated_nfw_mass.truncation_radius, am.Length)
+        assert isinstance(truncated_nfw_mass.truncation_radius, am.dim.Length)
         assert truncated_nfw_mass.truncation_radius.unit_length == "arcsec"
 
     def test_summarize_in_units(self):
@@ -1489,7 +1489,7 @@ class TestTruncatedNFWMassToConcentration(object):
         )
 
         summary_text = nfw.summarize_in_units(
-            radii=[am.Length(10.0), am.Length(500.0)],
+            radii=[am.dim.Length(10.0), am.dim.Length(500.0)],
             prefix="nfw_",
             unit_length="kpc",
             unit_mass="solMass",
@@ -1568,7 +1568,7 @@ class TestTruncatedNFWMassToConcentration(object):
 
         potential = truncated_nfw.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = truncated_nfw.deflections_from_grid(grid=grid)
 
@@ -1583,8 +1583,8 @@ class TestNFW(object):
         )
 
         assert nfw.centre == (1.0, 2.0)
-        assert isinstance(nfw.centre[0], am.Length)
-        assert isinstance(nfw.centre[1], am.Length)
+        assert isinstance(nfw.centre[0], am.dim.Length)
+        assert isinstance(nfw.centre[1], am.dim.Length)
         assert nfw.centre[0].unit == "arcsec"
         assert nfw.centre[1].unit == "arcsec"
 
@@ -1601,7 +1601,7 @@ class TestNFW(object):
         assert isinstance(nfw.inner_slope, float)
 
         assert nfw.scale_radius == 10.0
-        assert isinstance(nfw.scale_radius, am.Length)
+        assert isinstance(nfw.scale_radius, am.dim.Length)
         assert nfw.scale_radius.unit_length == "arcsec"
 
         nfw = am.mass_profiles.SphericalNFW(
@@ -1609,8 +1609,8 @@ class TestNFW(object):
         )
 
         assert nfw.centre == (1.0, 2.0)
-        assert isinstance(nfw.centre[0], am.Length)
-        assert isinstance(nfw.centre[1], am.Length)
+        assert isinstance(nfw.centre[0], am.dim.Length)
+        assert isinstance(nfw.centre[1], am.dim.Length)
         assert nfw.centre[0].unit == "arcsec"
         assert nfw.centre[1].unit == "arcsec"
 
@@ -1627,7 +1627,7 @@ class TestNFW(object):
         assert isinstance(nfw.inner_slope, float)
 
         assert nfw.scale_radius == 10.0
-        assert isinstance(nfw.scale_radius, am.Length)
+        assert isinstance(nfw.scale_radius, am.dim.Length)
         assert nfw.scale_radius.unit_length == "arcsec"
 
     def test__convergence_correct_values(self):
@@ -1857,7 +1857,7 @@ class TestNFW(object):
 
         potential = nfw.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = nfw.deflections_from_grid(grid=grid)
 
@@ -1871,7 +1871,7 @@ class TestNFW(object):
 
         potential = nfw.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = nfw.deflections_from_grid(grid=grid)
 

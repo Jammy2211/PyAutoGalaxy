@@ -1,5 +1,5 @@
 import numpy as np
-from automodel import decorator_util
+from autoarray import decorator_util
 
 
 @decorator_util.jit()

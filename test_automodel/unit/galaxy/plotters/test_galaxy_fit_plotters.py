@@ -21,7 +21,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
     plot_patch,
     galaxy_fitting_plotter_path,
 ):
-    PyAutoModel.automodel.galaxy.plotters.galaxy_fit_plotters.plot_fit_subplot(
+    automodel.galaxy.plotters.galaxy_fit_plotters.plot_fit_subplot(
         fit=gal_fit_7x7_image,
         should_plot_mask=True,
         positions=positions_7x7,
@@ -33,7 +33,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
 
     assert galaxy_fitting_plotter_path + "galaxy_fit.png" in plot_patch.paths
 
-    PyAutoModel.automodel.galaxy.plotters.galaxy_fit_plotters.plot_fit_subplot(
+    automodel.galaxy.plotters.galaxy_fit_plotters.plot_fit_subplot(
         fit=gal_fit_7x7_convergence,
         should_plot_mask=True,
         positions=positions_7x7,
@@ -45,7 +45,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
 
     assert galaxy_fitting_plotter_path + "galaxy_fit.png" in plot_patch.paths
 
-    PyAutoModel.automodel.galaxy.plotters.galaxy_fit_plotters.plot_fit_subplot(
+    automodel.galaxy.plotters.galaxy_fit_plotters.plot_fit_subplot(
         fit=gal_fit_7x7_potential,
         should_plot_mask=True,
         positions=positions_7x7,
@@ -57,7 +57,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
 
     assert galaxy_fitting_plotter_path + "galaxy_fit.png" in plot_patch.paths
 
-    PyAutoModel.automodel.galaxy.plotters.galaxy_fit_plotters.plot_fit_subplot(
+    automodel.galaxy.plotters.galaxy_fit_plotters.plot_fit_subplot(
         fit=gal_fit_7x7_deflections_y,
         should_plot_mask=True,
         positions=positions_7x7,
@@ -69,7 +69,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
 
     assert galaxy_fitting_plotter_path + "galaxy_fit.png" in plot_patch.paths
 
-    PyAutoModel.automodel.galaxy.plotters.galaxy_fit_plotters.plot_fit_subplot(
+    automodel.galaxy.plotters.galaxy_fit_plotters.plot_fit_subplot(
         fit=gal_fit_7x7_deflections_x,
         should_plot_mask=True,
         positions=positions_7x7,

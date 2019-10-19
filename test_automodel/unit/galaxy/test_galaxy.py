@@ -99,7 +99,7 @@ class TestLightProfiles(object):
         def test__two_profile_galaxy__is_sum_of_individual_profiles(
             self, lp_0, lp_1, gal_x1_lp, gal_x2_lp
         ):
-            radius = am.Length(0.5, "arcsec")
+            radius = am.dim.Length(0.5, "arcsec")
 
             lp_luminosity = lp_0.luminosity_within_circle_in_units(
                 radius=radius, unit_luminosity="eps"
@@ -130,7 +130,7 @@ class TestLightProfiles(object):
                 arcsec_per_kpc=0.5, kpc_per_arcsec=2.0
             )
 
-            radius = am.Length(0.5, "arcsec")
+            radius = am.dim.Length(0.5, "arcsec")
 
             lp_luminosity_arcsec = lp_0.luminosity_within_circle_in_units(radius=radius)
             gal_luminosity_arcsec = gal_x1_lp.luminosity_within_circle_in_units(
@@ -139,7 +139,7 @@ class TestLightProfiles(object):
 
             assert lp_luminosity_arcsec == gal_luminosity_arcsec
 
-            radius = am.Length(0.5, "kpc")
+            radius = am.dim.Length(0.5, "kpc")
 
             lp_luminosity_kpc = lp_0.luminosity_within_circle_in_units(
                 radius=radius, redshift_profile=0.5, cosmology=cosmology
@@ -153,7 +153,7 @@ class TestLightProfiles(object):
         def test__luminosity_unit_conversions__multiply_by_exposure_time(
             self, lp_0, gal_x1_lp
         ):
-            radius = am.Length(0.5, "arcsec")
+            radius = am.dim.Length(0.5, "arcsec")
 
             lp_luminosity_eps = lp_0.luminosity_within_ellipse_in_units(
                 major_axis=radius, unit_luminosity="eps", exposure_time=2.0
@@ -679,7 +679,7 @@ class TestMassProfiles(object):
         def test__two_profile_galaxy__is_sum_of_individual_profiles(
             self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
         ):
-            radius = am.Length(0.5, "arcsec")
+            radius = am.dim.Length(0.5, "arcsec")
 
             mp_mass = mp_0.mass_within_circle_in_units(
                 radius=radius, unit_mass="angular"
@@ -711,7 +711,7 @@ class TestMassProfiles(object):
                 arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=1.0
             )
 
-            radius = am.Length(0.5, "arcsec")
+            radius = am.dim.Length(0.5, "arcsec")
 
             mp_mass_arcsec = mp_0.mass_within_circle_in_units(
                 radius=radius,
@@ -729,7 +729,7 @@ class TestMassProfiles(object):
             )
             assert mp_mass_arcsec == gal_mass_arcsec
 
-            radius = am.Length(0.5, "kpc")
+            radius = am.dim.Length(0.5, "kpc")
 
             mp_mass_kpc = mp_0.mass_within_circle_in_units(
                 radius=radius,
@@ -754,7 +754,7 @@ class TestMassProfiles(object):
                 arcsec_per_kpc=1.0, kpc_per_arcsec=1.0, critical_surface_density=2.0
             )
 
-            radius = am.Length(0.5, "arcsec")
+            radius = am.dim.Length(0.5, "arcsec")
 
             mp_mass_angular = mp_0.mass_within_ellipse_in_units(
                 major_axis=radius,
@@ -1571,7 +1571,7 @@ class TestSummarizeInUnits(object):
         )
 
         summary_text = gal_summarize.summarize_in_units(
-            radii=[am.Length(10.0), am.Length(500.0)],
+            radii=[am.dim.Length(10.0), am.dim.Length(500.0)],
             whitespace=50,
             unit_length="arcsec",
             unit_luminosity="eps",

@@ -11,13 +11,13 @@ class TestPointMass(object):
         point_mass = am.mass_profiles.PointMass(centre=(1.0, 2.0), einstein_radius=2.0)
 
         assert point_mass.centre == (1.0, 2.0)
-        assert isinstance(point_mass.centre[0], am.Length)
-        assert isinstance(point_mass.centre[1], am.Length)
+        assert isinstance(point_mass.centre[0], am.dim.Length)
+        assert isinstance(point_mass.centre[1], am.dim.Length)
         assert point_mass.centre[0].unit == "arcsec"
         assert point_mass.centre[1].unit == "arcsec"
 
         assert point_mass.einstein_radius == 2.0
-        assert isinstance(point_mass.einstein_radius, am.Length)
+        assert isinstance(point_mass.einstein_radius, am.dim.Length)
         assert point_mass.einstein_radius.unit_length == "arcsec"
 
     def test__deflections__correct_values(self):
@@ -181,8 +181,8 @@ class TestCoredPowerLaw(object):
         )
 
         assert cored_power_law.centre == (1.0, 2.0)
-        assert isinstance(cored_power_law.centre[0], am.Length)
-        assert isinstance(cored_power_law.centre[1], am.Length)
+        assert isinstance(cored_power_law.centre[0], am.dim.Length)
+        assert isinstance(cored_power_law.centre[1], am.dim.Length)
         assert cored_power_law.centre[0].unit == "arcsec"
         assert cored_power_law.centre[1].unit == "arcsec"
 
@@ -193,14 +193,14 @@ class TestCoredPowerLaw(object):
         assert isinstance(cored_power_law.phi, float)
 
         assert cored_power_law.einstein_radius == 1.0
-        assert isinstance(cored_power_law.einstein_radius, am.Length)
+        assert isinstance(cored_power_law.einstein_radius, am.dim.Length)
         assert cored_power_law.einstein_radius.unit_length == "arcsec"
 
         assert cored_power_law.slope == 2.2
         assert isinstance(cored_power_law.slope, float)
 
         assert cored_power_law.core_radius == 0.1
-        assert isinstance(cored_power_law.core_radius, am.Length)
+        assert isinstance(cored_power_law.core_radius, am.dim.Length)
         assert cored_power_law.core_radius.unit_length == "arcsec"
 
         assert cored_power_law.einstein_radius_rescaled == pytest.approx(
@@ -212,8 +212,8 @@ class TestCoredPowerLaw(object):
         )
 
         assert cored_power_law.centre == (1.0, 2.0)
-        assert isinstance(cored_power_law.centre[0], am.Length)
-        assert isinstance(cored_power_law.centre[1], am.Length)
+        assert isinstance(cored_power_law.centre[0], am.dim.Length)
+        assert isinstance(cored_power_law.centre[1], am.dim.Length)
         assert cored_power_law.centre[0].unit == "arcsec"
         assert cored_power_law.centre[1].unit == "arcsec"
 
@@ -224,14 +224,14 @@ class TestCoredPowerLaw(object):
         assert isinstance(cored_power_law.phi, float)
 
         assert cored_power_law.einstein_radius == 1.0
-        assert isinstance(cored_power_law.einstein_radius, am.Length)
+        assert isinstance(cored_power_law.einstein_radius, am.dim.Length)
         assert cored_power_law.einstein_radius.unit_length == "arcsec"
 
         assert cored_power_law.slope == 2.2
         assert isinstance(cored_power_law.slope, float)
 
         assert cored_power_law.core_radius == 0.1
-        assert isinstance(cored_power_law.core_radius, am.Length)
+        assert isinstance(cored_power_law.core_radius, am.dim.Length)
         assert cored_power_law.core_radius.unit_length == "arcsec"
 
         assert cored_power_law.einstein_radius_rescaled == pytest.approx(0.4, 1.0e-4)
@@ -614,7 +614,7 @@ class TestCoredPowerLaw(object):
         )
 
         summary_text = cored_power_law.summarize_in_units(
-            radii=[am.Length(10.0), am.Length(500.0)],
+            radii=[am.dim.Length(10.0), am.dim.Length(500.0)],
             prefix="pl_",
             unit_length="arcsec",
             unit_mass="angular",
@@ -660,7 +660,7 @@ class TestCoredPowerLaw(object):
 
         potential = cored_power_law.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = cored_power_law.deflections_from_grid(grid=grid)
 
@@ -674,7 +674,7 @@ class TestCoredPowerLaw(object):
 
         potential = cored_power_law.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = cored_power_law.deflections_from_grid(grid=grid)
 
@@ -688,8 +688,8 @@ class TestPowerLaw(object):
         )
 
         assert power_law.centre == (1.0, 2.0)
-        assert isinstance(power_law.centre[0], am.Length)
-        assert isinstance(power_law.centre[1], am.Length)
+        assert isinstance(power_law.centre[0], am.dim.Length)
+        assert isinstance(power_law.centre[1], am.dim.Length)
         assert power_law.centre[0].unit == "arcsec"
         assert power_law.centre[1].unit == "arcsec"
 
@@ -700,14 +700,14 @@ class TestPowerLaw(object):
         assert isinstance(power_law.phi, float)
 
         assert power_law.einstein_radius == 1.0
-        assert isinstance(power_law.einstein_radius, am.Length)
+        assert isinstance(power_law.einstein_radius, am.dim.Length)
         assert power_law.einstein_radius.unit_length == "arcsec"
 
         assert power_law.slope == 2.0
         assert isinstance(power_law.slope, float)
 
         assert power_law.core_radius == 0.0
-        assert isinstance(power_law.core_radius, am.Length)
+        assert isinstance(power_law.core_radius, am.dim.Length)
         assert power_law.core_radius.unit_length == "arcsec"
 
         assert power_law.einstein_radius_rescaled == pytest.approx(0.6666666666, 1.0e-4)
@@ -717,8 +717,8 @@ class TestPowerLaw(object):
         )
 
         assert power_law.centre == (1.0, 2.0)
-        assert isinstance(power_law.centre[0], am.Length)
-        assert isinstance(power_law.centre[1], am.Length)
+        assert isinstance(power_law.centre[0], am.dim.Length)
+        assert isinstance(power_law.centre[1], am.dim.Length)
         assert power_law.centre[0].unit == "arcsec"
         assert power_law.centre[1].unit == "arcsec"
 
@@ -729,14 +729,14 @@ class TestPowerLaw(object):
         assert isinstance(power_law.phi, float)
 
         assert power_law.einstein_radius == 1.0
-        assert isinstance(power_law.einstein_radius, am.Length)
+        assert isinstance(power_law.einstein_radius, am.dim.Length)
         assert power_law.einstein_radius.unit_length == "arcsec"
 
         assert power_law.slope == 2.0
         assert isinstance(power_law.slope, float)
 
         assert power_law.core_radius == 0.0
-        assert isinstance(power_law.core_radius, am.Length)
+        assert isinstance(power_law.core_radius, am.dim.Length)
         assert power_law.core_radius.unit_length == "arcsec"
 
         assert power_law.einstein_radius_rescaled == pytest.approx(0.5, 1.0e-4)
@@ -1031,7 +1031,7 @@ class TestPowerLaw(object):
 
         potential = power_law.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = power_law.deflections_from_grid(grid=grid)
 
@@ -1045,7 +1045,7 @@ class TestPowerLaw(object):
 
         potential = power_law.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = power_law.deflections_from_grid(grid=grid)
 
@@ -1063,8 +1063,8 @@ class TestCoredIsothermal(object):
         )
 
         assert cored_isothermam.centre == (1.0, 2.0)
-        assert isinstance(cored_isothermam.centre[0], am.Length)
-        assert isinstance(cored_isothermam.centre[1], am.Length)
+        assert isinstance(cored_isothermam.centre[0], am.dim.Length)
+        assert isinstance(cored_isothermam.centre[1], am.dim.Length)
         assert cored_isothermam.centre[0].unit == "arcsec"
         assert cored_isothermam.centre[1].unit == "arcsec"
 
@@ -1075,14 +1075,14 @@ class TestCoredIsothermal(object):
         assert isinstance(cored_isothermam.phi, float)
 
         assert cored_isothermam.einstein_radius == 1.0
-        assert isinstance(cored_isothermam.einstein_radius, am.Length)
+        assert isinstance(cored_isothermam.einstein_radius, am.dim.Length)
         assert cored_isothermam.einstein_radius.unit_length == "arcsec"
 
         assert cored_isothermam.slope == 2.0
         assert isinstance(cored_isothermam.slope, float)
 
         assert cored_isothermam.core_radius == 0.1
-        assert isinstance(cored_isothermam.core_radius, am.Length)
+        assert isinstance(cored_isothermam.core_radius, am.dim.Length)
         assert cored_isothermam.core_radius.unit_length == "arcsec"
 
         assert cored_isothermam.einstein_radius_rescaled == pytest.approx(
@@ -1094,8 +1094,8 @@ class TestCoredIsothermal(object):
         )
 
         assert cored_isothermam.centre == (1.0, 2.0)
-        assert isinstance(cored_isothermam.centre[0], am.Length)
-        assert isinstance(cored_isothermam.centre[1], am.Length)
+        assert isinstance(cored_isothermam.centre[0], am.dim.Length)
+        assert isinstance(cored_isothermam.centre[1], am.dim.Length)
         assert cored_isothermam.centre[0].unit == "arcsec"
         assert cored_isothermam.centre[1].unit == "arcsec"
 
@@ -1106,14 +1106,14 @@ class TestCoredIsothermal(object):
         assert isinstance(cored_isothermam.phi, float)
 
         assert cored_isothermam.einstein_radius == 1.0
-        assert isinstance(cored_isothermam.einstein_radius, am.Length)
+        assert isinstance(cored_isothermam.einstein_radius, am.dim.Length)
         assert cored_isothermam.einstein_radius.unit_length == "arcsec"
 
         assert cored_isothermam.slope == 2.0
         assert isinstance(cored_isothermam.slope, float)
 
         assert cored_isothermam.core_radius == 0.1
-        assert isinstance(cored_isothermam.core_radius, am.Length)
+        assert isinstance(cored_isothermam.core_radius, am.dim.Length)
         assert cored_isothermam.core_radius.unit_length == "arcsec"
 
         assert cored_isothermam.einstein_radius_rescaled == pytest.approx(0.5, 1.0e-4)
@@ -1434,7 +1434,7 @@ class TestCoredIsothermal(object):
 
         potential = cored_isothermam.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = cored_isothermam.deflections_from_grid(grid=grid)
 
@@ -1448,7 +1448,7 @@ class TestCoredIsothermal(object):
 
         potential = cored_isothermam.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = cored_isothermam.deflections_from_grid(grid=grid)
 
@@ -1462,8 +1462,8 @@ class TestIsothermal(object):
         )
 
         assert isothermam.centre == (1.0, 2.0)
-        assert isinstance(isothermam.centre[0], am.Length)
-        assert isinstance(isothermam.centre[1], am.Length)
+        assert isinstance(isothermam.centre[0], am.dim.Length)
+        assert isinstance(isothermam.centre[1], am.dim.Length)
         assert isothermam.centre[0].unit == "arcsec"
         assert isothermam.centre[1].unit == "arcsec"
 
@@ -1474,14 +1474,14 @@ class TestIsothermal(object):
         assert isinstance(isothermam.phi, float)
 
         assert isothermam.einstein_radius == 1.0
-        assert isinstance(isothermam.einstein_radius, am.Length)
+        assert isinstance(isothermam.einstein_radius, am.dim.Length)
         assert isothermam.einstein_radius.unit_length == "arcsec"
 
         assert isothermam.slope == 2.0
         assert isinstance(isothermam.slope, float)
 
         assert isothermam.core_radius == 0.0
-        assert isinstance(isothermam.core_radius, am.Length)
+        assert isinstance(isothermam.core_radius, am.dim.Length)
         assert isothermam.core_radius.unit_length == "arcsec"
 
         assert isothermam.einstein_radius_rescaled == pytest.approx(
@@ -1493,8 +1493,8 @@ class TestIsothermal(object):
         )
 
         assert isothermam.centre == (1.0, 2.0)
-        assert isinstance(isothermam.centre[0], am.Length)
-        assert isinstance(isothermam.centre[1], am.Length)
+        assert isinstance(isothermam.centre[0], am.dim.Length)
+        assert isinstance(isothermam.centre[1], am.dim.Length)
         assert isothermam.centre[0].unit == "arcsec"
         assert isothermam.centre[1].unit == "arcsec"
 
@@ -1505,14 +1505,14 @@ class TestIsothermal(object):
         assert isinstance(isothermam.phi, float)
 
         assert isothermam.einstein_radius == 1.0
-        assert isinstance(isothermam.einstein_radius, am.Length)
+        assert isinstance(isothermam.einstein_radius, am.dim.Length)
         assert isothermam.einstein_radius.unit_length == "arcsec"
 
         assert isothermam.slope == 2.0
         assert isinstance(isothermam.slope, float)
 
         assert isothermam.core_radius == 0.0
-        assert isinstance(isothermam.core_radius, am.Length)
+        assert isinstance(isothermam.core_radius, am.dim.Length)
         assert isothermam.core_radius.unit_length == "arcsec"
 
         assert isothermam.einstein_radius_rescaled == pytest.approx(0.5, 1.0e-4)
@@ -1772,7 +1772,7 @@ class TestIsothermal(object):
 
         potential = isothermam.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = isothermam.deflections_from_grid(grid=grid)
 
@@ -1786,7 +1786,7 @@ class TestIsothermal(object):
 
         potential = isothermam.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = isothermam.deflections_from_grid(grid=grid)
 

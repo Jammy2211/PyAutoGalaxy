@@ -12,8 +12,8 @@ class TestMassSheet(object):
         mass_sheet = am.mass_profiles.MassSheet(centre=(1.0, 2.0), kappa=2.0)
 
         assert mass_sheet.centre == (1.0, 2.0)
-        assert isinstance(mass_sheet.centre[0], am.Length)
-        assert isinstance(mass_sheet.centre[1], am.Length)
+        assert isinstance(mass_sheet.centre[0], am.dim.Length)
+        assert isinstance(mass_sheet.centre[1], am.dim.Length)
         assert mass_sheet.centre[0].unit == "arcsec"
         assert mass_sheet.centre[1].unit == "arcsec"
 
@@ -185,7 +185,7 @@ class TestMassSheet(object):
 
         potential = mass_sheet.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = mass_sheet.deflections_from_grid(grid=grid)
 
@@ -251,7 +251,7 @@ class TestExternalShear(object):
 
         potential = shear.potential_from_grid(grid=grid)
 
-        assert potentiam.in_2d.shape == (2, 2)
+        assert potential.in_2d.shape == (2, 2)
 
         deflections = shear.deflections_from_grid(grid=grid)
 

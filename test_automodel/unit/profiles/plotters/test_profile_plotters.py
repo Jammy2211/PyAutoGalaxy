@@ -55,7 +55,7 @@ def test__all_quantities_are_output(
         output_format="png",
     )
 
-    assert profile_plotter_path + "potentiam.png" in plot_patch.paths
+    assert profile_plotter_path + "potential.png" in plot_patch.paths
 
     am.profile_plotters.plot_deflections_y(
         mass_profile=mp_0,

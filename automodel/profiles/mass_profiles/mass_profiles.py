@@ -6,7 +6,7 @@ from skimage import measure
 
 
 import autofit as af
-from PyAutoModel.automodel import dimensions as dim
+from automodel import dimensions as dim
 from automodel.util import text_util
 from automodel.profiles import geometry_profiles
 
@@ -84,7 +84,7 @@ class MassProfile(object):
 
 # noinspection PyAbstractClass
 class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
-    @af.map_types
+    @dim.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -346,8 +346,8 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
 
         potential = self.potential_from_grid(grid=grid)
 
-        deflections_y_2d = np.gradient(potentiam.in_2d, grid.in_2d[:, 0, 0], axis=0)
-        deflections_x_2d = np.gradient(potentiam.in_2d, grid.in_2d[0, :, 1], axis=1)
+        deflections_y_2d = np.gradient(potential.in_2d, grid.in_2d[:, 0, 0], axis=0)
+        deflections_x_2d = np.gradient(potential.in_2d, grid.in_2d[0, :, 1], axis=1)
 
         return grid.mask.mapping.grid_from_sub_grid_2d(
             sub_grid_2d=np.stack((deflections_y_2d, deflections_x_2d), axis=-1)

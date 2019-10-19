@@ -25,8 +25,8 @@ class TestEinsteinRadiusMass(object):
         cosmology = mock_cosmology.MockCosmology(kpc_per_arcsec=2.0)
 
         sis_arcsec = am.mass_profiles.SphericalIsothermal(
-            centre=(am.Length(0.0, "arcsec"), am.Length(0.0, "arcsec")),
-            einstein_radius=am.Length(2.0, "arcsec"),
+            centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
+            einstein_radius=am.dim.Length(2.0, "arcsec"),
         )
 
         radius = sis_arcsec.average_convergence_of_1_radius_in_units(
@@ -43,8 +43,8 @@ class TestEinsteinRadiusMass(object):
         assert radius == pytest.approx(4.0, 1e-4)
 
         sis_kpc = am.mass_profiles.SphericalIsothermal(
-            centre=(am.Length(0.0, "kpc"), am.Length(0.0, "kpc")),
-            einstein_radius=am.Length(2.0, "kpc"),
+            centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
+            einstein_radius=am.dim.Length(2.0, "kpc"),
         )
 
         radius = sis_kpc.average_convergence_of_1_radius_in_units(unit_length="kpc")
@@ -59,9 +59,9 @@ class TestEinsteinRadiusMass(object):
         assert radius == pytest.approx(1.0, 1e-4)
 
         nfw_arcsec = am.mass_profiles.SphericalNFW(
-            centre=(am.Length(0.0, "arcsec"), am.Length(0.0, "arcsec")),
+            centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
             kappa_s=0.5,
-            scale_radius=am.Length(5.0, "arcsec"),
+            scale_radius=am.dim.Length(5.0, "arcsec"),
         )
 
         radius = nfw_arcsec.average_convergence_of_1_radius_in_units(
@@ -80,9 +80,9 @@ class TestEinsteinRadiusMass(object):
         assert radius == pytest.approx(2.0 * 2.76386, 1e-4)
 
         nfw_kpc = am.mass_profiles.SphericalNFW(
-            centre=(am.Length(0.0, "kpc"), am.Length(0.0, "kpc")),
+            centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
             kappa_s=0.5,
-            scale_radius=am.Length(5.0, "kpc"),
+            scale_radius=am.dim.Length(5.0, "kpc"),
         )
 
         radius = nfw_kpc.average_convergence_of_1_radius_in_units(
@@ -105,8 +105,8 @@ class TestEinsteinRadiusMass(object):
         )
 
         sis_arcsec = am.mass_profiles.SphericalIsothermal(
-            centre=(am.Length(0.0, "arcsec"), am.Length(0.0, "arcsec")),
-            einstein_radius=am.Length(1.0, "arcsec"),
+            centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
+            einstein_radius=am.dim.Length(1.0, "arcsec"),
         )
 
         mass = sis_arcsec.einstein_mass_in_units(
@@ -123,8 +123,8 @@ class TestEinsteinRadiusMass(object):
         assert mass == pytest.approx(2.0 * np.pi, 1e-4)
 
         sis_kpc = am.mass_profiles.SphericalIsothermal(
-            centre=(am.Length(0.0, "kpc"), am.Length(0.0, "kpc")),
-            einstein_radius=am.Length(2.0, "kpc"),
+            centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
+            einstein_radius=am.dim.Length(2.0, "kpc"),
         )
 
         mass = sis_kpc.einstein_mass_in_units(
@@ -141,9 +141,9 @@ class TestEinsteinRadiusMass(object):
         assert mass == pytest.approx(2.0 * np.pi, 1e-4)
 
         nfw_arcsec = am.mass_profiles.SphericalNFW(
-            centre=(am.Length(0.0, "arcsec"), am.Length(0.0, "arcsec")),
+            centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
             kappa_s=0.5,
-            scale_radius=am.Length(5.0, "arcsec"),
+            scale_radius=am.dim.Length(5.0, "arcsec"),
         )
 
         mass = nfw_arcsec.einstein_mass_in_units(
@@ -160,9 +160,9 @@ class TestEinsteinRadiusMass(object):
         assert mass == pytest.approx(2.0 * np.pi * 2.76386 ** 2.0, 1e-4)
 
         nfw_kpc = am.mass_profiles.SphericalNFW(
-            centre=(am.Length(0.0, "kpc"), am.Length(0.0, "kpc")),
+            centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
             kappa_s=0.5,
-            scale_radius=am.Length(5.0, "kpc"),
+            scale_radius=am.dim.Length(5.0, "kpc"),
         )
 
         mass = nfw_kpc.einstein_mass_in_units(
@@ -207,7 +207,7 @@ class TestMassWithinCircle(object):
 
         sis = am.mass_profiles.SphericalIsothermal(einstein_radius=2.0)
 
-        radius = am.Length(2.0, "arcsec")
+        radius = am.dim.Length(2.0, "arcsec")
 
         mass = sis.mass_within_circle_in_units(
             radius=radius,
@@ -219,7 +219,7 @@ class TestMassWithinCircle(object):
 
         sis = am.mass_profiles.SphericalIsothermal(einstein_radius=4.0)
 
-        radius = am.Length(4.0, "arcsec")
+        radius = am.dim.Length(4.0, "arcsec")
 
         mass = sis.mass_within_circle_in_units(
             radius=radius,
@@ -233,7 +233,7 @@ class TestMassWithinCircle(object):
 
         sis = am.mass_profiles.SphericalIsothermal(einstein_radius=2.0)
 
-        radius = am.Length(1.0, "arcsec")
+        radius = am.dim.Length(1.0, "arcsec")
 
         mass_grid = mass_within_radius_of_profile_from_grid_calculation(
             radius=radius, profile=sis
@@ -257,11 +257,11 @@ class TestMassWithinCircle(object):
         # arcsec -> arcsec
 
         sis_arcsec = am.mass_profiles.SphericalIsothermal(
-            centre=(am.Length(0.0, "arcsec"), am.Length(0.0, "arcsec")),
-            einstein_radius=am.Length(2.0, "arcsec"),
+            centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
+            einstein_radius=am.dim.Length(2.0, "arcsec"),
         )
 
-        radius = am.Length(2.0, "arcsec")
+        radius = am.dim.Length(2.0, "arcsec")
         mass = sis_arcsec.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -274,7 +274,7 @@ class TestMassWithinCircle(object):
 
         # arcsec -> kpc
 
-        radius = am.Length(2.0, "kpc")
+        radius = am.dim.Length(2.0, "kpc")
         mass = sis_arcsec.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -286,7 +286,7 @@ class TestMassWithinCircle(object):
 
         # 2.0 arcsec = 4.0 kpc, same masses.
 
-        radius = am.Length(2.0, "arcsec")
+        radius = am.dim.Length(2.0, "arcsec")
         mass_arcsec = sis_arcsec.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -294,7 +294,7 @@ class TestMassWithinCircle(object):
             unit_mass="angular",
             cosmology=cosmology,
         )
-        radius = am.Length(4.0, "kpc")
+        radius = am.dim.Length(4.0, "kpc")
         mass_kpc = sis_arcsec.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -307,11 +307,11 @@ class TestMassWithinCircle(object):
         # kpc -> kpc
 
         sis_kpc = am.mass_profiles.SphericalIsothermal(
-            centre=(am.Length(0.0, "kpc"), am.Length(0.0, "kpc")),
-            einstein_radius=am.Length(2.0, "kpc"),
+            centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
+            einstein_radius=am.dim.Length(2.0, "kpc"),
         )
 
-        radius = am.Length(2.0, "kpc")
+        radius = am.dim.Length(2.0, "kpc")
         mass = sis_kpc.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -323,7 +323,7 @@ class TestMassWithinCircle(object):
 
         # kpc -> arcsec
 
-        radius = am.Length(2.0, "arcsec")
+        radius = am.dim.Length(2.0, "arcsec")
         mass = sis_kpc.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -337,7 +337,7 @@ class TestMassWithinCircle(object):
 
         # 2.0 arcsec = 4.0 kpc, same masses.
 
-        radius = am.Length(2.0, "arcsec")
+        radius = am.dim.Length(2.0, "arcsec")
         mass_arcsec = sis_kpc.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -345,7 +345,7 @@ class TestMassWithinCircle(object):
             unit_mass="angular",
             cosmology=cosmology,
         )
-        radius = am.Length(4.0, "kpc")
+        radius = am.dim.Length(4.0, "kpc")
         mass_kpc = sis_kpc.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -361,7 +361,7 @@ class TestMassWithinCircle(object):
         cosmology = mock_cosmology.MockCosmology(critical_surface_density=2.0)
 
         sis = am.mass_profiles.SphericalIsothermal(einstein_radius=2.0)
-        radius = am.Length(2.0, "arcsec")
+        radius = am.dim.Length(2.0, "arcsec")
 
         mass = sis.mass_within_circle_in_units(
             radius=radius,
@@ -398,7 +398,7 @@ class TestMassWithinEllipse(object):
 
         sis = am.mass_profiles.SphericalIsothermal(einstein_radius=2.0)
 
-        radius = am.Length(2.0)
+        radius = am.dim.Length(2.0)
         mass_circle = sis.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -416,7 +416,7 @@ class TestMassWithinEllipse(object):
         sie = am.mass_profiles.EllipticalIsothermal(
             einstein_radius=2.0, axis_ratio=0.5, phi=0.0
         )
-        radius = am.Length(2.0)
+        radius = am.dim.Length(2.0)
         mass_circle = sie.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -439,7 +439,7 @@ class TestMassWithinEllipse(object):
             einstein_radius=2.0, axis_ratio=0.5, phi=0.0
         )
 
-        radius = am.Length(0.5)
+        radius = am.dim.Length(0.5)
 
         mass_grid = mass_within_radius_of_profile_from_grid_calculation(
             radius=radius, profile=sie
@@ -464,11 +464,11 @@ class TestMassWithinEllipse(object):
         # arcsec -> arcsec
 
         sie_arcsec = am.mass_profiles.SphericalIsothermal(
-            centre=(am.Length(0.0, "arcsec"), am.Length(0.0, "arcsec")),
-            einstein_radius=am.Length(2.0, "arcsec"),
+            centre=(am.dim.Length(0.0, "arcsec"), am.dim.Length(0.0, "arcsec")),
+            einstein_radius=am.dim.Length(2.0, "arcsec"),
         )
 
-        major_axis = am.Length(0.5, "arcsec")
+        major_axis = am.dim.Length(0.5, "arcsec")
 
         mass_grid = mass_within_radius_of_profile_from_grid_calculation(
             radius=major_axis, profile=sie_arcsec
@@ -484,7 +484,7 @@ class TestMassWithinEllipse(object):
 
         # arcsec -> kpc
 
-        major_axis = am.Length(0.5, "kpc")
+        major_axis = am.dim.Length(0.5, "kpc")
         mass = sie_arcsec.mass_within_ellipse_in_units(
             major_axis=major_axis,
             redshift_profile=0.5,
@@ -496,7 +496,7 @@ class TestMassWithinEllipse(object):
 
         # 2.0 arcsec = 4.0 kpc, same masses.
 
-        radius = am.Length(2.0, "arcsec")
+        radius = am.dim.Length(2.0, "arcsec")
         mass_arcsec = sie_arcsec.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -504,7 +504,7 @@ class TestMassWithinEllipse(object):
             unit_mass="angular",
             cosmology=cosmology,
         )
-        radius = am.Length(4.0, "kpc")
+        radius = am.dim.Length(4.0, "kpc")
         mass_kpc = sie_arcsec.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -517,11 +517,11 @@ class TestMassWithinEllipse(object):
         # kpc -> kpc
 
         sie_kpc = am.mass_profiles.SphericalIsothermal(
-            centre=(am.Length(0.0, "kpc"), am.Length(0.0, "kpc")),
-            einstein_radius=am.Length(2.0, "kpc"),
+            centre=(am.dim.Length(0.0, "kpc"), am.dim.Length(0.0, "kpc")),
+            einstein_radius=am.dim.Length(2.0, "kpc"),
         )
 
-        major_axis = am.Length(0.5, "kpc")
+        major_axis = am.dim.Length(0.5, "kpc")
         mass = sie_kpc.mass_within_ellipse_in_units(
             major_axis=major_axis,
             redshift_profile=0.5,
@@ -532,7 +532,7 @@ class TestMassWithinEllipse(object):
 
         # kpc -> arcsec
 
-        major_axis = am.Length(0.5, "arcsec")
+        major_axis = am.dim.Length(0.5, "arcsec")
         mass = sie_kpc.mass_within_ellipse_in_units(
             major_axis=major_axis,
             redshift_profile=0.5,
@@ -544,7 +544,7 @@ class TestMassWithinEllipse(object):
 
         # 2.0 arcsec = 4.0 kpc, same masses.
 
-        radius = am.Length(2.0, "arcsec")
+        radius = am.dim.Length(2.0, "arcsec")
         mass_arcsec = sie_kpc.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -552,7 +552,7 @@ class TestMassWithinEllipse(object):
             unit_mass="angular",
             cosmology=cosmology,
         )
-        radius = am.Length(4.0, "kpc")
+        radius = am.dim.Length(4.0, "kpc")
         mass_kpc = sie_kpc.mass_within_circle_in_units(
             radius=radius,
             redshift_profile=0.5,
@@ -571,7 +571,7 @@ class TestMassWithinEllipse(object):
             einstein_radius=2.0, axis_ratio=0.5, phi=0.0
         )
 
-        radius = am.Length(2.0, "arcsec")
+        radius = am.dim.Length(2.0, "arcsec")
 
         mass_grid = mass_within_radius_of_profile_from_grid_calculation(
             radius=radius, profile=sie
@@ -587,7 +587,7 @@ class TestMassWithinEllipse(object):
         # Large errors required due to cusp at center of SIE - can get to errors of 0.01 for a 400 x 400 grid.
         assert mass_grid == pytest.approx(radius * sie.axis_ratio * mass, 0.1)
 
-        critical_surface_density = am.MassOverLength2(2.0, "arcsec", "solMass")
+        critical_surface_density = am.dim.MassOverLength2(2.0, "arcsec", "solMass")
         mass = sie.mass_within_ellipse_in_units(
             major_axis=radius,
             redshift_profile=0.5,
@@ -612,8 +612,8 @@ class TestDensityBetweenAnnuli(object):
             centre=(0.0, 0.0), einstein_radius=einstein_radius
         )
 
-        inner_annuli_radius = am.Length(2.0, "arcsec")
-        outer_annuli_radius = am.Length(3.0, "arcsec")
+        inner_annuli_radius = am.dim.Length(2.0, "arcsec")
+        outer_annuli_radius = am.dim.Length(3.0, "arcsec")
 
         inner_mass = math.pi * einstein_radius * inner_annuli_radius
         outer_mass = math.pi * einstein_radius * outer_annuli_radius
@@ -686,22 +686,22 @@ class TestDensityBetweenAnnuli(object):
         )
 
         inner_mass = nfw.mass_within_circle_in_units(
-            radius=am.Length(1.0),
+            radius=am.dim.Length(1.0),
             redshift_profile=0.5,
             redshift_source=1.0,
             unit_mass="angular",
         )
 
         outer_mass = nfw.mass_within_circle_in_units(
-            radius=am.Length(2.0),
+            radius=am.dim.Length(2.0),
             redshift_profile=0.5,
             redshift_source=1.0,
             unit_mass="angular",
         )
 
         density_between_annuli = nfw.density_between_circular_annuli_in_angular_units(
-            inner_annuli_radius=am.Length(1.0),
-            outer_annuli_radius=am.Length(2.0),
+            inner_annuli_radius=am.dim.Length(1.0),
+            outer_annuli_radius=am.dim.Length(2.0),
             unit_length="arcsec",
             unit_mass="angular",
             redshift_profile=0.5,

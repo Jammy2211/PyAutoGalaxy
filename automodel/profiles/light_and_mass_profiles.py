@@ -1,4 +1,4 @@
-from PyAutoModel.automodel import dimensions as dim
+from automodel import dimensions as dim
 from automodel.profiles import light_profiles as lp
 from automodel.profiles import mass_profiles as mp
 
@@ -142,7 +142,7 @@ class SphericalExponential(EllipticalExponential):
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles
         """
-        EllipticalExponentiam.__init__(
+        EllipticalExponential.__init__(
             self,
             centre=centre,
             axis_ratio=1.0,

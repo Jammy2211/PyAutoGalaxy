@@ -19,8 +19,8 @@ class TestSersic(object):
         )
 
         assert sersic.centre == (1.0, 2.0)
-        assert isinstance(sersic.centre[0], am.Length)
-        assert isinstance(sersic.centre[1], am.Length)
+        assert isinstance(sersic.centre[0], am.dim.Length)
+        assert isinstance(sersic.centre[1], am.dim.Length)
         assert sersic.centre[0].unit == "arcsec"
         assert sersic.centre[1].unit == "arcsec"
 
@@ -31,18 +31,18 @@ class TestSersic(object):
         assert isinstance(sersic.phi, float)
 
         assert sersic.intensity == 1.0
-        assert isinstance(sersic.intensity, am.Luminosity)
+        assert isinstance(sersic.intensity, am.dim.Luminosity)
         assert sersic.intensity.unit == "eps"
 
         assert sersic.effective_radius == 0.6
-        assert isinstance(sersic.effective_radius, am.Length)
+        assert isinstance(sersic.effective_radius, am.dim.Length)
         assert sersic.effective_radius.unit_length == "arcsec"
 
         assert sersic.sersic_index == 4.0
         assert isinstance(sersic.sersic_index, float)
 
         assert sersic.mass_to_light_ratio == 10.0
-        assert isinstance(sersic.mass_to_light_ratio, am.MassOverLuminosity)
+        assert isinstance(sersic.mass_to_light_ratio, am.dim.MassOverLuminosity)
         assert sersic.mass_to_light_ratio.unit == "angular / eps"
 
         assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
@@ -57,8 +57,8 @@ class TestSersic(object):
         )
 
         assert sersic.centre == (1.0, 2.0)
-        assert isinstance(sersic.centre[0], am.Length)
-        assert isinstance(sersic.centre[1], am.Length)
+        assert isinstance(sersic.centre[0], am.dim.Length)
+        assert isinstance(sersic.centre[1], am.dim.Length)
         assert sersic.centre[0].unit == "arcsec"
         assert sersic.centre[1].unit == "arcsec"
 
@@ -69,18 +69,18 @@ class TestSersic(object):
         assert isinstance(sersic.phi, float)
 
         assert sersic.intensity == 1.0
-        assert isinstance(sersic.intensity, am.Luminosity)
+        assert isinstance(sersic.intensity, am.dim.Luminosity)
         assert sersic.intensity.unit == "eps"
 
         assert sersic.effective_radius == 0.6
-        assert isinstance(sersic.effective_radius, am.Length)
+        assert isinstance(sersic.effective_radius, am.dim.Length)
         assert sersic.effective_radius.unit_length == "arcsec"
 
         assert sersic.sersic_index == 4.0
         assert isinstance(sersic.sersic_index, float)
 
         assert sersic.mass_to_light_ratio == 10.0
-        assert isinstance(sersic.mass_to_light_ratio, am.MassOverLuminosity)
+        assert isinstance(sersic.mass_to_light_ratio, am.dim.MassOverLuminosity)
         assert sersic.mass_to_light_ratio.unit == "angular / eps"
 
         assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
@@ -354,7 +354,7 @@ class TestSersic(object):
         # potential = sersic.potential_from_grid(
         #     grid=grid)
         #
-        # assert potentiam.shape == (2, 2)
+        # assert potential.shape == (2, 2)
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
@@ -369,7 +369,7 @@ class TestSersic(object):
         # potential = sersic.potential_from_grid(
         #     grid=grid)
         #
-        # assert potentiam.shape == (2, 2)
+        # assert potential.shape == (2, 2)
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
@@ -387,35 +387,35 @@ class TestExponential(object):
             mass_to_light_ratio=10.0,
         )
 
-        assert exponentiam.centre == (1.0, 2.0)
-        assert isinstance(exponentiam.centre[0], am.Length)
-        assert isinstance(exponentiam.centre[1], am.Length)
-        assert exponentiam.centre[0].unit == "arcsec"
-        assert exponentiam.centre[1].unit == "arcsec"
+        assert exponential.centre == (1.0, 2.0)
+        assert isinstance(exponential.centre[0], am.dim.Length)
+        assert isinstance(exponential.centre[1], am.dim.Length)
+        assert exponential.centre[0].unit == "arcsec"
+        assert exponential.centre[1].unit == "arcsec"
 
-        assert exponentiam.axis_ratio == 0.5
-        assert isinstance(exponentiam.axis_ratio, float)
+        assert exponential.axis_ratio == 0.5
+        assert isinstance(exponential.axis_ratio, float)
 
-        assert exponentiam.phi == 45.0
-        assert isinstance(exponentiam.phi, float)
+        assert exponential.phi == 45.0
+        assert isinstance(exponential.phi, float)
 
-        assert exponentiam.intensity == 1.0
-        assert isinstance(exponentiam.intensity, am.Luminosity)
-        assert exponentiam.intensity.unit == "eps"
+        assert exponential.intensity == 1.0
+        assert isinstance(exponential.intensity, am.dim.Luminosity)
+        assert exponential.intensity.unit == "eps"
 
-        assert exponentiam.effective_radius == 0.6
-        assert isinstance(exponentiam.effective_radius, am.Length)
-        assert exponentiam.effective_radius.unit_length == "arcsec"
+        assert exponential.effective_radius == 0.6
+        assert isinstance(exponential.effective_radius, am.dim.Length)
+        assert exponential.effective_radius.unit_length == "arcsec"
 
-        assert exponentiam.sersic_index == 1.0
-        assert isinstance(exponentiam.sersic_index, float)
+        assert exponential.sersic_index == 1.0
+        assert isinstance(exponential.sersic_index, float)
 
-        assert exponentiam.mass_to_light_ratio == 10.0
-        assert isinstance(exponentiam.mass_to_light_ratio, am.MassOverLuminosity)
-        assert exponentiam.mass_to_light_ratio.unit == "angular / eps"
+        assert exponential.mass_to_light_ratio == 10.0
+        assert isinstance(exponential.mass_to_light_ratio, am.dim.MassOverLuminosity)
+        assert exponential.mass_to_light_ratio.unit == "angular / eps"
 
-        assert exponentiam.sersic_constant == pytest.approx(1.67838, 1e-3)
-        assert exponentiam.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
+        assert exponential.sersic_constant == pytest.approx(1.67838, 1e-3)
+        assert exponential.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
 
         exponential = am.mass_profiles.SphericalExponential(
             centre=(1.0, 2.0),
@@ -424,35 +424,35 @@ class TestExponential(object):
             mass_to_light_ratio=10.0,
         )
 
-        assert exponentiam.centre == (1.0, 2.0)
-        assert isinstance(exponentiam.centre[0], am.Length)
-        assert isinstance(exponentiam.centre[1], am.Length)
-        assert exponentiam.centre[0].unit == "arcsec"
-        assert exponentiam.centre[1].unit == "arcsec"
+        assert exponential.centre == (1.0, 2.0)
+        assert isinstance(exponential.centre[0], am.dim.Length)
+        assert isinstance(exponential.centre[1], am.dim.Length)
+        assert exponential.centre[0].unit == "arcsec"
+        assert exponential.centre[1].unit == "arcsec"
 
-        assert exponentiam.axis_ratio == 1.0
-        assert isinstance(exponentiam.axis_ratio, float)
+        assert exponential.axis_ratio == 1.0
+        assert isinstance(exponential.axis_ratio, float)
 
-        assert exponentiam.phi == 0.0
-        assert isinstance(exponentiam.phi, float)
+        assert exponential.phi == 0.0
+        assert isinstance(exponential.phi, float)
 
-        assert exponentiam.intensity == 1.0
-        assert isinstance(exponentiam.intensity, am.Luminosity)
-        assert exponentiam.intensity.unit == "eps"
+        assert exponential.intensity == 1.0
+        assert isinstance(exponential.intensity, am.dim.Luminosity)
+        assert exponential.intensity.unit == "eps"
 
-        assert exponentiam.effective_radius == 0.6
-        assert isinstance(exponentiam.effective_radius, am.Length)
-        assert exponentiam.effective_radius.unit_length == "arcsec"
+        assert exponential.effective_radius == 0.6
+        assert isinstance(exponential.effective_radius, am.dim.Length)
+        assert exponential.effective_radius.unit_length == "arcsec"
 
-        assert exponentiam.sersic_index == 1.0
-        assert isinstance(exponentiam.sersic_index, float)
+        assert exponential.sersic_index == 1.0
+        assert isinstance(exponential.sersic_index, float)
 
-        assert exponentiam.mass_to_light_ratio == 10.0
-        assert isinstance(exponentiam.mass_to_light_ratio, am.MassOverLuminosity)
-        assert exponentiam.mass_to_light_ratio.unit == "angular / eps"
+        assert exponential.mass_to_light_ratio == 10.0
+        assert isinstance(exponential.mass_to_light_ratio, am.dim.MassOverLuminosity)
+        assert exponential.mass_to_light_ratio.unit == "angular / eps"
 
-        assert exponentiam.sersic_constant == pytest.approx(1.67838, 1e-3)
-        assert exponentiam.elliptical_effective_radius == 0.6
+        assert exponential.sersic_constant == pytest.approx(1.67838, 1e-3)
+        assert exponential.elliptical_effective_radius == 0.6
 
     def test__convergence_correct_values(self):
         exponential = am.mass_profiles.EllipticalExponential(
@@ -462,7 +462,7 @@ class TestExponential(object):
             effective_radius=2.0,
             mass_to_light_ratio=1.0,
         )
-        assert exponentiam.convergence_from_grid(
+        assert exponential.convergence_from_grid(
             grid=np.array([[1.0, 0.0]])
         ) == pytest.approx(4.9047, 1e-3)
 
@@ -473,7 +473,7 @@ class TestExponential(object):
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
         )
-        assert exponentiam.convergence_from_grid(
+        assert exponential.convergence_from_grid(
             grid=np.array([[0.0, 1.0]])
         ) == pytest.approx(4.8566, 1e-3)
 
@@ -484,7 +484,7 @@ class TestExponential(object):
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
         )
-        assert exponentiam.convergence_from_grid(
+        assert exponential.convergence_from_grid(
             grid=np.array([[0.0, 1.0]])
         ) == pytest.approx(2.0 * 4.8566, 1e-3)
 
@@ -495,7 +495,7 @@ class TestExponential(object):
             effective_radius=3.0,
             mass_to_light_ratio=2.0,
         )
-        assert exponentiam.convergence_from_grid(
+        assert exponential.convergence_from_grid(
             grid=np.array([[0.0, 1.0]])
         ) == pytest.approx(2.0 * 4.8566, 1e-3)
 
@@ -506,7 +506,7 @@ class TestExponential(object):
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
         )
-        assert exponentiam.convergence_from_grid(
+        assert exponential.convergence_from_grid(
             grid=np.array([[0.0, 1.0]])
         ) == pytest.approx(4.8566, 1e-3)
 
@@ -519,7 +519,7 @@ class TestExponential(object):
             effective_radius=0.2,
             mass_to_light_ratio=1.0,
         )
-        deflections = exponentiam.deflections_from_grid(
+        deflections = exponential.deflections_from_grid(
             grid=np.array([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
@@ -533,7 +533,7 @@ class TestExponential(object):
             effective_radius=0.2,
             mass_to_light_ratio=1.0,
         )
-        deflections = exponentiam.deflections_from_grid(
+        deflections = exponential.deflections_from_grid(
             grid=np.array([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
@@ -595,13 +595,13 @@ class TestExponential(object):
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
-        interp_deflections = exponentiam.deflections_from_grid(grid=regular_with_interp)
+        interp_deflections = exponential.deflections_from_grid(grid=regular_with_interp)
 
         interpolator = am.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
-        interp_deflections_values = exponentiam.deflections_from_grid(
+        interp_deflections_values = exponential.deflections_from_grid(
             grid=interpolator.interp_grid
         )
 
@@ -642,13 +642,13 @@ class TestExponential(object):
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
-        interp_deflections = exponentiam.deflections_from_grid(grid=regular_with_interp)
+        interp_deflections = exponential.deflections_from_grid(grid=regular_with_interp)
 
         interpolator = am.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
-        interp_deflections_values = exponentiam.deflections_from_grid(
+        interp_deflections_values = exponential.deflections_from_grid(
             grid=interpolator.interp_grid
         )
 
@@ -669,31 +669,31 @@ class TestExponential(object):
 
         exponential = am.mass_profiles.EllipticalExponential()
 
-        convergence = exponentiam.convergence_from_grid(grid=grid)
+        convergence = exponential.convergence_from_grid(grid=grid)
 
         assert convergence.in_2d.shape == (2, 2)
 
-        # potential = exponentiam.potential_from_grid(
+        # potential = exponential.potential_from_grid(
         #     grid=grid)
         #
-        # assert potentiam.shape == (2, 2)
+        # assert potential.shape == (2, 2)
 
-        deflections = exponentiam.deflections_from_grid(grid=grid)
+        deflections = exponential.deflections_from_grid(grid=grid)
 
         assert deflections.in_2d.shape == (2, 2, 2)
 
         exponential = am.mass_profiles.SphericalExponential()
 
-        convergence = exponentiam.convergence_from_grid(grid=grid)
+        convergence = exponential.convergence_from_grid(grid=grid)
 
         assert convergence.in_2d.shape == (2, 2)
 
-        # potential = exponentiam.potential_from_grid(
+        # potential = exponential.potential_from_grid(
         #     grid=grid)
         #
-        # assert potentiam.shape == (2, 2)
+        # assert potential.shape == (2, 2)
 
-        deflections = exponentiam.deflections_from_grid(grid=grid)
+        deflections = exponential.deflections_from_grid(grid=grid)
 
         assert deflections.in_2d.shape == (2, 2, 2)
 
@@ -710,8 +710,8 @@ class TestDevVaucouleurs(object):
         )
 
         assert dev_vaucouleurs.centre == (1.0, 2.0)
-        assert isinstance(dev_vaucouleurs.centre[0], am.Length)
-        assert isinstance(dev_vaucouleurs.centre[1], am.Length)
+        assert isinstance(dev_vaucouleurs.centre[0], am.dim.Length)
+        assert isinstance(dev_vaucouleurs.centre[1], am.dim.Length)
         assert dev_vaucouleurs.centre[0].unit == "arcsec"
         assert dev_vaucouleurs.centre[1].unit == "arcsec"
 
@@ -722,18 +722,18 @@ class TestDevVaucouleurs(object):
         assert isinstance(dev_vaucouleurs.phi, float)
 
         assert dev_vaucouleurs.intensity == 1.0
-        assert isinstance(dev_vaucouleurs.intensity, am.Luminosity)
+        assert isinstance(dev_vaucouleurs.intensity, am.dim.Luminosity)
         assert dev_vaucouleurs.intensity.unit == "eps"
 
         assert dev_vaucouleurs.effective_radius == 0.6
-        assert isinstance(dev_vaucouleurs.effective_radius, am.Length)
+        assert isinstance(dev_vaucouleurs.effective_radius, am.dim.Length)
         assert dev_vaucouleurs.effective_radius.unit_length == "arcsec"
 
         assert dev_vaucouleurs.sersic_index == 4.0
         assert isinstance(dev_vaucouleurs.sersic_index, float)
 
         assert dev_vaucouleurs.mass_to_light_ratio == 10.0
-        assert isinstance(dev_vaucouleurs.mass_to_light_ratio, am.MassOverLuminosity)
+        assert isinstance(dev_vaucouleurs.mass_to_light_ratio, am.dim.MassOverLuminosity)
         assert dev_vaucouleurs.mass_to_light_ratio.unit == "angular / eps"
 
         assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
@@ -747,8 +747,8 @@ class TestDevVaucouleurs(object):
         )
 
         assert dev_vaucouleurs.centre == (1.0, 2.0)
-        assert isinstance(dev_vaucouleurs.centre[0], am.Length)
-        assert isinstance(dev_vaucouleurs.centre[1], am.Length)
+        assert isinstance(dev_vaucouleurs.centre[0], am.dim.Length)
+        assert isinstance(dev_vaucouleurs.centre[1], am.dim.Length)
         assert dev_vaucouleurs.centre[0].unit == "arcsec"
         assert dev_vaucouleurs.centre[1].unit == "arcsec"
 
@@ -759,18 +759,18 @@ class TestDevVaucouleurs(object):
         assert isinstance(dev_vaucouleurs.phi, float)
 
         assert dev_vaucouleurs.intensity == 1.0
-        assert isinstance(dev_vaucouleurs.intensity, am.Luminosity)
+        assert isinstance(dev_vaucouleurs.intensity, am.dim.Luminosity)
         assert dev_vaucouleurs.intensity.unit == "eps"
 
         assert dev_vaucouleurs.effective_radius == 0.6
-        assert isinstance(dev_vaucouleurs.effective_radius, am.Length)
+        assert isinstance(dev_vaucouleurs.effective_radius, am.dim.Length)
         assert dev_vaucouleurs.effective_radius.unit_length == "arcsec"
 
         assert dev_vaucouleurs.sersic_index == 4.0
         assert isinstance(dev_vaucouleurs.sersic_index, float)
 
         assert dev_vaucouleurs.mass_to_light_ratio == 10.0
-        assert isinstance(dev_vaucouleurs.mass_to_light_ratio, am.MassOverLuminosity)
+        assert isinstance(dev_vaucouleurs.mass_to_light_ratio, am.dim.MassOverLuminosity)
         assert dev_vaucouleurs.mass_to_light_ratio.unit == "angular / eps"
 
         assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
@@ -982,7 +982,7 @@ class TestDevVaucouleurs(object):
         # potential = dev_vaucouleurs.potential_from_grid(
         #     grid=grid)
         #
-        # assert potentiam.shape == (2, 2)
+        # assert potential.shape == (2, 2)
 
         deflections = dev_vaucouleurs.deflections_from_grid(grid=grid)
 
@@ -997,7 +997,7 @@ class TestDevVaucouleurs(object):
         # potential = dev_vaucouleurs.potential_from_grid(
         #     grid=grid)
         #
-        # assert potentiam.shape == (2, 2)
+        # assert potential.shape == (2, 2)
 
         deflections = dev_vaucouleurs.deflections_from_grid(grid=grid)
 
@@ -1018,8 +1018,8 @@ class TestSersicMassRadialGradient(object):
         )
 
         assert sersic.centre == (1.0, 2.0)
-        assert isinstance(sersic.centre[0], am.Length)
-        assert isinstance(sersic.centre[1], am.Length)
+        assert isinstance(sersic.centre[0], am.dim.Length)
+        assert isinstance(sersic.centre[1], am.dim.Length)
         assert sersic.centre[0].unit == "arcsec"
         assert sersic.centre[1].unit == "arcsec"
 
@@ -1030,18 +1030,18 @@ class TestSersicMassRadialGradient(object):
         assert isinstance(sersic.phi, float)
 
         assert sersic.intensity == 1.0
-        assert isinstance(sersic.intensity, am.Luminosity)
+        assert isinstance(sersic.intensity, am.dim.Luminosity)
         assert sersic.intensity.unit == "eps"
 
         assert sersic.effective_radius == 0.6
-        assert isinstance(sersic.effective_radius, am.Length)
+        assert isinstance(sersic.effective_radius, am.dim.Length)
         assert sersic.effective_radius.unit_length == "arcsec"
 
         assert sersic.sersic_index == 4.0
         assert isinstance(sersic.sersic_index, float)
 
         assert sersic.mass_to_light_ratio == 10.0
-        assert isinstance(sersic.mass_to_light_ratio, am.MassOverLuminosity)
+        assert isinstance(sersic.mass_to_light_ratio, am.dim.MassOverLuminosity)
         assert sersic.mass_to_light_ratio.unit == "angular / eps"
 
         assert sersic.mass_to_light_gradient == -1.0
@@ -1060,8 +1060,8 @@ class TestSersicMassRadialGradient(object):
         )
 
         assert sersic.centre == (1.0, 2.0)
-        assert isinstance(sersic.centre[0], am.Length)
-        assert isinstance(sersic.centre[1], am.Length)
+        assert isinstance(sersic.centre[0], am.dim.Length)
+        assert isinstance(sersic.centre[1], am.dim.Length)
         assert sersic.centre[0].unit == "arcsec"
         assert sersic.centre[1].unit == "arcsec"
 
@@ -1072,18 +1072,18 @@ class TestSersicMassRadialGradient(object):
         assert isinstance(sersic.phi, float)
 
         assert sersic.intensity == 1.0
-        assert isinstance(sersic.intensity, am.Luminosity)
+        assert isinstance(sersic.intensity, am.dim.Luminosity)
         assert sersic.intensity.unit == "eps"
 
         assert sersic.effective_radius == 0.6
-        assert isinstance(sersic.effective_radius, am.Length)
+        assert isinstance(sersic.effective_radius, am.dim.Length)
         assert sersic.effective_radius.unit_length == "arcsec"
 
         assert sersic.sersic_index == 4.0
         assert isinstance(sersic.sersic_index, float)
 
         assert sersic.mass_to_light_ratio == 10.0
-        assert isinstance(sersic.mass_to_light_ratio, am.MassOverLuminosity)
+        assert isinstance(sersic.mass_to_light_ratio, am.dim.MassOverLuminosity)
         assert sersic.mass_to_light_ratio.unit == "angular / eps"
 
         assert sersic.mass_to_light_gradient == -1.0
@@ -1214,7 +1214,7 @@ class TestSersicMassRadialGradient(object):
             effective_radius=0.2,
             mass_to_light_ratio=1.0,
         )
-        exponential_deflections = exponentiam.deflections_from_grid(
+        exponential_deflections = exponential.deflections_from_grid(
             grid=np.array([[0.1625, 0.1625]])
         )
 
@@ -1446,7 +1446,7 @@ class TestSersicMassRadialGradient(object):
         # potential = sersic.potential_from_grid(
         #     grid=grid)
         #
-        # assert potentiam.shape == (2, 2)
+        # assert potential.shape == (2, 2)
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
@@ -1461,7 +1461,7 @@ class TestSersicMassRadialGradient(object):
         # potential = sersic.potential_from_grid(
         #     grid=grid)
         #
-        # assert potentiam.shape == (2, 2)
+        # assert potential.shape == (2, 2)
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
