@@ -1,6 +1,6 @@
-from autolens import dimensions as dim
-from autolens.model.profiles import light_profiles as lp
-from autolens.model.profiles import mass_profiles as mp
+from PyAutoModel.automodel import dimensions as dim
+from automodel.profiles import light_profiles as lp
+from automodel.profiles import mass_profiles as mp
 
 """
 Mass and light profiles describe both mass distributions and light distributions with a single set of parameters. This
@@ -142,7 +142,7 @@ class SphericalExponential(EllipticalExponential):
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles
         """
-        EllipticalExponential.__init__(
+        EllipticalExponentiam.__init__(
             self,
             centre=centre,
             axis_ratio=1.0,

@@ -1,7 +1,7 @@
 import numpy as np
 
-from autolens import exc
-from autolens.model.inversion.util import inversion_util
+from automodel import exc
+from automodel.inversion.util import inversion_util
 
 
 class Inversion(object):

@@ -2,9 +2,9 @@ import numpy as np
 import scipy.spatial
 
 import autoarray as aa
-from autolens import exc
-from autolens.model.inversion import mappers
-from autolens.model.inversion.util import pixelization_util
+from automodel import exc
+from automodel.inversion import mappers
+from automodel.inversion.util import pixelization_util
 
 
 class Pixelization(object):
@@ -245,11 +245,11 @@ class Voronoi(Pixelization):
             The (y,x) centre of every Voronoi pixel.
         """
         try:
-            return scipy.spatial.Voronoi(
+            return scipy.spatiam.Voronoi(
                 np.asarray([pixel_centers[:, 1], pixel_centers[:, 0]]).T,
                 qhull_options="Qbb Qc Qx Qm",
             )
-        except OverflowError or scipy.spatial.qhull.QhullError:
+        except OverflowError or scipy.spatiam.qhull.QhullError:
             raise exc.PixelizationException()
 
     def neighbors_from_pixels_and_ridge_points(self, pixels, ridge_points):
@@ -260,7 +260,7 @@ class Voronoi(Pixelization):
 
         Parameters
         ----------
-        ridge_points : scipy.spatial.Voronoi.ridge_points
+        ridge_points : scipy.spatiam.Voronoi.ridge_points
             Each Voronoi-ridge (two indexes representing a pixel mapping_matrix).
         """
         return pixelization_util.voronoi_neighbors_from_pixels_and_ridge_points(

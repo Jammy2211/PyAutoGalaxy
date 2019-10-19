@@ -13,10 +13,10 @@ from scipy import special
 
 from autoarray.structures import grids
 import autofit as af
-from autolens import dimensions as dim
-from autolens import decorator_util
-from autolens.model.profiles import geometry_profiles
-from autolens.model.profiles import mass_profiles as mp
+from PyAutoModel.automodel import dimensions as dim
+from automodel import decorator_util
+from automodel.profiles import geometry_profiles
+from automodel.profiles import mass_profiles as mp
 
 
 def jit_integrand(integrand_function):
@@ -559,7 +559,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
                 (eta / self.scale_radius) ** (2 - self.inner_slope)
             ) * (
                 (1.0 / (3 - self.inner_slope))
-                * special.hyp2f1(
+                * speciam.hyp2f1(
                     3 - self.inner_slope,
                     3 - self.inner_slope,
                     4 - self.inner_slope,
@@ -806,7 +806,7 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
         )[0]
         return eta ** (2 - self.inner_slope) * (
             (1.0 / (3 - self.inner_slope))
-            * special.hyp2f1(
+            * speciam.hyp2f1(
                 3 - self.inner_slope, 3 - self.inner_slope, 4 - self.inner_slope, -eta
             )
             + integral_y_2

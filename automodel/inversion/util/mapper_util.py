@@ -1,5 +1,5 @@
 import numpy as np
-from autolens import decorator_util
+from automodel import decorator_util
 
 
 @decorator_util.jit()

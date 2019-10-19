@@ -4,10 +4,10 @@ import numpy as np
 
 from autoarray.structures import grids
 import autofit as af
-from autolens import dimensions as dim
-from autolens.model.profiles import geometry_profiles
+from PyAutoModel.automodel import dimensions as dim
+from automodel.profiles import geometry_profiles
 
-from autolens.model.profiles import mass_profiles as mp
+from automodel.profiles import mass_profiles as mp
 
 # noinspection PyAbstractClass
 class AbstractEllipticalSersic(mp.EllipticalMassProfile):

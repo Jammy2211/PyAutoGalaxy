@@ -2,9 +2,9 @@ import numpy as np
 from astropy import cosmology as cosmo
 
 import autofit as af
-from autolens import dimensions as dim
-from autolens.model.profiles import geometry_profiles
-from autolens.model.profiles import mass_profiles as mp
+from PyAutoModel.automodel import dimensions as dim
+from automodel.profiles import geometry_profiles
+from automodel.profiles import mass_profiles as mp
 
 
 class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):

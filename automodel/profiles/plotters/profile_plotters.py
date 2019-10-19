@@ -36,7 +36,7 @@ def plot_image(
 ):
     """Plot the image of a light profile, on a grid of (y,x) coordinates.
 
-    Set *autolens.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *automodel.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -184,7 +184,7 @@ def plot_convergence(
 ):
     """Plot the convergence of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autolens.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *automodel.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -275,7 +275,7 @@ def plot_potential(
 ):
     """Plot the potential of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autolens.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *automodel.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -365,7 +365,7 @@ def plot_deflections_y(
 ):
     """Plot the y component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autolens.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *automodel.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -457,7 +457,7 @@ def plot_deflections_x(
 ):
     """Plot the x component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
 
-     Set *autolens.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
+     Set *automodel.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
 
      Parameters
      -----------
@@ -548,7 +548,7 @@ def plot_magnification(
 ):
     """Plot the magnification of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autolens.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *automodel.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------

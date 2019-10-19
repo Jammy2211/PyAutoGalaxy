@@ -6,8 +6,8 @@ matplotlib.use(backend)
 from matplotlib import pyplot as plt
 
 import autoarray as aa
-from autolens import exc
-from autolens.lens.plotters import lens_plotter_util
+from automodel import exc
+from automodel.lens.plotters import lens_plotter_util
 
 
 def plot_fit_subplot(

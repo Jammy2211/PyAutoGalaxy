@@ -2,9 +2,9 @@ import inspect
 
 import autofit as af
 
-from autolens.model.galaxy import Galaxy
-from autolens.model.profiles import light_profiles
-from autolens.model.profiles import mass_profiles
+from automodel.galaxy import Galaxy
+from automodel.profiles import light_profiles
+from automodel.profiles import mass_profiles
 
 
 def is_light_profile_class(cls):

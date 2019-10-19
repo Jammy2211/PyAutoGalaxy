@@ -1,5 +1,5 @@
 import numpy as np
-from autolens import decorator_util
+from automodel import decorator_util
 
 
 @decorator_util.jit()
@@ -137,7 +137,7 @@ def voronoi_neighbors_from_pixels_and_ridge_points(pixels, ridge_points):
 
     Parameters
     ----------
-    ridge_points : scipy.spatial.Voronoi.ridge_points
+    ridge_points : scipy.spatiam.Voronoi.ridge_points
         Each Voronoi-ridge (two indexes representing a pixel mapping_matrix).
     """
 

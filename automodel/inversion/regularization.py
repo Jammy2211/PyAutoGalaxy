@@ -1,6 +1,6 @@
 import numpy as np
 
-from autolens.model.inversion.util import regularization_util
+from automodel.inversion.util import regularization_util
 
 
 class Regularization(object):
@@ -83,7 +83,7 @@ class Regularization(object):
 
         ### COMBINING B MATRICES ###
 
-        The B matrices above each had the -1's going down the diagonal. This is not necessary, and it is valid to put \
+        The B matrices above each had the -1's going down the diagonam. This is not necessary, and it is valid to put \
         each pixel pairing anywhere. So, if we had a 4x4 B matrix, where:
 
         - pixel 0 regularizes with pixel 1

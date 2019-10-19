@@ -6,8 +6,8 @@ matplotlib.use(backend)
 from matplotlib import pyplot as plt
 
 import autoarray as aa
-from autolens.model.inversion.plotters import mapper_plotters
-from autolens.model.inversion import mappers
+from automodel.inversion.plotters import mapper_plotters
+from automodel.inversion import mappers
 
 
 def plot_inversion_subplot(

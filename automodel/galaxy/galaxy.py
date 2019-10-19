@@ -4,11 +4,12 @@ from itertools import count
 from skimage import measure
 
 import autofit as af
-from autolens import exc, dimensions as dim
-from autolens import text_util
-from autolens.model.inversion import pixelizations as pix
-from autolens.model.profiles import light_profiles as lp
-from autolens.model.profiles import mass_profiles as mp
+from automodel import exc
+from PyAutoModel.automodel import dimensions as dim
+from automodel import text_util
+from automodel.inversion import pixelizations as pix
+from automodel.profiles import light_profiles as lp
+from automodel.profiles import mass_profiles as mp
 
 
 def is_light_profile(obj):
@@ -366,8 +367,8 @@ class Galaxy(af.ModelObject):
     def deflections_via_potential_from_grid(self, grid):
         potential = self.potential_from_grid(grid=grid)
 
-        deflections_y_2d = np.gradient(potential.in_2d, grid.in_2d[:, 0, 0], axis=0)
-        deflections_x_2d = np.gradient(potential.in_2d, grid.in_2d[0, :, 1], axis=1)
+        deflections_y_2d = np.gradient(potentiam.in_2d, grid.in_2d[:, 0, 0], axis=0)
+        deflections_x_2d = np.gradient(potentiam.in_2d, grid.in_2d[0, :, 1], axis=1)
 
         return grid.mask.mapping.grid_from_sub_grid_2d(
             sub_grid_2d=np.stack((deflections_y_2d, deflections_x_2d), axis=-1)

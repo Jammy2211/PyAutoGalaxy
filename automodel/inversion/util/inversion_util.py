@@ -1,4 +1,4 @@
-from autolens import decorator_util
+from automodel import decorator_util
 import numpy as np
 
 
