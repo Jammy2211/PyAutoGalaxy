@@ -7,7 +7,7 @@ from skimage import measure
 
 import autofit as af
 from PyAutoModel.automodel import dimensions as dim
-from automodel import text_util
+from automodel.util import text_util
 from automodel.profiles import geometry_profiles
 
 

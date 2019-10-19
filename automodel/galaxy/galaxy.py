@@ -6,7 +6,7 @@ from skimage import measure
 import autofit as af
 from automodel import exc
 from PyAutoModel.automodel import dimensions as dim
-from automodel import text_util
+from automodel.util import text_util
 from automodel.inversion import pixelizations as pix
 from automodel.profiles import light_profiles as lp
 from automodel.profiles import mass_profiles as mp
