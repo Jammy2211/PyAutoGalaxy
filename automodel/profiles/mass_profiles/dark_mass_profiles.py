@@ -11,9 +11,10 @@ from numba.types import intc, CPointer, float64
 from scipy import LowLevelCallable
 from scipy import special
 
+import autoarray as aa
 from autoarray.structures import grids
-import autofit as af
 from autoarray import decorator_util
+from automodel.util import text_util
 from automodel import dimensions as dim
 from automodel.profiles import geometry_profiles
 from automodel.profiles import mass_profiles as mp
@@ -421,7 +422,7 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
         )
 
         summary += [
-            af.text_util.label_value_and_unit_string(
+            text_util.label_value_and_unit_string(
                 label=prefix + "rho_at_scale_radius",
                 value=rho_at_scale_radius,
                 unit=unit_mass + "/" + unit_length + "3",
@@ -441,7 +442,7 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
         )
 
         summary += [
-            af.text_util.label_and_value_string(
+            text_util.label_and_value_string(
                 label=prefix + "delta_concentration",
                 value=delta_concentration,
                 whitespace=whitespace,
@@ -460,7 +461,7 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
         )
 
         summary += [
-            af.text_util.label_and_value_string(
+            text_util.label_and_value_string(
                 label=prefix + "concentration",
                 value=concentration,
                 whitespace=whitespace,
@@ -479,7 +480,7 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
         )
 
         summary += [
-            af.text_util.label_value_and_unit_string(
+            text_util.label_value_and_unit_string(
                 label=prefix + "radius_at_200x_cosmic_density",
                 value=radius_at_200,
                 unit=unit_length,
@@ -499,7 +500,7 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
         )
 
         summary += [
-            af.text_util.label_value_and_unit_string(
+            text_util.label_value_and_unit_string(
                 label=prefix + "mass_at_200x_cosmic_density",
                 value=mass_at_200,
                 unit=unit_mass,
@@ -883,7 +884,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         return np.real(self.coord_func_m(grid_radius=grid_radius))
 
     def potential_from_grid(self, grid):
-        return np.zeros((grid.shape[0],))
+        return aa.array_masked.zeros(mask=grid.mask)
 
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
@@ -976,7 +977,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         )
 
         summary += [
-            af.text_util.label_value_and_unit_string(
+            text_util.label_value_and_unit_string(
                 label=prefix + "mass_at_truncation_radius",
                 value=mass_at_truncation_radius,
                 unit=unit_mass,

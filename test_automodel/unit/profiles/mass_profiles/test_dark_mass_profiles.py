@@ -1,10 +1,12 @@
-import automodel as am
 import numpy as np
 import pytest
 from astropy import cosmology as cosmo
 
+import autoarray as aa
+from autoarray.structures import grids
+import automodel as am
 
-from test import mock_cosmology
+from test_automodel.mock import mock_cosmology
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
@@ -814,14 +816,14 @@ class TestGeneralizedNFW(object):
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=0.5, scale_radius=8.0
         )
         assert gnfw.potential_from_grid(
-            grid=np.array([[0.1625, 0.1875]])
+            grid=aa.grid.manual_2d([[[0.1625, 0.1875]]])
         ) == pytest.approx(0.00920, 1e-3)
 
         gnfw = am.mp.SphericalGeneralizedNFW(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=8.0
         )
         assert gnfw.potential_from_grid(
-            grid=np.array([[0.1625, 0.1875]])
+            grid=aa.grid.manual_2d([[[0.1625, 0.1875]]])
         ) == pytest.approx(0.17448, 1e-3)
 
         # gnfw = am.EllipticalGeneralizedNFW(centre=(1.0, 1.0), kappa_s=5.0, axis_ratio=0.5,
@@ -987,7 +989,7 @@ class TestGeneralizedNFW(object):
     #     assert elliptical.potential_from_grid(grid) == pytest.approx(spherical.potential_from_grid(grid), 1e-4)
     #     assert elliptical.deflections_from_grid(grid) == pytest.approx(spherical.deflections_from_grid(grid), 1e-4)
 
-    def test__reshape_decorators(self):
+    def test__outputs_are_autoarrays(self):
 
         grid = aa.grid.uniform(
             shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
@@ -1102,7 +1104,7 @@ class TestTruncatedNFW(object):
         assert deflections[0, 0] == pytest.approx(factor * 0.38209715, 1.0e-4)
         assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
 
-        deflections = truncated_nfw.deflections_from_grid(grid=np.array([[0.0, 2.0]]))
+        deflections = truncated_nfw.deflections_from_grid(grid=aa.grid.manual_2d([[[0.0, 2.0]]]))
 
         assert deflections[0, 0] == pytest.approx(0.0, 1.0e-4)
         assert deflections[0, 1] == pytest.approx(factor * 0.38209715, 1.0e-4)
@@ -1149,19 +1151,19 @@ class TestTruncatedNFW(object):
         )
 
         truncated_nfw_convergence = truncated_nfw.convergence_from_grid(
-            grid=np.array([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
+            grid=aa.grid.manual_2d([[[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]]])
         )
         nfw_convergence = nfw.convergence_from_grid(
-            grid=np.array([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
+            grid=aa.grid.manual_2d([[[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]]])
         )
 
         assert truncated_nfw_convergence == pytest.approx(nfw_convergence, 1.0e-4)
 
         truncated_nfw_deflections = truncated_nfw.deflections_from_grid(
-            grid=np.array([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
+            grid=aa.grid.manual_2d([[[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]]])
         )
         nfw_deflections = nfw.deflections_from_grid(
-            grid=np.array([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
+            grid=aa.grid.manual_2d([[[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]]])
         )
 
         assert truncated_nfw_deflections == pytest.approx(nfw_deflections, 1.0e-4)
@@ -1345,7 +1347,7 @@ class TestTruncatedNFW(object):
         )
         i += 1
 
-    def test__reshape_decorators(self):
+    def test__outputs_are_autoarrays(self):
 
         grid = aa.grid.uniform(
             shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
@@ -1554,7 +1556,7 @@ class TestTruncatedNFWMassToConcentration(object):
         )
         i += 1
 
-    def test__reshape_decorators(self):
+    def test__outputs_are_autoarrays(self):
 
         grid = aa.grid.uniform(
             shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
@@ -1644,14 +1646,14 @@ class TestNFW(object):
         nfw = am.mp.SphericalNFW(
             centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0
         )
-        assert nfw.convergence_from_grid(grid=np.array([[0.5, 0.0]])) == pytest.approx(
+        assert nfw.convergence_from_grid(grid=aa.grid.manual_2d([[[0.5, 0.0]]])) == pytest.approx(
             1.388511, 1e-3
         )
 
         nfw = am.mp.SphericalNFW(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0
         )
-        assert nfw.convergence_from_grid(grid=np.array([[0.5, 0.0]])) == pytest.approx(
+        assert nfw.convergence_from_grid(grid=aa.grid.manual_2d([[[0.5, 0.0]]])) == pytest.approx(
             2.0 * 1.388511, 1e-3
         )
 
@@ -1665,7 +1667,7 @@ class TestNFW(object):
         nfw = am.mp.EllipticalNFW(
             centre=(0.0, 0.0), axis_ratio=0.5, phi=0.0, kappa_s=1.0, scale_radius=1.0
         )
-        assert nfw.convergence_from_grid(grid=np.array([[0.25, 0.0]])) == pytest.approx(
+        assert nfw.convergence_from_grid(grid=aa.grid.manual_2d([[[0.25, 0.0]]])) == pytest.approx(
             1.388511, 1e-3
         )
 
@@ -1709,19 +1711,19 @@ class TestNFW(object):
         assert potential_spherical == pytest.approx(potential_elliptical, 1e-3)
 
         potential_spherical = nfw_spherical.potential_from_grid(
-            grid=np.array([[50.0, 50.0]])
+            grid=aa.grid.manual_2d([[[50.0, 50.0]]])
         )
         potential_elliptical = nfw_elliptical.potential_from_grid(
-            grid=np.array([[50.0, 50.0]])
+            grid=aa.grid.manual_2d([[[50.0, 50.0]]])
         )
 
         assert potential_spherical == pytest.approx(potential_elliptical, 1e-3)
 
         potential_spherical = nfw_spherical.potential_from_grid(
-            grid=np.array([[-50.0, -50.0]])
+            grid=aa.grid.manual_2d([[[-50.0, -50.0]]])
         )
         potential_elliptical = nfw_elliptical.potential_from_grid(
-            grid=np.array([[-50.0, -50.0]])
+            grid=aa.grid.manual_2d([[[-50.0, -50.0]]])
         )
 
         assert potential_spherical == pytest.approx(potential_elliptical, 1e-3)
@@ -1843,7 +1845,7 @@ class TestNFW(object):
         assert (interp_deflections_manual_y != interp_deflections[:, 0]).all()
         assert (interp_deflections_manual_x != interp_deflections[:, 1]).all()
 
-    def test__reshape_decorators(self):
+    def test__outputs_are_autoarrays(self):
 
         grid = aa.grid.uniform(
             shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
