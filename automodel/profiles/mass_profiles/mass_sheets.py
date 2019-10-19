@@ -1,7 +1,7 @@
 import numpy as np
 from astropy import cosmology as cosmo
 
-import autofit as af
+import autoarray as aa
 from automodel import dimensions as dim
 from automodel.profiles import geometry_profiles
 from automodel.profiles import mass_profiles as mp
@@ -23,13 +23,11 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
         super(MassSheet, self).__init__(centre=centre)
         self.kappa = kappa
 
-    @geometry_profiles.transform_grid
     def convergence_from_grid(self, grid):
-        return np.full(shape=grid.shape[0], fill_value=self.kappa)
+        return aa.array.manual_1d(array=np.full(shape=grid.shape_1d[0], fill_value=self.kappa), shape_2d=grid.shape_2d)
 
-    @geometry_profiles.transform_grid
     def potential_from_grid(self, grid):
-        return np.zeros((grid.shape[0],))
+        return aa.array.manual_1d(array=np.zeros(shape=grid.shape_1d[0]), shape_2d=grid.shape_2d)
 
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
@@ -78,13 +76,11 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
     ):
         return 0.0
 
-    @geometry_profiles.transform_grid
     def convergence_from_grid(self, grid):
-        return np.zeros((grid.shape[0],))
+        return aa.array.manual_1d(array=np.zeros(shape=grid.shape_1d[0]), shape_2d=grid.shape_2d)
 
-    @geometry_profiles.transform_grid
     def potential_from_grid(self, grid):
-        return np.zeros((grid.shape[0],))
+        return aa.array.manual_1d(array=np.zeros(shape=grid.shape_1d[0]), shape_2d=grid.shape_2d)
 
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
