@@ -16,17 +16,16 @@ class GalaxyFit(fit.DataFit):
 
         self.galaxy_data = galaxy_data
         self.model_galaxies = model_galaxies
-        self.mapping = galaxy_data.mapping
 
-        _model_data_1d = galaxy_data.profile_quantity_from_galaxies(
+        model_data = galaxy_data.profile_quantity_from_galaxies(
             galaxies=model_galaxies
         )
 
         super(GalaxyFit, self).__init__(
-            data=galaxy_data.image.in_1d,
-            noise_map=galaxy_data.noise_map.in_1d,
-            mask=galaxy_data._mask_1d,
-            model_data=_model_data_1d,
+            data=galaxy_data.image,
+            noise_map=galaxy_data.noise_map,
+            mask=galaxy_data.mask,
+            model_data=model_data.in_1d_binned,
         )
 
     @property
@@ -34,29 +33,10 @@ class GalaxyFit(fit.DataFit):
         return self.galaxy_data.grid
 
     def image(self):
-        return self._data
-
-    def noise_map(self):
-        return self._noise_map
-
-    @property
-    def mask(self):
-        return self.mapping.mask
-
-    def signal_to_noise_map(self):
-        return self._signal_to_noise_map
+        return self.data
 
     def model_image(self):
-        return self._model_data
-
-    def residual_map(self):
-        return self._residual_map
-
-    def normalized_residual_map(self):
-        return self._normalized_residual_map
-
-    def chi_squared_map(self):
-        return self._chi_squared_map
+        return self.model_data
 
     @property
     def figure_of_merit(self):

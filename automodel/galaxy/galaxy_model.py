@@ -103,9 +103,9 @@ class GalaxyModel(PriorModel):
 
         if len(profile_models) > 0:
             if align_centres:
-                centre = profile_models[0].mask_centre
+                centre = profile_models[0].centre
                 for profile_model in profile_models:
-                    profile_model.mask_centre = centre
+                    profile_model.centre = centre
 
             if align_axis_ratios:
                 axis_ratio = profile_models[0].axis_ratio
