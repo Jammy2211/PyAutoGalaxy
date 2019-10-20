@@ -1,3 +1,4 @@
+from autoarray.structures import grids
 import automodel as am
 import numpy as np
 import pytest
@@ -10,7 +11,7 @@ class TestRectangular:
             self
         ):
 
-            pix = am.pix.Rectangular(shape=(3, 3))
+            pix = am.pix.Rectangular(shape_2d=(3, 3))
 
             pixelization_grid = np.array(
                 [
@@ -28,22 +29,22 @@ class TestRectangular:
 
             geometry = pix.geometry_from_grid(pixelization_grid, buffer=1e-8)
 
-            assert shape == (3, 3)
-            assert pixel_scales == pytest.approx((2.0 / 3.0, 2.0 / 3.0), 1e-2)
-            assert (pixel_neighbors[0] == [1, 3, -1, -1]).all()
-            assert (pixel_neighbors[1] == [0, 2, 4, -1]).all()
-            assert (pixel_neighbors[2] == [1, 5, -1, -1]).all()
-            assert (pixel_neighbors[3] == [0, 4, 6, -1]).all()
-            assert (pixel_neighbors[4] == [1, 3, 5, 7]).all()
-            assert (pixel_neighbors[5] == [2, 4, 8, -1]).all()
-            assert (pixel_neighbors[6] == [3, 7, -1, -1]).all()
-            assert (pixel_neighbors[7] == [4, 6, 8, -1]).all()
-            assert (pixel_neighbors[8] == [5, 7, -1, -1]).all()
+            assert geometry.shape_2d == (3, 3)
+            assert geometry.pixel_scales == pytest.approx((2.0 / 3.0, 2.0 / 3.0), 1e-2)
+            assert (geometry.pixel_neighbors[0] == [1, 3, -1, -1]).all()
+            assert (geometry.pixel_neighbors[1] == [0, 2, 4, -1]).all()
+            assert (geometry.pixel_neighbors[2] == [1, 5, -1, -1]).all()
+            assert (geometry.pixel_neighbors[3] == [0, 4, 6, -1]).all()
+            assert (geometry.pixel_neighbors[4] == [1, 3, 5, 7]).all()
+            assert (geometry.pixel_neighbors[5] == [2, 4, 8, -1]).all()
+            assert (geometry.pixel_neighbors[6] == [3, 7, -1, -1]).all()
+            assert (geometry.pixel_neighbors[7] == [4, 6, 8, -1]).all()
+            assert (geometry.pixel_neighbors[8] == [5, 7, -1, -1]).all()
 
-            assert (pixel_neighbors_size == np.array([2, 3, 2, 3, 4, 3, 2, 3, 2])).all()
+            assert (geometry.pixel_neighbors_size == np.array([2, 3, 2, 3, 4, 3, 2, 3, 2])).all()
 
         def test__3x3_grid__same_as_above_change_buffer(self):
-            pix = am.pix.Rectangular(shape=(3, 3))
+            pix = am.pix.Rectangular(shape_2d=(3, 3))
 
             pixelization_grid = np.array(
                 [
@@ -61,12 +62,12 @@ class TestRectangular:
 
             geometry = pix.geometry_from_grid(pixelization_grid, buffer=1e-4)
 
-            assert shape == (3, 3)
-            assert pixel_scales == pytest.approx((2.0 / 3.0, 2.0 / 3.0), 1e-2)
+            assert geometry.shape_2d == (3, 3)
+            assert geometry.pixel_scales == pytest.approx((2.0 / 3.0, 2.0 / 3.0), 1e-2)
 
         def test__5x4_grid__buffer_is_small(self):
 
-            pix = am.pix.Rectangular(shape=(5, 4))
+            pix = am.pix.Rectangular(shape_2d=(5, 4))
 
             pixelization_grid = np.array(
                 [
@@ -84,12 +85,12 @@ class TestRectangular:
 
             geometry = pix.geometry_from_grid(pixelization_grid, buffer=1e-8)
 
-            assert shape == (5, 4)
-            assert pixel_scales == pytest.approx((2.0 / 5.0, 2.0 / 4.0), 1e-2)
+            assert geometry.shape_2d == (5, 4)
+            assert geometry.pixel_scales == pytest.approx((2.0 / 5.0, 2.0 / 4.0), 1e-2)
 
         def test__3x3_grid__larger_range_of_grid(self):
 
-            pix = am.pix.Rectangular(shape=(3, 3))
+            pix = am.pix.Rectangular(shape_2d=(3, 3))
 
             pixelization_grid = np.array(
                 [[2.0, 1.0], [4.0, 3.0], [6.0, 5.0], [8.0, 7.0]]
@@ -97,13 +98,13 @@ class TestRectangular:
 
             geometry = pix.geometry_from_grid(pixelization_grid, buffer=1e-8)
 
-            assert shape == (3, 3)
-            assert pixel_scales == pytest.approx((6.0 / 3.0, 6.0 / 3.0), 1e-2)
+            assert geometry.shape_2d == (3, 3)
+            assert geometry.pixel_scales == pytest.approx((6.0 / 3.0, 6.0 / 3.0), 1e-2)
 
     class TestPixelCentres:
         def test__3x3_grid__pixel_centres(self):
 
-            pix = am.pix.Rectangular(shape=(3, 3))
+            pix = am.pix.Rectangular(shape_2d=(3, 3))
 
             pixelization_grid = np.array(
                 [
@@ -121,7 +122,7 @@ class TestRectangular:
 
             geometry = pix.geometry_from_grid(pixelization_grid, buffer=1e-8)
 
-            assert pixel_centres == pytest.approx(
+            assert geometry.pixel_centres == pytest.approx(
                 np.array(
                     [
                         [2.0 / 3.0, -2.0 / 3.0],
@@ -139,7 +140,7 @@ class TestRectangular:
 
         def test__4x3_grid__pixel_centres(self):
 
-            pix = am.pix.Rectangular(shape=(4, 3))
+            pix = am.pix.Rectangular(shape_2d=(4, 3))
 
             pixelization_grid = np.array(
                 [
@@ -157,7 +158,7 @@ class TestRectangular:
 
             geometry = pix.geometry_from_grid(pixelization_grid, buffer=1e-8)
 
-            assert pixel_centres == pytest.approx(
+            assert geometry.pixel_centres == pytest.approx(
                 np.array(
                     [
                         [0.75, -2.0 / 3.0],
@@ -183,7 +184,7 @@ class TestRectangular:
             # |8 | 9|10|11|
             # |12|13|14|15|
 
-            pix = am.pix.Rectangular(shape=(7, 5))
+            pix = am.pix.Rectangular(shape_2d=(7, 5))
 
             pixel_neighbors, pixel_neighbors_size = pix.pixel_neighbors
             pixel_neighbors_util, pixel_neighbors_size_util = am.util.pixelization.rectangular_neighbors_from_shape(
@@ -196,7 +197,7 @@ class TestRectangular:
     class TestPixelizationGrid:
         def test__pixelization_grid_returns_none_as_not_used(self, sub_grid_7x7):
 
-            pix = am.pix.Rectangular(shape=(3, 3))
+            pix = am.pix.Rectangular(shape_2d=(3, 3))
 
             assert pix.pixelization_grid_from_grid(grid=sub_grid_7x7) == None
 
@@ -392,31 +393,31 @@ class TestVoronoi:
 class TestVoronoiMagnification:
     def test__number_of_pixels_setup_correct(self):
 
-        pix = am.pix.VoronoiMagnification(shape=(3, 3))
+        pix = am.pix.VoronoiMagnification(shape_2d=(3, 3))
 
-        assert pix.shape == (3, 3)
+        assert pix.shape_2d == (3, 3)
 
     def test__pixelization_grid_returns_same_as_computed_from_grids_module(
         self, sub_grid_7x7
     ):
 
-        pix = am.pix.VoronoiMagnification(shape=(3, 3))
+        pix = am.pix.VoronoiMagnification(shape_2d=(3, 3))
 
         pixelization_grid = pix.pixelization_grid_from_grid(grid=sub_grid_7x7)
 
-        pixelization_grid_manual = am.PixelizationGrid.from_grid_and_unmasked_2d_grid_shape(
+        pixelization_grid_manual = grids.PixelizationGrid.from_grid_and_unmasked_2d_grid_shape(
             unmasked_sparse_shape=(3, 3), grid=sub_grid_7x7
         )
 
         assert (pixelization_grid_manual == pixelization_grid).all()
         assert (
-            pixelization_grid_manuam.nearest_pixelization_1d_index_for_mask_1d_index
+            pixelization_grid_manual.nearest_pixelization_1d_index_for_mask_1d_index
             == pixelization_grid.nearest_pixelization_1d_index_for_mask_1d_index
         ).all()
 
 
 class TestVoronoiBrightness:
-    def test__hyper_image_doesnt_use_min_and_max_cluster_weight_map_uses_floor_and_power(
+    def test__hyper_image_doesnt_use_min_and_max_weight_map_uses_floor_and_power(
         self
     ):
 
@@ -426,43 +427,43 @@ class TestVoronoiBrightness:
             pixels=5, weight_floor=0.0, weight_power=0.0
         )
 
-        cluster_weight_map = pix.cluster_weight_map_from_hyper_image(
+        weight_map = pix.weight_map_from_hyper_image(
             hyper_image=hyper_image
         )
 
-        assert (cluster_weight_map == np.ones(3)).all()
+        assert (weight_map == np.ones(3)).all()
 
         pix = am.pix.VoronoiBrightnessImage(
             pixels=5, weight_floor=0.0, weight_power=1.0
         )
 
-        cluster_weight_map = pix.cluster_weight_map_from_hyper_image(
+        weight_map = pix.weight_map_from_hyper_image(
             hyper_image=hyper_image
         )
 
-        assert (cluster_weight_map == np.array([0.0, 1.0, 0.0])).all()
+        assert (weight_map == np.array([0.0, 1.0, 0.0])).all()
 
         pix = am.pix.VoronoiBrightnessImage(
             pixels=5, weight_floor=1.0, weight_power=1.0
         )
 
-        cluster_weight_map = pix.cluster_weight_map_from_hyper_image(
+        weight_map = pix.weight_map_from_hyper_image(
             hyper_image=hyper_image
         )
 
-        assert (cluster_weight_map == np.array([1.0, 2.0, 1.0])).all()
+        assert (weight_map == np.array([1.0, 2.0, 1.0])).all()
 
         pix = am.pix.VoronoiBrightnessImage(
             pixels=5, weight_floor=1.0, weight_power=2.0
         )
 
-        cluster_weight_map = pix.cluster_weight_map_from_hyper_image(
+        weight_map = pix.weight_map_from_hyper_image(
             hyper_image=hyper_image
         )
 
-        assert (cluster_weight_map == np.array([1.0, 4.0, 1.0])).all()
+        assert (weight_map == np.array([1.0, 4.0, 1.0])).all()
 
-    def test__hyper_image_uses_min_and_max__cluster_weight_map_uses_floor_and_power(
+    def test__hyper_image_uses_min_and_max__weight_map_uses_floor_and_power(
         self
     ):
 
@@ -472,34 +473,34 @@ class TestVoronoiBrightness:
             pixels=5, weight_floor=0.0, weight_power=1.0
         )
 
-        cluster_weight_map = pix.cluster_weight_map_from_hyper_image(
+        weight_map = pix.weight_map_from_hyper_image(
             hyper_image=hyper_image
         )
 
-        assert (cluster_weight_map == np.array([0.0, 0.5, 1.0])).all()
+        assert (weight_map == np.array([0.0, 0.5, 1.0])).all()
 
         pix = am.pix.VoronoiBrightnessImage(
             pixels=5, weight_floor=0.0, weight_power=2.0
         )
 
-        cluster_weight_map = pix.cluster_weight_map_from_hyper_image(
+        weight_map = pix.weight_map_from_hyper_image(
             hyper_image=hyper_image
         )
 
-        assert (cluster_weight_map == np.array([0.0, 0.25, 1.0])).all()
+        assert (weight_map == np.array([0.0, 0.25, 1.0])).all()
 
         pix = am.pix.VoronoiBrightnessImage(
             pixels=5, weight_floor=1.0, weight_power=1.0
         )
 
-        cluster_weight_map = pix.cluster_weight_map_from_hyper_image(
+        weight_map = pix.weight_map_from_hyper_image(
             hyper_image=hyper_image
         )
 
-        assert (cluster_weight_map == np.array([3.0, 3.5, 4.0])).all()
+        assert (weight_map == np.array([3.0, 3.5, 4.0])).all()
 
     def test__pixelization_grid_returns_same_as_computed_from_grids_module(
-        self, sub_grid_7x7, lens_imaging_7x7
+        self, sub_grid_7x7,
     ):
 
         pix = am.pix.VoronoiBrightnessImage(
@@ -511,28 +512,27 @@ class TestVoronoiBrightness:
         pixelization_grid = pix.pixelization_grid_from_grid(
             grid=sub_grid_7x7,
             hyper_image=hyper_image,
-            cluster_grid=lens_imaging_7x7.grid.binned,
             seed=1,
         )
 
-        cluster_weight_map = pix.cluster_weight_map_from_hyper_image(
+        weight_map = pix.weight_map_from_hyper_image(
             hyper_image=hyper_image
         )
 
-        sparse_to_grid = am.SparseToGrid.from_total_pixels_grid_and_weight_map(
+        sparse_to_grid = grids.SparseToGrid.from_total_pixels_grid_and_weight_map(
             total_pixels=pix.pixels,
-            grid=lens_imaging_7x7.grid.binned,
-            weight_map=cluster_weight_map,
+            grid=sub_grid_7x7,
+            weight_map=weight_map,
             seed=1,
         )
 
-        pixelization_grid_manual = am.PixelizationGrid(
+        pixelization_grid_manual = grids.PixelizationGrid(
             grid_1d=sparse_to_grid.sparse,
             nearest_pixelization_1d_index_for_mask_1d_index=sparse_to_grid.sparse_1d_index_for_mask_1d_index,
         )
 
         assert (pixelization_grid_manual == pixelization_grid).all()
         assert (
-            pixelization_grid_manuam.nearest_pixelization_1d_index_for_mask_1d_index
+            pixelization_grid_manual.nearest_pixelization_1d_index_for_mask_1d_index
             == pixelization_grid.nearest_pixelization_1d_index_for_mask_1d_index
         ).all()

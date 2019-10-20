@@ -2,6 +2,7 @@ import numpy as np
 import scipy.spatial
 
 import autoarray as aa
+from autoarray.structures import grids
 from automodel import exc
 from automodel.inversion import mappers
 from automodel.util import pixelization_util
@@ -25,7 +26,7 @@ class Pixelization(object):
 
 
 class Rectangular(Pixelization):
-    def __init__(self, shape=(3, 3)):
+    def __init__(self, shape_2d=(3, 3)):
         """A rectangular pixelization, where pixels are defined on a Cartesian and uniform grid of shape \ 
         (rows, columns).
 
@@ -33,22 +34,22 @@ class Rectangular(Pixelization):
 
         Parameters
         -----------
-        shape : (int, int)
+        shape_2d : (int, int)
             The dimensions of the rectangular grid of pixels (y_pixels, x_pixel)
         """
 
-        if shape[0] <= 2 or shape[1] <= 2:
+        if shape_2d[0] <= 2 or shape_2d[1] <= 2:
             raise exc.PixelizationException(
                 "The rectangular pixelization must be at least dimensions 3x3"
             )
 
-        self.shape = (int(shape[0]), int(shape[1]))
-        self.pixels = self.shape[0] * self.shape[1]
+        self.shape_2d = (int(shape_2d[0]), int(shape_2d[1]))
+        self.pixels = self.shape_2d[0] * self.shape_2d[1]
         super(Rectangular, self).__init__()
 
     class Geometry(object):
         def __init__(
-            self, shape, pixel_scales, origin, pixel_neighbors, pixel_neighbors_size
+            self, shape_2d, pixel_scales, origin, pixel_neighbors, pixel_neighbors_size
         ):
             """The geometry of a rectangular grid.
 
@@ -56,7 +57,7 @@ class Rectangular(Pixelization):
 
             Parameters
             -----------
-            shape : (int, int)
+            shape_2d : (int, int)
                 The dimensions of the rectangular grid of pixels (y_pixels, x_pixel)
             pixel_scales : (float, float)
                 The pixel-to-arcsecond scale of a pixel in the y and x directions.
@@ -69,7 +70,7 @@ class Rectangular(Pixelization):
                 An array of length (y_pixels*x_pixels) which gives the number of neighbors of every pixel in the \
                 rectangular grid.
             """
-            self.shape = shape
+            self.shape_2d = shape_2d
             self.pixel_scales = pixel_scales
             self.origin = origin
             self.pixel_neighbors = pixel_neighbors.astype("int")
@@ -78,7 +79,9 @@ class Rectangular(Pixelization):
         @property
         def pixel_centres(self):
             """The centre of every pixel in the rectangular pixelization."""
-            return self.grid_1d
+            return aa.util.grid.grid_1d_via_shape_2d(
+            shape_2d=self.shape_2d, pixel_scales=self.pixel_scales, sub_size=1, origin=self.origin
+        )
 
     def geometry_from_grid(self, grid, buffer=1e-8):
         """Determine the geometry of the rectangular grid, by overlaying it over a grid of coordinates such that its \
@@ -96,13 +99,13 @@ class Rectangular(Pixelization):
         x_min = np.min(grid[:, 1]) - buffer
         x_max = np.max(grid[:, 1]) + buffer
         pixel_scales = (
-            float((y_max - y_min) / self.shape[0]),
-            float((x_max - x_min) / self.shape[1]),
+            float((y_max - y_min) / self.shape_2d[0]),
+            float((x_max - x_min) / self.shape_2d[1]),
         )
         origin = ((y_max + y_min) / 2.0, (x_max + x_min) / 2.0)
         pixel_neighbors, pixel_neighbors_size = self.pixel_neighbors
         return self.Geometry(
-            shape=self.shape,
+            shape_2d=self.shape_2d,
             pixel_scales=pixel_scales,
             origin=origin,
             pixel_neighbors=pixel_neighbors,
@@ -111,7 +114,7 @@ class Rectangular(Pixelization):
 
     @property
     def pixel_neighbors(self):
-        return pixelization_util.rectangular_neighbors_from_shape(shape=self.shape)
+        return pixelization_util.rectangular_neighbors_from_shape(shape=self.shape_2d)
 
     def mapper_from_grid_and_pixelization_grid(
         self,
@@ -146,14 +149,14 @@ class Rectangular(Pixelization):
         return mappers.RectangularMapper(
             pixels=self.pixels,
             grid=relocated_grid,
-            pixelization_grid=pixel_centres,
-            shape=self.shape,
+            pixelization_grid=geometry.pixel_centres,
+            shape=self.shape_2d,
             geometry=geometry,
             hyper_image=hyper_image,
         )
 
     def pixelization_grid_from_grid(
-        self, grid, cluster_grid=None, hyper_image=None, seed=1
+        self, grid, hyper_image=None, seed=1
     ):
         return None
 
@@ -171,7 +174,7 @@ class Voronoi(Pixelization):
     class Geometry(object):
         def __init__(
             self,
-            shape_arcsec,
+            shape_2d_arcsec,
             pixel_centres,
             origin,
             pixel_neighbors,
@@ -181,7 +184,7 @@ class Voronoi(Pixelization):
 
             Parameters
             -----------
-            shape_arcsec : (float, float)
+            shape_2d_arcsec : (float, float)
                 The dimensions of the Voronoi grid ni arc-second (y_arcseconds, x_arcseconds)
             pixel_centres : ndarray
                 The (y,x) centre of every Voronoi pixel in arc-seconds.
@@ -194,7 +197,7 @@ class Voronoi(Pixelization):
                 An array of length (voronoi_pixels) which gives the number of neighbors of every pixel in the \
                 Voronoi grid.
             """
-            self.shape_arc_sec = shape_arcsec
+            self.shape_2d_arcsec = shape_2d_arcsec
             self.pixel_centres = pixel_centres
             self.origin = origin
             self.pixel_neighbors = pixel_neighbors.astype("int")
@@ -225,10 +228,10 @@ class Voronoi(Pixelization):
         y_max = np.max(grid[:, 0]) + buffer
         x_min = np.min(grid[:, 1]) - buffer
         x_max = np.max(grid[:, 1]) + buffer
-        shape_arcsec = (y_max - y_min, x_max - x_min)
+        shape_2d_arcsec = (y_max - y_min, x_max - x_min)
         origin = ((y_max + y_min) / 2.0, (x_max + x_min) / 2.0)
         return self.Geometry(
-            shape_arcsec=shape_arcsec,
+            shape_2d_arcsec=shape_2d_arcsec,
             pixel_centres=pixel_centres,
             origin=origin,
             pixel_neighbors=pixel_neighbors,
@@ -332,28 +335,28 @@ class Voronoi(Pixelization):
 
 
 class VoronoiMagnification(Voronoi):
-    def __init__(self, shape=(3, 3)):
+    def __init__(self, shape_2d=(3, 3)):
         """A pixelization which adapts to the magnification pattern of a lens's mass model and uses a Voronoi \
         pixelization to discretize the grid into pixels.
 
         Parameters
         ----------
-        shape : (int, int)
+        shape_2d : (int, int)
             The shape of the unmasked sparse-grid which is laid over the masked image, in order to derive the \
             adaptive-magnification pixelization (see *ImagePlanePixelization*)
         """
         super(VoronoiMagnification, self).__init__()
-        self.shape = (int(shape[0]), int(shape[1]))
-        self.pixels = self.shape[0] * self.shape[1]
+        self.shape_2d = (int(shape_2d[0]), int(shape_2d[1]))
+        self.pixels = self.shape_2d[0] * self.shape_2d[1]
 
     def pixelization_grid_from_grid(
-        self, grid, cluster_grid=None, hyper_image=None, seed=1
+        self, grid, hyper_image=None, seed=1
     ):
-        sparse_to_grid = aa.SparseToGrid.from_grid_and_unmasked_2d_grid_shape(
-            grid=grid, unmasked_sparse_shape=self.shape
+        sparse_to_grid = grids.SparseToGrid.from_grid_and_unmasked_2d_grid_shape(
+            grid=grid, unmasked_sparse_shape=self.shape_2d
         )
 
-        return aa.PixelizationGrid(
+        return grids.PixelizationGrid(
             grid_1d=sparse_to_grid.sparse,
             nearest_pixelization_1d_index_for_mask_1d_index=sparse_to_grid.sparse_1d_index_for_mask_1d_index,
         )
@@ -373,26 +376,26 @@ class VoronoiBrightnessImage(Voronoi):
         self.weight_floor = weight_floor
         self.weight_power = weight_power
 
-    def cluster_weight_map_from_hyper_image(self, hyper_image):
-        cluster_weight_map = (hyper_image - np.min(hyper_image)) / (
+    def weight_map_from_hyper_image(self, hyper_image):
+        weight_map = (hyper_image - np.min(hyper_image)) / (
             np.max(hyper_image) - np.min(hyper_image)
         ) + self.weight_floor * np.max(hyper_image)
 
-        return np.power(cluster_weight_map, self.weight_power)
+        return np.power(weight_map, self.weight_power)
 
-    def pixelization_grid_from_grid(self, grid, hyper_image, cluster_grid=None, seed=0):
-        cluster_weight_map = self.cluster_weight_map_from_hyper_image(
+    def pixelization_grid_from_grid(self, grid, hyper_image, seed=0):
+        weight_map = self.weight_map_from_hyper_image(
             hyper_image=hyper_image
         )
 
-        sparse_to_grid = aa.SparseToGrid.from_total_pixels_grid_and_weight_map(
+        sparse_to_grid = grids.SparseToGrid.from_total_pixels_grid_and_weight_map(
             total_pixels=self.pixels,
-            grid=cluster_grid,
-            weight_map=cluster_weight_map,
+            grid=grid,
+            weight_map=weight_map,
             seed=seed,
         )
 
-        return aa.PixelizationGrid(
+        return grids.PixelizationGrid(
             grid_1d=sparse_to_grid.sparse,
             nearest_pixelization_1d_index_for_mask_1d_index=sparse_to_grid.sparse_1d_index_for_mask_1d_index,
         )
