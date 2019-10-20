@@ -71,6 +71,7 @@ class Rectangular(Pixelization):
                 rectangular grid.
             """
             self.shape_2d = shape_2d
+            self.shape_2d_arcsec = (shape_2d[0] * pixel_scales[0], shape_2d[1] * pixel_scales[1])
             self.pixel_scales = pixel_scales
             self.origin = origin
             self.pixel_neighbors = pixel_neighbors.astype("int")
@@ -149,8 +150,8 @@ class Rectangular(Pixelization):
         return mappers.RectangularMapper(
             pixels=self.pixels,
             grid=relocated_grid,
-            pixelization_grid=geometry.pixel_centres,
-            shape=self.shape_2d,
+            pixel_centres=geometry.pixel_centres,
+            shape_2d=self.shape_2d,
             geometry=geometry,
             hyper_image=hyper_image,
         )
@@ -327,7 +328,7 @@ class Voronoi(Pixelization):
         return mappers.VoronoiMapper(
             pixels=pixels,
             grid=relocated_grid,
-            pixelization_grid=pixel_centres,
+            pixel_centres=pixel_centres,
             voronoi=voronoi,
             geometry=geometry,
             hyper_image=hyper_image,

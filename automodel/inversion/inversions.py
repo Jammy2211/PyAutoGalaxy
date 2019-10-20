@@ -4,16 +4,16 @@ from automodel import exc
 from automodel.util import inversion_util
 
 
-class Inversion(object):
+class InversionImaging(object):
     def __init__(
         self,
-        noise_map_1d,
+        noise_map,
         mapper,
         regularization,
         blurred_mapping_matrix,
         regularization_matrix,
         curvature_reg_matrix,
-        pixelization_values,
+        values,
     ):
         """ An inversion, which given an input image and noise-map reconstructs the image using a linear inversion, \
         including a convolution that accounts for blurring.
@@ -26,7 +26,7 @@ class Inversion(object):
         -----------
         image_1d : ndarray
             Flattened 1D array of the observed image the inversion is fitting.
-        noise_map_1d : ndarray
+        noise_map : ndarray
             Flattened 1D array of the noise-map used by the inversion during the fit.   
         convolver : imaging.convolution.Convolver
             The convolver used to blur the util matrix with the PSF.
@@ -51,17 +51,17 @@ class Inversion(object):
             The vector containing the reconstructed fit to the hyper_galaxies.
         """
 
-        self.noise_map_1d = noise_map_1d
+        self.noise_map = noise_map
         self.mapper = mapper
         self.regularization = regularization
         self.blurred_mapping_matrix = blurred_mapping_matrix
         self.regularization_matrix = regularization_matrix
         self.curvature_reg_matrix = curvature_reg_matrix
-        self.pixelization_values = pixelization_values
+        self.values = values
 
     @classmethod
-    def from_data_1d_mapper_and_regularization(
-        cls, image_1d, noise_map_1d, convolver, mapper, regularization
+    def from_data_mapper_and_regularization(
+        cls, image, noise_map, convolver, mapper, regularization
     ):
 
         blurred_mapping_matrix = convolver.convolve_mapping_matrix(
@@ -70,12 +70,12 @@ class Inversion(object):
 
         data_vector = inversion_util.data_vector_from_blurred_mapping_matrix_and_data(
             blurred_mapping_matrix=blurred_mapping_matrix,
-            image_1d=image_1d,
-            noise_map_1d=noise_map_1d,
+            image_1d=image,
+            noise_map_1d=noise_map,
         )
 
         curvature_matrix = inversion_util.curvature_matrix_from_blurred_mapping_matrix(
-            blurred_mapping_matrix=blurred_mapping_matrix, noise_map_1d=noise_map_1d
+            blurred_mapping_matrix=blurred_mapping_matrix, noise_map_1d=noise_map
         )
 
         regularization_matrix = regularization.regularization_matrix_from_mapper(
@@ -85,66 +85,61 @@ class Inversion(object):
         curvature_reg_matrix = np.add(curvature_matrix, regularization_matrix)
 
         try:
-            pixelization_values = np.linalg.solve(curvature_reg_matrix, data_vector)
+            values = np.linalg.solve(curvature_reg_matrix, data_vector)
         except np.linalg.LinAlgError:
             raise exc.InversionException()
 
-        return Inversion(
-            noise_map_1d=noise_map_1d,
+        return InversionImaging(
+            noise_map=noise_map,
             mapper=mapper,
             regularization=regularization,
             blurred_mapping_matrix=blurred_mapping_matrix,
             regularization_matrix=regularization_matrix,
             curvature_reg_matrix=curvature_reg_matrix,
-            pixelization_values=pixelization_values,
+            values=values,
         )
 
     @property
-    def reconstructed_data_2d(self):
-        return self.mapper.grid.mask.mapping.scaled_array_2d_from_array_1d(
-            array_1d=np.asarray(self.reconstructed_data_1d)
-        )
-
-    @property
-    def reconstructed_data_1d(self):
-        return inversion_util.reconstructed_data_vector_from_blurred_mapping_matrix_and_solution_vector(
+    def reconstructed_image(self):
+        reconstructed_image = inversion_util.reconstructed_data_vector_from_blurred_mapping_matrix_and_solution_vector(
             blurred_mapping_matrix=self.blurred_mapping_matrix,
-            solution_vector=self.pixelization_values,
+            solution_vector=self.values,
         )
+        return self.mapper.grid.mask.mapping.array_from_array_1d(array_1d=reconstructed_image)
 
     @property
-    def pixelization_errors_with_covariance(self):
+    def errors_with_covariance(self):
         return np.linalg.inv(self.curvature_reg_matrix)
 
     @property
-    def pixelization_errors(self):
-        return np.diagonal(self.pixelization_errors_with_covariance)
+    def errors(self):
+        return np.diagonal(self.errors_with_covariance)
 
     @property
-    def pixelization_residual_map(self):
+    def residual_map(self):
         return inversion_util.pixelization_residual_map_from_pixelization_values_and_reconstructed_data_1d(
-            pixelization_values=self.pixelization_values,
-            reconstructed_data_1d=self.reconstructed_data_1d,
+            pixelization_values=self.values,
+            reconstructed_data_1d=self.reconstructed_image,
             mask_1d_index_for_sub_mask_1d_index=self.mapper.grid.mask._mask_1d_index_for_sub_mask_1d_index,
             all_sub_mask_1d_indexes_for_pixelization_1d_index=self.mapper.all_sub_mask_1d_indexes_for_pixelization_1d_index,
         )
 
     @property
-    def pixelization_normalized_residual_map(self):
+    def normalized_residual_map(self):
         return inversion_util.pixelization_normalized_residual_map_from_pixelization_values_and_reconstructed_data_1d(
-            pixelization_values=self.pixelization_values,
-            reconstructed_data_1d=self.reconstructed_data_1d,
-            noise_map_1d=self.noise_map_1d,
+            pixelization_values=self.values,
+            reconstructed_data_1d=self.reconstructed_image,
+            noise_map_1d=self.noise_map,
             mask_1d_index_for_sub_mask_1d_index=self.mapper.grid.mask._mask_1d_index_for_sub_mask_1d_index,
             all_sub_mask_1d_indexes_for_pixelization_1d_index=self.mapper.all_sub_mask_1d_indexes_for_pixelization_1d_index,
         )
 
     @property
-    def pixelization_chi_squared_map(self):
+    def chi_squared_map(self):
         return inversion_util.pixelization_chi_squared_map_from_pixelization_values_and_reconstructed_data_1d(
-            pixelization_values=self.pixelization_values,
-            reconstructed_data_1d=self.reconstructed_data_1d,
-            noise_map_1d=self.noise_map_1d,
+            pixelization_values=self.values,
+            reconstructed_data_1d=self.reconstructed_image,
+            noise_map_1d=self.noise_map,
             mask_1d_index_for_sub_mask_1d_index=self.mapper.grid.mask._mask_1d_index_for_sub_mask_1d_index,
             all_sub_mask_1d_indexes_for_pixelization_1d_index=self.mapper.all_sub_mask_1d_indexes_for_pixelization_1d_index,
         )
@@ -162,8 +157,8 @@ class Inversion(object):
         this is already in the regularization matrix and thus implicitly included in the matrix multiplication.
         """
         return np.matmul(
-            self.pixelization_values.T,
-            np.matmul(self.regularization_matrix, self.pixelization_values),
+            self.values.T,
+            np.matmul(self.regularization_matrix, self.values),
         )
 
     @property

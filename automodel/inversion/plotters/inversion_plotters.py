@@ -448,7 +448,7 @@ def plot_pixelization_residual_map(
 
     plot_inversion_with_source_values(
         inversion=inversion,
-        source_pixel_values=inversion.pixelization_residual_map,
+        source_pixel_values=inversion.residual_map,
         plot_origin=plot_origin,
         positions=positions,
         should_plot_centres=should_plot_centres,
@@ -527,7 +527,7 @@ def plot_pixelization_normalized_residual_map(
 
     plot_inversion_with_source_values(
         inversion=inversion,
-        source_pixel_values=inversion.pixelization_normalized_residual_map,
+        source_pixel_values=inversion.normalized_residual_map,
         plot_origin=plot_origin,
         positions=positions,
         should_plot_centres=should_plot_centres,
@@ -606,7 +606,7 @@ def plot_pixelization_chi_squared_map(
 
     plot_inversion_with_source_values(
         inversion=inversion,
-        source_pixel_values=inversion.pixelization_chi_squared_map,
+        source_pixel_values=inversion.chi_squared_map,
         plot_origin=plot_origin,
         positions=positions,
         should_plot_centres=should_plot_centres,

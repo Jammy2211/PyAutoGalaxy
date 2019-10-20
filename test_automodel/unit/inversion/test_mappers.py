@@ -78,9 +78,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=9,
-                shape=(3, 3),
+                shape_2d=(3, 3),
                 grid=grid,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
             )
 
@@ -135,9 +135,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=9,
-                shape=(3, 3),
+                shape_2d=(3, 3),
                 grid=grid,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
             )
 
@@ -190,9 +190,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=9,
-                shape=(3, 3),
+                shape_2d=(3, 3),
                 grid=grid,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
             )
 
@@ -252,9 +252,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=12,
-                shape=(4, 3),
+                shape_2d=(4, 3),
                 grid=grid,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
             )
 
@@ -316,9 +316,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=12,
-                shape=(3, 4),
+                shape_2d=(3, 4),
                 grid=grid,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
             )
 
@@ -366,9 +366,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=9,
-                shape=(3, 3),
+                shape_2d=(3, 3),
                 grid=grid,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
             )
 
@@ -411,9 +411,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=9,
-                shape=(3, 3),
+                shape_2d=(3, 3),
                 grid=grid,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
             )
 
@@ -457,9 +457,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=12,
-                shape=(4, 3),
+                shape_2d=(4, 3),
                 grid=grid,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
             )
 
@@ -505,9 +505,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=12,
-                shape=(3, 4),
+                shape_2d=(3, 4),
                 grid=grid,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
             )
 
@@ -577,9 +577,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=9,
-                shape=(3, 3),
+                shape_2d=(3, 3),
                 grid=grid,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
             )
 
@@ -634,9 +634,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=9,
-                shape=(3, 3),
+                shape_2d=(3, 3),
                 grid=grid,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
             )
 
@@ -680,9 +680,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=12,
-                shape=(4, 3),
+                shape_2d=(4, 3),
                 grid=grid,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
             )
 
@@ -727,9 +727,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=9,
-                shape=(3, 3),
+                shape_2d=(3, 3),
                 grid=None,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
             )
 
@@ -747,9 +747,9 @@ class TestRectangularMapper:
         def test__compare_to_imaging_util(self):
             pix = mappers.RectangularMapper(
                 pixels=9,
-                shape=(4, 3),
+                shape_2d=(4, 3),
                 grid=None,
-                pixelization_grid=None,
+                pixel_centres=None,
                 geometry=MockGeometry(),
             )
 
@@ -769,9 +769,9 @@ class TestRectangularMapper:
 
             pix = mappers.RectangularMapper(
                 pixels=9,
-                shape=(3, 4),
+                shape_2d=(3, 4),
                 grid=None,
-                pixelization_grid=None,
+                pixel_centres=None,
                 geometry=MockGeometry(),
             )
             solution = np.array(
@@ -812,9 +812,9 @@ class TestRectangularMapper:
 
             mapper = mappers.RectangularMapper(
                 pixels=6,
-                shape=(3, 3),
+                shape_2d=(3, 3),
                 grid=grid_7x7,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 geometry=geometry,
                 hyper_image=image_7x7
             )
@@ -942,7 +942,7 @@ class TestVoronoiMapper:
             mapper = mappers.VoronoiMapper(
                 pixels=6,
                 grid=grid_7x7,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 voronoi=voronoi,
                 geometry=MockGeometry(
                     pixel_centres=pixel_centers,
@@ -981,7 +981,7 @@ class TestVoronoiMapper:
             mapper = mappers.VoronoiMapper(
                 pixels=6,
                 grid=grid_7x7,
-                pixelization_grid=pixelization_grid,
+                pixel_centres=pixelization_grid,
                 voronoi=voronoi,
                 geometry=MockGeometry(
                     pixel_centres=pixel_centers,

@@ -1,9 +1,10 @@
-import automodel as am
+import autoarray as aa
 import numpy as np
 import pytest
 
-from test import mock_inversion
+from test_automodel.mock import mock_inversion
 from automodel import exc
+from automodel.inversion import inversions
 
 
 class TestRegularizationTerm:
@@ -11,15 +12,15 @@ class TestRegularizationTerm:
 
         matrix_shape = (3, 3)
 
-        inv = am.Inversion.from_data_1d_mapper_and_regularization(
-            image_1d=np.ones(9),
-            noise_map_1d=np.ones(9),
+        inv = inversions.InversionImaging.from_data_mapper_and_regularization(
+            image=np.ones(9),
+            noise_map=np.ones(9),
             convolver=mock_inversion.MockConvolver(matrix_shape),
             mapper=mock_inversion.MockMapper(matrix_shape=matrix_shape),
             regularization=mock_inversion.MockRegularization(matrix_shape),
         )
 
-        inv.pixelization_values = np.array([1.0, 1.0, 1.0])
+        inv.values = np.array([1.0, 1.0, 1.0])
 
         inv.regularization_matrix = np.array(
             [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
@@ -45,9 +46,9 @@ class TestRegularizationTerm:
 
         matrix_shape = (3, 3)
 
-        inv = am.Inversion.from_data_1d_mapper_and_regularization(
-            image_1d=np.ones(9),
-            noise_map_1d=np.ones(9),
+        inv = inversions.InversionImaging.from_data_mapper_and_regularization(
+            image=np.ones(9),
+            noise_map=np.ones(9),
             convolver=mock_inversion.MockConvolver(matrix_shape),
             mapper=mock_inversion.MockMapper(matrix_shape),
             regularization=mock_inversion.MockRegularization(matrix_shape),
@@ -67,7 +68,7 @@ class TestRegularizationTerm:
         #                                    [3.0]
         #                                    [5.0]
 
-        inv.pixelization_values = np.array([2.0, 3.0, 5.0])
+        inv.values = np.array([2.0, 3.0, 5.0])
 
         inv.regularization_matrix = np.array(
             [[2.0, -1.0, 0.0], [-1.0, 2.0, -1.0], [0.0, -1.0, 2.0]]
@@ -81,9 +82,9 @@ class TestLogDetMatrix:
 
         matrix_shape = (3, 3)
 
-        inv = am.Inversion.from_data_1d_mapper_and_regularization(
-            image_1d=np.ones(9),
-            noise_map_1d=np.ones(9),
+        inv = inversions.InversionImaging.from_data_mapper_and_regularization(
+            image=np.ones(9),
+            noise_map=np.ones(9),
             convolver=mock_inversion.MockConvolver(matrix_shape),
             mapper=mock_inversion.MockMapper(matrix_shape),
             regularization=mock_inversion.MockRegularization(matrix_shape),
@@ -101,9 +102,9 @@ class TestLogDetMatrix:
 
         matrix_shape = (3, 3)
 
-        inv = am.Inversion.from_data_1d_mapper_and_regularization(
-            image_1d=np.ones(9),
-            noise_map_1d=np.ones(9),
+        inv = inversions.InversionImaging.from_data_mapper_and_regularization(
+            image=np.ones(9),
+            noise_map=np.ones(9),
             convolver=mock_inversion.MockConvolver(matrix_shape),
             mapper=mock_inversion.MockMapper(matrix_shape),
             regularization=mock_inversion.MockRegularization(matrix_shape),
@@ -121,9 +122,9 @@ class TestLogDetMatrix:
 
         matrix_shape = (3, 3)
 
-        inv = am.Inversion.from_data_1d_mapper_and_regularization(
-            image_1d=np.ones(9),
-            noise_map_1d=np.ones(9),
+        inv = inversions.InversionImaging.from_data_mapper_and_regularization(
+            image=np.ones(9),
+            noise_map=np.ones(9),
             convolver=mock_inversion.MockConvolver(matrix_shape),
             mapper=mock_inversion.MockMapper(matrix_shape),
             regularization=mock_inversion.MockRegularization(matrix_shape),
@@ -143,7 +144,7 @@ class TestReconstructedDataVectorAndImage:
         matrix_shape = (3, 3)
 
         mask = aa.mask.manual(
-            array_2d=np.array(
+            mask_2d=np.array(
                 [[True, True, True], [False, False, False], [True, True, True]]
             ),
             pixel_scales=1.0,
@@ -152,15 +153,15 @@ class TestReconstructedDataVectorAndImage:
 
         grid = aa.grid_masked.from_mask(mask=mask)
 
-        inv = am.Inversion.from_data_1d_mapper_and_regularization(
-            image_1d=np.ones(9),
-            noise_map_1d=np.ones(9),
+        inv = inversions.InversionImaging.from_data_mapper_and_regularization(
+            image=np.ones(9),
+            noise_map=np.ones(9),
             convolver=mock_inversion.MockConvolver(matrix_shape),
             mapper=mock_inversion.MockMapper(matrix_shape=matrix_shape, grid=grid),
             regularization=mock_inversion.MockRegularization(matrix_shape),
         )
 
-        inv.pixelization_values = np.array([1.0, 1.0, 1.0, 1.0])
+        inv.values = np.array([1.0, 1.0, 1.0, 1.0])
 
         inv.blurred_mapping_matrix = np.array(
             [[1.0, 1.0, 1.0, 1.0], [1.0, 0.0, 1.0, 1.0], [1.0, 0.0, 0.0, 0.0]]
@@ -169,15 +170,15 @@ class TestReconstructedDataVectorAndImage:
         # Imaging pixel 1 maps to 3 pixs pixxels -> value is 3.0
         # Imaging pixel 2 maps to 1 pixs pixxels -> value is 1.0
 
-        assert (inv.reconstructed_data_1d == np.array([4.0, 3.0, 1.0])).all()
-        assert inv.reconstructed_data_2d == np.array(
+        assert (inv.reconstructed_image == np.array([4.0, 3.0, 1.0])).all()
+        assert (inv.reconstructed_image.in_2d == np.array(
             [[0.0, 0.0, 0.0], [4.0, 3.0, 1.0], [0.0, 0.0, 0.0]]
-        )
+        )).all()
 
-        assert inv.pixelization_errors_with_covariance == pytest.approx(
+        assert inv.errors_with_covariance == pytest.approx(
             np.array([[0.7, -0.3, -0.3], [-0.3, 0.7, -0.3], [-0.3, -0.3, 0.7]]), 1.0e-4
         )
-        assert inv.pixelization_errors == pytest.approx(
+        assert inv.errors == pytest.approx(
             np.array([0.7, 0.7, 0.7]), 1.0e-4
         )
 
@@ -188,7 +189,7 @@ class TestReconstructedDataVectorAndImage:
         matrix_shape = (3, 3)
 
         mask = aa.mask.manual(
-            array_2d=np.array(
+            mask_2d=np.array(
                 [[True, True, True], [False, False, False], [True, True, True]]
             ),
             pixel_scales=1.0,
@@ -197,15 +198,15 @@ class TestReconstructedDataVectorAndImage:
 
         grid = aa.grid_masked.from_mask(mask=mask)
 
-        inv = am.Inversion.from_data_1d_mapper_and_regularization(
-            image_1d=np.ones(9),
-            noise_map_1d=np.ones(9),
+        inv = inversions.InversionImaging.from_data_mapper_and_regularization(
+            image=np.ones(9),
+            noise_map=np.ones(9),
             convolver=mock_inversion.MockConvolver(matrix_shape),
             mapper=mock_inversion.MockMapper(matrix_shape=matrix_shape, grid=grid),
             regularization=mock_inversion.MockRegularization(matrix_shape),
         )
 
-        inv.pixelization_values = np.array([1.0, 2.0, 3.0, 4.0])
+        inv.values = np.array([1.0, 2.0, 3.0, 4.0])
 
         inv.blurred_mapping_matrix = np.array(
             [[1.0, 1.0, 1.0, 1.0], [1.0, 0.0, 1.0, 1.0], [1.0, 0.0, 0.0, 0.0]]
@@ -215,15 +216,15 @@ class TestReconstructedDataVectorAndImage:
         # # Imaging pixel 1 maps to 3 pixs pixxels -> value is 1.0 + 3.0 + 4.0
         # # Imaging pixel 2 maps to 1 pixs pixxels -> value is 1.0
 
-        assert (inv.reconstructed_data_1d == np.array([10.0, 8.0, 1.0])).all()
-        assert inv.reconstructed_data_2d == np.array(
+        assert (inv.reconstructed_image == np.array([10.0, 8.0, 1.0])).all()
+        assert (inv.reconstructed_image.in_2d == np.array(
             [[0.0, 0.0, 0.0], [10.0, 8.0, 1.0], [0.0, 0.0, 0.0]]
-        )
+        )).all()
 
-        assert inv.pixelization_errors_with_covariance == pytest.approx(
+        assert inv.errors_with_covariance == pytest.approx(
             np.array([[0.7, -0.3, -0.3], [-0.3, 0.7, -0.3], [-0.3, -0.3, 0.7]]), 1.0e-4
         )
-        assert inv.pixelization_errors == pytest.approx(
+        assert inv.errors == pytest.approx(
             np.array([0.7, 0.7, 0.7]), 1.0e-4
         )
 
@@ -242,12 +243,12 @@ class TestReconstructedDataVectorAndImage:
 #         grid = aa.grid_stack_from_mask_sub_size_and_psf_shape(
 #             mask=mask, sub_size=1, psf_shape=(1,1))
 #
-#         inv = am.Inversion(
+#         inv = inversions.Inversion(
 #             image_1d=np.ones(9), noise_map_1d=np.ones(9), convolver=mock_inversion.MockConvolver(matrix_shape),
 #             mapper=mock_inversion.MockMapper(matrix_shape, grid),
 #             regularization=mock_inversion.MockRegularization(matrix_shape))
 #
-#         inv.pixelization_values = np.array([1.0, 1.0, 1.0, 1.0])
+#         inv.values = np.array([1.0, 1.0, 1.0, 1.0])
 #
 #         inv.blurred_mapping_matrix = np.array([[1.0, 1.0, 1.0, 1.0],
 #                                                [1.0, 0.0, 1.0, 1.0],
@@ -255,5 +256,5 @@ class TestReconstructedDataVectorAndImage:
 #
 #         pixelization_residuals_util = \
 #             am.util.inversion.pixelization_residuals_from_pixelization_values_reconstructed_data_1d_and_mapping_quantities(
-#                 pixelization_values=inv.pixelization_values, reconstructed_data_1d=inv.reconstructed_data_1d,
+#                 pixelization_values=inv.values, reconstructed_data_1d=inv.reconstructed_data_1d,
 #                 mask_1d_index_for_sub_mask_1d_index=inv.mapper.mask_1d_index_for_sub_mask_1d_index, all_sub_mask_1d_indexes_for_pixelization_1d_index=inv.mapper.all_sub_mask_1d_indexes_for_pixelization_1d_index)
