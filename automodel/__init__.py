@@ -7,3 +7,4 @@ from automodel.galaxy.galaxy_fit import GalaxyFit
 from automodel.galaxy.galaxy_model import GalaxyModel
 from automodel.inversion import pixelizations as pix
 from automodel.inversion import regularization as reg
+from automodel.hyper import hyper_data
