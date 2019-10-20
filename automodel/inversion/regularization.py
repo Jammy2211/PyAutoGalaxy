@@ -1,6 +1,6 @@
 import numpy as np
 
-from automodel.inversion.util import regularization_util
+from automodel.util import regularization_util
 
 
 class Regularization(object):

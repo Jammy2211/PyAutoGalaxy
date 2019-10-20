@@ -19,7 +19,7 @@ class TestMappingMatrix:
         pixelization_1d_index_for_sub_mask_1d_index = np.array([0, 1, 2])
         mask_1d_index_for_sub_mask_1d_index = np.array([0, 1, 2])
 
-        mapping_matrix = am.mapper_util.mapping_matrix_from_pixelization_1d_index_for_sub_mask_1d_index(
+        mapping_matrix = am.util.mapper.mapping_matrix_from_pixelization_1d_index_for_sub_mask_1d_index(
             pixelization_1d_index_for_sub_mask_1d_index=pixelization_1d_index_for_sub_mask_1d_index,
             pixels=6,
             total_mask_pixels=3,
@@ -43,7 +43,7 @@ class TestMappingMatrix:
         pixelization_1d_index_for_sub_mask_1d_index = np.array([0, 1, 2, 7, 6])
         mask_1d_index_for_sub_mask_1d_index = np.array([0, 1, 2, 3, 4])
 
-        mapping_matrix = am.mapper_util.mapping_matrix_from_pixelization_1d_index_for_sub_mask_1d_index(
+        mapping_matrix = am.util.mapper.mapping_matrix_from_pixelization_1d_index_for_sub_mask_1d_index(
             pixelization_1d_index_for_sub_mask_1d_index=pixelization_1d_index_for_sub_mask_1d_index,
             pixels=8,
             total_mask_pixels=5,
@@ -92,7 +92,7 @@ class TestMappingMatrix:
         mask_1d_index_for_sub_mask_1d_index = np.array(
             [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]
         )
-        mapping_matrix = am.mapper_util.mapping_matrix_from_pixelization_1d_index_for_sub_mask_1d_index(
+        mapping_matrix = am.util.mapper.mapping_matrix_from_pixelization_1d_index_for_sub_mask_1d_index(
             pixelization_1d_index_for_sub_mask_1d_index=pixelization_1d_index_for_sub_mask_1d_index,
             pixels=8,
             total_mask_pixels=5,
@@ -124,7 +124,7 @@ class TestMappingMatrix:
             [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]
         )
 
-        mapping_matrix = am.mapper_util.mapping_matrix_from_pixelization_1d_index_for_sub_mask_1d_index(
+        mapping_matrix = am.util.mapper.mapping_matrix_from_pixelization_1d_index_for_sub_mask_1d_index(
             pixelization_1d_index_for_sub_mask_1d_index=pixelization_1d_index_for_sub_mask_1d_index,
             pixels=8,
             total_mask_pixels=5,
@@ -253,7 +253,7 @@ class TestMappingMatrix:
             ]
         )
 
-        mapping_matrix = am.mapper_util.mapping_matrix_from_pixelization_1d_index_for_sub_mask_1d_index(
+        mapping_matrix = am.util.mapper.mapping_matrix_from_pixelization_1d_index_for_sub_mask_1d_index(
             pixelization_1d_index_for_sub_mask_1d_index=pixelization_1d_index_for_sub_mask_1d_index,
             pixels=6,
             total_mask_pixels=3,

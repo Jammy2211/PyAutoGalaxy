@@ -26,7 +26,7 @@ class TestRegularizationConstant:
             pixel_neighbors, pixel_neighbors_size
         )
 
-        regularization_matrix_util = am.regularization_util.constant_regularization_matrix_from_pixel_neighbors(
+        regularization_matrix_util = am.util.regularization.constant_regularization_matrix_from_pixel_neighbors(
             coefficient=1.0,
             pixel_neighbors=pixel_neighbors,
             pixel_neighbors_size=pixel_neighbors_size,
@@ -51,7 +51,7 @@ class TestRegularizationWeighted:
             hyper_image=galaxy_image,
         )
 
-        pixel_signals_util = am.regularization_util.adaptive_pixel_signals_from_images(
+        pixel_signals_util = am.util.regularization.adaptive_pixel_signals_from_images(
             pixels=6,
             signal_scale=2.0,
             pixelization_1d_index_for_sub_mask_1d_index=pixelization_1d_index_for_sub_mask_1d_index,
@@ -71,7 +71,7 @@ class TestRegularizationWeighted:
 
         weights = reg.regularization_weights_from_pixel_signals(pixel_signals)
 
-        weights_util = am.regularization_util.adaptive_regularization_weights_from_pixel_signals(
+        weights_util = am.util.regularization.adaptive_regularization_weights_from_pixel_signals(
             inner_coefficient=10.0, outer_coefficient=15.0, pixel_signals=pixel_signals
         )
 
@@ -101,7 +101,7 @@ class TestRegularizationWeighted:
             pixel_neighbors_size=pixel_neighbors_size,
         )
 
-        regularization_matrix_util = am.regularization_util.weighted_regularization_matrix_from_pixel_neighbors(
+        regularization_matrix_util = am.util.regularization.weighted_regularization_matrix_from_pixel_neighbors(
             regularization_weights=regularization_weights,
             pixel_neighbors=pixel_neighbors,
             pixel_neighbors_size=pixel_neighbors_size,

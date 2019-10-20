@@ -1,7 +1,7 @@
 import numpy as np
 
 from automodel import exc
-from automodel.inversion.util import inversion_util
+from automodel.util import inversion_util
 
 
 class Inversion(object):

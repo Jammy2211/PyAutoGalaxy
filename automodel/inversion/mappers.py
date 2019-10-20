@@ -1,5 +1,5 @@
 import autoarray as aa
-from automodel.inversion.util import mapper_util
+from automodel.util import mapper_util
 
 import numpy as np
 
@@ -184,7 +184,7 @@ class VoronoiMapper(Mapper):
             A stack of grid describing the observed image's pixel coordinates (e.g. an image-grid, sub-grid, etc.).
         border : grid.GridBorder
             The border of the grid's grid.
-        voronoi : scipy.spatiam.Voronoi
+        voronoi : scipy.spatial.Voronoi
             Class storing the Voronoi grid's 
         geometry : pixelization.Voronoi.Geometry
             The geometry (e.g. y / x edge locations, pixel-scales) of the Vornoi pixelization.

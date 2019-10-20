@@ -14,22 +14,22 @@ def rectangular_neighbors_from_shape(shape):
     pixel_neighbors = -1 * np.ones(shape=(pixels, 4))
     pixel_neighbors_size = np.zeros(pixels)
 
-    pixel_neighbors, pixel_neighbors_size = compute_corner_neighbors(
+    pixel_neighbors, pixel_neighbors_size = rectangular_corner_neighbors(
         pixel_neighbors, pixel_neighbors_size, shape, pixels
     )
-    pixel_neighbors, pixel_neighbors_size = compute_top_edge_neighbors(
+    pixel_neighbors, pixel_neighbors_size = rectangular_top_edge_neighbors(
         pixel_neighbors, pixel_neighbors_size, shape, pixels
     )
-    pixel_neighbors, pixel_neighbors_size = compute_left_edge_neighbors(
+    pixel_neighbors, pixel_neighbors_size = rectangular_left_edge_neighbors(
         pixel_neighbors, pixel_neighbors_size, shape, pixels
     )
-    pixel_neighbors, pixel_neighbors_size = compute_right_edge_neighbors(
+    pixel_neighbors, pixel_neighbors_size = rectangular_right_edge_neighbors(
         pixel_neighbors, pixel_neighbors_size, shape, pixels
     )
-    pixel_neighbors, pixel_neighbors_size = compute_bottom_edge_neighbors(
+    pixel_neighbors, pixel_neighbors_size = rectangular_bottom_edge_neighbors(
         pixel_neighbors, pixel_neighbors_size, shape, pixels
     )
-    pixel_neighbors, pixel_neighbors_size = compute_central_neighbors(
+    pixel_neighbors, pixel_neighbors_size = rectangular_central_neighbors(
         pixel_neighbors, pixel_neighbors_size, shape, pixels
     )
 
@@ -37,7 +37,7 @@ def rectangular_neighbors_from_shape(shape):
 
 
 @decorator_util.jit()
-def compute_corner_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pixels):
+def rectangular_corner_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pixels):
 
     pixel_neighbors[0, 0:2] = np.array([1, shape[1]])
     pixel_neighbors_size[0] = 2
@@ -59,7 +59,7 @@ def compute_corner_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pixel
 
 
 @decorator_util.jit()
-def compute_top_edge_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pixels):
+def rectangular_top_edge_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pixels):
 
     for pix in range(1, shape[1] - 1):
         pixel_index = pix
@@ -72,7 +72,7 @@ def compute_top_edge_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pix
 
 
 @decorator_util.jit()
-def compute_left_edge_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pixels):
+def rectangular_left_edge_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pixels):
 
     for pix in range(1, shape[0] - 1):
         pixel_index = pix * shape[1]
@@ -85,7 +85,7 @@ def compute_left_edge_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pi
 
 
 @decorator_util.jit()
-def compute_right_edge_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pixels):
+def rectangular_right_edge_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pixels):
 
     for pix in range(1, shape[0] - 1):
         pixel_index = pix * shape[1] + shape[1] - 1
@@ -98,7 +98,7 @@ def compute_right_edge_neighbors(pixel_neighbors, pixel_neighbors_size, shape, p
 
 
 @decorator_util.jit()
-def compute_bottom_edge_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pixels):
+def rectangular_bottom_edge_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pixels):
 
     for pix in range(1, shape[1] - 1):
         pixel_index = pixels - pix - 1
@@ -111,7 +111,7 @@ def compute_bottom_edge_neighbors(pixel_neighbors, pixel_neighbors_size, shape, 
 
 
 @decorator_util.jit()
-def compute_central_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pixels):
+def rectangular_central_neighbors(pixel_neighbors, pixel_neighbors_size, shape, pixels):
 
     for x in range(1, shape[0] - 1):
         for y in range(1, shape[1] - 1):
@@ -137,7 +137,7 @@ def voronoi_neighbors_from_pixels_and_ridge_points(pixels, ridge_points):
 
     Parameters
     ----------
-    ridge_points : scipy.spatiam.Voronoi.ridge_points
+    ridge_points : scipy.spatial.Voronoi.ridge_points
         Each Voronoi-ridge (two indexes representing a pixel mapping_matrix).
     """
 

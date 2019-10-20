@@ -186,7 +186,7 @@ class TestRectangular:
             pix = am.pix.Rectangular(shape=(7, 5))
 
             pixel_neighbors, pixel_neighbors_size = pix.pixel_neighbors
-            pixel_neighbors_util, pixel_neighbors_size_util = am.pixelization_util.rectangular_neighbors_from_shape(
+            pixel_neighbors_util, pixel_neighbors_size_util = am.util.pixelization.rectangular_neighbors_from_shape(
                 shape=(7, 5)
             )
 
@@ -378,10 +378,10 @@ class TestVoronoi:
                 pixels=9, ridge_points=voronoi.ridge_points
             )
 
-            voronoi = scipy.spatiam.Voronoi(
+            voronoi = scipy.spatial.Voronoi(
                 np.asarray([points[:, 1], points[:, 0]]).T, qhull_options="Qbb Qc Qx Qm"
             )
-            pixel_neighbors_util, pixel_neighbors_size_util = am.pixelization_util.voronoi_neighbors_from_pixels_and_ridge_points(
+            pixel_neighbors_util, pixel_neighbors_size_util = am.util.pixelization.voronoi_neighbors_from_pixels_and_ridge_points(
                 pixels=9, ridge_points=np.array(voronoi.ridge_points)
             )
 
