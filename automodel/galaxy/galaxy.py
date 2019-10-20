@@ -7,7 +7,7 @@ from autofit.mapper.model_object import ModelObject
 from automodel import exc
 from automodel import dimensions as dim
 from automodel.util import text_util
-from automodel.inversion import pixelizations as pix
+from autoarray.operators.inversion import pixelizations as pix
 from automodel.profiles import light_profiles as lp
 from automodel.profiles import mass_profiles as mp
 

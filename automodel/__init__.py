@@ -5,6 +5,4 @@ from automodel.galaxy.galaxy import Galaxy, HyperGalaxy, Redshift
 from automodel.galaxy.galaxy_data import GalaxyData, GalaxyFitData
 from automodel.galaxy.galaxy_fit import GalaxyFit
 from automodel.galaxy.galaxy_model import GalaxyModel
-from automodel.inversion import pixelizations as pix
-from automodel.inversion import regularization as reg
 from automodel.hyper import hyper_data
