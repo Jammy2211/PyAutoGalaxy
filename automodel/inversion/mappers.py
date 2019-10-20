@@ -89,7 +89,7 @@ class Mapper(object):
 
     @property
     def pixelization_1d_index_for_sub_mask_1d_index(self):
-        raise NotImplementedError("sub_to_pixelization should be overridden")
+        raise NotImplementedError("pixelization_1d_index_for_sub_mask_1d_index should be overridden")
 
     @property
     def all_sub_mask_1d_indexes_for_pixelization_1d_index(self):
@@ -112,6 +112,17 @@ class Mapper(object):
 
         return all_sub_mask_1d_indexes_for_pixelization_1d_index
 
+    def pixel_signals_from_signal_scale(
+        self, signal_scale
+    ):
+
+        return mapper_util.adaptive_pixel_signals_from_images(
+            pixels=self.pixels,
+            signal_scale=signal_scale,
+            pixelization_1d_index_for_sub_mask_1d_index=self.pixelization_1d_index_for_sub_mask_1d_index,
+            mask_1d_index_for_sub_mask_1d_index=self.grid.regions._mask_1d_index_for_sub_mask_1d_index,
+            hyper_image=self.hyper_image,
+        )
 
 class RectangularMapper(Mapper):
     def __init__(
@@ -151,18 +162,19 @@ class RectangularMapper(Mapper):
     @property
     def pixelization_1d_index_for_sub_mask_1d_index(self):
         """The 1D index mappings between the sub grid's pixels and rectangular pixelization's pixels"""
-        return self.mapping.grid_pixels_from_grid_arcsec_1d(grid_arcsec_1d=self.grid)
+        return aa.util.grid.grid_pixel_indexes_1d_from_grid_arcsec_1d_shape_2d_and_pixel_scales(
+            grid_arcsec_1d=self.grid, shape_2d=self.geometry.shape_2d, pixel_scales=self.geometry.pixel_scales, origin=self.geometry.origin).astype('int')
 
     def reconstructed_pixelization_from_solution_vector(self, solution_vector):
         """Given the solution vector of an inversion (see *inversions.Inversion*), determine the reconstructed \
         pixelization of the rectangular pixelization by using the mapper."""
-        recon = array_util.sub_array_2d_for_sub_array_1d_mask_and_sub_size(
+        recon = aa.util.array.sub_array_2d_from_sub_array_1d(
             sub_array_1d=solution_vector,
             mask=np.full(fill_value=False, shape=self.shape),
             sub_size=1,
         )
-        return aa.Array(
-            array=recon, pixel_scales=self.pixel_scales, origin=self.origin
+        return aa.array.manual_2d(
+            array=recon, sub_size=1, pixel_scales=self.geometry.pixel_scales, origin=self.geometry.origin
         )
 
 
@@ -210,10 +222,10 @@ class VoronoiMapper(Mapper):
         return mapper_util.pixelization_1d_index_for_voronoi_sub_mask_1d_index_from_grids_and_geometry(
             grid=self.grid,
             nearest_pixelization_1d_index_for_mask_1d_index=self.pixelization_grid.nearest_pixelization_1d_index_for_mask_1d_index,
-            mask_1d_index_for_sub_mask_1d_index=self.grid.mask._mask_1d_index_for_sub_mask_1d_index,
-            pixel_centres=self.pixel_centres,
-            pixel_neighbors=self.pixel_neighbors,
-            pixel_neighbors_size=self.pixel_neighbors_size,
+            mask_1d_index_for_sub_mask_1d_index=self.grid.regions._mask_1d_index_for_sub_mask_1d_index,
+            pixel_centres=self.pixelization_grid,
+            pixel_neighbors=self.geometry.pixel_neighbors,
+            pixel_neighbors_size=self.geometry.pixel_neighbors_size,
         ).astype(
             "int"
         )

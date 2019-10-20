@@ -1,9 +1,11 @@
 import numpy as np
 import pytest
 
+import autoarray as aa
 import automodel as am
-from test import MockPixelizationGrid
-from test import MockGeometry
+from automodel.inversion import mappers
+from test_autoarray.mock.mock_grids import MockPixelizationGrid
+from test_automodel.mock.mock_inversion import MockGeometry
 
 
 def grid_to_pixel_pixels_via_nearest_neighbour(grid, pixel_centers):
@@ -74,7 +76,7 @@ class TestRectangularMapper:
                 sub_size=1,
             )
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=9,
                 shape=(3, 3),
                 grid=grid,
@@ -131,7 +133,7 @@ class TestRectangularMapper:
                 sub_size=1,
             )
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=9,
                 shape=(3, 3),
                 grid=grid,
@@ -186,7 +188,7 @@ class TestRectangularMapper:
                 sub_size=1,
             )
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=9,
                 shape=(3, 3),
                 grid=grid,
@@ -248,7 +250,7 @@ class TestRectangularMapper:
                 sub_size=1,
             )
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=12,
                 shape=(4, 3),
                 grid=grid,
@@ -312,7 +314,7 @@ class TestRectangularMapper:
                 sub_size=1,
             )
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=12,
                 shape=(3, 4),
                 grid=grid,
@@ -362,7 +364,7 @@ class TestRectangularMapper:
                 sub_size=1,
             )
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=9,
                 shape=(3, 3),
                 grid=grid,
@@ -407,7 +409,7 @@ class TestRectangularMapper:
                 sub_size=1,
             )
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=9,
                 shape=(3, 3),
                 grid=grid,
@@ -453,7 +455,7 @@ class TestRectangularMapper:
                 sub_size=1,
             )
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=12,
                 shape=(4, 3),
                 grid=grid,
@@ -501,7 +503,7 @@ class TestRectangularMapper:
 
             geometry = pix.geometry_from_grid(grid=pixelization_grid)
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=12,
                 shape=(3, 4),
                 grid=grid,
@@ -573,7 +575,7 @@ class TestRectangularMapper:
                 sub_size=1,
             )
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=9,
                 shape=(3, 3),
                 grid=grid,
@@ -630,7 +632,7 @@ class TestRectangularMapper:
                 sub_size=1,
             )
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=9,
                 shape=(3, 3),
                 grid=grid,
@@ -676,7 +678,7 @@ class TestRectangularMapper:
                 sub_size=1,
             )
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=12,
                 shape=(4, 3),
                 grid=grid,
@@ -723,7 +725,7 @@ class TestRectangularMapper:
 
             geometry = pix.geometry_from_grid(grid=pixelization_grid)
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=9,
                 shape=(3, 3),
                 grid=None,
@@ -736,14 +738,14 @@ class TestRectangularMapper:
             )
 
             assert (
-                recon_pix
+                recon_pix.in_2d
                 == np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]])
             ).all()
             assert recon_pix.pixel_scales == pytest.approx((4.0 / 3.0, 2.0 / 3.0), 1e-2)
             assert recon_pix.origin == (0.0, 0.0)
 
         def test__compare_to_imaging_util(self):
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=9,
                 shape=(4, 3),
                 grid=None,
@@ -757,15 +759,15 @@ class TestRectangularMapper:
             recon_pix = pix.reconstructed_pixelization_from_solution_vector(
                 solution_vector=solution
             )
-            recon_pix_util = aa.util.array.sub_array_2d_for_sub_array_1d_mask_and_sub_size(
+            recon_pix_util = aa.util.array.sub_array_2d_from_sub_array_1d(
                 sub_array_1d=solution,
                 mask=np.full(fill_value=False, shape=(4, 3)),
                 sub_size=1,
             )
-            assert (recon_pix == recon_pix_util).all()
-            assert recon_pix.shape == (4, 3)
+            assert (recon_pix.in_2d == recon_pix_util).all()
+            assert recon_pix.shape_2d == (4, 3)
 
-            pix = am.RectangularMapper(
+            pix = mappers.RectangularMapper(
                 pixels=9,
                 shape=(3, 4),
                 grid=None,
@@ -778,13 +780,58 @@ class TestRectangularMapper:
             recon_pix = pix.reconstructed_pixelization_from_solution_vector(
                 solution_vector=solution
             )
-            recon_pix_util = aa.util.array.sub_array_2d_for_sub_array_1d_mask_and_sub_size(
+            recon_pix_util = aa.util.array.sub_array_2d_from_sub_array_1d(
                 sub_array_1d=solution,
                 mask=np.full(fill_value=False, shape=(3, 4)),
                 sub_size=1,
             )
-            assert (recon_pix == recon_pix_util).all()
-            assert recon_pix.shape == (3, 4)
+            assert (recon_pix.in_2d == recon_pix_util).all()
+            assert recon_pix.shape_2d == (3, 4)
+
+    class TestPixelScales:
+
+        def test__pixel_signals__compare_to_mapper_util(self, grid_7x7, image_7x7):
+
+            pixelization_grid = np.array(
+                [
+                    [2.0, -1.0],
+                    [2.0, 0.0],
+                    [2.0, 1.0],
+                    [0.0, -1.0],
+                    [0.0, 0.0],
+                    [0.0, 1.0],
+                    [-2.0, -1.0],
+                    [-2.0, 0.0],
+                    [-2.0, 1.0],
+                ]
+            )
+
+            pix = am.pix.Rectangular(shape_2d=(3, 3))
+
+            geometry = pix.geometry_from_grid(grid=pixelization_grid)
+
+            mapper = mappers.RectangularMapper(
+                pixels=6,
+                shape=(3, 3),
+                grid=grid_7x7,
+                pixelization_grid=pixelization_grid,
+                geometry=geometry,
+                hyper_image=image_7x7
+            )
+
+            pixel_signals = mapper.pixel_signals_from_signal_scale(
+                signal_scale=2.0
+            )
+
+            pixel_signals_util = am.util.mapper.adaptive_pixel_signals_from_images(
+                pixels=6,
+                signal_scale=2.0,
+                pixelization_1d_index_for_sub_mask_1d_index=mapper.pixelization_1d_index_for_sub_mask_1d_index,
+                mask_1d_index_for_sub_mask_1d_index=grid_7x7.regions._mask_1d_index_for_sub_mask_1d_index,
+                hyper_image=image_7x7,
+            )
+
+            assert (pixel_signals == pixel_signals_util).all()
 
 
 class TestVoronoiMapper:
@@ -868,55 +915,17 @@ class TestVoronoiMapper:
             assert sub_to_pix[5] == 5
 
     class TestSubToPixelization:
-        def test__sub_to_pix_of_mapper_matches_nearest_neighbor_calculation(self):
+        def test__sub_to_pix_of_mapper_matches_nearest_neighbor_calculation(self, grid_7x7):
             pixel_centers = np.array(
                 [[0.1, 0.1], [1.1, 0.1], [2.1, 0.1], [0.1, 1.1], [1.1, 1.1], [2.1, 1.1]]
             )
 
-            grid = np.array(
-                [
-                    [0.05, 0.15],
-                    [0.15, 0.15],
-                    [0.05, 0.05],
-                    [0.15, 0.05],
-                    [1.05, 0.15],
-                    [1.15, 0.15],
-                    [1.05, 0.05],
-                    [1.15, 0.05],
-                    [2.05, 0.15],
-                    [2.15, 0.15],
-                    [2.05, 0.05],
-                    [2.15, 0.05],
-                    [0.05, 1.15],
-                    [0.15, 1.15],
-                    [0.05, 1.05],
-                    [0.15, 1.05],
-                    [1.05, 1.15],
-                    [1.15, 1.15],
-                    [1.05, 1.05],
-                    [1.15, 1.05],
-                    [2.05, 1.15],
-                    [2.15, 1.15],
-                    [2.05, 1.05],
-                    [2.15, 1.05],
-                ]
-            )
-
             sub_to_pix_nearest_neighbour = grid_to_pixel_pixels_via_nearest_neighbour(
-                grid, pixel_centers
+                grid_7x7, pixel_centers
             )
 
-            mask_1d_index_for_sub_mask_1d_index = np.array(
-                [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
-            )
             nearest_pixelization_1d_index_for_mask_1d_index = np.array(
                 [0, 0, 1, 0, 0, 1, 2, 2, 3]
-            )
-
-            grid = MockPixelizationGrid(
-                arr=grid,
-                mask_1d_index_for_sub_mask_1d_index=mask_1d_index_for_sub_mask_1d_index,
-                sub_size=1,
             )
 
             pixelization_grid = MockPixelizationGrid(
@@ -930,9 +939,9 @@ class TestVoronoiMapper:
                 pixels=6, ridge_points=voronoi.ridge_points
             )
 
-            mapper = am.VoronoiMapper(
+            mapper = mappers.VoronoiMapper(
                 pixels=6,
-                grid=grid,
+                grid=grid_7x7,
                 pixelization_grid=pixelization_grid,
                 voronoi=voronoi,
                 geometry=MockGeometry(
@@ -946,3 +955,52 @@ class TestVoronoiMapper:
                 mapper.pixelization_1d_index_for_sub_mask_1d_index
                 == sub_to_pix_nearest_neighbour
             ).all()
+
+    class TestPixelScales:
+
+        def test__pixel_scales_work_for_voronoi_mapper(self, grid_7x7, image_7x7):
+            pixel_centers = np.array(
+                [[0.1, 0.1], [1.1, 0.1], [2.1, 0.1], [0.1, 1.1], [1.1, 1.1], [2.1, 1.1]]
+            )
+
+            nearest_pixelization_1d_index_for_mask_1d_index = np.array(
+                [0, 0, 1, 0, 0, 1, 2, 2, 3]
+            )
+
+            pixelization_grid = MockPixelizationGrid(
+                arr=pixel_centers,
+                nearest_pixelization_1d_index_for_mask_1d_index=nearest_pixelization_1d_index_for_mask_1d_index,
+            )
+
+            pix = am.pix.Voronoi()
+            voronoi = pix.voronoi_from_pixel_centers(pixel_centers)
+            pixel_neighbors, pixel_neighbors_size = pix.neighbors_from_pixels_and_ridge_points(
+                pixels=6, ridge_points=voronoi.ridge_points
+            )
+
+            mapper = mappers.VoronoiMapper(
+                pixels=6,
+                grid=grid_7x7,
+                pixelization_grid=pixelization_grid,
+                voronoi=voronoi,
+                geometry=MockGeometry(
+                    pixel_centres=pixel_centers,
+                    pixel_neighbors=pixel_neighbors,
+                    pixel_neighbors_size=pixel_neighbors_size,
+                ),
+                hyper_image=image_7x7
+            )
+
+            pixel_signals = mapper.pixel_signals_from_signal_scale(
+                signal_scale=2.0
+            )
+
+            pixel_signals_util = am.util.mapper.adaptive_pixel_signals_from_images(
+                pixels=6,
+                signal_scale=2.0,
+                pixelization_1d_index_for_sub_mask_1d_index=mapper.pixelization_1d_index_for_sub_mask_1d_index,
+                mask_1d_index_for_sub_mask_1d_index=grid_7x7.regions._mask_1d_index_for_sub_mask_1d_index,
+                hyper_image=image_7x7,
+            )
+
+            assert (pixel_signals == pixel_signals_util).all()

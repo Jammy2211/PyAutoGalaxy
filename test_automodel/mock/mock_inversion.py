@@ -48,6 +48,17 @@ class MockRegularization(object):
         return np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])
 
 
+class MockRegMapper(object):
+
+    def __init__(self, pixel_neighbors=None, pixel_neighbors_size=None, pixel_signals=None):
+        self.pixel_neighbors = pixel_neighbors
+        self.pixel_neighbors_size = pixel_neighbors_size
+        self.pixel_signals = pixel_signals
+
+    def pixel_signals_from_signal_scale(self, signal_scale):
+        return self.pixel_signals
+
+
 class MockMapper(object):
     def __init__(self, matrix_shape, grid=None):
 
