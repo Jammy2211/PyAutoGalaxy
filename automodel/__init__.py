@@ -6,3 +6,5 @@ from automodel.galaxy.galaxy_data import GalaxyData, GalaxyFitData
 from automodel.galaxy.galaxy_fit import GalaxyFit
 from automodel.galaxy.galaxy_model import GalaxyModel
 from automodel.hyper import hyper_data
+from automodel import plotters as plot
+from autoarray.operators.inversion import pixelizations as pix, regularization as reg

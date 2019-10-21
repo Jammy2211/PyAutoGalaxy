@@ -21,8 +21,6 @@ class TestGalaxyFitData(object):
             galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
 
-        print(galaxy_fit_data.image)
-
 
         assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
         assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
@@ -93,7 +91,7 @@ class TestGalaxyFitData(object):
             use_image=True,
         )
 
-        grid = aa.grid_masked.from_mask(mask=sub_mask_7x7)
+        grid = aa.masked_grid.from_mask(mask=sub_mask_7x7)
         new_grid = grid.new_grid_with_interpolator(pixel_scale_interpolation_grid=1.0)
         assert (gal_data_7x7.grid == new_grid).all()
         assert (gal_data_7x7.grid.interpolator.vtx == new_grid.interpolator.vtx).all()

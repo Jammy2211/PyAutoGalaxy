@@ -11,8 +11,8 @@ class TestCase:
         # the source model_galaxy which comprises an elliptical exponential and elliptical sersic light profile.
         source_galaxy_prior = am.GalaxyModel(
             redshift=am.Redshift,
-            light_profile_one=am.light_profiles.EllipticalExponential,
-            light_profile_2=am.light_profiles.EllipticalSersic,
+            light_profile_one=am.lp.EllipticalExponential,
+            light_profile_2=am.lp.EllipticalSersic,
         )
 
         # Create a model_galaxy prior for the source model_galaxy. Here we are describing both the light and mass
@@ -20,8 +20,8 @@ class TestCase:
         # should match.
         lens_galaxy_prior = am.GalaxyModel(
             redshift=am.Redshift,
-            light_profile=am.light_profiles.EllipticalExponential,
-            mass_profile=am.mass_profiles.EllipticalExponential,
+            light_profile=am.lp.EllipticalExponential,
+            mass_profile=am.mp.EllipticalExponential,
             align_centres=True,
         )
 

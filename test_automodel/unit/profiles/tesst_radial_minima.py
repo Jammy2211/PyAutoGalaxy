@@ -232,7 +232,7 @@ class TestPowerLaw(object):
 
         mask = aa.mask.manual(mask, pixel_scales=1.0)
 
-        grid = aa.grid_masked.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -956,7 +956,7 @@ class TestSersicMassRadialGradient(object):
 
         mask = aa.mask.manual(mask, pixel_scales=1.0)
 
-        grid = aa.grid_masked.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5

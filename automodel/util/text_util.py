@@ -1,6 +1,6 @@
 import configparser
 
-import autoarray as aa
+from autoarray import conf
 
 
 def format_string_for_label(label: str) -> str:
@@ -18,7 +18,7 @@ def format_string_for_label(label: str) -> str:
     format
         The format string (e.g {:.2f})
     """
-    label_conf = aa.conf.instance.label_format
+    label_conf = conf.instance.label_format
 
     try:
         # noinspection PyProtectedMember

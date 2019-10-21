@@ -1,18 +1,18 @@
-import autofit as af
+import autoarray as aa
 import matplotlib
 
-backend = af.conf.instance.visualize.get("figures", "backend", str)
+backend = aa.conf.instance.visualize.get("figures", "backend", str)
 matplotlib.use(backend)
 from matplotlib import pyplot as plt
 
 import autoarray as aa
+from autoarray.plotters import plotter_util
 from automodel import exc
-from automodel.lens.plotters import lens_plotter_util
 
 
-def plot_fit_subplot(
+def subplot(
     fit,
-    should_plot_mask=True,
+    should_plot_mask_overlay=True,
     positions=None,
     units="arcsec",
     kpc_per_arcsec=None,
@@ -41,11 +41,11 @@ def plot_fit_subplot(
     output_format="show",
 ):
 
-    rows, columns, figsize_tool = aa.plotter_util.get_subplot_rows_columns_figsize(
+    rows, columns, figsize_tool = plotter_util.get_subplot_rows_columns_figsize(
         number_subplots=4
     )
 
-    mask = lens_plotter_util.get_mask(fit=fit, should_plot_mask=should_plot_mask)
+    mask = aa.plot.fit.get_mask_overlay(fit=fit, should_plot_mask_overlay=should_plot_mask_overlay)
 
     if figsize is None:
         figsize = figsize_tool
@@ -53,7 +53,7 @@ def plot_fit_subplot(
     plt.figure(figsize=figsize)
     plt.subplot(rows, columns, 1)
 
-    plot_galaxy_data_array(
+    galaxy_data_array(
         galaxy_data=fit.galaxy_data,
         mask=mask,
         positions=positions,
@@ -87,7 +87,7 @@ def plot_fit_subplot(
 
     plt.subplot(rows, columns, 2)
 
-    lens_plotter_util.plot_model_data(
+    aa.plot.fit.model_image(
         fit=fit,
         mask=mask,
         positions=positions,
@@ -121,7 +121,7 @@ def plot_fit_subplot(
 
     plt.subplot(rows, columns, 3)
 
-    lens_plotter_util.plot_residual_map(
+    aa.plot.fit.residual_map(
         fit=fit,
         mask=mask,
         as_subplot=True,
@@ -153,7 +153,7 @@ def plot_fit_subplot(
 
     plt.subplot(rows, columns, 4)
 
-    lens_plotter_util.plot_chi_squared_map(
+    aa.plot.fit.chi_squared_map(
         fit=fit,
         mask=mask,
         as_subplot=True,
@@ -183,7 +183,7 @@ def plot_fit_subplot(
         output_format=output_format,
     )
 
-    aa.plotter_util.output_subplot_array(
+    plotter_util.output_subplot_array(
         output_path=output_path,
         output_filename=output_filename,
         output_format=output_format,
@@ -192,9 +192,9 @@ def plot_fit_subplot(
     plt.close()
 
 
-def plot_fit_individuals(
+def individuals(
     fit,
-    should_plot_mask=True,
+    should_plot_mask_overlay=True,
     positions=None,
     should_plot_image=False,
     should_plot_noise_map=False,
@@ -206,13 +206,13 @@ def plot_fit_individuals(
     output_format="show",
 ):
 
-    mask = lens_plotter_util.get_mask(fit=fit, should_plot_mask=should_plot_mask)
+    mask = aa.plot.fit.get_mask_overlay(fit=fit, should_plot_mask_overlay=should_plot_mask_overlay)
 
     kpc_per_arcsec = None
 
     if should_plot_image:
 
-        plot_galaxy_data_array(
+        galaxy_data_array(
             galaxy_data=fit.galaxy_data,
             mask=mask,
             positions=positions,
@@ -224,7 +224,7 @@ def plot_fit_individuals(
 
     if should_plot_noise_map:
 
-        lens_plotter_util.plot_noise_map(
+        aa.plot.fit.noise_map(
             fit=fit,
             mask=mask,
             positions=positions,
@@ -236,7 +236,7 @@ def plot_fit_individuals(
 
     if should_plot_model_image:
 
-        lens_plotter_util.plot_model_data(
+        aa.plot.fit.model_image(
             fit=fit,
             mask=mask,
             positions=positions,
@@ -248,7 +248,7 @@ def plot_fit_individuals(
 
     if should_plot_residual_map:
 
-        lens_plotter_util.plot_residual_map(
+        aa.plot.fit.residual_map(
             fit=fit,
             mask=mask,
             units=units,
@@ -259,7 +259,7 @@ def plot_fit_individuals(
 
     if should_plot_chi_squared_map:
 
-        lens_plotter_util.plot_chi_squared_map(
+        aa.plot.fit.chi_squared_map(
             fit=fit,
             mask=mask,
             units=units,
@@ -269,7 +269,7 @@ def plot_fit_individuals(
         )
 
 
-def plot_galaxy_data_array(
+def galaxy_data_array(
     galaxy_data,
     mask=None,
     positions=None,
@@ -316,7 +316,7 @@ def plot_galaxy_data_array(
             "The galaxy data_type array does not have a True use_profile_type"
         )
 
-    aa.plot_array(
+    aa.plot.array(
         array=galaxy_data.image.in_2d,
         mask_overlay=mask,
         positions=positions,
@@ -348,3 +348,4 @@ def plot_galaxy_data_array(
         output_format=output_format,
         output_filename=output_filename,
     )
+

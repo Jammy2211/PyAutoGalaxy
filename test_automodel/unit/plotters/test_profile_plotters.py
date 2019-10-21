@@ -14,7 +14,7 @@ def test__all_quantities_are_output(
     lp_0, mp_0, sub_grid_7x7, mask_7x7, positions_7x7, profile_plotter_path, plot_patch
 ):
 
-    am.profile_plotters.plot_image(
+    am.plot.profile.image(
         light_profile=lp_0,
         grid=sub_grid_7x7,
         mask=mask_7x7,
@@ -27,7 +27,7 @@ def test__all_quantities_are_output(
 
     assert profile_plotter_path + "image.png" in plot_patch.paths
 
-    am.profile_plotters.plot_convergence(
+    am.plot.profile.convergence(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
         mask=mask_7x7,
@@ -42,7 +42,7 @@ def test__all_quantities_are_output(
 
     assert profile_plotter_path + "convergence.png" in plot_patch.paths
 
-    am.profile_plotters.plot_potential(
+    am.plot.profile.potential(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
         mask=mask_7x7,
@@ -57,7 +57,7 @@ def test__all_quantities_are_output(
 
     assert profile_plotter_path + "potential.png" in plot_patch.paths
 
-    am.profile_plotters.plot_deflections_y(
+    am.plot.profile.deflections_y(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
         mask=mask_7x7,
@@ -72,7 +72,7 @@ def test__all_quantities_are_output(
 
     assert profile_plotter_path + "deflections_y.png" in plot_patch.paths
 
-    am.profile_plotters.plot_deflections_x(
+    am.plot.profile.deflections_x(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
         mask=mask_7x7,
@@ -87,7 +87,7 @@ def test__all_quantities_are_output(
 
     assert profile_plotter_path + "deflections_x.png" in plot_patch.paths
 
-    am.profile_plotters.plot_magnification(
+    am.plot.profile.magnification(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
         mask=mask_7x7,

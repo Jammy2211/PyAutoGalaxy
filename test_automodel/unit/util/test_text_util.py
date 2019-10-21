@@ -1,7 +1,6 @@
 import os
 import shutil
 import pytest
-
 import autoarray as aa
 import automodel as am
 
@@ -38,6 +37,7 @@ def test__label_and_label_string():
 
 
 def test__label_and_value_string():
+
     string0 = am.util.text.label_and_value_string(
         label="param0", value=2.0, whitespace=10
     )

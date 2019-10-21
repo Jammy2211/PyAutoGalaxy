@@ -1,15 +1,15 @@
-import autofit as af
+import autoarray as aa
 import matplotlib
 
-backend = af.conf.instance.visualize.get("figures", "backend", str)
+backend = aa.conf.instance.visualize.get("figures", "backend", str)
 matplotlib.use(backend)
 from matplotlib import pyplot as plt
 
-import autoarray as aa
-from automodel.profiles.plotters import profile_plotters
+from autoarray.plotters import plotter_util
+from automodel.plotters import profile_plotters
 
 
-def plot_profile_image(
+def profile_image(
     galaxy,
     grid,
     mask=None,
@@ -59,7 +59,7 @@ def plot_profile_image(
 
     if galaxy.has_mass_profile:
 
-        lines = aa.plotter_util.get_critical_curve_and_caustic(
+        lines = plotter_util.get_critical_curve_and_caustic(
             obj=galaxy,
             grid=grid,
             plot_critical_curve=plot_critical_curves,
@@ -68,7 +68,7 @@ def plot_profile_image(
     else:
         lines = None
 
-    aa.plot_array(
+    aa.plot.array(
         array=image,
         mask_overlay=mask,
         positions=positions,
@@ -103,7 +103,7 @@ def plot_profile_image(
     )
 
 
-def plot_convergence(
+def convergence(
     galaxy,
     grid,
     mask=None,
@@ -151,14 +151,14 @@ def plot_convergence(
     """
     convergence = galaxy.convergence_from_grid(grid=grid)
 
-    lines = aa.plotter_util.get_critical_curve_and_caustic(
+    lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
         plot_critical_curve=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
-    aa.plot_array(
+    aa.plot.array(
         array=convergence,
         mask_overlay=mask,
         positions=positions,
@@ -193,7 +193,7 @@ def plot_convergence(
     )
 
 
-def plot_potential(
+def potential(
     galaxy,
     grid,
     mask=None,
@@ -241,14 +241,14 @@ def plot_potential(
      """
     potential = galaxy.potential_from_grid(grid=grid)
 
-    lines = aa.plotter_util.get_critical_curve_and_caustic(
+    lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
         plot_critical_curve=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
-    aa.plot_array(
+    aa.plot.array(
         array=potential,
         mask_overlay=mask,
         positions=positions,
@@ -283,7 +283,7 @@ def plot_potential(
     )
 
 
-def plot_deflections_y(
+def deflections_y(
     galaxy,
     grid,
     mask=None,
@@ -329,17 +329,17 @@ def plot_deflections_y(
     grid : ndarray or datas.array.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
     """
-    deflections = galaxy.deflections_from_grid(grid)
-    deflections_y = grid.mask.mapping.scaled_array_2d_from_array_1d(deflections[:, 0])
+    deflections = galaxy.deflections_from_grid(grid=grid)
+    deflections_y = grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 0])
 
-    lines = aa.plotter_util.get_critical_curve_and_caustic(
+    lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
         plot_critical_curve=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
-    aa.plot_array(
+    aa.plot.array(
         array=deflections_y,
         mask_overlay=mask,
         positions=positions,
@@ -374,7 +374,7 @@ def plot_deflections_y(
     )
 
 
-def plot_deflections_x(
+def deflections_x(
     galaxy,
     grid,
     mask=None,
@@ -420,17 +420,17 @@ def plot_deflections_x(
      grid : ndarray or datas.array.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
      """
-    deflections = galaxy.deflections_from_grid(grid)
-    deflections_x = grid.mask.mapping.scaled_array_2d_from_array_1d(deflections[:, 1])
+    deflections = galaxy.deflections_from_grid(grid=grid)
+    deflections_x = grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 1])
 
-    lines = aa.plotter_util.get_critical_curve_and_caustic(
+    lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
         plot_critical_curve=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
-    aa.plot_array(
+    aa.plot.array(
         array=deflections_x,
         mask_overlay=mask,
         positions=positions,
@@ -465,7 +465,7 @@ def plot_deflections_x(
     )
 
 
-def plot_magnification(
+def magnification(
     galaxy,
     grid,
     mask=None,
@@ -513,14 +513,14 @@ def plot_magnification(
      """
     magnification = galaxy.magnification_from_grid(grid=grid)
 
-    lines = aa.plotter_util.get_critical_curve_and_caustic(
+    lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
         plot_critical_curve=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
-    aa.plot_array(
+    aa.plot.array(
         array=magnification,
         mask_overlay=mask,
         positions=positions,
@@ -555,7 +555,7 @@ def plot_magnification(
     )
 
 
-def plot_image_subplot(
+def profile_image_subplot(
     galaxy,
     grid,
     mask=None,
@@ -588,7 +588,7 @@ def plot_image_subplot(
 ):
 
     total_light_profiles = len(galaxy.light_profiles)
-    rows, columns, figsize_tool = aa.plotter_util.get_subplot_rows_columns_figsize(
+    rows, columns, figsize_tool = plotter_util.get_subplot_rows_columns_figsize(
         number_subplots=total_light_profiles
     )
 
@@ -601,7 +601,7 @@ def plot_image_subplot(
 
         plt.subplot(rows, columns, i + 1)
 
-        profile_plotters.plot_image(
+        profile_plotters.image(
             light_profile=light_profile,
             mask=mask,
             positions=positions,
@@ -635,7 +635,7 @@ def plot_image_subplot(
             output_filename=output_filename,
         )
 
-    aa.plotter_util.output_subplot_array(
+    plotter_util.output_subplot_array(
         output_path=output_path,
         output_filename=output_filename,
         output_format=output_format,
@@ -643,7 +643,7 @@ def plot_image_subplot(
     plt.close()
 
 
-def plot_convergence_subplot(
+def convergence_subplot(
     galaxy,
     grid,
     mask=None,
@@ -676,7 +676,7 @@ def plot_convergence_subplot(
 ):
 
     total_mass_profiles = len(galaxy.mass_profiles)
-    rows, columns, figsize_tool = aa.plotter_util.get_subplot_rows_columns_figsize(
+    rows, columns, figsize_tool = plotter_util.get_subplot_rows_columns_figsize(
         number_subplots=total_mass_profiles
     )
 
@@ -689,7 +689,7 @@ def plot_convergence_subplot(
 
         plt.subplot(rows, columns, i + 1)
 
-        profile_plotters.plot_convergence(
+        profile_plotters.convergence(
             mass_profile=mass_profile,
             grid=grid,
             mask=mask,
@@ -723,7 +723,7 @@ def plot_convergence_subplot(
             output_filename=output_filename,
         )
 
-    aa.plotter_util.output_subplot_array(
+    plotter_util.output_subplot_array(
         output_path=output_path,
         output_filename=output_filename,
         output_format=output_format,
@@ -731,7 +731,7 @@ def plot_convergence_subplot(
     plt.close()
 
 
-def plot_potential_subplot(
+def potential_subplot(
     galaxy,
     grid,
     mask=None,
@@ -764,7 +764,7 @@ def plot_potential_subplot(
 ):
 
     total_mass_profiles = len(galaxy.mass_profiles)
-    rows, columns, figsize_tool = aa.plotter_util.get_subplot_rows_columns_figsize(
+    rows, columns, figsize_tool = plotter_util.get_subplot_rows_columns_figsize(
         number_subplots=total_mass_profiles
     )
 
@@ -777,7 +777,7 @@ def plot_potential_subplot(
 
         plt.subplot(rows, columns, i + 1)
 
-        profile_plotters.plot_potential(
+        profile_plotters.potential(
             mass_profile=mass_profile,
             grid=grid,
             mask=mask,
@@ -811,7 +811,7 @@ def plot_potential_subplot(
             output_filename=output_filename,
         )
 
-    aa.plotter_util.output_subplot_array(
+    plotter_util.output_subplot_array(
         output_path=output_path,
         output_filename=output_filename,
         output_format=output_format,
@@ -819,7 +819,7 @@ def plot_potential_subplot(
     plt.close()
 
 
-def plot_deflections_y_subplot(
+def deflections_y_subplot(
     galaxy,
     grid,
     mask=None,
@@ -852,7 +852,7 @@ def plot_deflections_y_subplot(
 ):
 
     total_mass_profiles = len(galaxy.mass_profiles)
-    rows, columns, figsize_tool = aa.plotter_util.get_subplot_rows_columns_figsize(
+    rows, columns, figsize_tool = plotter_util.get_subplot_rows_columns_figsize(
         number_subplots=total_mass_profiles
     )
 
@@ -865,7 +865,7 @@ def plot_deflections_y_subplot(
 
         plt.subplot(rows, columns, i + 1)
 
-        profile_plotters.plot_deflections_y(
+        profile_plotters.deflections_y(
             mass_profile=mass_profile,
             grid=grid,
             mask=mask,
@@ -899,7 +899,7 @@ def plot_deflections_y_subplot(
             output_filename=output_filename,
         )
 
-    aa.plotter_util.output_subplot_array(
+    plotter_util.output_subplot_array(
         output_path=output_path,
         output_filename=output_filename,
         output_format=output_format,
@@ -907,7 +907,7 @@ def plot_deflections_y_subplot(
     plt.close()
 
 
-def plot_deflections_x_subplot(
+def deflections_x_subplot(
     galaxy,
     grid,
     mask=None,
@@ -940,7 +940,7 @@ def plot_deflections_x_subplot(
 ):
 
     total_mass_profiles = len(galaxy.mass_profiles)
-    rows, columns, figsize_tool = aa.plotter_util.get_subplot_rows_columns_figsize(
+    rows, columns, figsize_tool = plotter_util.get_subplot_rows_columns_figsize(
         number_subplots=total_mass_profiles
     )
 
@@ -953,7 +953,7 @@ def plot_deflections_x_subplot(
 
         plt.subplot(rows, columns, i + 1)
 
-        profile_plotters.plot_deflections_x(
+        profile_plotters.deflections_x(
             mass_profile=mass_profile,
             grid=grid,
             mask=mask,
@@ -987,7 +987,7 @@ def plot_deflections_x_subplot(
             output_filename=output_filename,
         )
 
-    aa.plotter_util.output_subplot_array(
+    plotter_util.output_subplot_array(
         output_path=output_path,
         output_filename=output_filename,
         output_format=output_format,

@@ -1,7 +1,8 @@
 import autoarray as aa
+from autoarray.plotters import plotter_util
 
 
-def plot_image(
+def image(
     light_profile,
     grid,
     mask=None,
@@ -45,10 +46,10 @@ def plot_image(
     grid : ndarray or hyper_galaxies.array.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
     """
-    image = light_profile.profile_image_from_grid(grid=grid)
+    profile_image = light_profile.profile_image_from_grid(grid=grid)
 
-    aa.plot_array(
-        array=image,
+    aa.plot.array(
+        array=profile_image,
         mask_overlay=mask,
         positions=positions,
         as_subplot=as_subplot,
@@ -81,7 +82,7 @@ def plot_image(
     )
 
 
-def plot_luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
+def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
     light_profile,
     minimum_radius=1.0e-4,
     maximum_radius=10.0,
@@ -107,7 +108,7 @@ def plot_luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
     output_filename="luminosity_vs_radius",
 ):
 
-    radii = aa.plotter_util.quantity_radii_from_minimum_and_maximum_radii_and_radii_points(
+    radii = plotter_util.quantity_radii_from_minimum_and_maximum_radii_and_radii_points(
         minimum_radius=minimum_radius,
         maximum_radius=maximum_radius,
         radii_points=radii_bins,
@@ -122,7 +123,7 @@ def plot_luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
         )
     )
 
-    aa.plot_quantity_as_function_of_radius(
+    aa.plot.quantity_as_function_of_radius(
         quantity=luminosities,
         radii=radii,
         as_subplot=as_subplot,
@@ -147,7 +148,7 @@ def plot_luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
     )
 
 
-def plot_convergence(
+def convergence(
     mass_profile,
     grid,
     mask=None,
@@ -196,14 +197,14 @@ def plot_convergence(
 
     convergence = mass_profile.convergence_from_grid(grid=grid)
 
-    lines = aa.plotter_util.get_critical_curve_and_caustic(
+    lines = plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
         grid=grid,
         plot_critical_curve=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
-    aa.plot_array(
+    aa.plot.array(
         array=convergence,
         mask_overlay=mask,
         positions=positions,
@@ -238,7 +239,7 @@ def plot_convergence(
     )
 
 
-def plot_potential(
+def potential(
     mass_profile,
     grid,
     mask=None,
@@ -286,14 +287,14 @@ def plot_potential(
     """
     potential = mass_profile.potential_from_grid(grid=grid)
 
-    lines = aa.plotter_util.get_critical_curve_and_caustic(
+    lines = plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
         grid=grid,
         plot_critical_curve=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
-    aa.plot_array(
+    aa.plot.array(
         array=potential,
         mask_overlay=mask,
         positions=positions,
@@ -328,7 +329,7 @@ def plot_potential(
     )
 
 
-def plot_deflections_y(
+def deflections_y(
     mass_profile,
     grid,
     mask=None,
@@ -375,17 +376,17 @@ def plot_deflections_y(
         The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
     """
 
-    deflections = mass_profile.deflections_from_grid(grid)
-    deflections_y = grid.mask.mapping.scaled_array_2d_from_array_1d(deflections[:, 0])
+    deflections = mass_profile.deflections_from_grid(grid=grid)
+    deflections_y = grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 0])
 
-    lines = aa.plotter_util.get_critical_curve_and_caustic(
+    lines = plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
         grid=grid,
         plot_critical_curve=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
-    aa.plot_array(
+    aa.plot.array(
         array=deflections_y,
         mask_overlay=mask,
         positions=positions,
@@ -420,7 +421,7 @@ def plot_deflections_y(
     )
 
 
-def plot_deflections_x(
+def deflections_x(
     mass_profile,
     grid,
     mask=None,
@@ -466,17 +467,17 @@ def plot_deflections_x(
      grid : ndarray or hyper_galaxies.array.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
      """
-    deflections = mass_profile.deflections_from_grid(grid)
-    deflections_x = grid.mask.mapping.scaled_array_2d_from_array_1d(deflections[:, 1])
+    deflections = mass_profile.deflections_from_grid(grid=grid)
+    deflections_x = grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 1])
 
-    lines = aa.plotter_util.get_critical_curve_and_caustic(
+    lines = plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
         grid=grid,
         plot_critical_curve=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
-    aa.plot_array(
+    aa.plot.array(
         array=deflections_x,
         mask_overlay=mask,
         positions=positions,
@@ -511,7 +512,7 @@ def plot_deflections_x(
     )
 
 
-def plot_magnification(
+def magnification(
     mass_profile,
     grid,
     mask=None,
@@ -559,14 +560,14 @@ def plot_magnification(
     """
     magnification = mass_profile.magnification_from_grid(grid=grid)
 
-    lines = aa.plotter_util.get_critical_curve_and_caustic(
+    lines = plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
         grid=grid,
         plot_critical_curve=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
-    aa.plot_array(
+    aa.plot.array(
         array=magnification,
         mask_overlay=mask,
         positions=positions,

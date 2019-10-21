@@ -944,7 +944,7 @@ class TestGeneralizedNFW(object):
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.grid_masked.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1188,7 +1188,7 @@ class TestTruncatedNFW(object):
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.grid_masked.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1776,7 +1776,7 @@ class TestNFW(object):
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.grid_masked.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1820,7 +1820,7 @@ class TestNFW(object):
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.grid_masked.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
