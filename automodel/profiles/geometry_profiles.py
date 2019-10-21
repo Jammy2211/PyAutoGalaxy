@@ -1,6 +1,7 @@
 import numpy as np
 from functools import wraps
 
+import autofit as af
 import autoarray as aa
 from automodel import dimensions as dim
 
@@ -145,7 +146,7 @@ class TransformedGrid(np.ndarray):
 
 
 class GeometryProfile(dim.DimensionsProfile):
-    @dim.map_types
+    @af.map_types
     def __init__(self, centre: dim.Position = (0.0, 0.0)):
         """An abstract geometry profile, which describes profiles with y and x centre Cartesian coordinates
         
@@ -174,7 +175,7 @@ class GeometryProfile(dim.DimensionsProfile):
 
 
 class SphericalProfile(GeometryProfile):
-    @dim.map_types
+    @af.map_types
     def __init__(self, centre: dim.Position = (0.0, 0.0)):
         """ A spherical profile, which describes profiles with y and x centre Cartesian coordinates.
 
@@ -250,7 +251,7 @@ class SphericalProfile(GeometryProfile):
 
 
 class EllipticalProfile(SphericalProfile):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),

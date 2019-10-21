@@ -4,8 +4,9 @@ from scipy.optimize import root_scalar
 from astropy import cosmology as cosmo
 from skimage import measure
 
+import autofit as af
 from automodel import dimensions as dim
-from automodel.util import text_util
+from autofit.tools import text_util
 from automodel.profiles import geometry_profiles
 
 
@@ -82,7 +83,7 @@ class MassProfile(object):
 
 # noinspection PyAbstractClass
 class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),

@@ -1,6 +1,7 @@
 import numpy as np
 from astropy import cosmology as cosmo
 
+import autofit as af
 import autoarray as aa
 from automodel import dimensions as dim
 from automodel.profiles import geometry_profiles
@@ -8,7 +9,7 @@ from automodel.profiles import mass_profiles as mp
 
 
 class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
-    @dim.map_types
+    @af.map_types
     def __init__(self, centre: dim.Position = (0.0, 0.0), kappa: float = 0.0):
         """
         Represents a mass-sheet
@@ -38,7 +39,7 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
 
 # noinspection PyAbstractClass
 class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
-    @dim.map_types
+    @af.map_types
     def __init__(self, magnitude: float = 0.2, phi: float = 0.0):
         """
         An external shear term, to model the line-of-sight contribution of other galaxies / satellites.

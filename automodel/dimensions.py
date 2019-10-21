@@ -1,3 +1,4 @@
+import autofit as af
 import typing
 from functools import wraps
 from astropy import cosmology as cosmo
@@ -10,50 +11,6 @@ from decorator import decorator
 
 from automodel.util import cosmology_util
 from automodel import exc
-
-
-class DimensionType(float):
-    def __new__(cls, value, *args, **kwargs):
-        # noinspection PyArgumentList
-        return float.__new__(cls, value)
-
-    def __init__(self, value):
-        float.__init__(value)
-
-
-def _map_types(func, self, *args, **kwargs):
-    annotations = inspect.getfullargspec(func).annotations
-
-    def map_to_type(value, name=None, position=None):
-        if isinstance(value, DimensionType):
-            return value
-        arg_type = None
-        if name is not None:
-            try:
-                arg_type = annotations[name]
-            except KeyError:
-                pass
-        if position is not None:
-            arg_type = list(annotations.values())[position]
-        if typing_inspect.is_tuple_type(arg_type):
-            return tuple(
-                element_value
-                if isinstance(element_value, DimensionType)
-                else element_type(element_value)
-                for element_type, element_value in zip(arg_type.__args__, value)
-            )
-
-        return arg_type(value)
-
-    return func(
-        self,
-        *[map_to_type(value, position=index) for index, value in enumerate(args)],
-        **{name: map_to_type(value, name=name) for name, value in kwargs.items()}
-    )
-
-
-map_types = decorator(_map_types)
-
 
 def convert_units_to_input_units(func):
     """
@@ -312,7 +269,7 @@ class DimensionsProfile(object):
         return None
 
 
-class Length(DimensionType):
+class Length(af.DimensionType):
     def __init__(self, value, unit_length="arcsec"):
         super().__init__(value)
         self.unit_length = unit_length
@@ -336,7 +293,7 @@ class Length(DimensionType):
         return Length(value=value, unit_length=unit_length)
 
 
-class Luminosity(DimensionType):
+class Luminosity(af.DimensionType):
     def __init__(self, value, unit_luminosity="eps"):
         super().__init__(value)
         self.unit_luminosity = unit_luminosity
@@ -360,7 +317,7 @@ class Luminosity(DimensionType):
         return Luminosity(value=value, unit_luminosity=unit_luminosity)
 
 
-class Mass(DimensionType):
+class Mass(af.DimensionType):
     def __init__(self, value, unit_mass="angular"):
         super().__init__(value)
         self.unit_mass = unit_mass
@@ -383,7 +340,7 @@ class Mass(DimensionType):
         return Mass(value=value, unit_mass=unit_mass)
 
 
-class MassOverLuminosity(DimensionType):
+class MassOverLuminosity(af.DimensionType):
     def __init__(self, value, unit_luminosity="eps", unit_mass="angular"):
 
         super().__init__(value)
@@ -431,7 +388,7 @@ class MassOverLuminosity(DimensionType):
         )
 
 
-class MassOverLength2(DimensionType):
+class MassOverLength2(af.DimensionType):
     def __init__(self, value, unit_length="arcsec", unit_mass="angular"):
         super().__init__(value)
         self.unit_length = unit_length
@@ -475,7 +432,7 @@ class MassOverLength2(DimensionType):
         )
 
 
-class MassOverLength3(DimensionType):
+class MassOverLength3(af.DimensionType):
     def __init__(self, value, unit_length="arcsec", unit_mass="angular"):
         super().__init__(value)
         self.unit_length = unit_length

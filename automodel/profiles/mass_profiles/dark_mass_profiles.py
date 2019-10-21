@@ -11,10 +11,11 @@ from numba.types import intc, CPointer, float64
 from scipy import LowLevelCallable
 from scipy import special
 
+import autofit as af
 import autoarray as aa
 from autoarray.structures import grids
 from autoarray import decorator_util
-from automodel.util import text_util
+from autofit.tools import text_util
 from automodel import dimensions as dim
 from automodel.profiles import geometry_profiles
 from automodel.profiles import mass_profiles as mp
@@ -94,7 +95,7 @@ def jit_integrand(integrand_function):
 class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile):
     epsrel = 1.49e-5
 
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -734,7 +735,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
 
 
 class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -815,7 +816,7 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
 
 
 class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -1000,7 +1001,7 @@ class SphericalTruncatedNFWMassToConcentration(SphericalTruncatedNFW):
     A truncated NFW halo at z = 0.6 with tau = 2.0
     """
 
-    @dim.map_types
+    @af.map_types
     def __init__(self, centre: dim.Position = (0.0, 0.0), mass_at_200: float = 1e9):
         """
         Input m200: The m200 of the NFW part of the corresponding tNFW part. Unit: M_sun.
@@ -1044,7 +1045,7 @@ class SphericalTruncatedNFWMassToConcentration(SphericalTruncatedNFW):
 
 
 class SphericalTruncatedNFWChallenge(SphericalTruncatedNFW):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -1100,7 +1101,7 @@ class SphericalTruncatedNFWChallenge(SphericalTruncatedNFW):
 
 
 class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -1261,7 +1262,7 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
 
 
 class SphericalNFW(EllipticalNFW):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),

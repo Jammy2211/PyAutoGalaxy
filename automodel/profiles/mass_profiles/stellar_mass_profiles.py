@@ -2,6 +2,7 @@ from pyquad import quad_grid
 
 import numpy as np
 
+import autofit as af
 from autoarray.structures import grids
 from automodel import dimensions as dim
 from automodel.profiles import geometry_profiles
@@ -10,7 +11,7 @@ from automodel.profiles import mass_profiles as mp
 
 # noinspection PyAbstractClass
 class AbstractEllipticalSersic(mp.EllipticalMassProfile):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -190,7 +191,7 @@ class EllipticalSersic(AbstractEllipticalSersic):
 
 
 class SphericalSersic(EllipticalSersic):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -229,7 +230,7 @@ class SphericalSersic(EllipticalSersic):
 
 
 class EllipticalExponential(EllipticalSersic):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -270,7 +271,7 @@ class EllipticalExponential(EllipticalSersic):
 
 
 class SphericalExponential(EllipticalExponential):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -304,7 +305,7 @@ class SphericalExponential(EllipticalExponential):
 
 
 class EllipticalDevVaucouleurs(EllipticalSersic):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -345,7 +346,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
 
 
 class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -379,7 +380,7 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
 
 
 class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -523,7 +524,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
 
 
 class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),

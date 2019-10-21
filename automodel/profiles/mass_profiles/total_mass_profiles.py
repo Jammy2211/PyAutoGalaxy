@@ -4,6 +4,7 @@ from pyquad import quad_grid
 import numpy as np
 from astropy import cosmology as cosmo
 
+import autofit as af
 from autoarray.structures import grids
 from automodel import dimensions as dim
 from automodel.profiles import geometry_profiles
@@ -12,7 +13,7 @@ from automodel.profiles import mass_profiles as mp
 
 
 class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self, centre: dim.Position = (0.0, 0.0), einstein_radius: dim.Length = 1.0
     ):
@@ -43,7 +44,7 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
 
 
 class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -241,7 +242,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
 
 class SphericalCoredPowerLaw(EllipticalCoredPowerLaw):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -302,7 +303,7 @@ class SphericalCoredPowerLaw(EllipticalCoredPowerLaw):
 
 
 class EllipticalPowerLaw(EllipticalCoredPowerLaw):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -407,7 +408,7 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
 
 
 class SphericalPowerLaw(EllipticalPowerLaw):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -450,7 +451,7 @@ class SphericalPowerLaw(EllipticalPowerLaw):
 
 
 class EllipticalCoredIsothermal(EllipticalCoredPowerLaw):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -487,7 +488,7 @@ class EllipticalCoredIsothermal(EllipticalCoredPowerLaw):
 
 
 class SphericalCoredIsothermal(SphericalCoredPowerLaw):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -516,7 +517,7 @@ class SphericalCoredIsothermal(SphericalCoredPowerLaw):
 
 
 class EllipticalIsothermal(EllipticalPowerLaw):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -598,7 +599,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
 
 
 class SphericalIsothermal(EllipticalIsothermal):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self, centre: dim.Position = (0.0, 0.0), einstein_radius: dim.Length = 1.0
     ):
@@ -651,7 +652,7 @@ class SphericalIsothermal(EllipticalIsothermal):
 
 
 class EllipticalIsothermalKormann(mp.EllipticalMassProfile, mp.MassProfile):
-    @dim.map_types
+    @af.map_types
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
