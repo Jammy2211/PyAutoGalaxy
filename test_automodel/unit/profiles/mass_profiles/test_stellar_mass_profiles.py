@@ -360,7 +360,7 @@ class TestSersic(object):
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)
 
         sersic = am.mp.SphericalSersic()
 
@@ -375,7 +375,7 @@ class TestSersic(object):
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)
 
 
 class TestExponential(object):
@@ -682,7 +682,7 @@ class TestExponential(object):
 
         deflections = exponential.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)
 
         exponential = am.mp.SphericalExponential()
 
@@ -697,7 +697,7 @@ class TestExponential(object):
 
         deflections = exponential.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)
 
 
 class TestDevVaucouleurs(object):
@@ -988,7 +988,7 @@ class TestDevVaucouleurs(object):
 
         deflections = dev_vaucouleurs.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)
 
         dev_vaucouleurs = am.mp.SphericalDevVaucouleurs()
 
@@ -1003,7 +1003,7 @@ class TestDevVaucouleurs(object):
 
         deflections = dev_vaucouleurs.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)
 
 
 class TestSersicMassRadialGradient(object):
@@ -1452,7 +1452,7 @@ class TestSersicMassRadialGradient(object):
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)
 
         sersic = am.mp.SphericalSersicRadialGradient()
 
@@ -1467,4 +1467,4 @@ class TestSersicMassRadialGradient(object):
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)

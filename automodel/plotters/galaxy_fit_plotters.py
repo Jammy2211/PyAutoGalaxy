@@ -12,7 +12,6 @@ from automodel import exc
 
 def subplot(
     fit,
-    should_plot_mask_overlay=True,
     positions=None,
     units="arcsec",
     kpc_per_arcsec=None,
@@ -45,8 +44,6 @@ def subplot(
         number_subplots=4
     )
 
-    mask = aa.plot.fit.get_mask_overlay(fit=fit, should_plot_mask_overlay=should_plot_mask_overlay)
-
     if figsize is None:
         figsize = figsize_tool
 
@@ -55,7 +52,6 @@ def subplot(
 
     galaxy_data_array(
         galaxy_data=fit.galaxy_data,
-        mask=mask,
         positions=positions,
         as_subplot=True,
         units=units,
@@ -89,7 +85,7 @@ def subplot(
 
     aa.plot.fit.model_image(
         fit=fit,
-        mask=mask,
+        mask_overlay=fit.mask,
         positions=positions,
         as_subplot=True,
         units=units,
@@ -123,7 +119,7 @@ def subplot(
 
     aa.plot.fit.residual_map(
         fit=fit,
-        mask=mask,
+        mask_overlay=fit.mask,
         as_subplot=True,
         units=units,
         kpc_per_arcsec=kpc_per_arcsec,
@@ -155,7 +151,7 @@ def subplot(
 
     aa.plot.fit.chi_squared_map(
         fit=fit,
-        mask=mask,
+        mask_overlay=fit.mask,
         as_subplot=True,
         units=units,
         kpc_per_arcsec=kpc_per_arcsec,
@@ -214,7 +210,7 @@ def individuals(
 
         galaxy_data_array(
             galaxy_data=fit.galaxy_data,
-            mask=mask,
+            mask_overlay=fit.mask,
             positions=positions,
             units=units,
             kpc_per_arcsec=kpc_per_arcsec,
@@ -226,7 +222,7 @@ def individuals(
 
         aa.plot.fit.noise_map(
             fit=fit,
-            mask=mask,
+            mask_overlay=fit.mask,
             positions=positions,
             units=units,
             kpc_per_arcsec=kpc_per_arcsec,
@@ -238,7 +234,7 @@ def individuals(
 
         aa.plot.fit.model_image(
             fit=fit,
-            mask=mask,
+            mask_overlay=fit.mask,
             positions=positions,
             units=units,
             kpc_per_arcsec=kpc_per_arcsec,
@@ -250,7 +246,7 @@ def individuals(
 
         aa.plot.fit.residual_map(
             fit=fit,
-            mask=mask,
+            mask_overlay=fit.mask,
             units=units,
             kpc_per_arcsec=kpc_per_arcsec,
             output_path=output_path,
@@ -261,7 +257,7 @@ def individuals(
 
         aa.plot.fit.chi_squared_map(
             fit=fit,
-            mask=mask,
+            mask_overlay=fit.mask,
             units=units,
             kpc_per_arcsec=kpc_per_arcsec,
             output_path=output_path,
@@ -271,7 +267,6 @@ def individuals(
 
 def galaxy_data_array(
     galaxy_data,
-    mask=None,
     positions=None,
     as_subplot=False,
     units="arcsec",
@@ -317,8 +312,8 @@ def galaxy_data_array(
         )
 
     aa.plot.array(
-        array=galaxy_data.image.in_2d,
-        mask_overlay=mask,
+        array=galaxy_data.image,
+        mask_overlay=galaxy_data.mask,
         positions=positions,
         as_subplot=as_subplot,
         units=units,

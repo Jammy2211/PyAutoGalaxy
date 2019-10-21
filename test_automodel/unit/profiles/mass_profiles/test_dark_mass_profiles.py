@@ -1010,7 +1010,7 @@ class TestGeneralizedNFW(object):
         # deflections = gnfw.deflections_from_grid(
         #     grid=grid)
         #
-        # assert deflections.shape_2d == (2, 2, 2)
+        # assert deflections.shape_2d == (2, 2)
 
         gnfw = am.mp.SphericalGeneralizedNFW()
 
@@ -1024,7 +1024,7 @@ class TestGeneralizedNFW(object):
 
         deflections = gnfw.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)
 
 
 class TestTruncatedNFW(object):
@@ -1365,7 +1365,7 @@ class TestTruncatedNFW(object):
 
         deflections = truncated_nfw.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)
 
 
 class TestTruncatedNFWChallenge(object):
@@ -1574,7 +1574,7 @@ class TestTruncatedNFWMassToConcentration(object):
 
         deflections = truncated_nfw.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)
 
 
 class TestNFW(object):
@@ -1863,7 +1863,7 @@ class TestNFW(object):
 
         deflections = nfw.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)
 
         nfw = am.mp.SphericalNFW()
 
@@ -1877,4 +1877,4 @@ class TestNFW(object):
 
         deflections = nfw.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)

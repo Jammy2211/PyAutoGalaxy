@@ -189,7 +189,7 @@ class TestMassSheet(object):
 
         deflections = mass_sheet.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)
 
 
 class TestExternalShear(object):
@@ -255,4 +255,4 @@ class TestExternalShear(object):
 
         deflections = shear.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2, 2)
+        assert deflections.shape_2d == (2, 2)
