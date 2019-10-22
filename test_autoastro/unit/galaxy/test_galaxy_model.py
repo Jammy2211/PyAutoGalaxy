@@ -284,8 +284,8 @@ class TestPixelization(object):
     def test_pixelization(self):
         galaxy_model = am.GalaxyModel(
             redshift=am.Redshift,
-            pixelization=am.pix.Rectangular,
-            regularization=am.reg.Constant,
+            pixelization=aa.pix.Rectangular,
+            regularization=aa.reg.Constant,
         )
 
         arguments = {
@@ -303,8 +303,8 @@ class TestPixelization(object):
     def test_fixed_pixelization(self):
         galaxy_model = am.GalaxyModel(
             redshift=am.Redshift,
-            pixelization=am.pix.Rectangular(),
-            regularization=am.reg.Constant(),
+            pixelization=aa.pix.Rectangular(),
+            regularization=aa.reg.Constant(),
         )
 
         arguments = {galaxy_model.redshift.redshift: 2.0}
@@ -316,15 +316,15 @@ class TestPixelization(object):
 
     def test__if_no_pixelization_raises_error(self):
         with pytest.raises(exc.PriorException):
-            am.GalaxyModel(redshift=am.Redshift, pixelization=am.pix.Voronoi)
+            am.GalaxyModel(redshift=am.Redshift, pixelization=aa.pix.Voronoi)
 
 
 class TestRegularization(object):
     def test_regularization(self):
         galaxy_model = am.GalaxyModel(
             redshift=am.Redshift,
-            pixelization=am.pix.Rectangular,
-            regularization=am.reg.Constant,
+            pixelization=aa.pix.Rectangular,
+            regularization=aa.reg.Constant,
         )
 
         arguments = {
@@ -341,8 +341,8 @@ class TestRegularization(object):
     def test_fixed_regularization(self):
         galaxy_model = am.GalaxyModel(
             redshift=am.Redshift,
-            pixelization=am.pix.Voronoi(),
-            regularization=am.reg.Constant(),
+            pixelization=aa.pix.Voronoi(),
+            regularization=aa.reg.Constant(),
         )
 
         arguments = {galaxy_model.redshift.redshift: 2.0}
@@ -354,7 +354,7 @@ class TestRegularization(object):
     def test__if_no_pixelization_raises_error(self):
         with pytest.raises(exc.PriorException):
             am.GalaxyModel(
-                redshift=am.Redshift, regularization=am.reg.Constant
+                redshift=am.Redshift, regularization=aa.reg.Constant
             )
 
 
