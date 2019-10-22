@@ -1,0 +1,5 @@
+autoarray==0.2.0
+GetDist==0.2.8
+pyquad
+astropy
+numpy
