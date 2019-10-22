@@ -1,5 +1,6 @@
 import automodel as am
 import pytest
+from sys import path
 from autoarray import conf
 
 directory = path.dirname(path.realpath(__file__))
