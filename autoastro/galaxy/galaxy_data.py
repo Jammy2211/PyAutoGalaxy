@@ -132,20 +132,20 @@ class GalaxyFitData(object):
             profile_image = sum(
                 map(lambda g: g.profile_image_from_grid(grid=self.grid), galaxies)
             )
-            return self.grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=profile_image)
+            return self.grid.mapping.array_from_sub_array_1d(sub_array_1d=profile_image)
         elif self.use_convergence:
             convergence = sum(map(lambda g: g.convergence_from_grid(grid=self.grid), galaxies))
-            return self.grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=convergence)
+            return self.grid.mapping.array_from_sub_array_1d(sub_array_1d=convergence)
         elif self.use_potential:
             potential = sum(map(lambda g: g.potential_from_grid(grid=self.grid), galaxies))
-            return self.grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=potential)
+            return self.grid.mapping.array_from_sub_array_1d(sub_array_1d=potential)
         elif self.use_deflections_y:
             deflections_y = sum(
                 map(lambda g: g.deflections_from_grid(grid=self.grid), galaxies)
             )[:, 0]
-            return self.grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=deflections_y)
+            return self.grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections_y)
         elif self.use_deflections_x:
             deflections_x = sum(
                 map(lambda g: g.deflections_from_grid(grid=self.grid), galaxies)
             )[:, 1]
-            return self.grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=deflections_x)
+            return self.grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections_x)

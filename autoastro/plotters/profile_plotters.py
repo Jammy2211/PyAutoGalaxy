@@ -377,7 +377,7 @@ def deflections_y(
     """
 
     deflections = mass_profile.deflections_from_grid(grid=grid)
-    deflections_y = grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 0])
+    deflections_y = grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 0])
 
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
@@ -468,7 +468,7 @@ def deflections_x(
          The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
      """
     deflections = mass_profile.deflections_from_grid(grid=grid)
-    deflections_x = grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 1])
+    deflections_x = grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 1])
 
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,

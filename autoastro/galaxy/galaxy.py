@@ -171,9 +171,9 @@ class Galaxy(ModelObject):
             profile_image = sum(
                 map(lambda p: p.profile_image_from_grid(grid=grid), self.light_profiles)
             )
-            return grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=profile_image)
+            return grid.mapping.array_from_sub_array_1d(sub_array_1d=profile_image)
         else:
-            return grid.mask.mapping.array_from_sub_array_1d(
+            return grid.mapping.array_from_sub_array_1d(
                 sub_array_1d=np.zeros((grid.shape[0],))
             )
 
@@ -309,9 +309,9 @@ class Galaxy(ModelObject):
             convergence = sum(
                 map(lambda p: p.convergence_from_grid(grid=grid), self.mass_profiles)
             )
-            return grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=convergence)
+            return grid.mapping.array_from_sub_array_1d(sub_array_1d=convergence)
         else:
-            return grid.mask.mapping.array_from_sub_array_1d(
+            return grid.mapping.array_from_sub_array_1d(
                 sub_array_1d=np.zeros((grid.shape[0],))
             )
 
@@ -336,9 +336,9 @@ class Galaxy(ModelObject):
             potential = sum(
                 map(lambda p: p.potential_from_grid(grid=grid), self.mass_profiles)
             )
-            return grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=potential)
+            return grid.mapping.array_from_sub_array_1d(sub_array_1d=potential)
         else:
-            return grid.mask.mapping.array_from_sub_array_1d(
+            return grid.mapping.array_from_sub_array_1d(
                 sub_array_1d=np.zeros((grid.shape[0],))
             )
 
@@ -359,8 +359,8 @@ class Galaxy(ModelObject):
             deflections = sum(
                 map(lambda p: p.deflections_from_grid(grid=grid), self.mass_profiles)
             )
-            return grid.mask.mapping.grid_from_sub_grid_1d(sub_grid_1d=deflections)
-        return grid.mask.mapping.grid_from_sub_grid_1d(
+            return grid.mapping.grid_from_sub_grid_1d(sub_grid_1d=deflections)
+        return grid.mapping.grid_from_sub_grid_1d(
             sub_grid_1d=np.full((grid.shape[0], 2), 0.0)
         )
 
@@ -370,7 +370,7 @@ class Galaxy(ModelObject):
         deflections_y_2d = np.gradient(potential.in_2d, grid.in_2d[:, 0, 0], axis=0)
         deflections_x_2d = np.gradient(potential.in_2d, grid.in_2d[0, :, 1], axis=1)
 
-        return grid.mask.mapping.grid_from_sub_grid_2d(
+        return grid.mapping.grid_from_sub_grid_2d(
             sub_grid_2d=np.stack((deflections_y_2d, deflections_x_2d), axis=-1)
         )
 
@@ -378,7 +378,7 @@ class Galaxy(ModelObject):
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        return grid.mask.mapping.array_from_sub_array_2d(
+        return grid.mapping.array_from_sub_array_2d(
             sub_array_2d=1.0
             - np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[0, :, 1], axis=1)
         )
@@ -387,7 +387,7 @@ class Galaxy(ModelObject):
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        return grid.mask.mapping.array_from_sub_array_2d(
+        return grid.mapping.array_from_sub_array_2d(
             sub_array_2d=-1.0
             * np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[:, 0, 0], axis=0)
         )
@@ -396,7 +396,7 @@ class Galaxy(ModelObject):
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        return grid.mask.mapping.array_from_sub_array_2d(
+        return grid.mapping.array_from_sub_array_2d(
             sub_array_2d=-1.0
             * np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[0, :, 1], axis=1)
         )
@@ -405,7 +405,7 @@ class Galaxy(ModelObject):
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        return grid.mask.mapping.array_from_sub_array_2d(
+        return grid.mapping.array_from_sub_array_2d(
             sub_array_2d=1
             - np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[:, 0, 0], axis=0)
         )
@@ -428,7 +428,7 @@ class Galaxy(ModelObject):
 
         convergence = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
 
-        return grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=convergence)
+        return grid.mapping.array_from_sub_array_1d(sub_array_1d=convergence)
 
     def shear_via_jacobian_from_grid(self, grid):
 
@@ -437,7 +437,7 @@ class Galaxy(ModelObject):
         gamma_1 = 0.5 * (jacobian[1][1] - jacobian[0][0])
         gamma_2 = -0.5 * (jacobian[0][1] + jacobian[1][0])
 
-        return grid.mask.mapping.array_from_sub_array_1d(
+        return grid.mapping.array_from_sub_array_1d(
             sub_array_1d=(gamma_1 ** 2 + gamma_2 ** 2) ** 0.5
         )
 
@@ -447,7 +447,7 @@ class Galaxy(ModelObject):
 
         shear = self.shear_via_jacobian_from_grid(grid=grid)
 
-        return grid.mask.mapping.array_from_sub_array_1d(
+        return grid.mapping.array_from_sub_array_1d(
             sub_array_1d=1 - convergence - shear
         )
 
@@ -465,7 +465,7 @@ class Galaxy(ModelObject):
 
         det_jacobian = jacobian[0][0] * jacobian[1][1] - jacobian[0][1] * jacobian[1][0]
 
-        return grid.mask.mapping.array_from_sub_array_1d(sub_array_1d=1 / det_jacobian)
+        return grid.mapping.array_from_sub_array_1d(sub_array_1d=1 / det_jacobian)
 
     def tangential_critical_curve_from_grid(self, grid):
 
