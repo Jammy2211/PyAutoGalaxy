@@ -4,7 +4,7 @@ from astropy import cosmology as cosmo
 
 import autoarray as aa
 from autoarray.structures import grids
-import automodel as am
+import autoastro as am
 
 from test_automodel.mock import mock_cosmology
 

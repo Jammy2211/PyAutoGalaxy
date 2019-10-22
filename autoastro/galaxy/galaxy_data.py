@@ -1,5 +1,5 @@
 import autoarray as aa
-from automodel import exc
+from autoastro import exc
 
 
 class GalaxyData(object):

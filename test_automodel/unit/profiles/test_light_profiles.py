@@ -6,7 +6,7 @@ import pytest
 import scipy.special
 
 import autoarray as aa
-import automodel as am
+import autoastro as am
 from test_automodel.mock import mock_cosmology
 
 

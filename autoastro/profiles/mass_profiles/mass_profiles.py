@@ -5,9 +5,9 @@ from astropy import cosmology as cosmo
 from skimage import measure
 
 import autofit as af
-from automodel import dimensions as dim
+from autoastro import dimensions as dim
 from autofit.tools import text_util
-from automodel.profiles import geometry_profiles
+from autoastro.profiles import geometry_profiles
 
 
 class MassProfile(object):

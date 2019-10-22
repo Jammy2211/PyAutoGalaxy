@@ -3,9 +3,9 @@ import numpy as np
 from astropy import cosmology as cosmo
 from scipy.integrate import quad
 
-from automodel import dimensions as dim
+from autoastro import dimensions as dim
 from autofit.tools import text_util
-from automodel.profiles import geometry_profiles
+from autoastro.profiles import geometry_profiles
 
 
 class LightProfile(object):

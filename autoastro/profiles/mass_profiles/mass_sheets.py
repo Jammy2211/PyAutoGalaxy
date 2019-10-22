@@ -3,9 +3,9 @@ from astropy import cosmology as cosmo
 
 import autofit as af
 import autoarray as aa
-from automodel import dimensions as dim
-from automodel.profiles import geometry_profiles
-from automodel.profiles import mass_profiles as mp
+from autoastro import dimensions as dim
+from autoastro.profiles import geometry_profiles
+from autoastro.profiles import mass_profiles as mp
 
 
 class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):

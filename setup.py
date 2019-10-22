@@ -3,7 +3,7 @@ from os.path import abspath, dirname, join
 
 from setuptools import find_packages, setup
 
-from automodel import __version__
+from autoastro import __version__
 
 this_dir = abspath(dirname(__file__))
 with open(join(this_dir, 'README.md'), encoding='utf-8') as file:
@@ -13,7 +13,7 @@ with open(join(this_dir, 'requirements.txt')) as f:
     requirements = f.read().split('\n')
 
 setup(
-    name='automodel',
+    name='autoastro',
     version=__version__,
     description='Astro modelling',
     long_description=long_description,

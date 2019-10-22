@@ -16,9 +16,9 @@ import autoarray as aa
 from autoarray.structures import grids
 from autoarray import decorator_util
 from autofit.tools import text_util
-from automodel import dimensions as dim
-from automodel.profiles import geometry_profiles
-from automodel.profiles import mass_profiles as mp
+from autoastro import dimensions as dim
+from autoastro.profiles import geometry_profiles
+from autoastro.profiles import mass_profiles as mp
 
 
 def jit_integrand(integrand_function):

@@ -1,4 +1,4 @@
-import automodel as am
+import autoastro as am
 
 from test_autoarray.unit.conftest import *
 

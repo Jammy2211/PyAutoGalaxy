@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 
 import autoarray as aa
 from autoarray.plotters import plotter_util
-from automodel import exc
+from autoastro import exc
 
 
 def subplot(

@@ -1,6 +1,6 @@
-from automodel import dimensions as dim
-from automodel.profiles import light_profiles as lp
-from automodel.profiles import mass_profiles as mp
+from autoastro import dimensions as dim
+from autoastro.profiles import light_profiles as lp
+from autoastro.profiles import mass_profiles as mp
 
 """
 Mass and light profiles describe both mass distributions and light distributions with a single set of parameters. This

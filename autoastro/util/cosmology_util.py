@@ -1,6 +1,6 @@
 from astropy import constants
-from automodel import exc
-from automodel import dimensions as dim
+from autoastro import exc
+from autoastro import dimensions as dim
 import math
 
 

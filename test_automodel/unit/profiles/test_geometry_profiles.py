@@ -6,8 +6,8 @@ import numpy as np
 import pytest
 
 import autoarray as aa
-from automodel.profiles import geometry_profiles
-import automodel as am
+from autoastro.profiles import geometry_profiles
+import autoastro as am
 
 directory = path.dirname(path.realpath(__file__))
 

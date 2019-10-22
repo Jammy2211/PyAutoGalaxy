@@ -1,7 +1,7 @@
-from automodel import exc
+from autoastro import exc
 import pytest
 
-import automodel as am
+import autoastro as am
 
 from test_automodel.mock import mock_cosmology
 

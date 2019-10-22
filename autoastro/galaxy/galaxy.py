@@ -4,12 +4,12 @@ from itertools import count
 from skimage import measure
 
 from autofit.mapper.model_object import ModelObject
-from automodel import exc
-from automodel import dimensions as dim
+from autoastro import exc
+from autoastro import dimensions as dim
 from autofit.tools import text_util
 from autoarray.operators.inversion import pixelizations as pix
-from automodel.profiles import light_profiles as lp
-from automodel.profiles import mass_profiles as mp
+from autoastro.profiles import light_profiles as lp
+from autoastro.profiles import mass_profiles as mp
 
 
 def is_light_profile(obj):

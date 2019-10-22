@@ -6,7 +6,7 @@ matplotlib.use(backend)
 from matplotlib import pyplot as plt
 
 from autoarray.plotters import plotter_util
-from automodel.plotters import profile_plotters
+from autoastro.plotters import profile_plotters
 
 
 def profile_image(
@@ -46,7 +46,7 @@ def profile_image(
 ):
     """Plot the image (e.g. the datas) of a galaxy, on a grid of (y,x) coordinates.
 
-    Set *automodel.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -140,7 +140,7 @@ def convergence(
 ):
     """Plot the convergence of a galaxy, on a grid of (y,x) coordinates.
 
-    Set *automodel.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -230,7 +230,7 @@ def potential(
 ):
     """Plot the potential of a galaxy, on a grid of (y,x) coordinates.
 
-     Set *automodel.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
+     Set *autoastro.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
 
      Parameters
      -----------
@@ -320,7 +320,7 @@ def deflections_y(
 ):
     """Plot the y component of the deflection angles of a galaxy, on a grid of (y,x) coordinates.
 
-    Set *automodel.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -411,7 +411,7 @@ def deflections_x(
 ):
     """Plot the x component of the deflection angles of a galaxy, on a grid of (y,x) coordinates.
 
-     Set *automodel.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
+     Set *autoastro.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
 
      Parameters
      -----------
@@ -502,7 +502,7 @@ def magnification(
 ):
     """Plot the magnification of a galaxy, on a grid of (y,x) coordinates.
 
-     Set *automodel.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
+     Set *autoastro.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
 
      Parameters
      -----------

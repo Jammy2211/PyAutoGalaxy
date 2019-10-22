@@ -3,8 +3,8 @@ import numpy as np
 import pytest
 
 import autoarray as aa
-import automodel as am
-from automodel import exc
+import autoastro as am
+from autoastro import exc
 from test_automodel.mock import mock_galaxy
 
 

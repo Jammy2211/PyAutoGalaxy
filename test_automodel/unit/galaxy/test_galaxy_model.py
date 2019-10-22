@@ -4,8 +4,8 @@ import pytest
 
 import autofit as af
 import autoarray as aa
-from automodel import exc
-import automodel as am
+from autoastro import exc
+import autoastro as am
 
 
 class MockPriorModel:

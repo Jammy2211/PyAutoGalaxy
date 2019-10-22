@@ -1,4 +1,4 @@
-import automodel as am
+import autoastro as am
 from astropy import cosmology as cosmo
 
 import pytest

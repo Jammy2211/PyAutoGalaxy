@@ -3,7 +3,7 @@ from functools import wraps
 
 import autofit as af
 import autoarray as aa
-from automodel import dimensions as dim
+from autoastro import dimensions as dim
 
 
 def transform_grid(func):

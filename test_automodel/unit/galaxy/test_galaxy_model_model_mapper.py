@@ -1,5 +1,5 @@
 import autofit as af
-import automodel as am
+import autoastro as am
 
 
 class TestCase:

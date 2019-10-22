@@ -1,5 +1,5 @@
 import autoarray as aa
-import automodel as am
+import autoastro as am
 import math
 from skimage import measure
 import numpy as np

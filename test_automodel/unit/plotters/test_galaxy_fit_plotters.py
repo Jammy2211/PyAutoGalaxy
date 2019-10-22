@@ -1,4 +1,4 @@
-import automodel as am
+import autoastro as am
 import os
 
 import pytest
