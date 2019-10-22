@@ -3,7 +3,7 @@ from os.path import abspath, dirname, join
 
 from setuptools import find_packages, setup
 
-from autoarray import __version__
+from automodel import __version__
 
 this_dir = abspath(dirname(__file__))
 with open(join(this_dir, 'README.md'), encoding='utf-8') as file:
