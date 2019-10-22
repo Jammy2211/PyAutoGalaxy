@@ -1,2 +1,2 @@
 autoarray==0.2.0
-autofit==0.44.0
+autofit==0.44.1
