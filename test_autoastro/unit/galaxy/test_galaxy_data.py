@@ -5,7 +5,7 @@ import pytest
 import autoarray as aa
 import autoastro as am
 from autoastro import exc
-from test_automodel.mock import mock_galaxy
+from test_autoastro.mock import mock_galaxy
 
 
 class TestGalaxyFitData(object):

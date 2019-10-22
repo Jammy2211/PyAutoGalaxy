@@ -3,7 +3,7 @@ import autoastro as am
 import numpy as np
 import pytest
 
-from test_automodel.mock.mock_galaxy import MockGalaxy
+from test_autoastro.mock.mock_galaxy import MockGalaxy
 
 
 class TestLikelihood:

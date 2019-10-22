@@ -6,7 +6,7 @@ import autoarray as aa
 from autoarray.structures import grids
 import autoastro as am
 
-from test_automodel.mock import mock_cosmology
+from test_autoastro.mock import mock_cosmology
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 

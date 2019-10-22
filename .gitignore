@@ -5,3 +5,4 @@ __pycache__
 automodel.egg-info/
 build
 dist
+autoastro.egg-info/

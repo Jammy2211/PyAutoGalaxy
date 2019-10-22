@@ -7,7 +7,7 @@ import scipy.special
 
 import autoarray as aa
 import autoastro as am
-from test_automodel.mock import mock_cosmology
+from test_autoastro.mock import mock_cosmology
 
 
 @pytest.fixture(autouse=True)

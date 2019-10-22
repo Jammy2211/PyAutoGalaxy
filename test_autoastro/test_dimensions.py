@@ -3,7 +3,7 @@ import pytest
 
 import autoastro as am
 
-from test_automodel.mock import mock_cosmology
+from test_autoastro.mock import mock_cosmology
 
 
 class TestLength(object):

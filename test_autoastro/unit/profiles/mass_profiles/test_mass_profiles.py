@@ -5,7 +5,7 @@ from skimage import measure
 import numpy as np
 import pytest
 
-from test_automodel.mock import mock_cosmology
+from test_autoastro.mock import mock_cosmology
 
 
 @pytest.fixture(autouse=True)
