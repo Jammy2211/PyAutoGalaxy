@@ -1,3 +1,8 @@
 .env
 .idea
 __pycache__
+.eggs
+autoastro.egg-info/
+build
+dist
+autoastro.egg-info/

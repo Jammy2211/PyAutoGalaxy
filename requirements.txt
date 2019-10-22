@@ -3,3 +3,4 @@ GetDist==0.2.8
 pyquad
 astropy
 numpy
+autofit==0.44.1
