@@ -6,6 +6,7 @@ from autoastro.galaxy.galaxy_data import GalaxyData, GalaxyFitData
 from autoastro.galaxy.galaxy_fit import GalaxyFit
 from autoastro.galaxy.galaxy_model import GalaxyModel
 from autoastro.hyper import hyper_data
+from autoastro.hyper.hyper_data import HyperBackgroundNoise, HyperImageSky
 from autoastro import plotters as plot
-from autoarray.operators.inversion import pixelizations as pix, regularization as reg
+
 __version__ = '0.1.0'
