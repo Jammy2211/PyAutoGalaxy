@@ -1,3 +1,5 @@
 .env
 .idea
 __pycache__
+.eggs/
+automodel.egg-info/
