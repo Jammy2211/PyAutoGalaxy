@@ -375,7 +375,7 @@ class TestHyperGalaxy(object):
         assert galaxy.hyper_galaxy.noise_factor == 2
         assert galaxy.hyper_galaxy.noise_power == 1.5
 
-        assert galaxy.hyper_galaxy_image_1d is None
+        assert galaxy.hyper_galaxy_image is None
 
     def test_fixed_hyper_galaxy(self,):
         galaxy_model = am.GalaxyModel(
@@ -390,7 +390,7 @@ class TestHyperGalaxy(object):
         assert galaxy.hyper_galaxy.noise_factor == 0.0
         assert galaxy.hyper_galaxy.noise_power == 1.0
 
-        assert galaxy.hyper_galaxy_image_1d is None
+        assert galaxy.hyper_galaxy_image is None
 
 
 class TestFixedProfiles(object):

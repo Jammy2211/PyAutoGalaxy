@@ -59,9 +59,8 @@ class Galaxy(ModelObject):
         super().__init__()
         self.redshift = redshift
 
-        self.hyper_model_image_1d = None
-        self.hyper_galaxy_image_1d = None
-        self.binned_hyper_galaxy_image_1d = None
+        self.hyper_model_image = None
+        self.hyper_galaxy_image = None
 
         for name, val in kwargs.items():
             setattr(self, name, val)
