@@ -892,8 +892,8 @@ class TestBlurredProfileImages(object):
 
         blurring_image = light_profile.profile_image_from_grid(grid=blurring_grid_7x7)
 
-        blurred_image = convolver_7x7.convolved_scaled_array_from_image_array_and_blurring_array(
-            image_array=image.in_1d_binned, blurring_array=blurring_image.in_1d_binned
+        blurred_image = convolver_7x7.convolved_image_from_image_and_blurring_image(
+            image=image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
         )
 
         light_profile_blurred_image = light_profile.blurred_profile_image_from_grid_and_psf(
@@ -917,8 +917,8 @@ class TestBlurredProfileImages(object):
 
         blurring_image = light_profile.profile_image_from_grid(grid=blurring_grid_7x7)
 
-        blurred_image = convolver_7x7.convolved_image_from_image_array_and_blurring_array(
-            image_array=image.in_1d_binned, blurring_array=blurring_image.in_1d_binned
+        blurred_image = convolver_7x7.convolved_image_from_image_and_blurring_image(
+            image=image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
         )
 
         light_profile_blurred_image = light_profile.blurred_profile_image_from_grid_and_convolver(

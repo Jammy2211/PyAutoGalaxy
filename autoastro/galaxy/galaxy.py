@@ -195,9 +195,9 @@ class Galaxy(ModelObject):
 
         blurring_image = self.profile_image_from_grid(grid=blurring_grid)
 
-        return convolver.convolved_scaled_array_from_image_array_and_blurring_array(
-            image_array=profile_image.in_1d_binned,
-            blurring_array=blurring_image.in_1d_binned,
+        return convolver.convolved_image_from_image_and_blurring_image(
+            image=profile_image.in_1d_binned,
+            blurring_image=blurring_image.in_1d_binned,
         )
 
     def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
