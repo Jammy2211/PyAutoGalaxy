@@ -917,7 +917,7 @@ class TestBlurredProfileImages(object):
 
         blurring_image = light_profile.profile_image_from_grid(grid=blurring_grid_7x7)
 
-        blurred_image = convolver_7x7.convolved_image_1d_from_image_array_and_blurring_array(
+        blurred_image = convolver_7x7.convolved_image_from_image_array_and_blurring_array(
             image_array=image.in_1d_binned, blurring_array=blurring_image.in_1d_binned
         )
 
