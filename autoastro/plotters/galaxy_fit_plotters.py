@@ -83,7 +83,7 @@ def subplot(
 
     plt.subplot(rows, columns, 2)
 
-    aa.plot.fit.model_image(
+    aa.plot.imaging_fit.model_image(
         fit=fit,
         mask_overlay=fit.mask,
         positions=positions,
@@ -117,7 +117,7 @@ def subplot(
 
     plt.subplot(rows, columns, 3)
 
-    aa.plot.fit.residual_map(
+    aa.plot.imaging_fit.residual_map(
         fit=fit,
         mask_overlay=fit.mask,
         as_subplot=True,
@@ -149,7 +149,7 @@ def subplot(
 
     plt.subplot(rows, columns, 4)
 
-    aa.plot.fit.chi_squared_map(
+    aa.plot.imaging_fit.chi_squared_map(
         fit=fit,
         mask_overlay=fit.mask,
         as_subplot=True,
@@ -190,7 +190,6 @@ def subplot(
 
 def individuals(
     fit,
-    should_plot_mask_overlay=True,
     positions=None,
     should_plot_image=False,
     should_plot_noise_map=False,
@@ -201,8 +200,6 @@ def individuals(
     output_path=None,
     output_format="show",
 ):
-
-    mask = aa.plot.fit.get_mask_overlay(fit=fit, should_plot_mask_overlay=should_plot_mask_overlay)
 
     kpc_per_arcsec = None
 
@@ -220,7 +217,7 @@ def individuals(
 
     if should_plot_noise_map:
 
-        aa.plot.fit.noise_map(
+        aa.plot.imaging_fit.noise_map(
             fit=fit,
             mask_overlay=fit.mask,
             positions=positions,
@@ -232,7 +229,7 @@ def individuals(
 
     if should_plot_model_image:
 
-        aa.plot.fit.model_image(
+        aa.plot.imaging_fit.model_image(
             fit=fit,
             mask_overlay=fit.mask,
             positions=positions,
@@ -244,7 +241,7 @@ def individuals(
 
     if should_plot_residual_map:
 
-        aa.plot.fit.residual_map(
+        aa.plot.imaging_fit.residual_map(
             fit=fit,
             mask_overlay=fit.mask,
             units=units,
@@ -255,7 +252,7 @@ def individuals(
 
     if should_plot_chi_squared_map:
 
-        aa.plot.fit.chi_squared_map(
+        aa.plot.imaging_fit.chi_squared_map(
             fit=fit,
             mask_overlay=fit.mask,
             units=units,
@@ -343,4 +340,3 @@ def galaxy_data_array(
         output_format=output_format,
         output_filename=output_filename,
     )
-
