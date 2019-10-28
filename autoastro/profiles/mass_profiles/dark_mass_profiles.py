@@ -170,7 +170,7 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
 
         grid_eta = self.grid_to_elliptical_radii(grid)
 
-        for i in range(grid.shape[0]):
+        for i in range(grid.sub_shape_1d):
             surface_density_grid[i] = self.convergence_func(grid_eta[i])
 
         return surface_density_grid
@@ -570,7 +570,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
                 + integral
             )
 
-        for i in range(grid.shape[0]):
+        for i in range(grid.sub_shape_1d):
             potential_grid[i] = (2.0 * self.kappa_s * self.axis_ratio) * quad(
                 self.potential_func,
                 a=0.0,
@@ -787,7 +787,7 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
 
         deflection_grid = np.zeros(grid.sub_shape_1d)
 
-        for i in range(grid.shape[0]):
+        for i in range(grid.sub_shape_1d):
             deflection_grid[i] = np.multiply(
                 4.0 * self.kappa_s * self.scale_radius, self.deflection_func_sph(eta[i])
             )

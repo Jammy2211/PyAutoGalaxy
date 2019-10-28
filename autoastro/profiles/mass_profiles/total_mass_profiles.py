@@ -106,7 +106,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
         grid_eta = self.grid_to_elliptical_radii(grid)
 
-        for i in range(grid.shape[0]):
+        for i in range(grid.sub_shape_1d):
             covnergence_grid[i] = self.convergence_func(grid_eta[i])
 
         return covnergence_grid
@@ -647,7 +647,7 @@ class SphericalIsothermal(EllipticalIsothermal):
         """
         return self.grid_to_grid_cartesian(
             grid=grid,
-            radius=np.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled),
+            radius=np.full(grid.sub_shape_1d, 2.0 * self.einstein_radius_rescaled),
         )
 
 
@@ -703,7 +703,7 @@ class EllipticalIsothermalKormann(mp.EllipticalMassProfile, mp.MassProfile):
 
         grid_eta = self.grid_to_elliptical_radii(grid=grid)
 
-        for i in range(grid.shape[0]):
+        for i in range(grid.sub_shape_1d):
             covnergence_grid[i] = self.convergence_func(r=grid_eta[i])
 
         return covnergence_grid

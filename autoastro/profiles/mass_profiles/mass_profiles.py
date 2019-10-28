@@ -4,6 +4,7 @@ from scipy.optimize import root_scalar
 from astropy import cosmology as cosmo
 from skimage import measure
 
+from autoarray.structures import grids
 import autofit as af
 from autoastro import dimensions as dim
 from autofit.tools import text_util
@@ -458,10 +459,12 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         if len(tangential_critical_curve_indices) == 0:
             return []
 
-        return grid.geometry.grid_arcsec_from_grid_pixels_1d_for_marching_squares(
+        tangential_critical_curve = grid.geometry.grid_arcsec_from_grid_pixels_1d_for_marching_squares(
             grid_pixels_1d=tangential_critical_curve_indices[0],
             shape_2d=tangential_eigen_values.sub_shape_2d,
         )
+
+        return grids.IrregularGrid(grid=tangential_critical_curve)
 
     def radial_critical_curve_from_grid(self, grid):
 
@@ -474,10 +477,12 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         if len(radial_critical_curve_indices) == 0:
             return []
 
-        return grid.geometry.grid_arcsec_from_grid_pixels_1d_for_marching_squares(
+        radial_critical_curve = grid.geometry.grid_arcsec_from_grid_pixels_1d_for_marching_squares(
             grid_pixels_1d=radial_critical_curve_indices[0],
             shape_2d=radial_eigen_values.sub_shape_2d,
         )
+
+        return grids.IrregularGrid(grid=radial_critical_curve)
 
     def tangential_caustic_from_grid(self, grid):
 
