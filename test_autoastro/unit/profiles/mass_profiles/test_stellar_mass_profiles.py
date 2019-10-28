@@ -5,7 +5,7 @@ import autoarray as aa
 from autoarray.structures import grids
 import autoastro as am
 
-grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
+grid = aa.grid.manual_2d([[[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]]])
 
 
 class TestSersic(object):

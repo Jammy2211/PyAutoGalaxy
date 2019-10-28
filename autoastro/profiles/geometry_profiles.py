@@ -3,6 +3,7 @@ from functools import wraps
 
 import autofit as af
 import autoarray as aa
+from autoarray.structures import grids
 from autoastro import dimensions as dim
 
 
@@ -44,6 +45,8 @@ def transform_grid(func):
                 *args,
                 **kwargs,
             )
+
+
 
             # TODO : Clean this up.
 
@@ -141,7 +144,7 @@ def move_grid_to_radial_minimum(func):
     return wrapper
 
 
-class TransformedGrid(np.ndarray):
+class TransformedGrid(grids.AbstractGrid):
     pass
 
 
@@ -235,7 +238,7 @@ class SphericalProfile(GeometryProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         transformed = np.subtract(grid, self.centre)
-        return transformed.view(TransformedGrid)
+        return TransformedGrid(grid_1d=transformed, mask=grid.mask)
 
     def transform_grid_from_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
@@ -402,7 +405,7 @@ class EllipticalProfile(SphericalProfile):
                 radius * np.cos(theta_coordinate_to_profile),
             )
         ).T
-        return transformed.view(TransformedGrid)
+        return TransformedGrid(grid_1d=transformed, mask=grid.mask)
 
     def transform_grid_from_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \

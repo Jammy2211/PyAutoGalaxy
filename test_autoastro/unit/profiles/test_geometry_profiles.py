@@ -348,7 +348,7 @@ class TestEllipticalProfile(object):
                 axis_ratio=1.0, phi=45.0
             )
 
-            grid_original = np.array([[5.2221, 2.6565]])
+            grid_original = aa.grid.manual_2d([[[5.2221, 2.6565]]])
 
             grid_elliptical = elliptical_profile.transform_grid_to_reference_frame(
                 grid_original
@@ -417,7 +417,7 @@ class TestEllipticalProfile(object):
             )
 
             eccentric_radius = elliptical_profile.grid_to_eccentric_radii(
-                np.array([[1.0, 1.0]])
+                aa.grid.manual_2d([[[1.0, 1.0]]])
             )
 
             assert eccentric_radius == pytest.approx(2.0 ** 0.5, 1e-3)
@@ -434,7 +434,7 @@ class TestEllipticalProfile(object):
             )
 
             eccentric_radius = elliptical_profile.grid_to_eccentric_radii(
-                np.array([[1.0, 1.0]])
+                aa.grid.manual_2d([[[1.0, 1.0]]])
             )
 
             assert eccentric_radius == pytest.approx(1.58113, 1e-3)
@@ -458,7 +458,7 @@ class TestSphericalProfile(object):
             spherical_profile = geometry_profiles.SphericalProfile(centre=(0.0, 0.0))
 
             transformed_grid = spherical_profile.transform_grid_from_reference_frame(
-                np.array([[1.0, 1.0]])
+                aa.grid.manual_2d([[[1.0, 1.0]]])
             )
 
             assert transformed_grid[0, 0] == 1.0
@@ -495,7 +495,7 @@ class TestSphericalProfile(object):
         ):
             spherical_profile = geometry_profiles.SphericalProfile(centre=(0.0, 0.0))
 
-            grid = np.array([[1.0, 1.0]])
+            grid = aa.grid.manual_2d([[[1.0, 1.0]]])
 
             transformed_grid = spherical_profile.transform_grid_to_reference_frame(grid)
 
@@ -507,7 +507,7 @@ class TestSphericalProfile(object):
         ):
             spherical_profile = geometry_profiles.SphericalProfile(centre=(0.0, 0.0))
 
-            grid_original = np.array([[5.2221, 2.6565]])
+            grid_original = aa.grid.manual_2d([[[5.2221, 2.6565]]])
 
             grid_spherical = spherical_profile.transform_grid_to_reference_frame(
                 grid_original

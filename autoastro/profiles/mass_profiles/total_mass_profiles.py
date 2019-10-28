@@ -102,7 +102,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
         """
 
-        covnergence_grid = np.zeros(grid.shape[0])
+        covnergence_grid = np.zeros(grid.sub_shape_1d)
 
         grid_eta = self.grid_to_elliptical_radii(grid)
 
@@ -699,7 +699,7 @@ class EllipticalIsothermalKormann(mp.EllipticalMassProfile, mp.MassProfile):
 
         """
 
-        covnergence_grid = np.zeros(grid.shape[0])
+        covnergence_grid = np.zeros(grid.sub_shape_1d)
 
         grid_eta = self.grid_to_elliptical_radii(grid=grid)
 

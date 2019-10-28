@@ -173,7 +173,7 @@ class Galaxy(ModelObject):
             return grid.mapping.array_from_sub_array_1d(sub_array_1d=profile_image)
         else:
             return grid.mapping.array_from_sub_array_1d(
-                sub_array_1d=np.zeros((grid.shape[0],))
+                sub_array_1d=np.zeros((grid.sub_shape_1d,))
             )
 
     def blurred_profile_image_from_grid_and_psf(self, grid, psf, blurring_grid=None):
@@ -311,7 +311,7 @@ class Galaxy(ModelObject):
             return grid.mapping.array_from_sub_array_1d(sub_array_1d=convergence)
         else:
             return grid.mapping.array_from_sub_array_1d(
-                sub_array_1d=np.zeros((grid.shape[0],))
+                sub_array_1d=np.zeros((grid.sub_shape_1d,))
             )
 
     def potential_from_grid(self, grid):
@@ -338,7 +338,7 @@ class Galaxy(ModelObject):
             return grid.mapping.array_from_sub_array_1d(sub_array_1d=potential)
         else:
             return grid.mapping.array_from_sub_array_1d(
-                sub_array_1d=np.zeros((grid.shape[0],))
+                sub_array_1d=np.zeros((grid.sub_shape_1d,))
             )
 
     def deflections_from_grid(self, grid):
@@ -360,7 +360,7 @@ class Galaxy(ModelObject):
             )
             return grid.mapping.grid_from_sub_grid_1d(sub_grid_1d=deflections)
         return grid.mapping.grid_from_sub_grid_1d(
-            sub_grid_1d=np.full((grid.shape[0], 2), 0.0)
+            sub_grid_1d=np.full((grid.sub_shape_1d, 2), 0.0)
         )
 
     def deflections_via_potential_from_grid(self, grid):

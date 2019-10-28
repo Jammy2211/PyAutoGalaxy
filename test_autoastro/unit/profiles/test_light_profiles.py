@@ -18,7 +18,7 @@ def reset_config():
     aa.conf.instance = aa.conf.default
 
 
-grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
+grid = aa.grid.manual_2d([[[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]]])
 
 
 class TestGaussian:
@@ -129,7 +129,7 @@ class TestGaussian:
         )
 
         assert gaussian.profile_image_from_grid(
-            grid=np.array([[0.0, 3.0]])
+            grid=aa.grid.manual_2d([[[0.0, 3.0]]])
         ) == pytest.approx(0.0647, 1e-2)
 
     def test__intensity_from_grid__change_geometry(self):
@@ -156,10 +156,10 @@ class TestGaussian:
         )
 
         assert gaussian_0.profile_image_from_grid(
-            grid=np.array([[0.0, 0.0], [0.0, 1.0], [0.0, -1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 0.0], [0.0, 1.0], [0.0, -1.0]]])
         ) == pytest.approx(
             gaussian_1.profile_image_from_grid(
-                grid=np.array([[0.0, 0.0], [0.0, 1.0], [0.0, -1.0]])
+                grid=aa.grid.manual_2d([[[0.0, 0.0], [0.0, 1.0], [0.0, -1.0]]])
             ),
             1e-4,
         )
@@ -173,10 +173,10 @@ class TestGaussian:
         )
 
         assert gaussian_0.profile_image_from_grid(
-            grid=np.array([[0.0, 0.0], [0.0, 1.0], [0.0, -1.0]])
+            grid=aa.grid.manual_2d([[[0.0, 0.0], [0.0, 1.0], [0.0, -1.0]]])
         ) == pytest.approx(
             gaussian_1.profile_image_from_grid(
-                grid=np.array([[0.0, 0.0], [0.0, -1.0], [0.0, 1.0]])
+                grid=aa.grid.manual_2d([[[0.0, 0.0], [0.0, -1.0], [0.0, 1.0]]])
             ),
             1e-4,
         )
@@ -1148,7 +1148,7 @@ class TestLuminosityWithinEllipse(object):
         for x in xs:
             for y in ys:
 
-                eta = sersic.grid_to_elliptical_radii(np.array([[x, y]]))
+                eta = sersic.grid_to_elliptical_radii(aa.grid.manual_2d([[[x, y]]]))
 
                 if eta < radius:
                     luminosity_grid += sersic.profile_image_from_grid_radii(eta) * area
@@ -1164,13 +1164,13 @@ class TestGrids(object):
     def test__grid_to_eccentric_radius(self):
         elliptical = am.lp.EllipticalSersic(axis_ratio=0.5, phi=0.0)
 
-        assert elliptical.grid_to_eccentric_radii(np.array([[1, 1]])) == pytest.approx(
-            elliptical.grid_to_eccentric_radii(np.array([[-1, -1]])), 1e-10
+        assert elliptical.grid_to_eccentric_radii(aa.grid.manual_2d([[[1, 1]]])) == pytest.approx(
+            elliptical.grid_to_eccentric_radii(aa.grid.manual_2d([[[-1, -1]]])), 1e-10
         )
 
     def test__intensity_from_grid(self):
         elliptical = am.lp.EllipticalSersic(axis_ratio=0.5, phi=0.0)
 
-        assert elliptical.profile_image_from_grid(np.array([[1, 1]])) == pytest.approx(
-            elliptical.profile_image_from_grid(np.array([[-1, -1]])), 1e-4
+        assert elliptical.profile_image_from_grid(aa.grid.manual_2d([[[1, 1]]])) == pytest.approx(
+            elliptical.profile_image_from_grid(aa.grid.manual_2d([[[-1, -1]]])), 1e-4
         )

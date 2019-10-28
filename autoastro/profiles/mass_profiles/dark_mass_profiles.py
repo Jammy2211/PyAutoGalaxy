@@ -166,7 +166,7 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
 
         """
 
-        surface_density_grid = np.zeros(shape=grid.shape[0])
+        surface_density_grid = np.zeros(shape=grid.sub_shape_1d)
 
         grid_eta = self.grid_to_elliptical_radii(grid)
 
@@ -542,7 +542,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
             grid, tabulate_bins
         )
 
-        potential_grid = np.zeros(grid.shape[0])
+        potential_grid = np.zeros(grid.sub_shape_1d)
 
         deflection_integral = np.zeros((tabulate_bins,))
 
@@ -785,7 +785,7 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
 
         eta = np.multiply(1.0 / self.scale_radius, self.grid_to_grid_radii(grid))
 
-        deflection_grid = np.zeros(grid.shape[0])
+        deflection_grid = np.zeros(grid.sub_shape_1d)
 
         for i in range(grid.shape[0]):
             deflection_grid[i] = np.multiply(
@@ -885,7 +885,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         return np.real(self.coord_func_m(grid_radius=grid_radius))
 
     def potential_from_grid(self, grid):
-        return aa.array.manual_1d(array=np.zeros(shape=grid.shape_1d), shape_2d=grid.shape_2d)
+        return aa.array.manual_1d(array=np.zeros(shape=grid.sub_shape_1d), shape_2d=grid.sub_shape_2d)
 
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
