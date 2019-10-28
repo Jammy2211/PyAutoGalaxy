@@ -46,17 +46,10 @@ def transform_grid(func):
                 **kwargs,
             )
 
-
-
-            # TODO : Clean this up.
-
-            if hasattr(grid, "mask"):
-                if len(result.shape) == 1:
-                    return grid.mapping.array_from_sub_array_1d(sub_array_1d=result)
-                else:
-                    return grid.mapping.grid_from_sub_grid_1d(sub_grid_1d=result)
+            if len(result.shape) == 1:
+                return grid.mapping.array_from_sub_array_1d(sub_array_1d=result)
             else:
-                return result
+                return grid.mapping.grid_from_sub_grid_1d(sub_grid_1d=result)
 
         else:
             return func(profile, grid, *args, **kwargs)
