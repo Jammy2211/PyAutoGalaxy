@@ -1,6 +1,7 @@
 import autoarray as aa
 from autoarray.plotters import plotter_util
 
+
 def image(
     light_profile,
     grid,

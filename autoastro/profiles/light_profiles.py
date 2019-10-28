@@ -119,17 +119,14 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         blurring_image = self.profile_image_from_grid(grid=blurring_grid)
 
         return convolver.convolved_image_from_image_and_blurring_image(
-            image=profile_image.in_1d_binned,
-            blurring_image=blurring_image.in_1d_binned,
+            image=profile_image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
         )
 
     def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
 
         profile_image = self.profile_image_from_grid(grid=grid)
 
-        return transformer.visibilities_from_image(
-            image=profile_image.in_1d_binned
-        )
+        return transformer.visibilities_from_image(image=profile_image.in_1d_binned)
 
     @dim.convert_units_to_input_units
     def luminosity_within_circle_in_units(
@@ -428,7 +425,6 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
 
 
 class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
-
     @af.map_types
     def __init__(
         self,

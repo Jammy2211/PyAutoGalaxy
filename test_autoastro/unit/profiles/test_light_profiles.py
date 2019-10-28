@@ -47,9 +47,7 @@ class TestGaussian:
         assert isinstance(gaussian.sigma, am.dim.Length)
         assert gaussian.sigma.unit_length == "arcsec"
 
-        gaussian = am.lp.SphericalGaussian(
-            centre=(1.0, 2.0), intensity=1.0, sigma=0.1
-        )
+        gaussian = am.lp.SphericalGaussian(centre=(1.0, 2.0), intensity=1.0, sigma=0.1)
 
         assert gaussian.centre == (1.0, 2.0)
         assert isinstance(gaussian.centre[0], am.dim.Length)
@@ -193,9 +191,7 @@ class TestGaussian:
         ).all()
 
     def test__output_image_is_autoarray(self):
-        grid = aa.grid.uniform(
-            shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         gaussian = am.lp.EllipticalGaussian()
 
@@ -381,9 +377,7 @@ class TestSersic:
         i += 1
 
     def test__output_image_is_autoarray(self):
-        grid = aa.grid.uniform(
-            shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         sersic = am.lp.EllipticalSersic()
 
@@ -512,16 +506,16 @@ class TestExponential:
 
         assert exponential_0.profile_image_from_grid(
             grid=aa.grid.manual_2d([[[0.0, 1.0]]])
-        ) == exponential_1.profile_image_from_grid(grid=aa.grid.manual_2d([[[1.0, 0.0]]]))
+        ) == exponential_1.profile_image_from_grid(
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+        )
 
     def test__spherical_and_elliptical_match(self):
         elliptical = am.lp.EllipticalExponential(
             axis_ratio=1.0, phi=0.0, intensity=3.0, effective_radius=2.0
         )
 
-        spherical = am.lp.SphericalExponential(
-            intensity=3.0, effective_radius=2.0
-        )
+        spherical = am.lp.SphericalExponential(intensity=3.0, effective_radius=2.0)
 
         assert (
             elliptical.profile_image_from_grid(grid=grid)
@@ -529,9 +523,7 @@ class TestExponential:
         ).all()
 
     def test__output_image_is_autoarray(self):
-        grid = aa.grid.uniform(
-            shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         exponential = am.lp.EllipticalExponential()
 
@@ -661,16 +653,16 @@ class TestDevVaucouleurs:
 
         assert dev_vaucouleurs_0.profile_image_from_grid(
             grid=aa.grid.manual_2d([[[0.0, 1.0]]])
-        ) == dev_vaucouleurs_1.profile_image_from_grid(grid=aa.grid.manual_2d([[[1.0, 0.0]]]))
+        ) == dev_vaucouleurs_1.profile_image_from_grid(
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+        )
 
     def test__spherical_and_elliptical_match(self):
         elliptical = am.lp.EllipticalDevVaucouleurs(
             axis_ratio=1.0, phi=0.0, intensity=3.0, effective_radius=2.0
         )
 
-        spherical = am.lp.SphericalDevVaucouleurs(
-            intensity=3.0, effective_radius=2.0
-        )
+        spherical = am.lp.SphericalDevVaucouleurs(intensity=3.0, effective_radius=2.0)
 
         assert (
             elliptical.profile_image_from_grid(grid=grid)
@@ -678,9 +670,7 @@ class TestDevVaucouleurs:
         ).all()
 
     def test__output_image_is_autoarray(self):
-        grid = aa.grid.uniform(
-            shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         dev_vaucouleurs = am.lp.EllipticalDevVaucouleurs()
 
@@ -844,9 +834,7 @@ class TestCoreSersic(object):
         ).all()
 
     def test__output_image_is_autoarray(self):
-        grid = aa.grid.uniform(
-            shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         core_sersic = am.lp.EllipticalCoreSersic()
 
@@ -989,7 +977,9 @@ class TestLuminosityWithinCircle(object):
 
     def test__luminosity_units_conversions__uses_exposure_time(self):
         sersic_eps = am.lp.SphericalSersic(
-            intensity=am.dim.Luminosity(3.0, "eps"), effective_radius=2.0, sersic_index=1.0
+            intensity=am.dim.Luminosity(3.0, "eps"),
+            effective_radius=2.0,
+            sersic_index=1.0,
         )
 
         radius = am.dim.Length(0.5, "arcsec")
@@ -1164,13 +1154,17 @@ class TestGrids(object):
     def test__grid_to_eccentric_radius(self):
         elliptical = am.lp.EllipticalSersic(axis_ratio=0.5, phi=0.0)
 
-        assert elliptical.grid_to_eccentric_radii(aa.grid.manual_2d([[[1, 1]]])) == pytest.approx(
+        assert elliptical.grid_to_eccentric_radii(
+            aa.grid.manual_2d([[[1, 1]]])
+        ) == pytest.approx(
             elliptical.grid_to_eccentric_radii(aa.grid.manual_2d([[[-1, -1]]])), 1e-10
         )
 
     def test__intensity_from_grid(self):
         elliptical = am.lp.EllipticalSersic(axis_ratio=0.5, phi=0.0)
 
-        assert elliptical.profile_image_from_grid(aa.grid.manual_2d([[[1, 1]]])) == pytest.approx(
+        assert elliptical.profile_image_from_grid(
+            aa.grid.manual_2d([[[1, 1]]])
+        ) == pytest.approx(
             elliptical.profile_image_from_grid(aa.grid.manual_2d([[[-1, -1]]])), 1e-4
         )

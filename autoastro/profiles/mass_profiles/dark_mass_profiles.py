@@ -885,7 +885,9 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         return np.real(self.coord_func_m(grid_radius=grid_radius))
 
     def potential_from_grid(self, grid):
-        return aa.array.manual_1d(array=np.zeros(shape=grid.sub_shape_1d), shape_2d=grid.sub_shape_2d)
+        return aa.array.manual_1d(
+            array=np.zeros(shape=grid.sub_shape_1d), shape_2d=grid.sub_shape_2d
+        )
 
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum

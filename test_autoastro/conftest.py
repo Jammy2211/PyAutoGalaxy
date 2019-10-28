@@ -3,6 +3,7 @@ import os
 import pytest
 from matplotlib import pyplot
 
+
 class PlotPatch(object):
     def __init__(self):
         self.paths = []

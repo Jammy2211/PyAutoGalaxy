@@ -197,17 +197,14 @@ class Galaxy(ModelObject):
         blurring_image = self.profile_image_from_grid(grid=blurring_grid)
 
         return convolver.convolved_image_from_image_and_blurring_image(
-            image=profile_image.in_1d_binned,
-            blurring_image=blurring_image.in_1d_binned,
+            image=profile_image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
         )
 
     def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
 
         profile_image = self.profile_image_from_grid(grid=grid)
 
-        return transformer.visibilities_from_image(
-            image=profile_image.in_1d_binned
-        )
+        return transformer.visibilities_from_image(image=profile_image.in_1d_binned)
 
     def luminosity_within_circle_in_units(
         self,

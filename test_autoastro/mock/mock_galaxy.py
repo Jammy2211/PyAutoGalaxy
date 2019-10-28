@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class MockGalaxy(object):
     def __init__(self, value, shape=1):
         self.value = value

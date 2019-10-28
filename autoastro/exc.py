@@ -1,7 +1,6 @@
 import autofit as af
 
 
-
 class CosmologyException(Exception):
     pass
 

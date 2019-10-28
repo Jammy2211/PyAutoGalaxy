@@ -23,7 +23,7 @@ class MockPixelization(object):
         self.grid = grid
 
     # noinspection PyUnusedLocal,PyShadowingNames
-    def mapper_from_grid_and_pixelization_grid(
+    def mapper_from_grid_and_sparse_grid(
         self, grid, pixelization_grid, inversion_uses_border, hyper_image=None
     ):
         return self.value
@@ -49,8 +49,9 @@ class MockRegularization(object):
 
 
 class MockRegMapper(object):
-
-    def __init__(self, pixel_neighbors=None, pixel_neighbors_size=None, pixel_signals=None):
+    def __init__(
+        self, pixel_neighbors=None, pixel_neighbors_size=None, pixel_signals=None
+    ):
         self.pixel_neighbors = pixel_neighbors
         self.pixel_neighbors_size = pixel_neighbors_size
         self.pixel_signals = pixel_signals

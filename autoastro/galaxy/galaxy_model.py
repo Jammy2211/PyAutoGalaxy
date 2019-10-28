@@ -7,6 +7,7 @@ from autoastro.galaxy import Galaxy
 from autoastro.profiles import light_profiles
 from autoastro.profiles import mass_profiles
 
+
 def is_light_profile_class(cls):
     """
     Parameters

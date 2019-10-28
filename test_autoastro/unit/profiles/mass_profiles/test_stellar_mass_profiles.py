@@ -145,7 +145,9 @@ class TestSersic(object):
             sersic_index=2.0,
             mass_to_light_ratio=1.0,
         )
-        deflections = sersic.deflections_from_grid(grid=aa.grid.manual_2d([[[0.1625, 0.1625]]]))
+        deflections = sersic.deflections_from_grid(
+            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+        )
         assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.79374, 1e-3)
 
@@ -179,12 +181,8 @@ class TestSersic(object):
             grid=aa.grid.manual_2d([[[1.0, 0.0]]])
         ) == sersic_1.convergence_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]]))
 
-        sersic_0 = am.mp.EllipticalSersic(
-            centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0
-        )
-        sersic_1 = am.mp.EllipticalSersic(
-            centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0
-        )
+        sersic_0 = am.mp.EllipticalSersic(centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0)
+        sersic_1 = am.mp.EllipticalSersic(centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0)
         assert sersic_0.convergence_from_grid(
             grid=aa.grid.manual_2d([[[1.0, 0.0]]])
         ) == sersic_1.convergence_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]]))
@@ -192,26 +190,34 @@ class TestSersic(object):
     def test__deflections__change_geometry(self):
         sersic_0 = am.mp.SphericalSersic(centre=(0.0, 0.0))
         sersic_1 = am.mp.SphericalSersic(centre=(1.0, 1.0))
-        deflections_0 = sersic_0.deflections_from_grid(grid=aa.grid.manual_2d([[[1.0, 1.0]]]))
-        deflections_1 = sersic_1.deflections_from_grid(grid=aa.grid.manual_2d([[[0.0, 0.0]]]))
+        deflections_0 = sersic_0.deflections_from_grid(
+            grid=aa.grid.manual_2d([[[1.0, 1.0]]])
+        )
+        deflections_1 = sersic_1.deflections_from_grid(
+            grid=aa.grid.manual_2d([[[0.0, 0.0]]])
+        )
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
 
         sersic_0 = am.mp.SphericalSersic(centre=(0.0, 0.0))
         sersic_1 = am.mp.SphericalSersic(centre=(0.0, 0.0))
-        deflections_0 = sersic_0.deflections_from_grid(grid=aa.grid.manual_2d([[[1.0, 0.0]]]))
-        deflections_1 = sersic_1.deflections_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]]))
+        deflections_0 = sersic_0.deflections_from_grid(
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+        )
+        deflections_1 = sersic_1.deflections_from_grid(
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+        )
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
-        sersic_0 = am.mp.EllipticalSersic(
-            centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0
+        sersic_0 = am.mp.EllipticalSersic(centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0)
+        sersic_1 = am.mp.EllipticalSersic(centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0)
+        deflections_0 = sersic_0.deflections_from_grid(
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
         )
-        sersic_1 = am.mp.EllipticalSersic(
-            centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0
+        deflections_1 = sersic_1.deflections_from_grid(
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
         )
-        deflections_0 = sersic_0.deflections_from_grid(grid=aa.grid.manual_2d([[[1.0, 0.0]]]))
-        deflections_1 = sersic_1.deflections_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]]))
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
@@ -343,9 +349,7 @@ class TestSersic(object):
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = aa.grid.uniform(
-            shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         sersic = am.mp.EllipticalSersic()
 
@@ -665,9 +669,7 @@ class TestExponential(object):
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = aa.grid.uniform(
-            shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         exponential = am.mp.EllipticalExponential()
 
@@ -735,7 +737,9 @@ class TestDevVaucouleurs(object):
         assert isinstance(dev_vaucouleurs.sersic_index, float)
 
         assert dev_vaucouleurs.mass_to_light_ratio == 10.0
-        assert isinstance(dev_vaucouleurs.mass_to_light_ratio, am.dim.MassOverLuminosity)
+        assert isinstance(
+            dev_vaucouleurs.mass_to_light_ratio, am.dim.MassOverLuminosity
+        )
         assert dev_vaucouleurs.mass_to_light_ratio.unit == "angular / eps"
 
         assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
@@ -772,7 +776,9 @@ class TestDevVaucouleurs(object):
         assert isinstance(dev_vaucouleurs.sersic_index, float)
 
         assert dev_vaucouleurs.mass_to_light_ratio == 10.0
-        assert isinstance(dev_vaucouleurs.mass_to_light_ratio, am.dim.MassOverLuminosity)
+        assert isinstance(
+            dev_vaucouleurs.mass_to_light_ratio, am.dim.MassOverLuminosity
+        )
         assert dev_vaucouleurs.mass_to_light_ratio.unit == "angular / eps"
 
         assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
@@ -786,9 +792,9 @@ class TestDevVaucouleurs(object):
             effective_radius=2.0,
             mass_to_light_ratio=1.0,
         )
-        assert dev.convergence_from_grid(grid=aa.grid.manual_2d([[[1.0, 0.0]]])) == pytest.approx(
-            5.6697, 1e-3
-        )
+        assert dev.convergence_from_grid(
+            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+        ) == pytest.approx(5.6697, 1e-3)
 
         dev = am.mp.EllipticalDevVaucouleurs(
             axis_ratio=0.5,
@@ -797,9 +803,9 @@ class TestDevVaucouleurs(object):
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
         )
-        assert dev.convergence_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]])) == pytest.approx(
-            7.4455, 1e-3
-        )
+        assert dev.convergence_from_grid(
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+        ) == pytest.approx(7.4455, 1e-3)
 
         dev = am.mp.EllipticalDevVaucouleurs(
             axis_ratio=0.5,
@@ -808,9 +814,9 @@ class TestDevVaucouleurs(object):
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
         )
-        assert dev.convergence_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]])) == pytest.approx(
-            2.0 * 7.4455, 1e-3
-        )
+        assert dev.convergence_from_grid(
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+        ) == pytest.approx(2.0 * 7.4455, 1e-3)
 
         dev = am.mp.EllipticalDevVaucouleurs(
             axis_ratio=0.5,
@@ -819,9 +825,9 @@ class TestDevVaucouleurs(object):
             effective_radius=3.0,
             mass_to_light_ratio=2.0,
         )
-        assert dev.convergence_from_grid(grid=aa.grid.manual_2d([[[0.0, 1.0]]])) == pytest.approx(
-            2.0 * 7.4455, 1e-3
-        )
+        assert dev.convergence_from_grid(
+            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+        ) == pytest.approx(2.0 * 7.4455, 1e-3)
 
         sersic = am.mp.SphericalDevVaucouleurs(
             centre=(0.0, 0.0),
@@ -842,7 +848,9 @@ class TestDevVaucouleurs(object):
             effective_radius=0.8,
             mass_to_light_ratio=3.0,
         )
-        deflections = dev.deflections_from_grid(grid=aa.grid.manual_2d([[[0.1625, 0.1625]]]))
+        deflections = dev.deflections_from_grid(
+            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+        )
         assert deflections[0, 0] == pytest.approx(-24.528, 1e-3)
         assert deflections[0, 1] == pytest.approx(-3.37605, 1e-3)
 
@@ -971,9 +979,7 @@ class TestDevVaucouleurs(object):
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = aa.grid.uniform(
-            shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         dev_vaucouleurs = am.mp.EllipticalDevVaucouleurs()
 
@@ -1175,7 +1181,9 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_ratio=1.0,
             mass_to_light_gradient=1.0,
         )
-        deflections = sersic.deflections_from_grid(grid=aa.grid.manual_2d([[[0.1625, 0.1625]]]))
+        deflections = sersic.deflections_from_grid(
+            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+        )
         assert deflections[0, 0] == pytest.approx(3.60324873535244, 1e-3)
         assert deflections[0, 1] == pytest.approx(2.3638898009652, 1e-3)
 
@@ -1189,7 +1197,9 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_ratio=1.0,
             mass_to_light_gradient=-1.0,
         )
-        deflections = sersic.deflections_from_grid(grid=aa.grid.manual_2d([[[0.1625, 0.1625]]]))
+        deflections = sersic.deflections_from_grid(
+            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+        )
         assert deflections[0, 0] == pytest.approx(0.97806399756448, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.725459334118341, 1e-3)
 
@@ -1254,7 +1264,9 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_ratio=3.0,
         )
 
-        dev_deflections = dev.deflections_from_grid(grid=aa.grid.manual_2d([[[0.1625, 0.1625]]]))
+        dev_deflections = dev.deflections_from_grid(
+            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+        )
 
         assert (
             sersic_deflections[0, 0]
@@ -1435,9 +1447,7 @@ class TestSersicMassRadialGradient(object):
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = aa.grid.uniform(
-            shape_2d=(2, 2), pixel_scales=1.0, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         sersic = am.mp.EllipticalSersicRadialGradient()
 

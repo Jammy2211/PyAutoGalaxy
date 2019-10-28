@@ -412,9 +412,7 @@ class TestMassWithinEllipse(object):
         )
         assert mass_circle == mass_ellipse
 
-        sie = am.mp.EllipticalIsothermal(
-            einstein_radius=2.0, axis_ratio=0.5, phi=0.0
-        )
+        sie = am.mp.EllipticalIsothermal(einstein_radius=2.0, axis_ratio=0.5, phi=0.0)
         radius = am.dim.Length(2.0)
         mass_circle = sie.mass_within_circle_in_units(
             radius=radius,
@@ -434,9 +432,7 @@ class TestMassWithinEllipse(object):
         self
     ):
 
-        sie = am.mp.EllipticalIsothermal(
-            einstein_radius=2.0, axis_ratio=0.5, phi=0.0
-        )
+        sie = am.mp.EllipticalIsothermal(einstein_radius=2.0, axis_ratio=0.5, phi=0.0)
 
         radius = am.dim.Length(0.5)
 
@@ -566,9 +562,7 @@ class TestMassWithinEllipse(object):
 
         cosmology = mock_cosmology.MockCosmology(critical_surface_density=2.0)
 
-        sie = am.mp.EllipticalIsothermal(
-            einstein_radius=2.0, axis_ratio=0.5, phi=0.0
-        )
+        sie = am.mp.EllipticalIsothermal(einstein_radius=2.0, axis_ratio=0.5, phi=0.0)
 
         radius = am.dim.Length(2.0, "arcsec")
 
@@ -718,19 +712,17 @@ class TestDensityBetweenAnnuli(object):
 class TestDeflectionsViaPotential(object):
     def test__compare_sis_deflections_via_potential_and_calculation(self):
 
-        sis = am.mp.SphericalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2.0
-        )
+        sis = am.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(
-            shape_2d=(10, 10), pixel_scales=0.05, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
 
         deflections_via_calculation = sis.deflections_from_grid(grid=grid)
 
         deflections_via_potential = sis.deflections_via_potential_from_grid(grid=grid)
 
-        mean_error = np.mean(deflections_via_potential.in_1d - deflections_via_calculation.in_1d)
+        mean_error = np.mean(
+            deflections_via_potential.in_1d - deflections_via_calculation.in_1d
+        )
 
         assert mean_error < 1e-4
 
@@ -740,15 +732,15 @@ class TestDeflectionsViaPotential(object):
             centre=(0.0, 0.0), phi=45.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(10, 10), pixel_scales=0.05, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
 
         deflections_via_calculation = sie.deflections_from_grid(grid=grid)
 
         deflections_via_potential = sie.deflections_via_potential_from_grid(grid=grid)
 
-        mean_error = np.mean(deflections_via_potential.in_1d - deflections_via_calculation.in_1d)
+        mean_error = np.mean(
+            deflections_via_potential.in_1d - deflections_via_calculation.in_1d
+        )
 
         assert mean_error < 1e-4
 
@@ -758,15 +750,15 @@ class TestDeflectionsViaPotential(object):
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(10, 10), pixel_scales=0.05, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
 
         deflections_via_calculation = sie.deflections_from_grid(grid=grid)
 
         deflections_via_potential = sie.deflections_via_potential_from_grid(grid=grid)
 
-        mean_error = np.mean(deflections_via_potential.in_1d - deflections_via_calculation.in_1d)
+        mean_error = np.mean(
+            deflections_via_potential.in_1d - deflections_via_calculation.in_1d
+        )
 
         assert mean_error < 1e-4
 
@@ -778,9 +770,7 @@ class TestJacobian(object):
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(100, 100), pixel_scales=0.05, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
         jacobian = sie.jacobian_from_grid(grid=grid)
 
@@ -791,9 +781,7 @@ class TestJacobian(object):
 
         assert mean_error < 1e-4
 
-        grid = aa.grid.uniform(
-            shape_2d=(100, 100), pixel_scales=0.05, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
 
         jacobian = sie.jacobian_from_grid(grid=grid)
 
@@ -806,16 +794,13 @@ class TestJacobian(object):
 
 
 class TestMagnification(object):
-
     def test__compare_magnification_from_eigen_values_and_from_determinant(self):
 
         sie = am.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(100, 100), pixel_scales=0.05, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
         magnification_via_determinant = sie.magnification_from_grid(grid=grid)
 
@@ -837,9 +822,7 @@ class TestMagnification(object):
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(100, 100), pixel_scales=0.05, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
 
         magnification_via_determinant = sie.magnification_from_grid(grid=grid)
 
@@ -865,9 +848,7 @@ class TestMagnification(object):
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(100, 100), pixel_scales=0.05, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
         magnification_via_determinant = sie.magnification_from_grid(grid=grid)
 
@@ -880,14 +861,13 @@ class TestMagnification(object):
         )
 
         mean_error = np.mean(
-            magnification_via_determinant.in_1d - magnification_via_convergence_and_shear.in_1d
+            magnification_via_determinant.in_1d
+            - magnification_via_convergence_and_shear.in_1d
         )
 
         assert mean_error < 1e-4
 
-        grid = aa.grid.uniform(
-            shape_2d=(100, 100), pixel_scales=0.05, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
 
         magnification_via_determinant = sie.magnification_from_grid(grid=grid)
 
@@ -900,7 +880,8 @@ class TestMagnification(object):
         )
 
         mean_error = np.mean(
-            magnification_via_determinant.in_1d - magnification_via_convergence_and_shear.in_1d
+            magnification_via_determinant.in_1d
+            - magnification_via_convergence_and_shear.in_1d
         )
 
         assert mean_error < 1e-4
@@ -957,13 +938,9 @@ def caustics_via_magnification_from_mass_profile_and_grid(mass_profile, grid):
 class TestConvergenceViajacobian(object):
     def test__compare_sis_convergence_via_jacobian_and_calculation(self):
 
-        sis = am.mp.SphericalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2.0
-        )
+        sis = am.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(
-            shape_2d=(20, 20), pixel_scales=0.05, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
 
         convergence_via_calculation = sis.convergence_from_grid(grid=grid)
 
@@ -988,15 +965,15 @@ class TestConvergenceViajacobian(object):
             centre=(0.0, 0.0), phi=45.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(20, 20), pixel_scales=0.05, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
 
         convergence_via_calculation = sie.convergence_from_grid(grid=grid)
 
         convergence_via_jacobian = sie.convergence_via_jacobian_from_grid(grid=grid)
 
-        mean_error = np.mean(convergence_via_jacobian.in_1d - convergence_via_calculation.in_1d)
+        mean_error = np.mean(
+            convergence_via_jacobian.in_1d - convergence_via_calculation.in_1d
+        )
 
         assert mean_error < 1e-1
 
@@ -1010,9 +987,7 @@ class TestCriticalCurvesAndCaustics(object):
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(100, 100), pixel_scales=0.05, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
 
         magnification_via_determinant = sie.magnification_from_grid(grid=grid)
 
@@ -1032,13 +1007,9 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__tangential_critical_curve_radii__spherical_isothermal(self):
 
-        sis = am.mp.SphericalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2.0
-        )
+        sis = am.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(
-            shape_2d=(20, 20), pixel_scales=0.25, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=2)
 
         critical_curves = sis.critical_curves_from_grid(grid=grid)
 
@@ -1053,13 +1024,9 @@ class TestCriticalCurvesAndCaustics(object):
             x_critical_tangential ** 2 + y_critical_tangential ** 2
         ) == pytest.approx(sis.einstein_radius ** 2, 5e-1)
 
-        sis = am.mp.SphericalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2.0
-        )
+        sis = am.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(
-            shape_2d=(10, 10), pixel_scales=0.5, sub_size=4
-        )
+        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.5, sub_size=4)
 
         critical_curves = sis.critical_curves_from_grid(grid=grid)
 
@@ -1076,13 +1043,9 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__tangential_critical_curve_centres__spherical_isothermal(self):
 
-        sis = am.mp.SphericalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2.0
-        )
+        sis = am.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(
-            shape_2d=(20, 20), pixel_scales=0.25, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
 
         critical_curves = sis.critical_curves_from_grid(grid=grid)
 
@@ -1094,9 +1057,7 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.03 < y_centre < 0.03
         assert -0.03 < x_centre < 0.03
 
-        grid = aa.grid.uniform(
-            shape_2d=(20, 20), pixel_scales=0.25, sub_size=4
-        )
+        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=4)
 
         critical_curves = sis.critical_curves_from_grid(grid=grid)
 
@@ -1108,13 +1069,9 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.01 < y_centre < 0.01
         assert -0.01 < x_centre < 0.01
 
-        sis = am.mp.SphericalIsothermal(
-            centre=(0.5, 1.0), einstein_radius=2.0
-        )
+        sis = am.mp.SphericalIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(
-            shape_2d=(60, 60), pixel_scales=0.25, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(60, 60), pixel_scales=0.25, sub_size=1)
 
         critical_curves = sis.critical_curves_from_grid(grid=grid)
 
@@ -1128,13 +1085,9 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__radial_critical_curve_centres__spherical_isothermal(self):
 
-        sis = am.mp.SphericalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2.0
-        )
+        sis = am.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(
-            shape_2d=(20, 20), pixel_scales=0.25, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
 
         critical_curves = sis.critical_curves_from_grid(grid=grid)
 
@@ -1146,9 +1099,7 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.05 < y_centre < 0.05
         assert -0.05 < x_centre < 0.05
 
-        grid = aa.grid.uniform(
-            shape_2d=(20, 20), pixel_scales=0.25, sub_size=4
-        )
+        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=4)
 
         critical_curves = sis.critical_curves_from_grid(grid=grid)
 
@@ -1160,13 +1111,9 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.01 < y_centre < 0.01
         assert -0.01 < x_centre < 0.01
 
-        sis = am.mp.SphericalIsothermal(
-            centre=(0.5, 1.0), einstein_radius=2.0
-        )
+        sis = am.mp.SphericalIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(
-            shape_2d=(60, 60), pixel_scales=0.25, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(60, 60), pixel_scales=0.25, sub_size=1)
 
         critical_curves = sis.critical_curves_from_grid(grid=grid)
 
@@ -1180,13 +1127,9 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__tangential_caustic_centres__spherical_isothermal(self):
 
-        sis = am.mp.SphericalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2.0
-        )
+        sis = am.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(
-            shape_2d=(20, 20), pixel_scales=0.25, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
 
         caustics = sis.caustics_from_grid(grid=grid)
 
@@ -1198,9 +1141,7 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.03 < y_centre < 0.03
         assert -0.03 < x_centre < 0.03
 
-        grid = aa.grid.uniform(
-            shape_2d=(20, 20), pixel_scales=0.25, sub_size=4
-        )
+        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=4)
 
         caustics = sis.caustics_from_grid(grid=grid)
 
@@ -1212,13 +1153,9 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.01 < y_centre < 0.01
         assert -0.01 < x_centre < 0.01
 
-        sis = am.mp.SphericalIsothermal(
-            centre=(0.5, 1.0), einstein_radius=2.0
-        )
+        sis = am.mp.SphericalIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(
-            shape_2d=(60, 60), pixel_scales=0.25, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(60, 60), pixel_scales=0.25, sub_size=1)
 
         caustics = sis.caustics_from_grid(grid=grid)
 
@@ -1232,13 +1169,9 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__radial_caustics_radii__spherical_isothermal(self):
 
-        sis = am.mp.SphericalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2.0
-        )
+        sis = am.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(
-            shape_2d=(10, 10), pixel_scales=0.5, sub_size=4
-        )
+        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.5, sub_size=4)
 
         caustics = sis.caustics_from_grid(grid=grid)
 
@@ -1255,13 +1188,9 @@ class TestCriticalCurvesAndCaustics(object):
 
     def test__radial_caustic_centres__spherical_isothermal(self):
 
-        sis = am.mp.SphericalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2.0
-        )
+        sis = am.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(
-            shape_2d=(20, 20), pixel_scales=0.25, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
 
         caustics = sis.caustics_from_grid(grid=grid)
 
@@ -1273,9 +1202,7 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.2 < y_centre < 0.2
         assert -0.2 < x_centre < 0.2
 
-        grid = aa.grid.uniform(
-            shape_2d=(20, 20), pixel_scales=0.25, sub_size=4
-        )
+        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=4)
 
         caustics = sis.caustics_from_grid(grid=grid)
 
@@ -1287,13 +1214,9 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.09 < y_centre < 0.09
         assert -0.09 < x_centre < 0.09
 
-        sis = am.mp.SphericalIsothermal(
-            centre=(0.5, 1.0), einstein_radius=2.0
-        )
+        sis = am.mp.SphericalIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(
-            shape_2d=(60, 60), pixel_scales=0.25, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(60, 60), pixel_scales=0.25, sub_size=1)
 
         caustics = sis.caustics_from_grid(grid=grid)
 
@@ -1313,9 +1236,7 @@ class TestCriticalCurvesAndCaustics(object):
             centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(20, 20), pixel_scales=0.25, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
 
         tangential_critical_curve_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
             mass_profile=sie, grid=grid
@@ -1331,9 +1252,7 @@ class TestCriticalCurvesAndCaustics(object):
             tangential_critical_curve_from_magnification, 5e-1
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(10, 10), pixel_scales=0.5, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.5, sub_size=2)
 
         tangential_critical_curve_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
             mass_profile=sie, grid=grid
@@ -1355,9 +1274,7 @@ class TestCriticalCurvesAndCaustics(object):
             centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(100, 100), pixel_scales=0.05, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
 
         critical_curve_radial_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
             mass_profile=sie, grid=grid
@@ -1379,9 +1296,7 @@ class TestCriticalCurvesAndCaustics(object):
             centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(20, 20), pixel_scales=0.25, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
 
         tangential_caustic_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
             mass_profile=sie, grid=grid
@@ -1397,9 +1312,7 @@ class TestCriticalCurvesAndCaustics(object):
             sum(tangential_caustic_from_magnification), 5e-1
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(10, 10), pixel_scales=0.5, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.5, sub_size=2)
 
         tangential_caustic_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
             mass_profile=sie, grid=grid
@@ -1421,9 +1334,7 @@ class TestCriticalCurvesAndCaustics(object):
             centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(100, 100), pixel_scales=0.05, sub_size=1
-        )
+        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
         caustic_radial_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
             mass_profile=sie, grid=grid
@@ -1437,9 +1348,7 @@ class TestCriticalCurvesAndCaustics(object):
             sum(caustic_radial_from_magnification), 7e-1
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(100, 100), pixel_scales=0.05, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
 
         caustic_radial_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
             mass_profile=sie, grid=grid
@@ -1461,9 +1370,7 @@ class TestGridsBinning:
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(10, 10), pixel_scales=0.05, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=2)
 
         deflections = sie.deflections_via_potential_from_grid(grid=grid)
 
@@ -1489,9 +1396,7 @@ class TestGridsBinning:
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(10, 10), pixel_scales=0.05, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=2)
 
         jacobian = sie.jacobian_from_grid(grid=grid)
 
@@ -1525,9 +1430,7 @@ class TestGridsBinning:
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(10, 10), pixel_scales=0.05, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=2)
 
         shear_via_jacobian = sie.shear_via_jacobian_from_grid(grid=grid)
 
@@ -1559,9 +1462,7 @@ class TestGridsBinning:
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(10, 10), pixel_scales=0.05, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=2)
 
         tangential_eigen_values = sie.tangential_eigen_value_from_grid(grid=grid)
 
@@ -1593,9 +1494,7 @@ class TestGridsBinning:
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(
-            shape_2d=(100, 100), pixel_scales=0.05, sub_size=2
-        )
+        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
 
         radial_eigen_values = sie.radial_eigen_value_from_grid(grid=grid)
 

@@ -332,7 +332,9 @@ class TestDevVaucouleurs(object):
         assert isinstance(dev_vaucouleurs.sersic_index, float)
 
         assert dev_vaucouleurs.mass_to_light_ratio == 10.0
-        assert isinstance(dev_vaucouleurs.mass_to_light_ratio, am.dim.MassOverLuminosity)
+        assert isinstance(
+            dev_vaucouleurs.mass_to_light_ratio, am.dim.MassOverLuminosity
+        )
         assert dev_vaucouleurs.mass_to_light_ratio.unit == "angular / eps"
 
         assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
@@ -369,7 +371,9 @@ class TestDevVaucouleurs(object):
         assert isinstance(dev_vaucouleurs.sersic_index, float)
 
         assert dev_vaucouleurs.mass_to_light_ratio == 10.0
-        assert isinstance(dev_vaucouleurs.mass_to_light_ratio, am.dim.MassOverLuminosity)
+        assert isinstance(
+            dev_vaucouleurs.mass_to_light_ratio, am.dim.MassOverLuminosity
+        )
         assert dev_vaucouleurs.mass_to_light_ratio.unit == "angular / eps"
 
         assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)

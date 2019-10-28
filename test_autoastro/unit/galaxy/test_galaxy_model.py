@@ -80,9 +80,7 @@ class TestMassAndLightProfiles(object):
         assert galaxy.mass_profiles[0] == mass_and_light
 
     def test_make_galaxy_from_variable_profile(self):
-        galaxy_model = am.GalaxyModel(
-            redshift=0.5, profile=am.lmp.EllipticalSersic
-        )
+        galaxy_model = am.GalaxyModel(redshift=0.5, profile=am.lmp.EllipticalSersic)
 
         arguments = {
             galaxy_model.profile.centre.centre_0: 1.0,
@@ -98,9 +96,7 @@ class TestMassAndLightProfiles(object):
         galaxy = galaxy_model.instance_for_arguments(arguments)
 
         assert galaxy.light_profiles[0] == galaxy.mass_profiles[0]
-        assert isinstance(
-            galaxy.light_profiles[0], am.lmp.EllipticalSersic
-        )
+        assert isinstance(galaxy.light_profiles[0], am.lmp.EllipticalSersic)
 
         assert galaxy.mass_profiles[0].centre == (1.0, 0.2)
         assert galaxy.mass_profiles[0].axis_ratio == 0.4
@@ -135,10 +131,7 @@ class TestGalaxyModel:
         assert len(mapper.prior_model_tuples) == 2
 
     def test_align_centres(self, galaxy_model):
-        assert (
-            galaxy_model.light_profile.centre
-            != galaxy_model.mass_profile.centre
-        )
+        assert galaxy_model.light_profile.centre != galaxy_model.mass_profile.centre
 
         galaxy_model = am.GalaxyModel(
             redshift=am.Redshift,
@@ -147,10 +140,7 @@ class TestGalaxyModel:
             align_centres=True,
         )
 
-        assert (
-            galaxy_model.light_profile.centre
-            == galaxy_model.mass_profile.centre
-        )
+        assert galaxy_model.light_profile.centre == galaxy_model.mass_profile.centre
 
     def test_align_axis_ratios(self, galaxy_model):
         assert (
@@ -353,9 +343,7 @@ class TestRegularization(object):
 
     def test__if_no_pixelization_raises_error(self):
         with pytest.raises(exc.PriorException):
-            am.GalaxyModel(
-                redshift=am.Redshift, regularization=aa.reg.Constant
-            )
+            am.GalaxyModel(redshift=am.Redshift, regularization=aa.reg.Constant)
 
 
 class TestHyperGalaxy(object):

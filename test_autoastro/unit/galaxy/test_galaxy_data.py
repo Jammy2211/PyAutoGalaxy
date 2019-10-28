@@ -1,4 +1,3 @@
-
 import numpy as np
 import pytest
 
@@ -20,7 +19,6 @@ class TestGalaxyFitData(object):
         assert (
             galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
-
 
         assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
         assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
@@ -80,7 +78,7 @@ class TestGalaxyFitData(object):
 
     def test__pixel_scale_interpolation_grid(self, image_7x7, sub_mask_7x7):
 
-        noise_map = aa.array.full(fill_value=2.0, shape_2d=(7,7), pixel_scales=3.0)
+        noise_map = aa.array.full(fill_value=2.0, shape_2d=(7, 7), pixel_scales=3.0)
         gal_data_7x7 = am.GalaxyData(
             image=image_7x7, noise_map=noise_map, pixel_scales=3.0
         )
@@ -163,9 +161,7 @@ class TestGalaxyFitData(object):
 
         assert (image.in_1d_binned == np.ones(9)).all()
 
-        galaxy = am.Galaxy(
-            redshift=0.5, light=am.lp.SphericalSersic(intensity=1.0)
-        )
+        galaxy = am.Galaxy(redshift=0.5, light=am.lp.SphericalSersic(intensity=1.0))
 
         image_gal = galaxy.profile_image_from_grid(grid=galaxy_fit_data.grid)
 
@@ -506,7 +502,9 @@ class TestGalaxyFitData(object):
 
         assert (deflections_gal[:, 1] == deflections_gd.in_1d_binned).all()
 
-    def test__no_use_method__raises_exception(self, image_7x7, noise_map_7x7, sub_mask_7x7):
+    def test__no_use_method__raises_exception(
+        self, image_7x7, noise_map_7x7, sub_mask_7x7
+    ):
 
         gal_data_7x7 = am.GalaxyData(
             image=image_7x7, noise_map=noise_map_7x7, pixel_scales=3.0
@@ -515,7 +513,9 @@ class TestGalaxyFitData(object):
         with pytest.raises(exc.GalaxyException):
             am.GalaxyFitData(galaxy_data=gal_data_7x7, mask=sub_mask_7x7)
 
-    def test__multiple_use_methods__raises_exception(self, image_7x7, noise_map_7x7, sub_mask_7x7):
+    def test__multiple_use_methods__raises_exception(
+        self, image_7x7, noise_map_7x7, sub_mask_7x7
+    ):
 
         gal_data_7x7 = am.GalaxyData(
             image=image_7x7, noise_map=noise_map_7x7, pixel_scales=3.0

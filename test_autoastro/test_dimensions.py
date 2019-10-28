@@ -404,7 +404,9 @@ class MockDimensionsProfile(am.dim.DimensionsProfile):
         **kwargs
     ):
 
-        return am.dim.Luminosity(self.luminosity + luminosity_input, self.unit_luminosity)
+        return am.dim.Luminosity(
+            self.luminosity + luminosity_input, self.unit_luminosity
+        )
 
     @am.dim.convert_units_to_input_units
     def unit_mass_calc(
@@ -517,7 +519,8 @@ class TestDimensionsProfile(object):
             assert profile.unit_mass == "angular"
 
             profile = MockDimensionsProfile(
-                mass=am.dim.Mass(value=3.0, unit_mass="angular"), mass_over_luminosity=1.0
+                mass=am.dim.Mass(value=3.0, unit_mass="angular"),
+                mass_over_luminosity=1.0,
             )
 
             assert profile.unit_mass == "angular"
@@ -541,7 +544,8 @@ class TestDimensionsProfile(object):
             assert profile.unit_mass == "solMass"
 
             profile = MockDimensionsProfile(
-                mass=am.dim.Mass(value=3.0, unit_mass="solMass"), mass_over_luminosity=1.0
+                mass=am.dim.Mass(value=3.0, unit_mass="solMass"),
+                mass_over_luminosity=1.0,
             )
 
             assert profile.unit_mass == "solMass"

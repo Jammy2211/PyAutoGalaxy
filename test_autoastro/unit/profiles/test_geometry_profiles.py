@@ -368,12 +368,16 @@ class TestEllipticalProfile(object):
             elliptical_profile1 = geometry_profiles.EllipticalProfile(
                 axis_ratio=1.0, phi=0.0, centre=(0, 0)
             )
-            grid1 = elliptical_profile1.transform_grid_to_reference_frame(grid=aa.grid.manual_2d(grid=np.array([[[1.0, 1.0]]])))
+            grid1 = elliptical_profile1.transform_grid_to_reference_frame(
+                grid=aa.grid.manual_2d(grid=np.array([[[1.0, 1.0]]]))
+            )
 
             elliptical_profile2 = geometry_profiles.EllipticalProfile(
                 axis_ratio=1.0, phi=0.0, centre=(-1, -1)
             )
-            grid2 = elliptical_profile2.transform_grid_to_reference_frame(grid=aa.grid.manual_2d(grid=np.array([[[0.0, 0.0]]])))
+            grid2 = elliptical_profile2.transform_grid_to_reference_frame(
+                grid=aa.grid.manual_2d(grid=np.array([[[0.0, 0.0]]]))
+            )
 
             assert grid1[0, 0] == grid2[0, 0]
             assert grid1[0, 1] == grid2[0, 1]
@@ -382,12 +386,16 @@ class TestEllipticalProfile(object):
             elliptical_profile1 = geometry_profiles.EllipticalProfile(
                 axis_ratio=1.0, phi=55.0, centre=(0, 0)
             )
-            grid1 = elliptical_profile1.transform_grid_to_reference_frame(grid=aa.grid.manual_2d(grid=np.array([[[1.0, 1.0]]])))
+            grid1 = elliptical_profile1.transform_grid_to_reference_frame(
+                grid=aa.grid.manual_2d(grid=np.array([[[1.0, 1.0]]]))
+            )
 
             elliptical_profile2 = geometry_profiles.EllipticalProfile(
                 axis_ratio=1.0, phi=55.0, centre=(-1, -1)
             )
-            grid2 = elliptical_profile2.transform_grid_to_reference_frame(grid=aa.grid.manual_2d(grid=np.array([[[0.0, 0.0]]])))
+            grid2 = elliptical_profile2.transform_grid_to_reference_frame(
+                grid=aa.grid.manual_2d(grid=np.array([[[0.0, 0.0]]]))
+            )
 
             assert grid1[0, 0] == grid2[0, 0]
             assert grid1[0, 1] == grid2[0, 1]
@@ -396,7 +404,9 @@ class TestEllipticalProfile(object):
             elliptical_profile1 = geometry_profiles.EllipticalProfile(
                 axis_ratio=1.0, phi=55.0, centre=(1, 1)
             )
-            grid1 = elliptical_profile1.transform_grid_to_reference_frame(grid=aa.grid.manual_2d(grid=np.array([[[1.0, 1.0]]])))
+            grid1 = elliptical_profile1.transform_grid_to_reference_frame(
+                grid=aa.grid.manual_2d(grid=np.array([[[1.0, 1.0]]]))
+            )
 
             elliptical_profile2 = geometry_profiles.EllipticalProfile(
                 axis_ratio=1.0, phi=55.0, centre=(-1, -1)
@@ -469,17 +479,23 @@ class TestSphericalProfile(object):
         ):
             spherical_profile1 = geometry_profiles.SphericalProfile(centre=(0, 0))
 
-            grid1 = spherical_profile1.transform_grid_to_reference_frame(grid=aa.grid.manual_2d(grid=np.array([[[1.0, 1.0]]])))
+            grid1 = spherical_profile1.transform_grid_to_reference_frame(
+                grid=aa.grid.manual_2d(grid=np.array([[[1.0, 1.0]]]))
+            )
 
             spherical_profile2 = geometry_profiles.SphericalProfile(centre=(-1, -1))
-            grid2 = spherical_profile2.transform_grid_to_reference_frame(grid=aa.grid.manual_2d(grid=np.array([[[0.0, 0.0]]])))
+            grid2 = spherical_profile2.transform_grid_to_reference_frame(
+                grid=aa.grid.manual_2d(grid=np.array([[[0.0, 0.0]]]))
+            )
 
             assert grid1[0, 0] == grid2[0, 0]
             assert grid1[0, 1] == grid2[0, 1]
 
         def test__grid_are_again_the_same_after_centre_shift__grid_equivalent(self):
             spherical_profile1 = geometry_profiles.SphericalProfile(centre=(1, 1))
-            grid1 = spherical_profile1.transform_grid_to_reference_frame(grid=aa.grid.manual_2d(grid=np.array([[[1.0, 1.0]]])))
+            grid1 = spherical_profile1.transform_grid_to_reference_frame(
+                grid=aa.grid.manual_2d(grid=np.array([[[1.0, 1.0]]]))
+            )
 
             spherical_profile2 = geometry_profiles.SphericalProfile(centre=(-1, -1))
             grid2 = spherical_profile2.transform_grid_to_reference_frame(

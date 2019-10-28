@@ -17,9 +17,7 @@ class GalaxyFit(fit.DataFit):
         self.galaxy_data = galaxy_data
         self.model_galaxies = model_galaxies
 
-        model_data = galaxy_data.profile_quantity_from_galaxies(
-            galaxies=model_galaxies
-        )
+        model_data = galaxy_data.profile_quantity_from_galaxies(galaxies=model_galaxies)
 
         super(GalaxyFit, self).__init__(
             data=galaxy_data.image,
