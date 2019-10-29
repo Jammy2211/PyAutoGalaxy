@@ -37,14 +37,14 @@ def image(
 ):
     """Plot the image of a light profile, on a grid of (y,x) coordinates.
 
-    Set *autoastro.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.hyper_galaxies.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
     light_profile : model.profiles.light_profiles.LightProfile
         The light profile whose image are plotted.
-    grid : ndarray or hyper_galaxies.array.grid_stacks.Grid
-        The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
+    grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
+        The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     profile_image = light_profile.profile_image_from_grid(grid=grid)
 
@@ -185,14 +185,14 @@ def convergence(
 ):
     """Plot the convergence of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autoastro.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.hyper_galaxies.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
     mass_profile : model.profiles.mass_profiles.MassProfile
         The mass profile whose convergence is plotted.
-    grid : ndarray or hyper_galaxies.array.grid_stacks.Grid
-        The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
+    grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
+        The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
 
     convergence = mass_profile.convergence_from_grid(grid=grid)
@@ -276,14 +276,14 @@ def potential(
 ):
     """Plot the potential of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autoastro.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.hyper_galaxies.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
     mass_profile : model.profiles.mass_profiles.MassProfile
         The mass profile whose potential is plotted.
-    grid : ndarray or hyper_galaxies.array.grid_stacks.Grid
-        The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
+    grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
+        The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     potential = mass_profile.potential_from_grid(grid=grid)
 
@@ -366,14 +366,14 @@ def deflections_y(
 ):
     """Plot the y component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autoastro.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.hyper_galaxies.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
     mass_profile : model.profiles.mass_profiles.MassProfile
         The mass profile whose y deflecton angles are plotted.
-    grid : ndarray or hyper_galaxies.array.grid_stacks.Grid
-        The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
+    grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
+        The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
 
     deflections = mass_profile.deflections_from_grid(grid=grid)
@@ -458,14 +458,14 @@ def deflections_x(
 ):
     """Plot the x component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
 
-     Set *autoastro.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
+     Set *autoastro.hyper_galaxies.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
 
      Parameters
      -----------
      mass_profile : model.profiles.mass_profiles.MassProfile
          The mass profile whose x deflecton angles are plotted.
-     grid : ndarray or hyper_galaxies.array.grid_stacks.Grid
-         The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
+     grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
+         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
     deflections = mass_profile.deflections_from_grid(grid=grid)
     deflections_x = grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 1])
@@ -549,14 +549,14 @@ def magnification(
 ):
     """Plot the magnification of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autoastro.hyper_galaxies.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.hyper_galaxies.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
     mass_profile : model.profiles.mass_profiles.MassProfile
         The mass profile whose magnification is plotted.
-    grid : ndarray or hyper_galaxies.array.grid_stacks.Grid
-        The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
+    grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
+        The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     magnification = mass_profile.magnification_from_grid(grid=grid)
 

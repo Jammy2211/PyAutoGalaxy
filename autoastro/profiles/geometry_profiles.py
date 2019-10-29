@@ -3,7 +3,7 @@ from functools import wraps
 
 import autofit as af
 import autoarray as aa
-from autoarray.structures import grids
+from autoarray.structures.grids import grids
 from autoastro import dimensions as dim
 
 

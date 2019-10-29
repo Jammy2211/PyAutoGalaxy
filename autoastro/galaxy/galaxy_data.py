@@ -62,9 +62,9 @@ class GalaxyFitData(object):
         Attributes
         ----------
         noise_map_1d : ndarray
-            The masked 1D array of the noise_map-map
+            The masked 1D arrays of the noise_map-map
         grid_stacks : imaging.masks.GridStack
-            Grids of (y,x) Cartesian coordinates which map over the masked 1D fit data_type array's pixels (includes an \
+            Grids of (y,x) Cartesian coordinates which map over the masked 1D fit data_type arrays's pixels (includes an \
             grid, sub-grid, etc.)
         """
         self.mask = mask

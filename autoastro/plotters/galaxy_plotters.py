@@ -46,14 +46,14 @@ def profile_image(
 ):
     """Plot the image (e.g. the datas) of a galaxy, on a grid of (y,x) coordinates.
 
-    Set *autoastro.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.datas.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
     galaxy : model.galaxy.galaxy.Galaxy
         The galaxy whose image are plotted.
-    grid : ndarray or datas.array.grid_stacks.Grid
-        The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
+    grid : ndarray or datas.arrays.grid_stacks.Grid
+        The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     image = galaxy.profile_image_from_grid(grid=grid)
 
@@ -140,14 +140,14 @@ def convergence(
 ):
     """Plot the convergence of a galaxy, on a grid of (y,x) coordinates.
 
-    Set *autoastro.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.datas.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
     galaxy : model.galaxy.galaxy.Galaxy
         The galaxy whose convergence is plotted.
-    grid : ndarray or datas.array.grid_stacks.Grid
-        The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
+    grid : ndarray or datas.arrays.grid_stacks.Grid
+        The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     convergence = galaxy.convergence_from_grid(grid=grid)
 
@@ -230,14 +230,14 @@ def potential(
 ):
     """Plot the potential of a galaxy, on a grid of (y,x) coordinates.
 
-     Set *autoastro.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
+     Set *autoastro.datas.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
 
      Parameters
      -----------
     galaxy : model.galaxy.galaxy.Galaxy
          The galaxy whose potential is plotted.
-    grid : ndarray or datas.array.grid_stacks.Grid
-         The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
+    grid : ndarray or datas.arrays.grid_stacks.Grid
+         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
     potential = galaxy.potential_from_grid(grid=grid)
 
@@ -320,14 +320,14 @@ def deflections_y(
 ):
     """Plot the y component of the deflection angles of a galaxy, on a grid of (y,x) coordinates.
 
-    Set *autoastro.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.datas.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
     galaxy : model.galaxy.galaxy.Galaxy
         The galaxy whose y deflecton angles are plotted.
-    grid : ndarray or datas.array.grid_stacks.Grid
-        The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
+    grid : ndarray or datas.arrays.grid_stacks.Grid
+        The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     deflections = galaxy.deflections_from_grid(grid=grid)
     deflections_y = grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 0])
@@ -411,14 +411,14 @@ def deflections_x(
 ):
     """Plot the x component of the deflection angles of a galaxy, on a grid of (y,x) coordinates.
 
-     Set *autoastro.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
+     Set *autoastro.datas.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
 
      Parameters
      -----------
     galaxy : model.galaxy.galaxy.Galaxy
          The galaxy whose x deflecton angles are plotted.
-     grid : ndarray or datas.array.grid_stacks.Grid
-         The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
+     grid : ndarray or datas.arrays.grid_stacks.Grid
+         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
     deflections = galaxy.deflections_from_grid(grid=grid)
     deflections_x = grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 1])
@@ -502,14 +502,14 @@ def magnification(
 ):
     """Plot the magnification of a galaxy, on a grid of (y,x) coordinates.
 
-     Set *autoastro.datas.array.plotters.array_plotters* for a description of all innput parameters not described below.
+     Set *autoastro.datas.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
 
      Parameters
      -----------
     galaxy : model.galaxy.galaxy.Galaxy
          The galaxy whose magnification is plotted.
-    grid : ndarray or datas.array.grid_stacks.Grid
-         The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2)
+    grid : ndarray or datas.arrays.grid_stacks.Grid
+         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
     magnification = galaxy.magnification_from_grid(grid=grid)
 

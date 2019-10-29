@@ -13,7 +13,7 @@ from scipy import special
 
 import autofit as af
 import autoarray as aa
-from autoarray.structures import grids
+from autoarray.structures.grids import grids
 from autoarray import decorator_util
 from autofit.tools import text_util
 from autoastro import dimensions as dim
@@ -686,7 +686,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
         )
 
     @staticmethod
-    # TODO : Decorator needs to know that potential_integral is 1D array
+    # TODO : Decorator needs to know that potential_integral is 1D arrays
     #    @jit_integrand
     def potential_func(
         u,
@@ -709,7 +709,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
         return eta_u * (phi / u) / (1.0 - (1.0 - axis_ratio ** 2) * u) ** 0.5
 
     @staticmethod
-    # TODO : Decorator needs to know that surface_density_integral is 1D array
+    # TODO : Decorator needs to know that surface_density_integral is 1D arrays
     #    @jit_integrand
     def deflection_func(
         u,

@@ -552,26 +552,26 @@ class MockGridRadialMinimum(object):
 # class TestGridRadialMinimum(object):
 #
 #     def test__mock_profile__grid_radial_minimum_is_0_or_below_radial_coordinates__no_changes(self):
-#         grid = np.array([[2.5, 0.0], [4.0, 0.0], [6.0, 0.0]])
+#         grid = np.arrays([[2.5, 0.0], [4.0, 0.0], [6.0, 0.0]])
 #         mock_profile = MockGridRadialMinimum()
 #
 #         deflections = mock_profile.deflections_from_grid(grid=grid)
 #         assert (deflections == grid).all()
 #
 #     def test__mock_profile__grid_radial_minimum_is_above_some_radial_coordinates__moves_them_grid_radial_minimum(self):
-#         grid = np.array([[2.0, 0.0], [1.0, 0.0], [6.0, 0.0]])
+#         grid = np.arrays([[2.0, 0.0], [1.0, 0.0], [6.0, 0.0]])
 #         mock_profile = MockGridRadialMinimum()
 #
 #         deflections = mock_profile.deflections_from_grid(grid=grid)
 #
-#         assert (deflections == np.array([[2.5, 0.0], [2.5, 0.0], [6.0, 0.0]])).all()
+#         assert (deflections == np.arrays([[2.5, 0.0], [2.5, 0.0], [6.0, 0.0]])).all()
 #
 #     def test__mock_profile__same_as_above_but_diagonal_coordinates(self):
-#         grid = np.array([[np.sqrt(2.0), np.sqrt(2.0)], [1.0, np.sqrt(8.0)], [np.sqrt(8.0), np.sqrt(8.0)]])
+#         grid = np.arrays([[np.sqrt(2.0), np.sqrt(2.0)], [1.0, np.sqrt(8.0)], [np.sqrt(8.0), np.sqrt(8.0)]])
 #
 #         mock_profile = MockGridRadialMinimum()
 #
 #         deflections = mock_profile.deflections_from_grid(grid=grid)
 #
-#         assert deflections == pytest.approx(np.array([[1.7677, 1.7677], [1.0, np.sqrt(8.0)],
+#         assert deflections == pytest.approx(np.arrays([[1.7677, 1.7677], [1.0, np.sqrt(8.0)],
 #                                                       [np.sqrt(8), np.sqrt(8.0)]]), 1.0e-4)

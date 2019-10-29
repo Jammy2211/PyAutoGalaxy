@@ -3,7 +3,7 @@ from astropy import cosmology as cosmo
 from itertools import count
 from skimage import measure
 
-from autoarray.structures import grids
+from autoarray.structures.grids import grids
 from autofit.mapper.model_object import ModelObject
 from autoastro import exc
 from autoastro import dimensions as dim
@@ -293,7 +293,7 @@ class Galaxy(ModelObject):
         
         See *profiles.mass_profiles* module for details of how this is performed.
 
-        The *reshape_returned_array* decorator reshapes the NumPy array the convergence is outputted on. See \
+        The *reshape_returned_array* decorator reshapes the NumPy arrays the convergence is outputted on. See \
         *aa.reshape_returned_array* for a description of the output.
 
         Parameters
@@ -320,7 +320,7 @@ class Galaxy(ModelObject):
 
         See *profiles.mass_profiles* module for details of how this is performed.
 
-                The *reshape_returned_array* decorator reshapes the NumPy array the convergence is outputted on. See \
+                The *reshape_returned_array* decorator reshapes the NumPy arrays the convergence is outputted on. See \
         *aa.reshape_returned_array* for a description of the output.
 
         Parameters

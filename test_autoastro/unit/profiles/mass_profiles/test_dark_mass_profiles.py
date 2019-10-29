@@ -3,7 +3,7 @@ import pytest
 from astropy import cosmology as cosmo
 
 import autoarray as aa
-from autoarray.structures import grids
+from autoarray.structures.grids import grids
 import autoastro as am
 
 from test_autoastro.mock import mock_cosmology

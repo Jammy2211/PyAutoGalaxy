@@ -5,7 +5,7 @@ import numpy as np
 from astropy import cosmology as cosmo
 
 import autofit as af
-from autoarray.structures import grids
+from autoarray.structures.grids import grids
 from autoastro import dimensions as dim
 from autoastro.profiles import geometry_profiles
 
@@ -92,7 +92,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
-        The *reshape_returned_array* decorator reshapes the NumPy array the convergence is outputted on. See \
+        The *reshape_returned_array* decorator reshapes the NumPy arrays the convergence is outputted on. See \
         *aa.reshape_returned_array* for a description of the output.
 
         Parameters
@@ -689,7 +689,7 @@ class EllipticalIsothermalKormann(mp.EllipticalMassProfile, mp.MassProfile):
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
-        The *reshape_returned_array* decorator reshapes the NumPy array the convergence is outputted on. See \
+        The *reshape_returned_array* decorator reshapes the NumPy arrays the convergence is outputted on. See \
         *aa.reshape_returned_array* for a description of the output.
 
         Parameters

@@ -305,7 +305,7 @@ def galaxy_data_array(
         title = "Galaxy Data Deflections (x)"
     else:
         raise exc.PlottingException(
-            "The galaxy data_type array does not have a True use_profile_type"
+            "The galaxy data_type arrays does not have a True use_profile_type"
         )
 
     aa.plot.array(

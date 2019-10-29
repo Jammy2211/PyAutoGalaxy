@@ -4,7 +4,7 @@ from scipy.optimize import root_scalar
 from astropy import cosmology as cosmo
 from skimage import measure
 
-from autoarray.structures import grids
+from autoarray.structures.grids import grids
 import autofit as af
 from autoastro import dimensions as dim
 from autofit.tools import text_util

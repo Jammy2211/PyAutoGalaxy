@@ -3,7 +3,7 @@ from pyquad import quad_grid
 import numpy as np
 
 import autofit as af
-from autoarray.structures import grids
+from autoarray.structures.grids import grids
 from autoastro import dimensions as dim
 from autoastro.profiles import geometry_profiles
 
