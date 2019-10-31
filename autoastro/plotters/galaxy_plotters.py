@@ -37,7 +37,7 @@ def profile_image(
     xlabelsize=16,
     ylabelsize=16,
     xyticksize=16,
-    mask_overlay_pointsize=10,
+    mask_pointsize=10,
     position_pointsize=10.0,
     grid_pointsize=1,
     output_path=None,
@@ -50,7 +50,7 @@ def profile_image(
 
     Parameters
     -----------
-    galaxy : model.galaxy.galaxy.Galaxy
+    galaxy : model.galaxy.al.galaxy
         The galaxy whose image are plotted.
     grid : ndarray or datas.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
@@ -70,7 +70,7 @@ def profile_image(
 
     aa.plot.array(
         array=image,
-        mask_overlay=mask,
+        mask=mask,
         positions=positions,
         lines=lines,
         as_subplot=as_subplot,
@@ -94,7 +94,7 @@ def profile_image(
         xlabelsize=xlabelsize,
         ylabelsize=ylabelsize,
         xyticksize=xyticksize,
-        mask_overlay_pointsize=mask_overlay_pointsize,
+        mask_pointsize=mask_pointsize,
         position_pointsize=position_pointsize,
         grid_pointsize=grid_pointsize,
         output_path=output_path,
@@ -131,7 +131,7 @@ def convergence(
     xlabelsize=16,
     ylabelsize=16,
     xyticksize=16,
-    mask_overlay_pointsize=10,
+    mask_pointsize=10,
     position_pointsize=10.0,
     grid_pointsize=1,
     output_path=None,
@@ -144,7 +144,7 @@ def convergence(
 
     Parameters
     -----------
-    galaxy : model.galaxy.galaxy.Galaxy
+    galaxy : model.galaxy.al.galaxy
         The galaxy whose convergence is plotted.
     grid : ndarray or datas.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
@@ -160,7 +160,7 @@ def convergence(
 
     aa.plot.array(
         array=convergence,
-        mask_overlay=mask,
+        mask=mask,
         positions=positions,
         lines=lines,
         as_subplot=as_subplot,
@@ -184,7 +184,7 @@ def convergence(
         xlabelsize=xlabelsize,
         ylabelsize=ylabelsize,
         xyticksize=xyticksize,
-        mask_overlay_pointsize=mask_overlay_pointsize,
+        mask_pointsize=mask_pointsize,
         position_pointsize=position_pointsize,
         grid_pointsize=grid_pointsize,
         output_path=output_path,
@@ -221,7 +221,7 @@ def potential(
     xlabelsize=16,
     ylabelsize=16,
     xyticksize=16,
-    mask_overlay_pointsize=10,
+    mask_pointsize=10,
     position_pointsize=10.0,
     grid_pointsize=1,
     output_path=None,
@@ -234,7 +234,7 @@ def potential(
 
      Parameters
      -----------
-    galaxy : model.galaxy.galaxy.Galaxy
+    galaxy : model.galaxy.al.galaxy
          The galaxy whose potential is plotted.
     grid : ndarray or datas.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
@@ -250,7 +250,7 @@ def potential(
 
     aa.plot.array(
         array=potential,
-        mask_overlay=mask,
+        mask=mask,
         positions=positions,
         lines=lines,
         as_subplot=as_subplot,
@@ -274,7 +274,7 @@ def potential(
         xlabelsize=xlabelsize,
         ylabelsize=ylabelsize,
         xyticksize=xyticksize,
-        mask_overlay_pointsize=mask_overlay_pointsize,
+        mask_pointsize=mask_pointsize,
         position_pointsize=position_pointsize,
         grid_pointsize=grid_pointsize,
         output_path=output_path,
@@ -311,7 +311,7 @@ def deflections_y(
     xlabelsize=16,
     ylabelsize=16,
     xyticksize=16,
-    mask_overlay_pointsize=10,
+    mask_pointsize=10,
     position_pointsize=10.0,
     grid_pointsize=1,
     output_path=None,
@@ -324,7 +324,7 @@ def deflections_y(
 
     Parameters
     -----------
-    galaxy : model.galaxy.galaxy.Galaxy
+    galaxy : model.galaxy.al.galaxy
         The galaxy whose y deflecton angles are plotted.
     grid : ndarray or datas.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
@@ -341,7 +341,7 @@ def deflections_y(
 
     aa.plot.array(
         array=deflections_y,
-        mask_overlay=mask,
+        mask=mask,
         positions=positions,
         lines=lines,
         as_subplot=as_subplot,
@@ -365,7 +365,7 @@ def deflections_y(
         xlabelsize=xlabelsize,
         ylabelsize=ylabelsize,
         xyticksize=xyticksize,
-        mask_overlay_pointsize=mask_overlay_pointsize,
+        mask_pointsize=mask_pointsize,
         position_pointsize=position_pointsize,
         grid_pointsize=grid_pointsize,
         output_path=output_path,
@@ -402,7 +402,7 @@ def deflections_x(
     xlabelsize=16,
     ylabelsize=16,
     xyticksize=16,
-    mask_overlay_pointsize=10,
+    mask_pointsize=10,
     position_pointsize=10.0,
     grid_pointsize=1,
     output_path=None,
@@ -415,7 +415,7 @@ def deflections_x(
 
      Parameters
      -----------
-    galaxy : model.galaxy.galaxy.Galaxy
+    galaxy : model.galaxy.al.galaxy
          The galaxy whose x deflecton angles are plotted.
      grid : ndarray or datas.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
@@ -432,7 +432,7 @@ def deflections_x(
 
     aa.plot.array(
         array=deflections_x,
-        mask_overlay=mask,
+        mask=mask,
         positions=positions,
         lines=lines,
         as_subplot=as_subplot,
@@ -456,7 +456,7 @@ def deflections_x(
         xlabelsize=xlabelsize,
         ylabelsize=ylabelsize,
         xyticksize=xyticksize,
-        mask_overlay_pointsize=mask_overlay_pointsize,
+        mask_pointsize=mask_pointsize,
         position_pointsize=position_pointsize,
         grid_pointsize=grid_pointsize,
         output_path=output_path,
@@ -493,7 +493,7 @@ def magnification(
     xlabelsize=16,
     ylabelsize=16,
     xyticksize=16,
-    mask_overlay_pointsize=10,
+    mask_pointsize=10,
     position_pointsize=10.0,
     grid_pointsize=1,
     output_path=None,
@@ -506,7 +506,7 @@ def magnification(
 
      Parameters
      -----------
-    galaxy : model.galaxy.galaxy.Galaxy
+    galaxy : model.galaxy.al.galaxy
          The galaxy whose magnification is plotted.
     grid : ndarray or datas.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
@@ -522,7 +522,7 @@ def magnification(
 
     aa.plot.array(
         array=magnification,
-        mask_overlay=mask,
+        mask=mask,
         positions=positions,
         lines=lines,
         as_subplot=as_subplot,
@@ -546,7 +546,7 @@ def magnification(
         xlabelsize=xlabelsize,
         ylabelsize=ylabelsize,
         xyticksize=xyticksize,
-        mask_overlay_pointsize=mask_overlay_pointsize,
+        mask_pointsize=mask_pointsize,
         position_pointsize=position_pointsize,
         grid_pointsize=grid_pointsize,
         output_path=output_path,
@@ -579,7 +579,7 @@ def profile_image_subplot(
     xlabelsize=10,
     ylabelsize=10,
     xyticksize=10,
-    mask_overlay_pointsize=10,
+    mask_pointsize=10,
     position_pointsize=10.0,
     grid_pointsize=1,
     output_path=None,
@@ -627,7 +627,7 @@ def profile_image_subplot(
             xlabelsize=xlabelsize,
             ylabelsize=ylabelsize,
             xyticksize=xyticksize,
-            mask_overlay_pointsize=mask_overlay_pointsize,
+            mask_pointsize=mask_pointsize,
             position_pointsize=position_pointsize,
             grid_pointsize=grid_pointsize,
             output_path=output_path,
@@ -667,7 +667,7 @@ def convergence_subplot(
     xlabelsize=10,
     ylabelsize=10,
     xyticksize=10,
-    mask_overlay_pointsize=10,
+    mask_pointsize=10,
     position_pointsize=10.0,
     grid_pointsize=1,
     output_path=None,
@@ -715,7 +715,7 @@ def convergence_subplot(
             xlabelsize=xlabelsize,
             ylabelsize=ylabelsize,
             xyticksize=xyticksize,
-            mask_overlay_pointsize=mask_overlay_pointsize,
+            mask_pointsize=mask_pointsize,
             position_pointsize=position_pointsize,
             grid_pointsize=grid_pointsize,
             output_path=output_path,
@@ -755,7 +755,7 @@ def potential_subplot(
     xlabelsize=10,
     ylabelsize=10,
     xyticksize=10,
-    mask_overlay_pointsize=10,
+    mask_pointsize=10,
     position_pointsize=10.0,
     grid_pointsize=1,
     output_path=None,
@@ -803,7 +803,7 @@ def potential_subplot(
             xlabelsize=xlabelsize,
             ylabelsize=ylabelsize,
             xyticksize=xyticksize,
-            mask_overlay_pointsize=mask_overlay_pointsize,
+            mask_pointsize=mask_pointsize,
             position_pointsize=position_pointsize,
             grid_pointsize=grid_pointsize,
             output_path=output_path,
@@ -843,7 +843,7 @@ def deflections_y_subplot(
     xlabelsize=10,
     ylabelsize=10,
     xyticksize=10,
-    mask_overlay_pointsize=10,
+    mask_pointsize=10,
     position_pointsize=10.0,
     grid_pointsize=1,
     output_path=None,
@@ -891,7 +891,7 @@ def deflections_y_subplot(
             xlabelsize=xlabelsize,
             ylabelsize=ylabelsize,
             xyticksize=xyticksize,
-            mask_overlay_pointsize=mask_overlay_pointsize,
+            mask_pointsize=mask_pointsize,
             position_pointsize=position_pointsize,
             grid_pointsize=grid_pointsize,
             output_path=output_path,
@@ -931,7 +931,7 @@ def deflections_x_subplot(
     xlabelsize=10,
     ylabelsize=10,
     xyticksize=10,
-    mask_overlay_pointsize=10,
+    mask_pointsize=10,
     position_pointsize=10.0,
     grid_pointsize=1,
     output_path=None,
@@ -979,7 +979,7 @@ def deflections_x_subplot(
             xlabelsize=xlabelsize,
             ylabelsize=ylabelsize,
             xyticksize=xyticksize,
-            mask_overlay_pointsize=mask_overlay_pointsize,
+            mask_pointsize=mask_pointsize,
             position_pointsize=position_pointsize,
             grid_pointsize=grid_pointsize,
             output_path=output_path,

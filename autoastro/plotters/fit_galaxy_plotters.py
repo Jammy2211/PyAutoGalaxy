@@ -32,7 +32,7 @@ def subplot(
     xlabelsize=10,
     ylabelsize=10,
     xyticksize=10,
-    mask_overlay_pointsize=10,
+    mask_pointsize=10,
     position_pointsize=10.0,
     grid_pointsize=1,
     output_path=None,
@@ -75,7 +75,7 @@ def subplot(
         xyticksize=xyticksize,
         grid_pointsize=grid_pointsize,
         position_pointsize=position_pointsize,
-        mask_overlay_pointsize=mask_overlay_pointsize,
+        mask_pointsize=mask_pointsize,
         output_path=output_path,
         output_filename=output_filename,
         output_format=output_format,
@@ -85,7 +85,7 @@ def subplot(
 
     aa.plot.fit_imaging.model_image(
         fit=fit,
-        mask_overlay=fit.mask,
+        mask=fit.mask,
         positions=positions,
         as_subplot=True,
         units=units,
@@ -109,7 +109,7 @@ def subplot(
         ylabelsize=ylabelsize,
         xyticksize=xyticksize,
         position_pointsize=position_pointsize,
-        mask_overlay_pointsize=mask_overlay_pointsize,
+        mask_pointsize=mask_pointsize,
         output_path=output_path,
         output_filename="",
         output_format=output_format,
@@ -119,7 +119,7 @@ def subplot(
 
     aa.plot.fit_imaging.residual_map(
         fit=fit,
-        mask_overlay=fit.mask,
+        mask=fit.mask,
         as_subplot=True,
         units=units,
         kpc_per_arcsec=kpc_per_arcsec,
@@ -141,7 +141,7 @@ def subplot(
         ylabelsize=ylabelsize,
         xyticksize=xyticksize,
         position_pointsize=position_pointsize,
-        mask_overlay_pointsize=mask_overlay_pointsize,
+        mask_pointsize=mask_pointsize,
         output_path=output_path,
         output_filename="",
         output_format=output_format,
@@ -151,7 +151,7 @@ def subplot(
 
     aa.plot.fit_imaging.chi_squared_map(
         fit=fit,
-        mask_overlay=fit.mask,
+        mask=fit.mask,
         as_subplot=True,
         units=units,
         kpc_per_arcsec=kpc_per_arcsec,
@@ -173,7 +173,7 @@ def subplot(
         ylabelsize=ylabelsize,
         xyticksize=xyticksize,
         position_pointsize=position_pointsize,
-        mask_overlay_pointsize=mask_overlay_pointsize,
+        mask_pointsize=mask_pointsize,
         output_path=output_path,
         output_filename="",
         output_format=output_format,
@@ -207,7 +207,7 @@ def individuals(
 
         galaxy_data_array(
             galaxy_data=fit.galaxy_data,
-            mask_overlay=fit.mask,
+            mask=fit.mask,
             positions=positions,
             units=units,
             kpc_per_arcsec=kpc_per_arcsec,
@@ -219,7 +219,7 @@ def individuals(
 
         aa.plot.fit_imaging.noise_map(
             fit=fit,
-            mask_overlay=fit.mask,
+            mask=fit.mask,
             positions=positions,
             units=units,
             kpc_per_arcsec=kpc_per_arcsec,
@@ -231,7 +231,7 @@ def individuals(
 
         aa.plot.fit_imaging.model_image(
             fit=fit,
-            mask_overlay=fit.mask,
+            mask=fit.mask,
             positions=positions,
             units=units,
             kpc_per_arcsec=kpc_per_arcsec,
@@ -243,7 +243,7 @@ def individuals(
 
         aa.plot.fit_imaging.residual_map(
             fit=fit,
-            mask_overlay=fit.mask,
+            mask=fit.mask,
             units=units,
             kpc_per_arcsec=kpc_per_arcsec,
             output_path=output_path,
@@ -254,7 +254,7 @@ def individuals(
 
         aa.plot.fit_imaging.chi_squared_map(
             fit=fit,
-            mask_overlay=fit.mask,
+            mask=fit.mask,
             units=units,
             kpc_per_arcsec=kpc_per_arcsec,
             output_path=output_path,
@@ -285,7 +285,7 @@ def galaxy_data_array(
     xlabelsize=10,
     ylabelsize=10,
     xyticksize=10,
-    mask_overlay_pointsize=10,
+    mask_pointsize=10,
     position_pointsize=10.0,
     grid_pointsize=1,
     output_path=None,
@@ -310,7 +310,7 @@ def galaxy_data_array(
 
     aa.plot.array(
         array=galaxy_data.image,
-        mask_overlay=galaxy_data.mask,
+        mask=galaxy_data.mask,
         positions=positions,
         as_subplot=as_subplot,
         units=units,
@@ -333,7 +333,7 @@ def galaxy_data_array(
         xlabelsize=xlabelsize,
         ylabelsize=ylabelsize,
         xyticksize=xyticksize,
-        mask_overlay_pointsize=mask_overlay_pointsize,
+        mask_pointsize=mask_pointsize,
         position_pointsize=position_pointsize,
         grid_pointsize=grid_pointsize,
         output_path=output_path,

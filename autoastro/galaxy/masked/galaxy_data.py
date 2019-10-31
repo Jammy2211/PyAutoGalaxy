@@ -48,10 +48,10 @@ class MaskedGalaxyData(object):
         self.pixel_scales = galaxy_data.pixel_scales
 
         self.image = masked_structures.MaskedArray.manual_2d(
-            array=galaxy_data.image.in_2d, mask=mask.mask_sub_1
+            array=galaxy_data.image.in_2d_binned, mask=mask.mask_sub_1
         )
         self.noise_map = masked_structures.MaskedArray.manual_2d(
-            array=galaxy_data.noise_map.in_2d, mask=mask.mask_sub_1
+            array=galaxy_data.noise_map.in_2d_binned, mask=mask.mask_sub_1
         )
 
         self.signal_to_noise_map = self.image / self.noise_map

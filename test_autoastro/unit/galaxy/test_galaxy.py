@@ -203,7 +203,7 @@ class TestLightProfiles(object):
             )
 
             gal_x2_lp = aast.galaxy(
-                redshift=0.5, light_profile_0=lp_0, light_profile_1=lp_1
+                redshift=0.5, light_profile_0=al.lp_0, light_profile_1=al.lp_1
             )
 
             assert gal_x2_lp.profile_image_from_grid(
@@ -255,10 +255,10 @@ class TestLightProfiles(object):
 
             gal_x4_lp = aast.galaxy(
                 redshift=0.5,
-                light_profile_0=lp_0,
-                light_profile_1=lp_1,
-                light_profile_3=lp_2,
-                light_profile_4=lp_3,
+                light_profile_0=al.lp_0,
+                light_profile_1=al.lp_1,
+                light_profile_3=al.lp_2,
+                light_profile_4=al.lp_3,
             )
 
             assert gal_x4_lp.profile_image_from_grid(
@@ -865,7 +865,7 @@ class TestMassProfiles(object):
             )
 
             gal_x4_mp = aast.galaxy(
-                redshift=0.5, mass_profile_0=mp_0, mass_profile_1=mp_1
+                redshift=0.5, mass_profile_0=al.mp_0, mass_profile_1=al.mp_1
             )
 
             assert gal_x4_mp.convergence_from_grid(
@@ -923,10 +923,10 @@ class TestMassProfiles(object):
 
             gal_x4_mp = aast.galaxy(
                 redshift=0.5,
-                mass_profile_0=mp_0,
-                mass_profile_1=mp_1,
-                mass_profile_2=mp_2,
-                mass_profile_3=mp_3,
+                mass_profile_0=al.mp_0,
+                mass_profile_1=al.mp_1,
+                mass_profile_2=al.mp_2,
+                mass_profile_3=al.mp_3,
             )
 
             assert gal_x4_mp.convergence_from_grid(
@@ -1074,7 +1074,7 @@ class TestMassProfiles(object):
             mp_0 = aast.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
             mp_1 = aast.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=0.5)
 
-            gal_x2_mp = aast.galaxy(redshift=0.5, mass_0=mp_0, mass_1=mp_1)
+            gal_x2_mp = aast.galaxy(redshift=0.5, mass_0=al.mp_0, mass_1=al.mp_1)
 
             assert gal_x2_mp.einstein_radius_in_units(unit_length="arcsec") == 1.5
             assert gal_x2_mp.einstein_mass_in_units(unit_mass="angular") == np.pi * (
@@ -1085,7 +1085,7 @@ class TestMassProfiles(object):
             mp_0 = aast.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
             shear = aast.mp.ExternalShear()
 
-            gal_shear = aast.galaxy(redshift=0.5, mass_0=mp_0, shear=shear)
+            gal_shear = aast.galaxy(redshift=0.5, mass_0=al.mp_0, shear=shear)
 
             assert gal_shear.einstein_radius_in_units(unit_length="arcsec") == 1.0
             assert gal_shear.einstein_mass_in_units(unit_mass="angular") == np.pi
@@ -1591,7 +1591,7 @@ class TestMassAndLightProfiles(object):
 
     def test_multiple_profile(self, lmp_0, lp_0, mp_0):
         gal_multi_profiles = aast.galaxy(
-            redshift=0.5, profile=lmp_0, light=lp_0, sie=mp_0
+            redshift=0.5, profile=lmp_0, light=al.lp_0, sie=al.mp_0
         )
 
         assert 2 == len(gal_multi_profiles.light_profiles)
@@ -1602,10 +1602,10 @@ class TestSummarizeInUnits(object):
     def test__galaxy_with_two_light_and_mass_profiles(self, lp_0, lp_1, mp_0, mp_1):
         gal_summarize = aast.galaxy(
             redshift=0.5,
-            light_profile_0=lp_0,
-            light_profile_1=lp_1,
-            mass_profile_0=mp_0,
-            mass_profile_1=mp_1,
+            light_profile_0=al.lp_0,
+            light_profile_1=al.lp_1,
+            mass_profile_0=al.mp_0,
+            mass_profile_1=al.mp_1,
         )
 
         summary_text = gal_summarize.summarize_in_units(
