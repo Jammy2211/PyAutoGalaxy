@@ -2,6 +2,7 @@ from autoarray.structures import grids
 from autoarray.masked import masked_structures
 from autoastro import exc
 
+
 class MaskedGalaxyData(object):
     def __init__(
         self,

@@ -22,13 +22,17 @@ def set_config_path():
 @pytest.fixture(name="lp_0")
 def make_lp_0():
     # noinspection PyTypeChecker
-    return aast.lp.SphericalSersic(intensity=1.0, effective_radius=2.0, sersic_index=2.0)
+    return aast.lp.SphericalSersic(
+        intensity=1.0, effective_radius=2.0, sersic_index=2.0
+    )
 
 
 @pytest.fixture(name="lp_1")
 def make_lp_1():
     # noinspection PyTypeChecker
-    return aast.lp.SphericalSersic(intensity=2.0, effective_radius=2.0, sersic_index=2.0)
+    return aast.lp.SphericalSersic(
+        intensity=2.0, effective_radius=2.0, sersic_index=2.0
+    )
 
 
 @pytest.fixture(name="mp_0")
@@ -93,7 +97,9 @@ def make_gal_data_7x7(image_7x7, noise_map_7x7):
 
 @pytest.fixture(name="gal_fit_data_7x7_image")
 def make_gal_fit_data_7x7_image(gal_data_7x7, sub_mask_7x7):
-    return aast.masked.galaxy_data(galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_image=True)
+    return aast.masked.galaxy_data(
+        galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_image=True
+    )
 
 
 @pytest.fixture(name="gal_fit_data_7x7_convergence")
@@ -129,7 +135,9 @@ def make_gal_fit_data_7x7_deflections_x(gal_data_7x7, sub_mask_7x7):
 
 @pytest.fixture(name="gal_fit_7x7_image")
 def make_gal_fit_7x7_image(gal_fit_data_7x7_image, gal_x1_lp):
-    return aast.fit_galaxy(galaxy_data=gal_fit_data_7x7_image, model_galaxies=[gal_x1_lp])
+    return aast.fit_galaxy(
+        galaxy_data=gal_fit_data_7x7_image, model_galaxies=[gal_x1_lp]
+    )
 
 
 @pytest.fixture(name="gal_fit_7x7_convergence")

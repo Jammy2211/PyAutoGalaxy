@@ -1122,7 +1122,9 @@ class TestMassProfiles(object):
                 centre=(1.0, 1.0), einstein_radius=1.0
             )
 
-            galaxy = aast.galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.galaxy(
+                mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1
+            )
 
             grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
 
@@ -1200,7 +1202,9 @@ class TestMassProfiles(object):
                 centre=(1.0, 1.0), einstein_radius=1.0
             )
 
-            galaxy = aast.galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.galaxy(
+                mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1
+            )
 
             grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
@@ -1254,7 +1258,9 @@ class TestMassProfiles(object):
                 centre=(1.0, 1.0), einstein_radius=1.0
             )
 
-            galaxy = aast.galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.galaxy(
+                mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1
+            )
 
             grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
 
@@ -1323,7 +1329,9 @@ class TestMassProfiles(object):
             mass_profile_2 = aast.mp.SphericalIsothermal(
                 centre=(1.0, 1.0), einstein_radius=1.0
             )
-            galaxy = aast.galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.galaxy(
+                mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1
+            )
 
             grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
@@ -1370,7 +1378,9 @@ class TestMassProfiles(object):
             mass_profile_2 = aast.mp.SphericalIsothermal(
                 centre=(1.0, 1.0), einstein_radius=1.0
             )
-            galaxy = aast.galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.galaxy(
+                mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1
+            )
 
             grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
@@ -1419,7 +1429,9 @@ class TestMassProfiles(object):
                 centre=(0.2, 0.2), einstein_radius=1.0
             )
 
-            galaxy = aast.galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.galaxy(
+                mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1
+            )
 
             grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
 
@@ -1469,7 +1481,9 @@ class TestMassProfiles(object):
                 centre=(0.4, 0.4), einstein_radius=1.0
             )
 
-            galaxy = aast.galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.galaxy(
+                mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1
+            )
 
             grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.5, sub_size=1)
 
@@ -1517,7 +1531,9 @@ class TestMassProfiles(object):
                 centre=(0.2, 0.2), einstein_radius=1.0
             )
 
-            galaxy = aast.galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.galaxy(
+                mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1
+            )
 
             grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.5, sub_size=1)
 
@@ -1561,7 +1577,9 @@ class TestMassProfiles(object):
                 centre=(0.2, 0.2), einstein_radius=1.0
             )
 
-            galaxy = aast.galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.galaxy(
+                mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1
+            )
 
             grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=2)
 
@@ -1832,18 +1850,24 @@ class TestBooleanProperties(object):
             is True
         )
         assert (
-            aast.galaxy(redshift=0.5, mass_profile=aast.mp.MassProfile()).has_light_profile
+            aast.galaxy(
+                redshift=0.5, mass_profile=aast.mp.MassProfile()
+            ).has_light_profile
             is False
         )
 
     def test_has_mass_profile(self):
         assert aast.galaxy(redshift=0.5).has_mass_profile is False
         assert (
-            aast.galaxy(redshift=0.5, light_profile=aast.lp.LightProfile()).has_mass_profile
+            aast.galaxy(
+                redshift=0.5, light_profile=aast.lp.LightProfile()
+            ).has_mass_profile
             is False
         )
         assert (
-            aast.galaxy(redshift=0.5, mass_profile=aast.mp.MassProfile()).has_mass_profile
+            aast.galaxy(
+                redshift=0.5, mass_profile=aast.mp.MassProfile()
+            ).has_mass_profile
             is True
         )
 

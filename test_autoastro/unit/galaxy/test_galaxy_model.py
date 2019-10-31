@@ -348,7 +348,9 @@ class TestRegularization(object):
 
 class TestHyperGalaxy(object):
     def test_hyper_galaxy(self,):
-        galaxy_model = aast.GalaxyModel(redshift=aast.Redshift, hyper_galaxy=aast.HyperGalaxy)
+        galaxy_model = aast.GalaxyModel(
+            redshift=aast.Redshift, hyper_galaxy=aast.HyperGalaxy
+        )
 
         arguments = {
             galaxy_model.redshift.redshift: 0.2,

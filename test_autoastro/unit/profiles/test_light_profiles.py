@@ -47,7 +47,9 @@ class TestGaussian:
         assert isinstance(gaussian.sigma, aast.dim.Length)
         assert gaussian.sigma.unit_length == "arcsec"
 
-        gaussian = aast.lp.SphericalGaussian(centre=(1.0, 2.0), intensity=1.0, sigma=0.1)
+        gaussian = aast.lp.SphericalGaussian(
+            centre=(1.0, 2.0), intensity=1.0, sigma=0.1
+        )
 
         assert gaussian.centre == (1.0, 2.0)
         assert isinstance(gaussian.centre[0], aast.dim.Length)

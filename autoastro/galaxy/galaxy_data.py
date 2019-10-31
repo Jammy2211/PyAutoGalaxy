@@ -1,4 +1,3 @@
-
 class GalaxyData(object):
     def __init__(self, image, noise_map, pixel_scales):
         """ A galaxy-fit data_type is a collection of fit data_type components which are used to fit a galaxy to another galaxy. \
@@ -22,5 +21,3 @@ class GalaxyData(object):
         self.image = image
         self.noise_map = noise_map
         self.pixel_scales = pixel_scales
-
-

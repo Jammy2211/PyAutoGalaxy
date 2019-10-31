@@ -12,7 +12,9 @@ class TestLikelihood:
 
         noise_map = aa.array.ones(shape_2d=(3, 3), pixel_scales=1.0)
 
-        galaxy_data = aast.galaxy_data(image=image, noise_map=noise_map, pixel_scales=3.0)
+        galaxy_data = aast.galaxy_data(
+            image=image, noise_map=noise_map, pixel_scales=3.0
+        )
 
         mask = aa.mask.manual(
             mask_2d=np.array(
@@ -64,7 +66,9 @@ class TestLikelihood:
 
         noise_map = aa.array.full(fill_value=2.0, shape_2d=(3, 4), pixel_scales=1.0)
 
-        galaxy_data = aast.galaxy_data(image=image, noise_map=noise_map, pixel_scales=3.0)
+        galaxy_data = aast.galaxy_data(
+            image=image, noise_map=noise_map, pixel_scales=3.0
+        )
 
         mask = aa.mask.manual(
             mask_2d=np.array(
@@ -142,7 +146,8 @@ class TestCompareToManual:
         )
 
         galaxy = aast.galaxy(
-            redshift=0.5, light=aast.lp.SphericalSersic(centre=(1.0, 2.0), intensity=1.0)
+            redshift=0.5,
+            light=aast.lp.SphericalSersic(centre=(1.0, 2.0), intensity=1.0),
         )
         fit = aast.fit_galaxy(galaxy_data=galaxy_fit_data, model_galaxies=[galaxy])
 
