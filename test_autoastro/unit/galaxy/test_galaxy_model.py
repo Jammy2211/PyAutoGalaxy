@@ -450,7 +450,7 @@ class TestRedshift(object):
 
 @pytest.fixture(name="galaxy")
 def make_galaxy():
-    return aast.Galaxy(
+    return aast.galaxy(
         redshift=3,
         sersic=aast.lp.EllipticalSersic(),
         exponential=aast.lp.EllipticalExponential(),

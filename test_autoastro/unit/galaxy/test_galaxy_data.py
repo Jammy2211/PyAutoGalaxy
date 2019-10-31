@@ -10,7 +10,7 @@ from test_autoastro.mock import mock_galaxy
 class TestGalaxyFitData(object):
     def test__image_noise_map_and_mask(self, gal_data_7x7, sub_mask_7x7):
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_image=True
         )
 
@@ -70,7 +70,7 @@ class TestGalaxyFitData(object):
 
     def test__grid(self, gal_data_7x7, sub_mask_7x7, sub_grid_7x7):
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_image=True
         )
 
@@ -79,17 +79,17 @@ class TestGalaxyFitData(object):
     def test__pixel_scale_interpolation_grid(self, image_7x7, sub_mask_7x7):
 
         noise_map = aa.array.full(fill_value=2.0, shape_2d=(7, 7), pixel_scales=3.0)
-        gal_data_7x7 = aast.GalaxyData(
+        gal_data_7x7 = aast.galaxy_data(
             image=image_7x7, noise_map=noise_map, pixel_scales=3.0
         )
-        gal_data_7x7 = aast.GalaxyFitData(
+        gal_data_7x7 = aast.masked.galaxy_data(
             galaxy_data=gal_data_7x7,
             mask=sub_mask_7x7,
             pixel_scale_interpolation_grid=1.0,
             use_image=True,
         )
 
-        grid = aa.masked_grid.from_mask(mask=sub_mask_7x7)
+        grid = aa.masked.grid.from_mask(mask=sub_mask_7x7)
         new_grid = grid.new_grid_with_interpolator(pixel_scale_interpolation_grid=1.0)
         assert (gal_data_7x7.grid == new_grid).all()
         assert (gal_data_7x7.grid.interpolator.vtx == new_grid.interpolator.vtx).all()
@@ -97,7 +97,7 @@ class TestGalaxyFitData(object):
 
     def test__gal_data_7x7_image(self, gal_data_7x7, sub_mask_7x7):
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_image=True
         )
 
@@ -161,7 +161,7 @@ class TestGalaxyFitData(object):
 
         assert (image.in_1d_binned == np.ones(9)).all()
 
-        galaxy = aast.Galaxy(redshift=0.5, light=aast.lp.SphericalSersic(intensity=1.0))
+        galaxy = aast.galaxy(redshift=0.5, light=aast.lp.SphericalSersic(intensity=1.0))
 
         image_gal = galaxy.profile_image_from_grid(grid=galaxy_fit_data.grid)
 
@@ -171,7 +171,7 @@ class TestGalaxyFitData(object):
 
     def test__gal_data_7x7_convergence(self, gal_data_7x7, sub_mask_7x7):
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_convergence=True
         )
 
@@ -235,7 +235,7 @@ class TestGalaxyFitData(object):
 
         assert (convergence.in_1d_binned == np.ones(9)).all()
 
-        galaxy = aast.Galaxy(
+        galaxy = aast.galaxy(
             redshift=0.5, mass=aast.mp.SphericalIsothermal(einstein_radius=1.0)
         )
 
@@ -249,7 +249,7 @@ class TestGalaxyFitData(object):
 
     def test__gal_data_7x7_potential(self, gal_data_7x7, sub_mask_7x7):
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_potential=True
         )
 
@@ -313,7 +313,7 @@ class TestGalaxyFitData(object):
 
         assert (potential.in_1d_binned == np.ones(9)).all()
 
-        galaxy = aast.Galaxy(
+        galaxy = aast.galaxy(
             redshift=0.5, mass=aast.mp.SphericalIsothermal(einstein_radius=1.0)
         )
 
@@ -325,7 +325,7 @@ class TestGalaxyFitData(object):
 
     def test__gal_data_7x7_deflections_y(self, gal_data_7x7, sub_mask_7x7):
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_y=True
         )
         assert galaxy_fit_data.pixel_scales == (1.0, 1.0)
@@ -390,7 +390,7 @@ class TestGalaxyFitData(object):
 
         assert (deflections_y.in_1d_binned == np.ones(9)).all()
 
-        galaxy = aast.Galaxy(
+        galaxy = aast.galaxy(
             redshift=0.5, mass=aast.mp.SphericalIsothermal(einstein_radius=1.0)
         )
 
@@ -414,7 +414,7 @@ class TestGalaxyFitData(object):
 
     def test__gal_data_7x7_deflections_x(self, gal_data_7x7, sub_mask_7x7):
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_x=True
         )
 
@@ -480,7 +480,7 @@ class TestGalaxyFitData(object):
 
         assert (deflections_x.in_1d_binned == np.ones(9)).all()
 
-        galaxy = aast.Galaxy(
+        galaxy = aast.galaxy(
             redshift=0.5, mass=aast.mp.SphericalIsothermal(einstein_radius=1.0)
         )
 
@@ -506,23 +506,23 @@ class TestGalaxyFitData(object):
         self, image_7x7, noise_map_7x7, sub_mask_7x7
     ):
 
-        gal_data_7x7 = aast.GalaxyData(
+        gal_data_7x7 = aast.galaxy_data(
             image=image_7x7, noise_map=noise_map_7x7, pixel_scales=3.0
         )
 
         with pytest.raises(exc.GalaxyException):
-            aast.GalaxyFitData(galaxy_data=gal_data_7x7, mask=sub_mask_7x7)
+            aast.masked.galaxy_data(galaxy_data=gal_data_7x7, mask=sub_mask_7x7)
 
     def test__multiple_use_methods__raises_exception(
         self, image_7x7, noise_map_7x7, sub_mask_7x7
     ):
 
-        gal_data_7x7 = aast.GalaxyData(
+        gal_data_7x7 = aast.galaxy_data(
             image=image_7x7, noise_map=noise_map_7x7, pixel_scales=3.0
         )
 
         with pytest.raises(exc.GalaxyException):
-            aast.GalaxyFitData(
+            aast.masked.galaxy_data(
                 galaxy_data=gal_data_7x7,
                 mask=sub_mask_7x7,
                 use_image=True,
@@ -530,7 +530,7 @@ class TestGalaxyFitData(object):
             )
 
         with pytest.raises(exc.GalaxyException):
-            aast.GalaxyFitData(
+            aast.masked.galaxy_data(
                 galaxy_data=gal_data_7x7,
                 mask=sub_mask_7x7,
                 use_image=True,
@@ -538,7 +538,7 @@ class TestGalaxyFitData(object):
             )
 
         with pytest.raises(exc.GalaxyException):
-            aast.GalaxyFitData(
+            aast.masked.galaxy_data(
                 galaxy_data=gal_data_7x7,
                 mask=sub_mask_7x7,
                 use_image=True,
@@ -546,7 +546,7 @@ class TestGalaxyFitData(object):
             )
 
         with pytest.raises(exc.GalaxyException):
-            aast.GalaxyFitData(
+            aast.masked.galaxy_data(
                 galaxy_data=gal_data_7x7,
                 mask=sub_mask_7x7,
                 use_image=True,
@@ -555,7 +555,7 @@ class TestGalaxyFitData(object):
             )
 
         with pytest.raises(exc.GalaxyException):
-            aast.GalaxyFitData(
+            aast.masked.galaxy_data(
                 galaxy_data=gal_data_7x7,
                 mask=sub_mask_7x7,
                 use_image=True,

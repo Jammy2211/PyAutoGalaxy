@@ -12,7 +12,7 @@ class TestLikelihood:
 
         noise_map = aa.array.ones(shape_2d=(3, 3), pixel_scales=1.0)
 
-        galaxy_data = aast.GalaxyData(image=image, noise_map=noise_map, pixel_scales=3.0)
+        galaxy_data = aast.galaxy_data(image=image, noise_map=noise_map, pixel_scales=3.0)
 
         mask = aa.mask.manual(
             mask_2d=np.array(
@@ -23,38 +23,38 @@ class TestLikelihood:
         )
         g0 = MockGalaxy(value=1.0)
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=galaxy_data, mask=mask, use_image=True
         )
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
         assert fit.model_galaxies == [g0]
         assert fit.likelihood == -0.5 * np.log(2 * np.pi * 1.0)
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=galaxy_data, mask=mask, use_convergence=True
         )
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
         assert fit.model_galaxies == [g0]
         assert fit.likelihood == -0.5 * np.log(2 * np.pi * 1.0)
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=galaxy_data, mask=mask, use_potential=True
         )
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
         assert fit.model_galaxies == [g0]
         assert fit.likelihood == -0.5 * np.log(2 * np.pi * 1.0)
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=galaxy_data, mask=mask, use_deflections_y=True
         )
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
         assert fit.model_galaxies == [g0]
         assert fit.likelihood == -0.5 * np.log(2 * np.pi * 1.0)
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=galaxy_data, mask=mask, use_deflections_x=True
         )
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
         assert fit.model_galaxies == [g0]
         assert fit.likelihood == -0.5 * np.log(2 * np.pi * 1.0)
 
@@ -64,7 +64,7 @@ class TestLikelihood:
 
         noise_map = aa.array.full(fill_value=2.0, shape_2d=(3, 4), pixel_scales=1.0)
 
-        galaxy_data = aast.GalaxyData(image=image, noise_map=noise_map, pixel_scales=3.0)
+        galaxy_data = aast.galaxy_data(image=image, noise_map=noise_map, pixel_scales=3.0)
 
         mask = aa.mask.manual(
             mask_2d=np.array(
@@ -80,10 +80,10 @@ class TestLikelihood:
 
         g0 = MockGalaxy(value=1.0, shape=2)
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=galaxy_data, mask=mask, use_image=True
         )
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
 
         assert fit.model_galaxies == [g0]
         assert fit.chi_squared == (25.0 / 4.0)
@@ -92,10 +92,10 @@ class TestLikelihood:
             (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=galaxy_data, mask=mask, use_convergence=True
         )
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
         assert fit.model_galaxies == [g0]
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
@@ -103,10 +103,10 @@ class TestLikelihood:
             (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=galaxy_data, mask=mask, use_potential=True
         )
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
         assert fit.model_galaxies == [g0]
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
@@ -114,20 +114,20 @@ class TestLikelihood:
             (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=galaxy_data, mask=mask, use_deflections_y=True
         )
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
         assert fit.likelihood == -0.5 * (
             (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=galaxy_data, mask=mask, use_deflections_x=True
         )
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[g0])
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
         assert fit.likelihood == -0.5 * (
@@ -137,14 +137,14 @@ class TestLikelihood:
 
 class TestCompareToManual:
     def test__image(self, gal_data_7x7, sub_mask_7x7):
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_image=True
         )
 
-        galaxy = aast.Galaxy(
+        galaxy = aast.galaxy(
             redshift=0.5, light=aast.lp.SphericalSersic(centre=(1.0, 2.0), intensity=1.0)
         )
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[galaxy])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[galaxy])
 
         assert fit.model_galaxies == [galaxy]
 
@@ -177,15 +177,15 @@ class TestCompareToManual:
         assert likelihood == pytest.approx(fit.likelihood, 1e-4)
 
     def test__convergence(self, gal_data_7x7, sub_mask_7x7):
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_convergence=True
         )
 
-        galaxy = aast.Galaxy(
+        galaxy = aast.galaxy(
             redshift=0.5,
             mass=aast.mp.SphericalIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[galaxy])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[galaxy])
 
         assert fit.model_galaxies == [galaxy]
 
@@ -216,16 +216,16 @@ class TestCompareToManual:
         assert likelihood == pytest.approx(fit.likelihood, 1e-4)
 
     def test__potential(self, gal_data_7x7, sub_mask_7x7):
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_potential=True
         )
 
-        galaxy = aast.Galaxy(
+        galaxy = aast.galaxy(
             redshift=0.5,
             mass=aast.mp.SphericalIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
 
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[galaxy])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[galaxy])
 
         assert fit.model_galaxies == [galaxy]
 
@@ -259,16 +259,16 @@ class TestCompareToManual:
 
     def test__deflections_y(self, gal_data_7x7, sub_mask_7x7):
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_y=True
         )
 
-        galaxy = aast.Galaxy(
+        galaxy = aast.galaxy(
             redshift=0.5,
             mass=aast.mp.SphericalIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
 
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[galaxy])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[galaxy])
 
         assert fit.model_galaxies == [galaxy]
 
@@ -304,15 +304,15 @@ class TestCompareToManual:
 
     def test__deflections_x(self, gal_data_7x7, sub_mask_7x7):
 
-        galaxy_fit_data = aast.GalaxyFitData(
+        galaxy_fit_data = aast.masked.galaxy_data(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_x=True
         )
 
-        galaxy = aast.Galaxy(
+        galaxy = aast.galaxy(
             redshift=0.5,
             mass=aast.mp.SphericalIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
-        fit = aast.GalaxyFit(galaxy_data=galaxy_fit_data, model_galaxies=[galaxy])
+        fit = aast.galaxy_fit(galaxy_data=galaxy_fit_data, model_galaxies=[galaxy])
 
         assert fit.model_galaxies == [galaxy]
 
