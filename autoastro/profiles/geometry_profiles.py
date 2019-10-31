@@ -2,8 +2,7 @@ import numpy as np
 from functools import wraps
 
 import autofit as af
-import autoarray as aa
-from autoarray.structures.grids import grids
+from autoarray.structures import grids
 from autoastro import dimensions as dim
 
 
@@ -119,8 +118,8 @@ def move_grid_to_radial_minimum(func):
         -------
             A value or coordinate in the same coordinate system as those passed in.
         """
-        radial_minimum_config = aa.conf.NamedConfig(
-            f"{aa.conf.instance.config_path}/radial_minimum.ini"
+        radial_minimum_config = af.conf.NamedConfig(
+            f"{af.conf.instance.config_path}/radial_minimum.ini"
         )
         grid_radial_minimum = radial_minimum_config.get(
             "radial_minimum", profile.__class__.__name__, float

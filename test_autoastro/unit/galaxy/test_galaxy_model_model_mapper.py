@@ -1,5 +1,5 @@
 import autofit as af
-import autoastro as am
+import autoastro as aast
 
 
 class TestCase:
@@ -9,19 +9,19 @@ class TestCase:
 
         # Create a model_galaxy prior for the source model_galaxy. Here we are describing only the light profile of
         # the source model_galaxy which comprises an elliptical exponential and elliptical sersic light profile.
-        source_galaxy_prior = am.GalaxyModel(
-            redshift=am.Redshift,
-            light_profile_one=am.lp.EllipticalExponential,
-            light_profile_2=am.lp.EllipticalSersic,
+        source_galaxy_prior = aast.GalaxyModel(
+            redshift=aast.Redshift,
+            light_profile_one=aast.lp.EllipticalExponential,
+            light_profile_2=aast.lp.EllipticalSersic,
         )
 
         # Create a model_galaxy prior for the source model_galaxy. Here we are describing both the light and mass
         # profiles. We've also stipulated that the centres of any galaxies generated using the model_galaxy prior
         # should match.
-        lens_galaxy_prior = am.GalaxyModel(
-            redshift=am.Redshift,
-            light_profile=am.lp.EllipticalExponential,
-            mass_profile=am.mp.EllipticalExponential,
+        lens_galaxy_prior = aast.GalaxyModel(
+            redshift=aast.Redshift,
+            light_profile=aast.lp.EllipticalExponential,
+            mass_profile=aast.mp.EllipticalExponential,
             align_centres=True,
         )
 

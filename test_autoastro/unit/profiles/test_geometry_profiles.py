@@ -7,7 +7,7 @@ import pytest
 
 import autoarray as aa
 from autoastro.profiles import geometry_profiles
-import autoastro as am
+import autoastro as aast
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -83,8 +83,8 @@ class TestGeometryProfile(object):
         profile = geometry_profiles.GeometryProfile(centre=(1.0, 2.0))
 
         assert profile.centre == (1.0, 2.0)
-        assert isinstance(profile.centre[0], am.dim.Length)
-        assert isinstance(profile.centre[1], am.dim.Length)
+        assert isinstance(profile.centre[0], aast.dim.Length)
+        assert isinstance(profile.centre[1], aast.dim.Length)
         assert profile.centre[0].unit == "arcsec"
         assert profile.centre[1].unit == "arcsec"
 
@@ -97,8 +97,8 @@ class TestEllipticalProfile(object):
             )
 
             assert profile.centre == (1.0, 2.0)
-            assert isinstance(profile.centre[0], am.dim.Length)
-            assert isinstance(profile.centre[1], am.dim.Length)
+            assert isinstance(profile.centre[0], aast.dim.Length)
+            assert isinstance(profile.centre[1], aast.dim.Length)
             assert profile.centre[0].unit == "arcsec"
             assert profile.centre[1].unit == "arcsec"
 
@@ -456,8 +456,8 @@ class TestSphericalProfile(object):
             profile = geometry_profiles.SphericalProfile(centre=(1.0, 2.0))
 
             assert profile.centre == (1.0, 2.0)
-            assert isinstance(profile.centre[0], am.dim.Length)
-            assert isinstance(profile.centre[1], am.dim.Length)
+            assert isinstance(profile.centre[0], aast.dim.Length)
+            assert isinstance(profile.centre[1], aast.dim.Length)
             assert profile.centre[0].unit == "arcsec"
             assert profile.centre[1].unit == "arcsec"
 

@@ -1,4 +1,4 @@
-import autoastro as am
+import autoastro as aast
 import numpy as np
 
 
@@ -7,7 +7,7 @@ class TestHyperImageSky(object):
 
         image = np.array([1.0, 2.0, 3.0])
 
-        hyper_sky = am.hyper_data.HyperImageSky(sky_scale=10.0)
+        hyper_sky = aast.hyper_data.HyperImageSky(sky_scale=10.0)
 
         scaled_image = hyper_sky.hyper_image_from_image(image=image)
 
@@ -19,7 +19,7 @@ class TestHyperNoiseMapBackground(object):
 
         noise_map = np.array([1.0, 2.0, 3.0])
 
-        hyper_background_noise_map = am.hyper_data.HyperBackgroundNoise(noise_scale=2.0)
+        hyper_background_noise_map = aast.hyper_data.HyperBackgroundNoise(noise_scale=2.0)
 
         hyper_noise_map = hyper_background_noise_map.hyper_noise_map_from_noise_map(
             noise_map=noise_map
@@ -27,7 +27,7 @@ class TestHyperNoiseMapBackground(object):
 
         assert (hyper_noise_map == np.array([3.0, 4.0, 5.0])).all()
 
-        hyper_noise_map_background = am.hyper_data.HyperBackgroundNoise(noise_scale=3.0)
+        hyper_noise_map_background = aast.hyper_data.HyperBackgroundNoise(noise_scale=3.0)
 
         scaled_noise = hyper_noise_map_background.hyper_noise_map_from_noise_map(
             noise_map=noise_map

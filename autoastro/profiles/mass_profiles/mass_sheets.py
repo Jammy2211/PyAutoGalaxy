@@ -2,7 +2,7 @@ import numpy as np
 from astropy import cosmology as cosmo
 
 import autofit as af
-import autoarray as aa
+from autoarray.structures import arrays
 from autoastro import dimensions as dim
 from autoastro.profiles import geometry_profiles
 from autoastro.profiles import mass_profiles as mp
@@ -25,13 +25,13 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
         self.kappa = kappa
 
     def convergence_from_grid(self, grid):
-        return aa.array.manual_1d(
+        return arrays.Array.manual_1d(
             array=np.full(shape=grid.sub_shape_1d, fill_value=self.kappa),
             shape_2d=grid.sub_shape_2d,
         )
 
     def potential_from_grid(self, grid):
-        return aa.array.manual_1d(
+        return arrays.Array.manual_1d(
             array=np.zeros(shape=grid.sub_shape_1d), shape_2d=grid.sub_shape_2d
         )
 
@@ -83,12 +83,12 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
         return 0.0
 
     def convergence_from_grid(self, grid):
-        return aa.array.manual_1d(
+        return arrays.Array.manual_1d(
             array=np.zeros(shape=grid.sub_shape_1d), shape_2d=grid.sub_shape_2d
         )
 
     def potential_from_grid(self, grid):
-        return aa.array.manual_1d(
+        return arrays.Array.manual_1d(
             array=np.zeros(shape=grid.sub_shape_1d), shape_2d=grid.sub_shape_2d
         )
 

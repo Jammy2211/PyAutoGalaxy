@@ -5,7 +5,7 @@ import numpy as np
 from astropy import cosmology as cosmo
 
 import autofit as af
-from autoarray.structures.grids import grids
+from autoarray.structures import grids
 from autoastro import dimensions as dim
 from autoastro.profiles import geometry_profiles
 

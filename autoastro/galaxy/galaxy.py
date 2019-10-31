@@ -3,7 +3,7 @@ from astropy import cosmology as cosmo
 from itertools import count
 from skimage import measure
 
-from autoarray.structures.grids import grids
+from autoarray.structures import grids
 from autofit.mapper.model_object import ModelObject
 from autoastro import exc
 from autoastro import dimensions as dim

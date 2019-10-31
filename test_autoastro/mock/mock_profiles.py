@@ -1,8 +1,8 @@
-import autoastro as am
+import autoastro as aast
 import numpy as np
 
 # noinspection PyUnusedLocal
-class MockLightProfile(am.lp.LightProfile):
+class MockLightProfile(aast.lp.LightProfile):
     def __init__(self, value, size=1):
         self.value = value
         self.size = size

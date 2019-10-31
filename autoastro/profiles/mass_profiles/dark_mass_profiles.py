@@ -12,9 +12,9 @@ from scipy import LowLevelCallable
 from scipy import special
 
 import autofit as af
-import autoarray as aa
-from autoarray.structures.grids import grids
+
 from autoarray import decorator_util
+from autoarray.structures import arrays, grids
 from autofit.tools import text_util
 from autoastro import dimensions as dim
 from autoastro.profiles import geometry_profiles
@@ -885,7 +885,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         return np.real(self.coord_func_m(grid_radius=grid_radius))
 
     def potential_from_grid(self, grid):
-        return aa.array.manual_1d(
+        return arrays.Array.manual_1d(
             array=np.zeros(shape=grid.sub_shape_1d), shape_2d=grid.sub_shape_2d
         )
 

@@ -3,7 +3,7 @@ import pytest
 from skimage import measure
 
 import autoarray as aa
-import autoastro as am
+import autoastro as aast
 from autoastro import exc
 from test_autoastro.mock import mock_cosmology
 
@@ -13,7 +13,7 @@ class TestLightProfiles(object):
         def test__no_light_profiles__profile_image_returned_as_0s_of_shape_grid(
             self, sub_grid_7x7
         ):
-            galaxy = am.Galaxy(redshift=0.5)
+            galaxy = aast.Galaxy(redshift=0.5)
 
             profile_image = galaxy.profile_image_from_grid(grid=sub_grid_7x7)
 
@@ -22,7 +22,7 @@ class TestLightProfiles(object):
         def test__using_no_light_profiles__check_reshaping_decorator_of_returned_profile_image(
             self, sub_grid_7x7
         ):
-            galaxy = am.Galaxy(redshift=0.5)
+            galaxy = aast.Galaxy(redshift=0.5)
 
             profile_image = galaxy.profile_image_from_grid(grid=sub_grid_7x7)
 
@@ -102,7 +102,7 @@ class TestLightProfiles(object):
         def test__two_profile_galaxy__is_sum_of_individual_profiles(
             self, lp_0, lp_1, gal_x1_lp, gal_x2_lp
         ):
-            radius = am.dim.Length(0.5, "arcsec")
+            radius = aast.dim.Length(0.5, "arcsec")
 
             lp_luminosity = lp_0.luminosity_within_circle_in_units(
                 radius=radius, unit_luminosity="eps"
@@ -133,7 +133,7 @@ class TestLightProfiles(object):
                 arcsec_per_kpc=0.5, kpc_per_arcsec=2.0
             )
 
-            radius = am.dim.Length(0.5, "arcsec")
+            radius = aast.dim.Length(0.5, "arcsec")
 
             lp_luminosity_arcsec = lp_0.luminosity_within_circle_in_units(radius=radius)
             gal_luminosity_arcsec = gal_x1_lp.luminosity_within_circle_in_units(
@@ -142,7 +142,7 @@ class TestLightProfiles(object):
 
             assert lp_luminosity_arcsec == gal_luminosity_arcsec
 
-            radius = am.dim.Length(0.5, "kpc")
+            radius = aast.dim.Length(0.5, "kpc")
 
             lp_luminosity_kpc = lp_0.luminosity_within_circle_in_units(
                 radius=radius, redshift_profile=0.5, cosmology=cosmology
@@ -156,7 +156,7 @@ class TestLightProfiles(object):
         def test__luminosity_unit_conversions__multiply_by_exposure_time(
             self, lp_0, gal_x1_lp
         ):
-            radius = am.dim.Length(0.5, "arcsec")
+            radius = aast.dim.Length(0.5, "arcsec")
 
             lp_luminosity_eps = lp_0.luminosity_within_ellipse_in_units(
                 major_axis=radius, unit_luminosity="eps", exposure_time=2.0
@@ -178,14 +178,14 @@ class TestLightProfiles(object):
             assert lp_luminosity_counts == gal_luminosity_counts
 
         def test__no_light_profile__returns_none(self):
-            gal_no_lp = am.Galaxy(redshift=0.5, mass=am.mp.SphericalIsothermal())
+            gal_no_lp = aast.Galaxy(redshift=0.5, mass=aast.mp.SphericalIsothermal())
 
             assert gal_no_lp.luminosity_within_circle_in_units(radius=1.0) == None
             assert gal_no_lp.luminosity_within_ellipse_in_units(major_axis=1.0) == None
 
     class TestSymmetricProfiles(object):
         def test_1d_symmetry(self):
-            lp_0 = am.lp.EllipticalSersic(
+            lp_0 = aast.lp.EllipticalSersic(
                 axis_ratio=1.0,
                 phi=0.0,
                 intensity=1.0,
@@ -193,7 +193,7 @@ class TestLightProfiles(object):
                 sersic_index=4.0,
             )
 
-            lp_1 = am.lp.EllipticalSersic(
+            lp_1 = aast.lp.EllipticalSersic(
                 axis_ratio=1.0,
                 phi=0.0,
                 intensity=1.0,
@@ -202,7 +202,7 @@ class TestLightProfiles(object):
                 centre=(100, 0),
             )
 
-            gal_x2_lp = am.Galaxy(
+            gal_x2_lp = aast.Galaxy(
                 redshift=0.5, light_profile_0=lp_0, light_profile_1=lp_1
             )
 
@@ -218,7 +218,7 @@ class TestLightProfiles(object):
             )
 
         def test_2d_symmetry(self):
-            lp_0 = am.lp.EllipticalSersic(
+            lp_0 = aast.lp.EllipticalSersic(
                 axis_ratio=1.0,
                 phi=0.0,
                 intensity=1.0,
@@ -226,7 +226,7 @@ class TestLightProfiles(object):
                 sersic_index=4.0,
             )
 
-            lp_1 = am.lp.EllipticalSersic(
+            lp_1 = aast.lp.EllipticalSersic(
                 axis_ratio=1.0,
                 phi=0.0,
                 intensity=1.0,
@@ -235,7 +235,7 @@ class TestLightProfiles(object):
                 centre=(100, 0),
             )
 
-            lp_2 = am.lp.EllipticalSersic(
+            lp_2 = aast.lp.EllipticalSersic(
                 axis_ratio=1.0,
                 phi=0.0,
                 intensity=1.0,
@@ -244,7 +244,7 @@ class TestLightProfiles(object):
                 centre=(0, 100),
             )
 
-            lp_3 = am.lp.EllipticalSersic(
+            lp_3 = aast.lp.EllipticalSersic(
                 axis_ratio=1.0,
                 phi=0.0,
                 intensity=1.0,
@@ -253,7 +253,7 @@ class TestLightProfiles(object):
                 centre=(100, 100),
             )
 
-            gal_x4_lp = am.Galaxy(
+            gal_x4_lp = aast.Galaxy(
                 redshift=0.5,
                 light_profile_0=lp_0,
                 light_profile_1=lp_1,
@@ -301,10 +301,10 @@ class TestLightProfiles(object):
         def test__blurred_image_from_grid_and_psf(
             self, sub_grid_7x7, blurring_grid_7x7, psf_3x3, convolver_7x7
         ):
-            light_profile_0 = am.lp.EllipticalSersic(intensity=2.0)
-            light_profile_1 = am.lp.EllipticalSersic(intensity=3.0)
+            light_profile_0 = aast.lp.EllipticalSersic(intensity=2.0)
+            light_profile_1 = aast.lp.EllipticalSersic(intensity=3.0)
 
-            galaxy = am.Galaxy(
+            galaxy = aast.Galaxy(
                 light_profile_0=light_profile_0,
                 light_profile_1=light_profile_1,
                 redshift=0.5,
@@ -333,10 +333,10 @@ class TestLightProfiles(object):
         def test__blurred_image_from_grid_and_convolver(
             self, sub_grid_7x7, blurring_grid_7x7, convolver_7x7
         ):
-            light_profile_0 = am.lp.EllipticalSersic(intensity=2.0)
-            light_profile_1 = am.lp.EllipticalSersic(intensity=3.0)
+            light_profile_0 = aast.lp.EllipticalSersic(intensity=2.0)
+            light_profile_1 = aast.lp.EllipticalSersic(intensity=3.0)
 
-            galaxy = am.Galaxy(
+            galaxy = aast.Galaxy(
                 light_profile_0=light_profile_0,
                 light_profile_1=light_profile_1,
                 redshift=0.5,
@@ -369,8 +369,8 @@ class TestLightProfiles(object):
             self, sub_grid_7x7, transformer_7x7_7
         ):
 
-            light_profile_0 = am.lp.EllipticalSersic(intensity=2.0)
-            light_profile_1 = am.lp.EllipticalSersic(intensity=3.0)
+            light_profile_0 = aast.lp.EllipticalSersic(intensity=2.0)
+            light_profile_1 = aast.lp.EllipticalSersic(intensity=3.0)
 
             image = (
                 light_profile_0.profile_image_from_grid(grid=sub_grid_7x7).in_1d_binned
@@ -381,7 +381,7 @@ class TestLightProfiles(object):
 
             visibilities = transformer_7x7_7.visibilities_from_image(image=image)
 
-            galaxy = am.Galaxy(
+            galaxy = aast.Galaxy(
                 light_profile_0=light_profile_0,
                 light_profile_1=light_profile_1,
                 redshift=0.5,
@@ -445,7 +445,7 @@ class TestMassProfiles(object):
         def test__no_mass_profiles__convergence_returned_as_0s_of_shape_grid(
             self, sub_grid_7x7
         ):
-            galaxy = am.Galaxy(redshift=0.5)
+            galaxy = aast.Galaxy(redshift=0.5)
 
             convergence = galaxy.convergence_from_grid(grid=sub_grid_7x7)
 
@@ -456,7 +456,7 @@ class TestMassProfiles(object):
         def test__using_no_mass_profiles__check_reshaping_decorator_of_returned_convergence(
             self, sub_grid_7x7
         ):
-            galaxy = am.Galaxy(redshift=0.5)
+            galaxy = aast.Galaxy(redshift=0.5)
 
             convergence = galaxy.convergence_from_grid(grid=sub_grid_7x7)
 
@@ -537,7 +537,7 @@ class TestMassProfiles(object):
         def test__no_mass_profiles__potential_returned_as_0s_of_shape_grid(
             self, sub_grid_7x7
         ):
-            galaxy = am.Galaxy(redshift=0.5)
+            galaxy = aast.Galaxy(redshift=0.5)
 
             potential = galaxy.potential_from_grid(grid=sub_grid_7x7)
 
@@ -546,7 +546,7 @@ class TestMassProfiles(object):
         def test__using_no_mass_profiles__check_reshaping_decorator_of_returned_potential(
             self, sub_grid_7x7
         ):
-            galaxy = am.Galaxy(redshift=0.5)
+            galaxy = aast.Galaxy(redshift=0.5)
 
             potential = galaxy.potential_from_grid(grid=sub_grid_7x7)
 
@@ -618,7 +618,7 @@ class TestMassProfiles(object):
         def test__no_mass_profiles__deflections_returned_as_0s_of_shape_grid(
             self, sub_grid_7x7
         ):
-            galaxy = am.Galaxy(redshift=0.5)
+            galaxy = aast.Galaxy(redshift=0.5)
 
             deflections = galaxy.deflections_from_grid(grid=sub_grid_7x7)
 
@@ -629,7 +629,7 @@ class TestMassProfiles(object):
         def test__using_no_mass_profiles__check_reshaping_decorator_of_returned_deflections(
             self, sub_grid_7x7
         ):
-            galaxy = am.Galaxy(redshift=0.5)
+            galaxy = aast.Galaxy(redshift=0.5)
 
             deflections = galaxy.deflections_from_grid(grid=sub_grid_7x7)
 
@@ -729,7 +729,7 @@ class TestMassProfiles(object):
         def test__two_profile_galaxy__is_sum_of_individual_profiles(
             self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
         ):
-            radius = am.dim.Length(0.5, "arcsec")
+            radius = aast.dim.Length(0.5, "arcsec")
 
             mp_mass = mp_0.mass_within_circle_in_units(
                 radius=radius, unit_mass="angular"
@@ -761,7 +761,7 @@ class TestMassProfiles(object):
                 arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=1.0
             )
 
-            radius = am.dim.Length(0.5, "arcsec")
+            radius = aast.dim.Length(0.5, "arcsec")
 
             mp_mass_arcsec = mp_0.mass_within_circle_in_units(
                 radius=radius,
@@ -779,7 +779,7 @@ class TestMassProfiles(object):
             )
             assert mp_mass_arcsec == gal_mass_arcsec
 
-            radius = am.dim.Length(0.5, "kpc")
+            radius = aast.dim.Length(0.5, "kpc")
 
             mp_mass_kpc = mp_0.mass_within_circle_in_units(
                 radius=radius,
@@ -804,7 +804,7 @@ class TestMassProfiles(object):
                 arcsec_per_kpc=1.0, kpc_per_arcsec=1.0, critical_surface_density=2.0
             )
 
-            radius = am.dim.Length(0.5, "arcsec")
+            radius = aast.dim.Length(0.5, "arcsec")
 
             mp_mass_angular = mp_0.mass_within_ellipse_in_units(
                 major_axis=radius,
@@ -839,7 +839,7 @@ class TestMassProfiles(object):
             assert mp_mass_sol == gal_mass_sol
 
         def test__no_mass_profile__returns_none(self):
-            gal_no_mp = am.Galaxy(redshift=0.5, light=am.lp.SphericalSersic())
+            gal_no_mp = aast.Galaxy(redshift=0.5, light=aast.lp.SphericalSersic())
 
             assert (
                 gal_no_mp.mass_within_circle_in_units(
@@ -856,15 +856,15 @@ class TestMassProfiles(object):
 
     class TestSymmetricProfiles:
         def test_1d_symmetry(self):
-            mp_0 = am.mp.EllipticalIsothermal(
+            mp_0 = aast.mp.EllipticalIsothermal(
                 axis_ratio=0.5, phi=45.0, einstein_radius=1.0
             )
 
-            mp_1 = am.mp.EllipticalIsothermal(
+            mp_1 = aast.mp.EllipticalIsothermal(
                 centre=(100, 0), axis_ratio=0.5, phi=45.0, einstein_radius=1.0
             )
 
-            gal_x4_mp = am.Galaxy(
+            gal_x4_mp = aast.Galaxy(
                 redshift=0.5, mass_profile_0=mp_0, mass_profile_1=mp_1
             )
 
@@ -913,15 +913,15 @@ class TestMassProfiles(object):
             )
 
         def test_2d_symmetry(self):
-            mp_0 = am.mp.SphericalIsothermal(einstein_radius=1.0)
+            mp_0 = aast.mp.SphericalIsothermal(einstein_radius=1.0)
 
-            mp_1 = am.mp.SphericalIsothermal(centre=(100, 0), einstein_radius=1.0)
+            mp_1 = aast.mp.SphericalIsothermal(centre=(100, 0), einstein_radius=1.0)
 
-            mp_2 = am.mp.SphericalIsothermal(centre=(0, 100), einstein_radius=1.0)
+            mp_2 = aast.mp.SphericalIsothermal(centre=(0, 100), einstein_radius=1.0)
 
-            mp_3 = am.mp.SphericalIsothermal(centre=(100, 100), einstein_radius=1.0)
+            mp_3 = aast.mp.SphericalIsothermal(centre=(100, 100), einstein_radius=1.0)
 
-            gal_x4_mp = am.Galaxy(
+            gal_x4_mp = aast.Galaxy(
                 redshift=0.5,
                 mass_profile_0=mp_0,
                 mass_profile_1=mp_1,
@@ -1071,10 +1071,10 @@ class TestMassProfiles(object):
         def test__x2_sis_different_einstein_radii_and_mass__einstein_radii_and_mass_are_sum(
             self
         ):
-            mp_0 = am.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
-            mp_1 = am.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=0.5)
+            mp_0 = aast.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+            mp_1 = aast.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=0.5)
 
-            gal_x2_mp = am.Galaxy(redshift=0.5, mass_0=mp_0, mass_1=mp_1)
+            gal_x2_mp = aast.Galaxy(redshift=0.5, mass_0=mp_0, mass_1=mp_1)
 
             assert gal_x2_mp.einstein_radius_in_units(unit_length="arcsec") == 1.5
             assert gal_x2_mp.einstein_mass_in_units(unit_mass="angular") == np.pi * (
@@ -1082,21 +1082,21 @@ class TestMassProfiles(object):
             )
 
         def test__includes_shear__does_not_impact_values(self):
-            mp_0 = am.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
-            shear = am.mp.ExternalShear()
+            mp_0 = aast.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+            shear = aast.mp.ExternalShear()
 
-            gal_shear = am.Galaxy(redshift=0.5, mass_0=mp_0, shear=shear)
+            gal_shear = aast.Galaxy(redshift=0.5, mass_0=mp_0, shear=shear)
 
             assert gal_shear.einstein_radius_in_units(unit_length="arcsec") == 1.0
             assert gal_shear.einstein_mass_in_units(unit_mass="angular") == np.pi
 
     class TestDeflectionAnglesviaPotential(object):
         def test__compare_galaxy_deflections_via_potential_and_calculation(self):
-            mass_profile_1 = am.mp.SphericalIsothermal(
+            mass_profile_1 = aast.mp.SphericalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.0
             )
 
-            galaxy = am.Galaxy(mass_1=mass_profile_1, redshift=1)
+            galaxy = aast.Galaxy(mass_1=mass_profile_1, redshift=1)
 
             grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
 
@@ -1115,14 +1115,14 @@ class TestMassProfiles(object):
         def test__compare_two_component_galaxy_deflections_via_potential_and_calculation(
             self
         ):
-            mass_profile_1 = am.mp.SphericalIsothermal(
+            mass_profile_1 = aast.mp.SphericalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.0
             )
-            mass_profile_2 = am.mp.SphericalIsothermal(
+            mass_profile_2 = aast.mp.SphericalIsothermal(
                 centre=(1.0, 1.0), einstein_radius=1.0
             )
 
-            galaxy = am.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
 
             grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
 
@@ -1164,11 +1164,11 @@ class TestMassProfiles(object):
 
     class TestJacobian(object):
         def test__jacobian_components(self):
-            mass_profile_1 = am.mp.SphericalIsothermal(
+            mass_profile_1 = aast.mp.SphericalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.0
             )
 
-            galaxy = am.Galaxy(mass_1=mass_profile_1, redshift=1)
+            galaxy = aast.Galaxy(mass_1=mass_profile_1, redshift=1)
 
             grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
@@ -1193,14 +1193,14 @@ class TestMassProfiles(object):
             assert mean_error < 1e-4
 
         def test__jacobian_components__two_component_galaxy(self):
-            mass_profile_1 = am.mp.SphericalIsothermal(
+            mass_profile_1 = aast.mp.SphericalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.0
             )
-            mass_profile_2 = am.mp.SphericalIsothermal(
+            mass_profile_2 = aast.mp.SphericalIsothermal(
                 centre=(1.0, 1.0), einstein_radius=1.0
             )
 
-            galaxy = am.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
 
             grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
@@ -1226,11 +1226,11 @@ class TestMassProfiles(object):
 
     class TestConvergenceviaJacobian(object):
         def test__compare_galaxy_convergence_via_jacobian_and_calculation(self):
-            mass_profile_1 = am.mp.SphericalIsothermal(
+            mass_profile_1 = aast.mp.SphericalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.0
             )
 
-            galaxy = am.Galaxy(mass_1=mass_profile_1, redshift=1)
+            galaxy = aast.Galaxy(mass_1=mass_profile_1, redshift=1)
 
             grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
 
@@ -1247,14 +1247,14 @@ class TestMassProfiles(object):
         def test__compare_two_component_galaxy_convergence_via_jacobian_and_calculation(
             self
         ):
-            mass_profile_1 = am.mp.SphericalIsothermal(
+            mass_profile_1 = aast.mp.SphericalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.0
             )
-            mass_profile_2 = am.mp.SphericalIsothermal(
+            mass_profile_2 = aast.mp.SphericalIsothermal(
                 centre=(1.0, 1.0), einstein_radius=1.0
             )
 
-            galaxy = am.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
 
             grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
 
@@ -1317,13 +1317,13 @@ class TestMassProfiles(object):
         def test__compare_magnification_from_eigen_values_and_from_determinant__two_component_galaxy(
             self
         ):
-            mass_profile_1 = am.mp.SphericalIsothermal(
+            mass_profile_1 = aast.mp.SphericalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.0
             )
-            mass_profile_2 = am.mp.SphericalIsothermal(
+            mass_profile_2 = aast.mp.SphericalIsothermal(
                 centre=(1.0, 1.0), einstein_radius=1.0
             )
-            galaxy = am.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
 
             grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
@@ -1364,13 +1364,13 @@ class TestMassProfiles(object):
         def test__compare_magnification_from_determinant_and_from_convergence_and_shear__two_component_galaxy(
             self
         ):
-            mass_profile_1 = am.mp.SphericalIsothermal(
+            mass_profile_1 = aast.mp.SphericalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.0
             )
-            mass_profile_2 = am.mp.SphericalIsothermal(
+            mass_profile_2 = aast.mp.SphericalIsothermal(
                 centre=(1.0, 1.0), einstein_radius=1.0
             )
-            galaxy = am.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
 
             grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
@@ -1412,14 +1412,14 @@ class TestMassProfiles(object):
         def test__compare_tangential_critical_curves_from_magnification_and_eigen_values__two_component_galaxy(
             self
         ):
-            mass_profile_1 = am.mp.SphericalIsothermal(
+            mass_profile_1 = aast.mp.SphericalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.0
             )
-            mass_profile_2 = am.mp.SphericalIsothermal(
+            mass_profile_2 = aast.mp.SphericalIsothermal(
                 centre=(0.2, 0.2), einstein_radius=1.0
             )
 
-            galaxy = am.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
 
             grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
 
@@ -1462,14 +1462,14 @@ class TestMassProfiles(object):
         def test__compare_radial_critical_curves_from_magnification_and_eigen_values__reg_grid_two_component_galaxy(
             self
         ):
-            mass_profile_1 = am.mp.SphericalIsothermal(
+            mass_profile_1 = aast.mp.SphericalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.0
             )
-            mass_profile_2 = am.mp.SphericalIsothermal(
+            mass_profile_2 = aast.mp.SphericalIsothermal(
                 centre=(0.4, 0.4), einstein_radius=1.0
             )
 
-            galaxy = am.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
 
             grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.5, sub_size=1)
 
@@ -1510,14 +1510,14 @@ class TestMassProfiles(object):
         def test__compare_tangential_caustic_from_magnification_and_tangential_eigen_values__two_component_galaxy(
             self
         ):
-            mass_profile_1 = am.mp.SphericalIsothermal(
+            mass_profile_1 = aast.mp.SphericalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.0
             )
-            mass_profile_2 = am.mp.SphericalIsothermal(
+            mass_profile_2 = aast.mp.SphericalIsothermal(
                 centre=(0.2, 0.2), einstein_radius=1.0
             )
 
-            galaxy = am.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
 
             grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.5, sub_size=1)
 
@@ -1554,14 +1554,14 @@ class TestMassProfiles(object):
         def test__compare_radial_caustic_from_magnification_and_tangential_eigen_values__two_component_galaxy(
             self
         ):
-            mass_profile_1 = am.mp.SphericalIsothermal(
+            mass_profile_1 = aast.mp.SphericalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.0
             )
-            mass_profile_2 = am.mp.SphericalIsothermal(
+            mass_profile_2 = aast.mp.SphericalIsothermal(
                 centre=(0.2, 0.2), einstein_radius=1.0
             )
 
-            galaxy = am.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+            galaxy = aast.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
 
             grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=2)
 
@@ -1581,7 +1581,7 @@ class TestMassProfiles(object):
 
 class TestMassAndLightProfiles(object):
     def test_single_profile(self, lmp_0):
-        gal_x1_lmp = am.Galaxy(redshift=0.5, profile=lmp_0)
+        gal_x1_lmp = aast.Galaxy(redshift=0.5, profile=lmp_0)
 
         assert 1 == len(gal_x1_lmp.light_profiles)
         assert 1 == len(gal_x1_lmp.mass_profiles)
@@ -1590,7 +1590,7 @@ class TestMassAndLightProfiles(object):
         assert gal_x1_lmp.light_profiles[0] == lmp_0
 
     def test_multiple_profile(self, lmp_0, lp_0, mp_0):
-        gal_multi_profiles = am.Galaxy(
+        gal_multi_profiles = aast.Galaxy(
             redshift=0.5, profile=lmp_0, light=lp_0, sie=mp_0
         )
 
@@ -1600,7 +1600,7 @@ class TestMassAndLightProfiles(object):
 
 class TestSummarizeInUnits(object):
     def test__galaxy_with_two_light_and_mass_profiles(self, lp_0, lp_1, mp_0, mp_1):
-        gal_summarize = am.Galaxy(
+        gal_summarize = aast.Galaxy(
             redshift=0.5,
             light_profile_0=lp_0,
             light_profile_1=lp_1,
@@ -1609,7 +1609,7 @@ class TestSummarizeInUnits(object):
         )
 
         summary_text = gal_summarize.summarize_in_units(
-            radii=[am.dim.Length(10.0), am.dim.Length(500.0)],
+            radii=[aast.dim.Length(10.0), aast.dim.Length(500.0)],
             whitespace=50,
             unit_length="arcsec",
             unit_luminosity="eps",
@@ -1745,7 +1745,7 @@ class TestHyperGalaxy(object):
         def test__model_image_all_1s__factor_is_0__contributions_all_1s(self):
             hyper_image = np.ones((3,))
 
-            hyp = am.HyperGalaxy(contribution_factor=0.0)
+            hyp = aast.HyperGalaxy(contribution_factor=0.0)
             contribution_map = hyp.contribution_map_from_hyper_images(
                 hyper_model_image=hyper_image, hyper_galaxy_image=hyper_image
             )
@@ -1757,7 +1757,7 @@ class TestHyperGalaxy(object):
         ):
             hyper_image = np.array([0.5, 1.0, 1.5])
 
-            hyp = am.HyperGalaxy(contribution_factor=1.0)
+            hyp = aast.HyperGalaxy(contribution_factor=1.0)
             contribution_map = hyp.contribution_map_from_hyper_images(
                 hyper_model_image=hyper_image, hyper_galaxy_image=hyper_image
             )
@@ -1772,7 +1772,7 @@ class TestHyperGalaxy(object):
             noise_map = np.array([1.0, 2.0, 3.0])
             contribution_map = np.ones((3, 1))
 
-            hyper_galaxy = am.HyperGalaxy(
+            hyper_galaxy = aast.HyperGalaxy(
                 contribution_factor=0.0, noise_factor=2.0, noise_power=1.0
             )
 
@@ -1786,7 +1786,7 @@ class TestHyperGalaxy(object):
             noise_map = np.array([1.0, 2.0, 3.0])
             contribution_map = np.array([[0.0, 0.5, 1.0]])
 
-            hyper_galaxy = am.HyperGalaxy(
+            hyper_galaxy = aast.HyperGalaxy(
                 contribution_factor=0.0, noise_factor=2.0, noise_power=1.0
             )
 
@@ -1800,7 +1800,7 @@ class TestHyperGalaxy(object):
             noise_map = np.array([1.0, 2.0, 3.0])
             contribution_map = np.array([[0.0, 0.5, 1.0]])
 
-            hyper_galaxy = am.HyperGalaxy(
+            hyper_galaxy = aast.HyperGalaxy(
                 contribution_factor=0.0, noise_factor=2.0, noise_power=2.0
             )
 
@@ -1813,83 +1813,83 @@ class TestHyperGalaxy(object):
 
 class TestBooleanProperties(object):
     def test_has_profile(self):
-        assert am.Galaxy(redshift=0.5).has_profile is False
+        assert aast.Galaxy(redshift=0.5).has_profile is False
         assert (
-            am.Galaxy(redshift=0.5, light_profile=am.lp.LightProfile()).has_profile
+            aast.Galaxy(redshift=0.5, light_profile=aast.lp.LightProfile()).has_profile
             is True
         )
         assert (
-            am.Galaxy(redshift=0.5, mass_profile=am.mp.MassProfile()).has_profile
+            aast.Galaxy(redshift=0.5, mass_profile=aast.mp.MassProfile()).has_profile
             is True
         )
 
     def test_has_light_profile(self):
-        assert am.Galaxy(redshift=0.5).has_light_profile is False
+        assert aast.Galaxy(redshift=0.5).has_light_profile is False
         assert (
-            am.Galaxy(
-                redshift=0.5, light_profile=am.lp.LightProfile()
+            aast.Galaxy(
+                redshift=0.5, light_profile=aast.lp.LightProfile()
             ).has_light_profile
             is True
         )
         assert (
-            am.Galaxy(redshift=0.5, mass_profile=am.mp.MassProfile()).has_light_profile
+            aast.Galaxy(redshift=0.5, mass_profile=aast.mp.MassProfile()).has_light_profile
             is False
         )
 
     def test_has_mass_profile(self):
-        assert am.Galaxy(redshift=0.5).has_mass_profile is False
+        assert aast.Galaxy(redshift=0.5).has_mass_profile is False
         assert (
-            am.Galaxy(redshift=0.5, light_profile=am.lp.LightProfile()).has_mass_profile
+            aast.Galaxy(redshift=0.5, light_profile=aast.lp.LightProfile()).has_mass_profile
             is False
         )
         assert (
-            am.Galaxy(redshift=0.5, mass_profile=am.mp.MassProfile()).has_mass_profile
+            aast.Galaxy(redshift=0.5, mass_profile=aast.mp.MassProfile()).has_mass_profile
             is True
         )
 
     def test_has_redshift(self):
-        assert am.Galaxy(redshift=0.1).has_redshift is True
+        assert aast.Galaxy(redshift=0.1).has_redshift is True
 
     def test_has_pixelization(self):
-        assert am.Galaxy(redshift=0.5).has_pixelization is False
+        assert aast.Galaxy(redshift=0.5).has_pixelization is False
         assert (
-            am.Galaxy(
+            aast.Galaxy(
                 redshift=0.5, pixelization=object(), regularization=object()
             ).has_pixelization
             is True
         )
 
     def test_has_regularization(self):
-        assert am.Galaxy(redshift=0.5).has_regularization is False
+        assert aast.Galaxy(redshift=0.5).has_regularization is False
         assert (
-            am.Galaxy(
+            aast.Galaxy(
                 redshift=0.5, pixelization=object(), regularization=object()
             ).has_regularization
             is True
         )
 
     def test_has_hyper_galaxy(self):
-        assert am.Galaxy(redshift=0.5, hyper_galaxy=object()).has_hyper_galaxy is True
+        assert aast.Galaxy(redshift=0.5, hyper_galaxy=object()).has_hyper_galaxy is True
 
     def test__only_pixelization_raises_error(self):
         with pytest.raises(exc.GalaxyException):
-            am.Galaxy(redshift=0.5, pixelization=object())
+            aast.Galaxy(redshift=0.5, pixelization=object())
 
     def test__only_regularization_raises_error(self):
         with pytest.raises(exc.GalaxyException):
-            am.Galaxy(redshift=0.5, regularization=object())
+            aast.Galaxy(redshift=0.5, regularization=object())
 
 
 class TestGridBinning(object):
     def test__jacobian_sub_grid_binning_two_component_galaxy(self):
-        mass_profile_1 = am.mp.SphericalIsothermal(
+        mass_profile_1 = aast.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=1.0
         )
-        mass_profile_2 = am.mp.SphericalIsothermal(
+        mass_profile_2 = aast.mp.SphericalIsothermal(
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        galaxy = am.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+        galaxy = aast.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
 
         grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=2)
 
@@ -1920,14 +1920,14 @@ class TestGridBinning(object):
         )
 
     def test_shear_via_jacobian(self):
-        mass_profile_1 = am.mp.SphericalIsothermal(
+        mass_profile_1 = aast.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=1.0
         )
-        mass_profile_2 = am.mp.SphericalIsothermal(
+        mass_profile_2 = aast.mp.SphericalIsothermal(
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        galaxy = am.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+        galaxy = aast.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
 
         grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=2)
 
@@ -1956,14 +1956,14 @@ class TestGridBinning(object):
         )
 
     def test_tangential_eigen_values_sub_grid_binning_two_component_galaxy(self):
-        mass_profile_1 = am.mp.SphericalIsothermal(
+        mass_profile_1 = aast.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=1.0
         )
-        mass_profile_2 = am.mp.SphericalIsothermal(
+        mass_profile_2 = aast.mp.SphericalIsothermal(
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        galaxy = am.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+        galaxy = aast.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
 
         grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=2)
 
@@ -1992,14 +1992,14 @@ class TestGridBinning(object):
         )
 
     def test_radial_eigen_values_sub_grid_binning_two_component_galaxy(self):
-        mass_profile_1 = am.mp.SphericalIsothermal(
+        mass_profile_1 = aast.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=1.0
         )
-        mass_profile_2 = am.mp.SphericalIsothermal(
+        mass_profile_2 = aast.mp.SphericalIsothermal(
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        galaxy = am.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
+        galaxy = aast.Galaxy(mass_1=mass_profile_1, mass_2=mass_profile_2, redshift=1)
 
         grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
 
