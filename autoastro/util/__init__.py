@@ -1,1 +1,1 @@
-from ..util import cosmology_util as cosmo
+from ..util import cosmology_util as cosmology

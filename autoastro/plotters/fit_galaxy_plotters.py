@@ -83,7 +83,7 @@ def subplot(
 
     plt.subplot(rows, columns, 2)
 
-    aa.plot.imaging_fit.model_image(
+    aa.plot.fit_imaging.model_image(
         fit=fit,
         mask_overlay=fit.mask,
         positions=positions,
@@ -117,7 +117,7 @@ def subplot(
 
     plt.subplot(rows, columns, 3)
 
-    aa.plot.imaging_fit.residual_map(
+    aa.plot.fit_imaging.residual_map(
         fit=fit,
         mask_overlay=fit.mask,
         as_subplot=True,
@@ -149,7 +149,7 @@ def subplot(
 
     plt.subplot(rows, columns, 4)
 
-    aa.plot.imaging_fit.chi_squared_map(
+    aa.plot.fit_imaging.chi_squared_map(
         fit=fit,
         mask_overlay=fit.mask,
         as_subplot=True,
@@ -217,7 +217,7 @@ def individuals(
 
     if should_plot_noise_map:
 
-        aa.plot.imaging_fit.noise_map(
+        aa.plot.fit_imaging.noise_map(
             fit=fit,
             mask_overlay=fit.mask,
             positions=positions,
@@ -229,7 +229,7 @@ def individuals(
 
     if should_plot_model_image:
 
-        aa.plot.imaging_fit.model_image(
+        aa.plot.fit_imaging.model_image(
             fit=fit,
             mask_overlay=fit.mask,
             positions=positions,
@@ -241,7 +241,7 @@ def individuals(
 
     if should_plot_residual_map:
 
-        aa.plot.imaging_fit.residual_map(
+        aa.plot.fit_imaging.residual_map(
             fit=fit,
             mask_overlay=fit.mask,
             units=units,
@@ -252,7 +252,7 @@ def individuals(
 
     if should_plot_chi_squared_map:
 
-        aa.plot.imaging_fit.chi_squared_map(
+        aa.plot.fit_imaging.chi_squared_map(
             fit=fit,
             mask_overlay=fit.mask,
             units=units,

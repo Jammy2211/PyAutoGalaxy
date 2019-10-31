@@ -8,7 +8,7 @@ from autoastro.profiles import (
 from autoastro.galaxy.galaxy import Galaxy as galaxy, HyperGalaxy, Redshift
 from autoastro.galaxy.galaxy_data import GalaxyData as galaxy_data
 from autoastro.galaxy import masked
-from autoastro.galaxy.galaxy_fit import GalaxyFit as galaxy_fit
+from autoastro.galaxy.fit_galaxy import GalaxyFit as fit_galaxy
 from autoastro.galaxy.galaxy_model import GalaxyModel
 from autoastro.hyper import hyper_data
 from autoastro import plotters as plot

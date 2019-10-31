@@ -147,7 +147,7 @@ class TestPointMass(object):
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.masked.grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -567,7 +567,7 @@ class TestCoredPowerLaw(object):
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.masked.grid.from_mask(mask=mask)
         true_deflections = cored_power_law.deflections_from_grid(grid=grid)
 
         regular_with_interp = grid.new_grid_with_interpolator(
@@ -616,7 +616,7 @@ class TestCoredPowerLaw(object):
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.masked.grid.from_mask(mask=mask)
         true_deflections = cored_power_law.deflections_from_grid(grid=grid)
 
         regular_with_interp = grid.new_grid_with_interpolator(
@@ -1000,7 +1000,7 @@ class TestPowerLaw(object):
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.masked.grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1044,7 +1044,7 @@ class TestPowerLaw(object):
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.masked.grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1399,7 +1399,7 @@ class TestCoredIsothermal(object):
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.masked.grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1444,7 +1444,7 @@ class TestCoredIsothermal(object):
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.masked.grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1725,7 +1725,7 @@ class TestIsothermal(object):
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.masked.grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1766,7 +1766,7 @@ class TestIsothermal(object):
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.masked.grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
