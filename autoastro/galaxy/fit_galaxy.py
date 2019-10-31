@@ -10,7 +10,7 @@ class GalaxyFit(fit.DataFit):
         ----------
         galaxy_data : GalaxyData
             The galaxy-datas object being fitted.
-        model_galaxies : al.galaxy
+        model_galaxies : aast.galaxy
             The model galaxy used to fit the galaxy-datas.
         """
 

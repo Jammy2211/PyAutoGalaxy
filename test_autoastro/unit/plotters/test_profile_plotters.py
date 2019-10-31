@@ -15,7 +15,7 @@ def test__all_quantities_are_output(
 ):
 
     aast.plot.profile.image(
-        light_profile=al.lp_0,
+        light_profile=lp_0,
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
@@ -28,7 +28,7 @@ def test__all_quantities_are_output(
     assert profile_plotter_path + "image.png" in plot_patch.paths
 
     aast.plot.profile.convergence(
-        mass_profile=al.mp_0,
+        mass_profile=mp_0,
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
@@ -43,7 +43,7 @@ def test__all_quantities_are_output(
     assert profile_plotter_path + "convergence.png" in plot_patch.paths
 
     aast.plot.profile.potential(
-        mass_profile=al.mp_0,
+        mass_profile=mp_0,
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
@@ -58,7 +58,7 @@ def test__all_quantities_are_output(
     assert profile_plotter_path + "potential.png" in plot_patch.paths
 
     aast.plot.profile.deflections_y(
-        mass_profile=al.mp_0,
+        mass_profile=mp_0,
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
@@ -73,7 +73,7 @@ def test__all_quantities_are_output(
     assert profile_plotter_path + "deflections_y.png" in plot_patch.paths
 
     aast.plot.profile.deflections_x(
-        mass_profile=al.mp_0,
+        mass_profile=mp_0,
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
@@ -88,7 +88,7 @@ def test__all_quantities_are_output(
     assert profile_plotter_path + "deflections_x.png" in plot_patch.paths
 
     aast.plot.profile.magnification(
-        mass_profile=al.mp_0,
+        mass_profile=mp_0,
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
