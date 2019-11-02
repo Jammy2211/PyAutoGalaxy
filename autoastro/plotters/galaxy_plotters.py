@@ -62,10 +62,11 @@ def profile_image(
         lines = plotter_util.get_critical_curve_and_caustic(
             obj=galaxy,
             grid=grid,
-            plot_critical_curve=plot_critical_curves,
+            plot_critical_curves=plot_critical_curves,
             plot_caustics=plot_caustics,
         )
     else:
+
         lines = None
 
     aa.plot.array(
@@ -154,7 +155,7 @@ def convergence(
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
-        plot_critical_curve=plot_critical_curves,
+        plot_critical_curves=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
@@ -244,7 +245,7 @@ def potential(
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
-        plot_critical_curve=plot_critical_curves,
+        plot_critical_curves=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
@@ -335,7 +336,7 @@ def deflections_y(
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
-        plot_critical_curve=plot_critical_curves,
+        plot_critical_curves=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
@@ -426,7 +427,7 @@ def deflections_x(
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
-        plot_critical_curve=plot_critical_curves,
+        plot_critical_curves=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
@@ -516,7 +517,7 @@ def magnification(
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
-        plot_critical_curve=plot_critical_curves,
+        plot_critical_curves=plot_critical_curves,
         plot_caustics=plot_caustics,
     )
 
