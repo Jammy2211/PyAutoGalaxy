@@ -14,8 +14,8 @@ def profile_image(
     grid,
     mask=None,
     positions=None,
-    plot_critical_curves=False,
-    plot_caustics=False,
+    include_critical_curves=False,
+    include_caustics=False,
     as_subplot=False,
     units="arcsec",
     kpc_per_arcsec=None,
@@ -62,8 +62,8 @@ def profile_image(
         lines = plotter_util.get_critical_curve_and_caustic(
             obj=galaxy,
             grid=grid,
-            plot_critical_curves=plot_critical_curves,
-            plot_caustics=plot_caustics,
+            include_critical_curves=include_critical_curves,
+            include_caustics=include_caustics,
         )
     else:
 
@@ -109,8 +109,8 @@ def convergence(
     grid,
     mask=None,
     positions=None,
-    plot_critical_curves=False,
-    plot_caustics=False,
+    include_critical_curves=False,
+    include_caustics=False,
     as_subplot=False,
     units="arcsec",
     kpc_per_arcsec=None,
@@ -155,8 +155,8 @@ def convergence(
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
-        plot_critical_curves=plot_critical_curves,
-        plot_caustics=plot_caustics,
+        include_critical_curves=include_critical_curves,
+        include_caustics=include_caustics,
     )
 
     aa.plot.array(
@@ -199,8 +199,8 @@ def potential(
     grid,
     mask=None,
     positions=None,
-    plot_critical_curves=False,
-    plot_caustics=False,
+    include_critical_curves=False,
+    include_caustics=False,
     as_subplot=False,
     units="arcsec",
     kpc_per_arcsec=None,
@@ -245,8 +245,8 @@ def potential(
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
-        plot_critical_curves=plot_critical_curves,
-        plot_caustics=plot_caustics,
+        include_critical_curves=include_critical_curves,
+        include_caustics=include_caustics,
     )
 
     aa.plot.array(
@@ -289,8 +289,8 @@ def deflections_y(
     grid,
     mask=None,
     positions=None,
-    plot_critical_curves=False,
-    plot_caustics=False,
+    include_critical_curves=False,
+    include_caustics=False,
     as_subplot=False,
     units="arcsec",
     kpc_per_arcsec=None,
@@ -336,8 +336,8 @@ def deflections_y(
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
-        plot_critical_curves=plot_critical_curves,
-        plot_caustics=plot_caustics,
+        include_critical_curves=include_critical_curves,
+        include_caustics=include_caustics,
     )
 
     aa.plot.array(
@@ -380,8 +380,8 @@ def deflections_x(
     grid,
     mask=None,
     positions=None,
-    plot_critical_curves=False,
-    plot_caustics=False,
+    include_critical_curves=False,
+    include_caustics=False,
     as_subplot=False,
     units="arcsec",
     kpc_per_arcsec=None,
@@ -427,8 +427,8 @@ def deflections_x(
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
-        plot_critical_curves=plot_critical_curves,
-        plot_caustics=plot_caustics,
+        include_critical_curves=include_critical_curves,
+        include_caustics=include_caustics,
     )
 
     aa.plot.array(
@@ -471,8 +471,8 @@ def magnification(
     grid,
     mask=None,
     positions=None,
-    plot_critical_curves=False,
-    plot_caustics=False,
+    include_critical_curves=False,
+    include_caustics=False,
     as_subplot=False,
     units="arcsec",
     kpc_per_arcsec=None,
@@ -517,8 +517,8 @@ def magnification(
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         grid=grid,
-        plot_critical_curves=plot_critical_curves,
-        plot_caustics=plot_caustics,
+        include_critical_curves=include_critical_curves,
+        include_caustics=include_caustics,
     )
 
     aa.plot.array(
