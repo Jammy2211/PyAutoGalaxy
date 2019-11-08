@@ -191,11 +191,11 @@ def subplot(
 def individuals(
     fit,
     positions=None,
-    should_plot_image=False,
-    should_plot_noise_map=False,
-    should_plot_model_image=False,
-    should_plot_residual_map=False,
-    should_plot_chi_squared_map=False,
+    plot_image=False,
+    plot_noise_map=False,
+    plot_model_image=False,
+    plot_residual_map=False,
+    plot_chi_squared_map=False,
     units="kpc",
     output_path=None,
     output_format="show",
@@ -203,7 +203,7 @@ def individuals(
 
     kpc_per_arcsec = None
 
-    if should_plot_image:
+    if plot_image:
 
         galaxy_data_array(
             galaxy_data=fit.galaxy_data,
@@ -215,7 +215,7 @@ def individuals(
             output_format=output_format,
         )
 
-    if should_plot_noise_map:
+    if plot_noise_map:
 
         aa.plot.fit_imaging.noise_map(
             fit=fit,
@@ -227,7 +227,7 @@ def individuals(
             output_format=output_format,
         )
 
-    if should_plot_model_image:
+    if plot_model_image:
 
         aa.plot.fit_imaging.model_image(
             fit=fit,
@@ -239,7 +239,7 @@ def individuals(
             output_format=output_format,
         )
 
-    if should_plot_residual_map:
+    if plot_residual_map:
 
         aa.plot.fit_imaging.residual_map(
             fit=fit,
@@ -250,7 +250,7 @@ def individuals(
             output_format=output_format,
         )
 
-    if should_plot_chi_squared_map:
+    if plot_chi_squared_map:
 
         aa.plot.fit_imaging.chi_squared_map(
             fit=fit,
