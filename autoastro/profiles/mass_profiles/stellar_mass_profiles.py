@@ -3,6 +3,7 @@ from pyquad import quad_grid
 import numpy as np
 
 import autofit as af
+from autoarray.structures import arrays
 from autoarray.structures import grids
 from autoastro import dimensions as dim
 from autoastro.profiles import geometry_profiles
@@ -70,6 +71,11 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile):
 
     def convergence_func(self, radius):
         return self.mass_to_light_ratio * self.intensity_at_radius(radius)
+
+    def potential_from_grid(self, grid):
+        return arrays.Array.manual_1d(
+            array=np.zeros(shape=grid.sub_shape_1d), shape_2d=grid.sub_shape_2d
+        )
 
     @property
     def ellipticity_rescale(self):

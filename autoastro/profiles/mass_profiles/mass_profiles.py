@@ -27,10 +27,6 @@ class MassProfile(lensing.LensingObject):
     ):
         return ["Mass Profile = {}\n".format(self.__class__.__name__)]
 
-    @property
-    def unit_mass(self):
-        return "angular"
-
 # noinspection PyAbstractClass
 class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
     @af.map_types

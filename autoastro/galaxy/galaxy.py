@@ -296,6 +296,16 @@ class Galaxy(ModelObject, lensing.LensingObject):
         else:
             raise exc.GalaxyException("You cannot perform a mass-based calculation on a galaxy which does not have a mass-profile")
 
+    @dim.convert_units_to_input_units
+    def average_convergence_of_1_radius_in_units(
+            self,
+            unit_length="arcsec",
+            cosmology=cosmo.Planck15,
+            **kwargs,
+    ):
+        return sum([mass_profile.average_convergence_of_1_radius_in_units(unit_length=unit_length, redshift_profile=self.redshift, cosmology=cosmology, kwargs=kwargs)
+                    for mass_profile in self.mass_profiles])
+
     def convergence_from_grid(self, grid):
         """Compute the summed convergence of the galaxy's mass profiles using a grid \
         of Cartesian (y,x) coordinates.
@@ -371,17 +381,6 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return grid.mapping.grid_from_sub_grid_1d(
             sub_grid_1d=np.full((grid.sub_shape_1d, 2), 0.0)
         )
-
-    @dim.convert_units_to_input_units
-    def average_convergence_of_1_radius_in_units(
-            self,
-            unit_length="arcsec",
-            redshift_profile=None,
-            cosmology=cosmo.Planck15,
-            **kwargs,
-    ):
-        return sum([mass_profile.average_convergence_of_1_radius_in_units(unit_length=unit_length, redshift_profile=redshift_profile, cosmology=cosmology, kwargs=kwargs)
-                    for mass_profile in self.mass_profiles])
 
     def summarize_in_units(
         self,

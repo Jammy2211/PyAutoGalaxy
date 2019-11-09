@@ -38,7 +38,7 @@ class LensingObject(object):
     def mass_within_circle_in_units(
             self,
             radius: dim.Length,
-            unit_mass="solMass",
+            unit_mass="angular",
             redshift_profile=None,
             redshift_source=None,
             cosmology=cosmo.Planck15,
@@ -49,8 +49,8 @@ class LensingObject(object):
 
         The following units for mass can be specified and output:
 
-        - Dimensionless angular units (default) - 'solMass'.
-        - Solar masses - 'solMass' (multiplies the angular mass by the critical surface mass density).
+        - Dimensionless angular units (default) - 'angular'.
+        - Solar masses - 'angular' (multiplies the angular mass by the critical surface mass density).
 
         Parameters
         ----------
@@ -88,7 +88,7 @@ class LensingObject(object):
             inner_annuli_radius: dim.Length,
             outer_annuli_radius: dim.Length,
             unit_length="arcsec",
-            unit_mass="solMass",
+            unit_mass="angular",
             redshift_profile=None,
             redshift_source=None,
             cosmology=cosmo.Planck15,
@@ -118,7 +118,6 @@ class LensingObject(object):
             redshift_source=redshift_source,
             unit_mass=unit_mass,
             cosmology=cosmology,
-            kwargs=kwargs,
         )
 
         inner_mass = self.mass_within_circle_in_units(
@@ -127,7 +126,6 @@ class LensingObject(object):
             redshift_source=redshift_source,
             unit_mass=unit_mass,
             cosmology=cosmology,
-            kwargs=kwargs,
         )
 
         return dim.MassOverLength2(
@@ -165,7 +163,6 @@ class LensingObject(object):
                         radius=radius,
                         redshift_profile=redshift_profile,
                         cosmology=cosmology,
-                        kwargs=kwargs
                     )
                     - np.pi * radius ** 2.0
             )
@@ -187,11 +184,11 @@ class LensingObject(object):
             cosmology=cosmo.Planck15,
             **kwargs,
     ):
+
         einstein_radius = self.average_convergence_of_1_radius_in_units(
             unit_length=unit_length,
             redshift_profile=redshift_profile,
             cosmology=cosmology,
-            kwargs=kwargs,
         )
 
         return dim.Length(einstein_radius, unit_length)
@@ -199,17 +196,17 @@ class LensingObject(object):
     @dim.convert_units_to_input_units
     def einstein_mass_in_units(
             self,
-            unit_mass="solMass",
+            unit_mass="angular",
             redshift_profile=None,
             redshift_source=None,
             cosmology=cosmo.Planck15,
             **kwargs,
     ):
+
         einstein_radius = self.einstein_radius_in_units(
             unit_length=self.unit_length,
             redshift_profile=redshift_profile,
             cosmology=cosmology,
-            kwargs=kwargs,
         )
 
         return self.mass_within_circle_in_units(
@@ -218,7 +215,6 @@ class LensingObject(object):
             redshift_profile=redshift_profile,
             redshift_source=redshift_source,
             cosmology=cosmology,
-            kwargs=kwargs,
         )
 
     def deflections_via_potential_from_grid(self, grid):

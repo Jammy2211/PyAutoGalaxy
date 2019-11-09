@@ -40,6 +40,9 @@ def convert_units_to_input_units(func):
             The DimensionsProfile
         """
 
+        # if "method_called" in kwargs:
+        #     return func(obj, *args, **kwargs)
+
         # Extract units of calculation, to convert the input variables and profile to use these units.
 
         unit_length = (
@@ -54,12 +57,17 @@ def convert_units_to_input_units(func):
 
         # Extract input values which are used for conversions
 
-        cosmology = kwargs["cosmology"] if "cosmology" in kwargs else cosmo.Planck15
+        if hasattr(obj, "cosmology"):
+            cosmology = obj.cosmology
+        elif "cosmology" in kwargs:
+            cosmology = kwargs["cosmology"]
+        else:
+            cosmology = cosmo.Planck15
 
-        if "redshift_profile" in kwargs:
-            redshift_object = kwargs["redshift_profile"]
-        elif hasattr(obj, "redshift"):
+        if hasattr(obj, "redshift"):
             redshift_object = obj.redshift
+        elif "redshift_profile" in kwargs:
+            redshift_object = kwargs["redshift_profile"]
         else:
             redshift_object = None
 

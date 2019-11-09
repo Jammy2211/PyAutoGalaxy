@@ -12,54 +12,84 @@ class TestUnits:
 
     def test__light_profiles_conversions(self):
 
-        profile = aast.lp.EllipticalGaussian(
+        profile_0 = aast.lp.EllipticalGaussian(
             centre=(aast.dim.Length(value=3.0, unit_length="arcsec"), aast.dim.Length(value=3.0, unit_length="arcsec")),
                     intensity=aast.dim.Luminosity(value=2.0, unit_luminosity="eps"),
         )
 
-        galaxy = aast.galaxy(light=profile, redshift=1.0)
+        profile_1 = aast.lp.EllipticalGaussian(
+            centre=(aast.dim.Length(value=4.0, unit_length="arcsec"), aast.dim.Length(value=4.0, unit_length="arcsec")),
+                    intensity=aast.dim.Luminosity(value=5.0, unit_luminosity="eps"),
+        )
 
-        assert galaxy.light.centre == (3.0, 3.0)
-        assert galaxy.light.unit_length == "arcsec"
-        assert galaxy.light.intensity == 2.0
-        assert galaxy.light.intensity.unit_luminosity == "eps"
+        galaxy = aast.galaxy(light_0=profile_0, light_1=profile_1, redshift=1.0)
+
+        assert galaxy.light_0.centre == (3.0, 3.0)
+        assert galaxy.light_0.unit_length == "arcsec"
+        assert galaxy.light_0.intensity == 2.0
+        assert galaxy.light_0.intensity.unit_luminosity == "eps"
+        assert galaxy.light_1.centre == (4.0, 4.0)
+        assert galaxy.light_1.unit_length == "arcsec"
+        assert galaxy.light_1.intensity == 5.0
+        assert galaxy.light_1.intensity.unit_luminosity == "eps"
 
         galaxy = galaxy.new_object_with_units_converted(unit_length='kpc', kpc_per_arcsec=2.0, unit_luminosity="counts", exposure_time=0.5)
 
-        assert galaxy.light.centre == (6.0, 6.0)
-        assert galaxy.light.unit_length == "kpc"
-        assert galaxy.light.intensity == 1.0
-        assert galaxy.light.intensity.unit_luminosity == "counts"
+        assert galaxy.light_0.centre == (6.0, 6.0)
+        assert galaxy.light_0.unit_length == "kpc"
+        assert galaxy.light_0.intensity == 1.0
+        assert galaxy.light_0.intensity.unit_luminosity == "counts"
+        assert galaxy.light_1.centre == (8.0, 8.0)
+        assert galaxy.light_1.unit_length == "kpc"
+        assert galaxy.light_1.intensity == 2.5
+        assert galaxy.light_1.intensity.unit_luminosity == "counts"
 
     def test__mass_profiles_conversions(self):
 
-        profile = aast.mp.EllipticalSersic(
+        profile_0 = aast.mp.EllipticalSersic(
             centre=(aast.dim.Length(value=3.0, unit_length="arcsec"), aast.dim.Length(value=3.0, unit_length="arcsec")),
                     intensity=aast.dim.Luminosity(value=2.0, unit_luminosity="eps"),
             mass_to_light_ratio=aast.dim.MassOverLuminosity(value=5.0, unit_mass='angular', unit_luminosity='eps')
         )
 
-        galaxy = aast.galaxy(mass=profile, redshift=1.0)
+        profile_1 = aast.mp.EllipticalSersic(
+            centre=(aast.dim.Length(value=4.0, unit_length="arcsec"), aast.dim.Length(value=4.0, unit_length="arcsec")),
+                    intensity=aast.dim.Luminosity(value=5.0, unit_luminosity="eps"),
+            mass_to_light_ratio=aast.dim.MassOverLuminosity(value=10.0, unit_mass='angular', unit_luminosity='eps')
+        )
 
-        assert galaxy.mass.centre == (3.0, 3.0)
-        assert galaxy.mass.unit_length == "arcsec"
-        assert galaxy.mass.intensity == 2.0
-        assert galaxy.mass.intensity.unit_luminosity == "eps"
-        assert galaxy.mass.mass_to_light_ratio == 5.0
-        assert galaxy.mass.mass_to_light_ratio.unit_mass == "angular"
+        galaxy = aast.galaxy(mass_0=profile_0, mass_1=profile_1, redshift=1.0)
+
+        assert galaxy.mass_0.centre == (3.0, 3.0)
+        assert galaxy.mass_0.unit_length == "arcsec"
+        assert galaxy.mass_0.intensity == 2.0
+        assert galaxy.mass_0.intensity.unit_luminosity == "eps"
+        assert galaxy.mass_0.mass_to_light_ratio == 5.0
+        assert galaxy.mass_0.mass_to_light_ratio.unit_mass == "angular"
+        assert galaxy.mass_1.centre == (4.0, 4.0)
+        assert galaxy.mass_1.unit_length == "arcsec"
+        assert galaxy.mass_1.intensity == 5.0
+        assert galaxy.mass_1.intensity.unit_luminosity == "eps"
+        assert galaxy.mass_1.mass_to_light_ratio == 10.0
+        assert galaxy.mass_1.mass_to_light_ratio.unit_mass == "angular"
 
         galaxy = galaxy.new_object_with_units_converted(
             unit_length='kpc', kpc_per_arcsec=2.0,
             unit_luminosity="counts", exposure_time=0.5,
         unit_mass="solMass", critical_surface_density=3.0)
 
-        assert galaxy.mass.centre == (6.0, 6.0)
-        assert galaxy.mass.unit_length == "kpc"
-        assert galaxy.mass.intensity == 1.0
-        assert galaxy.mass.intensity.unit_luminosity == "counts"
-        assert galaxy.mass.mass_to_light_ratio == 30.0
-        assert galaxy.mass.mass_to_light_ratio.unit_mass == "solMass"
-
+        assert galaxy.mass_0.centre == (6.0, 6.0)
+        assert galaxy.mass_0.unit_length == "kpc"
+        assert galaxy.mass_0.intensity == 1.0
+        assert galaxy.mass_0.intensity.unit_luminosity == "counts"
+        assert galaxy.mass_0.mass_to_light_ratio == 30.0
+        assert galaxy.mass_0.mass_to_light_ratio.unit_mass == "solMass"
+        assert galaxy.mass_1.centre == (8.0, 8.0)
+        assert galaxy.mass_1.unit_length == "kpc"
+        assert galaxy.mass_1.intensity == 2.5
+        assert galaxy.mass_1.intensity.unit_luminosity == "counts"
+        assert galaxy.mass_1.mass_to_light_ratio == 60.0
+        assert galaxy.mass_1.mass_to_light_ratio.unit_mass == "solMass"
 
 class TestLightProfiles(object):
     class TestProfileImage:
