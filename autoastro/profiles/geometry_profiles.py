@@ -140,7 +140,7 @@ class TransformedGrid(grids.AbstractGrid):
     pass
 
 
-class GeometryProfile(dim.DimensionsObject):
+class GeometryProfile(dim.DimensionsProfile):
     @af.map_types
     def __init__(self, centre: dim.Position = (0.0, 0.0)):
         """An abstract geometry profile, which describes profiles with y and x centre Cartesian coordinates

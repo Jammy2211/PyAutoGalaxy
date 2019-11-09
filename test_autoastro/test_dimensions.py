@@ -361,7 +361,7 @@ class TestMassOverLength3(object):
             unit_arcsec.convert(unit_length="lol", unit_mass="solMass")
 
 
-class MockDimensionsObject(aast.dim.DimensionsObject):
+class MockDimensionsProfile(aast.dim.DimensionsProfile):
     def __init__(
         self,
         position: aast.dim.Position = None,
@@ -372,7 +372,7 @@ class MockDimensionsObject(aast.dim.DimensionsObject):
         mass_over_luminosity: aast.dim.MassOverLuminosity = None,
     ):
 
-        super(MockDimensionsObject, self).__init__()
+        super(MockDimensionsProfile, self).__init__()
 
         self.position = position
         self.param_float = param_float
@@ -424,142 +424,81 @@ class MockDimensionsObject(aast.dim.DimensionsObject):
 
 class TestDimensionsProfile(object):
     class TestUnitProperties(object):
-        def test__unit_length__extracted_from_profile(self):
-
-            profile = MockDimensionsObject(
-                length=aast.dim.Length(value=3.0, unit_length="arcsec")
-            )
+        def test__extracts_length_correctly__raises_error_if_different_lengths_input(
+                self
+        ):
+            profile = MockDimensionsProfile(
+                position=(
+                aast.dim.Length(value=3.0, unit_length="arcsec"), aast.dim.Length(value=3.0, unit_length="arcsec")),
+                length=aast.dim.Length(3.0, "arcsec"))
 
             assert profile.unit_length == "arcsec"
 
-            profile = MockDimensionsObject(
-                length=aast.dim.Length(value=3.0, unit_length="kpc")
-            )
+            profile = MockDimensionsProfile(
+                position=(
+                    aast.dim.Length(value=3.0, unit_length="kpc"), aast.dim.Length(value=3.0, unit_length="kpc")),
+                length=aast.dim.Length(3.0, "kpc"))
 
             assert profile.unit_length == "kpc"
 
-            profile = MockDimensionsObject(length=1.0)
+            with pytest.raises(exc.UnitsException):
+                profile = MockDimensionsProfile(
+                    position=(
+                        aast.dim.Length(value=3.0, unit_length="kpc"), aast.dim.Length(value=3.0, unit_length="kpc")),
+                    length=aast.dim.Length(3.0, "arcsec"))
 
-            assert profile.unit_length == None
+                profile.unit_length
 
-        def test__unit_luminosity__extracted_from_profile(self):
-
-            profile = MockDimensionsObject(
-                luminosity=aast.dim.Luminosity(value=3.0, unit_luminosity="eps"),
-                mass_over_luminosity=aast.dim.MassOverLuminosity(
-                    value=3.0, unit_luminosity="eps"
-                ),
-            )
-
-            assert profile.unit_luminosity == "eps"
-
-            profile = MockDimensionsObject(
-                luminosity=1.0,
-                mass_over_luminosity=aast.dim.MassOverLuminosity(
-                    value=3.0, unit_luminosity="eps"
-                ),
-            )
+        def test__extracts_luminosity_correctly__raises_error_if_different_luminosities(
+                self
+        ):
+            profile = MockDimensionsProfile(
+                luminosity=aast.dim.Luminosity(3.0, "eps"),
+                mass_over_luminosity=aast.dim.MassOverLuminosity(value=1.0, unit_luminosity="eps"))
 
             assert profile.unit_luminosity == "eps"
 
-            profile = MockDimensionsObject(
-                luminosity=aast.dim.Luminosity(value=3.0, unit_luminosity="eps"),
-                mass_over_luminosity=1.0,
-            )
-
-            assert profile.unit_luminosity == "eps"
-
-            profile = MockDimensionsObject(
-                luminosity=aast.dim.Luminosity(value=3.0, unit_luminosity="counts"),
-                mass_over_luminosity=aast.dim.MassOverLuminosity(
-                    value=3.0, unit_luminosity="counts"
-                ),
-            )
+            profile = MockDimensionsProfile(
+                luminosity=aast.dim.Luminosity(3.0, "counts"),
+                mass_over_luminosity=aast.dim.MassOverLuminosity(value=1.0, unit_luminosity="counts"))
 
             assert profile.unit_luminosity == "counts"
 
-            profile = MockDimensionsObject(
-                luminosity=1.0,
-                mass_over_luminosity=aast.dim.MassOverLuminosity(
-                    value=3.0, unit_luminosity="counts"
-                ),
-            )
+            with pytest.raises(exc.UnitsException):
+                profile = MockDimensionsProfile(
+                    luminosity=aast.dim.Luminosity(3.0, "eps"),
+                    mass_over_luminosity=aast.dim.MassOverLuminosity(value=1.0, unit_luminosity="counts"))
 
-            assert profile.unit_luminosity == "counts"
+                profile.unit_luminosity
 
-            profile = MockDimensionsObject(
-                luminosity=aast.dim.Luminosity(value=3.0, unit_luminosity="counts"),
-                mass_over_luminosity=1.0,
-            )
-
-            assert profile.unit_luminosity == "counts"
-
-            profile = MockDimensionsObject(luminosity=1.0, mass_over_luminosity=1.0)
-
-            assert profile.unit_luminosity == None
-
-        def test__unit_mass__extracted_from_profile(self):
-
-            profile = MockDimensionsObject(
-                mass=aast.dim.Mass(value=3.0, unit_mass="angular"),
-                mass_over_luminosity=aast.dim.MassOverLuminosity(
-                    value=3.0, unit_mass="angular"
-                ),
-            )
+        def test__extracts_mass_correctly__raises_error_if_different_mass(
+                self
+        ):
+            profile = MockDimensionsProfile(
+                mass=aast.dim.Mass(3.0, "angular"),
+                mass_over_luminosity=aast.dim.MassOverLuminosity(value=1.0, unit_mass="angular"))
 
             assert profile.unit_mass == "angular"
 
-            profile = MockDimensionsObject(
-                mass=1.0,
-                mass_over_luminosity=aast.dim.MassOverLuminosity(
-                    value=3.0, unit_mass="angular"
-                ),
-            )
-
-            assert profile.unit_mass == "angular"
-
-            profile = MockDimensionsObject(
-                mass=aast.dim.Mass(value=3.0, unit_mass="angular"),
-                mass_over_luminosity=1.0,
-            )
-
-            assert profile.unit_mass == "angular"
-
-            profile = MockDimensionsObject(
-                mass=aast.dim.Mass(value=3.0, unit_mass="solMass"),
-                mass_over_luminosity=aast.dim.MassOverLuminosity(
-                    value=3.0, unit_mass="solMass"
-                ),
-            )
+            profile = MockDimensionsProfile(
+                mass=aast.dim.Mass(3.0, "solMass"),
+                mass_over_luminosity=aast.dim.MassOverLuminosity(value=1.0, unit_mass="solMass"))
 
             assert profile.unit_mass == "solMass"
 
-            profile = MockDimensionsObject(
-                mass=1.0,
-                mass_over_luminosity=aast.dim.MassOverLuminosity(
-                    value=3.0, unit_mass="solMass"
-                ),
-            )
+            with pytest.raises(exc.UnitsException):
+                profile = MockDimensionsProfile(
+                    mass=aast.dim.Mass(3.0, "angular"),
+                    mass_over_luminosity=aast.dim.MassOverLuminosity(value=1.0, unit_mass="solMass"))
 
-            assert profile.unit_mass == "solMass"
-
-            profile = MockDimensionsObject(
-                mass=aast.dim.Mass(value=3.0, unit_mass="solMass"),
-                mass_over_luminosity=1.0,
-            )
-
-            assert profile.unit_mass == "solMass"
-
-            profile = MockDimensionsObject(mass=1.0, mass_over_luminosity=1.0)
-
-            assert profile.unit_mass == None
+                profile.unit_mass
 
     class TestUnitConversions(object):
         def test__arcsec_to_kpc_conversions_of_length__float_and_tuple_length__conversion_converts_values(
             self
         ):
 
-            profile_arcsec = MockDimensionsObject(
+            profile_arcsec = MockDimensionsProfile(
                 position=(
                     aast.dim.Length(1.0, "arcsec"),
                     aast.dim.Length(2.0, "arcsec"),
@@ -658,7 +597,7 @@ class TestDimensionsProfile(object):
             self
         ):
 
-            profile_arcsec = MockDimensionsObject(
+            profile_arcsec = MockDimensionsProfile(
                 position=(
                     aast.dim.Length(1.0, "arcsec"),
                     aast.dim.Length(2.0, "arcsec"),
@@ -679,7 +618,7 @@ class TestDimensionsProfile(object):
             self
         ):
 
-            profile_eps = MockDimensionsObject(
+            profile_eps = MockDimensionsProfile(
                 position=(
                     aast.dim.Length(1.0, "arcsec"),
                     aast.dim.Length(2.0, "arcsec"),
@@ -778,7 +717,7 @@ class TestDimensionsProfile(object):
             self
         ):
 
-            profile_eps = MockDimensionsObject(
+            profile_eps = MockDimensionsProfile(
                 position=(
                     aast.dim.Length(1.0, "arcsec"),
                     aast.dim.Length(2.0, "arcsec"),
@@ -806,7 +745,7 @@ class TestDimensionsProfile(object):
             self
         ):
 
-            profile_angular = MockDimensionsObject(
+            profile_angular = MockDimensionsProfile(
                 position=(
                     aast.dim.Length(1.0, "arcsec"),
                     aast.dim.Length(2.0, "arcsec"),
@@ -905,7 +844,7 @@ class TestDimensionsProfile(object):
             self
         ):
 
-            profile_angular = MockDimensionsObject(
+            profile_angular = MockDimensionsProfile(
                 position=(
                     aast.dim.Length(1.0, "arcsec"),
                     aast.dim.Length(2.0, "arcsec"),
@@ -935,7 +874,7 @@ class TestUnitCheckConversionWrapper(object):
         self
     ):
 
-        profile = MockDimensionsObject(length=aast.dim.Length(3.0, "arcsec"))
+        profile = MockDimensionsProfile(length=aast.dim.Length(3.0, "arcsec"))
 
         cosmo = mock_cosmology.MockCosmology(kpc_per_arcsec=2.0)
 
@@ -972,7 +911,7 @@ class TestUnitCheckConversionWrapper(object):
         assert length.unit_length == "kpc"
         assert length == 7.0
 
-        profile = MockDimensionsObject(length=aast.dim.Length(3.0, "kpc"))
+        profile = MockDimensionsProfile(length=aast.dim.Length(3.0, "kpc"))
 
         # length: kpc -> kpc, stays 3.0,  length_input: kpc -> kpc, stays 1.0
 
@@ -1014,7 +953,7 @@ class TestUnitCheckConversionWrapper(object):
         self
     ):
 
-        profile = MockDimensionsObject(luminosity=aast.dim.Luminosity(3.0, "eps"))
+        profile = MockDimensionsProfile(luminosity=aast.dim.Luminosity(3.0, "eps"))
 
         cosmo = mock_cosmology.MockCosmology()
 
@@ -1053,7 +992,7 @@ class TestUnitCheckConversionWrapper(object):
         assert luminosity.unit_luminosity == "counts"
         assert luminosity == 7.0
 
-        profile = MockDimensionsObject(luminosity=aast.dim.Luminosity(3.0, "counts"))
+        profile = MockDimensionsProfile(luminosity=aast.dim.Luminosity(3.0, "counts"))
 
         # luminosity: counts -> counts, stays 3.0,  luminosity_input: counts -> counts, stays 1.0
 
@@ -1098,7 +1037,7 @@ class TestUnitCheckConversionWrapper(object):
         self
     ):
 
-        profile = MockDimensionsObject(
+        profile = MockDimensionsProfile(
             length=aast.dim.Length(1.0, "arcsec"), mass=aast.dim.Mass(3.0, "angular")
         )
 
@@ -1143,7 +1082,7 @@ class TestUnitCheckConversionWrapper(object):
         assert mass.unit_mass == "solMass"
         assert mass == 7.0
 
-        profile = MockDimensionsObject(
+        profile = MockDimensionsProfile(
             length=aast.dim.Length(1.0, "arcsec"), mass=aast.dim.Mass(3.0, "solMass")
         )
 

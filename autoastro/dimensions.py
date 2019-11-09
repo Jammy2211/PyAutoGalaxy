@@ -3,8 +3,15 @@ import typing
 from functools import wraps
 from astropy import cosmology as cosmo
 
+
+import inspect
+import typing_inspect
+
+from decorator import decorator
+
 from autoastro.util import cosmology_util
 from autoastro import exc
+
 
 def convert_units_to_input_units(func):
     """
@@ -20,12 +27,12 @@ def convert_units_to_input_units(func):
     """
 
     @wraps(func)
-    def wrapper(profile, *args, **kwargs):
+    def wrapper(obj, *args, **kwargs):
         """
 
         Parameters
         ----------
-        profile : DimensionsObject
+        obj : DimensionsProfile
             The profiles that owns the function
 
         Returns
@@ -36,21 +43,26 @@ def convert_units_to_input_units(func):
         # Extract units of calculation, to convert the input variables and profile to use these units.
 
         unit_length = (
-            kwargs["unit_length"] if "unit_length" in kwargs else profile.unit_length
+            kwargs["unit_length"] if "unit_length" in kwargs else obj.unit_length
         )
         unit_luminosity = (
             kwargs["unit_luminosity"]
             if "unit_luminosity" in kwargs
-            else profile.unit_luminosity
+            else obj.unit_luminosity
         )
-        unit_mass = kwargs["unit_mass"] if "unit_mass" in kwargs else profile.unit_mass
+        unit_mass = kwargs["unit_mass"] if "unit_mass" in kwargs else obj.unit_mass
 
         # Extract input values which are used for conversions
 
         cosmology = kwargs["cosmology"] if "cosmology" in kwargs else cosmo.Planck15
-        redshift_profile = (
-            kwargs["redshift_profile"] if "redshift_profile" in kwargs else None
-        )
+
+        if "redshift_profile" in kwargs:
+            redshift_object = kwargs["redshift_profile"]
+        elif hasattr(obj, "redshift"):
+            redshift_object = obj.redshift
+        else:
+            redshift_object = None
+
         redshift_source = (
             kwargs["redshift_source"] if "redshift_source" in kwargs else None
         )
@@ -63,10 +75,10 @@ def convert_units_to_input_units(func):
 
         # Use cosmology and redshifts to compute conversion factors.
 
-        if redshift_profile is not None and cosmology is not None:
+        if redshift_object is not None and cosmology is not None:
 
             kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from_redshift_and_cosmology(
-                redshift=redshift_profile, cosmology=cosmology
+                redshift=redshift_object, cosmology=cosmology
             )
 
         else:
@@ -74,7 +86,7 @@ def convert_units_to_input_units(func):
             kpc_per_arcsec = None
 
         if (
-            redshift_profile is not None
+            redshift_object is not None
             and redshift_source is not None
             and cosmology is not None
             and unit_length is not None
@@ -82,7 +94,7 @@ def convert_units_to_input_units(func):
         ):
 
             critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from_redshifts_and_cosmology(
-                redshift_0=redshift_profile,
+                redshift_0=redshift_object,
                 redshift_1=redshift_source,
                 cosmology=cosmology,
                 unit_length=unit_length,
@@ -94,7 +106,7 @@ def convert_units_to_input_units(func):
             critical_surface_density = None
 
         if (
-            redshift_profile is not None
+            redshift_object is not None
             and cosmology is not None
             and unit_length is not None
             and unit_mass is not None
@@ -102,7 +114,7 @@ def convert_units_to_input_units(func):
         ):
 
             if redshift_of_cosmic_average_density is "profile":
-                redshift_calc = redshift_profile
+                redshift_calc = redshift_object
             elif redshift_of_cosmic_average_density is "local":
                 redshift_calc = 0.0
             else:
@@ -169,7 +181,7 @@ def convert_units_to_input_units(func):
 
         # Convert profile to input parameter units
 
-        profile = profile.new_object_with_units_converted(
+        obj = obj.new_object_with_units_converted(
             unit_length=unit_length,
             unit_luminosity=unit_luminosity,
             unit_mass=unit_mass,
@@ -187,19 +199,59 @@ def convert_units_to_input_units(func):
         if cosmic_average_density is not None:
             kwargs["cosmic_average_density"] = cosmic_average_density
 
-        return func(profile, *args, **kwargs)
+        return func(obj, *args, **kwargs)
 
     return wrapper
 
 
-class DimensionsObject(object):
+class DimensionsProfile(object):
+    def __init__(self):
+
+        pass
+
+    def new_object_with_units_converted(
+        self,
+        unit_length=None,
+        unit_luminosity=None,
+        unit_mass=None,
+        kpc_per_arcsec=None,
+        exposure_time=None,
+        critical_surface_density=None,
+        **kwargs
+    ):
+
+        constructor_args = inspect.getfullargspec(self.__init__).args
+
+        def convert(value):
+            if unit_length is not None:
+                if isinstance(value, Length):
+                    return value.convert(unit_length, kpc_per_arcsec)
+                if isinstance(value, tuple):
+                    return tuple(convert(item) for item in value)
+            if unit_luminosity is not None and isinstance(value, Luminosity):
+                return value.convert(unit_luminosity, exposure_time)
+            if unit_mass is not None and isinstance(value, Mass):
+                return value.convert(unit_mass, critical_surface_density)
+            if (unit_mass is not None or unit_luminosity is not None) and isinstance(
+                value, MassOverLuminosity
+            ):
+                return value.convert(
+                    unit_luminosity, unit_mass, exposure_time, critical_surface_density
+                )
+            return value
+
+        return self.__class__(
+            **{
+                key: convert(value)
+                for key, value in self.__dict__.items()
+                if key in constructor_args
+            }
+        )
 
     @property
     def unit_length(self):
 
         for attr, value in self.__dict__.items():
-            print(attr, value)
-            print(type(value[0]))
 
             if isinstance(value, tuple):
                 for tuple_value in value:

@@ -24,6 +24,9 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
         super(MassSheet, self).__init__(centre=centre)
         self.kappa = kappa
 
+    def convergence_func(self, radius):
+        return 0.0
+
     def convergence_from_grid(self, grid):
         return arrays.Array.manual_1d(
             array=np.full(shape=grid.sub_shape_1d, fill_value=self.kappa),
@@ -63,24 +66,18 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
         super(ExternalShear, self).__init__(centre=(0.0, 0.0), phi=phi, axis_ratio=1.0)
         self.magnitude = magnitude
 
-    def einstein_radius_in_units(
-        self,
-        unit_mass="solMass",
-        redshift_profile=None,
-        cosmology=cosmo.Planck15,
-        **kwargs
-    ):
+    def convergence_func(self, radius):
         return 0.0
 
-    def einstein_mass_in_units(
-        self,
-        unit_mass="solMass",
-        redshift_profile=None,
-        redshift_source=None,
-        cosmology=cosmo.Planck15,
-        **kwargs
+    @dim.convert_units_to_input_units
+    def average_convergence_of_1_radius_in_units(
+            self,
+            unit_length="arcsec",
+            redshift_profile=None,
+            cosmology=cosmo.Planck15,
+            **kwargs,
     ):
-        return 0.0
+        return dim.Length(value=0.0, unit_length=self.unit_length)
 
     def convergence_from_grid(self, grid):
         return arrays.Array.manual_1d(

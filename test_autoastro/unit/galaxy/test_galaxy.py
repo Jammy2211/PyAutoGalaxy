@@ -8,6 +8,59 @@ from autoastro import exc
 from test_autoastro.mock import mock_cosmology
 
 
+class TestUnits:
+
+    def test__light_profiles_conversions(self):
+
+        profile = aast.lp.EllipticalGaussian(
+            centre=(aast.dim.Length(value=3.0, unit_length="arcsec"), aast.dim.Length(value=3.0, unit_length="arcsec")),
+                    intensity=aast.dim.Luminosity(value=2.0, unit_luminosity="eps"),
+        )
+
+        galaxy = aast.galaxy(light=profile, redshift=1.0)
+
+        assert galaxy.light.centre == (3.0, 3.0)
+        assert galaxy.light.unit_length == "arcsec"
+        assert galaxy.light.intensity == 2.0
+        assert galaxy.light.intensity.unit_luminosity == "eps"
+
+        galaxy = galaxy.new_object_with_units_converted(unit_length='kpc', kpc_per_arcsec=2.0, unit_luminosity="counts", exposure_time=0.5)
+
+        assert galaxy.light.centre == (6.0, 6.0)
+        assert galaxy.light.unit_length == "kpc"
+        assert galaxy.light.intensity == 1.0
+        assert galaxy.light.intensity.unit_luminosity == "counts"
+
+    def test__mass_profiles_conversions(self):
+
+        profile = aast.mp.EllipticalSersic(
+            centre=(aast.dim.Length(value=3.0, unit_length="arcsec"), aast.dim.Length(value=3.0, unit_length="arcsec")),
+                    intensity=aast.dim.Luminosity(value=2.0, unit_luminosity="eps"),
+            mass_to_light_ratio=aast.dim.MassOverLuminosity(value=5.0, unit_mass='angular', unit_luminosity='eps')
+        )
+
+        galaxy = aast.galaxy(mass=profile, redshift=1.0)
+
+        assert galaxy.mass.centre == (3.0, 3.0)
+        assert galaxy.mass.unit_length == "arcsec"
+        assert galaxy.mass.intensity == 2.0
+        assert galaxy.mass.intensity.unit_luminosity == "eps"
+        assert galaxy.mass.mass_to_light_ratio == 5.0
+        assert galaxy.mass.mass_to_light_ratio.unit_mass == "angular"
+
+        galaxy = galaxy.new_object_with_units_converted(
+            unit_length='kpc', kpc_per_arcsec=2.0,
+            unit_luminosity="counts", exposure_time=0.5,
+        unit_mass="solMass", critical_surface_density=3.0)
+
+        assert galaxy.mass.centre == (6.0, 6.0)
+        assert galaxy.mass.unit_length == "kpc"
+        assert galaxy.mass.intensity == 1.0
+        assert galaxy.mass.intensity.unit_luminosity == "counts"
+        assert galaxy.mass.mass_to_light_ratio == 30.0
+        assert galaxy.mass.mass_to_light_ratio.unit_mass == "solMass"
+
+
 class TestLightProfiles(object):
     class TestProfileImage:
         def test__no_light_profiles__profile_image_returned_as_0s_of_shape_grid(
@@ -113,19 +166,6 @@ class TestLightProfiles(object):
 
             assert lp_luminosity == gal_luminosity
 
-            lp_luminosity = lp_0.luminosity_within_ellipse_in_units(
-                major_axis=radius, unit_luminosity="eps"
-            )
-            lp_luminosity += lp_1.luminosity_within_ellipse_in_units(
-                major_axis=radius, unit_luminosity="eps"
-            )
-
-            gal_luminosity = gal_x2_lp.luminosity_within_ellipse_in_units(
-                major_axis=radius, unit_luminosity="eps"
-            )
-
-            assert lp_luminosity == gal_luminosity
-
         def test__radius_unit_conversions__multiply_by_kpc_per_arcsec(
             self, lp_0, gal_x1_lp
         ):
@@ -156,16 +196,8 @@ class TestLightProfiles(object):
         def test__luminosity_unit_conversions__multiply_by_exposure_time(
             self, lp_0, gal_x1_lp
         ):
-            radius = aast.dim.Length(0.5, "arcsec")
 
-            lp_luminosity_eps = lp_0.luminosity_within_ellipse_in_units(
-                major_axis=radius, unit_luminosity="eps", exposure_time=2.0
-            )
-            gal_luminosity_eps = gal_x1_lp.luminosity_within_ellipse_in_units(
-                major_axis=radius, unit_luminosity="eps", exposure_time=2.0
-            )
-
-            assert lp_luminosity_eps == gal_luminosity_eps
+            radius=3.0
 
             lp_luminosity_counts = lp_0.luminosity_within_circle_in_units(
                 radius=radius, unit_luminosity="counts", exposure_time=2.0
@@ -181,7 +213,6 @@ class TestLightProfiles(object):
             gal_no_lp = aast.galaxy(redshift=0.5, mass=aast.mp.SphericalIsothermal())
 
             assert gal_no_lp.luminosity_within_circle_in_units(radius=1.0) == None
-            assert gal_no_lp.luminosity_within_ellipse_in_units(major_axis=1.0) == None
 
     class TestSymmetricProfiles(object):
         def test_1d_symmetry(self):
@@ -741,19 +772,6 @@ class TestMassProfiles(object):
 
             assert mp_mass == gal_mass
 
-            mp_mass = mp_0.mass_within_ellipse_in_units(
-                major_axis=radius, unit_mass="angular"
-            )
-            mp_mass += mp_1.mass_within_ellipse_in_units(
-                major_axis=radius, unit_mass="angular"
-            )
-
-            gal_mass = gal_x2_mp.mass_within_ellipse_in_units(
-                major_axis=radius, unit_mass="angular"
-            )
-
-            assert mp_mass == gal_mass
-
         def test__radius_unit_conversions__multiply_by_kpc_per_arcsec(
             self, mp_0, gal_x1_mp
         ):
@@ -806,22 +824,6 @@ class TestMassProfiles(object):
 
             radius = aast.dim.Length(0.5, "arcsec")
 
-            mp_mass_angular = mp_0.mass_within_ellipse_in_units(
-                major_axis=radius,
-                unit_mass="angular",
-                redshift_profile=0.5,
-                redshift_source=1.0,
-                cosmology=cosmology,
-            )
-
-            gal_mass_angular = gal_x1_mp.mass_within_ellipse_in_units(
-                major_axis=radius,
-                unit_mass="angular",
-                redshift_source=1.0,
-                cosmology=cosmology,
-            )
-            assert mp_mass_angular == gal_mass_angular
-
             mp_mass_sol = mp_0.mass_within_circle_in_units(
                 radius=radius,
                 unit_mass="solMass",
@@ -841,18 +843,10 @@ class TestMassProfiles(object):
         def test__no_mass_profile__returns_none(self):
             gal_no_mp = aast.galaxy(redshift=0.5, light=aast.lp.SphericalSersic())
 
-            assert (
+            with pytest.raises(exc.GalaxyException):
                 gal_no_mp.mass_within_circle_in_units(
                     radius=1.0, critical_surface_density=1.0
                 )
-                == None
-            )
-            assert (
-                gal_no_mp.mass_within_ellipse_in_units(
-                    major_axis=1.0, critical_surface_density=1.0
-                )
-                == None
-            )
 
     class TestSymmetricProfiles:
         def test_1d_symmetry(self):
@@ -1693,7 +1687,7 @@ class TestSummarizeInUnits(object):
         i += 1
         assert (
             summary_text[i]
-            == "einstein_mass                                     1.5708e+01 angular"
+            == "einstein_mass                                     2.8274e+01 angular"
         )
         i += 1
         assert (

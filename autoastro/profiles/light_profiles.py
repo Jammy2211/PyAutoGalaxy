@@ -8,41 +8,9 @@ from autofit.tools import text_util
 from autoastro.profiles import geometry_profiles
 
 import inspect
-import typing_inspect
-
-from decorator import decorator
 
 class LightProfile(object):
     """Mixin class that implements functions common to all light profiles"""
-
-    def new_object_with_units_converted(
-        self,
-        unit_length=None,
-        unit_luminosity=None,
-        kpc_per_arcsec=None,
-        exposure_time=None,
-        **kwargs,
-    ):
-
-        constructor_args = inspect.getfullargspec(self.__init__).args
-
-        def convert(value):
-            if unit_length is not None:
-                if isinstance(value, dim.Length):
-                    return value.convert(unit_length, kpc_per_arcsec)
-                if isinstance(value, tuple):
-                    return tuple(convert(item) for item in value)
-            if unit_luminosity is not None and isinstance(value, dim.Luminosity):
-                return value.convert(unit_luminosity, exposure_time)
-            return value
-
-        return self.__class__(
-            **{
-                key: convert(value)
-                for key, value in self.__dict__.items()
-                if key in constructor_args
-            }
-        )
 
     def profile_image_from_grid_radii(self, grid_radii):
         """
@@ -74,17 +42,6 @@ class LightProfile(object):
     def luminosity_within_circle_in_units(
         self,
         radius: dim.Length,
-        unit_luminosity="eps",
-        exposure_time=None,
-        redshift_profile=None,
-        cosmology=cosmo.Planck15,
-        **kwargs
-    ):
-        raise NotImplementedError()
-
-    def luminosity_within_ellipse_in_units(
-        self,
-        major_axis: dim.Length,
         unit_luminosity="eps",
         exposure_time=None,
         redshift_profile=None,
@@ -191,54 +148,18 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
             The exposure time of the observation, which converts luminosity from electrons per second units to counts.
         """
         luminosity = dim.Luminosity(
-            value=quad(self.luminosity_integral, a=0.0, b=radius, args=(1.0,))[0],
+            value=quad(self.luminosity_integral, a=0.0, b=radius)[0],
             unit_luminosity=self.unit_luminosity,
         )
         return luminosity.convert(
             unit_luminosity=unit_luminosity, exposure_time=exposure_time
         )
 
-    @dim.convert_units_to_input_units
-    def luminosity_within_ellipse_in_units(
-        self,
-        major_axis: dim.Length,
-        unit_luminosity="eps",
-        exposure_time=None,
-        redshift_profile=None,
-        cosmology=cosmo.Planck15,
-        **kwargs
-    ):
-        """Integrate the light profiles to compute the total luminosity within an ellipse of specified major axis. \
-        This is centred on the light profile's centre.
-
-        The following units for mass can be specified and output:
-
-        - Electrons per second (default) - 'eps'.
-        - Counts - 'counts' (multiplies the luminosity in electrons per second by the exposure time).
-
-        Parameters
-        ----------
-        major_axis : float
-            The major-axis radius of the ellipse.
-        unit_luminosity : str
-            The units the luminosity is returned in (eps | counts).
-        exposure_time : float or None
-            The exposure time of the observation, which converts luminosity from electrons per second units to counts.
-        """
-        luminosity = dim.Luminosity(
-            value=quad(
-                self.luminosity_integral, a=0.0, b=major_axis, args=(self.axis_ratio,)
-            )[0],
-            unit_luminosity=self.unit_luminosity,
-        )
-        return dim.Luminosity(luminosity, unit_luminosity)
-
-    def luminosity_integral(self, x, axis_ratio):
+    def luminosity_integral(self, x):
         """Routine to integrate the luminosity of an elliptical light profile.
 
         The axis ratio is set to 1.0 for computing the luminosity within a circle"""
-        r = x * axis_ratio
-        return 2 * np.pi * r * self.profile_image_from_grid_radii(x)
+        return 2 * np.pi * x * self.profile_image_from_grid_radii(x)
 
     @dim.convert_units_to_input_units
     def summarize_in_units(
