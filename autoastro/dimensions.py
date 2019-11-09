@@ -3,15 +3,8 @@ import typing
 from functools import wraps
 from astropy import cosmology as cosmo
 
-
-import inspect
-import typing_inspect
-
-from decorator import decorator
-
 from autoastro.util import cosmology_util
 from autoastro import exc
-
 
 def convert_units_to_input_units(func):
     """
@@ -32,7 +25,7 @@ def convert_units_to_input_units(func):
 
         Parameters
         ----------
-        profile : DimensionsProfile
+        profile : DimensionsObject
             The profiles that owns the function
 
         Returns
@@ -176,7 +169,7 @@ def convert_units_to_input_units(func):
 
         # Convert profile to input parameter units
 
-        profile = profile.new_profile_with_units_converted(
+        profile = profile.new_object_with_units_converted(
             unit_length=unit_length,
             unit_luminosity=unit_luminosity,
             unit_mass=unit_mass,
@@ -199,53 +192,20 @@ def convert_units_to_input_units(func):
     return wrapper
 
 
-class DimensionsProfile(object):
-    def __init__(self):
-
-        pass
-
-    def new_profile_with_units_converted(
-        self,
-        unit_length=None,
-        unit_luminosity=None,
-        unit_mass=None,
-        kpc_per_arcsec=None,
-        exposure_time=None,
-        critical_surface_density=None,
-    ):
-
-        constructor_args = inspect.getfullargspec(self.__init__).args
-
-        def convert(value):
-            if unit_length is not None:
-                if isinstance(value, Length):
-                    return value.convert(unit_length, kpc_per_arcsec)
-                if isinstance(value, tuple):
-                    return tuple(convert(item) for item in value)
-            if unit_luminosity is not None and isinstance(value, Luminosity):
-                return value.convert(unit_luminosity, exposure_time)
-            if unit_mass is not None and isinstance(value, Mass):
-                return value.convert(unit_mass, critical_surface_density)
-            if (unit_mass is not None or unit_luminosity is not None) and isinstance(
-                value, MassOverLuminosity
-            ):
-                return value.convert(
-                    unit_luminosity, unit_mass, exposure_time, critical_surface_density
-                )
-            return value
-
-        return self.__class__(
-            **{
-                key: convert(value)
-                for key, value in self.__dict__.items()
-                if key in constructor_args
-            }
-        )
+class DimensionsObject(object):
 
     @property
     def unit_length(self):
 
         for attr, value in self.__dict__.items():
+            print(attr, value)
+            print(type(value[0]))
+
+            if isinstance(value, tuple):
+                for tuple_value in value:
+                    if hasattr(tuple_value, "unit_length"):
+                        return tuple_value.unit_length
+
             if hasattr(value, "unit_length"):
                 return value.unit_length
 

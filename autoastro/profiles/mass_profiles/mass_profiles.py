@@ -10,8 +10,51 @@ from autoastro import dimensions as dim
 from autofit.tools import text_util
 from autoastro.profiles import geometry_profiles
 
+import inspect
+import typing_inspect
+
+from decorator import decorator
 
 class MassProfile(object):
+
+    def new_object_with_units_converted(
+        self,
+        unit_length=None,
+        unit_luminosity=None,
+        unit_mass=None,
+        kpc_per_arcsec=None,
+        exposure_time=None,
+        critical_surface_density=None,
+    ):
+
+        constructor_args = inspect.getfullargspec(self.__init__).args
+
+        def convert(value):
+            if unit_length is not None:
+                if isinstance(value, dim.Length):
+                    return value.convert(unit_length, kpc_per_arcsec)
+                if isinstance(value, tuple):
+                    return tuple(convert(item) for item in value)
+            if unit_luminosity is not None and isinstance(value, dim.Luminosity):
+                return value.convert(unit_luminosity, exposure_time)
+            if unit_mass is not None and isinstance(value, dim.Mass):
+                return value.convert(unit_mass, critical_surface_density)
+            if (unit_mass is not None or unit_luminosity is not None) and isinstance(
+                value, dim.MassOverLuminosity
+            ):
+                return value.convert(
+                    unit_luminosity, unit_mass, exposure_time, critical_surface_density
+                )
+            return value
+
+        return self.__class__(
+            **{
+                key: convert(value)
+                for key, value in self.__dict__.items()
+                if key in constructor_args
+            }
+        )
+
     def convergence_func(self, eta):
         raise NotImplementedError("surface_density_func should be overridden")
 

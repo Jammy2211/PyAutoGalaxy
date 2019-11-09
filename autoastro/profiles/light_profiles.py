@@ -7,9 +7,42 @@ from autoastro import dimensions as dim
 from autofit.tools import text_util
 from autoastro.profiles import geometry_profiles
 
+import inspect
+import typing_inspect
+
+from decorator import decorator
 
 class LightProfile(object):
     """Mixin class that implements functions common to all light profiles"""
+
+    def new_object_with_units_converted(
+        self,
+        unit_length=None,
+        unit_luminosity=None,
+        kpc_per_arcsec=None,
+        exposure_time=None,
+        **kwargs,
+    ):
+
+        constructor_args = inspect.getfullargspec(self.__init__).args
+
+        def convert(value):
+            if unit_length is not None:
+                if isinstance(value, dim.Length):
+                    return value.convert(unit_length, kpc_per_arcsec)
+                if isinstance(value, tuple):
+                    return tuple(convert(item) for item in value)
+            if unit_luminosity is not None and isinstance(value, dim.Luminosity):
+                return value.convert(unit_luminosity, exposure_time)
+            return value
+
+        return self.__class__(
+            **{
+                key: convert(value)
+                for key, value in self.__dict__.items()
+                if key in constructor_args
+            }
+        )
 
     def profile_image_from_grid_radii(self, grid_radii):
         """
@@ -83,6 +116,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         centre: dim.Position = (0.0, 0.0),
         axis_ratio: float = 1.0,
         phi: float = 0.0,
+        intensity: dim.Luminosity = 0.1,
     ):
         """  Abstract class for an elliptical light-profile.
 
@@ -98,6 +132,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         super(EllipticalLightProfile, self).__init__(
             centre=centre, axis_ratio=axis_ratio, phi=phi
         )
+        self.intensity = intensity
 
     def blurred_profile_image_from_grid_and_psf(self, grid, psf, blurring_grid):
 
@@ -278,10 +313,8 @@ class EllipticalGaussian(EllipticalLightProfile):
             The sigma value of the Gaussian.
         """
         super(EllipticalGaussian, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi
+            centre=centre, axis_ratio=axis_ratio, phi=phi, intensity=intensity,
         )
-
-        self.intensity = intensity
         self.sigma = sigma
 
     def profile_image_from_grid_radii(self, grid_radii):
@@ -368,9 +401,8 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
             higher value -> more concentrated).
         """
         super(AbstractEllipticalSersic, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi
+            centre=centre, axis_ratio=axis_ratio, phi=phi, intensity=intensity,
         )
-        self.intensity = intensity
         self.effective_radius = effective_radius
         self.sersic_index = sersic_index
 

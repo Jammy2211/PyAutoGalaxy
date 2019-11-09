@@ -140,7 +140,7 @@ class TransformedGrid(grids.AbstractGrid):
     pass
 
 
-class GeometryProfile(dim.DimensionsProfile):
+class GeometryProfile(dim.DimensionsObject):
     @af.map_types
     def __init__(self, centre: dim.Position = (0.0, 0.0)):
         """An abstract geometry profile, which describes profiles with y and x centre Cartesian coordinates
@@ -150,7 +150,7 @@ class GeometryProfile(dim.DimensionsProfile):
         centre : (float, float)
             The (y,x) arc-second coordinates of the profile centre.
         """
-        super(GeometryProfile, self).__init__()
+
         self.centre = centre
 
     def transform_grid_to_reference_frame(self, grid):

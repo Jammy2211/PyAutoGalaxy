@@ -361,7 +361,7 @@ class TestMassOverLength3(object):
             unit_arcsec.convert(unit_length="lol", unit_mass="solMass")
 
 
-class MockDimensionsProfile(aast.dim.DimensionsProfile):
+class MockDimensionsObject(aast.dim.DimensionsObject):
     def __init__(
         self,
         position: aast.dim.Position = None,
@@ -372,7 +372,7 @@ class MockDimensionsProfile(aast.dim.DimensionsProfile):
         mass_over_luminosity: aast.dim.MassOverLuminosity = None,
     ):
 
-        super(MockDimensionsProfile, self).__init__()
+        super(MockDimensionsObject, self).__init__()
 
         self.position = position
         self.param_float = param_float
@@ -426,25 +426,25 @@ class TestDimensionsProfile(object):
     class TestUnitProperties(object):
         def test__unit_length__extracted_from_profile(self):
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 length=aast.dim.Length(value=3.0, unit_length="arcsec")
             )
 
             assert profile.unit_length == "arcsec"
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 length=aast.dim.Length(value=3.0, unit_length="kpc")
             )
 
             assert profile.unit_length == "kpc"
 
-            profile = MockDimensionsProfile(length=1.0)
+            profile = MockDimensionsObject(length=1.0)
 
             assert profile.unit_length == None
 
         def test__unit_luminosity__extracted_from_profile(self):
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 luminosity=aast.dim.Luminosity(value=3.0, unit_luminosity="eps"),
                 mass_over_luminosity=aast.dim.MassOverLuminosity(
                     value=3.0, unit_luminosity="eps"
@@ -453,7 +453,7 @@ class TestDimensionsProfile(object):
 
             assert profile.unit_luminosity == "eps"
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 luminosity=1.0,
                 mass_over_luminosity=aast.dim.MassOverLuminosity(
                     value=3.0, unit_luminosity="eps"
@@ -462,14 +462,14 @@ class TestDimensionsProfile(object):
 
             assert profile.unit_luminosity == "eps"
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 luminosity=aast.dim.Luminosity(value=3.0, unit_luminosity="eps"),
                 mass_over_luminosity=1.0,
             )
 
             assert profile.unit_luminosity == "eps"
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 luminosity=aast.dim.Luminosity(value=3.0, unit_luminosity="counts"),
                 mass_over_luminosity=aast.dim.MassOverLuminosity(
                     value=3.0, unit_luminosity="counts"
@@ -478,7 +478,7 @@ class TestDimensionsProfile(object):
 
             assert profile.unit_luminosity == "counts"
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 luminosity=1.0,
                 mass_over_luminosity=aast.dim.MassOverLuminosity(
                     value=3.0, unit_luminosity="counts"
@@ -487,20 +487,20 @@ class TestDimensionsProfile(object):
 
             assert profile.unit_luminosity == "counts"
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 luminosity=aast.dim.Luminosity(value=3.0, unit_luminosity="counts"),
                 mass_over_luminosity=1.0,
             )
 
             assert profile.unit_luminosity == "counts"
 
-            profile = MockDimensionsProfile(luminosity=1.0, mass_over_luminosity=1.0)
+            profile = MockDimensionsObject(luminosity=1.0, mass_over_luminosity=1.0)
 
             assert profile.unit_luminosity == None
 
         def test__unit_mass__extracted_from_profile(self):
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 mass=aast.dim.Mass(value=3.0, unit_mass="angular"),
                 mass_over_luminosity=aast.dim.MassOverLuminosity(
                     value=3.0, unit_mass="angular"
@@ -509,7 +509,7 @@ class TestDimensionsProfile(object):
 
             assert profile.unit_mass == "angular"
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 mass=1.0,
                 mass_over_luminosity=aast.dim.MassOverLuminosity(
                     value=3.0, unit_mass="angular"
@@ -518,14 +518,14 @@ class TestDimensionsProfile(object):
 
             assert profile.unit_mass == "angular"
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 mass=aast.dim.Mass(value=3.0, unit_mass="angular"),
                 mass_over_luminosity=1.0,
             )
 
             assert profile.unit_mass == "angular"
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 mass=aast.dim.Mass(value=3.0, unit_mass="solMass"),
                 mass_over_luminosity=aast.dim.MassOverLuminosity(
                     value=3.0, unit_mass="solMass"
@@ -534,7 +534,7 @@ class TestDimensionsProfile(object):
 
             assert profile.unit_mass == "solMass"
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 mass=1.0,
                 mass_over_luminosity=aast.dim.MassOverLuminosity(
                     value=3.0, unit_mass="solMass"
@@ -543,14 +543,14 @@ class TestDimensionsProfile(object):
 
             assert profile.unit_mass == "solMass"
 
-            profile = MockDimensionsProfile(
+            profile = MockDimensionsObject(
                 mass=aast.dim.Mass(value=3.0, unit_mass="solMass"),
                 mass_over_luminosity=1.0,
             )
 
             assert profile.unit_mass == "solMass"
 
-            profile = MockDimensionsProfile(mass=1.0, mass_over_luminosity=1.0)
+            profile = MockDimensionsObject(mass=1.0, mass_over_luminosity=1.0)
 
             assert profile.unit_mass == None
 
@@ -559,7 +559,7 @@ class TestDimensionsProfile(object):
             self
         ):
 
-            profile_arcsec = MockDimensionsProfile(
+            profile_arcsec = MockDimensionsObject(
                 position=(
                     aast.dim.Length(1.0, "arcsec"),
                     aast.dim.Length(2.0, "arcsec"),
@@ -586,7 +586,7 @@ class TestDimensionsProfile(object):
             assert profile_arcsec.mass_over_luminosity == 6.0
             assert profile_arcsec.mass_over_luminosity.unit == "angular / eps"
 
-            profile_arcsec = profile_arcsec.new_profile_with_units_converted(
+            profile_arcsec = profile_arcsec.new_object_with_units_converted(
                 unit_length="arcsec"
             )
 
@@ -603,7 +603,7 @@ class TestDimensionsProfile(object):
             assert profile_arcsec.mass_over_luminosity == 6.0
             assert profile_arcsec.mass_over_luminosity.unit == "angular / eps"
 
-            profile_kpc = profile_arcsec.new_profile_with_units_converted(
+            profile_kpc = profile_arcsec.new_object_with_units_converted(
                 unit_length="kpc", kpc_per_arcsec=2.0
             )
 
@@ -620,7 +620,7 @@ class TestDimensionsProfile(object):
             assert profile_kpc.mass_over_luminosity == 6.0
             assert profile_kpc.mass_over_luminosity.unit == "angular / eps"
 
-            profile_kpc = profile_kpc.new_profile_with_units_converted(
+            profile_kpc = profile_kpc.new_object_with_units_converted(
                 unit_length="kpc"
             )
 
@@ -637,7 +637,7 @@ class TestDimensionsProfile(object):
             assert profile_kpc.mass_over_luminosity == 6.0
             assert profile_kpc.mass_over_luminosity.unit == "angular / eps"
 
-            profile_arcsec = profile_kpc.new_profile_with_units_converted(
+            profile_arcsec = profile_kpc.new_object_with_units_converted(
                 unit_length="arcsec", kpc_per_arcsec=2.0
             )
 
@@ -658,7 +658,7 @@ class TestDimensionsProfile(object):
             self
         ):
 
-            profile_arcsec = MockDimensionsProfile(
+            profile_arcsec = MockDimensionsObject(
                 position=(
                     aast.dim.Length(1.0, "arcsec"),
                     aast.dim.Length(2.0, "arcsec"),
@@ -666,20 +666,20 @@ class TestDimensionsProfile(object):
             )
 
             with pytest.raises(exc.UnitsException):
-                profile_arcsec.new_profile_with_units_converted(unit_length="kpc")
+                profile_arcsec.new_object_with_units_converted(unit_length="kpc")
 
-            profile_kpc = profile_arcsec.new_profile_with_units_converted(
+            profile_kpc = profile_arcsec.new_object_with_units_converted(
                 unit_length="kpc", kpc_per_arcsec=2.0
             )
 
             with pytest.raises(exc.UnitsException):
-                profile_kpc.new_profile_with_units_converted(unit_length="arcsec")
+                profile_kpc.new_object_with_units_converted(unit_length="arcsec")
 
         def test__eps_to_counts_conversions_of_luminosity__conversions_convert_values(
             self
         ):
 
-            profile_eps = MockDimensionsProfile(
+            profile_eps = MockDimensionsObject(
                 position=(
                     aast.dim.Length(1.0, "arcsec"),
                     aast.dim.Length(2.0, "arcsec"),
@@ -706,7 +706,7 @@ class TestDimensionsProfile(object):
             assert profile_eps.mass_over_luminosity == 6.0
             assert profile_eps.mass_over_luminosity.unit == "angular / eps"
 
-            profile_eps = profile_eps.new_profile_with_units_converted(
+            profile_eps = profile_eps.new_object_with_units_converted(
                 unit_luminosity="eps"
             )
 
@@ -723,7 +723,7 @@ class TestDimensionsProfile(object):
             assert profile_eps.mass_over_luminosity == 6.0
             assert profile_eps.mass_over_luminosity.unit == "angular / eps"
 
-            profile_counts = profile_eps.new_profile_with_units_converted(
+            profile_counts = profile_eps.new_object_with_units_converted(
                 unit_luminosity="counts", exposure_time=10.0
             )
 
@@ -740,7 +740,7 @@ class TestDimensionsProfile(object):
             assert profile_counts.mass_over_luminosity == pytest.approx(0.6, 1.0e-4)
             assert profile_counts.mass_over_luminosity.unit == "angular / counts"
 
-            profile_counts = profile_counts.new_profile_with_units_converted(
+            profile_counts = profile_counts.new_object_with_units_converted(
                 unit_luminosity="counts"
             )
 
@@ -757,7 +757,7 @@ class TestDimensionsProfile(object):
             assert profile_counts.mass_over_luminosity == pytest.approx(0.6, 1.0e-4)
             assert profile_counts.mass_over_luminosity.unit == "angular / counts"
 
-            profile_eps = profile_counts.new_profile_with_units_converted(
+            profile_eps = profile_counts.new_object_with_units_converted(
                 unit_luminosity="eps", exposure_time=10.0
             )
 
@@ -778,7 +778,7 @@ class TestDimensionsProfile(object):
             self
         ):
 
-            profile_eps = MockDimensionsProfile(
+            profile_eps = MockDimensionsObject(
                 position=(
                     aast.dim.Length(1.0, "arcsec"),
                     aast.dim.Length(2.0, "arcsec"),
@@ -793,20 +793,20 @@ class TestDimensionsProfile(object):
             )
 
             with pytest.raises(exc.UnitsException):
-                profile_eps.new_profile_with_units_converted(unit_luminosity="counts")
+                profile_eps.new_object_with_units_converted(unit_luminosity="counts")
 
-            profile_counts = profile_eps.new_profile_with_units_converted(
+            profile_counts = profile_eps.new_object_with_units_converted(
                 unit_luminosity="counts", exposure_time=10.0
             )
 
             with pytest.raises(exc.UnitsException):
-                profile_counts.new_profile_with_units_converted(unit_luminosity="eps")
+                profile_counts.new_object_with_units_converted(unit_luminosity="eps")
 
         def test__angular_to_solMass_conversions_of_mass__conversions_convert_values(
             self
         ):
 
-            profile_angular = MockDimensionsProfile(
+            profile_angular = MockDimensionsObject(
                 position=(
                     aast.dim.Length(1.0, "arcsec"),
                     aast.dim.Length(2.0, "arcsec"),
@@ -833,7 +833,7 @@ class TestDimensionsProfile(object):
             assert profile_angular.mass_over_luminosity == 6.0
             assert profile_angular.mass_over_luminosity.unit == "angular / eps"
 
-            profile_angular = profile_angular.new_profile_with_units_converted(
+            profile_angular = profile_angular.new_object_with_units_converted(
                 unit_mass="angular"
             )
 
@@ -850,7 +850,7 @@ class TestDimensionsProfile(object):
             assert profile_angular.mass_over_luminosity == 6.0
             assert profile_angular.mass_over_luminosity.unit == "angular / eps"
 
-            profile_solMass = profile_angular.new_profile_with_units_converted(
+            profile_solMass = profile_angular.new_object_with_units_converted(
                 unit_mass="solMass", critical_surface_density=10.0
             )
 
@@ -867,7 +867,7 @@ class TestDimensionsProfile(object):
             assert profile_solMass.mass_over_luminosity == pytest.approx(60.0, 1.0e-4)
             assert profile_solMass.mass_over_luminosity.unit == "solMass / eps"
 
-            profile_solMass = profile_solMass.new_profile_with_units_converted(
+            profile_solMass = profile_solMass.new_object_with_units_converted(
                 unit_mass="solMass"
             )
 
@@ -884,7 +884,7 @@ class TestDimensionsProfile(object):
             assert profile_solMass.mass_over_luminosity == pytest.approx(60.0, 1.0e-4)
             assert profile_solMass.mass_over_luminosity.unit == "solMass / eps"
 
-            profile_angular = profile_solMass.new_profile_with_units_converted(
+            profile_angular = profile_solMass.new_object_with_units_converted(
                 unit_mass="angular", critical_surface_density=10.0
             )
 
@@ -905,7 +905,7 @@ class TestDimensionsProfile(object):
             self
         ):
 
-            profile_angular = MockDimensionsProfile(
+            profile_angular = MockDimensionsObject(
                 position=(
                     aast.dim.Length(1.0, "arcsec"),
                     aast.dim.Length(2.0, "arcsec"),
@@ -920,14 +920,14 @@ class TestDimensionsProfile(object):
             )
 
             with pytest.raises(exc.UnitsException):
-                profile_angular.new_profile_with_units_converted(unit_mass="solMass")
+                profile_angular.new_object_with_units_converted(unit_mass="solMass")
 
-            profile_solMass = profile_angular.new_profile_with_units_converted(
+            profile_solMass = profile_angular.new_object_with_units_converted(
                 unit_mass="solMass", critical_surface_density=10.0
             )
 
             with pytest.raises(exc.UnitsException):
-                profile_solMass.new_profile_with_units_converted(unit_mass="angular")
+                profile_solMass.new_object_with_units_converted(unit_mass="angular")
 
 
 class TestUnitCheckConversionWrapper(object):
@@ -935,7 +935,7 @@ class TestUnitCheckConversionWrapper(object):
         self
     ):
 
-        profile = MockDimensionsProfile(length=aast.dim.Length(3.0, "arcsec"))
+        profile = MockDimensionsObject(length=aast.dim.Length(3.0, "arcsec"))
 
         cosmo = mock_cosmology.MockCosmology(kpc_per_arcsec=2.0)
 
@@ -972,7 +972,7 @@ class TestUnitCheckConversionWrapper(object):
         assert length.unit_length == "kpc"
         assert length == 7.0
 
-        profile = MockDimensionsProfile(length=aast.dim.Length(3.0, "kpc"))
+        profile = MockDimensionsObject(length=aast.dim.Length(3.0, "kpc"))
 
         # length: kpc -> kpc, stays 3.0,  length_input: kpc -> kpc, stays 1.0
 
@@ -1014,7 +1014,7 @@ class TestUnitCheckConversionWrapper(object):
         self
     ):
 
-        profile = MockDimensionsProfile(luminosity=aast.dim.Luminosity(3.0, "eps"))
+        profile = MockDimensionsObject(luminosity=aast.dim.Luminosity(3.0, "eps"))
 
         cosmo = mock_cosmology.MockCosmology()
 
@@ -1053,7 +1053,7 @@ class TestUnitCheckConversionWrapper(object):
         assert luminosity.unit_luminosity == "counts"
         assert luminosity == 7.0
 
-        profile = MockDimensionsProfile(luminosity=aast.dim.Luminosity(3.0, "counts"))
+        profile = MockDimensionsObject(luminosity=aast.dim.Luminosity(3.0, "counts"))
 
         # luminosity: counts -> counts, stays 3.0,  luminosity_input: counts -> counts, stays 1.0
 
@@ -1098,7 +1098,7 @@ class TestUnitCheckConversionWrapper(object):
         self
     ):
 
-        profile = MockDimensionsProfile(
+        profile = MockDimensionsObject(
             length=aast.dim.Length(1.0, "arcsec"), mass=aast.dim.Mass(3.0, "angular")
         )
 
@@ -1143,7 +1143,7 @@ class TestUnitCheckConversionWrapper(object):
         assert mass.unit_mass == "solMass"
         assert mass == 7.0
 
-        profile = MockDimensionsProfile(
+        profile = MockDimensionsObject(
             length=aast.dim.Length(1.0, "arcsec"), mass=aast.dim.Mass(3.0, "solMass")
         )
 

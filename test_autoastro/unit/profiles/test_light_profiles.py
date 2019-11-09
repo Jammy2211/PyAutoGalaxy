@@ -7,6 +7,8 @@ import scipy.special
 
 import autoarray as aa
 import autoastro as aast
+from autoastro import exc
+from autoastro.profiles.light_profiles import EllipticalLightProfile
 from test_autoastro.mock import mock_cosmology
 
 
@@ -851,24 +853,213 @@ class TestCoreSersic(object):
         assert image.shape_2d == (2, 2)
 
 
-def luminosity_from_radius_and_profile(radius, profile):
-    x = profile.sersic_constant * (
-        (radius / profile.effective_radius) ** (1.0 / profile.sersic_index)
-    )
+class TestUnits:
 
-    return (
-        profile.intensity
-        * profile.effective_radius ** 2
-        * 2
-        * math.pi
-        * profile.sersic_index
-        * (
-            (math.e ** profile.sersic_constant)
-            / (profile.sersic_constant ** (2 * profile.sersic_index))
+    def test__unit_length__extracted_from_profile(self):
+        
+        profile = EllipticalLightProfile(
+            centre=(aast.dim.Length(value=3.0, unit_length="arcsec"), aast.dim.Length(value=3.0, unit_length="arcsec"))
         )
-        * scipy.special.gamma(2 * profile.sersic_index)
-        * scipy.special.gammainc(2 * profile.sersic_index, x)
-    )
+
+        assert profile.unit_length == "arcsec"
+
+        profile = EllipticalLightProfile(
+            centre=(aast.dim.Length(value=3.0, unit_length="kpc"), aast.dim.Length(value=3.0, unit_length="kpc"))
+        )
+
+        assert profile.unit_length == "kpc"
+
+    def test__unit_luminosity__extracted_from_profile(self):
+
+        profile = EllipticalLightProfile(
+            intensity=aast.dim.Luminosity(value=3.0, unit_luminosity="eps"),
+        )
+
+        assert profile.unit_luminosity == "eps"
+
+        profile = EllipticalLightProfile(
+            intensity=aast.dim.Luminosity(value=3.0, unit_luminosity="counts"),
+        )
+
+        assert profile.unit_luminosity == "counts"
+
+        profile = EllipticalLightProfile(
+            intensity=1.0,
+        )
+
+        assert profile.unit_luminosity == "eps"
+
+    def test__arcsec_to_kpc_conversions_of_length__float_and_tuple_length__conversion_converts_values(
+        self
+    ):
+
+        profile_arcsec = EllipticalLightProfile(
+            centre=(
+                aast.dim.Length(1.0, "arcsec"),
+                aast.dim.Length(2.0, "arcsec"),
+            ),
+            axis_ratio=2.0,
+            intensity=aast.dim.Luminosity(value=4.0, unit_luminosity="eps"),
+        )
+
+        assert profile_arcsec.centre == (1.0, 2.0)
+        assert profile_arcsec.centre[0].unit_length == "arcsec"
+        assert profile_arcsec.centre[1].unit_length == "arcsec"
+        assert profile_arcsec.axis_ratio == 2.0
+        assert profile_arcsec.intensity == 4.0
+        assert profile_arcsec.intensity.unit_luminosity == "eps"
+
+        profile_arcsec = profile_arcsec.new_object_with_units_converted(
+            unit_length="arcsec"
+        )
+
+        assert profile_arcsec.centre == (1.0, 2.0)
+        assert profile_arcsec.centre[0].unit == "arcsec"
+        assert profile_arcsec.centre[1].unit == "arcsec"
+        assert profile_arcsec.axis_ratio == 2.0
+        assert profile_arcsec.intensity == 4.0
+        assert profile_arcsec.intensity.unit == "eps"
+
+        profile_kpc = profile_arcsec.new_object_with_units_converted(
+            unit_length="kpc", kpc_per_arcsec=2.0
+        )
+
+        assert profile_kpc.centre == (2.0, 4.0)
+        assert profile_kpc.centre[0].unit == "kpc"
+        assert profile_kpc.centre[1].unit == "kpc"
+        assert profile_kpc.axis_ratio == 2.0
+        assert profile_kpc.intensity == 4.0
+        assert profile_kpc.intensity.unit == "eps"
+
+        profile_kpc = profile_kpc.new_object_with_units_converted(
+            unit_length="kpc"
+        )
+
+        assert profile_kpc.centre == (2.0, 4.0)
+        assert profile_kpc.centre[0].unit == "kpc"
+        assert profile_kpc.centre[1].unit == "kpc"
+        assert profile_kpc.axis_ratio == 2.0
+        assert profile_kpc.intensity == 4.0
+        assert profile_kpc.intensity.unit == "eps"
+
+        profile_arcsec = profile_kpc.new_object_with_units_converted(
+            unit_length="arcsec", kpc_per_arcsec=2.0
+        )
+
+        assert profile_arcsec.centre == (1.0, 2.0)
+        assert profile_arcsec.centre[0].unit == "arcsec"
+        assert profile_arcsec.centre[1].unit == "arcsec"
+        assert profile_arcsec.axis_ratio == 2.0
+        assert profile_arcsec.intensity == 4.0
+        assert profile_arcsec.intensity.unit == "eps"
+
+    def test__conversion_requires_kpc_per_arcsec_but_does_not_supply_it_raises_error(
+        self
+    ):
+
+        profile_arcsec = EllipticalLightProfile(
+            centre=(
+                aast.dim.Length(1.0, "arcsec"),
+                aast.dim.Length(2.0, "arcsec"),
+            )
+        )
+
+        with pytest.raises(exc.UnitsException):
+            profile_arcsec.new_object_with_units_converted(unit_length="kpc")
+
+        profile_kpc = profile_arcsec.new_object_with_units_converted(
+            unit_length="kpc", kpc_per_arcsec=2.0
+        )
+
+        with pytest.raises(exc.UnitsException):
+            profile_kpc.new_object_with_units_converted(unit_length="arcsec")
+
+    def test__eps_to_counts_conversions_of_intensity__conversions_convert_values(
+        self
+    ):
+
+        profile_eps = EllipticalLightProfile(
+            centre=(
+                aast.dim.Length(1.0, "arcsec"),
+                aast.dim.Length(2.0, "arcsec"),
+            ),
+            axis_ratio=2.0,
+            intensity=aast.dim.Luminosity(value=4.0, unit_luminosity="eps"),
+        )
+
+        assert profile_eps.centre == (1.0, 2.0)
+        assert profile_eps.centre[0].unit_length == "arcsec"
+        assert profile_eps.centre[1].unit_length == "arcsec"
+        assert profile_eps.axis_ratio == 2.0
+        assert profile_eps.intensity == 4.0
+        assert profile_eps.intensity.unit_luminosity == "eps"
+
+        profile_eps = profile_eps.new_object_with_units_converted(
+            unit_luminosity="eps"
+        )
+
+        assert profile_eps.centre == (1.0, 2.0)
+        assert profile_eps.centre[0].unit_length == "arcsec"
+        assert profile_eps.centre[1].unit_length == "arcsec"
+        assert profile_eps.axis_ratio == 2.0
+        assert profile_eps.intensity == 4.0
+        assert profile_eps.intensity.unit_luminosity == "eps"
+
+        profile_counts = profile_eps.new_object_with_units_converted(
+            unit_luminosity="counts", exposure_time=10.0
+        )
+
+        assert profile_counts.centre == (1.0, 2.0)
+        assert profile_counts.centre[0].unit_length == "arcsec"
+        assert profile_counts.centre[1].unit_length == "arcsec"
+        assert profile_counts.axis_ratio == 2.0
+        assert profile_counts.intensity == 40.0
+        assert profile_counts.intensity.unit_luminosity == "counts"
+
+        profile_counts = profile_counts.new_object_with_units_converted(
+            unit_luminosity="counts"
+        )
+
+        assert profile_counts.centre == (1.0, 2.0)
+        assert profile_counts.centre[0].unit_length == "arcsec"
+        assert profile_counts.centre[1].unit_length == "arcsec"
+        assert profile_counts.axis_ratio == 2.0
+        assert profile_counts.intensity == 40.0
+        assert profile_counts.intensity.unit_luminosity == "counts"
+
+        profile_eps = profile_counts.new_object_with_units_converted(
+            unit_luminosity="eps", exposure_time=10.0
+        )
+
+        assert profile_eps.centre == (1.0, 2.0)
+        assert profile_eps.centre[0].unit_length == "arcsec"
+        assert profile_eps.centre[1].unit_length == "arcsec"
+        assert profile_eps.axis_ratio == 2.0
+        assert profile_eps.intensity == 4.0
+        assert profile_eps.intensity.unit_luminosity == "eps"
+
+    def test__intensity_conversion_requires_exposure_time_but_does_not_supply_it_raises_error(
+        self
+    ):
+
+        profile_eps = EllipticalLightProfile(
+            centre=(
+                aast.dim.Length(1.0, "arcsec"),
+                aast.dim.Length(2.0, "arcsec"),
+            ),
+            axis_ratio=2.0,
+            intensity=aast.dim.Luminosity(value=4.0, unit_luminosity="eps"),
+        )
+
+        with pytest.raises(exc.UnitsException):
+            profile_eps.new_object_with_units_converted(unit_luminosity="counts")
+
+        profile_counts = profile_eps.new_object_with_units_converted(
+            unit_luminosity="counts", exposure_time=10.0
+        )
+
+        with pytest.raises(exc.UnitsException):
+            profile_counts.new_object_with_units_converted(unit_luminosity="eps")
 
 
 class TestBlurredProfileImages(object):
@@ -940,6 +1131,26 @@ class TestVisibilities(object):
         )
 
         assert visibilities == pytest.approx(light_profile_visibilities, 1.0e-4)
+
+
+def luminosity_from_radius_and_profile(radius, profile):
+    x = profile.sersic_constant * (
+        (radius / profile.effective_radius) ** (1.0 / profile.sersic_index)
+    )
+
+    return (
+        profile.intensity
+        * profile.effective_radius ** 2
+        * 2
+        * math.pi
+        * profile.sersic_index
+        * (
+            (math.e ** profile.sersic_constant)
+            / (profile.sersic_constant ** (2 * profile.sersic_index))
+        )
+        * scipy.special.gamma(2 * profile.sersic_index)
+        * scipy.special.gammainc(2 * profile.sersic_index, x)
+    )
 
 
 class TestLuminosityWithinCircle(object):
