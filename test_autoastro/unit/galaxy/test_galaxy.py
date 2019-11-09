@@ -1078,7 +1078,7 @@ class TestMassProfiles(object):
 
             assert gal_x2_mp.einstein_radius_in_units(unit_length="arcsec") == 1.5
             assert gal_x2_mp.einstein_mass_in_units(unit_mass="angular") == np.pi * (
-                1.0 + 0.5 ** 2.0
+                (1.0 + 0.5) ** 2.0
             )
 
         def test__includes_shear__does_not_impact_values(self):
