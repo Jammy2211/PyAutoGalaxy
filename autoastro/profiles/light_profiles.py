@@ -9,6 +9,7 @@ from autoastro.profiles import geometry_profiles
 
 import inspect
 
+
 class LightProfile(object):
     """Mixin class that implements functions common to all light profiles"""
 
@@ -120,7 +121,6 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
         return transformer.visibilities_from_image(image=profile_image.in_1d_binned)
 
-    @dim.convert_units_to_input_units
     def luminosity_within_circle_in_units(
         self,
         radius: dim.Length,
@@ -161,7 +161,6 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         The axis ratio is set to 1.0 for computing the luminosity within a circle"""
         return 2 * np.pi * x * self.profile_image_from_grid_radii(x)
 
-    @dim.convert_units_to_input_units
     def summarize_in_units(
         self,
         radii,
@@ -234,7 +233,7 @@ class EllipticalGaussian(EllipticalLightProfile):
             The sigma value of the Gaussian.
         """
         super(EllipticalGaussian, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi, intensity=intensity,
+            centre=centre, axis_ratio=axis_ratio, phi=phi, intensity=intensity
         )
         self.sigma = sigma
 
@@ -322,7 +321,7 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
             higher value -> more concentrated).
         """
         super(AbstractEllipticalSersic, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi, intensity=intensity,
+            centre=centre, axis_ratio=axis_ratio, phi=phi, intensity=intensity
         )
         self.effective_radius = effective_radius
         self.sersic_index = sersic_index

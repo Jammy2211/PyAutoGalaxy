@@ -69,13 +69,12 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
     def convergence_func(self, radius):
         return 0.0
 
-    @dim.convert_units_to_input_units
     def average_convergence_of_1_radius_in_units(
-            self,
-            unit_length="arcsec",
-            redshift_profile=None,
-            cosmology=cosmo.Planck15,
-            **kwargs,
+        self,
+        unit_length="arcsec",
+        redshift_profile=None,
+        cosmology=cosmo.Planck15,
+        **kwargs,
     ):
         return dim.Length(value=0.0, unit_length=self.unit_length)
 

@@ -205,7 +205,6 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
     def coord_func_h(self, grid_radius):
         return np.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
 
-    @dim.convert_units_to_input_units
     def rho_at_scale_radius_for_units(
         self,
         redshift_profile,
@@ -241,7 +240,6 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
             critical_surface_density=critical_surface_density,
         )
 
-    @dim.convert_units_to_input_units
     def delta_concentration_for_units(
         self,
         redshift_profile,
@@ -269,7 +267,6 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
 
         return rho_scale_radius / cosmic_average_density
 
-    @dim.convert_units_to_input_units
     def concentration_for_units(
         self,
         redshift_profile,
@@ -308,7 +305,6 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
             - delta_concentration
         )
 
-    @dim.convert_units_to_input_units
     def radius_at_200_for_units(
         self,
         redshift_profile,
@@ -341,7 +337,6 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
             unit_length=unit_length, kpc_per_arcsec=kpc_per_arcsec
         )
 
-    @dim.convert_units_to_input_units
     def mass_at_200_for_units(
         self,
         redshift_profile,
@@ -385,7 +380,6 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
             unit_mass=unit_mass, critical_surface_density=critical_surface_density
         )
 
-    @dim.convert_units_to_input_units
     def summarize_in_units(
         self,
         radii,
@@ -910,7 +904,6 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
 
         return self.grid_to_grid_cartesian(grid, deflection_grid)
 
-    @dim.convert_units_to_input_units
     def mass_at_truncation_radius(
         self,
         redshift_profile,
@@ -941,7 +934,6 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
             )
         )
 
-    @dim.convert_units_to_input_units
     def summarize_in_units(
         self,
         radii,
@@ -1076,7 +1068,6 @@ class SphericalTruncatedNFWChallenge(SphericalTruncatedNFW):
             truncation_radius=2.0 * r200,
         )
 
-    @dim.convert_units_to_input_units
     def summarize_in_units(
         self,
         radii,

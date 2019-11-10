@@ -1,26 +1,24 @@
 import numpy as np
-from scipy.integrate import quad
-from scipy.optimize import root_scalar
 from astropy import cosmology as cosmo
 from skimage import measure
 
-import autofit as af
 from autoarray.structures import grids
 from autoastro import dimensions as dim
-from autofit.tools import text_util
-from autoastro.profiles import geometry_profiles
+from autoastro.util import cosmology_util
 
 
 class LensingObject(object):
 
     axis_ratio = None
-    ellipticity_rescale = None
 
     def convergence_func(self, eta):
         raise NotImplementedError("surface_density_func should be overridden")
 
     def convergence_from_grid(self, grid):
         raise NotImplementedError("surface_density_from_grid should be overridden")
+
+    def potential_func(self, u, y, x):
+        raise NotImplementedError("potential_func should be overridden")
 
     def potential_from_grid(self, grid):
         raise NotImplementedError(
@@ -31,191 +29,17 @@ class LensingObject(object):
         raise NotImplementedError("deflections_from_grid should be overridden")
 
     @property
+    def unit_length(self):
+        raise NotImplementedError("unit_length should be overridden")
+
+    @property
     def unit_mass(self):
         raise NotImplementedError("unit_mass should be overridden")
-
-    @dim.convert_units_to_input_units
-    def mass_within_circle_in_units(
-            self,
-            radius: dim.Length,
-            unit_mass="angular",
-            redshift_profile=None,
-            redshift_source=None,
-            cosmology=cosmo.Planck15,
-            **kwargs,
-    ):
-        """ Integrate the mass profiles's convergence profile to compute the total mass within a circle of \
-        specified radius. This is centred on the mass profile.
-
-        The following units for mass can be specified and output:
-
-        - Dimensionless angular units (default) - 'angular'.
-        - Solar masses - 'angular' (multiplies the angular mass by the critical surface mass density).
-
-        Parameters
-        ----------
-        radius : dim.Length
-            The radius of the circle to compute the dimensionless mass within.
-        unit_mass : str
-            The units the mass is returned in (angular | angular).
-        critical_surface_density : float or None
-            The critical surface mass density of the strong lens configuration, which converts mass from angulalr \
-            units to phsical units (e.g. solar masses).
-        """
-
-        critical_surface_density = (
-            kwargs["critical_surface_density"]
-            if "critical_surface_density" in kwargs
-            else None
-        )
-
-        mass = dim.Mass(
-            value=quad(self.mass_integral, a=0.0, b=radius)[0],
-            unit_mass=self.unit_mass,
-        )
-
-        return mass.convert(
-            unit_mass=unit_mass, critical_surface_density=critical_surface_density
-        )
 
     def mass_integral(self, x):
         """Routine to integrate an elliptical light profiles - set axis ratio to 1 to compute the luminosity within a \
         circle"""
         return 2 * np.pi * x * self.convergence_func(x)
-
-    def density_between_circular_annuli_in_angular_units(
-            self,
-            inner_annuli_radius: dim.Length,
-            outer_annuli_radius: dim.Length,
-            unit_length="arcsec",
-            unit_mass="angular",
-            redshift_profile=None,
-            redshift_source=None,
-            cosmology=cosmo.Planck15,
-            **kwargs,
-    ):
-        """Calculate the mass between two circular annuli and compute the density by dividing by the annuli surface
-        area.
-
-        The value returned by the mass integral is dimensionless, therefore the density between annuli is returned in \
-        units of inverse radius squared. A conversion factor can be specified to convert this to a physical value \
-        (e.g. the critical surface mass density).
-
-        Parameters
-        -----------
-        inner_annuli_radius : float
-            The radius of the inner annulus outside of which the density are estimated.
-        outer_annuli_radius : float
-            The radius of the outer annulus inside of which the density is estimated.
-        """
-        annuli_area = (np.pi * outer_annuli_radius ** 2.0) - (
-                np.pi * inner_annuli_radius ** 2.0
-        )
-
-        outer_mass = self.mass_within_circle_in_units(
-            radius=outer_annuli_radius,
-            redshift_profile=redshift_profile,
-            redshift_source=redshift_source,
-            unit_mass=unit_mass,
-            cosmology=cosmology,
-        )
-
-        inner_mass = self.mass_within_circle_in_units(
-            radius=inner_annuli_radius,
-            redshift_profile=redshift_profile,
-            redshift_source=redshift_source,
-            unit_mass=unit_mass,
-            cosmology=cosmology,
-        )
-
-        return dim.MassOverLength2(
-            value=(outer_mass - inner_mass) / annuli_area,
-            unit_length=unit_length,
-            unit_mass=unit_mass,
-        )
-
-    @dim.convert_units_to_input_units
-    def average_convergence_of_1_radius_in_units(
-            self,
-            unit_length="arcsec",
-            redshift_profile=None,
-            cosmology=cosmo.Planck15,
-            **kwargs,
-    ):
-        """The radius a critical curve forms for this mass profile, e.g. where the mean convergence is equal to 1.0.
-
-         In case of ellipitical mass profiles, the 'average' critical curve is used, whereby the convergence is \
-         rescaled into a circle using the axis ratio.
-
-         This radius corresponds to the Einstein radius of the mass profile, and is a property of a number of \
-         mass profiles below.
-         """
-
-        kpc_per_arcsec = (
-            kwargs["kpc_per_arcsec"] if "kpc_per_arcsec" in kwargs else None
-        )
-
-        def func(radius, redshift_profile, cosmology):
-            radius = dim.Length(radius, unit_length=unit_length)
-            return (
-                    self.mass_within_circle_in_units(
-                        unit_mass="angular",
-                        radius=radius,
-                        redshift_profile=redshift_profile,
-                        cosmology=cosmology,
-                    )
-                    - np.pi * radius ** 2.0
-            )
-
-        radius = (
-                self.ellipticity_rescale
-                * root_scalar(
-            func, bracket=[1e-4, 1000.0], args=(redshift_profile, cosmology)
-        ).root
-        )
-        radius = dim.Length(radius, unit_length)
-        return radius.convert(unit_length=unit_length, kpc_per_arcsec=kpc_per_arcsec)
-
-    @dim.convert_units_to_input_units
-    def einstein_radius_in_units(
-            self,
-            unit_length="arcsec",
-            redshift_profile=None,
-            cosmology=cosmo.Planck15,
-            **kwargs,
-    ):
-
-        einstein_radius = self.average_convergence_of_1_radius_in_units(
-            unit_length=unit_length,
-            redshift_profile=redshift_profile,
-            cosmology=cosmology,
-        )
-
-        return dim.Length(einstein_radius, unit_length)
-
-    @dim.convert_units_to_input_units
-    def einstein_mass_in_units(
-            self,
-            unit_mass="angular",
-            redshift_profile=None,
-            redshift_source=None,
-            cosmology=cosmo.Planck15,
-            **kwargs,
-    ):
-
-        einstein_radius = self.einstein_radius_in_units(
-            unit_length=self.unit_length,
-            redshift_profile=redshift_profile,
-            cosmology=cosmology,
-        )
-
-        return self.mass_within_circle_in_units(
-            radius=einstein_radius,
-            unit_mass=unit_mass,
-            redshift_profile=redshift_profile,
-            redshift_source=redshift_source,
-            cosmology=cosmology,
-        )
 
     def deflections_via_potential_from_grid(self, grid):
 
@@ -234,7 +58,7 @@ class LensingObject(object):
 
         return grid.mapping.array_from_sub_array_2d(
             sub_array_2d=1.0
-                         - np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[0, :, 1], axis=1)
+            - np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[0, :, 1], axis=1)
         )
 
     def jacobian_a12_from_grid(self, grid):
@@ -243,7 +67,7 @@ class LensingObject(object):
 
         return grid.mapping.array_from_sub_array_2d(
             sub_array_2d=-1.0
-                         * np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[:, 0, 0], axis=0)
+            * np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[:, 0, 0], axis=0)
         )
 
     def jacobian_a21_from_grid(self, grid):
@@ -252,7 +76,7 @@ class LensingObject(object):
 
         return grid.mapping.array_from_sub_array_2d(
             sub_array_2d=-1.0
-                         * np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[0, :, 1], axis=1)
+            * np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[0, :, 1], axis=1)
         )
 
     def jacobian_a22_from_grid(self, grid):
@@ -261,7 +85,7 @@ class LensingObject(object):
 
         return grid.mapping.array_from_sub_array_2d(
             sub_array_2d=1
-                         - np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[:, 0, 0], axis=0)
+            - np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[:, 0, 0], axis=0)
         )
 
     def jacobian_from_grid(self, grid):
@@ -396,3 +220,64 @@ class LensingObject(object):
             self.tangential_caustic_from_grid(grid=grid),
             self.radial_caustic_from_grid(grid=grid),
         ]
+
+    def area_within_tangential_critical_curve(self, grid):
+
+        critical_curve = self.critical_curves_from_grid(grid=grid)[0]
+        x, y = critical_curve[:, 0], critical_curve[:, 1]
+
+        return np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
+
+    def einstein_radius_in_units(
+        self, grid, unit_length="arcsec", redshift_object=None, cosmology=cosmo.Planck15
+    ):
+
+        area = self.area_within_tangential_critical_curve(grid=grid)
+
+        einstein_radius = dim.Length(
+            value=np.sqrt(area / np.pi), unit_length=self.unit_length
+        )
+
+        if unit_length is "kpc":
+
+            kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from_redshift_and_cosmology(
+                redshift=redshift_object, cosmology=cosmology
+            )
+
+        else:
+
+            kpc_per_arcsec = None
+
+        return einstein_radius.convert(
+            unit_length=unit_length, kpc_per_arcsec=kpc_per_arcsec
+        )
+
+    def einstein_mass_in_units(
+        self,
+        grid,
+        redshift_object=None,
+        redshift_source=None,
+        cosmology=cosmo.Planck15,
+        unit_mass="solMass",
+        **kwargs,
+    ):
+        radius = self.einstein_radius_in_units(grid=grid)
+        einstein_mass = dim.Mass(np.pi * (radius ** 2))
+
+        if unit_mass is "solMass":
+
+            critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from_redshifts_and_cosmology(
+                redshift_0=redshift_object,
+                redshift_1=redshift_source,
+                cosmology=cosmology,
+                unit_length=self.unit_length,
+                unit_mass=unit_mass,
+            )
+
+        else:
+
+            critical_surface_density = None
+
+        return einstein_mass.convert(
+            unit_mass=unit_mass, critical_surface_density=critical_surface_density
+        )

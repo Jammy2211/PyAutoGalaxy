@@ -31,7 +31,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         pixelization=None,
         regularization=None,
         hyper_galaxy=None,
-        **kwargs
+        **kwargs,
     ):
         """Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
         mass profiles, pixelizations, etc.).
@@ -130,7 +130,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             return self.mass_profiles[0].unit_length
         else:
             return None
-        
+
     @property
     def unit_luminosity(self):
         if self.has_light_profile:
@@ -189,16 +189,21 @@ class Galaxy(ModelObject, lensing.LensingObject):
     ):
 
         new_dict = {
-            key: value.new_object_with_units_converted(unit_length=unit_length, unit_luminosity=unit_luminosity,
-                                                       unit_mass=unit_mass, kpc_per_arcsec=kpc_per_arcsec, exposure_time=exposure_time,
-                                                       critical_surface_density=critical_surface_density, kwargs=kwargs)
-            if is_light_profile(value) or is_mass_profile(value) else value
+            key: value.new_object_with_units_converted(
+                unit_length=unit_length,
+                unit_luminosity=unit_luminosity,
+                unit_mass=unit_mass,
+                kpc_per_arcsec=kpc_per_arcsec,
+                exposure_time=exposure_time,
+                critical_surface_density=critical_surface_density,
+                kwargs=kwargs,
+            )
+            if is_light_profile(value) or is_mass_profile(value)
+            else value
             for key, value in self.__dict__.items()
         }
 
-        return self.__class__(
-            **new_dict
-        )
+        return self.__class__(**new_dict)
 
     def profile_image_from_grid(self, grid):
         """Calculate the summed image of all of the galaxy's light profiles using a grid of Cartesian (y,x) \
@@ -259,7 +264,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         unit_luminosity="eps",
         exposure_time=None,
         cosmology=cosmo.Planck15,
-        **kwargs
+        **kwargs,
     ):
         """Compute the total luminosity of the galaxy's light profiles within a circle of specified radius.
 
@@ -292,19 +297,31 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     def convergence_func(self, radius):
         if self.has_mass_profile:
-            return sum([mass_profile.convergence_func(radius=radius) for mass_profile in self.mass_profiles])
+            return sum(
+                [
+                    mass_profile.convergence_func(radius=radius)
+                    for mass_profile in self.mass_profiles
+                ]
+            )
         else:
-            raise exc.GalaxyException("You cannot perform a mass-based calculation on a galaxy which does not have a mass-profile")
+            raise exc.GalaxyException(
+                "You cannot perform a mass-based calculation on a galaxy which does not have a mass-profile"
+            )
 
-    @dim.convert_units_to_input_units
     def average_convergence_of_1_radius_in_units(
-            self,
-            unit_length="arcsec",
-            cosmology=cosmo.Planck15,
-            **kwargs,
+        self, unit_length="arcsec", cosmology=cosmo.Planck15, **kwargs
     ):
-        return sum([mass_profile.average_convergence_of_1_radius_in_units(unit_length=unit_length, redshift_profile=self.redshift, cosmology=cosmology, kwargs=kwargs)
-                    for mass_profile in self.mass_profiles])
+        return sum(
+            [
+                mass_profile.average_convergence_of_1_radius_in_units(
+                    unit_length=unit_length,
+                    redshift_profile=self.redshift,
+                    cosmology=cosmology,
+                    kwargs=kwargs,
+                )
+                for mass_profile in self.mass_profiles
+            ]
+        )
 
     def convergence_from_grid(self, grid):
         """Compute the summed convergence of the galaxy's mass profiles using a grid \
@@ -391,7 +408,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         unit_mass="solMass",
         redshift_source=None,
         cosmology=cosmo.Planck15,
-        **kwargs
+        **kwargs,
     ):
 
         if hasattr(self, "name"):
@@ -444,7 +461,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         unit_luminosity="eps",
         redshift_source=None,
         cosmology=cosmo.Planck15,
-        **kwargs
+        **kwargs,
     ):
 
         summary = ["\nGALAXY LIGHT\n\n"]
@@ -496,7 +513,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         unit_mass="solMass",
         redshift_source=None,
         cosmology=cosmo.Planck15,
-        **kwargs
+        **kwargs,
     ):
 
         summary = ["\nGALAXY MASS\n\n"]

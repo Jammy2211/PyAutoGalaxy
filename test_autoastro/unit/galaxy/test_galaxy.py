@@ -9,17 +9,22 @@ from test_autoastro.mock import mock_cosmology
 
 
 class TestUnits:
-
     def test__light_profiles_conversions(self):
 
         profile_0 = aast.lp.EllipticalGaussian(
-            centre=(aast.dim.Length(value=3.0, unit_length="arcsec"), aast.dim.Length(value=3.0, unit_length="arcsec")),
-                    intensity=aast.dim.Luminosity(value=2.0, unit_luminosity="eps"),
+            centre=(
+                aast.dim.Length(value=3.0, unit_length="arcsec"),
+                aast.dim.Length(value=3.0, unit_length="arcsec"),
+            ),
+            intensity=aast.dim.Luminosity(value=2.0, unit_luminosity="eps"),
         )
 
         profile_1 = aast.lp.EllipticalGaussian(
-            centre=(aast.dim.Length(value=4.0, unit_length="arcsec"), aast.dim.Length(value=4.0, unit_length="arcsec")),
-                    intensity=aast.dim.Luminosity(value=5.0, unit_luminosity="eps"),
+            centre=(
+                aast.dim.Length(value=4.0, unit_length="arcsec"),
+                aast.dim.Length(value=4.0, unit_length="arcsec"),
+            ),
+            intensity=aast.dim.Luminosity(value=5.0, unit_luminosity="eps"),
         )
 
         galaxy = aast.galaxy(light_0=profile_0, light_1=profile_1, redshift=1.0)
@@ -33,7 +38,12 @@ class TestUnits:
         assert galaxy.light_1.intensity == 5.0
         assert galaxy.light_1.intensity.unit_luminosity == "eps"
 
-        galaxy = galaxy.new_object_with_units_converted(unit_length='kpc', kpc_per_arcsec=2.0, unit_luminosity="counts", exposure_time=0.5)
+        galaxy = galaxy.new_object_with_units_converted(
+            unit_length="kpc",
+            kpc_per_arcsec=2.0,
+            unit_luminosity="counts",
+            exposure_time=0.5,
+        )
 
         assert galaxy.light_0.centre == (6.0, 6.0)
         assert galaxy.light_0.unit_length == "kpc"
@@ -47,15 +57,25 @@ class TestUnits:
     def test__mass_profiles_conversions(self):
 
         profile_0 = aast.mp.EllipticalSersic(
-            centre=(aast.dim.Length(value=3.0, unit_length="arcsec"), aast.dim.Length(value=3.0, unit_length="arcsec")),
-                    intensity=aast.dim.Luminosity(value=2.0, unit_luminosity="eps"),
-            mass_to_light_ratio=aast.dim.MassOverLuminosity(value=5.0, unit_mass='angular', unit_luminosity='eps')
+            centre=(
+                aast.dim.Length(value=3.0, unit_length="arcsec"),
+                aast.dim.Length(value=3.0, unit_length="arcsec"),
+            ),
+            intensity=aast.dim.Luminosity(value=2.0, unit_luminosity="eps"),
+            mass_to_light_ratio=aast.dim.MassOverLuminosity(
+                value=5.0, unit_mass="angular", unit_luminosity="eps"
+            ),
         )
 
         profile_1 = aast.mp.EllipticalSersic(
-            centre=(aast.dim.Length(value=4.0, unit_length="arcsec"), aast.dim.Length(value=4.0, unit_length="arcsec")),
-                    intensity=aast.dim.Luminosity(value=5.0, unit_luminosity="eps"),
-            mass_to_light_ratio=aast.dim.MassOverLuminosity(value=10.0, unit_mass='angular', unit_luminosity='eps')
+            centre=(
+                aast.dim.Length(value=4.0, unit_length="arcsec"),
+                aast.dim.Length(value=4.0, unit_length="arcsec"),
+            ),
+            intensity=aast.dim.Luminosity(value=5.0, unit_luminosity="eps"),
+            mass_to_light_ratio=aast.dim.MassOverLuminosity(
+                value=10.0, unit_mass="angular", unit_luminosity="eps"
+            ),
         )
 
         galaxy = aast.galaxy(mass_0=profile_0, mass_1=profile_1, redshift=1.0)
@@ -74,9 +94,13 @@ class TestUnits:
         assert galaxy.mass_1.mass_to_light_ratio.unit_mass == "angular"
 
         galaxy = galaxy.new_object_with_units_converted(
-            unit_length='kpc', kpc_per_arcsec=2.0,
-            unit_luminosity="counts", exposure_time=0.5,
-        unit_mass="solMass", critical_surface_density=3.0)
+            unit_length="kpc",
+            kpc_per_arcsec=2.0,
+            unit_luminosity="counts",
+            exposure_time=0.5,
+            unit_mass="solMass",
+            critical_surface_density=3.0,
+        )
 
         assert galaxy.mass_0.centre == (6.0, 6.0)
         assert galaxy.mass_0.unit_length == "kpc"
@@ -90,6 +114,7 @@ class TestUnits:
         assert galaxy.mass_1.intensity.unit_luminosity == "counts"
         assert galaxy.mass_1.mass_to_light_ratio == 60.0
         assert galaxy.mass_1.mass_to_light_ratio.unit_mass == "solMass"
+
 
 class TestLightProfiles(object):
     class TestProfileImage:
@@ -227,7 +252,7 @@ class TestLightProfiles(object):
             self, lp_0, gal_x1_lp
         ):
 
-            radius=3.0
+            radius = 3.0
 
             lp_luminosity_counts = lp_0.luminosity_within_circle_in_units(
                 radius=radius, unit_luminosity="counts", exposure_time=2.0
