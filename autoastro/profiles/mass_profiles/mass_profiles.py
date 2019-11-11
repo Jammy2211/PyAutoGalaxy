@@ -2,10 +2,8 @@ import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
 from astropy import cosmology as cosmo
-from skimage import measure
 
 import autofit as af
-from autoarray.structures import grids
 from autoastro.util import cosmology_util
 from autoastro import lensing
 from autoastro import dimensions as dim
@@ -81,6 +79,9 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
             The critical surface mass density of the strong lens configuration, which converts mass from angulalr \
             units to phsical units (e.g. solar masses).
         """
+
+        if not hasattr(radius, 'unit_length'):
+            radius = dim.Length(value=radius, unit_length="arcsec")
 
         if self.unit_length is not radius.unit_length:
 

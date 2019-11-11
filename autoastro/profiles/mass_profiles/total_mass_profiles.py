@@ -230,7 +230,6 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
             redshift_source=redshift_source,
             cosmology=cosmology,
             whitespace=whitespace,
-            kwargs=kwargs,
         )
 
         return summary
@@ -800,7 +799,6 @@ class EllipticalIsothermalKormann(mp.EllipticalMassProfile, mp.MassProfile):
             redshift_source=redshift_source,
             cosmology=cosmology,
             whitespace=whitespace,
-            kwargs=kwargs,
         )
 
         return summary

@@ -1,5 +1,7 @@
 import autoarray as aa
 import autoastro as aast
+import autofit as af
+import os
 import numpy as np
 import pytest
 

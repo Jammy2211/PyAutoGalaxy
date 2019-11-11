@@ -3,7 +3,7 @@ from autoarray.structures import grids
 import autoastro as aast
 import numpy as np
 import pytest
-
+import os
 
 grid = aa.grid.manual_2d([[[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]]])
 

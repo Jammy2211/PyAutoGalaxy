@@ -3,6 +3,7 @@ import numpy as np
 from astropy import cosmology as cosmo
 from scipy.integrate import quad
 
+from autoastro.util import cosmology_util
 from autoastro import dimensions as dim
 from autofit.tools import text_util
 from autoastro.profiles import geometry_profiles
@@ -126,7 +127,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         radius: dim.Length,
         unit_luminosity="eps",
         exposure_time=None,
-        redshift_profile=None,
+        redshift_object=None,
         cosmology=cosmo.Planck15,
         **kwargs
     ):
@@ -147,6 +148,19 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         exposure_time : float or None
             The exposure time of the observation, which converts luminosity from electrons per second units to counts.
         """
+
+        if not hasattr(radius, 'unit_length'):
+            radius = dim.Length(value=radius, unit_length="arcsec")
+
+        if self.unit_length is not radius.unit_length:
+
+            kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from_redshift_and_cosmology(
+                redshift=redshift_object, cosmology=cosmology
+            )
+
+            radius = radius.convert(unit_length=self.unit_length, kpc_per_arcsec=kpc_per_arcsec)
+
+
         luminosity = dim.Luminosity(
             value=quad(self.luminosity_integral, a=0.0, b=radius)[0],
             unit_luminosity=self.unit_luminosity,
@@ -187,7 +201,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
             luminosity = self.luminosity_within_circle_in_units(
                 unit_luminosity=unit_luminosity,
                 radius=radius,
-                redshift_profile=redshift_profile,
+                redshift_object=redshift_profile,
                 exposure_time=exposure_time,
                 cosmology=cosmology,
                 kwargs=kwargs,

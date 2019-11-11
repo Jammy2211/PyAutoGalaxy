@@ -4,6 +4,12 @@ import pytest
 import autoarray as aa
 from autoarray.structures import grids
 import autoastro as aast
+import os
+
+test_path = "{}/test_files/config/profiles".format(
+    os.path.dirname(os.path.realpath(__file__))
+)
+aa.conf.instance = aa.conf.Config(config_path=test_path)
 
 grid = aa.grid.manual_2d([[[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]]])
 

@@ -1073,7 +1073,7 @@ class TestLuminosityWithinCircle(object):
         )
 
         luminosity = sersic_kpc.luminosity_within_circle_in_units(
-            radius=radius, redshift_profile=0.5, cosmology=cosmology
+            radius=radius, redshift_object=0.5, cosmology=cosmology
         )
 
         assert luminosity_analytic == pytest.approx(luminosity, 1e-3)
@@ -1097,7 +1097,7 @@ class TestLuminosityWithinCircle(object):
         )
 
         luminosity = sersic_arcsec.luminosity_within_circle_in_units(
-            radius=radius, redshift_profile=0.5, cosmology=cosmology
+            radius=radius, redshift_object=0.5, cosmology=cosmology
         )
 
         assert luminosity_analytic == pytest.approx(luminosity, 1e-3)
@@ -1105,14 +1105,14 @@ class TestLuminosityWithinCircle(object):
         radius = aast.dim.Length(2.0, "arcsec")
         luminosity_arcsec = sersic_arcsec.luminosity_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             unit_mass="angular",
             cosmology=cosmology,
         )
         radius = aast.dim.Length(4.0, "kpc")
         luminosity_kpc = sersic_arcsec.luminosity_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             unit_mass="angular",
             cosmology=cosmology,
         )

@@ -3,11 +3,12 @@ import pytest
 from astropy import cosmology as cosmo
 
 import autoarray as aa
-from autoarray.masked import masked_structures
 from autoarray.structures import grids
 import autoastro as aast
 
 from test_autoastro.mock import mock_cosmology
+
+import os
 
 grid = aa.grid.manual_2d([[[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]]])
 

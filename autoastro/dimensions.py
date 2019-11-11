@@ -27,7 +27,6 @@ class DimensionsProfile(object):
         kpc_per_arcsec=None,
         exposure_time=None,
         critical_surface_density=None,
-        **kwargs
     ):
 
         constructor_args = inspect.getfullargspec(self.__init__).args
@@ -61,36 +60,59 @@ class DimensionsProfile(object):
     @property
     def unit_length(self):
 
+        unit_list = []
+
         for attr, value in self.__dict__.items():
 
             if isinstance(value, tuple):
                 for tuple_value in value:
                     if hasattr(tuple_value, "unit_length"):
-                        return tuple_value.unit_length
+                        unit_list.append(tuple_value.unit_length)
 
             if hasattr(value, "unit_length"):
-                return value.unit_length
+                unit_list.append(value.unit_length)
 
-        return None
+        if len(unit_list) > 0:
+            if not all(unit == unit_list[0] for unit in unit_list):
+                raise exc.UnitsException("This object has attributes with different units of length defined")
+        else:
+            return None
+
+        return unit_list[0]
 
     @property
     def unit_luminosity(self):
 
+        unit_list = []
+
         for attr, value in self.__dict__.items():
             if hasattr(value, "unit_luminosity"):
-                return value.unit_luminosity
+                unit_list.append(value.unit_luminosity)
 
-        return None
+        if len(unit_list) > 0:
+            if not all(unit == unit_list[0] for unit in unit_list):
+                raise exc.UnitsException("This object has attributes with different units of luminosity defined")
+        else:
+            return None
+
+        return unit_list[0]
 
     @property
     def unit_mass(self):
 
+        unit_list = []
+
         for attr, value in self.__dict__.items():
             if hasattr(value, "unit_mass"):
-                return value.unit_mass
+                unit_list.append(value.unit_mass)
 
-        return None
+        if len(unit_list) > 0:
+            if not all(unit == unit_list[0] for unit in unit_list):
+                raise exc.UnitsException("This object has attributes with different units of mass defined")
+        else:
+            return None
 
+        return unit_list[0]
 
 class Length(af.DimensionType):
     def __init__(self, value, unit_length="arcsec"):

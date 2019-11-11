@@ -12,10 +12,17 @@ from autoastro import lensing
 from test_autoastro.mock import mock_cosmology
 import os
 
-test_path = "{}/test_files/config/lensing".format(
-    os.path.dirname(os.path.realpath(__file__))
-)
-af.conf.instance = af.conf.Config(config_path=test_path)
+
+
+@pytest.fixture(autouse=True, scope="module")
+def reset_config():
+    """
+    Use configuration from the default path. You may want to change this to set a specific path.
+    """
+    test_path = "{}/test_files/config/lensing".format(
+        os.path.dirname(os.path.realpath(__file__))
+    )
+    af.conf.instance = af.conf.Config(config_path=test_path)
 
 
 class MockEllipticalIsothermal(
@@ -836,3 +843,130 @@ class TestEinsteinRadiusMassfrom(object):
         einstein_mass_vie_einstein_radius = np.pi * einstein_radius ** 2 * sigma_crit
 
         assert einstein_mass_vie_einstein_radius == pytest.approx(einstein_mass_from_critical_curve, 1e-3)
+
+
+class TestGridBinning(object):
+
+    def test__binning_works_on_all_from_grid_methods(self):
+
+        sie = MockEllipticalIsothermal(
+            centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
+        )
+
+        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=2)
+
+        deflections = sie.deflections_via_potential_from_grid(grid=grid)
+
+        deflections_first_binned_pixel = (
+            deflections[0] + deflections[1] + deflections[2] + deflections[3]
+        ) / 4
+
+        assert deflections.in_1d_binned[0] == pytest.approx(
+            deflections_first_binned_pixel, 1e-4
+        )
+
+        deflections_100th_binned_pixel = (
+            deflections[399] + deflections[398] + deflections[397] + deflections[396]
+        ) / 4
+
+        assert deflections.in_1d_binned[99] == pytest.approx(
+            deflections_100th_binned_pixel, 1e-4
+        )
+
+        jacobian = sie.jacobian_from_grid(grid=grid)
+
+        jacobian_1st_pixel_binned_up = (
+            jacobian[0][0][0]
+            + jacobian[0][0][1]
+            + jacobian[0][0][2]
+            + jacobian[0][0][3]
+        ) / 4
+
+        assert jacobian[0][0].in_2d_binned.shape == (10, 10)
+        assert jacobian[0][0].sub_shape_2d == (20, 20)
+        assert jacobian[0][0].in_1d_binned[0] == pytest.approx(
+            jacobian_1st_pixel_binned_up, 1e-4
+        )
+
+        jacobian_last_pixel_binned_up = (
+            jacobian[0][0][399]
+            + jacobian[0][0][398]
+            + jacobian[0][0][397]
+            + jacobian[0][0][396]
+        ) / 4
+
+        assert jacobian[0][0].in_1d_binned[99] == pytest.approx(
+            jacobian_last_pixel_binned_up, 1e-4
+        )
+
+        shear_via_jacobian = sie.shear_via_jacobian_from_grid(grid=grid)
+
+        shear_1st_pixel_binned_up = (
+            shear_via_jacobian[0]
+            + shear_via_jacobian[1]
+            + shear_via_jacobian[2]
+            + shear_via_jacobian[3]
+        ) / 4
+
+        assert shear_via_jacobian.in_1d_binned[0] == pytest.approx(
+            shear_1st_pixel_binned_up, 1e-4
+        )
+
+        shear_last_pixel_binned_up = (
+            shear_via_jacobian[399]
+            + shear_via_jacobian[398]
+            + shear_via_jacobian[397]
+            + shear_via_jacobian[396]
+        ) / 4
+
+        assert shear_via_jacobian.in_1d_binned[99] == pytest.approx(
+            shear_last_pixel_binned_up, 1e-4
+        )
+
+        tangential_eigen_values = sie.tangential_eigen_value_from_grid(grid=grid)
+
+        first_pixel_binned_up = (
+            tangential_eigen_values[0]
+            + tangential_eigen_values[1]
+            + tangential_eigen_values[2]
+            + tangential_eigen_values[3]
+        ) / 4
+
+        assert tangential_eigen_values.in_1d_binned[0] == pytest.approx(
+            first_pixel_binned_up, 1e-4
+        )
+
+        pixel_10000_from_av_sub_grid = (
+            tangential_eigen_values[399]
+            + tangential_eigen_values[398]
+            + tangential_eigen_values[397]
+            + tangential_eigen_values[396]
+        ) / 4
+
+        assert tangential_eigen_values.in_1d_binned[99] == pytest.approx(
+            pixel_10000_from_av_sub_grid, 1e-4
+        )
+
+        radial_eigen_values = sie.radial_eigen_value_from_grid(grid=grid)
+
+        first_pixel_binned_up = (
+            radial_eigen_values[0]
+            + radial_eigen_values[1]
+            + radial_eigen_values[2]
+            + radial_eigen_values[3]
+        ) / 4
+
+        assert radial_eigen_values.in_1d_binned[0] == pytest.approx(
+            first_pixel_binned_up, 1e-4
+        )
+
+        pixel_10000_from_av_sub_grid = (
+            radial_eigen_values[399]
+            + radial_eigen_values[398]
+            + radial_eigen_values[397]
+            + radial_eigen_values[396]
+        ) / 4
+
+        assert radial_eigen_values.in_1d_binned[99] == pytest.approx(
+            pixel_10000_from_av_sub_grid, 1e-4
+        )

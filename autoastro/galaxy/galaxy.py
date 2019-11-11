@@ -1,8 +1,10 @@
 import numpy as np
 from astropy import cosmology as cosmo
 from itertools import count
+from scipy.integrate import quad
 
 from autofit.mapper.model_object import ModelObject
+from autoastro.util import cosmology_util
 from autoastro import exc
 from autoastro import dimensions as dim
 from autoastro import lensing
@@ -185,7 +187,6 @@ class Galaxy(ModelObject, lensing.LensingObject):
         kpc_per_arcsec=None,
         exposure_time=None,
         critical_surface_density=None,
-        **kwargs,
     ):
 
         new_dict = {
@@ -196,7 +197,6 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 kpc_per_arcsec=kpc_per_arcsec,
                 exposure_time=exposure_time,
                 critical_surface_density=critical_surface_density,
-                kwargs=kwargs,
             )
             if is_light_profile(value) or is_mass_profile(value)
             else value
@@ -285,7 +285,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
                     lambda p: p.luminosity_within_circle_in_units(
                         radius=radius,
                         unit_luminosity=unit_luminosity,
-                        redshift_profile=self.redshift,
+                        redshift_object=self.redshift,
                         exposure_time=exposure_time,
                         cosmology=cosmology,
                         kwargs=kwargs,
@@ -294,34 +294,6 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 )
             )
         return None
-
-    def convergence_func(self, radius):
-        if self.has_mass_profile:
-            return sum(
-                [
-                    mass_profile.convergence_func(radius=radius)
-                    for mass_profile in self.mass_profiles
-                ]
-            )
-        else:
-            raise exc.GalaxyException(
-                "You cannot perform a mass-based calculation on a galaxy which does not have a mass-profile"
-            )
-
-    def average_convergence_of_1_radius_in_units(
-        self, unit_length="arcsec", cosmology=cosmo.Planck15, **kwargs
-    ):
-        return sum(
-            [
-                mass_profile.average_convergence_of_1_radius_in_units(
-                    unit_length=unit_length,
-                    redshift_object=self.redshift,
-                    cosmology=cosmology,
-                    kwargs=kwargs,
-                )
-                for mass_profile in self.mass_profiles
-            ]
-        )
 
     def convergence_from_grid(self, grid):
         """Compute the summed convergence of the galaxy's mass profiles using a grid \
@@ -398,6 +370,49 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return grid.mapping.grid_from_sub_grid_1d(
             sub_grid_1d=np.full((grid.sub_shape_1d, 2), 0.0)
         )
+
+    def mass_within_circle_in_units(
+        self,
+        radius: dim.Length,
+        unit_mass="angular",
+        redshift_source=None,
+        cosmology=cosmo.Planck15,
+    ):
+        """ Integrate the mass profiles's convergence profile to compute the total mass within a circle of \
+        specified radius. This is centred on the mass profile.
+
+        The following units for mass can be specified and output:
+
+        - Dimensionless angular units (default) - 'angular'.
+        - Solar masses - 'angular' (multiplies the angular mass by the critical surface mass density).
+
+        Parameters
+        ----------
+        radius : dim.Length
+            The radius of the circle to compute the dimensionless mass within.
+        unit_mass : str
+            The units the mass is returned in (angular | angular).
+        critical_surface_density : float or None
+            The critical surface mass density of the strong lens configuration, which converts mass from angulalr \
+            units to phsical units (e.g. solar masses).
+        """
+        if self.has_mass_profile:
+            return sum(
+                map(
+                    lambda p: p.mass_within_circle_in_units(
+                        radius=radius,
+                        unit_mass=unit_mass,
+                        redshift_object=self.redshift,
+                        redshift_source=redshift_source,
+                        cosmology=cosmology,
+                    ),
+                    self.mass_profiles,
+                )
+            )
+        else:
+            raise exc.GalaxyException(
+                "You cannot perform a mass-based calculation on a galaxy which does not have a mass-profile"
+            )
 
     def summarize_in_units(
         self,
@@ -535,7 +550,6 @@ class Galaxy(ModelObject, lensing.LensingObject):
             unit_mass=unit_mass,
             redshift_source=redshift_source,
             cosmology=cosmology,
-            kwargs=kwargs,
         )
 
         summary += [
@@ -553,7 +567,6 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 radius=radius,
                 redshift_source=redshift_source,
                 cosmology=cosmology,
-                kwargs=kwargs,
             )
 
             summary += [
@@ -578,7 +591,6 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 redshift_profile=self.redshift,
                 redshift_source=redshift_source,
                 cosmology=cosmology,
-                kwargs=kwargs,
             )
 
             summary += "\n"
