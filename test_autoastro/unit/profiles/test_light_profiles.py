@@ -242,7 +242,7 @@ class TestSersic:
         assert sersic.sersic_index == 4.0
         assert isinstance(sersic.sersic_index, float)
 
-        assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
+        assert sersic.sersic_instance == pytest.approx(7.66925, 1e-3)
         assert sersic.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
 
         sersic = aast.lp.SphericalSersic(
@@ -272,7 +272,7 @@ class TestSersic:
         assert sersic.sersic_index == 4.0
         assert isinstance(sersic.sersic_index, float)
 
-        assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
+        assert sersic.sersic_instance == pytest.approx(7.66925, 1e-3)
         assert sersic.elliptical_effective_radius == 0.6
 
     def test__intensity_at_radius__correct_value(self):
@@ -427,7 +427,7 @@ class TestExponential:
         assert exponential.sersic_index == 1.0
         assert isinstance(exponential.sersic_index, float)
 
-        assert exponential.sersic_constant == pytest.approx(1.67838, 1e-3)
+        assert exponential.sersic_instance == pytest.approx(1.67838, 1e-3)
         assert exponential.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
 
         exponential = aast.lp.SphericalExponential(
@@ -457,7 +457,7 @@ class TestExponential:
         assert exponential.sersic_index == 1.0
         assert isinstance(exponential.sersic_index, float)
 
-        assert exponential.sersic_constant == pytest.approx(1.67838, 1e-3)
+        assert exponential.sersic_instance == pytest.approx(1.67838, 1e-3)
         assert exponential.elliptical_effective_radius == 0.6
 
     def test__intensity_at_radius__correct_value(self):
@@ -573,7 +573,7 @@ class TestDevVaucouleurs:
         assert dev_vaucouleurs.sersic_index == 4.0
         assert isinstance(dev_vaucouleurs.sersic_index, float)
 
-        assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
+        assert dev_vaucouleurs.sersic_instance == pytest.approx(7.66924, 1e-3)
         assert dev_vaucouleurs.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
 
         dev_vaucouleurs = aast.lp.SphericalDevVaucouleurs(
@@ -603,7 +603,7 @@ class TestDevVaucouleurs:
         assert dev_vaucouleurs.sersic_index == 4.0
         assert isinstance(dev_vaucouleurs.sersic_index, float)
 
-        assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
+        assert dev_vaucouleurs.sersic_instance == pytest.approx(7.66924, 1e-3)
         assert dev_vaucouleurs.elliptical_effective_radius == 0.6
 
     def test__intensity_at_radius__correct_value(self):
@@ -739,7 +739,7 @@ class TestCoreSersic(object):
         assert core_sersic.alpha == 2.0
         assert isinstance(core_sersic.alpha, float)
 
-        assert core_sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
+        assert core_sersic.sersic_instance == pytest.approx(7.66925, 1e-3)
         assert core_sersic.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
 
         core_sersic = aast.lp.SphericalCoreSersic(
@@ -790,7 +790,7 @@ class TestCoreSersic(object):
         assert core_sersic.alpha == 2.0
         assert isinstance(core_sersic.alpha, float)
 
-        assert core_sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
+        assert core_sersic.sersic_instance == pytest.approx(7.66925, 1e-3)
         assert core_sersic.elliptical_effective_radius == 0.6
 
     def test__intensity_at_radius__correct_value(self):
@@ -852,7 +852,7 @@ class TestCoreSersic(object):
 
 
 def luminosity_from_radius_and_profile(radius, profile):
-    x = profile.sersic_constant * (
+    x = profile.sersic_instance * (
         (radius / profile.effective_radius) ** (1.0 / profile.sersic_index)
     )
 
@@ -863,8 +863,8 @@ def luminosity_from_radius_and_profile(radius, profile):
         * math.pi
         * profile.sersic_index
         * (
-            (math.e ** profile.sersic_constant)
-            / (profile.sersic_constant ** (2 * profile.sersic_index))
+            (math.e ** profile.sersic_instance)
+            / (profile.sersic_instance ** (2 * profile.sersic_index))
         )
         * scipy.special.gamma(2 * profile.sersic_index)
         * scipy.special.gammainc(2 * profile.sersic_index, x)

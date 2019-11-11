@@ -71,7 +71,7 @@ def make_galaxy_model(mapper,):
 
 
 class TestMassAndLightProfiles(object):
-    def test_make_galaxy_from_constant_profile(self, mass_and_light):
+    def test_make_galaxy_from_instance_profile(self, mass_and_light):
         prior = aast.GalaxyModel(redshift=0.5, profile=mass_and_light)
 
         galaxy = prior.instance_for_arguments({})
@@ -275,7 +275,7 @@ class TestPixelization(object):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift,
             pixelization=aa.pix.Rectangular,
-            regularization=aa.reg.Constant,
+            regularization=aa.reg.instance,
         )
 
         arguments = {
@@ -294,7 +294,7 @@ class TestPixelization(object):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift,
             pixelization=aa.pix.Rectangular(),
-            regularization=aa.reg.Constant(),
+            regularization=aa.reg.instance(),
         )
 
         arguments = {galaxy_model.redshift.redshift: 2.0}
@@ -314,7 +314,7 @@ class TestRegularization(object):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift,
             pixelization=aa.pix.Rectangular,
-            regularization=aa.reg.Constant,
+            regularization=aa.reg.instance,
         )
 
         arguments = {
@@ -332,7 +332,7 @@ class TestRegularization(object):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift,
             pixelization=aa.pix.Voronoi(),
-            regularization=aa.reg.Constant(),
+            regularization=aa.reg.instance(),
         )
 
         arguments = {galaxy_model.redshift.redshift: 2.0}
@@ -343,7 +343,7 @@ class TestRegularization(object):
 
     def test__if_no_pixelization_raises_error(self):
         with pytest.raises(exc.PriorException):
-            aast.GalaxyModel(redshift=aast.Redshift, regularization=aa.reg.Constant)
+            aast.GalaxyModel(redshift=aast.Redshift, regularization=aa.reg.instance)
 
 
 class TestHyperGalaxy(object):
@@ -443,7 +443,7 @@ class TestRedshift(object):
         # noinspection PyUnresolvedReferences
         assert galaxy_model.redshift == 3
 
-    def test_set_redshift_constant(self):
+    def test_set_redshift_instance(self):
         galaxy_model = aast.GalaxyModel(redshift=aast.Redshift)
         galaxy_model.redshift = 3
         # noinspection PyUnresolvedReferences
