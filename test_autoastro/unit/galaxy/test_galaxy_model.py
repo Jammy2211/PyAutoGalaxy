@@ -79,7 +79,7 @@ class TestMassAndLightProfiles(object):
         assert galaxy.light_profiles[0] == mass_and_light
         assert galaxy.mass_profiles[0] == mass_and_light
 
-    def test_make_galaxy_from_variable_profile(self):
+    def test_make_galaxy_from_model_profile(self):
         galaxy_model = aast.GalaxyModel(redshift=0.5, profile=aast.lmp.EllipticalSersic)
 
         arguments = {
@@ -406,23 +406,23 @@ class TestFixedProfiles(object):
 
         assert len(galaxy.mass_profiles) == 1
 
-    def test_fixed_and_variable(self):
+    def test_fixed_and_model(self):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift,
             mass_profile=aast.mp.SphericalNFW(),
             light_profile=aast.lp.EllipticalSersic(),
-            variable_light=aast.lp.EllipticalSersic,
+            model_light=aast.lp.EllipticalSersic,
         )
 
         arguments = {
             galaxy_model.redshift.redshift: 0.2,
-            galaxy_model.variable_light.axis_ratio: 0.4,
-            galaxy_model.variable_light.phi: 0.5,
-            galaxy_model.variable_light.intensity.value: 0.6,
-            galaxy_model.variable_light.effective_radius.value: 0.7,
-            galaxy_model.variable_light.sersic_index: 0.8,
-            galaxy_model.variable_light.centre.centre_0: 0,
-            galaxy_model.variable_light.centre.centre_1: 0,
+            galaxy_model.model_light.axis_ratio: 0.4,
+            galaxy_model.model_light.phi: 0.5,
+            galaxy_model.model_light.intensity.value: 0.6,
+            galaxy_model.model_light.effective_radius.value: 0.7,
+            galaxy_model.model_light.sersic_index: 0.8,
+            galaxy_model.model_light.centre.centre_0: 0,
+            galaxy_model.model_light.centre.centre_1: 0,
         }
 
         galaxy = galaxy_model.instance_for_arguments(arguments)

@@ -74,7 +74,7 @@ class GalaxyModel(PriorModel):
             and / or mass profiles always share the same orientation.
         redshift : float | Type[g.Redshift]
             The redshift of this model galaxy.
-        variable_redshift : bool
+        model_redshift : bool
             If *True*, the galaxy redshift will be treated as a free-parameter that is fitted for by the non-linear \
             search.
         pixelization : Pixelization

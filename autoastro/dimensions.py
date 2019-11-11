@@ -40,7 +40,7 @@ def convert_units_to_input_units(func):
             The DimensionsProfile
         """
 
-        # Extract units of calculation, to convert the input variables and profile to use these units.
+        # Extract units of calculation, to convert the input models and profile to use these units.
 
         unit_length = (
             kwargs["unit_length"] if "unit_length" in kwargs else profile.unit_length
