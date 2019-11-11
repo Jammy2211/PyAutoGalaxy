@@ -125,11 +125,11 @@ class MaskedGalaxyData(object):
             return self.grid.mapping.array_from_sub_array_1d(sub_array_1d=potential)
         elif self.use_deflections_y:
             deflections_y = sum(
-                map(lambda g: g.deflections_from_grid(grid=self.grid), galaxies)
+                map(lambda g: g.deflections_of_planes_summed_from_grid(grid=self.grid), galaxies)
             )[:, 0]
             return self.grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections_y)
         elif self.use_deflections_x:
             deflections_x = sum(
-                map(lambda g: g.deflections_from_grid(grid=self.grid), galaxies)
+                map(lambda g: g.deflections_of_planes_summed_from_grid(grid=self.grid), galaxies)
             )[:, 1]
             return self.grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections_x)

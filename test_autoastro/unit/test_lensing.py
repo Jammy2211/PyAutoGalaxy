@@ -434,7 +434,7 @@ def caustics_via_magnification_from_mass_profile_and_grid(mass_profile, grid):
 
         critical_curve = critical_curves[i]
 
-        deflections_1d = mass_profile.deflections_from_grid(grid=critical_curve)
+        deflections_1d = mass_profile.deflections_of_planes_summed_from_grid(grid=critical_curve)
 
         caustic = critical_curve - deflections_1d
 

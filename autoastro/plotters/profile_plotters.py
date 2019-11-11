@@ -199,7 +199,6 @@ def convergence(
 
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
-        grid=grid,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
@@ -289,7 +288,6 @@ def potential(
 
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
-        grid=grid,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
@@ -376,12 +374,11 @@ def deflections_y(
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
 
-    deflections = mass_profile.deflections_from_grid(grid=grid)
+    deflections = mass_profile.deflections_of_planes_summed_from_grid(grid=grid)
     deflections_y = grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 0])
 
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
-        grid=grid,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
@@ -467,12 +464,11 @@ def deflections_x(
      grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
-    deflections = mass_profile.deflections_from_grid(grid=grid)
+    deflections = mass_profile.deflections_of_planes_summed_from_grid(grid=grid)
     deflections_x = grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 1])
 
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
-        grid=grid,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
@@ -562,7 +558,6 @@ def magnification(
 
     lines = plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
-        grid=grid,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
