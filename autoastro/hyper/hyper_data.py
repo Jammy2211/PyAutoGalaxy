@@ -12,7 +12,7 @@ class HyperImageSky(object):
         self.sky_scale = sky_scale
 
     def hyper_image_from_image(self, image):
-        """Compute a new with the background sky level hyper. This can simply multiple by a constant factor \
+        """Compute a new with the background sky level hyper. This can simply multiple by a instance factor \
         (assuming a uniform background sky) because the is in units electrons per second.
 
         Parameters

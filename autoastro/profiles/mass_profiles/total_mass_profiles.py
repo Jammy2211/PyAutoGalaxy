@@ -40,7 +40,7 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
 
     # @property
     # def mass(self):
-    #     return (206265 * self.einstein_radius * (constants.c**2.0) / (4.0 * constants.G)) / 1.988e30
+    #     return (206265 * self.einstein_radius * (instances.c**2.0) / (4.0 * instances.G)) / 1.988e30
 
 
 class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
@@ -550,7 +550,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
     # def from_mass_in_solar_masses(cls, redshift_lens=0.5, redshift_source=1.0, centre: units.Position = (0.0, 0.0), axis_ratio_=0.9,
     #                               phi: float = 0.0, mass=10e10):
     #
-    #     return self.constant_kpc * self.angular_diameter_distance_of_plane_to_earth(j) / \
+    #     return self.instance_kpc * self.angular_diameter_distance_of_plane_to_earth(j) / \
     #            (self.angular_diameter_distance_between_planes(i, j) *
     #             self.angular_diameter_distance_of_plane_to_earth(i))
 

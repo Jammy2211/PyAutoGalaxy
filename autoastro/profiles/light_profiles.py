@@ -316,7 +316,7 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
         sersic_index: float = 4.0,
     ):
         """ Abstract base class for an elliptical Sersic light profile, used for computing its effective radius and
-        Sersic constant.
+        Sersic instance.
 
         Parameters
         ----------
@@ -363,7 +363,7 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
         return self.effective_radius / np.sqrt(self.axis_ratio)
 
     @property
-    def sersic_constant(self):
+    def sersic_instance(self):
         """ A parameter derived from Sersic index which ensures that effective radius contains 50% of the profile's
         total integrated light.
         """
@@ -385,7 +385,7 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
             The distance from the centre of the profile.
         """
         return self.intensity * np.exp(
-            -self.sersic_constant
+            -self.sersic_instance
             * (((radius / self.effective_radius) ** (1.0 / self.sersic_index)) - 1)
         )
 
@@ -442,7 +442,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
             self.intensity,
             np.exp(
                 np.multiply(
-                    -self.sersic_constant,
+                    -self.sersic_instance,
                     np.add(
                         np.power(
                             np.divide(grid_radii, self.effective_radius),
@@ -711,7 +711,7 @@ class EllipticalCoreSersic(EllipticalSersic):
             self.intensity_break
             * (2.0 ** (-self.gamma / self.alpha))
             * np.exp(
-                self.sersic_constant
+                self.sersic_instance
                 * (
                     ((2.0 ** (1.0 / self.alpha)) * self.radius_break)
                     / self.effective_radius
@@ -741,7 +741,7 @@ class EllipticalCoreSersic(EllipticalSersic):
             ),
             np.exp(
                 np.multiply(
-                    -self.sersic_constant,
+                    -self.sersic_instance,
                     (
                         np.power(
                             np.divide(
