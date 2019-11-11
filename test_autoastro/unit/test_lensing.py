@@ -510,28 +510,7 @@ class TestCriticalCurvesAndCaustics(object):
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=2)
-
-        critical_curves = sis.critical_curves_from_grid(grid=grid)
-
-        tangential_critical_curve = critical_curves[0]
-
-        x_critical_tangential, y_critical_tangential = (
-            tangential_critical_curve[:, 1],
-            tangential_critical_curve[:, 0],
-        )
-
-        assert np.mean(
-            x_critical_tangential ** 2 + y_critical_tangential ** 2
-        ) == pytest.approx(sis.einstein_radius ** 2, 5e-1)
-
-        sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-
-        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.5, sub_size=4)
-
-        critical_curves = sis.critical_curves_from_grid(grid=grid)
-
-        tangential_critical_curve = critical_curves[0]
+        tangential_critical_curve = sis.critical_curves[0]
 
         x_critical_tangential, y_critical_tangential = (
             tangential_critical_curve[:, 1],
@@ -546,11 +525,7 @@ class TestCriticalCurvesAndCaustics(object):
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
-
-        critical_curves = sis.critical_curves_from_grid(grid=grid)
-
-        tangential_critical_curve = critical_curves[0]
+        tangential_critical_curve = sis.critical_curves[0]
 
         y_centre = np.mean(tangential_critical_curve[:, 0])
         x_centre = np.mean(tangential_critical_curve[:, 1])
@@ -558,11 +533,7 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.03 < y_centre < 0.03
         assert -0.03 < x_centre < 0.03
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=4)
-
-        critical_curves = sis.critical_curves_from_grid(grid=grid)
-
-        tangential_critical_curve = critical_curves[0]
+        tangential_critical_curve = sis.critical_curves[0]
 
         y_centre = np.mean(tangential_critical_curve[:, 0])
         x_centre = np.mean(tangential_critical_curve[:, 1])
@@ -572,11 +543,7 @@ class TestCriticalCurvesAndCaustics(object):
 
         sis = MockSphericalIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(60, 60), pixel_scales=0.25, sub_size=1)
-
-        critical_curves = sis.critical_curves_from_grid(grid=grid)
-
-        tangential_critical_curve = critical_curves[0]
+        tangential_critical_curve = sis.critical_curves[0]
 
         y_centre = np.mean(tangential_critical_curve[:, 0])
         x_centre = np.mean(tangential_critical_curve[:, 1])
@@ -588,11 +555,7 @@ class TestCriticalCurvesAndCaustics(object):
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
-
-        critical_curves = sis.critical_curves_from_grid(grid=grid)
-
-        radial_critical_curve = critical_curves[1]
+        radial_critical_curve = sis.critical_curves[1]
 
         y_centre = np.mean(radial_critical_curve[:, 0])
         x_centre = np.mean(radial_critical_curve[:, 1])
@@ -600,11 +563,7 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.05 < y_centre < 0.05
         assert -0.05 < x_centre < 0.05
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=4)
-
-        critical_curves = sis.critical_curves_from_grid(grid=grid)
-
-        radial_critical_curve = critical_curves[1]
+        radial_critical_curve = sis.critical_curves[1]
 
         y_centre = np.mean(radial_critical_curve[:, 0])
         x_centre = np.mean(radial_critical_curve[:, 1])
@@ -614,11 +573,7 @@ class TestCriticalCurvesAndCaustics(object):
 
         sis = MockSphericalIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(60, 60), pixel_scales=0.25, sub_size=1)
-
-        critical_curves = sis.critical_curves_from_grid(grid=grid)
-
-        radial_critical_curve = critical_curves[1]
+        radial_critical_curve = sis.critical_curves[1]
 
         y_centre = np.mean(radial_critical_curve[:, 0])
         x_centre = np.mean(radial_critical_curve[:, 1])
@@ -630,11 +585,7 @@ class TestCriticalCurvesAndCaustics(object):
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
-
-        caustics = sis.caustics_from_grid(grid=grid)
-
-        tangential_caustic = caustics[0]
+        tangential_caustic = sis.caustics[0]
 
         y_centre = np.mean(tangential_caustic[:, 0])
         x_centre = np.mean(tangential_caustic[:, 1])
@@ -642,11 +593,7 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.03 < y_centre < 0.03
         assert -0.03 < x_centre < 0.03
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=4)
-
-        caustics = sis.caustics_from_grid(grid=grid)
-
-        tangential_caustic = caustics[0]
+        tangential_caustic = sis.caustics[0]
 
         y_centre = np.mean(tangential_caustic[:, 0])
         x_centre = np.mean(tangential_caustic[:, 1])
@@ -656,11 +603,7 @@ class TestCriticalCurvesAndCaustics(object):
 
         sis = MockSphericalIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(60, 60), pixel_scales=0.25, sub_size=1)
-
-        caustics = sis.caustics_from_grid(grid=grid)
-
-        tangential_caustic = caustics[0]
+        tangential_caustic = sis.caustics[0]
 
         y_centre = np.mean(tangential_caustic[:, 0])
         x_centre = np.mean(tangential_caustic[:, 1])
@@ -672,11 +615,7 @@ class TestCriticalCurvesAndCaustics(object):
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.5, sub_size=4)
-
-        caustics = sis.caustics_from_grid(grid=grid)
-
-        caustic_radial = caustics[1]
+        caustic_radial = sis.caustics[1]
 
         x_caustic_radial, y_caustic_radial = (
             caustic_radial[:, 1],
@@ -691,11 +630,7 @@ class TestCriticalCurvesAndCaustics(object):
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
-
-        caustics = sis.caustics_from_grid(grid=grid)
-
-        radial_caustic = caustics[1]
+        radial_caustic = sis.caustics[1]
 
         y_centre = np.mean(radial_caustic[:, 0])
         x_centre = np.mean(radial_caustic[:, 1])
@@ -703,11 +638,7 @@ class TestCriticalCurvesAndCaustics(object):
         assert -0.2 < y_centre < 0.2
         assert -0.2 < x_centre < 0.2
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=4)
-
-        caustics = sis.caustics_from_grid(grid=grid)
-
-        radial_caustic = caustics[1]
+        radial_caustic = sis.caustics[1]
 
         y_centre = np.mean(radial_caustic[:, 0])
         x_centre = np.mean(radial_caustic[:, 1])
@@ -717,11 +648,7 @@ class TestCriticalCurvesAndCaustics(object):
 
         sis = MockSphericalIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(60, 60), pixel_scales=0.25, sub_size=1)
-
-        caustics = sis.caustics_from_grid(grid=grid)
-
-        radial_caustic = caustics[1]
+        radial_caustic = sis.caustics[1]
 
         y_centre = np.mean(radial_caustic[:, 0])
         x_centre = np.mean(radial_caustic[:, 1])
@@ -737,35 +664,23 @@ class TestCriticalCurvesAndCaustics(object):
             centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
         )
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
-
         tangential_critical_curve_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
-            mass_profile=sie, grid=grid
+            mass_profile=sie, grid=sie.calculation_grid
         )[
             0
         ]
 
-        tangential_critical_curve_from_eigen_values = sie.tangential_critical_curve_from_grid(
-            grid=grid
-        )
-
-        assert tangential_critical_curve_from_eigen_values == pytest.approx(
+        assert sie.tangential_critical_curve == pytest.approx(
             tangential_critical_curve_from_magnification, 5e-1
         )
 
-        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.5, sub_size=2)
-
         tangential_critical_curve_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
-            mass_profile=sie, grid=grid
+            mass_profile=sie, grid=sie.calculation_grid
         )[
             0
         ]
 
-        tangential_critical_curve_from_eigen_values = sie.tangential_critical_curve_from_grid(
-            grid=grid
-        )
-
-        assert tangential_critical_curve_from_eigen_values == pytest.approx(
+        assert sie.tangential_critical_curve == pytest.approx(
             tangential_critical_curve_from_magnification, 5e-1
         )
 
@@ -775,20 +690,14 @@ class TestCriticalCurvesAndCaustics(object):
             centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
         )
 
-        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
-
         critical_curve_radial_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
-            mass_profile=sie, grid=grid
+            mass_profile=sie, grid=sie.calculation_grid
         )[
             1
         ]
 
-        critical_curve_radial_from_eigen_values = sie.radial_critical_curve_from_grid(
-            grid=grid
-        )
-
         assert sum(critical_curve_radial_from_magnification) == pytest.approx(
-            sum(critical_curve_radial_from_eigen_values), 5e-1
+            sum(sie.radial_critical_curve), 5e-1
         )
 
     def test__compare_tangential_caustic_from_magnification_and_eigen_values(self):
@@ -797,35 +706,13 @@ class TestCriticalCurvesAndCaustics(object):
             centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
         )
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=1)
-
         tangential_caustic_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
-            mass_profile=sie, grid=grid
+            mass_profile=sie, grid=sie.calculation_grid
         )[
             0
         ]
 
-        tangential_caustic_from_eigen_values = sie.tangential_caustic_from_grid(
-            grid=grid
-        )
-
-        assert sum(tangential_caustic_from_eigen_values) == pytest.approx(
-            sum(tangential_caustic_from_magnification), 5e-1
-        )
-
-        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.5, sub_size=2)
-
-        tangential_caustic_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
-            mass_profile=sie, grid=grid
-        )[
-            0
-        ]
-
-        tangential_caustic_from_eigen_values = sie.tangential_caustic_from_grid(
-            grid=grid
-        )
-
-        assert sum(tangential_caustic_from_eigen_values) == pytest.approx(
+        assert sum(sie.tangential_caustic) == pytest.approx(
             sum(tangential_caustic_from_magnification), 5e-1
         )
 
@@ -835,32 +722,14 @@ class TestCriticalCurvesAndCaustics(object):
             centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
         )
 
-        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
-
         caustic_radial_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
-            mass_profile=sie, grid=grid
+            mass_profile=sie, grid=sie.calculation_grid
         )[
             1
         ]
 
-        caustic_radial_from_eigen_values = sie.caustics_from_grid(grid=grid)[1]
-
-        assert sum(caustic_radial_from_eigen_values) == pytest.approx(
+        assert sum(sie.radial_caustic) == pytest.approx(
             sum(caustic_radial_from_magnification), 7e-1
-        )
-
-        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
-
-        caustic_radial_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
-            mass_profile=sie, grid=grid
-        )[
-            1
-        ]
-
-        caustic_radial_from_eigen_values = sie.caustics_from_grid(grid=grid)[1]
-
-        assert sum(caustic_radial_from_eigen_values) == pytest.approx(
-            sum(caustic_radial_from_magnification), 5e-1
         )
 
 
@@ -871,21 +740,13 @@ class TestEinsteinRadiusMassfrom(object):
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=2)
+        area_calc = np.pi * sis.einstein_radius ** 2
 
-        area_crit = sis.area_within_tangential_critical_curve(grid=grid)
+        assert sis.area_within_tangential_critical_curve == pytest.approx(area_calc, 1e-3)
 
         area_calc = np.pi * sis.einstein_radius ** 2
 
-        assert area_crit == pytest.approx(area_calc, 1e-3)
-
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=4)
-
-        area_crit = sis.area_within_tangential_critical_curve(grid=grid)
-
-        area_calc = np.pi * sis.einstein_radius ** 2
-
-        assert area_crit == pytest.approx(area_calc, 1e-3)
+        assert sis.area_within_tangential_critical_curve == pytest.approx(area_calc, 1e-3)
 
     def test__einstein_radius_from_tangential_critical_curve__spherical_isothermal(
         self
@@ -895,17 +756,17 @@ class TestEinsteinRadiusMassfrom(object):
 
         grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=2)
 
-        radius_from_critical_curve = sis.einstein_radius_in_units(grid=grid)
+        einstein_radius = sis.einstein_radius_in_units(unit_length="arcsec")
 
-        assert radius_from_critical_curve == pytest.approx(2.0, 1e-3)
+        assert einstein_radius == pytest.approx(2.0, 1e-3)
 
         cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=2.0, kpc_per_arcsec=0.5)
 
-        radius_from_critical_curve = sis.einstein_radius_in_units(
-            grid=grid, unit_length="kpc", redshift_object=2.0, cosmology=cosmology
+        einstein_radius = sis.einstein_radius_in_units(
+            unit_length="kpc", redshift_object=2.0, cosmology=cosmology
         )
 
-        assert radius_from_critical_curve == pytest.approx(1.0, 1e-3)
+        assert einstein_radius == pytest.approx(1.0, 1e-3)
 
     def test__compare_einstein_radius_from_tangential_critical_curve_and_rescaled__sie(
         self
@@ -915,19 +776,17 @@ class TestEinsteinRadiusMassfrom(object):
             centre=(0.0, 0.0), einstein_radius=2.0, axis_ratio=0.6
         )
 
-        grid = aa.grid.uniform(shape_2d=(50, 50), pixel_scales=0.25, sub_size=2)
+        einstein_radius = sie.einstein_radius_in_units(unit_length="arcsec")
 
-        radius_from_critical_curve = sie.einstein_radius_in_units(grid=grid)
-
-        assert radius_from_critical_curve == pytest.approx(1.9360, 1e-3)
+        assert einstein_radius == pytest.approx(1.9360, 1e-3)
 
         cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=2.0, kpc_per_arcsec=0.5)
 
-        radius_from_critical_curve = sie.einstein_radius_in_units(
-            grid=grid, unit_length="kpc", redshift_object=2.0, cosmology=cosmology
+        einstein_radius = sie.einstein_radius_in_units(
+            unit_length="kpc", redshift_object=2.0, cosmology=cosmology
         )
 
-        assert radius_from_critical_curve == pytest.approx(0.5 * 1.9360, 1e-3)
+        assert einstein_radius == pytest.approx(0.5 * 1.9360, 1e-3)
 
     def test__einstein_mass_from_tangential_critical_curve_and_kappa__spherical_isothermal(
         self
@@ -935,21 +794,19 @@ class TestEinsteinRadiusMassfrom(object):
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.25, sub_size=2)
-
-        mass_from_critical_curve = sis.einstein_mass_in_units(
-            grid=grid, redshift_object=1, redshift_source=2, unit_mass="angular"
+        einstein_mass = sis.einstein_mass_in_units(
+            redshift_object=1, redshift_source=2, unit_mass="angular"
         )
 
-        assert mass_from_critical_curve == pytest.approx(np.pi * 2.0 ** 2.0, 1e-3)
+        assert einstein_mass == pytest.approx(np.pi * 2.0 ** 2.0, 1e-3)
 
         cosmology = mock_cosmology.MockCosmology(kpc_per_arcsec=1.0, arcsec_per_kpc=1.0, critical_surface_density=0.5)
 
-        mass_from_critical_curve = sis.einstein_mass_in_units(
-            grid=grid, redshift_object=1, redshift_source=2, unit_mass="solMass", cosmology=cosmology
+        einstein_mass = sis.einstein_mass_in_units(
+            redshift_object=1, redshift_source=2, unit_mass="solMass", cosmology=cosmology
         )
 
-        assert mass_from_critical_curve == pytest.approx(2.0 * np.pi * 2.0**2.0, 1e-3)
+        assert einstein_mass == pytest.approx(2.0 * np.pi * 2.0**2.0, 1e-3)
 
     def test__einstein_mass_from_tangential_critical_curve_and_radius_rescaled_calc__sie(
         self
@@ -959,17 +816,14 @@ class TestEinsteinRadiusMassfrom(object):
             centre=(0.0, 0.0), einstein_radius=2.0, axis_ratio=0.6
         )
 
-        grid = aa.grid.uniform(shape_2d=(50, 50), pixel_scales=0.25, sub_size=2)
-
-        mass_from_critical_curve = sie.einstein_mass_in_units(
-            grid=grid,
+        einstein_mass_from_critical_curve = sie.einstein_mass_in_units(
             redshift_object=1,
             redshift_source=2,
             unit_mass="solMass",
             cosmology=cosmo.Planck15,
         )
 
-        radius_rescaled = sie.einstein_radius_in_units(grid=grid, unit_length="arcsec")
+        einstein_radius = sie.einstein_radius_in_units(unit_length="arcsec")
 
         sigma_crit = aast.util.cosmology.critical_surface_density_between_redshifts_from_redshifts_and_cosmology(
             redshift_0=1,
@@ -979,6 +833,6 @@ class TestEinsteinRadiusMassfrom(object):
             cosmology=cosmo.Planck15,
         )
 
-        mass_from_einstein_radius = np.pi * radius_rescaled ** 2 * sigma_crit
+        einstein_mass_vie_einstein_radius = np.pi * einstein_radius ** 2 * sigma_crit
 
-        assert mass_from_critical_curve == pytest.approx(mass_from_einstein_radius, 1e-3)
+        assert einstein_mass_vie_einstein_radius == pytest.approx(einstein_mass_from_critical_curve, 1e-3)

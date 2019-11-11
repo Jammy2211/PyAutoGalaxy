@@ -47,7 +47,7 @@ class TestMassWithinCircle(object):
 
         mass = sis.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
         )
@@ -59,7 +59,7 @@ class TestMassWithinCircle(object):
 
         mass = sis.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
         )
@@ -77,7 +77,7 @@ class TestMassWithinCircle(object):
 
         mass = sis.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
         )
@@ -100,7 +100,7 @@ class TestMassWithinCircle(object):
         radius = aast.dim.Length(2.0, "arcsec")
         mass = sis_arcsec.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
         )
@@ -113,7 +113,7 @@ class TestMassWithinCircle(object):
         radius = aast.dim.Length(2.0, "kpc")
         mass = sis_arcsec.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
             cosmology=cosmology,
@@ -125,7 +125,7 @@ class TestMassWithinCircle(object):
         radius = aast.dim.Length(2.0, "arcsec")
         mass_arcsec = sis_arcsec.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
             cosmology=cosmology,
@@ -133,7 +133,7 @@ class TestMassWithinCircle(object):
         radius = aast.dim.Length(4.0, "kpc")
         mass_kpc = sis_arcsec.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
             cosmology=cosmology,
@@ -150,7 +150,7 @@ class TestMassWithinCircle(object):
         radius = aast.dim.Length(2.0, "kpc")
         mass = sis_kpc.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
             cosmology=cosmology,
@@ -162,7 +162,7 @@ class TestMassWithinCircle(object):
         radius = aast.dim.Length(2.0, "arcsec")
         mass = sis_kpc.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
             cosmology=cosmology,
@@ -176,7 +176,7 @@ class TestMassWithinCircle(object):
         radius = aast.dim.Length(2.0, "arcsec")
         mass_arcsec = sis_kpc.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
             cosmology=cosmology,
@@ -184,7 +184,7 @@ class TestMassWithinCircle(object):
         radius = aast.dim.Length(4.0, "kpc")
         mass_kpc = sis_kpc.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
         )
@@ -201,7 +201,7 @@ class TestMassWithinCircle(object):
 
         mass = sis.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
             cosmology=cosmology,
@@ -210,7 +210,7 @@ class TestMassWithinCircle(object):
 
         mass = sis.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="solMass",
             cosmology=cosmology,
@@ -219,7 +219,7 @@ class TestMassWithinCircle(object):
 
         mass = sis.mass_within_circle_in_units(
             radius=radius,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="solMass",
             cosmology=cosmology,
@@ -314,14 +314,14 @@ class TestDensityBetweenAnnuli(object):
 
         inner_mass = nfw.mass_within_circle_in_units(
             radius=aast.dim.Length(1.0),
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
         )
 
         outer_mass = nfw.mass_within_circle_in_units(
             radius=aast.dim.Length(2.0),
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="angular",
         )

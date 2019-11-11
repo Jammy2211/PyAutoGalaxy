@@ -381,7 +381,7 @@ class MockDimensionsProfile(aast.dim.DimensionsProfile):
         self.mass = mass
         self.mass_over_luminosity = mass_over_luminosity
 
-    @aast.dim.convert_units_to_input_units
+    @aast.dim.check_object_units
     def unit_length_calc(
         self,
         length_input: aast.dim.Length,
@@ -393,7 +393,7 @@ class MockDimensionsProfile(aast.dim.DimensionsProfile):
 
         return aast.dim.Length(self.length + length_input, self.unit_length)
 
-    @aast.dim.convert_units_to_input_units
+    @aast.dim.check_object_units
     def unit_luminosity_calc(
         self,
         luminosity_input: aast.dim.Luminosity = None,
@@ -408,7 +408,7 @@ class MockDimensionsProfile(aast.dim.DimensionsProfile):
             self.luminosity + luminosity_input, self.unit_luminosity
         )
 
-    @aast.dim.convert_units_to_input_units
+    @aast.dim.check_object_units
     def unit_mass_calc(
         self,
         mass_input: aast.dim.Mass = None,

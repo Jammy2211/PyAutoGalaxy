@@ -315,7 +315,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             [
                 mass_profile.average_convergence_of_1_radius_in_units(
                     unit_length=unit_length,
-                    redshift_profile=self.redshift,
+                    redshift_object=self.redshift,
                     cosmology=cosmology,
                     kwargs=kwargs,
                 )

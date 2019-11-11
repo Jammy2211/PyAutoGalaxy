@@ -136,26 +136,26 @@ class TestAbstractNFW(object):
             grid_radius=np.array([3.0, 3.0])
         ) == pytest.approx(np.array([0.06946888, 0.06946888]), 1.0e-4)
 
-    def test__rho_at_scale_radius__numerical_values_in_default_units(self):
+    def test__rho_at_scale_radius__numerical_values_in_angular_units(self):
         cosmology = mock_cosmology.MockCosmology(
             kpc_per_arcsec=2.0, critical_surface_density=2.0
         )
 
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
         rho = nfw.rho_at_scale_radius_for_units(
-            redshift_profile=0.5, redshift_source=1.0, cosmology=cosmology
+            redshift_object=0.5, redshift_source=1.0, unit_mass="angular", cosmology=cosmology
         )
         assert rho == pytest.approx(1.0, 1e-3)
 
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=3.0, scale_radius=1.0)
         rho = nfw.rho_at_scale_radius_for_units(
-            redshift_profile=0.5, redshift_source=1.0, cosmology=cosmology
+            redshift_object=0.5, redshift_source=1.0, unit_mass="angular", cosmology=cosmology
         )
         assert rho == pytest.approx(3.0, 1e-3)
 
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0)
         rho = nfw.rho_at_scale_radius_for_units(
-            redshift_profile=0.5, redshift_source=1.0, cosmology=cosmology
+            redshift_object=0.5, redshift_source=1.0, unit_mass="angular", cosmology=cosmology
         )
         assert rho == pytest.approx(0.25, 1e-3)
 
@@ -173,7 +173,7 @@ class TestAbstractNFW(object):
         rho = nfw_arcsec.rho_at_scale_radius_for_units(
             unit_length="arcsec",
             unit_mass="solMass",
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             cosmology=cosmology,
         )
@@ -185,7 +185,7 @@ class TestAbstractNFW(object):
         rho = nfw_arcsec.rho_at_scale_radius_for_units(
             unit_length="kpc",
             unit_mass="solMass",
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             cosmology=cosmology,
         )
@@ -194,7 +194,7 @@ class TestAbstractNFW(object):
         rho = nfw_arcsec.rho_at_scale_radius_for_units(
             unit_length="arcsec",
             unit_mass="angular",
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             cosmology=cosmology,
         )
@@ -209,7 +209,7 @@ class TestAbstractNFW(object):
         rho = nfw_arcsec.rho_at_scale_radius_for_units(
             unit_length="kpc",
             unit_mass="solMass",
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             cosmology=cosmology,
         )
@@ -222,7 +222,7 @@ class TestAbstractNFW(object):
         rho = nfw_arcsec.rho_at_scale_radius_for_units(
             unit_length="kpc",
             unit_mass="solMass",
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             cosmology=cosmology,
         )
@@ -240,7 +240,7 @@ class TestAbstractNFW(object):
         rho = nfw_kpc.rho_at_scale_radius_for_units(
             unit_length="kpc",
             unit_mass="solMass",
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             cosmology=cosmology,
         )
@@ -249,7 +249,7 @@ class TestAbstractNFW(object):
         rho = nfw_kpc.rho_at_scale_radius_for_units(
             unit_length="arcsec",
             unit_mass="solMass",
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             cosmology=cosmology,
         )
@@ -258,7 +258,7 @@ class TestAbstractNFW(object):
         rho = nfw_kpc.rho_at_scale_radius_for_units(
             unit_length="kpc",
             unit_mass="angular",
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             cosmology=cosmology,
         )
@@ -275,7 +275,7 @@ class TestAbstractNFW(object):
         )
 
         delta_concentration = nfw.delta_concentration_for_units(
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="solMass",
             cosmology=cosmology,
@@ -284,7 +284,7 @@ class TestAbstractNFW(object):
 
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=3.0, scale_radius=1.0)
         delta_concentration = nfw.delta_concentration_for_units(
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="solMass",
             cosmology=cosmology,
@@ -293,7 +293,7 @@ class TestAbstractNFW(object):
 
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0)
         delta_concentration = nfw.delta_concentration_for_units(
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_mass="solMass",
             cosmology=cosmology,
@@ -357,7 +357,7 @@ class TestAbstractNFW(object):
 
         radius_200 = nfw_arcsec.radius_at_200_for_units(
             unit_length="arcsec",
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             cosmology=cosmology,
         )
@@ -375,7 +375,7 @@ class TestAbstractNFW(object):
 
         radius_200 = nfw_arcsec.radius_at_200_for_units(
             unit_length="kpc",
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             cosmology=cosmology,
         )
@@ -399,7 +399,7 @@ class TestAbstractNFW(object):
 
         radius_200 = nfw_kpc.radius_at_200_for_units(
             unit_length="kpc",
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             cosmology=cosmology,
         )
@@ -417,7 +417,7 @@ class TestAbstractNFW(object):
 
         radius_200 = nfw_kpc.radius_at_200_for_units(
             unit_length="arcsec",
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             cosmology=cosmology,
         )
@@ -436,14 +436,14 @@ class TestAbstractNFW(object):
 
         radius_at_200 = nfw.radius_at_200_for_units(
             unit_length="arcsec",
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             cosmology=cosmology,
         )
 
         mass_at_200 = nfw.mass_at_200_for_units(
             cosmology=cosmology,
-            redshift_profile=0.5,
+            redshift_object=0.5,
             redshift_source=1.0,
             unit_length="arcsec",
             unit_mass="solMass",
@@ -480,13 +480,13 @@ class TestAbstractNFW(object):
         rho = nfw.rho_at_scale_radius_for_units(
             unit_length="kpc",
             unit_mass="solMass",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             cosmology=cosmology,
         )
 
         delta_concentration = nfw.delta_concentration_for_units(
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             unit_length="kpc",
             unit_mass="solMass",
@@ -506,7 +506,7 @@ class TestAbstractNFW(object):
         radius_at_200 = nfw.radius_at_200_for_units(
             unit_length="kpc",
             unit_mass="solMass",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             redshift_of_cosmic_average_density="local",
             cosmology=cosmology,
@@ -515,7 +515,7 @@ class TestAbstractNFW(object):
         mass_at_200 = nfw.mass_at_200_for_units(
             unit_length="kpc",
             unit_mass="solMass",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             redshift_of_cosmic_average_density="local",
             cosmology=cosmology,
@@ -540,13 +540,13 @@ class TestAbstractNFW(object):
         rho = nfw.rho_at_scale_radius_for_units(
             unit_length="kpc",
             unit_mass="solMass",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             cosmology=cosmology,
         )
 
         delta_concentration = nfw.delta_concentration_for_units(
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             unit_length="kpc",
             unit_mass="solMass",
@@ -566,7 +566,7 @@ class TestAbstractNFW(object):
         radius_at_200 = nfw.radius_at_200_for_units(
             unit_length="kpc",
             unit_mass="solMass",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             redshift_of_cosmic_average_density="profile",
             cosmology=cosmology,
@@ -575,7 +575,7 @@ class TestAbstractNFW(object):
         mass_at_200 = nfw.mass_at_200_for_units(
             unit_length="kpc",
             unit_mass="solMass",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             redshift_of_cosmic_average_density="profile",
             cosmology=cosmology,
@@ -599,6 +599,7 @@ class TestAbstractNFW(object):
 
         nfw = aast.mp.SphericalTruncatedNFW(
             kappa_s=0.5,
+            centre=(aast.dim.Length(0.0, "kpc"), aast.dim.Length(0.0, "kpc")),
             scale_radius=aast.dim.Length(3.0, "kpc"),
             truncation_radius=aast.dim.Length(7.0, "kpc"),
         )
@@ -606,13 +607,13 @@ class TestAbstractNFW(object):
         rho = nfw.rho_at_scale_radius_for_units(
             unit_length="kpc",
             unit_mass="solMass",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             cosmology=cosmology,
         )
 
         delta_concentration = nfw.delta_concentration_for_units(
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             unit_length="kpc",
             unit_mass="solMass",
@@ -632,7 +633,7 @@ class TestAbstractNFW(object):
         radius_at_200 = nfw.radius_at_200_for_units(
             unit_length="kpc",
             unit_mass="solMass",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             redshift_of_cosmic_average_density="profile",
             cosmology=cosmology,
@@ -641,7 +642,7 @@ class TestAbstractNFW(object):
         mass_at_200 = nfw.mass_at_200_for_units(
             unit_length="kpc",
             unit_mass="solMass",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             redshift_of_cosmic_average_density="profile",
             cosmology=cosmology,
@@ -666,13 +667,13 @@ class TestAbstractNFW(object):
         rho = nfw.rho_at_scale_radius_for_units(
             unit_length="arcsec",
             unit_mass="solMass",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             cosmology=cosmology,
         )
 
         delta_concentration = nfw.delta_concentration_for_units(
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             unit_length="arcsec",
             unit_mass="solMass",
@@ -692,7 +693,7 @@ class TestAbstractNFW(object):
         radius_at_200 = nfw.radius_at_200_for_units(
             unit_length="arcsec",
             unit_mass="solMass",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             redshift_of_cosmic_average_density="profile",
             cosmology=cosmology,
@@ -701,7 +702,7 @@ class TestAbstractNFW(object):
         mass_at_200 = nfw.mass_at_200_for_units(
             unit_length="arcsec",
             unit_mass="solMass",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             redshift_of_cosmic_average_density="profile",
             cosmology=cosmology,
@@ -1307,7 +1308,7 @@ class TestTruncatedNFW(object):
         i += 1
         assert (
             summary_text[i]
-            == "nfw_einstein_mass                                 1.4418e+12 solMass"
+            == "nfw_einstein_mass                                 1.4417e+12 solMass"
         )
         i += 1
         assert (
@@ -1417,7 +1418,7 @@ class TestTruncatedNFWMassToConcentration(object):
         mass_at_200_via_mass = truncated_nfw_mass.mass_at_200_for_units(
             unit_mass="solMass",
             unit_length="arcsec",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             cosmology=cosmology,
         )
@@ -1439,7 +1440,7 @@ class TestTruncatedNFWMassToConcentration(object):
         mass_at_200_via_kappa_s = truncated_nfw_kappa_s.mass_at_200_for_units(
             unit_mass="solMass",
             unit_length="arcsec",
-            redshift_profile=0.6,
+            redshift_object=0.6,
             redshift_source=2.5,
             cosmology=cosmology,
         )
@@ -1514,7 +1515,7 @@ class TestTruncatedNFWMassToConcentration(object):
         i += 1
         assert (
             summary_text[i]
-            == "nfw_einstein_mass                                 1.4418e+12 solMass"
+            == "nfw_einstein_mass                                 1.4417e+12 solMass"
         )
         i += 1
         assert (

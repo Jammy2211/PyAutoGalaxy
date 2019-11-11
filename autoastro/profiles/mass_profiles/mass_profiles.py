@@ -6,6 +6,7 @@ from skimage import measure
 
 import autofit as af
 from autoarray.structures import grids
+from autoastro.util import cosmology_util
 from autoastro import lensing
 from autoastro import dimensions as dim
 from autofit.tools import text_util
@@ -23,7 +24,6 @@ class MassProfile(lensing.LensingObject):
         redshift_source=None,
         cosmology=cosmo.Planck15,
         whitespace=80,
-        **kwargs,
     ):
         return ["Mass Profile = {}\n".format(self.__class__.__name__)]
 
@@ -59,10 +59,9 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         self,
         radius: dim.Length,
         unit_mass="angular",
-        redshift_profile=None,
+        redshift_object=None,
         redshift_source=None,
         cosmology=cosmo.Planck15,
-        **kwargs,
     ):
         """ Integrate the mass profiles's convergence profile to compute the total mass within a circle of \
         specified radius. This is centred on the mass profile.
@@ -83,15 +82,31 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
             units to phsical units (e.g. solar masses).
         """
 
-        critical_surface_density = (
-            kwargs["critical_surface_density"]
-            if "critical_surface_density" in kwargs
-            else None
-        )
+        if self.unit_length is not radius.unit_length:
+
+            kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from_redshift_and_cosmology(
+                redshift=redshift_object, cosmology=cosmology
+            )
+
+            radius = radius.convert(unit_length=self.unit_length, kpc_per_arcsec=kpc_per_arcsec)
 
         mass = dim.Mass(
             value=quad(self.mass_integral, a=0.0, b=radius)[0], unit_mass=self.unit_mass
         )
+
+        if unit_mass is "solMass":
+
+            critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from_redshifts_and_cosmology(
+                redshift_0=redshift_object,
+                redshift_1=redshift_source,
+                cosmology=cosmology,
+                unit_length=self.unit_length,
+                unit_mass=unit_mass,
+            )
+
+        else:
+
+            critical_surface_density = None
 
         return mass.convert(
             unit_mass=unit_mass, critical_surface_density=critical_surface_density
@@ -106,7 +121,6 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         redshift_profile=None,
         redshift_source=None,
         cosmology=cosmo.Planck15,
-        **kwargs,
     ):
         """Calculate the mass between two circular annuli and compute the density by dividing by the annuli surface
         area.
@@ -128,7 +142,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
 
         outer_mass = self.mass_within_circle_in_units(
             radius=outer_annuli_radius,
-            redshift_profile=redshift_profile,
+            redshift_object=redshift_profile,
             redshift_source=redshift_source,
             unit_mass=unit_mass,
             cosmology=cosmology,
@@ -136,7 +150,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
 
         inner_mass = self.mass_within_circle_in_units(
             radius=inner_annuli_radius,
-            redshift_profile=redshift_profile,
+            redshift_object=redshift_profile,
             redshift_source=redshift_source,
             unit_mass=unit_mass,
             cosmology=cosmology,
@@ -151,9 +165,8 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
     def average_convergence_of_1_radius_in_units(
         self,
         unit_length="arcsec",
-        redshift_profile=None,
+        redshift_object=None,
         cosmology=cosmo.Planck15,
-        **kwargs,
     ):
         """The radius a critical curve forms for this mass profile, e.g. where the mean convergence is equal to 1.0.
 
@@ -164,9 +177,15 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
          mass profiles below.
          """
 
-        kpc_per_arcsec = (
-            kwargs["kpc_per_arcsec"] if "kpc_per_arcsec" in kwargs else None
-        )
+        if unit_length is "kpc":
+
+            kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from_redshift_and_cosmology(
+                redshift=redshift_object, cosmology=cosmology
+            )
+
+        else:
+
+            kpc_per_arcsec = None
 
         def func(radius, redshift_profile, cosmology):
             radius = dim.Length(radius, unit_length=unit_length)
@@ -174,7 +193,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
                 self.mass_within_circle_in_units(
                     unit_mass="angular",
                     radius=radius,
-                    redshift_profile=redshift_profile,
+                    redshift_object=redshift_profile,
                     cosmology=cosmology,
                 )
                 - np.pi * radius ** 2.0
@@ -183,7 +202,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         radius = (
             self.ellipticity_rescale
             * root_scalar(
-                func, bracket=[1e-4, 1000.0], args=(redshift_profile, cosmology)
+                func, bracket=[1e-4, 1000.0], args=(redshift_object, cosmology)
             ).root
         )
         radius = dim.Length(radius, unit_length)
@@ -199,8 +218,9 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         redshift_profile=None,
         redshift_source=None,
         cosmology=cosmo.Planck15,
-        **kwargs,
     ):
+
+
         summary = super().summarize_in_units(
             radii=radii,
             prefix="",
@@ -209,14 +229,12 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
             redshift_profile=redshift_profile,
             redshift_source=redshift_source,
             cosmology=cosmology,
-            kwargs=kwargs,
         )
 
         einstein_radius = self.einstein_radius_in_units(
             unit_length=unit_length,
             redshift_object=redshift_profile,
             cosmology=cosmology,
-            kwargs=kwargs,
         )
 
         summary += [
@@ -233,7 +251,6 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
             redshift_object=redshift_profile,
             redshift_source=redshift_source,
             cosmology=cosmology,
-            kwargs=kwargs,
         )
 
         summary += [
@@ -249,10 +266,9 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
             mass = self.mass_within_circle_in_units(
                 unit_mass=unit_mass,
                 radius=radius,
-                redshift_profile=redshift_profile,
+                redshift_object=redshift_profile,
                 redshift_source=redshift_source,
                 cosmology=cosmology,
-                kwargs=kwargs,
             )
 
             summary += [

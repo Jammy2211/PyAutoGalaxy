@@ -147,7 +147,17 @@ class LensingObject(object):
 
         return grid.mapping.array_from_sub_array_1d(sub_array_1d=1 / det_jacobian)
 
-    def tangential_critical_curve_from_grid(self, grid):
+    # @property
+    # def radius_where_convergence
+
+    @property
+    def calculation_grid(self):
+        return grids.Grid.uniform(shape_2d=(101, 101), pixel_scales=0.1, sub_size=4)
+
+    @property
+    def tangential_critical_curve(self):
+
+        grid = self.calculation_grid
 
         tangential_eigen_values = self.tangential_eigen_value_from_grid(grid=grid)
 
@@ -165,7 +175,10 @@ class LensingObject(object):
 
         return grids.GridIrregular(grid=tangential_critical_curve)
 
-    def radial_critical_curve_from_grid(self, grid):
+    @property
+    def radial_critical_curve(self):
+
+        grid = self.calculation_grid
 
         radial_eigen_values = self.radial_eigen_value_from_grid(grid=grid)
 
@@ -183,9 +196,17 @@ class LensingObject(object):
 
         return grids.GridIrregular(grid=radial_critical_curve)
 
-    def tangential_caustic_from_grid(self, grid):
+    @property
+    def critical_curves(self):
+        return [
+            self.tangential_critical_curve,
+            self.radial_critical_curve,
+        ]
 
-        tangential_critical_curve = self.tangential_critical_curve_from_grid(grid=grid)
+    @property
+    def tangential_caustic(self):
+
+        tangential_critical_curve = self.tangential_critical_curve
 
         if len(tangential_critical_curve) == 0:
             return []
@@ -196,9 +217,10 @@ class LensingObject(object):
 
         return tangential_critical_curve - deflections_critical_curve
 
-    def radial_caustic_from_grid(self, grid):
+    @property
+    def radial_caustic(self):
 
-        radial_critical_curve = self.radial_critical_curve_from_grid(grid=grid)
+        radial_critical_curve = self.radial_critical_curve
 
         if len(radial_critical_curve) == 0:
             return []
@@ -209,33 +231,27 @@ class LensingObject(object):
 
         return radial_critical_curve - deflections_critical_curve
 
-    def critical_curves_from_grid(self, grid):
+    @property
+    def caustics(self):
         return [
-            self.tangential_critical_curve_from_grid(grid=grid),
-            self.radial_critical_curve_from_grid(grid=grid),
+            self.tangential_caustic,
+            self.radial_caustic,
         ]
 
-    def caustics_from_grid(self, grid):
-        return [
-            self.tangential_caustic_from_grid(grid=grid),
-            self.radial_caustic_from_grid(grid=grid),
-        ]
+    @property
+    def area_within_tangential_critical_curve(self):
 
-    def area_within_tangential_critical_curve(self, grid):
-
-        critical_curve = self.critical_curves_from_grid(grid=grid)[0]
-        x, y = critical_curve[:, 0], critical_curve[:, 1]
+        tangential_critical_curve = self.tangential_critical_curve
+        x, y = tangential_critical_curve[:, 0], tangential_critical_curve[:, 1]
 
         return np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
 
     def einstein_radius_in_units(
-        self, grid, unit_length="arcsec", redshift_object=None, cosmology=cosmo.Planck15
+        self, unit_length="arcsec", redshift_object=None, cosmology=cosmo.Planck15
     ):
 
-        area = self.area_within_tangential_critical_curve(grid=grid)
-
         einstein_radius = dim.Length(
-            value=np.sqrt(area / np.pi), unit_length=self.unit_length
+            value=np.sqrt(self.area_within_tangential_critical_curve / np.pi), unit_length=self.unit_length
         )
 
         if unit_length is "kpc":
@@ -254,15 +270,14 @@ class LensingObject(object):
 
     def einstein_mass_in_units(
         self,
-        grid,
         redshift_object=None,
         redshift_source=None,
         cosmology=cosmo.Planck15,
         unit_mass="solMass",
-        **kwargs,
     ):
-        radius = self.einstein_radius_in_units(grid=grid)
-        einstein_mass = dim.Mass(np.pi * (radius ** 2))
+
+        einstein_radius = self.einstein_radius_in_units()
+        einstein_mass = dim.Mass(np.pi * (einstein_radius ** 2))
 
         if unit_mass is "solMass":
 

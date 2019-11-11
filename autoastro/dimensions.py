@@ -13,6 +13,7 @@ from autoastro.util import cosmology_util
 from autoastro import exc
 
 
+
 class DimensionsProfile(object):
     def __init__(self):
 

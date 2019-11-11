@@ -839,7 +839,7 @@ class TestMassProfiles(object):
             mp_mass_arcsec = mp_0.mass_within_circle_in_units(
                 radius=radius,
                 unit_mass="solMass",
-                redshift_profile=0.5,
+                redshift_object=0.5,
                 redshift_source=1.0,
                 cosmology=cosmology,
             )
@@ -857,7 +857,7 @@ class TestMassProfiles(object):
             mp_mass_kpc = mp_0.mass_within_circle_in_units(
                 radius=radius,
                 unit_mass="solMass",
-                redshift_profile=0.5,
+                redshift_object=0.5,
                 redshift_source=1.0,
                 cosmology=cosmology,
             )
@@ -882,7 +882,7 @@ class TestMassProfiles(object):
             mp_mass_sol = mp_0.mass_within_circle_in_units(
                 radius=radius,
                 unit_mass="solMass",
-                redshift_profile=0.5,
+                redshift_object=0.5,
                 redshift_source=1.0,
                 cosmology=cosmology,
             )
@@ -1490,7 +1490,7 @@ class TestMassProfiles(object):
                 0
             ]
 
-            critical_curve_tangential_from_tangential_eigen_values = galaxy.critical_curves_from_grid(
+            critical_curve_tangential_from_tangential_eigen_values = galaxy.critical_curves(
                 grid=grid
             )[
                 0
@@ -1509,7 +1509,7 @@ class TestMassProfiles(object):
                 0
             ]
 
-            critical_curve_tangential_from_tangential_eigen_values = galaxy.critical_curves_from_grid(
+            critical_curve_tangential_from_tangential_eigen_values = galaxy.critical_curves(
                 grid=grid
             )[
                 0
@@ -1542,7 +1542,7 @@ class TestMassProfiles(object):
                 1
             ]
 
-            critical_curve_radial_from_tangential_eigen_values = galaxy.critical_curves_from_grid(
+            critical_curve_radial_from_tangential_eigen_values = galaxy.critical_curves(
                 grid=grid
             )[
                 1
@@ -1560,7 +1560,7 @@ class TestMassProfiles(object):
                 1
             ]
 
-            critical_curve_radial_from_tangential_eigen_values = galaxy.critical_curves_from_grid(
+            critical_curve_radial_from_tangential_eigen_values = galaxy.critical_curves(
                 grid=grid
             )[
                 1
@@ -1592,7 +1592,7 @@ class TestMassProfiles(object):
                 0
             ]
 
-            caustic_tangential_from_tangential_eigen_values = galaxy.caustics_from_grid(
+            caustic_tangential_from_tangential_eigen_values = galaxy.caustics(
                 grid=grid
             )[0]
 
@@ -1608,7 +1608,7 @@ class TestMassProfiles(object):
                 0
             ]
 
-            caustic_tangential_from_tangential_eigen_values = galaxy.caustics_from_grid(
+            caustic_tangential_from_tangential_eigen_values = galaxy.caustics(
                 grid=grid
             )[0]
 
@@ -1637,7 +1637,7 @@ class TestMassProfiles(object):
             )[
                 1
             ]
-            caustic_radial_from_tangential_eigen_values = galaxy.caustics_from_grid(
+            caustic_radial_from_tangential_eigen_values = galaxy.caustics(
                 grid=grid
             )[1]
 

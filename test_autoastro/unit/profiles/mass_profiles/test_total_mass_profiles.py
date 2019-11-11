@@ -670,7 +670,7 @@ class TestCoredPowerLaw(object):
         i += 1
         assert (
             summary_text[i]
-            == "pl_einstein_mass                                  3.1416e+00 angular"
+            == "pl_einstein_mass                                  3.1412e+00 angular"
         )
         i += 1
         assert (
@@ -909,9 +909,6 @@ class TestPowerLaw(object):
             grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
         )
 
-        print(1.12841 / deflections[0, 0])
-        print(-0.60205 / deflections[0, 1])
-
         # assert deflections[0, 0] == pytest.approx(1.12841, 1e-3)
         # assert deflections[0, 1] == pytest.approx(-0.60205, 1e-3)
 
@@ -926,9 +923,6 @@ class TestPowerLaw(object):
         deflections = power_law.deflections_from_grid(
             grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
         )
-
-        print(1.25995 / deflections[0, 0])
-        print(-0.35096 / deflections[0, 1])
 
         assert deflections[0, 0] == pytest.approx(1.25995, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.35096, 1e-3)
