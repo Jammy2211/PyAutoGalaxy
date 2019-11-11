@@ -5,6 +5,7 @@ from os import path
 import numpy as np
 import pytest
 
+import autofit as af
 import autoarray as aa
 from autoastro.profiles import geometry_profiles
 import autoastro as aast
@@ -14,7 +15,7 @@ directory = path.dirname(path.realpath(__file__))
 
 @pytest.fixture(scope="session", autouse=True)
 def do_something():
-    aa.conf.instance = aa.conf.Config(
+    af.conf.instance = af.conf.Config(
         config_path="{}/../test_files/config/radial_min".format(directory)
     )
 

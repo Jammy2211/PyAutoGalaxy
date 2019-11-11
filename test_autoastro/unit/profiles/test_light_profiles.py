@@ -5,10 +5,9 @@ import numpy as np
 import pytest
 import scipy.special
 
+import autofit as af
 import autoarray as aa
 import autoastro as aast
-from autoastro import exc
-from autoastro.profiles.light_profiles import EllipticalLightProfile
 from test_autoastro.mock import mock_cosmology
 
 
@@ -17,7 +16,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    aa.conf.instance = aa.conf.default
+    af.conf.instance = af.conf.default
 
 
 grid = aa.grid.manual_2d([[[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]]])

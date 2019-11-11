@@ -1,3 +1,4 @@
+import autofit as af
 import autoarray as aa
 import autoastro as aast
 import math
@@ -12,7 +13,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    aa.conf.instance = aa.conf.default
+    af.conf.instance = af.conf.default
 
 
 def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
@@ -146,6 +147,8 @@ class TestMassWithinCircle(object):
             centre=(aast.dim.Length(0.0, "kpc"), aast.dim.Length(0.0, "kpc")),
             einstein_radius=aast.dim.Length(2.0, "kpc"),
         )
+
+        sis_kpc.core_radius = aast.dim.Length(value=0.0, unit_length="kpc")
 
         radius = aast.dim.Length(2.0, "kpc")
         mass = sis_kpc.mass_within_circle_in_units(

@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 from astropy import cosmology as cosmo
 
+import autofit as af
 import autoarray as aa
 from autoarray.structures import grids
 import autoastro as aast
@@ -12,6 +13,13 @@ import os
 
 grid = aa.grid.manual_2d([[[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]]])
 
+
+@pytest.fixture(autouse=True)
+def reset_config():
+    """
+    Use configuration from the default path. You may want to change this to set a specific path.
+    """
+    af.conf.instance = af.conf.default
 
 class TestAbstractNFW(object):
     def test__coord_function_f__correct_values(self):

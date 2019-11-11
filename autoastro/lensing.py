@@ -2,14 +2,13 @@ import numpy as np
 from astropy import cosmology as cosmo
 from skimage import measure
 
+from autoarray.util import array_util
 from autoarray.structures import grids
 from autoastro import dimensions as dim
 from autoastro.util import cosmology_util
 
 
 class LensingObject(object):
-
-    axis_ratio = None
 
     def convergence_func(self, eta):
         raise NotImplementedError("surface_density_func should be overridden")
@@ -197,6 +196,7 @@ class LensingObject(object):
         return grids.GridIrregular(grid=radial_critical_curve)
 
     @property
+    @array_util.Memoizer()
     def critical_curves(self):
         return [
             self.tangential_critical_curve,
@@ -232,6 +232,7 @@ class LensingObject(object):
         return radial_critical_curve - deflections_critical_curve
 
     @property
+    @array_util.Memoizer()
     def caustics(self):
         return [
             self.tangential_caustic,

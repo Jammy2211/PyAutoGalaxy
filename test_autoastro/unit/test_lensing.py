@@ -2,7 +2,6 @@ import autofit as af
 import autoarray as aa
 import autoastro as aast
 from autoastro.profiles import geometry_profiles
-import math
 from skimage import measure
 import numpy as np
 import pytest
@@ -12,9 +11,7 @@ from autoastro import lensing
 from test_autoastro.mock import mock_cosmology
 import os
 
-
-
-@pytest.fixture(autouse=True, scope="module")
+@pytest.fixture(autouse=True)
 def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
@@ -434,7 +431,7 @@ def caustics_via_magnification_from_mass_profile_and_grid(mass_profile, grid):
 
         critical_curve = critical_curves[i]
 
-        deflections_1d = mass_profile.deflections_of_planes_summed_from_grid(grid=critical_curve)
+        deflections_1d = mass_profile.deflections_from_grid(grid=critical_curve)
 
         caustic = critical_curve - deflections_1d
 

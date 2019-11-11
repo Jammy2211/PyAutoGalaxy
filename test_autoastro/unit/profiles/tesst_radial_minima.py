@@ -177,16 +177,16 @@ class TestPointMass(object):
 
         point_mass = aast.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
 
-        deflections_1 = point_mass.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = point_mass.deflections_of_planes_summed_from_grid(
+        deflections_1 = point_mass.deflections_from_grid(grid=grid_01)
+        deflections_0 = point_mass.deflections_from_grid(
             grid=np.array([[0.00000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         point_mass = aast.PointMass(centre=(1.0, 1.0), einstein_radius=1.0)
 
-        deflections_1 = point_mass.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = point_mass.deflections_of_planes_summed_from_grid(
+        deflections_1 = point_mass.deflections_from_grid(grid=grid_22)
+        deflections_0 = point_mass.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -237,13 +237,13 @@ class TestPowerLaw(object):
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
-        interp_deflections = power_law.deflections_of_planes_summed_from_grid(grid=regular_with_interp)
+        interp_deflections = power_law.deflections_from_grid(grid=regular_with_interp)
 
         interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
-        interp_deflections_values = power_law.deflections_of_planes_summed_from_grid(
+        interp_deflections_values = power_law.deflections_from_grid(
             grid=interpolator.interp_grid
         )
 
@@ -344,8 +344,8 @@ class TestCoredIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        deflections_1 = cored_isothermal.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = cored_isothermal.deflections_of_planes_summed_from_grid(
+        deflections_1 = cored_isothermal.deflections_from_grid(grid=grid_01)
+        deflections_0 = cored_isothermal.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -354,8 +354,8 @@ class TestCoredIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        deflections_1 = cored_isothermal.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = cored_isothermal.deflections_of_planes_summed_from_grid(
+        deflections_1 = cored_isothermal.deflections_from_grid(grid=grid_22)
+        deflections_0 = cored_isothermal.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -364,8 +364,8 @@ class TestCoredIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        deflections_1 = cored_isothermal.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = cored_isothermal.deflections_of_planes_summed_from_grid(
+        deflections_1 = cored_isothermal.deflections_from_grid(grid=grid_01)
+        deflections_0 = cored_isothermal.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -374,8 +374,8 @@ class TestCoredIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        deflections_1 = cored_isothermal.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = cored_isothermal.deflections_of_planes_summed_from_grid(
+        deflections_1 = cored_isothermal.deflections_from_grid(grid=grid_22)
+        deflections_0 = cored_isothermal.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -467,8 +467,8 @@ class TestIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        deflections_1 = isothermal.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = isothermal.deflections_of_planes_summed_from_grid(
+        deflections_1 = isothermal.deflections_from_grid(grid=grid_01)
+        deflections_0 = isothermal.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -477,8 +477,8 @@ class TestIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        deflections_1 = isothermal.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = isothermal.deflections_of_planes_summed_from_grid(
+        deflections_1 = isothermal.deflections_from_grid(grid=grid_22)
+        deflections_0 = isothermal.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -487,8 +487,8 @@ class TestIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
-        deflections_1 = isothermal.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = isothermal.deflections_of_planes_summed_from_grid(
+        deflections_1 = isothermal.deflections_from_grid(grid=grid_01)
+        deflections_0 = isothermal.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -497,8 +497,8 @@ class TestIsothermal(object):
             centre=(1.0, 1.0), einstein_radius=1.0
         )
 
-        deflections_1 = isothermal.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = isothermal.deflections_of_planes_summed_from_grid(
+        deflections_1 = isothermal.deflections_from_grid(grid=grid_22)
+        deflections_0 = isothermal.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -532,14 +532,14 @@ class TestGeneralizedNFW(object):
 
         gnfw = aast.mass_profiles.SphericalGeneralizedNFW(centre=(0.0, 0.0))
 
-        deflections_1 = gnfw.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = gnfw.deflections_of_planes_summed_from_grid(grid=np.array([[0.000000001, 0.0]]))
+        deflections_1 = gnfw.deflections_from_grid(grid=grid_01)
+        deflections_0 = gnfw.deflections_from_grid(grid=np.array([[0.000000001, 0.0]]))
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         gnfw = aast.mass_profiles.SphericalGeneralizedNFW(centre=(1.0, 1.0))
 
-        deflections_1 = gnfw.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = gnfw.deflections_of_planes_summed_from_grid(grid=np.array([[1.000000001, 1.0]]))
+        deflections_1 = gnfw.deflections_from_grid(grid=grid_22)
+        deflections_0 = gnfw.deflections_from_grid(grid=np.array([[1.000000001, 1.0]]))
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
@@ -579,16 +579,16 @@ class TestTruncatedNFW(object):
 
         truncated_nfw = aast.mass_profiles.SphericalTruncatedNFW(centre=(0.0, 0.0))
 
-        deflections_1 = truncated_nfw.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = truncated_nfw.deflections_of_planes_summed_from_grid(
+        deflections_1 = truncated_nfw.deflections_from_grid(grid=grid_01)
+        deflections_0 = truncated_nfw.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         truncated_nfw = aast.mass_profiles.SphericalTruncatedNFW(centre=(1.0, 1.0))
 
-        deflections_1 = truncated_nfw.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = truncated_nfw.deflections_of_planes_summed_from_grid(
+        deflections_1 = truncated_nfw.deflections_from_grid(grid=grid_22)
+        deflections_0 = truncated_nfw.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -646,26 +646,26 @@ class TestNFW(object):
 
         nfw = aast.mass_profiles.EllipticalNFW(centre=(0.0, 0.0))
 
-        deflections_1 = nfw.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = nfw.deflections_of_planes_summed_from_grid(grid=np.array([[0.000000001, 0.0]]))
+        deflections_1 = nfw.deflections_from_grid(grid=grid_01)
+        deflections_0 = nfw.deflections_from_grid(grid=np.array([[0.000000001, 0.0]]))
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         nfw = aast.mass_profiles.EllipticalNFW(centre=(1.0, 1.0))
 
-        deflections_1 = nfw.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = nfw.deflections_of_planes_summed_from_grid(grid=np.array([[1.000000001, 1.0]]))
+        deflections_1 = nfw.deflections_from_grid(grid=grid_22)
+        deflections_0 = nfw.deflections_from_grid(grid=np.array([[1.000000001, 1.0]]))
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         nfw = aast.mass_profiles.SphericalNFW(centre=(0.0, 0.0))
 
-        deflections_1 = nfw.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = nfw.deflections_of_planes_summed_from_grid(grid=np.array([[0.000000001, 0.0]]))
+        deflections_1 = nfw.deflections_from_grid(grid=grid_01)
+        deflections_0 = nfw.deflections_from_grid(grid=np.array([[0.000000001, 0.0]]))
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         nfw = aast.mass_profiles.SphericalNFW(centre=(1.0, 1.0))
 
-        deflections_1 = nfw.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = nfw.deflections_of_planes_summed_from_grid(grid=np.array([[1.000000001, 1.0]]))
+        deflections_1 = nfw.deflections_from_grid(grid=grid_22)
+        deflections_0 = nfw.deflections_from_grid(grid=np.array([[1.000000001, 1.0]]))
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
@@ -705,32 +705,32 @@ class TestSersic(object):
 
         sersic = aast.EllipticalSersic(centre=(0.0, 0.0))
 
-        deflections_1 = sersic.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = sersic.deflections_of_planes_summed_from_grid(
+        deflections_1 = sersic.deflections_from_grid(grid=grid_01)
+        deflections_0 = sersic.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         sersic = aast.EllipticalSersic(centre=(1.0, 1.0))
 
-        deflections_1 = sersic.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = sersic.deflections_of_planes_summed_from_grid(
+        deflections_1 = sersic.deflections_from_grid(grid=grid_22)
+        deflections_0 = sersic.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         sersic = aast.SphericalSersic(centre=(0.0, 0.0))
 
-        deflections_1 = sersic.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = sersic.deflections_of_planes_summed_from_grid(
+        deflections_1 = sersic.deflections_from_grid(grid=grid_01)
+        deflections_0 = sersic.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         sersic = aast.SphericalSersic(centre=(1.0, 1.0))
 
-        deflections_1 = sersic.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = sersic.deflections_of_planes_summed_from_grid(
+        deflections_1 = sersic.deflections_from_grid(grid=grid_22)
+        deflections_0 = sersic.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -772,32 +772,32 @@ class TestExponential(object):
 
         exponential = aast.EllipticalExponential(centre=(0.0, 0.0))
 
-        deflections_1 = exponential.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = exponential.deflections_of_planes_summed_from_grid(
+        deflections_1 = exponential.deflections_from_grid(grid=grid_01)
+        deflections_0 = exponential.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         exponential = aast.EllipticalExponential(centre=(1.0, 1.0))
 
-        deflections_1 = exponential.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = exponential.deflections_of_planes_summed_from_grid(
+        deflections_1 = exponential.deflections_from_grid(grid=grid_22)
+        deflections_0 = exponential.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         exponential = aast.SphericalExponential(centre=(0.0, 0.0))
 
-        deflections_1 = exponential.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = exponential.deflections_of_planes_summed_from_grid(
+        deflections_1 = exponential.deflections_from_grid(grid=grid_01)
+        deflections_0 = exponential.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         exponential = aast.SphericalExponential(centre=(1.0, 1.0))
 
-        deflections_1 = exponential.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = exponential.deflections_of_planes_summed_from_grid(
+        deflections_1 = exponential.deflections_from_grid(grid=grid_22)
+        deflections_0 = exponential.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -839,32 +839,32 @@ class TestDevVaucouleurs(object):
 
         dev_vaucouleurs = aast.EllipticalDevVaucouleurs(centre=(0.0, 0.0))
 
-        deflections_1 = dev_vaucouleurs.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = dev_vaucouleurs.deflections_of_planes_summed_from_grid(
+        deflections_1 = dev_vaucouleurs.deflections_from_grid(grid=grid_01)
+        deflections_0 = dev_vaucouleurs.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         dev_vaucouleurs = aast.EllipticalDevVaucouleurs(centre=(1.0, 1.0))
 
-        deflections_1 = dev_vaucouleurs.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = dev_vaucouleurs.deflections_of_planes_summed_from_grid(
+        deflections_1 = dev_vaucouleurs.deflections_from_grid(grid=grid_22)
+        deflections_0 = dev_vaucouleurs.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         dev_vaucouleurs = aast.SphericalDevVaucouleurs(centre=(0.0, 0.0))
 
-        deflections_1 = dev_vaucouleurs.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = dev_vaucouleurs.deflections_of_planes_summed_from_grid(
+        deflections_1 = dev_vaucouleurs.deflections_from_grid(grid=grid_01)
+        deflections_0 = dev_vaucouleurs.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         dev_vaucouleurs = aast.SphericalDevVaucouleurs(centre=(1.0, 1.0))
 
-        deflections_1 = dev_vaucouleurs.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = dev_vaucouleurs.deflections_of_planes_summed_from_grid(
+        deflections_1 = dev_vaucouleurs.deflections_from_grid(grid=grid_22)
+        deflections_0 = dev_vaucouleurs.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -906,32 +906,32 @@ class TestSersicMassRadialGradient(object):
 
         sersic = aast.EllipticalSersicRadialGradient(centre=(0.0, 0.0))
 
-        deflections_1 = sersic.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = sersic.deflections_of_planes_summed_from_grid(
+        deflections_1 = sersic.deflections_from_grid(grid=grid_01)
+        deflections_0 = sersic.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         sersic = aast.EllipticalSersicRadialGradient(centre=(1.0, 1.0))
 
-        deflections_1 = sersic.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = sersic.deflections_of_planes_summed_from_grid(
+        deflections_1 = sersic.deflections_from_grid(grid=grid_22)
+        deflections_0 = sersic.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         sersic = aast.SphericalSersicRadialGradient(centre=(0.0, 0.0))
 
-        deflections_1 = sersic.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = sersic.deflections_of_planes_summed_from_grid(
+        deflections_1 = sersic.deflections_from_grid(grid=grid_01)
+        deflections_0 = sersic.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         sersic = aast.SphericalSersicRadialGradient(centre=(1.0, 1.0))
 
-        deflections_1 = sersic.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = sersic.deflections_of_planes_summed_from_grid(
+        deflections_1 = sersic.deflections_from_grid(grid=grid_22)
+        deflections_0 = sersic.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -961,13 +961,13 @@ class TestSersicMassRadialGradient(object):
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
-        interp_deflections = sersic.deflections_of_planes_summed_from_grid(grid=regular_with_interp)
+        interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
         interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
-        interp_deflections_values = sersic.deflections_of_planes_summed_from_grid(
+        interp_deflections_values = sersic.deflections_from_grid(
             grid=interpolator.interp_grid
         )
 
@@ -986,16 +986,16 @@ class TestMassSheet(object):
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         mass_sheet = aast.mass_profiles.MassSheet(centre=(0.0, 0.0))
 
-        deflections_1 = mass_sheet.deflections_of_planes_summed_from_grid(grid=grid_01)
-        deflections_0 = mass_sheet.deflections_of_planes_summed_from_grid(
+        deflections_1 = mass_sheet.deflections_from_grid(grid=grid_01)
+        deflections_0 = mass_sheet.deflections_from_grid(
             grid=np.array([[0.000000001, 0.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
         mass_sheet = aast.mass_profiles.MassSheet(centre=(1.0, 1.0))
 
-        deflections_1 = mass_sheet.deflections_of_planes_summed_from_grid(grid=grid_22)
-        deflections_0 = mass_sheet.deflections_of_planes_summed_from_grid(
+        deflections_1 = mass_sheet.deflections_from_grid(grid=grid_22)
+        deflections_0 = mass_sheet.deflections_from_grid(
             grid=np.array([[1.000000001, 1.0]])
         )
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
@@ -1005,6 +1005,6 @@ class TestExternalShear(object):
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         shear = aast.mass_profiles.ExternalShear(magnitude=0.1, phi=45.0)
 
-        deflections_1 = shear.deflections_of_planes_summed_from_grid(grid=np.array([[1e-8, 0.0]]))
-        deflections_0 = shear.deflections_of_planes_summed_from_grid(grid=np.array([[1e-9, 0.0]]))
+        deflections_1 = shear.deflections_from_grid(grid=np.array([[1e-8, 0.0]]))
+        deflections_0 = shear.deflections_from_grid(grid=np.array([[1e-9, 0.0]]))
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)

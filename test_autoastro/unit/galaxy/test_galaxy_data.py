@@ -1,11 +1,18 @@
 import numpy as np
 import pytest
 
+import autofit as af
 import autoarray as aa
 import autoastro as aast
 from autoastro import exc
 from test_autoastro.mock import mock_galaxy
 
+@pytest.fixture(autouse=True)
+def reset_config():
+    """
+    Use configuration from the default path. You may want to change this to set a specific path.
+    """
+    af.conf.instance = af.conf.default
 
 class TestGalaxyFitData(object):
     def test__image_noise_map_and_mask(self, gal_data_7x7, sub_mask_7x7):

@@ -2,11 +2,19 @@ import numpy as np
 import pytest
 from skimage import measure
 
+import autofit as af
 import autoarray as aa
 import autoastro as aast
 from autoastro import exc
 from test_autoastro.mock import mock_cosmology
 
+
+@pytest.fixture(autouse=True)
+def reset_config():
+    """
+    Use configuration from the default path. You may want to change this to set a specific path.
+    """
+    af.conf.instance = af.conf.default
 
 class TestUnits:
     def test__light_profiles_conversions(self):
@@ -543,7 +551,7 @@ def caustics_via_magnification_from_galaxy_and_grid(galaxy, grid):
     for i in range(len(critical_curves)):
         critical_curve = critical_curves[i]
 
-        deflections = galaxy.deflections_of_planes_summed_from_grid(grid=critical_curve)
+        deflections = galaxy.deflections_from_grid(grid=critical_curve)
 
         caustic = critical_curve - deflections
 
@@ -763,24 +771,24 @@ class TestMassProfiles(object):
         def test__galaxies_with_x1_and_x2_mass_profiles__deflections_is_same_individual_profiles(
             self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
         ):
-            mp_deflections = mp_0.deflections_of_planes_summed_from_grid(
+            mp_deflections = mp_0.deflections_from_grid(
                 grid=aa.grid.manual_2d([[[1.05, -0.55]]])
             )
 
-            gal_mp_deflections = gal_x1_mp.deflections_of_planes_summed_from_grid(
+            gal_mp_deflections = gal_x1_mp.deflections_from_grid(
                 grid=aa.grid.manual_2d([[[1.05, -0.55]]])
             )
 
             assert (mp_deflections == gal_mp_deflections).all()
 
-            mp_deflections = mp_0.deflections_of_planes_summed_from_grid(
+            mp_deflections = mp_0.deflections_from_grid(
                 grid=aa.grid.manual_2d([[[1.05, -0.55]]])
             )
-            mp_deflections += mp_1.deflections_of_planes_summed_from_grid(
+            mp_deflections += mp_1.deflections_from_grid(
                 grid=aa.grid.manual_2d([[[1.05, -0.55]]])
             )
 
-            gal_deflections = gal_x2_mp.deflections_of_planes_summed_from_grid(
+            gal_deflections = gal_x2_mp.deflections_from_grid(
                 grid=aa.grid.manual_2d([[[1.05, -0.55]]])
             )
 
@@ -789,11 +797,11 @@ class TestMassProfiles(object):
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_mass_profile_values(
             self, sub_grid_7x7, gal_x2_mp
         ):
-            mp_0_deflections = gal_x2_mp.mass_profile_0.deflections_of_planes_summed_from_grid(
+            mp_0_deflections = gal_x2_mp.mass_profile_0.deflections_from_grid(
                 grid=sub_grid_7x7
             )
 
-            mp_1_deflections = gal_x2_mp.mass_profile_1.deflections_of_planes_summed_from_grid(
+            mp_1_deflections = gal_x2_mp.mass_profile_1.deflections_from_grid(
                 grid=sub_grid_7x7
             )
 
@@ -813,7 +821,7 @@ class TestMassProfiles(object):
                 + mp_deflections[7, 0]
             ) / 4.0
 
-            gal_deflections = gal_x2_mp.deflections_of_planes_summed_from_grid(grid=sub_grid_7x7)
+            gal_deflections = gal_x2_mp.deflections_from_grid(grid=sub_grid_7x7)
 
             assert gal_deflections.in_1d_binned[0, 0] == mp_deflections_y_0
             assert gal_deflections.in_1d_binned[1, 0] == mp_deflections_y_1
@@ -832,7 +840,7 @@ class TestMassProfiles(object):
                 + mp_deflections[7, 1]
             ) / 4.0
 
-            gal_deflections = gal_x2_mp.deflections_of_planes_summed_from_grid(grid=sub_grid_7x7)
+            gal_deflections = gal_x2_mp.deflections_from_grid(grid=sub_grid_7x7)
 
             assert gal_deflections.in_1d_binned[0, 1] == mp_deflections_x_0
             assert gal_deflections.in_1d_binned[1, 1] == mp_deflections_x_1

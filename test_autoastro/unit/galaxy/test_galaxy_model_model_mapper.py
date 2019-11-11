@@ -1,6 +1,14 @@
 import autofit as af
 import autoastro as aast
 
+import pytest
+
+@pytest.fixture(autouse=True)
+def reset_config():
+    """
+    Use configuration from the default path. You may want to change this to set a specific path.
+    """
+    af.conf.instance = af.conf.default
 
 class TestCase:
     def test_integration(self):
