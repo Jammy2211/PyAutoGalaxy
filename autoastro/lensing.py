@@ -1,4 +1,5 @@
 import numpy as np
+import autofit as af
 from astropy import cosmology as cosmo
 from skimage import measure
 
@@ -10,7 +11,7 @@ from autoastro.util import cosmology_util
 
 class LensingObject(object):
 
-    def convergence_func(self, eta):
+    def convergence_func(self, grid_radius):
         raise NotImplementedError("surface_density_func should be overridden")
 
     def convergence_from_grid(self, grid):
@@ -147,7 +148,8 @@ class LensingObject(object):
         return grid.mapping.array_from_sub_array_1d(sub_array_1d=1 / det_jacobian)
 
     # @property
-    # def radius_where_convergence
+    # def bounding_box(self):
+
 
     @property
     def calculation_grid(self):

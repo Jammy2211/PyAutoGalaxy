@@ -121,6 +121,18 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return len(self.mass_profiles) + len(self.light_profiles) > 0
 
     @property
+    def mass_profile_centres(self):
+        return [mass_profile.centre for mass_profile in self.mass_profiles]
+
+    @property
+    def mass_profile_axis_ratios(self):
+        return [mass_profile.axis_ratio for mass_profile in self.mass_profiles]
+
+    @property
+    def mass_profile_phis(self):
+        return [mass_profile.phi for mass_profile in self.mass_profiles]
+
+    @property
     def uses_cluster_inversion(self):
         return type(self.pixelization) is pix.VoronoiBrightnessImage
 

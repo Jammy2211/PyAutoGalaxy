@@ -270,7 +270,7 @@ class TestCoredPowerLaw(object):
         cored_power_law = aast.mp.SphericalCoredPowerLaw(
             centre=(1, 1), einstein_radius=1.0, slope=2.2, core_radius=0.1
         )
-        assert cored_power_law.convergence_func(radius=1.0) == pytest.approx(
+        assert cored_power_law.convergence_func(grid_radius=1.0) == pytest.approx(
             0.39762, 1e-4
         )
 
@@ -1174,14 +1174,14 @@ class TestCoredIsothermal(object):
         cored_isothermal = aast.mp.SphericalCoredIsothermal(
             centre=(1, 1), einstein_radius=1.0, core_radius=0.1
         )
-        assert cored_isothermal.convergence_func(radius=1.0) == pytest.approx(
+        assert cored_isothermal.convergence_func(grid_radius=1.0) == pytest.approx(
             0.49752, 1e-4
         )
 
         cored_isothermal = aast.mp.SphericalCoredIsothermal(
             centre=(1, 1), einstein_radius=1.0, core_radius=0.1
         )
-        assert cored_isothermal.convergence_func(radius=1.0) == pytest.approx(
+        assert cored_isothermal.convergence_func(grid_radius=1.0) == pytest.approx(
             0.49752, 1e-4
         )
 

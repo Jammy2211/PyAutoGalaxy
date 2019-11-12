@@ -24,7 +24,7 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
         super(MassSheet, self).__init__(centre=centre)
         self.kappa = kappa
 
-    def convergence_func(self, radius):
+    def convergence_func(self, grid_radius):
         return 0.0
 
     def convergence_from_grid(self, grid):
@@ -66,7 +66,7 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
         super(ExternalShear, self).__init__(centre=(0.0, 0.0), phi=phi, axis_ratio=1.0)
         self.magnitude = magnitude
 
-    def convergence_func(self, radius):
+    def convergence_func(self, grid_radius):
         return 0.0
 
     def average_convergence_of_1_radius_in_units(

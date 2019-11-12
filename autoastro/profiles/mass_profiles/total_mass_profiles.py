@@ -176,9 +176,9 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
-    def convergence_func(self, radius):
+    def convergence_func(self, grid_radius):
         return self.einstein_radius_rescaled * (
-            self.core_radius ** 2 + radius ** 2
+                self.core_radius ** 2 + grid_radius ** 2
         ) ** (-(self.slope - 1) / 2.0)
 
     @staticmethod
@@ -388,9 +388,9 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
 
         return self.rotate_grid_from_profile(np.vstack((deflection_y, deflection_x)).T)
 
-    def convergence_func(self, radius):
-        if radius > 0.0:
-            return self.einstein_radius_rescaled * radius ** (-(self.slope - 1))
+    def convergence_func(self, grid_radius):
+        if grid_radius > 0.0:
+            return self.einstein_radius_rescaled * grid_radius ** (-(self.slope - 1))
         else:
             return np.inf
 
@@ -702,7 +702,7 @@ class EllipticalIsothermalKormann(mp.EllipticalMassProfile, mp.MassProfile):
         grid_eta = self.grid_to_elliptical_radii(grid=grid)
 
         for i in range(grid.sub_shape_1d):
-            covnergence_grid[i] = self.convergence_func(r=grid_eta[i])
+            covnergence_grid[i] = self.convergence_func(grid_radius=grid_eta[i])
 
         return covnergence_grid
 
@@ -769,9 +769,9 @@ class EllipticalIsothermalKormann(mp.EllipticalMassProfile, mp.MassProfile):
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
-    def convergence_func(self, r):
+    def convergence_func(self, grid_radius):
         return (
-            self.einstein_radius * np.sqrt(self.axis_ratio) / (2 * self.axis_ratio * r)
+            self.einstein_radius * np.sqrt(self.axis_ratio) / (2 * self.axis_ratio * grid_radius)
         )
 
     @property

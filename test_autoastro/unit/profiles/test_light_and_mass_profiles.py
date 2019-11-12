@@ -54,7 +54,7 @@ class TestSersic(object):
         assert isinstance(sersic.mass_to_light_ratio, aast.dim.MassOverLuminosity)
         assert sersic.mass_to_light_ratio.unit == "angular / eps"
 
-        assert sersic.sersic_instance == pytest.approx(7.66925, 1e-3)
+        assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
         assert sersic.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
 
         sersic = aast.lmp.SphericalSersic(
@@ -92,7 +92,7 @@ class TestSersic(object):
         assert isinstance(sersic.mass_to_light_ratio, aast.dim.MassOverLuminosity)
         assert sersic.mass_to_light_ratio.unit == "angular / eps"
 
-        assert sersic.sersic_instance == pytest.approx(7.66925, 1e-3)
+        assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
         assert sersic.elliptical_effective_radius == 0.6
 
     def test__grid_calculations__same_as_sersic(self):
@@ -205,7 +205,7 @@ class TestExponential(object):
         assert isinstance(exponential.mass_to_light_ratio, aast.dim.MassOverLuminosity)
         assert exponential.mass_to_light_ratio.unit == "angular / eps"
 
-        assert exponential.sersic_instance == pytest.approx(1.67838, 1e-3)
+        assert exponential.sersic_constant == pytest.approx(1.67838, 1e-3)
         assert exponential.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
 
         exponential = aast.lmp.SphericalExponential(
@@ -242,7 +242,7 @@ class TestExponential(object):
         assert isinstance(exponential.mass_to_light_ratio, aast.dim.MassOverLuminosity)
         assert exponential.mass_to_light_ratio.unit == "angular / eps"
 
-        assert exponential.sersic_instance == pytest.approx(1.67838, 1e-3)
+        assert exponential.sersic_constant == pytest.approx(1.67838, 1e-3)
         assert exponential.elliptical_effective_radius == 0.6
 
     def test__grid_calculations__same_as_exponential(self):
@@ -345,7 +345,7 @@ class TestDevVaucouleurs(object):
         )
         assert dev_vaucouleurs.mass_to_light_ratio.unit == "angular / eps"
 
-        assert dev_vaucouleurs.sersic_instance == pytest.approx(7.66924, 1e-3)
+        assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
         assert dev_vaucouleurs.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
 
         dev_vaucouleurs = aast.lmp.SphericalDevVaucouleurs(
@@ -384,7 +384,7 @@ class TestDevVaucouleurs(object):
         )
         assert dev_vaucouleurs.mass_to_light_ratio.unit == "angular / eps"
 
-        assert dev_vaucouleurs.sersic_instance == pytest.approx(7.66924, 1e-3)
+        assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
         assert dev_vaucouleurs.elliptical_effective_radius == 0.6
 
     def test__grid_calculations__same_as_dev_vaucouleurs(self):
@@ -490,7 +490,7 @@ class TestSersicRadialGradient(object):
         assert sersic.mass_to_light_gradient == -1.0
         assert isinstance(sersic.mass_to_light_gradient, float)
 
-        assert sersic.sersic_instance == pytest.approx(7.66925, 1e-3)
+        assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
         assert sersic.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
 
         sersic = aast.lmp.SphericalSersicRadialGradient(
@@ -532,7 +532,7 @@ class TestSersicRadialGradient(object):
         assert sersic.mass_to_light_gradient == -1.0
         assert isinstance(sersic.mass_to_light_gradient, float)
 
-        assert sersic.sersic_instance == pytest.approx(7.66925, 1e-3)
+        assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
         assert sersic.elliptical_effective_radius == 0.6
 
     def test__grid_calculations__same_as_sersic_radial_gradient(self):

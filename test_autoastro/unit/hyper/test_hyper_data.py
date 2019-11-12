@@ -1,3 +1,4 @@
+import autofit as af
 import autoastro as aast
 import numpy as np
 

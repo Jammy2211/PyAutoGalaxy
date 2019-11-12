@@ -62,8 +62,8 @@ class MockEllipticalIsothermal(
         parameters"""
         return (1.0 / (1 + self.axis_ratio)) * self.einstein_radius
 
-    def convergence_func(self, radius):
-        return self.einstein_radius_rescaled * (radius ** 2) ** (-0.5)
+    def convergence_func(self, grid_radius):
+        return self.einstein_radius_rescaled * (grid_radius ** 2) ** (-0.5)
 
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
@@ -390,7 +390,6 @@ class TestMagnification(object):
         )
 
         assert mean_error < 1e-4
-
 
 def critical_curve_via_magnification_from_mass_profile_and_grid(mass_profile, grid):
 

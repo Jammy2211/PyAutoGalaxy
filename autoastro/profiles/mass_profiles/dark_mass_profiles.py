@@ -666,26 +666,26 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
-    def convergence_func(self, radius):
+    def convergence_func(self, grid_radius):
         def integral_y(y, eta):
             return (y + eta) ** (self.inner_slope - 4) * (1 - np.sqrt(1 - y ** 2))
 
-        radius = (1.0 / self.scale_radius) * radius
+        grid_radius = (1.0 / self.scale_radius) * grid_radius
         integral_y = quad(
             integral_y,
             a=0.0,
             b=1.0,
-            args=radius,
+            args=grid_radius,
             epsrel=EllipticalGeneralizedNFW.epsrel,
         )[0]
 
         return (
             2.0
             * self.kappa_s
-            * (radius ** (1 - self.inner_slope))
+            * (grid_radius ** (1 - self.inner_slope))
             * (
-                (1 + radius) ** (self.inner_slope - 3)
-                + ((3 - self.inner_slope) * integral_y)
+                    (1 + grid_radius) ** (self.inner_slope - 3)
+                    + ((3 - self.inner_slope) * integral_y)
             )
         )
 
