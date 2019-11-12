@@ -4,6 +4,7 @@ import autoastro as aast
 import math
 import numpy as np
 import pytest
+import os
 
 from test_autoastro.mock import mock_cosmology
 
@@ -348,10 +349,10 @@ class TestDensityBetweenAnnuli(object):
 
 class TestLensingObject:
 
-    def test__correct_einstein_mass_caclulated__means_all_innherited_methods_work(self):
+    def test__correct_einstein_mass_caclulated__means_all_innherited_methods_work(self, convergence_grid_config):
 
         sis = aast.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0
         )
 
-        assert sis.einstein_mass_in_units(unit_mass="angular") == pytest.approx(np.pi * 2.0 ** 2.0, 1.0e-4)
+        assert sis.einstein_mass_in_units(unit_mass="angular") == pytest.approx(np.pi * 2.0 ** 2.0, 1.0e-2)

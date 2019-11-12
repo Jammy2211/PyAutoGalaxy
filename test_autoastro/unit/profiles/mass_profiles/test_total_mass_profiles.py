@@ -655,6 +655,12 @@ class TestCoredPowerLaw(object):
         assert (interp_deflections_manual_x != interp_deflections[:, 1]).all()
 
     def test__summarize_in_units(self):
+
+        test_path = "{}/../../test_files/config/summary".format(
+            os.path.dirname(os.path.realpath(__file__))
+        )
+        af.conf.instance = af.conf.Config(config_path=test_path)
+
         cored_power_law = aast.mp.SphericalCoredPowerLaw(
             centre=(0.0, 0.0), einstein_radius=1.0, core_radius=0.0, slope=2.0
         )
@@ -678,7 +684,7 @@ class TestCoredPowerLaw(object):
         i += 1
         assert (
             summary_text[i]
-            == "pl_einstein_mass                                  3.1412e+00 angular"
+            == "pl_einstein_mass                                  3.1308e+00 angular"
         )
         i += 1
         assert (

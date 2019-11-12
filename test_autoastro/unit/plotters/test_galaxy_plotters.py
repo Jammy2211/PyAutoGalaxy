@@ -1,4 +1,5 @@
 import autoastro as aast
+import autofit as af
 import os
 
 import pytest
@@ -19,6 +20,7 @@ def test__individual_images_are_output(
     galaxy_plotter_path,
     plot_patch,
 ):
+
     aast.plot.galaxy.profile_image(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,

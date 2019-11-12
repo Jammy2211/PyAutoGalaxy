@@ -8,6 +8,7 @@ import autoastro as aast
 from autoastro import exc
 from test_autoastro.mock import mock_cosmology
 
+import os
 
 @pytest.fixture(autouse=True)
 def reset_config():
@@ -1230,7 +1231,7 @@ class TestMassProfiles(object):
 
     class TestLensingObject(object):
 
-        def test__correct_einstein_mass_caclulated_for_multiple_mass_profiles__means_all_innherited_methods_work(self):
+        def test__correct_einstein_mass_caclulated_for_multiple_mass_profiles__means_all_innherited_methods_work(self, convergence_grid_config):
 
             sis_0 = aast.mp.SphericalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=2.0
@@ -1242,7 +1243,7 @@ class TestMassProfiles(object):
 
             galaxy = aast.galaxy(mass_profile_0 = sis_0, mass_profile_1=sis_1, redshift=0.5)
 
-            assert galaxy.einstein_mass_in_units(unit_mass="angular") == pytest.approx(np.pi * 3.0 ** 2.0, 1.0e-4)
+            assert galaxy.einstein_mass_in_units(unit_mass="angular") == pytest.approx(np.pi * 3.0 ** 2.0, 1.0e-2)
 
 
 class TestMassAndLightProfiles(object):
@@ -1266,6 +1267,12 @@ class TestMassAndLightProfiles(object):
 
 class TestSummarizeInUnits(object):
     def test__galaxy_with_two_light_and_mass_profiles(self, lp_0, lp_1, mp_0, mp_1):
+
+        test_path = "{}/../test_files/config/summary".format(
+            os.path.dirname(os.path.realpath(__file__))
+        )
+        af.conf.instance = af.conf.Config(config_path=test_path)
+
         gal_summarize = aast.galaxy(
             redshift=0.5,
             light_profile_0=lp_0,
@@ -1336,12 +1343,12 @@ class TestSummarizeInUnits(object):
         i += 1
         assert (
             summary_text[i]
-            == "einstein_radius                                   3.00 arcsec"
+            == "einstein_radius                                   2.99 arcsec"
         )
         i += 1
         assert (
             summary_text[i]
-            == "einstein_mass                                     2.8274e+01 angular"
+            == "einstein_mass                                     2.8177e+01 angular"
         )
         i += 1
         assert (
@@ -1365,7 +1372,7 @@ class TestSummarizeInUnits(object):
         i += 1
         assert (
             summary_text[i]
-            == "einstein_mass                                     3.1412e+00 angular"
+            == "einstein_mass                                     3.1308e+00 angular"
         )
         i += 1
         assert (
@@ -1389,7 +1396,7 @@ class TestSummarizeInUnits(object):
         i += 1
         assert (
             summary_text[i]
-            == "einstein_mass                                     1.2566e+01 angular"
+            == "einstein_mass                                     1.2523e+01 angular"
         )
         i += 1
         assert (

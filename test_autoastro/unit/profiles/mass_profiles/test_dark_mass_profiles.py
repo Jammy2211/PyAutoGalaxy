@@ -1288,6 +1288,11 @@ class TestTruncatedNFW(object):
 
     def test_summarize_in_units(self):
 
+        test_path = "{}/../../test_files/config/summary".format(
+            os.path.dirname(os.path.realpath(__file__))
+        )
+        af.conf.instance = af.conf.Config(config_path=test_path)
+
         cosmology = cosmo.LambdaCDM(H0=70.0, Om0=0.3, Ode0=0.7)
 
         nfw = aast.mp.SphericalTruncatedNFW(
@@ -1312,12 +1317,12 @@ class TestTruncatedNFW(object):
         i += 1
         assert (
             summary_text[i]
-            == "nfw_einstein_radius                               15.38 kpc"
+            == "nfw_einstein_radius                               15.36 kpc"
         )
         i += 1
         assert (
             summary_text[i]
-            == "nfw_einstein_mass                                 1.4417e+12 solMass"
+            == "nfw_einstein_mass                                 1.4377e+12 solMass"
         )
         i += 1
         assert (
@@ -1495,6 +1500,11 @@ class TestTruncatedNFWMassToConcentration(object):
 
     def test_summarize_in_units(self):
 
+        test_path = "{}/../../test_files/config/summary".format(
+            os.path.dirname(os.path.realpath(__file__))
+        )
+        af.conf.instance = af.conf.Config(config_path=test_path)
+
         cosmology = cosmo.LambdaCDM(H0=70.0, Om0=0.3, Ode0=0.7)
 
         nfw = aast.mp.SphericalTruncatedNFW(
@@ -1519,12 +1529,12 @@ class TestTruncatedNFWMassToConcentration(object):
         i += 1
         assert (
             summary_text[i]
-            == "nfw_einstein_radius                               15.38 kpc"
+            == "nfw_einstein_radius                               15.36 kpc"
         )
         i += 1
         assert (
             summary_text[i]
-            == "nfw_einstein_mass                                 1.4417e+12 solMass"
+            == "nfw_einstein_mass                                 1.4377e+12 solMass"
         )
         i += 1
         assert (

@@ -1,5 +1,6 @@
 import numpy as np
 import autofit as af
+from scipy.optimize import root_scalar
 from astropy import cosmology as cosmo
 from skimage import measure
 
@@ -159,9 +160,65 @@ class LensingObject(object):
         x_min = np.min(list(map(lambda centre : centre[1], self.mass_profile_centres)))
         return [y_max, y_min, x_max, x_min]
 
+    def convergence_bounding_box(self, convergence_threshold=0.02):
+
+        [y_max, y_min, x_max, x_min] = self.mass_profile_bounding_box
+
+        def func_for_y_max(y):
+            grid = grids.GridIrregular.manual_1d(grid=[[y, x_max], [y, x_min]])
+            return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
+
+        convergence_y_max = (
+            root_scalar(
+                func_for_y_max, bracket=[y_max, 1000.0],
+            ).root
+        )
+
+        def func_for_y_min(y):
+            grid = grids.GridIrregular.manual_1d(grid=[[y, x_max], [y, x_min]])
+            return np.max(self.convergence_from_grid(grid=grid) - convergence_threshold)
+
+        convergence_y_min = (
+            root_scalar(
+                func_for_y_min, bracket=[y_min, -1000.0],
+            ).root
+        )
+
+        def func_for_x_max(x):
+            grid = grids.GridIrregular.manual_1d(grid=[[y_max, x], [y_min, x]])
+            return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
+
+        convergence_x_max = (
+            root_scalar(
+                func_for_x_max, bracket=[x_max, 1000.0],
+            ).root
+        )
+
+        def func_for_x_min(x):
+            grid = grids.GridIrregular.manual_1d(grid=[[y_max, x], [y_min, x]])
+            return np.max(self.convergence_from_grid(grid=grid) - convergence_threshold)
+
+        convergence_x_min = (
+            root_scalar(
+                func_for_x_min, bracket=[x_min, -1000.0],
+            ).root
+        )
+
+        return [convergence_y_max, convergence_y_min, convergence_x_max, convergence_x_min]
+
     @property
     def calculation_grid(self):
-        return grids.Grid.uniform(shape_2d=(101, 101), pixel_scales=0.1, sub_size=4)
+
+        convergence_threshold = af.conf.instance.general.get(
+            "calculation_grid", "convergence_threshold", float
+        )
+
+        pixels = af.conf.instance.general.get(
+            "calculation_grid", "pixels", int
+        )
+
+        bounding_box = self.convergence_bounding_box(convergence_threshold=convergence_threshold)
+        return grids.Grid.bounding_box(bounding_box=bounding_box, shape_2d=(pixels, pixels))
 
     @property
     def tangential_critical_curve(self):
@@ -250,6 +307,7 @@ class LensingObject(object):
         ]
 
     @property
+    @array_util.Memoizer()
     def area_within_tangential_critical_curve(self):
 
         tangential_critical_curve = self.tangential_critical_curve

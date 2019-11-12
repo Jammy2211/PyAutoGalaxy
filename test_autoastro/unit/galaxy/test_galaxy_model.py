@@ -281,7 +281,7 @@ class TestPixelization(object):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift,
             pixelization=aa.pix.Rectangular,
-            regularization=aa.reg.instance,
+            regularization=aa.reg.Constant,
         )
 
         arguments = {
@@ -300,7 +300,7 @@ class TestPixelization(object):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift,
             pixelization=aa.pix.Rectangular(),
-            regularization=aa.reg.instance(),
+            regularization=aa.reg.Constant(),
         )
 
         arguments = {galaxy_model.redshift.redshift: 2.0}
@@ -320,7 +320,7 @@ class TestRegularization(object):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift,
             pixelization=aa.pix.Rectangular,
-            regularization=aa.reg.instance,
+            regularization=aa.reg.Constant,
         )
 
         arguments = {
@@ -338,7 +338,7 @@ class TestRegularization(object):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift,
             pixelization=aa.pix.Voronoi(),
-            regularization=aa.reg.instance(),
+            regularization=aa.reg.Constant(),
         )
 
         arguments = {galaxy_model.redshift.redshift: 2.0}
@@ -349,7 +349,7 @@ class TestRegularization(object):
 
     def test__if_no_pixelization_raises_error(self):
         with pytest.raises(exc.PriorException):
-            aast.GalaxyModel(redshift=aast.Redshift, regularization=aa.reg.instance)
+            aast.GalaxyModel(redshift=aast.Redshift, regularization=aa.reg.Constant)
 
 
 class TestHyperGalaxy(object):
