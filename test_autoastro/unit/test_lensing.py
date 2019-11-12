@@ -157,6 +157,9 @@ class MockEllipticalIsothermal(
             np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
         )
 
+    @property
+    def mass_profile_centres(self):
+        return [self.centre]
 
 class MockSphericalIsothermal(MockEllipticalIsothermal):
     @af.map_types
@@ -213,6 +216,16 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
             radius=np.full(grid.sub_shape_1d, 2.0 * self.einstein_radius_rescaled),
         )
 
+
+class MockGalaxy(lensing.LensingObject):
+
+    def __init__(self, mass_profiles):
+
+        self.mass_profiles = mass_profiles
+
+    @property
+    def mass_profile_centres(self):
+        return [mass_profile.centre for mass_profile in self.mass_profiles]
 
 class TestDeflectionsViaPotential(object):
     def test__compare_sis_deflections_via_potential_and_calculation(self):
@@ -390,6 +403,62 @@ class TestMagnification(object):
         )
 
         assert mean_error < 1e-4
+
+
+class TestBoundingBox(object):
+
+    def test__mass_profile_bounding_box__is_drawn_around_centres_of_mass_profies(self):
+
+        sis = MockSphericalIsothermal(
+            centre=(0.0, 0.0),
+        )
+
+        assert sis.mass_profile_bounding_box == [0.0, 0.0, 0.0, 0.0]
+
+        sis_0 = MockSphericalIsothermal(
+            centre=(1.0, 1.0),
+        )
+
+        sis_1 = MockSphericalIsothermal(
+            centre=(-1.0, -1.0),
+        )
+
+        galaxy = MockGalaxy(mass_profiles=[sis_0, sis_1])
+
+        assert galaxy.mass_profile_bounding_box == [1.0, -1.0, 1.0, -1.0]
+
+        sis_0 = MockSphericalIsothermal(
+            centre=(8.0, -6.0),
+        )
+
+        sis_1 = MockSphericalIsothermal(
+            centre=(4.0, 10.0),
+        )
+
+        galaxy = MockGalaxy(mass_profiles=[sis_0, sis_1])
+
+        assert galaxy.mass_profile_bounding_box == [8.0, 4.0, 10.0, -6.0]
+
+        sis_0 = MockSphericalIsothermal(
+            centre=(8.0, -6.0),
+        )
+
+        sis_1 = MockSphericalIsothermal(
+            centre=(4.0, 10.0),
+        )
+
+        sis_2 = MockSphericalIsothermal(
+            centre=(18.0, -16.0),
+        )
+
+        sis_3 = MockSphericalIsothermal(
+            centre=(0.0, 90.0),
+        )
+
+        galaxy = MockGalaxy(mass_profiles=[sis_0, sis_1, sis_2, sis_3])
+
+        assert galaxy.mass_profile_bounding_box == [18.0, 0.0, 90.0, -16.0]
+
 
 def critical_curve_via_magnification_from_mass_profile_and_grid(mass_profile, grid):
 

@@ -286,5 +286,9 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         return summary
 
     @property
+    def mass_profile_centres(self):
+        return [self.centre]
+
+    @property
     def ellipticity_rescale(self):
         return NotImplementedError()

@@ -29,6 +29,10 @@ class LensingObject(object):
         raise NotImplementedError("deflections_from_grid should be overridden")
 
     @property
+    def mass_profile_centres(self):
+        raise NotImplementedError("mass profile centres should be overridden")
+
+    @property
     def unit_length(self):
         raise NotImplementedError("unit_length should be overridden")
 
@@ -147,9 +151,13 @@ class LensingObject(object):
 
         return grid.mapping.array_from_sub_array_1d(sub_array_1d=1 / det_jacobian)
 
-    # @property
-    # def bounding_box(self):
-
+    @property
+    def mass_profile_bounding_box(self):
+        y_max = np.max(list(map(lambda centre : centre[0], self.mass_profile_centres)))
+        y_min = np.min(list(map(lambda centre : centre[0], self.mass_profile_centres)))
+        x_max = np.max(list(map(lambda centre : centre[1], self.mass_profile_centres)))
+        x_min = np.min(list(map(lambda centre : centre[1], self.mass_profile_centres)))
+        return [y_max, y_min, x_max, x_min]
 
     @property
     def calculation_grid(self):
