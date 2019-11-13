@@ -4,12 +4,14 @@ import numpy as np
 
 import pytest
 
+
 @pytest.fixture(autouse=True)
 def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
     af.conf.instance = af.conf.default
+
 
 class TestHyperImageSky(object):
     def test__scale_sky_in_image__increases_all_image_values(self):

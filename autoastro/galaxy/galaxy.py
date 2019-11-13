@@ -559,9 +559,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         ]
 
         einstein_mass = self.einstein_mass_in_units(
-            unit_mass=unit_mass,
-            redshift_source=redshift_source,
-            cosmology=cosmology,
+            unit_mass=unit_mass, redshift_source=redshift_source, cosmology=cosmology
         )
 
         summary += [

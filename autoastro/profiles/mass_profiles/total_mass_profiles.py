@@ -178,7 +178,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
     def convergence_func(self, grid_radius):
         return self.einstein_radius_rescaled * (
-                self.core_radius ** 2 + grid_radius ** 2
+            self.core_radius ** 2 + grid_radius ** 2
         ) ** (-(self.slope - 1) / 2.0)
 
     @staticmethod
@@ -771,7 +771,9 @@ class EllipticalIsothermalKormann(mp.EllipticalMassProfile, mp.MassProfile):
 
     def convergence_func(self, grid_radius):
         return (
-            self.einstein_radius * np.sqrt(self.axis_ratio) / (2 * self.axis_ratio * grid_radius)
+            self.einstein_radius
+            * np.sqrt(self.axis_ratio)
+            / (2 * self.axis_ratio * grid_radius)
         )
 
     @property

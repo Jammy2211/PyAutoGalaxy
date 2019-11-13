@@ -149,7 +149,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
             The exposure time of the observation, which converts luminosity from electrons per second units to counts.
         """
 
-        if not hasattr(radius, 'unit_length'):
+        if not hasattr(radius, "unit_length"):
             radius = dim.Length(value=radius, unit_length="arcsec")
 
         if self.unit_length is not radius.unit_length:
@@ -158,8 +158,9 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
                 redshift=redshift_object, cosmology=cosmology
             )
 
-            radius = radius.convert(unit_length=self.unit_length, kpc_per_arcsec=kpc_per_arcsec)
-
+            radius = radius.convert(
+                unit_length=self.unit_length, kpc_per_arcsec=kpc_per_arcsec
+            )
 
         luminosity = dim.Luminosity(
             value=quad(self.luminosity_integral, a=0.0, b=radius)[0],

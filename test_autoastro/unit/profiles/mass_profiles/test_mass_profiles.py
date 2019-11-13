@@ -48,10 +48,7 @@ class TestMassWithinCircle(object):
         radius = aast.dim.Length(2.0, "arcsec")
 
         mass = sis.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
+            radius=radius, redshift_object=0.5, redshift_source=1.0, unit_mass="angular"
         )
         assert math.pi * sis.einstein_radius * radius == pytest.approx(mass, 1e-3)
 
@@ -60,10 +57,7 @@ class TestMassWithinCircle(object):
         radius = aast.dim.Length(4.0, "arcsec")
 
         mass = sis.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
+            radius=radius, redshift_object=0.5, redshift_source=1.0, unit_mass="angular"
         )
         assert math.pi * sis.einstein_radius * radius == pytest.approx(mass, 1e-3)
 
@@ -78,10 +72,7 @@ class TestMassWithinCircle(object):
         )
 
         mass = sis.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
+            radius=radius, redshift_object=0.5, redshift_source=1.0, unit_mass="angular"
         )
 
         assert mass_grid == pytest.approx(mass, 0.02)
@@ -101,10 +92,7 @@ class TestMassWithinCircle(object):
 
         radius = aast.dim.Length(2.0, "arcsec")
         mass = sis_arcsec.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
+            radius=radius, redshift_object=0.5, redshift_source=1.0, unit_mass="angular"
         )
         assert math.pi * sis_arcsec.einstein_radius * radius == pytest.approx(
             mass, 1e-3
@@ -187,10 +175,7 @@ class TestMassWithinCircle(object):
         )
         radius = aast.dim.Length(4.0, "kpc")
         mass_kpc = sis_kpc.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
+            radius=radius, redshift_object=0.5, redshift_source=1.0, unit_mass="angular"
         )
         assert mass_arcsec == mass_kpc
 
@@ -348,11 +333,12 @@ class TestDensityBetweenAnnuli(object):
 
 
 class TestLensingObject:
+    def test__correct_einstein_mass_caclulated__means_all_innherited_methods_work(
+        self, convergence_grid_config
+    ):
 
-    def test__correct_einstein_mass_caclulated__means_all_innherited_methods_work(self, convergence_grid_config):
+        sis = aast.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        sis = aast.mp.SphericalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2.0
+        assert sis.einstein_mass_in_units(unit_mass="angular") == pytest.approx(
+            np.pi * 2.0 ** 2.0, 1.0e-2
         )
-
-        assert sis.einstein_mass_in_units(unit_mass="angular") == pytest.approx(np.pi * 2.0 ** 2.0, 1.0e-2)

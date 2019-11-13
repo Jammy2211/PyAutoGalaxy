@@ -11,6 +11,7 @@ from autoastro import lensing
 from test_autoastro.mock import mock_cosmology
 import os
 
+
 @pytest.fixture(autouse=True)
 def reset_config():
     """
@@ -161,6 +162,7 @@ class MockEllipticalIsothermal(
     def mass_profile_centres(self):
         return [self.centre]
 
+
 class MockSphericalIsothermal(MockEllipticalIsothermal):
     @af.map_types
     def __init__(
@@ -218,7 +220,6 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
 
 
 class MockGalaxy(lensing.LensingObject):
-
     def __init__(self, mass_profiles):
 
         self.mass_profiles = mass_profiles
@@ -407,78 +408,62 @@ class TestMagnification(object):
 
 
 class TestBoundingBox(object):
-
     def test__mass_profile_bounding_box__is_drawn_around_centres_of_mass_profies(self):
 
-        sis = MockSphericalIsothermal(
-            centre=(0.0, 0.0),
-        )
+        sis = MockSphericalIsothermal(centre=(0.0, 0.0))
 
         assert sis.mass_profile_bounding_box == [0.0, 0.0, 0.0, 0.0]
 
-        sis_0 = MockSphericalIsothermal(
-            centre=(1.0, 1.0),
-        )
+        sis_0 = MockSphericalIsothermal(centre=(1.0, 1.0))
 
-        sis_1 = MockSphericalIsothermal(
-            centre=(-1.0, -1.0),
-        )
+        sis_1 = MockSphericalIsothermal(centre=(-1.0, -1.0))
 
         galaxy = MockGalaxy(mass_profiles=[sis_0, sis_1])
 
         assert galaxy.mass_profile_bounding_box == [1.0, -1.0, 1.0, -1.0]
 
-        sis_0 = MockSphericalIsothermal(
-            centre=(8.0, -6.0),
-        )
+        sis_0 = MockSphericalIsothermal(centre=(8.0, -6.0))
 
-        sis_1 = MockSphericalIsothermal(
-            centre=(4.0, 10.0),
-        )
+        sis_1 = MockSphericalIsothermal(centre=(4.0, 10.0))
 
         galaxy = MockGalaxy(mass_profiles=[sis_0, sis_1])
 
         assert galaxy.mass_profile_bounding_box == [8.0, 4.0, 10.0, -6.0]
 
-        sis_0 = MockSphericalIsothermal(
-            centre=(8.0, -6.0),
-        )
+        sis_0 = MockSphericalIsothermal(centre=(8.0, -6.0))
 
-        sis_1 = MockSphericalIsothermal(
-            centre=(4.0, 10.0),
-        )
+        sis_1 = MockSphericalIsothermal(centre=(4.0, 10.0))
 
-        sis_2 = MockSphericalIsothermal(
-            centre=(18.0, -16.0),
-        )
+        sis_2 = MockSphericalIsothermal(centre=(18.0, -16.0))
 
-        sis_3 = MockSphericalIsothermal(
-            centre=(0.0, 90.0),
-        )
+        sis_3 = MockSphericalIsothermal(centre=(0.0, 90.0))
 
         galaxy = MockGalaxy(mass_profiles=[sis_0, sis_1, sis_2, sis_3])
 
         assert galaxy.mass_profile_bounding_box == [18.0, 0.0, 90.0, -16.0]
 
-    def test__convergence_bounding_box_for_single_mass_profile__extends_to_threshold(self):
+    def test__convergence_bounding_box_for_single_mass_profile__extends_to_threshold(
+        self
+    ):
 
-        sis = MockSphericalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=1.0,
+        sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+
+        assert sis.convergence_bounding_box(
+            convergence_threshold=0.02
+        ) == pytest.approx([25.0, -25.0, 25.0, -25.0], 1.0e-4)
+
+        sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+
+        assert sis.convergence_bounding_box(convergence_threshold=0.1) == pytest.approx(
+            [5.0, -5.0, 5.0, -5.0], 1.0e-4
         )
 
-        assert sis.convergence_bounding_box(convergence_threshold=0.02) == pytest.approx([25.0, -25.0, 25.0, -25.0], 1.0e-4)
+        sis = MockSphericalIsothermal(centre=(5.0, 5.0), einstein_radius=1.0)
 
-        sis = MockSphericalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=1.0,
+        assert sis.convergence_bounding_box(convergence_threshold=0.1) == pytest.approx(
+            [10.0, 0.0, 10.0, 0.0], 1.0e-4
         )
 
-        assert sis.convergence_bounding_box(convergence_threshold=0.1) == pytest.approx([5.0, -5.0, 5.0, -5.0], 1.0e-4)
-
-        sis = MockSphericalIsothermal(
-            centre=(5.0, 5.0), einstein_radius=1.0,
-        )
-
-        assert sis.convergence_bounding_box(convergence_threshold=0.1) == pytest.approx([10.0, 0.0, 10.0, 0.0], 1.0e-4)
 
 def critical_curve_via_magnification_from_mass_profile_and_grid(mass_profile, grid):
 
@@ -703,7 +688,7 @@ class TestCriticalCurvesAndCaustics(object):
         y_centre = np.mean(radial_caustic[:, 0])
         x_centre = np.mean(radial_caustic[:, 1])
 
-        assert -0.2< y_centre < 0.2
+        assert -0.2 < y_centre < 0.2
         assert -0.35 < x_centre < 0.35
 
         radial_caustic = sis.caustics[1]
@@ -810,11 +795,15 @@ class TestEinsteinRadiusMassfrom(object):
 
         area_calc = np.pi * sis.einstein_radius ** 2
 
-        assert sis.area_within_tangential_critical_curve == pytest.approx(area_calc, 1e-1)
+        assert sis.area_within_tangential_critical_curve == pytest.approx(
+            area_calc, 1e-1
+        )
 
         area_calc = np.pi * sis.einstein_radius ** 2
 
-        assert sis.area_within_tangential_critical_curve == pytest.approx(area_calc, 1e-1)
+        assert sis.area_within_tangential_critical_curve == pytest.approx(
+            area_calc, 1e-1
+        )
 
     def test__einstein_radius_from_tangential_critical_curve__spherical_isothermal(
         self
@@ -866,13 +855,18 @@ class TestEinsteinRadiusMassfrom(object):
 
         assert einstein_mass == pytest.approx(np.pi * 2.0 ** 2.0, 1e-1)
 
-        cosmology = mock_cosmology.MockCosmology(kpc_per_arcsec=1.0, arcsec_per_kpc=1.0, critical_surface_density=0.5)
-
-        einstein_mass = sis.einstein_mass_in_units(
-            redshift_object=1, redshift_source=2, unit_mass="solMass", cosmology=cosmology
+        cosmology = mock_cosmology.MockCosmology(
+            kpc_per_arcsec=1.0, arcsec_per_kpc=1.0, critical_surface_density=0.5
         )
 
-        assert einstein_mass == pytest.approx(2.0 * np.pi * 2.0**2.0, 1e-1)
+        einstein_mass = sis.einstein_mass_in_units(
+            redshift_object=1,
+            redshift_source=2,
+            unit_mass="solMass",
+            cosmology=cosmology,
+        )
+
+        assert einstein_mass == pytest.approx(2.0 * np.pi * 2.0 ** 2.0, 1e-1)
 
     def test__einstein_mass_from_tangential_critical_curve_and_radius_rescaled_calc__sie(
         self
@@ -901,11 +895,12 @@ class TestEinsteinRadiusMassfrom(object):
 
         einstein_mass_vie_einstein_radius = np.pi * einstein_radius ** 2 * sigma_crit
 
-        assert einstein_mass_vie_einstein_radius == pytest.approx(einstein_mass_from_critical_curve, 1e-1)
+        assert einstein_mass_vie_einstein_radius == pytest.approx(
+            einstein_mass_from_critical_curve, 1e-1
+        )
 
 
 class TestGridBinning(object):
-
     def test__binning_works_on_all_from_grid_methods(self):
 
         sie = MockEllipticalIsothermal(

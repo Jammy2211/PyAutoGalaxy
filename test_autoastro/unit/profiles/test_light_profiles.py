@@ -1103,17 +1103,11 @@ class TestLuminosityWithinCircle(object):
 
         radius = aast.dim.Length(2.0, "arcsec")
         luminosity_arcsec = sersic_arcsec.luminosity_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            unit_mass="angular",
-            cosmology=cosmology,
+            radius=radius, redshift_object=0.5, unit_mass="angular", cosmology=cosmology
         )
         radius = aast.dim.Length(4.0, "kpc")
         luminosity_kpc = sersic_arcsec.luminosity_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            unit_mass="angular",
-            cosmology=cosmology,
+            radius=radius, redshift_object=0.5, unit_mass="angular", cosmology=cosmology
         )
         assert luminosity_arcsec == luminosity_kpc
 

@@ -21,6 +21,7 @@ def reset_config():
     """
     af.conf.instance = af.conf.default
 
+
 class TestAbstractNFW(object):
     def test__coord_function_f__correct_values(self):
         truncated_nfw = aast.mp.SphericalTruncatedNFW(
@@ -152,19 +153,28 @@ class TestAbstractNFW(object):
 
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
         rho = nfw.rho_at_scale_radius_for_units(
-            redshift_object=0.5, redshift_source=1.0, unit_mass="angular", cosmology=cosmology
+            redshift_object=0.5,
+            redshift_source=1.0,
+            unit_mass="angular",
+            cosmology=cosmology,
         )
         assert rho == pytest.approx(1.0, 1e-3)
 
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=3.0, scale_radius=1.0)
         rho = nfw.rho_at_scale_radius_for_units(
-            redshift_object=0.5, redshift_source=1.0, unit_mass="angular", cosmology=cosmology
+            redshift_object=0.5,
+            redshift_source=1.0,
+            unit_mass="angular",
+            cosmology=cosmology,
         )
         assert rho == pytest.approx(3.0, 1e-3)
 
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0)
         rho = nfw.rho_at_scale_radius_for_units(
-            redshift_object=0.5, redshift_source=1.0, unit_mass="angular", cosmology=cosmology
+            redshift_object=0.5,
+            redshift_source=1.0,
+            unit_mass="angular",
+            cosmology=cosmology,
         )
         assert rho == pytest.approx(0.25, 1e-3)
 

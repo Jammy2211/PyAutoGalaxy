@@ -7,12 +7,14 @@ import pytest
 
 from test_autoastro.mock.mock_galaxy import MockGalaxy
 
+
 @pytest.fixture(autouse=True)
 def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
     af.conf.instance = af.conf.default
+
 
 class TestLikelihood:
     def test__1x1_image__light_profile_fits_data_perfectly__lh_is_noise(self):

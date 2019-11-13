@@ -13,7 +13,6 @@ from autoastro.util import cosmology_util
 from autoastro import exc
 
 
-
 class DimensionsProfile(object):
     def __init__(self):
 
@@ -74,7 +73,9 @@ class DimensionsProfile(object):
 
         if len(unit_list) > 0:
             if not all(unit == unit_list[0] for unit in unit_list):
-                raise exc.UnitsException("This object has attributes with different units of length defined")
+                raise exc.UnitsException(
+                    "This object has attributes with different units of length defined"
+                )
         else:
             return None
 
@@ -91,7 +92,9 @@ class DimensionsProfile(object):
 
         if len(unit_list) > 0:
             if not all(unit == unit_list[0] for unit in unit_list):
-                raise exc.UnitsException("This object has attributes with different units of luminosity defined")
+                raise exc.UnitsException(
+                    "This object has attributes with different units of luminosity defined"
+                )
         else:
             return None
 
@@ -108,11 +111,14 @@ class DimensionsProfile(object):
 
         if len(unit_list) > 0:
             if not all(unit == unit_list[0] for unit in unit_list):
-                raise exc.UnitsException("This object has attributes with different units of mass defined")
+                raise exc.UnitsException(
+                    "This object has attributes with different units of mass defined"
+                )
         else:
             return None
 
         return unit_list[0]
+
 
 class Length(af.DimensionType):
     def __init__(self, value, unit_length="arcsec"):

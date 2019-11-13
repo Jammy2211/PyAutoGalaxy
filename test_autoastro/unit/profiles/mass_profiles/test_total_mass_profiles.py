@@ -6,12 +6,14 @@ import numpy as np
 import pytest
 import os
 
+
 @pytest.fixture(autouse=True)
 def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
     af.conf.instance = af.conf.default
+
 
 grid = aa.grid.manual_2d([[[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]]])
 

@@ -11,7 +11,6 @@ from autoastro.util import cosmology_util
 
 
 class LensingObject(object):
-
     def convergence_func(self, grid_radius):
         raise NotImplementedError("surface_density_func should be overridden")
 
@@ -154,10 +153,10 @@ class LensingObject(object):
 
     @property
     def mass_profile_bounding_box(self):
-        y_max = np.max(list(map(lambda centre : centre[0], self.mass_profile_centres)))
-        y_min = np.min(list(map(lambda centre : centre[0], self.mass_profile_centres)))
-        x_max = np.max(list(map(lambda centre : centre[1], self.mass_profile_centres)))
-        x_min = np.min(list(map(lambda centre : centre[1], self.mass_profile_centres)))
+        y_max = np.max(list(map(lambda centre: centre[0], self.mass_profile_centres)))
+        y_min = np.min(list(map(lambda centre: centre[0], self.mass_profile_centres)))
+        x_max = np.max(list(map(lambda centre: centre[1], self.mass_profile_centres)))
+        x_min = np.min(list(map(lambda centre: centre[1], self.mass_profile_centres)))
         return [y_max, y_min, x_max, x_min]
 
     def convergence_bounding_box(self, convergence_threshold=0.02):
@@ -168,43 +167,32 @@ class LensingObject(object):
             grid = grids.GridIrregular.manual_1d(grid=[[y, x_max], [y, x_min]])
             return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
 
-        convergence_y_max = (
-            root_scalar(
-                func_for_y_max, bracket=[y_max, 1000.0],
-            ).root
-        )
+        convergence_y_max = root_scalar(func_for_y_max, bracket=[y_max, 1000.0]).root
 
         def func_for_y_min(y):
             grid = grids.GridIrregular.manual_1d(grid=[[y, x_max], [y, x_min]])
             return np.max(self.convergence_from_grid(grid=grid) - convergence_threshold)
 
-        convergence_y_min = (
-            root_scalar(
-                func_for_y_min, bracket=[y_min, -1000.0],
-            ).root
-        )
+        convergence_y_min = root_scalar(func_for_y_min, bracket=[y_min, -1000.0]).root
 
         def func_for_x_max(x):
             grid = grids.GridIrregular.manual_1d(grid=[[y_max, x], [y_min, x]])
             return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
 
-        convergence_x_max = (
-            root_scalar(
-                func_for_x_max, bracket=[x_max, 1000.0],
-            ).root
-        )
+        convergence_x_max = root_scalar(func_for_x_max, bracket=[x_max, 1000.0]).root
 
         def func_for_x_min(x):
             grid = grids.GridIrregular.manual_1d(grid=[[y_max, x], [y_min, x]])
             return np.max(self.convergence_from_grid(grid=grid) - convergence_threshold)
 
-        convergence_x_min = (
-            root_scalar(
-                func_for_x_min, bracket=[x_min, -1000.0],
-            ).root
-        )
+        convergence_x_min = root_scalar(func_for_x_min, bracket=[x_min, -1000.0]).root
 
-        return [convergence_y_max, convergence_y_min, convergence_x_max, convergence_x_min]
+        return [
+            convergence_y_max,
+            convergence_y_min,
+            convergence_x_max,
+            convergence_x_min,
+        ]
 
     @property
     def calculation_grid(self):
@@ -213,12 +201,14 @@ class LensingObject(object):
             "calculation_grid", "convergence_threshold", float
         )
 
-        pixels = af.conf.instance.general.get(
-            "calculation_grid", "pixels", int
-        )
+        pixels = af.conf.instance.general.get("calculation_grid", "pixels", int)
 
-        bounding_box = self.convergence_bounding_box(convergence_threshold=convergence_threshold)
-        return grids.Grid.bounding_box(bounding_box=bounding_box, shape_2d=(pixels, pixels))
+        bounding_box = self.convergence_bounding_box(
+            convergence_threshold=convergence_threshold
+        )
+        return grids.Grid.bounding_box(
+            bounding_box=bounding_box, shape_2d=(pixels, pixels)
+        )
 
     @property
     def tangential_critical_curve(self):
@@ -265,10 +255,7 @@ class LensingObject(object):
     @property
     @array_util.Memoizer()
     def critical_curves(self):
-        return [
-            self.tangential_critical_curve,
-            self.radial_critical_curve,
-        ]
+        return [self.tangential_critical_curve, self.radial_critical_curve]
 
     @property
     def tangential_caustic(self):
@@ -301,10 +288,7 @@ class LensingObject(object):
     @property
     @array_util.Memoizer()
     def caustics(self):
-        return [
-            self.tangential_caustic,
-            self.radial_caustic,
-        ]
+        return [self.tangential_caustic, self.radial_caustic]
 
     @property
     @array_util.Memoizer()
@@ -320,7 +304,8 @@ class LensingObject(object):
     ):
 
         einstein_radius = dim.Length(
-            value=np.sqrt(self.area_within_tangential_critical_curve / np.pi), unit_length=self.unit_length
+            value=np.sqrt(self.area_within_tangential_critical_curve / np.pi),
+            unit_length=self.unit_length,
         )
 
         if unit_length is "kpc":

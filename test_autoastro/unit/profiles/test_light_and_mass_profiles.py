@@ -15,6 +15,7 @@ def reset_config():
     """
     af.conf.instance = af.conf.default
 
+
 class TestSersic(object):
     def test__constructor_and_units(self):
         sersic = aast.lmp.EllipticalSersic(

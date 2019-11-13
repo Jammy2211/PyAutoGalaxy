@@ -80,7 +80,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
             units to phsical units (e.g. solar masses).
         """
 
-        if not hasattr(radius, 'unit_length'):
+        if not hasattr(radius, "unit_length"):
             radius = dim.Length(value=radius, unit_length="arcsec")
 
         if self.unit_length is not radius.unit_length:
@@ -89,7 +89,9 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
                 redshift=redshift_object, cosmology=cosmology
             )
 
-            radius = radius.convert(unit_length=self.unit_length, kpc_per_arcsec=kpc_per_arcsec)
+            radius = radius.convert(
+                unit_length=self.unit_length, kpc_per_arcsec=kpc_per_arcsec
+            )
 
         mass = dim.Mass(
             value=quad(self.mass_integral, a=0.0, b=radius)[0], unit_mass=self.unit_mass
@@ -164,10 +166,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         )
 
     def average_convergence_of_1_radius_in_units(
-        self,
-        unit_length="arcsec",
-        redshift_object=None,
-        cosmology=cosmo.Planck15,
+        self, unit_length="arcsec", redshift_object=None, cosmology=cosmo.Planck15
     ):
         """The radius a critical curve forms for this mass profile, e.g. where the mean convergence is equal to 1.0.
 
@@ -220,7 +219,6 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         redshift_source=None,
         cosmology=cosmo.Planck15,
     ):
-
 
         summary = super().summarize_in_units(
             radii=radii,

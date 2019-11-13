@@ -684,8 +684,8 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
             * self.kappa_s
             * (grid_radius ** (1 - self.inner_slope))
             * (
-                    (1 + grid_radius) ** (self.inner_slope - 3)
-                    + ((3 - self.inner_slope) * integral_y)
+                (1 + grid_radius) ** (self.inner_slope - 3)
+                + ((3 - self.inner_slope) * integral_y)
             )
         )
 
@@ -952,7 +952,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         redshift_profile=None,
         redshift_source=None,
         redshift_of_cosmic_average_density="profile",
-        cosmology=cosmo.Planck15
+        cosmology=cosmo.Planck15,
     ):
         summary = super().summarize_in_units(
             radii=radii,
