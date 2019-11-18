@@ -11,15 +11,6 @@ def set_config_path():
         path.join(directory, "test_files/config"), path.join(directory, "output")
     )
 
-
-@pytest.fixture(name="convergence_grid_config")
-def convergence_grid_config():
-    conf.instance = conf.Config(
-        path.join(directory, "test_files/config/summary"),
-        path.join(directory, "output"),
-    )
-
-
 #
 # MODEL #
 #
