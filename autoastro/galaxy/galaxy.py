@@ -287,9 +287,9 @@ class Galaxy(ModelObject, lensing.LensingObject):
         radius : float
             The radius of the circle to compute the dimensionless mass within.
         unit_luminosity : str
-            The units the luminosity is returned in (eps | counts).
+            The unit_label the luminosity is returned in (eps | counts).
         exposure_time : float
-            The exposure time of the observation, which converts luminosity from electrons per second units to counts.
+            The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
         """
         if self.has_light_profile:
             return sum(
@@ -393,9 +393,9 @@ class Galaxy(ModelObject, lensing.LensingObject):
         """ Integrate the mass profiles's convergence profile to compute the total mass within a circle of \
         specified radius. This is centred on the mass profile.
 
-        The following units for mass can be specified and output:
+        The following unit_label for mass can be specified and output:
 
-        - Dimensionless angular units (default) - 'angular'.
+        - Dimensionless angular unit_label (default) - 'angular'.
         - Solar masses - 'angular' (multiplies the angular mass by the critical surface mass density).
 
         Parameters
@@ -403,10 +403,10 @@ class Galaxy(ModelObject, lensing.LensingObject):
         radius : dim.Length
             The radius of the circle to compute the dimensionless mass within.
         unit_mass : str
-            The units the mass is returned in (angular | angular).
+            The unit_label the mass is returned in (angular | angular).
         critical_surface_density : float or None
             The critical surface mass density of the strong lens configuration, which converts mass from angulalr \
-            units to phsical units (e.g. solar masses).
+            unit_label to phsical unit_label (e.g. solar masses).
         """
         if self.has_mass_profile:
             return sum(

@@ -134,7 +134,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         """Integrate the light profile to compute the total luminosity within a circle of specified radius. This is \
         centred on the light profile's centre.
 
-        The following units for mass can be specified and output:
+        The following unit_label for mass can be specified and output:
 
         - Electrons per second (default) - 'eps'.
         - Counts - 'counts' (multiplies the luminosity in electrons per second by the exposure time).
@@ -144,9 +144,9 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         radius : float
             The radius of the circle to compute the dimensionless mass within.
         unit_luminosity : str
-            The units the luminosity is returned in (eps | counts).
+            The unit_label the luminosity is returned in (eps | counts).
         exposure_time : float or None
-            The exposure time of the observation, which converts luminosity from electrons per second units to counts.
+            The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
         """
 
         if not hasattr(radius, "unit_length"):

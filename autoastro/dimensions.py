@@ -74,7 +74,7 @@ class DimensionsProfile(object):
         if len(unit_list) > 0:
             if not all(unit == unit_list[0] for unit in unit_list):
                 raise exc.UnitsException(
-                    "This object has attributes with different units of length defined"
+                    "This object has attributes with different unit_label of length defined"
                 )
         else:
             return None
@@ -93,7 +93,7 @@ class DimensionsProfile(object):
         if len(unit_list) > 0:
             if not all(unit == unit_list[0] for unit in unit_list):
                 raise exc.UnitsException(
-                    "This object has attributes with different units of luminosity defined"
+                    "This object has attributes with different unit_label of luminosity defined"
                 )
         else:
             return None
@@ -112,7 +112,7 @@ class DimensionsProfile(object):
         if len(unit_list) > 0:
             if not all(unit == unit_list[0] for unit in unit_list):
                 raise exc.UnitsException(
-                    "This object has attributes with different units of mass defined"
+                    "This object has attributes with different unit_label of mass defined"
                 )
         else:
             return None
@@ -334,7 +334,7 @@ def convert_length(value, unit_current, unit_new, power, kpc_per_arcsec):
 
     if unit_current is not unit_new and kpc_per_arcsec is None:
         raise exc.UnitsException(
-            "The length for a value has been requested in new units without a "
+            "The length for a value has been requested in new unit_label without a "
             "kpc_per_arcsec conversion factor."
         )
 
@@ -354,7 +354,7 @@ def convert_length(value, unit_current, unit_new, power, kpc_per_arcsec):
 def convert_luminosity(value, unit_current, unit_new, power, exposure_time):
     if unit_current is not unit_new and exposure_time is None:
         raise exc.UnitsException(
-            "The luminosity for a value has been requested in new units "
+            "The luminosity for a value has been requested in new unit_label "
             "without an  exposure time conversion factor."
         )
 
@@ -374,7 +374,7 @@ def convert_luminosity(value, unit_current, unit_new, power, exposure_time):
 def convert_mass(value, unit_current, unit_new, critical_surface_density):
     if unit_current is not unit_new and critical_surface_density is None:
         raise exc.UnitsException(
-            "The mass for a value has been requested in new units "
+            "The mass for a value has been requested in new unit_label "
             "without a critical surface mass density conversion factor."
         )
 

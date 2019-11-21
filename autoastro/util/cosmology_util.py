@@ -37,7 +37,7 @@ def angular_diameter_distance_between_redshifts_from_redshifts_and_cosmlology(
 
     if unit_length is "arcsec":
         raise exc.UnitsException(
-            "The angular diameter distance between redshifts cannot have units of length"
+            "The angular diameter distance between redshifts cannot have unit_label of length"
         )
 
     angular_diameter_distance_between_redshifts_kpc = cosmology.angular_diameter_distance_z1z2(
