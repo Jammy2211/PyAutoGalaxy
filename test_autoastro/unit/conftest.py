@@ -56,27 +56,27 @@ def make_lmp_0():
 
 @pytest.fixture(name="gal_x1_lp")
 def make_gal_x1_lp(lp_0):
-    return aast.galaxy(redshift=0.5, light_profile_0=lp_0)
+    return aast.Galaxy(redshift=0.5, light_profile_0=lp_0)
 
 
 @pytest.fixture(name="gal_x2_lp")
 def make_gal_x2_lp(lp_0, lp_1):
-    return aast.galaxy(redshift=0.5, light_profile_0=lp_0, light_profile_1=lp_1)
+    return aast.Galaxy(redshift=0.5, light_profile_0=lp_0, light_profile_1=lp_1)
 
 
 @pytest.fixture(name="gal_x1_mp")
 def make_gal_x1_mp(mp_0):
-    return aast.galaxy(redshift=0.5, mass_profile_0=mp_0)
+    return aast.Galaxy(redshift=0.5, mass_profile_0=mp_0)
 
 
 @pytest.fixture(name="gal_x2_mp")
 def make_gal_x2_mp(mp_0, mp_1):
-    return aast.galaxy(redshift=0.5, mass_profile_0=mp_0, mass_profile_1=mp_1)
+    return aast.Galaxy(redshift=0.5, mass_profile_0=mp_0, mass_profile_1=mp_1)
 
 
 @pytest.fixture(name="gal_x1_lp_x1_mp")
 def make_gal_x1_lp_x1_mp(lp_0, mp_0):
-    return aast.galaxy(redshift=0.5, light_profile_0=lp_0, mass_profile_0=mp_0)
+    return aast.Galaxy(redshift=0.5, light_profile_0=lp_0, mass_profile_0=mp_0)
 
 
 @pytest.fixture(name="hyper_galaxy")

@@ -5,7 +5,7 @@ from autoastro.profiles import (
     mass_profiles as mp,
     light_and_mass_profiles as lmp,
 )
-from autoastro.galaxy.galaxy import Galaxy as galaxy, HyperGalaxy, Redshift
+from autoastro.galaxy.galaxy import Galaxy, HyperGalaxy, Redshift
 from autoastro.galaxy.galaxy_data import GalaxyData as galaxy_data
 from autoastro.galaxy import masked
 from autoastro.galaxy.fit_galaxy import GalaxyFit as fit_galaxy

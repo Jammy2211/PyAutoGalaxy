@@ -155,7 +155,7 @@ class TestCompareToManual:
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_image=True
         )
 
-        galaxy = aast.galaxy(
+        galaxy = aast.Galaxy(
             redshift=0.5,
             light=aast.lp.SphericalSersic(centre=(1.0, 2.0), intensity=1.0),
         )
@@ -196,7 +196,7 @@ class TestCompareToManual:
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_convergence=True
         )
 
-        galaxy = aast.galaxy(
+        galaxy = aast.Galaxy(
             redshift=0.5,
             mass=aast.mp.SphericalIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
@@ -235,7 +235,7 @@ class TestCompareToManual:
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_potential=True
         )
 
-        galaxy = aast.galaxy(
+        galaxy = aast.Galaxy(
             redshift=0.5,
             mass=aast.mp.SphericalIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
@@ -278,7 +278,7 @@ class TestCompareToManual:
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_y=True
         )
 
-        galaxy = aast.galaxy(
+        galaxy = aast.Galaxy(
             redshift=0.5,
             mass=aast.mp.SphericalIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
@@ -323,7 +323,7 @@ class TestCompareToManual:
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_x=True
         )
 
-        galaxy = aast.galaxy(
+        galaxy = aast.Galaxy(
             redshift=0.5,
             mass=aast.mp.SphericalIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )

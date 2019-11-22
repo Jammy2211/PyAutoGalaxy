@@ -49,7 +49,7 @@ def profile_image(
 
     Parameters
     -----------
-    galaxy : model.galaxy.aast.galaxy
+    galaxy : model.galaxy.aast.Galaxy
         The galaxy whose image are plotted.
     grid : ndarray or datas.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
@@ -139,7 +139,7 @@ def convergence(
 
     Parameters
     -----------
-    galaxy : model.galaxy.aast.galaxy
+    galaxy : model.galaxy.aast.Galaxy
         The galaxy whose convergence is plotted.
     grid : ndarray or datas.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
@@ -229,7 +229,7 @@ def potential(
 
      Parameters
      -----------
-    galaxy : model.galaxy.aast.galaxy
+    galaxy : model.galaxy.aast.Galaxy
          The galaxy whose potential is plotted.
     grid : ndarray or datas.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
@@ -319,7 +319,7 @@ def deflections_y(
 
     Parameters
     -----------
-    galaxy : model.galaxy.aast.galaxy
+    galaxy : model.galaxy.aast.Galaxy
         The galaxy whose y deflecton angles are plotted.
     grid : ndarray or datas.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
@@ -410,7 +410,7 @@ def deflections_x(
 
      Parameters
      -----------
-    galaxy : model.galaxy.aast.galaxy
+    galaxy : model.galaxy.aast.Galaxy
          The galaxy whose x deflecton angles are plotted.
      grid : ndarray or datas.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
@@ -501,7 +501,7 @@ def magnification(
 
      Parameters
      -----------
-    galaxy : model.galaxy.aast.galaxy
+    galaxy : model.galaxy.aast.Galaxy
          The galaxy whose magnification is plotted.
     grid : ndarray or datas.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)

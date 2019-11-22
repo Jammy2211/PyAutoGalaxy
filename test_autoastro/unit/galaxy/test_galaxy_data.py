@@ -170,7 +170,7 @@ class TestGalaxyFitData(object):
 
         assert (image.in_1d_binned == np.ones(9)).all()
 
-        galaxy = aast.galaxy(redshift=0.5, light=aast.lp.SphericalSersic(intensity=1.0))
+        galaxy = aast.Galaxy(redshift=0.5, light=aast.lp.SphericalSersic(intensity=1.0))
 
         image_gal = galaxy.profile_image_from_grid(grid=galaxy_fit_data.grid)
 
@@ -244,7 +244,7 @@ class TestGalaxyFitData(object):
 
         assert (convergence.in_1d_binned == np.ones(9)).all()
 
-        galaxy = aast.galaxy(
+        galaxy = aast.Galaxy(
             redshift=0.5, mass=aast.mp.SphericalIsothermal(einstein_radius=1.0)
         )
 
@@ -322,7 +322,7 @@ class TestGalaxyFitData(object):
 
         assert (potential.in_1d_binned == np.ones(9)).all()
 
-        galaxy = aast.galaxy(
+        galaxy = aast.Galaxy(
             redshift=0.5, mass=aast.mp.SphericalIsothermal(einstein_radius=1.0)
         )
 
@@ -399,7 +399,7 @@ class TestGalaxyFitData(object):
 
         assert (deflections_y.in_1d_binned == np.ones(9)).all()
 
-        galaxy = aast.galaxy(
+        galaxy = aast.Galaxy(
             redshift=0.5, mass=aast.mp.SphericalIsothermal(einstein_radius=1.0)
         )
 
@@ -489,7 +489,7 @@ class TestGalaxyFitData(object):
 
         assert (deflections_x.in_1d_binned == np.ones(9)).all()
 
-        galaxy = aast.galaxy(
+        galaxy = aast.Galaxy(
             redshift=0.5, mass=aast.mp.SphericalIsothermal(einstein_radius=1.0)
         )
 
