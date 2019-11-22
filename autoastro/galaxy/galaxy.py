@@ -137,6 +137,20 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return type(self.pixelization) is pix.VoronoiBrightnessImage
 
     @property
+    def cosmology(self):
+        return cosmo.Planck15
+
+    @property
+    def arcsec_per_kpc(self):
+        return cosmology_util.arcsec_per_kpc_from_redshift_and_cosmology(
+            redshift=self.redshift, cosmology=self.cosmology
+        )
+
+    @property
+    def kpc_per_arcsec(self):
+        return 1.0 / self.arcsec_per_kpc
+
+    @property
     def unit_length(self):
         if self.has_light_profile:
             return self.light_profiles[0].unit_length

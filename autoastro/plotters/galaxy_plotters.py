@@ -6,7 +6,7 @@ matplotlib.use(backend)
 from matplotlib import pyplot as plt
 
 from autoarray.plotters import plotter_util
-from autoastro.plotters import profile_plotters
+from autoastro.plotters import profile_plotters, lens_plotter_util
 
 
 def profile_image(
@@ -17,8 +17,7 @@ def profile_image(
     include_critical_curves=False,
     include_caustics=False,
     as_subplot=False,
-    unit_label="arcsec",
-    kpc_per_arcsec=None,
+    plot_in_kpc=False,
     figsize=(7, 7),
     aspect="square",
     cmap="jet",
@@ -57,16 +56,13 @@ def profile_image(
     """
     image = galaxy.profile_image_from_grid(grid=grid)
 
-    if galaxy.has_mass_profile:
-
-        lines = plotter_util.get_critical_curve_and_caustic(
-            obj=galaxy,
-            include_critical_curves=include_critical_curves,
-            include_caustics=include_caustics,
-        )
-    else:
-
-        lines = None
+    lines = lens_plotter_util.get_critical_curve_and_caustic(
+        obj=galaxy,
+        include_critical_curves=include_critical_curves,
+        include_caustics=include_caustics,
+    )
+        
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
 
     aa.plot.array(
         array=image,
@@ -74,8 +70,8 @@ def profile_image(
         points=positions,
         lines=lines,
         as_subplot=as_subplot,
-        units_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_label=unit_label,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -111,8 +107,7 @@ def convergence(
     include_critical_curves=False,
     include_caustics=False,
     as_subplot=False,
-    unit_label="arcsec",
-    kpc_per_arcsec=None,
+    plot_in_kpc=False,
     figsize=(7, 7),
     aspect="square",
     cmap="jet",
@@ -151,11 +146,13 @@ def convergence(
     """
     convergence = galaxy.convergence_from_grid(grid=grid)
 
-    lines = plotter_util.get_critical_curve_and_caustic(
+    lines = lens_plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
+    
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
 
     aa.plot.array(
         array=convergence,
@@ -163,8 +160,8 @@ def convergence(
         points=positions,
         lines=lines,
         as_subplot=as_subplot,
-        units_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_label=unit_label,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -200,8 +197,7 @@ def potential(
     include_critical_curves=False,
     include_caustics=False,
     as_subplot=False,
-    unit_label="arcsec",
-    kpc_per_arcsec=None,
+    plot_in_kpc=False,
     figsize=(7, 7),
     aspect="square",
     cmap="jet",
@@ -240,11 +236,13 @@ def potential(
      """
     potential = galaxy.potential_from_grid(grid=grid)
 
-    lines = plotter_util.get_critical_curve_and_caustic(
+    lines = lens_plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
+    
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
 
     aa.plot.array(
         array=potential,
@@ -252,8 +250,8 @@ def potential(
         points=positions,
         lines=lines,
         as_subplot=as_subplot,
-        units_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_label=unit_label,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -289,8 +287,7 @@ def deflections_y(
     include_critical_curves=False,
     include_caustics=False,
     as_subplot=False,
-    unit_label="arcsec",
-    kpc_per_arcsec=None,
+    plot_in_kpc=False,
     figsize=(7, 7),
     aspect="square",
     cmap="jet",
@@ -330,11 +327,13 @@ def deflections_y(
     deflections = galaxy.deflections_from_grid(grid=grid)
     deflections_y = grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 0])
 
-    lines = plotter_util.get_critical_curve_and_caustic(
+    lines = lens_plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
+    
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
 
     aa.plot.array(
         array=deflections_y,
@@ -342,8 +341,8 @@ def deflections_y(
         points=positions,
         lines=lines,
         as_subplot=as_subplot,
-        units_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_label=unit_label,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -379,8 +378,7 @@ def deflections_x(
     include_critical_curves=False,
     include_caustics=False,
     as_subplot=False,
-    unit_label="arcsec",
-    kpc_per_arcsec=None,
+    plot_in_kpc=False,
     figsize=(7, 7),
     aspect="square",
     cmap="jet",
@@ -420,11 +418,13 @@ def deflections_x(
     deflections = galaxy.deflections_from_grid(grid=grid)
     deflections_x = grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 1])
 
-    lines = plotter_util.get_critical_curve_and_caustic(
+    lines = lens_plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
+    
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
 
     aa.plot.array(
         array=deflections_x,
@@ -432,8 +432,8 @@ def deflections_x(
         points=positions,
         lines=lines,
         as_subplot=as_subplot,
-        units_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_label=unit_label,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -469,8 +469,7 @@ def magnification(
     include_critical_curves=False,
     include_caustics=False,
     as_subplot=False,
-    unit_label="arcsec",
-    kpc_per_arcsec=None,
+    plot_in_kpc=False,
     figsize=(7, 7),
     aspect="square",
     cmap="jet",
@@ -509,11 +508,13 @@ def magnification(
      """
     magnification = galaxy.magnification_from_grid(grid=grid)
 
-    lines = plotter_util.get_critical_curve_and_caustic(
+    lines = lens_plotter_util.get_critical_curve_and_caustic(
         obj=galaxy,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
+    
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
 
     aa.plot.array(
         array=magnification,
@@ -521,8 +522,8 @@ def magnification(
         points=positions,
         lines=lines,
         as_subplot=as_subplot,
-        units_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_label=unit_label,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -555,8 +556,7 @@ def profile_image_subplot(
     grid,
     mask=None,
     positions=None,
-    unit_label="arcsec",
-    kpc_per_arcsec=None,
+    plot_in_kpc=False,
     figsize=None,
     aspect="square",
     cmap="jet",
@@ -591,6 +591,8 @@ def profile_image_subplot(
         figsize = figsize_tool
 
     plt.figure(figsize=figsize)
+    
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
 
     for i, light_profile in enumerate(galaxy.light_profiles):
 
@@ -603,7 +605,7 @@ def profile_image_subplot(
             grid=grid,
             as_subplot=True,
             unit_label=unit_label,
-            kpc_per_arcsec=kpc_per_arcsec,
+            unit_conversion_factor=unit_conversion_factor,
             figsize=figsize,
             aspect=aspect,
             cmap=cmap,
@@ -643,8 +645,7 @@ def convergence_subplot(
     grid,
     mask=None,
     positions=None,
-    unit_label="arcsec",
-    kpc_per_arcsec=None,
+    plot_in_kpc=False,
     figsize=None,
     aspect="square",
     cmap="jet",
@@ -679,6 +680,8 @@ def convergence_subplot(
         figsize = figsize_tool
 
     plt.figure(figsize=figsize)
+    
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
@@ -691,7 +694,7 @@ def convergence_subplot(
             positions=positions,
             as_subplot=True,
             unit_label=unit_label,
-            kpc_per_arcsec=kpc_per_arcsec,
+            unit_conversion_factor=unit_conversion_factor,
             figsize=figsize,
             aspect=aspect,
             cmap=cmap,
@@ -731,8 +734,7 @@ def potential_subplot(
     grid,
     mask=None,
     positions=None,
-    unit_label="arcsec",
-    kpc_per_arcsec=None,
+    plot_in_kpc=False,
     figsize=None,
     aspect="square",
     cmap="jet",
@@ -767,6 +769,8 @@ def potential_subplot(
         figsize = figsize_tool
 
     plt.figure(figsize=figsize)
+    
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
@@ -779,7 +783,7 @@ def potential_subplot(
             positions=positions,
             as_subplot=True,
             unit_label=unit_label,
-            kpc_per_arcsec=kpc_per_arcsec,
+            unit_conversion_factor=unit_conversion_factor,
             figsize=figsize,
             aspect=aspect,
             cmap=cmap,
@@ -819,8 +823,7 @@ def deflections_y_subplot(
     grid,
     mask=None,
     positions=None,
-    unit_label="arcsec",
-    kpc_per_arcsec=None,
+    plot_in_kpc=False,
     figsize=None,
     aspect="square",
     cmap="jet",
@@ -855,6 +858,8 @@ def deflections_y_subplot(
         figsize = figsize_tool
 
     plt.figure(figsize=figsize)
+    
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
@@ -867,7 +872,7 @@ def deflections_y_subplot(
             positions=positions,
             as_subplot=True,
             unit_label=unit_label,
-            kpc_per_arcsec=kpc_per_arcsec,
+            unit_conversion_factor=unit_conversion_factor,
             figsize=figsize,
             aspect=aspect,
             cmap=cmap,
@@ -907,8 +912,7 @@ def deflections_x_subplot(
     grid,
     mask=None,
     positions=None,
-    unit_label="arcsec",
-    kpc_per_arcsec=None,
+    plot_in_kpc=False,
     figsize=None,
     aspect="square",
     cmap="jet",
@@ -943,6 +947,8 @@ def deflections_x_subplot(
         figsize = figsize_tool
 
     plt.figure(figsize=figsize)
+    
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
@@ -955,7 +961,7 @@ def deflections_x_subplot(
             positions=positions,
             as_subplot=True,
             unit_label=unit_label,
-            kpc_per_arcsec=kpc_per_arcsec,
+            unit_conversion_factor=unit_conversion_factor,
             figsize=figsize,
             aspect=aspect,
             cmap=cmap,

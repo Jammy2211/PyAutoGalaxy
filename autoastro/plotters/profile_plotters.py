@@ -1,5 +1,6 @@
 import autoarray as aa
 from autoarray.plotters import plotter_util
+from autoastro.plotters import lens_plotter_util
 
 
 def image(
@@ -9,7 +10,7 @@ def image(
     positions=None,
     as_subplot=False,
     unit_label="arcsec",
-    kpc_per_arcsec=None,
+    unit_conversion_factor=None,
     figsize=(7, 7),
     aspect="square",
     cmap="jet",
@@ -53,8 +54,8 @@ def image(
         mask=mask,
         points=positions,
         as_subplot=as_subplot,
-        units_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_label=unit_label,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -93,7 +94,7 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
     effective_radius_line=None,
     einstein_radius_line=None,
     unit_label="arcsec",
-    kpc_per_arcsec=None,
+    unit_conversion_factor=None,
     figsize=(7, 7),
     plot_legend=True,
     title="Luminosity (Electrons Per Second) vs Radius",
@@ -132,7 +133,7 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
         effective_radius_line=effective_radius_line,
         einstein_radius_line=einstein_radius_line,
         unit_label=unit_label,
-        kpc_per_arcsec=kpc_per_arcsec,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         plot_legend=plot_legend,
         title=title,
@@ -157,7 +158,7 @@ def convergence(
     include_caustics=False,
     as_subplot=False,
     unit_label="arcsec",
-    kpc_per_arcsec=None,
+    unit_conversion_factor=None,
     figsize=(7, 7),
     aspect="square",
     cmap="jet",
@@ -197,7 +198,7 @@ def convergence(
 
     convergence = mass_profile.convergence_from_grid(grid=grid)
 
-    lines = plotter_util.get_critical_curve_and_caustic(
+    lines = lens_plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
@@ -209,8 +210,8 @@ def convergence(
         points=positions,
         lines=lines,
         as_subplot=as_subplot,
-        units_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_label=unit_label,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -247,7 +248,7 @@ def potential(
     include_critical_curves=False,
     include_caustics=False,
     unit_label="arcsec",
-    kpc_per_arcsec=None,
+    unit_conversion_factor=None,
     figsize=(7, 7),
     aspect="square",
     cmap="jet",
@@ -286,7 +287,7 @@ def potential(
     """
     potential = mass_profile.potential_from_grid(grid=grid)
 
-    lines = plotter_util.get_critical_curve_and_caustic(
+    lines = lens_plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
@@ -298,8 +299,8 @@ def potential(
         points=positions,
         lines=lines,
         as_subplot=as_subplot,
-        units_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_label=unit_label,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -336,7 +337,7 @@ def deflections_y(
     include_caustics=False,
     as_subplot=False,
     unit_label="arcsec",
-    kpc_per_arcsec=None,
+    unit_conversion_factor=None,
     figsize=(7, 7),
     aspect="square",
     cmap="jet",
@@ -377,7 +378,7 @@ def deflections_y(
     deflections = mass_profile.deflections_from_grid(grid=grid)
     deflections_y = grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 0])
 
-    lines = plotter_util.get_critical_curve_and_caustic(
+    lines = lens_plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
@@ -389,8 +390,8 @@ def deflections_y(
         points=positions,
         lines=lines,
         as_subplot=as_subplot,
-        units_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_label=unit_label,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -427,7 +428,7 @@ def deflections_x(
     include_caustics=False,
     as_subplot=False,
     unit_label="arcsec",
-    kpc_per_arcsec=None,
+    unit_conversion_factor=None,
     figsize=(7, 7),
     aspect="square",
     cmap="jet",
@@ -467,7 +468,7 @@ def deflections_x(
     deflections = mass_profile.deflections_from_grid(grid=grid)
     deflections_x = grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 1])
 
-    lines = plotter_util.get_critical_curve_and_caustic(
+    lines = lens_plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
@@ -479,8 +480,8 @@ def deflections_x(
         points=positions,
         lines=lines,
         as_subplot=as_subplot,
-        units_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_label=unit_label,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -517,7 +518,7 @@ def magnification(
     include_critical_curves=False,
     include_caustics=False,
     unit_label="arcsec",
-    kpc_per_arcsec=None,
+    unit_conversion_factor=None,
     figsize=(7, 7),
     aspect="square",
     cmap="jet",
@@ -556,7 +557,7 @@ def magnification(
     """
     magnification = mass_profile.magnification_from_grid(grid=grid)
 
-    lines = plotter_util.get_critical_curve_and_caustic(
+    lines = lens_plotter_util.get_critical_curve_and_caustic(
         obj=mass_profile,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
@@ -568,8 +569,8 @@ def magnification(
         points=positions,
         lines=lines,
         as_subplot=as_subplot,
-        units_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_label=unit_label,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,

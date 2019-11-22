@@ -1,5 +1,4 @@
 import autoastro as aast
-import autofit as af
 import os
 
 import pytest
@@ -26,6 +25,7 @@ def test__individual_images_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        plot_in_kpc=True,
         include_critical_curves=True,
         include_caustics=True,
         cb_tick_values=[1.0],

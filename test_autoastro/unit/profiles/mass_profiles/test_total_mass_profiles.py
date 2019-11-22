@@ -15,7 +15,7 @@ def reset_config():
     af.conf.instance = af.conf.default
 
 
-grid = aa.grid.manual_2d([[[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]]])
+grid = aa.grid_irregular.manual_1d([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestPointMass(object):
@@ -40,7 +40,7 @@ class TestPointMass(object):
         point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
 
         deflections = point_mass.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
         )
         assert deflections[0, 0] == pytest.approx(0.5, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.5, 1e-3)
@@ -48,7 +48,7 @@ class TestPointMass(object):
         point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=2.0)
 
         deflections = point_mass.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
         )
         assert deflections[0, 0] == pytest.approx(1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(1.0, 1e-3)
@@ -56,7 +56,7 @@ class TestPointMass(object):
         point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
 
         deflections = point_mass.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[2.0, 2.0]]])
+            grid=aa.grid_irregular.manual_1d([[2.0, 2.0]])
         )
         assert deflections[0, 0] == pytest.approx(0.25, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.25, 1e-3)
@@ -64,7 +64,7 @@ class TestPointMass(object):
         point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
 
         deflections = point_mass.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[2.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[2.0, 1.0]])
         )
         assert deflections[0, 0] == pytest.approx(0.4, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.2, 1e-3)
@@ -72,7 +72,7 @@ class TestPointMass(object):
         point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=2.0)
 
         deflections = point_mass.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[4.0, 9.0]]])
+            grid=aa.grid_irregular.manual_1d([[4.0, 9.0]])
         )
         assert deflections[0, 0] == pytest.approx(8.0 / 97.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(18.0 / 97.0, 1e-3)
@@ -80,7 +80,7 @@ class TestPointMass(object):
         point_mass = aast.mp.PointMass(centre=(1.0, 2.0), einstein_radius=1.0)
 
         deflections = point_mass.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[2.0, 3.0]]])
+            grid=aa.grid_irregular.manual_1d([[2.0, 3.0]])
         )
         assert deflections[0, 0] == pytest.approx(0.5, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.5, 1e-3)
@@ -90,10 +90,10 @@ class TestPointMass(object):
         point_mass_0 = aast.mp.PointMass(centre=(0.0, 0.0))
         point_mass_1 = aast.mp.PointMass(centre=(1.0, 1.0))
         deflections_0 = point_mass_0.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
         )
         deflections_1 = point_mass_1.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 0.0]])
         )
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
@@ -101,10 +101,10 @@ class TestPointMass(object):
         point_mass_0 = aast.mp.PointMass(centre=(0.0, 0.0))
         point_mass_1 = aast.mp.PointMass(centre=(0.0, 0.0))
         deflections_0 = point_mass_0.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
         )
         deflections_1 = point_mass_1.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         )
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
@@ -114,7 +114,7 @@ class TestPointMass(object):
         point_mass = aast.mp.PointMass(centre=(1.0, 2.0), einstein_radius=1.0)
 
         deflections = point_mass.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[2.0, 3.0], [2.0, 3.0], [2.0, 3.0]]])
+            grid=aa.grid_irregular.manual_1d([[2.0, 3.0], [2.0, 3.0], [2.0, 3.0]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.5, 1e-3)
@@ -127,7 +127,7 @@ class TestPointMass(object):
         point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
 
         deflections = point_mass.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 1.0], [2.0, 2.0], [1.0, 1.0], [2.0, 2.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 1.0], [2.0, 2.0], [1.0, 1.0], [2.0, 2.0]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.5, 1e-3)
@@ -285,7 +285,7 @@ class TestCoredPowerLaw(object):
             core_radius=0.2,
         )
         assert cored_power_law.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(0.45492, 1e-3)
 
         cored_power_law = aast.mp.EllipticalCoredPowerLaw(
@@ -297,7 +297,7 @@ class TestCoredPowerLaw(object):
             core_radius=0.2,
         )
         assert cored_power_law.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(1.3887, 1e-3)
 
     def test__potential_correct_values(self):
@@ -305,14 +305,14 @@ class TestCoredPowerLaw(object):
             centre=(-0.7, 0.5), einstein_radius=1.0, slope=1.8, core_radius=0.2
         )
         assert power_law.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         ) == pytest.approx(0.54913, 1e-3)
 
         power_law = aast.mp.SphericalCoredPowerLaw(
             centre=(0.2, -0.2), einstein_radius=0.5, slope=2.4, core_radius=0.5
         )
         assert power_law.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         ) == pytest.approx(0.01820, 1e-3)
 
         cored_power_law = aast.mp.EllipticalCoredPowerLaw(
@@ -324,7 +324,7 @@ class TestCoredPowerLaw(object):
             core_radius=0.5,
         )
         assert cored_power_law.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         ) == pytest.approx(0.02319, 1e-3)
 
         cored_power_law = aast.mp.EllipticalCoredPowerLaw(
@@ -336,7 +336,7 @@ class TestCoredPowerLaw(object):
             core_radius=0.2,
         )
         assert cored_power_law.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         ) == pytest.approx(0.71185, 1e-3)
 
     def test__deflections__correct_values(self):
@@ -344,7 +344,7 @@ class TestCoredPowerLaw(object):
             centre=(-0.7, 0.5), einstein_radius=1.0, slope=1.8, core_radius=0.2
         )
         deflections = power_law.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.80677, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.30680, 1e-3)
@@ -353,7 +353,7 @@ class TestCoredPowerLaw(object):
             centre=(0.2, -0.2), einstein_radius=0.5, slope=2.4, core_radius=0.5
         )
         deflections = power_law.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(-0.00321, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.09316, 1e-3)
@@ -367,7 +367,7 @@ class TestCoredPowerLaw(object):
             core_radius=0.2,
         )
         deflections = cored_power_law.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.9869, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.54882, 1e-3)
@@ -382,7 +382,7 @@ class TestCoredPowerLaw(object):
         )
 
         deflections = cored_power_law.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.01111, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.11403, 1e-3)
@@ -391,17 +391,17 @@ class TestCoredPowerLaw(object):
         cored_power_law_0 = aast.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
         cored_power_law_1 = aast.mp.SphericalCoredPowerLaw(centre=(1.0, 1.0))
         assert cored_power_law_0.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
         ) == cored_power_law_1.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 0.0]])
         )
 
         cored_power_law_0 = aast.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
         cored_power_law_1 = aast.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
         assert cored_power_law_0.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
         ) == cored_power_law_1.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         )
 
         cored_power_law_0 = aast.mp.EllipticalCoredPowerLaw(
@@ -411,26 +411,26 @@ class TestCoredPowerLaw(object):
             centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0
         )
         assert cored_power_law_0.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
         ) == cored_power_law_1.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         )
 
     def test__potential__change_geometry(self):
         cored_power_law_0 = aast.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
         cored_power_law_1 = aast.mp.SphericalCoredPowerLaw(centre=(1.0, 1.0))
         assert cored_power_law_0.potential_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
         ) == cored_power_law_1.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 0.0]])
         )
 
         cored_power_law_0 = aast.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
         cored_power_law_1 = aast.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
         assert cored_power_law_0.potential_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
         ) == cored_power_law_1.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         )
 
         cored_power_law_0 = aast.mp.EllipticalCoredPowerLaw(
@@ -440,19 +440,19 @@ class TestCoredPowerLaw(object):
             centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0
         )
         assert cored_power_law_0.potential_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
         ) == cored_power_law_1.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         )
 
     def test__deflections__change_geometry(self):
         cored_power_law_0 = aast.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
         cored_power_law_1 = aast.mp.SphericalCoredPowerLaw(centre=(1.0, 1.0))
         deflections_0 = cored_power_law_0.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
         )
         deflections_1 = cored_power_law_1.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 0.0]])
         )
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
@@ -460,10 +460,10 @@ class TestCoredPowerLaw(object):
         cored_power_law_0 = aast.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
         cored_power_law_1 = aast.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
         deflections_0 = cored_power_law_0.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
         )
         deflections_1 = cored_power_law_1.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         )
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
@@ -475,10 +475,10 @@ class TestCoredPowerLaw(object):
             centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0
         )
         deflections_0 = cored_power_law_0.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
         )
         deflections_1 = cored_power_law_1.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         )
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
@@ -493,10 +493,10 @@ class TestCoredPowerLaw(object):
             core_radius=0.2,
         )
         assert cored_power_law.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0], [0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0], [0.0, 1.0]])
         )[0] == pytest.approx(0.45492, 1e-3)
         assert cored_power_law.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0], [0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0], [0.0, 1.0]])
         )[1] == pytest.approx(0.45492, 1e-3)
 
         cored_power_law = aast.mp.EllipticalCoredPowerLaw(
@@ -508,10 +508,10 @@ class TestCoredPowerLaw(object):
             core_radius=0.5,
         )
         assert cored_power_law.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625], [0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625], [0.1625, 0.1625]])
         )[0] == pytest.approx(0.02319, 1e-3)
         assert cored_power_law.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625], [0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625], [0.1625, 0.1625]])
         )[1] == pytest.approx(0.02319, 1e-3)
 
         cored_power_law = aast.mp.EllipticalCoredPowerLaw(
@@ -523,7 +523,7 @@ class TestCoredPowerLaw(object):
             core_radius=0.2,
         )
         deflections = cored_power_law.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625], [0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625], [0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.9869, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.54882, 1e-3)
@@ -798,35 +798,35 @@ class TestPowerLaw(object):
             centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0
         )
         assert isothermal.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
         ) == pytest.approx(0.5, 1e-3)
 
         isothermal = aast.mp.SphericalPowerLaw(
             centre=(0.0, 0.0), einstein_radius=2.0, slope=2.2
         )
         assert isothermal.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[2.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
         ) == pytest.approx(0.4, 1e-3)
 
         power_law = aast.mp.SphericalPowerLaw(
             centre=(0.0, 0.0), einstein_radius=2.0, slope=2.2
         )
         assert power_law.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[2.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
         ) == pytest.approx(0.4, 1e-3)
 
         power_law = aast.mp.EllipticalPowerLaw(
             centre=(0.0, 0.0), axis_ratio=0.5, phi=0.0, einstein_radius=1.0, slope=2.3
         )
         assert power_law.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(0.466666, 1e-3)
 
         power_law = aast.mp.EllipticalPowerLaw(
             centre=(0.0, 0.0), axis_ratio=0.5, phi=0.0, einstein_radius=2.0, slope=1.7
         )
         assert power_law.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(1.4079, 1e-3)
 
     def test__potential_correct_values(self):
@@ -834,28 +834,28 @@ class TestPowerLaw(object):
             centre=(-0.7, 0.5), einstein_radius=1.3, slope=2.3
         )
         assert power_law.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         ) == pytest.approx(1.90421, 1e-3)
 
         power_law = aast.mp.SphericalPowerLaw(
             centre=(-0.7, 0.5), einstein_radius=1.3, slope=1.8
         )
         assert power_law.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         ) == pytest.approx(0.93758, 1e-3)
 
         power_law = aast.mp.EllipticalPowerLaw(
             centre=(-0.7, 0.5), axis_ratio=0.7, phi=60.0, einstein_radius=1.3, slope=2.2
         )
         assert power_law.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         ) == pytest.approx(1.53341, 1e-3)
 
         power_law = aast.mp.EllipticalPowerLaw(
             centre=(-0.7, 0.5), axis_ratio=0.7, phi=60.0, einstein_radius=1.3, slope=1.8
         )
         assert power_law.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         ) == pytest.approx(0.96723, 1e-3)
 
     def test__deflections__correct_values(self):
@@ -864,7 +864,7 @@ class TestPowerLaw(object):
             centre=(0.2, 0.2), einstein_radius=1.0, slope=2.0
         )
         deflections = power_law.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(-0.31622, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.94868, 1e-3)
@@ -873,7 +873,7 @@ class TestPowerLaw(object):
             centre=(0.2, 0.2), einstein_radius=1.0, slope=2.5
         )
         deflections = power_law.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(-1.59054, 1e-3)
         assert deflections[0, 1] == pytest.approx(-4.77162, 1e-3)
@@ -882,7 +882,7 @@ class TestPowerLaw(object):
             centre=(0.2, 0.2), einstein_radius=1.0, slope=1.5
         )
         deflections = power_law.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(-0.06287, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.18861, 1e-3)
@@ -891,7 +891,7 @@ class TestPowerLaw(object):
             centre=(0, 0), axis_ratio=0.5, phi=0.0, einstein_radius=1.0, slope=2.0
         )
         deflections = power_law.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
@@ -902,7 +902,7 @@ class TestPowerLaw(object):
         )
 
         deflections = power_law.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         )
 
         assert deflections[0, 0] == pytest.approx(1.29641, 1e-3)
@@ -912,7 +912,7 @@ class TestPowerLaw(object):
             centre=(0, 0), axis_ratio=0.5, phi=0.0, einstein_radius=1.0, slope=1.5
         )
         deflections = power_law.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.48036, 1e-3)
@@ -922,7 +922,7 @@ class TestPowerLaw(object):
             centre=(-0.7, 0.5), axis_ratio=0.7, phi=60.0, einstein_radius=1.3, slope=1.9
         )
         deflections = power_law.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         )
 
         # assert deflections[0, 0] == pytest.approx(1.12841, 1e-3)
@@ -937,7 +937,7 @@ class TestPowerLaw(object):
         )
 
         deflections = power_law.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         )
 
         assert deflections[0, 0] == pytest.approx(1.25995, 1e-3)
@@ -1197,21 +1197,21 @@ class TestCoredIsothermal(object):
             centre=(0.0, 0.0), einstein_radius=1.0, core_radius=0.2
         )
         assert cored_isothermal.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
         ) == pytest.approx(0.49029, 1e-3)
 
         cored_isothermal = aast.mp.SphericalCoredIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0, core_radius=0.2
         )
         assert cored_isothermal.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[1.0, 0.0]]])
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
         ) == pytest.approx(2.0 * 0.49029, 1e-3)
 
         cored_isothermal = aast.mp.SphericalCoredIsothermal(
             centre=(0.0, 0.0), einstein_radius=1.0, core_radius=0.2
         )
         assert cored_isothermal.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(0.49029, 1e-3)
 
         # axis ratio changes only einstein_rescaled, so wwe can use the above value and times by 1.0/1.5.
@@ -1223,7 +1223,7 @@ class TestCoredIsothermal(object):
             core_radius=0.2,
         )
         assert cored_isothermal.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(0.49029 * 1.33333, 1e-3)
 
         cored_isothermal = aast.mp.EllipticalCoredIsothermal(
@@ -1234,7 +1234,7 @@ class TestCoredIsothermal(object):
             core_radius=0.2,
         )
         assert cored_isothermal.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(2.0 * 0.49029, 1e-3)
 
         # for axis_ratio = 1.0, the factor is 1/2
@@ -1249,7 +1249,7 @@ class TestCoredIsothermal(object):
             core_radius=0.2,
         )
         assert cored_isothermal.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx((1.0 / 0.75) * 0.49029, 1e-3)
 
     def test__potential__correct_values(self):
@@ -1257,14 +1257,14 @@ class TestCoredIsothermal(object):
             centre=(-0.7, 0.5), einstein_radius=1.3, core_radius=0.2
         )
         assert isothermal_core.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         ) == pytest.approx(0.72231, 1e-3)
 
         isothermal_core = aast.mp.SphericalCoredIsothermal(
             centre=(0.2, -0.2), einstein_radius=0.5, core_radius=0.5
         )
         assert isothermal_core.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         ) == pytest.approx(0.03103, 1e-3)
 
         cored_isothermal = aast.mp.EllipticalCoredIsothermal(
@@ -1275,7 +1275,7 @@ class TestCoredIsothermal(object):
             core_radius=0.2,
         )
         assert cored_isothermal.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         ) == pytest.approx(0.74354, 1e-3)
 
         cored_isothermal = aast.mp.EllipticalCoredIsothermal(
@@ -1286,7 +1286,7 @@ class TestCoredIsothermal(object):
             core_radius=0.5,
         )
         assert cored_isothermal.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         ) == pytest.approx(0.04024, 1e-3)
 
     def test__deflections__correct_values(self):
@@ -1294,7 +1294,7 @@ class TestCoredIsothermal(object):
             centre=(-0.7, 0.5), einstein_radius=1.3, core_radius=0.2
         )
         deflections = isothermal_core.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.98582, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.37489, 1e-3)
@@ -1303,7 +1303,7 @@ class TestCoredIsothermal(object):
             centre=(0.2, -0.2), einstein_radius=0.5, core_radius=0.5
         )
         deflections = isothermal_core.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(-0.00559, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.16216, 1e-3)
@@ -1316,7 +1316,7 @@ class TestCoredIsothermal(object):
             core_radius=0.2,
         )
         deflections = cored_isothermal.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.95429, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.52047, 1e-3)
@@ -1329,7 +1329,7 @@ class TestCoredIsothermal(object):
             core_radius=0.5,
         )
         deflections = cored_isothermal.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.02097, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.20500, 1e-3)
@@ -1578,28 +1578,28 @@ class TestIsothermal(object):
         # kappa = 0.5 * 1.0 ** 1.0
         isothermal = aast.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
         assert isothermal.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(0.5 * 2.0, 1e-3)
 
         isothermal = aast.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, einstein_radius=1.0
         )
         assert isothermal.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(0.5, 1e-3)
 
         isothermal = aast.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, einstein_radius=2.0
         )
         assert isothermal.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(0.5 * 2.0, 1e-3)
 
         isothermal = aast.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), axis_ratio=0.5, phi=0.0, einstein_radius=1.0
         )
         assert isothermal.convergence_from_grid(
-            grid=aa.grid.manual_2d([[[0.0, 1.0]]])
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(0.66666, 1e-3)
 
     def test__potential__correct_values(self):
@@ -1607,14 +1607,14 @@ class TestIsothermal(object):
             centre=(-0.7, 0.5), einstein_radius=1.3
         )
         assert isothermal.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         ) == pytest.approx(1.23435, 1e-3)
 
         isothermal = aast.mp.EllipticalIsothermal(
             centre=(-0.7, 0.5), axis_ratio=0.7, phi=60.0, einstein_radius=1.3
         )
         assert isothermal.potential_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         ) == pytest.approx(1.19268, 1e-3)
 
     def test__deflections__correct_values(self):
@@ -1622,7 +1622,7 @@ class TestIsothermal(object):
             centre=(-0.7, 0.5), einstein_radius=1.3
         )
         deflections = isothermal.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(1.21510, 1e-4)
         assert deflections[0, 1] == pytest.approx(-0.46208, 1e-4)
@@ -1631,7 +1631,7 @@ class TestIsothermal(object):
             centre=(-0.1, 0.1), einstein_radius=5.0
         )
         deflections = isothermal.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1875, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(4.88588, 1e-4)
         assert deflections[0, 1] == pytest.approx(1.06214, 1e-4)
@@ -1640,7 +1640,7 @@ class TestIsothermal(object):
             centre=(0, 0), axis_ratio=0.5, phi=0.0, einstein_radius=1.0
         )
         deflections = isothermal.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)
@@ -1649,7 +1649,7 @@ class TestIsothermal(object):
             centre=(0, 0), axis_ratio=0.5, phi=0.0, einstein_radius=1.0
         )
         deflections = isothermal.deflections_from_grid(
-            grid=aa.grid.manual_2d([[[0.1625, 0.1625]]])
+            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)

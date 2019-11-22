@@ -30,7 +30,7 @@ def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
     for x in xs:
         for y in ys:
 
-            eta = profile.grid_to_elliptical_radii(aa.grid.manual_2d([[[x, y]]]))
+            eta = profile.grid_to_elliptical_radii(grid=aa.grid_irregular.manual_1d([[x, y]]))
 
             if eta < radius:
                 mass_total += profile.convergence_func(eta) * area
@@ -334,7 +334,7 @@ class TestDensityBetweenAnnuli(object):
 
 class TestLensingObject:
     def test__correct_einstein_mass_caclulated__means_all_innherited_methods_work(
-        self, convergence_grid_config
+        self,
     ):
 
         sis = aast.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)

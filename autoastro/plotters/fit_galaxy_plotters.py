@@ -14,7 +14,7 @@ def subplot(
     fit,
     positions=None,
     unit_label="arcsec",
-    kpc_per_arcsec=None,
+    unit_conversion_factor=None,
     figsize=None,
     aspect="square",
     cmap="jet",
@@ -55,7 +55,7 @@ def subplot(
         positions=positions,
         as_subplot=True,
         unit_label=unit_label,
-        kpc_per_arcsec=kpc_per_arcsec,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -89,7 +89,7 @@ def subplot(
         points=positions,
         as_subplot=True,
         unit_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -122,7 +122,7 @@ def subplot(
         mask=fit.mask,
         as_subplot=True,
         unit_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -154,7 +154,7 @@ def subplot(
         mask=fit.mask,
         as_subplot=True,
         unit_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
@@ -201,7 +201,7 @@ def individuals(
     output_format="show",
 ):
 
-    kpc_per_arcsec = None
+    unit_conversion_factor = None
 
     if plot_image:
 
@@ -210,7 +210,7 @@ def individuals(
             mask=fit.mask,
             positions=positions,
             unit_label=unit_label,
-            kpc_per_arcsec=kpc_per_arcsec,
+            unit_conversion_factor=unit_conversion_factor,
             output_path=output_path,
             output_format=output_format,
         )
@@ -222,7 +222,7 @@ def individuals(
             mask=fit.mask,
             points=positions,
             unit_label=unit_label,
-            unit_conversion_factor=kpc_per_arcsec,
+            unit_conversion_factor=unit_conversion_factor,
             output_path=output_path,
             output_format=output_format,
         )
@@ -234,7 +234,7 @@ def individuals(
             mask=fit.mask,
             points=positions,
             unit_label=unit_label,
-            unit_conversion_factor=kpc_per_arcsec,
+            unit_conversion_factor=unit_conversion_factor,
             output_path=output_path,
             output_format=output_format,
         )
@@ -245,7 +245,7 @@ def individuals(
             fit=fit,
             mask=fit.mask,
             unit_label=unit_label,
-            unit_conversion_factor=kpc_per_arcsec,
+            unit_conversion_factor=unit_conversion_factor,
             output_path=output_path,
             output_format=output_format,
         )
@@ -256,7 +256,7 @@ def individuals(
             fit=fit,
             mask=fit.mask,
             unit_label=unit_label,
-            unit_conversion_factor=kpc_per_arcsec,
+            unit_conversion_factor=unit_conversion_factor,
             output_path=output_path,
             output_format=output_format,
         )
@@ -267,7 +267,7 @@ def galaxy_data_array(
     positions=None,
     as_subplot=False,
     unit_label="arcsec",
-    kpc_per_arcsec=None,
+    unit_conversion_factor=None,
     figsize=None,
     aspect="square",
     cmap="jet",
@@ -313,8 +313,8 @@ def galaxy_data_array(
         mask=galaxy_data.mask,
         points=positions,
         as_subplot=as_subplot,
-        units_label=unit_label,
-        unit_conversion_factor=kpc_per_arcsec,
+        unit_label=unit_label,
+        unit_conversion_factor=unit_conversion_factor,
         figsize=figsize,
         aspect=aspect,
         cmap=cmap,
