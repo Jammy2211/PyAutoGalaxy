@@ -17,7 +17,7 @@ def get_unit_label_and_unit_conversion_factor(obj, plot_in_kpc):
 
 def get_critical_curves_and_caustics(obj, include_critical_curves, include_caustics):
 
-    if isinstance(obj, lensing.LensingObject):
+    if isinstance(obj, lensing.LensingObject) and obj.has_mass_profile:
 
         if include_critical_curves:
             critical_curves = obj.critical_curves
