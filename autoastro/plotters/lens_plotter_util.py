@@ -15,7 +15,7 @@ def get_unit_label_and_unit_conversion_factor(obj, plot_in_kpc):
     return unit_label, unit_conversion_factor
 
 
-def get_critical_curve_and_caustic(obj, include_critical_curves, include_caustics):
+def get_critical_curves_and_caustics(obj, include_critical_curves, include_caustics):
 
     if isinstance(obj, lensing.LensingObject):
 
