@@ -190,13 +190,13 @@ def subplot(
 
 def individuals(
     fit,
+    unit_label="arcsec",
     positions=None,
     plot_image=False,
     plot_noise_map=False,
     plot_model_image=False,
     plot_residual_map=False,
     plot_chi_squared_map=False,
-    unit_label="kpc",
     output_path=None,
     output_format="show",
 ):
