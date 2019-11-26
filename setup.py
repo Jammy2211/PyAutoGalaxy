@@ -1,9 +1,28 @@
 from codecs import open
 from os.path import abspath, dirname, join
+from subprocess import call
 
 from setuptools import find_packages, setup
 
 from autoastro import __version__
+
+class RunTests(Command):
+    """Run all tests."""
+
+    description = "run tests"
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        """Run all tests!"""
+        errno = call(["py.test", "--cov=autolens", "--cov-report=term-missing"])
+        raise SystemExit(errno)
+
 
 this_dir = abspath(dirname(__file__))
 with open(join(this_dir, "README.md"), encoding="utf-8") as file:
@@ -18,7 +37,7 @@ setup(
     description="Astro modelling",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/jammy2211/PyAutoArray",
+    url="https://github.com/jammy2211/PyAutoAstro",
     author="James Nightingale and Richard Hayes",
     author_email="james.w.nightingale@durham.ac.uk",
     include_package_data=True,
@@ -40,6 +59,6 @@ setup(
     keywords="cli",
     packages=find_packages(exclude=["docs"]),
     install_requires=requirements,
-    setup_requires=["pytest-runner"],
-    tests_require=["pytest"],
+    extras_require={"test": ["coverage", "pytest", "pytest-cov"]},
+    cmd_class={"test": RunTests},
 )
