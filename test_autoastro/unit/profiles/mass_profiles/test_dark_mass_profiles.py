@@ -871,13 +871,17 @@ class TestGeneralizedNFW(object):
         gnfw_1 = aast.mp.SphericalGeneralizedNFW(centre=(1.0, 1.0))
         assert gnfw_0.convergence_from_grid(
             grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
-        ) == gnfw_1.convergence_from_grid(grid=aa.grid_irregular.manual_1d([[0.0, 0.0]]))
+        ) == gnfw_1.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.0, 0.0]])
+        )
 
         gnfw_0 = aast.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
         gnfw_1 = aast.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
         assert gnfw_0.convergence_from_grid(
             grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
-        ) == gnfw_1.convergence_from_grid(grid=aa.grid_irregular.manual_1d([[0.0, 1.0]]))
+        ) == gnfw_1.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+        )
 
         # gnfw_0 = aast.EllipticalGeneralizedNFW(centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0)
         # gnfw_1 = aast.EllipticalGeneralizedNFW(centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0)

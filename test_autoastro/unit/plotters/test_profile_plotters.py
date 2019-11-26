@@ -19,7 +19,7 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
-        unit_label='test',
+        unit_label="test",
         unit_conversion_factor=2.0,
         cb_tick_values=[1.0],
         cb_tick_labels=["1.0"],

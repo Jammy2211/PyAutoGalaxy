@@ -127,7 +127,9 @@ class TestPointMass(object):
         point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
 
         deflections = point_mass.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0], [2.0, 2.0], [1.0, 1.0], [2.0, 2.0]])
+            grid=aa.grid_irregular.manual_1d(
+                [[1.0, 1.0], [2.0, 2.0], [1.0, 1.0], [2.0, 2.0]]
+            )
         )
 
         assert deflections[0, 0] == pytest.approx(0.5, 1e-3)

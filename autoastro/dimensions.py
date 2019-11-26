@@ -1,15 +1,7 @@
 import autofit as af
 import typing
-from functools import wraps
-from astropy import cosmology as cosmo
-
 
 import inspect
-import typing_inspect
-
-from decorator import decorator
-
-from autoastro.util import cosmology_util
 from autoastro import exc
 
 
@@ -68,13 +60,14 @@ class DimensionsProfile(object):
                     if hasattr(tuple_value, "unit_length"):
                         unit_list.append(tuple_value.unit_length)
 
-            if hasattr(value, "unit_length"):
-                unit_list.append(value.unit_length)
+            if isinstance(value, float):
+                if hasattr(value, "unit_length"):
+                    unit_list.append(value.unit_length)
 
         if len(unit_list) > 0:
             if not all(unit == unit_list[0] for unit in unit_list):
                 raise exc.UnitsException(
-                    "This object has attributes with different unit_label of length defined"
+                    "This object has attributes with different units of length defined"
                 )
         else:
             return None
@@ -87,8 +80,9 @@ class DimensionsProfile(object):
         unit_list = []
 
         for attr, value in self.__dict__.items():
-            if hasattr(value, "unit_luminosity"):
-                unit_list.append(value.unit_luminosity)
+            if isinstance(value, float):
+                if hasattr(value, "unit_luminosity"):
+                    unit_list.append(value.unit_luminosity)
 
         if len(unit_list) > 0:
             if not all(unit == unit_list[0] for unit in unit_list):
@@ -106,8 +100,9 @@ class DimensionsProfile(object):
         unit_list = []
 
         for attr, value in self.__dict__.items():
-            if hasattr(value, "unit_mass"):
-                unit_list.append(value.unit_mass)
+            if isinstance(value, float):
+                if hasattr(value, "unit_mass"):
+                    unit_list.append(value.unit_mass)
 
         if len(unit_list) > 0:
             if not all(unit == unit_list[0] for unit in unit_list):
@@ -332,17 +327,17 @@ Position = typing.Tuple[Length, Length]
 
 def convert_length(value, unit_current, unit_new, power, kpc_per_arcsec):
 
-    if unit_current is not unit_new and kpc_per_arcsec is None:
+    if unit_current not in unit_new and kpc_per_arcsec is None:
         raise exc.UnitsException(
-            "The length for a value has been requested in new unit_label without a "
+            "The length for a value has been requested in new units without a "
             "kpc_per_arcsec conversion factor."
         )
 
-    if unit_current is unit_new:
+    if unit_current in unit_new:
         return value
-    elif unit_current is "arcsec" and unit_new is "kpc":
+    elif unit_current in "arcsec" and unit_new in "kpc":
         return (kpc_per_arcsec ** power) * value
-    elif unit_current is "kpc" and unit_new is "arcsec":
+    elif unit_current in "kpc" and unit_new in "arcsec":
         return value / (kpc_per_arcsec ** power)
     else:
         raise exc.UnitsException(
@@ -352,17 +347,17 @@ def convert_length(value, unit_current, unit_new, power, kpc_per_arcsec):
 
 
 def convert_luminosity(value, unit_current, unit_new, power, exposure_time):
-    if unit_current is not unit_new and exposure_time is None:
+    if unit_current not in unit_new and exposure_time is None:
         raise exc.UnitsException(
-            "The luminosity for a value has been requested in new unit_label "
+            "The luminosity for a value has been requested in new units "
             "without an  exposure time conversion factor."
         )
 
-    if unit_current is unit_new:
+    if unit_current in unit_new:
         return value
-    elif unit_current is "eps" and unit_new is "counts":
+    elif unit_current in "eps" and unit_new in "counts":
         return (exposure_time ** power) * value
-    elif unit_current is "counts" and unit_new is "eps":
+    elif unit_current in "counts" and unit_new in "eps":
         return value / (exposure_time ** power)
     else:
         raise exc.UnitsException(
@@ -372,17 +367,17 @@ def convert_luminosity(value, unit_current, unit_new, power, exposure_time):
 
 
 def convert_mass(value, unit_current, unit_new, critical_surface_density):
-    if unit_current is not unit_new and critical_surface_density is None:
+    if unit_current not in unit_new and critical_surface_density is None:
         raise exc.UnitsException(
-            "The mass for a value has been requested in new unit_label "
+            "The mass for a value has been requested in new units "
             "without a critical surface mass density conversion factor."
         )
 
-    if unit_current is unit_new:
+    if unit_current in unit_new:
         return value
-    elif unit_current is "angular" and unit_new is "solMass":
+    elif unit_current in "angular" and unit_new in "solMass":
         return critical_surface_density * value
-    elif unit_current is "solMass" and unit_new is "angular":
+    elif unit_current in "solMass" and unit_new in "angular":
         return value / critical_surface_density
     else:
         raise exc.UnitsException(

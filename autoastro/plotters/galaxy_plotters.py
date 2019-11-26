@@ -61,8 +61,10 @@ def profile_image(
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
-        
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
+
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
+        obj=galaxy, plot_in_kpc=plot_in_kpc
+    )
 
     aa.plot.array(
         array=image,
@@ -151,8 +153,10 @@ def convergence(
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
-    
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
+
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
+        obj=galaxy, plot_in_kpc=plot_in_kpc
+    )
 
     aa.plot.array(
         array=convergence,
@@ -241,8 +245,10 @@ def potential(
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
-    
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
+
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
+        obj=galaxy, plot_in_kpc=plot_in_kpc
+    )
 
     aa.plot.array(
         array=potential,
@@ -332,8 +338,10 @@ def deflections_y(
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
-    
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
+
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
+        obj=galaxy, plot_in_kpc=plot_in_kpc
+    )
 
     aa.plot.array(
         array=deflections_y,
@@ -423,8 +431,10 @@ def deflections_x(
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
-    
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
+
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
+        obj=galaxy, plot_in_kpc=plot_in_kpc
+    )
 
     aa.plot.array(
         array=deflections_x,
@@ -513,8 +523,10 @@ def magnification(
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
-    
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
+
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
+        obj=galaxy, plot_in_kpc=plot_in_kpc
+    )
 
     aa.plot.array(
         array=magnification,
@@ -591,8 +603,10 @@ def profile_image_subplot(
         figsize = figsize_tool
 
     plt.figure(figsize=figsize)
-    
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
+
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
+        obj=galaxy, plot_in_kpc=plot_in_kpc
+    )
 
     for i, light_profile in enumerate(galaxy.light_profiles):
 
@@ -680,8 +694,10 @@ def convergence_subplot(
         figsize = figsize_tool
 
     plt.figure(figsize=figsize)
-    
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
+
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
+        obj=galaxy, plot_in_kpc=plot_in_kpc
+    )
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
@@ -769,8 +785,10 @@ def potential_subplot(
         figsize = figsize_tool
 
     plt.figure(figsize=figsize)
-    
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
+
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
+        obj=galaxy, plot_in_kpc=plot_in_kpc
+    )
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
@@ -858,8 +876,10 @@ def deflections_y_subplot(
         figsize = figsize_tool
 
     plt.figure(figsize=figsize)
-    
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
+
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
+        obj=galaxy, plot_in_kpc=plot_in_kpc
+    )
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
@@ -947,8 +967,10 @@ def deflections_x_subplot(
         figsize = figsize_tool
 
     plt.figure(figsize=figsize)
-    
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(obj=galaxy, plot_in_kpc=plot_in_kpc)
+
+    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
+        obj=galaxy, plot_in_kpc=plot_in_kpc
+    )
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 

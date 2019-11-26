@@ -61,7 +61,9 @@ class TestMassSheet(object):
 
         convergence = mass_sheet.convergence_from_grid(
             grid=aa.grid.manual_2d(
-                [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]], sub_size=2, pixel_scales=(1.0, 1.0)
+                [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
+                sub_size=2,
+                pixel_scales=(1.0, 1.0),
             )
         )
 
@@ -85,7 +87,9 @@ class TestMassSheet(object):
 
         potential = mass_sheet.potential_from_grid(
             grid=aa.grid.manual_2d(
-                [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]], sub_size=2, pixel_scales=(1.0, 1.0)
+                [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
+                sub_size=2,
+                pixel_scales=(1.0, 1.0),
             )
         )
 
@@ -203,7 +207,9 @@ class TestMassSheet(object):
 
         deflections = mass_sheet.deflections_from_grid(
             grid=aa.grid.manual_2d(
-                [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]], sub_size=2, pixel_scales=(1.0, 1.0)
+                [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
+                sub_size=2,
+                pixel_scales=(1.0, 1.0),
             )
         )
 
@@ -256,7 +262,9 @@ class TestMassSheet(object):
         mass_sheet = aast.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0], [2.0, 2.0], [1.0, 1.0], [2.0, 2.0]])
+            grid=aa.grid_irregular.manual_1d(
+                [[1.0, 1.0], [2.0, 2.0], [1.0, 1.0], [2.0, 2.0]]
+            )
         )
 
         assert deflections[0, 0] == pytest.approx(1.0, 1e-3)
@@ -317,7 +325,9 @@ class TestExternalShear(object):
 
         convergence = shear.convergence_from_grid(
             grid=aa.grid.manual_2d(
-                [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]], sub_size=2, pixel_scales=(1.0, 1.0)
+                [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
+                sub_size=2,
+                pixel_scales=(1.0, 1.0),
             )
         )
 
@@ -328,7 +338,9 @@ class TestExternalShear(object):
 
     def test__potential_returns_zeros(self):
         shear = aast.mp.ExternalShear(magnitude=0.1, phi=45.0)
-        potential = shear.potential_from_grid(grid=aa.grid_irregular.manual_1d([[0.1, 0.1]]))
+        potential = shear.potential_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.1, 0.1]])
+        )
         assert (potential == np.array([[0.0, 0.0]])).all()
 
         shear = aast.mp.ExternalShear(magnitude=0.1, phi=45.0)
@@ -339,7 +351,9 @@ class TestExternalShear(object):
 
         potential = shear.convergence_from_grid(
             grid=aa.grid.manual_2d(
-                [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]], sub_size=2, pixel_scales=(1.0, 1.0)
+                [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
+                sub_size=2,
+                pixel_scales=(1.0, 1.0),
             )
         )
 
@@ -370,7 +384,7 @@ class TestExternalShear(object):
                     [[0.1625, 0.1625], [0.1625, 0.1625]],
                 ],
                 sub_size=2,
-                pixel_scales=(1.0, 1.0)
+                pixel_scales=(1.0, 1.0),
             )
         )
 

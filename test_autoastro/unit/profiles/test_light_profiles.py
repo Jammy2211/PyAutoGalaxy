@@ -331,7 +331,9 @@ class TestSersic:
 
         assert sersic_0.profile_image_from_grid(
             grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
-        ) == sersic_1.profile_image_from_grid(grid=aa.grid_irregular.manual_1d([[1.0, 0.0]]))
+        ) == sersic_1.profile_image_from_grid(
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+        )
 
     def test__spherical_and_elliptical_match(self):
         elliptical = aast.lp.EllipticalSersic(
@@ -1119,7 +1121,8 @@ class TestGrids(object):
         assert elliptical.grid_to_eccentric_radii(
             aa.grid_irregular.manual_1d([[1, 1]])
         ) == pytest.approx(
-            elliptical.grid_to_eccentric_radii(aa.grid_irregular.manual_1d([[-1, -1]])), 1e-10
+            elliptical.grid_to_eccentric_radii(aa.grid_irregular.manual_1d([[-1, -1]])),
+            1e-10,
         )
 
     def test__intensity_from_grid(self):
@@ -1128,5 +1131,6 @@ class TestGrids(object):
         assert elliptical.profile_image_from_grid(
             aa.grid_irregular.manual_1d([[1, 1]])
         ) == pytest.approx(
-            elliptical.profile_image_from_grid(aa.grid_irregular.manual_1d([[-1, -1]])), 1e-4
+            elliptical.profile_image_from_grid(aa.grid_irregular.manual_1d([[-1, -1]])),
+            1e-4,
         )

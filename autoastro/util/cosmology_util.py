@@ -122,12 +122,13 @@ def critical_surface_density_between_redshifts_from_redshifts_and_cosmology(
         value=critical_surface_density_kpc.value, unit_mass=unit_mass, unit_length="kpc"
     )
 
-    if unit_length is not "arcsec":
+    if unit_length not in "arcsec":
+
         critical_surface_density = critical_surface_density_kpc.convert(
             unit_length=unit_length, unit_mass=unit_mass
         )
 
-    elif unit_length is "arcsec":
+    elif unit_length in "arcsec":
         kpc_per_arcsec = kpc_per_arcsec_from_redshift_and_cosmology(
             redshift=redshift_0, cosmology=cosmology
         )

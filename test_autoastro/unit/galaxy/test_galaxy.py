@@ -970,14 +970,18 @@ class TestMassProfiles(object):
             assert gal_x4_mp.potential_from_grid(
                 grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
             ) == pytest.approx(
-                gal_x4_mp.potential_from_grid(grid=aa.grid_irregular.manual_1d([[99.0, 0.0]])),
+                gal_x4_mp.potential_from_grid(
+                    grid=aa.grid_irregular.manual_1d([[99.0, 0.0]])
+                ),
                 1e-6,
             )
 
             assert gal_x4_mp.potential_from_grid(
                 grid=aa.grid_irregular.manual_1d([[49.0, 0.0]])
             ) == pytest.approx(
-                gal_x4_mp.potential_from_grid(grid=aa.grid_irregular.manual_1d([[51.0, 0.0]])),
+                gal_x4_mp.potential_from_grid(
+                    grid=aa.grid_irregular.manual_1d([[51.0, 0.0]])
+                ),
                 1e-6,
             )
 
@@ -1055,14 +1059,18 @@ class TestMassProfiles(object):
             assert gal_x4_mp.potential_from_grid(
                 grid=aa.grid_irregular.manual_1d([[49.0, 0.0]])
             ) == pytest.approx(
-                gal_x4_mp.potential_from_grid(grid=aa.grid_irregular.manual_1d([[51.0, 0.0]])),
+                gal_x4_mp.potential_from_grid(
+                    grid=aa.grid_irregular.manual_1d([[51.0, 0.0]])
+                ),
                 1e-5,
             )
 
             assert gal_x4_mp.potential_from_grid(
                 grid=aa.grid_irregular.manual_1d([[0.0, 49.0]])
             ) == pytest.approx(
-                gal_x4_mp.potential_from_grid(grid=aa.grid_irregular.manual_1d([[0.0, 51.0]])),
+                gal_x4_mp.potential_from_grid(
+                    grid=aa.grid_irregular.manual_1d([[0.0, 51.0]])
+                ),
                 1e-5,
             )
 
@@ -1078,7 +1086,9 @@ class TestMassProfiles(object):
             assert gal_x4_mp.potential_from_grid(
                 grid=aa.grid_irregular.manual_1d([[49.0, 49.0]])
             ) == pytest.approx(
-                gal_x4_mp.potential_from_grid(grid=aa.grid_irregular.manual_1d([[51.0, 51.0]])),
+                gal_x4_mp.potential_from_grid(
+                    grid=aa.grid_irregular.manual_1d([[51.0, 51.0]])
+                ),
                 1e-5,
             )
 
