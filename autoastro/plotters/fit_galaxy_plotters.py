@@ -1,7 +1,7 @@
 import autoarray as aa
 import matplotlib
 
-backend = aa.conf.instance.visualize.get("figures", "backend", str)
+backend = aa.conf.get_matplotlib_backend()
 matplotlib.use(backend)
 from matplotlib import pyplot as plt
 
