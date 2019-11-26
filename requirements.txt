@@ -1,6 +1,6 @@
+autofit==0.44.2
 autoarray==0.3.0
 GetDist==0.2.8
 pyquad==0.0.4.0
 astropy>=3.0.0
 numpy>=1.17.2
-autofit==0.44.2
