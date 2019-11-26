@@ -5,7 +5,7 @@ backend = aa.conf.get_matplotlib_backend()
 matplotlib.use(backend)
 from matplotlib import pyplot as plt
 
-from autoarray.plotters import plotter_util
+from autoarray.util import plotter_util
 from autoastro.plotters import profile_plotters, lens_plotter_util
 
 
