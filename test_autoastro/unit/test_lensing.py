@@ -17,7 +17,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    test_path = "{}/test_files/config/lensing".format(
+    test_path = "{}/test_files/config/lens".format(
         os.path.dirname(os.path.realpath(__file__))
     )
     af.conf.instance = af.conf.Config(config_path=test_path)
