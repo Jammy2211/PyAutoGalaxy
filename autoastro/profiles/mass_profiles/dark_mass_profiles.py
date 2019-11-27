@@ -989,7 +989,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
 
 class SphericalTruncatedNFWMassToConcentration(SphericalTruncatedNFW):
     """
-    This function only applies for the lensing configuration as follows:
+    This function only applies for the lens configuration as follows:
     Cosmology: FlatLamdaCDM
     H0 = 70.0 km/sec/Mpc
     Omega_Lambda = 0.7
