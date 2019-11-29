@@ -21,12 +21,20 @@ def get_critical_curves_and_caustics_from_lensing_object(obj, include_critical_c
     if isinstance(obj, lensing.LensingObject) and obj.has_mass_profile:
 
         if include_critical_curves:
-            critical_curves = obj.critical_curves
+            try:
+                critical_curves = obj.critical_curves
+            except ValueError:
+                print("Critical curve could not be calculated due to an unphysical mass model")
+                critical_curves = None
         else:
             critical_curves = []
 
         if include_caustics:
-            caustics = obj.caustics
+            try:
+                caustics = obj.caustics
+            except ValueError:
+                print("Caustics could not be calculated due to an unphysical mass model")
+                caustics = None
         else:
             caustics = []
 
