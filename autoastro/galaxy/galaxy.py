@@ -249,7 +249,9 @@ class Galaxy(ModelObject, lensing.LensingObject):
             profile_image = sum(
                 map(lambda p: p.profile_image_from_grid(grid=grid), self.light_profiles)
             )
-            return grid.mapping.array_stored_1d_from_sub_array_1d(sub_array_1d=profile_image)
+            return grid.mapping.array_stored_1d_from_sub_array_1d(
+                sub_array_1d=profile_image
+            )
         else:
             return grid.mapping.array_stored_1d_from_sub_array_1d(
                 sub_array_1d=np.zeros((grid.sub_shape_1d,))
@@ -342,7 +344,9 @@ class Galaxy(ModelObject, lensing.LensingObject):
             convergence = sum(
                 map(lambda p: p.convergence_from_grid(grid=grid), self.mass_profiles)
             )
-            return grid.mapping.array_stored_1d_from_sub_array_1d(sub_array_1d=convergence)
+            return grid.mapping.array_stored_1d_from_sub_array_1d(
+                sub_array_1d=convergence
+            )
         else:
             return grid.mapping.array_stored_1d_from_sub_array_1d(
                 sub_array_1d=np.zeros((grid.sub_shape_1d,))
@@ -369,7 +373,9 @@ class Galaxy(ModelObject, lensing.LensingObject):
             potential = sum(
                 map(lambda p: p.potential_from_grid(grid=grid), self.mass_profiles)
             )
-            return grid.mapping.array_stored_1d_from_sub_array_1d(sub_array_1d=potential)
+            return grid.mapping.array_stored_1d_from_sub_array_1d(
+                sub_array_1d=potential
+            )
         else:
             return grid.mapping.array_stored_1d_from_sub_array_1d(
                 sub_array_1d=np.zeros((grid.sub_shape_1d,))
