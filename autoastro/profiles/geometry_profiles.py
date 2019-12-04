@@ -46,7 +46,9 @@ def transform_grid(func):
             )
 
             if len(result.shape) == 1:
-                return grid.mapping.array_stored_1d_from_sub_array_1d(sub_array_1d=result)
+                return grid.mapping.array_stored_1d_from_sub_array_1d(
+                    sub_array_1d=result
+                )
             else:
                 return grid.mapping.grid_stored_1d_from_sub_grid_1d(sub_grid_1d=result)
 
@@ -230,7 +232,7 @@ class SphericalProfile(GeometryProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         transformed = np.subtract(grid, self.centre)
-        return TransformedGrid(grid_1d=transformed, mask=grid.mask)
+        return TransformedGrid(grid=transformed, mask=grid.mask)
 
     def transform_grid_from_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
@@ -397,7 +399,7 @@ class EllipticalProfile(SphericalProfile):
                 radius * np.cos(theta_coordinate_to_profile),
             )
         ).T
-        return TransformedGrid(grid_1d=transformed, mask=grid.mask)
+        return TransformedGrid(grid=transformed, mask=grid.mask)
 
     def transform_grid_from_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \

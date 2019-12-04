@@ -149,7 +149,9 @@ class LensingObject(object):
 
         det_jacobian = jacobian[0][0] * jacobian[1][1] - jacobian[0][1] * jacobian[1][0]
 
-        return grid.mapping.array_stored_1d_from_sub_array_1d(sub_array_1d=1 / det_jacobian)
+        return grid.mapping.array_stored_1d_from_sub_array_1d(
+            sub_array_1d=1 / det_jacobian
+        )
 
     @property
     def mass_profile_bounding_box(self):
