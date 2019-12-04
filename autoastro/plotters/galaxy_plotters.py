@@ -331,7 +331,9 @@ def deflections_y(
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     deflections = galaxy.deflections_from_grid(grid=grid)
-    deflections_y = grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 0])
+    deflections_y = grid.mapping.array_stored_1d_from_sub_array_1d(
+        sub_array_1d=deflections[:, 0]
+    )
 
     lines = lens_plotter_util.get_critical_curves_and_caustics_from_lensing_object(
         obj=galaxy,
@@ -424,7 +426,9 @@ def deflections_x(
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
     deflections = galaxy.deflections_from_grid(grid=grid)
-    deflections_x = grid.mapping.array_from_sub_array_1d(sub_array_1d=deflections[:, 1])
+    deflections_x = grid.mapping.array_stored_1d_from_sub_array_1d(
+        sub_array_1d=deflections[:, 1]
+    )
 
     lines = lens_plotter_util.get_critical_curves_and_caustics_from_lensing_object(
         obj=galaxy,

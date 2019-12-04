@@ -28,12 +28,12 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
         return 0.0
 
     def convergence_from_grid(self, grid):
-        return grid.mapping.array_from_sub_array_1d(
+        return grid.mapping.array_stored_1d_from_sub_array_1d(
             sub_array_1d=np.full(shape=grid.sub_shape_1d, fill_value=self.kappa)
         )
 
     def potential_from_grid(self, grid):
-        return grid.mapping.array_from_sub_array_1d(
+        return grid.mapping.array_stored_1d_from_sub_array_1d(
             sub_array_1d=np.zeros(shape=grid.sub_shape_1d)
         )
 
@@ -78,12 +78,12 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
         return dim.Length(value=0.0, unit_length=self.unit_length)
 
     def convergence_from_grid(self, grid):
-        return grid.mapping.array_from_sub_array_1d(
+        return grid.mapping.array_stored_1d_from_sub_array_1d(
             sub_array_1d=np.zeros(shape=grid.sub_shape_1d)
         )
 
     def potential_from_grid(self, grid):
-        return grid.mapping.array_from_sub_array_1d(
+        return grid.mapping.array_stored_1d_from_sub_array_1d(
             sub_array_1d=np.zeros(shape=grid.sub_shape_1d)
         )
 

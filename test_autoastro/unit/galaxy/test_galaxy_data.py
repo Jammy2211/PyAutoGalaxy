@@ -406,10 +406,10 @@ class TestGalaxyFitData(object):
         deflections_gal = galaxy.deflections_from_grid(grid=galaxy_fit_data.grid)
         deflections_gal = np.asarray(
             [
-                galaxy_fit_data.grid.mapping.array_binned_from_sub_array_1d(
+                galaxy_fit_data.grid.mapping.array_stored_1d_binned_from_sub_array_1d(
                     deflections_gal[:, 0]
                 ),
-                galaxy_fit_data.grid.mapping.array_binned_from_sub_array_1d(
+                galaxy_fit_data.grid.mapping.array_stored_1d_binned_from_sub_array_1d(
                     deflections_gal[:, 1]
                 ),
             ]
@@ -496,10 +496,10 @@ class TestGalaxyFitData(object):
         deflections_gal = galaxy.deflections_from_grid(grid=galaxy_fit_data.grid)
         deflections_gal = np.asarray(
             [
-                galaxy_fit_data.grid.mapping.array_binned_from_sub_array_1d(
+                galaxy_fit_data.grid.mapping.array_stored_1d_binned_from_sub_array_1d(
                     deflections_gal[:, 0]
                 ),
-                galaxy_fit_data.grid.mapping.array_binned_from_sub_array_1d(
+                galaxy_fit_data.grid.mapping.array_stored_1d_binned_from_sub_array_1d(
                     deflections_gal[:, 1]
                 ),
             ]
