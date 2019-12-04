@@ -1,4 +1,4 @@
-autofit==0.45.1
+autofit==0.45.4
 autoarray==0.3.4.2
 GetDist==0.2.8
 pyquad==0.0.4.0

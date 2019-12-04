@@ -46,9 +46,9 @@ def transform_grid(func):
             )
 
             if len(result.shape) == 1:
-                return grid.mapping.array_from_sub_array_1d(sub_array_1d=result)
+                return grid.mapping.array_stored_1d_from_sub_array_1d(sub_array_1d=result)
             else:
-                return grid.mapping.grid_from_sub_grid_1d(sub_grid_1d=result)
+                return grid.mapping.grid_stored_1d_from_sub_grid_1d(sub_grid_1d=result)
 
         else:
             return func(profile, grid, *args, **kwargs)

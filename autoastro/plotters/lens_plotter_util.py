@@ -16,7 +16,9 @@ def get_unit_label_and_unit_conversion_factor(obj, plot_in_kpc):
     return unit_label, unit_conversion_factor
 
 
-def get_critical_curves_and_caustics_from_lensing_object(obj, include_critical_curves, include_caustics):
+def get_critical_curves_and_caustics_from_lensing_object(
+    obj, include_critical_curves, include_caustics
+):
 
     if isinstance(obj, lensing.LensingObject) and obj.has_mass_profile:
 
@@ -24,7 +26,9 @@ def get_critical_curves_and_caustics_from_lensing_object(obj, include_critical_c
             try:
                 critical_curves = obj.critical_curves
             except ValueError:
-                print("Critical curve could not be calculated due to an unphysical mass model")
+                print(
+                    "Critical curve could not be calculated due to an unphysical mass model"
+                )
                 critical_curves = None
         else:
             critical_curves = []
@@ -33,7 +37,9 @@ def get_critical_curves_and_caustics_from_lensing_object(obj, include_critical_c
             try:
                 caustics = obj.caustics
             except ValueError:
-                print("Caustics could not be calculated due to an unphysical mass model")
+                print(
+                    "Caustics could not be calculated due to an unphysical mass model"
+                )
                 caustics = None
         else:
             caustics = []
