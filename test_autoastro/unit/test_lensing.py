@@ -30,11 +30,11 @@ class MockEllipticalIsothermal(
 ):
     @af.map_types
     def __init__(
-            self,
-            centre: aast.dim.Position = (0.0, 0.0),
-            axis_ratio: float = 1.0,
-            phi: float = 0.0,
-            einstein_radius: aast.dim.Length = 1.0,
+        self,
+        centre: aast.dim.Position = (0.0, 0.0),
+        axis_ratio: float = 1.0,
+        phi: float = 0.0,
+        einstein_radius: aast.dim.Length = 1.0,
     ):
         """
         Abstract class for elliptical mass profiles.
@@ -96,10 +96,10 @@ class MockEllipticalIsothermal(
     def potential_func(u, y, x, axis_ratio):
         eta_u = np.sqrt((u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u)))))
         return (
-                (eta_u / u)
-                * (eta_u) ** -1.0
-                * eta_u
-                / ((1 - (1 - axis_ratio ** 2) * u) ** 0.5)
+            (eta_u / u)
+            * (eta_u) ** -1.0
+            * eta_u
+            / ((1 - (1 - axis_ratio ** 2) * u) ** 0.5)
         )
 
     @geometry_profiles.transform_grid
@@ -137,10 +137,10 @@ class MockEllipticalIsothermal(
 
         """
         factor = (
-                2.0
-                * self.einstein_radius_rescaled
-                * self.axis_ratio
-                / np.sqrt(1 - self.axis_ratio ** 2)
+            2.0
+            * self.einstein_radius_rescaled
+            * self.axis_ratio
+            / np.sqrt(1 - self.axis_ratio ** 2)
         )
 
         psi = np.sqrt(
@@ -168,9 +168,9 @@ class MockEllipticalIsothermal(
 class MockSphericalIsothermal(MockEllipticalIsothermal):
     @af.map_types
     def __init__(
-            self,
-            centre: aast.dim.Position = (0.0, 0.0),
-            einstein_radius: aast.dim.Length = 1.0,
+        self,
+        centre: aast.dim.Position = (0.0, 0.0),
+        einstein_radius: aast.dim.Length = 1.0,
     ):
         """
         Abstract class for elliptical mass profiles.
@@ -325,7 +325,7 @@ class TestMagnification(object):
         radal_eigen_value = sie.radial_eigen_value_from_grid(grid=grid)
 
         magnification_via_eigen_values = 1 / (
-                tangential_eigen_value * radal_eigen_value
+            tangential_eigen_value * radal_eigen_value
         )
 
         mean_error = np.mean(
@@ -347,7 +347,7 @@ class TestMagnification(object):
         radal_eigen_value = sie.radial_eigen_value_from_grid(grid=grid)
 
         magnification_via_eigen_values = 1 / (
-                tangential_eigen_value * radal_eigen_value
+            tangential_eigen_value * radal_eigen_value
         )
 
         mean_error = np.mean(
@@ -357,7 +357,7 @@ class TestMagnification(object):
         assert mean_error < 1e-4
 
     def test__compare_magnification_from_determinant_and_from_convergence_and_shear(
-            self
+        self
     ):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
@@ -372,7 +372,7 @@ class TestMagnification(object):
         shear = sie.shear_via_jacobian_from_grid(grid=grid)
 
         magnification_via_convergence_and_shear = 1 / (
-                (1 - convergence) ** 2 - shear ** 2
+            (1 - convergence) ** 2 - shear ** 2
         )
 
         mean_error = np.mean(
@@ -391,7 +391,7 @@ class TestMagnification(object):
         shear = sie.shear_via_jacobian_from_grid(grid=grid)
 
         magnification_via_convergence_and_shear = 1 / (
-                (1 - convergence) ** 2 - shear ** 2
+            (1 - convergence) ** 2 - shear ** 2
         )
 
         mean_error = np.mean(
@@ -437,7 +437,7 @@ class TestBoundingBox(object):
         assert galaxy.mass_profile_bounding_box == [18.0, 0.0, 90.0, -16.0]
 
     def test__convergence_bounding_box_for_single_mass_profile__extends_to_threshold(
-            self
+        self
     ):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
@@ -545,7 +545,7 @@ class TestConvergenceViajacobian(object):
 
 class TestCriticalCurvesAndCaustics(object):
     def test_compare_magnification_from_determinant_and_from_convergence_and_shear(
-            self
+        self
     ):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
@@ -560,7 +560,7 @@ class TestCriticalCurvesAndCaustics(object):
         shear = sie.shear_via_jacobian_from_grid(grid=grid)
 
         magnification_via_convergence_and_shear = 1 / (
-                (1 - convergence) ** 2 - shear ** 2
+            (1 - convergence) ** 2 - shear ** 2
         )
 
         mean_error = np.mean(
@@ -690,7 +690,7 @@ class TestCriticalCurvesAndCaustics(object):
         assert 0.8 < x_centre < 1.2
 
     def test__compare_tangential_critical_curves_from_magnification_and_eigen_values(
-            self
+        self
     ):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
@@ -764,7 +764,7 @@ class TestCriticalCurvesAndCaustics(object):
 
 class TestEinsteinRadiusMassfrom(object):
     def test__tangential_critical_curve_area_from_critical_curve_and_calculation__spherical_isothermal(
-            self
+        self
     ):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
@@ -781,7 +781,7 @@ class TestEinsteinRadiusMassfrom(object):
         )
 
     def test__einstein_radius_from_tangential_critical_curve__spherical_isothermal(
-            self
+        self
     ):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
@@ -798,7 +798,7 @@ class TestEinsteinRadiusMassfrom(object):
         assert einstein_radius == pytest.approx(1.0, 1e-1)
 
     def test__compare_einstein_radius_from_tangential_critical_curve_and_rescaled__sie(
-            self
+        self
     ):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0, axis_ratio=0.6
@@ -817,7 +817,7 @@ class TestEinsteinRadiusMassfrom(object):
         assert einstein_radius == pytest.approx(0.5 * 1.9360, 1e-1)
 
     def test__einstein_mass_from_tangential_critical_curve_and_kappa__spherical_isothermal(
-            self
+        self
     ):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
@@ -841,7 +841,7 @@ class TestEinsteinRadiusMassfrom(object):
         assert einstein_mass == pytest.approx(2.0 * np.pi * 2.0 ** 2.0, 1e-1)
 
     def test__einstein_mass_from_tangential_critical_curve_and_radius_rescaled_calc__sie(
-            self
+        self
     ):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0, axis_ratio=0.6
@@ -882,17 +882,16 @@ class TestGridBinning(object):
         deflections = sie.deflections_via_potential_from_grid(grid=grid)
 
         deflections_first_binned_pixel = (
-                                                 deflections[0] + deflections[1] + deflections[2] + deflections[3]
-                                         ) / 4
+            deflections[0] + deflections[1] + deflections[2] + deflections[3]
+        ) / 4
 
         assert deflections.in_1d_binned[0] == pytest.approx(
             deflections_first_binned_pixel, 1e-4
         )
 
         deflections_100th_binned_pixel = (
-                                                 deflections[399] + deflections[398] + deflections[397] + deflections[
-                                             396]
-                                         ) / 4
+            deflections[399] + deflections[398] + deflections[397] + deflections[396]
+        ) / 4
 
         assert deflections.in_1d_binned[99] == pytest.approx(
             deflections_100th_binned_pixel, 1e-4
@@ -901,11 +900,11 @@ class TestGridBinning(object):
         jacobian = sie.jacobian_from_grid(grid=grid)
 
         jacobian_1st_pixel_binned_up = (
-                                               jacobian[0][0][0]
-                                               + jacobian[0][0][1]
-                                               + jacobian[0][0][2]
-                                               + jacobian[0][0][3]
-                                       ) / 4
+            jacobian[0][0][0]
+            + jacobian[0][0][1]
+            + jacobian[0][0][2]
+            + jacobian[0][0][3]
+        ) / 4
 
         assert jacobian[0][0].in_2d_binned.shape == (10, 10)
         assert jacobian[0][0].sub_shape_2d == (20, 20)
@@ -914,11 +913,11 @@ class TestGridBinning(object):
         )
 
         jacobian_last_pixel_binned_up = (
-                                                jacobian[0][0][399]
-                                                + jacobian[0][0][398]
-                                                + jacobian[0][0][397]
-                                                + jacobian[0][0][396]
-                                        ) / 4
+            jacobian[0][0][399]
+            + jacobian[0][0][398]
+            + jacobian[0][0][397]
+            + jacobian[0][0][396]
+        ) / 4
 
         assert jacobian[0][0].in_1d_binned[99] == pytest.approx(
             jacobian_last_pixel_binned_up, 1e-4
@@ -927,22 +926,22 @@ class TestGridBinning(object):
         shear_via_jacobian = sie.shear_via_jacobian_from_grid(grid=grid)
 
         shear_1st_pixel_binned_up = (
-                                            shear_via_jacobian[0]
-                                            + shear_via_jacobian[1]
-                                            + shear_via_jacobian[2]
-                                            + shear_via_jacobian[3]
-                                    ) / 4
+            shear_via_jacobian[0]
+            + shear_via_jacobian[1]
+            + shear_via_jacobian[2]
+            + shear_via_jacobian[3]
+        ) / 4
 
         assert shear_via_jacobian.in_1d_binned[0] == pytest.approx(
             shear_1st_pixel_binned_up, 1e-4
         )
 
         shear_last_pixel_binned_up = (
-                                             shear_via_jacobian[399]
-                                             + shear_via_jacobian[398]
-                                             + shear_via_jacobian[397]
-                                             + shear_via_jacobian[396]
-                                     ) / 4
+            shear_via_jacobian[399]
+            + shear_via_jacobian[398]
+            + shear_via_jacobian[397]
+            + shear_via_jacobian[396]
+        ) / 4
 
         assert shear_via_jacobian.in_1d_binned[99] == pytest.approx(
             shear_last_pixel_binned_up, 1e-4
@@ -951,22 +950,22 @@ class TestGridBinning(object):
         tangential_eigen_values = sie.tangential_eigen_value_from_grid(grid=grid)
 
         first_pixel_binned_up = (
-                                        tangential_eigen_values[0]
-                                        + tangential_eigen_values[1]
-                                        + tangential_eigen_values[2]
-                                        + tangential_eigen_values[3]
-                                ) / 4
+            tangential_eigen_values[0]
+            + tangential_eigen_values[1]
+            + tangential_eigen_values[2]
+            + tangential_eigen_values[3]
+        ) / 4
 
         assert tangential_eigen_values.in_1d_binned[0] == pytest.approx(
             first_pixel_binned_up, 1e-4
         )
 
         pixel_10000_from_av_sub_grid = (
-                                               tangential_eigen_values[399]
-                                               + tangential_eigen_values[398]
-                                               + tangential_eigen_values[397]
-                                               + tangential_eigen_values[396]
-                                       ) / 4
+            tangential_eigen_values[399]
+            + tangential_eigen_values[398]
+            + tangential_eigen_values[397]
+            + tangential_eigen_values[396]
+        ) / 4
 
         assert tangential_eigen_values.in_1d_binned[99] == pytest.approx(
             pixel_10000_from_av_sub_grid, 1e-4
@@ -975,22 +974,22 @@ class TestGridBinning(object):
         radial_eigen_values = sie.radial_eigen_value_from_grid(grid=grid)
 
         first_pixel_binned_up = (
-                                        radial_eigen_values[0]
-                                        + radial_eigen_values[1]
-                                        + radial_eigen_values[2]
-                                        + radial_eigen_values[3]
-                                ) / 4
+            radial_eigen_values[0]
+            + radial_eigen_values[1]
+            + radial_eigen_values[2]
+            + radial_eigen_values[3]
+        ) / 4
 
         assert radial_eigen_values.in_1d_binned[0] == pytest.approx(
             first_pixel_binned_up, 1e-4
         )
 
         pixel_10000_from_av_sub_grid = (
-                                               radial_eigen_values[399]
-                                               + radial_eigen_values[398]
-                                               + radial_eigen_values[397]
-                                               + radial_eigen_values[396]
-                                       ) / 4
+            radial_eigen_values[399]
+            + radial_eigen_values[398]
+            + radial_eigen_values[397]
+            + radial_eigen_values[396]
+        ) / 4
 
         assert radial_eigen_values.in_1d_binned[99] == pytest.approx(
             pixel_10000_from_av_sub_grid, 1e-4
