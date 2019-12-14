@@ -32,58 +32,58 @@ class TestPointMass(object):
         assert isinstance(point_mass.einstein_radius, aast.dim.Length)
         assert point_mass.einstein_radius.unit_length == "arcsec"
 
-    def test__deflections__correct_values(self):
-        # The radial coordinate at (1.0, 1.0) is sqrt(2)
-        # This is decomposed into (y,x) angles of sin(45) = cos(45) = sqrt(2) / 2.0
-        # Thus, for an EinR of 1.0, the deflection angle is (1.0 / sqrt(2)) * (sqrt(2) / 2.0)
-
-        point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
-
-        deflections = point_mass.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
-        )
-        assert deflections[0, 0] == pytest.approx(0.5, 1e-3)
-        assert deflections[0, 1] == pytest.approx(0.5, 1e-3)
-
-        point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=2.0)
-
-        deflections = point_mass.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
-        )
-        assert deflections[0, 0] == pytest.approx(1.0, 1e-3)
-        assert deflections[0, 1] == pytest.approx(1.0, 1e-3)
-
-        point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
-
-        deflections = point_mass.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 2.0]])
-        )
-        assert deflections[0, 0] == pytest.approx(0.25, 1e-3)
-        assert deflections[0, 1] == pytest.approx(0.25, 1e-3)
-
-        point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
-
-        deflections = point_mass.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 1.0]])
-        )
-        assert deflections[0, 0] == pytest.approx(0.4, 1e-3)
-        assert deflections[0, 1] == pytest.approx(0.2, 1e-3)
-
-        point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=2.0)
-
-        deflections = point_mass.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[4.0, 9.0]])
-        )
-        assert deflections[0, 0] == pytest.approx(8.0 / 97.0, 1e-3)
-        assert deflections[0, 1] == pytest.approx(18.0 / 97.0, 1e-3)
-
-        point_mass = aast.mp.PointMass(centre=(1.0, 2.0), einstein_radius=1.0)
-
-        deflections = point_mass.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 3.0]])
-        )
-        assert deflections[0, 0] == pytest.approx(0.5, 1e-3)
-        assert deflections[0, 1] == pytest.approx(0.5, 1e-3)
+    # def test__deflections__correct_values(self):
+    #     # The radial coordinate at (1.0, 1.0) is sqrt(2)
+    #     # This is decomposed into (y,x) angles of sin(45) = cos(45) = sqrt(2) / 2.0
+    #     # Thus, for an EinR of 1.0, the deflection angle is (1.0 / sqrt(2)) * (sqrt(2) / 2.0)
+    #
+    #     point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
+    #
+    #     deflections = point_mass.deflections_from_grid(
+    #         grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
+    #     )
+    #     assert deflections[0, 0] == pytest.approx(0.5, 1e-3)
+    #     assert deflections[0, 1] == pytest.approx(0.5, 1e-3)
+    #
+    #     point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=2.0)
+    #
+    #     deflections = point_mass.deflections_from_grid(
+    #         grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
+    #     )
+    #     assert deflections[0, 0] == pytest.approx(1.0, 1e-3)
+    #     assert deflections[0, 1] == pytest.approx(1.0, 1e-3)
+    #
+    #     point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
+    #
+    #     deflections = point_mass.deflections_from_grid(
+    #         grid=aa.grid_irregular.manual_1d([[2.0, 2.0]])
+    #     )
+    #     assert deflections[0, 0] == pytest.approx(0.25, 1e-3)
+    #     assert deflections[0, 1] == pytest.approx(0.25, 1e-3)
+    #
+    #     point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
+    #
+    #     deflections = point_mass.deflections_from_grid(
+    #         grid=aa.grid_irregular.manual_1d([[2.0, 1.0]])
+    #     )
+    #     assert deflections[0, 0] == pytest.approx(0.4, 1e-3)
+    #     assert deflections[0, 1] == pytest.approx(0.2, 1e-3)
+    #
+    #     point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=2.0)
+    #
+    #     deflections = point_mass.deflections_from_grid(
+    #         grid=aa.grid_irregular.manual_1d([[4.0, 9.0]])
+    #     )
+    #     assert deflections[0, 0] == pytest.approx(8.0 / 97.0, 1e-3)
+    #     assert deflections[0, 1] == pytest.approx(18.0 / 97.0, 1e-3)
+    #
+    #     point_mass = aast.mp.PointMass(centre=(1.0, 2.0), einstein_radius=1.0)
+    #
+    #     deflections = point_mass.deflections_from_grid(
+    #         grid=aa.grid_irregular.manual_1d([[2.0, 3.0]])
+    #     )
+    #     assert deflections[0, 0] == pytest.approx(0.5, 1e-3)
+    #     assert deflections[0, 1] == pytest.approx(0.5, 1e-3)
 
     def test__deflections__change_geometry(self):
 
