@@ -213,6 +213,20 @@ class TestLightProfiles(object):
 
             assert lp_profile_image == gal_profile_image
 
+        def test__positions_in__positions_out(
+            self, lp_0, gal_x1_lp, lp_1, gal_x2_lp
+        ):
+            lp_profile_image = lp_0.profile_image_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            gal_lp_profile_image = gal_x1_lp.profile_image_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            assert type(gal_lp_profile_image) == list
+            assert lp_profile_image[0][0] == gal_lp_profile_image[0][0]
+
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_light_profile_values(
             self, sub_grid_7x7, gal_x2_lp
         ):
@@ -659,6 +673,23 @@ class TestMassProfiles(object):
 
             assert mp_convergence == gal_convergence
 
+        def test__positions_in__positions_out(
+            self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
+        ):
+
+            mp_convergence = mp_0.convergence_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            gal_mp_convergence = gal_x1_mp.convergence_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            assert mp_convergence == gal_mp_convergence
+
+            assert type(gal_mp_convergence) == list
+            assert mp_convergence[0][0] == gal_mp_convergence[0][0]
+
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_mass_profile_values(
             self, sub_grid_7x7, gal_x2_mp
         ):
@@ -746,6 +777,24 @@ class TestMassProfiles(object):
 
             assert mp_potential == gal_potential
 
+        def test__positions_in__positions_out(
+            self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
+        ):
+
+            mp_potential = mp_0.potential_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            gal_mp_potential = gal_x1_mp.potential_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            assert mp_potential == gal_mp_potential
+
+            assert type(gal_mp_potential) == list
+            assert mp_potential[0][0] == gal_mp_potential[0][0]
+
+
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_mass_profile_values(
             self, sub_grid_7x7, gal_x2_mp
         ):
@@ -831,6 +880,24 @@ class TestMassProfiles(object):
             )
 
             assert (mp_deflections == gal_deflections).all()
+
+        def test__positions_in__positions_out(
+            self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
+        ):
+
+            mp_deflections = mp_0.deflections_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            gal_mp_deflections = gal_x1_mp.deflections_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            assert mp_deflections == gal_mp_deflections
+
+            assert type(gal_mp_deflections) == list
+            assert mp_deflections[0][0][0] == gal_mp_deflections[0][0][0]
+            assert mp_deflections[0][0][1] == gal_mp_deflections[0][0][1]
 
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_mass_profile_values(
             self, sub_grid_7x7, gal_x2_mp

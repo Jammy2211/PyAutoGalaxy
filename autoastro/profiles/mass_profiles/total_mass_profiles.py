@@ -30,6 +30,7 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
         super(PointMass, self).__init__(centre=centre)
         self.einstein_radius = einstein_radius
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -87,6 +88,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
             self.slope - 1
         )
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -111,6 +113,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
         return covnergence_grid
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -134,6 +137,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
         return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
+    @grids.convert_positions_to_grid
     @grids.grid_interpolate
     @geometry_profiles.cache
     @geometry_profiles.transform_grid
@@ -271,6 +275,7 @@ class SphericalCoredPowerLaw(EllipticalCoredPowerLaw):
             core_radius=core_radius,
         )
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -336,6 +341,7 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
             core_radius=dim.Length(0.0),
         )
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -434,6 +440,7 @@ class SphericalPowerLaw(EllipticalPowerLaw):
             slope=slope,
         )
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -556,6 +563,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
 
     # critical_covnergence =
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -616,6 +624,7 @@ class SphericalIsothermal(EllipticalIsothermal):
             centre=centre, axis_ratio=1.0, phi=0.0, einstein_radius=einstein_radius
         )
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -631,6 +640,7 @@ class SphericalIsothermal(EllipticalIsothermal):
         eta = self.grid_to_elliptical_radii(grid)
         return 2.0 * self.einstein_radius_rescaled * eta
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -647,164 +657,3 @@ class SphericalIsothermal(EllipticalIsothermal):
             grid=grid,
             radius=np.full(grid.sub_shape_1d, 2.0 * self.einstein_radius_rescaled),
         )
-
-
-class EllipticalIsothermalKormann(mp.EllipticalMassProfile, mp.MassProfile):
-    @af.map_types
-    def __init__(
-        self,
-        centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
-        einstein_radius: dim.Length = 1.0,
-    ):
-
-        """
-        Represents a cored elliptical power-law density distribution
-
-        Parameters
-        ----------
-        centre: (float, float)
-            The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            The elliptical mass profile's minor-to-major axis ratio (b/a).
-        phi : float
-            Rotation angle of mass profile's ellipse counter-clockwise from positive x-axis.
-        einstein_radius : float
-            The arc-second Einstein radius.
-        slope : float
-            The density slope of the power-law (lower value -> shallower profile, higher value -> steeper profile).
-        core_radius : float
-            The arc-second radius of the inner core.
-        """
-        super(EllipticalIsothermalKormann, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi
-        )
-        self.einstein_radius = einstein_radius
-
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
-    def convergence_from_grid(self, grid):
-        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
-
-        The *reshape_returned_array* decorator reshapes the NumPy arrays the convergence is outputted on. See \
-        *aa.reshape_returned_array* for a description of the output.
-
-        Parameters
-        ----------
-        grid : aa.Grid
-            The grid of (y,x) arc-second coordinates the convergence is computed on.
-
-        """
-
-        covnergence_grid = np.zeros(grid.sub_shape_1d)
-
-        grid_eta = self.grid_to_elliptical_radii(grid=grid)
-
-        for i in range(grid.sub_shape_1d):
-            covnergence_grid[i] = self.convergence_func(grid_radius=grid_eta[i])
-
-        return covnergence_grid
-
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
-    def potential_from_grid(self, grid):
-        """
-        Calculate the potential at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid : aa.Grid
-            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
-        """
-
-        f_prime = np.sqrt(1 - self.axis_ratio ** 2)
-        sin_phi = grid[:, 1] / np.sqrt(
-            self.axis_ratio ** 2 * grid[:, 0] ** 2 + grid[:, 1] ** 2
-        )
-        cos_phi = grid[:, 0] / np.sqrt(
-            self.axis_ratio ** 2 * grid[:, 0] ** 2 + grid[:, 1] ** 2
-        )
-        return (np.sqrt(self.axis_ratio) / f_prime) * (
-            grid[:, 1] * np.arcsin(f_prime * sin_phi)
-            + grid[:, 0] * np.arcsinh((f_prime / self.axis_ratio) * cos_phi)
-        )
-
-    @grids.grid_interpolate
-    @geometry_profiles.cache
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
-    def deflections_from_grid(self, grid):
-        """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid : aa.Grid
-            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
-        """
-
-        factor = (
-            self.einstein_radius
-            * np.sqrt(self.axis_ratio)
-            / np.sqrt(1 - self.axis_ratio ** 2)
-        )
-
-        deflection_y = factor * np.arcsinh(
-            (np.sqrt(1 - self.axis_ratio ** 2) * grid[:, 0])
-            / (
-                self.axis_ratio
-                * np.sqrt((self.axis_ratio ** 2) * (grid[:, 0] ** 2) + grid[:, 1] ** 2)
-            )
-        )
-
-        deflection_x = factor * np.arcsin(
-            (np.sqrt(1 - self.axis_ratio ** 2) * grid[:, 1])
-            / (np.sqrt((grid[:, 0] ** 2) * (self.axis_ratio ** 2) + grid[:, 1] ** 2))
-        )
-
-        return self.rotate_grid_from_profile(
-            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
-        )
-
-    def convergence_func(self, grid_radius):
-        return (
-            self.einstein_radius
-            * np.sqrt(self.axis_ratio)
-            / (2 * self.axis_ratio * grid_radius)
-        )
-
-    @property
-    def ellipticity_rescale(self):
-        return 1.0 / (self.axis_ratio ** 0.5)
-
-    def summarize_in_units(
-        self,
-        radii,
-        prefix="",
-        whitespace=80,
-        unit_length="arcsec",
-        unit_mass="solMass",
-        redshift_profile=None,
-        redshift_source=None,
-        cosmology=cosmo.Planck15,
-        **kwargs
-    ):
-        summary = super().summarize_in_units(
-            radii=radii,
-            prefix=prefix,
-            unit_length=unit_length,
-            unit_mass=unit_mass,
-            redshift_profile=redshift_profile,
-            redshift_source=redshift_source,
-            cosmology=cosmology,
-            whitespace=whitespace,
-        )
-
-        return summary
-
-    @property
-    def unit_mass(self):
-        return "angular"

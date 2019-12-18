@@ -133,6 +133,12 @@ class TestGaussian:
             grid=aa.grid_irregular.manual_1d([[0.0, 3.0]])
         ) == pytest.approx(0.0647, 1e-2)
 
+        value = gaussian.profile_image_from_grid(
+            grid=aa.positions(positions=[[(0.0, 3.0)]])
+        )
+
+        assert value[0][0] == pytest.approx(0.0647, 1e-2)
+
     def test__intensity_from_grid__change_geometry(self):
         gaussian = aast.lp.EllipticalGaussian(
             centre=(1.0, 1.0), axis_ratio=1.0, phi=0.0, intensity=1.0, sigma=1.0
@@ -311,6 +317,12 @@ class TestSersic:
         assert sersic.profile_image_from_grid(
             grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
         ) == pytest.approx(5.38066670129, 1e-3)
+
+        value = sersic.profile_image_from_grid(
+            grid=aa.positions([[(1.0, 0.0)]])
+        )
+
+        assert value[0][0] == pytest.approx(5.38066670129, 1e-3)
 
     def test__intensity_from_grid__change_geometry(self):
         sersic_0 = aast.lp.EllipticalSersic(
@@ -500,6 +512,12 @@ class TestExponential:
             grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(2.0 * 4.8566, 1e-3)
 
+        value = exponential.profile_image_from_grid(
+            grid=aa.positions([[(0.0, 1.0)]])
+        )
+
+        assert value[0][0] == pytest.approx(2.0 * 4.8566, 1e-3)
+
     def test__intensity_from_grid__change_geometry(self):
         exponential_0 = aast.lp.EllipticalExponential(
             axis_ratio=0.5, phi=0.0, intensity=3.0, effective_radius=2.0
@@ -646,6 +664,12 @@ class TestDevVaucouleurs:
         assert dev_vaucouleurs.profile_image_from_grid(
             grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(2.0 * 7.4455, 1e-3)
+
+        value = dev_vaucouleurs.profile_image_from_grid(
+            grid=aa.positions([[(0.0, 1.0)]])
+        )
+
+        assert value[0][0] == pytest.approx(2.0 * 7.4455, 1e-3)
 
     def test__intensity_from_grid__change_geometry(self):
         dev_vaucouleurs_0 = aast.lp.EllipticalDevVaucouleurs(

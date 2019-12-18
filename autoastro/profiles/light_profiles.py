@@ -3,6 +3,7 @@ import numpy as np
 from astropy import cosmology as cosmo
 from scipy.integrate import quad
 
+from autoarray.structures import grids
 from autoastro.util import cosmology_util
 from autoastro import dimensions as dim
 from autofit.tools import text_util
@@ -265,6 +266,7 @@ class EllipticalGaussian(EllipticalLightProfile):
             np.exp(-0.5 * np.square(np.divide(grid_radii, self.sigma))),
         )
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def profile_image_from_grid(self, grid, grid_radial_minimum=None):
@@ -455,6 +457,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
             ),
         )
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def profile_image_from_grid(self, grid, grid_radial_minimum=None):

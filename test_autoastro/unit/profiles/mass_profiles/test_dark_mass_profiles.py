@@ -805,8 +805,8 @@ class TestGeneralizedNFW(object):
             centre=(0.0, 0.0), kappa_s=2.0, inner_slope=1.5, scale_radius=1.0
         )
         assert gnfw.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
-        ) == pytest.approx(0.30840 * 2, 1e-3)
+            grid=aa.positions([[(2.0, 0.0)]])
+        )[0][0] == pytest.approx(0.30840 * 2, 1e-3)
 
         # gnfw = aast.EllipticalGeneralizedNFW(centre=(0.0, 0.0), kappa_s=1.0, axis_ratio=0.5,
         #                                    phi=90.0, inner_slope=1.5, scale_radius=1.0)
@@ -828,8 +828,8 @@ class TestGeneralizedNFW(object):
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=8.0
         )
         assert gnfw.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1875]])
-        ) == pytest.approx(0.17448, 1e-3)
+            grid=aa.positions([[(0.1625, 0.1875)]])
+        )[0][0] == pytest.approx(0.17448, 1e-3)
 
         # gnfw = aast.EllipticalGeneralizedNFW(centre=(1.0, 1.0), kappa_s=5.0, axis_ratio=0.5,
         #                                    phi=100.0, inner_slope=1.0, scale_radius=10.0)
@@ -849,10 +849,10 @@ class TestGeneralizedNFW(object):
             centre=(0.3, 0.2), kappa_s=2.5, inner_slope=1.5, scale_radius=4.0
         )
         deflections = gnfw.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
+            grid=aa.positions([[(0.1875, 0.1625)]])
         )
-        assert deflections[0, 0] == pytest.approx(-9.31254, 1e-3)
-        assert deflections[0, 1] == pytest.approx(-3.10418, 1e-3)
+        assert deflections[0][0][0] == pytest.approx(-9.31254, 1e-3)
+        assert deflections[0][0][1] == pytest.approx(-3.10418, 1e-3)
 
         # gnfw = aast.EllipticalGeneralizedNFW(centre=(0.0, 0.0), kappa_s=1.0, axis_ratio=0.3,
         #                                    phi=100.0, inner_slope=0.5, scale_radius=8.0)
@@ -866,7 +866,7 @@ class TestGeneralizedNFW(object):
         # assert deflections[0, 0] == pytest.approx(-5.99032, 1e-3)
         # assert deflections[0, 1] == pytest.approx(-4.02541, 1e-3)
 
-    def test__surfce_density__change_geometry(self):
+    def test__convergence__change_geometry(self):
         gnfw_0 = aast.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
         gnfw_1 = aast.mp.SphericalGeneralizedNFW(centre=(1.0, 1.0))
         assert gnfw_0.convergence_from_grid(
@@ -1106,8 +1106,8 @@ class TestTruncatedNFW(object):
         )
 
         assert truncated_nfw.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
-        ) == pytest.approx(1.51047026, 1.0e-4)
+            grid=aa.positions([[(2.0, 0.0)]])
+        )[0][0] == pytest.approx(1.51047026, 1.0e-4)
 
     def test__deflections_correct_values(self):
 
@@ -1161,11 +1161,11 @@ class TestTruncatedNFW(object):
         )
 
         deflections = truncated_nfw.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
+            grid=aa.positions([[(2.0, 0.0)]])
         )
 
-        assert deflections[0, 0] == pytest.approx(2.1702661386, 1.0e-4)
-        assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
+        assert deflections[0][0][0] == pytest.approx(2.1702661386, 1.0e-4)
+        assert deflections[0][0][1] == pytest.approx(0.0, 1.0e-4)
 
     def test__compare_nfw_and_truncated_nfw_with_large_truncation_radius__convergence_and_deflections_identical(
         self
@@ -1691,8 +1691,8 @@ class TestNFW(object):
             centre=(0.0, 0.0), axis_ratio=0.5, phi=0.0, kappa_s=1.0, scale_radius=1.0
         )
         assert nfw.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.25, 0.0]])
-        ) == pytest.approx(1.388511, 1e-3)
+            grid=aa.positions([[(0.25, 0.0)]])
+        )[0][0] == pytest.approx(1.388511, 1e-3)
 
     def test__potential_correct_values(self):
         nfw = aast.mp.SphericalNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
@@ -1709,8 +1709,8 @@ class TestNFW(object):
             centre=(0.3, 0.2), axis_ratio=0.7, phi=6.0, kappa_s=2.5, scale_radius=4.0
         )
         assert nfw.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
-        ) == pytest.approx(0.05380, 1e-3)
+            grid=aa.positions([[(0.1625, 0.1625)]])
+        )[0][0] == pytest.approx(0.05380, 1e-3)
 
     def test__potential__spherical_and_elliptical_are_same(self):
         nfw_spherical = aast.mp.SphericalNFW(
@@ -1775,10 +1775,10 @@ class TestNFW(object):
             centre=(0.3, 0.2), axis_ratio=0.7, phi=6.0, kappa_s=2.5, scale_radius=4.0
         )
         deflections = nfw.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.positions([[(0.1625, 0.1625)]])
         )
-        assert deflections[0, 0] == pytest.approx(-2.59480, 1e-3)
-        assert deflections[0, 1] == pytest.approx(-0.44204, 1e-3)
+        assert deflections[0][0][0] == pytest.approx(-2.59480, 1e-3)
+        assert deflections[0][0][1] == pytest.approx(-0.44204, 1e-3)
 
     def test__deflections_of_elliptical_profile__use_interpolate_and_cache_decorators(
         self
