@@ -4,6 +4,7 @@ from skimage import measure
 
 import autofit as af
 import autoarray as aa
+from autoarray.structures import grids
 import autoastro as aast
 from autoastro import exc
 from test_autoastro.mock import mock_cosmology
@@ -212,6 +213,17 @@ class TestLightProfiles(object):
             )
 
             assert lp_profile_image == gal_profile_image
+
+        def test__positions_in__positions_out(self, lp_0, gal_x1_lp, lp_1, gal_x2_lp):
+            lp_profile_image = lp_0.profile_image_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            gal_lp_profile_image = gal_x1_lp.profile_image_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            assert lp_profile_image[0][0] == gal_lp_profile_image[0][0]
 
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_light_profile_values(
             self, sub_grid_7x7, gal_x2_lp
@@ -519,6 +531,46 @@ class TestLightProfiles(object):
 
             assert visibilities == pytest.approx(galaxy_visibilities, 1.0e-4)
 
+    class TestLightProfileGeometry:
+        def test__extracts_centres_correctly(self):
+
+            galaxy = aast.Galaxy(redshift=0.5)
+
+            assert galaxy.light_profile_centres_list == []
+
+            galaxy = aast.Galaxy(
+                redshift=0.5, mp_0=aast.lp.EllipticalLightProfile(centre=(0.0, 1.0))
+            )
+
+            assert galaxy.light_profile_centres_list == [(0.0, 1.0)]
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                mp_0=aast.lp.EllipticalLightProfile(centre=(0.0, 1.0)),
+                mp_1=aast.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
+                mp_2=aast.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
+            )
+
+            assert galaxy.light_profile_centres_list == [
+                (0.0, 1.0),
+                (2.0, 3.0),
+                (4.0, 5.0),
+            ]
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                mp_0=aast.lp.EllipticalLightProfile(centre=(0.0, 1.0)),
+                mp_1=aast.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
+                lp_0=aast.mp.EllipticalMassProfile(centre=(-1.0, -2.0)),
+                mp_2=aast.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
+            )
+
+            assert galaxy.light_profile_centres_list == [
+                (0.0, 1.0),
+                (2.0, 3.0),
+                (4.0, 5.0),
+            ]
+
 
 def critical_curve_via_magnification_from_galaxy_and_grid(galaxy, grid):
     magnification = galaxy.magnification_from_grid(grid=grid)
@@ -627,6 +679,21 @@ class TestMassProfiles(object):
 
             assert mp_convergence == gal_convergence
 
+        def test__positions_in__positions_out(self, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+
+            mp_convergence = mp_0.convergence_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            gal_mp_convergence = gal_x1_mp.convergence_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            assert mp_convergence == gal_mp_convergence
+
+            assert type(gal_mp_convergence) == list
+            assert mp_convergence[0][0] == gal_mp_convergence[0][0]
+
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_mass_profile_values(
             self, sub_grid_7x7, gal_x2_mp
         ):
@@ -714,6 +781,21 @@ class TestMassProfiles(object):
 
             assert mp_potential == gal_potential
 
+        def test__positions_in__positions_out(self, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+
+            mp_potential = mp_0.potential_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            gal_mp_potential = gal_x1_mp.potential_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            assert mp_potential == gal_mp_potential
+
+            assert type(gal_mp_potential) == list
+            assert mp_potential[0][0] == gal_mp_potential[0][0]
+
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_mass_profile_values(
             self, sub_grid_7x7, gal_x2_mp
         ):
@@ -799,6 +881,22 @@ class TestMassProfiles(object):
             )
 
             assert (mp_deflections == gal_deflections).all()
+
+        def test__positions_in__positions_out(self, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+
+            mp_deflections = mp_0.deflections_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            gal_mp_deflections = gal_x1_mp.deflections_from_grid(
+                grid=aa.positions([[(1.05, -0.55)]])
+            )
+
+            assert mp_deflections == gal_mp_deflections
+
+            assert type(gal_mp_deflections) == grids.Positions
+            assert mp_deflections[0][0][0] == gal_mp_deflections[0][0][0]
+            assert mp_deflections[0][0][1] == gal_mp_deflections[0][0][1]
 
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_mass_profile_values(
             self, sub_grid_7x7, gal_x2_mp
@@ -1169,13 +1267,13 @@ class TestMassProfiles(object):
 
             galaxy = aast.Galaxy(redshift=0.5)
 
-            assert galaxy.mass_profile_centres == []
+            assert galaxy.mass_profile_centres_list == []
 
             galaxy = aast.Galaxy(
                 redshift=0.5, mp_0=aast.mp.EllipticalMassProfile(centre=(0.0, 1.0))
             )
 
-            assert galaxy.mass_profile_centres == [(0.0, 1.0)]
+            assert galaxy.mass_profile_centres_list == [(0.0, 1.0)]
 
             galaxy = aast.Galaxy(
                 redshift=0.5,
@@ -1184,7 +1282,11 @@ class TestMassProfiles(object):
                 mp_2=aast.mp.EllipticalMassProfile(centre=(4.0, 5.0)),
             )
 
-            assert galaxy.mass_profile_centres == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
+            assert galaxy.mass_profile_centres_list == [
+                (0.0, 1.0),
+                (2.0, 3.0),
+                (4.0, 5.0),
+            ]
 
             galaxy = aast.Galaxy(
                 redshift=0.5,
@@ -1194,19 +1296,23 @@ class TestMassProfiles(object):
                 mp_2=aast.mp.EllipticalMassProfile(centre=(4.0, 5.0)),
             )
 
-            assert galaxy.mass_profile_centres == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
+            assert galaxy.mass_profile_centres_list == [
+                (0.0, 1.0),
+                (2.0, 3.0),
+                (4.0, 5.0),
+            ]
 
         def test__extracts_axis_ratio_correctly(self):
 
             galaxy = aast.Galaxy(redshift=0.5)
 
-            assert galaxy.mass_profile_axis_ratios == []
+            assert galaxy.mass_profile_axis_ratio_list == []
 
             galaxy = aast.Galaxy(
                 redshift=0.5, mp_0=aast.mp.EllipticalMassProfile(axis_ratio=0.9)
             )
 
-            assert galaxy.mass_profile_axis_ratios == [0.9]
+            assert galaxy.mass_profile_axis_ratio_list == [0.9]
 
             galaxy = aast.Galaxy(
                 redshift=0.5,
@@ -1215,7 +1321,7 @@ class TestMassProfiles(object):
                 mp_2=aast.mp.EllipticalMassProfile(axis_ratio=0.7),
             )
 
-            assert galaxy.mass_profile_axis_ratios == [0.9, 0.8, 0.7]
+            assert galaxy.mass_profile_axis_ratio_list == [0.9, 0.8, 0.7]
 
             galaxy = aast.Galaxy(
                 redshift=0.5,
@@ -1225,19 +1331,19 @@ class TestMassProfiles(object):
                 mp_2=aast.mp.EllipticalMassProfile(axis_ratio=0.7),
             )
 
-            assert galaxy.mass_profile_axis_ratios == [0.9, 0.8, 0.7]
+            assert galaxy.mass_profile_axis_ratio_list == [0.9, 0.8, 0.7]
 
         def test__extracts_phis_correctly(self):
 
             galaxy = aast.Galaxy(redshift=0.5)
 
-            assert galaxy.mass_profile_phis == []
+            assert galaxy.mass_profile_phi_list == []
 
             galaxy = aast.Galaxy(
                 redshift=0.5, mp_0=aast.mp.EllipticalMassProfile(phi=0.9)
             )
 
-            assert galaxy.mass_profile_phis == [0.9]
+            assert galaxy.mass_profile_phi_list == [0.9]
 
             galaxy = aast.Galaxy(
                 redshift=0.5,
@@ -1246,7 +1352,7 @@ class TestMassProfiles(object):
                 mp_2=aast.mp.EllipticalMassProfile(phi=0.7),
             )
 
-            assert galaxy.mass_profile_phis == [0.9, 0.8, 0.7]
+            assert galaxy.mass_profile_phi_list == [0.9, 0.8, 0.7]
 
             galaxy = aast.Galaxy(
                 redshift=0.5,
@@ -1256,7 +1362,7 @@ class TestMassProfiles(object):
                 mp_2=aast.mp.EllipticalMassProfile(phi=0.7),
             )
 
-            assert galaxy.mass_profile_phis == [0.9, 0.8, 0.7]
+            assert galaxy.mass_profile_phi_list == [0.9, 0.8, 0.7]
 
     class TestLensingObject(object):
         def test__correct_einstein_mass_caclulated_for_multiple_mass_profiles__means_all_innherited_methods_work(

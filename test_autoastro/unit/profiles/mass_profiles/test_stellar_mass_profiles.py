@@ -142,9 +142,9 @@ class TestSersic(object):
             sersic_index=2.0,
             mass_to_light_ratio=1.0,
         )
-        assert sersic.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
-        ) == pytest.approx(5.38066670129, 1e-3)
+        assert sersic.convergence_from_grid(grid=aa.positions([[(1.0, 0.0)]]))[0][
+            0
+        ] == pytest.approx(5.38066670129, 1e-3)
 
     def test__deflections_correct_values(self):
         sersic = aast.mp.EllipticalSersic(
@@ -172,12 +172,12 @@ class TestSersic(object):
             mass_to_light_ratio=1.0,
         )
         deflections = sersic.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625], [0.1625, 0.1625]])
+            grid=aa.positions([[(0.1625, 0.1625), (0.1625, 0.1625)]])
         )
-        assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
-        assert deflections[0, 1] == pytest.approx(0.79374, 1e-3)
-        assert deflections[1, 0] == pytest.approx(1.1446, 1e-3)
-        assert deflections[1, 1] == pytest.approx(0.79374, 1e-3)
+        assert deflections[0][0][0] == pytest.approx(1.1446, 1e-3)
+        assert deflections[0][0][1] == pytest.approx(0.79374, 1e-3)
+        assert deflections[0][1][0] == pytest.approx(1.1446, 1e-3)
+        assert deflections[0][1][1] == pytest.approx(0.79374, 1e-3)
 
     def test__surfce_density__change_geometry(self):
         sersic_0 = aast.mp.SphericalSersic(centre=(0.0, 0.0))
@@ -529,9 +529,9 @@ class TestExponential(object):
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
         )
-        assert exponential.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
-        ) == pytest.approx(4.8566, 1e-3)
+        assert exponential.convergence_from_grid(grid=aa.positions([[(0.0, 1.0)]]))[0][
+            0
+        ] == pytest.approx(4.8566, 1e-3)
 
     def test__deflections_correct_values(self):
         exponential = aast.mp.EllipticalExponential(
@@ -557,10 +557,10 @@ class TestExponential(object):
             mass_to_light_ratio=1.0,
         )
         deflections = exponential.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.positions([[(0.1625, 0.1625)]])
         )
-        assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
-        assert deflections[0, 1] == pytest.approx(0.62569, 1e-3)
+        assert deflections[0][0][0] == pytest.approx(0.90493, 1e-3)
+        assert deflections[0][0][1] == pytest.approx(0.62569, 1e-3)
 
     def test__spherical_and_elliptical_identical(self):
         elliptical = aast.mp.EllipticalExponential(
@@ -852,9 +852,9 @@ class TestDevVaucouleurs(object):
             effective_radius=0.6,
             mass_to_light_ratio=1.0,
         )
-        assert sersic.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
-        ) == pytest.approx(0.351797, 1e-3)
+        assert sersic.convergence_from_grid(grid=aa.positions([[(0.0, 1.0)]]))[0][
+            0
+        ] == pytest.approx(0.351797, 1e-3)
 
     def test__deflections_correct_values(self):
         dev = aast.mp.EllipticalDevVaucouleurs(
@@ -865,11 +865,9 @@ class TestDevVaucouleurs(object):
             effective_radius=0.8,
             mass_to_light_ratio=3.0,
         )
-        deflections = dev.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
-        )
-        assert deflections[0, 0] == pytest.approx(-24.528, 1e-3)
-        assert deflections[0, 1] == pytest.approx(-3.37605, 1e-3)
+        deflections = dev.deflections_from_grid(grid=aa.positions([[(0.1625, 0.1625)]]))
+        assert deflections[0][0][0] == pytest.approx(-24.528, 1e-3)
+        assert deflections[0][0][1] == pytest.approx(-3.37605, 1e-3)
 
     def test__spherical_and_elliptical_identical(self):
         elliptical = aast.mp.EllipticalDevVaucouleurs(
@@ -1183,9 +1181,9 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_ratio=1.0,
             mass_to_light_gradient=1.0,
         )
-        assert sersic.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
-        ) == pytest.approx(2.836879 * 5.38066670129, abs=2e-01)
+        assert sersic.convergence_from_grid(grid=aa.positions([[(1.0, 0.0)]]))[0][
+            0
+        ] == pytest.approx(2.836879 * 5.38066670129, abs=2e-01)
 
     def test__deflections_correct_values(self):
         sersic = aast.mp.EllipticalSersicRadialGradient(
@@ -1215,10 +1213,10 @@ class TestSersicMassRadialGradient(object):
             mass_to_light_gradient=-1.0,
         )
         deflections = sersic.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.positions([[(0.1625, 0.1625)]])
         )
-        assert deflections[0, 0] == pytest.approx(0.97806399756448, 1e-3)
-        assert deflections[0, 1] == pytest.approx(0.725459334118341, 1e-3)
+        assert deflections[0][0][0] == pytest.approx(0.97806399756448, 1e-3)
+        assert deflections[0][0][1] == pytest.approx(0.725459334118341, 1e-3)
 
     def test__compare_to_sersic(self):
         sersic = aast.mp.EllipticalSersicRadialGradient(

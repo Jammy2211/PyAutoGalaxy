@@ -156,6 +156,7 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
 
         return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -521,6 +522,7 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
 
 
 class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid, tabulate_bins=1000):
@@ -593,6 +595,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
 
         return potential_grid
 
+    @grids.convert_positions_to_grid
     @grids.grid_interpolate
     @geometry_profiles.cache
     @geometry_profiles.transform_grid
@@ -773,6 +776,7 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
             scale_radius=scale_radius,
         )
 
+    @grids.convert_positions_to_grid
     @grids.grid_interpolate
     @geometry_profiles.cache
     @geometry_profiles.transform_grid
@@ -893,6 +897,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
             array=np.zeros(shape=grid.sub_shape_1d), shape_2d=grid.sub_shape_2d
         )
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid, **kwargs):
@@ -1142,6 +1147,7 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
         elif r == 1:
             return 1
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -1165,6 +1171,7 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
 
         return potential_grid
 
+    @grids.convert_positions_to_grid
     @grids.grid_interpolate
     @geometry_profiles.cache
     @geometry_profiles.transform_grid
@@ -1292,6 +1299,7 @@ class SphericalNFW(EllipticalNFW):
 
     # TODO : Make this use numpy arithmetic
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -1309,6 +1317,7 @@ class SphericalNFW(EllipticalNFW):
             2.0 * self.scale_radius * self.kappa_s * self.potential_func_sph(eta)
         )
 
+    @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):

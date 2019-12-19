@@ -288,7 +288,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         return summary
 
     @property
-    def mass_profile_centres(self):
+    def mass_profile_centres_list(self):
         return [self.centre]
 
     @property

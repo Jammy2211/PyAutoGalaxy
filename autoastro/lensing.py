@@ -29,7 +29,7 @@ class LensingObject(object):
         raise NotImplementedError("deflections_from_grid should be overridden")
 
     @property
-    def mass_profile_centres(self):
+    def mass_profile_centres_list(self):
         raise NotImplementedError("mass profile centres should be overridden")
 
     @property
@@ -155,10 +155,18 @@ class LensingObject(object):
 
     @property
     def mass_profile_bounding_box(self):
-        y_max = np.max(list(map(lambda centre: centre[0], self.mass_profile_centres)))
-        y_min = np.min(list(map(lambda centre: centre[0], self.mass_profile_centres)))
-        x_max = np.max(list(map(lambda centre: centre[1], self.mass_profile_centres)))
-        x_min = np.min(list(map(lambda centre: centre[1], self.mass_profile_centres)))
+        y_max = np.max(
+            list(map(lambda centre: centre[0], self.mass_profile_centres_list))
+        )
+        y_min = np.min(
+            list(map(lambda centre: centre[0], self.mass_profile_centres_list))
+        )
+        x_max = np.max(
+            list(map(lambda centre: centre[1], self.mass_profile_centres_list))
+        )
+        x_min = np.min(
+            list(map(lambda centre: centre[1], self.mass_profile_centres_list))
+        )
         return [y_max, y_min, x_max, x_min]
 
     def convergence_bounding_box(self, convergence_threshold=0.02):
