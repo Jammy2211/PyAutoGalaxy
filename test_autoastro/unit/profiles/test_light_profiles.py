@@ -318,9 +318,7 @@ class TestSersic:
             grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
         ) == pytest.approx(5.38066670129, 1e-3)
 
-        value = sersic.profile_image_from_grid(
-            grid=aa.positions([[(1.0, 0.0)]])
-        )
+        value = sersic.profile_image_from_grid(grid=aa.positions([[(1.0, 0.0)]]))
 
         assert value[0][0] == pytest.approx(5.38066670129, 1e-3)
 
@@ -512,9 +510,7 @@ class TestExponential:
             grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(2.0 * 4.8566, 1e-3)
 
-        value = exponential.profile_image_from_grid(
-            grid=aa.positions([[(0.0, 1.0)]])
-        )
+        value = exponential.profile_image_from_grid(grid=aa.positions([[(0.0, 1.0)]]))
 
         assert value[0][0] == pytest.approx(2.0 * 4.8566, 1e-3)
 

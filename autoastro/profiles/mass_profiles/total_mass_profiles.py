@@ -12,6 +12,7 @@ from autoastro.profiles import geometry_profiles
 from autoastro.profiles import mass_profiles as mp
 from astropy import constants
 
+
 class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
     @af.map_types
     def __init__(
@@ -36,12 +37,14 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
     def deflections_from_grid(self, grid):
         grid_radii = self.grid_to_grid_radii(grid=grid)
         return self.grid_to_grid_cartesian(
-            grid=grid, radius=self.einstein_radius**2 / grid_radii
+            grid=grid, radius=self.einstein_radius ** 2 / grid_radii
         )
 
     @property
     def mass(self):
-        return (206265 * self.einstein_radius * (constants.c**2.0) / (4.0 * constants.G)) / 1.988e30
+        return (
+            206265 * self.einstein_radius * (constants.c ** 2.0) / (4.0 * constants.G)
+        ) / 1.988e30
 
 
 class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):

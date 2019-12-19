@@ -298,9 +298,9 @@ class TestCoredPowerLaw(object):
             slope=1.7,
             core_radius=0.2,
         )
-        assert cored_power_law.convergence_from_grid(
-            grid=aa.positions([[(0.0, 1.0)]])
-        )[0][0] == pytest.approx(1.3887, 1e-3)
+        assert cored_power_law.convergence_from_grid(grid=aa.positions([[(0.0, 1.0)]]))[
+            0
+        ][0] == pytest.approx(1.3887, 1e-3)
 
     def test__potential_correct_values(self):
         power_law = aast.mp.SphericalCoredPowerLaw(
@@ -827,9 +827,9 @@ class TestPowerLaw(object):
         power_law = aast.mp.EllipticalPowerLaw(
             centre=(0.0, 0.0), axis_ratio=0.5, phi=0.0, einstein_radius=2.0, slope=1.7
         )
-        assert power_law.convergence_from_grid(
-            grid=aa.positions([[(0.0, 1.0)]])
-        )[0][0] == pytest.approx(1.4079, 1e-3)
+        assert power_law.convergence_from_grid(grid=aa.positions([[(0.0, 1.0)]]))[0][
+            0
+        ] == pytest.approx(1.4079, 1e-3)
 
     def test__potential_correct_values(self):
         power_law = aast.mp.SphericalPowerLaw(
@@ -856,9 +856,9 @@ class TestPowerLaw(object):
         power_law = aast.mp.EllipticalPowerLaw(
             centre=(-0.7, 0.5), axis_ratio=0.7, phi=60.0, einstein_radius=1.3, slope=1.8
         )
-        assert power_law.potential_from_grid(
-            grid=aa.positions([[(0.1625, 0.1625)]])
-        )[0][0] == pytest.approx(0.96723, 1e-3)
+        assert power_law.potential_from_grid(grid=aa.positions([[(0.1625, 0.1625)]]))[
+            0
+        ][0] == pytest.approx(0.96723, 1e-3)
 
     def test__deflections__correct_values(self):
 
@@ -1600,9 +1600,9 @@ class TestIsothermal(object):
         isothermal = aast.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), axis_ratio=0.5, phi=0.0, einstein_radius=1.0
         )
-        assert isothermal.convergence_from_grid(
-            grid=aa.positions([[(0.0, 1.0)]])
-        )[0][0] == pytest.approx(0.66666, 1e-3)
+        assert isothermal.convergence_from_grid(grid=aa.positions([[(0.0, 1.0)]]))[0][
+            0
+        ] == pytest.approx(0.66666, 1e-3)
 
     def test__potential__correct_values(self):
         isothermal = aast.mp.SphericalIsothermal(
@@ -1615,9 +1615,9 @@ class TestIsothermal(object):
         isothermal = aast.mp.EllipticalIsothermal(
             centre=(-0.7, 0.5), axis_ratio=0.7, phi=60.0, einstein_radius=1.3
         )
-        assert isothermal.potential_from_grid(
-            grid=aa.positions([[(0.1625, 0.1625)]])
-        )[0][0] == pytest.approx(1.19268, 1e-3)
+        assert isothermal.potential_from_grid(grid=aa.positions([[(0.1625, 0.1625)]]))[
+            0
+        ][0] == pytest.approx(1.19268, 1e-3)
 
     def test__deflections__correct_values(self):
         isothermal = aast.mp.SphericalIsothermal(

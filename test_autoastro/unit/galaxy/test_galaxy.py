@@ -213,9 +213,7 @@ class TestLightProfiles(object):
 
             assert lp_profile_image == gal_profile_image
 
-        def test__positions_in__positions_out(
-            self, lp_0, gal_x1_lp, lp_1, gal_x2_lp
-        ):
+        def test__positions_in__positions_out(self, lp_0, gal_x1_lp, lp_1, gal_x2_lp):
             lp_profile_image = lp_0.profile_image_from_grid(
                 grid=aa.positions([[(1.05, -0.55)]])
             )
@@ -224,7 +222,6 @@ class TestLightProfiles(object):
                 grid=aa.positions([[(1.05, -0.55)]])
             )
 
-            assert type(gal_lp_profile_image) == list
             assert lp_profile_image[0][0] == gal_lp_profile_image[0][0]
 
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_light_profile_values(
@@ -553,7 +550,11 @@ class TestLightProfiles(object):
                 mp_2=aast.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
             )
 
-            assert galaxy.light_profile_centres_list == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
+            assert galaxy.light_profile_centres_list == [
+                (0.0, 1.0),
+                (2.0, 3.0),
+                (4.0, 5.0),
+            ]
 
             galaxy = aast.Galaxy(
                 redshift=0.5,
@@ -563,7 +564,11 @@ class TestLightProfiles(object):
                 mp_2=aast.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
             )
 
-            assert galaxy.light_profile_centres_list == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
+            assert galaxy.light_profile_centres_list == [
+                (0.0, 1.0),
+                (2.0, 3.0),
+                (4.0, 5.0),
+            ]
 
 
 def critical_curve_via_magnification_from_galaxy_and_grid(galaxy, grid):
@@ -673,9 +678,7 @@ class TestMassProfiles(object):
 
             assert mp_convergence == gal_convergence
 
-        def test__positions_in__positions_out(
-            self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
-        ):
+        def test__positions_in__positions_out(self, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
 
             mp_convergence = mp_0.convergence_from_grid(
                 grid=aa.positions([[(1.05, -0.55)]])
@@ -777,9 +780,7 @@ class TestMassProfiles(object):
 
             assert mp_potential == gal_potential
 
-        def test__positions_in__positions_out(
-            self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
-        ):
+        def test__positions_in__positions_out(self, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
 
             mp_potential = mp_0.potential_from_grid(
                 grid=aa.positions([[(1.05, -0.55)]])
@@ -793,7 +794,6 @@ class TestMassProfiles(object):
 
             assert type(gal_mp_potential) == list
             assert mp_potential[0][0] == gal_mp_potential[0][0]
-
 
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_mass_profile_values(
             self, sub_grid_7x7, gal_x2_mp
@@ -881,9 +881,7 @@ class TestMassProfiles(object):
 
             assert (mp_deflections == gal_deflections).all()
 
-        def test__positions_in__positions_out(
-            self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
-        ):
+        def test__positions_in__positions_out(self, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
 
             mp_deflections = mp_0.deflections_from_grid(
                 grid=aa.positions([[(1.05, -0.55)]])
@@ -1283,7 +1281,11 @@ class TestMassProfiles(object):
                 mp_2=aast.mp.EllipticalMassProfile(centre=(4.0, 5.0)),
             )
 
-            assert galaxy.mass_profile_centres_list == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
+            assert galaxy.mass_profile_centres_list == [
+                (0.0, 1.0),
+                (2.0, 3.0),
+                (4.0, 5.0),
+            ]
 
             galaxy = aast.Galaxy(
                 redshift=0.5,
@@ -1293,7 +1295,11 @@ class TestMassProfiles(object):
                 mp_2=aast.mp.EllipticalMassProfile(centre=(4.0, 5.0)),
             )
 
-            assert galaxy.mass_profile_centres_list == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
+            assert galaxy.mass_profile_centres_list == [
+                (0.0, 1.0),
+                (2.0, 3.0),
+                (4.0, 5.0),
+            ]
 
         def test__extracts_axis_ratio_correctly(self):
 
