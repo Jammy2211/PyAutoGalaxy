@@ -4,6 +4,7 @@ from skimage import measure
 
 import autofit as af
 import autoarray as aa
+from autoarray.structures import grids
 import autoastro as aast
 from autoastro import exc
 from test_autoastro.mock import mock_cosmology
@@ -893,7 +894,7 @@ class TestMassProfiles(object):
 
             assert mp_deflections == gal_mp_deflections
 
-            assert type(gal_mp_deflections) == list
+            assert type(gal_mp_deflections) == grids.Positions
             assert mp_deflections[0][0][0] == gal_mp_deflections[0][0][0]
             assert mp_deflections[0][0][1] == gal_mp_deflections[0][0][1]
 
