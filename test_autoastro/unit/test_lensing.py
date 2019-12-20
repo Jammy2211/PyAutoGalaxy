@@ -230,6 +230,35 @@ class MockGalaxy(lensing.LensingObject):
         return [mass_profile.centre for mass_profile in self.mass_profiles]
 
 
+class TestDeflectionsMagnitudes(object):
+    def test__compare_sis_deflection_magnitudes_to_known_values(self):
+        sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+
+        grid = aa.grid_irregular.manual_1d(grid=np.array([[1.0, 0.0], [0.0, 1.0]]))
+
+        deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
+
+        assert deflection_magnitudes == pytest.approx(np.array([1.0, 1.0]), 1.0e-4)
+
+        sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        grid = aa.grid_irregular.manual_1d(grid=np.array([[2.0, 0.0], [0.0, 2.0]]))
+
+        deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
+
+        assert deflection_magnitudes == pytest.approx(np.array([2.0, 2.0]), 1.0e-4)
+
+        grid = aa.grid.uniform(shape_2d=(5, 5), pixel_scales=0.1, sub_size=1)
+
+        deflections = sis.deflections_from_grid(grid=grid)
+        magitudes_manual = np.sqrt(np.square(deflections[:,0]) + np.square(deflections[:,1]))
+
+        deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
+
+        assert deflection_magnitudes == pytest.approx(magitudes_manual, 1.0e-4)
+
+
+
 class TestDeflectionsViaPotential(object):
     def test__compare_sis_deflections_via_potential_and_calculation(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)

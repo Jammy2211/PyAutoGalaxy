@@ -9,13 +9,12 @@ from autoarray.structures import grids
 from autoastro import dimensions as dim
 from autoastro.util import cosmology_util
 
-
 class LensingObject(object):
     def convergence_func(self, grid_radius):
-        raise NotImplementedError("surface_density_func should be overridden")
+        raise NotImplementedError("convergence_func should be overridden")
 
     def convergence_from_grid(self, grid):
-        raise NotImplementedError("surface_density_from_grid should be overridden")
+        raise NotImplementedError("convergence_from_grid should be overridden")
 
     def potential_func(self, u, y, x):
         raise NotImplementedError("potential_func should be overridden")
@@ -44,6 +43,10 @@ class LensingObject(object):
         """Routine to integrate an elliptical light profiles - set axis ratio to 1 to compute the luminosity within a \
         circle"""
         return 2 * np.pi * x * self.convergence_func(x)
+
+    def deflection_magnitudes_from_grid(self, grid):
+        deflections = self.deflections_from_grid(grid=grid)
+        return deflections.distances_from_coordinate(coordinate=(0.0, 0.0))
 
     def deflections_via_potential_from_grid(self, grid):
 
@@ -216,6 +219,7 @@ class LensingObject(object):
         bounding_box = self.convergence_bounding_box(
             convergence_threshold=convergence_threshold
         )
+
         return grids.Grid.bounding_box(
             bounding_box=bounding_box, shape_2d=(pixels, pixels)
         )
