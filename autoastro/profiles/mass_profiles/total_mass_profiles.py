@@ -40,12 +40,6 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
             grid=grid, radius=self.einstein_radius ** 2 / grid_radii
         )
 
-    @property
-    def mass(self):
-        return (
-            206265 * self.einstein_radius * (constants.c ** 2.0) / (4.0 * constants.G)
-        ) / 1.988e30
-
 
 class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     @af.map_types

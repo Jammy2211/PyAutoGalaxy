@@ -258,7 +258,6 @@ class TestDeflectionsMagnitudes(object):
         assert deflection_magnitudes == pytest.approx(magitudes_manual, 1.0e-4)
 
 
-
 class TestDeflectionsViaPotential(object):
     def test__compare_sis_deflections_via_potential_and_calculation(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)

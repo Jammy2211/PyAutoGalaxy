@@ -216,9 +216,15 @@ class LensingObject(object):
 
         pixels = af.conf.instance.general.get("calculation_grid", "pixels", int)
 
-        bounding_box = self.convergence_bounding_box(
-            convergence_threshold=convergence_threshold
-        )
+        # TODO : The error is raised for point mass profile which does not have a convergence, need to think how to
+        # TODO : better deal with point masses.
+
+        try:
+            bounding_box = self.convergence_bounding_box(
+                convergence_threshold=convergence_threshold
+            )
+        except NotImplementedError:
+            bounding_box = [-10.0, 10.0, -10.0, 10.0]
 
         return grids.Grid.bounding_box(
             bounding_box=bounding_box, shape_2d=(pixels, pixels)
