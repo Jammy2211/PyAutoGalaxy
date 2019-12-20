@@ -10,6 +10,11 @@ from autoastro import dimensions as dim
 from autoastro.util import cosmology_util
 
 class LensingObject(object):
+
+    @property
+    def mass_profiles(self):
+        raise NotImplementedError("mass profiles list should be overriden")
+
     def convergence_func(self, grid_radius):
         raise NotImplementedError("convergence_func should be overridden")
 
@@ -28,7 +33,7 @@ class LensingObject(object):
         raise NotImplementedError("deflections_from_grid should be overridden")
 
     @property
-    def mass_profile_centres_list(self):
+    def mass_profile_centres(self):
         raise NotImplementedError("mass profile centres should be overridden")
 
     @property
@@ -159,16 +164,16 @@ class LensingObject(object):
     @property
     def mass_profile_bounding_box(self):
         y_max = np.max(
-            list(map(lambda centre: centre[0], self.mass_profile_centres_list))
+            list(map(lambda centre: centre[0], self.mass_profile_centres))
         )
         y_min = np.min(
-            list(map(lambda centre: centre[0], self.mass_profile_centres_list))
+            list(map(lambda centre: centre[0], self.mass_profile_centres))
         )
         x_max = np.max(
-            list(map(lambda centre: centre[1], self.mass_profile_centres_list))
+            list(map(lambda centre: centre[1], self.mass_profile_centres))
         )
         x_min = np.min(
-            list(map(lambda centre: centre[1], self.mass_profile_centres_list))
+            list(map(lambda centre: centre[1], self.mass_profile_centres))
         )
         return [y_max, y_min, x_max, x_min]
 
@@ -224,7 +229,7 @@ class LensingObject(object):
                 convergence_threshold=convergence_threshold
             )
         except NotImplementedError:
-            bounding_box = [-10.0, 10.0, -10.0, 10.0]
+            bounding_box = [-0.002, 0.002, -0.002, 0.002]
 
         return grids.Grid.bounding_box(
             bounding_box=bounding_box, shape_2d=(pixels, pixels)

@@ -1267,13 +1267,13 @@ class TestMassProfiles(object):
 
             galaxy = aast.Galaxy(redshift=0.5)
 
-            assert galaxy.mass_profile_centres_list == []
+            assert galaxy.mass_profile_centres == []
 
             galaxy = aast.Galaxy(
                 redshift=0.5, mp_0=aast.mp.EllipticalMassProfile(centre=(0.0, 1.0))
             )
 
-            assert galaxy.mass_profile_centres_list == [(0.0, 1.0)]
+            assert galaxy.mass_profile_centres == [(0.0, 1.0)]
 
             galaxy = aast.Galaxy(
                 redshift=0.5,
@@ -1282,7 +1282,7 @@ class TestMassProfiles(object):
                 mp_2=aast.mp.EllipticalMassProfile(centre=(4.0, 5.0)),
             )
 
-            assert galaxy.mass_profile_centres_list == [
+            assert galaxy.mass_profile_centres == [
                 (0.0, 1.0),
                 (2.0, 3.0),
                 (4.0, 5.0),
@@ -1296,7 +1296,7 @@ class TestMassProfiles(object):
                 mp_2=aast.mp.EllipticalMassProfile(centre=(4.0, 5.0)),
             )
 
-            assert galaxy.mass_profile_centres_list == [
+            assert galaxy.mass_profile_centres == [
                 (0.0, 1.0),
                 (2.0, 3.0),
                 (4.0, 5.0),

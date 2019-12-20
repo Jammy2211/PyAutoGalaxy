@@ -161,7 +161,7 @@ class MockEllipticalIsothermal(
         )
 
     @property
-    def mass_profile_centres_list(self):
+    def mass_profile_centres(self):
         return [self.centre]
 
 
@@ -226,7 +226,7 @@ class MockGalaxy(lensing.LensingObject):
         self.mass_profiles = mass_profiles
 
     @property
-    def mass_profile_centres_list(self):
+    def mass_profile_centres(self):
         return [mass_profile.centre for mass_profile in self.mass_profiles]
 
 

@@ -12,6 +12,11 @@ from autoastro.profiles import geometry_profiles
 
 
 class MassProfile(lensing.LensingObject):
+
+    @property
+    def mass_profiles(self):
+        return [self]
+
     @property
     def has_mass_profile(self):
         return True
@@ -288,7 +293,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         return summary
 
     @property
-    def mass_profile_centres_list(self):
+    def mass_profile_centres(self):
         return [self.centre]
 
     @property

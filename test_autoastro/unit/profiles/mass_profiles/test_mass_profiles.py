@@ -335,6 +335,13 @@ class TestDensityBetweenAnnuli(object):
 
 
 class TestLensingObject:
+
+    def test__mass_profiles__list__is_list_of_self(self):
+
+        sis = aast.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        assert sis.mass_profiles == [sis]
+
     def test__correct_einstein_mass_caclulated__means_all_innherited_methods_work(
         self,
     ):
