@@ -13,4 +13,4 @@ from autoastro.galaxy.galaxy_model import GalaxyModel
 from autoastro.hyper import hyper_data
 from autoastro import plotters as plot
 
-__version__ = '0.2.3'
+__version__ = '0.2.4'
