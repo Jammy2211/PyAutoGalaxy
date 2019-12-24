@@ -236,7 +236,9 @@ class LensingObject(object):
         )
 
         return grids.Grid.bounding_box(
-            bounding_box=bounding_box, shape_2d=(pixels, pixels)
+            bounding_box=bounding_box,
+            shape_2d=(pixels, pixels),
+            buffer_around_corners=True,
         )
 
     @property
