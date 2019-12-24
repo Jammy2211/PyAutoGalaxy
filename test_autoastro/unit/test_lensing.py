@@ -161,7 +161,15 @@ class MockEllipticalIsothermal(
         )
 
     @property
-    def mass_profile_centres_list(self):
+    def is_point_mass(self):
+        return False
+
+    @property
+    def mass_profiles(self):
+        return [self]
+
+    @property
+    def mass_profile_centres(self):
         return [self.centre]
 
 
@@ -223,11 +231,45 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
 
 class MockGalaxy(lensing.LensingObject):
     def __init__(self, mass_profiles):
-        self.mass_profiles = mass_profiles
+        self._mass_profiles = mass_profiles
 
     @property
-    def mass_profile_centres_list(self):
+    def mass_profiles(self):
+        return self._mass_profiles
+
+    @property
+    def mass_profile_centres(self):
         return [mass_profile.centre for mass_profile in self.mass_profiles]
+
+
+class TestDeflectionsMagnitudes(object):
+    def test__compare_sis_deflection_magnitudes_to_known_values(self):
+        sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+
+        grid = aa.grid_irregular.manual_1d(grid=np.array([[1.0, 0.0], [0.0, 1.0]]))
+
+        deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
+
+        assert deflection_magnitudes == pytest.approx(np.array([1.0, 1.0]), 1.0e-4)
+
+        sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        grid = aa.grid_irregular.manual_1d(grid=np.array([[2.0, 0.0], [0.0, 2.0]]))
+
+        deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
+
+        assert deflection_magnitudes == pytest.approx(np.array([2.0, 2.0]), 1.0e-4)
+
+        grid = aa.grid.uniform(shape_2d=(5, 5), pixel_scales=0.1, sub_size=1)
+
+        deflections = sis.deflections_from_grid(grid=grid)
+        magitudes_manual = np.sqrt(
+            np.square(deflections[:, 0]) + np.square(deflections[:, 1])
+        )
+
+        deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
+
+        assert deflection_magnitudes == pytest.approx(magitudes_manual, 1.0e-4)
 
 
 class TestDeflectionsViaPotential(object):
@@ -414,7 +456,7 @@ class TestBoundingBox(object):
 
         galaxy = MockGalaxy(mass_profiles=[sis_0, sis_1])
 
-        assert galaxy.mass_profile_bounding_box == [1.0, -1.0, 1.0, -1.0]
+        assert galaxy.mass_profile_bounding_box == [-1.0, 1.0, -1.0, 1.0]
 
         sis_0 = MockSphericalIsothermal(centre=(8.0, -6.0))
 
@@ -422,7 +464,7 @@ class TestBoundingBox(object):
 
         galaxy = MockGalaxy(mass_profiles=[sis_0, sis_1])
 
-        assert galaxy.mass_profile_bounding_box == [8.0, 4.0, 10.0, -6.0]
+        assert galaxy.mass_profile_bounding_box == [4.0, 8.0, -6.0, 10.0]
 
         sis_0 = MockSphericalIsothermal(centre=(8.0, -6.0))
 
@@ -434,7 +476,7 @@ class TestBoundingBox(object):
 
         galaxy = MockGalaxy(mass_profiles=[sis_0, sis_1, sis_2, sis_3])
 
-        assert galaxy.mass_profile_bounding_box == [18.0, 0.0, 90.0, -16.0]
+        assert galaxy.mass_profile_bounding_box == [0.0, 18.0, -16.0, 90.0]
 
     def test__convergence_bounding_box_for_single_mass_profile__extends_to_threshold(
         self
@@ -443,19 +485,52 @@ class TestBoundingBox(object):
 
         assert sis.convergence_bounding_box(
             convergence_threshold=0.02
-        ) == pytest.approx([25.0, -25.0, 25.0, -25.0], 1.0e-4)
+        ) == pytest.approx([-25.0, 25.0, -25.0, 25.0], 1.0e-4)
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
         assert sis.convergence_bounding_box(convergence_threshold=0.1) == pytest.approx(
-            [5.0, -5.0, 5.0, -5.0], 1.0e-4
+            [-5.0, 5.0, -5.0, 5.0], 1.0e-4
         )
 
         sis = MockSphericalIsothermal(centre=(5.0, 5.0), einstein_radius=1.0)
 
         assert sis.convergence_bounding_box(convergence_threshold=0.1) == pytest.approx(
-            [10.0, 0.0, 10.0, 0.0], 1.0e-4
+            [0.0, 10.0, 0.0, 10.0], 1.0e-4
         )
+
+    def test__convergence_bounding_box__mass_profiles_are_only_point_masses__uses_their_einstein_radii(
+        self
+    ):
+
+        point_mass_0 = aast.mp.PointMass(einstein_radius=0.1)
+
+        convergence_bounding_box = point_mass_0.convergence_bounding_box()
+
+        assert convergence_bounding_box == pytest.approx([-0.3, 0.3, -0.3, 0.3], 1.0e-4)
+
+        galaxy = MockGalaxy(mass_profiles=[point_mass_0])
+
+        convergence_bounding_box = galaxy.convergence_bounding_box()
+
+        assert convergence_bounding_box == pytest.approx([-0.3, 0.3, -0.3, 0.3], 1.0e-4)
+
+        point_mass_1 = aast.mp.PointMass(einstein_radius=0.3)
+
+        galaxy = MockGalaxy(mass_profiles=[point_mass_0, point_mass_1])
+
+        convergence_bounding_box = galaxy.convergence_bounding_box()
+
+        assert convergence_bounding_box == pytest.approx([-1.2, 1.2, -1.2, 1.2], 1.0e-4)
+
+        sis_0 = aast.mp.SphericalIsothermal(einstein_radius=2.0)
+        galaxy = aast.Galaxy(
+            redshift=0.5, point0=point_mass_0, point1=point_mass_1, sis0=sis_0
+        )
+
+        convergence_bounding_box = galaxy.convergence_bounding_box()
+
+        assert convergence_bounding_box != pytest.approx([-1.2, 1.2, -1.2, 1.2], 1.0e-4)
 
 
 def critical_curve_via_magnification_from_mass_profile_and_grid(mass_profile, grid):

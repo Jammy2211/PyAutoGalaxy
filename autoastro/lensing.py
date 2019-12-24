@@ -11,11 +11,15 @@ from autoastro.util import cosmology_util
 
 
 class LensingObject(object):
+    @property
+    def mass_profiles(self):
+        raise NotImplementedError("mass profiles list should be overriden")
+
     def convergence_func(self, grid_radius):
-        raise NotImplementedError("surface_density_func should be overridden")
+        raise NotImplementedError("convergence_func should be overridden")
 
     def convergence_from_grid(self, grid):
-        raise NotImplementedError("surface_density_from_grid should be overridden")
+        raise NotImplementedError("convergence_from_grid should be overridden")
 
     def potential_func(self, u, y, x):
         raise NotImplementedError("potential_func should be overridden")
@@ -29,7 +33,7 @@ class LensingObject(object):
         raise NotImplementedError("deflections_from_grid should be overridden")
 
     @property
-    def mass_profile_centres_list(self):
+    def mass_profile_centres(self):
         raise NotImplementedError("mass profile centres should be overridden")
 
     @property
@@ -44,6 +48,10 @@ class LensingObject(object):
         """Routine to integrate an elliptical light profiles - set axis ratio to 1 to compute the luminosity within a \
         circle"""
         return 2 * np.pi * x * self.convergence_func(x)
+
+    def deflection_magnitudes_from_grid(self, grid):
+        deflections = self.deflections_from_grid(grid=grid)
+        return deflections.distances_from_coordinate(coordinate=(0.0, 0.0))
 
     def deflections_via_potential_from_grid(self, grid):
 
@@ -155,29 +163,30 @@ class LensingObject(object):
 
     @property
     def mass_profile_bounding_box(self):
-        y_max = np.max(
-            list(map(lambda centre: centre[0], self.mass_profile_centres_list))
-        )
-        y_min = np.min(
-            list(map(lambda centre: centre[0], self.mass_profile_centres_list))
-        )
-        x_max = np.max(
-            list(map(lambda centre: centre[1], self.mass_profile_centres_list))
-        )
-        x_min = np.min(
-            list(map(lambda centre: centre[1], self.mass_profile_centres_list))
-        )
-        return [y_max, y_min, x_max, x_min]
+        y_min = np.min(list(map(lambda centre: centre[0], self.mass_profile_centres)))
+        y_max = np.max(list(map(lambda centre: centre[0], self.mass_profile_centres)))
+        x_min = np.min(list(map(lambda centre: centre[1], self.mass_profile_centres)))
+        x_max = np.max(list(map(lambda centre: centre[1], self.mass_profile_centres)))
+        return [y_min, y_max, x_min, x_max]
 
     def convergence_bounding_box(self, convergence_threshold=0.02):
 
-        [y_max, y_min, x_max, x_min] = self.mass_profile_bounding_box
+        if all(mass_profile.is_point_mass for mass_profile in self.mass_profiles):
+            einstein_radius = sum(
+                [
+                    mass_profile.einstein_radius
+                    for mass_profile in self.mass_profiles
+                    if mass_profile.is_point_mass
+                ]
+            )
+            return [
+                -3.0 * einstein_radius,
+                3.0 * einstein_radius,
+                -3.0 * einstein_radius,
+                3.0 * einstein_radius,
+            ]
 
-        def func_for_y_max(y):
-            grid = grids.GridIrregular.manual_1d(grid=[[y, x_max], [y, x_min]])
-            return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
-
-        convergence_y_max = root_scalar(func_for_y_max, bracket=[y_max, 1000.0]).root
+        [y_min, y_max, x_min, x_max] = self.mass_profile_bounding_box
 
         def func_for_y_min(y):
             grid = grids.GridIrregular.manual_1d(grid=[[y, x_max], [y, x_min]])
@@ -185,11 +194,11 @@ class LensingObject(object):
 
         convergence_y_min = root_scalar(func_for_y_min, bracket=[y_min, -1000.0]).root
 
-        def func_for_x_max(x):
-            grid = grids.GridIrregular.manual_1d(grid=[[y_max, x], [y_min, x]])
+        def func_for_y_max(y):
+            grid = grids.GridIrregular.manual_1d(grid=[[y, x_max], [y, x_min]])
             return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
 
-        convergence_x_max = root_scalar(func_for_x_max, bracket=[x_max, 1000.0]).root
+        convergence_y_max = root_scalar(func_for_y_max, bracket=[y_max, 1000.0]).root
 
         def func_for_x_min(x):
             grid = grids.GridIrregular.manual_1d(grid=[[y_max, x], [y_min, x]])
@@ -197,11 +206,17 @@ class LensingObject(object):
 
         convergence_x_min = root_scalar(func_for_x_min, bracket=[x_min, -1000.0]).root
 
+        def func_for_x_max(x):
+            grid = grids.GridIrregular.manual_1d(grid=[[y_max, x], [y_min, x]])
+            return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
+
+        convergence_x_max = root_scalar(func_for_x_max, bracket=[x_max, 1000.0]).root
+
         return [
-            convergence_y_max,
             convergence_y_min,
-            convergence_x_max,
+            convergence_y_max,
             convergence_x_min,
+            convergence_x_max,
         ]
 
     @property
@@ -213,11 +228,17 @@ class LensingObject(object):
 
         pixels = af.conf.instance.general.get("calculation_grid", "pixels", int)
 
+        # TODO : The error is raised for point mass profile which does not have a convergence, need to think how to
+        # TODO : better deal with point masses.
+
         bounding_box = self.convergence_bounding_box(
             convergence_threshold=convergence_threshold
         )
+
         return grids.Grid.bounding_box(
-            bounding_box=bounding_box, shape_2d=(pixels, pixels)
+            bounding_box=bounding_box,
+            shape_2d=(pixels, pixels),
+            buffer_around_corners=True,
         )
 
     @property
