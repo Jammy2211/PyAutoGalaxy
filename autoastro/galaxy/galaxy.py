@@ -122,7 +122,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return len(self.mass_profiles) + len(self.light_profiles) > 0
 
     @property
-    def light_profile_centres_list(self):
+    def light_profile_centres(self):
         return [light_profile.centre for light_profile in self.light_profiles]
 
     @property
@@ -130,11 +130,11 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return [mass_profile.centre for mass_profile in self.mass_profiles]
 
     @property
-    def mass_profile_axis_ratio_list(self):
+    def mass_profile_axis_ratios(self):
         return [mass_profile.axis_ratio for mass_profile in self.mass_profiles]
 
     @property
-    def mass_profile_phi_list(self):
+    def mass_profile_phis(self):
         return [mass_profile.phi for mass_profile in self.mass_profiles]
 
     @property

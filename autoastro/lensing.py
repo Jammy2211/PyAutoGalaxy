@@ -9,8 +9,8 @@ from autoarray.structures import grids
 from autoastro import dimensions as dim
 from autoastro.util import cosmology_util
 
-class LensingObject(object):
 
+class LensingObject(object):
     @property
     def mass_profiles(self):
         raise NotImplementedError("mass profiles list should be overriden")
@@ -163,29 +163,30 @@ class LensingObject(object):
 
     @property
     def mass_profile_bounding_box(self):
-        y_max = np.max(
-            list(map(lambda centre: centre[0], self.mass_profile_centres))
-        )
-        y_min = np.min(
-            list(map(lambda centre: centre[0], self.mass_profile_centres))
-        )
-        x_max = np.max(
-            list(map(lambda centre: centre[1], self.mass_profile_centres))
-        )
-        x_min = np.min(
-            list(map(lambda centre: centre[1], self.mass_profile_centres))
-        )
-        return [y_max, y_min, x_max, x_min]
+        y_min = np.min(list(map(lambda centre: centre[0], self.mass_profile_centres)))
+        y_max = np.max(list(map(lambda centre: centre[0], self.mass_profile_centres)))
+        x_min = np.min(list(map(lambda centre: centre[1], self.mass_profile_centres)))
+        x_max = np.max(list(map(lambda centre: centre[1], self.mass_profile_centres)))
+        return [y_min, y_max, x_min, x_max]
 
     def convergence_bounding_box(self, convergence_threshold=0.02):
 
-        [y_max, y_min, x_max, x_min] = self.mass_profile_bounding_box
+        if all(mass_profile.is_point_mass for mass_profile in self.mass_profiles):
+            einstein_radius = sum(
+                [
+                    mass_profile.einstein_radius
+                    for mass_profile in self.mass_profiles
+                    if mass_profile.is_point_mass
+                ]
+            )
+            return [
+                -3.0 * einstein_radius,
+                3.0 * einstein_radius,
+                -3.0 * einstein_radius,
+                3.0 * einstein_radius,
+            ]
 
-        def func_for_y_max(y):
-            grid = grids.GridIrregular.manual_1d(grid=[[y, x_max], [y, x_min]])
-            return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
-
-        convergence_y_max = root_scalar(func_for_y_max, bracket=[y_max, 1000.0]).root
+        [y_min, y_max, x_min, x_max] = self.mass_profile_bounding_box
 
         def func_for_y_min(y):
             grid = grids.GridIrregular.manual_1d(grid=[[y, x_max], [y, x_min]])
@@ -193,11 +194,11 @@ class LensingObject(object):
 
         convergence_y_min = root_scalar(func_for_y_min, bracket=[y_min, -1000.0]).root
 
-        def func_for_x_max(x):
-            grid = grids.GridIrregular.manual_1d(grid=[[y_max, x], [y_min, x]])
+        def func_for_y_max(y):
+            grid = grids.GridIrregular.manual_1d(grid=[[y, x_max], [y, x_min]])
             return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
 
-        convergence_x_max = root_scalar(func_for_x_max, bracket=[x_max, 1000.0]).root
+        convergence_y_max = root_scalar(func_for_y_max, bracket=[y_max, 1000.0]).root
 
         def func_for_x_min(x):
             grid = grids.GridIrregular.manual_1d(grid=[[y_max, x], [y_min, x]])
@@ -205,11 +206,17 @@ class LensingObject(object):
 
         convergence_x_min = root_scalar(func_for_x_min, bracket=[x_min, -1000.0]).root
 
+        def func_for_x_max(x):
+            grid = grids.GridIrregular.manual_1d(grid=[[y_max, x], [y_min, x]])
+            return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
+
+        convergence_x_max = root_scalar(func_for_x_max, bracket=[x_max, 1000.0]).root
+
         return [
-            convergence_y_max,
             convergence_y_min,
-            convergence_x_max,
+            convergence_y_max,
             convergence_x_min,
+            convergence_x_max,
         ]
 
     @property
@@ -224,12 +231,9 @@ class LensingObject(object):
         # TODO : The error is raised for point mass profile which does not have a convergence, need to think how to
         # TODO : better deal with point masses.
 
-        try:
-            bounding_box = self.convergence_bounding_box(
-                convergence_threshold=convergence_threshold
-            )
-        except NotImplementedError:
-            bounding_box = [-0.002, 0.002, -0.002, 0.002]
+        bounding_box = self.convergence_bounding_box(
+            convergence_threshold=convergence_threshold
+        )
 
         return grids.Grid.bounding_box(
             bounding_box=bounding_box, shape_2d=(pixels, pixels)

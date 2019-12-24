@@ -12,7 +12,6 @@ from autoastro.profiles import geometry_profiles
 
 
 class MassProfile(lensing.LensingObject):
-
     @property
     def mass_profiles(self):
         return [self]
@@ -20,6 +19,10 @@ class MassProfile(lensing.LensingObject):
     @property
     def has_mass_profile(self):
         return True
+
+    @property
+    def is_point_mass(self):
+        return False
 
     def summarize_in_units(
         self,

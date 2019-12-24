@@ -10,7 +10,6 @@ from autoastro import dimensions as dim
 from autoastro.profiles import geometry_profiles
 
 from autoastro.profiles import mass_profiles as mp
-from astropy import constants
 
 
 class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
@@ -31,6 +30,17 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
         super(PointMass, self).__init__(centre=centre)
         self.einstein_radius = einstein_radius
 
+    def convergence_from_grid(self, grid):
+
+        squared_distances = grid.squared_distances_from_coordinate(
+            coordinate=self.centre
+        )
+        central_pixel = np.argmin(squared_distances)
+
+        convergence = np.zeros(shape=grid.sub_shape_1d)
+        #    convergence[central_pixel] = np.pi * self.einstein_radius ** 2.0
+        return convergence
+
     @grids.convert_positions_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
@@ -39,6 +49,10 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
         return self.grid_to_grid_cartesian(
             grid=grid, radius=self.einstein_radius ** 2 / grid_radii
         )
+
+    @property
+    def is_point_mass(self):
+        return True
 
 
 class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):

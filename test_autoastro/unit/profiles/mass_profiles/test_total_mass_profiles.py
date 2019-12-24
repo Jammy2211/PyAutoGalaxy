@@ -32,6 +32,34 @@ class TestPointMass(object):
         assert isinstance(point_mass.einstein_radius, aast.dim.Length)
         assert point_mass.einstein_radius.unit_length == "arcsec"
 
+    # def test__converence__correct_values(self):
+    #
+    #     grid = aa.grid_irregular.manual_1d([[0.0, -1.0], [0.0, 0.0], [0.0, 1.0]])
+    #
+    #     point_mass = aast.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
+    #
+    #     convergence = point_mass.convergence_from_grid(
+    #         grid=grid)
+    #
+    #     assert convergence == pytest.approx(np.array([0.0, np.pi, 0.0]), 1e-3)
+    #
+    #     point_mass = aast.mp.PointMass(centre=(0.0, 0.8), einstein_radius=2.0)
+    #
+    #     convergence = point_mass.convergence_from_grid(
+    #         grid=grid)
+    #
+    #     assert convergence == pytest.approx(np.array([0.0, 0.0, 4.0*np.pi]), 1e-3)
+    #
+    #     grid = aa.grid.uniform(shape_2d=(5,5), pixel_scales=1.0, sub_size=2)
+    #
+    #     point_mass = aast.mp.PointMass(centre=(1.0, -1.0), einstein_radius=1.0)
+    #
+    #     convergence = point_mass.convergence_from_grid(
+    #         grid=grid)
+    #
+    #     assert convergence[14] == 0.0
+    #     assert convergence[24] == np.pi
+
     def test__deflections__correct_values(self):
 
         # The radial coordinate at (1.0, 1.0) is sqrt(2)
