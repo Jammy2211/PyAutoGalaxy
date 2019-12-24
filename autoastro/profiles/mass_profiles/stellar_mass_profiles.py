@@ -133,10 +133,8 @@ class EllipticalSersic(AbstractEllipticalSersic):
         x,
         npow,
         axis_ratio,
-        intensity,
         sersic_index,
         effective_radius,
-        mass_to_light_ratio,
         sersic_constant,
     ):
         eta_u = np.sqrt(axis_ratio) * np.sqrt(
@@ -144,9 +142,7 @@ class EllipticalSersic(AbstractEllipticalSersic):
         )
 
         return (
-            mass_to_light_ratio
-            * intensity
-            * np.exp(
+            np.exp(
                 -sersic_constant
                 * (((eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
             )
@@ -173,7 +169,7 @@ class EllipticalSersic(AbstractEllipticalSersic):
             sersic_constant = self.sersic_constant
 
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= quad_grid(
+            deflection_grid *= self.intensity * self.mass_to_light_ratio * quad_grid(
                 self.deflection_func,
                 0.0,
                 1.0,
@@ -181,10 +177,8 @@ class EllipticalSersic(AbstractEllipticalSersic):
                 args=(
                     npow,
                     self.axis_ratio,
-                    self.intensity,
                     self.sersic_index,
                     self.effective_radius,
-                    self.mass_to_light_ratio,
                     sersic_constant,
                 ),
             )[0]
@@ -469,7 +463,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
             sersic_constant = self.sersic_constant
 
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= quad_grid(
+            deflection_grid *= self.intensity * self.mass_to_light_ratio * quad_grid(
                 self.deflection_func,
                 0.0,
                 1.0,
@@ -477,10 +471,8 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
                 args=(
                     npow,
                     self.axis_ratio,
-                    self.intensity,
                     self.sersic_index,
                     self.effective_radius,
-                    self.mass_to_light_ratio,
                     self.mass_to_light_gradient,
                     sersic_constant,
                 ),
@@ -511,10 +503,8 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         x,
         npow,
         axis_ratio,
-        intensity,
         sersic_index,
         effective_radius,
-        mass_to_light_ratio,
         mass_to_light_gradient,
         sersic_constant,
     ):
@@ -523,9 +513,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         )
 
         return (
-            mass_to_light_ratio
-            * (((axis_ratio * eta_u) / effective_radius) ** -mass_to_light_gradient)
-            * intensity
+            (((axis_ratio * eta_u) / effective_radius) ** -mass_to_light_gradient)
             * np.exp(
                 -sersic_constant
                 * (((eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)

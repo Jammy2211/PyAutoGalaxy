@@ -37,6 +37,7 @@ def transform_grid(func):
         -------
             A value or coordinate in the same coordinate system as those passed in.
         """
+
         if not isinstance(grid, TransformedGrid):
             result = func(
                 profile,
