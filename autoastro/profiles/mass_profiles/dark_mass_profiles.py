@@ -1189,13 +1189,16 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
 
         def calculate_deflection_component(npow, index):
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= self.kappa_s * quad_grid(
-                self.deflection_func,
-                0.0,
-                1.0,
-                grid,
-                args=(npow, self.axis_ratio, self.scale_radius),
-            )[0]
+            deflection_grid *= (
+                self.kappa_s
+                * quad_grid(
+                    self.deflection_func,
+                    0.0,
+                    1.0,
+                    grid,
+                    args=(npow, self.axis_ratio, self.scale_radius),
+                )[0]
+            )
 
             return deflection_grid
 

@@ -128,26 +128,16 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile):
 class EllipticalSersic(AbstractEllipticalSersic):
     @staticmethod
     def deflection_func(
-        u,
-        y,
-        x,
-        npow,
-        axis_ratio,
-        sersic_index,
-        effective_radius,
-        sersic_constant,
+        u, y, x, npow, axis_ratio, sersic_index, effective_radius, sersic_constant
     ):
         eta_u = np.sqrt(axis_ratio) * np.sqrt(
             (u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u))))
         )
 
-        return (
-            np.exp(
-                -sersic_constant
-                * (((eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
-            )
-            / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
-        )
+        return np.exp(
+            -sersic_constant
+            * (((eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
+        ) / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
 
     @grids.convert_positions_to_grid
     @grids.grid_interpolate
@@ -169,19 +159,23 @@ class EllipticalSersic(AbstractEllipticalSersic):
             sersic_constant = self.sersic_constant
 
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= self.intensity * self.mass_to_light_ratio * quad_grid(
-                self.deflection_func,
-                0.0,
-                1.0,
-                grid,
-                args=(
-                    npow,
-                    self.axis_ratio,
-                    self.sersic_index,
-                    self.effective_radius,
-                    sersic_constant,
-                ),
-            )[0]
+            deflection_grid *= (
+                self.intensity
+                * self.mass_to_light_ratio
+                * quad_grid(
+                    self.deflection_func,
+                    0.0,
+                    1.0,
+                    grid,
+                    args=(
+                        npow,
+                        self.axis_ratio,
+                        self.sersic_index,
+                        self.effective_radius,
+                        sersic_constant,
+                    ),
+                )[0]
+            )
 
             return deflection_grid
 
@@ -463,20 +457,24 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
             sersic_constant = self.sersic_constant
 
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= self.intensity * self.mass_to_light_ratio * quad_grid(
-                self.deflection_func,
-                0.0,
-                1.0,
-                grid,
-                args=(
-                    npow,
-                    self.axis_ratio,
-                    self.sersic_index,
-                    self.effective_radius,
-                    self.mass_to_light_gradient,
-                    sersic_constant,
-                ),
-            )[0]
+            deflection_grid *= (
+                self.intensity
+                * self.mass_to_light_ratio
+                * quad_grid(
+                    self.deflection_func,
+                    0.0,
+                    1.0,
+                    grid,
+                    args=(
+                        npow,
+                        self.axis_ratio,
+                        self.sersic_index,
+                        self.effective_radius,
+                        self.mass_to_light_gradient,
+                        sersic_constant,
+                    ),
+                )[0]
+            )
             return deflection_grid
 
         deflection_y = calculate_deflection_component(1.0, 0)

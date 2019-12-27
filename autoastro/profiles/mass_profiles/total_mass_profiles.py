@@ -168,18 +168,16 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
             einstein_radius_rescaled = self.einstein_radius_rescaled
 
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= einstein_radius_rescaled * quad_grid(
-                self.deflection_func,
-                0.0,
-                1.0,
-                grid,
-                args=(
-                    npow,
-                    self.axis_ratio,
-                    self.slope,
-                    self.core_radius,
-                ),
-            )[0]
+            deflection_grid *= (
+                einstein_radius_rescaled
+                * quad_grid(
+                    self.deflection_func,
+                    0.0,
+                    1.0,
+                    grid,
+                    args=(npow, self.axis_ratio, self.slope, self.core_radius),
+                )[0]
+            )
 
             return deflection_grid
 
@@ -209,13 +207,10 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
         )
 
     @staticmethod
-    def deflection_func(
-        u, y, x, npow, axis_ratio, slope, core_radius
-    ):
+    def deflection_func(u, y, x, npow, axis_ratio, slope, core_radius):
         eta_u = np.sqrt((u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u)))))
-        return (
-            (core_radius ** 2 + eta_u ** 2) ** (-(slope - 1) / 2.0)
-            / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
+        return (core_radius ** 2 + eta_u ** 2) ** (-(slope - 1) / 2.0) / (
+            (1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5)
         )
 
     @property
