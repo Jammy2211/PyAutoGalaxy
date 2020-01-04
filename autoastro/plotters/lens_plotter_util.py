@@ -62,17 +62,17 @@ def get_mass_profile_centres_from_fit(include_mass_profile_centres, fit):
         return None
 
 
-def get_positions_from_fit(fit, include_positions):
+def get_positions_from_fit(fit, positions):
     """Get the masks of the fit if the masks should be plotted on the fit.
 
     Parameters
     -----------
     fit : datas.fitting.fitting.AbstractLensHyperFit
         The fit to the datas, which includes a lisrt of every model image, residual_map, chi-squareds, etc.
-    include_mask : bool
+    mask : bool
         If *True*, the masks is plotted on the fit's datas.
     """
-    if include_positions:
+    if positions:
         return fit.masked_dataset.positions
     else:
         return None
