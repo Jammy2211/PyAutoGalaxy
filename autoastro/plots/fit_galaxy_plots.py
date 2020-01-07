@@ -116,7 +116,8 @@ def individuals(
             array_plotter=array_plotter
         )
 
-
+@plotters.set_includes
+@plotters.set_labels
 def galaxy_data_array(
     galaxy_data,
     positions=None,

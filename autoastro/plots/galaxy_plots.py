@@ -9,7 +9,8 @@ from autoarray.util import plotter_util
 from autoarray.plotters import plotters, array_plotters
 from autoastro.plots import profile_plots, lens_plotter_util
 
-
+@plotters.set_includes
+@plotters.set_labels
 def profile_image(
     galaxy,
     grid,
@@ -49,7 +50,8 @@ def profile_image(
         lines=lines,
     )
 
-
+@plotters.set_includes
+@plotters.set_labels
 def convergence(
     galaxy,
     grid,
@@ -89,7 +91,8 @@ def convergence(
         lines=lines,
     )
 
-
+@plotters.set_includes
+@plotters.set_labels
 def potential(
     galaxy,
     grid,
@@ -129,7 +132,8 @@ def potential(
         lines=lines,
     )
 
-
+@plotters.set_includes
+@plotters.set_labels
 def deflections_y(
     galaxy,
     grid,
@@ -172,7 +176,8 @@ def deflections_y(
         lines=lines,
     )
 
-
+@plotters.set_includes
+@plotters.set_labels
 def deflections_x(
     galaxy,
     grid,
@@ -216,7 +221,8 @@ def deflections_x(
         array_plotter=array_plotters.ArrayPlotter(),
     )
 
-
+@plotters.set_includes
+@plotters.set_labels
 def magnification(
     galaxy,
     grid,
