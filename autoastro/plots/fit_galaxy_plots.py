@@ -6,6 +6,7 @@ matplotlib.use(backend)
 from matplotlib import pyplot as plt
 
 import autoarray as aa
+from autoarray.plotters import plotters, array_plotters
 from autoarray.util import plotter_util
 from autoastro import exc
 
@@ -13,31 +14,7 @@ from autoastro import exc
 def subplot(
     fit,
     positions=None,
-    unit_label="arcsec",
-    unit_conversion_factor=None,
-    figsize=None,
-    aspect="square",
-    cmap="jet",
-    norm="linear",
-    norm_min=None,
-    norm_max=None,
-    linthresh=0.05,
-    linscale=0.01,
-    cb_ticksize=10,
-    cb_fraction=0.047,
-    cb_pad=0.01,
-    cb_tick_values=None,
-    cb_tick_labels=None,
-    titlesize=10,
-    xlabelsize=10,
-    ylabelsize=10,
-    xyticksize=10,
-    mask_pointsize=10,
-    position_pointsize=10,
-    grid_pointsize=1,
-    output_path=None,
-    output_filename="galaxy_fit",
-    output_format="show",
+    array_plotter=array_plotters.ArrayPlotter(),
 ):
 
     rows, columns, figsize_tool = plotter_util.get_subplot_rows_columns_figsize(
@@ -53,32 +30,6 @@ def subplot(
     galaxy_data_array(
         galaxy_data=fit.galaxy_data,
         positions=positions,
-        as_subplot=True,
-        unit_label=unit_label,
-        unit_conversion_factor=unit_conversion_factor,
-        figsize=figsize,
-        aspect=aspect,
-        cmap=cmap,
-        norm=norm,
-        norm_min=norm_min,
-        norm_max=norm_max,
-        linthresh=linthresh,
-        linscale=linscale,
-        cb_ticksize=cb_ticksize,
-        cb_fraction=cb_fraction,
-        cb_pad=cb_pad,
-        cb_tick_values=cb_tick_values,
-        cb_tick_labels=cb_tick_labels,
-        titlesize=titlesize,
-        xlabelsize=xlabelsize,
-        ylabelsize=ylabelsize,
-        xyticksize=xyticksize,
-        grid_pointsize=grid_pointsize,
-        position_pointsize=position_pointsize,
-        mask_pointsize=mask_pointsize,
-        output_path=output_path,
-        output_filename=output_filename,
-        output_format=output_format,
     )
 
     plt.subplot(rows, columns, 2)
@@ -87,32 +38,6 @@ def subplot(
         fit=fit,
         mask=fit.mask,
         points=positions,
-        as_subplot=True,
-        unit_label=unit_label,
-        unit_conversion_factor=unit_conversion_factor,
-        figsize=figsize,
-        aspect=aspect,
-        cmap=cmap,
-        norm=norm,
-        norm_min=norm_min,
-        norm_max=norm_max,
-        linthresh=linthresh,
-        linscale=linscale,
-        cb_ticksize=cb_ticksize,
-        cb_fraction=cb_fraction,
-        cb_pad=cb_pad,
-        cb_tick_values=cb_tick_values,
-        cb_tick_labels=cb_tick_labels,
-        title="Model Galaxy",
-        titlesize=titlesize,
-        xlabelsize=xlabelsize,
-        ylabelsize=ylabelsize,
-        xyticksize=xyticksize,
-        position_pointsize=position_pointsize,
-        mask_pointsize=mask_pointsize,
-        output_path=output_path,
-        output_filename="",
-        output_format=output_format,
     )
 
     plt.subplot(rows, columns, 3)
@@ -120,31 +45,6 @@ def subplot(
     aa.plot.fit_imaging.residual_map(
         fit=fit,
         mask=fit.mask,
-        as_subplot=True,
-        unit_label=unit_label,
-        unit_conversion_factor=unit_conversion_factor,
-        figsize=figsize,
-        aspect=aspect,
-        cmap=cmap,
-        norm=norm,
-        norm_min=norm_min,
-        norm_max=norm_max,
-        linthresh=linthresh,
-        linscale=linscale,
-        cb_ticksize=cb_ticksize,
-        cb_fraction=cb_fraction,
-        cb_pad=cb_pad,
-        cb_tick_values=cb_tick_values,
-        cb_tick_labels=cb_tick_labels,
-        titlesize=titlesize,
-        xlabelsize=xlabelsize,
-        ylabelsize=ylabelsize,
-        xyticksize=xyticksize,
-        position_pointsize=position_pointsize,
-        mask_pointsize=mask_pointsize,
-        output_path=output_path,
-        output_filename="",
-        output_format=output_format,
     )
 
     plt.subplot(rows, columns, 4)
@@ -152,37 +52,9 @@ def subplot(
     aa.plot.fit_imaging.chi_squared_map(
         fit=fit,
         mask=fit.mask,
-        as_subplot=True,
-        unit_label=unit_label,
-        unit_conversion_factor=unit_conversion_factor,
-        figsize=figsize,
-        aspect=aspect,
-        cmap=cmap,
-        norm=norm,
-        norm_min=norm_min,
-        norm_max=norm_max,
-        linthresh=linthresh,
-        linscale=linscale,
-        cb_ticksize=cb_ticksize,
-        cb_fraction=cb_fraction,
-        cb_pad=cb_pad,
-        cb_tick_values=cb_tick_values,
-        cb_tick_labels=cb_tick_labels,
-        titlesize=titlesize,
-        xlabelsize=xlabelsize,
-        ylabelsize=ylabelsize,
-        xyticksize=xyticksize,
-        position_pointsize=position_pointsize,
-        mask_pointsize=mask_pointsize,
-        output_path=output_path,
-        output_filename="",
-        output_format=output_format,
     )
 
-    plotter_util.output_subplot_array(
-        output_path=output_path,
-        output_filename=output_filename,
-        output_format=output_format,
+    array_plotter.output_subplot_array(
     )
 
     plt.close()
@@ -190,15 +62,13 @@ def subplot(
 
 def individuals(
     fit,
-    unit_label="arcsec",
     positions=None,
     plot_image=False,
     plot_noise_map=False,
     plot_model_image=False,
     plot_residual_map=False,
     plot_chi_squared_map=False,
-    output_path=None,
-    output_format="show",
+    array_plotter=array_plotters.ArrayPlotter(),
 ):
 
     unit_conversion_factor = None
@@ -209,10 +79,7 @@ def individuals(
             galaxy_data=fit.galaxy_data,
             mask=fit.mask,
             positions=positions,
-            unit_label=unit_label,
-            unit_conversion_factor=unit_conversion_factor,
-            output_path=output_path,
-            output_format=output_format,
+            array_plotter=array_plotter
         )
 
     if plot_noise_map:
@@ -221,10 +88,7 @@ def individuals(
             fit=fit,
             mask=fit.mask,
             points=positions,
-            unit_label=unit_label,
-            unit_conversion_factor=unit_conversion_factor,
-            output_path=output_path,
-            output_format=output_format,
+            array_plotter=array_plotter
         )
 
     if plot_model_image:
@@ -233,10 +97,7 @@ def individuals(
             fit=fit,
             mask=fit.mask,
             points=positions,
-            unit_label=unit_label,
-            unit_conversion_factor=unit_conversion_factor,
-            output_path=output_path,
-            output_format=output_format,
+            array_plotter=array_plotter
         )
 
     if plot_residual_map:
@@ -244,10 +105,7 @@ def individuals(
         aa.plot.fit_imaging.residual_map(
             fit=fit,
             mask=fit.mask,
-            unit_label=unit_label,
-            unit_conversion_factor=unit_conversion_factor,
-            output_path=output_path,
-            output_format=output_format,
+            array_plotter=array_plotter
         )
 
     if plot_chi_squared_map:
@@ -255,42 +113,14 @@ def individuals(
         aa.plot.fit_imaging.chi_squared_map(
             fit=fit,
             mask=fit.mask,
-            unit_label=unit_label,
-            unit_conversion_factor=unit_conversion_factor,
-            output_path=output_path,
-            output_format=output_format,
+            array_plotter=array_plotter
         )
 
 
 def galaxy_data_array(
     galaxy_data,
     positions=None,
-    as_subplot=False,
-    unit_label="arcsec",
-    unit_conversion_factor=None,
-    figsize=None,
-    aspect="square",
-    cmap="jet",
-    norm="linear",
-    norm_min=None,
-    norm_max=None,
-    linthresh=0.05,
-    linscale=0.01,
-    cb_ticksize=10,
-    cb_fraction=0.047,
-    cb_pad=0.01,
-    cb_tick_values=None,
-    cb_tick_labels=None,
-    titlesize=10,
-    xlabelsize=10,
-    ylabelsize=10,
-    xyticksize=10,
-    mask_pointsize=10,
-    position_pointsize=10,
-    grid_pointsize=1,
-    output_path=None,
-    output_filename="galaxy_data",
-    output_format="show",
+    array_plotter=array_plotters.ArrayPlotter(),
 ):
 
     if galaxy_data.use_image:
@@ -312,31 +142,4 @@ def galaxy_data_array(
         array=galaxy_data.image,
         mask=galaxy_data.mask,
         points=positions,
-        as_subplot=as_subplot,
-        unit_label=unit_label,
-        unit_conversion_factor=unit_conversion_factor,
-        figsize=figsize,
-        aspect=aspect,
-        cmap=cmap,
-        norm=norm,
-        norm_min=norm_min,
-        norm_max=norm_max,
-        linthresh=linthresh,
-        linscale=linscale,
-        cb_ticksize=cb_ticksize,
-        cb_fraction=cb_fraction,
-        cb_pad=cb_pad,
-        cb_tick_values=cb_tick_values,
-        cb_tick_labels=cb_tick_labels,
-        title=title,
-        titlesize=titlesize,
-        xlabelsize=xlabelsize,
-        ylabelsize=ylabelsize,
-        xyticksize=xyticksize,
-        mask_pointsize=mask_pointsize,
-        point_pointsize=position_pointsize,
-        grid_pointsize=grid_pointsize,
-        output_path=output_path,
-        output_format=output_format,
-        output_filename=output_filename,
     )
