@@ -6,7 +6,7 @@ matplotlib.use(backend)
 from matplotlib import pyplot as plt
 
 from autoarray.util import plotter_util
-from autoastro.plotters import profile_plotters, lens_plotter_util
+from autoastro.plots import profile_plots, lens_plotter_util
 
 
 def profile_image(
@@ -66,7 +66,7 @@ def profile_image(
         obj=galaxy, plot_in_kpc=plot_in_kpc
     )
 
-    aa.plot.array(
+    array_plotter.plot_array(
         array=image,
         mask=mask,
         points=positions,
@@ -158,7 +158,7 @@ def convergence(
         obj=galaxy, plot_in_kpc=plot_in_kpc
     )
 
-    aa.plot.array(
+    array_plotter.plot_array(
         array=convergence,
         mask=mask,
         points=positions,
@@ -250,7 +250,7 @@ def potential(
         obj=galaxy, plot_in_kpc=plot_in_kpc
     )
 
-    aa.plot.array(
+    array_plotter.plot_array(
         array=potential,
         mask=mask,
         points=positions,
@@ -345,7 +345,7 @@ def deflections_y(
         obj=galaxy, plot_in_kpc=plot_in_kpc
     )
 
-    aa.plot.array(
+    array_plotter.plot_array(
         array=deflections_y,
         mask=mask,
         points=positions,
@@ -440,7 +440,7 @@ def deflections_x(
         obj=galaxy, plot_in_kpc=plot_in_kpc
     )
 
-    aa.plot.array(
+    array_plotter.plot_array(
         array=deflections_x,
         mask=mask,
         points=positions,
@@ -532,7 +532,7 @@ def magnification(
         obj=galaxy, plot_in_kpc=plot_in_kpc
     )
 
-    aa.plot.array(
+    array_plotter.plot_array(
         array=magnification,
         mask=mask,
         points=positions,
@@ -616,7 +616,7 @@ def profile_image_subplot(
 
         plt.subplot(rows, columns, i + 1)
 
-        profile_plotters.image(
+        profile_plots.image(
             light_profile=light_profile,
             mask=mask,
             positions=positions,
@@ -707,7 +707,7 @@ def convergence_subplot(
 
         plt.subplot(rows, columns, i + 1)
 
-        profile_plotters.convergence(
+        profile_plots.convergence(
             mass_profile=mass_profile,
             grid=grid,
             mask=mask,
@@ -798,7 +798,7 @@ def potential_subplot(
 
         plt.subplot(rows, columns, i + 1)
 
-        profile_plotters.potential(
+        profile_plots.potential(
             mass_profile=mass_profile,
             grid=grid,
             mask=mask,
@@ -889,7 +889,7 @@ def deflections_y_subplot(
 
         plt.subplot(rows, columns, i + 1)
 
-        profile_plotters.deflections_y(
+        profile_plots.deflections_y(
             mass_profile=mass_profile,
             grid=grid,
             mask=mask,
@@ -980,7 +980,7 @@ def deflections_x_subplot(
 
         plt.subplot(rows, columns, i + 1)
 
-        profile_plotters.deflections_x(
+        profile_plots.deflections_x(
             mass_profile=mass_profile,
             grid=grid,
             mask=mask,

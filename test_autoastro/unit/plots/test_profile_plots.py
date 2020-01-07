@@ -1,12 +1,23 @@
+import autoarray as aa
 import autoastro as aast
 import pytest
 import os
+from os import path
+from autoarray import conf
 
+directory = path.dirname(path.realpath(__file__))
 
 @pytest.fixture(name="profile_plotter_path")
 def make_profile_plotter_setup():
     return "{}/../../../test_files/plotting/profiles/".format(
         os.path.dirname(os.path.realpath(__file__))
+    )
+
+
+@pytest.fixture(autouse=True)
+def set_config_path():
+    conf.instance = conf.Config(
+        path.join(directory, "../test_files/plotters"), path.join(directory, "output")
     )
 
 
@@ -19,12 +30,9 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
-        unit_label="test",
-        unit_conversion_factor=2.0,
-        cb_tick_values=[1.0],
-        cb_tick_labels=["1.0"],
-        output_path=profile_plotter_path,
-        output_format="png",
+        array_plotter=aa.plotter.array(
+            output_path=profile_plotter_path, output_format="png"
+        ),
     )
 
     assert profile_plotter_path + "image.png" in plot_patch.paths
@@ -36,10 +44,9 @@ def test__all_quantities_are_output(
         positions=positions_7x7,
         include_critical_curves=False,
         include_caustics=True,
-        cb_tick_values=[1.0],
-        cb_tick_labels=["1.0"],
-        output_path=profile_plotter_path,
-        output_format="png",
+        array_plotter=aa.plotter.array(
+            output_path=profile_plotter_path, output_format="png"
+        ),
     )
 
     assert profile_plotter_path + "convergence.png" in plot_patch.paths
@@ -51,10 +58,9 @@ def test__all_quantities_are_output(
         positions=positions_7x7,
         include_critical_curves=False,
         include_caustics=True,
-        cb_tick_values=[1.0],
-        cb_tick_labels=["1.0"],
-        output_path=profile_plotter_path,
-        output_format="png",
+        array_plotter=aa.plotter.array(
+            output_path=profile_plotter_path, output_format="png"
+        ),
     )
 
     assert profile_plotter_path + "potential.png" in plot_patch.paths
@@ -66,10 +72,9 @@ def test__all_quantities_are_output(
         positions=positions_7x7,
         include_critical_curves=False,
         include_caustics=True,
-        cb_tick_values=[1.0],
-        cb_tick_labels=["1.0"],
-        output_path=profile_plotter_path,
-        output_format="png",
+        array_plotter=aa.plotter.array(
+            output_path=profile_plotter_path, output_format="png"
+        ),
     )
 
     assert profile_plotter_path + "deflections_y.png" in plot_patch.paths
@@ -81,10 +86,9 @@ def test__all_quantities_are_output(
         positions=positions_7x7,
         include_critical_curves=False,
         include_caustics=True,
-        cb_tick_values=[1.0],
-        cb_tick_labels=["1.0"],
-        output_path=profile_plotter_path,
-        output_format="png",
+        array_plotter=aa.plotter.array(
+            output_path=profile_plotter_path, output_format="png"
+        ),
     )
 
     assert profile_plotter_path + "deflections_x.png" in plot_patch.paths
@@ -96,10 +100,9 @@ def test__all_quantities_are_output(
         positions=positions_7x7,
         include_critical_curves=False,
         include_caustics=True,
-        cb_tick_values=[1.0],
-        cb_tick_labels=["1.0"],
-        output_path=profile_plotter_path,
-        output_format="png",
+        array_plotter=aa.plotter.array(
+            output_path=profile_plotter_path, output_format="png"
+        ),
     )
 
     assert profile_plotter_path + "magnification.png" in plot_patch.paths

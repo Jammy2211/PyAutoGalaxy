@@ -308,7 +308,7 @@ def galaxy_data_array(
             "The galaxy data_type arrays does not have a True use_profile_type"
         )
 
-    aa.plot.array(
+    array_plotter.plot_array(
         array=galaxy_data.image,
         mask=galaxy_data.mask,
         points=positions,
