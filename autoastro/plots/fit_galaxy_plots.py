@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 
 import autoarray as aa
 from autoarray.plotters import plotters, array_plotters
-from autoarray.util import plotter_util
+from autoastro.plots import lens_plotter_util
 from autoastro import exc
 
 
@@ -17,12 +17,17 @@ def subplot(
     array_plotter=array_plotters.ArrayPlotter(),
 ):
 
-    rows, columns, figsize_tool = plotter_util.get_subplot_rows_columns_figsize(
+    array_plotter = array_plotter.plotter_as_sub_plotter()
+    array_plotter = array_plotter.plotter_with_new_labels_and_filename(output_filename="imaging")
+
+    rows, columns, figsize_tool = array_plotter.get_subplot_rows_columns_figsize(
         number_subplots=4
     )
 
-    if figsize is None:
+    if array_plotter.figsize is None:
         figsize = figsize_tool
+    else:
+        figsize = array_plotter.figsize
 
     plt.figure(figsize=figsize)
     plt.subplot(rows, columns, 1)
@@ -71,8 +76,6 @@ def individuals(
     array_plotter=array_plotters.ArrayPlotter(),
 ):
 
-    unit_conversion_factor = None
-
     if plot_image:
 
         galaxy_data_array(
@@ -116,8 +119,8 @@ def individuals(
             array_plotter=array_plotter
         )
 
-@plotters.set_includes
-@plotters.set_labels
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def galaxy_data_array(
     galaxy_data,
     positions=None,

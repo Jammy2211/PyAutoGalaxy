@@ -2,8 +2,8 @@ from autoarray.plotters import plotters, array_plotters, line_plotters
 from autoarray.util import plotter_util
 from autoastro.plots import lens_plotter_util
 
-@plotters.set_includes
-@plotters.set_labels
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def image(
     light_profile,
     grid,
@@ -59,8 +59,8 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
         plot_axis_type=plot_axis_type,
     )
 
-@plotters.set_includes
-@plotters.set_labels
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def convergence(
     mass_profile,
     grid,
@@ -97,8 +97,8 @@ def convergence(
         lines=lines,
     )
 
-@plotters.set_includes
-@plotters.set_labels
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def potential(
     mass_profile,
     grid,
@@ -134,8 +134,8 @@ def potential(
         lines=lines,
     )
 
-@plotters.set_includes
-@plotters.set_labels
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def deflections_y(
     mass_profile,
     grid,
@@ -175,8 +175,8 @@ def deflections_y(
         lines=lines,
     )
 
-@plotters.set_includes
-@plotters.set_labels
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def deflections_x(
     mass_profile,
     grid,
@@ -215,8 +215,8 @@ def deflections_x(
         lines=lines,
     )
 
-@plotters.set_includes
-@plotters.set_labels
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def magnification(
     mass_profile,
     grid,

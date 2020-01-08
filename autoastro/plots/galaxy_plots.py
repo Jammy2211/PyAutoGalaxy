@@ -5,12 +5,11 @@ backend = aa.conf.get_matplotlib_backend()
 matplotlib.use(backend)
 from matplotlib import pyplot as plt
 
-from autoarray.util import plotter_util
-from autoarray.plotters import plotters, array_plotters
+from autoarray.plotters import array_plotters
 from autoastro.plots import profile_plots, lens_plotter_util
 
-@plotters.set_includes
-@plotters.set_labels
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def profile_image(
     galaxy,
     grid,
@@ -39,10 +38,6 @@ def profile_image(
         include_caustics=include_caustics,
     )
 
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
-        obj=galaxy, plot_in_kpc=plot_in_kpc
-    )
-
     array_plotter.plot_array(
         array=image,
         mask=mask,
@@ -50,8 +45,8 @@ def profile_image(
         lines=lines,
     )
 
-@plotters.set_includes
-@plotters.set_labels
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def convergence(
     galaxy,
     grid,
@@ -80,9 +75,7 @@ def convergence(
         include_caustics=include_caustics,
     )
 
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
-        obj=galaxy, plot_in_kpc=plot_in_kpc
-    )
+
 
     array_plotter.plot_array(
         array=convergence,
@@ -91,8 +84,8 @@ def convergence(
         lines=lines,
     )
 
-@plotters.set_includes
-@plotters.set_labels
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def potential(
     galaxy,
     grid,
@@ -121,9 +114,7 @@ def potential(
         include_caustics=include_caustics,
     )
 
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
-        obj=galaxy, plot_in_kpc=plot_in_kpc
-    )
+
 
     array_plotter.plot_array(
         array=potential,
@@ -132,8 +123,8 @@ def potential(
         lines=lines,
     )
 
-@plotters.set_includes
-@plotters.set_labels
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def deflections_y(
     galaxy,
     grid,
@@ -165,9 +156,7 @@ def deflections_y(
         include_caustics=include_caustics,
     )
 
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
-        obj=galaxy, plot_in_kpc=plot_in_kpc
-    )
+
 
     array_plotter.plot_array(
         array=deflections_y,
@@ -176,8 +165,8 @@ def deflections_y(
         lines=lines,
     )
 
-@plotters.set_includes
-@plotters.set_labels
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def deflections_x(
     galaxy,
     grid,
@@ -209,20 +198,15 @@ def deflections_x(
         include_caustics=include_caustics,
     )
 
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
-        obj=galaxy, plot_in_kpc=plot_in_kpc
-    )
-
     array_plotter.plot_array(
         array=deflections_x,
         mask=mask,
         points=positions,
         lines=lines,
-        array_plotter=array_plotters.ArrayPlotter(),
     )
 
-@plotters.set_includes
-@plotters.set_labels
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def magnification(
     galaxy,
     grid,
@@ -251,42 +235,37 @@ def magnification(
         include_caustics=include_caustics,
     )
 
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
-        obj=galaxy, plot_in_kpc=plot_in_kpc
-    )
-
     array_plotter.plot_array(
         array=magnification,
         mask=mask,
         points=positions,
         lines=lines,
-        unit_label=unit_label,
-        unit_conversion_factor=unit_conversion_factor,
     )
 
-
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def profile_image_subplot(
     galaxy,
     grid,
     mask=None,
     positions=None,
-    plot_in_kpc=False,
     array_plotter=array_plotters.ArrayPlotter(),
 ):
 
     total_light_profiles = len(galaxy.light_profiles)
-    rows, columns, figsize_tool = plotter_util.get_subplot_rows_columns_figsize(
+
+    array_plotter = array_plotter.plotter_as_sub_plotter()
+
+    rows, columns, figsize_tool = array_plotter.get_subplot_rows_columns_figsize(
         number_subplots=total_light_profiles
     )
 
-    if figsize is None:
+    if array_plotter.figsize is None:
         figsize = figsize_tool
+    else:
+        figsize = array_plotter.figsize
 
     plt.figure(figsize=figsize)
-
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
-        obj=galaxy, plot_in_kpc=plot_in_kpc
-    )
 
     for i, light_profile in enumerate(galaxy.light_profiles):
 
@@ -297,13 +276,15 @@ def profile_image_subplot(
             mask=mask,
             positions=positions,
             grid=grid,
+            array_plotter=array_plotter,
         )
 
     array_plotter.output_subplot_array(
     )
     plt.close()
 
-
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def convergence_subplot(
     galaxy,
     grid,
@@ -313,18 +294,19 @@ def convergence_subplot(
 ):
 
     total_mass_profiles = len(galaxy.mass_profiles)
-    rows, columns, figsize_tool = plotter_util.get_subplot_rows_columns_figsize(
+
+    array_plotter = array_plotter.plotter_as_sub_plotter()
+
+    rows, columns, figsize_tool = array_plotter.get_subplot_rows_columns_figsize(
         number_subplots=total_mass_profiles
     )
 
-    if figsize is None:
+    if array_plotter.figsize is None:
         figsize = figsize_tool
+    else:
+        figsize = array_plotter.figsize
 
     plt.figure(figsize=figsize)
-
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
-        obj=galaxy, plot_in_kpc=plot_in_kpc
-    )
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
@@ -341,7 +323,8 @@ def convergence_subplot(
     array_plotter.output_subplot_array()
     plt.close()
 
-
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def potential_subplot(
     galaxy,
     grid,
@@ -351,18 +334,20 @@ def potential_subplot(
 ):
 
     total_mass_profiles = len(galaxy.mass_profiles)
-    rows, columns, figsize_tool = plotter_util.get_subplot_rows_columns_figsize(
+    array_plotter = array_plotter.plotter_as_sub_plotter()
+
+    rows, columns, figsize_tool = array_plotter.get_subplot_rows_columns_figsize(
         number_subplots=total_mass_profiles
     )
 
-    if figsize is None:
+    if array_plotter.figsize is None:
         figsize = figsize_tool
+    else:
+        figsize = array_plotter.figsize
 
     plt.figure(figsize=figsize)
 
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
-        obj=galaxy, plot_in_kpc=plot_in_kpc
-    )
+
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
@@ -373,10 +358,6 @@ def potential_subplot(
             grid=grid,
             mask=mask,
             positions=positions,
-            as_subplot=True,
-            unit_label=unit_label,
-            unit_conversion_factor=unit_conversion_factor,
-            figsize=figsize,
             array_plotter=array_plotter
         )
 
@@ -384,7 +365,8 @@ def potential_subplot(
     )
     plt.close()
 
-
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def deflections_y_subplot(
     galaxy,
     grid,
@@ -394,18 +376,18 @@ def deflections_y_subplot(
 ):
 
     total_mass_profiles = len(galaxy.mass_profiles)
-    rows, columns, figsize_tool = plotter_util.get_subplot_rows_columns_figsize(
+    array_plotter = array_plotter.plotter_as_sub_plotter()
+
+    rows, columns, figsize_tool = array_plotter.get_subplot_rows_columns_figsize(
         number_subplots=total_mass_profiles
     )
 
-    if figsize is None:
+    if array_plotter.figsize is None:
         figsize = figsize_tool
+    else:
+        figsize = array_plotter.figsize
 
     plt.figure(figsize=figsize)
-
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
-        obj=galaxy, plot_in_kpc=plot_in_kpc
-    )
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
@@ -423,7 +405,8 @@ def deflections_y_subplot(
     )
     plt.close()
 
-
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def deflections_x_subplot(
     galaxy,
     grid,
@@ -433,18 +416,18 @@ def deflections_x_subplot(
 ):
 
     total_mass_profiles = len(galaxy.mass_profiles)
-    rows, columns, figsize_tool = plotter_util.get_subplot_rows_columns_figsize(
+    array_plotter = array_plotter.plotter_as_sub_plotter()
+
+    rows, columns, figsize_tool = array_plotter.get_subplot_rows_columns_figsize(
         number_subplots=total_mass_profiles
     )
 
-    if figsize is None:
+    if array_plotter.figsize is None:
         figsize = figsize_tool
+    else:
+        figsize = array_plotter.figsize
 
     plt.figure(figsize=figsize)
-
-    unit_label, unit_conversion_factor = lens_plotter_util.get_unit_label_and_unit_conversion_factor(
-        obj=galaxy, plot_in_kpc=plot_in_kpc
-    )
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
