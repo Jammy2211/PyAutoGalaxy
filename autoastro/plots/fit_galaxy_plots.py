@@ -6,19 +6,22 @@ matplotlib.use(backend)
 from matplotlib import pyplot as plt
 
 import autoarray as aa
-from autoarray.plotters import plotters, array_plotters
+from autoarray.plotters import array_plotters
 from autoastro.plots import lens_plotter_util
 from autoastro import exc
 
-
+@lens_plotter_util.set_includes
+@lens_plotter_util.set_labels_and_unit_conversion
 def subplot(
     fit,
     positions=None,
+    include_mask=None,
+    plot_in_kpc=False,
     array_plotter=array_plotters.ArrayPlotter(),
 ):
 
     array_plotter = array_plotter.plotter_as_sub_plotter()
-    array_plotter = array_plotter.plotter_with_new_labels_and_filename(output_filename="imaging")
+    array_plotter = array_plotter.plotter_with_new_labels_and_filename(output_filename="galaxy_fit")
 
     rows, columns, figsize_tool = array_plotter.get_subplot_rows_columns_figsize(
         number_subplots=4
@@ -35,28 +38,32 @@ def subplot(
     galaxy_data_array(
         galaxy_data=fit.galaxy_data,
         positions=positions,
+        array_plotter=array_plotter
     )
 
     plt.subplot(rows, columns, 2)
 
     aa.plot.fit_imaging.model_image(
         fit=fit,
-        mask=fit.mask,
+        include_mask=include_mask,
         points=positions,
+        array_plotter=array_plotter
     )
 
     plt.subplot(rows, columns, 3)
 
     aa.plot.fit_imaging.residual_map(
         fit=fit,
-        mask=fit.mask,
+        include_mask=include_mask,
+        array_plotter=array_plotter
     )
 
     plt.subplot(rows, columns, 4)
 
     aa.plot.fit_imaging.chi_squared_map(
         fit=fit,
-        mask=fit.mask,
+        include_mask=include_mask,
+        array_plotter=array_plotter
     )
 
     array_plotter.output_subplot_array(
@@ -124,6 +131,7 @@ def individuals(
 def galaxy_data_array(
     galaxy_data,
     positions=None,
+    plot_in_kpc=False,
     array_plotter=array_plotters.ArrayPlotter(),
 ):
 

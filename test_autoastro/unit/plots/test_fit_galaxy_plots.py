@@ -1,15 +1,26 @@
+import autoarray as aa
 import autoastro as aast
 import os
 
 import pytest
 
+from os import path
 
-@pytest.fixture(name="galaxy_fitting_plotter_path")
-def make_galaxy_fitting_plotter_setup():
+from autoarray import conf
+
+directory = path.dirname(path.realpath(__file__))
+
+@pytest.fixture(name="galaxy_fit_plotter_path")
+def make_galaxy_fit_plotter_setup():
     return "{}/../../../test_files/plotting/galaxy_fitting/".format(
         os.path.dirname(os.path.realpath(__file__))
     )
 
+@pytest.fixture(autouse=True)
+def set_config_path():
+    conf.instance = conf.Config(
+        path.join(directory, "../test_files/plotters"), path.join(directory, "output")
+    )
 
 def test__fit_sub_plot__all_types_of_galaxy_fit(
     gal_fit_7x7_image,
@@ -19,59 +30,54 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
     gal_fit_7x7_deflections_x,
     positions_7x7,
     plot_patch,
-    galaxy_fitting_plotter_path,
+    galaxy_fit_plotter_path,
 ):
     aast.plot.fit_galaxy.subplot(
         fit=gal_fit_7x7_image,
         positions=positions_7x7,
-        cb_tick_values=[1.0],
-        cb_tick_labels=["1.0"],
-        output_path=galaxy_fitting_plotter_path,
-        output_format="png",
+        array_plotter=aa.plotter.array(
+            output_path=galaxy_fit_plotter_path, output_format="png"
+        ),
     )
 
-    assert galaxy_fitting_plotter_path + "galaxy_fit.png" in plot_patch.paths
+    assert galaxy_fit_plotter_path + "galaxy_fit.png" in plot_patch.paths
 
     aast.plot.fit_galaxy.subplot(
         fit=gal_fit_7x7_convergence,
         positions=positions_7x7,
-        cb_tick_values=[1.0],
-        cb_tick_labels=["1.0"],
-        output_path=galaxy_fitting_plotter_path,
-        output_format="png",
+        array_plotter=aa.plotter.array(
+            output_path=galaxy_fit_plotter_path, output_format="png"
+        ),
     )
 
-    assert galaxy_fitting_plotter_path + "galaxy_fit.png" in plot_patch.paths
+    assert galaxy_fit_plotter_path + "galaxy_fit.png" in plot_patch.paths
 
     aast.plot.fit_galaxy.subplot(
         fit=gal_fit_7x7_potential,
         positions=positions_7x7,
-        cb_tick_values=[1.0],
-        cb_tick_labels=["1.0"],
-        output_path=galaxy_fitting_plotter_path,
-        output_format="png",
+        array_plotter=aa.plotter.array(
+            output_path=galaxy_fit_plotter_path, output_format="png"
+        ),
     )
 
-    assert galaxy_fitting_plotter_path + "galaxy_fit.png" in plot_patch.paths
+    assert galaxy_fit_plotter_path + "galaxy_fit.png" in plot_patch.paths
 
     aast.plot.fit_galaxy.subplot(
         fit=gal_fit_7x7_deflections_y,
         positions=positions_7x7,
-        cb_tick_values=[1.0],
-        cb_tick_labels=["1.0"],
-        output_path=galaxy_fitting_plotter_path,
-        output_format="png",
+        array_plotter=aa.plotter.array(
+            output_path=galaxy_fit_plotter_path, output_format="png"
+        ),
     )
 
-    assert galaxy_fitting_plotter_path + "galaxy_fit.png" in plot_patch.paths
+    assert galaxy_fit_plotter_path + "galaxy_fit.png" in plot_patch.paths
 
     aast.plot.fit_galaxy.subplot(
         fit=gal_fit_7x7_deflections_x,
         positions=positions_7x7,
-        cb_tick_values=[1.0],
-        cb_tick_labels=["1.0"],
-        output_path=galaxy_fitting_plotter_path,
-        output_format="png",
+        array_plotter=aa.plotter.array(
+            output_path=galaxy_fit_plotter_path, output_format="png"
+        ),
     )
 
-    assert galaxy_fitting_plotter_path + "galaxy_fit.png" in plot_patch.paths
+    assert galaxy_fit_plotter_path + "galaxy_fit.png" in plot_patch.paths
