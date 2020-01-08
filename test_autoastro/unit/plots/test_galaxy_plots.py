@@ -9,11 +9,13 @@ from autoarray import conf
 
 directory = path.dirname(path.realpath(__file__))
 
+
 @pytest.fixture(name="galaxy_plotter_path")
 def make_galaxy_plotter_setup():
     return "{}/../../../test_files/plotting/model_galaxy/".format(
         os.path.dirname(os.path.realpath(__file__))
     )
+
 
 @pytest.fixture(autouse=True)
 def set_config_path():
@@ -172,9 +174,7 @@ def test__individual_galaxy_quantities__all_are_output(
         ),
     )
 
-    assert (
-        galaxy_plotter_path + "deflections_y_subplot.png" in plot_patch.paths
-    )
+    assert galaxy_plotter_path + "deflections_y_subplot.png" in plot_patch.paths
 
     aast.plot.galaxy.deflections_x_subplot(
         galaxy=gal_x1_lp_x1_mp,

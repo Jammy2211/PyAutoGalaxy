@@ -5,6 +5,7 @@ from autoastro import lensing
 
 from functools import wraps
 
+
 def get_unit_label_and_unit_conversion_factor(kpc_per_arcsec, plot_in_kpc):
 
     if plot_in_kpc:
@@ -20,7 +21,7 @@ def get_unit_label_and_unit_conversion_factor(kpc_per_arcsec, plot_in_kpc):
     return unit_label, unit_conversion_factor
 
 
-def get_critical_curves_and_caustics_from_lensing_object(
+def critical_curves_and_caustics_from_lensing_object(
     obj, include_critical_curves, include_caustics
 ):
 
@@ -55,7 +56,7 @@ def get_critical_curves_and_caustics_from_lensing_object(
         return None
 
 
-def get_mass_profile_centres_from_fit(include_mass_profile_centres, fit):
+def mass_profile_centres_from_fit(fit, include_mass_profile_centres):
 
     if not hasattr(fit, "tracer"):
         return None
@@ -66,7 +67,7 @@ def get_mass_profile_centres_from_fit(include_mass_profile_centres, fit):
         return None
 
 
-def get_positions_from_fit(fit, positions):
+def positions_from_fit(fit, include_positions):
     """Get the masks of the fit if the masks should be plotted on the fit.
 
     Parameters
@@ -76,13 +77,13 @@ def get_positions_from_fit(fit, positions):
     mask : bool
         If *True*, the masks is plotted on the fit's datas.
     """
-    if positions:
+    if include_positions:
         return fit.masked_dataset.positions
     else:
         return None
 
 
-def get_image_plane_pix_grid_from_fit(include_image_plane_pix, fit):
+def image_plane_pix_grid_from_fit(include_image_plane_pix, fit):
 
     if fit.inversion is not None:
         if include_image_plane_pix:
@@ -117,15 +118,24 @@ def set_includes(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        includes = ["include_origin", "include_mask", "include_grid", "include_positions", "include_centres", "include_border",
-                    "include_critical_curves", "include_caustics"]
+        includes = [
+            "include_origin",
+            "include_mask",
+            "include_grid",
+            "include_positions",
+            "include_centres",
+            "include_border",
+            "include_critical_curves",
+            "include_caustics",
+        ]
 
         for include in includes:
             if include in kwargs:
                 if kwargs[include] is None:
 
                     kwargs[include] = plotters_util.setting(
-                        section="include", name=include[8:], python_type=bool)
+                        section="include", name=include[8:], python_type=bool
+                    )
 
         return func(*args, **kwargs)
 
@@ -169,6 +179,7 @@ def kpc_per_arcsec_of_object_from_dictionary(dictionary):
 
     return kpc_per_arcsec
 
+
 def set_labels_and_unit_conversion(func):
     """
     Decorate a profile method that accepts a coordinate grid and returns a data_type grid.
@@ -199,7 +210,11 @@ def set_labels_and_unit_conversion(func):
 
         if kpc_per_arcsec is not None:
 
-            plot_in_kpc = conf.instance.visualize.get("general", "plot_in_kpc", bool) if plot_in_kpc is None else plot_in_kpc
+            plot_in_kpc = (
+                conf.instance.visualize.get("general", "plot_in_kpc", bool)
+                if plot_in_kpc is None
+                else plot_in_kpc
+            )
 
         else:
 
@@ -210,9 +225,15 @@ def set_labels_and_unit_conversion(func):
         )
 
         label_title = plotters_util.label_title_from_plotter(plotter=plotter, func=func)
-        label_yunits = label_yunits_from_plotter(plotter=plotter, plot_in_kpc=plot_in_kpc)
-        label_xunits = label_xunits_from_plotter(plotter=plotter, plot_in_kpc=plot_in_kpc)
-        output_filename = plotters_util.output_filename_from_plotter_and_func(plotter=plotter, func=func)
+        label_yunits = label_yunits_from_plotter(
+            plotter=plotter, plot_in_kpc=plot_in_kpc
+        )
+        label_xunits = label_xunits_from_plotter(
+            plotter=plotter, plot_in_kpc=plot_in_kpc
+        )
+        output_filename = plotters_util.output_filename_from_plotter_and_func(
+            plotter=plotter, func=func
+        )
 
         kwargs[plotter_key] = plotter.plotter_with_new_labels_and_filename(
             label_title=label_title,

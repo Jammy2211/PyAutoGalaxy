@@ -2,6 +2,7 @@ from autoarray.plotters import plotters, array_plotters, line_plotters
 from autoarray.util import plotter_util
 from autoastro.plots import lens_plotter_util
 
+
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
 def image(
@@ -54,10 +55,9 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
     )
 
     line_plotter.plot_line(
-        quantity=luminosities,
-        radii=radii,
-        plot_axis_type=plot_axis_type,
+        quantity=luminosities, radii=radii, plot_axis_type=plot_axis_type
     )
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
@@ -84,18 +84,16 @@ def convergence(
 
     convergence = mass_profile.convergence_from_grid(grid=grid)
 
-    lines = lens_plotter_util.get_critical_curves_and_caustics_from_lensing_object(
+    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
         obj=mass_profile,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
 
     array_plotter.plot_array(
-        array=convergence,
-        mask=mask,
-        points=positions,
-        lines=lines,
+        array=convergence, mask=mask, points=positions, lines=lines
     )
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
@@ -121,18 +119,14 @@ def potential(
     """
     potential = mass_profile.potential_from_grid(grid=grid)
 
-    lines = lens_plotter_util.get_critical_curves_and_caustics_from_lensing_object(
+    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
         obj=mass_profile,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
 
-    array_plotter.plot_array(
-        array=potential,
-        mask=mask,
-        points=positions,
-        lines=lines,
-    )
+    array_plotter.plot_array(array=potential, mask=mask, points=positions, lines=lines)
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
@@ -162,18 +156,16 @@ def deflections_y(
         sub_array_1d=deflections[:, 0]
     )
 
-    lines = lens_plotter_util.get_critical_curves_and_caustics_from_lensing_object(
+    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
         obj=mass_profile,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
 
     array_plotter.plot_array(
-        array=deflections_y,
-        mask=mask,
-        points=positions,
-        lines=lines,
+        array=deflections_y, mask=mask, points=positions, lines=lines
     )
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
@@ -202,18 +194,16 @@ def deflections_x(
         sub_array_1d=deflections[:, 1]
     )
 
-    lines = lens_plotter_util.get_critical_curves_and_caustics_from_lensing_object(
+    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
         obj=mass_profile,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
 
     array_plotter.plot_array(
-        array=deflections_x,
-        mask=mask,
-        points=positions,
-        lines=lines,
+        array=deflections_x, mask=mask, points=positions, lines=lines
     )
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
@@ -239,15 +229,12 @@ def magnification(
     """
     magnification = mass_profile.magnification_from_grid(grid=grid)
 
-    lines = lens_plotter_util.get_critical_curves_and_caustics_from_lensing_object(
+    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
         obj=mass_profile,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
 
     array_plotter.plot_array(
-        array=magnification,
-        mask=mask,
-        points=positions,
-        lines=lines,
+        array=magnification, mask=mask, points=positions, lines=lines
     )

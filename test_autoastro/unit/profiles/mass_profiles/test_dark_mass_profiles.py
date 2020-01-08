@@ -64,7 +64,9 @@ class TestAbstractNFW(object):
 
         # r == 1
 
-        assert truncated_nfw.coord_func_g(grid_radius=np.array([1.0, 1.0])) == pytest.approx(np.real(np.array([1.0 / 3.0, 1.0 / 3.0])), 1.0e-4)
+        assert truncated_nfw.coord_func_g(
+            grid_radius=np.array([1.0, 1.0])
+        ) == pytest.approx(np.real(np.array([1.0 / 3.0, 1.0 / 3.0])), 1.0e-4)
 
     def test__coord_function_h__correct_values(self):
         truncated_nfw = aast.mp.SphericalTruncatedNFW(

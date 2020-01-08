@@ -8,6 +8,7 @@ from matplotlib import pyplot as plt
 from autoarray.plotters import array_plotters
 from autoastro.plots import profile_plots, lens_plotter_util
 
+
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
 def profile_image(
@@ -32,18 +33,14 @@ def profile_image(
     """
     image = galaxy.profile_image_from_grid(grid=grid)
 
-    lines = lens_plotter_util.get_critical_curves_and_caustics_from_lensing_object(
+    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
         obj=galaxy,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
 
-    array_plotter.plot_array(
-        array=image,
-        mask=mask,
-        points=positions,
-        lines=lines,
-    )
+    array_plotter.plot_array(array=image, mask=mask, points=positions, lines=lines)
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
@@ -69,20 +66,16 @@ def convergence(
     """
     convergence = galaxy.convergence_from_grid(grid=grid)
 
-    lines = lens_plotter_util.get_critical_curves_and_caustics_from_lensing_object(
+    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
         obj=galaxy,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
 
-
-
     array_plotter.plot_array(
-        array=convergence,
-        mask=mask,
-        points=positions,
-        lines=lines,
+        array=convergence, mask=mask, points=positions, lines=lines
     )
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
@@ -108,20 +101,14 @@ def potential(
      """
     potential = galaxy.potential_from_grid(grid=grid)
 
-    lines = lens_plotter_util.get_critical_curves_and_caustics_from_lensing_object(
+    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
         obj=galaxy,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
 
+    array_plotter.plot_array(array=potential, mask=mask, points=positions, lines=lines)
 
-
-    array_plotter.plot_array(
-        array=potential,
-        mask=mask,
-        points=positions,
-        lines=lines,
-    )
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
@@ -150,20 +137,16 @@ def deflections_y(
         sub_array_1d=deflections[:, 0]
     )
 
-    lines = lens_plotter_util.get_critical_curves_and_caustics_from_lensing_object(
+    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
         obj=galaxy,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
 
-
-
     array_plotter.plot_array(
-        array=deflections_y,
-        mask=mask,
-        points=positions,
-        lines=lines,
+        array=deflections_y, mask=mask, points=positions, lines=lines
     )
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
@@ -192,18 +175,16 @@ def deflections_x(
         sub_array_1d=deflections[:, 1]
     )
 
-    lines = lens_plotter_util.get_critical_curves_and_caustics_from_lensing_object(
+    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
         obj=galaxy,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
 
     array_plotter.plot_array(
-        array=deflections_x,
-        mask=mask,
-        points=positions,
-        lines=lines,
+        array=deflections_x, mask=mask, points=positions, lines=lines
     )
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
@@ -229,27 +210,21 @@ def magnification(
      """
     magnification = galaxy.magnification_from_grid(grid=grid)
 
-    lines = lens_plotter_util.get_critical_curves_and_caustics_from_lensing_object(
+    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
         obj=galaxy,
         include_critical_curves=include_critical_curves,
         include_caustics=include_caustics,
     )
 
     array_plotter.plot_array(
-        array=magnification,
-        mask=mask,
-        points=positions,
-        lines=lines,
+        array=magnification, mask=mask, points=positions, lines=lines
     )
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
 def profile_image_subplot(
-    galaxy,
-    grid,
-    mask=None,
-    positions=None,
-    array_plotter=array_plotters.ArrayPlotter(),
+    galaxy, grid, mask=None, positions=None, array_plotter=array_plotters.ArrayPlotter()
 ):
 
     total_light_profiles = len(galaxy.light_profiles)
@@ -279,18 +254,14 @@ def profile_image_subplot(
             array_plotter=array_plotter,
         )
 
-    array_plotter.output_subplot_array(
-    )
+    array_plotter.output_subplot_array()
     plt.close()
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
 def convergence_subplot(
-    galaxy,
-    grid,
-    mask=None,
-    positions=None,
-    array_plotter=array_plotters.ArrayPlotter(),
+    galaxy, grid, mask=None, positions=None, array_plotter=array_plotters.ArrayPlotter()
 ):
 
     total_mass_profiles = len(galaxy.mass_profiles)
@@ -317,20 +288,17 @@ def convergence_subplot(
             grid=grid,
             mask=mask,
             positions=positions,
-            array_plotter=array_plotter
+            array_plotter=array_plotter,
         )
 
     array_plotter.output_subplot_array()
     plt.close()
 
+
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
 def potential_subplot(
-    galaxy,
-    grid,
-    mask=None,
-    positions=None,
-    array_plotter=array_plotters.ArrayPlotter(),
+    galaxy, grid, mask=None, positions=None, array_plotter=array_plotters.ArrayPlotter()
 ):
 
     total_mass_profiles = len(galaxy.mass_profiles)
@@ -347,8 +315,6 @@ def potential_subplot(
 
     plt.figure(figsize=figsize)
 
-
-
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
         plt.subplot(rows, columns, i + 1)
@@ -358,21 +324,17 @@ def potential_subplot(
             grid=grid,
             mask=mask,
             positions=positions,
-            array_plotter=array_plotter
+            array_plotter=array_plotter,
         )
 
-    array_plotter.output_subplot_array(
-    )
+    array_plotter.output_subplot_array()
     plt.close()
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
 def deflections_y_subplot(
-    galaxy,
-    grid,
-    mask=None,
-    positions=None,
-        array_plotter=array_plotters.ArrayPlotter(),
+    galaxy, grid, mask=None, positions=None, array_plotter=array_plotters.ArrayPlotter()
 ):
 
     total_mass_profiles = len(galaxy.mass_profiles)
@@ -398,21 +360,17 @@ def deflections_y_subplot(
             grid=grid,
             mask=mask,
             positions=positions,
-            array_plotter=array_plotter
+            array_plotter=array_plotter,
         )
 
-    array_plotter.output_subplot_array(
-    )
+    array_plotter.output_subplot_array()
     plt.close()
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
 def deflections_x_subplot(
-    galaxy,
-    grid,
-    mask=None,
-    positions=None,
-    array_plotter=array_plotters.ArrayPlotter(),
+    galaxy, grid, mask=None, positions=None, array_plotter=array_plotters.ArrayPlotter()
 ):
 
     total_mass_profiles = len(galaxy.mass_profiles)
@@ -438,7 +396,7 @@ def deflections_x_subplot(
             grid=grid,
             mask=mask,
             positions=positions,
-            array_plotter=array_plotter
+            array_plotter=array_plotter,
         )
 
     array_plotter.output_subplot_array()

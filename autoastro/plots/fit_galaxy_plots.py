@@ -10,6 +10,7 @@ from autoarray.plotters import array_plotters
 from autoastro.plots import lens_plotter_util
 from autoastro import exc
 
+
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
 def subplot(
@@ -21,7 +22,9 @@ def subplot(
 ):
 
     array_plotter = array_plotter.plotter_as_sub_plotter()
-    array_plotter = array_plotter.plotter_with_new_labels_and_filename(output_filename="galaxy_fit")
+    array_plotter = array_plotter.plotter_with_new_labels_and_filename(
+        output_filename="galaxy_fit"
+    )
 
     rows, columns, figsize_tool = array_plotter.get_subplot_rows_columns_figsize(
         number_subplots=4
@@ -36,9 +39,7 @@ def subplot(
     plt.subplot(rows, columns, 1)
 
     galaxy_data_array(
-        galaxy_data=fit.galaxy_data,
-        positions=positions,
-        array_plotter=array_plotter
+        galaxy_data=fit.galaxy_data, positions=positions, array_plotter=array_plotter
     )
 
     plt.subplot(rows, columns, 2)
@@ -47,27 +48,22 @@ def subplot(
         fit=fit,
         include_mask=include_mask,
         points=positions,
-        array_plotter=array_plotter
+        array_plotter=array_plotter,
     )
 
     plt.subplot(rows, columns, 3)
 
     aa.plot.fit_imaging.residual_map(
-        fit=fit,
-        include_mask=include_mask,
-        array_plotter=array_plotter
+        fit=fit, include_mask=include_mask, array_plotter=array_plotter
     )
 
     plt.subplot(rows, columns, 4)
 
     aa.plot.fit_imaging.chi_squared_map(
-        fit=fit,
-        include_mask=include_mask,
-        array_plotter=array_plotter
+        fit=fit, include_mask=include_mask, array_plotter=array_plotter
     )
 
-    array_plotter.output_subplot_array(
-    )
+    array_plotter.output_subplot_array()
 
     plt.close()
 
@@ -89,42 +85,33 @@ def individuals(
             galaxy_data=fit.galaxy_data,
             mask=fit.mask,
             positions=positions,
-            array_plotter=array_plotter
+            array_plotter=array_plotter,
         )
 
     if plot_noise_map:
 
         aa.plot.fit_imaging.noise_map(
-            fit=fit,
-            mask=fit.mask,
-            points=positions,
-            array_plotter=array_plotter
+            fit=fit, mask=fit.mask, points=positions, array_plotter=array_plotter
         )
 
     if plot_model_image:
 
         aa.plot.fit_imaging.model_image(
-            fit=fit,
-            mask=fit.mask,
-            points=positions,
-            array_plotter=array_plotter
+            fit=fit, mask=fit.mask, points=positions, array_plotter=array_plotter
         )
 
     if plot_residual_map:
 
         aa.plot.fit_imaging.residual_map(
-            fit=fit,
-            mask=fit.mask,
-            array_plotter=array_plotter
+            fit=fit, mask=fit.mask, array_plotter=array_plotter
         )
 
     if plot_chi_squared_map:
 
         aa.plot.fit_imaging.chi_squared_map(
-            fit=fit,
-            mask=fit.mask,
-            array_plotter=array_plotter
+            fit=fit, mask=fit.mask, array_plotter=array_plotter
         )
+
 
 @lens_plotter_util.set_includes
 @lens_plotter_util.set_labels_and_unit_conversion
@@ -151,7 +138,5 @@ def galaxy_data_array(
         )
 
     array_plotter.plot_array(
-        array=galaxy_data.image,
-        mask=galaxy_data.mask,
-        points=positions,
+        array=galaxy_data.image, mask=galaxy_data.mask, points=positions
     )

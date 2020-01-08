@@ -7,6 +7,7 @@ from autoarray import conf
 
 directory = path.dirname(path.realpath(__file__))
 
+
 @pytest.fixture(name="profile_plotter_path")
 def make_profile_plotter_setup():
     return "{}/../../../test_files/plotting/profiles/".format(

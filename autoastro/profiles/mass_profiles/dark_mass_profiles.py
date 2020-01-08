@@ -179,7 +179,10 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
 
     def coord_func_f(self, grid_radius):
         if isinstance(grid_radius, np.ndarray):
-            return self.coord_func_f_jit(grid_radius=grid_radius, f=np.ones(shape=grid_radius.shape[0], dtype="complex64"))
+            return self.coord_func_f_jit(
+                grid_radius=grid_radius,
+                f=np.ones(shape=grid_radius.shape[0], dtype="complex64"),
+            )
         else:
             return self.coord_func_f_float_jit(grid_radius=grid_radius)
 
@@ -190,9 +193,13 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
         for index in range(f.shape[0]):
 
             if np.real(grid_radius[index]) > 1.0:
-                f[index] = (1.0 / np.sqrt(np.square(grid_radius[index]) - 1.0)) * np.arccos(np.divide(1.0, grid_radius[index]))
+                f[index] = (
+                    1.0 / np.sqrt(np.square(grid_radius[index]) - 1.0)
+                ) * np.arccos(np.divide(1.0, grid_radius[index]))
             elif np.real(grid_radius[index]) < 1.0:
-                f[index] = (1.0 / np.sqrt(1.0 - np.square(grid_radius[index]))) * np.arccosh(np.divide(1.0, grid_radius[index]))
+                f[index] = (
+                    1.0 / np.sqrt(1.0 - np.square(grid_radius[index]))
+                ) * np.arccosh(np.divide(1.0, grid_radius[index]))
 
         return f
 
@@ -201,9 +208,13 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
     def coord_func_f_float_jit(grid_radius):
 
         if np.real(grid_radius) > 1.0:
-            return (1.0 / np.sqrt(np.square(grid_radius) - 1.0)) * np.arccos(np.divide(1.0, grid_radius))
+            return (1.0 / np.sqrt(np.square(grid_radius) - 1.0)) * np.arccos(
+                np.divide(1.0, grid_radius)
+            )
         elif np.real(grid_radius) < 1.0:
-            return (1.0 / np.sqrt(1.0 - np.square(grid_radius))) * np.arccosh(np.divide(1.0, grid_radius))
+            return (1.0 / np.sqrt(1.0 - np.square(grid_radius))) * np.arccosh(
+                np.divide(1.0, grid_radius)
+            )
         else:
             return 1.0
 
@@ -211,7 +222,11 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
         f_r = self.coord_func_f(grid_radius=grid_radius)
 
         if isinstance(grid_radius, np.ndarray):
-            return self.coord_func_g_jit(grid_radius=grid_radius, f_r=f_r, g=np.zeros(shape=grid_radius.shape[0], dtype="complex64"))
+            return self.coord_func_g_jit(
+                grid_radius=grid_radius,
+                f_r=f_r,
+                g=np.zeros(shape=grid_radius.shape[0], dtype="complex64"),
+            )
         else:
             return self.coord_func_g_float_jit(grid_radius=grid_radius, f_r=f_r)
 
@@ -225,7 +240,7 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
             elif np.real(grid_radius[index]) < 1.0:
                 g[index] = (f_r[index] - 1.0) / (1.0 - np.square(grid_radius[index]))
             else:
-                g[index] = 1.0/3.0
+                g[index] = 1.0 / 3.0
 
         return g
 
@@ -238,7 +253,7 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
         elif np.real(grid_radius) < 1.0:
             return (f_r - 1.0) / (1.0 - np.square(grid_radius))
         else:
-            return 1.0/3.0
+            return 1.0 / 3.0
 
     def coord_func_h(self, grid_radius):
         return np.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
@@ -926,7 +941,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         )
 
     def convergence_func(self, grid_radius):
-        grid_radius = (((1.0 / self.scale_radius) * grid_radius) + 0j)
+        grid_radius = ((1.0 / self.scale_radius) * grid_radius) + 0j
         return np.real(2.0 * self.kappa_s * self.coord_func_l(grid_radius=grid_radius))
 
     def deflection_func_sph(self, grid_radius):
@@ -1355,7 +1370,7 @@ class SphericalNFW(EllipticalNFW):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
-        eta = ((1.0 / self.scale_radius) * self.grid_to_grid_radii(grid) + 0j)
+        eta = (1.0 / self.scale_radius) * self.grid_to_grid_radii(grid) + 0j
         return np.real(
             2.0 * self.scale_radius * self.kappa_s * self.potential_func_sph(eta)
         )
