@@ -42,7 +42,7 @@ def test__individual_images_are_output(
         include_critical_curves=True,
         include_caustics=True,
         array_plotter=aa.plotter.array(
-            output_path=galaxy_plotter_path, output_format="png"
+            output=aa.plotter.Output(galaxy_plotter_path, format="png"
         ),
     )
 
@@ -57,7 +57,7 @@ def test__individual_images_are_output(
         include_caustics=True,
         plot_in_kpc=True,
         array_plotter=aa.plotter.array(
-            output_path=galaxy_plotter_path, output_format="png"
+            output=aa.plotter.Output(galaxy_plotter_path, format="png"
         ),
     )
 
@@ -71,7 +71,7 @@ def test__individual_images_are_output(
         include_critical_curves=False,
         include_caustics=True,
         array_plotter=aa.plotter.array(
-            output_path=galaxy_plotter_path, output_format="png"
+            output=aa.plotter.Output(galaxy_plotter_path, format="png"
         ),
     )
 
@@ -85,7 +85,7 @@ def test__individual_images_are_output(
         include_critical_curves=False,
         include_caustics=True,
         array_plotter=aa.plotter.array(
-            output_path=galaxy_plotter_path, output_format="png"
+            output=aa.plotter.Output(galaxy_plotter_path, format="png"
         ),
     )
 
@@ -99,7 +99,7 @@ def test__individual_images_are_output(
         include_critical_curves=False,
         include_caustics=True,
         array_plotter=aa.plotter.array(
-            output_path=galaxy_plotter_path, output_format="png"
+            output=aa.plotter.Output(galaxy_plotter_path, format="png"
         ),
     )
 
@@ -113,7 +113,7 @@ def test__individual_images_are_output(
         include_critical_curves=False,
         include_caustics=True,
         array_plotter=aa.plotter.array(
-            output_path=galaxy_plotter_path, output_format="png"
+            output=aa.plotter.Output(galaxy_plotter_path, format="png"
         ),
     )
 
@@ -134,7 +134,7 @@ def test__individual_galaxy_quantities__all_are_output(
         mask=mask_7x7,
         positions=positions_7x7,
         array_plotter=aa.plotter.array(
-            output_path=galaxy_plotter_path, output_format="png"
+            output=aa.plotter.Output(galaxy_plotter_path, format="png"
         ),
     )
 
@@ -146,7 +146,7 @@ def test__individual_galaxy_quantities__all_are_output(
         mask=mask_7x7,
         positions=positions_7x7,
         array_plotter=aa.plotter.array(
-            output_path=galaxy_plotter_path, output_format="png"
+            output=aa.plotter.Output(galaxy_plotter_path, format="png"
         ),
     )
 
@@ -158,7 +158,7 @@ def test__individual_galaxy_quantities__all_are_output(
         mask=mask_7x7,
         positions=positions_7x7,
         array_plotter=aa.plotter.array(
-            output_path=galaxy_plotter_path, output_format="png"
+            output=aa.plotter.Output(galaxy_plotter_path, format="png"
         ),
     )
 
@@ -170,7 +170,7 @@ def test__individual_galaxy_quantities__all_are_output(
         mask=mask_7x7,
         positions=positions_7x7,
         array_plotter=aa.plotter.array(
-            output_path=galaxy_plotter_path, output_format="png"
+            output=aa.plotter.Output(galaxy_plotter_path, format="png"
         ),
     )
 
@@ -182,7 +182,7 @@ def test__individual_galaxy_quantities__all_are_output(
         mask=mask_7x7,
         positions=positions_7x7,
         array_plotter=aa.plotter.array(
-            output_path=galaxy_plotter_path, output_format="png"
+            output=aa.plotter.Output(galaxy_plotter_path, format="png"
         ),
     )
 

@@ -32,7 +32,7 @@ def test__all_quantities_are_output(
         mask=mask_7x7,
         positions=positions_7x7,
         array_plotter=aa.plotter.array(
-            output_path=profile_plotter_path, output_format="png"
+            output=aa.plotter.Output(profile_plotter_path, format="png"
         ),
     )
 
@@ -46,7 +46,7 @@ def test__all_quantities_are_output(
         include_critical_curves=False,
         include_caustics=True,
         array_plotter=aa.plotter.array(
-            output_path=profile_plotter_path, output_format="png"
+            output=aa.plotter.Output(profile_plotter_path, format="png"
         ),
     )
 
@@ -60,7 +60,7 @@ def test__all_quantities_are_output(
         include_critical_curves=False,
         include_caustics=True,
         array_plotter=aa.plotter.array(
-            output_path=profile_plotter_path, output_format="png"
+            output=aa.plotter.Output(profile_plotter_path, format="png"
         ),
     )
 
@@ -74,7 +74,7 @@ def test__all_quantities_are_output(
         include_critical_curves=False,
         include_caustics=True,
         array_plotter=aa.plotter.array(
-            output_path=profile_plotter_path, output_format="png"
+            output=aa.plotter.Output(profile_plotter_path, format="png"
         ),
     )
 
@@ -88,7 +88,7 @@ def test__all_quantities_are_output(
         include_critical_curves=False,
         include_caustics=True,
         array_plotter=aa.plotter.array(
-            output_path=profile_plotter_path, output_format="png"
+            output=aa.plotter.Output(profile_plotter_path, format="png"
         ),
     )
 
@@ -102,7 +102,7 @@ def test__all_quantities_are_output(
         include_critical_curves=False,
         include_caustics=True,
         array_plotter=aa.plotter.array(
-            output_path=profile_plotter_path, output_format="png"
+            output=aa.plotter.Output(profile_plotter_path, format="png"
         ),
     )
 

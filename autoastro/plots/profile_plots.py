@@ -10,6 +10,7 @@ def image(
     grid,
     mask=None,
     positions=None,
+    include=plotters.Include(),
     array_plotter=array_plotters.ArrayPlotter(),
 ):
     """Plot the image of a light profile, on a grid of (y,x) coordinates.

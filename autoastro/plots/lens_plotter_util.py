@@ -144,7 +144,7 @@ def set_includes(func):
 
 def label_yunits_from_plotter(plotter, plot_in_kpc):
 
-    if plotter.label_yunits is None:
+    if plotter.yunits is None:
         if plot_in_kpc:
             return "kpc"
         else:
@@ -152,12 +152,12 @@ def label_yunits_from_plotter(plotter, plot_in_kpc):
 
     else:
 
-        return plotter.label_yunits
+        return plotter.yunits
 
 
 def label_xunits_from_plotter(plotter, plot_in_kpc):
 
-    if plotter.label_xunits is None:
+    if plotter.xunits is None:
         if plot_in_kpc:
             return "kpc"
         else:
@@ -165,7 +165,7 @@ def label_xunits_from_plotter(plotter, plot_in_kpc):
 
     else:
 
-        return plotter.label_xunits
+        return plotter.xunits
 
 
 def kpc_per_arcsec_of_object_from_dictionary(dictionary):
@@ -235,7 +235,7 @@ def set_labels_and_unit_conversion(func):
             plotter=plotter, func=func
         )
 
-        kwargs[plotter_key] = plotter.plotter_with_new_labels_and_filename(
+        kwargs[plotter_key] = plotter.plotter_with_new_labels(
             label_title=label_title,
             label_yunits=label_yunits,
             label_xunits=label_xunits,
