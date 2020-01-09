@@ -254,7 +254,7 @@ def profile_image_subplot(
             array_plotter=array_plotter,
         )
 
-    array_plotter.output_subplot_array()
+    array_plotter.output.to_figure(structure=None, is_sub_plotter=False)
     plt.close()
 
 
@@ -291,7 +291,7 @@ def convergence_subplot(
             array_plotter=array_plotter,
         )
 
-    array_plotter.output_subplot_array()
+    array_plotter.output.to_figure(structure=None, is_sub_plotter=False)
     plt.close()
 
 
@@ -327,7 +327,7 @@ def potential_subplot(
             array_plotter=array_plotter,
         )
 
-    array_plotter.output_subplot_array()
+    array_plotter.output.to_figure(structure=None, is_sub_plotter=False)
     plt.close()
 
 
@@ -363,7 +363,7 @@ def deflections_y_subplot(
             array_plotter=array_plotter,
         )
 
-    array_plotter.output_subplot_array()
+    array_plotter.output.to_figure(structure=None, is_sub_plotter=False)
     plt.close()
 
 
@@ -399,5 +399,5 @@ def deflections_x_subplot(
             array_plotter=array_plotter,
         )
 
-    array_plotter.output_subplot_array()
+    array_plotter.output.to_figure(structure=None, is_sub_plotter=False)
     plt.close()
