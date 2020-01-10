@@ -87,7 +87,7 @@ def convergence(
         array=convergence,
         mask=mask,
         points=positions,
-        lines=include.critical_curves_and_caustics_from_obj(obj=mass_profile),
+        lines=include.critical_curves_from_obj(obj=mass_profile),
         centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
     )
@@ -119,7 +119,7 @@ def potential(
         array=potential,
         mask=mask,
         points=positions,
-        lines=include.critical_curves_and_caustics_from_obj(obj=mass_profile),
+        lines=include.critical_curves_from_obj(obj=mass_profile),
         centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
     )
@@ -155,7 +155,7 @@ def deflections_y(
         array=deflections_y,
         mask=mask,
         points=positions,
-        lines=include.critical_curves_and_caustics_from_obj(obj=mass_profile),
+        lines=include.critical_curves_from_obj(obj=mass_profile),
         centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
     )
@@ -190,7 +190,7 @@ def deflections_x(
         array=deflections_x,
         mask=mask,
         points=positions,
-        lines=include.critical_curves_and_caustics_from_obj(obj=mass_profile),
+        lines=include.critical_curves_from_obj(obj=mass_profile),
         centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
     )
@@ -222,7 +222,7 @@ def magnification(
         array=magnification,
         mask=mask,
         points=positions,
-        lines=include.critical_curves_and_caustics_from_obj(obj=mass_profile),
+        lines=include.critical_curves_from_obj(obj=mass_profile),
         centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
     )

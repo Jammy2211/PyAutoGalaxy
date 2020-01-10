@@ -76,34 +76,36 @@ class Include(plotters.Include):
         else:
             return None
 
-    def critical_curves_and_caustics_from_obj(self, obj):
+    def critical_curves_from_obj(self, obj):
+
+        if not self.critical_curves:
+            return None
+
+        if isinstance(obj, lensing.LensingObject) and obj.has_mass_profile:
+            try:
+                return obj.critical_curves
+            except ValueError:
+                print(
+                    "Critical curve could not be calculated due to an unphysical mass model"
+                )
+                return None
+        else:
+            return None
+
+    def caustics_from_obj(self, obj):
+
+        if not self.caustics:
+            return None
 
         if isinstance(obj, lensing.LensingObject) and obj.has_mass_profile:
 
-            if self.critical_curves:
-                try:
-                    critical_curves = obj.critical_curves
-                except ValueError:
-                    print(
-                        "Critical curve could not be calculated due to an unphysical mass model"
-                    )
-                    critical_curves = None
-            else:
-                critical_curves = []
-
-            if self.caustics:
-                try:
-                    caustics = obj.caustics
-                except ValueError:
-                    print(
-                        "Caustics could not be calculated due to an unphysical mass model"
-                    )
-                    caustics = None
-            else:
-                caustics = []
-
-            return [critical_curves, caustics]
-
+            try:
+                return obj.caustics
+            except ValueError:
+                print(
+                    "Caustics could not be calculated due to an unphysical mass model"
+                )
+                return None
         else:
 
             return None

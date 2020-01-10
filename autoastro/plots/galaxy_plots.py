@@ -31,7 +31,7 @@ def profile_image(
     """
     image = galaxy.profile_image_from_grid(grid=grid)
 
-    array_plotter.plot_array(array=image, mask=mask, points=positions, lines=include.critical_curves_and_caustics_from_obj(obj=galaxy), include_origin=include.origin)
+    array_plotter.plot_array(array=image, mask=mask, points=positions, lines=include.critical_curves_from_obj(obj=galaxy), include_origin=include.origin)
 
 
 @plotters.set_labels
@@ -56,7 +56,7 @@ def convergence(
     """
     convergence = galaxy.convergence_from_grid(grid=grid)
     array_plotter.plot_array(
-        array=convergence, mask=mask, points=positions, lines=include.critical_curves_and_caustics_from_obj(obj=galaxy), include_origin=include.origin
+        array=convergence, mask=mask, points=positions, lines=include.critical_curves_from_obj(obj=galaxy), include_origin=include.origin
     )
 
 
@@ -82,7 +82,7 @@ def potential(
      """
     potential = galaxy.potential_from_grid(grid=grid)
 
-    array_plotter.plot_array(array=potential, mask=mask, points=positions, lines=include.critical_curves_and_caustics_from_obj(obj=galaxy), include_origin=include.origin)
+    array_plotter.plot_array(array=potential, mask=mask, points=positions, lines=include.critical_curves_from_obj(obj=galaxy), include_origin=include.origin)
 
 
 @plotters.set_labels
@@ -111,7 +111,7 @@ def deflections_y(
     )
 
     array_plotter.plot_array(
-        array=deflections_y, mask=mask, points=positions, lines=include.critical_curves_and_caustics_from_obj(obj=galaxy), include_origin=include.origin
+        array=deflections_y, mask=mask, points=positions, lines=include.critical_curves_from_obj(obj=galaxy), include_origin=include.origin
     )
 
 
@@ -140,7 +140,7 @@ def deflections_x(
         sub_array_1d=deflections[:, 1]
     )
     array_plotter.plot_array(
-        array=deflections_x, mask=mask, points=positions, lines=include.critical_curves_and_caustics_from_obj(obj=galaxy), include_origin=include.origin
+        array=deflections_x, mask=mask, points=positions, lines=include.critical_curves_from_obj(obj=galaxy), include_origin=include.origin
     )
 
 
@@ -167,7 +167,7 @@ def magnification(
     magnification = galaxy.magnification_from_grid(grid=grid)
 
     array_plotter.plot_array(
-        array=magnification, mask=mask, points=positions, lines=include.critical_curves_and_caustics_from_obj(obj=galaxy), include_origin=include.origin
+        array=magnification, mask=mask, points=positions, lines=include.critical_curves_from_obj(obj=galaxy), include_origin=include.origin
     )
 
 
