@@ -1,16 +1,15 @@
 from autoarray.plotters import plotters, array_plotters, line_plotters
+from autoastro.plots import lensing_plotters
 from autoarray.util import plotter_util
-from autoastro.plots import lens_plotter_util
 
 
-@lens_plotter_util.set_includes
-@lens_plotter_util.set_labels_and_unit_conversion
+@plotters.set_labels
 def image(
     light_profile,
     grid,
     mask=None,
     positions=None,
-    include=plotters.Include(),
+    include=lensing_plotters.Include(),
     array_plotter=array_plotters.ArrayPlotter(),
 ):
     """Plot the image of a light profile, on a grid of (y,x) coordinates.
@@ -28,6 +27,7 @@ def image(
         array=light_profile.profile_image_from_grid(grid=grid),
         mask=mask,
         points=positions,
+        include_origin=include.origin,
     )
 
 
@@ -60,15 +60,13 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
     )
 
 
-@lens_plotter_util.set_includes
-@lens_plotter_util.set_labels_and_unit_conversion
+@plotters.set_labels
 def convergence(
     mass_profile,
     grid,
     mask=None,
     positions=None,
-    include_critical_curves=False,
-    include_caustics=False,
+    include=lensing_plotters.Include(),
     array_plotter=array_plotters.ArrayPlotter(),
 ):
     """Plot the convergence of a mass profile, on a grid of (y,x) coordinates.
@@ -85,26 +83,23 @@ def convergence(
 
     convergence = mass_profile.convergence_from_grid(grid=grid)
 
-    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
-        obj=mass_profile,
-        include_critical_curves=include_critical_curves,
-        include_caustics=include_caustics,
-    )
-
     array_plotter.plot_array(
-        array=convergence, mask=mask, points=positions, lines=lines
+        array=convergence,
+        mask=mask,
+        points=positions,
+        lines=include.critical_curves_and_caustics_from_obj(obj=mass_profile),
+        centres=include.mass_profile_centres_from_obj(obj=mass_profile),
+        include_origin=include.origin,
     )
 
 
-@lens_plotter_util.set_includes
-@lens_plotter_util.set_labels_and_unit_conversion
+@plotters.set_labels
 def potential(
     mass_profile,
     grid,
     mask=None,
     positions=None,
-    include_critical_curves=False,
-    include_caustics=False,
+    include=lensing_plotters.Include(),
     array_plotter=array_plotters.ArrayPlotter(),
 ):
     """Plot the potential of a mass profile, on a grid of (y,x) coordinates.
@@ -120,24 +115,23 @@ def potential(
     """
     potential = mass_profile.potential_from_grid(grid=grid)
 
-    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
-        obj=mass_profile,
-        include_critical_curves=include_critical_curves,
-        include_caustics=include_caustics,
+    array_plotter.plot_array(
+        array=potential,
+        mask=mask,
+        points=positions,
+        lines=include.critical_curves_and_caustics_from_obj(obj=mass_profile),
+        centres=include.mass_profile_centres_from_obj(obj=mass_profile),
+        include_origin=include.origin,
     )
 
-    array_plotter.plot_array(array=potential, mask=mask, points=positions, lines=lines)
 
-
-@lens_plotter_util.set_includes
-@lens_plotter_util.set_labels_and_unit_conversion
+@plotters.set_labels
 def deflections_y(
     mass_profile,
     grid,
     mask=None,
     positions=None,
-    include_critical_curves=False,
-    include_caustics=False,
+    include=lensing_plotters.Include(),
     array_plotter=array_plotters.ArrayPlotter(),
 ):
     """Plot the y component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
@@ -157,26 +151,23 @@ def deflections_y(
         sub_array_1d=deflections[:, 0]
     )
 
-    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
-        obj=mass_profile,
-        include_critical_curves=include_critical_curves,
-        include_caustics=include_caustics,
-    )
-
     array_plotter.plot_array(
-        array=deflections_y, mask=mask, points=positions, lines=lines
+        array=deflections_y,
+        mask=mask,
+        points=positions,
+        lines=include.critical_curves_and_caustics_from_obj(obj=mass_profile),
+        centres=include.mass_profile_centres_from_obj(obj=mass_profile),
+        include_origin=include.origin,
     )
 
 
-@lens_plotter_util.set_includes
-@lens_plotter_util.set_labels_and_unit_conversion
+@plotters.set_labels
 def deflections_x(
     mass_profile,
     grid,
     mask=None,
     positions=None,
-    include_critical_curves=False,
-    include_caustics=False,
+    include=lensing_plotters.Include(),
     array_plotter=array_plotters.ArrayPlotter(),
 ):
     """Plot the x component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
@@ -195,26 +186,23 @@ def deflections_x(
         sub_array_1d=deflections[:, 1]
     )
 
-    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
-        obj=mass_profile,
-        include_critical_curves=include_critical_curves,
-        include_caustics=include_caustics,
-    )
-
     array_plotter.plot_array(
-        array=deflections_x, mask=mask, points=positions, lines=lines
+        array=deflections_x,
+        mask=mask,
+        points=positions,
+        lines=include.critical_curves_and_caustics_from_obj(obj=mass_profile),
+        centres=include.mass_profile_centres_from_obj(obj=mass_profile),
+        include_origin=include.origin,
     )
 
 
-@lens_plotter_util.set_includes
-@lens_plotter_util.set_labels_and_unit_conversion
+@plotters.set_labels
 def magnification(
     mass_profile,
     grid,
     mask=None,
     positions=None,
-    include_critical_curves=False,
-    include_caustics=False,
+    include=lensing_plotters.Include(),
     array_plotter=array_plotters.ArrayPlotter(),
 ):
     """Plot the magnification of a mass profile, on a grid of (y,x) coordinates.
@@ -230,12 +218,11 @@ def magnification(
     """
     magnification = mass_profile.magnification_from_grid(grid=grid)
 
-    lines = lens_plotter_util.critical_curves_and_caustics_from_lensing_object(
-        obj=mass_profile,
-        include_critical_curves=include_critical_curves,
-        include_caustics=include_caustics,
-    )
-
     array_plotter.plot_array(
-        array=magnification, mask=mask, points=positions, lines=lines
+        array=magnification,
+        mask=mask,
+        points=positions,
+        lines=include.critical_curves_and_caustics_from_obj(obj=mass_profile),
+        centres=include.mass_profile_centres_from_obj(obj=mass_profile),
+        include_origin=include.origin,
     )

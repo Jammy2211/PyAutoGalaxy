@@ -39,8 +39,8 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         fit=gal_fit_7x7_image,
         positions=positions_7x7,
         array_plotter=aa.plotter.array(
-            output=aa.plotter.Output(galaxy_fit_plotter_path, format="png"
-        ),
+            output=aa.plotter.Output(path=galaxy_fit_plotter_path, format="png"
+        )),
     )
 
     assert galaxy_fit_plotter_path + "galaxy_fit.png" in plot_patch.paths
@@ -49,8 +49,8 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         fit=gal_fit_7x7_convergence,
         positions=positions_7x7,
         array_plotter=aa.plotter.array(
-            output=aa.plotter.Output(galaxy_fit_plotter_path, format="png"
-        ),
+            output=aa.plotter.Output(path=galaxy_fit_plotter_path, format="png"
+        )),
     )
 
     assert galaxy_fit_plotter_path + "galaxy_fit.png" in plot_patch.paths
@@ -59,8 +59,8 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         fit=gal_fit_7x7_potential,
         positions=positions_7x7,
         array_plotter=aa.plotter.array(
-            output=aa.plotter.Output(galaxy_fit_plotter_path, format="png"
-        ),
+            output=aa.plotter.Output(path=galaxy_fit_plotter_path, format="png"
+        )),
     )
 
     assert galaxy_fit_plotter_path + "galaxy_fit.png" in plot_patch.paths
@@ -69,8 +69,8 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         fit=gal_fit_7x7_deflections_y,
         positions=positions_7x7,
         array_plotter=aa.plotter.array(
-            output=aa.plotter.Output(galaxy_fit_plotter_path, format="png"
-        ),
+            output=aa.plotter.Output(path=galaxy_fit_plotter_path, format="png"
+        )),
     )
 
     assert galaxy_fit_plotter_path + "galaxy_fit.png" in plot_patch.paths
@@ -79,8 +79,8 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         fit=gal_fit_7x7_deflections_x,
         positions=positions_7x7,
         array_plotter=aa.plotter.array(
-            output=aa.plotter.Output(galaxy_fit_plotter_path, format="png"
-        ),
+            output=aa.plotter.Output(path=galaxy_fit_plotter_path, format="png"
+        )),
     )
 
     assert galaxy_fit_plotter_path + "galaxy_fit.png" in plot_patch.paths
