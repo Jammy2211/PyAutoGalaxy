@@ -31,9 +31,9 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
-        array_plotter=aa.plotter.array(
-            output=aa.plotter.Output(profile_plotter_path, format="png"
-        )),
+        plotter=aa.plotter.Plotter(
+            output=aa.plotter.Output(profile_plotter_path, format="png")
+        ),
     )
 
     assert profile_plotter_path + "image.png" in plot_patch.paths
@@ -43,9 +43,9 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
-        array_plotter=aa.plotter.array(
-            output=aa.plotter.Output(profile_plotter_path, format="png"
-        )),
+        plotter=aa.plotter.Plotter(
+            output=aa.plotter.Output(profile_plotter_path, format="png")
+        ),
     )
 
     assert profile_plotter_path + "convergence.png" in plot_patch.paths
@@ -55,9 +55,9 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
-        array_plotter=aa.plotter.array(
-            output=aa.plotter.Output(profile_plotter_path, format="png"
-        )),
+        plotter=aa.plotter.Plotter(
+            output=aa.plotter.Output(profile_plotter_path, format="png")
+        ),
     )
 
     assert profile_plotter_path + "potential.png" in plot_patch.paths
@@ -67,9 +67,9 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
-        array_plotter=aa.plotter.array(
-            output=aa.plotter.Output(profile_plotter_path, format="png"
-        )),
+        plotter=aa.plotter.Plotter(
+            output=aa.plotter.Output(profile_plotter_path, format="png")
+        ),
     )
 
     assert profile_plotter_path + "deflections_y.png" in plot_patch.paths
@@ -79,9 +79,9 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
-        array_plotter=aa.plotter.array(
-            output=aa.plotter.Output(profile_plotter_path, format="png"
-        )),
+        plotter=aa.plotter.Plotter(
+            output=aa.plotter.Output(profile_plotter_path, format="png")
+        ),
     )
 
     assert profile_plotter_path + "deflections_x.png" in plot_patch.paths
@@ -91,9 +91,9 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
-        array_plotter=aa.plotter.array(
-            output=aa.plotter.Output(profile_plotter_path, format="png"
-        )),
+        plotter=aa.plotter.Plotter(
+            output=aa.plotter.Output(profile_plotter_path, format="png")
+        ),
     )
 
     assert profile_plotter_path + "magnification.png" in plot_patch.paths

@@ -1560,6 +1560,20 @@ class TestHyperGalaxy(object):
                 == np.array([(0.5 / 1.5) / (1.5 / 2.5), (1.0 / 2.0) / (1.5 / 2.5), 1.0])
             ).all()
 
+        def test__galaxy_contribution_map_property(self):
+
+            hyper_image = np.ones((3,))
+
+            hyp = aast.HyperGalaxy(contribution_factor=0.0)
+
+            galaxy = aast.Galaxy(redshift=0.5, hyper_galaxy=hyp, hyper_galaxy_image=hyper_image, hyper_model_image=hyper_image)
+
+            contribution_map = hyp.contribution_map_from_hyper_images(
+                hyper_model_image=hyper_image, hyper_galaxy_image=hyper_image
+            )
+
+            assert (contribution_map == galaxy.contribution_map).all()
+
     class TestHyperNoiseMap(object):
         def test__contribution_all_1s__noise_factor_2__noise_adds_double(self):
             noise_map = np.array([1.0, 2.0, 3.0])

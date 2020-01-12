@@ -1,12 +1,5 @@
 import autoarray as aa
-import matplotlib
-
-backend = aa.conf.get_matplotlib_backend()
-matplotlib.use(backend)
-from matplotlib import pyplot as plt
-
-import autoarray as aa
-from autoarray.plotters import plotters, array_plotters
+from autoarray.plotters import plotters
 from autoastro.plots import lensing_plotters
 from autoastro import exc
 
@@ -16,54 +9,44 @@ def subplot(
     fit,
     positions=None,
     include=lensing_plotters.Include(),
-    array_plotter=array_plotters.ArrayPlotter(),
+    sub_plotter=plotters.SubPlotter(),
 ):
 
-    array_plotter = array_plotter.plotter_as_sub_plotter()
-    array_plotter = array_plotter.plotter_with_new_output_filename(
+    number_subplots = 4
+
+    sub_plotter = sub_plotter.plotter_with_new_output_filename(
         output_filename="galaxy_fit"
     )
 
-    rows, columns, figsize_tool = array_plotter.get_subplot_rows_columns_figsize(
-        number_subplots=4
-    )
+    sub_plotter.setup_subplot_figure(number_subplots=number_subplots)
 
-    if array_plotter.figsize is None:
-        figsize = figsize_tool
-    else:
-        figsize = array_plotter.figsize
-
-    plt.figure(figsize=figsize)
-    plt.subplot(rows, columns, 1)
+    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
 
     galaxy_data_array(
-        galaxy_data=fit.galaxy_data, positions=positions, array_plotter=array_plotter
+        galaxy_data=fit.galaxy_data, positions=positions, plotter=sub_plotter
     )
 
-    plt.subplot(rows, columns, 2)
+    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index= 2)
 
     aa.plot.fit_imaging.model_image(
-        fit=fit,
-        include=include,
-        points=positions,
-        array_plotter=array_plotter,
+        fit=fit, include=include, points=positions, plotter=sub_plotter
     )
 
-    plt.subplot(rows, columns, 3)
+    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index= 3)
 
     aa.plot.fit_imaging.residual_map(
-        fit=fit, include=include, array_plotter=array_plotter
+        fit=fit, include=include, plotter=sub_plotter
     )
 
-    plt.subplot(rows, columns, 4)
+    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index= 4)
 
     aa.plot.fit_imaging.chi_squared_map(
-        fit=fit, include=include, array_plotter=array_plotter
+        fit=fit, include=include, plotter=sub_plotter
     )
 
-    array_plotter.output.to_figure(structure=None, is_sub_plotter=False)
+    sub_plotter.output.subplot_to_figure()
 
-    plt.close()
+    sub_plotter.close_figure()
 
 
 def individuals(
@@ -75,7 +58,7 @@ def individuals(
     plot_residual_map=False,
     plot_chi_squared_map=False,
     include=lensing_plotters.Include(),
-    array_plotter=array_plotters.ArrayPlotter(),
+    plotter=plotters.Plotter(),
 ):
 
     if plot_image:
@@ -85,31 +68,39 @@ def individuals(
             mask=fit.mask,
             positions=positions,
             include=include,
-            array_plotter=array_plotter,
+            plotter=plotter,
         )
 
     if plot_noise_map:
 
         aa.plot.fit_imaging.noise_map(
-            fit=fit, mask=fit.mask, points=positions, include=include, array_plotter=array_plotter
+            fit=fit,
+            mask=fit.mask,
+            points=positions,
+            include=include,
+            plotter=plotter,
         )
 
     if plot_model_image:
 
         aa.plot.fit_imaging.model_image(
-            fit=fit, mask=fit.mask, points=positions, include=include, array_plotter=array_plotter
+            fit=fit,
+            mask=fit.mask,
+            points=positions,
+            include=include,
+            plotter=plotter,
         )
 
     if plot_residual_map:
 
         aa.plot.fit_imaging.residual_map(
-            fit=fit, mask=fit.mask, include=include, array_plotter=array_plotter
+            fit=fit, mask=fit.mask, include=include, plotter=plotter
         )
 
     if plot_chi_squared_map:
 
         aa.plot.fit_imaging.chi_squared_map(
-            fit=fit, mask=fit.mask, include=include, array_plotter=array_plotter
+            fit=fit, mask=fit.mask, include=include, plotter=plotter
         )
 
 
@@ -118,7 +109,7 @@ def galaxy_data_array(
     galaxy_data,
     positions=None,
     include=lensing_plotters.Include(),
-    array_plotter=array_plotters.ArrayPlotter(),
+    plotter=plotters.Plotter(),
 ):
 
     if galaxy_data.use_image:
@@ -136,6 +127,9 @@ def galaxy_data_array(
             "The galaxy data_type arrays does not have a True use_profile_type"
         )
 
-    array_plotter.plot_array(
-        array=galaxy_data.image, mask=galaxy_data.mask, points=positions, include_origin=include.origin
+    plotter.array.plot(
+        array=galaxy_data.image,
+        mask=galaxy_data.mask,
+        points=positions,
+        include_origin=include.origin,
     )

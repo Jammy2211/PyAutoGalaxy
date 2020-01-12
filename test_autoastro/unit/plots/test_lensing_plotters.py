@@ -2,8 +2,8 @@ import pytest
 
 from autoastro.plots import lensing_plotters
 
-class TestInclude:
 
+class TestInclude:
     def test__critical_curves_from_object(self, lp_0, mp_0):
 
         include = lensing_plotters.Include(critical_curves=False)
@@ -24,7 +24,7 @@ class TestInclude:
 
         assert critical_curves[0] == pytest.approx(mp_0.critical_curves[0], 1.0e-4)
         assert critical_curves[1] == pytest.approx(mp_0.critical_curves[1], 1.0e-4)
-        
+
     def test__caustics_from_object(self, lp_0, mp_0):
 
         include = lensing_plotters.Include(caustics=False)

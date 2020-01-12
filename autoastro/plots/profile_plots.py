@@ -1,4 +1,4 @@
-from autoarray.plotters import plotters, array_plotters, line_plotters
+from autoarray.plotters import plotters
 from autoastro.plots import lensing_plotters
 from autoarray.util import plotter_util
 
@@ -10,11 +10,11 @@ def image(
     mask=None,
     positions=None,
     include=lensing_plotters.Include(),
-    array_plotter=array_plotters.ArrayPlotter(),
+    plotter=plotters.Plotter(),
 ):
     """Plot the image of a light profile, on a grid of (y,x) coordinates.
 
-    Set *autoastro.hyper_galaxies.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -23,7 +23,7 @@ def image(
     grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-    array_plotter.plot_array(
+    plotter.array.plot(
         array=light_profile.profile_image_from_grid(grid=grid),
         mask=mask,
         points=positions,
@@ -37,7 +37,7 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
     maximum_radius=10.0,
     radii_bins=10,
     plot_axis_type="semilogy",
-    line_plotter=line_plotters.LinePlotter(),
+        plotter=plotters.Plotter(),
 ):
 
     radii = plotter_util.quantity_radii_from_minimum_and_maximum_radii_and_radii_points(
@@ -55,7 +55,7 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
         )
     )
 
-    line_plotter.plot_line(
+    plotter.array.plot(
         quantity=luminosities, radii=radii, plot_axis_type=plot_axis_type
     )
 
@@ -67,11 +67,11 @@ def convergence(
     mask=None,
     positions=None,
     include=lensing_plotters.Include(),
-    array_plotter=array_plotters.ArrayPlotter(),
+    plotter=plotters.Plotter(),
 ):
     """Plot the convergence of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autoastro.hyper_galaxies.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -80,11 +80,8 @@ def convergence(
     grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-
-    convergence = mass_profile.convergence_from_grid(grid=grid)
-
-    array_plotter.plot_array(
-        array=convergence,
+    plotter.array.plot(
+        array=mass_profile.convergence_from_grid(grid=grid),
         mask=mask,
         points=positions,
         lines=include.critical_curves_from_obj(obj=mass_profile),
@@ -100,11 +97,11 @@ def potential(
     mask=None,
     positions=None,
     include=lensing_plotters.Include(),
-    array_plotter=array_plotters.ArrayPlotter(),
+    plotter=plotters.Plotter(),
 ):
     """Plot the potential of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autoastro.hyper_galaxies.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -113,10 +110,8 @@ def potential(
     grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-    potential = mass_profile.potential_from_grid(grid=grid)
-
-    array_plotter.plot_array(
-        array=potential,
+    plotter.array.plot(
+        array=mass_profile.potential_from_grid(grid=grid),
         mask=mask,
         points=positions,
         lines=include.critical_curves_from_obj(obj=mass_profile),
@@ -132,11 +127,11 @@ def deflections_y(
     mask=None,
     positions=None,
     include=lensing_plotters.Include(),
-    array_plotter=array_plotters.ArrayPlotter(),
+    plotter=plotters.Plotter(),
 ):
     """Plot the y component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autoastro.hyper_galaxies.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -151,7 +146,7 @@ def deflections_y(
         sub_array_1d=deflections[:, 0]
     )
 
-    array_plotter.plot_array(
+    plotter.array.plot(
         array=deflections_y,
         mask=mask,
         points=positions,
@@ -168,11 +163,11 @@ def deflections_x(
     mask=None,
     positions=None,
     include=lensing_plotters.Include(),
-    array_plotter=array_plotters.ArrayPlotter(),
+    plotter=plotters.Plotter(),
 ):
     """Plot the x component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
 
-     Set *autoastro.hyper_galaxies.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
+     Set *autoastro.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
 
      Parameters
      -----------
@@ -186,7 +181,7 @@ def deflections_x(
         sub_array_1d=deflections[:, 1]
     )
 
-    array_plotter.plot_array(
+    plotter.array.plot(
         array=deflections_x,
         mask=mask,
         points=positions,
@@ -203,11 +198,11 @@ def magnification(
     mask=None,
     positions=None,
     include=lensing_plotters.Include(),
-    array_plotter=array_plotters.ArrayPlotter(),
+    plotter=plotters.Plotter(),
 ):
     """Plot the magnification of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autoastro.hyper_galaxies.arrays.plotters.array_plotters* for a description of all innput parameters not described below.
+    Set *autoastro.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -216,10 +211,8 @@ def magnification(
     grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-    magnification = mass_profile.magnification_from_grid(grid=grid)
-
-    array_plotter.plot_array(
-        array=magnification,
+    plotter.array.plot(
+        array=mass_profile.magnification_from_grid(grid=grid),
         mask=mask,
         points=positions,
         lines=include.critical_curves_from_obj(obj=mass_profile),
