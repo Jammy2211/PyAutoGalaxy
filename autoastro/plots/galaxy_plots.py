@@ -1,4 +1,4 @@
-from autoarray.plotters import plotters, mat_objs
+from autoarray.plotters import plotters
 from autoastro.plots import lensing_plotters, profile_plots
 
 

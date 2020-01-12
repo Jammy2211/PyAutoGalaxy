@@ -1,11 +1,11 @@
 import autoarray as aa
-from autoarray.plotters import plotters, mat_objs
+from autoarray.plotters import plotters
 from autoastro.plots import lensing_plotters
 from autoastro import exc
 
 
-@plotters.set_labels
-def subplot(
+@plotters.set_subplot_title
+def subplot_fit_galaxy(
     fit,
     positions=None,
     include=lensing_plotters.Include(),
@@ -13,11 +13,6 @@ def subplot(
 ):
 
     number_subplots = 4
-
-    sub_plotter = sub_plotter.plotter_with_new_output(
-        output=mat_objs.Output(filename="fit_galaxy"),
-    )
-
 
     sub_plotter.setup_subplot_figure(number_subplots=number_subplots)
 
