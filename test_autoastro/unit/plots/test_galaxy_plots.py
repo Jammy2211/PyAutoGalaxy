@@ -29,6 +29,7 @@ def test__individual_images_are_output(
     sub_grid_7x7,
     mask_7x7,
     positions_7x7,
+    include_all,
     galaxy_plotter_path,
     plot_patch,
 ):
@@ -38,6 +39,7 @@ def test__individual_images_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         plotter=aa.plotter.Plotter(
             output=aa.plotter.Output(galaxy_plotter_path, format="png")
         ),
@@ -50,6 +52,7 @@ def test__individual_images_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         plotter=aa.plotter.Plotter(
             output=aa.plotter.Output(galaxy_plotter_path, format="png")
         ),
@@ -62,6 +65,7 @@ def test__individual_images_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         plotter=aa.plotter.Plotter(
             output=aa.plotter.Output(galaxy_plotter_path, format="png")
         ),
@@ -74,6 +78,7 @@ def test__individual_images_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         plotter=aa.plotter.Plotter(
             output=aa.plotter.Output(galaxy_plotter_path, format="png")
         ),
@@ -86,6 +91,7 @@ def test__individual_images_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         plotter=aa.plotter.Plotter(
             output=aa.plotter.Output(galaxy_plotter_path, format="png")
         ),
@@ -98,6 +104,7 @@ def test__individual_images_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         plotter=aa.plotter.Plotter(
             output=aa.plotter.Output(galaxy_plotter_path, format="png")
         ),
@@ -113,6 +120,7 @@ def test__individual_images_are_output(
         galaxy=gal_x1_lp_x1_mp,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         plotter=aa.plotter.Plotter(
             output=aa.plotter.Output(galaxy_plotter_path, format="png")
         ),
@@ -125,6 +133,7 @@ def test__individual_galaxy_quantities__all_are_output(
     sub_grid_7x7,
     mask_7x7,
     positions_7x7,
+    include_all,
     galaxy_plotter_path,
     plot_patch,
 ):
@@ -133,6 +142,7 @@ def test__individual_galaxy_quantities__all_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         sub_plotter=aa.plotter.SubPlotter(
             output=aa.plotter.Output(galaxy_plotter_path, format="png")
         ),
@@ -145,6 +155,7 @@ def test__individual_galaxy_quantities__all_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         sub_plotter=aa.plotter.SubPlotter(
             output=aa.plotter.Output(galaxy_plotter_path, format="png")
         ),
@@ -157,6 +168,7 @@ def test__individual_galaxy_quantities__all_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         sub_plotter=aa.plotter.SubPlotter(
             output=aa.plotter.Output(galaxy_plotter_path, format="png")
         ),
@@ -169,6 +181,7 @@ def test__individual_galaxy_quantities__all_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         sub_plotter=aa.plotter.SubPlotter(
             output=aa.plotter.Output(galaxy_plotter_path, format="png")
         ),
@@ -181,6 +194,7 @@ def test__individual_galaxy_quantities__all_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         sub_plotter=aa.plotter.SubPlotter(
             output=aa.plotter.Output(galaxy_plotter_path, format="png")
         ),

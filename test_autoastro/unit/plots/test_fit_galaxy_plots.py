@@ -32,12 +32,14 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
     gal_fit_7x7_deflections_y,
     gal_fit_7x7_deflections_x,
     positions_7x7,
+    include_all,
     plot_patch,
     galaxy_fit_plotter_path,
 ):
     aast.plot.fit_galaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_image,
         positions=positions_7x7,
+        include=include_all,
         sub_plotter=aa.plotter.SubPlotter(
             output=aa.plotter.Output(path=galaxy_fit_plotter_path, format="png")
         ),
@@ -48,6 +50,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
     aast.plot.fit_galaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_convergence,
         positions=positions_7x7,
+        include=include_all,
         sub_plotter=aa.plotter.SubPlotter(
             output=aa.plotter.Output(path=galaxy_fit_plotter_path, format="png")
         ),
@@ -58,6 +61,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
     aast.plot.fit_galaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_potential,
         positions=positions_7x7,
+        include=include_all,
         sub_plotter=aa.plotter.SubPlotter(
             output=aa.plotter.Output(path=galaxy_fit_plotter_path, format="png")
         ),
@@ -68,6 +72,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
     aast.plot.fit_galaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_deflections_y,
         positions=positions_7x7,
+        include=include_all,
         sub_plotter=aa.plotter.SubPlotter(
             output=aa.plotter.Output(path=galaxy_fit_plotter_path, format="png")
         ),
@@ -78,6 +83,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
     aast.plot.fit_galaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_deflections_x,
         positions=positions_7x7,
+        include=include_all,
         sub_plotter=aa.plotter.SubPlotter(
             output=aa.plotter.Output(path=galaxy_fit_plotter_path, format="png")
         ),

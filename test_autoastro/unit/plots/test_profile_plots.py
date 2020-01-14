@@ -23,7 +23,7 @@ def set_config_path():
 
 
 def test__all_quantities_are_output(
-    lp_0, mp_0, sub_grid_7x7, mask_7x7, positions_7x7, profile_plotter_path, plot_patch
+    lp_0, mp_0, sub_grid_7x7, mask_7x7, positions_7x7, include_all, profile_plotter_path, plot_patch
 ):
 
     aast.plot.profile.image(
@@ -31,6 +31,7 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         plotter=aa.plotter.Plotter(
             output=aa.plotter.Output(profile_plotter_path, format="png")
         ),
@@ -43,6 +44,7 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         plotter=aa.plotter.Plotter(
             output=aa.plotter.Output(profile_plotter_path, format="png")
         ),
@@ -55,6 +57,7 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         plotter=aa.plotter.Plotter(
             output=aa.plotter.Output(profile_plotter_path, format="png")
         ),
@@ -67,6 +70,7 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         plotter=aa.plotter.Plotter(
             output=aa.plotter.Output(profile_plotter_path, format="png")
         ),
@@ -79,6 +83,7 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         plotter=aa.plotter.Plotter(
             output=aa.plotter.Output(profile_plotter_path, format="png")
         ),
@@ -91,6 +96,7 @@ def test__all_quantities_are_output(
         grid=sub_grid_7x7,
         mask=mask_7x7,
         positions=positions_7x7,
+        include=include_all,
         plotter=aa.plotter.Plotter(
             output=aa.plotter.Output(profile_plotter_path, format="png")
         ),

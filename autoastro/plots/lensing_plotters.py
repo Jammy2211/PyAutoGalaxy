@@ -1,6 +1,8 @@
+import autofit as af
 from autoarray.plotters import plotters
 from autoastro import lensing
 
+import copy
 
 
 class Include(plotters.Include):
@@ -20,6 +22,8 @@ class Include(plotters.Include):
         inversion_grid=None,
         inversion_border=None,
         inversion_image_pixelization_grid=None,
+        preloaded_critical_curves=None,
+        preload_caustics=None,
     ):
 
         super(Include, self).__init__(
@@ -43,9 +47,22 @@ class Include(plotters.Include):
         self.critical_curves = self.load_include(
             value=critical_curves, name="critical_curves"
         )
+
         self.caustics = self.load_include(value=caustics, name="caustics")
         self.multiple_images = self.load_include(
             value=multiple_images, name="multiple_images"
+        )
+
+        self.preloaded_critical_curves = preloaded_critical_curves
+        self.preloaded_caustics = preload_caustics
+
+    @staticmethod
+    def load_include(value, name):
+
+        return (
+            af.conf.instance.visualize_general.get(section_name="include", attribute_name=name, attribute_type=bool)
+            if value is None
+            else value
         )
 
     def mass_profile_centres_from_obj(self, obj):
@@ -74,6 +91,9 @@ class Include(plotters.Include):
         if not self.critical_curves:
             return None
 
+        if self.preloaded_caustics is not None:
+            return self.preloaded_critical_curves
+
         if isinstance(obj, lensing.LensingObject) and obj.has_mass_profile:
             try:
                 return obj.critical_curves
@@ -89,6 +109,9 @@ class Include(plotters.Include):
 
         if not self.caustics:
             return None
+
+        if self.preloaded_caustics is not None:
+            return self.preloaded_caustics
 
         if isinstance(obj, lensing.LensingObject) and obj.has_mass_profile:
 
@@ -128,3 +151,11 @@ class Include(plotters.Include):
                     )[-1]
 
         return None
+
+    def new_include_with_preloaded_critical_curves_and_caustics(self, preloaded_critical_curves, preloaded_caustics):
+
+        include = copy.deepcopy(self)
+        include.preloaded_critical_curves = preloaded_critical_curves
+        include.preloaded_caustics = preloaded_caustics
+
+        return include

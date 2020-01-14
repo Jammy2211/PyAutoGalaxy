@@ -4,7 +4,7 @@ from autoastro.plots import lensing_plotters
 from autoastro import exc
 
 
-@plotters.set_subplot_title
+@plotters.set_subplot_filename
 def subplot_fit_galaxy(
     fit,
     positions=None,

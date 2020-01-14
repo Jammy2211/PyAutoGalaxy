@@ -564,52 +564,6 @@ class TestLightProfiles(object):
             assert galaxy.light_profile_centres == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
 
 
-def critical_curve_via_magnification_from_galaxy_and_grid(galaxy, grid):
-    magnification = galaxy.magnification_from_grid(grid=grid)
-
-    inverse_magnification = 1 / magnification
-
-    critical_curves_indices = measure.find_contours(inverse_magnification.in_2d, 0)
-
-    no_critical_curves = len(critical_curves_indices)
-    contours = []
-    critical_curves = []
-
-    for jj in np.arange(no_critical_curves):
-        contours.append(critical_curves_indices[jj])
-        contour_x, contour_y = contours[jj].T
-        pixel_coord = np.stack((contour_x, contour_y), axis=-1)
-
-        critical_curve = grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
-            grid_pixels_1d=pixel_coord, shape_2d=magnification.sub_shape_2d
-        )
-
-        critical_curve = aa.grid_irregular.manual_1d(grid=critical_curve)
-
-        critical_curves.append(critical_curve)
-
-    return critical_curves
-
-
-def caustics_via_magnification_from_galaxy_and_grid(galaxy, grid):
-    caustics = []
-
-    critical_curves = critical_curve_via_magnification_from_galaxy_and_grid(
-        galaxy=galaxy, grid=grid
-    )
-
-    for i in range(len(critical_curves)):
-        critical_curve = critical_curves[i]
-
-        deflections = galaxy.deflections_from_grid(grid=critical_curve)
-
-        caustic = critical_curve - deflections
-
-        caustics.append(caustic)
-
-    return caustics
-
-
 class TestMassProfiles(object):
     class TestConvergence:
         def test__no_mass_profiles__convergence_returned_as_0s_of_shape_grid(
