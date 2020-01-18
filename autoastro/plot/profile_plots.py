@@ -10,7 +10,7 @@ def image(
     mask=None,
     positions=None,
     include=lensing_plotters.Include(),
-    plotter=plotters.Plotter(),
+    plotter=lensing_plotters.Plotter(),
 ):
     """Plot the image of a light profile, on a grid of (y,x) coordinates.
 
@@ -27,6 +27,7 @@ def image(
         array=light_profile.profile_image_from_grid(grid=grid),
         mask=mask,
         positions=positions,
+        light_profile_centres=include.light_profile_centres_from_obj(obj=light_profile),
         include_origin=include.origin,
     )
 
@@ -37,7 +38,7 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
     maximum_radius=10.0,
     radii_bins=10,
     plot_axis_type="semilogy",
-    plotter=plotters.Plotter(),
+    plotter=lensing_plotters.Plotter(),
 ):
 
     radii = plotter_util.quantity_radii_from_minimum_and_maximum_radii_and_radii_points(
@@ -67,7 +68,7 @@ def convergence(
     mask=None,
     positions=None,
     include=lensing_plotters.Include(),
-    plotter=plotters.Plotter(),
+    plotter=lensing_plotters.Plotter(),
 ):
     """Plot the convergence of a mass profile, on a grid of (y,x) coordinates.
 
@@ -84,8 +85,8 @@ def convergence(
         array=mass_profile.convergence_from_grid(grid=grid),
         mask=mask,
         positions=positions,
-        lines=include.critical_curves_from_obj(obj=mass_profile),
-        centres=include.mass_profile_centres_from_obj(obj=mass_profile),
+        critical_curves=include.critical_curves_from_obj(obj=mass_profile),
+        mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
     )
 
@@ -97,7 +98,7 @@ def potential(
     mask=None,
     positions=None,
     include=lensing_plotters.Include(),
-    plotter=plotters.Plotter(),
+    plotter=lensing_plotters.Plotter(),
 ):
     """Plot the potential of a mass profile, on a grid of (y,x) coordinates.
 
@@ -114,8 +115,8 @@ def potential(
         array=mass_profile.potential_from_grid(grid=grid),
         mask=mask,
         positions=positions,
-        lines=include.critical_curves_from_obj(obj=mass_profile),
-        centres=include.mass_profile_centres_from_obj(obj=mass_profile),
+        critical_curves=include.critical_curves_from_obj(obj=mass_profile),
+        mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
     )
 
@@ -127,7 +128,7 @@ def deflections_y(
     mask=None,
     positions=None,
     include=lensing_plotters.Include(),
-    plotter=plotters.Plotter(),
+    plotter=lensing_plotters.Plotter(),
 ):
     """Plot the y component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
 
@@ -150,8 +151,8 @@ def deflections_y(
         array=deflections_y,
         mask=mask,
         positions=positions,
-        lines=include.critical_curves_from_obj(obj=mass_profile),
-        centres=include.mass_profile_centres_from_obj(obj=mass_profile),
+        critical_curves=include.critical_curves_from_obj(obj=mass_profile),
+        mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
     )
 
@@ -163,7 +164,7 @@ def deflections_x(
     mask=None,
     positions=None,
     include=lensing_plotters.Include(),
-    plotter=plotters.Plotter(),
+    plotter=lensing_plotters.Plotter(),
 ):
     """Plot the x component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
 
@@ -185,8 +186,8 @@ def deflections_x(
         array=deflections_x,
         mask=mask,
         positions=positions,
-        lines=include.critical_curves_from_obj(obj=mass_profile),
-        centres=include.mass_profile_centres_from_obj(obj=mass_profile),
+        critical_curves=include.critical_curves_from_obj(obj=mass_profile),
+        mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
     )
 
@@ -198,7 +199,7 @@ def magnification(
     mask=None,
     positions=None,
     include=lensing_plotters.Include(),
-    plotter=plotters.Plotter(),
+    plotter=lensing_plotters.Plotter(),
 ):
     """Plot the magnification of a mass profile, on a grid of (y,x) coordinates.
 
@@ -215,7 +216,7 @@ def magnification(
         array=mass_profile.magnification_from_grid(grid=grid),
         mask=mask,
         positions=positions,
-        lines=include.critical_curves_from_obj(obj=mass_profile),
-        centres=include.mass_profile_centres_from_obj(obj=mass_profile),
+        critical_curves=include.critical_curves_from_obj(obj=mass_profile),
+        mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
     )

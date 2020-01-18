@@ -1,5 +1,5 @@
 import autoarray as aa
-import autoarray.plot as aplt
+import autoastro.plot as aplt
 import autoastro as aast
 import pytest
 import os

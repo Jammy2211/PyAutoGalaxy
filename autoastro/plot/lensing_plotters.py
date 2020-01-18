@@ -92,6 +92,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         mask=None,
         positions=None,
         grid=None,
+        lines=None,
         light_profile_centres=None,
         mass_profile_centres=None,
         multiple_images=None,
@@ -207,6 +208,7 @@ class LensingPlotter(plotters.AbstractPlotter):
             mask=mask,
             positions=positions,
             grid=grid,
+            lines=lines,
             include_origin=include_origin,
             include_border=include_border,
             bypass_output=True,
@@ -333,7 +335,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         vertical_line_labels=None,
     ):
 
-        super(LensingPlotter, self).plot_array(
+        super(LensingPlotter, self).plot_line(
             y=y,
             x=x,
             label=label,
@@ -513,7 +515,7 @@ class LensingPlotter(plotters.AbstractPlotter):
             self.figure.close()
 
 
-class Plotter(LensingPlotter):
+class Plotter(LensingPlotter, plotters.Plotter):
     def __init__(
         self,
         units=mat_objs.Units(),
@@ -566,7 +568,7 @@ class Plotter(LensingPlotter):
         )
 
 
-class SubPlotter(LensingPlotter):
+class SubPlotter(LensingPlotter, plotters.SubPlotter):
     def __init__(
         self,
         units=mat_objs.Units(),
@@ -680,6 +682,27 @@ class Include(plotters.Include):
             if value is None
             else value
         )
+
+    def light_profile_centres_from_obj(self, obj):
+
+        if self.light_profile_centres:
+            return obj.light_profile_centres
+        else:
+            return None
+
+    def light_profile_centres_of_galaxies_from_obj(self, obj):
+
+        if self.light_profile_centres:
+            return obj.light_profile_centres_of_galaxies
+        else:
+            return None
+
+    def light_profile_centres_of_planes_from_obj(self, obj):
+
+        if self.light_profile_centres:
+            return obj.light_profile_centres_of_planes
+        else:
+            return None
 
     def mass_profile_centres_from_obj(self, obj):
 

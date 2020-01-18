@@ -94,6 +94,10 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         )
         self.intensity = intensity
 
+    @property
+    def light_profile_centres(self):
+        return [self.centre]
+
     def blurred_profile_image_from_grid_and_psf(self, grid, psf, blurring_grid):
 
         profile_image = self.profile_image_from_grid(grid=grid)

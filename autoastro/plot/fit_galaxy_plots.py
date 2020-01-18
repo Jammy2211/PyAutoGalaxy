@@ -9,7 +9,7 @@ def subplot_fit_galaxy(
     fit,
     positions=None,
     include=lensing_plotters.Include(),
-    sub_plotter=plotters.SubPlotter(),
+    sub_plotter=lensing_plotters.SubPlotter(),
 ):
 
     number_subplots = 4
@@ -25,7 +25,7 @@ def subplot_fit_galaxy(
     sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
 
     aa.plot.fit_imaging.model_image(
-        fit=fit, include=include, points=positions, plotter=sub_plotter
+        fit=fit, include=include, positions=positions, plotter=sub_plotter
     )
 
     sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=3)
@@ -50,7 +50,7 @@ def individuals(
     plot_residual_map=False,
     plot_chi_squared_map=False,
     include=lensing_plotters.Include(),
-    plotter=plotters.Plotter(),
+    plotter=lensing_plotters.Plotter(),
 ):
 
     if plot_image:
@@ -66,13 +66,13 @@ def individuals(
     if plot_noise_map:
 
         aa.plot.fit_imaging.noise_map(
-            fit=fit, mask=fit.mask, points=positions, include=include, plotter=plotter
+            fit=fit, mask=fit.mask, positions=positions, include=include, plotter=plotter
         )
 
     if plot_model_image:
 
         aa.plot.fit_imaging.model_image(
-            fit=fit, mask=fit.mask, points=positions, include=include, plotter=plotter
+            fit=fit, mask=fit.mask, positions=positions, include=include, plotter=plotter
         )
 
     if plot_residual_map:
@@ -93,7 +93,7 @@ def galaxy_data_array(
     galaxy_data,
     positions=None,
     include=lensing_plotters.Include(),
-    plotter=plotters.Plotter(),
+    plotter=lensing_plotters.Plotter(),
 ):
 
     if galaxy_data.use_image:
