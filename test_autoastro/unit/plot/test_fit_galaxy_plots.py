@@ -35,7 +35,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
     plot_patch,
     galaxy_fit_plotter_path,
 ):
-    aast.plot.fit_galaxy.subplot_fit_galaxy(
+    aplt.fit_galaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_image,
         positions=positions_7x7,
         include=include_all,
@@ -46,7 +46,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
 
     assert galaxy_fit_plotter_path + "subplot_fit_galaxy.png" in plot_patch.paths
 
-    aast.plot.fit_galaxy.subplot_fit_galaxy(
+    aplt.fit_galaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_convergence,
         positions=positions_7x7,
         include=include_all,
@@ -57,7 +57,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
 
     assert galaxy_fit_plotter_path + "subplot_fit_galaxy.png" in plot_patch.paths
 
-    aast.plot.fit_galaxy.subplot_fit_galaxy(
+    aplt.fit_galaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_potential,
         positions=positions_7x7,
         include=include_all,
@@ -68,7 +68,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
 
     assert galaxy_fit_plotter_path + "subplot_fit_galaxy.png" in plot_patch.paths
 
-    aast.plot.fit_galaxy.subplot_fit_galaxy(
+    aplt.fit_galaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_deflections_y,
         positions=positions_7x7,
         include=include_all,
@@ -79,7 +79,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
 
     assert galaxy_fit_plotter_path + "subplot_fit_galaxy.png" in plot_patch.paths
 
-    aast.plot.fit_galaxy.subplot_fit_galaxy(
+    aplt.fit_galaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_deflections_x,
         positions=positions_7x7,
         include=include_all,

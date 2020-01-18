@@ -6,6 +6,7 @@ from autoastro import lensing
 import copy
 
 
+
 class LensingPlotter(plotters.AbstractPlotter):
     def __init__(
         self,
@@ -85,6 +86,31 @@ class LensingPlotter(plotters.AbstractPlotter):
         self.caustics_liner = mat_objs.Liner.from_instance_and_config(
             liner=caustics_liner, section="caustics", load_func=load_setting_func
         )
+
+    def plot_lensing_attributes(self, light_profile_centres=None,
+                                mass_profile_centres=None,
+                                multiple_images=None,
+                                critical_curves=None,
+                                caustics=None):
+
+        if light_profile_centres is not None:
+            self.light_profile_centres_scatterer.scatter_grids(
+                grids=light_profile_centres
+            )
+
+        if mass_profile_centres is not None:
+            self.mass_profile_centres_scatterer.scatter_grids(
+                grids=mass_profile_centres
+            )
+
+        if multiple_images is not None:
+            self.multiple_images_scatterer.scatter_grids(grids=multiple_images)
+
+        if critical_curves is not None:
+            self.critical_curves_liner.draw_grids(grids=critical_curves)
+
+        if caustics is not None:
+            self.caustics_liner.draw_grids(grids=caustics)
 
     def plot_array(
         self,
@@ -214,24 +240,8 @@ class LensingPlotter(plotters.AbstractPlotter):
             bypass_output=True,
         )
 
-        if light_profile_centres is not None:
-            self.light_profile_centres_scatterer.scatter_grids(
-                grids=light_profile_centres
-            )
-
-        if mass_profile_centres is not None:
-            self.mass_profile_centres_scatterer.scatter_grids(
-                grids=mass_profile_centres
-            )
-
-        if multiple_images is not None:
-            self.multiple_images_scatterer.scatter_grids(grids=multiple_images)
-
-        if critical_curves is not None:
-            self.critical_curves_liner.draw_grids(grids=critical_curves)
-
-        if caustics is not None:
-            self.caustics_liner.draw_grids(grids=caustics)
+        self.plot_lensing_attributes(light_profile_centres=light_profile_centres, mass_profile_centres=mass_profile_centres,
+                                     multiple_images=multiple_images, critical_curves=critical_curves, caustics=caustics)
 
         self.output.to_figure(structure=array)
 
@@ -301,24 +311,8 @@ class LensingPlotter(plotters.AbstractPlotter):
             bypass_output=True,
         )
 
-        if light_profile_centres is not None:
-            self.light_profile_centres_scatterer.scatter_grids(
-                grids=light_profile_centres
-            )
-
-        if mass_profile_centres is not None:
-            self.mass_profile_centres_scatterer.scatter_grids(
-                grids=mass_profile_centres
-            )
-
-        if multiple_images is not None:
-            self.multiple_images_scatterer.scatter_grids(grids=multiple_images)
-
-        if critical_curves is not None:
-            self.critical_curves_liner.draw_grids(grids=critical_curves)
-
-        if caustics is not None:
-            self.caustics_liner.draw_grids(grids=caustics)
+        self.plot_lensing_attributes(light_profile_centres=light_profile_centres, mass_profile_centres=mass_profile_centres,
+                                     multiple_images=multiple_images, critical_curves=critical_curves, caustics=caustics)
 
         self.output.to_figure(structure=grid)
 
@@ -434,26 +428,11 @@ class LensingPlotter(plotters.AbstractPlotter):
             include_border=include_border,
             image_pixel_indexes=image_pixel_indexes,
             source_pixel_indexes=source_pixel_indexes,
+            bypass_output=True,
         )
 
-        if light_profile_centres is not None:
-            self.light_profile_centres_scatterer.scatter_grids(
-                grids=light_profile_centres
-            )
-
-        if mass_profile_centres is not None:
-            self.mass_profile_centres_scatterer.scatter_grids(
-                grids=mass_profile_centres
-            )
-
-        if multiple_images is not None:
-            self.multiple_images_scatterer.scatter_grids(grids=multiple_images)
-
-        if critical_curves is not None:
-            self.critical_curves_liner.draw_grids(grids=critical_curves)
-
-        if caustics is not None:
-            self.caustics_liner.draw_grids(grids=caustics)
+        self.plot_lensing_attributes(light_profile_centres=light_profile_centres, mass_profile_centres=mass_profile_centres,
+                                     multiple_images=multiple_images, critical_curves=critical_curves, caustics=caustics)
 
         self.output.to_figure(structure=None)
 
@@ -488,26 +467,11 @@ class LensingPlotter(plotters.AbstractPlotter):
             include_border=include_border,
             image_pixel_indexes=image_pixel_indexes,
             source_pixel_indexes=source_pixel_indexes,
+            bypass_output=True
         )
 
-        if light_profile_centres is not None:
-            self.light_profile_centres_scatterer.scatter_grids(
-                grids=light_profile_centres
-            )
-
-        if mass_profile_centres is not None:
-            self.mass_profile_centres_scatterer.scatter_grids(
-                grids=mass_profile_centres
-            )
-
-        if multiple_images is not None:
-            self.multiple_images_scatterer.scatter_grids(grids=multiple_images)
-
-        if critical_curves is not None:
-            self.critical_curves_liner.draw_grids(grids=critical_curves)
-
-        if caustics is not None:
-            self.caustics_liner.draw_grids(grids=caustics)
+        self.plot_lensing_attributes(light_profile_centres=light_profile_centres, mass_profile_centres=mass_profile_centres,
+                                     multiple_images=multiple_images, critical_curves=critical_curves, caustics=caustics)
 
         self.output.to_figure(structure=None)
 

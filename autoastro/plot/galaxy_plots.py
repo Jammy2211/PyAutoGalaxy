@@ -1,5 +1,5 @@
 from autoarray.plot import plotters
-from autoastro.plot import lensing_plotters, profile_plots
+from autoastro.plot import lensing_plotters, light_profile_plots, mass_profile_plots
 
 
 @plotters.set_labels
@@ -216,7 +216,7 @@ def profile_image_subplot(
 
         sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
-        profile_plots.image(
+        light_profile_plots.profile_image(
             light_profile=light_profile,
             grid=grid,
             mask=mask,
@@ -247,7 +247,7 @@ def convergence_subplot(
 
         sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
-        profile_plots.convergence(
+        mass_profile_plots.convergence(
             mass_profile=mass_profile,
             grid=grid,
             mask=mask,
@@ -278,7 +278,7 @@ def potential_subplot(
 
         sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
-        profile_plots.potential(
+        mass_profile_plots.potential(
             mass_profile=mass_profile,
             grid=grid,
             mask=mask,
@@ -309,7 +309,7 @@ def deflections_y_subplot(
 
         sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
-        profile_plots.deflections_y(
+        mass_profile_plots.deflections_y(
             mass_profile=mass_profile,
             grid=grid,
             mask=mask,
@@ -340,7 +340,7 @@ def deflections_x_subplot(
 
         sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
-        profile_plots.deflections_x(
+        mass_profile_plots.deflections_x(
             mass_profile=mass_profile,
             grid=grid,
             mask=mask,
