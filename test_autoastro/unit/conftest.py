@@ -167,9 +167,11 @@ def make_gal_fit_7x7_deflections_x(gal_fit_data_7x7_deflections_x, gal_x1_mp):
         galaxy_data=gal_fit_data_7x7_deflections_x, model_galaxies=[gal_x1_mp]
     )
 
-from autoastro.plots.lensing_plotters import Include
+
+from autoastro.plot.lensing_plotters import Include
 
 # PLOTTING #
+
 
 @pytest.fixture(name="include_all")
 def make_include_all():
@@ -184,9 +186,10 @@ def make_include_all():
         critical_curves=True,
         caustics=True,
         multiple_images=True,
-        inversion_centres=True,
+        inversion_pixelization_grid=True,
         inversion_grid=True,
         inversion_border=True,
         inversion_image_pixelization_grid=True,
         preloaded_critical_curves=[(1.0, 1.0), (2.0, 2.0)],
-        preload_caustics=[(1.0, 1.0), (2.0, 2.0)])
+        preload_caustics=[(1.0, 1.0), (2.0, 2.0)],
+    )

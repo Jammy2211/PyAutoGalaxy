@@ -475,7 +475,10 @@ class Galaxy(ModelObject, lensing.LensingObject):
             A model image of the galaxy (from light profiles or an inversion) from a
             previous analysis phase.
         """
-        return self.hyper_galaxy.contribution_map_from_hyper_images(hyper_model_image=self.hyper_model_image, hyper_galaxy_image=self.hyper_galaxy_image)
+        return self.hyper_galaxy.contribution_map_from_hyper_images(
+            hyper_model_image=self.hyper_model_image,
+            hyper_galaxy_image=self.hyper_galaxy_image,
+        )
 
     def summarize_in_units(
         self,

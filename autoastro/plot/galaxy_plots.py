@@ -1,5 +1,5 @@
-from autoarray.plotters import plotters
-from autoastro.plots import lensing_plotters, profile_plots
+from autoarray.plot import plotters
+from autoastro.plot import lensing_plotters, profile_plots
 
 
 @plotters.set_labels
@@ -22,10 +22,10 @@ def profile_image(
     grid : ndarray or datas.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-    plotter.array.plot(
+    plotter.plot_array(
         array=galaxy.profile_image_from_grid(grid=grid),
         mask=mask,
-        points=positions,
+        positions=positions,
         lines=include.critical_curves_from_obj(obj=galaxy),
         centres=include.mass_profile_centres_from_obj(obj=galaxy),
         include_origin=include.origin,
@@ -52,10 +52,10 @@ def convergence(
     grid : ndarray or datas.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-    plotter.array.plot(
+    plotter.plot_array(
         array=galaxy.convergence_from_grid(grid=grid),
         mask=mask,
-        points=positions,
+        positions=positions,
         lines=include.critical_curves_from_obj(obj=galaxy),
         centres=include.mass_profile_centres_from_obj(obj=galaxy),
         include_origin=include.origin,
@@ -82,10 +82,10 @@ def potential(
     grid : ndarray or datas.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
-    plotter.array.plot(
+    plotter.plot_array(
         array=galaxy.potential_from_grid(grid=grid),
         mask=mask,
-        points=positions,
+        positions=positions,
         lines=include.critical_curves_from_obj(obj=galaxy),
         centres=include.mass_profile_centres_from_obj(obj=galaxy),
         include_origin=include.origin,
@@ -117,10 +117,10 @@ def deflections_y(
         sub_array_1d=deflections[:, 0]
     )
 
-    plotter.array.plot(
+    plotter.plot_array(
         array=deflections_y,
         mask=mask,
-        points=positions,
+        positions=positions,
         lines=include.critical_curves_from_obj(obj=galaxy),
         centres=include.mass_profile_centres_from_obj(obj=galaxy),
         include_origin=include.origin,
@@ -151,10 +151,10 @@ def deflections_x(
     deflections_x = grid.mapping.array_stored_1d_from_sub_array_1d(
         sub_array_1d=deflections[:, 1]
     )
-    plotter.array.plot(
+    plotter.plot_array(
         array=deflections_x,
         mask=mask,
-        points=positions,
+        positions=positions,
         lines=include.critical_curves_from_obj(obj=galaxy),
         centres=include.mass_profile_centres_from_obj(obj=galaxy),
         include_origin=include.origin,
@@ -182,10 +182,10 @@ def magnification(
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
 
-    plotter.array.plot(
+    plotter.plot_array(
         array=galaxy.magnification_from_grid(grid=grid),
         mask=mask,
-        points=positions,
+        positions=positions,
         lines=include.critical_curves_from_obj(obj=galaxy),
         centres=include.mass_profile_centres_from_obj(obj=galaxy),
         include_origin=include.origin,
@@ -201,14 +201,14 @@ def profile_image_subplot(
     include=lensing_plotters.Include(),
     sub_plotter=plotters.SubPlotter(),
 ):
-    
+
     number_subplots = len(galaxy.light_profiles)
 
-    sub_plotter.setup_subplot_figure(number_subplots=number_subplots)
+    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
 
     for i, light_profile in enumerate(galaxy.light_profiles):
 
-        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index= i + 1)
+        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
         profile_plots.image(
             light_profile=light_profile,
@@ -220,7 +220,7 @@ def profile_image_subplot(
         )
 
     sub_plotter.output.subplot_to_figure()
-    sub_plotter.close_figure()
+    sub_plotter.figure.close()
 
 
 @plotters.set_labels
@@ -235,11 +235,11 @@ def convergence_subplot(
 
     number_subplots = len(galaxy.mass_profiles)
 
-    sub_plotter.setup_subplot_figure(number_subplots=number_subplots)
+    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
-        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index= i + 1)
+        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
         profile_plots.convergence(
             mass_profile=mass_profile,
@@ -251,7 +251,7 @@ def convergence_subplot(
         )
 
     sub_plotter.output.subplot_to_figure()
-    sub_plotter.close_figure()
+    sub_plotter.figure.close()
 
 
 @plotters.set_labels
@@ -266,11 +266,11 @@ def potential_subplot(
 
     number_subplots = len(galaxy.mass_profiles)
 
-    sub_plotter.setup_subplot_figure(number_subplots=number_subplots)
-    
+    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
+
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
-        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index= i + 1)
+        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
         profile_plots.potential(
             mass_profile=mass_profile,
@@ -282,7 +282,7 @@ def potential_subplot(
         )
 
     sub_plotter.output.subplot_to_figure()
-    sub_plotter.close_figure()
+    sub_plotter.figure.close()
 
 
 @plotters.set_labels
@@ -297,11 +297,11 @@ def deflections_y_subplot(
 
     number_subplots = len(galaxy.mass_profiles)
 
-    sub_plotter.setup_subplot_figure(number_subplots=number_subplots)
+    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
-        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index= i + 1)
+        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
         profile_plots.deflections_y(
             mass_profile=mass_profile,
@@ -313,7 +313,7 @@ def deflections_y_subplot(
         )
 
     sub_plotter.output.subplot_to_figure()
-    sub_plotter.close_figure()
+    sub_plotter.figure.close()
 
 
 @plotters.set_labels
@@ -328,11 +328,11 @@ def deflections_x_subplot(
 
     number_subplots = len(galaxy.mass_profiles)
 
-    sub_plotter.setup_subplot_figure(number_subplots=number_subplots)
+    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
-        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index= i + 1)
+        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
         profile_plots.deflections_x(
             mass_profile=mass_profile,
@@ -344,7 +344,8 @@ def deflections_x_subplot(
         )
 
     sub_plotter.output.subplot_to_figure()
-    sub_plotter.close_figure()
+    sub_plotter.figure.close()
+
 
 @plotters.set_labels
 def contribution_map(
@@ -366,10 +367,10 @@ def contribution_map(
         The index of the datas in the datas-set of which the contribution_maps are plotted.
     """
 
-    plotter.array.plot(
+    plotter.plot_array(
         array=galaxy.contribution_map,
         mask=mask,
-        points=positions,
+        positions=positions,
         lines=include.critical_curves_from_obj(obj=galaxy),
         centres=include.mass_profile_centres_from_obj(obj=galaxy),
     )

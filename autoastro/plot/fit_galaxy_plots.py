@@ -1,6 +1,6 @@
 import autoarray as aa
-from autoarray.plotters import plotters
-from autoastro.plots import lensing_plotters
+from autoarray.plot import plotters
+from autoastro.plot import lensing_plotters
 from autoastro import exc
 
 
@@ -14,7 +14,7 @@ def subplot_fit_galaxy(
 
     number_subplots = 4
 
-    sub_plotter.setup_subplot_figure(number_subplots=number_subplots)
+    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
 
     sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
 
@@ -22,27 +22,23 @@ def subplot_fit_galaxy(
         galaxy_data=fit.galaxy_data, positions=positions, plotter=sub_plotter
     )
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index= 2)
+    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
 
     aa.plot.fit_imaging.model_image(
         fit=fit, include=include, points=positions, plotter=sub_plotter
     )
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index= 3)
+    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=3)
 
-    aa.plot.fit_imaging.residual_map(
-        fit=fit, include=include, plotter=sub_plotter
-    )
+    aa.plot.fit_imaging.residual_map(fit=fit, include=include, plotter=sub_plotter)
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index= 4)
+    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=4)
 
-    aa.plot.fit_imaging.chi_squared_map(
-        fit=fit, include=include, plotter=sub_plotter
-    )
+    aa.plot.fit_imaging.chi_squared_map(fit=fit, include=include, plotter=sub_plotter)
 
     sub_plotter.output.subplot_to_figure()
 
-    sub_plotter.close_figure()
+    sub_plotter.figure.close()
 
 
 def individuals(
@@ -70,21 +66,13 @@ def individuals(
     if plot_noise_map:
 
         aa.plot.fit_imaging.noise_map(
-            fit=fit,
-            mask=fit.mask,
-            points=positions,
-            include=include,
-            plotter=plotter,
+            fit=fit, mask=fit.mask, points=positions, include=include, plotter=plotter
         )
 
     if plot_model_image:
 
         aa.plot.fit_imaging.model_image(
-            fit=fit,
-            mask=fit.mask,
-            points=positions,
-            include=include,
-            plotter=plotter,
+            fit=fit, mask=fit.mask, points=positions, include=include, plotter=plotter
         )
 
     if plot_residual_map:
@@ -123,9 +111,9 @@ def galaxy_data_array(
             "The galaxy data_type arrays does not have a True use_profile_type"
         )
 
-    plotter.array.plot(
+    plotter.plot_array(
         array=galaxy_data.image,
         mask=galaxy_data.mask,
-        points=positions,
+        positions=positions,
         include_origin=include.origin,
     )

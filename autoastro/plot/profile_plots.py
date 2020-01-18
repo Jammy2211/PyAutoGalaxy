@@ -1,5 +1,5 @@
-from autoarray.plotters import plotters
-from autoastro.plots import lensing_plotters
+from autoarray.plot import plotters
+from autoastro.plot import lensing_plotters
 from autoarray.util import plotter_util
 
 
@@ -23,10 +23,10 @@ def image(
     grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-    plotter.array.plot(
+    plotter.plot_array(
         array=light_profile.profile_image_from_grid(grid=grid),
         mask=mask,
-        points=positions,
+        positions=positions,
         include_origin=include.origin,
     )
 
@@ -37,7 +37,7 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
     maximum_radius=10.0,
     radii_bins=10,
     plot_axis_type="semilogy",
-        plotter=plotters.Plotter(),
+    plotter=plotters.Plotter(),
 ):
 
     radii = plotter_util.quantity_radii_from_minimum_and_maximum_radii_and_radii_points(
@@ -55,7 +55,7 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
         )
     )
 
-    plotter.array.plot(
+    plotter.plot_array(
         quantity=luminosities, radii=radii, plot_axis_type=plot_axis_type
     )
 
@@ -80,10 +80,10 @@ def convergence(
     grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-    plotter.array.plot(
+    plotter.plot_array(
         array=mass_profile.convergence_from_grid(grid=grid),
         mask=mask,
-        points=positions,
+        positions=positions,
         lines=include.critical_curves_from_obj(obj=mass_profile),
         centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
@@ -110,10 +110,10 @@ def potential(
     grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-    plotter.array.plot(
+    plotter.plot_array(
         array=mass_profile.potential_from_grid(grid=grid),
         mask=mask,
-        points=positions,
+        positions=positions,
         lines=include.critical_curves_from_obj(obj=mass_profile),
         centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
@@ -146,10 +146,10 @@ def deflections_y(
         sub_array_1d=deflections[:, 0]
     )
 
-    plotter.array.plot(
+    plotter.plot_array(
         array=deflections_y,
         mask=mask,
-        points=positions,
+        positions=positions,
         lines=include.critical_curves_from_obj(obj=mass_profile),
         centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
@@ -181,10 +181,10 @@ def deflections_x(
         sub_array_1d=deflections[:, 1]
     )
 
-    plotter.array.plot(
+    plotter.plot_array(
         array=deflections_x,
         mask=mask,
-        points=positions,
+        positions=positions,
         lines=include.critical_curves_from_obj(obj=mass_profile),
         centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,
@@ -211,10 +211,10 @@ def magnification(
     grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-    plotter.array.plot(
+    plotter.plot_array(
         array=mass_profile.magnification_from_grid(grid=grid),
         mask=mask,
-        points=positions,
+        positions=positions,
         lines=include.critical_curves_from_obj(obj=mass_profile),
         centres=include.mass_profile_centres_from_obj(obj=mass_profile),
         include_origin=include.origin,

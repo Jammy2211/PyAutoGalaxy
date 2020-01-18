@@ -1520,7 +1520,12 @@ class TestHyperGalaxy(object):
 
             hyp = aast.HyperGalaxy(contribution_factor=0.0)
 
-            galaxy = aast.Galaxy(redshift=0.5, hyper_galaxy=hyp, hyper_galaxy_image=hyper_image, hyper_model_image=hyper_image)
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                hyper_galaxy=hyp,
+                hyper_galaxy_image=hyper_image,
+                hyper_model_image=hyper_image,
+            )
 
             contribution_map = hyp.contribution_map_from_hyper_images(
                 hyper_model_image=hyper_image, hyper_galaxy_image=hyper_image
