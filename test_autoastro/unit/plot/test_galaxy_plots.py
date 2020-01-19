@@ -36,7 +36,6 @@ def test__individual_images_are_output(
     aplt.galaxy.profile_image(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         plotter=aplt.Plotter(output=aplt.Output(galaxy_plotter_path, format="png")),
@@ -47,7 +46,6 @@ def test__individual_images_are_output(
     aplt.galaxy.convergence(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         plotter=aplt.Plotter(output=aplt.Output(galaxy_plotter_path, format="png")),
@@ -58,7 +56,6 @@ def test__individual_images_are_output(
     aplt.galaxy.potential(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         plotter=aplt.Plotter(output=aplt.Output(galaxy_plotter_path, format="png")),
@@ -69,7 +66,6 @@ def test__individual_images_are_output(
     aplt.galaxy.deflections_y(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         plotter=aplt.Plotter(output=aplt.Output(galaxy_plotter_path, format="png")),
@@ -80,7 +76,6 @@ def test__individual_images_are_output(
     aplt.galaxy.deflections_x(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         plotter=aplt.Plotter(output=aplt.Output(galaxy_plotter_path, format="png")),
@@ -91,7 +86,6 @@ def test__individual_images_are_output(
     aplt.galaxy.magnification(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         plotter=aplt.Plotter(output=aplt.Output(galaxy_plotter_path, format="png")),
@@ -119,7 +113,6 @@ def test__individual_images_are_output(
 def test__individual_galaxy_quantities__all_are_output(
     gal_x1_lp_x1_mp,
     sub_grid_7x7,
-    mask_7x7,
     positions_7x7,
     include_all,
     galaxy_plotter_path,
@@ -128,7 +121,6 @@ def test__individual_galaxy_quantities__all_are_output(
     aplt.galaxy.profile_image_subplot(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         sub_plotter=aplt.SubPlotter(
@@ -141,7 +133,6 @@ def test__individual_galaxy_quantities__all_are_output(
     aplt.galaxy.convergence_subplot(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         sub_plotter=aplt.SubPlotter(
@@ -154,7 +145,6 @@ def test__individual_galaxy_quantities__all_are_output(
     aplt.galaxy.potential_subplot(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         sub_plotter=aplt.SubPlotter(
@@ -167,7 +157,6 @@ def test__individual_galaxy_quantities__all_are_output(
     aplt.galaxy.deflections_y_subplot(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         sub_plotter=aplt.SubPlotter(
@@ -180,7 +169,6 @@ def test__individual_galaxy_quantities__all_are_output(
     aplt.galaxy.deflections_x_subplot(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         sub_plotter=aplt.SubPlotter(

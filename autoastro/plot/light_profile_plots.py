@@ -7,7 +7,6 @@ from autoarray.util import plotter_util
 def profile_image(
     light_profile,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     plotter=lensing_plotters.Plotter(),
@@ -25,7 +24,7 @@ def profile_image(
     """
     plotter.plot_array(
         array=light_profile.profile_image_from_grid(grid=grid),
-        mask=mask,
+        mask=include.mask_from_grid(grid=grid),
         positions=positions,
         light_profile_centres=include.light_profile_centres_from_obj(obj=light_profile),
         include_origin=include.origin,

@@ -6,7 +6,6 @@ from autoastro.plot import lensing_plotters, light_profile_plots, mass_profile_p
 def profile_image(
     galaxy,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     plotter=lensing_plotters.Plotter(),
@@ -24,7 +23,7 @@ def profile_image(
     """
     plotter.plot_array(
         array=galaxy.profile_image_from_grid(grid=grid),
-        mask=mask,
+        mask=include.mask_from_grid(grid=grid),
         positions=positions,
         critical_curves=include.critical_curves_from_obj(obj=galaxy),
         light_profile_centres=include.light_profile_centres_from_obj(obj=galaxy),
@@ -37,7 +36,6 @@ def profile_image(
 def convergence(
     galaxy,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     plotter=lensing_plotters.Plotter(),
@@ -55,7 +53,7 @@ def convergence(
     """
     plotter.plot_array(
         array=galaxy.convergence_from_grid(grid=grid),
-        mask=mask,
+        mask=include.mask_from_grid(grid=grid),
         positions=positions,
         critical_curves=include.critical_curves_from_obj(obj=galaxy),
         light_profile_centres=include.light_profile_centres_from_obj(obj=galaxy),
@@ -68,7 +66,6 @@ def convergence(
 def potential(
     galaxy,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     plotter=lensing_plotters.Plotter(),
@@ -86,7 +83,7 @@ def potential(
      """
     plotter.plot_array(
         array=galaxy.potential_from_grid(grid=grid),
-        mask=mask,
+        mask=include.mask_from_grid(grid=grid),
         positions=positions,
         critical_curves=include.critical_curves_from_obj(obj=galaxy),
         light_profile_centres=include.light_profile_centres_from_obj(obj=galaxy),
@@ -99,7 +96,6 @@ def potential(
 def deflections_y(
     galaxy,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     plotter=lensing_plotters.Plotter(),
@@ -122,7 +118,7 @@ def deflections_y(
 
     plotter.plot_array(
         array=deflections_y,
-        mask=mask,
+        mask=include.mask_from_grid(grid=grid),
         positions=positions,
         critical_curves=include.critical_curves_from_obj(obj=galaxy),
         light_profile_centres=include.light_profile_centres_from_obj(obj=galaxy),
@@ -135,7 +131,6 @@ def deflections_y(
 def deflections_x(
     galaxy,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     plotter=lensing_plotters.Plotter(),
@@ -157,7 +152,7 @@ def deflections_x(
     )
     plotter.plot_array(
         array=deflections_x,
-        mask=mask,
+        mask=include.mask_from_grid(grid=grid),
         positions=positions,
         critical_curves=include.critical_curves_from_obj(obj=galaxy),
         light_profile_centres=include.light_profile_centres_from_obj(obj=galaxy),
@@ -170,7 +165,6 @@ def deflections_x(
 def magnification(
     galaxy,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     plotter=lensing_plotters.Plotter(),
@@ -189,7 +183,7 @@ def magnification(
 
     plotter.plot_array(
         array=galaxy.magnification_from_grid(grid=grid),
-        mask=mask,
+        mask=include.mask_from_grid(grid=grid),
         positions=positions,
         critical_curves=include.critical_curves_from_obj(obj=galaxy),
         light_profile_centres=include.light_profile_centres_from_obj(obj=galaxy),
@@ -202,7 +196,6 @@ def magnification(
 def profile_image_subplot(
     galaxy,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     sub_plotter=lensing_plotters.SubPlotter(),
@@ -219,7 +212,6 @@ def profile_image_subplot(
         light_profile_plots.profile_image(
             light_profile=light_profile,
             grid=grid,
-            mask=mask,
             positions=positions,
             include=include,
             plotter=sub_plotter,
@@ -233,7 +225,6 @@ def profile_image_subplot(
 def convergence_subplot(
     galaxy,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     sub_plotter=lensing_plotters.SubPlotter(),
@@ -250,7 +241,6 @@ def convergence_subplot(
         mass_profile_plots.convergence(
             mass_profile=mass_profile,
             grid=grid,
-            mask=mask,
             positions=positions,
             include=include,
             plotter=sub_plotter,
@@ -264,7 +254,6 @@ def convergence_subplot(
 def potential_subplot(
     galaxy,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     sub_plotter=lensing_plotters.SubPlotter(),
@@ -281,7 +270,6 @@ def potential_subplot(
         mass_profile_plots.potential(
             mass_profile=mass_profile,
             grid=grid,
-            mask=mask,
             positions=positions,
             include=include,
             plotter=sub_plotter,
@@ -295,7 +283,6 @@ def potential_subplot(
 def deflections_y_subplot(
     galaxy,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     sub_plotter=lensing_plotters.SubPlotter(),
@@ -312,7 +299,6 @@ def deflections_y_subplot(
         mass_profile_plots.deflections_y(
             mass_profile=mass_profile,
             grid=grid,
-            mask=mask,
             positions=positions,
             include=include,
             plotter=sub_plotter,
@@ -326,7 +312,6 @@ def deflections_y_subplot(
 def deflections_x_subplot(
     galaxy,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     sub_plotter=lensing_plotters.SubPlotter(),
@@ -343,7 +328,6 @@ def deflections_x_subplot(
         mass_profile_plots.deflections_x(
             mass_profile=mass_profile,
             grid=grid,
-            mask=mask,
             positions=positions,
             include=include,
             plotter=sub_plotter,

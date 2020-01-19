@@ -669,6 +669,13 @@ class Include(plotters.Include):
             else value
         )
 
+    def mask_from_grid(self, grid):
+
+        if self.mask:
+            return grid.mask
+        else:
+            return None
+
     def light_profile_centres_from_obj(self, obj):
 
         if self.light_profile_centres:

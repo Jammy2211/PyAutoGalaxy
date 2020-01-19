@@ -25,7 +25,6 @@ def set_config_path():
 def test__all_quantities_are_output(
     mp_0,
     sub_grid_7x7,
-    mask_7x7,
     positions_7x7,
     include_all,
     mp_plotter_path,
@@ -35,7 +34,6 @@ def test__all_quantities_are_output(
     aast.plot.mp.convergence(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         plotter=aplt.Plotter(output=aplt.Output(mp_plotter_path, format="png")),
@@ -46,7 +44,6 @@ def test__all_quantities_are_output(
     aast.plot.mp.potential(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         plotter=aplt.Plotter(output=aplt.Output(mp_plotter_path, format="png")),
@@ -57,7 +54,6 @@ def test__all_quantities_are_output(
     aast.plot.mp.deflections_y(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         plotter=aplt.Plotter(output=aplt.Output(mp_plotter_path, format="png")),
@@ -68,7 +64,6 @@ def test__all_quantities_are_output(
     aast.plot.mp.deflections_x(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         plotter=aplt.Plotter(output=aplt.Output(mp_plotter_path, format="png")),
@@ -79,7 +74,6 @@ def test__all_quantities_are_output(
     aast.plot.mp.magnification(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
-        mask=mask_7x7,
         positions=positions_7x7,
         include=include_all,
         plotter=aplt.Plotter(output=aplt.Output(mp_plotter_path, format="png")),

@@ -6,7 +6,6 @@ from autoastro.plot import lensing_plotters
 def convergence(
     mass_profile,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     plotter=lensing_plotters.Plotter(),
@@ -24,7 +23,7 @@ def convergence(
     """
     plotter.plot_array(
         array=mass_profile.convergence_from_grid(grid=grid),
-        mask=mask,
+        mask=include.mask_from_grid(grid=grid),
         positions=positions,
         critical_curves=include.critical_curves_from_obj(obj=mass_profile),
         mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
@@ -36,7 +35,6 @@ def convergence(
 def potential(
     mass_profile,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     plotter=lensing_plotters.Plotter(),
@@ -54,7 +52,7 @@ def potential(
     """
     plotter.plot_array(
         array=mass_profile.potential_from_grid(grid=grid),
-        mask=mask,
+        mask=include.mask_from_grid(grid=grid),
         positions=positions,
         critical_curves=include.critical_curves_from_obj(obj=mass_profile),
         mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
@@ -66,7 +64,6 @@ def potential(
 def deflections_y(
     mass_profile,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     plotter=lensing_plotters.Plotter(),
@@ -90,7 +87,7 @@ def deflections_y(
 
     plotter.plot_array(
         array=deflections_y,
-        mask=mask,
+        mask=include.mask_from_grid(grid=grid),
         positions=positions,
         critical_curves=include.critical_curves_from_obj(obj=mass_profile),
         mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
@@ -102,7 +99,6 @@ def deflections_y(
 def deflections_x(
     mass_profile,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     plotter=lensing_plotters.Plotter(),
@@ -125,7 +121,7 @@ def deflections_x(
 
     plotter.plot_array(
         array=deflections_x,
-        mask=mask,
+        mask=include.mask_from_grid(grid=grid),
         positions=positions,
         critical_curves=include.critical_curves_from_obj(obj=mass_profile),
         mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
@@ -137,7 +133,6 @@ def deflections_x(
 def magnification(
     mass_profile,
     grid,
-    mask=None,
     positions=None,
     include=lensing_plotters.Include(),
     plotter=lensing_plotters.Plotter(),
@@ -155,7 +150,7 @@ def magnification(
     """
     plotter.plot_array(
         array=mass_profile.magnification_from_grid(grid=grid),
-        mask=mask,
+        mask=include.mask_from_grid(grid=grid),
         positions=positions,
         critical_curves=include.critical_curves_from_obj(obj=mass_profile),
         mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
