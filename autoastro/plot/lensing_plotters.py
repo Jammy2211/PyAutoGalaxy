@@ -128,6 +128,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         caustics=None,
         include_origin=False,
         include_border=False,
+        bypass_output=False,
     ):
         """Plot an array of data_type as a figure.
 
@@ -250,9 +251,10 @@ class LensingPlotter(plotters.AbstractPlotter):
             caustics=caustics,
         )
 
-        self.output.to_figure(structure=array)
+        if not bypass_output:
+            self.output.to_figure(structure=array)
 
-        if not isinstance(self, SubPlotter):
+        if not isinstance(self, SubPlotter) and not bypass_output:
             self.figure.close()
 
     def plot_grid(
@@ -269,6 +271,7 @@ class LensingPlotter(plotters.AbstractPlotter):
             include_origin=False,
             include_border=False,
         symmetric_around_centre=True,
+            bypass_output=False,
     ):
         """Plot a grid of (y,x) Cartesian coordinates as a scatter plotters of points.
 
@@ -330,9 +333,10 @@ class LensingPlotter(plotters.AbstractPlotter):
             caustics=caustics,
         )
 
-        self.output.to_figure(structure=grid)
+        if not bypass_output:
+            self.output.to_figure(structure=grid)
 
-        if not isinstance(self, SubPlotter):
+        if not isinstance(self, SubPlotter) and not bypass_output:
             self.figure.close()
 
     def plot_line(
@@ -343,6 +347,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         plot_axis_type="semilogy",
         vertical_lines=None,
         vertical_line_labels=None,
+            bypass_output=False,
     ):
 
         super(LensingPlotter, self).plot_line(
@@ -355,9 +360,10 @@ class LensingPlotter(plotters.AbstractPlotter):
             bypass_output=True,
         )
 
-        self.output.to_figure(structure=None)
+        if not bypass_output:
+            self.output.to_figure(structure=None)
 
-        if not isinstance(self, SubPlotter):
+        if not isinstance(self, SubPlotter) and not bypass_output:
             self.figure.close()
 
     def plot_mapper(
@@ -376,6 +382,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         include_border=False,
         image_pixel_indexes=None,
         source_pixel_indexes=None,
+            bypass_output=False,
     ):
 
         if isinstance(mapper, mappers.MapperRectangular):
@@ -432,6 +439,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         include_border=False,
         image_pixel_indexes=None,
         source_pixel_indexes=None,
+            bypass_output=False,
     ):
 
         super(LensingPlotter, self).plot_rectangular_mapper(
@@ -455,9 +463,10 @@ class LensingPlotter(plotters.AbstractPlotter):
             caustics=caustics,
         )
 
-        self.output.to_figure(structure=None)
+        if not bypass_output:
+            self.output.to_figure(structure=None)
 
-        if not isinstance(self, SubPlotter):
+        if not isinstance(self, SubPlotter) and not bypass_output:
             self.figure.close()
 
     def plot_voronoi_mapper(
@@ -476,6 +485,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         include_border=False,
         image_pixel_indexes=None,
         source_pixel_indexes=None,
+            bypass_output=False,
     ):
 
         super(LensingPlotter, self).plot_voronoi_mapper(
@@ -499,9 +509,10 @@ class LensingPlotter(plotters.AbstractPlotter):
             caustics=caustics,
         )
 
-        self.output.to_figure(structure=None)
+        if not bypass_output:
+            self.output.to_figure(structure=None)
 
-        if not isinstance(self, SubPlotter):
+        if not isinstance(self, SubPlotter) and not bypass_output:
             self.figure.close()
 
 
@@ -673,10 +684,10 @@ class Include(plotters.Include):
             else value
         )
 
-    def mask_from_grid(self, grid):
+    def positions_from_masked_dataset(self, masked_dataset):
 
-        if self.mask:
-            return grid.mask
+        if self.positions:
+            return masked_dataset.positions
         else:
             return None
 
@@ -762,6 +773,13 @@ class Include(plotters.Include):
 
             return None
 
+    def traced_grid_of_plane_from_fit_and_plane_index(self, fit, plane_index):
+
+        if self.positions is True:
+            return fit.tracer.traced_grids_of_planes_from_grid(grid=fit.grid)[plane_index]
+        else:
+            return None
+
     def positions_from_fit(self, fit):
         """Get the masks of the fit if the masks should be plotted on the fit.
 
@@ -774,6 +792,16 @@ class Include(plotters.Include):
         """
         if self.positions:
             return fit.masked_dataset.positions
+        else:
+            return None
+
+    def positions_of_plane_from_fit_and_plane_index(self, fit, plane_index):
+
+        if self.positions is True:
+            positions = self.positions_from_fit(fit=fit)
+            if positions is None:
+                return None
+            return fit.tracer.traced_grids_of_planes_from_grid(grid=positions)[plane_index]
         else:
             return None
 
