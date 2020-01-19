@@ -23,12 +23,7 @@ def set_config_path():
 
 
 def test__all_quantities_are_output(
-    mp_0,
-    sub_grid_7x7,
-    positions_7x7,
-    include_all,
-    mp_plotter_path,
-    plot_patch,
+    mp_0, sub_grid_7x7, positions_7x7, include_all, mp_plotter_path, plot_patch
 ):
 
     aast.plot.mp.convergence(

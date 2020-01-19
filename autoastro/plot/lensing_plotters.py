@@ -268,10 +268,10 @@ class LensingPlotter(plotters.AbstractPlotter):
         multiple_images=None,
         critical_curves=None,
         caustics=None,
-            include_origin=False,
-            include_border=False,
+        include_origin=False,
+        include_border=False,
         symmetric_around_centre=True,
-            bypass_output=False,
+        bypass_output=False,
     ):
         """Plot a grid of (y,x) Cartesian coordinates as a scatter plotters of points.
 
@@ -347,7 +347,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         plot_axis_type="semilogy",
         vertical_lines=None,
         vertical_line_labels=None,
-            bypass_output=False,
+        bypass_output=False,
     ):
 
         super(LensingPlotter, self).plot_line(
@@ -382,7 +382,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         include_border=False,
         image_pixel_indexes=None,
         source_pixel_indexes=None,
-            bypass_output=False,
+        bypass_output=False,
     ):
 
         if isinstance(mapper, mappers.MapperRectangular):
@@ -439,7 +439,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         include_border=False,
         image_pixel_indexes=None,
         source_pixel_indexes=None,
-            bypass_output=False,
+        bypass_output=False,
     ):
 
         super(LensingPlotter, self).plot_rectangular_mapper(
@@ -485,7 +485,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         include_border=False,
         image_pixel_indexes=None,
         source_pixel_indexes=None,
-            bypass_output=False,
+        bypass_output=False,
     ):
 
         super(LensingPlotter, self).plot_voronoi_mapper(
@@ -776,7 +776,9 @@ class Include(plotters.Include):
     def traced_grid_of_plane_from_fit_and_plane_index(self, fit, plane_index):
 
         if self.positions is True:
-            return fit.tracer.traced_grids_of_planes_from_grid(grid=fit.grid)[plane_index]
+            return fit.tracer.traced_grids_of_planes_from_grid(grid=fit.grid)[
+                plane_index
+            ]
         else:
             return None
 
@@ -801,7 +803,9 @@ class Include(plotters.Include):
             positions = self.positions_from_fit(fit=fit)
             if positions is None:
                 return None
-            return fit.tracer.traced_grids_of_planes_from_grid(grid=positions)[plane_index]
+            return fit.tracer.traced_grids_of_planes_from_grid(grid=positions)[
+                plane_index
+            ]
         else:
             return None
 
@@ -868,8 +872,8 @@ def plot_grid(
     critical_curves=None,
     caustics=None,
     symmetric_around_centre=True,
-        include_origin=False,
-        include_border=False,
+    include_origin=False,
+    include_border=False,
     plotter=Plotter(),
 ):
 

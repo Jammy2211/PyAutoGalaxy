@@ -67,7 +67,9 @@ class TestLensingPlotterAttributes:
         assert plotter.mass_profile_centres_scatterer.colors == ["r", "k"]
 
         plotter = aplt.Plotter(
-            mass_profile_centres_scatterer=aplt.Scatterer(size=1, marker=".", colors="k")
+            mass_profile_centres_scatterer=aplt.Scatterer(
+                size=1, marker=".", colors="k"
+            )
         )
 
         assert plotter.mass_profile_centres_scatterer.size == 1
@@ -130,7 +132,9 @@ class TestLensingPlotterAttributes:
         assert plotter.critical_curves_liner.pointsize == 20
 
         plotter = aplt.Plotter(
-            critical_curves_liner=aplt.Liner(width=1, style=".", colors="k", pointsize=3)
+            critical_curves_liner=aplt.Liner(
+                width=1, style=".", colors="k", pointsize=3
+            )
         )
 
         assert plotter.critical_curves_liner.width == 1
