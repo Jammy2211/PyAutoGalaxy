@@ -66,13 +66,21 @@ def individuals(
     if plot_noise_map:
 
         aa.plot.fit_imaging.noise_map(
-            fit=fit, mask=fit.mask, positions=positions, include=include, plotter=plotter
+            fit=fit,
+            mask=fit.mask,
+            positions=positions,
+            include=include,
+            plotter=plotter,
         )
 
     if plot_model_image:
 
         aa.plot.fit_imaging.model_image(
-            fit=fit, mask=fit.mask, positions=positions, include=include, plotter=plotter
+            fit=fit,
+            mask=fit.mask,
+            positions=positions,
+            include=include,
+            plotter=plotter,
         )
 
     if plot_residual_map:

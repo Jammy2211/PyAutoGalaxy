@@ -16,7 +16,6 @@ class MassProfile(lensing.LensingObject):
     def mass_profiles(self):
         return [self]
 
-
     @property
     def has_mass_profile(self):
         return True
