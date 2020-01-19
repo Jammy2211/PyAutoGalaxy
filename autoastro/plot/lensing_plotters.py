@@ -266,6 +266,8 @@ class LensingPlotter(plotters.AbstractPlotter):
         multiple_images=None,
         critical_curves=None,
         caustics=None,
+            include_origin=False,
+            include_border=False,
         symmetric_around_centre=True,
     ):
         """Plot a grid of (y,x) Cartesian coordinates as a scatter plotters of points.
@@ -315,6 +317,8 @@ class LensingPlotter(plotters.AbstractPlotter):
             axis_limits=axis_limits,
             indexes=indexes,
             symmetric_around_centre=symmetric_around_centre,
+            include_origin=include_origin,
+            include_border=include_border,
             bypass_output=True,
         )
 
@@ -836,6 +840,8 @@ def plot_grid(
     critical_curves=None,
     caustics=None,
     symmetric_around_centre=True,
+        include_origin=False,
+        include_border=False,
     plotter=Plotter(),
 ):
 
@@ -850,6 +856,8 @@ def plot_grid(
         critical_curves=critical_curves,
         caustics=caustics,
         symmetric_around_centre=symmetric_around_centre,
+        include_origin=include_origin,
+        include_border=include_border,
     )
 
 
