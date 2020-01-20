@@ -7,7 +7,13 @@ from autoarray.plot.mat_objs import (
     Labels,
     Legend,
     Output,
-    Scatterer,
+    OriginScatterer,
+    MaskScatterer,
+    BorderScatterer,
+    GridScatterer,
+    PositionsScatterer,
+    IndexScatterer,
+    PixelizationGridScatterer,
     Liner,
     VoronoiDrawer,
 )
@@ -18,6 +24,14 @@ from autoarray.plot import fit_imaging_plots as fit_imaging
 from autoarray.plot import fit_interferometer_plots as fit_interferometer
 from autoarray.plot import mapper_plots as mapper
 from autoarray.plot import inversion_plots as inversion
+
+from autoastro.plot.lensing_mat_objs import (
+    LightProfileCentreScatterer,
+    MassProfileCentreScatterer,
+    MultipleImagesScatterer,
+    CriticalCurvesLiner,
+    CausticsLiner,
+)
 
 from autoastro.plot.lensing_plotters import Plotter, SubPlotter, Include
 

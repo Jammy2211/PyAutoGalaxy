@@ -1,5 +1,6 @@
 import autofit as af
-from autoarray.plot import plotters, mat_objs
+from autoarray.plot import plotters
+from autoastro.plot import lensing_mat_objs
 from autoarray.operators.inversion import mappers
 from autoastro import lensing
 
@@ -9,28 +10,28 @@ import copy
 class LensingPlotter(plotters.AbstractPlotter):
     def __init__(
         self,
-        units=mat_objs.Units(),
-        figure=mat_objs.Figure(),
-        cmap=mat_objs.ColorMap(),
-        cb=mat_objs.ColorBar(),
-        legend=mat_objs.Legend(),
-        ticks=mat_objs.Ticks(),
-        labels=mat_objs.Labels(),
-        output=mat_objs.Output(),
-        origin_scatterer=mat_objs.Scatterer(),
-        mask_scatterer=mat_objs.Scatterer(),
-        border_scatterer=mat_objs.Scatterer(),
-        grid_scatterer=mat_objs.Scatterer(),
-        positions_scatterer=mat_objs.Scatterer(),
-        index_scatterer=mat_objs.Scatterer(),
-        pixelization_grid_scatterer=mat_objs.Scatterer(),
-        liner=mat_objs.Liner(),
-        voronoi_drawer=mat_objs.VoronoiDrawer(),
-        light_profile_centres_scatterer=mat_objs.Scatterer(),
-        mass_profile_centres_scatterer=mat_objs.Scatterer(),
-        multiple_images_scatterer=mat_objs.Scatterer(),
-        critical_curves_liner=mat_objs.Liner(),
-        caustics_liner=mat_objs.Liner(),
+        units=None,
+        figure=None,
+        cmap=None,
+        cb=None,
+        legend=None,
+        ticks=None,
+        labels=None,
+        output=None,
+        origin_scatterer=None,
+        mask_scatterer=None,
+        border_scatterer=None,
+        grid_scatterer=None,
+        positions_scatterer=None,
+        index_scatterer=None,
+        pixelization_grid_scatterer=None,
+        liner=None,
+        voronoi_drawer=None,
+        light_profile_centres_scatterer=None,
+        mass_profile_centres_scatterer=None,
+        multiple_images_scatterer=None,
+        critical_curves_liner=None,
+        caustics_liner=None,
     ):
 
         super(LensingPlotter, self).__init__(
@@ -54,36 +55,46 @@ class LensingPlotter(plotters.AbstractPlotter):
         )
 
         if isinstance(self, Plotter):
-            load_setting_func = plotters.load_figure_setting
+            from_subplot_config = False
         else:
-            load_setting_func = plotters.load_subplot_setting
+            from_subplot_config = True
 
-        self.light_profile_centres_scatterer = mat_objs.Scatterer.from_instance_and_config(
-            scatterer=light_profile_centres_scatterer,
-            section="light_profile_centres",
-            load_func=load_setting_func,
+        self.light_profile_centres_scatterer = (
+            light_profile_centres_scatterer
+            if light_profile_centres_scatterer is not None
+            else lensing_mat_objs.LightProfileCentreScatterer(
+                from_subplot_config=from_subplot_config
+            )
         )
 
-        self.mass_profile_centres_scatterer = mat_objs.Scatterer.from_instance_and_config(
-            scatterer=mass_profile_centres_scatterer,
-            section="mass_profile_centres",
-            load_func=load_setting_func,
+        self.mass_profile_centres_scatterer = (
+            mass_profile_centres_scatterer
+            if mass_profile_centres_scatterer is not None
+            else lensing_mat_objs.MassProfileCentreScatterer(
+                from_subplot_config=from_subplot_config
+            )
         )
 
-        self.multiple_images_scatterer = mat_objs.Scatterer.from_instance_and_config(
-            scatterer=multiple_images_scatterer,
-            section="multiple_images",
-            load_func=load_setting_func,
+        self.multiple_images_scatterer = (
+            multiple_images_scatterer
+            if multiple_images_scatterer is not None
+            else lensing_mat_objs.MultipleImagesScatterer(
+                from_subplot_config=from_subplot_config
+            )
         )
 
-        self.critical_curves_liner = mat_objs.Liner.from_instance_and_config(
-            liner=critical_curves_liner,
-            section="critical_curves",
-            load_func=load_setting_func,
+        self.critical_curves_liner = (
+            critical_curves_liner
+            if critical_curves_liner is not None
+            else lensing_mat_objs.CriticalCurvesLiner(
+                from_subplot_config=from_subplot_config
+            )
         )
 
-        self.caustics_liner = mat_objs.Liner.from_instance_and_config(
-            liner=caustics_liner, section="caustics", load_func=load_setting_func
+        self.caustics_liner = (
+            caustics_liner
+            if caustics_liner is not None
+            else lensing_mat_objs.CausticsLiner(from_subplot_config=from_subplot_config)
         )
 
     def plot_lensing_attributes(
@@ -519,28 +530,28 @@ class LensingPlotter(plotters.AbstractPlotter):
 class Plotter(LensingPlotter, plotters.Plotter):
     def __init__(
         self,
-        units=mat_objs.Units(),
-        figure=mat_objs.Figure(),
-        cmap=mat_objs.ColorMap(),
-        cb=mat_objs.ColorBar(),
-        ticks=mat_objs.Ticks(),
-        labels=mat_objs.Labels(),
-        legend=mat_objs.Legend(),
-        output=mat_objs.Output(),
-        origin_scatterer=mat_objs.Scatterer(),
-        mask_scatterer=mat_objs.Scatterer(),
-        border_scatterer=mat_objs.Scatterer(),
-        grid_scatterer=mat_objs.Scatterer(),
-        positions_scatterer=mat_objs.Scatterer(),
-        index_scatterer=mat_objs.Scatterer(),
-        pixelization_grid_scatterer=mat_objs.Scatterer(),
-        liner=mat_objs.Liner(),
-        voronoi_drawer=mat_objs.VoronoiDrawer(),
-        light_profile_centres_scatterer=mat_objs.Scatterer(),
-        mass_profile_centres_scatterer=mat_objs.Scatterer(),
-        multiple_images_scatterer=mat_objs.Scatterer(),
-        critical_curves_liner=mat_objs.Liner(),
-        caustics_liner=mat_objs.Liner(),
+        units=None,
+        figure=None,
+        cmap=None,
+        cb=None,
+        ticks=None,
+        labels=None,
+        legend=None,
+        output=None,
+        origin_scatterer=None,
+        mask_scatterer=None,
+        border_scatterer=None,
+        grid_scatterer=None,
+        positions_scatterer=None,
+        index_scatterer=None,
+        pixelization_grid_scatterer=None,
+        liner=None,
+        voronoi_drawer=None,
+        light_profile_centres_scatterer=None,
+        mass_profile_centres_scatterer=None,
+        multiple_images_scatterer=None,
+        critical_curves_liner=None,
+        caustics_liner=None,
     ):
 
         super(Plotter, self).__init__(
@@ -572,28 +583,28 @@ class Plotter(LensingPlotter, plotters.Plotter):
 class SubPlotter(LensingPlotter, plotters.SubPlotter):
     def __init__(
         self,
-        units=mat_objs.Units(),
-        figure=mat_objs.Figure(),
-        cmap=mat_objs.ColorMap(),
-        cb=mat_objs.ColorBar(),
-        legend=mat_objs.Legend(),
-        ticks=mat_objs.Ticks(),
-        labels=mat_objs.Labels(),
-        output=mat_objs.Output(),
-        origin_scatterer=mat_objs.Scatterer(),
-        mask_scatterer=mat_objs.Scatterer(),
-        border_scatterer=mat_objs.Scatterer(),
-        grid_scatterer=mat_objs.Scatterer(),
-        positions_scatterer=mat_objs.Scatterer(),
-        index_scatterer=mat_objs.Scatterer(),
-        pixelization_grid_scatterer=mat_objs.Scatterer(),
-        liner=mat_objs.Liner(),
-        voronoi_drawer=mat_objs.VoronoiDrawer(),
-        light_profile_centres_scatterer=mat_objs.Scatterer(),
-        mass_profile_centres_scatterer=mat_objs.Scatterer(),
-        multiple_images_scatterer=mat_objs.Scatterer(),
-        critical_curves_liner=mat_objs.Liner(),
-        caustics_liner=mat_objs.Liner(),
+        units=None,
+        figure=None,
+        cmap=None,
+        cb=None,
+        legend=None,
+        ticks=None,
+        labels=None,
+        output=None,
+        origin_scatterer=None,
+        mask_scatterer=None,
+        border_scatterer=None,
+        grid_scatterer=None,
+        positions_scatterer=None,
+        index_scatterer=None,
+        pixelization_grid_scatterer=None,
+        liner=None,
+        voronoi_drawer=None,
+        light_profile_centres_scatterer=None,
+        mass_profile_centres_scatterer=None,
+        multiple_images_scatterer=None,
+        critical_curves_liner=None,
+        caustics_liner=None,
     ):
 
         super(SubPlotter, self).__init__(

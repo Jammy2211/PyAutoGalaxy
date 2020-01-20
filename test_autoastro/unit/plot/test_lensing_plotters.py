@@ -1,6 +1,5 @@
 import autoarray as aa
 from os import path
-import matplotlib.pyplot as plt
 import os
 import pytest
 
@@ -33,7 +32,7 @@ class TestLensingPlotterAttributes:
         assert plotter.light_profile_centres_scatterer.colors == ["k", "r"]
 
         plotter = aplt.Plotter(
-            light_profile_centres_scatterer=aplt.Scatterer(
+            light_profile_centres_scatterer=aplt.LightProfileCentreScatterer(
                 size=1, marker=".", colors="k"
             )
         )
@@ -49,12 +48,12 @@ class TestLensingPlotterAttributes:
         assert sub_plotter.light_profile_centres_scatterer.colors == ["b"]
 
         sub_plotter = aplt.SubPlotter(
-            light_profile_centres_scatterer=aplt.Scatterer(
-                size=24, marker="o", colors="r"
+            light_profile_centres_scatterer=aplt.LightProfileCentreScatterer.sub(
+                marker="o", colors="r"
             )
         )
 
-        assert sub_plotter.light_profile_centres_scatterer.size == 24
+        assert sub_plotter.light_profile_centres_scatterer.size == 15
         assert sub_plotter.light_profile_centres_scatterer.marker == "o"
         assert sub_plotter.light_profile_centres_scatterer.colors == ["r"]
 
@@ -67,7 +66,7 @@ class TestLensingPlotterAttributes:
         assert plotter.mass_profile_centres_scatterer.colors == ["r", "k"]
 
         plotter = aplt.Plotter(
-            mass_profile_centres_scatterer=aplt.Scatterer(
+            mass_profile_centres_scatterer=aplt.MassProfileCentreScatterer(
                 size=1, marker=".", colors="k"
             )
         )
@@ -83,12 +82,12 @@ class TestLensingPlotterAttributes:
         assert sub_plotter.mass_profile_centres_scatterer.colors == ["k"]
 
         sub_plotter = aplt.SubPlotter(
-            mass_profile_centres_scatterer=aplt.Scatterer(
-                size=24, marker="o", colors="r"
+            mass_profile_centres_scatterer=aplt.MassProfileCentreScatterer.sub(
+                marker="o", colors="r"
             )
         )
 
-        assert sub_plotter.mass_profile_centres_scatterer.size == 24
+        assert sub_plotter.mass_profile_centres_scatterer.size == 16
         assert sub_plotter.mass_profile_centres_scatterer.marker == "o"
         assert sub_plotter.mass_profile_centres_scatterer.colors == ["r"]
 
@@ -101,7 +100,9 @@ class TestLensingPlotterAttributes:
         assert plotter.multiple_images_scatterer.colors == ["k", "w"]
 
         plotter = aplt.Plotter(
-            multiple_images_scatterer=aplt.Scatterer(size=1, marker=".", colors="k")
+            multiple_images_scatterer=aplt.MultipleImagesScatterer(
+                size=1, marker=".", colors="k"
+            )
         )
 
         assert plotter.multiple_images_scatterer.size == 1
@@ -115,10 +116,12 @@ class TestLensingPlotterAttributes:
         assert sub_plotter.multiple_images_scatterer.colors == ["g"]
 
         sub_plotter = aplt.SubPlotter(
-            multiple_images_scatterer=aplt.Scatterer(size=24, marker="o", colors="r")
+            multiple_images_scatterer=aplt.MultipleImagesScatterer.sub(
+                marker="o", colors="r"
+            )
         )
 
-        assert sub_plotter.multiple_images_scatterer.size == 24
+        assert sub_plotter.multiple_images_scatterer.size == 17
         assert sub_plotter.multiple_images_scatterer.marker == "o"
         assert sub_plotter.multiple_images_scatterer.colors == ["r"]
 
@@ -132,7 +135,7 @@ class TestLensingPlotterAttributes:
         assert plotter.critical_curves_liner.pointsize == 20
 
         plotter = aplt.Plotter(
-            critical_curves_liner=aplt.Liner(
+            critical_curves_liner=aplt.CriticalCurvesLiner(
                 width=1, style=".", colors="k", pointsize=3
             )
         )
@@ -150,12 +153,12 @@ class TestLensingPlotterAttributes:
         assert sub_plotter.critical_curves_liner.pointsize == 22
 
         sub_plotter = aplt.SubPlotter(
-            critical_curves_liner=aplt.Liner(
-                width=24, style=".", colors="r", pointsize=21
+            critical_curves_liner=aplt.CriticalCurvesLiner.sub(
+                style=".", colors="r", pointsize=21
             )
         )
 
-        assert sub_plotter.critical_curves_liner.width == 24
+        assert sub_plotter.critical_curves_liner.width == 6
         assert sub_plotter.critical_curves_liner.style == "."
         assert sub_plotter.critical_curves_liner.colors == ["r"]
         assert sub_plotter.critical_curves_liner.pointsize == 21
@@ -170,7 +173,9 @@ class TestLensingPlotterAttributes:
         assert plotter.caustics_liner.pointsize == 21
 
         plotter = aplt.Plotter(
-            caustics_liner=aplt.Liner(width=1, style=".", colors="k", pointsize=3)
+            caustics_liner=aplt.CausticsLiner(
+                width=1, style=".", colors="k", pointsize=3
+            )
         )
 
         assert plotter.caustics_liner.width == 1
@@ -186,10 +191,10 @@ class TestLensingPlotterAttributes:
         assert sub_plotter.caustics_liner.pointsize == 23
 
         sub_plotter = aplt.SubPlotter(
-            caustics_liner=aplt.Liner(width=24, style=".", colors="r", pointsize=21)
+            caustics_liner=aplt.CausticsLiner.sub(style=".", colors="r", pointsize=21)
         )
 
-        assert sub_plotter.caustics_liner.width == 24
+        assert sub_plotter.caustics_liner.width == 7
         assert sub_plotter.caustics_liner.style == "."
         assert sub_plotter.caustics_liner.colors == ["r"]
         assert sub_plotter.caustics_liner.pointsize == 21
