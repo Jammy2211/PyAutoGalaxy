@@ -746,13 +746,16 @@ class Include(plotters.Include):
 
     def critical_curves_from_obj(self, obj):
 
-        if not self.critical_curves:
+        if not hasattr(obj, "has_mass_profile"):
+            return None
+
+        if not self.critical_curves or not obj.has_mass_profile:
             return None
 
         if self.preloaded_caustics is not None:
             return self.preloaded_critical_curves
 
-        if isinstance(obj, lensing.LensingObject) and obj.has_mass_profile:
+        if isinstance(obj, lensing.LensingObject):
             try:
                 return obj.critical_curves
             except ValueError:
@@ -765,13 +768,16 @@ class Include(plotters.Include):
 
     def caustics_from_obj(self, obj):
 
-        if not self.caustics:
+        if not hasattr(obj, "has_mass_profile"):
+            return None
+
+        if not self.caustics or not obj.has_mass_profile:
             return None
 
         if self.preloaded_caustics is not None:
             return self.preloaded_caustics
 
-        if isinstance(obj, lensing.LensingObject) and obj.has_mass_profile:
+        if isinstance(obj, lensing.LensingObject):
 
             try:
                 return obj.caustics
