@@ -41,7 +41,7 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
         #    convergence[central_pixel] = np.pi * self.einstein_radius ** 2.0
         return convergence
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -99,7 +99,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
             self.slope - 1
         )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -124,7 +124,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
         return covnergence_grid
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -148,7 +148,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
         return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @grids.grid_interpolate
     @geometry_profiles.cache
     @geometry_profiles.transform_grid
@@ -279,7 +279,7 @@ class SphericalCoredPowerLaw(EllipticalCoredPowerLaw):
             core_radius=core_radius,
         )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -345,7 +345,7 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
             core_radius=dim.Length(0.0),
         )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -444,7 +444,7 @@ class SphericalPowerLaw(EllipticalPowerLaw):
             slope=slope,
         )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -567,7 +567,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
 
     # critical_covnergence =
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -628,7 +628,7 @@ class SphericalIsothermal(EllipticalIsothermal):
             centre=centre, axis_ratio=1.0, phi=0.0, einstein_radius=einstein_radius
         )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -644,7 +644,7 @@ class SphericalIsothermal(EllipticalIsothermal):
         eta = self.grid_to_elliptical_radii(grid)
         return 2.0 * self.einstein_radius_rescaled * eta
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):

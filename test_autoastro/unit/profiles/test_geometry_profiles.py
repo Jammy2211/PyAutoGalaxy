@@ -434,7 +434,7 @@ class TestEllipticalProfile(object):
             assert eccentric_radius == pytest.approx(2.0 ** 0.5, 1e-3)
 
             eccentric_radius = elliptical_profile.grid_to_eccentric_radii(
-                aa.positions([[(1.0, 1.0)]])
+                aa.coordinates([[(1.0, 1.0)]])
             )
 
             assert eccentric_radius[0][0] == pytest.approx(2.0 ** 0.5, 1e-3)

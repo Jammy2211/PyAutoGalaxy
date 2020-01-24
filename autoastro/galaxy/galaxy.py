@@ -236,7 +236,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         return self.__class__(**new_dict)
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     def profile_image_from_grid(self, grid):
         """Calculate the summed image of all of the galaxy's light profiles using a grid of Cartesian (y,x) \
         coordinates.
@@ -329,7 +329,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return None
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     def convergence_from_grid(self, grid):
         """Compute the summed convergence of the galaxy's mass profiles using a grid \
         of Cartesian (y,x) coordinates.
@@ -359,7 +359,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 sub_array_1d=np.zeros((grid.sub_shape_1d,))
             )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     def potential_from_grid(self, grid):
         """Compute the summed gravitational potential of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
@@ -389,7 +389,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 sub_array_1d=np.zeros((grid.sub_shape_1d,))
             )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     def deflections_from_grid(self, grid):
         """Compute the summed (y,x) deflection angles of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
