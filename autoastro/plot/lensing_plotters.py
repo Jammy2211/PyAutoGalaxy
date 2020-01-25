@@ -4,6 +4,7 @@ from autoastro.plot import lensing_mat_objs
 from autoarray.operators.inversion import mappers
 from autoastro import lensing
 
+from functools import wraps
 import copy
 
 
@@ -846,6 +847,64 @@ class Include(plotters.Include):
         include.preloaded_caustics = preloaded_caustics
 
         return include
+
+
+def set_include_and_plotter(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+
+        include_key = plotters.include_key_from_dictionary(dictionary=kwargs)
+
+        if include_key is not None:
+            include = kwargs[include_key]
+        else:
+            include = Include()
+            include_key = "include"
+
+        kwargs[include_key] = include
+
+        plotter_key = plotters.plotter_key_from_dictionary(dictionary=kwargs)
+
+        if plotter_key is not None:
+            plotter = kwargs[plotter_key]
+        else:
+            plotter = Plotter()
+            plotter_key = "plotter"
+
+        kwargs[plotter_key] = plotter
+
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+def set_include_and_sub_plotter(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+
+        include_key = plotters.include_key_from_dictionary(dictionary=kwargs)
+
+        if include_key is not None:
+            include = kwargs[include_key]
+        else:
+            include = Include()
+            include_key = "include"
+
+        kwargs[include_key] = include
+
+        plotter_key = plotters.plotter_key_from_dictionary(dictionary=kwargs)
+
+        if plotter_key is not None:
+            plotter = kwargs[plotter_key]
+        else:
+            plotter = SubPlotter()
+            plotter_key = "sub_plotter"
+
+        kwargs[plotter_key] = plotter
+
+        return func(*args, **kwargs)
+
+    return wrapper
 
 
 def plot_array(

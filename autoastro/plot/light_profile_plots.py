@@ -3,14 +3,9 @@ from autoastro.plot import lensing_plotters
 from autoarray.util import plotter_util
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def profile_image(
-    light_profile,
-    grid,
-    positions=None,
-    include=lensing_plotters.Include(),
-    plotter=lensing_plotters.Plotter(),
-):
+def profile_image(light_profile, grid, positions=None, include=None, plotter=None):
     """Plot the image of a light profile, on a grid of (y,x) coordinates.
 
     Set *autoastro.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
@@ -37,7 +32,7 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
     maximum_radius=10.0,
     radii_bins=10,
     plot_axis_type="semilogy",
-    plotter=lensing_plotters.Plotter(),
+    plotter=None,
 ):
 
     radii = plotter_util.quantity_radii_from_minimum_and_maximum_radii_and_radii_points(

@@ -2,14 +2,9 @@ from autoarray.plot import plotters
 from autoastro.plot import lensing_plotters, light_profile_plots, mass_profile_plots
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def profile_image(
-    galaxy,
-    grid,
-    positions=None,
-    include=lensing_plotters.Include(),
-    plotter=lensing_plotters.Plotter(),
-):
+def profile_image(galaxy, grid, positions=None, include=None, plotter=None):
     """Plot the image (e.g. the datas) of a galaxy, on a grid of (y,x) coordinates.
 
     Set *autoastro.datas.arrays.plotters.plotters* for a description of all innput parameters not described below.
@@ -32,14 +27,9 @@ def profile_image(
     )
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def convergence(
-    galaxy,
-    grid,
-    positions=None,
-    include=lensing_plotters.Include(),
-    plotter=lensing_plotters.Plotter(),
-):
+def convergence(galaxy, grid, positions=None, include=None, plotter=None):
     """Plot the convergence of a galaxy, on a grid of (y,x) coordinates.
 
     Set *autoastro.datas.arrays.plotters.plotters* for a description of all innput parameters not described below.
@@ -62,14 +52,9 @@ def convergence(
     )
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def potential(
-    galaxy,
-    grid,
-    positions=None,
-    include=lensing_plotters.Include(),
-    plotter=lensing_plotters.Plotter(),
-):
+def potential(galaxy, grid, positions=None, include=None, plotter=None):
     """Plot the potential of a galaxy, on a grid of (y,x) coordinates.
 
      Set *autoastro.datas.arrays.plotters.plotters* for a description of all innput parameters not described below.
@@ -92,14 +77,9 @@ def potential(
     )
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def deflections_y(
-    galaxy,
-    grid,
-    positions=None,
-    include=lensing_plotters.Include(),
-    plotter=lensing_plotters.Plotter(),
-):
+def deflections_y(galaxy, grid, positions=None, include=None, plotter=None):
     """Plot the y component of the deflection angles of a galaxy, on a grid of (y,x) coordinates.
 
     Set *autoastro.datas.arrays.plotters.plotters* for a description of all innput parameters not described below.
@@ -127,14 +107,9 @@ def deflections_y(
     )
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def deflections_x(
-    galaxy,
-    grid,
-    positions=None,
-    include=lensing_plotters.Include(),
-    plotter=lensing_plotters.Plotter(),
-):
+def deflections_x(galaxy, grid, positions=None, include=None, plotter=None):
     """Plot the x component of the deflection angles of a galaxy, on a grid of (y,x) coordinates.
 
      Set *autoastro.datas.arrays.plotters.plotters* for a description of all innput parameters not described below.
@@ -161,14 +136,9 @@ def deflections_x(
     )
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def magnification(
-    galaxy,
-    grid,
-    positions=None,
-    include=lensing_plotters.Include(),
-    plotter=lensing_plotters.Plotter(),
-):
+def magnification(galaxy, grid, positions=None, include=None, plotter=None):
     """Plot the magnification of a galaxy, on a grid of (y,x) coordinates.
 
      Set *autoastro.datas.arrays.plotters.plotters* for a description of all innput parameters not described below.
@@ -192,14 +162,9 @@ def magnification(
     )
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def profile_image_subplot(
-    galaxy,
-    grid,
-    positions=None,
-    include=lensing_plotters.Include(),
-    sub_plotter=lensing_plotters.SubPlotter(),
-):
+def profile_image_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
 
     number_subplots = len(galaxy.light_profiles)
 
@@ -221,14 +186,9 @@ def profile_image_subplot(
     sub_plotter.figure.close()
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def convergence_subplot(
-    galaxy,
-    grid,
-    positions=None,
-    include=lensing_plotters.Include(),
-    sub_plotter=lensing_plotters.SubPlotter(),
-):
+def convergence_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
 
     number_subplots = len(galaxy.mass_profiles)
 
@@ -250,14 +210,9 @@ def convergence_subplot(
     sub_plotter.figure.close()
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def potential_subplot(
-    galaxy,
-    grid,
-    positions=None,
-    include=lensing_plotters.Include(),
-    sub_plotter=lensing_plotters.SubPlotter(),
-):
+def potential_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
 
     number_subplots = len(galaxy.mass_profiles)
 
@@ -279,14 +234,9 @@ def potential_subplot(
     sub_plotter.figure.close()
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def deflections_y_subplot(
-    galaxy,
-    grid,
-    positions=None,
-    include=lensing_plotters.Include(),
-    sub_plotter=lensing_plotters.SubPlotter(),
-):
+def deflections_y_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
 
     number_subplots = len(galaxy.mass_profiles)
 
@@ -308,14 +258,9 @@ def deflections_y_subplot(
     sub_plotter.figure.close()
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def deflections_x_subplot(
-    galaxy,
-    grid,
-    positions=None,
-    include=lensing_plotters.Include(),
-    sub_plotter=lensing_plotters.SubPlotter(),
-):
+def deflections_x_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
 
     number_subplots = len(galaxy.mass_profiles)
 
@@ -337,14 +282,9 @@ def deflections_x_subplot(
     sub_plotter.figure.close()
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def contribution_map(
-    galaxy,
-    mask=None,
-    positions=None,
-    include=lensing_plotters.Include(),
-    plotter=lensing_plotters.Plotter(),
-):
+def contribution_map(galaxy, mask=None, positions=None, include=None, plotter=None):
     """Plot the summed contribution maps of a hyper_galaxies-fit.
 
     Set *autolens.datas.arrays.plotters.plotters* for a description of all input parameters not described below.

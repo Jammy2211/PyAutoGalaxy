@@ -4,13 +4,9 @@ from autoastro.plot import lensing_plotters
 from autoastro import exc
 
 
+@lensing_plotters.set_include_and_sub_plotter
 @plotters.set_subplot_filename
-def subplot_fit_galaxy(
-    fit,
-    positions=None,
-    include=lensing_plotters.Include(),
-    sub_plotter=lensing_plotters.SubPlotter(),
-):
+def subplot_fit_galaxy(fit, positions=None, include=None, sub_plotter=None):
 
     number_subplots = 4
 
@@ -49,8 +45,8 @@ def individuals(
     plot_model_image=False,
     plot_residual_map=False,
     plot_chi_squared_map=False,
-    include=lensing_plotters.Include(),
-    plotter=lensing_plotters.Plotter(),
+    include=None,
+    plotter=None,
 ):
 
     if plot_image:
@@ -96,13 +92,9 @@ def individuals(
         )
 
 
+@lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def galaxy_data_array(
-    galaxy_data,
-    positions=None,
-    include=lensing_plotters.Include(),
-    plotter=lensing_plotters.Plotter(),
-):
+def galaxy_data_array(galaxy_data, positions=None, include=None, plotter=None):
 
     if galaxy_data.use_image:
         title = "Galaxy Data Image"
