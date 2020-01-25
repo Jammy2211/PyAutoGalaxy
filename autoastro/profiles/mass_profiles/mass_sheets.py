@@ -46,6 +46,9 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
         grid_radii = self.grid_to_grid_radii(grid=grid)
         return self.grid_to_grid_cartesian(grid=grid, radius=self.kappa * grid_radii)
 
+    @property
+    def is_mass_sheet(self):
+        return True
 
 # noinspection PyAbstractClass
 class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):

@@ -1209,7 +1209,7 @@ class TestMassProfiles(object):
             )
 
     class TestMassProfileGeometry:
-        def test__extracts_centres_correctly(self):
+        def test__extracts_centres_correctly__ignores_mass_sheets(self):
 
             galaxy = aast.Galaxy(redshift=0.5)
 
@@ -1239,6 +1239,17 @@ class TestMassProfiles(object):
             )
 
             assert galaxy.mass_profile_centres == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                mp_0=aast.lp.EllipticalLightProfile(centre=(0.0, 1.0)),
+                mp_1=aast.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
+                lp_0=aast.mp.EllipticalMassProfile(centre=(-1.0, -2.0)),
+                mp_2=aast.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
+                sheet = aast.mp.MassSheet(centre=(10.0, 10.0))
+            )
+
+            assert galaxy.light_profile_centres == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
 
         def test__extracts_axis_ratio_correctly(self):
 

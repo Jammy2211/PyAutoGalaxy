@@ -41,6 +41,9 @@ class MassProfile(lensing.LensingObject):
     ):
         return ["Mass Profile = {}\n".format(self.__class__.__name__)]
 
+    @property
+    def is_mass_sheet(self):
+        return False
 
 # noinspection PyAbstractClass
 class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
@@ -71,7 +74,10 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
 
     @property
     def mass_profile_centres(self):
-        return [self.centre]
+        if not self.is_mass_sheet:
+            return [self.centre]
+        else:
+            return []
 
     def mass_within_circle_in_units(
         self,
