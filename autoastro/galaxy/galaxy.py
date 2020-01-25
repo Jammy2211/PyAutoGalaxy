@@ -127,7 +127,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def mass_profile_centres(self):
-        return [mass_profile.centre for mass_profile in self.mass_profiles]
+        centres = [mass_profile.centre for mass_profile in self.mass_profiles if not mass_profile.is_mass_sheet]
+        return list(filter(None, centres))
 
     @property
     def mass_profile_axis_ratios(self):
