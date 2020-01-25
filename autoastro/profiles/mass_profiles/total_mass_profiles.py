@@ -549,6 +549,10 @@ class EllipticalIsothermal(EllipticalPowerLaw):
         einstein_radius : float
             The arc-second Einstein radius.
         """
+
+        if not isinstance(self, SphericalIsothermal) and axis_ratio > 0.99999:
+            axis_ratio = 0.99999
+
         super(EllipticalIsothermal, self).__init__(
             centre=centre,
             axis_ratio=axis_ratio,

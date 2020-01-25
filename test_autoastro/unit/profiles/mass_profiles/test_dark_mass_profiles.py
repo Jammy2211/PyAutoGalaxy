@@ -1774,7 +1774,9 @@ class TestNFW(object):
         nfw = aast.mp.EllipticalNFW(
             centre=(0.3, 0.2), axis_ratio=0.7, phi=6.0, kappa_s=2.5, scale_radius=4.0
         )
-        deflections = nfw.deflections_from_grid(grid=aa.coordinates([[(0.1625, 0.1625)]]))
+        deflections = nfw.deflections_from_grid(
+            grid=aa.coordinates([[(0.1625, 0.1625)]])
+        )
         assert deflections[0][0][0] == pytest.approx(-2.59480, 1e-3)
         assert deflections[0][0][1] == pytest.approx(-0.44204, 1e-3)
 

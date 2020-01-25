@@ -45,6 +45,7 @@ class MassProfile(lensing.LensingObject):
     def is_mass_sheet(self):
         return False
 
+
 # noinspection PyAbstractClass
 class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
     @af.map_types

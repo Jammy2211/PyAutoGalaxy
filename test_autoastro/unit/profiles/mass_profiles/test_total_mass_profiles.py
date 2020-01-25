@@ -319,9 +319,9 @@ class TestCoredPowerLaw(object):
             slope=1.7,
             core_radius=0.2,
         )
-        assert cored_power_law.convergence_from_grid(grid=aa.coordinates([[(0.0, 1.0)]]))[
-            0
-        ][0] == pytest.approx(1.3887, 1e-3)
+        assert cored_power_law.convergence_from_grid(
+            grid=aa.coordinates([[(0.0, 1.0)]])
+        )[0][0] == pytest.approx(1.3887, 1e-3)
 
     def test__potential_correct_values(self):
         power_law = aast.mp.SphericalCoredPowerLaw(
@@ -1636,9 +1636,9 @@ class TestIsothermal(object):
         isothermal = aast.mp.EllipticalIsothermal(
             centre=(-0.7, 0.5), axis_ratio=0.7, phi=60.0, einstein_radius=1.3
         )
-        assert isothermal.potential_from_grid(grid=aa.coordinates([[(0.1625, 0.1625)]]))[
-            0
-        ][0] == pytest.approx(1.19268, 1e-3)
+        assert isothermal.potential_from_grid(
+            grid=aa.coordinates([[(0.1625, 0.1625)]])
+        )[0][0] == pytest.approx(1.19268, 1e-3)
 
     def test__deflections__correct_values(self):
         isothermal = aast.mp.SphericalIsothermal(

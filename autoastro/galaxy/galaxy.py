@@ -127,7 +127,11 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def mass_profile_centres(self):
-        centres = [mass_profile.centre for mass_profile in self.mass_profiles if not mass_profile.is_mass_sheet]
+        centres = [
+            mass_profile.centre
+            for mass_profile in self.mass_profiles
+            if not mass_profile.is_mass_sheet
+        ]
         return list(filter(None, centres))
 
     @property

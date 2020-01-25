@@ -214,7 +214,9 @@ class TestLightProfiles(object):
 
             assert lp_profile_image == gal_profile_image
 
-        def test__coordinates_in__coordinates_out(self, lp_0, gal_x1_lp, lp_1, gal_x2_lp):
+        def test__coordinates_in__coordinates_out(
+            self, lp_0, gal_x1_lp, lp_1, gal_x2_lp
+        ):
             lp_profile_image = lp_0.profile_image_from_grid(
                 grid=aa.coordinates([[(1.05, -0.55)]])
             )
@@ -625,7 +627,9 @@ class TestMassProfiles(object):
 
             assert mp_convergence == gal_convergence
 
-        def test__coordinates_in__coordinates_out(self, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+        def test__coordinates_in__coordinates_out(
+            self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
+        ):
 
             mp_convergence = mp_0.convergence_from_grid(
                 grid=aa.coordinates([[(1.05, -0.55)]])
@@ -727,7 +731,9 @@ class TestMassProfiles(object):
 
             assert mp_potential == gal_potential
 
-        def test__coordinates_in__coordinates_out(self, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+        def test__coordinates_in__coordinates_out(
+            self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
+        ):
 
             mp_potential = mp_0.potential_from_grid(
                 grid=aa.coordinates([[(1.05, -0.55)]])
@@ -828,7 +834,9 @@ class TestMassProfiles(object):
 
             assert (mp_deflections == gal_deflections).all()
 
-        def test__coordinates_in__coordinates_out(self, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+        def test__coordinates_in__coordinates_out(
+            self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
+        ):
 
             mp_deflections = mp_0.deflections_from_grid(
                 grid=aa.coordinates([[(1.05, -0.55)]])
@@ -1246,7 +1254,7 @@ class TestMassProfiles(object):
                 mp_1=aast.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
                 lp_0=aast.mp.EllipticalMassProfile(centre=(-1.0, -2.0)),
                 mp_2=aast.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
-                sheet = aast.mp.MassSheet(centre=(10.0, 10.0))
+                sheet=aast.mp.MassSheet(centre=(10.0, 10.0)),
             )
 
             assert galaxy.light_profile_centres == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]

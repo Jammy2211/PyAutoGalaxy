@@ -50,6 +50,7 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
     def is_mass_sheet(self):
         return True
 
+
 # noinspection PyAbstractClass
 class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
     @af.map_types
