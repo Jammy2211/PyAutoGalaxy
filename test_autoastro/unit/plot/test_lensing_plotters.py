@@ -260,8 +260,6 @@ class TestLensingPlotterPlots:
             multiple_images=[(1.0, 1.0)],
             critical_curves=[(1.0, 1.0), (2.0, 2.0)],
             caustics=[(1.0, 1.0), (2.0, 2.0)],
-            include_origin=True,
-            include_border=True,
             plotter=aplt.Plotter(
                 output=aplt.Output(path=plot_path, filename="array3", format="png")
             ),
@@ -421,9 +419,6 @@ class TestLensingPlotterPlots:
 
         aplt.mapper_obj(
             mapper=rectangular_mapper_7x7_3x3,
-            include_pixelization_grid=True,
-            include_grid=True,
-            include_border=True,
             light_profile_centres=[(1.0, 1.0)],
             mass_profile_centres=[(1.0, 1.0)],
             multiple_images=[(1.0, 1.0)],
@@ -474,9 +469,6 @@ class TestLensingPlotterPlots:
 
         aplt.mapper_obj(
             mapper=voronoi_mapper_9_3x3,
-            include_pixelization_grid=True,
-            include_grid=True,
-            include_border=True,
             image_pixel_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
             source_pixel_indexes=[[0, 1], [2]],
             plotter=aplt.Plotter(

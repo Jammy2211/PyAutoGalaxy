@@ -919,10 +919,12 @@ def plot_array(
     multiple_images=None,
     critical_curves=None,
     caustics=None,
-    include_origin=False,
-    include_border=False,
+    include=None,
     plotter=None,
 ):
+
+    if include is None:
+        include = Include()
 
     if plotter is None:
         plotter = Plotter()
@@ -937,8 +939,8 @@ def plot_array(
         caustics=caustics,
         positions=positions,
         grid=grid,
-        include_origin=include_origin,
-        include_border=include_border,
+        include_origin=include.origin,
+        include_border=include.border,
     )
 
 
@@ -954,10 +956,12 @@ def plot_grid(
     critical_curves=None,
     caustics=None,
     symmetric_around_centre=True,
-    include_origin=False,
-    include_border=False,
+    include=None,
     plotter=None,
 ):
+
+    if include is None:
+        include = Include()
 
     if plotter is None:
         plotter = Plotter()
@@ -974,8 +978,8 @@ def plot_grid(
         critical_curves=critical_curves,
         caustics=caustics,
         symmetric_around_centre=symmetric_around_centre,
-        include_origin=include_origin,
-        include_border=include_border,
+        include_origin=include.origin,
+        include_border=include.border,
     )
 
 
@@ -1004,9 +1008,6 @@ def plot_line(
 
 def plot_mapper_obj(
     mapper,
-    include_pixelization_grid=False,
-    include_grid=False,
-    include_border=False,
     light_profile_centres=None,
     mass_profile_centres=None,
     multiple_images=None,
@@ -1014,17 +1015,21 @@ def plot_mapper_obj(
     caustics=None,
     image_pixel_indexes=None,
     source_pixel_indexes=None,
+    include=None,
     plotter=None,
 ):
+
+    if include is None:
+        include = Include()
 
     if plotter is None:
         plotter = Plotter()
 
     plotter.plot_mapper(
         mapper=mapper,
-        include_pixelization_grid=include_pixelization_grid,
-        include_grid=include_grid,
-        include_border=include_border,
+        include_grid=include.inversion_grid,
+        include_pixelization_grid=include.inversion_pixelization_grid,
+        include_border=include.inversion_border,
         light_profile_centres=light_profile_centres,
         mass_profile_centres=mass_profile_centres,
         multiple_images=multiple_images,
