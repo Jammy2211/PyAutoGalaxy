@@ -162,7 +162,7 @@ def magnification(galaxy, grid, positions=None, include=None, plotter=None):
     )
 
 
-@lensing_plotters.set_include_and_plotter
+@lensing_plotters.set_include_and_sub_plotter
 @plotters.set_labels
 def profile_image_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
 
@@ -186,7 +186,7 @@ def profile_image_subplot(galaxy, grid, positions=None, include=None, sub_plotte
     sub_plotter.figure.close()
 
 
-@lensing_plotters.set_include_and_plotter
+@lensing_plotters.set_include_and_sub_plotter
 @plotters.set_labels
 def convergence_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
 
@@ -210,7 +210,7 @@ def convergence_subplot(galaxy, grid, positions=None, include=None, sub_plotter=
     sub_plotter.figure.close()
 
 
-@lensing_plotters.set_include_and_plotter
+@lensing_plotters.set_include_and_sub_plotter
 @plotters.set_labels
 def potential_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
 
@@ -234,7 +234,7 @@ def potential_subplot(galaxy, grid, positions=None, include=None, sub_plotter=No
     sub_plotter.figure.close()
 
 
-@lensing_plotters.set_include_and_plotter
+@lensing_plotters.set_include_and_sub_plotter
 @plotters.set_labels
 def deflections_y_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
 
@@ -258,7 +258,7 @@ def deflections_y_subplot(galaxy, grid, positions=None, include=None, sub_plotte
     sub_plotter.figure.close()
 
 
-@lensing_plotters.set_include_and_plotter
+@lensing_plotters.set_include_and_sub_plotter
 @plotters.set_labels
 def deflections_x_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
 

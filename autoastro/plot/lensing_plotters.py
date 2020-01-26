@@ -275,6 +275,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         color_array=None,
         axis_limits=None,
         indexes=None,
+        positions=None,
         light_profile_centres=None,
         mass_profile_centres=None,
         multiple_images=None,
@@ -331,6 +332,7 @@ class LensingPlotter(plotters.AbstractPlotter):
             color_array=color_array,
             axis_limits=axis_limits,
             indexes=indexes,
+            positions=positions,
             symmetric_around_centre=symmetric_around_centre,
             include_origin=include_origin,
             include_border=include_border,
@@ -919,8 +921,11 @@ def plot_array(
     caustics=None,
     include_origin=False,
     include_border=False,
-    plotter=Plotter(),
+    plotter=None,
 ):
+
+    if plotter is None:
+        plotter = Plotter()
 
     plotter.plot_array(
         array=array,
@@ -942,6 +947,7 @@ def plot_grid(
     color_array=None,
     axis_limits=None,
     indexes=None,
+    positions=None,
     light_profile_centres=None,
     mass_profile_centres=None,
     multiple_images=None,
@@ -950,14 +956,18 @@ def plot_grid(
     symmetric_around_centre=True,
     include_origin=False,
     include_border=False,
-    plotter=Plotter(),
+    plotter=None,
 ):
+
+    if plotter is None:
+        plotter = Plotter()
 
     plotter.plot_grid(
         grid=grid,
         color_array=color_array,
         axis_limits=axis_limits,
         indexes=indexes,
+        positions=positions,
         light_profile_centres=light_profile_centres,
         mass_profile_centres=mass_profile_centres,
         multiple_images=multiple_images,
@@ -976,8 +986,11 @@ def plot_line(
     plot_axis_type="semilogy",
     vertical_lines=None,
     vertical_line_labels=None,
-    plotter=Plotter(),
+    plotter=None,
 ):
+
+    if plotter is None:
+        plotter = Plotter()
 
     plotter.plot_line(
         y=y,
@@ -1001,8 +1014,11 @@ def plot_mapper_obj(
     caustics=None,
     image_pixel_indexes=None,
     source_pixel_indexes=None,
-    plotter=Plotter(),
+    plotter=None,
 ):
+
+    if plotter is None:
+        plotter = Plotter()
 
     plotter.plot_mapper(
         mapper=mapper,
