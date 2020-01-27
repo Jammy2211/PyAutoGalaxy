@@ -73,7 +73,7 @@ class TestMassSheet(object):
         assert convergence[3] == pytest.approx(1.0, 1e-3)
 
         convergence = mass_sheet.convergence_from_grid(
-            grid=aa.positions([[(1.0, 0.0)]])
+            grid=aa.coordinates([[(1.0, 0.0)]])
         )
 
         assert convergence[0][0] == pytest.approx(1.0, 1e-3)
@@ -104,7 +104,7 @@ class TestMassSheet(object):
         assert potential[2] == pytest.approx(0.0, 1e-3)
         assert potential[3] == pytest.approx(0.0, 1e-3)
 
-        potential = mass_sheet.potential_from_grid(grid=aa.positions([[(1.0, 0.0)]]))
+        potential = mass_sheet.potential_from_grid(grid=aa.coordinates([[(1.0, 0.0)]]))
 
         assert potential[0][0] == pytest.approx(0.0, 1e-3)
 
@@ -233,7 +233,7 @@ class TestMassSheet(object):
         assert deflections[3, 1] == pytest.approx(0.0, 1e-3)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.positions([[(1.0, 0.0)]])
+            grid=aa.coordinates([[(1.0, 0.0)]])
         )
 
         assert deflections[0][0][0] == pytest.approx(1.0, 1e-3)
@@ -353,7 +353,7 @@ class TestExternalShear(object):
         assert convergence[2] == pytest.approx(0.0, 1e-3)
         assert convergence[3] == pytest.approx(0.0, 1e-3)
 
-        convergence = shear.convergence_from_grid(grid=aa.positions([[(1.0, 0.0)]]))
+        convergence = shear.convergence_from_grid(grid=aa.coordinates([[(1.0, 0.0)]]))
 
         assert convergence[0][0] == pytest.approx(0.0, 1e-3)
 
@@ -383,7 +383,7 @@ class TestExternalShear(object):
         assert potential[2] == pytest.approx(0.0, 1e-3)
         assert potential[3] == pytest.approx(0.0, 1e-3)
 
-        potential = shear.potential_from_grid(grid=aa.positions([[(1.0, 0.0)]]))
+        potential = shear.potential_from_grid(grid=aa.coordinates([[(1.0, 0.0)]]))
 
         assert potential[0][0] == pytest.approx(0.0, 1e-3)
 
@@ -423,7 +423,7 @@ class TestExternalShear(object):
         assert deflections[3, 1] == pytest.approx(-0.011895, 1e-3)
 
         deflections = shear.deflections_from_grid(
-            grid=aa.positions([[(0.1625, 0.1625)]])
+            grid=aa.coordinates([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0][0][0] == pytest.approx(0.04439, 1e-3)

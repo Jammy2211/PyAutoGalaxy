@@ -134,7 +134,7 @@ class TestGaussian:
         ) == pytest.approx(0.0647, 1e-2)
 
         value = gaussian.profile_image_from_grid(
-            grid=aa.positions(positions=[[(0.0, 3.0)]])
+            grid=aa.coordinates(coordinates=[[(0.0, 3.0)]])
         )
 
         assert value[0][0] == pytest.approx(0.0647, 1e-2)
@@ -318,7 +318,7 @@ class TestSersic:
             grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
         ) == pytest.approx(5.38066670129, 1e-3)
 
-        value = sersic.profile_image_from_grid(grid=aa.positions([[(1.0, 0.0)]]))
+        value = sersic.profile_image_from_grid(grid=aa.coordinates([[(1.0, 0.0)]]))
 
         assert value[0][0] == pytest.approx(5.38066670129, 1e-3)
 
@@ -510,7 +510,7 @@ class TestExponential:
             grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(2.0 * 4.8566, 1e-3)
 
-        value = exponential.profile_image_from_grid(grid=aa.positions([[(0.0, 1.0)]]))
+        value = exponential.profile_image_from_grid(grid=aa.coordinates([[(0.0, 1.0)]]))
 
         assert value[0][0] == pytest.approx(2.0 * 4.8566, 1e-3)
 
@@ -662,7 +662,7 @@ class TestDevVaucouleurs:
         ) == pytest.approx(2.0 * 7.4455, 1e-3)
 
         value = dev_vaucouleurs.profile_image_from_grid(
-            grid=aa.positions([[(0.0, 1.0)]])
+            grid=aa.coordinates([[(0.0, 1.0)]])
         )
 
         assert value[0][0] == pytest.approx(2.0 * 7.4455, 1e-3)

@@ -11,6 +11,6 @@ from autoastro.galaxy import masked
 from autoastro.galaxy.fit_galaxy import GalaxyFit as fit_galaxy
 from autoastro.galaxy.galaxy_model import GalaxyModel
 from autoastro.hyper import hyper_data
-from autoastro import plotters as plot
+from autoastro import plot
 
-__version__ = '0.2.4'
+__version__ = "0.2.4"

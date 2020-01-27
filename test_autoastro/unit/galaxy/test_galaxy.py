@@ -214,13 +214,15 @@ class TestLightProfiles(object):
 
             assert lp_profile_image == gal_profile_image
 
-        def test__positions_in__positions_out(self, lp_0, gal_x1_lp, lp_1, gal_x2_lp):
+        def test__coordinates_in__coordinates_out(
+            self, lp_0, gal_x1_lp, lp_1, gal_x2_lp
+        ):
             lp_profile_image = lp_0.profile_image_from_grid(
-                grid=aa.positions([[(1.05, -0.55)]])
+                grid=aa.coordinates([[(1.05, -0.55)]])
             )
 
             gal_lp_profile_image = gal_x1_lp.profile_image_from_grid(
-                grid=aa.positions([[(1.05, -0.55)]])
+                grid=aa.coordinates([[(1.05, -0.55)]])
             )
 
             assert lp_profile_image[0][0] == gal_lp_profile_image[0][0]
@@ -564,52 +566,6 @@ class TestLightProfiles(object):
             assert galaxy.light_profile_centres == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
 
 
-def critical_curve_via_magnification_from_galaxy_and_grid(galaxy, grid):
-    magnification = galaxy.magnification_from_grid(grid=grid)
-
-    inverse_magnification = 1 / magnification
-
-    critical_curves_indices = measure.find_contours(inverse_magnification.in_2d, 0)
-
-    no_critical_curves = len(critical_curves_indices)
-    contours = []
-    critical_curves = []
-
-    for jj in np.arange(no_critical_curves):
-        contours.append(critical_curves_indices[jj])
-        contour_x, contour_y = contours[jj].T
-        pixel_coord = np.stack((contour_x, contour_y), axis=-1)
-
-        critical_curve = grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
-            grid_pixels_1d=pixel_coord, shape_2d=magnification.sub_shape_2d
-        )
-
-        critical_curve = aa.grid_irregular.manual_1d(grid=critical_curve)
-
-        critical_curves.append(critical_curve)
-
-    return critical_curves
-
-
-def caustics_via_magnification_from_galaxy_and_grid(galaxy, grid):
-    caustics = []
-
-    critical_curves = critical_curve_via_magnification_from_galaxy_and_grid(
-        galaxy=galaxy, grid=grid
-    )
-
-    for i in range(len(critical_curves)):
-        critical_curve = critical_curves[i]
-
-        deflections = galaxy.deflections_from_grid(grid=critical_curve)
-
-        caustic = critical_curve - deflections
-
-        caustics.append(caustic)
-
-    return caustics
-
-
 class TestMassProfiles(object):
     class TestConvergence:
         def test__no_mass_profiles__convergence_returned_as_0s_of_shape_grid(
@@ -671,14 +627,16 @@ class TestMassProfiles(object):
 
             assert mp_convergence == gal_convergence
 
-        def test__positions_in__positions_out(self, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+        def test__coordinates_in__coordinates_out(
+            self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
+        ):
 
             mp_convergence = mp_0.convergence_from_grid(
-                grid=aa.positions([[(1.05, -0.55)]])
+                grid=aa.coordinates([[(1.05, -0.55)]])
             )
 
             gal_mp_convergence = gal_x1_mp.convergence_from_grid(
-                grid=aa.positions([[(1.05, -0.55)]])
+                grid=aa.coordinates([[(1.05, -0.55)]])
             )
 
             assert mp_convergence == gal_mp_convergence
@@ -773,14 +731,16 @@ class TestMassProfiles(object):
 
             assert mp_potential == gal_potential
 
-        def test__positions_in__positions_out(self, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+        def test__coordinates_in__coordinates_out(
+            self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
+        ):
 
             mp_potential = mp_0.potential_from_grid(
-                grid=aa.positions([[(1.05, -0.55)]])
+                grid=aa.coordinates([[(1.05, -0.55)]])
             )
 
             gal_mp_potential = gal_x1_mp.potential_from_grid(
-                grid=aa.positions([[(1.05, -0.55)]])
+                grid=aa.coordinates([[(1.05, -0.55)]])
             )
 
             assert mp_potential == gal_mp_potential
@@ -874,19 +834,21 @@ class TestMassProfiles(object):
 
             assert (mp_deflections == gal_deflections).all()
 
-        def test__positions_in__positions_out(self, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+        def test__coordinates_in__coordinates_out(
+            self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
+        ):
 
             mp_deflections = mp_0.deflections_from_grid(
-                grid=aa.positions([[(1.05, -0.55)]])
+                grid=aa.coordinates([[(1.05, -0.55)]])
             )
 
             gal_mp_deflections = gal_x1_mp.deflections_from_grid(
-                grid=aa.positions([[(1.05, -0.55)]])
+                grid=aa.coordinates([[(1.05, -0.55)]])
             )
 
             assert mp_deflections == gal_mp_deflections
 
-            assert type(gal_mp_deflections) == grids.Positions
+            assert type(gal_mp_deflections) == grids.Coordinates
             assert mp_deflections[0][0][0] == gal_mp_deflections[0][0][0]
             assert mp_deflections[0][0][1] == gal_mp_deflections[0][0][1]
 
@@ -1255,7 +1217,7 @@ class TestMassProfiles(object):
             )
 
     class TestMassProfileGeometry:
-        def test__extracts_centres_correctly(self):
+        def test__extracts_centres_correctly__ignores_mass_sheets(self):
 
             galaxy = aast.Galaxy(redshift=0.5)
 
@@ -1285,6 +1247,17 @@ class TestMassProfiles(object):
             )
 
             assert galaxy.mass_profile_centres == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                mp_0=aast.lp.EllipticalLightProfile(centre=(0.0, 1.0)),
+                mp_1=aast.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
+                lp_0=aast.mp.EllipticalMassProfile(centre=(-1.0, -2.0)),
+                mp_2=aast.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
+                sheet=aast.mp.MassSheet(centre=(10.0, 10.0)),
+            )
+
+            assert galaxy.light_profile_centres == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
 
         def test__extracts_axis_ratio_correctly(self):
 
@@ -1559,6 +1532,25 @@ class TestHyperGalaxy(object):
                 contribution_map
                 == np.array([(0.5 / 1.5) / (1.5 / 2.5), (1.0 / 2.0) / (1.5 / 2.5), 1.0])
             ).all()
+
+        def test__galaxy_contribution_map_property(self):
+
+            hyper_image = np.ones((3,))
+
+            hyp = aast.HyperGalaxy(contribution_factor=0.0)
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                hyper_galaxy=hyp,
+                hyper_galaxy_image=hyper_image,
+                hyper_model_image=hyper_image,
+            )
+
+            contribution_map = hyp.contribution_map_from_hyper_images(
+                hyper_model_image=hyper_image, hyper_galaxy_image=hyper_image
+            )
+
+            assert (contribution_map == galaxy.contribution_map).all()
 
     class TestHyperNoiseMap(object):
         def test__contribution_all_1s__noise_factor_2__noise_adds_double(self):

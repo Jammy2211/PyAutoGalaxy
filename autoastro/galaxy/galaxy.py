@@ -127,7 +127,12 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def mass_profile_centres(self):
-        return [mass_profile.centre for mass_profile in self.mass_profiles]
+        centres = [
+            mass_profile.centre
+            for mass_profile in self.mass_profiles
+            if not mass_profile.is_mass_sheet
+        ]
+        return list(filter(None, centres))
 
     @property
     def mass_profile_axis_ratios(self):
@@ -236,7 +241,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         return self.__class__(**new_dict)
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     def profile_image_from_grid(self, grid):
         """Calculate the summed image of all of the galaxy's light profiles using a grid of Cartesian (y,x) \
         coordinates.
@@ -329,7 +334,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return None
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     def convergence_from_grid(self, grid):
         """Compute the summed convergence of the galaxy's mass profiles using a grid \
         of Cartesian (y,x) coordinates.
@@ -359,7 +364,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 sub_array_1d=np.zeros((grid.sub_shape_1d,))
             )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     def potential_from_grid(self, grid):
         """Compute the summed gravitational potential of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
@@ -389,7 +394,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 sub_array_1d=np.zeros((grid.sub_shape_1d,))
             )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     def deflections_from_grid(self, grid):
         """Compute the summed (y,x) deflection angles of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
@@ -454,6 +459,31 @@ class Galaxy(ModelObject, lensing.LensingObject):
             raise exc.GalaxyException(
                 "You cannot perform a mass-based calculation on a galaxy which does not have a mass-profile"
             )
+
+    @property
+    def contribution_map(self):
+        """Compute the contribution map of a galaxy, which represents the fraction of
+        flux in each pixel that the galaxy is attributed to contain, hyper to the
+        *contribution_factor* hyper_galaxies-parameter.
+
+        This is computed by dividing that galaxy's flux by the total flux in that \
+        pixel and then scaling by the maximum flux such that the contribution map \
+        ranges between 0 and 1.
+
+        Parameters
+        -----------
+        hyper_model_image : ndarray
+            The best-fit model image to the observed image from a previous analysis
+            phase. This provides the total light attributed to each image pixel by the
+            model.
+        hyper_galaxy_image : ndarray
+            A model image of the galaxy (from light profiles or an inversion) from a
+            previous analysis phase.
+        """
+        return self.hyper_galaxy.contribution_map_from_hyper_images(
+            hyper_model_image=self.hyper_model_image,
+            hyper_galaxy_image=self.hyper_galaxy_image,
+        )
 
     def summarize_in_units(
         self,
@@ -672,16 +702,6 @@ class HyperGalaxy(object):
 
         self.component_number = next(self._ids)
 
-    def hyper_noise_map_from_hyper_images_and_noise_map(
-        self, hyper_model_image, hyper_galaxy_image, noise_map
-    ):
-        contribution_map = self.contribution_map_from_hyper_images(
-            hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
-        )
-        return self.hyper_noise_map_from_contribution_map(
-            noise_map=noise_map, contribution_map=contribution_map
-        )
-
     def contribution_map_from_hyper_images(self, hyper_model_image, hyper_galaxy_image):
         """Compute the contribution map of a galaxy, which represents the fraction of
         flux in each pixel that the galaxy is attributed to contain, hyper to the
@@ -704,8 +724,17 @@ class HyperGalaxy(object):
         contribution_map = np.divide(
             hyper_galaxy_image, np.add(hyper_model_image, self.contribution_factor)
         )
-        contribution_map = np.divide(contribution_map, np.max(contribution_map))
-        return contribution_map
+        return np.divide(contribution_map, np.max(contribution_map))
+
+    def hyper_noise_map_from_hyper_images_and_noise_map(
+        self, hyper_model_image, hyper_galaxy_image, noise_map
+    ):
+        contribution_map = self.contribution_map_from_hyper_images(
+            hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
+        )
+        return self.hyper_noise_map_from_contribution_map(
+            noise_map=noise_map, contribution_map=contribution_map
+        )
 
     def hyper_noise_map_from_contribution_map(self, noise_map, contribution_map):
         """Compute a hyper galaxy hyper_galaxies noise-map from a baseline noise-map.

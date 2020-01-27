@@ -156,7 +156,7 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
 
         return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -169,41 +169,91 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
 
         """
 
-        surface_density_grid = np.zeros(shape=grid.sub_shape_1d)
+        grid_eta = self.grid_to_elliptical_radii(grid=grid)
 
-        grid_eta = self.grid_to_elliptical_radii(grid)
-
-        for i in range(grid.sub_shape_1d):
-            surface_density_grid[i] = self.convergence_func(grid_eta[i])
-
-        return surface_density_grid
+        return self.convergence_func(grid_radius=grid_eta)
 
     @property
     def ellipticity_rescale(self):
         return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
 
+    def coord_func_f(self, grid_radius):
+        if isinstance(grid_radius, np.ndarray):
+            return self.coord_func_f_jit(
+                grid_radius=grid_radius,
+                f=np.ones(shape=grid_radius.shape[0], dtype="complex64"),
+            )
+        else:
+            return self.coord_func_f_float_jit(grid_radius=grid_radius)
+
     @staticmethod
-    def coord_func_f(grid_radius):
-        f = np.where(
-            np.real(grid_radius) > 1.0,
-            (1.0 / np.sqrt(np.square(grid_radius) - 1.0))
-            * np.arccos(np.divide(1.0, grid_radius)),
-            (1.0 / np.sqrt(1.0 - np.square(grid_radius)))
-            * np.arccosh(np.divide(1.0, grid_radius)),
-        )
-        f[np.isnan(f)] = 1.0
+    @decorator_util.jit()
+    def coord_func_f_jit(grid_radius, f):
+
+        for index in range(f.shape[0]):
+
+            if np.real(grid_radius[index]) > 1.0:
+                f[index] = (
+                    1.0 / np.sqrt(np.square(grid_radius[index]) - 1.0)
+                ) * np.arccos(np.divide(1.0, grid_radius[index]))
+            elif np.real(grid_radius[index]) < 1.0:
+                f[index] = (
+                    1.0 / np.sqrt(1.0 - np.square(grid_radius[index]))
+                ) * np.arccosh(np.divide(1.0, grid_radius[index]))
+
         return f
+
+    @staticmethod
+    @decorator_util.jit()
+    def coord_func_f_float_jit(grid_radius):
+
+        if np.real(grid_radius) > 1.0:
+            return (1.0 / np.sqrt(np.square(grid_radius) - 1.0)) * np.arccos(
+                np.divide(1.0, grid_radius)
+            )
+        elif np.real(grid_radius) < 1.0:
+            return (1.0 / np.sqrt(1.0 - np.square(grid_radius))) * np.arccosh(
+                np.divide(1.0, grid_radius)
+            )
+        else:
+            return 1.0
 
     def coord_func_g(self, grid_radius):
         f_r = self.coord_func_f(grid_radius=grid_radius)
 
-        g = np.where(
-            np.real(grid_radius) > 1.0,
-            (1.0 - f_r) / (np.square(grid_radius) - 1.0),
-            (f_r - 1.0) / (1.0 - np.square(grid_radius)),
-        )
-        g[np.isnan(g)] = 1.0 / 3.0
+        if isinstance(grid_radius, np.ndarray):
+            return self.coord_func_g_jit(
+                grid_radius=grid_radius,
+                f_r=f_r,
+                g=np.zeros(shape=grid_radius.shape[0], dtype="complex64"),
+            )
+        else:
+            return self.coord_func_g_float_jit(grid_radius=grid_radius, f_r=f_r)
+
+    @staticmethod
+    @decorator_util.jit()
+    def coord_func_g_jit(grid_radius, f_r, g):
+
+        for index in range(f_r.shape[0]):
+            if np.real(grid_radius[index]) > 1.0:
+                g[index] = (1.0 - f_r[index]) / (np.square(grid_radius[index]) - 1.0)
+            elif np.real(grid_radius[index]) < 1.0:
+                g[index] = (f_r[index] - 1.0) / (1.0 - np.square(grid_radius[index]))
+            else:
+                g[index] = 1.0 / 3.0
+
         return g
+
+    @staticmethod
+    @decorator_util.jit()
+    def coord_func_g_float_jit(grid_radius, f_r):
+
+        if np.real(grid_radius) > 1.0:
+            return (1.0 - f_r) / (np.square(grid_radius) - 1.0)
+        elif np.real(grid_radius) < 1.0:
+            return (f_r - 1.0) / (1.0 - np.square(grid_radius))
+        else:
+            return 1.0 / 3.0
 
     def coord_func_h(self, grid_radius):
         return np.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
@@ -522,7 +572,7 @@ class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile)
 
 
 class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid, tabulate_bins=1000):
@@ -595,7 +645,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
 
         return potential_grid
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @grids.grid_interpolate
     @geometry_profiles.cache
     @geometry_profiles.transform_grid
@@ -674,23 +724,28 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
             return (y + eta) ** (self.inner_slope - 4) * (1 - np.sqrt(1 - y ** 2))
 
         grid_radius = (1.0 / self.scale_radius) * grid_radius
-        integral_y = quad(
-            integral_y,
-            a=0.0,
-            b=1.0,
-            args=grid_radius,
-            epsrel=EllipticalGeneralizedNFW.epsrel,
-        )[0]
 
-        return (
-            2.0
-            * self.kappa_s
-            * (grid_radius ** (1 - self.inner_slope))
-            * (
-                (1 + grid_radius) ** (self.inner_slope - 3)
-                + ((3 - self.inner_slope) * integral_y)
+        for index in range(grid_radius.shape[0]):
+
+            integral_y_value = quad(
+                integral_y,
+                a=0.0,
+                b=1.0,
+                args=grid_radius[index],
+                epsrel=EllipticalGeneralizedNFW.epsrel,
+            )[0]
+
+            grid_radius[index] = (
+                2.0
+                * self.kappa_s
+                * (grid_radius[index] ** (1 - self.inner_slope))
+                * (
+                    (1 + grid_radius[index]) ** (self.inner_slope - 3)
+                    + ((3 - self.inner_slope) * integral_y_value)
+                )
             )
-        )
+
+        return grid_radius
 
     @staticmethod
     # TODO : Decorator needs to know that potential_integral is 1D arrays
@@ -776,7 +831,7 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
             scale_radius=scale_radius,
         )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @grids.grid_interpolate
     @geometry_profiles.cache
     @geometry_profiles.transform_grid
@@ -853,6 +908,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         )
 
     def coord_func_l(self, grid_radius):
+
         f_r = self.coord_func_f(grid_radius=grid_radius)
         g_r = self.coord_func_g(grid_radius=grid_radius)
         k_r = self.coord_func_k(grid_radius=grid_radius)
@@ -897,7 +953,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
             array=np.zeros(shape=grid.sub_shape_1d), shape_2d=grid.sub_shape_2d
         )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid, **kwargs):
@@ -910,11 +966,11 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
-        eta = np.multiply(1.0 / self.scale_radius, self.grid_to_grid_radii(grid))
+        eta = np.multiply(1.0 / self.scale_radius, self.grid_to_grid_radii(grid=grid))
 
         deflection_grid = np.multiply(
             (4.0 * self.kappa_s * self.scale_radius / eta),
-            self.deflection_func_sph(eta),
+            self.deflection_func_sph(grid_radius=eta),
         )
 
         return self.grid_to_grid_cartesian(grid, deflection_grid)
@@ -1147,7 +1203,7 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
         elif r == 1:
             return 1
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -1171,7 +1227,7 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
 
         return potential_grid
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @grids.grid_interpolate
     @geometry_profiles.cache
     @geometry_profiles.transform_grid
@@ -1189,13 +1245,16 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
 
         def calculate_deflection_component(npow, index):
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= self.kappa_s * quad_grid(
-                self.deflection_func,
-                0.0,
-                1.0,
-                grid,
-                args=(npow, self.axis_ratio, self.scale_radius),
-            )[0]
+            deflection_grid *= (
+                self.kappa_s
+                * quad_grid(
+                    self.deflection_func,
+                    0.0,
+                    1.0,
+                    grid,
+                    args=(npow, self.axis_ratio, self.scale_radius),
+                )[0]
+            )
 
             return deflection_grid
 
@@ -1298,7 +1357,7 @@ class SphericalNFW(EllipticalNFW):
 
     # TODO : Make this use numpy arithmetic
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -1316,7 +1375,7 @@ class SphericalNFW(EllipticalNFW):
             2.0 * self.scale_radius * self.kappa_s * self.potential_func_sph(eta)
         )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):

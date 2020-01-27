@@ -24,6 +24,10 @@ class MassProfile(lensing.LensingObject):
     def is_point_mass(self):
         return False
 
+    @property
+    def ellipticity_rescale(self):
+        return NotImplementedError()
+
     def summarize_in_units(
         self,
         radii,
@@ -36,6 +40,10 @@ class MassProfile(lensing.LensingObject):
         whitespace=80,
     ):
         return ["Mass Profile = {}\n".format(self.__class__.__name__)]
+
+    @property
+    def is_mass_sheet(self):
+        return False
 
 
 # noinspection PyAbstractClass
@@ -64,6 +72,13 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         )
         self.axis_ratio = axis_ratio
         self.phi = phi
+
+    @property
+    def mass_profile_centres(self):
+        if not self.is_mass_sheet:
+            return [self.centre]
+        else:
+            return []
 
     def mass_within_circle_in_units(
         self,
@@ -294,11 +309,3 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
             ]
 
         return summary
-
-    @property
-    def mass_profile_centres(self):
-        return [self.centre]
-
-    @property
-    def ellipticity_rescale(self):
-        return NotImplementedError()

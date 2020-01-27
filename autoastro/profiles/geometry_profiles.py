@@ -184,7 +184,7 @@ class SphericalProfile(GeometryProfile):
         """
         super(SphericalProfile, self).__init__(centre=centre)
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @transform_grid
     def grid_to_grid_radii(self, grid):
         """Convert a grid of (y, x) coordinates to a grid of their circular radii.
@@ -324,7 +324,7 @@ class EllipticalProfile(SphericalProfile):
         )
         return np.vstack((y, x)).T
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @transform_grid
     @move_grid_to_radial_minimum
     def grid_to_elliptical_radii(self, grid):
@@ -343,7 +343,7 @@ class EllipticalProfile(SphericalProfile):
             )
         )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @transform_grid
     @move_grid_to_radial_minimum
     def grid_to_eccentric_radii(self, grid):

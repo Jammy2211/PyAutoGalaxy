@@ -47,7 +47,7 @@ class LensingObject(object):
     def mass_integral(self, x):
         """Routine to integrate an elliptical light profiles - set axis ratio to 1 to compute the luminosity within a \
         circle"""
-        return 2 * np.pi * x * self.convergence_func(x)
+        return 2 * np.pi * x * self.convergence_func(grid_radius=x)
 
     def deflection_magnitudes_from_grid(self, grid):
         deflections = self.deflections_from_grid(grid=grid)

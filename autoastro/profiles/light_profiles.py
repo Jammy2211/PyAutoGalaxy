@@ -94,6 +94,10 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         )
         self.intensity = intensity
 
+    @property
+    def light_profile_centres(self):
+        return [self.centre]
+
     def blurred_profile_image_from_grid_and_psf(self, grid, psf, blurring_grid):
 
         profile_image = self.profile_image_from_grid(grid=grid)
@@ -266,7 +270,7 @@ class EllipticalGaussian(EllipticalLightProfile):
             np.exp(-0.5 * np.square(np.divide(grid_radii, self.sigma))),
         )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def profile_image_from_grid(self, grid, grid_radial_minimum=None):
@@ -457,7 +461,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
             ),
         )
 
-    @grids.convert_positions_to_grid
+    @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def profile_image_from_grid(self, grid, grid_radial_minimum=None):
