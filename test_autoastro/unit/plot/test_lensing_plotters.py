@@ -2,6 +2,7 @@ import autoarray as aa
 from os import path
 import os
 import pytest
+import shutil
 
 import numpy as np
 import autoastro.plot as aplt
@@ -266,6 +267,41 @@ class TestLensingPlotterPlots:
         )
 
         assert plot_path + "array3.png" in plot_patch.paths
+
+    def test__plot_array__fits_files_output_correctly(self, plot_path):
+
+        plot_path = plot_path + "/fits/"
+
+        if os.path.exists(plot_path):
+            shutil.rmtree(plot_path)
+
+        arr = aa.array.ones(shape_2d=(31, 31), pixel_scales=(1.0, 1.0), sub_size=2)
+
+        plotter = aplt.Plotter(
+            output=aplt.Output(path=plot_path, filename="array", format="fits")
+        )
+
+        plotter.plot_array(array=arr)
+
+        arr = aa.util.array.numpy_array_2d_from_fits(
+            file_path=plot_path + "/array.fits", hdu=0
+        )
+
+        assert (arr == np.ones(shape=(31, 31))).all()
+
+        mask = aa.mask.circular(
+            shape_2d=(31, 31), pixel_scales=(1.0, 1.0), radius=5.0, centre=(2.0, 2.0)
+        )
+
+        masked_array = aa.masked.array.manual_2d(array=arr, mask=mask)
+
+        plotter.plot_array(array=masked_array)
+
+        arr = aa.util.array.numpy_array_2d_from_fits(
+            file_path=plot_path + "/array.fits", hdu=0
+        )
+
+        assert arr.shape == (13, 13)
 
     def test__plot_grid__works_with_all_extras_included(self, plot_path, plot_patch):
         grid = aa.grid.uniform(shape_2d=(11, 11), pixel_scales=1.0)

@@ -244,6 +244,15 @@ class LensingPlotter(plotters.AbstractPlotter):
             output_path='/path/to/output', output_format='png', output_filename='image')
         """
 
+        array = array.in_1d_binned
+
+        if array.mask.is_all_false:
+            buffer = 0
+        else:
+            buffer = 1
+
+        array = array.zoomed_around_mask(buffer=buffer)
+
         super(LensingPlotter, self).plot_array(
             array=array,
             mask=mask,
