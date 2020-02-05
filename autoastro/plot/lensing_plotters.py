@@ -6,6 +6,7 @@ from autoastro import lensing
 
 from functools import wraps
 import copy
+import numpy as np
 
 
 class LensingPlotter(plotters.AbstractPlotter):
@@ -243,6 +244,9 @@ class LensingPlotter(plotters.AbstractPlotter):
             xticks_manual=None, yticks_manual=None,
             output_path='/path/to/output', output_format='png', output_filename='image')
         """
+
+        if array is None or np.all(array == 0):
+            return
 
         array = array.in_1d_binned
 
