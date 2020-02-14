@@ -157,7 +157,7 @@ class TestUnits:
         assert galaxy.regularization == 2
 
 
-class TestLightProfiles(object):
+class TestLightProfiles:
     class TestProfileImage:
         def test__no_light_profiles__profile_image_returned_as_0s_of_shape_grid(
             self, sub_grid_7x7
@@ -323,7 +323,7 @@ class TestLightProfiles(object):
 
             assert gal_no_lp.luminosity_within_circle_in_units(radius=1.0) == None
 
-    class TestSymmetricProfiles(object):
+    class TestSymmetricProfiles:
         def test_1d_symmetry(self):
             lp_0 = aast.lp.EllipticalSersic(
                 axis_ratio=1.0,
@@ -437,7 +437,7 @@ class TestLightProfiles(object):
                 1e-5,
             )
 
-    class TestBlurredProfileImages(object):
+    class TestBlurredProfileImages:
         def test__blurred_image_from_grid_and_psf(
             self, sub_grid_7x7, blurring_grid_7x7, psf_3x3, convolver_7x7
         ):
@@ -504,7 +504,7 @@ class TestLightProfiles(object):
                 light_profile_blurred_image.in_2d, 1.0e-4
             )
 
-    class TestVisibilities(object):
+    class TestVisibilities:
         def test__visibilities_from_grid_and_transformer(
             self, sub_grid_7x7, transformer_7x7_7
         ):
@@ -566,7 +566,7 @@ class TestLightProfiles(object):
             assert galaxy.light_profile_centres == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
 
 
-class TestMassProfiles(object):
+class TestMassProfiles:
     class TestConvergence:
         def test__no_mass_profiles__convergence_returned_as_0s_of_shape_grid(
             self, sub_grid_7x7
@@ -1321,7 +1321,7 @@ class TestMassProfiles(object):
 
             assert galaxy.mass_profile_phis == [0.9, 0.8, 0.7]
 
-    class TestLensingObject(object):
+    class TestLensingObject:
         def test__correct_einstein_mass_caclulated_for_multiple_mass_profiles__means_all_innherited_methods_work(
             self,
         ):
@@ -1339,7 +1339,7 @@ class TestMassProfiles(object):
             )
 
 
-class TestMassAndLightProfiles(object):
+class TestMassAndLightProfiles:
     def test_single_profile(self, lmp_0):
         gal_x1_lmp = aast.Galaxy(redshift=0.5, profile=lmp_0)
 
@@ -1358,7 +1358,7 @@ class TestMassAndLightProfiles(object):
         assert 2 == len(gal_multi_profiles.mass_profiles)
 
 
-class TestSummarizeInUnits(object):
+class TestSummarizeInUnits:
     def test__galaxy_with_two_light_and_mass_profiles(self, lp_0, lp_1, mp_0, mp_1):
 
         test_path = "{}/../test_files/config/summary".format(
@@ -1506,8 +1506,8 @@ class TestSummarizeInUnits(object):
         i += 1
 
 
-class TestHyperGalaxy(object):
-    class TestContributionMaps(object):
+class TestHyperGalaxy:
+    class TestContributionMaps:
         def test__model_image_all_1s__factor_is_0__contributions_all_1s(self):
             hyper_image = np.ones((3,))
 
@@ -1552,7 +1552,7 @@ class TestHyperGalaxy(object):
 
             assert (contribution_map == galaxy.contribution_map).all()
 
-    class TestHyperNoiseMap(object):
+    class TestHyperNoiseMap:
         def test__contribution_all_1s__noise_factor_2__noise_adds_double(self):
             noise_map = np.array([1.0, 2.0, 3.0])
             contribution_map = np.ones((3, 1))
@@ -1596,7 +1596,7 @@ class TestHyperGalaxy(object):
             assert (hyper_noise_map == np.array([0.0, 2.0, 18.0])).all()
 
 
-class TestBooleanProperties(object):
+class TestBooleanProperties:
     def test_has_profile(self):
         assert aast.Galaxy(redshift=0.5).has_profile is False
         assert (

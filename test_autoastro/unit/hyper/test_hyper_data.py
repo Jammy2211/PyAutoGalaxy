@@ -13,7 +13,7 @@ def reset_config():
     af.conf.instance = af.conf.default
 
 
-class TestHyperImageSky(object):
+class TestHyperImageSky:
     def test__scale_sky_in_image__increases_all_image_values(self):
 
         image = np.array([1.0, 2.0, 3.0])
@@ -25,7 +25,7 @@ class TestHyperImageSky(object):
         assert (scaled_image == np.array([11.0, 12.0, 13.0])).all()
 
 
-class TestHyperNoiseMapBackground(object):
+class TestHyperNoiseMapBackground:
     def test__scaled_background_noise__adds_to_input_noise(self):
 
         noise_map = np.array([1.0, 2.0, 3.0])

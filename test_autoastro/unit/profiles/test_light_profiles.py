@@ -710,7 +710,7 @@ class TestDevVaucouleurs:
         assert image.shape_2d == (2, 2)
 
 
-class TestCoreSersic(object):
+class TestCoreSersic:
     def test__constructor_and_units(self):
         core_sersic = aast.lp.EllipticalCoreSersic(
             centre=(1.0, 2.0),
@@ -874,7 +874,7 @@ class TestCoreSersic(object):
         assert image.shape_2d == (2, 2)
 
 
-class TestBlurredProfileImages(object):
+class TestBlurredProfileImages:
     def test__blurred_image_from_grid_and_psf(
         self, sub_grid_7x7, blurring_grid_7x7, psf_3x3, convolver_7x7
     ):
@@ -926,7 +926,7 @@ class TestBlurredProfileImages(object):
         )
 
 
-class TestVisibilities(object):
+class TestVisibilities:
     def test__visibilities_from_grid_and_transformer(
         self, grid_7x7, sub_grid_7x7, transformer_7x7_7
     ):
@@ -965,7 +965,7 @@ def luminosity_from_radius_and_profile(radius, profile):
     )
 
 
-class TestLuminosityWithinCircle(object):
+class TestLuminosityWithinCircle:
     def test__luminosity_in_eps__spherical_sersic_index_2__compare_to_analytic(self):
         sersic = aast.lp.SphericalSersic(
             intensity=3.0, effective_radius=2.0, sersic_index=2.0
@@ -1134,7 +1134,7 @@ class TestLuminosityWithinCircle(object):
         assert luminosity_arcsec == luminosity_kpc
 
 
-class TestGrids(object):
+class TestGrids:
     def test__grid_to_eccentric_radius(self):
         elliptical = aast.lp.EllipticalSersic(axis_ratio=0.5, phi=0.0)
 

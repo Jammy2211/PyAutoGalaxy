@@ -40,7 +40,7 @@ def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
     return mass_total
 
 
-# class TestMassWithinCircle(object):
+# class TestMassWithinCircle:
 #     def test__mass_in_angular_units__singular_isothermal_sphere__compare_to_analytic(
 #         self
 #     ):
@@ -218,7 +218,7 @@ def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
 #         assert 2.0 * math.pi * sis.einstein_radius * radius == pytest.approx(mass, 1e-3)
 #
 #
-# class TestDensityBetweenAnnuli(object):
+# class TestDensityBetweenAnnuli:
 #     def test__circular_annuli__sis__analyic_density_agrees(self):
 #
 #         cosmology = mock_cosmology.MockCosmology(

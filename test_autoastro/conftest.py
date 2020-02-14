@@ -4,7 +4,7 @@ import pytest
 from matplotlib import pyplot
 
 
-class PlotPatch(object):
+class PlotPatch:
     def __init__(self):
         self.paths = []
 

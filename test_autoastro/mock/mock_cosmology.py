@@ -2,7 +2,7 @@ import math
 from astropy import constants
 
 
-class Value(object):
+class Value:
     def __init__(self, value):
 
         self.value = value
@@ -11,7 +11,7 @@ class Value(object):
         return Value(value=self.value)
 
 
-class MockCosmology(object):
+class MockCosmology:
     def __init__(
         self,
         arcsec_per_kpc=0.5,

@@ -3,7 +3,7 @@ from autoarray.masked import masked_structures
 from autoastro import exc
 
 
-class MaskedGalaxyData(object):
+class MaskedGalaxyData:
     def __init__(
         self,
         galaxy_data,

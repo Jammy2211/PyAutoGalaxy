@@ -18,7 +18,7 @@ def reset_config():
 grid = aa.grid_irregular.manual_1d([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
-class TestPointMass(object):
+class TestPointMass:
     def test__constructor_and_units(self):
         point_mass = aast.mp.PointMass(centre=(1.0, 2.0), einstein_radius=2.0)
 
@@ -224,7 +224,7 @@ class TestPointMass(object):
         assert deflections.shape_2d == (2, 2)
 
 
-class TestCoredPowerLaw(object):
+class TestCoredPowerLaw:
     def test__constructor_and_units(self):
         cored_power_law = aast.mp.EllipticalCoredPowerLaw(
             centre=(1.0, 2.0),
@@ -756,7 +756,7 @@ class TestCoredPowerLaw(object):
         assert deflections.shape_2d == (2, 2)
 
 
-class TestPowerLaw(object):
+class TestPowerLaw:
     def test__constructor_and_units(self):
         power_law = aast.mp.EllipticalPowerLaw(
             centre=(1.0, 2.0), axis_ratio=0.5, phi=45.0, einstein_radius=1.0, slope=2.0
@@ -1135,7 +1135,7 @@ class TestPowerLaw(object):
         assert deflections.shape_2d == (2, 2)
 
 
-class TestCoredIsothermal(object):
+class TestCoredIsothermal:
     def test__constructor_and_units(self):
         cored_isothermal = aast.mp.EllipticalCoredIsothermal(
             centre=(1.0, 2.0),
@@ -1536,7 +1536,7 @@ class TestCoredIsothermal(object):
         assert deflections.shape_2d == (2, 2)
 
 
-class TestIsothermal(object):
+class TestIsothermal:
     def test__constructor_and_units(self):
         isothermal = aast.mp.EllipticalIsothermal(
             centre=(1.0, 2.0), axis_ratio=0.5, phi=45.0, einstein_radius=1.0

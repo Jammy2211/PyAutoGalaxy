@@ -137,7 +137,7 @@ class TestDevVaucouleurs:
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
 
-class TestCoreSersic(object):
+class TestCoreSersic:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         core_sersic = aast.EllipticalCoreSersic(centre=(0.0, 0.0))
 
@@ -172,7 +172,7 @@ class TestCoreSersic(object):
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
 
-class TestPointMass(object):
+class TestPointMass:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
         point_mass = aast.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
@@ -192,7 +192,7 @@ class TestPointMass(object):
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
-class TestCoredPowerLaw(object):
+class TestCoredPowerLaw:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         cored_power_law = aast.EllipticalCoredPowerLaw(
             centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0
@@ -205,7 +205,7 @@ class TestCoredPowerLaw(object):
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
 
-class TestPowerLaw(object):
+class TestPowerLaw:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
         power_law = aast.EllipticalPowerLaw(
@@ -258,7 +258,7 @@ class TestPowerLaw(object):
         assert (interp_deflections_manual_x != interp_deflections[:, 1]).all()
 
 
-class TestCoredIsothermal(object):
+class TestCoredIsothermal:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         cored_isothermal = aast.EllipticalCoredIsothermal(
             centre=(0.0, 0.0), einstein_radius=1.0
@@ -381,7 +381,7 @@ class TestCoredIsothermal(object):
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
-class TestIsothermal(object):
+class TestIsothermal:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         isothermal = aast.mass_profiles.EllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=1.0
@@ -504,7 +504,7 @@ class TestIsothermal(object):
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
-class TestGeneralizedNFW(object):
+class TestGeneralizedNFW:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         gnfw = aast.mass_profiles.SphericalGeneralizedNFW(centre=(0.0, 0.0))
 
@@ -543,7 +543,7 @@ class TestGeneralizedNFW(object):
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
-class TestTruncatedNFW(object):
+class TestTruncatedNFW:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         truncated_nfw = aast.mass_profiles.SphericalTruncatedNFW(centre=(0.0, 0.0))
 
@@ -594,7 +594,7 @@ class TestTruncatedNFW(object):
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
-class TestNFW(object):
+class TestNFW:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         nfw = aast.mass_profiles.EllipticalNFW(centre=(0.0, 0.0))
 
@@ -669,7 +669,7 @@ class TestNFW(object):
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
-class TestSersic(object):
+class TestSersic:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         sersic = aast.EllipticalSersic(centre=(0.0, 0.0))
 
@@ -736,7 +736,7 @@ class TestSersic(object):
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
-class TestExponential(object):
+class TestExponential:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         exponential = aast.EllipticalExponential(centre=(0.0, 0.0))
 
@@ -803,7 +803,7 @@ class TestExponential(object):
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
-class TestDevVaucouleurs(object):
+class TestDevVaucouleurs:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         dev_vaucouleurs = aast.EllipticalDevVaucouleurs(centre=(0.0, 0.0))
 
@@ -870,7 +870,7 @@ class TestDevVaucouleurs(object):
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
-class TestSersicMassRadialGradient(object):
+class TestSersicMassRadialGradient:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         sersic = aast.EllipticalSersicRadialGradient(centre=(0.0, 0.0))
 
@@ -982,7 +982,7 @@ class TestSersicMassRadialGradient(object):
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
 
-class TestMassSheet(object):
+class TestMassSheet:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         mass_sheet = aast.mass_profiles.MassSheet(centre=(0.0, 0.0))
 
@@ -1001,7 +1001,7 @@ class TestMassSheet(object):
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
-class TestExternalShear(object):
+class TestExternalShear:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
         shear = aast.mass_profiles.ExternalShear(magnitude=0.1, phi=45.0)
 

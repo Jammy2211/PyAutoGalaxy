@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class MockGalaxy(object):
+class MockGalaxy:
     def __init__(self, value, shape=1):
         self.value = value
         self.shape = shape
@@ -19,7 +19,7 @@ class MockGalaxy(object):
         return np.full(shape=(self.shape, 2), fill_value=self.value)
 
 
-class MockHyperGalaxy(object):
+class MockHyperGalaxy:
     def __init__(self, contribution_factor=0.0, noise_factor=0.0, noise_power=1.0):
         self.contribution_factor = contribution_factor
         self.noise_factor = noise_factor
