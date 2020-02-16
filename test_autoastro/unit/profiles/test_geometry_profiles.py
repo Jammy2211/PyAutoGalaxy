@@ -20,9 +20,9 @@ def do_something():
     )
 
 
-class TestMemoize(object):
+class TestMemoize:
     def test_add_to_cache(self):
-        class MyProfile(object):
+        class MyProfile:
             # noinspection PyMethodMayBeStatic
             @geometry_profiles.cache
             def my_method(self, grid, grid_radial_minimum=None):
@@ -44,7 +44,7 @@ class TestMemoize(object):
         assert len(profile.cache) == 2
 
     def test_get_from_cache(self):
-        class CountingProfile(object):
+        class CountingProfile:
             def __init__(self):
                 self.count = 0
 
@@ -62,7 +62,7 @@ class TestMemoize(object):
         assert profile.my_method(grid=np.array([1]), grid_radial_minimum=None) == 2
 
     def test_multiple_cached_methods(self):
-        class MultiMethodProfile(object):
+        class MultiMethodProfile:
             @geometry_profiles.cache
             def method_one(self, grid, grid_radial_minimum=None):
                 return grid
@@ -79,7 +79,7 @@ class TestMemoize(object):
         assert profile.method_two(np.array([0])) is not array
 
 
-class TestGeometryProfile(object):
+class TestGeometryProfile:
     def test__constructor_and_units(self):
         profile = geometry_profiles.GeometryProfile(centre=(1.0, 2.0))
 
@@ -90,8 +90,8 @@ class TestGeometryProfile(object):
         assert profile.centre[1].unit == "arcsec"
 
 
-class TestEllipticalProfile(object):
-    class TestConstuctorUnits(object):
+class TestEllipticalProfile:
+    class TestConstuctorUnits:
         def test__constructor_and_units(self):
             profile = geometry_profiles.EllipticalProfile(
                 centre=(1.0, 2.0), axis_ratio=0.5, phi=45.0
@@ -109,7 +109,7 @@ class TestEllipticalProfile(object):
             assert profile.phi == 45.0
             assert isinstance(profile.phi, float)
 
-    class TestAnglesFromXAxis(object):
+    class TestAnglesFromXAxis:
         def test__profile_angle_phi_is_0__cosine_and_sin_of_phi_is_1_and_0(self):
             elliptical_profile = geometry_profiles.EllipticalProfile(
                 centre=(1.0, 1.0), axis_ratio=1.0, phi=0.0
@@ -154,7 +154,7 @@ class TestEllipticalProfile(object):
             assert cos_phi == pytest.approx(-0.707, 1e-3)
             assert sin_phi == pytest.approx(-0.707, 1e-3)
 
-    class TestTransformGrid(object):
+    class TestTransformGrid:
         def test__profile_angle_phi_is_0__grid_x_1_y_1__returns_same_grid_so_x_1_y_1(
             self
         ):
@@ -362,7 +362,7 @@ class TestEllipticalProfile(object):
             assert transformed_grid[0, 0] == pytest.approx(grid_original[0, 0], 1e-5)
             assert transformed_grid[0, 1] == pytest.approx(grid_original[0, 1], 1e-5)
 
-    class TestCoordinateMovements(object):
+    class TestCoordinateMovements:
         def test__grid_and_centres_of_two_lenses_are_equivalent__grid_are_equivalent(
             self
         ):
@@ -419,7 +419,7 @@ class TestEllipticalProfile(object):
             assert grid1[0, 0] == grid2[0, 0]
             assert grid1[0, 1] == grid2[0, 1]
 
-    class TestTransformedGridToEccentricRadius(object):
+    class TestTransformedGridToEccentricRadius:
         def test__profile_axis_ratio_1__r_is_root_2__therefore_ecccentric_radius_is_elliptical_radius_is_root_2(
             self
         ):
@@ -457,8 +457,8 @@ class TestEllipticalProfile(object):
             assert eccentric_radius == pytest.approx(1.58113, 1e-3)
 
 
-class TestSphericalProfile(object):
-    class TestConstuctorUnits(object):
+class TestSphericalProfile:
+    class TestConstuctorUnits:
         def test__constructor_and_unit_conversions(self):
             profile = geometry_profiles.SphericalProfile(centre=(1.0, 2.0))
 
@@ -468,7 +468,7 @@ class TestSphericalProfile(object):
             assert profile.centre[0].unit == "arcsec"
             assert profile.centre[1].unit == "arcsec"
 
-    class TestCoordinatesMovement(object):
+    class TestCoordinatesMovement:
         def test__profile_cenre_y_0_x_0__grid_y_1_x_1__no_coordinate_movement_so_y_1_x_1(
             self
         ):
@@ -512,7 +512,7 @@ class TestSphericalProfile(object):
             assert grid1[0, 0] == grid2[0, 0]
             assert grid1[0, 1] == grid2[0, 1]
 
-    class TestTransformCoordinates(object):
+    class TestTransformCoordinates:
         def test__profile_centre_y_0_x_0__grid_y_1_x_1__returns_y_1_x_1_so_same_grid(
             self
         ):
@@ -544,7 +544,7 @@ class TestSphericalProfile(object):
             assert transformed_grid[0, 1] == pytest.approx(grid_original[0, 1], 1e-5)
 
 
-class MockGridRadialMinimum(object):
+class MockGridRadialMinimum:
     def __init__(self):
         pass
 
@@ -556,7 +556,7 @@ class MockGridRadialMinimum(object):
         return grid
 
 
-# class TestGridRadialMinimum(object):
+# class TestGridRadialMinimum:
 #
 #     def test__mock_profile__grid_radial_minimum_is_0_or_below_radial_coordinates__no_changes(self):
 #         grid = np.arrays([[2.5, 0.0], [4.0, 0.0], [6.0, 0.0]])

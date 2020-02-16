@@ -6,7 +6,7 @@ import autoastro as aast
 from test_autoastro.mock import mock_cosmology
 
 
-class TestLength(object):
+class TestLength:
     def test__conversions_from_arcsec_to_kpc_and_back__errors_raised_if_no_kpc_per_arcsec(
         self
     ):
@@ -41,7 +41,7 @@ class TestLength(object):
             unit_arcsec.convert(unit_length="lol")
 
 
-class TestLuminosity(object):
+class TestLuminosity:
     def test__conversions_from_eps_and_counts_and_back__errors_raised_if_no_exposure_time(
         self
     ):
@@ -77,7 +77,7 @@ class TestLuminosity(object):
             unit_eps.convert(unit_luminosity="lol")
 
 
-class TestMass(object):
+class TestMass:
     def test__conversions_from_angular_and_sol_mass_and_back__errors_raised_if_no_exposure_time(
         self
     ):
@@ -125,7 +125,7 @@ class TestMass(object):
             mass_angular.convert(unit_mass="lol")
 
 
-class TestMassOverLuminosity(object):
+class TestMassOverLuminosity:
     def test__conversions_from_angular_and_sol_mass_and_back__errors_raised_if_critical_mass_density(
         self
     ):
@@ -205,7 +205,7 @@ class TestMassOverLuminosity(object):
             unit_eps.convert(unit_mass="lol", unit_luminosity="eps")
 
 
-class TestMassOverLength2(object):
+class TestMassOverLength2:
     def test__conversions_from_angular_and_sol_mass_and_back__errors_raised_if_critical_mass_density(
         self
     ):
@@ -283,7 +283,7 @@ class TestMassOverLength2(object):
             unit_arcsec.convert(unit_length="lol", unit_mass="solMass")
 
 
-class TestMassOverLength3(object):
+class TestMassOverLength3:
     def test__conversions_from_angular_and_sol_mass_and_back__errors_raised_if_critical_mass_density(
         self
     ):
@@ -382,8 +382,8 @@ class MockDimensionsProfile(aast.dim.DimensionsProfile):
         self.mass_over_luminosity = mass_over_luminosity
 
 
-class TestDimensionsProfile(object):
-    class TestUnitProperties(object):
+class TestDimensionsProfile:
+    class TestUnitProperties:
         def test__extracts_length_correctly__raises_error_if_different_lengths_input(
             self
         ):
@@ -478,7 +478,7 @@ class TestDimensionsProfile(object):
 
                 profile.unit_mass
 
-    class TestUnitConversions(object):
+    class TestUnitConversions:
         def test__arcsec_to_kpc_conversions_of_length__float_and_tuple_length__conversion_converts_values(
             self
         ):

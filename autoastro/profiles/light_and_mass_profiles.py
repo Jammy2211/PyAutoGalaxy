@@ -9,6 +9,36 @@ objects as being both mass and light profiles.
 """
 
 
+class EllipticalGaussian(lp.EllipticalGaussian, mp.EllipticalGaussian):
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        axis_ratio: float = 1.0,
+        phi: float = 0.0,
+        intensity: dim.Luminosity = 0.1,
+        sigma: dim.Length = 0.01,
+        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+    ):
+
+        lp.EllipticalGaussian.__init__(
+            self,
+            centre=centre,
+            axis_ratio=axis_ratio,
+            phi=phi,
+            intensity=intensity,
+            sigma=sigma,
+        )
+        mp.EllipticalGaussian.__init__(
+            self,
+            centre=centre,
+            axis_ratio=axis_ratio,
+            phi=phi,
+            intensity=intensity,
+            sigma=sigma,
+            mass_to_light_ratio=mass_to_light_ratio,
+        )
+
+
 class EllipticalSersic(lp.EllipticalSersic, mp.EllipticalSersic):
     def __init__(
         self,

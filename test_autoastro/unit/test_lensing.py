@@ -242,7 +242,7 @@ class MockGalaxy(lensing.LensingObject):
         return [mass_profile.centre for mass_profile in self.mass_profiles]
 
 
-class TestDeflectionsMagnitudes(object):
+class TestDeflectionsMagnitudes:
     def test__compare_sis_deflection_magnitudes_to_known_values(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
@@ -272,7 +272,7 @@ class TestDeflectionsMagnitudes(object):
         assert deflection_magnitudes == pytest.approx(magitudes_manual, 1.0e-4)
 
 
-class TestDeflectionsViaPotential(object):
+class TestDeflectionsViaPotential:
     def test__compare_sis_deflections_via_potential_and_calculation(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
@@ -323,7 +323,7 @@ class TestDeflectionsViaPotential(object):
         assert mean_error < 1e-4
 
 
-class TestJacobian(object):
+class TestJacobian:
     def test__jacobian_components(self):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
@@ -352,7 +352,7 @@ class TestJacobian(object):
         assert mean_error < 1e-4
 
 
-class TestMagnification(object):
+class TestMagnification:
     def test__compare_magnification_from_eigen_values_and_from_determinant(self):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
@@ -444,7 +444,7 @@ class TestMagnification(object):
         assert mean_error < 1e-4
 
 
-class TestBoundingBox(object):
+class TestBoundingBox:
     def test__mass_profile_bounding_box__is_drawn_around_centres_of_mass_profies(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0))
 
@@ -577,7 +577,7 @@ def caustics_via_magnification_from_mass_profile_and_grid(mass_profile, grid):
     return caustics
 
 
-class TestConvergenceViajacobian(object):
+class TestConvergenceViajacobian:
     def test__compare_sis_convergence_via_jacobian_and_calculation(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
@@ -618,7 +618,7 @@ class TestConvergenceViajacobian(object):
         assert mean_error < 1e-1
 
 
-class TestCriticalCurvesAndCaustics(object):
+class TestCriticalCurvesAndCaustics:
     def test_compare_magnification_from_determinant_and_from_convergence_and_shear(
         self
     ):
@@ -837,7 +837,7 @@ class TestCriticalCurvesAndCaustics(object):
         )
 
 
-class TestEinsteinRadiusMassfrom(object):
+class TestEinsteinRadiusMassfrom:
     def test__tangential_critical_curve_area_from_critical_curve_and_calculation__spherical_isothermal(
         self
     ):
@@ -946,7 +946,7 @@ class TestEinsteinRadiusMassfrom(object):
         )
 
 
-class TestGridBinning(object):
+class TestGridBinning:
     def test__binning_works_on_all_from_grid_methods(self):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0

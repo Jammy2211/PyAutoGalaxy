@@ -11,7 +11,7 @@ class MockLightProfile(aast.lp.LightProfile):
         return np.array(self.size * [self.value])
 
 
-class MockMassProfile(object):
+class MockMassProfile:
     def __init__(self, value):
         self.value = value
 

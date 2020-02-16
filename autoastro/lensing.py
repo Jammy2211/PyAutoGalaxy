@@ -10,7 +10,7 @@ from autoastro import dimensions as dim
 from autoastro.util import cosmology_util
 
 
-class LensingObject(object):
+class LensingObject:
     @property
     def mass_profiles(self):
         raise NotImplementedError("mass profiles list should be overriden")

@@ -16,7 +16,68 @@ def reset_config():
     af.conf.instance = af.conf.default
 
 
-class TestSersic(object):
+class TestGaussian(object):
+    def test__constructor_and_units(self):
+        gaussian = aast.lmp.EllipticalGaussian(
+            centre=(1.0, 2.0),
+            axis_ratio=0.5,
+            phi=45.0,
+            intensity=1.0,
+            sigma=4.0,
+            mass_to_light_ratio=10.0,
+        )
+
+        assert gaussian.centre == (1.0, 2.0)
+        assert isinstance(gaussian.centre[0], aast.dim.Length)
+        assert isinstance(gaussian.centre[1], aast.dim.Length)
+        assert gaussian.centre[0].unit == "arcsec"
+        assert gaussian.centre[1].unit == "arcsec"
+
+        assert gaussian.axis_ratio == 0.5
+        assert isinstance(gaussian.axis_ratio, float)
+
+        assert gaussian.phi == 45.0
+        assert isinstance(gaussian.phi, float)
+
+        assert gaussian.intensity == 1.0
+        assert isinstance(gaussian.intensity, aast.dim.Luminosity)
+        assert gaussian.intensity.unit == "eps"
+
+        assert gaussian.sigma == 4.0
+        assert isinstance(gaussian.sigma, aast.dim.Length)
+        assert gaussian.sigma.unit_length == "arcsec"
+
+        assert gaussian.mass_to_light_ratio == 10.0
+        assert isinstance(gaussian.mass_to_light_ratio, aast.dim.MassOverLuminosity)
+        assert gaussian.mass_to_light_ratio.unit == "angular / eps"
+
+    def test__grid_calculations__same_as_gaussian(self):
+        gaussian_lp = aast.lmp.EllipticalGaussian(
+            axis_ratio=0.7, phi=1.0, intensity=1.0, sigma=5.0
+        )
+        gaussian_mp = aast.lmp.EllipticalGaussian(
+            axis_ratio=0.7, phi=1.0, intensity=1.0, sigma=5.0, mass_to_light_ratio=2.0
+        )
+        gaussian_lmp = aast.lmp.EllipticalGaussian(
+            axis_ratio=0.7, phi=1.0, intensity=1.0, sigma=5.0, mass_to_light_ratio=2.0
+        )
+
+        assert (
+            gaussian_lp.profile_image_from_grid(grid=grid)
+            == gaussian_lmp.profile_image_from_grid(grid=grid)
+        ).all()
+        assert (
+            gaussian_mp.convergence_from_grid(grid=grid)
+            == gaussian_lmp.convergence_from_grid(grid=grid)
+        ).all()
+        #    assert (sersic_mp.potential_from_grid(grid=grid) == sersic_lmp.potential_from_grid(grid=grid)).all()
+        assert (
+            gaussian_mp.deflections_from_grid(grid=grid)
+            == gaussian_lmp.deflections_from_grid(grid=grid)
+        ).all()
+
+
+class TestSersic:
     def test__constructor_and_units(self):
         sersic = aast.lmp.EllipticalSersic(
             centre=(1.0, 2.0),
@@ -168,7 +229,7 @@ class TestSersic(object):
         )
 
 
-class TestExponential(object):
+class TestExponential:
     def test__constructor_and_units(self):
         exponential = aast.lmp.EllipticalExponential(
             centre=(1.0, 2.0),
@@ -306,7 +367,7 @@ class TestExponential(object):
         )
 
 
-class TestDevVaucouleurs(object):
+class TestDevVaucouleurs:
     def test__constructor_and_units(self):
         dev_vaucouleurs = aast.lmp.EllipticalDevVaucouleurs(
             centre=(1.0, 2.0),
@@ -448,7 +509,7 @@ class TestDevVaucouleurs(object):
         )
 
 
-class TestSersicRadialGradient(object):
+class TestSersicRadialGradient:
     def test__constructor_and_units(self):
         sersic = aast.lmp.EllipticalSersicRadialGradient(
             centre=(1.0, 2.0),

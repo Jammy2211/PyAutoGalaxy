@@ -22,7 +22,7 @@ def reset_config():
     af.conf.instance = af.conf.default
 
 
-class TestAbstractNFW(object):
+class TestAbstractNFW:
     def test__coord_function_f__correct_values(self):
         truncated_nfw = aast.mp.SphericalTruncatedNFW(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
@@ -748,7 +748,7 @@ class TestAbstractNFW(object):
         assert mass_at_truncation_radius == pytest.approx(177609204745.61484, 1.0e-4)
 
 
-class TestGeneralizedNFW(object):
+class TestGeneralizedNFW:
     def test__constructor_and_units(self):
         # gnfw = aast.EllipticalGeneralizedNFW(centre=(0.7, 1.0), axis_ratio=0.7, phi=45.0,
         #                                    kappa_s=2.0, inner_slope=1.5, scale_radius=10.0)
@@ -1046,7 +1046,7 @@ class TestGeneralizedNFW(object):
         assert deflections.shape_2d == (2, 2)
 
 
-class TestTruncatedNFW(object):
+class TestTruncatedNFW:
     def test__constructor_and_units(self):
 
         truncated_nfw = aast.mp.SphericalTruncatedNFW(
@@ -1398,7 +1398,7 @@ class TestTruncatedNFW(object):
         assert deflections.shape_2d == (2, 2)
 
 
-class TestTruncatedNFWChallenge(object):
+class TestTruncatedNFWChallenge:
     def test__constructor_and_units(self):
 
         truncated_nfw = aast.mp.SphericalTruncatedNFWChallenge(
@@ -1434,7 +1434,7 @@ class TestTruncatedNFWChallenge(object):
         assert truncated_nfw.truncation_radius.unit_length == "arcsec"
 
 
-class TestTruncatedNFWMassToConcentration(object):
+class TestTruncatedNFWMassToConcentration:
     def test__mass_and_concentration_consistent_with_normal_truncated_nfw(self):
 
         cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
@@ -1610,7 +1610,7 @@ class TestTruncatedNFWMassToConcentration(object):
         assert deflections.shape_2d == (2, 2)
 
 
-class TestNFW(object):
+class TestNFW:
     def test__constructor_and_units(self):
 
         nfw = aast.mp.EllipticalNFW(

@@ -667,7 +667,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return summary
 
 
-class HyperGalaxy(object):
+class HyperGalaxy:
     _ids = count()
 
     def __init__(self, contribution_factor=0.0, noise_factor=0.0, noise_power=1.0):
