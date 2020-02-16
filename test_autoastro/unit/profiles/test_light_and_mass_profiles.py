@@ -15,6 +15,7 @@ def reset_config():
     """
     af.conf.instance = af.conf.default
 
+
 class TestGaussian(object):
     def test__constructor_and_units(self):
         gaussian = aast.lmp.EllipticalGaussian(
@@ -77,7 +78,6 @@ class TestGaussian(object):
 
 
 class TestSersic:
-
     def test__constructor_and_units(self):
         sersic = aast.lmp.EllipticalSersic(
             centre=(1.0, 2.0),
