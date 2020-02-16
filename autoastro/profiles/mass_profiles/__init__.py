@@ -20,6 +20,7 @@ from .dark_mass_profiles import (
     SphericalNFW,
 )
 from .stellar_mass_profiles import (
+    EllipticalGaussian,
     EllipticalSersic,
     SphericalSersic,
     EllipticalExponential,
