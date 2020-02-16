@@ -5,7 +5,7 @@ import inspect
 from autoastro import exc
 
 
-class DimensionsProfile(object):
+class DimensionsProfile:
     def __init__(self):
 
         pass

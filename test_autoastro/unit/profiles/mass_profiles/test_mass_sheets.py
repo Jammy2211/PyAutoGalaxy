@@ -16,7 +16,7 @@ def reset_config():
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
-class TestMassSheet(object):
+class TestMassSheet:
     def test__constructor_and_units(self):
 
         mass_sheet = aast.mp.MassSheet(centre=(1.0, 2.0), kappa=2.0)
@@ -315,7 +315,7 @@ class TestMassSheet(object):
         assert deflections.shape_2d == (2, 2)
 
 
-class TestExternalShear(object):
+class TestExternalShear:
     def test__constructor_and_units(self):
 
         shear = aast.mp.ExternalShear(magnitude=0.05, phi=45.0)

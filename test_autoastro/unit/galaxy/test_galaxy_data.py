@@ -16,7 +16,7 @@ def reset_config():
     af.conf.instance = af.conf.default
 
 
-class TestGalaxyFitData(object):
+class TestGalaxyFitData:
     def test__image_noise_map_and_mask(self, gal_data_7x7, sub_mask_7x7):
 
         galaxy_fit_data = aast.masked.galaxy_data(

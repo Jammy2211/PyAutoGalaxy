@@ -15,7 +15,6 @@ def reset_config():
     """
     af.conf.instance = af.conf.default
 
-
 class TestGaussian(object):
     def test__constructor_and_units(self):
         gaussian = aast.lmp.EllipticalGaussian(
@@ -77,7 +76,8 @@ class TestGaussian(object):
         ).all()
 
 
-class TestSersic(object):
+class TestSersic:
+
     def test__constructor_and_units(self):
         sersic = aast.lmp.EllipticalSersic(
             centre=(1.0, 2.0),
@@ -229,7 +229,7 @@ class TestSersic(object):
         )
 
 
-class TestExponential(object):
+class TestExponential:
     def test__constructor_and_units(self):
         exponential = aast.lmp.EllipticalExponential(
             centre=(1.0, 2.0),
@@ -367,7 +367,7 @@ class TestExponential(object):
         )
 
 
-class TestDevVaucouleurs(object):
+class TestDevVaucouleurs:
     def test__constructor_and_units(self):
         dev_vaucouleurs = aast.lmp.EllipticalDevVaucouleurs(
             centre=(1.0, 2.0),
@@ -509,7 +509,7 @@ class TestDevVaucouleurs(object):
         )
 
 
-class TestSersicRadialGradient(object):
+class TestSersicRadialGradient:
     def test__constructor_and_units(self):
         sersic = aast.lmp.EllipticalSersicRadialGradient(
             centre=(1.0, 2.0),

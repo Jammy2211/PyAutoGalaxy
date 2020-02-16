@@ -1,4 +1,4 @@
-class HyperImageSky(object):
+class HyperImageSky:
     def __init__(self, sky_scale=0.0):
         """Class for scaling the background sky map and background noise_map-map of an grid.
 
@@ -23,7 +23,7 @@ class HyperImageSky(object):
         return image + self.sky_scale
 
 
-class HyperBackgroundNoise(object):
+class HyperBackgroundNoise:
     def __init__(self, noise_scale=0.0):
         """Class for scaling the background sky map and background noise_map-map of an grid.
 

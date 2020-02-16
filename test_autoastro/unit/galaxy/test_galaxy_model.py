@@ -78,7 +78,7 @@ def make_galaxy_model(mapper,):
     return galaxy_model_1
 
 
-class TestMassAndLightProfiles(object):
+class TestMassAndLightProfiles:
     def test_make_galaxy_from_instance_profile(self, mass_and_light):
         prior = aast.GalaxyModel(redshift=0.5, profile=mass_and_light)
 
@@ -278,7 +278,7 @@ class TestResultForArguments:
         )
 
 
-class TestPixelization(object):
+class TestPixelization:
     def test_pixelization(self):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift,
@@ -317,7 +317,7 @@ class TestPixelization(object):
             aast.GalaxyModel(redshift=aast.Redshift, pixelization=aa.pix.Voronoi)
 
 
-class TestRegularization(object):
+class TestRegularization:
     def test_regularization(self):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift,
@@ -354,7 +354,7 @@ class TestRegularization(object):
             aast.GalaxyModel(redshift=aast.Redshift, regularization=aa.reg.Constant)
 
 
-class TestHyperGalaxy(object):
+class TestHyperGalaxy:
     def test_hyper_galaxy(self,):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift, hyper_galaxy=aast.HyperGalaxy
@@ -391,7 +391,7 @@ class TestHyperGalaxy(object):
         assert galaxy.hyper_galaxy_image is None
 
 
-class TestFixedProfiles(object):
+class TestFixedProfiles:
     def test_fixed_light(self):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift, light_profile=aast.lp.EllipticalSersic()
@@ -439,7 +439,7 @@ class TestFixedProfiles(object):
         assert len(galaxy.mass_profiles) == 1
 
 
-class TestRedshift(object):
+class TestRedshift:
     def test_set_redshift_class(self):
         galaxy_model = aast.GalaxyModel(redshift=aast.Redshift)
         galaxy_model.redshift = aast.Redshift(3)

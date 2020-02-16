@@ -339,7 +339,7 @@ class TestEllipticalGaussian:
         ) == pytest.approx(1.03470, 1e-2)
 
 
-class TestSersic(object):
+class TestSersic:
     def test__constructor_and_units(self):
         sersic = aast.mp.EllipticalSersic(
             centre=(1.0, 2.0),
@@ -719,7 +719,7 @@ class TestSersic(object):
         assert deflections.shape_2d == (2, 2)
 
 
-class TestExponential(object):
+class TestExponential:
     def test__constructor_and_units(self):
         exponential = aast.mp.EllipticalExponential(
             centre=(1.0, 2.0),
@@ -1039,7 +1039,7 @@ class TestExponential(object):
         assert deflections.shape_2d == (2, 2)
 
 
-class TestDevVaucouleurs(object):
+class TestDevVaucouleurs:
     def test__constructor_and_units(self):
         dev_vaucouleurs = aast.mp.EllipticalDevVaucouleurs(
             centre=(1.0, 2.0),
@@ -1349,7 +1349,7 @@ class TestDevVaucouleurs(object):
         assert deflections.shape_2d == (2, 2)
 
 
-class TestSersicMassRadialGradient(object):
+class TestSersicMassRadialGradient:
     def test__constructor_and_units(self):
         sersic = aast.mp.EllipticalSersicRadialGradient(
             centre=(1.0, 2.0),
