@@ -118,12 +118,12 @@ class GalaxyModel(PriorModel):
                     profile_model.phi = phi
 
         if pixelization is not None and regularization is None:
-            raise exc.PriorException(
+            raise AssertionError(
                 "If the galaxy prior has a pixelization, it must also have a "
                 "regularization."
             )
         if pixelization is None and regularization is not None:
-            raise exc.PriorException(
+            raise AssertionError(
                 "If the galaxy prior has a regularization, it must also have a "
                 "pixelization."
             )
