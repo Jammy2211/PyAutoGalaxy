@@ -7,14 +7,6 @@ import autoastro as aast
 import autofit as af
 
 
-@pytest.fixture(autouse=True)
-def reset_config():
-    """
-    Use configuration from the default path. You may want to change this to set a specific path.
-    """
-    af.conf.instance = af.conf.default
-
-
 class MockPriorModel:
     def __init__(self, name, cls):
         self.name = name
