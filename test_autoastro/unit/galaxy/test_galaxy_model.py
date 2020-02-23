@@ -2,18 +2,9 @@ import os
 
 import pytest
 
-import autofit as af
 import autoarray as aa
-from autoastro import exc
 import autoastro as aast
-
-
-@pytest.fixture(autouse=True)
-def reset_config():
-    """
-    Use configuration from the default path. You may want to change this to set a specific path.
-    """
-    af.conf.instance = af.conf.default
+import autofit as af
 
 
 class MockPriorModel:
@@ -313,7 +304,7 @@ class TestPixelization:
         assert galaxy.pixelization.shape[1] == 3
 
     def test__if_no_pixelization_raises_error(self):
-        with pytest.raises(exc.PriorException):
+        with pytest.raises(AssertionError):
             aast.GalaxyModel(redshift=aast.Redshift, pixelization=aa.pix.Voronoi)
 
 
@@ -350,7 +341,7 @@ class TestRegularization:
         assert galaxy.regularization.coefficient == 1.0
 
     def test__if_no_pixelization_raises_error(self):
-        with pytest.raises(exc.PriorException):
+        with pytest.raises(AssertionError):
             aast.GalaxyModel(redshift=aast.Redshift, regularization=aa.reg.Constant)
 
 
