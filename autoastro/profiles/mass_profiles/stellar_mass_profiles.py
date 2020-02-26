@@ -14,7 +14,12 @@ from scipy.special import wofz
 import warnings
 
 
-class EllipticalGaussian(mp.EllipticalMassProfile):
+class StellarProfile:
+
+    pass
+
+
+class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
     @af.map_types
     def __init__(
         self,
@@ -200,7 +205,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile):
 
 
 # noinspection PyAbstractClass
-class AbstractEllipticalSersic(mp.EllipticalMassProfile):
+class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
     @af.map_types
     def __init__(
         self,

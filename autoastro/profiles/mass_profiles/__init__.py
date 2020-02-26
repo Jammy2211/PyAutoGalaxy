@@ -3,6 +3,8 @@ from .total_mass_profiles import (
     PointMass,
     EllipticalCoredPowerLaw,
     SphericalCoredPowerLaw,
+    EllipticalBrokenPowerLaw,
+    SphericalBrokenPowerLaw,
     EllipticalCoredIsothermal,
     SphericalCoredIsothermal,
     EllipticalPowerLaw,

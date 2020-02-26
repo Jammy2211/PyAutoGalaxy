@@ -52,6 +52,30 @@ def make_lmp_0():
     return aast.lmp.EllipticalSersicRadialGradient()
 
 
+@pytest.fixture(name="dmp_0")
+def make_dmp_0():
+    # noinspection PyTypeChecker
+    return aast.mp.SphericalNFW(kappa_s=1.0)
+
+
+@pytest.fixture(name="dmp_1")
+def make_dmp_1():
+    # noinspection PyTypeChecker
+    return aast.mp.SphericalNFW(kappa_s=2.0)
+
+
+@pytest.fixture(name="smp_0")
+def make_smp_0():
+    # noinspection PyTypeChecker
+    return aast.lmp.EllipticalSersic(intensity=1.0, mass_to_light_ratio=1.0)
+
+
+@pytest.fixture(name="smp_1")
+def make_smp_1():
+    # noinspection PyTypeChecker
+    return aast.lmp.EllipticalSersic(intensity=2.0, mass_to_light_ratio=2.0)
+
+
 # GALAXY #
 
 

@@ -13,6 +13,10 @@ from autoarray.structures import grids
 from autoarray.operators.inversion import pixelizations as pix
 from autoastro.profiles import light_profiles as lp
 from autoastro.profiles import mass_profiles as mp
+from autoastro.profiles.mass_profiles import (
+    dark_mass_profiles as dmp,
+    stellar_mass_profiles as smp,
+)
 
 
 def is_light_profile(obj):
@@ -145,6 +149,93 @@ class Galaxy(ModelObject, lensing.LensingObject):
     @property
     def uses_cluster_inversion(self):
         return type(self.pixelization) is pix.VoronoiBrightnessImage
+
+    # @classmethod
+    # def from_dark_matter_fraction_at_einstein_radius(cls, redshift, dark_mass_at_200, stellar_mass_profile):
+    #
+    #     galaxy = Galaxy(redshift=redshift,
+    #                     stellar=stellar_mass_profile,
+    #                     dark=mp.SphericalTruncatedNFWMassToConcentration(mass_at_200=dark_mass_at_200))
+    #
+    #     einstein_radius = galaxy.einstein_radius_in_units()
+
+    @property
+    def has_stellar_profile(self):
+        return len(self.stellar_profiles) > 0
+
+    @property
+    def has_dark_profile(self):
+        return len(self.dark_profiles) > 0
+
+    @property
+    def stellar_profiles(self):
+        return [
+            profile
+            for profile in self.mass_profiles
+            if isinstance(profile, smp.StellarProfile)
+        ]
+
+    @property
+    def dark_profiles(self):
+        return [
+            profile
+            for profile in self.mass_profiles
+            if isinstance(profile, dmp.DarkProfile)
+        ]
+
+    def stellar_mass_within_circle_in_units(
+        self,
+        radius: dim.Length,
+        unit_mass="angular",
+        redshift_source=None,
+        cosmology=cosmo.Planck15,
+    ):
+        if self.has_stellar_profile:
+            return sum(
+                [
+                    profile.mass_within_circle_in_units(
+                        radius=radius,
+                        unit_mass=unit_mass,
+                        redshift_object=self.redshift,
+                        redshift_source=redshift_source,
+                        cosmology=cosmology,
+                    )
+                    for profile in self.stellar_profiles
+                ]
+            )
+        else:
+            raise exc.GalaxyException(
+                "You cannot perform a stellar mass-based calculation on a galaxy which does not have a stellar mass-profile"
+            )
+
+    def dark_mass_within_circle_in_units(
+        self,
+        radius: dim.Length,
+        unit_mass="angular",
+        redshift_source=None,
+        cosmology=cosmo.Planck15,
+    ):
+        if self.has_dark_profile:
+            return sum(
+                [
+                    profile.mass_within_circle_in_units(
+                        radius=radius,
+                        unit_mass=unit_mass,
+                        redshift_object=self.redshift,
+                        redshift_source=redshift_source,
+                        cosmology=cosmology,
+                    )
+                    for profile in self.dark_profiles
+                ]
+            )
+        else:
+            raise exc.GalaxyException(
+                "You cannot perform a dark mass-based calculation on a galaxy which does not have a dark mass-profile"
+            )
+
+    # def dark_fraction_at_radius(self, radius):
+    #
+    #     dark_mass =
 
     @property
     def cosmology(self):
