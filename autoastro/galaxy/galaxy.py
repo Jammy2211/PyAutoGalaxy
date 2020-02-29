@@ -1,7 +1,7 @@
 import numpy as np
 from astropy import cosmology as cosmo
 from itertools import count
-from scipy.integrate import quad
+from scipy.optimize import root_scalar
 
 from autofit.mapper.model_object import ModelObject
 from autoastro.util import cosmology_util
@@ -17,6 +17,7 @@ from autoastro.profiles.mass_profiles import (
     dark_mass_profiles as dmp,
     stellar_mass_profiles as smp,
 )
+from copy import deepcopy
 
 
 def is_light_profile(obj):
@@ -150,15 +151,6 @@ class Galaxy(ModelObject, lensing.LensingObject):
     def uses_cluster_inversion(self):
         return type(self.pixelization) is pix.VoronoiBrightnessImage
 
-    # @classmethod
-    # def from_dark_matter_fraction_at_einstein_radius(cls, redshift, dark_mass_at_200, stellar_mass_profile):
-    #
-    #     galaxy = Galaxy(redshift=redshift,
-    #                     stellar=stellar_mass_profile,
-    #                     dark=mp.SphericalTruncatedNFWMassToConcentration(mass_at_200=dark_mass_at_200))
-    #
-    #     einstein_radius = galaxy.einstein_radius_in_units()
-
     @property
     def has_stellar_profile(self):
         return len(self.stellar_profiles) > 0
@@ -233,9 +225,15 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 "You cannot perform a dark mass-based calculation on a galaxy which does not have a dark mass-profile"
             )
 
-    # def dark_fraction_at_radius(self, radius):
-    #
-    #     dark_mass =
+    def stellar_fraction_at_radius(self, radius):
+        return 1.0 - self.dark_fraction_at_radius(radius=radius)
+
+    def dark_fraction_at_radius(self, radius):
+
+        stellar_mass = self.stellar_mass_within_circle_in_units(radius=radius)
+        dark_mass = self.dark_mass_within_circle_in_units(radius=radius)
+
+        return dark_mass / (stellar_mass + dark_mass)
 
     @property
     def cosmology(self):

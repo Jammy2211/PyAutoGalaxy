@@ -1084,7 +1084,50 @@ class TestMassProfiles:
             with pytest.raises(exc.GalaxyException):
                 galaxy.stellar_mass_within_circle_in_units(radius=1.0)
 
-    class Dark:
+        def test__stellar_fraction_at_radius(self, dmp_0, dmp_1, smp_0, smp_1):
+
+            galaxy = aast.Galaxy(redshift=0.5, stellar_0=smp_0, dark_0=dmp_0)
+
+            stellar_mass_0 = smp_0.mass_within_circle_in_units(radius=1.0)
+            dark_mass_0 = dmp_0.mass_within_circle_in_units(radius=1.0)
+
+            stellar_fraction = galaxy.stellar_fraction_at_radius(radius=1.0)
+
+            assert stellar_fraction == pytest.approx(
+                stellar_mass_0 / (dark_mass_0 + stellar_mass_0), 1.0e-4
+            )
+
+            galaxy = aast.Galaxy(
+                redshift=0.5, stellar_0=smp_0, stellar_1=smp_1, dark_0=dmp_0
+            )
+
+            stellar_fraction = galaxy.stellar_fraction_at_radius(radius=1.0)
+            stellar_mass_1 = smp_1.mass_within_circle_in_units(radius=1.0)
+
+            assert stellar_fraction == pytest.approx(
+                (stellar_mass_0 + stellar_mass_1)
+                / (dark_mass_0 + stellar_mass_0 + stellar_mass_1),
+                1.0e-4,
+            )
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                stellar_0=smp_0,
+                stellar_1=smp_1,
+                dark_0=dmp_0,
+                dark_mass_1=dmp_1,
+            )
+
+            stellar_fraction = galaxy.stellar_fraction_at_radius(radius=1.0)
+            dark_mass_1 = dmp_1.mass_within_circle_in_units(radius=1.0)
+
+            assert stellar_fraction == pytest.approx(
+                (stellar_mass_0 + stellar_mass_1)
+                / (dark_mass_0 + dark_mass_1 + stellar_mass_0 + stellar_mass_1),
+                1.0e-4,
+            )
+
+    class TestDark:
         def test__dark_profiles__is_list_of_dark_profiles(self):
             galaxy = aast.Galaxy(redshift=0.5)
 
@@ -1171,6 +1214,47 @@ class TestMassProfiles:
 
             with pytest.raises(exc.GalaxyException):
                 galaxy.dark_mass_within_circle_in_units(radius=1.0)
+
+        def test__dark_fraction_at_radius(self, dmp_0, dmp_1, smp_0, smp_1):
+
+            galaxy = aast.Galaxy(redshift=0.5, dark_0=dmp_0, stellar_0=smp_0)
+
+            stellar_mass_0 = smp_0.mass_within_circle_in_units(radius=1.0)
+            dark_mass_0 = dmp_0.mass_within_circle_in_units(radius=1.0)
+
+            dark_fraction = galaxy.dark_fraction_at_radius(radius=1.0)
+
+            assert dark_fraction == dark_mass_0 / (stellar_mass_0 + dark_mass_0)
+
+            galaxy = aast.Galaxy(
+                redshift=0.5, dark_0=dmp_0, dark_1=dmp_1, stellar_0=smp_0
+            )
+
+            dark_fraction = galaxy.dark_fraction_at_radius(radius=1.0)
+            dark_mass_1 = dmp_1.mass_within_circle_in_units(radius=1.0)
+
+            assert dark_fraction == pytest.approx(
+                (dark_mass_0 + dark_mass_1)
+                / (stellar_mass_0 + dark_mass_0 + dark_mass_1),
+                1.0e-4,
+            )
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                dark_0=dmp_0,
+                dark_1=dmp_1,
+                stellar_0=smp_0,
+                stellar_mass_1=smp_1,
+            )
+
+            dark_fraction = galaxy.dark_fraction_at_radius(radius=1.0)
+            stellar_mass_1 = smp_1.mass_within_circle_in_units(radius=1.0)
+
+            assert dark_fraction == pytest.approx(
+                (dark_mass_0 + dark_mass_1)
+                / (stellar_mass_0 + stellar_mass_1 + dark_mass_0 + dark_mass_1),
+                1.0e-4,
+            )
 
     class TestSymmetricProfiles:
         def test_1d_symmetry(self):
