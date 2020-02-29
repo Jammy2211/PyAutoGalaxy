@@ -993,6 +993,269 @@ class TestMassProfiles:
             with pytest.raises(exc.GalaxyException):
                 gal_no_mp.mass_within_circle_in_units(radius=1.0)
 
+    class TestStellar:
+        def test__stellar_profiles__is_list_of_stellar_profiles(self):
+            galaxy = aast.Galaxy(redshift=0.5)
+
+            assert galaxy.stellar_profiles == []
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                light=aast.lp.EllipticalGaussian(),
+                mass=aast.mp.EllipticalIsothermal(),
+            )
+
+            assert galaxy.stellar_profiles == []
+
+            stellar_0 = aast.lmp.EllipticalSersic()
+            galaxy = aast.Galaxy(redshift=0.5, stellar_0=stellar_0)
+
+            assert galaxy.stellar_profiles == [stellar_0]
+
+            stellar_0 = aast.lmp.SphericalDevVaucouleurs()
+            stellar_1 = aast.lmp.EllipticalDevVaucouleurs()
+            stellar_2 = aast.lmp.EllipticalGaussian()
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                stellar_0=stellar_0,
+                stellar_1=stellar_1,
+                stellar_2=stellar_2,
+            )
+
+            assert galaxy.stellar_profiles == [stellar_0, stellar_1, stellar_2]
+
+        def test__stellar_mass_within_galaxy__is_sum_of_individual_profiles(
+            self, smp_0, smp_1
+        ):
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                stellar_0=smp_0,
+                non_stellar_profile=aast.mp.EllipticalIsothermal(einstein_radius=1.0),
+            )
+
+            radius = aast.dim.Length(0.5, "arcsec")
+
+            stellar_mass_0 = smp_0.mass_within_circle_in_units(
+                radius=radius, unit_mass="angular"
+            )
+
+            gal_mass = galaxy.stellar_mass_within_circle_in_units(
+                radius=radius, unit_mass="angular"
+            )
+
+            assert stellar_mass_0 == gal_mass
+
+            stellar_mass_0 = smp_0.mass_within_circle_in_units(
+                radius=radius,
+                unit_mass="solMass",
+                redshift_object=0.5,
+                redshift_source=1.0,
+            )
+
+            gal_mass = galaxy.stellar_mass_within_circle_in_units(
+                radius=radius, unit_mass="solMass", redshift_source=1.0
+            )
+
+            assert stellar_mass_0 == gal_mass
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                stellar_0=smp_0,
+                stellar_1=smp_1,
+                non_stellar_profile=aast.mp.EllipticalIsothermal(einstein_radius=1.0),
+            )
+
+            stellar_mass_1 = smp_1.mass_within_circle_in_units(
+                radius=radius,
+                unit_mass="solMass",
+                redshift_object=0.5,
+                redshift_source=1.0,
+            )
+
+            gal_mass = galaxy.stellar_mass_within_circle_in_units(
+                radius=radius, unit_mass="solMass", redshift_source=1.0
+            )
+
+            assert stellar_mass_0 + stellar_mass_1 == gal_mass
+
+            galaxy = aast.Galaxy(redshift=0.5)
+
+            with pytest.raises(exc.GalaxyException):
+                galaxy.stellar_mass_within_circle_in_units(radius=1.0)
+
+        def test__stellar_fraction_at_radius(self, dmp_0, dmp_1, smp_0, smp_1):
+
+            galaxy = aast.Galaxy(redshift=0.5, stellar_0=smp_0, dark_0=dmp_0)
+
+            stellar_mass_0 = smp_0.mass_within_circle_in_units(radius=1.0)
+            dark_mass_0 = dmp_0.mass_within_circle_in_units(radius=1.0)
+
+            stellar_fraction = galaxy.stellar_fraction_at_radius(radius=1.0)
+
+            assert stellar_fraction == pytest.approx(
+                stellar_mass_0 / (dark_mass_0 + stellar_mass_0), 1.0e-4
+            )
+
+            galaxy = aast.Galaxy(
+                redshift=0.5, stellar_0=smp_0, stellar_1=smp_1, dark_0=dmp_0
+            )
+
+            stellar_fraction = galaxy.stellar_fraction_at_radius(radius=1.0)
+            stellar_mass_1 = smp_1.mass_within_circle_in_units(radius=1.0)
+
+            assert stellar_fraction == pytest.approx(
+                (stellar_mass_0 + stellar_mass_1)
+                / (dark_mass_0 + stellar_mass_0 + stellar_mass_1),
+                1.0e-4,
+            )
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                stellar_0=smp_0,
+                stellar_1=smp_1,
+                dark_0=dmp_0,
+                dark_mass_1=dmp_1,
+            )
+
+            stellar_fraction = galaxy.stellar_fraction_at_radius(radius=1.0)
+            dark_mass_1 = dmp_1.mass_within_circle_in_units(radius=1.0)
+
+            assert stellar_fraction == pytest.approx(
+                (stellar_mass_0 + stellar_mass_1)
+                / (dark_mass_0 + dark_mass_1 + stellar_mass_0 + stellar_mass_1),
+                1.0e-4,
+            )
+
+    class TestDark:
+        def test__dark_profiles__is_list_of_dark_profiles(self):
+            galaxy = aast.Galaxy(redshift=0.5)
+
+            assert galaxy.dark_profiles == []
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                light=aast.lp.EllipticalGaussian(),
+                mass=aast.mp.EllipticalIsothermal(),
+            )
+
+            assert galaxy.dark_profiles == []
+
+            dark_0 = aast.mp.SphericalNFW()
+            galaxy = aast.Galaxy(redshift=0.5, dark_0=dark_0)
+
+            assert galaxy.dark_profiles == [dark_0]
+
+            dark_0 = aast.mp.SphericalNFW()
+            dark_1 = aast.mp.EllipticalNFW()
+            dark_2 = aast.mp.EllipticalGeneralizedNFW()
+            galaxy = aast.Galaxy(
+                redshift=0.5, dark_0=dark_0, dark_1=dark_1, dark_2=dark_2
+            )
+
+            assert galaxy.dark_profiles == [dark_0, dark_1, dark_2]
+
+        def test__dark_mass_within_galaxy__is_sum_of_individual_profiles(
+            self, dmp_0, dmp_1
+        ):
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                dark_0=dmp_0,
+                non_dark_profile=aast.mp.EllipticalIsothermal(einstein_radius=1.0),
+            )
+
+            radius = aast.dim.Length(0.5, "arcsec")
+
+            dark_mass_0 = dmp_0.mass_within_circle_in_units(
+                radius=radius, unit_mass="angular"
+            )
+
+            gal_mass = galaxy.dark_mass_within_circle_in_units(
+                radius=radius, unit_mass="angular"
+            )
+
+            assert dark_mass_0 == gal_mass
+
+            dark_mass_0 = dmp_0.mass_within_circle_in_units(
+                radius=radius,
+                unit_mass="solMass",
+                redshift_object=0.5,
+                redshift_source=1.0,
+            )
+
+            gal_mass = galaxy.dark_mass_within_circle_in_units(
+                radius=radius, unit_mass="solMass", redshift_source=1.0
+            )
+
+            assert dark_mass_0 == gal_mass
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                dark_0=dmp_0,
+                dark_1=dmp_1,
+                non_dark_profile=aast.mp.EllipticalIsothermal(einstein_radius=1.0),
+            )
+
+            dark_mass_1 = dmp_1.mass_within_circle_in_units(
+                radius=radius,
+                unit_mass="solMass",
+                redshift_object=0.5,
+                redshift_source=1.0,
+            )
+
+            gal_mass = galaxy.dark_mass_within_circle_in_units(
+                radius=radius, unit_mass="solMass", redshift_source=1.0
+            )
+
+            assert dark_mass_0 + dark_mass_1 == gal_mass
+
+            galaxy = aast.Galaxy(redshift=0.5)
+
+            with pytest.raises(exc.GalaxyException):
+                galaxy.dark_mass_within_circle_in_units(radius=1.0)
+
+        def test__dark_fraction_at_radius(self, dmp_0, dmp_1, smp_0, smp_1):
+
+            galaxy = aast.Galaxy(redshift=0.5, dark_0=dmp_0, stellar_0=smp_0)
+
+            stellar_mass_0 = smp_0.mass_within_circle_in_units(radius=1.0)
+            dark_mass_0 = dmp_0.mass_within_circle_in_units(radius=1.0)
+
+            dark_fraction = galaxy.dark_fraction_at_radius(radius=1.0)
+
+            assert dark_fraction == dark_mass_0 / (stellar_mass_0 + dark_mass_0)
+
+            galaxy = aast.Galaxy(
+                redshift=0.5, dark_0=dmp_0, dark_1=dmp_1, stellar_0=smp_0
+            )
+
+            dark_fraction = galaxy.dark_fraction_at_radius(radius=1.0)
+            dark_mass_1 = dmp_1.mass_within_circle_in_units(radius=1.0)
+
+            assert dark_fraction == pytest.approx(
+                (dark_mass_0 + dark_mass_1)
+                / (stellar_mass_0 + dark_mass_0 + dark_mass_1),
+                1.0e-4,
+            )
+
+            galaxy = aast.Galaxy(
+                redshift=0.5,
+                dark_0=dmp_0,
+                dark_1=dmp_1,
+                stellar_0=smp_0,
+                stellar_mass_1=smp_1,
+            )
+
+            dark_fraction = galaxy.dark_fraction_at_radius(radius=1.0)
+            stellar_mass_1 = smp_1.mass_within_circle_in_units(radius=1.0)
+
+            assert dark_fraction == pytest.approx(
+                (dark_mass_0 + dark_mass_1)
+                / (stellar_mass_0 + stellar_mass_1 + dark_mass_0 + dark_mass_1),
+                1.0e-4,
+            )
+
     class TestSymmetricProfiles:
         def test_1d_symmetry(self):
             mp_0 = aast.mp.EllipticalIsothermal(

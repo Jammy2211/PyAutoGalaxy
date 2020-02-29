@@ -224,6 +224,417 @@ class TestPointMass:
         assert deflections.shape_2d == (2, 2)
 
 
+class TestBrokenPowerLaw:
+    def test__convergence_correct_values(self):
+        broken_power_law = aast.mp.SphericalBrokenPowerLaw(
+            centre=(0, 0),
+            einstein_radius=1.0,
+            inner_slope=1.5,
+            outer_slope=2.5,
+            break_radius=0.1,
+        )
+        assert broken_power_law.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        ) == pytest.approx(0.0355237, 1e-4)
+
+        assert broken_power_law.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0], [0.5, 1.0]])
+        ) == pytest.approx([0.0355237, 0.0355237], 1e-4)
+
+        broken_power_law = aast.mp.EllipticalBrokenPowerLaw(
+            centre=(0, 0),
+            axis_ratio=0.8,
+            phi=30.0,
+            einstein_radius=1.0,
+            inner_slope=1.5,
+            outer_slope=2.5,
+            break_radius=0.1,
+        )
+
+        assert broken_power_law.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        ) == pytest.approx(0.05006035, 1e-4)
+
+        broken_power_law = aast.mp.EllipticalBrokenPowerLaw(
+            centre=(0, 0),
+            axis_ratio=0.7,
+            phi=160.0,
+            einstein_radius=1.0,
+            inner_slope=1.8,
+            outer_slope=2.2,
+            break_radius=0.1,
+        )
+        assert broken_power_law.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        ) == pytest.approx(0.034768, 1e-4)
+
+        broken_power_law = aast.mp.EllipticalBrokenPowerLaw(
+            centre=(0, 0),
+            axis_ratio=0.7,
+            phi=250.0,
+            einstein_radius=1.0,
+            inner_slope=1.8,
+            outer_slope=2.2,
+            break_radius=0.1,
+        )
+        assert broken_power_law.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        ) == pytest.approx(0.03622852, 1e-4)
+
+        broken_power_law = aast.mp.EllipticalBrokenPowerLaw(
+            centre=(0, 0),
+            axis_ratio=0.7,
+            phi=310.0,
+            einstein_radius=1.0,
+            inner_slope=1.8,
+            outer_slope=2.2,
+            break_radius=0.1,
+        )
+        assert broken_power_law.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        ) == pytest.approx(0.026469, 1e-4)
+
+    def test__deflections__correct_values(self):
+
+        broken_power_law = aast.mp.SphericalBrokenPowerLaw(
+            centre=(0, 0),
+            einstein_radius=1.0,
+            inner_slope=1.5,
+            outer_slope=2.5,
+            break_radius=0.1,
+        )
+        deflections = broken_power_law.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        )
+        assert deflections[0, 0] == pytest.approx(0.404076, 1e-3)
+        assert deflections[0, 1] == pytest.approx(0.808152, 1e-3)
+
+        deflections = broken_power_law.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0], [0.5, 1.0]])
+        )
+
+        assert deflections[0, 0] == pytest.approx(0.404076, 1e-3)
+        assert deflections[0, 1] == pytest.approx(0.808152, 1e-3)
+        assert deflections[1, 0] == pytest.approx(0.404076, 1e-3)
+        assert deflections[1, 1] == pytest.approx(0.808152, 1e-3)
+
+        broken_power_law = aast.mp.EllipticalBrokenPowerLaw(
+            centre=(0, 0),
+            axis_ratio=0.8,
+            phi=30.0,
+            einstein_radius=1.0,
+            inner_slope=1.5,
+            outer_slope=2.5,
+            break_radius=0.1,
+        )
+
+        deflections = broken_power_law.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        )
+
+        assert deflections[0, 0] == pytest.approx(0.40392, 1e-3)
+        assert deflections[0, 1] == pytest.approx(0.811619, 1e-3)
+
+        broken_power_law = aast.mp.EllipticalBrokenPowerLaw(
+            centre=(0, 0),
+            axis_ratio=0.8,
+            phi=110.0,
+            einstein_radius=1.0,
+            inner_slope=1.5,
+            outer_slope=2.5,
+            break_radius=0.1,
+        )
+
+        deflections = broken_power_law.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        )
+
+        assert deflections[0, 0] == pytest.approx(0.4005338, 1e-3)
+        assert deflections[0, 1] == pytest.approx(0.8067221, 1e-3)
+
+        broken_power_law = aast.mp.EllipticalBrokenPowerLaw(
+            centre=(0, 0),
+            axis_ratio=0.8,
+            phi=220.0,
+            einstein_radius=1.0,
+            inner_slope=1.5,
+            outer_slope=2.5,
+            break_radius=0.1,
+        )
+
+        deflections = broken_power_law.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        )
+
+        assert deflections[0, 0] == pytest.approx(0.399651, 1e-3)
+        assert deflections[0, 1] == pytest.approx(0.813372, 1e-3)
+
+        broken_power_law = aast.mp.EllipticalBrokenPowerLaw(
+            centre=(0, 0),
+            axis_ratio=0.6,
+            phi=300.0,
+            einstein_radius=1.0,
+            inner_slope=1.5,
+            outer_slope=2.5,
+            break_radius=0.1,
+        )
+
+        deflections = broken_power_law.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        )
+
+        assert deflections[0, 0] == pytest.approx(0.402629, 1e-3)
+        assert deflections[0, 1] == pytest.approx(0.798795, 1e-3)
+
+    def test__convergence__change_geometry(self):
+        broken_power_law_0 = aast.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
+        broken_power_law_1 = aast.mp.SphericalBrokenPowerLaw(centre=(1.0, 1.0))
+        assert broken_power_law_0.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
+        ) == broken_power_law_1.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.0, 0.0]])
+        )
+
+        broken_power_law_0 = aast.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
+        broken_power_law_1 = aast.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
+        assert broken_power_law_0.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+        ) == broken_power_law_1.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+        )
+
+        broken_power_law_0 = aast.mp.EllipticalBrokenPowerLaw(
+            centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0
+        )
+        broken_power_law_1 = aast.mp.EllipticalBrokenPowerLaw(
+            centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0
+        )
+        assert broken_power_law_0.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+        ) == broken_power_law_1.convergence_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+        )
+
+    def test__deflections__change_geometry(self):
+        broken_power_law_0 = aast.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
+        broken_power_law_1 = aast.mp.SphericalBrokenPowerLaw(centre=(1.0, 1.0))
+        deflections_0 = broken_power_law_0.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
+        )
+        deflections_1 = broken_power_law_1.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.0, 0.0]])
+        )
+        assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
+        assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
+
+        broken_power_law_0 = aast.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
+        broken_power_law_1 = aast.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
+        deflections_0 = broken_power_law_0.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+        )
+        deflections_1 = broken_power_law_1.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+        )
+        assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
+        assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
+
+        broken_power_law_0 = aast.mp.EllipticalBrokenPowerLaw(
+            centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0
+        )
+        broken_power_law_1 = aast.mp.EllipticalBrokenPowerLaw(
+            centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0
+        )
+        deflections_0 = broken_power_law_0.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+        )
+        deflections_1 = broken_power_law_1.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+        )
+        assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
+        assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
+
+    def test__deflections__compare_to_power_law(self):
+
+        broken_power_law = aast.mp.SphericalBrokenPowerLaw(
+            centre=(0, 0),
+            einstein_radius=2.0,
+            inner_slope=1.999,
+            outer_slope=2.0001,
+            break_radius=0.0001,
+        )
+        deflections = broken_power_law.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        )
+
+        # Use of ratio avoids normalization definition difference effects
+
+        broken_yx_ratio = deflections[0, 0] / deflections[0, 1]
+
+        power_law = aast.mp.SphericalPowerLaw(
+            centre=(0, 0), einstein_radius=2.0, slope=2.0
+        )
+        deflections = power_law.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        )
+
+        power_law_yx_ratio = deflections[0, 0] / deflections[0, 1]
+
+        assert broken_yx_ratio == pytest.approx(power_law_yx_ratio, 1.0e-4)
+
+        broken_power_law = aast.mp.SphericalBrokenPowerLaw(
+            centre=(0, 0),
+            einstein_radius=2.0,
+            inner_slope=2.399,
+            outer_slope=2.4001,
+            break_radius=0.0001,
+        )
+        deflections = broken_power_law.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        )
+
+        # Use of ratio avoids normalization difference effects
+
+        broken_yx_ratio = deflections[0, 0] / deflections[0, 1]
+
+        power_law = aast.mp.SphericalPowerLaw(
+            centre=(0, 0), einstein_radius=2.0, slope=2.4
+        )
+        deflections = power_law.deflections_from_grid(
+            grid=aa.grid_irregular.manual_1d([[0.5, 1.0]])
+        )
+
+        power_law_yx_ratio = deflections[0, 0] / deflections[0, 1]
+
+        assert broken_yx_ratio == pytest.approx(power_law_yx_ratio, 1.0e-4)
+
+    def test__deflections_of_both_profiles__dont_use_interpolate_and_cache_decorators(
+        self
+    ):
+        broken_power_law = aast.mp.SphericalBrokenPowerLaw(
+            centre=(0, 0),
+            einstein_radius=2.0,
+            inner_slope=2.399,
+            outer_slope=2.4001,
+            break_radius=0.0001,
+        )
+
+        mask = np.array(
+            [
+                [True, True, True, True, True],
+                [True, False, False, False, True],
+                [True, False, True, False, True],
+                [True, False, False, False, True],
+                [True, True, True, True, True],
+            ]
+        )
+
+        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+
+        grid = aa.masked.grid.from_mask(mask=mask)
+        true_deflections = broken_power_law.deflections_from_grid(grid=grid)
+
+        regular_with_interp = grid.new_grid_with_interpolator(
+            pixel_scale_interpolation_grid=0.5
+        )
+        interp_deflections = broken_power_law.deflections_from_grid(
+            grid=regular_with_interp
+        )
+        assert np.max(true_deflections[:, 0] - interp_deflections[:, 0]) < 0.1
+        assert np.max(true_deflections[:, 1] - interp_deflections[:, 1]) < 0.1
+
+        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+            mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
+        )
+
+        interp_deflections_values = broken_power_law.deflections_from_grid(
+            grid=interpolator.interp_grid
+        )
+
+        interp_deflections_manual_y = interpolator.interpolated_values_from_values(
+            values=interp_deflections_values[:, 0]
+        )
+        interp_deflections_manual_x = interpolator.interpolated_values_from_values(
+            values=interp_deflections_values[:, 1]
+        )
+
+        assert (interp_deflections_manual_y != interp_deflections[:, 0]).all()
+        assert (interp_deflections_manual_x != interp_deflections[:, 1]).all()
+
+        broken_power_law = aast.mp.EllipticalBrokenPowerLaw(
+            centre=(0, 0),
+            einstein_radius=2.0,
+            inner_slope=2.399,
+            outer_slope=2.4001,
+            break_radius=0.0001,
+        )
+
+        mask = np.array(
+            [
+                [True, True, True, True, True],
+                [True, False, False, False, True],
+                [True, False, True, False, True],
+                [True, False, False, False, True],
+                [True, True, True, True, True],
+            ]
+        )
+
+        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+
+        grid = aa.masked.grid.from_mask(mask=mask)
+        true_deflections = broken_power_law.deflections_from_grid(grid=grid)
+
+        regular_with_interp = grid.new_grid_with_interpolator(
+            pixel_scale_interpolation_grid=0.5
+        )
+        interp_deflections = broken_power_law.deflections_from_grid(
+            grid=regular_with_interp
+        )
+        assert np.max(true_deflections[:, 0] - interp_deflections[:, 0]) < 0.1
+        assert np.max(true_deflections[:, 1] - interp_deflections[:, 1]) < 0.1
+
+        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+            mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
+        )
+
+        interp_deflections_values = broken_power_law.deflections_from_grid(
+            grid=interpolator.interp_grid
+        )
+
+        interp_deflections_manual_y = interpolator.interpolated_values_from_values(
+            values=interp_deflections_values[:, 0]
+        )
+        interp_deflections_manual_x = interpolator.interpolated_values_from_values(
+            values=interp_deflections_values[:, 1]
+        )
+
+        assert (interp_deflections_manual_y != interp_deflections[:, 0]).all()
+        assert (interp_deflections_manual_x != interp_deflections[:, 1]).all()
+
+    def test__output_are_autoarrays(self):
+
+        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+
+        cored_power_law = aast.mp.EllipticalBrokenPowerLaw()
+
+        convergence = cored_power_law.convergence_from_grid(grid=grid)
+
+        assert convergence.shape_2d == (2, 2)
+
+        deflections = cored_power_law.deflections_from_grid(grid=grid)
+
+        assert deflections.shape_2d == (2, 2)
+
+        cored_power_law = aast.mp.SphericalBrokenPowerLaw()
+
+        convergence = cored_power_law.convergence_from_grid(grid=grid)
+
+        assert convergence.shape_2d == (2, 2)
+
+        deflections = cored_power_law.deflections_from_grid(grid=grid)
+
+        assert deflections.shape_2d == (2, 2)
+
+
 class TestCoredPowerLaw:
     def test__constructor_and_units(self):
         cored_power_law = aast.mp.EllipticalCoredPowerLaw(
