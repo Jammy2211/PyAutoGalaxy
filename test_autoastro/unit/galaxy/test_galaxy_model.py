@@ -223,7 +223,7 @@ class TestResultForArguments:
             galaxy_model.light_profile.phi: 0.5,
             galaxy_model.light_profile.intensity.value: 0.6,
             galaxy_model.light_profile.effective_radius.value: 0.7,
-            galaxy_model.light_profile.sersic_index: 2,
+            galaxy_model.light_profile.sersic_index: 0.1,
         }
 
         galaxy = galaxy_model.instance_for_arguments(arguments)
