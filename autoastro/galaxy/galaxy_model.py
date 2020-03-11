@@ -1,11 +1,9 @@
 import inspect
 
-from autofit.mapper.prior_model.prior_model import PriorModel
-
-from autoastro import exc
 from autoastro.galaxy import Galaxy
 from autoastro.profiles import light_profiles
 from autoastro.profiles import mass_profiles
+from autofit.mapper.prior_model.prior_model import PriorModel
 
 
 def is_light_profile_class(cls):
@@ -44,15 +42,15 @@ class GalaxyModel(PriorModel):
     """
 
     def __init__(
-        self,
-        redshift,
-        align_centres=False,
-        align_axis_ratios=False,
-        align_orientations=False,
-        pixelization=None,
-        regularization=None,
-        hyper_galaxy=None,
-        **kwargs
+            self,
+            redshift,
+            align_centres=False,
+            align_axis_ratios=False,
+            align_orientations=False,
+            pixelization=None,
+            regularization=None,
+            hyper_galaxy=None,
+            **kwargs
     ):
         """Class to produce Galaxy instances from sets of profile classes and other model-fitting attributes (e.g. \
          pixelizations, regularization schemes, hyper_galaxies-galaxyes) using the model mapper.
