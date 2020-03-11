@@ -24,7 +24,7 @@ class MaskedGalaxyData:
         of light or mass profiles.
 
         This omits a number of the fit data_type components typically used when fitting an image (e.g. the observed image, PSF, \
-        exposure time map), but still has a number of the other components (e.g. an effective noise_map-map, grid_stacks).
+        exposure time map), but still has a number of the other components (e.g. an effective noise_map, grid_stacks).
 
         Parameters
         ----------
@@ -38,7 +38,7 @@ class MaskedGalaxyData:
         Attributes
         ----------
         noise_map_1d : ndarray
-            The masked 1D arrays of the noise_map-map
+            The masked 1D arrays of the noise_map
         grid_stacks : imaging.masks.GridStack
             Grids of (y,x) Cartesian coordinates which map over the masked 1D fit data_type arrays's pixels (includes an \
             grid, sub-grid, etc.)
