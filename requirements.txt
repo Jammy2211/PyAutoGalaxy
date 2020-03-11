@@ -1,5 +1,5 @@
-autofit==0.52.1
-autoarray==0.7.12
+autofit==0.53.0
+autoarray==0.8.0
 pyquad==0.0.4.0
 astropy>=3.0.0
 numpy>=1.18.0
