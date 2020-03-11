@@ -93,8 +93,15 @@ def jit_integrand(integrand_function):
     return LowLevelCallable(cf(wrapped).ctypes)
 
 
+class DarkProfile:
+
+    pass
+
+
 # noinspection PyAbstractClass
-class AbstractEllipticalGeneralizedNFW(mp.EllipticalMassProfile, mp.MassProfile):
+class AbstractEllipticalGeneralizedNFW(
+    mp.EllipticalMassProfile, mp.MassProfile, DarkProfile
+):
     epsrel = 1.49e-5
 
     @af.map_types

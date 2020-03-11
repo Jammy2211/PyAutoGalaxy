@@ -48,7 +48,7 @@ def make_mapper():
 
 
 @pytest.fixture(name="galaxy_model_2")
-def make_galaxy_model_2(mapper, ):
+def make_galaxy_model_2(mapper,):
     galaxy_model_2 = aast.GalaxyModel(
         redshift=aast.Redshift,
         light_profile=aast.lp.EllipticalDevVaucouleurs,
@@ -59,7 +59,7 @@ def make_galaxy_model_2(mapper, ):
 
 
 @pytest.fixture(name="galaxy_model")
-def make_galaxy_model(mapper, ):
+def make_galaxy_model(mapper,):
     galaxy_model_1 = aast.GalaxyModel(
         redshift=aast.Redshift,
         light_profile=aast.lp.EllipticalDevVaucouleurs,
@@ -143,8 +143,8 @@ class TestGalaxyModel:
 
     def test_align_axis_ratios(self, galaxy_model):
         assert (
-                galaxy_model.light_profile.axis_ratio
-                != galaxy_model.mass_profile.axis_ratio
+            galaxy_model.light_profile.axis_ratio
+            != galaxy_model.mass_profile.axis_ratio
         )
 
         galaxy_model = aast.GalaxyModel(
@@ -154,8 +154,8 @@ class TestGalaxyModel:
             align_axis_ratios=True,
         )
         assert (
-                galaxy_model.light_profile.axis_ratio
-                == galaxy_model.mass_profile.axis_ratio
+            galaxy_model.light_profile.axis_ratio
+            == galaxy_model.mass_profile.axis_ratio
         )
 
     def test_align_phis(self, galaxy_model):
@@ -223,7 +223,7 @@ class TestResultForArguments:
             galaxy_model.light_profile.phi: 0.5,
             galaxy_model.light_profile.intensity.value: 0.6,
             galaxy_model.light_profile.effective_radius.value: 0.7,
-            galaxy_model.light_profile.sersic_index: 2,
+            galaxy_model.light_profile.sersic_index: 0.1,
         }
 
         galaxy = galaxy_model.instance_for_arguments(arguments)
@@ -261,11 +261,11 @@ class TestResultForArguments:
 
         assert gaussian_galaxy_model_model.redshift.redshift == redshift_prior
         assert (
-                gaussian_galaxy_model_model.mass_profile.einstein_radius.value
-                == einstein_radius_prior
+            gaussian_galaxy_model_model.mass_profile.einstein_radius.value
+            == einstein_radius_prior
         )
         assert (
-                gaussian_galaxy_model_model.light_profile.intensity.value == intensity_prior
+            gaussian_galaxy_model_model.light_profile.intensity.value == intensity_prior
         )
 
 
@@ -346,7 +346,7 @@ class TestRegularization:
 
 
 class TestHyperGalaxy:
-    def test_hyper_galaxy(self, ):
+    def test_hyper_galaxy(self,):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift, hyper_galaxy=aast.HyperGalaxy
         )
@@ -366,7 +366,7 @@ class TestHyperGalaxy:
 
         assert galaxy.hyper_galaxy_image is None
 
-    def test_fixed_hyper_galaxy(self, ):
+    def test_fixed_hyper_galaxy(self,):
         galaxy_model = aast.GalaxyModel(
             redshift=aast.Redshift, hyper_galaxy=aast.HyperGalaxy()
         )
