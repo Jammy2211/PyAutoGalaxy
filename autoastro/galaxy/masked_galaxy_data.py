@@ -1,5 +1,4 @@
-from autoarray.structures import grids
-from autoarray.masked import masked_structures
+from autoarray.structures import arrays, grids
 from autoastro import exc
 
 
@@ -48,10 +47,10 @@ class MaskedGalaxyData:
         self.mapping = mask.mapping
         self.pixel_scales = galaxy_data.pixel_scales
 
-        self.image = masked_structures.MaskedArray.manual_2d(
+        self.image = arrays.MaskedArray.manual_2d(
             array=galaxy_data.image.in_2d_binned, mask=mask.mask_sub_1
         )
-        self.noise_map = masked_structures.MaskedArray.manual_2d(
+        self.noise_map = arrays.MaskedArray.manual_2d(
             array=galaxy_data.noise_map.in_2d_binned, mask=mask.mask_sub_1
         )
 

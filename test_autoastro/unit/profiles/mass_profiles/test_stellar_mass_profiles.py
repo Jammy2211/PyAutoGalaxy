@@ -612,7 +612,7 @@ class TestSersic:
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked.grid.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -660,7 +660,7 @@ class TestSersic:
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked.grid.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -933,7 +933,7 @@ class TestExponential:
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked.grid.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -980,7 +980,7 @@ class TestExponential:
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked.grid.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1243,7 +1243,7 @@ class TestDevVaucouleurs:
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked.grid.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1290,7 +1290,7 @@ class TestDevVaucouleurs:
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked.grid.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1709,7 +1709,7 @@ class TestSersicMassRadialGradient:
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked.grid.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1758,7 +1758,7 @@ class TestSersicMassRadialGradient:
 
         mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked.grid.from_mask(mask=mask)
+        grid = aa.masked_grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5

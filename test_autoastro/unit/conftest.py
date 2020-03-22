@@ -121,35 +121,35 @@ def make_gal_data_7x7(image_7x7, noise_map_7x7):
 
 @pytest.fixture(name="gal_fit_data_7x7_image")
 def make_gal_fit_data_7x7_image(gal_data_7x7, sub_mask_7x7):
-    return aast.masked.galaxy_data(
+    return aast.masked_galaxy_data(
         galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_image=True
     )
 
 
 @pytest.fixture(name="gal_fit_data_7x7_convergence")
 def make_gal_fit_data_7x7_convergence(gal_data_7x7, sub_mask_7x7):
-    return aast.masked.galaxy_data(
+    return aast.masked_galaxy_data(
         galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_convergence=True
     )
 
 
 @pytest.fixture(name="gal_fit_data_7x7_potential")
 def make_gal_fit_data_7x7_potential(gal_data_7x7, sub_mask_7x7):
-    return aast.masked.galaxy_data(
+    return aast.masked_galaxy_data(
         galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_potential=True
     )
 
 
 @pytest.fixture(name="gal_fit_data_7x7_deflections_y")
 def make_gal_fit_data_7x7_deflections_y(gal_data_7x7, sub_mask_7x7):
-    return aast.masked.galaxy_data(
+    return aast.masked_galaxy_data(
         galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_y=True
     )
 
 
 @pytest.fixture(name="gal_fit_data_7x7_deflections_x")
 def make_gal_fit_data_7x7_deflections_x(gal_data_7x7, sub_mask_7x7):
-    return aast.masked.galaxy_data(
+    return aast.masked_galaxy_data(
         galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_x=True
     )
 
