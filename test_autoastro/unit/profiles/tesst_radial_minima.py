@@ -230,9 +230,9 @@ class TestPowerLaw:
             ]
         )
 
-        mask = aa.mask.manual(mask, real_space_pixel_scales=1.0)
+        mask = aa.Mask.manual(mask, real_space_pixel_scales=1.0)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -954,9 +954,9 @@ class TestSersicMassRadialGradient:
             ]
         )
 
-        mask = aa.mask.manual(mask, real_space_pixel_scales=1.0)
+        mask = aa.Mask.manual(mask, real_space_pixel_scales=1.0)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5

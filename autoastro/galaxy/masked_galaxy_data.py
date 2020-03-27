@@ -2,7 +2,7 @@ from autoarray.structures import arrays, grids
 from autoastro import exc
 
 
-class MaskedGalaxyData:
+class MaskedGalaxyDataset:
     def __init__(
         self,
         galaxy_data,
@@ -142,3 +142,7 @@ class MaskedGalaxyData:
             return self.grid.mapping.array_stored_1d_from_sub_array_1d(
                 sub_array_1d=deflections_x
             )
+
+    @property
+    def data(self):
+        return self.image

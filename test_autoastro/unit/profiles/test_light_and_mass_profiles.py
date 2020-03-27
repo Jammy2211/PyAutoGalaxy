@@ -5,7 +5,7 @@ import autofit as af
 import autoarray as aa
 import autoastro as aast
 
-grid = aa.grid_irregular.manual_1d([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
+grid = aa.GridIrregular.manual_1d([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 @pytest.fixture(autouse=True)

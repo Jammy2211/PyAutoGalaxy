@@ -204,16 +204,16 @@ class TestLensingPlotterAttributes:
 class TestLensingPlotterPlots:
     def test__plot_array__works_with_all_extras_included(self, plot_path, plot_patch):
 
-        array = aa.array.ones(shape_2d=(31, 31), pixel_scales=(1.0, 1.0), sub_size=2)
+        array = aa.Array.ones(shape_2d=(31, 31), pixel_scales=(1.0, 1.0), sub_size=2)
 
-        mask = aa.mask.circular(
+        mask = aa.Mask.circular(
             shape_2d=array.shape_2d,
             pixel_scales=array.pixel_scales,
             radius=5.0,
             centre=(2.0, 2.0),
         )
 
-        grid = aa.grid.uniform(shape_2d=(11, 11), pixel_scales=0.5)
+        grid = aa.Grid.uniform(shape_2d=(11, 11), pixel_scales=0.5)
 
         plotter = aplt.Plotter(
             output=aplt.Output(path=plot_path, filename="array1", format="png")
@@ -275,7 +275,7 @@ class TestLensingPlotterPlots:
         if os.path.exists(plot_path):
             shutil.rmtree(plot_path)
 
-        arr = aa.array.ones(shape_2d=(31, 31), pixel_scales=(1.0, 1.0), sub_size=2)
+        arr = aa.Array.ones(shape_2d=(31, 31), pixel_scales=(1.0, 1.0), sub_size=2)
 
         plotter = aplt.Plotter(
             output=aplt.Output(path=plot_path, filename="array", format="fits")
@@ -289,11 +289,11 @@ class TestLensingPlotterPlots:
 
         assert (arr == np.ones(shape=(31, 31))).all()
 
-        mask = aa.mask.circular(
+        mask = aa.Mask.circular(
             shape_2d=(31, 31), pixel_scales=(1.0, 1.0), radius=5.0, centre=(2.0, 2.0)
         )
 
-        masked_array = aa.masked_array.manual_2d(array=arr, mask=mask)
+        masked_array = aa.MaskedArray.manual_2d(array=arr, mask=mask)
 
         plotter.plot_array(array=masked_array)
 
@@ -304,7 +304,7 @@ class TestLensingPlotterPlots:
         assert arr.shape == (13, 13)
 
     def test__plot_grid__works_with_all_extras_included(self, plot_path, plot_patch):
-        grid = aa.grid.uniform(shape_2d=(11, 11), pixel_scales=1.0)
+        grid = aa.Grid.uniform(shape_2d=(11, 11), pixel_scales=1.0)
         color_array = np.linspace(start=0.0, stop=1.0, num=grid.shape_1d)
 
         plotter = aplt.Plotter(

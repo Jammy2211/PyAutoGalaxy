@@ -18,7 +18,7 @@ def reset_config():
     af.conf.instance = af.conf.default
 
 
-grid = aa.grid_irregular.manual_1d([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
+grid = aa.GridIrregular.manual_1d([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestEllipticalGaussian:
@@ -67,32 +67,32 @@ class TestEllipticalGaussian:
 
         gaussian = aast.mp.EllipticalGaussian(axis_ratio=0.9, sigma=2.0)
 
-        sigma = gaussian.sigma_from_grid(grid=aa.grid_irregular.manual_1d([[1.0, 0.0]]))
+        sigma = gaussian.sigma_from_grid(grid=aa.GridIrregular.manual_1d([[1.0, 0.0]]))
 
         assert np.real(sigma[0]) == pytest.approx(0.0, 1.0e-4)
         assert np.imag(sigma[0]) == pytest.approx(-0.086128, 1.0e-4)
 
         gaussian = aast.mp.EllipticalGaussian(axis_ratio=0.9, sigma=3.0)
 
-        sigma = gaussian.sigma_from_grid(grid=aa.grid_irregular.manual_1d([[1.0, 0.0]]))
+        sigma = gaussian.sigma_from_grid(grid=aa.GridIrregular.manual_1d([[1.0, 0.0]]))
 
         assert np.real(sigma[0]) == pytest.approx(0.0, 1.0e-4)
         assert np.imag(sigma[0]) == pytest.approx(-0.059380, 1.0e-4)
 
-        sigma = gaussian.sigma_from_grid(grid=aa.grid_irregular.manual_1d([[1.0, 0.5]]))
+        sigma = gaussian.sigma_from_grid(grid=aa.GridIrregular.manual_1d([[1.0, 0.5]]))
 
         assert np.real(sigma[0]) == pytest.approx(0.026596, 1.0e-4)
         assert np.imag(sigma[0]) == pytest.approx(-0.059033, 1.0e-4)
 
         gaussian = aast.mp.EllipticalGaussian(axis_ratio=0.8, sigma=3.0)
 
-        sigma = gaussian.sigma_from_grid(grid=aa.grid_irregular.manual_1d([[1.0, 0.5]]))
+        sigma = gaussian.sigma_from_grid(grid=aa.GridIrregular.manual_1d([[1.0, 0.5]]))
 
         assert np.real(sigma[0]) == pytest.approx(0.0344443, 1.0e-4)
         assert np.imag(sigma[0]) == pytest.approx(-0.085903, 1.0e-4)
 
         sigma = gaussian.sigma_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.3, 0.5], [0.3, 0.5]])
+            grid=aa.GridIrregular.manual_1d([[0.3, 0.5], [0.3, 0.5]])
         )
 
         assert np.real(sigma[0]) == pytest.approx(0.03522, 1.0e-4)
@@ -111,7 +111,7 @@ class TestEllipticalGaussian:
         )
 
         deflections = gaussian.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.85595, 1.0e-4)
@@ -126,7 +126,7 @@ class TestEllipticalGaussian:
         )
 
         deflections = gaussian.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.5, 0.2]])
+            grid=aa.GridIrregular.manual_1d([[0.5, 0.2]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.277765, 1.0e-4)
@@ -141,7 +141,7 @@ class TestEllipticalGaussian:
         )
 
         deflections = gaussian.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.5, 0.2]])
+            grid=aa.GridIrregular.manual_1d([[0.5, 0.2]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.55553, 1.0e-4)
@@ -156,7 +156,7 @@ class TestEllipticalGaussian:
         )
 
         deflections = gaussian.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.5, 0.2]])
+            grid=aa.GridIrregular.manual_1d([[0.5, 0.2]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.555531, 1.0e-4)
@@ -172,7 +172,7 @@ class TestEllipticalGaussian:
             mass_to_light_ratio=1.0,
         )
 
-        grid = aa.grid.uniform(shape_2d=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
+        grid = aa.Grid.uniform(shape_2d=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
 
         deflections_via_analytic = gaussian.deflections_from_grid_via_analytic(
             grid=grid
@@ -193,7 +193,7 @@ class TestEllipticalGaussian:
             mass_to_light_ratio=7.0,
         )
 
-        grid = aa.grid.uniform(shape_2d=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
+        grid = aa.Grid.uniform(shape_2d=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
 
         deflections_via_analytic = gaussian.deflections_from_grid_via_analytic(
             grid=grid
@@ -219,13 +219,13 @@ class TestEllipticalGaussian:
         )
 
         deflections = gaussian.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[-1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[-1.0, 0.0]])
         )
         deflections_via_analytic = gaussian.deflections_from_grid_via_analytic(
-            grid=aa.grid_irregular.manual_1d([[-1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[-1.0, 0.0]])
         )
         deflections_via_integrator = gaussian.deflections_from_grid_via_integrator(
-            grid=aa.grid_irregular.manual_1d([[-1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[-1.0, 0.0]])
         )
 
         assert deflections[0, 0] == deflections_via_analytic[0, 0]
@@ -243,13 +243,13 @@ class TestEllipticalGaussian:
 
         pytest.warns(RuntimeWarning)
         deflections = gaussian.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[-5.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[-5.0, 0.0]])
         )
         deflections_via_analytic = gaussian.deflections_from_grid_via_analytic(
-            grid=aa.grid_irregular.manual_1d([[-5.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[-5.0, 0.0]])
         )
         deflections_via_integrator = gaussian.deflections_from_grid_via_integrator(
-            grid=aa.grid_irregular.manual_1d([[-5.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[-5.0, 0.0]])
         )
 
         assert deflections[0, 0] != deflections_via_analytic[0, 0]
@@ -299,7 +299,7 @@ class TestEllipticalGaussian:
             mass_to_light_ratio=1.0,
         )
         assert gaussian.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(0.24197, 1e-2)
 
         gaussian = aast.mp.EllipticalGaussian(
@@ -311,7 +311,7 @@ class TestEllipticalGaussian:
             mass_to_light_ratio=2.0,
         )
         assert gaussian.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(2.0 * 0.24197, 1e-2)
 
         gaussian = aast.mp.EllipticalGaussian(
@@ -323,7 +323,7 @@ class TestEllipticalGaussian:
             mass_to_light_ratio=1.0,
         )
         assert gaussian.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(2.0 * 0.24197, 1e-2)
 
         gaussian = aast.mp.EllipticalGaussian(
@@ -335,7 +335,7 @@ class TestEllipticalGaussian:
             mass_to_light_ratio=4.0,
         )
         assert gaussian.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(1.03470, 1e-2)
 
 
@@ -428,7 +428,7 @@ class TestSersic:
             mass_to_light_ratio=1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.5]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.5]])
         ) == pytest.approx(4.90657319276, 1e-3)
 
         sersic = aast.mp.EllipticalSersic(
@@ -439,7 +439,7 @@ class TestSersic:
             mass_to_light_ratio=1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.5]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.5]])
         ) == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
         sersic = aast.mp.EllipticalSersic(
@@ -450,7 +450,7 @@ class TestSersic:
             mass_to_light_ratio=2.0,
         )
         assert sersic.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.5]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.5]])
         ) == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
         sersic = aast.mp.EllipticalSersic(
@@ -462,7 +462,7 @@ class TestSersic:
             sersic_index=2.0,
             mass_to_light_ratio=1.0,
         )
-        assert sersic.convergence_from_grid(grid=aa.coordinates([[(1.0, 0.0)]]))[0][
+        assert sersic.convergence_from_grid(grid=aa.Coordinates([[(1.0, 0.0)]]))[0][
             0
         ] == pytest.approx(5.38066670129, 1e-3)
 
@@ -477,7 +477,7 @@ class TestSersic:
             mass_to_light_ratio=1.0,
         )
         deflections = sersic.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.79374, 1e-3)
@@ -492,7 +492,7 @@ class TestSersic:
             mass_to_light_ratio=1.0,
         )
         deflections = sersic.deflections_from_grid(
-            grid=aa.coordinates([[(0.1625, 0.1625), (0.1625, 0.1625)]])
+            grid=aa.Coordinates([[(0.1625, 0.1625), (0.1625, 0.1625)]])
         )
         assert deflections[0][0][0] == pytest.approx(1.1446, 1e-3)
         assert deflections[0][0][1] == pytest.approx(0.79374, 1e-3)
@@ -503,35 +503,35 @@ class TestSersic:
         sersic_0 = aast.mp.EllipticalSersic(centre=(0.0, 0.0))
         sersic_1 = aast.mp.EllipticalSersic(centre=(1.0, 1.0))
         assert sersic_0.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 1.0]])
         ) == sersic_1.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 0.0]])
         )
 
         sersic_0 = aast.mp.EllipticalSersic(centre=(0.0, 0.0))
         sersic_1 = aast.mp.EllipticalSersic(centre=(0.0, 0.0))
         assert sersic_0.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
         ) == sersic_1.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         )
 
         sersic_0 = aast.mp.EllipticalSersic(centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0)
         sersic_1 = aast.mp.EllipticalSersic(centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0)
         assert sersic_0.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
         ) == sersic_1.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         )
 
     def test__deflections__change_geometry(self):
         sersic_0 = aast.mp.EllipticalSersic(centre=(0.0, 0.0))
         sersic_1 = aast.mp.EllipticalSersic(centre=(1.0, 1.0))
         deflections_0 = sersic_0.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 1.0]])
         )
         deflections_1 = sersic_1.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 0.0]])
         )
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
@@ -539,10 +539,10 @@ class TestSersic:
         sersic_0 = aast.mp.EllipticalSersic(centre=(0.0, 0.0))
         sersic_1 = aast.mp.EllipticalSersic(centre=(0.0, 0.0))
         deflections_0 = sersic_0.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
         )
         deflections_1 = sersic_1.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         )
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
@@ -550,10 +550,10 @@ class TestSersic:
         sersic_0 = aast.mp.EllipticalSersic(centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0)
         sersic_1 = aast.mp.EllipticalSersic(centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0)
         deflections_0 = sersic_0.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
         )
         deflections_1 = sersic_1.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         )
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
@@ -610,9 +610,9 @@ class TestSersic:
             ]
         )
 
-        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -658,9 +658,9 @@ class TestSersic:
             ]
         )
 
-        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -686,7 +686,7 @@ class TestSersic:
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         sersic = aast.mp.EllipticalSersic()
 
@@ -806,7 +806,7 @@ class TestExponential:
             mass_to_light_ratio=1.0,
         )
         assert exponential.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
         ) == pytest.approx(4.9047, 1e-3)
 
         exponential = aast.mp.EllipticalExponential(
@@ -817,7 +817,7 @@ class TestExponential:
             mass_to_light_ratio=1.0,
         )
         assert exponential.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(4.8566, 1e-3)
 
         exponential = aast.mp.EllipticalExponential(
@@ -828,7 +828,7 @@ class TestExponential:
             mass_to_light_ratio=1.0,
         )
         assert exponential.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(2.0 * 4.8566, 1e-3)
 
         exponential = aast.mp.EllipticalExponential(
@@ -839,7 +839,7 @@ class TestExponential:
             mass_to_light_ratio=2.0,
         )
         assert exponential.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(2.0 * 4.8566, 1e-3)
 
         exponential = aast.mp.EllipticalExponential(
@@ -849,7 +849,7 @@ class TestExponential:
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
         )
-        assert exponential.convergence_from_grid(grid=aa.coordinates([[(0.0, 1.0)]]))[
+        assert exponential.convergence_from_grid(grid=aa.Coordinates([[(0.0, 1.0)]]))[
             0
         ][0] == pytest.approx(4.8566, 1e-3)
 
@@ -863,7 +863,7 @@ class TestExponential:
             mass_to_light_ratio=1.0,
         )
         deflections = exponential.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.62569, 1e-3)
@@ -877,7 +877,7 @@ class TestExponential:
             mass_to_light_ratio=1.0,
         )
         deflections = exponential.deflections_from_grid(
-            grid=aa.coordinates([[(0.1625, 0.1625)]])
+            grid=aa.Coordinates([[(0.1625, 0.1625)]])
         )
         assert deflections[0][0][0] == pytest.approx(0.90493, 1e-3)
         assert deflections[0][0][1] == pytest.approx(0.62569, 1e-3)
@@ -931,9 +931,9 @@ class TestExponential:
             ]
         )
 
-        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -978,9 +978,9 @@ class TestExponential:
             ]
         )
 
-        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1006,7 +1006,7 @@ class TestExponential:
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         exponential = aast.mp.EllipticalExponential()
 
@@ -1130,7 +1130,7 @@ class TestDevVaucouleurs:
             mass_to_light_ratio=1.0,
         )
         assert dev.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
         ) == pytest.approx(5.6697, 1e-3)
 
         dev = aast.mp.EllipticalDevVaucouleurs(
@@ -1141,7 +1141,7 @@ class TestDevVaucouleurs:
             mass_to_light_ratio=1.0,
         )
         assert dev.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(7.4455, 1e-3)
 
         dev = aast.mp.EllipticalDevVaucouleurs(
@@ -1152,7 +1152,7 @@ class TestDevVaucouleurs:
             mass_to_light_ratio=1.0,
         )
         assert dev.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(2.0 * 7.4455, 1e-3)
 
         dev = aast.mp.EllipticalDevVaucouleurs(
@@ -1163,7 +1163,7 @@ class TestDevVaucouleurs:
             mass_to_light_ratio=2.0,
         )
         assert dev.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(2.0 * 7.4455, 1e-3)
 
         sersic = aast.mp.EllipticalDevVaucouleurs(
@@ -1172,7 +1172,7 @@ class TestDevVaucouleurs:
             effective_radius=0.6,
             mass_to_light_ratio=1.0,
         )
-        assert sersic.convergence_from_grid(grid=aa.coordinates([[(0.0, 1.0)]]))[0][
+        assert sersic.convergence_from_grid(grid=aa.Coordinates([[(0.0, 1.0)]]))[0][
             0
         ] == pytest.approx(0.351797, 1e-3)
 
@@ -1186,7 +1186,7 @@ class TestDevVaucouleurs:
             mass_to_light_ratio=3.0,
         )
         deflections = dev.deflections_from_grid(
-            grid=aa.coordinates([[(0.1625, 0.1625)]])
+            grid=aa.Coordinates([[(0.1625, 0.1625)]])
         )
         assert deflections[0][0][0] == pytest.approx(-24.528, 1e-3)
         assert deflections[0][0][1] == pytest.approx(-3.37605, 1e-3)
@@ -1241,9 +1241,9 @@ class TestDevVaucouleurs:
             ]
         )
 
-        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1288,9 +1288,9 @@ class TestDevVaucouleurs:
             ]
         )
 
-        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1316,7 +1316,7 @@ class TestDevVaucouleurs:
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         dev_vaucouleurs = aast.mp.EllipticalDevVaucouleurs()
 
@@ -1450,7 +1450,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_gradient=1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         ) == pytest.approx(0.6 * 0.351797, 1e-3)
 
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1.5/2.0)**1.0 = 0.75
@@ -1464,7 +1464,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_gradient=-1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.5, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.5, 0.0]])
         ) == pytest.approx(0.75 * 4.90657319276, 1e-3)
 
         sersic = aast.mp.EllipticalSersicRadialGradient(
@@ -1477,7 +1477,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_gradient=-1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.5, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.5, 0.0]])
         ) == pytest.approx(2.0 * 0.75 * 4.90657319276, 1e-3)
 
         sersic = aast.mp.EllipticalSersicRadialGradient(
@@ -1490,7 +1490,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_gradient=-1.0,
         )
         assert sersic.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.5, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.5, 0.0]])
         ) == pytest.approx(2.0 * 0.75 * 4.90657319276, 1e-3)
 
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = ((0.5*1.41)/2.0)**-1.0 = 2.836
@@ -1503,7 +1503,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_ratio=1.0,
             mass_to_light_gradient=1.0,
         )
-        assert sersic.convergence_from_grid(grid=aa.coordinates([[(1.0, 0.0)]]))[0][
+        assert sersic.convergence_from_grid(grid=aa.Coordinates([[(1.0, 0.0)]]))[0][
             0
         ] == pytest.approx(2.836879 * 5.38066670129, abs=2e-01)
 
@@ -1519,7 +1519,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_gradient=1.0,
         )
         deflections = sersic.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(3.60324873535244, 1e-3)
         assert deflections[0, 1] == pytest.approx(2.3638898009652, 1e-3)
@@ -1535,7 +1535,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_gradient=-1.0,
         )
         deflections = sersic.deflections_from_grid(
-            grid=aa.coordinates([[(0.1625, 0.1625)]])
+            grid=aa.Coordinates([[(0.1625, 0.1625)]])
         )
         assert deflections[0][0][0] == pytest.approx(0.97806399756448, 1e-3)
         assert deflections[0][0][1] == pytest.approx(0.725459334118341, 1e-3)
@@ -1552,7 +1552,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_gradient=0.0,
         )
         sersic_deflections = sersic.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1625]])
         )
 
         exponential = aast.mp.EllipticalExponential(
@@ -1564,7 +1564,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_ratio=1.0,
         )
         exponential_deflections = exponential.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1625]])
         )
 
         assert (
@@ -1589,7 +1589,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_gradient=0.0,
         )
         sersic_deflections = sersic.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1625]])
         )
 
         dev = aast.mp.EllipticalDevVaucouleurs(
@@ -1602,7 +1602,7 @@ class TestSersicMassRadialGradient:
         )
 
         dev_deflections = dev.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1625]])
         )
 
         assert (
@@ -1627,7 +1627,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_gradient=0.0,
         )
         sersic_grad_deflections = sersic_grad.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1625]])
         )
 
         sersic = aast.mp.EllipticalSersic(
@@ -1640,7 +1640,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_ratio=1.0,
         )
         sersic_deflections = sersic.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1625]])
         )
 
         assert (
@@ -1707,9 +1707,9 @@ class TestSersicMassRadialGradient:
             ]
         )
 
-        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1756,9 +1756,9 @@ class TestSersicMassRadialGradient:
             ]
         )
 
-        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1784,7 +1784,7 @@ class TestSersicMassRadialGradient:
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         sersic = aast.mp.EllipticalSersicRadialGradient()
 

@@ -11,7 +11,7 @@ from test_autoastro.mock import mock_cosmology
 
 import os
 
-grid = aa.grid_irregular.manual_1d([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
+grid = aa.GridIrregular.manual_1d([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 @pytest.fixture(autouse=True)
@@ -798,49 +798,49 @@ class TestGeneralizedNFW:
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
         )
         assert gnfw.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 0.0]])
         ) == pytest.approx(0.30840, 1e-3)
 
         gnfw = aast.mp.SphericalGeneralizedNFW(
             centre=(0.0, 0.0), kappa_s=2.0, inner_slope=1.5, scale_radius=1.0
         )
-        assert gnfw.convergence_from_grid(grid=aa.coordinates([[(2.0, 0.0)]]))[0][
+        assert gnfw.convergence_from_grid(grid=aa.Coordinates([[(2.0, 0.0)]]))[0][
             0
         ] == pytest.approx(0.30840 * 2, 1e-3)
 
         # gnfw = aast.EllipticalGeneralizedNFW(centre=(0.0, 0.0), kappa_s=1.0, axis_ratio=0.5,
         #                                    phi=90.0, inner_slope=1.5, scale_radius=1.0)
-        # assert gnfw.convergence_from_grid(grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])) == pytest.approx(0.30840, 1e-3)
+        # assert gnfw.convergence_from_grid(grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])) == pytest.approx(0.30840, 1e-3)
         #
         # gnfw = aast.EllipticalGeneralizedNFW(centre=(0.0, 0.0), kappa_s=2.0, axis_ratio=0.5,
         #                                    phi=90.0, inner_slope=1.5, scale_radius=1.0)
-        # assert gnfw.convergence_from_grid(grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])) == pytest.approx(0.30840 * 2, 1e-3)
+        # assert gnfw.convergence_from_grid(grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])) == pytest.approx(0.30840 * 2, 1e-3)
 
     def test__potential_correct_values(self):
         gnfw = aast.mp.SphericalGeneralizedNFW(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=0.5, scale_radius=8.0
         )
         assert gnfw.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1875]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1875]])
         ) == pytest.approx(0.00920, 1e-3)
 
         gnfw = aast.mp.SphericalGeneralizedNFW(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=8.0
         )
-        assert gnfw.potential_from_grid(grid=aa.coordinates([[(0.1625, 0.1875)]]))[0][
+        assert gnfw.potential_from_grid(grid=aa.Coordinates([[(0.1625, 0.1875)]]))[0][
             0
         ] == pytest.approx(0.17448, 1e-3)
 
         # gnfw = aast.EllipticalGeneralizedNFW(centre=(1.0, 1.0), kappa_s=5.0, axis_ratio=0.5,
         #                                    phi=100.0, inner_slope=1.0, scale_radius=10.0)
-        # assert gnfw.potential_from_grid(grid=aa.grid_irregular.manual_1d([[2.0, 2.0]])) == pytest.approx(2.4718, 1e-4)
+        # assert gnfw.potential_from_grid(grid=aa.GridIrregular.manual_1d([[2.0, 2.0]])) == pytest.approx(2.4718, 1e-4)
 
     def test__deflections_correct_values(self):
         gnfw = aast.mp.SphericalGeneralizedNFW(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=0.5, scale_radius=8.0
         )
         deflections = gnfw.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1875, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.43501, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.37701, 1e-3)
@@ -849,20 +849,20 @@ class TestGeneralizedNFW:
             centre=(0.3, 0.2), kappa_s=2.5, inner_slope=1.5, scale_radius=4.0
         )
         deflections = gnfw.deflections_from_grid(
-            grid=aa.coordinates([[(0.1875, 0.1625)]])
+            grid=aa.Coordinates([[(0.1875, 0.1625)]])
         )
         assert deflections[0][0][0] == pytest.approx(-9.31254, 1e-3)
         assert deflections[0][0][1] == pytest.approx(-3.10418, 1e-3)
 
         # gnfw = aast.EllipticalGeneralizedNFW(centre=(0.0, 0.0), kappa_s=1.0, axis_ratio=0.3,
         #                                    phi=100.0, inner_slope=0.5, scale_radius=8.0)
-        # deflections = gnfw.deflections_from_grid(grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]]))
+        # deflections = gnfw.deflections_from_grid(grid=aa.GridIrregular.manual_1d([[0.1875, 0.1625]]))
         # assert deflections[0, 0] == pytest.approx(0.26604, 1e-3)
         # assert deflections[0, 1] == pytest.approx(0.58988, 1e-3)
         #
         # gnfw = aast.EllipticalGeneralizedNFW(centre=(0.3, 0.2), kappa_s=2.5, axis_ratio=0.5,
         #                                    phi=100.0, inner_slope=1.5, scale_radius=4.0)
-        # deflections = gnfw.deflections_from_grid(grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]]))
+        # deflections = gnfw.deflections_from_grid(grid=aa.GridIrregular.manual_1d([[0.1875, 0.1625]]))
         # assert deflections[0, 0] == pytest.approx(-5.99032, 1e-3)
         # assert deflections[0, 1] == pytest.approx(-4.02541, 1e-3)
 
@@ -870,41 +870,37 @@ class TestGeneralizedNFW:
         gnfw_0 = aast.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
         gnfw_1 = aast.mp.SphericalGeneralizedNFW(centre=(1.0, 1.0))
         assert gnfw_0.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
-        ) == gnfw_1.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 0.0]])
-        )
+            grid=aa.GridIrregular.manual_1d([[1.0, 1.0]])
+        ) == gnfw_1.convergence_from_grid(grid=aa.GridIrregular.manual_1d([[0.0, 0.0]]))
 
         gnfw_0 = aast.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
         gnfw_1 = aast.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
         assert gnfw_0.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
-        ) == gnfw_1.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
-        )
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
+        ) == gnfw_1.convergence_from_grid(grid=aa.GridIrregular.manual_1d([[0.0, 1.0]]))
 
         # gnfw_0 = aast.EllipticalGeneralizedNFW(centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0)
         # gnfw_1 = aast.EllipticalGeneralizedNFW(centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0)
-        # assert gnfw_0.convergence_from_grid(grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])) == gnfw_1.convergence_from_grid(
-        #     grid=aa.grid_irregular.manual_1d([[0.0, 1.0]]))
+        # assert gnfw_0.convergence_from_grid(grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])) == gnfw_1.convergence_from_grid(
+        #     grid=aa.GridIrregular.manual_1d([[0.0, 1.0]]))
 
     def test__potential__change_geometry(self):
         gnfw_0 = aast.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
         gnfw_1 = aast.mp.SphericalGeneralizedNFW(centre=(1.0, 1.0))
         assert gnfw_0.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
-        ) == gnfw_1.potential_from_grid(grid=aa.grid_irregular.manual_1d([[0.0, 0.0]]))
+            grid=aa.GridIrregular.manual_1d([[1.0, 1.0]])
+        ) == gnfw_1.potential_from_grid(grid=aa.GridIrregular.manual_1d([[0.0, 0.0]]))
 
         gnfw_0 = aast.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
         gnfw_1 = aast.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
         assert gnfw_0.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
-        ) == gnfw_1.potential_from_grid(grid=aa.grid_irregular.manual_1d([[0.0, 1.0]]))
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
+        ) == gnfw_1.potential_from_grid(grid=aa.GridIrregular.manual_1d([[0.0, 1.0]]))
 
         # gnfw_0 = aast.EllipticalGeneralizedNFW(centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0)
         # gnfw_1 = aast.EllipticalGeneralizedNFW(centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0)
-        # assert gnfw_0.potential_from_grid(grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])) == gnfw_1.potential_from_grid(
-        #     grid=aa.grid_irregular.manual_1d([[0.0, 1.0]]))
+        # assert gnfw_0.potential_from_grid(grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])) == gnfw_1.potential_from_grid(
+        #     grid=aa.GridIrregular.manual_1d([[0.0, 1.0]]))
 
     def test__deflections__change_geometry(self):
         gnfw_0 = aast.mp.SphericalGeneralizedNFW(
@@ -914,10 +910,10 @@ class TestGeneralizedNFW:
             centre=(1.0, 1.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
         )
         deflections_0 = gnfw_0.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 1.0]])
         )
         deflections_1 = gnfw_1.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 0.0]])
         )
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
@@ -929,10 +925,10 @@ class TestGeneralizedNFW:
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
         )
         deflections_0 = gnfw_0.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
         )
         deflections_1 = gnfw_1.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         )
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
@@ -941,8 +937,8 @@ class TestGeneralizedNFW:
         #                                      inner_slope=1.5, scale_radius=1.0)
         # gnfw_1 = aast.EllipticalGeneralizedNFW(centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0, kappa_s=1.0,
         #                                      inner_slope=1.5, scale_radius=1.0)
-        # deflections_0 = gnfw_0.deflections_from_grid(grid=aa.grid_irregular.manual_1d([[1.0, 0.0]]))
-        # deflections_1 = gnfw_1.deflections_from_grid(grid=aa.grid_irregular.manual_1d([[0.0, 1.0]]))
+        # deflections_0 = gnfw_0.deflections_from_grid(grid=aa.GridIrregular.manual_1d([[1.0, 0.0]]))
+        # deflections_1 = gnfw_1.deflections_from_grid(grid=aa.GridIrregular.manual_1d([[0.0, 1.0]]))
         # assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         # assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
@@ -963,9 +959,9 @@ class TestGeneralizedNFW:
             ]
         )
 
-        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1012,7 +1008,7 @@ class TestGeneralizedNFW:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         # gnfw = aast.EllipticalGeneralizedNFW()
         #
@@ -1086,11 +1082,11 @@ class TestTruncatedNFW:
         )
 
         assert truncated_nfw.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 0.0]])
         ) == pytest.approx(2.0 * 0.046409642, 1.0e-4)
 
         assert truncated_nfw.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 1.0]])
         ) == pytest.approx(2.0 * 0.10549515, 1.0e-4)
 
         truncated_nfw = aast.mp.SphericalTruncatedNFW(
@@ -1098,14 +1094,14 @@ class TestTruncatedNFW:
         )
 
         assert truncated_nfw.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 0.0]])
         ) == pytest.approx(6.0 * 0.046409642, 1.0e-4)
 
         truncated_nfw = aast.mp.SphericalTruncatedNFW(
             centre=(0.0, 0.0), kappa_s=3.0, scale_radius=5.0, truncation_radius=2.0
         )
 
-        assert truncated_nfw.convergence_from_grid(grid=aa.coordinates([[(2.0, 0.0)]]))[
+        assert truncated_nfw.convergence_from_grid(grid=aa.Coordinates([[(2.0, 0.0)]]))[
             0
         ][0] == pytest.approx(1.51047026, 1.0e-4)
 
@@ -1118,7 +1114,7 @@ class TestTruncatedNFW:
         # factor = (4.0 * kappa_s * scale_radius / (r / scale_radius))
 
         deflections = truncated_nfw.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 0.0]])
         )
 
         factor = (4.0 * 1.0 * 1.0) / (2.0 / 1.0)
@@ -1126,14 +1122,14 @@ class TestTruncatedNFW:
         assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
 
         deflections = truncated_nfw.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 2.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 2.0]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.0, 1.0e-4)
         assert deflections[0, 1] == pytest.approx(factor * 0.38209715, 1.0e-4)
 
         deflections = truncated_nfw.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 1.0]])
         )
 
         factor = (4.0 * 1.0 * 1.0) / (np.sqrt(2) / 1.0)
@@ -1149,7 +1145,7 @@ class TestTruncatedNFW:
         )
 
         deflections = truncated_nfw.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 0.0]])
         )
 
         factor = (4.0 * 2.0 * 1.0) / (2.0 / 1.0)
@@ -1161,7 +1157,7 @@ class TestTruncatedNFW:
         )
 
         deflections = truncated_nfw.deflections_from_grid(
-            grid=aa.coordinates([[(2.0, 0.0)]])
+            grid=aa.Coordinates([[(2.0, 0.0)]])
         )
 
         assert deflections[0][0][0] == pytest.approx(2.1702661386, 1.0e-4)
@@ -1178,19 +1174,19 @@ class TestTruncatedNFW:
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0)
 
         truncated_nfw_convergence = truncated_nfw.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
         )
         nfw_convergence = nfw.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
         )
 
         assert truncated_nfw_convergence == pytest.approx(nfw_convergence, 1.0e-4)
 
         truncated_nfw_deflections = truncated_nfw.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
         )
         nfw_deflections = nfw.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
         )
 
         assert truncated_nfw_deflections == pytest.approx(nfw_deflections, 1.0e-4)
@@ -1213,9 +1209,9 @@ class TestTruncatedNFW:
             ]
         )
 
-        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1381,7 +1377,7 @@ class TestTruncatedNFW:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         truncated_nfw = aast.mp.SphericalTruncatedNFW()
 
@@ -1593,7 +1589,7 @@ class TestTruncatedNFWMassToConcentration:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         truncated_nfw = aast.mp.SphericalTruncatedNFW()
 
@@ -1669,46 +1665,46 @@ class TestNFW:
         # kappa(r) = 2 * kappa_s * (1 - 0.60459978807) / (4-1) = 0.263600141
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
         assert nfw.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 0.0]])
         ) == pytest.approx(0.263600141, 1e-3)
 
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
         assert nfw.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.5, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[0.5, 0.0]])
         ) == pytest.approx(1.388511, 1e-3)
 
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0)
         assert nfw.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.5, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[0.5, 0.0]])
         ) == pytest.approx(2.0 * 1.388511, 1e-3)
 
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0)
         assert nfw.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
         ) == pytest.approx(1.388511, 1e-3)
 
         nfw = aast.mp.EllipticalNFW(
             centre=(0.0, 0.0), axis_ratio=0.5, phi=0.0, kappa_s=1.0, scale_radius=1.0
         )
-        assert nfw.convergence_from_grid(grid=aa.coordinates([[(0.25, 0.0)]]))[0][
+        assert nfw.convergence_from_grid(grid=aa.Coordinates([[(0.25, 0.0)]]))[0][
             0
         ] == pytest.approx(1.388511, 1e-3)
 
     def test__potential_correct_values(self):
         nfw = aast.mp.SphericalNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
         assert nfw.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1875, 0.1625]])
         ) == pytest.approx(0.03702, 1e-3)
 
         nfw = aast.mp.SphericalNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
         assert nfw.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1875, 0.1625]])
         ) == pytest.approx(0.03702, 1e-3)
 
         nfw = aast.mp.EllipticalNFW(
             centre=(0.3, 0.2), axis_ratio=0.7, phi=6.0, kappa_s=2.5, scale_radius=4.0
         )
-        assert nfw.potential_from_grid(grid=aa.coordinates([[(0.1625, 0.1625)]]))[0][
+        assert nfw.potential_from_grid(grid=aa.Coordinates([[(0.1625, 0.1625)]]))[0][
             0
         ] == pytest.approx(0.05380, 1e-3)
 
@@ -1721,28 +1717,28 @@ class TestNFW:
         )
 
         potential_spherical = nfw_spherical.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1875, 0.1625]])
         )
         potential_elliptical = nfw_elliptical.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1875, 0.1625]])
         )
 
         assert potential_spherical == pytest.approx(potential_elliptical, 1e-3)
 
         potential_spherical = nfw_spherical.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[50.0, 50.0]])
+            grid=aa.GridIrregular.manual_1d([[50.0, 50.0]])
         )
         potential_elliptical = nfw_elliptical.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[50.0, 50.0]])
+            grid=aa.GridIrregular.manual_1d([[50.0, 50.0]])
         )
 
         assert potential_spherical == pytest.approx(potential_elliptical, 1e-3)
 
         potential_spherical = nfw_spherical.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[-50.0, -50.0]])
+            grid=aa.GridIrregular.manual_1d([[-50.0, -50.0]])
         )
         potential_elliptical = nfw_elliptical.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[-50.0, -50.0]])
+            grid=aa.GridIrregular.manual_1d([[-50.0, -50.0]])
         )
 
         assert potential_spherical == pytest.approx(potential_elliptical, 1e-3)
@@ -1750,14 +1746,14 @@ class TestNFW:
     def test__deflections_correct_values(self):
         nfw = aast.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
         deflections = nfw.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.56194, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.56194, 1e-3)
 
         nfw = aast.mp.SphericalNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
         deflections = nfw.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1875, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1875, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(-2.08909, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.69636, 1e-3)
@@ -1766,7 +1762,7 @@ class TestNFW:
             centre=(0.0, 0.0), axis_ratio=0.9999, phi=0.0, kappa_s=1.0, scale_radius=1.0
         )
         deflections = nfw.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.56194, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.56194, 1e-3)
@@ -1775,7 +1771,7 @@ class TestNFW:
             centre=(0.3, 0.2), axis_ratio=0.7, phi=6.0, kappa_s=2.5, scale_radius=4.0
         )
         deflections = nfw.deflections_from_grid(
-            grid=aa.coordinates([[(0.1625, 0.1625)]])
+            grid=aa.Coordinates([[(0.1625, 0.1625)]])
         )
         assert deflections[0][0][0] == pytest.approx(-2.59480, 1e-3)
         assert deflections[0][0][1] == pytest.approx(-0.44204, 1e-3)
@@ -1797,9 +1793,9 @@ class TestNFW:
             ]
         )
 
-        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1839,9 +1835,9 @@ class TestNFW:
             ]
         )
 
-        mask = aa.mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.masked_grid.from_mask(mask=mask)
+        grid = aa.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1868,7 +1864,7 @@ class TestNFW:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         nfw = aast.mp.EllipticalNFW(axis_ratio=0.9)
 

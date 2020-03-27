@@ -15,7 +15,7 @@ def subplot_fit_galaxy(fit, positions=None, include=None, sub_plotter=None):
     sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
 
     galaxy_data_array(
-        galaxy_data=fit.galaxy_data, positions=positions, plotter=sub_plotter
+        galaxy_data=fit.masked_galaxy_dataset, positions=positions, plotter=sub_plotter
     )
 
     sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
@@ -52,7 +52,7 @@ def individuals(
     if plot_image:
 
         galaxy_data_array(
-            galaxy_data=fit.galaxy_data,
+            galaxy_data=fit.masked_galaxy_dataset,
             mask=fit.mask,
             positions=positions,
             include=include,

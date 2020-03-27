@@ -31,7 +31,7 @@ def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
         for y in ys:
 
             eta = profile.grid_to_elliptical_radii(
-                grid=aa.grid_irregular.manual_1d([[x, y]])
+                grid=aa.GridIrregular.manual_1d([[x, y]])
             )
 
             if eta < radius:

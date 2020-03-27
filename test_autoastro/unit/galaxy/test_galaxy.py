@@ -192,24 +192,24 @@ class TestLightProfiles:
             self, lp_0, gal_x1_lp, lp_1, gal_x2_lp
         ):
             lp_profile_image = lp_0.profile_image_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             gal_lp_profile_image = gal_x1_lp.profile_image_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             assert lp_profile_image == gal_lp_profile_image
 
             lp_profile_image = lp_0.profile_image_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
             lp_profile_image += lp_1.profile_image_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             gal_profile_image = gal_x2_lp.profile_image_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             assert lp_profile_image == gal_profile_image
@@ -218,11 +218,11 @@ class TestLightProfiles:
             self, lp_0, gal_x1_lp, lp_1, gal_x2_lp
         ):
             lp_profile_image = lp_0.profile_image_from_grid(
-                grid=aa.coordinates([[(1.05, -0.55)]])
+                grid=aa.Coordinates([[(1.05, -0.55)]])
             )
 
             gal_lp_profile_image = gal_x1_lp.profile_image_from_grid(
-                grid=aa.coordinates([[(1.05, -0.55)]])
+                grid=aa.Coordinates([[(1.05, -0.55)]])
             )
 
             assert lp_profile_image[0][0] == gal_lp_profile_image[0][0]
@@ -347,14 +347,14 @@ class TestLightProfiles:
             )
 
             assert gal_x2_lp.profile_image_from_grid(
-                grid=aa.grid_irregular.manual_1d([[0.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[0.0, 0.0]])
             ) == gal_x2_lp.profile_image_from_grid(
-                grid=aa.grid_irregular.manual_1d([[100.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[100.0, 0.0]])
             )
             assert gal_x2_lp.profile_image_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 0.0]])
             ) == gal_x2_lp.profile_image_from_grid(
-                grid=aa.grid_irregular.manual_1d([[51.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[51.0, 0.0]])
             )
 
         def test_2d_symmetry(self):
@@ -402,37 +402,37 @@ class TestLightProfiles:
             )
 
             assert gal_x4_lp.profile_image_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 0.0]])
             ) == pytest.approx(
                 gal_x4_lp.profile_image_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[51.0, 0.0]])
+                    grid=aa.GridIrregular.manual_1d([[51.0, 0.0]])
                 ),
                 1e-5,
             )
 
             assert gal_x4_lp.profile_image_from_grid(
-                grid=aa.grid_irregular.manual_1d([[0.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[0.0, 49.0]])
             ) == pytest.approx(
                 gal_x4_lp.profile_image_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[0.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[0.0, 51.0]])
                 ),
                 1e-5,
             )
 
             assert gal_x4_lp.profile_image_from_grid(
-                grid=aa.grid_irregular.manual_1d([[100.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[100.0, 49.0]])
             ) == pytest.approx(
                 gal_x4_lp.profile_image_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[100.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[100.0, 51.0]])
                 ),
                 1e-5,
             )
 
             assert gal_x4_lp.profile_image_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 49.0]])
             ) == pytest.approx(
                 gal_x4_lp.profile_image_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[51.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[51.0, 51.0]])
                 ),
                 1e-5,
             )
@@ -605,24 +605,24 @@ class TestMassProfiles:
             self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
         ):
             mp_convergence = mp_0.convergence_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             gal_mp_convergence = gal_x1_mp.convergence_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             assert mp_convergence == gal_mp_convergence
 
             mp_convergence = mp_0.convergence_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
             mp_convergence += mp_1.convergence_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             gal_convergence = gal_x2_mp.convergence_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             assert mp_convergence == gal_convergence
@@ -632,11 +632,11 @@ class TestMassProfiles:
         ):
 
             mp_convergence = mp_0.convergence_from_grid(
-                grid=aa.coordinates([[(1.05, -0.55)]])
+                grid=aa.Coordinates([[(1.05, -0.55)]])
             )
 
             gal_mp_convergence = gal_x1_mp.convergence_from_grid(
-                grid=aa.coordinates([[(1.05, -0.55)]])
+                grid=aa.Coordinates([[(1.05, -0.55)]])
             )
 
             assert mp_convergence == gal_mp_convergence
@@ -709,24 +709,24 @@ class TestMassProfiles:
             self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
         ):
             mp_potential = mp_0.potential_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             gal_mp_potential = gal_x1_mp.potential_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             assert mp_potential == gal_mp_potential
 
             mp_potential = mp_0.potential_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
             mp_potential += mp_1.potential_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             gal_potential = gal_x2_mp.potential_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             assert mp_potential == gal_potential
@@ -736,11 +736,11 @@ class TestMassProfiles:
         ):
 
             mp_potential = mp_0.potential_from_grid(
-                grid=aa.coordinates([[(1.05, -0.55)]])
+                grid=aa.Coordinates([[(1.05, -0.55)]])
             )
 
             gal_mp_potential = gal_x1_mp.potential_from_grid(
-                grid=aa.coordinates([[(1.05, -0.55)]])
+                grid=aa.Coordinates([[(1.05, -0.55)]])
             )
 
             assert mp_potential == gal_mp_potential
@@ -812,24 +812,24 @@ class TestMassProfiles:
             self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
         ):
             mp_deflections = mp_0.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             gal_mp_deflections = gal_x1_mp.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             assert (mp_deflections == gal_mp_deflections).all()
 
             mp_deflections = mp_0.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
             mp_deflections += mp_1.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             gal_deflections = gal_x2_mp.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.05, -0.55]])
+                grid=aa.GridIrregular.manual_1d([[1.05, -0.55]])
             )
 
             assert (mp_deflections == gal_deflections).all()
@@ -839,11 +839,11 @@ class TestMassProfiles:
         ):
 
             mp_deflections = mp_0.deflections_from_grid(
-                grid=aa.coordinates([[(1.05, -0.55)]])
+                grid=aa.Coordinates([[(1.05, -0.55)]])
             )
 
             gal_mp_deflections = gal_x1_mp.deflections_from_grid(
-                grid=aa.coordinates([[(1.05, -0.55)]])
+                grid=aa.Coordinates([[(1.05, -0.55)]])
             )
 
             assert mp_deflections == gal_mp_deflections
@@ -1271,49 +1271,49 @@ class TestMassProfiles:
             )
 
             assert gal_x4_mp.convergence_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
             ) == gal_x4_mp.convergence_from_grid(
-                grid=aa.grid_irregular.manual_1d([[99.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[99.0, 0.0]])
             )
 
             assert gal_x4_mp.convergence_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 0.0]])
             ) == gal_x4_mp.convergence_from_grid(
-                grid=aa.grid_irregular.manual_1d([[51.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[51.0, 0.0]])
             )
 
             assert gal_x4_mp.potential_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
             ) == pytest.approx(
                 gal_x4_mp.potential_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[99.0, 0.0]])
+                    grid=aa.GridIrregular.manual_1d([[99.0, 0.0]])
                 ),
                 1e-6,
             )
 
             assert gal_x4_mp.potential_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 0.0]])
             ) == pytest.approx(
                 gal_x4_mp.potential_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[51.0, 0.0]])
+                    grid=aa.GridIrregular.manual_1d([[51.0, 0.0]])
                 ),
                 1e-6,
             )
 
             assert gal_x4_mp.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
             ) == pytest.approx(
                 gal_x4_mp.deflections_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[99.0, 0.0]])
+                    grid=aa.GridIrregular.manual_1d([[99.0, 0.0]])
                 ),
                 1e-6,
             )
 
             assert gal_x4_mp.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 0.0]])
             ) == pytest.approx(
                 gal_x4_mp.deflections_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[51.0, 0.0]])
+                    grid=aa.GridIrregular.manual_1d([[51.0, 0.0]])
                 ),
                 1e-6,
             )
@@ -1336,145 +1336,145 @@ class TestMassProfiles:
             )
 
             assert gal_x4_mp.convergence_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 0.0]])
             ) == pytest.approx(
                 gal_x4_mp.convergence_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[51.0, 0.0]])
+                    grid=aa.GridIrregular.manual_1d([[51.0, 0.0]])
                 ),
                 1e-5,
             )
 
             assert gal_x4_mp.convergence_from_grid(
-                grid=aa.grid_irregular.manual_1d([[0.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[0.0, 49.0]])
             ) == pytest.approx(
                 gal_x4_mp.convergence_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[0.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[0.0, 51.0]])
                 ),
                 1e-5,
             )
 
             assert gal_x4_mp.convergence_from_grid(
-                grid=aa.grid_irregular.manual_1d([[100.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[100.0, 49.0]])
             ) == pytest.approx(
                 gal_x4_mp.convergence_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[100.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[100.0, 51.0]])
                 ),
                 1e-5,
             )
 
             assert gal_x4_mp.convergence_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 49.0]])
             ) == pytest.approx(
                 gal_x4_mp.convergence_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[51.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[51.0, 51.0]])
                 ),
                 1e-5,
             )
 
             assert gal_x4_mp.potential_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 0.0]])
             ) == pytest.approx(
                 gal_x4_mp.potential_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[51.0, 0.0]])
+                    grid=aa.GridIrregular.manual_1d([[51.0, 0.0]])
                 ),
                 1e-5,
             )
 
             assert gal_x4_mp.potential_from_grid(
-                grid=aa.grid_irregular.manual_1d([[0.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[0.0, 49.0]])
             ) == pytest.approx(
                 gal_x4_mp.potential_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[0.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[0.0, 51.0]])
                 ),
                 1e-5,
             )
 
             assert gal_x4_mp.potential_from_grid(
-                grid=aa.grid_irregular.manual_1d([[100.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[100.0, 49.0]])
             ) == pytest.approx(
                 gal_x4_mp.potential_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[100.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[100.0, 51.0]])
                 ),
                 1e-5,
             )
 
             assert gal_x4_mp.potential_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 49.0]])
             ) == pytest.approx(
                 gal_x4_mp.potential_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[51.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[51.0, 51.0]])
                 ),
                 1e-5,
             )
 
             assert -1.0 * gal_x4_mp.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 0.0]])
             )[0, 0] == pytest.approx(
                 gal_x4_mp.deflections_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[51.0, 0.0]])
+                    grid=aa.GridIrregular.manual_1d([[51.0, 0.0]])
                 )[0, 0],
                 1e-5,
             )
 
             assert 1.0 * gal_x4_mp.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[0.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[0.0, 49.0]])
             )[0, 0] == pytest.approx(
                 gal_x4_mp.deflections_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[0.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[0.0, 51.0]])
                 )[0, 0],
                 1e-5,
             )
 
             assert 1.0 * gal_x4_mp.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[100.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[100.0, 49.0]])
             )[0, 0] == pytest.approx(
                 gal_x4_mp.deflections_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[100.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[100.0, 51.0]])
                 )[0, 0],
                 1e-5,
             )
 
             assert -1.0 * gal_x4_mp.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 49.0]])
             )[0, 0] == pytest.approx(
                 gal_x4_mp.deflections_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[51.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[51.0, 51.0]])
                 )[0, 0],
                 1e-5,
             )
 
             assert 1.0 * gal_x4_mp.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 0.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 0.0]])
             )[0, 1] == pytest.approx(
                 gal_x4_mp.deflections_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[51.0, 0.0]])
+                    grid=aa.GridIrregular.manual_1d([[51.0, 0.0]])
                 )[0, 1],
                 1e-5,
             )
 
             assert -1.0 * gal_x4_mp.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[0.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[0.0, 49.0]])
             )[0, 1] == pytest.approx(
                 gal_x4_mp.deflections_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[0.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[0.0, 51.0]])
                 )[0, 1],
                 1e-5,
             )
 
             assert -1.0 * gal_x4_mp.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[100.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[100.0, 49.0]])
             )[0, 1] == pytest.approx(
                 gal_x4_mp.deflections_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[100.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[100.0, 51.0]])
                 )[0, 1],
                 1e-5,
             )
 
             assert -1.0 * gal_x4_mp.deflections_from_grid(
-                grid=aa.grid_irregular.manual_1d([[49.0, 49.0]])
+                grid=aa.GridIrregular.manual_1d([[49.0, 49.0]])
             )[0, 1] == pytest.approx(
                 gal_x4_mp.deflections_from_grid(
-                    grid=aa.grid_irregular.manual_1d([[51.0, 51.0]])
+                    grid=aa.GridIrregular.manual_1d([[51.0, 51.0]])
                 )[0, 1],
                 1e-5,
             )

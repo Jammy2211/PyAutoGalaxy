@@ -94,8 +94,8 @@ def test__individual_images_are_output(
     assert galaxy_plotter_path + "magnification.png" in plot_patch.paths
 
     gal_x1_lp_x1_mp.hyper_galaxy = aast.HyperGalaxy()
-    gal_x1_lp_x1_mp.hyper_model_image = aa.array.ones(shape_2d=(7, 7), pixel_scales=0.1)
-    gal_x1_lp_x1_mp.hyper_galaxy_image = aa.array.ones(
+    gal_x1_lp_x1_mp.hyper_model_image = aa.Array.ones(shape_2d=(7, 7), pixel_scales=0.1)
+    gal_x1_lp_x1_mp.hyper_galaxy_image = aa.Array.ones(
         shape_2d=(7, 7), pixel_scales=0.1
     )
 
