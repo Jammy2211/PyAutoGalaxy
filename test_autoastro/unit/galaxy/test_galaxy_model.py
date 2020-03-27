@@ -36,9 +36,7 @@ def make_profile():
 @pytest.fixture(scope="session", autouse=True)
 def do_something():
     aa.conf.instance = aa.conf.Config(
-        "{}/../test_files/config/galaxy_model".format(
-            os.path.dirname(os.path.realpath(__file__))
-        )
+        "{}/config/galaxy_model".format(os.path.dirname(os.path.realpath(__file__)))
     )
 
 

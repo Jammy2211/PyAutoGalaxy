@@ -1,6 +1,5 @@
 import autoarray as aa
 import autoastro.plot as aplt
-import autoastro as aast
 import os
 
 import pytest
@@ -12,7 +11,7 @@ directory = path.dirname(path.realpath(__file__))
 
 @pytest.fixture(name="galaxy_fit_plotter_path")
 def make_galaxy_fit_plotter_setup():
-    return "{}/../../../test_files/plotting/galaxy_fitting/".format(
+    return "{}/files/plots/galaxy_fitting/".format(
         os.path.dirname(os.path.realpath(__file__))
     )
 
@@ -20,7 +19,7 @@ def make_galaxy_fit_plotter_setup():
 @pytest.fixture(autouse=True)
 def set_config_path():
     aa.conf.instance = aa.conf.Config(
-        path.join(directory, "../test_files/plot"), path.join(directory, "output")
+        path.join(directory, "files/plotter"), path.join(directory, "output")
     )
 
 
@@ -35,7 +34,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
     plot_patch,
     galaxy_fit_plotter_path,
 ):
-    aplt.fit_galaxy.subplot_fit_galaxy(
+    aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_image,
         positions=positions_7x7,
         include=include_all,
@@ -46,7 +45,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
 
     assert galaxy_fit_plotter_path + "subplot_fit_galaxy.png" in plot_patch.paths
 
-    aplt.fit_galaxy.subplot_fit_galaxy(
+    aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_convergence,
         positions=positions_7x7,
         include=include_all,
@@ -57,7 +56,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
 
     assert galaxy_fit_plotter_path + "subplot_fit_galaxy.png" in plot_patch.paths
 
-    aplt.fit_galaxy.subplot_fit_galaxy(
+    aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_potential,
         positions=positions_7x7,
         include=include_all,
@@ -68,7 +67,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
 
     assert galaxy_fit_plotter_path + "subplot_fit_galaxy.png" in plot_patch.paths
 
-    aplt.fit_galaxy.subplot_fit_galaxy(
+    aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_deflections_y,
         positions=positions_7x7,
         include=include_all,
@@ -79,7 +78,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
 
     assert galaxy_fit_plotter_path + "subplot_fit_galaxy.png" in plot_patch.paths
 
-    aplt.fit_galaxy.subplot_fit_galaxy(
+    aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_deflections_x,
         positions=positions_7x7,
         include=include_all,

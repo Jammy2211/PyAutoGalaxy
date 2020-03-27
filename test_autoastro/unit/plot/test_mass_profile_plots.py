@@ -10,7 +10,7 @@ directory = path.dirname(path.realpath(__file__))
 
 @pytest.fixture(name="mp_plotter_path")
 def make_mp_plotter_setup():
-    return "{}/../../../test_files/plotting/mps/".format(
+    return "{}/files/plots/profiles/".format(
         os.path.dirname(os.path.realpath(__file__))
     )
 
@@ -18,7 +18,7 @@ def make_mp_plotter_setup():
 @pytest.fixture(autouse=True)
 def set_config_path():
     aa.conf.instance = aa.conf.Config(
-        path.join(directory, "../test_files/plot"), path.join(directory, "output")
+        path.join(directory, "files/plotter"), path.join(directory, "output")
     )
 
 
@@ -26,7 +26,7 @@ def test__all_quantities_are_output(
     mp_0, sub_grid_7x7, positions_7x7, include_all, mp_plotter_path, plot_patch
 ):
 
-    aast.plot.mp.convergence(
+    aast.plot.MassProfile.convergence(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
         positions=positions_7x7,
@@ -36,7 +36,7 @@ def test__all_quantities_are_output(
 
     assert mp_plotter_path + "convergence.png" in plot_patch.paths
 
-    aast.plot.mp.potential(
+    aast.plot.MassProfile.potential(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
         positions=positions_7x7,
@@ -46,7 +46,7 @@ def test__all_quantities_are_output(
 
     assert mp_plotter_path + "potential.png" in plot_patch.paths
 
-    aast.plot.mp.deflections_y(
+    aast.plot.MassProfile.deflections_y(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
         positions=positions_7x7,
@@ -56,7 +56,7 @@ def test__all_quantities_are_output(
 
     assert mp_plotter_path + "deflections_y.png" in plot_patch.paths
 
-    aast.plot.mp.deflections_x(
+    aast.plot.MassProfile.deflections_x(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
         positions=positions_7x7,
@@ -66,7 +66,7 @@ def test__all_quantities_are_output(
 
     assert mp_plotter_path + "deflections_x.png" in plot_patch.paths
 
-    aast.plot.mp.magnification(
+    aast.plot.MassProfile.magnification(
         mass_profile=mp_0,
         grid=sub_grid_7x7,
         positions=positions_7x7,

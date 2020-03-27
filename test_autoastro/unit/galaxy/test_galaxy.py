@@ -1624,7 +1624,7 @@ class TestMassAndLightProfiles:
 class TestSummarizeInUnits:
     def test__galaxy_with_two_light_and_mass_profiles(self, lp_0, lp_1, mp_0, mp_1):
 
-        test_path = "{}/../test_files/config/summary".format(
+        test_path = "{}/config/summary".format(
             os.path.dirname(os.path.realpath(__file__))
         )
         af.conf.instance = af.conf.Config(config_path=test_path)

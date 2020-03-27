@@ -1092,7 +1092,7 @@ class TestCoredPowerLaw:
 
     def test__summarize_in_units(self):
 
-        test_path = "{}/../../test_files/config/summary".format(
+        test_path = "{}/config/summary".format(
             os.path.dirname(os.path.realpath(__file__))
         )
         af.conf.instance = af.conf.Config(config_path=test_path)

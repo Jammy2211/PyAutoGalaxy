@@ -4,19 +4,12 @@ import math
 import numpy as np
 import pytest
 import scipy.special
+import os
 
 import autofit as af
 import autoarray as aa
 import autoastro as aast
 from test_autoastro.mock import mock_cosmology
-
-
-@pytest.fixture(autouse=True)
-def reset_config():
-    """
-    Use configuration from the default path. You may want to change this to set a specific path.
-    """
-    af.conf.instance = af.conf.default
 
 
 grid = aa.GridIrregular.manual_1d([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
@@ -364,6 +357,12 @@ class TestSersic:
         ).all()
 
     def test__summarize_in_units(self):
+
+        test_path = "{}/config/summary".format(
+            os.path.dirname(os.path.realpath(__file__))
+        )
+        af.conf.instance = af.conf.Config(config_path=test_path)
+
         sersic = aast.lp.SphericalSersic(
             intensity=3.0, effective_radius=2.0, sersic_index=2.0
         )

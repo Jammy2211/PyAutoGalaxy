@@ -16,7 +16,7 @@ directory = path.dirname(path.realpath(__file__))
 @pytest.fixture(scope="session", autouse=True)
 def do_something():
     af.conf.instance = af.conf.Config(
-        config_path="{}/../test_files/config/radial_min".format(directory)
+        config_path="{}/config/radial_min".format(directory)
     )
 
 

@@ -13,13 +13,13 @@ directory = path.dirname(path.realpath(__file__))
 
 @pytest.fixture(name="plot_path")
 def make_plotter_setup():
-    return "{}/..//test_files/plot/".format(os.path.dirname(os.path.realpath(__file__)))
+    return "{}/files/plots/".format(os.path.dirname(os.path.realpath(__file__)))
 
 
 @pytest.fixture(autouse=True)
 def set_config_path():
     aa.conf.instance = aa.conf.Config(
-        path.join(directory, "../test_files/plot"), path.join(directory, "output")
+        path.join(directory, "files/plotter"), path.join(directory, "output")
     )
 
 
@@ -251,7 +251,7 @@ class TestLensingPlotterPlots:
 
         assert plot_path + "array2.png" in plot_patch.paths
 
-        aplt.array(
+        aplt.Array(
             array=array,
             mask=mask,
             grid=grid,
@@ -345,7 +345,7 @@ class TestLensingPlotterPlots:
 
         assert plot_path + "grid2.png" in plot_patch.paths
 
-        aplt.grid(
+        aplt.Grid(
             grid=grid,
             color_array=color_array,
             axis_limits=[-1.5, 1.5, -2.5, 2.5],
@@ -395,7 +395,7 @@ class TestLensingPlotterPlots:
 
         assert plot_path + "line2.png" in plot_patch.paths
 
-        aplt.line(
+        aplt.Line(
             y=np.array([1.0, 2.0, 3.0]),
             x=np.array([0.5, 1.0, 1.5]),
             plot_axis_type="loglog",
@@ -453,7 +453,7 @@ class TestLensingPlotterPlots:
 
         assert plot_path + "mapper2.png" in plot_patch.paths
 
-        aplt.mapper_obj(
+        aplt.MapperObj(
             mapper=rectangular_mapper_7x7_3x3,
             light_profile_centres=[(1.0, 1.0)],
             mass_profile_centres=[(1.0, 1.0)],
@@ -503,7 +503,7 @@ class TestLensingPlotterPlots:
 
         assert plot_path + "mapper2.png" in plot_patch.paths
 
-        aplt.mapper_obj(
+        aplt.MapperObj(
             mapper=voronoi_mapper_9_3x3,
             image_pixel_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
             source_pixel_indexes=[[0, 1], [2]],
