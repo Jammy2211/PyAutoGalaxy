@@ -34,13 +34,13 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         convergence = mass_sheet.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
         )
 
         assert convergence[0] == pytest.approx(1.0, 1e-3)
 
         convergence = mass_sheet.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0], [3.0, 3.0], [5.0, -9.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0], [3.0, 3.0], [5.0, -9.0]])
         )
 
         assert convergence[0] == pytest.approx(1.0, 1e-3)
@@ -50,7 +50,7 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(0.0, 0.0), kappa=-3.0)
 
         convergence = mass_sheet.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0], [3.0, 3.0], [5.0, -9.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0], [3.0, 3.0], [5.0, -9.0]])
         )
 
         assert convergence[0] == pytest.approx(-3.0, 1e-3)
@@ -60,7 +60,7 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         convergence = mass_sheet.convergence_from_grid(
-            grid=aa.grid.manual_2d(
+            grid=aa.Grid.manual_2d(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -73,7 +73,7 @@ class TestMassSheet:
         assert convergence[3] == pytest.approx(1.0, 1e-3)
 
         convergence = mass_sheet.convergence_from_grid(
-            grid=aa.coordinates([[(1.0, 0.0)]])
+            grid=aa.Coordinates([[(1.0, 0.0)]])
         )
 
         assert convergence[0][0] == pytest.approx(1.0, 1e-3)
@@ -82,7 +82,7 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         potential = mass_sheet.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0], [3.0, 3.0], [5.0, -9.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0], [3.0, 3.0], [5.0, -9.0]])
         )
 
         assert potential[0] == pytest.approx(0.0, 1e-3)
@@ -92,7 +92,7 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         potential = mass_sheet.potential_from_grid(
-            grid=aa.grid.manual_2d(
+            grid=aa.Grid.manual_2d(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -104,7 +104,7 @@ class TestMassSheet:
         assert potential[2] == pytest.approx(0.0, 1e-3)
         assert potential[3] == pytest.approx(0.0, 1e-3)
 
-        potential = mass_sheet.potential_from_grid(grid=aa.coordinates([[(1.0, 0.0)]]))
+        potential = mass_sheet.potential_from_grid(grid=aa.Coordinates([[(1.0, 0.0)]]))
 
         assert potential[0][0] == pytest.approx(0.0, 1e-3)
 
@@ -112,14 +112,14 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
         )
 
         assert deflections[0, 0] == pytest.approx(1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.0, 1e-3)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 0.0]])
         )
 
         assert deflections[0, 0] == pytest.approx(2.0, 1e-3)
@@ -128,14 +128,14 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(0.0, 0.0), kappa=-1.0)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
         )
 
         assert deflections[0, 0] == pytest.approx(-1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.0, 1e-3)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 0.0]])
         )
 
         assert deflections[0, 0] == pytest.approx(-2.0, 1e-3)
@@ -144,7 +144,7 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(0.0, 0.0), kappa=2.0)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 0.0]])
         )
 
         assert deflections[0, 0] == pytest.approx(4.0, 1e-3)
@@ -157,7 +157,7 @@ class TestMassSheet:
         # Thus, for a mass sheet, the deflection angle is (sqrt(2) * sqrt(2) / 2.0) = 1.0
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 1.0]])
         )
         assert deflections[0, 0] == pytest.approx(1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(1.0, 1e-3)
@@ -165,7 +165,7 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(0.0, 0.0), kappa=2.0)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 1.0]])
         )
         assert deflections[0, 0] == pytest.approx(2.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(2.0, 1e-3)
@@ -173,7 +173,7 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(0.0, 0.0), kappa=2.0)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 2.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 2.0]])
         )
         assert deflections[0, 0] == pytest.approx(4.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(4.0, 1e-3)
@@ -186,13 +186,13 @@ class TestMassSheet:
         # This is decomposed into x angle of sin(26.5650512 degrees) = 0.4472135
         # Thus, for a mass sheet, the deflection angles are:
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 1.0]])
         )
         assert deflections[0, 0] == pytest.approx(0.8944271 * np.sqrt(5), 1e-3)
         assert deflections[0, 1] == pytest.approx(0.4472135 * np.sqrt(5), 1e-3)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[-1.0, -1.0]])
+            grid=aa.GridIrregular.manual_1d([[-1.0, -1.0]])
         )
         assert deflections[0, 0] == pytest.approx(-1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(-1.0, 1e-3)
@@ -200,7 +200,7 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(1.0, 2.0), kappa=1.0)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 3.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 3.0]])
         )
         assert deflections[0, 0] == pytest.approx(1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(1.0, 1e-3)
@@ -208,7 +208,7 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(1.0, 2.0), kappa=-1.0)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 3.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 3.0]])
         )
         assert deflections[0, 0] == pytest.approx(-1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(-1.0, 1e-3)
@@ -216,7 +216,7 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid.manual_2d(
+            grid=aa.Grid.manual_2d(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -233,7 +233,7 @@ class TestMassSheet:
         assert deflections[3, 1] == pytest.approx(0.0, 1e-3)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.coordinates([[(1.0, 0.0)]])
+            grid=aa.Coordinates([[(1.0, 0.0)]])
         )
 
         assert deflections[0][0][0] == pytest.approx(1.0, 1e-3)
@@ -243,10 +243,10 @@ class TestMassSheet:
         mass_sheet_0 = aast.mp.MassSheet(centre=(0.0, 0.0))
         mass_sheet_1 = aast.mp.MassSheet(centre=(1.0, 1.0))
         deflections_0 = mass_sheet_0.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 1.0]])
         )
         deflections_1 = mass_sheet_1.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 0.0]])
         )
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
@@ -254,10 +254,10 @@ class TestMassSheet:
         mass_sheet_0 = aast.mp.MassSheet(centre=(0.0, 0.0))
         mass_sheet_1 = aast.mp.MassSheet(centre=(0.0, 0.0))
         deflections_0 = mass_sheet_0.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[1.0, 0.0]])
+            grid=aa.GridIrregular.manual_1d([[1.0, 0.0]])
         )
         deflections_1 = mass_sheet_1.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.0, 1.0]])
+            grid=aa.GridIrregular.manual_1d([[0.0, 1.0]])
         )
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
@@ -266,7 +266,7 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(1.0, 2.0), kappa=1.0)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[2.0, 3.0], [2.0, 3.0], [2.0, 3.0]])
+            grid=aa.GridIrregular.manual_1d([[2.0, 3.0], [2.0, 3.0], [2.0, 3.0]])
         )
 
         assert deflections[0, 0] == pytest.approx(1.0, 1e-3)
@@ -279,7 +279,7 @@ class TestMassSheet:
         mass_sheet = aast.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d(
+            grid=aa.GridIrregular.manual_1d(
                 [[1.0, 1.0], [2.0, 2.0], [1.0, 1.0], [2.0, 2.0]]
             )
         )
@@ -298,7 +298,7 @@ class TestMassSheet:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         mass_sheet = aast.mp.MassSheet()
 
@@ -330,18 +330,18 @@ class TestExternalShear:
 
         shear = aast.mp.ExternalShear(magnitude=0.1, phi=45.0)
         convergence = shear.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1, 0.1]])
+            grid=aa.GridIrregular.manual_1d([[0.1, 0.1]])
         )
         assert (convergence == np.array([0.0])).all()
 
         shear = aast.mp.ExternalShear(magnitude=0.1, phi=45.0)
         convergence = shear.convergence_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]])
+            grid=aa.GridIrregular.manual_1d([[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]])
         )
         assert (convergence == np.array([0.0, 0.0, 0.0])).all()
 
         convergence = shear.convergence_from_grid(
-            grid=aa.grid.manual_2d(
+            grid=aa.Grid.manual_2d(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -353,25 +353,25 @@ class TestExternalShear:
         assert convergence[2] == pytest.approx(0.0, 1e-3)
         assert convergence[3] == pytest.approx(0.0, 1e-3)
 
-        convergence = shear.convergence_from_grid(grid=aa.coordinates([[(1.0, 0.0)]]))
+        convergence = shear.convergence_from_grid(grid=aa.Coordinates([[(1.0, 0.0)]]))
 
         assert convergence[0][0] == pytest.approx(0.0, 1e-3)
 
     def test__potential_returns_zeros(self):
         shear = aast.mp.ExternalShear(magnitude=0.1, phi=45.0)
         potential = shear.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1, 0.1]])
+            grid=aa.GridIrregular.manual_1d([[0.1, 0.1]])
         )
         assert (potential == np.array([[0.0, 0.0]])).all()
 
         shear = aast.mp.ExternalShear(magnitude=0.1, phi=45.0)
         potential = shear.potential_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]])
+            grid=aa.GridIrregular.manual_1d([[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]])
         )
         assert (potential == np.array([0.0, 0.0, 0.0])).all()
 
         potential = shear.potential_from_grid(
-            grid=aa.grid.manual_2d(
+            grid=aa.Grid.manual_2d(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -383,27 +383,27 @@ class TestExternalShear:
         assert potential[2] == pytest.approx(0.0, 1e-3)
         assert potential[3] == pytest.approx(0.0, 1e-3)
 
-        potential = shear.potential_from_grid(grid=aa.coordinates([[(1.0, 0.0)]]))
+        potential = shear.potential_from_grid(grid=aa.Coordinates([[(1.0, 0.0)]]))
 
         assert potential[0][0] == pytest.approx(0.0, 1e-3)
 
     def test__deflections_correct_values(self):
         shear = aast.mp.ExternalShear(magnitude=0.1, phi=45.0)
         deflections = shear.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.01625, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.01625, 1e-3)
 
         shear = aast.mp.ExternalShear(magnitude=0.2, phi=75.0)
         deflections = shear.deflections_from_grid(
-            grid=aa.grid_irregular.manual_1d([[0.1625, 0.1625]])
+            grid=aa.GridIrregular.manual_1d([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.04439, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.011895, 1e-3)
 
         deflections = shear.deflections_from_grid(
-            grid=aa.grid.manual_2d(
+            grid=aa.Grid.manual_2d(
                 [
                     [[0.1625, 0.1625], [0.1625, 0.1625]],
                     [[0.1625, 0.1625], [0.1625, 0.1625]],
@@ -423,7 +423,7 @@ class TestExternalShear:
         assert deflections[3, 1] == pytest.approx(-0.011895, 1e-3)
 
         deflections = shear.deflections_from_grid(
-            grid=aa.coordinates([[(0.1625, 0.1625)]])
+            grid=aa.Coordinates([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0][0][0] == pytest.approx(0.04439, 1e-3)
@@ -431,7 +431,7 @@ class TestExternalShear:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = aa.grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         shear = aast.mp.ExternalShear()
 

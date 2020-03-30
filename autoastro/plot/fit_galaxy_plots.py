@@ -15,22 +15,22 @@ def subplot_fit_galaxy(fit, positions=None, include=None, sub_plotter=None):
     sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
 
     galaxy_data_array(
-        galaxy_data=fit.galaxy_data, positions=positions, plotter=sub_plotter
+        galaxy_data=fit.masked_galaxy_dataset, positions=positions, plotter=sub_plotter
     )
 
     sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
 
-    aa.plot.fit_imaging.model_image(
+    aa.plot.FitImaging.model_image(
         fit=fit, include=include, positions=positions, plotter=sub_plotter
     )
 
     sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=3)
 
-    aa.plot.fit_imaging.residual_map(fit=fit, include=include, plotter=sub_plotter)
+    aa.plot.FitImaging.residual_map(fit=fit, include=include, plotter=sub_plotter)
 
     sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=4)
 
-    aa.plot.fit_imaging.chi_squared_map(fit=fit, include=include, plotter=sub_plotter)
+    aa.plot.FitImaging.chi_squared_map(fit=fit, include=include, plotter=sub_plotter)
 
     sub_plotter.output.subplot_to_figure()
 
@@ -52,7 +52,7 @@ def individuals(
     if plot_image:
 
         galaxy_data_array(
-            galaxy_data=fit.galaxy_data,
+            galaxy_data=fit.masked_galaxy_dataset,
             mask=fit.mask,
             positions=positions,
             include=include,
@@ -61,7 +61,7 @@ def individuals(
 
     if plot_noise_map:
 
-        aa.plot.fit_imaging.noise_map(
+        aa.plot.FitImaging.noise_map(
             fit=fit,
             mask=fit.mask,
             positions=positions,
@@ -71,7 +71,7 @@ def individuals(
 
     if plot_model_image:
 
-        aa.plot.fit_imaging.model_image(
+        aa.plot.FitImaging.model_image(
             fit=fit,
             mask=fit.mask,
             positions=positions,
@@ -81,13 +81,13 @@ def individuals(
 
     if plot_residual_map:
 
-        aa.plot.fit_imaging.residual_map(
+        aa.plot.FitImaging.residual_map(
             fit=fit, mask=fit.mask, include=include, plotter=plotter
         )
 
     if plot_chi_squared_map:
 
-        aa.plot.fit_imaging.chi_squared_map(
+        aa.plot.FitImaging.chi_squared_map(
             fit=fit, mask=fit.mask, include=include, plotter=plotter
         )
 

@@ -19,9 +19,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    test_path = "{}/test_files/config/lens".format(
-        os.path.dirname(os.path.realpath(__file__))
-    )
+    test_path = "{}/config/lensing".format(os.path.dirname(os.path.realpath(__file__)))
     af.conf.instance = af.conf.Config(config_path=test_path)
 
 
@@ -246,7 +244,7 @@ class TestDeflectionsMagnitudes:
     def test__compare_sis_deflection_magnitudes_to_known_values(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
-        grid = aa.grid_irregular.manual_1d(grid=np.array([[1.0, 0.0], [0.0, 1.0]]))
+        grid = aa.GridIrregular.manual_1d(grid=np.array([[1.0, 0.0], [0.0, 1.0]]))
 
         deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
 
@@ -254,13 +252,13 @@ class TestDeflectionsMagnitudes:
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid_irregular.manual_1d(grid=np.array([[2.0, 0.0], [0.0, 2.0]]))
+        grid = aa.GridIrregular.manual_1d(grid=np.array([[2.0, 0.0], [0.0, 2.0]]))
 
         deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
 
         assert deflection_magnitudes == pytest.approx(np.array([2.0, 2.0]), 1.0e-4)
 
-        grid = aa.grid.uniform(shape_2d=(5, 5), pixel_scales=0.1, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(5, 5), pixel_scales=0.1, sub_size=1)
 
         deflections = sis.deflections_from_grid(grid=grid)
         magitudes_manual = np.sqrt(
@@ -276,7 +274,7 @@ class TestDeflectionsViaPotential:
     def test__compare_sis_deflections_via_potential_and_calculation(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
 
         deflections_via_calculation = sis.deflections_from_grid(grid=grid)
 
@@ -293,7 +291,7 @@ class TestDeflectionsViaPotential:
             centre=(0.0, 0.0), phi=45.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
 
         deflections_via_calculation = sie.deflections_from_grid(grid=grid)
 
@@ -310,7 +308,7 @@ class TestDeflectionsViaPotential:
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
 
         deflections_via_calculation = sie.deflections_from_grid(grid=grid)
 
@@ -329,7 +327,7 @@ class TestJacobian:
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
         jacobian = sie.jacobian_from_grid(grid=grid)
 
@@ -340,7 +338,7 @@ class TestJacobian:
 
         assert mean_error < 1e-4
 
-        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
+        grid = aa.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
 
         jacobian = sie.jacobian_from_grid(grid=grid)
 
@@ -358,7 +356,7 @@ class TestMagnification:
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
         magnification_via_determinant = sie.magnification_from_grid(grid=grid)
 
@@ -380,7 +378,7 @@ class TestMagnification:
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
+        grid = aa.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
 
         magnification_via_determinant = sie.magnification_from_grid(grid=grid)
 
@@ -405,7 +403,7 @@ class TestMagnification:
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
 
         magnification_via_determinant = sie.magnification_from_grid(grid=grid)
 
@@ -424,7 +422,7 @@ class TestMagnification:
 
         assert mean_error < 1e-4
 
-        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
+        grid = aa.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
 
         magnification_via_determinant = sie.magnification_from_grid(grid=grid)
 
@@ -581,7 +579,7 @@ class TestConvergenceViajacobian:
     def test__compare_sis_convergence_via_jacobian_and_calculation(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
 
         convergence_via_calculation = sis.convergence_from_grid(grid=grid)
 
@@ -605,7 +603,7 @@ class TestConvergenceViajacobian:
             centre=(0.0, 0.0), phi=45.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
+        grid = aa.Grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
 
         convergence_via_calculation = sie.convergence_from_grid(grid=grid)
 
@@ -626,7 +624,7 @@ class TestCriticalCurvesAndCaustics:
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
+        grid = aa.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
 
         magnification_via_determinant = sie.magnification_from_grid(grid=grid)
 
@@ -952,7 +950,7 @@ class TestGridBinning:
             centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
         )
 
-        grid = aa.grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=2)
+        grid = aa.Grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=2)
 
         deflections = sie.deflections_via_potential_from_grid(grid=grid)
 

@@ -1,0 +1,26 @@
+{
+    "Constant": {
+        "coeffs_0": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0
+        }
+    },
+    "AdaptiveBrightness": {
+        "coeffs_0": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0
+        },
+        "coeffs_1": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0
+        },
+        "signal_scale": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0
+        }
+    }
+}
