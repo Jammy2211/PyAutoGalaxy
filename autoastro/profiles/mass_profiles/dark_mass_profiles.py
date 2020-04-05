@@ -3,7 +3,11 @@ from pyquad import quad_grid
 import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import fsolve
+from astropy import units
 from astropy import cosmology as cosmo
+
+from colossus.cosmology import cosmology as col_cosmology
+from colossus.halo.concentration import concentration as col_concentration
 
 import inspect
 from numba import cfunc
@@ -1055,7 +1059,114 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         return summary
 
 
-class SphericalTruncatedNFWMassToConcentration(SphericalTruncatedNFW):
+class SphericalTruncatedNFWMCRDuffy(SphericalTruncatedNFW):
+    """
+    This function only applies for the lens configuration as follows:
+    Cosmology: FlatLamdaCDM
+    H0 = 70.0 km/sec/Mpc
+    Omega_Lambda = 0.7
+    Omega_m = 0.3
+    Redshfit of Main Lens: 0.6
+    Redshift of Source: 2.5
+    A truncated NFW halo at z = 0.6 with tau = 2.0
+    """
+
+    @af.map_types
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        mass_at_200: float = 1e9,
+        redshift_object: float = 0.5,
+        redshift_source: float = 1.0,
+    ):
+        """
+        Input m200: The m200 of the NFW part of the corresponding tNFW part. Unit: M_sun.
+        """
+
+        kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_duffy(
+            mass_at_200=mass_at_200,
+            redshift_object=redshift_object,
+            redshift_source=redshift_source,
+        )
+
+        super(SphericalTruncatedNFWMCRDuffy, self).__init__(
+            centre=centre,
+            kappa_s=kappa_s,
+            scale_radius=scale_radius,
+            truncation_radius=2.0 * radius_at_200,
+        )
+
+
+class SphericalTruncatedNFWMCRLudlow(SphericalTruncatedNFW):
+    """
+    This function only applies for the lens configuration as follows:
+    Cosmology: FlatLamdaCDM
+    H0 = 70.0 km/sec/Mpc
+    Omega_Lambda = 0.7
+    Omega_m = 0.3
+    Redshfit of Main Lens: 0.6
+    Redshift of Source: 2.5
+    A truncated NFW halo at z = 0.6 with tau = 2.0
+    """
+
+    @af.map_types
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        mass_at_200: float = 1e9,
+        redshift_object: float = 0.5,
+        redshift_source: float = 1.0,
+    ):
+        """
+        Input m200: The m200 of the NFW part of the corresponding tNFW part. Unit: M_sun.
+        """
+
+        kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_ludlow(
+            mass_at_200=mass_at_200,
+            redshift_object=redshift_object,
+            redshift_source=redshift_source,
+        )
+
+        super(SphericalTruncatedNFWMCRLudlow, self).__init__(
+            centre=centre,
+            kappa_s=kappa_s,
+            scale_radius=scale_radius,
+            truncation_radius=2.0 * radius_at_200,
+        )
+
+
+class SphericalTruncatedNFWChallenge(SphericalTruncatedNFW):
+    @af.map_types
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        kappa_s: float = 0.05,
+        scale_radius: dim.Length = 1.0,
+    ):
+        def solve_c(c, de_c):
+            """
+            Equation need for solving concentration c for a given delta_c
+            """
+            return 200.0 / 3.0 * (c * c * c / (np.log(1 + c) - c / (1 + c))) - de_c
+
+        kpc_per_arcsec = 6.68549148608755
+        scale_radius_kpc = scale_radius * kpc_per_arcsec
+        cosmic_average_density = 262.30319684750657
+        critical_surface_density = 1940654909.413325
+        rho_s = kappa_s * critical_surface_density / scale_radius_kpc
+        de_c = rho_s / cosmic_average_density  # delta_c
+        concentration = fsolve(solve_c, 10.0, args=(de_c,))[0]
+        r200 = concentration * scale_radius_kpc / kpc_per_arcsec  # R_200
+
+        super(SphericalTruncatedNFWChallenge, self).__init__(
+            centre=centre,
+            kappa_s=kappa_s,
+            scale_radius=scale_radius,
+            truncation_radius=2.0 * r200,
+        )
+
+
+class SphericalTruncatedNFWMCRChallenge(SphericalTruncatedNFW):
     """
     This function only applies for the lens configuration as follows:
     Cosmology: FlatLamdaCDM
@@ -1102,65 +1213,12 @@ class SphericalTruncatedNFWMassToConcentration(SphericalTruncatedNFW):
         kappa_s = rho_s * scale_radius_kpc / critical_surface_density
         scale_radius = scale_radius_kpc / kpc_per_arcsec
 
-        super(SphericalTruncatedNFWMassToConcentration, self).__init__(
+        super(SphericalTruncatedNFWMCRChallenge, self).__init__(
             centre=centre,
             kappa_s=kappa_s,
             scale_radius=scale_radius,
             truncation_radius=2.0 * radius_at_200,
         )
-
-
-class SphericalTruncatedNFWChallenge(SphericalTruncatedNFW):
-    @af.map_types
-    def __init__(
-        self,
-        centre: dim.Position = (0.0, 0.0),
-        kappa_s: float = 0.05,
-        scale_radius: dim.Length = 1.0,
-    ):
-        def solve_c(c, de_c):
-            """
-            Equation need for solving concentration c for a given delta_c
-            """
-            return 200.0 / 3.0 * (c * c * c / (np.log(1 + c) - c / (1 + c))) - de_c
-
-        kpc_per_arcsec = 6.68549148608755
-        scale_radius_kpc = scale_radius * kpc_per_arcsec
-        cosmic_average_density = 262.30319684750657
-        critical_surface_density = 1940654909.413325
-        rho_s = kappa_s * critical_surface_density / scale_radius_kpc
-        de_c = rho_s / cosmic_average_density  # delta_c
-        concentration = fsolve(solve_c, 10.0, args=(de_c,))[0]
-        r200 = concentration * scale_radius_kpc / kpc_per_arcsec  # R_200
-
-        super(SphericalTruncatedNFWChallenge, self).__init__(
-            centre=centre,
-            kappa_s=kappa_s,
-            scale_radius=scale_radius,
-            truncation_radius=2.0 * r200,
-        )
-
-    def summarize_in_units(
-        self,
-        radii,
-        unit_length="arcsec",
-        unit_mass="solMass",
-        redshift_profile=None,
-        redshift_source=None,
-        redshift_of_cosmic_average_density="profile",
-        cosmology=cosmo.Planck15,
-    ):
-        summary = super().summarize_in_units(
-            radii=radii,
-            unit_length=unit_length,
-            unit_mass=unit_mass,
-            redshift_profile=redshift_profile,
-            redshift_source=redshift_source,
-            redshift_of_cosmic_average_density=redshift_of_cosmic_average_density,
-            cosmology=cosmology,
-        )
-
-        return summary
 
 
 class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
@@ -1359,11 +1417,6 @@ class SphericalNFW(EllipticalNFW):
             scale_radius=scale_radius,
         )
 
-    # TODO : The 'func' routines require a different input to the elliptical cases, meaning they cannot be overridden.
-    # TODO : Should be able to refactor code to deal with this nicely, but will wait until we're clear on numba.
-
-    # TODO : Make this use numpy arithmetic
-
     @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
@@ -1382,10 +1435,18 @@ class SphericalNFW(EllipticalNFW):
             2.0 * self.scale_radius * self.kappa_s * self.potential_func_sph(eta)
         )
 
+    def deflection_func_sph(self, grid_radius):
+        grid_radius = grid_radius + 0j
+        return np.real(self.coord_func_h(grid_radius=grid_radius))
+
+    @staticmethod
+    def potential_func_sph(eta):
+        return ((np.log(eta / 2.0)) ** 2) - (np.arctanh(np.sqrt(1 - eta ** 2))) ** 2
+
     @grids.convert_coordinates_to_grid
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
-    def deflections_from_grid(self, grid):
+    def deflections_from_grid(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -1393,29 +1454,152 @@ class SphericalNFW(EllipticalNFW):
         ----------
         grid : aa.Grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
         """
+
         eta = np.multiply(1.0 / self.scale_radius, self.grid_to_grid_radii(grid=grid))
-        deflection_r = np.multiply(
-            4.0 * self.kappa_s * self.scale_radius, self.deflection_func_sph(eta)
+
+        deflection_grid = np.multiply(
+            (4.0 * self.kappa_s * self.scale_radius / eta),
+            self.deflection_func_sph(grid_radius=eta),
         )
 
-        return self.grid_to_grid_cartesian(grid, deflection_r)
+        return self.grid_to_grid_cartesian(grid, deflection_grid)
 
-    @staticmethod
-    def potential_func_sph(eta):
-        return ((np.log(eta / 2.0)) ** 2) - (np.arctanh(np.sqrt(1 - eta ** 2))) ** 2
 
-    @staticmethod
-    def deflection_func_sph(eta):
-        conditional_eta = np.copy(eta)
-        conditional_eta[eta > 1] = np.multiply(
-            np.divide(1.0, np.sqrt(np.add(np.square(eta[eta > 1]), -1))),
-            np.arctan(np.sqrt(np.add(np.square(eta[eta > 1]), -1))),
+class SphericalNFWMCRDuffy(SphericalNFW):
+    @af.map_types
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        mass_at_200: float = 1e9,
+        redshift_object: float = 0.5,
+        redshift_source: float = 1.0,
+    ):
+
+        kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_duffy(
+            mass_at_200=mass_at_200,
+            redshift_object=redshift_object,
+            redshift_source=redshift_source,
         )
-        conditional_eta[eta < 1] = np.multiply(
-            np.divide(1.0, np.sqrt(np.add(1, -np.square(eta[eta < 1])))),
-            np.arctanh(np.sqrt(np.add(1, -np.square(eta[eta < 1])))),
+
+        super(SphericalNFWMCRDuffy, self).__init__(
+            centre=centre, kappa_s=kappa_s, scale_radius=scale_radius
         )
 
-        return np.divide(np.add(np.log(np.divide(eta, 2.0)), conditional_eta), eta)
+
+class SphericalNFWMCRLudlow(SphericalNFW):
+    @af.map_types
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        mass_at_200: float = 1e9,
+        redshift_object: float = 0.5,
+        redshift_source: float = 1.0,
+    ):
+
+        kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_ludlow(
+            mass_at_200=mass_at_200,
+            redshift_object=redshift_object,
+            redshift_source=redshift_source,
+        )
+
+        super(SphericalNFWMCRLudlow, self).__init__(
+            centre=centre, kappa_s=kappa_s, scale_radius=scale_radius
+        )
+
+
+def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_source):
+
+    cosmology = cosmo.Planck15
+
+    cosmic_average_density = (
+        cosmology.critical_density(redshift_object).to(units.solMass / units.kpc ** 3)
+    ).value
+
+    critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from_redshifts_and_cosmology(
+        redshift_0=redshift_object,
+        redshift_1=redshift_source,
+        cosmology=cosmology,
+        unit_length="kpc",
+        unit_mass="solMass",
+    )
+
+    kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from_redshift_and_cosmology(
+        redshift=redshift_object, cosmology=cosmology
+    )
+
+    radius_at_200 = (
+        mass_at_200 / (200.0 * cosmic_average_density * (4.0 * np.pi / 3.0))
+    ) ** (
+        1.0 / 3.0
+    )  # r200
+    coefficient = 5.71 * (1.0 + redshift_object) ** (
+        -0.47
+    )  # The coefficient of Duffy mass-concentration (Duffy+2008)
+    concentration = coefficient * (mass_at_200 / 2.952465309e12) ** (
+        -0.084
+    )  # mass-concentration relation. (Duffy+2008)
+    de_c = (
+        200.0
+        / 3.0
+        * (
+            concentration ** 3
+            / (np.log(1.0 + concentration) - concentration / (1.0 + concentration))
+        )
+    )  # rho_c
+
+    scale_radius_kpc = radius_at_200 / concentration  # scale radius in kpc
+    rho_s = cosmic_average_density * de_c  # rho_s
+    kappa_s = rho_s * scale_radius_kpc / critical_surface_density  # kappa_s
+    scale_radius = scale_radius_kpc / kpc_per_arcsec  # scale radius in arcsec
+
+    return kappa_s, scale_radius, radius_at_200
+
+
+def kappa_s_and_scale_radius_for_ludlow(mass_at_200, redshift_object, redshift_source):
+
+    cosmology = cosmo.Planck15
+
+    col_cosmo = col_cosmology.setCosmology("planck15")
+    m_input = mass_at_200 * col_cosmo.h
+    concentration = col_concentration(
+        m_input, "200c", redshift_object, model="ludlow16"
+    )
+
+    cosmic_average_density = (
+        cosmology.critical_density(redshift_object).to(units.solMass / units.kpc ** 3)
+    ).value
+
+    critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from_redshifts_and_cosmology(
+        redshift_0=redshift_object,
+        redshift_1=redshift_source,
+        cosmology=cosmology,
+        unit_length="kpc",
+        unit_mass="solMass",
+    )
+
+    kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from_redshift_and_cosmology(
+        redshift=redshift_object, cosmology=cosmology
+    )
+
+    radius_at_200 = (
+        mass_at_200 / (200.0 * cosmic_average_density * (4.0 * np.pi / 3.0))
+    ) ** (
+        1.0 / 3.0
+    )  # r200
+
+    de_c = (
+        200.0
+        / 3.0
+        * (
+            concentration ** 3
+            / (np.log(1.0 + concentration) - concentration / (1.0 + concentration))
+        )
+    )  # rho_c
+
+    scale_radius_kpc = radius_at_200 / concentration  # scale radius in kpc
+    rho_s = cosmic_average_density * de_c  # rho_s
+    kappa_s = rho_s * scale_radius_kpc / critical_surface_density  # kappa_s
+    scale_radius = scale_radius_kpc / kpc_per_arcsec  # scale radius in arcsec
+
+    return kappa_s, scale_radius, radius_at_200
