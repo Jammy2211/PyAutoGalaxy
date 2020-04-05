@@ -1394,13 +1394,16 @@ class TestTruncatedNFW:
         assert deflections.shape_2d == (2, 2)
 
 
-class TestTruncatedNFWMCR:
+class TestTruncatedNFWMCRDuffy:
     def test__mass_and_concentration_consistent_with_normal_truncated_nfw(self):
 
         cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
         truncated_nfw_mass = aast.mp.SphericalTruncatedNFWMCRDuffy(
-            centre=(1.0, 2.0), mass_at_200=1.0e9, redshift_object=0.6, redshift_source=2.5
+            centre=(1.0, 2.0),
+            mass_at_200=1.0e9,
+            redshift_object=0.6,
+            redshift_source=2.5,
         )
 
         mass_at_200_via_mass = truncated_nfw_mass.mass_at_200_for_units(
@@ -1462,13 +1465,91 @@ class TestTruncatedNFWMCR:
         assert truncated_nfw_mass.inner_slope == 1.0
         assert isinstance(truncated_nfw_mass.inner_slope, float)
 
-        assert truncated_nfw_mass.scale_radius == pytest.approx(0.2767, 1.0e-4)
+        assert truncated_nfw_mass.scale_radius == pytest.approx(0.273382, 1.0e-4)
         assert isinstance(truncated_nfw_mass.scale_radius, aast.dim.Length)
         assert truncated_nfw_mass.scale_radius.unit_length == "arcsec"
 
-        assert truncated_nfw_mass.truncation_radius == pytest.approx(
-            33.1428053449, 1.0e-4
+        assert truncated_nfw_mass.truncation_radius == pytest.approx(33.71341, 1.0e-4)
+        assert isinstance(truncated_nfw_mass.truncation_radius, aast.dim.Length)
+        assert truncated_nfw_mass.truncation_radius.unit_length == "arcsec"
+
+
+class TestTruncatedNFWMCRLludlow:
+    def test__mass_and_concentration_consistent_with_normal_truncated_nfw(self):
+
+        cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
+
+        truncated_nfw_mass = aast.mp.SphericalTruncatedNFWMCRLudlow(
+            centre=(1.0, 2.0),
+            mass_at_200=1.0e9,
+            redshift_object=0.6,
+            redshift_source=2.5,
         )
+
+        mass_at_200_via_mass = truncated_nfw_mass.mass_at_200_for_units(
+            unit_mass="solMass",
+            unit_length="arcsec",
+            redshift_object=0.6,
+            redshift_source=2.5,
+            cosmology=cosmology,
+        )
+        concentration_via_mass = truncated_nfw_mass.concentration_for_units(
+            unit_mass="solMass",
+            unit_length="arcsec",
+            redshift_profile=0.6,
+            redshift_source=2.5,
+            cosmology=cosmology,
+        )
+
+        truncated_nfw_kappa_s = aast.mp.SphericalTruncatedNFW(
+            centre=(1.0, 2.0),
+            kappa_s=truncated_nfw_mass.kappa_s,
+            scale_radius=truncated_nfw_mass.scale_radius,
+            truncation_radius=truncated_nfw_mass.truncation_radius,
+        )
+
+        mass_at_200_via_kappa_s = truncated_nfw_kappa_s.mass_at_200_for_units(
+            unit_mass="solMass",
+            unit_length="arcsec",
+            redshift_object=0.6,
+            redshift_source=2.5,
+            cosmology=cosmology,
+        )
+        concentration_via_kappa_s = truncated_nfw_kappa_s.concentration_for_units(
+            unit_mass="solMass",
+            unit_length="arcsec",
+            redshift_profile=0.6,
+            redshift_source=2.5,
+            cosmology=cosmology,
+        )
+
+        # We uare using the SphericalTruncatedNFW to check the mass gives a conosistnt kappa_s, given certain radii.
+
+        assert mass_at_200_via_kappa_s == mass_at_200_via_mass
+        assert concentration_via_kappa_s == concentration_via_mass
+
+        assert isinstance(truncated_nfw_mass.kappa_s, float)
+
+        assert truncated_nfw_mass.centre == (1.0, 2.0)
+        assert isinstance(truncated_nfw_mass.centre[0], aast.dim.Length)
+        assert isinstance(truncated_nfw_mass.centre[1], aast.dim.Length)
+        assert truncated_nfw_mass.centre[0].unit == "arcsec"
+        assert truncated_nfw_mass.centre[1].unit == "arcsec"
+
+        assert truncated_nfw_mass.axis_ratio == 1.0
+        assert isinstance(truncated_nfw_mass.axis_ratio, float)
+
+        assert truncated_nfw_mass.phi == 0.0
+        assert isinstance(truncated_nfw_mass.phi, float)
+
+        assert truncated_nfw_mass.inner_slope == 1.0
+        assert isinstance(truncated_nfw_mass.inner_slope, float)
+
+        assert truncated_nfw_mass.scale_radius == pytest.approx(0.21164, 1.0e-4)
+        assert isinstance(truncated_nfw_mass.scale_radius, aast.dim.Length)
+        assert truncated_nfw_mass.scale_radius.unit_length == "arcsec"
+
+        assert truncated_nfw_mass.truncation_radius == pytest.approx(33.7134116, 1.0e-4)
         assert isinstance(truncated_nfw_mass.truncation_radius, aast.dim.Length)
         assert truncated_nfw_mass.truncation_radius.unit_length == "arcsec"
 
@@ -1479,7 +1560,7 @@ class TestTruncatedNFWMCRChallenge:
         cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
         truncated_nfw_mass = aast.mp.SphericalTruncatedNFWMCRChallenge(
-            centre=(1.0, 2.0), mass_at_200=1.0e9,
+            centre=(1.0, 2.0), mass_at_200=1.0e9
         )
 
         mass_at_200_via_mass = truncated_nfw_mass.mass_at_200_for_units(
@@ -1841,13 +1922,16 @@ class TestNFW:
         assert deflections.shape_2d == (2, 2)
 
 
-class TestNFWMCR:
+class TestNFWMCRDuffy:
     def test__mass_and_concentration_consistent_with_normal_nfw(self):
 
         cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
         nfw_mass = aast.mp.SphericalNFWMCRDuffy(
-            centre=(1.0, 2.0), mass_at_200=1.0e9, redshift_object=0.6, redshift_source=2.5,
+            centre=(1.0, 2.0),
+            mass_at_200=1.0e9,
+            redshift_object=0.6,
+            redshift_source=2.5,
         )
 
         mass_at_200_via_mass = nfw_mass.mass_at_200_for_units(
@@ -1908,6 +1992,81 @@ class TestNFWMCR:
         assert nfw_mass.inner_slope == 1.0
         assert isinstance(nfw_mass.inner_slope, float)
 
-        assert nfw_mass.scale_radius == pytest.approx(0.2767, 1.0e-4)
+        assert nfw_mass.scale_radius == pytest.approx(0.273382, 1.0e-4)
+        assert isinstance(nfw_mass.scale_radius, aast.dim.Length)
+        assert nfw_mass.scale_radius.unit_length == "arcsec"
+
+
+class TestNFWMCRLudlow:
+    def test__mass_and_concentration_consistent_with_normal_nfw(self):
+
+        cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
+
+        nfw_mass = aast.mp.SphericalNFWMCRLudlow(
+            centre=(1.0, 2.0),
+            mass_at_200=1.0e9,
+            redshift_object=0.6,
+            redshift_source=2.5,
+        )
+
+        mass_at_200_via_mass = nfw_mass.mass_at_200_for_units(
+            unit_mass="solMass",
+            unit_length="arcsec",
+            redshift_object=0.6,
+            redshift_source=2.5,
+            cosmology=cosmology,
+        )
+        concentration_via_mass = nfw_mass.concentration_for_units(
+            unit_mass="solMass",
+            unit_length="arcsec",
+            redshift_profile=0.6,
+            redshift_source=2.5,
+            cosmology=cosmology,
+        )
+
+        nfw_kappa_s = aast.mp.SphericalNFW(
+            centre=(1.0, 2.0),
+            kappa_s=nfw_mass.kappa_s,
+            scale_radius=nfw_mass.scale_radius,
+        )
+
+        mass_at_200_via_kappa_s = nfw_kappa_s.mass_at_200_for_units(
+            unit_mass="solMass",
+            unit_length="arcsec",
+            redshift_object=0.6,
+            redshift_source=2.5,
+            cosmology=cosmology,
+        )
+        concentration_via_kappa_s = nfw_kappa_s.concentration_for_units(
+            unit_mass="solMass",
+            unit_length="arcsec",
+            redshift_profile=0.6,
+            redshift_source=2.5,
+            cosmology=cosmology,
+        )
+
+        # We uare using the SphericalTruncatedNFW to check the mass gives a conosistnt kappa_s, given certain radii.
+
+        assert mass_at_200_via_kappa_s == mass_at_200_via_mass
+        assert concentration_via_kappa_s == concentration_via_mass
+
+        assert isinstance(nfw_mass.kappa_s, float)
+
+        assert nfw_mass.centre == (1.0, 2.0)
+        assert isinstance(nfw_mass.centre[0], aast.dim.Length)
+        assert isinstance(nfw_mass.centre[1], aast.dim.Length)
+        assert nfw_mass.centre[0].unit == "arcsec"
+        assert nfw_mass.centre[1].unit == "arcsec"
+
+        assert nfw_mass.axis_ratio == 1.0
+        assert isinstance(nfw_mass.axis_ratio, float)
+
+        assert nfw_mass.phi == 0.0
+        assert isinstance(nfw_mass.phi, float)
+
+        assert nfw_mass.inner_slope == 1.0
+        assert isinstance(nfw_mass.inner_slope, float)
+
+        assert nfw_mass.scale_radius == pytest.approx(0.21164, 1.0e-4)
         assert isinstance(nfw_mass.scale_radius, aast.dim.Length)
         assert nfw_mass.scale_radius.unit_length == "arcsec"

@@ -17,10 +17,12 @@ from .dark_mass_profiles import (
     SphericalGeneralizedNFW,
     SphericalTruncatedNFW,
     SphericalTruncatedNFWMCRDuffy,
+    SphericalTruncatedNFWMCRLudlow,
     SphericalTruncatedNFWMCRChallenge,
     EllipticalNFW,
     SphericalNFW,
     SphericalNFWMCRDuffy,
+    SphericalNFWMCRLudlow,
 )
 from .stellar_mass_profiles import (
     EllipticalGaussian,
