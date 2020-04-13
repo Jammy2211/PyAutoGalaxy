@@ -13,7 +13,7 @@ def profile_image(galaxy, grid, positions=None, include=None, plotter=None):
     -----------
     galaxy : model.galaxy.aast.Galaxy
         The galaxy whose image are plotted.
-    grid : ndarray or datas.arrays.grid_stacks.Grid
+    grid : grid_like or datas.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     plotter.plot_array(
@@ -38,7 +38,7 @@ def convergence(galaxy, grid, positions=None, include=None, plotter=None):
     -----------
     galaxy : model.galaxy.aast.Galaxy
         The galaxy whose convergence is plotted.
-    grid : ndarray or datas.arrays.grid_stacks.Grid
+    grid : grid_like or datas.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     plotter.plot_array(
@@ -63,7 +63,7 @@ def potential(galaxy, grid, positions=None, include=None, plotter=None):
      -----------
     galaxy : model.galaxy.aast.Galaxy
          The galaxy whose potential is plotted.
-    grid : ndarray or datas.arrays.grid_stacks.Grid
+    grid : grid_like or datas.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
     plotter.plot_array(
@@ -88,7 +88,7 @@ def deflections_y(galaxy, grid, positions=None, include=None, plotter=None):
     -----------
     galaxy : model.galaxy.aast.Galaxy
         The galaxy whose y deflecton angles are plotted.
-    grid : ndarray or datas.arrays.grid_stacks.Grid
+    grid : grid_like or datas.arrays.grid_stacks.Grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     deflections = galaxy.deflections_from_grid(grid=grid)
@@ -118,7 +118,7 @@ def deflections_x(galaxy, grid, positions=None, include=None, plotter=None):
      -----------
     galaxy : model.galaxy.aast.Galaxy
          The galaxy whose x deflecton angles are plotted.
-     grid : ndarray or datas.arrays.grid_stacks.Grid
+     grid : grid_like or datas.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
     deflections = galaxy.deflections_from_grid(grid=grid)
@@ -147,7 +147,7 @@ def magnification(galaxy, grid, positions=None, include=None, plotter=None):
      -----------
     galaxy : model.galaxy.aast.Galaxy
          The galaxy whose magnification is plotted.
-    grid : ndarray or datas.arrays.grid_stacks.Grid
+    grid : grid_like or datas.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
 

@@ -330,7 +330,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         return self.__class__(**new_dict)
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     def profile_image_from_grid(self, grid):
         """Calculate the summed image of all of the galaxy's light profiles using a grid of Cartesian (y,x) \
         coordinates.
@@ -341,7 +341,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
 
         """
@@ -423,7 +423,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return None
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     def convergence_from_grid(self, grid):
         """Compute the summed convergence of the galaxy's mass profiles using a grid \
         of Cartesian (y,x) coordinates.
@@ -437,7 +437,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
 
         """
@@ -453,7 +453,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 sub_array_1d=np.zeros((grid.sub_shape_1d,))
             )
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     def potential_from_grid(self, grid):
         """Compute the summed gravitational potential of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
@@ -467,7 +467,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
 
         """
@@ -483,7 +483,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 sub_array_1d=np.zeros((grid.sub_shape_1d,))
             )
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     def deflections_from_grid(self, grid):
         """Compute the summed (y,x) deflection angles of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
@@ -494,7 +494,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
         """
         if self.has_mass_profile:

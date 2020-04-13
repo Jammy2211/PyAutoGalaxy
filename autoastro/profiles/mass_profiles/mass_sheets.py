@@ -27,19 +27,19 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
     def convergence_func(self, grid_radius):
         return 0.0
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     def convergence_from_grid(self, grid):
         return grid.mapping.array_stored_1d_from_sub_array_1d(
             sub_array_1d=np.full(shape=grid.sub_shape_1d, fill_value=self.kappa)
         )
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     def potential_from_grid(self, grid):
         return grid.mapping.array_stored_1d_from_sub_array_1d(
             sub_array_1d=np.zeros(shape=grid.sub_shape_1d)
         )
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -84,19 +84,19 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
     ):
         return dim.Length(value=0.0, unit_length=self.unit_length)
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     def convergence_from_grid(self, grid):
         return grid.mapping.array_stored_1d_from_sub_array_1d(
             sub_array_1d=np.zeros(shape=grid.sub_shape_1d)
         )
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     def potential_from_grid(self, grid):
         return grid.mapping.array_stored_1d_from_sub_array_1d(
             sub_array_1d=np.zeros(shape=grid.sub_shape_1d)
         )
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):

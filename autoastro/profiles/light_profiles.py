@@ -33,7 +33,7 @@ class LightProfile:
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
         Returns
         -------
@@ -270,7 +270,7 @@ class EllipticalGaussian(EllipticalLightProfile):
             np.exp(-0.5 * np.square(np.divide(grid_radii, self.sigma))),
         )
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def profile_image_from_grid(self, grid, grid_radial_minimum=None):
@@ -281,7 +281,7 @@ class EllipticalGaussian(EllipticalLightProfile):
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
         """
         return self.profile_image_from_grid_radii(self.grid_to_elliptical_radii(grid))
@@ -461,7 +461,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
             ),
         )
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def profile_image_from_grid(self, grid, grid_radial_minimum=None):
@@ -471,7 +471,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
         """
         return self.profile_image_from_grid_radii(self.grid_to_eccentric_radii(grid))

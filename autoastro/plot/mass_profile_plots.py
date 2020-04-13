@@ -13,7 +13,7 @@ def convergence(mass_profile, grid, positions=None, include=None, plotter=None):
     -----------
     mass_profile : model.profiles.mass_profiles.MassProfile
         The mass profile whose convergence is plotted.
-    grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
+    grid : grid_like
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     plotter.plot_array(
@@ -37,7 +37,7 @@ def potential(mass_profile, grid, positions=None, include=None, plotter=None):
     -----------
     mass_profile : model.profiles.mass_profiles.MassProfile
         The mass profile whose potential is plotted.
-    grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
+    grid : grid_like
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     plotter.plot_array(
@@ -61,7 +61,7 @@ def deflections_y(mass_profile, grid, positions=None, include=None, plotter=None
     -----------
     mass_profile : model.profiles.mass_profiles.MassProfile
         The mass profile whose y deflecton angles are plotted.
-    grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
+    grid : grid_like
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
 
@@ -91,7 +91,7 @@ def deflections_x(mass_profile, grid, positions=None, include=None, plotter=None
      -----------
      mass_profile : model.profiles.mass_profiles.MassProfile
          The mass profile whose x deflecton angles are plotted.
-     grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
+     grid : grid_like
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
     deflections = mass_profile.deflections_from_grid(grid=grid)
@@ -120,7 +120,7 @@ def magnification(mass_profile, grid, positions=None, include=None, plotter=None
     -----------
     mass_profile : model.profiles.mass_profiles.MassProfile
         The mass profile whose magnification is plotted.
-    grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
+    grid : grid_like
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     plotter.plot_array(

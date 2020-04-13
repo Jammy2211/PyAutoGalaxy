@@ -7,6 +7,7 @@ from pyquad import quad_grid
 from skimage import measure
 
 import autoarray as aa
+from autoarray.structures import grids
 import autoastro as aast
 import autofit as af
 from autoastro import lensing
@@ -66,6 +67,7 @@ class MockEllipticalIsothermal(
     def convergence_func(self, grid_radius):
         return self.einstein_radius_rescaled * (grid_radius ** 2) ** (-0.5)
 
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -100,6 +102,7 @@ class MockEllipticalIsothermal(
             / ((1 - (1 - axis_ratio ** 2) * u) ** 0.5)
         )
 
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -119,6 +122,7 @@ class MockEllipticalIsothermal(
 
         return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -194,6 +198,7 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
             centre=centre, axis_ratio=1.0, phi=0.0, einstein_radius=einstein_radius
         )
 
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -209,6 +214,7 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
         eta = self.grid_to_elliptical_radii(grid)
         return 2.0 * self.einstein_radius_rescaled * eta
 
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -244,7 +250,7 @@ class TestDeflectionsMagnitudes:
     def test__compare_sis_deflection_magnitudes_to_known_values(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
-        grid = aa.GridIrregular.manual_1d(grid=np.array([[1.0, 0.0], [0.0, 1.0]]))
+        grid = aa.Coordinates([(1.0, 0.0), (0.0, 1.0)])
 
         deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
 
@@ -252,7 +258,7 @@ class TestDeflectionsMagnitudes:
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.GridIrregular.manual_1d(grid=np.array([[2.0, 0.0], [0.0, 2.0]]))
+        grid = aa.Coordinates([(2.0, 0.0), (0.0, 2.0)])
 
         deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
 
