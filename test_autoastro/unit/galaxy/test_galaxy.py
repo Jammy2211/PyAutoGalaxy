@@ -576,7 +576,7 @@ class TestMassProfiles:
             convergence = galaxy.convergence_from_grid(grid=sub_grid_7x7)
 
             assert (
-                    convergence.in_1d == np.zeros(shape=sub_grid_7x7.sub_shape_1d)
+                convergence.in_1d == np.zeros(shape=sub_grid_7x7.sub_shape_1d)
             ).all()
 
         def test__using_no_mass_profiles__check_reshaping_decorator_of_returned_convergence(
@@ -591,7 +591,7 @@ class TestMassProfiles:
             convergence = galaxy.convergence_from_grid(grid=sub_grid_7x7)
 
             assert (
-                    convergence.in_1d == np.zeros(shape=sub_grid_7x7.sub_shape_1d)
+                convergence.in_1d == np.zeros(shape=sub_grid_7x7.sub_shape_1d)
             ).all()
 
             convergence = galaxy.convergence_from_grid(grid=sub_grid_7x7)
@@ -783,7 +783,7 @@ class TestMassProfiles:
             deflections = galaxy.deflections_from_grid(grid=sub_grid_7x7)
 
             assert (
-                    deflections.in_1d == np.zeros(shape=(sub_grid_7x7.sub_shape_1d, 2))
+                deflections.in_1d == np.zeros(shape=(sub_grid_7x7.sub_shape_1d, 2))
             ).all()
 
         def test__using_no_mass_profiles__check_reshaping_decorator_of_returned_deflections(
@@ -798,7 +798,7 @@ class TestMassProfiles:
             deflections = galaxy.deflections_from_grid(grid=sub_grid_7x7)
 
             assert (
-                    deflections.in_1d == np.zeros(shape=(sub_grid_7x7.sub_shape_1d, 2))
+                deflections.in_1d == np.zeros(shape=(sub_grid_7x7.sub_shape_1d, 2))
             ).all()
 
             deflections = galaxy.deflections_from_grid(grid=sub_grid_7x7)

@@ -136,9 +136,9 @@ def move_grid_to_radial_minimum(func):
 
 
 class TransformedGrid(np.ndarray):
-
     def __new__(cls, grid, *args, **kwargs):
         return grid.view(cls)
+
 
 class GeometryProfile(dim.DimensionsProfile):
     @af.map_types
