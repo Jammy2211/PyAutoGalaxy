@@ -346,16 +346,10 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         """
         if self.has_light_profile:
-            profile_image = sum(
+            return sum(
                 map(lambda p: p.profile_image_from_grid(grid=grid), self.light_profiles)
             )
-            return grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=profile_image
-            )
-        else:
-            return grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=np.zeros((grid.sub_shape_1d,))
-            )
+        return np.zeros((grid.shape[0],))
 
     def blurred_profile_image_from_grid_and_psf(self, grid, psf, blurring_grid=None):
 
@@ -425,15 +419,14 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @grids.grid_like_to_numpy
     def convergence_from_grid(self, grid):
-        """Compute the summed convergence of the galaxy's mass profiles using a grid \
-        of Cartesian (y,x) coordinates.
+        """Compute the summed convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
         If the galaxy has no mass profiles, a grid of zeros is returned.
         
         See *profiles.mass_profiles* module for details of how this is performed.
 
-        The *reshape_returned_array* decorator reshapes the NumPy arrays the convergence is outputted on. See \
-        *aa.reshape_returned_array* for a description of the output.
+        The *grid_like_to_numpy* decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        *aa.grid_like_to_numpy* for a description of the output.
 
         Parameters
         ----------
@@ -445,8 +438,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             return sum(
                 map(lambda p: p.convergence_from_grid(grid=grid), self.mass_profiles)
             )
-        else:
-            return np.zeros((grid.shape[0],))
+        return np.zeros((grid.shape[0],))
 
     @grids.grid_like_to_numpy
     def potential_from_grid(self, grid):
@@ -457,8 +449,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         See *profiles.mass_profiles* module for details of how this is performed.
 
-                The *reshape_returned_array* decorator reshapes the NumPy arrays the convergence is outputted on. See \
-        *aa.reshape_returned_array* for a description of the output.
+        The *grid_like_to_numpy* decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        *aa.grid_like_to_numpy* for a description of the output.
 
         Parameters
         ----------
@@ -467,16 +459,10 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         """
         if self.has_mass_profile:
-            potential = sum(
+            return sum(
                 map(lambda p: p.potential_from_grid(grid=grid), self.mass_profiles)
             )
-            return grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=potential
-            )
-        else:
-            return grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=np.zeros((grid.sub_shape_1d,))
-            )
+        return np.zeros((grid.shape[0],))
 
     @grids.grid_like_to_numpy
     def deflections_from_grid(self, grid):
@@ -493,13 +479,10 @@ class Galaxy(ModelObject, lensing.LensingObject):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         if self.has_mass_profile:
-            deflections = sum(
+            return sum(
                 map(lambda p: p.deflections_from_grid(grid=grid), self.mass_profiles)
             )
-            return grid.mapping.grid_stored_1d_from_sub_grid_1d(sub_grid_1d=deflections)
-        return grid.mapping.grid_stored_1d_from_sub_grid_1d(
-            sub_grid_1d=np.full((grid.sub_shape_1d, 2), 0.0)
-        )
+        return np.zeros((grid.shape[0], 2))
 
     def mass_within_circle_in_units(
         self,

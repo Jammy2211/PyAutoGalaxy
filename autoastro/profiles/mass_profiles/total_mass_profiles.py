@@ -290,8 +290,8 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
-        The *reshape_returned_array* decorator reshapes the NumPy arrays the convergence is outputted on. See \
-        *aa.reshape_returned_array* for a description of the output.
+        The *grid_like_to_numpy* decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        *aa.grid_like_to_numpy* for a description of the output.
 
         Parameters
         ----------

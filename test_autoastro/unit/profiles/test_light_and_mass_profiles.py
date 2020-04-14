@@ -1,11 +1,9 @@
 import numpy as np
 import pytest
 
-import autofit as af
-import autoarray as aa
 import autoastro as aast
 
-grid = aa.GridIrregular.manual_1d([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
+grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestGaussian(object):
@@ -44,6 +42,7 @@ class TestGaussian(object):
         assert gaussian.mass_to_light_ratio.unit == "angular / eps"
 
     def test__grid_calculations__same_as_gaussian(self):
+
         gaussian_lp = aast.lmp.EllipticalGaussian(
             axis_ratio=0.7, phi=1.0, intensity=1.0, sigma=5.0
         )
