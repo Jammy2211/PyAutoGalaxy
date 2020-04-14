@@ -204,6 +204,7 @@ class TestPointMass:
 
 class TestBrokenPowerLaw:
     def test__convergence_correct_values(self):
+
         broken_power_law = aast.mp.SphericalBrokenPowerLaw(
             centre=(0, 0),
             einstein_radius=1.0,
@@ -211,13 +212,18 @@ class TestBrokenPowerLaw:
             outer_slope=2.5,
             break_radius=0.1,
         )
-        assert broken_power_law.convergence_from_grid(
-            grid=np.array([[0.5, 1.0]])
-        ) == pytest.approx(0.0355237, 1e-4)
 
-        assert broken_power_law.convergence_from_grid(
+        convergence = broken_power_law.convergence_from_grid(
+            grid=np.array([[0.5, 1.0]])
+        )
+
+        assert convergence == pytest.approx(0.0355237, 1e-4)
+
+        convergence = broken_power_law.convergence_from_grid(
             grid=np.array([[0.5, 1.0], [0.5, 1.0]])
-        ) == pytest.approx([0.0355237, 0.0355237], 1e-4)
+        )
+
+        assert convergence == pytest.approx([0.0355237, 0.0355237], 1e-4)
 
         broken_power_law = aast.mp.EllipticalBrokenPowerLaw(
             centre=(0, 0),
@@ -229,9 +235,11 @@ class TestBrokenPowerLaw:
             break_radius=0.1,
         )
 
-        assert broken_power_law.convergence_from_grid(
+        convergence = broken_power_law.convergence_from_grid(
             grid=np.array([[0.5, 1.0]])
-        ) == pytest.approx(0.05006035, 1e-4)
+        )
+
+        assert convergence == pytest.approx(0.05006035, 1e-4)
 
         broken_power_law = aast.mp.EllipticalBrokenPowerLaw(
             centre=(0, 0),
@@ -242,9 +250,12 @@ class TestBrokenPowerLaw:
             outer_slope=2.2,
             break_radius=0.1,
         )
-        assert broken_power_law.convergence_from_grid(
+
+        convergence = broken_power_law.convergence_from_grid(
             grid=np.array([[0.5, 1.0]])
-        ) == pytest.approx(0.034768, 1e-4)
+        )
+
+        assert convergence == pytest.approx(0.034768, 1e-4)
 
         broken_power_law = aast.mp.EllipticalBrokenPowerLaw(
             centre=(0, 0),
@@ -255,9 +266,12 @@ class TestBrokenPowerLaw:
             outer_slope=2.2,
             break_radius=0.1,
         )
-        assert broken_power_law.convergence_from_grid(
+
+        convergence = broken_power_law.convergence_from_grid(
             grid=np.array([[0.5, 1.0]])
-        ) == pytest.approx(0.03622852, 1e-4)
+        )
+
+        assert convergence == pytest.approx(0.03622852, 1e-4)
 
         broken_power_law = aast.mp.EllipticalBrokenPowerLaw(
             centre=(0, 0),
@@ -268,9 +282,12 @@ class TestBrokenPowerLaw:
             outer_slope=2.2,
             break_radius=0.1,
         )
-        assert broken_power_law.convergence_from_grid(
+
+        convergence = broken_power_law.convergence_from_grid(
             grid=np.array([[0.5, 1.0]])
-        ) == pytest.approx(0.026469, 1e-4)
+        )
+
+        assert convergence == pytest.approx(0.026469, 1e-4)
 
     def test__deflections__correct_values(self):
 
@@ -281,9 +298,11 @@ class TestBrokenPowerLaw:
             outer_slope=2.5,
             break_radius=0.1,
         )
+
         deflections = broken_power_law.deflections_from_grid(
             grid=np.array([[0.5, 1.0]])
         )
+
         assert deflections[0, 0] == pytest.approx(0.404076, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.808152, 1e-3)
 
@@ -365,17 +384,32 @@ class TestBrokenPowerLaw:
         assert deflections[0, 1] == pytest.approx(0.798795, 1e-3)
 
     def test__convergence__change_geometry(self):
+
         broken_power_law_0 = aast.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
         broken_power_law_1 = aast.mp.SphericalBrokenPowerLaw(centre=(1.0, 1.0))
-        assert broken_power_law_0.convergence_from_grid(
+
+        convergence_0 = broken_power_law_0.convergence_from_grid(
             grid=np.array([[1.0, 1.0]])
-        ) == broken_power_law_1.convergence_from_grid(grid=np.array([[0.0, 0.0]]))
+        )
+
+        convergence_1 = broken_power_law_1.convergence_from_grid(
+            grid=np.array([[0.0, 0.0]])
+        )
+
+        assert convergence_0 == convergence_1
 
         broken_power_law_0 = aast.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
         broken_power_law_1 = aast.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
-        assert broken_power_law_0.convergence_from_grid(
+
+        convergence_0 = broken_power_law_0.convergence_from_grid(
             grid=np.array([[1.0, 0.0]])
-        ) == broken_power_law_1.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
+        )
+
+        convergence_1 = broken_power_law_1.convergence_from_grid(
+            grid=np.array([[0.0, 1.0]])
+        )
+
+        assert convergence_0 == convergence_1
 
         broken_power_law_0 = aast.mp.EllipticalBrokenPowerLaw(
             centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0
@@ -383,30 +417,42 @@ class TestBrokenPowerLaw:
         broken_power_law_1 = aast.mp.EllipticalBrokenPowerLaw(
             centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0
         )
-        assert broken_power_law_0.convergence_from_grid(
+
+        convergence_0 = broken_power_law_0.convergence_from_grid(
             grid=np.array([[1.0, 0.0]])
-        ) == broken_power_law_1.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
+        )
+
+        convergence_1 = broken_power_law_1.convergence_from_grid(
+            grid=np.array([[0.0, 1.0]])
+        )
+
+        assert convergence_0 == convergence_1
 
     def test__deflections__change_geometry(self):
+
         broken_power_law_0 = aast.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
         broken_power_law_1 = aast.mp.SphericalBrokenPowerLaw(centre=(1.0, 1.0))
+
         deflections_0 = broken_power_law_0.deflections_from_grid(
             grid=np.array([[1.0, 1.0]])
         )
         deflections_1 = broken_power_law_1.deflections_from_grid(
             grid=np.array([[0.0, 0.0]])
         )
+
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
 
         broken_power_law_0 = aast.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
         broken_power_law_1 = aast.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
+
         deflections_0 = broken_power_law_0.deflections_from_grid(
             grid=np.array([[1.0, 0.0]])
         )
         deflections_1 = broken_power_law_1.deflections_from_grid(
             grid=np.array([[0.0, 1.0]])
         )
+
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
@@ -416,12 +462,14 @@ class TestBrokenPowerLaw:
         broken_power_law_1 = aast.mp.EllipticalBrokenPowerLaw(
             centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0
         )
+
         deflections_0 = broken_power_law_0.deflections_from_grid(
             grid=np.array([[1.0, 0.0]])
         )
         deflections_1 = broken_power_law_1.deflections_from_grid(
             grid=np.array([[0.0, 1.0]])
         )
+
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
@@ -507,6 +555,7 @@ class TestBrokenPowerLaw:
         interp_deflections = broken_power_law.deflections_from_grid(
             grid=regular_with_interp
         )
+
         assert np.max(true_deflections[:, 0] - interp_deflections[:, 0]) < 0.1
         assert np.max(true_deflections[:, 1] - interp_deflections[:, 1]) < 0.1
 
@@ -557,6 +606,7 @@ class TestBrokenPowerLaw:
         interp_deflections = broken_power_law.deflections_from_grid(
             grid=regular_with_interp
         )
+
         assert np.max(true_deflections[:, 0] - interp_deflections[:, 0]) < 0.1
         assert np.max(true_deflections[:, 1] - interp_deflections[:, 1]) < 0.1
 
@@ -676,9 +726,9 @@ class TestCoredPowerLaw:
             centre=(1, 1), einstein_radius=1.0, slope=2.2, core_radius=0.1
         )
 
-        assert cored_power_law.convergence_func(grid_radius=1.0) == pytest.approx(
-            0.39762, 1e-4
-        )
+        convergence = cored_power_law.convergence_func(grid_radius=1.0)
+
+        assert convergence == pytest.approx(0.39762, 1e-4)
 
         cored_power_law = aast.mp.EllipticalCoredPowerLaw(
             centre=(0.0, 0.0),
@@ -1237,19 +1287,20 @@ class TestPowerLaw:
         assert power_law.einstein_radius_rescaled == pytest.approx(0.5, 1.0e-4)
 
     def test__convergence_correct_values(self):
-        isothermal = aast.mp.SphericalPowerLaw(
+
+        power_law = aast.mp.SphericalPowerLaw(
             centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0
         )
 
-        convergence = isothermal.convergence_from_grid(grid=np.array([[1.0, 0.0]]))
+        convergence = power_law.convergence_from_grid(grid=np.array([[1.0, 0.0]]))
 
         assert convergence == pytest.approx(0.5, 1e-3)
 
-        isothermal = aast.mp.SphericalPowerLaw(
+        power_law = aast.mp.SphericalPowerLaw(
             centre=(0.0, 0.0), einstein_radius=2.0, slope=2.2
         )
 
-        convergence = isothermal.convergence_from_grid(grid=np.array([[2.0, 0.0]]))
+        convergence = power_law.convergence_from_grid(grid=np.array([[2.0, 0.0]]))
 
         assert convergence == pytest.approx(0.4, 1e-3)
 
@@ -1257,7 +1308,7 @@ class TestPowerLaw:
             centre=(0.0, 0.0), einstein_radius=2.0, slope=2.2
         )
 
-        convergence = isothermal.convergence_from_grid(grid=np.array([[2.0, 0.0]]))
+        convergence = power_law.convergence_from_grid(grid=np.array([[2.0, 0.0]]))
 
         assert convergence == pytest.approx(0.4, 1e-3)
 
@@ -1265,7 +1316,7 @@ class TestPowerLaw:
             centre=(0.0, 0.0), axis_ratio=0.5, phi=0.0, einstein_radius=1.0, slope=2.3
         )
 
-        convergence = isothermal.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
+        convergence = power_law.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
 
         assert convergence == pytest.approx(0.466666, 1e-3)
 
@@ -1273,7 +1324,7 @@ class TestPowerLaw:
             centre=(0.0, 0.0), axis_ratio=0.5, phi=0.0, einstein_radius=2.0, slope=1.7
         )
 
-        convergence = isothermal.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
+        convergence = power_law.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
 
         assert convergence == pytest.approx(1.4079, 1e-3)
 
@@ -1813,7 +1864,7 @@ class TestCoredIsothermal:
         )
 
         assert deflections[0, 0] == pytest.approx(0.02097, 1e-3)
-        assert deflections[0, 0] == pytest.approx(0.20500, 1e-3)
+        assert deflections[0, 1] == pytest.approx(0.20500, 1e-3)
 
     def test__compare_to_cored_power_law(self):
 

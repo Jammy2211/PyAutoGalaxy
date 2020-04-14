@@ -282,6 +282,7 @@ class TestSersic:
         assert sersic.elliptical_effective_radius == 0.6
 
     def test__intensity_at_radius__correct_value(self):
+
         sersic = aast.lp.EllipticalSersic(
             axis_ratio=1.0,
             phi=0.0,
@@ -308,6 +309,7 @@ class TestSersic:
         assert image == pytest.approx(4.90657319276, 1e-3)
 
     def test__intensity_from_grid__correct_values(self):
+
         sersic = aast.lp.EllipticalSersic(
             axis_ratio=0.5,
             phi=0.0,
@@ -325,6 +327,7 @@ class TestSersic:
         assert value == pytest.approx(5.38066670129, 1e-3)
 
     def test__image_from_grid__change_geometry(self):
+
         sersic_0 = aast.lp.EllipticalSersic(
             axis_ratio=0.5,
             phi=0.0,
