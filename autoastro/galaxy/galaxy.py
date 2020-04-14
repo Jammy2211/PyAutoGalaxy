@@ -9,7 +9,7 @@ from autoastro import exc
 from autoastro import dimensions as dim
 from autoastro import lensing
 from autofit.tools import text_util
-from autoarray.structures import grids
+from autoarray.structures import arrays, grids
 from autoarray.operators.inversion import pixelizations as pix
 from autoastro.profiles import light_profiles as lp
 from autoastro.profiles import mass_profiles as mp
@@ -128,24 +128,30 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def light_profile_centres(self):
-        return [light_profile.centre for light_profile in self.light_profiles]
+        return grids.Coordinates(
+            [[light_profile.centre] for light_profile in self.light_profiles]
+        )
 
     @property
     def mass_profile_centres(self):
         centres = [
-            mass_profile.centre
+            [mass_profile.centre]
             for mass_profile in self.mass_profiles
             if not mass_profile.is_mass_sheet
         ]
-        return list(filter(None, centres))
+        return grids.Coordinates(list(filter(None, centres)))
 
     @property
     def mass_profile_axis_ratios(self):
-        return [mass_profile.axis_ratio for mass_profile in self.mass_profiles]
+        return arrays.Values(
+            [[mass_profile.axis_ratio] for mass_profile in self.mass_profiles]
+        )
 
     @property
     def mass_profile_phis(self):
-        return [mass_profile.phi for mass_profile in self.mass_profiles]
+        return arrays.Values(
+            [[mass_profile.phi] for mass_profile in self.mass_profiles]
+        )
 
     @property
     def uses_cluster_inversion(self):

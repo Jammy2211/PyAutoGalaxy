@@ -94,7 +94,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
     @property
     def light_profile_centres(self):
-        return [self.centre]
+        return grids.Coordinates([self.centre])
 
     def blurred_profile_image_from_grid_and_psf(self, grid, psf, blurring_grid):
         """Evaluate the light profile image on an input *Grid* of coordinates and then convolve it with a PSF.
