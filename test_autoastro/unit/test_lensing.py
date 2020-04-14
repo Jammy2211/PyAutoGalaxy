@@ -83,11 +83,11 @@ class MockEllipticalIsothermal(
 
         """
 
-        covnergence_grid = np.zeros(grid.sub_shape_1d)
+        covnergence_grid = np.zeros(grid.shape[0])
 
         grid_eta = self.grid_to_elliptical_radii(grid)
 
-        for i in range(grid.sub_shape_1d):
+        for i in range(grid.shape[0]):
             covnergence_grid[i] = self.convergence_func(grid_eta[i])
 
         return covnergence_grid
@@ -229,7 +229,7 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
         """
         return self.grid_to_grid_cartesian(
             grid=grid,
-            radius=np.full(grid.sub_shape_1d, 2.0 * self.einstein_radius_rescaled),
+            radius=np.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled),
         )
 
 
@@ -485,6 +485,7 @@ class TestBoundingBox:
     def test__convergence_bounding_box_for_single_mass_profile__extends_to_threshold(
         self
     ):
+
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
         assert sis.convergence_bounding_box(

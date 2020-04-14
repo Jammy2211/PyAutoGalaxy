@@ -609,7 +609,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
             grid, tabulate_bins
         )
 
-        potential_grid = np.zeros(grid.sub_shape_1d)
+        potential_grid = np.zeros(grid.shape[0])
 
         deflection_integral = np.zeros((tabulate_bins,))
 
@@ -637,7 +637,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
                 + integral
             )
 
-        for i in range(grid.sub_shape_1d):
+        for i in range(grid.shape[0]):
             potential_grid[i] = (2.0 * self.kappa_s * self.axis_ratio) * quad(
                 self.potential_func,
                 a=0.0,
@@ -859,9 +859,9 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
 
         eta = np.multiply(1.0 / self.scale_radius, self.grid_to_grid_radii(grid))
 
-        deflection_grid = np.zeros(grid.sub_shape_1d)
+        deflection_grid = np.zeros(grid.shape[0])
 
-        for i in range(grid.sub_shape_1d):
+        for i in range(grid.shape[0]):
             deflection_grid[i] = np.multiply(
                 4.0 * self.kappa_s * self.scale_radius, self.deflection_func_sph(eta[i])
             )
@@ -961,7 +961,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
 
     def potential_from_grid(self, grid):
         return arrays.Array.manual_1d(
-            array=np.zeros(shape=grid.sub_shape_1d), shape_2d=grid.sub_shape_2d
+            array=np.zeros(shape=grid.shape[0]), shape_2d=grid.sub_shape_2d
         )
 
     @grids.grid_like_to_numpy

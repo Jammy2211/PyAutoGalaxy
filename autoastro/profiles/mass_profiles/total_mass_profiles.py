@@ -38,7 +38,7 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
         )
         central_pixel = np.argmin(squared_distances)
 
-        convergence = np.zeros(shape=grid.sub_shape_1d)
+        convergence = np.zeros(shape=grid.shape[0])
         #    convergence[central_pixel] = np.pi * self.einstein_radius ** 2.0
         return convergence
 
@@ -126,7 +126,7 @@ class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     @grids.grid_like_to_numpy
     def potential_from_grid(self, grid):
         return arrays.Array.manual_1d(
-            array=np.zeros(shape=grid.sub_shape_1d), shape_2d=grid.sub_shape_2d
+            array=np.zeros(shape=grid.shape[0]), shape_2d=grid.sub_shape_2d
         )
 
     @grids.grid_like_to_numpy
@@ -300,11 +300,11 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
         """
 
-        covnergence_grid = np.zeros(grid.sub_shape_1d)
+        covnergence_grid = np.zeros(grid.shape[0])
 
         grid_eta = self.grid_to_elliptical_radii(grid)
 
-        for i in range(grid.sub_shape_1d):
+        for i in range(grid.shape[0]):
             covnergence_grid[i] = self.convergence_func(grid_eta[i])
 
         return covnergence_grid
@@ -848,5 +848,5 @@ class SphericalIsothermal(EllipticalIsothermal):
         """
         return self.grid_to_grid_cartesian(
             grid=grid,
-            radius=np.full(grid.sub_shape_1d, 2.0 * self.einstein_radius_rescaled),
+            radius=np.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled),
         )

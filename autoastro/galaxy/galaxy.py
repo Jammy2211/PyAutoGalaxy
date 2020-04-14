@@ -442,16 +442,11 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         """
         if self.has_mass_profile:
-            convergence = sum(
+            return sum(
                 map(lambda p: p.convergence_from_grid(grid=grid), self.mass_profiles)
             )
-            return grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=convergence
-            )
         else:
-            return grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=np.zeros((grid.sub_shape_1d,))
-            )
+            return np.zeros((grid.shape[0],))
 
     @grids.grid_like_to_numpy
     def potential_from_grid(self, grid):

@@ -189,25 +189,25 @@ class LensingObject:
         [y_min, y_max, x_min, x_max] = self.mass_profile_bounding_box
 
         def func_for_y_min(y):
-            grid = grids.Coordinates([[y, x_max], [y, x_min]])
+            grid = grids.Coordinates([(y, x_max), (y, x_min)])
             return np.max(self.convergence_from_grid(grid=grid) - convergence_threshold)
 
         convergence_y_min = root_scalar(func_for_y_min, bracket=[y_min, -1000.0]).root
 
         def func_for_y_max(y):
-            grid = grids.Coordinates([[y, x_max], [y, x_min]])
+            grid = grids.Coordinates([(y, x_max), (y, x_min)])
             return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
 
         convergence_y_max = root_scalar(func_for_y_max, bracket=[y_max, 1000.0]).root
 
         def func_for_x_min(x):
-            grid = grids.Coordinates([[y_max, x], [y_min, x]])
+            grid = grids.Coordinates([(y_max, x), (y_min, x)])
             return np.max(self.convergence_from_grid(grid=grid) - convergence_threshold)
 
         convergence_x_min = root_scalar(func_for_x_min, bracket=[x_min, -1000.0]).root
 
         def func_for_x_max(x):
-            grid = grids.Coordinates([[y_max, x], [y_min, x]])
+            grid = grids.Coordinates([(y_max, x), (y_min, x)])
             return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
 
         convergence_x_max = root_scalar(func_for_x_max, bracket=[x_max, 1000.0]).root

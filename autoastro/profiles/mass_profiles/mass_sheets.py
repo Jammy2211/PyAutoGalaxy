@@ -30,13 +30,13 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
     @grids.grid_like_to_numpy
     def convergence_from_grid(self, grid):
         return grid.mapping.array_stored_1d_from_sub_array_1d(
-            sub_array_1d=np.full(shape=grid.sub_shape_1d, fill_value=self.kappa)
+            sub_array_1d=np.full(shape=grid.shape[0], fill_value=self.kappa)
         )
 
     @grids.grid_like_to_numpy
     def potential_from_grid(self, grid):
         return grid.mapping.array_stored_1d_from_sub_array_1d(
-            sub_array_1d=np.zeros(shape=grid.sub_shape_1d)
+            sub_array_1d=np.zeros(shape=grid.shape[0])
         )
 
     @grids.grid_like_to_numpy
@@ -87,13 +87,13 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
     @grids.grid_like_to_numpy
     def convergence_from_grid(self, grid):
         return grid.mapping.array_stored_1d_from_sub_array_1d(
-            sub_array_1d=np.zeros(shape=grid.sub_shape_1d)
+            sub_array_1d=np.zeros(shape=grid.shape[0])
         )
 
     @grids.grid_like_to_numpy
     def potential_from_grid(self, grid):
         return grid.mapping.array_stored_1d_from_sub_array_1d(
-            sub_array_1d=np.zeros(shape=grid.sub_shape_1d)
+            sub_array_1d=np.zeros(shape=grid.shape[0])
         )
 
     @grids.grid_like_to_numpy
