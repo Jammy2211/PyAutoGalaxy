@@ -33,8 +33,8 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
 
     def convergence_from_grid(self, grid):
 
-        squared_distances = grid.squared_distances_from_coordinate(
-            coordinate=self.centre
+        squared_distances = np.square(grid[:, 0] - self.centre[0]) + np.square(
+            grid[:, 1] - self.centre[1]
         )
         central_pixel = np.argmin(squared_distances)
 

@@ -728,7 +728,7 @@ class Include(plotters.Include):
     def light_profile_centres_of_galaxies_from_obj(self, obj):
 
         if self.light_profile_centres:
-            return obj.light_profile_centres_of_galaxies
+            return obj.light_profile_centres
         else:
             return None
 

@@ -128,12 +128,36 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def light_profile_centres(self):
+        """Returns the light profile centres of the galaxy as a *Coordinates* object, which structures the centres
+        in lists according to which light profile they come from. 
+        
+        Fo example, if a galaxy has two light profiles, the first with one centre and second with two centres this 
+        returns:
+        
+        [[(y0, x0)], [(y0, x0), (y1, x1)]]
+        
+        NOTE: Currently, no light profiles can have more than one centre (it unlikely one ever will). The structure of 
+        the output follows this convention to follow other methods in the *Galaxy* class that return profile 
+        attributes."""
         return grids.Coordinates(
             [[light_profile.centre] for light_profile in self.light_profiles]
         )
 
     @property
     def mass_profile_centres(self):
+        """Returns the mass profile centres of the galaxy as a *Coordinates* object, which structures the centres
+        in lists according to which mass profile they come from. 
+
+        Fo example, if a galaxy has two mass profiles, the first with one centre and second with two centres this 
+        returns:
+
+        [[(y0, x0)], [(y0, x0), (y1, x1)]]
+
+        NOTE: Currently, no mass profiles can have more than one centre (it unlikely one ever will). The structure of 
+        the output follows this convention to follow other methods in the *Galaxy* class that return profile 
+        attributes.
+
+        The centres of mass-sheets are omitted, as their centres are not relevent in terms of lensing calculations."""
         centres = [
             [mass_profile.centre]
             for mass_profile in self.mass_profiles
@@ -143,12 +167,27 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def mass_profile_axis_ratios(self):
+        """Returns the mass profile axis-ratios of the galaxy as a *Values* object, which structures the axis-ratios
+        in lists according to which mass profile they come from. 
+
+        Fo example, if a galaxy has two mass profiles, the first with one axis-ratio and second with two axis-ratios
+        this returns:
+
+        [[axis_ratio_0], [axis_ratio_0, axis_ratio_1]]
+        """
         return arrays.Values(
             [[mass_profile.axis_ratio] for mass_profile in self.mass_profiles]
         )
 
     @property
     def mass_profile_phis(self):
+        """Returns the mass profile phis of the galaxy as a *Values* object, which structures the phis in lists
+        according to which mass profile they come from.
+
+        Fo example, if a galaxy has two mass profiles, the first with one phi and second with two phis this returns:
+
+        [[phi_0], [phi_0, phi_1]]
+        """
         return arrays.Values(
             [[mass_profile.phi] for mass_profile in self.mass_profiles]
         )
