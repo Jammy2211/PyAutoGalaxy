@@ -717,22 +717,16 @@ class Include(plotters.Include):
 
         if self.positions:
             return masked_dataset.positions
-        else:
-            return None
 
     def light_profile_centres_from_obj(self, obj):
 
         if self.light_profile_centres:
             return obj.light_profile_centres
-        else:
-            return None
 
     def mass_profile_centres_from_obj(self, obj):
 
         if self.mass_profile_centres:
             return obj.mass_profile_centres
-        else:
-            return None
 
     def critical_curves_from_obj(self, obj):
 
@@ -752,9 +746,6 @@ class Include(plotters.Include):
                 print(
                     "Critical curve could not be calculated due to an unphysical mass model"
                 )
-                return None
-        else:
-            return None
 
     def caustics_from_obj(self, obj):
 
@@ -775,10 +766,6 @@ class Include(plotters.Include):
                 print(
                     "Caustics could not be calculated due to an unphysical mass model"
                 )
-                return None
-        else:
-
-            return None
 
     def traced_grid_of_plane_from_fit_and_plane_index(self, fit, plane_index):
 
@@ -786,8 +773,6 @@ class Include(plotters.Include):
             return fit.tracer.traced_grids_of_planes_from_grid(grid=fit.grid)[
                 plane_index
             ]
-        else:
-            return None
 
     def positions_from_fit(self, fit):
         """Get the masks of the fit if the masks should be plotted on the fit.
@@ -801,8 +786,6 @@ class Include(plotters.Include):
         """
         if self.positions:
             return fit.masked_dataset.positions
-        else:
-            return None
 
     def positions_of_plane_from_fit_and_plane_index(self, fit, plane_index):
 
@@ -813,8 +796,6 @@ class Include(plotters.Include):
             return fit.tracer.traced_grids_of_planes_from_grid(grid=positions)[
                 plane_index
             ]
-        else:
-            return None
 
     def inversion_image_pixelization_grid_from_fit(self, fit):
 
@@ -824,8 +805,6 @@ class Include(plotters.Include):
                     return fit.tracer.sparse_image_plane_grids_of_planes_from_grid(
                         grid=fit.grid
                     )[-1]
-
-        return None
 
     def new_include_with_preloaded_critical_curves_and_caustics(
         self, preloaded_critical_curves, preloaded_caustics

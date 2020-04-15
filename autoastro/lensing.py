@@ -284,9 +284,10 @@ class LensingObject:
         return grids.Coordinates(radial_critical_curve)
 
     @property
-    @array_util.Memoizer()
     def critical_curves(self):
-        return [self.tangential_critical_curve, self.radial_critical_curve]
+        return grids.Coordinates(
+            [self.tangential_critical_curve, self.radial_critical_curve]
+        )
 
     @property
     def tangential_caustic(self):
@@ -317,9 +318,8 @@ class LensingObject:
         return radial_critical_curve - deflections_critical_curve
 
     @property
-    @array_util.Memoizer()
     def caustics(self):
-        return [self.tangential_caustic, self.radial_caustic]
+        return grids.Coordinates([self.tangential_caustic, self.radial_caustic])
 
     @property
     @array_util.Memoizer()
