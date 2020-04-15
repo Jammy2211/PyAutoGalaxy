@@ -123,6 +123,19 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return len(self.mass_profiles) > 0
 
     @property
+    def has_only_mass_sheets(self):
+
+        if not self.has_mass_profile:
+            return False
+
+        mass_sheet_bools = [
+            mass_profile.is_mass_sheet for mass_profile in self.mass_profiles
+        ]
+        total_mass_sheets = sum(mass_sheet_bools)
+
+        return len(self.mass_profiles) == total_mass_sheets
+
+    @property
     def has_profile(self):
         return len(self.mass_profiles) + len(self.light_profiles) > 0
 
@@ -135,7 +148,9 @@ class Galaxy(ModelObject, lensing.LensingObject):
         returns:
         
         [[(y0, x0)], [(y0, x0), (y1, x1)]]
-        
+
+        This is used for visualization, for example plotting the centres of all light profiles colored by their profile.
+
         NOTE: Currently, no light profiles can have more than one centre (it unlikely one ever will). The structure of 
         the output follows this convention to follow other methods in the *Galaxy* class that return profile 
         attributes."""
@@ -153,11 +168,13 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         [[(y0, x0)], [(y0, x0), (y1, x1)]]
 
+        This is used for visualization, for example plotting the centres of all mass profiles colored by their profile.
+
         NOTE: Currently, no mass profiles can have more than one centre (it unlikely one ever will). The structure of 
         the output follows this convention to follow other methods in the *Galaxy* class that return profile 
         attributes.
 
-        The centres of mass-sheets are omitted, as their centres are not relevent in terms of lensing calculations."""
+        The centres of mass-sheets are omitted, as their centres are not relevant to lensing calculations."""
         centres = [
             [mass_profile.centre]
             for mass_profile in self.mass_profiles
@@ -174,6 +191,10 @@ class Galaxy(ModelObject, lensing.LensingObject):
         this returns:
 
         [[axis_ratio_0], [axis_ratio_0, axis_ratio_1]]
+
+        This is used for visualization, for example plotting the axis-ratios of all mass profiles colored by their
+        profile.
+
         """
         return arrays.Values(
             [[mass_profile.axis_ratio] for mass_profile in self.mass_profiles]
@@ -187,6 +208,9 @@ class Galaxy(ModelObject, lensing.LensingObject):
         Fo example, if a galaxy has two mass profiles, the first with one phi and second with two phis this returns:
 
         [[phi_0], [phi_0, phi_1]]
+
+        This is used for visualization, for example plotting the phis of all mass profiles colored by their profile.
+
         """
         return arrays.Values(
             [[mass_profile.phi] for mass_profile in self.mass_profiles]

@@ -1455,6 +1455,12 @@ class TestMassProfiles:
                 [(4.0, 5.0)],
             ]
 
+            assert galaxy.light_profile_centres.in_list_1d == [
+                (0.0, 1.0),
+                (2.0, 3.0),
+                (4.0, 5.0),
+            ]
+
         def test__extracts_axis_ratio_correctly(self):
 
             galaxy = aast.Galaxy(redshift=0.5)
@@ -1831,6 +1837,34 @@ class TestBooleanProperties:
             aast.Galaxy(
                 redshift=0.5, mass_profile=aast.mp.MassProfile()
             ).has_mass_profile
+            is True
+        )
+
+    def test_has_only_mass_sheets(self):
+
+        assert aast.Galaxy(redshift=0.5).has_only_mass_sheets is False
+        assert (
+            aast.Galaxy(
+                redshift=0.5, light_profile=aast.lp.LightProfile()
+            ).has_only_mass_sheets
+            is False
+        )
+        assert (
+            aast.Galaxy(
+                redshift=0.5, mass_profile=aast.mp.MassProfile()
+            ).has_only_mass_sheets
+            is False
+        )
+        assert (
+            aast.Galaxy(
+                redshift=0.5,
+                mass_profile=aast.mp.MassProfile(),
+                sheet=aast.mp.MassSheet(),
+            ).has_only_mass_sheets
+            is False
+        )
+        assert (
+            aast.Galaxy(redshift=0.5, sheet=aast.mp.MassSheet()).has_only_mass_sheets
             is True
         )
 
