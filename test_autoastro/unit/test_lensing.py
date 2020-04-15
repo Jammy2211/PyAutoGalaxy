@@ -7,6 +7,7 @@ from pyquad import quad_grid
 from skimage import measure
 
 import autoarray as aa
+from autoarray.structures import grids
 import autoastro as aast
 import autofit as af
 from autoastro import lensing
@@ -66,13 +67,14 @@ class MockEllipticalIsothermal(
     def convergence_func(self, grid_radius):
         return self.einstein_radius_rescaled * (grid_radius ** 2) ** (-0.5)
 
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
-        The *reshape_returned_array* decorator reshapes the NumPy arrays the convergence is outputted on. See \
-        *aa.reshape_returned_array* for a description of the output.
+        The *grid_like_to_numpy* decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        *aa.grid_like_to_numpy* for a description of the output.
 
         Parameters
         ----------
@@ -81,11 +83,11 @@ class MockEllipticalIsothermal(
 
         """
 
-        covnergence_grid = np.zeros(grid.sub_shape_1d)
+        covnergence_grid = np.zeros(grid.shape[0])
 
         grid_eta = self.grid_to_elliptical_radii(grid)
 
-        for i in range(grid.sub_shape_1d):
+        for i in range(grid.shape[0]):
             covnergence_grid[i] = self.convergence_func(grid_eta[i])
 
         return covnergence_grid
@@ -100,6 +102,7 @@ class MockEllipticalIsothermal(
             / ((1 - (1 - axis_ratio ** 2) * u) ** 0.5)
         )
 
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -119,6 +122,7 @@ class MockEllipticalIsothermal(
 
         return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -194,6 +198,7 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
             centre=centre, axis_ratio=1.0, phi=0.0, einstein_radius=einstein_radius
         )
 
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -209,6 +214,7 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
         eta = self.grid_to_elliptical_radii(grid)
         return 2.0 * self.einstein_radius_rescaled * eta
 
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -223,7 +229,7 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
         """
         return self.grid_to_grid_cartesian(
             grid=grid,
-            radius=np.full(grid.sub_shape_1d, 2.0 * self.einstein_radius_rescaled),
+            radius=np.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled),
         )
 
 
@@ -244,7 +250,7 @@ class TestDeflectionsMagnitudes:
     def test__compare_sis_deflection_magnitudes_to_known_values(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
-        grid = aa.GridIrregular.manual_1d(grid=np.array([[1.0, 0.0], [0.0, 1.0]]))
+        grid = aa.Coordinates([(1.0, 0.0), (0.0, 1.0)])
 
         deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
 
@@ -252,7 +258,7 @@ class TestDeflectionsMagnitudes:
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = aa.GridIrregular.manual_1d(grid=np.array([[2.0, 0.0], [0.0, 2.0]]))
+        grid = aa.Coordinates([(2.0, 0.0), (0.0, 2.0)])
 
         deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
 
@@ -479,6 +485,7 @@ class TestBoundingBox:
     def test__convergence_bounding_box_for_single_mass_profile__extends_to_threshold(
         self
     ):
+
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
         assert sis.convergence_bounding_box(
@@ -645,7 +652,7 @@ class TestCriticalCurvesAndCaustics:
     def test__tangential_critical_curve_radii__spherical_isothermal(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        tangential_critical_curve = sis.critical_curves[0]
+        tangential_critical_curve = np.asarray(sis.critical_curves.in_list[0])
 
         x_critical_tangential, y_critical_tangential = (
             tangential_critical_curve[:, 1],
@@ -659,7 +666,7 @@ class TestCriticalCurvesAndCaustics:
     def test__tangential_critical_curve_centres__spherical_isothermal(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        tangential_critical_curve = sis.critical_curves[0]
+        tangential_critical_curve = np.asarray(sis.critical_curves.in_list[0])
 
         y_centre = np.mean(tangential_critical_curve[:, 0])
         x_centre = np.mean(tangential_critical_curve[:, 1])
@@ -669,7 +676,7 @@ class TestCriticalCurvesAndCaustics:
 
         sis = MockSphericalIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        tangential_critical_curve = sis.critical_curves[0]
+        tangential_critical_curve = np.asarray(sis.critical_curves.in_list[0])
 
         y_centre = np.mean(tangential_critical_curve[:, 0])
         x_centre = np.mean(tangential_critical_curve[:, 1])
@@ -680,7 +687,7 @@ class TestCriticalCurvesAndCaustics:
     def test__radial_critical_curve_centres__spherical_isothermal(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        radial_critical_curve = sis.critical_curves[1]
+        radial_critical_curve = np.asarray(sis.critical_curves.in_list[1])
 
         y_centre = np.mean(radial_critical_curve[:, 0])
         x_centre = np.mean(radial_critical_curve[:, 1])
@@ -690,7 +697,7 @@ class TestCriticalCurvesAndCaustics:
 
         sis = MockSphericalIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        radial_critical_curve = sis.critical_curves[1]
+        radial_critical_curve = np.asarray(sis.critical_curves.in_list[1])
 
         y_centre = np.mean(radial_critical_curve[:, 0])
         x_centre = np.mean(radial_critical_curve[:, 1])
@@ -701,7 +708,7 @@ class TestCriticalCurvesAndCaustics:
     def test__tangential_caustic_centres__spherical_isothermal(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        tangential_caustic = sis.caustics[0]
+        tangential_caustic = np.asarray(sis.caustics.in_list[0])
 
         y_centre = np.mean(tangential_caustic[:, 0])
         x_centre = np.mean(tangential_caustic[:, 1])
@@ -711,7 +718,7 @@ class TestCriticalCurvesAndCaustics:
 
         sis = MockSphericalIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        tangential_caustic = sis.caustics[0]
+        tangential_caustic = np.asarray(sis.caustics.in_list[0])
 
         y_centre = np.mean(tangential_caustic[:, 0])
         x_centre = np.mean(tangential_caustic[:, 1])
@@ -722,7 +729,7 @@ class TestCriticalCurvesAndCaustics:
     def test__radial_caustics_radii__spherical_isothermal(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        caustic_radial = sis.caustics[1]
+        caustic_radial = np.asarray(sis.caustics.in_list[1])
 
         x_caustic_radial, y_caustic_radial = (
             caustic_radial[:, 1],
@@ -736,7 +743,7 @@ class TestCriticalCurvesAndCaustics:
     def test__radial_caustic_centres__spherical_isothermal(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        radial_caustic = sis.caustics[1]
+        radial_caustic = np.asarray(sis.caustics.in_list[1])
 
         y_centre = np.mean(radial_caustic[:, 0])
         x_centre = np.mean(radial_caustic[:, 1])
@@ -744,7 +751,7 @@ class TestCriticalCurvesAndCaustics:
         assert -0.2 < y_centre < 0.2
         assert -0.35 < x_centre < 0.35
 
-        radial_caustic = sis.caustics[1]
+        radial_caustic = np.asarray(sis.caustics.in_list[1])
 
         y_centre = np.mean(radial_caustic[:, 0])
         x_centre = np.mean(radial_caustic[:, 1])
@@ -754,7 +761,7 @@ class TestCriticalCurvesAndCaustics:
 
         sis = MockSphericalIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        radial_caustic = sis.caustics[1]
+        radial_caustic = np.asarray(sis.caustics.in_list[1])
 
         y_centre = np.mean(radial_caustic[:, 0])
         x_centre = np.mean(radial_caustic[:, 1])

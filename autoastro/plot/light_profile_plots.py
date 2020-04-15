@@ -14,7 +14,7 @@ def profile_image(light_profile, grid, positions=None, include=None, plotter=Non
     -----------
     light_profile : model.profiles.light_profiles.LightProfile
         The light profile whose image are plotted.
-    grid : ndarray or hyper_galaxies.arrays.grid_stacks.Grid
+    grid : grid_like
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     plotter.plot_array(

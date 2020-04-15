@@ -13,8 +13,8 @@ def transform_grid(func):
 
     Parameters
     ----------
-    func : (profiles, *args, **kwargs) -> Object
-        A function that requires transformed coordinates
+    func : (profile, grid *args, **kwargs) -> Object
+        A function where the input grid is the grid whose coordinates are transformed.
 
     Returns
     -------
@@ -28,15 +28,13 @@ def transform_grid(func):
         Parameters
         ----------
         profile : GeometryProfile
-            The profiles that owns the function
-        grid : ndarray
-            PlaneCoordinates in either cartesian or profiles coordinate system
-        args
-        kwargs
+            The profiles that owns the function.
+        grid : grid_like
+            The (y, x) coordinates in the original reference frame of the grid.
 
         Returns
         -------
-            A value or coordinate in the same coordinate system as those passed in.
+            A grid_like object whose coordinates may be transformed.
         """
 
         if not isinstance(grid, TransformedGrid):
@@ -47,12 +45,7 @@ def transform_grid(func):
                 **kwargs,
             )
 
-            if len(result.shape) == 1:
-                return grid.mapping.array_stored_1d_from_sub_array_1d(
-                    sub_array_1d=result
-                )
-            else:
-                return grid.mapping.grid_stored_1d_from_sub_grid_1d(sub_grid_1d=result)
+            return result
 
         else:
             return func(profile, grid, *args, **kwargs)
@@ -113,14 +106,12 @@ def move_grid_to_radial_minimum(func):
         ----------
         profile : SphericalProfile
             The profiles that owns the function
-        grid : ndarray
-            PlaneCoordinates in either cartesian or profiles coordinate system
-        args
-        kwargs
+        grid : grid_like
+            The (y, x) coordinates which are to be radially moved from (0.0, 0.0).
 
         Returns
         -------
-            A value or coordinate in the same coordinate system as those passed in.
+            The grid_like object whose coordinates are radially moved from (0.0, 0.0).
         """
         radial_minimum_config = autoconf.named.NamedConfig(
             f"{af.conf.instance.config_path}/radial_minimum.ini"
@@ -128,20 +119,25 @@ def move_grid_to_radial_minimum(func):
         grid_radial_minimum = radial_minimum_config.get(
             "radial_minimum", profile.__class__.__name__, float
         )
+
         with np.errstate(all="ignore"):  # Division by zero fixed via isnan
+
             grid_radii = profile.grid_to_grid_radii(grid=grid)
+
             grid_radial_scale = np.where(
                 grid_radii < grid_radial_minimum, grid_radial_minimum / grid_radii, 1.0
             )
             grid = np.multiply(grid, grid_radial_scale[:, None])
         grid[np.isnan(grid)] = grid_radial_minimum
+
         return func(profile, grid, *args, **kwargs)
 
     return wrapper
 
 
-class TransformedGrid(grids.AbstractGrid):
-    pass
+class TransformedGrid(np.ndarray):
+    def __new__(cls, grid, *args, **kwargs):
+        return grid.view(cls)
 
 
 class GeometryProfile(dim.DimensionsProfile):
@@ -185,7 +181,7 @@ class SphericalProfile(GeometryProfile):
         """
         super(SphericalProfile, self).__init__(centre=centre)
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @transform_grid
     def grid_to_grid_radii(self, grid):
         """Convert a grid of (y, x) coordinates to a grid of their circular radii.
@@ -194,7 +190,7 @@ class SphericalProfile(GeometryProfile):
 
         Parameters
         ----------
-        grid : TransformedGrid(ndarray)
+        grid : grid_like
             The (y, x) coordinates in the reference frame of the profile.
         """
         return np.sqrt(np.add(np.square(grid[:, 0]), np.square(grid[:, 1])))
@@ -209,6 +205,7 @@ class SphericalProfile(GeometryProfile):
         """
         return np.cos(grid_thetas), np.sin(grid_thetas)
 
+    @grids.grid_like_to_numpy
     def grid_to_grid_cartesian(self, grid, radius):
         """
         Convert a grid of (y,x) coordinates with their specified circular radii to their original (y,x) Cartesian 
@@ -216,7 +213,7 @@ class SphericalProfile(GeometryProfile):
 
         Parameters
         ----------
-        grid : TransformedGrid(ndarray)
+        grid : grid_like
             The (y, x) coordinates in the reference frame of the profile.
         radius : ndarray
             The circular radius of each coordinate from the profile center.
@@ -225,25 +222,27 @@ class SphericalProfile(GeometryProfile):
         cos_theta, sin_theta = self.grid_angle_to_profile(grid_thetas=grid_thetas)
         return np.multiply(radius[:, None], np.vstack((sin_theta, cos_theta)).T)
 
+    @grids.grid_like_to_numpy
     def transform_grid_to_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates to the reference frame of the profile, including a translation to \
         its centre.
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
         """
         transformed = np.subtract(grid, self.centre)
-        return TransformedGrid(grid=transformed, mask=grid.mask)
+        return TransformedGrid(grid=transformed)
 
+    @grids.grid_like_to_numpy
     def transform_grid_from_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
         reference frame, including a translation from the profile's centre.
 
         Parameters
         ----------
-        grid : TransformedGrid(ndarray)
+        grid : grid_like
             The (y, x) coordinates in the reference frame of the profile.
         """
         transformed = np.add(grid, self.centre)
@@ -303,6 +302,7 @@ class EllipticalProfile(SphericalProfile):
         theta_coordinate_to_profile = np.add(grid_thetas, -self.phi_radians)
         return np.cos(theta_coordinate_to_profile), np.sin(theta_coordinate_to_profile)
 
+    @grids.grid_like_to_numpy
     def rotate_grid_from_profile(self, grid_elliptical):
         """ Rotate a grid of elliptical (y,x) coordinates from the reference frame of the profile back to the \
         unrotated coordinate grid reference frame (coordinates are not shifted back to their original centre).
@@ -312,7 +312,7 @@ class EllipticalProfile(SphericalProfile):
 
         Parameters
         ----------
-        grid_elliptical : TransformedGrid(ndarray)
+        grid_elliptical : grid_like
             The (y, x) coordinates in the reference frame of an elliptical profile.
         """
         y = np.add(
@@ -325,7 +325,7 @@ class EllipticalProfile(SphericalProfile):
         )
         return np.vstack((y, x)).T
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @transform_grid
     @move_grid_to_radial_minimum
     def grid_to_elliptical_radii(self, grid):
@@ -335,7 +335,7 @@ class EllipticalProfile(SphericalProfile):
 
         Parameters
         ----------
-        grid : TransformedGrid(ndarray)
+        grid : grid_like
             The (y, x) coordinates in the reference frame of the elliptical profile.
         """
         return np.sqrt(
@@ -344,7 +344,7 @@ class EllipticalProfile(SphericalProfile):
             )
         )
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @transform_grid
     @move_grid_to_radial_minimum
     def grid_to_eccentric_radii(self, grid):
@@ -355,20 +355,21 @@ class EllipticalProfile(SphericalProfile):
 
         Parameters
         ----------
-        grid : TransformedGrid(ndarray)
+        grid : grid_like
             The (y, x) coordinates in the reference frame of the elliptical profile.
         """
         return np.multiply(
             np.sqrt(self.axis_ratio), self.grid_to_elliptical_radii(grid)
         ).view(np.ndarray)
 
+    @grids.grid_like_to_numpy
     def transform_grid_to_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates to the reference frame of the profile, including a translation to \
         its centre and a rotation to it orientation.
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
         """
         if self.__class__.__name__.startswith("Spherical"):
@@ -385,15 +386,16 @@ class EllipticalProfile(SphericalProfile):
                 radius * np.cos(theta_coordinate_to_profile),
             )
         ).T
-        return TransformedGrid(grid=transformed, mask=grid.mask)
+        return TransformedGrid(grid=transformed)
 
+    @grids.grid_like_to_numpy
     def transform_grid_from_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
         reference frame, including a rotation to its original orientation and a translation from the profile's centre.
 
         Parameters
         ----------
-        grid : TransformedGrid(ndarray)
+        grid : grid_like
             The (y, x) coordinates in the reference frame of the profile.
         """
         if self.__class__.__name__.startswith("Spherical"):

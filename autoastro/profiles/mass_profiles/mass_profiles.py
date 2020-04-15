@@ -4,6 +4,7 @@ from scipy.optimize import root_scalar
 from astropy import cosmology as cosmo
 
 import autofit as af
+from autoarray.structures import grids
 from autoastro.util import cosmology_util
 from autoastro import lensing
 from autoastro import dimensions as dim
@@ -76,7 +77,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
     @property
     def mass_profile_centres(self):
         if not self.is_mass_sheet:
-            return [self.centre]
+            return grids.Coordinates([self.centre])
         else:
             return []
 

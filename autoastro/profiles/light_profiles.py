@@ -9,8 +9,6 @@ from autoastro import dimensions as dim
 from autofit.tools import text_util
 from autoastro.profiles import geometry_profiles
 
-import inspect
-
 
 class LightProfile:
     """Mixin class that implements functions common to all light profiles"""
@@ -33,7 +31,7 @@ class LightProfile:
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
         Returns
         -------
@@ -96,10 +94,28 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
     @property
     def light_profile_centres(self):
-        return [self.centre]
+        return grids.Coordinates([self.centre])
 
     def blurred_profile_image_from_grid_and_psf(self, grid, psf, blurring_grid):
+        """Evaluate the light profile image on an input *Grid* of coordinates and then convolve it with a PSF.
 
+        The *Grid* may be masked, in which case values outside but near the edge of the mask will convolve light into
+        the mask. A blurring grid is therefore required, which evaluates the image on pixels on the mask edge such that
+        their light is blurred into it by the PSF.
+
+        The grid and blurring_grid must be a *Grid* objects so the evaluated image can be mapped to a uniform 2D array
+        and binned up for convolution. They therefore cannot be *Coordinates* objects.
+
+        Parameters
+        ----------
+        grid : Grid
+            The (y, x) coordinates in the original reference frame of the grid.
+        psf : aa.Kernel
+            The PSF the evaluated light profile image is convolved with.
+        blurring_grid : Grid
+            The (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
+
+        """
         profile_image = self.profile_image_from_grid(grid=grid)
 
         blurring_image = self.profile_image_from_grid(grid=blurring_grid)
@@ -112,7 +128,26 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
     def blurred_profile_image_from_grid_and_convolver(
         self, grid, convolver, blurring_grid
     ):
+        """Evaluate the light profile image on an input *Grid* of coordinates and then convolve it with a PSF using a
+        *Convolver* object.
 
+        The *Grid* may be masked, in which case values outside but near the edge of the mask will convolve light into
+        the mask. A blurring grid is therefore required, which evaluates the image on pixels on the mask edge such that
+        their light is blurred into it by the Convolver.
+
+        The grid and blurring_grid must be a *Grid* objects so the evaluated image can be mapped to a uniform 2D array
+        and binned up for convolution. They therefore cannot be *Coordinates* objects.
+
+        Parameters
+        ----------
+        grid : Grid
+            The (y, x) coordinates in the original reference frame of the grid.
+        Convolver : aa.Convolver
+            The Convolver object used to blur the PSF.
+        blurring_grid : Grid
+            The (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
+
+        """
         profile_image = self.profile_image_from_grid(grid=grid)
 
         blurring_image = self.profile_image_from_grid(grid=blurring_grid)
@@ -250,7 +285,7 @@ class EllipticalGaussian(EllipticalLightProfile):
         intensity : float
             Overall intensity normalisation of the light profiles (electrons per second).
         sigma : float
-            The sigma value of the Gaussian.
+            The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
         super(EllipticalGaussian, self).__init__(
             centre=centre, axis_ratio=axis_ratio, phi=phi, intensity=intensity
@@ -270,7 +305,7 @@ class EllipticalGaussian(EllipticalLightProfile):
             np.exp(-0.5 * np.square(np.divide(grid_radii, self.sigma))),
         )
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def profile_image_from_grid(self, grid, grid_radial_minimum=None):
@@ -281,7 +316,7 @@ class EllipticalGaussian(EllipticalLightProfile):
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
         """
         return self.profile_image_from_grid_radii(self.grid_to_elliptical_radii(grid))
@@ -304,7 +339,7 @@ class SphericalGaussian(EllipticalGaussian):
         intensity : float_
             Overall intensity normalisation of the light profiles (electrons per second).
         sigma : float
-            The sigma value of the Gaussian.
+            The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
         super(SphericalGaussian, self).__init__(
             centre=centre, axis_ratio=1.0, phi=0.0, intensity=intensity, sigma=sigma
@@ -461,7 +496,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
             ),
         )
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def profile_image_from_grid(self, grid, grid_radial_minimum=None):
@@ -471,7 +506,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
         """
         return self.profile_image_from_grid_radii(self.grid_to_eccentric_radii(grid))

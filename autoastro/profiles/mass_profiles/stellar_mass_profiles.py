@@ -91,7 +91,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
             except RuntimeWarning:
                 return self.deflections_from_grid_via_integrator(grid=grid)
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @grids.grid_interpolate
     @geometry_profiles.cache
     @geometry_profiles.transform_grid
@@ -122,7 +122,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
             )
         )
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @grids.grid_interpolate
     @geometry_profiles.cache
     @geometry_profiles.transform_grid
@@ -173,7 +173,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
             (1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5)
         )
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -250,7 +250,7 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
         self.effective_radius = effective_radius
         self.sersic_index = sersic_index
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -267,10 +267,10 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
     def convergence_func(self, grid_radius):
         return self.mass_to_light_ratio * self.intensity_at_radius(grid_radius)
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     def potential_from_grid(self, grid):
         return arrays.Array.manual_1d(
-            array=np.zeros(shape=grid.sub_shape_1d), shape_2d=grid.sub_shape_2d
+            array=np.zeros(shape=grid.shape[0]), shape_2d=grid.sub_shape_2d
         )
 
     @property
@@ -333,7 +333,7 @@ class EllipticalSersic(AbstractEllipticalSersic):
             * (((eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
         ) / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @grids.grid_interpolate
     @geometry_profiles.cache
     @geometry_profiles.transform_grid
@@ -617,7 +617,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         )
         self.mass_to_light_gradient = mass_to_light_gradient
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @geometry_profiles.transform_grid
     @geometry_profiles.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -631,7 +631,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         """
         return self.convergence_func(self.grid_to_eccentric_radii(grid))
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     @grids.grid_interpolate
     @geometry_profiles.cache
     @geometry_profiles.transform_grid

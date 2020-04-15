@@ -214,6 +214,6 @@ def make_include_all():
         inversion_grid=True,
         inversion_border=True,
         inversion_image_pixelization_grid=True,
-        preloaded_critical_curves=[(1.0, 1.0), (2.0, 2.0)],
-        preload_caustics=[(1.0, 1.0), (2.0, 2.0)],
+        preloaded_critical_curves=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
+        preload_caustics=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
     )

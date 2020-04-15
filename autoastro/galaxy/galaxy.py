@@ -9,7 +9,7 @@ from autoastro import exc
 from autoastro import dimensions as dim
 from autoastro import lensing
 from autofit.tools import text_util
-from autoarray.structures import grids
+from autoarray.structures import arrays, grids
 from autoarray.operators.inversion import pixelizations as pix
 from autoastro.profiles import light_profiles as lp
 from autoastro.profiles import mass_profiles as mp
@@ -123,29 +123,98 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return len(self.mass_profiles) > 0
 
     @property
+    def has_only_mass_sheets(self):
+
+        if not self.has_mass_profile:
+            return False
+
+        mass_sheet_bools = [
+            mass_profile.is_mass_sheet for mass_profile in self.mass_profiles
+        ]
+        total_mass_sheets = sum(mass_sheet_bools)
+
+        return len(self.mass_profiles) == total_mass_sheets
+
+    @property
     def has_profile(self):
         return len(self.mass_profiles) + len(self.light_profiles) > 0
 
     @property
     def light_profile_centres(self):
-        return [light_profile.centre for light_profile in self.light_profiles]
+        """Returns the light profile centres of the galaxy as a *Coordinates* object, which structures the centres
+        in lists according to which light profile they come from. 
+        
+        Fo example, if a galaxy has two light profiles, the first with one centre and second with two centres this 
+        returns:
+        
+        [[(y0, x0)], [(y0, x0), (y1, x1)]]
+
+        This is used for visualization, for example plotting the centres of all light profiles colored by their profile.
+
+        NOTE: Currently, no light profiles can have more than one centre (it unlikely one ever will). The structure of 
+        the output follows this convention to follow other methods in the *Galaxy* class that return profile 
+        attributes."""
+        return grids.Coordinates(
+            [[light_profile.centre] for light_profile in self.light_profiles]
+        )
 
     @property
     def mass_profile_centres(self):
+        """Returns the mass profile centres of the galaxy as a *Coordinates* object, which structures the centres
+        in lists according to which mass profile they come from. 
+
+        Fo example, if a galaxy has two mass profiles, the first with one centre and second with two centres this 
+        returns:
+
+        [[(y0, x0)], [(y0, x0), (y1, x1)]]
+
+        This is used for visualization, for example plotting the centres of all mass profiles colored by their profile.
+
+        NOTE: Currently, no mass profiles can have more than one centre (it unlikely one ever will). The structure of 
+        the output follows this convention to follow other methods in the *Galaxy* class that return profile 
+        attributes.
+
+        The centres of mass-sheets are omitted, as their centres are not relevant to lensing calculations."""
         centres = [
-            mass_profile.centre
+            [mass_profile.centre]
             for mass_profile in self.mass_profiles
             if not mass_profile.is_mass_sheet
         ]
-        return list(filter(None, centres))
+        return grids.Coordinates(list(filter(None, centres)))
 
     @property
     def mass_profile_axis_ratios(self):
-        return [mass_profile.axis_ratio for mass_profile in self.mass_profiles]
+        """Returns the mass profile axis-ratios of the galaxy as a *Values* object, which structures the axis-ratios
+        in lists according to which mass profile they come from. 
+
+        Fo example, if a galaxy has two mass profiles, the first with one axis-ratio and second with two axis-ratios
+        this returns:
+
+        [[axis_ratio_0], [axis_ratio_0, axis_ratio_1]]
+
+        This is used for visualization, for example plotting the axis-ratios of all mass profiles colored by their
+        profile.
+
+        """
+        return arrays.Values(
+            [[mass_profile.axis_ratio] for mass_profile in self.mass_profiles]
+        )
 
     @property
     def mass_profile_phis(self):
-        return [mass_profile.phi for mass_profile in self.mass_profiles]
+        """Returns the mass profile phis of the galaxy as a *Values* object, which structures the phis in lists
+        according to which mass profile they come from.
+
+        Fo example, if a galaxy has two mass profiles, the first with one phi and second with two phis this returns:
+
+        [[phi_0], [phi_0, phi_1]]
+
+        This is used for visualization, for example plotting the phis of all mass profiles colored by their profile.
+
+        """
+        return arrays.Values(
+            [[mass_profile.phi] for mass_profile in self.mass_profiles]
+        )
 
     @property
     def uses_cluster_inversion(self):
@@ -330,7 +399,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         return self.__class__(**new_dict)
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     def profile_image_from_grid(self, grid):
         """Calculate the summed image of all of the galaxy's light profiles using a grid of Cartesian (y,x) \
         coordinates.
@@ -341,21 +410,15 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
 
         """
         if self.has_light_profile:
-            profile_image = sum(
+            return sum(
                 map(lambda p: p.profile_image_from_grid(grid=grid), self.light_profiles)
             )
-            return grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=profile_image
-            )
-        else:
-            return grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=np.zeros((grid.sub_shape_1d,))
-            )
+        return np.zeros((grid.shape[0],))
 
     def blurred_profile_image_from_grid_and_psf(self, grid, psf, blurring_grid=None):
 
@@ -423,37 +486,30 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return None
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     def convergence_from_grid(self, grid):
-        """Compute the summed convergence of the galaxy's mass profiles using a grid \
-        of Cartesian (y,x) coordinates.
+        """Compute the summed convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
         If the galaxy has no mass profiles, a grid of zeros is returned.
         
         See *profiles.mass_profiles* module for details of how this is performed.
 
-        The *reshape_returned_array* decorator reshapes the NumPy arrays the convergence is outputted on. See \
-        *aa.reshape_returned_array* for a description of the output.
+        The *grid_like_to_numpy* decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        *aa.grid_like_to_numpy* for a description of the output.
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
 
         """
         if self.has_mass_profile:
-            convergence = sum(
+            return sum(
                 map(lambda p: p.convergence_from_grid(grid=grid), self.mass_profiles)
             )
-            return grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=convergence
-            )
-        else:
-            return grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=np.zeros((grid.sub_shape_1d,))
-            )
+        return np.zeros((grid.shape[0],))
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     def potential_from_grid(self, grid):
         """Compute the summed gravitational potential of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
@@ -462,28 +518,22 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         See *profiles.mass_profiles* module for details of how this is performed.
 
-                The *reshape_returned_array* decorator reshapes the NumPy arrays the convergence is outputted on. See \
-        *aa.reshape_returned_array* for a description of the output.
+        The *grid_like_to_numpy* decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        *aa.grid_like_to_numpy* for a description of the output.
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
 
         """
         if self.has_mass_profile:
-            potential = sum(
+            return sum(
                 map(lambda p: p.potential_from_grid(grid=grid), self.mass_profiles)
             )
-            return grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=potential
-            )
-        else:
-            return grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=np.zeros((grid.sub_shape_1d,))
-            )
+        return np.zeros((grid.shape[0],))
 
-    @grids.convert_coordinates_to_grid
+    @grids.grid_like_to_numpy
     def deflections_from_grid(self, grid):
         """Compute the summed (y,x) deflection angles of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
@@ -494,17 +544,14 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        grid : ndarray
+        grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
         """
         if self.has_mass_profile:
-            deflections = sum(
+            return sum(
                 map(lambda p: p.deflections_from_grid(grid=grid), self.mass_profiles)
             )
-            return grid.mapping.grid_stored_1d_from_sub_grid_1d(sub_grid_1d=deflections)
-        return grid.mapping.grid_stored_1d_from_sub_grid_1d(
-            sub_grid_1d=np.full((grid.sub_shape_1d, 2), 0.0)
-        )
+        return np.zeros((grid.shape[0], 2))
 
     def mass_within_circle_in_units(
         self,
