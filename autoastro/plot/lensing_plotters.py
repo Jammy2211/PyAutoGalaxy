@@ -109,23 +109,25 @@ class LensingPlotter(plotters.AbstractPlotter):
     ):
 
         if light_profile_centres is not None:
-            self.light_profile_centres_scatterer.scatter_grids(
-                grids=light_profile_centres
+            self.light_profile_centres_scatterer.scatter_coordinates(
+                coordinates=light_profile_centres
             )
 
         if mass_profile_centres is not None:
-            self.mass_profile_centres_scatterer.scatter_grids(
-                grids=mass_profile_centres
+            self.mass_profile_centres_scatterer.scatter_coordinates(
+                coordinates=mass_profile_centres
             )
 
         if multiple_images is not None:
-            self.multiple_images_scatterer.scatter_grids(grids=multiple_images)
+            self.multiple_images_scatterer.scatter_coordinates(
+                coordinates=multiple_images
+            )
 
         if critical_curves is not None:
-            self.critical_curves_liner.draw_grids(grids=critical_curves)
+            self.critical_curves_liner.draw_coordinates(coordinates=critical_curves)
 
         if caustics is not None:
-            self.caustics_liner.draw_grids(grids=caustics)
+            self.caustics_liner.draw_coordinates(coordinates=caustics)
 
     def plot_array(
         self,
@@ -725,38 +727,10 @@ class Include(plotters.Include):
         else:
             return None
 
-    def light_profile_centres_of_galaxies_from_obj(self, obj):
-
-        if self.light_profile_centres:
-            return obj.light_profile_centres
-        else:
-            return None
-
-    def light_profile_centres_of_planes_from_obj(self, obj):
-
-        if self.light_profile_centres:
-            return obj.light_profile_centres_of_planes
-        else:
-            return None
-
     def mass_profile_centres_from_obj(self, obj):
 
         if self.mass_profile_centres:
             return obj.mass_profile_centres
-        else:
-            return None
-
-    def mass_profile_centres_of_galaxies_from_obj(self, obj):
-
-        if self.mass_profile_centres:
-            return obj.mass_profile_centres_of_galaxies
-        else:
-            return None
-
-    def mass_profile_centres_of_planes_from_obj(self, obj):
-
-        if self.mass_profile_centres:
-            return obj.mass_profile_centres_of_planes
         else:
             return None
 
