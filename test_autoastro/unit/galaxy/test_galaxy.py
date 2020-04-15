@@ -1455,12 +1455,6 @@ class TestMassProfiles:
                 [(4.0, 5.0)],
             ]
 
-            assert galaxy.light_profile_centres.in_list_1d == [
-                (0.0, 1.0),
-                (2.0, 3.0),
-                (4.0, 5.0),
-            ]
-
         def test__extracts_axis_ratio_correctly(self):
 
             galaxy = aast.Galaxy(redshift=0.5)
