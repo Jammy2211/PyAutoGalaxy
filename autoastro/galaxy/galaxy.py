@@ -55,7 +55,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         mass_profiles: [mp.MassProfile]
             A list of the galaxy's mass profiles.
         hyper_galaxy : HyperGalaxy
-            The hyper_galaxies-parameters of the hyper_galaxies-galaxy, which is used for performing a hyper_galaxies-analysis on the noise-map.
+            The hyper_galaxies-parameters of the hyper_galaxies-galaxy, which is used for performing a hyper_galaxies-analysis on the noise map.
             
         Attributes
         ----------
@@ -807,7 +807,7 @@ class HyperGalaxy:
     _ids = count()
 
     def __init__(self, contribution_factor=0.0, noise_factor=0.0, noise_power=1.0):
-        """ If a *Galaxy* is given a *HyperGalaxy* as an attribute, the noise-map in \
+        """ If a *Galaxy* is given a *HyperGalaxy* as an attribute, the noise map in \
         the regions of the image that the galaxy is located will be hyper, to prevent \
         over-fitting of the galaxy.
         
@@ -818,7 +818,7 @@ class HyperGalaxy:
         unblurred_image_1d of the galaxy's light from a previous analysis phase.
          
         The *HyperGalaxy* class contains the hyper_galaxies-parameters which are associated \
-        with this galaxy for scaling the noise-map.
+        with this galaxy for scaling the noise map.
         
         Parameters
         -----------
@@ -826,11 +826,11 @@ class HyperGalaxy:
             Factor that adjusts how much of the galaxy's light is attributed to the
             contribution map.
         noise_factor : float
-            Factor by which the noise-map is increased in the regions of the galaxy's
+            Factor by which the noise map is increased in the regions of the galaxy's
             contribution map.
         noise_power : float
             The power to which the contribution map is raised when scaling the
-            noise-map.
+            noise map.
         """
         self.contribution_factor = contribution_factor
         self.noise_factor = noise_factor
@@ -873,7 +873,7 @@ class HyperGalaxy:
         )
 
     def hyper_noise_map_from_contribution_map(self, noise_map, contribution_map):
-        """Compute a hyper galaxy hyper_galaxies noise-map from a baseline noise-map.
+        """Compute a hyper galaxy hyper_galaxies noise map from a baseline noise map.
 
         This uses the galaxy contribution map and the *noise_factor* and *noise_power*
         hyper_galaxies-parameters.
@@ -881,7 +881,7 @@ class HyperGalaxy:
         Parameters
         -----------
         noise_map : ndarray
-            The observed noise-map (before scaling).
+            The observed noise map (before scaling).
         contribution_map : ndarray
             The galaxy contribution map.
         """

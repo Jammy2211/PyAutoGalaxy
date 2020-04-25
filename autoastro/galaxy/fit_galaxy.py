@@ -39,4 +39,4 @@ class FitGalaxy(fit.FitDataset):
 
     @property
     def figure_of_merit(self):
-        return self.likelihood
+        return self.log_likelihood

@@ -224,6 +224,7 @@ class TestLensingPlotterPlots:
             mask=mask,
             grid=grid,
             positions=aa.Coordinates([(-1.0, -1.0)]),
+            array_overlay=array,
             light_profile_centres=aa.Coordinates([(1.0, 1.0)]),
             mass_profile_centres=aa.Coordinates([(1.0, 1.0)]),
             multiple_images=aa.Coordinates([(1.0, 1.0)]),

@@ -41,7 +41,7 @@ class TestLikelihood:
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.model_galaxies == [g0]
-        assert fit.likelihood == -0.5 * np.log(2 * np.pi * 1.0)
+        assert fit.log_likelihood == -0.5 * np.log(2 * np.pi * 1.0)
 
         masked_galaxy_dataset = aast.MaskedGalaxyDataset(
             galaxy_data=galaxy_data, mask=mask, use_convergence=True
@@ -50,7 +50,7 @@ class TestLikelihood:
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.model_galaxies == [g0]
-        assert fit.likelihood == -0.5 * np.log(2 * np.pi * 1.0)
+        assert fit.log_likelihood == -0.5 * np.log(2 * np.pi * 1.0)
 
         masked_galaxy_dataset = aast.MaskedGalaxyDataset(
             galaxy_data=galaxy_data, mask=mask, use_potential=True
@@ -59,7 +59,7 @@ class TestLikelihood:
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.model_galaxies == [g0]
-        assert fit.likelihood == -0.5 * np.log(2 * np.pi * 1.0)
+        assert fit.log_likelihood == -0.5 * np.log(2 * np.pi * 1.0)
 
         masked_galaxy_dataset = aast.MaskedGalaxyDataset(
             galaxy_data=galaxy_data, mask=mask, use_deflections_y=True
@@ -68,7 +68,7 @@ class TestLikelihood:
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.model_galaxies == [g0]
-        assert fit.likelihood == -0.5 * np.log(2 * np.pi * 1.0)
+        assert fit.log_likelihood == -0.5 * np.log(2 * np.pi * 1.0)
 
         masked_galaxy_dataset = aast.MaskedGalaxyDataset(
             galaxy_data=galaxy_data, mask=mask, use_deflections_x=True
@@ -77,7 +77,7 @@ class TestLikelihood:
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.model_galaxies == [g0]
-        assert fit.likelihood == -0.5 * np.log(2 * np.pi * 1.0)
+        assert fit.log_likelihood == -0.5 * np.log(2 * np.pi * 1.0)
 
     def test__1x2_image__noise_not_1__alls_correct(self):
         image = aa.Array.full(fill_value=5.0, shape_2d=(3, 4), pixel_scales=1.0)
@@ -113,7 +113,7 @@ class TestLikelihood:
         assert fit.model_galaxies == [g0]
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
-        assert fit.likelihood == -0.5 * (
+        assert fit.log_likelihood == -0.5 * (
             (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
@@ -126,7 +126,7 @@ class TestLikelihood:
         assert fit.model_galaxies == [g0]
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
-        assert fit.likelihood == -0.5 * (
+        assert fit.log_likelihood == -0.5 * (
             (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
@@ -139,7 +139,7 @@ class TestLikelihood:
         assert fit.model_galaxies == [g0]
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
-        assert fit.likelihood == -0.5 * (
+        assert fit.log_likelihood == -0.5 * (
             (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
@@ -151,7 +151,7 @@ class TestLikelihood:
         )
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
-        assert fit.likelihood == -0.5 * (
+        assert fit.log_likelihood == -0.5 * (
             (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
@@ -163,7 +163,7 @@ class TestLikelihood:
         )
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
-        assert fit.likelihood == -0.5 * (
+        assert fit.log_likelihood == -0.5 * (
             (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
@@ -206,11 +206,11 @@ class TestCompareToManual:
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        likelihood = aa.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+        log_likelihood = aa.util.fit.likelihood_from_chi_squared_and_noise_normalization(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
-        assert likelihood == pytest.approx(fit.likelihood, 1e-4)
+        assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
     def test__convergence(self, gal_data_7x7, sub_mask_7x7):
         masked_galaxy_dataset = aast.MaskedGalaxyDataset(
@@ -247,11 +247,11 @@ class TestCompareToManual:
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        likelihood = aa.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+        log_likelihood = aa.util.fit.likelihood_from_chi_squared_and_noise_normalization(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
-        assert likelihood == pytest.approx(fit.likelihood, 1e-4)
+        assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
     def test__potential(self, gal_data_7x7, sub_mask_7x7):
         masked_galaxy_dataset = aast.MaskedGalaxyDataset(
@@ -291,11 +291,11 @@ class TestCompareToManual:
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        likelihood = aa.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+        log_likelihood = aa.util.fit.likelihood_from_chi_squared_and_noise_normalization(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
-        assert likelihood == pytest.approx(fit.likelihood, 1e-4)
+        assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
     def test__deflections_y(self, gal_data_7x7, sub_mask_7x7):
 
@@ -338,11 +338,11 @@ class TestCompareToManual:
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        likelihood = aa.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+        log_likelihood = aa.util.fit.likelihood_from_chi_squared_and_noise_normalization(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
-        assert likelihood == pytest.approx(fit.likelihood, 1e-4)
+        assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
     def test__deflections_x(self, gal_data_7x7, sub_mask_7x7):
 
@@ -384,8 +384,8 @@ class TestCompareToManual:
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        likelihood = aa.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+        log_likelihood = aa.util.fit.likelihood_from_chi_squared_and_noise_normalization(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
-        assert likelihood == pytest.approx(fit.likelihood, 1e-4)
+        assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
