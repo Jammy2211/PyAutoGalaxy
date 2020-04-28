@@ -6,7 +6,7 @@ from scipy.integrate import quad
 from autoarray.structures import grids
 from autoastro.util import cosmology_util
 from autoastro import dimensions as dim
-from autofit.tools import text_util
+from autofit.text import formatter
 from autoastro.profiles import geometry_profiles
 
 
@@ -249,7 +249,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
             )
 
             summary += [
-                text_util.within_radius_label_value_and_unit_string(
+                formatter.within_radius_label_value_and_unit_string(
                     prefix=prefix + "luminosity",
                     radius=radius,
                     unit_length=unit_length,

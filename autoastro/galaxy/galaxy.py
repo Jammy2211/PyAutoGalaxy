@@ -8,7 +8,7 @@ from autoastro.util import cosmology_util
 from autoastro import exc
 from autoastro import dimensions as dim
 from autoastro import lensing
-from autofit.tools import text_util
+from autofit.text import formatter
 from autoarray.structures import arrays, grids
 from autoarray.operators.inversion import pixelizations as pix
 from autoastro.profiles import light_profiles as lp
@@ -641,7 +641,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             prefix_galaxy = ""
 
         summary += [
-            text_util.label_and_value_string(
+            formatter.label_and_value_string(
                 label=prefix_galaxy + "redshift",
                 value=self.redshift,
                 whitespace=whitespace,
@@ -698,7 +698,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
 
             summary += [
-                text_util.within_radius_label_value_and_unit_string(
+                formatter.within_radius_label_value_and_unit_string(
                     prefix=prefix + "luminosity",
                     radius=radius,
                     unit_length=unit_length,
@@ -745,7 +745,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         )
 
         summary += [
-            text_util.label_value_and_unit_string(
+            formatter.label_value_and_unit_string(
                 label=prefix + "einstein_radius",
                 value=einstein_radius,
                 unit=unit_length,
@@ -758,7 +758,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         )
 
         summary += [
-            text_util.label_value_and_unit_string(
+            formatter.label_value_and_unit_string(
                 label=prefix + "einstein_mass",
                 value=einstein_mass,
                 unit=unit_mass,
@@ -775,7 +775,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
 
             summary += [
-                text_util.within_radius_label_value_and_unit_string(
+                formatter.within_radius_label_value_and_unit_string(
                     prefix=prefix + "mass",
                     radius=radius,
                     unit_length=unit_length,

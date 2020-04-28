@@ -8,7 +8,7 @@ from autoarray.structures import grids
 from autoastro.util import cosmology_util
 from autoastro import lensing
 from autoastro import dimensions as dim
-from autofit.tools import text_util
+from autofit.text import formatter
 from autoastro.profiles import geometry_profiles
 
 
@@ -265,7 +265,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         )
 
         summary += [
-            text_util.label_value_and_unit_string(
+            formatter.label_value_and_unit_string(
                 label=prefix + "einstein_radius",
                 value=einstein_radius,
                 unit=unit_length,
@@ -281,7 +281,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         )
 
         summary += [
-            text_util.label_value_and_unit_string(
+            formatter.label_value_and_unit_string(
                 label=prefix + "einstein_mass",
                 value=einstein_mass,
                 unit=unit_mass,
@@ -299,7 +299,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
             )
 
             summary += [
-                text_util.within_radius_label_value_and_unit_string(
+                formatter.within_radius_label_value_and_unit_string(
                     prefix=prefix + "mass",
                     radius=radius,
                     unit_length=unit_length,

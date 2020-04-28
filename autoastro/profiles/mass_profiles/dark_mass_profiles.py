@@ -20,7 +20,7 @@ import autofit as af
 from autoastro.util import cosmology_util
 from autoarray import decorator_util
 from autoarray.structures import arrays, grids
-from autofit.tools import text_util
+from autofit.text import formatter
 from autoastro import dimensions as dim
 from autoastro.profiles import geometry_profiles
 from autoastro.profiles import mass_profiles as mp
@@ -497,7 +497,7 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            text_util.label_value_and_unit_string(
+            formatter.label_value_and_unit_string(
                 label=prefix + "rho_at_scale_radius",
                 value=rho_at_scale_radius,
                 unit=unit_mass + "/" + unit_length + "3",
@@ -515,7 +515,7 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            text_util.label_and_value_string(
+            formatter.label_and_value_string(
                 label=prefix + "delta_concentration",
                 value=delta_concentration,
                 whitespace=whitespace,
@@ -532,7 +532,7 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            text_util.label_and_value_string(
+            formatter.label_and_value_string(
                 label=prefix + "concentration",
                 value=concentration,
                 whitespace=whitespace,
@@ -549,7 +549,7 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            text_util.label_value_and_unit_string(
+            formatter.label_value_and_unit_string(
                 label=prefix + "radius_at_200x_cosmic_density",
                 value=radius_at_200,
                 unit=unit_length,
@@ -567,7 +567,7 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            text_util.label_value_and_unit_string(
+            formatter.label_value_and_unit_string(
                 label=prefix + "mass_at_200x_cosmic_density",
                 value=mass_at_200,
                 unit=unit_mass,
@@ -1048,7 +1048,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         )
 
         summary += [
-            text_util.label_value_and_unit_string(
+            formatter.label_value_and_unit_string(
                 label=prefix + "mass_at_truncation_radius",
                 value=mass_at_truncation_radius,
                 unit=unit_mass,
