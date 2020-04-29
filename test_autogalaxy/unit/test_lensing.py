@@ -178,9 +178,7 @@ class MockEllipticalIsothermal(
 class MockSphericalIsothermal(MockEllipticalIsothermal):
     @af.map_types
     def __init__(
-        self,
-        centre: ag.dim.Position = (0.0, 0.0),
-        einstein_radius: ag.dim.Length = 1.0,
+        self, centre: ag.dim.Position = (0.0, 0.0), einstein_radius: ag.dim.Length = 1.0
     ):
         """
         Abstract class for elliptical mass profiles.

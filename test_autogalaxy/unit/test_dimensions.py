@@ -484,10 +484,7 @@ class TestDimensionsProfile:
         ):
 
             profile_arcsec = MockDimensionsProfile(
-                position=(
-                    ag.dim.Length(1.0, "arcsec"),
-                    ag.dim.Length(2.0, "arcsec"),
-                ),
+                position=(ag.dim.Length(1.0, "arcsec"), ag.dim.Length(2.0, "arcsec")),
                 param_float=2.0,
                 length=ag.dim.Length(value=3.0, unit_length="arcsec"),
                 luminosity=ag.dim.Luminosity(value=4.0, unit_luminosity="eps"),
@@ -581,10 +578,7 @@ class TestDimensionsProfile:
         ):
 
             profile_arcsec = MockDimensionsProfile(
-                position=(
-                    ag.dim.Length(1.0, "arcsec"),
-                    ag.dim.Length(2.0, "arcsec"),
-                )
+                position=(ag.dim.Length(1.0, "arcsec"), ag.dim.Length(2.0, "arcsec"))
             )
 
             with pytest.raises(exc.UnitsException):
@@ -602,10 +596,7 @@ class TestDimensionsProfile:
         ):
 
             profile_eps = MockDimensionsProfile(
-                position=(
-                    ag.dim.Length(1.0, "arcsec"),
-                    ag.dim.Length(2.0, "arcsec"),
-                ),
+                position=(ag.dim.Length(1.0, "arcsec"), ag.dim.Length(2.0, "arcsec")),
                 param_float=2.0,
                 length=ag.dim.Length(value=3.0, unit_length="arcsec"),
                 luminosity=ag.dim.Luminosity(value=4.0, unit_luminosity="eps"),
@@ -701,10 +692,7 @@ class TestDimensionsProfile:
         ):
 
             profile_eps = MockDimensionsProfile(
-                position=(
-                    ag.dim.Length(1.0, "arcsec"),
-                    ag.dim.Length(2.0, "arcsec"),
-                ),
+                position=(ag.dim.Length(1.0, "arcsec"), ag.dim.Length(2.0, "arcsec")),
                 param_float=2.0,
                 length=ag.dim.Length(value=3.0, unit_length="arcsec"),
                 luminosity=ag.dim.Luminosity(value=4.0, unit_luminosity="eps"),
@@ -729,10 +717,7 @@ class TestDimensionsProfile:
         ):
 
             profile_angular = MockDimensionsProfile(
-                position=(
-                    ag.dim.Length(1.0, "arcsec"),
-                    ag.dim.Length(2.0, "arcsec"),
-                ),
+                position=(ag.dim.Length(1.0, "arcsec"), ag.dim.Length(2.0, "arcsec")),
                 param_float=2.0,
                 length=ag.dim.Length(value=3.0, unit_length="arcsec"),
                 luminosity=ag.dim.Luminosity(value=4.0, unit_luminosity="eps"),
@@ -828,10 +813,7 @@ class TestDimensionsProfile:
         ):
 
             profile_angular = MockDimensionsProfile(
-                position=(
-                    ag.dim.Length(1.0, "arcsec"),
-                    ag.dim.Length(2.0, "arcsec"),
-                ),
+                position=(ag.dim.Length(1.0, "arcsec"), ag.dim.Length(2.0, "arcsec")),
                 param_float=2.0,
                 length=ag.dim.Length(value=3.0, unit_length="arcsec"),
                 luminosity=ag.dim.Luminosity(value=4.0, unit_luminosity="eps"),

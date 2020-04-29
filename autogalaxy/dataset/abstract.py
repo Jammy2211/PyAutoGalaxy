@@ -28,7 +28,7 @@ class AbstractLensMasked:
             if not positions_fit.maximum_separation_within_threshold(
                 self.positions_threshold
             ):
-                raise exc.RayTracingException
+                raise exc.PlaneException
 
     def check_inversion_pixels_are_below_limit_via_tracer(self, tracer):
 

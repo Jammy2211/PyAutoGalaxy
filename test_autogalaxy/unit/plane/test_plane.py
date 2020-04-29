@@ -6,7 +6,6 @@ from skimage import measure
 import os
 
 import autofit as af
-import autogalaxy as am
 import autogalaxy as ag
 from autogalaxy.plane import plane
 from autogalaxy import exc
@@ -672,21 +671,21 @@ class TestAbstractPlaneCosmology:
 
         assert (
             plane.arcsec_per_kpc
-            == am.util.cosmology.arcsec_per_kpc_from_redshift_and_cosmology(
+            == ag.util.cosmology.arcsec_per_kpc_from_redshift_and_cosmology(
                 redshift=0.1, cosmology=planck
             )
         )
 
         assert (
             plane.kpc_per_arcsec
-            == am.util.cosmology.kpc_per_arcsec_from_redshift_and_cosmology(
+            == ag.util.cosmology.kpc_per_arcsec_from_redshift_and_cosmology(
                 redshift=0.1, cosmology=planck
             )
         )
 
         assert plane.angular_diameter_distance_to_earth_in_units(
             unit_length="arcsec"
-        ) == am.util.cosmology.angular_diameter_distance_to_earth_from_redshift_and_cosmology(
+        ) == ag.util.cosmology.angular_diameter_distance_to_earth_from_redshift_and_cosmology(
             redshift=0.1, cosmology=planck, unit_length="arcsec"
         )
 
@@ -694,7 +693,7 @@ class TestAbstractPlaneCosmology:
 
         assert plane.angular_diameter_distance_to_earth_in_units(
             unit_length="kpc"
-        ) == am.util.cosmology.angular_diameter_distance_to_earth_from_redshift_and_cosmology(
+        ) == ag.util.cosmology.angular_diameter_distance_to_earth_from_redshift_and_cosmology(
             redshift=0.1, cosmology=planck, unit_length="kpc"
         )
 
@@ -702,21 +701,21 @@ class TestAbstractPlaneCosmology:
 
         assert (
             plane.arcsec_per_kpc
-            == am.util.cosmology.arcsec_per_kpc_from_redshift_and_cosmology(
+            == ag.util.cosmology.arcsec_per_kpc_from_redshift_and_cosmology(
                 redshift=1.0, cosmology=planck
             )
         )
 
         assert (
             plane.kpc_per_arcsec
-            == am.util.cosmology.kpc_per_arcsec_from_redshift_and_cosmology(
+            == ag.util.cosmology.kpc_per_arcsec_from_redshift_and_cosmology(
                 redshift=1.0, cosmology=planck
             )
         )
 
         assert plane.angular_diameter_distance_to_earth_in_units(
             unit_length="arcsec"
-        ) == am.util.cosmology.angular_diameter_distance_to_earth_from_redshift_and_cosmology(
+        ) == ag.util.cosmology.angular_diameter_distance_to_earth_from_redshift_and_cosmology(
             redshift=1.0, cosmology=planck, unit_length="arcsec"
         )
 
@@ -724,7 +723,7 @@ class TestAbstractPlaneCosmology:
 
         assert plane.angular_diameter_distance_to_earth_in_units(
             unit_length="kpc"
-        ) == am.util.cosmology.angular_diameter_distance_to_earth_from_redshift_and_cosmology(
+        ) == ag.util.cosmology.angular_diameter_distance_to_earth_from_redshift_and_cosmology(
             redshift=1.0, cosmology=planck, unit_length="kpc"
         )
 
@@ -732,7 +731,7 @@ class TestAbstractPlaneCosmology:
 
         assert plane.cosmic_average_density_in_units(
             unit_length="arcsec", unit_mass="solMass"
-        ) == am.util.cosmology.cosmic_average_density_from_redshift_and_cosmology(
+        ) == ag.util.cosmology.cosmic_average_density_from_redshift_and_cosmology(
             redshift=0.6, cosmology=planck, unit_length="arcsec", unit_mass="solMass"
         )
 
@@ -740,7 +739,7 @@ class TestAbstractPlaneCosmology:
 
         assert plane.cosmic_average_density_in_units(
             unit_length="kpc", unit_mass="solMass"
-        ) == am.util.cosmology.cosmic_average_density_from_redshift_and_cosmology(
+        ) == ag.util.cosmology.cosmic_average_density_from_redshift_and_cosmology(
             redshift=0.6, cosmology=planck, unit_length="kpc", unit_mass="solMass"
         )
 
@@ -902,6 +901,41 @@ class TestAbstractPlaneLensing:
             assert profile_image.shape_2d == (7, 7)
             assert (profile_image[0] == 0.0).all()
             assert (profile_image[1] == 0.0).all()
+
+        def test__x1_plane__padded_image__compare_to_galaxy_images_using_padded_grid_stack(
+            self, sub_grid_7x7
+        ):
+
+            padded_grid = sub_grid_7x7.padded_grid_from_kernel_shape(
+                kernel_shape_2d=(3, 3)
+            )
+
+            g0 = ag.Galaxy(
+                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
+            )
+            g1 = ag.Galaxy(
+                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
+            )
+            g2 = ag.Galaxy(
+                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=3.0)
+            )
+
+            padded_g0_image = g0.profile_image_from_grid(grid=padded_grid)
+
+            padded_g1_image = g1.profile_image_from_grid(grid=padded_grid)
+
+            padded_g2_image = g2.profile_image_from_grid(grid=padded_grid)
+
+            plane = ag.Plane(galaxies=[g0, g1, g2])
+
+            padded_plane_profile_image = plane.padded_profile_image_from_grid_and_psf_shape(
+                grid=sub_grid_7x7, psf_shape_2d=(3, 3)
+            )
+
+            assert padded_plane_profile_image.shape_2d == (9, 9)
+            assert padded_plane_profile_image == pytest.approx(
+                padded_g0_image + padded_g1_image + padded_g2_image, 1.0e-4
+            )
 
     class TestConvergence:
         def test__convergence_same_as_multiple_galaxies__include_reshape_mapping(
@@ -1280,7 +1314,7 @@ class TestAbstractPlaneLensing:
                 redshift=0.5, luminosity=ag.lp.SphericalSersic(intensity=2.0)
             )
 
-            radius = am.dim.Length(1.0, "arcsec")
+            radius = ag.dim.Length(1.0, "arcsec")
 
             g0_luminosity = g0.luminosity_within_circle_in_units(
                 radius=radius, unit_luminosity="eps"
@@ -1320,7 +1354,7 @@ class TestAbstractPlaneLensing:
                 redshift=0.5, luminosity=ag.lp.SphericalSersic(intensity=2.0)
             )
 
-            radius = am.dim.Length(1.0, "arcsec")
+            radius = ag.dim.Length(1.0, "arcsec")
 
             g0_luminosity = g0.luminosity_within_circle_in_units(radius=radius)
             g1_luminosity = g1.luminosity_within_circle_in_units(radius=radius)
@@ -1333,7 +1367,7 @@ class TestAbstractPlaneLensing:
             assert plane_luminosities[0] == g0_luminosity
             assert plane_luminosities[1] == g1_luminosity
 
-            radius = am.dim.Length(1.0, "kpc")
+            radius = ag.dim.Length(1.0, "kpc")
 
             plane = ag.Plane(galaxies=[g0, g1], redshift=0.5)
             g0_luminosity = g0.luminosity_within_circle_in_units(radius=radius)
@@ -1355,7 +1389,7 @@ class TestAbstractPlaneLensing:
                 redshift=0.5, mass=ag.mp.SphericalIsothermal(einstein_radius=2.0)
             )
 
-            radius = am.dim.Length(1.0, "arcsec")
+            radius = ag.dim.Length(1.0, "arcsec")
 
             g0_mass = g0.mass_within_circle_in_units(radius=radius, unit_mass="angular")
             g1_mass = g1.mass_within_circle_in_units(radius=radius, unit_mass="angular")
@@ -1386,7 +1420,7 @@ class TestAbstractPlaneLensing:
             assert plane_masses[1] == g1_mass
 
         def test__within_circle_different_distance_units__same_as_galaxy_masses(self):
-            radius = am.dim.Length(1.0, "arcsec")
+            radius = ag.dim.Length(1.0, "arcsec")
 
             g0 = ag.Galaxy(
                 redshift=0.5, mass=ag.mp.SphericalIsothermal(einstein_radius=1.0)
@@ -1410,7 +1444,7 @@ class TestAbstractPlaneLensing:
             assert plane_masses[0] == g0_mass
             assert plane_masses[1] == g1_mass
 
-            radius = am.dim.Length(1.0, "kpc")
+            radius = ag.dim.Length(1.0, "kpc")
 
             plane = ag.Plane(galaxies=[g0, g1], redshift=0.5)
             g0_mass = g0.mass_within_circle_in_units(
@@ -2428,7 +2462,7 @@ class TestPlane:
             plane = ag.Plane(galaxies=[], redshift=0.5)
             assert plane.redshift == 0.5
 
-            with pytest.raises(exc.RayTracingException):
+            with pytest.raises(exc.PlaneException):
                 ag.Plane(galaxies=[])
 
         def test__galaxy_redshifts_gives_list_of_redshifts(self):
@@ -2447,7 +2481,7 @@ class TestPlane:
             g0 = ag.Galaxy(redshift=0.1)
             g1 = ag.Galaxy(redshift=1.0)
 
-            with pytest.raises(exc.RayTracingException):
+            with pytest.raises(exc.PlaneException):
                 ag.Plane(galaxies=[g0, g1])
 
             g0 = ag.Galaxy(redshift=0.4)
@@ -2489,7 +2523,7 @@ class TestPlane:
             plane = ag.Plane(galaxies=[g0, g1], redshift=0.6)
 
             summary_text = plane.summarize_in_units(
-                radii=[am.dim.Length(10.0), am.dim.Length(500.0)],
+                radii=[ag.dim.Length(10.0), ag.dim.Length(500.0)],
                 whitespace=50,
                 unit_length="arcsec",
                 unit_luminosity="eps",

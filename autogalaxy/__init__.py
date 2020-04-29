@@ -34,6 +34,7 @@ from autogalaxy.galaxy.galaxy_data import GalaxyData
 from autogalaxy.galaxy.masked_galaxy_data import MaskedGalaxyDataset
 from autogalaxy.galaxy.fit_galaxy import FitGalaxy
 from autogalaxy.galaxy.galaxy_model import GalaxyModel
+from autogalaxy.plane.plane import Plane
 from autogalaxy.hyper import hyper_data
 from autogalaxy import plot
 

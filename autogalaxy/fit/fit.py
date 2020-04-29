@@ -91,11 +91,7 @@ class FitImaging(aa_fit.FitImaging):
         # TODO : Extend to multiple inversioons across Planes
 
         galaxy_model_image_dict.update(
-            {
-                self.plane.galaxies[
-                    0
-                ]: self.inversion.mapped_reconstructed_image
-            }
+            {self.plane.galaxies[0]: self.inversion.mapped_reconstructed_image}
         )
 
         return galaxy_model_image_dict
@@ -225,11 +221,7 @@ class FitInterferometer(aa_fit.FitInterferometer):
         for galaxy_index in self.plane.galaxy_indexes_with_pixelizations:
 
             galaxy_model_image_dict.update(
-                {
-                    self.plane.galaxies[
-                        0
-                    ]: self.inversion.mapped_reconstructed_image
-                }
+                {self.plane.galaxies[0]: self.inversion.mapped_reconstructed_image}
             )
 
         return galaxy_model_image_dict
@@ -276,7 +268,6 @@ class FitInterferometer(aa_fit.FitInterferometer):
     @property
     def total_inversions(self):
         return 1
-
 
 
 def hyper_image_from_image_and_hyper_image_sky(image, hyper_image_sky):

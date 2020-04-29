@@ -7,6 +7,7 @@ from autoarray.structures import arrays, grids, visibilities as vis
 from autogalaxy.util import cosmology_util
 from autogalaxy import exc
 from autogalaxy import dimensions as dim
+from autogalaxy.util import plane_util
 
 
 class AbstractPlane(lensing.LensingObject):
@@ -26,14 +27,14 @@ class AbstractPlane(lensing.LensingObject):
         if redshift is None:
 
             if not galaxies:
-                raise exc.RayTracingException(
+                raise exc.PlaneException(
                     "A redshift and no galaxies were input to a Plane. A redshift for the Plane therefore cannot be"
                     "determined"
                 )
             elif not all(
                 [galaxies[0].redshift == galaxy.redshift for galaxy in galaxies]
             ):
-                raise exc.RayTracingException(
+                raise exc.PlaneException(
                     "A redshift and two or more galaxies with different redshifts were input to a Plane. A unique "
                     "Redshift for the Plane therefore cannot be determined"
                 )
@@ -337,6 +338,12 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
         return list(
             map(lambda galaxy: galaxy.profile_image_from_grid(grid=grid), self.galaxies)
         )
+
+    def padded_profile_image_from_grid_and_psf_shape(self, grid, psf_shape_2d):
+
+        padded_grid = grid.padded_grid_from_kernel_shape(kernel_shape_2d=psf_shape_2d)
+
+        return self.profile_image_from_grid(grid=padded_grid)
 
     @grids.grid_like_to_numpy
     def convergence_from_grid(self, grid):

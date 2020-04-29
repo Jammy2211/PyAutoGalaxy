@@ -1492,9 +1492,7 @@ class TestMassProfiles:
 
             assert galaxy.mass_profile_phis == []
 
-            galaxy = ag.Galaxy(
-                redshift=0.5, mp_0=ag.mp.EllipticalMassProfile(phi=0.9)
-            )
+            galaxy = ag.Galaxy(redshift=0.5, mp_0=ag.mp.EllipticalMassProfile(phi=0.9))
 
             assert galaxy.mass_profile_phis.in_list == [[0.9]]
 
@@ -1526,9 +1524,7 @@ class TestMassProfiles:
 
             sis_1 = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
-            galaxy = ag.Galaxy(
-                mass_profile_0=sis_0, mass_profile_1=sis_1, redshift=0.5
-            )
+            galaxy = ag.Galaxy(mass_profile_0=sis_0, mass_profile_1=sis_1, redshift=0.5)
 
             assert galaxy.einstein_mass_in_units(unit_mass="angular") == pytest.approx(
                 np.pi * 3.0 ** 2.0, 1.0e-2
@@ -1813,24 +1809,18 @@ class TestBooleanProperties:
             is True
         )
         assert (
-            ag.Galaxy(
-                redshift=0.5, mass_profile=ag.mp.MassProfile()
-            ).has_light_profile
+            ag.Galaxy(redshift=0.5, mass_profile=ag.mp.MassProfile()).has_light_profile
             is False
         )
 
     def test_has_mass_profile(self):
         assert ag.Galaxy(redshift=0.5).has_mass_profile is False
         assert (
-            ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.LightProfile()
-            ).has_mass_profile
+            ag.Galaxy(redshift=0.5, light_profile=ag.lp.LightProfile()).has_mass_profile
             is False
         )
         assert (
-            ag.Galaxy(
-                redshift=0.5, mass_profile=ag.mp.MassProfile()
-            ).has_mass_profile
+            ag.Galaxy(redshift=0.5, mass_profile=ag.mp.MassProfile()).has_mass_profile
             is True
         )
 
@@ -1851,9 +1841,7 @@ class TestBooleanProperties:
         )
         assert (
             ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.MassProfile(),
-                sheet=ag.mp.MassSheet(),
+                redshift=0.5, mass_profile=ag.mp.MassProfile(), sheet=ag.mp.MassSheet()
             ).has_only_mass_sheets
             is False
         )

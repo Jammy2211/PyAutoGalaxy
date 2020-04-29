@@ -5,9 +5,7 @@ from autoarray.structures import grids
 import copy
 
 
-class MaskedInterferometer(
-    interferometer.MaskedInterferometer,
-):
+class MaskedInterferometer(interferometer.MaskedInterferometer):
     def __init__(
         self,
         interferometer,

@@ -22,17 +22,13 @@ def set_config_path():
 @pytest.fixture(name="lp_0")
 def make_lp_0():
     # noinspection PyTypeChecker
-    return ag.lp.SphericalSersic(
-        intensity=1.0, effective_radius=2.0, sersic_index=2.0
-    )
+    return ag.lp.SphericalSersic(intensity=1.0, effective_radius=2.0, sersic_index=2.0)
 
 
 @pytest.fixture(name="lp_1")
 def make_lp_1():
     # noinspection PyTypeChecker
-    return ag.lp.SphericalSersic(
-        intensity=2.0, effective_radius=2.0, sersic_index=2.0
-    )
+    return ag.lp.SphericalSersic(intensity=2.0, effective_radius=2.0, sersic_index=2.0)
 
 
 @pytest.fixture(name="mp_0")

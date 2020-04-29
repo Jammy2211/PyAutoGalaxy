@@ -30,9 +30,7 @@ class TestHyperNoiseMapBackground:
 
         noise_map = np.array([1.0, 2.0, 3.0])
 
-        hyper_background_noise_map = ag.hyper_data.HyperBackgroundNoise(
-            noise_scale=2.0
-        )
+        hyper_background_noise_map = ag.hyper_data.HyperBackgroundNoise(noise_scale=2.0)
 
         hyper_noise_map = hyper_background_noise_map.hyper_noise_map_from_noise_map(
             noise_map=noise_map
@@ -40,9 +38,7 @@ class TestHyperNoiseMapBackground:
 
         assert (hyper_noise_map == np.array([3.0, 4.0, 5.0])).all()
 
-        hyper_noise_map_background = ag.hyper_data.HyperBackgroundNoise(
-            noise_scale=3.0
-        )
+        hyper_noise_map_background = ag.hyper_data.HyperBackgroundNoise(noise_scale=3.0)
 
         scaled_noise = hyper_noise_map_background.hyper_noise_map_from_noise_map(
             noise_map=noise_map

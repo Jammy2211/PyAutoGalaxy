@@ -71,22 +71,17 @@ class TestMaskedImaging:
 
 
 class TestSimulatorImaging:
-    def test__from_tracer_and_grid__same_as_tracer_image(self):
+    def test__from_plane_and_grid__same_as_plane_image(self):
+
         psf = ag.Kernel.from_gaussian(shape_2d=(7, 7), sigma=0.5, pixel_scales=1.0)
 
         grid = ag.Grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
 
-        lens_galaxy = ag.Galaxy(
-            redshift=0.5,
-            light=ag.lp.EllipticalSersic(intensity=1.0),
-            mass=ag.mp.EllipticalIsothermal(einstein_radius=1.6),
-        )
+        galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
 
-        source_galaxy = ag.Galaxy(
-            redshift=1.0, light=ag.lp.EllipticalSersic(intensity=0.3)
-        )
+        galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.EllipticalSersic(intensity=0.3))
 
-        tracer = ag.Tracer.from_galaxies(galaxies=[lens_galaxy, source_galaxy])
+        plane = ag.Plane(redshift=0.75, galaxies=[galaxy_0, galaxy_1])
 
         simulator = ag.SimulatorImaging(
             psf=psf,
@@ -96,13 +91,13 @@ class TestSimulatorImaging:
             noise_seed=1,
         )
 
-        imaging = simulator.from_tracer_and_grid(tracer=tracer, grid=grid)
+        imaging = simulator.from_plane_and_grid(plane=plane, grid=grid)
 
         assert (imaging.image.in_2d == imaging.image.in_2d).all()
         assert (imaging.psf == imaging.psf).all()
         assert (imaging.noise_map == imaging.noise_map).all()
 
-    def test__from_deflections_and_galaxies__same_as_calculation_using_tracer(self):
+    def test__from_deflections_and_galaxies__same_as_calculation_using_plane(self):
 
         psf = ag.Kernel.no_blur(pixel_scales=0.05)
 
@@ -116,7 +111,7 @@ class TestSimulatorImaging:
             redshift=1.0, light=ag.lp.EllipticalSersic(intensity=0.3)
         )
 
-        tracer = ag.Tracer.from_galaxies(galaxies=[lens_galaxy, source_galaxy])
+        plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
         simulator = ag.SimulatorImaging(
             psf=psf,
@@ -127,12 +122,11 @@ class TestSimulatorImaging:
         )
 
         imaging = simulator.from_deflections_and_galaxies(
-            deflections=tracer.deflections_from_grid(grid=grid),
-            galaxies=[source_galaxy],
+            deflections=plane.deflections_from_grid(grid=grid), galaxies=[source_galaxy]
         )
 
         imaging_via_image = simulator.from_image(
-            image=tracer.profile_image_from_grid(grid=grid)
+            image=plane.profile_image_from_grid(grid=grid)
         )
 
         assert (imaging.image.in_2d == imaging_via_image.image.in_2d).all()
@@ -176,10 +170,10 @@ class TestSimulatorImaging:
             galaxies=[lens_galaxy, source_galaxy], grid=grid
         )
 
-        tracer = ag.Tracer.from_galaxies(galaxies=[lens_galaxy, source_galaxy])
+        plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
         imaging_via_image = simulator.from_image(
-            image=tracer.profile_image_from_grid(grid=grid)
+            image=plane.profile_image_from_grid(grid=grid)
         )
 
         assert (imaging.image == imaging_via_image.image).all()

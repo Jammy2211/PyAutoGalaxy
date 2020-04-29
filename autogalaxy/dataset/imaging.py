@@ -1,6 +1,6 @@
 from autoarray.dataset import imaging
 from autoarray.structures import grids
-
+from autogalaxy.plane import plane as pl
 
 import copy
 
@@ -101,7 +101,7 @@ class SimulatorImaging(imaging.SimulatorImaging):
             noise_seed=noise_seed,
         )
 
-    def from_tracer_and_grid(self, tracer, grid, name=None):
+    def from_plane_and_grid(self, plane, grid, name=None):
         """
         Create a realistic simulated image by applying effects to a plain simulated image.
 
@@ -125,7 +125,7 @@ class SimulatorImaging(imaging.SimulatorImaging):
             A seed for random noise_maps generation
         """
 
-        image = tracer.padded_profile_image_from_grid_and_psf_shape(
+        image = plane.padded_profile_image_from_grid_and_psf_shape(
             grid=grid, psf_shape_2d=self.psf.shape_2d
         )
 
@@ -164,22 +164,6 @@ class SimulatorImaging(imaging.SimulatorImaging):
         5) Output the dataset to .fits format if a dataset_path and data_name are specified. Otherwise, return the simulated \
            imaging data_type instance."""
 
-        tracer = ray_tracing.Tracer.from_galaxies(galaxies=galaxies)
+        plane = pl.Plane(galaxies=galaxies)
 
-        return self.from_tracer_and_grid(tracer=tracer, grid=grid, name=name)
-
-    def from_deflections_and_galaxies(self, deflections, galaxies, name=None):
-
-        grid = grids.Grid.uniform(
-            shape_2d=deflections.shape_2d,
-            pixel_scales=deflections.pixel_scales,
-            sub_size=1,
-        )
-
-        deflected_grid = grid - deflections.in_1d_binned
-
-        image = sum(
-            map(lambda g: g.profile_image_from_grid(grid=deflected_grid), galaxies)
-        )
-
-        return self.from_image(image=image, name=name)
+        return self.from_plane_and_grid(plane=plane, grid=grid, name=name)

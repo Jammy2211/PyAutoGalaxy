@@ -345,9 +345,7 @@ class TestRegularization:
 
 class TestHyperGalaxy:
     def test_hyper_galaxy(self,):
-        galaxy_model = ag.GalaxyModel(
-            redshift=ag.Redshift, hyper_galaxy=ag.HyperGalaxy
-        )
+        galaxy_model = ag.GalaxyModel(redshift=ag.Redshift, hyper_galaxy=ag.HyperGalaxy)
 
         arguments = {
             galaxy_model.redshift.redshift: 0.2,
