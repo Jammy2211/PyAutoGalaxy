@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export PACKAGE_NAME=autoastro
+export PACKAGE_NAME=autogalaxy
 
 rm -rf $p/dist
 rm -rf $p/build

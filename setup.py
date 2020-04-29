@@ -6,7 +6,7 @@ from setuptools import find_packages, setup, Command
 
 
 def version():
-    with open("autoastro/__init__.py") as f:
+    with open("autogalaxy/__init__.py") as f:
         lines = f.read().split("\n")
     for line in lines:
         if "__version__" in line:
@@ -27,7 +27,7 @@ class RunTests(Command):
 
     def run(self):
         """Run all tests!"""
-        errno = call(["py.test", "--cov=autolens", "--cov-report=term-missing"])
+        errno = call(["py.test", "--cov=autogalaxy", "--cov-report=term-missing"])
         raise SystemExit(errno)
 
 
@@ -39,7 +39,7 @@ with open(join(this_dir, "requirements.txt")) as f:
     requirements = f.read().split("\n")
 
 setup(
-    name="autoastro",
+    name="autogalaxy",
     version=version(),
     description="Astro modelling",
     long_description=long_description,
