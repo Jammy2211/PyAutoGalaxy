@@ -1,7 +1,7 @@
 from autoarray.dataset import imaging
-from autoarray.structures import grids
 from autogalaxy.plane import plane as pl
 
+import numpy as np
 import copy
 
 
@@ -164,6 +164,6 @@ class SimulatorImaging(imaging.SimulatorImaging):
         5) Output the dataset to .fits format if a dataset_path and data_name are specified. Otherwise, return the simulated \
            imaging data_type instance."""
 
-        plane = pl.Plane(galaxies=galaxies)
+        plane = pl.Plane(redshift=float(np.mean([galaxy.redshift for galaxy in galaxies])), galaxies=galaxies)
 
         return self.from_plane_and_grid(plane=plane, grid=grid, name=name)

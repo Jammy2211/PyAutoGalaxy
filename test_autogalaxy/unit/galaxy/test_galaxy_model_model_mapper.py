@@ -35,8 +35,8 @@ class TestCase:
             align_centres=True,
         )
 
-        mapper.source_galaxy = source_galaxy_prior
-        mapper.lens_galaxy = lens_galaxy_prior
+        mapper.galaxy_1 = source_galaxy_prior
+        mapper.galaxy_0 = lens_galaxy_prior
 
         # Create a model instance. All the instances of the profile classes are created here. Normally we would do this
         # using the output of a non linear search but in this case we are using the median values from the priors.
@@ -44,15 +44,15 @@ class TestCase:
 
         # Recover model_galaxy instances. We can pass the model instance to model_galaxy priors to recover a fully
         # constructed model_galaxy
-        source_galaxy = instance.source_galaxy
-        lens_galaxy = instance.lens_galaxy
+        galaxy_1 = instance.galaxy_1
+        galaxy_0 = instance.galaxy_0
 
         # Let's just check that worked
-        assert len(source_galaxy.light_profiles) == 2
-        assert len(source_galaxy.mass_profiles) == 0
+        assert len(galaxy_1.light_profiles) == 2
+        assert len(galaxy_1.mass_profiles) == 0
 
-        assert len(lens_galaxy.light_profiles) == 1
-        assert len(lens_galaxy.mass_profiles) == 1
+        assert len(galaxy_0.light_profiles) == 1
+        assert len(galaxy_0.mass_profiles) == 1
 
-        assert source_galaxy.redshift == 1.5
-        assert lens_galaxy.redshift == 1.5
+        assert galaxy_1.redshift == 1.5
+        assert galaxy_0.redshift == 1.5

@@ -97,53 +97,17 @@ class TestSimulatorImaging:
         assert (imaging.psf == imaging.psf).all()
         assert (imaging.noise_map == imaging.noise_map).all()
 
-    def test__from_deflections_and_galaxies__same_as_calculation_using_plane(self):
-
-        psf = ag.Kernel.no_blur(pixel_scales=0.05)
-
-        grid = ag.Grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
-
-        lens_galaxy = ag.Galaxy(
-            redshift=0.5, mass=ag.mp.EllipticalIsothermal(einstein_radius=1.6)
-        )
-
-        source_galaxy = ag.Galaxy(
-            redshift=1.0, light=ag.lp.EllipticalSersic(intensity=0.3)
-        )
-
-        plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
-
-        simulator = ag.SimulatorImaging(
-            psf=psf,
-            exposure_time_map=ag.Array.full(fill_value=10000.0, shape_2d=grid.shape_2d),
-            background_sky_map=ag.Array.full(fill_value=100.0, shape_2d=grid.shape_2d),
-            add_noise=True,
-            noise_seed=1,
-        )
-
-        imaging = simulator.from_deflections_and_galaxies(
-            deflections=plane.deflections_from_grid(grid=grid), galaxies=[source_galaxy]
-        )
-
-        imaging_via_image = simulator.from_image(
-            image=plane.profile_image_from_grid(grid=grid)
-        )
-
-        assert (imaging.image.in_2d == imaging_via_image.image.in_2d).all()
-        assert (imaging.psf == imaging_via_image.psf).all()
-        assert (imaging.noise_map == imaging_via_image.noise_map).all()
-
     def test__simulate_imaging_from_lens__source_galaxy__compare_to_imaging(self):
 
-        lens_galaxy = ag.Galaxy(
+        galaxy_0 = ag.Galaxy(
             redshift=0.5,
             mass=ag.mp.EllipticalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.6, axis_ratio=0.7, phi=45.0
             ),
         )
 
-        source_galaxy = ag.Galaxy(
-            redshift=0.5,
+        galaxy_1 = ag.Galaxy(
+            redshift=1.0,
             light=ag.lp.EllipticalSersic(
                 centre=(0.1, 0.1),
                 axis_ratio=0.8,
@@ -167,10 +131,10 @@ class TestSimulatorImaging:
         )
 
         imaging = simulator.from_galaxies_and_grid(
-            galaxies=[lens_galaxy, source_galaxy], grid=grid
+            galaxies=[galaxy_0, galaxy_1], grid=grid
         )
 
-        plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
+        plane = ag.Plane(redshift=0.75, galaxies=[galaxy_0, galaxy_1])
 
         imaging_via_image = simulator.from_image(
             image=plane.profile_image_from_grid(grid=grid)

@@ -153,17 +153,17 @@ class TestSimulatorInterferometer:
 
         grid = ag.Grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
 
-        lens_galaxy = ag.Galaxy(
+        galaxy_0 = ag.Galaxy(
             redshift=0.5,
             light=ag.lp.EllipticalSersic(intensity=1.0),
             mass=ag.mp.EllipticalIsothermal(einstein_radius=1.6),
         )
 
-        source_galaxy = ag.Galaxy(
+        galaxy_1 = ag.Galaxy(
             redshift=1.0, light=ag.lp.EllipticalSersic(intensity=0.3)
         )
 
-        tracer = ag.Tracer.from_galaxies(galaxies=[lens_galaxy, source_galaxy])
+        tracer = ag.Tracer.from_galaxies(galaxies=[galaxy_0, galaxy_1])
 
         simulator = ag.SimulatorInterferometer(
             uv_wavelengths=np.ones(shape=(7, 2)),
@@ -191,15 +191,15 @@ class TestSimulatorInterferometer:
 
         grid = ag.Grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
 
-        lens_galaxy = ag.Galaxy(
+        galaxy_0 = ag.Galaxy(
             redshift=0.5, mass=ag.mp.EllipticalIsothermal(einstein_radius=1.6)
         )
 
-        source_galaxy = ag.Galaxy(
+        galaxy_1 = ag.Galaxy(
             redshift=1.0, light=ag.lp.EllipticalSersic(intensity=0.3)
         )
 
-        tracer = ag.Tracer.from_galaxies(galaxies=[lens_galaxy, source_galaxy])
+        tracer = ag.Tracer.from_galaxies(galaxies=[galaxy_0, galaxy_1])
 
         simulator = ag.SimulatorInterferometer(
             uv_wavelengths=np.ones(shape=(7, 2)),
@@ -211,7 +211,7 @@ class TestSimulatorInterferometer:
 
         interferometer = simulator.from_deflections_and_galaxies(
             deflections=tracer.deflections_from_grid(grid=grid),
-            galaxies=[source_galaxy],
+            galaxies=[galaxy_1],
         )
 
         interferometer_via_image = simulator.from_image(
@@ -230,14 +230,14 @@ class TestSimulatorInterferometer:
         self
     ):
 
-        lens_galaxy = ag.Galaxy(
+        galaxy_0 = ag.Galaxy(
             redshift=0.5,
             mass=ag.mp.EllipticalIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.6, axis_ratio=0.7, phi=45.0
             ),
         )
 
-        source_galaxy = ag.Galaxy(
+        galaxy_1 = ag.Galaxy(
             redshift=0.5,
             light=ag.lp.EllipticalSersic(
                 centre=(0.1, 0.1),
@@ -260,10 +260,10 @@ class TestSimulatorInterferometer:
         )
 
         interferometer = simulator.from_galaxies_and_grid(
-            galaxies=[lens_galaxy, source_galaxy], grid=grid
+            galaxies=[galaxy_0, galaxy_1], grid=grid
         )
 
-        tracer = ag.Tracer.from_galaxies(galaxies=[lens_galaxy, source_galaxy])
+        tracer = ag.Tracer.from_galaxies(galaxies=[galaxy_0, galaxy_1])
 
         interferometer_via_image = simulator.from_image(
             image=tracer.profile_image_from_grid(grid=grid)
