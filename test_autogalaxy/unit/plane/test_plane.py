@@ -1884,7 +1884,7 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(galaxies=[galaxy], redshift=None)
 
-            plane_image_from_func = ag.util.lens.plane_image_of_galaxies_from_grid(
+            plane_image_from_func = ag.util.plane.plane_image_of_galaxies_from_grid(
                 shape=(7, 7),
                 grid=sub_grid_7x7.geometry.unmasked_grid,
                 galaxies=[galaxy],
