@@ -1,8 +1,8 @@
 from autoarray.dataset import interferometer
 from autoarray.operators import transformer
-from autoarray.structures import grids
+from autogalaxy.plane import plane as pl
 
-import copy
+import numpy as np
 
 
 class MaskedInterferometer(interferometer.MaskedInterferometer):
@@ -100,7 +100,7 @@ class SimulatorInterferometer(interferometer.SimulatorInterferometer):
             noise_seed=noise_seed,
         )
 
-    def from_tracer_and_grid(self, tracer, grid, name=None):
+    def from_plane_and_grid(self, plane, grid, name=None):
         """
         Create a realistic simulated image by applying effects to a plain simulated image.
 
@@ -124,7 +124,7 @@ class SimulatorInterferometer(interferometer.SimulatorInterferometer):
             A seed for random noise_maps generation
         """
 
-        image = tracer.profile_image_from_grid(grid=grid)
+        image = plane.profile_image_from_grid(grid=grid)
 
         return self.from_image(image=image.in_1d_binned, name=name)
 
@@ -133,7 +133,7 @@ class SimulatorInterferometer(interferometer.SimulatorInterferometer):
 
         1)  Setup the image-plane grid of the Imaging arrays, which defines the coordinates used for the ray-tracing.
 
-        2) Use this grid and the lens and source galaxies to setup a tracer, which generates the image of \
+        2) Use this grid and the lens and source galaxies to setup a plane, which generates the image of \
            the simulated imaging data.
 
         3) Simulate the imaging data, using a special image which ensures edge-effects don't
@@ -144,22 +144,6 @@ class SimulatorInterferometer(interferometer.SimulatorInterferometer):
         5) Output the dataset to .fits format if a dataset_path and data_name are specified. Otherwise, return the simulated \
            imaging data_type instance."""
 
-        tracer = ray_tracing.Tracer.from_galaxies(galaxies=galaxies)
+        plane = pl.Plane(redshift=float(np.mean([galaxy.redshift for galaxy in galaxies])), galaxies=galaxies)
 
-        return self.from_tracer_and_grid(tracer=tracer, grid=grid, name=name)
-
-    def from_deflections_and_galaxies(self, deflections, galaxies, name=None):
-
-        grid = grids.Grid.uniform(
-            shape_2d=deflections.shape_2d,
-            pixel_scales=deflections.pixel_scales,
-            sub_size=1,
-        )
-
-        deflected_grid = grid - deflections.in_1d_binned
-
-        image = sum(
-            map(lambda g: g.profile_image_from_grid(grid=deflected_grid), galaxies)
-        )
-
-        return self.from_image(image=image, name=name)
+        return self.from_plane_and_grid(plane=plane, grid=grid, name=name)

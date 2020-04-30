@@ -114,7 +114,7 @@ class TestMaskedInterferometer:
 
 
 class TestSimulatorInterferometer:
-    def test__from_tracer__same_as_tracer_input(self):
+    def test__from_plane__same_as_plane_input(self):
 
         grid = ag.Grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
 
@@ -128,7 +128,7 @@ class TestSimulatorInterferometer:
             redshift=1.0, light=ag.lp.EllipticalSersic(intensity=0.3)
         )
 
-        tracer = ag.Tracer.from_galaxies(galaxies=[galaxy_0, galaxy_1])
+        plane = ag.Plane(redshift=0.75, galaxies=[galaxy_0, galaxy_1])
 
         simulator = ag.SimulatorInterferometer(
             uv_wavelengths=np.ones(shape=(7, 2)),
@@ -138,10 +138,10 @@ class TestSimulatorInterferometer:
             noise_seed=1,
         )
 
-        interferometer = simulator.from_tracer_and_grid(tracer=tracer, grid=grid)
+        interferometer = simulator.from_plane_and_grid(plane=plane, grid=grid)
 
         interferometer_via_image = simulator.from_image(
-            image=tracer.profile_image_from_grid(grid=grid)
+            image=plane.profile_image_from_grid(grid=grid)
         )
 
         assert (
@@ -149,45 +149,6 @@ class TestSimulatorInterferometer:
         ).all()
         assert (
             interferometer.uv_wavelengths == interferometer_via_image.uv_wavelengths
-        ).all()
-        assert (interferometer.noise_map == interferometer_via_image.noise_map).all()
-
-    def test__from_deflections_and_galaxies__same_as_calculation_using_tracer(self):
-
-        grid = ag.Grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
-
-        galaxy_0 = ag.Galaxy(
-            redshift=0.5, mass=ag.mp.EllipticalIsothermal(einstein_radius=1.6)
-        )
-
-        galaxy_1 = ag.Galaxy(
-            redshift=1.0, light=ag.lp.EllipticalSersic(intensity=0.3)
-        )
-
-        tracer = ag.Tracer.from_galaxies(galaxies=[galaxy_0, galaxy_1])
-
-        simulator = ag.SimulatorInterferometer(
-            uv_wavelengths=np.ones(shape=(7, 2)),
-            exposure_time_map=ag.Array.full(fill_value=10000.0, shape_2d=grid.shape_2d),
-            background_sky_map=ag.Array.full(fill_value=100.0, shape_2d=grid.shape_2d),
-            noise_sigma=0.1,
-            noise_seed=1,
-        )
-
-        interferometer = simulator.from_deflections_and_galaxies(
-            deflections=tracer.deflections_from_grid(grid=grid),
-            galaxies=[galaxy_1],
-        )
-
-        interferometer_via_image = simulator.from_image(
-            image=tracer.profile_image_from_grid(grid=grid)
-        )
-
-        assert (
-            interferometer.visibilities == interferometer_via_image.visibilities
-        ).all()
-        assert (
-            interferometer_via_image.uv_wavelengths == interferometer.uv_wavelengths
         ).all()
         assert (interferometer.noise_map == interferometer_via_image.noise_map).all()
 
@@ -228,10 +189,10 @@ class TestSimulatorInterferometer:
             galaxies=[galaxy_0, galaxy_1], grid=grid
         )
 
-        tracer = ag.Tracer.from_galaxies(galaxies=[galaxy_0, galaxy_1])
+        plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
         interferometer_via_image = simulator.from_image(
-            image=tracer.profile_image_from_grid(grid=grid)
+            image=plane.profile_image_from_grid(grid=grid)
         )
 
         assert interferometer.visibilities == pytest.approx(
