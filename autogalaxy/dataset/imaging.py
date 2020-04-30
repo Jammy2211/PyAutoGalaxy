@@ -52,15 +52,6 @@ class MaskedImaging(imaging.MaskedImaging):
             renormalize_psf=renormalize_psf,
         )
 
-    def modify_image_and_noise_map(self, image, noise_map):
-
-        masked_imaging = copy.deepcopy(self)
-
-        masked_imaging.image = image
-        masked_imaging.noise_map = noise_map
-
-        return masked_imaging
-
 
 class SimulatorImaging(imaging.SimulatorImaging):
     def __init__(

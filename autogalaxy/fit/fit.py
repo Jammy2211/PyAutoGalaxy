@@ -37,7 +37,7 @@ class FitImaging(aa_fit.FitImaging):
             or hyper_background_noise is not None
         ):
 
-            masked_imaging = masked_imaging.modify_image_and_noise_map(
+            masked_imaging = masked_imaging.modify_noise_map(
                 image=image, noise_map=noise_map
             )
 
@@ -158,7 +158,7 @@ class FitInterferometer(aa_fit.FitInterferometer):
 
         if hyper_background_noise is not None:
 
-            masked_interferometer = masked_interferometer.modify_image_and_noise_map(
+            masked_interferometer = masked_interferometer.modify_noise_map(
                 noise_map=noise_map
             )
 

@@ -61,30 +61,19 @@ class TestMaskedInterferometer:
             interferometer=interferometer_7,
             visibilities_mask=visibilities_mask_7x2,
             real_space_mask=sub_mask_7x7,
-            pixel_scale_interpolation_grid=1.0,
             primary_beam_shape_2d=(3, 3),
             inversion_pixel_limit=20.0,
-            inversion_uses_border=False,
-            preload_sparse_grids_of_planes=1,
         )
 
         assert (masked_interferometer_7.grid.in_1d_binned == grid_7x7).all()
         assert (masked_interferometer_7.grid == sub_grid_7x7).all()
 
         assert masked_interferometer_7.inversion_pixel_limit == 20.0
-        assert masked_interferometer_7.inversion_uses_border == False
-        assert masked_interferometer_7.preload_sparse_grids_of_planes == 1
 
         grid = ag.MaskedGrid.from_mask(mask=sub_mask_7x7)
         new_grid = grid.new_grid_with_interpolator(pixel_scale_interpolation_grid=1.0)
 
         assert (masked_interferometer_7.grid == new_grid).all()
-        assert (
-            masked_interferometer_7.grid.interpolator.vtx == new_grid.interpolator.vtx
-        ).all()
-        assert (
-            masked_interferometer_7.grid.interpolator.wts == new_grid.interpolator.wts
-        ).all()
 
     def test__different_interferometer_without_mock_objects__customize_constructor_inputs(
         self
@@ -108,8 +97,6 @@ class TestMaskedInterferometer:
             visibilities_mask=visibilities_mask,
             real_space_mask=real_space_mask,
             primary_beam_shape_2d=(5, 5),
-            positions=[ag.Coordinates([[(1.0, 1.0)]])],
-            positions_threshold=1.0,
         )
 
         assert (masked_interferometer.visibilities.in_1d == np.ones((19, 2))).all()
@@ -123,29 +110,7 @@ class TestMaskedInterferometer:
         ).all()
         assert masked_interferometer.primary_beam_shape_2d == (5, 5)
 
-        assert (
-            masked_interferometer.positions.in_list[0] == np.array([[1.0, 1.0]])
-        ).all()
-        assert masked_interferometer.positions_threshold == 1.0
 
-    def test__modified_noise_map(
-        self, noise_map_7x2, interferometer_7, sub_mask_7x7, visibilities_mask_7x2
-    ):
-
-        masked_interferometer_7 = ag.MaskedInterferometer(
-            interferometer=interferometer_7,
-            visibilities_mask=visibilities_mask_7x2,
-            real_space_mask=sub_mask_7x7,
-            transformer_class=ag.TransformerDFT,
-        )
-
-        noise_map_7x2[0, 0] = 10.0
-
-        masked_interferometer_7 = masked_interferometer_7.modify_image_and_noise_map(
-            noise_map=noise_map_7x2
-        )
-
-        assert masked_interferometer_7.noise_map[0, 0] == 10.0
 
 
 class TestSimulatorInterferometer:
