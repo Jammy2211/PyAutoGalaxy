@@ -8,13 +8,13 @@ class FitImaging(aa_fit.FitImaging):
     def __init__(
         self, masked_imaging, plane, hyper_image_sky=None, hyper_background_noise=None
     ):
-        """ An  lens fitter, which contains the tracer's used to perform the fit and functions to manipulate \
+        """ An  lens fitter, which contains the plane's used to perform the fit and functions to manipulate \
         the lens dataset's hyper_galaxies.
 
         Parameters
         -----------
-        tracer : ray_tracing.Tracer
-            The tracer, which describes the ray-tracing and strong lens configuration.
+        plane : plane.Tracer
+            The plane, which describes the ray-tracing and strong lens configuration.
         scaled_array_2d_from_array_1d : func
             A function which maps the 1D lens hyper_galaxies to its unmasked 2D arrays.
         """
@@ -139,13 +139,13 @@ class FitImaging(aa_fit.FitImaging):
 
 class FitInterferometer(aa_fit.FitInterferometer):
     def __init__(self, masked_interferometer, plane, hyper_background_noise=None):
-        """ An  lens fitter, which contains the tracer's used to perform the fit and functions to manipulate \
+        """ An  lens fitter, which contains the plane's used to perform the fit and functions to manipulate \
         the lens dataset's hyper_galaxies.
 
         Parameters
         -----------
-        tracer : ray_tracing.Tracer
-            The tracer, which describes the ray-tracing and strong lens configuration.
+        plane : plane.Tracer
+            The plane, which describes the ray-tracing and strong lens configuration.
         scaled_array_2d_from_array_1d : func
             A function which maps the 1D lens hyper_galaxies to its unmasked 2D arrays.
         """

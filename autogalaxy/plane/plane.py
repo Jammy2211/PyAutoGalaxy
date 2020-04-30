@@ -36,10 +36,7 @@ class AbstractPlane(lensing.LensingObject):
             elif not all(
                 [galaxies[0].redshift == galaxy.redshift for galaxy in galaxies]
             ):
-                raise exc.PlaneException(
-                    "A redshift and two or more galaxies with different redshifts were input to a Plane. A unique "
-                    "Redshift for the Plane therefore cannot be determined"
-                )
+                redshift = np.mean([galaxy.redshift for galaxy in galaxies])
             else:
                 redshift = galaxies[0].redshift
 

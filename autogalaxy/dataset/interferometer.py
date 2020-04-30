@@ -1,6 +1,7 @@
 from autoarray.dataset import interferometer
 from autoarray.operators import transformer
 from autogalaxy.plane import plane as pl
+from autogalaxy import exc
 
 import numpy as np
 
@@ -55,6 +56,13 @@ class MaskedInterferometer(interferometer.MaskedInterferometer):
             inversion_pixel_limit=inversion_pixel_limit,
             renormalize_primary_beam=renormalize_primary_beam,
         )
+
+    def check_inversion_pixels_are_below_limit_via_plane(self, plane):
+
+        if self.inversion_pixel_limit is not None:
+            if plane.has_pixelization:
+                if plane.pixelization.pixels > self.inversion_pixel_limit:
+                    raise exc.PixelizationException
 
 
 class SimulatorInterferometer(interferometer.SimulatorInterferometer):

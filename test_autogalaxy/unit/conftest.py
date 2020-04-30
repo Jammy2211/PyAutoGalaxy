@@ -1,6 +1,7 @@
 import autogalaxy as ag
 
 from test_autoarray.unit.conftest import *
+from test_autogalaxy.mock import mock_pipeline
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -291,6 +292,29 @@ def make_masked_imaging_fit_x2_galaxy_7x7(masked_imaging_7x7, gal_x1_lp):
 def make_masked_interferometer_fit_7x7(masked_interferometer_7, plane_7x7):
     return ag.FitInterferometer(
         masked_interferometer=masked_interferometer_7, plane=plane_7x7
+    )
+
+
+@pytest.fixture(name="phase_dataset_7x7")
+def make_phase_data(mask_7x7):
+    return ag.PhaseDataset(
+        non_linear_class=mock_pipeline.MockNLO, phase_tag="", phase_name="test_phase"
+    )
+
+
+@pytest.fixture(name="phase_imaging_7x7")
+def make_phase_imaging_7x7():
+    return ag.PhaseImaging(
+        non_linear_class=mock_pipeline.MockNLO, phase_name="test_phase"
+    )
+
+
+@pytest.fixture(name="phase_interferometer_7")
+def make_phase_interferometer_7(mask_7x7):
+    return ag.PhaseInterferometer(
+        non_linear_class=mock_pipeline.MockNLO,
+        real_space_mask=mask_7x7,
+        phase_name="test_phase",
     )
 
 

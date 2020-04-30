@@ -1,5 +1,6 @@
 from autoarray.dataset import imaging
 from autogalaxy.plane import plane as pl
+from autogalaxy import exc
 
 import numpy as np
 import copy
@@ -51,6 +52,13 @@ class MaskedImaging(imaging.MaskedImaging):
             inversion_pixel_limit=inversion_pixel_limit,
             renormalize_psf=renormalize_psf,
         )
+
+    def check_inversion_pixels_are_below_limit_via_plane(self, plane):
+
+        if self.inversion_pixel_limit is not None:
+            if plane.has_pixelization:
+                if plane.pixelization.pixels > self.inversion_pixel_limit:
+                    raise exc.PixelizationException
 
 
 class SimulatorImaging(imaging.SimulatorImaging):
@@ -144,7 +152,7 @@ class SimulatorImaging(imaging.SimulatorImaging):
 
         1)  Setup the image-plane grid of the Imaging arrays, which defines the coordinates used for the ray-tracing.
 
-        2) Use this grid and the lens and source galaxies to setup a tracer, which generates the image of \
+        2) Use this grid and the lens and source galaxies to setup a plane, which generates the image of \
            the simulated imaging data.
 
         3) Simulate the imaging data, using a special image which ensures edge-effects don't

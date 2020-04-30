@@ -1735,7 +1735,7 @@ class TestAbstractPlaneData:
             assert (blurred_image_dict[g2].in_1d == g2_blurred_image.in_1d).all()
 
     class TestUnmaskedBlurredProfileImages:
-        def test__unmasked_images_of_tracer_planes_and_galaxies(self):
+        def test__unmasked_images_of_plane_planes_and_galaxies(self):
             psf = ag.Kernel.manual_2d(
                 array=(np.array([[0.0, 3.0, 0.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0]])),
                 pixel_scales=1.0,
