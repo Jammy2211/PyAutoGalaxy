@@ -2,6 +2,7 @@ import numpy as np
 from astropy import cosmology as cosmo
 
 import autofit as af
+from autoarray.operators.inversion import inversions as inv
 from autogalaxy import lensing
 from autoarray.structures import arrays, grids, visibilities as vis
 from autogalaxy.util import cosmology_util
@@ -598,6 +599,46 @@ class AbstractPlaneData(AbstractPlaneLensing):
             raise exc.PixelizationException(
                 "The number of galaxies with pixelizations in one plane is above 1"
             )
+
+    def inversion_imaging_from_grid_and_data(
+        self, grid, image, noise_map, convolver, inversion_uses_border=False
+    ):
+
+        sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
+
+        mapper = self.mapper_from_grid_and_sparse_grid(
+            grid=grid,
+            sparse_grid=sparse_grid,
+            inversion_uses_border=inversion_uses_border,
+        )
+
+        return inv.InversionImaging.from_data_mapper_and_regularization(
+            image=image,
+            noise_map=noise_map,
+            convolver=convolver,
+            mapper=mapper,
+            regularization=self.regularization,
+        )
+
+    def inversion_interferometer_from_grid_and_data(
+        self, grid, visibilities, noise_map, transformer, inversion_uses_border=False
+    ):
+
+        sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
+
+        mapper = self.mapper_from_grid_and_sparse_grid(
+            grid=grid,
+            sparse_grid=sparse_grid,
+            inversion_uses_border=inversion_uses_border,
+        )
+
+        return inv.InversionInterferometer.from_data_mapper_and_regularization(
+            visibilities=visibilities,
+            noise_map=noise_map,
+            transformer=transformer,
+            mapper=mapper,
+            regularization=self.regularization,
+        )
 
     def plane_image_from_grid(self, grid):
         return plane_util.plane_image_of_galaxies_from_grid(

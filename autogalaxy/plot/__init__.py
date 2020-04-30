@@ -44,3 +44,7 @@ from autogalaxy.plot import light_profile_plots as LightProfile
 from autogalaxy.plot import mass_profile_plots as MassProfile
 from autogalaxy.plot import galaxy_plots as Galaxy
 from autogalaxy.plot import fit_galaxy_plots as FitGalaxy
+from autogalaxy.plot import plane_plots as Plane
+from autogalaxy.plot import mapper_plots as Mapper
+from autogalaxy.plot import inversion_plots as Inversion
+from autogalaxy.plot import hyper_plots as hyper

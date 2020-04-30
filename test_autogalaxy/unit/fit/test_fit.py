@@ -537,7 +537,7 @@ class TestFitImaging:
             )
 
     class TestCompareToManualProfilesOnly:
-        def test___all_lens_fit_quantities__no_hyper_methods(self, masked_imaging_7x7):
+        def test___all_fit_quantities__no_hyper_methods(self, masked_imaging_7x7):
 
             g0 = ag.Galaxy(
                 redshift=0.5,
@@ -788,7 +788,7 @@ class TestFitImaging:
             ).all()
 
     class TestCompareToManualInversionOnly:
-        def test___all_lens_fit_quantities__no_hyper_methods(self, masked_imaging_7x7):
+        def test___all_quantities__no_hyper_methods(self, masked_imaging_7x7):
 
             pix = ag.pix.Rectangular(shape=(3, 3))
             reg = ag.reg.Constant(coefficient=1.0)
@@ -872,7 +872,7 @@ class TestFitImaging:
             assert log_evidence == fit.log_evidence
             assert log_evidence == fit.figure_of_merit
 
-        def test___lens_fit_galaxy_model_image_dict__has_inversion_mapped_reconstructed_image(
+        def test___fit_galaxy_model_image_dict__has_inversion_mapped_reconstructed_image(
             self, masked_imaging_7x7
         ):
             pix = ag.pix.Rectangular(shape=(3, 3))
@@ -881,7 +881,7 @@ class TestFitImaging:
             g0 = ag.Galaxy(redshift=0.5)
             g1 = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-            plane = ag.Plane(galaxies=[g0, g1])
+            plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
@@ -907,9 +907,7 @@ class TestFitImaging:
                 fit.galaxy_model_image_dict[g1].in_2d, 1.0e-4
             )
 
-        def test___all_lens_fit_quantities__include_hyper_methods(
-            self, masked_imaging_7x7
-        ):
+        def test___all_fit_quantities__include_hyper_methods(self, masked_imaging_7x7):
 
             hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
 
@@ -1033,7 +1031,7 @@ class TestFitImaging:
 
             g0 = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-            plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
+            plane = ag.Plane(redshift=0.75, galaxies=[ag.Galaxy(redshift=0.5), g0])
 
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
@@ -1055,7 +1053,7 @@ class TestFitImaging:
             )
 
     class TestCompareToManualProfilesAndInversion:
-        def test___all_lens_fit_quantities__no_hyper_methods(self, masked_imaging_7x7):
+        def test___all_fit_quantities__no_hyper_methods(self, masked_imaging_7x7):
             galaxy_light = ag.Galaxy(
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
             )
@@ -1064,7 +1062,7 @@ class TestFitImaging:
             reg = ag.reg.Constant(coefficient=1.0)
             galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-            plane = ag.Plane(galaxies=[galaxy_light, galaxy_pix])
+            plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
 
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
@@ -1155,7 +1153,7 @@ class TestFitImaging:
             assert log_evidence == fit.log_evidence
             assert log_evidence == fit.figure_of_merit
 
-        def test___lens_fit_galaxy_model_image_dict__has_blurred_profile_images_and_inversion_mapped_reconstructed_image(
+        def test___fit_galaxy_model_image_dict__has_blurred_profile_images_and_inversion_mapped_reconstructed_image(
             self, masked_imaging_7x7
         ):
 
@@ -1171,33 +1169,20 @@ class TestFitImaging:
             reg = ag.reg.Constant(coefficient=1.0)
             galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-            plane = ag.Plane(galaxies=[g0, g1, g2, galaxy_pix])
+            plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2, galaxy_pix])
 
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
-            traced_grids = plane.traced_grids_of_galaxies_from_grid(
-                grid=masked_imaging_7x7.grid
-            )
-            traced_blurring_grids = plane.traced_grids_of_galaxies_from_grid(
-                grid=masked_imaging_7x7.blurring_grid
-            )
-
-            g0_image = g0.profile_image_from_grid(grid=traced_grids[0])
-            g0_blurring_image = g0.profile_image_from_grid(
-                grid=traced_blurring_grids[0]
+            g0_blurred_image = g0.blurred_profile_image_from_grid_and_convolver(
+                grid=masked_imaging_7x7.grid,
+                convolver=masked_imaging_7x7.convolver,
+                blurring_grid=masked_imaging_7x7.blurring_grid,
             )
 
-            g0_blurred_image = masked_imaging_7x7.convolver.convolved_image_from_image_and_blurring_image(
-                image=g0_image, blurring_image=g0_blurring_image
-            )
-
-            g1_image = g1.profile_image_from_grid(grid=traced_grids[1])
-            g1_blurring_image = g1.profile_image_from_grid(
-                grid=traced_blurring_grids[1]
-            )
-
-            g1_blurred_image = masked_imaging_7x7.convolver.convolved_image_from_image_and_blurring_image(
-                image=g1_image, blurring_image=g1_blurring_image
+            g1_blurred_image = g1.blurred_profile_image_from_grid_and_convolver(
+                grid=masked_imaging_7x7.grid,
+                convolver=masked_imaging_7x7.convolver,
+                blurring_grid=masked_imaging_7x7.blurring_grid,
             )
 
             blurred_profile_image = g0_blurred_image + g1_blurred_image
@@ -1234,9 +1219,7 @@ class TestFitImaging:
                 1.0e-4,
             )
 
-        def test___all_lens_fit_quantities__include_hyper_methods(
-            self, masked_imaging_7x7
-        ):
+        def test___all_fit_quantities__include_hyper_methods(self, masked_imaging_7x7):
 
             hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
 
@@ -1265,7 +1248,7 @@ class TestFitImaging:
             reg = ag.reg.Constant(coefficient=1.0)
             galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-            plane = ag.Plane(galaxies=[galaxy_light, galaxy_pix])
+            plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
 
             fit = ag.FitImaging(
                 masked_imaging=masked_imaging_7x7,
@@ -1381,7 +1364,7 @@ class TestFitImaging:
             reg = ag.reg.Constant(coefficient=1.0)
             galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-            plane = ag.Plane(galaxies=[galaxy_light, galaxy_pix])
+            plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
 
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
@@ -1414,62 +1397,6 @@ class TestFitImaging:
 
 
 class TestFitInterferometer:
-    class TestFitProperties:
-        def test__total_inversions(self, masked_interferometer_7):
-            g0 = ag.Galaxy(redshift=0.5)
-
-            g1 = ag.Galaxy(redshift=1.0)
-
-            g2 = ag.Galaxy(redshift=2.0)
-
-            plane = ag.Plane(galaxies=[g0, g1, g2])
-
-            fit = ag.FitInterferometer(
-                masked_interferometer=masked_interferometer_7, plane=plane
-            )
-
-            assert fit.total_inversions == 0
-
-            g2 = ag.Galaxy(
-                redshift=2.0,
-                pixelization=ag.pix.Rectangular(),
-                regularization=ag.reg.Constant(),
-            )
-
-            plane = ag.Plane(galaxies=[g0, g1, g2])
-
-            fit = ag.FitInterferometer(
-                masked_interferometer=masked_interferometer_7, plane=plane
-            )
-
-            assert fit.total_inversions == 1
-
-            g0 = ag.Galaxy(
-                redshift=0.5,
-                pixelization=ag.pix.Rectangular(),
-                regularization=ag.reg.Constant(),
-            )
-
-            g1 = ag.Galaxy(
-                redshift=1.0,
-                pixelization=ag.pix.Rectangular(),
-                regularization=ag.reg.Constant(),
-            )
-
-            g2 = ag.Galaxy(
-                redshift=2.0,
-                pixelization=ag.pix.Rectangular(),
-                regularization=ag.reg.Constant(),
-            )
-
-            plane = ag.Plane(galaxies=[g0, g1, g2])
-
-            fit = ag.FitInterferometer(
-                masked_interferometer=masked_interferometer_7, plane=plane
-            )
-
-            assert fit.total_inversions == 3
-
     class TestLikelihood:
         def test__1x2_image__1x2_visibilities__simple_fourier_transform(self):
             # The image plane image generated by the galaxy is [1.0, 1.0]
@@ -1581,11 +1508,13 @@ class TestFitInterferometer:
             )
 
             profile_image = g0.profile_image_from_grid(grid=masked_interferometer.grid)
+
             model_visibilities_manual = transformer.visibilities_from_image(
                 image=profile_image
             )
 
             plane = ag.Plane(galaxies=[g0])
+
 
             fit = ag.FitInterferometer(
                 masked_interferometer=masked_interferometer, plane=plane
@@ -1600,6 +1529,8 @@ class TestFitInterferometer:
             assert (
                 fit.noise_map.in_1d == np.array([[[2.0, 2.0], [2.0, 2.0], [2.0, 2.0]]])
             ).all()
+
+
 
             assert fit.model_visibilities.in_1d == pytest.approx(
                 model_visibilities_manual, 1.0e-4
@@ -1697,9 +1628,7 @@ class TestFitInterferometer:
             assert (fit.noise_map.in_1d == np.full(fill_value=3.0, shape=(3, 2))).all()
 
     class TestCompareToManualProfilesOnly:
-        def test___all_lens_fit_quantities__no_hyper_methods(
-            self, masked_interferometer_7
-        ):
+        def test___all_fit_quantities__no_hyper_methods(self, masked_interferometer_7):
             g0 = ag.Galaxy(
                 redshift=0.5,
                 light_profile=ag.lp.EllipticalSersic(intensity=1.0),
@@ -1710,7 +1639,7 @@ class TestFitInterferometer:
                 redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
             )
 
-            plane = ag.Plane(galaxies=[g0, g1])
+            plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
             fit = ag.FitInterferometer(
                 masked_interferometer=masked_interferometer_7, plane=plane
@@ -1760,7 +1689,7 @@ class TestFitInterferometer:
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
             assert log_likelihood == fit.figure_of_merit
 
-        def test___lens_fit_galaxy_model_image_dict__corresponds_to_profile_galaxy_images(
+        def test___fit_galaxy_model_image_dict__corresponds_to_profile_galaxy_images(
             self, masked_interferometer_7
         ):
             g0 = ag.Galaxy(
@@ -1771,24 +1700,19 @@ class TestFitInterferometer:
             g1 = ag.Galaxy(
                 redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
             )
-            g2 = ag.Galaxy(redshift=1.0)
 
-            plane = ag.Plane(galaxies=[g0, g1, g2])
+            plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
             fit = ag.FitInterferometer(
                 masked_interferometer=masked_interferometer_7, plane=plane
             )
 
-            traced_grids_of_galaxies = plane.traced_grids_of_galaxies_from_grid(
+            g0_profile_image = g0.profile_image_from_grid(
                 grid=masked_interferometer_7.grid
             )
 
-            g0_profile_image = g0.profile_image_from_grid(
-                grid=traced_grids_of_galaxies[0]
-            )
-
             g1_profile_image = g1.profile_image_from_grid(
-                grid=traced_grids_of_galaxies[1]
+                grid=masked_interferometer_7.grid
             )
 
             assert fit.galaxy_model_image_dict[g0].in_1d == pytest.approx(
@@ -1798,7 +1722,7 @@ class TestFitInterferometer:
                 g1_profile_image, 1.0e-4
             )
 
-        def test___lens_fit_galaxy_visibilities_dict__corresponds_to_galaxy_visibilities(
+        def test___fit_galaxy_visibilities_dict__corresponds_to_galaxy_visibilities(
             self, masked_interferometer_7
         ):
             g0 = ag.Galaxy(
@@ -1809,25 +1733,20 @@ class TestFitInterferometer:
             g1 = ag.Galaxy(
                 redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
             )
-            g2 = ag.Galaxy(redshift=1.0)
 
-            plane = ag.Plane(galaxies=[g0, g1, g2])
+            plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
             fit = ag.FitInterferometer(
                 masked_interferometer=masked_interferometer_7, plane=plane
             )
 
-            traced_grids_of_galaxies = plane.traced_grids_of_galaxies_from_grid(
-                grid=masked_interferometer_7.grid
-            )
-
             g0_profile_visibilities = g0.profile_visibilities_from_grid_and_transformer(
-                grid=traced_grids_of_galaxies[0],
+                grid=masked_interferometer_7.grid,
                 transformer=masked_interferometer_7.transformer,
             )
 
             g1_profile_visibilities = g1.profile_visibilities_from_grid_and_transformer(
-                grid=traced_grids_of_galaxies[1],
+                grid=masked_interferometer_7.grid,
                 transformer=masked_interferometer_7.transformer,
             )
 
@@ -1837,9 +1756,6 @@ class TestFitInterferometer:
             assert fit.galaxy_model_visibilities_dict[g1].in_1d == pytest.approx(
                 g1_profile_visibilities, 1.0e-4
             )
-            assert (
-                fit.galaxy_model_visibilities_dict[g2].in_1d == np.zeros((7, 2))
-            ).all()
 
             assert fit.model_visibilities.in_1d == pytest.approx(
                 fit.galaxy_model_visibilities_dict[g0].in_1d
@@ -1847,7 +1763,7 @@ class TestFitInterferometer:
                 1.0e-4,
             )
 
-        def test___all_lens_fit_quantities__hyper_background_noise(
+        def test___all_fit_quantities__hyper_background_noise(
             self, masked_interferometer_7
         ):
 
@@ -1867,7 +1783,7 @@ class TestFitInterferometer:
                 redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
             )
 
-            plane = ag.Plane(galaxies=[g0, g1])
+            plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
             fit = ag.FitInterferometer(
                 masked_interferometer=masked_interferometer_7,
@@ -1878,9 +1794,7 @@ class TestFitInterferometer:
             assert hyper_noise_map.in_1d == pytest.approx(fit.noise_map.in_1d)
 
     class TestCompareToManualInversionOnly:
-        def test___all_lens_fit_quantities__no_hyper_methods(
-            self, masked_interferometer_7
-        ):
+        def test___all_fit_quantities__no_hyper_methods(self, masked_interferometer_7):
 
             pix = ag.pix.Rectangular(shape=(3, 3))
             reg = ag.reg.Constant(coefficient=0.01)
@@ -1977,7 +1891,7 @@ class TestFitInterferometer:
                 == mapped_reconstructed_image
             ).all()
 
-        def test___lens_fit_galaxy_model_image_dict__profile_images_and_inversion_mapped_reconstructed_image(
+        def test___fit_galaxy_model_image_dict__profile_images_and_inversion_mapped_reconstructed_image(
             self, masked_interferometer_7
         ):
             pix = ag.pix.Rectangular(shape=(3, 3))
@@ -1986,7 +1900,7 @@ class TestFitInterferometer:
             g0 = ag.Galaxy(redshift=0.5)
             g1 = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-            plane = ag.Plane(galaxies=[g0, g1])
+            plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
             fit = ag.FitInterferometer(
                 masked_interferometer=masked_interferometer_7, plane=plane
@@ -2010,7 +1924,7 @@ class TestFitInterferometer:
                 inversion.mapped_reconstructed_image.in_1d, 1.0e-4
             )
 
-        def test___lens_fit_galaxy_model_visibilities_dict__has_inversion_mapped_reconstructed_visibilities(
+        def test___fit_galaxy_model_visibilities_dict__has_inversion_mapped_reconstructed_visibilities(
             self, masked_interferometer_7
         ):
             pix = ag.pix.Rectangular(shape=(3, 3))
@@ -2019,7 +1933,7 @@ class TestFitInterferometer:
             g0 = ag.Galaxy(redshift=0.5)
             g1 = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-            plane = ag.Plane(galaxies=[g0, g1])
+            plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
             fit = ag.FitInterferometer(
                 masked_interferometer=masked_interferometer_7, plane=plane
@@ -2047,7 +1961,7 @@ class TestFitInterferometer:
                 fit.galaxy_model_visibilities_dict[g1].in_1d, 1.0e-4
             )
 
-        def test___all_lens_fit_quantities__hyper_background_noise(
+        def test___all_fit_quantities__hyper_background_noise(
             self, masked_interferometer_7
         ):
 
@@ -2077,9 +1991,7 @@ class TestFitInterferometer:
             assert hyper_noise_map.in_1d == pytest.approx(fit.noise_map.in_1d)
 
     class TestCompareToManualProfilesAndInversion:
-        def test___all_lens_fit_quantities__no_hyper_methods(
-            self, masked_interferometer_7
-        ):
+        def test___all_fit_quantities__no_hyper_methods(self, masked_interferometer_7):
             galaxy_light = ag.Galaxy(
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
             )
@@ -2088,7 +2000,7 @@ class TestFitInterferometer:
             reg = ag.reg.Constant(coefficient=1.0)
             galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-            plane = ag.Plane(galaxies=[galaxy_light, galaxy_pix])
+            plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
 
             fit = ag.FitInterferometer(
                 masked_interferometer=masked_interferometer_7, plane=plane
@@ -2196,7 +2108,7 @@ class TestFitInterferometer:
                 == mapped_reconstructed_image
             ).all()
 
-        def test___lens_fit_galaxy_model_visibilities_dict__has_profile_image_and_inversion_mapped_reconstructed_image(
+        def test___fit_galaxy_model_visibilities_dict__has_profile_image_and_inversion_mapped_reconstructed_image(
             self, masked_interferometer_7
         ):
 
@@ -2206,28 +2118,25 @@ class TestFitInterferometer:
             g1 = ag.Galaxy(
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
             )
-            g2 = ag.Galaxy(redshift=0.5)
 
             pix = ag.pix.Rectangular(shape=(3, 3))
             reg = ag.reg.Constant(coefficient=1.0)
             galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-            plane = ag.Plane(galaxies=[g0, g1, g2, galaxy_pix])
+            plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, galaxy_pix])
 
             fit = ag.FitInterferometer(
                 masked_interferometer=masked_interferometer_7, plane=plane
             )
 
-            traced_grids = plane.traced_grids_of_galaxies_from_grid(
-                grid=masked_interferometer_7.grid
-            )
-
             g0_visibilities = g0.profile_visibilities_from_grid_and_transformer(
-                grid=traced_grids[0], transformer=masked_interferometer_7.transformer
+                grid=masked_interferometer_7.grid,
+                transformer=masked_interferometer_7.transformer,
             )
 
             g1_visibilities = g1.profile_visibilities_from_grid_and_transformer(
-                grid=traced_grids[1], transformer=masked_interferometer_7.transformer
+                grid=masked_interferometer_7.grid,
+                transformer=masked_interferometer_7.transformer,
             )
 
             profile_visibilities = g0_visibilities + g1_visibilities
@@ -2247,11 +2156,9 @@ class TestFitInterferometer:
                 regularization=reg,
             )
 
-            g0_image = g0.profile_image_from_grid(grid=traced_grids[0])
+            g0_image = g0.profile_image_from_grid(grid=masked_interferometer_7.grid)
 
-            g1_image = g1.profile_image_from_grid(grid=traced_grids[1])
-
-            assert (fit.galaxy_model_image_dict[g2].in_2d == np.zeros((7, 7))).all()
+            g1_image = g1.profile_image_from_grid(grid=masked_interferometer_7.grid)
 
             assert fit.galaxy_model_image_dict[g0].in_1d == pytest.approx(
                 g0_image.in_1d, 1.0e-4
@@ -2263,7 +2170,7 @@ class TestFitInterferometer:
                 inversion.mapped_reconstructed_image.in_1d, 1.0e-4
             )
 
-        def test___lens_fit_galaxy_model_visibilities_dict__has_profile_visibilitiess_and_inversion_mapped_reconstructed_visibilities(
+        def test___fit_galaxy_model_visibilities_dict__has_profile_visibilitiess_and_inversion_mapped_reconstructed_visibilities(
             self, masked_interferometer_7
         ):
 
@@ -2279,22 +2186,20 @@ class TestFitInterferometer:
             reg = ag.reg.Constant(coefficient=1.0)
             galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-            plane = ag.Plane(galaxies=[g0, g1, g2, galaxy_pix])
+            plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2, galaxy_pix])
 
             fit = ag.FitInterferometer(
                 masked_interferometer=masked_interferometer_7, plane=plane
             )
 
-            traced_grids = plane.traced_grids_of_galaxies_from_grid(
-                grid=masked_interferometer_7.grid
-            )
-
             g0_visibilities = g0.profile_visibilities_from_grid_and_transformer(
-                grid=traced_grids[0], transformer=masked_interferometer_7.transformer
+                grid=masked_interferometer_7.grid,
+                transformer=masked_interferometer_7.transformer,
             )
 
             g1_visibilities = g1.profile_visibilities_from_grid_and_transformer(
-                grid=traced_grids[1], transformer=masked_interferometer_7.transformer
+                grid=masked_interferometer_7.grid,
+                transformer=masked_interferometer_7.transformer,
             )
 
             profile_visibilities = g0_visibilities + g1_visibilities
@@ -2335,7 +2240,7 @@ class TestFitInterferometer:
                 1.0e-4,
             )
 
-        def test___all_lens_fit_quantities__hyper_background_noise(
+        def test___all_fit_quantities__hyper_background_noise(
             self, masked_interferometer_7
         ):
 
@@ -2353,7 +2258,7 @@ class TestFitInterferometer:
             reg = ag.reg.Constant(coefficient=1.0)
             galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-            plane = ag.Plane(galaxies=[galaxy_light, galaxy_pix])
+            plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
 
             fit = ag.FitInterferometer(
                 masked_interferometer=masked_interferometer_7,
@@ -2366,160 +2271,3 @@ class TestFitInterferometer:
             )
 
             assert hyper_noise_map.in_1d == pytest.approx(fit.noise_map.in_1d)
-
-
-class MockTracerPositions:
-    def __init__(self, positions, noise=None):
-        self.positions = positions
-        self.noise = noise
-
-    def traced_grids_of_galaxies_from_grid(self, grid, plane_index_limit=None):
-        return [self.positions]
-
-
-class TestFitPositions:
-    def test__x1_positions__mock_position_plane__maximum_separation_is_correct(self):
-
-        positions = ag.Coordinates(coordinates=[[(0.0, 0.0), (0.0, 1.0)]])
-        plane = MockTracerPositions(positions=positions)
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-        assert fit.maximum_separations[0] == 1.0
-
-        positions = ag.Coordinates([[(0.0, 0.0), (1.0, 1.0)]])
-        plane = MockTracerPositions(positions=positions)
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-        assert fit.maximum_separations[0] == np.sqrt(2)
-
-        positions = ag.Coordinates([[(0.0, 0.0), (1.0, 3.0)]])
-        plane = MockTracerPositions(positions=positions)
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-        assert fit.maximum_separations[0] == np.sqrt(np.square(1.0) + np.square(3.0))
-
-        positions = ag.Coordinates([[(-2.0, -4.0), (1.0, 3.0)]])
-        plane = MockTracerPositions(positions=positions)
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-        assert fit.maximum_separations[0] == np.sqrt(np.square(3.0) + np.square(7.0))
-
-        positions = ag.Coordinates([[(8.0, 4.0), (-9.0, -4.0)]])
-        plane = MockTracerPositions(positions=positions)
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-        assert fit.maximum_separations[0] == np.sqrt(np.square(17.0) + np.square(8.0))
-
-    def test_multiple_positions__mock_position_plane__maximum_separation_is_correct(
-        self
-    ):
-        positions = ag.Coordinates([[(0.0, 0.0), (0.0, 1.0), (0.0, 0.5)]])
-        plane = MockTracerPositions(positions=positions)
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-        assert fit.maximum_separations[0] == 1.0
-
-        positions = ag.Coordinates([[(0.0, 0.0), (0.0, 0.0), (3.0, 3.0)]])
-        plane = MockTracerPositions(positions=positions)
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-        assert fit.maximum_separations[0] == np.sqrt(18)
-
-        ag.Coordinates([[(0.0, 0.0), (1.0, 1.0), (3.0, 3.0)]])
-        plane = MockTracerPositions(positions=positions)
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-        assert fit.maximum_separations[0] == np.sqrt(18)
-
-        positions = ag.Coordinates(
-            [
-                [
-                    (-2.0, -4.0),
-                    (1.0, 3.0),
-                    (0.1, 0.1),
-                    (-0.1, -0.1),
-                    (0.3, 0.4),
-                    (-0.6, 0.5),
-                ]
-            ]
-        )
-        plane = MockTracerPositions(positions=positions)
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-        assert fit.maximum_separations[0] == np.sqrt(np.square(3.0) + np.square(7.0))
-
-        positions = ag.Coordinates([[(8.0, 4.0), (8.0, 4.0), (-9.0, -4.0)]])
-        plane = MockTracerPositions(positions=positions)
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-        assert fit.maximum_separations[0] == np.sqrt(np.square(17.0) + np.square(8.0))
-
-    def test_multiple_sets_of_positions__multiple_sets_of_max_distances(self):
-        positions = ag.Coordinates(
-            [
-                [(0.0, 0.0), (0.0, 1.0), (0.0, 0.5)],
-                [(0.0, 0.0), (0.0, 0.0), (3.0, 3.0)],
-                [(0.0, 0.0), (1.0, 1.0), (3.0, 3.0)],
-            ]
-        )
-        plane = MockTracerPositions(positions=positions)
-
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-
-        assert fit.maximum_separations[0] == 1.0
-        assert fit.maximum_separations[1] == np.sqrt(18)
-        assert fit.maximum_separations[2] == np.sqrt(18)
-
-    def test__likelihood__is_sum_of_separations_divided_by_noise(self):
-        positions = ag.Coordinates(
-            [
-                [(0.0, 0.0), (0.0, 1.0), (0.0, 0.5)],
-                [(0.0, 0.0), (0.0, 0.0), (3.0, 3.0)],
-                [(0.0, 0.0), (1.0, 1.0), (3.0, 3.0)],
-            ]
-        )
-
-        plane = MockTracerPositions(positions=positions)
-
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-        assert fit.chi_squared_map[0] == 1.0
-        assert fit.chi_squared_map[1] == pytest.approx(18.0, 1e-4)
-        assert fit.chi_squared_map[2] == pytest.approx(18.0, 1e-4)
-        assert fit.figure_of_merit == pytest.approx(-0.5 * (1.0 + 18 + 18), 1e-4)
-
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=2.0)
-        assert fit.chi_squared_map[0] == (1.0 / 2.0) ** 2.0
-        assert fit.chi_squared_map[1] == pytest.approx(
-            (np.sqrt(18.0) / 2.0) ** 2.0, 1e-4
-        )
-        assert fit.chi_squared_map[2] == pytest.approx(
-            (np.sqrt(18.0) / 2.0) ** 2.0, 1e-4
-        )
-        assert fit.figure_of_merit == pytest.approx(
-            -0.5
-            * (
-                (1.0 / 2.0) ** 2.0
-                + (np.sqrt(18.0) / 2.0) ** 2.0
-                + (np.sqrt(18.0) / 2.0) ** 2.0
-            ),
-            1e-4,
-        )
-
-    def test__threshold__if_not_met_returns_ray_tracing_exception(self):
-
-        positions = ag.Coordinates([[(0.0, 0.0), (0.0, 1.0)]])
-        plane = MockTracerPositions(positions=positions)
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-
-        assert fit.maximum_separation_within_threshold(threshold=100.0)
-        assert not fit.maximum_separation_within_threshold(threshold=0.1)
-
-    def test__above_with_real_plane(self):
-
-        plane = ag.Plane(
-            galaxies=[
-                ag.Galaxy(
-                    redshift=0.5, mass=ag.mp.SphericalIsothermal(einstein_radius=1.0)
-                ),
-                ag.Galaxy(redshift=1.0),
-            ]
-        )
-
-        positions = ag.Coordinates([[(1.0, 0.0), (-1.0, 0.0)]])
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-        assert fit.maximum_separation_within_threshold(threshold=0.01)
-
-        positions = ag.Coordinates([[(1.2, 0.0), (-1.0, 0.0)]])
-        fit = ag.FitPositions(positions=positions, plane=plane, noise_map=1.0)
-        assert fit.maximum_separation_within_threshold(threshold=0.3)
-        assert not fit.maximum_separation_within_threshold(threshold=0.15)

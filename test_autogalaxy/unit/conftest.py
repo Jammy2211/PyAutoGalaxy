@@ -134,7 +134,7 @@ def make_hyper_galaxy():
 
 @pytest.fixture(name="plane_7x7")
 def make_plane_7x7(gal_x1_lp_x1_mp):
-    return al.Plane(galaxies=[gal_x1_lp_x1_mp])
+    return ag.Plane(galaxies=[gal_x1_lp_x1_mp])
 
 
 # GALAXY DATA #
@@ -219,6 +219,69 @@ def make_gal_fit_7x7_deflections_x(gal_fit_data_7x7_deflections_x, gal_x1_mp):
         masked_galaxy_dataset=gal_fit_data_7x7_deflections_x, model_galaxies=[gal_x1_mp]
     )
 
+
+### HYPER GALAXIES ###
+
+@pytest.fixture(name="hyper_model_image_7x7")
+def make_hyper_model_image_7x7(mask_7x7):
+    return ag.MaskedArray.full(fill_value=5.0, mask=mask_7x7)
+
+
+@pytest.fixture(name="hyper_galaxy_image_0_7x7")
+def make_hyper_galaxy_image_0_7x7(mask_7x7):
+    return ag.MaskedArray.full(fill_value=2.0, mask=mask_7x7)
+
+
+@pytest.fixture(name="hyper_galaxy_image_1_7x7")
+def make_hyper_galaxy_image_1_7x7(mask_7x7):
+    return ag.MaskedArray.full(fill_value=3.0, mask=mask_7x7)
+
+
+@pytest.fixture(name="hyper_galaxy_image_path_dict_7x7")
+def make_hyper_galaxy_image_path_dict_7x7(
+    hyper_galaxy_image_0_7x7, hyper_galaxy_image_1_7x7
+):
+    hyper_galaxy_image_path_dict = {}
+
+    hyper_galaxy_image_path_dict[("g0",)] = hyper_galaxy_image_0_7x7
+    hyper_galaxy_image_path_dict[("g1",)] = hyper_galaxy_image_1_7x7
+
+    return hyper_galaxy_image_path_dict
+
+
+@pytest.fixture(name="contribution_map_7x7")
+def make_contribution_map_7x7(
+    hyper_model_image_7x7, hyper_galaxy_image_0_7x7, hyper_galaxy
+):
+    return hyper_galaxy.contribution_map_from_hyper_images(
+        hyper_model_image=hyper_model_image_7x7,
+        hyper_galaxy_image=hyper_galaxy_image_0_7x7,
+    )
+
+
+@pytest.fixture(name="hyper_noise_map_7x7")
+def make_hyper_noise_map_7x7(
+    masked_imaging_fit_x2_plane_7x7, contribution_map_7x7, hyper_galaxy
+):
+    hyper_noise = hyper_galaxy.hyper_noise_map_from_contribution_map(
+        noise_map=masked_imaging_fit_x2_plane_7x7.noise_map,
+        contribution_map=contribution_map_7x7,
+    )
+    return masked_imaging_fit_x2_plane_7x7.noise_map + hyper_noise
+
+### FITS ###
+
+@pytest.fixture(name="masked_imaging_fit_7x7")
+def make_masked_imaging_fit_x1_plane_7x7(masked_imaging_7x7, plane_7x7):
+    return ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane_7x7)
+
+@pytest.fixture(name="masked_interferometer_fit_7x7")
+def make_masked_interferometer_fit_x1_plane_7x7(
+    masked_interferometer_7, plane_7x7
+):
+    return ag.FitInterferometer(
+        masked_interferometer=masked_interferometer_7, plane=plane_7x7
+    )
 
 from autogalaxy.plot.lensing_plotters import Include
 

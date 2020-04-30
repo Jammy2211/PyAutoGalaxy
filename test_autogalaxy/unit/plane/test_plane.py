@@ -2067,6 +2067,55 @@ class TestAbstractPlaneData:
                     inversion_uses_border=False,
                 )
 
+    class TestInversion:
+        def test__x1_inversion_imaging_in_plane__performs_inversion_correctly(
+            self, sub_grid_7x7, masked_imaging_7x7
+        ):
+
+            pix = ag.pix.Rectangular(shape=(3, 3))
+            reg = ag.reg.Constant(coefficient=0.0)
+
+            g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+
+            plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
+
+            inversion = plane.inversion_imaging_from_grid_and_data(
+                grid=sub_grid_7x7,
+                image=masked_imaging_7x7.image,
+                noise_map=masked_imaging_7x7.noise_map,
+                convolver=masked_imaging_7x7.convolver,
+                inversion_uses_border=False,
+            )
+
+            assert inversion.mapped_reconstructed_image == pytest.approx(
+                masked_imaging_7x7.image, 1.0e-2
+            )
+
+        def test__x1_inversion_interferometer_in_plane__performs_inversion_correctly(
+            self, sub_grid_7x7, masked_interferometer_7
+        ):
+
+            masked_interferometer_7.visibilities = ag.Visibilities.ones(shape_1d=(7,))
+
+            pix = ag.pix.Rectangular(shape=(7, 7))
+            reg = ag.reg.Constant(coefficient=0.0)
+
+            g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+
+            plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
+
+            inversion = plane.inversion_interferometer_from_grid_and_data(
+                grid=sub_grid_7x7,
+                visibilities=masked_interferometer_7.visibilities,
+                noise_map=masked_interferometer_7.noise_map,
+                transformer=masked_interferometer_7.transformer,
+                inversion_uses_border=False,
+            )
+
+            assert inversion.mapped_reconstructed_visibilities[:, 0] == pytest.approx(
+                masked_interferometer_7.visibilities[:, 0], 1.0e-2
+            )
+
     class TestPlaneImage:
         def test__3x3_grid__extracts_max_min_coordinates__ignores_other_coordinates_more_central(
             self, sub_grid_7x7
