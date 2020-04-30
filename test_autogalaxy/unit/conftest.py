@@ -12,6 +12,30 @@ def set_config_path():
     )
 
 
+############
+# AutoGalaxy #
+############
+
+# Lens Datasets #
+
+
+@pytest.fixture(name="masked_imaging_7x7")
+def make_masked_imaging_7x7(imaging_7x7, sub_mask_7x7):
+    return ag.MaskedImaging(imaging=imaging_7x7, mask=sub_mask_7x7)
+
+
+@pytest.fixture(name="masked_interferometer_7")
+def make_masked_interferometer_7(
+    interferometer_7, mask_7x7, visibilities_mask_7x2, sub_grid_7x7, transformer_7x7_7
+):
+    return ag.MaskedInterferometer(
+        interferometer=interferometer_7,
+        visibilities_mask=visibilities_mask_7x2,
+        real_space_mask=mask_7x7,
+        transformer_class=aa.TransformerDFT,
+    )
+
+
 #
 # MODEL #
 #
@@ -103,6 +127,14 @@ def make_gal_x1_lp_x1_mp(lp_0, mp_0):
 @pytest.fixture(name="hyper_galaxy")
 def make_hyper_galaxy():
     return ag.HyperGalaxy(noise_factor=1.0, noise_power=1.0, contribution_factor=1.0)
+
+
+# Plane #
+
+
+@pytest.fixture(name="plane_7x7")
+def make_plane_7x7(gal_x1_lp_x1_mp):
+    return al.Plane(galaxies=[gal_x1_lp_x1_mp])
 
 
 # GALAXY DATA #

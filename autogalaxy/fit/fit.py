@@ -37,7 +37,7 @@ class FitImaging(aa_fit.FitImaging):
             or hyper_background_noise is not None
         ):
 
-            masked_imaging = masked_imaging.modify_noise_map(
+            masked_imaging = masked_imaging.modify_image_and_noise_map(
                 image=image, noise_map=noise_map
             )
 
@@ -74,6 +74,10 @@ class FitImaging(aa_fit.FitImaging):
         )
 
     @property
+    def galaxies(self):
+        return self.plane.galaxies
+
+    @property
     def grid(self):
         return self.masked_imaging.grid
 
@@ -82,34 +86,39 @@ class FitImaging(aa_fit.FitImaging):
         """
         A dictionary associating galaxies with their corresponding model images
         """
+
         galaxy_model_image_dict = self.plane.galaxy_blurred_profile_image_dict_from_grid_and_convolver(
             grid=self.grid,
             convolver=self.masked_imaging.convolver,
             blurring_grid=self.masked_imaging.blurring_grid,
         )
 
-        # TODO : Extend to multiple inversioons across Planes
+        for galaxy in self.galaxies:
 
-        galaxy_model_image_dict.update(
-            {self.plane.galaxies[0]: self.inversion.mapped_reconstructed_image}
-        )
+            if galaxy.has_pixelization:
+
+                galaxy_model_image_dict.update(
+                    {galaxy: self.inversion.mapped_reconstructed_image}
+                )
 
         return galaxy_model_image_dict
 
     @property
     def model_images_of_galaxies(self):
 
-        model_images_of_galaxies = self.plane.blurred_profile_images_of__from_grid_and_psf(
+        model_images_of_galaxies = self.plane.blurred_profile_images_of_galaxies_from_grid_and_psf(
             grid=self.grid,
             psf=self.masked_imaging.psf,
             blurring_grid=self.masked_imaging.blurring_grid,
         )
 
-        for galaxy_index in self.plane.galaxy_indexes_with_pixelizations:
+        for galaxy_index, galaxy in enumerate(self.galaxies):
 
-            model_images_of_galaxies[
-                galaxy_index
-            ] += self.inversion.mapped_reconstructed_image
+            if galaxy.has_pixelization:
+
+                model_images_of_galaxies[
+                    galaxy_index
+                ] += self.inversion.mapped_reconstructed_image
 
         return model_images_of_galaxies
 
@@ -120,14 +129,8 @@ class FitImaging(aa_fit.FitImaging):
         )
 
     @property
-    def unmasked_blurred_profile_image_of_planes(self):
-        return self.plane.unmasked_blurred_profile_image_of_planes_from_grid_and_psf(
-            grid=self.grid, psf=self.masked_imaging.psf
-        )
-
-    @property
-    def unmasked_blurred_profile_image_of_planes_and_galaxies(self):
-        return self.plane.unmasked_blurred_profile_image_of_planes_and_galaxies_from_grid_and_psf(
+    def unmasked_blurred_profile_image_of_galaxies(self):
+        return self.plane.unmasked_blurred_profile_image_of_galaxies_from_grid_and_psf(
             grid=self.grid, psf=self.masked_imaging.psf
         )
 

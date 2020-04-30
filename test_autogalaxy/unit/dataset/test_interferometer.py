@@ -111,8 +111,6 @@ class TestMaskedInterferometer:
         assert masked_interferometer.primary_beam_shape_2d == (5, 5)
 
 
-
-
 class TestSimulatorInterferometer:
     def test__from_plane__same_as_plane_input(self):
 
@@ -124,9 +122,7 @@ class TestSimulatorInterferometer:
             mass=ag.mp.EllipticalIsothermal(einstein_radius=1.6),
         )
 
-        galaxy_1 = ag.Galaxy(
-            redshift=1.0, light=ag.lp.EllipticalSersic(intensity=0.3)
-        )
+        galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.EllipticalSersic(intensity=0.3))
 
         plane = ag.Plane(redshift=0.75, galaxies=[galaxy_0, galaxy_1])
 

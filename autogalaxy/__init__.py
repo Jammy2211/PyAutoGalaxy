@@ -35,6 +35,7 @@ from autogalaxy.galaxy.masked_galaxy_data import MaskedGalaxyDataset
 from autogalaxy.galaxy.fit_galaxy import FitGalaxy
 from autogalaxy.galaxy.galaxy_model import GalaxyModel
 from autogalaxy.plane.plane import Plane
+from autogalaxy.fit.fit import FitImaging, FitInterferometer
 from autogalaxy.hyper import hyper_data
 from autogalaxy import plot
 

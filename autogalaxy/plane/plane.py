@@ -7,6 +7,7 @@ from autoarray.structures import arrays, grids, visibilities as vis
 from autogalaxy.util import cosmology_util
 from autogalaxy import exc
 from autogalaxy import dimensions as dim
+from autogalaxy.galaxy import galaxy as g
 from autogalaxy.util import plane_util
 
 
@@ -513,6 +514,34 @@ class AbstractPlaneData(AbstractPlaneLensing):
             for galaxy in self.galaxies
         ]
 
+    def unmasked_blurred_profile_image_from_grid_and_psf(self, grid, psf):
+
+        padded_grid = grid.padded_grid_from_kernel_shape(kernel_shape_2d=psf.shape_2d)
+
+        padded_image = self.profile_image_from_grid(grid=padded_grid)
+
+        return padded_grid.mapping.unmasked_blurred_array_from_padded_array_psf_and_image_shape(
+            padded_array=padded_image, psf=psf, image_shape=grid.mask.shape
+        )
+
+    def unmasked_blurred_profile_image_of_galaxies_from_grid_and_psf(self, grid, psf):
+
+        padded_grid = grid.padded_grid_from_kernel_shape(kernel_shape_2d=psf.shape_2d)
+
+        unmasked_blurred_profile_images_of_planes = []
+
+        for galaxy in self.galaxies:
+
+            padded_image_1d = galaxy.profile_image_from_grid(grid=padded_grid)
+
+            unmasked_blurred_array_2d = padded_grid.mapping.unmasked_blurred_array_from_padded_array_psf_and_image_shape(
+                padded_array=padded_image_1d, psf=psf, image_shape=grid.mask.shape
+            )
+
+            unmasked_blurred_profile_images_of_planes.append(unmasked_blurred_array_2d)
+
+        return unmasked_blurred_profile_images_of_planes
+
     def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
 
         if self.galaxies:
@@ -639,6 +668,59 @@ class AbstractPlaneData(AbstractPlaneLensing):
                 contribution_maps.append(None)
 
         return contribution_maps
+
+    def galaxy_profile_image_dict_from_grid(self, grid) -> {g.Galaxy: np.ndarray}:
+        """
+        A dictionary associating galaxies with their corresponding model images
+        """
+
+        galaxy_profile_image_dict = dict()
+
+        profile_images_of_galaxies = self.profile_images_of_galaxies_from_grid(
+            grid=grid
+        )
+        for (galaxy_index, galaxy) in enumerate(self.galaxies):
+            galaxy_profile_image_dict[galaxy] = profile_images_of_galaxies[galaxy_index]
+
+        return galaxy_profile_image_dict
+
+    def galaxy_blurred_profile_image_dict_from_grid_and_convolver(
+        self, grid, convolver, blurring_grid
+    ) -> {g.Galaxy: np.ndarray}:
+        """
+        A dictionary associating galaxies with their corresponding model images
+        """
+
+        galaxy_blurred_profile_image_dict = dict()
+
+        blurred_profile_images_of_galaxies = self.blurred_profile_images_of_galaxies_from_grid_and_convolver(
+            grid=grid, convolver=convolver, blurring_grid=blurring_grid
+        )
+        for (galaxy_index, galaxy) in enumerate(self.galaxies):
+            galaxy_blurred_profile_image_dict[
+                galaxy
+            ] = blurred_profile_images_of_galaxies[galaxy_index]
+
+        return galaxy_blurred_profile_image_dict
+
+    def galaxy_profile_visibilities_dict_from_grid_and_transformer(
+        self, grid, transformer
+    ) -> {g.Galaxy: np.ndarray}:
+        """
+        A dictionary associating galaxies with their corresponding model images
+        """
+
+        galaxy_profile_visibilities_image_dict = dict()
+
+        profile_visibilities_of_galaxies = self.profile_visibilities_of_galaxies_from_grid_and_transformer(
+            grid=grid, transformer=transformer
+        )
+        for (galaxy_index, galaxy) in enumerate(self.galaxies):
+            galaxy_profile_visibilities_image_dict[
+                galaxy
+            ] = profile_visibilities_of_galaxies[galaxy_index]
+
+        return galaxy_profile_visibilities_image_dict
 
     @property
     def yticks(self):
