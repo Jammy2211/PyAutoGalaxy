@@ -84,12 +84,8 @@ def subplot_fit_real_space(fit, include=None, sub_plotter=None):
 
         inversion_plots.reconstructed_image(
             inversion=fit.inversion,
-            light_profile_centres=include.light_profile_centres_from_obj(
-                fit.plane.image_plane
-            ),
-            mass_profile_centres=include.mass_profile_centres_from_obj(
-                fit.plane.image_plane
-            ),
+            light_profile_centres=include.light_profile_centres_from_obj(fit.plane),
+            mass_profile_centres=include.mass_profile_centres_from_obj(fit.plane),
             critical_curves=include.critical_curves_from_obj(obj=fit.plane),
             image_positions=include.positions_from_fit(fit=fit),
             grid=include.inversion_image_pixelization_grid_from_fit(fit=fit),

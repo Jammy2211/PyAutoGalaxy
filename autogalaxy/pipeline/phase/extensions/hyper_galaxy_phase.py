@@ -186,7 +186,7 @@ class HyperGalaxyPhase(HyperPhase):
             inversion_uses_border=cast(
                 PhaseImaging, phase
             ).meta_dataset.inversion_uses_border,
-            preload_sparse_grids_of_planes=None,
+            preload_sparse_grids_of_galaxies=None,
         )
 
         hyper_result = copy.deepcopy(results.last)

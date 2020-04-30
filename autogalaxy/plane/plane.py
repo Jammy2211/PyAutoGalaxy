@@ -526,7 +526,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         padded_grid = grid.padded_grid_from_kernel_shape(kernel_shape_2d=psf.shape_2d)
 
-        unmasked_blurred_profile_images_of_planes = []
+        unmasked_blurred_profile_images_of_galaxies = []
 
         for galaxy in self.galaxies:
 
@@ -536,9 +536,11 @@ class AbstractPlaneData(AbstractPlaneLensing):
                 padded_array=padded_image_1d, psf=psf, image_shape=grid.mask.shape
             )
 
-            unmasked_blurred_profile_images_of_planes.append(unmasked_blurred_array_2d)
+            unmasked_blurred_profile_images_of_galaxies.append(
+                unmasked_blurred_array_2d
+            )
 
-        return unmasked_blurred_profile_images_of_planes
+        return unmasked_blurred_profile_images_of_galaxies
 
     def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
 

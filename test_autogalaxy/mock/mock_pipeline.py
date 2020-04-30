@@ -184,7 +184,7 @@ class MockHyperCombinedPhase:
         pass
 
     @property
-    def max_log_likelihood_pixelization_grids_of_planes(self):
+    def max_log_likelihood_pixelization_grids_of_galaxies(self):
         return 1
 
 

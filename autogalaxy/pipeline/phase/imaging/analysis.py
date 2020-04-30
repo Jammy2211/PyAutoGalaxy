@@ -101,7 +101,5 @@ class Analysis(analysis_dataset.Analysis):
 
             visualizer = self.visualizer
 
-        visualizer.visualize_ray_tracing(
-            plane=fit.plane, during_analysis=during_analysis
-        )
+        visualizer.visualize_plane(plane=fit.plane, during_analysis=during_analysis)
         visualizer.visualize_fit(fit=fit, during_analysis=during_analysis)

@@ -255,7 +255,7 @@ class FitInterferometer(aa_fit.FitInterferometer):
 
     def model_visibilities_of_galaxies(self):
 
-        model_visibilities_of_galaxies = self.plane.profile_visibilities_of_planes_from_grid_and_transformer(
+        model_visibilities_of_galaxies = self.plane.profile_visibilities_of_galaxies_from_grid_and_transformer(
             grid=self.masked_interferometer.grid,
             transformer=self.masked_interferometer.transformer,
         )

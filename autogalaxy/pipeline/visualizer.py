@@ -26,16 +26,6 @@ class AbstractVisualizer:
         )
         self.include = lensing_plotters.Include()
 
-        self.plot_ray_tracing_all_at_end_png = plot_setting("plane", "all_at_end_png")
-        self.plot_ray_tracing_all_at_end_fits = plot_setting("plane", "all_at_end_fits")
-        self.plot_subplot_ray_tracing = plot_setting("plane", "subplot_ray_tracing")
-        self.plot_ray_tracing_profile_image = plot_setting("plane", "profile_image")
-        self.plot_ray_tracing_source_plane = plot_setting("plane", "source_plane_image")
-        self.plot_ray_tracing_convergence = plot_setting("plane", "convergence")
-        self.plot_ray_tracing_potential = plot_setting("plane", "potential")
-        self.plot_ray_tracing_deflections = plot_setting("plane", "deflections")
-        self.plot_ray_tracing_magnification = plot_setting("plane", "magnification")
-
     def new_visualizer_with_preloaded_critical_curves_and_caustics(
         self, preloaded_critical_curves, preloaded_caustics
     ):
@@ -124,14 +114,11 @@ class PhaseDatasetVisualizer(AbstractVisualizer):
             "fit", "normalized_residual_map"
         )
         self.plot_fit_chi_squared_map = plot_setting("fit", "chi_squared_map")
-        self.plot_fit_subtracted_images_of_planes = plot_setting(
-            "fit", "subtracted_images_of_planes"
+        self.plot_fit_subtracted_images_of_galaxies = plot_setting(
+            "fit", "subtracted_images_of_galaxies"
         )
-        self.plot_fit_model_images_of_planes = plot_setting(
-            "fit", "model_images_of_planes"
-        )
-        self.plot_fit_plane_images_of_planes = plot_setting(
-            "fit", "plane_images_of_planes"
+        self.plot_fit_model_images_of_galaxies = plot_setting(
+            "fit", "model_images_of_galaxies"
         )
 
         self.plot_subplot_inversion = plot_setting("inversion", "subplot_inversion")
@@ -162,81 +149,6 @@ class PhaseDatasetVisualizer(AbstractVisualizer):
 
         self.plot_hyper_model_image = plot_setting("hyper_galaxy", "model_image")
         self.plot_hyper_galaxy_images = plot_setting("hyper_galaxy", "images")
-
-    def visualize_ray_tracing(self, plane, during_analysis):
-
-        plotter = self.plotter.plotter_with_new_output(
-            path=self.plotter.output.path + "plane/"
-        )
-
-        if self.plot_subplot_ray_tracing:
-
-            ray_tracing_plots.subplot_tracer(
-                plane=plane,
-                grid=self.masked_dataset.grid,
-                positions=self.include.positions_from_masked_dataset(
-                    masked_dataset=self.masked_dataset
-                ),
-                include=self.include,
-                sub_plotter=self.sub_plotter,
-            )
-
-        ray_tracing_plots.individual(
-            plane=plane,
-            grid=self.masked_dataset.grid,
-            positions=self.include.positions_from_masked_dataset(
-                masked_dataset=self.masked_dataset
-            ),
-            plot_profile_image=self.plot_ray_tracing_profile_image,
-            plot_source_plane=self.plot_ray_tracing_source_plane,
-            plot_convergence=self.plot_ray_tracing_convergence,
-            plot_potential=self.plot_ray_tracing_potential,
-            plot_deflections=self.plot_ray_tracing_deflections,
-            plot_magnification=self.plot_ray_tracing_magnification,
-            include=self.include,
-            plotter=plotter,
-        )
-
-        if not during_analysis:
-
-            if self.plot_ray_tracing_all_at_end_png:
-
-                ray_tracing_plots.individual(
-                    plane=plane,
-                    grid=self.masked_dataset.grid,
-                    positions=self.include.positions_from_masked_dataset(
-                        masked_dataset=self.masked_dataset
-                    ),
-                    plot_profile_image=True,
-                    plot_source_plane=True,
-                    plot_convergence=True,
-                    plot_potential=True,
-                    plot_deflections=True,
-                    include=self.include,
-                    plotter=plotter,
-                )
-
-            if self.plot_ray_tracing_all_at_end_fits:
-
-                self.visualize_ray_tracing_in_fits(plane=plane)
-
-    def visualize_ray_tracing_in_fits(self, plane):
-
-        fits_plotter = self.plotter.plotter_with_new_output(
-            path=self.plotter.output.path + "/plane/fits/", format="fits"
-        )
-
-        ray_tracing_plots.individual(
-            plane=plane,
-            grid=self.masked_dataset.grid,
-            plot_profile_image=True,
-            plot_source_plane=True,
-            plot_convergence=True,
-            plot_potential=True,
-            plot_deflections=True,
-            include=self.include,
-            plotter=fits_plotter,
-        )
 
     def visualize_hyper_images(self, hyper_galaxy_image_path_dict, hyper_model_image):
 
@@ -298,9 +210,6 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
                 mask=self.include.mask_from_masked_dataset(
                     masked_dataset=self.masked_dataset
                 ),
-                positions=self.include.positions_from_masked_dataset(
-                    masked_dataset=self.masked_dataset
-                ),
                 include=self.include,
                 sub_plotter=self.sub_plotter,
             )
@@ -308,9 +217,6 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
         aa.plot.Imaging.individual(
             imaging=self.masked_imaging.imaging,
             mask=self.include.mask_from_masked_dataset(
-                masked_dataset=self.masked_dataset
-            ),
-            positions=self.include.positions_from_masked_dataset(
                 masked_dataset=self.masked_dataset
             ),
             plot_image=self.plot_dataset_data,
@@ -348,9 +254,8 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
             plot_residual_map=self.plot_fit_residual_map,
             plot_chi_squared_map=self.plot_fit_chi_squared_map,
             plot_normalized_residual_map=self.plot_fit_normalized_residual_map,
-            plot_subtracted_images_of_galaxies=self.plot_fit_subtracted_images_of_planes,
-            plot_model_images_of_galaxies=self.plot_fit_model_images_of_planes,
-            plot_plane_images_of_galaxies=self.plot_fit_plane_images_of_planes,
+            plot_subtracted_images_of_galaxies=self.plot_fit_subtracted_images_of_galaxies,
+            plot_model_images_of_galaxies=self.plot_fit_model_images_of_galaxies,
             include=self.include,
             plotter=plotter,
         )
@@ -360,18 +265,14 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
             if self.plot_subplot_inversion:
                 inversion_plots.subplot_inversion(
                     inversion=fit.inversion,
-                    image_positions=self.include.positions_from_fit(fit=fit),
-                    source_positions=self.include.positions_of_plane_from_fit_and_plane_index(
-                        fit=fit, plane_index=-1
-                    ),
                     grid=self.include.inversion_image_pixelization_grid_from_fit(
                         fit=fit
                     ),
                     light_profile_centres=self.include.light_profile_centres_from_obj(
-                        obj=fit.plane.image_plane
+                        obj=fit.plane
                     ),
                     mass_profile_centres=self.include.mass_profile_centres_from_obj(
-                        obj=fit.plane.image_plane
+                        obj=fit.plane
                     ),
                     critical_curves=self.include.critical_curves_from_obj(
                         obj=fit.plane
@@ -387,16 +288,12 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
 
             inversion_plots.individuals(
                 inversion=fit.inversion,
-                image_positions=self.include.positions_from_fit(fit=fit),
-                source_positions=self.include.positions_of_plane_from_fit_and_plane_index(
-                    fit=fit, plane_index=-1
-                ),
                 grid=self.include.inversion_image_pixelization_grid_from_fit(fit=fit),
                 light_profile_centres=self.include.light_profile_centres_from_obj(
-                    obj=fit.plane.image_plane
+                    obj=fit.plane
                 ),
                 mass_profile_centres=self.include.mass_profile_centres_from_obj(
-                    obj=fit.plane.image_plane
+                    obj=fit.plane
                 ),
                 critical_curves=self.include.critical_curves_from_obj(obj=fit.plane),
                 caustics=self.include.caustics_from_obj(obj=fit.plane),
@@ -427,7 +324,6 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
                     plot_chi_squared_map=True,
                     plot_subtracted_images_of_galaxies=True,
                     plot_model_images_of_galaxies=True,
-                    plot_plane_images_of_galaxies=True,
                     include=self.include,
                     plotter=plotter,
                 )
@@ -435,18 +331,14 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
                 if fit.inversion is not None:
                     inversion_plots.individuals(
                         inversion=fit.inversion,
-                        image_positions=self.include.positions_from_fit(fit=fit),
-                        source_positions=self.include.positions_of_plane_from_fit_and_plane_index(
-                            fit=fit, plane_index=-1
-                        ),
                         grid=self.include.inversion_image_pixelization_grid_from_fit(
                             fit=fit
                         ),
                         light_profile_centres=self.include.light_profile_centres_from_obj(
-                            obj=fit.plane.image_plane
+                            obj=fit.plane
                         ),
                         mass_profile_centres=self.include.mass_profile_centres_from_obj(
-                            obj=fit.plane.image_plane
+                            obj=fit.plane
                         ),
                         critical_curves=self.include.critical_curves_from_obj(
                             obj=fit.plane
@@ -486,7 +378,6 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
             plot_chi_squared_map=True,
             plot_subtracted_images_of_galaxies=True,
             plot_model_images_of_galaxies=True,
-            plot_plane_images_of_galaxies=True,
             include=self.include,
             plotter=fits_plotter,
         )
@@ -585,16 +476,12 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
             # if self.plot_fit_inversion_as_subplot:
             #     inversion_plots.subplot_inversion(
             #         inversion=fit.inversion,
-            #         image_positions=self.include.positions_from_fit(fit=fit),
-            #         source_positions=self.include.positions_of_plane_from_fit_and_plane_index(
-            #             fit=fit, plane_index=-1
-            #         ),
             #         grid=self.include.inversion_image_pixelization_grid_from_fit(fit=fit),
             #         light_profile_centres=self.include.light_profile_centres_of_galaxies_from_obj(
-            #             obj=fit.plane.image_plane
+            #             obj=fit.plane
             #         ),
             #         mass_profile_centres=self.include.mass_profile_centres_of_galaxies_from_obj(
-            #             obj=fit.plane.image_plane
+            #             obj=fit.plane
             #         ),
             #         critical_curves=self.include.critical_curves_from_obj(obj=fit.plane),
             #         caustics=self.include.caustics_from_obj(obj=fit.plane),
@@ -604,16 +491,12 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
 
             inversion_plots.individuals(
                 inversion=fit.inversion,
-                image_positions=self.include.positions_from_fit(fit=fit),
-                source_positions=self.include.positions_of_plane_from_fit_and_plane_index(
-                    fit=fit, plane_index=-1
-                ),
                 grid=self.include.inversion_image_pixelization_grid_from_fit(fit=fit),
                 light_profile_centres=self.include.light_profile_centres_from_obj(
-                    obj=fit.plane.image_plane
+                    obj=fit.plane
                 ),
                 mass_profile_centres=self.include.mass_profile_centres_from_obj(
-                    obj=fit.plane.image_plane
+                    obj=fit.plane
                 ),
                 critical_curves=self.include.critical_curves_from_obj(obj=fit.plane),
                 caustics=self.include.caustics_from_obj(obj=fit.plane),
@@ -649,18 +532,14 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
                 if fit.inversion is not None:
                     inversion_plots.individuals(
                         inversion=fit.inversion,
-                        image_positions=self.include.positions_from_fit(fit=fit),
-                        source_positions=self.include.positions_of_plane_from_fit_and_plane_index(
-                            fit=fit, plane_index=-1
-                        ),
                         grid=self.include.inversion_image_pixelization_grid_from_fit(
                             fit=fit
                         ),
                         light_profile_centres=self.include.light_profile_centres_from_obj(
-                            obj=fit.plane.image_plane
+                            obj=fit.plane
                         ),
                         mass_profile_centres=self.include.mass_profile_centres_from_obj(
-                            obj=fit.plane.image_plane
+                            obj=fit.plane
                         ),
                         critical_curves=self.include.critical_curves_from_obj(
                             obj=fit.plane
@@ -700,18 +579,14 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
                 if fit.inversion is not None:
                     inversion_plots.individuals(
                         inversion=fit.inversion,
-                        image_positions=self.include.positions_from_fit(fit=fit),
-                        source_positions=self.include.positions_of_plane_from_fit_and_plane_index(
-                            fit=fit, plane_index=-1
-                        ),
                         grid=self.include.inversion_image_pixelization_grid_from_fit(
                             fit=fit
                         ),
                         light_profile_centres=self.include.light_profile_centres_from_obj(
-                            obj=fit.plane.image_plane
+                            obj=fit.plane
                         ),
                         mass_profile_centres=self.include.mass_profile_centres_from_obj(
-                            obj=fit.plane.image_plane
+                            obj=fit.plane
                         ),
                         critical_curves=self.include.critical_curves_from_obj(
                             obj=fit.plane

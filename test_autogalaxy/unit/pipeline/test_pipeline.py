@@ -157,24 +157,3 @@ class DummyPhasePositions(af.AbstractPhase):
         self.pixel_scales = pixel_scales
         self.results = results
         return af.Result(af.ModelInstance(), 1)
-
-
-class TestPipelinePositions:
-    def test_run_pipeline(self):
-        phase_1 = DummyPhasePositions(phase_name="one")
-        phase_2 = DummyPhasePositions(phase_name="two")
-        pipeline = ag.PipelinePositions("", phase_1, phase_2)
-
-        pipeline.run(pixel_scales=None)
-
-        assert len(phase_2.results) == 2
-
-    def test_addition(self):
-        phase_1 = DummyPhasePositions("one")
-        phase_2 = DummyPhasePositions("two")
-        phase_3 = DummyPhasePositions("three")
-
-        pipeline1 = ag.PipelinePositions("", phase_1, phase_2)
-        pipeline2 = ag.PipelinePositions("", phase_3)
-
-        assert (phase_1, phase_2, phase_3) == (pipeline1 + pipeline2).phases

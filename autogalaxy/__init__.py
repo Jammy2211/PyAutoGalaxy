@@ -57,7 +57,7 @@ from autogalaxy.pipeline.phase.dataset.phase import PhaseDataset
 from autogalaxy.pipeline.phase.imaging.phase import PhaseImaging
 from autogalaxy.pipeline.phase.interferometer.phase import PhaseInterferometer
 from autogalaxy.pipeline.phase.phase_galaxy import PhaseGalaxy
-from autogalaxy.pipeline.pipeline import PipelineDataset, PipelinePositions
+from autogalaxy.pipeline.pipeline import PipelineDataset
 from autogalaxy.pipeline import setup
 from autolens import plot
 

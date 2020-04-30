@@ -25,7 +25,7 @@ def set_config_path():
 
 class TestAbstractPhaseVisualizer:
     def test__visualizer_with_preloaded_critical_curves_and_caustics_is_setup(
-        self, masked_imaging_7x7, plane_x2_plane_7x7, include_all, plot_path, plot_patch
+        self, masked_imaging_7x7, include_all, plot_path, plot_patch
     ):
         visualizer = vis.PhaseDatasetVisualizer(
             masked_dataset=masked_imaging_7x7, image_path=plot_path
@@ -43,46 +43,6 @@ class TestAbstractPhaseVisualizer:
 
         visualizer.include.critical_curves = False
         visualizer.include.caustics = False
-        visualizer.visualize_ray_tracing(plane=plane_x2_plane_7x7, during_analysis=True)
-
-        assert plot_path + "subplots/subplot_plane.png" in plot_patch.paths
-
-
-class TestPhaseDataSetVisualizer:
-    def test__visualizes_ray_tracing_using_configs(
-        self, masked_imaging_7x7, plane_x2_plane_7x7, include_all, plot_path, plot_patch
-    ):
-
-        if os.path.exists(plot_path):
-            shutil.rmtree(plot_path)
-
-        visualizer = vis.PhaseDatasetVisualizer(
-            masked_dataset=masked_imaging_7x7, image_path=plot_path
-        )
-
-        visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=include_all.preloaded_critical_curves,
-            preloaded_caustics=include_all.preloaded_caustics,
-        )
-
-        visualizer.visualize_ray_tracing(
-            plane=plane_x2_plane_7x7, during_analysis=False
-        )
-
-        assert plot_path + "subplots/subplot_plane.png" in plot_patch.paths
-        assert plot_path + "plane/profile_image.png" in plot_patch.paths
-        assert plot_path + "plane/source_plane.png" in plot_patch.paths
-        assert plot_path + "plane/convergence.png" in plot_patch.paths
-        assert plot_path + "plane/potential.png" not in plot_patch.paths
-        assert plot_path + "plane/deflections_y.png" not in plot_patch.paths
-        assert plot_path + "plane/deflections_x.png" not in plot_patch.paths
-        assert plot_path + "plane/magnification.png" in plot_patch.paths
-
-        convergence = ag.util.array.numpy_array_2d_from_fits(
-            file_path=plot_path + "plane/fits/convergence.fits", hdu=0
-        )
-
-        assert convergence.shape == (5, 5)
 
 
 class TestPhaseImagingVisualizer:
@@ -118,7 +78,7 @@ class TestPhaseImagingVisualizer:
     def test__source_and_lens__visualizes_fit_and_inversion_using_configs(
         self,
         masked_imaging_7x7,
-        masked_imaging_fit_x2_plane_inversion_7x7,
+        masked_imaging_fit_x2_galaxy_inversion_7x7,
         include_all,
         plot_path,
         plot_patch,
@@ -137,7 +97,7 @@ class TestPhaseImagingVisualizer:
         )
 
         visualizer.visualize_fit(
-            fit=masked_imaging_fit_x2_plane_inversion_7x7, during_analysis=False
+            fit=masked_imaging_fit_x2_galaxy_inversion_7x7, during_analysis=False
         )
 
         assert plot_path + "subplots/subplot_fit_imaging.png" in plot_patch.paths
@@ -149,21 +109,21 @@ class TestPhaseImagingVisualizer:
         assert plot_path + "fit_imaging/normalized_residual_map.png" in plot_patch.paths
         assert plot_path + "fit_imaging/chi_squared_map.png" in plot_patch.paths
         assert (
-            plot_path + "fit_imaging/subtracted_image_of_plane_0.png"
+            plot_path + "fit_imaging/subtracted_image_of_galaxy_0.png"
             in plot_patch.paths
         )
         assert (
-            plot_path + "fit_imaging/subtracted_image_of_plane_1.png"
+            plot_path + "fit_imaging/subtracted_image_of_galaxy_1.png"
             in plot_patch.paths
         )
         assert (
-            plot_path + "fit_imaging/model_image_of_plane_0.png" not in plot_patch.paths
+            plot_path + "fit_imaging/model_image_of_galaxy_0.png"
+            not in plot_patch.paths
         )
         assert (
-            plot_path + "fit_imaging/model_image_of_plane_1.png" not in plot_patch.paths
+            plot_path + "fit_imaging/model_image_of_galaxy_1.png"
+            not in plot_patch.paths
         )
-        assert plot_path + "fit_imaging/plane_image_of_plane_0.png" in plot_patch.paths
-        assert plot_path + "fit_imaging/plane_image_of_plane_1.png" in plot_patch.paths
 
         assert plot_path + "subplots/subplot_inversion.png" in plot_patch.paths
         assert plot_path + "inversion/reconstructed_image.png" in plot_patch.paths
@@ -227,12 +187,7 @@ class TestPhaseImagingVisualizer:
 
 class TestPhaseInterferometerVisualizer:
     def test__visualizes_interferometer_using_configs(
-        self,
-        masked_interferometer_7,
-        general_config,
-        include_all,
-        plot_path,
-        plot_patch,
+        self, masked_interferometer_7, include_all, plot_path, plot_patch
     ):
 
         visualizer = vis.PhaseInterferometerVisualizer(
@@ -252,10 +207,10 @@ class TestPhaseInterferometerVisualizer:
         assert plot_path + "interferometer/v_wavelengths.png" not in plot_patch.paths
         assert plot_path + "interferometer/primary_beam.png" in plot_patch.paths
 
-    def test__source_and_lens__visualizes_fit_using_configs(
+    def test__x2_galaxies_in_fit__visualizes_fit_using_configs(
         self,
         masked_interferometer_7,
-        masked_interferometer_fit_x2_plane_inversion_7x7,
+        masked_interferometer_fit_x2_galaxy_inversion_7x7,
         include_all,
         plot_path,
         plot_patch,
@@ -271,7 +226,7 @@ class TestPhaseInterferometerVisualizer:
         )
 
         visualizer.visualize_fit(
-            fit=masked_interferometer_fit_x2_plane_inversion_7x7, during_analysis=True
+            fit=masked_interferometer_fit_x2_galaxy_inversion_7x7, during_analysis=True
         )
 
         assert plot_path + "subplots/subplot_fit_interferometer.png" in plot_patch.paths
@@ -319,7 +274,7 @@ class TestPhaseInterferometerVisualizer:
 class TestHyperGalaxyVisualizer:
     def test__hyper_fit__images_for_phase__source_and_lens__depedent_on_input(
         self,
-        masked_imaging_fit_x2_plane_7x7,
+        masked_imaging_fit_x2_galaxy_7x7,
         hyper_galaxy_image_0_7x7,
         include_all,
         plot_path,
@@ -334,8 +289,8 @@ class TestHyperGalaxyVisualizer:
         )
 
         visualizer.visualize_hyper_galaxy(
-            fit=masked_imaging_fit_x2_plane_7x7,
-            hyper_fit=masked_imaging_fit_x2_plane_7x7,
+            fit=masked_imaging_fit_x2_galaxy_7x7,
+            hyper_fit=masked_imaging_fit_x2_galaxy_7x7,
             galaxy_image=hyper_galaxy_image_0_7x7,
             contribution_map_in=hyper_galaxy_image_0_7x7,
         )

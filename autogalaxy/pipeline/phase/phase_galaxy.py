@@ -34,12 +34,12 @@ class AnalysisSingle(Analysis):
             self.visualizer.plot_fit_individuals(fit)
         else:
 
-            if self.visualizer.plot_ray_tracing_all_at_end_png:
+            if self.visualizer.plot_plane_all_at_end_png:
                 self.visualizer.plot_fit_individuals(
                     fit=fit, plot_all=True, image_format="png"
                 )
 
-            if self.visualizer.plot_ray_tracing_all_at_end_fits:
+            if self.visualizer.plot_plane_all_at_end_fits:
                 self.visualizer.plot_fit_individuals(
                     fit=fit, plot_all=True, image_format="fits", path_suffix="/fits/"
                 )
@@ -93,7 +93,7 @@ class AnalysisDeflections(Analysis):
             self.visualizer.plot_fit_individuals(fit_y, path_suffix="/fit_y")
             self.visualizer.plot_fit_individuals(fit_x, path_suffix="/fit_x")
         else:
-            if self.visualizer.plot_ray_tracing_all_at_end_png:
+            if self.visualizer.plot_plane_all_at_end_png:
                 self.visualizer.plot_fit_individuals(
                     fit_y, path_suffix="/fits/fit_y", plot_all=True
                 )
@@ -101,7 +101,7 @@ class AnalysisDeflections(Analysis):
                     fit_x, path_suffix="/fits/fit_x", plot_all=True
                 )
 
-            if self.visualizer.plot_ray_tracing_all_at_end_fits:
+            if self.visualizer.plot_plane_all_at_end_fits:
                 self.visualizer.plot_fit_individuals(
                     fit_y, path_suffix="/fits/fit_y", plot_all=True, image_format="fits"
                 )

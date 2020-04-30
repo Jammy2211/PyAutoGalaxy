@@ -138,6 +138,17 @@ def make_plane_7x7(gal_x1_lp_x1_mp):
     return ag.Plane(galaxies=[gal_x1_lp_x1_mp])
 
 
+@pytest.fixture(name="plane_x2_galaxy_inversion_7x7")
+def make_plane_x2_galaxy_inversion_7x7(gal_x1_lp, gal_x1_mp):
+    source_gal_inversion = ag.Galaxy(
+        redshift=1.0,
+        pixelization=ag.pix.Rectangular(),
+        regularization=ag.reg.Constant(),
+    )
+
+    return ag.Plane(galaxies=[gal_x1_lp, source_gal_inversion])
+
+
 # GALAXY DATA #
 
 
@@ -288,10 +299,29 @@ def make_masked_imaging_fit_x2_galaxy_7x7(masked_imaging_7x7, gal_x1_lp):
     return ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
 
+@pytest.fixture(name="masked_imaging_fit_x2_galaxy_inversion_7x7")
+def make_masked_imaging_fit_x2_galaxy_inversion_7x7(
+    masked_imaging_7x7, plane_x2_galaxy_inversion_7x7
+):
+    return ag.FitImaging(
+        masked_imaging=masked_imaging_7x7, plane=plane_x2_galaxy_inversion_7x7
+    )
+
+
 @pytest.fixture(name="masked_interferometer_fit_7x7")
 def make_masked_interferometer_fit_7x7(masked_interferometer_7, plane_7x7):
     return ag.FitInterferometer(
         masked_interferometer=masked_interferometer_7, plane=plane_7x7
+    )
+
+
+@pytest.fixture(name="masked_interferometer_fit_x2_galaxy_inversion_7x7")
+def make_masked_interferometer_fit_x2_galaxy_inversion_7x7(
+    masked_interferometer_7, plane_x2_galaxy_inversion_7x7
+):
+    return ag.FitInterferometer(
+        masked_interferometer=masked_interferometer_7,
+        plane=plane_x2_galaxy_inversion_7x7,
     )
 
 
