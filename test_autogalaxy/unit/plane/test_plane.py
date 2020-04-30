@@ -2719,23 +2719,6 @@ class TestPlane:
             assert plane.redshift == 1.0
             assert plane.galaxy_redshifts == [1.0, 1.0, 1.0]
 
-        def test__galaxies_have_different_redshifts__exception_is_raised_if_redshift_not_input(
-            self
-        ):
-            g0 = ag.Galaxy(redshift=0.1)
-            g1 = ag.Galaxy(redshift=1.0)
-
-            with pytest.raises(exc.PlaneException):
-                ag.Plane(galaxies=[g0, g1])
-
-            g0 = ag.Galaxy(redshift=0.4)
-            g1 = ag.Galaxy(redshift=0.5)
-            g2 = ag.Galaxy(redshift=0.6)
-
-            plane = ag.Plane(galaxies=[g0, g1, g2], redshift=0.5)
-
-            assert plane.redshift == 0.5
-
     class TestSummarize:
         def test__plane_x2_galaxies__summarize_is_correct(self):
 

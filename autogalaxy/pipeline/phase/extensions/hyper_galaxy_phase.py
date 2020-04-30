@@ -128,7 +128,7 @@ class Analysis(af.Analysis):
 
         noise_map = noise_map + hyper_noise_map
 
-        masked_imaging = self.masked_imaging.modify_noise_map(
+        masked_imaging = self.masked_imaging.modify_image_and_noise_map(
             image=image, noise_map=noise_map
         )
 
