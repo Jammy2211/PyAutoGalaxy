@@ -793,7 +793,10 @@ class Include(plotters.Include):
             If *True*, the masks is plotted on the fit's datas.
         """
         if self.positions:
-            return fit.masked_dataset.positions
+            try:
+                return fit.masked_dataset.positions
+            except AttributeError:
+                return None
 
     def positions_of_plane_from_fit_and_plane_index(self, fit, plane_index):
 

@@ -1515,7 +1515,6 @@ class TestFitInterferometer:
 
             plane = ag.Plane(galaxies=[g0])
 
-
             fit = ag.FitInterferometer(
                 masked_interferometer=masked_interferometer, plane=plane
             )
@@ -1529,8 +1528,6 @@ class TestFitInterferometer:
             assert (
                 fit.noise_map.in_1d == np.array([[[2.0, 2.0], [2.0, 2.0], [2.0, 2.0]]])
             ).all()
-
-
 
             assert fit.model_visibilities.in_1d == pytest.approx(
                 model_visibilities_manual, 1.0e-4

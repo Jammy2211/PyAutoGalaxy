@@ -20,10 +20,6 @@ from autoarray.plot.mat_objs import (
 
 from autoarray.plot import imaging_plots as Imaging
 from autoarray.plot import interferometer_plots as Interferometer
-from autoarray.plot import fit_imaging_plots as FitImaging
-from autoarray.plot import fit_interferometer_plots as FitInterferometer
-from autoarray.plot import mapper_plots as Mapper
-from autoarray.plot import inversion_plots as Inversion
 
 from autogalaxy.plot.lensing_mat_objs import (
     LightProfileCentreScatterer,
@@ -44,6 +40,8 @@ from autogalaxy.plot import light_profile_plots as LightProfile
 from autogalaxy.plot import mass_profile_plots as MassProfile
 from autogalaxy.plot import galaxy_plots as Galaxy
 from autogalaxy.plot import fit_galaxy_plots as FitGalaxy
+from autogalaxy.plot import fit_imaging_plots as FitImaging
+from autogalaxy.plot import fit_interferometer_plots as FitInterferometer
 from autogalaxy.plot import plane_plots as Plane
 from autogalaxy.plot import mapper_plots as Mapper
 from autogalaxy.plot import inversion_plots as Inversion
