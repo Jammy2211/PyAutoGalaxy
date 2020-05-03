@@ -1,10 +1,6 @@
 import autofit as af
 import autoarray as aa
-from autogalaxy import exc
-from autogalaxy.fit import fit
 from autoarray.operators.inversion import pixelizations as pix
-
-import numpy as np
 
 
 def isprior(obj):

@@ -775,13 +775,6 @@ class Include(plotters.Include):
                     "Caustics could not be calculated due to an unphysical mass model"
                 )
 
-    def traced_grid_of_plane_from_fit_and_plane_index(self, fit, plane_index):
-
-        if self.positions is True:
-            return fit.plane.traced_grids_of_galaxies_from_grid(grid=fit.grid)[
-                plane_index
-            ]
-
     def positions_from_fit(self, fit):
         """Get the masks of the fit if the masks should be plotted on the fit.
 
@@ -798,13 +791,20 @@ class Include(plotters.Include):
             except AttributeError:
                 return None
 
+    def traced_grid_of_plane_from_fit_and_plane_index(self, fit, plane_index):
+
+        if self.positions is True:
+            return fit.tracer.traced_grids_of_planes_from_grid(grid=fit.grid)[
+                plane_index
+            ]
+
     def positions_of_plane_from_fit_and_plane_index(self, fit, plane_index):
 
         if self.positions is True:
             positions = self.positions_from_fit(fit=fit)
             if positions is None:
                 return None
-            return fit.plane.traced_grids_of_galaxies_from_grid(grid=positions)[
+            return fit.tracer.traced_grids_of_planes_from_grid(grid=positions)[
                 plane_index
             ]
 
@@ -813,7 +813,7 @@ class Include(plotters.Include):
         if fit.inversion is not None:
             if self.inversion_image_pixelization_grid:
                 if fit.inversion.mapper.is_image_plane_pixelization:
-                    return fit.plane.sparse_image_plane_grids_of_galaxies_from_grid(
+                    return fit.tracer.sparse_image_plane_grids_of_planes_from_grid(
                         grid=fit.grid
                     )[-1]
 

@@ -21,7 +21,7 @@ class AnalysisSingle(Analysis):
 
         self.galaxy_data = galaxy_data
 
-    def fit(self, instance):
+    def log_likelihood_function(self, instance):
         fit = self.fit_for_instance(instance=instance)
         return fit.figure_of_merit
 
@@ -77,7 +77,7 @@ class AnalysisDeflections(Analysis):
         self.galaxy_data_y = galaxy_data_y
         self.galaxy_data_x = galaxy_data_x
 
-    def fit(self, instance):
+    def log_likelihood_function(self, instance):
         fit_y, fit_x = self.fit_for_instance(instance=instance)
         return fit_y.figure_of_merit + fit_x.figure_of_merit
 

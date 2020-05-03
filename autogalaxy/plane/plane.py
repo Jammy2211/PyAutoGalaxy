@@ -325,6 +325,7 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
 
         """
         if self.galaxies:
+
             return sum(
                 map(
                     lambda galaxy: galaxy.profile_image_from_grid(grid=grid),

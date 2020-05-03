@@ -78,7 +78,7 @@ class TestMaskedInterferometer:
     def test__different_interferometer_without_mock_objects__customize_constructor_inputs(
         self
     ):
-        interferometer = ag.Interferometer.manual(
+        interferometer = ag.Interferometer(
             visibilities=ag.Visibilities.ones(shape_1d=(19,)),
             primary_beam=ag.Kernel.ones(shape_2d=(7, 7), pixel_scales=1.0),
             noise_map=ag.Visibilities.full(fill_value=2.0, shape_1d=(19,)),

@@ -169,7 +169,7 @@ class TestMakeAnalysis:
             analysis.masked_dataset.check_inversion_pixels_are_below_limit_via_plane(
                 plane=plane
             )
-            analysis.fit(instance=instance)
+            analysis.log_likelihood_function(instance=instance)
 
         phase_imaging_7x7 = ag.PhaseImaging(
             galaxies=dict(
@@ -217,7 +217,7 @@ class TestMakeAnalysis:
             analysis.masked_dataset.check_inversion_pixels_are_below_limit_via_plane(
                 plane=plane
             )
-            analysis.fit(instance=instance)
+            analysis.log_likelihood_function(instance=instance)
 
 
 class TestPhasePickle:

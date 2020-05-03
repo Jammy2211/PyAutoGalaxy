@@ -1405,7 +1405,7 @@ class TestFitInterferometer:
 
             uv_wavelengths = np.array([[0.0, 0.0]])
 
-            interferometer = ag.Interferometer.manual(
+            interferometer = ag.Interferometer(
                 visibilities=ag.Visibilities.full(fill_value=5.0, shape_1d=(1,)),
                 noise_map=ag.Visibilities.ones(shape_1d=(1,)),
                 uv_wavelengths=uv_wavelengths,
@@ -1462,121 +1462,13 @@ class TestFitInterferometer:
                 25.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
             )
 
-        def test__3x2_image__2x2_visibilities__use_transformer_for_likelihood(self):
-
-            uv_wavelengths = np.array([[1.0, 0.0], [1.0, 1.0], [2.0, 2.0]])
-
-            interferometer = ag.Interferometer.manual(
-                visibilities=ag.Visibilities.full(fill_value=5.0, shape_1d=(3,)),
-                noise_map=ag.Visibilities.full(fill_value=2.0, shape_1d=(3,)),
-                uv_wavelengths=uv_wavelengths,
-                primary_beam=None,
-            )
-
-            transformer = ag.TransformerDFT(
-                uv_wavelengths=uv_wavelengths,
-                grid=ag.Grid.manual_2d(
-                    [[[0.0, -1.0], [0.0, 1.0], [1.0, 1.0]]], pixel_scales=(1.0, 1.0)
-                ),
-            )
-
-            visibilities_mask = np.full(fill_value=False, shape=(3, 2))
-
-            real_space_mask = ag.Mask.manual(
-                mask_2d=np.array(
-                    [
-                        [True, True, True, True, True],
-                        [True, False, False, False, True],
-                        [True, True, True, True, True],
-                    ]
-                ),
-                pixel_scales=1.0,
-                sub_size=1,
-            )
-
-            masked_interferometer = ag.MaskedInterferometer(
-                interferometer=interferometer,
-                visibilities_mask=visibilities_mask,
-                real_space_mask=real_space_mask,
-                transformer_class=ag.TransformerDFT,
-            )
-
-            # Setup as a ray trace instance, using a light profile for the lens
-
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=0.001)
-            )
-
-            profile_image = g0.profile_image_from_grid(grid=masked_interferometer.grid)
-
-            model_visibilities_manual = transformer.visibilities_from_image(
-                image=profile_image
-            )
-
-            plane = ag.Plane(galaxies=[g0])
-
-            fit = ag.FitInterferometer(
-                masked_interferometer=masked_interferometer, plane=plane
-            )
-
-            assert (fit.visibilities_mask == np.array([False, False])).all()
-
-            assert (
-                fit.visibilities.in_1d
-                == np.array([[[5.0, 5.0], [5.0, 5.0], [5.0, 5.0]]])
-            ).all()
-            assert (
-                fit.noise_map.in_1d == np.array([[[2.0, 2.0], [2.0, 2.0], [2.0, 2.0]]])
-            ).all()
-
-            assert fit.model_visibilities.in_1d == pytest.approx(
-                model_visibilities_manual, 1.0e-4
-            )
-
-            # moddel visibilities are all [1.94805, 0.0]
-
-            assert fit.residual_map.in_1d == pytest.approx(
-                np.array([[3.0519, 5.0], [3.0519, 5.0], [3.0519, 5.0]]), 1.0e-4
-            )
-
-            assert fit.normalized_residual_map.in_1d == pytest.approx(
-                np.array(
-                    [
-                        [3.0519 / 2.0, 5.0 / 2.0],
-                        [3.0519 / 2.0, 5.0 / 2.0],
-                        [3.0519 / 2.0, 5.0 / 2.0],
-                    ]
-                ),
-                1.0e-4,
-            )
-
-            assert fit.chi_squared_map.in_1d == pytest.approx(
-                np.array(
-                    [
-                        [(3.0519 / 2.0) ** 2.0, (5.0 / 2.0) ** 2.0],
-                        [(3.0519 / 2.0) ** 2.0, (5.0 / 2.0) ** 2.0],
-                        [(3.0519 / 2.0) ** 2.0, (5.0 / 2.0) ** 2.0],
-                    ]
-                ),
-                1.0e-4,
-            )
-
-            assert fit.chi_squared == pytest.approx(25.73579, 1.0e-4)
-            assert fit.reduced_chi_squared == pytest.approx(25.73579 / 6.0)
-            assert fit.noise_normalization == pytest.approx(
-                (6.0 * np.log(2 * np.pi * 2.0 ** 2.0)), 1.0e-4
-            )
-            assert fit.log_likelihood == pytest.approx(
-                -0.5 * (25.73579 + 6.0 * np.log(2 * np.pi * 2.0 ** 2.0)), 1.0e-4
-            )
-
         def test__hyper_background_changes_background_sky__reflected_in_likelihood(
             self
         ):
 
             uv_wavelengths = np.array([[1.0, 0.0], [1.0, 1.0], [2.0, 2.0]])
 
-            interferometer = ag.Interferometer.manual(
+            interferometer = ag.Interferometer(
                 visibilities=ag.Visibilities.full(fill_value=5.0, shape_1d=(3,)),
                 noise_map=ag.Visibilities.full(fill_value=2.0, shape_1d=(3,)),
                 uv_wavelengths=uv_wavelengths,

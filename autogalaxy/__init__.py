@@ -54,6 +54,7 @@ from autogalaxy.pipeline.phase.extensions.inversion_phase import (
 )
 from autogalaxy.pipeline.phase.abstract.phase import AbstractPhase
 from autogalaxy.pipeline.phase.dataset.phase import PhaseDataset
+from autogalaxy.pipeline.phase.dataset.meta_dataset import MetaDataset
 from autogalaxy.pipeline.phase.imaging.phase import PhaseImaging
 from autogalaxy.pipeline.phase.interferometer.phase import PhaseInterferometer
 from autogalaxy.pipeline.phase.phase_galaxy import PhaseGalaxy

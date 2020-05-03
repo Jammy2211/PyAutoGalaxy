@@ -51,7 +51,7 @@ class TestFit:
             dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
         )
         instance = phase_imaging_7x7.model.instance_from_unit_vector([])
-        fit_figure_of_merit = analysis.fit(instance=instance)
+        fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
         masked_imaging = ag.MaskedImaging(imaging=imaging_7x7, mask=mask_7x7)
         plane = analysis.plane_for_instance(instance=instance)
@@ -83,7 +83,7 @@ class TestFit:
             dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
         )
         instance = phase_imaging_7x7.model.instance_from_unit_vector([])
-        fit_figure_of_merit = analysis.fit(instance=instance)
+        fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
         mask = phase_imaging_7x7.meta_dataset.mask_with_phase_sub_size_from_mask(
             mask=mask_7x7
@@ -141,7 +141,7 @@ class TestFit:
 
         instance.galaxies.lens.hyper_galaxy = hyper_galaxy
 
-        fit_likelihood = analysis.fit(instance=instance)
+        fit_likelihood = analysis.log_likelihood_function(instance=instance)
 
         g0 = ag.Galaxy(
             redshift=0.5,

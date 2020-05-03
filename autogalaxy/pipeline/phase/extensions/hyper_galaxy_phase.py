@@ -69,7 +69,7 @@ class Analysis(af.Analysis):
                 contribution_map_in=contribution_map,
             )
 
-    def fit(self, instance):
+    def log_likelihood_function(self, instance):
         """
         Fit the model image to the real image by scaling the hyper_galaxies noise.
         Parameters
@@ -253,7 +253,7 @@ class HyperGalaxyPhase(HyperPhase):
                     image_path=optimizer.paths.image_path,
                 )
 
-                result = optimizer.fit(analysis=analysis, model=model)
+                result = optimizer.log_likelihood_function(model=model, analysis=analysis)
 
                 def transfer_field(name):
                     if hasattr(result.instance, name):
