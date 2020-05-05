@@ -804,6 +804,7 @@ class Include(plotters.Include):
             positions = self.positions_from_fit(fit=fit)
             if positions is None:
                 return None
+
             return fit.tracer.traced_grids_of_planes_from_grid(grid=positions)[
                 plane_index
             ]

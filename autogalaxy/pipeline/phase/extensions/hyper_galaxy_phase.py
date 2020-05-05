@@ -1,5 +1,4 @@
 import copy
-import pickle
 from typing import cast
 
 import numpy as np
@@ -174,19 +173,9 @@ class HyperGalaxyPhase(HyperPhase):
             imaging=dataset,
             mask=results.last.mask,
             psf_shape_2d=dataset.psf.shape_2d,
-            positions_threshold=cast(
-                PhaseImaging, phase
-            ).meta_dataset.positions_threshold,
-            pixel_scale_interpolation_grid=cast(
-                PhaseImaging, phase
-            ).meta_dataset.pixel_scale_interpolation_grid,
             inversion_pixel_limit=cast(
                 PhaseImaging, phase
             ).meta_dataset.inversion_pixel_limit,
-            inversion_uses_border=cast(
-                PhaseImaging, phase
-            ).meta_dataset.inversion_uses_border,
-            preload_sparse_grids_of_galaxies=None,
         )
 
         hyper_result = copy.deepcopy(results.last)

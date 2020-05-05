@@ -17,6 +17,7 @@ from autoarray.operators.inversion.inversions import inversion as Inversion
 from autoarray.operators.inversion import pixelizations as pix, regularization as reg
 from autoarray import conf
 
+from autogalaxy import aggregator as agg
 from autogalaxy.dataset.imaging import MaskedImaging, SimulatorImaging
 from autogalaxy.dataset.interferometer import (
     MaskedInterferometer,
