@@ -2,7 +2,7 @@
 .idea
 __pycache__
 .eggs
-autoastro.egg-info/
+autogalaxy.egg-info/
 build
 dist
-autoastro.egg-info/
+autogalaxy.egg-info/

@@ -1,0 +1,5 @@
+Optimizer = MultiNest 
+Sub-grid size = 2 
+PSF shape = None 
+Positions Threshold = 0.0 
+Cosmology = <class 'astropy.cosmology.core.FLRW'> 

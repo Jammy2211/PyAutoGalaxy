@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export PACKAGE_NAME=autoastro
+export PACKAGE_NAME=autogalaxy
 
 rm -rf $p/dist
 rm -rf $p/build
@@ -23,7 +23,7 @@ set +e
 git commit -m "Incremented version number"
 set -e
 
-pytest $p
+# pytest $p
 
 python setup.py sdist bdist_wheel
 twine upload dist/* --skip-existing --username $PYPI_USERNAME --password $PYPI_PASSWORD

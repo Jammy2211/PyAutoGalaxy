@@ -1,0 +1,5 @@
+Optimizer = MultiNest 
+Sub-grid size = 2 
+Primary Beam shape = None 
+Positions Threshold = None 
+Cosmology = <class 'astropy.cosmology.core.FLRW'> 

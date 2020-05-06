@@ -1,0 +1,6 @@
+phase=test_phase_2
+phase_tag=phase_tag__sub_2__pos_1.00
+pipeline=
+pipeline_tag=
+non_linear_search=mocknlo
+dataset_name=mock_imaging_7x7
