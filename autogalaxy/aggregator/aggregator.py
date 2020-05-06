@@ -81,4 +81,6 @@ def fit_interferometer_from_agg_obj(agg_obj):
     masked_interferometer = masked_interferometer_from_agg_obj(agg_obj=agg_obj)
     plane = plane_from_agg_obj(agg_obj=agg_obj)
 
-    return ag.FitInterferometer(masked_interferometer=masked_interferometer, plane=plane)
+    return ag.FitInterferometer(
+        masked_interferometer=masked_interferometer, plane=plane
+    )

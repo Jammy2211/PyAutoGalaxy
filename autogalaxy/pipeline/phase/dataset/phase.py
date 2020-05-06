@@ -11,7 +11,6 @@ class PhaseDataset(abstract.AbstractPhase):
     galaxies = af.PhaseProperty("galaxies")
 
     Result = Result
-    extensions = extensions
 
     @af.convert_paths
     def __init__(
@@ -100,8 +99,8 @@ class PhaseDataset(abstract.AbstractPhase):
         """
         raise NotImplementedError()
 
-    def extend_with_inversion_phase(self):
-        return self.extensions.InversionPhase(phase=self)
+    def extend_with_inversion_phase(self, non_linear_class=af.MultiNest):
+        return extensions.InversionPhase(phase=self, non_linear_class=non_linear_class)
 
     def extend_with_multiple_hyper_phases(
         self,
@@ -118,30 +117,30 @@ class PhaseDataset(abstract.AbstractPhase):
 
         if self.meta_dataset.has_pixelization and inversion:
             if not include_background_sky and not include_background_noise:
-                hyper_phase_classes.append(self.extensions.InversionPhase)
+                hyper_phase_classes.append(extensions.InversionPhase)
             elif include_background_sky and not include_background_noise:
-                hyper_phase_classes.append(self.extensions.InversionBackgroundSkyPhase)
+                hyper_phase_classes.append(extensions.InversionBackgroundSkyPhase)
             elif not include_background_sky and include_background_noise:
-                hyper_phase_classes.append(self.extensions.InversionBackgroundNoisePhase)
+                hyper_phase_classes.append(extensions.InversionBackgroundNoisePhase)
             else:
-                hyper_phase_classes.append(self.extensions.InversionBackgroundBothPhase)
+                hyper_phase_classes.append(extensions.InversionBackgroundBothPhase)
 
         if hyper_galaxy:
             if not include_background_sky and not include_background_noise:
                 hyper_phase_classes.append(
-                    self.extensions.hyper_galaxy_phase.HyperGalaxyPhase
+                    extensions.hyper_galaxy_phase.HyperGalaxyPhase
                 )
             elif include_background_sky and not include_background_noise:
                 hyper_phase_classes.append(
-                    self.extensions.hyper_galaxy_phase.HyperGalaxyBackgroundSkyPhase
+                    extensions.hyper_galaxy_phase.HyperGalaxyBackgroundSkyPhase
                 )
             elif not include_background_sky and include_background_noise:
                 hyper_phase_classes.append(
-                    self.extensions.hyper_galaxy_phase.HyperGalaxyBackgroundNoisePhase
+                    extensions.hyper_galaxy_phase.HyperGalaxyBackgroundNoisePhase
                 )
             else:
                 hyper_phase_classes.append(
-                    self.extensions.hyper_galaxy_phase.HyperGalaxyBackgroundBothPhase
+                    extensions.hyper_galaxy_phase.HyperGalaxyBackgroundBothPhase
                 )
 
         if hyper_galaxy_phase_first:
@@ -151,6 +150,6 @@ class PhaseDataset(abstract.AbstractPhase):
         if len(hyper_phase_classes) == 0:
             return self
         else:
-            return self.extensions.CombinedHyperPhase(
+            return extensions.CombinedHyperPhase(
                 phase=self, hyper_phase_classes=hyper_phase_classes
             )

@@ -140,7 +140,7 @@ class PhaseInterferometer(dataset.PhaseDataset):
         return PhaseAttributes(
             cosmology=self.cosmology,
             hyper_model_image=analysis.hyper_model_image,
-            hyper_galaxy_image_path_dict=analysis.hyper_galaxy_image_path_dict
+            hyper_galaxy_image_path_dict=analysis.hyper_galaxy_image_path_dict,
         )
 
     def output_phase_info(self):

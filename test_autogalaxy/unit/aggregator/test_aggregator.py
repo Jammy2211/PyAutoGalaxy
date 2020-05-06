@@ -109,7 +109,10 @@ def test__masked_interferometer_generator_from_aggregator(interferometer_7, mask
     masked_interferometer_gen = ag.agg.MaskedInterferometer(aggregator=agg)
 
     for masked_interferometer in masked_interferometer_gen:
-        assert (masked_interferometer.interferometer.visibilities == interferometer_7.visibilities).all()
+        assert (
+            masked_interferometer.interferometer.visibilities
+            == interferometer_7.visibilities
+        ).all()
         assert (masked_interferometer.real_space_mask == mask_7x7).all()
 
 
@@ -122,7 +125,7 @@ def test__fit_interferometer_generator_from_aggregator(interferometer_7, mask_7x
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
         phase_name="test_phase_aggregator",
-        real_space_mask=mask_7x7
+        real_space_mask=mask_7x7,
     )
 
     phase_interferometer_7x7.run(
@@ -134,5 +137,10 @@ def test__fit_interferometer_generator_from_aggregator(interferometer_7, mask_7x
     fit_interferometer_gen = ag.agg.FitInterferometer(aggregator=agg)
 
     for fit_interferometer in fit_interferometer_gen:
-        assert (fit_interferometer.masked_interferometer.interferometer.visibilities == interferometer_7.visibilities).all()
-        assert (fit_interferometer.masked_interferometer.real_space_mask == mask_7x7).all()
+        assert (
+            fit_interferometer.masked_interferometer.interferometer.visibilities
+            == interferometer_7.visibilities
+        ).all()
+        assert (
+            fit_interferometer.masked_interferometer.real_space_mask == mask_7x7
+        ).all()

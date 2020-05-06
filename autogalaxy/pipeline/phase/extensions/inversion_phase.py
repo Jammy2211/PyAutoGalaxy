@@ -10,36 +10,23 @@ from .hyper_phase import HyperPhase
 # noinspection PyAbstractClass
 class ModelFixingHyperPhase(HyperPhase):
     def __init__(
-        self, phase: abstract.AbstractPhase, hyper_name: str, model_classes=tuple()
+        self,
+        phase: abstract.AbstractPhase,
+        hyper_name: str,
+        non_linear_class=af.MultiNest,
+        model_classes=tuple(),
     ):
-        super().__init__(phase=phase, hyper_name=hyper_name)
+        super().__init__(
+            phase=phase, hyper_name=hyper_name, non_linear_class=non_linear_class
+        )
+
         self.model_classes = model_classes
 
     def make_hyper_phase(self):
         phase = super().make_hyper_phase()
 
-        multinest_config = af.conf.instance.non_linear.config_for("MultiNest")
-
-        phase.optimizer.const_efficiency_mode = multinest_config.get(
-            "general", "extension_inversion_const_efficiency_mode", bool
-        )
-        phase.optimizer.sampling_efficiency = multinest_config.get(
-            "general", "extension_inversion_sampling_efficiency", float
-        )
-        phase.optimizer.n_live_points = multinest_config.get(
-            "general", "extension_inversion_n_live_points", int
-        )
-        phase.optimizer.multimodal = multinest_config.get(
-            "general", "extension_inversion_multimodal", bool
-        )
-        phase.optimizer.evidence_tolerance = multinest_config.get(
-            "general", "extension_inversion_evidence_tolerance", float
-        )
-        phase.optimizer.terminate_at_acceptance_ratio = multinest_config.get(
-            "general", "extension_inversion_terminate_at_acceptance_ratio", bool
-        )
-        phase.optimizer.acceptance_ratio_threshold = multinest_config.get(
-            "general", "extension_inversion_acceptance_ratio_threshold", float
+        self.update_optimizer_with_config(
+            optimizer=phase.optimizer, section="inversion"
         )
 
         return phase
@@ -72,9 +59,13 @@ class InversionPhase(ModelFixingHyperPhase):
         self,
         phase: abstract.AbstractPhase,
         model_classes=(pix.Pixelization, reg.Regularization),
+        non_linear_class=af.MultiNest,
     ):
         super().__init__(
-            phase=phase, model_classes=model_classes, hyper_name="inversion"
+            phase=phase,
+            model_classes=model_classes,
+            non_linear_class=non_linear_class,
+            hyper_name="inversion",
         )
 
 
@@ -85,10 +76,11 @@ class InversionBackgroundSkyPhase(InversionPhase):
     pixelization
     """
 
-    def __init__(self, phase: PhaseImaging):
+    def __init__(self, phase: PhaseImaging, non_linear_class=af.MultiNest):
         super().__init__(
             phase=phase,
             model_classes=(pix.Pixelization, reg.Regularization, hd.HyperImageSky),
+            non_linear_class=non_linear_class,
         )
 
 
@@ -99,7 +91,7 @@ class InversionBackgroundNoisePhase(InversionPhase):
     pixelization
     """
 
-    def __init__(self, phase: PhaseImaging):
+    def __init__(self, phase: PhaseImaging, non_linear_class=af.MultiNest):
         super().__init__(
             phase=phase,
             model_classes=(
@@ -107,6 +99,7 @@ class InversionBackgroundNoisePhase(InversionPhase):
                 reg.Regularization,
                 hd.HyperBackgroundNoise,
             ),
+            non_linear_class=non_linear_class,
         )
 
 
@@ -117,7 +110,7 @@ class InversionBackgroundBothPhase(InversionPhase):
     pixelization
     """
 
-    def __init__(self, phase: PhaseImaging):
+    def __init__(self, phase: PhaseImaging, non_linear_class=af.MultiNest):
         super().__init__(
             phase=phase,
             model_classes=(
@@ -126,4 +119,5 @@ class InversionBackgroundBothPhase(InversionPhase):
                 hd.HyperImageSky,
                 hd.HyperBackgroundNoise,
             ),
+            non_linear_class=non_linear_class,
         )

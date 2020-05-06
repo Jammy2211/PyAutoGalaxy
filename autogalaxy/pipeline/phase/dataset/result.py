@@ -24,6 +24,10 @@ class Result(abstract.result.Result):
         return self.max_log_likelihood_fit.mask
 
     @property
+    def masked_dataset(self):
+        return self.max_log_likelihood_fit.masked_dataset
+
+    @property
     def pixelization(self):
         for galaxy in self.max_log_likelihood_fit.galaxies:
             if galaxy.pixelization is not None:

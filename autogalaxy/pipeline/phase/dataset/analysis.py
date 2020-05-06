@@ -65,6 +65,7 @@ class Analysis(af.Analysis):
         instance
            The input instance with images associated with galaxies where possible.
         """
+
         if self.hyper_galaxy_image_path_dict is not None:
 
             for galaxy_path, galaxy in instance.path_instance_tuples_for_class(

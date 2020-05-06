@@ -17,7 +17,10 @@ class Result(af.Result):
 
     @property
     def max_log_likelihood_plane(self):
-        return self.analysis.plane_for_instance(instance=self.instance)
+
+        instance = self.analysis.associate_hyper_images(instance=self.instance)
+
+        return self.analysis.plane_for_instance(instance=instance)
 
     @property
     def path_galaxy_tuples(self) -> [(str, g.Galaxy)]:

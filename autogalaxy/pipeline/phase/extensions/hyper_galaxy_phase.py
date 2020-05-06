@@ -1,16 +1,12 @@
 import copy
-from typing import cast
-
 import numpy as np
 
 import autofit as af
 from autoarray.fit import fit as aa_fit
 from autogalaxy.galaxy import galaxy as g
 from autogalaxy.hyper import hyper_data as hd
-from autogalaxy.dataset import imaging
 from autogalaxy.fit import fit
 from autogalaxy.pipeline import visualizer
-from autogalaxy.pipeline.phase.imaging import PhaseImaging
 from .hyper_phase import HyperPhase
 
 
@@ -169,14 +165,7 @@ class HyperGalaxyPhase(HyperPhase):
 
         phase = self.make_hyper_phase()
 
-        masked_imaging = imaging.MaskedImaging(
-            imaging=dataset,
-            mask=results.last.mask,
-            psf_shape_2d=dataset.psf.shape_2d,
-            inversion_pixel_limit=cast(
-                PhaseImaging, phase
-            ).meta_dataset.inversion_pixel_limit,
-        )
+        masked_imaging = results.last.masked_dataset
 
         hyper_result = copy.deepcopy(results.last)
         hyper_result.model = hyper_result.model.copy_with_fixed_priors(
@@ -194,22 +183,8 @@ class HyperGalaxyPhase(HyperPhase):
 
             optimizer = phase.optimizer.copy_with_name_extension(extension=path[-1])
 
-            multinest_config = af.conf.instance.non_linear.config_for("MultiNest")
-
-            optimizer.const_efficiency_mode = multinest_config.get(
-                "general", "extension_hyper_galaxy_const_efficiency_mode", bool
-            )
-            optimizer.sampling_efficiency = multinest_config.get(
-                "general", "extension_hyper_galaxy_sampling_efficiency", float
-            )
-            optimizer.n_live_points = multinest_config.get(
-                "general", "extension_hyper_galaxy_n_live_points", int
-            )
-            optimizer.multimodal = multinest_config.get(
-                "general", "extension_hyper_galaxy_multimodal", bool
-            )
-            optimizer.evidence_tolerance = multinest_config.get(
-                "general", "extension_hyper_galaxy_evidence_tolerance", float
+            self.update_optimizer_with_config(
+                optimizer=optimizer, section="hyper_galaxy"
             )
 
             model = copy.deepcopy(phase.model)
@@ -242,14 +217,14 @@ class HyperGalaxyPhase(HyperPhase):
                     image_path=optimizer.paths.image_path,
                 )
 
-                result = optimizer.log_likelihood_function(model=model, analysis=analysis)
+                result = optimizer.full_fit(model=model, analysis=analysis)
 
                 def transfer_field(name):
-                    if hasattr(result.instance, name):
+                    if hasattr(result._instance, name):
                         setattr(
                             hyper_result.instance.object_for_path(path),
                             name,
-                            getattr(result.instance, name),
+                            getattr(result._instance, name),
                         )
                         setattr(
                             hyper_result.model.object_for_path(path),
@@ -260,14 +235,14 @@ class HyperGalaxyPhase(HyperPhase):
                 transfer_field("hyper_galaxy")
 
                 hyper_result.instance.hyper_image_sky = getattr(
-                    result.instance, "hyper_image_sky"
+                    result._instance, "hyper_image_sky"
                 )
                 hyper_result.model.hyper_image_sky = getattr(
                     result.model, "hyper_image_sky"
                 )
 
                 hyper_result.instance.hyper_background_noise = getattr(
-                    result.instance, "hyper_background_noise"
+                    result._instance, "hyper_background_noise"
                 )
                 hyper_result.model.hyper_background_noise = getattr(
                     result.model, "hyper_background_noise"
