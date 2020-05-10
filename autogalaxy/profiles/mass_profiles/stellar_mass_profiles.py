@@ -93,9 +93,9 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
 
     @grids.grid_like_to_numpy
     @grids.grid_interpolate
-    @geometry_profiles.cache
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.cache
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def deflections_from_grid_via_analytic(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -124,9 +124,9 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
 
     @grids.grid_like_to_numpy
     @grids.grid_interpolate
-    @geometry_profiles.cache
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.cache
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def deflections_from_grid_via_integrator(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -174,8 +174,8 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
         )
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -251,8 +251,8 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
         self.sersic_index = sersic_index
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -335,9 +335,9 @@ class EllipticalSersic(AbstractEllipticalSersic):
 
     @grids.grid_like_to_numpy
     @grids.grid_interpolate
-    @geometry_profiles.cache
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.cache
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -618,8 +618,8 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         self.mass_to_light_gradient = mass_to_light_gradient
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -633,9 +633,9 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
 
     @grids.grid_like_to_numpy
     @grids.grid_interpolate
-    @geometry_profiles.cache
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.cache
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.

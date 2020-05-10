@@ -82,10 +82,13 @@ with **PyAutoGalaxy**. It can be found in the workspace & consists of 5 chapters
 Workspace
 ---------
 
-**PyAutoGalaxy** comes with a workspace, which can be found `here <https://github.com/Jammy2211/autogalaxy_workspace>`_ & which includes:
+**PyAutoGalaxy** comes with a workspace, which can be found `here <https://github.com/Jammy2211/autogalaxy_workspace>`_
+and which includes:
 
-- **Aggregator** - Manipulate large suites of modeling results via Jupyter notebooks, using **PyAutoFit**'s in-built results database.
-- **API** - Illustrative scripts of the **PyAutoGalaxy** interface, for examples on how to make plots, perform galaxy calculations, etc.
+- **Aggregator** - Manipulate large suites of modeling results via Jupyter notebooks, using **PyAutoFit**'s
+                   in-built results database.
+- **API** - Illustrative scripts of the **PyAutoGalaxy** interface, for examples on how to make plots, perform galaxy
+            calculations, etc.
 - **Config** - Configuration files which customize **PyAutoGalaxy**'s behaviour.
 - **Dataset** - Where data is stored, including example datasets distributed with **PyAutoGalaxy**.
 - **HowToGalaxy** - The **HowToGalaxy** lecture series.

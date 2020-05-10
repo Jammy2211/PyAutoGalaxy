@@ -348,3 +348,54 @@ class TestLensingObject:
         assert sis.einstein_mass_in_units(unit_mass="angular") == pytest.approx(
             np.pi * 2.0 ** 2.0, 1.0e-2
         )
+
+
+class TestRegression:
+    def test__convergence_centre_is_brightest_pixel_in_grid(self):
+
+        # This test is chosen because of a bug where the transform grid decorator was called multiple times in the
+        # evaluation of a light profile, in a very difficult to spot bug using the unit tests above.
+
+        grid = ag.Grid.uniform(shape_2d=(11, 11), pixel_scales=1.0, sub_size=1)
+
+        mass_profile = ag.mp.EllipticalIsothermal(
+            centre=(1.0, 0.0), einstein_radius=1.0
+        )
+
+        grid_transform = mass_profile.transform_grid_to_reference_frame(grid=grid)
+
+        y_transform, x_transform = np.unravel_index(
+            abs(grid_transform.distances_from_coordinate((0.0, 0.0))).in_2d.argmin(),
+            grid.shape_2d,
+        )
+
+        convergence = mass_profile.convergence_from_grid(grid=grid)
+
+        y, x = np.unravel_index(abs(convergence.in_2d).argmax(), convergence.shape_2d)
+
+        assert y == y_transform
+        assert x == x_transform
+
+        assert y == 4
+        assert x == 5
+
+        mass_profile = ag.mp.EllipticalIsothermal(
+            centre=(2.0, 1.0), einstein_radius=1.0, axis_ratio=0.5, phi=45.0
+        )
+
+        grid_transform = mass_profile.transform_grid_to_reference_frame(grid=grid)
+
+        y_transform, x_transform = np.unravel_index(
+            abs(grid_transform.distances_from_coordinate((0.0, 0.0))).in_2d.argmin(),
+            grid.shape_2d,
+        )
+
+        convergence = mass_profile.convergence_from_grid(grid=grid)
+
+        y, x = np.unravel_index(abs(convergence.in_2d).argmax(), convergence.shape_2d)
+
+        assert y == y_transform
+        assert x == x_transform
+
+        assert y == 3
+        assert x == 6

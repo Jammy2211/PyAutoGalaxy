@@ -1,143 +1,8 @@
 import numpy as np
-from functools import wraps
 
-import autoconf.named
 import autofit as af
 from autoarray.structures import grids
 from autogalaxy import dimensions as dim
-
-
-def transform_grid(func):
-    """Wrap the function in a function that checks whether the coordinates have been transformed. If they have not \ 
-    been transformed then they are transformed.
-
-    Parameters
-    ----------
-    func : (profile, grid *args, **kwargs) -> Object
-        A function where the input grid is the grid whose coordinates are transformed.
-
-    Returns
-    -------
-        A function that can except cartesian or transformed coordinates
-    """
-
-    @wraps(func)
-    def wrapper(profile, grid, *args, **kwargs):
-        """
-
-        Parameters
-        ----------
-        profile : GeometryProfile
-            The profiles that owns the function.
-        grid : grid_like
-            The (y, x) coordinates in the original reference frame of the grid.
-
-        Returns
-        -------
-            A grid_like object whose coordinates may be transformed.
-        """
-
-        if not isinstance(grid, TransformedGrid):
-            result = func(
-                profile,
-                profile.transform_grid_to_reference_frame(grid),
-                *args,
-                **kwargs,
-            )
-
-            return result
-
-        else:
-            return func(profile, grid, *args, **kwargs)
-
-    return wrapper
-
-
-def cache(func):
-    """
-    Caches results of a call to a grid function. If a grid that evaluates to the same byte value is passed into the same
-    function of the same instance as previously then the cached result is returned.
-
-    Parameters
-    ----------
-    func
-        Some instance method that takes a grid as its argument
-
-    Returns
-    -------
-    result
-        Some result, either newly calculated or recovered from the cache
-    """
-
-    def wrapper(instance: GeometryProfile, grid: np.ndarray, *args, **kwargs):
-        if not hasattr(instance, "cache"):
-            instance.cache = {}
-        key = (func.__name__, grid.tobytes())
-        if key not in instance.cache:
-            instance.cache[key] = func(instance, grid)
-        return instance.cache[key]
-
-    return wrapper
-
-
-def move_grid_to_radial_minimum(func):
-    """ Checks whether any coordinates in the grid are radially near (0.0, 0.0), which can lead to numerical faults in \
-    the evaluation of a light or mass profiles. If any coordinates are radially within the the radial minimum \
-    threshold, their (y,x) coordinates are shifted to that value to ensure they are evaluated correctly.
-
-    By default this radial minimum is not used, and users should be certain they use a value that does not impact \
-    results.
-
-    Parameters
-    ----------
-    func : (profile, *args, **kwargs) -> Object
-        A function that takes a grid of coordinates which may have a singularity as (0.0, 0.0)
-
-    Returns
-    -------
-        A function that can except cartesian or transformed coordinates
-    """
-
-    @wraps(func)
-    def wrapper(profile, grid, *args, **kwargs):
-        """
-
-        Parameters
-        ----------
-        profile : SphericalProfile
-            The profiles that owns the function
-        grid : grid_like
-            The (y, x) coordinates which are to be radially moved from (0.0, 0.0).
-
-        Returns
-        -------
-            The grid_like object whose coordinates are radially moved from (0.0, 0.0).
-        """
-        radial_minimum_config = autoconf.named.NamedConfig(
-            f"{af.conf.instance.config_path}/radial_minimum.ini"
-        )
-        grid_radial_minimum = radial_minimum_config.get(
-            "radial_minimum", profile.__class__.__name__, float
-        )
-
-        with np.errstate(all="ignore"):  # Division by zero fixed via isnan
-
-            grid_radii = profile.grid_to_grid_radii(grid=grid)
-
-            grid_radial_scale = np.where(
-                grid_radii < grid_radial_minimum, grid_radial_minimum / grid_radii, 1.0
-            )
-            grid = np.multiply(grid, grid_radial_scale[:, None])
-        grid[np.isnan(grid)] = grid_radial_minimum
-
-        return func(profile, grid, *args, **kwargs)
-
-    return wrapper
-
-
-class TransformedGrid(np.ndarray):
-    def __new__(cls, grid, *args, **kwargs):
-        return grid.view(cls)
 
 
 class GeometryProfile(dim.DimensionsProfile):
@@ -182,7 +47,7 @@ class SphericalProfile(GeometryProfile):
         super(SphericalProfile, self).__init__(centre=centre)
 
     @grids.grid_like_to_numpy
-    @transform_grid
+    @grids.transform_grid
     def grid_to_grid_radii(self, grid):
         """Convert a grid of (y, x) coordinates to a grid of their circular radii.
 
@@ -233,7 +98,7 @@ class SphericalProfile(GeometryProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         transformed = np.subtract(grid, self.centre)
-        return TransformedGrid(grid=transformed)
+        return grids.TransformedGridNumpy(grid=transformed)
 
     @grids.grid_like_to_numpy
     def transform_grid_from_reference_frame(self, grid):
@@ -246,7 +111,7 @@ class SphericalProfile(GeometryProfile):
             The (y, x) coordinates in the reference frame of the profile.
         """
         transformed = np.add(grid, self.centre)
-        return transformed.view(TransformedGrid)
+        return transformed.view(grids.TransformedGridNumpy)
 
 
 class EllipticalProfile(SphericalProfile):
@@ -326,8 +191,8 @@ class EllipticalProfile(SphericalProfile):
         return np.vstack((y, x)).T
 
     @grids.grid_like_to_numpy
-    @transform_grid
-    @move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def grid_to_elliptical_radii(self, grid):
         """ Convert a grid of (y,x) coordinates to an elliptical radius.
 
@@ -345,8 +210,8 @@ class EllipticalProfile(SphericalProfile):
         )
 
     @grids.grid_like_to_numpy
-    @transform_grid
-    @move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def grid_to_eccentric_radii(self, grid):
         """Convert a grid of (y,x) coordinates to an eccentric radius, which is (1.0/axis_ratio) * elliptical radius \
         and used to define light profile half-light radii using circular radii.
@@ -386,7 +251,7 @@ class EllipticalProfile(SphericalProfile):
                 radius * np.cos(theta_coordinate_to_profile),
             )
         ).T
-        return TransformedGrid(grid=transformed)
+        return grids.TransformedGridNumpy(grid=transformed)
 
     @grids.grid_like_to_numpy
     def transform_grid_from_reference_frame(self, grid):

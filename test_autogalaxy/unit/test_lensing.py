@@ -68,8 +68,8 @@ class MockEllipticalIsothermal(
         return self.einstein_radius_rescaled * (grid_radius ** 2) ** (-0.5)
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -103,8 +103,8 @@ class MockEllipticalIsothermal(
         )
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -123,8 +123,8 @@ class MockEllipticalIsothermal(
         return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -197,8 +197,8 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
         )
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -213,8 +213,8 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
         return 2.0 * self.einstein_radius_rescaled * eta
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
