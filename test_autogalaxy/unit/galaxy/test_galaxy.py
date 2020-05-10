@@ -327,22 +327,9 @@ class TestLightProfiles:
 
     class TestSymmetricProfiles:
         def test_1d_symmetry(self):
-            lp_0 = ag.lp.EllipticalSersic(
-                axis_ratio=1.0,
-                phi=0.0,
-                intensity=1.0,
-                effective_radius=0.6,
-                sersic_index=4.0,
-            )
+            lp_0 = ag.lp.EllipticalSersic(centre=(0.0, 0.0), intensity=1.0)
 
-            lp_1 = ag.lp.EllipticalSersic(
-                axis_ratio=1.0,
-                phi=0.0,
-                intensity=1.0,
-                effective_radius=0.6,
-                sersic_index=4.0,
-                centre=(100, 0),
-            )
+            lp_1 = ag.lp.EllipticalSersic(centre=(100.0, 0.0), intensity=1.0)
 
             gal_x2_lp = ag.Galaxy(
                 redshift=0.5, light_profile_0=lp_0, light_profile_1=lp_1
@@ -351,6 +338,7 @@ class TestLightProfiles:
             assert gal_x2_lp.profile_image_from_grid(
                 grid=np.array([[0.0, 0.0]])
             ) == gal_x2_lp.profile_image_from_grid(grid=np.array([[100.0, 0.0]]))
+
             assert gal_x2_lp.profile_image_from_grid(
                 grid=np.array([[49.0, 0.0]])
             ) == gal_x2_lp.profile_image_from_grid(grid=np.array([[51.0, 0.0]]))

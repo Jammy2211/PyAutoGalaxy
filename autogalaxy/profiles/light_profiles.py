@@ -306,8 +306,8 @@ class EllipticalGaussian(EllipticalLightProfile):
         )
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def profile_image_from_grid(self, grid, grid_radial_minimum=None):
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
@@ -497,8 +497,8 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
         )
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def profile_image_from_grid(self, grid, grid_radial_minimum=None):
         """ Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 

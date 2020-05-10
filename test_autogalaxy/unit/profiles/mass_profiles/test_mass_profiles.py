@@ -348,3 +348,5 @@ class TestLensingObject:
         assert sis.einstein_mass_in_units(unit_mass="angular") == pytest.approx(
             np.pi * 2.0 ** 2.0, 1.0e-2
         )
+
+

@@ -20,65 +20,6 @@ def do_something():
     )
 
 
-class TestMemoize:
-    def test_add_to_cache(self):
-        class MyProfile:
-            # noinspection PyMethodMayBeStatic
-            @geometry_profiles.cache
-            def my_method(self, grid, grid_radial_minimum=None):
-                return grid
-
-        profile = MyProfile()
-        other_profile = MyProfile()
-        assert not hasattr(profile, "cache")
-
-        profile.my_method(np.array([0]))
-        assert hasattr(profile, "cache")
-        assert not hasattr(other_profile, "cache")
-        assert len(profile.cache) == 1
-
-        profile.my_method(np.array([0]))
-        assert len(profile.cache) == 1
-
-        profile.my_method(np.array([1]))
-        assert len(profile.cache) == 2
-
-    def test_get_from_cache(self):
-        class CountingProfile:
-            def __init__(self):
-                self.count = 0
-
-            @geometry_profiles.cache
-            def my_method(self, grid, grid_radial_minimum=None):
-                self.count += 1
-                return self.count
-
-        profile = CountingProfile()
-
-        assert profile.my_method(grid=np.array([0]), grid_radial_minimum=None) == 1
-        assert profile.my_method(grid=np.array([1]), grid_radial_minimum=None) == 2
-        assert profile.my_method(grid=np.array([2]), grid_radial_minimum=None) == 3
-        assert profile.my_method(grid=np.array([0]), grid_radial_minimum=None) == 1
-        assert profile.my_method(grid=np.array([1]), grid_radial_minimum=None) == 2
-
-    def test_multiple_cached_methods(self):
-        class MultiMethodProfile:
-            @geometry_profiles.cache
-            def method_one(self, grid, grid_radial_minimum=None):
-                return grid
-
-            @geometry_profiles.cache
-            def method_two(self, grid, grid_radial_minimum=None):
-                return grid
-
-        profile = MultiMethodProfile()
-
-        array = np.array([0])
-        profile.method_one(array)
-        assert profile.method_one(array) is array
-        assert profile.method_two(np.array([0])) is not array
-
-
 class TestGeometryProfile:
     def test__constructor_and_units(self):
         profile = geometry_profiles.GeometryProfile(centre=(1.0, 2.0))
@@ -515,43 +456,3 @@ class TestSphericalProfile:
             )
 
             assert transformed_grid == pytest.approx(grid_original, 1e-5)
-
-
-class MockGridRadialMinimum:
-    def __init__(self):
-        pass
-
-    def grid_to_grid_radii(self, grid):
-        return np.sqrt(np.add(np.square(grid[:, 0]), np.square(grid[:, 1])))
-
-    @geometry_profiles.move_grid_to_radial_minimum
-    def deflections_from_grid(self, grid):
-        return grid
-
-
-# class TestGridRadialMinimum:
-#
-#     def test__mock_profile__grid_radial_minimum_is_0_or_below_radial_coordinates__no_changes(self):
-#         grid = np.arrays([[2.5, 0.0], [4.0, 0.0], [6.0, 0.0]])
-#         mock_profile = MockGridRadialMinimum()
-#
-#         deflections = mock_profile.deflections_from_grid(grid=grid)
-#         assert (deflections == grid).all()
-#
-#     def test__mock_profile__grid_radial_minimum_is_above_some_radial_coordinates__moves_them_grid_radial_minimum(self):
-#         grid = np.arrays([[2.0, 0.0], [1.0, 0.0], [6.0, 0.0]])
-#         mock_profile = MockGridRadialMinimum()
-#
-#         deflections = mock_profile.deflections_from_grid(grid=grid)
-#
-#         assert (deflections == np.arrays([[2.5, 0.0], [2.5, 0.0], [6.0, 0.0]])).all()
-#
-#     def test__mock_profile__same_as_above_but_diagonal_coordinates(self):
-#         grid = np.arrays([[np.sqrt(2.0), np.sqrt(2.0)], [1.0, np.sqrt(8.0)], [np.sqrt(8.0), np.sqrt(8.0)]])
-#
-#         mock_profile = MockGridRadialMinimum()
-#
-#         deflections = mock_profile.deflections_from_grid(grid=grid)
-#
-#         assert deflections == pytest.approx(np.arrays([[1.7677, 1.7677], [1.0, np.sqrt(8.0)],
-#                                                       [np.sqrt(8), np.sqrt(8.0)]]), 1.0e-4)

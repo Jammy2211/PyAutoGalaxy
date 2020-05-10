@@ -168,8 +168,8 @@ class AbstractEllipticalGeneralizedNFW(
         return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -584,8 +584,8 @@ class AbstractEllipticalGeneralizedNFW(
 
 class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def potential_from_grid(self, grid, tabulate_bins=1000):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -658,9 +658,9 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
 
     @grids.grid_like_to_numpy
     @grids.grid_interpolate
-    @geometry_profiles.cache
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.cache
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid, tabulate_bins=1000):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -844,9 +844,9 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
 
     @grids.grid_like_to_numpy
     @grids.grid_interpolate
-    @geometry_profiles.cache
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.cache
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -965,8 +965,8 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         )
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -1269,8 +1269,8 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
             return 1
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -1294,9 +1294,9 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
 
     @grids.grid_like_to_numpy
     @grids.grid_interpolate
-    @geometry_profiles.cache
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.cache
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -1418,8 +1418,8 @@ class SphericalNFW(EllipticalNFW):
         )
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def potential_from_grid(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -1444,8 +1444,8 @@ class SphericalNFW(EllipticalNFW):
         return ((np.log(eta / 2.0)) ** 2) - (np.arctanh(np.sqrt(1 - eta ** 2))) ** 2
 
     @grids.grid_like_to_numpy
-    @geometry_profiles.transform_grid
-    @geometry_profiles.move_grid_to_radial_minimum
+    @grids.transform_grid
+    @grids.move_grid_to_radial_minimum
     def deflections_from_grid(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
