@@ -63,4 +63,4 @@ from autogalaxy.pipeline.pipeline import PipelineDataset
 from autogalaxy.pipeline import setup
 
 
-__version__ = "0.9.0"
+__version__ = '0.9.1'
