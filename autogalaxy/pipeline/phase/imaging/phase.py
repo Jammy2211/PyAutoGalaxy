@@ -1,6 +1,5 @@
-from astropy import cosmology as cosmo
-
 import autofit as af
+from astropy import cosmology as cosmo
 from autogalaxy.pipeline import tagging
 from autogalaxy.pipeline.phase import dataset
 from autogalaxy.pipeline.phase.imaging.analysis import Analysis

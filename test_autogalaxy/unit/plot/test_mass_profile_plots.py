@@ -1,9 +1,10 @@
-import autoarray as aa
-import autogalaxy.plot as aplt
-import autogalaxy as ag
-import pytest
 import os
 from os import path
+
+from autoconf import conf
+import autogalaxy as ag
+import autogalaxy.plot as aplt
+import pytest
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -17,7 +18,7 @@ def make_mp_plotter_setup():
 
 @pytest.fixture(autouse=True)
 def set_config_path():
-    aa.conf.instance = aa.conf.Config(
+    conf.instance = conf.Config(
         path.join(directory, "files/plotter"), path.join(directory, "output")
     )
 

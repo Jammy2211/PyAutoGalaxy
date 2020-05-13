@@ -1,10 +1,11 @@
-import autoarray as aa
-import autogalaxy.plot as aplt
-import autogalaxy as ag
 import os
-
-import pytest
 from os import path
+
+from autoconf import conf
+import autogalaxy as ag
+import autogalaxy as ag
+import autogalaxy.plot as aplt
+import pytest
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -16,7 +17,7 @@ def make_galaxy_plotter_setup():
 
 @pytest.fixture(autouse=True)
 def set_config_path():
-    aa.conf.instance = aa.conf.Config(
+    conf.instance = conf.Config(
         path.join(directory, "files/plotter"), path.join(directory, "output")
     )
 
@@ -92,8 +93,8 @@ def test__individual_images_are_output(
     assert galaxy_plotter_path + "magnification.png" in plot_patch.paths
 
     gal_x1_lp_x1_mp.hyper_galaxy = ag.HyperGalaxy()
-    gal_x1_lp_x1_mp.hyper_model_image = aa.Array.ones(shape_2d=(7, 7), pixel_scales=0.1)
-    gal_x1_lp_x1_mp.hyper_galaxy_image = aa.Array.ones(
+    gal_x1_lp_x1_mp.hyper_model_image = ag.Array.ones(shape_2d=(7, 7), pixel_scales=0.1)
+    gal_x1_lp_x1_mp.hyper_galaxy_image = ag.Array.ones(
         shape_2d=(7, 7), pixel_scales=0.1
     )
 

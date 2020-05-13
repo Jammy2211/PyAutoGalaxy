@@ -1,6 +1,6 @@
 from autoarray.plot import plotters
-from autogalaxy.plot import lensing_plotters
 from autoarray.util import plotter_util
+from autogalaxy.plot import lensing_plotters
 
 
 @lensing_plotters.set_include_and_plotter

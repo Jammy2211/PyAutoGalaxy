@@ -1,5 +1,6 @@
-import autofit as af
 import autoarray as aa
+import autofit as af
+from autoconf import conf
 from autoarray.operators.inversion import pixelizations as pix
 
 
@@ -30,11 +31,8 @@ class MetaDataset:
         self.model = model
         self.sub_size = sub_size
         self.signal_to_noise_limit = signal_to_noise_limit
-        self.inversion_pixel_limit = (
-            inversion_pixel_limit
-            or af.conf.instance.general.get(
-                "inversion", "inversion_pixel_limit_overall", int
-            )
+        self.inversion_pixel_limit = inversion_pixel_limit or conf.instance.general.get(
+            "inversion", "inversion_pixel_limit_overall", int
         )
 
     def mask_with_phase_sub_size_from_mask(self, mask):

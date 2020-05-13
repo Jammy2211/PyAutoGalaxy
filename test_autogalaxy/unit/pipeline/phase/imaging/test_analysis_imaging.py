@@ -1,8 +1,9 @@
 from os import path
-import pytest
-from astropy import cosmology as cosmo
+
 import autofit as af
 import autogalaxy as ag
+import pytest
+from astropy import cosmology as cosmo
 from autogalaxy.fit.fit import FitImaging
 from test_autolens.mock import mock_pipeline
 

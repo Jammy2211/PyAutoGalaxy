@@ -1,10 +1,9 @@
-from astropy import cosmology as cosmo
-
 import autofit as af
+from astropy import cosmology as cosmo
 from autogalaxy.galaxy import fit_galaxy
 from autogalaxy.galaxy import masked_galaxy_data
-from autogalaxy.pipeline.phase import abstract
 from autogalaxy.pipeline import visualizer
+from autogalaxy.pipeline.phase import abstract
 
 
 class Analysis(af.Analysis):

@@ -1,7 +1,8 @@
-from astropy import constants
-from autogalaxy import exc
-from autogalaxy import dimensions as dim
 import math
+
+from astropy import constants
+from autogalaxy import dimensions as dim
+from autogalaxy import exc
 
 
 def arcsec_per_kpc_from_redshift_and_cosmology(redshift, cosmology):

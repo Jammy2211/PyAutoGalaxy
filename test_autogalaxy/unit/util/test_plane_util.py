@@ -1,7 +1,6 @@
+import autogalaxy as ag
 import numpy as np
 import pytest
-
-import autogalaxy as ag
 from autogalaxy import exc
 
 

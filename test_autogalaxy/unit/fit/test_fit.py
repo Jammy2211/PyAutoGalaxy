@@ -1,9 +1,7 @@
 import autogalaxy as ag
-from autoarray.operators.inversion import inversions
-
 import numpy as np
 import pytest
-
+from autoarray.operators.inversion import inversions
 from test_autogalaxy.mock.mock_profiles import MockLightProfile
 
 

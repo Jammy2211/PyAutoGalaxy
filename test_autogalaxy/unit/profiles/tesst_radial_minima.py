@@ -1,10 +1,11 @@
 from __future__ import division, print_function
 
-import autofit as af
 import os
 
+import autofit as af
+
 test_path = "{}/config/".format(os.path.dirname(os.path.realpath(__file__)))
-af.conf.instance = af.conf.Config(config_path=test_path)
+conf.instance = conf.Config(config_path=test_path)
 
 import numpy as np
 import pytest
@@ -230,16 +231,16 @@ class TestPowerLaw:
             ]
         )
 
-        mask = aa.Mask.manual(mask, real_space_pixel_scales=1.0)
+        mask = ag.Mask.manual(mask, real_space_pixel_scales=1.0)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = power_law.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -954,16 +955,16 @@ class TestSersicMassRadialGradient:
             ]
         )
 
-        mask = aa.Mask.manual(mask, real_space_pixel_scales=1.0)
+        mask = ag.Mask.manual(mask, real_space_pixel_scales=1.0)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 

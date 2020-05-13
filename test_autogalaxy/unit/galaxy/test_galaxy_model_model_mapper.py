@@ -1,3 +1,4 @@
+from autoconf import conf
 import autofit as af
 import autogalaxy as ag
 
@@ -9,7 +10,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    af.conf.instance = af.conf.default
+    conf.instance = conf.default
 
 
 class TestCase:

@@ -1,7 +1,7 @@
-import autofit as af
+import inspect
 import typing
 
-import inspect
+import autofit as af
 from autogalaxy import exc
 
 

@@ -1,12 +1,12 @@
+import os
+import pickle
 from os import path
-import numpy as np
-import pytest
 
 import autofit as af
 import autogalaxy as ag
+import numpy as np
+import pytest
 from test_autolens.mock import mock_pipeline
-
-import os
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -144,3 +144,86 @@ def test__fit_interferometer_generator_from_aggregator(interferometer_7, mask_7x
         assert (
             fit_interferometer.masked_interferometer.real_space_mask == mask_7x7
         ).all()
+
+
+class MockResult:
+    def __init__(self, log_likelihood):
+        self.log_likelihood = log_likelihood
+        self.model = log_likelihood
+
+
+class MockAggregator:
+    def __init__(self, grid_search_result):
+
+        self.grid_search_result = grid_search_result
+
+    @property
+    def grid_search_results(self):
+        return iter([self.grid_search_result])
+
+    def values(self, str):
+        return self.grid_search_results
+
+
+def test__results_array_from_results_file(path):
+
+    results = [
+        MockResult(log_likelihood=1.0),
+        MockResult(log_likelihood=2.0),
+        MockResult(log_likelihood=3.0),
+        MockResult(log_likelihood=4.0),
+    ]
+
+    lower_limit_lists = [[0.0, 0.0], [0.0, 0.5], [0.5, 0.0], [0.5, 0.5]]
+    physical_lower_limits_lists = [[-1.0, -1.0], [-1.0, 0.0], [0.0, -1.0], [0.0, 0.0]]
+
+    grid_search_result = af.GridSearchResult(
+        results=results,
+        physical_lower_limits_lists=physical_lower_limits_lists,
+        lower_limit_lists=lower_limit_lists,
+    )
+
+    aggregator = MockAggregator(grid_search_result=grid_search_result)
+
+    array = ag.agg.grid_search_result_as_array(aggregator=aggregator)
+
+    assert array.in_2d == pytest.approx(np.array([[3.0, 2.0], [1.0, 4.0]]), 1.0e4)
+    assert array.pixel_scales == (1.0, 1.0)
+
+
+def test__results_array_from_real_grid_search_pickle(path):
+
+    with open("{}/{}.pickle".format(path, "grid_search_result"), "rb") as f:
+        grid_search_result = pickle.load(f)
+
+    assert grid_search_result.physical_step_sizes == pytest.approx((0.8, 0.8), 1.0e-4)
+
+    array = ag.agg.grid_search_result_as_array_from_grid_search_result(
+        grid_search_result=grid_search_result
+    )
+
+    assert array.in_2d[0, 0] == pytest.approx(21039.54, 1.0e-2)
+    assert array.in_2d[0, 1] == pytest.approx(21040.64, 1.0e-2)
+    assert array.in_2d[0, 2] == pytest.approx(21629.03, 1.0e-2)
+    assert array.in_2d[0, 3] == pytest.approx(21623.81, 1.0e-2)
+    assert array.in_2d[0, 4] == pytest.approx(21039.58, 1.0e-2)
+    assert array.in_2d[1, 0] == pytest.approx(21052.43, 1.0e-2)
+    assert array.in_2d[1, 1] == pytest.approx(21039.60, 1.0e-2)
+    assert array.in_2d[1, 2] == pytest.approx(21086.19, 1.0e-2)
+    assert array.in_2d[1, 3] == pytest.approx(21070.26, 1.0e-2)
+    assert array.in_2d[1, 4] == pytest.approx(21039.44, 1.0e-2)
+    assert array.in_2d[2, 0] == pytest.approx(21068.41, 1.0e-2)
+    assert array.in_2d[2, 1] == pytest.approx(21046.94, 1.0e-2)
+    assert array.in_2d[2, 2] == pytest.approx(21039.71, 1.0e-2)
+    assert array.in_2d[2, 3] == pytest.approx(21048.62, 1.0e-2)
+    assert array.in_2d[2, 4] == pytest.approx(21064.88, 1.0e-2)
+    assert array.in_2d[3, 0] == pytest.approx(21064.22, 1.0e-2)
+    assert array.in_2d[3, 1] == pytest.approx(21046.82, 1.0e-2)
+    assert array.in_2d[3, 2] == pytest.approx(21039.69, 1.0e-2)
+    assert array.in_2d[3, 3] == pytest.approx(21051.30, 1.0e-2)
+    assert array.in_2d[3, 4] == pytest.approx(21064.96, 1.0e-2)
+    assert array.in_2d[4, 0] == pytest.approx(21047.51, 1.0e-2)
+    assert array.in_2d[4, 1] == pytest.approx(21039.91, 1.0e-2)
+    assert array.in_2d[4, 2] == pytest.approx(21039.49, 1.0e-2)
+    assert array.in_2d[4, 3] == pytest.approx(21048.40, 1.0e-2)
+    assert array.in_2d[4, 4] == pytest.approx(21059.12, 1.0e-2)

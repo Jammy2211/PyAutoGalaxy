@@ -1,9 +1,9 @@
 import inspect
 
+from autofit.mapper.prior_model.prior_model import PriorModel
 from autogalaxy.galaxy import Galaxy
 from autogalaxy.profiles import light_profiles
 from autogalaxy.profiles import mass_profiles
-from autofit.mapper.prior_model.prior_model import PriorModel
 
 
 def is_light_profile_class(cls):

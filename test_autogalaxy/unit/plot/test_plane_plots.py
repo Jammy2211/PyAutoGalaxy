@@ -1,11 +1,11 @@
+import os
+from os import path
+
+from autoconf import conf
 import autogalaxy as ag
 import autogalaxy.plot as aplt
 import pytest
-import os
-
-from os import path
-
-from autofit import conf
+from autoconf import conf
 
 directory = path.dirname(path.realpath(__file__))
 

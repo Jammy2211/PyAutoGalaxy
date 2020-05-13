@@ -1,15 +1,14 @@
+import os
+
+from autoconf import conf
+import autofit as af
+import autogalaxy as ag
 import numpy as np
 import pytest
 from astropy import cosmology as cosmo
-from skimage import measure
-
-import os
-
-import autofit as af
-import autogalaxy as ag
-from autogalaxy.plane import plane
 from autogalaxy import exc
-
+from autogalaxy.plane import plane
+from skimage import measure
 from test_autoarray.mock import mock_inversion
 
 planck = cosmo.Planck15
@@ -867,7 +866,7 @@ class TestAbstractPlaneProfiles:
 
         def test__same_as_above__grid_is_positions(self):
             # Overwrite one value so intensity in each pixel is different
-            positions = ag.Coordinates(coordinates=[[(2.0, 2.0)], [(3.0, 3.0)]])
+            positions = ag.GridCoordinates(coordinates=[[(2.0, 2.0)], [(3.0, 3.0)]])
 
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
@@ -2681,7 +2680,7 @@ class TestPlane:
             self, gal_x1_mp
         ):
 
-            positions = ag.Coordinates(coordinates=[[(1.0, 1.0), (1.0, 0.0)]])
+            positions = ag.GridCoordinates(coordinates=[[(1.0, 1.0), (1.0, 0.0)]])
 
             plane = ag.Plane(galaxies=[gal_x1_mp, gal_x1_mp], redshift=None)
 
@@ -2725,7 +2724,7 @@ class TestPlane:
             test_path = "{}/files/summary".format(
                 os.path.dirname(os.path.realpath(__file__))
             )
-            af.conf.instance = af.conf.Config(config_path=test_path)
+            conf.instance = conf.Config(config_path=test_path)
 
             sersic_0 = ag.lp.SphericalSersic(
                 intensity=1.0, effective_radius=2.0, sersic_index=2.0
@@ -3033,6 +3032,36 @@ class TestPlaneImage:
         )
 
 
+class TestDecorators:
+    def test__grid_iterator_in__iterates_grid_correctly(self, gal_x1_lp):
+
+        mask = ag.Mask.manual(
+            mask_2d=[
+                [True, True, True, True, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, True, True, True, True],
+            ],
+            pixel_scales=(1.0, 1.0),
+            origin=(0.001, 0.001),
+        )
+
+        grid = ag.GridIterator.from_mask(
+            mask=mask, fractional_accuracy=1.0, sub_steps=[2]
+        )
+
+        plane = ag.Plane(galaxies=[gal_x1_lp], redshift=None)
+
+        profile_image = plane.profile_image_from_grid(grid=grid)
+
+        mask_sub_2 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
+        grid_sub_2 = ag.Grid.from_mask(mask=mask)
+        profile_image_sub_2 = plane.profile_image_from_grid(grid=grid)
+
+        assert (profile_image == profile_image_sub_2).all()
+
+
 class TestRegression:
     def test__profile_image_centre_is_brightest_pixel_in_grid(self):
 
@@ -3126,7 +3155,9 @@ class TestRegression:
 
         grid = ag.Grid.uniform(shape_2d=(11, 11), pixel_scales=1.0, sub_size=1)
 
-        mass_profile = ag.mp.EllipticalIsothermal(centre=(1.0, 0.0), einstein_radius=1.0)
+        mass_profile = ag.mp.EllipticalIsothermal(
+            centre=(1.0, 0.0), einstein_radius=1.0
+        )
 
         grid_transform = mass_profile.transform_grid_to_reference_frame(grid=grid)
 
@@ -3137,9 +3168,7 @@ class TestRegression:
 
         convergence = mass_profile.convergence_from_grid(grid=grid)
 
-        y, x = np.unravel_index(
-            abs(convergence.in_2d).argmax(), convergence.shape_2d
-        )
+        y, x = np.unravel_index(abs(convergence.in_2d).argmax(), convergence.shape_2d)
 
         assert y == y_transform
         assert x == x_transform
@@ -3151,9 +3180,7 @@ class TestRegression:
 
         convergence = galaxy.convergence_from_grid(grid=grid)
 
-        y, x = np.unravel_index(
-            abs(convergence.in_2d).argmax(), convergence.shape_2d
-        )
+        y, x = np.unravel_index(abs(convergence.in_2d).argmax(), convergence.shape_2d)
 
         assert y == y_transform
         assert x == x_transform
@@ -3165,9 +3192,7 @@ class TestRegression:
 
         convergence = plane.convergence_from_grid(grid=grid)
 
-        y, x = np.unravel_index(
-            abs(convergence.in_2d).argmax(), convergence.shape_2d
-        )
+        y, x = np.unravel_index(abs(convergence.in_2d).argmax(), convergence.shape_2d)
 
         assert y == y_transform
         assert x == x_transform
@@ -3194,9 +3219,7 @@ class TestRegression:
 
         convergence = plane.convergence_from_grid(grid=grid)
 
-        y, x = np.unravel_index(
-            abs(convergence.in_2d).argmax(), convergence.shape_2d
-        )
+        y, x = np.unravel_index(abs(convergence.in_2d).argmax(), convergence.shape_2d)
 
         assert y == y_transform
         assert x == x_transform

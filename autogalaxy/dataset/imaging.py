@@ -1,9 +1,9 @@
-from autoarray.dataset import imaging
-from autogalaxy.plane import plane as pl
-from autogalaxy import exc
+import copy
 
 import numpy as np
-import copy
+from autoarray.dataset import imaging
+from autogalaxy import exc
+from autogalaxy.plane import plane as pl
 
 
 class MaskedImaging(imaging.MaskedImaging):

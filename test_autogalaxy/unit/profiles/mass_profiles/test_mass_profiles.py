@@ -1,11 +1,9 @@
-import autofit as af
-import autoarray as aa
-import autogalaxy as ag
 import math
+
+from autoconf import conf
+import autogalaxy as ag
 import numpy as np
 import pytest
-import os
-
 from test_autogalaxy.mock import mock_cosmology
 
 
@@ -14,7 +12,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    af.conf.instance = af.conf.default
+    conf.instance = conf.default
 
 
 def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
@@ -348,5 +346,3 @@ class TestLensingObject:
         assert sis.einstein_mass_in_units(unit_mass="angular") == pytest.approx(
             np.pi * 2.0 ** 2.0, 1.0e-2
         )
-
-

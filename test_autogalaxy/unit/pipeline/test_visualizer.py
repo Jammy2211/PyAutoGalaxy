@@ -1,10 +1,12 @@
-import autogalaxy as ag
-from autogalaxy.pipeline import visualizer as vis
 import os
-import pytest
-from os import path
 import shutil
-from autofit import conf
+from os import path
+
+from autoconf import conf
+import autogalaxy as ag
+import pytest
+from autoconf import conf
+from autogalaxy.pipeline import visualizer as vis
 
 directory = path.dirname(path.realpath(__file__))
 

@@ -1,6 +1,6 @@
-import autogalaxy.plot as aplt
 import os
 
+import autogalaxy.plot as aplt
 import pytest
 
 

@@ -1,11 +1,11 @@
 import os
 from os import path
 
-import numpy as np
-import pytest
-
+from autoconf import conf
 import autofit as af
 import autogalaxy as ag
+import numpy as np
+import pytest
 from test_autolens.mock import mock_pipeline
 
 pytestmark = pytest.mark.filterwarnings(
@@ -24,7 +24,7 @@ def clean_images():
         os.remove("{}/source_lens_phase/model_image_0.fits".format(directory))
     except FileNotFoundError:
         pass
-    af.conf.instance.dataset_path = directory
+    conf.instance.dataset_path = directory
 
 
 class TestMakeAnalysis:

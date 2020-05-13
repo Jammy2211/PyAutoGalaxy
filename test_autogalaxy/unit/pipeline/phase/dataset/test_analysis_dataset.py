@@ -1,11 +1,10 @@
 from os import path
 
-import pytest
-from astropy import cosmology as cosmo
-import numpy as np
-
 import autofit as af
 import autogalaxy as ag
+import numpy as np
+import pytest
+from astropy import cosmology as cosmo
 from test_autolens.mock import mock_pipeline
 
 pytestmark = pytest.mark.filterwarnings(

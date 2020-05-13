@@ -1,4 +1,4 @@
-import autofit as af
+from autoconf import conf
 import autogalaxy as ag
 import numpy as np
 
@@ -10,7 +10,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    af.conf.instance = af.conf.default
+    conf.instance = conf.default
 
 
 class TestHyperImageSky:

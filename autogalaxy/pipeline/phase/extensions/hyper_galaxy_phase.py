@@ -1,12 +1,13 @@
 import copy
-import numpy as np
 
 import autofit as af
+import numpy as np
 from autoarray.fit import fit as aa_fit
+from autogalaxy.fit import fit
 from autogalaxy.galaxy import galaxy as g
 from autogalaxy.hyper import hyper_data as hd
-from autogalaxy.fit import fit
 from autogalaxy.pipeline import visualizer
+
 from .hyper_phase import HyperPhase
 
 

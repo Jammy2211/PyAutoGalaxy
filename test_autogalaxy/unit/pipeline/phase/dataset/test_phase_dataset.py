@@ -1,10 +1,8 @@
 from os import path
 
-import numpy as np
+import autogalaxy as ag
 import pytest
 from astropy import cosmology as cosmo
-
-import autogalaxy as ag
 from autogalaxy import exc
 from test_autolens.mock import mock_pipeline
 

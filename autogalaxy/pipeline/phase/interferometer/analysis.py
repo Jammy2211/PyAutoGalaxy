@@ -1,8 +1,8 @@
 import autofit as af
 from autoarray.exc import InversionException
-from autogalaxy.galaxy import galaxy as g
 from autofit.exc import FitException
 from autogalaxy.fit import fit
+from autogalaxy.galaxy import galaxy as g
 from autogalaxy.pipeline import visualizer
 from autogalaxy.pipeline.phase.dataset import analysis as analysis_data
 

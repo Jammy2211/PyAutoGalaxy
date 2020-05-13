@@ -1,9 +1,6 @@
-from autogalaxy import exc
-import pytest
-
 import autogalaxy as ag
-
-from test_autogalaxy.mock import mock_cosmology
+import pytest
+from autogalaxy import exc
 
 
 class TestLength:

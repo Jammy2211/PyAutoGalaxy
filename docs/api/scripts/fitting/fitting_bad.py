@@ -1,6 +1,7 @@
+import os
+
 import autogalaxy as al
 import autogalaxy.plot as aplt
-import os
 
 # Setup the path to the autogalaxy_workspace, using a relative directory name.
 workspace_path = "{}/../../../../../autogalaxy_workspace/".format(

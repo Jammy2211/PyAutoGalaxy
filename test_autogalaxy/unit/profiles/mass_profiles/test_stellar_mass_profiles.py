@@ -1,13 +1,8 @@
+from autoconf import conf
+import autogalaxy as ag
 import numpy as np
 import pytest
-
-import autofit as af
-import autoarray as aa
 from autoarray.structures import grids
-import autogalaxy as ag
-import os
-
-from scipy.special import wofz
 
 
 @pytest.fixture(autouse=True)
@@ -15,7 +10,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    af.conf.instance = af.conf.default
+    conf.instance = conf.default
 
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
@@ -162,7 +157,7 @@ class TestEllipticalGaussian:
             mass_to_light_ratio=1.0,
         )
 
-        grid = aa.Grid.uniform(shape_2d=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
+        grid = ag.Grid.uniform(shape_2d=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
 
         deflections_via_analytic = gaussian.deflections_from_grid_via_analytic(
             grid=grid
@@ -183,7 +178,7 @@ class TestEllipticalGaussian:
             mass_to_light_ratio=7.0,
         )
 
-        grid = aa.Grid.uniform(shape_2d=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
+        grid = ag.Grid.uniform(shape_2d=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
 
         deflections_via_analytic = gaussian.deflections_from_grid_via_analytic(
             grid=grid
@@ -493,7 +488,7 @@ class TestSersic:
         )
 
         deflections = sersic.deflections_from_grid(
-            grid=aa.Coordinates([[(0.1625, 0.1625), (0.1625, 0.1625)]])
+            grid=ag.GridCoordinates([[(0.1625, 0.1625), (0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
@@ -611,16 +606,16 @@ class TestSersic:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -659,16 +654,16 @@ class TestSersic:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -687,7 +682,7 @@ class TestSersic:
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         sersic = ag.mp.EllipticalSersic()
 
@@ -886,7 +881,7 @@ class TestExponential:
         )
 
         deflections = exponential.deflections_from_grid(
-            grid=aa.Coordinates([[(0.1625, 0.1625)]])
+            grid=ag.GridCoordinates([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
@@ -937,16 +932,16 @@ class TestExponential:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = exponential.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -984,16 +979,16 @@ class TestExponential:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = exponential.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1013,7 +1008,7 @@ class TestExponential:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         exponential = ag.mp.EllipticalExponential()
 
@@ -1202,7 +1197,7 @@ class TestDevVaucouleurs:
         )
 
         deflections = dev.deflections_from_grid(
-            grid=aa.Coordinates([[(0.1625, 0.1625)]])
+            grid=ag.GridCoordinates([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(-24.528, 1e-3)
@@ -1253,16 +1248,16 @@ class TestDevVaucouleurs:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = dev.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1300,16 +1295,16 @@ class TestDevVaucouleurs:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = dev.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1328,7 +1323,7 @@ class TestDevVaucouleurs:
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         dev_vaucouleurs = ag.mp.EllipticalDevVaucouleurs()
 
@@ -1557,7 +1552,7 @@ class TestSersicMassRadialGradient:
         )
 
         deflections = sersic.deflections_from_grid(
-            grid=aa.Coordinates([[(0.1625, 0.1625)]])
+            grid=ag.GridCoordinates([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.97806399756448, 1e-3)
@@ -1734,16 +1729,16 @@ class TestSersicMassRadialGradient:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1783,16 +1778,16 @@ class TestSersicMassRadialGradient:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1811,7 +1806,7 @@ class TestSersicMassRadialGradient:
         assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         sersic = ag.mp.EllipticalSersicRadialGradient()
 

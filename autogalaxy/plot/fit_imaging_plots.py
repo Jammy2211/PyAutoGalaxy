@@ -1,8 +1,7 @@
-from autoarray.plot import plotters
-from autogalaxy.plot import lensing_plotters
-from autogalaxy.plot import inversion_plots
-
 import numpy as np
+from autoarray.plot import plotters
+from autogalaxy.plot import inversion_plots
+from autogalaxy.plot import lensing_plotters
 
 
 @lensing_plotters.set_include_and_sub_plotter

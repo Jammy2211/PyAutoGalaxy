@@ -1,9 +1,8 @@
+from autoconf import conf
+import autogalaxy as ag
+import autogalaxy as ag
 import numpy as np
 import pytest
-
-import autofit as af
-import autoarray as aa
-import autogalaxy as ag
 from autogalaxy import exc
 from test_autogalaxy.mock import mock_galaxy
 
@@ -13,7 +12,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    af.conf.instance = af.conf.default
+    conf.instance = conf.default
 
 
 class TestGalaxyFitData:
@@ -87,7 +86,7 @@ class TestGalaxyFitData:
 
     def test__pixel_scale_interpolation_grid(self, image_7x7, sub_mask_7x7):
 
-        noise_map = aa.Array.full(fill_value=2.0, shape_2d=(7, 7), pixel_scales=3.0)
+        noise_map = ag.Array.full(fill_value=2.0, shape_2d=(7, 7), pixel_scales=3.0)
         gal_data_7x7 = ag.GalaxyData(
             image=image_7x7, noise_map=noise_map, pixel_scales=3.0
         )
@@ -98,7 +97,7 @@ class TestGalaxyFitData:
             use_image=True,
         )
 
-        grid = aa.MaskedGrid.from_mask(mask=sub_mask_7x7)
+        grid = ag.MaskedGrid.from_mask(mask=sub_mask_7x7)
         new_grid = grid.new_grid_with_interpolator(pixel_scale_interpolation_grid=1.0)
         assert (gal_data_7x7.grid == new_grid).all()
         assert (gal_data_7x7.grid.interpolator.vtx == new_grid.interpolator.vtx).all()

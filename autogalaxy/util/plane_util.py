@@ -1,8 +1,7 @@
+import numpy as np
 from autoarray.structures import grids
 from autogalaxy import exc
 from autogalaxy.plane import plane as pl
-
-import numpy as np
 
 
 def plane_image_of_galaxies_from_grid(shape, grid, galaxies, buffer=1.0e-2):

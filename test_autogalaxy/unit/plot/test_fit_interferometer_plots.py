@@ -1,7 +1,7 @@
-import pytest
 import os
 
 import autogalaxy.plot as aplt
+import pytest
 
 
 @pytest.fixture(name="plot_path")

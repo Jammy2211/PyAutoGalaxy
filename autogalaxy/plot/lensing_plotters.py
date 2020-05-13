@@ -1,12 +1,12 @@
-import autofit as af
-from autoarray.plot import plotters
-from autogalaxy.plot import lensing_mat_objs
-from autoarray.operators.inversion import mappers
-from autogalaxy import lensing
-
-from functools import wraps
 import copy
+from functools import wraps
+
 import numpy as np
+from autoconf import conf
+from autoarray.operators.inversion import mappers
+from autoarray.plot import plotters
+from autogalaxy import lensing
+from autogalaxy.plot import lensing_mat_objs
 
 
 class LensingPlotter(plotters.AbstractPlotter):
@@ -714,7 +714,7 @@ class Include(plotters.Include):
     def load_include(value, name):
 
         return (
-            af.conf.instance.visualize_general.get(
+            conf.instance.visualize_general.get(
                 section_name="include", attribute_name=name, attribute_type=bool
             )
             if value is None

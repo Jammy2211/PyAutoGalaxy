@@ -1,7 +1,7 @@
+import os
+
 import autogalaxy as al
 import autogalaxy.plot as aplt
-
-import os
 
 # In this example, we simulate a complex image of a 3-plane double Einstein ring strong gravitational galaxy.
 

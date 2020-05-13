@@ -1,11 +1,8 @@
-import os
 from os import path
-import numpy as np
 
-import pytest
-
-import autofit as af
+from autoconf import conf
 import autogalaxy as ag
+import pytest
 from test_autolens.mock import mock_pipeline
 
 pytestmark = pytest.mark.filterwarnings(
@@ -21,7 +18,7 @@ directory = path.dirname(path.realpath(__file__))
 def do_something():
     print("{}/config/".format(directory))
 
-    af.conf.instance = af.conf.Config("{}/config/".format(directory))
+    conf.instance = conf.Config("{}/config/".format(directory))
 
 
 class TestGeneric:

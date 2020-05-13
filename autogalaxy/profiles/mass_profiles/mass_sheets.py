@@ -1,8 +1,7 @@
+import autofit as af
 import numpy as np
 from astropy import cosmology as cosmo
-
-import autofit as af
-from autoarray.structures import arrays, grids
+from autoarray.structures import grids
 from autogalaxy import dimensions as dim
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
@@ -27,17 +26,17 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
     def convergence_func(self, grid_radius):
         return 0.0
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def convergence_from_grid(self, grid):
         return np.full(shape=grid.shape[0], fill_value=self.kappa)
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grids.grid_like_to_numpy
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         grid_radii = self.grid_to_grid_radii(grid=grid)
         return self.grid_to_grid_cartesian(grid=grid, radius=self.kappa * grid_radii)
@@ -80,17 +79,17 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
     ):
         return dim.Length(value=0.0, unit_length=self.unit_length)
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def convergence_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grids.grid_like_to_numpy
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.

@@ -1,6 +1,5 @@
-from astropy import cosmology as cosmo
-
 import autofit as af
+from astropy import cosmology as cosmo
 from autofit.tools.phase import Dataset
 from autogalaxy.pipeline.phase import abstract
 from autogalaxy.pipeline.phase import extensions

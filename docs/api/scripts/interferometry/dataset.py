@@ -1,7 +1,5 @@
 import os
-import numpy as np
 
-import autofit as af
 import autogalaxy as al
 import autogalaxy.plot as aplt
 

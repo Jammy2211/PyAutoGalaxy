@@ -1,5 +1,4 @@
-import autofit as af
-import autoarray as aa
+from autoconf import conf
 import autogalaxy as ag
 import numpy as np
 import pytest
@@ -10,7 +9,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    af.conf.instance = af.conf.default
+    conf.instance = conf.default
 
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
@@ -59,7 +58,7 @@ class TestMassSheet:
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         convergence = mass_sheet.convergence_from_grid(
-            grid=aa.Grid.manual_2d(
+            grid=ag.Grid.manual_2d(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -89,7 +88,7 @@ class TestMassSheet:
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         potential = mass_sheet.potential_from_grid(
-            grid=aa.Grid.manual_2d(
+            grid=ag.Grid.manual_2d(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -189,7 +188,7 @@ class TestMassSheet:
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=aa.Grid.manual_2d(
+            grid=ag.Grid.manual_2d(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -259,7 +258,7 @@ class TestMassSheet:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         mass_sheet = ag.mp.MassSheet()
 
@@ -300,7 +299,7 @@ class TestExternalShear:
         assert (convergence == np.array([0.0, 0.0, 0.0])).all()
 
         convergence = shear.convergence_from_grid(
-            grid=aa.Grid.manual_2d(
+            grid=ag.Grid.manual_2d(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -328,7 +327,7 @@ class TestExternalShear:
         assert (potential == np.array([0.0, 0.0, 0.0])).all()
 
         potential = shear.potential_from_grid(
-            grid=aa.Grid.manual_2d(
+            grid=ag.Grid.manual_2d(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -356,7 +355,7 @@ class TestExternalShear:
         assert deflections[0, 1] == pytest.approx(-0.011895, 1e-3)
 
         deflections = shear.deflections_from_grid(
-            grid=aa.Grid.manual_2d(
+            grid=ag.Grid.manual_2d(
                 [
                     [[0.1625, 0.1625], [0.1625, 0.1625]],
                     [[0.1625, 0.1625], [0.1625, 0.1625]],
@@ -382,7 +381,7 @@ class TestExternalShear:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         shear = ag.mp.ExternalShear()
 

@@ -1,23 +1,21 @@
+from itertools import count
+
 import numpy as np
 from astropy import cosmology as cosmo
-from itertools import count
-from scipy.optimize import root_scalar
-
-from autofit.mapper.model_object import ModelObject
-from autogalaxy.util import cosmology_util
-from autogalaxy import exc
-from autogalaxy import dimensions as dim
-from autogalaxy import lensing
-from autofit.text import formatter
-from autoarray.structures import arrays, grids
 from autoarray.operators.inversion import pixelizations as pix
+from autoarray.structures import arrays, grids
+from autofit.mapper.model_object import ModelObject
+from autofit.text import formatter
+from autogalaxy import dimensions as dim
+from autogalaxy import exc
+from autogalaxy import lensing
 from autogalaxy.profiles import light_profiles as lp
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.profiles.mass_profiles import (
     dark_mass_profiles as dmp,
     stellar_mass_profiles as smp,
 )
-from copy import deepcopy
+from autogalaxy.util import cosmology_util
 
 
 def is_light_profile(obj):
@@ -141,7 +139,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def light_profile_centres(self):
-        """Returns the light profile centres of the galaxy as a *Coordinates* object, which structures the centres
+        """Returns the light profile centres of the galaxy as a *GridCoordinates* object, which structures the centres
         in lists according to which light profile they come from. 
         
         Fo example, if a galaxy has two light profiles, the first with one centre and second with two centres this 
@@ -154,13 +152,13 @@ class Galaxy(ModelObject, lensing.LensingObject):
         NOTE: Currently, no light profiles can have more than one centre (it unlikely one ever will). The structure of 
         the output follows this convention to follow other methods in the *Galaxy* class that return profile 
         attributes."""
-        return grids.Coordinates(
+        return grids.GridCoordinates(
             [[light_profile.centre] for light_profile in self.light_profiles]
         )
 
     @property
     def mass_profile_centres(self):
-        """Returns the mass profile centres of the galaxy as a *Coordinates* object, which structures the centres
+        """Returns the mass profile centres of the galaxy as a *GridCoordinates* object, which structures the centres
         in lists according to which mass profile they come from. 
 
         Fo example, if a galaxy has two mass profiles, the first with one centre and second with two centres this 
@@ -180,7 +178,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             for mass_profile in self.mass_profiles
             if not mass_profile.is_mass_sheet
         ]
-        return grids.Coordinates(list(filter(None, centres)))
+        return grids.GridCoordinates(list(filter(None, centres)))
 
     @property
     def mass_profile_axis_ratios(self):
@@ -399,7 +397,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         return self.__class__(**new_dict)
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def profile_image_from_grid(self, grid):
         """Calculate the summed image of all of the galaxy's light profiles using a grid of Cartesian (y,x) \
         coordinates.
@@ -486,7 +484,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return None
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def convergence_from_grid(self, grid):
         """Compute the summed convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
@@ -494,8 +492,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
         
         See *profiles.mass_profiles* module for details of how this is performed.
 
-        The *grid_like_to_numpy* decorator reshapes the NumPy arrays the convergence is outputted on. See \
-        *aa.grid_like_to_numpy* for a description of the output.
+        The *grid_like_to_structure* decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        *aa.grid_like_to_structure* for a description of the output.
 
         Parameters
         ----------
@@ -509,7 +507,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0],))
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
         """Compute the summed gravitational potential of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
@@ -518,8 +516,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         See *profiles.mass_profiles* module for details of how this is performed.
 
-        The *grid_like_to_numpy* decorator reshapes the NumPy arrays the convergence is outputted on. See \
-        *aa.grid_like_to_numpy* for a description of the output.
+        The *grid_like_to_structure* decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        *aa.grid_like_to_structure* for a description of the output.
 
         Parameters
         ----------
@@ -533,7 +531,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0],))
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def deflections_from_grid(self, grid):
         """Compute the summed (y,x) deflection angles of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.

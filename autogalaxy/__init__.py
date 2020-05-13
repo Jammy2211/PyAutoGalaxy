@@ -1,7 +1,14 @@
 from autoarray import preprocess
 from autoarray.mask.mask import Mask
 from autoarray.structures.arrays import Array, Values
-from autoarray.structures.grids import Grid, GridRectangular, GridVoronoi, Coordinates
+from autoarray.structures.grids import (
+    Grid,
+    GridIterator,
+    GridInterpolator,
+    GridCoordinates,
+    GridRectangular,
+    GridVoronoi,
+)
 from autoarray.structures.kernel import Kernel
 from autoarray.structures.visibilities import Visibilities
 from autoarray.structures.arrays import MaskedArray
@@ -15,7 +22,7 @@ from autoarray.operators.transformer import TransformerNUFFT
 from autoarray.operators.inversion.mappers import mapper as Mapper
 from autoarray.operators.inversion.inversions import inversion as Inversion
 from autoarray.operators.inversion import pixelizations as pix, regularization as reg
-from autoarray import conf
+from autoconf import conf
 
 from autogalaxy import aggregator as agg
 from autogalaxy.dataset.imaging import MaskedImaging, SimulatorImaging
@@ -62,5 +69,4 @@ from autogalaxy.pipeline.phase.phase_galaxy import PhaseGalaxy
 from autogalaxy.pipeline.pipeline import PipelineDataset
 from autogalaxy.pipeline import setup
 
-
-__version__ = '0.9.2'
+__version__ = "0.9.2"

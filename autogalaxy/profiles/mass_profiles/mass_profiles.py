@@ -1,15 +1,14 @@
+import autofit as af
 import numpy as np
+from astropy import cosmology as cosmo
+from autoarray.structures import grids
+from autofit.text import formatter
+from autogalaxy import dimensions as dim
+from autogalaxy import lensing
+from autogalaxy.profiles import geometry_profiles
+from autogalaxy.util import cosmology_util
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
-from astropy import cosmology as cosmo
-
-import autofit as af
-from autoarray.structures import grids
-from autogalaxy.util import cosmology_util
-from autogalaxy import lensing
-from autogalaxy import dimensions as dim
-from autofit.text import formatter
-from autogalaxy.profiles import geometry_profiles
 
 
 class MassProfile(lensing.LensingObject):
@@ -77,7 +76,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
     @property
     def mass_profile_centres(self):
         if not self.is_mass_sheet:
-            return grids.Coordinates([self.centre])
+            return grids.GridCoordinates([self.centre])
         else:
             return []
 

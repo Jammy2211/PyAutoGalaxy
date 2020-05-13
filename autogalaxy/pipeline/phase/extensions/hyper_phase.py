@@ -1,6 +1,7 @@
 import copy
 
 import autofit as af
+from autoconf import conf
 from autofit.tools.phase import Dataset
 from autogalaxy.pipeline.phase import abstract
 
@@ -107,7 +108,7 @@ class HyperPhase:
 
         non_linear_name = self.non_linear_class.__name__
 
-        config = af.conf.instance.non_linear.config_for(non_linear_name)
+        config = conf.instance.non_linear.config_for(non_linear_name)
 
         if non_linear_name in "MultiNest":
 

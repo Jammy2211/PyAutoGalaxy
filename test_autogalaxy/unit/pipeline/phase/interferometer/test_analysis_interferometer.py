@@ -1,9 +1,8 @@
 from os import path
 
+import autogalaxy as ag
 import pytest
 from astropy import cosmology as cosmo
-
-import autogalaxy as ag
 from autogalaxy.fit.fit import FitInterferometer
 from test_autolens.mock import mock_pipeline
 

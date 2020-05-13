@@ -1,13 +1,12 @@
+from autoconf import conf
 import numpy as np
-import autofit as af
-from scipy.optimize import root_scalar
 from astropy import cosmology as cosmo
-from skimage import measure
-
-from autoarray.util import array_util
 from autoarray.structures import grids
+from autoarray.util import array_util
 from autogalaxy import dimensions as dim
 from autogalaxy.util import cosmology_util
+from scipy.optimize import root_scalar
+from skimage import measure
 
 
 class LensingObject:
@@ -222,11 +221,11 @@ class LensingObject:
     @property
     def calculation_grid(self):
 
-        convergence_threshold = af.conf.instance.general.get(
+        convergence_threshold = conf.instance.general.get(
             "calculation_grid", "convergence_threshold", float
         )
 
-        pixels = af.conf.instance.general.get("calculation_grid", "pixels", int)
+        pixels = conf.instance.general.get("calculation_grid", "pixels", int)
 
         # TODO : The error is raised for point mass profile which does not have a convergence, need to think how to
         # TODO : better deal with point masses.
@@ -260,7 +259,7 @@ class LensingObject:
             shape_2d=tangential_eigen_values.sub_shape_2d,
         )
 
-        return grids.Coordinates(tangential_critical_curve)
+        return grids.GridCoordinates(tangential_critical_curve)
 
     @property
     def radial_critical_curve(self):
@@ -281,11 +280,11 @@ class LensingObject:
             shape_2d=radial_eigen_values.sub_shape_2d,
         )
 
-        return grids.Coordinates(radial_critical_curve)
+        return grids.GridCoordinates(radial_critical_curve)
 
     @property
     def critical_curves(self):
-        return grids.Coordinates(
+        return grids.GridCoordinates(
             [self.tangential_critical_curve, self.radial_critical_curve]
         )
 
@@ -319,7 +318,7 @@ class LensingObject:
 
     @property
     def caustics(self):
-        return grids.Coordinates([self.tangential_caustic, self.radial_caustic])
+        return grids.GridCoordinates([self.tangential_caustic, self.radial_caustic])
 
     @property
     @array_util.Memoizer()

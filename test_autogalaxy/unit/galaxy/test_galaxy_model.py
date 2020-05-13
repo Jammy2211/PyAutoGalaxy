@@ -1,10 +1,9 @@
 import os
-
-import pytest
-
-import autoarray as aa
+from autoconf import conf
 import autogalaxy as ag
 import autofit as af
+import autogalaxy as ag
+import pytest
 
 
 class MockPriorModel:
@@ -35,7 +34,7 @@ def make_profile():
 
 @pytest.fixture(scope="session", autouse=True)
 def do_something():
-    aa.conf.instance = aa.conf.Config(
+    conf.instance = conf.Config(
         "{}/config/galaxy_model".format(os.path.dirname(os.path.realpath(__file__)))
     )
 
@@ -271,8 +270,8 @@ class TestPixelization:
     def test_pixelization(self):
         galaxy_model = ag.GalaxyModel(
             redshift=ag.Redshift,
-            pixelization=aa.pix.Rectangular,
-            regularization=aa.reg.Constant,
+            pixelization=ag.pix.Rectangular,
+            regularization=ag.reg.Constant,
         )
 
         arguments = {
@@ -290,8 +289,8 @@ class TestPixelization:
     def test_fixed_pixelization(self):
         galaxy_model = ag.GalaxyModel(
             redshift=ag.Redshift,
-            pixelization=aa.pix.Rectangular(),
-            regularization=aa.reg.Constant(),
+            pixelization=ag.pix.Rectangular(),
+            regularization=ag.reg.Constant(),
         )
 
         arguments = {galaxy_model.redshift.redshift: 2.0}
@@ -303,15 +302,15 @@ class TestPixelization:
 
     def test__if_no_pixelization_raises_error(self):
         with pytest.raises(AssertionError):
-            ag.GalaxyModel(redshift=ag.Redshift, pixelization=aa.pix.Voronoi)
+            ag.GalaxyModel(redshift=ag.Redshift, pixelization=ag.pix.Voronoi)
 
 
 class TestRegularization:
     def test_regularization(self):
         galaxy_model = ag.GalaxyModel(
             redshift=ag.Redshift,
-            pixelization=aa.pix.Rectangular,
-            regularization=aa.reg.Constant,
+            pixelization=ag.pix.Rectangular,
+            regularization=ag.reg.Constant,
         )
 
         arguments = {
@@ -328,8 +327,8 @@ class TestRegularization:
     def test_fixed_regularization(self):
         galaxy_model = ag.GalaxyModel(
             redshift=ag.Redshift,
-            pixelization=aa.pix.Voronoi(),
-            regularization=aa.reg.Constant(),
+            pixelization=ag.pix.Voronoi(),
+            regularization=ag.reg.Constant(),
         )
 
         arguments = {galaxy_model.redshift.redshift: 2.0}
@@ -340,7 +339,7 @@ class TestRegularization:
 
     def test__if_no_pixelization_raises_error(self):
         with pytest.raises(AssertionError):
-            ag.GalaxyModel(redshift=ag.Redshift, regularization=aa.reg.Constant)
+            ag.GalaxyModel(redshift=ag.Redshift, regularization=ag.reg.Constant)
 
 
 class TestHyperGalaxy:

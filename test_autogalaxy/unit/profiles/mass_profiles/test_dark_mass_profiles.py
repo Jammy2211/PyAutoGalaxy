@@ -1,15 +1,11 @@
+import os
+
+from autoconf import conf
+import autogalaxy as ag
 import numpy as np
 import pytest
 from astropy import cosmology as cosmo
-
-import autofit as af
-import autoarray as aa
-from autoarray.structures import grids
-import autogalaxy as ag
-
 from test_autogalaxy.mock import mock_cosmology
-
-import os
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
@@ -19,7 +15,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    af.conf.instance = af.conf.default
+    conf.instance = conf.default
 
 
 class TestAbstractNFW:
@@ -985,16 +981,16 @@ class TestGeneralizedNFW:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = gNFW.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = ag.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1034,7 +1030,7 @@ class TestGeneralizedNFW:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         # gnfw = ag.EllipticalGeneralizedNFW()
         #
@@ -1175,7 +1171,7 @@ class TestTruncatedNFW:
         )
 
         deflections = truncated_nfw.deflections_from_grid(
-            grid=aa.Coordinates([[(2.0, 0.0)]])
+            grid=ag.GridCoordinates([[(2.0, 0.0)]])
         )
 
         assert deflections[0, 0] == pytest.approx(2.1702661386, 1.0e-4)
@@ -1227,9 +1223,9 @@ class TestTruncatedNFW:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1238,7 +1234,7 @@ class TestTruncatedNFW:
             grid=regular_with_interp
         )
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = ag.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1319,7 +1315,7 @@ class TestTruncatedNFW:
         test_path = "{}/config/summary".format(
             os.path.dirname(os.path.realpath(__file__))
         )
-        af.conf.instance = af.conf.Config(config_path=test_path)
+        conf.instance = conf.Config(config_path=test_path)
 
         cosmology = cosmo.LambdaCDM(H0=70.0, Om0=0.3, Ode0=0.7)
 
@@ -1395,7 +1391,7 @@ class TestTruncatedNFW:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         truncated_nfw = ag.mp.SphericalTruncatedNFW()
 
@@ -1829,7 +1825,7 @@ class TestNFW:
         )
 
         deflections = nfw.deflections_from_grid(
-            grid=aa.Coordinates([[(0.1625, 0.1625)]])
+            grid=ag.GridCoordinates([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(-2.59480, 1e-3)
@@ -1852,16 +1848,16 @@ class TestNFW:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = nfw.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = ag.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1894,16 +1890,16 @@ class TestNFW:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = nfw.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = ag.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1923,7 +1919,7 @@ class TestNFW:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         nfw = ag.mp.EllipticalNFW(axis_ratio=0.9)
 

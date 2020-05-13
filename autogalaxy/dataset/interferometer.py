@@ -1,9 +1,8 @@
+import numpy as np
 from autoarray.dataset import interferometer
 from autoarray.operators import transformer
-from autogalaxy.plane import plane as pl
 from autogalaxy import exc
-
-import numpy as np
+from autogalaxy.plane import plane as pl
 
 
 class MaskedInterferometer(interferometer.MaskedInterferometer):

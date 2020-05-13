@@ -1,5 +1,3 @@
-import os
-
 import pytest
 from matplotlib import pyplot
 

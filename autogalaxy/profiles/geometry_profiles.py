@@ -1,6 +1,5 @@
-import numpy as np
-
 import autofit as af
+import numpy as np
 from autoarray.structures import grids
 from autogalaxy import dimensions as dim
 
@@ -46,8 +45,8 @@ class SphericalProfile(GeometryProfile):
         """
         super(SphericalProfile, self).__init__(centre=centre)
 
-    @grids.grid_like_to_numpy
-    @grids.transform_grid
+    @grids.grid_like_to_structure
+    @grids.transform
     def grid_to_grid_radii(self, grid):
         """Convert a grid of (y, x) coordinates to a grid of their circular radii.
 
@@ -70,7 +69,7 @@ class SphericalProfile(GeometryProfile):
         """
         return np.cos(grid_thetas), np.sin(grid_thetas)
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def grid_to_grid_cartesian(self, grid, radius):
         """
         Convert a grid of (y,x) coordinates with their specified circular radii to their original (y,x) Cartesian 
@@ -87,7 +86,7 @@ class SphericalProfile(GeometryProfile):
         cos_theta, sin_theta = self.grid_angle_to_profile(grid_thetas=grid_thetas)
         return np.multiply(radius[:, None], np.vstack((sin_theta, cos_theta)).T)
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def transform_grid_to_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates to the reference frame of the profile, including a translation to \
         its centre.
@@ -98,9 +97,9 @@ class SphericalProfile(GeometryProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         transformed = np.subtract(grid, self.centre)
-        return grids.TransformedGridNumpy(grid=transformed)
+        return grids.GridTransformedNumpy(grid=transformed)
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def transform_grid_from_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
         reference frame, including a translation from the profile's centre.
@@ -111,7 +110,7 @@ class SphericalProfile(GeometryProfile):
             The (y, x) coordinates in the reference frame of the profile.
         """
         transformed = np.add(grid, self.centre)
-        return transformed.view(grids.TransformedGridNumpy)
+        return transformed.view(grids.GridTransformedNumpy)
 
 
 class EllipticalProfile(SphericalProfile):
@@ -167,7 +166,7 @@ class EllipticalProfile(SphericalProfile):
         theta_coordinate_to_profile = np.add(grid_thetas, -self.phi_radians)
         return np.cos(theta_coordinate_to_profile), np.sin(theta_coordinate_to_profile)
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def rotate_grid_from_profile(self, grid_elliptical):
         """ Rotate a grid of elliptical (y,x) coordinates from the reference frame of the profile back to the \
         unrotated coordinate grid reference frame (coordinates are not shifted back to their original centre).
@@ -190,9 +189,9 @@ class EllipticalProfile(SphericalProfile):
         )
         return np.vstack((y, x)).T
 
-    @grids.grid_like_to_numpy
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def grid_to_elliptical_radii(self, grid):
         """ Convert a grid of (y,x) coordinates to an elliptical radius.
 
@@ -209,9 +208,9 @@ class EllipticalProfile(SphericalProfile):
             )
         )
 
-    @grids.grid_like_to_numpy
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def grid_to_eccentric_radii(self, grid):
         """Convert a grid of (y,x) coordinates to an eccentric radius, which is (1.0/axis_ratio) * elliptical radius \
         and used to define light profile half-light radii using circular radii.
@@ -227,7 +226,7 @@ class EllipticalProfile(SphericalProfile):
             np.sqrt(self.axis_ratio), self.grid_to_elliptical_radii(grid)
         ).view(np.ndarray)
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def transform_grid_to_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates to the reference frame of the profile, including a translation to \
         its centre and a rotation to it orientation.
@@ -251,9 +250,9 @@ class EllipticalProfile(SphericalProfile):
                 radius * np.cos(theta_coordinate_to_profile),
             )
         ).T
-        return grids.TransformedGridNumpy(grid=transformed)
+        return grids.GridTransformedNumpy(grid=transformed)
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def transform_grid_from_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
         reference frame, including a rotation to its original orientation and a translation from the profile's centre.

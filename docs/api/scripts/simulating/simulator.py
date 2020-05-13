@@ -1,7 +1,8 @@
+import os
+
 import autofit as af
 import autogalaxy as al
 import autogalaxy.plot as aplt
-import os
 
 # This tool allows one to make simulated datasets of strong galaxyes, which can be used to test example pipelines and
 # investigate strong galaxy modeling where the 'true' answer is known.

@@ -1,30 +1,25 @@
-from pyquad import quad_grid
-
-import numpy as np
-from scipy.integrate import quad
-from scipy.optimize import fsolve
-from astropy import units
-from astropy import cosmology as cosmo
-
-from colossus.cosmology import cosmology as col_cosmology
-from colossus.halo.concentration import concentration as col_concentration
-
 import inspect
-from numba import cfunc
-from numba.types import intc, CPointer, float64
-from scipy import LowLevelCallable
-from scipy import special
 
 import autofit as af
-
-from autogalaxy.util import cosmology_util
+import numpy as np
+from astropy import cosmology as cosmo
+from astropy import units
 from autoarray import decorator_util
 from autoarray.structures import arrays, grids
 from autofit.text import formatter
 from autogalaxy import dimensions as dim
-from autogalaxy.profiles import geometry_profiles
-from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy import exc
+from autogalaxy.profiles import mass_profiles as mp
+from autogalaxy.util import cosmology_util
+from colossus.cosmology import cosmology as col_cosmology
+from colossus.halo.concentration import concentration as col_concentration
+from numba import cfunc
+from numba.types import intc, CPointer, float64
+from pyquad import quad_grid
+from scipy import LowLevelCallable
+from scipy import special
+from scipy.integrate import quad
+from scipy.optimize import fsolve
 
 
 def jit_integrand(integrand_function):
@@ -167,9 +162,9 @@ class AbstractEllipticalGeneralizedNFW(
 
         return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
 
-    @grids.grid_like_to_numpy
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -583,9 +578,9 @@ class AbstractEllipticalGeneralizedNFW(
 
 
 class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
-    @grids.grid_like_to_numpy
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def potential_from_grid(self, grid, tabulate_bins=1000):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -656,11 +651,11 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
 
         return potential_grid
 
-    @grids.grid_like_to_numpy
-    @grids.grid_interpolate
+    @grids.grid_like_to_structure
+    @grids.interpolate
     @grids.cache
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid, tabulate_bins=1000):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -842,11 +837,11 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
             scale_radius=scale_radius,
         )
 
-    @grids.grid_like_to_numpy
-    @grids.grid_interpolate
+    @grids.grid_like_to_structure
+    @grids.interpolate
     @grids.cache
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -964,9 +959,9 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
             array=np.zeros(shape=grid.shape[0]), shape_2d=grid.sub_shape_2d
         )
 
-    @grids.grid_like_to_numpy
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -1268,9 +1263,9 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
         elif r == 1:
             return 1
 
-    @grids.grid_like_to_numpy
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def potential_from_grid(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -1292,11 +1287,11 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
 
         return potential_grid
 
-    @grids.grid_like_to_numpy
-    @grids.grid_interpolate
+    @grids.grid_like_to_structure
+    @grids.interpolate
     @grids.cache
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -1417,9 +1412,9 @@ class SphericalNFW(EllipticalNFW):
             scale_radius=scale_radius,
         )
 
-    @grids.grid_like_to_numpy
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def potential_from_grid(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -1443,9 +1438,9 @@ class SphericalNFW(EllipticalNFW):
     def potential_func_sph(eta):
         return ((np.log(eta / 2.0)) ** 2) - (np.arctanh(np.sqrt(1 - eta ** 2))) ** 2
 
-    @grids.grid_like_to_numpy
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.

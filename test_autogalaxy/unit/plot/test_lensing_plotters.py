@@ -1,12 +1,12 @@
-import autoarray as aa
-from os import path
 import os
-import pytest
 import shutil
+from os import path
 
-import numpy as np
+from autoconf import conf
+import autogalaxy as ag
 import autogalaxy.plot as aplt
-
+import numpy as np
+import pytest
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -18,7 +18,7 @@ def make_plotter_setup():
 
 @pytest.fixture(autouse=True)
 def set_config_path():
-    aa.conf.instance = aa.conf.Config(
+    conf.instance = conf.Config(
         path.join(directory, "files/plotter"), path.join(directory, "output")
     )
 
@@ -204,16 +204,16 @@ class TestLensingPlotterAttributes:
 class TestLensingPlotterPlots:
     def test__plot_array__works_with_all_extras_included(self, plot_path, plot_patch):
 
-        array = aa.Array.ones(shape_2d=(31, 31), pixel_scales=(1.0, 1.0), sub_size=2)
+        array = ag.Array.ones(shape_2d=(31, 31), pixel_scales=(1.0, 1.0), sub_size=2)
 
-        mask = aa.Mask.circular(
+        mask = ag.Mask.circular(
             shape_2d=array.shape_2d,
             pixel_scales=array.pixel_scales,
             radius=5.0,
             centre=(2.0, 2.0),
         )
 
-        grid = aa.Grid.uniform(shape_2d=(11, 11), pixel_scales=0.5)
+        grid = ag.Grid.uniform(shape_2d=(11, 11), pixel_scales=0.5)
 
         plotter = aplt.Plotter(
             output=aplt.Output(path=plot_path, filename="array1", format="png")
@@ -223,13 +223,13 @@ class TestLensingPlotterPlots:
             array=array,
             mask=mask,
             grid=grid,
-            positions=aa.Coordinates([(-1.0, -1.0)]),
+            positions=ag.GridCoordinates([(-1.0, -1.0)]),
             array_overlay=array,
-            light_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            mass_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            multiple_images=aa.Coordinates([(1.0, 1.0)]),
-            critical_curves=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
-            caustics=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
+            light_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            mass_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            multiple_images=ag.GridCoordinates([(1.0, 1.0)]),
+            critical_curves=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
+            caustics=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
             include_origin=True,
             include_border=True,
         )
@@ -244,8 +244,8 @@ class TestLensingPlotterPlots:
             array=array,
             mask=mask,
             grid=grid,
-            positions=aa.Coordinates([[(1.0, 1.0), (2.0, 2.0)], [(-1.0, -1.0)]]),
-            critical_curves=aa.Coordinates(
+            positions=ag.GridCoordinates([[(1.0, 1.0), (2.0, 2.0)], [(-1.0, -1.0)]]),
+            critical_curves=ag.GridCoordinates(
                 [[(1.0, 1.0), (2.0, 2.0)], [(2.0, 4.0), (5.0, 6.0)]]
             ),
             include_origin=True,
@@ -258,12 +258,12 @@ class TestLensingPlotterPlots:
             array=array,
             mask=mask,
             grid=grid,
-            positions=aa.Coordinates([(-1.0, -1.0)]),
-            light_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            mass_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            multiple_images=aa.Coordinates([(1.0, 1.0)]),
-            critical_curves=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
-            caustics=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
+            positions=ag.GridCoordinates([(-1.0, -1.0)]),
+            light_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            mass_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            multiple_images=ag.GridCoordinates([(1.0, 1.0)]),
+            critical_curves=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
+            caustics=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
             plotter=aplt.Plotter(
                 output=aplt.Output(path=plot_path, filename="array3", format="png")
             ),
@@ -278,7 +278,7 @@ class TestLensingPlotterPlots:
         if os.path.exists(plot_path):
             shutil.rmtree(plot_path)
 
-        arr = aa.Array.ones(shape_2d=(31, 31), pixel_scales=(1.0, 1.0), sub_size=2)
+        arr = ag.Array.ones(shape_2d=(31, 31), pixel_scales=(1.0, 1.0), sub_size=2)
 
         plotter = aplt.Plotter(
             output=aplt.Output(path=plot_path, filename="array", format="fits")
@@ -286,28 +286,28 @@ class TestLensingPlotterPlots:
 
         plotter.plot_array(array=arr)
 
-        arr = aa.util.array.numpy_array_2d_from_fits(
+        arr = ag.util.array.numpy_array_2d_from_fits(
             file_path=plot_path + "/array.fits", hdu=0
         )
 
         assert (arr == np.ones(shape=(31, 31))).all()
 
-        mask = aa.Mask.circular(
+        mask = ag.Mask.circular(
             shape_2d=(31, 31), pixel_scales=(1.0, 1.0), radius=5.0, centre=(2.0, 2.0)
         )
 
-        masked_array = aa.MaskedArray.manual_2d(array=arr, mask=mask)
+        masked_array = ag.MaskedArray.manual_2d(array=arr, mask=mask)
 
         plotter.plot_array(array=masked_array)
 
-        arr = aa.util.array.numpy_array_2d_from_fits(
+        arr = ag.util.array.numpy_array_2d_from_fits(
             file_path=plot_path + "/array.fits", hdu=0
         )
 
         assert arr.shape == (13, 13)
 
     def test__plot_grid__works_with_all_extras_included(self, plot_path, plot_patch):
-        grid = aa.Grid.uniform(shape_2d=(11, 11), pixel_scales=1.0)
+        grid = ag.Grid.uniform(shape_2d=(11, 11), pixel_scales=1.0)
         color_array = np.linspace(start=0.0, stop=1.0, num=grid.shape_1d)
 
         plotter = aplt.Plotter(
@@ -318,11 +318,11 @@ class TestLensingPlotterPlots:
             grid=grid,
             color_array=color_array,
             axis_limits=[-1.5, 1.5, -2.5, 2.5],
-            light_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            mass_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            multiple_images=aa.Coordinates([(1.0, 1.0)]),
-            critical_curves=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
-            caustics=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
+            light_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            mass_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            multiple_images=ag.GridCoordinates([(1.0, 1.0)]),
+            critical_curves=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
+            caustics=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
             indexes=[0, 1, 2, 14],
             symmetric_around_centre=False,
         )
@@ -337,11 +337,11 @@ class TestLensingPlotterPlots:
             grid=grid,
             color_array=color_array,
             axis_limits=[-1.5, 1.5, -2.5, 2.5],
-            light_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            mass_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            multiple_images=aa.Coordinates([(1.0, 1.0)]),
-            critical_curves=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
-            caustics=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
+            light_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            mass_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            multiple_images=ag.GridCoordinates([(1.0, 1.0)]),
+            critical_curves=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
+            caustics=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
             indexes=[0, 1, 2, 14],
             symmetric_around_centre=True,
         )
@@ -352,11 +352,11 @@ class TestLensingPlotterPlots:
             grid=grid,
             color_array=color_array,
             axis_limits=[-1.5, 1.5, -2.5, 2.5],
-            light_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            mass_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            multiple_images=aa.Coordinates([(1.0, 1.0)]),
-            critical_curves=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
-            caustics=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
+            light_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            mass_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            multiple_images=ag.GridCoordinates([(1.0, 1.0)]),
+            critical_curves=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
+            caustics=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
             indexes=[0, 1, 2, 14],
             symmetric_around_centre=True,
             plotter=aplt.Plotter(
@@ -425,11 +425,11 @@ class TestLensingPlotterPlots:
             include_pixelization_grid=True,
             include_grid=True,
             include_border=True,
-            light_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            mass_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            multiple_images=aa.Coordinates([(1.0, 1.0)]),
-            critical_curves=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
-            caustics=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
+            light_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            mass_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            multiple_images=ag.GridCoordinates([(1.0, 1.0)]),
+            critical_curves=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
+            caustics=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
             image_pixel_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
             source_pixel_indexes=[[0, 1], [2]],
         )
@@ -445,11 +445,11 @@ class TestLensingPlotterPlots:
             include_pixelization_grid=True,
             include_grid=True,
             include_border=True,
-            light_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            mass_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            multiple_images=aa.Coordinates([(1.0, 1.0)]),
-            critical_curves=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
-            caustics=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
+            light_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            mass_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            multiple_images=ag.GridCoordinates([(1.0, 1.0)]),
+            critical_curves=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
+            caustics=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
             image_pixel_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
             source_pixel_indexes=[[0, 1], [2]],
         )
@@ -458,11 +458,11 @@ class TestLensingPlotterPlots:
 
         aplt.MapperObj(
             mapper=rectangular_mapper_7x7_3x3,
-            light_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            mass_profile_centres=aa.Coordinates([(1.0, 1.0)]),
-            multiple_images=aa.Coordinates([(1.0, 1.0)]),
-            critical_curves=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
-            caustics=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
+            light_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            mass_profile_centres=ag.GridCoordinates([(1.0, 1.0)]),
+            multiple_images=ag.GridCoordinates([(1.0, 1.0)]),
+            critical_curves=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
+            caustics=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
             image_pixel_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
             source_pixel_indexes=[[0, 1], [2]],
             plotter=aplt.Plotter(

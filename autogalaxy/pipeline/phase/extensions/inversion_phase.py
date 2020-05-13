@@ -1,9 +1,10 @@
 import autofit as af
-from autogalaxy.hyper import hyper_data as hd
 from autoarray.operators.inversion import pixelizations as pix
 from autoarray.operators.inversion import regularization as reg
+from autogalaxy.hyper import hyper_data as hd
 from autogalaxy.pipeline.phase import abstract
 from autogalaxy.pipeline.phase.imaging.phase import PhaseImaging
+
 from .hyper_phase import HyperPhase
 
 

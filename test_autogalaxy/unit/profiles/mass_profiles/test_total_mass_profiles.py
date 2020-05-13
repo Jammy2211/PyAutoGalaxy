@@ -1,10 +1,10 @@
-import autofit as af
-import autoarray as aa
-from autoarray.structures import grids
+import os
+
+from autoconf import conf
 import autogalaxy as ag
 import numpy as np
 import pytest
-import os
+from autoarray.structures import grids
 
 
 @pytest.fixture(autouse=True)
@@ -12,7 +12,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    af.conf.instance = af.conf.default
+    conf.instance = conf.default
 
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
@@ -50,7 +50,7 @@ class TestPointMass:
     #
     #     assert convergence == pytest.approx(np.array([0.0, 0.0, 4.0*np.pi]), 1e-3)
     #
-    #     grid = aa.Grid.uniform(shape_2d=(5,5), pixel_scales=1.0, sub_size=2)
+    #     grid = ag.Grid.uniform(shape_2d=(5,5), pixel_scales=1.0, sub_size=2)
     #
     #     point_mass = ag.mp.PointMass(centre=(1.0, -1.0), einstein_radius=1.0)
     #
@@ -164,16 +164,16 @@ class TestPointMass:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = point_mass.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -193,7 +193,7 @@ class TestPointMass:
 
     def test__output_are_autoarrays(self):
 
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         point_mass = ag.mp.PointMass()
 
@@ -544,9 +544,9 @@ class TestBrokenPowerLaw:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
         true_deflections = broken_power_law.deflections_from_grid(grid=grid)
 
         regular_with_interp = grid.new_grid_with_interpolator(
@@ -559,7 +559,7 @@ class TestBrokenPowerLaw:
         assert np.max(true_deflections[:, 0] - interp_deflections[:, 0]) < 0.1
         assert np.max(true_deflections[:, 1] - interp_deflections[:, 1]) < 0.1
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -595,9 +595,9 @@ class TestBrokenPowerLaw:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
         true_deflections = broken_power_law.deflections_from_grid(grid=grid)
 
         regular_with_interp = grid.new_grid_with_interpolator(
@@ -610,7 +610,7 @@ class TestBrokenPowerLaw:
         assert np.max(true_deflections[:, 0] - interp_deflections[:, 0]) < 0.1
         assert np.max(true_deflections[:, 1] - interp_deflections[:, 1]) < 0.1
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -630,7 +630,7 @@ class TestBrokenPowerLaw:
 
     def test__output_are_autoarrays(self):
 
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         cored_power_law = ag.mp.EllipticalBrokenPowerLaw()
 
@@ -1068,9 +1068,9 @@ class TestCoredPowerLaw:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
         true_deflections = cored_power_law.deflections_from_grid(grid=grid)
 
         regular_with_interp = grid.new_grid_with_interpolator(
@@ -1082,7 +1082,7 @@ class TestCoredPowerLaw:
         assert np.max(true_deflections[:, 0] - interp_deflections[:, 0]) < 0.1
         assert np.max(true_deflections[:, 1] - interp_deflections[:, 1]) < 0.1
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1117,9 +1117,9 @@ class TestCoredPowerLaw:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
         true_deflections = cored_power_law.deflections_from_grid(grid=grid)
 
         regular_with_interp = grid.new_grid_with_interpolator(
@@ -1131,7 +1131,7 @@ class TestCoredPowerLaw:
         assert np.max(true_deflections[:, 0] - interp_deflections[:, 0]) < 0.1
         assert np.max(true_deflections[:, 1] - interp_deflections[:, 1]) < 0.1
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1154,7 +1154,7 @@ class TestCoredPowerLaw:
         test_path = "{}/config/summary".format(
             os.path.dirname(os.path.realpath(__file__))
         )
-        af.conf.instance = af.conf.Config(config_path=test_path)
+        conf.instance = conf.Config(config_path=test_path)
 
         cored_power_law = ag.mp.SphericalCoredPowerLaw(
             centre=(0.0, 0.0), einstein_radius=1.0, core_radius=0.0, slope=2.0
@@ -1195,7 +1195,7 @@ class TestCoredPowerLaw:
 
     def test__output_are_autoarrays(self):
 
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         cored_power_law = ag.mp.EllipticalCoredPowerLaw()
 
@@ -1495,16 +1495,16 @@ class TestPowerLaw:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = power_law.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1540,16 +1540,16 @@ class TestPowerLaw:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = power_law.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1569,7 +1569,7 @@ class TestPowerLaw:
 
     def test__output_are_autoarrays(self):
 
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         power_law = ag.mp.EllipticalPowerLaw()
 
@@ -1941,9 +1941,9 @@ class TestCoredIsothermal:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1951,7 +1951,7 @@ class TestCoredIsothermal:
         interp_deflections = cored_isothermal.deflections_from_grid(
             grid=regular_with_interp
         )
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -1986,9 +1986,9 @@ class TestCoredIsothermal:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
@@ -1996,7 +1996,7 @@ class TestCoredIsothermal:
         interp_deflections = cored_isothermal.deflections_from_grid(
             grid=regular_with_interp
         )
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -2016,7 +2016,7 @@ class TestCoredIsothermal:
 
     def test__output_are_autoarrays(self):
 
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         cored_isothermal = ag.mp.EllipticalCoredIsothermal()
 
@@ -2290,15 +2290,15 @@ class TestIsothermal:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = isothermal.deflections_from_grid(grid=regular_with_interp)
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -2331,15 +2331,15 @@ class TestIsothermal:
             ]
         )
 
-        mask = aa.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
+        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = aa.MaskedGrid.from_mask(mask=mask)
+        grid = ag.MaskedGrid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             pixel_scale_interpolation_grid=0.5
         )
         interp_deflections = isothermal.deflections_from_grid(grid=regular_with_interp)
-        interpolator = grids.Interpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
+        interpolator = grids.GridInterpolator.from_mask_grid_and_pixel_scale_interpolation_grids(
             mask=mask, grid=grid, pixel_scale_interpolation_grid=0.5
         )
 
@@ -2359,7 +2359,7 @@ class TestIsothermal:
 
     def test__output_are_autoarrays(self):
 
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         isothermal = ag.mp.EllipticalIsothermal()
 

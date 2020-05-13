@@ -1,15 +1,11 @@
+import os
+
+from autoconf import conf
+import autogalaxy as ag
 import numpy as np
 import pytest
-from skimage import measure
-
-import autofit as af
-import autoarray as aa
-from autoarray.structures import grids
-import autogalaxy as ag
 from autogalaxy import exc
 from test_autogalaxy.mock import mock_cosmology
-
-import os
 
 
 @pytest.fixture(autouse=True)
@@ -17,7 +13,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    af.conf.instance = af.conf.default
+    conf.instance = conf.default
 
 
 class TestUnits:
@@ -219,11 +215,11 @@ class TestLightProfiles:
         ):
 
             lp_profile_image = lp_0.profile_image_from_grid(
-                grid=aa.Coordinates([[(1.05, -0.55)]])
+                grid=ag.GridCoordinates([[(1.05, -0.55)]])
             )
 
             gal_lp_profile_image = gal_x1_lp.profile_image_from_grid(
-                grid=aa.Coordinates([[(1.05, -0.55)]])
+                grid=ag.GridCoordinates([[(1.05, -0.55)]])
             )
 
             assert lp_profile_image.in_list[0][0] == gal_lp_profile_image.in_list[0][0]
@@ -609,11 +605,11 @@ class TestMassProfiles:
         ):
 
             mp_convergence = mp_0.convergence_from_grid(
-                grid=aa.Coordinates([[(1.05, -0.55)]])
+                grid=ag.GridCoordinates([[(1.05, -0.55)]])
             )
 
             gal_mp_convergence = gal_x1_mp.convergence_from_grid(
-                grid=aa.Coordinates([[(1.05, -0.55)]])
+                grid=ag.GridCoordinates([[(1.05, -0.55)]])
             )
 
             assert mp_convergence == gal_mp_convergence
@@ -706,11 +702,11 @@ class TestMassProfiles:
         ):
 
             mp_potential = mp_0.potential_from_grid(
-                grid=aa.Coordinates([[(1.05, -0.55)]])
+                grid=ag.GridCoordinates([[(1.05, -0.55)]])
             )
 
             gal_mp_potential = gal_x1_mp.potential_from_grid(
-                grid=aa.Coordinates([[(1.05, -0.55)]])
+                grid=ag.GridCoordinates([[(1.05, -0.55)]])
             )
 
             assert mp_potential == gal_mp_potential
@@ -802,14 +798,14 @@ class TestMassProfiles:
         ):
 
             mp_deflections = mp_0.deflections_from_grid(
-                grid=aa.Coordinates([[(1.05, -0.55)]])
+                grid=ag.GridCoordinates([[(1.05, -0.55)]])
             )
 
             gal_mp_deflections = gal_x1_mp.deflections_from_grid(
-                grid=aa.Coordinates([[(1.05, -0.55)]])
+                grid=ag.GridCoordinates([[(1.05, -0.55)]])
             )
 
-            assert type(gal_mp_deflections) == grids.Coordinates
+            assert type(gal_mp_deflections) == ag.GridCoordinates
             assert (
                 mp_deflections.in_list[0][0][0] == gal_mp_deflections.in_list[0][0][0]
             )
@@ -1544,7 +1540,7 @@ class TestSummarizeInUnits:
         test_path = "{}/config/summary".format(
             os.path.dirname(os.path.realpath(__file__))
         )
-        af.conf.instance = af.conf.Config(config_path=test_path)
+        conf.instance = conf.Config(config_path=test_path)
 
         gal_summarize = ag.Galaxy(
             redshift=0.5,

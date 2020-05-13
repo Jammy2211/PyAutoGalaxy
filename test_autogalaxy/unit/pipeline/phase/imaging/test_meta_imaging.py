@@ -1,10 +1,9 @@
 from os import path
 
-import numpy as np
-import pytest
-
 import autofit as af
 import autogalaxy as ag
+import numpy as np
+import pytest
 from test_autolens.mock import mock_pipeline
 
 pytestmark = pytest.mark.filterwarnings(

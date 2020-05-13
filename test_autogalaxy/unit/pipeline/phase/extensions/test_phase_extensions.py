@@ -1,10 +1,8 @@
+import autofit as af
 import autofit.optimize.non_linear.paths
 import autogalaxy as ag
-import numpy as np
 import pytest
 from astropy import cosmology as cosmo
-
-import autofit as af
 from autogalaxy.fit.fit import FitImaging
 from test_autolens.mock import mock_pipeline
 

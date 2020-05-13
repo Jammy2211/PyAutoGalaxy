@@ -1,16 +1,16 @@
 from __future__ import division, print_function
 
 import math
+import os
+
+from autoconf import conf
+import autogalaxy as ag
+import autofit as af
+import autogalaxy as ag
 import numpy as np
 import pytest
 import scipy.special
-import os
-
-import autofit as af
-import autoarray as aa
-import autogalaxy as ag
 from test_autogalaxy.mock import mock_cosmology
-
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
@@ -197,7 +197,7 @@ class TestGaussian:
         assert (elliptical_image == spherical_image).all()
 
     def test__output_image_is_array(self):
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         gaussian = ag.lp.EllipticalGaussian()
 
@@ -368,7 +368,7 @@ class TestSersic:
         test_path = "{}/config/summary".format(
             os.path.dirname(os.path.realpath(__file__))
         )
-        af.conf.instance = af.conf.Config(config_path=test_path)
+        conf.instance = conf.Config(config_path=test_path)
 
         sersic = ag.lp.SphericalSersic(
             intensity=3.0, effective_radius=2.0, sersic_index=2.0
@@ -398,7 +398,7 @@ class TestSersic:
         i += 1
 
     def test__output_image_is_autoarray(self):
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         sersic = ag.lp.EllipticalSersic()
 
@@ -553,7 +553,7 @@ class TestExponential:
         assert (elliptical_image == spherical_image).all()
 
     def test__output_image_is_autoarray(self):
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         exponential = ag.lp.EllipticalExponential()
 
@@ -709,7 +709,7 @@ class TestDevVaucouleurs:
         assert (elliptical_image == spherical_image).all()
 
     def test__output_image_is_autoarray(self):
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs()
 
@@ -877,7 +877,7 @@ class TestCoreSersic:
         assert (elliptical_image == spherical_image).all()
 
     def test__output_image_is_autoarray(self):
-        grid = aa.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         core_sersic = ag.lp.EllipticalCoreSersic()
 

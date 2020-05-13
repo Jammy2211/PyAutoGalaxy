@@ -1,8 +1,8 @@
-import autogalaxy as al
-import autogalaxy.plot as aplt
 import os
 
 import astropy.cosmology as cosmo
+import autogalaxy as al
+import autogalaxy.plot as aplt
 
 plot_path = "{}/../images/galaxying/".format(
     os.path.dirname(os.path.realpath(__file__))

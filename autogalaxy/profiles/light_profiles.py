@@ -1,13 +1,12 @@
 import autofit as af
 import numpy as np
 from astropy import cosmology as cosmo
-from scipy.integrate import quad
-
 from autoarray.structures import grids
-from autogalaxy.util import cosmology_util
-from autogalaxy import dimensions as dim
 from autofit.text import formatter
+from autogalaxy import dimensions as dim
 from autogalaxy.profiles import geometry_profiles
+from autogalaxy.util import cosmology_util
+from scipy.integrate import quad
 
 
 class LightProfile:
@@ -94,7 +93,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
     @property
     def light_profile_centres(self):
-        return grids.Coordinates([self.centre])
+        return grids.GridCoordinates([self.centre])
 
     def blurred_profile_image_from_grid_and_psf(self, grid, psf, blurring_grid):
         """Evaluate the light profile image on an input *Grid* of coordinates and then convolve it with a PSF.
@@ -104,7 +103,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         their light is blurred into it by the PSF.
 
         The grid and blurring_grid must be a *Grid* objects so the evaluated image can be mapped to a uniform 2D array
-        and binned up for convolution. They therefore cannot be *Coordinates* objects.
+        and binned up for convolution. They therefore cannot be *GridCoordinates* objects.
 
         Parameters
         ----------
@@ -136,7 +135,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         their light is blurred into it by the Convolver.
 
         The grid and blurring_grid must be a *Grid* objects so the evaluated image can be mapped to a uniform 2D array
-        and binned up for convolution. They therefore cannot be *Coordinates* objects.
+        and binned up for convolution. They therefore cannot be *GridCoordinates* objects.
 
         Parameters
         ----------
@@ -305,9 +304,9 @@ class EllipticalGaussian(EllipticalLightProfile):
             np.exp(-0.5 * np.square(np.divide(grid_radii, self.sigma))),
         )
 
-    @grids.grid_like_to_numpy
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def profile_image_from_grid(self, grid, grid_radial_minimum=None):
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
@@ -496,9 +495,9 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
             ),
         )
 
-    @grids.grid_like_to_numpy
-    @grids.transform_grid
-    @grids.move_grid_to_radial_minimum
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
     def profile_image_from_grid(self, grid, grid_radial_minimum=None):
         """ Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 

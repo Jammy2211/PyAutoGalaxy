@@ -1,14 +1,13 @@
+import autofit as af
 import numpy as np
 from astropy import cosmology as cosmo
-
-import autofit as af
 from autoarray.operators.inversion import inversions as inv
-from autogalaxy import lensing
 from autoarray.structures import arrays, grids, visibilities as vis
-from autogalaxy.util import cosmology_util
-from autogalaxy import exc
 from autogalaxy import dimensions as dim
+from autogalaxy import exc
+from autogalaxy import lensing
 from autogalaxy.galaxy import galaxy as g
+from autogalaxy.util import cosmology_util
 from autogalaxy.util import plane_util
 
 
@@ -120,7 +119,7 @@ class AbstractPlane(lensing.LensingObject):
 
     @property
     def light_profile_centres(self):
-        """Returns the light profile centres of the plane as a *Coordinates* object, which structures the centres
+        """Returns the light profile centres of the plane as a *GridCoordinates* object, which structures the centres
         in lists according to which galaxy they come from.
 
         Fo example, if a plane has two galaxies, the first with one light profile and second with two light profiles
@@ -130,7 +129,7 @@ class AbstractPlane(lensing.LensingObject):
         
         This is used for visualization, for example plotting the centres of all light profiles colored by their galaxy.
         """
-        return grids.Coordinates(
+        return grids.GridCoordinates(
             [
                 list(galaxy.light_profile_centres)
                 for galaxy in self.galaxies
@@ -154,7 +153,7 @@ class AbstractPlane(lensing.LensingObject):
 
     @property
     def mass_profile_centres(self):
-        """Returns the mass profile centres of the plane as a *Coordinates* object, which structures the centres
+        """Returns the mass profile centres of the plane as a *GridCoordinates* object, which structures the centres
         in lists according to which galaxy they come from.
 
         Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
@@ -166,7 +165,7 @@ class AbstractPlane(lensing.LensingObject):
 
         The centres of mass-sheets are filtered out, as their centres are not relevant to lensing calculations.
         """
-        return grids.Coordinates(
+        return grids.GridCoordinates(
             [
                 list(galaxy.mass_profile_centres)
                 for galaxy in self.galaxies
@@ -176,7 +175,7 @@ class AbstractPlane(lensing.LensingObject):
 
     @property
     def mass_profile_axis_ratios(self):
-        """Returns the mass profile axis-ratios of the plane as a *Coordinates* object, which structures the axis-ratios
+        """Returns the mass profile axis-ratios of the plane as a *GridCoordinates* object, which structures the axis-ratios
         in lists according to which galaxy they come from.
 
         Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
@@ -197,7 +196,7 @@ class AbstractPlane(lensing.LensingObject):
 
     @property
     def mass_profile_phis(self):
-        """Returns the mass profile phis of the plane as a *Coordinates* object, which structures the phis
+        """Returns the mass profile phis of the plane as a *GridCoordinates* object, which structures the phis
         in lists according to which galaxy they come from.
 
         Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
@@ -309,7 +308,7 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
             redshift=redshift, galaxies=galaxies, cosmology=cosmology
         )
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def profile_image_from_grid(self, grid):
         """Compute the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
         individual images of each galaxy's light profile.
@@ -345,7 +344,7 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
 
         return self.profile_image_from_grid(grid=padded_grid)
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def convergence_from_grid(self, grid):
         """Compute the convergence of the list of galaxies of the plane's sub-grid, by summing the individual convergences \
         of each galaxy's mass profile.
@@ -369,7 +368,7 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
         else:
             return np.zeros(shape=(grid.shape[0],))
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
         """Compute the potential of the list of galaxies of the plane's sub-grid, by summing the individual potentials \
         of each galaxy's mass profile.
@@ -392,13 +391,13 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
             return sum(map(lambda g: g.potential_from_grid(grid=grid), self.galaxies))
         return np.zeros((grid.shape[0]))
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def deflections_from_grid(self, grid):
         if self.galaxies:
             return sum(map(lambda g: g.deflections_from_grid(grid=grid), self.galaxies))
         return np.zeros(shape=(grid.shape[0], 2))
 
-    @grids.grid_like_to_numpy
+    @grids.grid_like_to_structure
     def traced_grid_from_grid(self, grid):
         """Trace this plane's grid_stacks to the next plane, using its deflection angles."""
 

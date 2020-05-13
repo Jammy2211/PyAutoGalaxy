@@ -1,7 +1,6 @@
 import autogalaxy as ag
-from astropy import cosmology as cosmo
-
 import pytest
+from astropy import cosmology as cosmo
 
 planck = cosmo.Planck15
 

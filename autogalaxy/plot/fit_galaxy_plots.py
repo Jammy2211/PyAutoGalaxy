@@ -1,7 +1,7 @@
 import autoarray as aa
 from autoarray.plot import plotters
-from autogalaxy.plot import lensing_plotters
 from autogalaxy import exc
+from autogalaxy.plot import lensing_plotters
 
 
 @lensing_plotters.set_include_and_sub_plotter

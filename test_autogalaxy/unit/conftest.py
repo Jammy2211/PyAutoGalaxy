@@ -33,7 +33,7 @@ def make_masked_interferometer_7(
         interferometer=interferometer_7,
         visibilities_mask=visibilities_mask_7x2,
         real_space_mask=mask_7x7,
-        transformer_class=aa.TransformerDFT,
+        transformer_class=ag.TransformerDFT,
     )
 
 
@@ -370,6 +370,6 @@ def make_include_all():
         inversion_grid=True,
         inversion_border=True,
         inversion_image_pixelization_grid=True,
-        preloaded_critical_curves=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
-        preload_caustics=aa.Coordinates([(1.0, 1.0), (2.0, 2.0)]),
+        preloaded_critical_curves=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
+        preload_caustics=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
     )
