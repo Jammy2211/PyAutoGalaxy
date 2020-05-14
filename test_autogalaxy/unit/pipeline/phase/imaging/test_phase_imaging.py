@@ -4,7 +4,7 @@ import autofit as af
 import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autolens.mock import mock_pipeline
+from test_autogalaxy.mock import mock_pipeline
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -66,14 +66,14 @@ class TestHyperMethods:
     ):
 
         galaxies = af.ModelInstance()
-        galaxies.lens = ag.Galaxy(redshift=0.5)
+        galaxies.galaxy = ag.Galaxy(redshift=0.5)
         galaxies.source = ag.Galaxy(redshift=1.0)
 
         instance = af.ModelInstance()
         instance.galaxies = galaxies
 
         hyper_galaxy_image_path_dict = {
-            ("galaxies", "lens"): ag.Array.ones(shape_2d=(3, 3), pixel_scales=1.0),
+            ("galaxies", "galaxy"): ag.Array.ones(shape_2d=(3, 3), pixel_scales=1.0),
             ("galaxies", "source"): ag.Array.full(
                 fill_value=2.0, shape_2d=(3, 3), pixel_scales=1.0
             ),
@@ -88,7 +88,7 @@ class TestHyperMethods:
 
         phase_imaging_7x7 = ag.PhaseImaging(
             galaxies=dict(
-                lens=ag.GalaxyModel(redshift=0.5, hyper_galaxy=ag.HyperGalaxy)
+                galaxy=ag.GalaxyModel(redshift=0.5, hyper_galaxy=ag.HyperGalaxy)
             ),
             non_linear_class=mock_pipeline.MockNLO,
             phase_name="test_phase",
@@ -99,7 +99,7 @@ class TestHyperMethods:
         )
 
         assert (
-            analysis.hyper_galaxy_image_path_dict[("galaxies", "lens")].in_2d
+            analysis.hyper_galaxy_image_path_dict[("galaxies", "galaxy")].in_2d
             == np.ones((3, 3))
         ).all()
 

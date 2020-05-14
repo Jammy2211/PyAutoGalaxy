@@ -11,7 +11,7 @@ for an example of one of the first notebooks.
 
 It can be found in the workspace & consists of 5 chapters:
 
-- **Introduction** - An introduction to strong gravitational galaxying & **PyAutogalaxy**.
+- **Introduction** - An introduction to strong gravitational lensing & **PyAutogalaxy**.
 - **Lens Modeling** - How to model strong galaxyes, including a primer on Bayesian non-linear analysis.
 - **Pipelines** - How to build pipelines & tailor them to your own science case.
 - **Inversions** - How to perform pixelized reconstructions of the source-galaxy.

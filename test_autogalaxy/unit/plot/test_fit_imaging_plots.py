@@ -197,7 +197,7 @@ def test__subplot_of_galaxy(
     assert plot_path + "subplot_of_galaxy_1.png" in plot_patch.paths
 
 
-def test__fit_individuals__source_and_lens__dependent_on_input(
+def test__fit_individuals__source_and_galaxy__dependent_on_input(
     masked_imaging_fit_7x7,
     masked_imaging_fit_x2_galaxy_7x7,
     include_all,

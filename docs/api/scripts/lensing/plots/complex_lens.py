@@ -63,7 +63,7 @@ source_galaxy = al.Galaxy(
 )
 
 # We create a tracer using the galaxies above, which uses the galaxy's redshifts to set image-plane and
-# source-plane locations and their light and mass profiles to perform galaxying calculations.
+# source-plane locations and their light and mass profiles to perform lensing calculations.
 tracer = al.Tracer.from_galaxies(
     galaxies=[galaxy_galaxy_0, galaxy_galaxy_1, source_galaxy]
 )

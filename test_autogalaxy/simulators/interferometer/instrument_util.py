@@ -4,8 +4,6 @@ import autofit as af
 import autogalaxy as ag
 import autogalaxy.plot as aplt
 
-test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
-
 
 def pixel_scale_from_instrument(instrument):
     """Determine the pixel scale from an instrument based on real observations.
@@ -135,13 +133,15 @@ def simulate_interferometer_from_instrument(data_label, instrument, galaxies):
 
 def load_test_interferometer(data_label, instrument):
 
+    test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
+
     dataset_path = af.path_util.make_and_return_path_from_path_and_folder_names(
         path=test_path,
         folder_names=["dataset", "interferometer", data_label, instrument],
     )
 
     return ag.Interferometer.from_fits(
-        visibilities_path=dataset_path + "/visibilities.fits",
-        noise_map_path=dataset_path + "/noise_map.fits",
-        uv_wavelengths_path=dataset_path + "/uv_wavelengths.fits",
+        visibilities_path=f"{dataset_path}/visibilities.fits",
+        noise_map_path=f"{dataset_path}/noise_map.fits",
+        uv_wavelengths_path=f"{dataset_path}/uv_wavelengths.fits",
     )

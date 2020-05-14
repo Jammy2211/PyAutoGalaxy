@@ -4,7 +4,7 @@ import autofit as af
 import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autolens.mock import mock_pipeline
+from test_autogalaxy.mock import mock_pipeline
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -95,8 +95,8 @@ class TestVariants:
     def test__phase_can_receive_hyper_image_and_noise_maps(self):
         phase_imaging_7x7 = ag.PhaseImaging(
             galaxies=dict(
-                lens=ag.GalaxyModel(redshift=ag.Redshift),
-                lens1=ag.GalaxyModel(redshift=ag.Redshift),
+                galaxy=ag.GalaxyModel(redshift=ag.Redshift),
+                galaxy1=ag.GalaxyModel(redshift=ag.Redshift),
             ),
             hyper_image_sky=ag.hyper_data.HyperImageSky,
             hyper_background_noise=ag.hyper_data.HyperBackgroundNoise,

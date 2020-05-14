@@ -94,7 +94,7 @@ class TestPipelineSourceSettings:
         source = ag.setup.Source(lens_mass_centre=(3.027, 4.033))
         assert source.lens_mass_centre_tag == "__lens_mass_centre_(3.03,4.03)"
 
-    def test__align_light_mass_centre_tag__is_empty_sting_if_both_lens_light_and_mass_centres_input(
+    def test__align_light_mass_centre_tag__is_empty_sting_if_both_galaxy_light_and_mass_centres_input(
         self
     ):
         source = ag.setup.Source(align_light_mass_centre=False)

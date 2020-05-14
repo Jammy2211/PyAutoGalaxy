@@ -29,7 +29,7 @@ class TestCase:
         # Create a model_galaxy prior for the source model_galaxy. Here we are describing both the light and mass
         # profiles. We've also stipulated that the centres of any galaxies generated using the model_galaxy prior
         # should match.
-        lens_galaxy_prior = ag.GalaxyModel(
+        galaxy_galaxy_prior = ag.GalaxyModel(
             redshift=ag.Redshift,
             light_profile=ag.lp.EllipticalExponential,
             mass_profile=ag.mp.EllipticalExponential,
@@ -37,7 +37,7 @@ class TestCase:
         )
 
         mapper.galaxy_1 = source_galaxy_prior
-        mapper.galaxy_0 = lens_galaxy_prior
+        mapper.galaxy_0 = galaxy_galaxy_prior
 
         # Create a model instance. All the instances of the profile classes are created here. Normally we would do this
         # using the output of a non linear search but in this case we are using the median values from the priors.

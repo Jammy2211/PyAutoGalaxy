@@ -8,14 +8,14 @@ intervening mass of the foreground galaxy. Its light can be fully bent around th
 paths to the Earth, meaning that the background galaxy is observed multiple times. This by-chance alignment of two
 galaxies is called a strong gravitational galaxy and a two-dimensional scheme of such a system is pictured below.
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/galaxying/schematic.jpg
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/lensing/schematic.jpg
   :width: 400
   :alt: Alternative text
 
 (Image Credit: Image credit: F. Courbin, S. G. Djorgovski, G. Meylan, et al., Caltech / EPFL / WMKO,
 https://www.astro.caltech.edu/~george/qsogalaxy/)
 
-PyAutoLens is software designed for modeling these strong galaxying systems! To begin, lets import autogalaxy and the plot
+PyAutoLens is software designed for modeling these strong lensing systems! To begin, lets import autogalaxy and the plot
 module.
 
 .. code-block:: bash
@@ -36,7 +36,7 @@ Cartesian grids of (y,x) coordinates. Below, we make and plot a uniform Cartesia
 
 This is what our grid looks like:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/galaxying/grid.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/lensing/grid.png
   :width: 400
   :alt: Alternative text
 
@@ -70,7 +70,7 @@ The plot module provides convinience methods for plotting properties of objects,
 
 Heres the image of the light profile:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/galaxying/sersic_light_profile.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/lensing/sersic_light_profile.png
   :width: 400
   :alt: Alternative text
 
@@ -97,28 +97,28 @@ potential and deflection angles on our Cartesian grid:
 
 Heres how the convergence, potential and deflection angles look:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/galaxying/isothermal_mass_profile_convergence.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/lensing/isothermal_mass_profile_convergence.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/galaxying/isothermal_mass_profile_potential.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/lensing/isothermal_mass_profile_potential.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/galaxying/isothermal_mass_profile_deflections_y.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/lensing/isothermal_mass_profile_deflections_y.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/galaxying/isothermal_mass_profile_deflections_x.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/lensing/isothermal_mass_profile_deflections_x.png
   :width: 400
   :alt: Alternative text
 
-For anyone not familiar with gravitational galaxying, don't worry about what the convergence and potential are. The key
+For anyone not familiar with gravitational lensing, don't worry about what the convergence and potential are. The key
 thing to note is that the deflection angles describe how a given mass distribution deflections light-rays, which allows
 us create strong galaxy systems like the one shown above!
 
 In **PyAutoLens**, a *Galaxy* object is a collection of *LightProfile* and *MassProfile* objects at a given redshift.
-The code below creates two galaxies representing the galaxy and source galaxies shown in the strong galaxying diagram above.
+The code below creates two galaxies representing the galaxy and source galaxies shown in the strong lensing diagram above.
 
 .. code-block:: bash
 
@@ -147,12 +147,12 @@ When computing the image from the tracer above, the tracer performs all ray-trac
 This includes using the galaxy galaxy's mass profile to deflect the light-rays that are traced to the source galaxy.
 This makes the image below, where the source's light appears as a multiply imaged and strongly galaxyed Einstein ring.
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/galaxying/tracer_image.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/lensing/tracer_image.png
   :width: 400
   :alt: Alternative text
 
 The PyAutoLens API has been designed such that all of the objects introduced above are extensible. *Galaxy* objects can
-take many profiles and *Tracer* objects many galaxies. If the galaxies are at different redshifts a strong galaxying
+take many profiles and *Tracer* objects many galaxies. If the galaxies are at different redshifts a strong lensing
 system with multiple galaxy planes will be created, performing complex multi-plane ray-tracing calculations.
 
 To finish, lets create a tracer using 3 galaxies at different redshifts. The mass distribution of the first galaxy
@@ -211,6 +211,6 @@ rings!
 
 This is what the galaxy looks like:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/galaxying/complex_galaxy.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/api/images/lensing/complex_galaxy.png
   :width: 400
   :alt: Alternative text

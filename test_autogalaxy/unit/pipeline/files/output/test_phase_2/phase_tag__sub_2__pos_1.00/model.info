@@ -6,7 +6,7 @@ galaxies
                 centre_0                                                                  GaussianPrior, mean = 0.0, sigma = 0.3
                 centre_1                                                                  GaussianPrior, mean = 0.0, sigma = 0.3
             einstein_radius                                                               UniformPrior, lower_limit = 0.0, upper_limit = 4.0
-    lens
+    galaxy
         redshift                                                                          0.5
         light
             centre                                                                        (0.0, 0.0)

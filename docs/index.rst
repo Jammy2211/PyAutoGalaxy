@@ -6,7 +6,7 @@
    :hidden:
 
    installation
-   api/galaxying
+   api/lensing
    workspace
    howtogalaxy
 

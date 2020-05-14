@@ -3,7 +3,7 @@ import os
 import autogalaxy as al
 import autogalaxy.plot as aplt
 
-plot_path = "{}/../images/galaxying/".format(
+plot_path = "{}/../images/lensing/".format(
     os.path.dirname(os.path.realpath(__file__))
 )
 

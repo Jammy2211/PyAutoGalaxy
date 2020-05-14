@@ -63,7 +63,7 @@ Features
 - **Pixelizations** - Reconstruct complex galaxy morphologies on a variety of pixel-grids.
 - **Adaption** - Adapt the galaxy analysis to the features of the observed galaxy imaging.
 - **Interferometry** - Model radio / sub-mm interferometer data directly in the uv-plane.
-- **Visualization** - Custom visualization libraries for plotting physical galaxying quantities & modeling results.
+- **Visualization** - Custom visualization libraries for plotting physical lensing quantities & modeling results.
 - **PyAutoFit** - Perform fits using many non-linear searches (MCMC, Nested Sampling) and manipulate large result outputs
                   via the probablistic programming language `PyAutoFit <https://github.com/rhayes777/PyAutoFit>`_
 

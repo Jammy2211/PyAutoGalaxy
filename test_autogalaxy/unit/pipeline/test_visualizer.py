@@ -2,7 +2,6 @@ import os
 import shutil
 from os import path
 
-from autoconf import conf
 import autogalaxy as ag
 import pytest
 from autoconf import conf
@@ -77,7 +76,7 @@ class TestPhaseImagingVisualizer:
         )
         assert plot_path + "imaging/potential_chi_squared_map.png" in plot_patch.paths
 
-    def test__source_and_lens__visualizes_fit_and_inversion_using_configs(
+    def test__source_and_galaxy__visualizes_fit_and_inversion_using_configs(
         self,
         masked_imaging_7x7,
         masked_imaging_fit_x2_galaxy_inversion_7x7,
@@ -274,7 +273,7 @@ class TestPhaseInterferometerVisualizer:
 
 
 class TestHyperGalaxyVisualizer:
-    def test__hyper_fit__images_for_phase__source_and_lens__depedent_on_input(
+    def test__hyper_fit__images_for_phase__source_and_galaxy__depedent_on_input(
         self,
         masked_imaging_fit_x2_galaxy_7x7,
         hyper_galaxy_image_0_7x7,

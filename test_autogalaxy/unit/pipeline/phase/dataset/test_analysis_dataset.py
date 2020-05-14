@@ -5,7 +5,7 @@ import autogalaxy as ag
 import numpy as np
 import pytest
 from astropy import cosmology as cosmo
-from test_autolens.mock import mock_pipeline
+from test_autogalaxy.mock import mock_pipeline
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -20,14 +20,14 @@ class TestHyperMethods:
     def test__associate_images(self, masked_imaging_7x7):
 
         galaxies = af.ModelInstance()
-        galaxies.lens = ag.Galaxy(redshift=0.5)
+        galaxies.galaxy = ag.Galaxy(redshift=0.5)
         galaxies.source = ag.Galaxy(redshift=1.0)
 
         instance = af.ModelInstance()
         instance.galaxies = galaxies
 
         hyper_galaxy_image_path_dict = {
-            ("galaxies", "lens"): ag.Array.ones(shape_2d=(3, 3), pixel_scales=1.0),
+            ("galaxies", "galaxy"): ag.Array.ones(shape_2d=(3, 3), pixel_scales=1.0),
             ("galaxies", "source"): ag.Array.full(
                 fill_value=2.0, shape_2d=(3, 3), pixel_scales=1.0
             ),
@@ -49,14 +49,14 @@ class TestHyperMethods:
 
         instance = analysis.associate_hyper_images(instance=instance)
 
-        assert instance.galaxies.lens.hyper_galaxy_image.in_2d == pytest.approx(
+        assert instance.galaxies.galaxy.hyper_galaxy_image.in_2d == pytest.approx(
             np.ones((3, 3)), 1.0e-4
         )
         assert instance.galaxies.source.hyper_galaxy_image.in_2d == pytest.approx(
             2.0 * np.ones((3, 3)), 1.0e-4
         )
 
-        assert instance.galaxies.lens.hyper_model_image.in_2d == pytest.approx(
+        assert instance.galaxies.galaxy.hyper_model_image.in_2d == pytest.approx(
             3.0 * np.ones((3, 3)), 1.0e-4
         )
         assert instance.galaxies.source.hyper_model_image.in_2d == pytest.approx(

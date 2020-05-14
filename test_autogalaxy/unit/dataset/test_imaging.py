@@ -97,7 +97,7 @@ class TestSimulatorImaging:
         assert (imaging.psf == imaging.psf).all()
         assert (imaging.noise_map == imaging.noise_map).all()
 
-    def test__simulate_imaging_from_lens__source_galaxy__compare_to_imaging(self):
+    def test__simulate_imaging_from_galaxy__source_galaxy__compare_to_imaging(self):
 
         galaxy_0 = ag.Galaxy(
             redshift=0.5,

@@ -281,7 +281,7 @@ class TestEllipticalProfile:
             assert transformed_grid == pytest.approx(grid_original, 1e-5)
 
     class TestCoordinateMovements:
-        def test__grid_and_centres_of_two_lenses_are_equivalent__grid_are_equivalent(
+        def test__grid_and_centres_of_two_galaxyes_are_equivalent__grid_are_equivalent(
             self
         ):
             elliptical_profile1 = geometry_profiles.EllipticalProfile(
@@ -395,7 +395,7 @@ class TestSphericalProfile:
 
             assert (transformed_grid == np.array([[1.0, 1.0]])).all()
 
-        def test__grid_and_centres_of_two_lenses_are_equivalent__grid_are_equivalent(
+        def test__grid_and_centres_of_two_galaxyes_are_equivalent__grid_are_equivalent(
             self
         ):
             spherical_profile1 = geometry_profiles.SphericalProfile(centre=(0, 0))

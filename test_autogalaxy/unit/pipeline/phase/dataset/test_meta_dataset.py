@@ -61,7 +61,7 @@ class TestSetup:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
             galaxies=dict(
-                lens=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
+                galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
             ),
         )
 
@@ -70,7 +70,7 @@ class TestSetup:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
             galaxies=dict(
-                lens=ag.GalaxyModel(
+                galaxy=ag.GalaxyModel(
                     redshift=0.5,
                     pixelization=ag.pix.Rectangular,
                     regularization=ag.reg.Constant,
@@ -88,7 +88,7 @@ class TestSetup:
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
-            galaxies=dict(lens=ag.GalaxyModel(redshift=0.5), source=source),
+            galaxies=dict(galaxy=ag.GalaxyModel(redshift=0.5), source=source),
         )
 
         assert phase_imaging_7x7.meta_dataset.uses_cluster_inversion is True
@@ -96,7 +96,7 @@ class TestSetup:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
             galaxies=dict(
-                lens=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
+                galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
             ),
         )
 
@@ -105,7 +105,7 @@ class TestSetup:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
             galaxies=dict(
-                lens=ag.GalaxyModel(
+                galaxy=ag.GalaxyModel(
                     redshift=0.5,
                     pixelization=ag.pix.Rectangular,
                     regularization=ag.reg.Constant,
@@ -119,7 +119,7 @@ class TestSetup:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
             galaxies=dict(
-                lens=ag.GalaxyModel(redshift=0.5),
+                galaxy=ag.GalaxyModel(redshift=0.5),
                 source=ag.GalaxyModel(
                     redshift=1.0,
                     pixelization=ag.pix.VoronoiBrightnessImage,

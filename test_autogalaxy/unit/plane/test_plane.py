@@ -890,7 +890,7 @@ class TestAbstractPlaneProfiles:
                 g0_image.in_list[1][0] + g1_image.in_list[1][0], 1.0e-4
             )
 
-        def test__plane_has_no_galaxies__image_is_zeros_size_of_unlensed_grid(
+        def test__plane_has_no_galaxies__image_is_zeros_size_of_ungalaxyed_grid(
             self, sub_grid_7x7
         ):
             plane = ag.Plane(galaxies=[], redshift=0.5)
@@ -975,7 +975,7 @@ class TestAbstractPlaneProfiles:
         def test__convergence_same_as_multiple_galaxies__include_reshape_mapping(
             self, sub_grid_7x7
         ):
-            # The *unlensed* sub-grid must be used to compute the convergence. This changes the subgrid to ensure this
+            # The *ungalaxyed* sub-grid must be used to compute the convergence. This changes the subgrid to ensure this
             # is the case.
 
             sub_grid_7x7[5] = np.array([5.0, 2.0])
@@ -1086,7 +1086,7 @@ class TestAbstractPlaneProfiles:
         def test__potential_same_as_multiple_galaxies__include_reshape_mapping(
             self, sub_grid_7x7
         ):
-            # The *unlensed* sub-grid must be used to compute the potential. This changes the subgrid to ensure this
+            # The *ungalaxyed* sub-grid must be used to compute the potential. This changes the subgrid to ensure this
             # is the case.
 
             sub_grid_7x7[5] = np.array([5.0, 2.0])
@@ -1324,7 +1324,7 @@ class TestAbstractPlaneProfiles:
                 np.array([[2.0 * 0.707, -2.0 * 0.707], [2.0, 0.0]]), 1e-3
             )
 
-        def test__plane_has_no_galaxies__deflections_are_zeros_size_of_unlensed_grid(
+        def test__plane_has_no_galaxies__deflections_are_zeros_size_of_ungalaxyed_grid(
             self, sub_grid_7x7
         ):
             plane = ag.Plane(redshift=0.5, galaxies=[])

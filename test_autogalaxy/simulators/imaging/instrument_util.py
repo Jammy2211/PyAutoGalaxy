@@ -4,8 +4,6 @@ import autofit as af
 import autogalaxy as ag
 import autogalaxy.plot as aplt
 
-test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
-
 
 def pixel_scale_from_instrument(instrument):
     """Determine the pixel scale from an instrument type based on real observations.
@@ -42,9 +40,9 @@ def grid_from_instrument(instrument):
         A string giving the resolution of the desired instrument (VRO | Euclid | HST | HST_Up | AO).
     """
     if instrument in "vro":
-        return ag.Grid.uniform(shape_2d=(40, 40), pixel_scales=0.2)
+        return ag.Grid.uniform(shape_2d=(50, 50), pixel_scales=0.2)
     elif instrument in "euclid":
-        return ag.Grid.uniform(shape_2d=(80, 80), pixel_scales=0.1)
+        return ag.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.1)
     elif instrument in "hst":
         return ag.Grid.uniform(shape_2d=(160, 160), pixel_scales=0.05)
     elif instrument in "hst_up":
@@ -191,6 +189,8 @@ def simulate_imaging_from_instrument(data_label, instrument, galaxies):
 
 def load_test_imaging(instrument, data_label, name=None):
 
+    test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
+
     pixel_scales = pixel_scale_from_instrument(instrument=instrument)
 
     dataset_path = af.path_util.make_and_return_path_from_path_and_folder_names(
@@ -198,9 +198,9 @@ def load_test_imaging(instrument, data_label, name=None):
     )
 
     return ag.Imaging.from_fits(
-        image_path=dataset_path + "/image.fits",
-        psf_path=dataset_path + "/psf.fits",
-        noise_map_path=dataset_path + "/noise_map.fits",
+        image_path=f"{dataset_path}/image.fits",
+        psf_path=f"{dataset_path}/psf.fits",
+        noise_map_path=f"{dataset_path}/noise_map.fits",
         pixel_scales=pixel_scales,
         name=name,
     )

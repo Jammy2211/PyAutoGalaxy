@@ -1,7 +1,7 @@
 import autofit as af
 import autogalaxy as ag
 import pytest
-from test_autolens.mock import mock_pipeline
+from test_autogalaxy.mock import mock_pipeline
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -22,7 +22,7 @@ class TestModel:
     def test__promise_attrbutes(self):
         phase = ag.PhaseDataset(
             galaxies=dict(
-                lens=ag.GalaxyModel(
+                galaxy=ag.GalaxyModel(
                     redshift=0.5,
                     mass=ag.mp.EllipticalIsothermal,
                     shear=ag.mp.ExternalShear,
@@ -34,7 +34,7 @@ class TestModel:
             phase_name="test_phase",
         )
 
-        print(hasattr(af.last.result.instance.galaxies.lens, "mas2s"))
+        print(hasattr(af.last.result.instance.galaxies.galaxy, "mas2s"))
 
     def test__customize(self, imaging_7x7, mask_7x7):
         class MyPlanePhaseAnd(ag.PhaseImaging):
@@ -87,7 +87,7 @@ class TestModel:
         phase_dataset_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
             galaxies=dict(
-                lens=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
+                galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
             ),
         )
 
@@ -98,12 +98,12 @@ class TestModel:
     def test__phase_can_receive_list_of_galaxy_models(self):
         phase_dataset_7x7 = ag.PhaseImaging(
             galaxies=dict(
-                lens=ag.GalaxyModel(
+                galaxy=ag.GalaxyModel(
                     sersic=ag.lp.EllipticalSersic,
                     sis=ag.mp.SphericalIsothermal,
                     redshift=ag.Redshift,
                 ),
-                lens1=ag.GalaxyModel(
+                galaxy1=ag.GalaxyModel(
                     sis=ag.mp.SphericalIsothermal, redshift=ag.Redshift
                 ),
             ),
@@ -116,7 +116,7 @@ class TestModel:
 
         sersic = phase_dataset_7x7.model.galaxies[0].sersic
         sis = phase_dataset_7x7.model.galaxies[0].sis
-        lens_1_sis = phase_dataset_7x7.model.galaxies[1].sis
+        galaxy_1_sis = phase_dataset_7x7.model.galaxies[1].sis
 
         arguments = {
             sersic.centre[0]: 0.2,
@@ -130,9 +130,9 @@ class TestModel:
             sis.centre[1]: 0.2,
             sis.einstein_radius.priors[0]: 0.3,
             phase_dataset_7x7.model.galaxies[0].redshift.priors[0]: 0.4,
-            lens_1_sis.centre[0]: 0.6,
-            lens_1_sis.centre[1]: 0.5,
-            lens_1_sis.einstein_radius.priors[0]: 0.7,
+            galaxy_1_sis.centre[0]: 0.6,
+            galaxy_1_sis.centre[1]: 0.5,
+            galaxy_1_sis.einstein_radius.priors[0]: 0.7,
             phase_dataset_7x7.model.galaxies[1].redshift.priors[0]: 0.8,
         }
 
@@ -155,12 +155,12 @@ class TestModel:
 
         phase_dataset_7x7 = LensPlanePhase2(
             galaxies=dict(
-                lens=ag.GalaxyModel(
+                galaxy=ag.GalaxyModel(
                     sersic=ag.lp.EllipticalSersic,
                     sis=ag.mp.SphericalIsothermal,
                     redshift=ag.Redshift,
                 ),
-                lens1=ag.GalaxyModel(
+                galaxy1=ag.GalaxyModel(
                     sis=ag.mp.SphericalIsothermal, redshift=ag.Redshift
                 ),
             ),
@@ -173,7 +173,7 @@ class TestModel:
 
         sersic = phase_dataset_7x7.model.galaxies[0].sersic
         sis = phase_dataset_7x7.model.galaxies[0].sis
-        lens_1_sis = phase_dataset_7x7.model.galaxies[1].sis
+        galaxy_1_sis = phase_dataset_7x7.model.galaxies[1].sis
 
         arguments = {
             sersic.centre[0]: 0.01,
@@ -186,9 +186,9 @@ class TestModel:
             sis.centre[0]: 0.1,
             sis.centre[1]: 0.2,
             phase_dataset_7x7.model.galaxies[0].redshift.priors[0]: 0.4,
-            lens_1_sis.centre[0]: 0.6,
-            lens_1_sis.centre[1]: 0.5,
-            lens_1_sis.einstein_radius.priors[0]: 0.7,
+            galaxy_1_sis.centre[0]: 0.6,
+            galaxy_1_sis.centre[1]: 0.5,
+            galaxy_1_sis.einstein_radius.priors[0]: 0.7,
             phase_dataset_7x7.model.galaxies[1].redshift.priors[0]: 0.8,
         }
 
@@ -216,7 +216,7 @@ class TestSetup:
             phase_name="phase_name",
             non_linear_class=mock_pipeline.MockNLO,
             galaxies=dict(
-                lens=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
+                galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
         )
 
@@ -228,7 +228,7 @@ class TestSetup:
             phase_name="phase_name",
             non_linear_class=mock_pipeline.MockNLO,
             galaxies=dict(
-                lens=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
+                galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
         )
 
@@ -238,13 +238,13 @@ class TestSetup:
 
         class CustomPhase(ag.PhaseImaging):
             def customize_priors(self, results):
-                self.galaxies.lens.light = ag.lp.EllipticalLightProfile()
+                self.galaxies.galaxy.light = ag.lp.EllipticalLightProfile()
 
         phase_dataset_7x7 = CustomPhase(
             phase_name="phase_name",
             non_linear_class=mock_pipeline.MockNLO,
             galaxies=dict(
-                lens=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
+                galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
         )
         phase_dataset_7x7.make_analysis = make_analysis

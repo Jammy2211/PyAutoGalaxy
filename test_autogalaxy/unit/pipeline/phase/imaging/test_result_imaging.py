@@ -2,14 +2,14 @@ import autofit as af
 import autogalaxy as ag
 import numpy as np
 from astropy import cosmology as cosmo
-from test_autolens.mock import mock_pipeline
+from test_autogalaxy.mock import mock_pipeline
 
 
 class TestImagePassing:
     def test___image_dict(self, masked_imaging_7x7):
 
         galaxies = af.ModelInstance()
-        galaxies.lens = ag.Galaxy(redshift=0.5)
+        galaxies.galaxy = ag.Galaxy(redshift=0.5)
         galaxies.source = ag.Galaxy(redshift=1.0)
 
         instance = af.ModelInstance()
@@ -30,11 +30,11 @@ class TestImagePassing:
         )
 
         image_dict = result.image_galaxy_dict
-        assert isinstance(image_dict[("galaxies", "lens")], np.ndarray)
+        assert isinstance(image_dict[("galaxies", "galaxy")], np.ndarray)
         assert isinstance(image_dict[("galaxies", "source")], np.ndarray)
 
-        result.instance.galaxies.lens = ag.Galaxy(redshift=0.5)
+        result.instance.galaxies.galaxy = ag.Galaxy(redshift=0.5)
 
         image_dict = result.image_galaxy_dict
-        assert (image_dict[("galaxies", "lens")].in_2d == np.zeros((7, 7))).all()
+        assert (image_dict[("galaxies", "galaxy")].in_2d == np.zeros((7, 7))).all()
         assert isinstance(image_dict[("galaxies", "source")], np.ndarray)

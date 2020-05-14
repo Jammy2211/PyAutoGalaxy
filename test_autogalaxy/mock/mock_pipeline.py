@@ -100,7 +100,7 @@ class MockResult:
         self.hyper_combined = MockHyperCombinedPhase()
         self.use_as_hyper_dataset = use_as_hyper_dataset
 
-        self.max_log_likelihood.plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)])
+        self.max_log_likelihood_plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)])
 
     @property
     def last(self):

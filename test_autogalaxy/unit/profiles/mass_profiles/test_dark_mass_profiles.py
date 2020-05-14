@@ -326,17 +326,17 @@ class TestAbstractNFW:
         #                           cosmic_average_density=1.0)
         #
         # nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
-        # delta_concentration = nfw.delta_concentration(unit_length='kpc', unit_mass='solMass', redshift_lens=0.5,
+        # delta_concentration = nfw.delta_concentration(unit_length='kpc', unit_mass='solMass', redshift_galaxy=0.5,
         #                                               redshift_source=1.0, cosmology=cosmology)
         # assert delta_concentration == pytest.approx(0.5, 1e-3)
         #
         # nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0)
-        # delta_concentration = nfw.delta_concentration(unit_length='kpc', unit_mass='solMass', redshift_lens=0.5, redshift_source=1.0,
+        # delta_concentration = nfw.delta_concentration(unit_length='kpc', unit_mass='solMass', redshift_galaxy=0.5, redshift_source=1.0,
         #                                               cosmology=cosmology)
         # assert delta_concentration == pytest.approx(1.0, 1e-3)
         #
         # nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=20.0)
-        # delta_concentration = nfw.delta_concentration(unit_length='kpc',  unit_mass='solMass', redshift_lens=0.5, redshift_source=1.0,
+        # delta_concentration = nfw.delta_concentration(unit_length='kpc',  unit_mass='solMass', redshift_galaxy=0.5, redshift_source=1.0,
         #                                               cosmology=cosmology)
         # assert delta_concentration == pytest.approx(0.05, 1e-3)
         #
@@ -344,7 +344,7 @@ class TestAbstractNFW:
         #                           cosmic_average_density=2.0)
         #
         # nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
-        # delta_concentration = nfw.delta_concentration(unit_length='kpc',  unit_mass='solMass', redshift_lens=0.5, redshift_source=1.0,
+        # delta_concentration = nfw.delta_concentration(unit_length='kpc',  unit_mass='solMass', redshift_galaxy=0.5, redshift_source=1.0,
         #                                               cosmology=cosmology)
         # assert delta_concentration == pytest.approx(0.25, 1e-3)
 
@@ -482,10 +482,10 @@ class TestAbstractNFW:
         # cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0,
         #                           cosmic_average_density=1.0)
         #
-        # radius_at_200 = nfw.radius_at_200_for_units(unit_length='arcsec', redshift_lens=0.5, redshift_source=1.0,
+        # radius_at_200 = nfw.radius_at_200_for_units(unit_length='arcsec', redshift_galaxy=0.5, redshift_source=1.0,
         #                                             cosmology=cosmology)
         #
-        # mass_at_200 = nfw.mass_at_200(cosmology=cosmology, redshift_lens=0.5, redshift_source=1.0, unit_length='arcsec',
+        # mass_at_200 = nfw.mass_at_200(cosmology=cosmology, redshift_galaxy=0.5, redshift_source=1.0, unit_length='arcsec',
         #                               unit_mass='solMass')
         #
         # mass_calc = 200.0 * ((4.0 / 3.0) * np.pi) * cosmology.cosmic_average_density * (radius_at_200 ** 3.0)
@@ -1281,7 +1281,7 @@ class TestTruncatedNFW:
         # cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=1.0, kpc_per_arcsec=1.0, critical_surface_density=2.0,
         #                           cosmic_average_density=3.0)
         #
-        # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_lens=0.5, redshift_source=1.0,
+        # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,
         #     unit_length='arcsec', unit_mass='solMass', cosmology=cosmology)
         #
         # assert mass_at_truncation_radius == pytest.approx(0.00008789978, 1.0e-5)
@@ -1289,7 +1289,7 @@ class TestTruncatedNFW:
         # truncated_nfw = ag.mp.SphericalTruncatedNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0,
         #                                          truncation_radius=1.0)
         #
-        # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_lens=0.5, redshift_source=1.0,
+        # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,
         #     unit_length='arcsec', unit_mass='solMass', cosmology=cosmology)
         #
         # assert mass_at_truncation_radius == pytest.approx(0.0000418378, 1.0e-5)
@@ -1297,7 +1297,7 @@ class TestTruncatedNFW:
         # truncated_nfw = ag.mp.SphericalTruncatedNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=8.0,
         #                                          truncation_radius=4.0)
         #
-        # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_lens=0.5, redshift_source=1.0,
+        # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,
         #     unit_length='arcsec', unit_mass='solMass', cosmology=cosmology)
         #
         # assert mass_at_truncation_radius == pytest.approx(0.0000421512, 1.0e-4)
@@ -1305,7 +1305,7 @@ class TestTruncatedNFW:
         # truncated_nfw = ag.mp.SphericalTruncatedNFW(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=8.0,
         #                                          truncation_radius=4.0)
         #
-        # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_lens=0.5, redshift_source=1.0,
+        # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,
         #     unit_length='arcsec', unit_mass='solMass', cosmology=cosmology)
         #
         # assert mass_at_truncation_radius == pytest.approx(0.00033636625, 1.0e-4)

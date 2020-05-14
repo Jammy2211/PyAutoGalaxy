@@ -3,7 +3,7 @@
 API - Fitting
 -------------
 
-**PyAutoLens** can create *Tracer* objects to represent a strong galaxying system. Now, we're going use these objects to
+**PyAutoLens** can create *Tracer* objects to represent a strong lensing system. Now, we're going use these objects to
 fit imaging data of a strong galaxy, which we begin by loading from .fits files:
 
 .. code-block:: bash
@@ -54,7 +54,7 @@ to make the galaxyed source appear bigger:
   :width: 400
   :alt: Alternative text
 
-Following the galaxying API guide, we can make a tracer from a collection of *LightProfile*, *MassProfile* and *Galaxy*
+Following the lensing API guide, we can make a tracer from a collection of *LightProfile*, *MassProfile* and *Galaxy*
 objects. We can then use the *FitImaging* object to fit this tracer to the dataset, performing all necessary tasks
 to create the model image we fit the data with, such as blurring the tracer's image with the imaging PSF:
 

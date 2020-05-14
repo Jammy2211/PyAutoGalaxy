@@ -4,7 +4,7 @@ import autogalaxy as ag
 import pytest
 from astropy import cosmology as cosmo
 from autogalaxy.fit.fit import FitImaging
-from test_autolens.mock import mock_pipeline
+from test_autogalaxy.mock import mock_pipeline
 
 
 class MostLikelyFit:
@@ -104,7 +104,7 @@ class TestModelFixing:
         instance = af.ModelInstance()
         mapper = af.ModelMapper()
 
-        mapper.lens_galaxy = ag.GalaxyModel(
+        mapper.galaxy_galaxy = ag.GalaxyModel(
             redshift=ag.Redshift,
             pixelization=ag.pix.Rectangular,
             regularization=ag.reg.Constant,
@@ -115,7 +115,7 @@ class TestModelFixing:
 
         assert mapper.prior_count == 10
 
-        instance.lens_galaxy = ag.Galaxy(
+        instance.galaxy_galaxy = ag.Galaxy(
             pixelization=ag.pix.Rectangular(),
             regularization=ag.reg.Constant(),
             redshift=1.0,
@@ -134,7 +134,7 @@ class TestModelFixing:
         mapper = mapper.copy_with_fixed_priors(instance, phase.model_classes)
 
         assert mapper.prior_count == 3
-        assert mapper.lens_galaxy.redshift == 1.0
+        assert mapper.galaxy_galaxy.redshift == 1.0
         assert mapper.source_galaxy.light.axis_ratio == 1.0
 
 
@@ -232,12 +232,12 @@ class TestHyperGalaxyPhase:
         hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-        lens_galaxy = ag.Galaxy(
+        galaxy_galaxy = ag.Galaxy(
             redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1)
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            galaxies=dict(lens=lens_galaxy),
+            galaxies=dict(galaxy=galaxy_galaxy),
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
             sub_size=2,

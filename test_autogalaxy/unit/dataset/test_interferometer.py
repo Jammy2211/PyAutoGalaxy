@@ -148,7 +148,7 @@ class TestSimulatorInterferometer:
         ).all()
         assert (interferometer.noise_map == interferometer_via_image.noise_map).all()
 
-    def test__simulate_interferometer_from_lens__source_galaxy__compare_to_interferometer(
+    def test__simulate_interferometer_from_galaxy__source_galaxy__compare_to_interferometer(
         self
     ):
 

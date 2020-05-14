@@ -6,7 +6,7 @@ import autofit as af
 import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autolens.mock import mock_pipeline
+from test_autogalaxy.mock import mock_pipeline
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -19,9 +19,9 @@ directory = path.dirname(path.realpath(__file__))
 
 def clean_images():
     try:
-        os.remove("{}/source_lens_phase/source_image_0.fits".format(directory))
-        os.remove("{}/source_lens_phase/lens_image_0.fits".format(directory))
-        os.remove("{}/source_lens_phase/model_image_0.fits".format(directory))
+        os.remove("{}/source_galaxy_phase/source_image_0.fits".format(directory))
+        os.remove("{}/source_galaxy_phase/galaxy_image_0.fits".format(directory))
+        os.remove("{}/source_galaxy_phase/model_image_0.fits".format(directory))
     except FileNotFoundError:
         pass
     conf.instance.dataset_path = directory
@@ -78,8 +78,8 @@ class TestMakeAnalysis:
     def test__phase_can_receive_hyper_image_and_noise_maps(self, mask_7x7):
         phase_interferometer_7 = ag.PhaseInterferometer(
             galaxies=dict(
-                lens=ag.GalaxyModel(redshift=ag.Redshift),
-                lens1=ag.GalaxyModel(redshift=ag.Redshift),
+                galaxy=ag.GalaxyModel(redshift=ag.Redshift),
+                galaxy1=ag.GalaxyModel(redshift=ag.Redshift),
             ),
             real_space_mask=mask_7x7,
             hyper_background_noise=ag.hyper_data.HyperBackgroundNoise,
@@ -100,21 +100,21 @@ class TestHyperMethods:
     ):
 
         galaxies = af.ModelInstance()
-        galaxies.lens = ag.Galaxy(redshift=0.5)
+        galaxies.galaxy = ag.Galaxy(redshift=0.5)
         galaxies.source = ag.Galaxy(redshift=1.0)
 
         instance = af.ModelInstance()
         instance.galaxies = galaxies
 
         hyper_galaxy_image_path_dict = {
-            ("galaxies", "lens"): ag.Array.ones(shape_2d=(3, 3), pixel_scales=1.0),
+            ("galaxies", "galaxy"): ag.Array.ones(shape_2d=(3, 3), pixel_scales=1.0),
             ("galaxies", "source"): ag.Array.full(
                 fill_value=2.0, shape_2d=(3, 3), pixel_scales=1.0
             ),
         }
 
         hyper_galaxy_visibilities_path_dict = {
-            ("galaxies", "lens"): ag.Visibilities.full(fill_value=4.0, shape_1d=(7,)),
+            ("galaxies", "galaxy"): ag.Visibilities.full(fill_value=4.0, shape_1d=(7,)),
             ("galaxies", "source"): ag.Visibilities.full(fill_value=5.0, shape_1d=(7,)),
         }
 
@@ -131,7 +131,7 @@ class TestHyperMethods:
 
         phase_interferometer_7 = ag.PhaseInterferometer(
             galaxies=dict(
-                lens=ag.GalaxyModel(redshift=0.5, hyper_galaxy=ag.HyperGalaxy)
+                galaxy=ag.GalaxyModel(redshift=0.5, hyper_galaxy=ag.HyperGalaxy)
             ),
             real_space_mask=mask_7x7,
             non_linear_class=mock_pipeline.MockNLO,
@@ -145,7 +145,7 @@ class TestHyperMethods:
         )
 
         assert (
-            analysis.hyper_galaxy_image_path_dict[("galaxies", "lens")].in_2d
+            analysis.hyper_galaxy_image_path_dict[("galaxies", "galaxy")].in_2d
             == np.ones((3, 3))
         ).all()
 
@@ -157,7 +157,7 @@ class TestHyperMethods:
         assert (analysis.hyper_model_image.in_2d == 3.0 * np.ones((3, 3))).all()
 
         assert (
-            analysis.hyper_galaxy_visibilities_path_dict[("galaxies", "lens")]
+            analysis.hyper_galaxy_visibilities_path_dict[("galaxies", "galaxy")]
             == 4.0 * np.ones((7, 2))
         ).all()
 

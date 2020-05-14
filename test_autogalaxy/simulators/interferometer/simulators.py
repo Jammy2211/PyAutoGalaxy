@@ -1,17 +1,17 @@
-import autolens as al
+import autogalaxy as ag
 
-from test_autolens.simulators.interferometer import instrument_util
+from test_autogalaxy.simulators.interferometer import instrument_util
 
 
 def simulate__galaxy_x1__dev_vaucouleurs(instrument):
 
-    data_label = "lens_light_dev_vaucouleurs"
+    data_label = "galaxy_x1__dev_vaucouleurs"
 
-    # This lens-only system has a Dev Vaucouleurs spheroid / bulge.
+    # This galaxy-only system has a Dev Vaucouleurs spheroid / bulge.
 
-    lens_galaxy = al.Galaxy(
+    galaxy_galaxy = ag.Galaxy(
         redshift=0.5,
-        bulge=al.lp.EllipticalDevVaucouleurs(
+        bulge=ag.lp.EllipticalDevVaucouleurs(
             centre=(0.0, 0.0),
             axis_ratio=0.9,
             phi=45.0,
@@ -23,26 +23,26 @@ def simulate__galaxy_x1__dev_vaucouleurs(instrument):
     instrument_util.simulate_interferometer_from_instrument(
         instrument=instrument,
         data_label=data_label,
-        galaxies=[lens_galaxy, al.Galaxy(redshift=1.0)],
+        galaxies=[galaxy_galaxy, ag.Galaxy(redshift=1.0)],
     )
 
 
 def simulate__galaxy_x1__bulge_disk(instrument):
 
-    data_label = "lens_bulge_disk"
+    data_label = "galaxy_x1__bulge_disk"
 
     # This source-only system has a Dev Vaucouleurs spheroid / bulge and surrounding Exponential envelope
 
-    lens_galaxy = al.Galaxy(
+    galaxy_galaxy = ag.Galaxy(
         redshift=0.5,
-        bulge=al.lp.EllipticalDevVaucouleurs(
+        bulge=ag.lp.EllipticalDevVaucouleurs(
             centre=(0.0, 0.0),
             axis_ratio=0.9,
             phi=45.0,
             intensity=0.1,
             effective_radius=1.0,
         ),
-        envelope=al.lp.EllipticalExponential(
+        envelope=ag.lp.EllipticalExponential(
             centre=(0.0, 0.0),
             axis_ratio=0.7,
             phi=60.0,
@@ -54,19 +54,19 @@ def simulate__galaxy_x1__bulge_disk(instrument):
     instrument_util.simulate_interferometer_from_instrument(
         instrument=instrument,
         data_label=data_label,
-        galaxies=[lens_galaxy, al.Galaxy(redshift=1.0)],
+        galaxies=[galaxy_galaxy, ag.Galaxy(redshift=1.0)],
     )
 
 
 def simulate__galaxy_x2__sersics(instrument):
 
-    data_label = "lens_x2_light"
+    data_label = "galaxy_x2__sersics"
 
     # This source-only system has two Sersic bulges separated by 2.0"
 
-    lens_galaxy_0 = al.Galaxy(
+    galaxy_galaxy_0 = ag.Galaxy(
         redshift=0.5,
-        bulge=al.lp.EllipticalSersic(
+        bulge=ag.lp.EllipticalSersic(
             centre=(-1.0, -1.0),
             axis_ratio=0.8,
             phi=0.0,
@@ -76,9 +76,9 @@ def simulate__galaxy_x2__sersics(instrument):
         ),
     )
 
-    lens_galaxy_1 = al.Galaxy(
+    galaxy_galaxy_1 = ag.Galaxy(
         redshift=0.5,
-        bulge=al.lp.EllipticalSersic(
+        bulge=ag.lp.EllipticalSersic(
             centre=(1.0, 1.0),
             axis_ratio=0.8,
             phi=0.0,
@@ -91,19 +91,19 @@ def simulate__galaxy_x2__sersics(instrument):
     instrument_util.simulate_interferometer_from_instrument(
         instrument=instrument,
         data_label=data_label,
-        galaxies=[lens_galaxy_0, lens_galaxy_1, al.Galaxy(redshift=1.0)],
+        galaxies=[galaxy_galaxy_0, galaxy_galaxy_1, ag.Galaxy(redshift=1.0)],
     )
 
 
 def simulate__galaxy_x1__dev_vaucouleurs__offset_centre(instrument):
 
-    data_label = "lens_light_dev_vaucouleurs"
+    data_label = "galaxy_x1__dev_vaucouleurs__offset_centre"
 
-    # This lens-only system has a Dev Vaucouleurs spheroid / bulge.
+    # This galaxy-only system has a Dev Vaucouleurs spheroid / bulge.
 
-    lens_galaxy = al.Galaxy(
+    galaxy_galaxy = ag.Galaxy(
         redshift=0.5,
-        bulge=al.lp.EllipticalDevVaucouleurs(
+        bulge=ag.lp.EllipticalDevVaucouleurs(
             centre=(2.0, 2.0),
             axis_ratio=0.9,
             phi=45.0,
@@ -115,5 +115,5 @@ def simulate__galaxy_x1__dev_vaucouleurs__offset_centre(instrument):
     instrument_util.simulate_interferometer_from_instrument(
         instrument=instrument,
         data_label=data_label,
-        galaxies=[lens_galaxy, al.Galaxy(redshift=1.0)],
+        galaxies=[galaxy_galaxy, ag.Galaxy(redshift=1.0)],
     )

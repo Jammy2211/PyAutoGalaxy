@@ -117,7 +117,7 @@ def test__fit_sub_plot_real_space(
     assert plot_path + "subplot_fit_real_space.png" in plot_patch.paths
 
 
-def test__fit_individuals__source_and_lens__depedent_on_input(
+def test__fit_individuals__source_and_galaxy__depedent_on_input(
     masked_interferometer_fit_7x7, include_all, plot_path, plot_patch
 ):
 

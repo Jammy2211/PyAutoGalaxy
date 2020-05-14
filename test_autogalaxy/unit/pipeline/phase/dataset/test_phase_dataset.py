@@ -4,7 +4,7 @@ import autogalaxy as ag
 import pytest
 from astropy import cosmology as cosmo
 from autogalaxy import exc
-from test_autolens.mock import mock_pipeline
+from test_autogalaxy.mock import mock_pipeline
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -229,7 +229,7 @@ class TestPhasePickle:
             phase_name="phase_name",
             non_linear_class=mock_pipeline.MockNLO,
             galaxies=dict(
-                lens=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
+                galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
         )
 
@@ -241,7 +241,7 @@ class TestPhasePickle:
             phase_name="phase_name",
             non_linear_class=mock_pipeline.MockNLO,
             galaxies=dict(
-                lens=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
+                galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
         )
 
@@ -251,13 +251,13 @@ class TestPhasePickle:
 
         class CustomPhase(ag.PhaseImaging):
             def customize_priors(self, results):
-                self.galaxies.lens.light = ag.lp.EllipticalLightProfile()
+                self.galaxies.galaxy.light = ag.lp.EllipticalLightProfile()
 
         phase_imaging_7x7 = CustomPhase(
             phase_name="phase_name",
             non_linear_class=mock_pipeline.MockNLO,
             galaxies=dict(
-                lens=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
+                galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
         )
         phase_imaging_7x7.make_analysis = make_analysis

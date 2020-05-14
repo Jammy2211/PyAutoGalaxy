@@ -38,7 +38,7 @@ class TestFitImaging:
 
             masked_imaging_7x7 = ag.MaskedImaging(imaging=imaging, mask=mask)
 
-            # Setup as a ray trace instance, using a light profile for the lens
+            # Setup as a ray trace instance, using a light profile for the galaxy
 
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=MockLightProfile(value=1.0, size=2)
@@ -141,7 +141,7 @@ class TestFitImaging:
                 imaging=imaging, mask=mask, renormalize_psf=False
             )
 
-            # Setup as a ray trace instance, using a light profile for the lens
+            # Setup as a ray trace instance, using a light profile for the galaxy
 
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=MockLightProfile(value=1.0, size=2)
@@ -249,7 +249,7 @@ class TestFitImaging:
                 imaging=imaging, mask=mask, renormalize_psf=False
             )
 
-            # Setup as a ray trace instance, using a light profile for the lens
+            # Setup as a ray trace instance, using a light profile for the galaxy
 
             g0 = ag.Galaxy(
                 redshift=0.5,
@@ -354,7 +354,7 @@ class TestFitImaging:
 
             masked_imaging_7x7 = ag.MaskedImaging(imaging=imaging, mask=mask)
 
-            # Setup as a ray trace instance, using a light profile for the lens
+            # Setup as a ray trace instance, using a light profile for the galaxy
 
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=MockLightProfile(value=1.0, size=2)
@@ -459,7 +459,7 @@ class TestFitImaging:
 
             masked_imaging_7x7 = ag.MaskedImaging(imaging=imaging, mask=mask)
 
-            # Setup as a ray trace instance, using a light profile for the lens
+            # Setup as a ray trace instance, using a light profile for the galaxy
 
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=MockLightProfile(value=1.0, size=2)
@@ -1433,7 +1433,7 @@ class TestFitInterferometer:
                 transformer_class=ag.TransformerDFT,
             )
 
-            # Setup as a ray trace instance, using a light profile for the lens
+            # Setup as a ray trace instance, using a light profile for the galaxy
 
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=MockLightProfile(value=1.0, size=2)
@@ -1493,7 +1493,7 @@ class TestFitInterferometer:
                 real_space_mask=real_space_mask,
             )
 
-            # Setup as a ray trace instance, using a light profile for the lens
+            # Setup as a ray trace instance, using a light profile for the galaxy
 
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=MockLightProfile(value=1.0, size=2)

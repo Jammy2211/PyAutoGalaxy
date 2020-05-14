@@ -3,7 +3,7 @@ from os import path
 from autoconf import conf
 import autogalaxy as ag
 import pytest
-from test_autolens.mock import mock_pipeline
+from test_autogalaxy.mock import mock_pipeline
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -45,7 +45,7 @@ class TestPlane:
         phase_dataset_7x7 = ag.PhaseImaging(
             non_linear_class=mock_pipeline.MockNLO,
             galaxies=dict(
-                lens=ag.Galaxy(
+                galaxy=ag.Galaxy(
                     redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
                 ),
                 source=ag.Galaxy(
