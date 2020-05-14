@@ -1,6 +1,6 @@
 class GalaxyData:
     def __init__(self, image, noise_map, pixel_scales):
-        """ A galaxy-fit data_type is a collection of fit data_type components which are used to fit a galaxy to another galaxy. \
+        """ A galaxy-fit data is a collection of fit data components which are used to fit a galaxy to another galaxy. \
         This is where a component of a galaxy's light profiles (e.g. image) or mass profiles (e.g. convergence \
         , potential or deflection angles) are fitted to one another.
 
@@ -8,7 +8,7 @@ class GalaxyData:
         using one inferred parametrization of light or mass profiles to a new galaxy with a different parametrization \
         of light or mass profiles.
 
-        This omits a number of the fit data_type components typically used when fitting an image (e.g. the observed image, PSF, \
+        This omits a number of the fit data components typically used when fitting an image (e.g. the observed image, PSF, \
         exposure time map), but still has a number of the other components (e.g. an effective noise_map, grid_stacks).
 
         Parameters

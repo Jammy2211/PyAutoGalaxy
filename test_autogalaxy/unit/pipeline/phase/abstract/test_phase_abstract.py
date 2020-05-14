@@ -250,4 +250,4 @@ class TestSetup:
         phase_dataset_7x7.make_analysis = make_analysis
 
         # with pytest.raises(af.exc.PipelineException):
-        #     phase_dataset_7x7.run(data_type=imaging_7x7, results=None, mask=None)
+        #     phase_dataset_7x7.run(data=imaging_7x7, results=None, mask=None)

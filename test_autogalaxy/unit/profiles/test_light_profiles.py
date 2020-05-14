@@ -1152,6 +1152,69 @@ class TestLuminosityWithinCircle:
         assert luminosity_arcsec == luminosity_kpc
 
 
+class TestDecorators:
+    def test__grid_iterator_in__iterates_grid_correctly(self, gal_x1_lp):
+
+        mask = ag.Mask.manual(
+            mask_2d=[
+                [True, True, True, True, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, True, True, True, True],
+            ],
+            pixel_scales=(1.0, 1.0),
+        )
+
+        grid = ag.GridIterator.from_mask(
+            mask=mask, fractional_accuracy=1.0, sub_steps=[2]
+        )
+
+        light_profile = ag.lp.EllipticalSersic(intensity=1.0)
+
+        profile_image = light_profile.profile_image_from_grid(grid=grid)
+
+        mask_sub_2 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
+        grid_sub_2 = ag.Grid.from_mask(mask=mask_sub_2)
+        profile_image_sub_2 = light_profile.profile_image_from_grid(
+            grid=grid_sub_2
+        ).in_1d_binned
+
+        assert (profile_image == profile_image_sub_2).all()
+
+        grid = ag.GridIterator.from_mask(
+            mask=mask, fractional_accuracy=0.9999, sub_steps=[4, 16]
+        )
+
+        light_profile = ag.lp.EllipticalSersic(centre=(0.08, 0.08), intensity=1.0)
+
+        profile_image = light_profile.profile_image_from_grid(grid=grid)
+
+        mask_sub_15 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=15)
+        grid_sub_15 = ag.Grid.from_mask(mask=mask_sub_15)
+        profile_image_sub_15 = light_profile.profile_image_from_grid(
+            grid=grid_sub_15
+        ).in_1d_binned
+
+        mask_sub_16 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=16)
+        grid_sub_16 = ag.Grid.from_mask(mask=mask_sub_16)
+        profile_image_sub_16 = light_profile.profile_image_from_grid(
+            grid=grid_sub_16
+        ).in_1d_binned
+
+        print(profile_image_sub_15)
+        print(profile_image_sub_16)
+
+        fractional_accuracies = profile_image_sub_15 / profile_image_sub_16
+        fractional_accuracies[fractional_accuracies > 1.0] = (
+            1.0 / fractional_accuracies[fractional_accuracies > 1.0]
+        )
+
+        print(fractional_accuracies)
+
+    #    assert (profile_image == profile_image_sub_2).all()
+
+
 class TestGrids:
     def test__grid_to_eccentric_radius(self):
         elliptical = ag.lp.EllipticalSersic(axis_ratio=0.5, phi=0.0)

@@ -3056,8 +3056,10 @@ class TestDecorators:
         profile_image = plane.profile_image_from_grid(grid=grid)
 
         mask_sub_2 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
-        grid_sub_2 = ag.Grid.from_mask(mask=mask)
-        profile_image_sub_2 = plane.profile_image_from_grid(grid=grid)
+        grid_sub_2 = ag.Grid.from_mask(mask=mask_sub_2)
+        profile_image_sub_2 = plane.profile_image_from_grid(
+            grid=grid_sub_2
+        ).in_1d_binned
 
         assert (profile_image == profile_image_sub_2).all()
 

@@ -148,7 +148,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         include_border=False,
         bypass_output=False,
     ):
-        """Plot an array of data_type as a figure.
+        """Plot an array of data as a figure.
 
         Parameters
         -----------
@@ -160,11 +160,11 @@ class LensingPlotter(plotters.AbstractPlotter):
             labels
         outputs : PlotterOutputs
             outputs
-        array : data_type.array.aa.Scaled
-            The 2D array of data_type which is plotted.
+        array : data.array.aa.Scaled
+            The 2D array of data which is plotted.
         origin : (float, float).
             The origin of the coordinate system of the array, which is plotted as an 'x' on the image if input.
-        mask : data_type.array.mask.Mask
+        mask : data.array.mask.Mask
             The mask applied to the array, the edge of which is plotted as a set of points over the plotted array.
         extract_array_from_mask : bool
             The plotter array is extracted using the mask, such that masked values are plotted as zeros. This ensures \
@@ -176,7 +176,7 @@ class LensingPlotter(plotters.AbstractPlotter):
             If a mask is supplied, its borders pixels (e.g. the exterior edge) is plotted if this is *True*.
         positions : [[]]
             Lists of (y,x) coordinates on the image which are plotted as colored dots, to highlight specific pixels.
-        grid : data_type.array.aa.Grid
+        grid : data.array.aa.Grid
             A grid of (y,x) coordinates which may be plotted over the plotted array.
         as_subplot : bool
             Whether the array is plotted as part of a subplot, in which case the grid figure is not opened / closed.
@@ -309,7 +309,7 @@ class LensingPlotter(plotters.AbstractPlotter):
 
         Parameters
         -----------
-        grid : data_type.array.aa.Grid
+        grid : data.array.aa.Grid
             The (y,x) coordinates of the grid, in an array of shape (total_coordinates, 2).
         axis_limits : []
             The axis limits of the figure on which the grid is plotted, following [xmin, xmax, ymin, ymax].

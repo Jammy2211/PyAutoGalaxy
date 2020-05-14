@@ -14,7 +14,7 @@ class MaskedGalaxyDataset:
         use_deflections_y=False,
         use_deflections_x=False,
     ):
-        """ A galaxy-fit data_type is a collection of fit data_type components which are used to fit a galaxy to another galaxy. \
+        """ A galaxy-fit data is a collection of fit data components which are used to fit a galaxy to another galaxy. \
         This is where a component of a galaxy's light profiles (e.g. image) or mass profiles (e.g. surface \
         density, potential or deflection angles) are fitted to one another.
 
@@ -22,15 +22,15 @@ class MaskedGalaxyDataset:
         using one inferred parametrization of light or mass profiles to a new galaxy with a different parametrization \
         of light or mass profiles.
 
-        This omits a number of the fit data_type components typically used when fitting an image (e.g. the observed image, PSF, \
+        This omits a number of the fit data components typically used when fitting an image (e.g. the observed image, PSF, \
         exposure time map), but still has a number of the other components (e.g. an effective noise_map, grid_stacks).
 
         Parameters
         ----------
         galaxy_data : GalaxyData
-            The collection of data_type about the galaxy (image of its profile map, noise map, etc.) that is fitted.
+            The collection of data about the galaxy (image of its profile map, noise map, etc.) that is fitted.
         mask: aa.AbstractMask
-            The 2D masks that is applied to image fit data_type.
+            The 2D masks that is applied to image fit data.
         sub_size : int
             The size of the sub-grid used for computing the SubGrid (see imaging.masks.SubGrid).
 
@@ -39,7 +39,7 @@ class MaskedGalaxyDataset:
         noise_map_1d : ndarray
             The masked 1D arrays of the noise_map
         grid_stacks : imaging.masks.GridStack
-            Grids of (y,x) Cartesian coordinates which map over the masked 1D fit data_type arrays's pixels (includes an \
+            Grids of (y,x) Cartesian coordinates which map over the masked 1D fit data arrays's pixels (includes an \
             grid, sub-grid, etc.)
         """
         self.mask = mask
@@ -79,7 +79,7 @@ class MaskedGalaxyDataset:
             ]
         ):
             raise exc.GalaxyException(
-                "The galaxy fit data_type has not been supplied with a use_ method."
+                "The galaxy fit data has not been supplied with a use_ method."
             )
 
         if (
@@ -95,7 +95,7 @@ class MaskedGalaxyDataset:
             > 1
         ):
             raise exc.GalaxyException(
-                "The galaxy fit data_type has not been supplied with multiple use_ methods, only supply "
+                "The galaxy fit data has not been supplied with multiple use_ methods, only supply "
                 "one."
             )
 
