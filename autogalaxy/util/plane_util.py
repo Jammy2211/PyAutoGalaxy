@@ -4,7 +4,7 @@ from autogalaxy import exc
 from autogalaxy.plane import plane as pl
 
 
-def plane_image_of_galaxies_from_grid(shape, grid, galaxies, buffer=1.0e-2):
+def plane_image_of_galaxies_from(shape, grid, galaxies, buffer=1.0e-2):
 
     y_min = np.min(grid[:, 0]) - buffer
     y_max = np.max(grid[:, 0]) + buffer
@@ -26,7 +26,7 @@ def plane_image_of_galaxies_from_grid(shape, grid, galaxies, buffer=1.0e-2):
     return pl.PlaneImage(array=image, grid=grid)
 
 
-def ordered_plane_redshifts_from_galaxies(galaxies):
+def ordered_plane_redshifts_from(galaxies):
     """Given a list of galaxies (with redshifts), return a list of the redshifts in ascending order.
 
     If two or more galaxies have the same redshift that redshift is not double counted.
@@ -51,7 +51,7 @@ def ordered_plane_redshifts_from_galaxies(galaxies):
     ]
 
 
-def ordered_plane_redshifts_from_lens_source_plane_redshifts_and_slice_sizes(
+def ordered_plane_redshifts_with_slicing_from(
     lens_redshifts, planes_between_lenses, source_plane_redshift
 ):
     """Given a set of lens plane redshifts, the source-plane redshift and the number of planes between each, setup the \
@@ -110,7 +110,7 @@ def ordered_plane_redshifts_from_lens_source_plane_redshifts_and_slice_sizes(
     return plane_redshifts[0:-1]
 
 
-def galaxies_in_redshift_ordered_planes_from_galaxies(galaxies, plane_redshifts):
+def galaxies_in_redshift_ordered_planes_from(galaxies, plane_redshifts):
     """Given a list of galaxies (with redshifts), return a list of the galaxies where each entry contains a list \
     of galaxies at the same redshift in ascending redshift order.
 

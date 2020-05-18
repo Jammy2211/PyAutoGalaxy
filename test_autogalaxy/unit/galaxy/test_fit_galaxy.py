@@ -181,27 +181,25 @@ class TestCompareToManual:
 
         model_data = galaxy.profile_image_from_grid(grid=masked_galaxy_dataset.grid)
 
-        residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+        residual_map = ag.util.fit.residual_map_from(
             data=masked_galaxy_dataset.image, model_data=model_data.in_1d_binned
         )
 
         assert residual_map == pytest.approx(fit.residual_map, 1e-4)
 
-        chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+        chi_squared_map = ag.util.fit.chi_squared_map_from(
             residual_map=residual_map, noise_map=masked_galaxy_dataset.noise_map
         )
 
         assert chi_squared_map == pytest.approx(fit.chi_squared_map, 1e-4)
 
-        chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
-            chi_squared_map=chi_squared_map
-        )
+        chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
 
-        noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+        noise_normalization = ag.util.fit.noise_normalization_from(
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+        log_likelihood = ag.util.fit.likelihood_from(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
@@ -224,25 +222,23 @@ class TestCompareToManual:
 
         model_data = galaxy.convergence_from_grid(grid=masked_galaxy_dataset.grid)
 
-        residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+        residual_map = ag.util.fit.residual_map_from(
             data=masked_galaxy_dataset.image, model_data=model_data.in_1d_binned
         )
         assert residual_map == pytest.approx(fit.residual_map, 1e-4)
 
-        chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+        chi_squared_map = ag.util.fit.chi_squared_map_from(
             residual_map=residual_map, noise_map=masked_galaxy_dataset.noise_map
         )
         assert chi_squared_map == pytest.approx(fit.chi_squared_map, 1e-4)
 
-        chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
-            chi_squared_map=chi_squared_map
-        )
+        chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
 
-        noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+        noise_normalization = ag.util.fit.noise_normalization_from(
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+        log_likelihood = ag.util.fit.likelihood_from(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
@@ -266,27 +262,25 @@ class TestCompareToManual:
 
         model_data = galaxy.potential_from_grid(grid=masked_galaxy_dataset.grid)
 
-        residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+        residual_map = ag.util.fit.residual_map_from(
             data=masked_galaxy_dataset.image, model_data=model_data.in_1d_binned
         )
 
         assert residual_map == pytest.approx(fit.residual_map, 1e-4)
 
-        chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+        chi_squared_map = ag.util.fit.chi_squared_map_from(
             residual_map=residual_map, noise_map=masked_galaxy_dataset.noise_map
         )
 
         assert chi_squared_map == pytest.approx(fit.chi_squared_map, 1e-4)
 
-        chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
-            chi_squared_map=chi_squared_map
-        )
+        chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
 
-        noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+        noise_normalization = ag.util.fit.noise_normalization_from(
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+        log_likelihood = ag.util.fit.likelihood_from(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
@@ -313,27 +307,25 @@ class TestCompareToManual:
             grid=masked_galaxy_dataset.grid
         ).in_1d_binned[:, 0]
 
-        residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+        residual_map = ag.util.fit.residual_map_from(
             data=masked_galaxy_dataset.image, model_data=model_data
         )
 
         assert residual_map == pytest.approx(fit.residual_map, 1e-4)
 
-        chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+        chi_squared_map = ag.util.fit.chi_squared_map_from(
             residual_map=residual_map, noise_map=masked_galaxy_dataset.noise_map
         )
 
         assert chi_squared_map == pytest.approx(fit.chi_squared_map, 1e-4)
 
-        chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
-            chi_squared_map=chi_squared_map
-        )
+        chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
 
-        noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+        noise_normalization = ag.util.fit.noise_normalization_from(
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+        log_likelihood = ag.util.fit.likelihood_from(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
@@ -359,27 +351,25 @@ class TestCompareToManual:
             grid=masked_galaxy_dataset.grid
         ).in_1d_binned[:, 1]
 
-        residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+        residual_map = ag.util.fit.residual_map_from(
             data=masked_galaxy_dataset.image, model_data=model_data
         )
 
         assert residual_map == pytest.approx(fit.residual_map, 1e-4)
 
-        chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+        chi_squared_map = ag.util.fit.chi_squared_map_from(
             residual_map=residual_map, noise_map=masked_galaxy_dataset.noise_map
         )
 
         assert chi_squared_map == pytest.approx(fit.chi_squared_map, 1e-4)
 
-        chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
-            chi_squared_map=chi_squared_map
-        )
+        chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
 
-        noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+        noise_normalization = ag.util.fit.noise_normalization_from(
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+        log_likelihood = ag.util.fit.likelihood_from(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 

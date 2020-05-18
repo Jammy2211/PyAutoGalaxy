@@ -308,7 +308,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def arcsec_per_kpc(self):
-        return cosmology_util.arcsec_per_kpc_from_redshift_and_cosmology(
+        return cosmology_util.arcsec_per_kpc_from(
             redshift=self.redshift, cosmology=self.cosmology
         )
 

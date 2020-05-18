@@ -340,7 +340,7 @@ class LensingObject:
 
         if unit_length is "kpc":
 
-            kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from_redshift_and_cosmology(
+            kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
                 redshift=redshift_object, cosmology=cosmology
             )
 
@@ -365,7 +365,7 @@ class LensingObject:
 
         if unit_mass is "solMass":
 
-            critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from_redshifts_and_cosmology(
+            critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from(
                 redshift_0=redshift_object,
                 redshift_1=redshift_source,
                 cosmology=cosmology,

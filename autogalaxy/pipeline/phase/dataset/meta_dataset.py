@@ -59,10 +59,7 @@ class MetaDataset:
 
     @property
     def has_pixelization(self):
-        if self.pixelization is not None:
-            return True
-        else:
-            return False
+        return self.pixelization is not None
 
     @property
     def uses_cluster_inversion(self):

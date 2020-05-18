@@ -4,9 +4,7 @@ import astropy.cosmology as cosmo
 import autogalaxy as al
 import autogalaxy.plot as aplt
 
-plot_path = "{}/../images/lensing/".format(
-    os.path.dirname(os.path.realpath(__file__))
-)
+plot_path = "{}/../images/lensing/".format(os.path.dirname(os.path.realpath(__file__)))
 
 grid = al.Grid.uniform(shape_2d=(120, 120), pixel_scales=0.05)
 

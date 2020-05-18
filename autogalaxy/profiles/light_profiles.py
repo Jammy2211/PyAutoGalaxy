@@ -193,7 +193,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
         if self.unit_length is not radius.unit_length:
 
-            kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from_redshift_and_cosmology(
+            kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
                 redshift=redshift_object, cosmology=cosmology
             )
 

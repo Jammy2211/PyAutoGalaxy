@@ -29,7 +29,7 @@ class AbstractPlane(lensing.LensingObject):
 
             if not galaxies:
                 raise exc.PlaneException(
-                    "A redshift and no galaxies were input to a Plane. A redshift for the Plane therefore cannot be"
+                    "No redshift and no galaxies were input to a Plane. A redshift for the Plane therefore cannot be"
                     "determined"
                 )
             elif not all(
@@ -278,7 +278,7 @@ class AbstractPlaneCosmology(AbstractPlane):
 
     @property
     def arcsec_per_kpc(self):
-        return cosmology_util.arcsec_per_kpc_from_redshift_and_cosmology(
+        return cosmology_util.arcsec_per_kpc_from(
             redshift=self.redshift, cosmology=self.cosmology
         )
 
@@ -287,14 +287,14 @@ class AbstractPlaneCosmology(AbstractPlane):
         return 1.0 / self.arcsec_per_kpc
 
     def angular_diameter_distance_to_earth_in_units(self, unit_length="arcsec"):
-        return cosmology_util.angular_diameter_distance_to_earth_from_redshift_and_cosmology(
+        return cosmology_util.angular_diameter_distance_to_earth_from(
             redshift=self.redshift, cosmology=self.cosmology, unit_length=unit_length
         )
 
     def cosmic_average_density_in_units(
         self, unit_length="arcsec", unit_mass="angular"
     ):
-        return cosmology_util.cosmic_average_density_from_redshift_and_cosmology(
+        return cosmology_util.cosmic_average_density_from(
             redshift=self.redshift,
             cosmology=self.cosmology,
             unit_length=unit_length,
@@ -640,7 +640,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         )
 
     def plane_image_from_grid(self, grid):
-        return plane_util.plane_image_of_galaxies_from_grid(
+        return plane_util.plane_image_of_galaxies_from(
             shape=grid.mask.shape,
             grid=grid.geometry.unmasked_grid,
             galaxies=self.galaxies,

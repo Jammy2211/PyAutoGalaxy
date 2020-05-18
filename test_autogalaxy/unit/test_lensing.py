@@ -20,9 +20,7 @@ def reset_config():
     """
     Use configuration from the default path. You may want to change this to set a specific path.
     """
-    test_path = "{}/config/lensing".format(
-        os.path.dirname(os.path.realpath(__file__))
-    )
+    test_path = "{}/config/lensing".format(os.path.dirname(os.path.realpath(__file__)))
     conf.instance = conf.Config(config_path=test_path)
 
 
@@ -936,7 +934,7 @@ class TestEinsteinRadiusMassfrom:
 
         einstein_radius = sie.einstein_radius_in_units(unit_length="arcsec")
 
-        sigma_crit = ag.util.cosmology.critical_surface_density_between_redshifts_from_redshifts_and_cosmology(
+        sigma_crit = ag.util.cosmology.critical_surface_density_between_redshifts_from(
             redshift_0=1,
             redshift_1=2,
             unit_length="arcsec",

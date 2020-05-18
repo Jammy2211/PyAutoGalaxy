@@ -668,23 +668,17 @@ class TestAbstractPlaneCosmology:
     def test__all_cosmological_quantities_match_cosmology_util(self):
         plane = ag.Plane(redshift=0.1, cosmology=planck)
 
-        assert (
-            plane.arcsec_per_kpc
-            == ag.util.cosmology.arcsec_per_kpc_from_redshift_and_cosmology(
-                redshift=0.1, cosmology=planck
-            )
+        assert plane.arcsec_per_kpc == ag.util.cosmology.arcsec_per_kpc_from(
+            redshift=0.1, cosmology=planck
         )
 
-        assert (
-            plane.kpc_per_arcsec
-            == ag.util.cosmology.kpc_per_arcsec_from_redshift_and_cosmology(
-                redshift=0.1, cosmology=planck
-            )
+        assert plane.kpc_per_arcsec == ag.util.cosmology.kpc_per_arcsec_from(
+            redshift=0.1, cosmology=planck
         )
 
         assert plane.angular_diameter_distance_to_earth_in_units(
             unit_length="arcsec"
-        ) == ag.util.cosmology.angular_diameter_distance_to_earth_from_redshift_and_cosmology(
+        ) == ag.util.cosmology.angular_diameter_distance_to_earth_from(
             redshift=0.1, cosmology=planck, unit_length="arcsec"
         )
 
@@ -692,29 +686,23 @@ class TestAbstractPlaneCosmology:
 
         assert plane.angular_diameter_distance_to_earth_in_units(
             unit_length="kpc"
-        ) == ag.util.cosmology.angular_diameter_distance_to_earth_from_redshift_and_cosmology(
+        ) == ag.util.cosmology.angular_diameter_distance_to_earth_from(
             redshift=0.1, cosmology=planck, unit_length="kpc"
         )
 
         plane = ag.Plane(redshift=1.0, cosmology=planck)
 
-        assert (
-            plane.arcsec_per_kpc
-            == ag.util.cosmology.arcsec_per_kpc_from_redshift_and_cosmology(
-                redshift=1.0, cosmology=planck
-            )
+        assert plane.arcsec_per_kpc == ag.util.cosmology.arcsec_per_kpc_from(
+            redshift=1.0, cosmology=planck
         )
 
-        assert (
-            plane.kpc_per_arcsec
-            == ag.util.cosmology.kpc_per_arcsec_from_redshift_and_cosmology(
-                redshift=1.0, cosmology=planck
-            )
+        assert plane.kpc_per_arcsec == ag.util.cosmology.kpc_per_arcsec_from(
+            redshift=1.0, cosmology=planck
         )
 
         assert plane.angular_diameter_distance_to_earth_in_units(
             unit_length="arcsec"
-        ) == ag.util.cosmology.angular_diameter_distance_to_earth_from_redshift_and_cosmology(
+        ) == ag.util.cosmology.angular_diameter_distance_to_earth_from(
             redshift=1.0, cosmology=planck, unit_length="arcsec"
         )
 
@@ -722,7 +710,7 @@ class TestAbstractPlaneCosmology:
 
         assert plane.angular_diameter_distance_to_earth_in_units(
             unit_length="kpc"
-        ) == ag.util.cosmology.angular_diameter_distance_to_earth_from_redshift_and_cosmology(
+        ) == ag.util.cosmology.angular_diameter_distance_to_earth_from(
             redshift=1.0, cosmology=planck, unit_length="kpc"
         )
 
@@ -730,7 +718,7 @@ class TestAbstractPlaneCosmology:
 
         assert plane.cosmic_average_density_in_units(
             unit_length="arcsec", unit_mass="solMass"
-        ) == ag.util.cosmology.cosmic_average_density_from_redshift_and_cosmology(
+        ) == ag.util.cosmology.cosmic_average_density_from(
             redshift=0.6, cosmology=planck, unit_length="arcsec", unit_mass="solMass"
         )
 
@@ -738,7 +726,7 @@ class TestAbstractPlaneCosmology:
 
         assert plane.cosmic_average_density_in_units(
             unit_length="kpc", unit_mass="solMass"
-        ) == ag.util.cosmology.cosmic_average_density_from_redshift_and_cosmology(
+        ) == ag.util.cosmology.cosmic_average_density_from(
             redshift=0.6, cosmology=planck, unit_length="kpc", unit_mass="solMass"
         )
 
@@ -2127,7 +2115,7 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(galaxies=[galaxy], redshift=None)
 
-            plane_image_from_func = ag.util.plane.plane_image_of_galaxies_from_grid(
+            plane_image_from_func = ag.util.plane.plane_image_of_galaxies_from(
                 shape=(7, 7),
                 grid=sub_grid_7x7.geometry.unmasked_grid,
                 galaxies=[galaxy],

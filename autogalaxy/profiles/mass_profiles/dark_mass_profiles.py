@@ -274,11 +274,11 @@ class AbstractEllipticalGeneralizedNFW(
     ):
         """The Cosmic average density is defined at the redshift of the profile."""
 
-        kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from_redshift_and_cosmology(
+        kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
             redshift=redshift_object, cosmology=cosmology
         )
 
-        critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from_redshifts_and_cosmology(
+        critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from(
             redshift_0=redshift_object,
             redshift_1=redshift_source,
             cosmology=cosmology,
@@ -320,7 +320,7 @@ class AbstractEllipticalGeneralizedNFW(
                 "string. Must be (local | profile)"
             )
 
-        cosmic_average_density = cosmology_util.cosmic_average_density_from_redshift_and_cosmology(
+        cosmic_average_density = cosmology_util.cosmic_average_density_from(
             redshift=redshift_calc,
             cosmology=cosmology,
             unit_length=unit_length,
@@ -383,7 +383,7 @@ class AbstractEllipticalGeneralizedNFW(
         cosmology=cosmo.Planck15,
     ):
 
-        kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from_redshift_and_cosmology(
+        kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
             redshift=redshift_object, cosmology=cosmology
         )
 
@@ -424,14 +424,14 @@ class AbstractEllipticalGeneralizedNFW(
                 "string. Must be (local | profile)"
             )
 
-        cosmic_average_density = cosmology_util.cosmic_average_density_from_redshift_and_cosmology(
+        cosmic_average_density = cosmology_util.cosmic_average_density_from(
             redshift=redshift_calc,
             cosmology=cosmology,
             unit_length=unit_length,
             unit_mass=unit_mass,
         )
 
-        critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from_redshifts_and_cosmology(
+        critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from(
             redshift_0=redshift_object,
             redshift_1=redshift_source,
             cosmology=cosmology,
@@ -1511,7 +1511,7 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
         cosmology.critical_density(redshift_object).to(units.solMass / units.kpc ** 3)
     ).value
 
-    critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from_redshifts_and_cosmology(
+    critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from(
         redshift_0=redshift_object,
         redshift_1=redshift_source,
         cosmology=cosmology,
@@ -1519,7 +1519,7 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
         unit_mass="solMass",
     )
 
-    kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from_redshift_and_cosmology(
+    kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
         redshift=redshift_object, cosmology=cosmology
     )
 
@@ -1565,7 +1565,7 @@ def kappa_s_and_scale_radius_for_ludlow(mass_at_200, redshift_object, redshift_s
         cosmology.critical_density(redshift_object).to(units.solMass / units.kpc ** 3)
     ).value
 
-    critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from_redshifts_and_cosmology(
+    critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from(
         redshift_0=redshift_object,
         redshift_1=redshift_source,
         cosmology=cosmology,
@@ -1573,7 +1573,7 @@ def kappa_s_and_scale_radius_for_ludlow(mass_at_200, redshift_object, redshift_s
         unit_mass="solMass",
     )
 
-    kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from_redshift_and_cosmology(
+    kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
         redshift=redshift_object, cosmology=cosmology
     )
 

@@ -563,13 +563,13 @@ class TestFitImaging:
 
             assert model_image.in_2d == pytest.approx(fit.model_image.in_2d)
 
-            residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+            residual_map = ag.util.fit.residual_map_from(
                 data=masked_imaging_7x7.image, model_data=model_image
             )
 
             assert residual_map.in_2d == pytest.approx(fit.residual_map.in_2d)
 
-            normalized_residual_map = ag.util.fit.normalized_residual_map_from_residual_map_and_noise_map(
+            normalized_residual_map = ag.util.fit.normalized_residual_map_from(
                 residual_map=residual_map, noise_map=masked_imaging_7x7.noise_map
             )
 
@@ -577,21 +577,19 @@ class TestFitImaging:
                 fit.normalized_residual_map.in_2d
             )
 
-            chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+            chi_squared_map = ag.util.fit.chi_squared_map_from(
                 residual_map=residual_map, noise_map=masked_imaging_7x7.noise_map
             )
 
             assert chi_squared_map.in_2d == pytest.approx(fit.chi_squared_map.in_2d)
 
-            chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
-                chi_squared_map=chi_squared_map
-            )
+            chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
 
-            noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+            noise_normalization = ag.util.fit.noise_normalization_from(
                 noise_map=masked_imaging_7x7.noise_map
             )
 
-            log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+            log_likelihood = ag.util.fit.likelihood_from(
                 chi_squared=chi_squared, noise_normalization=noise_normalization
             )
 
@@ -697,13 +695,13 @@ class TestFitImaging:
 
             assert model_image.in_2d == pytest.approx(fit.model_image.in_2d)
 
-            residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+            residual_map = ag.util.fit.residual_map_from(
                 data=image, model_data=model_image
             )
 
             assert residual_map.in_2d == pytest.approx(fit.residual_map.in_2d)
 
-            normalized_residual_map = ag.util.fit.normalized_residual_map_from_residual_map_and_noise_map(
+            normalized_residual_map = ag.util.fit.normalized_residual_map_from(
                 residual_map=residual_map, noise_map=hyper_noise_map
             )
 
@@ -711,21 +709,19 @@ class TestFitImaging:
                 fit.normalized_residual_map.in_2d
             )
 
-            chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+            chi_squared_map = ag.util.fit.chi_squared_map_from(
                 residual_map=residual_map, noise_map=hyper_noise_map
             )
 
             assert chi_squared_map.in_2d == pytest.approx(fit.chi_squared_map.in_2d)
 
-            chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
-                chi_squared_map=chi_squared_map
-            )
+            chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
 
-            noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+            noise_normalization = ag.util.fit.noise_normalization_from(
                 noise_map=hyper_noise_map
             )
 
-            log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+            log_likelihood = ag.util.fit.likelihood_from(
                 chi_squared=chi_squared, noise_normalization=noise_normalization
             )
 
@@ -812,14 +808,14 @@ class TestFitImaging:
                 fit.model_image.in_2d, 1.0e-4
             )
 
-            residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+            residual_map = ag.util.fit.residual_map_from(
                 data=masked_imaging_7x7.image,
                 model_data=inversion.mapped_reconstructed_image,
             )
 
             assert residual_map.in_2d == pytest.approx(fit.residual_map.in_2d, 1.0e-4)
 
-            normalized_residual_map = ag.util.fit.normalized_residual_map_from_residual_map_and_noise_map(
+            normalized_residual_map = ag.util.fit.normalized_residual_map_from(
                 residual_map=residual_map, noise_map=masked_imaging_7x7.noise_map
             )
 
@@ -827,7 +823,7 @@ class TestFitImaging:
                 fit.normalized_residual_map.in_2d, 1.0e-4
             )
 
-            chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+            chi_squared_map = ag.util.fit.chi_squared_map_from(
                 residual_map=residual_map, noise_map=masked_imaging_7x7.noise_map
             )
 
@@ -835,21 +831,19 @@ class TestFitImaging:
                 fit.chi_squared_map.in_2d, 1.0e-4
             )
 
-            chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
-                chi_squared_map=chi_squared_map
-            )
+            chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
 
-            noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+            noise_normalization = ag.util.fit.noise_normalization_from(
                 noise_map=masked_imaging_7x7.noise_map
             )
 
-            log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+            log_likelihood = ag.util.fit.likelihood_from(
                 chi_squared=chi_squared, noise_normalization=noise_normalization
             )
 
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-            log_likelihood_with_regularization = ag.util.fit.likelihood_with_regularization_from_inversion_terms(
+            log_likelihood_with_regularization = ag.util.fit.likelihood_with_regularization_from(
                 chi_squared=chi_squared,
                 regularization_term=inversion.regularization_term,
                 noise_normalization=noise_normalization,
@@ -859,7 +853,7 @@ class TestFitImaging:
                 fit.log_likelihood_with_regularization, 1e-4
             )
 
-            log_evidence = ag.util.fit.evidence_from_inversion_terms(
+            log_evidence = ag.util.fit.log_evidence_from(
                 chi_squared=chi_squared,
                 regularization_term=inversion.regularization_term,
                 log_curvature_regularization_term=inversion.log_det_curvature_reg_matrix_term,
@@ -965,13 +959,13 @@ class TestFitImaging:
                 fit.model_image.in_2d, 1.0e-4
             )
 
-            residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+            residual_map = ag.util.fit.residual_map_from(
                 data=image, model_data=inversion.mapped_reconstructed_image
             )
 
             assert residual_map.in_2d == pytest.approx(fit.residual_map.in_2d)
 
-            normalized_residual_map = ag.util.fit.normalized_residual_map_from_residual_map_and_noise_map(
+            normalized_residual_map = ag.util.fit.normalized_residual_map_from(
                 residual_map=residual_map, noise_map=hyper_noise_map
             )
 
@@ -979,27 +973,25 @@ class TestFitImaging:
                 fit.normalized_residual_map.in_2d
             )
 
-            chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+            chi_squared_map = ag.util.fit.chi_squared_map_from(
                 residual_map=residual_map, noise_map=hyper_noise_map
             )
 
             assert chi_squared_map.in_2d == pytest.approx(fit.chi_squared_map.in_2d)
 
-            chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
-                chi_squared_map=chi_squared_map
-            )
+            chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
 
-            noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+            noise_normalization = ag.util.fit.noise_normalization_from(
                 noise_map=hyper_noise_map
             )
 
-            log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+            log_likelihood = ag.util.fit.likelihood_from(
                 chi_squared=chi_squared, noise_normalization=noise_normalization
             )
 
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-            log_likelihood_with_regularization = ag.util.fit.likelihood_with_regularization_from_inversion_terms(
+            log_likelihood_with_regularization = ag.util.fit.likelihood_with_regularization_from(
                 chi_squared=chi_squared,
                 regularization_term=inversion.regularization_term,
                 noise_normalization=noise_normalization,
@@ -1009,7 +1001,7 @@ class TestFitImaging:
                 fit.log_likelihood_with_regularization, 1e-4
             )
 
-            log_evidence = ag.util.fit.evidence_from_inversion_terms(
+            log_evidence = ag.util.fit.log_evidence_from(
                 chi_squared=chi_squared,
                 regularization_term=inversion.regularization_term,
                 log_curvature_regularization_term=inversion.log_det_curvature_reg_matrix_term,
@@ -1096,13 +1088,13 @@ class TestFitImaging:
 
             assert model_image.in_2d == pytest.approx(fit.model_image.in_2d)
 
-            residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+            residual_map = ag.util.fit.residual_map_from(
                 data=masked_imaging_7x7.image, model_data=model_image
             )
 
             assert residual_map.in_2d == pytest.approx(fit.residual_map.in_2d)
 
-            normalized_residual_map = ag.util.fit.normalized_residual_map_from_residual_map_and_noise_map(
+            normalized_residual_map = ag.util.fit.normalized_residual_map_from(
                 residual_map=residual_map, noise_map=masked_imaging_7x7.noise_map
             )
 
@@ -1110,27 +1102,25 @@ class TestFitImaging:
                 fit.normalized_residual_map.in_2d
             )
 
-            chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+            chi_squared_map = ag.util.fit.chi_squared_map_from(
                 residual_map=residual_map, noise_map=masked_imaging_7x7.noise_map
             )
 
             assert chi_squared_map.in_2d == pytest.approx(fit.chi_squared_map.in_2d)
 
-            chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
-                chi_squared_map=chi_squared_map
-            )
+            chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
 
-            noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+            noise_normalization = ag.util.fit.noise_normalization_from(
                 noise_map=masked_imaging_7x7.noise_map
             )
 
-            log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+            log_likelihood = ag.util.fit.likelihood_from(
                 chi_squared=chi_squared, noise_normalization=noise_normalization
             )
 
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-            log_likelihood_with_regularization = ag.util.fit.likelihood_with_regularization_from_inversion_terms(
+            log_likelihood_with_regularization = ag.util.fit.likelihood_with_regularization_from(
                 chi_squared=chi_squared,
                 regularization_term=inversion.regularization_term,
                 noise_normalization=noise_normalization,
@@ -1140,7 +1130,7 @@ class TestFitImaging:
                 fit.log_likelihood_with_regularization, 1e-4
             )
 
-            log_evidence = ag.util.fit.evidence_from_inversion_terms(
+            log_evidence = ag.util.fit.log_evidence_from(
                 chi_squared=chi_squared,
                 regularization_term=inversion.regularization_term,
                 log_curvature_regularization_term=inversion.log_det_curvature_reg_matrix_term,
@@ -1294,13 +1284,13 @@ class TestFitImaging:
 
             assert model_image.in_2d == pytest.approx(fit.model_image.in_2d, 1.0e-4)
 
-            residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+            residual_map = ag.util.fit.residual_map_from(
                 data=image, model_data=model_image
             )
 
             assert residual_map.in_2d == pytest.approx(fit.residual_map.in_2d, 1.0e-4)
 
-            normalized_residual_map = ag.util.fit.normalized_residual_map_from_residual_map_and_noise_map(
+            normalized_residual_map = ag.util.fit.normalized_residual_map_from(
                 residual_map=residual_map, noise_map=hyper_noise_map
             )
 
@@ -1308,7 +1298,7 @@ class TestFitImaging:
                 fit.normalized_residual_map.in_2d, 1.0e-4
             )
 
-            chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+            chi_squared_map = ag.util.fit.chi_squared_map_from(
                 residual_map=residual_map, noise_map=hyper_noise_map
             )
 
@@ -1316,21 +1306,19 @@ class TestFitImaging:
                 fit.chi_squared_map.in_2d, 1.0e-4
             )
 
-            chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
-                chi_squared_map=chi_squared_map
-            )
+            chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
 
-            noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+            noise_normalization = ag.util.fit.noise_normalization_from(
                 noise_map=hyper_noise_map
             )
 
-            log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+            log_likelihood = ag.util.fit.likelihood_from(
                 chi_squared=chi_squared, noise_normalization=noise_normalization
             )
 
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-            log_likelihood_with_regularization = ag.util.fit.likelihood_with_regularization_from_inversion_terms(
+            log_likelihood_with_regularization = ag.util.fit.likelihood_with_regularization_from(
                 chi_squared=chi_squared,
                 regularization_term=inversion.regularization_term,
                 noise_normalization=noise_normalization,
@@ -1340,7 +1328,7 @@ class TestFitImaging:
                 fit.log_likelihood_with_regularization, 1e-4
             )
 
-            log_evidence = ag.util.fit.evidence_from_inversion_terms(
+            log_evidence = ag.util.fit.log_evidence_from(
                 chi_squared=chi_squared,
                 regularization_term=inversion.regularization_term,
                 log_curvature_regularization_term=inversion.log_det_curvature_reg_matrix_term,
@@ -1541,13 +1529,13 @@ class TestFitInterferometer:
 
             assert model_visibilities == pytest.approx(fit.model_visibilities, 1e-4)
 
-            residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+            residual_map = ag.util.fit.residual_map_from(
                 data=masked_interferometer_7.visibilities, model_data=model_visibilities
             )
 
             assert residual_map == pytest.approx(fit.residual_map, 1e-4)
 
-            normalized_residual_map = ag.util.fit.normalized_residual_map_from_residual_map_and_noise_map(
+            normalized_residual_map = ag.util.fit.normalized_residual_map_from(
                 residual_map=residual_map, noise_map=masked_interferometer_7.noise_map
             )
 
@@ -1555,21 +1543,21 @@ class TestFitInterferometer:
                 fit.normalized_residual_map, 1e-4
             )
 
-            chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+            chi_squared_map = ag.util.fit.chi_squared_map_from(
                 residual_map=residual_map, noise_map=masked_interferometer_7.noise_map
             )
 
             assert chi_squared_map == pytest.approx(fit.chi_squared_map, 1e-4)
 
-            chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
+            chi_squared = ag.util.fit.chi_squared_from(
                 chi_squared_map=fit.chi_squared_map
             )
 
-            noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+            noise_normalization = ag.util.fit.noise_normalization_from(
                 noise_map=masked_interferometer_7.noise_map
             )
 
-            log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+            log_likelihood = ag.util.fit.likelihood_from(
                 chi_squared=chi_squared, noise_normalization=noise_normalization
             )
 
@@ -1710,14 +1698,14 @@ class TestFitInterferometer:
                 fit.model_visibilities, 1.0e-4
             )
 
-            residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+            residual_map = ag.util.fit.residual_map_from(
                 data=masked_interferometer_7.visibilities,
                 model_data=inversion.mapped_reconstructed_visibilities,
             )
 
             assert residual_map.in_1d == pytest.approx(fit.residual_map.in_1d, 1.0e-4)
 
-            normalized_residual_map = ag.util.fit.normalized_residual_map_from_residual_map_and_noise_map(
+            normalized_residual_map = ag.util.fit.normalized_residual_map_from(
                 residual_map=residual_map, noise_map=masked_interferometer_7.noise_map
             )
 
@@ -1725,7 +1713,7 @@ class TestFitInterferometer:
                 fit.normalized_residual_map.in_1d, 1.0e-4
             )
 
-            chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+            chi_squared_map = ag.util.fit.chi_squared_map_from(
                 residual_map=residual_map, noise_map=masked_interferometer_7.noise_map
             )
 
@@ -1733,21 +1721,19 @@ class TestFitInterferometer:
                 fit.chi_squared_map.in_1d, 1.0e-4
             )
 
-            chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
-                chi_squared_map=chi_squared_map
-            )
+            chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
 
-            noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+            noise_normalization = ag.util.fit.noise_normalization_from(
                 noise_map=masked_interferometer_7.noise_map
             )
 
-            log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+            log_likelihood = ag.util.fit.likelihood_from(
                 chi_squared=chi_squared, noise_normalization=noise_normalization
             )
 
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-            log_likelihood_with_regularization = ag.util.fit.likelihood_with_regularization_from_inversion_terms(
+            log_likelihood_with_regularization = ag.util.fit.likelihood_with_regularization_from(
                 chi_squared=chi_squared,
                 regularization_term=inversion.regularization_term,
                 noise_normalization=noise_normalization,
@@ -1757,7 +1743,7 @@ class TestFitInterferometer:
                 fit.log_likelihood_with_regularization, 1e-4
             )
 
-            log_evidence = ag.util.fit.evidence_from_inversion_terms(
+            log_evidence = ag.util.fit.log_evidence_from(
                 chi_squared=chi_squared,
                 regularization_term=inversion.regularization_term,
                 log_curvature_regularization_term=inversion.log_det_curvature_reg_matrix_term,
@@ -1768,7 +1754,7 @@ class TestFitInterferometer:
             assert log_evidence == fit.log_evidence
             assert log_evidence == fit.figure_of_merit
 
-            mapped_reconstructed_image = ag.util.inversion.mapped_reconstructed_data_from_mapping_matrix_and_reconstruction(
+            mapped_reconstructed_image = ag.util.inversion.mapped_reconstructed_data_from(
                 mapping_matrix=fit.inversion.mapper.mapping_matrix,
                 reconstruction=fit.inversion.reconstruction,
             )
@@ -1930,13 +1916,13 @@ class TestFitInterferometer:
                 fit.model_visibilities.in_1d
             )
 
-            residual_map = ag.util.fit.residual_map_from_data_and_model_data(
+            residual_map = ag.util.fit.residual_map_from(
                 data=masked_interferometer_7.visibilities, model_data=model_visibilities
             )
 
             assert residual_map.in_1d == pytest.approx(fit.residual_map.in_1d)
 
-            normalized_residual_map = ag.util.fit.normalized_residual_map_from_residual_map_and_noise_map(
+            normalized_residual_map = ag.util.fit.normalized_residual_map_from(
                 residual_map=residual_map, noise_map=masked_interferometer_7.noise_map
             )
 
@@ -1944,27 +1930,25 @@ class TestFitInterferometer:
                 fit.normalized_residual_map.in_1d
             )
 
-            chi_squared_map = ag.util.fit.chi_squared_map_from_residual_map_and_noise_map(
+            chi_squared_map = ag.util.fit.chi_squared_map_from(
                 residual_map=residual_map, noise_map=masked_interferometer_7.noise_map
             )
 
             assert chi_squared_map.in_1d == pytest.approx(fit.chi_squared_map.in_1d)
 
-            chi_squared = ag.util.fit.chi_squared_from_chi_squared_map(
-                chi_squared_map=chi_squared_map
-            )
+            chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
 
-            noise_normalization = ag.util.fit.noise_normalization_from_noise_map(
+            noise_normalization = ag.util.fit.noise_normalization_from(
                 noise_map=masked_interferometer_7.noise_map
             )
 
-            log_likelihood = ag.util.fit.likelihood_from_chi_squared_and_noise_normalization(
+            log_likelihood = ag.util.fit.likelihood_from(
                 chi_squared=chi_squared, noise_normalization=noise_normalization
             )
 
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-            log_likelihood_with_regularization = ag.util.fit.likelihood_with_regularization_from_inversion_terms(
+            log_likelihood_with_regularization = ag.util.fit.likelihood_with_regularization_from(
                 chi_squared=chi_squared,
                 regularization_term=inversion.regularization_term,
                 noise_normalization=noise_normalization,
@@ -1974,7 +1958,7 @@ class TestFitInterferometer:
                 fit.log_likelihood_with_regularization, 1e-4
             )
 
-            log_evidence = ag.util.fit.evidence_from_inversion_terms(
+            log_evidence = ag.util.fit.log_evidence_from(
                 chi_squared=chi_squared,
                 regularization_term=inversion.regularization_term,
                 log_curvature_regularization_term=inversion.log_det_curvature_reg_matrix_term,
@@ -1985,7 +1969,7 @@ class TestFitInterferometer:
             assert log_evidence == fit.log_evidence
             assert log_evidence == fit.figure_of_merit
 
-            mapped_reconstructed_image = ag.util.inversion.mapped_reconstructed_data_from_mapping_matrix_and_reconstruction(
+            mapped_reconstructed_image = ag.util.inversion.mapped_reconstructed_data_from(
                 mapping_matrix=fit.inversion.mapper.mapping_matrix,
                 reconstruction=fit.inversion.reconstruction,
             )
