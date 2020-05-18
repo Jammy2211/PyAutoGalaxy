@@ -1183,36 +1183,28 @@ class TestDecorators:
         assert (profile_image == profile_image_sub_2).all()
 
         grid = ag.GridIterator.from_mask(
-            mask=mask, fractional_accuracy=0.9999, sub_steps=[4, 16]
+            mask=mask, fractional_accuracy=0.95, sub_steps=[2, 4, 8]
         )
 
         light_profile = ag.lp.EllipticalSersic(centre=(0.08, 0.08), intensity=1.0)
 
         profile_image = light_profile.profile_image_from_grid(grid=grid)
 
-        mask_sub_15 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=15)
-        grid_sub_15 = ag.Grid.from_mask(mask=mask_sub_15)
-        profile_image_sub_15 = light_profile.profile_image_from_grid(
-            grid=grid_sub_15
+        mask_sub_4 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
+        grid_sub_4 = ag.Grid.from_mask(mask=mask_sub_4)
+        profile_image_sub_4 = light_profile.profile_image_from_grid(
+            grid=grid_sub_4
         ).in_1d_binned
 
-        mask_sub_16 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=16)
-        grid_sub_16 = ag.Grid.from_mask(mask=mask_sub_16)
-        profile_image_sub_16 = light_profile.profile_image_from_grid(
-            grid=grid_sub_16
+        assert profile_image[0] == profile_image_sub_4[0]
+
+        mask_sub_8 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
+        grid_sub_8 = ag.Grid.from_mask(mask=mask_sub_8)
+        profile_image_sub_8 = light_profile.profile_image_from_grid(
+            grid=grid_sub_8
         ).in_1d_binned
 
-        print(profile_image_sub_15)
-        print(profile_image_sub_16)
-
-        fractional_accuracies = profile_image_sub_15 / profile_image_sub_16
-        fractional_accuracies[fractional_accuracies > 1.0] = (
-            1.0 / fractional_accuracies[fractional_accuracies > 1.0]
-        )
-
-        print(fractional_accuracies)
-
-    #    assert (profile_image == profile_image_sub_2).all()
+        assert profile_image[4] == profile_image_sub_8[4]
 
 
 class TestGrids:

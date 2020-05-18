@@ -3051,6 +3051,35 @@ class TestDecorators:
 
         assert (profile_image == profile_image_sub_2).all()
 
+        grid = ag.GridIterator.from_mask(
+            mask=mask, fractional_accuracy=0.95, sub_steps=[2, 4, 8]
+        )
+
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            light=ag.lp.EllipticalSersic(centre=(0.08, 0.08), intensity=1.0),
+        )
+
+        plane = ag.Plane(galaxies=[galaxy])
+
+        profile_image = plane.profile_image_from_grid(grid=grid)
+
+        mask_sub_4 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
+        grid_sub_4 = ag.Grid.from_mask(mask=mask_sub_4)
+        profile_image_sub_4 = plane.profile_image_from_grid(
+            grid=grid_sub_4
+        ).in_1d_binned
+
+        assert profile_image[0] == profile_image_sub_4[0]
+
+        mask_sub_8 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
+        grid_sub_8 = ag.Grid.from_mask(mask=mask_sub_8)
+        profile_image_sub_8 = plane.profile_image_from_grid(
+            grid=grid_sub_8
+        ).in_1d_binned
+
+        assert profile_image[4] == profile_image_sub_8[4]
+
 
 class TestRegression:
     def test__profile_image_centre_is_brightest_pixel_in_grid(self):
