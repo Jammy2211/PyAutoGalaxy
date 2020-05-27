@@ -54,12 +54,10 @@ class PhaseDataset(abstract.AbstractPhase):
         result: AbstractPhase.Result
             A result object comprising the best fit model and other hyper_galaxies.
         """
-        self.save_model_info()
         self.save_metadata(dataset=dataset)
         self.save_dataset(dataset=dataset)
         self.save_mask(mask)
         self.save_meta_dataset(meta_dataset=self.meta_dataset)
-        self.save_info(info=info)
 
         self.model = self.model.populate(results)
 
@@ -71,9 +69,8 @@ class PhaseDataset(abstract.AbstractPhase):
         self.save_phase_attributes(phase_attributes=phase_attributes)
 
         self.customize_priors(results)
-        self.assert_and_save_pickle()
 
-        result = self.run_analysis(analysis)
+        result = self.run_analysis(analysis=analysis, info=info)
 
         return self.make_result(result=result, analysis=analysis)
 

@@ -54,8 +54,7 @@ class HyperPhase:
         phase.paths.zip()
 
         phase.optimizer = phase.optimizer.copy_with_name_extension(
-            extension=self.hyper_name + "_" + phase.paths.phase_tag,
-            remove_phase_tag=True,
+            extension=self.hyper_name + "_" + phase.paths.tag, remove_phase_tag=True
         )
 
         phase.paths = phase.optimizer.paths
@@ -99,7 +98,7 @@ class HyperPhase:
         )
 
         result = self.phase.run(dataset, results=results, **kwargs)
-        results.add(self.phase.paths.phase_name, result)
+        results.add(self.phase.paths.name, result)
         hyper_result = self.run_hyper(dataset=dataset, results=results, **kwargs)
         setattr(result, self.hyper_name, hyper_result)
         return result

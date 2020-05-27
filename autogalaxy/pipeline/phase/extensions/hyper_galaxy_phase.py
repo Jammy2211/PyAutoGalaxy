@@ -218,7 +218,7 @@ class HyperGalaxyPhase(HyperPhase):
                     image_path=optimizer.paths.image_path,
                 )
 
-                result = optimizer.full_fit(model=model, analysis=analysis)
+                result = optimizer.fit(model=model, analysis=analysis)
 
                 def transfer_field(name):
                     if hasattr(result._instance, name):

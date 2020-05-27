@@ -1868,7 +1868,7 @@ class TestBooleanProperties:
 
 
 class TestDecorators:
-    def test__grid_iterator_in__iterates_grid_correctly(self, gal_x1_lp):
+    def test__grid_iterator_in__iterates_array_result_correctly(self, gal_x1_lp):
 
         mask = ag.Mask.manual(
             mask_2d=[
@@ -1923,3 +1923,56 @@ class TestDecorators:
         ).in_1d_binned
 
         assert profile_image[4] == profile_image_sub_8[4]
+
+    def test__grid_iterator_in__iterates_grid_result_correctly(self, gal_x1_mp):
+
+        mask = ag.Mask.manual(
+            mask_2d=[
+                [True, True, True, True, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, True, True, True, True],
+            ],
+            pixel_scales=(1.0, 1.0),
+        )
+
+        grid = ag.GridIterator.from_mask(
+            mask=mask, fractional_accuracy=1.0, sub_steps=[2]
+        )
+
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            mass=ag.mp.EllipticalIsothermal(centre=(0.08, 0.08), einstein_radius=1.0),
+        )
+
+        deflections = galaxy.deflections_from_grid(grid=grid)
+
+        mask_sub_2 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
+        grid_sub_2 = ag.Grid.from_mask(mask=mask_sub_2)
+        deflections_sub_2 = galaxy.deflections_from_grid(grid=grid_sub_2).in_1d_binned
+
+        assert (deflections == deflections_sub_2).all()
+
+        grid = ag.GridIterator.from_mask(
+            mask=mask, fractional_accuracy=0.99, sub_steps=[2, 4, 8]
+        )
+
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            mass=ag.mp.EllipticalIsothermal(centre=(0.08, 0.08), einstein_radius=1.0),
+        )
+
+        deflections = galaxy.deflections_from_grid(grid=grid)
+
+        mask_sub_4 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
+        grid_sub_4 = ag.Grid.from_mask(mask=mask_sub_4)
+        deflections_sub_4 = galaxy.deflections_from_grid(grid=grid_sub_4).in_1d_binned
+
+        assert deflections[0, 0] == deflections_sub_4[0, 0]
+
+        mask_sub_8 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
+        grid_sub_8 = ag.Grid.from_mask(mask=mask_sub_8)
+        deflections_sub_8 = galaxy.deflections_from_grid(grid=grid_sub_8).in_1d_binned
+
+        assert deflections[4, 0] == deflections_sub_8[4, 0]

@@ -35,7 +35,7 @@ class MockOptimizer(af.NonLinearOptimizer):
         # noinspection PyTypeChecker
         return af.Result(None, analysis.log_likelihood_function(None), None)
 
-    def _full_fit(self, model, analysis):
+    def _fit(self, model, analysis):
         # noinspection PyTypeChecker
         return af.Result(None, analysis.log_likelihood_function(None), None)
 
@@ -43,10 +43,7 @@ class MockOptimizer(af.NonLinearOptimizer):
 class MockPhase:
     def __init__(self):
         self.paths = autofit.optimize.non_linear.paths.Paths(
-            phase_name="phase_name",
-            phase_path="phase_path",
-            phase_folders=("",),
-            phase_tag="",
+            name="phase_name", path_prefix="phase_path", folders=("",), tag=""
         )
         self.optimizer = MockOptimizer(paths=self.paths)
         self.model = af.ModelMapper()

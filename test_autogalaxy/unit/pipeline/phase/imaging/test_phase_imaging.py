@@ -38,7 +38,7 @@ class TestMakeAnalysis:
         )
 
         file_phase_info = "{}/{}".format(
-            phase_imaging_7x7.optimizer.paths.phase_output_path, "phase.info"
+            phase_imaging_7x7.optimizer.paths.output_path, "phase.info"
         )
 
         phase_info = open(file_phase_info, "r")

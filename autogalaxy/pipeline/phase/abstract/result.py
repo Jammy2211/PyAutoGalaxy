@@ -7,7 +7,21 @@ class Result(af.Result):
         self, samples, previous_model, analysis, optimizer, use_as_hyper_dataset=False
     ):
         """
-        The result of a phase
+        The results of a non-linear search performed by a phase.
+
+        Parameters
+        ----------
+        samples : af.Samples
+            A class containing the samples of the non-linear search, including methods to get the maximum log
+            likelihood model, errors, etc.
+        previous_model : af.ModelMapper
+            The model used in this result model-fit.
+        analysis : Analysis
+            The Analysis class used by this model-fit to fit the model to the data.
+        optimizer : af.NonLinearOptimizer
+            The non-linear search optimizer used by this model fit.
+        use_as_hyper_dataset : bool
+            Whether this result's phase contains hyper phases, allowing it to be used a hyper dataset.
         """
         super().__init__(samples=samples, previous_model=previous_model)
 

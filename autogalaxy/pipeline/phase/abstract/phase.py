@@ -26,7 +26,7 @@ class AbstractPhase(af.AbstractPhase):
 
     @property
     def phase_folders(self):
-        return self.optimizer.phase_folders
+        return self.optimizer.folders
 
     @property
     def phase_property_collections(self):

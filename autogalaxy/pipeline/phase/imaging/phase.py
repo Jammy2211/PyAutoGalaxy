@@ -51,7 +51,7 @@ class PhaseImaging(dataset.PhaseDataset):
             bin_up_factor=bin_up_factor,
             psf_shape_2d=psf_shape_2d,
         )
-        paths.phase_tag = phase_tag
+        paths.tag = phase_tag
 
         super().__init__(
             paths,
@@ -119,9 +119,7 @@ class PhaseImaging(dataset.PhaseDataset):
 
     def output_phase_info(self):
 
-        file_phase_info = "{}/{}".format(
-            self.optimizer.paths.phase_output_path, "phase.info"
-        )
+        file_phase_info = "{}/{}".format(self.optimizer.paths.output_path, "phase.info")
 
         with open(file_phase_info, "w") as phase_info:
             phase_info.write("Optimizer = {} \n".format(type(self.optimizer).__name__))

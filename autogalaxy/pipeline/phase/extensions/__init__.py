@@ -59,7 +59,7 @@ class CombinedHyperPhase(HyperPhase):
         result = self.phase.run(
             dataset=dataset, mask=mask, results=results, info=info, **kwargs
         )
-        results.add(self.phase.paths.phase_name, result)
+        results.add(self.phase.paths.name, result)
 
         for phase in self.hyper_phases:
             hyper_result = phase.run_hyper(

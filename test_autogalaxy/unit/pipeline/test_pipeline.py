@@ -33,7 +33,7 @@ class DummyPhaseImaging(af.AbstractPhase):
         pass
 
     def __init__(self, phase_name, phase_tag=""):
-        super().__init__(Paths(phase_name=phase_name, phase_tag=phase_tag))
+        super().__init__(Paths(name=phase_name, tag=phase_tag))
         self.dataset = None
         self.results = None
         self.mask = None
@@ -45,7 +45,6 @@ class DummyPhaseImaging(af.AbstractPhase):
         self.dataset = dataset
         self.results = results
         self.mask = mask
-        self.assert_and_save_pickle()
         return af.Result(af.ModelInstance(), 1)
 
 
@@ -146,7 +145,7 @@ class DummyPhasePositions(af.AbstractPhase):
         pass
 
     def __init__(self, phase_name):
-        super().__init__(Paths(phase_name=phase_name, phase_tag=""))
+        super().__init__(Paths(name=phase_name, tag=""))
         self.results = None
         self.pixel_scales = None
         self.optimizer = Optimizer(phase_name)
