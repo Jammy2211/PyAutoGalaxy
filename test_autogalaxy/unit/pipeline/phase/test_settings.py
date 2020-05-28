@@ -19,15 +19,10 @@ class TestPhaseTag:
         settings = ag.PhaseSettingsInterferometer(
             sub_size=1,
             transformer_class=ag.TransformerDFT,
-            real_space_shape_2d=(3, 3),
-            real_space_pixel_scales=(1.0, 2.0),
             primary_beam_shape_2d=(2, 2),
         )
 
-        assert (
-            settings.phase_tag
-            == "phase_tag__dft__rs_shape_3x3__rs_pix_1.00x2.00__sub_1__pb_2x2"
-        )
+        assert settings.phase_tag == "phase_tag__dft__sub_1__pb_2x2"
 
 
 class TestPhaseTaggers:
@@ -84,21 +79,3 @@ class TestPhaseTaggers:
         assert settings.primary_beam_shape_tag == "__pb_2x2"
         settings = ag.PhaseSettingsInterferometer(primary_beam_shape_2d=(3, 4))
         assert settings.primary_beam_shape_tag == "__pb_3x4"
-
-    def test__real_space_shape_2d_tagger(self):
-
-        settings = ag.PhaseSettingsInterferometer(real_space_shape_2d=None)
-        assert settings.real_space_shape_2d_tag == ""
-        settings = ag.PhaseSettingsInterferometer(real_space_shape_2d=(2, 2))
-        assert settings.real_space_shape_2d_tag == "__rs_shape_2x2"
-        settings = ag.PhaseSettingsInterferometer(real_space_shape_2d=(3, 4))
-        assert settings.real_space_shape_2d_tag == "__rs_shape_3x4"
-
-    def test__real_space_pixel_scales_tagger(self):
-
-        settings = ag.PhaseSettingsInterferometer(real_space_pixel_scales=None)
-        assert settings.real_space_pixel_scales_tag == ""
-        settings = ag.PhaseSettingsInterferometer(real_space_pixel_scales=(0.01, 0.02))
-        assert settings.real_space_pixel_scales_tag == "__rs_pix_0.01x0.02"
-        settings = ag.PhaseSettingsInterferometer(real_space_pixel_scales=(2.0, 1.0))
-        assert settings.real_space_pixel_scales_tag == "__rs_pix_2.00x1.00"

@@ -157,8 +157,6 @@ class PhaseSettingsInterferometer(AbstractPhaseSettings):
         bin_up_factor=None,
         inversion_pixel_limit=None,
         transformer_class=transformer.TransformerNUFFT,
-        real_space_shape_2d=None,
-        real_space_pixel_scales=None,
         primary_beam_shape_2d=None,
     ):
 
@@ -174,8 +172,6 @@ class PhaseSettingsInterferometer(AbstractPhaseSettings):
         )
 
         self.transformer_class = transformer_class
-        self.real_space_shape_2d = real_space_shape_2d
-        self.real_space_pixel_scales = real_space_pixel_scales
         self.primary_beam_shape_2d = primary_beam_shape_2d
 
     @property
@@ -184,8 +180,6 @@ class PhaseSettingsInterferometer(AbstractPhaseSettings):
         return (
             "phase_tag"
             + self.transformer_tag
-            + self.real_space_shape_2d_tag
-            + self.real_space_pixel_scales_tag
             + self.sub_size_tag
             + self.signal_to_noise_limit_tag
             + self.bin_up_factor_tag
@@ -211,38 +205,6 @@ class PhaseSettingsInterferometer(AbstractPhaseSettings):
             return "__nufft"
         elif self.transformer_class is None:
             return ""
-
-    @property
-    def real_space_shape_2d_tag(self):
-        """Generate a sub-grid tag, to customize phase names based on the sub-grid size used.
-
-        This changes the phase name 'phase_name' as follows:
-
-        real_space_shape_2d = None -> phase_name
-        real_space_shape_2d = 1 -> phase_name_real_space_shape_2d_2
-        real_space_shape_2d = 4 -> phase_name_real_space_shape_2d_4
-        """
-        if self.real_space_shape_2d is None:
-            return ""
-        y = str(self.real_space_shape_2d[0])
-        x = str(self.real_space_shape_2d[1])
-        return "__rs_shape_" + y + "x" + x
-
-    @property
-    def real_space_pixel_scales_tag(self):
-        """Generate a sub-grid tag, to customize phase names based on the sub-grid size used.
-
-        This changes the phase name 'phase_name' as follows:
-
-        real_space_pixel_scales = None -> phase_name
-        real_space_pixel_scales = 1 -> phase_name_real_space_pixel_scales_2
-        real_space_pixel_scales = 4 -> phase_name_real_space_pixel_scales_4
-        """
-        if self.real_space_pixel_scales is None:
-            return ""
-        y = "{0:.2f}".format(self.real_space_pixel_scales[0])
-        x = "{0:.2f}".format(self.real_space_pixel_scales[1])
-        return "__rs_pix_" + y + "x" + x
 
     @property
     def primary_beam_shape_tag(self):

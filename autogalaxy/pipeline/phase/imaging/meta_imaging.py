@@ -29,6 +29,10 @@ class MetaImaging(meta_dataset.MetaDataset):
         masked_imaging = imaging.MaskedImaging(
             imaging=dataset,
             mask=mask,
+            grid_class=self.settings.grid_class,
+            grid_inversion_class=self.settings.grid_inversion_class,
+            fractional_accuracy=self.settings.fractional_accuracy,
+            sub_steps=self.settings.sub_steps,
             psf_shape_2d=self.settings.psf_shape_2d,
             inversion_pixel_limit=self.settings.inversion_pixel_limit,
         )
