@@ -32,6 +32,7 @@ class TestMaskedImaging:
         masked_imaging_7x7 = ag.MaskedImaging(
             imaging=imaging_7x7,
             mask=sub_mask_7x7,
+            grid_class=ag.Grid,
             psf_shape_2d=(3, 3),
             inversion_pixel_limit=20.0,
         )
@@ -39,9 +40,8 @@ class TestMaskedImaging:
         assert masked_imaging_7x7.inversion_pixel_limit == 20.0
 
         grid = ag.MaskedGrid.from_mask(mask=sub_mask_7x7)
-        new_grid = grid.new_grid_with_interpolator(pixel_scale_interpolation_grid=1.0)
 
-        assert (masked_imaging_7x7.grid == new_grid).all()
+        assert (masked_imaging_7x7.grid == grid).all()
 
         blurring_grid = grid.blurring_grid_from_kernel_shape(kernel_shape_2d=(3, 3))
         new_blurring_grid = blurring_grid.new_grid_with_interpolator(

@@ -57,7 +57,7 @@ class FitImaging(aa_fit.FitImaging):
         else:
 
             inversion = plane.inversion_imaging_from_grid_and_data(
-                grid=masked_imaging.grid,
+                grid=masked_imaging.grid_inversion,
                 image=self.profile_subtracted_image,
                 noise_map=noise_map,
                 convolver=masked_imaging.convolver,

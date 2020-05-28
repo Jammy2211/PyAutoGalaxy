@@ -1,6 +1,7 @@
 import copy
 
 import numpy as np
+from autoarray.structures import grids
 from autoarray.dataset import imaging
 from autogalaxy import exc
 from autogalaxy.plane import plane as pl
@@ -11,6 +12,10 @@ class MaskedImaging(imaging.MaskedImaging):
         self,
         imaging,
         mask,
+        grid_class=grids.GridIterator,
+        grid_inversion_class=grids.Grid,
+        grid_fractional_accuracy=0.9999,
+        grid_sub_steps=[2, 4, 8, 16],
         psf_shape_2d=None,
         inversion_pixel_limit=None,
         renormalize_psf=True,
@@ -48,6 +53,10 @@ class MaskedImaging(imaging.MaskedImaging):
         super(MaskedImaging, self).__init__(
             imaging=imaging,
             mask=mask,
+            grid_class=grid_class,
+            grid_inversion_class=grid_inversion_class,
+            grid_fractional_accuracy=grid_fractional_accuracy,
+            grid_sub_steps=grid_sub_steps,
             psf_shape_2d=psf_shape_2d,
             inversion_pixel_limit=inversion_pixel_limit,
             renormalize_psf=renormalize_psf,

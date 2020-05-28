@@ -36,7 +36,9 @@ class TestFitImaging:
                 sub_size=1,
             )
 
-            masked_imaging_7x7 = ag.MaskedImaging(imaging=imaging, mask=mask)
+            masked_imaging_7x7 = ag.MaskedImaging(
+                imaging=imaging, mask=mask, grid_class=ag.Grid
+            )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
 
@@ -138,7 +140,7 @@ class TestFitImaging:
             )
 
             masked_imaging_7x7 = ag.MaskedImaging(
-                imaging=imaging, mask=mask, renormalize_psf=False
+                imaging=imaging, mask=mask, renormalize_psf=False, grid_class=ag.Grid
             )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
@@ -246,7 +248,7 @@ class TestFitImaging:
             )
 
             masked_imaging_7x7 = ag.MaskedImaging(
-                imaging=imaging, mask=mask, renormalize_psf=False
+                imaging=imaging, mask=mask, renormalize_psf=False, grid_class=ag.Grid
             )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
@@ -352,7 +354,9 @@ class TestFitImaging:
                 sub_size=1,
             )
 
-            masked_imaging_7x7 = ag.MaskedImaging(imaging=imaging, mask=mask)
+            masked_imaging_7x7 = ag.MaskedImaging(
+                imaging=imaging, mask=mask, grid_class=ag.Grid
+            )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
 
@@ -457,7 +461,9 @@ class TestFitImaging:
                 sub_size=1,
             )
 
-            masked_imaging_7x7 = ag.MaskedImaging(imaging=imaging, mask=mask)
+            masked_imaging_7x7 = ag.MaskedImaging(
+                imaging=imaging, mask=mask, grid_class=ag.Grid
+            )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
 
@@ -1417,6 +1423,7 @@ class TestFitInterferometer:
             masked_interferometer = ag.MaskedInterferometer(
                 interferometer=interferometer,
                 visibilities_mask=visibilities_mask,
+                grid_class=ag.Grid,
                 real_space_mask=real_space_mask,
                 transformer_class=ag.TransformerDFT,
             )
@@ -1477,6 +1484,7 @@ class TestFitInterferometer:
 
             masked_interferometer = ag.MaskedInterferometer(
                 interferometer=interferometer,
+                grid_class=ag.Grid,
                 visibilities_mask=visibilities_mask,
                 real_space_mask=real_space_mask,
             )

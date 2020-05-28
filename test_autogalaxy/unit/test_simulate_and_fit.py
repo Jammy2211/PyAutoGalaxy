@@ -8,7 +8,7 @@ import pytest
 
 def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__noise_normalization_correct():
 
-    grid = ag.Grid.uniform(shape_2d=(11, 11), pixel_scales=0.2, sub_size=2)
+    grid = ag.GridIterator.uniform(shape_2d=(11, 11), pixel_scales=0.2)
 
     psf = ag.Kernel.manual_2d(
         array=np.array([[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]]),
@@ -68,7 +68,9 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
         shape_2d=imaging.image.shape_2d, pixel_scales=0.2, sub_size=2, radius=0.8
     )
 
-    masked_imaging = ag.MaskedImaging(imaging=imaging, mask=mask)
+    masked_imaging = ag.MaskedImaging(
+        imaging=imaging, mask=mask, grid_class=ag.GridIterator
+    )
 
     plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
 
@@ -142,7 +144,7 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
         shape_2d=simulator.image.shape_2d, pixel_scales=0.2, sub_size=1, radius=0.8
     )
 
-    masked_imaging = ag.MaskedImaging(imaging=simulator, mask=mask)
+    masked_imaging = ag.MaskedImaging(imaging=simulator, mask=mask, grid_class=ag.Grid)
 
     plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
 
@@ -218,6 +220,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
         interferometer=interferometer,
         visibilities_mask=visibilities_mask,
         real_space_mask=real_space_mask,
+        grid_class=ag.Grid,
         transformer_class=ag.TransformerDFT,
     )
 

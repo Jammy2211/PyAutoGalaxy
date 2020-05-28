@@ -1,4 +1,5 @@
 import numpy as np
+from autoarray.structures import grids
 from autoarray.dataset import interferometer
 from autoarray.operators import transformer
 from autogalaxy import exc
@@ -11,6 +12,10 @@ class MaskedInterferometer(interferometer.MaskedInterferometer):
         interferometer,
         visibilities_mask,
         real_space_mask,
+        grid_class=grids.GridIterator,
+        grid_inversion_class=grids.Grid,
+        grid_fractional_accuracy=0.9999,
+        grid_sub_steps=[2, 4, 8, 16],
         transformer_class=transformer.TransformerNUFFT,
         primary_beam_shape_2d=None,
         inversion_pixel_limit=None,
@@ -50,6 +55,10 @@ class MaskedInterferometer(interferometer.MaskedInterferometer):
             interferometer=interferometer,
             visibilities_mask=visibilities_mask,
             real_space_mask=real_space_mask,
+            grid_class=grid_class,
+            grid_inversion_class=grid_inversion_class,
+            grid_fractional_accuracy=grid_fractional_accuracy,
+            grid_sub_steps=grid_sub_steps,
             transformer_class=transformer_class,
             primary_beam_shape_2d=primary_beam_shape_2d,
             inversion_pixel_limit=inversion_pixel_limit,
