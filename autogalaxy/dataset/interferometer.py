@@ -43,7 +43,7 @@ class MaskedInterferometer(interferometer.MaskedInterferometer):
         positions : [[]]
             Lists of image-pixel coordinates (arc-seconds) that mappers close to one another in the source-plane(s), \
             used to speed up the non-linear sampling.
-        pixel_scale_interpolation_grid : float
+        interpolation_pixel_scale : float
             If *True*, expensive to compute mass profile deflection angles will be computed on a sparse grid and \
             interpolated to the grid, sub and blurring grids.
         inversion_pixel_limit : int or None

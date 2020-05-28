@@ -34,7 +34,7 @@ class TestModel:
             phase_name="test_phase",
         )
 
-        print(hasattr(af.last.result.instance.galaxies.galaxy, "mas2s"))
+        print(hasattr(af.last.result.instance.galaxies.light, "mas2s"))
 
     def test__customize(self, imaging_7x7, mask_7x7):
         class MyPlanePhaseAnd(ag.PhaseImaging):
@@ -238,7 +238,7 @@ class TestSetup:
 
         class CustomPhase(ag.PhaseImaging):
             def customize_priors(self, results):
-                self.galaxies.galaxy.light = ag.lp.EllipticalLightProfile()
+                self.galaxies.light.light = ag.lp.EllipticalLightProfile()
 
         phase_dataset_7x7 = CustomPhase(
             phase_name="phase_name",

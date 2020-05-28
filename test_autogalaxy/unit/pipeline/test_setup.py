@@ -24,13 +24,6 @@ class TestPipelineGeneralSettings:
         general = ag.setup.General(hyper_background_noise=True)
         assert general.hyper_background_noise_tag == "_bg_noise"
 
-    def test__hyper_fixed_after_source(self):
-        general = ag.setup.General(hyper_fixed_after_source=False)
-        assert general.hyper_fixed_after_source_tag == ""
-
-        general = ag.setup.General(hyper_fixed_after_source=True)
-        assert general.hyper_fixed_after_source_tag == "_fixed"
-
     def test__tag(self):
 
         general = ag.setup.General(
@@ -38,152 +31,40 @@ class TestPipelineGeneralSettings:
         )
 
         assert general.tag == "general__hyper_galaxies_bg_sky_bg_noise"
-        assert general.source_tag == "general__hyper_galaxies_bg_sky_bg_noise"
 
         general = ag.setup.General(hyper_galaxies=True, hyper_background_noise=True)
 
         assert general.tag == "general__hyper_galaxies_bg_noise"
-        assert general.source_tag == "general__hyper_galaxies_bg_noise"
-
-        general = ag.setup.General(
-            hyper_fixed_after_source=True,
-            hyper_galaxies=True,
-            hyper_background_noise=True,
-        )
-
-        assert general.tag == "general__hyper_galaxies_bg_noise_fixed"
-        assert general.source_tag == "general__hyper_galaxies_bg_noise"
 
 
-class TestPipelineSourceSettings:
+class TestPipelineGalaxySettings:
     def test__pixelization_tag(self):
-        source = ag.setup.Source(pixelization=None)
-        assert source.pixelization_tag == ""
-        source = ag.setup.Source(pixelization=ag.pix.Rectangular)
-        assert source.pixelization_tag == "pix_rect"
-        source = ag.setup.Source(pixelization=ag.pix.VoronoiBrightnessImage)
-        assert source.pixelization_tag == "pix_voro_image"
+        galaxy = ag.setup.Light(pixelization=None)
+        assert galaxy.pixelization_tag == ""
+        galaxy = ag.setup.Light(pixelization=ag.pix.Rectangular)
+        assert galaxy.pixelization_tag == "pix_rect"
+        galaxy = ag.setup.Light(pixelization=ag.pix.VoronoiBrightnessImage)
+        assert galaxy.pixelization_tag == "pix_voro_image"
 
     def test__regularization_tag(self):
-        source = ag.setup.Source(regularization=None)
-        assert source.regularization_tag == ""
-        source = ag.setup.Source(regularization=ag.reg.Constant)
-        assert source.regularization_tag == "__reg_const"
-        source = ag.setup.Source(regularization=ag.reg.AdaptiveBrightness)
-        assert source.regularization_tag == "__reg_adapt_bright"
+        galaxy = ag.setup.Light(regularization=None)
+        assert galaxy.regularization_tag == ""
+        galaxy = ag.setup.Light(regularization=ag.reg.Constant)
+        assert galaxy.regularization_tag == "__reg_const"
+        galaxy = ag.setup.Light(regularization=ag.reg.AdaptiveBrightness)
+        assert galaxy.regularization_tag == "__reg_adapt_bright"
 
-    def test__lens_light_centre_tag(self):
+    def test__light_centre_tag(self):
 
-        source = ag.setup.Source(lens_light_centre=None)
-        assert source.lens_light_centre_tag == ""
-        source = ag.setup.Source(lens_light_centre=(2.0, 2.0))
-        assert source.lens_light_centre_tag == "__lens_light_centre_(2.00,2.00)"
-        source = ag.setup.Source(lens_light_centre=(3.0, 4.0))
-        assert source.lens_light_centre_tag == "__lens_light_centre_(3.00,4.00)"
-        source = ag.setup.Source(lens_light_centre=(3.027, 4.033))
-        assert source.lens_light_centre_tag == "__lens_light_centre_(3.03,4.03)"
+        galaxy = ag.setup.Light(light_centre=None)
+        assert galaxy.light_centre_tag == ""
+        galaxy = ag.setup.Light(light_centre=(2.0, 2.0))
+        assert galaxy.light_centre_tag == "__light_centre_(2.00,2.00)"
+        galaxy = ag.setup.Light(light_centre=(3.0, 4.0))
+        assert galaxy.light_centre_tag == "__light_centre_(3.00,4.00)"
+        galaxy = ag.setup.Light(light_centre=(3.027, 4.033))
+        assert galaxy.light_centre_tag == "__light_centre_(3.03,4.03)"
 
-    def test__lens_mass_centre_tag(self):
-
-        source = ag.setup.Source(lens_mass_centre=None)
-        assert source.lens_mass_centre_tag == ""
-        source = ag.setup.Source(lens_mass_centre=(2.0, 2.0))
-        assert source.lens_mass_centre_tag == "__lens_mass_centre_(2.00,2.00)"
-        source = ag.setup.Source(lens_mass_centre=(3.0, 4.0))
-        assert source.lens_mass_centre_tag == "__lens_mass_centre_(3.00,4.00)"
-        source = ag.setup.Source(lens_mass_centre=(3.027, 4.033))
-        assert source.lens_mass_centre_tag == "__lens_mass_centre_(3.03,4.03)"
-
-    def test__align_light_mass_centre_tag__is_empty_sting_if_both_galaxy_light_and_mass_centres_input(
-        self
-    ):
-        source = ag.setup.Source(align_light_mass_centre=False)
-        assert source.align_light_mass_centre_tag == ""
-        source = ag.setup.Source(align_light_mass_centre=True)
-        assert source.align_light_mass_centre_tag == "__align_light_mass_centre"
-        source = ag.setup.Source(
-            lens_light_centre=(0.0, 0.0),
-            lens_mass_centre=(1.0, 1.0),
-            align_light_mass_centre=True,
-        )
-        assert source.align_light_mass_centre_tag == ""
-
-    def test__lens_light_bulge_only_tag(self):
-        source = ag.setup.Source(lens_light_bulge_only=False)
-        assert source.lens_light_bulge_only_tag == ""
-        source = ag.setup.Source(lens_light_bulge_only=True)
-        assert source.lens_light_bulge_only_tag == "__bulge_only"
-
-    def test__no_shear_tag(self):
-        source = ag.setup.Source(no_shear=False)
-        assert source.no_shear_tag == "__with_shear"
-
-        source = ag.setup.Source(no_shear=True)
-        assert source.no_shear_tag == "__no_shear"
-
-    def test__fix_lens_light_tag(self):
-        source = ag.setup.Source(fix_lens_light=False)
-        assert source.fix_lens_light_tag == ""
-        source = ag.setup.Source(fix_lens_light=True)
-        assert source.fix_lens_light_tag == "__fix_lens_light"
-
-    def test__number_of_gaussians_tag(self):
-        source = ag.setup.Source()
-        assert source.number_of_gaussians_tag == ""
-        source = ag.setup.Source(number_of_gaussians=1)
-        assert source.number_of_gaussians_tag == "__gaussians_x1"
-        source = ag.setup.Source(number_of_gaussians=2)
-        assert source.number_of_gaussians_tag == "__gaussians_x2"
-
-    def test__tag(self):
-
-        source = ag.setup.Source(
-            pixelization=ag.pix.Rectangular,
-            regularization=ag.reg.Constant,
-            lens_light_centre=(1.0, 2.0),
-            lens_mass_centre=(3.0, 4.0),
-            align_light_mass_centre=False,
-            no_shear=True,
-            fix_lens_light=True,
-        )
-
-        source.type_tag = source.inversion_tag
-
-        assert (
-            source.tag
-            == "source__pix_rect__reg_const__no_shear__lens_light_centre_(1.00,2.00)__lens_mass_centre_(3.00,4.00)__fix_lens_light"
-        )
-
-        assert source.tag_beginner == "source__pix_rect__reg_const"
-
-        source = ag.setup.Source(
-            pixelization=ag.pix.Rectangular,
-            regularization=ag.reg.Constant,
-            align_light_mass_centre=True,
-            number_of_gaussians=1,
-            fix_lens_light=True,
-            lens_light_bulge_only=True,
-        )
-
-        source.type_tag = "test"
-
-        assert (
-            source.tag
-            == "source__test__gaussians_x1__with_shear__align_light_mass_centre__bulge_only__fix_lens_light"
-        )
-
-    def test__tag_beginner(self):
-
-        source = ag.setup.Source(
-            pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
-        )
-
-        assert source.tag_beginner_no_inversion == "source"
-
-        assert source.tag_beginner == "source__pix_rect__reg_const"
-
-
-class TestPipelineLightSettings:
     def test__align_bulge_disk_tags(self):
 
         light = ag.setup.Light(align_bulge_disk_centre=False)
@@ -237,12 +118,12 @@ class TestPipelineLightSettings:
         assert light.disk_as_sersic_tag == "__disk_sersic"
 
     def test__number_of_gaussians_tag(self):
-        source = ag.setup.Source()
-        assert source.number_of_gaussians_tag == ""
-        source = ag.setup.Source(number_of_gaussians=1)
-        assert source.number_of_gaussians_tag == "__gaussians_x1"
-        source = ag.setup.Source(number_of_gaussians=2)
-        assert source.number_of_gaussians_tag == "__gaussians_x2"
+        galaxy = ag.setup.Light()
+        assert galaxy.number_of_gaussians_tag == ""
+        galaxy = ag.setup.Light(number_of_gaussians=1)
+        assert galaxy.number_of_gaussians_tag == "__gaussians_x1"
+        galaxy = ag.setup.Light(number_of_gaussians=2)
+        assert galaxy.number_of_gaussians_tag == "__gaussians_x2"
 
     def test__tag(self):
 
@@ -272,87 +153,3 @@ class TestPipelineLightSettings:
         light.type_tag = "test"
 
         assert light.tag == "light__test__gaussians_x2"
-
-    def test__tag_beginner(self):
-
-        light = ag.setup.Light(align_bulge_disk_phi=True)
-
-        assert light.tag_beginner == "light__align_bulge_disk_phi__disk_exp"
-
-        light = ag.setup.Light(
-            align_bulge_disk_centre=True,
-            align_bulge_disk_axis_ratio=True,
-            disk_as_sersic=True,
-        )
-
-        assert (
-            light.tag_beginner
-            == "light__align_bulge_disk_centre_axis_ratio__disk_sersic"
-        )
-
-        light = ag.setup.Light(
-            align_bulge_disk_centre=True,
-            align_bulge_disk_axis_ratio=True,
-            disk_as_sersic=True,
-            number_of_gaussians=2,
-        )
-
-        assert light.tag_beginner == "light__gaussians_x2"
-
-
-class TestPipelineMassSettings:
-    def test__no_shear_tag(self):
-        mass = ag.setup.Mass(no_shear=False)
-        assert mass.no_shear_tag == "__with_shear"
-
-        mass = ag.setup.Mass(no_shear=True)
-        assert mass.no_shear_tag == "__no_shear"
-
-    def test__align_light_dark_tag(self):
-
-        mass = ag.setup.Mass(align_light_dark_centre=False)
-        assert mass.align_light_dark_centre_tag == ""
-        mass = ag.setup.Mass(align_light_dark_centre=True)
-        assert mass.align_light_dark_centre_tag == "__align_light_dark_centre"
-
-    def test__align_bulge_dark_tag(self):
-        mass = ag.setup.Mass(align_bulge_dark_centre=False)
-        assert mass.align_bulge_dark_centre_tag == ""
-        mass = ag.setup.Mass(align_bulge_dark_centre=True)
-        assert mass.align_bulge_dark_centre_tag == "__align_bulge_dark_centre"
-
-    def test__fix_lens_light_tag(self):
-        mass = ag.setup.Mass(fix_lens_light=False)
-        assert mass.fix_lens_light_tag == ""
-        mass = ag.setup.Mass(fix_lens_light=True)
-        assert mass.fix_lens_light_tag == "__fix_lens_light"
-
-    def test__tag(self):
-
-        mass = ag.setup.Mass(
-            no_shear=True, align_light_dark_centre=True, fix_lens_light=True
-        )
-        mass.type_tag = ""
-
-        assert mass.tag == "mass____no_shear__align_light_dark_centre__fix_lens_light"
-
-        mass = ag.setup.Mass(align_bulge_dark_centre=True)
-
-        mass.type_tag = "test"
-
-        assert mass.tag == "mass__test__with_shear__align_bulge_dark_centre"
-
-    def test__tag_beginner(self):
-
-        mass = ag.setup.Mass(
-            no_shear=True, align_light_dark_centre=True, fix_lens_light=True
-        )
-
-        assert (
-            mass.tag_beginner
-            == "mass__no_shear__align_light_dark_centre__fix_lens_light"
-        )
-
-        mass = ag.setup.Mass(align_bulge_dark_centre=True)
-
-        assert mass.tag_beginner == "mass__with_shear__align_bulge_dark_centre"

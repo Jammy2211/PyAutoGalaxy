@@ -35,7 +35,7 @@ def make_pipeline(name, phase_folders, non_linear_class=af.MultiNest):
     class GridPhase(af.as_grid_search(phase_class=ag.PhaseImaging, parallel=False)):
         @property
         def grid_priors(self):
-            return [self.model.galaxies.galaxy.bulge.effective_radius]
+            return [self.model.galaxies.light.bulge.effective_radius]
 
     phase2 = GridPhase(
         phase_name="phase_2",
@@ -52,7 +52,7 @@ def make_pipeline(name, phase_folders, non_linear_class=af.MultiNest):
     phase3 = ag.PhaseImaging(
         phase_name="phase_3",
         phase_folders=phase_folders,
-        galaxies=dict(galaxy=phase2.result.model.galaxies.galaxy),
+        galaxies=dict(galaxy=phase2.result.model.galaxies.light),
         non_linear_class=non_linear_class,
     )
 

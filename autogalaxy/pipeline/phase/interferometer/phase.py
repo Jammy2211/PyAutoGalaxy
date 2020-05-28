@@ -1,7 +1,7 @@
 import autofit as af
 from astropy import cosmology as cosmo
 from autoarray.operators import transformer
-from autogalaxy.pipeline import tagging
+from autogalaxy.pipeline.phase import settings
 from autogalaxy.pipeline.phase import dataset
 from autogalaxy.pipeline.phase.interferometer.analysis import Analysis
 from autogalaxy.pipeline.phase.interferometer.meta_interferometer import (
@@ -46,7 +46,7 @@ class PhaseInterferometer(dataset.PhaseDataset):
             The side length of the subgrid
         """
 
-        paths.tag = tagging.phase_tag_from_phase_settings(
+        paths.tag = tagging.phase_tag_from_phase_setup(
             sub_size=sub_size,
             real_space_shape_2d=real_space_mask.shape_2d,
             real_space_pixel_scales=real_space_mask.pixel_scales,

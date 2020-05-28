@@ -1,6 +1,7 @@
 import autofit as af
 from astropy import cosmology as cosmo
-from autogalaxy.pipeline import tagging
+from autogalaxy.pipeline.phase import settings
+from autogalaxy.pipeline import setup
 from autogalaxy.pipeline.phase import dataset
 from autogalaxy.pipeline.phase.imaging.analysis import Analysis
 from autogalaxy.pipeline.phase.imaging.meta_imaging import MetaImaging
@@ -25,11 +26,7 @@ class PhaseImaging(dataset.PhaseDataset):
         hyper_background_noise=None,
         non_linear_class=af.MultiNest,
         cosmology=cosmo.Planck15,
-        sub_size=2,
-        signal_to_noise_limit=None,
-        bin_up_factor=None,
-        psf_shape_2d=None,
-        inversion_pixel_limit=None,
+        phase_setup=None,
     ):
 
         """
@@ -45,7 +42,10 @@ class PhaseImaging(dataset.PhaseDataset):
             The side length of the subgrid
         """
 
-        phase_tag = tagging.phase_tag_from_phase_settings(
+        if phase_setup is None:
+            phase_setup = setup.PhaseSettingsImaging()
+
+        phase_tag = tagging.phase_tag_from_phase_setup(
             sub_size=sub_size,
             signal_to_noise_limit=signal_to_noise_limit,
             bin_up_factor=bin_up_factor,

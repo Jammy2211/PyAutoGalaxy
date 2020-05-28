@@ -7,7 +7,7 @@ class MaskedGalaxyDataset:
         self,
         galaxy_data,
         mask,
-        pixel_scale_interpolation_grid=None,
+        interpolation_pixel_scale=None,
         use_image=False,
         use_convergence=False,
         use_potential=False,
@@ -60,12 +60,12 @@ class MaskedGalaxyDataset:
 
         self.grid = grids.Grid.from_mask(mask=mask)
 
-        self.pixel_scale_interpolation_grid = pixel_scale_interpolation_grid
+        self.interpolation_pixel_scale = interpolation_pixel_scale
 
-        if pixel_scale_interpolation_grid is not None:
+        if interpolation_pixel_scale is not None:
 
             self.grid = self.grid.new_grid_with_interpolator(
-                pixel_scale_interpolation_grid=pixel_scale_interpolation_grid
+                interpolation_pixel_scale=interpolation_pixel_scale
             )
 
         if all(

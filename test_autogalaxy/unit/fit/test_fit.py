@@ -790,6 +790,9 @@ class TestFitImaging:
     class TestCompareToManualInversionOnly:
         def test___all_quantities__no_hyper_methods(self, masked_imaging_7x7):
 
+            # Ensures the inversion grid is used, as this would cause the test to fail.
+            masked_imaging_7x7.grid[0, 0] = -100.0
+
             pix = ag.pix.Rectangular(shape=(3, 3))
             reg = ag.reg.Constant(coefficient=1.0)
 
@@ -800,7 +803,7 @@ class TestFitImaging:
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
             mapper = pix.mapper_from_grid_and_sparse_grid(
-                grid=masked_imaging_7x7.grid, sparse_grid=None
+                grid=masked_imaging_7x7.grid_inversion, sparse_grid=None
             )
             inversion = inversions.InversionImaging.from_data_mapper_and_regularization(
                 mapper=mapper,
@@ -1679,6 +1682,9 @@ class TestFitInterferometer:
     class TestCompareToManualInversionOnly:
         def test___all_fit_quantities__no_hyper_methods(self, masked_interferometer_7):
 
+            # Ensures the inversion grid is used, as this would cause the test to fail.
+            masked_interferometer_7.grid[0, 0] = -100.0
+
             pix = ag.pix.Rectangular(shape=(3, 3))
             reg = ag.reg.Constant(coefficient=0.01)
 
@@ -1691,7 +1697,7 @@ class TestFitInterferometer:
             )
 
             mapper = pix.mapper_from_grid_and_sparse_grid(
-                grid=masked_interferometer_7.grid, sparse_grid=None
+                grid=masked_interferometer_7.grid_inversion, sparse_grid=None
             )
 
             inversion = inversions.InversionInterferometer.from_data_mapper_and_regularization(

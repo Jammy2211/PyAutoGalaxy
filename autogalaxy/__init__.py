@@ -46,7 +46,8 @@ from autogalaxy.plane.plane import Plane
 from autogalaxy.fit.fit import FitImaging, FitInterferometer
 from autogalaxy.hyper import hyper_data
 from autogalaxy import plot
-from autogalaxy.pipeline import tagging
+from autogalaxy.pipeline.phase.settings import PhaseSettingsImaging
+from autogalaxy.pipeline.phase.settings import PhaseSettingsInterferometer
 from autogalaxy.pipeline.phase.abstract import phase
 from autogalaxy.pipeline.phase.abstract.phase import AbstractPhase
 from autogalaxy.pipeline.phase.extensions import CombinedHyperPhase

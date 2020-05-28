@@ -32,7 +32,7 @@ def make_pipeline(name, phase_folders, non_linear_class=af.MultiNest):
     phase2 = ag.PhaseImaging(
         phase_name="phase_2",
         phase_folders=phase_folders,
-        galaxies=dict(galaxy=phase1.result.model.galaxies.galaxy),
+        galaxies=dict(galaxy=phase1.result.model.galaxies.light),
         non_linear_class=non_linear_class,
     )
 

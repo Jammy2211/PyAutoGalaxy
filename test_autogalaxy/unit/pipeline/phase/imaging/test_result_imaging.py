@@ -33,7 +33,7 @@ class TestImagePassing:
         assert isinstance(image_dict[("galaxies", "galaxy")], np.ndarray)
         assert isinstance(image_dict[("galaxies", "source")], np.ndarray)
 
-        result.instance.galaxies.galaxy = ag.Galaxy(redshift=0.5)
+        result.instance.galaxies.light = ag.Galaxy(redshift=0.5)
 
         image_dict = result.image_galaxy_dict
         assert (image_dict[("galaxies", "galaxy")].in_2d == np.zeros((7, 7))).all()

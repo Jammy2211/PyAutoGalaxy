@@ -45,7 +45,7 @@ class TestMaskedImaging:
 
         blurring_grid = grid.blurring_grid_from_kernel_shape(kernel_shape_2d=(3, 3))
         new_blurring_grid = blurring_grid.new_grid_with_interpolator(
-            pixel_scale_interpolation_grid=1.0
+            interpolation_pixel_scale=1.0
         )
 
         assert (masked_imaging_7x7.blurring_grid.in_1d == blurring_grid_7x7).all()

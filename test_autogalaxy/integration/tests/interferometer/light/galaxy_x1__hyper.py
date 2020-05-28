@@ -34,8 +34,8 @@ def make_pipeline(name, phase_folders, real_space_mask, non_linear_class=af.Mult
         galaxies=dict(
             galaxy=ag.GalaxyModel(
                 redshift=0.5,
-                bulge=phase1.result.model.galaxies.galaxy.bulge,
-                hyper_galaxy=phase1.result.hyper_combined.instance.galaxies.galaxy.hyper_galaxy,
+                bulge=phase1.result.model.galaxies.light.bulge,
+                hyper_galaxy=phase1.result.hyper_combined.instance.galaxies.light.hyper_galaxy,
             )
         ),
         hyper_background_noise=phase1.result.hyper_combined.instance.hyper_background_noise,

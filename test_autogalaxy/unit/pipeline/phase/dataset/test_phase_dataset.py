@@ -251,7 +251,7 @@ class TestPhasePickle:
 
         class CustomPhase(ag.PhaseImaging):
             def customize_priors(self, results):
-                self.galaxies.galaxy.light = ag.lp.EllipticalLightProfile()
+                self.galaxies.light.light = ag.lp.EllipticalLightProfile()
 
         phase_imaging_7x7 = CustomPhase(
             phase_name="phase_name",
