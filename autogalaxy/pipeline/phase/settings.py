@@ -1,3 +1,4 @@
+from autoconf import conf
 from autoarray.structures import grids
 from autoarray.operators import transformer
 
@@ -27,7 +28,9 @@ class AbstractPhaseSettings:
         self.interpolation_pixel_scale = interpolation_pixel_scale
         self.signal_to_noise_limit = signal_to_noise_limit
         self.bin_up_factor = bin_up_factor
-        self.inversion_pixel_limit = inversion_pixel_limit
+        self.inversion_pixel_limit = inversion_pixel_limit or conf.instance.general.get(
+            "inversion", "inversion_pixel_limit_overall", int
+        )
 
     @property
     def sub_size_tag(self):
@@ -95,7 +98,6 @@ class PhaseSettingsImaging(AbstractPhaseSettings):
         sub_size=2,
         fractional_accuracy=0.9999,
         sub_steps=None,
-        interpolation_pixel_scale=None,
         signal_to_noise_limit=None,
         bin_up_factor=None,
         inversion_pixel_limit=None,
@@ -108,7 +110,6 @@ class PhaseSettingsImaging(AbstractPhaseSettings):
             sub_size=sub_size,
             fractional_accuracy=fractional_accuracy,
             sub_steps=sub_steps,
-            interpolation_pixel_scale=interpolation_pixel_scale,
             signal_to_noise_limit=signal_to_noise_limit,
             bin_up_factor=bin_up_factor,
             inversion_pixel_limit=inversion_pixel_limit,
@@ -152,7 +153,6 @@ class PhaseSettingsInterferometer(AbstractPhaseSettings):
         sub_size=2,
         fractional_accuracy=0.9999,
         sub_steps=None,
-        interpolation_pixel_scale=None,
         signal_to_noise_limit=None,
         bin_up_factor=None,
         inversion_pixel_limit=None,
@@ -168,7 +168,6 @@ class PhaseSettingsInterferometer(AbstractPhaseSettings):
             sub_size=sub_size,
             fractional_accuracy=fractional_accuracy,
             sub_steps=sub_steps,
-            interpolation_pixel_scale=interpolation_pixel_scale,
             signal_to_noise_limit=signal_to_noise_limit,
             bin_up_factor=bin_up_factor,
             inversion_pixel_limit=inversion_pixel_limit,
@@ -180,7 +179,7 @@ class PhaseSettingsInterferometer(AbstractPhaseSettings):
         self.primary_beam_shape_2d = primary_beam_shape_2d
 
     @property
-    def phase_tag(self,):
+    def phase_tag(self):
 
         return (
             "phase_tag"

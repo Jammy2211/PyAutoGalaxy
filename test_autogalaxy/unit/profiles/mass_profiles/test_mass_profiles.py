@@ -378,7 +378,7 @@ class TestDecorators:
             grid=grid_sub_2
         ).in_1d_binned
 
-        assert (deflections == deflections_sub_2).all()
+        assert deflections == pytest.approx(deflections_sub_2, 1.0e-6)
 
         grid = ag.GridIterator.from_mask(
             mask=mask, fractional_accuracy=0.99, sub_steps=[2, 4, 8]

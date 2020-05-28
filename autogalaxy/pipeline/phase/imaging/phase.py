@@ -1,7 +1,7 @@
 import autofit as af
 from astropy import cosmology as cosmo
-from autogalaxy.pipeline.phase import settings
 from autogalaxy.pipeline import setup
+from autogalaxy.pipeline.phase.settings import PhaseSettingsImaging
 from autogalaxy.pipeline.phase import dataset
 from autogalaxy.pipeline.phase.imaging.analysis import Analysis
 from autogalaxy.pipeline.phase.imaging.meta_imaging import MetaImaging
@@ -24,9 +24,9 @@ class PhaseImaging(dataset.PhaseDataset):
         galaxies=None,
         hyper_image_sky=None,
         hyper_background_noise=None,
+        settings=PhaseSettingsImaging(),
         non_linear_class=af.MultiNest,
         cosmology=cosmo.Planck15,
-        phase_setup=None,
     ):
 
         """
@@ -42,16 +42,7 @@ class PhaseImaging(dataset.PhaseDataset):
             The side length of the subgrid
         """
 
-        if phase_setup is None:
-            phase_setup = setup.PhaseSettingsImaging()
-
-        phase_tag = tagging.phase_tag_from_phase_setup(
-            sub_size=sub_size,
-            signal_to_noise_limit=signal_to_noise_limit,
-            bin_up_factor=bin_up_factor,
-            psf_shape_2d=psf_shape_2d,
-        )
-        paths.tag = phase_tag
+        paths.tag = settings.phase_tag
 
         super().__init__(
             paths,
@@ -66,12 +57,7 @@ class PhaseImaging(dataset.PhaseDataset):
         self.is_hyper_phase = False
 
         self.meta_dataset = MetaImaging(
-            model=self.model,
-            bin_up_factor=bin_up_factor,
-            psf_shape_2d=psf_shape_2d,
-            sub_size=sub_size,
-            signal_to_noise_limit=signal_to_noise_limit,
-            inversion_pixel_limit=inversion_pixel_limit,
+            settings=settings, model=self.model, is_hyper_phase=self.is_hyper_phase
         )
 
     def make_phase_attributes(self, analysis):
@@ -123,8 +109,12 @@ class PhaseImaging(dataset.PhaseDataset):
 
         with open(file_phase_info, "w") as phase_info:
             phase_info.write("Optimizer = {} \n".format(type(self.optimizer).__name__))
-            phase_info.write("Sub-grid size = {} \n".format(self.meta_dataset.sub_size))
-            phase_info.write("PSF shape = {} \n".format(self.meta_dataset.psf_shape_2d))
+            phase_info.write(
+                "Sub-grid size = {} \n".format(self.meta_dataset.settings.sub_size)
+            )
+            phase_info.write(
+                "PSF shape = {} \n".format(self.meta_dataset.settings.psf_shape_2d)
+            )
             phase_info.write("Cosmology = {} \n".format(self.cosmology))
 
             phase_info.close()

@@ -22,7 +22,8 @@ class TestVariants:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="phase_imaging_7x7", signal_to_noise_limit=1.0
+            phase_name="phase_imaging_7x7",
+            settings=ag.PhaseSettingsImaging(signal_to_noise_limit=1.0),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -44,7 +45,8 @@ class TestVariants:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="phase_imaging_7x7", signal_to_noise_limit=0.1
+            phase_name="phase_imaging_7x7",
+            settings=ag.PhaseSettingsImaging(signal_to_noise_limit=0.1),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -69,7 +71,8 @@ class TestVariants:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="phase_imaging_7x7", bin_up_factor=2
+            phase_name="phase_imaging_7x7",
+            settings=ag.PhaseSettingsImaging(bin_up_factor=2),
         )
 
         analysis = phase_imaging_7x7.make_analysis(

@@ -44,7 +44,7 @@ class TestFit:
         phase_imaging_7x7 = ag.PhaseImaging(
             galaxies=[galaxy_galaxy],
             cosmology=cosmo.FLRW,
-            sub_size=1,
+            settings=ag.PhaseSettingsImaging(sub_size=1),
             phase_name="test_phase",
         )
 
@@ -76,7 +76,7 @@ class TestFit:
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
             cosmology=cosmo.FLRW,
-            sub_size=4,
+            settings=ag.PhaseSettingsImaging(sub_size=4),
             phase_name="test_phase",
         )
 

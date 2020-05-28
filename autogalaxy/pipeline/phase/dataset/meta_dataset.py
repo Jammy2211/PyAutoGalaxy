@@ -19,29 +19,18 @@ def isinstance_or_prior(obj, cls):
 
 
 class MetaDataset:
-    def __init__(
-        self,
-        model,
-        sub_size=2,
-        signal_to_noise_limit=None,
-        inversion_pixel_limit=None,
-        is_hyper_phase=False,
-    ):
+    def __init__(self, settings, model, is_hyper_phase=False):
+        self.settings = settings
         self.is_hyper_phase = is_hyper_phase
         self.model = model
-        self.sub_size = sub_size
-        self.signal_to_noise_limit = signal_to_noise_limit
-        self.inversion_pixel_limit = inversion_pixel_limit or conf.instance.general.get(
-            "inversion", "inversion_pixel_limit_overall", int
-        )
 
     def mask_with_phase_sub_size_from_mask(self, mask):
 
-        if mask.sub_size != self.sub_size:
+        if mask.sub_size != self.settings.sub_size:
             mask = aa.Mask.manual(
                 mask_2d=mask,
                 pixel_scales=mask.pixel_scales,
-                sub_size=self.sub_size,
+                sub_size=self.settings.sub_size,
                 origin=mask.origin,
             )
 

@@ -237,7 +237,7 @@ class TestHyperGalaxyPhase:
             galaxies=dict(galaxy=galaxy_galaxy),
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
-            sub_size=2,
+            settings=ag.PhaseSettingsImaging(sub_size=2),
             cosmology=cosmo.FLRW,
             phase_name="test_phase",
         )

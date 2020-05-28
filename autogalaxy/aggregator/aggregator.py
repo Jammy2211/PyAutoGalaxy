@@ -83,8 +83,8 @@ def masked_imaging_from_agg_obj(agg_obj):
     return ag.MaskedImaging(
         imaging=agg_obj.dataset,
         mask=agg_obj.mask,
-        psf_shape_2d=agg_obj.meta_dataset.psf_shape_2d,
-        inversion_pixel_limit=agg_obj.meta_dataset.inversion_pixel_limit,
+        psf_shape_2d=agg_obj.meta_dataset.settings.psf_shape_2d,
+        inversion_pixel_limit=agg_obj.meta_dataset.settings.inversion_pixel_limit,
     )
 
 
@@ -155,9 +155,9 @@ def masked_interferometer_from_agg_obj(agg_obj):
         interferometer=agg_obj.dataset,
         visibilities_mask=agg_obj.mask,
         real_space_mask=agg_obj.meta_dataset.real_space_mask,
-        transformer_class=agg_obj.meta_dataset.transformer_class,
-        primary_beam_shape_2d=agg_obj.meta_dataset.primary_beam_shape_2d,
-        inversion_pixel_limit=agg_obj.meta_dataset.inversion_pixel_limit,
+        transformer_class=agg_obj.meta_dataset.settings.transformer_class,
+        primary_beam_shape_2d=agg_obj.meta_dataset.settings.primary_beam_shape_2d,
+        inversion_pixel_limit=agg_obj.meta_dataset.settings.inversion_pixel_limit,
     )
 
 

@@ -1,7 +1,7 @@
 import autofit as af
 from astropy import cosmology as cosmo
 from autoarray.operators import transformer
-from autogalaxy.pipeline.phase import settings
+from autogalaxy.pipeline.phase.settings import PhaseSettingsInterferometer
 from autogalaxy.pipeline.phase import dataset
 from autogalaxy.pipeline.phase.interferometer.analysis import Analysis
 from autogalaxy.pipeline.phase.interferometer.meta_interferometer import (
@@ -23,14 +23,11 @@ class PhaseInterferometer(dataset.PhaseDataset):
         paths,
         *,
         real_space_mask,
-        transformer_class=transformer.TransformerNUFFT,
         galaxies=None,
         hyper_background_noise=None,
+        settings=PhaseSettingsInterferometer(),
         non_linear_class=af.MultiNest,
         cosmology=cosmo.Planck15,
-        sub_size=2,
-        primary_beam_shape_2d=None,
-        inversion_pixel_limit=None,
     ):
 
         """
@@ -46,12 +43,7 @@ class PhaseInterferometer(dataset.PhaseDataset):
             The side length of the subgrid
         """
 
-        paths.tag = tagging.phase_tag_from_phase_setup(
-            sub_size=sub_size,
-            real_space_shape_2d=real_space_mask.shape_2d,
-            real_space_pixel_scales=real_space_mask.pixel_scales,
-            primary_beam_shape_2d=primary_beam_shape_2d,
-        )
+        paths.tag = settings.phase_tag
 
         super().__init__(
             paths,
@@ -65,12 +57,10 @@ class PhaseInterferometer(dataset.PhaseDataset):
         self.is_hyper_phase = False
 
         self.meta_dataset = MetaInterferometer(
+            settings=settings,
             model=self.model,
-            sub_size=sub_size,
             real_space_mask=real_space_mask,
-            transformer_class=transformer_class,
-            primary_beam_shape_2d=primary_beam_shape_2d,
-            inversion_pixel_limit=inversion_pixel_limit,
+            is_hyper_phase=False,
         )
 
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
@@ -147,10 +137,12 @@ class PhaseInterferometer(dataset.PhaseDataset):
 
         with open(file_phase_info, "w") as phase_info:
             phase_info.write("Optimizer = {} \n".format(type(self.optimizer).__name__))
-            phase_info.write("Sub-grid size = {} \n".format(self.meta_dataset.sub_size))
+            phase_info.write(
+                "Sub-grid size = {} \n".format(self.meta_dataset.settings.sub_size)
+            )
             phase_info.write(
                 "Primary Beam shape = {} \n".format(
-                    self.meta_dataset.primary_beam_shape_2d
+                    self.meta_dataset.settings.primary_beam_shape_2d
                 )
             )
             phase_info.write("Cosmology = {} \n".format(self.cosmology))

@@ -40,7 +40,7 @@ class TestResult:
             galaxies=[
                 ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
             ],
-            sub_size=2,
+            settings=ag.PhaseSettingsImaging(sub_size=2),
             phase_name="test_phase_2",
         )
 
@@ -66,7 +66,7 @@ class TestResult:
                     regularization=ag.reg.Constant(),
                 ),
             ),
-            inversion_pixel_limit=6,
+            settings=ag.PhaseSettingsImaging(inversion_pixel_limit=6),
             phase_name="test_phase_2",
         )
 
@@ -89,7 +89,7 @@ class TestResult:
                     regularization=ag.reg.Constant(),
                 ),
             ),
-            inversion_pixel_limit=6,
+            settings=ag.PhaseSettingsImaging(inversion_pixel_limit=6),
             phase_name="test_phase_2",
         )
 

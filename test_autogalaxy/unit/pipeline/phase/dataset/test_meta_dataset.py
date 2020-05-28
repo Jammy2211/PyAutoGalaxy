@@ -132,19 +132,22 @@ class TestSetup:
 
     def test__inversion_pixel_limit_computed_via_config_or_input(self,):
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="phase_imaging_7x7", inversion_pixel_limit=None
+            phase_name="phase_imaging_7x7",
+            settings=ag.PhaseSettingsImaging(inversion_pixel_limit=None),
         )
 
-        assert phase_imaging_7x7.meta_dataset.inversion_pixel_limit == 3000
+        assert phase_imaging_7x7.meta_dataset.settings.inversion_pixel_limit == 3000
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="phase_imaging_7x7", inversion_pixel_limit=10
+            phase_name="phase_imaging_7x7",
+            settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
         )
 
-        assert phase_imaging_7x7.meta_dataset.inversion_pixel_limit == 10
+        assert phase_imaging_7x7.meta_dataset.settings.inversion_pixel_limit == 10
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="phase_imaging_7x7", inversion_pixel_limit=2000
+            phase_name="phase_imaging_7x7",
+            settings=ag.PhaseSettingsImaging(inversion_pixel_limit=2000),
         )
 
-        assert phase_imaging_7x7.meta_dataset.inversion_pixel_limit == 2000
+        assert phase_imaging_7x7.meta_dataset.settings.inversion_pixel_limit == 2000
