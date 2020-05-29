@@ -3,21 +3,75 @@ from autoarray.operators.inversion import pixelizations as pix
 from autoarray.operators.inversion import regularization as reg
 
 
-class Setup:
-    def __init__(self, general=None, light=None):
-
-        self.general = general
-        self.light = light
-
-    def set_light_type(self, light_type):
-
-        self.light.type_tag = light_type
-
-
-class General:
+class PipelineSetup:
     def __init__(
-        self, hyper_galaxies=False, hyper_image_sky=False, hyper_background_noise=False
+        self,
+        pixelization=None,
+        regularization=None,
+        light_centre=None,
+        align_bulge_disk_centre=False,
+        align_bulge_disk_phi=False,
+        align_bulge_disk_axis_ratio=False,
+        disk_as_sersic=False,
+        number_of_gaussians=None,
+        hyper_galaxies=False,
+        hyper_image_sky=False,
+        hyper_background_noise=False,
     ):
+        """The setup of a pipeline, which controls how PyAutoGalaxy template pipelines runs, for example controlling
+        assumptions about the bulge-disk model or the number of Gaussians used for multi-Gaussian fitting.
+
+        Users can write their own pipelines which do not use or require the *PipelineSetup* class.
+
+        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
+        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
+        different models to a dataset in a structured path format.
+
+        Parameters
+        ----------
+        pixelization : ag.pix.Pixelization
+           If the pipeline uses an *Inversion* to reconstruct the galaxy's light, this determines the
+           *Pixelization* used.
+        regularization : ag.reg.Regularization
+           If the pipeline uses an *Inversion* to reconstruct the galaxy's light, this determines the
+           *Regularization* scheme used.
+        light_centre : (float, float)
+           If input, a fixed (y,x) centre of the galaxy is used for the light profile model which is not treated as a
+            free parameter by the non-linear search.
+        align_bulge_disk_centre : bool
+            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
+            *True* will align the centre of the bulge and disk components and not fit them separately.
+        align_bulge_disk_phi : bool
+            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
+            *True* will align the rotation angles phi of the bulge and disk components and not fit them separately.
+        align_bulge_disk_axis_ratio : bool
+            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
+            *True* will align the axis-ratios of the bulge and disk components and not fit them separately.
+        disk_as_sersic : bool
+            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
+            *True* will use an EllipticalSersic for the disk instead of an EllipticalExponential.
+        number_of_gaussians : int
+            If a multi-Gaussian light model is used to fit the galaxy, this determines the number of Gaussians.
+        hyper_galaxies : bool
+            If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used to scale the
+            noise-map of the dataset throughout the fitting.
+        hyper_image_sky : bool
+            If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used include the
+            image's background sky component in the model.
+        hyper_background_noise : bool
+            If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used include the
+            noise-map's background component in the model.
+        """
+
+        self.pixelization = pixelization
+        self.regularization = regularization
+        self.light_centre = light_centre
+
+        self.align_bulge_disk_centre = align_bulge_disk_centre
+        self.align_bulge_disk_phi = align_bulge_disk_phi
+        self.align_bulge_disk_axis_ratio = align_bulge_disk_axis_ratio
+        self.disk_as_sersic = disk_as_sersic
+        self.number_of_gaussians = number_of_gaussians
 
         self.hyper_galaxies = hyper_galaxies
         self.hyper_image_sky = hyper_image_sky
@@ -25,110 +79,42 @@ class General:
 
     @property
     def tag(self):
-        return "general" + self.hyper_tag
-
-    @property
-    def hyper_tag(self):
-
-        if not any(
-            [self.hyper_galaxies, self.hyper_image_sky, self.hyper_background_noise]
-        ):
-            return ""
-
+        """Generate the overall tag of this pipeline, which customizes the 'setup' folder the results are output to.
+        """
         return (
-            "__hyper"
-            + self.hyper_galaxies_tag
-            + self.hyper_image_sky_tag
-            + self.hyper_background_noise_tag
+            "setup"
+            + self.hyper_tag
+            + self.inversion_tag
+            + self.light_centre_tag
+            + self.align_bulge_disk_tag
+            + self.disk_as_sersic_tag
+            + self.number_of_gaussians_tag
         )
 
     @property
-    def hyper_galaxies_tag(self):
-        """Generate a tag for if hyper-galaxies are used in a hyper_galaxies pipeline to customize phase names.
-
-        This changes the phase name 'pipeline_name__' as follows:
-
-        fix_lens_light = False -> pipeline_name__
-        fix_lens_light = True -> pipeline_name___hyper_galaxies
-        """
-        if not self.hyper_galaxies:
-            return ""
-        elif self.hyper_galaxies:
-            return "_galaxies"
-
-    @property
-    def hyper_image_sky_tag(self):
-        """Generate a tag for if the sky-background is hyper as a hyper_galaxies-parameter in a hyper_galaxies pipeline to
-        customize phase names.
-
-        This changes the phase name 'pipeline_name__' as follows:
-
-        fix_lens_light = False -> pipeline_name__
-        fix_lens_light = True -> pipeline_name___hyper_bg_sky
-        """
-        if not self.hyper_image_sky:
-            return ""
-        elif self.hyper_image_sky:
-            return "_bg_sky"
-
-    @property
-    def hyper_background_noise_tag(self):
-        """Generate a tag for if the background noise is hyper as a hyper_galaxies-parameter in a hyper_galaxies pipeline to
-        customize phase names.
-
-        This changes the phase name 'pipeline_name__' as follows:
-
-        fix_lens_light = False -> pipeline_name__
-        fix_lens_light = True -> pipeline_name___hyper_bg_noise
-        """
-        if not self.hyper_background_noise:
-            return ""
-        elif self.hyper_background_noise:
-            return "_bg_noise"
-
-
-class Light:
-    def __init__(
-        self,
-        pixelization=pix.VoronoiBrightnessImage,
-        regularization=reg.AdaptiveBrightness,
-        light_centre=None,
-        align_bulge_disk_centre=False,
-        align_bulge_disk_phi=False,
-        align_bulge_disk_axis_ratio=False,
-        disk_as_sersic=False,
-        number_of_gaussians=None,
-    ):
-
-        self.pixelization = pixelization
-        self.regularization = regularization
-        self.light_centre = light_centre
-        self.align_bulge_disk_centre = align_bulge_disk_centre
-        self.align_bulge_disk_phi = align_bulge_disk_phi
-        self.align_bulge_disk_axis_ratio = align_bulge_disk_axis_ratio
-        self.disk_as_sersic = disk_as_sersic
-        self.number_of_gaussians = number_of_gaussians
-        self.type_tag = None
-
-    @property
-    def tag(self):
-        if self.number_of_gaussians is None:
-            return (
-                "light__"
-                + self.type_tag
-                + self.align_bulge_disk_tag
-                + self.disk_as_sersic_tag
-            )
-        else:
-            return "light__" + self.type_tag + self.number_of_gaussians_tag
-
-    @property
     def inversion_tag(self):
-        return self.pixelization_tag + self.regularization_tag
+        """Generate a tag if an *Inversion* is used to  *Pixelization* used to reconstruct the galaxy's light, which 
+        is the sum of the pixelization and regularization tags.
+        """
+        if self.pixelization is None or self.regularization is None:
+            return ""
+
+        return "__" + self.pixelization_tag + self.regularization_tag
 
     @property
     def pixelization_tag(self):
+        """Tag the *Pixelization* scheme used by the pipeline, if an inversion is usse to reconstruct
+        the galaxy's light.
 
+        The pixelization tag is loaded from the config file 'autogalaxy_workspace/config/label.ini' in the [tag]
+        seciton.
+
+        For the default regulariation tags, this changes the setup folder as follows:
+
+        pixelization = None -> setup
+        pixelization = pix.Rectangular -> setup__pix_rect
+        pixelization = pix.VoronoiMagnification -> setup__pix_voro_mag
+        """
         if self.pixelization is None:
             return ""
         else:
@@ -138,7 +124,18 @@ class Light:
 
     @property
     def regularization_tag(self):
+        """Tag the *Regularization* scheme used by the pipeline, if an inversion is usse to reconstruct
+        the galaxy's light.
+        
+        The regularization tag is loaded from the config file 'autogalaxy_workspace/config/label.ini' in the [tag]
+        seciton.
 
+        For the default regulariation tags, this changes the setup folder as follows:
+
+        regularization = None -> setup
+        regularization = reg.Constant -> setup__reg_const
+        regularization = reg.AdaptiveBrightness -> setup__reg_adapt_bright
+        """
         if self.regularization is None:
             return ""
         else:
@@ -148,13 +145,14 @@ class Light:
 
     @property
     def light_centre_tag(self):
-        """Generate a tag for if the lens light of the pipeline and / or phase are fixed to a previous estimate, or varied \
-         during he analysis, to customize phase names.
+        """Tag if the lens light of the pipeline and / or phase are fixed to a previous estimate, or varied \
+         during he analysis, to customize pipeline output paths.
 
-        This changes the phase name 'pipeline_name__' as follows:
+        This changes the setup folder as follows:
 
-        fix_lens_light = False -> pipeline_name__
-        fix_lens_light = True -> pipeline_name___fix_lens_light
+        light_centre = None -> setup
+        light_centre = (1.0, 1.0) -> setup___light_centre_(1.0, 1.0)
+        light_centre = (3.0, -2.0) -> setup___light_centre_(3.0, -2.0)
         """
         if self.light_centre is None:
             return ""
@@ -165,11 +163,10 @@ class Light:
 
     @property
     def align_bulge_disk_centre_tag(self):
-        """Generate a tag for if the bulge and disk of a bulge-disk system are aligned or not, to customize phase names \
-        based on the bulge-disk model. This changee the phase name 'pipeline_name__' as follows:
-
-        bd_align_centres = False -> pipeline_name__
-        bd_align_centres = True -> pipeline_name___bd_align_centres
+        """Tag if the bulge and disk of a bulge-disk system are aligned or not, to customize pipeline 
+        output paths based on the bulge-disk model.
+        
+        This is used to generate an overall align-bulge disk tag in *align_bulge_disk_tag*.
         """
         if not self.align_bulge_disk_centre:
             return ""
@@ -178,11 +175,10 @@ class Light:
 
     @property
     def align_bulge_disk_axis_ratio_tag(self):
-        """Generate a tag for if the bulge and disk of a bulge-disk system are aligned or not, to customize phase names \
-        based on the bulge-disk model. This changes the phase name 'pipeline_name__' as follows:
-
-        bd_align_axis_ratio = False -> pipeline_name__
-        bd_align_axis_ratio = True -> pipeline_name___bd_align_axis_ratio
+        """Tag if the bulge and disk of a bulge-disk system are aligned or not, to customize pipeline 
+        output paths based on the bulge-disk model. 
+        
+        This is used to generate an overall align-bulge disk tag in *align_bulge_disk_tag*.
         """
         if not self.align_bulge_disk_axis_ratio:
             return ""
@@ -191,11 +187,10 @@ class Light:
 
     @property
     def align_bulge_disk_phi_tag(self):
-        """Generate a tag for if the bulge and disk of a bulge-disk system are aligned or not, to customize phase names \
-        based on the bulge-disk model. This changes the phase name 'pipeline_name__' as follows:
-
-        bd_align_phi = False -> pipeline_name__
-        bd_align_phi = True -> pipeline_name___bd_align_phi
+        """Tag if the bulge and disk of a bulge-disk system are aligned or not, to customize 
+        pipeline output paths based on the bulge-disk model. 
+        
+        This is used to generate an overall align-bulge disk tag in *align_bulge_disk_tag*.
         """
         if not self.align_bulge_disk_phi:
             return ""
@@ -204,9 +199,9 @@ class Light:
 
     @property
     def align_bulge_disk_tag(self):
-        """Generate a tag for the alignment of the geometry of the bulge and disk of a bulge-disk system, to customize \
-        phase names based on the bulge-disk model. This adds together the bulge_disk tags generated in the 3 functions
-        above
+        """Tag the alignment of the geometry of the bulge and disk of a bulge-disk system, to customize  pipeline output 
+        paths based on the bulge-disk model. This adds together the bulge_disk tags generated in the  3 functions 
+        *align_bulge_disk_centre_tag*, *align_bulge_disk_axis_ratio_tag* and *align_bulge_disk_phi_tag*.
         """
 
         if not any(
@@ -227,22 +222,81 @@ class Light:
 
     @property
     def disk_as_sersic_tag(self):
-        """Generate a tag for if the disk component of a bulge-disk light profile fit of the pipeline is modeled as a \
-        Sersic or the default profile of an Exponential.
+        """Tag if the disk component of a bulge-disk light profile fit of the pipeline is modeled as a EllipticalSersic
+        or an EllipticalExponential.
 
-        This changes the phase name 'pipeline_name__' as follows:
+        This changes the setup folder as follows:
 
-        disk_as_sersic = False -> pipeline_name__
-        disk_as_sersic = True -> pipeline_name___disk_as_sersic
+        disk_as_sersic = False -> setup
+        disk_as_sersic = True -> setup___disk_as_sersic
         """
         if not self.disk_as_sersic:
-            return "__disk_exp"
+            return ""
         elif self.disk_as_sersic:
             return "__disk_sersic"
 
     @property
     def number_of_gaussians_tag(self):
+        """Tag the number of Gaussians if modeling the galaxy using multiple Gaussians light profiles.
+
+        This changes the setup folder as follows:
+
+        number_of_gaussians = None -> setup
+        number_of_gaussians = 2 = True -> setup__gaussians_x2
+        number_of_gaussians = 4 = True -> setup__gaussians_x4
+        """
         if self.number_of_gaussians is None:
             return ""
         else:
             return "__gaussians_x" + str(self.number_of_gaussians)
+
+    @property
+    def hyper_tag(self):
+        """Tag ithe hyper pipeline features used in a hyper pipeline to customize pipeline output paths.
+        """
+        if not any(
+            [self.hyper_galaxies, self.hyper_image_sky, self.hyper_background_noise]
+        ):
+            return ""
+
+        return (
+            "__hyper"
+            + self.hyper_galaxies_tag
+            + self.hyper_image_sky_tag
+            + self.hyper_background_noise_tag
+        )
+
+    @property
+    def hyper_galaxies_tag(self):
+        """Tag if hyper-galaxies are used in a hyper pipeline to customize pipeline output paths.
+
+        This is used to generate an overall hyper tag in *hyper_tag*.
+        """
+        if not self.hyper_galaxies:
+            return ""
+        elif self.hyper_galaxies:
+            return "_galaxies"
+
+    @property
+    def hyper_image_sky_tag(self):
+        """Tag if the sky-background is hyper as a hyper_galaxies-parameter in a hyper pipeline to customize pipeline
+        output paths.
+
+        This is used to generate an overall hyper tag in *hyper_tag*.
+        """
+        if not self.hyper_image_sky:
+            return ""
+        elif self.hyper_image_sky:
+            return "_bg_sky"
+
+    @property
+    def hyper_background_noise_tag(self):
+        """Tag if the background noise is hyper as a hyper_galaxies-parameter in a hyper pipeline to customize pipeline
+        output paths.
+
+        This is used to generate an overall hyper tag in *hyper_tag*.
+        """
+        if not self.hyper_background_noise:
+            return ""
+        elif self.hyper_background_noise:
+            return "_bg_noise"

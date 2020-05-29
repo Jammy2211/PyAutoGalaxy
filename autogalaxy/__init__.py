@@ -68,6 +68,6 @@ from autogalaxy.pipeline.phase.imaging.phase import PhaseImaging
 from autogalaxy.pipeline.phase.interferometer.phase import PhaseInterferometer
 from autogalaxy.pipeline.phase.phase_galaxy import PhaseGalaxy
 from autogalaxy.pipeline.pipeline import PipelineDataset
-from autogalaxy.pipeline import setup
+from autogalaxy.pipeline.setup import PipelineSetup
 
 __version__ = "0.9.2"
