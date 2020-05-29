@@ -2,6 +2,8 @@ from autoconf import conf
 from autoarray.structures import grids
 from autoarray.operators import transformer
 
+import copy
+
 
 class AbstractPhaseSettings:
     def __init__(
@@ -31,6 +33,49 @@ class AbstractPhaseSettings:
         self.inversion_pixel_limit = inversion_pixel_limit or conf.instance.general.get(
             "inversion", "inversion_pixel_limit_overall", int
         )
+
+    def edit(
+        self,
+        grid_class=None,
+        grid_inversion_class=None,
+        sub_size=None,
+        fractional_accuracy=None,
+        sub_steps=None,
+        signal_to_noise_limit=None,
+        bin_up_factor=None,
+        inversion_pixel_limit=None,
+    ):
+
+        settings = copy.copy(self)
+
+        settings.grid_class = self.grid_class if grid_class is None else grid_class
+        settings.grid_inversion_class = (
+            self.grid_inversion_class
+            if grid_inversion_class is None
+            else grid_inversion_class
+        )
+        settings.sub_size = self.sub_size if sub_size is None else sub_size
+        settings.fractional_accuracy = (
+            self.fractional_accuracy
+            if fractional_accuracy is None
+            else fractional_accuracy
+        )
+        settings.sub_steps = self.sub_steps if sub_steps is None else sub_steps
+        settings.signal_to_noise_limit = (
+            self.signal_to_noise_limit
+            if signal_to_noise_limit is None
+            else signal_to_noise_limit
+        )
+        settings.bin_up_factor = (
+            self.bin_up_factor if bin_up_factor is None else bin_up_factor
+        )
+        settings.inversion_pixel_limit = (
+            self.inversion_pixel_limit
+            if inversion_pixel_limit is None
+            else inversion_pixel_limit
+        )
+
+        return settings
 
     @property
     def sub_size_tag(self):
@@ -117,6 +162,36 @@ class PhaseSettingsImaging(AbstractPhaseSettings):
 
         self.psf_shape_2d = psf_shape_2d
 
+    def edit(
+        self,
+        grid_class=None,
+        grid_inversion_class=None,
+        sub_size=None,
+        fractional_accuracy=None,
+        sub_steps=None,
+        signal_to_noise_limit=None,
+        bin_up_factor=None,
+        inversion_pixel_limit=None,
+        psf_shape_2d=None,
+    ):
+
+        settings = super().edit(
+            grid_class=grid_class,
+            grid_inversion_class=grid_inversion_class,
+            sub_size=sub_size,
+            fractional_accuracy=fractional_accuracy,
+            sub_steps=sub_steps,
+            signal_to_noise_limit=signal_to_noise_limit,
+            bin_up_factor=bin_up_factor,
+            inversion_pixel_limit=inversion_pixel_limit,
+        )
+
+        settings.psf_shape_2d = (
+            self.psf_shape_2d if psf_shape_2d is None else psf_shape_2d
+        )
+
+        return settings
+
     @property
     def phase_tag(self,):
         return (
@@ -173,6 +248,42 @@ class PhaseSettingsInterferometer(AbstractPhaseSettings):
 
         self.transformer_class = transformer_class
         self.primary_beam_shape_2d = primary_beam_shape_2d
+
+    def edit(
+        self,
+        grid_class=None,
+        grid_inversion_class=None,
+        sub_size=None,
+        fractional_accuracy=None,
+        sub_steps=None,
+        signal_to_noise_limit=None,
+        bin_up_factor=None,
+        inversion_pixel_limit=None,
+        transformer_class=None,
+        primary_beam_shape_2d=None,
+    ):
+
+        settings = super().edit(
+            grid_class=grid_class,
+            grid_inversion_class=grid_inversion_class,
+            sub_size=sub_size,
+            fractional_accuracy=fractional_accuracy,
+            sub_steps=sub_steps,
+            signal_to_noise_limit=signal_to_noise_limit,
+            bin_up_factor=bin_up_factor,
+            inversion_pixel_limit=inversion_pixel_limit,
+        )
+
+        settings.transformer_class = (
+            self.transformer_class if transformer_class is None else transformer_class
+        )
+        settings.primary_beam_shape_2d = (
+            self.primary_beam_shape_2d
+            if primary_beam_shape_2d is None
+            else primary_beam_shape_2d
+        )
+
+        return settings
 
     @property
     def phase_tag(self):

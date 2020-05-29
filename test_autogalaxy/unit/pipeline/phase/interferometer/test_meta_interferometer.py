@@ -1,8 +1,6 @@
 from os import path
 
-import autofit as af
 import autogalaxy as ag
-import numpy as np
 import pytest
 from test_autogalaxy.mock import mock_pipeline
 
