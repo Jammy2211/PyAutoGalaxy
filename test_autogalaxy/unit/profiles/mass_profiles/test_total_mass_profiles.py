@@ -166,14 +166,14 @@ class TestPointMass:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
         )
         interp_deflections = point_mass.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -546,7 +546,7 @@ class TestBrokenPowerLaw:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
         true_deflections = broken_power_law.deflections_from_grid(grid=grid)
 
         regular_with_interp = grid.new_grid_with_interpolator(
@@ -559,7 +559,7 @@ class TestBrokenPowerLaw:
         assert np.max(true_deflections[:, 0] - interp_deflections[:, 0]) < 0.1
         assert np.max(true_deflections[:, 1] - interp_deflections[:, 1]) < 0.1
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -597,7 +597,7 @@ class TestBrokenPowerLaw:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
         true_deflections = broken_power_law.deflections_from_grid(grid=grid)
 
         regular_with_interp = grid.new_grid_with_interpolator(
@@ -610,7 +610,7 @@ class TestBrokenPowerLaw:
         assert np.max(true_deflections[:, 0] - interp_deflections[:, 0]) < 0.1
         assert np.max(true_deflections[:, 1] - interp_deflections[:, 1]) < 0.1
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -1070,7 +1070,7 @@ class TestCoredPowerLaw:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
         true_deflections = cored_power_law.deflections_from_grid(grid=grid)
 
         regular_with_interp = grid.new_grid_with_interpolator(
@@ -1082,7 +1082,7 @@ class TestCoredPowerLaw:
         assert np.max(true_deflections[:, 0] - interp_deflections[:, 0]) < 0.1
         assert np.max(true_deflections[:, 1] - interp_deflections[:, 1]) < 0.1
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -1119,7 +1119,7 @@ class TestCoredPowerLaw:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
         true_deflections = cored_power_law.deflections_from_grid(grid=grid)
 
         regular_with_interp = grid.new_grid_with_interpolator(
@@ -1131,7 +1131,7 @@ class TestCoredPowerLaw:
         assert np.max(true_deflections[:, 0] - interp_deflections[:, 0]) < 0.1
         assert np.max(true_deflections[:, 1] - interp_deflections[:, 1]) < 0.1
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -1497,14 +1497,14 @@ class TestPowerLaw:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
         )
         interp_deflections = power_law.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -1542,14 +1542,14 @@ class TestPowerLaw:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
         )
         interp_deflections = power_law.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -1943,7 +1943,7 @@ class TestCoredIsothermal:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
@@ -1951,7 +1951,7 @@ class TestCoredIsothermal:
         interp_deflections = cored_isothermal.deflections_from_grid(
             grid=regular_with_interp
         )
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -1988,7 +1988,7 @@ class TestCoredIsothermal:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
@@ -1996,7 +1996,7 @@ class TestCoredIsothermal:
         interp_deflections = cored_isothermal.deflections_from_grid(
             grid=regular_with_interp
         )
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -2292,13 +2292,13 @@ class TestIsothermal:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
         )
         interp_deflections = isothermal.deflections_from_grid(grid=regular_with_interp)
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -2333,13 +2333,13 @@ class TestIsothermal:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
         )
         interp_deflections = isothermal.deflections_from_grid(grid=regular_with_interp)
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 

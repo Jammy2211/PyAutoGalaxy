@@ -17,7 +17,7 @@ class MetaImaging(meta_dataset.MetaDataset):
                 bin_up_factor=self.settings.bin_up_factor
             )
 
-            mask = mask.mapping.binned_mask_from_bin_up_factor(
+            mask = mask.binned_mask_from_bin_up_factor(
                 bin_up_factor=self.settings.bin_up_factor
             )
 

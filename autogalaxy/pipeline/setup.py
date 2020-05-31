@@ -79,7 +79,7 @@ class PipelineSetup:
 
     @property
     def tag(self):
-        """Generate the overall tag of this pipeline, which customizes the 'setup' folder the results are output to.
+        """Generate the pipeline's overall tag, which customizes the 'setup' folder the results are output to.
         """
         return (
             "setup"
@@ -103,8 +103,8 @@ class PipelineSetup:
 
     @property
     def pixelization_tag(self):
-        """Tag the *Pixelization* scheme used by the pipeline, if an inversion is usse to reconstruct
-        the galaxy's light.
+        """Tag the *Pixelization* scheme used by the pipeline, if an inversion is usse to reconstruct the galaxy's 
+        light.
 
         The pixelization tag is loaded from the config file 'autogalaxy_workspace/config/label.ini' in the [tag]
         seciton.
@@ -124,8 +124,8 @@ class PipelineSetup:
 
     @property
     def regularization_tag(self):
-        """Tag the *Regularization* scheme used by the pipeline, if an inversion is usse to reconstruct
-        the galaxy's light.
+        """Tag the *Regularization* scheme used by the pipeline, if an inversion is usse to reconstruct the galaxy's 
+        light.
         
         The regularization tag is loaded from the config file 'autogalaxy_workspace/config/label.ini' in the [tag]
         seciton.
@@ -145,8 +145,8 @@ class PipelineSetup:
 
     @property
     def light_centre_tag(self):
-        """Tag if the lens light of the pipeline and / or phase are fixed to a previous estimate, or varied \
-         during he analysis, to customize pipeline output paths.
+        """Tag if the lens light of the pipeline are fixed to a previous estimate, or varied \
+         during the analysis, to customize pipeline output paths.
 
         This changes the setup folder as follows:
 

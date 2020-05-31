@@ -112,9 +112,7 @@ def test__masked_imaging__uses_signal_to_noise_limit(imaging_7x7, mask_7x7_1_pix
 def test__masked_imaging__uses_bin_up_factor(imaging_7x7, mask_7x7_1_pix):
     binned_up_imaging = imaging_7x7.binned_from_bin_up_factor(bin_up_factor=2)
 
-    binned_up_mask = mask_7x7_1_pix.mapping.binned_mask_from_bin_up_factor(
-        bin_up_factor=2
-    )
+    binned_up_mask = mask_7x7_1_pix.binned_mask_from_bin_up_factor(bin_up_factor=2)
 
     phase_imaging_7x7 = ag.PhaseImaging(
         phase_name="phase_imaging_7x7",

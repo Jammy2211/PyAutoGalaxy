@@ -1,7 +1,7 @@
 from autoconf import conf
 import numpy as np
 from astropy import cosmology as cosmo
-from autoarray.structures import grids
+from autoarray.structures import arrays, grids
 from autoarray.util import array_util
 from autogalaxy import dimensions as dim
 from autogalaxy.util import cosmology_util
@@ -59,44 +59,48 @@ class LensingObject:
         deflections_y_2d = np.gradient(potential.in_2d, grid.in_2d[:, 0, 0], axis=0)
         deflections_x_2d = np.gradient(potential.in_2d, grid.in_2d[0, :, 1], axis=1)
 
-        return grid.mapping.grid_stored_1d_from_sub_grid_2d(
-            sub_grid_2d=np.stack((deflections_y_2d, deflections_x_2d), axis=-1)
+        return grids.MaskedGrid.manual_2d(
+            grid=np.stack((deflections_y_2d, deflections_x_2d), axis=-1), mask=grid.mask
         )
 
     def jacobian_a11_from_grid(self, grid):
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        return grid.mapping.array_stored_1d_from_sub_array_2d(
-            sub_array_2d=1.0
-            - np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[0, :, 1], axis=1)
+        return arrays.MaskedArray.manual_2d(
+            array=1.0
+            - np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[0, :, 1], axis=1),
+            mask=grid.mask,
         )
 
     def jacobian_a12_from_grid(self, grid):
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        return grid.mapping.array_stored_1d_from_sub_array_2d(
-            sub_array_2d=-1.0
-            * np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[:, 0, 0], axis=0)
+        return arrays.MaskedArray.manual_2d(
+            array=-1.0
+            * np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[:, 0, 0], axis=0),
+            mask=grid.mask,
         )
 
     def jacobian_a21_from_grid(self, grid):
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        return grid.mapping.array_stored_1d_from_sub_array_2d(
-            sub_array_2d=-1.0
-            * np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[0, :, 1], axis=1)
+        return arrays.MaskedArray.manual_2d(
+            array=-1.0
+            * np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[0, :, 1], axis=1),
+            mask=grid.mask,
         )
 
     def jacobian_a22_from_grid(self, grid):
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        return grid.mapping.array_stored_1d_from_sub_array_2d(
-            sub_array_2d=1
-            - np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[:, 0, 0], axis=0)
+        return arrays.MaskedArray.manual_2d(
+            array=1
+            - np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[:, 0, 0], axis=0),
+            mask=grid.mask,
         )
 
     def jacobian_from_grid(self, grid):
@@ -117,7 +121,7 @@ class LensingObject:
 
         convergence = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
 
-        return grid.mapping.array_stored_1d_from_sub_array_1d(sub_array_1d=convergence)
+        return arrays.Array(array=convergence, mask=grid.mask)
 
     def shear_via_jacobian_from_grid(self, grid):
 
@@ -126,9 +130,7 @@ class LensingObject:
         gamma_1 = 0.5 * (jacobian[1][1] - jacobian[0][0])
         gamma_2 = -0.5 * (jacobian[0][1] + jacobian[1][0])
 
-        return grid.mapping.array_stored_1d_from_sub_array_1d(
-            sub_array_1d=(gamma_1 ** 2 + gamma_2 ** 2) ** 0.5
-        )
+        return arrays.Array(array=(gamma_1 ** 2 + gamma_2 ** 2) ** 0.5, mask=grid.mask)
 
     def tangential_eigen_value_from_grid(self, grid):
 
@@ -136,9 +138,7 @@ class LensingObject:
 
         shear = self.shear_via_jacobian_from_grid(grid=grid)
 
-        return grid.mapping.array_stored_1d_from_sub_array_1d(
-            sub_array_1d=1 - convergence - shear
-        )
+        return arrays.Array(array=1 - convergence - shear, mask=grid.mask)
 
     def radial_eigen_value_from_grid(self, grid):
 
@@ -146,9 +146,7 @@ class LensingObject:
 
         shear = self.shear_via_jacobian_from_grid(grid=grid)
 
-        return grid.mapping.array_stored_1d_from_sub_array_1d(
-            sub_array_1d=1 - convergence + shear
-        )
+        return arrays.Array(array=1 - convergence + shear, mask=grid.mask)
 
     def magnification_from_grid(self, grid):
 
@@ -156,9 +154,7 @@ class LensingObject:
 
         det_jacobian = jacobian[0][0] * jacobian[1][1] - jacobian[0][1] * jacobian[1][0]
 
-        return grid.mapping.array_stored_1d_from_sub_array_1d(
-            sub_array_1d=1 / det_jacobian
-        )
+        return arrays.Array(array=1 / det_jacobian, mask=grid.mask)
 
     @property
     def mass_profile_bounding_box(self):

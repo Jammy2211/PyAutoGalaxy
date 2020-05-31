@@ -1729,14 +1729,14 @@ class TestAbstractPlaneData:
             )
 
             mask = ag.Mask.manual(
-                mask_2d=np.array(
+                mask=np.array(
                     [[True, True, True], [True, False, True], [True, True, True]]
                 ),
                 pixel_scales=1.0,
                 sub_size=1,
             )
 
-            grid = ag.MaskedGrid.from_mask(mask=mask)
+            grid = ag.Grid.from_mask(mask=mask)
 
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=0.1)
@@ -2132,7 +2132,7 @@ class TestAbstractPlaneData:
 
             mask = ag.Mask.unmasked(shape_2d=(5, 5), pixel_scales=1.0, sub_size=1)
 
-            grid = ag.MaskedGrid.from_mask(mask=mask)
+            grid = ag.Grid.from_mask(mask=mask)
 
             g0 = ag.Galaxy(
                 redshift=0.5,
@@ -3024,7 +3024,7 @@ class TestDecorators:
     def test__grid_iterator_in__iterates_grid_correctly(self, gal_x1_lp):
 
         mask = ag.Mask.manual(
-            mask_2d=[
+            mask=[
                 [True, True, True, True, True],
                 [True, False, False, False, True],
                 [True, False, False, False, True],
@@ -3043,7 +3043,7 @@ class TestDecorators:
 
         profile_image = plane.profile_image_from_grid(grid=grid)
 
-        mask_sub_2 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
+        mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid.from_mask(mask=mask_sub_2)
         profile_image_sub_2 = plane.profile_image_from_grid(
             grid=grid_sub_2
@@ -3064,7 +3064,7 @@ class TestDecorators:
 
         profile_image = plane.profile_image_from_grid(grid=grid)
 
-        mask_sub_4 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
+        mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid.from_mask(mask=mask_sub_4)
         profile_image_sub_4 = plane.profile_image_from_grid(
             grid=grid_sub_4
@@ -3072,7 +3072,7 @@ class TestDecorators:
 
         assert profile_image[0] == profile_image_sub_4[0]
 
-        mask_sub_8 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
+        mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid.from_mask(mask=mask_sub_8)
         profile_image_sub_8 = plane.profile_image_from_grid(
             grid=grid_sub_8
@@ -3083,7 +3083,7 @@ class TestDecorators:
     def test__grid_iterator_in__iterates_grid_result_correctly(self, gal_x1_mp):
 
         mask = ag.Mask.manual(
-            mask_2d=[
+            mask=[
                 [True, True, True, True, True],
                 [True, False, False, False, True],
                 [True, False, False, False, True],
@@ -3106,7 +3106,7 @@ class TestDecorators:
 
         deflections = plane.deflections_from_grid(grid=grid)
 
-        mask_sub_2 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
+        mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid.from_mask(mask=mask_sub_2)
         deflections_sub_2 = galaxy.deflections_from_grid(grid=grid_sub_2).in_1d_binned
 
@@ -3125,13 +3125,13 @@ class TestDecorators:
 
         deflections = plane.deflections_from_grid(grid=grid)
 
-        mask_sub_4 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
+        mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid.from_mask(mask=mask_sub_4)
         deflections_sub_4 = galaxy.deflections_from_grid(grid=grid_sub_4).in_1d_binned
 
         assert deflections[0, 0] == deflections_sub_4[0, 0]
 
-        mask_sub_8 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
+        mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid.from_mask(mask=mask_sub_8)
         deflections_sub_8 = galaxy.deflections_from_grid(grid=grid_sub_8).in_1d_binned
 

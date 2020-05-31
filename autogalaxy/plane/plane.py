@@ -517,7 +517,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         padded_image = self.profile_image_from_grid(grid=padded_grid)
 
-        return padded_grid.mapping.unmasked_blurred_array_from_padded_array_psf_and_image_shape(
+        return padded_grid.mask.unmasked_blurred_array_from_padded_array_psf_and_image_shape(
             padded_array=padded_image, psf=psf, image_shape=grid.mask.shape
         )
 
@@ -531,7 +531,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
             padded_image_1d = galaxy.profile_image_from_grid(grid=padded_grid)
 
-            unmasked_blurred_array_2d = padded_grid.mapping.unmasked_blurred_array_from_padded_array_psf_and_image_shape(
+            unmasked_blurred_array_2d = padded_grid.mask.unmasked_blurred_array_from_padded_array_psf_and_image_shape(
                 padded_array=padded_image_1d, psf=psf, image_shape=grid.mask.shape
             )
 

@@ -1,4 +1,5 @@
 from autoarray.plot import plotters
+from autoarray.structures import arrays
 from autogalaxy.plot import lensing_plotters
 
 
@@ -66,8 +67,8 @@ def deflections_y(mass_profile, grid, positions=None, include=None, plotter=None
     """
 
     deflections = mass_profile.deflections_from_grid(grid=grid)
-    deflections_y = grid.mapping.array_stored_1d_from_sub_array_1d(
-        sub_array_1d=deflections[:, 0]
+    deflections_y = arrays.MaskedArray.manual_1d(
+        array=deflections.in_1d[:, 0], mask=grid.mask
     )
 
     plotter.plot_array(
@@ -95,8 +96,8 @@ def deflections_x(mass_profile, grid, positions=None, include=None, plotter=None
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
     deflections = mass_profile.deflections_from_grid(grid=grid)
-    deflections_x = grid.mapping.array_stored_1d_from_sub_array_1d(
-        sub_array_1d=deflections[:, 1]
+    deflections_x = arrays.MaskedArray.manual_1d(
+        array=deflections.in_1d[:, 1], mask=grid.mask
     )
 
     plotter.plot_array(

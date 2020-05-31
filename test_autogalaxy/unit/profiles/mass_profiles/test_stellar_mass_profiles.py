@@ -608,14 +608,14 @@ class TestSersic:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -656,14 +656,14 @@ class TestSersic:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -934,14 +934,14 @@ class TestExponential:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
         )
         interp_deflections = exponential.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -981,14 +981,14 @@ class TestExponential:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
         )
         interp_deflections = exponential.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -1250,14 +1250,14 @@ class TestDevVaucouleurs:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
         )
         interp_deflections = dev.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -1297,14 +1297,14 @@ class TestDevVaucouleurs:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
         )
         interp_deflections = dev.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -1731,14 +1731,14 @@ class TestSersicMassRadialGradient:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 
@@ -1780,14 +1780,14 @@ class TestSersicMassRadialGradient:
 
         mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
 
-        grid = ag.MaskedGrid.from_mask(mask=mask)
+        grid = ag.Grid.from_mask(mask=mask)
 
         regular_with_interp = grid.new_grid_with_interpolator(
             interpolation_pixel_scale=0.5
         )
         interp_deflections = sersic.deflections_from_grid(grid=regular_with_interp)
 
-        interpolator = grids.GridInterpolator.from_mask_grid_and_interpolation_pixel_scales(
+        interpolator = grids.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
             mask=mask, grid=grid, interpolation_pixel_scale=0.5
         )
 

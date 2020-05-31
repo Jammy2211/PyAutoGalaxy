@@ -28,7 +28,7 @@ class MetaDataset:
 
         if mask.sub_size != self.settings.sub_size:
             mask = aa.Mask.manual(
-                mask_2d=mask,
+                mask=mask,
                 pixel_scales=mask.pixel_scales,
                 sub_size=self.settings.sub_size,
                 origin=mask.origin,

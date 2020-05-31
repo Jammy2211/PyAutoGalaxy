@@ -44,7 +44,6 @@ class MaskedGalaxyDataset:
         """
         self.mask = mask
         self.galaxy_data = galaxy_data
-        self.mapping = mask.mapping
         self.pixel_scales = galaxy_data.pixel_scales
 
         self.image = arrays.MaskedArray.manual_2d(
@@ -111,37 +110,27 @@ class MaskedGalaxyDataset:
             profile_image = sum(
                 map(lambda g: g.profile_image_from_grid(grid=self.grid), galaxies)
             )
-            return self.grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=profile_image
-            )
+            return arrays.Array(array=profile_image, mask=self.mask)
         elif self.use_convergence:
             convergence = sum(
                 map(lambda g: g.convergence_from_grid(grid=self.grid), galaxies)
             )
-            return self.grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=convergence
-            )
+            return arrays.Array(array=convergence, mask=self.mask)
         elif self.use_potential:
             potential = sum(
                 map(lambda g: g.potential_from_grid(grid=self.grid), galaxies)
             )
-            return self.grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=potential
-            )
+            return arrays.Array(array=potential, mask=self.mask)
         elif self.use_deflections_y:
             deflections_y = sum(
                 map(lambda g: g.deflections_from_grid(grid=self.grid), galaxies)
             )[:, 0]
-            return self.grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=deflections_y
-            )
+            return arrays.Array(array=deflections_y, mask=self.mask)
         elif self.use_deflections_x:
             deflections_x = sum(
                 map(lambda g: g.deflections_from_grid(grid=self.grid), galaxies)
             )[:, 1]
-            return self.grid.mapping.array_stored_1d_from_sub_array_1d(
-                sub_array_1d=deflections_x
-            )
+            return arrays.Array(array=deflections_x, mask=self.mask)
 
     @property
     def data(self):

@@ -4,7 +4,7 @@ from autoarray.structures.arrays import Array, Values
 from autoarray.structures.grids import (
     Grid,
     GridIterator,
-    GridInterpolator,
+    GridInterpolate,
     GridCoordinates,
     GridRectangular,
     GridVoronoi,

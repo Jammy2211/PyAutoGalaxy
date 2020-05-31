@@ -1156,7 +1156,7 @@ class TestDecorators:
     def test__grid_iterator_in__iterates_grid_correctly(self, gal_x1_lp):
 
         mask = ag.Mask.manual(
-            mask_2d=[
+            mask=[
                 [True, True, True, True, True],
                 [True, False, False, False, True],
                 [True, False, False, False, True],
@@ -1174,7 +1174,7 @@ class TestDecorators:
 
         profile_image = light_profile.profile_image_from_grid(grid=grid)
 
-        mask_sub_2 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
+        mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid.from_mask(mask=mask_sub_2)
         profile_image_sub_2 = light_profile.profile_image_from_grid(
             grid=grid_sub_2
@@ -1190,7 +1190,7 @@ class TestDecorators:
 
         profile_image = light_profile.profile_image_from_grid(grid=grid)
 
-        mask_sub_4 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
+        mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid.from_mask(mask=mask_sub_4)
         profile_image_sub_4 = light_profile.profile_image_from_grid(
             grid=grid_sub_4
@@ -1198,7 +1198,7 @@ class TestDecorators:
 
         assert profile_image[0] == profile_image_sub_4[0]
 
-        mask_sub_8 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
+        mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid.from_mask(mask=mask_sub_8)
         profile_image_sub_8 = light_profile.profile_image_from_grid(
             grid=grid_sub_8

@@ -54,7 +54,7 @@ source_galaxy = al.Galaxy(
     ),
 )
 
-# Use these galaxies to setup a tracer, which will generate the image for the simulated interferometer dataset.
+"""Use these galaxies to setup a tracer, which will generate the image for the simulated interferometer dataset."""
 tracer = al.Tracer.from_galaxies(galaxies=[galaxy_galaxy, source_galaxy])
 
 plotter = aplt.Plotter(

@@ -27,10 +27,10 @@ dataset_path = af.path_util.make_and_return_path_from_path_and_folder_names(
     path=plot_path, folder_names=[dataset_name]
 )
 
-# The grid used to simulate the image.
+"""The grid used to simulate the image."""
 grid = al.Grid.uniform(shape_2d=(170, 170), pixel_scales=0.05, sub_size=4)
 
-# Simulate a simple Gaussian PSF for the image.
+"""Simulate a simple Gaussian PSF for the image."""
 psf = al.Kernel.from_gaussian(
     shape_2d=(11, 11), sigma=0.1, pixel_scales=grid.pixel_scales
 )
@@ -75,23 +75,22 @@ source_galaxy = al.Galaxy(
 )
 
 
-# Use these galaxies to setup a tracer, which will generate the image for the simulated imaging dataset.
+"""Use these galaxies to setup a tracer, which will generate the image for the simulated imaging dataset."""
 tracer = al.Tracer.from_galaxies(galaxies=[galaxy_galaxy, source_galaxy])
 
-# Lets look at the tracer's image - this is the image we'll be simulating.
-
-# To make this figure, we need to pass the plotter a grid which it uses to create the image. The simulator has its
-# grid accessible as a property, which we can use to do this.
+"""Lets look at the tracer's image - this is the image we'll be simulating."""
 aplt.Tracer.profile_image(tracer=tracer, grid=grid)
 
-# We can now pass this simulator a tracer, which creates the ray-traced image plotted above and simulates it as an
-# imaging dataset.
+"""
+We can now pass this simulator a tracer, which creates the ray-traced image plotted above and simulates it as an
+imaging dataset.
+"""
 imaging = simulator.from_tracer_and_grid(tracer=tracer, grid=grid)
 
-# Lets plot the simulated imaging dataset before we output it to fits.
+"""Lets plot the simulated imaging dataset before we output it to fits."""
 aplt.Imaging.subplot_imaging(imaging=imaging)
 
-# Finally, lets output our simulated dataset to the dataset path as .fits files.
+"""Finally, lets output our simulated dataset to the dataset path as .fits files"""
 imaging.output_to_fits(
     image_path=f"{dataset_path}/image.fits",
     psf_path=f"{dataset_path}/psf.fits",

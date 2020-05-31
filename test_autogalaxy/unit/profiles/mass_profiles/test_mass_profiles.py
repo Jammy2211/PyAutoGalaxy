@@ -352,7 +352,7 @@ class TestDecorators:
     def test__grid_iterator_in__iterates_grid_result_correctly(self, gal_x1_mp):
 
         mask = ag.Mask.manual(
-            mask_2d=[
+            mask=[
                 [True, True, True, True, True],
                 [True, False, False, False, True],
                 [True, False, False, False, True],
@@ -372,7 +372,7 @@ class TestDecorators:
 
         deflections = mass_profile.deflections_from_grid(grid=grid)
 
-        mask_sub_2 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
+        mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid.from_mask(mask=mask_sub_2)
         deflections_sub_2 = mass_profile.deflections_from_grid(
             grid=grid_sub_2
@@ -390,7 +390,7 @@ class TestDecorators:
 
         deflections = mass_profile.deflections_from_grid(grid=grid)
 
-        mask_sub_4 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
+        mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid.from_mask(mask=mask_sub_4)
         deflections_sub_4 = mass_profile.deflections_from_grid(
             grid=grid_sub_4
@@ -398,7 +398,7 @@ class TestDecorators:
 
         assert deflections[0, 0] == deflections_sub_4[0, 0]
 
-        mask_sub_8 = mask.mapping.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
+        mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid.from_mask(mask=mask_sub_8)
         deflections_sub_8 = mass_profile.deflections_from_grid(
             grid=grid_sub_8

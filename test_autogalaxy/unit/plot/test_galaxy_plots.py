@@ -3,7 +3,6 @@ from os import path
 
 from autoconf import conf
 import autogalaxy as ag
-import autogalaxy as ag
 import autogalaxy.plot as aplt
 import pytest
 

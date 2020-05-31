@@ -25,7 +25,7 @@ class TestFitImaging:
             imaging.image[6] = 4.0
 
             mask = ag.Mask.manual(
-                mask_2d=np.array(
+                mask=np.array(
                     [
                         [True, True, True, True],
                         [True, False, False, True],
@@ -128,7 +128,7 @@ class TestFitImaging:
             imaging.image[6] = 4.0
 
             mask = ag.Mask.manual(
-                mask_2d=np.array(
+                mask=np.array(
                     [
                         [True, True, True, True],
                         [True, False, False, True],
@@ -236,7 +236,7 @@ class TestFitImaging:
             imaging.image[6] = 4.0
 
             mask = ag.Mask.manual(
-                mask_2d=np.array(
+                mask=np.array(
                     [
                         [True, True, True, True],
                         [True, False, False, True],
@@ -343,7 +343,7 @@ class TestFitImaging:
             imaging.image[5] = 5.0
 
             mask = ag.Mask.manual(
-                mask_2d=np.array(
+                mask=np.array(
                     [
                         [True, True, True, True],
                         [True, False, False, True],
@@ -450,7 +450,7 @@ class TestFitImaging:
             imaging.image[6] = 4.0
 
             mask = ag.Mask.manual(
-                mask_2d=np.array(
+                mask=np.array(
                     [
                         [True, True, True, True],
                         [True, False, False, True],
@@ -1412,7 +1412,7 @@ class TestFitInterferometer:
             visibilities_mask = np.full(fill_value=False, shape=(1, 2))
 
             real_space_mask = ag.Mask.manual(
-                mask_2d=np.array(
+                mask=np.array(
                     [
                         [True, True, True, True],
                         [True, False, False, True],
@@ -1474,7 +1474,7 @@ class TestFitInterferometer:
             visibilities_mask = np.full(fill_value=False, shape=(1, 2))
 
             real_space_mask = ag.Mask.manual(
-                mask_2d=np.array(
+                mask=np.array(
                     [
                         [True, True, True, True, True],
                         [True, False, False, False, True],

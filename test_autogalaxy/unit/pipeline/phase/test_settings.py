@@ -108,13 +108,13 @@ class TestEdit:
 
         settings = settings.edit(
             grid_class=ag.GridIterator,
-            grid_inversion_class=ag.GridInterpolator,
+            grid_inversion_class=ag.GridInterpolate,
             sub_steps=[5],
             inversion_pixel_limit=200,
         )
 
         assert settings.grid_class is ag.GridIterator
-        assert settings.grid_inversion_class is ag.GridInterpolator
+        assert settings.grid_inversion_class is ag.GridInterpolate
         assert settings.sub_size == 2
         assert settings.fractional_accuracy == 0.5
         assert settings.sub_steps == [5]
@@ -132,7 +132,7 @@ class TestEdit:
         )
 
         assert settings.grid_class is ag.GridIterator
-        assert settings.grid_inversion_class is ag.GridInterpolator
+        assert settings.grid_inversion_class is ag.GridInterpolate
         assert settings.sub_size == 3
         assert settings.fractional_accuracy == 0.7
         assert settings.sub_steps == [5]
@@ -169,14 +169,14 @@ class TestEdit:
 
         settings = settings.edit(
             grid_class=ag.GridIterator,
-            grid_inversion_class=ag.GridInterpolator,
+            grid_inversion_class=ag.GridInterpolate,
             sub_steps=[5],
             inversion_pixel_limit=200,
             transformer_class=ag.TransformerFFT,
         )
 
         assert settings.grid_class is ag.GridIterator
-        assert settings.grid_inversion_class is ag.GridInterpolator
+        assert settings.grid_inversion_class is ag.GridInterpolate
         assert settings.sub_size == 2
         assert settings.fractional_accuracy == 0.5
         assert settings.sub_steps == [5]
@@ -195,7 +195,7 @@ class TestEdit:
         )
 
         assert settings.grid_class is ag.GridIterator
-        assert settings.grid_inversion_class is ag.GridInterpolator
+        assert settings.grid_inversion_class is ag.GridInterpolate
         assert settings.sub_size == 3
         assert settings.fractional_accuracy == 0.7
         assert settings.sub_steps == [5]

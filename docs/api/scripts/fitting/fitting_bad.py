@@ -10,7 +10,7 @@ workspace_path = "{}/../../../../../autogalaxy_workspace/".format(
 plot_path = "{}/../images/fitting/".format(os.path.dirname(os.path.realpath(__file__)))
 dataset_path = "{}/dataset".format(os.path.dirname(os.path.realpath(__file__)))
 
-# Using the dataset path, load the data (image, noise map, PSF) as an imaging object from .fits files.
+"""Using the dataset path, load the data (image, noise map, PSF) as an imaging object from .fits files."""
 imaging = al.Imaging.from_fits(
     image_path=f"{dataset_path}/image.fits",
     psf_path=f"{dataset_path}/psf.fits",
@@ -55,7 +55,7 @@ source_galaxy = al.Galaxy(
 )
 
 
-# Use these galaxies to setup a tracer, which will generate the image for the simulated imaging dataset.
+"""Use these galaxies to setup a tracer, which will generate the image for the simulated imaging dataset."""
 tracer = al.Tracer.from_galaxies(galaxies=[galaxy_galaxy, source_galaxy])
 
 fit = al.FitImaging(masked_imaging=masked_imaging, tracer=tracer)

@@ -71,7 +71,7 @@ class TestMaskedInterferometer:
 
         assert masked_interferometer_7.inversion_pixel_limit == 20.0
 
-        grid = ag.MaskedGrid.from_mask(mask=sub_mask_7x7)
+        grid = ag.Grid.from_mask(mask=sub_mask_7x7)
 
         assert (masked_interferometer_7.grid == grid).all()
 

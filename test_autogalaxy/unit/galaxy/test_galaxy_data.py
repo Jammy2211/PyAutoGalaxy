@@ -1,6 +1,5 @@
 from autoconf import conf
 import autogalaxy as ag
-import autogalaxy as ag
 import numpy as np
 import pytest
 from autogalaxy import exc
@@ -97,7 +96,7 @@ class TestGalaxyFitData:
             use_image=True,
         )
 
-        grid = ag.MaskedGrid.from_mask(mask=sub_mask_7x7)
+        grid = ag.Grid.from_mask(mask=sub_mask_7x7)
         new_grid = grid.new_grid_with_interpolator(interpolation_pixel_scale=1.0)
         assert (gal_data_7x7.grid == new_grid).all()
         assert (gal_data_7x7.grid.interpolator.vtx == new_grid.interpolator.vtx).all()
@@ -405,11 +404,17 @@ class TestGalaxyFitData:
         deflections_gal = galaxy.deflections_from_grid(grid=galaxy_fit_data.grid)
         deflections_gal = np.asarray(
             [
-                galaxy_fit_data.grid.mapping.array_stored_1d_binned_from_sub_array_1d(
+                np.multiply(
+                    deflections_gal.mask.sub_fraction,
                     deflections_gal[:, 0]
+                    .reshape(-1, deflections_gal.mask.sub_length)
+                    .sum(axis=1),
                 ),
-                galaxy_fit_data.grid.mapping.array_stored_1d_binned_from_sub_array_1d(
+                np.multiply(
+                    deflections_gal.mask.sub_fraction,
                     deflections_gal[:, 1]
+                    .reshape(-1, deflections_gal.mask.sub_length)
+                    .sum(axis=1),
                 ),
             ]
         ).T
@@ -495,11 +500,17 @@ class TestGalaxyFitData:
         deflections_gal = galaxy.deflections_from_grid(grid=galaxy_fit_data.grid)
         deflections_gal = np.asarray(
             [
-                galaxy_fit_data.grid.mapping.array_stored_1d_binned_from_sub_array_1d(
+                np.multiply(
+                    deflections_gal.mask.sub_fraction,
                     deflections_gal[:, 0]
+                    .reshape(-1, deflections_gal.mask.sub_length)
+                    .sum(axis=1),
                 ),
-                galaxy_fit_data.grid.mapping.array_stored_1d_binned_from_sub_array_1d(
+                np.multiply(
+                    deflections_gal.mask.sub_fraction,
                     deflections_gal[:, 1]
+                    .reshape(-1, deflections_gal.mask.sub_length)
+                    .sum(axis=1),
                 ),
             ]
         ).T

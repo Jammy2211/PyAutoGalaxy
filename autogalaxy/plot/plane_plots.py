@@ -1,4 +1,5 @@
 from autoarray.plot import plotters
+from autoarray.structures import arrays
 from autogalaxy.plot import lensing_plotters
 
 
@@ -65,8 +66,8 @@ def potential(plane, grid, include=None, plotter=None):
 def deflections_y(plane, grid, include=None, plotter=None):
 
     deflections = plane.deflections_from_grid(grid=grid)
-    deflections_y = grid.mapping.array_stored_1d_from_sub_array_1d(
-        sub_array_1d=deflections[:, 0]
+    deflections_y = arrays.MaskedArray.manual_1d(
+        array=deflections.in_1d[:, 0], mask=grid.mask
     )
 
     plotter.plot_array(
@@ -84,8 +85,8 @@ def deflections_y(plane, grid, include=None, plotter=None):
 def deflections_x(plane, grid, include=None, plotter=None):
 
     deflections = plane.deflections_from_grid(grid=grid)
-    deflections_x = grid.mapping.array_stored_1d_from_sub_array_1d(
-        sub_array_1d=deflections[:, 1]
+    deflections_x = arrays.MaskedArray.manual_1d(
+        array=deflections.in_1d[:, 1], mask=grid.mask
     )
 
     plotter.plot_array(

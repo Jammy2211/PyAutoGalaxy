@@ -1,7 +1,6 @@
 import os
 
 from autoconf import conf
-import autogalaxy as ag
 import autofit as af
 import autogalaxy as ag
 import numpy as np
