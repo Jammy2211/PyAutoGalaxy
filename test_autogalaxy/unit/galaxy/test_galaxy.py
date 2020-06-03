@@ -8,14 +8,6 @@ from autogalaxy import exc
 from test_autogalaxy.mock import mock_cosmology
 
 
-@pytest.fixture(autouse=True)
-def reset_config():
-    """
-    Use configuration from the default path. You may want to change this to set a specific path.
-    """
-    conf.instance = conf.default
-
-
 class TestUnits:
     def test__light_profiles_conversions(self):
 
@@ -1511,7 +1503,7 @@ class TestMassProfiles:
             galaxy = ag.Galaxy(mass_profile_0=sis_0, mass_profile_1=sis_1, redshift=0.5)
 
             assert galaxy.einstein_mass_in_units(unit_mass="angular") == pytest.approx(
-                np.pi * 3.0 ** 2.0, 1.0e-2
+                np.pi * 3.0 ** 2.0, 1.0e-1
             )
 
 
@@ -1868,7 +1860,7 @@ class TestBooleanProperties:
 
 
 class TestDecorators:
-    def test__grid_iterator_in__iterates_array_result_correctly(self, gal_x1_lp):
+    def test__grid_iterate_in__iterates_array_result_correctly(self, gal_x1_lp):
 
         mask = ag.Mask.manual(
             mask=[
@@ -1881,7 +1873,7 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.GridIterator.from_mask(
+        grid = ag.GridIterate.from_mask(
             mask=mask, fractional_accuracy=1.0, sub_steps=[2]
         )
 
@@ -1897,7 +1889,7 @@ class TestDecorators:
 
         assert (profile_image == profile_image_sub_2).all()
 
-        grid = ag.GridIterator.from_mask(
+        grid = ag.GridIterate.from_mask(
             mask=mask, fractional_accuracy=0.95, sub_steps=[2, 4, 8]
         )
 
@@ -1924,7 +1916,7 @@ class TestDecorators:
 
         assert profile_image[4] == profile_image_sub_8[4]
 
-    def test__grid_iterator_in__iterates_grid_result_correctly(self, gal_x1_mp):
+    def test__grid_iterate_in__iterates_grid_result_correctly(self, gal_x1_mp):
 
         mask = ag.Mask.manual(
             mask=[
@@ -1937,7 +1929,7 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.GridIterator.from_mask(
+        grid = ag.GridIterate.from_mask(
             mask=mask, fractional_accuracy=1.0, sub_steps=[2]
         )
 
@@ -1954,7 +1946,7 @@ class TestDecorators:
 
         assert (deflections == deflections_sub_2).all()
 
-        grid = ag.GridIterator.from_mask(
+        grid = ag.GridIterate.from_mask(
             mask=mask, fractional_accuracy=0.99, sub_steps=[2, 4, 8]
         )
 
@@ -1976,3 +1968,90 @@ class TestDecorators:
         deflections_sub_8 = galaxy.deflections_from_grid(grid=grid_sub_8).in_1d_binned
 
         assert deflections[4, 0] == deflections_sub_8[4, 0]
+
+    def test__grid_interp_in__interps_based_on_intepolate_config(self):
+
+        # False in interpolate.ini
+
+        mask = ag.Mask.manual(
+            mask=[
+                [True, True, True, True, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, True, True, True, True],
+            ],
+            pixel_scales=(1.0, 1.0),
+        )
+
+        grid = ag.Grid.from_mask(mask=mask)
+
+        grid_interp = ag.GridInterpolate.from_mask(mask=mask, pixel_scales_interp=0.1)
+
+        light_profile = ag.lp.EllipticalSersic(intensity=1.0)
+        light_profile_interp = ag.lp.SphericalSersic(intensity=1.0)
+
+        profile_image_no_interp = light_profile.profile_image_from_grid(grid=grid)
+
+        array_interp = light_profile.profile_image_from_grid(
+            grid=grid_interp.grid_interp
+        )
+        profile_image_interp = grid_interp.interpolated_array_from_array_interp(
+            array_interp=array_interp
+        )
+
+        galaxy = ag.Galaxy(
+            redshift=0.5, light=light_profile_interp, light_0=light_profile
+        )
+
+        profile_image = galaxy.profile_image_from_grid(grid=grid_interp)
+
+        assert (profile_image == profile_image_no_interp + profile_image_interp).all()
+
+        mass_profile = ag.mp.EllipticalIsothermal(einstein_radius=1.0)
+        mass_profile_interp = ag.mp.SphericalIsothermal(einstein_radius=1.0)
+
+        convergence_no_interp = mass_profile.convergence_from_grid(grid=grid)
+
+        array_interp = mass_profile_interp.convergence_from_grid(
+            grid=grid_interp.grid_interp
+        )
+        convergence_interp = grid_interp.interpolated_array_from_array_interp(
+            array_interp=array_interp
+        )
+
+        galaxy = ag.Galaxy(redshift=0.5, mass=mass_profile_interp, mass_0=mass_profile)
+
+        convergence = galaxy.convergence_from_grid(grid=grid_interp)
+
+        assert (convergence == convergence_no_interp + convergence_interp).all()
+
+        potential_no_interp = mass_profile.potential_from_grid(grid=grid)
+
+        array_interp = mass_profile_interp.potential_from_grid(
+            grid=grid_interp.grid_interp
+        )
+        potential_interp = grid_interp.interpolated_array_from_array_interp(
+            array_interp=array_interp
+        )
+
+        galaxy = ag.Galaxy(redshift=0.5, mass=mass_profile_interp, mass_0=mass_profile)
+
+        potential = galaxy.potential_from_grid(grid=grid_interp)
+
+        assert (potential == potential_no_interp + potential_interp).all()
+
+        deflections_no_interp = mass_profile.deflections_from_grid(grid=grid)
+
+        grid_interp_0 = mass_profile_interp.deflections_from_grid(
+            grid=grid_interp.grid_interp
+        )
+        deflections_interp = grid_interp.interpolated_grid_from_grid_interp(
+            grid_interp=grid_interp_0
+        )
+
+        galaxy = ag.Galaxy(redshift=0.5, mass=mass_profile_interp, mass_0=mass_profile)
+
+        deflections = galaxy.deflections_from_grid(grid=grid_interp)
+
+        assert (deflections == deflections_no_interp + deflections_interp).all()

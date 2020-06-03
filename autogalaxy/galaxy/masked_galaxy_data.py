@@ -1,3 +1,4 @@
+from autoarray.dataset import abstract_dataset
 from autoarray.structures import arrays, grids
 from autogalaxy import exc
 
@@ -7,7 +8,10 @@ class MaskedGalaxyDataset:
         self,
         galaxy_data,
         mask,
-        interpolation_pixel_scale=None,
+        grid_class=grids.Grid,
+        fractional_accuracy=0.9999,
+        sub_steps=None,
+        pixel_scales_interp=None,
         use_image=False,
         use_convergence=False,
         use_potential=False,
@@ -57,15 +61,13 @@ class MaskedGalaxyDataset:
 
         self.sub_size = mask.sub_size
 
-        self.grid = grids.Grid.from_mask(mask=mask)
-
-        self.interpolation_pixel_scale = interpolation_pixel_scale
-
-        if interpolation_pixel_scale is not None:
-
-            self.grid = self.grid.new_grid_with_interpolator(
-                interpolation_pixel_scale=interpolation_pixel_scale
-            )
+        self.grid = abstract_dataset.grid_from_mask_and_grid_class(
+            mask=mask,
+            grid_class=grid_class,
+            fractional_accuracy=fractional_accuracy,
+            sub_steps=sub_steps,
+            pixel_scales_interp=pixel_scales_interp,
+        )
 
         if all(
             not element
@@ -110,27 +112,31 @@ class MaskedGalaxyDataset:
             profile_image = sum(
                 map(lambda g: g.profile_image_from_grid(grid=self.grid), galaxies)
             )
-            return arrays.Array(array=profile_image, mask=self.mask)
+            return arrays.MaskedArray.manual_1d(array=profile_image, mask=self.mask)
         elif self.use_convergence:
             convergence = sum(
                 map(lambda g: g.convergence_from_grid(grid=self.grid), galaxies)
             )
-            return arrays.Array(array=convergence, mask=self.mask)
+            return arrays.MaskedArray.manual_1d(array=convergence, mask=self.mask)
         elif self.use_potential:
             potential = sum(
                 map(lambda g: g.potential_from_grid(grid=self.grid), galaxies)
             )
-            return arrays.Array(array=potential, mask=self.mask)
+            return arrays.MaskedArray.manual_1d(array=potential, mask=self.mask)
         elif self.use_deflections_y:
-            deflections_y = sum(
+            deflections = sum(
                 map(lambda g: g.deflections_from_grid(grid=self.grid), galaxies)
-            )[:, 0]
-            return arrays.Array(array=deflections_y, mask=self.mask)
+            )
+            return arrays.MaskedArray.manual_1d(
+                array=deflections[:, 0], mask=self.grid.mask
+            )
         elif self.use_deflections_x:
-            deflections_x = sum(
+            deflections = sum(
                 map(lambda g: g.deflections_from_grid(grid=self.grid), galaxies)
-            )[:, 1]
-            return arrays.Array(array=deflections_x, mask=self.mask)
+            )
+            return arrays.MaskedArray.manual_1d(
+                array=deflections[:, 1], mask=self.grid.mask
+            )
 
     @property
     def data(self):

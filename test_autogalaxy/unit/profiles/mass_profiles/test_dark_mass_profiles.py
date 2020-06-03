@@ -963,51 +963,6 @@ class TestGeneralizedNFW:
         # assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         # assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
-    def test__deflections_of_spherical_profile__use_interpolate_and_cache_decorators(
-        self
-    ):
-
-        gNFW = ag.mp.SphericalGeneralizedNFW(
-            centre=(-0.7, 0.5), kappa_s=1.0, inner_slope=0.5, scale_radius=8.0
-        )
-
-        mask = np.array(
-            [
-                [True, True, True, True, True],
-                [True, False, False, False, True],
-                [True, False, True, False, True],
-                [True, False, False, False, True],
-                [True, True, True, True, True],
-            ]
-        )
-
-        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
-
-        grid = ag.Grid.from_mask(mask=mask)
-
-        regular_with_interp = grid.new_grid_with_interpolator(
-            interpolation_pixel_scale=0.5
-        )
-        interp_deflections = gNFW.deflections_from_grid(grid=regular_with_interp)
-
-        interpolator = ag.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
-            mask=mask, grid=grid, interpolation_pixel_scale=0.5
-        )
-
-        interp_deflections_values = gNFW.deflections_from_grid(
-            grid=interpolator.interp_grid
-        )
-
-        interp_deflections_manual_y = interpolator.interpolated_values_from_values(
-            values=interp_deflections_values[:, 0]
-        )
-        interp_deflections_manual_x = interpolator.interpolated_values_from_values(
-            values=interp_deflections_values[:, 1]
-        )
-
-        assert (interp_deflections_manual_y == interp_deflections[:, 0]).all()
-        assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
-
     # def test__compare_to_nfw(self):
     #     nfw = ag.mp.EllipticalNFW(centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0, kappa_s=1.0, scale_radius=5.0)
     #     gnfw = ag.EllipticalGeneralizedNFW(centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0, kappa_s=1.0,
@@ -1204,53 +1159,6 @@ class TestTruncatedNFW:
         )
 
         assert truncated_nfw_deflections == pytest.approx(nfw_deflections, 1.0e-4)
-
-    def test__deflections_of_spherical_profile__dont_use_interpolate_and_cache_decorators(
-        self
-    ):
-
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
-            centre=(-0.7, 0.5), kappa_s=1.0, scale_radius=8.0, truncation_radius=2.0
-        )
-
-        mask = np.array(
-            [
-                [True, True, True, True, True],
-                [True, False, False, False, True],
-                [True, False, True, False, True],
-                [True, False, False, False, True],
-                [True, True, True, True, True],
-            ]
-        )
-
-        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
-
-        grid = ag.Grid.from_mask(mask=mask)
-
-        regular_with_interp = grid.new_grid_with_interpolator(
-            interpolation_pixel_scale=0.5
-        )
-        interp_deflections = truncated_nfw.deflections_from_grid(
-            grid=regular_with_interp
-        )
-
-        interpolator = ag.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
-            mask=mask, grid=grid, interpolation_pixel_scale=0.5
-        )
-
-        interp_deflections_values = truncated_nfw.deflections_from_grid(
-            grid=interpolator.interp_grid
-        )
-
-        interp_deflections_manual_y = interpolator.interpolated_values_from_values(
-            values=interp_deflections_values[:, 0]
-        )
-        interp_deflections_manual_x = interpolator.interpolated_values_from_values(
-            values=interp_deflections_values[:, 1]
-        )
-
-        assert (interp_deflections_manual_y != interp_deflections[:, 0]).all()
-        assert (interp_deflections_manual_x != interp_deflections[:, 1]).all()
 
     def test__mass_at_truncation_radius__values(self):
 
@@ -1830,92 +1738,6 @@ class TestNFW:
 
         assert deflections[0, 0] == pytest.approx(-2.59480, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.44204, 1e-3)
-
-    def test__deflections_of_elliptical_profile__use_interpolate_and_cache_decorators(
-        self
-    ):
-        nfw = ag.mp.EllipticalNFW(
-            centre=(-0.7, 0.5), axis_ratio=0.9, phi=45.0, kappa_s=1.0, scale_radius=8.0
-        )
-
-        mask = np.array(
-            [
-                [True, True, True, True, True],
-                [True, False, False, False, True],
-                [True, False, True, False, True],
-                [True, False, False, False, True],
-                [True, True, True, True, True],
-            ]
-        )
-
-        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
-
-        grid = ag.Grid.from_mask(mask=mask)
-
-        regular_with_interp = grid.new_grid_with_interpolator(
-            interpolation_pixel_scale=0.5
-        )
-        interp_deflections = nfw.deflections_from_grid(grid=regular_with_interp)
-
-        interpolator = ag.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
-            mask=mask, grid=grid, interpolation_pixel_scale=0.5
-        )
-
-        interp_deflections_values = nfw.deflections_from_grid(
-            grid=interpolator.interp_grid
-        )
-
-        interp_deflections_manual_y = interpolator.interpolated_values_from_values(
-            values=interp_deflections_values[:, 0]
-        )
-        interp_deflections_manual_x = interpolator.interpolated_values_from_values(
-            values=interp_deflections_values[:, 1]
-        )
-
-        assert (interp_deflections_manual_y == interp_deflections[:, 0]).all()
-        assert (interp_deflections_manual_x == interp_deflections[:, 1]).all()
-
-    def test__deflections_of_spherical_profile__dont_use_interpolate_and_cache_decorators(
-        self
-    ):
-        nfw = ag.mp.SphericalNFW(centre=(-0.7, 0.5), kappa_s=1.0, scale_radius=8.0)
-
-        mask = np.array(
-            [
-                [True, True, True, True, True],
-                [True, False, False, False, True],
-                [True, False, True, False, True],
-                [True, False, False, False, True],
-                [True, True, True, True, True],
-            ]
-        )
-
-        mask = ag.Mask.manual(mask, pixel_scales=(1.0, 1.0), sub_size=1)
-
-        grid = ag.Grid.from_mask(mask=mask)
-
-        regular_with_interp = grid.new_grid_with_interpolator(
-            interpolation_pixel_scale=0.5
-        )
-        interp_deflections = nfw.deflections_from_grid(grid=regular_with_interp)
-
-        interpolator = ag.GridInterpolate.from_mask_grid_and_interpolation_pixel_scales(
-            mask=mask, grid=grid, interpolation_pixel_scale=0.5
-        )
-
-        interp_deflections_values = nfw.deflections_from_grid(
-            grid=interpolator.interp_grid
-        )
-
-        interp_deflections_manual_y = interpolator.interpolated_values_from_values(
-            values=interp_deflections_values[:, 0]
-        )
-        interp_deflections_manual_x = interpolator.interpolated_values_from_values(
-            values=interp_deflections_values[:, 1]
-        )
-
-        assert (interp_deflections_manual_y != interp_deflections[:, 0]).all()
-        assert (interp_deflections_manual_x != interp_deflections[:, 1]).all()
 
     def test__outputs_are_autoarrays(self):
 

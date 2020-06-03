@@ -44,12 +44,9 @@ class TestMaskedImaging:
         assert (masked_imaging_7x7.grid == grid).all()
 
         blurring_grid = grid.blurring_grid_from_kernel_shape(kernel_shape_2d=(3, 3))
-        new_blurring_grid = blurring_grid.new_grid_with_interpolator(
-            interpolation_pixel_scale=1.0
-        )
 
         assert (masked_imaging_7x7.blurring_grid.in_1d == blurring_grid_7x7).all()
-        assert (masked_imaging_7x7.blurring_grid == new_blurring_grid).all()
+        assert (masked_imaging_7x7.blurring_grid == blurring_grid).all()
 
     def test__modified_image_and_noise_map(
         self, image_7x7, noise_map_7x7, imaging_7x7, sub_mask_7x7

@@ -8,7 +8,7 @@ import pytest
 
 def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__noise_normalization_correct():
 
-    grid = ag.GridIterator.uniform(shape_2d=(11, 11), pixel_scales=0.2)
+    grid = ag.GridIterate.uniform(shape_2d=(11, 11), pixel_scales=0.2)
 
     psf = ag.Kernel.manual_2d(
         array=np.array([[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]]),
@@ -69,7 +69,7 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
     )
 
     masked_imaging = ag.MaskedImaging(
-        imaging=imaging, mask=mask, grid_class=ag.GridIterator
+        imaging=imaging, mask=mask, grid_class=ag.GridIterate
     )
 
     plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])

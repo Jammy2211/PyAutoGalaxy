@@ -331,8 +331,6 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
         return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
     @grids.grid_like_to_structure
-    @grids.interpolate
-    @grids.cache
     @grids.transform
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):

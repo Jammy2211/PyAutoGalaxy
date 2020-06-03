@@ -49,7 +49,7 @@ def test__masked_imaging__settings_inputs_are_used_in_masked_imaging(
         phase_name="phase_interferometer_7",
         real_space_mask=mask_7x7,
         settings=ag.PhaseSettingsInterferometer(
-            grid_class=ag.GridIterator,
+            grid_class=ag.GridIterate,
             sub_size=3,
             fractional_accuracy=0.99,
             sub_steps=[2],
@@ -61,7 +61,7 @@ def test__masked_imaging__settings_inputs_are_used_in_masked_imaging(
         dataset=interferometer_7, mask=mask_7x7, results=mock_pipeline.MockResults()
     )
 
-    assert isinstance(analysis.masked_dataset.grid, ag.GridIterator)
+    assert isinstance(analysis.masked_dataset.grid, ag.GridIterate)
     assert analysis.masked_dataset.grid.sub_size == 1
     assert analysis.masked_dataset.grid.fractional_accuracy == 0.99
     assert analysis.masked_dataset.grid.sub_steps == [2]

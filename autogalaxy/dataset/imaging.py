@@ -12,7 +12,7 @@ class MaskedImaging(imaging.MaskedImaging):
         self,
         imaging,
         mask,
-        grid_class=grids.GridIterator,
+        grid_class=grids.GridIterate,
         grid_inversion_class=grids.Grid,
         fractional_accuracy=0.9999,
         sub_steps=None,
@@ -42,7 +42,7 @@ class MaskedImaging(imaging.MaskedImaging):
         positions : [[]]
             Lists of image-pixel coordinates (arc-seconds) that mappers close to one another in the source-plane(s), \
             used to speed up the non-linear sampling.
-        interpolation_pixel_scale : float
+        pixel_scales_interp : float
             If *True*, expensive to compute mass profile deflection angles will be computed on a sparse grid and \
             interpolated to the grid, sub and blurring grids.
         inversion_pixel_limit : int or None

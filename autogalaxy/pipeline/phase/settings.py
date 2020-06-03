@@ -8,12 +8,12 @@ import copy
 class AbstractPhaseSettings:
     def __init__(
         self,
-        grid_class=grids.GridIterator,
+        grid_class=grids.GridIterate,
         grid_inversion_class=grids.Grid,
         sub_size=2,
         fractional_accuracy=0.9999,
         sub_steps=None,
-        interpolation_pixel_scale=None,
+        pixel_scales_interp=None,
         signal_to_noise_limit=None,
         bin_up_factor=None,
         inversion_pixel_limit=None,
@@ -27,7 +27,7 @@ class AbstractPhaseSettings:
         self.sub_size = sub_size
         self.fractional_accuracy = fractional_accuracy
         self.sub_steps = sub_steps
-        self.interpolation_pixel_scale = interpolation_pixel_scale
+        self.pixel_scales_interp = pixel_scales_interp
         self.signal_to_noise_limit = signal_to_noise_limit
         self.bin_up_factor = bin_up_factor
         self.inversion_pixel_limit = inversion_pixel_limit or conf.instance.general.get(
@@ -120,25 +120,25 @@ class AbstractPhaseSettings:
         return "__bin_" + str(self.bin_up_factor)
 
     @property
-    def interpolation_pixel_scale_tag(self):
+    def pixel_scales_interp_tag(self):
         """Generate an interpolation pixel scale tag, to customize phase names based on the resolution of the interpolation \
         grid that deflection angles are computed on before interpolating to the and sub aa.
 
         This changes the phase name 'phase_name' as follows:
 
-        interpolation_pixel_scale = 1 -> phase_name
-        interpolation_pixel_scale = 2 -> phase_name_interpolation_pixel_scale_2
-        interpolation_pixel_scale = 2 -> phase_name_interpolation_pixel_scale_2
+        pixel_scales_interp = 1 -> phase_name
+        pixel_scales_interp = 2 -> phase_name_pixel_scales_interp_2
+        pixel_scales_interp = 2 -> phase_name_pixel_scales_interp_2
         """
-        if self.interpolation_pixel_scale is None:
+        if self.pixel_scales_interp is None:
             return ""
-        return "__interp_{0:.3f}".format(self.interpolation_pixel_scale)
+        return "__interp_{0:.3f}".format(self.pixel_scales_interp)
 
 
 class PhaseSettingsImaging(AbstractPhaseSettings):
     def __init__(
         self,
-        grid_class=grids.GridIterator,
+        grid_class=grids.GridIterate,
         grid_inversion_class=grids.Grid,
         sub_size=2,
         fractional_accuracy=0.9999,
@@ -223,7 +223,7 @@ class PhaseSettingsImaging(AbstractPhaseSettings):
 class PhaseSettingsInterferometer(AbstractPhaseSettings):
     def __init__(
         self,
-        grid_class=grids.GridIterator,
+        grid_class=grids.GridIterate,
         grid_inversion_class=grids.Grid,
         sub_size=2,
         fractional_accuracy=0.9999,

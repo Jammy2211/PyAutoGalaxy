@@ -3,7 +3,7 @@ from autoarray.mask.mask import Mask
 from autoarray.structures.arrays import Array, Values
 from autoarray.structures.grids import (
     Grid,
-    GridIterator,
+    GridIterate,
     GridInterpolate,
     GridCoordinates,
     GridRectangular,

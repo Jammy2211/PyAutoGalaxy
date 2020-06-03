@@ -652,8 +652,6 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
         return potential_grid
 
     @grids.grid_like_to_structure
-    @grids.interpolate
-    @grids.cache
     @grids.transform
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid, tabulate_bins=1000):
@@ -838,8 +836,6 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
         )
 
     @grids.grid_like_to_structure
-    @grids.interpolate
-    @grids.cache
     @grids.transform
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid, **kwargs):
@@ -1288,8 +1284,6 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
         return potential_grid
 
     @grids.grid_like_to_structure
-    @grids.interpolate
-    @grids.cache
     @grids.transform
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):

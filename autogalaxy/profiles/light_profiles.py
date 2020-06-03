@@ -318,6 +318,7 @@ class EllipticalGaussian(EllipticalLightProfile):
         grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
         """
+
         return self.profile_image_from_grid_radii(self.grid_to_elliptical_radii(grid))
 
 

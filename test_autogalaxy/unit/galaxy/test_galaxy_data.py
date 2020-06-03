@@ -75,32 +75,51 @@ class TestGalaxyFitData:
             )
         ).all()
 
-    def test__grid(self, gal_data_7x7, sub_mask_7x7, sub_grid_7x7):
+    def test__grid(
+        self,
+        gal_data_7x7,
+        sub_mask_7x7,
+        grid_7x7,
+        sub_grid_7x7,
+        blurring_grid_7x7,
+        grid_iterate_7x7,
+    ):
 
         galaxy_fit_data = ag.MaskedGalaxyDataset(
-            galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_image=True
-        )
-
-        assert (galaxy_fit_data.grid == sub_grid_7x7).all()
-
-    def test__interpolation_pixel_scale(self, image_7x7, sub_mask_7x7):
-
-        noise_map = ag.Array.full(fill_value=2.0, shape_2d=(7, 7), pixel_scales=3.0)
-        gal_data_7x7 = ag.GalaxyData(
-            image=image_7x7, noise_map=noise_map, pixel_scales=3.0
-        )
-        gal_data_7x7 = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7,
             mask=sub_mask_7x7,
-            interpolation_pixel_scale=1.0,
             use_image=True,
+            grid_class=ag.Grid,
         )
 
-        grid = ag.Grid.from_mask(mask=sub_mask_7x7)
-        new_grid = grid.new_grid_with_interpolator(interpolation_pixel_scale=1.0)
-        assert (gal_data_7x7.grid == new_grid).all()
-        assert (gal_data_7x7.grid.interpolator.vtx == new_grid.interpolator.vtx).all()
-        assert (gal_data_7x7.grid.interpolator.wts == new_grid.interpolator.wts).all()
+        assert isinstance(galaxy_fit_data.grid, ag.Grid)
+        assert (galaxy_fit_data.grid == sub_grid_7x7).all()
+
+        galaxy_fit_data = ag.MaskedGalaxyDataset(
+            galaxy_data=gal_data_7x7,
+            mask=sub_mask_7x7,
+            use_image=True,
+            grid_class=ag.GridIterate,
+        )
+
+        assert isinstance(galaxy_fit_data.grid, ag.GridIterate)
+        assert (galaxy_fit_data.grid.in_1d_binned == grid_iterate_7x7).all()
+
+        galaxy_fit_data = ag.MaskedGalaxyDataset(
+            galaxy_data=gal_data_7x7,
+            mask=sub_mask_7x7,
+            use_image=True,
+            grid_class=ag.GridInterpolate,
+            pixel_scales_interp=1.0,
+        )
+
+        grid = ag.GridInterpolate.from_mask(mask=sub_mask_7x7, pixel_scales_interp=1.0)
+
+        assert isinstance(galaxy_fit_data.grid, ag.GridInterpolate)
+        assert (galaxy_fit_data.grid == grid).all()
+        assert (galaxy_fit_data.grid.grid_interp == grid.grid_interp).all()
+        assert (galaxy_fit_data.grid.vtx == grid.vtx).all()
+        assert (galaxy_fit_data.grid.wts == grid.wts).all()
 
     def test__gal_data_7x7_image(self, gal_data_7x7, sub_mask_7x7):
 

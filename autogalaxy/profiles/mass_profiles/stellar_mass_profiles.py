@@ -88,8 +88,6 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
                 return self.deflections_from_grid_via_integrator(grid=grid)
 
     @grids.grid_like_to_structure
-    @grids.interpolate
-    @grids.cache
     @grids.transform
     @grids.relocate_to_radial_minimum
     def deflections_from_grid_via_analytic(self, grid):
@@ -119,8 +117,6 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
         )
 
     @grids.grid_like_to_structure
-    @grids.interpolate
-    @grids.cache
     @grids.transform
     @grids.relocate_to_radial_minimum
     def deflections_from_grid_via_integrator(self, grid):
@@ -330,8 +326,6 @@ class EllipticalSersic(AbstractEllipticalSersic):
         ) / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
 
     @grids.grid_like_to_structure
-    @grids.interpolate
-    @grids.cache
     @grids.transform
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -628,8 +622,6 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         return self.convergence_func(self.grid_to_eccentric_radii(grid))
 
     @grids.grid_like_to_structure
-    @grids.interpolate
-    @grids.cache
     @grids.transform
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):

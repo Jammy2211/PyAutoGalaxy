@@ -107,13 +107,13 @@ class TestEdit:
         assert settings.psf_shape_2d == (3, 3)
 
         settings = settings.edit(
-            grid_class=ag.GridIterator,
+            grid_class=ag.GridIterate,
             grid_inversion_class=ag.GridInterpolate,
             sub_steps=[5],
             inversion_pixel_limit=200,
         )
 
-        assert settings.grid_class is ag.GridIterator
+        assert settings.grid_class is ag.GridIterate
         assert settings.grid_inversion_class is ag.GridInterpolate
         assert settings.sub_size == 2
         assert settings.fractional_accuracy == 0.5
@@ -131,7 +131,7 @@ class TestEdit:
             psf_shape_2d=(5, 5),
         )
 
-        assert settings.grid_class is ag.GridIterator
+        assert settings.grid_class is ag.GridIterate
         assert settings.grid_inversion_class is ag.GridInterpolate
         assert settings.sub_size == 3
         assert settings.fractional_accuracy == 0.7
@@ -168,14 +168,14 @@ class TestEdit:
         assert settings.primary_beam_shape_2d == (3, 3)
 
         settings = settings.edit(
-            grid_class=ag.GridIterator,
+            grid_class=ag.GridIterate,
             grid_inversion_class=ag.GridInterpolate,
             sub_steps=[5],
             inversion_pixel_limit=200,
             transformer_class=ag.TransformerFFT,
         )
 
-        assert settings.grid_class is ag.GridIterator
+        assert settings.grid_class is ag.GridIterate
         assert settings.grid_inversion_class is ag.GridInterpolate
         assert settings.sub_size == 2
         assert settings.fractional_accuracy == 0.5
@@ -194,7 +194,7 @@ class TestEdit:
             primary_beam_shape_2d=(5, 5),
         )
 
-        assert settings.grid_class is ag.GridIterator
+        assert settings.grid_class is ag.GridIterate
         assert settings.grid_inversion_class is ag.GridInterpolate
         assert settings.sub_size == 3
         assert settings.fractional_accuracy == 0.7

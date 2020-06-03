@@ -7,14 +7,6 @@ import pytest
 from test_autogalaxy.mock import mock_cosmology
 
 
-@pytest.fixture(autouse=True)
-def reset_config():
-    """
-    Use configuration from the default path. You may want to change this to set a specific path.
-    """
-    conf.instance = conf.default
-
-
 def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
 
     mass_total = 0.0
@@ -344,12 +336,12 @@ class TestLensingObject:
         sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
         assert sis.einstein_mass_in_units(unit_mass="angular") == pytest.approx(
-            np.pi * 2.0 ** 2.0, 1.0e-2
+            np.pi * 2.0 ** 2.0, 1.0e-1
         )
 
 
 class TestDecorators:
-    def test__grid_iterator_in__iterates_grid_result_correctly(self, gal_x1_mp):
+    def test__grid_iterate_in__iterates_grid_result_correctly(self, gal_x1_mp):
 
         mask = ag.Mask.manual(
             mask=[
@@ -362,7 +354,7 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.GridIterator.from_mask(
+        grid = ag.GridIterate.from_mask(
             mask=mask, fractional_accuracy=1.0, sub_steps=[2]
         )
 
@@ -380,7 +372,7 @@ class TestDecorators:
 
         assert deflections == pytest.approx(deflections_sub_2, 1.0e-6)
 
-        grid = ag.GridIterator.from_mask(
+        grid = ag.GridIterate.from_mask(
             mask=mask, fractional_accuracy=0.99, sub_steps=[2, 4, 8]
         )
 
@@ -405,3 +397,149 @@ class TestDecorators:
         ).in_1d_binned
 
         assert deflections[4, 0] == deflections_sub_8[4, 0]
+
+    def test__grid_interpolate_in__convergence__interpolates_based_on_intepolate_config(
+        self
+    ):
+
+        # False in interpolate.ini
+
+        mask = ag.Mask.manual(
+            mask=[
+                [True, True, True, True, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, True, True, True, True],
+            ],
+            pixel_scales=(1.0, 1.0),
+        )
+
+        grid = ag.Grid.from_mask(mask=mask)
+
+        grid_interpolate = ag.GridInterpolate.from_mask(
+            mask=mask, pixel_scales_interp=0.1
+        )
+
+        mass_profile = ag.mp.EllipticalIsothermal(einstein_radius=1.0)
+
+        convergence = mass_profile.convergence_from_grid(grid=grid)
+        convergence_no_interpolate = mass_profile.convergence_from_grid(
+            grid=grid_interpolate
+        )
+
+        assert (convergence == convergence_no_interpolate).all()
+
+        # False in interpolate.ini
+
+        mass_profile = ag.mp.SphericalIsothermal(einstein_radius=1.0)
+
+        convergence = mass_profile.convergence_from_grid(grid=grid)
+        convergence_interpolate = mass_profile.convergence_from_grid(
+            grid=grid_interpolate
+        )
+        assert (convergence != convergence_interpolate).all()
+
+        array_interp = mass_profile.convergence_from_grid(
+            grid=grid_interpolate.grid_interp
+        )
+        interpolated_array = grid_interpolate.interpolated_array_from_array_interp(
+            array_interp=array_interp
+        )
+        assert (convergence_interpolate == interpolated_array).all()
+
+    def test__grid_interpolate_in__potential__interpolates_based_on_intepolate_config(
+        self
+    ):
+
+        # False in interpolate.ini
+
+        mask = ag.Mask.manual(
+            mask=[
+                [True, True, True, True, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, True, True, True, True],
+            ],
+            pixel_scales=(1.0, 1.0),
+        )
+
+        grid = ag.Grid.from_mask(mask=mask)
+
+        grid_interpolate = ag.GridInterpolate.from_mask(
+            mask=mask, pixel_scales_interp=0.1
+        )
+
+        mass_profile = ag.mp.EllipticalIsothermal(einstein_radius=1.0)
+
+        potential = mass_profile.potential_from_grid(grid=grid)
+        potential_no_interpolate = mass_profile.potential_from_grid(
+            grid=grid_interpolate
+        )
+
+        assert (potential == potential_no_interpolate).all()
+
+        # False in interpolate.ini
+
+        mass_profile = ag.mp.SphericalIsothermal(einstein_radius=1.0)
+
+        potential = mass_profile.potential_from_grid(grid=grid)
+        potential_interpolate = mass_profile.potential_from_grid(grid=grid_interpolate)
+        assert (potential != potential_interpolate).all()
+
+        array_interp = mass_profile.potential_from_grid(
+            grid=grid_interpolate.grid_interp
+        )
+        interpolated_array = grid_interpolate.interpolated_array_from_array_interp(
+            array_interp=array_interp
+        )
+        assert (potential_interpolate == interpolated_array).all()
+
+    def test__grid_interpolate_in__deflections__interpolates_based_on_intepolate_config(
+        self
+    ):
+
+        # False in interpolate.ini
+
+        mask = ag.Mask.manual(
+            mask=[
+                [True, True, True, True, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, True, True, True, True],
+            ],
+            pixel_scales=(1.0, 1.0),
+        )
+
+        grid = ag.Grid.from_mask(mask=mask)
+
+        grid_interpolate = ag.GridInterpolate.from_mask(
+            mask=mask, pixel_scales_interp=0.1
+        )
+
+        mass_profile = ag.mp.EllipticalIsothermal(einstein_radius=1.0)
+
+        deflections = mass_profile.deflections_from_grid(grid=grid)
+        deflections_no_interpolate = mass_profile.deflections_from_grid(
+            grid=grid_interpolate
+        )
+
+        assert (deflections == deflections_no_interpolate).all()
+
+        # False in interpolate.ini
+
+        mass_profile = ag.mp.SphericalIsothermal(einstein_radius=1.0)
+
+        deflections_interpolate = mass_profile.deflections_from_grid(
+            grid=grid_interpolate
+        )
+
+        grid_interp = mass_profile.deflections_from_grid(
+            grid=grid_interpolate.grid_interp
+        )
+        interpolated_grid = grid_interpolate.interpolated_grid_from_grid_interp(
+            grid_interp=grid_interp
+        )
+        assert (deflections_interpolate == interpolated_grid).all()

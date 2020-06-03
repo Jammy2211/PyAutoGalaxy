@@ -1,7 +1,5 @@
 from autoconf import conf
 import autogalaxy as ag
-import autofit as af
-import autogalaxy as ag
 import numpy as np
 import pytest
 from test_autogalaxy.mock.mock_galaxy import MockGalaxy

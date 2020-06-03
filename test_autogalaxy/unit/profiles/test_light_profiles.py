@@ -1153,7 +1153,7 @@ class TestLuminosityWithinCircle:
 
 
 class TestDecorators:
-    def test__grid_iterator_in__iterates_grid_correctly(self, gal_x1_lp):
+    def test__grid_iterate_in__iterates_grid_correctly(self):
 
         mask = ag.Mask.manual(
             mask=[
@@ -1166,7 +1166,7 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.GridIterator.from_mask(
+        grid = ag.GridIterate.from_mask(
             mask=mask, fractional_accuracy=1.0, sub_steps=[2]
         )
 
@@ -1182,7 +1182,7 @@ class TestDecorators:
 
         assert (profile_image == profile_image_sub_2).all()
 
-        grid = ag.GridIterator.from_mask(
+        grid = ag.GridIterate.from_mask(
             mask=mask, fractional_accuracy=0.95, sub_steps=[2, 4, 8]
         )
 
@@ -1205,6 +1205,74 @@ class TestDecorators:
         ).in_1d_binned
 
         assert profile_image[4] == profile_image_sub_8[4]
+
+    def test__grid_iterate_in__iterates_grid_correctly_for_peak(self):
+
+        grid = ag.GridIterate.uniform(
+            shape_2d=(100, 100),
+            pixel_scales=0.1,
+            fractional_accuracy=0.9999,
+            sub_steps=[2, 4, 8, 16, 24],
+        )
+
+        light = ag.lp.EllipticalSersic(
+            centre=(0.1, 0.1),
+            axis_ratio=0.8,
+            phi=60.0,
+            intensity=0.3,
+            effective_radius=1.0,
+            sersic_index=2.5,
+        )
+
+        light.profile_image_from_grid(grid=grid)
+
+    def test__grid_interpolate_in__interpolates_based_on_intepolate_config(self):
+
+        # False in interpolate.ini
+
+        mask = ag.Mask.manual(
+            mask=[
+                [True, True, True, True, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, False, False, False, True],
+                [True, True, True, True, True],
+            ],
+            pixel_scales=(1.0, 1.0),
+        )
+
+        grid = ag.Grid.from_mask(mask=mask)
+
+        grid_interpolate = ag.GridInterpolate.from_mask(
+            mask=mask, pixel_scales_interp=0.1
+        )
+
+        light_profile = ag.lp.EllipticalSersic(intensity=1.0)
+
+        profile_image = light_profile.profile_image_from_grid(grid=grid)
+        profile_image_no_interpolate = light_profile.profile_image_from_grid(
+            grid=grid_interpolate
+        )
+
+        assert (profile_image == profile_image_no_interpolate).all()
+
+        # False in interpolate.ini
+
+        light_profile = ag.lp.SphericalSersic(intensity=1.0)
+
+        profile_image = light_profile.profile_image_from_grid(grid=grid)
+        profile_image_interpolate = light_profile.profile_image_from_grid(
+            grid=grid_interpolate
+        )
+        assert (profile_image != profile_image_interpolate).all()
+
+        array_interp = light_profile.profile_image_from_grid(
+            grid=grid_interpolate.grid_interp
+        )
+        interpolated_array = grid_interpolate.interpolated_array_from_array_interp(
+            array_interp=array_interp
+        )
+        assert (profile_image_interpolate == interpolated_array).all()
 
 
 class TestGrids:
