@@ -40,15 +40,15 @@ def grid_from_instrument(instrument):
         A string giving the resolution of the desired instrument (VRO | Euclid | HST | HST_Up | AO).
     """
     if instrument in "vro":
-        return ag.Grid.uniform(shape_2d=(50, 50), pixel_scales=0.2)
+        return ag.GridIterate.uniform(shape_2d=(80, 80), pixel_scales=0.2)
     elif instrument in "euclid":
-        return ag.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.1)
+        return ag.GridIterate.uniform(shape_2d=(120, 120), pixel_scales=0.1)
     elif instrument in "hst":
-        return ag.Grid.uniform(shape_2d=(160, 160), pixel_scales=0.05)
+        return ag.GridIterate.uniform(shape_2d=(200, 200), pixel_scales=0.05)
     elif instrument in "hst_up":
-        return ag.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.03)
+        return ag.GridIterate.uniform(shape_2d=(300, 300), pixel_scales=0.03)
     elif instrument in "ao":
-        return ag.Grid.uniform(shape_2d=(800, 800), pixel_scales=0.01)
+        return ag.GridIterate.uniform(shape_2d=(800, 800), pixel_scales=0.01)
     else:
         raise ValueError("An invalid instrument was entered - ", instrument)
 
@@ -185,59 +185,6 @@ def simulate_imaging_from_instrument(data_label, instrument, galaxies):
     )
 
     aplt.Plane.profile_image(plane=plane, grid=grid, plotter=plotter)
-
-
-def simulate_ci_data_from_ci_normalization_region_and_cti_model(
-    ci_data_type,
-    ci_data_model,
-    ci_data_resolution,
-    clocker,
-    pattern,
-    parallel_traps=None,
-    parallel_ccd_volume=None,
-    serial_traps=None,
-    serial_ccd_volume=None,
-    read_noise=1.0,
-    cosmic_ray_map=None,
-):
-
-    shape = simulate_util.shape_from_ci_data_resolution(
-        ci_data_resolution=ci_data_resolution
-    )
-
-    ci_pre_cti = pattern.simulate_ci_pre_cti(shape=shape)
-
-    simulator = ac.ci.SimulatorCIImaging(read_noise=read_noise)
-
-    imaging = simulator.from_image(
-        clocker=clocker,
-        ci_pre_cti=ci_pre_cti,
-        ci_pattern=pattern,
-        parallel_traps=parallel_traps,
-        parallel_ccd_volume=parallel_ccd_volume,
-        serial_traps=serial_traps,
-        serial_ccd_volume=serial_ccd_volume,
-        cosmic_ray_map=cosmic_ray_map,
-    )
-
-    # Now, lets output this simulated ccd-simulator to the test_autocti/simulator folder.
-    test_path = "{}/../".format(os.path.dirname(os.path.realpath(__file__)))
-
-    ci_data_path = af.path_util.make_and_return_path_from_path_and_folder_names(
-        path=test_path,
-        folder_names=["dataset", ci_data_type, ci_data_model, ci_data_resolution],
-    )
-
-    normalization = str(int(pattern.normalization))
-
-    imaging.output_to_fits(
-        image_path=ci_data_path + "image_" + normalization + ".fits",
-        noise_map_path=ci_data_path + "noise_map_" + normalization + ".fits",
-        ci_pre_cti_path=ci_data_path + "ci_pre_cti_" + normalization + ".fits",
-        cosmic_ray_map_path=ci_data_path + "cosmic_ray_map_" + normalization + ".fits",
-        overwrite=True,
-    )
-
 
 def load_test_imaging(instrument, data_label, name=None):
 

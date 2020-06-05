@@ -1,6 +1,6 @@
 autofit==0.58.0
 autoarray==0.10.7
 colossus==1.2.14
-pyquad==0.0.4.0
+pyquad==0.6
 astropy>=3.0.0
 numpy>=1.18.0

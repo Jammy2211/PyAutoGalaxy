@@ -35,7 +35,7 @@ def grid_from_instrument(instrument):
     pixel_scales = pixel_scale_from_instrument(instrument=instrument)
 
     if instrument in "sma":
-        return ag.Grid.uniform(shape_2d=(151, 151), pixel_scales=pixel_scales)
+        return ag.GridIterate.uniform(shape_2d=(151, 151), pixel_scales=pixel_scales)
     else:
         raise ValueError("An invalid data_label resolution was entered - ", instrument)
 
