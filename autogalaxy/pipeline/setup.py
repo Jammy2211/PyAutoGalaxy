@@ -119,8 +119,8 @@ class PipelineSetup:
             return (
                 conf.instance.tag.get("pipeline", "pixelization", str)
                 + "_"
-                + conf.instance.label.get(
-                    "tag", self.pixelization().__class__.__name__, str
+                + conf.instance.tag.get(
+                    "pixelization", self.pixelization().__class__.__name__, str
                 )
             )
 
@@ -145,8 +145,8 @@ class PipelineSetup:
                 "__"
                 + conf.instance.tag.get("pipeline", "regularization", str)
                 + "_"
-                + conf.instance.label.get(
-                    "tag", self.regularization().__class__.__name__, str
+                + conf.instance.tag.get(
+                    "regularization", self.regularization().__class__.__name__, str
                 )
             )
 

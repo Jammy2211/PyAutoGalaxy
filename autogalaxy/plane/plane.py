@@ -561,7 +561,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             for galaxy in self.galaxies
         ]
 
-    def sparse_image_plane_grid_from_grid(self, grid):
+    def sparse_image_plane_grid_from_grid(self, grid, inversion_stochastic=False):
 
         if not self.has_pixelization:
             return None
@@ -569,7 +569,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         hyper_galaxy_image = self.hyper_galaxy_image_of_galaxy_with_pixelization
 
         return self.pixelization.sparse_grid_from_grid(
-            grid=grid, hyper_image=hyper_galaxy_image
+            grid=grid, hyper_image=hyper_galaxy_image, inversion_stochastic=inversion_stochastic
         )
 
     def mapper_from_grid_and_sparse_grid(

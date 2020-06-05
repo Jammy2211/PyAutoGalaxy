@@ -39,6 +39,7 @@ class PhaseDataset(abstract.AbstractPhase):
             paths.tag = settings.phase_with_inversion_tag
 
         super().__init__(paths, non_linear_class=non_linear_class)
+        self.settings = settings
         self.galaxies = galaxies or []
         self.cosmology = cosmology
         self.use_as_hyper_dataset = False

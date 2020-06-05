@@ -1,11 +1,9 @@
 from autoconf import conf
+from autofit.tools.phase import AbstractPhaseSettings
 from autoarray.structures import grids
 from autoarray.operators import transformer
 
-import copy
-
-
-class AbstractPhaseSettings:
+class PhaseSettings(AbstractPhaseSettings):
     def __init__(
         self,
         grid_class=grids.GridIterate,
@@ -17,7 +15,10 @@ class AbstractPhaseSettings:
         signal_to_noise_limit=None,
         bin_up_factor=None,
         inversion_pixel_limit=None,
+        log_likelihood_cap=None,
     ):
+
+        super().__init__(log_likelihood_cap=log_likelihood_cap)
 
         if sub_steps is None:
             sub_steps = [2, 4, 8, 16]
@@ -216,7 +217,7 @@ class AbstractPhaseSettings:
         )
 
 
-class PhaseSettingsImaging(AbstractPhaseSettings):
+class PhaseSettingsImaging(PhaseSettings):
     def __init__(
         self,
         grid_class=grids.GridIterate,
@@ -229,6 +230,7 @@ class PhaseSettingsImaging(AbstractPhaseSettings):
         bin_up_factor=None,
         inversion_pixel_limit=None,
         psf_shape_2d=None,
+        log_likelihood_cap=None,
     ):
 
         super().__init__(
@@ -241,6 +243,7 @@ class PhaseSettingsImaging(AbstractPhaseSettings):
             signal_to_noise_limit=signal_to_noise_limit,
             bin_up_factor=bin_up_factor,
             inversion_pixel_limit=inversion_pixel_limit,
+            log_likelihood_cap=log_likelihood_cap,
         )
 
         self.psf_shape_2d = psf_shape_2d
@@ -253,6 +256,7 @@ class PhaseSettingsImaging(AbstractPhaseSettings):
             + self.signal_to_noise_limit_tag
             + self.bin_up_factor_tag
             + self.psf_shape_tag
+            + self.log_likelihood_cap_tag
         )
 
     @property
@@ -263,6 +267,7 @@ class PhaseSettingsImaging(AbstractPhaseSettings):
             + self.signal_to_noise_limit_tag
             + self.bin_up_factor_tag
             + self.psf_shape_tag
+            + self.log_likelihood_cap_tag
         )
 
     @property
@@ -285,7 +290,7 @@ class PhaseSettingsImaging(AbstractPhaseSettings):
         )
 
 
-class PhaseSettingsInterferometer(AbstractPhaseSettings):
+class PhaseSettingsInterferometer(PhaseSettings):
     def __init__(
         self,
         grid_class=grids.GridIterate,
@@ -299,6 +304,7 @@ class PhaseSettingsInterferometer(AbstractPhaseSettings):
         inversion_pixel_limit=None,
         transformer_class=transformer.TransformerNUFFT,
         primary_beam_shape_2d=None,
+        log_likelihood_cap=None,
     ):
 
         super().__init__(
@@ -311,6 +317,7 @@ class PhaseSettingsInterferometer(AbstractPhaseSettings):
             signal_to_noise_limit=signal_to_noise_limit,
             bin_up_factor=bin_up_factor,
             inversion_pixel_limit=inversion_pixel_limit,
+            log_likelihood_cap=log_likelihood_cap,
         )
 
         self.transformer_class = transformer_class
@@ -326,6 +333,7 @@ class PhaseSettingsInterferometer(AbstractPhaseSettings):
             + self.signal_to_noise_limit_tag
             + self.bin_up_factor_tag
             + self.primary_beam_shape_tag
+            + self.log_likelihood_cap_tag
         )
 
     @property
@@ -338,6 +346,7 @@ class PhaseSettingsInterferometer(AbstractPhaseSettings):
             + self.signal_to_noise_limit_tag
             + self.bin_up_factor_tag
             + self.primary_beam_shape_tag
+            + self.log_likelihood_cap_tag
         )
 
     @property
