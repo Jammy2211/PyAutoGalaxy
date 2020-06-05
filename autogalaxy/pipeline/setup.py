@@ -1,6 +1,4 @@
 from autoconf import conf
-from autoarray.operators.inversion import pixelizations as pix
-from autoarray.operators.inversion import regularization as reg
 
 
 class PipelineSetup:

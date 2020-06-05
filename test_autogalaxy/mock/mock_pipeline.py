@@ -3,6 +3,20 @@ import autogalaxy as ag
 import numpy as np
 
 
+class MockPhaseSettings:
+    def __init__(self):
+
+        pass
+
+    @property
+    def phase_no_inversion_tag(self):
+        return ""
+
+    @property
+    def phase_with_inversion_tag(self):
+        return ""
+
+
 class GalaxiesMockAnalysis:
     def __init__(self, number_galaxies, value):
         self.number_galaxies = number_galaxies

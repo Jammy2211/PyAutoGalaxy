@@ -15,6 +15,7 @@ class PhaseDataset(abstract.AbstractPhase):
     def __init__(
         self,
         paths,
+        settings,
         galaxies=None,
         non_linear_class=af.MultiNest,
         cosmology=cosmo.Planck15,
@@ -29,6 +30,13 @@ class PhaseDataset(abstract.AbstractPhase):
         non_linear_class: class
             The class of a non_linear optimizer
         """
+
+        has_inversion = inversion_in_galaxies(galaxies=galaxies)
+
+        if not has_inversion:
+            paths.tag = settings.phase_no_inversion_tag
+        else:
+            paths.tag = settings.phase_with_inversion_tag
 
         super().__init__(paths, non_linear_class=non_linear_class)
         self.galaxies = galaxies or []
@@ -149,3 +157,14 @@ class PhaseDataset(abstract.AbstractPhase):
             return extensions.CombinedHyperPhase(
                 phase=self, hyper_phase_classes=hyper_phase_classes
             )
+
+
+def inversion_in_galaxies(galaxies):
+
+    if galaxies is not dict:
+        return False
+
+    for name, galaxy_model in galaxies.items():
+        if galaxy_model.pixelization is not None:
+            return True
+        return False

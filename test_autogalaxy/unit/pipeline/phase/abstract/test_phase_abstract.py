@@ -29,6 +29,7 @@ class TestModel:
                 ),
                 source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
             ),
+            settings=mock_pipeline.MockPhaseSettings(),
             non_linear_class=mock_pipeline.MockNLO,
             phase_tag="",
             phase_name="test_phase",

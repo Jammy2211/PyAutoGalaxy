@@ -1,6 +1,5 @@
 import autofit as af
 from astropy import cosmology as cosmo
-from autogalaxy.pipeline import setup
 from autogalaxy.pipeline.phase.settings import PhaseSettingsImaging
 from autogalaxy.pipeline.phase import dataset
 from autogalaxy.pipeline.phase.imaging.analysis import Analysis
@@ -42,11 +41,12 @@ class PhaseImaging(dataset.PhaseDataset):
             The side length of the subgrid
         """
 
-        paths.tag = settings.phase_tag
+        paths.tag = settings.phase_with_inversion_tag
 
         super().__init__(
             paths,
             galaxies=galaxies,
+            settings=settings,
             non_linear_class=non_linear_class,
             cosmology=cosmology,
         )

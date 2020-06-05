@@ -328,7 +328,10 @@ def make_masked_interferometer_fit_x2_galaxy_inversion_7x7(
 @pytest.fixture(name="phase_dataset_7x7")
 def make_phase_data(mask_7x7):
     return ag.PhaseDataset(
-        non_linear_class=mock_pipeline.MockNLO, phase_tag="", phase_name="test_phase"
+        non_linear_class=mock_pipeline.MockNLO,
+        settings=mock_pipeline.MockPhaseSettings(),
+        phase_tag="",
+        phase_name="test_phase",
     )
 
 
