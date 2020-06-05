@@ -80,7 +80,7 @@ class PipelineSetup:
         """Generate the pipeline's overall tag, which customizes the 'setup' folder the results are output to.
         """
         return (
-            "setup"
+            conf.instance.tag.get("pipeline", "pipeline", str)
             + self.hyper_tag
             + self.inversion_tag
             + self.light_centre_tag
@@ -116,8 +116,12 @@ class PipelineSetup:
         if self.pixelization is None:
             return ""
         else:
-            return "pix_" + conf.instance.label.get(
-                "tag", self.pixelization().__class__.__name__, str
+            return (
+                conf.instance.tag.get("pipeline", "pixelization", str)
+                + "_"
+                + conf.instance.label.get(
+                    "tag", self.pixelization().__class__.__name__, str
+                )
             )
 
     @property
@@ -137,8 +141,13 @@ class PipelineSetup:
         if self.regularization is None:
             return ""
         else:
-            return "__reg_" + conf.instance.label.get(
-                "tag", self.regularization().__class__.__name__, str
+            return (
+                "__"
+                + conf.instance.tag.get("pipeline", "regularization", str)
+                + "_"
+                + conf.instance.label.get(
+                    "tag", self.regularization().__class__.__name__, str
+                )
             )
 
     @property
@@ -157,7 +166,15 @@ class PipelineSetup:
         else:
             y = "{0:.2f}".format(self.light_centre[0])
             x = "{0:.2f}".format(self.light_centre[1])
-            return "__light_centre_(" + y + "," + x + ")"
+            return (
+                "__"
+                + conf.instance.tag.get("pipeline", "light_centre", str)
+                + "_("
+                + y
+                + ","
+                + x
+                + ")"
+            )
 
     @property
     def align_bulge_disk_centre_tag(self):
@@ -169,7 +186,9 @@ class PipelineSetup:
         if not self.align_bulge_disk_centre:
             return ""
         elif self.align_bulge_disk_centre:
-            return "_centre"
+            return "_" + conf.instance.tag.get(
+                "pipeline", "align_bulge_disk_centre", str
+            )
 
     @property
     def align_bulge_disk_axis_ratio_tag(self):
@@ -181,7 +200,9 @@ class PipelineSetup:
         if not self.align_bulge_disk_axis_ratio:
             return ""
         elif self.align_bulge_disk_axis_ratio:
-            return "_axis_ratio"
+            return "_" + conf.instance.tag.get(
+                "pipeline", "align_bulge_disk_axis_ratio", str
+            )
 
     @property
     def align_bulge_disk_phi_tag(self):
@@ -193,7 +214,7 @@ class PipelineSetup:
         if not self.align_bulge_disk_phi:
             return ""
         elif self.align_bulge_disk_phi:
-            return "_phi"
+            return "_" + conf.instance.tag.get("pipeline", "align_bulge_disk_phi", str)
 
     @property
     def align_bulge_disk_tag(self):
@@ -212,7 +233,8 @@ class PipelineSetup:
             return ""
 
         return (
-            "__align_bulge_disk"
+            "__"
+            + conf.instance.tag.get("pipeline", "align_bulge_disk", str)
             + self.align_bulge_disk_centre_tag
             + self.align_bulge_disk_axis_ratio_tag
             + self.align_bulge_disk_phi_tag
@@ -231,7 +253,7 @@ class PipelineSetup:
         if not self.disk_as_sersic:
             return ""
         elif self.disk_as_sersic:
-            return "__disk_sersic"
+            return "__" + conf.instance.tag.get("pipeline", "disk_as_sersic", str)
 
     @property
     def number_of_gaussians_tag(self):
@@ -246,7 +268,12 @@ class PipelineSetup:
         if self.number_of_gaussians is None:
             return ""
         else:
-            return "__gaussians_x" + str(self.number_of_gaussians)
+            return (
+                "__"
+                + conf.instance.tag.get("pipeline", "number_of_gaussians", str)
+                + "_x"
+                + str(self.number_of_gaussians)
+            )
 
     @property
     def hyper_tag(self):
@@ -258,7 +285,8 @@ class PipelineSetup:
             return ""
 
         return (
-            "__hyper"
+            "__"
+            + conf.instance.tag.get("pipeline", "hyper", str)
             + self.hyper_galaxies_tag
             + self.hyper_image_sky_tag
             + self.hyper_background_noise_tag
@@ -273,7 +301,7 @@ class PipelineSetup:
         if not self.hyper_galaxies:
             return ""
         elif self.hyper_galaxies:
-            return "_galaxies"
+            return "_" + conf.instance.tag.get("pipeline", "hyper_galaxies", str)
 
     @property
     def hyper_image_sky_tag(self):
@@ -285,7 +313,7 @@ class PipelineSetup:
         if not self.hyper_image_sky:
             return ""
         elif self.hyper_image_sky:
-            return "_bg_sky"
+            return "_" + conf.instance.tag.get("pipeline", "hyper_image_sky", str)
 
     @property
     def hyper_background_noise_tag(self):
@@ -297,4 +325,6 @@ class PipelineSetup:
         if not self.hyper_background_noise:
             return ""
         elif self.hyper_background_noise:
-            return "_bg_noise"
+            return "_" + conf.instance.tag.get(
+                "pipeline", "hyper_background_noise", str
+            )
