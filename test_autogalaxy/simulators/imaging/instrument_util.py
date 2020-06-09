@@ -186,6 +186,7 @@ def simulate_imaging_from_instrument(data_label, instrument, galaxies):
 
     aplt.Plane.profile_image(plane=plane, grid=grid, plotter=plotter)
 
+
 def load_test_imaging(instrument, data_label, name=None):
 
     test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))

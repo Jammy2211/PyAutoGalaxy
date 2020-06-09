@@ -1,6 +1,44 @@
 import autogalaxy as ag
 
 
+def test__hyper_galaxies_tag():
+
+    setup = ag.PipelineSetup(hyper_galaxies=False)
+    assert setup.hyper_galaxies_tag == ""
+
+    setup = ag.PipelineSetup(hyper_galaxies=True)
+    assert setup.hyper_galaxies_tag == "_galaxies"
+
+
+def test__hyper_image_sky_tag():
+    setup = ag.PipelineSetup(hyper_image_sky=False)
+    assert setup.hyper_galaxies_tag == ""
+
+    setup = ag.PipelineSetup(hyper_image_sky=True)
+    assert setup.hyper_image_sky_tag == "_bg_sky"
+
+
+def test__hyper_background_noise_tag():
+    setup = ag.PipelineSetup(hyper_background_noise=False)
+    assert setup.hyper_galaxies_tag == ""
+
+    setup = ag.PipelineSetup(hyper_background_noise=True)
+    assert setup.hyper_background_noise_tag == "_bg_noise"
+
+
+def test__hyper_tag():
+
+    setup = ag.PipelineSetup(
+        hyper_galaxies=True, hyper_image_sky=True, hyper_background_noise=True
+    )
+
+    assert setup.hyper_tag == "__hyper_galaxies_bg_sky_bg_noise"
+
+    setup = ag.PipelineSetup(hyper_galaxies=True, hyper_background_noise=True)
+
+    assert setup.hyper_tag == "__hyper_galaxies_bg_noise"
+
+
 def test__pixelization_tag():
     setup = ag.PipelineSetup(pixelization=None)
     assert setup.pixelization_tag == ""
@@ -110,44 +148,6 @@ def test__number_of_gaussians_tag():
     assert setup.number_of_gaussians_tag == "__gaussians_x1"
     setup = ag.PipelineSetup(number_of_gaussians=2)
     assert setup.number_of_gaussians_tag == "__gaussians_x2"
-
-
-def test__hyper_galaxies_tag():
-
-    setup = ag.PipelineSetup(hyper_galaxies=False)
-    assert setup.hyper_galaxies_tag == ""
-
-    setup = ag.PipelineSetup(hyper_galaxies=True)
-    assert setup.hyper_galaxies_tag == "_galaxies"
-
-
-def test__hyper_image_sky_tag():
-    setup = ag.PipelineSetup(hyper_image_sky=False)
-    assert setup.hyper_galaxies_tag == ""
-
-    setup = ag.PipelineSetup(hyper_image_sky=True)
-    assert setup.hyper_image_sky_tag == "_bg_sky"
-
-
-def test__hyper_background_noise_tag():
-    setup = ag.PipelineSetup(hyper_background_noise=False)
-    assert setup.hyper_galaxies_tag == ""
-
-    setup = ag.PipelineSetup(hyper_background_noise=True)
-    assert setup.hyper_background_noise_tag == "_bg_noise"
-
-
-def test__hyper_tag():
-
-    setup = ag.PipelineSetup(
-        hyper_galaxies=True, hyper_image_sky=True, hyper_background_noise=True
-    )
-
-    assert setup.hyper_tag == "__hyper_galaxies_bg_sky_bg_noise"
-
-    setup = ag.PipelineSetup(hyper_galaxies=True, hyper_background_noise=True)
-
-    assert setup.hyper_tag == "__hyper_galaxies_bg_noise"
 
 
 def test__tag():

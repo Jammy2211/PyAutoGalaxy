@@ -26,9 +26,7 @@ class ModelFixingHyperPhase(HyperPhase):
     def make_hyper_phase(self):
         phase = super().make_hyper_phase()
 
-        self.update_optimizer_with_config(
-            optimizer=phase.optimizer, section="inversion"
-        )
+        self.update_search_with_config(search=phase.search, section="inversion")
 
         return phase
 
@@ -37,7 +35,7 @@ class ModelFixingHyperPhase(HyperPhase):
 
     def run_hyper(self, dataset, info=None, results=None, **kwargs):
         """
-        Run the phase, overriding the optimizer's model instance with one created to
+        Run the phase, overriding the search's model instance with one created to
         only fit pixelization hyperparameters.
         """
 

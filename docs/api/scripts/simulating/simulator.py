@@ -35,8 +35,10 @@ psf = al.Kernel.from_gaussian(
     shape_2d=(11, 11), sigma=0.1, pixel_scales=grid.pixel_scales
 )
 
-# To simulate the imaging dataset we first create a simulator, which defines the shape, resolution and pixel-scale of the
-# image that is simulated, as well as its expoosure time, noise levels and psf.
+"""
+To simulate the imaging dataset we first create a simulator, which defines the expoosure time, background sky,
+noise levels and psf of the dataset that is simulated.
+"""
 simulator = al.SimulatorImaging(
     exposure_time_map=al.Array.full(fill_value=300.0, shape_2d=grid.shape_2d),
     psf=psf,

@@ -23,9 +23,9 @@ def make_pipeline(name, phase_folders, non_linear_class=af.MultiNest):
         non_linear_class=non_linear_class,
     )
 
-    phase1.optimizer.const_efficiency_mode = True
-    phase1.optimizer.n_live_points = 40
-    phase1.optimizer.sampling_efficiency = 0.8
+    phase1.search.const_efficiency_mode = True
+    phase1.search.n_live_points = 40
+    phase1.search.sampling_efficiency = 0.8
 
     # TODO : And even with them not causing errors above, the promise doesnt work.
 
@@ -36,9 +36,9 @@ def make_pipeline(name, phase_folders, non_linear_class=af.MultiNest):
         non_linear_class=non_linear_class,
     )
 
-    phase2.optimizer.const_efficiency_mode = True
-    phase2.optimizer.n_live_points = 40
-    phase2.optimizer.sampling_efficiency = 0.8
+    phase2.search.const_efficiency_mode = True
+    phase2.search.n_live_points = 40
+    phase2.search.sampling_efficiency = 0.8
 
     return ag.PipelineDataset(name, phase1, phase2)
 

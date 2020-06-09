@@ -22,13 +22,13 @@ class PhaseDataset(abstract.AbstractPhase):
     ):
         """
 
-        A phase in an lens pipeline. Uses the set non_linear optimizer to try to fit models and hyper_galaxies
+        A phase in an lens pipeline. Uses the set non_linear search to try to fit models and hyper_galaxies
         passed to it.
 
         Parameters
         ----------
         non_linear_class: class
-            The class of a non_linear optimizer
+            The class of a non_linear search
         """
 
         has_inversion = inversion_in_galaxies(galaxies=galaxies)
@@ -100,7 +100,7 @@ class PhaseDataset(abstract.AbstractPhase):
         Returns
         -------
         lens : Analysis
-            An lens object that the non-linear optimizer calls to determine the fit of a set of values
+            An lens object that the non-linear search calls to determine the fit of a set of values
         """
         raise NotImplementedError()
 

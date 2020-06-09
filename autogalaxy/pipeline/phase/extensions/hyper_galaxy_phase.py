@@ -182,11 +182,9 @@ class HyperGalaxyPhase(HyperPhase):
 
             # TODO : NEed t be sure these wont mess up anything else.
 
-            optimizer = phase.optimizer.copy_with_name_extension(extension=path[-1])
+            search = phase.search.copy_with_name_extension(extension=path[-1])
 
-            self.update_optimizer_with_config(
-                optimizer=optimizer, section="hyper_galaxy"
-            )
+            self.update_search_with_config(search=search, section="hyper_galaxy")
 
             model = copy.deepcopy(phase.model)
 
@@ -215,10 +213,10 @@ class HyperGalaxyPhase(HyperPhase):
                     hyper_galaxy_image=hyper_result.analysis.hyper_galaxy_image_path_dict[
                         path
                     ],
-                    image_path=optimizer.paths.image_path,
+                    image_path=search.paths.image_path,
                 )
 
-                result = optimizer.fit(model=model, analysis=analysis)
+                result = search.fit(model=model, analysis=analysis)
 
                 def transfer_field(name):
                     if hasattr(result._instance, name):

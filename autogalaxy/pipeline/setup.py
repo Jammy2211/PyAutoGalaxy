@@ -4,6 +4,9 @@ from autoconf import conf
 class PipelineSetup:
     def __init__(
         self,
+        hyper_galaxies=False,
+        hyper_image_sky=False,
+        hyper_background_noise=False,
         pixelization=None,
         regularization=None,
         light_centre=None,
@@ -12,9 +15,6 @@ class PipelineSetup:
         align_bulge_disk_axis_ratio=False,
         disk_as_sersic=False,
         number_of_gaussians=None,
-        hyper_galaxies=False,
-        hyper_image_sky=False,
-        hyper_background_noise=False,
     ):
         """The setup of a pipeline, which controls how PyAutoGalaxy template pipelines runs, for example controlling
         assumptions about the bulge-disk model or the number of Gaussians used for multi-Gaussian fitting.
@@ -27,6 +27,15 @@ class PipelineSetup:
 
         Parameters
         ----------
+        hyper_galaxies : bool
+            If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used to scale the
+            noise-map of the dataset throughout the fitting.
+        hyper_image_sky : bool
+            If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used include the
+            image's background sky component in the model.
+        hyper_background_noise : bool
+            If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used include the
+            noise-map's background component in the model.
         pixelization : ag.pix.Pixelization
            If the pipeline uses an *Inversion* to reconstruct the galaxy's light, this determines the
            *Pixelization* used.
@@ -50,16 +59,11 @@ class PipelineSetup:
             *True* will use an EllipticalSersic for the disk instead of an EllipticalExponential.
         number_of_gaussians : int
             If a multi-Gaussian light model is used to fit the galaxy, this determines the number of Gaussians.
-        hyper_galaxies : bool
-            If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used to scale the
-            noise-map of the dataset throughout the fitting.
-        hyper_image_sky : bool
-            If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used include the
-            image's background sky component in the model.
-        hyper_background_noise : bool
-            If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used include the
-            noise-map's background component in the model.
         """
+
+        self.hyper_galaxies = hyper_galaxies
+        self.hyper_image_sky = hyper_image_sky
+        self.hyper_background_noise = hyper_background_noise
 
         self.pixelization = pixelization
         self.regularization = regularization
@@ -71,9 +75,59 @@ class PipelineSetup:
         self.disk_as_sersic = disk_as_sersic
         self.number_of_gaussians = number_of_gaussians
 
-        self.hyper_galaxies = hyper_galaxies
-        self.hyper_image_sky = hyper_image_sky
-        self.hyper_background_noise = hyper_background_noise
+    @property
+    def hyper_tag(self):
+        """Tag ithe hyper pipeline features used in a hyper pipeline to customize pipeline output paths.
+        """
+        if not any(
+            [self.hyper_galaxies, self.hyper_image_sky, self.hyper_background_noise]
+        ):
+            return ""
+
+        return (
+            "__"
+            + conf.instance.tag.get("pipeline", "hyper", str)
+            + self.hyper_galaxies_tag
+            + self.hyper_image_sky_tag
+            + self.hyper_background_noise_tag
+        )
+
+    @property
+    def hyper_galaxies_tag(self):
+        """Tag if hyper-galaxies are used in a hyper pipeline to customize pipeline output paths.
+
+        This is used to generate an overall hyper tag in *hyper_tag*.
+        """
+        if not self.hyper_galaxies:
+            return ""
+        elif self.hyper_galaxies:
+            return "_" + conf.instance.tag.get("pipeline", "hyper_galaxies", str)
+
+    @property
+    def hyper_image_sky_tag(self):
+        """Tag if the sky-background is hyper as a hyper_galaxies-parameter in a hyper pipeline to customize pipeline
+        output paths.
+
+        This is used to generate an overall hyper tag in *hyper_tag*.
+        """
+        if not self.hyper_image_sky:
+            return ""
+        elif self.hyper_image_sky:
+            return "_" + conf.instance.tag.get("pipeline", "hyper_image_sky", str)
+
+    @property
+    def hyper_background_noise_tag(self):
+        """Tag if the background noise is hyper as a hyper_galaxies-parameter in a hyper pipeline to customize pipeline
+        output paths.
+
+        This is used to generate an overall hyper tag in *hyper_tag*.
+        """
+        if not self.hyper_background_noise:
+            return ""
+        elif self.hyper_background_noise:
+            return "_" + conf.instance.tag.get(
+                "pipeline", "hyper_background_noise", str
+            )
 
     @property
     def tag(self):
@@ -273,58 +327,4 @@ class PipelineSetup:
                 + conf.instance.tag.get("pipeline", "number_of_gaussians", str)
                 + "_x"
                 + str(self.number_of_gaussians)
-            )
-
-    @property
-    def hyper_tag(self):
-        """Tag ithe hyper pipeline features used in a hyper pipeline to customize pipeline output paths.
-        """
-        if not any(
-            [self.hyper_galaxies, self.hyper_image_sky, self.hyper_background_noise]
-        ):
-            return ""
-
-        return (
-            "__"
-            + conf.instance.tag.get("pipeline", "hyper", str)
-            + self.hyper_galaxies_tag
-            + self.hyper_image_sky_tag
-            + self.hyper_background_noise_tag
-        )
-
-    @property
-    def hyper_galaxies_tag(self):
-        """Tag if hyper-galaxies are used in a hyper pipeline to customize pipeline output paths.
-
-        This is used to generate an overall hyper tag in *hyper_tag*.
-        """
-        if not self.hyper_galaxies:
-            return ""
-        elif self.hyper_galaxies:
-            return "_" + conf.instance.tag.get("pipeline", "hyper_galaxies", str)
-
-    @property
-    def hyper_image_sky_tag(self):
-        """Tag if the sky-background is hyper as a hyper_galaxies-parameter in a hyper pipeline to customize pipeline
-        output paths.
-
-        This is used to generate an overall hyper tag in *hyper_tag*.
-        """
-        if not self.hyper_image_sky:
-            return ""
-        elif self.hyper_image_sky:
-            return "_" + conf.instance.tag.get("pipeline", "hyper_image_sky", str)
-
-    @property
-    def hyper_background_noise_tag(self):
-        """Tag if the background noise is hyper as a hyper_galaxies-parameter in a hyper pipeline to customize pipeline
-        output paths.
-
-        This is used to generate an overall hyper tag in *hyper_tag*.
-        """
-        if not self.hyper_background_noise:
-            return ""
-        elif self.hyper_background_noise:
-            return "_" + conf.instance.tag.get(
-                "pipeline", "hyper_background_noise", str
             )

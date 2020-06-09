@@ -3,7 +3,7 @@ import numpy as np
 from autoconf import conf
 import autofit as af
 import autogalaxy as ag
-from autofit.optimize.non_linear.mock_nlo import MockNLO
+from autofit.non_linear.mock_nlo import MockNLO
 from test_autogalaxy.simulators.interferometer import instrument_util
 
 

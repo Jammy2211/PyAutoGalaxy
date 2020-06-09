@@ -191,39 +191,39 @@ def test__results_array_from_results_file(path):
     assert array.pixel_scales == (1.0, 1.0)
 
 
-def test__results_array_from_real_grid_search_pickle(path):
-
-    with open("{}/{}.pickle".format(path, "grid_search_result"), "rb") as f:
-        grid_search_result = pickle.load(f)
-
-    assert grid_search_result.physical_step_sizes == pytest.approx((0.8, 0.8), 1.0e-4)
-
-    array = ag.agg.grid_search_result_as_array_from_grid_search_result(
-        grid_search_result=grid_search_result
-    )
-
-    assert array.in_2d[0, 0] == pytest.approx(21039.54, 1.0e-2)
-    assert array.in_2d[0, 1] == pytest.approx(21040.64, 1.0e-2)
-    assert array.in_2d[0, 2] == pytest.approx(21629.03, 1.0e-2)
-    assert array.in_2d[0, 3] == pytest.approx(21623.81, 1.0e-2)
-    assert array.in_2d[0, 4] == pytest.approx(21039.58, 1.0e-2)
-    assert array.in_2d[1, 0] == pytest.approx(21052.43, 1.0e-2)
-    assert array.in_2d[1, 1] == pytest.approx(21039.60, 1.0e-2)
-    assert array.in_2d[1, 2] == pytest.approx(21086.19, 1.0e-2)
-    assert array.in_2d[1, 3] == pytest.approx(21070.26, 1.0e-2)
-    assert array.in_2d[1, 4] == pytest.approx(21039.44, 1.0e-2)
-    assert array.in_2d[2, 0] == pytest.approx(21068.41, 1.0e-2)
-    assert array.in_2d[2, 1] == pytest.approx(21046.94, 1.0e-2)
-    assert array.in_2d[2, 2] == pytest.approx(21039.71, 1.0e-2)
-    assert array.in_2d[2, 3] == pytest.approx(21048.62, 1.0e-2)
-    assert array.in_2d[2, 4] == pytest.approx(21064.88, 1.0e-2)
-    assert array.in_2d[3, 0] == pytest.approx(21064.22, 1.0e-2)
-    assert array.in_2d[3, 1] == pytest.approx(21046.82, 1.0e-2)
-    assert array.in_2d[3, 2] == pytest.approx(21039.69, 1.0e-2)
-    assert array.in_2d[3, 3] == pytest.approx(21051.30, 1.0e-2)
-    assert array.in_2d[3, 4] == pytest.approx(21064.96, 1.0e-2)
-    assert array.in_2d[4, 0] == pytest.approx(21047.51, 1.0e-2)
-    assert array.in_2d[4, 1] == pytest.approx(21039.91, 1.0e-2)
-    assert array.in_2d[4, 2] == pytest.approx(21039.49, 1.0e-2)
-    assert array.in_2d[4, 3] == pytest.approx(21048.40, 1.0e-2)
-    assert array.in_2d[4, 4] == pytest.approx(21059.12, 1.0e-2)
+# def test__results_array_from_real_grid_search_pickle(path):
+#
+#     with open("{}/{}.pickle".format(path, "grid_search_result"), "rb") as f:
+#         grid_search_result = pickle.load(f)
+#
+#     assert grid_search_result.physical_step_sizes == pytest.approx((0.8, 0.8), 1.0e-4)
+#
+#     array = ag.agg.grid_search_result_as_array_from_grid_search_result(
+#         grid_search_result=grid_search_result
+#     )
+#
+#     assert array.in_2d[0, 0] == pytest.approx(21039.54, 1.0e-2)
+#     assert array.in_2d[0, 1] == pytest.approx(21040.64, 1.0e-2)
+#     assert array.in_2d[0, 2] == pytest.approx(21629.03, 1.0e-2)
+#     assert array.in_2d[0, 3] == pytest.approx(21623.81, 1.0e-2)
+#     assert array.in_2d[0, 4] == pytest.approx(21039.58, 1.0e-2)
+#     assert array.in_2d[1, 0] == pytest.approx(21052.43, 1.0e-2)
+#     assert array.in_2d[1, 1] == pytest.approx(21039.60, 1.0e-2)
+#     assert array.in_2d[1, 2] == pytest.approx(21086.19, 1.0e-2)
+#     assert array.in_2d[1, 3] == pytest.approx(21070.26, 1.0e-2)
+#     assert array.in_2d[1, 4] == pytest.approx(21039.44, 1.0e-2)
+#     assert array.in_2d[2, 0] == pytest.approx(21068.41, 1.0e-2)
+#     assert array.in_2d[2, 1] == pytest.approx(21046.94, 1.0e-2)
+#     assert array.in_2d[2, 2] == pytest.approx(21039.71, 1.0e-2)
+#     assert array.in_2d[2, 3] == pytest.approx(21048.62, 1.0e-2)
+#     assert array.in_2d[2, 4] == pytest.approx(21064.88, 1.0e-2)
+#     assert array.in_2d[3, 0] == pytest.approx(21064.22, 1.0e-2)
+#     assert array.in_2d[3, 1] == pytest.approx(21046.82, 1.0e-2)
+#     assert array.in_2d[3, 2] == pytest.approx(21039.69, 1.0e-2)
+#     assert array.in_2d[3, 3] == pytest.approx(21051.30, 1.0e-2)
+#     assert array.in_2d[3, 4] == pytest.approx(21064.96, 1.0e-2)
+#     assert array.in_2d[4, 0] == pytest.approx(21047.51, 1.0e-2)
+#     assert array.in_2d[4, 1] == pytest.approx(21039.91, 1.0e-2)
+#     assert array.in_2d[4, 2] == pytest.approx(21039.49, 1.0e-2)
+#     assert array.in_2d[4, 3] == pytest.approx(21048.40, 1.0e-2)
+#     assert array.in_2d[4, 4] == pytest.approx(21059.12, 1.0e-2)

@@ -38,7 +38,7 @@ class DummyPhaseImaging(af.AbstractPhase):
         self.results = None
         self.mask = None
 
-        self.optimizer = Optimizer(phase_name)
+        self.search = Optimizer(phase_name)
 
     def run(self, dataset, results, mask=None, info=None):
         self.save_metadata(dataset)
@@ -100,7 +100,7 @@ class TestMetaData:
 
         assert (
             mock_files[2].text
-            == "phase=phase_name\nphase_tag=\npipeline=pipeline_name\npipeline_tag=\nnon_linear_search=optimizer\ndataset_name=data_name"
+            == "phase=phase_name\nphase_tag=\npipeline=pipeline_name\npipeline_tag=\nnon_linear_search=search\ndataset_name=data_name"
         )
 
         assert "phase_name////non_linear.pickle" in mock_files[3].filename
@@ -148,7 +148,7 @@ class DummyPhasePositions(af.AbstractPhase):
         super().__init__(Paths(name=phase_name, tag=""))
         self.results = None
         self.pixel_scales = None
-        self.optimizer = Optimizer(phase_name)
+        self.search = Optimizer(phase_name)
 
     def run(self, pixel_scales, results):
         self.save_metadata(MockImagingData())

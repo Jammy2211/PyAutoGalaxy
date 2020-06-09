@@ -3,6 +3,7 @@ from autofit.tools.phase import AbstractPhaseSettings
 from autoarray.structures import grids
 from autoarray.operators import transformer
 
+
 class PhaseSettings(AbstractPhaseSettings):
     def __init__(
         self,

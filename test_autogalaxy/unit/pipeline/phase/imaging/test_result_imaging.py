@@ -26,7 +26,7 @@ class TestImagePassing:
             samples=mock_pipeline.MockSamples(max_log_likelihood_instance=instance),
             previous_model=af.ModelMapper(),
             analysis=analysis,
-            optimizer=None,
+            search=None,
         )
 
         image_dict = result.image_galaxy_dict

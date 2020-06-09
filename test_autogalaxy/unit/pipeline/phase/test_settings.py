@@ -214,10 +214,13 @@ class TestTags:
             sub_size=3,
             transformer_class=ag.TransformerDFT,
             primary_beam_shape_2d=(2, 2),
-            log_likelihood_cap=200.001
+            log_likelihood_cap=200.001,
         )
 
-        assert settings.phase_no_inversion_tag == "settings__grid_facc_0.1__dft__pb_2x2__lh_cap_200.0"
+        assert (
+            settings.phase_no_inversion_tag
+            == "settings__grid_facc_0.1__dft__pb_2x2__lh_cap_200.0"
+        )
         assert (
             settings.phase_with_inversion_tag
             == "settings__grid_facc_0.1_inv_sub_3__dft__pb_2x2__lh_cap_200.0"

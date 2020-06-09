@@ -53,15 +53,13 @@ class HyperPhase:
         phase = copy.deepcopy(self.phase)
         phase.paths.zip()
 
-        phase.optimizer = phase.optimizer.copy_with_name_extension(
+        phase.search = phase.search.copy_with_name_extension(
             extension=self.hyper_name + "_" + phase.paths.tag, remove_phase_tag=True
         )
 
-        phase.paths = phase.optimizer.paths
+        phase.paths = phase.search.paths
 
-        self.update_optimizer_with_config(
-            optimizer=phase.optimizer, section="hyper_combined"
-        )
+        self.update_search_with_config(search=phase.search, section="hyper_combined")
 
         phase.is_hyper_phase = True
         phase.customize_priors = self.customize_priors
@@ -103,31 +101,29 @@ class HyperPhase:
         setattr(result, self.hyper_name, hyper_result)
         return result
 
-    def update_optimizer_with_config(self, optimizer, section):
+    def update_search_with_config(self, search, section):
 
         non_linear_name = self.non_linear_class.__name__
 
-        config = conf.instance.non_linear.config_for(non_linear_name)
+        config = conf.instance.nest.config_for(non_linear_name)
 
         if non_linear_name in "MultiNest":
 
-            optimizer.const_efficiency_mode = config.get(
+            search.const_efficiency_mode = config.get(
                 section, "const_efficiency_mode", bool
             )
-            optimizer.sampling_efficiency = config.get(
+            search.sampling_efficiency = config.get(
                 section, "sampling_efficiency", float
             )
-            optimizer.n_live_points = config.get(section, "n_live_points", int)
-            optimizer.multimodal = config.get(section, "multimodal", bool)
-            optimizer.evidence_tolerance = config.get(
-                section, "evidence_tolerance", float
-            )
+            search.n_live_points = config.get(section, "n_live_points", int)
+            search.multimodal = config.get(section, "multimodal", bool)
+            search.evidence_tolerance = config.get(section, "evidence_tolerance", float)
 
             try:
-                optimizer.terminate_at_acceptance_ratio = config.get(
+                search.terminate_at_acceptance_ratio = config.get(
                     section, "terminate_at_acceptance_ratio", bool
                 )
-                optimizer.acceptance_ratio_threshold = config.get(
+                search.acceptance_ratio_threshold = config.get(
                     section, "acceptance_ratio_threshold", float
                 )
             except Exception:

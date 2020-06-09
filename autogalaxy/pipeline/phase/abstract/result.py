@@ -4,7 +4,7 @@ from autogalaxy.galaxy import galaxy as g
 
 class Result(af.Result):
     def __init__(
-        self, samples, previous_model, analysis, optimizer, use_as_hyper_dataset=False
+        self, samples, previous_model, analysis, search, use_as_hyper_dataset=False
     ):
         """
         The results of a non-linear search performed by a phase.
@@ -18,15 +18,15 @@ class Result(af.Result):
             The model used in this result model-fit.
         analysis : Analysis
             The Analysis class used by this model-fit to fit the model to the data.
-        optimizer : af.NonLinearOptimizer
-            The non-linear search optimizer used by this model fit.
+        search : af.NonLinearSearch
+            The non-linear search search used by this model fit.
         use_as_hyper_dataset : bool
             Whether this result's phase contains hyper phases, allowing it to be used a hyper dataset.
         """
         super().__init__(samples=samples, previous_model=previous_model)
 
         self.analysis = analysis
-        self.optimizer = optimizer
+        self.search = search
         self.use_as_hyper_dataset = use_as_hyper_dataset
 
     @property

@@ -11,13 +11,13 @@ class AbstractPhase(af.AbstractPhase):
     @af.convert_paths
     def __init__(self, paths, *, non_linear_class=af.MultiNest):
         """
-        A phase in an lens pipeline. Uses the set non_linear optimizer to try to fit
+        A phase in an lens pipeline. Uses the set non_linear search to try to fit
         models and hyper_galaxies passed to it.
 
         Parameters
         ----------
         non_linear_class: class
-            The class of a non_linear optimizer
+            The class of a non_linear search
         """
 
         self.use_as_hyper_dataset = False
@@ -26,7 +26,7 @@ class AbstractPhase(af.AbstractPhase):
 
     @property
     def phase_folders(self):
-        return self.optimizer.folders
+        return self.search.folders
 
     @property
     def phase_property_collections(self):
@@ -42,7 +42,7 @@ class AbstractPhase(af.AbstractPhase):
 
     @property
     def path(self):
-        return self.optimizer.path
+        return self.search.path
 
     def make_result(self, result, analysis):
 
@@ -50,7 +50,7 @@ class AbstractPhase(af.AbstractPhase):
             samples=result.samples,
             previous_model=result.previous_model,
             analysis=analysis,
-            optimizer=self.optimizer,
+            search=self.search,
             use_as_hyper_dataset=self.use_as_hyper_dataset,
         )
 

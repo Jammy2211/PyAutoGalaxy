@@ -54,19 +54,19 @@ class TestMakeAnalysis:
         )
 
         file_phase_info = "{}/{}".format(
-            phase_interferometer_7.optimizer.paths.output_path, "phase.info"
+            phase_interferometer_7.search.paths.output_path, "phase.info"
         )
 
         phase_info = open(file_phase_info, "r")
 
-        optimizer = phase_info.readline()
+        search = phase_info.readline()
         sub_size = phase_info.readline()
         primary_beam_shape_2d = phase_info.readline()
         cosmology = phase_info.readline()
 
         phase_info.close()
 
-        assert optimizer == "Optimizer = MockNLO \n"
+        assert search == "Optimizer = MockNLO \n"
         assert sub_size == "Sub-grid size = 2 \n"
         assert primary_beam_shape_2d == "Primary Beam shape = None \n"
         assert (

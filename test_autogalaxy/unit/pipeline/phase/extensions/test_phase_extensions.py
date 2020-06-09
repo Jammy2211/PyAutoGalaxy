@@ -1,5 +1,6 @@
+from autoconf import conf
 import autofit as af
-import autofit.optimize.non_linear.paths
+import autofit.non_linear.paths
 import autogalaxy as ag
 import pytest
 from astropy import cosmology as cosmo
@@ -26,14 +27,18 @@ class MockAnalysis:
 
 
 # noinspection PyAbstractClass
-class MockOptimizer(af.NonLinearOptimizer):
+class MockOptimizer(af.NonLinearSearch):
     @af.convert_paths
     def __init__(self, paths):
         super().__init__(paths=paths)
 
-    def _fit(self, analysis, fitness_function):
-        # noinspection PyTypeChecker
-        return af.Result(None, analysis.log_likelihood_function(None), None)
+    @property
+    def config_type(self):
+        return conf.instance.mock
+
+    @property
+    def tag(self):
+        return "mock"
 
     def _fit(self, model, analysis):
         # noinspection PyTypeChecker
@@ -42,10 +47,10 @@ class MockOptimizer(af.NonLinearOptimizer):
 
 class MockPhase:
     def __init__(self):
-        self.paths = autofit.optimize.non_linear.paths.Paths(
+        self.paths = autofit.non_linear.paths.Paths(
             name="phase_name", path_prefix="phase_path", folders=("",), tag=""
         )
-        self.optimizer = MockOptimizer(paths=self.paths)
+        self.search = MockOptimizer(paths=self.paths)
         self.model = af.ModelMapper()
 
     def save_dataset(self, dataset):
