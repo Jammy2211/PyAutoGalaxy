@@ -13,20 +13,18 @@ class ModelFixingHyperPhase(HyperPhase):
     def __init__(
         self,
         phase: abstract.AbstractPhase,
+        search,
         hyper_name: str,
-        non_linear_class=af.MultiNest,
         model_classes=tuple(),
     ):
-        super().__init__(
-            phase=phase, hyper_name=hyper_name, non_linear_class=non_linear_class
-        )
+        super().__init__(phase=phase, search=search, hyper_name=hyper_name)
+
+        # TODO : Search settings go here.
 
         self.model_classes = model_classes
 
     def make_hyper_phase(self):
         phase = super().make_hyper_phase()
-
-        self.update_search_with_config(search=phase.search, section="inversion")
 
         return phase
 
@@ -57,13 +55,13 @@ class InversionPhase(ModelFixingHyperPhase):
     def __init__(
         self,
         phase: abstract.AbstractPhase,
+        search,
         model_classes=(pix.Pixelization, reg.Regularization),
-        non_linear_class=af.MultiNest,
     ):
         super().__init__(
             phase=phase,
+            search=search,
             model_classes=model_classes,
-            non_linear_class=non_linear_class,
             hyper_name="inversion",
         )
 
@@ -75,11 +73,11 @@ class InversionBackgroundSkyPhase(InversionPhase):
     pixelization
     """
 
-    def __init__(self, phase: PhaseImaging, non_linear_class=af.MultiNest):
+    def __init__(self, phase: PhaseImaging, search):
         super().__init__(
             phase=phase,
+            search=search,
             model_classes=(pix.Pixelization, reg.Regularization, hd.HyperImageSky),
-            non_linear_class=non_linear_class,
         )
 
 
@@ -90,15 +88,15 @@ class InversionBackgroundNoisePhase(InversionPhase):
     pixelization
     """
 
-    def __init__(self, phase: PhaseImaging, non_linear_class=af.MultiNest):
+    def __init__(self, phase: PhaseImaging, search):
         super().__init__(
             phase=phase,
+            search=search,
             model_classes=(
                 pix.Pixelization,
                 reg.Regularization,
                 hd.HyperBackgroundNoise,
             ),
-            non_linear_class=non_linear_class,
         )
 
 
@@ -109,14 +107,14 @@ class InversionBackgroundBothPhase(InversionPhase):
     pixelization
     """
 
-    def __init__(self, phase: PhaseImaging, non_linear_class=af.MultiNest):
+    def __init__(self, phase: PhaseImaging, search):
         super().__init__(
             phase=phase,
+            search=search,
             model_classes=(
                 pix.Pixelization,
                 reg.Regularization,
                 hd.HyperImageSky,
                 hd.HyperBackgroundNoise,
             ),
-            non_linear_class=non_linear_class,
         )

@@ -2,7 +2,6 @@ from os import path
 
 import autogalaxy as ag
 import pytest
-from astropy import cosmology as cosmo
 from autogalaxy import exc
 from test_autogalaxy.mock import mock_pipeline
 
@@ -19,7 +18,7 @@ class TestPhase:
     def test__extend_with_hyper_and_pixelizations(self):
 
         phase_no_pixelization = ag.PhaseImaging(
-            non_linear_class=mock_pipeline.MockNLO, phase_name="test_phase"
+            phase_name="test_phase", search=mock_pipeline.MockSearch()
         )
 
         phase_extended = phase_no_pixelization.extend_with_multiple_hyper_phases(
@@ -35,6 +34,7 @@ class TestPhase:
         assert phase_extended == phase_no_pixelization
 
         phase_with_pixelization = ag.PhaseImaging(
+            phase_name="test_phase",
             galaxies=dict(
                 source=ag.GalaxyModel(
                     redshift=0.5,
@@ -42,8 +42,7 @@ class TestPhase:
                     regularization=ag.reg.Constant,
                 )
             ),
-            non_linear_class=mock_pipeline.MockNLO,
-            phase_name="test_phase",
+            search=mock_pipeline.MockSearch(),
         )
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
@@ -121,6 +120,7 @@ class TestMakeAnalysis:
     ):
 
         phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
             galaxies=dict(
                 source=ag.Galaxy(
                     redshift=0.5,
@@ -129,8 +129,7 @@ class TestMakeAnalysis:
                 )
             ),
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
-            cosmology=cosmo.FLRW,
-            phase_name="test_phase",
+            search=mock_pipeline.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -145,6 +144,7 @@ class TestMakeAnalysis:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
             galaxies=dict(
                 source=ag.Galaxy(
                     redshift=0.5,
@@ -153,8 +153,7 @@ class TestMakeAnalysis:
                 )
             ),
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
-            cosmology=cosmo.FLRW,
-            phase_name="test_phase",
+            search=mock_pipeline.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -170,6 +169,7 @@ class TestMakeAnalysis:
             analysis.log_likelihood_function(instance=instance)
 
         phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
             galaxies=dict(
                 source=ag.Galaxy(
                     redshift=0.5,
@@ -178,8 +178,7 @@ class TestMakeAnalysis:
                 )
             ),
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
-            cosmology=cosmo.FLRW,
-            phase_name="test_phase",
+            search=mock_pipeline.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -193,6 +192,7 @@ class TestMakeAnalysis:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
             galaxies=dict(
                 source=ag.Galaxy(
                     redshift=0.5,
@@ -201,8 +201,7 @@ class TestMakeAnalysis:
                 )
             ),
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
-            cosmology=cosmo.FLRW,
-            phase_name="test_phase",
+            search=mock_pipeline.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -227,10 +226,10 @@ class TestPhasePickle:
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="phase_name",
-            non_linear_class=mock_pipeline.MockNLO,
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
+            search=mock_pipeline.MockSearch(),
         )
 
         phase_imaging_7x7.make_analysis = make_analysis
@@ -239,10 +238,10 @@ class TestPhasePickle:
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="phase_name",
-            non_linear_class=mock_pipeline.MockNLO,
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
+            search=mock_pipeline.MockSearch(),
         )
 
         phase_imaging_7x7.make_analysis = make_analysis
@@ -255,10 +254,10 @@ class TestPhasePickle:
 
         phase_imaging_7x7 = CustomPhase(
             phase_name="phase_name",
-            non_linear_class=mock_pipeline.MockNLO,
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
+            search=mock_pipeline.MockSearch(),
         )
         phase_imaging_7x7.make_analysis = make_analysis
 

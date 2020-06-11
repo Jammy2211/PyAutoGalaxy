@@ -52,11 +52,11 @@ multimodal : bool
     Whether MultiNest uses multi-modal sampling, whereby the parameter space search will 'split' into multiple modes
     if it detects there are multiple peaks in log_likelihood space.
 
-    For galaxy modeling there are rarely multiple solutions, thus this mode generally does not do anything. When multiple
+    For lens modeling there are rarely multiple solutions, thus this mode generally does not do anything. When multiple
     arise one typically has much higher log_likelihood values than the other, thus multimodal mode leads to a decrease in
     run time sampling both modes. Thus, I recommend you keep this setting off.
 
 importance_nested_sampling : bool
 
     Importance nested sampling mode uses information from the rejected points to improve the non-linear search. For
-    galaxy modeling this appears to slow down the analysis with no clear benefit, so I recommend keeping it turned off.
+    lens modeling this appears to slow down the analysis with no clear benefit, so I recommend keeping it turned off.

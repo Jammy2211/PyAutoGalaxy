@@ -21,6 +21,7 @@ class TestModel:
 
     def test__promise_attrbutes(self):
         phase = ag.PhaseDataset(
+            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(
                     redshift=0.5,
@@ -30,9 +31,7 @@ class TestModel:
                 source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
             ),
             settings=mock_pipeline.MockPhaseSettings(),
-            non_linear_class=mock_pipeline.MockNLO,
-            phase_tag="",
-            phase_name="test_phase",
+            search=mock_pipeline.MockSearch(),
         )
 
         print(hasattr(af.last.result.instance.galaxies.light, "mas2s"))
@@ -51,7 +50,7 @@ class TestModel:
         setattr(results[0].model, "galaxies", [galaxy_model])
 
         phase_dataset_7x7 = MyPlanePhaseAnd(
-            phase_name="test_phase", non_linear_class=mock_pipeline.MockNLO
+            phase_name="test_phase", search=mock_pipeline.MockSearch()
         )
 
         phase_dataset_7x7.make_analysis(
@@ -74,7 +73,7 @@ class TestModel:
         setattr(results[0].model, "galaxies", [galaxy_model])
 
         phase_dataset_7x7 = MyPlanePhaseAnd(
-            phase_name="test_phase", non_linear_class=mock_pipeline.MockNLO
+            phase_name="test_phase", search=mock_pipeline.MockSearch()
         )
 
         phase_dataset_7x7.make_analysis(
@@ -90,14 +89,17 @@ class TestModel:
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
             ),
+            search=mock_pipeline.MockSearch(),
         )
 
-        ag.PhaseImaging(phase_name="test_phase")
+        ag.PhaseImaging(phase_name="test_phase", search=mock_pipeline.MockSearch())
 
         assert phase_dataset_7x7.galaxies is not None
 
     def test__phase_can_receive_list_of_galaxy_models(self):
+
         phase_dataset_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(
                     sersic=ag.lp.EllipticalSersic,
@@ -108,8 +110,7 @@ class TestModel:
                     sis=ag.mp.SphericalIsothermal, redshift=ag.Redshift
                 ),
             ),
-            non_linear_class=af.MultiNest,
-            phase_name="test_phase",
+            search=mock_pipeline.MockSearch(),
         )
 
         for item in phase_dataset_7x7.model.path_priors_tuples:
@@ -155,6 +156,7 @@ class TestModel:
                 self.galaxies[0].sis.einstein_radius = 10.0
 
         phase_dataset_7x7 = LensPlanePhase2(
+            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(
                     sersic=ag.lp.EllipticalSersic,
@@ -165,8 +167,7 @@ class TestModel:
                     sis=ag.mp.SphericalIsothermal, redshift=ag.Redshift
                 ),
             ),
-            non_linear_class=af.MultiNest,
-            phase_name="test_phase",
+            search=mock_pipeline.MockSearch(),
         )
 
         # noinspection PyTypeChecker
@@ -215,10 +216,10 @@ class TestSetup:
 
         phase_dataset_7x7 = ag.PhaseImaging(
             phase_name="phase_name",
-            non_linear_class=mock_pipeline.MockNLO,
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
+            search=mock_pipeline.MockSearch(),
         )
 
         phase_dataset_7x7.make_analysis = make_analysis
@@ -227,10 +228,10 @@ class TestSetup:
 
         phase_dataset_7x7 = ag.PhaseImaging(
             phase_name="phase_name",
-            non_linear_class=mock_pipeline.MockNLO,
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
+            search=mock_pipeline.MockSearch(),
         )
 
         phase_dataset_7x7.make_analysis = make_analysis
@@ -243,10 +244,10 @@ class TestSetup:
 
         phase_dataset_7x7 = CustomPhase(
             phase_name="phase_name",
-            non_linear_class=mock_pipeline.MockNLO,
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
+            search=mock_pipeline.MockSearch(),
         )
         phase_dataset_7x7.make_analysis = make_analysis
 

@@ -10,14 +10,14 @@ data_label = "galaxy_x1__dev_vaucouleurs"
 instrument = "vro"
 
 
-def make_pipeline(name, phase_folders, non_linear_class=af.MultiNest):
+def make_pipeline(name, phase_folders, search=af.DynestyStatic()):
     phase1 = ag.PhaseImaging(
         phase_name="phase_1",
         phase_folders=phase_folders,
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, sersic=ag.lp.EllipticalSersic)
         ),
-        non_linear_class=non_linear_class,
+        search=search,
     )
 
     phase1.search.const_efficiency_mode = True

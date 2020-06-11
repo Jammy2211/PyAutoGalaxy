@@ -46,7 +46,7 @@ simple analysis which fits a galaxy's light.
     phase = ag.PhaseImaging(
         galaxies=dict(galaxy=galaxy_model),
         phase_name='example/phase_example',
-        non_linear_class=af.MultiNest
+        search=af.DynestyStatic()
         )
 
     # We pass the imaging data and mask to the phase, thereby fitting it with the galaxy model & plot the resulting fit.

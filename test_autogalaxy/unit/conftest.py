@@ -328,26 +328,23 @@ def make_masked_interferometer_fit_x2_galaxy_inversion_7x7(
 @pytest.fixture(name="phase_dataset_7x7")
 def make_phase_data(mask_7x7):
     return ag.PhaseDataset(
-        non_linear_class=mock_pipeline.MockNLO,
-        settings=mock_pipeline.MockPhaseSettings(),
-        phase_tag="",
         phase_name="test_phase",
+        settings=mock_pipeline.MockPhaseSettings(),
+        search=mock_pipeline.MockSearch(),
     )
 
 
 @pytest.fixture(name="phase_imaging_7x7")
 def make_phase_imaging_7x7():
-    return ag.PhaseImaging(
-        non_linear_class=mock_pipeline.MockNLO, phase_name="test_phase"
-    )
+    return ag.PhaseImaging(phase_name="test_phase", search=mock_pipeline.MockSearch())
 
 
 @pytest.fixture(name="phase_interferometer_7")
 def make_phase_interferometer_7(mask_7x7):
     return ag.PhaseInterferometer(
-        non_linear_class=mock_pipeline.MockNLO,
-        real_space_mask=mask_7x7,
         phase_name="test_phase",
+        search=mock_pipeline.MockSearch(),
+        real_space_mask=mask_7x7,
     )
 
 

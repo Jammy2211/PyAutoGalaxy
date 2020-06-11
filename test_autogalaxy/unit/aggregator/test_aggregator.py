@@ -19,12 +19,12 @@ def make_path():
 def test__plane_generator_from_aggregator(imaging_7x7, mask_7x7):
 
     phase_imaging_7x7 = ag.PhaseImaging(
-        non_linear_class=mock_pipeline.MockNLO,
+        phase_name="test_phase_aggregator",
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
-        phase_name="test_phase_aggregator",
+        search=mock_pipeline.MockSearch(),
     )
 
     phase_imaging_7x7.run(
@@ -45,12 +45,12 @@ def test__plane_generator_from_aggregator(imaging_7x7, mask_7x7):
 def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7):
 
     phase_imaging_7x7 = ag.PhaseImaging(
-        non_linear_class=mock_pipeline.MockNLO,
+        phase_name="test_phase_aggregator",
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
-        phase_name="test_phase_aggregator",
+        search=mock_pipeline.MockSearch(),
     )
 
     phase_imaging_7x7.run(
@@ -68,12 +68,12 @@ def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7):
 def test__fit_imaging_generator_from_aggregator(imaging_7x7, mask_7x7):
 
     phase_imaging_7x7 = ag.PhaseImaging(
-        non_linear_class=mock_pipeline.MockNLO,
+        phase_name="test_phase_aggregator",
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
-        phase_name="test_phase_aggregator",
+        search=mock_pipeline.MockSearch(),
     )
 
     phase_imaging_7x7.run(
@@ -91,13 +91,13 @@ def test__fit_imaging_generator_from_aggregator(imaging_7x7, mask_7x7):
 def test__masked_interferometer_generator_from_aggregator(interferometer_7, mask_7x7):
 
     phase_interferometer_7x7 = ag.PhaseInterferometer(
-        non_linear_class=mock_pipeline.MockNLO,
+        phase_name="test_phase_aggregator",
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
+        search=mock_pipeline.MockSearch(),
         real_space_mask=mask_7x7,
-        phase_name="test_phase_aggregator",
     )
 
     phase_interferometer_7x7.run(
@@ -119,12 +119,12 @@ def test__masked_interferometer_generator_from_aggregator(interferometer_7, mask
 def test__fit_interferometer_generator_from_aggregator(interferometer_7, mask_7x7):
 
     phase_interferometer_7x7 = ag.PhaseInterferometer(
-        non_linear_class=mock_pipeline.MockNLO,
+        phase_name="test_phase_aggregator",
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
-        phase_name="test_phase_aggregator",
+        search=mock_pipeline.MockSearch(),
         real_space_mask=mask_7x7,
     )
 

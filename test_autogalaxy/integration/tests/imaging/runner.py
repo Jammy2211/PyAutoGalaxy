@@ -6,11 +6,7 @@ from test_autogalaxy.simulators.imaging import instrument_util
 
 
 def run(
-    module,
-    test_name=None,
-    non_linear_class=af.MultiNest,
-    config_folder="config",
-    mask=None,
+    module, test_name=None, search=af.DynestyStatic(), config_folder="config", mask=None
 ):
 
     test_name = test_name or module.test_name
@@ -20,7 +16,7 @@ def run(
     conf.instance = conf.Config(config_path=config_path, output_path=output_path)
 
     imaging = instrument_util.load_test_imaging(
-        data_label=module.data_label, instrument=module.instrument, name="test_dataset"
+        data_label=module.data_name, instrument=module.instrument, name="test_dataset"
     )
 
     if mask is None:
@@ -29,9 +25,7 @@ def run(
         )
 
     module.make_pipeline(
-        name=test_name,
-        phase_folders=[module.test_type, test_name],
-        non_linear_class=non_linear_class,
+        name=test_name, phase_folders=[module.test_type, test_name], search=search
     ).run(dataset=imaging, mask=mask, info={"test": 2})
 
 
@@ -40,7 +34,7 @@ def run_a_mock(module):
     run(
         module,
         test_name=f"{module.test_name}_mock",
-        non_linear_class=af.MockNLO,
+        search=af.MockSearch,
         config_folder="config_mock",
     )
 
@@ -50,6 +44,6 @@ def run_with_multi_nest(module):
     run(
         module,
         test_name=f"{module.test_name}_nest",
-        non_linear_class=af.MultiNest,
+        search=af.DynestyStatic(),
         config_folder="config_mock",
     )

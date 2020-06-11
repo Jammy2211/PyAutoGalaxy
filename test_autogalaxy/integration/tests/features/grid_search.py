@@ -8,7 +8,7 @@ data_label = "galaxy_x1__dev_vaucouleurs"
 instrument = "vro"
 
 
-def make_pipeline(name, phase_folders, non_linear_class=af.MultiNest):
+def make_pipeline(name, phase_folders, search=af.DynestyStatic()):
 
     bulge = af.PriorModel(ag.lp.EllipticalDevVaucouleurs)
 
@@ -25,7 +25,7 @@ def make_pipeline(name, phase_folders, non_linear_class=af.MultiNest):
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, bulge=ag.lp.EllipticalSersic)
         ),
-        non_linear_class=non_linear_class,
+        search=search,
     )
 
     phase1.search.const_efficiency_mode = True
@@ -42,7 +42,7 @@ def make_pipeline(name, phase_folders, non_linear_class=af.MultiNest):
         phase_folders=phase_folders,
         galaxies=dict(galaxy=ag.GalaxyModel(redshift=0.5, bulge=bulge)),
         number_of_steps=2,
-        non_linear_class=non_linear_class,
+        search=search,
     )
 
     phase2.search.const_efficiency_mode = True
@@ -53,7 +53,7 @@ def make_pipeline(name, phase_folders, non_linear_class=af.MultiNest):
         phase_name="phase_3",
         phase_folders=phase_folders,
         galaxies=dict(galaxy=phase2.result.model.galaxies.light),
-        non_linear_class=non_linear_class,
+        search=search,
     )
 
     phase3.search.const_efficiency_mode = True

@@ -50,7 +50,7 @@ class TestMakeAnalysis:
 
         phase_info.close()
 
-        assert search == "Optimizer = MockNLO \n"
+        assert search == "Optimizer = MockSearch \n"
         assert sub_size == "Sub-grid size = 2 \n"
         assert psf_shape_2d == "PSF shape = None \n"
         assert (
@@ -87,11 +87,11 @@ class TestHyperMethods:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5, hyper_galaxy=ag.HyperGalaxy)
             ),
-            non_linear_class=mock_pipeline.MockNLO,
-            phase_name="test_phase",
+            search=mock_pipeline.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(

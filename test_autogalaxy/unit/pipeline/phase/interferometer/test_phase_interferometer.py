@@ -66,7 +66,7 @@ class TestMakeAnalysis:
 
         phase_info.close()
 
-        assert search == "Optimizer = MockNLO \n"
+        assert search == "Optimizer = MockSearch \n"
         assert sub_size == "Sub-grid size = 2 \n"
         assert primary_beam_shape_2d == "Primary Beam shape = None \n"
         assert (
@@ -77,14 +77,14 @@ class TestMakeAnalysis:
 
     def test__phase_can_receive_hyper_image_and_noise_maps(self, mask_7x7):
         phase_interferometer_7 = ag.PhaseInterferometer(
+            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=ag.Redshift),
                 galaxy1=ag.GalaxyModel(redshift=ag.Redshift),
             ),
-            real_space_mask=mask_7x7,
             hyper_background_noise=ag.hyper_data.HyperBackgroundNoise,
-            non_linear_class=af.MultiNest,
-            phase_name="test_phase",
+            search=mock_pipeline.MockSearch(),
+            real_space_mask=mask_7x7,
         )
 
         instance = phase_interferometer_7.model.instance_from_vector([0.1, 0.2, 0.3])
@@ -130,15 +130,17 @@ class TestHyperMethods:
         )
 
         phase_interferometer_7 = ag.PhaseInterferometer(
+            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5, hyper_galaxy=ag.HyperGalaxy)
             ),
+            search=mock_pipeline.MockSearch(),
             real_space_mask=mask_7x7,
-            non_linear_class=mock_pipeline.MockNLO,
-            phase_name="test_phase",
         )
 
-        phase_interferometer_7.extend_with_multiple_hyper_phases()
+        phase_interferometer_7.extend_with_multiple_hyper_phases(
+            search=mock_pipeline.MockSearch()
+        )
 
         analysis = phase_interferometer_7.make_analysis(
             dataset=interferometer_7, mask=mask_7x7, results=results

@@ -42,9 +42,9 @@ class TestHyperMethods:
 
         analysis = ag.PhaseImaging.Analysis(
             masked_imaging=masked_imaging_7x7,
-            cosmology=cosmo.Planck15,
             image_path="files/",
             results=results,
+            cosmology=cosmo.Planck15,
         )
 
         instance = analysis.associate_hyper_images(instance=instance)

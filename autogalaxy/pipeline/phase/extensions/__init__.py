@@ -10,7 +10,12 @@ from .inversion_phase import ModelFixingHyperPhase
 
 
 class CombinedHyperPhase(HyperPhase):
-    def __init__(self, phase: PhaseImaging, hyper_phase_classes: (type,) = tuple()):
+    def __init__(
+        self,
+        phase: PhaseImaging,
+        search: af.NonLinearSearch,
+        hyper_phase_classes: (type,) = tuple(),
+    ):
         """
         A hyper_combined hyper_galaxies phase that can run zero or more other hyper_galaxies phases after the initial phase is
         run.
@@ -22,8 +27,10 @@ class CombinedHyperPhase(HyperPhase):
         hyper_phase_classes
             The classes of hyper_galaxies phases to be run following the initial phase
         """
-        super().__init__(phase, "hyper_combined")
-        self.hyper_phases = list(map(lambda cls: cls(phase), hyper_phase_classes))
+        super().__init__(phase=phase, search=search, hyper_name="hyper_combined")
+        self.hyper_phases = list(
+            map(lambda cls: cls(phase, search), hyper_phase_classes)
+        )
 
     @property
     def phase_names(self) -> [str]:

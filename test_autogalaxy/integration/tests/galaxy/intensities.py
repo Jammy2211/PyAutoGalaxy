@@ -43,7 +43,7 @@ def galaxy_fit_phase():
         ),
         use_image=True,
         sub_size=4,
-        non_linear_class=af.MultiNest,
+        search=af.DynestyStatic(),
     )
 
     phase1.run(galaxy_data=[data])

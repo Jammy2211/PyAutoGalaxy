@@ -8,7 +8,7 @@ data_label = "galaxy_x2__sersics"
 instrument = "vro"
 
 
-def make_pipeline(name, phase_folders, non_linear_class=af.MultiNest):
+def make_pipeline(name, phase_folders, search=af.DynestyStatic()):
 
     bulge_0 = af.PriorModel(ag.lp.EllipticalSersic)
     bulge_1 = af.PriorModel(ag.lp.EllipticalSersic)
@@ -25,7 +25,7 @@ def make_pipeline(name, phase_folders, non_linear_class=af.MultiNest):
             galaxy_0=ag.GalaxyModel(redshift=0.5, bulge=bulge_0),
             galaxy_1=ag.GalaxyModel(redshift=0.5, bulge=bulge_1),
         ),
-        non_linear_class=non_linear_class,
+        search=search,
     )
 
     phase1.search.const_efficiency_mode = True

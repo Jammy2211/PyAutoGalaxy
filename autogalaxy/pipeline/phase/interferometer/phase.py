@@ -22,11 +22,11 @@ class PhaseInterferometer(dataset.PhaseDataset):
         self,
         paths,
         *,
+        search,
         real_space_mask,
         galaxies=None,
         hyper_background_noise=None,
         settings=PhaseSettingsInterferometer(),
-        non_linear_class=af.MultiNest,
         cosmology=cosmo.Planck15,
     ):
 
@@ -37,7 +37,7 @@ class PhaseInterferometer(dataset.PhaseDataset):
 
         Parameters
         ----------
-        non_linear_class: class
+        search: class
             The class of a non_linear search
         sub_size: int
             The side length of the subgrid
@@ -49,7 +49,7 @@ class PhaseInterferometer(dataset.PhaseDataset):
             paths,
             galaxies=galaxies,
             settings=settings,
-            non_linear_class=non_linear_class,
+            search=search,
             cosmology=cosmology,
         )
 

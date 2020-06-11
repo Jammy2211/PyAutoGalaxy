@@ -25,11 +25,13 @@ class TestGeneric:
     def test__results_of_phase_are_available_as_properties(self, imaging_7x7, mask_7x7):
 
         phase_dataset_7x7 = ag.PhaseImaging(
-            non_linear_class=mock_pipeline.MockNLO,
-            galaxies=[
-                ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
-            ],
             phase_name="test_phase_2",
+            galaxies=dict(
+                galaxy=ag.Galaxy(
+                    redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
+                )
+            ),
+            search=mock_pipeline.MockSearch(),
         )
 
         result = phase_dataset_7x7.run(
@@ -43,16 +45,16 @@ class TestPlane:
     def test__max_log_likelihood_plane_available_as_result(self, imaging_7x7, mask_7x7):
 
         phase_dataset_7x7 = ag.PhaseImaging(
-            non_linear_class=mock_pipeline.MockNLO,
+            phase_name="test_phase",
             galaxies=dict(
-                galaxy=ag.Galaxy(
+                galaxy_0=ag.Galaxy(
                     redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
                 ),
-                source=ag.Galaxy(
-                    redshift=1.0, light=ag.lp.EllipticalCoreSersic(intensity=2.0)
+                galaxy_1=ag.Galaxy(
+                    redshift=0.5, light=ag.lp.EllipticalCoreSersic(intensity=2.0)
                 ),
             ),
-            phase_name="test_phase_2",
+            search=mock_pipeline.MockSearch(),
         )
 
         result = phase_dataset_7x7.run(

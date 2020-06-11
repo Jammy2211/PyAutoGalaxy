@@ -13,12 +13,7 @@ class PhaseDataset(abstract.AbstractPhase):
 
     @af.convert_paths
     def __init__(
-        self,
-        paths,
-        settings,
-        galaxies=None,
-        non_linear_class=af.MultiNest,
-        cosmology=cosmo.Planck15,
+        self, paths, settings, search, galaxies=None, cosmology=cosmo.Planck15
     ):
         """
 
@@ -27,7 +22,7 @@ class PhaseDataset(abstract.AbstractPhase):
 
         Parameters
         ----------
-        non_linear_class: class
+        search: class
             The class of a non_linear search
         """
 
@@ -38,7 +33,7 @@ class PhaseDataset(abstract.AbstractPhase):
         else:
             paths.tag = settings.phase_with_inversion_tag
 
-        super().__init__(paths, non_linear_class=non_linear_class)
+        super().__init__(paths, search=search)
         self.settings = settings
         self.galaxies = galaxies or []
         self.cosmology = cosmology
@@ -104,11 +99,12 @@ class PhaseDataset(abstract.AbstractPhase):
         """
         raise NotImplementedError()
 
-    def extend_with_inversion_phase(self, non_linear_class=af.MultiNest):
-        return extensions.InversionPhase(phase=self, non_linear_class=non_linear_class)
+    def extend_with_inversion_phase(self, search):
+        return extensions.InversionPhase(phase=self, search=search)
 
     def extend_with_multiple_hyper_phases(
         self,
+        search,
         hyper_galaxy=False,
         inversion=False,
         include_background_sky=False,
@@ -156,7 +152,7 @@ class PhaseDataset(abstract.AbstractPhase):
             return self
         else:
             return extensions.CombinedHyperPhase(
-                phase=self, hyper_phase_classes=hyper_phase_classes
+                phase=self, search=search, hyper_phase_classes=hyper_phase_classes
             )
 
 

@@ -20,12 +20,12 @@ class TestFit:
     def test__fit_using_imaging(self, imaging_7x7, mask_7x7):
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            non_linear_class=mock_pipeline.MockNLO,
+            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
                 source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
             ),
-            phase_name="test_phase_test_fit",
+            search=mock_pipeline.MockSearch(),
         )
 
         result = phase_imaging_7x7.run(
@@ -37,15 +37,13 @@ class TestFit:
     def test__figure_of_merit__matches_correct_fit_given_galaxy_profiles(
         self, imaging_7x7, mask_7x7
     ):
-        galaxy_galaxy = ag.Galaxy(
-            redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1)
-        )
+        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            galaxies=[galaxy_galaxy],
-            cosmology=cosmo.FLRW,
-            settings=ag.PhaseSettingsImaging(sub_size=1),
             phase_name="test_phase",
+            galaxies=dict(galaxy=galaxy),
+            settings=ag.PhaseSettingsImaging(sub_size=1),
+            search=mock_pipeline.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -67,17 +65,15 @@ class TestFit:
         hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-        galaxy_galaxy = ag.Galaxy(
-            redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1)
-        )
+        galalxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            galaxies=[galaxy_galaxy],
+            phase_name="test_phase",
+            galaxies=dict(galaxy=galalxy),
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
-            cosmology=cosmo.FLRW,
             settings=ag.PhaseSettingsImaging(sub_size=4),
-            phase_name="test_phase",
+            search=mock_pipeline.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -131,9 +127,9 @@ class TestFit:
 
         analysis = ag.PhaseImaging.Analysis(
             masked_imaging=masked_imaging_7x7,
-            cosmology=cosmo.Planck15,
             results=results,
             image_path="files/",
+            cosmology=cosmo.Planck15,
         )
 
         hyper_galaxy = ag.HyperGalaxy(

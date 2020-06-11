@@ -1,4 +1,4 @@
-Optimizer = MockNLO 
+Optimizer = MockSearch
 Sub-grid size = 2 
 PSF shape = None 
 Positions Threshold = None 

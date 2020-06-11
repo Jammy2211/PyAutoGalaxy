@@ -2,7 +2,6 @@ from os import path
 
 import autogalaxy as ag
 import pytest
-from astropy import cosmology as cosmo
 from autogalaxy.fit.fit import FitInterferometer
 from test_autogalaxy.mock import mock_pipeline
 
@@ -20,13 +19,13 @@ class TestFit:
         self, interferometer_7, mask_7x7, visibilities_mask_7x2
     ):
         phase_interferometer_7 = ag.PhaseInterferometer(
-            non_linear_class=mock_pipeline.MockNLO,
+            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
                 source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
             ),
+            search=mock_pipeline.MockSearch(),
             real_space_mask=mask_7x7,
-            phase_name="test_phase_test_fit",
         )
 
         result = phase_interferometer_7.run(
@@ -40,16 +39,14 @@ class TestFit:
     def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
         self, interferometer_7, mask_7x7, visibilities_mask_7x2
     ):
-        galaxy_galaxy = ag.Galaxy(
-            redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1)
-        )
+        galalxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
         phase_interferometer_7 = ag.PhaseInterferometer(
-            real_space_mask=mask_7x7,
-            galaxies=[galaxy_galaxy],
-            cosmology=cosmo.FLRW,
-            settings=ag.PhaseSettingsInterferometer(sub_size=2),
             phase_name="test_phase",
+            galaxies=dict(galaxy=galalxy),
+            settings=ag.PhaseSettingsInterferometer(sub_size=2),
+            search=mock_pipeline.MockSearch(),
+            real_space_mask=mask_7x7,
         )
 
         analysis = phase_interferometer_7.make_analysis(
@@ -81,17 +78,15 @@ class TestFit:
     ):
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-        galaxy_galaxy = ag.Galaxy(
-            redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1)
-        )
+        galalxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
         phase_interferometer_7 = ag.PhaseInterferometer(
-            real_space_mask=mask_7x7,
-            galaxies=[galaxy_galaxy],
-            hyper_background_noise=hyper_background_noise,
-            cosmology=cosmo.FLRW,
-            settings=ag.PhaseSettingsInterferometer(sub_size=4),
             phase_name="test_phase",
+            galaxies=dict(galaxy=galalxy),
+            hyper_background_noise=hyper_background_noise,
+            settings=ag.PhaseSettingsInterferometer(sub_size=4),
+            search=mock_pipeline.MockSearch(),
+            real_space_mask=mask_7x7,
         )
 
         analysis = phase_interferometer_7.make_analysis(

@@ -17,9 +17,9 @@ class TestImagePassing:
 
         analysis = ag.PhaseImaging.Analysis(
             masked_imaging=masked_imaging_7x7,
-            cosmology=cosmo.Planck15,
             image_path="files/",
             results=mock_pipeline.MockResults(),
+            cosmology=cosmo.Planck15,
         )
 
         result = ag.PhaseImaging.Result(

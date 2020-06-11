@@ -8,7 +8,7 @@ data_label = "galaxy_x2__sersics"
 instrument = "sma"
 
 
-def make_pipeline(name, phase_folders, real_space_mask, non_linear_class=af.MultiNest):
+def make_pipeline(name, phase_folders, real_space_mask, search=af.DynestyStatic()):
 
     bulge_0 = af.PriorModel(ag.lp.EllipticalSersic)
 
@@ -20,7 +20,7 @@ def make_pipeline(name, phase_folders, real_space_mask, non_linear_class=af.Mult
         phase_folders=phase_folders,
         galaxies=dict(galaxy_0=ag.GalaxyModel(redshift=0.5, bulge=bulge_0)),
         real_space_mask=real_space_mask,
-        non_linear_class=non_linear_class,
+        search=search,
     )
 
     phase1.search.const_efficiency_mode = True
@@ -40,7 +40,7 @@ def make_pipeline(name, phase_folders, real_space_mask, non_linear_class=af.Mult
             galaxy_1=ag.GalaxyModel(redshift=0.5, bulge=bulge_1),
         ),
         real_space_mask=real_space_mask,
-        non_linear_class=non_linear_class,
+        search=search,
     )
 
     phase2.search.const_efficiency_mode = True
@@ -55,7 +55,7 @@ def make_pipeline(name, phase_folders, real_space_mask, non_linear_class=af.Mult
             galaxy_1=phase2.result.model.galaxies.galaxy_1,
         ),
         real_space_mask=real_space_mask,
-        non_linear_class=non_linear_class,
+        search=search,
     )
 
     phase3.search.const_efficiency_mode = True

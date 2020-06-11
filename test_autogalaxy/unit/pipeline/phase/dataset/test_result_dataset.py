@@ -18,11 +18,13 @@ class TestResult:
     def test__results_of_phase_are_available_as_properties(self, imaging_7x7, mask_7x7):
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            non_linear_class=mock_pipeline.MockNLO,
-            galaxies=[
-                ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
-            ],
             phase_name="test_phase_2",
+            galaxies=dict(
+                galaxy=ag.Galaxy(
+                    redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
+                )
+            ),
+            search=mock_pipeline.MockSearch(),
         )
 
         result = phase_imaging_7x7.run(
@@ -36,12 +38,14 @@ class TestResult:
     ):
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            non_linear_class=mock_pipeline.MockNLO,
-            galaxies=[
-                ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
-            ],
-            settings=ag.PhaseSettingsImaging(sub_size=2),
             phase_name="test_phase_2",
+            galaxies=dict(
+                galaxy=ag.Galaxy(
+                    redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
+                )
+            ),
+            settings=ag.PhaseSettingsImaging(sub_size=2),
+            search=mock_pipeline.MockSearch(),
         )
 
         result = phase_imaging_7x7.run(
@@ -55,7 +59,7 @@ class TestResult:
     ):
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            non_linear_class=mock_pipeline.MockNLO,
+            phase_name="test_phase_2",
             galaxies=dict(
                 galaxy=ag.Galaxy(
                     redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
@@ -67,7 +71,7 @@ class TestResult:
                 ),
             ),
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=6),
-            phase_name="test_phase_2",
+            search=mock_pipeline.MockSearch(),
         )
 
         result = phase_imaging_7x7.run(
@@ -78,7 +82,7 @@ class TestResult:
         assert result.pixelization.shape == (2, 3)
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            non_linear_class=mock_pipeline.MockNLO,
+            phase_name="test_phase_2",
             galaxies=dict(
                 galaxy=ag.Galaxy(
                     redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
@@ -90,7 +94,7 @@ class TestResult:
                 ),
             ),
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=6),
-            phase_name="test_phase_2",
+            search=mock_pipeline.MockSearch(),
         )
 
         phase_imaging_7x7.galaxies.source.hyper_galaxy_image = np.ones(9)

@@ -7,12 +7,7 @@ from autogalaxy.pipeline.phase import abstract
 
 
 class HyperPhase:
-    def __init__(
-        self,
-        phase: abstract.AbstractPhase,
-        hyper_name: str,
-        non_linear_class=af.MultiNest,
-    ):
+    def __init__(self, phase: abstract.AbstractPhase, search, hyper_name: str):
         """
         Abstract HyperPhase. Wraps a phase, performing that phase before performing the action
         specified by the run_hyper.
@@ -24,7 +19,7 @@ class HyperPhase:
         """
         self.phase = phase
         self.hyper_name = hyper_name
-        self.non_linear_class = non_linear_class
+        self.search = search
 
     def run_hyper(self, *args, **kwargs) -> af.Result:
         """
@@ -56,8 +51,6 @@ class HyperPhase:
         phase.search = phase.search.copy_with_name_extension(
             extension=self.hyper_name + "_" + phase.paths.tag, remove_phase_tag=True
         )
-
-        phase.paths = phase.search.paths
 
         self.update_search_with_config(search=phase.search, section="hyper_combined")
 
@@ -100,34 +93,6 @@ class HyperPhase:
         hyper_result = self.run_hyper(dataset=dataset, results=results, **kwargs)
         setattr(result, self.hyper_name, hyper_result)
         return result
-
-    def update_search_with_config(self, search, section):
-
-        non_linear_name = self.non_linear_class.__name__
-
-        config = conf.instance.nest.config_for(non_linear_name)
-
-        if non_linear_name in "MultiNest":
-
-            search.const_efficiency_mode = config.get(
-                section, "const_efficiency_mode", bool
-            )
-            search.sampling_efficiency = config.get(
-                section, "sampling_efficiency", float
-            )
-            search.n_live_points = config.get(section, "n_live_points", int)
-            search.multimodal = config.get(section, "multimodal", bool)
-            search.evidence_tolerance = config.get(section, "evidence_tolerance", float)
-
-            try:
-                search.terminate_at_acceptance_ratio = config.get(
-                    section, "terminate_at_acceptance_ratio", bool
-                )
-                search.acceptance_ratio_threshold = config.get(
-                    section, "acceptance_ratio_threshold", float
-                )
-            except Exception:
-                pass
 
     def __getattr__(self, item):
         return getattr(self.phase, item)

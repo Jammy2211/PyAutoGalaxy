@@ -1,4 +1,4 @@
-Optimizer = MockNLO 
+Optimizer = MockSearch
 Sub-grid size = 2 
 Primary Beam shape = None 
 Positions Threshold = None 

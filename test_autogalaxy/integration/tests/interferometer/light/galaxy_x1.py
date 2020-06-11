@@ -8,7 +8,7 @@ data_label = "galaxy_x1__dev_vaucouleurs"
 instrument = "sma"
 
 
-def make_pipeline(name, phase_folders, real_space_mask, non_linear_class=af.MultiNest):
+def make_pipeline(name, phase_folders, real_space_mask, search=af.DynestyStatic()):
 
     phase1 = ag.PhaseInterferometer(
         phase_name="phase_1",
@@ -17,7 +17,7 @@ def make_pipeline(name, phase_folders, real_space_mask, non_linear_class=af.Mult
             galaxy=ag.GalaxyModel(redshift=0.5, bulge=ag.lp.EllipticalSersic)
         ),
         real_space_mask=real_space_mask,
-        non_linear_class=non_linear_class,
+        search=search,
     )
 
     phase1.search.const_efficiency_mode = True

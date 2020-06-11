@@ -27,6 +27,8 @@ class Analysis(af.Analysis):
             The contribution of one galaxy to the model image
         """
 
+        super().__init__()
+
         self.masked_imaging = masked_imaging
 
         self.visualizer = visualizer.HyperGalaxyVisualizer(image_path=image_path)
