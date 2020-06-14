@@ -1,7 +1,7 @@
 import autogalaxy as ag
 
 from test_autoarray.unit.conftest import *
-from test_autogalaxy.mock import mock_pipeline
+from test_autogalaxy import mock
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -325,26 +325,37 @@ def make_masked_interferometer_fit_x2_galaxy_inversion_7x7(
     )
 
 
+@pytest.fixture(name="samples_with_result")
+def make_samples_with_result():
+
+    galaxies = [
+        ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic),
+        ag.Galaxy(redshift=1.0, light=ag.lp.EllipticalSersic),
+    ]
+
+    plane = ag.Plane(galaxies=galaxies)
+
+    return mock.MockSamples(max_log_likelihood_instance=plane)
+
+
 @pytest.fixture(name="phase_dataset_7x7")
 def make_phase_data(mask_7x7):
     return ag.PhaseDataset(
         phase_name="test_phase",
-        settings=mock_pipeline.MockPhaseSettings(),
-        search=mock_pipeline.MockSearch(),
+        settings=ag.PhaseSettingsImaging(),
+        search=mock.MockSearch(),
     )
 
 
 @pytest.fixture(name="phase_imaging_7x7")
 def make_phase_imaging_7x7():
-    return ag.PhaseImaging(phase_name="test_phase", search=mock_pipeline.MockSearch())
+    return ag.PhaseImaging(phase_name="test_phase", search=mock.MockSearch())
 
 
 @pytest.fixture(name="phase_interferometer_7")
 def make_phase_interferometer_7(mask_7x7):
     return ag.PhaseInterferometer(
-        phase_name="test_phase",
-        search=mock_pipeline.MockSearch(),
-        real_space_mask=mask_7x7,
+        phase_name="test_phase", search=mock.MockSearch(), real_space_mask=mask_7x7
     )
 
 

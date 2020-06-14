@@ -1,4 +1,28 @@
+import autofit as af
 import autogalaxy as ag
+
+
+def test__hyper_searches():
+
+    setup = ag.PipelineSetup(hyper_galaxies=False)
+    assert setup.hyper_galaxies_search == None
+
+    setup = ag.PipelineSetup(hyper_galaxies=True)
+    assert setup.hyper_galaxies_search.n_live_points == 50
+
+    setup = ag.PipelineSetup(
+        hyper_galaxies=True, hyper_galaxies_search=af.DynestyStatic(n_live_points=51)
+    )
+    assert setup.hyper_galaxies_search.n_live_points == 51
+
+    setup = ag.PipelineSetup(inversion_search=None)
+    assert setup.inversion_search.n_live_points == 50
+
+    setup = ag.PipelineSetup(inversion_search=af.DynestyStatic(n_live_points=51))
+    assert setup.inversion_search.n_live_points == 51
+
+    setup = ag.PipelineSetup(hyper_combined_search=af.DynestyStatic(n_live_points=51))
+    assert setup.hyper_combined_search.n_live_points == 51
 
 
 def test__hyper_galaxies_tag():

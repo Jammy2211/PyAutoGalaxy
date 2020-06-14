@@ -10,7 +10,7 @@ import autogalaxy as ag
 import numpy as np
 import pytest
 import scipy.special
-from test_autogalaxy.mock import mock_cosmology
+from test_autogalaxy import mock
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
@@ -1077,7 +1077,7 @@ class TestLuminosityWithinCircle:
     def test__radius_units_conversions__light_profile_updates_units_and_computes_correct_luminosity(
         self
     ):
-        cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0)
+        cosmology = mock.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0)
 
         sersic_arcsec = ag.lp.SphericalSersic(
             centre=(ag.dim.Length(0.0, "arcsec"), ag.dim.Length(0.0, "arcsec")),

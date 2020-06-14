@@ -3,7 +3,7 @@ from os import path
 from autoconf import conf
 import autogalaxy as ag
 import pytest
-from test_autogalaxy.mock import mock_pipeline
+from test_autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -31,11 +31,11 @@ class TestGeneric:
                     redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
                 )
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         result = phase_dataset_7x7.run(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
 
         assert isinstance(result, ag.AbstractPhase.Result)
@@ -53,8 +53,8 @@ class TestPlane:
 
         phase_dataset_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
-            search=mock_pipeline.MockSearch(
-                samples=mock_pipeline.MockSamples(
+            search=mock.MockSearch(
+                samples=mock.MockSamples(
                     max_log_likelihood_instance=max_log_likelihood_plane
                 )
             ),

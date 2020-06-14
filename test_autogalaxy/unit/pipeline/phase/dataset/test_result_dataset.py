@@ -3,7 +3,7 @@ from os import path
 import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autogalaxy.mock import mock_pipeline
+from test_autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -24,17 +24,17 @@ class TestResult:
                     redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
                 )
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         result = phase_imaging_7x7.run(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
 
         assert isinstance(result, ag.AbstractPhase.Result)
 
     def test__results_of_phase_include_mask__available_as_property(
-        self, imaging_7x7, mask_7x7
+        self, imaging_7x7, mask_7x7, samples_with_result
     ):
 
         phase_imaging_7x7 = ag.PhaseImaging(
@@ -45,11 +45,11 @@ class TestResult:
                 )
             ),
             settings=ag.PhaseSettingsImaging(sub_size=2),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(samples=samples_with_result),
         )
 
         result = phase_imaging_7x7.run(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
 
         assert (result.mask == mask_7x7).all()
@@ -66,18 +66,16 @@ class TestResult:
 
         max_log_likelihood_plane = ag.Plane(galaxies=[source])
 
-        samples = mock_pipeline.MockSamples(
-            max_log_likelihood_instance=max_log_likelihood_plane
-        )
+        samples = mock.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase_2",
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=6),
-            search=mock_pipeline.MockSearch(samples=samples),
+            search=mock.MockSearch(samples=samples),
         )
 
         result = phase_imaging_7x7.run(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
 
         assert isinstance(result.pixelization, ag.pix.VoronoiMagnification)
@@ -91,21 +89,19 @@ class TestResult:
 
         max_log_likelihood_plane = ag.Plane(galaxies=[source])
 
-        samples = mock_pipeline.MockSamples(
-            max_log_likelihood_instance=max_log_likelihood_plane
-        )
+        samples = mock.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase_2",
             galaxies=dict(source=source),
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=6),
-            search=mock_pipeline.MockSearch(samples=samples),
+            search=mock.MockSearch(samples=samples),
         )
 
         phase_imaging_7x7.galaxies.source.hyper_galaxy_image = np.ones(9)
 
         result = phase_imaging_7x7.run(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
 
         assert isinstance(result.pixelization, ag.pix.VoronoiBrightnessImage)

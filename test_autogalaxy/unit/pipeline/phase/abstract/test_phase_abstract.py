@@ -1,7 +1,7 @@
 import autofit as af
 import autogalaxy as ag
 import pytest
-from test_autogalaxy.mock import mock_pipeline
+from test_autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -30,8 +30,8 @@ class TestModel:
                 ),
                 source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
             ),
-            settings=mock_pipeline.MockPhaseSettings(),
-            search=mock_pipeline.MockSearch(),
+            settings=ag.PhaseSettingsImaging(),
+            search=mock.MockSearch(),
         )
 
         print(hasattr(af.last.result.instance.galaxies.light, "mas2s"))
@@ -42,10 +42,10 @@ class TestModel:
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
-        ag.PhaseImaging(phase_name="test_phase", search=mock_pipeline.MockSearch())
+        ag.PhaseImaging(phase_name="test_phase", search=mock.MockSearch())
 
         assert phase_dataset_7x7.galaxies is not None
 
@@ -63,7 +63,7 @@ class TestModel:
                     sis=ag.mp.SphericalIsothermal, redshift=ag.Redshift
                 ),
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         for item in phase_dataset_7x7.model.path_priors_tuples:
@@ -120,7 +120,7 @@ class TestModel:
                     sis=ag.mp.SphericalIsothermal, redshift=ag.Redshift
                 ),
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         # noinspection PyTypeChecker
@@ -164,19 +164,17 @@ class TestSetup:
 
     # noinspection PyTypeChecker
     def test_assertion_failure(self, imaging_7x7, mask_7x7):
-        def make_analysis(*args, **kwargs):
-            return mock_pipeline.GalaxiesMockAnalysis(1, 1)
 
         phase_dataset_7x7 = ag.PhaseImaging(
             phase_name="phase_name",
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
-            search=mock_pipeline.MockSearch(),
+            settings=ag.PhaseSettingsImaging(),
+            search=mock.MockSearch(),
         )
 
-        phase_dataset_7x7.make_analysis = make_analysis
-        result = phase_dataset_7x7.run(dataset=imaging_7x7, results=None, mask=None)
+        result = phase_dataset_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)
         assert result is not None
 
         phase_dataset_7x7 = ag.PhaseImaging(
@@ -184,9 +182,8 @@ class TestSetup:
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
-            search=mock_pipeline.MockSearch(),
+            settings=ag.PhaseSettingsImaging(),
+            search=mock.MockSearch(),
         )
-
-        phase_dataset_7x7.make_analysis = make_analysis
-        result = phase_dataset_7x7.run(dataset=imaging_7x7, results=None, mask=None)
+        result = phase_dataset_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)
         assert result is not None

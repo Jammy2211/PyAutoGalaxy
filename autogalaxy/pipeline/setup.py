@@ -1,4 +1,5 @@
 from autoconf import conf
+import autofit as af
 
 
 class PipelineSetup:
@@ -7,6 +8,9 @@ class PipelineSetup:
         hyper_galaxies=False,
         hyper_image_sky=False,
         hyper_background_noise=False,
+        hyper_galaxies_search=None,
+        inversion_search=None,
+        hyper_combined_search=None,
         pixelization=None,
         regularization=None,
         light_centre=None,
@@ -36,6 +40,12 @@ class PipelineSetup:
         hyper_background_noise : bool
             If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used include the
             noise-map's background component in the model.
+        hyper_galaxies_search : af.NonLinearSearch or None
+            The non-linear search used by every hyper-galaxies phase.
+        inversion_search : af.NonLinearSearch or None
+            The non-linear search used by every inversion phase.
+        hyper_combined_search : af.NonLinearSearch or None
+            The non-linear search used by every hyper combined phase.
         pixelization : ag.pix.Pixelization
            If the pipeline uses an *Inversion* to reconstruct the galaxy's light, this determines the
            *Pixelization* used.
@@ -62,6 +72,30 @@ class PipelineSetup:
         """
 
         self.hyper_galaxies = hyper_galaxies
+
+        if self.hyper_galaxies and hyper_galaxies_search is None:
+            self.hyper_galaxies_search = af.DynestyStatic(
+                n_live_points=75, sampling_efficiency=0.5, evidence_tolerance=0.8
+            )
+        elif self.hyper_galaxies and hyper_galaxies_search is not None:
+            self.hyper_galaxies_search = hyper_galaxies_search
+        else:
+            self.hyper_galaxies_search = None
+
+        if inversion_search is None:
+            self.inversion_search = af.DynestyStatic(
+                n_live_points=30, sampling_efficiency=0.5, evidence_tolerance=0.8
+            )
+        elif inversion_search is not None:
+            self.inversion_search = inversion_search
+
+        if hyper_combined_search is None:
+            self.hyper_combined_search = af.DynestyStatic(
+                n_live_points=50, sampling_efficiency=0.5, evidence_tolerance=0.8
+            )
+        else:
+            self.hyper_combined_search = hyper_combined_search
+
         self.hyper_image_sky = hyper_image_sky
         self.hyper_background_noise = hyper_background_noise
 

@@ -4,7 +4,7 @@ import autogalaxy as ag
 from autogalaxy.hyper import hyper_data as hd
 import pytest
 from autogalaxy.fit.fit import FitImaging
-from test_autogalaxy.mock import mock_pipeline
+from test_autogalaxy import mock
 
 
 class MockPhase:
@@ -13,7 +13,7 @@ class MockPhase:
         self.paths = autofit.non_linear.paths.Paths(
             name=self.phase_name, path_prefix="phase_path", folders=("",), tag=""
         )
-        self.search = mock_pipeline.MockSearch(paths=self.paths)
+        self.search = mock.MockSearch(paths=self.paths)
         self.model = af.ModelMapper()
 
     def save_dataset(self, dataset):
@@ -21,7 +21,7 @@ class MockPhase:
 
     # noinspection PyUnusedLocal,PyMethodMayBeStatic
     def run(self, *args, **kwargs):
-        return mock_pipeline.MockResult()
+        return mock.MockResult()
 
 
 class TestModelFixing:
@@ -30,7 +30,7 @@ class TestModelFixing:
         phase = ag.ModelFixingHyperPhase(
             phase=MockPhase(),
             hyper_name="test",
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
             model_classes=(hd.HyperImageSky, hd.HyperBackgroundNoise),
         )
 
@@ -50,7 +50,7 @@ class TestModelFixing:
         instance = af.ModelInstance()
         mapper = af.ModelMapper()
 
-        mapper.galaxy_galaxy = ag.GalaxyModel(
+        mapper.galaxy = ag.GalaxyModel(
             redshift=ag.Redshift,
             pixelization=ag.pix.Rectangular,
             regularization=ag.reg.Constant,
@@ -61,7 +61,7 @@ class TestModelFixing:
 
         assert mapper.prior_count == 10
 
-        instance.galaxy_galaxy = ag.Galaxy(
+        instance.galaxy = ag.Galaxy(
             pixelization=ag.pix.Rectangular(),
             regularization=ag.reg.Constant(),
             redshift=1.0,
@@ -74,14 +74,14 @@ class TestModelFixing:
         phase = ag.ModelFixingHyperPhase(
             phase=MockPhase(),
             hyper_name="mock_phase",
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
             model_classes=(ag.pix.Pixelization, ag.reg.Regularization),
         )
 
         mapper = mapper.copy_with_fixed_priors(instance, phase.model_classes)
 
         assert mapper.prior_count == 3
-        assert mapper.galaxy_galaxy.redshift == 1.0
+        assert mapper.galaxy.redshift == 1.0
         assert mapper.source_galaxy.light.axis_ratio == 1.0
 
 
@@ -91,17 +91,17 @@ def make_combined():
 
     # noinspection PyUnusedLocal
     def run_hyper(*args, **kwargs):
-        return mock_pipeline.MockResult()
+        return mock.MockResult()
 
     hyper_galaxy_phase = ag.HyperGalaxyPhase(
         phase=normal_phase,
-        search=mock_pipeline.MockSearch(),
+        search=mock.MockSearch(),
         include_sky_background=False,
         include_noise_background=False,
     )
     inversion_phase = ag.InversionPhase(
         phase=normal_phase,
-        search=mock_pipeline.MockSearch(),
+        search=mock.MockSearch(),
         model_classes=(ag.pix.Pixelization, ag.reg.Regularization),
     )
 
@@ -109,7 +109,7 @@ def make_combined():
     hyper_combined = ag.CombinedHyperPhase(
         phase=normal_phase,
         hyper_phases=(hyper_galaxy_phase, inversion_phase),
-        search=mock_pipeline.MockSearch(),
+        search=mock.MockSearch(),
     )
 
     for phase in hyper_combined.hyper_phases:
@@ -123,18 +123,18 @@ class TestHyperAPI:
         result = hyper_combined.run(dataset=None, mask=None)
 
         assert hasattr(result, "hyper_galaxy")
-        assert isinstance(result.hyper_galaxy, mock_pipeline.MockResult)
+        assert isinstance(result.hyper_galaxy, mock.MockResult)
 
         assert hasattr(result, "inversion")
-        assert isinstance(result.inversion, mock_pipeline.MockResult)
+        assert isinstance(result.inversion, mock.MockResult)
 
         assert hasattr(result, "hyper_combined")
-        assert isinstance(result.hyper_combined, mock_pipeline.MockResult)
+        assert isinstance(result.hyper_combined, mock.MockResult)
 
     def test_combine_models(self, hyper_combined):
-        result = mock_pipeline.MockResult()
-        hyper_galaxy_result = mock_pipeline.MockResult()
-        inversion_result = mock_pipeline.MockResult()
+        result = mock.MockResult()
+        hyper_galaxy_result = mock.MockResult()
+        inversion_result = mock.MockResult()
 
         hyper_galaxy_result.model = af.ModelMapper()
         inversion_result.model = af.ModelMapper()
@@ -173,26 +173,33 @@ class TestHyperAPI:
         # noinspection PyTypeChecker
         phase = ag.HyperGalaxyPhase(
             phase=normal_phase,
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
             include_sky_background=False,
             include_noise_background=False,
         )
 
         # noinspection PyUnusedLocal
         def run_hyper(*args, **kwargs):
-            return mock_pipeline.MockResult()
+            return mock.MockResult()
 
         phase.run_hyper = run_hyper
 
         result = phase.run(dataset=imaging_7x7)
 
         assert hasattr(result, "hyper_galaxy")
-        assert isinstance(result.hyper_galaxy, mock_pipeline.MockResult)
+        assert isinstance(result.hyper_galaxy, mock.MockResult)
 
     def test__paths(self):
 
+        galaxy = ag.Galaxy(
+            pixelization=ag.pix.Rectangular(),
+            regularization=ag.reg.Constant(),
+            redshift=1.0,
+        )
+
         phase = ag.PhaseImaging(
             phase_name="test_phase",
+            galaxies=dict(galaxy=galaxy),
             search=af.DynestyStatic(n_live_points=1),
             settings=ag.PhaseSettingsImaging(bin_up_factor=2),
         )
@@ -208,6 +215,33 @@ class TestHyperAPI:
             in hyper_phase.paths.output_path
         )
 
+        phase_extended = phase.extend_with_multiple_hyper_phases(
+            inversion_search=af.DynestyStatic(n_live_points=1),
+            hyper_galaxy_search=af.DynestyStatic(n_live_points=2),
+            hyper_combined_search=af.DynestyStatic(n_live_points=3),
+        )
+
+        inversion_phase = phase_extended.hyper_phases[0].make_hyper_phase()
+
+        assert (
+            "test_phase/inversion_settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_1_eff_0.5"
+            in inversion_phase.paths.output_path
+        )
+
+        hyper_galaxy_phase = phase_extended.hyper_phases[1].make_hyper_phase()
+
+        assert (
+            "test_phase/hyper_galaxy_settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_2_eff_0.5"
+            in hyper_galaxy_phase.paths.output_path
+        )
+
+        hyper_combined_phase = phase_extended.make_hyper_phase()
+
+        assert (
+            "test_phase/hyper_combined_settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_3_eff_0.5"
+            in hyper_combined_phase.paths.output_path
+        )
+
 
 class TestHyperGalaxyPhase:
     def test__likelihood_function_is_same_as_normal_phase_likelihood_function(
@@ -217,21 +251,19 @@ class TestHyperGalaxyPhase:
         hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-        galaxy_galaxy = ag.Galaxy(
-            redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1)
-        )
+        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
-            galaxies=dict(galaxy=galaxy_galaxy),
+            galaxies=dict(galaxy=galaxy),
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
             settings=ag.PhaseSettingsImaging(sub_size=2),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
         instance = phase_imaging_7x7.model.instance_from_unit_vector([])
 

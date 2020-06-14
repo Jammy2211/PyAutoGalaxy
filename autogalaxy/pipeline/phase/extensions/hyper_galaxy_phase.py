@@ -182,13 +182,9 @@ class HyperGalaxyPhase(HyperPhase):
 
         for path, galaxy in results.last.path_galaxy_tuples:
 
-            # TODO : NEed t be sure these wont mess up anything else.
+            model = copy.deepcopy(phase.model)
 
             search = phase.search.copy_with_name_extension(extension=path[-1])
-
-            self.update_search_with_config(search=search, section="hyper_galaxy")
-
-            model = copy.deepcopy(phase.model)
 
             # TODO : This is a HACK :O
 

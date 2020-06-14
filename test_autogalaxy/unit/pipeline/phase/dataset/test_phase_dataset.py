@@ -3,7 +3,7 @@ from os import path
 import autogalaxy as ag
 import pytest
 from autogalaxy import exc
-from test_autogalaxy.mock import mock_pipeline
+from test_autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -18,7 +18,7 @@ class TestPhase:
     def test__extend_with_hyper_and_pixelizations(self):
 
         phase_no_pixelization = ag.PhaseImaging(
-            phase_name="test_phase", search=mock_pipeline.MockSearch()
+            phase_name="test_phase", search=mock.MockSearch()
         )
 
         phase_extended = phase_no_pixelization.extend_with_multiple_hyper_phases(
@@ -29,7 +29,7 @@ class TestPhase:
         # This phase does not have a pixelization, so even though inversion=True it will not be extended
 
         phase_extended = phase_no_pixelization.extend_with_multiple_hyper_phases(
-            inversion_search=mock_pipeline.MockSearch()
+            inversion_search=mock.MockSearch()
         )
         assert phase_extended == phase_no_pixelization
 
@@ -42,29 +42,28 @@ class TestPhase:
                     regularization=ag.reg.Constant,
                 )
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            inversion_search=mock_pipeline.MockSearch()
+            inversion_search=mock.MockSearch()
         )
         assert isinstance(phase_extended.hyper_phases[0], ag.InversionPhase)
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            hyper_galaxy_search=mock_pipeline.MockSearch(), inversion_search=None
+            hyper_galaxy_search=mock.MockSearch(), inversion_search=None
         )
         assert isinstance(phase_extended.hyper_phases[0], ag.HyperGalaxyPhase)
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            hyper_galaxy_search=mock_pipeline.MockSearch(),
-            inversion_search=mock_pipeline.MockSearch(),
+            hyper_galaxy_search=mock.MockSearch(), inversion_search=mock.MockSearch()
         )
         assert isinstance(phase_extended.hyper_phases[0], ag.InversionPhase)
         assert isinstance(phase_extended.hyper_phases[1], ag.HyperGalaxyPhase)
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            hyper_galaxy_search=mock_pipeline.MockSearch(),
-            inversion_search=mock_pipeline.MockSearch(),
+            hyper_galaxy_search=mock.MockSearch(),
+            inversion_search=mock.MockSearch(),
             hyper_galaxy_phase_first=True,
         )
         assert isinstance(phase_extended.hyper_phases[0], ag.HyperGalaxyPhase)
@@ -80,7 +79,7 @@ class TestMakeAnalysis:
         )
 
         analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_input, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_input, results=mock.MockResults()
         )
 
         assert (analysis.masked_imaging.mask == mask_input).all()
@@ -97,7 +96,7 @@ class TestMakeAnalysis:
 
         phase_imaging_7x7.meta_dataset.settings.sub_size = 1
         analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_input, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_input, results=mock.MockResults()
         )
 
         assert (analysis.masked_imaging.mask == mask_input).all()
@@ -106,7 +105,7 @@ class TestMakeAnalysis:
 
         phase_imaging_7x7.meta_dataset.settings.sub_size = 2
         analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_input, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_input, results=mock.MockResults()
         )
 
         assert (analysis.masked_imaging.mask == mask_input).all()
@@ -127,11 +126,11 @@ class TestMakeAnalysis:
                 )
             ),
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
 
         instance = phase_imaging_7x7.model.instance_from_unit_vector([])
@@ -151,11 +150,11 @@ class TestMakeAnalysis:
                 )
             ),
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
         instance = phase_imaging_7x7.model.instance_from_unit_vector([])
         plane = analysis.plane_for_instance(instance=instance)
@@ -176,11 +175,11 @@ class TestMakeAnalysis:
                 )
             ),
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
         instance = phase_imaging_7x7.model.instance_from_unit_vector([])
         plane = analysis.plane_for_instance(instance=instance)
@@ -199,11 +198,11 @@ class TestMakeAnalysis:
                 )
             ),
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
         instance = phase_imaging_7x7.model.instance_from_unit_vector([])
         plane = analysis.plane_for_instance(instance=instance)
@@ -219,18 +218,15 @@ class TestPhasePickle:
 
     # noinspection PyTypeChecker
     def test_assertion_failure(self, imaging_7x7, mask_7x7):
-        def make_analysis(*args, **kwargs):
-            return mock_pipeline.GalaxiesMockAnalysis(1, 1)
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="phase_name",
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
-        phase_imaging_7x7.make_analysis = make_analysis
         result = phase_imaging_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)
         assert result is not None
 
@@ -239,9 +235,8 @@ class TestPhasePickle:
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
-        phase_imaging_7x7.make_analysis = make_analysis
         result = phase_imaging_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)
         assert result is not None

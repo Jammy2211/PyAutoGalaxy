@@ -2,7 +2,7 @@ import autofit as af
 import autogalaxy as ag
 import numpy as np
 from astropy import cosmology as cosmo
-from test_autogalaxy.mock import mock_pipeline
+from test_autogalaxy import mock
 
 
 class TestImagePassing:
@@ -18,12 +18,12 @@ class TestImagePassing:
         analysis = ag.PhaseImaging.Analysis(
             masked_imaging=masked_imaging_7x7,
             image_path="files/",
-            results=mock_pipeline.MockResults(),
+            results=mock.MockResults(),
             cosmology=cosmo.Planck15,
         )
 
         result = ag.PhaseImaging.Result(
-            samples=mock_pipeline.MockSamples(max_log_likelihood_instance=instance),
+            samples=mock.MockSamples(max_log_likelihood_instance=instance),
             previous_model=af.ModelMapper(),
             analysis=analysis,
             search=None,

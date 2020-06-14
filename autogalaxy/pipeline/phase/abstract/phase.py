@@ -46,8 +46,6 @@ class AbstractPhase(af.AbstractPhase):
 
     def make_result(self, result, analysis):
 
-        print(result.samples)
-
         return self.Result(
             samples=result.samples,
             previous_model=result.previous_model,

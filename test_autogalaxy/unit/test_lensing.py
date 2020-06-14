@@ -11,7 +11,7 @@ from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
 from pyquad import quad_grid
 from skimage import measure
-from test_autogalaxy.mock import mock_cosmology
+from test_autogalaxy import mock
 
 
 @pytest.fixture(autouse=True)
@@ -866,7 +866,7 @@ class TestEinsteinRadiusMassfrom:
 
         assert einstein_radius == pytest.approx(2.0, 1e-1)
 
-        cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=2.0, kpc_per_arcsec=0.5)
+        cosmology = mock.MockCosmology(arcsec_per_kpc=2.0, kpc_per_arcsec=0.5)
 
         einstein_radius = sis.einstein_radius_in_units(
             unit_length="kpc", redshift_object=2.0, cosmology=cosmology
@@ -885,7 +885,7 @@ class TestEinsteinRadiusMassfrom:
 
         assert einstein_radius == pytest.approx(1.9360, 1e-1)
 
-        cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=2.0, kpc_per_arcsec=0.5)
+        cosmology = mock.MockCosmology(arcsec_per_kpc=2.0, kpc_per_arcsec=0.5)
 
         einstein_radius = sie.einstein_radius_in_units(
             unit_length="kpc", redshift_object=2.0, cosmology=cosmology
@@ -904,7 +904,7 @@ class TestEinsteinRadiusMassfrom:
 
         assert einstein_mass == pytest.approx(np.pi * 2.0 ** 2.0, 1e-1)
 
-        cosmology = mock_cosmology.MockCosmology(
+        cosmology = mock.MockCosmology(
             kpc_per_arcsec=1.0, arcsec_per_kpc=1.0, critical_surface_density=0.5
         )
 

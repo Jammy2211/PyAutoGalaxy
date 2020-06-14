@@ -3,7 +3,7 @@ import autogalaxy as ag
 import numpy as np
 import pytest
 from autogalaxy import exc
-from test_autogalaxy.mock import mock_galaxy
+from test_autogalaxy import mock
 
 
 @pytest.fixture(autouse=True)
@@ -181,7 +181,7 @@ class TestGalaxyFitData:
             )
         ).all()
 
-        galaxy = mock_galaxy.MockGalaxy(value=1, shape=36)
+        galaxy = mock.MockGalaxy(value=1, shape=36)
 
         image = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
 
@@ -255,7 +255,7 @@ class TestGalaxyFitData:
             )
         ).all()
 
-        galaxy = mock_galaxy.MockGalaxy(value=1, shape=36)
+        galaxy = mock.MockGalaxy(value=1, shape=36)
 
         convergence = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
 
@@ -333,7 +333,7 @@ class TestGalaxyFitData:
             )
         ).all()
 
-        galaxy = mock_galaxy.MockGalaxy(value=1, shape=36)
+        galaxy = mock.MockGalaxy(value=1, shape=36)
 
         potential = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
 
@@ -408,7 +408,7 @@ class TestGalaxyFitData:
             )
         ).all()
 
-        galaxy = mock_galaxy.MockGalaxy(value=1, shape=36)
+        galaxy = mock.MockGalaxy(value=1, shape=36)
 
         deflections_y = galaxy_fit_data.profile_quantity_from_galaxies(
             galaxies=[galaxy]
@@ -504,7 +504,7 @@ class TestGalaxyFitData:
             )
         ).all()
 
-        galaxy = mock_galaxy.MockGalaxy(value=1, shape=36)
+        galaxy = mock.MockGalaxy(value=1, shape=36)
 
         deflections_x = galaxy_fit_data.profile_quantity_from_galaxies(
             galaxies=[galaxy]

@@ -3,7 +3,7 @@ from os import path
 import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autogalaxy.mock import mock_pipeline
+from test_autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -29,7 +29,7 @@ def test__masked_imaging__settings_inputs_are_used_in_masked_imaging(
             inversion_pixel_limit=100,
             psf_shape_2d=(3, 3),
         ),
-        search=mock_pipeline.MockSearch(),
+        search=mock.MockSearch(),
     )
 
     assert phase_imaging_7x7.meta_dataset.settings.sub_size == 3
@@ -39,7 +39,7 @@ def test__masked_imaging__settings_inputs_are_used_in_masked_imaging(
     assert phase_imaging_7x7.meta_dataset.settings.psf_shape_2d == (3, 3)
 
     analysis = phase_imaging_7x7.make_analysis(
-        dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+        dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
     )
 
     assert isinstance(analysis.masked_dataset.grid, ag.Grid)
@@ -53,11 +53,11 @@ def test__masked_imaging__settings_inputs_are_used_in_masked_imaging(
             fractional_accuracy=0.99,
             sub_steps=[2],
         ),
-        search=mock_pipeline.MockSearch(),
+        search=mock.MockSearch(),
     )
 
     analysis = phase_imaging_7x7.make_analysis(
-        dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+        dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
     )
 
     assert isinstance(analysis.masked_dataset.grid, ag.GridIterate)
@@ -74,11 +74,11 @@ def test__masked_imaging__uses_signal_to_noise_limit(imaging_7x7, mask_7x7_1_pix
     phase_imaging_7x7 = ag.PhaseImaging(
         phase_name="phase_imaging_7x7",
         settings=ag.PhaseSettingsImaging(signal_to_noise_limit=1.0),
-        search=mock_pipeline.MockSearch(),
+        search=mock.MockSearch(),
     )
 
     analysis = phase_imaging_7x7.make_analysis(
-        dataset=imaging_7x7, mask=mask_7x7_1_pix, results=mock_pipeline.MockResults()
+        dataset=imaging_7x7, mask=mask_7x7_1_pix, results=mock.MockResults()
     )
     assert (
         analysis.masked_dataset.image.in_2d
@@ -96,11 +96,11 @@ def test__masked_imaging__uses_signal_to_noise_limit(imaging_7x7, mask_7x7_1_pix
     phase_imaging_7x7 = ag.PhaseImaging(
         phase_name="phase_imaging_7x7",
         settings=ag.PhaseSettingsImaging(signal_to_noise_limit=0.1),
-        search=mock_pipeline.MockSearch(),
+        search=mock.MockSearch(),
     )
 
     analysis = phase_imaging_7x7.make_analysis(
-        dataset=imaging_7x7, mask=mask_7x7_1_pix, results=mock_pipeline.MockResults()
+        dataset=imaging_7x7, mask=mask_7x7_1_pix, results=mock.MockResults()
     )
     assert (
         analysis.masked_dataset.image.in_2d
@@ -120,11 +120,11 @@ def test__masked_imaging__uses_bin_up_factor(imaging_7x7, mask_7x7_1_pix):
     phase_imaging_7x7 = ag.PhaseImaging(
         phase_name="phase_imaging_7x7",
         settings=ag.PhaseSettingsImaging(bin_up_factor=2),
-        search=mock_pipeline.MockSearch(),
+        search=mock.MockSearch(),
     )
 
     analysis = phase_imaging_7x7.make_analysis(
-        dataset=imaging_7x7, mask=mask_7x7_1_pix, results=mock_pipeline.MockResults()
+        dataset=imaging_7x7, mask=mask_7x7_1_pix, results=mock.MockResults()
     )
     assert (
         analysis.masked_dataset.image.in_2d
@@ -149,7 +149,7 @@ def test__phase_can_receive_hyper_image_and_noise_maps():
         ),
         hyper_image_sky=ag.hyper_data.HyperImageSky,
         hyper_background_noise=ag.hyper_data.HyperBackgroundNoise,
-        search=mock_pipeline.MockSearch(),
+        search=mock.MockSearch(),
     )
 
     instance = phase_imaging_7x7.model.instance_from_vector([0.1, 0.2, 0.3, 0.4])

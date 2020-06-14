@@ -4,7 +4,7 @@ import autofit as af
 import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autogalaxy.mock import mock_pipeline
+from test_autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -20,7 +20,7 @@ class TestMakeAnalysis:
         self, phase_imaging_7x7, imaging_7x7, mask_7x7
     ):
         analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
 
         assert (
@@ -34,7 +34,7 @@ class TestMakeAnalysis:
 
     def test___phase_info_is_made(self, phase_imaging_7x7, imaging_7x7, mask_7x7):
         phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
 
         file_phase_info = "{}/{}".format(
@@ -79,7 +79,7 @@ class TestHyperMethods:
             ),
         }
 
-        results = mock_pipeline.MockResults(
+        results = mock.MockResults(
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
             hyper_model_image=ag.Array.full(fill_value=3.0, shape_2d=(3, 3)),
             mask=mask_7x7,
@@ -91,7 +91,7 @@ class TestHyperMethods:
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5, hyper_galaxy=ag.HyperGalaxy)
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(

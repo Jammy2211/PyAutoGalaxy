@@ -5,7 +5,7 @@ import autogalaxy as ag
 import numpy as np
 import pytest
 from astropy import cosmology as cosmo
-from test_autogalaxy.mock import mock_cosmology
+from test_autogalaxy import mock
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
@@ -149,9 +149,7 @@ class TestAbstractNFW:
         assert coord_m == pytest.approx(np.array([0.06946888, 0.06946888]), 1.0e-4)
 
     def test__rho_at_scale_radius__numerical_values_in_angular_units(self):
-        cosmology = mock_cosmology.MockCosmology(
-            kpc_per_arcsec=2.0, critical_surface_density=2.0
-        )
+        cosmology = mock.MockCosmology(kpc_per_arcsec=2.0, critical_surface_density=2.0)
 
         nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
         rho = nfw.rho_at_scale_radius_for_units(
@@ -182,7 +180,7 @@ class TestAbstractNFW:
         assert rho == pytest.approx(0.25, 1e-3)
 
     def test__rho_at_scale_radius__unit_conversions(self):
-        cosmology = mock_cosmology.MockCosmology(
+        cosmology = mock.MockCosmology(
             arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0
         )
 
@@ -224,7 +222,7 @@ class TestAbstractNFW:
 
         # This will make the critical convergence 4.0, with the same conversions as above
 
-        cosmology = mock_cosmology.MockCosmology(
+        cosmology = mock.MockCosmology(
             arcsec_per_kpc=0.25, kpc_per_arcsec=4.0, critical_surface_density=2.0
         )
 
@@ -237,7 +235,7 @@ class TestAbstractNFW:
         )
         assert rho == pytest.approx(0.5 / 4.0, 1e-3)
 
-        cosmology = mock_cosmology.MockCosmology(
+        cosmology = mock.MockCosmology(
             arcsec_per_kpc=0.25, kpc_per_arcsec=4.0, critical_surface_density=4.0
         )
 
@@ -256,7 +254,7 @@ class TestAbstractNFW:
             scale_radius=ag.dim.Length(1.0, "kpc"),
         )
 
-        cosmology = mock_cosmology.MockCosmology(
+        cosmology = mock.MockCosmology(
             arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0
         )
         rho = nfw_kpc.rho_at_scale_radius_for_units(
@@ -289,7 +287,7 @@ class TestAbstractNFW:
     def test__delta_concentration_value_in_default_units(self):
         nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
-        cosmology = mock_cosmology.MockCosmology(
+        cosmology = mock.MockCosmology(
             arcsec_per_kpc=1.0,
             kpc_per_arcsec=1.0,
             critical_surface_density=1.0,
@@ -322,7 +320,7 @@ class TestAbstractNFW:
         )
         assert delta_concentration == pytest.approx(0.25, 1e-3)
 
-        # cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0,
+        # cosmology = mock.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0,
         #                           cosmic_average_density=1.0)
         #
         # nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
@@ -340,7 +338,7 @@ class TestAbstractNFW:
         #                                               cosmology=cosmology)
         # assert delta_concentration == pytest.approx(0.05, 1e-3)
         #
-        # cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0,
+        # cosmology = mock.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0,
         #                           cosmic_average_density=2.0)
         #
         # nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
@@ -349,7 +347,7 @@ class TestAbstractNFW:
         # assert delta_concentration == pytest.approx(0.25, 1e-3)
 
     def test__solve_concentration(self):
-        cosmology = mock_cosmology.MockCosmology(
+        cosmology = mock.MockCosmology(
             arcsec_per_kpc=1.0,
             kpc_per_arcsec=1.0,
             critical_surface_density=1.0,
@@ -371,7 +369,7 @@ class TestAbstractNFW:
             scale_radius=ag.dim.Length(1.0, "arcsec"),
         )
 
-        cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=0.2, kpc_per_arcsec=5.0)
+        cosmology = mock.MockCosmology(arcsec_per_kpc=0.2, kpc_per_arcsec=5.0)
 
         concentration = nfw_arcsec.concentration_for_units(
             cosmology=cosmology, redshift_profile=0.5, redshift_source=1.0
@@ -386,7 +384,7 @@ class TestAbstractNFW:
 
         assert radius_200 == concentration * 1.0
 
-        cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0)
+        cosmology = mock.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0)
 
         concentration = nfw_arcsec.concentration_for_units(
             unit_length="kpc",
@@ -410,7 +408,7 @@ class TestAbstractNFW:
             scale_radius=ag.dim.Length(1.0, "kpc"),
         )
 
-        cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=0.2, kpc_per_arcsec=5.0)
+        cosmology = mock.MockCosmology(arcsec_per_kpc=0.2, kpc_per_arcsec=5.0)
 
         concentration = nfw_kpc.concentration_for_units(
             unit_length="kpc",
@@ -428,7 +426,7 @@ class TestAbstractNFW:
 
         assert radius_200 == concentration * 1.0
 
-        cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0)
+        cosmology = mock.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0)
 
         concentration = nfw_kpc.concentration_for_units(
             unit_length="arcsec",
@@ -449,7 +447,7 @@ class TestAbstractNFW:
     def test__mass_at_200__unit_conversions_work(self):
         nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
-        cosmology = mock_cosmology.MockCosmology(
+        cosmology = mock.MockCosmology(
             arcsec_per_kpc=1.0,
             kpc_per_arcsec=1.0,
             critical_surface_density=1.0,
@@ -479,7 +477,7 @@ class TestAbstractNFW:
         )
         assert mass_at_200 == pytest.approx(mass_calc, 1.0e-5)
 
-        # cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0,
+        # cosmology = mock.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0,
         #                           cosmic_average_density=1.0)
         #
         # radius_at_200 = nfw.radius_at_200_for_units(unit_length='arcsec', redshift_galaxy=0.5, redshift_source=1.0,
@@ -1166,7 +1164,7 @@ class TestTruncatedNFW:
             centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=1.0
         )
 
-        cosmology = mock_cosmology.MockCosmology(
+        cosmology = mock.MockCosmology(
             arcsec_per_kpc=1.0,
             kpc_per_arcsec=1.0,
             critical_surface_density=1.0,
@@ -1186,7 +1184,7 @@ class TestTruncatedNFW:
         # truncated_nfw = ag.mp.SphericalTruncatedNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0,
         #                                          truncation_radius=1.0)
         #
-        # cosmology = mock_cosmology.MockCosmology(arcsec_per_kpc=1.0, kpc_per_arcsec=1.0, critical_surface_density=2.0,
+        # cosmology = mock.MockCosmology(arcsec_per_kpc=1.0, kpc_per_arcsec=1.0, critical_surface_density=2.0,
         #                           cosmic_average_density=3.0)
         #
         # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,

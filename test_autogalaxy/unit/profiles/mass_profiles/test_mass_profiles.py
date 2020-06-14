@@ -4,7 +4,7 @@ from autoconf import conf
 import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autogalaxy.mock import mock_cosmology
+from test_autogalaxy import mock
 
 
 def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
@@ -71,7 +71,7 @@ class TestMassWithinCircle:
         self
     ):
 
-        cosmology = mock_cosmology.MockCosmology(kpc_per_arcsec=2.0)
+        cosmology = mock.MockCosmology(kpc_per_arcsec=2.0)
 
         # arcsec -> arcsec
 
@@ -173,7 +173,7 @@ class TestMassWithinCircle:
         self
     ):
 
-        cosmology = mock_cosmology.MockCosmology(critical_surface_density=2.0)
+        cosmology = mock.MockCosmology(critical_surface_density=2.0)
 
         sis = ag.mp.SphericalIsothermal(einstein_radius=2.0)
         radius = ag.dim.Length(2.0, "arcsec")
@@ -209,9 +209,7 @@ class TestMassWithinCircle:
 class TestDensityBetweenAnnuli:
     def test__circular_annuli__sis__analyic_density_agrees(self):
 
-        cosmology = mock_cosmology.MockCosmology(
-            kpc_per_arcsec=2.0, critical_surface_density=2.0
-        )
+        cosmology = mock.MockCosmology(kpc_per_arcsec=2.0, critical_surface_density=2.0)
 
         einstein_radius = 1.0
         sis_arcsec = ag.mp.SphericalIsothermal(
@@ -283,9 +281,7 @@ class TestDensityBetweenAnnuli:
 
     def test__circular_annuli__nfw_profile__compare_to_manual_mass(self):
 
-        cosmology = mock_cosmology.MockCosmology(
-            kpc_per_arcsec=2.0, critical_surface_density=2.0
-        )
+        cosmology = mock.MockCosmology(kpc_per_arcsec=2.0, critical_surface_density=2.0)
 
         nfw = ag.mp.EllipticalNFW(
             centre=(0.0, 0.0), axis_ratio=0.8, phi=45.0, kappa_s=1.0

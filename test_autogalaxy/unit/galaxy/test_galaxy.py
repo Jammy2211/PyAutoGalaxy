@@ -5,7 +5,7 @@ import autogalaxy as ag
 import numpy as np
 import pytest
 from autogalaxy import exc
-from test_autogalaxy.mock import mock_cosmology
+from test_autogalaxy import mock
 
 
 class TestUnits:
@@ -268,9 +268,7 @@ class TestLightProfiles:
         def test__radius_unit_conversions__multiply_by_kpc_per_arcsec(
             self, lp_0, gal_x1_lp
         ):
-            cosmology = mock_cosmology.MockCosmology(
-                arcsec_per_kpc=0.5, kpc_per_arcsec=2.0
-            )
+            cosmology = mock.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0)
 
             radius = ag.dim.Length(0.5, "arcsec")
 
@@ -875,7 +873,7 @@ class TestMassProfiles:
         def test__radius_unit_conversions__multiply_by_kpc_per_arcsec(
             self, mp_0, gal_x1_mp
         ):
-            cosmology = mock_cosmology.MockCosmology(
+            cosmology = mock.MockCosmology(
                 arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=1.0
             )
 
@@ -918,7 +916,7 @@ class TestMassProfiles:
         def test__mass_unit_conversions__same_as_individual_profile(
             self, mp_0, gal_x1_mp
         ):
-            cosmology = mock_cosmology.MockCosmology(
+            cosmology = mock.MockCosmology(
                 arcsec_per_kpc=1.0, kpc_per_arcsec=1.0, critical_surface_density=2.0
             )
 

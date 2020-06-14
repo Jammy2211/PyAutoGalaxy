@@ -2,7 +2,7 @@ from os import path
 
 import autogalaxy as ag
 import pytest
-from test_autogalaxy.mock import mock_pipeline
+from test_autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -18,9 +18,7 @@ class TestSetup:
         source_galaxy = ag.Galaxy(redshift=0.5)
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
-            galaxies=[source_galaxy],
-            search=mock_pipeline.MockSearch(),
+            phase_name="test_phase", galaxies=[source_galaxy], search=mock.MockSearch()
         )
 
         assert phase_imaging_7x7.meta_dataset.pixelization is None
@@ -34,9 +32,7 @@ class TestSetup:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
-            galaxies=[source_galaxy],
-            search=mock_pipeline.MockSearch(),
+            phase_name="test_phase", galaxies=[source_galaxy], search=mock.MockSearch()
         )
 
         assert isinstance(
@@ -52,9 +48,7 @@ class TestSetup:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
-            galaxies=[source_galaxy],
-            search=mock_pipeline.MockSearch(),
+            phase_name="test_phase", galaxies=[source_galaxy], search=mock.MockSearch()
         )
 
         assert type(phase_imaging_7x7.meta_dataset.pixelization) == type(
@@ -69,7 +63,7 @@ class TestSetup:
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         assert phase_imaging_7x7.meta_dataset.uses_cluster_inversion is False
@@ -84,7 +78,7 @@ class TestSetup:
                 ),
                 source=ag.GalaxyModel(redshift=1.0),
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
         assert phase_imaging_7x7.meta_dataset.uses_cluster_inversion is False
 
@@ -97,7 +91,7 @@ class TestSetup:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
             galaxies=dict(galaxy=ag.GalaxyModel(redshift=0.5), source=source),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         assert phase_imaging_7x7.meta_dataset.uses_cluster_inversion is True
@@ -107,7 +101,7 @@ class TestSetup:
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         assert phase_imaging_7x7.meta_dataset.uses_cluster_inversion is False
@@ -122,7 +116,7 @@ class TestSetup:
                 ),
                 source=ag.GalaxyModel(redshift=1.0),
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         assert phase_imaging_7x7.meta_dataset.uses_cluster_inversion is False
@@ -137,7 +131,7 @@ class TestSetup:
                     regularization=ag.reg.Constant,
                 ),
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         assert phase_imaging_7x7.meta_dataset.uses_cluster_inversion is True
@@ -146,7 +140,7 @@ class TestSetup:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="phase_imaging_7x7",
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=None),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         assert phase_imaging_7x7.meta_dataset.settings.inversion_pixel_limit == 3000
@@ -154,7 +148,7 @@ class TestSetup:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="phase_imaging_7x7",
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         assert phase_imaging_7x7.meta_dataset.settings.inversion_pixel_limit == 10
@@ -162,7 +156,7 @@ class TestSetup:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="phase_imaging_7x7",
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=2000),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         assert phase_imaging_7x7.meta_dataset.settings.inversion_pixel_limit == 2000

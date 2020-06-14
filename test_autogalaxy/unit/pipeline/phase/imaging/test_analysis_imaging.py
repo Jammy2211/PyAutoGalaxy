@@ -5,7 +5,7 @@ import autogalaxy as ag
 import pytest
 from astropy import cosmology as cosmo
 from autogalaxy.fit.fit import FitImaging
-from test_autogalaxy.mock import mock_pipeline
+from test_autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -17,7 +17,7 @@ directory = path.dirname(path.realpath(__file__))
 
 
 class TestFit:
-    def test__fit_using_imaging(self, imaging_7x7, mask_7x7):
+    def test__fit_using_imaging(self, imaging_7x7, mask_7x7, samples_with_result):
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
@@ -25,11 +25,11 @@ class TestFit:
                 galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
                 source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
             ),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(samples=samples_with_result),
         )
 
         result = phase_imaging_7x7.run(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
         assert isinstance(result.instance.galaxies[0], ag.Galaxy)
         assert isinstance(result.instance.galaxies[0], ag.Galaxy)
@@ -43,11 +43,11 @@ class TestFit:
             phase_name="test_phase",
             galaxies=dict(galaxy=galaxy),
             settings=ag.PhaseSettingsImaging(sub_size=1),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
         instance = phase_imaging_7x7.model.instance_from_unit_vector([])
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
@@ -73,11 +73,11 @@ class TestFit:
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
             settings=ag.PhaseSettingsImaging(sub_size=4),
-            search=mock_pipeline.MockSearch(),
+            search=mock.MockSearch(),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock_pipeline.MockResults()
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
         instance = phase_imaging_7x7.model.instance_from_unit_vector([])
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
@@ -119,7 +119,7 @@ class TestFit:
 
         hyper_galaxy_image_path_dict = {("galaxies", "galaxy"): galaxy_hyper_image}
 
-        results = mock_pipeline.MockResults(
+        results = mock.MockResults(
             use_as_hyper_dataset=True,
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
             hyper_model_image=hyper_model_image,
