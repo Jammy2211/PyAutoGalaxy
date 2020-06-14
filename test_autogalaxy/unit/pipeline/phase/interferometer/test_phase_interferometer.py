@@ -139,7 +139,7 @@ class TestHyperMethods:
         )
 
         phase_interferometer_7.extend_with_multiple_hyper_phases(
-            search=mock_pipeline.MockSearch()
+            hyper_combined_search=mock_pipeline.MockSearch()
         )
 
         analysis = phase_interferometer_7.make_analysis(

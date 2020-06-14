@@ -1,5 +1,4 @@
 import os
-import pickle
 from os import path
 
 import autofit as af

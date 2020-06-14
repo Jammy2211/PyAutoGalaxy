@@ -25,7 +25,9 @@ def make_pipeline(name, phase_folders, real_space_mask, search=af.DynestyStatic(
     phase1.search.sampling_efficiency = 0.8
 
     phase1 = phase1.extend_with_multiple_hyper_phases(
-        hyper_galaxy=True, include_background_sky=True, include_background_noise=True
+        hyper_galaxy_search=True,
+        include_background_sky=True,
+        include_background_noise=True,
     )
 
     phase2 = ag.PhaseInterferometer(

@@ -203,6 +203,12 @@ class MockHyperCombinedPhase:
 
 
 class MockSearch(af.NonLinearSearch):
+    def __init__(self, paths=None, samples=None):
+
+        super().__init__(paths=paths)
+
+        self.samples = samples or MockSamples()
+
     def _fit(self, model, analysis):
         class Fitness:
             def __init__(self, instance_from_vector):
@@ -232,4 +238,4 @@ class MockSearch(af.NonLinearSearch):
         return "mock"
 
     def samples_from_model(self, model):
-        return MockSamples()
+        return self.samples

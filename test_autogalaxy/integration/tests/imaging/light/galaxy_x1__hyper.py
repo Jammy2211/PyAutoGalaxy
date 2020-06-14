@@ -26,7 +26,9 @@ def make_pipeline(name, phase_folders, search=af.DynestyStatic()):
     )
 
     phase1 = phase1.extend_with_multiple_hyper_phases(
-        hyper_galaxy=True, include_background_sky=True, include_background_noise=True
+        hyper_galaxy_search=True,
+        include_background_sky=True,
+        include_background_noise=True,
     )
 
     return ag.PipelineDataset(name, phase1)

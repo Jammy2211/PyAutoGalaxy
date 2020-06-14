@@ -54,13 +54,8 @@ from autogalaxy.pipeline.phase.extensions import CombinedHyperPhase
 from autogalaxy.pipeline.phase.extensions import HyperGalaxyPhase
 from autogalaxy.pipeline.phase.extensions.hyper_galaxy_phase import HyperGalaxyPhase
 from autogalaxy.pipeline.phase.extensions.hyper_phase import HyperPhase
-from autogalaxy.pipeline.phase.extensions.inversion_phase import (
-    InversionBackgroundBothPhase,
-    InversionBackgroundNoisePhase,
-    InversionBackgroundSkyPhase,
-    InversionPhase,
-    ModelFixingHyperPhase,
-)
+from autogalaxy.pipeline.phase.extensions.inversion_phase import ModelFixingHyperPhase
+from autogalaxy.pipeline.phase.extensions.inversion_phase import InversionPhase
 from autogalaxy.pipeline.phase.abstract.phase import AbstractPhase
 from autogalaxy.pipeline.phase.dataset.phase import PhaseDataset
 from autogalaxy.pipeline.phase.dataset.meta_dataset import MetaDataset

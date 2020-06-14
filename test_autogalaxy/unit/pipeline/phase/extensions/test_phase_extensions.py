@@ -1,56 +1,19 @@
-from autoconf import conf
 import autofit as af
 import autofit.non_linear.paths
 import autogalaxy as ag
+from autogalaxy.hyper import hyper_data as hd
 import pytest
-from astropy import cosmology as cosmo
 from autogalaxy.fit.fit import FitImaging
 from test_autogalaxy.mock import mock_pipeline
 
 
-class MostLikelyFit:
-    def __init__(self, model_image_2d):
-        self.model_image_2d = model_image_2d
-
-
-class MockResult:
-    def __init__(self, max_log_likelihood_fit=None):
-        self.max_log_likelihood_fit = max_log_likelihood_fit
-        self.analysis = MockAnalysis()
-        self.path_galaxy_tuples = []
-        self.model = af.ModelMapper()
-        self.mask = None
-
-
-class MockAnalysis:
-    pass
-
-
-# noinspection PyAbstractClass
-class MockOptimizer(af.NonLinearSearch):
-    @af.convert_paths
-    def __init__(self, paths):
-        super().__init__(paths=paths)
-
-    @property
-    def config_type(self):
-        return conf.instance.mock
-
-    @property
-    def tag(self):
-        return "mock"
-
-    def _fit(self, model, analysis):
-        # noinspection PyTypeChecker
-        return af.Result(None, analysis.log_likelihood_function(None), None)
-
-
 class MockPhase:
     def __init__(self):
+        self.phase_name = "phase_name"
         self.paths = autofit.non_linear.paths.Paths(
-            name="phase_name", path_prefix="phase_path", folders=("",), tag=""
+            name=self.phase_name, path_prefix="phase_path", folders=("",), tag=""
         )
-        self.search = MockOptimizer(paths=self.paths)
+        self.search = mock_pipeline.MockSearch(paths=self.paths)
         self.model = af.ModelMapper()
 
     def save_dataset(self, dataset):
@@ -58,48 +21,29 @@ class MockPhase:
 
     # noinspection PyUnusedLocal,PyMethodMayBeStatic
     def run(self, *args, **kwargs):
-        return MockResult()
+        return mock_pipeline.MockResult()
 
 
 class TestModelFixing:
     def test__defaults_both(self):
         # noinspection PyTypeChecker
-        phase = ag.InversionBackgroundBothPhase(MockPhase())
+        phase = ag.ModelFixingHyperPhase(
+            phase=MockPhase(),
+            hyper_name="test",
+            search=mock_pipeline.MockSearch(),
+            model_classes=(hd.HyperImageSky, hd.HyperBackgroundNoise),
+        )
 
         instance = af.ModelInstance()
         instance.hyper_image_sky = ag.hyper_data.HyperImageSky()
         instance.hyper_background_noise = ag.hyper_data.HyperBackgroundNoise()
 
-        mapper = phase.make_model(instance)
+        mapper = phase.make_model(instance=instance)
 
         assert isinstance(mapper.hyper_image_sky, af.PriorModel)
         assert isinstance(mapper.hyper_background_noise, af.PriorModel)
 
         assert mapper.hyper_image_sky.cls == ag.hyper_data.HyperImageSky
-        assert mapper.hyper_background_noise.cls == ag.hyper_data.HyperBackgroundNoise
-
-    def test__defaults_hyper_image_sky(self):
-        # noinspection PyTypeChecker
-        phase = ag.InversionBackgroundSkyPhase(MockPhase())
-
-        instance = af.ModelInstance()
-        instance.hyper_image_sky = ag.hyper_data.HyperImageSky()
-
-        mapper = phase.make_model(instance)
-
-        assert isinstance(mapper.hyper_image_sky, af.PriorModel)
-        assert mapper.hyper_image_sky.cls == ag.hyper_data.HyperImageSky
-
-    def test__defaults_background_noise(self):
-        # noinspection PyTypeChecker
-        phase = ag.InversionBackgroundNoisePhase(MockPhase())
-
-        instance = af.ModelInstance()
-        instance.hyper_background_noise = ag.hyper_data.HyperBackgroundNoise()
-
-        mapper = phase.make_model(instance)
-
-        assert isinstance(mapper.hyper_background_noise, af.PriorModel)
         assert mapper.hyper_background_noise.cls == ag.hyper_data.HyperBackgroundNoise
 
     def test__make_pixelization_model(self):
@@ -128,8 +72,9 @@ class TestModelFixing:
 
         # noinspection PyTypeChecker
         phase = ag.ModelFixingHyperPhase(
-            MockPhase(),
-            "mock_phase",
+            phase=MockPhase(),
+            hyper_name="mock_phase",
+            search=mock_pipeline.MockSearch(),
             model_classes=(ag.pix.Pixelization, ag.reg.Regularization),
         )
 
@@ -146,11 +91,25 @@ def make_combined():
 
     # noinspection PyUnusedLocal
     def run_hyper(*args, **kwargs):
-        return MockResult()
+        return mock_pipeline.MockResult()
+
+    hyper_galaxy_phase = ag.HyperGalaxyPhase(
+        phase=normal_phase,
+        search=mock_pipeline.MockSearch(),
+        include_sky_background=False,
+        include_noise_background=False,
+    )
+    inversion_phase = ag.InversionPhase(
+        phase=normal_phase,
+        search=mock_pipeline.MockSearch(),
+        model_classes=(ag.pix.Pixelization, ag.reg.Regularization),
+    )
 
     # noinspection PyTypeChecker
     hyper_combined = ag.CombinedHyperPhase(
-        normal_phase, hyper_phase_classes=(ag.HyperGalaxyPhase, ag.InversionPhase)
+        phase=normal_phase,
+        hyper_phases=(hyper_galaxy_phase, inversion_phase),
+        search=mock_pipeline.MockSearch(),
     )
 
     for phase in hyper_combined.hyper_phases:
@@ -164,18 +123,18 @@ class TestHyperAPI:
         result = hyper_combined.run(dataset=None, mask=None)
 
         assert hasattr(result, "hyper_galaxy")
-        assert isinstance(result.hyper_galaxy, MockResult)
+        assert isinstance(result.hyper_galaxy, mock_pipeline.MockResult)
 
         assert hasattr(result, "inversion")
-        assert isinstance(result.inversion, MockResult)
+        assert isinstance(result.inversion, mock_pipeline.MockResult)
 
         assert hasattr(result, "hyper_combined")
-        assert isinstance(result.hyper_combined, MockResult)
+        assert isinstance(result.hyper_combined, mock_pipeline.MockResult)
 
     def test_combine_models(self, hyper_combined):
-        result = MockResult()
-        hyper_galaxy_result = MockResult()
-        inversion_result = MockResult()
+        result = mock_pipeline.MockResult()
+        hyper_galaxy_result = mock_pipeline.MockResult()
+        inversion_result = mock_pipeline.MockResult()
 
         hyper_galaxy_result.model = af.ModelMapper()
         inversion_result.model = af.ModelMapper()
@@ -212,18 +171,23 @@ class TestHyperAPI:
         normal_phase = MockPhase()
 
         # noinspection PyTypeChecker
-        phase = ag.HyperGalaxyPhase(normal_phase)
+        phase = ag.HyperGalaxyPhase(
+            phase=normal_phase,
+            search=mock_pipeline.MockSearch(),
+            include_sky_background=False,
+            include_noise_background=False,
+        )
 
         # noinspection PyUnusedLocal
         def run_hyper(*args, **kwargs):
-            return MockResult()
+            return mock_pipeline.MockResult()
 
         phase.run_hyper = run_hyper
 
         result = phase.run(dataset=imaging_7x7)
 
         assert hasattr(result, "hyper_galaxy")
-        assert isinstance(result.hyper_galaxy, MockResult)
+        assert isinstance(result.hyper_galaxy, mock_pipeline.MockResult)
 
     def test__paths(self):
 
@@ -286,7 +250,7 @@ class TestHyperGalaxyPhase:
         )
 
         phase_imaging_7x7_hyper = phase_imaging_7x7.extend_with_multiple_hyper_phases(
-            hyper_galaxy=True
+            hyper_galaxy_search=True
         )
 
         instance = phase_imaging_7x7_hyper.model.instance_from_unit_vector([])

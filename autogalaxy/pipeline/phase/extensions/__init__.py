@@ -2,11 +2,7 @@ import autofit as af
 from autogalaxy.pipeline.phase.imaging import PhaseImaging
 from .hyper_galaxy_phase import HyperGalaxyPhase
 from .hyper_phase import HyperPhase
-from .inversion_phase import InversionBackgroundBothPhase
-from .inversion_phase import InversionBackgroundNoisePhase
-from .inversion_phase import InversionBackgroundSkyPhase
-from .inversion_phase import InversionPhase
-from .inversion_phase import ModelFixingHyperPhase
+from .inversion_phase import ModelFixingHyperPhase, InversionPhase
 
 
 class CombinedHyperPhase(HyperPhase):
@@ -14,7 +10,7 @@ class CombinedHyperPhase(HyperPhase):
         self,
         phase: PhaseImaging,
         search: af.NonLinearSearch,
-        hyper_phase_classes: (type,) = tuple(),
+        hyper_phases: (HyperPhase,) = tuple(),
     ):
         """
         A hyper_combined hyper_galaxies phase that can run zero or more other hyper_galaxies phases after the initial phase is
@@ -24,13 +20,11 @@ class CombinedHyperPhase(HyperPhase):
         ----------
         phase : phase_PhaseImaging
             The phase wrapped by this hyper_galaxies phase
-        hyper_phase_classes
+        hyper_phases
             The classes of hyper_galaxies phases to be run following the initial phase
         """
         super().__init__(phase=phase, search=search, hyper_name="hyper_combined")
-        self.hyper_phases = list(
-            map(lambda cls: cls(phase, search), hyper_phase_classes)
-        )
+        self.hyper_phases = hyper_phases
 
     @property
     def phase_names(self) -> [str]:

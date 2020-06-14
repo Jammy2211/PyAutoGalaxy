@@ -144,11 +144,11 @@ class Analysis(af.Analysis):
 class HyperGalaxyPhase(HyperPhase):
     Analysis = Analysis
 
-    def __init__(self, phase):
+    def __init__(self, phase, search, include_sky_background, include_noise_background):
 
-        super().__init__(phase=phase, hyper_name="hyper_galaxy")
-        self.include_sky_background = False
-        self.include_noise_background = False
+        super().__init__(phase=phase, search=search, hyper_name="hyper_galaxy")
+        self.include_sky_background = include_sky_background
+        self.include_noise_background = include_noise_background
 
     def run_hyper(self, dataset, info=None, results=None):
         """
@@ -250,24 +250,3 @@ class HyperGalaxyPhase(HyperPhase):
                 )
 
         return hyper_result
-
-
-class HyperGalaxyBackgroundSkyPhase(HyperGalaxyPhase):
-    def __init__(self, phase):
-        super().__init__(phase=phase)
-        self.include_sky_background = True
-        self.include_noise_background = False
-
-
-class HyperGalaxyBackgroundNoisePhase(HyperGalaxyPhase):
-    def __init__(self, phase):
-        super().__init__(phase=phase)
-        self.include_sky_background = False
-        self.include_noise_background = True
-
-
-class HyperGalaxyBackgroundBothPhase(HyperGalaxyPhase):
-    def __init__(self, phase):
-        super().__init__(phase=phase)
-        self.include_sky_background = True
-        self.include_noise_background = True

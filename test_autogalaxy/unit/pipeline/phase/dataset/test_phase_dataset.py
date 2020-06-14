@@ -22,14 +22,14 @@ class TestPhase:
         )
 
         phase_extended = phase_no_pixelization.extend_with_multiple_hyper_phases(
-            hyper_galaxy=False, inversion=False
+            hyper_galaxy_search=None, inversion_search=None
         )
         assert phase_extended == phase_no_pixelization
 
         # This phase does not have a pixelization, so even though inversion=True it will not be extended
 
         phase_extended = phase_no_pixelization.extend_with_multiple_hyper_phases(
-            inversion=True
+            inversion_search=mock_pipeline.MockSearch()
         )
         assert phase_extended == phase_no_pixelization
 
@@ -46,31 +46,29 @@ class TestPhase:
         )
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            inversion=True
+            inversion_search=mock_pipeline.MockSearch()
         )
-        assert type(phase_extended.hyper_phases[0]) == ag.InversionPhase
+        assert isinstance(phase_extended.hyper_phases[0], ag.InversionPhase)
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            hyper_galaxy=True, inversion=False
+            hyper_galaxy_search=mock_pipeline.MockSearch(), inversion_search=None
         )
-        assert type(phase_extended.hyper_phases[0]) == ag.HyperGalaxyPhase
+        assert isinstance(phase_extended.hyper_phases[0], ag.HyperGalaxyPhase)
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            hyper_galaxy=False, inversion=True
+            hyper_galaxy_search=mock_pipeline.MockSearch(),
+            inversion_search=mock_pipeline.MockSearch(),
         )
-        assert type(phase_extended.hyper_phases[0]) == ag.InversionPhase
+        assert isinstance(phase_extended.hyper_phases[0], ag.InversionPhase)
+        assert isinstance(phase_extended.hyper_phases[1], ag.HyperGalaxyPhase)
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            hyper_galaxy=True, inversion=True
+            hyper_galaxy_search=mock_pipeline.MockSearch(),
+            inversion_search=mock_pipeline.MockSearch(),
+            hyper_galaxy_phase_first=True,
         )
-        assert type(phase_extended.hyper_phases[0]) == ag.InversionPhase
-        assert type(phase_extended.hyper_phases[1]) == ag.HyperGalaxyPhase
-
-        phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            hyper_galaxy=True, inversion=True, hyper_galaxy_phase_first=True
-        )
-        assert type(phase_extended.hyper_phases[0]) == ag.HyperGalaxyPhase
-        assert type(phase_extended.hyper_phases[1]) == ag.InversionPhase
+        assert isinstance(phase_extended.hyper_phases[0], ag.HyperGalaxyPhase)
+        assert isinstance(phase_extended.hyper_phases[1], ag.InversionPhase)
 
 
 class TestMakeAnalysis:

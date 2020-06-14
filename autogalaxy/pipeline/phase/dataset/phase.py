@@ -1,4 +1,7 @@
 import autofit as af
+from autoarray.operators.inversion import pixelizations as pix
+from autoarray.operators.inversion import regularization as reg
+from autogalaxy.hyper import hyper_data as hd
 from astropy import cosmology as cosmo
 from autofit.tools.phase import Dataset
 from autogalaxy.pipeline.phase import abstract
@@ -102,9 +105,9 @@ class PhaseDataset(abstract.AbstractPhase):
 
     def extend_with_multiple_hyper_phases(
         self,
-        search,
-        hyper_galaxy=False,
-        inversion=False,
+        hyper_combined_search=None,
+        inversion_search=None,
+        hyper_galaxy_search=None,
         include_background_sky=False,
         include_background_noise=False,
         hyper_galaxy_phase_first=False,
@@ -112,45 +115,67 @@ class PhaseDataset(abstract.AbstractPhase):
 
         self.use_as_hyper_dataset = True
 
-        hyper_phase_classes = []
+        hyper_phases = []
 
-        if self.meta_dataset.has_pixelization and inversion:
+        if self.meta_dataset.has_pixelization and inversion_search:
             if not include_background_sky and not include_background_noise:
-                hyper_phase_classes.append(extensions.InversionPhase)
-            elif include_background_sky and not include_background_noise:
-                hyper_phase_classes.append(extensions.InversionBackgroundSkyPhase)
-            elif not include_background_sky and include_background_noise:
-                hyper_phase_classes.append(extensions.InversionBackgroundNoisePhase)
-            else:
-                hyper_phase_classes.append(extensions.InversionBackgroundBothPhase)
-
-        if hyper_galaxy:
-            if not include_background_sky and not include_background_noise:
-                hyper_phase_classes.append(
-                    extensions.hyper_galaxy_phase.HyperGalaxyPhase
+                phase_inversion = extensions.InversionPhase(
+                    phase=self,
+                    search=inversion_search,
+                    model_classes=(pix.Pixelization, reg.Regularization),
                 )
             elif include_background_sky and not include_background_noise:
-                hyper_phase_classes.append(
-                    extensions.hyper_galaxy_phase.HyperGalaxyBackgroundSkyPhase
+                phase_inversion = extensions.InversionPhase(
+                    phase=self,
+                    search=inversion_search,
+                    model_classes=(
+                        pix.Pixelization,
+                        reg.Regularization,
+                        hd.HyperImageSky,
+                    ),
                 )
             elif not include_background_sky and include_background_noise:
-                hyper_phase_classes.append(
-                    extensions.hyper_galaxy_phase.HyperGalaxyBackgroundNoisePhase
+                phase_inversion = extensions.InversionPhase(
+                    phase=self,
+                    search=inversion_search,
+                    model_classes=(
+                        pix.Pixelization,
+                        reg.Regularization,
+                        hd.HyperBackgroundNoise,
+                    ),
                 )
             else:
-                hyper_phase_classes.append(
-                    extensions.hyper_galaxy_phase.HyperGalaxyBackgroundBothPhase
+                phase_inversion = extensions.InversionPhase(
+                    phase=self,
+                    search=inversion_search,
+                    model_classes=(
+                        pix.Pixelization,
+                        reg.Regularization,
+                        hd.HyperImageSky,
+                        hd.HyperBackgroundNoise,
+                    ),
                 )
+
+            hyper_phases.append(phase_inversion)
+
+        if hyper_galaxy_search is not None:
+            phase_hyper_galaxy = extensions.HyperGalaxyPhase(
+                phase=self,
+                search=hyper_galaxy_search,
+                include_sky_background=include_background_sky,
+                include_noise_background=include_background_noise,
+            )
+            hyper_phases.append(phase_hyper_galaxy)
 
         if hyper_galaxy_phase_first:
-            if inversion and hyper_galaxy:
-                hyper_phase_classes = [cls for cls in reversed(hyper_phase_classes)]
+            if inversion_search is not None and hyper_galaxy_search is not None:
+                hyper_phases = [phase for phase in reversed(hyper_phases)]
 
-        if len(hyper_phase_classes) == 0:
+        if len(hyper_phases) == 0:
             return self
         else:
             return extensions.CombinedHyperPhase(
-                phase=self, search=search, hyper_phase_classes=hyper_phase_classes
+                phase=self, search=hyper_combined_search, hyper_phases=hyper_phases
             )
 
 

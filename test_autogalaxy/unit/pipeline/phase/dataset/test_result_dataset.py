@@ -58,20 +58,22 @@ class TestResult:
         self, imaging_7x7, mask_7x7
     ):
 
+        source = ag.Galaxy(
+            redshift=1.0,
+            pixelization=ag.pix.VoronoiMagnification(shape=(2, 3)),
+            regularization=ag.reg.Constant(),
+        )
+
+        max_log_likelihood_plane = ag.Plane(galaxies=[source])
+
+        samples = mock_pipeline.MockSamples(
+            max_log_likelihood_instance=max_log_likelihood_plane
+        )
+
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase_2",
-            galaxies=dict(
-                galaxy=ag.Galaxy(
-                    redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
-                ),
-                source=ag.Galaxy(
-                    redshift=1.0,
-                    pixelization=ag.pix.VoronoiMagnification(shape=(2, 3)),
-                    regularization=ag.reg.Constant(),
-                ),
-            ),
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=6),
-            search=mock_pipeline.MockSearch(),
+            search=mock_pipeline.MockSearch(samples=samples),
         )
 
         result = phase_imaging_7x7.run(
@@ -81,20 +83,23 @@ class TestResult:
         assert isinstance(result.pixelization, ag.pix.VoronoiMagnification)
         assert result.pixelization.shape == (2, 3)
 
+        source = ag.Galaxy(
+            redshift=1.0,
+            pixelization=ag.pix.VoronoiBrightnessImage(pixels=6),
+            regularization=ag.reg.Constant(),
+        )
+
+        max_log_likelihood_plane = ag.Plane(galaxies=[source])
+
+        samples = mock_pipeline.MockSamples(
+            max_log_likelihood_instance=max_log_likelihood_plane
+        )
+
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase_2",
-            galaxies=dict(
-                galaxy=ag.Galaxy(
-                    redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
-                ),
-                source=ag.Galaxy(
-                    redshift=1.0,
-                    pixelization=ag.pix.VoronoiBrightnessImage(pixels=6),
-                    regularization=ag.reg.Constant(),
-                ),
-            ),
+            galaxies=dict(source=source),
             settings=ag.PhaseSettingsImaging(inversion_pixel_limit=6),
-            search=mock_pipeline.MockSearch(),
+            search=mock_pipeline.MockSearch(samples=samples),
         )
 
         phase_imaging_7x7.galaxies.source.hyper_galaxy_image = np.ones(9)
