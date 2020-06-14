@@ -19,8 +19,6 @@ class ModelFixingHyperPhase(HyperPhase):
     ):
         super().__init__(phase=phase, search=search, hyper_name=hyper_name)
 
-        # TODO : Search settings go here.
-
         self.model_classes = model_classes
 
     def make_hyper_phase(self):

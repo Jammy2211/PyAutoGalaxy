@@ -11,14 +11,44 @@ class PhaseSettings(AbstractPhaseSettings):
         grid_inversion_class=grids.Grid,
         sub_size=2,
         fractional_accuracy=0.9999,
-        pixel_scales_interp=None,
         sub_steps=None,
+        pixel_scales_interp=None,
         signal_to_noise_limit=None,
         bin_up_factor=None,
         inversion_pixel_limit=None,
         log_likelihood_cap=None,
     ):
+        """The settings of a phase, which customize how a model is fitted to data in a PyAutoGalaxy *Phase*. for
+        example the type of grid used or options or augmenting the data.
 
+        The *PhaseSettings* perform phase tagging, whereby the phase settings tag the output path of the results
+        depending on their parameters This allows one to fit models to a dataset using different settings in a
+        structured path format.
+
+        Parameters
+        ----------
+        grid_class : ag.Grid
+            The type of grid used to create the profile_image from the *Galaxy* and *Plane*. The options are *Grid*,
+            *GridIterate* and *GridInterpolate* (see the *Grids* documentation for a description of these options).
+        grid_inversion_class : ag.Grid
+            The type of grid used to create the grid that maps the *Inversion* source pixels to the data's image-pixels.
+            The options are *Grid*, *GridIterate* and *GridInterpolate* (see the *Grids* documentation for a
+            description of these options).
+        sub_size : int
+            If the grid and / or grid_inversion use a *Grid*, this sets the sub-size used by the *Grid*.
+        fractional_accuracy : int
+            If the grid and / or grid_inversion use a *GridIterate*, this sets the fractional accuracy it
+            uses when evaluating functions.
+        sub_steps : int
+            If the grid and / or grid_inversion use a *GridIterate*, this sets the steps the sub-size is increased by
+            to meet the fractional accuracy when evaluating functions.
+        pixel_scales_interp : float or (float, float)
+            If the grid and / or grid_inversion use a *GridInterpolate*, this sets the resolution of the interpolation
+            grid.
+        signal_to_noise_limit : float
+            If input, the dataset's noise-map is rescaled such that no pixel has a signal-to-noise above the
+            signa to noise limit.
+        """
         super().__init__(log_likelihood_cap=log_likelihood_cap)
 
         if sub_steps is None:
@@ -45,7 +75,7 @@ class PhaseSettings(AbstractPhaseSettings):
 
         return (
             "__"
-            + conf.instance.tag.get("phase", "grid", str)
+            + conf.instance.tag.get("phase", "grid")
             + "_"
             + self.grid_sub_size_tag
             + self.grid_fractional_accuracy_tag
@@ -60,13 +90,13 @@ class PhaseSettings(AbstractPhaseSettings):
         """
         return (
             "__"
-            + conf.instance.tag.get("phase", "grid", str)
+            + conf.instance.tag.get("phase", "grid")
             + "_"
             + self.grid_sub_size_tag
             + self.grid_fractional_accuracy_tag
             + self.grid_pixel_scales_interp_tag
             + "_"
-            + conf.instance.tag.get("phase", "grid_inversion", str)
+            + conf.instance.tag.get("phase", "grid_inversion")
             + "_"
             + self.grid_inversion_sub_size_tag
             + self.grid_inversion_fractional_accuracy_tag
@@ -77,7 +107,7 @@ class PhaseSettings(AbstractPhaseSettings):
     def grid_sub_size_tag(self):
         """Generate a sub-size tag, to customize phase names based on the sub-grid size used, of the Grid class.
 
-        This changes the phase settings folder is tagged as follows:
+        This changes the phase settings folder as follows:
 
         sub_size = None -> settings
         sub_size = 1 -> settings_sub_size_2
@@ -85,16 +115,14 @@ class PhaseSettings(AbstractPhaseSettings):
         """
         if not self.grid_class is grids.Grid:
             return ""
-        return (
-            conf.instance.tag.get("phase", "sub_size", str) + "_" + str(self.sub_size)
-        )
+        return conf.instance.tag.get("phase", "sub_size") + "_" + str(self.sub_size)
 
     @property
     def grid_fractional_accuracy_tag(self):
         """Generate a fractional accuracy tag, to customize phase names based on the fractional accuracy of the
         GridIterate class.
 
-        This changes the phase settings folder is tagged as follows:
+        This changes the phase settings folder as follows:
 
         fraction_accuracy = 0.5 -> settings__facc_0.5
         fractional_accuracy = 0.999999 = 4 -> settings__facc_0.999999
@@ -102,7 +130,7 @@ class PhaseSettings(AbstractPhaseSettings):
         if not self.grid_class is grids.GridIterate:
             return ""
         return (
-            conf.instance.tag.get("phase", "fractional_accuracy", str)
+            conf.instance.tag.get("phase", "fractional_accuracy")
             + "_"
             + str(self.fractional_accuracy)
         )
@@ -112,7 +140,7 @@ class PhaseSettings(AbstractPhaseSettings):
         """Generate an interpolation pixel scale tag, to customize phase names based on the resolution of the 
         GridInterpolate.
 
-        This changes the phase settings folder is tagged as follows:
+        This changes the phase settings folder as follows:
 
         pixel_scales_interp = None -> settings
         pixel_scales_interp = 0.1 -> settings___grid_interp_0.1
@@ -122,14 +150,14 @@ class PhaseSettings(AbstractPhaseSettings):
         if self.pixel_scales_interp is None:
             return ""
         return conf.instance.tag.get(
-            "phase", "pixel_scales_interp", str
+            "phase", "pixel_scales_interp"
         ) + "_{0:.3f}".format(self.pixel_scales_interp)
 
     @property
     def grid_inversion_sub_size_tag(self):
         """Generate a sub-size tag, to customize phase names based on the sub-grid size used, of the Grid class.
 
-        This changes the phase settings folder is tagged as follows:
+        This changes the phase settings folder as follows:
 
         sub_size = None -> settings
         sub_size = 1 -> settings__grid_sub_size_2
@@ -137,16 +165,14 @@ class PhaseSettings(AbstractPhaseSettings):
         """
         if not self.grid_inversion_class is grids.Grid:
             return ""
-        return (
-            conf.instance.tag.get("phase", "sub_size", str) + "_" + str(self.sub_size)
-        )
+        return conf.instance.tag.get("phase", "sub_size") + "_" + str(self.sub_size)
 
     @property
     def grid_inversion_fractional_accuracy_tag(self):
         """Generate a fractional accuracy tag, to customize phase names based on the fractional accuracy of the
         GridIterate class.
 
-        This changes the phase settings folder is tagged as follows:
+        This changes the phase settings folder as follows:
 
         fraction_accuracy = 0.5 -> settings__facc_0.5
         fractional_accuracy = 0.999999 = 4 -> settings__facc_0.999999
@@ -154,7 +180,7 @@ class PhaseSettings(AbstractPhaseSettings):
         if not self.grid_inversion_class is grids.GridIterate:
             return ""
         return (
-            conf.instance.tag.get("phase", "fractional_accuracy", str)
+            conf.instance.tag.get("phase", "fractional_accuracy")
             + "_"
             + str(self.fractional_accuracy)
         )
@@ -164,7 +190,7 @@ class PhaseSettings(AbstractPhaseSettings):
         """Generate an interpolation pixel scale tag, to customize phase names based on the resolution of the 
         GridInterpolate.
 
-        This changes the phase settings folder is tagged as follows:
+        This changes the phase settings folder as follows:
 
         pixel_scales_interp = None -> settings
         pixel_scales_interp = 0.1 -> settings___grid_interp_0.1
@@ -174,7 +200,7 @@ class PhaseSettings(AbstractPhaseSettings):
         if self.pixel_scales_interp is None:
             return ""
         return conf.instance.tag.get(
-            "phase", "pixel_scales_interp", str
+            "phase", "pixel_scales_interp"
         ) + "_{0:.3f}".format(self.pixel_scales_interp)
 
     @property
@@ -182,7 +208,7 @@ class PhaseSettings(AbstractPhaseSettings):
         """Generate a signal to noise limit tag, to customize phase names based on limiting the signal to noise ratio of
         the dataset being fitted.
 
-        This changes the phase settings folder is tagged as follows:
+        This changes the phase settings folder as follows:
 
         signal_to_noise_limit = None -> settings
         signal_to_noise_limit = 2 -> settings_snr_2
@@ -192,7 +218,7 @@ class PhaseSettings(AbstractPhaseSettings):
             return ""
         return (
             "__"
-            + conf.instance.tag.get("phase", "signal_to_noise_limit", str)
+            + conf.instance.tag.get("phase", "signal_to_noise_limit")
             + "_"
             + str(self.signal_to_noise_limit)
         )
@@ -202,7 +228,7 @@ class PhaseSettings(AbstractPhaseSettings):
         """Generate a bin up tag, to customize phase names based on the resolutioon the image is binned up by for faster \
         run times.
 
-        This changes the phase settings folder is tagged as follows:
+        This changes the phase settings folder as follows:
 
         bin_up_factor = 1 -> settings
         bin_up_factor = 2 -> settings_bin_up_factor_2
@@ -212,7 +238,7 @@ class PhaseSettings(AbstractPhaseSettings):
             return ""
         return (
             "__"
-            + conf.instance.tag.get("phase", "bin_up_factor", str)
+            + conf.instance.tag.get("phase", "bin_up_factor")
             + "_"
             + str(self.bin_up_factor)
         )
@@ -252,7 +278,7 @@ class PhaseSettingsImaging(PhaseSettings):
     @property
     def phase_no_inversion_tag(self):
         return (
-            conf.instance.tag.get("phase", "phase", str)
+            conf.instance.tag.get("phase", "phase")
             + self.grid_no_inversion_tag
             + self.signal_to_noise_limit_tag
             + self.bin_up_factor_tag
@@ -263,7 +289,7 @@ class PhaseSettingsImaging(PhaseSettings):
     @property
     def phase_with_inversion_tag(self):
         return (
-            conf.instance.tag.get("phase", "phase", str)
+            conf.instance.tag.get("phase", "phase")
             + self.grid_with_inversion_tag
             + self.signal_to_noise_limit_tag
             + self.bin_up_factor_tag
@@ -276,7 +302,7 @@ class PhaseSettingsImaging(PhaseSettings):
         """Generate an image psf shape tag, to customize phase names based on size of the image PSF that the original PSF \
         is trimmed to for faster run times.
 
-        This changes the phase settings folder is tagged as follows:
+        This changes the phase settings folder as follows:
 
         image_psf_shape = 1 -> settings
         image_psf_shape = 2 -> settings_image_psf_shape_2
@@ -286,9 +312,7 @@ class PhaseSettingsImaging(PhaseSettings):
             return ""
         y = str(self.psf_shape_2d[0])
         x = str(self.psf_shape_2d[1])
-        return (
-            "__" + conf.instance.tag.get("phase", "psf_shape", str) + "_" + y + "x" + x
-        )
+        return "__" + conf.instance.tag.get("phase", "psf_shape") + "_" + y + "x" + x
 
 
 class PhaseSettingsInterferometer(PhaseSettings):
@@ -328,7 +352,7 @@ class PhaseSettingsInterferometer(PhaseSettings):
     def phase_no_inversion_tag(self):
 
         return (
-            conf.instance.tag.get("phase", "phase", str)
+            conf.instance.tag.get("phase", "phase")
             + self.grid_no_inversion_tag
             + self.transformer_tag
             + self.signal_to_noise_limit_tag
@@ -341,7 +365,7 @@ class PhaseSettingsInterferometer(PhaseSettings):
     def phase_with_inversion_tag(self):
 
         return (
-            conf.instance.tag.get("phase", "phase", str)
+            conf.instance.tag.get("phase", "phase")
             + self.grid_with_inversion_tag
             + self.transformer_tag
             + self.signal_to_noise_limit_tag
@@ -355,7 +379,7 @@ class PhaseSettingsInterferometer(PhaseSettings):
         """Generate an image psf shape tag, to customize phase names based on size of the image PSF that the original PSF \
         is trimmed to for faster run times.
 
-        This changes the phase settings folder is tagged as follows:
+        This changes the phase settings folder as follows:
 
         image_psf_shape = 1 -> settings
         image_psf_shape = 2 -> settings_image_psf_shape_2
@@ -364,7 +388,7 @@ class PhaseSettingsInterferometer(PhaseSettings):
         if self.transformer_class is None:
             return ""
         return "__" + conf.instance.tag.get(
-            "transformer", self.transformer_class.__name__, str
+            "transformer", self.transformer_class.__name__
         )
 
     @property
@@ -372,7 +396,7 @@ class PhaseSettingsInterferometer(PhaseSettings):
         """Generate an image psf shape tag, to customize phase names based on size of the image PSF that the original PSF \
         is trimmed to for faster run times.
 
-        This changes the phase settings folder is tagged as follows:
+        This changes the phase settings folder as follows:
 
         image_psf_shape = 1 -> settings
         image_psf_shape = 2 -> settings_image_psf_shape_2
@@ -384,7 +408,7 @@ class PhaseSettingsInterferometer(PhaseSettings):
         x = str(self.primary_beam_shape_2d[1])
         return (
             "__"
-            + conf.instance.tag.get("phase", "primary_beam_shape", str)
+            + conf.instance.tag.get("phase", "primary_beam_shape")
             + "_"
             + y
             + "x"

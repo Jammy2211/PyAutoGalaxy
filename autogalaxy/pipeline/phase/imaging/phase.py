@@ -41,8 +41,6 @@ class PhaseImaging(dataset.PhaseDataset):
             The side length of the subgrid
         """
 
-        paths.tag = settings.phase_with_inversion_tag
-
         super().__init__(
             paths=paths,
             search=search,

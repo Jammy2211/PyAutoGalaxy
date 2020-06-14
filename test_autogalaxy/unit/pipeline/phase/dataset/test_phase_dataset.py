@@ -247,19 +247,3 @@ class TestPhasePickle:
         phase_imaging_7x7.make_analysis = make_analysis
         result = phase_imaging_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)
         assert result is not None
-
-        class CustomPhase(ag.PhaseImaging):
-            def customize_priors(self, results):
-                self.galaxies.light.light = ag.lp.EllipticalLightProfile()
-
-        phase_imaging_7x7 = CustomPhase(
-            phase_name="phase_name",
-            galaxies=dict(
-                galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
-            ),
-            search=mock_pipeline.MockSearch(),
-        )
-        phase_imaging_7x7.make_analysis = make_analysis
-
-        # with pytest.raises(af.exc.PipelineException):
-        #     phase_imaging_7x7.run(data=imaging_7x7, results=None, mask=None, positions=None)

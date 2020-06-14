@@ -1,7 +1,6 @@
 import copy
 
 import autofit as af
-from autoconf import conf
 from autofit.tools.phase import Dataset
 from autogalaxy.pipeline.phase import abstract
 
@@ -47,20 +46,15 @@ class HyperPhase:
 
         phase = copy.deepcopy(self.phase)
         phase.paths.zip()
+        new_output_path = f"{self.phase.paths.path_prefix}/{self.phase.phase_name}/{self.hyper_name}_{phase.paths.tag}"
 
-        phase.search = phase.search.copy_with_name_extension(
-            extension=self.hyper_name + "_" + phase.paths.tag, remove_phase_tag=True
+        phase.search = self.search.copy_with_name_extension(
+            extension=new_output_path, remove_phase_tag=True
         )
 
-        self.update_search_with_config(search=phase.search, section="hyper_combined")
-
         phase.is_hyper_phase = True
-        phase.customize_priors = self.customize_priors
 
         return phase
-
-    def customize_priors(self, results):
-        pass
 
     def run(
         self, dataset: Dataset, results: af.ResultsCollection = None, **kwargs

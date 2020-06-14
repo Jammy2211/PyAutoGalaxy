@@ -36,53 +36,6 @@ class TestModel:
 
         print(hasattr(af.last.result.instance.galaxies.light, "mas2s"))
 
-    def test__customize(self, imaging_7x7, mask_7x7):
-        class MyPlanePhaseAnd(ag.PhaseImaging):
-            def customize_priors(self, results):
-                self.galaxies = results.last.instance.galaxies
-
-        results = mock_pipeline.MockResults()
-
-        galaxy = ag.Galaxy(redshift=0.5)
-        galaxy_model = ag.GalaxyModel(redshift=0.5)
-
-        setattr(results[0].instance, "galaxies", [galaxy])
-        setattr(results[0].model, "galaxies", [galaxy_model])
-
-        phase_dataset_7x7 = MyPlanePhaseAnd(
-            phase_name="test_phase", search=mock_pipeline.MockSearch()
-        )
-
-        phase_dataset_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=results
-        )
-        phase_dataset_7x7.customize_priors(results=results)
-
-        assert phase_dataset_7x7.galaxies == [galaxy]
-
-        class MyPlanePhaseAnd(ag.PhaseImaging):
-            def customize_priors(self, results):
-                self.galaxies = results.last.model.galaxies
-
-        results = mock_pipeline.MockResults()
-
-        galaxy = ag.Galaxy(redshift=0.5)
-        galaxy_model = ag.GalaxyModel(redshift=0.5)
-
-        setattr(results[0].instance, "galaxies", [galaxy])
-        setattr(results[0].model, "galaxies", [galaxy_model])
-
-        phase_dataset_7x7 = MyPlanePhaseAnd(
-            phase_name="test_phase", search=mock_pipeline.MockSearch()
-        )
-
-        phase_dataset_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=results
-        )
-        phase_dataset_7x7.customize_priors(results)
-
-        assert phase_dataset_7x7.galaxies == [galaxy_model]
-
     def test__duplication(self):
         phase_dataset_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
@@ -237,19 +190,3 @@ class TestSetup:
         phase_dataset_7x7.make_analysis = make_analysis
         result = phase_dataset_7x7.run(dataset=imaging_7x7, results=None, mask=None)
         assert result is not None
-
-        class CustomPhase(ag.PhaseImaging):
-            def customize_priors(self, results):
-                self.galaxies.light.light = ag.lp.EllipticalLightProfile()
-
-        phase_dataset_7x7 = CustomPhase(
-            phase_name="phase_name",
-            galaxies=dict(
-                galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
-            ),
-            search=mock_pipeline.MockSearch(),
-        )
-        phase_dataset_7x7.make_analysis = make_analysis
-
-        # with pytest.raises(af.exc.PipelineException):
-        #     phase_dataset_7x7.run(data=imaging_7x7, results=None, mask=None)

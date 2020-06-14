@@ -225,6 +225,25 @@ class TestHyperAPI:
         assert hasattr(result, "hyper_galaxy")
         assert isinstance(result.hyper_galaxy, MockResult)
 
+    def test__paths(self):
+
+        phase = ag.PhaseImaging(
+            phase_name="test_phase",
+            search=af.DynestyStatic(n_live_points=1),
+            settings=ag.PhaseSettingsImaging(bin_up_factor=2),
+        )
+
+        phase_extended = phase.extend_with_inversion_phase(
+            inversion_search=af.DynestyStatic(n_live_points=1)
+        )
+
+        hyper_phase = phase_extended.make_hyper_phase()
+
+        assert (
+            "test_phase/inversion_settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_1_eff_0.5"
+            in hyper_phase.paths.output_path
+        )
+
 
 class TestHyperGalaxyPhase:
     def test__likelihood_function_is_same_as_normal_phase_likelihood_function(

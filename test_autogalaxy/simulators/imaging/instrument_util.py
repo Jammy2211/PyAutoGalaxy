@@ -159,8 +159,8 @@ def simulate_imaging_from_instrument(data_label, instrument, galaxies):
     # Now, lets output this simulated imaging-data to the test_autoarray/simulator folder.
     test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
 
-    dataset_path = af.path_util.make_and_return_path_from_path_and_folder_names(
-        path=test_path, folder_names=["dataset", "imaging", data_label, instrument]
+    dataset_path = af.util.create_path(
+        path=test_path, folders=["dataset", "imaging", data_label, instrument]
     )
 
     imaging.output_to_fits(
@@ -193,8 +193,8 @@ def load_test_imaging(instrument, data_label, name=None):
 
     pixel_scales = pixel_scale_from_instrument(instrument=instrument)
 
-    dataset_path = af.path_util.make_and_return_path_from_path_and_folder_names(
-        path=test_path, folder_names=["dataset", "imaging", data_label, instrument]
+    dataset_path = af.util.create_path(
+        path=test_path, folders=["dataset", "imaging", data_label, instrument]
     )
 
     return ag.Imaging.from_fits(

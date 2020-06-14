@@ -60,7 +60,7 @@ class PhaseDataset(abstract.AbstractPhase):
         """
         self.save_metadata(dataset=dataset)
         self.save_dataset(dataset=dataset)
-        self.save_mask(mask)
+        self.save_mask(mask=mask)
         self.save_meta_dataset(meta_dataset=self.meta_dataset)
 
         self.model = self.model.populate(results)
@@ -71,8 +71,6 @@ class PhaseDataset(abstract.AbstractPhase):
 
         phase_attributes = self.make_phase_attributes(analysis=analysis)
         self.save_phase_attributes(phase_attributes=phase_attributes)
-
-        self.customize_priors(results)
 
         result = self.run_analysis(analysis=analysis, info=info)
 
@@ -99,8 +97,8 @@ class PhaseDataset(abstract.AbstractPhase):
         """
         raise NotImplementedError()
 
-    def extend_with_inversion_phase(self, search):
-        return extensions.InversionPhase(phase=self, search=search)
+    def extend_with_inversion_phase(self, inversion_search):
+        return extensions.InversionPhase(phase=self, search=inversion_search)
 
     def extend_with_multiple_hyper_phases(
         self,
