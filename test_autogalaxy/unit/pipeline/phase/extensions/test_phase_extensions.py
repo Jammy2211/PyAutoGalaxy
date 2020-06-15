@@ -82,7 +82,7 @@ class TestModelFixing:
 
         assert mapper.prior_count == 3
         assert mapper.galaxy.redshift == 1.0
-        assert mapper.source_galaxy.light.axis_ratio == 1.0
+        assert mapper.source_galaxy.light.elliptical_comps[0] == 0.0
 
 
 @pytest.fixture(name="hyper_combined")
@@ -210,8 +210,10 @@ class TestHyperAPI:
 
         hyper_phase = phase_extended.make_hyper_phase()
 
+        print(hyper_phase.paths.output_path)
+
         assert (
-            "test_phase/inversion_settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_1_eff_0.5"
+            "test_phase/inversion__settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_1_eff_0.5"
             in hyper_phase.paths.output_path
         )
 
@@ -224,21 +226,21 @@ class TestHyperAPI:
         inversion_phase = phase_extended.hyper_phases[0].make_hyper_phase()
 
         assert (
-            "test_phase/inversion_settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_1_eff_0.5"
+            "test_phase/inversion__settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_1_eff_0.5"
             in inversion_phase.paths.output_path
         )
 
         hyper_galaxy_phase = phase_extended.hyper_phases[1].make_hyper_phase()
 
         assert (
-            "test_phase/hyper_galaxy_settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_2_eff_0.5"
+            "test_phase/hyper_galaxy__settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_2_eff_0.5"
             in hyper_galaxy_phase.paths.output_path
         )
 
         hyper_combined_phase = phase_extended.make_hyper_phase()
 
         assert (
-            "test_phase/hyper_combined_settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_3_eff_0.5"
+            "test_phase/hyper_combined__settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_3_eff_0.5"
             in hyper_combined_phase.paths.output_path
         )
 

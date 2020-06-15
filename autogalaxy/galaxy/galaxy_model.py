@@ -44,9 +44,6 @@ class GalaxyModel(PriorModel):
     def __init__(
         self,
         redshift,
-        align_centres=False,
-        align_axis_ratios=False,
-        align_orientations=False,
         pixelization=None,
         regularization=None,
         hyper_galaxy=None,
@@ -61,15 +58,6 @@ class GalaxyModel(PriorModel):
             The *LightProfile* classes for which model light profile instances are generated for this galaxy model.
         mass_profile_classes: [MassProfile]
             The *MassProfile* classes for which model mass profile instances are generated for this galaxy model.
-        align_centres : bool
-            If *True*, the same prior will be used for all the profiles centres, such that all light and / or mass \
-            profiles always share the same origin.
-        align_axis_ratios : bool
-            If *True*, the same prior will be used for all the profiles axis-ratio, such that all light and / or mass \
-            profiles always share the same axis-ratio.
-        align_orientations : bool
-            If *True*, the same prior will be used for all the profiles rotation angles phi, such that all light \
-            and / or mass profiles always share the same orientation.
         redshift : float | Type[g.Redshift]
             The redshift of this model galaxy.
         model_redshift : bool
@@ -98,22 +86,6 @@ class GalaxyModel(PriorModel):
             cls = prior_model.cls
             if is_mass_profile_class(cls) or is_light_profile_class(cls):
                 profile_models.append(prior_model)
-
-        if len(profile_models) > 0:
-            if align_centres:
-                centre = profile_models[0].centre
-                for profile_model in profile_models:
-                    profile_model.centre = centre
-
-            if align_axis_ratios:
-                axis_ratio = profile_models[0].axis_ratio
-                for profile_model in profile_models:
-                    profile_model.axis_ratio = axis_ratio
-
-            if align_orientations:
-                phi = profile_models[0].phi
-                for profile_model in profile_models:
-                    profile_model.phi = phi
 
         if pixelization is not None and regularization is None:
             raise AssertionError(

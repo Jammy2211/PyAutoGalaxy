@@ -76,8 +76,8 @@ class TestModel:
         arguments = {
             sersic.centre[0]: 0.2,
             sersic.centre[1]: 0.2,
-            sersic.axis_ratio: 0.0,
-            sersic.phi: 0.1,
+            sersic.elliptical_comps[0]: 0.0,
+            sersic.elliptical_comps[1]: 0.1,
             sersic.effective_radius.priors[0]: 0.2,
             sersic.sersic_index: 0.6,
             sersic.intensity.priors[0]: 0.6,
@@ -133,8 +133,8 @@ class TestModel:
         arguments = {
             sersic.centre[0]: 0.01,
             sersic.centre[1]: 0.2,
-            sersic.axis_ratio: 0.0,
-            sersic.phi: 0.1,
+            sersic.elliptical_comps[0]: 0.0,
+            sersic.elliptical_comps[1]: 0.1,
             sersic.effective_radius.priors[0]: 0.2,
             sersic.sersic_index: 0.6,
             sersic.intensity.priors[0]: 0.6,

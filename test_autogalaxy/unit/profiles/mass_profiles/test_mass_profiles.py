@@ -284,7 +284,7 @@ class TestDensityBetweenAnnuli:
         cosmology = mock.MockCosmology(kpc_per_arcsec=2.0, critical_surface_density=2.0)
 
         nfw = ag.mp.EllipticalNFW(
-            centre=(0.0, 0.0), axis_ratio=0.8, phi=45.0, kappa_s=1.0
+            centre=(0.0, 0.0), elliptical_comps=(0.111111, 0.0), kappa_s=1.0
         )
 
         inner_mass = nfw.mass_within_circle_in_units(

@@ -5,8 +5,6 @@ import os
 
 from autoconf import conf
 import autogalaxy as ag
-import autofit as af
-import autogalaxy as ag
 import numpy as np
 import pytest
 import scipy.special
@@ -17,8 +15,12 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 class TestGaussian:
     def test__constructor_and_units(self):
+
         gaussian = ag.lp.EllipticalGaussian(
-            centre=(1.0, 2.0), axis_ratio=0.5, phi=45.0, intensity=1.0, sigma=0.1
+            centre=(1.0, 2.0),
+            elliptical_comps=(0.333333, 0.0),
+            intensity=1.0,
+            sigma=0.1,
         )
 
         assert gaussian.centre == (1.0, 2.0)
@@ -27,10 +29,10 @@ class TestGaussian:
         assert gaussian.centre[0].unit == "arcsec"
         assert gaussian.centre[1].unit == "arcsec"
 
-        assert gaussian.axis_ratio == 0.5
+        assert gaussian.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(gaussian.axis_ratio, float)
 
-        assert gaussian.phi == 45.0
+        assert gaussian.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(gaussian.phi, float)
 
         assert gaussian.intensity == 1.0
@@ -64,8 +66,9 @@ class TestGaussian:
         assert gaussian.sigma.unit_length == "arcsec"
 
     def test__intensity_as_radius__correct_value(self):
+
         gaussian = ag.lp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, intensity=1.0, sigma=1.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
         )
 
         image = gaussian.profile_image_from_grid_radii(grid_radii=1.0)
@@ -73,7 +76,7 @@ class TestGaussian:
         assert image == pytest.approx(0.24197, 1e-2)
 
         gaussian = ag.lp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, intensity=2.0, sigma=1.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=2.0, sigma=1.0
         )
 
         image = gaussian.profile_image_from_grid_radii(grid_radii=1.0)
@@ -81,7 +84,7 @@ class TestGaussian:
         assert image == pytest.approx(2.0 * 0.24197, 1e-2)
 
         gaussian = ag.lp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, intensity=1.0, sigma=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
         )
 
         image = gaussian.profile_image_from_grid_radii(grid_radii=1.0)
@@ -89,7 +92,7 @@ class TestGaussian:
         assert image == pytest.approx(0.1760, 1e-2)
 
         gaussian = ag.lp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, intensity=1.0, sigma=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
         )
 
         image = gaussian.profile_image_from_grid_radii(grid_radii=3.0)
@@ -98,7 +101,7 @@ class TestGaussian:
 
     def test__intensity_from_grid__same_values_as_above(self):
         gaussian = ag.lp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, intensity=1.0, sigma=1.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
         )
 
         image = gaussian.profile_image_from_grid(grid=np.array([[0.0, 1.0]]))
@@ -106,7 +109,7 @@ class TestGaussian:
         assert image == pytest.approx(0.24197, 1e-2)
 
         gaussian = ag.lp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, intensity=2.0, sigma=1.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=2.0, sigma=1.0
         )
 
         image = gaussian.profile_image_from_grid(grid=np.array([[0.0, 1.0]]))
@@ -114,7 +117,7 @@ class TestGaussian:
         assert image == pytest.approx(2.0 * 0.24197, 1e-2)
 
         gaussian = ag.lp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, intensity=1.0, sigma=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
         )
 
         image = gaussian.profile_image_from_grid(grid=np.array([[0.0, 1.0]]))
@@ -122,7 +125,7 @@ class TestGaussian:
         assert image == pytest.approx(0.1760, 1e-2)
 
         gaussian = ag.lp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, intensity=1.0, sigma=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
         )
 
         image = gaussian.profile_image_from_grid(grid=np.array([[0.0, 3.0]]))
@@ -136,13 +139,16 @@ class TestGaussian:
     def test__intensity_from_grid__change_geometry(self):
 
         gaussian = ag.lp.EllipticalGaussian(
-            centre=(1.0, 1.0), axis_ratio=1.0, phi=0.0, intensity=1.0, sigma=1.0
+            centre=(1.0, 1.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
         )
         image = gaussian.profile_image_from_grid(grid=np.array([[1.0, 0.0]]))
         assert image == pytest.approx(0.24197, 1e-2)
 
         gaussian = ag.lp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=0.5, phi=0.0, intensity=1.0, sigma=1.0
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.333333),
+            intensity=1.0,
+            sigma=1.0,
         )
 
         image = gaussian.profile_image_from_grid(grid=np.array([[1.0, 0.0]]))
@@ -150,11 +156,17 @@ class TestGaussian:
         assert image == pytest.approx(0.05399, 1e-2)
 
         gaussian_0 = ag.lp.EllipticalGaussian(
-            centre=(-3.0, -0.0), axis_ratio=0.5, phi=0.0, intensity=1.0, sigma=1.0
+            centre=(-3.0, -0.0),
+            elliptical_comps=(0.0, 0.333333),
+            intensity=1.0,
+            sigma=1.0,
         )
 
         gaussian_1 = ag.lp.EllipticalGaussian(
-            centre=(3.0, 0.0), axis_ratio=0.5, phi=0.0, intensity=1.0, sigma=1.0
+            centre=(3.0, 0.0),
+            elliptical_comps=(0.0, 0.333333),
+            intensity=1.0,
+            sigma=1.0,
         )
 
         image_0 = gaussian_0.profile_image_from_grid(
@@ -168,11 +180,17 @@ class TestGaussian:
         assert image_0 == pytest.approx(image_1, 1e-4)
 
         gaussian_0 = ag.lp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=0.5, phi=180.0, intensity=1.0, sigma=1.0
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.333333),
+            intensity=1.0,
+            sigma=1.0,
         )
 
         gaussian_1 = ag.lp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=0.5, phi=0.0, intensity=1.0, sigma=1.0
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.333333),
+            intensity=1.0,
+            sigma=1.0,
         )
 
         image_0 = gaussian_0.profile_image_from_grid(
@@ -187,7 +205,7 @@ class TestGaussian:
 
     def test__spherical_and_elliptical_match(self):
         elliptical = ag.lp.EllipticalGaussian(
-            axis_ratio=1.0, phi=0.0, intensity=3.0, sigma=2.0
+            elliptical_comps=(0.0, 0.0), intensity=3.0, sigma=2.0
         )
         spherical = ag.lp.SphericalGaussian(intensity=3.0, sigma=2.0)
 
@@ -214,10 +232,10 @@ class TestGaussian:
 
 class TestSersic:
     def test__constructor_and_units(self):
+
         sersic = ag.lp.EllipticalSersic(
             centre=(1.0, 2.0),
-            axis_ratio=0.5,
-            phi=45.0,
+            elliptical_comps=(0.333333, 0.0),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=4.0,
@@ -229,10 +247,10 @@ class TestSersic:
         assert sersic.centre[0].unit == "arcsec"
         assert sersic.centre[1].unit == "arcsec"
 
-        assert sersic.axis_ratio == 0.5
+        assert sersic.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(sersic.axis_ratio, float)
 
-        assert sersic.phi == 45.0
+        assert sersic.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(sersic.phi, float)
 
         assert sersic.intensity == 1.0
@@ -247,7 +265,9 @@ class TestSersic:
         assert isinstance(sersic.sersic_index, float)
 
         assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
-        assert sersic.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
+        assert sersic.elliptical_effective_radius == pytest.approx(
+            0.6 / np.sqrt(0.5), 1.0e-4
+        )
 
         sersic = ag.lp.SphericalSersic(
             centre=(1.0, 2.0), intensity=1.0, effective_radius=0.6, sersic_index=4.0
@@ -282,8 +302,7 @@ class TestSersic:
     def test__intensity_at_radius__correct_value(self):
 
         sersic = ag.lp.EllipticalSersic(
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=4.0,
@@ -294,8 +313,7 @@ class TestSersic:
         assert image == pytest.approx(0.351797, 1e-3)
 
         sersic = ag.lp.EllipticalSersic(
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=3.0,
             effective_radius=2.0,
             sersic_index=2.0,
@@ -309,8 +327,7 @@ class TestSersic:
     def test__intensity_from_grid__correct_values_for_input_parameters(self):
 
         sersic = ag.lp.EllipticalSersic(
-            axis_ratio=0.5,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
             effective_radius=2.0,
             sersic_index=2.0,
@@ -323,16 +340,14 @@ class TestSersic:
     def test__image_from_grid__change_geometry(self):
 
         sersic_0 = ag.lp.EllipticalSersic(
-            axis_ratio=0.5,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
             effective_radius=2.0,
             sersic_index=2.0,
         )
 
         sersic_1 = ag.lp.EllipticalSersic(
-            axis_ratio=0.5,
-            phi=90.0,
+            elliptical_comps=(0.0, -0.333333),
             intensity=3.0,
             effective_radius=2.0,
             sersic_index=2.0,
@@ -346,8 +361,7 @@ class TestSersic:
 
     def test__spherical_and_elliptical_match(self):
         elliptical = ag.lp.EllipticalSersic(
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=3.0,
             effective_radius=2.0,
             sersic_index=2.0,
@@ -417,8 +431,7 @@ class TestExponential:
     def test__constructor_and_units(self):
         exponential = ag.lp.EllipticalExponential(
             centre=(1.0, 2.0),
-            axis_ratio=0.5,
-            phi=45.0,
+            elliptical_comps=(0.333333, 0.0),
             intensity=1.0,
             effective_radius=0.6,
         )
@@ -429,10 +442,10 @@ class TestExponential:
         assert exponential.centre[0].unit == "arcsec"
         assert exponential.centre[1].unit == "arcsec"
 
-        assert exponential.axis_ratio == 0.5
+        assert exponential.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(exponential.axis_ratio, float)
 
-        assert exponential.phi == 45.0
+        assert exponential.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(exponential.phi, float)
 
         assert exponential.intensity == 1.0
@@ -447,7 +460,9 @@ class TestExponential:
         assert isinstance(exponential.sersic_index, float)
 
         assert exponential.sersic_constant == pytest.approx(1.67838, 1e-3)
-        assert exponential.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
+        assert exponential.elliptical_effective_radius == pytest.approx(
+            0.6 / np.sqrt(0.5), 1.0e-4
+        )
 
         exponential = ag.lp.SphericalExponential(
             centre=(1.0, 2.0), intensity=1.0, effective_radius=0.6
@@ -481,7 +496,7 @@ class TestExponential:
 
     def test__intensity_at_radius__correct_value(self):
         exponential = ag.lp.EllipticalExponential(
-            axis_ratio=1.0, phi=0.0, intensity=1.0, effective_radius=0.6
+            elliptical_comps=(0.0, 0.0), intensity=1.0, effective_radius=0.6
         )
 
         image = exponential.profile_image_from_grid_radii(grid_radii=1.0)
@@ -489,7 +504,7 @@ class TestExponential:
         assert image == pytest.approx(0.3266, 1e-3)
 
         exponential = ag.lp.EllipticalExponential(
-            axis_ratio=1.0, phi=0.0, intensity=3.0, effective_radius=2.0
+            elliptical_comps=(0.0, 0.0), intensity=3.0, effective_radius=2.0
         )
 
         image = exponential.profile_image_from_grid_radii(grid_radii=1.5)
@@ -498,7 +513,7 @@ class TestExponential:
 
     def test__intensity_from_grid__correct_values(self):
         exponential = ag.lp.EllipticalExponential(
-            axis_ratio=0.5, phi=0.0, intensity=3.0, effective_radius=2.0
+            elliptical_comps=(0.0, 0.333333), intensity=3.0, effective_radius=2.0
         )
 
         image = exponential.profile_image_from_grid(grid=np.array([[1.0, 0.0]]))
@@ -506,7 +521,7 @@ class TestExponential:
         assert image == pytest.approx(4.9047, 1e-3)
 
         exponential = ag.lp.EllipticalExponential(
-            axis_ratio=0.5, phi=90.0, intensity=2.0, effective_radius=3.0
+            elliptical_comps=(0.0, -0.333333), intensity=2.0, effective_radius=3.0
         )
 
         image = exponential.profile_image_from_grid(grid=np.array([[0.0, 1.0]]))
@@ -514,7 +529,7 @@ class TestExponential:
         assert image == pytest.approx(4.8566, 1e-3)
 
         exponential = ag.lp.EllipticalExponential(
-            axis_ratio=0.5, phi=90.0, intensity=4.0, effective_radius=3.0
+            elliptical_comps=(0.0, -0.333333), intensity=4.0, effective_radius=3.0
         )
 
         image = exponential.profile_image_from_grid(grid=np.array([[0.0, 1.0]]))
@@ -527,11 +542,11 @@ class TestExponential:
 
     def test__intensity_from_grid__change_geometry(self):
         exponential_0 = ag.lp.EllipticalExponential(
-            axis_ratio=0.5, phi=0.0, intensity=3.0, effective_radius=2.0
+            elliptical_comps=(0.0, 0.333333), intensity=3.0, effective_radius=2.0
         )
 
         exponential_1 = ag.lp.EllipticalExponential(
-            axis_ratio=0.5, phi=90.0, intensity=3.0, effective_radius=2.0
+            elliptical_comps=(0.0, -0.333333), intensity=3.0, effective_radius=2.0
         )
 
         image_0 = exponential_0.profile_image_from_grid(grid=np.array([[0.0, 1.0]]))
@@ -542,7 +557,7 @@ class TestExponential:
 
     def test__spherical_and_elliptical_match(self):
         elliptical = ag.lp.EllipticalExponential(
-            axis_ratio=1.0, phi=0.0, intensity=3.0, effective_radius=2.0
+            elliptical_comps=(0.0, 0.0), intensity=3.0, effective_radius=2.0
         )
 
         spherical = ag.lp.SphericalExponential(intensity=3.0, effective_radius=2.0)
@@ -572,8 +587,7 @@ class TestDevVaucouleurs:
     def test__constructor_and_units(self):
         dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs(
             centre=(1.0, 2.0),
-            axis_ratio=0.5,
-            phi=45.0,
+            elliptical_comps=(0.333333, 0.0),
             intensity=1.0,
             effective_radius=0.6,
         )
@@ -584,10 +598,10 @@ class TestDevVaucouleurs:
         assert dev_vaucouleurs.centre[0].unit == "arcsec"
         assert dev_vaucouleurs.centre[1].unit == "arcsec"
 
-        assert dev_vaucouleurs.axis_ratio == 0.5
+        assert dev_vaucouleurs.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(dev_vaucouleurs.axis_ratio, float)
 
-        assert dev_vaucouleurs.phi == 45.0
+        assert dev_vaucouleurs.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(dev_vaucouleurs.phi, float)
 
         assert dev_vaucouleurs.intensity == 1.0
@@ -602,7 +616,9 @@ class TestDevVaucouleurs:
         assert isinstance(dev_vaucouleurs.sersic_index, float)
 
         assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
-        assert dev_vaucouleurs.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
+        assert dev_vaucouleurs.elliptical_effective_radius == pytest.approx(
+            0.6 / np.sqrt(0.5), 1.0e-4
+        )
 
         dev_vaucouleurs = ag.lp.SphericalDevVaucouleurs(
             centre=(1.0, 2.0), intensity=1.0, effective_radius=0.6
@@ -636,7 +652,7 @@ class TestDevVaucouleurs:
 
     def test__intensity_at_radius__correct_value(self):
         dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs(
-            axis_ratio=1.0, phi=0.0, intensity=1.0, effective_radius=0.6
+            elliptical_comps=(0.0, 0.0), intensity=1.0, effective_radius=0.6
         )
 
         image = dev_vaucouleurs.profile_image_from_grid_radii(grid_radii=1.0)
@@ -644,7 +660,7 @@ class TestDevVaucouleurs:
         assert image == pytest.approx(0.3518, 1e-3)
 
         dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs(
-            axis_ratio=1.0, phi=0.0, intensity=3.0, effective_radius=2.0
+            elliptical_comps=(0.0, 0.0), intensity=3.0, effective_radius=2.0
         )
 
         image = dev_vaucouleurs.profile_image_from_grid_radii(grid_radii=1.5)
@@ -653,7 +669,7 @@ class TestDevVaucouleurs:
 
     def test__intensity_from_grid__correct_values(self):
         dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs(
-            axis_ratio=0.5, phi=0.0, intensity=3.0, effective_radius=2.0
+            elliptical_comps=(0.0, 0.333333), intensity=3.0, effective_radius=2.0
         )
 
         image = dev_vaucouleurs.profile_image_from_grid(grid=np.array([[1.0, 0.0]]))
@@ -661,7 +677,7 @@ class TestDevVaucouleurs:
         assert image == pytest.approx(5.6697, 1e-3)
 
         dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs(
-            axis_ratio=0.5, phi=90.0, intensity=2.0, effective_radius=3.0
+            elliptical_comps=(0.0, -0.333333), intensity=2.0, effective_radius=3.0
         )
 
         image = dev_vaucouleurs.profile_image_from_grid(grid=np.array([[0.0, 1.0]]))
@@ -669,7 +685,7 @@ class TestDevVaucouleurs:
         assert image == pytest.approx(7.4455, 1e-3)
 
         dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs(
-            axis_ratio=0.5, phi=90.0, intensity=4.0, effective_radius=3.0
+            elliptical_comps=(0.0, -0.333333), intensity=4.0, effective_radius=3.0
         )
 
         image = dev_vaucouleurs.profile_image_from_grid(grid=np.array([[0.0, 1.0]]))
@@ -682,11 +698,11 @@ class TestDevVaucouleurs:
 
     def test__intensity_from_grid__change_geometry(self):
         dev_vaucouleurs_0 = ag.lp.EllipticalDevVaucouleurs(
-            axis_ratio=0.5, phi=0.0, intensity=3.0, effective_radius=2.0
+            elliptical_comps=(0.0, 0.333333), intensity=3.0, effective_radius=2.0
         )
 
         dev_vaucouleurs_1 = ag.lp.EllipticalDevVaucouleurs(
-            axis_ratio=0.5, phi=90.0, intensity=3.0, effective_radius=2.0
+            elliptical_comps=(0.0, -0.333333), intensity=3.0, effective_radius=2.0
         )
 
         image_0 = dev_vaucouleurs_0.profile_image_from_grid(grid=np.array([[0.0, 1.0]]))
@@ -697,7 +713,7 @@ class TestDevVaucouleurs:
 
     def test__spherical_and_elliptical_match(self):
         elliptical = ag.lp.EllipticalDevVaucouleurs(
-            axis_ratio=1.0, phi=0.0, intensity=3.0, effective_radius=2.0
+            elliptical_comps=(0.0, 0.0), intensity=3.0, effective_radius=2.0
         )
 
         spherical = ag.lp.SphericalDevVaucouleurs(intensity=3.0, effective_radius=2.0)
@@ -728,8 +744,7 @@ class TestCoreSersic:
     def test__constructor_and_units(self):
         core_sersic = ag.lp.EllipticalCoreSersic(
             centre=(1.0, 2.0),
-            axis_ratio=0.5,
-            phi=45.0,
+            elliptical_comps=(0.333333, 0.0),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=4.0,
@@ -745,10 +760,10 @@ class TestCoreSersic:
         assert core_sersic.centre[0].unit == "arcsec"
         assert core_sersic.centre[1].unit == "arcsec"
 
-        assert core_sersic.axis_ratio == 0.5
+        assert core_sersic.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(core_sersic.axis_ratio, float)
 
-        assert core_sersic.phi == 45.0
+        assert core_sersic.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(core_sersic.phi, float)
 
         assert core_sersic.intensity == 1.0
@@ -777,7 +792,9 @@ class TestCoreSersic:
         assert isinstance(core_sersic.alpha, float)
 
         assert core_sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
-        assert core_sersic.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
+        assert core_sersic.elliptical_effective_radius == pytest.approx(
+            0.6 / np.sqrt(0.5), 1.0e-4
+        )
 
         core_sersic = ag.lp.SphericalCoreSersic(
             centre=(1.0, 2.0),
@@ -832,8 +849,7 @@ class TestCoreSersic:
 
     def test__intensity_at_radius__correct_value(self):
         core_sersic = ag.lp.EllipticalCoreSersic(
-            axis_ratio=0.5,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.333333),
             intensity=1.0,
             effective_radius=5.0,
             sersic_index=4.0,
@@ -849,8 +865,7 @@ class TestCoreSersic:
 
     def test__spherical_and_elliptical_match(self):
         elliptical = ag.lp.EllipticalCoreSersic(
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=5.0,
             sersic_index=4.0,
@@ -1217,8 +1232,7 @@ class TestDecorators:
 
         light = ag.lp.EllipticalSersic(
             centre=(0.1, 0.1),
-            axis_ratio=0.8,
-            phi=60.0,
+            elliptical_comps=(0.096225, -0.055555),
             intensity=0.3,
             effective_radius=1.0,
             sersic_index=2.5,
@@ -1277,7 +1291,7 @@ class TestDecorators:
 
 class TestGrids:
     def test__grid_to_eccentric_radius(self):
-        elliptical = ag.lp.EllipticalSersic(axis_ratio=0.5, phi=0.0)
+        elliptical = ag.lp.EllipticalSersic(elliptical_comps=(0.0, 0.333333))
 
         radii_0 = elliptical.grid_to_eccentric_radii(np.array([[1, 1]]))
 

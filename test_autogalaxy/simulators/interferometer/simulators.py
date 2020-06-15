@@ -44,8 +44,7 @@ def simulate__galaxy_x1__bulge_disk(instrument):
         ),
         envelope=ag.lp.EllipticalExponential(
             centre=(0.0, 0.0),
-            axis_ratio=0.7,
-            phi=60.0,
+            elliptical_comps=(0.152828, -0.088235),
             intensity=1.0,
             effective_radius=2.0,
         ),

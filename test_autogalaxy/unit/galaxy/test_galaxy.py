@@ -323,24 +323,26 @@ class TestLightProfiles:
 
             assert gal_x2_lp.profile_image_from_grid(
                 grid=np.array([[0.0, 0.0]])
-            ) == gal_x2_lp.profile_image_from_grid(grid=np.array([[100.0, 0.0]]))
+            ) == pytest.approx(
+                gal_x2_lp.profile_image_from_grid(grid=np.array([[100.0, 0.0]])), 1.0e-4
+            )
 
             assert gal_x2_lp.profile_image_from_grid(
                 grid=np.array([[49.0, 0.0]])
-            ) == gal_x2_lp.profile_image_from_grid(grid=np.array([[51.0, 0.0]]))
+            ) == pytest.approx(
+                gal_x2_lp.profile_image_from_grid(grid=np.array([[51.0, 0.0]])), 1.0e-4
+            )
 
         def test_2d_symmetry(self):
             lp_0 = ag.lp.EllipticalSersic(
-                axis_ratio=1.0,
-                phi=0.0,
+                elliptical_comps=(0.0, 0.0),
                 intensity=1.0,
                 effective_radius=0.6,
                 sersic_index=4.0,
             )
 
             lp_1 = ag.lp.EllipticalSersic(
-                axis_ratio=1.0,
-                phi=0.0,
+                elliptical_comps=(0.0, 0.0),
                 intensity=1.0,
                 effective_radius=0.6,
                 sersic_index=4.0,
@@ -348,8 +350,7 @@ class TestLightProfiles:
             )
 
             lp_2 = ag.lp.EllipticalSersic(
-                axis_ratio=1.0,
-                phi=0.0,
+                elliptical_comps=(0.0, 0.0),
                 intensity=1.0,
                 effective_radius=0.6,
                 sersic_index=4.0,
@@ -357,8 +358,7 @@ class TestLightProfiles:
             )
 
             lp_3 = ag.lp.EllipticalSersic(
-                axis_ratio=1.0,
-                phi=0.0,
+                elliptical_comps=(0.0, 0.0),
                 intensity=1.0,
                 effective_radius=0.6,
                 sersic_index=4.0,
@@ -1210,11 +1210,11 @@ class TestMassProfiles:
     class TestSymmetricProfiles:
         def test_1d_symmetry(self):
             mp_0 = ag.mp.EllipticalIsothermal(
-                axis_ratio=0.5, phi=45.0, einstein_radius=1.0
+                elliptical_comps=(0.333333, 0.0), einstein_radius=1.0
             )
 
             mp_1 = ag.mp.EllipticalIsothermal(
-                centre=(100, 0), axis_ratio=0.5, phi=45.0, einstein_radius=1.0
+                centre=(100, 0), elliptical_comps=(0.333333, 0.0), einstein_radius=1.0
             )
 
             gal_x4_mp = ag.Galaxy(
@@ -1223,11 +1223,15 @@ class TestMassProfiles:
 
             assert gal_x4_mp.convergence_from_grid(
                 grid=np.array([[1.0, 0.0]])
-            ) == gal_x4_mp.convergence_from_grid(grid=np.array([[99.0, 0.0]]))
+            ) == pytest.approx(
+                gal_x4_mp.convergence_from_grid(grid=np.array([[99.0, 0.0]])), 1.0e-4
+            )
 
             assert gal_x4_mp.convergence_from_grid(
                 grid=np.array([[49.0, 0.0]])
-            ) == gal_x4_mp.convergence_from_grid(grid=np.array([[51.0, 0.0]]))
+            ) == pytest.approx(
+                gal_x4_mp.convergence_from_grid(grid=np.array([[51.0, 0.0]])), 1.0e-4
+            )
 
             assert gal_x4_mp.potential_from_grid(
                 grid=np.array([[1.0, 0.0]])
@@ -1436,29 +1440,48 @@ class TestMassProfiles:
             assert galaxy.mass_profile_axis_ratios == []
 
             galaxy = ag.Galaxy(
-                redshift=0.5, mp_0=ag.mp.EllipticalMassProfile(axis_ratio=0.9)
+                redshift=0.5,
+                mp_0=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.05263)),
             )
 
-            assert galaxy.mass_profile_axis_ratios.in_list == [[0.9]]
+            assert galaxy.mass_profile_axis_ratios.in_list[0][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
 
             galaxy = ag.Galaxy(
                 redshift=0.5,
-                mp_0=ag.mp.EllipticalMassProfile(axis_ratio=0.9),
-                mp_1=ag.mp.EllipticalMassProfile(axis_ratio=0.8),
-                mp_2=ag.mp.EllipticalMassProfile(axis_ratio=0.7),
+                mp_0=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.05263)),
+                mp_1=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.111111)),
+                mp_2=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.176470)),
             )
 
-            assert galaxy.mass_profile_axis_ratios.in_list == [[0.9], [0.8], [0.7]]
+            assert galaxy.mass_profile_axis_ratios.in_list[0][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
+            assert galaxy.mass_profile_axis_ratios.in_list[1][0] == pytest.approx(
+                0.8, 1.0e-4
+            )
+            assert galaxy.mass_profile_axis_ratios.in_list[2][0] == pytest.approx(
+                0.7, 1.0e-4
+            )
 
             galaxy = ag.Galaxy(
                 redshift=0.5,
-                mp_0=ag.mp.EllipticalMassProfile(axis_ratio=0.9),
-                mp_1=ag.mp.EllipticalMassProfile(axis_ratio=0.8),
-                lp_0=ag.lp.EllipticalLightProfile(axis_ratio=0.1),
-                mp_2=ag.mp.EllipticalMassProfile(axis_ratio=0.7),
+                mp_0=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.05263)),
+                mp_1=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.111111)),
+                lp_0=ag.lp.EllipticalLightProfile(elliptical_comps=(0.0, 0.8181818)),
+                mp_2=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.176470)),
             )
 
-            assert galaxy.mass_profile_axis_ratios.in_list == [[0.9], [0.8], [0.7]]
+            assert galaxy.mass_profile_axis_ratios.in_list[0][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
+            assert galaxy.mass_profile_axis_ratios.in_list[1][0] == pytest.approx(
+                0.8, 1.0e-4
+            )
+            assert galaxy.mass_profile_axis_ratios.in_list[2][0] == pytest.approx(
+                0.7, 1.0e-4
+            )
 
         def test__extracts_phis_correctly(self):
 
@@ -1466,28 +1489,51 @@ class TestMassProfiles:
 
             assert galaxy.mass_profile_phis == []
 
-            galaxy = ag.Galaxy(redshift=0.5, mp_0=ag.mp.EllipticalMassProfile(phi=0.9))
+            galaxy = ag.Galaxy(
+                redshift=0.5,
+                mp_0=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
+                    axis_ratio=0.5, phi=0.9
+                ),
+            )
 
             assert galaxy.mass_profile_phis.in_list == [[0.9]]
 
             galaxy = ag.Galaxy(
                 redshift=0.5,
-                mp_0=ag.mp.EllipticalMassProfile(phi=0.9),
-                mp_1=ag.mp.EllipticalMassProfile(phi=0.8),
-                mp_2=ag.mp.EllipticalMassProfile(phi=0.7),
+                mp_0=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
+                    axis_ratio=0.5, phi=0.9
+                ),
+                mp_1=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
+                    axis_ratio=0.5, phi=0.8
+                ),
+                mp_2=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
+                    axis_ratio=0.5, phi=0.7
+                ),
             )
 
-            assert galaxy.mass_profile_phis.in_list == [[0.9], [0.8], [0.7]]
+            assert galaxy.mass_profile_phis.in_list[0][0] == pytest.approx(0.9, 1.0e-4)
+            assert galaxy.mass_profile_phis.in_list[1][0] == pytest.approx(0.8, 1.0e-4)
+            assert galaxy.mass_profile_phis.in_list[2][0] == pytest.approx(0.7, 1.0e-4)
 
             galaxy = ag.Galaxy(
                 redshift=0.5,
-                mp_0=ag.mp.EllipticalMassProfile(phi=0.9),
-                mp_1=ag.mp.EllipticalMassProfile(phi=0.8),
-                lp_0=ag.lp.EllipticalLightProfile(phi=0.1),
-                mp_2=ag.mp.EllipticalMassProfile(phi=0.7),
+                mp_0=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
+                    axis_ratio=0.5, phi=0.9
+                ),
+                mp_1=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
+                    axis_ratio=0.5, phi=0.8
+                ),
+                lp_0=ag.lp.EllipticalLightProfile.from_axis_ratio_and_phi(
+                    axis_ratio=0.5, phi=0.1
+                ),
+                mp_2=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
+                    axis_ratio=0.5, phi=0.7
+                ),
             )
 
-            assert galaxy.mass_profile_phis.in_list == [[0.9], [0.8], [0.7]]
+            assert galaxy.mass_profile_phis.in_list[0][0] == pytest.approx(0.9, 1.0e-4)
+            assert galaxy.mass_profile_phis.in_list[1][0] == pytest.approx(0.8, 1.0e-4)
+            assert galaxy.mass_profile_phis.in_list[2][0] == pytest.approx(0.7, 1.0e-4)
 
     class TestLensingObject:
         def test__correct_einstein_mass_caclulated_for_multiple_mass_profiles__means_all_innherited_methods_work(

@@ -278,21 +278,21 @@ class TestMassSheet:
 class TestExternalShear:
     def test__constructor_and_units(self):
 
-        shear = ag.mp.ExternalShear(magnitude=0.05, phi=45.0)
+        shear = ag.mp.ExternalShear(elliptical_comps=(0.05, 0.0))
 
-        assert shear.magnitude == 0.05
+        assert shear.magnitude == pytest.approx(0.05, 1.0e-4)
         assert isinstance(shear.magnitude, float)
 
-        assert shear.phi == 45.0
+        assert shear.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(shear.phi, float)
 
     def test__convergence_returns_zeros(self):
 
-        shear = ag.mp.ExternalShear(magnitude=0.1, phi=45.0)
+        shear = ag.mp.ExternalShear(elliptical_comps=(0.1, 0.0))
         convergence = shear.convergence_from_grid(grid=np.array([[0.1, 0.1]]))
         assert (convergence == np.array([0.0])).all()
 
-        shear = ag.mp.ExternalShear(magnitude=0.1, phi=45.0)
+        shear = ag.mp.ExternalShear(elliptical_comps=(0.1, 0.0))
         convergence = shear.convergence_from_grid(
             grid=np.array([[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]])
         )
@@ -316,11 +316,11 @@ class TestExternalShear:
         assert convergence[0] == pytest.approx(0.0, 1e-3)
 
     def test__potential_returns_zeros(self):
-        shear = ag.mp.ExternalShear(magnitude=0.1, phi=45.0)
+        shear = ag.mp.ExternalShear(elliptical_comps=(0.1, 0.0))
         potential = shear.potential_from_grid(grid=np.array([[0.1, 0.1]]))
         assert (potential == np.array([[0.0, 0.0]])).all()
 
-        shear = ag.mp.ExternalShear(magnitude=0.1, phi=45.0)
+        shear = ag.mp.ExternalShear(elliptical_comps=(0.1, 0.0))
         potential = shear.potential_from_grid(
             grid=np.array([[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]])
         )
@@ -344,12 +344,13 @@ class TestExternalShear:
         assert potential[0] == pytest.approx(0.0, 1e-3)
 
     def test__deflections_correct_values(self):
-        shear = ag.mp.ExternalShear(magnitude=0.1, phi=45.0)
+
+        shear = ag.mp.ExternalShear(elliptical_comps=(0.1, 0.0))
         deflections = shear.deflections_from_grid(grid=np.array([[0.1625, 0.1625]]))
         assert deflections[0, 0] == pytest.approx(0.01625, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.01625, 1e-3)
 
-        shear = ag.mp.ExternalShear(magnitude=0.2, phi=75.0)
+        shear = ag.mp.ExternalShear(elliptical_comps=(0.1, -0.17320))
         deflections = shear.deflections_from_grid(grid=np.array([[0.1625, 0.1625]]))
         assert deflections[0, 0] == pytest.approx(0.04439, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.011895, 1e-3)

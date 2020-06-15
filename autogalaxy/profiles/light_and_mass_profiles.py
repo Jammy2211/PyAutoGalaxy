@@ -1,6 +1,7 @@
 from autogalaxy import dimensions as dim
 from autogalaxy.profiles import light_profiles as lp
 from autogalaxy.profiles import mass_profiles as mp
+import typing
 
 """
 Mass and light profiles describe both mass distributions and light distributions with a single set of parameters. This
@@ -13,8 +14,7 @@ class EllipticalGaussian(lp.EllipticalGaussian, mp.EllipticalGaussian):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         intensity: dim.Luminosity = 0.1,
         sigma: dim.Length = 0.01,
         mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
@@ -23,16 +23,14 @@ class EllipticalGaussian(lp.EllipticalGaussian, mp.EllipticalGaussian):
         lp.EllipticalGaussian.__init__(
             self,
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             intensity=intensity,
             sigma=sigma,
         )
         mp.EllipticalGaussian.__init__(
             self,
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             intensity=intensity,
             sigma=sigma,
             mass_to_light_ratio=mass_to_light_ratio,
@@ -43,8 +41,7 @@ class EllipticalSersic(lp.EllipticalSersic, mp.EllipticalSersic):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         intensity: dim.Luminosity = 0.1,
         effective_radius: dim.Length = 0.6,
         sersic_index: float = 0.6,
@@ -54,8 +51,7 @@ class EllipticalSersic(lp.EllipticalSersic, mp.EllipticalSersic):
         lp.EllipticalSersic.__init__(
             self,
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -63,8 +59,7 @@ class EllipticalSersic(lp.EllipticalSersic, mp.EllipticalSersic):
         mp.EllipticalSersic.__init__(
             self,
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -99,8 +94,7 @@ class SphericalSersic(EllipticalSersic):
         EllipticalSersic.__init__(
             self,
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -112,8 +106,7 @@ class EllipticalExponential(EllipticalSersic):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         intensity: dim.Luminosity = 0.1,
         effective_radius: dim.Length = 0.6,
         mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
@@ -140,8 +133,7 @@ class EllipticalExponential(EllipticalSersic):
         EllipticalSersic.__init__(
             self,
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=1.0,
@@ -175,8 +167,7 @@ class SphericalExponential(EllipticalExponential):
         EllipticalExponential.__init__(
             self,
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             mass_to_light_ratio=mass_to_light_ratio,
@@ -187,8 +178,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         intensity: dim.Luminosity = 0.1,
         effective_radius: dim.Length = 0.6,
         mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
@@ -214,8 +204,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
         """
         super(EllipticalDevVaucouleurs, self).__init__(
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=4.0,
@@ -249,8 +238,7 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
         EllipticalDevVaucouleurs.__init__(
             self,
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             mass_to_light_ratio=mass_to_light_ratio,
@@ -263,8 +251,7 @@ class EllipticalSersicRadialGradient(
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         intensity: dim.Luminosity = 0.1,
         effective_radius: dim.Length = 0.6,
         sersic_index: float = 0.6,
@@ -296,8 +283,7 @@ class EllipticalSersicRadialGradient(
         lp.EllipticalSersic.__init__(
             self,
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -305,8 +291,7 @@ class EllipticalSersicRadialGradient(
         mp.EllipticalSersicRadialGradient.__init__(
             self,
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -346,8 +331,7 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
         EllipticalSersicRadialGradient.__init__(
             self,
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,

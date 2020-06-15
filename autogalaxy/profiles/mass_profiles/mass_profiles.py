@@ -9,6 +9,7 @@ from autogalaxy.profiles import geometry_profiles
 from autogalaxy.util import cosmology_util
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
+import typing
 
 
 class MassProfile(lensing.LensingObject):
@@ -52,8 +53,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
     ):
         """
         Abstract class for elliptical mass profiles.
@@ -62,16 +62,13 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            Ellipse's minor-to-major axis ratio (b/a)
-        phi : float
-            Rotation angle of profile's ellipse counter-clockwise from positive x-axis
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         """
         super(EllipticalMassProfile, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi
+            centre=centre, elliptical_comps=elliptical_comps
         )
-        self.axis_ratio = axis_ratio
-        self.phi = phi
 
     @property
     def mass_profile_centres(self):

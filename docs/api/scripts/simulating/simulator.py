@@ -57,7 +57,7 @@ galaxy_galaxy = al.Galaxy(
         sersic_index=4.0,
     ),
     mass=al.mp.EllipticalIsothermal(
-        centre=(0.0, 0.0), einstein_radius=1.6, axis_ratio=0.7, phi=45.0
+        centre=(0.0, 0.0), einstein_radius=1.6, elliptical_comps=(0.17647, 0.0)
     ),
     shear=al.mp.ExternalShear(magnitude=0.05, phi=90.0),
 )

@@ -5,6 +5,8 @@ from autoarray.structures import grids
 from autogalaxy import dimensions as dim
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
+from autogalaxy.util import convert
+import typing
 
 
 class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
@@ -49,7 +51,7 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
 # noinspection PyAbstractClass
 class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
     @af.map_types
-    def __init__(self, magnitude: float = 0.2, phi: float = 0.0):
+    def __init__(self, elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0)):
         """
         An external shear term, to model the line-of-sight contribution of other galaxies / satellites.
 
@@ -64,8 +66,16 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
             The rotation axis of the shear.
         """
 
-        super(ExternalShear, self).__init__(centre=(0.0, 0.0), phi=phi, axis_ratio=1.0)
+        super(ExternalShear, self).__init__(
+            centre=(0.0, 0.0), elliptical_comps=elliptical_comps
+        )
+
+        magnitude, phi = convert.magnitude_and_phi_from_elliptical_comps(
+            elliptical_comps=elliptical_comps
+        )
+
         self.magnitude = magnitude
+        self.phi = phi
 
     def convergence_func(self, grid_radius):
         return 0.0

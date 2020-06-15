@@ -8,6 +8,7 @@ from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
 from pyquad import quad_grid
 from scipy import special
+import typing
 
 
 class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
@@ -57,8 +58,7 @@ class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         einstein_radius: dim.Length = 1.0,
         inner_slope: float = 1.5,
         outer_slope: float = 2.5,
@@ -76,15 +76,13 @@ class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
         """
 
         super(EllipticalBrokenPowerLaw, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi
+            centre=centre, elliptical_comps=elliptical_comps
         )
 
-        self.einstein_radius = np.sqrt(axis_ratio) * einstein_radius
+        self.einstein_radius = np.sqrt(self.axis_ratio) * einstein_radius
         self.break_radius = break_radius
         self.inner_slope = inner_slope
         self.outer_slope = outer_slope
-        self.axis_ratio = axis_ratio
-        self.phi = phi
 
         # Parameters defined in the notes
         self.nu = break_radius / self.einstein_radius
@@ -228,8 +226,7 @@ class SphericalBrokenPowerLaw(EllipticalBrokenPowerLaw):
 
         super(SphericalBrokenPowerLaw, self).__init__(
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             einstein_radius=einstein_radius,
             inner_slope=inner_slope,
             outer_slope=outer_slope,
@@ -242,8 +239,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         einstein_radius: dim.Length = 1.0,
         slope: float = 2.0,
         core_radius: dim.Length = 0.01,
@@ -255,10 +251,9 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            The elliptical mass profile's minor-to-major axis ratio (b/a).
-        phi : float
-            Rotation angle of mass profile's ellipse counter-clockwise from positive x-axis.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         einstein_radius : float
             The arc-second Einstein radius.
         slope : float
@@ -267,7 +262,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
             The arc-second radius of the inner core.
         """
         super(EllipticalCoredPowerLaw, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi
+            centre=centre, elliptical_comps=elliptical_comps
         )
         self.einstein_radius = einstein_radius
         self.slope = slope
@@ -452,8 +447,7 @@ class SphericalCoredPowerLaw(EllipticalCoredPowerLaw):
         """
         super(SphericalCoredPowerLaw, self).__init__(
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             einstein_radius=einstein_radius,
             slope=slope,
             core_radius=core_radius,
@@ -494,8 +488,7 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         einstein_radius: dim.Length = 1.0,
         slope: float = 2.0,
     ):
@@ -506,10 +499,9 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            The elliptical mass profile's minor-to-major axis ratio (b/a).
-        phi : float
-            Rotation angle of mass profile's ellipse counter-clockwise from positive x-axis.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         einstein_radius : float
             The arc-second Einstein radius.
         slope : float
@@ -518,8 +510,7 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
 
         super(EllipticalPowerLaw, self).__init__(
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             einstein_radius=einstein_radius,
             slope=slope,
             core_radius=dim.Length(0.0),
@@ -618,8 +609,7 @@ class SphericalPowerLaw(EllipticalPowerLaw):
 
         super(SphericalPowerLaw, self).__init__(
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             einstein_radius=einstein_radius,
             slope=slope,
         )
@@ -644,8 +634,7 @@ class EllipticalCoredIsothermal(EllipticalCoredPowerLaw):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         einstein_radius: dim.Length = 1.0,
         core_radius: dim.Length = 0.01,
     ):
@@ -657,10 +646,9 @@ class EllipticalCoredIsothermal(EllipticalCoredPowerLaw):
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            The elliptical mass profile's minor-to-major axis ratio (b/a).
-        phi : float
-            Rotation angle of mass profile's ellipse counter-clockwise from positive x-axis.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         einstein_radius : float
             The arc-second Einstein radius.
         core_radius : float
@@ -668,8 +656,7 @@ class EllipticalCoredIsothermal(EllipticalCoredPowerLaw):
         """
         super(EllipticalCoredIsothermal, self).__init__(
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             einstein_radius=einstein_radius,
             slope=2.0,
             core_radius=core_radius,
@@ -710,8 +697,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         einstein_radius: dim.Length = 1.0,
     ):
         """
@@ -722,24 +708,22 @@ class EllipticalIsothermal(EllipticalPowerLaw):
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            The elliptical mass profile's minor-to-major axis ratio (b/a).
-        phi : float
-            Rotation angle of mass profile's ellipse counter-clockwise from positive x-axis.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         einstein_radius : float
             The arc-second Einstein radius.
         """
 
-        if not isinstance(self, SphericalIsothermal) and axis_ratio > 0.99999:
-            axis_ratio = 0.99999
-
         super(EllipticalIsothermal, self).__init__(
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             einstein_radius=einstein_radius,
             slope=2.0,
         )
+
+        if not isinstance(self, SphericalIsothermal) and self.axis_ratio > 0.99999:
+            self.axis_ratio = 0.99999
 
     # @classmethod
     # def from_mass_in_solar_masses(cls, redshift_lens=0.5, redshift_source=1.0, centre: unit_label.Position = (0.0, 0.0), axis_ratio_=0.9,
@@ -809,7 +793,7 @@ class SphericalIsothermal(EllipticalIsothermal):
             The arc-second Einstein radius.
         """
         super(SphericalIsothermal, self).__init__(
-            centre=centre, axis_ratio=1.0, phi=0.0, einstein_radius=einstein_radius
+            centre=centre, elliptical_comps=(0.0, 0.0), einstein_radius=einstein_radius
         )
 
     @grids.grid_like_to_structure

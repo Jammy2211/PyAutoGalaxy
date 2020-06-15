@@ -2,6 +2,8 @@ import autofit as af
 import numpy as np
 from autoarray.structures import grids
 from autogalaxy import dimensions as dim
+from autogalaxy.util import cosmology_util, convert
+import typing
 
 
 class GeometryProfile(dim.DimensionsProfile):
@@ -118,8 +120,7 @@ class EllipticalProfile(SphericalProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
     ):
         """ An elliptical profile, which describes profiles with y and x centre Cartesian coordinates, an axis-ratio \
         and rotational angle phi.
@@ -128,14 +129,40 @@ class EllipticalProfile(SphericalProfile):
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+
+        Attributes
+        ----------
         axis_ratio : float
-            Ratio of profiles ellipse's minor and major axes (b/a)
+            Ratio of light profiles ellipse's minor and major axes (b/a).
         phi : float
-            Rotation angle of profiles ellipse counter-clockwise from positive x-axis
+            Rotation angle of light profile counter-clockwise from positive x-axis.
         """
         super(EllipticalProfile, self).__init__(centre=centre)
+
+        self.elliptical_comps = elliptical_comps
+
+        axis_ratio, phi = convert.axis_ratio_and_phi_from_elliptical_comps(
+            elliptical_comps=elliptical_comps
+        )
+
         self.axis_ratio = axis_ratio
         self.phi = phi
+
+    @classmethod
+    def from_axis_ratio_and_phi(
+        cls,
+        centre: dim.Position = (0.0, 0.0),
+        axis_ratio: float = 1.0,
+        phi: float = 0.0,
+    ):
+
+        elliptical_comps = convert.elliptical_comps_from_axis_ratio_and_phi(
+            axis_ratio=axis_ratio, phi=phi
+        )
+        return cls(centre=centre, elliptical_comps=elliptical_comps)
 
     @property
     def phi_radians(self):

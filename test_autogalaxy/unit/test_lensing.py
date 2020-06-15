@@ -12,6 +12,7 @@ from autogalaxy.profiles import geometry_profiles
 from pyquad import quad_grid
 from skimage import measure
 from test_autogalaxy import mock
+import typing
 
 
 @pytest.fixture(autouse=True)
@@ -30,8 +31,7 @@ class MockEllipticalIsothermal(
     def __init__(
         self,
         centre: ag.dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         einstein_radius: ag.dim.Length = 1.0,
     ):
         """
@@ -41,16 +41,13 @@ class MockEllipticalIsothermal(
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            Ellipse's minor-to-major axis ratio (b/a)
-        phi : float
-            Rotation angle of profile's ellipse counter-clockwise from positive x-axis
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         """
         super(MockEllipticalIsothermal, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi
+            centre=centre, elliptical_comps=elliptical_comps
         )
-        self.axis_ratio = axis_ratio
-        self.phi = phi
         self.einstein_radius = einstein_radius
 
     @property
@@ -186,13 +183,12 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            Ellipse's minor-to-major axis ratio (b/a)
-        phi : float
-            Rotation angle of profile's ellipse counter-clockwise from positive x-axis
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         """
         super(MockSphericalIsothermal, self).__init__(
-            centre=centre, axis_ratio=1.0, phi=0.0, einstein_radius=einstein_radius
+            centre=centre, elliptical_comps=(0.0, 0.0), einstein_radius=einstein_radius
         )
 
     @grids.grid_like_to_structure
@@ -290,8 +286,9 @@ class TestDeflectionsViaPotential:
         assert mean_error < 1e-4
 
     def test__compare_sie_at_phi_45__deflections_via_potential_and_calculation(self):
+
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), phi=45.0, axis_ratio=0.8, einstein_radius=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.111111, 0.0), einstein_radius=2.0
         )
 
         grid = ag.Grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
@@ -307,8 +304,9 @@ class TestDeflectionsViaPotential:
         assert mean_error < 1e-4
 
     def test__compare_sie_at_phi_0__deflections_via_potential_and_calculation(self):
+
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
         )
 
         grid = ag.Grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=1)
@@ -327,7 +325,7 @@ class TestDeflectionsViaPotential:
 class TestJacobian:
     def test__jacobian_components(self):
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
         )
 
         grid = ag.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
@@ -356,7 +354,7 @@ class TestJacobian:
 class TestMagnification:
     def test__compare_magnification_from_eigen_values_and_from_determinant(self):
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
         )
 
         grid = ag.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
@@ -378,7 +376,7 @@ class TestMagnification:
         assert mean_error < 1e-4
 
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
         )
 
         grid = ag.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
@@ -403,7 +401,7 @@ class TestMagnification:
         self
     ):
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
         )
 
         grid = ag.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
@@ -604,7 +602,7 @@ class TestConvergenceViajacobian:
 
     def test__compare_sie_at_phi_45__convergence_via_jacobian_and_calculation(self):
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), phi=45.0, axis_ratio=0.8, einstein_radius=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.111111, 0.0), einstein_radius=2.0
         )
 
         grid = ag.Grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
@@ -625,7 +623,7 @@ class TestCriticalCurvesAndCaustics:
         self
     ):
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
         )
 
         grid = ag.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
@@ -769,8 +767,9 @@ class TestCriticalCurvesAndCaustics:
     def test__compare_tangential_critical_curves_from_magnification_and_eigen_values(
         self
     ):
+
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
+            centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
         )
 
         tangential_critical_curve_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
@@ -795,7 +794,7 @@ class TestCriticalCurvesAndCaustics:
 
     def test__compare_radial_critical_curves_from_magnification_and_eigen_values(self):
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
+            centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
         )
 
         critical_curve_radial_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
@@ -810,7 +809,7 @@ class TestCriticalCurvesAndCaustics:
 
     def test__compare_tangential_caustic_from_magnification_and_eigen_values(self):
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
+            centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
         )
 
         tangential_caustic_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
@@ -825,7 +824,7 @@ class TestCriticalCurvesAndCaustics:
 
     def test__compare_radial_caustic_from_magnification_and_eigen_values__grid(self):
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.8, phi=40
+            centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
         )
 
         caustic_radial_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
@@ -877,8 +876,9 @@ class TestEinsteinRadiusMassfrom:
     def test__compare_einstein_radius_from_tangential_critical_curve_and_rescaled__sie(
         self
     ):
+
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2.0, axis_ratio=0.6
+            centre=(0.0, 0.0), einstein_radius=2.0, elliptical_comps=(0.0, -0.25)
         )
 
         einstein_radius = sie.einstein_radius_in_units(unit_length="arcsec")
@@ -921,7 +921,7 @@ class TestEinsteinRadiusMassfrom:
         self
     ):
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2.0, axis_ratio=0.6
+            centre=(0.0, 0.0), einstein_radius=2.0, elliptical_comps=(0.0, -0.25)
         )
 
         einstein_mass_from_critical_curve = sie.einstein_mass_in_units(
@@ -951,7 +951,7 @@ class TestEinsteinRadiusMassfrom:
 class TestGridBinning:
     def test__binning_works_on_all_from_grid_methods(self):
         sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), phi=0.0, axis_ratio=0.8, einstein_radius=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
         )
 
         grid = ag.Grid.uniform(shape_2d=(10, 10), pixel_scales=0.05, sub_size=2)

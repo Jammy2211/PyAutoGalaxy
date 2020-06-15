@@ -1,4 +1,5 @@
 import inspect
+import typing
 
 import autofit as af
 import numpy as np
@@ -107,8 +108,7 @@ class AbstractEllipticalGeneralizedNFW(
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
         inner_slope: float = 1.0,
         scale_radius: dim.Length = 1.0,
@@ -120,10 +120,9 @@ class AbstractEllipticalGeneralizedNFW(
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            Ratio of profiles ellipse's minor and major axes (b/a).
-        phi : float
-            Rotational angle of profiles ellipse counter-clockwise from positive x-axis.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         kappa_s : float
             The overall normalization of the dark matter halo \
             (kappa_s = (rho_s * scale_radius)/lensing_critical_density)
@@ -135,7 +134,7 @@ class AbstractEllipticalGeneralizedNFW(
         """
 
         super(AbstractEllipticalGeneralizedNFW, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi
+            centre=centre, elliptical_comps=elliptical_comps
         )
         super(mp.MassProfile, self).__init__()
         self.kappa_s = kappa_s
@@ -828,8 +827,7 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
 
         super(SphericalGeneralizedNFW, self).__init__(
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             kappa_s=kappa_s,
             inner_slope=inner_slope,
             scale_radius=scale_radius,
@@ -891,8 +889,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
     ):
         super(SphericalTruncatedNFW, self).__init__(
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             kappa_s=kappa_s,
             inner_slope=1.0,
             scale_radius=scale_radius,
@@ -1221,8 +1218,7 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
         scale_radius: dim.Length = 1.0,
     ):
@@ -1233,10 +1229,9 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            Ratio of profiles ellipse's minor and major axes (b/a).
-        phi : float
-            Rotational angle of profiles ellipse counter-clockwise from positive x-axis.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         kappa_s : float
             The overall normalization of the dark matter halo \
             (kappa_s = (rho_s * scale_radius)/lensing_critical_density)
@@ -1247,8 +1242,7 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
 
         super(EllipticalNFW, self).__init__(
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             kappa_s=kappa_s,
             inner_slope=1.0,
             scale_radius=scale_radius,
@@ -1404,8 +1398,7 @@ class SphericalNFW(EllipticalNFW):
 
         super(SphericalNFW, self).__init__(
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             kappa_s=kappa_s,
             scale_radius=scale_radius,
         )

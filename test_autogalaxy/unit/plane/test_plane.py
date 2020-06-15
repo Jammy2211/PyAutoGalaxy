@@ -574,15 +574,21 @@ class TestAbstractPlane:
         def test__extracts_axis_ratio_of_all_mass_profiles_of_all_galaxies(self):
 
             g0 = ag.Galaxy(
-                redshift=0.5, mass=ag.mp.EllipticalIsothermal(axis_ratio=0.9)
+                redshift=0.5,
+                mass=ag.mp.EllipticalIsothermal(elliptical_comps=(0.0, 0.05263)),
             )
             g1 = ag.Galaxy(
-                redshift=0.5, mass=ag.mp.EllipticalIsothermal(axis_ratio=0.8)
+                redshift=0.5,
+                mass=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(axis_ratio=0.8),
             )
             g2 = ag.Galaxy(
                 redshift=0.5,
-                mass0=ag.mp.EllipticalIsothermal(axis_ratio=0.7),
-                mass1=ag.mp.EllipticalIsothermal(axis_ratio=0.6),
+                mass0=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(
+                    axis_ratio=0.7
+                ),
+                mass1=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(
+                    axis_ratio=0.6
+                ),
             )
 
             plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
@@ -591,42 +597,86 @@ class TestAbstractPlane:
 
             plane = ag.Plane(galaxies=[g0], redshift=None)
 
-            assert plane.mass_profile_axis_ratios.in_list == [[0.9]]
+            assert plane.mass_profile_axis_ratios.in_list[0][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
 
             plane = ag.Plane(galaxies=[g1], redshift=None)
 
-            assert plane.mass_profile_axis_ratios.in_list == [[0.8]]
+            assert plane.mass_profile_axis_ratios.in_list[0][0] == pytest.approx(
+                0.8, 1.0e-4
+            )
 
             plane = ag.Plane(galaxies=[g0, g1], redshift=None)
 
-            assert plane.mass_profile_axis_ratios.in_list == [[0.9], [0.8]]
+            assert plane.mass_profile_axis_ratios.in_list[0][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
+            assert plane.mass_profile_axis_ratios.in_list[1][0] == pytest.approx(
+                0.8, 1.0e-4
+            )
 
             plane = ag.Plane(galaxies=[g1, g0], redshift=None)
 
-            assert plane.mass_profile_axis_ratios.in_list == [[0.8], [0.9]]
+            assert plane.mass_profile_axis_ratios.in_list[0][0] == pytest.approx(
+                0.8, 1.0e-4
+            )
+            assert plane.mass_profile_axis_ratios.in_list[1][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
 
             plane = ag.Plane(
                 galaxies=[g0, ag.Galaxy(redshift=0.5), g1, ag.Galaxy(redshift=0.5)],
                 redshift=None,
             )
 
-            assert plane.mass_profile_axis_ratios.in_list == [[0.9], [0.8]]
+            assert plane.mass_profile_axis_ratios.in_list[0][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
+            assert plane.mass_profile_axis_ratios.in_list[1][0] == pytest.approx(
+                0.8, 1.0e-4
+            )
 
             plane = ag.Plane(
                 galaxies=[g0, ag.Galaxy(redshift=0.5), g1, ag.Galaxy(redshift=0.5), g2],
                 redshift=None,
             )
 
-            assert plane.mass_profile_axis_ratios.in_list == [[0.9], [0.8], [0.7, 0.6]]
+            assert plane.mass_profile_axis_ratios.in_list[0][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
+            assert plane.mass_profile_axis_ratios.in_list[1][0] == pytest.approx(
+                0.8, 1.0e-4
+            )
+            assert plane.mass_profile_axis_ratios.in_list[2][0] == pytest.approx(
+                0.7, 1.0e-4
+            )
+            assert plane.mass_profile_axis_ratios.in_list[2][1] == pytest.approx(
+                0.6, 1.0e-4
+            )
 
         def test__extracts_phi_of_all_mass_profiles_of_all_galaxies(self):
 
-            g0 = ag.Galaxy(redshift=0.5, mass=ag.mp.EllipticalIsothermal(phi=0.9))
-            g1 = ag.Galaxy(redshift=0.5, mass=ag.mp.EllipticalIsothermal(phi=0.8))
+            g0 = ag.Galaxy(
+                redshift=0.5,
+                mass=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(
+                    axis_ratio=0.1, phi=0.9
+                ),
+            )
+            g1 = ag.Galaxy(
+                redshift=0.5,
+                mass=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(
+                    axis_ratio=0.1, phi=0.8
+                ),
+            )
             g2 = ag.Galaxy(
                 redshift=0.5,
-                mass0=ag.mp.EllipticalIsothermal(phi=0.7),
-                mass1=ag.mp.EllipticalIsothermal(phi=0.6),
+                mass0=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(
+                    axis_ratio=0.1, phi=0.7
+                ),
+                mass1=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(
+                    axis_ratio=0.1, phi=0.6
+                ),
             )
 
             plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
@@ -635,33 +685,39 @@ class TestAbstractPlane:
 
             plane = ag.Plane(galaxies=[g0], redshift=None)
 
-            assert plane.mass_profile_phis.in_list == [[0.9]]
+            assert plane.mass_profile_phis.in_list[0][0] == pytest.approx(0.9, 1.0e-4)
 
             plane = ag.Plane(galaxies=[g1], redshift=None)
 
-            assert plane.mass_profile_phis.in_list == [[0.8]]
+            assert plane.mass_profile_phis.in_list[0][0] == pytest.approx(0.8, 1.0e-4)
 
             plane = ag.Plane(galaxies=[g0, g1], redshift=None)
 
-            assert plane.mass_profile_phis.in_list == [[0.9], [0.8]]
+            assert plane.mass_profile_phis.in_list[0][0] == pytest.approx(0.9, 1.0e-4)
+            assert plane.mass_profile_phis.in_list[1][0] == pytest.approx(0.8, 1.0e-4)
 
             plane = ag.Plane(galaxies=[g1, g0], redshift=None)
 
-            assert plane.mass_profile_phis.in_list == [[0.8], [0.9]]
+            assert plane.mass_profile_phis.in_list[0][0] == pytest.approx(0.8, 1.0e-4)
+            assert plane.mass_profile_phis.in_list[1][0] == pytest.approx(0.9, 1.0e-4)
 
             plane = ag.Plane(
                 galaxies=[g0, ag.Galaxy(redshift=0.5), g1, ag.Galaxy(redshift=0.5)],
                 redshift=None,
             )
 
-            assert plane.mass_profile_phis.in_list == [[0.9], [0.8]]
+            assert plane.mass_profile_phis.in_list[0][0] == pytest.approx(0.9, 1.0e-4)
+            assert plane.mass_profile_phis.in_list[1][0] == pytest.approx(0.8, 1.0e-4)
 
             plane = ag.Plane(
                 galaxies=[g0, ag.Galaxy(redshift=0.5), g1, ag.Galaxy(redshift=0.5), g2],
                 redshift=None,
             )
 
-            assert plane.mass_profile_phis.in_list == [[0.9], [0.8], [0.7, 0.6]]
+            assert plane.mass_profile_phis.in_list[0][0] == pytest.approx(0.9, 1.0e-4)
+            assert plane.mass_profile_phis.in_list[1][0] == pytest.approx(0.8, 1.0e-4)
+            assert plane.mass_profile_phis.in_list[2][0] == pytest.approx(0.7, 1.0e-4)
+            assert plane.mass_profile_phis.in_list[2][1] == pytest.approx(0.6, 1.0e-4)
 
 
 class TestAbstractPlaneCosmology:
@@ -3292,7 +3348,7 @@ class TestRegression:
         # More complex test using different profile and Numpy array
 
         light_profile = ag.lp.EllipticalSersic(
-            centre=(2.0, 1.0), intensity=1.0, axis_ratio=0.5, phi=45.0
+            centre=(2.0, 1.0), intensity=1.0, elliptical_comps=(0.333333, 0.0)
         )
 
         galaxy = ag.Galaxy(redshift=0.5, light=light_profile)
@@ -3373,7 +3429,7 @@ class TestRegression:
         # More complex test using different profile and Numpy array
 
         mass_profile = ag.mp.EllipticalIsothermal(
-            centre=(2.0, 1.0), einstein_radius=1.0, axis_ratio=0.5, phi=45.0
+            centre=(2.0, 1.0), einstein_radius=1.0, elliptical_comps=(0.333333, 0.0)
         )
 
         galaxy = ag.Galaxy(redshift=0.5, mass=mass_profile)

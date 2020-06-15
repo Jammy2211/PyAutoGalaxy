@@ -329,8 +329,8 @@ def make_masked_interferometer_fit_x2_galaxy_inversion_7x7(
 def make_samples_with_result():
 
     galaxies = [
-        ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic),
-        ag.Galaxy(redshift=1.0, light=ag.lp.EllipticalSersic),
+        ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)),
+        ag.Galaxy(redshift=1.0, light=ag.lp.EllipticalSersic(intensity=2.0)),
     ]
 
     plane = ag.Plane(galaxies=galaxies)

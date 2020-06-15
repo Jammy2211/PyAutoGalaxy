@@ -8,6 +8,7 @@ from autogalaxy import dimensions as dim
 from autogalaxy.profiles import mass_profiles as mp
 from pyquad import quad_grid
 from scipy.special import wofz
+import typing
 
 
 class StellarProfile:
@@ -20,8 +21,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 0.99,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         intensity: dim.Luminosity = 0.1,
         sigma: dim.Length = 0.01,
         mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
@@ -32,28 +32,27 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
         ----------
         centre : (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            Ratio of light profiles ellipse's minor and major axes (b/a).
-        phi : float
-            Rotation angle of light profile counter-clockwise from positive x-axis.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         intensity : float
             Overall intensity normalisation of the light profiles (electrons per second).
         sigma : float
             The sigma value of the Gaussian.
         """
 
-        if axis_ratio > 0.9999:
-            axis_ratio = 0.9999
-
         super(EllipticalGaussian, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi
+            centre=centre, elliptical_comps=elliptical_comps
         )
         super(mp.EllipticalMassProfile, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi
+            centre=centre, elliptical_comps=elliptical_comps
         )
         self.mass_to_light_ratio = mass_to_light_ratio
         self.intensity = intensity
         self.sigma = sigma
+
+        if self.axis_ratio > 0.9999:
+            self.axis_ratio = 0.9999
 
     def omega_from_grid_and_q(self, grid_complex, q):
         x = np.real(grid_complex)
@@ -202,8 +201,7 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         intensity: dim.Luminosity = 0.1,
         effective_radius: dim.Length = 0.6,
         sersic_index: float = 0.6,
@@ -217,10 +215,9 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            Ratio of profiles ellipse's minor and major axes (b/a).
-        phi : float
-            Rotational angle of profiles ellipse counter-clockwise from positive x-axis.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         intensity : float
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius : float
@@ -232,10 +229,10 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
             The mass-to-light ratio of the light profiles
         """
         super(AbstractEllipticalSersic, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi
+            centre=centre, elliptical_comps=elliptical_comps
         )
         super(mp.EllipticalMassProfile, self).__init__(
-            centre=centre, axis_ratio=axis_ratio, phi=phi
+            centre=centre, elliptical_comps=elliptical_comps
         )
         self.mass_to_light_ratio = mass_to_light_ratio
         self.intensity = intensity
@@ -401,8 +398,7 @@ class SphericalSersic(EllipticalSersic):
         """
         super(SphericalSersic, self).__init__(
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -415,8 +411,7 @@ class EllipticalExponential(EllipticalSersic):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         intensity: dim.Luminosity = 0.1,
         effective_radius: dim.Length = 0.6,
         mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
@@ -429,10 +424,9 @@ class EllipticalExponential(EllipticalSersic):
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            Ratio of profiles ellipse's minor and major axes (b/a).
-        phi : float
-            Rotational angle of profiles ellipse counter-clockwise from positive x-axis.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         intensity : float
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius : float
@@ -442,8 +436,7 @@ class EllipticalExponential(EllipticalSersic):
         """
         super(EllipticalExponential, self).__init__(
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=1.0,
@@ -477,8 +470,7 @@ class SphericalExponential(EllipticalExponential):
         """
         super(SphericalExponential, self).__init__(
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             mass_to_light_ratio=mass_to_light_ratio,
@@ -490,8 +482,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         intensity: dim.Luminosity = 0.1,
         effective_radius: dim.Length = 0.6,
         mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
@@ -504,10 +495,9 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            Ratio of profiles ellipse's minor and major axes (b/a).
-        phi : float
-            Rotational angle of profiles ellipse counter-clockwise from positive x-axis.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         intensity : float
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius : float
@@ -517,8 +507,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
         """
         super(EllipticalDevVaucouleurs, self).__init__(
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=4.0,
@@ -552,8 +541,7 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
         """
         super(SphericalDevVaucouleurs, self).__init__(
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             mass_to_light_ratio=mass_to_light_ratio,
@@ -565,8 +553,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         intensity: dim.Luminosity = 0.1,
         effective_radius: dim.Length = 0.6,
         sersic_index: float = 0.6,
@@ -580,10 +567,9 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         ----------
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        axis_ratio : float
-            Ratio of profiles ellipse's minor and major axes (b/a).
-        phi : float
-            Rotational angle of profiles ellipse counter-clockwise from positive x-axis.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         intensity : float
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius : float
@@ -598,8 +584,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         """
         super(EllipticalSersicRadialGradient, self).__init__(
             centre=centre,
-            axis_ratio=axis_ratio,
-            phi=phi,
+            elliptical_comps=elliptical_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -734,8 +719,7 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
         """
         super(SphericalSersicRadialGradient, self).__init__(
             centre=centre,
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,

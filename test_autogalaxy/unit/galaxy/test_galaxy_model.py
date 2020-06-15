@@ -10,7 +10,7 @@ class MockPriorModel:
         self.name = name
         self.cls = cls
         self.centre = "origin for {}".format(name)
-        self.phi = "phi for {}".format(name)
+        self.elliptical_comps = "elliptical_comps for {}".format(name)
 
 
 class MockModelMapper:
@@ -80,12 +80,12 @@ class TestMassAndLightProfiles:
         arguments = {
             galaxy_model.profile.centre.centre_0: 1.0,
             galaxy_model.profile.centre.centre_1: 0.2,
-            galaxy_model.profile.axis_ratio: 0.4,
-            galaxy_model.profile.phi: 0.5,
+            galaxy_model.profile.elliptical_comps.elliptical_comps_0: 0.4,
+            galaxy_model.profile.elliptical_comps.elliptical_comps_1: 0.5,
             galaxy_model.profile.intensity.value: 0.6,
             galaxy_model.profile.effective_radius.value: 0.7,
             galaxy_model.profile.sersic_index: 0.8,
-            galaxy_model.profile.mass_to_light_ratio.value: 3.0,
+            galaxy_model.profile.mass_to_light_ratio.value: 0.5,
         }
 
         galaxy = galaxy_model.instance_for_arguments(arguments)
@@ -94,12 +94,11 @@ class TestMassAndLightProfiles:
         assert isinstance(galaxy.light_profiles[0], ag.lmp.EllipticalSersic)
 
         assert galaxy.mass_profiles[0].centre == (1.0, 0.2)
-        assert galaxy.mass_profiles[0].axis_ratio == 0.4
-        assert galaxy.mass_profiles[0].phi == 0.5
+        assert galaxy.mass_profiles[0].elliptical_comps == (0.4, 0.5)
         assert galaxy.mass_profiles[0].intensity == 0.6
         assert galaxy.mass_profiles[0].effective_radius == 0.7
         assert galaxy.mass_profiles[0].sersic_index == 0.8
-        assert galaxy.mass_profiles[0].mass_to_light_ratio == 3.0
+        assert galaxy.mass_profiles[0].mass_to_light_ratio == 0.5
 
 
 class TestGalaxyModel:
@@ -124,46 +123,6 @@ class TestGalaxyModel:
             mass_profile=ag.mp.EllipticalCoredIsothermal,
         )
         assert len(mapper.prior_model_tuples) == 2
-
-    def test_align_centres(self, galaxy_model):
-        assert galaxy_model.light_profile.centre != galaxy_model.mass_profile.centre
-
-        galaxy_model = ag.GalaxyModel(
-            redshift=ag.Redshift,
-            light_profile=ag.lp.EllipticalDevVaucouleurs,
-            mass_profile=ag.mp.EllipticalCoredIsothermal,
-            align_centres=True,
-        )
-
-        assert galaxy_model.light_profile.centre == galaxy_model.mass_profile.centre
-
-    def test_align_axis_ratios(self, galaxy_model):
-        assert (
-            galaxy_model.light_profile.axis_ratio
-            != galaxy_model.mass_profile.axis_ratio
-        )
-
-        galaxy_model = ag.GalaxyModel(
-            redshift=ag.Redshift,
-            light_profile=ag.lp.EllipticalDevVaucouleurs,
-            mass_profile=ag.mp.EllipticalCoredIsothermal,
-            align_axis_ratios=True,
-        )
-        assert (
-            galaxy_model.light_profile.axis_ratio
-            == galaxy_model.mass_profile.axis_ratio
-        )
-
-    def test_align_phis(self, galaxy_model):
-        assert galaxy_model.light_profile.phi != galaxy_model.mass_profile.phi
-
-        galaxy_model = ag.GalaxyModel(
-            redshift=ag.Redshift,
-            light_profile=ag.lp.EllipticalDevVaucouleurs,
-            mass_profile=ag.mp.EllipticalCoredIsothermal,
-            align_orientations=True,
-        )
-        assert galaxy_model.light_profile.phi == galaxy_model.mass_profile.phi
 
 
 class TestNamedProfiles:
@@ -205,18 +164,19 @@ class TestResultForArguments:
     def test_complicated_instance_for_arguments(self):
         galaxy_model = ag.GalaxyModel(
             redshift=ag.Redshift,
-            align_centres=True,
             light_profile=ag.lp.EllipticalSersic,
             mass_profile=ag.mp.SphericalIsothermal,
         )
 
+        galaxy_model.light_profile.centre = galaxy_model.mass_profile.centre
+
         arguments = {
             galaxy_model.redshift.redshift: 0.5,
-            galaxy_model.mass_profile.centre.centre_0: 1.0,
-            galaxy_model.mass_profile.centre.centre_1: 0.2,
+            galaxy_model.mass_profile.centre.centre_0: 0.9,
+            galaxy_model.mass_profile.centre.centre_1: 0.3,
             galaxy_model.mass_profile.einstein_radius.value: 0.3,
-            galaxy_model.light_profile.axis_ratio: 0.4,
-            galaxy_model.light_profile.phi: 0.5,
+            galaxy_model.light_profile.elliptical_comps.elliptical_comps_0: 0.5,
+            galaxy_model.light_profile.elliptical_comps.elliptical_comps_1: 0.6,
             galaxy_model.light_profile.intensity.value: 0.6,
             galaxy_model.light_profile.effective_radius.value: 0.7,
             galaxy_model.light_profile.sersic_index: 0.1,
@@ -224,16 +184,17 @@ class TestResultForArguments:
 
         galaxy = galaxy_model.instance_for_arguments(arguments)
 
-        assert galaxy.light_profiles[0].centre[0] == 1.0
-        assert galaxy.light_profiles[0].centre[1] == 0.2
+        assert galaxy.light_profiles[0].centre[0] == 0.9
+        assert galaxy.light_profiles[0].centre[1] == 0.3
 
     def test_gaussian_prior_model_for_arguments(self):
         galaxy_model = ag.GalaxyModel(
             redshift=ag.Redshift,
-            align_centres=True,
             light_profile=ag.lp.EllipticalSersic,
             mass_profile=ag.mp.SphericalIsothermal,
         )
+
+        galaxy_model.light_profile.centre = galaxy_model.mass_profile.centre
 
         redshift_prior = af.GaussianPrior(1, 1)
         einstein_radius_prior = af.GaussianPrior(4, 1)
@@ -244,8 +205,12 @@ class TestResultForArguments:
             galaxy_model.mass_profile.centre.centre_0: af.GaussianPrior(2, 1),
             galaxy_model.mass_profile.centre.centre_1: af.GaussianPrior(3, 1),
             galaxy_model.mass_profile.einstein_radius.value: einstein_radius_prior,
-            galaxy_model.light_profile.axis_ratio: af.GaussianPrior(5, 1),
-            galaxy_model.light_profile.phi: af.GaussianPrior(6, 1),
+            galaxy_model.light_profile.elliptical_comps.elliptical_comps_0: af.GaussianPrior(
+                6, 1
+            ),
+            galaxy_model.light_profile.elliptical_comps.elliptical_comps_1: af.GaussianPrior(
+                6, 1
+            ),
             galaxy_model.light_profile.intensity.value: intensity_prior,
             galaxy_model.light_profile.effective_radius.value: af.GaussianPrior(8, 1),
             galaxy_model.light_profile.sersic_index: af.GaussianPrior(9, 1),
@@ -409,8 +374,8 @@ class TestFixedProfiles:
 
         arguments = {
             galaxy_model.redshift.redshift: 0.2,
-            galaxy_model.model_light.axis_ratio: 0.4,
-            galaxy_model.model_light.phi: 0.5,
+            galaxy_model.model_light.elliptical_comps.elliptical_comps_0: 0.5,
+            galaxy_model.model_light.elliptical_comps.elliptical_comps_1: 0.6,
             galaxy_model.model_light.intensity.value: 0.6,
             galaxy_model.model_light.effective_radius.value: 0.7,
             galaxy_model.model_light.sersic_index: 0.8,

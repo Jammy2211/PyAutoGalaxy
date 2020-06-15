@@ -2,7 +2,6 @@ from autoconf import conf
 import autogalaxy as ag
 import numpy as np
 import pytest
-from autoarray.structures import grids
 
 
 @pytest.fixture(autouse=True)
@@ -60,14 +59,14 @@ class TestEllipticalGaussian:
 
     def test__sigma_from_grid(self):
 
-        gaussian = ag.mp.EllipticalGaussian(axis_ratio=0.9, sigma=2.0)
+        gaussian = ag.mp.EllipticalGaussian(elliptical_comps=(0.0, 0.05263), sigma=2.0)
 
         sigma = gaussian.sigma_from_grid(grid=np.array([[1.0, 0.0]]))
 
         assert np.real(sigma[0]) == pytest.approx(0.0, 1.0e-4)
         assert np.imag(sigma[0]) == pytest.approx(-0.086128, 1.0e-4)
 
-        gaussian = ag.mp.EllipticalGaussian(axis_ratio=0.9, sigma=3.0)
+        gaussian = ag.mp.EllipticalGaussian(elliptical_comps=(0.0, 0.05263), sigma=3.0)
 
         sigma = gaussian.sigma_from_grid(grid=np.array([[1.0, 0.0]]))
 
@@ -79,7 +78,7 @@ class TestEllipticalGaussian:
         assert np.real(sigma[0]) == pytest.approx(0.026596, 1.0e-4)
         assert np.imag(sigma[0]) == pytest.approx(-0.059033, 1.0e-4)
 
-        gaussian = ag.mp.EllipticalGaussian(axis_ratio=0.8, sigma=3.0)
+        gaussian = ag.mp.EllipticalGaussian(elliptical_comps=(0.0, 0.111111), sigma=3.0)
 
         sigma = gaussian.sigma_from_grid(grid=np.array([[1.0, 0.5]]))
 
@@ -97,7 +96,7 @@ class TestEllipticalGaussian:
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
-            axis_ratio=0.9,
+            elliptical_comps=(0.0, 0.05263),
             intensity=1.0,
             sigma=3.0,
             mass_to_light_ratio=1.0,
@@ -110,7 +109,7 @@ class TestEllipticalGaussian:
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
-            axis_ratio=0.8,
+            elliptical_comps=(0.0, 0.111111),
             intensity=1.0,
             sigma=5.0,
             mass_to_light_ratio=1.0,
@@ -123,7 +122,7 @@ class TestEllipticalGaussian:
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
-            axis_ratio=0.8,
+            elliptical_comps=(0.0, 0.111111),
             intensity=1.0,
             sigma=5.0,
             mass_to_light_ratio=2.0,
@@ -136,7 +135,7 @@ class TestEllipticalGaussian:
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
-            axis_ratio=0.8,
+            elliptical_comps=(0.0, 0.111111),
             intensity=2.0,
             sigma=5.0,
             mass_to_light_ratio=1.0,
@@ -151,7 +150,7 @@ class TestEllipticalGaussian:
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.4, 0.2),
-            axis_ratio=0.7,
+            elliptical_comps=(0.0, 0.17647),
             intensity=1.0,
             sigma=10.0,
             mass_to_light_ratio=1.0,
@@ -172,7 +171,7 @@ class TestEllipticalGaussian:
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(-0.7, -0.4),
-            axis_ratio=0.8,
+            elliptical_comps=(0.0, 0.05263),
             intensity=3.0,
             sigma=15.0,
             mass_to_light_ratio=7.0,
@@ -197,7 +196,7 @@ class TestEllipticalGaussian:
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(-0.7, -0.4),
-            axis_ratio=0.8,
+            elliptical_comps=(0.0, 0.05263),
             intensity=3.0,
             sigma=5.0,
             mass_to_light_ratio=7.0,
@@ -218,7 +217,7 @@ class TestEllipticalGaussian:
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(-0.0, -0.0),
-            axis_ratio=0.2,
+            elliptical_comps=(0.0, 0.666666),
             intensity=3.0,
             sigma=0.1,
             mass_to_light_ratio=7.0,
@@ -243,7 +242,7 @@ class TestEllipticalGaussian:
     def test__intensity_as_radius__correct_value(self):
 
         gaussian = ag.mp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, intensity=1.0, sigma=1.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
         )
 
         intensity = gaussian.intensity_at_radius(grid_radii=1.0)
@@ -251,7 +250,7 @@ class TestEllipticalGaussian:
         assert intensity == pytest.approx(0.24197, 1e-2)
 
         gaussian = ag.mp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, intensity=2.0, sigma=1.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=2.0, sigma=1.0
         )
 
         intensity = gaussian.intensity_at_radius(grid_radii=1.0)
@@ -259,7 +258,7 @@ class TestEllipticalGaussian:
         assert intensity == pytest.approx(2.0 * 0.24197, 1e-2)
 
         gaussian = ag.mp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, intensity=1.0, sigma=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
         )
 
         intensity = gaussian.intensity_at_radius(grid_radii=1.0)
@@ -267,7 +266,7 @@ class TestEllipticalGaussian:
         assert intensity == pytest.approx(0.1760, 1e-2)
 
         gaussian = ag.mp.EllipticalGaussian(
-            centre=(0.0, 0.0), axis_ratio=1.0, phi=0.0, intensity=1.0, sigma=2.0
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
         )
 
         intensity = gaussian.intensity_at_radius(grid_radii=3.0)
@@ -278,8 +277,7 @@ class TestEllipticalGaussian:
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
-            axis_ratio=0.9999,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             sigma=1.0,
             mass_to_light_ratio=1.0,
@@ -291,8 +289,7 @@ class TestEllipticalGaussian:
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
-            axis_ratio=0.9999,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             sigma=1.0,
             mass_to_light_ratio=2.0,
@@ -304,8 +301,7 @@ class TestEllipticalGaussian:
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
-            axis_ratio=0.9999,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=2.0,
             sigma=1.0,
             mass_to_light_ratio=1.0,
@@ -317,8 +313,7 @@ class TestEllipticalGaussian:
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
-            axis_ratio=0.5,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.333333),
             intensity=2.0,
             sigma=3.0,
             mass_to_light_ratio=4.0,
@@ -333,8 +328,7 @@ class TestSersic:
     def test__constructor_and_units(self):
         sersic = ag.mp.EllipticalSersic(
             centre=(1.0, 2.0),
-            axis_ratio=0.5,
-            phi=45.0,
+            elliptical_comps=(0.333333, 0.0),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=4.0,
@@ -347,10 +341,10 @@ class TestSersic:
         assert sersic.centre[0].unit == "arcsec"
         assert sersic.centre[1].unit == "arcsec"
 
-        assert sersic.axis_ratio == 0.5
+        assert sersic.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(sersic.axis_ratio, float)
 
-        assert sersic.phi == 45.0
+        assert sersic.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(sersic.phi, float)
 
         assert sersic.intensity == 1.0
@@ -369,7 +363,9 @@ class TestSersic:
         assert sersic.mass_to_light_ratio.unit == "angular / eps"
 
         assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
-        assert sersic.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
+        assert sersic.elliptical_effective_radius == pytest.approx(
+            0.6 / np.sqrt(0.5), 1.0e-4
+        )
 
         sersic = ag.mp.EllipticalSersic(
             centre=(1.0, 2.0),
@@ -448,8 +444,7 @@ class TestSersic:
 
         sersic = ag.mp.EllipticalSersic(
             centre=(0.0, 0.0),
-            axis_ratio=0.5,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
             effective_radius=2.0,
             sersic_index=2.0,
@@ -464,8 +459,7 @@ class TestSersic:
 
         sersic = ag.mp.EllipticalSersic(
             centre=(-0.4, -0.2),
-            axis_ratio=0.8,
-            phi=110.0,
+            elliptical_comps=(-0.07142, -0.085116),
             intensity=5.0,
             effective_radius=0.2,
             sersic_index=2.0,
@@ -479,8 +473,7 @@ class TestSersic:
 
         sersic = ag.mp.EllipticalSersic(
             centre=(-0.4, -0.2),
-            axis_ratio=0.8,
-            phi=110.0,
+            elliptical_comps=(-0.07142, -0.085116),
             intensity=5.0,
             effective_radius=0.2,
             sersic_index=2.0,
@@ -516,8 +509,12 @@ class TestSersic:
 
         assert convergence_0 == convergence_1
 
-        sersic_0 = ag.mp.EllipticalSersic(centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0)
-        sersic_1 = ag.mp.EllipticalSersic(centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0)
+        sersic_0 = ag.mp.EllipticalSersic(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
+        )
+        sersic_1 = ag.mp.EllipticalSersic(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
+        )
 
         convergence_0 = sersic_0.convergence_from_grid(grid=np.array([[1.0, 0.0]]))
 
@@ -545,8 +542,12 @@ class TestSersic:
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
-        sersic_0 = ag.mp.EllipticalSersic(centre=(0.0, 0.0), axis_ratio=0.8, phi=0.0)
-        sersic_1 = ag.mp.EllipticalSersic(centre=(0.0, 0.0), axis_ratio=0.8, phi=90.0)
+        sersic_0 = ag.mp.EllipticalSersic(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
+        )
+        sersic_1 = ag.mp.EllipticalSersic(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
+        )
 
         deflections_0 = sersic_0.deflections_from_grid(grid=np.array([[1.0, 0.0]]))
         deflections_1 = sersic_1.deflections_from_grid(grid=np.array([[0.0, 1.0]]))
@@ -557,8 +558,7 @@ class TestSersic:
     def test__spherical_and_elliptical_identical(self):
         elliptical = ag.mp.EllipticalSersic(
             centre=(0.0, 0.0),
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
             sersic_index=4.0,
@@ -621,8 +621,7 @@ class TestExponential:
     def test__constructor_and_units(self):
         exponential = ag.mp.EllipticalExponential(
             centre=(1.0, 2.0),
-            axis_ratio=0.5,
-            phi=45.0,
+            elliptical_comps=(0.333333, 0.0),
             intensity=1.0,
             effective_radius=0.6,
             mass_to_light_ratio=10.0,
@@ -634,10 +633,10 @@ class TestExponential:
         assert exponential.centre[0].unit == "arcsec"
         assert exponential.centre[1].unit == "arcsec"
 
-        assert exponential.axis_ratio == 0.5
+        assert exponential.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(exponential.axis_ratio, float)
 
-        assert exponential.phi == 45.0
+        assert exponential.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(exponential.phi, float)
 
         assert exponential.intensity == 1.0
@@ -656,7 +655,9 @@ class TestExponential:
         assert exponential.mass_to_light_ratio.unit == "angular / eps"
 
         assert exponential.sersic_constant == pytest.approx(1.67838, 1e-3)
-        assert exponential.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
+        assert exponential.elliptical_effective_radius == pytest.approx(
+            0.6 / np.sqrt(0.5), 1.0e-4
+        )
 
         exponential = ag.mp.EllipticalExponential(
             centre=(1.0, 2.0),
@@ -697,8 +698,7 @@ class TestExponential:
 
     def test__convergence_correct_values(self):
         exponential = ag.mp.EllipticalExponential(
-            axis_ratio=0.5,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
             effective_radius=2.0,
             mass_to_light_ratio=1.0,
@@ -709,8 +709,7 @@ class TestExponential:
         assert convergence == pytest.approx(4.9047, 1e-3)
 
         exponential = ag.mp.EllipticalExponential(
-            axis_ratio=0.5,
-            phi=90.0,
+            elliptical_comps=(0.0, -0.333333),
             intensity=2.0,
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
@@ -721,8 +720,7 @@ class TestExponential:
         assert convergence == pytest.approx(4.8566, 1e-3)
 
         exponential = ag.mp.EllipticalExponential(
-            axis_ratio=0.5,
-            phi=90.0,
+            elliptical_comps=(0.0, -0.333333),
             intensity=4.0,
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
@@ -732,8 +730,7 @@ class TestExponential:
         assert convergence == pytest.approx(2.0 * 4.8566, 1e-3)
 
         exponential = ag.mp.EllipticalExponential(
-            axis_ratio=0.5,
-            phi=90.0,
+            elliptical_comps=(0.0, -0.333333),
             intensity=2.0,
             effective_radius=3.0,
             mass_to_light_ratio=2.0,
@@ -744,8 +741,7 @@ class TestExponential:
         assert convergence == pytest.approx(2.0 * 4.8566, 1e-3)
 
         exponential = ag.mp.EllipticalExponential(
-            axis_ratio=0.5,
-            phi=90.0,
+            elliptical_comps=(0.0, -0.333333),
             intensity=2.0,
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
@@ -759,8 +755,7 @@ class TestExponential:
 
         exponential = ag.mp.EllipticalExponential(
             centre=(-0.4, -0.2),
-            axis_ratio=0.8,
-            phi=110.0,
+            elliptical_comps=(-0.07142, -0.085116),
             intensity=5.0,
             effective_radius=0.2,
             mass_to_light_ratio=1.0,
@@ -775,8 +770,7 @@ class TestExponential:
 
         exponential = ag.mp.EllipticalExponential(
             centre=(-0.4, -0.2),
-            axis_ratio=0.8,
-            phi=110.0,
+            elliptical_comps=(-0.07142, -0.085116),
             intensity=5.0,
             effective_radius=0.2,
             mass_to_light_ratio=1.0,
@@ -793,8 +787,7 @@ class TestExponential:
 
         elliptical = ag.mp.EllipticalExponential(
             centre=(0.0, 0.0),
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
             mass_to_light_ratio=1.0,
@@ -852,8 +845,7 @@ class TestDevVaucouleurs:
 
         dev_vaucouleurs = ag.mp.EllipticalDevVaucouleurs(
             centre=(1.0, 2.0),
-            axis_ratio=0.5,
-            phi=45.0,
+            elliptical_comps=(0.333333, 0.0),
             intensity=1.0,
             effective_radius=0.6,
             mass_to_light_ratio=10.0,
@@ -865,10 +857,10 @@ class TestDevVaucouleurs:
         assert dev_vaucouleurs.centre[0].unit == "arcsec"
         assert dev_vaucouleurs.centre[1].unit == "arcsec"
 
-        assert dev_vaucouleurs.axis_ratio == 0.5
+        assert dev_vaucouleurs.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(dev_vaucouleurs.axis_ratio, float)
 
-        assert dev_vaucouleurs.phi == 45.0
+        assert dev_vaucouleurs.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(dev_vaucouleurs.phi, float)
 
         assert dev_vaucouleurs.intensity == 1.0
@@ -889,7 +881,9 @@ class TestDevVaucouleurs:
         assert dev_vaucouleurs.mass_to_light_ratio.unit == "angular / eps"
 
         assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
-        assert dev_vaucouleurs.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
+        assert dev_vaucouleurs.elliptical_effective_radius == pytest.approx(
+            0.6 / np.sqrt(0.5), 1.0e-4
+        )
 
         dev_vaucouleurs = ag.mp.EllipticalDevVaucouleurs(
             centre=(1.0, 2.0),
@@ -933,8 +927,7 @@ class TestDevVaucouleurs:
     def test__convergence_correct_values(self):
 
         dev = ag.mp.EllipticalDevVaucouleurs(
-            axis_ratio=0.5,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
             effective_radius=2.0,
             mass_to_light_ratio=1.0,
@@ -945,8 +938,7 @@ class TestDevVaucouleurs:
         assert convergence == pytest.approx(5.6697, 1e-3)
 
         dev = ag.mp.EllipticalDevVaucouleurs(
-            axis_ratio=0.5,
-            phi=90.0,
+            elliptical_comps=(0.0, -0.333333),
             intensity=2.0,
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
@@ -957,8 +949,7 @@ class TestDevVaucouleurs:
         assert convergence == pytest.approx(7.4455, 1e-3)
 
         dev = ag.mp.EllipticalDevVaucouleurs(
-            axis_ratio=0.5,
-            phi=90.0,
+            elliptical_comps=(0.0, -0.333333),
             intensity=4.0,
             effective_radius=3.0,
             mass_to_light_ratio=1.0,
@@ -969,8 +960,7 @@ class TestDevVaucouleurs:
         assert convergence == pytest.approx(2.0 * 7.4455, 1e-3)
 
         dev = ag.mp.EllipticalDevVaucouleurs(
-            axis_ratio=0.5,
-            phi=90.0,
+            elliptical_comps=(0.0, -0.333333),
             intensity=2.0,
             effective_radius=3.0,
             mass_to_light_ratio=2.0,
@@ -995,8 +985,7 @@ class TestDevVaucouleurs:
 
         dev = ag.mp.EllipticalDevVaucouleurs(
             centre=(0.4, 0.2),
-            axis_ratio=0.9,
-            phi=10.0,
+            elliptical_comps=(0.0180010, 0.0494575),
             intensity=2.0,
             effective_radius=0.8,
             mass_to_light_ratio=3.0,
@@ -1013,8 +1002,7 @@ class TestDevVaucouleurs:
 
         elliptical = ag.mp.EllipticalDevVaucouleurs(
             centre=(0.0, 0.0),
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
             mass_to_light_ratio=1.0,
@@ -1071,8 +1059,7 @@ class TestSersicMassRadialGradient:
 
         sersic = ag.mp.EllipticalSersicRadialGradient(
             centre=(1.0, 2.0),
-            axis_ratio=0.5,
-            phi=45.0,
+            elliptical_comps=(0.333333, 0.0),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=4.0,
@@ -1086,10 +1073,10 @@ class TestSersicMassRadialGradient:
         assert sersic.centre[0].unit == "arcsec"
         assert sersic.centre[1].unit == "arcsec"
 
-        assert sersic.axis_ratio == 0.5
+        assert sersic.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(sersic.axis_ratio, float)
 
-        assert sersic.phi == 45.0
+        assert sersic.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(sersic.phi, float)
 
         assert sersic.intensity == 1.0
@@ -1111,7 +1098,9 @@ class TestSersicMassRadialGradient:
         assert isinstance(sersic.mass_to_light_gradient, float)
 
         assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
-        assert sersic.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
+        assert sersic.elliptical_effective_radius == pytest.approx(
+            0.6 / np.sqrt(0.5), 1.0e-4
+        )
 
         sersic = ag.mp.EllipticalSersicRadialGradient(
             centre=(1.0, 2.0),
@@ -1160,8 +1149,7 @@ class TestSersicMassRadialGradient:
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1/0.6)**-1.0 = 0.6
         sersic = ag.mp.EllipticalSersicRadialGradient(
             centre=(0.0, 0.0),
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=4.0,
@@ -1176,8 +1164,7 @@ class TestSersicMassRadialGradient:
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1.5/2.0)**1.0 = 0.75
 
         sersic = ag.mp.EllipticalSersicRadialGradient(
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=3.0,
             effective_radius=2.0,
             sersic_index=2.0,
@@ -1190,8 +1177,7 @@ class TestSersicMassRadialGradient:
         assert convergence == pytest.approx(0.75 * 4.90657319276, 1e-3)
 
         sersic = ag.mp.EllipticalSersicRadialGradient(
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=6.0,
             effective_radius=2.0,
             sersic_index=2.0,
@@ -1204,8 +1190,7 @@ class TestSersicMassRadialGradient:
         assert convergence == pytest.approx(2.0 * 0.75 * 4.90657319276, 1e-3)
 
         sersic = ag.mp.EllipticalSersicRadialGradient(
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=3.0,
             effective_radius=2.0,
             sersic_index=2.0,
@@ -1219,8 +1204,7 @@ class TestSersicMassRadialGradient:
 
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = ((0.5*1.41)/2.0)**-1.0 = 2.836
         sersic = ag.mp.EllipticalSersicRadialGradient(
-            axis_ratio=0.5,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
             effective_radius=2.0,
             sersic_index=2.0,
@@ -1236,8 +1220,7 @@ class TestSersicMassRadialGradient:
 
         sersic = ag.mp.EllipticalSersicRadialGradient(
             centre=(-0.4, -0.2),
-            axis_ratio=0.8,
-            phi=110.0,
+            elliptical_comps=(-0.07142, -0.085116),
             intensity=5.0,
             effective_radius=0.2,
             sersic_index=2.0,
@@ -1252,8 +1235,7 @@ class TestSersicMassRadialGradient:
 
         sersic = ag.mp.EllipticalSersicRadialGradient(
             centre=(-0.4, -0.2),
-            axis_ratio=0.8,
-            phi=110.0,
+            elliptical_comps=(-0.07142, -0.085116),
             intensity=5.0,
             effective_radius=0.2,
             sersic_index=2.0,
@@ -1272,8 +1254,7 @@ class TestSersicMassRadialGradient:
 
         sersic = ag.mp.EllipticalSersicRadialGradient(
             centre=(-0.4, -0.2),
-            axis_ratio=0.8,
-            phi=110.0,
+            elliptical_comps=(-0.07142, -0.085116),
             intensity=5.0,
             effective_radius=0.2,
             sersic_index=1.0,
@@ -1287,8 +1268,7 @@ class TestSersicMassRadialGradient:
 
         exponential = ag.mp.EllipticalExponential(
             centre=(-0.4, -0.2),
-            axis_ratio=0.8,
-            phi=110.0,
+            elliptical_comps=(-0.07142, -0.085116),
             intensity=5.0,
             effective_radius=0.2,
             mass_to_light_ratio=1.0,
@@ -1310,8 +1290,7 @@ class TestSersicMassRadialGradient:
 
         sersic = ag.mp.EllipticalSersicRadialGradient(
             centre=(0.4, 0.2),
-            axis_ratio=0.9,
-            phi=10.0,
+            elliptical_comps=(0.0180010, 0.0494575),
             intensity=2.0,
             effective_radius=0.8,
             sersic_index=4.0,
@@ -1324,8 +1303,7 @@ class TestSersicMassRadialGradient:
 
         dev = ag.mp.EllipticalDevVaucouleurs(
             centre=(0.4, 0.2),
-            axis_ratio=0.9,
-            phi=10.0,
+            elliptical_comps=(0.0180010, 0.0494575),
             intensity=2.0,
             effective_radius=0.8,
             mass_to_light_ratio=3.0,
@@ -1346,8 +1324,7 @@ class TestSersicMassRadialGradient:
 
         sersic_grad = ag.mp.EllipticalSersicRadialGradient(
             centre=(-0.4, -0.2),
-            axis_ratio=0.8,
-            phi=110.0,
+            elliptical_comps=(-0.07142, -0.085116),
             intensity=5.0,
             effective_radius=0.2,
             sersic_index=2.0,
@@ -1360,8 +1337,7 @@ class TestSersicMassRadialGradient:
 
         sersic = ag.mp.EllipticalSersic(
             centre=(-0.4, -0.2),
-            axis_ratio=0.8,
-            phi=110.0,
+            elliptical_comps=(-0.07142, -0.085116),
             intensity=5.0,
             effective_radius=0.2,
             sersic_index=2.0,
@@ -1386,8 +1362,7 @@ class TestSersicMassRadialGradient:
 
         elliptical = ag.mp.EllipticalSersicRadialGradient(
             centre=(0.0, 0.0),
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
             sersic_index=4.0,

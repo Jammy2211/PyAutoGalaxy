@@ -468,7 +468,7 @@ class TestExternalShear:
 
         conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
 
-        shear = ag.mp.ExternalShear(magnitude=0.1, phi=45.0)
+        shear = ag.mp.ExternalShear(elliptical_comps=(0.1, 0.1))
 
         deflections_1 = shear.deflections_from_grid(grid=np.array([[1e-8, 0.0]]))
         deflections_0 = shear.deflections_from_grid(grid=np.array([[1e-9, 0.0]]))

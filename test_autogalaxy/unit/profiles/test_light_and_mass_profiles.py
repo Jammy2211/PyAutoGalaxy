@@ -9,8 +9,7 @@ class TestGaussian(object):
     def test__constructor_and_units(self):
         gaussian = ag.lmp.EllipticalGaussian(
             centre=(1.0, 2.0),
-            axis_ratio=0.5,
-            phi=45.0,
+            elliptical_comps=(0.333333, 0.0),
             intensity=1.0,
             sigma=4.0,
             mass_to_light_ratio=10.0,
@@ -22,10 +21,10 @@ class TestGaussian(object):
         assert gaussian.centre[0].unit == "arcsec"
         assert gaussian.centre[1].unit == "arcsec"
 
-        assert gaussian.axis_ratio == 0.5
+        assert gaussian.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(gaussian.axis_ratio, float)
 
-        assert gaussian.phi == 45.0
+        assert gaussian.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(gaussian.phi, float)
 
         assert gaussian.intensity == 1.0
@@ -43,13 +42,19 @@ class TestGaussian(object):
     def test__grid_calculations__same_as_gaussian(self):
 
         gaussian_lp = ag.lmp.EllipticalGaussian(
-            axis_ratio=0.7, phi=1.0, intensity=1.0, sigma=5.0
+            elliptical_comps=(0.1, 0.05), intensity=1.0, sigma=5.0
         )
         gaussian_mp = ag.lmp.EllipticalGaussian(
-            axis_ratio=0.7, phi=1.0, intensity=1.0, sigma=5.0, mass_to_light_ratio=2.0
+            elliptical_comps=(0.1, 0.05),
+            intensity=1.0,
+            sigma=5.0,
+            mass_to_light_ratio=2.0,
         )
         gaussian_lmp = ag.lmp.EllipticalGaussian(
-            axis_ratio=0.7, phi=1.0, intensity=1.0, sigma=5.0, mass_to_light_ratio=2.0
+            elliptical_comps=(0.1, 0.05),
+            intensity=1.0,
+            sigma=5.0,
+            mass_to_light_ratio=2.0,
         )
 
         assert (
@@ -71,8 +76,7 @@ class TestSersic:
     def test__constructor_and_units(self):
         sersic = ag.lmp.EllipticalSersic(
             centre=(1.0, 2.0),
-            axis_ratio=0.5,
-            phi=45.0,
+            elliptical_comps=(0.333333, 0.0),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=4.0,
@@ -85,10 +89,12 @@ class TestSersic:
         assert sersic.centre[0].unit == "arcsec"
         assert sersic.centre[1].unit == "arcsec"
 
-        assert sersic.axis_ratio == 0.5
+        assert sersic.elliptical_comps == (0.333333, 0.0)
+
+        assert sersic.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(sersic.axis_ratio, float)
 
-        assert sersic.phi == 45.0
+        assert sersic.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(sersic.phi, float)
 
         assert sersic.intensity == 1.0
@@ -107,7 +113,9 @@ class TestSersic:
         assert sersic.mass_to_light_ratio.unit == "angular / eps"
 
         assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
-        assert sersic.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
+        assert sersic.elliptical_effective_radius == pytest.approx(
+            0.6 / np.sqrt(0.5), 1.0e-4
+        )
 
         sersic = ag.lmp.SphericalSersic(
             centre=(1.0, 2.0),
@@ -149,23 +157,20 @@ class TestSersic:
 
     def test__grid_calculations__same_as_sersic(self):
         sersic_lp = ag.lmp.EllipticalSersic(
-            axis_ratio=0.7,
-            phi=1.0,
+            elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=2.0,
         )
         sersic_mp = ag.lmp.EllipticalSersic(
-            axis_ratio=0.7,
-            phi=1.0,
+            elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=2.0,
             mass_to_light_ratio=2.0,
         )
         sersic_lmp = ag.lmp.EllipticalSersic(
-            axis_ratio=0.7,
-            phi=1.0,
+            elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=2.0,
@@ -189,8 +194,7 @@ class TestSersic:
     def test__spherical_and_elliptical_identical(self):
         elliptical = ag.lmp.EllipticalSersic(
             centre=(0.0, 0.0),
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
             sersic_index=2.0,
@@ -223,8 +227,7 @@ class TestExponential:
     def test__constructor_and_units(self):
         exponential = ag.lmp.EllipticalExponential(
             centre=(1.0, 2.0),
-            axis_ratio=0.5,
-            phi=45.0,
+            elliptical_comps=(0.333333, 0.0),
             intensity=1.0,
             effective_radius=0.6,
             mass_to_light_ratio=10.0,
@@ -236,10 +239,10 @@ class TestExponential:
         assert exponential.centre[0].unit == "arcsec"
         assert exponential.centre[1].unit == "arcsec"
 
-        assert exponential.axis_ratio == 0.5
+        assert exponential.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(exponential.axis_ratio, float)
 
-        assert exponential.phi == 45.0
+        assert exponential.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(exponential.phi, float)
 
         assert exponential.intensity == 1.0
@@ -258,7 +261,9 @@ class TestExponential:
         assert exponential.mass_to_light_ratio.unit == "angular / eps"
 
         assert exponential.sersic_constant == pytest.approx(1.67838, 1e-3)
-        assert exponential.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
+        assert exponential.elliptical_effective_radius == pytest.approx(
+            0.6 / np.sqrt(0.5), 1.0e-4
+        )
 
         exponential = ag.lmp.SphericalExponential(
             centre=(1.0, 2.0),
@@ -299,18 +304,16 @@ class TestExponential:
 
     def test__grid_calculations__same_as_exponential(self):
         sersic_lp = ag.lmp.EllipticalExponential(
-            axis_ratio=0.7, phi=1.0, intensity=1.0, effective_radius=0.6
+            elliptical_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
         )
         sersic_mp = ag.lmp.EllipticalExponential(
-            axis_ratio=0.7,
-            phi=1.0,
+            elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             mass_to_light_ratio=2.0,
         )
         sersic_lmp = ag.lmp.EllipticalExponential(
-            axis_ratio=0.7,
-            phi=1.0,
+            elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             mass_to_light_ratio=2.0,
@@ -333,8 +336,7 @@ class TestExponential:
     def test__spherical_and_elliptical_identical(self):
         elliptical = ag.lmp.EllipticalExponential(
             centre=(0.0, 0.0),
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
         )
@@ -361,8 +363,7 @@ class TestDevVaucouleurs:
     def test__constructor_and_units(self):
         dev_vaucouleurs = ag.lmp.EllipticalDevVaucouleurs(
             centre=(1.0, 2.0),
-            axis_ratio=0.5,
-            phi=45.0,
+            elliptical_comps=(0.333333, 0.0),
             intensity=1.0,
             effective_radius=0.6,
             mass_to_light_ratio=10.0,
@@ -374,10 +375,10 @@ class TestDevVaucouleurs:
         assert dev_vaucouleurs.centre[0].unit == "arcsec"
         assert dev_vaucouleurs.centre[1].unit == "arcsec"
 
-        assert dev_vaucouleurs.axis_ratio == 0.5
+        assert dev_vaucouleurs.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(dev_vaucouleurs.axis_ratio, float)
 
-        assert dev_vaucouleurs.phi == 45.0
+        assert dev_vaucouleurs.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(dev_vaucouleurs.phi, float)
 
         assert dev_vaucouleurs.intensity == 1.0
@@ -398,7 +399,9 @@ class TestDevVaucouleurs:
         assert dev_vaucouleurs.mass_to_light_ratio.unit == "angular / eps"
 
         assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
-        assert dev_vaucouleurs.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
+        assert dev_vaucouleurs.elliptical_effective_radius == pytest.approx(
+            0.6 / np.sqrt(0.5), 1.0e-4
+        )
 
         dev_vaucouleurs = ag.lmp.SphericalDevVaucouleurs(
             centre=(1.0, 2.0),
@@ -441,18 +444,16 @@ class TestDevVaucouleurs:
 
     def test__grid_calculations__same_as_dev_vaucouleurs(self):
         sersic_lp = ag.lmp.EllipticalDevVaucouleurs(
-            axis_ratio=0.7, phi=1.0, intensity=1.0, effective_radius=0.6
+            elliptical_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
         )
         sersic_mp = ag.lmp.EllipticalDevVaucouleurs(
-            axis_ratio=0.7,
-            phi=1.0,
+            elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             mass_to_light_ratio=2.0,
         )
         sersic_lmp = ag.lmp.EllipticalDevVaucouleurs(
-            axis_ratio=0.7,
-            phi=1.0,
+            elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             mass_to_light_ratio=2.0,
@@ -475,8 +476,7 @@ class TestDevVaucouleurs:
     def test__spherical_and_elliptical_identical(self):
         elliptical = ag.lmp.EllipticalDevVaucouleurs(
             centre=(0.0, 0.0),
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
         )
@@ -503,8 +503,7 @@ class TestSersicRadialGradient:
     def test__constructor_and_units(self):
         sersic = ag.lmp.EllipticalSersicRadialGradient(
             centre=(1.0, 2.0),
-            axis_ratio=0.5,
-            phi=45.0,
+            elliptical_comps=(0.333333, 0.0),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=4.0,
@@ -518,10 +517,10 @@ class TestSersicRadialGradient:
         assert sersic.centre[0].unit == "arcsec"
         assert sersic.centre[1].unit == "arcsec"
 
-        assert sersic.axis_ratio == 0.5
+        assert sersic.axis_ratio == pytest.approx(0.5, 1.0e-4)
         assert isinstance(sersic.axis_ratio, float)
 
-        assert sersic.phi == 45.0
+        assert sersic.phi == pytest.approx(45.0, 1.0e-4)
         assert isinstance(sersic.phi, float)
 
         assert sersic.intensity == 1.0
@@ -543,7 +542,9 @@ class TestSersicRadialGradient:
         assert isinstance(sersic.mass_to_light_gradient, float)
 
         assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
-        assert sersic.elliptical_effective_radius == 0.6 / np.sqrt(0.5)
+        assert sersic.elliptical_effective_radius == pytest.approx(
+            0.6 / np.sqrt(0.5), 1.0e-4
+        )
 
         sersic = ag.lmp.SphericalSersicRadialGradient(
             centre=(1.0, 2.0),
@@ -589,15 +590,13 @@ class TestSersicRadialGradient:
 
     def test__grid_calculations__same_as_sersic_radial_gradient(self):
         sersic_lp = ag.lmp.EllipticalSersic(
-            axis_ratio=0.7,
-            phi=1.0,
+            elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=2.0,
         )
         sersic_mp = ag.lmp.EllipticalSersicRadialGradient(
-            axis_ratio=0.7,
-            phi=1.0,
+            elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=2.0,
@@ -605,8 +604,7 @@ class TestSersicRadialGradient:
             mass_to_light_gradient=0.5,
         )
         sersic_lmp = ag.lmp.EllipticalSersicRadialGradient(
-            axis_ratio=0.7,
-            phi=1.0,
+            elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=2.0,
@@ -631,8 +629,7 @@ class TestSersicRadialGradient:
     def test__spherical_and_elliptical_identical(self):
         elliptical = ag.lmp.EllipticalSersicRadialGradient(
             centre=(0.0, 0.0),
-            axis_ratio=1.0,
-            phi=0.0,
+            elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
         )
