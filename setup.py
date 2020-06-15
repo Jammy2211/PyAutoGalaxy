@@ -44,7 +44,7 @@ setup(
     description="Astro modelling",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/jammy2211/PyAutoAstro",
+    url="https://github.com/jammy2211/PyAutoGalaxy",
     author="James Nightingale and Richard Hayes",
     author_email="james.w.nightingale@durham.ac.uk",
     include_package_data=True,
