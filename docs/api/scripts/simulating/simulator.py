@@ -59,7 +59,7 @@ galaxy_galaxy = al.Galaxy(
     mass=al.mp.EllipticalIsothermal(
         centre=(0.0, 0.0), einstein_radius=1.6, elliptical_comps=(0.17647, 0.0)
     ),
-    shear=al.mp.ExternalShear(magnitude=0.05, phi=90.0),
+    shear=al.mp.ExternalShear(elliptical_comps=(0.0, 0.05)),
 )
 
 source_galaxy = al.Galaxy(

@@ -159,9 +159,7 @@ class EllipticalProfile(SphericalProfile):
         phi: float = 0.0,
     ):
 
-        elliptical_comps = convert.elliptical_comps_from_axis_ratio_and_phi(
-            axis_ratio=axis_ratio, phi=phi
-        )
+        elliptical_comps = convert.elliptical_comps_from(axis_ratio=axis_ratio, phi=phi)
         return cls(centre=centre, elliptical_comps=elliptical_comps)
 
     @property

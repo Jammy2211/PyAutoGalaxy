@@ -15,8 +15,7 @@ class PipelineSetup:
         regularization=None,
         light_centre=None,
         align_bulge_disk_centre=False,
-        align_bulge_disk_phi=False,
-        align_bulge_disk_axis_ratio=False,
+        align_bulge_disk_elliptical_comps=False,
         disk_as_sersic=False,
         number_of_gaussians=None,
     ):
@@ -104,8 +103,7 @@ class PipelineSetup:
         self.light_centre = light_centre
 
         self.align_bulge_disk_centre = align_bulge_disk_centre
-        self.align_bulge_disk_phi = align_bulge_disk_phi
-        self.align_bulge_disk_axis_ratio = align_bulge_disk_axis_ratio
+        self.align_bulge_disk_elliptical_comps = align_bulge_disk_elliptical_comps
         self.disk_as_sersic = disk_as_sersic
         self.number_of_gaussians = number_of_gaussians
 
@@ -279,30 +277,18 @@ class PipelineSetup:
             )
 
     @property
-    def align_bulge_disk_axis_ratio_tag(self):
-        """Tag if the bulge and disk of a bulge-disk system are aligned or not, to customize pipeline 
+    def align_bulge_disk_elliptical_comps_tag(self):
+        """Tag if the ellipticity of the bulge and disk of a bulge-disk system are aligned or not, to customize pipeline
         output paths based on the bulge-disk model. 
         
         This is used to generate an overall align-bulge disk tag in *align_bulge_disk_tag*.
         """
-        if not self.align_bulge_disk_axis_ratio:
+        if not self.align_bulge_disk_elliptical_comps:
             return ""
-        elif self.align_bulge_disk_axis_ratio:
+        elif self.align_bulge_disk_elliptical_comps:
             return "_" + conf.instance.tag.get(
-                "pipeline", "align_bulge_disk_axis_ratio", str
+                "pipeline", "align_bulge_disk_elliptical_comps", str
             )
-
-    @property
-    def align_bulge_disk_phi_tag(self):
-        """Tag if the bulge and disk of a bulge-disk system are aligned or not, to customize 
-        pipeline output paths based on the bulge-disk model. 
-        
-        This is used to generate an overall align-bulge disk tag in *align_bulge_disk_tag*.
-        """
-        if not self.align_bulge_disk_phi:
-            return ""
-        elif self.align_bulge_disk_phi:
-            return "_" + conf.instance.tag.get("pipeline", "align_bulge_disk_phi", str)
 
     @property
     def align_bulge_disk_tag(self):
@@ -312,11 +298,7 @@ class PipelineSetup:
         """
 
         if not any(
-            [
-                self.align_bulge_disk_centre,
-                self.align_bulge_disk_axis_ratio,
-                self.align_bulge_disk_phi,
-            ]
+            [self.align_bulge_disk_centre, self.align_bulge_disk_elliptical_comps]
         ):
             return ""
 
@@ -324,8 +306,7 @@ class PipelineSetup:
             "__"
             + conf.instance.tag.get("pipeline", "align_bulge_disk", str)
             + self.align_bulge_disk_centre_tag
-            + self.align_bulge_disk_axis_ratio_tag
-            + self.align_bulge_disk_phi_tag
+            + self.align_bulge_disk_elliptical_comps_tag
         )
 
     @property

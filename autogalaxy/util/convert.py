@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def elliptical_comps_from_magnitude_phi(magnitude, phi):
+def elliptical_comps_shear_from(magnitude, phi):
     """
     :param phi: angel
     :param magnitude: ellipticity
@@ -26,7 +26,7 @@ def magnitude_and_phi_from_elliptical_comps(elliptical_comps):
         return magnitude, phi
 
 
-def elliptical_comps_from_axis_ratio_and_phi(axis_ratio, phi):
+def elliptical_comps_from(axis_ratio, phi):
     """
     Convert an input axis ratio (0.0 > q > 1.0) and rotation position angle phi defined counter clockwise from the
     positive x-axis(0.0 > phi > 180) to the (y,x) ellipitical components e1 and e2.

@@ -116,46 +116,28 @@ def test__align_bulge_disk_tags():
     light = ag.PipelineSetup(align_bulge_disk_centre=True)
     assert light.align_bulge_disk_centre_tag == "_centre"
 
-    light = ag.PipelineSetup(align_bulge_disk_axis_ratio=False)
-    assert light.align_bulge_disk_axis_ratio_tag == ""
-    light = ag.PipelineSetup(align_bulge_disk_axis_ratio=True)
-    assert light.align_bulge_disk_axis_ratio_tag == "_axis_ratio"
-
-    light = ag.PipelineSetup(align_bulge_disk_phi=False)
-    assert light.align_bulge_disk_phi_tag == ""
-    light = ag.PipelineSetup(align_bulge_disk_phi=True)
-    assert light.align_bulge_disk_phi_tag == "_phi"
+    light = ag.PipelineSetup(align_bulge_disk_elliptical_comps=False)
+    assert light.align_bulge_disk_elliptical_comps_tag == ""
+    light = ag.PipelineSetup(align_bulge_disk_elliptical_comps=True)
+    assert light.align_bulge_disk_elliptical_comps_tag == "_ell"
 
 
 def test__bulge_disk_tag():
     light = ag.PipelineSetup(
-        align_bulge_disk_centre=False,
-        align_bulge_disk_axis_ratio=False,
-        align_bulge_disk_phi=False,
+        align_bulge_disk_centre=False, align_bulge_disk_elliptical_comps=False
     )
     assert light.align_bulge_disk_tag == ""
 
     light = ag.PipelineSetup(
-        align_bulge_disk_centre=True,
-        align_bulge_disk_axis_ratio=False,
-        align_bulge_disk_phi=False,
+        align_bulge_disk_centre=True, align_bulge_disk_elliptical_comps=False
     )
     print(light.align_bulge_disk_tag)
     assert light.align_bulge_disk_tag == "__align_bulge_disk_centre"
 
     light = ag.PipelineSetup(
-        align_bulge_disk_centre=True,
-        align_bulge_disk_axis_ratio=False,
-        align_bulge_disk_phi=True,
+        align_bulge_disk_centre=True, align_bulge_disk_elliptical_comps=True
     )
-    assert light.align_bulge_disk_tag == "__align_bulge_disk_centre_phi"
-
-    light = ag.PipelineSetup(
-        align_bulge_disk_centre=True,
-        align_bulge_disk_axis_ratio=True,
-        align_bulge_disk_phi=True,
-    )
-    assert light.align_bulge_disk_tag == "__align_bulge_disk_centre_axis_ratio_phi"
+    assert light.align_bulge_disk_tag == "__align_bulge_disk_centre_ell"
 
 
 def test__disk_as_sersic_tag():
