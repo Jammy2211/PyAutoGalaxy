@@ -21,7 +21,7 @@ def plane_image_of_galaxies_from(shape, grid, galaxies, buffer=1.0e-2):
         shape_2d=shape, pixel_scales=pixel_scales, sub_size=1, origin=origin
     )
 
-    image = sum(map(lambda g: g.profile_image_from_grid(grid=uniform_grid), galaxies))
+    image = sum(map(lambda g: g.image_from_grid(grid=uniform_grid), galaxies))
 
     return pl.PlaneImage(array=image, grid=grid)
 

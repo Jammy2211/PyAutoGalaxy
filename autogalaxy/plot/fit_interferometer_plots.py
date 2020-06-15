@@ -60,7 +60,7 @@ def subplot_fit_real_space(fit, include=None, sub_plotter=None):
 
     if fit.inversion is None:
 
-        plane_plots.profile_image(
+        plane_plots.image(
             plane=fit.plane,
             grid=fit.masked_interferometer.grid,
             positions=include.positions_from_fit(fit=fit),

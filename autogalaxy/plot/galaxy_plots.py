@@ -5,7 +5,7 @@ from autogalaxy.plot import lensing_plotters, light_profile_plots, mass_profile_
 
 @lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def profile_image(galaxy, grid, positions=None, include=None, plotter=None):
+def image(galaxy, grid, positions=None, include=None, plotter=None):
     """Plot the image (e.g. the datas) of a galaxy, on a grid of (y,x) coordinates.
 
     Set *autogalaxy.datas.arrays.plotters.plotters* for a description of all innput parameters not described below.
@@ -18,7 +18,7 @@ def profile_image(galaxy, grid, positions=None, include=None, plotter=None):
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     plotter.plot_array(
-        array=galaxy.profile_image_from_grid(grid=grid),
+        array=galaxy.image_from_grid(grid=grid),
         mask=include.mask_from_grid(grid=grid),
         positions=positions,
         critical_curves=include.critical_curves_from_obj(obj=galaxy),
@@ -165,7 +165,7 @@ def magnification(galaxy, grid, positions=None, include=None, plotter=None):
 
 @lensing_plotters.set_include_and_sub_plotter
 @plotters.set_labels
-def profile_image_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
+def image_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
 
     number_subplots = len(galaxy.light_profiles)
 
@@ -175,7 +175,7 @@ def profile_image_subplot(galaxy, grid, positions=None, include=None, sub_plotte
 
         sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
-        light_profile_plots.profile_image(
+        light_profile_plots.image(
             light_profile=light_profile,
             grid=grid,
             positions=positions,

@@ -23,15 +23,15 @@ class TestGaussian:
 
         gaussian = ag.lp.EllipticalGaussian(centre=(0.0, 0.0))
 
-        image_1 = gaussian.profile_image_from_grid(grid=grid_10)
-        image_0 = gaussian.profile_image_from_grid(grid=grid_zero)
+        image_1 = gaussian.image_from_grid(grid=grid_10)
+        image_0 = gaussian.image_from_grid(grid=grid_zero)
 
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
         gaussian = ag.lp.SphericalGaussian(centre=(0.0, 0.0))
 
-        image_1 = gaussian.profile_image_from_grid(grid=grid_10)
-        image_0 = gaussian.profile_image_from_grid(grid=grid_zero)
+        image_1 = gaussian.image_from_grid(grid=grid_10)
+        image_0 = gaussian.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
 
@@ -42,14 +42,14 @@ class TestSersic:
 
         sersic = ag.lp.EllipticalSersic(centre=(0.0, 0.0))
 
-        image_1 = sersic.profile_image_from_grid(grid=grid_10)
-        image_0 = sersic.profile_image_from_grid(grid=grid_zero)
+        image_1 = sersic.image_from_grid(grid=grid_10)
+        image_0 = sersic.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
         sersic = ag.lp.SphericalSersic(centre=(0.0, 0.0))
 
-        image_1 = sersic.profile_image_from_grid(grid=grid_10)
-        image_0 = sersic.profile_image_from_grid(grid=grid_zero)
+        image_1 = sersic.image_from_grid(grid=grid_10)
+        image_0 = sersic.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
 
@@ -60,14 +60,14 @@ class TestExponential:
 
         exponential = ag.lp.EllipticalExponential(centre=(0.0, 0.0))
 
-        image_1 = exponential.profile_image_from_grid(grid=grid_10)
-        image_0 = exponential.profile_image_from_grid(grid=grid_zero)
+        image_1 = exponential.image_from_grid(grid=grid_10)
+        image_0 = exponential.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
         exponential = ag.lp.SphericalExponential(centre=(0.0, 0.0))
 
-        image_1 = exponential.profile_image_from_grid(grid=grid_10)
-        image_0 = exponential.profile_image_from_grid(grid=grid_zero)
+        image_1 = exponential.image_from_grid(grid=grid_10)
+        image_0 = exponential.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
 
@@ -78,14 +78,14 @@ class TestDevVaucouleurs:
 
         dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs(centre=(0.0, 0.0))
 
-        image_1 = dev_vaucouleurs.profile_image_from_grid(grid=grid_10)
-        image_0 = dev_vaucouleurs.profile_image_from_grid(grid=grid_zero)
+        image_1 = dev_vaucouleurs.image_from_grid(grid=grid_10)
+        image_0 = dev_vaucouleurs.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
         dev_vaucouleurs = ag.lp.SphericalDevVaucouleurs(centre=(0.0, 0.0))
 
-        image_1 = dev_vaucouleurs.profile_image_from_grid(grid=grid_10)
-        image_0 = dev_vaucouleurs.profile_image_from_grid(grid=grid_zero)
+        image_1 = dev_vaucouleurs.image_from_grid(grid=grid_10)
+        image_0 = dev_vaucouleurs.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
 
@@ -96,14 +96,14 @@ class TestCoreSersic:
 
         core_sersic = ag.lp.EllipticalCoreSersic(centre=(0.0, 0.0))
 
-        image_1 = core_sersic.profile_image_from_grid(grid=grid_10)
-        image_0 = core_sersic.profile_image_from_grid(grid=grid_zero)
+        image_1 = core_sersic.image_from_grid(grid=grid_10)
+        image_0 = core_sersic.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
         core_sersic = ag.lp.SphericalCoreSersic(centre=(0.0, 0.0))
 
-        image_1 = core_sersic.profile_image_from_grid(grid=grid_10)
-        image_0 = core_sersic.profile_image_from_grid(grid=grid_zero)
+        image_1 = core_sersic.image_from_grid(grid=grid_10)
+        image_0 = core_sersic.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
 

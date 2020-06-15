@@ -27,7 +27,7 @@ def test__all_quantities_are_output(
     lp_0, sub_grid_7x7, positions_7x7, include_all, profile_plotter_path, plot_patch
 ):
 
-    ag.plot.LightProfile.profile_image(
+    ag.plot.LightProfile.image(
         light_profile=lp_0,
         grid=sub_grid_7x7,
         positions=positions_7x7,
@@ -35,4 +35,4 @@ def test__all_quantities_are_output(
         plotter=aplt.Plotter(output=aplt.Output(profile_plotter_path, format="png")),
     )
 
-    assert profile_plotter_path + "profile_image.png" in plot_patch.paths
+    assert profile_plotter_path + "image.png" in plot_patch.paths

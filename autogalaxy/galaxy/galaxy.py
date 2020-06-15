@@ -398,7 +398,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return self.__class__(**new_dict)
 
     @grids.grid_like_to_structure
-    def profile_image_from_grid(self, grid):
+    def image_from_grid(self, grid):
         """Calculate the summed image of all of the galaxy's light profiles using a grid of Cartesian (y,x) \
         coordinates.
         
@@ -413,39 +413,34 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         """
         if self.has_light_profile:
-            return sum(
-                map(lambda p: p.profile_image_from_grid(grid=grid), self.light_profiles)
-            )
+            return sum(map(lambda p: p.image_from_grid(grid=grid), self.light_profiles))
         return np.zeros((grid.shape[0],))
 
-    def blurred_profile_image_from_grid_and_psf(self, grid, psf, blurring_grid=None):
+    def blurred_image_from_grid_and_psf(self, grid, psf, blurring_grid=None):
 
-        profile_image = self.profile_image_from_grid(grid=grid)
+        image = self.image_from_grid(grid=grid)
 
-        blurring_image = self.profile_image_from_grid(grid=blurring_grid)
+        blurring_image = self.image_from_grid(grid=blurring_grid)
 
         return psf.convolved_array_from_array_2d_and_mask(
-            array_2d=profile_image.in_2d_binned + blurring_image.in_2d_binned,
-            mask=grid.mask,
+            array_2d=image.in_2d_binned + blurring_image.in_2d_binned, mask=grid.mask
         )
 
-    def blurred_profile_image_from_grid_and_convolver(
-        self, grid, convolver, blurring_grid
-    ):
+    def blurred_image_from_grid_and_convolver(self, grid, convolver, blurring_grid):
 
-        profile_image = self.profile_image_from_grid(grid=grid)
+        image = self.image_from_grid(grid=grid)
 
-        blurring_image = self.profile_image_from_grid(grid=blurring_grid)
+        blurring_image = self.image_from_grid(grid=blurring_grid)
 
         return convolver.convolved_image_from_image_and_blurring_image(
-            image=profile_image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
+            image=image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
         )
 
     def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
 
-        profile_image = self.profile_image_from_grid(grid=grid)
+        image = self.image_from_grid(grid=grid)
 
-        return transformer.visibilities_from_image(image=profile_image.in_1d_binned)
+        return transformer.visibilities_from_image(image=image.in_1d_binned)
 
     def luminosity_within_circle_in_units(
         self,

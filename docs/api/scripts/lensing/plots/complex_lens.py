@@ -73,13 +73,13 @@ grid = al.Grid.uniform(shape_2d=(150, 150), pixel_scales=0.05)
 
 # The tracer and grid are used to calculate the galaxy system's convergence, potential,
 # deflection angles, image-plane image and source-plane image (see figure ?).
-aplt.Tracer.profile_image(
+aplt.Tracer.image(
     tracer=tracer, grid=grid, include=aplt.Include(critical_curves=True, caustics=True)
 )
 
 figures_path = "{}/../figures/".format(os.path.dirname(os.path.realpath(__file__)))
 
-aplt.Tracer.profile_image(
+aplt.Tracer.image(
     tracer=tracer,
     grid=grid,
     include=aplt.Include(critical_curves=True, caustics=True),

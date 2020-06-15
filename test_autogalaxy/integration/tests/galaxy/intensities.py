@@ -28,7 +28,7 @@ def galaxy_fit_phase():
         ),
     )
 
-    image = galaxy.profile_image_from_grid(galaxies=[galaxy], grid=grid)
+    image = galaxy.image_from_grid(galaxies=[galaxy], grid=grid)
 
     noise_map = ag.Array.manual_2d(
         array=np.ones(image.shape), pixel_scales=pixel_scales

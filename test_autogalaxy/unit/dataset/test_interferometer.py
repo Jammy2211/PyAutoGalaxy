@@ -137,7 +137,7 @@ class TestSimulatorInterferometer:
         interferometer = simulator.from_plane_and_grid(plane=plane, grid=grid)
 
         interferometer_via_image = simulator.from_image(
-            image=plane.profile_image_from_grid(grid=grid)
+            image=plane.image_from_grid(grid=grid)
         )
 
         assert (
@@ -187,7 +187,7 @@ class TestSimulatorInterferometer:
         plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
         interferometer_via_image = simulator.from_image(
-            image=plane.profile_image_from_grid(grid=grid)
+            image=plane.image_from_grid(grid=grid)
         )
 
         assert interferometer.visibilities == pytest.approx(

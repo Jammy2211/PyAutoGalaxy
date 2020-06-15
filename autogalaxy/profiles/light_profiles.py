@@ -13,7 +13,7 @@ import typing
 class LightProfile:
     """Mixin class that implements functions common to all light profiles"""
 
-    def profile_image_from_grid_radii(self, grid_radii):
+    def image_from_grid_radii(self, grid_radii):
         """
         Abstract method for obtaining intensity at on a grid of radii.
 
@@ -25,7 +25,7 @@ class LightProfile:
         raise NotImplementedError("intensity_at_radius should be overridden")
 
     # noinspection PyMethodMayBeStatic
-    def profile_image_from_grid(self, grid, grid_radial_minimum=None):
+    def image_from_grid(self, grid, grid_radial_minimum=None):
         """
         Abstract method for obtaining intensity at a grid of Cartesian (y,x) coordinates.
 
@@ -94,7 +94,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
     def light_profile_centres(self):
         return grids.GridCoordinates([self.centre])
 
-    def blurred_profile_image_from_grid_and_psf(self, grid, psf, blurring_grid):
+    def blurred_image_from_grid_and_psf(self, grid, psf, blurring_grid):
         """Evaluate the light profile image on an input *Grid* of coordinates and then convolve it with a PSF.
 
         The *Grid* may be masked, in which case values outside but near the edge of the mask will convolve light into
@@ -114,18 +114,15 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
             The (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
 
         """
-        profile_image = self.profile_image_from_grid(grid=grid)
+        image = self.image_from_grid(grid=grid)
 
-        blurring_image = self.profile_image_from_grid(grid=blurring_grid)
+        blurring_image = self.image_from_grid(grid=blurring_grid)
 
         return psf.convolved_array_from_array_2d_and_mask(
-            array_2d=profile_image.in_2d_binned + blurring_image.in_2d_binned,
-            mask=grid.mask,
+            array_2d=image.in_2d_binned + blurring_image.in_2d_binned, mask=grid.mask
         )
 
-    def blurred_profile_image_from_grid_and_convolver(
-        self, grid, convolver, blurring_grid
-    ):
+    def blurred_image_from_grid_and_convolver(self, grid, convolver, blurring_grid):
         """Evaluate the light profile image on an input *Grid* of coordinates and then convolve it with a PSF using a
         *Convolver* object.
 
@@ -146,19 +143,19 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
             The (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
 
         """
-        profile_image = self.profile_image_from_grid(grid=grid)
+        image = self.image_from_grid(grid=grid)
 
-        blurring_image = self.profile_image_from_grid(grid=blurring_grid)
+        blurring_image = self.image_from_grid(grid=blurring_grid)
 
         return convolver.convolved_image_from_image_and_blurring_image(
-            image=profile_image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
+            image=image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
         )
 
     def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
 
-        profile_image = self.profile_image_from_grid(grid=grid)
+        image = self.image_from_grid(grid=grid)
 
-        return transformer.visibilities_from_image(image=profile_image.in_1d_binned)
+        return transformer.visibilities_from_image(image=image.in_1d_binned)
 
     def luminosity_within_circle_in_units(
         self,
@@ -212,7 +209,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         """Routine to integrate the luminosity of an elliptical light profile.
 
         The axis ratio is set to 1.0 for computing the luminosity within a circle"""
-        return 2 * np.pi * x * self.profile_image_from_grid_radii(x)
+        return 2 * np.pi * x * self.image_from_grid_radii(x)
 
     def summarize_in_units(
         self,
@@ -289,7 +286,7 @@ class EllipticalGaussian(EllipticalLightProfile):
         )
         self.sigma = sigma
 
-    def profile_image_from_grid_radii(self, grid_radii):
+    def image_from_grid_radii(self, grid_radii):
         """Calculate the intensity of the Gaussian light profile on a grid of radial coordinates.
 
         Parameters
@@ -305,7 +302,7 @@ class EllipticalGaussian(EllipticalLightProfile):
     @grids.grid_like_to_structure
     @grids.transform
     @grids.relocate_to_radial_minimum
-    def profile_image_from_grid(self, grid, grid_radial_minimum=None):
+    def image_from_grid(self, grid, grid_radial_minimum=None):
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 
@@ -317,7 +314,7 @@ class EllipticalGaussian(EllipticalLightProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
 
-        return self.profile_image_from_grid_radii(self.grid_to_elliptical_radii(grid))
+        return self.image_from_grid_radii(self.grid_to_elliptical_radii(grid))
 
 
 class SphericalGaussian(EllipticalGaussian):
@@ -463,7 +460,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
             sersic_index=sersic_index,
         )
 
-    def profile_image_from_grid_radii(self, grid_radii):
+    def image_from_grid_radii(self, grid_radii):
         """
         Calculate the intensity of the Sersic light profile on a grid of radial coordinates.
 
@@ -492,7 +489,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
     @grids.grid_like_to_structure
     @grids.transform
     @grids.relocate_to_radial_minimum
-    def profile_image_from_grid(self, grid, grid_radial_minimum=None):
+    def image_from_grid(self, grid, grid_radial_minimum=None):
         """ Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 
         If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
@@ -502,7 +499,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
         grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
         """
-        return self.profile_image_from_grid_radii(self.grid_to_eccentric_radii(grid))
+        return self.image_from_grid_radii(self.grid_to_eccentric_radii(grid))
 
 
 class SphericalSersic(EllipticalSersic):
@@ -744,7 +741,7 @@ class EllipticalCoreSersic(EllipticalSersic):
             )
         )
 
-    def profile_image_from_grid_radii(self, grid_radii):
+    def image_from_grid_radii(self, grid_radii):
         """Calculate the intensity of the cored-Sersic light profile on a grid of radial coordinates.
 
         Parameters

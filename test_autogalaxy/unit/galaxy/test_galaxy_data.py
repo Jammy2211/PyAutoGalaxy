@@ -189,7 +189,7 @@ class TestGalaxyFitData:
 
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.SphericalSersic(intensity=1.0))
 
-        image_gal = galaxy.profile_image_from_grid(grid=galaxy_fit_data.grid)
+        image_gal = galaxy.image_from_grid(grid=galaxy_fit_data.grid)
 
         image_gd = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
 

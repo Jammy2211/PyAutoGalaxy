@@ -25,11 +25,11 @@ class Result(dataset.Result):
 
     @property
     def unmasked_model_image(self):
-        return self.max_log_likelihood_fit.unmasked_blurred_profile_image
+        return self.max_log_likelihood_fit.unmasked_blurred_image
 
     @property
     def unmasked_model_image_of_galaxies(self):
-        return self.max_log_likelihood_fit.unmasked_blurred_profile_image_of_galaxies
+        return self.max_log_likelihood_fit.unmasked_blurred_image_of_galaxies
 
     def image_for_galaxy(self, galaxy: g.Galaxy) -> np.ndarray:
         """

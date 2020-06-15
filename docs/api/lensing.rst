@@ -60,7 +60,7 @@ of the light profile:
 
 .. code-block:: bash
 
-    image = sersic_light_profile.profile_image_from_grid(grid=grid)
+    image = sersic_light_profile.image_from_grid(grid=grid)
 
 The plot module provides convenience methods for plotting properties of objects, like the image of a *LightProfile*:
 
@@ -139,9 +139,9 @@ galaxy system.
         galaxies=[galaxy_galaxy, source_galaxy], cosmology=cosmo.LambdaCDM
     )
 
-    image = tracer.profile_image_from_grid(grid=grid)
+    image = tracer.image_from_grid(grid=grid)
 
-    aplt.Tracer.profile_image(tracer=tracer, grid=grid)
+    aplt.Tracer.image(tracer=tracer, grid=grid)
 
 When computing the image from the tracer above, the tracer performs all ray-tracing for the given strong galaxy system.
 This includes using the galaxy galaxy's mass profile to deflect the light-rays that are traced to the source galaxy.
@@ -207,7 +207,7 @@ rings!
 
     tracer = al.Tracer.from_galaxies(galaxies=[galaxy_galaxy_0, galaxy_galaxy_1, source_galaxy])
 
-    aplt.Tracer.profile_image(tracer=tracer, grid=grid)
+    aplt.Tracer.image(tracer=tracer, grid=grid)
 
 This is what the galaxy looks like:
 

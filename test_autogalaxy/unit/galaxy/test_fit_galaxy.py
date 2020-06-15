@@ -177,7 +177,7 @@ class TestCompareToManual:
 
         assert fit.model_galaxies == [galaxy]
 
-        model_data = galaxy.profile_image_from_grid(grid=masked_galaxy_dataset.grid)
+        model_data = galaxy.image_from_grid(grid=masked_galaxy_dataset.grid)
 
         residual_map = ag.util.fit.residual_map_from(
             data=masked_galaxy_dataset.image, model_data=model_data.in_1d_binned

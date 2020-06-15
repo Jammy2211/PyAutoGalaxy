@@ -133,7 +133,7 @@ class SimulatorImaging(imaging.SimulatorImaging):
             A seed for random noise_maps generation
         """
 
-        image = plane.padded_profile_image_from_grid_and_psf_shape(
+        image = plane.padded_image_from_grid_and_psf_shape(
             grid=grid, psf_shape_2d=self.psf.shape_2d
         )
 

@@ -79,7 +79,7 @@ source_galaxy = al.Galaxy(
 tracer = al.Tracer.from_galaxies(galaxies=[galaxy_galaxy, source_galaxy])
 
 """Lets look at the tracer's image - this is the image we'll be simulating."""
-aplt.Tracer.profile_image(tracer=tracer, grid=grid)
+aplt.Tracer.image(tracer=tracer, grid=grid)
 
 """
 We can now pass this simulator a tracer, which creates the ray-traced image plotted above and simulates it as an

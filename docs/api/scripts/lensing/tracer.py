@@ -40,4 +40,4 @@ plotter = aplt.Plotter(
     output=aplt.Output(path=plot_path, filename="tracer_image", format="png"),
 )
 
-aplt.Tracer.profile_image(tracer=tracer, grid=grid, plotter=plotter)
+aplt.Tracer.image(tracer=tracer, grid=grid, plotter=plotter)

@@ -5,7 +5,7 @@ from autogalaxy.plot import lensing_plotters
 
 @lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def profile_image(light_profile, grid, positions=None, include=None, plotter=None):
+def image(light_profile, grid, positions=None, include=None, plotter=None):
     """Plot the image of a light profile, on a grid of (y,x) coordinates.
 
     Set *autogalaxy.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
@@ -18,7 +18,7 @@ def profile_image(light_profile, grid, positions=None, include=None, plotter=Non
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
     plotter.plot_array(
-        array=light_profile.profile_image_from_grid(grid=grid),
+        array=light_profile.image_from_grid(grid=grid),
         mask=include.mask_from_grid(grid=grid),
         positions=positions,
         light_profile_centres=include.light_profile_centres_from_obj(obj=light_profile),

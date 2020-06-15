@@ -62,9 +62,7 @@ plotter = aplt.Plotter(
     output=aplt.Output(path=plot_path, filename="image_pre_ft", format="png"),
 )
 
-aplt.Tracer.profile_image(
-    tracer=tracer, grid=masked_interferometer.grid, plotter=plotter
-)
+aplt.Tracer.image(tracer=tracer, grid=masked_interferometer.grid, plotter=plotter)
 
 fit = al.FitInterferometer(masked_interferometer=masked_interferometer, tracer=tracer)
 

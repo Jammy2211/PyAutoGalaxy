@@ -37,7 +37,7 @@ class TestPlaneImageFromGrid:
             mask=mask,
         )
 
-        plane_image_galaxy = galaxy.profile_image_from_grid(grid)
+        plane_image_galaxy = galaxy.image_from_grid(grid)
 
         assert (plane_image.array == plane_image_galaxy).all()
 
@@ -82,7 +82,7 @@ class TestPlaneImageFromGrid:
             mask=mask,
         )
 
-        plane_image_galaxy = galaxy.profile_image_from_grid(grid=grid)
+        plane_image_galaxy = galaxy.image_from_grid(grid=grid)
 
         assert (plane_image.array == plane_image_galaxy).all()
 
@@ -113,7 +113,7 @@ class TestPlaneImageFromGrid:
             mask=mask,
         )
 
-        plane_image_galaxy = galaxy.profile_image_from_grid(grid=grid)
+        plane_image_galaxy = galaxy.image_from_grid(grid=grid)
 
         assert (plane_image.array == plane_image_galaxy).all()
 
@@ -144,7 +144,7 @@ class TestPlaneImageFromGrid:
             mask=mask,
         )
 
-        plane_image_galaxy = galaxy.profile_image_from_grid(grid=grid)
+        plane_image_galaxy = galaxy.image_from_grid(grid=grid)
 
         assert (plane_image.array == plane_image_galaxy).all()
 
@@ -178,7 +178,7 @@ class TestPlaneImageFromGrid:
             mask=mask,
         )
 
-        plane_image_galaxy = galaxy.profile_image_from_grid(grid=grid)
+        plane_image_galaxy = galaxy.image_from_grid(grid=grid)
 
         assert (plane_image.array == plane_image_galaxy).all()
 

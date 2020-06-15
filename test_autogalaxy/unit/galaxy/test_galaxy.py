@@ -147,107 +147,80 @@ class TestUnits:
 
 class TestLightProfiles:
     class TestProfileImage:
-        def test__no_light_profiles__profile_image_returned_as_0s_of_shape_grid(
+        def test__no_light_profiles__image_returned_as_0s_of_shape_grid(
             self, sub_grid_7x7
         ):
             galaxy = ag.Galaxy(redshift=0.5)
 
-            profile_image = galaxy.profile_image_from_grid(grid=sub_grid_7x7)
+            image = galaxy.image_from_grid(grid=sub_grid_7x7)
 
-            assert (profile_image == np.zeros(shape=sub_grid_7x7.sub_shape_1d)).all()
+            assert (image == np.zeros(shape=sub_grid_7x7.sub_shape_1d)).all()
 
-        def test__using_no_light_profiles__check_reshaping_decorator_of_returned_profile_image(
+        def test__using_no_light_profiles__check_reshaping_decorator_of_returned_image(
             self, sub_grid_7x7
         ):
             galaxy = ag.Galaxy(redshift=0.5)
 
-            profile_image = galaxy.profile_image_from_grid(grid=sub_grid_7x7)
+            image = galaxy.image_from_grid(grid=sub_grid_7x7)
 
-            assert (profile_image.in_2d_binned == np.zeros(shape=(7, 7))).all()
+            assert (image.in_2d_binned == np.zeros(shape=(7, 7))).all()
 
-            profile_image = galaxy.profile_image_from_grid(grid=sub_grid_7x7)
+            image = galaxy.image_from_grid(grid=sub_grid_7x7)
 
-            assert (profile_image == np.zeros(shape=sub_grid_7x7.sub_shape_1d)).all()
+            assert (image == np.zeros(shape=sub_grid_7x7.sub_shape_1d)).all()
 
-            profile_image = galaxy.profile_image_from_grid(grid=sub_grid_7x7)
+            image = galaxy.image_from_grid(grid=sub_grid_7x7)
 
             assert (
-                profile_image.in_1d_binned
-                == np.zeros(shape=sub_grid_7x7.sub_shape_1d // 4)
+                image.in_1d_binned == np.zeros(shape=sub_grid_7x7.sub_shape_1d // 4)
             ).all()
 
-        def test__galaxies_with_x1_and_x2_light_profiles__profile_image_is_same_individual_profiles(
+        def test__galaxies_with_x1_and_x2_light_profiles__image_is_same_individual_profiles(
             self, lp_0, gal_x1_lp, lp_1, gal_x2_lp
         ):
-            lp_profile_image = lp_0.profile_image_from_grid(
-                grid=np.array([[1.05, -0.55]])
-            )
+            lp_image = lp_0.image_from_grid(grid=np.array([[1.05, -0.55]]))
 
-            gal_lp_profile_image = gal_x1_lp.profile_image_from_grid(
-                grid=np.array([[1.05, -0.55]])
-            )
+            gal_lp_image = gal_x1_lp.image_from_grid(grid=np.array([[1.05, -0.55]]))
 
-            assert lp_profile_image == gal_lp_profile_image
+            assert lp_image == gal_lp_image
 
-            lp_profile_image = lp_0.profile_image_from_grid(
-                grid=np.array([[1.05, -0.55]])
-            )
-            lp_profile_image += lp_1.profile_image_from_grid(
-                grid=np.array([[1.05, -0.55]])
-            )
+            lp_image = lp_0.image_from_grid(grid=np.array([[1.05, -0.55]]))
+            lp_image += lp_1.image_from_grid(grid=np.array([[1.05, -0.55]]))
 
-            gal_profile_image = gal_x2_lp.profile_image_from_grid(
-                grid=np.array([[1.05, -0.55]])
-            )
+            gal_image = gal_x2_lp.image_from_grid(grid=np.array([[1.05, -0.55]]))
 
-            assert lp_profile_image == gal_profile_image
+            assert lp_image == gal_image
 
         def test__coordinates_in__coordinates_out(
             self, lp_0, gal_x1_lp, lp_1, gal_x2_lp
         ):
 
-            lp_profile_image = lp_0.profile_image_from_grid(
+            lp_image = lp_0.image_from_grid(grid=ag.GridCoordinates([[(1.05, -0.55)]]))
+
+            gal_lp_image = gal_x1_lp.image_from_grid(
                 grid=ag.GridCoordinates([[(1.05, -0.55)]])
             )
 
-            gal_lp_profile_image = gal_x1_lp.profile_image_from_grid(
-                grid=ag.GridCoordinates([[(1.05, -0.55)]])
-            )
-
-            assert lp_profile_image.in_list[0][0] == gal_lp_profile_image.in_list[0][0]
+            assert lp_image.in_list[0][0] == gal_lp_image.in_list[0][0]
 
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_light_profile_values(
             self, sub_grid_7x7, gal_x2_lp
         ):
 
-            lp_0_profile_image = gal_x2_lp.light_profile_0.profile_image_from_grid(
-                grid=sub_grid_7x7
-            )
+            lp_0_image = gal_x2_lp.light_profile_0.image_from_grid(grid=sub_grid_7x7)
 
-            lp_1_profile_image = gal_x2_lp.light_profile_1.profile_image_from_grid(
-                grid=sub_grid_7x7
-            )
+            lp_1_image = gal_x2_lp.light_profile_1.image_from_grid(grid=sub_grid_7x7)
 
-            lp_profile_image = lp_0_profile_image + lp_1_profile_image
+            lp_image = lp_0_image + lp_1_image
 
-            lp_profile_image_0 = (
-                lp_profile_image[0]
-                + lp_profile_image[1]
-                + lp_profile_image[2]
-                + lp_profile_image[3]
-            ) / 4.0
+            lp_image_0 = (lp_image[0] + lp_image[1] + lp_image[2] + lp_image[3]) / 4.0
 
-            lp_profile_image_1 = (
-                lp_profile_image[4]
-                + lp_profile_image[5]
-                + lp_profile_image[6]
-                + lp_profile_image[7]
-            ) / 4.0
+            lp_image_1 = (lp_image[4] + lp_image[5] + lp_image[6] + lp_image[7]) / 4.0
 
-            gal_profile_image = gal_x2_lp.profile_image_from_grid(grid=sub_grid_7x7)
+            gal_image = gal_x2_lp.image_from_grid(grid=sub_grid_7x7)
 
-            assert gal_profile_image.in_1d_binned[0] == lp_profile_image_0
-            assert gal_profile_image.in_1d_binned[1] == lp_profile_image_1
+            assert gal_image.in_1d_binned[0] == lp_image_0
+            assert gal_image.in_1d_binned[1] == lp_image_1
 
     class TestLuminosityWithin:
         def test__two_profile_galaxy__is_sum_of_individual_profiles(
@@ -321,16 +294,16 @@ class TestLightProfiles:
                 redshift=0.5, light_profile_0=lp_0, light_profile_1=lp_1
             )
 
-            assert gal_x2_lp.profile_image_from_grid(
+            assert gal_x2_lp.image_from_grid(
                 grid=np.array([[0.0, 0.0]])
             ) == pytest.approx(
-                gal_x2_lp.profile_image_from_grid(grid=np.array([[100.0, 0.0]])), 1.0e-4
+                gal_x2_lp.image_from_grid(grid=np.array([[100.0, 0.0]])), 1.0e-4
             )
 
-            assert gal_x2_lp.profile_image_from_grid(
+            assert gal_x2_lp.image_from_grid(
                 grid=np.array([[49.0, 0.0]])
             ) == pytest.approx(
-                gal_x2_lp.profile_image_from_grid(grid=np.array([[51.0, 0.0]])), 1.0e-4
+                gal_x2_lp.image_from_grid(grid=np.array([[51.0, 0.0]])), 1.0e-4
             )
 
         def test_2d_symmetry(self):
@@ -373,28 +346,28 @@ class TestLightProfiles:
                 light_profile_4=lp_3,
             )
 
-            assert gal_x4_lp.profile_image_from_grid(
+            assert gal_x4_lp.image_from_grid(
                 grid=np.array([[49.0, 0.0]])
             ) == pytest.approx(
-                gal_x4_lp.profile_image_from_grid(grid=np.array([[51.0, 0.0]])), 1e-5
+                gal_x4_lp.image_from_grid(grid=np.array([[51.0, 0.0]])), 1e-5
             )
 
-            assert gal_x4_lp.profile_image_from_grid(
+            assert gal_x4_lp.image_from_grid(
                 grid=np.array([[0.0, 49.0]])
             ) == pytest.approx(
-                gal_x4_lp.profile_image_from_grid(grid=np.array([[0.0, 51.0]])), 1e-5
+                gal_x4_lp.image_from_grid(grid=np.array([[0.0, 51.0]])), 1e-5
             )
 
-            assert gal_x4_lp.profile_image_from_grid(
+            assert gal_x4_lp.image_from_grid(
                 grid=np.array([[100.0, 49.0]])
             ) == pytest.approx(
-                gal_x4_lp.profile_image_from_grid(grid=np.array([[100.0, 51.0]])), 1e-5
+                gal_x4_lp.image_from_grid(grid=np.array([[100.0, 51.0]])), 1e-5
             )
 
-            assert gal_x4_lp.profile_image_from_grid(
+            assert gal_x4_lp.image_from_grid(
                 grid=np.array([[49.0, 49.0]])
             ) == pytest.approx(
-                gal_x4_lp.profile_image_from_grid(grid=np.array([[51.0, 51.0]])), 1e-5
+                gal_x4_lp.image_from_grid(grid=np.array([[51.0, 51.0]])), 1e-5
             )
 
     class TestBlurredProfileImages:
@@ -411,15 +384,15 @@ class TestLightProfiles:
                 redshift=0.5,
             )
 
-            image = galaxy.profile_image_from_grid(grid=sub_grid_7x7)
+            image = galaxy.image_from_grid(grid=sub_grid_7x7)
 
-            blurring_image = galaxy.profile_image_from_grid(grid=blurring_grid_7x7)
+            blurring_image = galaxy.image_from_grid(grid=blurring_grid_7x7)
 
             blurred_image = convolver_7x7.convolved_image_from_image_and_blurring_image(
                 image=image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
             )
 
-            light_profile_blurred_image = galaxy.blurred_profile_image_from_grid_and_psf(
+            light_profile_blurred_image = galaxy.blurred_image_from_grid_and_psf(
                 grid=sub_grid_7x7, blurring_grid=blurring_grid_7x7, psf=psf_3x3
             )
 
@@ -443,15 +416,15 @@ class TestLightProfiles:
                 redshift=0.5,
             )
 
-            image = galaxy.profile_image_from_grid(grid=sub_grid_7x7)
+            image = galaxy.image_from_grid(grid=sub_grid_7x7)
 
-            blurring_image = galaxy.profile_image_from_grid(grid=blurring_grid_7x7)
+            blurring_image = galaxy.image_from_grid(grid=blurring_grid_7x7)
 
             blurred_image = convolver_7x7.convolved_image_from_image_and_blurring_image(
                 image=image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
             )
 
-            light_profile_blurred_image = galaxy.blurred_profile_image_from_grid_and_convolver(
+            light_profile_blurred_image = galaxy.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
                 convolver=convolver_7x7,
                 blurring_grid=blurring_grid_7x7,
@@ -474,10 +447,8 @@ class TestLightProfiles:
             light_profile_1 = ag.lp.EllipticalSersic(intensity=3.0)
 
             image = (
-                light_profile_0.profile_image_from_grid(grid=sub_grid_7x7).in_1d_binned
-                + light_profile_1.profile_image_from_grid(
-                    grid=sub_grid_7x7
-                ).in_1d_binned
+                light_profile_0.image_from_grid(grid=sub_grid_7x7).in_1d_binned
+                + light_profile_1.image_from_grid(grid=sub_grid_7x7).in_1d_binned
             )
 
             visibilities = transformer_7x7_7.visibilities_from_image(image=image)
@@ -1923,15 +1894,13 @@ class TestDecorators:
 
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
 
-        profile_image = galaxy.profile_image_from_grid(grid=grid)
+        image = galaxy.image_from_grid(grid=grid)
 
         mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid.from_mask(mask=mask_sub_2)
-        profile_image_sub_2 = galaxy.profile_image_from_grid(
-            grid=grid_sub_2
-        ).in_1d_binned
+        image_sub_2 = galaxy.image_from_grid(grid=grid_sub_2).in_1d_binned
 
-        assert (profile_image == profile_image_sub_2).all()
+        assert (image == image_sub_2).all()
 
         grid = ag.GridIterate.from_mask(
             mask=mask, fractional_accuracy=0.95, sub_steps=[2, 4, 8]
@@ -1942,23 +1911,19 @@ class TestDecorators:
             light=ag.lp.EllipticalSersic(centre=(0.08, 0.08), intensity=1.0),
         )
 
-        profile_image = galaxy.profile_image_from_grid(grid=grid)
+        image = galaxy.image_from_grid(grid=grid)
 
         mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid.from_mask(mask=mask_sub_4)
-        profile_image_sub_4 = galaxy.profile_image_from_grid(
-            grid=grid_sub_4
-        ).in_1d_binned
+        image_sub_4 = galaxy.image_from_grid(grid=grid_sub_4).in_1d_binned
 
-        assert profile_image[0] == profile_image_sub_4[0]
+        assert image[0] == image_sub_4[0]
 
         mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid.from_mask(mask=mask_sub_8)
-        profile_image_sub_8 = galaxy.profile_image_from_grid(
-            grid=grid_sub_8
-        ).in_1d_binned
+        image_sub_8 = galaxy.image_from_grid(grid=grid_sub_8).in_1d_binned
 
-        assert profile_image[4] == profile_image_sub_8[4]
+        assert image[4] == image_sub_8[4]
 
     def test__grid_iterate_in__iterates_grid_result_correctly(self, gal_x1_mp):
 
@@ -2035,12 +2000,10 @@ class TestDecorators:
         light_profile = ag.lp.EllipticalSersic(intensity=1.0)
         light_profile_interp = ag.lp.SphericalSersic(intensity=1.0)
 
-        profile_image_no_interp = light_profile.profile_image_from_grid(grid=grid)
+        image_no_interp = light_profile.image_from_grid(grid=grid)
 
-        array_interp = light_profile.profile_image_from_grid(
-            grid=grid_interp.grid_interp
-        )
-        profile_image_interp = grid_interp.interpolated_array_from_array_interp(
+        array_interp = light_profile.image_from_grid(grid=grid_interp.grid_interp)
+        image_interp = grid_interp.interpolated_array_from_array_interp(
             array_interp=array_interp
         )
 
@@ -2048,9 +2011,9 @@ class TestDecorators:
             redshift=0.5, light=light_profile_interp, light_0=light_profile
         )
 
-        profile_image = galaxy.profile_image_from_grid(grid=grid_interp)
+        image = galaxy.image_from_grid(grid=grid_interp)
 
-        assert (profile_image == profile_image_no_interp + profile_image_interp).all()
+        assert (image == image_no_interp + image_interp).all()
 
         mass_profile = ag.mp.EllipticalIsothermal(einstein_radius=1.0)
         mass_profile_interp = ag.mp.SphericalIsothermal(einstein_radius=1.0)

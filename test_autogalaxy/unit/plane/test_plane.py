@@ -789,12 +789,12 @@ class TestAbstractPlaneCosmology:
 
 class TestAbstractPlaneProfiles:
     class TestProfileImage:
-        def test__profile_image_from_grid__same_as_its_light_profile_image(
+        def test__image_from_grid__same_as_its_light_image(
             self, sub_grid_7x7, gal_x1_lp
         ):
             light_profile = gal_x1_lp.light_profiles[0]
 
-            lp_image = light_profile.profile_image_from_grid(grid=sub_grid_7x7)
+            lp_image = light_profile.image_from_grid(grid=sub_grid_7x7)
 
             # Perform sub gridding average manually
             lp_image_pixel_0 = (
@@ -806,37 +806,37 @@ class TestAbstractPlaneProfiles:
 
             plane = ag.Plane(galaxies=[gal_x1_lp], redshift=None)
 
-            profile_image = plane.profile_image_from_grid(grid=sub_grid_7x7)
+            image = plane.image_from_grid(grid=sub_grid_7x7)
 
-            assert (profile_image.in_1d_binned[0] == lp_image_pixel_0).all()
-            assert (profile_image.in_1d_binned[1] == lp_image_pixel_1).all()
-            assert (profile_image == lp_image).all()
+            assert (image.in_1d_binned[0] == lp_image_pixel_0).all()
+            assert (image.in_1d_binned[1] == lp_image_pixel_1).all()
+            assert (image == lp_image).all()
 
-        def test__profile_image_from_grid__same_as_its_galaxy_image(
+        def test__image_from_grid__same_as_its_galaxy_image(
             self, sub_grid_7x7, gal_x1_lp
         ):
-            galaxy_image = gal_x1_lp.profile_image_from_grid(grid=sub_grid_7x7)
+            galaxy_image = gal_x1_lp.image_from_grid(grid=sub_grid_7x7)
 
             plane = ag.Plane(galaxies=[gal_x1_lp], redshift=None)
 
-            profile_image = plane.profile_image_from_grid(grid=sub_grid_7x7)
+            image = plane.image_from_grid(grid=sub_grid_7x7)
 
-            assert profile_image == pytest.approx(galaxy_image, 1.0e-4)
+            assert image == pytest.approx(galaxy_image, 1.0e-4)
 
-        def test__profile_image_from_positions__same_as_galaxy_image_with_conversions(
+        def test__image_from_positions__same_as_galaxy_image_with_conversions(
             self, positions_7x7, gal_x1_lp
         ):
-            galaxy_image = gal_x1_lp.profile_image_from_grid(grid=positions_7x7)
+            galaxy_image = gal_x1_lp.image_from_grid(grid=positions_7x7)
 
             plane = ag.Plane(galaxies=[gal_x1_lp], redshift=None)
 
-            profile_image = plane.profile_image_from_grid(grid=positions_7x7)
+            image = plane.image_from_grid(grid=positions_7x7)
 
-            assert profile_image.in_list[0][0] == pytest.approx(
+            assert image.in_list[0][0] == pytest.approx(
                 galaxy_image.in_list[0][0], 1.0e-4
             )
 
-        def test__profile_images_of_galaxies(self, sub_grid_7x7):
+        def test__images_of_galaxies(self, sub_grid_7x7):
             # Overwrite one value so intensity in each pixel is different
             sub_grid_7x7[5] = np.array([2.0, 2.0])
 
@@ -850,8 +850,8 @@ class TestAbstractPlaneProfiles:
             lp0 = g0.light_profiles[0]
             lp1 = g1.light_profiles[0]
 
-            lp0_image = lp0.profile_image_from_grid(grid=sub_grid_7x7)
-            lp1_image = lp1.profile_image_from_grid(grid=sub_grid_7x7)
+            lp0_image = lp0.image_from_grid(grid=sub_grid_7x7)
+            lp1_image = lp1.image_from_grid(grid=sub_grid_7x7)
 
             # Perform sub gridding average manually
             lp0_image_pixel_0 = (
@@ -869,23 +869,21 @@ class TestAbstractPlaneProfiles:
 
             plane = ag.Plane(galaxies=[g0, g1], redshift=None)
 
-            profile_image = plane.profile_image_from_grid(grid=sub_grid_7x7)
+            image = plane.image_from_grid(grid=sub_grid_7x7)
 
-            assert profile_image.in_1d_binned[0] == pytest.approx(
+            assert image.in_1d_binned[0] == pytest.approx(
                 lp0_image_pixel_0 + lp1_image_pixel_0, 1.0e-4
             )
-            assert profile_image.in_1d_binned[1] == pytest.approx(
+            assert image.in_1d_binned[1] == pytest.approx(
                 lp0_image_pixel_1 + lp1_image_pixel_1, 1.0e-4
             )
 
-            profile_image_of_galaxies = plane.profile_images_of_galaxies_from_grid(
-                grid=sub_grid_7x7
-            )
+            image_of_galaxies = plane.images_of_galaxies_from_grid(grid=sub_grid_7x7)
 
-            assert profile_image_of_galaxies[0].in_1d_binned[0] == lp0_image_pixel_0
-            assert profile_image_of_galaxies[0].in_1d_binned[1] == lp0_image_pixel_1
-            assert profile_image_of_galaxies[1].in_1d_binned[0] == lp1_image_pixel_0
-            assert profile_image_of_galaxies[1].in_1d_binned[1] == lp1_image_pixel_1
+            assert image_of_galaxies[0].in_1d_binned[0] == lp0_image_pixel_0
+            assert image_of_galaxies[0].in_1d_binned[1] == lp0_image_pixel_1
+            assert image_of_galaxies[1].in_1d_binned[0] == lp1_image_pixel_0
+            assert image_of_galaxies[1].in_1d_binned[1] == lp1_image_pixel_1
 
         def test__same_as_above__use_multiple_galaxies(self, sub_grid_7x7):
             # Overwrite one value so intensity in each pixel is different
@@ -898,15 +896,15 @@ class TestAbstractPlaneProfiles:
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
             )
 
-            g0_image = g0.profile_image_from_grid(grid=sub_grid_7x7)
+            g0_image = g0.image_from_grid(grid=sub_grid_7x7)
 
-            g1_image = g1.profile_image_from_grid(grid=sub_grid_7x7)
+            g1_image = g1.image_from_grid(grid=sub_grid_7x7)
 
             plane = ag.Plane(galaxies=[g0, g1], redshift=None)
 
-            profile_image = plane.profile_image_from_grid(grid=sub_grid_7x7)
+            image = plane.image_from_grid(grid=sub_grid_7x7)
 
-            assert profile_image == pytest.approx(g0_image + g1_image, 1.0e-4)
+            assert image == pytest.approx(g0_image + g1_image, 1.0e-4)
 
         def test__same_as_above__grid_is_positions(self):
             # Overwrite one value so intensity in each pixel is different
@@ -919,18 +917,18 @@ class TestAbstractPlaneProfiles:
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
             )
 
-            g0_image = g0.profile_image_from_grid(grid=positions)
+            g0_image = g0.image_from_grid(grid=positions)
 
-            g1_image = g1.profile_image_from_grid(grid=positions)
+            g1_image = g1.image_from_grid(grid=positions)
 
             plane = ag.Plane(galaxies=[g0, g1], redshift=None)
 
-            profile_image = plane.profile_image_from_grid(grid=positions)
+            image = plane.image_from_grid(grid=positions)
 
-            assert profile_image.in_list[0][0] == pytest.approx(
+            assert image.in_list[0][0] == pytest.approx(
                 g0_image.in_list[0][0] + g1_image.in_list[0][0], 1.0e-4
             )
-            assert profile_image.in_list[1][0] == pytest.approx(
+            assert image.in_list[1][0] == pytest.approx(
                 g0_image.in_list[1][0] + g1_image.in_list[1][0], 1.0e-4
             )
 
@@ -939,11 +937,11 @@ class TestAbstractPlaneProfiles:
         ):
             plane = ag.Plane(galaxies=[], redshift=0.5)
 
-            profile_image = plane.profile_image_from_grid(grid=sub_grid_7x7)
+            image = plane.image_from_grid(grid=sub_grid_7x7)
 
-            assert profile_image.shape_2d == (7, 7)
-            assert (profile_image[0] == 0.0).all()
-            assert (profile_image[1] == 0.0).all()
+            assert image.shape_2d == (7, 7)
+            assert (image[0] == 0.0).all()
+            assert (image[1] == 0.0).all()
 
         def test__x1_plane__padded_image__compare_to_galaxy_images_using_padded_grid_stack(
             self, sub_grid_7x7
@@ -963,20 +961,20 @@ class TestAbstractPlaneProfiles:
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=3.0)
             )
 
-            padded_g0_image = g0.profile_image_from_grid(grid=padded_grid)
+            padded_g0_image = g0.image_from_grid(grid=padded_grid)
 
-            padded_g1_image = g1.profile_image_from_grid(grid=padded_grid)
+            padded_g1_image = g1.image_from_grid(grid=padded_grid)
 
-            padded_g2_image = g2.profile_image_from_grid(grid=padded_grid)
+            padded_g2_image = g2.image_from_grid(grid=padded_grid)
 
             plane = ag.Plane(galaxies=[g0, g1, g2])
 
-            padded_plane_profile_image = plane.padded_profile_image_from_grid_and_psf_shape(
+            padded_plane_image = plane.padded_image_from_grid_and_psf_shape(
                 grid=sub_grid_7x7, psf_shape_2d=(3, 3)
             )
 
-            assert padded_plane_profile_image.shape_2d == (9, 9)
-            assert padded_plane_profile_image == pytest.approx(
+            assert padded_plane_image.shape_2d == (9, 9)
+            assert padded_plane_image == pytest.approx(
                 padded_g0_image + padded_g1_image + padded_g2_image, 1.0e-4
             )
 
@@ -995,21 +993,21 @@ class TestAbstractPlaneProfiles:
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=3.0)
             )
 
-            g0_image = g0.profile_image_from_grid(grid=sub_grid_7x7)
-            g1_image = g1.profile_image_from_grid(grid=sub_grid_7x7)
-            g2_image = g2.profile_image_from_grid(grid=sub_grid_7x7)
+            g0_image = g0.image_from_grid(grid=sub_grid_7x7)
+            g1_image = g1.image_from_grid(grid=sub_grid_7x7)
+            g2_image = g2.image_from_grid(grid=sub_grid_7x7)
 
             plane = ag.Plane(
                 redshift=-0.75, galaxies=[g1, g0, g2], cosmology=cosmo.Planck15
             )
 
-            image_1d_dict = plane.galaxy_profile_image_dict_from_grid(grid=sub_grid_7x7)
+            image_1d_dict = plane.galaxy_image_dict_from_grid(grid=sub_grid_7x7)
 
             assert (image_1d_dict[g0].in_1d == g0_image).all()
             assert (image_1d_dict[g1].in_1d == g1_image).all()
             assert (image_1d_dict[g2].in_1d == g2_image).all()
 
-            image_dict = plane.galaxy_profile_image_dict_from_grid(grid=sub_grid_7x7)
+            image_dict = plane.galaxy_image_dict_from_grid(grid=sub_grid_7x7)
 
             assert (image_dict[g0].in_2d == g0_image.in_2d).all()
             assert (image_dict[g1].in_2d == g1_image.in_2d).all()
@@ -1578,13 +1576,13 @@ class TestAbstractPlaneData:
                 redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
             )
 
-            blurred_g0_image = g0.blurred_profile_image_from_grid_and_convolver(
+            blurred_g0_image = g0.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
                 blurring_grid=blurring_grid_7x7,
                 convolver=convolver_7x7,
             )
 
-            blurred_g1_image = g1.blurred_profile_image_from_grid_and_convolver(
+            blurred_g1_image = g1.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
                 blurring_grid=blurring_grid_7x7,
                 convolver=convolver_7x7,
@@ -1592,7 +1590,7 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
-            blurred_image = plane.blurred_profile_image_from_grid_and_psf(
+            blurred_image = plane.blurred_image_from_grid_and_psf(
                 grid=sub_grid_7x7, blurring_grid=blurring_grid_7x7, psf=psf_3x3
             )
 
@@ -1614,17 +1612,17 @@ class TestAbstractPlaneData:
                 redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
             )
 
-            blurred_g0_image = g0.blurred_profile_image_from_grid_and_psf(
+            blurred_g0_image = g0.blurred_image_from_grid_and_psf(
                 grid=sub_grid_7x7, blurring_grid=blurring_grid_7x7, psf=psf_3x3
             )
 
-            blurred_g1_image = g1.blurred_profile_image_from_grid_and_psf(
+            blurred_g1_image = g1.blurred_image_from_grid_and_psf(
                 grid=sub_grid_7x7, blurring_grid=blurring_grid_7x7, psf=psf_3x3
             )
 
             plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
-            blurred_images_of_galaxies = plane.blurred_profile_images_of_galaxies_from_grid_and_psf(
+            blurred_images_of_galaxies = plane.blurred_images_of_galaxies_from_grid_and_psf(
                 grid=sub_grid_7x7, blurring_grid=blurring_grid_7x7, psf=psf_3x3
             )
 
@@ -1654,13 +1652,13 @@ class TestAbstractPlaneData:
                 redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
             )
 
-            blurred_g0_image = g0.blurred_profile_image_from_grid_and_convolver(
+            blurred_g0_image = g0.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
                 convolver=convolver_7x7,
                 blurring_grid=blurring_grid_7x7,
             )
 
-            blurred_g1_image = g1.blurred_profile_image_from_grid_and_convolver(
+            blurred_g1_image = g1.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
                 convolver=convolver_7x7,
                 blurring_grid=blurring_grid_7x7,
@@ -1668,7 +1666,7 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
-            blurred_image = plane.blurred_profile_image_from_grid_and_convolver(
+            blurred_image = plane.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
                 convolver=convolver_7x7,
                 blurring_grid=blurring_grid_7x7,
@@ -1692,13 +1690,13 @@ class TestAbstractPlaneData:
                 redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
             )
 
-            blurred_g0_image = g0.blurred_profile_image_from_grid_and_convolver(
+            blurred_g0_image = g0.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
                 convolver=convolver_7x7,
                 blurring_grid=blurring_grid_7x7,
             )
 
-            blurred_g1_image = g1.blurred_profile_image_from_grid_and_convolver(
+            blurred_g1_image = g1.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
                 convolver=convolver_7x7,
                 blurring_grid=blurring_grid_7x7,
@@ -1706,7 +1704,7 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
-            blurred_images_of_galaxies = plane.blurred_profile_images_of_galaxies_from_grid_and_convolver(
+            blurred_images_of_galaxies = plane.blurred_images_of_galaxies_from_grid_and_convolver(
                 grid=sub_grid_7x7,
                 blurring_grid=blurring_grid_7x7,
                 convolver=convolver_7x7,
@@ -1745,19 +1743,19 @@ class TestAbstractPlaneData:
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=3.0)
             )
 
-            g0_blurred_image = g0.blurred_profile_image_from_grid_and_convolver(
+            g0_blurred_image = g0.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
                 convolver=convolver_7x7,
                 blurring_grid=blurring_grid_7x7,
             )
 
-            g1_blurred_image = g1.blurred_profile_image_from_grid_and_convolver(
+            g1_blurred_image = g1.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
                 convolver=convolver_7x7,
                 blurring_grid=blurring_grid_7x7,
             )
 
-            g2_blurred_image = g2.blurred_profile_image_from_grid_and_convolver(
+            g2_blurred_image = g2.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
                 convolver=convolver_7x7,
                 blurring_grid=blurring_grid_7x7,
@@ -1767,7 +1765,7 @@ class TestAbstractPlaneData:
                 redshift=-0.75, galaxies=[g1, g0, g2], cosmology=cosmo.Planck15
             )
 
-            blurred_image_dict = plane.galaxy_blurred_profile_image_dict_from_grid_and_convolver(
+            blurred_image_dict = plane.galaxy_blurred_image_dict_from_grid_and_convolver(
                 grid=sub_grid_7x7,
                 convolver=convolver_7x7,
                 blurring_grid=blurring_grid_7x7,
@@ -1807,21 +1805,21 @@ class TestAbstractPlaneData:
                 kernel_shape_2d=psf.shape_2d
             )
 
-            manual_blurred_image_0 = plane.profile_images_of_galaxies_from_grid(
+            manual_blurred_image_0 = plane.images_of_galaxies_from_grid(
                 grid=padded_grid
             )[0]
             manual_blurred_image_0 = psf.convolved_array_from_array(
                 array=manual_blurred_image_0
             )
 
-            manual_blurred_image_1 = plane.profile_images_of_galaxies_from_grid(
+            manual_blurred_image_1 = plane.images_of_galaxies_from_grid(
                 grid=padded_grid
             )[1]
             manual_blurred_image_1 = psf.convolved_array_from_array(
                 array=manual_blurred_image_1
             )
 
-            unmasked_blurred_image = plane.unmasked_blurred_profile_image_from_grid_and_psf(
+            unmasked_blurred_image = plane.unmasked_blurred_image_from_grid_and_psf(
                 grid=grid, psf=psf
             )
 
@@ -1831,7 +1829,7 @@ class TestAbstractPlaneData:
                 1.0e-4,
             )
 
-            unmasked_blurred_image_of_galaxies = plane.unmasked_blurred_profile_image_of_galaxies_from_grid_and_psf(
+            unmasked_blurred_image_of_galaxies = plane.unmasked_blurred_image_of_galaxies_from_grid_and_psf(
                 grid=grid, psf=psf
             )
 
@@ -1851,7 +1849,7 @@ class TestAbstractPlaneData:
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
             )
 
-            image = g0.profile_image_from_grid(grid=sub_grid_7x7)
+            image = g0.image_from_grid(grid=sub_grid_7x7)
 
             visibilities = transformer_7x7_7.visibilities_from_image(image=image)
 
@@ -1867,9 +1865,9 @@ class TestAbstractPlaneData:
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
             )
 
-            image = g0.profile_image_from_grid(
+            image = g0.image_from_grid(grid=sub_grid_7x7) + g1.image_from_grid(
                 grid=sub_grid_7x7
-            ) + g1.profile_image_from_grid(grid=sub_grid_7x7)
+            )
 
             visibilities = transformer_7x7_7.visibilities_from_image(image=image)
 
@@ -1903,9 +1901,9 @@ class TestAbstractPlaneData:
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
             )
 
-            g0_image = g0.profile_image_from_grid(grid=sub_grid_7x7)
+            g0_image = g0.image_from_grid(grid=sub_grid_7x7)
 
-            g1_image = g1.profile_image_from_grid(grid=sub_grid_7x7)
+            g1_image = g1.image_from_grid(grid=sub_grid_7x7)
 
             g0_visibilities = transformer_7x7_7.visibilities_from_image(image=g0_image)
 
@@ -3097,15 +3095,13 @@ class TestDecorators:
 
         plane = ag.Plane(galaxies=[gal_x1_lp], redshift=None)
 
-        profile_image = plane.profile_image_from_grid(grid=grid)
+        image = plane.image_from_grid(grid=grid)
 
         mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid.from_mask(mask=mask_sub_2)
-        profile_image_sub_2 = plane.profile_image_from_grid(
-            grid=grid_sub_2
-        ).in_1d_binned
+        image_sub_2 = plane.image_from_grid(grid=grid_sub_2).in_1d_binned
 
-        assert (profile_image == profile_image_sub_2).all()
+        assert (image == image_sub_2).all()
 
         grid = ag.GridIterate.from_mask(
             mask=mask, fractional_accuracy=0.95, sub_steps=[2, 4, 8]
@@ -3118,23 +3114,19 @@ class TestDecorators:
 
         plane = ag.Plane(galaxies=[galaxy])
 
-        profile_image = plane.profile_image_from_grid(grid=grid)
+        image = plane.image_from_grid(grid=grid)
 
         mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid.from_mask(mask=mask_sub_4)
-        profile_image_sub_4 = plane.profile_image_from_grid(
-            grid=grid_sub_4
-        ).in_1d_binned
+        image_sub_4 = plane.image_from_grid(grid=grid_sub_4).in_1d_binned
 
-        assert profile_image[0] == profile_image_sub_4[0]
+        assert image[0] == image_sub_4[0]
 
         mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid.from_mask(mask=mask_sub_8)
-        profile_image_sub_8 = plane.profile_image_from_grid(
-            grid=grid_sub_8
-        ).in_1d_binned
+        image_sub_8 = plane.image_from_grid(grid=grid_sub_8).in_1d_binned
 
-        assert profile_image[4] == profile_image_sub_8[4]
+        assert image[4] == image_sub_8[4]
 
     def test__grid_iterate_in__iterates_grid_result_correctly(self, gal_x1_mp):
 
@@ -3214,12 +3206,10 @@ class TestDecorators:
         light_profile = ag.lp.EllipticalSersic(intensity=1.0)
         light_profile_interp = ag.lp.SphericalSersic(intensity=1.0)
 
-        profile_image_no_interp = light_profile.profile_image_from_grid(grid=grid)
+        image_no_interp = light_profile.image_from_grid(grid=grid)
 
-        array_interp = light_profile.profile_image_from_grid(
-            grid=grid_interp.grid_interp
-        )
-        profile_image_interp = grid_interp.interpolated_array_from_array_interp(
+        array_interp = light_profile.image_from_grid(grid=grid_interp.grid_interp)
+        image_interp = grid_interp.interpolated_array_from_array_interp(
             array_interp=array_interp
         )
 
@@ -3229,9 +3219,9 @@ class TestDecorators:
 
         plane = ag.Plane(galaxies=[galaxy])
 
-        profile_image = plane.profile_image_from_grid(grid=grid_interp)
+        image = plane.image_from_grid(grid=grid_interp)
 
-        assert (profile_image == profile_image_no_interp + profile_image_interp).all()
+        assert (image == image_no_interp + image_interp).all()
 
         mass_profile = ag.mp.EllipticalIsothermal(einstein_radius=1.0)
         mass_profile_interp = ag.mp.SphericalIsothermal(einstein_radius=1.0)
@@ -3289,7 +3279,7 @@ class TestDecorators:
 
 
 class TestRegression:
-    def test__profile_image_centre_is_brightest_pixel_in_grid(self):
+    def test__image_centre_is_brightest_pixel_in_grid(self):
 
         # This test is chosen because of a bug where the transform grid decorator was called multiple times in the
         # evaluation of a light profile, in a very difficult to spot bug using the unit tests above.
@@ -3305,11 +3295,9 @@ class TestRegression:
             grid.shape_2d,
         )
 
-        profile_image = light_profile.profile_image_from_grid(grid=grid)
+        image = light_profile.image_from_grid(grid=grid)
 
-        y, x = np.unravel_index(
-            abs(profile_image.in_2d).argmax(), profile_image.shape_2d
-        )
+        y, x = np.unravel_index(abs(image.in_2d).argmax(), image.shape_2d)
 
         assert y == y_transform
         assert x == x_transform
@@ -3319,11 +3307,9 @@ class TestRegression:
 
         galaxy = ag.Galaxy(redshift=0.5, light=light_profile)
 
-        profile_image = galaxy.profile_image_from_grid(grid=grid)
+        image = galaxy.image_from_grid(grid=grid)
 
-        y, x = np.unravel_index(
-            abs(profile_image.in_2d).argmax(), profile_image.shape_2d
-        )
+        y, x = np.unravel_index(abs(image.in_2d).argmax(), image.shape_2d)
 
         assert y == y_transform
         assert x == x_transform
@@ -3333,11 +3319,9 @@ class TestRegression:
 
         plane = ag.Plane(galaxies=[galaxy])
 
-        profile_image = plane.profile_image_from_grid(grid=grid)
+        image = plane.image_from_grid(grid=grid)
 
-        y, x = np.unravel_index(
-            abs(profile_image.in_2d).argmax(), profile_image.shape_2d
-        )
+        y, x = np.unravel_index(abs(image.in_2d).argmax(), image.shape_2d)
 
         assert y == y_transform
         assert x == x_transform
@@ -3362,11 +3346,9 @@ class TestRegression:
             grid.shape_2d,
         )
 
-        profile_image = plane.profile_image_from_grid(grid=grid)
+        image = plane.image_from_grid(grid=grid)
 
-        y, x = np.unravel_index(
-            abs(profile_image.in_2d).argmax(), profile_image.shape_2d
-        )
+        y, x = np.unravel_index(abs(image.in_2d).argmax(), image.shape_2d)
 
         assert y == y_transform
         assert x == x_transform

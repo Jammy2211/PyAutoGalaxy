@@ -127,7 +127,7 @@ def simulate_interferometer_from_instrument(data_label, instrument, galaxies):
         interferometer=interferometer, plot_visibilities=True, plotter=plotter
     )
 
-    aplt.Plane.profile_image(plane=plane, grid=grid, plotter=plotter)
+    aplt.Plane.image(plane=plane, grid=grid, plotter=plotter)
 
 
 def load_test_interferometer(data_label, instrument):

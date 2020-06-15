@@ -109,10 +109,8 @@ class MaskedGalaxyDataset:
     def profile_quantity_from_galaxies(self, galaxies):
 
         if self.use_image:
-            profile_image = sum(
-                map(lambda g: g.profile_image_from_grid(grid=self.grid), galaxies)
-            )
-            return arrays.MaskedArray.manual_1d(array=profile_image, mask=self.mask)
+            image = sum(map(lambda g: g.image_from_grid(grid=self.grid), galaxies))
+            return arrays.MaskedArray.manual_1d(array=image, mask=self.mask)
         elif self.use_convergence:
             convergence = sum(
                 map(lambda g: g.convergence_from_grid(grid=self.grid), galaxies)

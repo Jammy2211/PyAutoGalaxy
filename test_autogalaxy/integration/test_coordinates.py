@@ -16,25 +16,25 @@ def test__centre_light_profile_on_grid_coordinate__peak_flux_is_correct_index():
     grid = ag.Grid.uniform(shape_2d=(5, 5), pixel_scales=1.0, sub_size=1)
 
     sersic = ag.lp.SphericalSersic(centre=(2.0, -2.0))
-    image = sersic.profile_image_from_grid(grid=grid)
+    image = sersic.image_from_grid(grid=grid)
 
     assert image.in_1d.argmax() == 0
     assert np.unravel_index(image.in_2d.argmax(), image.in_2d.shape) == (0, 0)
 
     sersic = ag.lp.SphericalSersic(centre=(2.0, 2.0))
-    image = sersic.profile_image_from_grid(grid=grid)
+    image = sersic.image_from_grid(grid=grid)
 
     assert image.in_1d.argmax() == 4
     assert np.unravel_index(image.in_2d.argmax(), image.in_2d.shape) == (0, 4)
 
     sersic = ag.lp.SphericalSersic(centre=(-2.0, -2.0))
-    image = sersic.profile_image_from_grid(grid=grid)
+    image = sersic.image_from_grid(grid=grid)
 
     assert image.in_1d.argmax() == 20
     assert np.unravel_index(image.in_2d.argmax(), image.in_2d.shape) == (4, 0)
 
     sersic = ag.lp.SphericalSersic(centre=(-2.0, 2.0))
-    image = sersic.profile_image_from_grid(grid=grid)
+    image = sersic.image_from_grid(grid=grid)
 
     assert image.in_1d.argmax() == 24
     assert np.unravel_index(image.in_2d.argmax(), image.in_2d.shape) == (4, 4)

@@ -5,10 +5,10 @@ from autogalaxy.plot import lensing_plotters
 
 @lensing_plotters.set_include_and_plotter
 @plotters.set_labels
-def profile_image(plane, grid, positions=None, include=None, plotter=None):
+def image(plane, grid, positions=None, include=None, plotter=None):
 
     plotter.plot_array(
-        array=plane.profile_image_from_grid(grid=grid),
+        array=plane.image_from_grid(grid=grid),
         mask=include.mask_from_grid(grid=grid),
         positions=positions,
         critical_curves=include.critical_curves_from_obj(obj=plane),

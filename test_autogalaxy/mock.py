@@ -14,7 +14,7 @@ class MockLightProfile(ag.lp.LightProfile):
         self.value = value
         self.size = size
 
-    def profile_image_from_grid(self, grid):
+    def image_from_grid(self, grid):
         return np.array(self.size * [self.value])
 
 
@@ -41,7 +41,7 @@ class MockGalaxy:
         self.shape = shape
 
     @grids.grid_like_to_structure
-    def profile_image_from_grid(self, grid):
+    def image_from_grid(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 
     @grids.grid_like_to_structure

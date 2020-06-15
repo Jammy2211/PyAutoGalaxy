@@ -132,9 +132,7 @@ class TestSimulatorImaging:
 
         plane = ag.Plane(redshift=0.75, galaxies=[galaxy_0, galaxy_1])
 
-        imaging_via_image = simulator.from_image(
-            image=plane.profile_image_from_grid(grid=grid)
-        )
+        imaging_via_image = simulator.from_image(image=plane.image_from_grid(grid=grid))
 
         assert (imaging.image == imaging_via_image.image).all()
         assert (imaging.psf == imaging_via_image.psf).all()

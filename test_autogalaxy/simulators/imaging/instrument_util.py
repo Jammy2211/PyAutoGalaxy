@@ -184,7 +184,7 @@ def simulate_imaging_from_instrument(data_label, instrument, galaxies):
         plotter=plotter,
     )
 
-    aplt.Plane.profile_image(plane=plane, grid=grid, plotter=plotter)
+    aplt.Plane.image(plane=plane, grid=grid, plotter=plotter)
 
 
 def load_test_imaging(instrument, data_label, name=None):

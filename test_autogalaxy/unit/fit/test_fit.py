@@ -561,7 +561,7 @@ class TestFitImaging:
                 fit.noise_map.in_2d
             )
 
-            model_image = plane.blurred_profile_image_from_grid_and_convolver(
+            model_image = plane.blurred_image_from_grid_and_convolver(
                 grid=masked_imaging_7x7.grid,
                 convolver=masked_imaging_7x7.convolver,
                 blurring_grid=masked_imaging_7x7.blurring_grid,
@@ -619,13 +619,13 @@ class TestFitImaging:
 
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
-            g0_blurred_image = g0.blurred_profile_image_from_grid_and_convolver(
+            g0_blurred_image = g0.blurred_image_from_grid_and_convolver(
                 grid=masked_imaging_7x7.grid,
                 blurring_grid=masked_imaging_7x7.blurring_grid,
                 convolver=masked_imaging_7x7.convolver,
             )
 
-            g1_blurred_image = g1.blurred_profile_image_from_grid_and_convolver(
+            g1_blurred_image = g1.blurred_image_from_grid_and_convolver(
                 grid=masked_imaging_7x7.grid,
                 blurring_grid=masked_imaging_7x7.blurring_grid,
                 convolver=masked_imaging_7x7.convolver,
@@ -693,7 +693,7 @@ class TestFitImaging:
 
             assert hyper_noise_map.in_2d == pytest.approx(fit.noise_map.in_2d)
 
-            model_image = plane.blurred_profile_image_from_grid_and_convolver(
+            model_image = plane.blurred_image_from_grid_and_convolver(
                 grid=masked_imaging_7x7.grid,
                 convolver=masked_imaging_7x7.convolver,
                 blurring_grid=masked_imaging_7x7.blurring_grid,
@@ -734,7 +734,7 @@ class TestFitImaging:
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
             assert log_likelihood == fit.figure_of_merit
 
-        def test___blurred_and_model_images_of_galaxies_and_unmasked_blurred_profile_image_properties(
+        def test___blurred_and_model_images_of_galaxies_and_unmasked_blurred_image_properties(
             self, masked_imaging_7x7
         ):
 
@@ -752,39 +752,37 @@ class TestFitImaging:
 
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
-            blurred_profile_images_of_galaxies = plane.blurred_profile_images_of_galaxies_from_grid_and_convolver(
+            blurred_images_of_galaxies = plane.blurred_images_of_galaxies_from_grid_and_convolver(
                 grid=masked_imaging_7x7.grid,
                 convolver=masked_imaging_7x7.convolver,
                 blurring_grid=masked_imaging_7x7.blurring_grid,
             )
 
-            assert blurred_profile_images_of_galaxies[0].in_2d == pytest.approx(
+            assert blurred_images_of_galaxies[0].in_2d == pytest.approx(
                 fit.model_images_of_galaxies[0].in_2d, 1.0e-4
             )
 
-            assert blurred_profile_images_of_galaxies[1].in_2d == pytest.approx(
+            assert blurred_images_of_galaxies[1].in_2d == pytest.approx(
                 fit.model_images_of_galaxies[1].in_2d, 1.0e-4
             )
 
-            unmasked_blurred_profile_image = plane.unmasked_blurred_profile_image_from_grid_and_psf(
+            unmasked_blurred_image = plane.unmasked_blurred_image_from_grid_and_psf(
+                grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
+            )
+
+            assert (unmasked_blurred_image == fit.unmasked_blurred_image).all()
+
+            unmasked_blurred_image_of_galaxies = plane.unmasked_blurred_image_of_galaxies_from_grid_and_psf(
                 grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
             )
 
             assert (
-                unmasked_blurred_profile_image == fit.unmasked_blurred_profile_image
-            ).all()
-
-            unmasked_blurred_profile_image_of_galaxies = plane.unmasked_blurred_profile_image_of_galaxies_from_grid_and_psf(
-                grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
-            )
-
-            assert (
-                unmasked_blurred_profile_image_of_galaxies[0]
-                == fit.unmasked_blurred_profile_image_of_galaxies[0]
+                unmasked_blurred_image_of_galaxies[0]
+                == fit.unmasked_blurred_image_of_galaxies[0]
             ).all()
             assert (
-                unmasked_blurred_profile_image_of_galaxies[1]
-                == fit.unmasked_blurred_profile_image_of_galaxies[1]
+                unmasked_blurred_image_of_galaxies[1]
+                == fit.unmasked_blurred_image_of_galaxies[1]
             ).all()
 
     class TestCompareToManualInversionOnly:
@@ -1021,7 +1019,7 @@ class TestFitImaging:
             assert log_evidence == fit.log_evidence
             assert log_evidence == fit.figure_of_merit
 
-        def test___blurred_and_model_images_of_galaxies_and_unmasked_blurred_profile_image_properties(
+        def test___blurred_and_model_images_of_galaxies_and_unmasked_blurred_image_properties(
             self, masked_imaging_7x7
         ):
 
@@ -1065,17 +1063,15 @@ class TestFitImaging:
 
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
-            blurred_profile_image = plane.blurred_profile_image_from_grid_and_convolver(
+            blurred_image = plane.blurred_image_from_grid_and_convolver(
                 grid=masked_imaging_7x7.grid,
                 convolver=masked_imaging_7x7.convolver,
                 blurring_grid=masked_imaging_7x7.blurring_grid,
             )
 
-            assert blurred_profile_image.in_2d == pytest.approx(
-                fit.blurred_profile_image.in_2d
-            )
+            assert blurred_image.in_2d == pytest.approx(fit.blurred_image.in_2d)
 
-            profile_subtracted_image = masked_imaging_7x7.image - blurred_profile_image
+            profile_subtracted_image = masked_imaging_7x7.image - blurred_image
 
             assert profile_subtracted_image.in_2d == pytest.approx(
                 fit.profile_subtracted_image.in_2d
@@ -1093,7 +1089,7 @@ class TestFitImaging:
                 regularization=reg,
             )
 
-            model_image = blurred_profile_image + inversion.mapped_reconstructed_image
+            model_image = blurred_image + inversion.mapped_reconstructed_image
 
             assert model_image.in_2d == pytest.approx(fit.model_image.in_2d)
 
@@ -1150,7 +1146,7 @@ class TestFitImaging:
             assert log_evidence == fit.log_evidence
             assert log_evidence == fit.figure_of_merit
 
-        def test___fit_galaxy_model_image_dict__has_blurred_profile_images_and_inversion_mapped_reconstructed_image(
+        def test___fit_galaxy_model_image_dict__has_blurred_images_and_inversion_mapped_reconstructed_image(
             self, masked_imaging_7x7
         ):
 
@@ -1170,21 +1166,21 @@ class TestFitImaging:
 
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
-            g0_blurred_image = g0.blurred_profile_image_from_grid_and_convolver(
+            g0_blurred_image = g0.blurred_image_from_grid_and_convolver(
                 grid=masked_imaging_7x7.grid,
                 convolver=masked_imaging_7x7.convolver,
                 blurring_grid=masked_imaging_7x7.blurring_grid,
             )
 
-            g1_blurred_image = g1.blurred_profile_image_from_grid_and_convolver(
+            g1_blurred_image = g1.blurred_image_from_grid_and_convolver(
                 grid=masked_imaging_7x7.grid,
                 convolver=masked_imaging_7x7.convolver,
                 blurring_grid=masked_imaging_7x7.blurring_grid,
             )
 
-            blurred_profile_image = g0_blurred_image + g1_blurred_image
+            blurred_image = g0_blurred_image + g1_blurred_image
 
-            profile_subtracted_image = masked_imaging_7x7.image - blurred_profile_image
+            profile_subtracted_image = masked_imaging_7x7.image - blurred_image
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_imaging_7x7.grid, inversion_uses_border=False
             )
@@ -1261,17 +1257,15 @@ class TestFitImaging:
 
             assert hyper_noise_map.in_2d == pytest.approx(fit.noise_map.in_2d, 1.0e-4)
 
-            blurred_profile_image = plane.blurred_profile_image_from_grid_and_convolver(
+            blurred_image = plane.blurred_image_from_grid_and_convolver(
                 grid=masked_imaging_7x7.grid,
                 convolver=masked_imaging_7x7.convolver,
                 blurring_grid=masked_imaging_7x7.blurring_grid,
             )
 
-            assert blurred_profile_image.in_2d == pytest.approx(
-                fit.blurred_profile_image.in_2d
-            )
+            assert blurred_image.in_2d == pytest.approx(fit.blurred_image.in_2d)
 
-            profile_subtracted_image = image - blurred_profile_image
+            profile_subtracted_image = image - blurred_image
 
             assert profile_subtracted_image.in_2d == pytest.approx(
                 fit.profile_subtracted_image.in_2d
@@ -1289,7 +1283,7 @@ class TestFitImaging:
                 regularization=reg,
             )
 
-            model_image = blurred_profile_image + inversion.mapped_reconstructed_image
+            model_image = blurred_image + inversion.mapped_reconstructed_image
 
             assert model_image.in_2d == pytest.approx(fit.model_image.in_2d, 1.0e-4)
 
@@ -1348,7 +1342,7 @@ class TestFitImaging:
             assert log_evidence == fit.log_evidence
             assert log_evidence == fit.figure_of_merit
 
-        def test___blurred_and_model_images_of_galaxies_and_unmasked_blurred_profile_image_properties(
+        def test___blurred_and_model_images_of_galaxies_and_unmasked_blurred_image_properties(
             self, masked_imaging_7x7
         ):
             galaxy_light = ag.Galaxy(
@@ -1363,13 +1357,13 @@ class TestFitImaging:
 
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
-            blurred_profile_image = plane.blurred_profile_image_from_grid_and_convolver(
+            blurred_image = plane.blurred_image_from_grid_and_convolver(
                 grid=masked_imaging_7x7.grid,
                 convolver=masked_imaging_7x7.convolver,
                 blurring_grid=masked_imaging_7x7.blurring_grid,
             )
 
-            profile_subtracted_image = masked_imaging_7x7.image - blurred_profile_image
+            profile_subtracted_image = masked_imaging_7x7.image - blurred_image
 
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_imaging_7x7.grid, inversion_uses_border=False
@@ -1383,7 +1377,7 @@ class TestFitImaging:
                 regularization=reg,
             )
 
-            assert blurred_profile_image.in_2d == pytest.approx(
+            assert blurred_image.in_2d == pytest.approx(
                 fit.model_images_of_galaxies[0].in_2d, 1.0e-4
             )
             assert inversion.mapped_reconstructed_image.in_2d == pytest.approx(
@@ -1593,19 +1587,15 @@ class TestFitInterferometer:
                 masked_interferometer=masked_interferometer_7, plane=plane
             )
 
-            g0_profile_image = g0.profile_image_from_grid(
-                grid=masked_interferometer_7.grid
-            )
+            g0_image = g0.image_from_grid(grid=masked_interferometer_7.grid)
 
-            g1_profile_image = g1.profile_image_from_grid(
-                grid=masked_interferometer_7.grid
-            )
+            g1_image = g1.image_from_grid(grid=masked_interferometer_7.grid)
 
             assert fit.galaxy_model_image_dict[g0].in_1d == pytest.approx(
-                g0_profile_image, 1.0e-4
+                g0_image, 1.0e-4
             )
             assert fit.galaxy_model_image_dict[g1].in_1d == pytest.approx(
-                g1_profile_image, 1.0e-4
+                g1_image, 1.0e-4
             )
 
         def test___fit_galaxy_visibilities_dict__corresponds_to_galaxy_visibilities(
@@ -1778,7 +1768,7 @@ class TestFitInterferometer:
                 == mapped_reconstructed_image
             ).all()
 
-        def test___fit_galaxy_model_image_dict__profile_images_and_inversion_mapped_reconstructed_image(
+        def test___fit_galaxy_model_image_dict__images_and_inversion_mapped_reconstructed_image(
             self, masked_interferometer_7
         ):
             pix = ag.pix.Rectangular(shape=(3, 3))
@@ -1993,7 +1983,7 @@ class TestFitInterferometer:
                 == mapped_reconstructed_image
             ).all()
 
-        def test___fit_galaxy_model_visibilities_dict__has_profile_image_and_inversion_mapped_reconstructed_image(
+        def test___fit_galaxy_model_visibilities_dict__has_image_and_inversion_mapped_reconstructed_image(
             self, masked_interferometer_7
         ):
 
@@ -2041,9 +2031,9 @@ class TestFitInterferometer:
                 regularization=reg,
             )
 
-            g0_image = g0.profile_image_from_grid(grid=masked_interferometer_7.grid)
+            g0_image = g0.image_from_grid(grid=masked_interferometer_7.grid)
 
-            g1_image = g1.profile_image_from_grid(grid=masked_interferometer_7.grid)
+            g1_image = g1.image_from_grid(grid=masked_interferometer_7.grid)
 
             assert fit.galaxy_model_image_dict[g0].in_1d == pytest.approx(
                 g0_image.in_1d, 1.0e-4

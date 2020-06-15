@@ -31,7 +31,7 @@ def test__individual_images_are_output(
     plot_patch,
 ):
 
-    aplt.Galaxy.profile_image(
+    aplt.Galaxy.image(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,
         positions=positions_7x7,
@@ -39,7 +39,7 @@ def test__individual_images_are_output(
         plotter=aplt.Plotter(output=aplt.Output(galaxy_plotter_path, format="png")),
     )
 
-    assert galaxy_plotter_path + "profile_image.png" in plot_patch.paths
+    assert galaxy_plotter_path + "image.png" in plot_patch.paths
 
     aplt.Galaxy.convergence(
         galaxy=gal_x1_lp_x1_mp,
@@ -116,7 +116,7 @@ def test__individual_galaxy_quantities__all_are_output(
     galaxy_plotter_path,
     plot_patch,
 ):
-    aplt.Galaxy.profile_image_subplot(
+    aplt.Galaxy.image_subplot(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_7x7,
         positions=positions_7x7,
@@ -126,7 +126,7 @@ def test__individual_galaxy_quantities__all_are_output(
         ),
     )
 
-    assert galaxy_plotter_path + "profile_image_subplot.png" in plot_patch.paths
+    assert galaxy_plotter_path + "image_subplot.png" in plot_patch.paths
 
     aplt.Galaxy.convergence_subplot(
         galaxy=gal_x1_lp_x1_mp,

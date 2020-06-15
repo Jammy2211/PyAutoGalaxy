@@ -16,13 +16,11 @@ sersic_light_profile = al.lp.EllipticalSersic(
     sersic_index=4.0,
 )
 
-image = sersic_light_profile.profile_image_from_grid(grid=grid)
+image = sersic_light_profile.image_from_grid(grid=grid)
 
 plotter = aplt.Plotter(
     labels=aplt.Labels(title="Image of Elliptical Sersic Light Profile"),
     output=aplt.Output(path=plot_path, filename="sersic_light_profile", format="png"),
 )
 
-aplt.LightProfile.profile_image(
-    light_profile=sersic_light_profile, grid=grid, plotter=plotter
-)
+aplt.LightProfile.image(light_profile=sersic_light_profile, grid=grid, plotter=plotter)

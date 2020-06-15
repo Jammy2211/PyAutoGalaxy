@@ -32,7 +32,7 @@ def test__all_individual_plotters__output_file_with_default_name(
     plot_patch,
 ):
 
-    aplt.Plane.profile_image(
+    aplt.Plane.image(
         plane=plane_7x7,
         grid=sub_grid_7x7,
         positions=positions_7x7,
@@ -40,7 +40,7 @@ def test__all_individual_plotters__output_file_with_default_name(
         plotter=aplt.Plotter(output=aplt.Output(plane_plotter_path, format="png")),
     )
 
-    assert plane_plotter_path + "profile_image.png" in plot_patch.paths
+    assert plane_plotter_path + "image.png" in plot_patch.paths
 
     aplt.Plane.plane_image(
         plane=plane_7x7,
