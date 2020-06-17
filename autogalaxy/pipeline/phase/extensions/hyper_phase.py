@@ -44,6 +44,8 @@ class HyperPhase:
             A copy of the original phase with a modified name and path
         """
 
+        print(self.search)
+
         phase = copy.deepcopy(self.phase)
         phase.paths.zip()
         new_output_path = f"{self.phase.paths.path_prefix}/{self.phase.phase_name}/{self.hyper_name}__{phase.paths.tag}"
