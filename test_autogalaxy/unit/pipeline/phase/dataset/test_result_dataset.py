@@ -87,6 +87,8 @@ class TestResult:
             regularization=ag.reg.Constant(),
         )
 
+        source.hyper_galaxy_image = np.ones(9)
+
         max_log_likelihood_plane = ag.Plane(galaxies=[source])
 
         samples = mock.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
