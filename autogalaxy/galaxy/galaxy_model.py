@@ -55,9 +55,9 @@ class GalaxyModel(PriorModel):
         Parameters
         ----------
         light_profile_classes: [LightProfile]
-            The *LightProfile* classes for which model light profile instances are generated for this galaxy model.
+            The _LightProfile_ classes for which model light profile instances are generated for this galaxy model.
         mass_profile_classes: [MassProfile]
-            The *MassProfile* classes for which model mass profile instances are generated for this galaxy model.
+            The _MassProfile_ classes for which model mass profile instances are generated for this galaxy model.
         redshift : float | Type[g.Redshift]
             The redshift of this model galaxy.
         model_redshift : bool

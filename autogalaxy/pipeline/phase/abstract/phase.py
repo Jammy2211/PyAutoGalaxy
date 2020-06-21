@@ -25,7 +25,7 @@ class AbstractPhase(af.AbstractPhase):
         super().__init__(paths=paths, search=search)
 
     @property
-    def phase_folders(self):
+    def folders(self):
         return self.search.folders
 
     @property

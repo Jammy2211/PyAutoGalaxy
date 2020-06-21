@@ -7,7 +7,7 @@ from autoarray.operators import transformer
 class PhaseSettings(AbstractPhaseSettings):
     def __init__(
         self,
-        grid_class=grids.GridIterate,
+        grid_class=grids.Grid,
         grid_inversion_class=grids.Grid,
         sub_size=2,
         fractional_accuracy=0.9999,
@@ -36,10 +36,10 @@ class PhaseSettings(AbstractPhaseSettings):
             description of these options).
         sub_size : int
             If the grid and / or grid_inversion use a *Grid*, this sets the sub-size used by the *Grid*.
-        fractional_accuracy : int
+        fractional_accuracy : float
             If the grid and / or grid_inversion use a *GridIterate*, this sets the fractional accuracy it
             uses when evaluating functions.
-        sub_steps : int
+        sub_steps : [int]
             If the grid and / or grid_inversion use a *GridIterate*, this sets the steps the sub-size is increased by
             to meet the fractional accuracy when evaluating functions.
         pixel_scales_interp : float or (float, float)
@@ -247,7 +247,7 @@ class PhaseSettings(AbstractPhaseSettings):
 class PhaseSettingsImaging(PhaseSettings):
     def __init__(
         self,
-        grid_class=grids.GridIterate,
+        grid_class=grids.Grid,
         grid_inversion_class=grids.Grid,
         sub_size=2,
         fractional_accuracy=0.9999,
@@ -318,7 +318,7 @@ class PhaseSettingsImaging(PhaseSettings):
 class PhaseSettingsInterferometer(PhaseSettings):
     def __init__(
         self,
-        grid_class=grids.GridIterate,
+        grid_class=grids.Grid,
         grid_inversion_class=grids.Grid,
         sub_size=2,
         fractional_accuracy=0.9999,

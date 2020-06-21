@@ -8,11 +8,11 @@ data_label = "galaxy_x1__dev_vaucouleurs"
 instrument = "vro"
 
 
-def make_pipeline(name, phase_folders, search=af.DynestyStatic()):
+def make_pipeline(name, folders, search=af.DynestyStatic()):
 
     phase1 = ag.PhaseImaging(
         phase_name="phase_1",
-        phase_folders=phase_folders,
+        folders=setup.folders,
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, sersic=ag.lp.EllipticalSersic)
         ),
