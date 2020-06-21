@@ -12,7 +12,7 @@ class MaskedImaging(imaging.MaskedImaging):
         self,
         imaging,
         mask,
-        grid_class=grids.GridIterate,
+        grid_class=grids.Grid,
         grid_inversion_class=grids.Grid,
         fractional_accuracy=0.9999,
         sub_steps=None,

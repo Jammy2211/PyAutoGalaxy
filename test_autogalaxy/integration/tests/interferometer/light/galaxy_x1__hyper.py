@@ -8,11 +8,11 @@ data_label = "galaxy_x1__dev_vaucouleurs"
 instrument = "sma"
 
 
-def make_pipeline(name, phase_folders, real_space_mask, search=af.DynestyStatic()):
+def make_pipeline(name, folders, real_space_mask, search=af.DynestyStatic()):
 
     phase1 = ag.PhaseInterferometer(
         phase_name="phase_1",
-        phase_folders=phase_folders,
+        folders=setup.folders,
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, bulge=ag.lp.EllipticalSersic)
         ),
@@ -25,14 +25,14 @@ def make_pipeline(name, phase_folders, real_space_mask, search=af.DynestyStatic(
     phase1.search.sampling_efficiency = 0.8
 
     phase1 = phase1.extend_with_multiple_hyper_phases(
-        hyper_galaxy_search=True,
+        hyper_galaxies_search=True,
         include_background_sky=True,
         include_background_noise=True,
     )
 
     phase2 = ag.PhaseInterferometer(
         phase_name="phase_2",
-        phase_folders=phase_folders,
+        folders=setup.folders,
         galaxies=dict(
             galaxy=ag.GalaxyModel(
                 redshift=0.5,

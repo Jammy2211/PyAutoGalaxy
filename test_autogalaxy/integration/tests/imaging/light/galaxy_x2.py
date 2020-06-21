@@ -8,7 +8,7 @@ data_label = "galaxy_x2__sersics"
 instrument = "vro"
 
 
-def make_pipeline(name, phase_folders, search=af.DynestyStatic()):
+def make_pipeline(name, folders, search=af.DynestyStatic()):
 
     bulge_0 = af.PriorModel(ag.lp.EllipticalSersic)
     bulge_1 = af.PriorModel(ag.lp.EllipticalSersic)
@@ -20,7 +20,7 @@ def make_pipeline(name, phase_folders, search=af.DynestyStatic()):
 
     phase1 = ag.PhaseImaging(
         phase_name="phase_1",
-        phase_folders=phase_folders,
+        folders=setup.folders,
         galaxies=dict(
             galaxy_0=ag.GalaxyModel(redshift=0.5, bulge=bulge_0),
             galaxy_1=ag.GalaxyModel(redshift=0.5, bulge=bulge_1),

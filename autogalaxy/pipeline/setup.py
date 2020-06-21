@@ -5,9 +5,11 @@ import autofit as af
 class PipelineSetup:
     def __init__(
         self,
+        folders=None,
         hyper_galaxies=False,
         hyper_image_sky=False,
         hyper_background_noise=False,
+        hyper_galaxy_phase_first=False,
         hyper_galaxies_search=None,
         inversion_search=None,
         hyper_combined_search=None,
@@ -70,6 +72,8 @@ class PipelineSetup:
             If a multi-Gaussian light model is used to fit the galaxy, this determines the number of Gaussians.
         """
 
+        self.folders = folders
+
         self.hyper_galaxies = hyper_galaxies
 
         if self.hyper_galaxies and hyper_galaxies_search is None:
@@ -94,6 +98,8 @@ class PipelineSetup:
             )
         else:
             self.hyper_combined_search = hyper_combined_search
+
+        self.hyper_galaxy_phase_first = hyper_galaxy_phase_first
 
         self.hyper_image_sky = hyper_image_sky
         self.hyper_background_noise = hyper_background_noise
@@ -184,6 +190,16 @@ class PipelineSetup:
             return ""
 
         return "__" + self.pixelization_tag + self.regularization_tag
+
+    @property
+    def inversion_tag_no_underscore(self):
+        """Generate a tag if an *Inversion* is used to  *Pixelization* used to reconstruct the galaxy's light, which
+        is the sum of the pixelization and regularization tags.
+        """
+        if self.pixelization is None or self.regularization is None:
+            return ""
+
+        return self.pixelization_tag + self.regularization_tag
 
     @property
     def pixelization_tag(self):

@@ -751,6 +751,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
+
         factor = (
             2.0
             * self.einstein_radius_rescaled

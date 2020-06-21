@@ -210,37 +210,39 @@ class TestHyperAPI:
 
         hyper_phase = phase_extended.make_hyper_phase()
 
-        print(hyper_phase.paths.output_path)
-
         assert (
-            "test_phase/inversion__settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_1_eff_0.5"
+            "test_phase/inversion__settings__grid_sub_2__bin_2/dynesty_static__nlive_1_eff_0.5"
             in hyper_phase.paths.output_path
         )
 
         phase_extended = phase.extend_with_multiple_hyper_phases(
-            inversion_search=af.DynestyStatic(n_live_points=1),
-            hyper_galaxy_search=af.DynestyStatic(n_live_points=2),
-            hyper_combined_search=af.DynestyStatic(n_live_points=3),
+            setup=ag.PipelineSetup(
+                hyper_galaxies=True,
+                inversion_search=af.DynestyStatic(n_live_points=1),
+                hyper_galaxies_search=af.DynestyStatic(n_live_points=2),
+                hyper_combined_search=af.DynestyStatic(n_live_points=3),
+            ),
+            include_inversion=True,
         )
 
         inversion_phase = phase_extended.hyper_phases[0].make_hyper_phase()
 
         assert (
-            "test_phase/inversion__settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_1_eff_0.5"
+            "test_phase/inversion__settings__grid_sub_2__bin_2/dynesty_static__nlive_1_eff_0.5"
             in inversion_phase.paths.output_path
         )
 
         hyper_galaxy_phase = phase_extended.hyper_phases[1].make_hyper_phase()
 
         assert (
-            "test_phase/hyper_galaxy__settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_2_eff_0.5"
+            "test_phase/hyper_galaxy__settings__grid_sub_2__bin_2/dynesty_static__nlive_2_eff_0.5"
             in hyper_galaxy_phase.paths.output_path
         )
 
         hyper_combined_phase = phase_extended.make_hyper_phase()
 
         assert (
-            "test_phase/hyper_combined__settings__grid_facc_0.9999__bin_2/dynesty_static__nlive_3_eff_0.5"
+            "test_phase/hyper_combined__settings__grid_sub_2__bin_2/dynesty_static__nlive_3_eff_0.5"
             in hyper_combined_phase.paths.output_path
         )
 
@@ -284,7 +286,9 @@ class TestHyperGalaxyPhase:
         )
 
         phase_imaging_7x7_hyper = phase_imaging_7x7.extend_with_multiple_hyper_phases(
-            hyper_galaxy_search=True
+            setup=ag.PipelineSetup(
+                hyper_galaxies=True, hyper_galaxies_search=mock.MockSearch()
+            )
         )
 
         instance = phase_imaging_7x7_hyper.model.instance_from_unit_vector([])
