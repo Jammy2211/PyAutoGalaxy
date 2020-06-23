@@ -30,7 +30,7 @@ def make_pipeline(name, folders, search=af.DynestyStatic()):
 
     phase1.search.const_efficiency_mode = True
     phase1.search.n_live_points = 40
-    phase1.search.sampling_efficiency = 0.8
+    phase1.search.facc = 0.8
 
     class GridPhase(af.as_grid_search(phase_class=ag.PhaseImaging, parallel=False)):
         @property
@@ -47,7 +47,7 @@ def make_pipeline(name, folders, search=af.DynestyStatic()):
 
     phase2.search.const_efficiency_mode = True
     phase2.search.n_live_points = 10
-    phase2.search.sampling_efficiency = 0.5
+    phase2.search.facc = 0.5
 
     phase3 = ag.PhaseImaging(
         phase_name="phase_3",
@@ -58,7 +58,7 @@ def make_pipeline(name, folders, search=af.DynestyStatic()):
 
     phase3.search.const_efficiency_mode = True
     phase3.search.n_live_points = 40
-    phase3.search.sampling_efficiency = 0.8
+    phase3.search.facc = 0.8
 
     return ag.PipelineDataset(name, phase1, phase2, phase3)
 
