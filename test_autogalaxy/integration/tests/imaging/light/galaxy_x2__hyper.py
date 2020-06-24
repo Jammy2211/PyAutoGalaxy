@@ -4,7 +4,7 @@ from test_autogalaxy.integration.tests.imaging import runner
 
 test_type = "galaxy_x1"
 test_name = "galaxy_x2__sersics__hyper"
-data_label = "galaxy_x2__sersics"
+data_name = "galaxy_x2__sersics"
 instrument = "vro"
 
 
@@ -20,7 +20,7 @@ def make_pipeline(name, folders, search=af.DynestyStatic()):
 
     phase1 = ag.PhaseImaging(
         phase_name="phase_1",
-        folders=setup.folders,
+        folders=folders,
         galaxies=dict(
             galaxy_0=ag.GalaxyModel(redshift=0.5, bulge=ag.lp.EllipticalSersic),
             galaxy_1=ag.GalaxyModel(redshift=0.5, bulge=ag.lp.EllipticalSersic),
@@ -36,7 +36,7 @@ def make_pipeline(name, folders, search=af.DynestyStatic()):
 
     phase2 = ag.PhaseImaging(
         phase_name="phase_2",
-        folders=setup.folders,
+        folders=folders,
         galaxies=dict(
             galaxy_0=ag.GalaxyModel(
                 redshift=0.5,

@@ -142,7 +142,7 @@ def simulator_from_instrument(instrument):
         raise ValueError("An invalid instrument was entered - ", instrument)
 
 
-def simulate_imaging_from_instrument(data_label, instrument, galaxies):
+def simulate_imaging_from_instrument(data_name, instrument, galaxies):
 
     # Simulate the imaging data, remembering that we use a special image which ensures edge-effects don't
     # degrade our modeling of the telescope optics (e.ag. the PSF convolution).
@@ -160,7 +160,7 @@ def simulate_imaging_from_instrument(data_label, instrument, galaxies):
     test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
 
     dataset_path = af.util.create_path(
-        path=test_path, folders=["dataset", "imaging", data_label, instrument]
+        path=test_path, folders=["dataset", "imaging", data_name, instrument]
     )
 
     imaging.output_to_fits(
@@ -187,14 +187,14 @@ def simulate_imaging_from_instrument(data_label, instrument, galaxies):
     aplt.Plane.image(plane=plane, grid=grid, plotter=plotter)
 
 
-def load_test_imaging(instrument, data_label, name=None):
+def load_test_imaging(instrument, data_name, name=None):
 
     test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
 
     pixel_scales = pixel_scale_from_instrument(instrument=instrument)
 
     dataset_path = af.util.create_path(
-        path=test_path, folders=["dataset", "imaging", data_label, instrument]
+        path=test_path, folders=["dataset", "imaging", data_name, instrument]
     )
 
     return ag.Imaging.from_fits(
