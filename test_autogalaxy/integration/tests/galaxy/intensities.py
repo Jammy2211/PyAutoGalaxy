@@ -38,6 +38,7 @@ def galaxy_fit_phase():
 
     phase1 = ag.PhaseGalaxy(
         phase_name=test_name + "/",
+        folders=folders,
         galaxies=dict(
             gal=ag.GalaxyModel(redshift=0.5, light=ag.lp.SphericalExponential)
         ),

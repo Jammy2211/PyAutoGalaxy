@@ -4,7 +4,7 @@ from test_autogalaxy.integration.tests.interferometer import runner
 
 test_type = "galaxy_x1"
 test_name = "galaxy_bulge__hyper_bg"
-data_label = "galaxy_x1__dev_vaucouleurs"
+data_name = "galaxy_x1__dev_vaucouleurs"
 instrument = "sma"
 
 
@@ -12,7 +12,7 @@ def make_pipeline(name, folders, real_space_mask, search=af.DynestyStatic()):
 
     phase1 = ag.PhaseInterferometer(
         phase_name="phase_1",
-        folders=setup.folders,
+        folders=folders,
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, bulge=ag.lp.EllipticalSersic)
         ),
@@ -32,7 +32,7 @@ def make_pipeline(name, folders, real_space_mask, search=af.DynestyStatic()):
 
     phase2 = ag.PhaseInterferometer(
         phase_name="phase_2",
-        folders=setup.folders,
+        folders=folders,
         galaxies=dict(
             galaxy=ag.GalaxyModel(
                 redshift=0.5,

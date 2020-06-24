@@ -5,7 +5,7 @@ from test_autogalaxy.simulators.imaging import instrument_util
 
 def simulate__galaxy_x1__dev_vaucouleurs(instrument):
 
-    data_label = "galaxy_x1__dev_vaucouleurs"
+    data_name = "galaxy_x1__dev_vaucouleurs"
 
     # This galaxy-only system has a Dev Vaucouleurs spheroid / bulge.
 
@@ -21,7 +21,7 @@ def simulate__galaxy_x1__dev_vaucouleurs(instrument):
     )
 
     instrument_util.simulate_imaging_from_instrument(
-        data_label=data_label,
+        data_name=data_name,
         instrument=instrument,
         galaxies=[galaxy_galaxy, ag.Galaxy(redshift=1.0)],
     )
@@ -29,7 +29,7 @@ def simulate__galaxy_x1__dev_vaucouleurs(instrument):
 
 def simulate__galaxy_x1__bulge_disk(instrument):
 
-    data_label = "galaxy_x1__bulge_disk"
+    data_name = "galaxy_x1__bulge_disk"
 
     # This source-only system has a Dev Vaucouleurs spheroid / bulge and surrounding Exponential envelope
 
@@ -51,7 +51,7 @@ def simulate__galaxy_x1__bulge_disk(instrument):
     )
 
     instrument_util.simulate_imaging_from_instrument(
-        data_label=data_label,
+        data_name=data_name,
         instrument=instrument,
         galaxies=[galaxy_galaxy, ag.Galaxy(redshift=1.0)],
     )
@@ -59,7 +59,7 @@ def simulate__galaxy_x1__bulge_disk(instrument):
 
 def simulate__galaxy_x2__sersics(instrument):
 
-    data_label = "galaxy_x2__sersics"
+    data_name = "galaxy_x2__sersics"
 
     # This source-only system has two Sersic bulges separated by 2.0"
 
@@ -88,7 +88,7 @@ def simulate__galaxy_x2__sersics(instrument):
     )
 
     instrument_util.simulate_imaging_from_instrument(
-        data_label=data_label,
+        data_name=data_name,
         instrument=instrument,
         galaxies=[galaxy_galaxy_0, galaxy_galaxy_1, ag.Galaxy(redshift=1.0)],
     )
@@ -96,7 +96,7 @@ def simulate__galaxy_x2__sersics(instrument):
 
 def simulate__galaxy_x1__dev_vaucouleurs__offset_centre(instrument):
 
-    data_label = "galaxy_x1__dev_vaucouleurs__offset_centre"
+    data_name = "galaxy_x1__dev_vaucouleurs__offset_centre"
 
     # This galaxy-only system has a Dev Vaucouleurs spheroid / bulge.
 
@@ -112,7 +112,7 @@ def simulate__galaxy_x1__dev_vaucouleurs__offset_centre(instrument):
     )
 
     instrument_util.simulate_imaging_from_instrument(
-        data_label=data_label,
+        data_name=data_name,
         instrument=instrument,
         galaxies=[galaxy_galaxy, ag.Galaxy(redshift=1.0)],
     )

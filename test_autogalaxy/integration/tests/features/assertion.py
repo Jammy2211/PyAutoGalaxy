@@ -4,7 +4,7 @@ from test_autogalaxy.integration.tests.imaging import runner
 
 test_type = "features"
 test_name = "assertion"
-data_label = "galaxy_x1__dev_vaucouleurs"
+data_name = "galaxy_x1__dev_vaucouleurs"
 instrument = "vro"
 
 
@@ -18,7 +18,7 @@ def make_pipeline(name, folders, search=af.DynestyStatic()):
 
     phase1 = ag.PhaseImaging(
         phase_name="phase_1",
-        folders=setup.folders,
+        folders=folders,
         galaxies=dict(galaxy=ag.GalaxyModel(redshift=0.5, sersic=sersic)),
         search=search,
     )
@@ -31,7 +31,7 @@ def make_pipeline(name, folders, search=af.DynestyStatic()):
 
     phase2 = ag.PhaseImaging(
         phase_name="phase_2",
-        folders=setup.folders,
+        folders=folders,
         galaxies=dict(galaxy=phase1.result.model.galaxies.light),
         search=search,
     )

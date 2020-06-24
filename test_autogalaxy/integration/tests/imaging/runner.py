@@ -16,7 +16,7 @@ def run(
     conf.instance = conf.Config(config_path=config_path, output_path=output_path)
 
     imaging = instrument_util.load_test_imaging(
-        data_label=module.data_name, instrument=module.instrument, name="test_dataset"
+        data_name=module.data_name, instrument=module.instrument, name="test_dataset"
     )
 
     if mask is None:
@@ -35,15 +35,5 @@ def run_a_mock(module):
         module,
         test_name=f"{module.test_name}_mock",
         search=af.MockSearch,
-        config_folder="config_mock",
-    )
-
-
-def run_with_multi_nest(module):
-    # noinspection PyTypeChecker
-    run(
-        module,
-        test_name=f"{module.test_name}_nest",
-        search=af.DynestyStatic(),
         config_folder="config_mock",
     )

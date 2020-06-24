@@ -15,7 +15,7 @@ def run(module, test_name=None, search=af.DynestyStatic(), config_folder="config
     conf.instance = conf.Config(config_path=config_path, output_path=output_path)
 
     interferometer = instrument_util.load_test_interferometer(
-        data_label=module.data_name, instrument=module.instrument
+        data_name=module.data_name, instrument=module.instrument
     )
 
     pixel_scales = instrument_util.pixel_scale_from_instrument(

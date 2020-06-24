@@ -18,7 +18,7 @@ def pixel_scale_from_instrument(instrument):
     if instrument in "sma":
         return (0.05, 0.05)
     else:
-        raise ValueError("An invalid data_label resolution was entered - ", instrument)
+        raise ValueError("An invalid data_name resolution was entered - ", instrument)
 
 
 def grid_from_instrument(instrument):
@@ -37,7 +37,7 @@ def grid_from_instrument(instrument):
     if instrument in "sma":
         return ag.GridIterate.uniform(shape_2d=(151, 151), pixel_scales=pixel_scales)
     else:
-        raise ValueError("An invalid data_label resolution was entered - ", instrument)
+        raise ValueError("An invalid data_name resolution was entered - ", instrument)
 
 
 def uv_wavelengths_from_instrument(instrument):
@@ -56,7 +56,7 @@ def uv_wavelengths_from_instrument(instrument):
     if instrument in "sma":
         uv_wavelengths_path += "/sma"
     else:
-        raise ValueError("An invalid data_label resolution was entered - ", instrument)
+        raise ValueError("An invalid data_name resolution was entered - ", instrument)
 
     return ag.util.array.numpy_array_1d_from_fits(
         file_path=uv_wavelengths_path + "/uv_wavelengths.fits", hdu=0
@@ -85,10 +85,10 @@ def simulator_from_instrument(instrument):
             noise_sigma=0.01,
         )
     else:
-        raise ValueError("An invalid data_label resolution was entered - ", instrument)
+        raise ValueError("An invalid data_name resolution was entered - ", instrument)
 
 
-def simulate_interferometer_from_instrument(data_label, instrument, galaxies):
+def simulate_interferometer_from_instrument(data_name, instrument, galaxies):
 
     # Simulate the imaging data, remembering that we use a special image which ensures edge-effects don't
     # degrade our modeling of the telescope optics (e.ag. the PSF convolution).
@@ -106,7 +106,7 @@ def simulate_interferometer_from_instrument(data_label, instrument, galaxies):
     test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
 
     dataset_path = af.util.create_path(
-        path=test_path, folders=["dataset", "interferometer", data_label, instrument]
+        path=test_path, folders=["dataset", "interferometer", data_name, instrument]
     )
 
     interferometer.output_to_fits(
@@ -130,12 +130,12 @@ def simulate_interferometer_from_instrument(data_label, instrument, galaxies):
     aplt.Plane.image(plane=plane, grid=grid, plotter=plotter)
 
 
-def load_test_interferometer(data_label, instrument):
+def load_test_interferometer(data_name, instrument):
 
     test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
 
     dataset_path = af.util.create_path(
-        path=test_path, folders=["dataset", "interferometer", data_label, instrument]
+        path=test_path, folders=["dataset", "interferometer", data_name, instrument]
     )
 
     return ag.Interferometer.from_fits(
