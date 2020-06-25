@@ -16,7 +16,7 @@ def test__hyper_searches():
     assert setup.hyper_galaxies_search.n_live_points == 51
 
     setup = ag.PipelineSetup(inversion_search=None)
-    assert setup.inversion_search.n_live_points == 30
+    assert setup.inversion_search.n_live_points == 50
 
     setup = ag.PipelineSetup(inversion_search=af.DynestyStatic(n_live_points=51))
     assert setup.inversion_search.n_live_points == 51

@@ -87,7 +87,7 @@ class PipelineSetup:
 
         if inversion_search is None:
             self.inversion_search = af.DynestyStatic(
-                n_live_points=30, evidence_tolerance=0.8
+                n_live_points=50, evidence_tolerance=0.8
             )
         elif inversion_search is not None:
             self.inversion_search = inversion_search
