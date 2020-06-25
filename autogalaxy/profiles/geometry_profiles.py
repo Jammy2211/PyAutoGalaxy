@@ -262,7 +262,9 @@ class EllipticalProfile(SphericalProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         if self.__class__.__name__.startswith("Spherical"):
-            return super().transform_grid_to_reference_frame(grid)
+            return super().transform_grid_to_reference_frame(
+                grid=grids.GridTransformedNumpy(grid=grid)
+            )
         shifted_coordinates = np.subtract(grid, self.centre)
         radius = np.sqrt(np.sum(shifted_coordinates ** 2.0, 1))
         theta_coordinate_to_profile = (
@@ -288,7 +290,9 @@ class EllipticalProfile(SphericalProfile):
             The (y, x) coordinates in the reference frame of the profile.
         """
         if self.__class__.__name__.startswith("Spherical"):
-            return super().transform_grid_from_reference_frame(grid)
+            return super().transform_grid_from_reference_frame(
+                grid=grids.GridTransformedNumpy(grid=grid)
+            )
 
         y = np.add(
             np.add(

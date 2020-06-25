@@ -1277,6 +1277,39 @@ class TestDecorators:
         assert (image_interpolate == interpolated_array).all()
 
 
+class TestRegression:
+    def test__centre_of_profile_in_right_place(self):
+
+        grid = ag.Grid.uniform(shape_2d=(7, 7), pixel_scales=1.0)
+
+        light_profile = ag.lp.EllipticalSersic(centre=(2.0, 1.0), intensity=1.0)
+        image = light_profile.image_from_grid(grid=grid)
+        max_indexes = np.unravel_index(image.in_2d.argmax(), image.shape_2d)
+        assert max_indexes == (1, 4)
+
+        light_profile = ag.lp.SphericalSersic(centre=(2.0, 1.0), intensity=1.0)
+        image = light_profile.image_from_grid(grid=grid)
+        max_indexes = np.unravel_index(image.in_2d.argmax(), image.shape_2d)
+        assert max_indexes == (1, 4)
+
+        grid = ag.GridIterate.uniform(
+            shape_2d=(7, 7),
+            pixel_scales=1.0,
+            fractional_accuracy=0.99,
+            sub_steps=[2, 4],
+        )
+
+        light_profile = ag.lp.EllipticalSersic(centre=(2.0, 1.0), intensity=1.0)
+        image = light_profile.image_from_grid(grid=grid)
+        max_indexes = np.unravel_index(image.in_2d.argmax(), image.shape_2d)
+        assert max_indexes == (1, 4)
+
+        light_profile = ag.lp.SphericalSersic(centre=(2.0, 1.0), intensity=1.0)
+        image = light_profile.image_from_grid(grid=grid)
+        max_indexes = np.unravel_index(image.in_2d.argmax(), image.shape_2d)
+        assert max_indexes == (1, 4)
+
+
 class TestGrids:
     def test__grid_to_eccentric_radius(self):
         elliptical = ag.lp.EllipticalSersic(elliptical_comps=(0.0, 0.333333))
