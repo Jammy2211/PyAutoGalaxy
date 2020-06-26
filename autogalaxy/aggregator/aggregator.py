@@ -83,8 +83,12 @@ def masked_imaging_from_agg_obj(agg_obj):
     return ag.MaskedImaging(
         imaging=agg_obj.dataset,
         mask=agg_obj.mask,
-        psf_shape_2d=agg_obj.meta_dataset.settings.psf_shape_2d,
-        inversion_pixel_limit=agg_obj.meta_dataset.settings.inversion_pixel_limit,
+        grid_class=agg_obj.settings.grid_class,
+        grid_inversion_class=agg_obj.settings.grid_inversion_class,
+        fractional_accuracy=agg_obj.settings.fractional_accuracy,
+        sub_steps=agg_obj.settings.sub_steps,
+        psf_shape_2d=agg_obj.settings.psf_shape_2d,
+        inversion_pixel_limit=agg_obj.settings.inversion_pixel_limit,
     )
 
 
@@ -151,13 +155,18 @@ def masked_interferometer_from_agg_obj(agg_obj):
     agg_obj : af.PhaseOutput
         A PyAutoFit aggregator's PhaseOutput object containing the generators of the results of PyAutoGalaxy model-fits.
     """
+
     return ag.MaskedInterferometer(
         interferometer=agg_obj.dataset,
         visibilities_mask=agg_obj.mask,
         real_space_mask=agg_obj.meta_dataset.real_space_mask,
-        transformer_class=agg_obj.meta_dataset.settings.transformer_class,
-        primary_beam_shape_2d=agg_obj.meta_dataset.settings.primary_beam_shape_2d,
-        inversion_pixel_limit=agg_obj.meta_dataset.settings.inversion_pixel_limit,
+        grid_class=agg_obj.settings.grid_class,
+        grid_inversion_class=agg_obj.settings.grid_inversion_class,
+        fractional_accuracy=agg_obj.settings.fractional_accuracy,
+        sub_steps=agg_obj.settings.sub_steps,
+        transformer_class=agg_obj.settings.transformer_class,
+        primary_beam_shape_2d=agg_obj.settings.primary_beam_shape_2d,
+        inversion_pixel_limit=agg_obj.settings.inversion_pixel_limit,
     )
 
 

@@ -60,6 +60,12 @@ def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, sample
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
+        settings=ag.PhaseSettingsImaging(
+            grid_class=ag.GridIterate,
+            grid_inversion_class=ag.GridIterate,
+            fractional_accuracy=0.5,
+            sub_steps=[2],
+        ),
         search=mock.MockSearch(samples=samples),
     )
 
@@ -73,6 +79,10 @@ def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, sample
 
     for masked_imaging in masked_imaging_gen:
         assert (masked_imaging.imaging.image == imaging_7x7.image).all()
+        assert isinstance(masked_imaging.grid, ag.GridIterate)
+        assert isinstance(masked_imaging.grid_inversion, ag.GridIterate)
+        assert masked_imaging.grid.sub_steps == [2]
+        assert masked_imaging.grid.fractional_accuracy == 0.5
 
 
 def test__fit_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
@@ -108,6 +118,13 @@ def test__masked_interferometer_generator_from_aggregator(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
+        settings=ag.PhaseSettingsInterferometer(
+            grid_class=ag.GridIterate,
+            grid_inversion_class=ag.GridIterate,
+            fractional_accuracy=0.5,
+            sub_steps=[2],
+            transformer_class=ag.TransformerDFT,
+        ),
         search=mock.MockSearch(samples=samples),
         real_space_mask=mask_7x7,
     )
@@ -128,6 +145,11 @@ def test__masked_interferometer_generator_from_aggregator(
             == interferometer_7.visibilities
         ).all()
         assert (masked_interferometer.real_space_mask == mask_7x7).all()
+        assert isinstance(masked_interferometer.grid, ag.GridIterate)
+        assert isinstance(masked_interferometer.grid_inversion, ag.GridIterate)
+        assert masked_interferometer.grid.sub_steps == [2]
+        assert masked_interferometer.grid.fractional_accuracy == 0.5
+        assert isinstance(masked_interferometer.transformer, ag.TransformerDFT)
 
 
 def test__fit_interferometer_generator_from_aggregator(

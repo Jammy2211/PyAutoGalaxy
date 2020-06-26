@@ -3279,158 +3279,99 @@ class TestDecorators:
 
 
 class TestRegression:
-    def test__image_centre_is_brightest_pixel_in_grid(self):
+    def test__centre_of_profile_in_right_place(self):
+        grid = ag.Grid.uniform(shape_2d=(7, 7), pixel_scales=1.0)
 
-        # This test is chosen because of a bug where the transform grid decorator was called multiple times in the
-        # evaluation of a light profile, in a very difficult to spot bug using the unit tests above.
-
-        grid = ag.Grid.uniform(shape_2d=(11, 11), pixel_scales=1.0, sub_size=1)
-
-        light_profile = ag.lp.EllipticalSersic(centre=(1.0, 0.0), intensity=1.0)
-
-        grid_transform = light_profile.transform_grid_to_reference_frame(grid=grid)
-
-        y_transform, x_transform = np.unravel_index(
-            abs(grid_transform.distances_from_coordinate((0.0, 0.0))).in_2d.argmin(),
-            grid.shape_2d,
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            mass=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass_0=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
-
-        image = light_profile.image_from_grid(grid=grid)
-
-        y, x = np.unravel_index(abs(image.in_2d).argmax(), image.shape_2d)
-
-        assert y == y_transform
-        assert x == x_transform
-
-        assert y == 4
-        assert x == 5
-
-        galaxy = ag.Galaxy(redshift=0.5, light=light_profile)
-
-        image = galaxy.image_from_grid(grid=grid)
-
-        y, x = np.unravel_index(abs(image.in_2d).argmax(), image.shape_2d)
-
-        assert y == y_transform
-        assert x == x_transform
-
-        assert y == 4
-        assert x == 5
-
-        plane = ag.Plane(galaxies=[galaxy])
-
-        image = plane.image_from_grid(grid=grid)
-
-        y, x = np.unravel_index(abs(image.in_2d).argmax(), image.shape_2d)
-
-        assert y == y_transform
-        assert x == x_transform
-
-        assert y == 4
-        assert x == 5
-
-        # More complex test using different profile and Numpy array
-
-        light_profile = ag.lp.EllipticalSersic(
-            centre=(2.0, 1.0), intensity=1.0, elliptical_comps=(0.333333, 0.0)
-        )
-
-        galaxy = ag.Galaxy(redshift=0.5, light=light_profile)
-
-        plane = ag.Plane(galaxies=[galaxy])
-
-        grid_transform = light_profile.transform_grid_to_reference_frame(grid=grid)
-
-        y_transform, x_transform = np.unravel_index(
-            abs(grid_transform.distances_from_coordinate((0.0, 0.0))).in_2d.argmin(),
-            grid.shape_2d,
-        )
-
-        image = plane.image_from_grid(grid=grid)
-
-        y, x = np.unravel_index(abs(image.in_2d).argmax(), image.shape_2d)
-
-        assert y == y_transform
-        assert x == x_transform
-
-        assert y == 3
-        assert x == 6
-
-    def test__convergence_centre_is_brightest_pixel_in_grid(self):
-
-        # This test is chosen because of a bug where the transform grid decorator was called multiple times in the
-        # evaluation of a mass profile, in a very difficult to spot bug using the unit tests above.
-
-        grid = ag.Grid.uniform(shape_2d=(11, 11), pixel_scales=1.0, sub_size=1)
-
-        mass_profile = ag.mp.EllipticalIsothermal(
-            centre=(1.0, 0.0), einstein_radius=1.0
-        )
-
-        grid_transform = mass_profile.transform_grid_to_reference_frame(grid=grid)
-
-        y_transform, x_transform = np.unravel_index(
-            abs(grid_transform.distances_from_coordinate((0.0, 0.0))).in_2d.argmin(),
-            grid.shape_2d,
-        )
-
-        convergence = mass_profile.convergence_from_grid(grid=grid)
-
-        y, x = np.unravel_index(abs(convergence.in_2d).argmax(), convergence.shape_2d)
-
-        assert y == y_transform
-        assert x == x_transform
-
-        assert y == 4
-        assert x == 5
-
-        galaxy = ag.Galaxy(redshift=0.5, mass=mass_profile)
-
-        convergence = galaxy.convergence_from_grid(grid=grid)
-
-        y, x = np.unravel_index(abs(convergence.in_2d).argmax(), convergence.shape_2d)
-
-        assert y == y_transform
-        assert x == x_transform
-
-        assert y == 4
-        assert x == 5
 
         plane = ag.Plane(galaxies=[galaxy])
 
         convergence = plane.convergence_from_grid(grid=grid)
+        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        assert max_indexes == (1, 4)
 
-        y, x = np.unravel_index(abs(convergence.in_2d).argmax(), convergence.shape_2d)
+        potential = plane.potential_from_grid(grid=grid)
+        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        assert max_indexes == (1, 4)
 
-        assert y == y_transform
-        assert x == x_transform
+        deflections = plane.deflections_from_grid(grid=grid)
+        assert deflections.in_2d[1, 4, 0] > 0
+        assert deflections.in_2d[2, 4, 0] < 0
+        assert deflections.in_2d[1, 4, 1] > 0
+        assert deflections.in_2d[1, 3, 1] < 0
 
-        assert y == 4
-        assert x == 5
-
-        # More complex test using different profile and Numpy array
-
-        mass_profile = ag.mp.EllipticalIsothermal(
-            centre=(2.0, 1.0), einstein_radius=1.0, elliptical_comps=(0.333333, 0.0)
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            mass=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass_0=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
-
-        galaxy = ag.Galaxy(redshift=0.5, mass=mass_profile)
 
         plane = ag.Plane(galaxies=[galaxy])
 
-        grid_transform = mass_profile.transform_grid_to_reference_frame(grid=grid)
+        convergence = plane.convergence_from_grid(grid=grid)
+        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        assert max_indexes == (1, 4)
 
-        y_transform, x_transform = np.unravel_index(
-            abs(grid_transform.distances_from_coordinate((0.0, 0.0))).in_2d.argmin(),
-            grid.shape_2d,
+        potential = plane.potential_from_grid(grid=grid)
+        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        assert max_indexes == (1, 4)
+
+        deflections = plane.deflections_from_grid(grid=grid)
+        assert deflections.in_2d[1, 4, 0] > 0
+        assert deflections.in_2d[2, 4, 0] < 0
+        assert deflections.in_2d[1, 4, 1] > 0
+        assert deflections.in_2d[1, 3, 1] < 0
+
+        grid = ag.GridIterate.uniform(
+            shape_2d=(7, 7),
+            pixel_scales=1.0,
+            fractional_accuracy=0.99,
+            sub_steps=[2, 4],
         )
 
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            mass=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass_0=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        )
+
+        plane = ag.Plane(galaxies=[galaxy])
+
         convergence = plane.convergence_from_grid(grid=grid)
+        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        assert max_indexes == (1, 4)
 
-        y, x = np.unravel_index(abs(convergence.in_2d).argmax(), convergence.shape_2d)
+        potential = plane.potential_from_grid(grid=grid)
+        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        assert max_indexes == (1, 4)
 
-        assert y == y_transform
-        assert x == x_transform
+        deflections = plane.deflections_from_grid(grid=grid)
+        assert deflections.in_2d[1, 4, 0] >= 0
+        assert deflections.in_2d[2, 4, 0] <= 0
+        assert deflections.in_2d[1, 4, 1] >= 0
+        assert deflections.in_2d[1, 3, 1] <= 0
 
-        assert y == 3
-        assert x == 6
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            mass=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        )
+
+        plane = ag.Plane(galaxies=[galaxy])
+
+        convergence = plane.convergence_from_grid(grid=grid)
+        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        assert max_indexes == (1, 4)
+
+        potential = plane.potential_from_grid(grid=grid)
+        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        assert max_indexes == (1, 4)
+
+        deflections = plane.deflections_from_grid(grid=grid)
+        assert deflections.in_2d[1, 4, 0] >= 0
+        assert deflections.in_2d[2, 4, 0] <= 0
+        assert deflections.in_2d[1, 4, 1] >= 0
+        assert deflections.in_2d[1, 3, 1] <= 0

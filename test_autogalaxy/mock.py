@@ -2,7 +2,6 @@ import numpy as np
 import math
 
 from astropy import constants
-
 from autoarray.structures import grids
 import autogalaxy as ag
 
@@ -123,11 +122,10 @@ class MockCosmology:
 ### Mock Pipeline / Phase ###
 
 import autofit as af
-from test_autofit import mock
 from test_autofit.mock import MockSearch, MockSamples
 
 
-class MockResult(mock.MockResult):
+class MockResult(af.MockResult):
     def __init__(
         self,
         samples=None,

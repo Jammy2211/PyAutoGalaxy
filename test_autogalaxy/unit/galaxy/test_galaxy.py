@@ -1874,6 +1874,95 @@ class TestBooleanProperties:
             ag.Galaxy(redshift=0.5, regularization=object())
 
 
+class TestRegression:
+    def test__centre_of_profile_in_right_place(self):
+
+        grid = ag.Grid.uniform(shape_2d=(7, 7), pixel_scales=1.0)
+
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            mass=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass_0=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        )
+
+        convergence = galaxy.convergence_from_grid(grid=grid)
+        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        assert max_indexes == (1, 4)
+
+        potential = galaxy.potential_from_grid(grid=grid)
+        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        assert max_indexes == (1, 4)
+
+        deflections = galaxy.deflections_from_grid(grid=grid)
+        assert deflections.in_2d[1, 4, 0] > 0
+        assert deflections.in_2d[2, 4, 0] < 0
+        assert deflections.in_2d[1, 4, 1] > 0
+        assert deflections.in_2d[1, 3, 1] < 0
+
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            mass=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass_0=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        )
+        convergence = galaxy.convergence_from_grid(grid=grid)
+        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        assert max_indexes == (1, 4)
+
+        potential = galaxy.potential_from_grid(grid=grid)
+        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        assert max_indexes == (1, 4)
+
+        deflections = galaxy.deflections_from_grid(grid=grid)
+        assert deflections.in_2d[1, 4, 0] > 0
+        assert deflections.in_2d[2, 4, 0] < 0
+        assert deflections.in_2d[1, 4, 1] > 0
+        assert deflections.in_2d[1, 3, 1] < 0
+
+        grid = ag.GridIterate.uniform(
+            shape_2d=(7, 7),
+            pixel_scales=1.0,
+            fractional_accuracy=0.99,
+            sub_steps=[2, 4],
+        )
+
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            mass=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass_0=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        )
+        convergence = galaxy.convergence_from_grid(grid=grid)
+        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        assert max_indexes == (1, 4)
+
+        potential = galaxy.potential_from_grid(grid=grid)
+        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        assert max_indexes == (1, 4)
+
+        deflections = galaxy.deflections_from_grid(grid=grid)
+        assert deflections.in_2d[1, 4, 0] >= 0
+        assert deflections.in_2d[2, 4, 0] <= 0
+        assert deflections.in_2d[1, 4, 1] >= 0
+        assert deflections.in_2d[1, 3, 1] <= 0
+
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            mass=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        )
+        convergence = galaxy.convergence_from_grid(grid=grid)
+        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        assert max_indexes == (1, 4)
+
+        potential = galaxy.potential_from_grid(grid=grid)
+        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        assert max_indexes == (1, 4)
+
+        deflections = galaxy.deflections_from_grid(grid=grid)
+        assert deflections.in_2d[1, 4, 0] >= 0
+        assert deflections.in_2d[2, 4, 0] <= 0
+        assert deflections.in_2d[1, 4, 1] >= 0
+        assert deflections.in_2d[1, 3, 1] <= 0
+
+
 class TestDecorators:
     def test__grid_iterate_in__iterates_array_result_correctly(self, gal_x1_lp):
 

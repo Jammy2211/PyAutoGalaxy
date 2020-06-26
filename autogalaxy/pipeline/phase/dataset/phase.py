@@ -65,6 +65,7 @@ class PhaseDataset(abstract.AbstractPhase):
         self.save_dataset(dataset=dataset)
         self.save_mask(mask=mask)
         self.save_meta_dataset(meta_dataset=self.meta_dataset)
+        self.save_settings(settings=self.settings)
 
         self.model = self.model.populate(results)
 

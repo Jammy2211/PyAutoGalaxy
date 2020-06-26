@@ -1,5 +1,5 @@
 from os import path
-
+import autofit as af
 import autogalaxy as ag
 import pytest
 from autogalaxy import exc

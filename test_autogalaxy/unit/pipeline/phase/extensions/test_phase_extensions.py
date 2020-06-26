@@ -211,7 +211,7 @@ class TestHyperAPI:
         hyper_phase = phase_extended.make_hyper_phase()
 
         assert (
-            "test_phase/inversion__settings__grid_sub_2__bin_2/dynesty_static__nlive_1_eff_0.5"
+            "test_phase/inversion__settings__grid_sub_2__bin_2/dynesty_static__nlive_1"
             in hyper_phase.paths.output_path
         )
 
@@ -228,21 +228,21 @@ class TestHyperAPI:
         inversion_phase = phase_extended.hyper_phases[0].make_hyper_phase()
 
         assert (
-            "test_phase/inversion__settings__grid_sub_2__bin_2/dynesty_static__nlive_1_eff_0.5"
+            "test_phase/inversion__settings__grid_sub_2__bin_2/dynesty_static__nlive_1"
             in inversion_phase.paths.output_path
         )
 
         hyper_galaxy_phase = phase_extended.hyper_phases[1].make_hyper_phase()
 
         assert (
-            "test_phase/hyper_galaxy__settings__grid_sub_2__bin_2/dynesty_static__nlive_2_eff_0.5"
+            "test_phase/hyper_galaxy__settings__grid_sub_2__bin_2/dynesty_static__nlive_2"
             in hyper_galaxy_phase.paths.output_path
         )
 
         hyper_combined_phase = phase_extended.make_hyper_phase()
 
         assert (
-            "test_phase/hyper_combined__settings__grid_sub_2__bin_2/dynesty_static__nlive_3_eff_0.5"
+            "test_phase/hyper_combined__settings__grid_sub_2__bin_2/dynesty_static__nlive_3"
             in hyper_combined_phase.paths.output_path
         )
 
