@@ -117,7 +117,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
                 unit_length=self.unit_length, kpc_per_arcsec=kpc_per_arcsec
             )
 
-        mass = dim.MassSetup(
+        mass = dim.Mass(
             value=quad(self.mass_integral, a=0.0, b=radius)[0], unit_mass=self.unit_mass
         )
 
