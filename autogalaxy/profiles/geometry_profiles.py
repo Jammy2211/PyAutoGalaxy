@@ -144,7 +144,7 @@ class EllipticalProfile(SphericalProfile):
 
         self.elliptical_comps = elliptical_comps
 
-        axis_ratio, phi = convert.axis_ratio_and_phi_from_elliptical_comps(
+        axis_ratio, phi = convert.axis_ratio_and_phi_from(
             elliptical_comps=elliptical_comps
         )
 

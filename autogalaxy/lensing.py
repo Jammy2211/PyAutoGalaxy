@@ -357,7 +357,7 @@ class LensingObject:
     ):
 
         einstein_radius = self.einstein_radius_in_units()
-        einstein_mass = dim.Mass(np.pi * (einstein_radius ** 2))
+        einstein_mass = dim.MassSetup(np.pi * (einstein_radius ** 2))
 
         if unit_mass is "solMass":
 

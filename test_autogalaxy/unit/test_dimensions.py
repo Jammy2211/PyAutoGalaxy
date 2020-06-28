@@ -79,7 +79,7 @@ class TestMass:
         self
     ):
 
-        mass_angular = ag.dim.Mass(value=2.0)
+        mass_angular = ag.dim.MassSetup(value=2.0)
 
         assert mass_angular == 2.0
         assert mass_angular.unit_mass == "angular"
@@ -448,7 +448,7 @@ class TestDimensionsProfile:
 
         def test__extracts_mass_correctly__raises_error_if_different_mass(self):
             profile = MockDimensionsProfile(
-                mass=ag.dim.Mass(3.0, "angular"),
+                mass=ag.dim.MassSetup(3.0, "angular"),
                 mass_over_luminosity=ag.dim.MassOverLuminosity(
                     value=1.0, unit_mass="angular"
                 ),
@@ -457,7 +457,7 @@ class TestDimensionsProfile:
             assert profile.unit_mass == "angular"
 
             profile = MockDimensionsProfile(
-                mass=ag.dim.Mass(3.0, "solMass"),
+                mass=ag.dim.MassSetup(3.0, "solMass"),
                 mass_over_luminosity=ag.dim.MassOverLuminosity(
                     value=1.0, unit_mass="solMass"
                 ),
@@ -467,7 +467,7 @@ class TestDimensionsProfile:
 
             with pytest.raises(exc.UnitsException):
                 profile = MockDimensionsProfile(
-                    mass=ag.dim.Mass(3.0, "angular"),
+                    mass=ag.dim.MassSetup(3.0, "angular"),
                     mass_over_luminosity=ag.dim.MassOverLuminosity(
                         value=1.0, unit_mass="solMass"
                     ),
@@ -485,7 +485,7 @@ class TestDimensionsProfile:
                 param_float=2.0,
                 length=ag.dim.Length(value=3.0, unit_length="arcsec"),
                 luminosity=ag.dim.Luminosity(value=4.0, unit_luminosity="eps"),
-                mass=ag.dim.Mass(value=5.0, unit_mass="angular"),
+                mass=ag.dim.MassSetup(value=5.0, unit_mass="angular"),
                 mass_over_luminosity=ag.dim.MassOverLuminosity(
                     value=6.0, unit_luminosity="eps", unit_mass="angular"
                 ),
@@ -597,7 +597,7 @@ class TestDimensionsProfile:
                 param_float=2.0,
                 length=ag.dim.Length(value=3.0, unit_length="arcsec"),
                 luminosity=ag.dim.Luminosity(value=4.0, unit_luminosity="eps"),
-                mass=ag.dim.Mass(value=5.0, unit_mass="angular"),
+                mass=ag.dim.MassSetup(value=5.0, unit_mass="angular"),
                 mass_over_luminosity=ag.dim.MassOverLuminosity(
                     value=6.0, unit_luminosity="eps", unit_mass="angular"
                 ),
@@ -693,7 +693,7 @@ class TestDimensionsProfile:
                 param_float=2.0,
                 length=ag.dim.Length(value=3.0, unit_length="arcsec"),
                 luminosity=ag.dim.Luminosity(value=4.0, unit_luminosity="eps"),
-                mass=ag.dim.Mass(value=5.0, unit_mass="angular"),
+                mass=ag.dim.MassSetup(value=5.0, unit_mass="angular"),
                 mass_over_luminosity=ag.dim.MassOverLuminosity(
                     value=6.0, unit_luminosity="eps", unit_mass="angular"
                 ),
@@ -718,7 +718,7 @@ class TestDimensionsProfile:
                 param_float=2.0,
                 length=ag.dim.Length(value=3.0, unit_length="arcsec"),
                 luminosity=ag.dim.Luminosity(value=4.0, unit_luminosity="eps"),
-                mass=ag.dim.Mass(value=5.0, unit_mass="angular"),
+                mass=ag.dim.MassSetup(value=5.0, unit_mass="angular"),
                 mass_over_luminosity=ag.dim.MassOverLuminosity(
                     value=6.0, unit_luminosity="eps", unit_mass="angular"
                 ),
@@ -814,7 +814,7 @@ class TestDimensionsProfile:
                 param_float=2.0,
                 length=ag.dim.Length(value=3.0, unit_length="arcsec"),
                 luminosity=ag.dim.Luminosity(value=4.0, unit_luminosity="eps"),
-                mass=ag.dim.Mass(value=5.0, unit_mass="angular"),
+                mass=ag.dim.MassSetup(value=5.0, unit_mass="angular"),
                 mass_over_luminosity=ag.dim.MassOverLuminosity(
                     value=6.0, unit_luminosity="eps", unit_mass="angular"
                 ),

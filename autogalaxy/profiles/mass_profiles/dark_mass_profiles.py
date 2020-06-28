@@ -447,7 +447,7 @@ class AbstractEllipticalGeneralizedNFW(
             cosmology=cosmology,
         )
 
-        mass_at_200 = dim.Mass(
+        mass_at_200 = dim.MassSetup(
             200.0
             * ((4.0 / 3.0) * np.pi)
             * cosmic_average_density
