@@ -1,5 +1,24 @@
 import autofit as af
 import autogalaxy as ag
+from autogalaxy import exc
+
+import pytest
+
+
+def test__inversion_evidence_tolerance():
+
+    setup = ag.PipelineSetup(pixelization=None, inversion_evidence_tolerance=None)
+    assert setup.inversion_evidence_tolerance == -1.0
+
+    setup = ag.PipelineSetup(
+        pixelization=ag.pix.Rectangular(), inversion_evidence_tolerance=None
+    )
+    assert setup.inversion_evidence_tolerance == -1.0
+
+    setup = ag.PipelineSetup(
+        pixelization=ag.pix.Rectangular(), inversion_evidence_tolerance=1.0
+    )
+    assert setup.inversion_evidence_tolerance == 1.0
 
 
 def test__hyper_searches():
@@ -9,20 +28,54 @@ def test__hyper_searches():
 
     setup = ag.PipelineSetup(hyper_galaxies=True)
     assert setup.hyper_galaxies_search.n_live_points == 75
+    assert setup.hyper_galaxies_search.evidence_tolerance == pytest.approx(
+        0.084, 1.0e-4
+    )
 
     setup = ag.PipelineSetup(
         hyper_galaxies=True, hyper_galaxies_search=af.DynestyStatic(n_live_points=51)
     )
     assert setup.hyper_galaxies_search.n_live_points == 51
+    assert setup.hyper_galaxies_search.evidence_tolerance == pytest.approx(0.06, 1.0e-4)
 
     setup = ag.PipelineSetup(inversion_search=None)
     assert setup.inversion_search.n_live_points == 50
+    assert setup.inversion_search.evidence_tolerance == pytest.approx(0.059, 1.0e-4)
 
     setup = ag.PipelineSetup(inversion_search=af.DynestyStatic(n_live_points=51))
     assert setup.inversion_search.n_live_points == 51
 
     setup = ag.PipelineSetup(hyper_combined_search=af.DynestyStatic(n_live_points=51))
     assert setup.hyper_combined_search.n_live_points == 51
+
+    setup = ag.PipelineSetup(
+        hyper_galaxies=True,
+        inversion_evidence_tolerance=0.5,
+        pixelization=ag.pix.Rectangular(),
+    )
+    assert setup.hyper_galaxies_search.evidence_tolerance == 0.5
+    assert setup.inversion_search.evidence_tolerance == 0.5
+    assert setup.hyper_combined_search.evidence_tolerance == 0.5
+
+    with pytest.raises(exc.PipelineException):
+
+        ag.PipelineSetup(
+            hyper_galaxies=True,
+            hyper_galaxies_search=af.DynestyStatic(n_live_points=51),
+            inversion_evidence_tolerance=0.5,
+        )
+
+    with pytest.raises(exc.PipelineException):
+        ag.PipelineSetup(
+            inversion_search=af.DynestyStatic(n_live_points=51),
+            inversion_evidence_tolerance=3.0,
+        )
+
+    with pytest.raises(exc.PipelineException):
+        ag.PipelineSetup(
+            hyper_combined_search=af.DynestyStatic(n_live_points=51),
+            inversion_evidence_tolerance=3.0,
+        )
 
 
 def test__hyper_galaxies_tag():
