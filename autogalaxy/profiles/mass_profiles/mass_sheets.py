@@ -70,7 +70,7 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
             centre=(0.0, 0.0), elliptical_comps=elliptical_comps
         )
 
-        magnitude, phi = convert.magnitude_and_phi_from_elliptical_comps(
+        magnitude, phi = convert.shear_magnitude_and_phi_from(
             elliptical_comps=elliptical_comps
         )
 

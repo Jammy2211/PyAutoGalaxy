@@ -163,7 +163,7 @@ class Luminosity(af.DimensionType):
         return Luminosity(value=value, unit_luminosity=unit_luminosity)
 
 
-class Mass(af.DimensionType):
+class MassSetup(af.DimensionType):
     def __init__(self, value, unit_mass="angular"):
         super().__init__(value)
         self.unit_mass = unit_mass
@@ -183,7 +183,7 @@ class Mass(af.DimensionType):
             critical_surface_density=critical_surface_density,
         )
 
-        return Mass(value=value, unit_mass=unit_mass)
+        return MassSetup(value=value, unit_mass=unit_mass)
 
 
 class MassOverLuminosity(af.DimensionType):
