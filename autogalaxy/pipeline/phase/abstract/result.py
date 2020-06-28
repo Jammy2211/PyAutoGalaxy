@@ -23,10 +23,9 @@ class Result(af.Result):
         use_as_hyper_dataset : bool
             Whether this result's phase contains hyper phases, allowing it to be used a hyper dataset.
         """
-        super().__init__(samples=samples, previous_model=previous_model)
+        super().__init__(samples=samples, previous_model=previous_model, search=search)
 
         self.analysis = analysis
-        self.search = search
         self.use_as_hyper_dataset = use_as_hyper_dataset
 
     @property

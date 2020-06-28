@@ -1,4 +1,5 @@
 import autofit as af
+from autofit.exc import PipelineException
 
 
 class CosmologyException(Exception):
