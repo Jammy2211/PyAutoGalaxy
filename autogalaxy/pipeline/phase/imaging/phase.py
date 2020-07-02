@@ -2,6 +2,7 @@ import autofit as af
 from astropy import cosmology as cosmo
 from autogalaxy.pipeline.phase.settings import PhaseSettingsImaging
 from autogalaxy.pipeline.phase import dataset
+from autogalaxy.pipeline.phase import extensions
 from autogalaxy.pipeline.phase.imaging.analysis import Analysis
 from autogalaxy.pipeline.phase.imaging.meta_imaging import MetaImaging
 from autogalaxy.pipeline.phase.imaging.result import Result
@@ -116,6 +117,10 @@ class PhaseImaging(dataset.PhaseDataset):
             phase_info.write("Cosmology = {} \n".format(self.cosmology))
 
             phase_info.close()
+
+    def extend_with_stochastic_phase(self, stochastic_search=None):
+
+        return extensions.InversionPhase(phase=self, search=inversion_search)
 
 
 class PhaseAttributes:

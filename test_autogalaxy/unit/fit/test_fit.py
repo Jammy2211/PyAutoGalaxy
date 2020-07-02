@@ -1164,6 +1164,8 @@ class TestFitImaging:
 
             plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2, galaxy_pix])
 
+            masked_imaging_7x7.image[0] = 3.0
+
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
             g0_blurred_image = g0.blurred_image_from_grid_and_convolver(
