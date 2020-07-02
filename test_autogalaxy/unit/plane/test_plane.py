@@ -9,7 +9,7 @@ from astropy import cosmology as cosmo
 from autogalaxy import exc
 from autogalaxy.plane import plane
 from skimage import measure
-from test_autoarray.mock import mock_inversion
+from test_autoarray import mock
 
 planck = cosmo.Planck15
 
@@ -354,8 +354,8 @@ class TestAbstractPlane:
         def test__1_galaxy_in_plane__it_has_pixelization__returns_mapper(self):
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(value=1),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(1, 1)),
+                pixelization=mock.MockPixelization(value=1),
+                regularization=mock.MockRegularization(matrix_shape=(1, 1)),
             )
 
             plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
@@ -364,8 +364,8 @@ class TestAbstractPlane:
 
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(value=2),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(2, 2)),
+                pixelization=mock.MockPixelization(value=2),
+                regularization=mock.MockRegularization(matrix_shape=(2, 2)),
             )
             galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
@@ -376,13 +376,13 @@ class TestAbstractPlane:
         def test__2_galaxies_in_plane__both_have_pixelization__raises_error(self):
             galaxy_pix_0 = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(value=1),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(1, 1)),
+                pixelization=mock.MockPixelization(value=1),
+                regularization=mock.MockRegularization(matrix_shape=(1, 1)),
             )
             galaxy_pix_1 = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(value=2),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(1, 1)),
+                pixelization=mock.MockPixelization(value=2),
+                regularization=mock.MockRegularization(matrix_shape=(1, 1)),
             )
 
             plane = ag.Plane(galaxies=[galaxy_pix_0, galaxy_pix_1], redshift=None)
@@ -403,8 +403,8 @@ class TestAbstractPlane:
         ):
             galaxy_reg = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(value=1),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(1, 1)),
+                pixelization=mock.MockPixelization(value=1),
+                regularization=mock.MockRegularization(matrix_shape=(1, 1)),
             )
 
             plane = ag.Plane(galaxies=[galaxy_reg], redshift=None)
@@ -413,8 +413,8 @@ class TestAbstractPlane:
 
             galaxy_reg = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(value=1),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(2, 2)),
+                pixelization=mock.MockPixelization(value=1),
+                regularization=mock.MockRegularization(matrix_shape=(2, 2)),
             )
             galaxy_no_reg = ag.Galaxy(redshift=0.5)
 
@@ -425,13 +425,13 @@ class TestAbstractPlane:
         def test__2_galaxies_in_plane__both_have_regularization__raises_error(self):
             galaxy_reg_0 = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(value=1),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(1, 1)),
+                pixelization=mock.MockPixelization(value=1),
+                regularization=mock.MockRegularization(matrix_shape=(1, 1)),
             )
             galaxy_reg_1 = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(value=2),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(1, 1)),
+                pixelization=mock.MockPixelization(value=2),
+                regularization=mock.MockRegularization(matrix_shape=(1, 1)),
             )
 
             plane = ag.Plane(galaxies=[galaxy_reg_0, galaxy_reg_1], redshift=None)
@@ -1988,10 +1988,10 @@ class TestAbstractPlaneData:
         ):
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(
+                pixelization=mock.MockPixelization(
                     value=1, grid=np.array([[1.0, 1.0]])
                 ),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(1, 1)),
+                regularization=mock.MockRegularization(matrix_shape=(1, 1)),
             )
 
             plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
@@ -2008,10 +2008,10 @@ class TestAbstractPlaneData:
 
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(
+                pixelization=mock.MockPixelization(
                     value=1, grid=np.array([[1.0, 1.0]])
                 ),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(1, 1)),
+                regularization=mock.MockRegularization(matrix_shape=(1, 1)),
                 hyper_galaxy_image=2,
             )
 
@@ -2040,8 +2040,8 @@ class TestAbstractPlaneData:
         ):
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(value=1),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(1, 1)),
+                pixelization=mock.MockPixelization(value=1),
+                regularization=mock.MockRegularization(matrix_shape=(1, 1)),
             )
 
             plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
@@ -2054,8 +2054,8 @@ class TestAbstractPlaneData:
 
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(value=1),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(1, 1)),
+                pixelization=mock.MockPixelization(value=1),
+                regularization=mock.MockRegularization(matrix_shape=(1, 1)),
             )
             galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
@@ -2072,8 +2072,8 @@ class TestAbstractPlaneData:
         ):
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(value=1),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(1, 1)),
+                pixelization=mock.MockPixelization(value=1),
+                regularization=mock.MockRegularization(matrix_shape=(1, 1)),
             )
             galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
@@ -2090,13 +2090,13 @@ class TestAbstractPlaneData:
         ):
             galaxy_pix_0 = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(value=1),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(1, 1)),
+                pixelization=mock.MockPixelization(value=1),
+                regularization=mock.MockRegularization(matrix_shape=(1, 1)),
             )
             galaxy_pix_1 = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock_inversion.MockPixelization(value=2),
-                regularization=mock_inversion.MockRegularization(matrix_shape=(1, 1)),
+                pixelization=mock.MockPixelization(value=2),
+                regularization=mock.MockRegularization(matrix_shape=(1, 1)),
             )
 
             plane = ag.Plane(galaxies=[galaxy_pix_0, galaxy_pix_1], redshift=None)
