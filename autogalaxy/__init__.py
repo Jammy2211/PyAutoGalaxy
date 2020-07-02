@@ -24,46 +24,46 @@ from autoarray.operators.inversion.inversions import inversion as Inversion
 from autoarray.operators.inversion import pixelizations as pix, regularization as reg
 from autoconf import conf
 
-from autogalaxy import aggregator as agg
-from autogalaxy.dataset.imaging import MaskedImaging, SimulatorImaging
-from autogalaxy.dataset.interferometer import (
+from . import aggregator as agg
+from .dataset.imaging import MaskedImaging, SimulatorImaging
+from .dataset.interferometer import (
     MaskedInterferometer,
     SimulatorInterferometer,
 )
-from autogalaxy import dimensions as dim
-from autogalaxy import util
-from autogalaxy.profiles import (
+from . import dimensions as dim
+from . import util
+from .profiles import (
     light_profiles as lp,
     mass_profiles as mp,
     light_and_mass_profiles as lmp,
 )
-from autogalaxy.galaxy.galaxy import Galaxy, HyperGalaxy, Redshift
-from autogalaxy.galaxy.galaxy_data import GalaxyData
-from autogalaxy.galaxy.masked_galaxy_data import MaskedGalaxyDataset
-from autogalaxy.galaxy.fit_galaxy import FitGalaxy
-from autogalaxy.galaxy.galaxy_model import GalaxyModel
-from autogalaxy.plane.plane import Plane
-from autogalaxy.fit.fit import FitImaging, FitInterferometer
-from autogalaxy.hyper import hyper_data
-from autogalaxy import plot
-from autogalaxy.pipeline.phase.settings import PhaseSettingsImaging
-from autogalaxy.pipeline.phase.settings import PhaseSettingsInterferometer
-from autogalaxy.pipeline.phase.abstract import phase
-from autogalaxy.pipeline.phase.abstract.phase import AbstractPhase
-from autogalaxy.pipeline.phase.extensions import CombinedHyperPhase
-from autogalaxy.pipeline.phase.extensions import HyperGalaxyPhase
-from autogalaxy.pipeline.phase.extensions.hyper_galaxy_phase import HyperGalaxyPhase
-from autogalaxy.pipeline.phase.extensions.hyper_phase import HyperPhase
-from autogalaxy.pipeline.phase.extensions.inversion_phase import ModelFixingHyperPhase
-from autogalaxy.pipeline.phase.extensions.inversion_phase import InversionPhase
-from autogalaxy.pipeline.phase.abstract.phase import AbstractPhase
-from autogalaxy.pipeline.phase.dataset.phase import PhaseDataset
-from autogalaxy.pipeline.phase.dataset.meta_dataset import MetaDataset
-from autogalaxy.pipeline.phase.imaging.phase import PhaseImaging
-from autogalaxy.pipeline.phase.interferometer.phase import PhaseInterferometer
-from autogalaxy.pipeline.phase.phase_galaxy import PhaseGalaxy
-from autogalaxy.pipeline.pipeline import PipelineDataset
-from autogalaxy.pipeline.setup import PipelineSetup
-from autogalaxy.util import convert
+from .galaxy.galaxy import Galaxy, HyperGalaxy, Redshift
+from .galaxy.galaxy_data import GalaxyData
+from .galaxy.masked_galaxy_data import MaskedGalaxyDataset
+from .galaxy.fit_galaxy import FitGalaxy
+from .galaxy.galaxy_model import GalaxyModel
+from .plane.plane import Plane
+from .fit.fit import FitImaging, FitInterferometer
+from .hyper import hyper_data
+from . import plot
+from .pipeline.phase.settings import PhaseSettingsImaging
+from .pipeline.phase.settings import PhaseSettingsInterferometer
+from .pipeline.phase.abstract import phase
+from .pipeline.phase.abstract.phase import AbstractPhase
+from .pipeline.phase.extensions import CombinedHyperPhase
+from .pipeline.phase.extensions import HyperGalaxyPhase
+from .pipeline.phase.extensions.hyper_galaxy_phase import HyperGalaxyPhase
+from .pipeline.phase.extensions.hyper_phase import HyperPhase
+from .pipeline.phase.extensions.inversion_phase import ModelFixingHyperPhase
+from .pipeline.phase.extensions.inversion_phase import InversionPhase
+from .pipeline.phase.abstract.phase import AbstractPhase
+from .pipeline.phase.dataset.phase import PhaseDataset
+from .pipeline.phase.dataset.meta_dataset import MetaDataset
+from .pipeline.phase.imaging.phase import PhaseImaging
+from .pipeline.phase.interferometer.phase import PhaseInterferometer
+from .pipeline.phase.phase_galaxy import PhaseGalaxy
+from .pipeline.pipeline import PipelineDataset
+from .pipeline.setup import PipelineSetup
+from .util import convert
 
 __version__ = '0.10.13'
