@@ -26,10 +26,7 @@ from autoconf import conf
 
 from . import aggregator as agg
 from .dataset.imaging import MaskedImaging, SimulatorImaging
-from .dataset.interferometer import (
-    MaskedInterferometer,
-    SimulatorInterferometer,
-)
+from .dataset.interferometer import MaskedInterferometer, SimulatorInterferometer
 from . import dimensions as dim
 from . import util
 from .profiles import (
@@ -66,4 +63,4 @@ from .pipeline.pipeline import PipelineDataset
 from .pipeline.setup import PipelineSetup
 from .util import convert
 
-__version__ = '0.10.16'
+__version__ = "0.10.16"
