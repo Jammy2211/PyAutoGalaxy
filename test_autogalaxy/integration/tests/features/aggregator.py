@@ -51,18 +51,18 @@ if __name__ == "__main__":
     #
     #     print(meta_dataset.sub_size)
 
-    agg_phase_1 = agg.filter(agg.phase == "phase_1")
+    agg_phase1 = agg.filter(agg.phase == "phase_1")
 
-    phase_attribute_gen = agg_phase_1.values("phase_attributes")
+    phase_attribute_gen = agg_phase1.values("phase_attributes")
 
     for phase_attribute in phase_attribute_gen:
 
         hyper_galaxy_image_path_dict = phase_attribute.hyper_galaxy_image_path_dict
         print(hyper_galaxy_image_path_dict)
 
-    agg_phase_2 = agg.filter(agg.phase == "phase_2")
+    agg_phase2 = agg.filter(agg.phase == "phase_2")
 
-    phase_attribute_gen = agg_phase_2.values("phase_attributes")
+    phase_attribute_gen = agg_phase2.values("phase_attributes")
 
     for phase_attribute in phase_attribute_gen:
 

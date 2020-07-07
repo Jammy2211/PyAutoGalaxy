@@ -522,13 +522,13 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
     def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
-    ​
+        ​
         For coordinates (0.0, 0.0) the analytic calculation of the deflection angle gives a NaN. Therefore, \
         coordinates at (0.0, 0.0) are shifted slightly to (1.0e-8, 1.0e-8).
 
         This code is an adaption of Tessore & Metcalf 2015:
         https://arxiv.org/abs/1507.01819
-    ​
+        ​
         Parameters
         ----------
         grid : aa.Grid
@@ -618,6 +618,7 @@ class SphericalPowerLaw(EllipticalPowerLaw):
     @grids.transform
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
+
         eta = self.grid_to_grid_radii(grid)
         deflection_r = (
             2.0
@@ -626,6 +627,7 @@ class SphericalPowerLaw(EllipticalPowerLaw):
                 np.power(eta, (3.0 - self.slope)), np.multiply((3.0 - self.slope), eta)
             )
         )
+
         return self.grid_to_grid_cartesian(grid, deflection_r)
 
 
@@ -749,7 +751,6 @@ class EllipticalIsothermal(EllipticalPowerLaw):
         ----------
         grid : aa.Grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
         """
 
         factor = (
@@ -808,7 +809,6 @@ class SphericalIsothermal(EllipticalIsothermal):
         ----------
         grid : aa.Grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
         """
         eta = self.grid_to_elliptical_radii(grid)
         return 2.0 * self.einstein_radius_rescaled * eta
@@ -824,7 +824,6 @@ class SphericalIsothermal(EllipticalIsothermal):
         ----------
         grid : aa.Grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
         """
         return self.grid_to_grid_cartesian(
             grid=grid,

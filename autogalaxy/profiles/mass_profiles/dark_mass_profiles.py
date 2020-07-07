@@ -316,7 +316,7 @@ class AbstractEllipticalGeneralizedNFW(
         else:
             raise exc.UnitsException(
                 "The redshift of the cosmic average density haas been specified as an invalid "
-                "string. Must be (local | profile)"
+                "string. Must be {local, profile}"
             )
 
         cosmic_average_density = cosmology_util.cosmic_average_density_from(
@@ -420,7 +420,7 @@ class AbstractEllipticalGeneralizedNFW(
         else:
             raise exc.UnitsException(
                 "The redshift of the cosmic average density haas been specified as an invalid "
-                "string. Must be (local | profile)"
+                "string. Must be {local, profile}"
             )
 
         cosmic_average_density = cosmology_util.cosmic_average_density_from(

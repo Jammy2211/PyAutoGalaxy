@@ -342,7 +342,7 @@ def convert_length(value, unit_current, unit_new, power, kpc_per_arcsec):
     else:
         raise exc.UnitsException(
             "The unit specified for the length of a value was an invalid string, you "
-            "must use (arcsec | kpc)"
+            "must use {arcsec, kpc}"
         )
 
 
@@ -362,7 +362,7 @@ def convert_luminosity(value, unit_current, unit_new, power, exposure_time):
     else:
         raise exc.UnitsException(
             "The unit specified for the luminosity of a value was an invalid string, you "
-            "must use (electrons per second | counts)"
+            "must use {electrons per second, counts}"
         )
 
 
@@ -382,5 +382,5 @@ def convert_mass(value, unit_current, unit_new, critical_surface_density):
     else:
         raise exc.UnitsException(
             "The unit specified for the mass of a value was an invalid string, you "
-            "must use (angular | solMass)"
+            "must use {angular, solMass}"
         )

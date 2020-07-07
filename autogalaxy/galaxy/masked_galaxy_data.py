@@ -32,7 +32,7 @@ class MaskedGalaxyDataset:
         Parameters
         ----------
         galaxy_data : GalaxyData
-            The collection of data about the galaxy (image of its profile map, noise map, etc.) that is fitted.
+            The collection of data about the galaxy (image of its profile map, noise-map, etc.) that is fitted.
         mask: aa.AbstractMask
             The 2D masks that is applied to image fit data.
         sub_size : int

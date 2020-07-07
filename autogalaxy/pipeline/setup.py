@@ -97,9 +97,7 @@ class PipelineSetup:
         self.hyper_galaxies = hyper_galaxies
 
         if self.hyper_galaxies and hyper_galaxies_search is None:
-            self.hyper_galaxies_search = af.DynestyStatic(
-                n_live_points=75, evidence_tolerance=self.inversion_evidence_tolerance
-            )
+            self.hyper_galaxies_search = af.DynestyStatic(n_live_points=75)
         elif self.hyper_galaxies and hyper_galaxies_search is not None:
             self.hyper_galaxies_search = hyper_galaxies_search
         else:

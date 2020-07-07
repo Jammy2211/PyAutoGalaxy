@@ -179,7 +179,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         radius : float
             The radius of the circle to compute the dimensionless mass within.
         unit_luminosity : str
-            The unit_label the luminosity is returned in (eps | counts).
+            The unit_label the luminosity is returned in {esp, counts}.
         exposure_time : float or None
             The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
         """
@@ -331,7 +331,7 @@ class SphericalGaussian(EllipticalGaussian):
         ----------
         centre : (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        intensity : float_
+        intensity : float
             Overall intensity normalisation of the light profiles (electrons per second).
         sigma : float
             The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.

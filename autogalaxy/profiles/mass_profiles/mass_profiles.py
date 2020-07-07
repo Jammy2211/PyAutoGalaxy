@@ -98,7 +98,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         radius : dim.Length
             The radius of the circle to compute the dimensionless mass within.
         unit_mass : str
-            The unit_label the mass is returned in (angular | angular).
+            The unit_label the mass is returned in {angular, angular}.
         critical_surface_density : float or None
             The critical surface mass density of the strong lens configuration, which converts mass from angulalr \
             unit_label to phsical unit_label (e.g. solar masses).
