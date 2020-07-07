@@ -109,30 +109,30 @@ class TestMetaData:
 class TestPassMask:
     def test_pass_mask(self):
         mask = MockMask()
-        phase_1 = DummyPhaseImaging("one")
-        phase_2 = DummyPhaseImaging("two")
+        phase1 = DummyPhaseImaging("one")
+        phase2 = DummyPhaseImaging("two")
         pipeline = ag.PipelineDataset("", phase_1, phase_2)
         pipeline.run(dataset=MockImagingData(), mask=mask)
 
-        assert phase_1.mask is mask
-        assert phase_2.mask is mask
+        assert phase1.mask is mask
+        assert phase2.mask is mask
 
 
 class TestPipelineImaging:
     def test_run_pipeline(self):
-        phase_1 = DummyPhaseImaging("one")
-        phase_2 = DummyPhaseImaging("two")
+        phase1 = DummyPhaseImaging("one")
+        phase2 = DummyPhaseImaging("two")
 
         pipeline = ag.PipelineDataset("", phase_1, phase_2)
 
         pipeline.run(dataset=MockImagingData(), mask=MockMask())
 
-        assert len(phase_2.results) == 2
+        assert len(phase2.results) == 2
 
     def test_addition(self):
-        phase_1 = DummyPhaseImaging("one")
-        phase_2 = DummyPhaseImaging("two")
-        phase_3 = DummyPhaseImaging("three")
+        phase1 = DummyPhaseImaging("one")
+        phase2 = DummyPhaseImaging("two")
+        phase3 = DummyPhaseImaging("three")
 
         pipeline1 = ag.PipelineDataset("", phase_1, phase_2)
         pipeline2 = ag.PipelineDataset("", phase_3)

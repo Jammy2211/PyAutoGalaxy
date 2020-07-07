@@ -412,7 +412,7 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
         radius : float
             The radius of the circle to compute the dimensionless mass within.
         unit_luminosity : str
-            The unit_label the luminosity is returned in (eps | counts).
+            The unit_label the luminosity is returned in {esp, counts}.
         exposure_time : float
             The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
         """
@@ -442,7 +442,7 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
         radius : float
             The radius of the circle to compute the dimensionless mass within.
         unit_mass : str
-            The unit_label the mass is returned in (angular | angular).
+            The unit_label the mass is returned in {angular, angular}.
 
         """
         return list(
@@ -644,7 +644,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         return sum(hyper_noise_maps)
 
     def hyper_noise_maps_of_galaxies_from_noise_map(self, noise_map):
-        """For a contribution map and noise map, use the model hyper_galaxy galaxies to compute a hyper noise map.
+        """For a contribution map and noise-map, use the model hyper_galaxy galaxies to compute a hyper noise-map.
 
         Parameters
         -----------
