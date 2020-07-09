@@ -118,10 +118,6 @@ class PhaseImaging(dataset.PhaseDataset):
 
             phase_info.close()
 
-    def extend_with_stochastic_phase(self, stochastic_search=None):
-
-        return extensions.InversionPhase(phase=self, search=inversion_search)
-
 
 class PhaseAttributes:
     def __init__(self, cosmology, hyper_model_image, hyper_galaxy_image_path_dict):

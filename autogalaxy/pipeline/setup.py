@@ -21,7 +21,7 @@ class PipelineSetup:
         align_bulge_disk_elliptical_comps=False,
         disk_as_sersic=False,
         number_of_gaussians=None,
-        inversion_evidence_tolerance=None,
+        evidence_tolerance=None,
     ):
         """The setup of a pipeline, which controls how PyAutoGalaxy template pipelines runs, for example controlling
         assumptions about the bulge-disk model or the number of Gaussians used for multi-Gaussian fitting.
@@ -79,16 +79,16 @@ class PipelineSetup:
         self.pixelization = pixelization
         self.regularization = regularization
 
-        self._inversion_evidence_tolerance = inversion_evidence_tolerance
+        self.evidence_tolerance = evidence_tolerance
 
-        if inversion_evidence_tolerance is not None:
+        if evidence_tolerance is not None:
             if (
                 hyper_galaxies_search is not None
                 or inversion_search is not None
                 or hyper_combined_search is not None
             ):
                 raise exc.PipelineException(
-                    "You have manually specified a search in the PipelineSetup, and an inversion_evidence_tolerance."
+                    "You have manually specified a search in the PipelineSetup, and an evidence_tolerance."
                     "You cannot manually specify both - remove one."
                     "(If you want the hyper search to use a specific evidence tolerance, include the evidence"
                     "tolerance in its parameters"
@@ -105,14 +105,14 @@ class PipelineSetup:
 
         if inversion_search is None:
             self.inversion_search = af.DynestyStatic(
-                n_live_points=50, evidence_tolerance=self.inversion_evidence_tolerance
+                n_live_points=50, evidence_tolerance=self.evidence_tolerance
             )
         elif inversion_search is not None:
             self.inversion_search = inversion_search
 
         if hyper_combined_search is None:
             self.hyper_combined_search = af.DynestyStatic(
-                n_live_points=50, evidence_tolerance=self.inversion_evidence_tolerance
+                n_live_points=50, evidence_tolerance=self.evidence_tolerance
             )
         else:
             self.hyper_combined_search = hyper_combined_search
@@ -375,10 +375,3 @@ class PipelineSetup:
                 + "_x"
                 + str(self.number_of_gaussians)
             )
-
-    @property
-    def inversion_evidence_tolerance(self):
-        if self.pixelization is None or self._inversion_evidence_tolerance is None:
-            return -1.0
-        else:
-            return self._inversion_evidence_tolerance

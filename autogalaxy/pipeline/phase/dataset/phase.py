@@ -112,6 +112,7 @@ class PhaseDataset(abstract.AbstractPhase):
 
         if include_inversion:
             if self.meta_dataset.has_pixelization and setup.inversion_search:
+
                 if not setup.hyper_image_sky and not setup.hyper_background_noise:
                     phase_inversion = extensions.InversionPhase(
                         phase=self,
