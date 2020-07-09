@@ -13,6 +13,7 @@ class ModelFixingHyperPhase(HyperPhase):
         hyper_name: str,
         model_classes=tuple(),
     ):
+
         super().__init__(phase=phase, search=search, hyper_name=hyper_name)
 
         self.model_classes = model_classes

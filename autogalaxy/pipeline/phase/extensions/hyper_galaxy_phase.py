@@ -184,7 +184,7 @@ class HyperGalaxyPhase(HyperPhase):
 
             model = copy.deepcopy(phase.model)
 
-            search = phase.search.copy_with_name_extension(extension=path[-1])
+            search = self.search.copy_with_name_extension(extension=path[-1])
 
             # TODO : This is a HACK :O
 
