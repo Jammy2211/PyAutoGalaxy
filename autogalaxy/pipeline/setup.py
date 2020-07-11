@@ -1,5 +1,6 @@
 from autoconf import conf
 import autofit as af
+from autoarray.operators.inversion import pixelizations as pix
 from autogalaxy import exc
 
 
@@ -21,6 +22,7 @@ class PipelineSetup:
         align_bulge_disk_elliptical_comps=False,
         disk_as_sersic=False,
         number_of_gaussians=None,
+        inversion_pixels_fixed=None,
         evidence_tolerance=None,
     ):
         """The setup of a pipeline, which controls how PyAutoGalaxy template pipelines runs, for example controlling
@@ -129,6 +131,8 @@ class PipelineSetup:
         self.disk_as_sersic = disk_as_sersic
         self.number_of_gaussians = number_of_gaussians
 
+        self.inversion_pixels_fixed = inversion_pixels_fixed
+
     @property
     def hyper_tag(self):
         """Tag ithe hyper pipeline features used in a hyper pipeline to customize pipeline output paths.
@@ -205,7 +209,12 @@ class PipelineSetup:
         if self.pixelization is None or self.regularization is None:
             return ""
 
-        return "__" + self.pixelization_tag + self.regularization_tag
+        return (
+            "__"
+            + self.pixelization_tag
+            + self.inversion_pixels_fixed_tag
+            + self.regularization_tag
+        )
 
     @property
     def inversion_tag_no_underscore(self):
@@ -215,7 +224,24 @@ class PipelineSetup:
         if self.pixelization is None or self.regularization is None:
             return ""
 
-        return self.pixelization_tag + self.regularization_tag
+        return (
+            self.pixelization_tag
+            + self.inversion_pixels_fixed_tag
+            + self.regularization_tag
+        )
+
+    @property
+    def inversion_pixels_fixed_tag(self):
+        """Generate a tag if an *Inversion* is used to  *Pixelization* used to reconstruct the galaxy's light, which
+        is the sum of the pixelization and regularization tags.
+        """
+        if self.inversion_pixels_fixed is None:
+            return ""
+
+        if self.pixelization is not pix.VoronoiBrightnessImage:
+            return ""
+
+        return f"_{str(self.inversion_pixels_fixed)}"
 
     @property
     def pixelization_tag(self):
