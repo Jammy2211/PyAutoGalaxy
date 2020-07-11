@@ -5,6 +5,28 @@ from autogalaxy import exc
 import pytest
 
 
+def test__pixelization__model_depends_on_inversion_pixels_fixed():
+
+    setup = ag.PipelineSetup()
+
+    assert setup.pixelization is None
+
+    setup = ag.PipelineSetup(pixelization=ag.pix.Rectangular)
+
+    assert setup.pixelization is ag.pix.Rectangular
+
+    setup = ag.PipelineSetup(pixelization=ag.pix.VoronoiBrightnessImage)
+
+    assert setup.pixelization is ag.pix.VoronoiBrightnessImage
+
+    setup = ag.PipelineSetup(
+        pixelization=ag.pix.VoronoiBrightnessImage, inversion_pixels_fixed=100
+    )
+
+    assert isinstance(setup.pixelization, af.PriorModel)
+    assert setup.pixelization.pixels == 100
+
+
 def test__hyper_searches():
 
     setup = ag.PipelineSetup(hyper_galaxies=False)
