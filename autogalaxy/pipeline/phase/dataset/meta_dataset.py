@@ -59,7 +59,7 @@ class MetaDataset:
         return False
 
     @property
-    def pixelizaition_is_model(self):
+    def pixelization_is_model(self):
         if self.model.galaxies:
             for galaxy in self.model.galaxies:
                 if isprior(galaxy.pixelization):

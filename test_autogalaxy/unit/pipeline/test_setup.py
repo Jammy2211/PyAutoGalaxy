@@ -5,6 +5,28 @@ from autogalaxy import exc
 import pytest
 
 
+def test__pixelization__model_depends_on_inversion_pixels_fixed():
+
+    setup = ag.PipelineSetup()
+
+    assert setup.pixelization is None
+
+    setup = ag.PipelineSetup(pixelization=ag.pix.Rectangular)
+
+    assert setup.pixelization is ag.pix.Rectangular
+
+    setup = ag.PipelineSetup(pixelization=ag.pix.VoronoiBrightnessImage)
+
+    assert setup.pixelization is ag.pix.VoronoiBrightnessImage
+
+    setup = ag.PipelineSetup(
+        pixelization=ag.pix.VoronoiBrightnessImage, inversion_pixels_fixed=100
+    )
+
+    assert isinstance(setup.pixelization, af.PriorModel)
+    assert setup.pixelization.pixels == 100
+
+
 def test__hyper_searches():
 
     setup = ag.PipelineSetup(hyper_galaxies=False)
@@ -32,11 +54,10 @@ def test__hyper_searches():
     setup = ag.PipelineSetup(hyper_combined_search=af.DynestyStatic(n_live_points=51))
     assert setup.hyper_combined_search.n_live_points == 51
 
-    setup = ag.PipelineSetup(
-        hyper_galaxies=True,
-        evidence_tolerance=0.5,
+    setup = ag.PipelineSetup(hyper_galaxies=True, evidence_tolerance=0.5)
+    assert setup.hyper_galaxies_search.evidence_tolerance == pytest.approx(
+        0.084, 1.0e-4
     )
-    assert setup.hyper_galaxies_search.evidence_tolerance == pytest.approx(0.084, 1.0e-4)
     assert setup.inversion_search.evidence_tolerance == 0.5
     assert setup.hyper_combined_search.evidence_tolerance == 0.5
 
@@ -50,8 +71,7 @@ def test__hyper_searches():
 
     with pytest.raises(exc.PipelineException):
         ag.PipelineSetup(
-            inversion_search=af.DynestyStatic(n_live_points=51),
-            evidence_tolerance=3.0,
+            inversion_search=af.DynestyStatic(n_live_points=51), evidence_tolerance=3.0
         )
 
     with pytest.raises(exc.PipelineException):
@@ -117,20 +137,45 @@ def test__regularization_tag():
     assert setup.regularization_tag == "__reg_adapt_bright"
 
 
+def test__inversion_pixels_fixed_tag():
+
+    setup = ag.PipelineSetup(inversion_pixels_fixed=None)
+    assert setup.inversion_pixels_fixed_tag == ""
+
+    setup = ag.PipelineSetup(inversion_pixels_fixed=100)
+    assert setup.inversion_pixels_fixed_tag == ""
+
+    setup = ag.PipelineSetup(
+        inversion_pixels_fixed=100, pixelization=ag.pix.VoronoiBrightnessImage
+    )
+    assert setup.inversion_pixels_fixed_tag == "_100"
+
+
 def test__inversion_tag():
-    setup = ag.PipelineSetup(pixelization=None)
+
+    setup = ag.PipelineSetup(pixelization=None, inversion_pixels_fixed=100)
     assert setup.inversion_tag == ""
-    setup = ag.PipelineSetup(regularization=None)
+    setup = ag.PipelineSetup(regularization=None, inversion_pixels_fixed=100)
     assert setup.inversion_tag == ""
     setup = ag.PipelineSetup(
-        pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
+        pixelization=ag.pix.Rectangular,
+        regularization=ag.reg.Constant,
+        inversion_pixels_fixed=100,
     )
     assert setup.inversion_tag == "__pix_rect__reg_const"
     setup = ag.PipelineSetup(
         pixelization=ag.pix.VoronoiBrightnessImage,
         regularization=ag.reg.AdaptiveBrightness,
+        inversion_pixels_fixed=None,
     )
     assert setup.inversion_tag == "__pix_voro_image__reg_adapt_bright"
+
+    setup = ag.PipelineSetup(
+        pixelization=ag.pix.VoronoiBrightnessImage,
+        regularization=ag.reg.AdaptiveBrightness,
+        inversion_pixels_fixed=100,
+    )
+    assert setup.inversion_tag == "__pix_voro_image_100__reg_adapt_bright"
 
 
 def test__light_centre_tag():
