@@ -36,7 +36,7 @@ class HyperPhase:
         """
         raise NotImplementedError()
 
-    def make_hyper_phase(self) -> abstract.AbstractPhase:
+    def make_hyper_phase(self, include_path_prefix=True) -> abstract.AbstractPhase:
         """
         Returns
         -------
@@ -46,7 +46,10 @@ class HyperPhase:
 
         phase = copy.deepcopy(self.phase)
         phase.paths.zip()
-        new_output_path = f"{self.phase.paths.path_prefix}/{self.phase.phase_name}/{self.hyper_name}__{phase.paths.tag}"
+        if include_path_prefix:
+            new_output_path = f"{self.phase.paths.path_prefix}/{self.phase.phase_name}/{self.hyper_name}__{phase.paths.tag}"
+        else:
+            new_output_path = f"{self.hyper_name}__{phase.paths.tag}"
 
         phase.search = self.search.copy_with_name_extension(
             extension=new_output_path, remove_phase_tag=True
@@ -57,7 +60,7 @@ class HyperPhase:
         return phase
 
     def run(
-        self, dataset: Dataset, results: af.ResultsCollection = None, **kwargs
+        self, dataset: Dataset, results: af.ResultsCollection, **kwargs
     ) -> af.Result:
         """
         Run the hyper phase and then the hyper_galaxies phase.
@@ -76,12 +79,6 @@ class HyperPhase:
             The result of the phase, with a hyper_galaxies result attached as an attribute with the hyper_name of this
             phase.
         """
-        self.save_dataset(dataset=dataset)
-
-        results = (
-            copy.deepcopy(results) if results is not None else af.ResultsCollection()
-        )
-
         result = self.phase.run(dataset, results=results, **kwargs)
         results.add(self.phase.paths.name, result)
         hyper_result = self.run_hyper(dataset=dataset, results=results, **kwargs)

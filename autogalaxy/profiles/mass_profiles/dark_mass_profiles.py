@@ -1088,17 +1088,6 @@ class SphericalTruncatedNFWMCRDuffy(SphericalTruncatedNFW):
 
 
 class SphericalTruncatedNFWMCRLudlow(SphericalTruncatedNFW):
-    """
-    This function only applies for the lens configuration as follows:
-    Cosmology: FlatLamdaCDM
-    H0 = 70.0 km/sec/Mpc
-    Omega_Lambda = 0.7
-    Omega_m = 0.3
-    Redshfit of Main Lens: 0.6
-    Redshift of Source: 2.5
-    A truncated NFW halo at z = 0.6 with tau = 2.0
-    """
-
     @af.map_types
     def __init__(
         self,
