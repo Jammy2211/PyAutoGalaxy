@@ -107,14 +107,18 @@ class PipelineSetup:
 
         if inversion_search is None:
             self.inversion_search = af.DynestyStatic(
-                n_live_points=50, evidence_tolerance=self.evidence_tolerance
+                n_live_points=50,
+                evidence_tolerance=self.evidence_tolerance,
+                sample="rstagger",
             )
         elif inversion_search is not None:
             self.inversion_search = inversion_search
 
         if hyper_combined_search is None:
             self.hyper_combined_search = af.DynestyStatic(
-                n_live_points=50, evidence_tolerance=self.evidence_tolerance
+                n_live_points=50,
+                evidence_tolerance=self.evidence_tolerance,
+                sample="rstagger",
             )
         else:
             self.hyper_combined_search = hyper_combined_search

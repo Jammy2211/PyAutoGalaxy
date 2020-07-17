@@ -34,7 +34,7 @@ class CombinedHyperPhase(HyperPhase):
         return [phase.hyper_name for phase in self.hyper_phases]
 
     def run(
-        self, dataset, mask, results: af.ResultsCollection = None, info=None, **kwargs
+        self, dataset, mask, results: af.ResultsCollection, info=None, **kwargs
     ) -> af.Result:
         """
         Run the phase followed by the hyper_galaxies phases. Each result of a hyper_galaxies phase is attached to the
@@ -56,7 +56,7 @@ class CombinedHyperPhase(HyperPhase):
         result
             The result of the phase, with hyper_galaxies results attached by associated hyper_galaxies names
         """
-        results = results.copy() if results is not None else af.ResultsCollection()
+        results = results.copy()
 
         result = self.phase.run(
             dataset=dataset, mask=mask, results=results, info=info, **kwargs
@@ -96,7 +96,9 @@ class CombinedHyperPhase(HyperPhase):
             model += getattr(result, name).model
         return model
 
-    def run_hyper(self, dataset, results, info=None, **kwargs) -> af.Result:
+    def run_hyper(
+        self, dataset, results: af.ResultsCollection, info=None, **kwargs
+    ) -> af.Result:
 
         phase = self.make_hyper_phase()
         phase.model = self.combine_models(results.last)

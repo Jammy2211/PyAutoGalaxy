@@ -18,21 +18,21 @@ class ModelFixingHyperPhase(HyperPhase):
 
         self.model_classes = model_classes
 
-    def make_hyper_phase(self):
-        phase = super().make_hyper_phase()
+    def make_hyper_phase(self, include_path_prefix=True):
+        phase = super().make_hyper_phase(include_path_prefix=include_path_prefix)
 
         return phase
 
     def make_model(self, instance):
         return instance.as_model(self.model_classes)
 
-    def run_hyper(self, dataset, info=None, results=None, **kwargs):
+    def run_hyper(self, dataset, results: af.ResultsCollection, info=None, **kwargs):
         """
         Run the phase, overriding the search's model instance with one created to
         only fit pixelization hyperparameters.
         """
 
-        self.results = results or af.ResultsCollection()
+        self.results = results
 
         phase = self.make_hyper_phase()
         phase.model = self.make_model(results.last.instance)

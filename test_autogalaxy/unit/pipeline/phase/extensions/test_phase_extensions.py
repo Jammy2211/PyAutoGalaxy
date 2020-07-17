@@ -120,7 +120,9 @@ def make_combined():
 
 class TestHyperAPI:
     def test_combined_result(self, hyper_combined):
-        result = hyper_combined.run(dataset=None, mask=None)
+        result = hyper_combined.run(
+            dataset=None, mask=None, results=af.ResultsCollection()
+        )
 
         assert hasattr(result, "hyper_galaxy")
         assert isinstance(result.hyper_galaxy, mock.MockResult)
@@ -184,7 +186,7 @@ class TestHyperAPI:
 
         phase.run_hyper = run_hyper
 
-        result = phase.run(dataset=imaging_7x7)
+        result = phase.run(dataset=imaging_7x7, results=af.ResultsCollection())
 
         assert hasattr(result, "hyper_galaxy")
         assert isinstance(result.hyper_galaxy, mock.MockResult)
