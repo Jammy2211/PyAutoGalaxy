@@ -34,7 +34,13 @@ class CombinedHyperPhase(HyperPhase):
         return [phase.hyper_name for phase in self.hyper_phases]
 
     def run(
-        self, dataset, mask, results: af.ResultsCollection, info=None, **kwargs
+        self,
+        dataset,
+        mask,
+        results: af.ResultsCollection,
+        info=None,
+        pickle_files=None,
+        **kwargs
     ) -> af.Result:
         """
         Run the phase followed by the hyper_galaxies phases. Each result of a hyper_galaxies phase is attached to the
@@ -59,13 +65,22 @@ class CombinedHyperPhase(HyperPhase):
         results = results.copy()
 
         result = self.phase.run(
-            dataset=dataset, mask=mask, results=results, info=info, **kwargs
+            dataset=dataset,
+            mask=mask,
+            results=results,
+            info=info,
+            pickle_files=pickle_files,
+            **kwargs
         )
         results.add(self.phase.paths.name, result)
 
         for phase in self.hyper_phases:
             hyper_result = phase.run_hyper(
-                dataset=dataset, results=results, info=info, **kwargs
+                dataset=dataset,
+                results=results,
+                info=info,
+                pickle_files=pickle_files,
+                **kwargs
             )
             setattr(result, phase.hyper_name, hyper_result)
 
@@ -97,10 +112,21 @@ class CombinedHyperPhase(HyperPhase):
         return model
 
     def run_hyper(
-        self, dataset, results: af.ResultsCollection, info=None, **kwargs
+        self,
+        dataset,
+        results: af.ResultsCollection,
+        info=None,
+        pickle_files=None,
+        **kwargs
     ) -> af.Result:
 
         phase = self.make_hyper_phase()
         phase.model = self.combine_models(results.last)
 
-        return phase.run(dataset, mask=results.last.mask, results=results, info=info)
+        return phase.run(
+            dataset,
+            mask=results.last.mask,
+            results=results,
+            info=info,
+            pickle_files=pickle_files,
+        )

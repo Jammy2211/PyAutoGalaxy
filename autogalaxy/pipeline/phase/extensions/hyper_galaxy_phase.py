@@ -150,7 +150,9 @@ class HyperGalaxyPhase(HyperPhase):
         self.include_sky_background = include_sky_background
         self.include_noise_background = include_noise_background
 
-    def run_hyper(self, dataset, results: af.ResultsCollection, info=None):
+    def run_hyper(
+        self, dataset, results: af.ResultsCollection, info=None, pickle_files=None
+    ):
         """
         Run a fit for each galaxy from the previous phase.
         Parameters
