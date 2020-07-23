@@ -1,5 +1,6 @@
 import copy
 from functools import wraps
+import inspect
 
 import numpy as np
 from autoconf import conf
@@ -12,6 +13,7 @@ from autogalaxy.plot import lensing_mat_objs
 class LensingPlotter(plotters.AbstractPlotter):
     def __init__(
         self,
+        module=None,
         units=None,
         figure=None,
         cmap=None,
@@ -38,6 +40,7 @@ class LensingPlotter(plotters.AbstractPlotter):
     ):
 
         super(LensingPlotter, self).__init__(
+            module=module,
             units=units,
             figure=figure,
             cmap=cmap,
@@ -552,6 +555,7 @@ class LensingPlotter(plotters.AbstractPlotter):
 class Plotter(LensingPlotter, plotters.Plotter):
     def __init__(
         self,
+        module=None,
         units=None,
         figure=None,
         cmap=None,
@@ -578,6 +582,7 @@ class Plotter(LensingPlotter, plotters.Plotter):
     ):
 
         super(Plotter, self).__init__(
+            module=module,
             units=units,
             figure=figure,
             cmap=cmap,
@@ -607,6 +612,7 @@ class Plotter(LensingPlotter, plotters.Plotter):
 class SubPlotter(LensingPlotter, plotters.SubPlotter):
     def __init__(
         self,
+        module=None,
         units=None,
         figure=None,
         cmap=None,
@@ -633,6 +639,7 @@ class SubPlotter(LensingPlotter, plotters.SubPlotter):
     ):
 
         super(SubPlotter, self).__init__(
+            module=module,
             units=units,
             figure=figure,
             cmap=cmap,
@@ -848,7 +855,7 @@ def set_include_and_plotter(func):
         if plotter_key is not None:
             plotter = kwargs[plotter_key]
         else:
-            plotter = Plotter()
+            plotter = Plotter(module=inspect.getmodule(func))
             plotter_key = "plotter"
 
         kwargs[plotter_key] = plotter
@@ -872,15 +879,15 @@ def set_include_and_sub_plotter(func):
 
         kwargs[include_key] = include
 
-        plotter_key = plotters.plotter_key_from_dictionary(dictionary=kwargs)
+        sub_plotter_key = plotters.plotter_key_from_dictionary(dictionary=kwargs)
 
-        if plotter_key is not None:
-            plotter = kwargs[plotter_key]
+        if sub_plotter_key is not None:
+            plotter = kwargs[sub_plotter_key]
         else:
-            plotter = SubPlotter()
-            plotter_key = "sub_plotter"
+            plotter = SubPlotter(module=inspect.getmodule(func))
+            sub_plotter_key = "sub_plotter"
 
-        kwargs[plotter_key] = plotter
+        kwargs[sub_plotter_key] = plotter
 
         return func(*args, **kwargs)
 

@@ -17,7 +17,6 @@ from autoarray.dataset.imaging import Imaging
 from autoarray.dataset.interferometer import Interferometer
 from autoarray.operators.convolver import Convolver
 from autoarray.operators.transformer import TransformerDFT
-from autoarray.operators.transformer import TransformerFFT
 from autoarray.operators.transformer import TransformerNUFFT
 from autoarray.operators.inversion.mappers import mapper as Mapper
 from autoarray.operators.inversion.inversions import inversion as Inversion
@@ -63,4 +62,4 @@ from .pipeline.pipeline import PipelineDataset
 from .pipeline.setup import PipelineSetup
 from .util import convert
 
-__version__ = '0.12.3'
+__version__ = "0.12.3"

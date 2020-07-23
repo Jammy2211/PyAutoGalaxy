@@ -46,10 +46,7 @@ class HyperPhase:
 
         phase = copy.deepcopy(self.phase)
         phase.paths.zip()
-        if include_path_prefix:
-            new_output_path = f"{self.phase.paths.path_prefix}/{self.phase.phase_name}/{self.hyper_name}__{phase.paths.tag}"
-        else:
-            new_output_path = f"{self.hyper_name}__{phase.paths.tag}"
+        new_output_path = f"{self.phase.paths.path_prefix}/{self.phase.phase_name}/{self.hyper_name}__{phase.paths.tag}"
 
         phase.search = self.search.copy_with_name_extension(
             extension=new_output_path, remove_phase_tag=True

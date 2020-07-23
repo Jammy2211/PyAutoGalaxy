@@ -160,8 +160,6 @@ class TestTags:
     def test__transformer_tag(self):
         settings = ag.PhaseSettingsInterferometer(transformer_class=ag.TransformerDFT)
         assert settings.transformer_tag == "__dft"
-        settings = ag.PhaseSettingsInterferometer(transformer_class=ag.TransformerFFT)
-        assert settings.transformer_tag == "__fft"
         settings = ag.PhaseSettingsInterferometer(transformer_class=ag.TransformerNUFFT)
         assert settings.transformer_tag == "__nufft"
         settings = ag.PhaseSettingsInterferometer(transformer_class=None)
