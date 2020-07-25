@@ -59,7 +59,7 @@ class LensingObject:
         deflections_y_2d = np.gradient(potential.in_2d, grid.in_2d[:, 0, 0], axis=0)
         deflections_x_2d = np.gradient(potential.in_2d, grid.in_2d[0, :, 1], axis=1)
 
-        return grids.MaskedGrid.manual_2d(
+        return grids.Grid.manual_mask(
             grid=np.stack((deflections_y_2d, deflections_x_2d), axis=-1), mask=grid.mask
         )
 
