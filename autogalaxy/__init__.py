@@ -11,7 +11,6 @@ from autoarray.structures.grids import (
 )
 from autoarray.structures.kernel import Kernel
 from autoarray.structures.visibilities import Visibilities
-from autoarray.structures.arrays import MaskedArray
 from autoarray.structures.grids import MaskedGrid
 from autoarray.dataset.imaging import Imaging
 from autoarray.dataset.interferometer import Interferometer

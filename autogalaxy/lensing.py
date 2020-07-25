@@ -67,7 +67,7 @@ class LensingObject:
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        return arrays.MaskedArray.manual_2d(
+        return arrays.Array.manual_mask(
             array=1.0
             - np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[0, :, 1], axis=1),
             mask=grid.mask,
@@ -77,7 +77,7 @@ class LensingObject:
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        return arrays.MaskedArray.manual_2d(
+        return arrays.Array.manual_mask(
             array=-1.0
             * np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[:, 0, 0], axis=0),
             mask=grid.mask,
@@ -87,7 +87,7 @@ class LensingObject:
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        return arrays.MaskedArray.manual_2d(
+        return arrays.Array.manual_mask(
             array=-1.0
             * np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[0, :, 1], axis=1),
             mask=grid.mask,
@@ -97,7 +97,7 @@ class LensingObject:
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        return arrays.MaskedArray.manual_2d(
+        return arrays.Array.manual_mask(
             array=1
             - np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[:, 0, 0], axis=0),
             mask=grid.mask,

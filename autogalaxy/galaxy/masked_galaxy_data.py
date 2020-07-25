@@ -50,10 +50,10 @@ class MaskedGalaxyDataset:
         self.galaxy_data = galaxy_data
         self.pixel_scales = galaxy_data.pixel_scales
 
-        self.image = arrays.MaskedArray.manual_2d(
+        self.image = arrays.Array.manual_mask(
             array=galaxy_data.image.in_2d_binned, mask=mask.mask_sub_1
         )
-        self.noise_map = arrays.MaskedArray.manual_2d(
+        self.noise_map = arrays.Array.manual_mask(
             array=galaxy_data.noise_map.in_2d_binned, mask=mask.mask_sub_1
         )
 
@@ -110,29 +110,29 @@ class MaskedGalaxyDataset:
 
         if self.use_image:
             image = sum(map(lambda g: g.image_from_grid(grid=self.grid), galaxies))
-            return arrays.MaskedArray.manual_1d(array=image, mask=self.mask)
+            return arrays.Array.manual_mask(array=image, mask=self.mask)
         elif self.use_convergence:
             convergence = sum(
                 map(lambda g: g.convergence_from_grid(grid=self.grid), galaxies)
             )
-            return arrays.MaskedArray.manual_1d(array=convergence, mask=self.mask)
+            return arrays.Array.manual_mask(array=convergence, mask=self.mask)
         elif self.use_potential:
             potential = sum(
                 map(lambda g: g.potential_from_grid(grid=self.grid), galaxies)
             )
-            return arrays.MaskedArray.manual_1d(array=potential, mask=self.mask)
+            return arrays.Array.manual_mask(array=potential, mask=self.mask)
         elif self.use_deflections_y:
             deflections = sum(
                 map(lambda g: g.deflections_from_grid(grid=self.grid), galaxies)
             )
-            return arrays.MaskedArray.manual_1d(
+            return arrays.Array.manual_mask(
                 array=deflections[:, 0], mask=self.grid.mask
             )
         elif self.use_deflections_x:
             deflections = sum(
                 map(lambda g: g.deflections_from_grid(grid=self.grid), galaxies)
             )
-            return arrays.MaskedArray.manual_1d(
+            return arrays.Array.manual_mask(
                 array=deflections[:, 1], mask=self.grid.mask
             )
 

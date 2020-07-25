@@ -667,7 +667,12 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
             else:
 
-                hyper_noise_maps.append(arrays.MaskedArray.zeros(mask=noise_map.mask))
+                hyper_noise_map = arrays.Array.manual_mask(
+                    array=np.zeros(noise_map.mask.mask_sub_1.pixels_in_mask),
+                    mask=noise_map.mask.mask_sub_1,
+                )
+
+                hyper_noise_maps.append(hyper_noise_map)
 
         return hyper_noise_maps
 
