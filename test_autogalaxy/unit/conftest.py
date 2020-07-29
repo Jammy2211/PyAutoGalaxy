@@ -237,17 +237,23 @@ def make_gal_fit_7x7_deflections_x(gal_fit_data_7x7_deflections_x, gal_x1_mp):
 
 @pytest.fixture(name="hyper_model_image_7x7")
 def make_hyper_model_image_7x7(mask_7x7):
-    return ag.MaskedArray.full(fill_value=5.0, mask=mask_7x7)
+    return ag.Array.manual_mask(
+        np.full(fill_value=5.0, shape=mask_7x7.pixels_in_mask), mask=mask_7x7
+    )
 
 
 @pytest.fixture(name="hyper_galaxy_image_0_7x7")
 def make_hyper_galaxy_image_0_7x7(mask_7x7):
-    return ag.MaskedArray.full(fill_value=2.0, mask=mask_7x7)
+    return ag.Array.manual_mask(
+        np.full(fill_value=2.0, shape=mask_7x7.pixels_in_mask), mask=mask_7x7
+    )
 
 
 @pytest.fixture(name="hyper_galaxy_image_1_7x7")
 def make_hyper_galaxy_image_1_7x7(mask_7x7):
-    return ag.MaskedArray.full(fill_value=3.0, mask=mask_7x7)
+    return ag.Array.manual_mask(
+        np.full(fill_value=3.0, shape=mask_7x7.pixels_in_mask), mask=mask_7x7
+    )
 
 
 @pytest.fixture(name="hyper_galaxy_image_path_dict_7x7")

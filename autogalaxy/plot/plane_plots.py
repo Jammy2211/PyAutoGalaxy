@@ -66,7 +66,7 @@ def potential(plane, grid, include=None, plotter=None):
 def deflections_y(plane, grid, include=None, plotter=None):
 
     deflections = plane.deflections_from_grid(grid=grid)
-    deflections_y = arrays.MaskedArray.manual_1d(
+    deflections_y = arrays.Array.manual_mask(
         array=deflections.in_1d[:, 0], mask=grid.mask
     )
 
@@ -85,7 +85,7 @@ def deflections_y(plane, grid, include=None, plotter=None):
 def deflections_x(plane, grid, include=None, plotter=None):
 
     deflections = plane.deflections_from_grid(grid=grid)
-    deflections_x = arrays.MaskedArray.manual_1d(
+    deflections_x = arrays.Array.manual_mask(
         array=deflections.in_1d[:, 1], mask=grid.mask
     )
 

@@ -67,7 +67,7 @@ def deflections_y(mass_profile, grid, positions=None, include=None, plotter=None
     """
 
     deflections = mass_profile.deflections_from_grid(grid=grid)
-    deflections_y = arrays.MaskedArray.manual_1d(
+    deflections_y = arrays.Array.manual_mask(
         array=deflections.in_1d[:, 0], mask=grid.mask
     )
 
@@ -96,7 +96,7 @@ def deflections_x(mass_profile, grid, positions=None, include=None, plotter=None
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
      """
     deflections = mass_profile.deflections_from_grid(grid=grid)
-    deflections_x = arrays.MaskedArray.manual_1d(
+    deflections_x = arrays.Array.manual_mask(
         array=deflections.in_1d[:, 1], mask=grid.mask
     )
 

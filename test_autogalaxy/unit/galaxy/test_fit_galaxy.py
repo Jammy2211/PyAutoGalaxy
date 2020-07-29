@@ -197,7 +197,7 @@ class TestCompareToManual:
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        log_likelihood = ag.util.fit.likelihood_from(
+        log_likelihood = ag.util.fit.log_likelihood_from(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
@@ -236,7 +236,7 @@ class TestCompareToManual:
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        log_likelihood = ag.util.fit.likelihood_from(
+        log_likelihood = ag.util.fit.log_likelihood_from(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
@@ -278,7 +278,7 @@ class TestCompareToManual:
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        log_likelihood = ag.util.fit.likelihood_from(
+        log_likelihood = ag.util.fit.log_likelihood_from(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
@@ -323,7 +323,7 @@ class TestCompareToManual:
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        log_likelihood = ag.util.fit.likelihood_from(
+        log_likelihood = ag.util.fit.log_likelihood_from(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
@@ -367,7 +367,7 @@ class TestCompareToManual:
             noise_map=masked_galaxy_dataset.noise_map
         )
 
-        log_likelihood = ag.util.fit.likelihood_from(
+        log_likelihood = ag.util.fit.log_likelihood_from(
             chi_squared=chi_squared, noise_normalization=noise_normalization
         )
 
