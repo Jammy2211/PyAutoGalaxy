@@ -611,7 +611,13 @@ class AbstractPlaneData(AbstractPlaneLensing):
         )
 
     def inversion_interferometer_from_grid_and_data(
-        self, grid, visibilities, noise_map, transformer, inversion_uses_border=False
+        self,
+        grid,
+        visibilities,
+        noise_map,
+        transformer,
+        visibilities_complex=None,
+        inversion_uses_border=False,
     ):
 
         sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
@@ -626,6 +632,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             visibilities=visibilities,
             noise_map=noise_map,
             transformer=transformer,
+            visibilities_complex=visibilities_complex,
             mapper=mapper,
             regularization=self.regularization,
         )
