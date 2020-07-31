@@ -1,6 +1,6 @@
 from autoarray import preprocess
 from autoarray.mask.mask import Mask
-from autoarray.structures.arrays import Array, Values
+from autoarray.structures.arrays import Values
 from autoarray.structures.grids import (
     Grid,
     GridIterate,
@@ -21,6 +21,7 @@ from autoarray.operators.inversion.inversions import inversion as Inversion
 from autoarray.operators.inversion import pixelizations as pix, regularization as reg
 from autoconf import conf
 
+from .structures.arrays import Array
 from . import aggregator as agg
 from .dataset.imaging import MaskedImaging, SimulatorImaging
 from .dataset.interferometer import MaskedInterferometer, SimulatorInterferometer
@@ -60,4 +61,4 @@ from .pipeline.pipeline import PipelineDataset
 from .pipeline.setup import PipelineSetup
 from .util import convert
 
-__version__ = '0.12.6'
+__version__ = "0.12.6"
