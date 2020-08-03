@@ -13,7 +13,7 @@ class Result(abstract.result.Result):
             instance=self.instance
         )
 
-        return self.analysis.masked_imaging_fit_for_tracer(
+        return self.analysis.positions_fit_for_tracer(
             plane=self.max_log_likelihood_plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,

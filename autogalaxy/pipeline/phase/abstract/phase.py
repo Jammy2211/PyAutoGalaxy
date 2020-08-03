@@ -1,6 +1,6 @@
 import autofit as af
 from autogalaxy.pipeline.phase.abstract.result import Result
-
+from astropy import cosmology as cosmo
 
 # noinspection PyAbstractClass
 
@@ -9,7 +9,9 @@ class AbstractPhase(af.AbstractPhase):
     Result = Result
 
     @af.convert_paths
-    def __init__(self, paths, *, search):
+    def __init__(
+        self, paths, *, settings, search, galaxies=None, cosmology=cosmo.Planck15
+    ):
         """
         A phase in an lens pipeline. Uses the set non_linear search to try to fit
         models and hyper_galaxies passed to it.
@@ -23,6 +25,10 @@ class AbstractPhase(af.AbstractPhase):
         self.use_as_hyper_dataset = False
 
         super().__init__(paths=paths, search=search)
+
+        self.settings = settings
+        self.galaxies = galaxies or []
+        self.cosmology = cosmology
 
     @property
     def folders(self):

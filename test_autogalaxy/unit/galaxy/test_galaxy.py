@@ -473,16 +473,17 @@ class TestLightProfiles:
             assert galaxy.light_profile_centres == []
 
             galaxy = ag.Galaxy(
-                redshift=0.5, mp_0=ag.lp.EllipticalLightProfile(centre=(0.0, 1.0))
+                redshift=0.5, lp_0=ag.lp.EllipticalLightProfile(centre=(0.0, 1.0))
             )
 
             assert galaxy.light_profile_centres.in_list == [[(0.0, 1.0)]]
+            assert galaxy.light_profile_centres.as_dict["lp_0"] == [(0.0, 1.0)]
 
             galaxy = ag.Galaxy(
                 redshift=0.5,
-                mp_0=ag.lp.EllipticalLightProfile(centre=(0.0, 1.0)),
-                mp_1=ag.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
-                mp_2=ag.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
+                lp_0=ag.lp.EllipticalLightProfile(centre=(0.0, 1.0)),
+                lp_1=ag.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
+                lp_2=ag.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
             )
 
             assert galaxy.light_profile_centres.in_list == [
@@ -490,13 +491,16 @@ class TestLightProfiles:
                 [(2.0, 3.0)],
                 [(4.0, 5.0)],
             ]
+            assert galaxy.light_profile_centres.as_dict["lp_0"] == [(0.0, 1.0)]
+            assert galaxy.light_profile_centres.as_dict["lp_1"] == [(2.0, 3.0)]
+            assert galaxy.light_profile_centres.as_dict["lp_2"] == [(4.0, 5.0)]
 
             galaxy = ag.Galaxy(
                 redshift=0.5,
-                mp_0=ag.lp.EllipticalLightProfile(centre=(0.0, 1.0)),
-                mp_1=ag.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
-                lp_0=ag.mp.EllipticalMassProfile(centre=(-1.0, -2.0)),
-                mp_2=ag.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
+                lp_0=ag.lp.EllipticalLightProfile(centre=(0.0, 1.0)),
+                lp_1=ag.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
+                mp_0=ag.mp.EllipticalMassProfile(centre=(-1.0, -2.0)),
+                lp_2=ag.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
             )
 
             assert galaxy.light_profile_centres.in_list == [
@@ -504,6 +508,9 @@ class TestLightProfiles:
                 [(2.0, 3.0)],
                 [(4.0, 5.0)],
             ]
+            assert galaxy.light_profile_centres.as_dict["lp_0"] == [(0.0, 1.0)]
+            assert galaxy.light_profile_centres.as_dict["lp_1"] == [(2.0, 3.0)]
+            assert galaxy.light_profile_centres.as_dict["lp_2"] == [(4.0, 5.0)]
 
 
 class TestMassProfiles:
@@ -1361,6 +1368,7 @@ class TestMassProfiles:
             )
 
             assert galaxy.mass_profile_centres.in_list == [[(0.0, 1.0)]]
+            assert galaxy.mass_profile_centres.as_dict["mp_0"] == [(0.0, 1.0)]
 
             galaxy = ag.Galaxy(
                 redshift=0.5,
@@ -1374,6 +1382,9 @@ class TestMassProfiles:
                 [(2.0, 3.0)],
                 [(4.0, 5.0)],
             ]
+            assert galaxy.mass_profile_centres.as_dict["mp_0"] == [(0.0, 1.0)]
+            assert galaxy.mass_profile_centres.as_dict["mp_1"] == [(2.0, 3.0)]
+            assert galaxy.mass_profile_centres.as_dict["mp_2"] == [(4.0, 5.0)]
 
             galaxy = ag.Galaxy(
                 redshift=0.5,
@@ -1388,21 +1399,27 @@ class TestMassProfiles:
                 [(2.0, 3.0)],
                 [(4.0, 5.0)],
             ]
+            assert galaxy.mass_profile_centres.as_dict["mp_0"] == [(0.0, 1.0)]
+            assert galaxy.mass_profile_centres.as_dict["mp_1"] == [(2.0, 3.0)]
+            assert galaxy.mass_profile_centres.as_dict["mp_2"] == [(4.0, 5.0)]
 
             galaxy = ag.Galaxy(
                 redshift=0.5,
-                mp_0=ag.lp.EllipticalLightProfile(centre=(0.0, 1.0)),
-                mp_1=ag.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
-                lp_0=ag.mp.EllipticalMassProfile(centre=(-1.0, -2.0)),
-                mp_2=ag.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
+                mp_0=ag.mp.EllipticalMassProfile(centre=(0.0, 1.0)),
+                mp_1=ag.mp.EllipticalMassProfile(centre=(2.0, 3.0)),
+                lp_0=ag.lp.EllipticalLightProfile(centre=(-1.0, -2.0)),
+                mp_2=ag.mp.EllipticalMassProfile(centre=(4.0, 5.0)),
                 sheet=ag.mp.MassSheet(centre=(10.0, 10.0)),
             )
 
-            assert galaxy.light_profile_centres.in_list == [
+            assert galaxy.mass_profile_centres.in_list == [
                 [(0.0, 1.0)],
                 [(2.0, 3.0)],
                 [(4.0, 5.0)],
             ]
+            assert galaxy.mass_profile_centres.as_dict["mp_0"] == [(0.0, 1.0)]
+            assert galaxy.mass_profile_centres.as_dict["mp_1"] == [(2.0, 3.0)]
+            assert galaxy.mass_profile_centres.as_dict["mp_2"] == [(4.0, 5.0)]
 
         def test__extracts_axis_ratio_correctly(self):
 
@@ -1416,6 +1433,9 @@ class TestMassProfiles:
             )
 
             assert galaxy.mass_profile_axis_ratios.in_list[0][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
+            assert galaxy.mass_profile_axis_ratios.as_dict["mp_0"][0] == pytest.approx(
                 0.9, 1.0e-4
             )
 
@@ -1433,6 +1453,15 @@ class TestMassProfiles:
                 0.8, 1.0e-4
             )
             assert galaxy.mass_profile_axis_ratios.in_list[2][0] == pytest.approx(
+                0.7, 1.0e-4
+            )
+            assert galaxy.mass_profile_axis_ratios.as_dict["mp_0"][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
+            assert galaxy.mass_profile_axis_ratios.as_dict["mp_1"][0] == pytest.approx(
+                0.8, 1.0e-4
+            )
+            assert galaxy.mass_profile_axis_ratios.as_dict["mp_2"][0] == pytest.approx(
                 0.7, 1.0e-4
             )
 
@@ -1453,6 +1482,15 @@ class TestMassProfiles:
             assert galaxy.mass_profile_axis_ratios.in_list[2][0] == pytest.approx(
                 0.7, 1.0e-4
             )
+            assert galaxy.mass_profile_axis_ratios.as_dict["mp_0"][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
+            assert galaxy.mass_profile_axis_ratios.as_dict["mp_1"][0] == pytest.approx(
+                0.8, 1.0e-4
+            )
+            assert galaxy.mass_profile_axis_ratios.as_dict["mp_2"][0] == pytest.approx(
+                0.7, 1.0e-4
+            )
 
         def test__extracts_phis_correctly(self):
 
@@ -1468,6 +1506,9 @@ class TestMassProfiles:
             )
 
             assert galaxy.mass_profile_phis.in_list == [[0.9]]
+            assert galaxy.mass_profile_phis.as_dict["mp_0"][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
 
             galaxy = ag.Galaxy(
                 redshift=0.5,
@@ -1485,6 +1526,15 @@ class TestMassProfiles:
             assert galaxy.mass_profile_phis.in_list[0][0] == pytest.approx(0.9, 1.0e-4)
             assert galaxy.mass_profile_phis.in_list[1][0] == pytest.approx(0.8, 1.0e-4)
             assert galaxy.mass_profile_phis.in_list[2][0] == pytest.approx(0.7, 1.0e-4)
+            assert galaxy.mass_profile_phis.as_dict["mp_0"][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
+            assert galaxy.mass_profile_phis.as_dict["mp_1"][0] == pytest.approx(
+                0.8, 1.0e-4
+            )
+            assert galaxy.mass_profile_phis.as_dict["mp_2"][0] == pytest.approx(
+                0.7, 1.0e-4
+            )
 
             galaxy = ag.Galaxy(
                 redshift=0.5,
@@ -1505,6 +1555,15 @@ class TestMassProfiles:
             assert galaxy.mass_profile_phis.in_list[0][0] == pytest.approx(0.9, 1.0e-4)
             assert galaxy.mass_profile_phis.in_list[1][0] == pytest.approx(0.8, 1.0e-4)
             assert galaxy.mass_profile_phis.in_list[2][0] == pytest.approx(0.7, 1.0e-4)
+            assert galaxy.mass_profile_phis.as_dict["mp_0"][0] == pytest.approx(
+                0.9, 1.0e-4
+            )
+            assert galaxy.mass_profile_phis.as_dict["mp_1"][0] == pytest.approx(
+                0.8, 1.0e-4
+            )
+            assert galaxy.mass_profile_phis.as_dict["mp_2"][0] == pytest.approx(
+                0.7, 1.0e-4
+            )
 
     class TestLensingObject:
         def test__correct_einstein_mass_caclulated_for_multiple_mass_profiles__means_all_innherited_methods_work(

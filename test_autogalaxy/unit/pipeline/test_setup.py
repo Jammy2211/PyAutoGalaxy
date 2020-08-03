@@ -212,7 +212,7 @@ def test__bulge_disk_tag():
     light = ag.PipelineSetup(
         align_bulge_disk_centre=True, align_bulge_disk_elliptical_comps=False
     )
-    print(light.align_bulge_disk_tag)
+
     assert light.align_bulge_disk_tag == "__align_bulge_disk_centre"
 
     light = ag.PipelineSetup(
