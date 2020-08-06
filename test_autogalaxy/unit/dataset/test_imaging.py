@@ -1,5 +1,69 @@
-import autogalaxy as ag
+from astropy.io import fits
+
+import os
 import numpy as np
+import autoarray as aa
+import autogalaxy as ag
+
+
+def create_fits(fits_path, array):
+
+    if os.path.exists(fits_path):
+        os.remove(fits_path)
+
+    hdu_list = fits.HDUList()
+
+    hdu_list.append(fits.ImageHDU(array))
+
+    hdu_list.writeto(f"{fits_path}")
+
+
+class TestImaging:
+    def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9(self):
+
+        fits_path = "{}/files".format(os.path.dirname(os.path.realpath(__file__)))
+
+        image = np.array([[1.0, 0.0], [0.0, 0.0]])
+        image_path = f"{fits_path}/image.fits"
+        create_fits(fits_path=image_path, array=image)
+
+        noise_map = np.array([[2.0, 0.0], [0.0, 0.0]])
+        noise_map_path = f"{fits_path}/noise_map.fits"
+        create_fits(fits_path=noise_map_path, array=noise_map)
+
+        psf = np.array([[1.0, 1.0], [0.0, 0.0]])
+        psf_path = f"{fits_path}/psf.fits"
+        create_fits(fits_path=psf_path, array=psf)
+
+        imaging = ag.Imaging.from_fits(
+            image_path=image_path,
+            noise_map_path=noise_map_path,
+            psf_path=psf_path,
+            pixel_scales=0.1,
+        )
+
+        assert (imaging.image.in_2d == np.array([[0.0, 0.0], [1.0, 0.0]])).all()
+        assert (imaging.noise_map.in_2d == np.array([[0.0, 0.0], [2.0, 0.0]])).all()
+        assert (imaging.psf.in_2d == np.array([[0.0, 0.0], [0.5, 0.5]])).all()
+
+        imaging.output_to_fits(
+            image_path=image_path,
+            noise_map_path=noise_map_path,
+            psf_path=psf_path,
+            overwrite=True,
+        )
+
+        hdu_list = fits.open(image_path)
+        image = np.array(hdu_list[0].data).astype("float64")
+        assert (image == np.array([[1.0, 0.0], [0.0, 0.0]])).all()
+
+        hdu_list = fits.open(noise_map_path)
+        noise_map = np.array(hdu_list[0].data).astype("float64")
+        assert (noise_map == np.array([[2.0, 0.0], [0.0, 0.0]])).all()
+
+        hdu_list = fits.open(psf_path)
+        psf = np.array(hdu_list[0].data).astype("float64")
+        assert (psf == np.array([[0.5, 0.5], [0.0, 0.0]])).all()
 
 
 class TestMaskedImaging:

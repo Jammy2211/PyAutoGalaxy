@@ -1,6 +1,6 @@
 from autoarray import preprocess
 from autoarray.mask.mask import Mask
-from autoarray.structures.arrays import Values
+from autoarray.structures.arrays import Array, Values
 from autoarray.structures.grids import (
     Grid,
     GridIterate,
@@ -9,6 +9,7 @@ from autoarray.structures.grids import (
     GridRectangular,
     GridVoronoi,
 )
+from autoarray.structures.frame import Frame
 from autoarray.structures.kernel import Kernel
 from autoarray.structures.visibilities import Visibilities
 from autoarray.dataset.imaging import Imaging
@@ -16,12 +17,12 @@ from autoarray.dataset.interferometer import Interferometer
 from autoarray.operators.convolver import Convolver
 from autoarray.operators.transformer import TransformerDFT
 from autoarray.operators.transformer import TransformerNUFFT
+from autoarray.operators.transformer import TransformerNUFFTLinearOperator
 from autoarray.operators.inversion.mappers import mapper as Mapper
 from autoarray.operators.inversion.inversions import inversion as Inversion
 from autoarray.operators.inversion import pixelizations as pix, regularization as reg
 from autoconf import conf
 
-from .structures.arrays import Array
 from . import aggregator as agg
 from .dataset.imaging import MaskedImaging, SimulatorImaging
 from .dataset.interferometer import MaskedInterferometer, SimulatorInterferometer

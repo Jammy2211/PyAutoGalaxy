@@ -4,6 +4,7 @@ import numpy as np
 from autoarray.structures import grids
 from autoarray.dataset import imaging
 from autogalaxy import exc
+from autoarray.structures import arrays, kernel
 from autogalaxy.plane import plane as pl
 
 

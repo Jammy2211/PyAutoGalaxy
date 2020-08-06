@@ -27,13 +27,25 @@ def make_masked_imaging_7x7(imaging_7x7, sub_mask_7x7):
 
 @pytest.fixture(name="masked_interferometer_7")
 def make_masked_interferometer_7(
-    interferometer_7, mask_7x7, visibilities_mask_7x2, sub_grid_7x7, transformer_7x7_7
+    interferometer_7, mask_7x7, visibilities_mask_7x2, sub_grid_7x7
 ):
     return ag.MaskedInterferometer(
         interferometer=interferometer_7,
         visibilities_mask=visibilities_mask_7x2,
         real_space_mask=mask_7x7,
         transformer_class=ag.TransformerDFT,
+    )
+
+
+@pytest.fixture(name="masked_interferometer_7_lop")
+def make_masked_interferometer_7_lop(
+    interferometer_7, mask_7x7, visibilities_mask_7x2, sub_grid_7x7
+):
+    return ag.MaskedInterferometer(
+        interferometer=interferometer_7,
+        visibilities_mask=visibilities_mask_7x2,
+        real_space_mask=mask_7x7,
+        transformer_class=ag.TransformerNUFFTLinearOperator,
     )
 
 

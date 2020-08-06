@@ -57,7 +57,12 @@ class HyperPhase:
         return phase
 
     def run(
-        self, dataset: Dataset, results: af.ResultsCollection, **kwargs
+        self,
+        dataset: Dataset,
+        results: af.ResultsCollection,
+        info=None,
+        pickle_files=None,
+        **kwargs,
     ) -> af.Result:
         """
         Run the hyper phase and then the hyper_galaxies phase.
@@ -76,9 +81,17 @@ class HyperPhase:
             The result of the phase, with a hyper_galaxies result attached as an attribute with the hyper_name of this
             phase.
         """
-        result = self.phase.run(dataset, results=results, **kwargs)
+        result = self.phase.run(
+            dataset, results=results, info=info, pickle_files=pickle_files, **kwargs
+        )
         results.add(self.phase.paths.name, result)
-        hyper_result = self.run_hyper(dataset=dataset, results=results, **kwargs)
+        hyper_result = self.run_hyper(
+            dataset=dataset,
+            results=results,
+            info=info,
+            pickle_files=pickle_files,
+            **kwargs,
+        )
         setattr(result, self.hyper_name, hyper_result)
         return result
 
