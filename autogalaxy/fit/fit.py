@@ -184,6 +184,7 @@ class FitInterferometer(aa_fit.FitInterferometer):
                 visibilities=self.profile_subtracted_visibilities,
                 noise_map=noise_map,
                 transformer=masked_interferometer.transformer,
+                inversion_uses_linear_operators=masked_interferometer.inversion_uses_linear_operators,
             )
 
             model_visibilities = (

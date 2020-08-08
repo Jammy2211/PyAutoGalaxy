@@ -45,7 +45,8 @@ def make_masked_interferometer_7_lop(
         interferometer=interferometer_7,
         visibilities_mask=visibilities_mask_7x2,
         real_space_mask=mask_7x7,
-        transformer_class=ag.TransformerNUFFTLinearOperator,
+        transformer_class=ag.TransformerNUFFT,
+        inversion_uses_linear_operators=True,
     )
 
 

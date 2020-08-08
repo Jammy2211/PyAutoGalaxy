@@ -327,6 +327,7 @@ class PhaseSettingsInterferometer(PhaseSettings):
         signal_to_noise_limit=None,
         bin_up_factor=None,
         inversion_pixel_limit=None,
+        inversion_uses_linear_operators=True,
         transformer_class=transformer.TransformerNUFFT,
         primary_beam_shape_2d=None,
         log_likelihood_cap=None,
@@ -347,6 +348,10 @@ class PhaseSettingsInterferometer(PhaseSettings):
 
         self.transformer_class = transformer_class
         self.primary_beam_shape_2d = primary_beam_shape_2d
+        if self.transformer_class is transformer.TransformerDFT:
+            self.inversion_uses_linear_operators = False
+        else:
+            self.inversion_uses_linear_operators = inversion_uses_linear_operators
 
     @property
     def phase_no_inversion_tag(self):
@@ -368,6 +373,7 @@ class PhaseSettingsInterferometer(PhaseSettings):
             conf.instance.tag.get("phase", "phase")
             + self.grid_with_inversion_tag
             + self.transformer_tag
+            + self.inversion_uses_linear_operators_tag
             + self.signal_to_noise_limit_tag
             + self.bin_up_factor_tag
             + self.primary_beam_shape_tag
@@ -414,3 +420,12 @@ class PhaseSettingsInterferometer(PhaseSettings):
             + "x"
             + x
         )
+
+    @property
+    def inversion_uses_linear_operators_tag(self):
+        if not self.inversion_uses_linear_operators:
+            return ""
+        else:
+            return (
+                f"__{conf.instance.tag.get('phase', 'inversion_uses_linear_operators')}"
+            )

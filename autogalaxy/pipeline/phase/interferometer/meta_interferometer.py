@@ -25,6 +25,7 @@ class MetaInterferometer(meta_dataset.MetaDataset):
             sub_steps=self.settings.sub_steps,
             transformer_class=self.settings.transformer_class,
             primary_beam_shape_2d=self.settings.primary_beam_shape_2d,
+            inversion_uses_linear_operators=self.settings.inversion_uses_linear_operators,
             inversion_pixel_limit=self.settings.inversion_pixel_limit,
         )
 

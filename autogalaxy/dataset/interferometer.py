@@ -19,6 +19,7 @@ class MaskedInterferometer(interferometer.MaskedInterferometer):
         transformer_class=transformer.TransformerNUFFT,
         primary_beam_shape_2d=None,
         inversion_pixel_limit=None,
+        inversion_uses_linear_operators=True,
         renormalize_primary_beam=True,
     ):
         """
@@ -62,6 +63,7 @@ class MaskedInterferometer(interferometer.MaskedInterferometer):
             transformer_class=transformer_class,
             primary_beam_shape_2d=primary_beam_shape_2d,
             inversion_pixel_limit=inversion_pixel_limit,
+            inversion_uses_linear_operators=inversion_uses_linear_operators,
             renormalize_primary_beam=renormalize_primary_beam,
         )
 

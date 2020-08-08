@@ -165,6 +165,21 @@ class TestTags:
         settings = ag.PhaseSettingsInterferometer(transformer_class=None)
         assert settings.transformer_tag == ""
 
+    def test__inversion_uses_linear_operator_tag(self):
+
+        settings = ag.PhaseSettingsInterferometer(
+            transformer_class=ag.TransformerDFT, inversion_uses_linear_operators=True
+        )
+        assert settings.inversion_uses_linear_operators_tag == ""
+        settings = ag.PhaseSettingsInterferometer(
+            transformer_class=ag.TransformerNUFFT, inversion_uses_linear_operators=False
+        )
+        assert settings.inversion_uses_linear_operators_tag == ""
+        settings = ag.PhaseSettingsInterferometer(
+            transformer_class=ag.TransformerNUFFT, inversion_uses_linear_operators=True
+        )
+        assert settings.inversion_uses_linear_operators_tag == "__lop"
+
     def test__primary_beam_shape_2d_tag(self):
         settings = ag.PhaseSettingsInterferometer(primary_beam_shape_2d=None)
         assert settings.primary_beam_shape_tag == ""
@@ -211,6 +226,7 @@ class TestTags:
             fractional_accuracy=0.1,
             sub_size=3,
             transformer_class=ag.TransformerDFT,
+            inversion_uses_linear_operators=True,
             primary_beam_shape_2d=(2, 2),
             log_likelihood_cap=200.001,
         )
@@ -222,4 +238,19 @@ class TestTags:
         assert (
             settings.phase_with_inversion_tag
             == "settings__grid_facc_0.1_inv_sub_3__dft__pb_2x2__lh_cap_200.0"
+        )
+
+        settings = ag.PhaseSettingsInterferometer(
+            grid_class=ag.GridIterate,
+            grid_inversion_class=ag.Grid,
+            fractional_accuracy=0.1,
+            sub_size=3,
+            transformer_class=ag.TransformerNUFFT,
+            inversion_uses_linear_operators=True,
+        )
+
+        assert settings.phase_no_inversion_tag == "settings__grid_facc_0.1__nufft"
+        assert (
+            settings.phase_with_inversion_tag
+            == "settings__grid_facc_0.1_inv_sub_3__nufft__lop"
         )

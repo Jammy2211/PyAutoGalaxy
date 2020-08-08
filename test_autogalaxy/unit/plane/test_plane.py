@@ -2149,6 +2149,7 @@ class TestAbstractPlaneData:
                 visibilities=masked_interferometer_7.visibilities,
                 noise_map=masked_interferometer_7.noise_map,
                 transformer=masked_interferometer_7.transformer,
+                inversion_uses_linear_operators=False,
                 inversion_uses_border=False,
             )
 
