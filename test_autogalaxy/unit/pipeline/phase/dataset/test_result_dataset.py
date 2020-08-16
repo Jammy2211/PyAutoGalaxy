@@ -70,7 +70,7 @@ class TestResult:
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase_2",
-            settings=ag.PhaseSettingsImaging(inversion_pixel_limit=6),
+            settings=ag.PhaseSettingsImaging(),
             search=mock.MockSearch(samples=samples),
         )
 
@@ -96,7 +96,7 @@ class TestResult:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase_2",
             galaxies=dict(source=source),
-            settings=ag.PhaseSettingsImaging(inversion_pixel_limit=6),
+            settings=ag.PhaseSettingsImaging(),
             search=mock.MockSearch(samples=samples),
         )
 

@@ -1,12 +1,19 @@
 import numpy as np
 
 from autoarray.fit import fit as aa_fit
+from autoarray.inversion import pixelizations as pix, inversions as inv
 from autogalaxy.galaxy import galaxy as g
 
 
 class FitImaging(aa_fit.FitImaging):
     def __init__(
-        self, masked_imaging, plane, hyper_image_sky=None, hyper_background_noise=None
+        self,
+        masked_imaging,
+        plane,
+        hyper_image_sky=None,
+        hyper_background_noise=None,
+        pixelization_settings=pix.PixelizationSettings(),
+        inversion_settings=inv.InversionSettings(),
     ):
         """ An  lens fitter, which contains the plane's used to perform the fit and functions to manipulate \
         the lens dataset's hyper_galaxies.
@@ -61,6 +68,8 @@ class FitImaging(aa_fit.FitImaging):
                 image=self.profile_subtracted_image,
                 noise_map=noise_map,
                 convolver=masked_imaging.convolver,
+                pixelization_settings=pixelization_settings,
+                inversion_settings=inversion_settings,
             )
 
             model_image = self.blurred_image + inversion.mapped_reconstructed_image
@@ -136,7 +145,14 @@ class FitImaging(aa_fit.FitImaging):
 
 
 class FitInterferometer(aa_fit.FitInterferometer):
-    def __init__(self, masked_interferometer, plane, hyper_background_noise=None):
+    def __init__(
+        self,
+        masked_interferometer,
+        plane,
+        hyper_background_noise=None,
+        pixelization_settings=pix.PixelizationSettings(),
+        inversion_settings=inv.InversionSettings(),
+    ):
         """ An  lens fitter, which contains the plane's used to perform the fit and functions to manipulate \
         the lens dataset's hyper_galaxies.
 
@@ -184,7 +200,8 @@ class FitInterferometer(aa_fit.FitInterferometer):
                 visibilities=self.profile_subtracted_visibilities,
                 noise_map=noise_map,
                 transformer=masked_interferometer.transformer,
-                inversion_uses_linear_operators=masked_interferometer.inversion_uses_linear_operators,
+                pixelization_settings=pixelization_settings,
+                inversion_settings=inversion_settings,
             )
 
             model_visibilities = (

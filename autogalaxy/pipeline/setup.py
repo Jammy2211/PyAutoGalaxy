@@ -1,6 +1,6 @@
 from autoconf import conf
 import autofit as af
-from autoarray.operators.inversion import pixelizations as pix
+from autoarray.inversion import pixelizations as pix
 from autogalaxy import exc
 
 

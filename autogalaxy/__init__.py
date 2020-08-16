@@ -18,9 +18,10 @@ from autoarray.operators.convolver import Convolver
 from autoarray.operators.transformer import TransformerDFT
 from autoarray.operators.transformer import TransformerNUFFT
 from autoarray.operators.transformer import TransformerNUFFT
-from autoarray.operators.inversion.mappers import mapper as Mapper
-from autoarray.operators.inversion.inversions import inversion as Inversion
-from autoarray.operators.inversion import pixelizations as pix, regularization as reg
+from autoarray.inversion.mappers import mapper as Mapper
+from autoarray.inversion.inversions import inversion as Inversion, InversionSettings
+from autoarray.inversion import pixelizations as pix, regularization as reg
+from autoarray.inversion.pixelizations import PixelizationSettings
 from autoconf import conf
 
 from . import aggregator as agg

@@ -1,7 +1,7 @@
 import autoarray as aa
 import autofit as af
 from autoconf import conf
-from autoarray.operators.inversion import pixelizations as pix
+from autoarray.inversion import pixelizations as pix
 
 
 def isprior(obj):

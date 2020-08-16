@@ -1,5 +1,6 @@
 from autoconf import conf
 from autofit.tools.phase import AbstractPhaseSettings
+from autoarray.inversion import pixelizations as pix, inversions as inv
 from autoarray.structures import grids
 from autoarray.operators import transformer
 
@@ -15,7 +16,8 @@ class PhaseSettings(AbstractPhaseSettings):
         pixel_scales_interp=None,
         signal_to_noise_limit=None,
         bin_up_factor=None,
-        inversion_pixel_limit=None,
+        pixelization_settings=pix.PixelizationSettings(),
+        inversion_settings=inv.InversionSettings(),
         log_likelihood_cap=None,
     ):
         """The settings of a phase, which customize how a model is fitted to data in a PyAutoGalaxy *Phase*. for
@@ -62,9 +64,9 @@ class PhaseSettings(AbstractPhaseSettings):
         self.pixel_scales_interp = pixel_scales_interp
         self.signal_to_noise_limit = signal_to_noise_limit
         self.bin_up_factor = bin_up_factor
-        self.inversion_pixel_limit = inversion_pixel_limit or conf.instance.general.get(
-            "inversion", "inversion_pixel_limit_overall", int
-        )
+
+        self.pixelization = pixelization_settings
+        self.inversion = inversion_settings
 
     @property
     def grid_no_inversion_tag(self):
@@ -255,8 +257,9 @@ class PhaseSettingsImaging(PhaseSettings):
         pixel_scales_interp=None,
         signal_to_noise_limit=None,
         bin_up_factor=None,
-        inversion_pixel_limit=None,
         psf_shape_2d=None,
+        pixelization_settings=pix.PixelizationSettings(),
+        inversion_settings=inv.InversionSettings(),
         log_likelihood_cap=None,
     ):
 
@@ -269,7 +272,8 @@ class PhaseSettingsImaging(PhaseSettings):
             pixel_scales_interp=pixel_scales_interp,
             signal_to_noise_limit=signal_to_noise_limit,
             bin_up_factor=bin_up_factor,
-            inversion_pixel_limit=inversion_pixel_limit,
+            pixelization_settings=pixelization_settings,
+            inversion_settings=inversion_settings,
             log_likelihood_cap=log_likelihood_cap,
         )
 
@@ -326,9 +330,9 @@ class PhaseSettingsInterferometer(PhaseSettings):
         pixel_scales_interp=None,
         signal_to_noise_limit=None,
         bin_up_factor=None,
-        inversion_pixel_limit=None,
-        inversion_uses_linear_operators=True,
         transformer_class=transformer.TransformerNUFFT,
+        pixelization_settings=pix.PixelizationSettings(),
+        inversion_settings=inv.InversionSettings(),
         primary_beam_shape_2d=None,
         log_likelihood_cap=None,
     ):
@@ -342,16 +346,13 @@ class PhaseSettingsInterferometer(PhaseSettings):
             sub_steps=sub_steps,
             signal_to_noise_limit=signal_to_noise_limit,
             bin_up_factor=bin_up_factor,
-            inversion_pixel_limit=inversion_pixel_limit,
+            pixelization_settings=pixelization_settings,
+            inversion_settings=inversion_settings,
             log_likelihood_cap=log_likelihood_cap,
         )
 
         self.transformer_class = transformer_class
         self.primary_beam_shape_2d = primary_beam_shape_2d
-        if self.transformer_class is transformer.TransformerDFT:
-            self.inversion_uses_linear_operators = False
-        else:
-            self.inversion_uses_linear_operators = inversion_uses_linear_operators
 
     @property
     def phase_no_inversion_tag(self):
@@ -373,7 +374,7 @@ class PhaseSettingsInterferometer(PhaseSettings):
             conf.instance.tag.get("phase", "phase")
             + self.grid_with_inversion_tag
             + self.transformer_tag
-            + self.inversion_uses_linear_operators_tag
+            + self.inversion.use_linear_operators_tag
             + self.signal_to_noise_limit_tag
             + self.bin_up_factor_tag
             + self.primary_beam_shape_tag
@@ -420,12 +421,3 @@ class PhaseSettingsInterferometer(PhaseSettings):
             + "x"
             + x
         )
-
-    @property
-    def inversion_uses_linear_operators_tag(self):
-        if not self.inversion_uses_linear_operators:
-            return ""
-        else:
-            return (
-                f"__{conf.instance.tag.get('phase', 'inversion_uses_linear_operators')}"
-            )

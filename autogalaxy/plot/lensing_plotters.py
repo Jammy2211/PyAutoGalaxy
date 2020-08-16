@@ -4,7 +4,7 @@ import inspect
 
 import numpy as np
 from autoconf import conf
-from autoarray.operators.inversion import mappers
+from autoarray.inversion import mappers
 from autoarray.plot import plotters
 from autogalaxy import lensing
 from autogalaxy.plot import lensing_mat_objs

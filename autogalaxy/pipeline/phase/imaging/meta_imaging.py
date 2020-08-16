@@ -34,7 +34,6 @@ class MetaImaging(meta_dataset.MetaDataset):
             fractional_accuracy=self.settings.fractional_accuracy,
             sub_steps=self.settings.sub_steps,
             psf_shape_2d=self.settings.psf_shape_2d,
-            inversion_pixel_limit=self.settings.inversion_pixel_limit,
         )
 
         return masked_imaging

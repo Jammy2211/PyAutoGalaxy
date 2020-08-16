@@ -1,7 +1,8 @@
 import autofit as af
 import numpy as np
 from astropy import cosmology as cosmo
-from autoarray.operators.inversion import inversions as inv
+from autoarray.inversion import pixelizations as pix
+from autoarray.inversion import inversions as inv
 from autoarray.structures import arrays, grids, visibilities as vis
 from autogalaxy import dimensions as dim
 from autogalaxy import exc
@@ -551,7 +552,9 @@ class AbstractPlaneData(AbstractPlaneLensing):
             for galaxy in self.galaxies
         ]
 
-    def sparse_image_plane_grid_from_grid(self, grid, inversion_stochastic=False):
+    def sparse_image_plane_grid_from_grid(
+        self, grid, pixelization_setting=pix.PixelizationSettings()
+    ):
 
         if not self.has_pixelization:
             return None
@@ -559,13 +562,11 @@ class AbstractPlaneData(AbstractPlaneLensing):
         hyper_galaxy_image = self.hyper_galaxy_image_of_galaxy_with_pixelization
 
         return self.pixelization.sparse_grid_from_grid(
-            grid=grid,
-            hyper_image=hyper_galaxy_image,
-            inversion_stochastic=inversion_stochastic,
+            grid=grid, hyper_image=hyper_galaxy_image, settings=pixelization_setting
         )
 
     def mapper_from_grid_and_sparse_grid(
-        self, grid, sparse_grid, inversion_uses_border=False
+        self, grid, sparse_grid, pixelization_settings=pix.PixelizationSettings()
     ):
 
         galaxies_with_pixelization = list(
@@ -581,8 +582,8 @@ class AbstractPlaneData(AbstractPlaneLensing):
             return pixelization.mapper_from_grid_and_sparse_grid(
                 grid=grid,
                 sparse_grid=sparse_grid,
-                inversion_uses_border=inversion_uses_border,
                 hyper_image=galaxies_with_pixelization[0].hyper_galaxy_image,
+                settings=pixelization_settings,
             )
 
         elif len(galaxies_with_pixelization) > 1:
@@ -591,7 +592,13 @@ class AbstractPlaneData(AbstractPlaneLensing):
             )
 
     def inversion_imaging_from_grid_and_data(
-        self, grid, image, noise_map, convolver, inversion_uses_border=False
+        self,
+        grid,
+        image,
+        noise_map,
+        convolver,
+        pixelization_settings=pix.PixelizationSettings(),
+        inversion_settings=inv.InversionSettings(),
     ):
 
         sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
@@ -599,7 +606,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         mapper = self.mapper_from_grid_and_sparse_grid(
             grid=grid,
             sparse_grid=sparse_grid,
-            inversion_uses_border=inversion_uses_border,
+            pixelization_settings=pixelization_settings,
         )
 
         return inv.InversionImagingMatrix.from_data_mapper_and_regularization(
@@ -608,6 +615,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             convolver=convolver,
             mapper=mapper,
             regularization=self.regularization,
+            settings=inversion_settings,
         )
 
     def inversion_interferometer_from_grid_and_data(
@@ -616,8 +624,8 @@ class AbstractPlaneData(AbstractPlaneLensing):
         visibilities,
         noise_map,
         transformer,
-        inversion_uses_border=False,
-        inversion_uses_linear_operators=True,
+        pixelization_settings=pix.PixelizationSettings(),
+        inversion_settings=inv.InversionSettings(),
     ):
 
         sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
@@ -625,7 +633,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         mapper = self.mapper_from_grid_and_sparse_grid(
             grid=grid,
             sparse_grid=sparse_grid,
-            inversion_uses_border=inversion_uses_border,
+            pixelization_settings=pixelization_settings,
         )
 
         return inv.AbstractInversionInterferometer.from_data_mapper_and_regularization(
@@ -634,7 +642,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             transformer=transformer,
             mapper=mapper,
             regularization=self.regularization,
-            uses_linear_operators=inversion_uses_linear_operators,
+            settings=inversion_settings,
         )
 
     def plane_image_from_grid(self, grid):

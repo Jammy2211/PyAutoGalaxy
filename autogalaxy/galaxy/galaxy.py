@@ -2,7 +2,7 @@ from itertools import count
 
 import numpy as np
 from astropy import cosmology as cosmo
-from autoarray.operators.inversion import pixelizations as pix
+from autoarray.inversion import pixelizations as pix
 from autoarray.structures import arrays, grids
 from autofit.mapper.model_object import ModelObject
 from autofit.text import formatter

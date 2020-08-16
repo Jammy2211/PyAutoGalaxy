@@ -26,7 +26,6 @@ def test__masked_imaging__settings_inputs_are_used_in_masked_imaging(
             sub_size=3,
             signal_to_noise_limit=1.0,
             bin_up_factor=2,
-            inversion_pixel_limit=100,
             psf_shape_2d=(3, 3),
         ),
         search=mock.MockSearch(),
@@ -35,7 +34,6 @@ def test__masked_imaging__settings_inputs_are_used_in_masked_imaging(
     assert phase_imaging_7x7.meta_dataset.settings.sub_size == 3
     assert phase_imaging_7x7.meta_dataset.settings.signal_to_noise_limit == 1.0
     assert phase_imaging_7x7.meta_dataset.settings.bin_up_factor == 2
-    assert phase_imaging_7x7.meta_dataset.settings.inversion_pixel_limit == 100
     assert phase_imaging_7x7.meta_dataset.settings.psf_shape_2d == (3, 3)
 
     analysis = phase_imaging_7x7.make_analysis(

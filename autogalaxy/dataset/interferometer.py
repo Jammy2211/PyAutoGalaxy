@@ -18,8 +18,6 @@ class MaskedInterferometer(interferometer.MaskedInterferometer):
         sub_steps=None,
         transformer_class=transformer.TransformerNUFFT,
         primary_beam_shape_2d=None,
-        inversion_pixel_limit=None,
-        inversion_uses_linear_operators=True,
         renormalize_primary_beam=True,
     ):
         """
@@ -47,9 +45,6 @@ class MaskedInterferometer(interferometer.MaskedInterferometer):
         pixel_scales_interp : float
             If *True*, expensive to compute mass profile deflection angles will be computed on a sparse grid and \
             interpolated to the grid, sub and blurring grids.
-        inversion_pixel_limit : int or None
-            The maximum number of pixels that can be used by an inversion, with the limit placed primarily to speed \
-            up run.
         """
 
         super(MaskedInterferometer, self).__init__(
@@ -62,17 +57,8 @@ class MaskedInterferometer(interferometer.MaskedInterferometer):
             sub_steps=sub_steps,
             transformer_class=transformer_class,
             primary_beam_shape_2d=primary_beam_shape_2d,
-            inversion_pixel_limit=inversion_pixel_limit,
-            inversion_uses_linear_operators=inversion_uses_linear_operators,
             renormalize_primary_beam=renormalize_primary_beam,
         )
-
-    def check_inversion_pixels_are_below_limit_via_plane(self, plane):
-
-        if self.inversion_pixel_limit is not None:
-            if plane.has_pixelization:
-                if plane.pixelization.pixels > self.inversion_pixel_limit:
-                    raise exc.PixelizationException
 
 
 class SimulatorInterferometer(interferometer.SimulatorInterferometer):

@@ -226,7 +226,11 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
 
     plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
 
-    fit = ag.FitInterferometer(masked_interferometer=masked_interferometer, plane=plane)
+    fit = ag.FitInterferometer(
+        masked_interferometer=masked_interferometer,
+        plane=plane,
+        pixelization_settings=ag.PixelizationSettings(use_border=False),
+    )
 
     assert fit.chi_squared == pytest.approx(0.0)
 
@@ -244,7 +248,11 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
 
     plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
 
-    fit = ag.FitInterferometer(masked_interferometer=masked_interferometer, plane=plane)
+    fit = ag.FitInterferometer(
+        masked_interferometer=masked_interferometer,
+        plane=plane,
+        pixelization_settings=ag.PixelizationSettings(use_border=False),
+    )
     assert abs(fit.chi_squared) < 1.0e-4
 
     path = "{}/data_temp".format(

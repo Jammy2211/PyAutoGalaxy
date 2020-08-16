@@ -4,7 +4,6 @@ import numpy as np
 from autoarray.structures import grids
 from autoarray.dataset import imaging
 from autogalaxy import exc
-from autoarray.structures import arrays, kernel
 from autogalaxy.plane import plane as pl
 
 
@@ -18,7 +17,6 @@ class MaskedImaging(imaging.MaskedImaging):
         fractional_accuracy=0.9999,
         sub_steps=None,
         psf_shape_2d=None,
-        inversion_pixel_limit=None,
         renormalize_psf=True,
     ):
         """
@@ -46,9 +44,6 @@ class MaskedImaging(imaging.MaskedImaging):
         pixel_scales_interp : float
             If *True*, expensive to compute mass profile deflection angles will be computed on a sparse grid and \
             interpolated to the grid, sub and blurring grids.
-        inversion_pixel_limit : int or None
-            The maximum number of pixels that can be used by an inversion, with the limit placed primarily to speed \
-            up run.
         """
 
         super(MaskedImaging, self).__init__(
@@ -59,16 +54,8 @@ class MaskedImaging(imaging.MaskedImaging):
             fractional_accuracy=fractional_accuracy,
             sub_steps=sub_steps,
             psf_shape_2d=psf_shape_2d,
-            inversion_pixel_limit=inversion_pixel_limit,
             renormalize_psf=renormalize_psf,
         )
-
-    def check_inversion_pixels_are_below_limit_via_plane(self, plane):
-
-        if self.inversion_pixel_limit is not None:
-            if plane.has_pixelization:
-                if plane.pixelization.pixels > self.inversion_pixel_limit:
-                    raise exc.PixelizationException
 
 
 class SimulatorImaging(imaging.SimulatorImaging):

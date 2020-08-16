@@ -88,7 +88,6 @@ def masked_imaging_from_agg_obj(agg_obj):
         fractional_accuracy=agg_obj.settings.fractional_accuracy,
         sub_steps=agg_obj.settings.sub_steps,
         psf_shape_2d=agg_obj.settings.psf_shape_2d,
-        inversion_pixel_limit=agg_obj.settings.inversion_pixel_limit,
     )
 
 
@@ -166,7 +165,6 @@ def masked_interferometer_from_agg_obj(agg_obj):
         sub_steps=agg_obj.settings.sub_steps,
         transformer_class=agg_obj.settings.transformer_class,
         primary_beam_shape_2d=agg_obj.settings.primary_beam_shape_2d,
-        inversion_pixel_limit=agg_obj.settings.inversion_pixel_limit,
     )
 
 

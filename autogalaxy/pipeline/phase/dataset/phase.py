@@ -1,6 +1,6 @@
 import autofit as af
-from autoarray.operators.inversion import pixelizations as pix
-from autoarray.operators.inversion import regularization as reg
+from autoarray.inversion import pixelizations as pix
+from autoarray.inversion import regularization as reg
 from autogalaxy.hyper import hyper_data as hd
 from astropy import cosmology as cosmo
 from autofit.tools.phase import Dataset

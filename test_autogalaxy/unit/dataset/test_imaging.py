@@ -98,10 +98,7 @@ class TestMaskedImaging:
             mask=sub_mask_7x7,
             grid_class=ag.Grid,
             psf_shape_2d=(3, 3),
-            inversion_pixel_limit=20.0,
         )
-
-        assert masked_imaging_7x7.inversion_pixel_limit == 20.0
 
         grid = ag.Grid.from_mask(mask=sub_mask_7x7)
 
