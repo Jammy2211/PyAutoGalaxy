@@ -17,6 +17,7 @@ class TestImagePassing:
 
         analysis = ag.PhaseImaging.Analysis(
             masked_imaging=masked_imaging_7x7,
+            settings=ag.PhaseSettingsImaging(),
             image_path="files/",
             results=mock.MockResults(),
             cosmology=cosmo.Planck15,

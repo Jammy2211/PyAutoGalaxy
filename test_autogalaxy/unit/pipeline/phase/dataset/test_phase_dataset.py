@@ -1,8 +1,6 @@
 from os import path
-import autofit as af
 import autogalaxy as ag
 import pytest
-from autogalaxy import exc
 from test_autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(

@@ -121,7 +121,12 @@ def fit_imaging_from_agg_obj(agg_obj):
     masked_imaging = masked_imaging_from_agg_obj(agg_obj=agg_obj)
     plane = plane_from_agg_obj(agg_obj=agg_obj)
 
-    return ag.FitImaging(masked_imaging=masked_imaging, plane=plane)
+    return ag.FitImaging(
+        masked_imaging=masked_imaging,
+        plane=plane,
+        pixelization_settings=agg_obj.settings.pixelization,
+        inversion_settings=agg_obj.settings.inversion,
+    )
 
 
 def masked_interferometer_generator_from_aggregator(aggregator):
@@ -200,7 +205,10 @@ def fit_interferometer_from_agg_obj(agg_obj):
     plane = plane_from_agg_obj(agg_obj=agg_obj)
 
     return ag.FitInterferometer(
-        masked_interferometer=masked_interferometer, plane=plane
+        masked_interferometer=masked_interferometer,
+        plane=plane,
+        pixelization_settings=agg_obj.settings.pixelization,
+        inversion_settings=agg_obj.settings.inversion,
     )
 
 

@@ -13,7 +13,9 @@ def last_result_with_use_as_hyper_dataset(results):
 
 
 class Analysis(af.Analysis):
-    def __init__(self, cosmology, results, log_likelihood_cap=None):
+    def __init__(self, cosmology, settings, results, log_likelihood_cap=None):
+
+        self.settings = settings
 
         super().__init__(log_likelihood_cap=log_likelihood_cap)
 

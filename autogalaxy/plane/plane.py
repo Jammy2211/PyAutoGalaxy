@@ -553,7 +553,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         ]
 
     def sparse_image_plane_grid_from_grid(
-        self, grid, pixelization_setting=pix.PixelizationSettings()
+        self, grid, pixelization_settings=pix.PixelizationSettings()
     ):
 
         if not self.has_pixelization:
@@ -562,7 +562,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         hyper_galaxy_image = self.hyper_galaxy_image_of_galaxy_with_pixelization
 
         return self.pixelization.sparse_grid_from_grid(
-            grid=grid, hyper_image=hyper_galaxy_image, settings=pixelization_setting
+            grid=grid, hyper_image=hyper_galaxy_image, settings=pixelization_settings
         )
 
     def mapper_from_grid_and_sparse_grid(
