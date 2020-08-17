@@ -69,7 +69,9 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
     )
 
     masked_imaging = ag.MaskedImaging(
-        imaging=imaging, mask=mask, grid_class=ag.GridIterate
+        imaging=imaging,
+        mask=mask,
+        settings=ag.MaskedImagingSettings(grid_class=ag.GridIterate),
     )
 
     plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
@@ -144,7 +146,11 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
         shape_2d=simulator.image.shape_2d, pixel_scales=0.2, sub_size=1, radius=0.8
     )
 
-    masked_imaging = ag.MaskedImaging(imaging=simulator, mask=mask, grid_class=ag.Grid)
+    masked_imaging = ag.MaskedImaging(
+        imaging=simulator,
+        mask=mask,
+        settings=ag.MaskedImagingSettings(grid_class=ag.Grid, sub_size=1),
+    )
 
     plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
 
@@ -220,8 +226,9 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
         interferometer=interferometer,
         visibilities_mask=visibilities_mask,
         real_space_mask=real_space_mask,
-        grid_class=ag.Grid,
-        transformer_class=ag.TransformerDFT,
+        settings=ag.MaskedInterferometerSettings(
+            grid_class=ag.Grid, transformer_class=ag.TransformerDFT, sub_size=2
+        ),
     )
 
     plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])

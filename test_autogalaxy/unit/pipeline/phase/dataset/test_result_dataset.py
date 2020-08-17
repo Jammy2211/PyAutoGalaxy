@@ -44,7 +44,9 @@ class TestResult:
                     redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
                 )
             ),
-            settings=ag.PhaseSettingsImaging(sub_size=2),
+            settings=ag.PhaseSettingsImaging(
+                masked_imaging_settings=ag.MaskedImagingSettings(sub_size=2)
+            ),
             search=mock.MockSearch(samples=samples_with_result),
         )
 

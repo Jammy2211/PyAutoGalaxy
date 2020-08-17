@@ -17,16 +17,6 @@ pytestmark = pytest.mark.filterwarnings(
 directory = path.dirname(path.realpath(__file__))
 
 
-def clean_images():
-    try:
-        os.remove("{}/source_galaxy_phase/source_image_0.fits".format(directory))
-        os.remove("{}/source_galaxy_phase/galaxy_image_0.fits".format(directory))
-        os.remove("{}/source_galaxy_phase/model_image_0.fits".format(directory))
-    except FileNotFoundError:
-        pass
-    conf.instance.dataset_path = directory
-
-
 class TestMakeAnalysis:
     def test__masks_visibilities_and_noise_map_correctly(
         self, phase_interferometer_7, interferometer_7, visibilities_mask_7x2
@@ -61,14 +51,12 @@ class TestMakeAnalysis:
 
         search = phase_info.readline()
         sub_size = phase_info.readline()
-        primary_beam_shape_2d = phase_info.readline()
         cosmology = phase_info.readline()
 
         phase_info.close()
 
         assert search == "Optimizer = MockSearch \n"
         assert sub_size == "Sub-grid size = 2 \n"
-        assert primary_beam_shape_2d == "Primary Beam shape = None \n"
         assert (
             cosmology
             == 'Cosmology = FlatLambdaCDM(name="Planck15", H0=67.7 km / (Mpc s), Om0=0.307, Tcmb0=2.725 K, '
@@ -92,6 +80,56 @@ class TestMakeAnalysis:
         assert instance.galaxies[0].redshift == 0.1
         assert instance.galaxies[1].redshift == 0.2
         assert instance.hyper_background_noise.noise_scale == 0.3
+
+    def test__masked_interferometer__settings_inputs_are_used_in_masked_interferometer(
+        self, interferometer_7, mask_7x7
+    ):
+
+        phase_interferometer_7 = ag.PhaseInterferometer(
+            phase_name="phase_interferometer_7",
+            settings=ag.PhaseSettingsInterferometer(
+                masked_interferometer_settings=ag.MaskedInterferometerSettings(
+                    grid_class=ag.Grid, grid_inversion_class=ag.Grid, sub_size=3
+                )
+            ),
+            search=mock.MockSearch(),
+            real_space_mask=mask_7x7,
+        )
+
+        assert phase_interferometer_7.settings.masked_interferometer.sub_size == 3
+
+        analysis = phase_interferometer_7.make_analysis(
+            dataset=interferometer_7, mask=mask_7x7, results=mock.MockResults()
+        )
+
+        assert isinstance(analysis.masked_dataset.grid, ag.Grid)
+        assert isinstance(analysis.masked_dataset.grid_inversion, ag.Grid)
+        assert isinstance(analysis.masked_dataset.transformer, ag.TransformerNUFFT)
+
+        phase_interferometer_7 = ag.PhaseInterferometer(
+            phase_name="phase_interferometer_7",
+            settings=ag.PhaseSettingsInterferometer(
+                masked_interferometer_settings=ag.MaskedInterferometerSettings(
+                    grid_class=ag.GridIterate,
+                    sub_size=3,
+                    fractional_accuracy=0.99,
+                    sub_steps=[2],
+                    transformer_class=ag.TransformerDFT,
+                )
+            ),
+            search=mock.MockSearch(),
+            real_space_mask=mask_7x7,
+        )
+
+        analysis = phase_interferometer_7.make_analysis(
+            dataset=interferometer_7, mask=mask_7x7, results=mock.MockResults()
+        )
+
+        assert isinstance(analysis.masked_dataset.grid, ag.GridIterate)
+        assert analysis.masked_dataset.grid.sub_size == 1
+        assert analysis.masked_dataset.grid.fractional_accuracy == 0.99
+        assert analysis.masked_dataset.grid.sub_steps == [2]
+        assert isinstance(analysis.masked_dataset.transformer, ag.TransformerDFT)
 
 
 class TestHyperMethods:

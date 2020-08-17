@@ -85,7 +85,6 @@ class TestMaskedImaging:
 
         assert (masked_imaging_7x7.psf.in_1d == (1.0 / 9.0) * np.ones(9)).all()
         assert (masked_imaging_7x7.psf.in_2d == (1.0 / 9.0) * np.ones((3, 3))).all()
-        assert masked_imaging_7x7.psf_shape_2d == (3, 3)
 
         assert type(masked_imaging_7x7.convolver) == ag.Convolver
 
@@ -96,8 +95,7 @@ class TestMaskedImaging:
         masked_imaging_7x7 = ag.MaskedImaging(
             imaging=imaging_7x7,
             mask=sub_mask_7x7,
-            grid_class=ag.Grid,
-            psf_shape_2d=(3, 3),
+            settings=ag.MaskedImagingSettings(grid_class=ag.Grid, psf_shape_2d=(3, 3)),
         )
 
         grid = ag.Grid.from_mask(mask=sub_mask_7x7)

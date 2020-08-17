@@ -67,7 +67,6 @@ class PhaseDataset(abstract.AbstractPhase):
         self.save_metadata(dataset=dataset)
         self.save_dataset(dataset=dataset)
         self.save_mask(mask=mask)
-        self.save_meta_dataset(meta_dataset=self.meta_dataset)
         self.save_settings(settings=self.settings)
 
         self.model = self.model.populate(results)
@@ -116,7 +115,7 @@ class PhaseDataset(abstract.AbstractPhase):
         hyper_phases = []
 
         if include_inversion:
-            if self.meta_dataset.has_pixelization and setup.inversion_search:
+            if self.has_pixelization and setup.inversion_search:
 
                 if not setup.hyper_image_sky and not setup.hyper_background_noise:
                     phase_inversion = extensions.InversionPhase(

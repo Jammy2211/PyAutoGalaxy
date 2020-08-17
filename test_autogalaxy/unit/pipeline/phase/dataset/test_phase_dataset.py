@@ -106,7 +106,14 @@ class TestMakeAnalysis:
             shape_2d=imaging_7x7.shape_2d, pixel_scales=1, sub_size=1, radius=1.5
         )
 
-        phase_imaging_7x7.meta_dataset.settings.sub_size = 1
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
+            search=mock.MockSearch(),
+            settings=ag.PhaseSettingsImaging(
+                masked_imaging_settings=ag.MaskedImagingSettings(sub_size=1)
+            ),
+        )
+
         analysis = phase_imaging_7x7.make_analysis(
             dataset=imaging_7x7, mask=mask_input, results=mock.MockResults()
         )
@@ -115,7 +122,14 @@ class TestMakeAnalysis:
         assert analysis.masked_imaging.mask.sub_size == 1
         assert analysis.masked_imaging.mask.pixel_scales == mask_input.pixel_scales
 
-        phase_imaging_7x7.meta_dataset.settings.sub_size = 2
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
+            search=mock.MockSearch(),
+            settings=ag.PhaseSettingsImaging(
+                masked_imaging_settings=ag.MaskedImagingSettings(sub_size=2)
+            ),
+        )
+
         analysis = phase_imaging_7x7.make_analysis(
             dataset=imaging_7x7, mask=mask_input, results=mock.MockResults()
         )

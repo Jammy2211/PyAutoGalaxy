@@ -72,7 +72,7 @@ def masked_imaging_from_agg_obj(agg_obj):
      outputs such that the function can use the *Aggregator*'s map function to to create a *MaskedImaging* generator.
 
      The *MaskedImaging* is created following the same method as the PyAutoGalaxy *Phase* classes, including using the
-     *meta_dataset* instance output by the phase to load inputs of the *MaskedImaging* (e.g. psf_shape_2d). 
+     *MaskedImagingSettings* instance output by the phase to load inputs of the *MaskedImaging* (e.g. psf_shape_2d).
 
     Parameters
     ----------
@@ -83,11 +83,7 @@ def masked_imaging_from_agg_obj(agg_obj):
     return ag.MaskedImaging(
         imaging=agg_obj.dataset,
         mask=agg_obj.mask,
-        grid_class=agg_obj.settings.grid_class,
-        grid_inversion_class=agg_obj.settings.grid_inversion_class,
-        fractional_accuracy=agg_obj.settings.fractional_accuracy,
-        sub_steps=agg_obj.settings.sub_steps,
-        psf_shape_2d=agg_obj.settings.psf_shape_2d,
+        settings=agg_obj.settings.masked_imaging,
     )
 
 
@@ -151,7 +147,7 @@ def masked_interferometer_from_agg_obj(agg_obj):
     *MaskedInterferometer* generator.
 
     The *MaskedInterferometer* is created following the same method as the PyAutoGalaxy *Phase* classes, including
-    using the *meta_dataset* instance output by the phase to load inputs of the *MaskedInterferometer*
+    using the *MaskedInterferometerSettings* instance output by the phase to load inputs of the *MaskedInterferometer*
     (e.g. psf_shape_2d).
 
     Parameters
@@ -163,13 +159,8 @@ def masked_interferometer_from_agg_obj(agg_obj):
     return ag.MaskedInterferometer(
         interferometer=agg_obj.dataset,
         visibilities_mask=agg_obj.mask,
-        real_space_mask=agg_obj.meta_dataset.real_space_mask,
-        grid_class=agg_obj.settings.grid_class,
-        grid_inversion_class=agg_obj.settings.grid_inversion_class,
-        fractional_accuracy=agg_obj.settings.fractional_accuracy,
-        sub_steps=agg_obj.settings.sub_steps,
-        transformer_class=agg_obj.settings.transformer_class,
-        primary_beam_shape_2d=agg_obj.settings.primary_beam_shape_2d,
+        real_space_mask=agg_obj.phase_attributes.real_space_mask,
+        settings=agg_obj.settings.masked_interferometer,
     )
 
 

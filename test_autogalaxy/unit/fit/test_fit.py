@@ -33,11 +33,12 @@ class TestFitImaging:
                     ]
                 ),
                 pixel_scales=1.0,
-                sub_size=1,
             )
 
             masked_imaging_7x7 = ag.MaskedImaging(
-                imaging=imaging, mask=mask, grid_class=ag.Grid
+                imaging=imaging,
+                mask=mask,
+                settings=ag.MaskedImagingSettings(grid_class=ag.Grid, sub_size=1),
             )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
@@ -136,11 +137,14 @@ class TestFitImaging:
                     ]
                 ),
                 pixel_scales=1.0,
-                sub_size=1,
             )
 
             masked_imaging_7x7 = ag.MaskedImaging(
-                imaging=imaging, mask=mask, renormalize_psf=False, grid_class=ag.Grid
+                imaging=imaging,
+                mask=mask,
+                settings=ag.MaskedImagingSettings(
+                    grid_class=ag.Grid, renormalize_psf=False, sub_size=1
+                ),
             )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
@@ -244,11 +248,14 @@ class TestFitImaging:
                     ]
                 ),
                 pixel_scales=1.0,
-                sub_size=1,
             )
 
             masked_imaging_7x7 = ag.MaskedImaging(
-                imaging=imaging, mask=mask, renormalize_psf=False, grid_class=ag.Grid
+                imaging=imaging,
+                mask=mask,
+                settings=ag.MaskedImagingSettings(
+                    grid_class=ag.Grid, renormalize_psf=False, sub_size=1
+                ),
             )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
@@ -351,11 +358,12 @@ class TestFitImaging:
                     ]
                 ),
                 pixel_scales=1.0,
-                sub_size=1,
             )
 
             masked_imaging_7x7 = ag.MaskedImaging(
-                imaging=imaging, mask=mask, grid_class=ag.Grid
+                imaging=imaging,
+                mask=mask,
+                settings=ag.MaskedImagingSettings(grid_class=ag.Grid, sub_size=1),
             )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
@@ -458,11 +466,12 @@ class TestFitImaging:
                     ]
                 ),
                 pixel_scales=1.0,
-                sub_size=1,
             )
 
             masked_imaging_7x7 = ag.MaskedImaging(
-                imaging=imaging, mask=mask, grid_class=ag.Grid
+                imaging=imaging,
+                mask=mask,
+                settings=ag.MaskedImagingSettings(grid_class=ag.Grid, sub_size=1),
             )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
@@ -1406,7 +1415,6 @@ class TestFitInterferometer:
                 visibilities=ag.Visibilities.full(fill_value=5.0, shape_1d=(1,)),
                 noise_map=ag.Visibilities.ones(shape_1d=(1,)),
                 uv_wavelengths=uv_wavelengths,
-                primary_beam=None,
             )
 
             interferometer.visibilities[0, 1] = 4.0
@@ -1422,15 +1430,15 @@ class TestFitInterferometer:
                     ]
                 ),
                 pixel_scales=1.0,
-                sub_size=1,
             )
 
             masked_interferometer = ag.MaskedInterferometer(
                 interferometer=interferometer,
                 visibilities_mask=visibilities_mask,
-                grid_class=ag.Grid,
                 real_space_mask=real_space_mask,
-                transformer_class=ag.TransformerDFT,
+                settings=ag.MaskedInterferometerSettings(
+                    grid_class=ag.Grid, sub_size=1, transformer_class=ag.TransformerDFT
+                ),
             )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
@@ -1470,7 +1478,6 @@ class TestFitInterferometer:
                 visibilities=ag.Visibilities.full(fill_value=5.0, shape_1d=(3,)),
                 noise_map=ag.Visibilities.full(fill_value=2.0, shape_1d=(3,)),
                 uv_wavelengths=uv_wavelengths,
-                primary_beam=None,
             )
 
             visibilities_mask = np.full(fill_value=False, shape=(1, 2))
@@ -1484,14 +1491,15 @@ class TestFitInterferometer:
                     ]
                 ),
                 pixel_scales=1.0,
-                sub_size=1,
             )
 
             masked_interferometer = ag.MaskedInterferometer(
                 interferometer=interferometer,
-                grid_class=ag.Grid,
                 visibilities_mask=visibilities_mask,
                 real_space_mask=real_space_mask,
+                settings=ag.MaskedInterferometerSettings(
+                    grid_class=ag.Grid, sub_size=1
+                ),
             )
 
             # Setup as a ray trace instance, using a light profile for the galaxy

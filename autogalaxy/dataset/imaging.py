@@ -3,22 +3,71 @@ import copy
 import numpy as np
 from autoarray.structures import grids
 from autoarray.dataset import imaging
-from autogalaxy import exc
 from autogalaxy.plane import plane as pl
 
 
-class MaskedImaging(imaging.MaskedImaging):
+class MaskedImagingSettings(imaging.MaskedImagingSettings):
     def __init__(
         self,
-        imaging,
-        mask,
         grid_class=grids.Grid,
         grid_inversion_class=grids.Grid,
+        sub_size=2,
         fractional_accuracy=0.9999,
         sub_steps=None,
+        pixel_scales_interp=None,
+        bin_up_factor=None,
+        signal_to_noise_limit=None,
         psf_shape_2d=None,
         renormalize_psf=True,
     ):
+        """
+        The lens dataset is the collection of data_type (image, noise-map, PSF), a mask, grid, convolver \
+        and other utilities that are used for modeling and fitting an image of a strong lens.
+
+        Whilst the image, noise-map, etc. are loaded in 2D, the lens dataset creates reduced 1D arrays of each \
+        for lens calculations.
+
+        Parameters
+        ----------
+        grid_class : ag.Grid
+            The type of grid used to create the image from the *Galaxy* and *Plane*. The options are *Grid*,
+            *GridIterate* and *GridInterpolate* (see the *Grids* documentation for a description of these options).
+        grid_inversion_class : ag.Grid
+            The type of grid used to create the grid that maps the *Inversion* source pixels to the data's image-pixels.
+            The options are *Grid*, *GridIterate* and *GridInterpolate* (see the *Grids* documentation for a
+            description of these options).
+        sub_size : int
+            If the grid and / or grid_inversion use a *Grid*, this sets the sub-size used by the *Grid*.
+        fractional_accuracy : float
+            If the grid and / or grid_inversion use a *GridIterate*, this sets the fractional accuracy it
+            uses when evaluating functions.
+        sub_steps : [int]
+            If the grid and / or grid_inversion use a *GridIterate*, this sets the steps the sub-size is increased by
+            to meet the fractional accuracy when evaluating functions.
+        pixel_scales_interp : float or (float, float)
+            If the grid and / or grid_inversion use a *GridInterpolate*, this sets the resolution of the interpolation
+            grid.
+        signal_to_noise_limit : float
+            If input, the dataset's noise-map is rescaled such that no pixel has a signal-to-noise above the
+            signa to noise limit.
+        """
+
+        super().__init__(
+            grid_class=grid_class,
+            grid_inversion_class=grid_inversion_class,
+            sub_size=sub_size,
+            fractional_accuracy=fractional_accuracy,
+            sub_steps=sub_steps,
+            pixel_scales_interp=pixel_scales_interp,
+            bin_up_factor=bin_up_factor,
+            signal_to_noise_limit=signal_to_noise_limit,
+            psf_shape_2d=psf_shape_2d,
+            renormalize_psf=renormalize_psf,
+        )
+
+
+class MaskedImaging(imaging.MaskedImaging):
+    def __init__(self, imaging, mask, settings=MaskedImagingSettings()):
         """
         The lens dataset is the collection of data (image, noise-map, PSF), a mask, grid, convolver \
         and other utilities that are used for modeling and fitting an image of a strong lens.
@@ -47,14 +96,7 @@ class MaskedImaging(imaging.MaskedImaging):
         """
 
         super(MaskedImaging, self).__init__(
-            imaging=imaging,
-            mask=mask,
-            grid_class=grid_class,
-            grid_inversion_class=grid_inversion_class,
-            fractional_accuracy=fractional_accuracy,
-            sub_steps=sub_steps,
-            psf_shape_2d=psf_shape_2d,
-            renormalize_psf=renormalize_psf,
+            imaging=imaging, mask=mask, settings=settings
         )
 
 

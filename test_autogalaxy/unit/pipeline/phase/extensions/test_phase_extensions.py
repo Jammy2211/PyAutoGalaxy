@@ -203,7 +203,9 @@ class TestHyperAPI:
             phase_name="test_phase",
             galaxies=dict(galaxy=galaxy),
             search=af.DynestyStatic(n_live_points=1),
-            settings=ag.PhaseSettingsImaging(bin_up_factor=2),
+            settings=ag.PhaseSettingsImaging(
+                masked_imaging_settings=ag.MaskedImagingSettings(bin_up_factor=2)
+            ),
         )
 
         phase_extended = phase.extend_with_inversion_phase(
@@ -264,7 +266,9 @@ class TestHyperGalaxyPhase:
             galaxies=dict(galaxy=galaxy),
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
-            settings=ag.PhaseSettingsImaging(sub_size=2),
+            settings=ag.PhaseSettingsImaging(
+                masked_imaging_settings=ag.MaskedImagingSettings(sub_size=2)
+            ),
             search=mock.MockSearch(),
         )
 
@@ -273,12 +277,13 @@ class TestHyperGalaxyPhase:
         )
         instance = phase_imaging_7x7.model.instance_from_unit_vector([])
 
-        mask = phase_imaging_7x7.meta_dataset.mask_with_phase_sub_size_from_mask(
-            mask=mask_7x7
-        )
-        assert mask.sub_size == 2
+        assert analysis.masked_dataset.mask.sub_size == 2
 
-        masked_imaging = ag.MaskedImaging(imaging=imaging_7x7, mask=mask)
+        masked_imaging = ag.MaskedImaging(
+            imaging=imaging_7x7,
+            mask=mask_7x7,
+            settings=ag.MaskedImagingSettings(sub_size=2),
+        )
         plane = analysis.plane_for_instance(instance=instance)
         fit = FitImaging(
             masked_imaging=masked_imaging,

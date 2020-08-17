@@ -25,8 +25,12 @@ from autoarray.inversion.pixelizations import PixelizationSettings
 from autoconf import conf
 
 from . import aggregator as agg
-from .dataset.imaging import MaskedImaging, SimulatorImaging
-from .dataset.interferometer import MaskedInterferometer, SimulatorInterferometer
+from .dataset.imaging import MaskedImaging, MaskedImagingSettings, SimulatorImaging
+from .dataset.interferometer import (
+    MaskedInterferometer,
+    MaskedInterferometerSettings,
+    SimulatorInterferometer,
+)
 from . import dimensions as dim
 from . import util
 from .profiles import (

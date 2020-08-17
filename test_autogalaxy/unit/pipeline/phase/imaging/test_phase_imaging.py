@@ -59,8 +59,142 @@ class TestMakeAnalysis:
             "Neff=3.05, m_nu=[0.   0.   0.06] eV, Ob0=0.0486) \n"
         )
 
+    def test__masked_imaging__settings_inputs_are_used_in_masked_imaging(
+        self, imaging_7x7, mask_7x7
+    ):
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="phase_imaging_7x7",
+            settings=ag.PhaseSettingsImaging(
+                masked_imaging_settings=ag.MaskedImagingSettings(
+                    grid_class=ag.Grid,
+                    grid_inversion_class=ag.Grid,
+                    sub_size=3,
+                    signal_to_noise_limit=1.0,
+                    bin_up_factor=2,
+                    psf_shape_2d=(3, 3),
+                )
+            ),
+            search=mock.MockSearch(),
+        )
+
+        assert phase_imaging_7x7.settings.masked_imaging.sub_size == 3
+        assert phase_imaging_7x7.settings.masked_imaging.signal_to_noise_limit == 1.0
+        assert phase_imaging_7x7.settings.masked_imaging.bin_up_factor == 2
+        assert phase_imaging_7x7.settings.masked_imaging.psf_shape_2d == (3, 3)
+
+        analysis = phase_imaging_7x7.make_analysis(
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
+        )
+
+        assert isinstance(analysis.masked_dataset.grid, ag.Grid)
+        assert isinstance(analysis.masked_dataset.grid_inversion, ag.Grid)
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="phase_imaging_7x7",
+            settings=ag.PhaseSettingsImaging(
+                masked_imaging_settings=ag.MaskedImagingSettings(
+                    grid_class=ag.GridIterate,
+                    sub_size=3,
+                    fractional_accuracy=0.99,
+                    sub_steps=[2],
+                )
+            ),
+            search=mock.MockSearch(),
+        )
+
+        analysis = phase_imaging_7x7.make_analysis(
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
+        )
+
+        assert isinstance(analysis.masked_dataset.grid, ag.GridIterate)
+        assert analysis.masked_dataset.grid.sub_size == 1
+        assert analysis.masked_dataset.grid.fractional_accuracy == 0.99
+        assert analysis.masked_dataset.grid.sub_steps == [2]
+
+    def test__masked_imaging__uses_signal_to_noise_limit(
+        self, imaging_7x7, mask_7x7_1_pix
+    ):
+
+        imaging_snr_limit = imaging_7x7.signal_to_noise_limited_from_signal_to_noise_limit(
+            signal_to_noise_limit=1.0
+        )
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="phase_imaging_7x7",
+            settings=ag.PhaseSettingsImaging(
+                masked_imaging_settings=ag.MaskedImagingSettings(
+                    signal_to_noise_limit=1.0
+                )
+            ),
+            search=mock.MockSearch(),
+        )
+
+        analysis = phase_imaging_7x7.make_analysis(
+            dataset=imaging_7x7, mask=mask_7x7_1_pix, results=mock.MockResults()
+        )
+        assert (
+            analysis.masked_dataset.image.in_2d
+            == imaging_snr_limit.image.in_2d * np.invert(mask_7x7_1_pix)
+        ).all()
+        assert (
+            analysis.masked_dataset.noise_map.in_2d
+            == imaging_snr_limit.noise_map.in_2d * np.invert(mask_7x7_1_pix)
+        ).all()
+
+    def test__masked_imaging__uses_bin_up_factor(self, imaging_7x7, mask_7x7_1_pix):
+        binned_up_imaging = imaging_7x7.binned_from_bin_up_factor(bin_up_factor=2)
+
+        binned_up_mask = mask_7x7_1_pix.binned_mask_from_bin_up_factor(bin_up_factor=2)
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="phase_imaging_7x7",
+            settings=ag.PhaseSettingsImaging(
+                masked_imaging_settings=ag.MaskedImagingSettings(bin_up_factor=2)
+            ),
+            search=mock.MockSearch(),
+        )
+
+        analysis = phase_imaging_7x7.make_analysis(
+            dataset=imaging_7x7, mask=mask_7x7_1_pix, results=mock.MockResults()
+        )
+        assert (
+            analysis.masked_dataset.image.in_2d
+            == binned_up_imaging.image.in_2d * np.invert(binned_up_mask)
+        ).all()
+
+        assert (
+            analysis.masked_dataset.psf == (1.0 / 9.0) * binned_up_imaging.psf
+        ).all()
+        assert (
+            analysis.masked_dataset.noise_map.in_2d
+            == binned_up_imaging.noise_map.in_2d * np.invert(binned_up_mask)
+        ).all()
+
+        assert (analysis.masked_dataset.mask == binned_up_mask).all()
+
 
 class TestHyperMethods:
+    def test__phase_can_receive_hyper_image_and_noise_maps(self):
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
+            galaxies=dict(
+                galaxy=ag.GalaxyModel(redshift=ag.Redshift),
+                galaxy1=ag.GalaxyModel(redshift=ag.Redshift),
+            ),
+            hyper_image_sky=ag.hyper_data.HyperImageSky,
+            hyper_background_noise=ag.hyper_data.HyperBackgroundNoise,
+            search=mock.MockSearch(),
+        )
+
+        instance = phase_imaging_7x7.model.instance_from_vector([0.1, 0.2, 0.3, 0.4])
+
+        assert instance.galaxies[0].redshift == 0.1
+        assert instance.galaxies[1].redshift == 0.2
+        assert instance.hyper_image_sky.sky_scale == 0.3
+        assert instance.hyper_background_noise.noise_scale == 0.4
+
     def test__phase_is_extended_with_hyper_phases__sets_up_hyper_dataset_from_results(
         self, imaging_7x7, mask_7x7
     ):

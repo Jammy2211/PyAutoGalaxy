@@ -159,6 +159,158 @@ class TestModel:
         assert instance.galaxies[1].sis.einstein_radius == 0.7
         assert instance.galaxies[1].redshift == 0.8
 
+    def test__pixelization_property_extracts_pixelization(self, imaging_7x7, mask_7x7):
+
+        source_galaxy = ag.Galaxy(redshift=0.5)
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase", galaxies=[source_galaxy], search=mock.MockSearch()
+        )
+
+        assert phase_imaging_7x7.pixelization is None
+        assert phase_imaging_7x7.has_pixelization is False
+        assert phase_imaging_7x7.pixelization_is_model == False
+
+        source_galaxy = ag.Galaxy(
+            redshift=0.5,
+            pixelization=ag.pix.Rectangular(),
+            regularization=ag.reg.Constant(),
+        )
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase", galaxies=[source_galaxy], search=mock.MockSearch()
+        )
+
+        assert isinstance(phase_imaging_7x7.pixelization, ag.pix.Rectangular)
+        assert phase_imaging_7x7.has_pixelization is True
+        assert phase_imaging_7x7.pixelization_is_model == False
+
+        source_galaxy = ag.GalaxyModel(
+            redshift=0.5,
+            pixelization=ag.pix.Rectangular,
+            regularization=ag.reg.Constant,
+        )
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase", galaxies=[source_galaxy], search=mock.MockSearch()
+        )
+
+        assert type(phase_imaging_7x7.pixelization) == type(ag.pix.Rectangular)
+        assert phase_imaging_7x7.has_pixelization is True
+        assert phase_imaging_7x7.pixelization_is_model == True
+
+        pixelization = af.PriorModel(ag.pix.VoronoiBrightnessImage)
+        pixelization.pixels = 100
+
+        source_galaxy = ag.GalaxyModel(
+            redshift=0.5, pixelization=pixelization, regularization=ag.reg.Constant
+        )
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase", galaxies=[source_galaxy], search=mock.MockSearch()
+        )
+
+        assert type(phase_imaging_7x7.pixelization) == type(ag.pix.Rectangular)
+        assert phase_imaging_7x7.has_pixelization is True
+        assert phase_imaging_7x7.pixelization_is_model == True
+
+    def test__check_if_phase_uses_cluster_inversion(self):
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
+            galaxies=dict(
+                galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
+            ),
+            search=mock.MockSearch(),
+        )
+
+        assert phase_imaging_7x7.uses_cluster_inversion is False
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
+            galaxies=dict(
+                galaxy=ag.GalaxyModel(
+                    redshift=0.5,
+                    pixelization=ag.pix.Rectangular,
+                    regularization=ag.reg.Constant,
+                ),
+                source=ag.GalaxyModel(redshift=1.0),
+            ),
+            search=mock.MockSearch(),
+        )
+        assert phase_imaging_7x7.uses_cluster_inversion is False
+
+        source = ag.GalaxyModel(
+            redshift=1.0,
+            pixelization=ag.pix.VoronoiBrightnessImage,
+            regularization=ag.reg.Constant,
+        )
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
+            galaxies=dict(galaxy=ag.GalaxyModel(redshift=0.5), source=source),
+            search=mock.MockSearch(),
+        )
+
+        assert phase_imaging_7x7.uses_cluster_inversion is True
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
+            galaxies=dict(
+                galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
+            ),
+            search=mock.MockSearch(),
+        )
+
+        assert phase_imaging_7x7.uses_cluster_inversion is False
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
+            galaxies=dict(
+                galaxy=ag.GalaxyModel(
+                    redshift=0.5,
+                    pixelization=ag.pix.Rectangular,
+                    regularization=ag.reg.Constant,
+                ),
+                source=ag.GalaxyModel(redshift=1.0),
+            ),
+            search=mock.MockSearch(),
+        )
+
+        assert phase_imaging_7x7.uses_cluster_inversion is False
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
+            galaxies=dict(
+                galaxy=ag.GalaxyModel(redshift=0.5),
+                source=ag.GalaxyModel(
+                    redshift=1.0,
+                    pixelization=ag.pix.VoronoiBrightnessImage,
+                    regularization=ag.reg.Constant,
+                ),
+            ),
+            search=mock.MockSearch(),
+        )
+
+        assert phase_imaging_7x7.uses_cluster_inversion is True
+
+        pixelization = af.PriorModel(ag.pix.VoronoiBrightnessImage)
+        pixelization.pixels = 100
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
+            galaxies=dict(
+                galaxy=ag.GalaxyModel(redshift=0.5),
+                source=ag.GalaxyModel(
+                    redshift=1.0,
+                    pixelization=pixelization,
+                    regularization=ag.reg.Constant,
+                ),
+            ),
+            search=mock.MockSearch(),
+        )
+
+        assert phase_imaging_7x7.uses_cluster_inversion is True
+
 
 class TestSetup:
 

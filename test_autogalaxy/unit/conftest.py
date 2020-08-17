@@ -22,7 +22,11 @@ def set_config_path():
 
 @pytest.fixture(name="masked_imaging_7x7")
 def make_masked_imaging_7x7(imaging_7x7, sub_mask_7x7):
-    return ag.MaskedImaging(imaging=imaging_7x7, mask=sub_mask_7x7)
+    return ag.MaskedImaging(
+        imaging=imaging_7x7,
+        mask=sub_mask_7x7,
+        settings=ag.MaskedImagingSettings(sub_size=1),
+    )
 
 
 @pytest.fixture(name="masked_interferometer_7")
@@ -33,7 +37,9 @@ def make_masked_interferometer_7(
         interferometer=interferometer_7,
         visibilities_mask=visibilities_mask_7x2,
         real_space_mask=mask_7x7,
-        transformer_class=ag.TransformerDFT,
+        settings=ag.MaskedInterferometerSettings(
+            sub_size=1, transformer_class=ag.TransformerDFT
+        ),
     )
 
 
@@ -45,7 +51,7 @@ def make_masked_interferometer_7_lop(
         interferometer=interferometer_7,
         visibilities_mask=visibilities_mask_7x2,
         real_space_mask=mask_7x7,
-        transformer_class=ag.TransformerNUFFT,
+        settings=ag.MaskedInterferometerSettings(transformer_class=ag.TransformerNUFFT),
     )
 
 
