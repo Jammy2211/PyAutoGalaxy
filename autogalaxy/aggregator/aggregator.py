@@ -72,7 +72,7 @@ def masked_imaging_from_agg_obj(agg_obj):
      outputs such that the function can use the *Aggregator*'s map function to to create a *MaskedImaging* generator.
 
      The *MaskedImaging* is created following the same method as the PyAutoGalaxy *Phase* classes, including using the
-     *MaskedImagingSettings* instance output by the phase to load inputs of the *MaskedImaging* (e.g. psf_shape_2d).
+     *SettingsMaskedImaging* instance output by the phase to load inputs of the *MaskedImaging* (e.g. psf_shape_2d).
 
     Parameters
     ----------
@@ -83,7 +83,7 @@ def masked_imaging_from_agg_obj(agg_obj):
     return ag.MaskedImaging(
         imaging=agg_obj.dataset,
         mask=agg_obj.mask,
-        settings=agg_obj.settings.masked_imaging,
+        settings=agg_obj.settings.settings_masked_imaging,
     )
 
 
@@ -120,8 +120,8 @@ def fit_imaging_from_agg_obj(agg_obj):
     return ag.FitImaging(
         masked_imaging=masked_imaging,
         plane=plane,
-        pixelization_settings=agg_obj.settings.pixelization,
-        inversion_settings=agg_obj.settings.inversion,
+        settings_pixelization=agg_obj.settings.settings_pixelization,
+        settings_inversion=agg_obj.settings.settings_inversion,
     )
 
 
@@ -147,7 +147,7 @@ def masked_interferometer_from_agg_obj(agg_obj):
     *MaskedInterferometer* generator.
 
     The *MaskedInterferometer* is created following the same method as the PyAutoGalaxy *Phase* classes, including
-    using the *MaskedInterferometerSettings* instance output by the phase to load inputs of the *MaskedInterferometer*
+    using the *SettingsMaskedInterferometer* instance output by the phase to load inputs of the *MaskedInterferometer*
     (e.g. psf_shape_2d).
 
     Parameters
@@ -160,7 +160,7 @@ def masked_interferometer_from_agg_obj(agg_obj):
         interferometer=agg_obj.dataset,
         visibilities_mask=agg_obj.mask,
         real_space_mask=agg_obj.phase_attributes.real_space_mask,
-        settings=agg_obj.settings.masked_interferometer,
+        settings=agg_obj.settings.settings_masked_interferometer,
     )
 
 
@@ -198,8 +198,8 @@ def fit_interferometer_from_agg_obj(agg_obj):
     return ag.FitInterferometer(
         masked_interferometer=masked_interferometer,
         plane=plane,
-        pixelization_settings=agg_obj.settings.pixelization,
-        inversion_settings=agg_obj.settings.inversion,
+        settings_pixelization=agg_obj.settings.settings_pixelization,
+        settings_inversion=agg_obj.settings.settings_inversion,
     )
 
 

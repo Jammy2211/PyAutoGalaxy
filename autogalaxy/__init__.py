@@ -19,16 +19,16 @@ from autoarray.operators.transformer import TransformerDFT
 from autoarray.operators.transformer import TransformerNUFFT
 from autoarray.operators.transformer import TransformerNUFFT
 from autoarray.inversion.mappers import mapper as Mapper
-from autoarray.inversion.inversions import inversion as Inversion, InversionSettings
+from autoarray.inversion.inversions import inversion as Inversion, SettingsInversion
 from autoarray.inversion import pixelizations as pix, regularization as reg
-from autoarray.inversion.pixelizations import PixelizationSettings
+from autoarray.inversion.pixelizations import SettingsPixelization
 from autoconf import conf
 
 from . import aggregator as agg
-from .dataset.imaging import MaskedImaging, MaskedImagingSettings, SimulatorImaging
+from .dataset.imaging import MaskedImaging, SettingsMaskedImaging, SimulatorImaging
 from .dataset.interferometer import (
     MaskedInterferometer,
-    MaskedInterferometerSettings,
+    SettingsMaskedInterferometer,
     SimulatorInterferometer,
 )
 from . import dimensions as dim
@@ -47,8 +47,8 @@ from .plane.plane import Plane
 from .fit.fit import FitImaging, FitInterferometer
 from .hyper import hyper_data
 from . import plot
-from .pipeline.phase.settings import PhaseSettingsImaging
-from .pipeline.phase.settings import PhaseSettingsInterferometer
+from .pipeline.phase.settings import SettingsPhaseImaging
+from .pipeline.phase.settings import SettingsPhaseInterferometer
 from .pipeline.phase.abstract import phase
 from .pipeline.phase.abstract.phase import AbstractPhase
 from .pipeline.phase.extensions import CombinedHyperPhase
@@ -64,7 +64,7 @@ from .pipeline.phase.imaging.phase import PhaseImaging
 from .pipeline.phase.interferometer.phase import PhaseInterferometer
 from .pipeline.phase.phase_galaxy import PhaseGalaxy
 from .pipeline.pipeline import PipelineDataset
-from .pipeline.setup import PipelineSetup
+from .pipeline.setup import SetupPipeline
 from .util import convert
 
 __version__ = "0.12.7"

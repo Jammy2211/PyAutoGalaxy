@@ -21,7 +21,7 @@ def make_pipeline(name, folders, search=af.DynestyStatic()):
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic)
         ),
-        settings=ag.PhaseSettingsImaging(grid_class=ag.Grid),
+        settings=ag.SettingsPhaseImaging(grid_class=ag.Grid),
         search=search,
     )
 

@@ -73,8 +73,8 @@ class Analysis(analysis_dataset.Analysis):
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
-            pixelization_settings=self.settings.pixelization,
-            inversion_settings=self.settings.inversion,
+            settings_pixelization=self.settings.settings_pixelization,
+            settings_inversion=self.settings.settings_inversion,
         )
 
     def visualize(self, instance, during_analysis):

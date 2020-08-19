@@ -42,8 +42,8 @@ class TestFit:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
             galaxies=dict(galaxy=galaxy),
-            settings=ag.PhaseSettingsImaging(
-                masked_imaging_settings=ag.MaskedImagingSettings(sub_size=1)
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=1)
             ),
             search=mock.MockSearch(),
         )
@@ -57,7 +57,7 @@ class TestFit:
         masked_imaging = ag.MaskedImaging(
             imaging=imaging_7x7,
             mask=mask_7x7,
-            settings=ag.MaskedImagingSettings(sub_size=1),
+            settings=ag.SettingsMaskedImaging(sub_size=1),
         )
         plane = analysis.plane_for_instance(instance=instance)
 
@@ -78,8 +78,8 @@ class TestFit:
             galaxies=dict(galaxy=galalxy),
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
-            settings=ag.PhaseSettingsImaging(
-                masked_imaging_settings=ag.MaskedImagingSettings(sub_size=4)
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=4)
             ),
             search=mock.MockSearch(),
         )
@@ -95,7 +95,7 @@ class TestFit:
         masked_imaging = ag.MaskedImaging(
             imaging=imaging_7x7,
             mask=mask_7x7,
-            settings=ag.MaskedImagingSettings(sub_size=4),
+            settings=ag.SettingsMaskedImaging(sub_size=4),
         )
         plane = analysis.plane_for_instance(instance=instance)
         fit = FitImaging(
@@ -136,7 +136,7 @@ class TestFit:
 
         analysis = ag.PhaseImaging.Analysis(
             masked_imaging=masked_imaging_7x7,
-            settings=ag.PhaseSettingsImaging(),
+            settings=ag.SettingsPhaseImaging(),
             results=results,
             image_path="files/",
             cosmology=cosmo.Planck15,

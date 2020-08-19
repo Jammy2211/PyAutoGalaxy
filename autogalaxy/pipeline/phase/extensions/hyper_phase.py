@@ -36,7 +36,7 @@ class HyperPhase:
         """
         raise NotImplementedError()
 
-    def make_hyper_phase(self, include_path_prefix=True) -> abstract.AbstractPhase:
+    def make_hyper_phase(self) -> abstract.AbstractPhase:
         """
         Returns
         -------
@@ -45,15 +45,10 @@ class HyperPhase:
         """
 
         phase = copy.deepcopy(self.phase)
-        phase.paths.zip()
-        new_output_path = f"{self.phase.paths.path_prefix}/{self.phase.phase_name}/{self.hyper_name}__{phase.paths.tag}"
-
         phase.search = self.search.copy_with_name_extension(
-            extension=new_output_path, remove_phase_tag=True
+            extension=self.phase.phase_name
         )
-
-        phase.is_hyper_phase = True
-
+        phase.hyper_name = self.hyper_name
         return phase
 
     def run(

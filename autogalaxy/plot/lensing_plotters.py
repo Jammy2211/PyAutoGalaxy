@@ -794,7 +794,7 @@ class Include(plotters.Include):
         """
         if self.positions:
             try:
-                return fit.masked_dataset.positions
+                return fit.settings_masked_dataset.positions
             except AttributeError:
                 return None
 

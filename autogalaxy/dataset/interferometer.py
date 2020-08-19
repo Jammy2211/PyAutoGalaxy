@@ -5,7 +5,7 @@ from autoarray.operators import transformer
 from autogalaxy.plane import plane as pl
 
 
-class MaskedInterferometerSettings(interferometer.MaskedInterferometerSettings):
+class SettingsMaskedInterferometer(interferometer.SettingsMaskedInterferometer):
     def __init__(
         self,
         grid_class=grids.Grid,
@@ -67,7 +67,7 @@ class MaskedInterferometer(interferometer.MaskedInterferometer):
         interferometer,
         visibilities_mask,
         real_space_mask,
-        settings=MaskedInterferometerSettings(),
+        settings=SettingsMaskedInterferometer(),
     ):
         """
         The lens dataset is the collection of data (image, noise-map), a mask, grid, convolver \

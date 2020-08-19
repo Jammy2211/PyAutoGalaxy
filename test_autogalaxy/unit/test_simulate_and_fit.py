@@ -71,7 +71,7 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
     masked_imaging = ag.MaskedImaging(
         imaging=imaging,
         mask=mask,
-        settings=ag.MaskedImagingSettings(grid_class=ag.GridIterate),
+        settings=ag.SettingsMaskedImaging(grid_class=ag.GridIterate),
     )
 
     plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
@@ -149,7 +149,7 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
     masked_imaging = ag.MaskedImaging(
         imaging=simulator,
         mask=mask,
-        settings=ag.MaskedImagingSettings(grid_class=ag.Grid, sub_size=1),
+        settings=ag.SettingsMaskedImaging(grid_class=ag.Grid, sub_size=1),
     )
 
     plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
@@ -226,7 +226,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
         interferometer=interferometer,
         visibilities_mask=visibilities_mask,
         real_space_mask=real_space_mask,
-        settings=ag.MaskedInterferometerSettings(
+        settings=ag.SettingsMaskedInterferometer(
             grid_class=ag.Grid, transformer_class=ag.TransformerDFT, sub_size=2
         ),
     )
@@ -236,7 +236,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
     fit = ag.FitInterferometer(
         masked_interferometer=masked_interferometer,
         plane=plane,
-        pixelization_settings=ag.PixelizationSettings(use_border=False),
+        settings_pixelization=ag.SettingsPixelization(use_border=False),
     )
 
     assert fit.chi_squared == pytest.approx(0.0)
@@ -258,7 +258,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
     fit = ag.FitInterferometer(
         masked_interferometer=masked_interferometer,
         plane=plane,
-        pixelization_settings=ag.PixelizationSettings(use_border=False),
+        settings_pixelization=ag.SettingsPixelization(use_border=False),
     )
     assert abs(fit.chi_squared) < 1.0e-4
 

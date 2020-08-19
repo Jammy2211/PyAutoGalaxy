@@ -1,7 +1,7 @@
 import autofit as af
 from astropy import cosmology as cosmo
 from autogalaxy.dataset import imaging
-from autogalaxy.pipeline.phase.settings import PhaseSettingsImaging
+from autogalaxy.pipeline.phase.settings import SettingsPhaseImaging
 from autogalaxy.pipeline.phase import dataset
 from autogalaxy.pipeline.phase.imaging.analysis import Analysis
 from autogalaxy.pipeline.phase.imaging.result import Result
@@ -24,7 +24,7 @@ class PhaseImaging(dataset.PhaseDataset):
         galaxies=None,
         hyper_image_sky=None,
         hyper_background_noise=None,
-        settings=PhaseSettingsImaging(),
+        settings=SettingsPhaseImaging(),
         cosmology=cosmo.Planck15,
     ):
 
@@ -82,7 +82,7 @@ class PhaseImaging(dataset.PhaseDataset):
         """
 
         masked_imaging = imaging.MaskedImaging(
-            imaging=dataset, mask=mask, settings=self.settings.masked_imaging
+            imaging=dataset, mask=mask, settings=self.settings.settings_masked_imaging
         )
 
         self.output_phase_info()
@@ -104,10 +104,14 @@ class PhaseImaging(dataset.PhaseDataset):
         with open(file_phase_info, "w") as phase_info:
             phase_info.write("Optimizer = {} \n".format(type(self.search).__name__))
             phase_info.write(
-                "Sub-grid size = {} \n".format(self.settings.masked_imaging.sub_size)
+                "Sub-grid size = {} \n".format(
+                    self.settings.settings_masked_imaging.sub_size
+                )
             )
             phase_info.write(
-                "PSF shape = {} \n".format(self.settings.masked_imaging.psf_shape_2d)
+                "PSF shape = {} \n".format(
+                    self.settings.settings_masked_imaging.psf_shape_2d
+                )
             )
             phase_info.write("Cosmology = {} \n".format(self.cosmology))
 

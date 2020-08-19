@@ -3,8 +3,8 @@ import autogalaxy as ag
 
 def test__tag__mixture_of_values():
 
-    settings = ag.PhaseSettingsImaging(
-        masked_imaging_settings=ag.MaskedImagingSettings(
+    settings = ag.SettingsPhaseImaging(
+        settings_masked_imaging=ag.SettingsMaskedImaging(
             grid_class=ag.Grid,
             grid_inversion_class=ag.Grid,
             sub_size=2,
@@ -14,11 +14,11 @@ def test__tag__mixture_of_values():
         )
     )
 
-    assert settings.phase_no_inversion_tag == "settings__grid_sub_2__snr_2"
-    assert settings.phase_with_inversion_tag == "settings__grid_sub_2_inv_sub_2__snr_2"
+    assert settings.phase_tag_no_inversion == "settings__grid_sub_2__snr_2"
+    assert settings.phase_tag_with_inversion == "settings__grid_sub_2_inv_sub_2__snr_2"
 
-    settings = ag.PhaseSettingsImaging(
-        masked_imaging_settings=ag.MaskedImagingSettings(
+    settings = ag.SettingsPhaseImaging(
+        settings_masked_imaging=ag.SettingsMaskedImaging(
             grid_class=ag.Grid,
             grid_inversion_class=ag.GridIterate,
             sub_size=1,
@@ -29,45 +29,45 @@ def test__tag__mixture_of_values():
         )
     )
 
-    assert settings.phase_no_inversion_tag == "settings__grid_sub_1__bin_3__psf_2x2"
+    assert settings.phase_tag_no_inversion == "settings__grid_sub_1__bin_3__psf_2x2"
     assert (
-        settings.phase_with_inversion_tag
+        settings.phase_tag_with_inversion
         == "settings__grid_sub_1_inv_facc_0.1__bin_3__psf_2x2"
     )
 
-    settings = ag.PhaseSettingsInterferometer(
-        masked_interferometer_settings=ag.MaskedInterferometerSettings(
+    settings = ag.SettingsPhaseInterferometer(
+        masked_interferometer=ag.SettingsMaskedInterferometer(
             grid_class=ag.GridIterate,
             grid_inversion_class=ag.Grid,
             fractional_accuracy=0.1,
             sub_size=3,
             transformer_class=ag.TransformerDFT,
         ),
-        inversion_settings=ag.InversionSettings(use_linear_operators=False),
+        settings_inversion=ag.SettingsInversion(use_linear_operators=False),
         log_likelihood_cap=200.001,
     )
 
     assert (
-        settings.phase_no_inversion_tag == "settings__grid_facc_0.1__dft__lh_cap_200.0"
+        settings.phase_tag_no_inversion == "settings__grid_facc_0.1__dft__lh_cap_200.0"
     )
     assert (
-        settings.phase_with_inversion_tag
+        settings.phase_tag_with_inversion
         == "settings__grid_facc_0.1_inv_sub_3__dft__lh_cap_200.0"
     )
 
-    settings = ag.PhaseSettingsInterferometer(
-        masked_interferometer_settings=ag.MaskedInterferometerSettings(
+    settings = ag.SettingsPhaseInterferometer(
+        masked_interferometer=ag.SettingsMaskedInterferometer(
             grid_class=ag.GridIterate,
             grid_inversion_class=ag.Grid,
             fractional_accuracy=0.1,
             sub_size=3,
             transformer_class=ag.TransformerNUFFT,
         ),
-        inversion_settings=ag.InversionSettings(use_linear_operators=True),
+        settings_inversion=ag.SettingsInversion(use_linear_operators=True),
     )
 
-    assert settings.phase_no_inversion_tag == "settings__grid_facc_0.1__nufft"
+    assert settings.phase_tag_no_inversion == "settings__grid_facc_0.1__nufft"
     assert (
-        settings.phase_with_inversion_tag
+        settings.phase_tag_with_inversion
         == "settings__grid_facc_0.1_inv_sub_3__nufft__lop"
     )

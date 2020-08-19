@@ -553,7 +553,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         ]
 
     def sparse_image_plane_grid_from_grid(
-        self, grid, pixelization_settings=pix.PixelizationSettings()
+        self, grid, settings_pixelization=pix.SettingsPixelization()
     ):
 
         if not self.has_pixelization:
@@ -562,11 +562,11 @@ class AbstractPlaneData(AbstractPlaneLensing):
         hyper_galaxy_image = self.hyper_galaxy_image_of_galaxy_with_pixelization
 
         return self.pixelization.sparse_grid_from_grid(
-            grid=grid, hyper_image=hyper_galaxy_image, settings=pixelization_settings
+            grid=grid, hyper_image=hyper_galaxy_image, settings=settings_pixelization
         )
 
     def mapper_from_grid_and_sparse_grid(
-        self, grid, sparse_grid, pixelization_settings=pix.PixelizationSettings()
+        self, grid, sparse_grid, settings_pixelization=pix.SettingsPixelization()
     ):
 
         galaxies_with_pixelization = list(
@@ -583,7 +583,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
                 grid=grid,
                 sparse_grid=sparse_grid,
                 hyper_image=galaxies_with_pixelization[0].hyper_galaxy_image,
-                settings=pixelization_settings,
+                settings=settings_pixelization,
             )
 
         elif len(galaxies_with_pixelization) > 1:
@@ -597,8 +597,8 @@ class AbstractPlaneData(AbstractPlaneLensing):
         image,
         noise_map,
         convolver,
-        pixelization_settings=pix.PixelizationSettings(),
-        inversion_settings=inv.InversionSettings(),
+        settings_pixelization=pix.SettingsPixelization(),
+        settings_inversion=inv.SettingsInversion(),
     ):
 
         sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
@@ -606,7 +606,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         mapper = self.mapper_from_grid_and_sparse_grid(
             grid=grid,
             sparse_grid=sparse_grid,
-            pixelization_settings=pixelization_settings,
+            settings_pixelization=settings_pixelization,
         )
 
         return inv.InversionImagingMatrix.from_data_mapper_and_regularization(
@@ -615,7 +615,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             convolver=convolver,
             mapper=mapper,
             regularization=self.regularization,
-            settings=inversion_settings,
+            settings=settings_inversion,
         )
 
     def inversion_interferometer_from_grid_and_data(
@@ -624,8 +624,8 @@ class AbstractPlaneData(AbstractPlaneLensing):
         visibilities,
         noise_map,
         transformer,
-        pixelization_settings=pix.PixelizationSettings(),
-        inversion_settings=inv.InversionSettings(),
+        settings_pixelization=pix.SettingsPixelization(),
+        settings_inversion=inv.SettingsInversion(),
     ):
 
         sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
@@ -633,7 +633,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         mapper = self.mapper_from_grid_and_sparse_grid(
             grid=grid,
             sparse_grid=sparse_grid,
-            pixelization_settings=pixelization_settings,
+            settings_pixelization=settings_pixelization,
         )
 
         return inv.AbstractInversionInterferometer.from_data_mapper_and_regularization(
@@ -642,7 +642,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             transformer=transformer,
             mapper=mapper,
             regularization=self.regularization,
-            settings=inversion_settings,
+            settings=settings_inversion,
         )
 
     def plane_image_from_grid(self, grid):

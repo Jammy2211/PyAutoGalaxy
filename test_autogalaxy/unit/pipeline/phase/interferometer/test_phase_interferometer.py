@@ -87,8 +87,8 @@ class TestMakeAnalysis:
 
         phase_interferometer_7 = ag.PhaseInterferometer(
             phase_name="phase_interferometer_7",
-            settings=ag.PhaseSettingsInterferometer(
-                masked_interferometer_settings=ag.MaskedInterferometerSettings(
+            settings=ag.SettingsPhaseInterferometer(
+                masked_interferometer=ag.SettingsMaskedInterferometer(
                     grid_class=ag.Grid, grid_inversion_class=ag.Grid, sub_size=3
                 )
             ),
@@ -96,7 +96,9 @@ class TestMakeAnalysis:
             real_space_mask=mask_7x7,
         )
 
-        assert phase_interferometer_7.settings.masked_interferometer.sub_size == 3
+        assert (
+            phase_interferometer_7.settings.settings_masked_interferometer.sub_size == 3
+        )
 
         analysis = phase_interferometer_7.make_analysis(
             dataset=interferometer_7, mask=mask_7x7, results=mock.MockResults()
@@ -108,8 +110,8 @@ class TestMakeAnalysis:
 
         phase_interferometer_7 = ag.PhaseInterferometer(
             phase_name="phase_interferometer_7",
-            settings=ag.PhaseSettingsInterferometer(
-                masked_interferometer_settings=ag.MaskedInterferometerSettings(
+            settings=ag.SettingsPhaseInterferometer(
+                masked_interferometer=ag.SettingsMaskedInterferometer(
                     grid_class=ag.GridIterate,
                     sub_size=3,
                     fractional_accuracy=0.99,
@@ -177,7 +179,7 @@ class TestHyperMethods:
         )
 
         phase_interferometer_7.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(hyper_combined_search=mock.MockSearch())
+            setup=ag.SetupPipeline(hyper_combined_search=mock.MockSearch())
         )
 
         analysis = phase_interferometer_7.make_analysis(

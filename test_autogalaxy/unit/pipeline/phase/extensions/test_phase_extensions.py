@@ -203,8 +203,8 @@ class TestHyperAPI:
             phase_name="test_phase",
             galaxies=dict(galaxy=galaxy),
             search=af.DynestyStatic(n_live_points=1),
-            settings=ag.PhaseSettingsImaging(
-                masked_imaging_settings=ag.MaskedImagingSettings(bin_up_factor=2)
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(bin_up_factor=2)
             ),
         )
 
@@ -213,14 +213,15 @@ class TestHyperAPI:
         )
 
         hyper_phase = phase_extended.make_hyper_phase()
+        hyper_phase.modify_search_paths()
 
         assert (
-            "test_phase/inversion__settings__grid_sub_2__bin_2/dynesty_static__nlive_1"
+            "test_phase/inversion__settings__grid_sub_2_inv_sub_2__bin_2/dynesty_static__nlive_1"
             in hyper_phase.paths.output_path
         )
 
         phase_extended = phase.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(
+            setup=ag.SetupPipeline(
                 hyper_galaxies=True,
                 inversion_search=af.DynestyStatic(n_live_points=1),
                 hyper_galaxies_search=af.DynestyStatic(n_live_points=2),
@@ -230,23 +231,26 @@ class TestHyperAPI:
         )
 
         inversion_phase = phase_extended.hyper_phases[0].make_hyper_phase()
+        inversion_phase.modify_search_paths()
 
         assert (
-            "test_phase/inversion__settings__grid_sub_2__bin_2/dynesty_static__nlive_1"
+            "test_phase/inversion__settings__grid_sub_2_inv_sub_2__bin_2/dynesty_static__nlive_1"
             in inversion_phase.paths.output_path
         )
 
         hyper_galaxy_phase = phase_extended.hyper_phases[1].make_hyper_phase()
+        hyper_galaxy_phase.modify_search_paths()
 
         assert (
-            "test_phase/hyper_galaxy__settings__grid_sub_2__bin_2/dynesty_static__nlive_2"
+            "test_phase/hyper_galaxy__settings__grid_sub_2_inv_sub_2__bin_2/dynesty_static__nlive_2"
             in hyper_galaxy_phase.paths.output_path
         )
 
         hyper_combined_phase = phase_extended.make_hyper_phase()
+        hyper_combined_phase.modify_search_paths()
 
         assert (
-            "test_phase/hyper_combined__settings__grid_sub_2__bin_2/dynesty_static__nlive_3"
+            "test_phase/hyper_combined__settings__grid_sub_2_inv_sub_2__bin_2/dynesty_static__nlive_3"
             in hyper_combined_phase.paths.output_path
         )
 
@@ -266,8 +270,8 @@ class TestHyperGalaxyPhase:
             galaxies=dict(galaxy=galaxy),
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
-            settings=ag.PhaseSettingsImaging(
-                masked_imaging_settings=ag.MaskedImagingSettings(sub_size=2)
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=2)
             ),
             search=mock.MockSearch(),
         )
@@ -282,7 +286,7 @@ class TestHyperGalaxyPhase:
         masked_imaging = ag.MaskedImaging(
             imaging=imaging_7x7,
             mask=mask_7x7,
-            settings=ag.MaskedImagingSettings(sub_size=2),
+            settings=ag.SettingsMaskedImaging(sub_size=2),
         )
         plane = analysis.plane_for_instance(instance=instance)
         fit = FitImaging(
@@ -293,7 +297,7 @@ class TestHyperGalaxyPhase:
         )
 
         phase_imaging_7x7_hyper = phase_imaging_7x7.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(
+            setup=ag.SetupPipeline(
                 hyper_galaxies=True, hyper_galaxies_search=mock.MockSearch()
             )
         )

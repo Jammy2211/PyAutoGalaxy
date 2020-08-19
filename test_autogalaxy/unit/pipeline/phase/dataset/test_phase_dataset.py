@@ -20,14 +20,14 @@ class TestPhase:
         )
 
         phase_extended = phase_no_pixelization.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(hyper_galaxies_search=None, inversion_search=None)
+            setup=ag.SetupPipeline(hyper_galaxies_search=None, inversion_search=None)
         )
         assert phase_extended == phase_no_pixelization
 
         # This phase does not have a pixelization, so even though inversion=True it will not be extended
 
         phase_extended = phase_no_pixelization.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(inversion_search=mock.MockSearch())
+            setup=ag.SetupPipeline(inversion_search=mock.MockSearch())
         )
         assert phase_extended == phase_no_pixelization
 
@@ -44,13 +44,13 @@ class TestPhase:
         )
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(inversion_search=mock.MockSearch()),
+            setup=ag.SetupPipeline(inversion_search=mock.MockSearch()),
             include_inversion=True,
         )
         assert isinstance(phase_extended.hyper_phases[0], ag.InversionPhase)
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(
+            setup=ag.SetupPipeline(
                 hyper_galaxies=True,
                 hyper_galaxies_search=mock.MockSearch(),
                 inversion_search=None,
@@ -59,7 +59,7 @@ class TestPhase:
         assert isinstance(phase_extended.hyper_phases[0], ag.HyperGalaxyPhase)
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(
+            setup=ag.SetupPipeline(
                 hyper_galaxies=True,
                 hyper_galaxies_search=mock.MockSearch(),
                 inversion_search=mock.MockSearch(),
@@ -70,7 +70,7 @@ class TestPhase:
         assert isinstance(phase_extended.hyper_phases[1], ag.HyperGalaxyPhase)
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(
+            setup=ag.SetupPipeline(
                 hyper_galaxies=True,
                 hyper_galaxies_search=mock.MockSearch(),
                 inversion_search=mock.MockSearch(),
@@ -109,8 +109,8 @@ class TestMakeAnalysis:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
             search=mock.MockSearch(),
-            settings=ag.PhaseSettingsImaging(
-                masked_imaging_settings=ag.MaskedImagingSettings(sub_size=1)
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=1)
             ),
         )
 
@@ -125,8 +125,8 @@ class TestMakeAnalysis:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
             search=mock.MockSearch(),
-            settings=ag.PhaseSettingsImaging(
-                masked_imaging_settings=ag.MaskedImagingSettings(sub_size=2)
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=2)
             ),
         )
 

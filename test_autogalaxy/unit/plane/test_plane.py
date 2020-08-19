@@ -2081,7 +2081,7 @@ class TestAbstractPlaneData:
             mapper = plane.mapper_from_grid_and_sparse_grid(
                 grid=sub_grid_7x7,
                 sparse_grid=sub_grid_7x7,
-                pixelization_settings=ag.PixelizationSettings(use_border=False),
+                settings_pixelization=ag.SettingsPixelization(use_border=False),
             )
 
             assert mapper == 1
@@ -2106,7 +2106,7 @@ class TestAbstractPlaneData:
                 plane.mapper_from_grid_and_sparse_grid(
                     grid=sub_grid_7x7,
                     sparse_grid=sub_grid_7x7,
-                    pixelization_settings=ag.PixelizationSettings(use_border=False),
+                    settings_pixelization=ag.SettingsPixelization(use_border=False),
                 )
 
     class TestInversion:
@@ -2126,7 +2126,7 @@ class TestAbstractPlaneData:
                 image=masked_imaging_7x7.image,
                 noise_map=masked_imaging_7x7.noise_map,
                 convolver=masked_imaging_7x7.convolver,
-                pixelization_settings=ag.PixelizationSettings(use_border=False),
+                settings_pixelization=ag.SettingsPixelization(use_border=False),
             )
 
             assert inversion.mapped_reconstructed_image == pytest.approx(
@@ -2151,8 +2151,8 @@ class TestAbstractPlaneData:
                 visibilities=masked_interferometer_7.visibilities,
                 noise_map=masked_interferometer_7.noise_map,
                 transformer=masked_interferometer_7.transformer,
-                pixelization_settings=ag.PixelizationSettings(use_border=False),
-                inversion_settings=ag.InversionSettings(use_linear_operators=False),
+                settings_pixelization=ag.SettingsPixelization(use_border=False),
+                settings_inversion=ag.SettingsInversion(use_linear_operators=False),
             )
 
             assert inversion.mapped_reconstructed_visibilities[:, 0] == pytest.approx(

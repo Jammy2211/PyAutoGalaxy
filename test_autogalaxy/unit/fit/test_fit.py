@@ -38,7 +38,7 @@ class TestFitImaging:
             masked_imaging_7x7 = ag.MaskedImaging(
                 imaging=imaging,
                 mask=mask,
-                settings=ag.MaskedImagingSettings(grid_class=ag.Grid, sub_size=1),
+                settings=ag.SettingsMaskedImaging(grid_class=ag.Grid, sub_size=1),
             )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
@@ -142,7 +142,7 @@ class TestFitImaging:
             masked_imaging_7x7 = ag.MaskedImaging(
                 imaging=imaging,
                 mask=mask,
-                settings=ag.MaskedImagingSettings(
+                settings=ag.SettingsMaskedImaging(
                     grid_class=ag.Grid, renormalize_psf=False, sub_size=1
                 ),
             )
@@ -253,7 +253,7 @@ class TestFitImaging:
             masked_imaging_7x7 = ag.MaskedImaging(
                 imaging=imaging,
                 mask=mask,
-                settings=ag.MaskedImagingSettings(
+                settings=ag.SettingsMaskedImaging(
                     grid_class=ag.Grid, renormalize_psf=False, sub_size=1
                 ),
             )
@@ -363,7 +363,7 @@ class TestFitImaging:
             masked_imaging_7x7 = ag.MaskedImaging(
                 imaging=imaging,
                 mask=mask,
-                settings=ag.MaskedImagingSettings(grid_class=ag.Grid, sub_size=1),
+                settings=ag.SettingsMaskedImaging(grid_class=ag.Grid, sub_size=1),
             )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
@@ -471,7 +471,7 @@ class TestFitImaging:
             masked_imaging_7x7 = ag.MaskedImaging(
                 imaging=imaging,
                 mask=mask,
-                settings=ag.MaskedImagingSettings(grid_class=ag.Grid, sub_size=1),
+                settings=ag.SettingsMaskedImaging(grid_class=ag.Grid, sub_size=1),
             )
 
             # Setup as a ray trace instance, using a light profile for the galaxy
@@ -962,7 +962,7 @@ class TestFitImaging:
 
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_imaging_7x7.grid,
-                settings=ag.PixelizationSettings(use_border=False),
+                settings=ag.SettingsPixelization(use_border=False),
             )
             inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
                 mapper=mapper,
@@ -1044,7 +1044,7 @@ class TestFitImaging:
 
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_imaging_7x7.grid,
-                settings=ag.PixelizationSettings(use_border=False),
+                settings=ag.SettingsPixelization(use_border=False),
             )
 
             inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
@@ -1090,7 +1090,7 @@ class TestFitImaging:
 
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_imaging_7x7.grid,
-                settings=ag.PixelizationSettings(use_border=False),
+                settings=ag.SettingsPixelization(use_border=False),
             )
 
             inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
@@ -1197,7 +1197,7 @@ class TestFitImaging:
             profile_subtracted_image = masked_imaging_7x7.image - blurred_image
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_imaging_7x7.grid,
-                settings=ag.PixelizationSettings(use_border=False),
+                settings=ag.SettingsPixelization(use_border=False),
             )
 
             inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
@@ -1288,7 +1288,7 @@ class TestFitImaging:
 
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_imaging_7x7.grid,
-                settings=ag.PixelizationSettings(use_border=False),
+                settings=ag.SettingsPixelization(use_border=False),
             )
 
             inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
@@ -1383,7 +1383,7 @@ class TestFitImaging:
 
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_imaging_7x7.grid,
-                settings=ag.PixelizationSettings(use_border=False),
+                settings=ag.SettingsPixelization(use_border=False),
             )
 
             inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
@@ -1436,7 +1436,7 @@ class TestFitInterferometer:
                 interferometer=interferometer,
                 visibilities_mask=visibilities_mask,
                 real_space_mask=real_space_mask,
-                settings=ag.MaskedInterferometerSettings(
+                settings=ag.SettingsMaskedInterferometer(
                     grid_class=ag.Grid, sub_size=1, transformer_class=ag.TransformerDFT
                 ),
             )
@@ -1497,7 +1497,7 @@ class TestFitInterferometer:
                 interferometer=interferometer,
                 visibilities_mask=visibilities_mask,
                 real_space_mask=real_space_mask,
-                settings=ag.MaskedInterferometerSettings(
+                settings=ag.SettingsMaskedInterferometer(
                     grid_class=ag.Grid, sub_size=1
                 ),
             )
@@ -1900,7 +1900,7 @@ class TestFitInterferometer:
             fit = ag.FitInterferometer(
                 masked_interferometer=masked_interferometer_7_lop,
                 plane=plane,
-                inversion_settings=ag.InversionSettings(use_linear_operators=True),
+                settings_inversion=ag.SettingsInversion(use_linear_operators=True),
             )
 
             mapper = pix.mapper_from_grid_and_sparse_grid(
@@ -1913,7 +1913,7 @@ class TestFitInterferometer:
                 visibilities=masked_interferometer_7_lop.visibilities,
                 noise_map=masked_interferometer_7_lop.noise_map,
                 transformer=masked_interferometer_7_lop.transformer,
-                settings=ag.InversionSettings(use_linear_operators=True),
+                settings=ag.SettingsInversion(use_linear_operators=True),
             )
 
             assert inversion.mapped_reconstructed_visibilities == pytest.approx(
@@ -2023,7 +2023,7 @@ class TestFitInterferometer:
 
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_interferometer_7.grid,
-                settings=ag.PixelizationSettings(use_border=False),
+                settings=ag.SettingsPixelization(use_border=False),
             )
 
             inversion = inversions.InversionInterferometerMatrix.from_data_mapper_and_regularization(
@@ -2143,7 +2143,7 @@ class TestFitInterferometer:
             )
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_interferometer_7.grid,
-                settings=ag.PixelizationSettings(use_border=False),
+                settings=ag.SettingsPixelization(use_border=False),
             )
 
             inversion = inversions.InversionInterferometerMatrix.from_data_mapper_and_regularization(
@@ -2207,7 +2207,7 @@ class TestFitInterferometer:
             )
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_interferometer_7.grid,
-                settings=ag.PixelizationSettings(use_border=False),
+                settings=ag.SettingsPixelization(use_border=False),
             )
 
             inversion = inversions.InversionInterferometerMatrix.from_data_mapper_and_regularization(

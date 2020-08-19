@@ -121,8 +121,8 @@ class Analysis(analysis_data.Analysis):
             masked_interferometer=self.masked_dataset,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
-            pixelization_settings=self.settings.pixelization,
-            inversion_settings=self.settings.inversion,
+            settings_pixelization=self.settings.settings_pixelization,
+            settings_inversion=self.settings.settings_inversion,
         )
 
     def visualize(self, instance, during_analysis):

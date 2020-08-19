@@ -1,7 +1,7 @@
 import autofit as af
 from astropy import cosmology as cosmo
 from autogalaxy.dataset import interferometer
-from autogalaxy.pipeline.phase.settings import PhaseSettingsInterferometer
+from autogalaxy.pipeline.phase.settings import SettingsPhaseInterferometer
 from autogalaxy.pipeline.phase import dataset
 from autogalaxy.pipeline.phase.interferometer.analysis import Analysis
 from autogalaxy.pipeline.phase.interferometer.result import Result
@@ -23,7 +23,7 @@ class PhaseInterferometer(dataset.PhaseDataset):
         real_space_mask,
         galaxies=None,
         hyper_background_noise=None,
-        settings=PhaseSettingsInterferometer(),
+        settings=SettingsPhaseInterferometer(),
         cosmology=cosmo.Planck15,
     ):
 
@@ -40,7 +40,7 @@ class PhaseInterferometer(dataset.PhaseDataset):
             The side length of the subgrid
         """
 
-        paths.tag = settings.phase_with_inversion_tag
+        paths.tag = settings.phase_tag_with_inversion
 
         super().__init__(
             paths,
@@ -78,7 +78,7 @@ class PhaseInterferometer(dataset.PhaseDataset):
             interferometer=dataset,
             visibilities_mask=mask,
             real_space_mask=self.real_space_mask,
-            settings=self.settings.masked_interferometer,
+            settings=self.settings.settings_masked_interferometer,
         )
 
         self.output_phase_info()
@@ -109,7 +109,7 @@ class PhaseInterferometer(dataset.PhaseDataset):
             phase_info.write("Optimizer = {} \n".format(type(self.search).__name__))
             phase_info.write(
                 "Sub-grid size = {} \n".format(
-                    self.settings.masked_interferometer.sub_size
+                    self.settings.settings_masked_interferometer.sub_size
                 )
             )
             phase_info.write("Cosmology = {} \n".format(self.cosmology))

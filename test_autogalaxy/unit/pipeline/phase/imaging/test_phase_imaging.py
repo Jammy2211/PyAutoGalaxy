@@ -65,8 +65,8 @@ class TestMakeAnalysis:
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="phase_imaging_7x7",
-            settings=ag.PhaseSettingsImaging(
-                masked_imaging_settings=ag.MaskedImagingSettings(
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(
                     grid_class=ag.Grid,
                     grid_inversion_class=ag.Grid,
                     sub_size=3,
@@ -78,10 +78,13 @@ class TestMakeAnalysis:
             search=mock.MockSearch(),
         )
 
-        assert phase_imaging_7x7.settings.masked_imaging.sub_size == 3
-        assert phase_imaging_7x7.settings.masked_imaging.signal_to_noise_limit == 1.0
-        assert phase_imaging_7x7.settings.masked_imaging.bin_up_factor == 2
-        assert phase_imaging_7x7.settings.masked_imaging.psf_shape_2d == (3, 3)
+        assert phase_imaging_7x7.settings.settings_masked_imaging.sub_size == 3
+        assert (
+            phase_imaging_7x7.settings.settings_masked_imaging.signal_to_noise_limit
+            == 1.0
+        )
+        assert phase_imaging_7x7.settings.settings_masked_imaging.bin_up_factor == 2
+        assert phase_imaging_7x7.settings.settings_masked_imaging.psf_shape_2d == (3, 3)
 
         analysis = phase_imaging_7x7.make_analysis(
             dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
@@ -92,8 +95,8 @@ class TestMakeAnalysis:
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="phase_imaging_7x7",
-            settings=ag.PhaseSettingsImaging(
-                masked_imaging_settings=ag.MaskedImagingSettings(
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(
                     grid_class=ag.GridIterate,
                     sub_size=3,
                     fractional_accuracy=0.99,
@@ -122,8 +125,8 @@ class TestMakeAnalysis:
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="phase_imaging_7x7",
-            settings=ag.PhaseSettingsImaging(
-                masked_imaging_settings=ag.MaskedImagingSettings(
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(
                     signal_to_noise_limit=1.0
                 )
             ),
@@ -149,8 +152,8 @@ class TestMakeAnalysis:
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="phase_imaging_7x7",
-            settings=ag.PhaseSettingsImaging(
-                masked_imaging_settings=ag.MaskedImagingSettings(bin_up_factor=2)
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(bin_up_factor=2)
             ),
             search=mock.MockSearch(),
         )

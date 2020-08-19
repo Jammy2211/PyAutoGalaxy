@@ -25,7 +25,7 @@ def make_masked_imaging_7x7(imaging_7x7, sub_mask_7x7):
     return ag.MaskedImaging(
         imaging=imaging_7x7,
         mask=sub_mask_7x7,
-        settings=ag.MaskedImagingSettings(sub_size=1),
+        settings=ag.SettingsMaskedImaging(sub_size=1),
     )
 
 
@@ -37,7 +37,7 @@ def make_masked_interferometer_7(
         interferometer=interferometer_7,
         visibilities_mask=visibilities_mask_7x2,
         real_space_mask=mask_7x7,
-        settings=ag.MaskedInterferometerSettings(
+        settings=ag.SettingsMaskedInterferometer(
             sub_size=1, transformer_class=ag.TransformerDFT
         ),
     )
@@ -51,7 +51,7 @@ def make_masked_interferometer_7_lop(
         interferometer=interferometer_7,
         visibilities_mask=visibilities_mask_7x2,
         real_space_mask=mask_7x7,
-        settings=ag.MaskedInterferometerSettings(transformer_class=ag.TransformerNUFFT),
+        settings=ag.SettingsMaskedInterferometer(transformer_class=ag.TransformerNUFFT),
     )
 
 
@@ -366,7 +366,7 @@ def make_samples_with_result():
 def make_phase_data(mask_7x7):
     return ag.PhaseDataset(
         phase_name="test_phase",
-        settings=ag.PhaseSettingsImaging(),
+        settings=ag.SettingsPhaseImaging(),
         search=mock.MockSearch(),
     )
 

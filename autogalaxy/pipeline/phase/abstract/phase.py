@@ -78,6 +78,9 @@ class AbstractPhase(af.AbstractPhase):
     def run(self, dataset, mask, results=None):
         raise NotImplementedError()
 
+    def modify_search_paths(self):
+        raise NotImplementedError()
+
     @property
     def pixelization(self):
         for galaxy in self.galaxies:

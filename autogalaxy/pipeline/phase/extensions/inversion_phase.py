@@ -18,10 +18,8 @@ class ModelFixingHyperPhase(HyperPhase):
 
         self.model_classes = model_classes
 
-    def make_hyper_phase(self, include_path_prefix=True):
-        phase = super().make_hyper_phase(include_path_prefix=include_path_prefix)
-
-        return phase
+    def make_hyper_phase(self):
+        return super().make_hyper_phase()
 
     def make_model(self, instance):
         return instance.as_model(self.model_classes)

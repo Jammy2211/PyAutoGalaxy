@@ -6,7 +6,7 @@ from autoarray.dataset import imaging
 from autogalaxy.plane import plane as pl
 
 
-class MaskedImagingSettings(imaging.MaskedImagingSettings):
+class SettingsMaskedImaging(imaging.SettingsMaskedImaging):
     def __init__(
         self,
         grid_class=grids.Grid,
@@ -67,7 +67,7 @@ class MaskedImagingSettings(imaging.MaskedImagingSettings):
 
 
 class MaskedImaging(imaging.MaskedImaging):
-    def __init__(self, imaging, mask, settings=MaskedImagingSettings()):
+    def __init__(self, imaging, mask, settings=SettingsMaskedImaging()):
         """
         The lens dataset is the collection of data (image, noise-map, PSF), a mask, grid, convolver \
         and other utilities that are used for modeling and fitting an image of a strong lens.

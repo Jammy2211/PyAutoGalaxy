@@ -17,7 +17,7 @@ class TestMaskedInterferometer:
             interferometer=interferometer_7,
             visibilities_mask=visibilities_mask_7x2,
             real_space_mask=sub_mask_7x7,
-            settings=ag.MaskedInterferometerSettings(
+            settings=ag.SettingsMaskedInterferometer(
                 transformer_class=ag.TransformerDFT
             ),
         )
@@ -58,7 +58,7 @@ class TestMaskedInterferometer:
             interferometer=interferometer_7,
             visibilities_mask=visibilities_mask_7x2,
             real_space_mask=sub_mask_7x7,
-            settings=ag.MaskedInterferometerSettings(grid_class=ag.Grid),
+            settings=ag.SettingsMaskedInterferometer(grid_class=ag.Grid),
         )
 
         assert (masked_interferometer_7.grid.in_1d_binned == grid_7x7).all()

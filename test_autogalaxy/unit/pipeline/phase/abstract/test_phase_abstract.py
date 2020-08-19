@@ -30,7 +30,7 @@ class TestModel:
                 ),
                 source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
             ),
-            settings=ag.PhaseSettingsImaging(),
+            settings=ag.SettingsPhaseImaging(),
             search=mock.MockSearch(),
         )
 
@@ -322,7 +322,7 @@ class TestSetup:
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
-            settings=ag.PhaseSettingsImaging(),
+            settings=ag.SettingsPhaseImaging(),
             search=mock.MockSearch(),
         )
 
@@ -334,7 +334,7 @@ class TestSetup:
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
-            settings=ag.PhaseSettingsImaging(),
+            settings=ag.SettingsPhaseImaging(),
             search=mock.MockSearch(),
         )
         result = phase_dataset_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)

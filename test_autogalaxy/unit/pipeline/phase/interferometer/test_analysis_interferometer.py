@@ -45,10 +45,8 @@ class TestFit:
         phase_interferometer_7 = ag.PhaseInterferometer(
             phase_name="test_phase",
             galaxies=dict(galaxy=galalxy),
-            settings=ag.PhaseSettingsInterferometer(
-                masked_interferometer_settings=ag.MaskedInterferometerSettings(
-                    sub_size=2
-                )
+            settings=ag.SettingsPhaseInterferometer(
+                masked_interferometer=ag.SettingsMaskedInterferometer(sub_size=2)
             ),
             search=mock.MockSearch(),
             real_space_mask=mask_7x7,
@@ -86,10 +84,8 @@ class TestFit:
             phase_name="test_phase",
             galaxies=dict(galaxy=galalxy),
             hyper_background_noise=hyper_background_noise,
-            settings=ag.PhaseSettingsInterferometer(
-                masked_interferometer_settings=ag.MaskedInterferometerSettings(
-                    sub_size=4
-                )
+            settings=ag.SettingsPhaseInterferometer(
+                masked_interferometer=ag.SettingsMaskedInterferometer(sub_size=4)
             ),
             search=mock.MockSearch(),
             real_space_mask=mask_7x7,
@@ -109,7 +105,7 @@ class TestFit:
             interferometer=interferometer_7,
             visibilities_mask=visibilities_mask_7x2,
             real_space_mask=mask_7x7,
-            settings=ag.MaskedInterferometerSettings(sub_size=4),
+            settings=ag.SettingsMaskedInterferometer(sub_size=4),
         )
         plane = analysis.plane_for_instance(instance=instance)
         fit = FitInterferometer(
