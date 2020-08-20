@@ -1,8 +1,6 @@
 from os import path
-import autofit as af
 import autogalaxy as ag
 import pytest
-from autogalaxy import exc
 from test_autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
@@ -22,14 +20,14 @@ class TestPhase:
         )
 
         phase_extended = phase_no_pixelization.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(hyper_galaxies_search=None, inversion_search=None)
+            setup=ag.SetupPipeline(hyper_galaxies_search=None, inversion_search=None)
         )
         assert phase_extended == phase_no_pixelization
 
         # This phase does not have a pixelization, so even though inversion=True it will not be extended
 
         phase_extended = phase_no_pixelization.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(inversion_search=mock.MockSearch())
+            setup=ag.SetupPipeline(inversion_search=mock.MockSearch())
         )
         assert phase_extended == phase_no_pixelization
 
@@ -46,13 +44,13 @@ class TestPhase:
         )
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(inversion_search=mock.MockSearch()),
+            setup=ag.SetupPipeline(inversion_search=mock.MockSearch()),
             include_inversion=True,
         )
         assert isinstance(phase_extended.hyper_phases[0], ag.InversionPhase)
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(
+            setup=ag.SetupPipeline(
                 hyper_galaxies=True,
                 hyper_galaxies_search=mock.MockSearch(),
                 inversion_search=None,
@@ -61,7 +59,7 @@ class TestPhase:
         assert isinstance(phase_extended.hyper_phases[0], ag.HyperGalaxyPhase)
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(
+            setup=ag.SetupPipeline(
                 hyper_galaxies=True,
                 hyper_galaxies_search=mock.MockSearch(),
                 inversion_search=mock.MockSearch(),
@@ -72,7 +70,7 @@ class TestPhase:
         assert isinstance(phase_extended.hyper_phases[1], ag.HyperGalaxyPhase)
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            setup=ag.PipelineSetup(
+            setup=ag.SetupPipeline(
                 hyper_galaxies=True,
                 hyper_galaxies_search=mock.MockSearch(),
                 inversion_search=mock.MockSearch(),
@@ -108,7 +106,14 @@ class TestMakeAnalysis:
             shape_2d=imaging_7x7.shape_2d, pixel_scales=1, sub_size=1, radius=1.5
         )
 
-        phase_imaging_7x7.meta_dataset.settings.sub_size = 1
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
+            search=mock.MockSearch(),
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=1)
+            ),
+        )
+
         analysis = phase_imaging_7x7.make_analysis(
             dataset=imaging_7x7, mask=mask_input, results=mock.MockResults()
         )
@@ -117,7 +122,14 @@ class TestMakeAnalysis:
         assert analysis.masked_imaging.mask.sub_size == 1
         assert analysis.masked_imaging.mask.pixel_scales == mask_input.pixel_scales
 
-        phase_imaging_7x7.meta_dataset.settings.sub_size = 2
+        phase_imaging_7x7 = ag.PhaseImaging(
+            phase_name="test_phase",
+            search=mock.MockSearch(),
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=2)
+            ),
+        )
+
         analysis = phase_imaging_7x7.make_analysis(
             dataset=imaging_7x7, mask=mask_input, results=mock.MockResults()
         )
@@ -125,107 +137,6 @@ class TestMakeAnalysis:
         assert (analysis.masked_imaging.mask == mask_input).all()
         assert analysis.masked_imaging.mask.sub_size == 2
         assert analysis.masked_imaging.mask.pixel_scales == mask_input.pixel_scales
-
-    def test__inversion_resolution_error_raised_if_above_inversion_pixel_limit(
-        self, phase_imaging_7x7, imaging_7x7, mask_7x7
-    ):
-
-        phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
-            galaxies=dict(
-                source=ag.Galaxy(
-                    redshift=0.5,
-                    pixelization=ag.pix.Rectangular(shape=(3, 3)),
-                    regularization=ag.reg.Constant(),
-                )
-            ),
-            settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
-            search=mock.MockSearch(),
-        )
-
-        analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
-        )
-
-        instance = phase_imaging_7x7.model.instance_from_unit_vector([])
-        plane = analysis.plane_for_instance(instance=instance)
-
-        analysis.masked_dataset.check_inversion_pixels_are_below_limit_via_plane(
-            plane=plane
-        )
-
-        phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
-            galaxies=dict(
-                source=ag.Galaxy(
-                    redshift=0.5,
-                    pixelization=ag.pix.Rectangular(shape=(4, 4)),
-                    regularization=ag.reg.Constant(),
-                )
-            ),
-            settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
-            search=mock.MockSearch(),
-        )
-
-        analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
-        )
-        instance = phase_imaging_7x7.model.instance_from_unit_vector([])
-        plane = analysis.plane_for_instance(instance=instance)
-
-        with pytest.raises(exc.PixelizationException):
-            analysis.masked_dataset.check_inversion_pixels_are_below_limit_via_plane(
-                plane=plane
-            )
-            analysis.log_likelihood_function(instance=instance)
-
-        phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
-            galaxies=dict(
-                source=ag.Galaxy(
-                    redshift=0.5,
-                    pixelization=ag.pix.Rectangular(shape=(3, 3)),
-                    regularization=ag.reg.Constant(),
-                )
-            ),
-            settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
-            search=mock.MockSearch(),
-        )
-
-        analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
-        )
-        instance = phase_imaging_7x7.model.instance_from_unit_vector([])
-        plane = analysis.plane_for_instance(instance=instance)
-
-        analysis.masked_dataset.check_inversion_pixels_are_below_limit_via_plane(
-            plane=plane
-        )
-
-        phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
-            galaxies=dict(
-                source=ag.Galaxy(
-                    redshift=0.5,
-                    pixelization=ag.pix.Rectangular(shape=(4, 4)),
-                    regularization=ag.reg.Constant(),
-                )
-            ),
-            settings=ag.PhaseSettingsImaging(inversion_pixel_limit=10),
-            search=mock.MockSearch(),
-        )
-
-        analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
-        )
-        instance = phase_imaging_7x7.model.instance_from_unit_vector([])
-        plane = analysis.plane_for_instance(instance=instance)
-
-        with pytest.raises(exc.PixelizationException):
-            analysis.masked_dataset.check_inversion_pixels_are_below_limit_via_plane(
-                plane=plane
-            )
-            analysis.log_likelihood_function(instance=instance)
 
 
 class TestPhasePickle:

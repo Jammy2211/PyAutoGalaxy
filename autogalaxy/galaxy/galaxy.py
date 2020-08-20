@@ -2,7 +2,7 @@ from itertools import count
 
 import numpy as np
 from astropy import cosmology as cosmo
-from autoarray.operators.inversion import pixelizations as pix
+from autoarray.inversion import pixelizations as pix
 from autoarray.structures import arrays, grids
 from autofit.mapper.model_object import ModelObject
 from autofit.text import formatter
@@ -93,8 +93,16 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return [value for value in self.__dict__.values() if is_light_profile(value)]
 
     @property
+    def light_profile_keys(self):
+        return [key for key, value in self.__dict__.items() if is_light_profile(value)]
+
+    @property
     def mass_profiles(self):
         return [value for value in self.__dict__.values() if is_mass_profile(value)]
+
+    @property
+    def mass_profile_keys(self):
+        return [key for key, value in self.__dict__.items() if is_mass_profile(value)]
 
     @property
     def has_redshift(self):
@@ -152,9 +160,18 @@ class Galaxy(ModelObject, lensing.LensingObject):
         NOTE: Currently, no light profiles can have more than one centre (it unlikely one ever will). The structure of 
         the output follows this convention to follow other methods in the *Galaxy* class that return profile 
         attributes."""
-        return grids.GridCoordinates(
-            [[light_profile.centre] for light_profile in self.light_profiles]
-        )
+
+        centres = [[light_profile.centre] for light_profile in self.light_profiles]
+
+        if len(centres) == 0:
+            return []
+
+        centres_dict = {}
+
+        for key, centre in zip(self.light_profile_keys, centres):
+            centres_dict[key] = centre
+
+        return grids.GridCoordinates(coordinates=centres_dict)
 
     @property
     def mass_profile_centres(self):
@@ -178,7 +195,17 @@ class Galaxy(ModelObject, lensing.LensingObject):
             for mass_profile in self.mass_profiles
             if not mass_profile.is_mass_sheet
         ]
-        return grids.GridCoordinates(list(filter(None, centres)))
+
+        if len(centres) == 0:
+            return []
+
+        centres_dict = {}
+
+        for key, centre in zip(self.mass_profile_keys, centres):
+            if centre is not None:
+                centres_dict[key] = centre
+
+        return grids.GridCoordinates(coordinates=centres_dict)
 
     @property
     def mass_profile_axis_ratios(self):
@@ -194,9 +221,18 @@ class Galaxy(ModelObject, lensing.LensingObject):
         profile.
 
         """
-        return arrays.Values(
-            [[mass_profile.axis_ratio] for mass_profile in self.mass_profiles]
-        )
+
+        axis_ratios = [[mass_profile.axis_ratio] for mass_profile in self.mass_profiles]
+
+        if len(axis_ratios) == 0:
+            return []
+
+        axis_ratios_dict = {}
+
+        for key, axis_ratio in zip(self.mass_profile_keys, axis_ratios):
+            axis_ratios_dict[key] = axis_ratio
+
+        return arrays.Values(values=axis_ratios_dict)
 
     @property
     def mass_profile_phis(self):
@@ -210,9 +246,17 @@ class Galaxy(ModelObject, lensing.LensingObject):
         This is used for visualization, for example plotting the phis of all mass profiles colored by their profile.
 
         """
-        return arrays.Values(
-            [[mass_profile.phi] for mass_profile in self.mass_profiles]
-        )
+        phis = [[mass_profile.phi] for mass_profile in self.mass_profiles]
+
+        if len(phis) == 0:
+            return []
+
+        phis_dict = {}
+
+        for key, phi in zip(self.mass_profile_keys, phis):
+            phis_dict[key] = phi
+
+        return arrays.Values(values=phis_dict)
 
     @property
     def uses_cluster_inversion(self):

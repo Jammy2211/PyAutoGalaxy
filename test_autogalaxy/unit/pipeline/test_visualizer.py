@@ -207,7 +207,6 @@ class TestPhaseInterferometerVisualizer:
         assert plot_path + "interferometer/visibilities.png" in plot_patch.paths
         assert plot_path + "interferometer/u_wavelengths.png" not in plot_patch.paths
         assert plot_path + "interferometer/v_wavelengths.png" not in plot_patch.paths
-        assert plot_path + "interferometer/primary_beam.png" in plot_patch.paths
 
     def test__x2_galaxies_in_fit__visualizes_fit_using_configs(
         self,

@@ -2066,7 +2066,7 @@ class TestAbstractPlaneData:
 
             assert mapper == 1
 
-        def test__inversion_uses_border_is_false__still_returns_mapper(
+        def test__inversion_use_border_is_false__still_returns_mapper(
             self, sub_grid_7x7
         ):
             galaxy_pix = ag.Galaxy(
@@ -2079,7 +2079,9 @@ class TestAbstractPlaneData:
             plane = ag.Plane(galaxies=[galaxy_no_pix, galaxy_pix], redshift=0.5)
 
             mapper = plane.mapper_from_grid_and_sparse_grid(
-                grid=sub_grid_7x7, sparse_grid=sub_grid_7x7, inversion_uses_border=False
+                grid=sub_grid_7x7,
+                sparse_grid=sub_grid_7x7,
+                settings_pixelization=ag.SettingsPixelization(use_border=False),
             )
 
             assert mapper == 1
@@ -2104,7 +2106,7 @@ class TestAbstractPlaneData:
                 plane.mapper_from_grid_and_sparse_grid(
                     grid=sub_grid_7x7,
                     sparse_grid=sub_grid_7x7,
-                    inversion_uses_border=False,
+                    settings_pixelization=ag.SettingsPixelization(use_border=False),
                 )
 
     class TestInversion:
@@ -2124,7 +2126,7 @@ class TestAbstractPlaneData:
                 image=masked_imaging_7x7.image,
                 noise_map=masked_imaging_7x7.noise_map,
                 convolver=masked_imaging_7x7.convolver,
-                inversion_uses_border=False,
+                settings_pixelization=ag.SettingsPixelization(use_border=False),
             )
 
             assert inversion.mapped_reconstructed_image == pytest.approx(
@@ -2149,7 +2151,8 @@ class TestAbstractPlaneData:
                 visibilities=masked_interferometer_7.visibilities,
                 noise_map=masked_interferometer_7.noise_map,
                 transformer=masked_interferometer_7.transformer,
-                inversion_uses_border=False,
+                settings_pixelization=ag.SettingsPixelization(use_border=False),
+                settings_inversion=ag.SettingsInversion(use_linear_operators=False),
             )
 
             assert inversion.mapped_reconstructed_visibilities[:, 0] == pytest.approx(
@@ -2170,7 +2173,7 @@ class TestAbstractPlaneData:
 
             plane_image_from_func = ag.util.plane.plane_image_of_galaxies_from(
                 shape=(7, 7),
-                grid=sub_grid_7x7.geometry.unmasked_grid,
+                grid=sub_grid_7x7.geometry.unmasked_grid_sub_1,
                 galaxies=[galaxy],
             )
 

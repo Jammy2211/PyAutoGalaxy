@@ -1,10 +1,10 @@
 from autoconf import conf
 import autofit as af
-from autoarray.operators.inversion import pixelizations as pix
+from autoarray.inversion import pixelizations as pix
 from autogalaxy import exc
 
 
-class PipelineSetup:
+class SetupPipeline:
     def __init__(
         self,
         folders=None,
@@ -28,7 +28,7 @@ class PipelineSetup:
         """The setup of a pipeline, which controls how PyAutoGalaxy template pipelines runs, for example controlling
         assumptions about the bulge-disk model or the number of Gaussians used for multi-Gaussian fitting.
 
-        Users can write their own pipelines which do not use or require the *PipelineSetup* class.
+        Users can write their own pipelines which do not use or require the *SetupPipeline* class.
 
         This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
         scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
@@ -90,7 +90,7 @@ class PipelineSetup:
                 or hyper_combined_search is not None
             ):
                 raise exc.PipelineException(
-                    "You have manually specified a search in the PipelineSetup, and an evidence_tolerance."
+                    "You have manually specified a search in the SetupPipeline, and an evidence_tolerance."
                     "You cannot manually specify both - remove one."
                     "(If you want the hyper search to use a specific evidence tolerance, include the evidence"
                     "tolerance in its parameters"

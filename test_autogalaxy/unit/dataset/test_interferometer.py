@@ -17,7 +17,9 @@ class TestMaskedInterferometer:
             interferometer=interferometer_7,
             visibilities_mask=visibilities_mask_7x2,
             real_space_mask=sub_mask_7x7,
-            transformer_class=ag.TransformerDFT,
+            settings=ag.SettingsMaskedInterferometer(
+                transformer_class=ag.TransformerDFT
+            ),
         )
 
         assert (
@@ -31,11 +33,6 @@ class TestMaskedInterferometer:
             masked_interferometer_7.visibilities_mask
             == np.full(fill_value=False, shape=(7, 2))
         ).all()
-
-        assert (
-            masked_interferometer_7.primary_beam.in_2d == (1.0 / 9.0) * np.ones((3, 3))
-        ).all()
-        assert masked_interferometer_7.primary_beam_shape_2d == (3, 3)
 
         assert (
             masked_interferometer_7.interferometer.uv_wavelengths
@@ -61,15 +58,11 @@ class TestMaskedInterferometer:
             interferometer=interferometer_7,
             visibilities_mask=visibilities_mask_7x2,
             real_space_mask=sub_mask_7x7,
-            grid_class=ag.Grid,
-            primary_beam_shape_2d=(3, 3),
-            inversion_pixel_limit=20.0,
+            settings=ag.SettingsMaskedInterferometer(grid_class=ag.Grid),
         )
 
         assert (masked_interferometer_7.grid.in_1d_binned == grid_7x7).all()
         assert (masked_interferometer_7.grid == sub_grid_7x7).all()
-
-        assert masked_interferometer_7.inversion_pixel_limit == 20.0
 
         grid = ag.Grid.from_mask(mask=sub_mask_7x7)
 
@@ -80,7 +73,6 @@ class TestMaskedInterferometer:
     ):
         interferometer = ag.Interferometer(
             visibilities=ag.Visibilities.ones(shape_1d=(19,)),
-            primary_beam=ag.Kernel.ones(shape_2d=(7, 7), pixel_scales=1.0),
             noise_map=ag.Visibilities.full(fill_value=2.0, shape_1d=(19,)),
             uv_wavelengths=3.0 * np.ones((19, 2)),
         )
@@ -96,7 +88,6 @@ class TestMaskedInterferometer:
             interferometer=interferometer,
             visibilities_mask=visibilities_mask,
             real_space_mask=real_space_mask,
-            primary_beam_shape_2d=(5, 5),
         )
 
         assert (masked_interferometer.visibilities.in_1d == np.ones((19, 2))).all()
@@ -105,10 +96,6 @@ class TestMaskedInterferometer:
             masked_interferometer.interferometer.uv_wavelengths
             == 3.0 * np.ones((19, 2))
         ).all()
-        assert (
-            masked_interferometer.primary_beam.in_2d == (1.0 / 25.0) * np.ones((5, 5))
-        ).all()
-        assert masked_interferometer.primary_beam_shape_2d == (5, 5)
 
 
 class TestSimulatorInterferometer:

@@ -45,7 +45,9 @@ class TestFit:
         phase_interferometer_7 = ag.PhaseInterferometer(
             phase_name="test_phase",
             galaxies=dict(galaxy=galalxy),
-            settings=ag.PhaseSettingsInterferometer(sub_size=2),
+            settings=ag.SettingsPhaseInterferometer(
+                masked_interferometer=ag.SettingsMaskedInterferometer(sub_size=2)
+            ),
             search=mock.MockSearch(),
             real_space_mask=mask_7x7,
         )
@@ -58,13 +60,10 @@ class TestFit:
         instance = phase_interferometer_7.model.instance_from_unit_vector([])
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
-        real_space_mask = phase_interferometer_7.meta_dataset.mask_with_phase_sub_size_from_mask(
-            mask=mask_7x7
-        )
         masked_interferometer = ag.MaskedInterferometer(
             interferometer=interferometer_7,
             visibilities_mask=visibilities_mask_7x2,
-            real_space_mask=real_space_mask,
+            real_space_mask=mask_7x7,
         )
         plane = analysis.plane_for_instance(instance=instance)
 
@@ -85,7 +84,9 @@ class TestFit:
             phase_name="test_phase",
             galaxies=dict(galaxy=galalxy),
             hyper_background_noise=hyper_background_noise,
-            settings=ag.PhaseSettingsInterferometer(sub_size=4),
+            settings=ag.SettingsPhaseInterferometer(
+                masked_interferometer=ag.SettingsMaskedInterferometer(sub_size=4)
+            ),
             search=mock.MockSearch(),
             real_space_mask=mask_7x7,
         )
@@ -98,15 +99,13 @@ class TestFit:
         instance = phase_interferometer_7.model.instance_from_unit_vector([])
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
-        real_space_mask = phase_interferometer_7.meta_dataset.mask_with_phase_sub_size_from_mask(
-            mask=mask_7x7
-        )
-        assert real_space_mask.sub_size == 4
+        assert analysis.masked_interferometer.real_space_mask.sub_size == 4
 
         masked_interferometer = ag.MaskedInterferometer(
             interferometer=interferometer_7,
             visibilities_mask=visibilities_mask_7x2,
-            real_space_mask=real_space_mask,
+            real_space_mask=mask_7x7,
+            settings=ag.SettingsMaskedInterferometer(sub_size=4),
         )
         plane = analysis.plane_for_instance(instance=instance)
         fit = FitInterferometer(

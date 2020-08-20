@@ -1,6 +1,6 @@
 from autoarray import preprocess
 from autoarray.mask.mask import Mask
-from autoarray.structures.arrays import Values
+from autoarray.structures.arrays import Array, Values
 from autoarray.structures.grids import (
     Grid,
     GridIterate,
@@ -9,6 +9,7 @@ from autoarray.structures.grids import (
     GridRectangular,
     GridVoronoi,
 )
+from autoarray.structures.frame import Frame
 from autoarray.structures.kernel import Kernel
 from autoarray.structures.visibilities import Visibilities
 from autoarray.dataset.imaging import Imaging
@@ -16,15 +17,20 @@ from autoarray.dataset.interferometer import Interferometer
 from autoarray.operators.convolver import Convolver
 from autoarray.operators.transformer import TransformerDFT
 from autoarray.operators.transformer import TransformerNUFFT
-from autoarray.operators.inversion.mappers import mapper as Mapper
-from autoarray.operators.inversion.inversions import inversion as Inversion
-from autoarray.operators.inversion import pixelizations as pix, regularization as reg
+from autoarray.operators.transformer import TransformerNUFFT
+from autoarray.inversion.mappers import mapper as Mapper
+from autoarray.inversion.inversions import inversion as Inversion, SettingsInversion
+from autoarray.inversion import pixelizations as pix, regularization as reg
+from autoarray.inversion.pixelizations import SettingsPixelization
 from autoconf import conf
 
-from .structures.arrays import Array
 from . import aggregator as agg
-from .dataset.imaging import MaskedImaging, SimulatorImaging
-from .dataset.interferometer import MaskedInterferometer, SimulatorInterferometer
+from .dataset.imaging import MaskedImaging, SettingsMaskedImaging, SimulatorImaging
+from .dataset.interferometer import (
+    MaskedInterferometer,
+    SettingsMaskedInterferometer,
+    SimulatorInterferometer,
+)
 from . import dimensions as dim
 from . import util
 from .profiles import (
@@ -41,8 +47,8 @@ from .plane.plane import Plane
 from .fit.fit import FitImaging, FitInterferometer
 from .hyper import hyper_data
 from . import plot
-from .pipeline.phase.settings import PhaseSettingsImaging
-from .pipeline.phase.settings import PhaseSettingsInterferometer
+from .pipeline.phase.settings import SettingsPhaseImaging
+from .pipeline.phase.settings import SettingsPhaseInterferometer
 from .pipeline.phase.abstract import phase
 from .pipeline.phase.abstract.phase import AbstractPhase
 from .pipeline.phase.extensions import CombinedHyperPhase
@@ -58,7 +64,7 @@ from .pipeline.phase.imaging.phase import PhaseImaging
 from .pipeline.phase.interferometer.phase import PhaseInterferometer
 from .pipeline.phase.phase_galaxy import PhaseGalaxy
 from .pipeline.pipeline import PipelineDataset
-from .pipeline.setup import PipelineSetup
+from .pipeline.setup import SetupPipeline
 from .util import convert
 
-__version__ = '0.12.7'
+__version__ = '0.13.0'

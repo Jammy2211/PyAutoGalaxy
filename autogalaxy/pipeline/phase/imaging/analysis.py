@@ -6,9 +6,13 @@ from autogalaxy.pipeline.phase.dataset import analysis as analysis_dataset
 
 
 class Analysis(analysis_dataset.Analysis):
-    def __init__(self, masked_imaging, cosmology, image_path=None, results=None):
+    def __init__(
+        self, masked_imaging, settings, cosmology, image_path=None, results=None
+    ):
 
-        super(Analysis, self).__init__(cosmology=cosmology, results=results)
+        super(Analysis, self).__init__(
+            settings=settings, cosmology=cosmology, results=results
+        )
 
         self.visualizer = visualizer.PhaseImagingVisualizer(
             masked_dataset=masked_imaging, image_path=image_path, results=results
@@ -43,10 +47,6 @@ class Analysis(analysis_dataset.Analysis):
         self.associate_hyper_images(instance=instance)
         plane = self.plane_for_instance(instance=instance)
 
-        # self.masked_dataset.check_inversion_pixels_are_below_limit_via_tracer(
-        #     plane=plane
-        # )
-
         hyper_image_sky = self.hyper_image_sky_for_instance(instance=instance)
 
         hyper_background_noise = self.hyper_background_noise_for_instance(
@@ -73,6 +73,8 @@ class Analysis(analysis_dataset.Analysis):
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
+            settings_pixelization=self.settings.settings_pixelization,
+            settings_inversion=self.settings.settings_inversion,
         )
 
     def visualize(self, instance, during_analysis):

@@ -44,7 +44,9 @@ class TestResult:
                     redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
                 )
             ),
-            settings=ag.PhaseSettingsImaging(sub_size=2),
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=2)
+            ),
             search=mock.MockSearch(samples=samples_with_result),
         )
 
@@ -70,7 +72,7 @@ class TestResult:
 
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase_2",
-            settings=ag.PhaseSettingsImaging(inversion_pixel_limit=6),
+            settings=ag.SettingsPhaseImaging(),
             search=mock.MockSearch(samples=samples),
         )
 
@@ -96,7 +98,7 @@ class TestResult:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase_2",
             galaxies=dict(source=source),
-            settings=ag.PhaseSettingsImaging(inversion_pixel_limit=6),
+            settings=ag.SettingsPhaseImaging(),
             search=mock.MockSearch(samples=samples),
         )
 

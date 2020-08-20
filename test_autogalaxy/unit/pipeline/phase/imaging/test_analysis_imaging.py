@@ -42,7 +42,9 @@ class TestFit:
         phase_imaging_7x7 = ag.PhaseImaging(
             phase_name="test_phase",
             galaxies=dict(galaxy=galaxy),
-            settings=ag.PhaseSettingsImaging(sub_size=1),
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=1)
+            ),
             search=mock.MockSearch(),
         )
 
@@ -52,7 +54,11 @@ class TestFit:
         instance = phase_imaging_7x7.model.instance_from_unit_vector([])
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
-        masked_imaging = ag.MaskedImaging(imaging=imaging_7x7, mask=mask_7x7)
+        masked_imaging = ag.MaskedImaging(
+            imaging=imaging_7x7,
+            mask=mask_7x7,
+            settings=ag.SettingsMaskedImaging(sub_size=1),
+        )
         plane = analysis.plane_for_instance(instance=instance)
 
         fit = ag.FitImaging(masked_imaging=masked_imaging, plane=plane)
@@ -72,7 +78,9 @@ class TestFit:
             galaxies=dict(galaxy=galalxy),
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
-            settings=ag.PhaseSettingsImaging(sub_size=4),
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=4)
+            ),
             search=mock.MockSearch(),
         )
 
@@ -82,12 +90,13 @@ class TestFit:
         instance = phase_imaging_7x7.model.instance_from_unit_vector([])
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
-        mask = phase_imaging_7x7.meta_dataset.mask_with_phase_sub_size_from_mask(
-            mask=mask_7x7
-        )
-        assert mask.sub_size == 4
+        assert analysis.masked_imaging.mask.sub_size == 4
 
-        masked_imaging = ag.MaskedImaging(imaging=imaging_7x7, mask=mask)
+        masked_imaging = ag.MaskedImaging(
+            imaging=imaging_7x7,
+            mask=mask_7x7,
+            settings=ag.SettingsMaskedImaging(sub_size=4),
+        )
         plane = analysis.plane_for_instance(instance=instance)
         fit = FitImaging(
             masked_imaging=masked_imaging,
@@ -127,6 +136,7 @@ class TestFit:
 
         analysis = ag.PhaseImaging.Analysis(
             masked_imaging=masked_imaging_7x7,
+            settings=ag.SettingsPhaseImaging(),
             results=results,
             image_path="files/",
             cosmology=cosmo.Planck15,

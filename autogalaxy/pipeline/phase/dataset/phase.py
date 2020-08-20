@@ -1,6 +1,7 @@
+from autoconf import conf
 import autofit as af
-from autoarray.operators.inversion import pixelizations as pix
-from autoarray.operators.inversion import regularization as reg
+from autoarray.inversion import pixelizations as pix
+from autoarray.inversion import regularization as reg
 from autogalaxy.hyper import hyper_data as hd
 from astropy import cosmology as cosmo
 from autofit.tools.phase import Dataset
@@ -29,17 +30,15 @@ class PhaseDataset(abstract.AbstractPhase):
             The class of a non_linear search
         """
 
-        has_inversion = inversion_in_galaxies(galaxies=galaxies)
+        super().__init__(
+            paths,
+            search=search,
+            settings=settings,
+            galaxies=galaxies,
+            cosmology=cosmology,
+        )
 
-        if not has_inversion:
-            paths.tag = settings.phase_no_inversion_tag
-        else:
-            paths.tag = settings.phase_with_inversion_tag
-
-        super().__init__(paths, search=search)
-        self.settings = settings
-        self.galaxies = galaxies or []
-        self.cosmology = cosmology
+        self.hyper_name = None
         self.use_as_hyper_dataset = False
         self.is_hyper_phase = False
 
@@ -61,18 +60,21 @@ class PhaseDataset(abstract.AbstractPhase):
         result: AbstractPhase.Result
             A result object comprising the best fit model and other hyper_galaxies.
         """
-        self.save_metadata(dataset=dataset)
-        self.save_dataset(dataset=dataset)
-        self.save_mask(mask=mask)
-        self.save_meta_dataset(meta_dataset=self.meta_dataset)
-        self.save_settings(settings=self.settings)
 
         self.model = self.model.populate(results)
 
         results = results or af.ResultsCollection()
 
+        self.modify_dataset(dataset=dataset, results=results)
+        self.modify_settings(dataset=dataset, results=results)
+        self.modify_search_paths()
+
         analysis = self.make_analysis(dataset=dataset, mask=mask, results=results)
 
+        self.save_metadata(dataset=dataset)
+        self.save_dataset(dataset=dataset)
+        self.save_mask(mask=mask)
+        self.save_settings(settings=self.settings)
         phase_attributes = self.make_phase_attributes(analysis=analysis)
         self.save_phase_attributes(phase_attributes=phase_attributes)
 
@@ -103,6 +105,36 @@ class PhaseDataset(abstract.AbstractPhase):
         """
         raise NotImplementedError()
 
+    def modify_dataset(self, dataset, results):
+        pass
+
+    def modify_settings(self, dataset, results):
+        pass
+
+    def modify_search_paths(self):
+
+        if self.hyper_name is None:
+            hyper_tag = ""
+        else:
+            hyper_tag = f"{self.hyper_name}__"
+
+        old_tag = conf.instance.general.get("tag", "old_tag", bool)
+
+        if old_tag:
+
+            self.search.paths.tag = f"{hyper_tag}{self.settings.phase_tag_no_inversion}"
+
+        else:
+
+            if not self.has_pixelization:
+                self.search.paths.tag = (
+                    f"{hyper_tag}{self.settings.phase_tag_no_inversion}"
+                )
+            else:
+                self.search.paths.tag = (
+                    f"{hyper_tag}{self.settings.phase_tag_with_inversion}"
+                )
+
     def extend_with_inversion_phase(self, inversion_search):
         return extensions.InversionPhase(phase=self, search=inversion_search)
 
@@ -113,7 +145,7 @@ class PhaseDataset(abstract.AbstractPhase):
         hyper_phases = []
 
         if include_inversion:
-            if self.meta_dataset.has_pixelization and setup.inversion_search:
+            if self.has_pixelization and setup.inversion_search:
 
                 if not setup.hyper_image_sky and not setup.hyper_background_noise:
                     phase_inversion = extensions.InversionPhase(
@@ -178,14 +210,3 @@ class PhaseDataset(abstract.AbstractPhase):
                 search=setup.hyper_combined_search,
                 hyper_phases=hyper_phases,
             )
-
-
-def inversion_in_galaxies(galaxies):
-
-    if galaxies is not dict:
-        return False
-
-    for name, galaxy_model in galaxies.items():
-        if galaxy_model.pixelization is not None:
-            return True
-        return False

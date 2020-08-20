@@ -36,7 +36,7 @@ class HyperPhase:
         """
         raise NotImplementedError()
 
-    def make_hyper_phase(self, include_path_prefix=True) -> abstract.AbstractPhase:
+    def make_hyper_phase(self) -> abstract.AbstractPhase:
         """
         Returns
         -------
@@ -45,19 +45,19 @@ class HyperPhase:
         """
 
         phase = copy.deepcopy(self.phase)
-        phase.paths.zip()
-        new_output_path = f"{self.phase.paths.path_prefix}/{self.phase.phase_name}/{self.hyper_name}__{phase.paths.tag}"
-
         phase.search = self.search.copy_with_name_extension(
-            extension=new_output_path, remove_phase_tag=True
+            extension=f"{self.phase.paths.path_prefix}/{self.phase.phase_name}"
         )
-
-        phase.is_hyper_phase = True
-
+        phase.hyper_name = self.hyper_name
         return phase
 
     def run(
-        self, dataset: Dataset, results: af.ResultsCollection, **kwargs
+        self,
+        dataset: Dataset,
+        results: af.ResultsCollection,
+        info=None,
+        pickle_files=None,
+        **kwargs,
     ) -> af.Result:
         """
         Run the hyper phase and then the hyper_galaxies phase.
@@ -76,9 +76,17 @@ class HyperPhase:
             The result of the phase, with a hyper_galaxies result attached as an attribute with the hyper_name of this
             phase.
         """
-        result = self.phase.run(dataset, results=results, **kwargs)
+        result = self.phase.run(
+            dataset, results=results, info=info, pickle_files=pickle_files, **kwargs
+        )
         results.add(self.phase.paths.name, result)
-        hyper_result = self.run_hyper(dataset=dataset, results=results, **kwargs)
+        hyper_result = self.run_hyper(
+            dataset=dataset,
+            results=results,
+            info=info,
+            pickle_files=pickle_files,
+            **kwargs,
+        )
         setattr(result, self.hyper_name, hyper_result)
         return result
 

@@ -60,11 +60,13 @@ def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, sample
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
-        settings=ag.PhaseSettingsImaging(
-            grid_class=ag.GridIterate,
-            grid_inversion_class=ag.GridIterate,
-            fractional_accuracy=0.5,
-            sub_steps=[2],
+        settings=ag.SettingsPhaseImaging(
+            settings_masked_imaging=ag.SettingsMaskedImaging(
+                grid_class=ag.GridIterate,
+                grid_inversion_class=ag.GridIterate,
+                fractional_accuracy=0.5,
+                sub_steps=[2],
+            )
         ),
         search=mock.MockSearch(samples=samples),
     )
@@ -118,12 +120,14 @@ def test__masked_interferometer_generator_from_aggregator(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
-        settings=ag.PhaseSettingsInterferometer(
-            grid_class=ag.GridIterate,
-            grid_inversion_class=ag.GridIterate,
-            fractional_accuracy=0.5,
-            sub_steps=[2],
-            transformer_class=ag.TransformerDFT,
+        settings=ag.SettingsPhaseInterferometer(
+            masked_interferometer=ag.SettingsMaskedInterferometer(
+                grid_class=ag.GridIterate,
+                grid_inversion_class=ag.GridIterate,
+                fractional_accuracy=0.5,
+                sub_steps=[2],
+                transformer_class=ag.TransformerDFT,
+            )
         ),
         search=mock.MockSearch(samples=samples),
         real_space_mask=mask_7x7,
