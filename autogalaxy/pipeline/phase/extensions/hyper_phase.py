@@ -46,7 +46,7 @@ class HyperPhase:
 
         phase = copy.deepcopy(self.phase)
         phase.search = self.search.copy_with_name_extension(
-            extension=self.phase.phase_name
+            extension=f"{self.phase.paths.path_prefix}/{self.phase.phase_name}"
         )
         phase.hyper_name = self.hyper_name
         return phase

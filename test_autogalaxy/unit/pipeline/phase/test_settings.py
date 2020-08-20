@@ -15,7 +15,10 @@ def test__tag__mixture_of_values():
     )
 
     assert settings.phase_tag_no_inversion == "settings__grid_sub_2__snr_2"
-    assert settings.phase_tag_with_inversion == "settings__grid_sub_2_inv_sub_2__snr_2"
+    assert (
+        settings.phase_tag_with_inversion
+        == "settings__grid_sub_2_inv_sub_2__snr_2__no_border"
+    )
 
     settings = ag.SettingsPhaseImaging(
         settings_masked_imaging=ag.SettingsMaskedImaging(
@@ -32,7 +35,7 @@ def test__tag__mixture_of_values():
     assert settings.phase_tag_no_inversion == "settings__grid_sub_1__bin_3__psf_2x2"
     assert (
         settings.phase_tag_with_inversion
-        == "settings__grid_sub_1_inv_facc_0.1__bin_3__psf_2x2"
+        == "settings__grid_sub_1_inv_facc_0.1__bin_3__psf_2x2__no_border"
     )
 
     settings = ag.SettingsPhaseInterferometer(
@@ -52,7 +55,7 @@ def test__tag__mixture_of_values():
     )
     assert (
         settings.phase_tag_with_inversion
-        == "settings__grid_facc_0.1_inv_sub_3__dft__lh_cap_200.0"
+        == "settings__grid_facc_0.1_inv_sub_3__dft__no_border__lh_cap_200.0"
     )
 
     settings = ag.SettingsPhaseInterferometer(
@@ -69,5 +72,5 @@ def test__tag__mixture_of_values():
     assert settings.phase_tag_no_inversion == "settings__grid_facc_0.1__nufft"
     assert (
         settings.phase_tag_with_inversion
-        == "settings__grid_facc_0.1_inv_sub_3__nufft__lop"
+        == "settings__grid_facc_0.1_inv_sub_3__nufft__no_border__lop"
     )

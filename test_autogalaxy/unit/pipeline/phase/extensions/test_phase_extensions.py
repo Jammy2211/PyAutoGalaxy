@@ -212,11 +212,14 @@ class TestHyperAPI:
             inversion_search=af.DynestyStatic(n_live_points=1)
         )
 
+        phase_extended.paths.path_prefix = "prefix"
         hyper_phase = phase_extended.make_hyper_phase()
         hyper_phase.modify_search_paths()
 
+        print(hyper_phase.paths.output_path)
+
         assert (
-            "test_phase/inversion__settings__grid_sub_2_inv_sub_2__bin_2/dynesty_static__nlive_1"
+            "unit/output//prefix/test_phase/inversion__settings__grid_sub_2_inv_sub_2__bin_2__no_border/dynesty_static__nlive_1"
             in hyper_phase.paths.output_path
         )
 
@@ -234,7 +237,7 @@ class TestHyperAPI:
         inversion_phase.modify_search_paths()
 
         assert (
-            "test_phase/inversion__settings__grid_sub_2_inv_sub_2__bin_2/dynesty_static__nlive_1"
+            "test_phase/inversion__settings__grid_sub_2_inv_sub_2__bin_2__no_border/dynesty_static__nlive_1"
             in inversion_phase.paths.output_path
         )
 
@@ -242,7 +245,7 @@ class TestHyperAPI:
         hyper_galaxy_phase.modify_search_paths()
 
         assert (
-            "test_phase/hyper_galaxy__settings__grid_sub_2_inv_sub_2__bin_2/dynesty_static__nlive_2"
+            "test_phase/hyper_galaxy__settings__grid_sub_2_inv_sub_2__bin_2__no_border/dynesty_static__nlive_2"
             in hyper_galaxy_phase.paths.output_path
         )
 
@@ -250,7 +253,7 @@ class TestHyperAPI:
         hyper_combined_phase.modify_search_paths()
 
         assert (
-            "test_phase/hyper_combined__settings__grid_sub_2_inv_sub_2__bin_2/dynesty_static__nlive_3"
+            "test_phase/hyper_combined__settings__grid_sub_2_inv_sub_2__bin_2__no_border/dynesty_static__nlive_3"
             in hyper_combined_phase.paths.output_path
         )
 

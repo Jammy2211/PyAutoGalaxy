@@ -648,7 +648,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
     def plane_image_from_grid(self, grid):
         return plane_util.plane_image_of_galaxies_from(
             shape=grid.mask.shape,
-            grid=grid.geometry.unmasked_grid,
+            grid=grid.geometry.unmasked_grid_sub_1,
             galaxies=self.galaxies,
         )
 

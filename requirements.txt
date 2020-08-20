@@ -1,5 +1,5 @@
-autofit==0.65.0
-autoarray==0.12.2
+autofit==0.67.0
+autoarray==0.13.0
 colossus==1.2.14
 pyquad==0.6.2
 astropy>=3.0.0
