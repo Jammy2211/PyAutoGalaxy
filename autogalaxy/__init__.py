@@ -9,7 +9,7 @@ from autoarray.structures.grids import (
     GridRectangular,
     GridVoronoi,
 )
-from autoarray.structures.frame import Frame
+from autoarray.structures.frames import Frame
 from autoarray.structures.kernel import Kernel
 from autoarray.structures.visibilities import Visibilities
 from autoarray.dataset.imaging import Imaging
@@ -67,4 +67,4 @@ from .pipeline.pipeline import PipelineDataset
 from .pipeline.setup import SetupPipeline
 from .util import convert
 
-__version__ = '0.13.0'
+__version__ = "0.13.0"
