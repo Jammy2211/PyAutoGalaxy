@@ -1,4 +1,4 @@
-autofit==0.67.0
+autofit==0.67.1
 autoarray==0.13.1
 colossus==1.2.14
 pyquad==0.6.2
