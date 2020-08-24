@@ -26,6 +26,30 @@ def make_samples():
     return mock.MockSamples(max_log_likelihood_instance=plane)
 
 
+def test__dataset_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
+
+    phase_imaging_7x7 = ag.PhaseImaging(
+        phase_name="test_phase_aggregator",
+        galaxies=dict(
+            galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
+            source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
+        ),
+        search=mock.MockSearch(samples=samples),
+    )
+
+    imaging_7x7.positions = ag.GridCoordinates([[1.0, 1.0], [2.0, 2.0]])
+
+    phase_imaging_7x7.run(
+        dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults(samples=samples)
+    )
+
+    agg = af.Aggregator(directory=phase_imaging_7x7.paths.output_path)
+
+    dataset = list(agg.values("dataset"))
+
+    print(dataset)
+
+
 def test__plane_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
 
     phase_imaging_7x7 = ag.PhaseImaging(

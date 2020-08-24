@@ -67,4 +67,4 @@ from .pipeline.pipeline import PipelineDataset
 from .pipeline.setup import SetupPipeline
 from .util import convert
 
-__version__ = '0.13.2'
+__version__ = '0.13.3'
