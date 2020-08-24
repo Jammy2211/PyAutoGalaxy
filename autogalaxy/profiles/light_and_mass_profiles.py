@@ -338,3 +338,85 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
             mass_to_light_ratio=mass_to_light_ratio,
             mass_to_light_gradient=mass_to_light_gradient,
         )
+
+
+class EllipticalExponentialRadialGradient(EllipticalSersicRadialGradient):
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: dim.Luminosity = 0.1,
+        effective_radius: dim.Length = 0.6,
+        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        mass_to_light_gradient: float = 0.0,
+    ):
+        """
+        Setup an Exponential mass and light profiles.
+
+        Parameters
+        ----------
+        centre: (float, float)
+            The origin of the profiles
+        axis_ratio : float
+            Ratio of profiles ellipse's minor and major axes (b/a)
+        phi : float
+            Rotational angle of profiles ellipse counter-clockwise from positive x-axis
+        intensity : float
+            Overall flux intensity normalisation in the light profiles (electrons per second)
+        effective_radius : float
+            The radius containing half the light of this model_mapper
+        mass_to_light_ratio : float
+            The mass-to-light ratio of the light profiles
+        mass_to_light_gradient : float
+            The mass-to-light radial gradient.
+        """
+        EllipticalSersicRadialGradient.__init__(
+            self,
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            intensity=intensity,
+            effective_radius=effective_radius,
+            sersic_index=1.0,
+            mass_to_light_ratio=mass_to_light_ratio,
+            mass_to_light_gradient=mass_to_light_gradient,
+        )
+
+
+class SphericalExponentialRadialGradient(SphericalSersicRadialGradient):
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        intensity: dim.Luminosity = 0.1,
+        effective_radius: dim.Length = 0.6,
+        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        mass_to_light_gradient: float = 0.0,
+    ):
+        """
+        Setup an Exponential mass and light profiles.
+
+        Parameters
+        ----------
+        centre: (float, float)
+            The origin of the profiles
+        axis_ratio : float
+            Ratio of profiles ellipse's minor and major axes (b/a)
+        phi : float
+            Rotational angle of profiles ellipse counter-clockwise from positive x-axis
+        intensity : float
+            Overall flux intensity normalisation in the light profiles (electrons per second)
+        effective_radius : float
+            The radius containing half the light of this model_mapper
+        mass_to_light_ratio : float
+            The mass-to-light ratio of the light profiles
+        mass_to_light_gradient : float
+            The mass-to-light radial gradient.
+        """
+        SphericalSersicRadialGradient.__init__(
+            self,
+            centre=centre,
+            intensity=intensity,
+            effective_radius=effective_radius,
+            sersic_index=1.0,
+            mass_to_light_ratio=mass_to_light_ratio,
+            mass_to_light_gradient=mass_to_light_gradient,
+        )
