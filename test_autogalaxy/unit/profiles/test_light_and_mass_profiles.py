@@ -650,3 +650,141 @@ class TestSersicRadialGradient:
             elliptical.deflections_from_grid(grid=grid),
             spherical.deflections_from_grid(grid=grid),
         )
+
+
+class TestExponentialRadialGradient:
+    def test__constructor_and_units(self):
+        sersic = ag.lmp.EllipticalExponentialRadialGradient(
+            centre=(1.0, 2.0),
+            elliptical_comps=(0.333333, 0.0),
+            intensity=1.0,
+            effective_radius=0.6,
+            mass_to_light_ratio=10.0,
+            mass_to_light_gradient=-1.0,
+        )
+
+        assert sersic.centre == (1.0, 2.0)
+        assert isinstance(sersic.centre[0], ag.dim.Length)
+        assert isinstance(sersic.centre[1], ag.dim.Length)
+        assert sersic.centre[0].unit == "arcsec"
+        assert sersic.centre[1].unit == "arcsec"
+
+        assert sersic.axis_ratio == pytest.approx(0.5, 1.0e-4)
+        assert isinstance(sersic.axis_ratio, float)
+
+        assert sersic.phi == pytest.approx(45.0, 1.0e-4)
+        assert isinstance(sersic.phi, float)
+
+        assert sersic.intensity == 1.0
+        assert isinstance(sersic.intensity, ag.dim.Luminosity)
+        assert sersic.intensity.unit == "eps"
+
+        assert sersic.effective_radius == 0.6
+        assert isinstance(sersic.effective_radius, ag.dim.Length)
+        assert sersic.effective_radius.unit_length == "arcsec"
+
+        assert sersic.mass_to_light_ratio == 10.0
+        assert isinstance(sersic.mass_to_light_ratio, ag.dim.MassOverLuminosity)
+        assert sersic.mass_to_light_ratio.unit == "angular / eps"
+
+        assert sersic.mass_to_light_gradient == -1.0
+        assert isinstance(sersic.mass_to_light_gradient, float)
+
+        assert sersic.elliptical_effective_radius == pytest.approx(
+            0.6 / np.sqrt(0.5), 1.0e-4
+        )
+
+        sersic = ag.lmp.SphericalExponentialRadialGradient(
+            centre=(1.0, 2.0),
+            intensity=1.0,
+            effective_radius=0.6,
+            mass_to_light_ratio=10.0,
+            mass_to_light_gradient=-1.0,
+        )
+
+        assert sersic.centre == (1.0, 2.0)
+        assert isinstance(sersic.centre[0], ag.dim.Length)
+        assert isinstance(sersic.centre[1], ag.dim.Length)
+        assert sersic.centre[0].unit == "arcsec"
+        assert sersic.centre[1].unit == "arcsec"
+
+        assert sersic.axis_ratio == 1.0
+        assert isinstance(sersic.axis_ratio, float)
+
+        assert sersic.phi == 0.0
+        assert isinstance(sersic.phi, float)
+
+        assert sersic.intensity == 1.0
+        assert isinstance(sersic.intensity, ag.dim.Luminosity)
+        assert sersic.intensity.unit == "eps"
+
+        assert sersic.effective_radius == 0.6
+        assert isinstance(sersic.effective_radius, ag.dim.Length)
+        assert sersic.effective_radius.unit_length == "arcsec"
+
+        assert sersic.mass_to_light_ratio == 10.0
+        assert isinstance(sersic.mass_to_light_ratio, ag.dim.MassOverLuminosity)
+        assert sersic.mass_to_light_ratio.unit == "angular / eps"
+
+        assert sersic.mass_to_light_gradient == -1.0
+        assert isinstance(sersic.mass_to_light_gradient, float)
+
+        assert sersic.elliptical_effective_radius == 0.6
+
+    def test__grid_calculations__same_as_sersic_radial_gradient(self):
+        sersic_lp = ag.lmp.EllipticalExponential(
+            elliptical_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
+        )
+        sersic_mp = ag.lmp.EllipticalExponentialRadialGradient(
+            elliptical_comps=(0.1, 0.05),
+            intensity=1.0,
+            effective_radius=0.6,
+            mass_to_light_ratio=2.0,
+            mass_to_light_gradient=0.5,
+        )
+        sersic_lmp = ag.lmp.EllipticalExponentialRadialGradient(
+            elliptical_comps=(0.1, 0.05),
+            intensity=1.0,
+            effective_radius=0.6,
+            mass_to_light_ratio=2.0,
+            mass_to_light_gradient=0.5,
+        )
+
+        assert (
+            sersic_lp.image_from_grid(grid=grid)
+            == sersic_lmp.image_from_grid(grid=grid)
+        ).all()
+        assert (
+            sersic_mp.convergence_from_grid(grid=grid)
+            == sersic_lmp.convergence_from_grid(grid=grid)
+        ).all()
+        #    assert (sersic_mp.potential_from_grid(grid=grid) == sersic_lmp.potential_from_grid(grid=grid)).all()
+        assert (
+            sersic_mp.deflections_from_grid(grid=grid)
+            == sersic_lmp.deflections_from_grid(grid=grid)
+        ).all()
+
+    def test__spherical_and_elliptical_identical(self):
+        elliptical = ag.lmp.EllipticalExponentialRadialGradient(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+        )
+        spherical = ag.lmp.SphericalExponentialRadialGradient(
+            centre=(0.0, 0.0), intensity=1.0, effective_radius=1.0
+        )
+
+        assert (
+            elliptical.image_from_grid(grid=grid)
+            == spherical.image_from_grid(grid=grid)
+        ).all()
+        assert (
+            elliptical.convergence_from_grid(grid=grid)
+            == spherical.convergence_from_grid(grid=grid)
+        ).all()
+        # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
+        np.testing.assert_almost_equal(
+            elliptical.deflections_from_grid(grid=grid),
+            spherical.deflections_from_grid(grid=grid),
+        )
