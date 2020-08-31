@@ -4,177 +4,6 @@ from autoarray.inversion import pixelizations as pix, regularization as reg
 from autogalaxy import exc
 
 
-class SetupPipeline:
-    def __init__(
-        self,
-        folders=None,
-        light_centre=None,
-        align_bulge_disk_centre=False,
-        align_bulge_disk_elliptical_comps=False,
-        disk_as_sersic=False,
-    ):
-        """The setup of a pipeline, which controls how PyAutoGalaxy template pipelines runs, for example controlling
-        assumptions about the bulge-disk model or the number of Gaussians used for multi-Gaussian fitting.
-
-        Users can write their own pipelines which do not use or require the *SetupPipeline* class.
-
-        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
-        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
-        different models to a dataset in a structured path format.
-
-        Parameters
-        ----------
-        hyper_galaxies : bool
-            If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used to scale the
-            noise-map of the dataset throughout the fitting.
-        hyper_image_sky : bool
-            If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used include the
-            image's background sky component in the model.
-        hyper_background_noise : bool
-            If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used include the
-            noise-map's background component in the model.
-        hyper_galaxies_search : af.NonLinearSearch or None
-            The non-linear search used by every hyper-galaxies phase.
-        inversion_search : af.NonLinearSearch or None
-            The non-linear search used by every inversion phase.
-        hyper_combined_search : af.NonLinearSearch or None
-            The non-linear search used by every hyper combined phase.
-        pixelization : ag.pix.Pixelization
-           If the pipeline uses an *Inversion* to reconstruct the galaxy's light, this determines the
-           *Pixelization* used.
-        regularization : ag.reg.Regularization
-           If the pipeline uses an *Inversion* to reconstruct the galaxy's light, this determines the
-           *Regularization* scheme used.
-        light_centre : (float, float)
-           If input, a fixed (y,x) centre of the galaxy is used for the light profile model which is not treated as a
-            free parameter by the non-linear search.
-        align_bulge_disk_centre : bool
-            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
-            *True* will align the centre of the bulge and disk components and not fit them separately.
-        align_bulge_disk_phi : bool
-            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
-            *True* will align the rotation angles phi of the bulge and disk components and not fit them separately.
-        align_bulge_disk_axis_ratio : bool
-            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
-            *True* will align the axis-ratios of the bulge and disk components and not fit them separately.
-        disk_as_sersic : bool
-            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
-            *True* will use an EllipticalSersic for the disk instead of an EllipticalExponential.
-        number_of_gaussians : int
-            If a multi-Gaussian light model is used to fit the galaxy, this determines the number of Gaussians.
-        """
-
-        self.folders = folders
-
-        self.light_centre = light_centre
-
-        self.align_bulge_disk_centre = align_bulge_disk_centre
-        self.align_bulge_disk_elliptical_comps = align_bulge_disk_elliptical_comps
-        self.disk_as_sersic = disk_as_sersic
-
-    @property
-    def tag(self):
-        """Generate the pipeline's overall tag, which customizes the 'setup' folder the results are output to.
-        """
-        return (
-            conf.instance.tag.get("pipeline", "pipeline", str)
-            + self.hyper_tag
-            + self.inversion_tag
-            + self.light_centre_tag
-            + self.align_bulge_disk_tag
-            + self.disk_as_sersic_tag
-            + self.number_of_gaussians_tag
-        )
-
-    @property
-    def light_centre_tag(self):
-        """Tag if the lens light of the pipeline are fixed to a previous estimate, or varied \
-         during the analysis, to customize pipeline output paths.
-
-        This changes the setup folder as follows:
-
-        light_centre = None -> setup
-        light_centre = (1.0, 1.0) -> setup___light_centre_(1.0, 1.0)
-        light_centre = (3.0, -2.0) -> setup___light_centre_(3.0, -2.0)
-        """
-        if self.light_centre is None:
-            return ""
-        else:
-            y = "{0:.2f}".format(self.light_centre[0])
-            x = "{0:.2f}".format(self.light_centre[1])
-            return (
-                "__"
-                + conf.instance.tag.get("pipeline", "light_centre", str)
-                + "_("
-                + y
-                + ","
-                + x
-                + ")"
-            )
-
-    @property
-    def align_bulge_disk_centre_tag(self):
-        """Tag if the bulge and disk of a bulge-disk system are aligned or not, to customize pipeline 
-        output paths based on the bulge-disk model.
-        
-        This is used to generate an overall align-bulge disk tag in *align_bulge_disk_tag*.
-        """
-        if not self.align_bulge_disk_centre:
-            return ""
-        elif self.align_bulge_disk_centre:
-            return "_" + conf.instance.tag.get(
-                "pipeline", "align_bulge_disk_centre", str
-            )
-
-    @property
-    def align_bulge_disk_elliptical_comps_tag(self):
-        """Tag if the ellipticity of the bulge and disk of a bulge-disk system are aligned or not, to customize pipeline
-        output paths based on the bulge-disk model. 
-        
-        This is used to generate an overall align-bulge disk tag in *align_bulge_disk_tag*.
-        """
-        if not self.align_bulge_disk_elliptical_comps:
-            return ""
-        elif self.align_bulge_disk_elliptical_comps:
-            return "_" + conf.instance.tag.get(
-                "pipeline", "align_bulge_disk_elliptical_comps", str
-            )
-
-    @property
-    def align_bulge_disk_tag(self):
-        """Tag the alignment of the geometry of the bulge and disk of a bulge-disk system, to customize  pipeline output 
-        paths based on the bulge-disk model. This adds together the bulge_disk tags generated in the  3 functions 
-        *align_bulge_disk_centre_tag*, *align_bulge_disk_axis_ratio_tag* and *align_bulge_disk_phi_tag*.
-        """
-
-        if not any(
-            [self.align_bulge_disk_centre, self.align_bulge_disk_elliptical_comps]
-        ):
-            return ""
-
-        return (
-            "__"
-            + conf.instance.tag.get("pipeline", "align_bulge_disk", str)
-            + self.align_bulge_disk_centre_tag
-            + self.align_bulge_disk_elliptical_comps_tag
-        )
-
-    @property
-    def disk_as_sersic_tag(self):
-        """Tag if the disk component of a bulge-disk light profile fit of the pipeline is modeled as a EllipticalSersic
-        or an EllipticalExponential.
-
-        This changes the setup folder as follows:
-
-        disk_as_sersic = False -> setup
-        disk_as_sersic = True -> setup___disk_as_sersic
-        """
-        if not self.disk_as_sersic:
-            return ""
-        elif self.disk_as_sersic:
-            return "__" + conf.instance.tag.get("pipeline", "disk_as_sersic", str)
-
-
 class SetupHyper:
     def __init__(
         self,
@@ -191,7 +20,7 @@ class SetupHyper:
         for example controlling whether hyper galaxies are used to scale the noise and the non-linear searches used
         in these phases.
 
-        Users can write their own pipelines which do not use or require the *SetupPipeline* class.
+        Users can write their own pipelines which do not use or require the *SetupHyper* class.
 
         This class enables pipeline tagging, whereby the hyper setup of the pipeline is used in the template pipeline
         scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
@@ -270,7 +99,7 @@ class SetupHyper:
         self.hyper_background_noise = hyper_background_noise
 
     @property
-    def hyper_tag(self):
+    def tag(self):
         """Tag ithe hyper pipeline features used in a hyper pipeline to customize pipeline output paths.
         """
         if not any(
@@ -331,11 +160,11 @@ class SetupSource:
         regularization: reg.Regularization = None,
         inversion_pixels_fixed: float = None,
     ):
-        """The setup of the source analysis of a  pipeline, which controls how PyAutoGalaxy template pipelines runs,
+        """The setup of the source modeling of a pipeline, which controls how PyAutoGalaxy template pipelines runs,
         for example controlling the _Pixelization_ and _Regularization_ used by a source model which uses an
         _Inversion_.
 
-        Users can write their own pipelines which do not use or require the *SetupPipeline* class.
+        Users can write their own pipelines which do not use or require the *SetupSource* class.
 
         This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
         scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
@@ -358,6 +187,10 @@ class SetupSource:
         self.regularization = regularization
 
         self.inversion_pixels_fixed = inversion_pixels_fixed
+
+    @property
+    def tag(self):
+        return self.inversion_tag
 
     @property
     def pixelization(self):
@@ -434,13 +267,7 @@ class SetupSource:
         if self._pixelization is None:
             return ""
         else:
-            return (
-                conf.instance.tag.get("pipeline", "pixelization", str)
-                + "_"
-                + conf.instance.tag.get(
-                    "pixelization", self._pixelization().__class__.__name__, str
-                )
-            )
+            return f"{conf.instance.tag.get('pipeline', 'pixelization')}_{conf.instance.tag.get('pixelization', self._pixelization().__class__.__name__)}"
 
     @property
     def regularization_tag(self):
@@ -459,11 +286,168 @@ class SetupSource:
         if self.regularization is None:
             return ""
         else:
-            return (
-                "__"
-                + conf.instance.tag.get("pipeline", "regularization", str)
-                + "_"
-                + conf.instance.tag.get(
-                    "regularization", self.regularization().__class__.__name__, str
-                )
-            )
+            return f"__{conf.instance.tag.get('pipeline', 'regularization')}_{conf.instance.tag.get('regularization', self.regularization().__class__.__name__)}"
+
+
+class SetupLight:
+    def __init__(
+        self,
+        light_centre: (float, float) = None,
+        align_bulge_disk_centre: bool = False,
+        align_bulge_disk_elliptical_comps: bool = False,
+        disk_as_sersic: bool = False,
+    ):
+        """The setup of the light modeling in a pipeline, which controls how PyAutoGalaxy template pipelines runs, for
+        example controlling assumptions about the bulge-disk model.
+
+        Users can write their own pipelines which do not use or require the *SetupLight* class.
+
+        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
+        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
+        different models to a dataset in a structured path format.
+
+        Parameters
+        ----------
+        light_centre : (float, float)
+           If input, a fixed (y,x) centre of the galaxy is used for the light profile model which is not treated as a
+            free parameter by the non-linear search.
+        align_bulge_disk_centre : bool
+            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
+            *True* will align the centre of the bulge and disk components and not fit them separately.
+        align_bulge_disk_elliptical_comps : bool
+            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
+            *True* will align the elliptical components the bulge and disk components and not fit them separately.
+        disk_as_sersic : bool
+            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
+            *True* will use an EllipticalSersic for the disk instead of an EllipticalExponential.
+        """
+
+        self.light_centre = light_centre
+        self.align_bulge_disk_centre = align_bulge_disk_centre
+        self.align_bulge_disk_elliptical_comps = align_bulge_disk_elliptical_comps
+        self.disk_as_sersic = disk_as_sersic
+
+    @property
+    def tag(self):
+        return (
+            self.light_centre_tag + self.align_bulge_disk_tag + self.disk_as_sersic_tag
+        )
+
+    @property
+    def light_centre_tag(self):
+        """Tag if the lens light of the pipeline are fixed to a previous estimate, or varied \
+         during the analysis, to customize pipeline output paths.
+
+        This changes the setup folder as follows:
+
+        light_centre = None -> setup
+        light_centre = (1.0, 1.0) -> setup___light_centre_(1.0, 1.0)
+        light_centre = (3.0, -2.0) -> setup___light_centre_(3.0, -2.0)
+        """
+        if self.light_centre is None:
+            return ""
+        else:
+            y = "{0:.2f}".format(self.light_centre[0])
+            x = "{0:.2f}".format(self.light_centre[1])
+            return f"__{conf.instance.tag.get('pipeline', 'light_centre')}_({y},{x})"
+
+    @property
+    def align_bulge_disk_centre_tag(self):
+        """Tag if the bulge and disk of a bulge-disk system are aligned or not, to customize pipeline
+        output paths based on the bulge-disk model.
+
+        This is used to generate an overall align-bulge disk tag in *align_bulge_disk_tag*.
+        """
+        if not self.align_bulge_disk_centre:
+            return ""
+        elif self.align_bulge_disk_centre:
+            return f"_{conf.instance.tag.get('pipeline', 'align_bulge_disk_centre')}"
+
+    @property
+    def align_bulge_disk_elliptical_comps_tag(self):
+        """Tag if the ellipticity of the bulge and disk of a bulge-disk system are aligned or not, to customize pipeline
+        output paths based on the bulge-disk model.
+
+        This is used to generate an overall align-bulge disk tag in *align_bulge_disk_tag*.
+        """
+        if not self.align_bulge_disk_elliptical_comps:
+            return ""
+        elif self.align_bulge_disk_elliptical_comps:
+            return f"_{conf.instance.tag.get('pipeline', 'align_bulge_disk_elliptical_comps')}"
+
+    @property
+    def align_bulge_disk_tag(self):
+        """Tag the alignment of the geometry of the bulge and disk of a bulge-disk system, to customize  pipeline output
+        paths based on the bulge-disk model. This adds together the bulge_disk tags generated in the  3 functions
+        *align_bulge_disk_centre_tag*, *align_bulge_disk_axis_ratio_tag* and *align_bulge_disk_phi_tag*.
+        """
+
+        if not any(
+            [self.align_bulge_disk_centre, self.align_bulge_disk_elliptical_comps]
+        ):
+            return ""
+
+        return f"__{conf.instance.tag.get('pipeline', 'align_bulge_disk')}{self.align_bulge_disk_centre_tag}{self.align_bulge_disk_elliptical_comps_tag}"
+
+    @property
+    def disk_as_sersic_tag(self):
+        """Tag if the disk component of a bulge-disk light profile fit of the pipeline is modeled as a EllipticalSersic
+        or an EllipticalExponential.
+
+        This changes the setup folder as follows:
+
+        disk_as_sersic = False -> setup
+        disk_as_sersic = True -> setup___disk_as_sersic
+        """
+        if not self.disk_as_sersic:
+            return ""
+        elif self.disk_as_sersic:
+            return f"__{conf.instance.tag.get('pipeline', 'disk_as_sersic')}"
+
+
+class SetupPipeline:
+    def __init__(
+        self,
+        folders: [str] = None,
+        hyper: SetupHyper = SetupHyper(),
+        source: SetupSource = SetupSource(),
+        light: SetupLight = SetupLight(),
+        mass=None,
+    ):
+        """The setup of a pipeline, which controls how PyAutoGalaxy template pipelines runs, for example controlling
+        assumptions about the bulge-disk model or the model used to fit the source galaxy.
+
+        Users can write their own pipelines which do not use or require the *SetupPipeline* class.
+
+        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
+        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
+        different models to a dataset in a structured path format.
+
+        Parameters
+        ----------
+        hyper : SetupHyper
+            The settings of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
+        source : SetupSource
+            The settings of the source analysis (e.g. the _Pixelization and _Regularization used).
+        light : SetupLight
+            The settings of the light profile modeling (e.g. for bulge-disk models if they are geometrically aligned).
+        mass : SetupMass
+            The settings of the mass modeling (e.g. if a constant mass to light ratio is used).
+        """
+
+        self.folders = folders
+        self.hyper = hyper
+        self.source = source
+        self.light = light
+        self.mass = mass
+
+    @property
+    def tag(self):
+        """Generate the pipeline's overall tag, which customizes the 'setup' folder the results are output to.
+        """
+        return (
+            conf.instance.tag.get("pipeline", "pipeline", str)
+            + self.hyper.tag
+            + self.source.tag
+            + self.light.tag
+        )

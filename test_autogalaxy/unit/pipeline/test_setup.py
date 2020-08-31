@@ -5,73 +5,6 @@ from autogalaxy import exc
 import pytest
 
 
-def test__light_centre_tag():
-
-    setup = ag.SetupPipeline(light_centre=None)
-    assert setup.light_centre_tag == ""
-    setup = ag.SetupPipeline(light_centre=(2.0, 2.0))
-    assert setup.light_centre_tag == "__light_centre_(2.00,2.00)"
-    setup = ag.SetupPipeline(light_centre=(3.0, 4.0))
-    assert setup.light_centre_tag == "__light_centre_(3.00,4.00)"
-    setup = ag.SetupPipeline(light_centre=(3.027, 4.033))
-    assert setup.light_centre_tag == "__light_centre_(3.03,4.03)"
-
-
-def test__align_bulge_disk_tags():
-
-    light = ag.SetupPipeline(align_bulge_disk_centre=False)
-    assert light.align_bulge_disk_centre_tag == ""
-    light = ag.SetupPipeline(align_bulge_disk_centre=True)
-    assert light.align_bulge_disk_centre_tag == "_centre"
-
-    light = ag.SetupPipeline(align_bulge_disk_elliptical_comps=False)
-    assert light.align_bulge_disk_elliptical_comps_tag == ""
-    light = ag.SetupPipeline(align_bulge_disk_elliptical_comps=True)
-    assert light.align_bulge_disk_elliptical_comps_tag == "_ell"
-
-
-def test__bulge_disk_tag():
-    light = ag.SetupPipeline(
-        align_bulge_disk_centre=False, align_bulge_disk_elliptical_comps=False
-    )
-    assert light.align_bulge_disk_tag == ""
-
-    light = ag.SetupPipeline(
-        align_bulge_disk_centre=True, align_bulge_disk_elliptical_comps=False
-    )
-
-    assert light.align_bulge_disk_tag == "__align_bulge_disk_centre"
-
-    light = ag.SetupPipeline(
-        align_bulge_disk_centre=True, align_bulge_disk_elliptical_comps=True
-    )
-    assert light.align_bulge_disk_tag == "__align_bulge_disk_centre_ell"
-
-
-def test__disk_as_sersic_tag():
-    light = ag.SetupPipeline(disk_as_sersic=False)
-    assert light.disk_as_sersic_tag == ""
-    light = ag.SetupPipeline(disk_as_sersic=True)
-    assert light.disk_as_sersic_tag == "__disk_sersic"
-
-
-def test__tag():
-
-    setup = ag.SetupPipeline(
-        pixelization=ag.pix.Rectangular,
-        regularization=ag.reg.Constant,
-        light_centre=(1.0, 2.0),
-    )
-
-    setup.type_tag = setup.inversion_tag
-
-    assert setup.tag == "setup__pix_rect__reg_const__light_centre_(1.00,2.00)"
-
-    setup = ag.SetupPipeline(number_of_gaussians=1)
-
-    assert setup.tag == "setup__gaussians_x1"
-
-
 class TestSetupHyper:
     def test__hyper_searches(self):
         setup = ag.SetupHyper(hyper_galaxies=False)
@@ -154,11 +87,11 @@ class TestSetupHyper:
             hyper_galaxies=True, hyper_image_sky=True, hyper_background_noise=True
         )
 
-        assert setup.hyper_tag == "__hyper_galaxies_bg_sky_bg_noise"
+        assert setup.tag == "__hyper_galaxies_bg_sky_bg_noise"
 
         setup = ag.SetupHyper(hyper_galaxies=True, hyper_background_noise=True)
 
-        assert setup.hyper_tag == "__hyper_galaxies_bg_noise"
+        assert setup.tag == "__hyper_galaxies_bg_noise"
 
 
 class TestSetupSource:
@@ -234,3 +167,82 @@ class TestSetupSource:
             inversion_pixels_fixed=100,
         )
         assert setup.inversion_tag == "__pix_voro_image_100__reg_adapt_bright"
+
+
+class TestSetupLight:
+    def test__light_centre_tag(self):
+        setup = ag.SetupLight(light_centre=None)
+        assert setup.light_centre_tag == ""
+        setup = ag.SetupLight(light_centre=(2.0, 2.0))
+        assert setup.light_centre_tag == "__light_centre_(2.00,2.00)"
+        setup = ag.SetupLight(light_centre=(3.0, 4.0))
+        assert setup.light_centre_tag == "__light_centre_(3.00,4.00)"
+        setup = ag.SetupLight(light_centre=(3.027, 4.033))
+        assert setup.light_centre_tag == "__light_centre_(3.03,4.03)"
+
+    def test__align_bulge_disk_tags(self):
+        light = ag.SetupLight(align_bulge_disk_centre=False)
+        assert light.align_bulge_disk_centre_tag == ""
+        light = ag.SetupLight(align_bulge_disk_centre=True)
+        assert light.align_bulge_disk_centre_tag == "_centre"
+
+        light = ag.SetupLight(align_bulge_disk_elliptical_comps=False)
+        assert light.align_bulge_disk_elliptical_comps_tag == ""
+        light = ag.SetupLight(align_bulge_disk_elliptical_comps=True)
+        assert light.align_bulge_disk_elliptical_comps_tag == "_ell"
+
+    def test__bulge_disk_tag(self):
+        light = ag.SetupLight(
+            align_bulge_disk_centre=False, align_bulge_disk_elliptical_comps=False
+        )
+        assert light.align_bulge_disk_tag == ""
+
+        light = ag.SetupLight(
+            align_bulge_disk_centre=True, align_bulge_disk_elliptical_comps=False
+        )
+
+        assert light.align_bulge_disk_tag == "__align_bulge_disk_centre"
+
+        light = ag.SetupLight(
+            align_bulge_disk_centre=True, align_bulge_disk_elliptical_comps=True
+        )
+        assert light.align_bulge_disk_tag == "__align_bulge_disk_centre_ell"
+
+    def test__disk_as_sersic_tag(self):
+        light = ag.SetupLight(disk_as_sersic=False)
+        assert light.disk_as_sersic_tag == ""
+        light = ag.SetupLight(disk_as_sersic=True)
+        assert light.disk_as_sersic_tag == "__disk_sersic"
+
+
+class TestSetupPipeline:
+    def test__tag(self):
+
+        source = ag.SetupSource(
+            pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
+        )
+
+        light = ag.SetupLight(light_centre=(1.0, 2.0))
+
+        setup = ag.SetupPipeline(source=source, light=light)
+
+        setup.type_tag = setup.source.inversion_tag
+
+        assert setup.tag == "setup__pix_rect__reg_const__light_centre_(1.00,2.00)"
+
+        hyper = ag.SetupHyper(hyper_galaxies=True, hyper_background_noise=True)
+
+        source = ag.SetupSource(
+            pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
+        )
+
+        light = ag.SetupLight(light_centre=(1.0, 2.0))
+
+        setup = ag.SetupPipeline(hyper=hyper, source=source, light=light)
+
+        setup.type_tag = setup.source.inversion_tag
+
+        assert (
+            setup.tag
+            == "setup__hyper_galaxies_bg_noise__pix_rect__reg_const__light_centre_(1.00,2.00)"
+        )

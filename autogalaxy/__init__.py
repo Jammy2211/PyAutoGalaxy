@@ -64,7 +64,7 @@ from .pipeline.phase.imaging.phase import PhaseImaging
 from .pipeline.phase.interferometer.phase import PhaseInterferometer
 from .pipeline.phase.phase_galaxy import PhaseGalaxy
 from .pipeline.pipeline import PipelineDataset
-from .pipeline.setup import SetupPipeline, SetupHyper, SetupSource
+from .pipeline.setup import SetupPipeline, SetupHyper, SetupSource, SetupLight
 from .util import convert
 
 __version__ = "0.13.4"
