@@ -1,6 +1,7 @@
 from autoconf import conf
 import autofit as af
 from autoarray.inversion import pixelizations as pix, regularization as reg
+from autogalaxy.profiles import mass_profiles as mp, light_and_mass_profiles as lmp
 from autogalaxy import exc
 
 
@@ -405,6 +406,335 @@ class SetupLight:
             return f"__{conf.instance.tag.get('pipeline', 'disk_as_sersic')}"
 
 
+class SetupMass:
+    def __init__(
+        self,
+        mass_centre: (float, float) = None,
+        align_light_mass_centre: bool = False,
+        constant_mass_to_light_ratio: bool = False,
+        bulge_mass_to_light_ratio_gradient: bool = False,
+        disk_mass_to_light_ratio_gradient: bool = False,
+        align_light_dark_centre: bool = False,
+        align_bulge_dark_centre: bool = False,
+    ):
+        """The setup of mass modeling in a pipeline, which controls how PyAutoLens template pipelines runs, for
+        example controlling assumptions about the mass-to-light profile used too control how a light profile is
+        converted to a mass profile.
+
+        Users can write their own pipelines which do not use or require the *SetupPipeline* class.
+
+        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
+        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
+        different models to a dataset in a structured path format.
+
+        Parameters
+        ----------
+        include_smbh : bool
+            If True, a super-massive black hole (SMBH) is included in the mass model as a _PointMass_.
+        smbh_centre_fixed : bool
+            If True, the super-massive black hole's centre is fixed to a value input by the pipeline, else it is
+            free to vary in the model.
+        """
+
+        self.mass_centre = mass_centre
+        self.align_light_mass_centre = align_light_mass_centre
+
+        if align_light_dark_centre and align_bulge_dark_centre:
+            raise exc.SetupException(
+                "In PipelineMassSettings align_light_dark_centre and align_bulge_disk_centre"
+                "can not both be True (one is not relevent to the light profile you are fitting"
+            )
+
+        self.constant_mass_to_light_ratio = constant_mass_to_light_ratio
+        self.bulge_mass_to_light_ratio_gradient = bulge_mass_to_light_ratio_gradient
+        self.disk_mass_to_light_ratio_gradient = disk_mass_to_light_ratio_gradient
+        self.align_light_dark_centre = align_light_dark_centre
+        self.align_bulge_dark_centre = align_bulge_dark_centre
+
+    @property
+    def tag(self):
+        """Generate the pipeline's overall tag, which customizes the 'setup' folder the results are output to.
+        """
+        return (
+            self.align_light_mass_centre_tag
+            + self.mass_centre_tag
+            + self.align_light_dark_centre_tag
+            + self.align_bulge_dark_centre_tag
+        )
+
+    @property
+    def mass_centre_tag(self):
+        """Generate a tag if the lens mass model centre of the pipeline is fixed to an input value, to customize
+        pipeline output paths.
+
+        This changes the setup folder as follows:
+
+        mass_centre = None -> setup
+        mass_centre = (1.0, 1.0) -> setup___mass_centre_(1.0, 1.0)
+        mass_centre = (3.0, -2.0) -> setup___mass_centre_(3.0, -2.0)
+        """
+        if self.mass_centre is None:
+            return ""
+
+        y = "{0:.2f}".format(self.mass_centre[0])
+        x = "{0:.2f}".format(self.mass_centre[1])
+        return f"__{conf.instance.tag.get('pipeline', 'mass_centre')}_({y},{x})"
+
+    @property
+    def mass_to_light_tag(self):
+        """Generate a tag about the mass-to-light conversion in the mass model, in particular:
+
+         - Whether the mass-to-light ratio is constant (shared amongst all light and mass profiles) or free (all
+           mass-to-light ratios are free parameters).
+         - Whether certain components in the mass model include a gradient in their light-to-mass conversion.
+        """
+
+        mass_to_light_tag = f"__{conf.instance.tag.get('pipeline', 'mass_to_light_ratio')}{self.constant_mass_to_light_ratio_tag}"
+
+        if (
+            self.bulge_mass_to_light_ratio_gradient
+            or self.disk_mass_to_light_ratio_gradient
+        ):
+            gradient_tag = conf.instance.tag.get(
+                "pipeline", "mass_to_light_ratio_gradient"
+            )
+            if self.bulge_mass_to_light_ratio_gradient:
+                gradient_tag = (
+                    f"{gradient_tag}{self.bulge_mass_to_light_ratio_gradient_tag}"
+                )
+            if self.disk_mass_to_light_ratio_gradient:
+                gradient_tag = (
+                    f"{gradient_tag}{self.disk_mass_to_light_ratio_gradient_tag}"
+                )
+            return f"{mass_to_light_tag}_{gradient_tag}"
+        else:
+            return mass_to_light_tag
+
+    @property
+    def constant_mass_to_light_ratio_tag(self):
+        """Generate a tag for whether the mass-to-light ratio in a light-dark mass model is constaant (shared amongst
+         all light and mass profiles) or free (all mass-to-light ratios are free parameters).
+
+        This changes the setup folder as follows:
+
+        constant_mass_to_light_ratio = False -> mlr_free
+        constant_mass_to_light_ratio = True -> mlr_constant
+        """
+        if self.constant_mass_to_light_ratio:
+            return (
+                f"_{conf.instance.tag.get('pipeline', 'constant_mass_to_light_ratio')}"
+            )
+        return f"_{conf.instance.tag.get('pipeline', 'free_mass_to_light_ratio')}"
+
+    @property
+    def bulge_mass_to_light_ratio_gradient_tag(self):
+        """Generate a tag for whether the mass-to-light ratio in a light-dark mass model is constaant (shared amongst
+         all light and mass profiles) or free (all mass-to-light ratios are free parameters).
+
+        This changes the setup folder as follows:
+
+        constant_mass_to_light_ratio = False -> mlr_free
+        constant_mass_to_light_ratio = True -> mlr_constant
+        """
+        if not self.bulge_mass_to_light_ratio_gradient:
+            return ""
+        return f"_{conf.instance.tag.get('pipeline', 'bulge_mass_to_light_ratio_gradient')}"
+
+    @property
+    def disk_mass_to_light_ratio_gradient_tag(self):
+        """Generate a tag for whether the mass-to-light ratio in a light-dark mass model is constaant (shared amongst
+         all light and mass profiles) or free (all mass-to-light ratios are free parameters).
+
+        This changes the setup folder as follows:
+
+        constant_mass_to_light_ratio = False -> mlr_free
+        constant_mass_to_light_ratio = True -> mlr_constant
+        """
+        if not self.disk_mass_to_light_ratio_gradient:
+            return ""
+        return (
+            f"_{conf.instance.tag.get('pipeline', 'disk_mass_to_light_ratio_gradient')}"
+        )
+
+    @property
+    def align_light_mass_centre_tag(self):
+        """Generate a tag if the lens mass model is centre is aligned with that of its light profile.
+
+        This changes the setup folder as follows:
+
+        align_light_mass_centre = False -> setup
+        align_light_mass_centre = True -> setup___align_light_mass_centre
+        """
+        if self.mass_centre is not None:
+            return ""
+
+        if not self.align_light_mass_centre:
+            return ""
+        return f"__{conf.instance.tag.get('pipeline', 'align_light_mass_centre')}"
+
+    @property
+    def align_light_dark_centre_tag(self):
+        """Generate a tag if the lens mass model is a decomposed light + dark matter model if their centres are aligned.
+
+        This changes the setup folder as follows:
+
+        align_light_dark_centre = False -> setup
+        align_light_dark_centre = True -> setup___align_light_dark_centre
+        """
+        if not self.align_light_dark_centre:
+            return ""
+        return f"__{conf.instance.tag.get('pipeline', 'align_light_dark_centre')}"
+
+    @property
+    def align_bulge_dark_centre_tag(self):
+        """Generate a tag if the lens mass model is a decomposed bulge + disk + dark matter model if the bulge centre
+        is aligned with the dark matter centre.
+
+        This changes the setup folder as follows:
+
+        align_bulge_dark_centre = False -> setup
+        align_bulge_dark_centre = True -> setup___align_bulge_dark_centre
+        """
+        if not self.align_bulge_dark_centre:
+            return ""
+        return "__" + conf.instance.tag.get("pipeline", "align_bulge_dark_centre")
+
+    @property
+    def bulge_light_and_mass_profile(self):
+        """
+        The light and mass profile of a bulge component of a galaxy.
+
+        By default, this is returned as an  _EllipticalSersic_ profile without a radial gradient, however
+        the _SetupPipeline_ inputs can be customized to change this to include a radial gradient.
+        """
+        if not self.bulge_mass_to_light_ratio_gradient:
+            return af.PriorModel(lmp.EllipticalSersic)
+        return af.PriorModel(lmp.EllipticalSersicRadialGradient)
+
+    @property
+    def disk_light_and_mass_profile(self):
+        """
+        The light and mass profile of a disk component of a galaxy.
+
+        By default, this is returned as an  _EllipticalExponential_ profile without a radial gradient, however
+        the _SetupPipeline_ inputs can be customized to change this to an _EllipticalSersic_ or to include a radial
+        gradient.
+        """
+
+        if self.disk_as_sersic:
+            if not self.disk_mass_to_light_ratio_gradient:
+                return af.PriorModel(lmp.EllipticalSersic)
+            return af.PriorModel(lmp.EllipticalSersicRadialGradient)
+        else:
+            if not self.disk_mass_to_light_ratio_gradient:
+                return af.PriorModel(lmp.EllipticalExponential)
+            return af.PriorModel(lmp.EllipticalExponentialRadialGradient)
+
+    def set_mass_to_light_ratios_of_light_and_mass_profiles(
+        self, light_and_mass_profiles
+    ):
+        """
+        For an input list of _LightMassProfile_'s which will represent a galaxy with a light-dark mass model, set all
+        the mass-to-light ratios of every light and mass profile to the same value if a constant mass-to-light ratio
+        is being used, else keep them as free parameters.
+
+        Parameters
+        ----------
+        light_and_mass_profiles : [LightMassProfile]
+            The light and mass profiles which have their mass-to-light ratios changed.
+        """
+
+        if self.constant_mass_to_light_ratio:
+
+            for profile in light_and_mass_profiles[1:]:
+                profile.mass_to_light_ratio = light_and_mass_profiles[
+                    0
+                ].mass_to_light_ratio
+
+
+class SetupSMBH:
+    def __init__(self, include_smbh: bool = False, smbh_centre_fixed: bool = True):
+        """The setup of a super massive black hole (SMBH) in the mass model of a PyAutoGalaxy template pipeline run..
+
+        Users can write their own pipelines which do not use or require the *SetupPipeline* class.
+
+        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
+        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
+        different models to a dataset in a structured path format.
+
+        Parameters
+        ----------
+        include_smbh : bool
+            If True, a super-massive black hole (SMBH) is included in the mass model as a _PointMass_.
+        smbh_centre_fixed : bool
+            If True, the super-massive black hole's centre is fixed to a value input by the pipeline, else it is
+            free to vary in the model.
+        """
+        self.include_smbh = include_smbh
+        self.smbh_centre_fixed = smbh_centre_fixed
+
+    @property
+    def tag(self):
+        return self.include_smbh_tag
+
+    @property
+    def include_smbh_tag(self):
+        """Generate a tag if the lens mass model includes a _PointMass_ representing a super-massive black hole (smbh).
+
+        The tag includes whether the _PointMass_ centre is fixed or fitted for as a free parameter.
+
+        This changes the setup folder as follows:
+
+        include_smbh = False -> setup
+        include_smbh = True, smbh_centre_fixed=True -> setup___smbh_centre_fixed
+        include_smbh = True, smbh_centre_fixed=False -> setup___smbh_centre_free
+        """
+        if not self.include_smbh:
+            return ""
+
+        include_smbh_tag = conf.instance.tag.get("pipeline", "include_smbh")
+
+        if self.smbh_centre_fixed:
+
+            smbh_centre_tag = conf.instance.tag.get("pipeline", "smbh_centre_fixed")
+
+        else:
+
+            smbh_centre_tag = conf.instance.tag.get("pipeline", "smbh_centre_free")
+
+        return f"__{include_smbh_tag}_{smbh_centre_tag}"
+
+    def smbh_from_centre(self, centre, centre_sigma=0.1):
+        """
+        Create a _PriorModel_ of a _PointMass_ _MassProfile_ if *include_smbh* is True, which is fitted for in the
+        mass-model too represent a super-massive black-hole (smbh).
+
+        The centre of the smbh is an input parameter of the functiono, and this centre is either fixed to the input
+        values as an instance or fitted for as a model.
+
+        Parameters
+        ----------
+        centre : (float, float)
+            The centre of the _PointMass_ that repreents the super-massive black hole.
+        centre_fixed : bool
+            If True, the centre is fixed to the input values, else it is fitted for as free parameters.
+        centre_sigma : float
+            If the centre is free, this is the sigma value of each centre's _GaussianPrior_.
+        """
+        if not self.include_smbh:
+            return None
+
+        smbh = af.PriorModel(mp.PointMass)
+
+        if self.smbh_centre_fixed:
+            smbh.centre = centre
+        else:
+            smbh.centre.centre_0 = af.GaussianPrior(mean=centre[0], sigma=centre_sigma)
+            smbh.centre.centre_1 = af.GaussianPrior(mean=centre[1], sigma=centre_sigma)
+
+        return smbh
+
+
 class SetupPipeline:
     def __init__(
         self,
@@ -412,7 +742,8 @@ class SetupPipeline:
         hyper: SetupHyper = SetupHyper(),
         source: SetupSource = SetupSource(),
         light: SetupLight = SetupLight(),
-        mass=None,
+        mass: SetupMass = SetupMass(),
+        smbh: SetupSMBH = SetupSMBH(),
     ):
         """The setup of a pipeline, which controls how PyAutoGalaxy template pipelines runs, for example controlling
         assumptions about the bulge-disk model or the model used to fit the source galaxy.
@@ -440,6 +771,7 @@ class SetupPipeline:
         self.source = source
         self.light = light
         self.mass = mass
+        self.smbh = smbh
 
     @property
     def tag(self):
@@ -450,4 +782,6 @@ class SetupPipeline:
             + self.hyper.tag
             + self.source.tag
             + self.light.tag
+            + self.mass.tag
+            + self.smbh.tag
         )

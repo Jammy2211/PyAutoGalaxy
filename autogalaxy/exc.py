@@ -24,3 +24,7 @@ class PixelizationException(af.exc.FitException):
 
 class UnitsException(Exception):
     pass
+
+
+class SetupException(Exception):
+    pass

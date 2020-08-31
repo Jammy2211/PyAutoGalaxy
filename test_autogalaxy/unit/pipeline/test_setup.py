@@ -215,6 +215,190 @@ class TestSetupLight:
         assert light.disk_as_sersic_tag == "__disk_sersic"
 
 
+class TestSetupMass:
+    def test__mass_centre_tag(self):
+        setup = ag.SetupMass(mass_centre=None)
+        assert setup.mass_centre_tag == ""
+        setup = ag.SetupMass(mass_centre=(2.0, 2.0))
+        assert setup.mass_centre_tag == "__mass_centre_(2.00,2.00)"
+        setup = ag.SetupMass(mass_centre=(3.0, 4.0))
+        assert setup.mass_centre_tag == "__mass_centre_(3.00,4.00)"
+        setup = ag.SetupMass(mass_centre=(3.027, 4.033))
+        assert setup.mass_centre_tag == "__mass_centre_(3.03,4.03)"
+
+    def test__align_light_mass_centre_tag__is_empty_sting_if_both_lens_light_and_mass_centres_input(
+        self
+    ):
+        setup = ag.SetupMass(align_light_mass_centre=False)
+        assert setup.align_light_mass_centre_tag == ""
+        setup = ag.SetupMass(align_light_mass_centre=True)
+        assert setup.align_light_mass_centre_tag == "__align_light_mass_centre"
+        setup = ag.SetupMass(mass_centre=(1.0, 1.0), align_light_mass_centre=True)
+        assert setup.align_light_mass_centre_tag == ""
+
+    def test__constant_mass_to_light_ratio_tag(self):
+        setup = ag.SetupMass(constant_mass_to_light_ratio=True)
+        assert setup.constant_mass_to_light_ratio_tag == "_const"
+        setup = ag.SetupMass(constant_mass_to_light_ratio=False)
+        assert setup.constant_mass_to_light_ratio_tag == "_free"
+
+    def test__bulge_and_disk_mass_to_light_ratio_gradient_tag(self):
+        setup = ag.SetupMass(bulge_mass_to_light_ratio_gradient=True)
+        assert setup.bulge_mass_to_light_ratio_gradient_tag == "_bulge"
+        setup = ag.SetupMass(bulge_mass_to_light_ratio_gradient=False)
+        assert setup.bulge_mass_to_light_ratio_gradient_tag == ""
+
+        setup = ag.SetupMass(disk_mass_to_light_ratio_gradient=True)
+        assert setup.disk_mass_to_light_ratio_gradient_tag == "_disk"
+        setup = ag.SetupMass(disk_mass_to_light_ratio_gradient=False)
+        assert setup.disk_mass_to_light_ratio_gradient_tag == ""
+
+    def test__mass_to_light_tag(self):
+        setup = ag.SetupMass(
+            constant_mass_to_light_ratio=True,
+            bulge_mass_to_light_ratio_gradient=False,
+            disk_mass_to_light_ratio_gradient=False,
+        )
+        assert setup.mass_to_light_tag == "__mlr_const"
+
+        setup = ag.SetupMass(
+            constant_mass_to_light_ratio=True,
+            bulge_mass_to_light_ratio_gradient=True,
+            disk_mass_to_light_ratio_gradient=False,
+        )
+        assert setup.mass_to_light_tag == "__mlr_const_grad_bulge"
+
+        setup = ag.SetupMass(
+            constant_mass_to_light_ratio=True,
+            bulge_mass_to_light_ratio_gradient=True,
+            disk_mass_to_light_ratio_gradient=True,
+        )
+        assert setup.mass_to_light_tag == "__mlr_const_grad_bulge_disk"
+
+    def test__align_light_dark_tag(self):
+        setup = ag.SetupMass(align_light_dark_centre=False)
+        assert setup.align_light_dark_centre_tag == ""
+        setup = ag.SetupMass(align_light_dark_centre=True)
+        assert setup.align_light_dark_centre_tag == "__align_light_dark_centre"
+
+    def test__align_bulge_dark_tag(self):
+        setup = ag.SetupMass(align_bulge_dark_centre=False)
+        assert setup.align_bulge_dark_centre_tag == ""
+        setup = ag.SetupMass(align_bulge_dark_centre=True)
+        assert setup.align_bulge_dark_centre_tag == "__align_bulge_dark_centre"
+
+    def test__bulge_light_and_mass_profile(self):
+
+        light = ag.SetupMass(bulge_mass_to_light_ratio_gradient=False)
+        assert (
+            light.bulge_light_and_mass_profile.effective_radius
+            is ag.lmp.EllipticalSersic
+        )
+
+        light = ag.SetupMass(bulge_mass_to_light_ratio_gradient=True)
+        assert (
+            light.bulge_light_and_mass_profile.effective_radius
+            is ag.lmp.EllipticalSersicRadialGradient
+        )
+
+    def test__disk_light_and_mass_profile(self):
+
+        light = ag.SetupMass(
+            disk_as_sersic=False, disk_mass_to_light_ratio_gradient=False
+        )
+        assert (
+            light.disk_light_and_mass_profile.effective_radius
+            is ag.lmp.EllipticalExponential
+        )
+
+        light = ag.SetupMass(
+            disk_as_sersic=True, disk_mass_to_light_ratio_gradient=False
+        )
+        assert (
+            light.disk_light_and_mass_profile.effective_radius
+            is ag.lmp.EllipticalSersic
+        )
+
+        light = ag.SetupMass(
+            disk_as_sersic=False, disk_mass_to_light_ratio_gradient=True
+        )
+        assert (
+            light.disk_light_and_mass_profile.effective_radius
+            is ag.lmp.EllipticalExponentialRadialGradient
+        )
+
+        light = ag.SetupMass(
+            disk_as_sersic=True, disk_mass_to_light_ratio_gradient=True
+        )
+        assert (
+            light.disk_light_and_mass_profile.effective_radius
+            is ag.lmp.EllipticalSersicRadialGradient
+        )
+
+    def test__set_mass_to_light_ratios_of_light_and_mass_profiles(self):
+
+        lmp_0 = af.PriorModel(ag.lmp.EllipticalSersic)
+        lmp_1 = af.PriorModel(ag.lmp.EllipticalSersic)
+        lmp_2 = af.PriorModel(ag.lmp.EllipticalSersic)
+
+        setup = ag.SetupMass(constant_mass_to_light_ratio=False)
+
+        setup.set_mass_to_light_ratios_of_light_and_mass_profiles(
+            light_and_mass_profiles=[lmp_0, lmp_1, lmp_2]
+        )
+
+        assert lmp_0.mass_to_light_ratio != lmp_1.mass_to_light_ratio
+        assert lmp_0.mass_to_light_ratio != lmp_2.mass_to_light_ratio
+        assert lmp_1.mass_to_light_ratio != lmp_2.mass_to_light_ratio
+
+        lmp_0 = af.PriorModel(ag.lmp.EllipticalSersic)
+        lmp_1 = af.PriorModel(ag.lmp.EllipticalSersic)
+        lmp_2 = af.PriorModel(ag.lmp.EllipticalSersic)
+
+        setup = ag.SetupMass(constant_mass_to_light_ratio=True)
+
+        setup.set_mass_to_light_ratios_of_light_and_mass_profiles(
+            light_and_mass_profiles=[lmp_0, lmp_1, lmp_2]
+        )
+
+        assert lmp_0.mass_to_light_ratio == lmp_1.mass_to_light_ratio
+        assert lmp_0.mass_to_light_ratio == lmp_2.mass_to_light_ratio
+        assert lmp_1.mass_to_light_ratio == lmp_2.mass_to_light_ratio
+
+
+class TestSMBH:
+    def test__smbh_tag(self):
+        setup = ag.SetupSMBH(include_smbh=False)
+        assert setup.include_smbh_tag == ""
+
+        setup = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=True)
+        assert setup.include_smbh_tag == "__smbh_centre_fixed"
+
+        setup = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=False)
+        assert setup.include_smbh_tag == "__smbh_centre_free"
+
+    def test__smbh_from_centre(self):
+
+        setup = ag.SetupSMBH(include_smbh=False, smbh_centre_fixed=True)
+        smbh = setup.smbh_from_centre(centre=(0.0, 0.0))
+        assert smbh is None
+
+        setup = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=True)
+        smbh = setup.smbh_from_centre(centre=(0.0, 0.0))
+        assert isinstance(smbh, af.PriorModel)
+        assert smbh.centre == (0.0, 0.0)
+
+        setup = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=False)
+        smbh = setup.smbh_from_centre(centre=(0.1, 0.2), centre_sigma=0.2)
+        assert isinstance(smbh, af.PriorModel)
+        assert isinstance(smbh.centre[0], af.GaussianPrior)
+        assert smbh.centre[0].mean == 0.1
+        assert smbh.centre[0].sigma == 0.2
+        assert isinstance(smbh.centre[1], af.GaussianPrior)
+        assert smbh.centre[1].mean == 0.2
+        assert smbh.centre[1].sigma == 0.2
+
+
 class TestSetupPipeline:
     def test__tag(self):
 
@@ -246,3 +430,9 @@ class TestSetupPipeline:
             setup.tag
             == "setup__hyper_galaxies_bg_noise__pix_rect__reg_const__light_centre_(1.00,2.00)"
         )
+
+        smbh = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=True)
+
+        setup = ag.SetupPipeline(smbh=smbh)
+
+        assert setup.tag == "setup__smbh_centre_fixed"
