@@ -27,98 +27,6 @@ def test__pixelization__model_depends_on_inversion_pixels_fixed():
     assert setup.pixelization.pixels == 100
 
 
-def test__hyper_searches():
-
-    setup = ag.SetupPipeline(hyper_galaxies=False)
-    assert setup.hyper_galaxies_search == None
-
-    setup = ag.SetupPipeline(hyper_galaxies=True)
-    assert setup.hyper_galaxies_search.n_live_points == 75
-    assert setup.hyper_galaxies_search.evidence_tolerance == pytest.approx(
-        0.084, 1.0e-4
-    )
-
-    setup = ag.SetupPipeline(
-        hyper_galaxies=True, hyper_galaxies_search=af.DynestyStatic(n_live_points=51)
-    )
-    assert setup.hyper_galaxies_search.n_live_points == 51
-    assert setup.hyper_galaxies_search.evidence_tolerance == pytest.approx(0.06, 1.0e-4)
-
-    setup = ag.SetupPipeline(inversion_search=None)
-    assert setup.inversion_search.n_live_points == 50
-    assert setup.inversion_search.evidence_tolerance == pytest.approx(0.059, 1.0e-4)
-
-    setup = ag.SetupPipeline(inversion_search=af.DynestyStatic(n_live_points=51))
-    assert setup.inversion_search.n_live_points == 51
-
-    setup = ag.SetupPipeline(hyper_combined_search=af.DynestyStatic(n_live_points=51))
-    assert setup.hyper_combined_search.n_live_points == 51
-
-    setup = ag.SetupPipeline(hyper_galaxies=True, evidence_tolerance=0.5)
-    assert setup.hyper_galaxies_search.evidence_tolerance == pytest.approx(
-        0.084, 1.0e-4
-    )
-    assert setup.inversion_search.evidence_tolerance == 0.5
-    assert setup.hyper_combined_search.evidence_tolerance == 0.5
-
-    with pytest.raises(exc.PipelineException):
-
-        ag.SetupPipeline(
-            hyper_galaxies=True,
-            hyper_galaxies_search=af.DynestyStatic(n_live_points=51),
-            evidence_tolerance=0.5,
-        )
-
-    with pytest.raises(exc.PipelineException):
-        ag.SetupPipeline(
-            inversion_search=af.DynestyStatic(n_live_points=51), evidence_tolerance=3.0
-        )
-
-    with pytest.raises(exc.PipelineException):
-        ag.SetupPipeline(
-            hyper_combined_search=af.DynestyStatic(n_live_points=51),
-            evidence_tolerance=3.0,
-        )
-
-
-def test__hyper_galaxies_tag():
-
-    setup = ag.SetupPipeline(hyper_galaxies=False)
-    assert setup.hyper_galaxies_tag == ""
-
-    setup = ag.SetupPipeline(hyper_galaxies=True)
-    assert setup.hyper_galaxies_tag == "_galaxies"
-
-
-def test__hyper_image_sky_tag():
-    setup = ag.SetupPipeline(hyper_image_sky=False)
-    assert setup.hyper_galaxies_tag == ""
-
-    setup = ag.SetupPipeline(hyper_image_sky=True)
-    assert setup.hyper_image_sky_tag == "_bg_sky"
-
-
-def test__hyper_background_noise_tag():
-    setup = ag.SetupPipeline(hyper_background_noise=False)
-    assert setup.hyper_galaxies_tag == ""
-
-    setup = ag.SetupPipeline(hyper_background_noise=True)
-    assert setup.hyper_background_noise_tag == "_bg_noise"
-
-
-def test__hyper_tag():
-
-    setup = ag.SetupPipeline(
-        hyper_galaxies=True, hyper_image_sky=True, hyper_background_noise=True
-    )
-
-    assert setup.hyper_tag == "__hyper_galaxies_bg_sky_bg_noise"
-
-    setup = ag.SetupPipeline(hyper_galaxies=True, hyper_background_noise=True)
-
-    assert setup.hyper_tag == "__hyper_galaxies_bg_noise"
-
-
 def test__pixelization_tag():
     setup = ag.SetupPipeline(pixelization=None)
     assert setup.pixelization_tag == ""
@@ -252,3 +160,92 @@ def test__tag():
     setup = ag.SetupPipeline(number_of_gaussians=1)
 
     assert setup.tag == "setup__gaussians_x1"
+
+
+class TestSetupHyper:
+    def test__hyper_searches(self):
+        setup = ag.SetupHyper(hyper_galaxies=False)
+        assert setup.hyper_galaxies_search == None
+
+        setup = ag.SetupHyper(hyper_galaxies=True)
+        assert setup.hyper_galaxies_search.n_live_points == 75
+        assert setup.hyper_galaxies_search.evidence_tolerance == pytest.approx(
+            0.084, 1.0e-4
+        )
+
+        setup = ag.SetupHyper(
+            hyper_galaxies=True,
+            hyper_galaxies_search=af.DynestyStatic(n_live_points=51),
+        )
+        assert setup.hyper_galaxies_search.n_live_points == 51
+        assert setup.hyper_galaxies_search.evidence_tolerance == pytest.approx(
+            0.06, 1.0e-4
+        )
+
+        setup = ag.SetupHyper(inversion_search=None)
+        assert setup.inversion_search.n_live_points == 50
+        assert setup.inversion_search.evidence_tolerance == pytest.approx(0.059, 1.0e-4)
+
+        setup = ag.SetupHyper(inversion_search=af.DynestyStatic(n_live_points=51))
+        assert setup.inversion_search.n_live_points == 51
+
+        setup = ag.SetupHyper(hyper_combined_search=af.DynestyStatic(n_live_points=51))
+        assert setup.hyper_combined_search.n_live_points == 51
+
+        setup = ag.SetupHyper(hyper_galaxies=True, evidence_tolerance=0.5)
+        assert setup.hyper_galaxies_search.evidence_tolerance == pytest.approx(
+            0.084, 1.0e-4
+        )
+        assert setup.inversion_search.evidence_tolerance == 0.5
+        assert setup.hyper_combined_search.evidence_tolerance == 0.5
+
+        with pytest.raises(exc.PipelineException):
+            ag.SetupHyper(
+                hyper_galaxies=True,
+                hyper_galaxies_search=af.DynestyStatic(n_live_points=51),
+                evidence_tolerance=0.5,
+            )
+
+        with pytest.raises(exc.PipelineException):
+            ag.SetupHyper(
+                inversion_search=af.DynestyStatic(n_live_points=51),
+                evidence_tolerance=3.0,
+            )
+
+        with pytest.raises(exc.PipelineException):
+            ag.SetupHyper(
+                hyper_combined_search=af.DynestyStatic(n_live_points=51),
+                evidence_tolerance=3.0,
+            )
+
+    def test__hyper_galaxies_tag(self):
+        setup = ag.SetupHyper(hyper_galaxies=False)
+        assert setup.hyper_galaxies_tag == ""
+
+        setup = ag.SetupHyper(hyper_galaxies=True)
+        assert setup.hyper_galaxies_tag == "_galaxies"
+
+    def test__hyper_image_sky_tag(self):
+        setup = ag.SetupHyper(hyper_image_sky=False)
+        assert setup.hyper_galaxies_tag == ""
+
+        setup = ag.SetupHyper(hyper_image_sky=True)
+        assert setup.hyper_image_sky_tag == "_bg_sky"
+
+    def test__hyper_background_noise_tag(self):
+        setup = ag.SetupHyper(hyper_background_noise=False)
+        assert setup.hyper_galaxies_tag == ""
+
+        setup = ag.SetupHyper(hyper_background_noise=True)
+        assert setup.hyper_background_noise_tag == "_bg_noise"
+
+    def test__hyper_tag(self):
+        setup = ag.SetupHyper(
+            hyper_galaxies=True, hyper_image_sky=True, hyper_background_noise=True
+        )
+
+        assert setup.hyper_tag == "__hyper_galaxies_bg_sky_bg_noise"
+
+        setup = ag.SetupHyper(hyper_galaxies=True, hyper_background_noise=True)
+
+        assert setup.hyper_tag == "__hyper_galaxies_bg_noise"
