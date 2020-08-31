@@ -1,6 +1,6 @@
 from autoconf import conf
 import autofit as af
-from autoarray.inversion import pixelizations as pix
+from autoarray.inversion import pixelizations as pix, regularization as reg
 from autogalaxy import exc
 
 
@@ -8,22 +8,10 @@ class SetupPipeline:
     def __init__(
         self,
         folders=None,
-        hyper_galaxies=False,
-        hyper_image_sky=False,
-        hyper_background_noise=False,
-        hyper_galaxy_phase_first=False,
-        hyper_galaxies_search=None,
-        inversion_search=None,
-        hyper_combined_search=None,
-        pixelization=None,
-        regularization=None,
         light_centre=None,
         align_bulge_disk_centre=False,
         align_bulge_disk_elliptical_comps=False,
         disk_as_sersic=False,
-        number_of_gaussians=None,
-        inversion_pixels_fixed=None,
-        evidence_tolerance=None,
     ):
         """The setup of a pipeline, which controls how PyAutoGalaxy template pipelines runs, for example controlling
         assumptions about the bulge-disk model or the number of Gaussians used for multi-Gaussian fitting.
@@ -78,77 +66,11 @@ class SetupPipeline:
 
         self.folders = folders
 
-        self._pixelization = pixelization
-        self.regularization = regularization
-
-        self.evidence_tolerance = evidence_tolerance
-
-        if evidence_tolerance is not None:
-            if (
-                hyper_galaxies_search is not None
-                or inversion_search is not None
-                or hyper_combined_search is not None
-            ):
-                raise exc.PipelineException(
-                    "You have manually specified a search in the SetupPipeline, and an evidence_tolerance."
-                    "You cannot manually specify both - remove one."
-                    "(If you want the hyper search to use a specific evidence tolerance, include the evidence"
-                    "tolerance in its parameters"
-                )
-
-        self.hyper_galaxies = hyper_galaxies
-
-        if self.hyper_galaxies and hyper_galaxies_search is None:
-            self.hyper_galaxies_search = af.DynestyStatic(n_live_points=75)
-        elif self.hyper_galaxies and hyper_galaxies_search is not None:
-            self.hyper_galaxies_search = hyper_galaxies_search
-        else:
-            self.hyper_galaxies_search = None
-
-        if inversion_search is None:
-            self.inversion_search = af.DynestyStatic(
-                n_live_points=50,
-                evidence_tolerance=self.evidence_tolerance,
-                sample="rstagger",
-            )
-        elif inversion_search is not None:
-            self.inversion_search = inversion_search
-
-        if hyper_combined_search is None:
-            self.hyper_combined_search = af.DynestyStatic(
-                n_live_points=50,
-                evidence_tolerance=self.evidence_tolerance,
-                sample="rstagger",
-            )
-        else:
-            self.hyper_combined_search = hyper_combined_search
-
-        self.hyper_galaxy_phase_first = hyper_galaxy_phase_first
-
-        self.hyper_image_sky = hyper_image_sky
-        self.hyper_background_noise = hyper_background_noise
-
         self.light_centre = light_centre
 
         self.align_bulge_disk_centre = align_bulge_disk_centre
         self.align_bulge_disk_elliptical_comps = align_bulge_disk_elliptical_comps
         self.disk_as_sersic = disk_as_sersic
-        self.number_of_gaussians = number_of_gaussians
-
-        self.inversion_pixels_fixed = inversion_pixels_fixed
-
-    @property
-    def pixelization(self):
-
-        if (
-            self._pixelization is not pix.VoronoiBrightnessImage
-            or self.inversion_pixels_fixed is None
-        ):
-            return self._pixelization
-
-        pixelization = af.PriorModel(self._pixelization)
-        pixelization.pixels = self.inversion_pixels_fixed
-        return pixelization
 
     @property
     def tag(self):
@@ -163,99 +85,6 @@ class SetupPipeline:
             + self.disk_as_sersic_tag
             + self.number_of_gaussians_tag
         )
-
-    @property
-    def inversion_tag(self):
-        """Generate a tag if an *Inversion* is used to  *Pixelization* used to reconstruct the galaxy's light, which 
-        is the sum of the pixelization and regularization tags.
-        """
-        if self._pixelization is None or self.regularization is None:
-            return ""
-
-        return (
-            "__"
-            + self.pixelization_tag
-            + self.inversion_pixels_fixed_tag
-            + self.regularization_tag
-        )
-
-    @property
-    def inversion_tag_no_underscore(self):
-        """Generate a tag if an *Inversion* is used to  *Pixelization* used to reconstruct the galaxy's light, which
-        is the sum of the pixelization and regularization tags.
-        """
-        if self._pixelization is None or self.regularization is None:
-            return ""
-
-        return (
-            self.pixelization_tag
-            + self.inversion_pixels_fixed_tag
-            + self.regularization_tag
-        )
-
-    @property
-    def inversion_pixels_fixed_tag(self):
-        """Generate a tag if an *Inversion* is used to  *Pixelization* used to reconstruct the galaxy's light, which
-        is the sum of the pixelization and regularization tags.
-        """
-        if self.inversion_pixels_fixed is None:
-            return ""
-
-        if self._pixelization is not pix.VoronoiBrightnessImage:
-            return ""
-
-        return f"_{str(self.inversion_pixels_fixed)}"
-
-    @property
-    def pixelization_tag(self):
-        """Tag the *Pixelization* scheme used by the pipeline, if an inversion is usse to reconstruct the galaxy's 
-        light.
-
-        The pixelization tag is loaded from the config file 'autogalaxy_workspace/config/label.ini' in the [tag]
-        seciton.
-
-        For the default regulariation tags, this changes the setup folder as follows:
-
-        pixelization = None -> setup
-        pixelization = pix.Rectangular -> setup__pix_rect
-        pixelization = pix.VoronoiMagnification -> setup__pix_voro_mag
-        """
-        if self._pixelization is None:
-            return ""
-        else:
-            return (
-                conf.instance.tag.get("pipeline", "pixelization", str)
-                + "_"
-                + conf.instance.tag.get(
-                    "pixelization", self._pixelization().__class__.__name__, str
-                )
-            )
-
-    @property
-    def regularization_tag(self):
-        """Tag the *Regularization* scheme used by the pipeline, if an inversion is usse to reconstruct the galaxy's 
-        light.
-        
-        The regularization tag is loaded from the config file 'autogalaxy_workspace/config/label.ini' in the [tag]
-        seciton.
-
-        For the default regulariation tags, this changes the setup folder as follows:
-
-        regularization = None -> setup
-        regularization = reg.Constant -> setup__reg_const
-        regularization = reg.AdaptiveBrightness -> setup__reg_adapt_bright
-        """
-        if self.regularization is None:
-            return ""
-        else:
-            return (
-                "__"
-                + conf.instance.tag.get("pipeline", "regularization", str)
-                + "_"
-                + conf.instance.tag.get(
-                    "regularization", self.regularization().__class__.__name__, str
-                )
-            )
 
     @property
     def light_centre_tag(self):
@@ -344,26 +173,6 @@ class SetupPipeline:
             return ""
         elif self.disk_as_sersic:
             return "__" + conf.instance.tag.get("pipeline", "disk_as_sersic", str)
-
-    @property
-    def number_of_gaussians_tag(self):
-        """Tag the number of Gaussians if modeling the galaxy using multiple Gaussians light profiles.
-
-        This changes the setup folder as follows:
-
-        number_of_gaussians = None -> setup
-        number_of_gaussians = 2 = True -> setup__gaussians_x2
-        number_of_gaussians = 4 = True -> setup__gaussians_x4
-        """
-        if self.number_of_gaussians is None:
-            return ""
-        else:
-            return (
-                "__"
-                + conf.instance.tag.get("pipeline", "number_of_gaussians", str)
-                + "_x"
-                + str(self.number_of_gaussians)
-            )
 
 
 class SetupHyper:
@@ -512,4 +321,149 @@ class SetupHyper:
         elif self.hyper_background_noise:
             return "_" + conf.instance.tag.get(
                 "pipeline", "hyper_background_noise", str
+            )
+
+
+class SetupSource:
+    def __init__(
+        self,
+        pixelization: pix.Pixelization = None,
+        regularization: reg.Regularization = None,
+        inversion_pixels_fixed: float = None,
+    ):
+        """The setup of the source analysis of a  pipeline, which controls how PyAutoGalaxy template pipelines runs,
+        for example controlling the _Pixelization_ and _Regularization_ used by a source model which uses an
+        _Inversion_.
+
+        Users can write their own pipelines which do not use or require the *SetupPipeline* class.
+
+        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
+        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
+        different models to a dataset in a structured path format.
+
+        Parameters
+        ----------
+        pixelization : pix.Pixelization or None
+           If the pipeline uses an *Inversion* to reconstruct the galaxy's light, this determines the
+           *Pixelization* used.
+        regularization : reg.Regularization or None
+           If the pipeline uses an *Inversion* to reconstruct the galaxy's light, this determines the
+           *Regularization* scheme used.
+        inversion_pixels_fixed : float
+            The fixed number of source pixels used by a _Pixelization_ class that takes as input a fixed number of
+            pixels.
+        """
+
+        self._pixelization = pixelization
+        self.regularization = regularization
+
+        self.inversion_pixels_fixed = inversion_pixels_fixed
+
+    @property
+    def pixelization(self):
+        """
+        The _PriorModel_ used to set up the pixelization model in pipelines. This _PriorModel_ has its number of
+        pixels fixed to a certain value if the *inversion_pixels_fixed* parameter is input.
+        """
+        if (
+            self._pixelization is not pix.VoronoiBrightnessImage
+            or self.inversion_pixels_fixed is None
+        ):
+            return self._pixelization
+
+        pixelization = af.PriorModel(self._pixelization)
+        pixelization.pixels = self.inversion_pixels_fixed
+        return pixelization
+
+    @property
+    def inversion_tag(self):
+        """Generate a tag if an *Inversion* is used to  *Pixelization* used to reconstruct the galaxy's light, which
+        is the sum of the pixelization and regularization tags.
+        """
+        if self._pixelization is None or self.regularization is None:
+            return ""
+
+        return (
+            "__"
+            + self.pixelization_tag
+            + self.inversion_pixels_fixed_tag
+            + self.regularization_tag
+        )
+
+    @property
+    def inversion_tag_no_underscore(self):
+        """Generate a tag if an *Inversion* is used to  *Pixelization* used to reconstruct the galaxy's light, which
+        is the sum of the pixelization and regularization tags.
+        """
+        if self._pixelization is None or self.regularization is None:
+            return ""
+
+        return (
+            self.pixelization_tag
+            + self.inversion_pixels_fixed_tag
+            + self.regularization_tag
+        )
+
+    @property
+    def inversion_pixels_fixed_tag(self):
+        """Generate a tag if an *Inversion* is used to  *Pixelization* used to reconstruct the galaxy's light, which
+        is the sum of the pixelization and regularization tags.
+        """
+        if self.inversion_pixels_fixed is None:
+            return ""
+
+        if self._pixelization is not pix.VoronoiBrightnessImage:
+            return ""
+
+        return f"_{str(self.inversion_pixels_fixed)}"
+
+    @property
+    def pixelization_tag(self):
+        """Tag the *Pixelization* scheme used by the pipeline, if an inversion is usse to reconstruct the galaxy's
+        light.
+
+        The pixelization tag is loaded from the config file 'autogalaxy_workspace/config/label.ini' in the [tag]
+        seciton.
+
+        For the default regulariation tags, this changes the setup folder as follows:
+
+        pixelization = None -> setup
+        pixelization = pix.Rectangular -> setup__pix_rect
+        pixelization = pix.VoronoiMagnification -> setup__pix_voro_mag
+        """
+        if self._pixelization is None:
+            return ""
+        else:
+            return (
+                conf.instance.tag.get("pipeline", "pixelization", str)
+                + "_"
+                + conf.instance.tag.get(
+                    "pixelization", self._pixelization().__class__.__name__, str
+                )
+            )
+
+    @property
+    def regularization_tag(self):
+        """Tag the *Regularization* scheme used by the pipeline, if an inversion is usse to reconstruct the galaxy's
+        light.
+
+        The regularization tag is loaded from the config file 'autogalaxy_workspace/config/label.ini' in the [tag]
+        seciton.
+
+        For the default regulariation tags, this changes the setup folder as follows:
+
+        regularization = None -> setup
+        regularization = reg.Constant -> setup__reg_const
+        regularization = reg.AdaptiveBrightness -> setup__reg_adapt_bright
+        """
+        if self.regularization is None:
+            return ""
+        else:
+            return (
+                "__"
+                + conf.instance.tag.get("pipeline", "regularization", str)
+                + "_"
+                + conf.instance.tag.get(
+                    "regularization", self.regularization().__class__.__name__, str
+                )
             )

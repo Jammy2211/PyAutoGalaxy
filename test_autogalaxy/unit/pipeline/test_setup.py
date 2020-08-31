@@ -5,87 +5,6 @@ from autogalaxy import exc
 import pytest
 
 
-def test__pixelization__model_depends_on_inversion_pixels_fixed():
-
-    setup = ag.SetupPipeline()
-
-    assert setup.pixelization is None
-
-    setup = ag.SetupPipeline(pixelization=ag.pix.Rectangular)
-
-    assert setup.pixelization is ag.pix.Rectangular
-
-    setup = ag.SetupPipeline(pixelization=ag.pix.VoronoiBrightnessImage)
-
-    assert setup.pixelization is ag.pix.VoronoiBrightnessImage
-
-    setup = ag.SetupPipeline(
-        pixelization=ag.pix.VoronoiBrightnessImage, inversion_pixels_fixed=100
-    )
-
-    assert isinstance(setup.pixelization, af.PriorModel)
-    assert setup.pixelization.pixels == 100
-
-
-def test__pixelization_tag():
-    setup = ag.SetupPipeline(pixelization=None)
-    assert setup.pixelization_tag == ""
-    setup = ag.SetupPipeline(pixelization=ag.pix.Rectangular)
-    assert setup.pixelization_tag == "pix_rect"
-    setup = ag.SetupPipeline(pixelization=ag.pix.VoronoiBrightnessImage)
-    assert setup.pixelization_tag == "pix_voro_image"
-
-
-def test__regularization_tag():
-    setup = ag.SetupPipeline(regularization=None)
-    assert setup.regularization_tag == ""
-    setup = ag.SetupPipeline(regularization=ag.reg.Constant)
-    assert setup.regularization_tag == "__reg_const"
-    setup = ag.SetupPipeline(regularization=ag.reg.AdaptiveBrightness)
-    assert setup.regularization_tag == "__reg_adapt_bright"
-
-
-def test__inversion_pixels_fixed_tag():
-
-    setup = ag.SetupPipeline(inversion_pixels_fixed=None)
-    assert setup.inversion_pixels_fixed_tag == ""
-
-    setup = ag.SetupPipeline(inversion_pixels_fixed=100)
-    assert setup.inversion_pixels_fixed_tag == ""
-
-    setup = ag.SetupPipeline(
-        inversion_pixels_fixed=100, pixelization=ag.pix.VoronoiBrightnessImage
-    )
-    assert setup.inversion_pixels_fixed_tag == "_100"
-
-
-def test__inversion_tag():
-
-    setup = ag.SetupPipeline(pixelization=None, inversion_pixels_fixed=100)
-    assert setup.inversion_tag == ""
-    setup = ag.SetupPipeline(regularization=None, inversion_pixels_fixed=100)
-    assert setup.inversion_tag == ""
-    setup = ag.SetupPipeline(
-        pixelization=ag.pix.Rectangular,
-        regularization=ag.reg.Constant,
-        inversion_pixels_fixed=100,
-    )
-    assert setup.inversion_tag == "__pix_rect__reg_const"
-    setup = ag.SetupPipeline(
-        pixelization=ag.pix.VoronoiBrightnessImage,
-        regularization=ag.reg.AdaptiveBrightness,
-        inversion_pixels_fixed=None,
-    )
-    assert setup.inversion_tag == "__pix_voro_image__reg_adapt_bright"
-
-    setup = ag.SetupPipeline(
-        pixelization=ag.pix.VoronoiBrightnessImage,
-        regularization=ag.reg.AdaptiveBrightness,
-        inversion_pixels_fixed=100,
-    )
-    assert setup.inversion_tag == "__pix_voro_image_100__reg_adapt_bright"
-
-
 def test__light_centre_tag():
 
     setup = ag.SetupPipeline(light_centre=None)
@@ -134,15 +53,6 @@ def test__disk_as_sersic_tag():
     assert light.disk_as_sersic_tag == ""
     light = ag.SetupPipeline(disk_as_sersic=True)
     assert light.disk_as_sersic_tag == "__disk_sersic"
-
-
-def test__number_of_gaussians_tag():
-    setup = ag.SetupPipeline()
-    assert setup.number_of_gaussians_tag == ""
-    setup = ag.SetupPipeline(number_of_gaussians=1)
-    assert setup.number_of_gaussians_tag == "__gaussians_x1"
-    setup = ag.SetupPipeline(number_of_gaussians=2)
-    assert setup.number_of_gaussians_tag == "__gaussians_x2"
 
 
 def test__tag():
@@ -249,3 +159,78 @@ class TestSetupHyper:
         setup = ag.SetupHyper(hyper_galaxies=True, hyper_background_noise=True)
 
         assert setup.hyper_tag == "__hyper_galaxies_bg_noise"
+
+
+class TestSetupSource:
+    def test__pixelization__model_depends_on_inversion_pixels_fixed(self):
+        setup = ag.SetupSource()
+
+        assert setup.pixelization is None
+
+        setup = ag.SetupSource(pixelization=ag.pix.Rectangular)
+
+        assert setup.pixelization is ag.pix.Rectangular
+
+        setup = ag.SetupSource(pixelization=ag.pix.VoronoiBrightnessImage)
+
+        assert setup.pixelization is ag.pix.VoronoiBrightnessImage
+
+        setup = ag.SetupSource(
+            pixelization=ag.pix.VoronoiBrightnessImage, inversion_pixels_fixed=100
+        )
+
+        assert isinstance(setup.pixelization, af.PriorModel)
+        assert setup.pixelization.pixels == 100
+
+    def test__pixelization_tag(self):
+        setup = ag.SetupSource(pixelization=None)
+        assert setup.pixelization_tag == ""
+        setup = ag.SetupSource(pixelization=ag.pix.Rectangular)
+        assert setup.pixelization_tag == "pix_rect"
+        setup = ag.SetupSource(pixelization=ag.pix.VoronoiBrightnessImage)
+        assert setup.pixelization_tag == "pix_voro_image"
+
+    def test__regularization_tag(self):
+        setup = ag.SetupSource(regularization=None)
+        assert setup.regularization_tag == ""
+        setup = ag.SetupSource(regularization=ag.reg.Constant)
+        assert setup.regularization_tag == "__reg_const"
+        setup = ag.SetupSource(regularization=ag.reg.AdaptiveBrightness)
+        assert setup.regularization_tag == "__reg_adapt_bright"
+
+    def test__inversion_pixels_fixed_tag(self):
+        setup = ag.SetupSource(inversion_pixels_fixed=None)
+        assert setup.inversion_pixels_fixed_tag == ""
+
+        setup = ag.SetupSource(inversion_pixels_fixed=100)
+        assert setup.inversion_pixels_fixed_tag == ""
+
+        setup = ag.SetupSource(
+            inversion_pixels_fixed=100, pixelization=ag.pix.VoronoiBrightnessImage
+        )
+        assert setup.inversion_pixels_fixed_tag == "_100"
+
+    def test__inversion_tag(self):
+        setup = ag.SetupSource(pixelization=None, inversion_pixels_fixed=100)
+        assert setup.inversion_tag == ""
+        setup = ag.SetupSource(regularization=None, inversion_pixels_fixed=100)
+        assert setup.inversion_tag == ""
+        setup = ag.SetupSource(
+            pixelization=ag.pix.Rectangular,
+            regularization=ag.reg.Constant,
+            inversion_pixels_fixed=100,
+        )
+        assert setup.inversion_tag == "__pix_rect__reg_const"
+        setup = ag.SetupSource(
+            pixelization=ag.pix.VoronoiBrightnessImage,
+            regularization=ag.reg.AdaptiveBrightness,
+            inversion_pixels_fixed=None,
+        )
+        assert setup.inversion_tag == "__pix_voro_image__reg_adapt_bright"
+
+        setup = ag.SetupSource(
+            pixelization=ag.pix.VoronoiBrightnessImage,
+            regularization=ag.reg.AdaptiveBrightness,
+            inversion_pixels_fixed=100,
+        )
+        assert setup.inversion_tag == "__pix_voro_image_100__reg_adapt_bright"
