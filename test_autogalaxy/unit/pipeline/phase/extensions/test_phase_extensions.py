@@ -216,15 +216,13 @@ class TestHyperAPI:
         hyper_phase = phase_extended.make_hyper_phase()
         hyper_phase.modify_search_paths()
 
-        print(hyper_phase.paths.output_path)
-
         assert (
             "unit/output//prefix/test_phase/inversion__settings__grid_sub_2_inv_sub_2__bin_2__no_border/dynesty_static__nlive_1"
             in hyper_phase.paths.output_path
         )
 
         phase_extended = phase.extend_with_multiple_hyper_phases(
-            setup=ag.SetupPipeline(
+            setup_hyper=ag.SetupHyper(
                 hyper_galaxies=True,
                 inversion_search=af.DynestyStatic(n_live_points=1),
                 hyper_galaxies_search=af.DynestyStatic(n_live_points=2),
@@ -300,7 +298,7 @@ class TestHyperGalaxyPhase:
         )
 
         phase_imaging_7x7_hyper = phase_imaging_7x7.extend_with_multiple_hyper_phases(
-            setup=ag.SetupPipeline(
+            setup_hyper=ag.SetupHyper(
                 hyper_galaxies=True, hyper_galaxies_search=mock.MockSearch()
             )
         )

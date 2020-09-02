@@ -87,28 +87,37 @@ class TestSetupHyper:
             hyper_galaxies=True, hyper_image_sky=True, hyper_background_noise=True
         )
 
-        assert setup.tag == "__hyper_galaxies_bg_sky_bg_noise"
+        assert setup.tag == "hyper_galaxies_bg_sky_bg_noise"
 
         setup = ag.SetupHyper(hyper_galaxies=True, hyper_background_noise=True)
 
-        assert setup.tag == "__hyper_galaxies_bg_noise"
+        assert setup.tag == "hyper_galaxies_bg_noise"
 
 
-class TestSetupSource:
+class TestSetupSourceParametric:
+    def test__tag_ang_type(self):
+
+        setup = ag.SetupSourceParametric()
+
+        assert setup.model_type == "bulge"
+        assert setup.tag == "source_bulge"
+
+
+class TestSetupSourceInversion:
     def test__pixelization__model_depends_on_inversion_pixels_fixed(self):
-        setup = ag.SetupSource()
+        setup = ag.SetupSourceInversion()
 
         assert setup.pixelization is None
 
-        setup = ag.SetupSource(pixelization=ag.pix.Rectangular)
+        setup = ag.SetupSourceInversion(pixelization=ag.pix.Rectangular)
 
         assert setup.pixelization is ag.pix.Rectangular
 
-        setup = ag.SetupSource(pixelization=ag.pix.VoronoiBrightnessImage)
+        setup = ag.SetupSourceInversion(pixelization=ag.pix.VoronoiBrightnessImage)
 
         assert setup.pixelization is ag.pix.VoronoiBrightnessImage
 
-        setup = ag.SetupSource(
+        setup = ag.SetupSourceInversion(
             pixelization=ag.pix.VoronoiBrightnessImage, inversion_pixels_fixed=100
         )
 
@@ -116,159 +125,171 @@ class TestSetupSource:
         assert setup.pixelization.pixels == 100
 
     def test__pixelization_tag(self):
-        setup = ag.SetupSource(pixelization=None)
+        setup = ag.SetupSourceInversion(pixelization=None)
         assert setup.pixelization_tag == ""
-        setup = ag.SetupSource(pixelization=ag.pix.Rectangular)
+        setup = ag.SetupSourceInversion(pixelization=ag.pix.Rectangular)
         assert setup.pixelization_tag == "pix_rect"
-        setup = ag.SetupSource(pixelization=ag.pix.VoronoiBrightnessImage)
+        setup = ag.SetupSourceInversion(pixelization=ag.pix.VoronoiBrightnessImage)
         assert setup.pixelization_tag == "pix_voro_image"
 
     def test__regularization_tag(self):
-        setup = ag.SetupSource(regularization=None)
+        setup = ag.SetupSourceInversion(regularization=None)
         assert setup.regularization_tag == ""
-        setup = ag.SetupSource(regularization=ag.reg.Constant)
-        assert setup.regularization_tag == "__reg_const"
-        setup = ag.SetupSource(regularization=ag.reg.AdaptiveBrightness)
-        assert setup.regularization_tag == "__reg_adapt_bright"
+        setup = ag.SetupSourceInversion(regularization=ag.reg.Constant)
+        assert setup.regularization_tag == "_reg_const"
+        setup = ag.SetupSourceInversion(regularization=ag.reg.AdaptiveBrightness)
+        assert setup.regularization_tag == "_reg_adapt_bright"
 
     def test__inversion_pixels_fixed_tag(self):
-        setup = ag.SetupSource(inversion_pixels_fixed=None)
+        setup = ag.SetupSourceInversion(inversion_pixels_fixed=None)
         assert setup.inversion_pixels_fixed_tag == ""
 
-        setup = ag.SetupSource(inversion_pixels_fixed=100)
+        setup = ag.SetupSourceInversion(inversion_pixels_fixed=100)
         assert setup.inversion_pixels_fixed_tag == ""
 
-        setup = ag.SetupSource(
+        setup = ag.SetupSourceInversion(
             inversion_pixels_fixed=100, pixelization=ag.pix.VoronoiBrightnessImage
         )
         assert setup.inversion_pixels_fixed_tag == "_100"
 
-    def test__inversion_tag(self):
-        setup = ag.SetupSource(pixelization=None, inversion_pixels_fixed=100)
-        assert setup.inversion_tag == ""
-        setup = ag.SetupSource(regularization=None, inversion_pixels_fixed=100)
-        assert setup.inversion_tag == ""
-        setup = ag.SetupSource(
+    def test__tag_and_type(self):
+
+        setup = ag.SetupSourceInversion(pixelization=None, inversion_pixels_fixed=100)
+        assert setup.model_type == ""
+        assert setup.tag == ""
+        setup = ag.SetupSourceInversion(regularization=None, inversion_pixels_fixed=100)
+        assert setup.model_type == ""
+        assert setup.tag == ""
+        setup = ag.SetupSourceInversion(
             pixelization=ag.pix.Rectangular,
             regularization=ag.reg.Constant,
             inversion_pixels_fixed=100,
         )
-        assert setup.inversion_tag == "__pix_rect__reg_const"
-        setup = ag.SetupSource(
+        assert setup.model_type == "pix_rect_reg_const"
+        assert setup.tag == "source_pix_rect_reg_const"
+        setup = ag.SetupSourceInversion(
             pixelization=ag.pix.VoronoiBrightnessImage,
             regularization=ag.reg.AdaptiveBrightness,
             inversion_pixels_fixed=None,
         )
-        assert setup.inversion_tag == "__pix_voro_image__reg_adapt_bright"
+        assert setup.model_type == "pix_voro_image_reg_adapt_bright"
+        assert setup.tag == "source_pix_voro_image_reg_adapt_bright"
 
-        setup = ag.SetupSource(
+        setup = ag.SetupSourceInversion(
             pixelization=ag.pix.VoronoiBrightnessImage,
             regularization=ag.reg.AdaptiveBrightness,
             inversion_pixels_fixed=100,
         )
-        assert setup.inversion_tag == "__pix_voro_image_100__reg_adapt_bright"
+        assert setup.model_type == "pix_voro_image_100_reg_adapt_bright"
+        assert setup.tag == "source_pix_voro_image_100_reg_adapt_bright"
 
 
-class TestSetupLight:
+class TestSetupLightBulge:
     def test__light_centre_tag(self):
-        setup = ag.SetupLight(light_centre=None)
+        setup = ag.SetupLightBulge(light_centre=None)
         assert setup.light_centre_tag == ""
-        setup = ag.SetupLight(light_centre=(2.0, 2.0))
+        setup = ag.SetupLightBulge(light_centre=(2.0, 2.0))
         assert setup.light_centre_tag == "__light_centre_(2.00,2.00)"
-        setup = ag.SetupLight(light_centre=(3.0, 4.0))
+        setup = ag.SetupLightBulge(light_centre=(3.0, 4.0))
         assert setup.light_centre_tag == "__light_centre_(3.00,4.00)"
-        setup = ag.SetupLight(light_centre=(3.027, 4.033))
+        setup = ag.SetupLightBulge(light_centre=(3.027, 4.033))
         assert setup.light_centre_tag == "__light_centre_(3.03,4.03)"
 
+
+class TestSetupLightBulgeDisk:
     def test__align_bulge_disk_tags(self):
-        light = ag.SetupLight(align_bulge_disk_centre=False)
+        light = ag.SetupLightBulgeDisk(align_bulge_disk_centre=False)
         assert light.align_bulge_disk_centre_tag == ""
-        light = ag.SetupLight(align_bulge_disk_centre=True)
+        light = ag.SetupLightBulgeDisk(align_bulge_disk_centre=True)
         assert light.align_bulge_disk_centre_tag == "_centre"
 
-        light = ag.SetupLight(align_bulge_disk_elliptical_comps=False)
+        light = ag.SetupLightBulgeDisk(align_bulge_disk_elliptical_comps=False)
         assert light.align_bulge_disk_elliptical_comps_tag == ""
-        light = ag.SetupLight(align_bulge_disk_elliptical_comps=True)
+        light = ag.SetupLightBulgeDisk(align_bulge_disk_elliptical_comps=True)
         assert light.align_bulge_disk_elliptical_comps_tag == "_ell"
 
     def test__bulge_disk_tag(self):
-        light = ag.SetupLight(
+        light = ag.SetupLightBulgeDisk(
             align_bulge_disk_centre=False, align_bulge_disk_elliptical_comps=False
         )
         assert light.align_bulge_disk_tag == ""
 
-        light = ag.SetupLight(
+        light = ag.SetupLightBulgeDisk(
             align_bulge_disk_centre=True, align_bulge_disk_elliptical_comps=False
         )
 
         assert light.align_bulge_disk_tag == "__align_bulge_disk_centre"
 
-        light = ag.SetupLight(
+        light = ag.SetupLightBulgeDisk(
             align_bulge_disk_centre=True, align_bulge_disk_elliptical_comps=True
         )
         assert light.align_bulge_disk_tag == "__align_bulge_disk_centre_ell"
 
     def test__disk_as_sersic_tag(self):
-        light = ag.SetupLight(disk_as_sersic=False)
+        light = ag.SetupLightBulgeDisk(disk_as_sersic=False)
         assert light.disk_as_sersic_tag == ""
-        light = ag.SetupLight(disk_as_sersic=True)
+        light = ag.SetupLightBulgeDisk(disk_as_sersic=True)
         assert light.disk_as_sersic_tag == "__disk_sersic"
 
 
-class TestSetupMass:
+class TestSetupMassTotal:
     def test__mass_centre_tag(self):
-        setup = ag.SetupMass(mass_centre=None)
+        setup = ag.SetupMassTotal(mass_centre=None)
         assert setup.mass_centre_tag == ""
-        setup = ag.SetupMass(mass_centre=(2.0, 2.0))
+        setup = ag.SetupMassTotal(mass_centre=(2.0, 2.0))
         assert setup.mass_centre_tag == "__mass_centre_(2.00,2.00)"
-        setup = ag.SetupMass(mass_centre=(3.0, 4.0))
+        setup = ag.SetupMassTotal(mass_centre=(3.0, 4.0))
         assert setup.mass_centre_tag == "__mass_centre_(3.00,4.00)"
-        setup = ag.SetupMass(mass_centre=(3.027, 4.033))
+        setup = ag.SetupMassTotal(mass_centre=(3.027, 4.033))
         assert setup.mass_centre_tag == "__mass_centre_(3.03,4.03)"
 
+
+class TestSetupMassLightDark:
     def test__align_light_mass_centre_tag__is_empty_sting_if_both_lens_light_and_mass_centres_input(
         self
     ):
-        setup = ag.SetupMass(align_light_mass_centre=False)
+        setup = ag.SetupMassLightDark(align_light_mass_centre=False)
         assert setup.align_light_mass_centre_tag == ""
-        setup = ag.SetupMass(align_light_mass_centre=True)
+        setup = ag.SetupMassLightDark(align_light_mass_centre=True)
         assert setup.align_light_mass_centre_tag == "__align_light_mass_centre"
-        setup = ag.SetupMass(mass_centre=(1.0, 1.0), align_light_mass_centre=True)
+        setup = ag.SetupMassLightDark(
+            mass_centre=(1.0, 1.0), align_light_mass_centre=True
+        )
         assert setup.align_light_mass_centre_tag == ""
 
     def test__constant_mass_to_light_ratio_tag(self):
-        setup = ag.SetupMass(constant_mass_to_light_ratio=True)
+        setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=True)
         assert setup.constant_mass_to_light_ratio_tag == "_const"
-        setup = ag.SetupMass(constant_mass_to_light_ratio=False)
+        setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=False)
         assert setup.constant_mass_to_light_ratio_tag == "_free"
 
     def test__bulge_and_disk_mass_to_light_ratio_gradient_tag(self):
-        setup = ag.SetupMass(bulge_mass_to_light_ratio_gradient=True)
+        setup = ag.SetupMassLightDark(bulge_mass_to_light_ratio_gradient=True)
         assert setup.bulge_mass_to_light_ratio_gradient_tag == "_bulge"
-        setup = ag.SetupMass(bulge_mass_to_light_ratio_gradient=False)
+        setup = ag.SetupMassLightDark(bulge_mass_to_light_ratio_gradient=False)
         assert setup.bulge_mass_to_light_ratio_gradient_tag == ""
 
-        setup = ag.SetupMass(disk_mass_to_light_ratio_gradient=True)
+        setup = ag.SetupMassLightDark(disk_mass_to_light_ratio_gradient=True)
         assert setup.disk_mass_to_light_ratio_gradient_tag == "_disk"
-        setup = ag.SetupMass(disk_mass_to_light_ratio_gradient=False)
+        setup = ag.SetupMassLightDark(disk_mass_to_light_ratio_gradient=False)
         assert setup.disk_mass_to_light_ratio_gradient_tag == ""
 
     def test__mass_to_light_tag(self):
-        setup = ag.SetupMass(
+        setup = ag.SetupMassLightDark(
             constant_mass_to_light_ratio=True,
             bulge_mass_to_light_ratio_gradient=False,
             disk_mass_to_light_ratio_gradient=False,
         )
         assert setup.mass_to_light_tag == "__mlr_const"
 
-        setup = ag.SetupMass(
+        setup = ag.SetupMassLightDark(
             constant_mass_to_light_ratio=True,
             bulge_mass_to_light_ratio_gradient=True,
             disk_mass_to_light_ratio_gradient=False,
         )
         assert setup.mass_to_light_tag == "__mlr_const_grad_bulge"
 
-        setup = ag.SetupMass(
+        setup = ag.SetupMassLightDark(
             constant_mass_to_light_ratio=True,
             bulge_mass_to_light_ratio_gradient=True,
             disk_mass_to_light_ratio_gradient=True,
@@ -276,26 +297,26 @@ class TestSetupMass:
         assert setup.mass_to_light_tag == "__mlr_const_grad_bulge_disk"
 
     def test__align_light_dark_tag(self):
-        setup = ag.SetupMass(align_light_dark_centre=False)
+        setup = ag.SetupMassLightDark(align_light_dark_centre=False)
         assert setup.align_light_dark_centre_tag == ""
-        setup = ag.SetupMass(align_light_dark_centre=True)
+        setup = ag.SetupMassLightDark(align_light_dark_centre=True)
         assert setup.align_light_dark_centre_tag == "__align_light_dark_centre"
 
     def test__align_bulge_dark_tag(self):
-        setup = ag.SetupMass(align_bulge_dark_centre=False)
+        setup = ag.SetupMassLightDark(align_bulge_dark_centre=False)
         assert setup.align_bulge_dark_centre_tag == ""
-        setup = ag.SetupMass(align_bulge_dark_centre=True)
+        setup = ag.SetupMassLightDark(align_bulge_dark_centre=True)
         assert setup.align_bulge_dark_centre_tag == "__align_bulge_dark_centre"
 
     def test__bulge_light_and_mass_profile(self):
 
-        light = ag.SetupMass(bulge_mass_to_light_ratio_gradient=False)
+        light = ag.SetupMassLightDark(bulge_mass_to_light_ratio_gradient=False)
         assert (
             light.bulge_light_and_mass_profile.effective_radius
             is ag.lmp.EllipticalSersic
         )
 
-        light = ag.SetupMass(bulge_mass_to_light_ratio_gradient=True)
+        light = ag.SetupMassLightDark(bulge_mass_to_light_ratio_gradient=True)
         assert (
             light.bulge_light_and_mass_profile.effective_radius
             is ag.lmp.EllipticalSersicRadialGradient
@@ -303,7 +324,7 @@ class TestSetupMass:
 
     def test__disk_light_and_mass_profile(self):
 
-        light = ag.SetupMass(
+        light = ag.SetupMassLightDark(
             disk_as_sersic=False, disk_mass_to_light_ratio_gradient=False
         )
         assert (
@@ -311,7 +332,7 @@ class TestSetupMass:
             is ag.lmp.EllipticalExponential
         )
 
-        light = ag.SetupMass(
+        light = ag.SetupMassLightDark(
             disk_as_sersic=True, disk_mass_to_light_ratio_gradient=False
         )
         assert (
@@ -319,7 +340,7 @@ class TestSetupMass:
             is ag.lmp.EllipticalSersic
         )
 
-        light = ag.SetupMass(
+        light = ag.SetupMassLightDark(
             disk_as_sersic=False, disk_mass_to_light_ratio_gradient=True
         )
         assert (
@@ -327,7 +348,7 @@ class TestSetupMass:
             is ag.lmp.EllipticalExponentialRadialGradient
         )
 
-        light = ag.SetupMass(
+        light = ag.SetupMassLightDark(
             disk_as_sersic=True, disk_mass_to_light_ratio_gradient=True
         )
         assert (
@@ -341,7 +362,7 @@ class TestSetupMass:
         lmp_1 = af.PriorModel(ag.lmp.EllipticalSersic)
         lmp_2 = af.PriorModel(ag.lmp.EllipticalSersic)
 
-        setup = ag.SetupMass(constant_mass_to_light_ratio=False)
+        setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=False)
 
         setup.set_mass_to_light_ratios_of_light_and_mass_profiles(
             light_and_mass_profiles=[lmp_0, lmp_1, lmp_2]
@@ -355,7 +376,7 @@ class TestSetupMass:
         lmp_1 = af.PriorModel(ag.lmp.EllipticalSersic)
         lmp_2 = af.PriorModel(ag.lmp.EllipticalSersic)
 
-        setup = ag.SetupMass(constant_mass_to_light_ratio=True)
+        setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=True)
 
         setup.set_mass_to_light_ratios_of_light_and_mass_profiles(
             light_and_mass_profiles=[lmp_0, lmp_1, lmp_2]
@@ -369,13 +390,13 @@ class TestSetupMass:
 class TestSMBH:
     def test__smbh_tag(self):
         setup = ag.SetupSMBH(include_smbh=False)
-        assert setup.include_smbh_tag == ""
+        assert setup.tag == "smbh"
 
         setup = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=True)
-        assert setup.include_smbh_tag == "__smbh_centre_fixed"
+        assert setup.tag == "smbh_centre_fixed"
 
         setup = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=False)
-        assert setup.include_smbh_tag == "__smbh_centre_free"
+        assert setup.tag == "smbh_centre_free"
 
     def test__smbh_from_centre(self):
 
@@ -402,33 +423,36 @@ class TestSMBH:
 class TestSetupPipeline:
     def test__tag(self):
 
-        source = ag.SetupSource(
+        source = ag.SetupSourceInversion(
             pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
         )
 
-        light = ag.SetupLight(light_centre=(1.0, 2.0))
+        light = ag.SetupLightBulgeDisk(light_centre=(1.0, 2.0))
 
         setup = ag.SetupPipeline(source=source, light=light)
 
-        setup.type_tag = setup.source.inversion_tag
-
-        assert setup.tag == "setup__pix_rect__reg_const__light_centre_(1.00,2.00)"
-
-        hyper = ag.SetupHyper(hyper_galaxies=True, hyper_background_noise=True)
-
-        source = ag.SetupSource(
-            pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
-        )
-
-        light = ag.SetupLight(light_centre=(1.0, 2.0))
-
-        setup = ag.SetupPipeline(hyper=hyper, source=source, light=light)
-
-        setup.type_tag = setup.source.inversion_tag
+        setup.type_tag = setup.source.tag
 
         assert (
             setup.tag
-            == "setup__hyper_galaxies_bg_noise__pix_rect__reg_const__light_centre_(1.00,2.00)"
+            == "setup__source_pix_rect_reg_const__light_bulge_disk__light_centre_(1.00,2.00)"
+        )
+
+        hyper = ag.SetupHyper(hyper_galaxies=True, hyper_background_noise=True)
+
+        source = ag.SetupSourceInversion(
+            pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
+        )
+
+        light = ag.SetupLightBulgeDisk(light_centre=(1.0, 2.0))
+
+        setup = ag.SetupPipeline(hyper=hyper, source=source, light=light)
+
+        setup.type_tag = setup.source.tag
+
+        assert (
+            setup.tag
+            == "setup__hyper_galaxies_bg_noise__source_pix_rect_reg_const__light_bulge_disk__light_centre_(1.00,2.00)"
         )
 
         smbh = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=True)

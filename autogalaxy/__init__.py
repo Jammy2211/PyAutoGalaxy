@@ -67,9 +67,12 @@ from .pipeline.pipeline import PipelineDataset
 from .pipeline.setup import (
     SetupPipeline,
     SetupHyper,
-    SetupSource,
-    SetupLight,
-    SetupMass,
+    SetupSourceParametric,
+    SetupSourceInversion,
+    SetupLightBulge,
+    SetupLightBulgeDisk,
+    SetupMassTotal,
+    SetupMassLightDark,
     SetupSMBH,
 )
 from .util import convert
