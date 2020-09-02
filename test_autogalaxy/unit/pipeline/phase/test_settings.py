@@ -14,10 +14,10 @@ def test__tag__mixture_of_values():
         )
     )
 
-    assert settings.phase_tag_no_inversion == "settings_imaging[grid_sub_2__snr_2]"
+    assert settings.phase_tag_no_inversion == "settings__imaging[grid_sub_2__snr_2]"
     assert (
         settings.phase_tag_with_inversion
-        == "settings_imaging[grid_sub_2_inv_sub_2__snr_2]_pix[no_border]_inv[mat]"
+        == "settings__imaging[grid_sub_2_inv_sub_2__snr_2]_pix[no_border]_inv[mat]"
     )
 
     settings = ag.SettingsPhaseImaging(
@@ -34,11 +34,11 @@ def test__tag__mixture_of_values():
 
     assert (
         settings.phase_tag_no_inversion
-        == "settings_imaging[grid_sub_1__bin_3__psf_2x2]"
+        == "settings__imaging[grid_sub_1__bin_3__psf_2x2]"
     )
     assert (
         settings.phase_tag_with_inversion
-        == "settings_imaging[grid_sub_1_inv_facc_0.1__bin_3__psf_2x2]_pix[no_border]_inv[mat]"
+        == "settings__imaging[grid_sub_1_inv_facc_0.1__bin_3__psf_2x2]_pix[no_border]_inv[mat]"
     )
 
     settings = ag.SettingsPhaseInterferometer(
@@ -55,11 +55,11 @@ def test__tag__mixture_of_values():
 
     assert (
         settings.phase_tag_no_inversion
-        == "settings_interferometer[grid_facc_0.1__dft]_lh_cap_200.0"
+        == "settings__interferometer[grid_facc_0.1__dft]_lh_cap_200.0"
     )
     assert (
         settings.phase_tag_with_inversion
-        == "settings_interferometer[grid_facc_0.1_inv_sub_3__dft]_pix[no_border]_inv[mat]_lh_cap_200.0"
+        == "settings__interferometer[grid_facc_0.1_inv_sub_3__dft]_pix[no_border]_inv[mat]_lh_cap_200.0"
     )
 
     settings = ag.SettingsPhaseInterferometer(
@@ -75,9 +75,9 @@ def test__tag__mixture_of_values():
 
     assert (
         settings.phase_tag_no_inversion
-        == "settings_interferometer[grid_facc_0.1__nufft]"
+        == "settings__interferometer[grid_facc_0.1__nufft]"
     )
     assert (
         settings.phase_tag_with_inversion
-        == "settings_interferometer[grid_facc_0.1_inv_sub_3__nufft]_pix[no_border]_inv[lop]"
+        == "settings__interferometer[grid_facc_0.1_inv_sub_3__nufft]_pix[no_border]_inv[lop]"
     )

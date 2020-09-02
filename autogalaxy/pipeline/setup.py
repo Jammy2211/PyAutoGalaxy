@@ -109,10 +109,10 @@ class SetupHyper:
             return ""
 
         return (
-            conf.instance.setup_tag.get("hyper", "hyper", str)
-            + self.hyper_galaxies_tag
-            + self.hyper_image_sky_tag
-            + self.hyper_background_noise_tag
+            f"{conf.instance.setup_tag.get('hyper', 'hyper')}["
+            f"{self.hyper_galaxies_tag}"
+            f"{self.hyper_image_sky_tag}"
+            f"{self.hyper_background_noise_tag}]"
         )
 
     @property
@@ -124,7 +124,7 @@ class SetupHyper:
         if not self.hyper_galaxies:
             return ""
         elif self.hyper_galaxies:
-            return "_" + conf.instance.setup_tag.get("hyper", "hyper_galaxies", str)
+            return conf.instance.setup_tag.get("hyper", "hyper_galaxies")
 
     @property
     def hyper_image_sky_tag(self):
@@ -136,7 +136,7 @@ class SetupHyper:
         if not self.hyper_image_sky:
             return ""
         elif self.hyper_image_sky:
-            return "_" + conf.instance.setup_tag.get("hyper", "hyper_image_sky", str)
+            return f"_{conf.instance.setup_tag.get('hyper', 'hyper_image_sky')}"
 
     @property
     def hyper_background_noise_tag(self):
@@ -148,9 +148,7 @@ class SetupHyper:
         if not self.hyper_background_noise:
             return ""
         elif self.hyper_background_noise:
-            return "_" + conf.instance.setup_tag.get(
-                "hyper", "hyper_background_noise", str
-            )
+            return f"_{conf.instance.setup_tag.get('hyper', 'hyper_background_noise')}"
 
 
 class SetupSourceParametric:
@@ -166,7 +164,7 @@ class SetupSourceParametric:
     def tag(self):
         """Generate a tag of the parameetric source model.
         """
-        return f"{conf.instance.setup_tag.get('source', 'source')}_{self.model_type}"
+        return f"{conf.instance.setup_tag.get('source', 'source')}[{self.model_type}]"
 
 
 class SetupSourceInversion:
@@ -212,11 +210,7 @@ class SetupSourceInversion:
         if self._pixelization is None or self.regularization is None:
             return ""
 
-        return (
-            self.pixelization_tag
-            + self.inversion_pixels_fixed_tag
-            + self.regularization_tag
-        )
+        return f"{self.pixelization_tag}{self.inversion_pixels_fixed_tag}{self.regularization_tag}"
 
     @property
     def tag(self):
@@ -226,7 +220,7 @@ class SetupSourceInversion:
         if self._pixelization is None or self.regularization is None:
             return ""
 
-        return f"{conf.instance.setup_tag.get('source', 'source')}_{self.model_type}"
+        return f"{conf.instance.setup_tag.get('source', 'source')}[{self.model_type}]"
 
     @property
     def pixelization(self):
@@ -366,7 +360,10 @@ class SetupLightBulge(AbstractSetupLight):
     def tag(self):
         """Generate a tag of the parameetric source model.
         """
-        return f"{conf.instance.setup_tag.get('light', 'light')}_{self.model_type}"
+        return (
+            f"{conf.instance.setup_tag.get('light', 'light')}[{self.model_type}"
+            f"{self.light_centre_tag}]"
+        )
 
 
 class SetupLightBulgeDisk(AbstractSetupLight):
@@ -415,10 +412,10 @@ class SetupLightBulgeDisk(AbstractSetupLight):
     @property
     def tag(self):
         return (
-            f"{conf.instance.setup_tag.get('light', 'light')}_{self.model_type}"
-            + self.light_centre_tag
-            + self.align_bulge_disk_tag
-            + self.disk_as_sersic_tag
+            f"{conf.instance.setup_tag.get('light', 'light')}[{self.model_type}"
+            f"{self.light_centre_tag}"
+            f"{self.align_bulge_disk_tag}"
+            f"{self.disk_as_sersic_tag}]"
         )
 
     @property
@@ -538,15 +535,15 @@ class SetupMassTotal(AbstractSetupMass):
 
     @property
     def model_type(self):
-        return "power_law"
+        return "total"
 
     @property
     def tag(self):
         """Generate the pipeline's overall tag, which customizes the 'setup' folder the results are output to.
         """
         return (
-            f"{conf.instance.setup_tag.get('mass', 'mass')}_{self.model_type}"
-            + self.mass_centre_tag
+            f"{conf.instance.setup_tag.get('mass', 'mass')}[{self.model_type}"
+            f"{self.mass_centre_tag}]"
         )
 
 
@@ -622,11 +619,12 @@ class SetupMassLightDark(AbstractSetupMass):
         """Generate the pipeline's overall tag, which customizes the 'setup' folder the results are output to.
         """
         return (
-            f"{conf.instance.setup_tag.get('mass', 'mass')}_{self.model_type}"
-            + self.align_light_mass_centre_tag
-            + self.mass_centre_tag
-            + self.align_light_dark_centre_tag
-            + self.align_bulge_dark_centre_tag
+            f"{conf.instance.setup_tag.get('mass', 'mass')}[{self.model_type}"
+            f"{self.mass_to_light_tag}"
+            f"{self.align_light_mass_centre_tag}"
+            f"{self.mass_centre_tag}"
+            f"{self.align_light_dark_centre_tag}"
+            f"{self.align_bulge_dark_centre_tag}]"
         )
 
     @property
@@ -638,7 +636,10 @@ class SetupMassLightDark(AbstractSetupMass):
          - Whether certain components in the mass model include a gradient in their light-to-mass conversion.
         """
 
-        mass_to_light_tag = f"__{conf.instance.setup_tag.get('mass', 'mass_to_light_ratio')}{self.constant_mass_to_light_ratio_tag}"
+        mass_to_light_tag = (
+            f"__{conf.instance.setup_tag.get('mass', 'mass_to_light_ratio')}"
+            f"{self.constant_mass_to_light_ratio_tag}"
+        )
 
         if (
             self.bulge_mass_to_light_ratio_gradient
@@ -835,7 +836,7 @@ class SetupSMBH:
 
     @property
     def tag(self):
-        return f"{conf.instance.setup_tag.get('smbh', 'smbh')}" + self.smbh_centre_tag
+        return f"{conf.instance.setup_tag.get('smbh', 'smbh')}[{self.smbh_centre_tag}]"
 
     @property
     def smbh_centre_tag(self):
@@ -860,7 +861,7 @@ class SetupSMBH:
 
             smbh_centre_tag = conf.instance.setup_tag.get("smbh", "smbh_centre_free")
 
-        return f"_{smbh_centre_tag}"
+        return f"{smbh_centre_tag}"
 
     def smbh_from_centre(self, centre, centre_sigma=0.1):
         """
@@ -940,10 +941,10 @@ class SetupPipeline:
         """
 
         setup_tag = conf.instance.setup_tag.get("pipeline", "pipeline")
-        hyper_tag = f"__{self.hyper.tag}" if self.hyper is not None else ""
-        source_tag = f"__{self.source.tag}" if self.source is not None else ""
-        light_tag = f"__{self.light.tag}" if self.light is not None else ""
-        mass_tag = f"__{self.mass.tag}" if self.mass is not None else ""
-        smbh_tag = f"__{self.smbh.tag}" if self.smbh is not None else ""
+        hyper_tag = f"_{self.hyper.tag}" if self.hyper is not None else ""
+        source_tag = f"_{self.source.tag}" if self.source is not None else ""
+        light_tag = f"_{self.light.tag}" if self.light is not None else ""
+        mass_tag = f"_{self.mass.tag}" if self.mass is not None else ""
+        smbh_tag = f"_{self.smbh.tag}" if self.smbh is not None else ""
 
-        return f"{setup_tag}{hyper_tag}{source_tag}{light_tag}{mass_tag}{smbh_tag}"
+        return f"{setup_tag}_{hyper_tag}{source_tag}{light_tag}{mass_tag}{smbh_tag}"
