@@ -216,11 +216,10 @@ class TestHyperAPI:
         hyper_phase = phase_extended.make_hyper_phase()
         hyper_phase.modify_search_paths()
 
-        print(hyper_phase.paths.output_path)
-
         assert (
-            "unit/output//prefix/test_phase/inversion__settings__imaging[grid_sub_2_inv_sub_2__bin_2]_pix[no_border]_inv[mat]/dynesty_static__nlive_1"
-            in hyper_phase.paths.output_path
+            "unit/output//prefix/test_phase/"
+            "inversion__settings__imaging[grid_sub_2_inv_sub_2__bin_2]_pix[no_border]_inv[mat]/"
+            "dynesty_static[nlive_1" in hyper_phase.paths.output_path
         )
 
         phase_extended = phase.extend_with_multiple_hyper_phases(
@@ -237,24 +236,27 @@ class TestHyperAPI:
         inversion_phase.modify_search_paths()
 
         assert (
-            "test_phase/inversion__settings__imaging[grid_sub_2_inv_sub_2__bin_2]_pix[no_border]_inv[mat]/dynesty_static__nlive_1"
-            in inversion_phase.paths.output_path
+            "test_phase/"
+            "inversion__settings__imaging[grid_sub_2_inv_sub_2__bin_2]_pix[no_border]_inv[mat]/"
+            "dynesty_static[nlive_1" in inversion_phase.paths.output_path
         )
 
         hyper_galaxy_phase = phase_extended.hyper_phases[1].make_hyper_phase()
         hyper_galaxy_phase.modify_search_paths()
 
         assert (
-            "test_phase/hyper_galaxy__settings__imaging[grid_sub_2_inv_sub_2__bin_2]_pix[no_border]_inv[mat]/dynesty_static__nlive_2"
-            in hyper_galaxy_phase.paths.output_path
+            "test_phase/"
+            "hyper_galaxy__settings__imaging[grid_sub_2_inv_sub_2__bin_2]_pix[no_border]_inv[mat]/"
+            "dynesty_static[nlive_2" in hyper_galaxy_phase.paths.output_path
         )
 
         hyper_combined_phase = phase_extended.make_hyper_phase()
         hyper_combined_phase.modify_search_paths()
 
         assert (
-            "test_phase/hyper_combined__settings__imaging[grid_sub_2_inv_sub_2__bin_2]_pix[no_border]_inv[mat]/dynesty_static__nlive_3"
-            in hyper_combined_phase.paths.output_path
+            "test_phase/"
+            "hyper_combined__settings__imaging[grid_sub_2_inv_sub_2__bin_2]_pix[no_border]_inv[mat]/"
+            "dynesty_static[nlive_3" in hyper_combined_phase.paths.output_path
         )
 
 

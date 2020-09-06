@@ -82,6 +82,13 @@ class TestSetupHyper:
         setup = ag.SetupHyper(hyper_background_noise=True)
         assert setup.hyper_background_noise_tag == "_bg_noise"
 
+    def test__hyper_fixed_after_source(self):
+        hyper = ag.SetupHyper(hyper_fixed_after_source=False)
+        assert hyper.hyper_fixed_after_source_tag == ""
+
+        hyper = ag.SetupHyper(hyper_fixed_after_source=True)
+        assert hyper.hyper_fixed_after_source_tag == "_fixed"
+
     def test__hyper_tag(self):
 
         setup = ag.SetupHyper(
@@ -96,116 +103,42 @@ class TestSetupHyper:
 
         assert setup.tag == "hyper[galaxies_bg_sky_bg_noise]"
 
-        setup = ag.SetupHyper(hyper_galaxies=True, hyper_background_noise=True)
-
-        assert setup.tag == "hyper[galaxies_bg_noise]"
-
-
-class TestSetupSourceParametric:
-    def test__tag_ang_type(self):
-
-        setup = ag.SetupSourceParametric()
-
-        assert setup.model_type == "bulge"
-        assert setup.tag == "source[bulge]"
-
-
-class TestSetupSourceInversion:
-    def test__pixelization__model_depends_on_inversion_pixels_fixed(self):
-        setup = ag.SetupSourceInversion()
-
-        assert setup.pixelization is None
-
-        setup = ag.SetupSourceInversion(pixelization=ag.pix.Rectangular)
-
-        assert setup.pixelization is ag.pix.Rectangular
-
-        setup = ag.SetupSourceInversion(pixelization=ag.pix.VoronoiBrightnessImage)
-
-        assert setup.pixelization is ag.pix.VoronoiBrightnessImage
-
-        setup = ag.SetupSourceInversion(
-            pixelization=ag.pix.VoronoiBrightnessImage, inversion_pixels_fixed=100
+        setup = ag.SetupHyper(
+            hyper_galaxies=True,
+            hyper_background_noise=True,
+            hyper_fixed_after_source=True,
         )
 
-        assert isinstance(setup.pixelization, af.PriorModel)
-        assert setup.pixelization.pixels == 100
-
-    def test__pixelization_tag(self):
-        setup = ag.SetupSourceInversion(pixelization=None)
-        assert setup.pixelization_tag == ""
-        setup = ag.SetupSourceInversion(pixelization=ag.pix.Rectangular)
-        assert setup.pixelization_tag == "pix_rect"
-        setup = ag.SetupSourceInversion(pixelization=ag.pix.VoronoiBrightnessImage)
-        assert setup.pixelization_tag == "pix_voro_image"
-
-    def test__regularization_tag(self):
-        setup = ag.SetupSourceInversion(regularization=None)
-        assert setup.regularization_tag == ""
-        setup = ag.SetupSourceInversion(regularization=ag.reg.Constant)
-        assert setup.regularization_tag == "_reg_const"
-        setup = ag.SetupSourceInversion(regularization=ag.reg.AdaptiveBrightness)
-        assert setup.regularization_tag == "_reg_adapt_bright"
-
-    def test__inversion_pixels_fixed_tag(self):
-        setup = ag.SetupSourceInversion(inversion_pixels_fixed=None)
-        assert setup.inversion_pixels_fixed_tag == ""
-
-        setup = ag.SetupSourceInversion(inversion_pixels_fixed=100)
-        assert setup.inversion_pixels_fixed_tag == ""
-
-        setup = ag.SetupSourceInversion(
-            inversion_pixels_fixed=100, pixelization=ag.pix.VoronoiBrightnessImage
-        )
-        assert setup.inversion_pixels_fixed_tag == "_100"
-
-    def test__tag_and_type(self):
-
-        setup = ag.SetupSourceInversion(pixelization=None, inversion_pixels_fixed=100)
-        assert setup.model_type == ""
-        assert setup.tag == ""
-        setup = ag.SetupSourceInversion(regularization=None, inversion_pixels_fixed=100)
-        assert setup.model_type == ""
-        assert setup.tag == ""
-        setup = ag.SetupSourceInversion(
-            pixelization=ag.pix.Rectangular,
-            regularization=ag.reg.Constant,
-            inversion_pixels_fixed=100,
-        )
-        assert setup.model_type == "pix_rect_reg_const"
-        assert setup.tag == "source[pix_rect_reg_const]"
-        setup = ag.SetupSourceInversion(
-            pixelization=ag.pix.VoronoiBrightnessImage,
-            regularization=ag.reg.AdaptiveBrightness,
-            inversion_pixels_fixed=None,
-        )
-        assert setup.model_type == "pix_voro_image_reg_adapt_bright"
-        assert setup.tag == "source[pix_voro_image_reg_adapt_bright]"
-
-        setup = ag.SetupSourceInversion(
-            pixelization=ag.pix.VoronoiBrightnessImage,
-            regularization=ag.reg.AdaptiveBrightness,
-            inversion_pixels_fixed=100,
-        )
-        assert setup.model_type == "pix_voro_image_100_reg_adapt_bright"
-        assert setup.tag == "source[pix_voro_image_100_reg_adapt_bright]"
+        assert setup.tag == "hyper[galaxies_bg_noise_fixed]"
 
 
-class TestSetupLightBulge:
+class TestAbstractSetupLight:
+    def test__align_centre_to_light_centre(self):
+
+        light = af.PriorModel(ag.mp.SphericalIsothermal)
+
+        source = ag.SetupLightSersic(light_centre=(1.0, 2.0))
+
+        light = source.align_centre_to_light_centre(light=light)
+
+        assert light.centre == (1.0, 2.0)
+
+
+class TestSetupLightSersic:
     def test__light_centre_tag(self):
-        setup = ag.SetupLightBulge(light_centre=None)
+        setup = ag.SetupLightSersic(light_centre=None)
         assert setup.light_centre_tag == ""
-        setup = ag.SetupLightBulge(light_centre=(2.0, 2.0))
+        setup = ag.SetupLightSersic(light_centre=(2.0, 2.0))
         assert setup.light_centre_tag == "__light_centre_(2.00,2.00)"
-        setup = ag.SetupLightBulge(light_centre=(3.0, 4.0))
+        setup = ag.SetupLightSersic(light_centre=(3.0, 4.0))
         assert setup.light_centre_tag == "__light_centre_(3.00,4.00)"
-        setup = ag.SetupLightBulge(light_centre=(3.027, 4.033))
+        setup = ag.SetupLightSersic(light_centre=(3.027, 4.033))
         assert setup.light_centre_tag == "__light_centre_(3.03,4.03)"
 
     def test__tag_and_type(self):
-        setup = ag.SetupLightBulge(light_centre=None)
+        setup = ag.SetupLightSersic(light_centre=None)
         assert setup.tag == "light[bulge]"
-        setup = ag.SetupLightBulge(light_centre=(3.027, 4.033))
+        setup = ag.SetupLightSersic(light_centre=(3.027, 4.033))
         assert setup.tag == "light[bulge__light_centre_(3.03,4.03)]"
 
 
@@ -259,6 +192,34 @@ class TestSetupLightBulgeDisk:
         )
 
 
+class TestAbstractSetupMass:
+    def test__align_centre_to_mass_centre(self):
+
+        mass = af.PriorModel(ag.mp.SphericalIsothermal)
+
+        source = ag.SetupMassTotal(mass_centre=(1.0, 2.0))
+
+        mass = source.align_centre_to_mass_centre(mass=mass)
+
+        assert mass.centre == (1.0, 2.0)
+
+    def test__unfix_mass_centre(self):
+
+        mass = af.PriorModel(ag.mp.SphericalIsothermal)
+        mass.centre = (1.0, 2.0)
+
+        setup_mass = ag.SetupMassTotal()
+
+        mass = af.PriorModel(ag.mp.SphericalIsothermal)
+
+        mass = setup_mass.unfix_mass_centre(mass=mass)
+
+        # assert mass.centre.centre_0.mean == 5.0
+        # assert mass.centre.centre_0.sigma == 0.05
+        # assert mass.centre.centre_1.mean == 6.0
+        # assert mass.centre.centre_1.sigma == 0.05
+
+
 class TestSetupMassTotal:
     def test__mass_centre_tag(self):
         setup = ag.SetupMassTotal(mass_centre=None)
@@ -277,20 +238,27 @@ class TestSetupMassTotal:
         setup = ag.SetupMassTotal(mass_centre=(3.027, 4.033))
         assert setup.tag == "mass[total__mass_centre_(3.03,4.03)]"
 
+    def test__align_centre_of_mass_to_light(self):
+
+        mass = af.PriorModel(ag.mp.SphericalIsothermal)
+
+        source = ag.SetupMassTotal(align_light_mass_centre=False)
+
+        mass = source.align_centre_of_mass_to_light(mass=mass, light_centre=(1.0, 2.0))
+
+        assert mass.centre.centre_0.mean == 1.0
+        assert mass.centre.centre_0.sigma == 0.1
+        assert mass.centre.centre_0.mean == 1.0
+        assert mass.centre.centre_0.sigma == 0.1
+
+        source = ag.SetupMassTotal(align_light_mass_centre=True)
+
+        mass = source.align_centre_of_mass_to_light(mass=mass, light_centre=(1.0, 2.0))
+
+        assert mass.centre == (1.0, 2.0)
+
 
 class TestSetupMassLightDark:
-    def test__align_light_mass_centre_tag__is_empty_sting_if_both_lens_light_and_mass_centres_input(
-        self
-    ):
-        setup = ag.SetupMassLightDark(align_light_mass_centre=False)
-        assert setup.align_light_mass_centre_tag == ""
-        setup = ag.SetupMassLightDark(align_light_mass_centre=True)
-        assert setup.align_light_mass_centre_tag == "__align_light_mass_centre"
-        setup = ag.SetupMassLightDark(
-            mass_centre=(1.0, 1.0), align_light_mass_centre=True
-        )
-        assert setup.align_light_mass_centre_tag == ""
-
     def test__constant_mass_to_light_ratio_tag(self):
         setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=True)
         assert setup.constant_mass_to_light_ratio_tag == "_const"
@@ -437,6 +405,96 @@ class TestSetupMassLightDark:
         assert lmp_1.mass_to_light_ratio == lmp_2.mass_to_light_ratio
 
 
+class TestSetupSourceParametric:
+    def test__tag_ang_type(self):
+
+        setup = ag.SetupSourceParametric()
+
+        assert setup.model_type == "bulge"
+        assert setup.tag == "source[bulge]"
+
+
+class TestSetupSourceInversion:
+    def test__pixelization__model_depends_on_inversion_pixels_fixed(self):
+        setup = ag.SetupSourceInversion()
+
+        assert setup.pixelization is None
+
+        setup = ag.SetupSourceInversion(pixelization=ag.pix.Rectangular)
+
+        assert setup.pixelization is ag.pix.Rectangular
+
+        setup = ag.SetupSourceInversion(pixelization=ag.pix.VoronoiBrightnessImage)
+
+        assert setup.pixelization is ag.pix.VoronoiBrightnessImage
+
+        setup = ag.SetupSourceInversion(
+            pixelization=ag.pix.VoronoiBrightnessImage, inversion_pixels_fixed=100
+        )
+
+        assert isinstance(setup.pixelization, af.PriorModel)
+        assert setup.pixelization.pixels == 100
+
+    def test__pixelization_tag(self):
+        setup = ag.SetupSourceInversion(pixelization=None)
+        assert setup.pixelization_tag == ""
+        setup = ag.SetupSourceInversion(pixelization=ag.pix.Rectangular)
+        assert setup.pixelization_tag == "pix_rect"
+        setup = ag.SetupSourceInversion(pixelization=ag.pix.VoronoiBrightnessImage)
+        assert setup.pixelization_tag == "pix_voro_image"
+
+    def test__regularization_tag(self):
+        setup = ag.SetupSourceInversion(regularization=None)
+        assert setup.regularization_tag == ""
+        setup = ag.SetupSourceInversion(regularization=ag.reg.Constant)
+        assert setup.regularization_tag == "_reg_const"
+        setup = ag.SetupSourceInversion(regularization=ag.reg.AdaptiveBrightness)
+        assert setup.regularization_tag == "_reg_adapt_bright"
+
+    def test__inversion_pixels_fixed_tag(self):
+        setup = ag.SetupSourceInversion(inversion_pixels_fixed=None)
+        assert setup.inversion_pixels_fixed_tag == ""
+
+        setup = ag.SetupSourceInversion(inversion_pixels_fixed=100)
+        assert setup.inversion_pixels_fixed_tag == ""
+
+        setup = ag.SetupSourceInversion(
+            inversion_pixels_fixed=100, pixelization=ag.pix.VoronoiBrightnessImage
+        )
+        assert setup.inversion_pixels_fixed_tag == "_100"
+
+    def test__tag_and_type(self):
+
+        setup = ag.SetupSourceInversion(pixelization=None, inversion_pixels_fixed=100)
+        assert setup.model_type == ""
+        assert setup.tag == ""
+        setup = ag.SetupSourceInversion(regularization=None, inversion_pixels_fixed=100)
+        assert setup.model_type == ""
+        assert setup.tag == ""
+        setup = ag.SetupSourceInversion(
+            pixelization=ag.pix.Rectangular,
+            regularization=ag.reg.Constant,
+            inversion_pixels_fixed=100,
+        )
+        assert setup.model_type == "pix_rect_reg_const"
+        assert setup.tag == "source[pix_rect_reg_const]"
+        setup = ag.SetupSourceInversion(
+            pixelization=ag.pix.VoronoiBrightnessImage,
+            regularization=ag.reg.AdaptiveBrightness,
+            inversion_pixels_fixed=None,
+        )
+        assert setup.model_type == "pix_voro_image_reg_adapt_bright"
+        assert setup.tag == "source[pix_voro_image_reg_adapt_bright]"
+
+        setup = ag.SetupSourceInversion(
+            pixelization=ag.pix.VoronoiBrightnessImage,
+            regularization=ag.reg.AdaptiveBrightness,
+            inversion_pixels_fixed=100,
+        )
+        assert setup.model_type == "pix_voro_image_100_reg_adapt_bright"
+        assert setup.tag == "source[pix_voro_image_100_reg_adapt_bright]"
+
+
 class TestSMBH:
     def test__smbh_tag(self):
         setup = ag.SetupSMBH(include_smbh=False)
@@ -479,9 +537,9 @@ class TestSetupPipeline:
 
         light = ag.SetupLightBulgeDisk(light_centre=(1.0, 2.0))
 
-        setup = ag.SetupPipeline(source=source, light=light)
+        setup = ag.SetupPipeline(setup_source=source, setup_light=light)
 
-        setup.type_tag = setup.source.tag
+        setup.type_tag = setup.setup_source.tag
 
         assert (
             setup.tag
@@ -496,9 +554,11 @@ class TestSetupPipeline:
 
         light = ag.SetupLightBulgeDisk(light_centre=(1.0, 2.0))
 
-        setup = ag.SetupPipeline(hyper=hyper, source=source, light=light)
+        setup = ag.SetupPipeline(
+            setup_hyper=hyper, setup_source=source, setup_light=light
+        )
 
-        setup.type_tag = setup.source.tag
+        setup.type_tag = setup.setup_source.tag
 
         assert (
             setup.tag
@@ -507,6 +567,6 @@ class TestSetupPipeline:
 
         smbh = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=True)
 
-        setup = ag.SetupPipeline(smbh=smbh)
+        setup = ag.SetupPipeline(setup_smbh=smbh)
 
         assert setup.tag == "setup__smbh[centre_fixed]"

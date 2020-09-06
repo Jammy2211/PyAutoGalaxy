@@ -41,6 +41,8 @@ class ModelFixingHyperPhase(HyperPhase):
 
         phase = self.make_hyper_phase()
         phase.model = self.make_model(results.last.instance)
+        print(results.last.instance)
+        print(phase.model)
 
         return phase.run(
             dataset,

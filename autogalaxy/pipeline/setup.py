@@ -12,6 +12,7 @@ class SetupHyper:
         hyper_image_sky: bool = False,
         hyper_background_noise: bool = False,
         hyper_galaxy_phase_first: bool = False,
+        hyper_fixed_after_source=False,
         hyper_galaxies_search: af.NonLinearSearch = None,
         inversion_search: af.NonLinearSearch = None,
         hyper_combined_search: af.NonLinearSearch = None,
@@ -94,6 +95,7 @@ class SetupHyper:
         else:
             self.hyper_combined_search = hyper_combined_search
 
+        self.hyper_fixed_after_source = hyper_fixed_after_source
         self.hyper_galaxy_phase_first = hyper_galaxy_phase_first
 
         self.hyper_image_sky = hyper_image_sky
@@ -112,7 +114,8 @@ class SetupHyper:
             f"{conf.instance.setup_tag.get('hyper', 'hyper')}["
             f"{self.hyper_galaxies_tag}"
             f"{self.hyper_image_sky_tag}"
-            f"{self.hyper_background_noise_tag}]"
+            f"{self.hyper_background_noise_tag}"
+            f"{self.hyper_fixed_after_source_tag}]"
         )
 
     @property
@@ -150,144 +153,21 @@ class SetupHyper:
         elif self.hyper_background_noise:
             return f"_{conf.instance.setup_tag.get('hyper', 'hyper_background_noise')}"
 
-
-class SetupSourceParametric:
-    def __init__(self):
-
-        pass
-
     @property
-    def model_type(self):
-        return "bulge"
+    def hyper_fixed_after_source_tag(self):
+        """Generate a tag for if the hyper parameters are held fixed after the source pipeline.
 
-    @property
-    def tag(self):
-        """Generate a tag of the parameetric source model.
+        This changes the pipeline setup tag as follows:
+
+        hyper_fixed_after_source = False -> setup
+        hyper_fixed_after_source = True -> setup__hyper_fixed
         """
-        return f"{conf.instance.setup_tag.get('source', 'source')}[{self.model_type}]"
-
-
-class SetupSourceInversion:
-    def __init__(
-        self,
-        pixelization: pix.Pixelization = None,
-        regularization: reg.Regularization = None,
-        inversion_pixels_fixed: float = None,
-    ):
-        """The setup of the source modeling of a pipeline, which controls how PyAutoGalaxy template pipelines runs,
-        for example controlling the _Pixelization_ and _Regularization_ used by a source model which uses an
-        _Inversion_.
-
-        Users can write their own pipelines which do not use or require the *SetupSource* class.
-
-        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
-        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
-        different models to a dataset in a structured path format.
-
-        Parameters
-        ----------
-        pixelization : pix.Pixelization or None
-           If the pipeline uses an *Inversion* to reconstruct the galaxy's light, this determines the
-           *Pixelization* used.
-        regularization : reg.Regularization or None
-           If the pipeline uses an *Inversion* to reconstruct the galaxy's light, this determines the
-           *Regularization* scheme used.
-        inversion_pixels_fixed : float
-            The fixed number of source pixels used by a _Pixelization_ class that takes as input a fixed number of
-            pixels.
-        """
-
-        self._pixelization = pixelization
-        self.regularization = regularization
-
-        self.inversion_pixels_fixed = inversion_pixels_fixed
-
-    @property
-    def model_type(self):
-        """Generate a tag if an *Inversion* is used to  *Pixelization* used to reconstruct the galaxy's light, which
-        is the sum of the pixelization and regularization tags.
-        """
-        if self._pixelization is None or self.regularization is None:
+        if not self.hyper_fixed_after_source:
             return ""
-
-        return f"{self.pixelization_tag}{self.inversion_pixels_fixed_tag}{self.regularization_tag}"
-
-    @property
-    def tag(self):
-        """Generate a tag if an *Inversion* is used to  *Pixelization* used to reconstruct the galaxy's light, which
-        is the sum of the pixelization and regularization tags.
-        """
-        if self._pixelization is None or self.regularization is None:
-            return ""
-
-        return f"{conf.instance.setup_tag.get('source', 'source')}[{self.model_type}]"
-
-    @property
-    def pixelization(self):
-        """
-        The _PriorModel_ used to set up the pixelization model in pipelines. This _PriorModel_ has its number of
-        pixels fixed to a certain value if the *inversion_pixels_fixed* parameter is input.
-        """
-        if (
-            self._pixelization is not pix.VoronoiBrightnessImage
-            or self.inversion_pixels_fixed is None
-        ):
-            return self._pixelization
-
-        pixelization = af.PriorModel(self._pixelization)
-        pixelization.pixels = self.inversion_pixels_fixed
-        return pixelization
-
-    @property
-    def inversion_pixels_fixed_tag(self):
-        """Generate a tag if an *Inversion* is used to  *Pixelization* used to reconstruct the galaxy's light, which
-        is the sum of the pixelization and regularization tags.
-        """
-        if self.inversion_pixels_fixed is None:
-            return ""
-
-        if self._pixelization is not pix.VoronoiBrightnessImage:
-            return ""
-
-        return f"_{str(self.inversion_pixels_fixed)}"
-
-    @property
-    def pixelization_tag(self):
-        """Tag the *Pixelization* scheme used by the pipeline, if an inversion is usse to reconstruct the galaxy's
-        light.
-
-        The pixelization tag is loaded from the config file 'autogalaxy_workspace/config/label.ini' in the [tag]
-        seciton.
-
-        For the default regulariation tags, this changes the setup folder as follows:
-
-        pixelization = None -> setup
-        pixelization = pix.Rectangular -> setup__pix_rect
-        pixelization = pix.VoronoiMagnification -> setup__pix_voro_mag
-        """
-        if self._pixelization is None:
-            return ""
-        else:
-            return f"{conf.instance.setup_tag.get('source', 'pixelization')}_{conf.instance.setup_tag.get('pixelization', self._pixelization().__class__.__name__)}"
-
-    @property
-    def regularization_tag(self):
-        """Tag the *Regularization* scheme used by the pipeline, if an inversion is usse to reconstruct the galaxy's
-        light.
-
-        The regularization tag is loaded from the config file 'autogalaxy_workspace/config/label.ini' in the [tag]
-        seciton.
-
-        For the default regulariation tags, this changes the setup folder as follows:
-
-        regularization = None -> setup
-        regularization = reg.Constant -> setup__reg_const
-        regularization = reg.AdaptiveBrightness -> setup__reg_adapt_bright
-        """
-        if self.regularization is None:
-            return ""
-        else:
-            return f"_{conf.instance.setup_tag.get('source', 'regularization')}_{conf.instance.setup_tag.get('regularization', self.regularization().__class__.__name__)}"
+        elif self.hyper_fixed_after_source:
+            return "_" + conf.instance.setup_tag.get(
+                "hyper", "hyper_fixed_after_source"
+            )
 
 
 class AbstractSetupLight:
@@ -298,7 +178,7 @@ class AbstractSetupLight:
 
         Parameters
         ----------
-        light_centre : (float, float)
+        light_centre : (float, float) or None
            If input, a fixed (y,x) centre of the galaxy is used for the light profile model which is not treated as a
             free parameter by the non-linear search.
         """
@@ -322,8 +202,38 @@ class AbstractSetupLight:
             x = "{0:.2f}".format(self.light_centre[1])
             return f"__{conf.instance.setup_tag.get('light', 'light_centre')}_({y},{x})"
 
+    def align_centre_to_light_centre(self, light):
+        """
+        Align the centre of an input light profile to the light_centre of this instance of the SLaM Source
+        class, make the centre of the light profile fixed and thus not free parameters that are fitted for.
 
-class SetupLightBulge(AbstractSetupLight):
+        If the light_centre is not input (and thus None) the light profile centre is unchanged.
+
+        Parameters
+        ----------
+        light : ag.mp.MassProfile
+            The light profile whose centre may be aligned with the light_centre attribute.
+        """
+        if self.light_centre is not None:
+            light.centre = self.light_centre
+        return light
+
+    def unalign_mass_centre_from_light_centre(self, mass):
+        """If the centre of a mass model was previously aligned with that of the lens light centre, unaligned them
+        by using an earlier model of the light.
+        """
+        if self.align_light_mass_centre:
+
+            mass.centre = af.last[-3].model.galaxies.lens.bulge.centre
+
+        else:
+
+            mass.centre = af.last[-1].model.galaxies.lens.mass.centre
+
+        return mass
+
+
+class SetupLightSersic(AbstractSetupLight):
     def __init__(self, light_centre: (float, float) = None):
         """The setup of the light modeling in a pipeline, which controls how PyAutoGalaxy template pipelines runs, for
         example controlling assumptions about the bulge-disk model.
@@ -336,18 +246,9 @@ class SetupLightBulge(AbstractSetupLight):
 
         Parameters
         ----------
-        light_centre : (float, float)
+        light_centre : (float, float) or None
            If input, a fixed (y,x) centre of the galaxy is used for the light profile model which is not treated as a
             free parameter by the non-linear search.
-        align_bulge_disk_centre : bool
-            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
-            *True* will align the centre of the bulge and disk components and not fit them separately.
-        align_bulge_disk_elliptical_comps : bool
-            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
-            *True* will align the elliptical components the bulge and disk components and not fit them separately.
-        disk_as_sersic : bool
-            If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
-            *True* will use an EllipticalSersic for the disk instead of an EllipticalExponential.
         """
 
         super().__init__(light_centre=light_centre)
@@ -385,16 +286,16 @@ class SetupLightBulgeDisk(AbstractSetupLight):
 
         Parameters
         ----------
-        light_centre : (float, float)
+        light_centre : (float, float) or None
            If input, a fixed (y,x) centre of the galaxy is used for the light profile model which is not treated as a
             free parameter by the non-linear search.
-        align_bulge_disk_centre : bool
+        align_bulge_disk_centre : bool or None
             If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
             *True* will align the centre of the bulge and disk components and not fit them separately.
-        align_bulge_disk_elliptical_comps : bool
+        align_bulge_disk_elliptical_comps : bool or None
             If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
             *True* will align the elliptical components the bulge and disk components and not fit them separately.
-        disk_as_sersic : bool
+        disk_as_sersic : bool or None
             If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
             *True* will use an EllipticalSersic for the disk instead of an EllipticalExponential.
         """
@@ -511,9 +412,52 @@ class AbstractSetupMass:
         x = "{0:.2f}".format(self.mass_centre[1])
         return f"__{conf.instance.setup_tag.get('mass', 'mass_centre')}_({y},{x})"
 
+    def align_centre_to_mass_centre(self, mass):
+        """
+        Align the centre of an input mass profile to the mass_centre of this instance of the SLaM Source
+        class, make the centre of the mass profile fixed and thus not free parameters that are fitted for.
+
+        If the mass_centre is not input (and thus None) the mass profile centre is unchanged.
+
+        Parameters
+        ----------
+        mass : ag.mp.MassProfile
+            The mass profile whose centre may be aligned with the mass_centre attribute.
+        """
+        if self.mass_centre is not None:
+            mass.centre = self.mass_centre
+        return mass
+
+    def unfix_mass_centre(self, mass, index=0):
+        """If the centre of a mass model was previously fixed to an input value (e.g. mass_centre), unaligned it
+        by making its centre GaussianPriors.
+        """
+
+        if self.mass_centre is not None:
+
+            mass.centre.centre_0 = af.GaussianPrior(
+                mean=self.mass_centre[0], sigma=0.05
+            )
+            mass.centre.centre_1 = af.GaussianPrior(
+                mean=self.mass_centre[1], sigma=0.05
+            )
+
+        else:
+
+            mass.centre.centre_0 = af.last[
+                index
+            ].model.galaxies.lens.mass.centre.centre_0
+            mass.centre.centre_1 = af.last[
+                index
+            ].model.galaxies.lens.mass.centre.centre_1
+
+        return mass
+
 
 class SetupMassTotal(AbstractSetupMass):
-    def __init__(self, mass_centre: (float, float) = None):
+    def __init__(
+        self, mass_centre: (float, float) = None, align_light_mass_centre: bool = False
+    ):
         """The setup of mass modeling in a pipeline, which controls how PyAutoLens template pipelines runs, for
         example controlling assumptions about the mass-to-light profile used too control how a light profile is
         converted to a mass profile.
@@ -533,6 +477,8 @@ class SetupMassTotal(AbstractSetupMass):
 
         super().__init__(mass_centre=mass_centre)
 
+        self.align_light_mass_centre = align_light_mass_centre
+
     @property
     def model_type(self):
         return "total"
@@ -543,15 +489,49 @@ class SetupMassTotal(AbstractSetupMass):
         """
         return (
             f"{conf.instance.setup_tag.get('mass', 'mass')}[{self.model_type}"
-            f"{self.mass_centre_tag}]"
+            f"{self.mass_centre_tag}"
+            f"{self.align_light_mass_centre_tag}]"
         )
+
+    @property
+    def align_light_mass_centre_tag(self):
+        """Generate a tag if the lens mass model is centre is aligned with that of its light profile.
+
+        This changes the setup folder as follows:
+
+        align_light_mass_centre = False -> setup
+        align_light_mass_centre = True -> setup___align_light_mass_centre
+        """
+        if self.mass_centre is not None:
+            return ""
+
+        if not self.align_light_mass_centre:
+            return ""
+        return f"__{conf.instance.setup_tag.get('mass', 'align_light_mass_centre')}"
+
+    def align_centre_of_mass_to_light(self, mass, light_centre):
+        """Align the centre of a mass profile to the centre of a light profile, if the align_light_mass_centre
+        SLaM setting is True.
+
+        Parameters
+        ----------
+        mass : ag.mp.MassProfile
+            The mass profile whose centre may be aligned with the light_centre attribute.
+        light : (float, float)
+            The centre of the light profile the mass profile is aligned with.
+        """
+        if self.align_light_mass_centre:
+            mass.centre = light_centre
+        else:
+            mass.centre.centre_0 = af.GaussianPrior(mean=light_centre[0], sigma=0.1)
+            mass.centre.centre_1 = af.GaussianPrior(mean=light_centre[1], sigma=0.1)
+        return mass
 
 
 class SetupMassLightDark(AbstractSetupMass):
     def __init__(
         self,
         mass_centre: (float, float) = None,
-        align_light_mass_centre: bool = False,
         constant_mass_to_light_ratio: bool = False,
         bulge_mass_to_light_ratio_gradient: bool = False,
         disk_mass_to_light_ratio_gradient: bool = False,
@@ -573,9 +553,6 @@ class SetupMassLightDark(AbstractSetupMass):
         mass_centre : (float, float)
            If input, a fixed (y,x) centre of the mass profile is used which is not treated as a free parameter by the
            non-linear search.
-        align_light_mass_centre : bool
-            If True, and the mass model is a decomposed single light and dark matter model (e.g. EllipticalSersic +
-            SphericalNFW), the centre of the light and dark matter profiles are aligned.
         constant_mass_to_light_ratio : bool
             If True, and the mass model consists of multiple _LightProfile_ and _MassProfile_ coomponents, the
             mass-to-light ratio's of all components are fixed to one shared value.
@@ -585,8 +562,8 @@ class SetupMassLightDark(AbstractSetupMass):
         disk_mass_to_light_ratio_gradient : bool
             If True, the bulge _EllipticalExponential_ component of the mass model is altered to include a gradient in
             its mass-to-light ratio conversion.
-        align_light_mass_centre : bool
-            If True, and the mass model is a bulge and dark matter modoel (e.g. EllipticalSersic + SphericalNFW),
+        align_light_dark_centre : bool
+            If True, and the mass model is a sersic and dark matter model (e.g. EllipticalSersic + SphericalNFW),
             the centre of the bulge and dark matter profiles are aligned.
         align_bulge_mass_centre : bool
             If True, and the mass model is a decomposed bulge, disk and dark matter model (e.g. EllipticalSersic +
@@ -594,8 +571,6 @@ class SetupMassLightDark(AbstractSetupMass):
         """
 
         super().__init__(mass_centre=mass_centre)
-
-        self.align_light_mass_centre = align_light_mass_centre
 
         if align_light_dark_centre and align_bulge_dark_centre:
             raise exc.SetupException(
@@ -620,9 +595,8 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         return (
             f"{conf.instance.setup_tag.get('mass', 'mass')}[{self.model_type}"
-            f"{self.mass_to_light_tag}"
-            f"{self.align_light_mass_centre_tag}"
             f"{self.mass_centre_tag}"
+            f"{self.mass_to_light_tag}"
             f"{self.align_light_dark_centre_tag}"
             f"{self.align_bulge_dark_centre_tag}]"
         )
@@ -701,22 +675,6 @@ class SetupMassLightDark(AbstractSetupMass):
         if not self.disk_mass_to_light_ratio_gradient:
             return ""
         return f"_{conf.instance.setup_tag.get('mass', 'disk_mass_to_light_ratio_gradient')}"
-
-    @property
-    def align_light_mass_centre_tag(self):
-        """Generate a tag if the lens mass model is centre is aligned with that of its light profile.
-
-        This changes the setup folder as follows:
-
-        align_light_mass_centre = False -> setup
-        align_light_mass_centre = True -> setup___align_light_mass_centre
-        """
-        if self.mass_centre is not None:
-            return ""
-
-        if not self.align_light_mass_centre:
-            return ""
-        return f"__{conf.instance.setup_tag.get('mass', 'align_light_mass_centre')}"
 
     @property
     def align_light_dark_centre_tag(self):
@@ -813,6 +771,154 @@ class SetupMassLightDark(AbstractSetupMass):
                 ].mass_to_light_ratio
 
 
+class AbstractSetupSource:
+    pass
+
+
+class SetupSourceParametric(AbstractSetupSource):
+    def __init__(self):
+        pass
+
+    @property
+    def model_type(self):
+        return "bulge"
+
+    @property
+    def tag(self):
+        """Generate a tag of the parameetric source model.
+        """
+        return f"{conf.instance.setup_tag.get('source', 'source')}[{self.model_type}]"
+
+
+class SetupSourceInversion(AbstractSetupSource):
+    def __init__(
+        self,
+        pixelization: pix.Pixelization = None,
+        regularization: reg.Regularization = None,
+        inversion_pixels_fixed: float = None,
+    ):
+        """The setup of the source modeling of a pipeline, which controls how PyAutoGalaxy template pipelines runs,
+        for example controlling the _Pixelization_ and _Regularization_ used by a source model which uses an
+        _Inversion_.
+
+        Users can write their own pipelines which do not use or require the *SetupSource* class.
+
+        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
+        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
+        different models to a dataset in a structured path format.
+
+        Parameters
+        ----------
+        pixelization : pix.Pixelization or None
+           If the pipeline uses an _Inversion_ to reconstruct the galaxy's light, this determines the
+           *Pixelization* used.
+        regularization : reg.Regularization or None
+           If the pipeline uses an _Inversion_ to reconstruct the galaxy's light, this determines the
+           *Regularization* scheme used.
+        inversion_pixels_fixed : float
+            The fixed number of source pixels used by a _Pixelization_ class that takes as input a fixed number of
+            pixels.
+        """
+
+        self._pixelization = pixelization
+        self.regularization = regularization
+
+        self.inversion_pixels_fixed = inversion_pixels_fixed
+
+    @property
+    def model_type(self):
+        """Generate a tag if an _Inversion_ is used to  *Pixelization* used to reconstruct the galaxy's light, which
+        is the sum of the pixelization and regularization tags.
+        """
+        if self._pixelization is None or self.regularization is None:
+            return ""
+
+        return f"{self.pixelization_tag}{self.inversion_pixels_fixed_tag}{self.regularization_tag}"
+
+    @property
+    def tag(self):
+        """Generate a tag if an _Inversion_ is used to  *Pixelization* used to reconstruct the galaxy's light, which
+        is the sum of the pixelization and regularization tags.
+        """
+        if self._pixelization is None or self.regularization is None:
+            return ""
+
+        return f"{conf.instance.setup_tag.get('source', 'source')}[{self.model_type}]"
+
+    @property
+    def pixelization(self):
+        """
+        The _PriorModel_ used to set up the pixelization model in pipelines. This _PriorModel_ has its number of
+        pixels fixed to a certain value if the *inversion_pixels_fixed* parameter is input.
+        """
+        if (
+            self._pixelization is not pix.VoronoiBrightnessImage
+            or self.inversion_pixels_fixed is None
+        ):
+            return self._pixelization
+
+        pixelization = af.PriorModel(self._pixelization)
+        pixelization.pixels = self.inversion_pixels_fixed
+        return pixelization
+
+    @property
+    def inversion_pixels_fixed_tag(self):
+        """Generate a tag if an _Inversion_ is used to  *Pixelization* used to reconstruct the galaxy's light, which
+        is the sum of the pixelization and regularization tags.
+        """
+        if self.inversion_pixels_fixed is None:
+            return ""
+
+        if self._pixelization is not pix.VoronoiBrightnessImage:
+            return ""
+
+        return f"_{str(self.inversion_pixels_fixed)}"
+
+    @property
+    def pixelization_tag(self):
+        """Tag the *Pixelization* scheme used by the pipeline, if an inversion is usse to reconstruct the galaxy's
+        light.
+
+        The pixelization tag is loaded from the config file 'autogalaxy_workspace/config/label.ini' in the [tag]
+        seciton.
+
+        For the default regulariation tags, this changes the setup folder as follows:
+
+        pixelization = None -> setup
+        pixelization = pix.Rectangular -> setup__pix_rect
+        pixelization = pix.VoronoiMagnification -> setup__pix_voro_mag
+        """
+        if self._pixelization is None:
+            return ""
+        else:
+            return (
+                f"{conf.instance.setup_tag.get('source', 'pixelization')}_"
+                f"{conf.instance.setup_tag.get('pixelization', self._pixelization().__class__.__name__)}"
+            )
+
+    @property
+    def regularization_tag(self):
+        """Tag the *Regularization* scheme used by the pipeline, if an inversion is usse to reconstruct the galaxy's
+        light.
+
+        The regularization tag is loaded from the config file 'autogalaxy_workspace/config/label.ini' in the [tag]
+        seciton.
+
+        For the default regulariation tags, this changes the setup folder as follows:
+
+        regularization = None -> setup
+        regularization = reg.Constant -> setup__reg_const
+        regularization = reg.AdaptiveBrightness -> setup__reg_adapt_bright
+        """
+        if self.regularization is None:
+            return ""
+        else:
+            return (
+                f"_{conf.instance.setup_tag.get('source', 'regularization')}_"
+                f"{conf.instance.setup_tag.get('regularization', self.regularization().__class__.__name__)}"
+            )
+
+
 class SetupSMBH:
     def __init__(self, include_smbh: bool = False, smbh_centre_fixed: bool = True):
         """The setup of a super massive black hole (SMBH) in the mass model of a PyAutoGalaxy template pipeline run..
@@ -898,11 +1004,12 @@ class SetupPipeline:
     def __init__(
         self,
         folders: [str] = None,
-        hyper: SetupHyper = None,
-        source: SetupSourceInversion = None,
-        light: SetupLightBulgeDisk = None,
-        mass: SetupMassLightDark = None,
-        smbh: SetupSMBH = None,
+        redshift_source: float = 1.0,
+        setup_hyper: SetupHyper = None,
+        setup_light: AbstractSetupLight = None,
+        setup_mass: AbstractSetupMass = None,
+        setup_source: AbstractSetupSource = None,
+        setup_smbh: SetupSMBH = None,
     ):
         """The setup of a pipeline, which controls how PyAutoGalaxy template pipelines runs, for example controlling
         assumptions about the bulge-disk model or the model used to fit the source galaxy.
@@ -915,25 +1022,35 @@ class SetupPipeline:
 
         Parameters
         ----------
-        hyper : SetupHyper
+        folders : [str] or None
+            A list of folders that the output of the pipeline are output into before the pipeline name, tags and
+            phase folders.
+        redshift_source : float
+            The redshift of the source galaxy used by the pipeline for converting arc-seconds to kpc, masses to solMass,
+            etc.
+        setup_hyper : SetupHyper
             The settings of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
-        source : SetupSourceInversion
+        setup_source : AbstractSetupSource
             The settings of the source analysis (e.g. the _Pixelization and _Regularization used).
-        light : SetupLightBulgeDisk
+        setup_light : AbstractSetupLight
             The settings of the light profile modeling (e.g. for bulge-disk models if they are geometrically aligned).
-        mass : SetupMassLightDark
+        setup_mass : AbstractSetupMass
             The settings of the mass modeling (e.g. if a constant mass to light ratio is used).
         """
 
         self.folders = folders
-        self.hyper = hyper
-        self.source = source
-        self.light = light
-        self.mass = mass
-        self.smbh = smbh
+        self.redshift_source = redshift_source
+        self.setup_hyper = setup_hyper
+        self.setup_source = setup_source
+        self.setup_light = setup_light
+        self.setup_mass = setup_mass
+        self.setup_smbh = setup_smbh
 
-        if self.light is not None and self.mass is not None:
-            self.mass.disk_as_sersic = self.light.disk_as_sersic
+        if (
+            isinstance(self.setup_light, SetupLightBulgeDisk)
+            and self.setup_mass is not None
+        ):
+            self.setup_mass.disk_as_sersic = self.setup_light.disk_as_sersic
 
     @property
     def tag(self):
@@ -941,10 +1058,12 @@ class SetupPipeline:
         """
 
         setup_tag = conf.instance.setup_tag.get("pipeline", "pipeline")
-        hyper_tag = f"_{self.hyper.tag}" if self.hyper is not None else ""
-        source_tag = f"_{self.source.tag}" if self.source is not None else ""
-        light_tag = f"_{self.light.tag}" if self.light is not None else ""
-        mass_tag = f"_{self.mass.tag}" if self.mass is not None else ""
-        smbh_tag = f"_{self.smbh.tag}" if self.smbh is not None else ""
+        hyper_tag = f"_{self.setup_hyper.tag}" if self.setup_hyper is not None else ""
+        source_tag = (
+            f"_{self.setup_source.tag}" if self.setup_source is not None else ""
+        )
+        light_tag = f"_{self.setup_light.tag}" if self.setup_light is not None else ""
+        mass_tag = f"_{self.setup_mass.tag}" if self.setup_mass is not None else ""
+        smbh_tag = f"_{self.setup_smbh.tag}" if self.setup_smbh is not None else ""
 
         return f"{setup_tag}_{hyper_tag}{source_tag}{light_tag}{mass_tag}{smbh_tag}"

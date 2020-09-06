@@ -69,7 +69,7 @@ from .pipeline.setup import (
     SetupHyper,
     SetupSourceParametric,
     SetupSourceInversion,
-    SetupLightBulge,
+    SetupLightSersic,
     SetupLightBulgeDisk,
     SetupMassTotal,
     SetupMassLightDark,

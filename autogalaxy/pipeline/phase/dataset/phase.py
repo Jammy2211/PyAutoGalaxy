@@ -118,25 +118,19 @@ class PhaseDataset(abstract.AbstractPhase):
         else:
             hyper_tag = f"{self.hyper_name}__"
 
-        old_tag = conf.instance.general.get("tag", "old_tag", bool)
-
-        if old_tag:
-
+        if not self.has_pixelization:
             self.search.paths.tag = f"{hyper_tag}{self.settings.phase_tag_no_inversion}"
-
         else:
-
-            if not self.has_pixelization:
-                self.search.paths.tag = (
-                    f"{hyper_tag}{self.settings.phase_tag_no_inversion}"
-                )
-            else:
-                self.search.paths.tag = (
-                    f"{hyper_tag}{self.settings.phase_tag_with_inversion}"
-                )
+            self.search.paths.tag = (
+                f"{hyper_tag}{self.settings.phase_tag_with_inversion}"
+            )
 
     def extend_with_inversion_phase(self, inversion_search):
-        return extensions.InversionPhase(phase=self, search=inversion_search)
+        return extensions.InversionPhase(
+            phase=self,
+            search=inversion_search,
+            model_classes=(pix.Pixelization, reg.Regularization),
+        )
 
     def extend_with_multiple_hyper_phases(self, setup_hyper, include_inversion=False):
 

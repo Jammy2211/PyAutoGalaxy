@@ -33,7 +33,7 @@ class SettingsMaskedImaging(imaging.SettingsMaskedImaging):
             The type of grid used to create the image from the *Galaxy* and *Plane*. The options are *Grid*,
             *GridIterate* and *GridInterpolate* (see the *Grids* documentation for a description of these options).
         grid_inversion_class : ag.Grid
-            The type of grid used to create the grid that maps the *Inversion* source pixels to the data's image-pixels.
+            The type of grid used to create the grid that maps the _Inversion_ source pixels to the data's image-pixels.
             The options are *Grid*, *GridIterate* and *GridInterpolate* (see the *Grids* documentation for a
             description of these options).
         sub_size : int
