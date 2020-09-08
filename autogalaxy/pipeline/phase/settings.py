@@ -54,7 +54,7 @@ class SettingsPhaseImaging(SettingsPhase):
     def phase_tag_no_inversion(self):
         return (
             f"{conf.instance.settings_tag.get('phase', 'phase')}__"
-            f"{self.settings_masked_imaging.tag_no_inversion}"
+            f"{self.settings_masked_imaging.tag_no_inversion}_"
             f"{self.log_likelihood_cap_tag}"
         )
 
@@ -62,9 +62,9 @@ class SettingsPhaseImaging(SettingsPhase):
     def phase_tag_with_inversion(self):
         return (
             f"{conf.instance.settings_tag.get('phase', 'phase')}__"
-            f"{self.settings_masked_imaging.tag_with_inversion}_"
-            f"{self.settings_pixelization.tag}_"
-            f"{self.settings_inversion.tag}"
+            f"{self.settings_masked_imaging.tag_with_inversion}__"
+            f"{self.settings_pixelization.tag}__"
+            f"{self.settings_inversion.tag}_"
             f"{self.log_likelihood_cap_tag}"
         )
 
@@ -94,7 +94,7 @@ class SettingsPhaseInterferometer(SettingsPhase):
 
         return (
             f"{conf.instance.settings_tag.get('phase', 'phase')}__"
-            f"{self.settings_masked_interferometer.tag_no_inversion}"
+            f"{self.settings_masked_interferometer.tag_no_inversion}_"
             f"{self.log_likelihood_cap_tag}"
         )
 
@@ -103,8 +103,8 @@ class SettingsPhaseInterferometer(SettingsPhase):
 
         return (
             f"{conf.instance.settings_tag.get('phase', 'phase')}__"
-            f"{self.settings_masked_interferometer.tag_with_inversion}_"
-            f"{self.settings_pixelization.tag}_"
-            f"{self.settings_inversion.tag}"
+            f"{self.settings_masked_interferometer.tag_with_inversion}__"
+            f"{self.settings_pixelization.tag}__"
+            f"{self.settings_inversion.tag}_"
             f"{self.log_likelihood_cap_tag}"
         )

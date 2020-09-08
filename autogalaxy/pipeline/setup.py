@@ -444,19 +444,17 @@ class AbstractSetupMass:
 
         else:
 
-            mass.centre.centre_0 = af.last[
-                index
-            ].model.galaxies.lens.mass.centre.centre_0
-            mass.centre.centre_1 = af.last[
-                index
-            ].model.galaxies.lens.mass.centre.centre_1
+            mass.centre = af.last[index].model.galaxies.lens.mass.centre
 
         return mass
 
 
 class SetupMassTotal(AbstractSetupMass):
     def __init__(
-        self, mass_centre: (float, float) = None, align_light_mass_centre: bool = False
+        self,
+        mass_profile: mp.MassProfile = None,
+        mass_centre: (float, float) = None,
+        align_light_mass_centre: bool = False,
     ):
         """The setup of mass modeling in a pipeline, which controls how PyAutoLens template pipelines runs, for
         example controlling assumptions about the mass-to-light profile used too control how a light profile is
@@ -477,6 +475,8 @@ class SetupMassTotal(AbstractSetupMass):
 
         super().__init__(mass_centre=mass_centre)
 
+        self.mass_profile = mass_profile
+
         self.align_light_mass_centre = align_light_mass_centre
 
     @property
@@ -488,10 +488,18 @@ class SetupMassTotal(AbstractSetupMass):
         """Generate the pipeline's overall tag, which customizes the 'setup' folder the results are output to.
         """
         return (
-            f"{conf.instance.setup_tag.get('mass', 'mass')}[{self.model_type}"
+            f"{conf.instance.setup_tag.get('mass', 'mass')}[{self.model_type}{self.mass_profile_tag}"
             f"{self.mass_centre_tag}"
             f"{self.align_light_mass_centre_tag}]"
         )
+
+    @property
+    def mass_profile_tag(self):
+
+        if self.mass_profile is None:
+            return ""
+
+        return f"__{conf.instance.setup_tag.get('total', self.mass_profile().__class__.__name__)}"
 
     @property
     def align_light_mass_centre_tag(self):
@@ -775,13 +783,13 @@ class AbstractSetupSource:
     pass
 
 
-class SetupSourceParametric(AbstractSetupSource):
+class SetupSourceSersic(AbstractSetupSource):
     def __init__(self):
         pass
 
     @property
     def model_type(self):
-        return "bulge"
+        return "sersic"
 
     @property
     def tag(self):
@@ -914,7 +922,7 @@ class SetupSourceInversion(AbstractSetupSource):
             return ""
         else:
             return (
-                f"_{conf.instance.setup_tag.get('source', 'regularization')}_"
+                f"__{conf.instance.setup_tag.get('source', 'regularization')}_"
                 f"{conf.instance.setup_tag.get('regularization', self.regularization().__class__.__name__)}"
             )
 
@@ -1058,12 +1066,12 @@ class SetupPipeline:
         """
 
         setup_tag = conf.instance.setup_tag.get("pipeline", "pipeline")
-        hyper_tag = f"_{self.setup_hyper.tag}" if self.setup_hyper is not None else ""
+        hyper_tag = f"__{self.setup_hyper.tag}" if self.setup_hyper is not None else ""
         source_tag = (
-            f"_{self.setup_source.tag}" if self.setup_source is not None else ""
+            f"__{self.setup_source.tag}" if self.setup_source is not None else ""
         )
-        light_tag = f"_{self.setup_light.tag}" if self.setup_light is not None else ""
-        mass_tag = f"_{self.setup_mass.tag}" if self.setup_mass is not None else ""
-        smbh_tag = f"_{self.setup_smbh.tag}" if self.setup_smbh is not None else ""
+        light_tag = f"__{self.setup_light.tag}" if self.setup_light is not None else ""
+        mass_tag = f"__{self.setup_mass.tag}" if self.setup_mass is not None else ""
+        smbh_tag = f"__{self.setup_smbh.tag}" if self.setup_smbh is not None else ""
 
-        return f"{setup_tag}_{hyper_tag}{source_tag}{light_tag}{mass_tag}{smbh_tag}"
+        return f"{setup_tag}{hyper_tag}{light_tag}{mass_tag}{source_tag}{smbh_tag}"
