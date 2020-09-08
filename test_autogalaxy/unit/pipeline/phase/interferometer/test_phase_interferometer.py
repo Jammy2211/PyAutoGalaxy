@@ -178,8 +178,10 @@ class TestHyperMethods:
             real_space_mask=mask_7x7,
         )
 
+        setup_hyper = ag.SetupHyper(hyper_combined_search=mock.MockSearch())
+
         phase_interferometer_7.extend_with_multiple_hyper_phases(
-            setup=ag.SetupPipeline(hyper_combined_search=mock.MockSearch())
+            setup_hyper=setup_hyper
         )
 
         analysis = phase_interferometer_7.make_analysis(

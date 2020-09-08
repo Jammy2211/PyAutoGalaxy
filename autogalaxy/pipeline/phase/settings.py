@@ -53,19 +53,19 @@ class SettingsPhaseImaging(SettingsPhase):
     @property
     def phase_tag_no_inversion(self):
         return (
-            conf.instance.tag.get("phase", "phase")
-            + self.settings_masked_imaging.tag_no_inversion
-            + self.log_likelihood_cap_tag
+            f"{conf.instance.settings_tag.get('phase', 'phase')}__"
+            f"{self.settings_masked_imaging.tag_no_inversion}_"
+            f"{self.log_likelihood_cap_tag}"
         )
 
     @property
     def phase_tag_with_inversion(self):
         return (
-            conf.instance.tag.get("phase", "phase")
-            + self.settings_masked_imaging.tag_with_inversion
-            + self.settings_pixelization.tag
-            + self.settings_inversion.tag
-            + self.log_likelihood_cap_tag
+            f"{conf.instance.settings_tag.get('phase', 'phase')}__"
+            f"{self.settings_masked_imaging.tag_with_inversion}__"
+            f"{self.settings_pixelization.tag}__"
+            f"{self.settings_inversion.tag}_"
+            f"{self.log_likelihood_cap_tag}"
         )
 
 
@@ -93,18 +93,18 @@ class SettingsPhaseInterferometer(SettingsPhase):
     def phase_tag_no_inversion(self):
 
         return (
-            conf.instance.tag.get("phase", "phase")
-            + self.settings_masked_interferometer.tag_no_inversion
-            + self.log_likelihood_cap_tag
+            f"{conf.instance.settings_tag.get('phase', 'phase')}__"
+            f"{self.settings_masked_interferometer.tag_no_inversion}_"
+            f"{self.log_likelihood_cap_tag}"
         )
 
     @property
     def phase_tag_with_inversion(self):
 
         return (
-            conf.instance.tag.get("phase", "phase")
-            + self.settings_masked_interferometer.tag_with_inversion
-            + self.settings_pixelization.tag
-            + self.settings_inversion.tag
-            + self.log_likelihood_cap_tag
+            f"{conf.instance.settings_tag.get('phase', 'phase')}__"
+            f"{self.settings_masked_interferometer.tag_with_inversion}__"
+            f"{self.settings_pixelization.tag}__"
+            f"{self.settings_inversion.tag}_"
+            f"{self.log_likelihood_cap_tag}"
         )

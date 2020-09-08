@@ -1,5 +1,5 @@
-galaxies_lens_light_centre_0                                          x_{\mathrm{s}}
-galaxies_lens_light_centre_1                                          y_{\mathrm{s}}
+galaxies_light_centre_0                                          x_{\mathrm{s}}
+galaxies_light_centre_1                                          y_{\mathrm{s}}
 galaxies_galaxy_light_axis_ratio                                        q_{\mathrm{s}}
 galaxies_galaxy_light_phi                                               phi_{\mathrm{s}}
 galaxies_galaxy_light_intensity_value                                   I_{\mathrm{s}}
