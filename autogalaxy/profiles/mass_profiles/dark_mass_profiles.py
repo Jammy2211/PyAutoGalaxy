@@ -1071,7 +1071,7 @@ class SphericalTruncatedNFWMCRDuffy(SphericalTruncatedNFW):
         Input m200: The m200 of the NFW part of the corresponding tNFW part. Unit: M_sun.
         """
 
-        self.mass_at_200_input = mass_at_200
+        self.mass_at_200 = mass_at_200
 
         kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_duffy(
             mass_at_200=mass_at_200,
@@ -1100,7 +1100,7 @@ class SphericalTruncatedNFWMCRLudlow(SphericalTruncatedNFW):
         Input m200: The m200 of the NFW part of the corresponding tNFW part. Unit: M_sun.
         """
 
-        self.mass_at_200_input = mass_at_200
+        self.mass_at_200 = mass_at_200
 
         kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_ludlow(
             mass_at_200=mass_at_200,
@@ -1451,7 +1451,7 @@ class SphericalNFWMCRDuffy(SphericalNFW):
         redshift_source: float = 1.0,
     ):
 
-        self.mass_at_200_input = mass_at_200
+        self.mass_at_200 = mass_at_200
 
         kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_duffy(
             mass_at_200=mass_at_200,
@@ -1474,7 +1474,7 @@ class SphericalNFWMCRLudlow(SphericalNFW):
         redshift_source: float = 1.0,
     ):
 
-        self.mass_at_200_input = mass_at_200
+        self.mass_at_200 = mass_at_200
 
         kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_ludlow(
             mass_at_200=mass_at_200,

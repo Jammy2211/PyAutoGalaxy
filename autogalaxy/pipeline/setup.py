@@ -468,6 +468,9 @@ class SetupMassTotal(AbstractSetupMass):
 
         Parameters
         ----------
+        mass_profile : mp.MassProfile
+            The _MassProfile_ fitted by the _Pipeline_ (the pipeline must specifically use this option to use this
+            mass profile)
         mass_centre : (float, float)
            If input, a fixed (y,x) centre of the mass profile is used which is not treated as a free parameter by the
            non-linear search.
