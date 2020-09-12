@@ -1,7 +1,13 @@
 from autoconf import conf
 import autofit as af
+
 from autoarray.inversion import pixelizations as pix, regularization as reg
-from autogalaxy.profiles import mass_profiles as mp, light_and_mass_profiles as lmp
+from autogalaxy.galaxy import galaxy as g
+from autogalaxy.profiles import (
+    light_profiles as lp,
+    mass_profiles as mp,
+    light_and_mass_profiles as lmp,
+)
 from autogalaxy import exc
 
 
@@ -169,6 +175,64 @@ class SetupHyper:
                 "hyper", "hyper_fixed_after_source"
             )
 
+    def hyper_galaxy_lens_from_previous_pipeline(
+        self, index=0, noise_factor_is_model=False
+    ):
+
+        if self.hyper_galaxies:
+
+            hyper_galaxy = af.PriorModel(g.HyperGalaxy)
+
+            if noise_factor_is_model:
+
+                hyper_galaxy.noise_factor = af.last[
+                    index
+                ].hyper_combined.model.galaxies.lens.hyper_galaxy.noise_factor
+
+            else:
+
+                hyper_galaxy.noise_factor = af.last[
+                    index
+                ].hyper_combined.instance.galaxies.lens.hyper_galaxy.noise_factor
+
+            hyper_galaxy.contribution_factor = af.last[
+                index
+            ].hyper_combined.instance.optional.galaxies.lens.hyper_galaxy.contribution_factor
+            hyper_galaxy.noise_power = af.last[
+                index
+            ].hyper_combined.instance.optional.galaxies.lens.hyper_galaxy.noise_power
+
+            return hyper_galaxy
+
+    def hyper_galaxy_source_from_previous_pipeline(
+        self, index=0, noise_factor_is_model=False
+    ):
+
+        if self.hyper_galaxies:
+
+            hyper_galaxy = af.PriorModel(g.HyperGalaxy)
+
+            if noise_factor_is_model:
+
+                hyper_galaxy.noise_factor = af.last[
+                    index
+                ].hyper_combined.model.galaxies.source.hyper_galaxy.noise_factor
+
+            else:
+
+                hyper_galaxy.noise_factor = af.last[
+                    index
+                ].hyper_combined.instance.galaxies.source.hyper_galaxy.noise_factor
+
+            hyper_galaxy.contribution_factor = af.last[
+                index
+            ].hyper_combined.instance.optional.galaxies.source.hyper_galaxy.contribution_factor
+            hyper_galaxy.noise_power = af.last[
+                index
+            ].hyper_combined.instance.optional.galaxies.source.hyper_galaxy.noise_power
+
+            return hyper_galaxy
+
 
 class AbstractSetupLight:
     def __init__(self, light_centre: (float, float) = None):
@@ -202,7 +266,9 @@ class AbstractSetupLight:
             x = "{0:.2f}".format(self.light_centre[1])
             return f"__{conf.instance.setup_tag.get('light', 'light_centre')}_({y},{x})"
 
-    def align_centre_to_light_centre(self, light):
+    def align_centre_to_light_centre(
+        self, light_prior_model: af.PriorModel(lp.LightProfile)
+    ):
         """
         Align the centre of an input light profile to the light_centre of this instance of the SLaM Source
         class, make the centre of the light profile fixed and thus not free parameters that are fitted for.
@@ -211,26 +277,12 @@ class AbstractSetupLight:
 
         Parameters
         ----------
-        light : ag.mp.MassProfile
-            The light profile whose centre may be aligned with the light_centre attribute.
+        light_prior_model : af.PriorModel(ag.lp.LightProfile)
+            The _LightProfile_ whose centre may be aligned with the light_centre attribute.
         """
         if self.light_centre is not None:
-            light.centre = self.light_centre
-        return light
-
-    def unalign_mass_centre_from_light_centre(self, mass):
-        """If the centre of a mass model was previously aligned with that of the lens light centre, unaligned them
-        by using an earlier model of the light.
-        """
-        if self.align_light_mass_centre:
-
-            mass.centre = af.last[-3].model.galaxies.lens.bulge.centre
-
-        else:
-
-            mass.centre = af.last[-1].model.galaxies.lens.mass.centre
-
-        return mass
+            light_prior_model.centre = self.light_centre
+        return light_prior_model
 
 
 class SetupLightSersic(AbstractSetupLight):
@@ -274,6 +326,8 @@ class SetupLightBulgeDisk(AbstractSetupLight):
         align_bulge_disk_centre: bool = False,
         align_bulge_disk_elliptical_comps: bool = False,
         disk_as_sersic: bool = False,
+        include_envelope: bool = False,
+        envelope_as_sersic: bool = False,
     ):
         """The setup of the light modeling in a pipeline, which controls how PyAutoGalaxy template pipelines runs, for
         example controlling assumptions about the bulge-disk model.
@@ -305,6 +359,8 @@ class SetupLightBulgeDisk(AbstractSetupLight):
         self.align_bulge_disk_centre = align_bulge_disk_centre
         self.align_bulge_disk_elliptical_comps = align_bulge_disk_elliptical_comps
         self.disk_as_sersic = disk_as_sersic
+        self.include_envelope = include_envelope
+        self.envelope_as_sersic = envelope_as_sersic
 
     @property
     def model_type(self):
@@ -316,7 +372,9 @@ class SetupLightBulgeDisk(AbstractSetupLight):
             f"{conf.instance.setup_tag.get('light', 'light')}[{self.model_type}"
             f"{self.light_centre_tag}"
             f"{self.align_bulge_disk_tag}"
-            f"{self.disk_as_sersic_tag}]"
+            f"{self.disk_as_sersic_tag}"
+            f"{self.include_envelope_tag}"
+            f"{self.envelope_as_sersic_tag}]"
         )
 
     @property
@@ -372,6 +430,54 @@ class SetupLightBulgeDisk(AbstractSetupLight):
         elif self.disk_as_sersic:
             return f"__{conf.instance.setup_tag.get('light', 'disk_as_sersic')}"
 
+    @property
+    def include_envelope_tag(self):
+        if not self.include_envelope:
+            return ""
+        return f"__{conf.instance.setup_tag.get('light', 'include_envelope')}"
+
+    @property
+    def envelope_as_sersic_tag(self):
+        """Tag if the envelope component of a bulge-envelope light profile fit of the pipeline is modeled as a EllipticalSersic
+        or an EllipticalExponential.
+
+        This changes the setup folder as follows:
+
+        envelope_as_sersic = False -> setup
+        envelope_as_sersic = True -> setup___envelope_as_sersic
+        """
+        if not self.envelope_as_sersic:
+            return ""
+        elif self.envelope_as_sersic:
+            return f"__{conf.instance.setup_tag.get('light', 'envelope_as_sersic')}"
+
+    @property
+    def disk_prior_model(self):
+
+        if self.disk_as_sersic:
+            return af.PriorModel(lp.EllipticalSersic)
+        else:
+            return af.PriorModel(lp.EllipticalExponential)
+
+    @property
+    def envelope_prior_model(self):
+
+        if self.include_envelope:
+            if self.envelope_as_sersic:
+                return af.PriorModel(lp.EllipticalSersic)
+            else:
+                return af.PriorModel(lp.EllipticalExponential)
+
+    def align_bulge_and_disk_centre_and_elliptical_comps(
+        self, bulge_prior_model, disk_prior_model
+    ):
+
+        if self.align_bulge_disk_centre:
+            bulge_prior_model.centre = disk_prior_model.centre
+
+        if self.align_bulge_disk_elliptical_comps:
+            bulge_prior_model.elliptical_comps = disk_prior_model.elliptical_comps
+
 
 class AbstractSetupMass:
     def __init__(self, mass_centre: (float, float) = None):
@@ -412,7 +518,9 @@ class AbstractSetupMass:
         x = "{0:.2f}".format(self.mass_centre[1])
         return f"__{conf.instance.setup_tag.get('mass', 'mass_centre')}_({y},{x})"
 
-    def align_centre_to_mass_centre(self, mass):
+    def align_centre_to_mass_centre(
+        self, mass_prior_model: af.PriorModel(mp.MassProfile)
+    ):
         """
         Align the centre of an input mass profile to the mass_centre of this instance of the SLaM Source
         class, make the centre of the mass profile fixed and thus not free parameters that are fitted for.
@@ -421,32 +529,39 @@ class AbstractSetupMass:
 
         Parameters
         ----------
-        mass : ag.mp.MassProfile
+        mass_prior_model : af.PriorModel(ag.mp.MassProfile)
             The mass profile whose centre may be aligned with the mass_centre attribute.
         """
         if self.mass_centre is not None:
-            mass.centre = self.mass_centre
-        return mass
+            mass_prior_model.centre = self.mass_centre
+        return mass_prior_model
 
-    def unfix_mass_centre(self, mass, index=0):
+    def unfix_mass_centre(
+        self, mass_prior_model: af.PriorModel(mp.MassProfile), index: int = 0
+    ):
         """If the centre of a mass model was previously fixed to an input value (e.g. mass_centre), unaligned it
         by making its centre GaussianPriors.
+
+        Parameters
+        ----------
+        mass_prior_model : af.PriorModel(ag.mp.MassProfile)
+            The mass profile whose centre may be unfixed from a previous model.
         """
 
         if self.mass_centre is not None:
 
-            mass.centre.centre_0 = af.GaussianPrior(
+            mass_prior_model.centre.centre_0 = af.GaussianPrior(
                 mean=self.mass_centre[0], sigma=0.05
             )
-            mass.centre.centre_1 = af.GaussianPrior(
+            mass_prior_model.centre.centre_1 = af.GaussianPrior(
                 mean=self.mass_centre[1], sigma=0.05
             )
 
         else:
 
-            mass.centre = af.last[index].model.galaxies.lens.mass.centre
+            mass_prior_model.centre = af.last[index].model.galaxies.lens.mass.centre
 
-        return mass
+        return mass_prior_model
 
 
 class SetupMassTotal(AbstractSetupMass):
@@ -520,23 +635,52 @@ class SetupMassTotal(AbstractSetupMass):
             return ""
         return f"__{conf.instance.setup_tag.get('mass', 'align_light_mass_centre')}"
 
-    def align_centre_of_mass_to_light(self, mass, light_centre):
+    def align_centre_of_mass_to_light(
+        self,
+        mass_prior_model: af.PriorModel(mp.MassProfile),
+        light_centre: (float, float),
+    ):
         """Align the centre of a mass profile to the centre of a light profile, if the align_light_mass_centre
         SLaM setting is True.
 
         Parameters
         ----------
-        mass : ag.mp.MassProfile
+        mass_prior_model : af.PriorModel(ag.mp.MassProfile)
             The mass profile whose centre may be aligned with the light_centre attribute.
         light : (float, float)
             The centre of the light profile the mass profile is aligned with.
         """
         if self.align_light_mass_centre:
-            mass.centre = light_centre
+            mass_prior_model.centre = light_centre
         else:
-            mass.centre.centre_0 = af.GaussianPrior(mean=light_centre[0], sigma=0.1)
-            mass.centre.centre_1 = af.GaussianPrior(mean=light_centre[1], sigma=0.1)
-        return mass
+            mass_prior_model.centre.centre_0 = af.GaussianPrior(
+                mean=light_centre[0], sigma=0.1
+            )
+            mass_prior_model.centre.centre_1 = af.GaussianPrior(
+                mean=light_centre[1], sigma=0.1
+            )
+        return mass_prior_model
+
+    def unalign_mass_centre_from_light_centre(
+        self, mass_prior_model: af.PriorModel(mp.MassProfile)
+    ):
+        """If the centre of a mass model was previously aligned with that of the lens light centre, unaligned them
+        by using an earlier model of the light.
+
+        Parameters
+        ----------
+        mass_prior_model : af.PriorModel(ag.mp.MassProfile)
+            The _MassProfile_ whose centre may be aligned with the _LightProfile_ centre.
+        """
+        if self.align_light_mass_centre:
+
+            mass_prior_model.centre = af.last[-3].model.galaxies.lens.bulge.centre
+
+        else:
+
+            mass_prior_model.centre = af.last[-1].model.galaxies.lens.mass.centre
+
+        return mass_prior_model
 
 
 class SetupMassLightDark(AbstractSetupMass):
@@ -546,6 +690,10 @@ class SetupMassLightDark(AbstractSetupMass):
         constant_mass_to_light_ratio: bool = False,
         bulge_mass_to_light_ratio_gradient: bool = False,
         disk_mass_to_light_ratio_gradient: bool = False,
+        envelope_mass_to_light_ratio_gradient: bool = False,
+        disk_as_sersic: bool = False,
+        include_envelope: bool = False,
+        envelope_as_sersic: bool = False,
         align_light_dark_centre: bool = False,
         align_bulge_dark_centre: bool = False,
     ):
@@ -592,9 +740,14 @@ class SetupMassLightDark(AbstractSetupMass):
         self.constant_mass_to_light_ratio = constant_mass_to_light_ratio
         self.bulge_mass_to_light_ratio_gradient = bulge_mass_to_light_ratio_gradient
         self.disk_mass_to_light_ratio_gradient = disk_mass_to_light_ratio_gradient
+        self.envelope_mass_to_light_ratio_gradient = (
+            envelope_mass_to_light_ratio_gradient
+        )
         self.align_light_dark_centre = align_light_dark_centre
         self.align_bulge_dark_centre = align_bulge_dark_centre
-        self.disk_as_sersic = None
+        self.disk_as_sersic = disk_as_sersic
+        self.envelope_as_sersic = envelope_as_sersic
+        self.include_envelope = include_envelope
 
     @property
     def model_type(self):
@@ -609,7 +762,10 @@ class SetupMassLightDark(AbstractSetupMass):
             f"{self.mass_centre_tag}"
             f"{self.mass_to_light_tag}"
             f"{self.align_light_dark_centre_tag}"
-            f"{self.align_bulge_dark_centre_tag}]"
+            f"{self.align_bulge_dark_centre_tag}"
+            f"{self.disk_as_sersic_tag}"
+            f"{self.include_envelope_tag}"
+            f"{self.envelope_as_sersic_tag}]"
         )
 
     @property
@@ -629,6 +785,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if (
             self.bulge_mass_to_light_ratio_gradient
             or self.disk_mass_to_light_ratio_gradient
+            or self.envelope_mass_to_light_ratio_gradient
         ):
             gradient_tag = conf.instance.setup_tag.get(
                 "mass", "mass_to_light_ratio_gradient"
@@ -640,6 +797,10 @@ class SetupMassLightDark(AbstractSetupMass):
             if self.disk_mass_to_light_ratio_gradient:
                 gradient_tag = (
                     f"{gradient_tag}{self.disk_mass_to_light_ratio_gradient_tag}"
+                )
+            if self.envelope_mass_to_light_ratio_gradient:
+                gradient_tag = (
+                    f"{gradient_tag}{self.envelope_mass_to_light_ratio_gradient_tag}"
                 )
             return f"{mass_to_light_tag}_{gradient_tag}"
         else:
@@ -688,6 +849,20 @@ class SetupMassLightDark(AbstractSetupMass):
         return f"_{conf.instance.setup_tag.get('mass', 'disk_mass_to_light_ratio_gradient')}"
 
     @property
+    def envelope_mass_to_light_ratio_gradient_tag(self):
+        """Generate a tag for whether the mass-to-light ratio in a light-dark mass model is constaant (shared amongst
+         all light and mass profiles) or free (all mass-to-light ratios are free parameters).
+
+        This changes the setup folder as follows:
+
+        constant_mass_to_light_ratio = False -> mlr_free
+        constant_mass_to_light_ratio = True -> mlr_constant
+        """
+        if not self.include_envelope or not self.envelope_mass_to_light_ratio_gradient:
+            return ""
+        return f"_{conf.instance.setup_tag.get('mass', 'envelope_mass_to_light_ratio_gradient')}"
+
+    @property
     def align_light_dark_centre_tag(self):
         """Generate a tag if the lens mass model is a decomposed light + dark matter model if their centres are aligned.
 
@@ -730,7 +905,27 @@ class SetupMassLightDark(AbstractSetupMass):
             return f"__{conf.instance.setup_tag.get('light', 'disk_as_sersic')}"
 
     @property
-    def bulge_light_and_mass_profile(self):
+    def include_envelope_tag(self):
+        if not self.include_envelope:
+            return ""
+        return f"__{conf.instance.setup_tag.get('light', 'include_envelope')}"
+
+    @property
+    def envelope_as_sersic_tag(self):
+        """Tag if the envelope component of a bulge-envelope light profile fit of the pipeline is modeled as a EllipticalSersic
+        or an EllipticalExponential.
+
+        This changes the setup folder as follows:
+
+        envelope_as_sersic = False -> setup
+        envelope_as_sersic = True -> setup___envelope_as_sersic
+        """
+        if not self.envelope_as_sersic:
+            return ""
+        return f"__{conf.instance.setup_tag.get('light', 'envelope_as_sersic')}"
+
+    @property
+    def bulge_light_and_mass_prior_model(self):
         """
         The light and mass profile of a bulge component of a galaxy.
 
@@ -742,7 +937,7 @@ class SetupMassLightDark(AbstractSetupMass):
         return af.PriorModel(lmp.EllipticalSersicRadialGradient)
 
     @property
-    def disk_light_and_mass_profile(self):
+    def disk_light_and_mass_prior_model(self):
         """
         The light and mass profile of a disk component of a galaxy.
 
@@ -760,8 +955,27 @@ class SetupMassLightDark(AbstractSetupMass):
                 return af.PriorModel(lmp.EllipticalExponential)
             return af.PriorModel(lmp.EllipticalExponentialRadialGradient)
 
-    def set_mass_to_light_ratios_of_light_and_mass_profiles(
-        self, light_and_mass_profiles
+    @property
+    def envelope_light_and_mass_prior_model(self):
+        """
+        The light and mass profile of a envelope component of a galaxy.
+
+        By default, this is returned as an  _EllipticalExponential_ profile without a radial gradient, however
+        the _SetupPipeline_ inputs can be customized to change this to an _EllipticalSersic_ or to include a radial
+        gradient.
+        """
+
+        if self.envelope_as_sersic:
+            if not self.envelope_mass_to_light_ratio_gradient:
+                return af.PriorModel(lmp.EllipticalSersic)
+            return af.PriorModel(lmp.EllipticalSersicRadialGradient)
+        else:
+            if not self.envelope_mass_to_light_ratio_gradient:
+                return af.PriorModel(lmp.EllipticalExponential)
+            return af.PriorModel(lmp.EllipticalExponentialRadialGradient)
+
+    def set_mass_to_light_ratios_of_light_and_mass_prior_models(
+        self, light_and_mass_prior_models: [af.PriorModel(mp.MassProfile)]
     ):
         """
         For an input list of _LightMassProfile_'s which will represent a galaxy with a light-dark mass model, set all
@@ -770,16 +984,30 @@ class SetupMassLightDark(AbstractSetupMass):
 
         Parameters
         ----------
-        light_and_mass_profiles : [LightMassProfile]
-            The light and mass profiles which have their mass-to-light ratios changed.
+        light_and_mass_prior_models : [af.PriorModel(LightMassProfile)]
+            The _LightMassProfile_'s which have their mass-to-light ratios changed.
         """
 
         if self.constant_mass_to_light_ratio:
 
-            for profile in light_and_mass_profiles[1:]:
-                profile.mass_to_light_ratio = light_and_mass_profiles[
+            for profile in list(filter(None, light_and_mass_prior_models[1:])):
+                profile.mass_to_light_ratio = light_and_mass_prior_models[
                     0
                 ].mass_to_light_ratio
+
+    def align_sersic_and_dark_centre(self, sersic_prior_model, dark_prior_model):
+
+        if self.align_light_dark_centre:
+            dark_prior_model.centre = sersic_prior_model.centre
+        else:
+            dark_prior_model.centre = af.last.model.galaxies.lens.sersic.centre
+
+    def align_bulge_and_dark_centre(self, bulge_prior_model, dark_prior_model):
+
+        if self.align_light_dark_centre:
+            dark_prior_model.centre = bulge_prior_model.centre
+        else:
+            dark_prior_model.centre = af.last.model.galaxies.lens.sersic.centre
 
 
 class AbstractSetupSource:

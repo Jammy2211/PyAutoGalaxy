@@ -757,7 +757,7 @@ class Include(plotters.Include):
         if isinstance(obj, lensing.LensingObject):
             try:
                 return obj.critical_curves
-            except ValueError:
+            except Exception:
                 print(
                     "Critical curve could not be calculated due to an unphysical mass model"
                 )
@@ -777,7 +777,7 @@ class Include(plotters.Include):
 
             try:
                 return obj.caustics
-            except ValueError:
+            except Exception:
                 print(
                     "Caustics could not be calculated due to an unphysical mass model"
                 )
