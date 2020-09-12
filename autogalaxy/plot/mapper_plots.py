@@ -13,7 +13,7 @@ def subplot_image_and_mapper(
     caustics=None,
     image_pixel_indexes=None,
     source_pixel_indexes=None,
-    include=plotters.Include(),
+    include=None,
     sub_plotter=None,
 ):
 

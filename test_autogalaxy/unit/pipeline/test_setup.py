@@ -119,7 +119,7 @@ class TestAbstractSetupLight:
 
         source = ag.SetupLightSersic(light_centre=(1.0, 2.0))
 
-        light = source.align_centre_to_light_centre(light=light)
+        light = source.align_centre_to_light_centre(light_prior_model=light)
 
         assert light.centre == (1.0, 2.0)
 
@@ -177,6 +177,18 @@ class TestSetupLightBulgeDisk:
         light = ag.SetupLightBulgeDisk(disk_as_sersic=True)
         assert light.disk_as_sersic_tag == "__disk_sersic"
 
+    def test__include_envelope_tag(self):
+        light = ag.SetupLightBulgeDisk(include_envelope=False)
+        assert light.include_envelope_tag == ""
+        light = ag.SetupLightBulgeDisk(include_envelope=True)
+        assert light.include_envelope_tag == "__include_envelope"
+
+    def test__envelope_as_sersic_tag(self):
+        light = ag.SetupLightBulgeDisk(envelope_as_sersic=False)
+        assert light.envelope_as_sersic_tag == ""
+        light = ag.SetupLightBulgeDisk(envelope_as_sersic=True)
+        assert light.envelope_as_sersic_tag == "__envelope_sersic"
+
     def test__tag_and_type(self):
 
         light = ag.SetupLightBulgeDisk()
@@ -191,6 +203,18 @@ class TestSetupLightBulgeDisk:
             light.tag == "light[bulge_disk__align_bulge_disk_centre_ell__disk_sersic]"
         )
 
+        light = ag.SetupLightBulgeDisk(
+            align_bulge_disk_centre=True,
+            align_bulge_disk_elliptical_comps=True,
+            disk_as_sersic=True,
+            include_envelope=True,
+            envelope_as_sersic=True,
+        )
+        assert (
+            light.tag
+            == "light[bulge_disk__align_bulge_disk_centre_ell__disk_sersic__include_envelope__envelope_sersic]"
+        )
+
 
 class TestAbstractSetupMass:
     def test__align_centre_to_mass_centre(self):
@@ -199,7 +223,7 @@ class TestAbstractSetupMass:
 
         source = ag.SetupMassTotal(mass_centre=(1.0, 2.0))
 
-        mass = source.align_centre_to_mass_centre(mass=mass)
+        mass = source.align_centre_to_mass_centre(mass_prior_model=mass)
 
         assert mass.centre == (1.0, 2.0)
 
@@ -212,7 +236,7 @@ class TestAbstractSetupMass:
 
         mass = af.PriorModel(ag.mp.SphericalIsothermal)
 
-        mass = setup_mass.unfix_mass_centre(mass=mass)
+        mass = setup_mass.unfix_mass_centre(mass_prior_model=mass)
 
         # assert mass.centre.centre_0.mean == 5.0
         # assert mass.centre.centre_0.sigma == 0.05
@@ -260,7 +284,9 @@ class TestSetupMassTotal:
 
         source = ag.SetupMassTotal(align_light_mass_centre=False)
 
-        mass = source.align_centre_of_mass_to_light(mass=mass, light_centre=(1.0, 2.0))
+        mass = source.align_centre_of_mass_to_light(
+            mass_prior_model=mass, light_centre=(1.0, 2.0)
+        )
 
         assert mass.centre.centre_0.mean == 1.0
         assert mass.centre.centre_0.sigma == 0.1
@@ -269,7 +295,9 @@ class TestSetupMassTotal:
 
         source = ag.SetupMassTotal(align_light_mass_centre=True)
 
-        mass = source.align_centre_of_mass_to_light(mass=mass, light_centre=(1.0, 2.0))
+        mass = source.align_centre_of_mass_to_light(
+            mass_prior_model=mass, light_centre=(1.0, 2.0)
+        )
 
         assert mass.centre == (1.0, 2.0)
 
@@ -291,6 +319,15 @@ class TestSetupMassLightDark:
         assert setup.disk_mass_to_light_ratio_gradient_tag == "_disk"
         setup = ag.SetupMassLightDark(disk_mass_to_light_ratio_gradient=False)
         assert setup.disk_mass_to_light_ratio_gradient_tag == ""
+
+        setup = ag.SetupMassLightDark(
+            include_envelope=True, envelope_mass_to_light_ratio_gradient=True
+        )
+        assert setup.envelope_mass_to_light_ratio_gradient_tag == "_envelope"
+        setup = ag.SetupMassLightDark(
+            include_envelope=True, envelope_mass_to_light_ratio_gradient=False
+        )
+        assert setup.envelope_mass_to_light_ratio_gradient_tag == ""
 
     def test__mass_to_light_tag(self):
         setup = ag.SetupMassLightDark(
@@ -321,6 +358,15 @@ class TestSetupMassLightDark:
         )
         assert setup.mass_to_light_tag == "__mlr_free_grad_bulge"
 
+        setup = ag.SetupMassLightDark(
+            constant_mass_to_light_ratio=False,
+            bulge_mass_to_light_ratio_gradient=True,
+            disk_mass_to_light_ratio_gradient=False,
+            include_envelope=True,
+            envelope_mass_to_light_ratio_gradient=True,
+        )
+        assert setup.mass_to_light_tag == "__mlr_free_grad_bulge_envelope"
+
     def test__align_light_dark_tag(self):
         setup = ag.SetupMassLightDark(align_light_dark_centre=False)
         assert setup.align_light_dark_centre_tag == ""
@@ -346,17 +392,32 @@ class TestSetupMassLightDark:
             == "mass[light_dark__mlr_const_grad_bulge_disk__align_bulge_dark_centre]"
         )
 
+        setup = ag.SetupMassLightDark(
+            constant_mass_to_light_ratio=True,
+            bulge_mass_to_light_ratio_gradient=True,
+            disk_mass_to_light_ratio_gradient=True,
+            envelope_mass_to_light_ratio_gradient=True,
+            disk_as_sersic=True,
+            align_bulge_dark_centre=True,
+            include_envelope=True,
+            envelope_as_sersic=True,
+        )
+        assert (
+            setup.tag
+            == "mass[light_dark__mlr_const_grad_bulge_disk_envelope__align_bulge_dark_centre__disk_sersic__include_envelope__envelope_sersic]"
+        )
+
     def test__bulge_light_and_mass_profile(self):
 
         light = ag.SetupMassLightDark(bulge_mass_to_light_ratio_gradient=False)
         assert (
-            light.bulge_light_and_mass_profile.effective_radius
+            light.bulge_light_and_mass_prior_model.effective_radius
             is ag.lmp.EllipticalSersic
         )
 
         light = ag.SetupMassLightDark(bulge_mass_to_light_ratio_gradient=True)
         assert (
-            light.bulge_light_and_mass_profile.effective_radius
+            light.bulge_light_and_mass_prior_model.effective_radius
             is ag.lmp.EllipticalSersicRadialGradient
         )
 
@@ -367,7 +428,7 @@ class TestSetupMassLightDark:
         mass.disk_as_sersic = False
 
         assert (
-            mass.disk_light_and_mass_profile.effective_radius
+            mass.disk_light_and_mass_prior_model.effective_radius
             is ag.lmp.EllipticalExponential
         )
 
@@ -376,7 +437,8 @@ class TestSetupMassLightDark:
         mass.disk_as_sersic = True
 
         assert (
-            mass.disk_light_and_mass_profile.effective_radius is ag.lmp.EllipticalSersic
+            mass.disk_light_and_mass_prior_model.effective_radius
+            is ag.lmp.EllipticalSersic
         )
 
         mass = ag.SetupMassLightDark(disk_mass_to_light_ratio_gradient=True)
@@ -384,7 +446,7 @@ class TestSetupMassLightDark:
         mass.disk_as_sersic = False
 
         assert (
-            mass.disk_light_and_mass_profile.effective_radius
+            mass.disk_light_and_mass_prior_model.effective_radius
             is ag.lmp.EllipticalExponentialRadialGradient
         )
 
@@ -393,7 +455,45 @@ class TestSetupMassLightDark:
         mass.disk_as_sersic = True
 
         assert (
-            mass.disk_light_and_mass_profile.effective_radius
+            mass.disk_light_and_mass_prior_model.effective_radius
+            is ag.lmp.EllipticalSersicRadialGradient
+        )
+
+    def test__envelope_light_and_mass_profile(self):
+
+        mass = ag.SetupMassLightDark(envelope_mass_to_light_ratio_gradient=False)
+
+        mass.envelope_as_sersic = False
+
+        assert (
+            mass.envelope_light_and_mass_prior_model.effective_radius
+            is ag.lmp.EllipticalExponential
+        )
+
+        mass = ag.SetupMassLightDark(envelope_mass_to_light_ratio_gradient=False)
+
+        mass.envelope_as_sersic = True
+
+        assert (
+            mass.envelope_light_and_mass_prior_model.effective_radius
+            is ag.lmp.EllipticalSersic
+        )
+
+        mass = ag.SetupMassLightDark(envelope_mass_to_light_ratio_gradient=True)
+
+        mass.envelope_as_sersic = False
+
+        assert (
+            mass.envelope_light_and_mass_prior_model.effective_radius
+            is ag.lmp.EllipticalExponentialRadialGradient
+        )
+
+        mass = ag.SetupMassLightDark(envelope_mass_to_light_ratio_gradient=True)
+
+        mass.envelope_as_sersic = True
+
+        assert (
+            mass.envelope_light_and_mass_prior_model.effective_radius
             is ag.lmp.EllipticalSersicRadialGradient
         )
 
@@ -405,8 +505,8 @@ class TestSetupMassLightDark:
 
         setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=False)
 
-        setup.set_mass_to_light_ratios_of_light_and_mass_profiles(
-            light_and_mass_profiles=[lmp_0, lmp_1, lmp_2]
+        setup.set_mass_to_light_ratios_of_light_and_mass_prior_models(
+            light_and_mass_prior_models=[lmp_0, lmp_1, lmp_2]
         )
 
         assert lmp_0.mass_to_light_ratio != lmp_1.mass_to_light_ratio
@@ -419,8 +519,8 @@ class TestSetupMassLightDark:
 
         setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=True)
 
-        setup.set_mass_to_light_ratios_of_light_and_mass_profiles(
-            light_and_mass_profiles=[lmp_0, lmp_1, lmp_2]
+        setup.set_mass_to_light_ratios_of_light_and_mass_prior_models(
+            light_and_mass_prior_models=[lmp_0, lmp_1, lmp_2]
         )
 
         assert lmp_0.mass_to_light_ratio == lmp_1.mass_to_light_ratio
