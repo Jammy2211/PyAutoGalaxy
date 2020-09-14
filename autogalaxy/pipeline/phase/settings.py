@@ -72,14 +72,14 @@ class SettingsPhaseImaging(SettingsPhase):
 class SettingsPhaseInterferometer(SettingsPhase):
     def __init__(
         self,
-        masked_interferometer=interferometer.SettingsMaskedInterferometer(),
+        settings_masked_interferometer=interferometer.SettingsMaskedInterferometer(),
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
         log_likelihood_cap=None,
     ):
 
         super().__init__(
-            settings_masked_dataset=masked_interferometer,
+            settings_masked_dataset=settings_masked_interferometer,
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
             log_likelihood_cap=log_likelihood_cap,
