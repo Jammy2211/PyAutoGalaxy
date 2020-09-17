@@ -127,10 +127,10 @@ class LensingObject:
 
         jacobian = self.jacobian_from_grid(grid=grid)
 
-        gamma_1 = 0.5 * (jacobian[1][1] - jacobian[0][0])
-        gamma_2 = -0.5 * (jacobian[0][1] + jacobian[1][0])
+        gamma_y = -0.5 * (jacobian[0][1] + jacobian[1][0])
+        gamma_x = 0.5 * (jacobian[1][1] - jacobian[0][0])
 
-        return arrays.Array(array=(gamma_1 ** 2 + gamma_2 ** 2) ** 0.5, mask=grid.mask)
+        return arrays.Array(array=(gamma_x ** 2 + gamma_y ** 2) ** 0.5, mask=grid.mask)
 
     def tangential_eigen_value_from_grid(self, grid):
 

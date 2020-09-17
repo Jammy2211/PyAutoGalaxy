@@ -81,6 +81,30 @@ class TestPhase:
         assert isinstance(phase_extended.hyper_phases[0], ag.HyperGalaxyPhase)
         assert isinstance(phase_extended.hyper_phases[1], ag.InversionPhase)
 
+    def test__extend_with_hyper_galaxy_phase__passes_galaxy_names(self):
+
+        phase = ag.PhaseImaging(phase_name="test_phase", search=mock.MockSearch())
+
+        setup_hyper = ag.SetupHyper(
+            hyper_galaxies=True, hyper_galaxies_search=mock.MockSearch()
+        )
+
+        phase_extended = phase.extend_with_multiple_hyper_phases(
+            setup_hyper=setup_hyper
+        )
+        assert phase_extended.hyper_phases[0].hyper_galaxy_names == None
+
+        setup_hyper = ag.SetupHyper(
+            hyper_galaxies=True, hyper_galaxies_search=mock.MockSearch()
+        )
+
+        setup_hyper.hyper_galaxy_names = ["one"]
+
+        phase_extended = phase.extend_with_multiple_hyper_phases(
+            setup_hyper=setup_hyper
+        )
+        assert phase_extended.hyper_phases[0].hyper_galaxy_names == ["one"]
+
 
 class TestMakeAnalysis:
     def test__mask_input_uses_mask(self, phase_imaging_7x7, imaging_7x7):

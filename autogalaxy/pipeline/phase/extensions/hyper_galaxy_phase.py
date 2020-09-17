@@ -144,11 +144,19 @@ class Analysis(af.Analysis):
 class HyperGalaxyPhase(HyperPhase):
     Analysis = Analysis
 
-    def __init__(self, phase, search, include_sky_background, include_noise_background):
+    def __init__(
+        self,
+        phase,
+        search,
+        include_sky_background,
+        include_noise_background,
+        hyper_galaxy_names=None,
+    ):
 
         super().__init__(phase=phase, search=search, hyper_name="hyper_galaxy")
         self.include_sky_background = include_sky_background
         self.include_noise_background = include_noise_background
+        self.hyper_galaxy_names = hyper_galaxy_names
 
     def run_hyper(
         self, dataset, results: af.ResultsCollection, info=None, pickle_files=None
@@ -169,6 +177,7 @@ class HyperGalaxyPhase(HyperPhase):
         self.results = results
 
         phase = self.make_hyper_phase()
+        phase.modify_search_paths()
 
         masked_imaging = results.last.masked_dataset
 
@@ -184,67 +193,69 @@ class HyperGalaxyPhase(HyperPhase):
 
         for path, galaxy in results.last.path_galaxy_tuples:
 
-            model = copy.deepcopy(phase.model)
+            if self.hyper_galaxy_names is not None:
+                if path[-1] in self.hyper_galaxy_names:
 
-            search = self.search.copy_with_name_extension(extension=path[-1])
+                    model = copy.deepcopy(phase.model)
+                    search = copy.deepcopy(phase.search)
+                    search.paths.tag += f"/{path[-1]}"
 
-            # TODO : This is a HACK :O
+                    # TODO : This is a HACK :O
 
-            model.galaxies = []
+                    model.galaxies = []
 
-            model.hyper_galaxy = g.HyperGalaxy
+                    model.hyper_galaxy = g.HyperGalaxy
 
-            if self.include_sky_background:
-                model.hyper_image_sky = hd.HyperImageSky
+                    if self.include_sky_background:
+                        model.hyper_image_sky = hd.HyperImageSky
 
-            if self.include_noise_background:
-                model.hyper_background_noise = hd.HyperBackgroundNoise
+                    if self.include_noise_background:
+                        model.hyper_background_noise = hd.HyperBackgroundNoise
 
-            # If arrays is all zeros, galaxy did not have image in previous phase and
-            # shoumasked_imaging be ignored
-            if not np.all(
-                hyper_result.analysis.hyper_galaxy_image_path_dict[path] == 0
-            ):
-                hyper_model_image = hyper_result.analysis.hyper_model_image
+                    # If arrays is all zeros, galaxy did not have image in previous phase and hyper phase is omitted.
+                    if not np.all(
+                        hyper_result.analysis.hyper_galaxy_image_path_dict[path] == 0
+                    ):
+                        hyper_model_image = hyper_result.analysis.hyper_model_image
 
-                analysis = self.Analysis(
-                    masked_imaging=masked_imaging,
-                    hyper_model_image=hyper_model_image,
-                    hyper_galaxy_image=hyper_result.analysis.hyper_galaxy_image_path_dict[
-                        path
-                    ],
-                    image_path=search.paths.image_path,
-                )
-
-                result = search.fit(model=model, analysis=analysis)
-
-                def transfer_field(name):
-                    if hasattr(result._instance, name):
-                        setattr(
-                            hyper_result.instance.object_for_path(path),
-                            name,
-                            getattr(result._instance, name),
-                        )
-                        setattr(
-                            hyper_result.model.object_for_path(path),
-                            name,
-                            getattr(result.model, name),
+                        analysis = self.Analysis(
+                            masked_imaging=masked_imaging,
+                            hyper_model_image=hyper_model_image,
+                            hyper_galaxy_image=hyper_result.analysis.hyper_galaxy_image_path_dict[
+                                path
+                            ],
+                            image_path=search.paths.image_path,
                         )
 
-                transfer_field("hyper_galaxy")
+                        result = search.fit(model=model, analysis=analysis)
 
-                hyper_result.instance.hyper_image_sky = getattr(
-                    result._instance, "hyper_image_sky"
-                )
-                hyper_result.model.hyper_image_sky = getattr(
-                    result.model, "hyper_image_sky"
-                )
+                        def transfer_field(name):
+                            if hasattr(result._instance, name):
+                                setattr(
+                                    hyper_result._instance.object_for_path(path),
+                                    name,
+                                    getattr(result._instance, name),
+                                )
+                                setattr(
+                                    hyper_result.model.object_for_path(path),
+                                    name,
+                                    getattr(result.model, name),
+                                )
 
-                hyper_result.instance.hyper_background_noise = getattr(
-                    result._instance, "hyper_background_noise"
-                )
-                hyper_result.model.hyper_background_noise = getattr(
-                    result.model, "hyper_background_noise"
-                )
+                        transfer_field("hyper_galaxy")
+
+                        hyper_result._instance.hyper_image_sky = getattr(
+                            result._instance, "hyper_image_sky"
+                        )
+                        hyper_result.model.hyper_image_sky = getattr(
+                            result.model, "hyper_image_sky"
+                        )
+
+                        hyper_result._instance.hyper_background_noise = getattr(
+                            result._instance, "hyper_background_noise"
+                        )
+                        hyper_result.model.hyper_background_noise = getattr(
+                            result.model, "hyper_background_noise"
+                        )
 
         return hyper_result
