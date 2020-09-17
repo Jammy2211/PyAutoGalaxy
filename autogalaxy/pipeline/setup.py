@@ -83,6 +83,8 @@ class SetupHyper:
         else:
             self.hyper_galaxies_search = None
 
+        self.hyper_galaxy_names = None
+
         if inversion_search is None:
             self.inversion_search = af.DynestyStatic(
                 n_live_points=50,
@@ -125,6 +127,22 @@ class SetupHyper:
         )
 
     @property
+    def tag_no_fixed(self):
+        """Tag ithe hyper pipeline features used in a hyper pipeline to customize pipeline output paths.
+        """
+        if not any(
+            [self.hyper_galaxies, self.hyper_image_sky, self.hyper_background_noise]
+        ):
+            return ""
+
+        return (
+            f"{conf.instance.setup_tag.get('hyper', 'hyper')}["
+            f"{self.hyper_galaxies_tag}"
+            f"{self.hyper_image_sky_tag}"
+            f"{self.hyper_background_noise_tag}]"
+        )
+
+    @property
     def hyper_galaxies_tag(self):
         """Tag if hyper-galaxies are used in a hyper pipeline to customize pipeline output paths.
 
@@ -145,7 +163,7 @@ class SetupHyper:
         if not self.hyper_image_sky:
             return ""
         elif self.hyper_image_sky:
-            return f"_{conf.instance.setup_tag.get('hyper', 'hyper_image_sky')}"
+            return f"__{conf.instance.setup_tag.get('hyper', 'hyper_image_sky')}"
 
     @property
     def hyper_background_noise_tag(self):
@@ -157,7 +175,7 @@ class SetupHyper:
         if not self.hyper_background_noise:
             return ""
         elif self.hyper_background_noise:
-            return f"_{conf.instance.setup_tag.get('hyper', 'hyper_background_noise')}"
+            return f"__{conf.instance.setup_tag.get('hyper', 'hyper_background_noise')}"
 
     @property
     def hyper_fixed_after_source_tag(self):
@@ -171,8 +189,8 @@ class SetupHyper:
         if not self.hyper_fixed_after_source:
             return ""
         elif self.hyper_fixed_after_source:
-            return "_" + conf.instance.setup_tag.get(
-                "hyper", "hyper_fixed_after_source"
+            return (
+                f"__{conf.instance.setup_tag.get('hyper', 'hyper_fixed_after_source')}"
             )
 
     def hyper_galaxy_lens_from_previous_pipeline(

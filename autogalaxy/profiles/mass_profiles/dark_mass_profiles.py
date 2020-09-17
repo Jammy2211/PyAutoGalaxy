@@ -491,8 +491,8 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            formatter.label_value_and_unit_string(
-                label=prefix + "rho_at_scale_radius",
+            formatter.parameter_name_value_and_unit_string(
+                parameter_name=prefix + "rho_at_scale_radius",
                 value=rho_at_scale_radius,
                 unit=unit_mass + "/" + unit_length + "3",
                 whitespace=whitespace,
@@ -509,8 +509,8 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            formatter.label_and_value_string(
-                label=prefix + "delta_concentration",
+            formatter.parameter_name_and_value_string(
+                parameter_name=prefix + "delta_concentration",
                 value=delta_concentration,
                 whitespace=whitespace,
             )
@@ -526,8 +526,8 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            formatter.label_and_value_string(
-                label=prefix + "concentration",
+            formatter.parameter_name_and_value_string(
+                parameter_name=prefix + "concentration",
                 value=concentration,
                 whitespace=whitespace,
             )
@@ -543,8 +543,8 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            formatter.label_value_and_unit_string(
-                label=prefix + "radius_at_200x_cosmic_density",
+            formatter.parameter_name_value_and_unit_string(
+                parameter_name=prefix + "radius_at_200x_cosmic_density",
                 value=radius_at_200,
                 unit=unit_length,
                 whitespace=whitespace,
@@ -561,8 +561,8 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            formatter.label_value_and_unit_string(
-                label=prefix + "mass_at_200x_cosmic_density",
+            formatter.parameter_name_value_and_unit_string(
+                parameter_name=prefix + "mass_at_200x_cosmic_density",
                 value=mass_at_200,
                 unit=unit_mass,
                 whitespace=whitespace,
@@ -1036,8 +1036,8 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         )
 
         summary += [
-            formatter.label_value_and_unit_string(
-                label=prefix + "mass_at_truncation_radius",
+            formatter.parameter_name_value_and_unit_string(
+                parameter_name=prefix + "mass_at_truncation_radius",
                 value=mass_at_truncation_radius,
                 unit=unit_mass,
                 whitespace=whitespace,

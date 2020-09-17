@@ -101,7 +101,7 @@ class TestSetupHyper:
             hyper_galaxies=True, hyper_image_sky=True, hyper_background_noise=True
         )
 
-        assert setup.tag == "hyper[galaxies_bg_sky_bg_noise]"
+        assert setup.tag == "hyper[galaxies__bg_sky__bg_noise]"
 
         setup = ag.SetupHyper(
             hyper_galaxies=True,
@@ -109,7 +109,7 @@ class TestSetupHyper:
             hyper_fixed_after_source=True,
         )
 
-        assert setup.tag == "hyper[galaxies_bg_noise_fixed]"
+        assert setup.tag == "hyper[galaxies__bg_noise__fixed]"
 
 
 class TestAbstractSetupLight:

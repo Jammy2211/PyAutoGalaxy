@@ -196,6 +196,7 @@ class PhaseDataset(abstract.AbstractPhase):
                 search=setup_hyper.hyper_galaxies_search,
                 include_sky_background=setup_hyper.hyper_image_sky,
                 include_noise_background=setup_hyper.hyper_background_noise,
+                hyper_galaxy_names=setup_hyper.hyper_galaxy_names,
             )
             hyper_phases.append(phase_hyper_galaxy)
 

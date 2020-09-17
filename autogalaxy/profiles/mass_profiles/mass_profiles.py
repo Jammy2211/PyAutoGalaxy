@@ -261,8 +261,8 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         )
 
         summary += [
-            formatter.label_value_and_unit_string(
-                label=prefix + "einstein_radius",
+            formatter.parameter_name_value_and_unit_string(
+                parameter_name=prefix + "einstein_radius",
                 value=einstein_radius,
                 unit=unit_length,
                 whitespace=whitespace,
@@ -277,8 +277,8 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         )
 
         summary += [
-            formatter.label_value_and_unit_string(
-                label=prefix + "einstein_mass",
+            formatter.parameter_name_value_and_unit_string(
+                parameter_name=prefix + "einstein_mass",
                 value=einstein_mass,
                 unit=unit_mass,
                 whitespace=whitespace,
