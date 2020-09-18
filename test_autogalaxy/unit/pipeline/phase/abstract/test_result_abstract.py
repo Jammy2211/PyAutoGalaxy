@@ -25,13 +25,14 @@ class TestGeneric:
     def test__results_of_phase_are_available_as_properties(self, imaging_7x7, mask_7x7):
 
         phase_dataset_7x7 = ag.PhaseImaging(
-            phase_name="test_phase_2",
             galaxies=dict(
                 galaxy=ag.Galaxy(
                     redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
                 )
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase_2",
+            ),
         )
 
         result = phase_dataset_7x7.run(
@@ -52,8 +53,8 @@ class TestPlane:
         max_log_likelihood_plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
         phase_dataset_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             search=mock.MockSearch(
+                phase_name="test_phase",
                 samples=mock.MockSamples(
                     max_log_likelihood_instance=max_log_likelihood_plane
                 )
