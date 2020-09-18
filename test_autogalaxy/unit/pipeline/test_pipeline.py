@@ -5,6 +5,7 @@ import autogalaxy as ag
 import numpy as np
 import pytest
 from autofit import Paths
+from test_autogalaxy.mock import MockSearch
 
 
 class MockAnalysis:
@@ -94,7 +95,7 @@ def make_mock_file(monkeypatch):
 class TestMetaData:
     def test_files(self, mock_files):
         pipeline = ag.PipelineDataset(
-            "pipeline_name", DummyPhaseImaging(phase_name="phase_name")
+            "pipeline_name", DummyPhaseImaging(search="phase_name")
         )
         pipeline.run(dataset=MockImagingData(), mask=MockMask())
 
@@ -145,7 +146,7 @@ class DummyPhasePositions(af.AbstractPhase):
         pass
 
     def __init__(self, phase_name):
-        super().__init__(Paths(name=phase_name, tag=""))
+        super().__init__(MockSearch(name=phase_name))
         self.results = None
         self.pixel_scales = None
         self.search = Optimizer(phase_name)
