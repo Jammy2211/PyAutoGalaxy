@@ -365,21 +365,29 @@ def make_samples_with_result():
 @pytest.fixture(name="phase_dataset_7x7")
 def make_phase_data(mask_7x7):
     return ag.PhaseDataset(
-        phase_name="test_phase",
         settings=ag.SettingsPhaseImaging(),
-        search=mock.MockSearch(),
+        search=mock.MockSearch(
+            phase_name="test_phase",
+        ),
     )
 
 
 @pytest.fixture(name="phase_imaging_7x7")
 def make_phase_imaging_7x7():
-    return ag.PhaseImaging(phase_name="test_phase", search=mock.MockSearch())
+    return ag.PhaseImaging(
+        search=mock.MockSearch(
+            phase_name="test_phase",
+        )
+    )
 
 
 @pytest.fixture(name="phase_interferometer_7")
 def make_phase_interferometer_7(mask_7x7):
     return ag.PhaseInterferometer(
-        phase_name="test_phase", search=mock.MockSearch(), real_space_mask=mask_7x7
+        search=mock.MockSearch(
+            phase_name="test_phase",
+        ),
+        real_space_mask=mask_7x7
     )
 
 

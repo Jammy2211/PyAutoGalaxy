@@ -179,7 +179,7 @@ class TestResultForArguments:
             galaxy_model.light_profile.elliptical_comps.elliptical_comps_1: 0.6,
             galaxy_model.light_profile.intensity.value: 0.6,
             galaxy_model.light_profile.effective_radius.value: 0.7,
-            galaxy_model.light_profile.sersic_index: 0.1,
+            galaxy_model.light_profile.sersic_index: 0.5,
         }
 
         galaxy = galaxy_model.instance_for_arguments(arguments)

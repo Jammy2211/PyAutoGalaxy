@@ -29,12 +29,14 @@ def make_samples():
 def test__dataset_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
 
     phase_imaging_7x7 = ag.PhaseImaging(
-        phase_name="test_phase_aggregator",
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
-        search=mock.MockSearch(samples=samples),
+        search=mock.MockSearch(
+            samples=samples,
+            phase_name="test_phase_aggregator",
+        ),
     )
 
     imaging_7x7.positions = ag.GridCoordinates([[1.0, 1.0], [2.0, 2.0]])
@@ -53,12 +55,14 @@ def test__dataset_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
 def test__plane_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
 
     phase_imaging_7x7 = ag.PhaseImaging(
-        phase_name="test_phase_aggregator",
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
-        search=mock.MockSearch(samples=samples),
+        search=mock.MockSearch(
+            samples=samples,
+            phase_name="test_phase_aggregator",
+        ),
     )
 
     phase_imaging_7x7.run(
@@ -79,7 +83,6 @@ def test__plane_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
 def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
 
     phase_imaging_7x7 = ag.PhaseImaging(
-        phase_name="test_phase_aggregator",
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
@@ -92,7 +95,10 @@ def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, sample
                 sub_steps=[2],
             )
         ),
-        search=mock.MockSearch(samples=samples),
+        search=mock.MockSearch(
+            samples=samples,
+            phase_name="test_phase_aggregator",
+        ),
     )
 
     phase_imaging_7x7.run(
@@ -114,12 +120,14 @@ def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, sample
 def test__fit_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
 
     phase_imaging_7x7 = ag.PhaseImaging(
-        phase_name="test_phase_aggregator",
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
-        search=mock.MockSearch(samples=samples),
+        search=mock.MockSearch(
+            samples=samples,
+            phase_name="test_phase_aggregator",
+        ),
     )
 
     phase_imaging_7x7.run(
@@ -139,7 +147,6 @@ def test__masked_interferometer_generator_from_aggregator(
 ):
 
     phase_interferometer_7x7 = ag.PhaseInterferometer(
-        phase_name="test_phase_aggregator",
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
@@ -153,7 +160,10 @@ def test__masked_interferometer_generator_from_aggregator(
                 transformer_class=ag.TransformerDFT,
             )
         ),
-        search=mock.MockSearch(samples=samples),
+        search=mock.MockSearch(
+            samples=samples,
+            phase_name="test_phase_aggregator",
+        ),
         real_space_mask=mask_7x7,
     )
 
@@ -185,12 +195,14 @@ def test__fit_interferometer_generator_from_aggregator(
 ):
 
     phase_interferometer_7x7 = ag.PhaseInterferometer(
-        phase_name="test_phase_aggregator",
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
-        search=mock.MockSearch(samples=samples),
+        search=mock.MockSearch(
+            samples=samples,
+            phase_name="test_phase_aggregator",
+        ),
         real_space_mask=mask_7x7,
     )
 

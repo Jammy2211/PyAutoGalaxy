@@ -1,10 +1,11 @@
-import autofit as af
 from astropy import cosmology as cosmo
+
+import autofit as af
 from autogalaxy.dataset import imaging
-from autogalaxy.pipeline.phase.settings import SettingsPhaseImaging
 from autogalaxy.pipeline.phase import dataset
 from autogalaxy.pipeline.phase.imaging.analysis import Analysis
 from autogalaxy.pipeline.phase.imaging.result import Result
+from autogalaxy.pipeline.phase.settings import SettingsPhaseImaging
 
 
 class PhaseImaging(dataset.PhaseDataset):
@@ -15,19 +16,16 @@ class PhaseImaging(dataset.PhaseDataset):
     Analysis = Analysis
     Result = Result
 
-    @af.convert_paths
     def __init__(
-        self,
-        paths,
-        *,
-        search,
-        galaxies=None,
-        hyper_image_sky=None,
-        hyper_background_noise=None,
-        settings=SettingsPhaseImaging(),
-        cosmology=cosmo.Planck15,
+            self,
+            *,
+            search,
+            galaxies=None,
+            hyper_image_sky=None,
+            hyper_background_noise=None,
+            settings=SettingsPhaseImaging(),
+            cosmology=cosmo.Planck15,
     ):
-
         """
 
         A phase in an lens pipeline. Uses the set non_linear search to try to fit models and hyper_galaxies
@@ -42,7 +40,6 @@ class PhaseImaging(dataset.PhaseDataset):
         """
 
         super().__init__(
-            paths=paths,
             search=search,
             galaxies=galaxies,
             settings=settings,
@@ -98,7 +95,6 @@ class PhaseImaging(dataset.PhaseDataset):
         return analysis
 
     def output_phase_info(self):
-
         file_phase_info = "{}/{}".format(self.search.paths.output_path, "phase.info")
 
         with open(file_phase_info, "w") as phase_info:
@@ -120,7 +116,6 @@ class PhaseImaging(dataset.PhaseDataset):
 
 class PhaseAttributes:
     def __init__(self, cosmology, hyper_model_image, hyper_galaxy_image_path_dict):
-
         self.cosmology = cosmology
         self.hyper_model_image = hyper_model_image
         self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
