@@ -881,50 +881,6 @@ class TestCoredPowerLaw:
             spherical.deflections_from_grid(grid=grid), 1e-4
         )
 
-    def test__summarize_in_units(self):
-
-        test_path = "{}/config/summary".format(
-            os.path.dirname(os.path.realpath(__file__))
-        )
-        conf.instance = conf.Config(config_path=test_path)
-
-        cored_power_law = ag.mp.SphericalCoredPowerLaw(
-            centre=(0.0, 0.0), einstein_radius=1.0, core_radius=0.0, slope=2.0
-        )
-
-        summary_text = cored_power_law.summarize_in_units(
-            radii=[ag.dim.Length(10.0), ag.dim.Length(500.0)],
-            prefix="pl_",
-            unit_length="arcsec",
-            unit_mass="angular",
-            whitespace=50,
-        )
-
-        i = 0
-
-        assert summary_text[i] == "Mass Profile = SphericalCoredPowerLaw\n"
-        i += 1
-        assert (
-            summary_text[i]
-            == "pl_einstein_radius                                1.00 arcsec"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "pl_einstein_mass                                  3.1308e+00 angular"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "pl_mass_within_10.00_arcsec                       3.1416e+01 angular"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "pl_mass_within_500.00_arcsec                      1.5708e+03 angular"
-        )
-        i += 1
-
     def test__output_are_autoarrays(self):
 
         grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
