@@ -6,3 +6,6 @@ autogalaxy.egg-info/
 build
 dist
 autogalaxy.egg-info/
+test_autogalaxy/config/json_priors/autogalaxy.galaxy.galaxy.Redshift.redshift.json
+test_autogalaxy/config/json_priors/autogalaxy.json
+test_autogalaxy/unit/config/json_priors/autogalaxy.json
