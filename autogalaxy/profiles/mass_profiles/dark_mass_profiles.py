@@ -491,7 +491,7 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            formatter.parameter_name_value_and_unit_string(
+            formatter.parameter_result_string_from(
                 parameter_name=prefix + "rho_at_scale_radius",
                 value=rho_at_scale_radius,
                 unit=unit_mass + "/" + unit_length + "3",
@@ -509,7 +509,7 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            formatter.parameter_name_and_value_string(
+            formatter.parameter_result_string_from(
                 parameter_name=prefix + "delta_concentration",
                 value=delta_concentration,
                 whitespace=whitespace,
@@ -526,7 +526,7 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            formatter.parameter_name_and_value_string(
+            formatter.parameter_result_string_from(
                 parameter_name=prefix + "concentration",
                 value=concentration,
                 whitespace=whitespace,
@@ -543,7 +543,7 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            formatter.parameter_name_value_and_unit_string(
+            formatter.parameter_result_string_from(
                 parameter_name=prefix + "radius_at_200x_cosmic_density",
                 value=radius_at_200,
                 unit=unit_length,
@@ -561,7 +561,7 @@ class AbstractEllipticalGeneralizedNFW(
         )
 
         summary += [
-            formatter.parameter_name_value_and_unit_string(
+            formatter.parameter_result_string_from(
                 parameter_name=prefix + "mass_at_200x_cosmic_density",
                 value=mass_at_200,
                 unit=unit_mass,
@@ -1036,7 +1036,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         )
 
         summary += [
-            formatter.parameter_name_value_and_unit_string(
+            formatter.parameter_result_string_from(
                 parameter_name=prefix + "mass_at_truncation_radius",
                 value=mass_at_truncation_radius,
                 unit=unit_mass,

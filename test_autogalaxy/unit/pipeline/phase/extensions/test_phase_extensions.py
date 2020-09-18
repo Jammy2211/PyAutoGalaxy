@@ -218,7 +218,7 @@ class TestHyperAPI:
 
         assert (
             "unit/output//prefix/test_phase/"
-            "inversion__settings__imaging[grid_sub_2_inv_sub_2__bin_2]_pix[no_border]_inv[mat]/"
+            "inversion__settings__imaging[grid_sub_2_inv_sub_2__bin_2]__pix[no_border]__inv[mat]/"
             "dynesty_static[nlive_1" in hyper_phase.paths.output_path
         )
 
@@ -237,7 +237,7 @@ class TestHyperAPI:
 
         assert (
             "test_phase/"
-            "inversion__settings__imaging[grid_sub_2_inv_sub_2__bin_2]_pix[no_border]_inv[mat]/"
+            "inversion__settings__imaging[grid_sub_2_inv_sub_2__bin_2]__pix[no_border]__inv[mat]/"
             "dynesty_static[nlive_1" in inversion_phase.paths.output_path
         )
 
@@ -246,7 +246,7 @@ class TestHyperAPI:
 
         assert (
             "test_phase/"
-            "hyper_galaxy__settings__imaging[grid_sub_2_inv_sub_2__bin_2]_pix[no_border]_inv[mat]/"
+            "hyper_galaxy__settings__imaging[grid_sub_2_inv_sub_2__bin_2]__pix[no_border]__inv[mat]/"
             "dynesty_static[nlive_2" in hyper_galaxy_phase.paths.output_path
         )
 
@@ -255,7 +255,7 @@ class TestHyperAPI:
 
         assert (
             "test_phase/"
-            "hyper_combined__settings__imaging[grid_sub_2_inv_sub_2__bin_2]_pix[no_border]_inv[mat]/"
+            "hyper_combined__settings__imaging[grid_sub_2_inv_sub_2__bin_2]__pix[no_border]__inv[mat]/"
             "dynesty_static[nlive_3" in hyper_combined_phase.paths.output_path
         )
 

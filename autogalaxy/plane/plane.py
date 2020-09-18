@@ -805,7 +805,7 @@ class Plane(AbstractPlaneData):
         prefix_plane = ""
 
         summary += [
-            af.formatter.parameter_name_and_value_string(
+            af.formatter.parameter_result_string_from(
                 parameter_name=prefix_plane + "redshift",
                 value=self.redshift,
                 whitespace=whitespace,
@@ -814,7 +814,7 @@ class Plane(AbstractPlaneData):
         ]
 
         summary += [
-            af.formatter.parameter_name_and_value_string(
+            af.formatter.parameter_result_string_from(
                 parameter_name=prefix_plane + "kpc_per_arcsec",
                 value=self.kpc_per_arcsec,
                 whitespace=whitespace,
@@ -827,7 +827,7 @@ class Plane(AbstractPlaneData):
         )
 
         summary += [
-            af.formatter.parameter_name_and_value_string(
+            af.formatter.parameter_result_string_from(
                 parameter_name=prefix_plane + "angular_diameter_distance_to_earth",
                 value=angular_diameter_distance_to_earth,
                 whitespace=whitespace,

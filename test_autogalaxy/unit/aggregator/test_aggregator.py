@@ -145,7 +145,7 @@ def test__masked_interferometer_generator_from_aggregator(
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         ),
         settings=ag.SettingsPhaseInterferometer(
-            masked_interferometer=ag.SettingsMaskedInterferometer(
+            settings_masked_interferometer=ag.SettingsMaskedInterferometer(
                 grid_class=ag.GridIterate,
                 grid_inversion_class=ag.GridIterate,
                 fractional_accuracy=0.5,

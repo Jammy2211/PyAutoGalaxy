@@ -678,7 +678,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             prefix_galaxy = ""
 
         summary += [
-            formatter.parameter_name_and_value_string(
+            formatter.parameter_result_string_from(
                 parameter_name=prefix_galaxy + "redshift",
                 value=self.redshift,
                 whitespace=whitespace,
@@ -782,7 +782,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         )
 
         summary += [
-            formatter.parameter_name_value_and_unit_string(
+            formatter.parameter_result_string_from(
                 parameter_name=prefix + "einstein_radius",
                 value=einstein_radius,
                 unit=unit_length,
@@ -795,7 +795,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         )
 
         summary += [
-            formatter.parameter_name_value_and_unit_string(
+            formatter.parameter_result_string_from(
                 parameter_name=prefix + "einstein_mass",
                 value=einstein_mass,
                 unit=unit_mass,

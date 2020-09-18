@@ -88,7 +88,7 @@ class TestMakeAnalysis:
         phase_interferometer_7 = ag.PhaseInterferometer(
             phase_name="phase_interferometer_7",
             settings=ag.SettingsPhaseInterferometer(
-                masked_interferometer=ag.SettingsMaskedInterferometer(
+                settings_masked_interferometer=ag.SettingsMaskedInterferometer(
                     grid_class=ag.Grid, grid_inversion_class=ag.Grid, sub_size=3
                 )
             ),
@@ -111,7 +111,7 @@ class TestMakeAnalysis:
         phase_interferometer_7 = ag.PhaseInterferometer(
             phase_name="phase_interferometer_7",
             settings=ag.SettingsPhaseInterferometer(
-                masked_interferometer=ag.SettingsMaskedInterferometer(
+                settings_masked_interferometer=ag.SettingsMaskedInterferometer(
                     grid_class=ag.GridIterate,
                     sub_size=3,
                     fractional_accuracy=0.99,
