@@ -407,7 +407,7 @@ class TestSetupMassLightDark:
             == "mass[light_dark__mlr_const_grad_bulge_disk_envelope__align_bulge_dark_centre__disk_sersic__include_envelope__envelope_sersic]"
         )
 
-    def test__bulge_light_and_mass_profile(self):
+    def _test__bulge_light_and_mass_profile(self):
 
         # TODO : Update to use PriorModel type?
 
@@ -423,7 +423,7 @@ class TestSetupMassLightDark:
             is ag.lmp.EllipticalSersicRadialGradient
         )
 
-    def test__disk_light_and_mass_profile(self):
+    def _test__disk_light_and_mass_profile(self):
 
         mass = ag.SetupMassLightDark(disk_mass_to_light_ratio_gradient=False)
 
@@ -461,7 +461,7 @@ class TestSetupMassLightDark:
             is ag.lmp.EllipticalSersicRadialGradient
         )
 
-    def test__envelope_light_and_mass_profile(self):
+    def _test__envelope_light_and_mass_profile(self):
 
         mass = ag.SetupMassLightDark(envelope_mass_to_light_ratio_gradient=False)
 
