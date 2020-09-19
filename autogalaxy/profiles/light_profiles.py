@@ -51,19 +51,6 @@ class LightProfile:
     ):
         raise NotImplementedError()
 
-    def summarize_in_units(
-        self,
-        radii,
-        unit_length="arcsec",
-        unit_luminosity="eps",
-        exposure_time=None,
-        redshift_profile=None,
-        cosmology=cosmo.Planck15,
-        **kwargs
-    ):
-        return ["Light Profile = {}\n".format(self.__class__.__name__)]
-
-
 # noinspection PyAbstractClass
 class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
     """Generic class for an elliptical light profiles"""
@@ -210,52 +197,6 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
         The axis ratio is set to 1.0 for computing the luminosity within a circle"""
         return 2 * np.pi * x * self.image_from_grid_radii(x)
-
-    def summarize_in_units(
-        self,
-        radii,
-        prefix="",
-        unit_length="arcsec",
-        unit_luminosity="eps",
-        exposure_time=None,
-        redshift_profile=None,
-        cosmology=cosmo.Planck15,
-        whitespace=80,
-        **kwargs
-    ):
-        summary = super().summarize_in_units(
-            radii=radii,
-            unit_length=unit_length,
-            unit_luminosity=unit_luminosity,
-            exposure_time=exposure_time,
-            redshift_profile=redshift_profile,
-            cosmology=cosmology,
-            kwargs=kwargs,
-        )
-
-        for radius in radii:
-            luminosity = self.luminosity_within_circle_in_units(
-                unit_luminosity=unit_luminosity,
-                radius=radius,
-                redshift_object=redshift_profile,
-                exposure_time=exposure_time,
-                cosmology=cosmology,
-                kwargs=kwargs,
-            )
-
-            summary += [
-                formatter.within_radius_label_value_and_unit_string(
-                    prefix=prefix + "luminosity",
-                    radius=radius,
-                    unit_length=unit_length,
-                    value=luminosity,
-                    unit_value=unit_luminosity,
-                    whitespace=whitespace,
-                )
-            ]
-
-        return summary
-
 
 class EllipticalGaussian(EllipticalLightProfile):
     @af.map_types

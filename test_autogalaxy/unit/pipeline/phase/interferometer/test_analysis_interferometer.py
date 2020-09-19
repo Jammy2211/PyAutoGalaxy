@@ -46,7 +46,9 @@ class TestFit:
             phase_name="test_phase",
             galaxies=dict(galaxy=galalxy),
             settings=ag.SettingsPhaseInterferometer(
-                masked_interferometer=ag.SettingsMaskedInterferometer(sub_size=2)
+                settings_masked_interferometer=ag.SettingsMaskedInterferometer(
+                    sub_size=2
+                )
             ),
             search=mock.MockSearch(),
             real_space_mask=mask_7x7,
@@ -85,7 +87,9 @@ class TestFit:
             galaxies=dict(galaxy=galalxy),
             hyper_background_noise=hyper_background_noise,
             settings=ag.SettingsPhaseInterferometer(
-                masked_interferometer=ag.SettingsMaskedInterferometer(sub_size=4)
+                settings_masked_interferometer=ag.SettingsMaskedInterferometer(
+                    sub_size=4
+                )
             ),
             search=mock.MockSearch(),
             real_space_mask=mask_7x7,

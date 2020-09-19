@@ -377,40 +377,6 @@ class TestSersic:
 
         assert (image_elliptical == image_spherical).all()
 
-    def test__summarize_in_units(self):
-
-        test_path = "{}/config/summary".format(
-            os.path.dirname(os.path.realpath(__file__))
-        )
-        conf.instance = conf.Config(config_path=test_path)
-
-        sersic = ag.lp.SphericalSersic(
-            intensity=3.0, effective_radius=2.0, sersic_index=2.0
-        )
-
-        summary_text = sersic.summarize_in_units(
-            radii=[ag.dim.Length(10.0), ag.dim.Length(500.0)],
-            prefix="sersic_",
-            unit_length="arcsec",
-            unit_luminosity="eps",
-            whitespace=50,
-        )
-
-        i = 0
-
-        assert summary_text[i] == "Light Profile = SphericalSersic\n"
-        i += 1
-        assert (
-            summary_text[i]
-            == "sersic_luminosity_within_10.00_arcsec             1.8854e+02 eps"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "sersic_luminosity_within_500.00_arcsec            1.9573e+02 eps"
-        )
-        i += 1
-
     def test__output_image_is_autoarray(self):
         grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 

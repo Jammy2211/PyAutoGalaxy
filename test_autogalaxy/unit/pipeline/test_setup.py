@@ -73,21 +73,21 @@ class TestSetupHyper:
         assert setup.hyper_galaxies_tag == ""
 
         setup = ag.SetupHyper(hyper_image_sky=True)
-        assert setup.hyper_image_sky_tag == "_bg_sky"
+        assert setup.hyper_image_sky_tag == "__bg_sky"
 
     def test__hyper_background_noise_tag(self):
         setup = ag.SetupHyper(hyper_background_noise=False)
         assert setup.hyper_galaxies_tag == ""
 
         setup = ag.SetupHyper(hyper_background_noise=True)
-        assert setup.hyper_background_noise_tag == "_bg_noise"
+        assert setup.hyper_background_noise_tag == "__bg_noise"
 
     def test__hyper_fixed_after_source(self):
         hyper = ag.SetupHyper(hyper_fixed_after_source=False)
         assert hyper.hyper_fixed_after_source_tag == ""
 
         hyper = ag.SetupHyper(hyper_fixed_after_source=True)
-        assert hyper.hyper_fixed_after_source_tag == "_fixed"
+        assert hyper.hyper_fixed_after_source_tag == "__fixed_from_source"
 
     def test__hyper_tag(self):
 
@@ -109,7 +109,7 @@ class TestSetupHyper:
             hyper_fixed_after_source=True,
         )
 
-        assert setup.tag == "hyper[galaxies__bg_noise__fixed]"
+        assert setup.tag == "hyper[galaxies__bg_noise__fixed_from_source]"
 
 
 class TestAbstractSetupLight:
@@ -409,6 +409,8 @@ class TestSetupMassLightDark:
 
     def test__bulge_light_and_mass_profile(self):
 
+        # TODO : Update to use PriorModel type?
+
         light = ag.SetupMassLightDark(bulge_mass_to_light_ratio_gradient=False)
         assert (
             light.bulge_light_and_mass_prior_model.effective_radius
@@ -662,8 +664,6 @@ class TestSetupPipeline:
 
         setup = ag.SetupPipeline(setup_source=source, setup_light=light)
 
-        setup.type_tag = setup.setup_source.tag
-
         assert (
             setup.tag == "setup__"
             "light[bulge_disk__light_centre_(1.00,2.00)]__"
@@ -682,10 +682,8 @@ class TestSetupPipeline:
             setup_hyper=hyper, setup_source=source, setup_light=light
         )
 
-        setup.type_tag = setup.setup_source.tag
-
         assert (
-            setup.tag == "setup__hyper[galaxies_bg_noise]__"
+            setup.tag == "setup__hyper[galaxies__bg_noise]__"
             "light[bulge_disk__light_centre_(1.00,2.00)]__"
             "source[pix_rect__reg_const]"
         )
