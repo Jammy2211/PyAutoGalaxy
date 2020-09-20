@@ -181,7 +181,9 @@ class InputDeflections(mp.MassProfile):
     def deflections_from_grid(self, grid):
 
         if self.preload_grid is not None and self.preload_deflections is not None:
-            if grid[0, 0] == self.preload_grid[0, 0]:
+            if (grid[0, 0] == self.preload_grid[0, 0]) and (
+                grid.pixel_scales == self.preload_grid.pixel_scales
+            ):
                 return self.normalization_scale * self.preload_deflections
 
         deflections_y = self.normalization_scale * griddata(
