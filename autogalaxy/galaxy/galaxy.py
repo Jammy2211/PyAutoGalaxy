@@ -658,6 +658,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             hyper_galaxy_image=self.hyper_galaxy_image,
         )
 
+
 class HyperGalaxy:
     _ids = count()
 

@@ -1599,6 +1599,7 @@ class TestMassAndLightProfiles:
         assert 2 == len(gal_multi_profiles.light_profiles)
         assert 2 == len(gal_multi_profiles.mass_profiles)
 
+
 class TestHyperGalaxy:
     class TestContributionMaps:
         def test__model_image_all_1s__factor_is_0__contributions_all_1s(self):

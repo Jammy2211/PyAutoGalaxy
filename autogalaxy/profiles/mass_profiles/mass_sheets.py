@@ -8,6 +8,9 @@ from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.util import convert
 import typing
 
+from scipy.interpolate import griddata
+from autogalaxy import exc
+
 
 class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
     @af.map_types
@@ -113,3 +116,88 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
         deflection_y = -np.multiply(self.magnitude, grid[:, 0])
         deflection_x = np.multiply(self.magnitude, grid[:, 1])
         return self.rotate_grid_from_profile(np.vstack((deflection_y, deflection_x)).T)
+
+
+class InputDeflections(mp.MassProfile):
+    def __init__(
+        self,
+        deflections_y,
+        deflections_x,
+        image_plane_grid,
+        preload_grid=None,
+        normalization_scale: float = 1.0,
+    ):
+        """
+        Represents a known deflection angle map (e.g. from an already performed lens model or particle simulation
+        of a mass distribution) which can be used for model fitting.
+        
+        The image-plane grid of the delflection angles is used to align an input grid to the input deflections, so that
+        a new deflection angle map can be computed via interpolation using the scipy.interpolate.griddata method.
+
+        A normalization scale can be included, which scales the overall normalization of the deflection angle map
+        interpolated by a multiplicative factor.
+
+        Parameters
+        ----------
+        deflections_y : aa.Array
+            The input array of the y components of the deflection angles.
+        deflections_x : aa.Array
+            The input array of the x components of the deflection angles.
+        image_plane_grid : aa.Grid
+            The image-plane grid from which the deflection angles are defined.
+        grid_interp : aa.Grid
+            The grid that interpolated quantities are computed on. If this is input in advance, the interpolation
+            weights can be precomputed to speed up the calculation time.
+        normalization_scale : float
+            The calculated deflection angles are multiplied by this factor scaling their values up and doown.
+        """
+        super().__init__()
+
+        self.deflections_y = deflections_y
+        self.deflections_x = deflections_x
+
+        self.image_plane_grid = image_plane_grid
+
+        self.centre = image_plane_grid.origin
+
+        self.preload_grid = preload_grid
+        self.preload_deflections = None
+
+        if self.preload_grid is not None:
+            self.normalization_scale = 1.0
+            self.preload_deflections = self.deflections_from_grid(grid=preload_grid)
+
+        self.normalization_scale = normalization_scale
+
+    @grids.grid_like_to_structure
+    def convergence_from_grid(self, grid):
+        return self.convergence_via_jacobian_from_grid(grid=grid)
+
+    @grids.grid_like_to_structure
+    def potential_from_grid(self, grid):
+        return np.zeros(shape=grid.shape[0])
+
+    @grids.grid_like_to_structure
+    def deflections_from_grid(self, grid):
+
+        if self.preload_grid is not None and self.preload_deflections is not None:
+            if grid[0, 0] == self.preload_grid[0, 0]:
+                return self.normalization_scale * self.preload_deflections
+
+        deflections_y = self.normalization_scale * griddata(
+            points=self.image_plane_grid, values=self.deflections_y, xi=grid
+        )
+        deflections_x = self.normalization_scale * griddata(
+            points=self.image_plane_grid, values=self.deflections_x, xi=grid
+        )
+
+        if np.isnan(deflections_y).any() or np.isnan(deflections_x).any():
+            raise exc.ProfileException(
+                "The grid input into the DefectionsInput.deflections_from_grid() method has (y,x)"
+                "coodinates extending beyond the input image_plane_grid."
+                ""
+                "Update the image_plane_grid to include deflection angles reaching to larger"
+                "radii or reduce the input grid. "
+            )
+
+        return np.stack((deflections_y, deflections_x), axis=-1)
