@@ -789,6 +789,7 @@ class Plane(AbstractPlaneData):
             redshift=redshift, galaxies=galaxies, cosmology=cosmology
         )
 
+
 class PlaneImage:
     def __init__(self, array, grid):
         self.array = array

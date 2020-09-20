@@ -2762,6 +2762,7 @@ class TestPlane:
             assert plane.redshift == 1.0
             assert plane.galaxy_redshifts == [1.0, 1.0, 1.0]
 
+
 class TestPlaneImage:
     def test__compute_xticks_from_grid_correctly(self):
 

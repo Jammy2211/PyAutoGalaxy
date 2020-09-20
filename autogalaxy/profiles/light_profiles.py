@@ -51,6 +51,7 @@ class LightProfile:
     ):
         raise NotImplementedError()
 
+
 # noinspection PyAbstractClass
 class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
     """Generic class for an elliptical light profiles"""
@@ -197,6 +198,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
         The axis ratio is set to 1.0 for computing the luminosity within a circle"""
         return 2 * np.pi * x * self.image_from_grid_radii(x)
+
 
 class EllipticalGaussian(EllipticalLightProfile):
     @af.map_types
