@@ -227,7 +227,7 @@ class HyperGalaxyPhase(HyperPhase):
                             image_path=search.paths.image_path,
                         )
 
-                        result = search.fit(model=model, analysis=analysis)
+                        result = search.fit(model=model, analysis=analysis, info=info, pickle_files=pickle_files)
 
                         def transfer_field(name):
                             if hasattr(result._instance, name):

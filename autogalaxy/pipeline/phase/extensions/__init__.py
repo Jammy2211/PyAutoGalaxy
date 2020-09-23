@@ -85,7 +85,7 @@ class CombinedHyperPhase(HyperPhase):
             setattr(result, phase.hyper_name, hyper_result)
 
         setattr(
-            result, self.hyper_name, self.run_hyper(dataset=dataset, results=results)
+            result, self.hyper_name, self.run_hyper(dataset=dataset, results=results, info=info, pickle_files=pickle_files)
         )
         return result
 
