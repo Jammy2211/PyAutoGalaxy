@@ -24,7 +24,7 @@ class TestFitImaging:
             )
             imaging.image[6] = 4.0
 
-            mask = ag.Mask.manual(
+            mask = ag.Mask2D.manual(
                 mask=np.array(
                     [
                         [True, True, True, True],
@@ -128,7 +128,7 @@ class TestFitImaging:
             )
             imaging.image[6] = 4.0
 
-            mask = ag.Mask.manual(
+            mask = ag.Mask2D.manual(
                 mask=np.array(
                     [
                         [True, True, True, True],
@@ -239,7 +239,7 @@ class TestFitImaging:
             )
             imaging.image[6] = 4.0
 
-            mask = ag.Mask.manual(
+            mask = ag.Mask2D.manual(
                 mask=np.array(
                     [
                         [True, True, True, True],
@@ -349,7 +349,7 @@ class TestFitImaging:
             )
             imaging.image[5] = 5.0
 
-            mask = ag.Mask.manual(
+            mask = ag.Mask2D.manual(
                 mask=np.array(
                     [
                         [True, True, True, True],
@@ -457,7 +457,7 @@ class TestFitImaging:
             )
             imaging.image[6] = 4.0
 
-            mask = ag.Mask.manual(
+            mask = ag.Mask2D.manual(
                 mask=np.array(
                     [
                         [True, True, True, True],
@@ -1421,7 +1421,7 @@ class TestFitInterferometer:
 
             visibilities_mask = np.full(fill_value=False, shape=(1, 2))
 
-            real_space_mask = ag.Mask.manual(
+            real_space_mask = ag.Mask2D.manual(
                 mask=np.array(
                     [
                         [True, True, True, True],
@@ -1482,7 +1482,7 @@ class TestFitInterferometer:
 
             visibilities_mask = np.full(fill_value=False, shape=(1, 2))
 
-            real_space_mask = ag.Mask.manual(
+            real_space_mask = ag.Mask2D.manual(
                 mask=np.array(
                     [
                         [True, True, True, True, True],

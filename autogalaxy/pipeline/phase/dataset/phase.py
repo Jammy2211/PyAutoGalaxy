@@ -51,7 +51,7 @@ class PhaseDataset(abstract.AbstractPhase):
 
         Parameters
         ----------
-        mask: Mask
+        mask: Mask2D
             The default masks passed in by the pipeline
         results: autofit.tools.pipeline.ResultsCollection
             An object describing the results of the last phase or None if no phase has been executed
@@ -94,7 +94,7 @@ class PhaseDataset(abstract.AbstractPhase):
 
         Parameters
         ----------
-        mask: Mask
+        mask: Mask2D
             The default masks passed in by the pipeline
         dataset: im.Imaging
             An masked_imaging that has been masked

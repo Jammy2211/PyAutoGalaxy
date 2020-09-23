@@ -1781,7 +1781,7 @@ class TestAbstractPlaneData:
                 pixel_scales=1.0,
             )
 
-            mask = ag.Mask.manual(
+            mask = ag.Mask2D.manual(
                 mask=np.array(
                     [[True, True, True], [True, False, True], [True, True, True]]
                 ),
@@ -2186,7 +2186,7 @@ class TestAbstractPlaneData:
             # -1.6, -0.8, 0.0, 0.8, 1.6. The origin -1.6, -1.6 of the model_galaxy means its brighest pixel should be
             # index 0 of the 1D grid and (0,0) of the 2d plane datas_.
 
-            mask = ag.Mask.unmasked(shape_2d=(5, 5), pixel_scales=1.0, sub_size=1)
+            mask = ag.Mask2D.unmasked(shape_2d=(5, 5), pixel_scales=1.0, sub_size=1)
 
             grid = ag.Grid.from_mask(mask=mask)
 
@@ -2814,7 +2814,7 @@ class TestPlaneImage:
 class TestDecorators:
     def test__grid_iterate_in__iterates_grid_correctly(self, gal_x1_lp):
 
-        mask = ag.Mask.manual(
+        mask = ag.Mask2D.manual(
             mask=[
                 [True, True, True, True, True],
                 [True, False, False, False, True],
@@ -2867,7 +2867,7 @@ class TestDecorators:
 
     def test__grid_iterate_in__iterates_grid_result_correctly(self, gal_x1_mp):
 
-        mask = ag.Mask.manual(
+        mask = ag.Mask2D.manual(
             mask=[
                 [True, True, True, True, True],
                 [True, False, False, False, True],
@@ -2925,7 +2925,7 @@ class TestDecorators:
     def test__grid_interp_in__interps_based_on_intepolate_config(self):
         # False in interpolate.ini
 
-        mask = ag.Mask.manual(
+        mask = ag.Mask2D.manual(
             mask=[
                 [True, True, True, True, True],
                 [True, False, False, False, True],

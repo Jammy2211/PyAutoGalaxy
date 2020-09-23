@@ -68,7 +68,7 @@ class PhaseImaging(dataset.PhaseDataset):
 
         Parameters
         ----------
-        mask: Mask
+        mask: Mask2D
             The default masks passed in by the pipeline
         dataset: im.Imaging
             An masked_imaging that has been masked

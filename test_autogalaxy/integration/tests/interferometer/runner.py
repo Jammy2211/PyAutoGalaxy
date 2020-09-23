@@ -23,7 +23,7 @@ def run(module, test_name=None, search=af.DynestyStatic(), config_folder="config
     )
     grid = instrument_util.grid_from_instrument(instrument=module.instrument)
 
-    real_space_mask = ag.Mask.circular(
+    real_space_mask = ag.Mask2D.circular(
         shape_2d=grid.shape_2d, pixel_scales=pixel_scales, radius=2.0
     )
 

@@ -20,7 +20,7 @@ def run(
     )
 
     if mask is None:
-        mask = ag.Mask.circular(
+        mask = ag.Mask2D.circular(
             shape_2d=imaging.shape_2d, pixel_scales=imaging.pixel_scales, radius=2.0
         )
 

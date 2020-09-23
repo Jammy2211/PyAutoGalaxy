@@ -1877,7 +1877,7 @@ class TestRegression:
 class TestDecorators:
     def test__grid_iterate_in__iterates_array_result_correctly(self, gal_x1_lp):
 
-        mask = ag.Mask.manual(
+        mask = ag.Mask2D.manual(
             mask=[
                 [True, True, True, True, True],
                 [True, False, False, False, True],
@@ -1927,7 +1927,7 @@ class TestDecorators:
 
     def test__grid_iterate_in__iterates_grid_result_correctly(self, gal_x1_mp):
 
-        mask = ag.Mask.manual(
+        mask = ag.Mask2D.manual(
             mask=[
                 [True, True, True, True, True],
                 [True, False, False, False, True],
@@ -1982,7 +1982,7 @@ class TestDecorators:
 
         # False in interpolate.ini
 
-        mask = ag.Mask.manual(
+        mask = ag.Mask2D.manual(
             mask=[
                 [True, True, True, True, True],
                 [True, False, False, False, True],
