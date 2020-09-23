@@ -296,7 +296,7 @@ class AbstractSetupLight:
         Parameters
         ----------
         light_prior_model : af.PriorModel(ag.lp.LightProfile)
-            The _LightProfile_ whose centre may be aligned with the light_centre attribute.
+            The `LightProfile` whose centre may be aligned with the light_centre attribute.
         """
         if self.light_centre is not None:
             light_prior_model.centre = self.light_centre
@@ -602,7 +602,7 @@ class SetupMassTotal(AbstractSetupMass):
         Parameters
         ----------
         mass_profile : mp.MassProfile
-            The _MassProfile_ fitted by the _Pipeline_ (the pipeline must specifically use this option to use this
+            The `MassProfile` fitted by the `Pipeline` (the pipeline must specifically use this option to use this
             mass profile)
         mass_centre : (float, float)
            If input, a fixed (y,x) centre of the mass profile is used which is not treated as a free parameter by the
@@ -688,7 +688,7 @@ class SetupMassTotal(AbstractSetupMass):
         Parameters
         ----------
         mass_prior_model : af.PriorModel(ag.mp.MassProfile)
-            The _MassProfile_ whose centre may be aligned with the _LightProfile_ centre.
+            The `MassProfile` whose centre may be aligned with the `LightProfile` centre.
         """
         if self.align_light_mass_centre:
 
@@ -731,13 +731,13 @@ class SetupMassLightDark(AbstractSetupMass):
            If input, a fixed (y,x) centre of the mass profile is used which is not treated as a free parameter by the
            non-linear search.
         constant_mass_to_light_ratio : bool
-            If True, and the mass model consists of multiple _LightProfile_ and _MassProfile_ coomponents, the
+            If True, and the mass model consists of multiple `LightProfile` and `MassProfile` coomponents, the
             mass-to-light ratio's of all components are fixed to one shared value.
         bulge_mass_to_light_ratio_gradient : bool
-            If True, the bulge _EllipticalSersic_ component of the mass model is altered to include a gradient in its
+            If True, the bulge `EllipticalSersic` component of the mass model is altered to include a gradient in its
             mass-to-light ratio conversion.
         disk_mass_to_light_ratio_gradient : bool
-            If True, the bulge _EllipticalExponential_ component of the mass model is altered to include a gradient in
+            If True, the bulge `EllipticalExponential` component of the mass model is altered to include a gradient in
             its mass-to-light ratio conversion.
         align_light_dark_centre : bool
             If True, and the mass model is a sersic and dark matter model (e.g. EllipticalSersic + SphericalNFW),
@@ -947,8 +947,8 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         The light and mass profile of a bulge component of a galaxy.
 
-        By default, this is returned as an  _EllipticalSersic_ profile without a radial gradient, however
-        the _SetupPipeline_ inputs can be customized to change this to include a radial gradient.
+        By default, this is returned as an  `EllipticalSersic` profile without a radial gradient, however
+        the `SetupPipeline` inputs can be customized to change this to include a radial gradient.
         """
         if not self.bulge_mass_to_light_ratio_gradient:
             return af.PriorModel(lmp.EllipticalSersic)
@@ -959,8 +959,8 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         The light and mass profile of a disk component of a galaxy.
 
-        By default, this is returned as an  _EllipticalExponential_ profile without a radial gradient, however
-        the _SetupPipeline_ inputs can be customized to change this to an _EllipticalSersic_ or to include a radial
+        By default, this is returned as an  `EllipticalExponential` profile without a radial gradient, however
+        the `SetupPipeline` inputs can be customized to change this to an `EllipticalSersic` or to include a radial
         gradient.
         """
 
@@ -978,8 +978,8 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         The light and mass profile of a envelope component of a galaxy.
 
-        By default, this is returned as an  _EllipticalExponential_ profile without a radial gradient, however
-        the _SetupPipeline_ inputs can be customized to change this to an _EllipticalSersic_ or to include a radial
+        By default, this is returned as an  `EllipticalExponential` profile without a radial gradient, however
+        the `SetupPipeline` inputs can be customized to change this to an `EllipticalSersic` or to include a radial
         gradient.
         """
 
@@ -996,14 +996,14 @@ class SetupMassLightDark(AbstractSetupMass):
         self, light_and_mass_prior_models: [af.PriorModel(mp.MassProfile)]
     ):
         """
-        For an input list of _LightMassProfile_'s which will represent a galaxy with a light-dark mass model, set all
+        For an input list of `LightMassProfile`'s which will represent a galaxy with a light-dark mass model, set all
         the mass-to-light ratios of every light and mass profile to the same value if a constant mass-to-light ratio
         is being used, else keep them as free parameters.
 
         Parameters
         ----------
         light_and_mass_prior_models : [af.PriorModel(LightMassProfile)]
-            The _LightMassProfile_'s which have their mass-to-light ratios changed.
+            The `LightMassProfile`'s which have their mass-to-light ratios changed.
         """
 
         if self.constant_mass_to_light_ratio:
@@ -1055,7 +1055,7 @@ class SetupSourceInversion(AbstractSetupSource):
         inversion_pixels_fixed: float = None,
     ):
         """The setup of the source modeling of a pipeline, which controls how PyAutoGalaxy template pipelines runs,
-        for example controlling the _Pixelization_ and _Regularization_ used by a source model which uses an
+        for example controlling the `Pixelization` and `Regularization` used by a source model which uses an
         _Inversion_.
 
         Users can write their own pipelines which do not use or require the *SetupSource* class.
@@ -1067,13 +1067,13 @@ class SetupSourceInversion(AbstractSetupSource):
         Parameters
         ----------
         pixelization : pix.Pixelization or None
-           If the pipeline uses an _Inversion_ to reconstruct the galaxy's light, this determines the
+           If the pipeline uses an `Inversion` to reconstruct the galaxy's light, this determines the
            *Pixelization* used.
         regularization : reg.Regularization or None
-           If the pipeline uses an _Inversion_ to reconstruct the galaxy's light, this determines the
+           If the pipeline uses an `Inversion` to reconstruct the galaxy's light, this determines the
            *Regularization* scheme used.
         inversion_pixels_fixed : float
-            The fixed number of source pixels used by a _Pixelization_ class that takes as input a fixed number of
+            The fixed number of source pixels used by a `Pixelization` class that takes as input a fixed number of
             pixels.
         """
 
@@ -1084,7 +1084,7 @@ class SetupSourceInversion(AbstractSetupSource):
 
     @property
     def model_type(self):
-        """Generate a tag if an _Inversion_ is used to  *Pixelization* used to reconstruct the galaxy's light, which
+        """Generate a tag if an `Inversion` is used to  *Pixelization* used to reconstruct the galaxy's light, which
         is the sum of the pixelization and regularization tags.
         """
         if self._pixelization is None or self.regularization is None:
@@ -1094,7 +1094,7 @@ class SetupSourceInversion(AbstractSetupSource):
 
     @property
     def tag(self):
-        """Generate a tag if an _Inversion_ is used to  *Pixelization* used to reconstruct the galaxy's light, which
+        """Generate a tag if an `Inversion` is used to  *Pixelization* used to reconstruct the galaxy's light, which
         is the sum of the pixelization and regularization tags.
         """
         if self._pixelization is None or self.regularization is None:
@@ -1105,7 +1105,7 @@ class SetupSourceInversion(AbstractSetupSource):
     @property
     def pixelization(self):
         """
-        The _PriorModel_ used to set up the pixelization model in pipelines. This _PriorModel_ has its number of
+        The `PriorModel` used to set up the pixelization model in pipelines. This `PriorModel` has its number of
         pixels fixed to a certain value if the *inversion_pixels_fixed* parameter is input.
         """
         if (
@@ -1120,7 +1120,7 @@ class SetupSourceInversion(AbstractSetupSource):
 
     @property
     def inversion_pixels_fixed_tag(self):
-        """Generate a tag if an _Inversion_ is used to  *Pixelization* used to reconstruct the galaxy's light, which
+        """Generate a tag if an `Inversion` is used to  *Pixelization* used to reconstruct the galaxy's light, which
         is the sum of the pixelization and regularization tags.
         """
         if self.inversion_pixels_fixed is None:
@@ -1203,9 +1203,9 @@ class SetupSMBH:
 
     @property
     def smbh_centre_tag(self):
-        """Generate a tag if the lens mass model includes a _PointMass_ representing a super-massive black hole (smbh).
+        """Generate a tag if the lens mass model includes a `PointMass` representing a super-massive black hole (smbh).
 
-        The tag includes whether the _PointMass_ centre is fixed or fitted for as a free parameter.
+        The tag includes whether the `PointMass` centre is fixed or fitted for as a free parameter.
 
         This changes the setup folder as follows:
 
@@ -1228,7 +1228,7 @@ class SetupSMBH:
 
     def smbh_from_centre(self, centre, centre_sigma=0.1):
         """
-        Create a _PriorModel_ of a _PointMass_ _MassProfile_ if *include_smbh* is True, which is fitted for in the
+        Create a `PriorModel` of a `PointMass` _MassProfile_ if *include_smbh* is True, which is fitted for in the
         mass-model too represent a super-massive black-hole (smbh).
 
         The centre of the smbh is an input parameter of the functiono, and this centre is either fixed to the input
@@ -1237,7 +1237,7 @@ class SetupSMBH:
         Parameters
         ----------
         centre : (float, float)
-            The centre of the _PointMass_ that repreents the super-massive black hole.
+            The centre of the `PointMass` that repreents the super-massive black hole.
         centre_fixed : bool
             If True, the centre is fixed to the input values, else it is fitted for as free parameters.
         centre_sigma : float

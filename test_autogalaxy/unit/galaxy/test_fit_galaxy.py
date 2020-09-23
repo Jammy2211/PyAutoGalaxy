@@ -21,7 +21,7 @@ class TestLikelihood:
 
         galaxy_data = ag.GalaxyData(image=image, noise_map=noise_map, pixel_scales=3.0)
 
-        mask = ag.Mask.manual(
+        mask = ag.Mask2D.manual(
             mask=np.array(
                 [[True, True, True], [True, False, True], [True, True, True]]
             ),
@@ -83,7 +83,7 @@ class TestLikelihood:
 
         galaxy_data = ag.GalaxyData(image=image, noise_map=noise_map, pixel_scales=3.0)
 
-        mask = ag.Mask.manual(
+        mask = ag.Mask2D.manual(
             mask=np.array(
                 [
                     [True, True, True, True],

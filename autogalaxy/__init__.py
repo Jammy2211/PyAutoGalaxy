@@ -1,5 +1,5 @@
 from autoarray import preprocess
-from autoarray.mask.mask import Mask
+from autoarray.mask.mask_2d import Mask2D
 from autoarray.structures.arrays import Array, Values
 from autoarray.structures.grids import (
     Grid,
@@ -77,4 +77,4 @@ from .pipeline.setup import (
 )
 from .util import convert
 
-__version__ = '0.14.11'
+__version__ = '0.14.12'

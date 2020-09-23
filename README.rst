@@ -32,7 +32,7 @@ simple analysis which fits a galaxy's light.
         pixel_scales=0.1)
 
     # Create a mask for the data, which we setup as a 3.0" circle.
-    mask = ag.Mask.circular(shape_2d=imaging.shape_2d, pixel_scales=imaging.pixel_scales, radius=3.0)
+    mask = ag.Mask2D.circular(shape_2d=imaging.shape_2d, pixel_scales=imaging.pixel_scales, radius=3.0)
 
     # We model our galaxy using a light profile (an elliptical Sersic).
     light_profile = ag.lp.EllipticalSersic

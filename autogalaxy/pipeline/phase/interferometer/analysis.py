@@ -1,5 +1,5 @@
 import autofit as af
-from autoarray.exc import InversionException
+from autoarray.exc import PixelizationException, InversionException, GridException
 from autofit.exc import FitException
 from autogalaxy.fit import fit
 from autogalaxy.galaxy import galaxy as g
@@ -74,7 +74,7 @@ class Analysis(analysis_data.Analysis):
             )
 
             return fit.figure_of_merit
-        except InversionException as e:
+        except (PixelizationException, InversionException, GridException) as e:
             raise FitException from e
 
     def associate_hyper_visibilities(

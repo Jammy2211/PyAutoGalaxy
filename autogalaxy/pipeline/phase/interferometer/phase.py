@@ -61,7 +61,7 @@ class PhaseInterferometer(dataset.PhaseDataset):
 
         Parameters
         ----------
-        mask: Mask
+        mask: Mask2D
             The default masks passed in by the pipeline
         dataset: im.Interferometer
             An masked_interferometer that has been masked
