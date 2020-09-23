@@ -1,16 +1,8 @@
 import autogalaxy as ag
+from autogalaxy.pipeline.phase.dataset import PhaseDataset
 
 from test_autoarray.unit.conftest import *
 from test_autogalaxy import mock
-
-directory = path.dirname(path.realpath(__file__))
-
-
-@pytest.fixture(autouse=True)
-def set_config_path():
-    conf.instance = conf.Config(
-        path.join(directory, "config"), path.join(directory, "output")
-    )
 
 
 ############
@@ -364,7 +356,7 @@ def make_samples_with_result():
 
 @pytest.fixture(name="phase_dataset_7x7")
 def make_phase_data(mask_7x7):
-    return ag.PhaseDataset(
+    return PhaseDataset(
         settings=ag.SettingsPhaseImaging(),
         search=mock.MockSearch(
             phase_name="test_phase",

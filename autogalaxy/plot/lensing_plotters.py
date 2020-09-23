@@ -1,42 +1,43 @@
 import copy
-from functools import wraps
 import inspect
+from functools import wraps
 
 import numpy as np
-from autoconf import conf
+
 from autoarray.inversion import mappers
 from autoarray.plot import plotters
+from autoconf import conf
 from autogalaxy import lensing
 from autogalaxy.plot import lensing_mat_objs
 
 
 class LensingPlotter(plotters.AbstractPlotter):
     def __init__(
-        self,
-        module=None,
-        units=None,
-        figure=None,
-        cmap=None,
-        cb=None,
-        legend=None,
-        ticks=None,
-        labels=None,
-        output=None,
-        origin_scatterer=None,
-        mask_scatterer=None,
-        border_scatterer=None,
-        grid_scatterer=None,
-        positions_scatterer=None,
-        index_scatterer=None,
-        pixelization_grid_scatterer=None,
-        array_overlayer=None,
-        liner=None,
-        voronoi_drawer=None,
-        light_profile_centres_scatterer=None,
-        mass_profile_centres_scatterer=None,
-        multiple_images_scatterer=None,
-        critical_curves_liner=None,
-        caustics_liner=None,
+            self,
+            module=None,
+            units=None,
+            figure=None,
+            cmap=None,
+            cb=None,
+            legend=None,
+            ticks=None,
+            labels=None,
+            output=None,
+            origin_scatterer=None,
+            mask_scatterer=None,
+            border_scatterer=None,
+            grid_scatterer=None,
+            positions_scatterer=None,
+            index_scatterer=None,
+            pixelization_grid_scatterer=None,
+            array_overlayer=None,
+            liner=None,
+            voronoi_drawer=None,
+            light_profile_centres_scatterer=None,
+            mass_profile_centres_scatterer=None,
+            multiple_images_scatterer=None,
+            critical_curves_liner=None,
+            caustics_liner=None,
     ):
 
         super(LensingPlotter, self).__init__(
@@ -105,12 +106,12 @@ class LensingPlotter(plotters.AbstractPlotter):
         )
 
     def plot_lensing_attributes(
-        self,
-        light_profile_centres=None,
-        mass_profile_centres=None,
-        multiple_images=None,
-        critical_curves=None,
-        caustics=None,
+            self,
+            light_profile_centres=None,
+            mass_profile_centres=None,
+            multiple_images=None,
+            critical_curves=None,
+            caustics=None,
     ):
 
         if light_profile_centres is not None:
@@ -135,21 +136,21 @@ class LensingPlotter(plotters.AbstractPlotter):
             self.caustics_liner.draw_coordinates(coordinates=caustics)
 
     def plot_array(
-        self,
-        array,
-        mask=None,
-        positions=None,
-        grid=None,
-        lines=None,
-        array_overlay=None,
-        light_profile_centres=None,
-        mass_profile_centres=None,
-        multiple_images=None,
-        critical_curves=None,
-        caustics=None,
-        include_origin=False,
-        include_border=False,
-        bypass_output=False,
+            self,
+            array,
+            mask=None,
+            positions=None,
+            grid=None,
+            lines=None,
+            array_overlay=None,
+            light_profile_centres=None,
+            mass_profile_centres=None,
+            multiple_images=None,
+            critical_curves=None,
+            caustics=None,
+            include_origin=False,
+            include_border=False,
+            bypass_output=False,
     ):
         """Plot an array of data as a figure.
 
@@ -292,21 +293,21 @@ class LensingPlotter(plotters.AbstractPlotter):
             self.figure.close()
 
     def plot_grid(
-        self,
-        grid,
-        color_array=None,
-        axis_limits=None,
-        indexes=None,
-        positions=None,
-        light_profile_centres=None,
-        mass_profile_centres=None,
-        multiple_images=None,
-        critical_curves=None,
-        caustics=None,
-        include_origin=False,
-        include_border=False,
-        symmetric_around_centre=True,
-        bypass_output=False,
+            self,
+            grid,
+            color_array=None,
+            axis_limits=None,
+            indexes=None,
+            positions=None,
+            light_profile_centres=None,
+            mass_profile_centres=None,
+            multiple_images=None,
+            critical_curves=None,
+            caustics=None,
+            include_origin=False,
+            include_border=False,
+            symmetric_around_centre=True,
+            bypass_output=False,
     ):
         """Plot a grid of (y,x) Cartesian coordinates as a scatter plotters of points.
 
@@ -376,14 +377,14 @@ class LensingPlotter(plotters.AbstractPlotter):
             self.figure.close()
 
     def plot_line(
-        self,
-        y,
-        x,
-        label=None,
-        plot_axis_type="semilogy",
-        vertical_lines=None,
-        vertical_line_labels=None,
-        bypass_output=False,
+            self,
+            y,
+            x,
+            label=None,
+            plot_axis_type="semilogy",
+            vertical_lines=None,
+            vertical_line_labels=None,
+            bypass_output=False,
     ):
 
         super(LensingPlotter, self).plot_line(
@@ -403,22 +404,22 @@ class LensingPlotter(plotters.AbstractPlotter):
             self.figure.close()
 
     def plot_mapper(
-        self,
-        mapper,
-        source_pixel_values=None,
-        positions=None,
-        light_profile_centres=None,
-        mass_profile_centres=None,
-        multiple_images=None,
-        critical_curves=None,
-        caustics=None,
-        include_origin=False,
-        include_pixelization_grid=False,
-        include_grid=False,
-        include_border=False,
-        image_pixel_indexes=None,
-        source_pixel_indexes=None,
-        bypass_output=False,
+            self,
+            mapper,
+            source_pixel_values=None,
+            positions=None,
+            light_profile_centres=None,
+            mass_profile_centres=None,
+            multiple_images=None,
+            critical_curves=None,
+            caustics=None,
+            include_origin=False,
+            include_pixelization_grid=False,
+            include_grid=False,
+            include_border=False,
+            image_pixel_indexes=None,
+            source_pixel_indexes=None,
+            bypass_output=False,
     ):
 
         if isinstance(mapper, mappers.MapperRectangular):
@@ -460,22 +461,22 @@ class LensingPlotter(plotters.AbstractPlotter):
             )
 
     def plot_rectangular_mapper(
-        self,
-        mapper,
-        source_pixel_values=None,
-        positions=None,
-        light_profile_centres=None,
-        mass_profile_centres=None,
-        multiple_images=None,
-        critical_curves=None,
-        caustics=None,
-        include_origin=False,
-        include_pixelization_grid=False,
-        include_grid=False,
-        include_border=False,
-        image_pixel_indexes=None,
-        source_pixel_indexes=None,
-        bypass_output=False,
+            self,
+            mapper,
+            source_pixel_values=None,
+            positions=None,
+            light_profile_centres=None,
+            mass_profile_centres=None,
+            multiple_images=None,
+            critical_curves=None,
+            caustics=None,
+            include_origin=False,
+            include_pixelization_grid=False,
+            include_grid=False,
+            include_border=False,
+            image_pixel_indexes=None,
+            source_pixel_indexes=None,
+            bypass_output=False,
     ):
 
         super(LensingPlotter, self).plot_rectangular_mapper(
@@ -506,22 +507,22 @@ class LensingPlotter(plotters.AbstractPlotter):
             self.figure.close()
 
     def plot_voronoi_mapper(
-        self,
-        mapper,
-        source_pixel_values=None,
-        positions=None,
-        light_profile_centres=None,
-        mass_profile_centres=None,
-        multiple_images=None,
-        critical_curves=None,
-        caustics=None,
-        include_origin=False,
-        include_pixelization_grid=False,
-        include_grid=False,
-        include_border=False,
-        image_pixel_indexes=None,
-        source_pixel_indexes=None,
-        bypass_output=False,
+            self,
+            mapper,
+            source_pixel_values=None,
+            positions=None,
+            light_profile_centres=None,
+            mass_profile_centres=None,
+            multiple_images=None,
+            critical_curves=None,
+            caustics=None,
+            include_origin=False,
+            include_pixelization_grid=False,
+            include_grid=False,
+            include_border=False,
+            image_pixel_indexes=None,
+            source_pixel_indexes=None,
+            bypass_output=False,
     ):
 
         super(LensingPlotter, self).plot_voronoi_mapper(
@@ -554,33 +555,32 @@ class LensingPlotter(plotters.AbstractPlotter):
 
 class Plotter(LensingPlotter, plotters.Plotter):
     def __init__(
-        self,
-        module=None,
-        units=None,
-        figure=None,
-        cmap=None,
-        cb=None,
-        ticks=None,
-        labels=None,
-        legend=None,
-        output=None,
-        origin_scatterer=None,
-        mask_scatterer=None,
-        border_scatterer=None,
-        grid_scatterer=None,
-        positions_scatterer=None,
-        index_scatterer=None,
-        pixelization_grid_scatterer=None,
-        array_overlayer=None,
-        liner=None,
-        voronoi_drawer=None,
-        light_profile_centres_scatterer=None,
-        mass_profile_centres_scatterer=None,
-        multiple_images_scatterer=None,
-        critical_curves_liner=None,
-        caustics_liner=None,
+            self,
+            module=None,
+            units=None,
+            figure=None,
+            cmap=None,
+            cb=None,
+            ticks=None,
+            labels=None,
+            legend=None,
+            output=None,
+            origin_scatterer=None,
+            mask_scatterer=None,
+            border_scatterer=None,
+            grid_scatterer=None,
+            positions_scatterer=None,
+            index_scatterer=None,
+            pixelization_grid_scatterer=None,
+            array_overlayer=None,
+            liner=None,
+            voronoi_drawer=None,
+            light_profile_centres_scatterer=None,
+            mass_profile_centres_scatterer=None,
+            multiple_images_scatterer=None,
+            critical_curves_liner=None,
+            caustics_liner=None,
     ):
-
         super(Plotter, self).__init__(
             module=module,
             units=units,
@@ -611,33 +611,32 @@ class Plotter(LensingPlotter, plotters.Plotter):
 
 class SubPlotter(LensingPlotter, plotters.SubPlotter):
     def __init__(
-        self,
-        module=None,
-        units=None,
-        figure=None,
-        cmap=None,
-        cb=None,
-        legend=None,
-        ticks=None,
-        labels=None,
-        output=None,
-        origin_scatterer=None,
-        mask_scatterer=None,
-        border_scatterer=None,
-        grid_scatterer=None,
-        positions_scatterer=None,
-        index_scatterer=None,
-        pixelization_grid_scatterer=None,
-        array_overlayer=None,
-        liner=None,
-        voronoi_drawer=None,
-        light_profile_centres_scatterer=None,
-        mass_profile_centres_scatterer=None,
-        multiple_images_scatterer=None,
-        critical_curves_liner=None,
-        caustics_liner=None,
+            self,
+            module=None,
+            units=None,
+            figure=None,
+            cmap=None,
+            cb=None,
+            legend=None,
+            ticks=None,
+            labels=None,
+            output=None,
+            origin_scatterer=None,
+            mask_scatterer=None,
+            border_scatterer=None,
+            grid_scatterer=None,
+            positions_scatterer=None,
+            index_scatterer=None,
+            pixelization_grid_scatterer=None,
+            array_overlayer=None,
+            liner=None,
+            voronoi_drawer=None,
+            light_profile_centres_scatterer=None,
+            mass_profile_centres_scatterer=None,
+            multiple_images_scatterer=None,
+            critical_curves_liner=None,
+            caustics_liner=None,
     ):
-
         super(SubPlotter, self).__init__(
             module=module,
             units=units,
@@ -668,23 +667,23 @@ class SubPlotter(LensingPlotter, plotters.SubPlotter):
 
 class Include(plotters.Include):
     def __init__(
-        self,
-        origin=None,
-        mask=None,
-        grid=None,
-        border=None,
-        positions=None,
-        light_profile_centres=None,
-        mass_profile_centres=None,
-        critical_curves=None,
-        caustics=None,
-        multiple_images=None,
-        inversion_pixelization_grid=None,
-        inversion_grid=None,
-        inversion_border=None,
-        inversion_image_pixelization_grid=None,
-        preloaded_critical_curves=None,
-        preload_caustics=None,
+            self,
+            origin=None,
+            mask=None,
+            grid=None,
+            border=None,
+            positions=None,
+            light_profile_centres=None,
+            mass_profile_centres=None,
+            critical_curves=None,
+            caustics=None,
+            multiple_images=None,
+            inversion_pixelization_grid=None,
+            inversion_grid=None,
+            inversion_border=None,
+            inversion_image_pixelization_grid=None,
+            preloaded_critical_curves=None,
+            preload_caustics=None,
     ):
 
         super(Include, self).__init__(
@@ -719,14 +718,9 @@ class Include(plotters.Include):
 
     @staticmethod
     def load_include(value, name):
-
-        return (
-            conf.instance.visualize_general.get(
-                section_name="include", attribute_name=name, attribute_type=bool
-            )
-            if value is None
-            else value
-        )
+        if value is not None:
+            return value
+        return conf.instance["visualize"]["general"]["include"][name]
 
     def positions_from_masked_dataset(self, masked_dataset):
 
@@ -826,7 +820,7 @@ class Include(plotters.Include):
                     )[-1]
 
     def new_include_with_preloaded_critical_curves_and_caustics(
-        self, preloaded_critical_curves, preloaded_caustics
+            self, preloaded_critical_curves, preloaded_caustics
     ):
 
         include = copy.deepcopy(self)
@@ -895,20 +889,19 @@ def set_include_and_sub_plotter(func):
 
 
 def plot_array(
-    array,
-    mask=None,
-    positions=None,
-    grid=None,
-    array_overlay=None,
-    light_profile_centres=None,
-    mass_profile_centres=None,
-    multiple_images=None,
-    critical_curves=None,
-    caustics=None,
-    include=None,
-    plotter=None,
+        array,
+        mask=None,
+        positions=None,
+        grid=None,
+        array_overlay=None,
+        light_profile_centres=None,
+        mass_profile_centres=None,
+        multiple_images=None,
+        critical_curves=None,
+        caustics=None,
+        include=None,
+        plotter=None,
 ):
-
     if include is None:
         include = Include()
 
@@ -932,21 +925,20 @@ def plot_array(
 
 
 def plot_grid(
-    grid,
-    color_array=None,
-    axis_limits=None,
-    indexes=None,
-    positions=None,
-    light_profile_centres=None,
-    mass_profile_centres=None,
-    multiple_images=None,
-    critical_curves=None,
-    caustics=None,
-    symmetric_around_centre=True,
-    include=None,
-    plotter=None,
+        grid,
+        color_array=None,
+        axis_limits=None,
+        indexes=None,
+        positions=None,
+        light_profile_centres=None,
+        mass_profile_centres=None,
+        multiple_images=None,
+        critical_curves=None,
+        caustics=None,
+        symmetric_around_centre=True,
+        include=None,
+        plotter=None,
 ):
-
     if include is None:
         include = Include()
 
@@ -971,15 +963,14 @@ def plot_grid(
 
 
 def plot_line(
-    y,
-    x,
-    label=None,
-    plot_axis_type="semilogy",
-    vertical_lines=None,
-    vertical_line_labels=None,
-    plotter=None,
+        y,
+        x,
+        label=None,
+        plot_axis_type="semilogy",
+        vertical_lines=None,
+        vertical_line_labels=None,
+        plotter=None,
 ):
-
     if plotter is None:
         plotter = Plotter()
 
@@ -994,18 +985,17 @@ def plot_line(
 
 
 def plot_mapper_obj(
-    mapper,
-    light_profile_centres=None,
-    mass_profile_centres=None,
-    multiple_images=None,
-    critical_curves=None,
-    caustics=None,
-    image_pixel_indexes=None,
-    source_pixel_indexes=None,
-    include=None,
-    plotter=None,
+        mapper,
+        light_profile_centres=None,
+        mass_profile_centres=None,
+        multiple_images=None,
+        critical_curves=None,
+        caustics=None,
+        image_pixel_indexes=None,
+        source_pixel_indexes=None,
+        include=None,
+        plotter=None,
 ):
-
     if include is None:
         include = Include()
 

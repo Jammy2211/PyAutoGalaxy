@@ -8,7 +8,24 @@ from .dataset.interferometer import (
     SettingsMaskedInterferometer,
     SimulatorInterferometer,
 )
-from autoarray import Grid
+from autoarray import GridIterate
+from autoarray import Mask2D
+from autoarray import GridCoordinates
+from autoarray import TransformerDFT
+from autoarray import pix
+from autoarray.structures.arrays import Array
+from autoarray.structures.grids import (
+    Grid,
+    GridRectangular,
+    GridVoronoi,
+)
+from autoarray.structures.kernel import Kernel
+from autoarray.structures.visibilities import Visibilities
+from autoarray.dataset.imaging import Imaging
+from autoarray.dataset.interferometer import Interferometer
+from autoarray.operators.convolver import Convolver
+from autoconf import conf
+
 from .fit.fit import FitImaging, FitInterferometer
 from .galaxy.fit_galaxy import FitGalaxy
 from .galaxy.galaxy import Galaxy, HyperGalaxy, Redshift
