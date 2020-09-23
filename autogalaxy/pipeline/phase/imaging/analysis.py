@@ -1,4 +1,4 @@
-from autoarray.exc import InversionException, GridException
+from autoarray.exc import PixelizationException, InversionException, GridException
 from autofit.exc import FitException
 from autogalaxy.fit import fit
 from autogalaxy.pipeline import visualizer
@@ -61,7 +61,7 @@ class Analysis(analysis_dataset.Analysis):
             )
 
             return fit.figure_of_merit
-        except InversionException or GridException as e:
+        except (PixelizationException, InversionException, GridException) as e:
             raise FitException from e
 
     def masked_imaging_fit_for_plane(

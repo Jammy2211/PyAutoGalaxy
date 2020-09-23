@@ -789,66 +789,6 @@ class Plane(AbstractPlaneData):
             redshift=redshift, galaxies=galaxies, cosmology=cosmology
         )
 
-    # noinspection PyUnusedLocal
-    def summarize_in_units(
-        self,
-        radii,
-        whitespace=80,
-        unit_length="arcsec",
-        unit_luminosity="eps",
-        unit_mass="angular",
-        redshift_source=None,
-        **kwargs,
-    ):
-
-        summary = ["Plane\n"]
-        prefix_plane = ""
-
-        summary += [
-            af.formatter.parameter_result_string_from(
-                parameter_name=prefix_plane + "redshift",
-                value=self.redshift,
-                whitespace=whitespace,
-                format_string="{:.2f}",
-            )
-        ]
-
-        summary += [
-            af.formatter.parameter_result_string_from(
-                parameter_name=prefix_plane + "kpc_per_arcsec",
-                value=self.kpc_per_arcsec,
-                whitespace=whitespace,
-                format_string="{:.2f}",
-            )
-        ]
-
-        angular_diameter_distance_to_earth = self.angular_diameter_distance_to_earth_in_units(
-            unit_length=unit_length
-        )
-
-        summary += [
-            af.formatter.parameter_result_string_from(
-                parameter_name=prefix_plane + "angular_diameter_distance_to_earth",
-                value=angular_diameter_distance_to_earth,
-                whitespace=whitespace,
-                format_string="{:.2f}",
-            )
-        ]
-
-        for galaxy in self.galaxies:
-            summary += ["\n"]
-            summary += galaxy.summarize_in_units(
-                radii=radii,
-                whitespace=whitespace,
-                unit_length=unit_length,
-                unit_luminosity=unit_luminosity,
-                unit_mass=unit_mass,
-                redshift_source=redshift_source,
-                cosmology=self.cosmology,
-            )
-
-        return summary
-
 
 class PlaneImage:
     def __init__(self, array, grid):

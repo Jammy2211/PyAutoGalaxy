@@ -16,11 +16,11 @@ def run(
     conf.instance = conf.Config(config_path=config_path, output_path=output_path)
 
     imaging = instrument_util.load_test_imaging(
-        data_name=module.data_name, instrument=module.instrument, name="test_dataset"
+        data_name=module.dataset_name, instrument=module.instrument, name="test_dataset"
     )
 
     if mask is None:
-        mask = ag.Mask.circular(
+        mask = ag.Mask2D.circular(
             shape_2d=imaging.shape_2d, pixel_scales=imaging.pixel_scales, radius=2.0
         )
 

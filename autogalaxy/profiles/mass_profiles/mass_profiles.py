@@ -29,19 +29,6 @@ class MassProfile(lensing.LensingObject):
     def ellipticity_rescale(self):
         return NotImplementedError()
 
-    def summarize_in_units(
-        self,
-        radii,
-        prefix="",
-        unit_length="arcsec",
-        unit_mass="solMass",
-        redshift_profile=None,
-        redshift_source=None,
-        cosmology=cosmo.Planck15,
-        whitespace=80,
-    ):
-        return ["Mass Profile = {}\n".format(self.__class__.__name__)]
-
     @property
     def is_mass_sheet(self):
         return False
@@ -231,78 +218,3 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         )
         radius = dim.Length(radius, unit_length)
         return radius.convert(unit_length=unit_length, kpc_per_arcsec=kpc_per_arcsec)
-
-    def summarize_in_units(
-        self,
-        radii,
-        prefix="",
-        whitespace=80,
-        unit_length="arcsec",
-        unit_mass="solMass",
-        redshift_profile=None,
-        redshift_source=None,
-        cosmology=cosmo.Planck15,
-    ):
-
-        summary = super().summarize_in_units(
-            radii=radii,
-            prefix="",
-            unit_length=unit_length,
-            unit_mass=unit_mass,
-            redshift_profile=redshift_profile,
-            redshift_source=redshift_source,
-            cosmology=cosmology,
-        )
-
-        einstein_radius = self.einstein_radius_in_units(
-            unit_length=unit_length,
-            redshift_object=redshift_profile,
-            cosmology=cosmology,
-        )
-
-        summary += [
-            formatter.parameter_result_string_from(
-                parameter_name=prefix + "einstein_radius",
-                value=einstein_radius,
-                unit=unit_length,
-                whitespace=whitespace,
-            )
-        ]
-
-        einstein_mass = self.einstein_mass_in_units(
-            unit_mass=unit_mass,
-            redshift_object=redshift_profile,
-            redshift_source=redshift_source,
-            cosmology=cosmology,
-        )
-
-        summary += [
-            formatter.parameter_result_string_from(
-                parameter_name=prefix + "einstein_mass",
-                value=einstein_mass,
-                unit=unit_mass,
-                whitespace=whitespace,
-            )
-        ]
-
-        for radius in radii:
-            mass = self.mass_within_circle_in_units(
-                unit_mass=unit_mass,
-                radius=radius,
-                redshift_object=redshift_profile,
-                redshift_source=redshift_source,
-                cosmology=cosmology,
-            )
-
-            summary += [
-                formatter.within_radius_label_value_and_unit_string(
-                    prefix=prefix + "mass",
-                    radius=radius,
-                    unit_length=unit_length,
-                    value=mass,
-                    unit_value=unit_mass,
-                    whitespace=whitespace,
-                )
-            ]
-
-        return summary

@@ -1600,154 +1600,6 @@ class TestMassAndLightProfiles:
         assert 2 == len(gal_multi_profiles.mass_profiles)
 
 
-class TestSummarizeInUnits:
-    def test__galaxy_with_two_light_and_mass_profiles(self, lp_0, lp_1, mp_0, mp_1):
-
-        test_path = "{}/config/summary".format(
-            os.path.dirname(os.path.realpath(__file__))
-        )
-        conf.instance = conf.Config(config_path=test_path)
-
-        gal_summarize = ag.Galaxy(
-            redshift=0.5,
-            light_profile_0=lp_0,
-            light_profile_1=lp_1,
-            mass_profile_0=mp_0,
-            mass_profile_1=mp_1,
-        )
-
-        summary_text = gal_summarize.summarize_in_units(
-            radii=[ag.dim.Length(10.0), ag.dim.Length(500.0)],
-            whitespace=50,
-            unit_length="arcsec",
-            unit_luminosity="eps",
-            unit_mass="angular",
-        )
-
-        i = 0
-
-        assert summary_text[i] == "Galaxy\n"
-        i += 1
-        assert (
-            summary_text[i] == "redshift                                          0.50"
-        )
-        i += 1
-        assert summary_text[i] == "\nGALAXY LIGHT\n\n"
-        i += 1
-        assert (
-            summary_text[i]
-            == "luminosity_within_10.00_arcsec                    1.8854e+02 eps"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "luminosity_within_500.00_arcsec                   1.9573e+02 eps"
-        )
-        i += 1
-        assert summary_text[i] == "\nLIGHT PROFILES:\n\n"
-        i += 1
-        assert summary_text[i] == "Light Profile = SphericalSersic\n"
-        i += 1
-        assert (
-            summary_text[i]
-            == "luminosity_within_10.00_arcsec                    6.2848e+01 eps"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "luminosity_within_500.00_arcsec                   6.5243e+01 eps"
-        )
-        i += 1
-        assert summary_text[i] == "\n"
-        i += 1
-        assert summary_text[i] == "Light Profile = SphericalSersic\n"
-        i += 1
-        assert (
-            summary_text[i]
-            == "luminosity_within_10.00_arcsec                    1.2570e+02 eps"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "luminosity_within_500.00_arcsec                   1.3049e+02 eps"
-        )
-        i += 1
-        assert summary_text[i] == "\n"
-        i += 1
-        assert summary_text[i] == "\nGALAXY MASS\n\n"
-        i += 1
-        assert (
-            summary_text[i]
-            == "einstein_radius                                   2.99 arcsec"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "einstein_mass                                     2.8177e+01 angular"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "mass_within_10.00_arcsec                          9.4248e+01 angular"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "mass_within_500.00_arcsec                         4.7124e+03 angular"
-        )
-        i += 1
-        assert summary_text[i] == "\nMASS PROFILES:\n\n"
-        i += 1
-        assert summary_text[i] == "Mass Profile = SphericalIsothermal\n"
-        i += 1
-        assert (
-            summary_text[i]
-            == "einstein_radius                                   1.00 arcsec"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "einstein_mass                                     3.1308e+00 angular"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "mass_within_10.00_arcsec                          3.1416e+01 angular"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "mass_within_500.00_arcsec                         1.5708e+03 angular"
-        )
-        i += 1
-        assert summary_text[i] == "\n"
-        i += 1
-        assert summary_text[i] == "Mass Profile = SphericalIsothermal\n"
-        i += 1
-        assert (
-            summary_text[i]
-            == "einstein_radius                                   2.00 arcsec"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "einstein_mass                                     1.2523e+01 angular"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "mass_within_10.00_arcsec                          6.2832e+01 angular"
-        )
-        i += 1
-        assert (
-            summary_text[i]
-            == "mass_within_500.00_arcsec                         3.1416e+03 angular"
-        )
-        i += 1
-        assert summary_text[i] == "\n"
-        i += 1
-
-
 class TestHyperGalaxy:
     class TestContributionMaps:
         def test__model_image_all_1s__factor_is_0__contributions_all_1s(self):
@@ -2025,7 +1877,7 @@ class TestRegression:
 class TestDecorators:
     def test__grid_iterate_in__iterates_array_result_correctly(self, gal_x1_lp):
 
-        mask = ag.Mask.manual(
+        mask = ag.Mask2D.manual(
             mask=[
                 [True, True, True, True, True],
                 [True, False, False, False, True],
@@ -2075,7 +1927,7 @@ class TestDecorators:
 
     def test__grid_iterate_in__iterates_grid_result_correctly(self, gal_x1_mp):
 
-        mask = ag.Mask.manual(
+        mask = ag.Mask2D.manual(
             mask=[
                 [True, True, True, True, True],
                 [True, False, False, False, True],
@@ -2130,7 +1982,7 @@ class TestDecorators:
 
         # False in interpolate.ini
 
-        mask = ag.Mask.manual(
+        mask = ag.Mask2D.manual(
             mask=[
                 [True, True, True, True, True],
                 [True, False, False, False, True],
