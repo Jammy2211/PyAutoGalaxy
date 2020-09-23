@@ -126,7 +126,7 @@ class InputDeflections(mp.MassProfile):
         image_plane_grid,
         preload_grid=None,
         preload_blurring_grid=None,
-  #      normalization_scale: float = 1.0,
+        #      normalization_scale: float = 1.0,
     ):
         """
         Represents a known deflection angle map (e.g. from an already performed lens model or particle simulation
@@ -172,9 +172,11 @@ class InputDeflections(mp.MassProfile):
 
         if self.preload_blurring_grid is not None:
             self.normalization_scale = 1.0
-            self.preload_blurring_deflections = self.deflections_from_grid(grid=preload_blurring_grid)
+            self.preload_blurring_deflections = self.deflections_from_grid(
+                grid=preload_blurring_grid
+            )
 
-        self.normalization_scale = 1.0 # normalization_scale
+        self.normalization_scale = 1.0  # normalization_scale
 
     @grids.grid_like_to_structure
     def convergence_from_grid(self, grid):
@@ -193,7 +195,10 @@ class InputDeflections(mp.MassProfile):
                 if np.allclose(grid, self.preload_grid, 1e-8):
                     return self.normalization_scale * self.preload_deflections
 
-        if self.preload_blurring_grid is not None and self.preload_blurring_deflections is not None:
+        if (
+            self.preload_blurring_grid is not None
+            and self.preload_blurring_deflections is not None
+        ):
 
             if grid.sub_shape_1d == self.preload_blurring_grid.sub_shape_1d:
                 if np.allclose(grid, self.preload_blurring_grid, 1e-8):
