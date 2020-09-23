@@ -167,7 +167,7 @@ class LensingPlotter(plotters.AbstractPlotter):
             The 2D array of data which is plotted.
         origin : (float, float).
             The origin of the coordinate system of the array, which is plotted as an 'x' on the image if input.
-        mask : data.array.mask.Mask
+        mask : data.array.mask.Mask2D
             The mask applied to the array, the edge of which is plotted as a set of points over the plotted array.
         extract_array_from_mask : bool
             The plotter array is extracted using the mask, such that masked values are plotted as zeros. This ensures \

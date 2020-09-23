@@ -35,4 +35,4 @@ from .stellar_mass_profiles import (
     EllipticalSersicRadialGradient,
     SphericalSersicRadialGradient,
 )
-from .mass_sheets import ExternalShear, MassSheet
+from .mass_sheets import ExternalShear, MassSheet, InputDeflections

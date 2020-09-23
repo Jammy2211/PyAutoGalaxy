@@ -6,6 +6,10 @@ class CosmologyException(Exception):
     pass
 
 
+class ProfileException(Exception):
+    pass
+
+
 class GalaxyException(Exception):
     pass
 

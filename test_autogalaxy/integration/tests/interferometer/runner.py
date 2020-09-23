@@ -15,7 +15,7 @@ def run(module, test_name=None, search=af.DynestyStatic(), config_folder="config
     conf.instance = conf.Config(config_path=config_path, output_path=output_path)
 
     interferometer = instrument_util.load_test_interferometer(
-        data_name=module.data_name, instrument=module.instrument
+        data_name=module.dataset_name, instrument=module.instrument
     )
 
     pixel_scales = instrument_util.pixel_scale_from_instrument(
@@ -23,7 +23,7 @@ def run(module, test_name=None, search=af.DynestyStatic(), config_folder="config
     )
     grid = instrument_util.grid_from_instrument(instrument=module.instrument)
 
-    real_space_mask = ag.Mask.circular(
+    real_space_mask = ag.Mask2D.circular(
         shape_2d=grid.shape_2d, pixel_scales=pixel_scales, radius=2.0
     )
 

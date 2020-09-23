@@ -5,10 +5,6 @@ from autogalaxy.aggregator.aggregator import (
 from autogalaxy.aggregator.aggregator import (
     fit_interferometer_generator_from_aggregator as FitInterferometer,
 )
-from autogalaxy.aggregator.aggregator import grid_search_result_as_array
-from autogalaxy.aggregator.aggregator import (
-    grid_search_result_as_array_from_grid_search_result,
-)
 from autogalaxy.aggregator.aggregator import masked_imaging_from_agg_obj
 from autogalaxy.aggregator.aggregator import (
     masked_imaging_generator_from_aggregator as MaskedImaging,

@@ -392,31 +392,6 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     def ellipticity_rescale(self):
         return (1.0 + self.axis_ratio) / 2.0
 
-    def summarize_in_units(
-        self,
-        radii,
-        prefix="",
-        whitespace=80,
-        unit_length="arcsec",
-        unit_mass="solMass",
-        redshift_profile=None,
-        redshift_source=None,
-        cosmology=cosmo.Planck15,
-        **kwargs
-    ):
-        summary = super().summarize_in_units(
-            radii=radii,
-            prefix=prefix,
-            unit_length=unit_length,
-            unit_mass=unit_mass,
-            redshift_profile=redshift_profile,
-            redshift_source=redshift_source,
-            cosmology=cosmology,
-            whitespace=whitespace,
-        )
-
-        return summary
-
     @property
     def unit_mass(self):
         return "angular"
