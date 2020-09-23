@@ -1,8 +1,7 @@
 import autofit as af
 import numpy as np
 from astropy import cosmology as cosmo
-from autoarray.inversion import pixelizations as pix
-from autoarray.inversion import inversions as inv
+from autoarray.operators.inversion import pixelizations as pix, inversions as inv
 from autoarray.structures import arrays, grids, visibilities as vis
 from autogalaxy import dimensions as dim
 from autogalaxy import exc
