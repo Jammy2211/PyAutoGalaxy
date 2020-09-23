@@ -10,4 +10,3 @@ from autoarray.util import mapper_util as mapper
 from autoarray.util import inversion_util as inversion
 from autoarray.util import transformer_util as transformer
 from ..util import cosmology_util as cosmology
-from ..util import plane_util as plane
