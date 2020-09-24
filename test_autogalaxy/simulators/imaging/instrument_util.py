@@ -30,7 +30,7 @@ def pixel_scale_from_instrument(instrument):
 
 
 def grid_from_instrument(instrument):
-    """Determine the *Grid* from an instrument type based on real observations.
+    """Determine the `Grid` from an instrument type based on real observations.
 
     These options are representative of VRO, Euclid, HST, over-sampled HST and Adaptive Optics image.
 

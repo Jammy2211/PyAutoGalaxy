@@ -2,7 +2,7 @@ import autogalaxy as ag
 
 
 def plane_generator_from_aggregator(aggregator):
-    """Compute a generator of *Plane* objects from an input aggregator, which generates a list of the *Plane* objects 
+    """Compute a generator of `Plane` objects from an input aggregator, which generates a list of the `Plane` objects
     for every set of results loaded in the aggregator.
 
     This is performed by mapping the *plane_from_agg_obj* with the aggregator, which sets up each plane using only
@@ -16,11 +16,11 @@ def plane_generator_from_aggregator(aggregator):
 
 
 def plane_from_agg_obj(agg_obj):
-    """Compute a *Plane* object from an aggregator's *PhaseOutput* class, which we call an 'agg_obj' to describe that
+    """Compute a `Plane` object from an aggregator's *PhaseOutput* class, which we call an 'agg_obj' to describe that
      it acts as the aggregator object for one result in the *Aggregator*. This uses the aggregator's generator outputs
-     such that the function can use the *Aggregator*'s map function to to create a *Plane* generator.
+     such that the function can use the *Aggregator*'s map function to to create a `Plane` generator.
 
-     The *Plane* is created following the same method as the PyAutoGalaxy *Phase* classes using an instance of the
+     The `Plane` is created following the same method as the PyAutoGalaxy *Phase* classes using an instance of the
      maximum log likelihood model's galaxies. These galaxies have their hyper-images added (if they were used in the
      fit) and passed into a Plane object.
 

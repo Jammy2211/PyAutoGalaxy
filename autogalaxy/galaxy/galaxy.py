@@ -147,7 +147,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def light_profile_centres(self):
-        """Returns the light profile centres of the galaxy as a *GridCoordinates* object, which structures the centres
+        """Returns the light profile centres of the galaxy as a `GridCoordinates` object, which structures the centres
         in lists according to which light profile they come from. 
         
         Fo example, if a galaxy has two light profiles, the first with one centre and second with two centres this 
@@ -158,7 +158,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         This is used for visualization, for example plotting the centres of all light profiles colored by their profile.
 
         NOTE: Currently, no light profiles can have more than one centre (it unlikely one ever will). The structure of 
-        the output follows this convention to follow other methods in the *Galaxy* class that return profile 
+        the output follows this convention to follow other methods in the `Galaxy` class that return profile
         attributes."""
 
         centres = [[light_profile.centre] for light_profile in self.light_profiles]
@@ -175,7 +175,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def mass_profile_centres(self):
-        """Returns the mass profile centres of the galaxy as a *GridCoordinates* object, which structures the centres
+        """Returns the mass profile centres of the galaxy as a `GridCoordinates` object, which structures the centres
         in lists according to which mass profile they come from. 
 
         Fo example, if a galaxy has two mass profiles, the first with one centre and second with two centres this 
@@ -186,7 +186,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         This is used for visualization, for example plotting the centres of all mass profiles colored by their profile.
 
         NOTE: Currently, no mass profiles can have more than one centre (it unlikely one ever will). The structure of 
-        the output follows this convention to follow other methods in the *Galaxy* class that return profile 
+        the output follows this convention to follow other methods in the `Galaxy` class that return profile
         attributes.
 
         The centres of mass-sheets are omitted, as their centres are not relevant to lensing calculations."""
@@ -531,7 +531,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         
         See *profiles.mass_profiles* module for details of how this is performed.
 
-        The *grid_like_to_structure* decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        The `grid_like_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See \
         *aa.grid_like_to_structure* for a description of the output.
 
         Parameters
@@ -555,7 +555,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         See *profiles.mass_profiles* module for details of how this is performed.
 
-        The *grid_like_to_structure* decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        The `grid_like_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See \
         *aa.grid_like_to_structure* for a description of the output.
 
         Parameters
@@ -663,7 +663,7 @@ class HyperGalaxy:
     _ids = count()
 
     def __init__(self, contribution_factor=0.0, noise_factor=0.0, noise_power=1.0):
-        """ If a *Galaxy* is given a *HyperGalaxy* as an attribute, the noise-map in \
+        """ If a `Galaxy` is given a *HyperGalaxy* as an attribute, the noise-map in \
         the regions of the image that the galaxy is located will be hyper, to prevent \
         over-fitting of the galaxy.
         
