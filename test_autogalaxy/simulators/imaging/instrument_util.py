@@ -6,7 +6,8 @@ import autogalaxy.plot as aplt
 
 
 def pixel_scale_from_instrument(instrument):
-    """Determine the pixel scale from an instrument type based on real observations.
+    """
+    Returns the pixel scale from an instrument type based on real observations.
 
     These options are representative of VRO, Euclid, HST, over-sampled HST and Adaptive Optics image.
 
@@ -30,7 +31,8 @@ def pixel_scale_from_instrument(instrument):
 
 
 def grid_from_instrument(instrument):
-    """Determine the `Grid` from an instrument type based on real observations.
+    """
+    Returns the `Grid` from an instrument type based on real observations.
 
     These options are representative of VRO, Euclid, HST, over-sampled HST and Adaptive Optics image.
 
@@ -54,7 +56,8 @@ def grid_from_instrument(instrument):
 
 
 def psf_from_instrument(instrument):
-    """Determine the *PSF* from an instrument type based on real observations.
+    """
+    Returns the *PSF* from an instrument type based on real observations.
 
     These options are representative of VRO, Euclid, HST, over-sampled HST and Adaptive Optics image.
 
@@ -90,7 +93,8 @@ def psf_from_instrument(instrument):
 
 
 def simulator_from_instrument(instrument):
-    """Determine the *Simulator* from an instrument type based on real observations.
+    """
+    Returns the *Simulator* from an instrument type based on real observations.
 
     These options are representative of VRO, Euclid, HST, over-sampled HST and Adaptive Optics image.
 

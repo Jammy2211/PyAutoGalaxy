@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
     agg_phase1 = agg.filter(agg.phase == "phase_1")
 
-    phase_attribute_gen = agg_phase1.values("phase_attributes")
+    phase_attribute_gen = agg_phase1.values("attributes")
 
     for phase_attribute in phase_attribute_gen:
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
     agg_phase2 = agg.filter(agg.phase == "phase_2")
 
-    phase_attribute_gen = agg_phase2.values("phase_attributes")
+    phase_attribute_gen = agg_phase2.values("attributes")
 
     for phase_attribute in phase_attribute_gen:
 

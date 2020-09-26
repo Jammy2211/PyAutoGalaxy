@@ -21,9 +21,9 @@ class Analysis(af.Analysis):
         ----------
         masked_imaging: LensData
             lens dataset, including an image and noise
-        hyper_model_image: ndarray
+        hyper_model_image: np.ndarray
             An image produce of the overall system by a model
-        hyper_galaxy_image: ndarray
+        hyper_galaxy_image: np.ndarray
             The contribution of one galaxy to the model image
         """
 

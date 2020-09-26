@@ -6,7 +6,8 @@ import autogalaxy.plot as aplt
 
 
 def pixel_scale_from_instrument(instrument):
-    """Determine the pixel scale from an instrument based on real observations.
+    """
+    Returns the pixel scale from an instrument based on real observations.
 
     These options are representative of SMA interferometry.
 
@@ -22,7 +23,8 @@ def pixel_scale_from_instrument(instrument):
 
 
 def grid_from_instrument(instrument):
-    """Determine the grid from an instrument based on real observations.
+    """
+    Returns the grid from an instrument based on real observations.
 
     These options are representative of SMA interferometry.
 
@@ -41,7 +43,8 @@ def grid_from_instrument(instrument):
 
 
 def uv_wavelengths_from_instrument(instrument):
-    """Determine the uv wavelengths from an instrument based on real observations.
+    """
+    Returns the uv wavelengths from an instrument based on real observations.
 
     These options are representative of SMA interferometry.
 
@@ -64,7 +67,8 @@ def uv_wavelengths_from_instrument(instrument):
 
 
 def simulator_from_instrument(instrument):
-    """Determine the pixel scale from an instrument based on real observations.
+    """
+    Returns the pixel scale from an instrument based on real observations.
 
     These options are representative of VRO, Euclid, HST, over-sampled HST and Adaptive Optics image.
 

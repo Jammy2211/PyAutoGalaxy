@@ -13,7 +13,10 @@ class Analysis(analysis_data.Analysis):
     ):
 
         super(Analysis, self).__init__(
-            settings=settings, cosmology=cosmology, results=results
+            masked_dataset=masked_interferometer,
+            settings=settings,
+            cosmology=cosmology,
+            results=results,
         )
 
         self.visualizer = visualizer.PhaseInterferometerVisualizer(
@@ -24,8 +27,6 @@ class Analysis(analysis_data.Analysis):
             hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
             hyper_model_image=self.hyper_model_image,
         )
-
-        self.masked_dataset = masked_interferometer
 
         result = analysis_data.last_result_with_use_as_hyper_dataset(results=results)
 
@@ -149,3 +150,26 @@ class Analysis(analysis_data.Analysis):
             visualizer = self.visualizer
 
         visualizer.visualize_fit(fit=fit, during_analysis=during_analysis)
+
+    def make_attributes(self):
+        return Attributes(
+            cosmology=self.cosmology,
+            real_space_mask=self.masked_dataset.real_space_mask,
+            hyper_model_image=self.hyper_model_image,
+            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
+        )
+
+
+class Attributes:
+    def __init__(
+        self,
+        cosmology,
+        real_space_mask,
+        hyper_model_image,
+        hyper_galaxy_image_path_dict,
+    ):
+
+        self.cosmology = cosmology
+        self.real_space_mask = real_space_mask
+        self.hyper_model_image = hyper_model_image
+        self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict

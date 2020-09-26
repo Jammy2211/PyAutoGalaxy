@@ -11,7 +11,10 @@ class Analysis(analysis_dataset.Analysis):
     ):
 
         super(Analysis, self).__init__(
-            settings=settings, cosmology=cosmology, results=results
+            masked_dataset=masked_imaging,
+            settings=settings,
+            cosmology=cosmology,
+            results=results,
         )
 
         self.visualizer = visualizer.PhaseImagingVisualizer(
@@ -22,8 +25,6 @@ class Analysis(analysis_dataset.Analysis):
             hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
             hyper_model_image=self.hyper_model_image,
         )
-
-        self.masked_dataset = masked_imaging
 
     @property
     def masked_imaging(self):
@@ -105,3 +106,17 @@ class Analysis(analysis_dataset.Analysis):
 
         #   visualizer.visualize_plane(plane=fit.plane, during_analysis=during_analysis)
         visualizer.visualize_fit(fit=fit, during_analysis=during_analysis)
+
+    def make_attributes(self):
+        return Attributes(
+            cosmology=self.cosmology,
+            hyper_model_image=self.hyper_model_image,
+            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
+        )
+
+
+class Attributes:
+    def __init__(self, cosmology, hyper_model_image, hyper_galaxy_image_path_dict):
+        self.cosmology = cosmology
+        self.hyper_model_image = hyper_model_image
+        self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
