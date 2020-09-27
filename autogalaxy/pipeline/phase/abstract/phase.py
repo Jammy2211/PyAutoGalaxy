@@ -46,10 +46,6 @@ class AbstractPhase(af.AbstractPhase):
         self.cosmology = cosmology
 
     @property
-    def folders(self):
-        return self.search.folders
-
-    @property
     def phase_property_collections(self):
         """
         Returns

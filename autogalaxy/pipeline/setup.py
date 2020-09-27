@@ -1260,7 +1260,7 @@ class SetupSMBH:
 class SetupPipeline:
     def __init__(
         self,
-        folders: [str] = None,
+        path_prefix: str = None,
         redshift_source: float = 1.0,
         setup_hyper: SetupHyper = None,
         setup_light: AbstractSetupLight = None,
@@ -1279,9 +1279,8 @@ class SetupPipeline:
 
         Parameters
         ----------
-        folders : [str] or None
-            A list of folders that the output of the pipeline are output into before the pipeline name, tags and
-            phase folders.
+        path_prefix : str or None
+            The prefix of folders between the output path of the pipeline and the pipeline name, tags and phase folders.
         redshift_source : float
             The redshift of the source galaxy used by the pipeline for converting arc-seconds to kpc, masses to solMass,
             etc.
@@ -1295,7 +1294,7 @@ class SetupPipeline:
             The settings of the mass modeling (e.g. if a constant mass to light ratio is used).
         """
 
-        self.folders = folders
+        self.path_prefix = path_prefix
         self.redshift_source = redshift_source
         self.setup_hyper = setup_hyper
         self.setup_source = setup_source

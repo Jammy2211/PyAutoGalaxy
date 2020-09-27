@@ -45,7 +45,15 @@ class PhaseDataset(abstract.AbstractPhase):
         self.use_as_hyper_dataset = False
         self.is_hyper_phase = False
 
-    def run(self, dataset: Dataset, mask, results=None, info=None, pickle_files=None):
+    def run(
+        self,
+        dataset: Dataset,
+        mask,
+        results=None,
+        info=None,
+        pickle_files=None,
+        log_likelihood_cap=None,
+    ):
         """
         Run this phase.
 
@@ -75,7 +83,10 @@ class PhaseDataset(abstract.AbstractPhase):
         analysis = self.make_analysis(dataset=dataset, mask=mask, results=results)
 
         result = self.run_analysis(
-            analysis=analysis, info=info, pickle_files=pickle_files
+            analysis=analysis,
+            info=info,
+            pickle_files=pickle_files,
+            log_likelihood_cap=log_likelihood_cap,
         )
 
         return self.make_result(result=result, analysis=analysis)

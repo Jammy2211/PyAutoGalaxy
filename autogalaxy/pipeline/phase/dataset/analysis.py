@@ -16,15 +16,11 @@ def last_result_with_use_as_hyper_dataset(results):
 
 
 class Analysis(af.Analysis):
-    def __init__(
-        self, masked_dataset, cosmology, settings, results, log_likelihood_cap=None
-    ):
+    def __init__(self, masked_dataset, cosmology, settings, results):
 
         self.masked_dataset = masked_dataset
         self.cosmology = cosmology
         self.settings = settings
-
-        super().__init__(log_likelihood_cap=log_likelihood_cap)
 
         result = last_result_with_use_as_hyper_dataset(results=results)
 

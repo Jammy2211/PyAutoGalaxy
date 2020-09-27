@@ -33,7 +33,7 @@ def run(module, test_name=None, search=af.DynestyStatic(), config_folder="config
 
     module.make_pipeline(
         name=test_name,
-        folders=[module.test_type, test_name],
+        path_prefix=[module.test_type, test_name],
         search=search,
         real_space_mask=real_space_mask,
     ).run(dataset=interferometer, mask=visibilities_mask)

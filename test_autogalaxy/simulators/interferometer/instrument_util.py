@@ -110,7 +110,7 @@ def simulate_interferometer_from_instrument(data_name, instrument, galaxies):
     test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
 
     dataset_path = af.util.create_path(
-        path=test_path, folders=["dataset", "interferometer", data_name, instrument]
+        path=test_path, path_prefix=["dataset", "interferometer", data_name, instrument]
     )
 
     interferometer.output_to_fits(
@@ -139,7 +139,7 @@ def load_test_interferometer(data_name, instrument):
     test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
 
     dataset_path = af.util.create_path(
-        path=test_path, folders=["dataset", "interferometer", data_name, instrument]
+        path=test_path, path_prefix=["dataset", "interferometer", data_name, instrument]
     )
 
     return ag.Interferometer.from_fits(

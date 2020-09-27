@@ -8,7 +8,7 @@ data_name = "galaxy_x2__sersics"
 instrument = "sma"
 
 
-def make_pipeline(name, folders, real_space_mask, search=af.DynestyStatic()):
+def make_pipeline(name, path_prefix, real_space_mask, search=af.DynestyStatic()):
 
     bulge_0 = af.PriorModel(ag.lp.EllipticalSersic)
     bulge_1 = af.PriorModel(ag.lp.EllipticalSersic)
@@ -20,7 +20,7 @@ def make_pipeline(name, folders, real_space_mask, search=af.DynestyStatic()):
 
     phase1 = ag.PhaseInterferometer(
         phase_name="phase_1",
-        folders=folders,
+        path_prefix=path_prefix,
         galaxies=dict(
             galaxy_0=ag.GalaxyModel(redshift=0.5, bulge=bulge_0),
             galaxy_1=ag.GalaxyModel(redshift=0.5, bulge=bulge_1),
@@ -37,7 +37,7 @@ def make_pipeline(name, folders, real_space_mask, search=af.DynestyStatic()):
 
     phase2 = ag.PhaseInterferometer(
         phase_name="phase_2",
-        folders=folders,
+        path_prefix=path_prefix,
         galaxies=dict(
             galaxy_0=ag.GalaxyModel(
                 redshift=0.5,
