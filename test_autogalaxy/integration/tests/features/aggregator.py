@@ -10,10 +10,10 @@ data_name = "galaxy_x1__dev_vaucouleurs"
 instrument = "vro"
 
 
-def make_pipeline(name, folders, search=af.DynestyStatic()):
+def make_pipeline(name, path_prefix, search=af.DynestyStatic()):
     phase1 = ag.PhaseImaging(
         phase_name="phase_1",
-        folders=folders,
+        path_prefix=path_prefix,
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, sersic=ag.lp.EllipticalSersic)
         ),
@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
     agg_phase1 = agg.filter(agg.phase == "phase_1")
 
-    phase_attribute_gen = agg_phase1.values("phase_attributes")
+    phase_attribute_gen = agg_phase1.values("attributes")
 
     for phase_attribute in phase_attribute_gen:
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
     agg_phase2 = agg.filter(agg.phase == "phase_2")
 
-    phase_attribute_gen = agg_phase2.values("phase_attributes")
+    phase_attribute_gen = agg_phase2.values("attributes")
 
     for phase_attribute in phase_attribute_gen:
 

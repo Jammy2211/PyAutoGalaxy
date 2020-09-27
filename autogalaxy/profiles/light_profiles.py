@@ -35,7 +35,7 @@ class LightProfile:
             The (y, x) coordinates in the original reference frame of the grid.
         Returns
         -------
-        intensity : ndarray
+        intensity : np.ndarray
             The value of intensity at the given radius
         """
         raise NotImplementedError("intensity_from_grid should be overridden")

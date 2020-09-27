@@ -49,7 +49,7 @@ simple analysis which fits a galaxy's light.
         search=af.DynestyStatic()
         )
 
-    # We pass the imaging data and mask to the phase, thereby fitting it with the galaxy model & plot the resulting fit.
+    # We pass the imaging ``data`` and mask to the phase, thereby fitting it with the galaxy model & plot the resulting fit.
     result = phase.run(data=imaging, mask=mask)
     ag.plot.FitImaging.subplot_fit_imaging(fit=result.max_log_likelihood_fit)
 

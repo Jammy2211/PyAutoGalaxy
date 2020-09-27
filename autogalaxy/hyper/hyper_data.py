@@ -12,12 +12,13 @@ class HyperImageSky:
         self.sky_scale = sky_scale
 
     def hyper_image_from_image(self, image):
-        """Compute a new with the background sky level hyper. This can simply multiple by a instance factor \
+        """
+    Returns a new with the background sky level hyper. This can simply multiple by a instance factor \
         (assuming a uniform background sky) because the is in units electrons per second.
 
         Parameters
         -----------
-        image : ndarray
+        image : np.ndarray
             The before scaling (electrons per second).
         """
         return image + self.sky_scale
@@ -37,13 +38,14 @@ class HyperBackgroundNoise:
         self.noise_scale = noise_scale
 
     def hyper_noise_map_from_noise_map(self, noise_map):
-        """Compute a hyper noise_maps from the background noise_maps grid.
+        """
+    Returns a hyper noise_maps from the background noise_maps grid.
 
         Parameters
         -----------
-        noise_map : ndarray
+        noise_map : np.ndarray
             The noise_maps before scaling (electrons per second).
-        background_noise : ndarray
+        background_noise : np.ndarray
             The background noise_maps values (electrons per second).
         """
         return noise_map + self.noise_scale

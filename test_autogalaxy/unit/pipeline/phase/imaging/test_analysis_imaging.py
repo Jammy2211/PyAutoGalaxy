@@ -166,4 +166,4 @@ class TestFit:
         fit = FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
         assert (fit.plane.galaxies[0].hyper_galaxy_image == galaxy_hyper_image).all()
-        assert (fit_likelihood == fit.log_likelihood).all()
+        assert fit_likelihood == fit.log_likelihood

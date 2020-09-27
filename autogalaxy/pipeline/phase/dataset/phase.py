@@ -45,7 +45,15 @@ class PhaseDataset(abstract.AbstractPhase):
         self.use_as_hyper_dataset = False
         self.is_hyper_phase = False
 
-    def run(self, dataset: Dataset, mask, results=None, info=None, pickle_files=None):
+    def run(
+        self,
+        dataset: Dataset,
+        mask,
+        results=None,
+        info=None,
+        pickle_files=None,
+        log_likelihood_cap=None,
+    ):
         """
         Run this phase.
 
@@ -74,15 +82,11 @@ class PhaseDataset(abstract.AbstractPhase):
 
         analysis = self.make_analysis(dataset=dataset, mask=mask, results=results)
 
-        self.save_metadata(dataset=dataset)
-        self.save_dataset(dataset=dataset)
-        self.save_mask(mask=mask)
-        self.save_settings(settings=self.settings)
-        phase_attributes = self.make_phase_attributes(analysis=analysis)
-        self.save_phase_attributes(phase_attributes=phase_attributes)
-
         result = self.run_analysis(
-            analysis=analysis, info=info, pickle_files=pickle_files
+            analysis=analysis,
+            info=info,
+            pickle_files=pickle_files,
+            log_likelihood_cap=log_likelihood_cap,
         )
 
         return self.make_result(result=result, analysis=analysis)
@@ -127,55 +131,6 @@ class PhaseDataset(abstract.AbstractPhase):
             self.search.paths.tag = (
                 f"{hyper_tag}{self.settings.phase_tag_with_inversion}"
             )
-
-        output_path = self.search.paths.output_path
-
-        if hasattr(self.settings, "settings_lens"):
-            if self.settings.settings_lens.positions_threshold is not None:
-
-                path_containing_settings = output_path.rsplit("/", 1)[0]
-                path_containing_settings = path_containing_settings.rsplit("/", 1)[0]
-
-                folders = os.listdir(path_containing_settings)
-                folders_to_rename = list(
-                    filter(
-                        None,
-                        [
-                            folder
-                            if ("pos_on" not in folder) and ("pos" in folder)
-                            else None
-                            for folder in folders
-                        ],
-                    )
-                )
-
-                if len(folders_to_rename) == 0:
-                    return
-
-                if hyper_tag == "":
-                    folders_to_rename = list(
-                        filter(
-                            None,
-                            [
-                                folder if "settings" in folder else None
-                                for folder in folders_to_rename
-                            ],
-                        )
-                    )
-                    folder_to_rename = min(folders_to_rename, key=len)
-                else:
-                    folders_to_rename = [
-                        folder for folder in folders_to_rename if hyper_tag in folder
-                    ]
-                    if len(folders_to_rename) == 0:
-                        return
-                    folder_to_rename = folders_to_rename[0]
-
-                shutil.rmtree(f"{path_containing_settings}/{self.search.paths.tag}")
-                os.rename(
-                    f"{path_containing_settings}/{folder_to_rename}",
-                    f"{path_containing_settings}/{self.search.paths.tag}",
-                )
 
     def extend_with_inversion_phase(self, inversion_search):
         return extensions.InversionPhase(

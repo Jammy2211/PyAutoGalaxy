@@ -2,6 +2,9 @@ import autofit as af
 from autogalaxy.galaxy import galaxy as g
 from autogalaxy.plane import plane as pl
 
+import pickle
+import dill
+
 
 def last_result_with_use_as_hyper_dataset(results):
 
@@ -13,13 +16,11 @@ def last_result_with_use_as_hyper_dataset(results):
 
 
 class Analysis(af.Analysis):
-    def __init__(self, cosmology, settings, results, log_likelihood_cap=None):
+    def __init__(self, masked_dataset, cosmology, settings, results):
 
-        self.settings = settings
-
-        super().__init__(log_likelihood_cap=log_likelihood_cap)
-
+        self.masked_dataset = masked_dataset
         self.cosmology = cosmology
+        self.settings = settings
 
         result = last_result_with_use_as_hyper_dataset(results=results)
 
@@ -84,3 +85,37 @@ class Analysis(af.Analysis):
                     ]
 
         return instance
+
+    def save_for_aggregator(self, paths):
+
+        self.save_dataset(paths=paths)
+        self.save_mask(paths=paths)
+        self.save_settings(paths=paths)
+        self.save_attributes(paths=paths)
+
+    def save_dataset(self, paths):
+        """
+        Save the dataset associated with the phase
+        """
+        with open(f"{paths.pickle_path}/dataset.pickle", "wb") as f:
+            pickle.dump(self.masked_dataset.dataset, f)
+
+    def save_mask(self, paths):
+        """
+        Save the mask associated with the phase
+        """
+        with open(f"{paths.pickle_path}/mask.pickle", "wb") as f:
+            dill.dump(self.masked_dataset.mask, f)
+
+    def save_settings(self, paths):
+        with open(f"{paths.pickle_path}/settings.pickle", "wb+") as f:
+            pickle.dump(self.settings, f)
+
+    def make_attributes(self):
+        raise NotImplementedError
+
+    def save_attributes(self, paths):
+
+        attributes = self.make_attributes()
+        with open(f"{paths.pickle_path}/attributes.pickle", "wb+") as f:
+            pickle.dump(attributes, f)

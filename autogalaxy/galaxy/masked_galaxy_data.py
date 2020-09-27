@@ -40,7 +40,7 @@ class MaskedGalaxyDataset:
 
         Attributes
         ----------
-        noise_map_1d : ndarray
+        noise_map_1d : np.ndarray
             The masked 1D arrays of the noise_map
         grid_stacks : imaging.masks.GridStack
             Grids of (y,x) Cartesian coordinates which map over the masked 1D fit data arrays's pixels (includes an \

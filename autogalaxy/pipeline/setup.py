@@ -183,8 +183,8 @@ class SetupHyper:
 
         This changes the pipeline setup tag as follows:
 
-        hyper_fixed_after_source = False -> setup
-        hyper_fixed_after_source = True -> setup__hyper_fixed
+        hyper_fixed_after_source = ``False`` -> setup
+        hyper_fixed_after_source = ``True`` -> setup__hyper_fixed
         """
         if not self.hyper_fixed_after_source:
             return ""
@@ -440,8 +440,8 @@ class SetupLightBulgeDisk(AbstractSetupLight):
 
         This changes the setup folder as follows:
 
-        disk_as_sersic = False -> setup
-        disk_as_sersic = True -> setup___disk_as_sersic
+        disk_as_sersic = ``False`` -> setup
+        disk_as_sersic = ``True`` -> setup___disk_as_sersic
         """
         if not self.disk_as_sersic:
             return ""
@@ -461,8 +461,8 @@ class SetupLightBulgeDisk(AbstractSetupLight):
 
         This changes the setup folder as follows:
 
-        envelope_as_sersic = False -> setup
-        envelope_as_sersic = True -> setup___envelope_as_sersic
+        envelope_as_sersic = ``False`` -> setup
+        envelope_as_sersic = ``True`` -> setup___envelope_as_sersic
         """
         if not self.envelope_as_sersic:
             return ""
@@ -643,8 +643,8 @@ class SetupMassTotal(AbstractSetupMass):
 
         This changes the setup folder as follows:
 
-        align_light_mass_centre = False -> setup
-        align_light_mass_centre = True -> setup___align_light_mass_centre
+        align_light_mass_centre = ``False`` -> setup
+        align_light_mass_centre = ``True`` -> setup___align_light_mass_centre
         """
         if self.mass_centre is not None:
             return ""
@@ -752,7 +752,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if align_light_dark_centre and align_bulge_dark_centre:
             raise exc.SetupException(
                 "In PipelineMassSettings align_light_dark_centre and align_bulge_disk_centre"
-                "can not both be True (one is not relevent to the light profile you are fitting"
+                "can not both be ``True`` (one is not relevent to the light profile you are fitting"
             )
 
         self.constant_mass_to_light_ratio = constant_mass_to_light_ratio
@@ -831,8 +831,8 @@ class SetupMassLightDark(AbstractSetupMass):
 
         This changes the setup folder as follows:
 
-        constant_mass_to_light_ratio = False -> mlr_free
-        constant_mass_to_light_ratio = True -> mlr_constant
+        constant_mass_to_light_ratio = ``False`` -> mlr_free
+        constant_mass_to_light_ratio = ``True`` -> mlr_constant
         """
         if self.constant_mass_to_light_ratio:
             return f"_{conf.instance.setup_tag.get('mass', 'constant_mass_to_light_ratio')}"
@@ -845,8 +845,8 @@ class SetupMassLightDark(AbstractSetupMass):
 
         This changes the setup folder as follows:
 
-        constant_mass_to_light_ratio = False -> mlr_free
-        constant_mass_to_light_ratio = True -> mlr_constant
+        constant_mass_to_light_ratio = ``False`` -> mlr_free
+        constant_mass_to_light_ratio = ``True`` -> mlr_constant
         """
         if not self.bulge_mass_to_light_ratio_gradient:
             return ""
@@ -859,8 +859,8 @@ class SetupMassLightDark(AbstractSetupMass):
 
         This changes the setup folder as follows:
 
-        constant_mass_to_light_ratio = False -> mlr_free
-        constant_mass_to_light_ratio = True -> mlr_constant
+        constant_mass_to_light_ratio = ``False`` -> mlr_free
+        constant_mass_to_light_ratio = ``True`` -> mlr_constant
         """
         if not self.disk_mass_to_light_ratio_gradient:
             return ""
@@ -873,8 +873,8 @@ class SetupMassLightDark(AbstractSetupMass):
 
         This changes the setup folder as follows:
 
-        constant_mass_to_light_ratio = False -> mlr_free
-        constant_mass_to_light_ratio = True -> mlr_constant
+        constant_mass_to_light_ratio = ``False`` -> mlr_free
+        constant_mass_to_light_ratio = ``True`` -> mlr_constant
         """
         if not self.include_envelope or not self.envelope_mass_to_light_ratio_gradient:
             return ""
@@ -886,8 +886,8 @@ class SetupMassLightDark(AbstractSetupMass):
 
         This changes the setup folder as follows:
 
-        align_light_dark_centre = False -> setup
-        align_light_dark_centre = True -> setup___align_light_dark_centre
+        align_light_dark_centre = ``False`` -> setup
+        align_light_dark_centre = ``True`` -> setup___align_light_dark_centre
         """
         if not self.align_light_dark_centre:
             return ""
@@ -900,8 +900,8 @@ class SetupMassLightDark(AbstractSetupMass):
 
         This changes the setup folder as follows:
 
-        align_bulge_dark_centre = False -> setup
-        align_bulge_dark_centre = True -> setup___align_bulge_dark_centre
+        align_bulge_dark_centre = ``False`` -> setup
+        align_bulge_dark_centre = ``True`` -> setup___align_bulge_dark_centre
         """
         if not self.align_bulge_dark_centre:
             return ""
@@ -914,8 +914,8 @@ class SetupMassLightDark(AbstractSetupMass):
 
         This changes the setup folder as follows:
 
-        disk_as_sersic = False -> setup
-        disk_as_sersic = True -> setup___disk_as_sersic
+        disk_as_sersic = ``False`` -> setup
+        disk_as_sersic = ``True`` -> setup___disk_as_sersic
         """
         if not self.disk_as_sersic:
             return ""
@@ -935,8 +935,8 @@ class SetupMassLightDark(AbstractSetupMass):
 
         This changes the setup folder as follows:
 
-        envelope_as_sersic = False -> setup
-        envelope_as_sersic = True -> setup___envelope_as_sersic
+        envelope_as_sersic = ``False`` -> setup
+        envelope_as_sersic = ``True`` -> setup___envelope_as_sersic
         """
         if not self.envelope_as_sersic:
             return ""
@@ -1209,7 +1209,7 @@ class SetupSMBH:
 
         This changes the setup folder as follows:
 
-        include_smbh = False -> setup
+        include_smbh = ``False`` -> setup
         include_smbh = True, smbh_centre_fixed=True -> setup___smbh_centre_fixed
         include_smbh = True, smbh_centre_fixed=False -> setup___smbh_centre_free
         """
@@ -1260,7 +1260,7 @@ class SetupSMBH:
 class SetupPipeline:
     def __init__(
         self,
-        folders: [str] = None,
+        path_prefix: str = None,
         redshift_source: float = 1.0,
         setup_hyper: SetupHyper = None,
         setup_light: AbstractSetupLight = None,
@@ -1279,9 +1279,8 @@ class SetupPipeline:
 
         Parameters
         ----------
-        folders : [str] or None
-            A list of folders that the output of the pipeline are output into before the pipeline name, tags and
-            phase folders.
+        path_prefix : str or None
+            The prefix of folders between the output path of the pipeline and the pipeline name, tags and phase folders.
         redshift_source : float
             The redshift of the source galaxy used by the pipeline for converting arc-seconds to kpc, masses to solMass,
             etc.
@@ -1295,7 +1294,7 @@ class SetupPipeline:
             The settings of the mass modeling (e.g. if a constant mass to light ratio is used).
         """
 
-        self.folders = folders
+        self.path_prefix = path_prefix
         self.redshift_source = redshift_source
         self.setup_hyper = setup_hyper
         self.setup_source = setup_source

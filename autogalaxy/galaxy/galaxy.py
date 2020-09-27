@@ -42,7 +42,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         """Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
         mass profiles, pixelizations, etc.).
         
-        All *has_* methods retun *True* if galaxy has that attribute, *False* if not.
+        All *has_* methods retun *True* if galaxy has that attribute, ``False`` if not.
 
         Parameters
         ----------
@@ -147,7 +147,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def light_profile_centres(self):
-        """Returns the light profile centres of the galaxy as a `GridCoordinates` object, which structures the centres
+        """
+    Returns the light profile centres of the galaxy as a `GridCoordinates` object, which structures the centres
         in lists according to which light profile they come from. 
         
         Fo example, if a galaxy has two light profiles, the first with one centre and second with two centres this 
@@ -175,7 +176,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def mass_profile_centres(self):
-        """Returns the mass profile centres of the galaxy as a `GridCoordinates` object, which structures the centres
+        """
+    Returns the mass profile centres of the galaxy as a `GridCoordinates` object, which structures the centres
         in lists according to which mass profile they come from. 
 
         Fo example, if a galaxy has two mass profiles, the first with one centre and second with two centres this 
@@ -209,7 +211,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def mass_profile_axis_ratios(self):
-        """Returns the mass profile axis-ratios of the galaxy as a *Values* object, which structures the axis-ratios
+        """
+    Returns the mass profile axis-ratios of the galaxy as a *Values* object, which structures the axis-ratios
         in lists according to which mass profile they come from. 
 
         Fo example, if a galaxy has two mass profiles, the first with one axis-ratio and second with two axis-ratios
@@ -236,7 +239,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def mass_profile_phis(self):
-        """Returns the mass profile phis of the galaxy as a *Values* object, which structures the phis in lists
+        """
+    Returns the mass profile phis of the galaxy as a *Values* object, which structures the phis in lists
         according to which mass profile they come from.
 
         Fo example, if a galaxy has two mass profiles, the first with one phi and second with two phis this returns:
@@ -494,7 +498,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
         cosmology=cosmo.Planck15,
         **kwargs,
     ):
-        """Compute the total luminosity of the galaxy's light profiles within a circle of specified radius.
+        """
+    Returns the total luminosity of the galaxy's light profiles within a circle of specified radius.
 
         See *light_profiles.luminosity_within_circle* for details of how this is performed.
 
@@ -525,7 +530,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @grids.grid_like_to_structure
     def convergence_from_grid(self, grid):
-        """Compute the summed convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
+        """
+    Returns the summed convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
         If the galaxy has no mass profiles, a grid of zeros is returned.
         
@@ -548,7 +554,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
-        """Compute the summed gravitational potential of the galaxy's mass profiles \
+        """
+    Returns the summed gravitational potential of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
 
         If the galaxy has no mass profiles, a grid of zeros is returned.
@@ -572,7 +579,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @grids.grid_like_to_structure
     def deflections_from_grid(self, grid):
-        """Compute the summed (y,x) deflection angles of the galaxy's mass profiles \
+        """
+    Returns the summed (y,x) deflection angles of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
 
         If the galaxy has no mass profiles, two grid of zeros are returned.
@@ -635,7 +643,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     @property
     def contribution_map(self):
-        """Compute the contribution map of a galaxy, which represents the fraction of
+        """
+    Returns the contribution map of a galaxy, which represents the fraction of
         flux in each pixel that the galaxy is attributed to contain, hyper to the
         *contribution_factor* hyper_galaxies-parameter.
 
@@ -645,11 +654,11 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         -----------
-        hyper_model_image : ndarray
+        hyper_model_image : np.ndarray
             The best-fit model image to the observed image from a previous analysis
             phase. This provides the total light attributed to each image pixel by the
             model.
-        hyper_galaxy_image : ndarray
+        hyper_galaxy_image : np.ndarray
             A model image of the galaxy (from light profiles or an inversion) from a
             previous analysis phase.
         """
@@ -695,7 +704,8 @@ class HyperGalaxy:
         self.component_number = next(self._ids)
 
     def contribution_map_from_hyper_images(self, hyper_model_image, hyper_galaxy_image):
-        """Compute the contribution map of a galaxy, which represents the fraction of
+        """
+    Returns the contribution map of a galaxy, which represents the fraction of
         flux in each pixel that the galaxy is attributed to contain, hyper to the
         *contribution_factor* hyper_galaxies-parameter.
 
@@ -705,11 +715,11 @@ class HyperGalaxy:
 
         Parameters
         -----------
-        hyper_model_image : ndarray
+        hyper_model_image : np.ndarray
             The best-fit model image to the observed image from a previous analysis
             phase. This provides the total light attributed to each image pixel by the
             model.
-        hyper_galaxy_image : ndarray
+        hyper_galaxy_image : np.ndarray
             A model image of the galaxy (from light profiles or an inversion) from a
             previous analysis phase.
         """
@@ -729,16 +739,17 @@ class HyperGalaxy:
         )
 
     def hyper_noise_map_from_contribution_map(self, noise_map, contribution_map):
-        """Compute a hyper galaxy hyper_galaxies noise-map from a baseline noise-map.
+        """
+    Returns a hyper galaxy hyper_galaxies noise-map from a baseline noise-map.
 
         This uses the galaxy contribution map and the *noise_factor* and *noise_power*
         hyper_galaxies-parameters.
 
         Parameters
         -----------
-        noise_map : ndarray
+        noise_map : np.ndarray
             The observed noise-map (before scaling).
-        contribution_map : ndarray
+        contribution_map : np.ndarray
             The galaxy contribution map.
         """
         return self.noise_factor * (noise_map * contribution_map) ** self.noise_power
