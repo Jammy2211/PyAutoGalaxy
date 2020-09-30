@@ -748,7 +748,7 @@ class TestCriticalCurvesAndCaustics:
         x_centre = np.mean(radial_caustic[:, 1])
 
         assert 0.3 < y_centre < 0.7
-        assert 0.8 < x_centre < 1.2
+        assert 0.7 < x_centre < 1.2
 
     def test__compare_tangential_critical_curves_from_magnification_and_eigen_values(
             self

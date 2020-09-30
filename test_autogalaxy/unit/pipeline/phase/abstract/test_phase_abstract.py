@@ -2,6 +2,7 @@ import pytest
 
 import autofit as af
 import autogalaxy as ag
+from autogalaxy.pipeline.phase.dataset import PhaseDataset
 from test_autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
@@ -21,7 +22,7 @@ class TestModel:
         assert phase_dataset_7x7.model.galaxies == [ag.GalaxyModel(redshift=0.5)]
 
     def test__promise_attrbutes(self):
-        phase = ag.PhaseDataset(
+        phase = PhaseDataset(
             galaxies=dict(
                 galaxy=ag.GalaxyModel(
                     redshift=0.5,

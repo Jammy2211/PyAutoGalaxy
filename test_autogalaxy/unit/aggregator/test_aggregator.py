@@ -1,9 +1,10 @@
 import os
 from os import path
 
+import pytest
+
 import autofit as af
 import autogalaxy as ag
-import pytest
 from test_autogalaxy import mock
 
 directory = path.dirname(path.realpath(__file__))
@@ -16,7 +17,6 @@ def make_path():
 
 @pytest.fixture(name="samples")
 def make_samples():
-
     galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(centre=(0.0, 1.0)))
     galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.EllipticalSersic())
 
@@ -26,7 +26,6 @@ def make_samples():
 
 
 def test__dataset_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
-
     phase_imaging_7x7 = ag.PhaseImaging(
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
@@ -52,7 +51,6 @@ def test__dataset_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
 
 
 def test__plane_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
-
     phase_imaging_7x7 = ag.PhaseImaging(
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
@@ -80,7 +78,6 @@ def test__plane_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
 
 
 def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
-
     phase_imaging_7x7 = ag.PhaseImaging(
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
@@ -117,7 +114,6 @@ def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, sample
 
 
 def test__fit_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
-
     phase_imaging_7x7 = ag.PhaseImaging(
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
@@ -142,9 +138,8 @@ def test__fit_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
 
 
 def test__masked_interferometer_generator_from_aggregator(
-    interferometer_7, mask_7x7, samples
+        interferometer_7, mask_7x7, samples
 ):
-
     phase_interferometer_7x7 = ag.PhaseInterferometer(
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
@@ -178,8 +173,8 @@ def test__masked_interferometer_generator_from_aggregator(
 
     for masked_interferometer in masked_interferometer_gen:
         assert (
-            masked_interferometer.interferometer.visibilities
-            == interferometer_7.visibilities
+                masked_interferometer.interferometer.visibilities
+                == interferometer_7.visibilities
         ).all()
         assert (masked_interferometer.real_space_mask == mask_7x7).all()
         assert isinstance(masked_interferometer.grid, ag.GridIterate)
@@ -190,9 +185,8 @@ def test__masked_interferometer_generator_from_aggregator(
 
 
 def test__fit_interferometer_generator_from_aggregator(
-    interferometer_7, mask_7x7, samples
+        interferometer_7, mask_7x7, samples
 ):
-
     phase_interferometer_7x7 = ag.PhaseInterferometer(
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
@@ -217,9 +211,9 @@ def test__fit_interferometer_generator_from_aggregator(
 
     for fit_interferometer in fit_interferometer_gen:
         assert (
-            fit_interferometer.masked_interferometer.interferometer.visibilities
-            == interferometer_7.visibilities
+                fit_interferometer.masked_interferometer.interferometer.visibilities
+                == interferometer_7.visibilities
         ).all()
         assert (
-            fit_interferometer.masked_interferometer.real_space_mask == mask_7x7
+                fit_interferometer.masked_interferometer.real_space_mask == mask_7x7
         ).all()

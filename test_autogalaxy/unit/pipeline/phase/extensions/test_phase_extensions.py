@@ -219,7 +219,7 @@ class TestHyperAPI:
         hyper_phase.modify_search_paths()
 
         assert (
-            "unit/output//prefix/test_phase/"
+            "output//prefix/test_phase/"
             "inversion__settings__imaging[grid_sub_2_inv_sub_2__bin_2]__pix[no_border]__inv[mat]/"
             "dynesty_static[nlive_1" in hyper_phase.paths.output_path
         )

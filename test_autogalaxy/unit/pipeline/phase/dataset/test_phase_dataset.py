@@ -17,7 +17,7 @@ directory = path.dirname(path.realpath(__file__))
 class TestPhase:
     def test__extend_with_hyper_and_pixelizations(self):
         phase_no_pixelization = ag.PhaseImaging(
-             search=mock.MockSearch("test_phase")
+            search=mock.MockSearch("test_phase")
         )
 
         phase_extended = phase_no_pixelization.extend_with_multiple_hyper_phases(
@@ -33,7 +33,7 @@ class TestPhase:
         assert phase_extended == phase_no_pixelization
 
         phase_with_pixelization = ag.PhaseImaging(
-                        galaxies=dict(
+            galaxies=dict(
                 source=ag.GalaxyModel(
                     redshift=0.5,
                     pixelization=ag.pix.Rectangular,
@@ -82,7 +82,7 @@ class TestPhase:
         assert isinstance(phase_extended.hyper_phases[1], ag.InversionPhase)
 
     def test__extend_with_hyper_galaxy_phase__passes_galaxy_names(self):
-        phase = ag.PhaseImaging( search=mock.MockSearch())
+        phase = ag.PhaseImaging(search=mock.MockSearch())
 
         setup_hyper = ag.SetupHyper(
             hyper_galaxies=True, hyper_galaxies_search=mock.MockSearch("test_phase")
@@ -130,7 +130,7 @@ class TestMakeAnalysis:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-                        search=mock.MockSearch("test_phase"),
+            search=mock.MockSearch("test_phase"),
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=1)
             ),
@@ -145,7 +145,7 @@ class TestMakeAnalysis:
         assert analysis.masked_imaging.mask.pixel_scales == mask_input.pixel_scales
 
         phase_imaging_7x7 = ag.PhaseImaging(
-                        search=mock.MockSearch("test_phase"),
+            search=mock.MockSearch("test_phase"),
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=2)
             ),

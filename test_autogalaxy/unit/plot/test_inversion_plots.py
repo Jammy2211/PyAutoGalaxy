@@ -5,7 +5,6 @@ import pytest
 
 import autogalaxy as ag
 import autogalaxy.plot as aplt
-from autoconf import conf
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -15,11 +14,6 @@ def make_plotter_setup():
     return "{}/files/plots/inversion/".format(
         os.path.dirname(os.path.realpath(__file__))
     )
-
-
-@pytest.fixture(autouse=True)
-def set_config_path():
-    conf.instance.output_path = path.join(directory, "output")
 
 
 def test__individual_attributes_are_output_for_rectangular_inversion(

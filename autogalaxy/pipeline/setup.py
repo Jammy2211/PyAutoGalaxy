@@ -634,7 +634,7 @@ class SetupMassTotal(AbstractSetupMass):
         if self.mass_profile is None:
             return ""
 
-        return f"__{conf.instance.setup_tag.get('total', self.mass_profile().__class__.__name__)}"
+        return f"__{conf.instance['notation']['setup_tags']['total'][self.mass_profile().__class__.__name__]}"
 
     @property
     def align_light_mass_centre_tag(self):
