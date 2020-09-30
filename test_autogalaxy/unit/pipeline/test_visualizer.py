@@ -19,9 +19,7 @@ def make_visualizer_plotter_setup():
 
 @pytest.fixture(autouse=True)
 def set_config_path():
-    conf.instance = conf.Config(
-        path.join(directory, "files/plotter"), path.join(directory, "output")
-    )
+    conf.instance.output_path = path.join(directory, "output")
 
 
 class TestAbstractPhaseVisualizer:

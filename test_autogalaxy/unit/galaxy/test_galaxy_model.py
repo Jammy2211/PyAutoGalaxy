@@ -31,13 +31,6 @@ def make_profile():
     return ag.lmp.EllipticalSersicRadialGradient()
 
 
-@pytest.fixture(scope="session", autouse=True)
-def do_something():
-    conf.instance = conf.Config(
-        "{}/config/galaxy_model".format(os.path.dirname(os.path.realpath(__file__)))
-    )
-
-
 @pytest.fixture(name="mapper")
 def make_mapper():
     return af.ModelMapper()

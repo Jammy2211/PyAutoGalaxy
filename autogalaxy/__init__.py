@@ -9,6 +9,7 @@ from .dataset.interferometer import (
     SimulatorInterferometer,
 )
 from autoarray import GridIterate
+from autoarray import GridInterpolate
 from autoarray import Mask2D
 from autoarray import GridCoordinates
 from autoarray import TransformerDFT

@@ -1,8 +1,6 @@
-from os import path
-
-from autoconf import conf
-import autogalaxy as ag
 import pytest
+
+import autogalaxy as ag
 from test_autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
@@ -11,19 +9,9 @@ pytestmark = pytest.mark.filterwarnings(
     "either in an error or a different result."
 )
 
-directory = path.dirname(path.realpath(__file__))
-
-
-@pytest.fixture(scope="session", autouse=True)
-def do_something():
-    print("{}/config/".format(directory))
-
-    conf.instance = conf.Config("{}/config/".format(directory))
-
 
 class TestGeneric:
     def test__results_of_phase_are_available_as_properties(self, imaging_7x7, mask_7x7):
-
         phase_dataset_7x7 = ag.PhaseImaging(
             galaxies=dict(
                 galaxy=ag.Galaxy(
@@ -44,7 +32,6 @@ class TestGeneric:
 
 class TestPlane:
     def test__max_log_likelihood_plane_available_as_result(self, imaging_7x7, mask_7x7):
-
         galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
         galaxy_1 = ag.Galaxy(
             redshift=0.5, light=ag.lp.EllipticalCoreSersic(intensity=2.0)
