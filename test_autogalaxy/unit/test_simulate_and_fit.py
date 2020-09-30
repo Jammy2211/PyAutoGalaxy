@@ -1,13 +1,13 @@
 import os
 import shutil
 
-import autogalaxy as ag
 import numpy as np
 import pytest
 
+import autogalaxy as ag
+
 
 def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__noise_normalization_correct():
-
     grid = ag.GridIterate.uniform(shape_2d=(11, 11), pixel_scales=0.2)
 
     psf = ag.Kernel.manual_2d(
@@ -89,7 +89,6 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
 
 
 def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0__noise_normalization_correct():
-
     grid = ag.Grid.uniform(shape_2d=(11, 11), pixel_scales=0.2, sub_size=1)
 
     psf = ag.Kernel.from_gaussian(
@@ -167,7 +166,6 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
 
 
 def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normalization_correct():
-
     grid = ag.Grid.uniform(shape_2d=(51, 51), pixel_scales=0.1, sub_size=2)
 
     galaxy_galaxy = ag.Galaxy(
@@ -268,5 +266,4 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
         os.path.dirname(os.path.realpath(__file__))
     )  # Setup path so we can output the simulated image.
 
-    if os.path.exists(path) == True:
-        shutil.rmtree(path)
+    shutil.rmtree(path, ignore_errors=True)

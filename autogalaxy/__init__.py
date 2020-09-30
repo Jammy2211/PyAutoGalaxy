@@ -13,6 +13,10 @@ from autoarray import Mask2D
 from autoarray import GridCoordinates
 from autoarray import TransformerDFT
 from autoarray import pix
+from autoarray import reg
+from autoarray import TransformerNUFFT
+from autoarray import SettingsInversion
+from autoarray import SettingsPixelization
 from autoarray.structures.arrays import Array
 from autoarray.structures.grids import (
     Grid,

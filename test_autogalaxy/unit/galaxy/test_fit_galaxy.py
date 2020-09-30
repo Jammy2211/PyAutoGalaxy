@@ -5,12 +5,7 @@ import pytest
 from test_autogalaxy.mock import MockGalaxy
 
 
-@pytest.fixture(autouse=True)
-def reset_config():
-    """
-    Use configuration from the default path. You may want to change this to set a specific path.
-    """
-    conf.instance = conf.default
+
 
 
 class TestLikelihood:

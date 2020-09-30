@@ -25,8 +25,8 @@ directory = path.dirname(path.realpath(__file__))
 
 
 @pytest.fixture(autouse=True)
-def set_galaxy_config_path(request):
-    if dirname(realpath(__file__)) in request.module.directory:
+def set_config_path(request):
+    if dirname(realpath(__file__)) in str(request.module):
         conf.instance = conf.Config(
             path.join(directory, "unit/config"), path.join(directory, "unit/output")
         )
