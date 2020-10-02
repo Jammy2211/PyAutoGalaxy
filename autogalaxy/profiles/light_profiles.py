@@ -35,7 +35,7 @@ class LightProfile:
             The (y, x) coordinates in the original reference frame of the grid.
         Returns
         -------
-        intensity : ndarray
+        intensity : np.ndarray
             The value of intensity at the given radius
         """
         raise NotImplementedError("intensity_from_grid should be overridden")
@@ -83,14 +83,14 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         return grids.GridCoordinates([self.centre])
 
     def blurred_image_from_grid_and_psf(self, grid, psf, blurring_grid):
-        """Evaluate the light profile image on an input *Grid* of coordinates and then convolve it with a PSF.
+        """Evaluate the light profile image on an input `Grid` of coordinates and then convolve it with a PSF.
 
-        The *Grid* may be masked, in which case values outside but near the edge of the mask will convolve light into
+        The `Grid` may be masked, in which case values outside but near the edge of the mask will convolve light into
         the mask. A blurring grid is therefore required, which evaluates the image on pixels on the mask edge such that
         their light is blurred into it by the PSF.
 
-        The grid and blurring_grid must be a *Grid* objects so the evaluated image can be mapped to a uniform 2D array
-        and binned up for convolution. They therefore cannot be *GridCoordinates* objects.
+        The grid and blurring_grid must be a `Grid` objects so the evaluated image can be mapped to a uniform 2D array
+        and binned up for convolution. They therefore cannot be `GridCoordinates` objects.
 
         Parameters
         ----------
@@ -111,15 +111,15 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         )
 
     def blurred_image_from_grid_and_convolver(self, grid, convolver, blurring_grid):
-        """Evaluate the light profile image on an input *Grid* of coordinates and then convolve it with a PSF using a
+        """Evaluate the light profile image on an input `Grid` of coordinates and then convolve it with a PSF using a
         *Convolver* object.
 
-        The *Grid* may be masked, in which case values outside but near the edge of the mask will convolve light into
+        The `Grid` may be masked, in which case values outside but near the edge of the mask will convolve light into
         the mask. A blurring grid is therefore required, which evaluates the image on pixels on the mask edge such that
         their light is blurred into it by the Convolver.
 
-        The grid and blurring_grid must be a *Grid* objects so the evaluated image can be mapped to a uniform 2D array
-        and binned up for convolution. They therefore cannot be *GridCoordinates* objects.
+        The grid and blurring_grid must be a `Grid` objects so the evaluated image can be mapped to a uniform 2D array
+        and binned up for convolution. They therefore cannot be `GridCoordinates` objects.
 
         Parameters
         ----------
@@ -355,7 +355,8 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
         )
 
     def intensity_at_radius(self, radius):
-        """ Compute the intensity of the profile at a given radius.
+        """
+    Returns the intensity of the profile at a given radius.
 
         Parameters
         ----------

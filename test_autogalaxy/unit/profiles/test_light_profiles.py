@@ -1202,7 +1202,7 @@ class TestDecorators:
 
     def test__grid_interpolate_in__interpolates_based_on_intepolate_config(self):
 
-        # False in interpolate.ini
+        # ``False`` in interpolate.ini
 
         mask = ag.Mask2D.manual(
             mask=[
@@ -1228,7 +1228,7 @@ class TestDecorators:
 
         assert (image == image_no_interpolate).all()
 
-        # False in interpolate.ini
+        # ``False`` in interpolate.ini
 
         light_profile = ag.lp.SphericalSersic(intensity=1.0)
 

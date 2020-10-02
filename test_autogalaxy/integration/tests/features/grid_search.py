@@ -8,7 +8,7 @@ data_name = "galaxy_x1__dev_vaucouleurs"
 instrument = "vro"
 
 
-def make_pipeline(name, folders, search=af.DynestyStatic()):
+def make_pipeline(name, path_prefix, search=af.DynestyStatic()):
 
     bulge = af.PriorModel(ag.lp.EllipticalDevVaucouleurs)
 
@@ -21,7 +21,7 @@ def make_pipeline(name, folders, search=af.DynestyStatic()):
 
     phase1 = ag.PhaseImaging(
         phase_name="phase_1",
-        folders=folders,
+        path_prefix=path_prefix,
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, bulge=ag.lp.EllipticalSersic)
         ),
@@ -39,7 +39,7 @@ def make_pipeline(name, folders, search=af.DynestyStatic()):
 
     phase2 = GridPhase(
         phase_name="phase_2",
-        folders=folders,
+        path_prefix=path_prefix,
         galaxies=dict(galaxy=ag.GalaxyModel(redshift=0.5, bulge=bulge)),
         number_of_steps=2,
         search=search,
@@ -51,7 +51,7 @@ def make_pipeline(name, folders, search=af.DynestyStatic()):
 
     phase3 = ag.PhaseImaging(
         phase_name="phase_3",
-        folders=folders,
+        path_prefix=path_prefix,
         galaxies=dict(galaxy=phase2.result.model.galaxies.light),
         search=search,
     )

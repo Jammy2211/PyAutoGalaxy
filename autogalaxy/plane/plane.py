@@ -120,7 +120,8 @@ class AbstractPlane(lensing.LensingObject):
 
     @property
     def light_profile_centres(self):
-        """Returns the light profile centres of the plane as a *GridCoordinates* object, which structures the centres
+        """
+    Returns the light profile centres of the plane as a `GridCoordinates` object, which structures the centres
         in lists according to which galaxy they come from.
 
         Fo example, if a plane has two galaxies, the first with one light profile and second with two light profiles
@@ -154,7 +155,8 @@ class AbstractPlane(lensing.LensingObject):
 
     @property
     def mass_profile_centres(self):
-        """Returns the mass profile centres of the plane as a *GridCoordinates* object, which structures the centres
+        """
+    Returns the mass profile centres of the plane as a `GridCoordinates` object, which structures the centres
         in lists according to which galaxy they come from.
 
         Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
@@ -176,7 +178,8 @@ class AbstractPlane(lensing.LensingObject):
 
     @property
     def mass_profile_axis_ratios(self):
-        """Returns the mass profile axis-ratios of the plane as a *GridCoordinates* object, which structures the axis-ratios
+        """
+    Returns the mass profile axis-ratios of the plane as a `GridCoordinates` object, which structures the axis-ratios
         in lists according to which galaxy they come from.
 
         Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
@@ -197,7 +200,8 @@ class AbstractPlane(lensing.LensingObject):
 
     @property
     def mass_profile_phis(self):
-        """Returns the mass profile phis of the plane as a *GridCoordinates* object, which structures the phis
+        """
+    Returns the mass profile phis of the plane as a `GridCoordinates` object, which structures the phis
         in lists according to which galaxy they come from.
 
         Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
@@ -310,7 +314,8 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
 
     @grids.grid_like_to_structure
     def image_from_grid(self, grid):
-        """Compute the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
+        """
+    Returns the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
         individual images of each galaxy's light profile.
 
         The image is calculated on the sub-grid and binned-up to the original grid by taking the mean
@@ -342,7 +347,8 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
 
     @grids.grid_like_to_structure
     def convergence_from_grid(self, grid):
-        """Compute the convergence of the list of galaxies of the plane's sub-grid, by summing the individual convergences \
+        """
+    Returns the convergence of the list of galaxies of the plane's sub-grid, by summing the individual convergences \
         of each galaxy's mass profile.
 
         The convergence is calculated on the sub-grid and binned-up to the original grid by taking the mean
@@ -366,7 +372,8 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
 
     @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
-        """Compute the potential of the list of galaxies of the plane's sub-grid, by summing the individual potentials \
+        """
+    Returns the potential of the list of galaxies of the plane's sub-grid, by summing the individual potentials \
         of each galaxy's mass profile.
 
         The potential is calculated on the sub-grid and binned-up to the original grid by taking the mean
@@ -402,7 +409,8 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
     def luminosities_of_galaxies_within_circles_in_units(
             self, radius: dim.Length, unit_luminosity="eps", exposure_time=None
     ):
-        """Compute the total luminosity of all galaxies in this plane within a circle of specified radius.
+        """
+    Returns the total luminosity of all galaxies in this plane within a circle of specified radius.
 
         See *galaxy.light_within_circle* and *light_profiles.light_within_circle* for details \
         of how this is performed.
@@ -431,7 +439,8 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
     def masses_of_galaxies_within_circles_in_units(
             self, radius: dim.Length, unit_mass="angular", redshift_source=None
     ):
-        """Compute the total mass of all galaxies in this plane within a circle of specified radius.
+        """
+    Returns the total mass of all galaxies in this plane within a circle of specified radius.
 
         See *galaxy.angular_mass_within_circle* and *mass_profiles.angular_mass_within_circle* for details
         of how this is performed.
@@ -770,13 +779,15 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
     @property
     def yticks(self):
-        """Compute the yticks labels of this grid, used for plotting the y-axis ticks when visualizing an image \
+        """
+    Returns the yticks labels of this grid, used for plotting the y-axis ticks when visualizing an image \
         """
         return np.linspace(np.amin(self.grid[:, 0]), np.amax(self.grid[:, 0]), 4)
 
     @property
     def xticks(self):
-        """Compute the xticks labels of this grid, used for plotting the x-axis ticks when visualizing an \
+        """
+    Returns the xticks labels of this grid, used for plotting the x-axis ticks when visualizing an \
         image"""
         return np.linspace(np.amin(self.grid[:, 1]), np.amax(self.grid[:, 1]), 4)
 

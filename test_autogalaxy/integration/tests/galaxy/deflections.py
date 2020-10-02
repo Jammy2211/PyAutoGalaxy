@@ -31,8 +31,8 @@ def galaxy_fit_phase():
 
     deflections = galaxy.deflections_from_grid(galaxies=[galaxy], grid=grid)
 
-    noise_map = ag.Array.manual_2d
-        sub_array_1d=np.ones(deflections[:, 0].shape), pixel_scales=pixel_scales
+    noise_map = ag.Array.manual_2d(
+        array=np.ones(deflections[:, 0].shape), pixel_scales=pixel_scales
     )
 
     data_y = ag.GalaxyData(
@@ -44,7 +44,7 @@ def galaxy_fit_phase():
 
     phase1 = ag.PhaseGalaxy(
         phase_name=test_name + "/",
-        folders=folders,
+        path_prefix=path_prefix,
         galaxies=dict(
             gal=ag.GalaxyModel(redshift=0.5, light=ag.mp.SphericalIsothermal)
         ),

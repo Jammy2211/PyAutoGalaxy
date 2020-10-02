@@ -66,7 +66,7 @@ class SphericalProfile(GeometryProfile):
         
         Parameters
         -----------
-        grid_thetas : ndarray
+        grid_thetas : np.ndarray
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
         return np.cos(grid_thetas), np.sin(grid_thetas)
@@ -81,7 +81,7 @@ class SphericalProfile(GeometryProfile):
         ----------
         grid : grid_like
             The (y, x) coordinates in the reference frame of the profile.
-        radius : ndarray
+        radius : np.ndarray
             The circular radius of each coordinate from the profile center.
         """
         grid_thetas = np.arctan2(grid[:, 0], grid[:, 1])
@@ -185,7 +185,7 @@ class EllipticalProfile(SphericalProfile):
 
         Parameters
         -----------
-        grid_thetas : ndarray
+        grid_thetas : np.ndarray
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
         theta_coordinate_to_profile = np.add(grid_thetas, -self.phi_radians)
@@ -218,7 +218,8 @@ class EllipticalProfile(SphericalProfile):
     @grids.transform
     @grids.relocate_to_radial_minimum
     def grid_to_elliptical_radii(self, grid):
-        """ Convert a grid of (y,x) coordinates to an elliptical radius.
+        """
+    Convert a grid of (y,x) coordinates to an elliptical radius.
 
         If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
 
