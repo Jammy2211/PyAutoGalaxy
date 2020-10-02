@@ -355,7 +355,8 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
         )
 
     def intensity_at_radius(self, radius):
-        """ Compute the intensity of the profile at a given radius.
+        """
+    Returns the intensity of the profile at a given radius.
 
         Parameters
         ----------

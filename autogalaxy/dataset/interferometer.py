@@ -142,7 +142,7 @@ class SimulatorInterferometer(interferometer.SimulatorInterferometer):
 
     def from_plane_and_grid(self, plane, grid, name=None):
         """
-        Create a realistic simulated image by applying effects to a plain simulated image.
+        Returns a realistic simulated image by applying effects to a plain simulated image.
 
         Parameters
         ----------

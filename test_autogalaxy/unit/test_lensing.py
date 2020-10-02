@@ -69,7 +69,7 @@ class MockEllipticalIsothermal(
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
-        The `grid_like_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        The `grid_like_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See \
         *ag.grid_like_to_structure* for a description of the output.
 
         Parameters

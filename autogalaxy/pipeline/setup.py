@@ -983,6 +983,9 @@ class SetupMassLightDark(AbstractSetupMass):
         gradient.
         """
 
+        if not self.include_envelope:
+            return None
+
         if self.envelope_as_sersic:
             if not self.envelope_mass_to_light_ratio_gradient:
                 return af.PriorModel(lmp.EllipticalSersic)
@@ -1022,10 +1025,10 @@ class SetupMassLightDark(AbstractSetupMass):
 
     def align_bulge_and_dark_centre(self, bulge_prior_model, dark_prior_model):
 
-        if self.align_light_dark_centre:
+        if self.align_bulge_dark_centre:
             dark_prior_model.centre = bulge_prior_model.centre
         else:
-            dark_prior_model.centre = af.last.model.galaxies.lens.sersic.centre
+            dark_prior_model.centre = af.last.model.galaxies.lens.bulge.centre
 
 
 class AbstractSetupSource:
@@ -1228,7 +1231,7 @@ class SetupSMBH:
 
     def smbh_from_centre(self, centre, centre_sigma=0.1):
         """
-        Create a `PriorModel` of a `PointMass` _MassProfile_ if *include_smbh* is True, which is fitted for in the
+        Returns a `PriorModel` of a `PointMass` _MassProfile_ if *include_smbh* is True, which is fitted for in the
         mass-model too represent a super-massive black-hole (smbh).
 
         The centre of the smbh is an input parameter of the functiono, and this centre is either fixed to the input
