@@ -2,7 +2,6 @@ from astropy.io import fits
 
 import os
 import numpy as np
-import autoarray as aa
 import autogalaxy as ag
 
 
@@ -22,18 +21,15 @@ class TestImaging:
     def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9(self):
 
         fits_path = "{}/files".format(os.path.dirname(os.path.realpath(__file__)))
-
-        image = np.array([[1.0, 0.0], [0.0, 0.0]])
         image_path = f"{fits_path}/image.fits"
-        create_fits(fits_path=image_path, array=image)
 
-        noise_map = np.array([[2.0, 0.0], [0.0, 0.0]])
+        create_fits(fits_path=image_path, array=[[1.0, 0.0], [0.0, 0.0]])
+
         noise_map_path = f"{fits_path}/noise_map.fits"
-        create_fits(fits_path=noise_map_path, array=noise_map)
+        create_fits(fits_path=noise_map_path, array=[[2.0, 0.0], [0.0, 0.0]])
 
-        psf = np.array([[1.0, 1.0], [0.0, 0.0]])
         psf_path = f"{fits_path}/psf.fits"
-        create_fits(fits_path=psf_path, array=psf)
+        create_fits(fits_path=psf_path, array=[[1.0, 1.0], [0.0, 0.0]])
 
         imaging = ag.Imaging.from_fits(
             image_path=image_path,
@@ -129,7 +125,7 @@ class TestMaskedImaging:
 class TestSimulatorImaging:
     def test__from_plane_and_grid__same_as_plane_image(self):
 
-        psf = ag.Kernel.from_gaussian(shape_2d=(7, 7), sigma=0.5, pixel_scales=1.0)
+        psf = ag.Kernel.from_gaussian(shape_2d=(7, 7), sigma=0.5, pixel_scales=0.05)
 
         grid = ag.Grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
 
@@ -141,8 +137,12 @@ class TestSimulatorImaging:
 
         simulator = ag.SimulatorImaging(
             psf=psf,
-            exposure_time_map=ag.Array.full(fill_value=10000.0, shape_2d=grid.shape_2d),
-            background_sky_map=ag.Array.full(fill_value=100.0, shape_2d=grid.shape_2d),
+            exposure_time_map=ag.Array.full(
+                fill_value=10000.0, shape_2d=grid.shape_2d, pixel_scales=0.05
+            ),
+            background_sky_map=ag.Array.full(
+                fill_value=100.0, shape_2d=grid.shape_2d, pixel_scales=0.05
+            ),
             add_noise=True,
             noise_seed=1,
         )
@@ -179,8 +179,12 @@ class TestSimulatorImaging:
 
         simulator = ag.SimulatorImaging(
             psf=psf,
-            exposure_time_map=ag.Array.full(fill_value=10000.0, shape_2d=grid.shape_2d),
-            background_sky_map=ag.Array.full(fill_value=100.0, shape_2d=grid.shape_2d),
+            exposure_time_map=ag.Array.full(
+                fill_value=10000.0, shape_2d=grid.shape_2d, pixel_scales=0.2
+            ),
+            background_sky_map=ag.Array.full(
+                fill_value=100.0, shape_2d=grid.shape_2d, pixel_scales=0.2
+            ),
             add_noise=True,
             noise_seed=1,
         )
