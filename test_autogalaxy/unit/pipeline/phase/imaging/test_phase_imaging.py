@@ -210,7 +210,9 @@ class TestHyperMethods:
 
         results = mock.MockResults(
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
-            hyper_model_image=ag.Array.full(fill_value=3.0, shape_2d=(3, 3)),
+            hyper_model_image=ag.Array.full(
+                fill_value=3.0, shape_2d=(3, 3), pixel_scales=1.0
+            ),
             mask=mask_7x7,
             use_as_hyper_dataset=True,
         )
