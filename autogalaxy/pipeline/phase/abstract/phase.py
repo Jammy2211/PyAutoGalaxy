@@ -81,11 +81,11 @@ class AbstractPhase(af.AbstractPhase):
     def pixelization(self):
         for galaxy in self.galaxies:
             if hasattr(galaxy, "pixelization"):
-                if galaxy.pixelization is not None:
-                    if isinstance(galaxy.pixelization, af.PriorModel):
-                        return galaxy.pixelization.cls
+                if galaxy.pixelization_prior_model is not None:
+                    if isinstance(galaxy.pixelization_prior_model, af.PriorModel):
+                        return galaxy.pixelization_prior_model.cls
                     else:
-                        return galaxy.pixelization
+                        return galaxy.pixelization_prior_model
 
     @property
     def has_pixelization(self):
@@ -95,7 +95,7 @@ class AbstractPhase(af.AbstractPhase):
     def uses_cluster_inversion(self):
         if self.galaxies:
             for galaxy in self.galaxies:
-                if isinstance_or_prior(galaxy.pixelization, pix.VoronoiBrightnessImage):
+                if isinstance_or_prior(galaxy.pixelization_prior_model, pix.VoronoiBrightnessImage):
                     return True
         return False
 
@@ -103,6 +103,6 @@ class AbstractPhase(af.AbstractPhase):
     def pixelization_is_model(self):
         if self.galaxies:
             for galaxy in self.galaxies:
-                if isprior(galaxy.pixelization):
+                if isprior(galaxy.pixelization_prior_model):
                     return True
         return False

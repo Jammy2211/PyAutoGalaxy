@@ -222,7 +222,7 @@ class TestResultForArguments:
 
         assert gaussian_galaxy_model_model.redshift.redshift == redshift_prior
         assert (
-            gaussian_galaxy_model_model.mass_profile.einstein_radius.value
+            gaussian_galaxy_model_model.mass_prior_model.einstein_radius.value
             == einstein_radius_prior
         )
         assert (
@@ -247,8 +247,8 @@ class TestPixelization:
 
         galaxy = galaxy_model.instance_for_arguments(arguments)
 
-        assert galaxy.pixelization.shape[0] == 24
-        assert galaxy.pixelization.shape[1] == 23
+        assert galaxy.pixelization_prior_model.shape[0] == 24
+        assert galaxy.pixelization_prior_model.shape[1] == 23
 
     def test_fixed_pixelization(self):
         galaxy_model = ag.GalaxyModel(
@@ -261,8 +261,8 @@ class TestPixelization:
 
         galaxy = galaxy_model.instance_for_arguments(arguments)
 
-        assert galaxy.pixelization.shape[0] == 3
-        assert galaxy.pixelization.shape[1] == 3
+        assert galaxy.pixelization_prior_model.shape[0] == 3
+        assert galaxy.pixelization_prior_model.shape[1] == 3
 
     def test__if_no_pixelization_raises_error(self):
         with pytest.raises(AssertionError):
@@ -286,7 +286,7 @@ class TestRegularization:
 
         galaxy = galaxy_model.instance_for_arguments(arguments)
 
-        assert galaxy.regularization.coefficient == 0.5
+        assert galaxy.regularization_prior_model.coefficient == 0.5
 
     def test_fixed_regularization(self):
         galaxy_model = ag.GalaxyModel(
@@ -299,7 +299,7 @@ class TestRegularization:
 
         galaxy = galaxy_model.instance_for_arguments(arguments)
 
-        assert galaxy.regularization.coefficient == 1.0
+        assert galaxy.regularization_prior_model.coefficient == 1.0
 
     def test__if_no_pixelization_raises_error(self):
         with pytest.raises(AssertionError):

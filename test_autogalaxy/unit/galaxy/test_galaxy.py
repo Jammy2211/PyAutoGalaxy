@@ -141,8 +141,8 @@ class TestUnits:
         )
 
         assert galaxy.redshift == 1.0
-        assert galaxy.pixelization == 1
-        assert galaxy.regularization == 2
+        assert galaxy.pixelization_prior_model == 1
+        assert galaxy.regularization_prior_model == 2
 
 
 class TestLightProfiles:

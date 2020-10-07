@@ -30,5 +30,5 @@ class Result(abstract.result.Result):
     @property
     def pixelization(self):
         for galaxy in self.max_log_likelihood_fit.galaxies:
-            if galaxy.pixelization is not None:
-                return galaxy.pixelization
+            if galaxy.pixelization_prior_model is not None:
+                return galaxy.pixelization_prior_model

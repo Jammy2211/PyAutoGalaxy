@@ -62,11 +62,11 @@ class AbstractPlane(lensing.LensingObject):
 
     @property
     def has_pixelization(self):
-        return any([galaxy.pixelization for galaxy in self.galaxies])
+        return any([galaxy.pixelization_prior_model for galaxy in self.galaxies])
 
     @property
     def has_regularization(self):
-        return any([galaxy.regularization for galaxy in self.galaxies])
+        return any([galaxy.regularization_prior_model for galaxy in self.galaxies])
 
     @property
     def galaxies_with_light_profile(self):
@@ -90,7 +90,7 @@ class AbstractPlane(lensing.LensingObject):
         if len(self.galaxies_with_pixelization) == 0:
             return None
         if len(self.galaxies_with_pixelization) == 1:
-            return self.galaxies_with_pixelization[0].pixelization
+            return self.galaxies_with_pixelization[0].pixelization_prior_model
         elif len(self.galaxies_with_pixelization) > 1:
             raise exc.PixelizationException(
                 "The number of galaxies with pixelizations in one plane is above 1"
@@ -102,7 +102,7 @@ class AbstractPlane(lensing.LensingObject):
         if len(self.galaxies_with_regularization) == 0:
             return None
         if len(self.galaxies_with_regularization) == 1:
-            return self.galaxies_with_regularization[0].regularization
+            return self.galaxies_with_regularization[0].regularization_prior_model
         elif len(self.galaxies_with_regularization) > 1:
             raise exc.PixelizationException(
                 "The number of galaxies with regularizations in one plane is above 1"
@@ -579,14 +579,14 @@ class AbstractPlaneData(AbstractPlaneLensing):
     ):
 
         galaxies_with_pixelization = list(
-            filter(lambda galaxy: galaxy.pixelization is not None, self.galaxies)
+            filter(lambda galaxy: galaxy.pixelization_prior_model is not None, self.galaxies)
         )
 
         if len(galaxies_with_pixelization) == 0:
             return None
         if len(galaxies_with_pixelization) == 1:
 
-            pixelization = galaxies_with_pixelization[0].pixelization
+            pixelization = galaxies_with_pixelization[0].pixelization_prior_model
 
             return pixelization.mapper_from_grid_and_sparse_grid(
                 grid=grid,

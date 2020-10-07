@@ -67,10 +67,8 @@ from .pipeline.pipeline import PipelineDataset
 from .pipeline.setup import (
     SetupPipeline,
     SetupHyper,
-    SetupSourceSersic,
-    SetupSourceInversion,
-    SetupLightSersic,
-    SetupLightBulgeDisk,
+    SetupLight,
+    SetupLightInversion,
     SetupMassTotal,
     SetupMassLightDark,
     SetupSMBH,

@@ -411,7 +411,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return all(
             (
                 isinstance(other, Galaxy),
-                self.pixelization == other.pixelization,
+                self.pixelization == other.pixelization_prior_model,
                 self.redshift == other.redshift,
                 self.hyper_galaxy == other.hyper_galaxy,
                 self.light_profiles == other.light_profiles,
