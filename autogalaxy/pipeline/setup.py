@@ -48,11 +48,11 @@ class SetupHyper:
             If True, the hyper-galaxy phase which scales the noise map is performed before the inversion phase, else
             it is performed after.
         hyper_galaxies_search : af.NonLinearSearch or None
-            The non-linear search used by every hyper-galaxies phase.
+            The `NonLinearSearch` used by every hyper-galaxies phase.
         inversion_search : af.NonLinearSearch or None
-            The non-linear search used by every inversion phase.
+            The `NonLinearSearch` used by every inversion phase.
         hyper_combined_search : af.NonLinearSearch or None
-            The non-linear search used by every hyper combined phase.
+            The `NonLinearSearch` used by every hyper combined phase.
         evidence_tolerance : float
             The evidence tolerance of the non-linear searches used in the hyper phases, whereby higher values will
             lead them to end earlier at the expense of accuracy.
