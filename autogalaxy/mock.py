@@ -1,5 +1,4 @@
 import math
-from pathlib import Path
 
 from astropy import constants
 
@@ -7,15 +6,13 @@ import autofit as af
 import autogalaxy as ag
 from autoarray.mock import *
 from autoarray.structures import grids
-from autoconf import conf
 from autofit.non_linear.mock.mock_search import MockSamples
 from autogalaxy.pipeline.phase.dataset import PhaseDataset
 from autogalaxy.plot.lensing_plotters import Include
-# noinspection PyUnusedLocal
 from test_autofit.mock import MockSearch
 
 
-### MockProfiles ###
+# MockProfiles #
 
 
 class MockLightProfile(ag.lp.LightProfile):
@@ -41,7 +38,7 @@ class MockMassProfile:
         return np.array([self.value, self.value])
 
 
-### Mock Galaxy ###
+# Mock Galaxy #
 
 
 class MockGalaxy:
@@ -84,7 +81,7 @@ class MockHyperGalaxy:
         return self.noise_factor * (noise_map * contributions) ** self.noise_power
 
 
-### Mock Cosmology ###
+# Mock Cosmology #
 
 
 class Value:
@@ -127,7 +124,7 @@ class MockCosmology:
         return Value(value=self.cosmic_average_density)
 
 
-### Mock Pipeline / Phase ###
+# Mock Pipeline / Phase #
 
 
 class MockResult(af.MockResult):
@@ -438,7 +435,7 @@ def make_gal_fit_7x7_deflections_x():
     )
 
 
-### HYPER GALAXIES ###
+# HYPER GALAXIES #
 
 
 def make_hyper_model_image_7x7():
