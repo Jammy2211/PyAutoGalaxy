@@ -56,7 +56,7 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
     @af.map_types
     def __init__(self, elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0)):
         """
-        An _ExternalShear_ term, to model the line-of-sight contribution of other galaxies / satellites.
+        An `ExternalShear` term, to model the line-of-sight contribution of other galaxies / satellites.
 
         The shear angle phi is defined in the direction of stretching of the image. Therefore, if an object located \
         outside the lens is responsible for the shear, it will be offset 90 degrees from the value of phi.
@@ -125,7 +125,8 @@ class InputDeflections(mp.MassProfile):
         deflections_x,
         image_plane_grid,
         preload_grid=None,
-        normalization_scale: float = 1.0,
+        preload_blurring_grid=None,
+        #      normalization_scale: float = 1.0,
     ):
         """
         Represents a known deflection angle map (e.g. from an already performed lens model or particle simulation
@@ -162,12 +163,20 @@ class InputDeflections(mp.MassProfile):
 
         self.preload_grid = preload_grid
         self.preload_deflections = None
+        self.preload_blurring_grid = preload_blurring_grid
+        self.preload_blurring_deflections = None
 
         if self.preload_grid is not None:
             self.normalization_scale = 1.0
             self.preload_deflections = self.deflections_from_grid(grid=preload_grid)
 
-        self.normalization_scale = normalization_scale
+        if self.preload_blurring_grid is not None:
+            self.normalization_scale = 1.0
+            self.preload_blurring_deflections = self.deflections_from_grid(
+                grid=preload_blurring_grid
+            )
+
+        self.normalization_scale = 1.0  # normalization_scale
 
     @grids.grid_like_to_structure
     def convergence_from_grid(self, grid):
@@ -181,10 +190,19 @@ class InputDeflections(mp.MassProfile):
     def deflections_from_grid(self, grid):
 
         if self.preload_grid is not None and self.preload_deflections is not None:
-            if (grid[0, 0] == self.preload_grid[0, 0]) and (
-                grid.pixel_scales == self.preload_grid.pixel_scales
-            ):
-                return self.normalization_scale * self.preload_deflections
+
+            if grid.sub_shape_1d == self.preload_grid.sub_shape_1d:
+                if np.allclose(grid, self.preload_grid, 1e-8):
+                    return self.normalization_scale * self.preload_deflections
+
+        if (
+            self.preload_blurring_grid is not None
+            and self.preload_blurring_deflections is not None
+        ):
+
+            if grid.sub_shape_1d == self.preload_blurring_grid.sub_shape_1d:
+                if np.allclose(grid, self.preload_blurring_grid, 1e-8):
+                    return self.normalization_scale * self.preload_blurring_deflections
 
         deflections_y = self.normalization_scale * griddata(
             points=self.image_plane_grid, values=self.deflections_y, xi=grid

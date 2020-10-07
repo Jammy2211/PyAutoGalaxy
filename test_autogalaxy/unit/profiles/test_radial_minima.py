@@ -10,9 +10,9 @@ import pytest
 
 directory = os.path.dirname(os.path.realpath(__file__))
 
-grid_10 = ag.Grid.manual_2d(grid=np.array([[[1.0, 0.0]]]), pixel_scales=1.0, sub_size=1)
+grid_10 = ag.Grid.manual_2d(grid=[[[1.0, 0.0]]], pixel_scales=1.0, sub_size=1)
 grid_zero = ag.Grid.manual_2d(
-    grid=np.array([[[0.0000000001, 0.0]]]), pixel_scales=1.0, sub_size=1
+    grid=[[[0.0000000001, 0.0]]], pixel_scales=1.0, sub_size=1
 )
 
 
@@ -115,9 +115,7 @@ class TestPointMass:
         point_mass = ag.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
 
         deflections_1 = point_mass.deflections_from_grid(grid=grid_10)
-        deflections_0 = point_mass.deflections_from_grid(
-            grid=np.array([[0.00000001, 0.0]])
-        )
+        deflections_0 = point_mass.deflections_from_grid(grid=[[0.00000001, 0.0]])
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
@@ -131,9 +129,7 @@ class TestCoredPowerLaw:
         )
 
         convergence_1 = cored_power_law.convergence_from_grid(grid=grid_10)
-        convergence_0 = cored_power_law.convergence_from_grid(
-            grid=np.array([[1e-8, 0.0]])
-        )
+        convergence_0 = cored_power_law.convergence_from_grid(grid=[[1e-8, 0.0]])
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
 
@@ -147,7 +143,7 @@ class TestPowerLaw:
         )
 
         convergence_1 = power_law.convergence_from_grid(grid=grid_10)
-        convergence_0 = power_law.convergence_from_grid(grid=np.array([[1.0e-9, 0.0]]))
+        convergence_0 = power_law.convergence_from_grid(grid=[[1.0e-9, 0.0]])
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
 
@@ -470,6 +466,6 @@ class TestExternalShear:
 
         shear = ag.mp.ExternalShear(elliptical_comps=(0.1, 0.1))
 
-        deflections_1 = shear.deflections_from_grid(grid=np.array([[1e-8, 0.0]]))
-        deflections_0 = shear.deflections_from_grid(grid=np.array([[1e-9, 0.0]]))
+        deflections_1 = shear.deflections_from_grid(grid=[[1e-8, 0.0]])
+        deflections_0 = shear.deflections_from_grid(grid=[[1e-9, 0.0]])
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)

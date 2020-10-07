@@ -1,6 +1,3 @@
-import os
-
-from autoconf import conf
 import autogalaxy as ag
 import numpy as np
 import pytest
@@ -1782,9 +1779,7 @@ class TestAbstractPlaneData:
             )
 
             mask = ag.Mask2D.manual(
-                mask=np.array(
-                    [[True, True, True], [True, False, True], [True, True, True]]
-                ),
+                mask=[[True, True, True], [True, False, True], [True, True, True]],
                 pixel_scales=1.0,
                 sub_size=1,
             )
@@ -1987,9 +1982,7 @@ class TestAbstractPlaneData:
         ):
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=mock.MockPixelization(
-                    value=1, grid=np.array([[1.0, 1.0]])
-                ),
+                pixelization=mock.MockPixelization(value=1, grid=[[1.0, 1.0]]),
                 regularization=mock.MockRegularization(matrix_shape=(1, 1)),
             )
 
@@ -2250,10 +2243,16 @@ class TestAbstractPlaneData:
                 contribution_factor=1.0, noise_factor=0.0, noise_power=1.0
             )
 
-            hyper_model_image = ag.Array.manual_2d(array=[[0.5, 1.0, 1.5]])
+            hyper_model_image = ag.Array.manual_2d(
+                array=[[0.5, 1.0, 1.5]], pixel_scales=1.0
+            )
 
-            hyper_galaxy_image_0 = ag.Array.manual_2d(array=[[0.5, 1.0, 1.5]])
-            hyper_galaxy_image_1 = ag.Array.manual_2d(array=[[0.5, 1.0, 1.5]])
+            hyper_galaxy_image_0 = ag.Array.manual_2d(
+                array=[[0.5, 1.0, 1.5]], pixel_scales=1.0
+            )
+            hyper_galaxy_image_1 = ag.Array.manual_2d(
+                array=[[0.5, 1.0, 1.5]], pixel_scales=1.0
+            )
 
             galaxy_0 = ag.Galaxy(
                 redshift=0.5,
@@ -2281,8 +2280,8 @@ class TestAbstractPlaneData:
             ).all()
 
         def test__contribution_maps_are_same_as_hyper_galaxy_calculation(self):
-            hyper_model_image = ag.Array.manual_2d([[2.0, 4.0, 10.0]])
-            hyper_galaxy_image = ag.Array.manual_2d([[1.0, 5.0, 8.0]])
+            hyper_model_image = ag.Array.manual_2d([[2.0, 4.0, 10.0]], pixel_scales=1.0)
+            hyper_galaxy_image = ag.Array.manual_2d([[1.0, 5.0, 8.0]], pixel_scales=1.0)
 
             hyper_galaxy_0 = ag.HyperGalaxy(contribution_factor=5.0)
             hyper_galaxy_1 = ag.HyperGalaxy(contribution_factor=10.0)
@@ -2333,8 +2332,8 @@ class TestAbstractPlaneData:
             ).all()
 
         def test__contriution_maps_are_none_for_galaxy_without_hyper_galaxy(self):
-            hyper_model_image = ag.Array.manual_2d([[2.0, 4.0, 10.0]])
-            hyper_galaxy_image = ag.Array.manual_2d([[1.0, 5.0, 8.0]])
+            hyper_model_image = ag.Array.manual_2d([[2.0, 4.0, 10.0]], pixel_scales=1.0)
+            hyper_galaxy_image = ag.Array.manual_2d([[1.0, 5.0, 8.0]], pixel_scales=1.0)
 
             hyper_galaxy = ag.HyperGalaxy(contribution_factor=5.0)
 
@@ -2371,10 +2370,16 @@ class TestAbstractPlaneData:
                 contribution_factor=1.0, noise_factor=0.0, noise_power=1.0
             )
 
-            hyper_model_image = ag.Array.manual_2d(array=[[0.5, 1.0, 1.5]])
+            hyper_model_image = ag.Array.manual_2d(
+                array=[[0.5, 1.0, 1.5]], pixel_scales=1.0
+            )
 
-            hyper_galaxy_image_0 = ag.Array.manual_2d(array=[[0.5, 1.0, 1.5]])
-            hyper_galaxy_image_1 = ag.Array.manual_2d(array=[[0.5, 1.0, 1.5]])
+            hyper_galaxy_image_0 = ag.Array.manual_2d(
+                array=[[0.5, 1.0, 1.5]], pixel_scales=1.0
+            )
+            hyper_galaxy_image_1 = ag.Array.manual_2d(
+                array=[[0.5, 1.0, 1.5]], pixel_scales=1.0
+            )
 
             galaxy_0 = ag.Galaxy(
                 redshift=0.5,
@@ -2412,7 +2417,7 @@ class TestAbstractPlaneData:
         def test__x2_hyper_galaxy__use_numerical_values_of_hyper_noise_map_scaling(
             self
         ):
-            noise_map = ag.Array.manual_2d([[1.0, 2.0, 3.0]])
+            noise_map = ag.Array.manual_2d(array=[[1.0, 2.0, 3.0]], pixel_scales=1.0)
 
             hyper_galaxy_0 = ag.HyperGalaxy(
                 contribution_factor=0.0, noise_factor=1.0, noise_power=1.0
@@ -2421,10 +2426,16 @@ class TestAbstractPlaneData:
                 contribution_factor=3.0, noise_factor=1.0, noise_power=2.0
             )
 
-            hyper_model_image = ag.Array.manual_2d([[0.5, 1.0, 1.5]])
+            hyper_model_image = ag.Array.manual_2d(
+                array=[[0.5, 1.0, 1.5]], pixel_scales=1.0
+            )
 
-            hyper_galaxy_image_0 = ag.Array.manual_2d([[0.0, 1.0, 1.5]])
-            hyper_galaxy_image_1 = ag.Array.manual_2d([[1.0, 1.0, 1.5]])
+            hyper_galaxy_image_0 = ag.Array.manual_2d(
+                array=[[0.0, 1.0, 1.5]], pixel_scales=1.0
+            )
+            hyper_galaxy_image_1 = ag.Array.manual_2d(
+                array=[[1.0, 1.0, 1.5]], pixel_scales=1.0
+            )
 
             galaxy_0 = ag.Galaxy(
                 redshift=0.5,
@@ -2452,10 +2463,14 @@ class TestAbstractPlaneData:
             )
 
         def test__hyper_noise_maps_are_same_as_hyper_galaxy_calculation(self):
-            noise_map = ag.Array.manual_2d([[5.0, 3.0, 1.0]])
+            noise_map = ag.Array.manual_2d(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
 
-            hyper_model_image = ag.Array.manual_2d([[2.0, 4.0, 10.0]])
-            hyper_galaxy_image = ag.Array.manual_2d([[1.0, 5.0, 8.0]])
+            hyper_model_image = ag.Array.manual_2d(
+                array=[[2.0, 4.0, 10.0]], pixel_scales=1.0
+            )
+            hyper_galaxy_image = ag.Array.manual_2d(
+                array=[[1.0, 5.0, 8.0]], pixel_scales=1.0
+            )
 
             hyper_galaxy_0 = ag.HyperGalaxy(contribution_factor=5.0)
             hyper_galaxy_1 = ag.HyperGalaxy(contribution_factor=10.0)
@@ -2515,10 +2530,14 @@ class TestAbstractPlaneData:
             assert (hyper_noise_maps[1].in_1d == hyper_noise_map_0).all()
 
         def test__hyper_noise_maps_are_none_for_galaxy_without_hyper_galaxy(self):
-            noise_map = ag.Array.manual_2d([[5.0, 3.0, 1.0]])
+            noise_map = ag.Array.manual_2d(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
 
-            hyper_model_image = ag.Array.manual_2d([[2.0, 4.0, 10.0]])
-            hyper_galaxy_image = ag.Array.manual_2d([[1.0, 5.0, 8.0]])
+            hyper_model_image = ag.Array.manual_2d(
+                array=[[2.0, 4.0, 10.0]], pixel_scales=1.0
+            )
+            hyper_galaxy_image = ag.Array.manual_2d(
+                array=[[1.0, 5.0, 8.0]], pixel_scales=1.0
+            )
 
             hyper_galaxy_0 = ag.HyperGalaxy(contribution_factor=5.0)
             hyper_galaxy_1 = ag.HyperGalaxy(contribution_factor=10.0)
@@ -2592,10 +2611,14 @@ class TestAbstractPlaneData:
         def test__hyper_noise_map_from_noise_map__is_sum_of_galaxy_hyper_noise_maps__filters_nones(
             self
         ):
-            noise_map = ag.Array.manual_2d([[5.0, 3.0, 1.0]])
+            noise_map = ag.Array.manual_2d(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
 
-            hyper_model_image = ag.Array.manual_2d([[2.0, 4.0, 10.0]])
-            hyper_galaxy_image = ag.Array.manual_2d([[1.0, 5.0, 8.0]])
+            hyper_model_image = ag.Array.manual_2d(
+                array=[[2.0, 4.0, 10.0]], pixel_scales=1.0
+            )
+            hyper_galaxy_image = ag.Array.manual_2d(
+                array=[[1.0, 5.0, 8.0]], pixel_scales=1.0
+            )
 
             hyper_galaxy_0 = ag.HyperGalaxy(contribution_factor=5.0)
             hyper_galaxy_1 = ag.HyperGalaxy(contribution_factor=10.0)
@@ -2667,7 +2690,7 @@ class TestAbstractPlaneData:
         def test__plane_has_no_hyper_galaxies__hyper_noise_map_function_returns_none(
             self
         ):
-            noise_map = ag.Array.manual_2d([[5.0, 3.0, 1.0]])
+            noise_map = ag.Array.manual_2d(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
 
             plane = ag.Plane(redshift=0.5, galaxies=[ag.Galaxy(redshift=0.5)])
             hyper_noise_map = plane.hyper_noise_map_from_noise_map(noise_map=noise_map)
@@ -2923,7 +2946,7 @@ class TestDecorators:
         assert deflections[4, 0] == deflections_sub_8[4, 0]
 
     def test__grid_interp_in__interps_based_on_intepolate_config(self):
-        # False in interpolate.ini
+        # ``False`` in interpolate.ini
 
         mask = ag.Mask2D.manual(
             mask=[

@@ -15,7 +15,7 @@ class SettingsPhase(AbstractSettingsPhase):
         """The settings of a phase, which customize how a model is fitted to data in a PyAutoGalaxy *Phase*. for
         example the type of grid used or options or augmenting the data.
 
-        The *SettingsPhase* perform phase tagging, whereby the phase settings tag the output path of the results
+        The `SettingsPhase` perform phase tagging, whereby the phase settings tag the output path of the results
         depending on their parameters This allows one to fit models to a dataset using different settings in a
         structured path format.
 

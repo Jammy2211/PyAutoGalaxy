@@ -6,7 +6,8 @@ import autogalaxy.plot as aplt
 
 
 def pixel_scale_from_instrument(instrument):
-    """Determine the pixel scale from an instrument based on real observations.
+    """
+    Returns the pixel scale from an instrument based on real observations.
 
     These options are representative of SMA interferometry.
 
@@ -22,7 +23,8 @@ def pixel_scale_from_instrument(instrument):
 
 
 def grid_from_instrument(instrument):
-    """Determine the grid from an instrument based on real observations.
+    """
+    Returns the grid from an instrument based on real observations.
 
     These options are representative of SMA interferometry.
 
@@ -41,7 +43,8 @@ def grid_from_instrument(instrument):
 
 
 def uv_wavelengths_from_instrument(instrument):
-    """Determine the uv wavelengths from an instrument based on real observations.
+    """
+    Returns the uv wavelengths from an instrument based on real observations.
 
     These options are representative of SMA interferometry.
 
@@ -64,7 +67,8 @@ def uv_wavelengths_from_instrument(instrument):
 
 
 def simulator_from_instrument(instrument):
-    """Determine the pixel scale from an instrument based on real observations.
+    """
+    Returns the pixel scale from an instrument based on real observations.
 
     These options are representative of VRO, Euclid, HST, over-sampled HST and Adaptive Optics image.
 
@@ -106,7 +110,7 @@ def simulate_interferometer_from_instrument(data_name, instrument, galaxies):
     test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
 
     dataset_path = af.util.create_path(
-        path=test_path, folders=["dataset", "interferometer", data_name, instrument]
+        path=test_path, path_prefix=["dataset", "interferometer", data_name, instrument]
     )
 
     interferometer.output_to_fits(
@@ -135,7 +139,7 @@ def load_test_interferometer(data_name, instrument):
     test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
 
     dataset_path = af.util.create_path(
-        path=test_path, folders=["dataset", "interferometer", data_name, instrument]
+        path=test_path, path_prefix=["dataset", "interferometer", data_name, instrument]
     )
 
     return ag.Interferometer.from_fits(

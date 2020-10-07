@@ -267,7 +267,8 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
         return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
 
     def intensity_at_radius(self, radius):
-        """ Compute the intensity of the profile at a given radius.
+        """
+    Returns the intensity of the profile at a given radius.
 
         Parameters
         ----------
