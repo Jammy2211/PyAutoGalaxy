@@ -15,11 +15,6 @@ def make_psf_3x3():
     return mock.make_psf_3x3()
 
 
-@pytest.fixture(name="rectangular_pixelization_grid_3x3")
-def make_rectangular_pixelization_grid_3x3():
-    return mock.make_rectangular_pixelization_grid_3x3()
-
-
 @pytest.fixture(name="rectangular_inversion_7x7_3x3")
 def make_rectangular_inversion_7x7_3x3():
     return mock.make_rectangular_inversion_7x7_3x3()
@@ -231,39 +226,9 @@ def make_plane_7x7():
     return mock.make_plane_7x7()
 
 
-@pytest.fixture(name="plane_x2_galaxy_inversion_7x7")
-def make_plane_x2_galaxy_inversion_7x7():
-    return mock.make_plane_x2_galaxy_inversion_7x7()
-
-
 @pytest.fixture(name="gal_data_7x7")
 def make_gal_data_7x7():
     return mock.make_gal_data_7x7()
-
-
-@pytest.fixture(name="gal_fit_data_7x7_image")
-def make_gal_fit_data_7x7_image():
-    return mock.make_gal_fit_data_7x7_image()
-
-
-@pytest.fixture(name="gal_fit_data_7x7_convergence")
-def make_gal_fit_data_7x7_convergence():
-    return mock.make_gal_fit_data_7x7_convergence()
-
-
-@pytest.fixture(name="gal_fit_data_7x7_potential")
-def make_gal_fit_data_7x7_potential():
-    return mock.make_gal_fit_data_7x7_potential()
-
-
-@pytest.fixture(name="gal_fit_data_7x7_deflections_y")
-def make_gal_fit_data_7x7_deflections_y():
-    return mock.make_gal_fit_data_7x7_deflections_y()
-
-
-@pytest.fixture(name="gal_fit_data_7x7_deflections_x")
-def make_gal_fit_data_7x7_deflections_x():
-    return mock.make_gal_fit_data_7x7_deflections_x()
 
 
 @pytest.fixture(name="gal_fit_7x7_image")
@@ -301,11 +266,6 @@ def make_hyper_galaxy_image_0_7x7():
     return mock.make_hyper_galaxy_image_0_7x7()
 
 
-@pytest.fixture(name="hyper_galaxy_image_1_7x7")
-def make_hyper_galaxy_image_1_7x7():
-    return mock.make_hyper_galaxy_image_1_7x7()
-
-
 @pytest.fixture(name="hyper_galaxy_image_path_dict_7x7")
 def make_hyper_galaxy_image_path_dict_7x7():
     return mock.make_hyper_galaxy_image_path_dict_7x7()
@@ -319,17 +279,6 @@ def make_contribution_map_7x7(
         hyper_model_image=hyper_model_image_7x7,
         hyper_galaxy_image=hyper_galaxy_image_0_7x7,
     )
-
-
-@pytest.fixture(name="hyper_noise_map_7x7")
-def make_hyper_noise_map_7x7(
-        masked_imaging_fit_x2_plane_7x7, contribution_map_7x7, hyper_galaxy
-):
-    hyper_noise = hyper_galaxy.hyper_noise_map_from_contribution_map(
-        noise_map=masked_imaging_fit_x2_plane_7x7.noise_map,
-        contribution_map=contribution_map_7x7,
-    )
-    return masked_imaging_fit_x2_plane_7x7.noise_map + hyper_noise
 
 
 ### FITS ###
@@ -378,11 +327,6 @@ def make_phase_imaging_7x7():
 @pytest.fixture(name="phase_interferometer_7")
 def make_phase_interferometer_7():
     return mock.make_phase_interferometer_7()
-
-
-@pytest.fixture(name="voronoi_pixelization_grid_9")
-def make_voronoi_pixelization_grid_9():
-    return mock.make_voronoi_pixelization_grid_9()
 
 
 @pytest.fixture(name="voronoi_mapper_9_3x3")
