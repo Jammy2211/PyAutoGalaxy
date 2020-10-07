@@ -1,8 +1,6 @@
 import numpy as np
 import pytest
 
-import autoarray as aa
-from autoarray import FitInterferometer
 # Lens Datasets #
 from autogalaxy import mock
 
@@ -14,62 +12,57 @@ from autogalaxy import mock
 
 @pytest.fixture(name="psf_3x3")
 def make_psf_3x3():
-    return aa.mock.make_psf_3x3()
+    return mock.make_psf_3x3()
 
 
 @pytest.fixture(name="masked_interferometer_7")
 def make_masked_interferometer_7():
-    return aa.mock.make_masked_interferometer_7()
+    return mock.make_masked_interferometer_7()
 
 
 @pytest.fixture(name="rectangular_pixelization_grid_3x3")
 def make_rectangular_pixelization_grid_3x3():
-    return aa.mock.make_rectangular_pixelization_grid_3x3()
+    return mock.make_rectangular_pixelization_grid_3x3()
 
 
 @pytest.fixture(name="rectangular_inversion_7x7_3x3")
 def make_rectangular_inversion_7x7_3x3():
-    return aa.mock.make_rectangular_inversion_7x7_3x3()
+    return mock.make_rectangular_inversion_7x7_3x3()
 
 
 @pytest.fixture(name="voronoi_inversion_9_3x3")
 def make_voronoi_inversion_9_3x3():
-    return aa.mock.make_voronoi_inversion_9_3x3()
+    return mock.make_voronoi_inversion_9_3x3()
 
 
 @pytest.fixture(name="rectangular_mapper_7x7_3x3")
 def make_rectangular_mapper_7x7_3x3():
-    return aa.mock.make_rectangular_mapper_7x7_3x3()
+    return mock.make_rectangular_mapper_7x7_3x3()
 
 
 @pytest.fixture(name="fit_interferometer_7")
 def make_masked_interferometer_fit_x1_plane_7(masked_interferometer_7):
-    fit_interferometer = FitInterferometer(
-        masked_interferometer=masked_interferometer_7,
-        model_visibilities=5.0 * masked_interferometer_7.visibilities,
-    )
-    fit_interferometer.masked_dataset = masked_interferometer_7
-    return fit_interferometer
+    mock.make_masked_interferometer_fit_x1_plane_7()
 
 
 @pytest.fixture(name="noise_map_7x7")
 def make_noise_map_7x7():
-    return aa.mock.make_noise_map_7x7()
+    return mock.make_noise_map_7x7()
 
 
 @pytest.fixture(name="sub_mask_7x7")
 def make_sub_mask_7x7():
-    return aa.mock.make_sub_mask_7x7()
+    return mock.make_sub_mask_7x7()
 
 
 @pytest.fixture(name="imaging_7x7")
 def make_imaging_7x7():
-    return aa.mock.make_imaging_7x7()
+    return mock.make_imaging_7x7()
 
 
 @pytest.fixture(name="image_7x7")
 def make_image_7x7():
-    return aa.mock.make_image_7x7()
+    return mock.make_image_7x7()
 
 
 @pytest.fixture(name="masked_imaging_7x7")
@@ -79,37 +72,37 @@ def make_masked_imaging_7x7():
 
 @pytest.fixture(name="interferometer_7")
 def make_interferometer_7():
-    return aa.mock.make_interferometer_7()
+    return mock.make_interferometer_7()
 
 
 @pytest.fixture(name="mask_7x7")
 def make_mask_7x7():
-    return aa.mock.make_mask_7x7()
+    return mock.make_mask_7x7()
 
 
 @pytest.fixture(name="convolver_7x7")
 def make_convolver_7x7():
-    return aa.mock.make_convolver_7x7()
+    return mock.make_convolver_7x7()
 
 
 @pytest.fixture(name="mask_7x7_1_pix")
 def make_mask_7x7_1_pix():
-    return aa.mock.make_mask_7x7_1_pix()
+    return mock.make_mask_7x7_1_pix()
 
 
 @pytest.fixture(name="grid_iterate_7x7")
 def make_grid_iterate_7x7():
-    return aa.mock.make_grid_iterate_7x7()
+    return mock.make_grid_iterate_7x7()
 
 
 @pytest.fixture(name="transformer_7x7_7")
 def make_transformer_7x7_7():
-    return aa.mock.make_transformer_7x7_7()
+    return mock.make_transformer_7x7_7()
 
 
 @pytest.fixture(name="positions_7x7")
 def make_positions_7x7():
-    return aa.mock.make_positions_7x7()
+    return mock.make_positions_7x7()
 
 
 @pytest.fixture(name="visibilities_mask_7x2")
@@ -119,21 +112,17 @@ def make_visibilities_mask_7x2():
 
 @pytest.fixture(name="grid_7x7")
 def make_grid_7x7():
-    return aa.mock.make_grid_7x7()
+    return mock.make_grid_7x7()
 
 
 @pytest.fixture(name="sub_grid_7x7")
 def make_sub_grid_7x7():
-    return aa.mock.make_sub_grid_7x7()
+    return mock.make_sub_grid_7x7()
 
 
 @pytest.fixture(name="sub_grid_7x7_simple")
-def make_sub_grid_7x7_simple(mask_7x7, sub_grid_7x7):
-    sub_grid_7x7[0] = np.array([1.0, 1.0])
-    sub_grid_7x7[1] = np.array([1.0, 0.0])
-    sub_grid_7x7[2] = np.array([1.0, 1.0])
-    sub_grid_7x7[3] = np.array([1.0, 0.0])
-    return sub_grid_7x7
+def make_sub_grid_7x7_simple():
+    return mock.make_sub_grid_7x7_simple()
 
 
 @pytest.fixture(name="masked_interferometer_7")
@@ -384,12 +373,12 @@ def make_phase_interferometer_7():
 
 @pytest.fixture(name="voronoi_pixelization_grid_9")
 def make_voronoi_pixelization_grid_9():
-    return aa.mock.make_voronoi_pixelization_grid_9()
+    return mock.make_voronoi_pixelization_grid_9()
 
 
 @pytest.fixture(name="voronoi_mapper_9_3x3")
 def make_voronoi_mapper_9_3x3():
-    return aa.mock.make_voronoi_mapper_9_3x3()
+    return mock.make_voronoi_mapper_9_3x3()
 
 
 @pytest.fixture(name="include_all")
