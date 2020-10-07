@@ -1,5 +1,4 @@
 from os import path
-from os.path import dirname, realpath
 
 import pytest
 from matplotlib import pyplot
@@ -27,11 +26,10 @@ directory = path.dirname(path.realpath(__file__))
 
 
 @pytest.fixture(autouse=True)
-def set_config_path(request):
-    if dirname(realpath(__file__)) in str(request.module):
-        conf.instance = conf.Config.for_directory(
-            directory
-        )
+def set_config_path():
+    conf.instance = conf.Config.for_directory(
+        directory
+    )
 
 
 @pytest.fixture(name="visibilities_7x2")

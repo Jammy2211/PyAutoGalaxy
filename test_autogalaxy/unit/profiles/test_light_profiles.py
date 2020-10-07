@@ -8,7 +8,7 @@ import autogalaxy as ag
 import numpy as np
 import pytest
 import scipy.special
-from test_autogalaxy import mock
+from autogalaxy import mock
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 

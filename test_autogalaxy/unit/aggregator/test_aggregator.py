@@ -5,7 +5,7 @@ import pytest
 
 import autofit as af
 import autogalaxy as ag
-from test_autogalaxy import mock
+from autogalaxy import mock
 
 directory = path.dirname(path.realpath(__file__))
 

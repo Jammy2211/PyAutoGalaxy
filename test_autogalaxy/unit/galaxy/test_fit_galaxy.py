@@ -1,11 +1,8 @@
-from autoconf import conf
-import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autogalaxy.mock import MockGalaxy
 
-
-
+import autogalaxy as ag
+from autogalaxy.mock import MockGalaxy
 
 
 class TestLikelihood:
@@ -103,7 +100,7 @@ class TestLikelihood:
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
         assert fit.log_likelihood == -0.5 * (
-            (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
+                (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
         masked_galaxy_dataset = ag.MaskedGalaxyDataset(
@@ -116,7 +113,7 @@ class TestLikelihood:
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
         assert fit.log_likelihood == -0.5 * (
-            (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
+                (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
         masked_galaxy_dataset = ag.MaskedGalaxyDataset(
@@ -129,7 +126,7 @@ class TestLikelihood:
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
         assert fit.log_likelihood == -0.5 * (
-            (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
+                (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
         masked_galaxy_dataset = ag.MaskedGalaxyDataset(
@@ -141,7 +138,7 @@ class TestLikelihood:
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
         assert fit.log_likelihood == -0.5 * (
-            (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
+                (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
         masked_galaxy_dataset = ag.MaskedGalaxyDataset(
@@ -153,7 +150,7 @@ class TestLikelihood:
         assert fit.chi_squared == (25.0 / 4.0)
         assert fit.reduced_chi_squared == (25.0 / 4.0) / 2.0
         assert fit.log_likelihood == -0.5 * (
-            (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
+                (25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)
         )
 
 
@@ -280,7 +277,6 @@ class TestCompareToManual:
         assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
     def test__deflections_y(self, gal_data_7x7, sub_mask_7x7):
-
         masked_galaxy_dataset = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_y=True
         )
@@ -325,7 +321,6 @@ class TestCompareToManual:
         assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
     def test__deflections_x(self, gal_data_7x7, sub_mask_7x7):
-
         masked_galaxy_dataset = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_x=True
         )

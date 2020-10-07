@@ -10,8 +10,8 @@ import autofit as af
 import autogalaxy as ag
 from autoarray.structures import grids
 from autogalaxy import lensing
+from autogalaxy import mock
 from autogalaxy.profiles import geometry_profiles
-from test_autogalaxy import mock
 
 
 class MockEllipticalIsothermal(

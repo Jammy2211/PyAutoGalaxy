@@ -4,7 +4,7 @@ import autogalaxy as ag
 from autogalaxy.hyper import hyper_data as hd
 import pytest
 from autogalaxy.fit.fit import FitImaging
-from test_autogalaxy import mock
+from autogalaxy import mock
 
 
 class MockPhase:
