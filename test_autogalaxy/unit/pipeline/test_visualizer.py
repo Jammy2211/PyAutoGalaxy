@@ -1,11 +1,14 @@
 import os
 import shutil
 from os import path
+from pathlib import Path
 
 import pytest
 
 import autogalaxy as ag
+from autoconf import conf
 from autogalaxy.pipeline import visualizer as vis
+from autogalaxy.plot import Include
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -14,6 +17,41 @@ directory = path.dirname(path.realpath(__file__))
 def make_visualizer_plotter_setup():
     return "{}/files/plot/visualizer/".format(
         os.path.dirname(os.path.realpath(__file__))
+    )
+
+
+@pytest.fixture(
+    autouse=True
+)
+def default_config(plot_path):
+    conf.instance = conf.Config(
+        f"{directory}/config",
+        output_path=plot_path,
+        default_config_paths=[
+            conf.instance.path
+        ]
+    )
+
+
+@pytest.fixture(name="include_all")
+def make_include_all(default_config):
+    return Include(
+        origin=True,
+        mask=True,
+        grid=True,
+        border=True,
+        positions=True,
+        light_profile_centres=True,
+        mass_profile_centres=True,
+        critical_curves=True,
+        caustics=True,
+        multiple_images=True,
+        inversion_pixelization_grid=True,
+        inversion_grid=True,
+        inversion_border=True,
+        inversion_image_pixelization_grid=True,
+        preloaded_critical_curves=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
+        preload_caustics=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
     )
 
 
