@@ -3,7 +3,6 @@ from os import path
 import pytest
 from matplotlib import pyplot
 
-import autoarray as aa
 from autoconf import conf
 
 
@@ -30,28 +29,3 @@ def set_config_path():
     conf.instance = conf.Config.for_directory(
         directory
     )
-
-
-@pytest.fixture(name="visibilities_7x2")
-def make_visibilities_7():
-    return aa.mock.make_visibilities_7()
-
-
-@pytest.fixture(name="noise_map_7x2")
-def make_noise_map_7():
-    return aa.mock.make_noise_map_7()
-
-
-@pytest.fixture(name="uv_wavelengths_7x2")
-def make_uv_wavelengths_7():
-    return aa.mock.make_uv_wavelengths_7()
-
-
-@pytest.fixture(name="blurring_grid_7x7")
-def make_blurring_grid_7x7(blurring_mask_7x7):
-    return aa.Grid.from_mask(mask=blurring_mask_7x7)
-
-
-@pytest.fixture(name="blurring_mask_7x7")
-def make_blurring_mask_7x7():
-    return aa.mock.make_blurring_mask_7x7()

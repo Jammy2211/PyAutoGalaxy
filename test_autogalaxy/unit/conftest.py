@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 # Lens Datasets #
+from autoarray import TransformerNUFFT, SettingsMaskedInterferometer, MaskedInterferometer
 from autogalaxy import mock
 
 
@@ -13,11 +14,6 @@ from autogalaxy import mock
 @pytest.fixture(name="psf_3x3")
 def make_psf_3x3():
     return mock.make_psf_3x3()
-
-
-@pytest.fixture(name="masked_interferometer_7")
-def make_masked_interferometer_7():
-    return mock.make_masked_interferometer_7()
 
 
 @pytest.fixture(name="rectangular_pixelization_grid_3x3")
@@ -291,15 +287,8 @@ def make_hyper_galaxy_image_1_7x7():
 
 
 @pytest.fixture(name="hyper_galaxy_image_path_dict_7x7")
-def make_hyper_galaxy_image_path_dict_7x7(
-        hyper_galaxy_image_0_7x7, hyper_galaxy_image_1_7x7
-):
-    hyper_galaxy_image_path_dict = {}
-
-    hyper_galaxy_image_path_dict[("g0",)] = hyper_galaxy_image_0_7x7
-    hyper_galaxy_image_path_dict[("g1",)] = hyper_galaxy_image_1_7x7
-
-    return hyper_galaxy_image_path_dict
+def make_hyper_galaxy_image_path_dict_7x7():
+    return mock.make_hyper_galaxy_image_path_dict_7x7()
 
 
 @pytest.fixture(name="contribution_map_7x7")
