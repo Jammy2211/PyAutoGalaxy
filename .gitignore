@@ -26,3 +26,6 @@ test_autogalaxy/unit/pipeline/files/plot/visualizer/fit_imaging/fits/subtracted_
 test_autogalaxy/unit/pipeline/files/plot/visualizer/inversion/fits/interpolated_errors.fits
 test_autogalaxy/unit/pipeline/files/plot/visualizer/inversion/fits/interpolated_reconstruction.fits
 test_autogalaxy/unit/pipeline/files/plot/visualizer/inversion/fits/reconstructed_image.fits
+test_autogalaxy/unit/data_temp/simulate_and_fit/image.fits
+test_autogalaxy/unit/data_temp/simulate_and_fit/noise_map.fits
+test_autogalaxy/unit/data_temp/simulate_and_fit/psf.fits
