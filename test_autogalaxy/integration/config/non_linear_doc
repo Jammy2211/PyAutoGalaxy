@@ -37,7 +37,7 @@ stop running. A higher tolerance will provide more accurate errors, but take lon
 *Recommended values*
 
 For the early phases of a pipeline, where you are not interested in precise parameter errors / PDF's, use values of
-1000-10000 to ensure the non-linear search terminates early. For the final phase, use 0.8, to ensure errors and PDF's
+1000-10000 to ensure the `NonLinearSearch` terminates early. For the final phase, use 0.8, to ensure errors and PDF's
 are precisely estimated.
 
 
@@ -64,7 +64,7 @@ faster.
 
 importance_nested_sampling:
 
-Importance nested sampling mode uses information from the rejected points to improve the non-linear search accuracy.
+Importance nested sampling mode uses information from the rejected points to improve the `NonLinearSearch` accuracy.
 
 *Recommended values*
 
