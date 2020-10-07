@@ -1,0 +1,7 @@
+phase=test_phase_2
+phase_tag=settings__imaging[grid_sub_2_inv_sub_2]__pix[no_border]__inv[mat]
+pipeline=
+pipeline_tag=
+dataset_name=mock_imaging_7x7name=test_phase_2
+tag=settings__imaging[grid_sub_2_inv_sub_2]__pix[no_border]__inv[mat]
+non_linear_search=mocksearch

@@ -1,0 +1,3 @@
+name=test_phase_2
+tag=settings__imaging[grid_sub_2_inv_sub_2]__pix[no_border]__inv[mat]
+non_linear_search=mocksearch

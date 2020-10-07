@@ -1,0 +1,7 @@
+phase=
+phase_tag=settings__interferometer[grid_sub_2__nufft]
+pipeline=
+pipeline_tag=
+dataset_name=datasetname=
+tag=settings__interferometer[grid_sub_2__nufft]
+non_linear_search=mocksearch

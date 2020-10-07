@@ -103,3 +103,10 @@ class PhaseImaging(dataset.PhaseDataset):
             phase_info.write("Cosmology = {} \n".format(self.cosmology))
 
             phase_info.close()
+
+
+class PhaseAttributes:
+    def __init__(self, cosmology, hyper_model_image, hyper_galaxy_image_path_dict):
+        self.cosmology = cosmology
+        self.hyper_model_image = hyper_model_image
+        self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
