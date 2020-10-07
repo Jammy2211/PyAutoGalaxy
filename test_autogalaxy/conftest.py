@@ -1,7 +1,6 @@
 from os import path
 from os.path import dirname, realpath
 
-import numpy as np
 import pytest
 from matplotlib import pyplot
 
@@ -37,30 +36,17 @@ def set_config_path(request):
 
 @pytest.fixture(name="visibilities_7x2")
 def make_visibilities_7():
-    visibilities = aa.Visibilities.full(shape_1d=(7,), fill_value=1.0)
-    visibilities[6, 0] = -1.0
-    visibilities[6, 1] = -1.0
-    return visibilities
+    return aa.mock.make_visibilities_7()
 
 
 @pytest.fixture(name="noise_map_7x2")
 def make_noise_map_7():
-    return aa.VisibilitiesNoiseMap.full(shape_1d=(7,), fill_value=2.0)
+    return aa.mock.make_noise_map_7()
 
 
 @pytest.fixture(name="uv_wavelengths_7x2")
 def make_uv_wavelengths_7():
-    return np.array(
-        [
-            [-55636.4609375, 171376.90625],
-            [-6903.21923828, 51155.578125],
-            [-63488.4140625, 4141.28369141],
-            [55502.828125, 47016.7265625],
-            [54160.75390625, -99354.1796875],
-            [-9327.66308594, -95212.90625],
-            [0.0, 0.0],
-        ]
-    )
+    return aa.mock.make_uv_wavelengths_7()
 
 
 @pytest.fixture(name="blurring_grid_7x7")
@@ -70,16 +56,4 @@ def make_blurring_grid_7x7(blurring_mask_7x7):
 
 @pytest.fixture(name="blurring_mask_7x7")
 def make_blurring_mask_7x7():
-    blurring_mask = np.array(
-        [
-            [True, True, True, True, True, True, True],
-            [True, False, False, False, False, False, True],
-            [True, False, True, True, True, False, True],
-            [True, False, True, True, True, False, True],
-            [True, False, True, True, True, False, True],
-            [True, False, False, False, False, False, True],
-            [True, True, True, True, True, True, True],
-        ]
-    )
-
-    return aa.Mask2D.manual(mask=blurring_mask, pixel_scales=(1.0, 1.0))
+    return aa.mock.make_blurring_mask_7x7()
