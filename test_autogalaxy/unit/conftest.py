@@ -2,7 +2,6 @@ import numpy as np
 import pytest
 
 # Lens Datasets #
-from autoarray import TransformerNUFFT, SettingsMaskedInterferometer, MaskedInterferometer
 from autogalaxy import mock
 
 
@@ -38,7 +37,7 @@ def make_rectangular_mapper_7x7_3x3():
 
 @pytest.fixture(name="fit_interferometer_7")
 def make_masked_interferometer_fit_x1_plane_7(masked_interferometer_7):
-    mock.make_masked_interferometer_fit_x1_plane_7()
+    return mock.make_masked_interferometer_fit_x1_plane_7()
 
 
 @pytest.fixture(name="noise_map_7x7")
@@ -104,6 +103,27 @@ def make_positions_7x7():
 @pytest.fixture(name="visibilities_mask_7x2")
 def make_visibilities_mask_7x2():
     return np.full(fill_value=False, shape=(7, 2))
+
+
+@pytest.fixture(
+    name="blurring_grid_7x7"
+)
+def make_blurring_grid_7x7():
+    return mock.make_blurring_grid_7x7()
+
+
+@pytest.fixture(
+    name="noise_map_7x2"
+)
+def make_noise_map_7():
+    return mock.make_noise_map_7()
+
+
+@pytest.fixture(
+    name="visibilities_7x2"
+)
+def make_visibilities_7():
+    return mock.make_visibilities_7()
 
 
 @pytest.fixture(name="grid_7x7")
