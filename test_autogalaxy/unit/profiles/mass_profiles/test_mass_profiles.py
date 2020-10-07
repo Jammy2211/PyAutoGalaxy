@@ -4,7 +4,7 @@ from autoconf import conf
 import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autogalaxy import mock
+from autogalaxy import mock
 
 
 def mass_within_radius_of_profile_from_grid_calculation(radius, profile):

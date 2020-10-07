@@ -1,10 +1,10 @@
-from autoconf import conf
+from astropy import cosmology as cosmo
+
 import autofit as af
 from autoarray.inversion import pixelizations as pix
 from autoarray.inversion import regularization as reg
-from autogalaxy.hyper import hyper_data as hd
-from astropy import cosmology as cosmo
 from autofit.tools.phase import Dataset
+from autogalaxy.hyper import hyper_data as hd
 from autogalaxy.pipeline.phase import abstract
 from autogalaxy.pipeline.phase import extensions
 from autogalaxy.pipeline.phase.dataset.result import Result
@@ -18,9 +18,8 @@ class PhaseDataset(abstract.AbstractPhase):
 
     Result = Result
 
-    @af.convert_paths
     def __init__(
-        self, paths, settings, search, galaxies=None, cosmology=cosmo.Planck15
+            self, settings, search, galaxies=None, cosmology=cosmo.Planck15
     ):
         """
 
@@ -34,7 +33,6 @@ class PhaseDataset(abstract.AbstractPhase):
         """
 
         super().__init__(
-            paths,
             search=search,
             settings=settings,
             galaxies=galaxies,
@@ -149,8 +147,8 @@ class PhaseDataset(abstract.AbstractPhase):
             if self.has_pixelization and setup_hyper.inversion_search:
 
                 if (
-                    not setup_hyper.hyper_image_sky
-                    and not setup_hyper.hyper_background_noise
+                        not setup_hyper.hyper_image_sky
+                        and not setup_hyper.hyper_background_noise
                 ):
                     phase_inversion = extensions.InversionPhase(
                         phase=self,
@@ -158,8 +156,8 @@ class PhaseDataset(abstract.AbstractPhase):
                         model_classes=(pix.Pixelization, reg.Regularization),
                     )
                 elif (
-                    setup_hyper.hyper_image_sky
-                    and not setup_hyper.hyper_background_noise
+                        setup_hyper.hyper_image_sky
+                        and not setup_hyper.hyper_background_noise
                 ):
                     phase_inversion = extensions.InversionPhase(
                         phase=self,
@@ -171,8 +169,8 @@ class PhaseDataset(abstract.AbstractPhase):
                         ),
                     )
                 elif (
-                    not setup_hyper.hyper_image_sky
-                    and setup_hyper.hyper_background_noise
+                        not setup_hyper.hyper_image_sky
+                        and setup_hyper.hyper_background_noise
                 ):
                     phase_inversion = extensions.InversionPhase(
                         phase=self,
@@ -209,7 +207,7 @@ class PhaseDataset(abstract.AbstractPhase):
 
         if setup_hyper.hyper_galaxy_phase_first:
             if (
-                include_inversion and setup_hyper.inversion_search is not None
+                    include_inversion and setup_hyper.inversion_search is not None
             ) and setup_hyper.hyper_galaxies_search is not None:
                 hyper_phases = [phase for phase in reversed(hyper_phases)]
 

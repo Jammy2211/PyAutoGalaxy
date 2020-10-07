@@ -119,7 +119,7 @@ class SetupHyper:
             return ""
 
         return (
-            f"{conf.instance.setup_tag.get('hyper', 'hyper')}["
+            f"{conf.instance['notation']['setup_tags']['hyper']['hyper']}["
             f"{self.hyper_galaxies_tag}"
             f"{self.hyper_image_sky_tag}"
             f"{self.hyper_background_noise_tag}"
@@ -136,7 +136,7 @@ class SetupHyper:
             return ""
 
         return (
-            f"{conf.instance.setup_tag.get('hyper', 'hyper')}["
+            f"{conf.instance['notation']['setup_tags']['hyper']['hyper']}["
             f"{self.hyper_galaxies_tag}"
             f"{self.hyper_image_sky_tag}"
             f"{self.hyper_background_noise_tag}]"
@@ -151,7 +151,7 @@ class SetupHyper:
         if not self.hyper_galaxies:
             return ""
         elif self.hyper_galaxies:
-            return conf.instance.setup_tag.get("hyper", "hyper_galaxies")
+            return conf.instance['notation']['setup_tags']['hyper']['hyper_galaxies']
 
     @property
     def hyper_image_sky_tag(self):
@@ -163,7 +163,7 @@ class SetupHyper:
         if not self.hyper_image_sky:
             return ""
         elif self.hyper_image_sky:
-            return f"__{conf.instance.setup_tag.get('hyper', 'hyper_image_sky')}"
+            return f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_image_sky']}"
 
     @property
     def hyper_background_noise_tag(self):
@@ -175,7 +175,7 @@ class SetupHyper:
         if not self.hyper_background_noise:
             return ""
         elif self.hyper_background_noise:
-            return f"__{conf.instance.setup_tag.get('hyper', 'hyper_background_noise')}"
+            return f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_background_noise']}"
 
     @property
     def hyper_fixed_after_source_tag(self):
@@ -190,7 +190,7 @@ class SetupHyper:
             return ""
         elif self.hyper_fixed_after_source:
             return (
-                f"__{conf.instance.setup_tag.get('hyper', 'hyper_fixed_after_source')}"
+                f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_fixed_after_source']}"
             )
 
     def hyper_galaxy_lens_from_previous_pipeline(
@@ -256,7 +256,7 @@ class AbstractSetupLight:
 
     @property
     def component_tag(self):
-        return conf.instance.setup_tag.get('light', 'light')
+        return conf.instance['notation']['setup_tags']['light']['light']
 
 
 class SetupLight(AbstractSetupLight):
@@ -282,11 +282,11 @@ class SetupLight(AbstractSetupLight):
         Parameters
         ----------
         bulge_prior_model : af.PriorModel
-            The `LightProfile` `PriorModel` used to represent the light distribution of a bulge. 
+            The `LightProfile` `PriorModel` used to represent the light distribution of a bulge.
         disk_prior_model : af.PriorModel
-            The `LightProfile` `PriorModel` used to represent the light distribution of a disk. 
+            The `LightProfile` `PriorModel` used to represent the light distribution of a disk.
         envelope_prior_model : af.PriorModel
-            The `LightProfile` `PriorModel` used to represent the light distribution of a envelope. 
+            The `LightProfile` `PriorModel` used to represent the light distribution of a envelope.
         light_centre : (float, float) or None
            If input, a fixed (y,x) centre of the galaxy is used for the light profile model which is not treated as a
             free parameter by the non-linear search.
@@ -337,7 +337,7 @@ class SetupLight(AbstractSetupLight):
         if self.bulge_prior_model is None:
             return ""
 
-        tag = conf.instance.setup_tag.get('light_prior_model', self.bulge_prior_model.name)
+        tag = conf.instance['notation']['setup_tags']['light_prior_model'][self.bulge_prior_model.name]
 
         return f"bulge_{tag}"
 
@@ -362,7 +362,7 @@ class SetupLight(AbstractSetupLight):
         if self.disk_prior_model is None:
             return ""
 
-        tag = conf.instance.setup_tag.get('light_prior_model', self.disk_prior_model.name)
+        tag = conf.instance['notation']['setup_tags']['light_prior_model'][self.disk_prior_model.name]
 
         return f"__disk_{tag}"
 
@@ -387,7 +387,7 @@ class SetupLight(AbstractSetupLight):
         if self.envelope_prior_model is None:
             return ""
 
-        tag = conf.instance.setup_tag.get('light_prior_model', self.envelope_prior_model.name)
+        tag = conf.instance['notation']['setup_tags']['light_prior_model'][self.envelope_prior_model.name]
 
         return f"__envelope_{tag}"
 
@@ -407,7 +407,7 @@ class SetupLight(AbstractSetupLight):
         else:
             y = "{0:.2f}".format(self.light_centre[0])
             x = "{0:.2f}".format(self.light_centre[1])
-            return f"__{conf.instance.setup_tag.get('light', 'light_centre')}_({y},{x})"
+            return f"__{conf.instance['notation']['setup_tags']['light']['light_centre']}_({y},{x})"
 
     @property
     def align_bulge_disk_centre_tag(self):
@@ -419,7 +419,7 @@ class SetupLight(AbstractSetupLight):
         if not self.align_bulge_disk_centre:
             return ""
         elif self.align_bulge_disk_centre:
-            return f"_{conf.instance.setup_tag.get('light', 'align_bulge_disk_centre')}"
+            return f"_{conf.instance['notation']['setup_tags']['light']['align_bulge_disk_centre']}"
 
     @property
     def align_bulge_disk_elliptical_comps_tag(self):
@@ -431,7 +431,7 @@ class SetupLight(AbstractSetupLight):
         if not self.align_bulge_disk_elliptical_comps:
             return ""
         elif self.align_bulge_disk_elliptical_comps:
-            return f"_{conf.instance.setup_tag.get('light', 'align_bulge_disk_elliptical_comps')}"
+            return f"_{conf.instance['notation']['setup_tags']['light']['align_bulge_disk_elliptical_comps']}"
 
     @property
     def align_bulge_disk_tag(self):
@@ -445,7 +445,7 @@ class SetupLight(AbstractSetupLight):
         ):
             return ""
 
-        return f"__{conf.instance.setup_tag.get('light', 'align_bulge_disk')}{self.align_bulge_disk_centre_tag}{self.align_bulge_disk_elliptical_comps_tag}"
+        return f"__{conf.instance['notation']['setup_tags']['light']['align_bulge_disk']}{self.align_bulge_disk_centre_tag}{self.align_bulge_disk_elliptical_comps_tag}"
 
     def align_centre_to_light_centre(
         self, light_prior_model: af.PriorModel(lp.LightProfile)
@@ -566,8 +566,8 @@ class SetupLightInversion(AbstractSetupLight):
         pixelization = pix.VoronoiMagnification -> setup__pix_voro_mag
         """
         return (
-            f"{conf.instance.setup_tag.get('inversion', 'pixelization')}_"
-            f"{conf.instance.setup_tag.get('pixelization', self._pixelization_prior_model.name)}"
+            f"{conf.instance['notation']['setup_tags']['inversion']['pixelization']}_"
+            f"{conf.instance['notation']['setup_tags']['pixelization'][self._pixelization_prior_model.name]}"
         )
 
     @property
@@ -585,8 +585,8 @@ class SetupLightInversion(AbstractSetupLight):
         regularization = reg.AdaptiveBrightness -> setup__reg_adapt_bright
         """
         return (
-                f"__{conf.instance.setup_tag.get('inversion', 'regularization')}_"
-                f"{conf.instance.setup_tag.get('regularization', self.regularization_prior_model.name)}"
+                f"__{conf.instance['notation']['setup_tags']['inversion']['regularization']}_"
+                f"{conf.instance['notation']['setup_tags']['regularization'][self.regularization_prior_model.name]}"
             )
 
 
@@ -613,7 +613,7 @@ class AbstractSetupMass:
 
     @property
     def component_tag(self):
-        return f"{conf.instance.setup_tag.get('mass', 'mass')}"
+        return f"{conf.instance['notation']['setup_tags']['mass']['mass']}"
 
     @property
     def mass_centre_tag(self):
@@ -631,7 +631,7 @@ class AbstractSetupMass:
 
         y = "{0:.2f}".format(self.mass_centre[0])
         x = "{0:.2f}".format(self.mass_centre[1])
-        return f"__{conf.instance.setup_tag.get('mass', 'mass_centre')}_({y},{x})"
+        return f"__{conf.instance['notation']['setup_tags']['mass']['mass_centre']}_({y},{x})"
 
     def align_centre_to_mass_centre(
         self, mass_prior_model: af.PriorModel(mp.MassProfile)
@@ -729,7 +729,7 @@ class SetupMassTotal(AbstractSetupMass):
         if self.mass_prior_model is None:
             return ""
 
-        return f"total_{conf.instance.setup_tag.get('mass_prior_model', self.mass_prior_model.name)}"
+        return f"total_{conf.instance['notation']['setup_tags']['mass_prior_model'][self.mass_prior_model.name]}"
 
     @property
     def align_light_mass_centre_tag(self):
@@ -745,7 +745,7 @@ class SetupMassTotal(AbstractSetupMass):
 
         if not self.align_light_mass_centre:
             return ""
-        return f"__{conf.instance.setup_tag.get('mass', 'align_light_mass_centre')}"
+        return f"__{conf.instance['notation']['setup_tags']['mass']['align_light_mass_centre']}"
 
     def align_centre_of_mass_to_light(
         self,
@@ -880,8 +880,8 @@ class SetupMassLightDark(AbstractSetupMass):
         constant_mass_to_light_ratio = ``True`` -> mlr_constant
         """
         if self.constant_mass_to_light_ratio:
-            return f"mlr_{conf.instance.setup_tag.get('mass', 'constant_mass_to_light_ratio')}"
-        return f"mlr_{conf.instance.setup_tag.get('mass', 'free_mass_to_light_ratio')}"
+            return f"mlr_{conf.instance['notation']['setup_tags']('mass', 'constant_mass_to_light_ratio')}"
+        return f"mlr_{conf.instance['notation']['setup_tags']('mass', 'free_mass_to_light_ratio')}"
 
     @property
     def bulge_prior_model_tag(self) -> str:
@@ -904,7 +904,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.bulge_prior_model is None:
             return ""
 
-        tag = conf.instance.setup_tag.get('light_prior_model', self.bulge_prior_model.name)
+        tag = conf.instance['notation']['setup_tags']('light_prior_model', self.bulge_prior_model.name)
 
         return f"bulge_{tag}"
 
@@ -929,7 +929,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.disk_prior_model is None:
             return ""
 
-        tag = conf.instance.setup_tag.get('light_prior_model', self.disk_prior_model.name)
+        tag = conf.instance['notation']['setup_tags']('light_prior_model', self.disk_prior_model.name)
 
         return f"__disk_{tag}"
 
@@ -954,7 +954,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.envelope_prior_model is None:
             return ""
 
-        tag = conf.instance.setup_tag.get('light_prior_model', self.envelope_prior_model.name)
+        tag = conf.instance['notation']['setup_tags']('light_prior_model', self.envelope_prior_model.name)
 
         return f"__envelope_{tag}"
 
@@ -969,7 +969,7 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         if not self.align_light_dark_centre:
             return ""
-        return f"__{conf.instance.setup_tag.get('mass', 'align_light_dark_centre')}"
+        return f"__{conf.instance['notation']['setup_tags']('mass', 'align_light_dark_centre')}"
 
     @property
     def align_bulge_dark_centre_tag(self) -> str:
@@ -983,7 +983,7 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         if not self.align_bulge_dark_centre:
             return ""
-        return "__" + conf.instance.setup_tag.get("mass", "align_bulge_dark_centre")
+        return "__" + conf.instance['notation']['setup_tags']("mass", "align_bulge_dark_centre")
 
     def set_mass_to_light_ratios_of_light_and_mass_prior_models(
         self, light_and_mass_prior_models: [af.PriorModel(mp.MassProfile)]
@@ -1044,7 +1044,7 @@ class SetupSMBH:
 
     @property
     def tag(self):
-        return f"{conf.instance.setup_tag.get('smbh', 'smbh')}[{self.smbh_centre_tag}]"
+        return f"{conf.instance['notation']['setup_tags']['smbh']['smbh']}[{self.smbh_centre_tag}]"
 
     @property
     def smbh_centre_tag(self):
@@ -1063,11 +1063,11 @@ class SetupSMBH:
 
         if self.smbh_centre_fixed:
 
-            smbh_centre_tag = conf.instance.setup_tag.get("smbh", "smbh_centre_fixed")
+            smbh_centre_tag = conf.instance['notation']['setup_tags']['smbh']['smbh_centre_fixed']
 
         else:
 
-            smbh_centre_tag = conf.instance.setup_tag.get("smbh", "smbh_centre_free")
+            smbh_centre_tag = conf.instance['notation']['setup_tags']['smbh']['smbh_centre_free']
 
         return f"{smbh_centre_tag}"
 
@@ -1156,7 +1156,7 @@ class SetupPipeline:
         """Generate the pipeline's overall tag, which customizes the 'setup' folder the results are output to.
         """
 
-        setup_tag = conf.instance.setup_tag.get("pipeline", "pipeline")
+        setup_tag = conf.instance['notation']['setup_tags']["pipeline"]["pipeline"]
         hyper_tag = f"__{self.setup_hyper.tag}" if self.setup_hyper is not None else ""
         source_tag = (
             f"__{self.setup_source.tag}" if self.setup_source is not None else ""

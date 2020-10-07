@@ -1,12 +1,11 @@
-import os
 from os import path
 
-from autoconf import conf
-import autofit as af
-import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autogalaxy import mock
+
+import autofit as af
+import autogalaxy as ag
+from autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -19,7 +18,7 @@ directory = path.dirname(path.realpath(__file__))
 
 class TestMakeAnalysis:
     def test__masks_visibilities_and_noise_map_correctly(
-        self, phase_interferometer_7, interferometer_7, visibilities_mask_7x2
+            self, phase_interferometer_7, interferometer_7, visibilities_mask_7x2
     ):
         analysis = phase_interferometer_7.make_analysis(
             dataset=interferometer_7,
@@ -28,14 +27,14 @@ class TestMakeAnalysis:
         )
 
         assert (
-            analysis.masked_interferometer.visibilities == interferometer_7.visibilities
+                analysis.masked_interferometer.visibilities == interferometer_7.visibilities
         ).all()
         assert (
-            analysis.masked_interferometer.noise_map == interferometer_7.noise_map
+                analysis.masked_interferometer.noise_map == interferometer_7.noise_map
         ).all()
 
     def test__phase_info_is_made(
-        self, phase_interferometer_7, interferometer_7, visibilities_mask_7x2
+            self, phase_interferometer_7, interferometer_7, visibilities_mask_7x2
     ):
         phase_interferometer_7.make_analysis(
             dataset=interferometer_7,
@@ -58,20 +57,19 @@ class TestMakeAnalysis:
         assert search == "Optimizer = MockSearch \n"
         assert sub_size == "Sub-grid size = 2 \n"
         assert (
-            cosmology
-            == 'Cosmology = FlatLambdaCDM(name="Planck15", H0=67.7 km / (Mpc s), Om0=0.307, Tcmb0=2.725 K, '
-            "Neff=3.05, m_nu=[0.   0.   0.06] eV, Ob0=0.0486) \n"
+                cosmology
+                == 'Cosmology = FlatLambdaCDM(name="Planck15", H0=67.7 km / (Mpc s), Om0=0.307, Tcmb0=2.725 K, '
+                   "Neff=3.05, m_nu=[0.   0.   0.06] eV, Ob0=0.0486) \n"
         )
 
     def test__phase_can_receive_hyper_image_and_noise_maps(self, mask_7x7):
         phase_interferometer_7 = ag.PhaseInterferometer(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=ag.Redshift),
                 galaxy1=ag.GalaxyModel(redshift=ag.Redshift),
             ),
             hyper_background_noise=ag.hyper_data.HyperBackgroundNoise,
-            search=mock.MockSearch(),
+            search=mock.MockSearch("test_phase", ),
             real_space_mask=mask_7x7,
         )
 
@@ -82,22 +80,20 @@ class TestMakeAnalysis:
         assert instance.hyper_background_noise.noise_scale == 0.3
 
     def test__masked_interferometer__settings_inputs_are_used_in_masked_interferometer(
-        self, interferometer_7, mask_7x7
+            self, interferometer_7, mask_7x7
     ):
-
         phase_interferometer_7 = ag.PhaseInterferometer(
-            phase_name="phase_interferometer_7",
             settings=ag.SettingsPhaseInterferometer(
                 settings_masked_interferometer=ag.SettingsMaskedInterferometer(
                     grid_class=ag.Grid, grid_inversion_class=ag.Grid, sub_size=3
                 )
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch("phase_interferometer_7", ),
             real_space_mask=mask_7x7,
         )
 
         assert (
-            phase_interferometer_7.settings.settings_masked_interferometer.sub_size == 3
+                phase_interferometer_7.settings.settings_masked_interferometer.sub_size == 3
         )
 
         analysis = phase_interferometer_7.make_analysis(
@@ -109,7 +105,6 @@ class TestMakeAnalysis:
         assert isinstance(analysis.masked_dataset.transformer, ag.TransformerNUFFT)
 
         phase_interferometer_7 = ag.PhaseInterferometer(
-            phase_name="phase_interferometer_7",
             settings=ag.SettingsPhaseInterferometer(
                 settings_masked_interferometer=ag.SettingsMaskedInterferometer(
                     grid_class=ag.GridIterate,
@@ -119,7 +114,7 @@ class TestMakeAnalysis:
                     transformer_class=ag.TransformerDFT,
                 )
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch("phase_interferometer_7", ),
             real_space_mask=mask_7x7,
         )
 
@@ -136,9 +131,8 @@ class TestMakeAnalysis:
 
 class TestHyperMethods:
     def test__phase_is_extended_with_hyper_phases__sets_up_hyper_images(
-        self, interferometer_7, mask_7x7
+            self, interferometer_7, mask_7x7
     ):
-
         galaxies = af.ModelInstance()
         galaxies.galaxy = ag.Galaxy(redshift=0.5)
         galaxies.source = ag.Galaxy(redshift=1.0)
@@ -172,7 +166,6 @@ class TestHyperMethods:
         )
 
         phase_interferometer_7 = ag.PhaseInterferometer(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5, hyper_galaxy=ag.HyperGalaxy)
             ),
@@ -180,7 +173,7 @@ class TestHyperMethods:
             real_space_mask=mask_7x7,
         )
 
-        setup_hyper = ag.SetupHyper(hyper_combined_search=mock.MockSearch())
+        setup_hyper = ag.SetupHyper(hyper_combined_search=mock.MockSearch("test_phase", ))
 
         phase_interferometer_7.extend_with_multiple_hyper_phases(
             setup_hyper=setup_hyper
@@ -191,25 +184,25 @@ class TestHyperMethods:
         )
 
         assert (
-            analysis.hyper_galaxy_image_path_dict[("galaxies", "galaxy")].in_2d
-            == np.ones((3, 3))
+                analysis.hyper_galaxy_image_path_dict[("galaxies", "galaxy")].in_2d
+                == np.ones((3, 3))
         ).all()
 
         assert (
-            analysis.hyper_galaxy_image_path_dict[("galaxies", "source")].in_2d
-            == 2.0 * np.ones((3, 3))
+                analysis.hyper_galaxy_image_path_dict[("galaxies", "source")].in_2d
+                == 2.0 * np.ones((3, 3))
         ).all()
 
         assert (analysis.hyper_model_image.in_2d == 3.0 * np.ones((3, 3))).all()
 
         assert (
-            analysis.hyper_galaxy_visibilities_path_dict[("galaxies", "galaxy")]
-            == 4.0 * np.ones((7, 2))
+                analysis.hyper_galaxy_visibilities_path_dict[("galaxies", "galaxy")]
+                == 4.0 * np.ones((7, 2))
         ).all()
 
         assert (
-            analysis.hyper_galaxy_visibilities_path_dict[("galaxies", "source")]
-            == 5.0 * np.ones((7, 2))
+                analysis.hyper_galaxy_visibilities_path_dict[("galaxies", "source")]
+                == 5.0 * np.ones((7, 2))
         ).all()
 
         assert (analysis.hyper_model_visibilities == 6.0 * np.ones((7, 2))).all()

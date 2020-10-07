@@ -417,7 +417,7 @@ def regularization_weights(
     plotter=None,
 ):
 
-    regularization_weights = inversion.regularization_prior_model.regularization_weights_from_mapper(
+    regularization_weights = inversion.regularization.regularization_weights_from_mapper(
         mapper=inversion.mapper
     )
 

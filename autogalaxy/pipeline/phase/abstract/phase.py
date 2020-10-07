@@ -23,9 +23,12 @@ class AbstractPhase(af.AbstractPhase):
 
     Result = Result
 
-    @af.convert_paths
     def __init__(
-        self, paths, *, settings, search, galaxies=None, cosmology=cosmo.Planck15
+        self,
+            *,
+            settings,
+            search,
+            galaxies=None, cosmology=cosmo.Planck15
     ):
         """
         A phase in an lens pipeline. Uses the set non_linear search to try to fit
@@ -39,7 +42,7 @@ class AbstractPhase(af.AbstractPhase):
 
         self.use_as_hyper_dataset = False
 
-        super().__init__(paths=paths, search=search)
+        super().__init__(search=search)
 
         self.settings = settings
         self.galaxies = galaxies or []
@@ -81,11 +84,11 @@ class AbstractPhase(af.AbstractPhase):
     def pixelization(self):
         for galaxy in self.galaxies:
             if hasattr(galaxy, "pixelization"):
-                if galaxy.pixelization_prior_model is not None:
-                    if isinstance(galaxy.pixelization_prior_model, af.PriorModel):
-                        return galaxy.pixelization_prior_model.cls
+                if galaxy.pixelization is not None:
+                    if isinstance(galaxy.pixelization, af.PriorModel):
+                        return galaxy.pixelization.cls
                     else:
-                        return galaxy.pixelization_prior_model
+                        return galaxy.pixelization
 
     @property
     def has_pixelization(self):
@@ -95,7 +98,7 @@ class AbstractPhase(af.AbstractPhase):
     def uses_cluster_inversion(self):
         if self.galaxies:
             for galaxy in self.galaxies:
-                if isinstance_or_prior(galaxy.pixelization_prior_model, pix.VoronoiBrightnessImage):
+                if isinstance_or_prior(galaxy.pixelization, pix.VoronoiBrightnessImage):
                     return True
         return False
 
@@ -103,6 +106,6 @@ class AbstractPhase(af.AbstractPhase):
     def pixelization_is_model(self):
         if self.galaxies:
             for galaxy in self.galaxies:
-                if isprior(galaxy.pixelization_prior_model):
+                if isprior(galaxy.pixelization):
                     return True
         return False

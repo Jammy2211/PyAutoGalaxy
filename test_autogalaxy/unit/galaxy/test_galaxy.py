@@ -5,7 +5,7 @@ import autogalaxy as ag
 import numpy as np
 import pytest
 from autogalaxy import exc
-from test_autogalaxy import mock
+from autogalaxy import mock
 
 
 class TestUnits:
@@ -141,8 +141,8 @@ class TestUnits:
         )
 
         assert galaxy.redshift == 1.0
-        assert galaxy.pixelization_prior_model == 1
-        assert galaxy.regularization_prior_model == 2
+        assert galaxy.pixelization == 1
+        assert galaxy.regularization == 2
 
 
 class TestLightProfiles:

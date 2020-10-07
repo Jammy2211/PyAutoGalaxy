@@ -1,8 +1,8 @@
-import autofit as af
 import numpy as np
 from astropy import cosmology as cosmo
-from autoarray.inversion import pixelizations as pix
+
 from autoarray.inversion import inversions as inv
+from autoarray.inversion import pixelizations as pix
 from autoarray.structures import arrays, grids, visibilities as vis
 from autogalaxy import dimensions as dim
 from autogalaxy import exc
@@ -34,7 +34,7 @@ class AbstractPlane(lensing.LensingObject):
                     "determined"
                 )
             elif not all(
-                [galaxies[0].redshift == galaxy.redshift for galaxy in galaxies]
+                    [galaxies[0].redshift == galaxy.redshift for galaxy in galaxies]
             ):
                 redshift = np.mean([galaxy.redshift for galaxy in galaxies])
             else:
@@ -62,11 +62,11 @@ class AbstractPlane(lensing.LensingObject):
 
     @property
     def has_pixelization(self):
-        return any([galaxy.pixelization_prior_model for galaxy in self.galaxies])
+        return any([galaxy.pixelization for galaxy in self.galaxies])
 
     @property
     def has_regularization(self):
-        return any([galaxy.regularization_prior_model for galaxy in self.galaxies])
+        return any([galaxy.regularization for galaxy in self.galaxies])
 
     @property
     def galaxies_with_light_profile(self):
@@ -90,7 +90,7 @@ class AbstractPlane(lensing.LensingObject):
         if len(self.galaxies_with_pixelization) == 0:
             return None
         if len(self.galaxies_with_pixelization) == 1:
-            return self.galaxies_with_pixelization[0].pixelization_prior_model
+            return self.galaxies_with_pixelization[0].pixelization
         elif len(self.galaxies_with_pixelization) > 1:
             raise exc.PixelizationException(
                 "The number of galaxies with pixelizations in one plane is above 1"
@@ -102,7 +102,7 @@ class AbstractPlane(lensing.LensingObject):
         if len(self.galaxies_with_regularization) == 0:
             return None
         if len(self.galaxies_with_regularization) == 1:
-            return self.galaxies_with_regularization[0].regularization_prior_model
+            return self.galaxies_with_regularization[0].regularization
         elif len(self.galaxies_with_regularization) > 1:
             raise exc.PixelizationException(
                 "The number of galaxies with regularizations in one plane is above 1"
@@ -221,13 +221,13 @@ class AbstractPlane(lensing.LensingObject):
         )
 
     def new_object_with_units_converted(
-        self,
-        unit_length=None,
-        unit_luminosity=None,
-        unit_mass=None,
-        kpc_per_arcsec=None,
-        exposure_time=None,
-        critical_surface_density=None,
+            self,
+            unit_length=None,
+            unit_luminosity=None,
+            unit_mass=None,
+            kpc_per_arcsec=None,
+            exposure_time=None,
+            critical_surface_density=None,
     ):
 
         new_galaxies = list(
@@ -276,7 +276,6 @@ class AbstractPlane(lensing.LensingObject):
 
 class AbstractPlaneCosmology(AbstractPlane):
     def __init__(self, redshift, galaxies, cosmology):
-
         super(AbstractPlaneCosmology, self).__init__(
             redshift=redshift, galaxies=galaxies, cosmology=cosmology
         )
@@ -297,7 +296,7 @@ class AbstractPlaneCosmology(AbstractPlane):
         )
 
     def cosmic_average_density_in_units(
-        self, unit_length="arcsec", unit_mass="angular"
+            self, unit_length="arcsec", unit_mass="angular"
     ):
         return cosmology_util.cosmic_average_density_from(
             redshift=self.redshift,
@@ -408,7 +407,7 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
         return grid - self.deflections_from_grid(grid=grid)
 
     def luminosities_of_galaxies_within_circles_in_units(
-        self, radius: dim.Length, unit_luminosity="eps", exposure_time=None
+            self, radius: dim.Length, unit_luminosity="eps", exposure_time=None
     ):
         """
     Returns the total luminosity of all galaxies in this plane within a circle of specified radius.
@@ -438,7 +437,7 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
         )
 
     def masses_of_galaxies_within_circles_in_units(
-        self, radius: dim.Length, unit_mass="angular", redshift_source=None
+            self, radius: dim.Length, unit_mass="angular", redshift_source=None
     ):
         """
     Returns the total mass of all galaxies in this plane within a circle of specified radius.
@@ -504,7 +503,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         )
 
     def blurred_images_of_galaxies_from_grid_and_convolver(
-        self, grid, convolver, blurring_grid
+            self, grid, convolver, blurring_grid
     ):
         return [
             galaxy.blurred_image_from_grid_and_convolver(
@@ -552,7 +551,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             )
 
     def profile_visibilities_of_galaxies_from_grid_and_transformer(
-        self, grid, transformer
+            self, grid, transformer
     ):
         return [
             galaxy.profile_visibilities_from_grid_and_transformer(
@@ -562,7 +561,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         ]
 
     def sparse_image_plane_grid_from_grid(
-        self, grid, settings_pixelization=pix.SettingsPixelization()
+            self, grid, settings_pixelization=pix.SettingsPixelization()
     ):
 
         if not self.has_pixelization:
@@ -575,18 +574,18 @@ class AbstractPlaneData(AbstractPlaneLensing):
         )
 
     def mapper_from_grid_and_sparse_grid(
-        self, grid, sparse_grid, settings_pixelization=pix.SettingsPixelization()
+            self, grid, sparse_grid, settings_pixelization=pix.SettingsPixelization()
     ):
 
         galaxies_with_pixelization = list(
-            filter(lambda galaxy: galaxy.pixelization_prior_model is not None, self.galaxies)
+            filter(lambda galaxy: galaxy.pixelization is not None, self.galaxies)
         )
 
         if len(galaxies_with_pixelization) == 0:
             return None
         if len(galaxies_with_pixelization) == 1:
 
-            pixelization = galaxies_with_pixelization[0].pixelization_prior_model
+            pixelization = galaxies_with_pixelization[0].pixelization
 
             return pixelization.mapper_from_grid_and_sparse_grid(
                 grid=grid,
@@ -601,13 +600,13 @@ class AbstractPlaneData(AbstractPlaneLensing):
             )
 
     def inversion_imaging_from_grid_and_data(
-        self,
-        grid,
-        image,
-        noise_map,
-        convolver,
-        settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=inv.SettingsInversion(),
+            self,
+            grid,
+            image,
+            noise_map,
+            convolver,
+            settings_pixelization=pix.SettingsPixelization(),
+            settings_inversion=inv.SettingsInversion(),
     ):
 
         sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
@@ -628,13 +627,13 @@ class AbstractPlaneData(AbstractPlaneLensing):
         )
 
     def inversion_interferometer_from_grid_and_data(
-        self,
-        grid,
-        visibilities,
-        noise_map,
-        transformer,
-        settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=inv.SettingsInversion(),
+            self,
+            grid,
+            visibilities,
+            noise_map,
+            transformer,
+            settings_pixelization=pix.SettingsPixelization(),
+            settings_inversion=inv.SettingsInversion(),
     ):
 
         sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
@@ -743,7 +742,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         return galaxy_image_dict
 
     def galaxy_blurred_image_dict_from_grid_and_convolver(
-        self, grid, convolver, blurring_grid
+            self, grid, convolver, blurring_grid
     ) -> {g.Galaxy: np.ndarray}:
         """
         A dictionary associating galaxies with their corresponding model images
@@ -760,7 +759,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         return galaxy_blurred_image_dict
 
     def galaxy_profile_visibilities_dict_from_grid_and_transformer(
-        self, grid, transformer
+            self, grid, transformer
     ) -> {g.Galaxy: np.ndarray}:
         """
         A dictionary associating galaxies with their corresponding model images
@@ -795,7 +794,6 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
 class Plane(AbstractPlaneData):
     def __init__(self, redshift=None, galaxies=None, cosmology=cosmo.Planck15):
-
         super(Plane, self).__init__(
             redshift=redshift, galaxies=galaxies, cosmology=cosmology
         )

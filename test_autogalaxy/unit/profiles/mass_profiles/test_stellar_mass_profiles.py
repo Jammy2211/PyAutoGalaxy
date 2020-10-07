@@ -1,23 +1,13 @@
-from autoconf import conf
-import autogalaxy as ag
 import numpy as np
 import pytest
 
-
-@pytest.fixture(autouse=True)
-def reset_config():
-    """
-    Use configuration from the default path. You may want to change this to set a specific path.
-    """
-    conf.instance = conf.default
-
+import autogalaxy as ag
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestEllipticalGaussian:
     def test__omega_from_grid_and_q(self):
-
         gaussian = ag.mp.EllipticalGaussian()
 
         omega = gaussian.omega_from_grid_and_q(
@@ -58,7 +48,6 @@ class TestEllipticalGaussian:
         assert np.imag(omega[1]) == pytest.approx(-1.12107, 1.0e-4)
 
     def test__sigma_from_grid(self):
-
         gaussian = ag.mp.EllipticalGaussian(elliptical_comps=(0.0, 0.05263), sigma=2.0)
 
         sigma = gaussian.sigma_from_grid(grid=np.array([[1.0, 0.0]]))
@@ -93,7 +82,6 @@ class TestEllipticalGaussian:
         assert np.imag(sigma[1]) == pytest.approx(-0.026401, 1.0e-4)
 
     def test__deflections_correct_values(self):
-
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.05263),
@@ -147,7 +135,6 @@ class TestEllipticalGaussian:
         assert deflections[0, 1] == pytest.approx(0.177806, 1.0e-4)
 
     def test__deflections_via_integrator_and_analytic_agree(self):
-
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.4, 0.2),
             elliptical_comps=(0.0, 0.17647),
@@ -191,9 +178,8 @@ class TestEllipticalGaussian:
         )
 
     def test__deflections_via_grid__uses_integrator_if_analytic_fails_else_analytic(
-        self
+            self
     ):
-
         gaussian = ag.mp.EllipticalGaussian(
             centre=(-0.7, -0.4),
             elliptical_comps=(0.0, 0.05263),
@@ -240,7 +226,6 @@ class TestEllipticalGaussian:
     #   assert deflections[0, 1] == deflections_via_integrator[0, 1]
 
     def test__intensity_as_radius__correct_value(self):
-
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
         )
@@ -274,7 +259,6 @@ class TestEllipticalGaussian:
         assert intensity == pytest.approx(0.0647, 1e-2)
 
     def test__convergence_from_grid__correct_value(self):
-
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
@@ -456,7 +440,6 @@ class TestSersic:
         assert convergence == pytest.approx(5.38066670129, 1e-3)
 
     def test__deflections_correct_values(self):
-
         sersic = ag.mp.EllipticalSersic(
             centre=(-0.4, -0.2),
             elliptical_comps=(-0.07142, -0.085116),
@@ -490,7 +473,6 @@ class TestSersic:
         assert deflections[1, 1] == pytest.approx(0.79374, 1e-3)
 
     def test__surfce_density__change_geometry(self):
-
         sersic_0 = ag.mp.EllipticalSersic(centre=(0.0, 0.0))
         sersic_1 = ag.mp.EllipticalSersic(centre=(1.0, 1.0))
 
@@ -523,7 +505,6 @@ class TestSersic:
         assert convergence_0 == convergence_1
 
     def test__deflections__change_geometry(self):
-
         sersic_0 = ag.mp.EllipticalSersic(centre=(0.0, 0.0))
         sersic_1 = ag.mp.EllipticalSersic(centre=(1.0, 1.0))
 
@@ -574,8 +555,8 @@ class TestSersic:
         )
 
         assert (
-            elliptical.convergence_from_grid(grid=grid)
-            == spherical.convergence_from_grid(grid=grid)
+                elliptical.convergence_from_grid(grid=grid)
+                == spherical.convergence_from_grid(grid=grid)
         ).all()
         # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
         np.testing.assert_almost_equal(
@@ -752,7 +733,6 @@ class TestExponential:
         assert convergence == pytest.approx(4.8566, 1e-3)
 
     def test__deflections_correct_values(self):
-
         exponential = ag.mp.EllipticalExponential(
             centre=(-0.4, -0.2),
             elliptical_comps=(-0.07142, -0.085116),
@@ -784,7 +764,6 @@ class TestExponential:
         assert deflections[0, 1] == pytest.approx(0.62569, 1e-3)
 
     def test__spherical_and_elliptical_identical(self):
-
         elliptical = ag.mp.EllipticalExponential(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
@@ -801,12 +780,11 @@ class TestExponential:
         )
 
         assert (
-            elliptical.convergence_from_grid(grid=grid)
-            == spherical.convergence_from_grid(grid=grid)
+                elliptical.convergence_from_grid(grid=grid)
+                == spherical.convergence_from_grid(grid=grid)
         ).all()
 
     def test__outputs_are_autoarrays(self):
-
         grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
 
         exponential = ag.mp.EllipticalExponential()
@@ -842,7 +820,6 @@ class TestExponential:
 
 class TestDevVaucouleurs:
     def test__constructor_and_units(self):
-
         dev_vaucouleurs = ag.mp.EllipticalDevVaucouleurs(
             centre=(1.0, 2.0),
             elliptical_comps=(0.333333, 0.0),
@@ -925,7 +902,6 @@ class TestDevVaucouleurs:
         assert dev_vaucouleurs.elliptical_effective_radius == 0.6
 
     def test__convergence_correct_values(self):
-
         dev = ag.mp.EllipticalDevVaucouleurs(
             elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
@@ -982,7 +958,6 @@ class TestDevVaucouleurs:
         assert convergence == pytest.approx(0.351797, 1e-3)
 
     def test__deflections_correct_values(self):
-
         dev = ag.mp.EllipticalDevVaucouleurs(
             centre=(0.4, 0.2),
             elliptical_comps=(0.0180010, 0.0494575),
@@ -999,7 +974,6 @@ class TestDevVaucouleurs:
         assert deflections[0, 1] == pytest.approx(-3.37605, 1e-3)
 
     def test__spherical_and_elliptical_identical(self):
-
         elliptical = ag.mp.EllipticalDevVaucouleurs(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
@@ -1016,8 +990,8 @@ class TestDevVaucouleurs:
         )
 
         assert (
-            elliptical.convergence_from_grid(grid=grid)
-            == spherical.convergence_from_grid(grid=grid)
+                elliptical.convergence_from_grid(grid=grid)
+                == spherical.convergence_from_grid(grid=grid)
         ).all()
 
     def test__outputs_are_autoarrays(self):
@@ -1056,7 +1030,6 @@ class TestDevVaucouleurs:
 
 class TestSersicMassRadialGradient:
     def test__constructor_and_units(self):
-
         sersic = ag.mp.EllipticalSersicRadialGradient(
             centre=(1.0, 2.0),
             elliptical_comps=(0.333333, 0.0),
@@ -1145,7 +1118,6 @@ class TestSersicMassRadialGradient:
         assert sersic.elliptical_effective_radius == 0.6
 
     def test__convergence_correct_values(self):
-
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1/0.6)**-1.0 = 0.6
         sersic = ag.mp.EllipticalSersicRadialGradient(
             centre=(0.0, 0.0),
@@ -1217,7 +1189,6 @@ class TestSersicMassRadialGradient:
         assert convergence == pytest.approx(2.836879 * 5.38066670129, abs=2e-01)
 
     def test__deflections_correct_values(self):
-
         sersic = ag.mp.EllipticalSersicRadialGradient(
             centre=(-0.4, -0.2),
             elliptical_comps=(-0.07142, -0.085116),
@@ -1251,7 +1222,6 @@ class TestSersicMassRadialGradient:
         assert deflections[0, 1] == pytest.approx(0.725459334118341, 1e-3)
 
     def test__compare_to_sersic(self):
-
         sersic = ag.mp.EllipticalSersicRadialGradient(
             centre=(-0.4, -0.2),
             elliptical_comps=(-0.07142, -0.085116),
@@ -1278,14 +1248,14 @@ class TestSersicMassRadialGradient:
         )
 
         assert (
-            sersic_deflections[0, 0]
-            == exponential_deflections[0, 0]
-            == pytest.approx(0.90493, 1e-3)
+                sersic_deflections[0, 0]
+                == exponential_deflections[0, 0]
+                == pytest.approx(0.90493, 1e-3)
         )
         assert (
-            sersic_deflections[0, 1]
-            == exponential_deflections[0, 1]
-            == pytest.approx(0.62569, 1e-3)
+                sersic_deflections[0, 1]
+                == exponential_deflections[0, 1]
+                == pytest.approx(0.62569, 1e-3)
         )
 
         sersic = ag.mp.EllipticalSersicRadialGradient(
@@ -1312,14 +1282,14 @@ class TestSersicMassRadialGradient:
         dev_deflections = dev.deflections_from_grid(grid=np.array([[0.1625, 0.1625]]))
 
         assert (
-            sersic_deflections[0, 0]
-            == dev_deflections[0, 0]
-            == pytest.approx(-24.528, 1e-3)
+                sersic_deflections[0, 0]
+                == dev_deflections[0, 0]
+                == pytest.approx(-24.528, 1e-3)
         )
         assert (
-            sersic_deflections[0, 1]
-            == dev_deflections[0, 1]
-            == pytest.approx(-3.37605, 1e-3)
+                sersic_deflections[0, 1]
+                == dev_deflections[0, 1]
+                == pytest.approx(-3.37605, 1e-3)
         )
 
         sersic_grad = ag.mp.EllipticalSersicRadialGradient(
@@ -1348,18 +1318,17 @@ class TestSersicMassRadialGradient:
         )
 
         assert (
-            sersic_grad_deflections[0, 0]
-            == sersic_deflections[0, 0]
-            == pytest.approx(1.1446, 1e-3)
+                sersic_grad_deflections[0, 0]
+                == sersic_deflections[0, 0]
+                == pytest.approx(1.1446, 1e-3)
         )
         assert (
-            sersic_grad_deflections[0, 1]
-            == sersic_deflections[0, 1]
-            == pytest.approx(0.79374, 1e-3)
+                sersic_grad_deflections[0, 1]
+                == sersic_deflections[0, 1]
+                == pytest.approx(0.79374, 1e-3)
         )
 
     def test__spherical_and_elliptical_identical(self):
-
         elliptical = ag.mp.EllipticalSersicRadialGradient(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
@@ -1380,13 +1349,13 @@ class TestSersicMassRadialGradient:
         )
 
         assert (
-            elliptical.convergence_from_grid(grid=grid)
-            == spherical.convergence_from_grid(grid=grid)
+                elliptical.convergence_from_grid(grid=grid)
+                == spherical.convergence_from_grid(grid=grid)
         ).all()
         # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
         assert (
-            elliptical.deflections_from_grid(grid=grid)
-            == spherical.deflections_from_grid(grid=grid)
+                elliptical.deflections_from_grid(grid=grid)
+                == spherical.deflections_from_grid(grid=grid)
         ).all()
 
     def test__outputs_are_autoarrays(self):

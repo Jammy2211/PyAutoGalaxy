@@ -3,7 +3,7 @@ from os import path
 import autogalaxy as ag
 import pytest
 from autogalaxy.fit.fit import FitInterferometer
-from test_autogalaxy import mock
+from autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -20,12 +20,14 @@ class TestFit:
     ):
 
         phase_interferometer_7 = ag.PhaseInterferometer(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
                 source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
             ),
-            search=mock.MockSearch(samples=samples_with_result),
+            search=mock.MockSearch(
+                samples=samples_with_result,
+                phase_name="test_phase",
+            ),
             real_space_mask=mask_7x7,
         )
 
@@ -43,14 +45,15 @@ class TestFit:
         galalxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
         phase_interferometer_7 = ag.PhaseInterferometer(
-            phase_name="test_phase",
             galaxies=dict(galaxy=galalxy),
             settings=ag.SettingsPhaseInterferometer(
                 settings_masked_interferometer=ag.SettingsMaskedInterferometer(
                     sub_size=2
                 )
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
             real_space_mask=mask_7x7,
         )
 
@@ -83,7 +86,6 @@ class TestFit:
         galalxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
         phase_interferometer_7 = ag.PhaseInterferometer(
-            phase_name="test_phase",
             galaxies=dict(galaxy=galalxy),
             hyper_background_noise=hyper_background_noise,
             settings=ag.SettingsPhaseInterferometer(
@@ -91,7 +93,9 @@ class TestFit:
                     sub_size=4
                 )
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
             real_space_mask=mask_7x7,
         )
 
