@@ -1,7 +1,6 @@
 import os
 import shutil
 from os import path
-from pathlib import Path
 
 import pytest
 
@@ -161,7 +160,7 @@ class TestPhaseImagingVisualizer:
         assert plot_path + "subplots/subplot_inversion.png" in plot_patch.paths
         assert plot_path + "inversion/reconstructed_image.png" in plot_patch.paths
         assert plot_path + "inversion/reconstruction.png" in plot_patch.paths
-        assert plot_path + "inversion/errors.png" not in plot_patch.paths
+        # assert plot_path + "inversion/errors.png" not in plot_patch.paths
         assert plot_path + "inversion/residual_map.png" not in plot_patch.paths
         assert (
                 plot_path + "inversion/normalized_residual_map.png" not in plot_patch.paths
