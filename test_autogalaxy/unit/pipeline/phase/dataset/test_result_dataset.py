@@ -1,9 +1,10 @@
 from os import path
 
-import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autogalaxy import mock
+
+import autogalaxy as ag
+from autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -16,15 +17,13 @@ directory = path.dirname(path.realpath(__file__))
 
 class TestResult:
     def test__results_of_phase_are_available_as_properties(self, imaging_7x7, mask_7x7):
-
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase_2",
             galaxies=dict(
                 galaxy=ag.Galaxy(
                     redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
                 )
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch("test_phase_2", ),
         )
 
         result = phase_imaging_7x7.run(
@@ -34,11 +33,9 @@ class TestResult:
         assert isinstance(result, ag.AbstractPhase.Result)
 
     def test__results_of_phase_include_mask__available_as_property(
-        self, imaging_7x7, mask_7x7, samples_with_result
+            self, imaging_7x7, mask_7x7, samples_with_result
     ):
-
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase_2",
             galaxies=dict(
                 galaxy=ag.Galaxy(
                     redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
@@ -47,7 +44,7 @@ class TestResult:
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=2)
             ),
-            search=mock.MockSearch(samples=samples_with_result),
+            search=mock.MockSearch("test_phase_2", samples=samples_with_result),
         )
 
         result = phase_imaging_7x7.run(
@@ -57,9 +54,8 @@ class TestResult:
         assert (result.mask == mask_7x7).all()
 
     def test__results_of_phase_include_pixelization__available_as_property(
-        self, imaging_7x7, mask_7x7
+            self, imaging_7x7, mask_7x7
     ):
-
         source = ag.Galaxy(
             redshift=1.0,
             pixelization=ag.pix.VoronoiMagnification(shape=(2, 3)),
@@ -71,9 +67,8 @@ class TestResult:
         samples = mock.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase_2",
             settings=ag.SettingsPhaseImaging(),
-            search=mock.MockSearch(samples=samples),
+            search=mock.MockSearch("test_phase_2", samples=samples),
         )
 
         result = phase_imaging_7x7.run(
@@ -96,10 +91,9 @@ class TestResult:
         samples = mock.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase_2",
             galaxies=dict(source=source),
             settings=ag.SettingsPhaseImaging(),
-            search=mock.MockSearch(samples=samples),
+            search=mock.MockSearch("test_phase_2", samples=samples),
         )
 
         phase_imaging_7x7.galaxies.source.hyper_galaxy_image = np.ones(9)

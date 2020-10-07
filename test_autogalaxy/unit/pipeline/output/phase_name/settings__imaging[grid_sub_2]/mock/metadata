@@ -1,0 +1,7 @@
+phase=phase_name
+phase_tag=settings__imaging[grid_sub_2]
+pipeline=
+pipeline_tag=
+dataset_name=mock_imaging_7x7name=phase_name
+tag=settings__imaging[grid_sub_2]
+non_linear_search=mocksearch

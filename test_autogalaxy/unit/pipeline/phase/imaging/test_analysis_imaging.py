@@ -5,7 +5,7 @@ import autogalaxy as ag
 import pytest
 from astropy import cosmology as cosmo
 from autogalaxy.fit.fit import FitImaging
-from test_autogalaxy import mock
+from autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -20,12 +20,14 @@ class TestFit:
     def test__fit_using_imaging(self, imaging_7x7, mask_7x7, samples_with_result):
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
                 source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
             ),
-            search=mock.MockSearch(samples=samples_with_result),
+            search=mock.MockSearch(
+                samples=samples_with_result,
+                phase_name="test_phase",
+            ),
         )
 
         result = phase_imaging_7x7.run(
@@ -40,12 +42,13 @@ class TestFit:
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(galaxy=galaxy),
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=1)
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -74,14 +77,15 @@ class TestFit:
         galalxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(galaxy=galalxy),
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=4)
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
         )
 
         analysis = phase_imaging_7x7.make_analysis(

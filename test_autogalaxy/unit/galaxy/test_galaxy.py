@@ -5,7 +5,7 @@ import autogalaxy as ag
 import numpy as np
 import pytest
 from autogalaxy import exc
-from test_autogalaxy import mock
+from autogalaxy import mock
 
 
 class TestUnits:

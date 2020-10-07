@@ -31,13 +31,6 @@ def make_profile():
     return ag.lmp.EllipticalSersicRadialGradient()
 
 
-@pytest.fixture(scope="session", autouse=True)
-def do_something():
-    conf.instance = conf.Config(
-        "{}/config/galaxy_model".format(os.path.dirname(os.path.realpath(__file__)))
-    )
-
-
 @pytest.fixture(name="mapper")
 def make_mapper():
     return af.ModelMapper()
@@ -179,7 +172,7 @@ class TestResultForArguments:
             galaxy_model.light_profile.elliptical_comps.elliptical_comps_1: 0.6,
             galaxy_model.light_profile.intensity.value: 0.6,
             galaxy_model.light_profile.effective_radius.value: 0.7,
-            galaxy_model.light_profile.sersic_index: 0.1,
+            galaxy_model.light_profile.sersic_index: 0.5,
         }
 
         galaxy = galaxy_model.instance_for_arguments(arguments)

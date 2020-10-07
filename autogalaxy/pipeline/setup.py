@@ -1,28 +1,27 @@
-from autoconf import conf
 import autofit as af
-
 from autoarray.inversion import pixelizations as pix, regularization as reg
+from autoconf import conf
+from autogalaxy import exc
 from autogalaxy.galaxy import galaxy as g
 from autogalaxy.profiles import (
     light_profiles as lp,
     mass_profiles as mp,
     light_and_mass_profiles as lmp,
 )
-from autogalaxy import exc
 
 
 class SetupHyper:
     def __init__(
-        self,
-        hyper_galaxies: bool = False,
-        hyper_image_sky: bool = False,
-        hyper_background_noise: bool = False,
-        hyper_galaxy_phase_first: bool = False,
-        hyper_fixed_after_source=False,
-        hyper_galaxies_search: af.NonLinearSearch = None,
-        inversion_search: af.NonLinearSearch = None,
-        hyper_combined_search: af.NonLinearSearch = None,
-        evidence_tolerance: float = None,
+            self,
+            hyper_galaxies: bool = False,
+            hyper_image_sky: bool = False,
+            hyper_background_noise: bool = False,
+            hyper_galaxy_phase_first: bool = False,
+            hyper_fixed_after_source=False,
+            hyper_galaxies_search: af.NonLinearSearch = None,
+            inversion_search: af.NonLinearSearch = None,
+            hyper_combined_search: af.NonLinearSearch = None,
+            evidence_tolerance: float = None,
     ):
         """The hyper setup of a pipeline, which controls how hyper-features in PyAutoGalaxy template pipelines run,
         for example controlling whether hyper galaxies are used to scale the noise and the non-linear searches used
@@ -63,9 +62,9 @@ class SetupHyper:
 
         if evidence_tolerance is not None:
             if (
-                hyper_galaxies_search is not None
-                or inversion_search is not None
-                or hyper_combined_search is not None
+                    hyper_galaxies_search is not None
+                    or inversion_search is not None
+                    or hyper_combined_search is not None
             ):
                 raise exc.PipelineException(
                     "You have manually specified a search in the SetupPipeline, and an evidence_tolerance."
@@ -114,12 +113,12 @@ class SetupHyper:
         """Tag ithe hyper pipeline features used in a hyper pipeline to customize pipeline output paths.
         """
         if not any(
-            [self.hyper_galaxies, self.hyper_image_sky, self.hyper_background_noise]
+                [self.hyper_galaxies, self.hyper_image_sky, self.hyper_background_noise]
         ):
             return ""
 
         return (
-            f"{conf.instance.setup_tag.get('hyper', 'hyper')}["
+            f"{conf.instance['notation']['setup_tags']['hyper']['hyper']}["
             f"{self.hyper_galaxies_tag}"
             f"{self.hyper_image_sky_tag}"
             f"{self.hyper_background_noise_tag}"
@@ -131,12 +130,12 @@ class SetupHyper:
         """Tag ithe hyper pipeline features used in a hyper pipeline to customize pipeline output paths.
         """
         if not any(
-            [self.hyper_galaxies, self.hyper_image_sky, self.hyper_background_noise]
+                [self.hyper_galaxies, self.hyper_image_sky, self.hyper_background_noise]
         ):
             return ""
 
         return (
-            f"{conf.instance.setup_tag.get('hyper', 'hyper')}["
+            f"{conf.instance['notation']['setup_tags']['hyper']['hyper']}["
             f"{self.hyper_galaxies_tag}"
             f"{self.hyper_image_sky_tag}"
             f"{self.hyper_background_noise_tag}]"
@@ -151,7 +150,7 @@ class SetupHyper:
         if not self.hyper_galaxies:
             return ""
         elif self.hyper_galaxies:
-            return conf.instance.setup_tag.get("hyper", "hyper_galaxies")
+            return conf.instance["notation"]["setup_tags"]["hyper"]["hyper_galaxies"]
 
     @property
     def hyper_image_sky_tag(self):
@@ -163,7 +162,7 @@ class SetupHyper:
         if not self.hyper_image_sky:
             return ""
         elif self.hyper_image_sky:
-            return f"__{conf.instance.setup_tag.get('hyper', 'hyper_image_sky')}"
+            return f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_image_sky']}"
 
     @property
     def hyper_background_noise_tag(self):
@@ -175,7 +174,7 @@ class SetupHyper:
         if not self.hyper_background_noise:
             return ""
         elif self.hyper_background_noise:
-            return f"__{conf.instance.setup_tag.get('hyper', 'hyper_background_noise')}"
+            return f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_background_noise']}"
 
     @property
     def hyper_fixed_after_source_tag(self):
@@ -190,11 +189,11 @@ class SetupHyper:
             return ""
         elif self.hyper_fixed_after_source:
             return (
-                f"__{conf.instance.setup_tag.get('hyper', 'hyper_fixed_after_source')}"
+                f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_fixed_after_source']}"
             )
 
     def hyper_galaxy_lens_from_previous_pipeline(
-        self, index=0, noise_factor_is_model=False
+            self, index=0, noise_factor_is_model=False
     ):
 
         if self.hyper_galaxies:
@@ -223,7 +222,7 @@ class SetupHyper:
             return hyper_galaxy
 
     def hyper_galaxy_source_from_previous_pipeline(
-        self, index=0, noise_factor_is_model=False
+            self, index=0, noise_factor_is_model=False
     ):
 
         if self.hyper_galaxies:
@@ -282,10 +281,10 @@ class AbstractSetupLight:
         else:
             y = "{0:.2f}".format(self.light_centre[0])
             x = "{0:.2f}".format(self.light_centre[1])
-            return f"__{conf.instance.setup_tag.get('light', 'light_centre')}_({y},{x})"
+            return f"__{conf.instance['notation']['setup_tags']['light']['light_centre']}_({y},{x})"
 
     def align_centre_to_light_centre(
-        self, light_prior_model: af.PriorModel(lp.LightProfile)
+            self, light_prior_model: af.PriorModel(lp.LightProfile)
     ):
         """
         Align the centre of an input light profile to the light_centre of this instance of the SLaM Source
@@ -332,20 +331,20 @@ class SetupLightSersic(AbstractSetupLight):
         """Generate a tag of the parameetric source model.
         """
         return (
-            f"{conf.instance.setup_tag.get('light', 'light')}[{self.model_type}"
+            f"{conf.instance['notation']['setup_tags']['light']['light']}[{self.model_type}"
             f"{self.light_centre_tag}]"
         )
 
 
 class SetupLightBulgeDisk(AbstractSetupLight):
     def __init__(
-        self,
-        light_centre: (float, float) = None,
-        align_bulge_disk_centre: bool = False,
-        align_bulge_disk_elliptical_comps: bool = False,
-        disk_as_sersic: bool = False,
-        include_envelope: bool = False,
-        envelope_as_sersic: bool = False,
+            self,
+            light_centre: (float, float) = None,
+            align_bulge_disk_centre: bool = False,
+            align_bulge_disk_elliptical_comps: bool = False,
+            disk_as_sersic: bool = False,
+            include_envelope: bool = False,
+            envelope_as_sersic: bool = False,
     ):
         """The setup of the light modeling in a pipeline, which controls how PyAutoGalaxy template pipelines runs, for
         example controlling assumptions about the bulge-disk model.
@@ -387,7 +386,7 @@ class SetupLightBulgeDisk(AbstractSetupLight):
     @property
     def tag(self):
         return (
-            f"{conf.instance.setup_tag.get('light', 'light')}[{self.model_type}"
+            f"{conf.instance['notation']['setup_tags']['light']['light']}[{self.model_type}"
             f"{self.light_centre_tag}"
             f"{self.align_bulge_disk_tag}"
             f"{self.disk_as_sersic_tag}"
@@ -405,7 +404,7 @@ class SetupLightBulgeDisk(AbstractSetupLight):
         if not self.align_bulge_disk_centre:
             return ""
         elif self.align_bulge_disk_centre:
-            return f"_{conf.instance.setup_tag.get('light', 'align_bulge_disk_centre')}"
+            return f"_{conf.instance['notation']['setup_tags']['light']['align_bulge_disk_centre']}"
 
     @property
     def align_bulge_disk_elliptical_comps_tag(self):
@@ -417,7 +416,7 @@ class SetupLightBulgeDisk(AbstractSetupLight):
         if not self.align_bulge_disk_elliptical_comps:
             return ""
         elif self.align_bulge_disk_elliptical_comps:
-            return f"_{conf.instance.setup_tag.get('light', 'align_bulge_disk_elliptical_comps')}"
+            return f"_{conf.instance['notation']['setup_tags']['light']['align_bulge_disk_elliptical_comps']}"
 
     @property
     def align_bulge_disk_tag(self):
@@ -427,11 +426,11 @@ class SetupLightBulgeDisk(AbstractSetupLight):
         """
 
         if not any(
-            [self.align_bulge_disk_centre, self.align_bulge_disk_elliptical_comps]
+                [self.align_bulge_disk_centre, self.align_bulge_disk_elliptical_comps]
         ):
             return ""
 
-        return f"__{conf.instance.setup_tag.get('light', 'align_bulge_disk')}{self.align_bulge_disk_centre_tag}{self.align_bulge_disk_elliptical_comps_tag}"
+        return f"__{conf.instance['notation']['setup_tags']['light']['align_bulge_disk']}{self.align_bulge_disk_centre_tag}{self.align_bulge_disk_elliptical_comps_tag}"
 
     @property
     def disk_as_sersic_tag(self):
@@ -446,13 +445,13 @@ class SetupLightBulgeDisk(AbstractSetupLight):
         if not self.disk_as_sersic:
             return ""
         elif self.disk_as_sersic:
-            return f"__{conf.instance.setup_tag.get('light', 'disk_as_sersic')}"
+            return f"__{conf.instance['notation']['setup_tags']['light']['disk_as_sersic']}"
 
     @property
     def include_envelope_tag(self):
         if not self.include_envelope:
             return ""
-        return f"__{conf.instance.setup_tag.get('light', 'include_envelope')}"
+        return f"__{conf.instance['notation']['setup_tags']['light']['include_envelope']}"
 
     @property
     def envelope_as_sersic_tag(self):
@@ -467,7 +466,7 @@ class SetupLightBulgeDisk(AbstractSetupLight):
         if not self.envelope_as_sersic:
             return ""
         elif self.envelope_as_sersic:
-            return f"__{conf.instance.setup_tag.get('light', 'envelope_as_sersic')}"
+            return f"__{conf.instance['notation']['setup_tags']['light']['envelope_as_sersic']}"
 
     @property
     def disk_prior_model(self):
@@ -487,7 +486,7 @@ class SetupLightBulgeDisk(AbstractSetupLight):
                 return af.PriorModel(lp.EllipticalExponential)
 
     def align_bulge_and_disk_centre_and_elliptical_comps(
-        self, bulge_prior_model, disk_prior_model
+            self, bulge_prior_model, disk_prior_model
     ):
 
         if self.align_bulge_disk_centre:
@@ -534,10 +533,10 @@ class AbstractSetupMass:
 
         y = "{0:.2f}".format(self.mass_centre[0])
         x = "{0:.2f}".format(self.mass_centre[1])
-        return f"__{conf.instance.setup_tag.get('mass', 'mass_centre')}_({y},{x})"
+        return f"__{conf.instance['notation']['setup_tags']['mass']['mass_centre']}_({y},{x})"
 
     def align_centre_to_mass_centre(
-        self, mass_prior_model: af.PriorModel(mp.MassProfile)
+            self, mass_prior_model: af.PriorModel(mp.MassProfile)
     ):
         """
         Align the centre of an input mass profile to the mass_centre of this instance of the SLaM Source
@@ -555,7 +554,7 @@ class AbstractSetupMass:
         return mass_prior_model
 
     def unfix_mass_centre(
-        self, mass_prior_model: af.PriorModel(mp.MassProfile), index: int = 0
+            self, mass_prior_model: af.PriorModel(mp.MassProfile), index: int = 0
     ):
         """If the centre of a mass model was previously fixed to an input value (e.g. mass_centre), unaligned it
         by making its centre GaussianPriors.
@@ -584,10 +583,10 @@ class AbstractSetupMass:
 
 class SetupMassTotal(AbstractSetupMass):
     def __init__(
-        self,
-        mass_profile: mp.MassProfile = None,
-        mass_centre: (float, float) = None,
-        align_light_mass_centre: bool = False,
+            self,
+            mass_profile: mp.MassProfile = None,
+            mass_centre: (float, float) = None,
+            align_light_mass_centre: bool = False,
     ):
         """The setup of mass modeling in a pipeline, which controls how PyAutoLens template pipelines runs, for
         example controlling assumptions about the mass-to-light profile used too control how a light profile is
@@ -624,7 +623,7 @@ class SetupMassTotal(AbstractSetupMass):
         """Generate the pipeline's overall tag, which customizes the 'setup' folder the results are output to.
         """
         return (
-            f"{conf.instance.setup_tag.get('mass', 'mass')}[{self.model_type}{self.mass_profile_tag}"
+            f"{conf.instance['notation']['setup_tags']['mass']['mass']}[{self.model_type}{self.mass_profile_tag}"
             f"{self.mass_centre_tag}"
             f"{self.align_light_mass_centre_tag}]"
         )
@@ -635,7 +634,7 @@ class SetupMassTotal(AbstractSetupMass):
         if self.mass_profile is None:
             return ""
 
-        return f"__{conf.instance.setup_tag.get('total', self.mass_profile().__class__.__name__)}"
+        return f"__{conf.instance['notation']['setup_tags']['total'][self.mass_profile().__class__.__name__]}"
 
     @property
     def align_light_mass_centre_tag(self):
@@ -651,12 +650,12 @@ class SetupMassTotal(AbstractSetupMass):
 
         if not self.align_light_mass_centre:
             return ""
-        return f"__{conf.instance.setup_tag.get('mass', 'align_light_mass_centre')}"
+        return f"__{conf.instance['notation']['setup_tags']['mass']['align_light_mass_centre']}"
 
     def align_centre_of_mass_to_light(
-        self,
-        mass_prior_model: af.PriorModel(mp.MassProfile),
-        light_centre: (float, float),
+            self,
+            mass_prior_model: af.PriorModel(mp.MassProfile),
+            light_centre: (float, float),
     ):
         """Align the centre of a mass profile to the centre of a light profile, if the align_light_mass_centre
         SLaM setting is True.
@@ -680,7 +679,7 @@ class SetupMassTotal(AbstractSetupMass):
         return mass_prior_model
 
     def unalign_mass_centre_from_light_centre(
-        self, mass_prior_model: af.PriorModel(mp.MassProfile)
+            self, mass_prior_model: af.PriorModel(mp.MassProfile)
     ):
         """If the centre of a mass model was previously aligned with that of the lens light centre, unaligned them
         by using an earlier model of the light.
@@ -703,17 +702,17 @@ class SetupMassTotal(AbstractSetupMass):
 
 class SetupMassLightDark(AbstractSetupMass):
     def __init__(
-        self,
-        mass_centre: (float, float) = None,
-        constant_mass_to_light_ratio: bool = False,
-        bulge_mass_to_light_ratio_gradient: bool = False,
-        disk_mass_to_light_ratio_gradient: bool = False,
-        envelope_mass_to_light_ratio_gradient: bool = False,
-        disk_as_sersic: bool = False,
-        include_envelope: bool = False,
-        envelope_as_sersic: bool = False,
-        align_light_dark_centre: bool = False,
-        align_bulge_dark_centre: bool = False,
+            self,
+            mass_centre: (float, float) = None,
+            constant_mass_to_light_ratio: bool = False,
+            bulge_mass_to_light_ratio_gradient: bool = False,
+            disk_mass_to_light_ratio_gradient: bool = False,
+            envelope_mass_to_light_ratio_gradient: bool = False,
+            disk_as_sersic: bool = False,
+            include_envelope: bool = False,
+            envelope_as_sersic: bool = False,
+            align_light_dark_centre: bool = False,
+            align_bulge_dark_centre: bool = False,
     ):
         """The setup of mass modeling in a pipeline, which controls how PyAutoLens template pipelines runs, for
         example controlling assumptions about the mass-to-light profile used too control how a light profile is
@@ -776,7 +775,7 @@ class SetupMassLightDark(AbstractSetupMass):
         """Generate the pipeline's overall tag, which customizes the 'setup' folder the results are output to.
         """
         return (
-            f"{conf.instance.setup_tag.get('mass', 'mass')}[{self.model_type}"
+            f"{conf.instance['notation']['setup_tags']['mass']['mass']}[{self.model_type}"
             f"{self.mass_centre_tag}"
             f"{self.mass_to_light_tag}"
             f"{self.align_light_dark_centre_tag}"
@@ -796,18 +795,16 @@ class SetupMassLightDark(AbstractSetupMass):
         """
 
         mass_to_light_tag = (
-            f"__{conf.instance.setup_tag.get('mass', 'mass_to_light_ratio')}"
+            f"__{conf.instance['notation']['setup_tags']['mass']['mass_to_light_ratio']}"
             f"{self.constant_mass_to_light_ratio_tag}"
         )
 
         if (
-            self.bulge_mass_to_light_ratio_gradient
-            or self.disk_mass_to_light_ratio_gradient
-            or self.envelope_mass_to_light_ratio_gradient
+                self.bulge_mass_to_light_ratio_gradient
+                or self.disk_mass_to_light_ratio_gradient
+                or self.envelope_mass_to_light_ratio_gradient
         ):
-            gradient_tag = conf.instance.setup_tag.get(
-                "mass", "mass_to_light_ratio_gradient"
-            )
+            gradient_tag = conf.instance["notation"]["setup_tags"]["mass"]["mass_to_light_ratio_gradient"]
             if self.bulge_mass_to_light_ratio_gradient:
                 gradient_tag = (
                     f"{gradient_tag}{self.bulge_mass_to_light_ratio_gradient_tag}"
@@ -835,8 +832,8 @@ class SetupMassLightDark(AbstractSetupMass):
         constant_mass_to_light_ratio = ``True`` -> mlr_constant
         """
         if self.constant_mass_to_light_ratio:
-            return f"_{conf.instance.setup_tag.get('mass', 'constant_mass_to_light_ratio')}"
-        return f"_{conf.instance.setup_tag.get('mass', 'free_mass_to_light_ratio')}"
+            return f"_{conf.instance['notation']['setup_tags']['mass']['constant_mass_to_light_ratio']}"
+        return f"_{conf.instance['notation']['setup_tags']['mass']['free_mass_to_light_ratio']}"
 
     @property
     def bulge_mass_to_light_ratio_gradient_tag(self):
@@ -850,7 +847,7 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         if not self.bulge_mass_to_light_ratio_gradient:
             return ""
-        return f"_{conf.instance.setup_tag.get('mass', 'bulge_mass_to_light_ratio_gradient')}"
+        return f"_{conf.instance['notation']['setup_tags']['mass']['bulge_mass_to_light_ratio_gradient']}"
 
     @property
     def disk_mass_to_light_ratio_gradient_tag(self):
@@ -864,7 +861,7 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         if not self.disk_mass_to_light_ratio_gradient:
             return ""
-        return f"_{conf.instance.setup_tag.get('mass', 'disk_mass_to_light_ratio_gradient')}"
+        return f"_{conf.instance['notation']['setup_tags']['mass']['disk_mass_to_light_ratio_gradient']}"
 
     @property
     def envelope_mass_to_light_ratio_gradient_tag(self):
@@ -878,7 +875,7 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         if not self.include_envelope or not self.envelope_mass_to_light_ratio_gradient:
             return ""
-        return f"_{conf.instance.setup_tag.get('mass', 'envelope_mass_to_light_ratio_gradient')}"
+        return f"_{conf.instance['notation']['setup_tags']['mass']['envelope_mass_to_light_ratio_gradient']}"
 
     @property
     def align_light_dark_centre_tag(self):
@@ -891,7 +888,7 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         if not self.align_light_dark_centre:
             return ""
-        return f"__{conf.instance.setup_tag.get('mass', 'align_light_dark_centre')}"
+        return f"__{conf.instance['notation']['setup_tags']['mass']['align_light_dark_centre']}"
 
     @property
     def align_bulge_dark_centre_tag(self):
@@ -905,7 +902,7 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         if not self.align_bulge_dark_centre:
             return ""
-        return "__" + conf.instance.setup_tag.get("mass", "align_bulge_dark_centre")
+        return "__" + conf.instance["notation"]["setup_tags"]["mass"]["align_bulge_dark_centre"]
 
     @property
     def disk_as_sersic_tag(self):
@@ -920,13 +917,13 @@ class SetupMassLightDark(AbstractSetupMass):
         if not self.disk_as_sersic:
             return ""
         elif self.disk_as_sersic:
-            return f"__{conf.instance.setup_tag.get('light', 'disk_as_sersic')}"
+            return f"__{conf.instance['notation']['setup_tags']['light']['disk_as_sersic']}"
 
     @property
     def include_envelope_tag(self):
         if not self.include_envelope:
             return ""
-        return f"__{conf.instance.setup_tag.get('light', 'include_envelope')}"
+        return f"__{conf.instance['notation']['setup_tags']['light']['include_envelope']}"
 
     @property
     def envelope_as_sersic_tag(self):
@@ -940,7 +937,7 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         if not self.envelope_as_sersic:
             return ""
-        return f"__{conf.instance.setup_tag.get('light', 'envelope_as_sersic')}"
+        return f"__{conf.instance['notation']['setup_tags']['light']['envelope_as_sersic']}"
 
     @property
     def bulge_light_and_mass_prior_model(self):
@@ -996,7 +993,7 @@ class SetupMassLightDark(AbstractSetupMass):
             return af.PriorModel(lmp.EllipticalExponentialRadialGradient)
 
     def set_mass_to_light_ratios_of_light_and_mass_prior_models(
-        self, light_and_mass_prior_models: [af.PriorModel(mp.MassProfile)]
+            self, light_and_mass_prior_models: [af.PriorModel(mp.MassProfile)]
     ):
         """
         For an input list of `LightMassProfile`'s which will represent a galaxy with a light-dark mass model, set all
@@ -1047,15 +1044,15 @@ class SetupSourceSersic(AbstractSetupSource):
     def tag(self):
         """Generate a tag of the parameetric source model.
         """
-        return f"{conf.instance.setup_tag.get('source', 'source')}[{self.model_type}]"
+        return f"{conf.instance['notation']['setup_tags']['source']['source']}[{self.model_type}]"
 
 
 class SetupSourceInversion(AbstractSetupSource):
     def __init__(
-        self,
-        pixelization: pix.Pixelization = None,
-        regularization: reg.Regularization = None,
-        inversion_pixels_fixed: float = None,
+            self,
+            pixelization: pix.Pixelization = None,
+            regularization: reg.Regularization = None,
+            inversion_pixels_fixed: float = None,
     ):
         """The setup of the source modeling of a pipeline, which controls how PyAutoGalaxy template pipelines runs,
         for example controlling the `Pixelization` and `Regularization` used by a source model which uses an
@@ -1103,7 +1100,7 @@ class SetupSourceInversion(AbstractSetupSource):
         if self._pixelization is None or self.regularization is None:
             return ""
 
-        return f"{conf.instance.setup_tag.get('source', 'source')}[{self.model_type}]"
+        return f"{conf.instance['notation']['setup_tags']['source']['source']}[{self.model_type}]"
 
     @property
     def pixelization(self):
@@ -1112,8 +1109,8 @@ class SetupSourceInversion(AbstractSetupSource):
         pixels fixed to a certain value if the *inversion_pixels_fixed* parameter is input.
         """
         if (
-            self._pixelization is not pix.VoronoiBrightnessImage
-            or self.inversion_pixels_fixed is None
+                self._pixelization is not pix.VoronoiBrightnessImage
+                or self.inversion_pixels_fixed is None
         ):
             return self._pixelization
 
@@ -1151,9 +1148,10 @@ class SetupSourceInversion(AbstractSetupSource):
         if self._pixelization is None:
             return ""
         else:
+            setup_tags = conf.instance['notation']['setup_tags']
             return (
-                f"{conf.instance.setup_tag.get('source', 'pixelization')}_"
-                f"{conf.instance.setup_tag.get('pixelization', self._pixelization().__class__.__name__)}"
+                f"{setup_tags['source']['pixelization']}_"
+                f"{setup_tags['pixelization'][self._pixelization().__class__.__name__]}"
             )
 
     @property
@@ -1173,9 +1171,10 @@ class SetupSourceInversion(AbstractSetupSource):
         if self.regularization is None:
             return ""
         else:
+            setup_tags = conf.instance['notation']['setup_tags']
             return (
-                f"__{conf.instance.setup_tag.get('source', 'regularization')}_"
-                f"{conf.instance.setup_tag.get('regularization', self.regularization().__class__.__name__)}"
+                f"__{setup_tags['source']['regularization']}_"
+                f"{setup_tags['regularization'][self.regularization().__class__.__name__]}"
             )
 
 
@@ -1202,7 +1201,7 @@ class SetupSMBH:
 
     @property
     def tag(self):
-        return f"{conf.instance.setup_tag.get('smbh', 'smbh')}[{self.smbh_centre_tag}]"
+        return f"{conf.instance['notation']['setup_tags']['smbh']['smbh']}[{self.smbh_centre_tag}]"
 
     @property
     def smbh_centre_tag(self):
@@ -1221,11 +1220,11 @@ class SetupSMBH:
 
         if self.smbh_centre_fixed:
 
-            smbh_centre_tag = conf.instance.setup_tag.get("smbh", "smbh_centre_fixed")
+            smbh_centre_tag = conf.instance["notation"]["setup_tags"]["smbh"]["smbh_centre_fixed"]
 
         else:
 
-            smbh_centre_tag = conf.instance.setup_tag.get("smbh", "smbh_centre_free")
+            smbh_centre_tag = conf.instance["notation"]["setup_tags"]["smbh"]["smbh_centre_free"]
 
         return f"{smbh_centre_tag}"
 
@@ -1306,8 +1305,8 @@ class SetupPipeline:
         self.setup_smbh = setup_smbh
 
         if (
-            isinstance(self.setup_light, SetupLightBulgeDisk)
-            and self.setup_mass is not None
+                isinstance(self.setup_light, SetupLightBulgeDisk)
+                and self.setup_mass is not None
         ):
             self.setup_mass.disk_as_sersic = self.setup_light.disk_as_sersic
 
@@ -1316,7 +1315,7 @@ class SetupPipeline:
         """Generate the pipeline's overall tag, which customizes the 'setup' folder the results are output to.
         """
 
-        setup_tag = conf.instance.setup_tag.get("pipeline", "pipeline")
+        setup_tag = conf.instance["notation"]["setup_tags"]["pipeline"]["pipeline"]
         hyper_tag = f"__{self.setup_hyper.tag}" if self.setup_hyper is not None else ""
         source_tag = (
             f"__{self.setup_source.tag}" if self.setup_source is not None else ""

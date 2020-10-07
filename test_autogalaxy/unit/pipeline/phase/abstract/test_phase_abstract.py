@@ -1,7 +1,9 @@
+import pytest
+
 import autofit as af
 import autogalaxy as ag
-import pytest
-from test_autogalaxy import mock
+from autogalaxy.pipeline.phase.dataset import PhaseDataset
+from autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -20,8 +22,7 @@ class TestModel:
         assert phase_dataset_7x7.model.galaxies == [ag.GalaxyModel(redshift=0.5)]
 
     def test__promise_attrbutes(self):
-        phase = ag.PhaseDataset(
-            phase_name="test_phase",
+        phase = PhaseDataset(
             galaxies=dict(
                 galaxy=ag.GalaxyModel(
                     redshift=0.5,
@@ -31,28 +32,34 @@ class TestModel:
                 source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
             ),
             settings=ag.SettingsPhaseImaging(),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
         )
 
         print(hasattr(af.last.result.instance.galaxies.light, "mas2s"))
 
     def test__duplication(self):
         phase_dataset_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
         )
 
-        ag.PhaseImaging(phase_name="test_phase", search=mock.MockSearch())
+        ag.PhaseImaging(
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            )
+        )
 
         assert phase_dataset_7x7.galaxies is not None
 
     def test__phase_can_receive_list_of_galaxy_models(self):
 
         phase_dataset_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(
                     sersic=ag.lp.EllipticalSersic,
@@ -63,7 +70,9 @@ class TestModel:
                     sis=ag.mp.SphericalIsothermal, redshift=ag.Redshift
                 ),
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
         )
 
         for item in phase_dataset_7x7.model.path_priors_tuples:
@@ -109,7 +118,6 @@ class TestModel:
                 self.galaxies[0].sis.einstein_radius = 10.0
 
         phase_dataset_7x7 = LensPlanePhase2(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(
                     sersic=ag.lp.EllipticalSersic,
@@ -120,7 +128,9 @@ class TestModel:
                     sis=ag.mp.SphericalIsothermal, redshift=ag.Redshift
                 ),
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
         )
 
         # noinspection PyTypeChecker
@@ -164,7 +174,10 @@ class TestModel:
         source_galaxy = ag.Galaxy(redshift=0.5)
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase", galaxies=[source_galaxy], search=mock.MockSearch()
+            galaxies=[source_galaxy],
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            )
         )
 
         assert phase_imaging_7x7.pixelization is None
@@ -178,7 +191,10 @@ class TestModel:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase", galaxies=[source_galaxy], search=mock.MockSearch()
+            galaxies=[source_galaxy],
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            )
         )
 
         assert isinstance(phase_imaging_7x7.pixelization, ag.pix.Rectangular)
@@ -192,7 +208,9 @@ class TestModel:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase", galaxies=[source_galaxy], search=mock.MockSearch()
+            galaxies=[source_galaxy], search=mock.MockSearch(
+                phase_name="test_phase",
+            )
         )
 
         assert type(phase_imaging_7x7.pixelization) == type(ag.pix.Rectangular)
@@ -207,7 +225,9 @@ class TestModel:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase", galaxies=[source_galaxy], search=mock.MockSearch()
+            galaxies=[source_galaxy], search=mock.MockSearch(
+                phase_name="test_phase"
+            )
         )
 
         assert type(phase_imaging_7x7.pixelization) == type(ag.pix.Rectangular)
@@ -216,17 +236,17 @@ class TestModel:
 
     def test__check_if_phase_uses_cluster_inversion(self):
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
         )
 
         assert phase_imaging_7x7.uses_cluster_inversion is False
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(
                     redshift=0.5,
@@ -235,7 +255,9 @@ class TestModel:
                 ),
                 source=ag.GalaxyModel(redshift=1.0),
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
         )
         assert phase_imaging_7x7.uses_cluster_inversion is False
 
@@ -246,25 +268,26 @@ class TestModel:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(galaxy=ag.GalaxyModel(redshift=0.5), source=source),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
         )
 
         assert phase_imaging_7x7.uses_cluster_inversion is True
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
         )
 
         assert phase_imaging_7x7.uses_cluster_inversion is False
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(
                     redshift=0.5,
@@ -273,13 +296,14 @@ class TestModel:
                 ),
                 source=ag.GalaxyModel(redshift=1.0),
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
         )
 
         assert phase_imaging_7x7.uses_cluster_inversion is False
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5),
                 source=ag.GalaxyModel(
@@ -288,7 +312,9 @@ class TestModel:
                     regularization=ag.reg.Constant,
                 ),
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
         )
 
         assert phase_imaging_7x7.uses_cluster_inversion is True
@@ -297,7 +323,6 @@ class TestModel:
         pixelization.pixels = 100
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5),
                 source=ag.GalaxyModel(
@@ -306,7 +331,9 @@ class TestModel:
                     regularization=ag.reg.Constant,
                 ),
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="test_phase",
+            ),
         )
 
         assert phase_imaging_7x7.uses_cluster_inversion is True
@@ -316,26 +343,27 @@ class TestSetup:
 
     # noinspection PyTypeChecker
     def test_assertion_failure(self, imaging_7x7, mask_7x7):
-
         phase_dataset_7x7 = ag.PhaseImaging(
-            phase_name="phase_name",
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
             settings=ag.SettingsPhaseImaging(),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="phase_name",
+            ),
         )
 
         result = phase_dataset_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)
         assert result is not None
 
         phase_dataset_7x7 = ag.PhaseImaging(
-            phase_name="phase_name",
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
             settings=ag.SettingsPhaseImaging(),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(
+                phase_name="phase_name",
+            ),
         )
         result = phase_dataset_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)
         assert result is not None

@@ -1,9 +1,9 @@
 import os
 from os import path
 
-from autoconf import conf
-import autogalaxy.plot as aplt
 import pytest
+
+import autogalaxy.plot as aplt
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -15,23 +15,16 @@ def make_galaxy_fit_plotter_setup():
     )
 
 
-@pytest.fixture(autouse=True)
-def set_config_path():
-    conf.instance = conf.Config(
-        path.join(directory, "files/plotter"), path.join(directory, "output")
-    )
-
-
 def test__fit_sub_plot__all_types_of_galaxy_fit(
-    gal_fit_7x7_image,
-    gal_fit_7x7_convergence,
-    gal_fit_7x7_potential,
-    gal_fit_7x7_deflections_y,
-    gal_fit_7x7_deflections_x,
-    positions_7x7,
-    include_all,
-    plot_patch,
-    galaxy_fit_plotter_path,
+        gal_fit_7x7_image,
+        gal_fit_7x7_convergence,
+        gal_fit_7x7_potential,
+        gal_fit_7x7_deflections_y,
+        gal_fit_7x7_deflections_x,
+        positions_7x7,
+        include_all,
+        plot_patch,
+        galaxy_fit_plotter_path,
 ):
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_image,

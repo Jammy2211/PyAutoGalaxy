@@ -1,8 +1,9 @@
-import autogalaxy as ag
 import numpy as np
 import pytest
+
+import autogalaxy as ag
 from autoarray.inversion import inversions
-from test_autogalaxy.mock import MockLightProfile
+from autogalaxy.mock import MockLightProfile
 
 
 class TestFitImaging:
@@ -49,63 +50,63 @@ class TestFitImaging:
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
             assert (
-                fit.mask
-                == np.array(
-                    [
-                        [True, True, True, True],
-                        [True, False, False, True],
-                        [True, True, True, True],
-                    ]
-                )
+                    fit.mask
+                    == np.array(
+                [
+                    [True, True, True, True],
+                    [True, False, False, True],
+                    [True, True, True, True],
+                ]
+            )
             ).all()
 
             assert (
-                fit.image.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 5.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.image.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 5.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.noise_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.noise_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.model_image.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.model_image.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.residual_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 3.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.residual_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 3.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.normalized_residual_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 3.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.normalized_residual_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 3.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.chi_squared_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 16.0, 9.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.chi_squared_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 16.0, 9.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert fit.chi_squared == 25.0
             assert fit.reduced_chi_squared == 25.0 / 2.0
             assert fit.noise_normalization == (2.0 * np.log(2 * np.pi * 1.0 ** 2.0))
             assert fit.log_likelihood == -0.5 * (
-                25.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
+                    25.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
             )
 
         def test__1x2_image__include_psf_blurring__plane_fits_data_with_chi_sq_4(self):
@@ -153,67 +154,67 @@ class TestFitImaging:
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
             assert (
-                fit.mask
-                == np.array(
-                    [
-                        [True, True, True, True],
-                        [True, False, False, True],
-                        [True, True, True, True],
-                    ]
-                )
+                    fit.mask
+                    == np.array(
+                [
+                    [True, True, True, True],
+                    [True, False, False, True],
+                    [True, True, True, True],
+                ]
+            )
             ).all()
 
             assert (
-                fit.image.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 5.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.image.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 5.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.noise_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.noise_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.model_image.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.model_image.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.residual_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.residual_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.normalized_residual_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.normalized_residual_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.chi_squared_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 16.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.chi_squared_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 16.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert fit.chi_squared == 16.0
             assert fit.reduced_chi_squared == 16.0 / 2.0
             assert fit.noise_normalization == (2.0 * np.log(2 * np.pi * 1.0 ** 2.0))
             assert fit.log_likelihood == -0.5 * (
-                16.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
+                    16.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
             )
 
         def test_hyper_galaxy_changes_noise_above_from_1_to_2__reflected_in_likelihood(
-            self
+                self
         ):
             # This PSF changes the blurred image plane image from [1.0, 1.0] to [1.0, 5.0]
 
@@ -270,67 +271,66 @@ class TestFitImaging:
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
             assert (
-                fit.mask
-                == np.array(
-                    [
-                        [True, True, True, True],
-                        [True, False, False, True],
-                        [True, True, True, True],
-                    ]
-                )
+                    fit.mask
+                    == np.array(
+                [
+                    [True, True, True, True],
+                    [True, False, False, True],
+                    [True, True, True, True],
+                ]
+            )
             ).all()
 
             assert (
-                fit.image.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 5.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.image.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 5.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.noise_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 2.0, 2.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.noise_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 2.0, 2.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.model_image.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.model_image.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.residual_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.residual_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.normalized_residual_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 2.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.normalized_residual_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 2.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.chi_squared_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.chi_squared_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert fit.chi_squared == 4.0
             assert fit.reduced_chi_squared == 4.0 / 2.0
             assert fit.noise_normalization == (2.0 * np.log(2 * np.pi * 2.0 ** 2.0))
             assert fit.log_likelihood == -0.5 * (
-                4.0 + 2.0 * np.log(2 * np.pi * 2.0 ** 2.0)
+                    4.0 + 2.0 * np.log(2 * np.pi * 2.0 ** 2.0)
             )
 
         def test__hyper_image_changes_background_sky__reflected_in_likelihood(self):
-
             psf = ag.Kernel.manual_2d(
                 array=[[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]],
                 pixel_scales=1.0,
@@ -374,69 +374,68 @@ class TestFitImaging:
             )
 
             assert (
-                fit.mask
-                == np.array(
-                    [
-                        [True, True, True, True],
-                        [True, False, False, True],
-                        [True, True, True, True],
-                    ]
-                )
+                    fit.mask
+                    == np.array(
+                [
+                    [True, True, True, True],
+                    [True, False, False, True],
+                    [True, True, True, True],
+                ]
+            )
             ).all()
 
             assert (
-                fit.image.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 6.0, 5.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.image.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 6.0, 5.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.noise_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.noise_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.model_image.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.model_image.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.residual_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 5.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.residual_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 5.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.normalized_residual_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 5.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.normalized_residual_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 5.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.chi_squared_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 25.0, 16.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.chi_squared_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 25.0, 16.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert fit.chi_squared == 41.0
             assert fit.reduced_chi_squared == 41.0 / 2.0
             assert fit.noise_normalization == (2.0 * np.log(2 * np.pi * 1.0 ** 2.0))
             assert fit.log_likelihood == -0.5 * (
-                41.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
+                    41.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
             )
 
         def test__hyper_background_changes_background_noise_map__reflected_in_likelihood(
-            self
+                self
         ):
-
             psf = ag.Kernel.manual_2d(
                 array=[[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]],
                 pixel_scales=1.0,
@@ -480,68 +479,67 @@ class TestFitImaging:
             )
 
             assert (
-                fit.mask
-                == np.array(
-                    [
-                        [True, True, True, True],
-                        [True, False, False, True],
-                        [True, True, True, True],
-                    ]
-                )
+                    fit.mask
+                    == np.array(
+                [
+                    [True, True, True, True],
+                    [True, False, False, True],
+                    [True, True, True, True],
+                ]
+            )
             ).all()
 
             assert (
-                fit.image.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 5.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.image.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 5.0, 4.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.noise_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 2.0, 2.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.noise_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 2.0, 2.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.model_image.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.model_image.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.residual_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 3.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.residual_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 3.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.normalized_residual_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 2.0, 1.5, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.normalized_residual_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 2.0, 1.5, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert (
-                fit.chi_squared_map.in_2d
-                == np.array(
-                    [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 2.25, 0.0], [0.0, 0.0, 0.0, 0.0]]
-                )
+                    fit.chi_squared_map.in_2d
+                    == np.array(
+                [[0.0, 0.0, 0.0, 0.0], [0.0, 4.0, 2.25, 0.0], [0.0, 0.0, 0.0, 0.0]]
+            )
             ).all()
 
             assert fit.chi_squared == 6.25
             assert fit.reduced_chi_squared == 6.25 / 2.0
             assert fit.noise_normalization == (2.0 * np.log(2 * np.pi * 2.0 ** 2.0))
             assert fit.log_likelihood == -0.5 * (
-                6.25 + 2.0 * np.log(2 * np.pi * 2.0 ** 2.0)
+                    6.25 + 2.0 * np.log(2 * np.pi * 2.0 ** 2.0)
             )
 
     class TestCompareToManualProfilesOnly:
         def test___all_fit_quantities__no_hyper_methods(self, masked_imaging_7x7):
-
             g0 = ag.Galaxy(
                 redshift=0.5,
                 light_profile=ag.lp.EllipticalSersic(intensity=1.0),
@@ -602,7 +600,7 @@ class TestFitImaging:
             assert log_likelihood == fit.figure_of_merit
 
         def test___fit_galaxy_model_image_dict__corresponds_to_blurred_galaxy_images(
-            self, masked_imaging_7x7
+                self, masked_imaging_7x7
         ):
             g0 = ag.Galaxy(
                 redshift=0.5,
@@ -645,9 +643,8 @@ class TestFitImaging:
             )
 
         def test___all_fit_quantities__including_hyper_methods(
-            self, masked_imaging_7x7
+                self, masked_imaging_7x7
         ):
-
             hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
 
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
@@ -734,9 +731,8 @@ class TestFitImaging:
             assert log_likelihood == fit.figure_of_merit
 
         def test___blurred_and_model_images_of_galaxies_and_unmasked_blurred_image_properties(
-            self, masked_imaging_7x7
+                self, masked_imaging_7x7
         ):
-
             g0 = ag.Galaxy(
                 redshift=0.5,
                 light_profile=ag.lp.EllipticalSersic(intensity=1.0),
@@ -776,17 +772,16 @@ class TestFitImaging:
             )
 
             assert (
-                unmasked_blurred_image_of_galaxies[0]
-                == fit.unmasked_blurred_image_of_galaxies[0]
+                    unmasked_blurred_image_of_galaxies[0]
+                    == fit.unmasked_blurred_image_of_galaxies[0]
             ).all()
             assert (
-                unmasked_blurred_image_of_galaxies[1]
-                == fit.unmasked_blurred_image_of_galaxies[1]
+                    unmasked_blurred_image_of_galaxies[1]
+                    == fit.unmasked_blurred_image_of_galaxies[1]
             ).all()
 
     class TestCompareToManualInversionOnly:
         def test___all_quantities__no_hyper_methods(self, masked_imaging_7x7):
-
             # Ensures the inversion grid is used, as this would cause the test to fail.
             masked_imaging_7x7.grid[0, 0] = -100.0
 
@@ -871,7 +866,7 @@ class TestFitImaging:
             assert log_evidence == fit.figure_of_merit
 
         def test___fit_galaxy_model_image_dict__has_inversion_mapped_reconstructed_image(
-            self, masked_imaging_7x7
+                self, masked_imaging_7x7
         ):
             pix = ag.pix.Rectangular(shape=(3, 3))
             reg = ag.reg.Constant(coefficient=1.0)
@@ -906,7 +901,6 @@ class TestFitImaging:
             )
 
         def test___all_fit_quantities__include_hyper_methods(self, masked_imaging_7x7):
-
             hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
 
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
@@ -1020,9 +1014,8 @@ class TestFitImaging:
             assert log_evidence == fit.figure_of_merit
 
         def test___blurred_and_model_images_of_galaxies_and_unmasked_blurred_image_properties(
-            self, masked_imaging_7x7
+                self, masked_imaging_7x7
         ):
-
             pix = ag.pix.Rectangular(shape=(3, 3))
             reg = ag.reg.Constant(coefficient=1.0)
 
@@ -1149,9 +1142,8 @@ class TestFitImaging:
             assert log_evidence == fit.figure_of_merit
 
         def test___fit_galaxy_model_image_dict__has_blurred_images_and_inversion_mapped_reconstructed_image(
-            self, masked_imaging_7x7
+                self, masked_imaging_7x7
         ):
-
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
             )
@@ -1218,7 +1210,6 @@ class TestFitImaging:
             )
 
         def test___all_fit_quantities__include_hyper_methods(self, masked_imaging_7x7):
-
             hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
 
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
@@ -1349,7 +1340,7 @@ class TestFitImaging:
             assert log_evidence == fit.figure_of_merit
 
         def test___blurred_and_model_images_of_galaxies_and_unmasked_blurred_image_properties(
-            self, masked_imaging_7x7
+                self, masked_imaging_7x7
         ):
             galaxy_light = ag.Galaxy(
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
@@ -1451,13 +1442,12 @@ class TestFitInterferometer:
             assert fit.reduced_chi_squared == 25.0 / 2.0
             assert fit.noise_normalization == (2.0 * np.log(2 * np.pi * 1.0 ** 2.0))
             assert fit.log_likelihood == -0.5 * (
-                25.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
+                    25.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
             )
 
         def test__hyper_background_changes_background_sky__reflected_in_likelihood(
-            self
+                self
         ):
-
             uv_wavelengths = np.array([[1.0, 0.0], [1.0, 1.0], [2.0, 2.0]])
 
             interferometer = ag.Interferometer(
@@ -1502,7 +1492,7 @@ class TestFitInterferometer:
             )
 
             assert (
-                fit.visibilities.in_1d == np.full(fill_value=5.0, shape=(3, 2))
+                    fit.visibilities.in_1d == np.full(fill_value=5.0, shape=(3, 2))
             ).all()
 
             assert (fit.noise_map.in_1d == np.full(fill_value=3.0, shape=(3, 2))).all()
@@ -1570,7 +1560,7 @@ class TestFitInterferometer:
             assert log_likelihood == fit.figure_of_merit
 
         def test___fit_galaxy_model_image_dict__corresponds_to_profile_galaxy_images(
-            self, masked_interferometer_7
+                self, masked_interferometer_7
         ):
             g0 = ag.Galaxy(
                 redshift=0.5,
@@ -1599,7 +1589,7 @@ class TestFitInterferometer:
             )
 
         def test___fit_galaxy_visibilities_dict__corresponds_to_galaxy_visibilities(
-            self, masked_interferometer_7
+                self, masked_interferometer_7
         ):
             g0 = ag.Galaxy(
                 redshift=0.5,
@@ -1640,9 +1630,8 @@ class TestFitInterferometer:
             )
 
         def test___all_fit_quantities__hyper_background_noise(
-            self, masked_interferometer_7
+                self, masked_interferometer_7
         ):
-
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
             hyper_noise_map = hyper_background_noise.hyper_noise_map_from_noise_map(
@@ -1671,7 +1660,6 @@ class TestFitInterferometer:
 
     class TestCompareToManualInversionOnly:
         def test___all_fit_quantities__no_hyper_methods(self, masked_interferometer_7):
-
             # Ensures the inversion grid is used, as this would cause the test to fail.
             masked_interferometer_7.grid[0, 0] = -100.0
 
@@ -1764,12 +1752,12 @@ class TestFitInterferometer:
             )
 
             assert (
-                fit.inversion.mapped_reconstructed_image.in_1d
-                == mapped_reconstructed_image
+                    fit.inversion.mapped_reconstructed_image.in_1d
+                    == mapped_reconstructed_image
             ).all()
 
         def test___fit_galaxy_model_image_dict__images_and_inversion_mapped_reconstructed_image(
-            self, masked_interferometer_7
+                self, masked_interferometer_7
         ):
             pix = ag.pix.Rectangular(shape=(3, 3))
             reg = ag.reg.Constant(coefficient=1.0)
@@ -1802,7 +1790,7 @@ class TestFitInterferometer:
             )
 
         def test___fit_galaxy_model_visibilities_dict__has_inversion_mapped_reconstructed_visibilities(
-            self, masked_interferometer_7
+                self, masked_interferometer_7
         ):
             pix = ag.pix.Rectangular(shape=(3, 3))
             reg = ag.reg.Constant(coefficient=1.0)
@@ -1839,9 +1827,8 @@ class TestFitInterferometer:
             )
 
         def test___all_fit_quantities__hyper_background_noise(
-            self, masked_interferometer_7
+                self, masked_interferometer_7
         ):
-
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
             hyper_noise_map = hyper_background_noise.hyper_noise_map_from_noise_map(
@@ -1868,9 +1855,8 @@ class TestFitInterferometer:
             assert hyper_noise_map.in_1d == pytest.approx(fit.noise_map.in_1d)
 
         def test___all_fit_quantities__uses_linear_operator_inversion(
-            self, masked_interferometer_7_lop
+                self, masked_interferometer_7_lop
         ):
-
             # Ensures the inversion grid is used, as this would cause the test to fail.
             masked_interferometer_7_lop.grid[0, 0] = -100.0
 
@@ -1968,8 +1954,8 @@ class TestFitInterferometer:
             )
 
             assert (
-                fit.inversion.mapped_reconstructed_image.in_1d
-                == mapped_reconstructed_image
+                    fit.inversion.mapped_reconstructed_image.in_1d
+                    == mapped_reconstructed_image
             ).all()
 
     class TestCompareToManualProfilesAndInversion:
@@ -1998,7 +1984,7 @@ class TestFitInterferometer:
             )
 
             profile_subtracted_visibilities = (
-                masked_interferometer_7.visibilities - profile_visibilities
+                    masked_interferometer_7.visibilities - profile_visibilities
             )
 
             assert profile_subtracted_visibilities.in_1d == pytest.approx(
@@ -2019,7 +2005,7 @@ class TestFitInterferometer:
             )
 
             model_visibilities = (
-                profile_visibilities + inversion.mapped_reconstructed_visibilities
+                    profile_visibilities + inversion.mapped_reconstructed_visibilities
             )
 
             assert model_visibilities.in_1d == pytest.approx(
@@ -2085,14 +2071,13 @@ class TestFitInterferometer:
             )
 
             assert (
-                fit.inversion.mapped_reconstructed_image.in_1d
-                == mapped_reconstructed_image
+                    fit.inversion.mapped_reconstructed_image.in_1d
+                    == mapped_reconstructed_image
             ).all()
 
         def test___fit_galaxy_model_visibilities_dict__has_image_and_inversion_mapped_reconstructed_image(
-            self, masked_interferometer_7
+                self, masked_interferometer_7
         ):
-
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
             )
@@ -2123,7 +2108,7 @@ class TestFitInterferometer:
             profile_visibilities = g0_visibilities + g1_visibilities
 
             profile_subtracted_visibilities = (
-                masked_interferometer_7.visibilities - profile_visibilities
+                    masked_interferometer_7.visibilities - profile_visibilities
             )
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_interferometer_7.grid,
@@ -2153,9 +2138,8 @@ class TestFitInterferometer:
             )
 
         def test___fit_galaxy_model_visibilities_dict__has_profile_visibilitiess_and_inversion_mapped_reconstructed_visibilities(
-            self, masked_interferometer_7
+                self, masked_interferometer_7
         ):
-
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
             )
@@ -2187,7 +2171,7 @@ class TestFitInterferometer:
             profile_visibilities = g0_visibilities + g1_visibilities
 
             profile_subtracted_visibilities = (
-                masked_interferometer_7.visibilities - profile_visibilities
+                    masked_interferometer_7.visibilities - profile_visibilities
             )
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_interferometer_7.grid,
@@ -2211,8 +2195,8 @@ class TestFitInterferometer:
                 g1_visibilities.in_1d, 1.0e-4
             )
             assert fit.galaxy_model_visibilities_dict[
-                galaxy_pix
-            ].in_1d == pytest.approx(
+                       galaxy_pix
+                   ].in_1d == pytest.approx(
                 inversion.mapped_reconstructed_visibilities.in_1d, 1.0e-4
             )
 
@@ -2224,9 +2208,8 @@ class TestFitInterferometer:
             )
 
         def test___all_fit_quantities__hyper_background_noise(
-            self, masked_interferometer_7
+                self, masked_interferometer_7
         ):
-
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
             hyper_noise_map = hyper_background_noise.hyper_noise_map_from_noise_map(
