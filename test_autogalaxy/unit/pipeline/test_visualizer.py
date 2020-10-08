@@ -19,16 +19,12 @@ def make_visualizer_plotter_setup():
     )
 
 
-@pytest.fixture(
-    autouse=True
-)
+@pytest.fixture(autouse=True)
 def default_config(plot_path):
     conf.instance = conf.Config(
         f"{directory}/config",
         output_path=plot_path,
-        default_config_paths=[
-            conf.instance.path
-        ]
+        default_config_paths=[conf.instance.path],
     )
 
 
@@ -56,7 +52,7 @@ def make_include_all(default_config):
 
 class TestAbstractPhaseVisualizer:
     def test__visualizer_with_preloaded_critical_curves_and_caustics_is_setup(
-            self, masked_imaging_7x7, include_all, plot_path, plot_patch
+        self, masked_imaging_7x7, include_all, plot_path, plot_patch
     ):
         visualizer = vis.PhaseDatasetVisualizer(
             masked_dataset=masked_imaging_7x7, image_path=plot_path
@@ -78,7 +74,7 @@ class TestAbstractPhaseVisualizer:
 
 class TestPhaseImagingVisualizer:
     def test__visualizes_imaging_using_configs(
-            self, masked_imaging_7x7, include_all, plot_path, plot_patch
+        self, masked_imaging_7x7, include_all, plot_path, plot_patch
     ):
 
         if os.path.exists(plot_path):
@@ -102,18 +98,18 @@ class TestPhaseImagingVisualizer:
         assert plot_path + "imaging/inverse_noise_map.png" in plot_patch.paths
         assert plot_path + "imaging/signal_to_noise_map.png" not in plot_patch.paths
         assert (
-                plot_path + "imaging/absolute_signal_to_noise_map.png"
-                not in plot_patch.paths
+            plot_path + "imaging/absolute_signal_to_noise_map.png"
+            not in plot_patch.paths
         )
         assert plot_path + "imaging/potential_chi_squared_map.png" in plot_patch.paths
 
     def test__source_and_galaxy__visualizes_fit_and_inversion_using_configs(
-            self,
-            masked_imaging_7x7,
-            masked_imaging_fit_x2_galaxy_inversion_7x7,
-            include_all,
-            plot_path,
-            plot_patch,
+        self,
+        masked_imaging_7x7,
+        masked_imaging_fit_x2_galaxy_inversion_7x7,
+        include_all,
+        plot_path,
+        plot_patch,
     ):
 
         if os.path.exists(plot_path):
@@ -141,20 +137,20 @@ class TestPhaseImagingVisualizer:
         assert plot_path + "fit_imaging/normalized_residual_map.png" in plot_patch.paths
         assert plot_path + "fit_imaging/chi_squared_map.png" in plot_patch.paths
         assert (
-                plot_path + "fit_imaging/subtracted_image_of_galaxy_0.png"
-                in plot_patch.paths
+            plot_path + "fit_imaging/subtracted_image_of_galaxy_0.png"
+            in plot_patch.paths
         )
         assert (
-                plot_path + "fit_imaging/subtracted_image_of_galaxy_1.png"
-                in plot_patch.paths
+            plot_path + "fit_imaging/subtracted_image_of_galaxy_1.png"
+            in plot_patch.paths
         )
         assert (
-                plot_path + "fit_imaging/model_image_of_galaxy_0.png"
-                not in plot_patch.paths
+            plot_path + "fit_imaging/model_image_of_galaxy_0.png"
+            not in plot_patch.paths
         )
         assert (
-                plot_path + "fit_imaging/model_image_of_galaxy_1.png"
-                not in plot_patch.paths
+            plot_path + "fit_imaging/model_image_of_galaxy_1.png"
+            not in plot_patch.paths
         )
 
         assert plot_path + "subplots/subplot_inversion.png" in plot_patch.paths
@@ -163,16 +159,16 @@ class TestPhaseImagingVisualizer:
         # assert plot_path + "inversion/errors.png" not in plot_patch.paths
         assert plot_path + "inversion/residual_map.png" not in plot_patch.paths
         assert (
-                plot_path + "inversion/normalized_residual_map.png" not in plot_patch.paths
+            plot_path + "inversion/normalized_residual_map.png" not in plot_patch.paths
         )
         assert plot_path + "inversion/chi_squared_map.png" in plot_patch.paths
         assert (
-                plot_path + "inversion/regularization_weight_map.png"
-                not in plot_patch.paths
+            plot_path + "inversion/regularization_weight_map.png"
+            not in plot_patch.paths
         )
         assert (
-                plot_path + "inversion/interpolated_reconstruction.png"
-                not in plot_patch.paths
+            plot_path + "inversion/interpolated_reconstruction.png"
+            not in plot_patch.paths
         )
         assert plot_path + "inversion/interpolated_errors.png" in plot_patch.paths
 
@@ -190,13 +186,13 @@ class TestPhaseImagingVisualizer:
         assert image.shape == (7, 7)
 
     def test__visualizes_hyper_images_using_config(
-            self,
-            masked_imaging_7x7,
-            hyper_model_image_7x7,
-            include_all,
-            hyper_galaxy_image_path_dict_7x7,
-            plot_path,
-            plot_patch,
+        self,
+        masked_imaging_7x7,
+        hyper_model_image_7x7,
+        include_all,
+        hyper_galaxy_image_path_dict_7x7,
+        plot_path,
+        plot_patch,
     ):
 
         visualizer = vis.PhaseImagingVisualizer(
@@ -219,7 +215,7 @@ class TestPhaseImagingVisualizer:
 
 class TestPhaseInterferometerVisualizer:
     def test__visualizes_interferometer_using_configs(
-            self, masked_interferometer_7, include_all, plot_path, plot_patch
+        self, masked_interferometer_7, include_all, plot_path, plot_patch
     ):
         visualizer = vis.PhaseInterferometerVisualizer(
             masked_dataset=masked_interferometer_7, image_path=plot_path
@@ -238,12 +234,12 @@ class TestPhaseInterferometerVisualizer:
         assert plot_path + "interferometer/v_wavelengths.png" not in plot_patch.paths
 
     def test__x2_galaxies_in_fit__visualizes_fit_using_configs(
-            self,
-            masked_interferometer_7,
-            masked_interferometer_fit_x2_galaxy_inversion_7x7,
-            include_all,
-            plot_path,
-            plot_patch,
+        self,
+        masked_interferometer_7,
+        masked_interferometer_fit_x2_galaxy_inversion_7x7,
+        include_all,
+        plot_path,
+        plot_patch,
     ):
         visualizer = vis.PhaseInterferometerVisualizer(
             masked_dataset=masked_interferometer_7, image_path=plot_path
@@ -262,24 +258,24 @@ class TestPhaseInterferometerVisualizer:
         assert plot_path + "fit_interferometer/visibilities.png" in plot_patch.paths
         assert plot_path + "fit_interferometer/noise_map.png" not in plot_patch.paths
         assert (
-                plot_path + "fit_interferometer/signal_to_noise_map.png"
-                not in plot_patch.paths
+            plot_path + "fit_interferometer/signal_to_noise_map.png"
+            not in plot_patch.paths
         )
         assert (
-                plot_path + "fit_interferometer/model_visibilities.png" in plot_patch.paths
+            plot_path + "fit_interferometer/model_visibilities.png" in plot_patch.paths
         )
         assert (
-                plot_path + "fit_interferometer/residual_map_vs_uv_distances_real.png"
-                not in plot_patch.paths
+            plot_path + "fit_interferometer/residual_map_vs_uv_distances_real.png"
+            not in plot_patch.paths
         )
         assert (
-                plot_path
-                + "fit_interferometer/normalized_residual_map_vs_uv_distances_real.png"
-                in plot_patch.paths
+            plot_path
+            + "fit_interferometer/normalized_residual_map_vs_uv_distances_real.png"
+            in plot_patch.paths
         )
         assert (
-                plot_path + "fit_interferometer/chi_squared_map_vs_uv_distances_real.png"
-                in plot_patch.paths
+            plot_path + "fit_interferometer/chi_squared_map_vs_uv_distances_real.png"
+            in plot_patch.paths
         )
 
         #    assert plot_path + "subplots/subplot_inversion.png" in plot_patch.paths
@@ -290,24 +286,24 @@ class TestPhaseInterferometerVisualizer:
         #  assert plot_path + "inversion/normalized_residual_map.png" not in plot_patch.paths
         #  assert plot_path + "inversion/chi_squared_map.png" in plot_patch.paths
         assert (
-                plot_path + "inversion/regularization_weight_map.png"
-                not in plot_patch.paths
+            plot_path + "inversion/regularization_weight_map.png"
+            not in plot_patch.paths
         )
         assert (
-                plot_path + "inversion/interpolated_reconstruction.png"
-                not in plot_patch.paths
+            plot_path + "inversion/interpolated_reconstruction.png"
+            not in plot_patch.paths
         )
         assert plot_path + "inversion/interpolated_errors.png" in plot_patch.paths
 
 
 class TestHyperGalaxyVisualizer:
     def test__hyper_fit__images_for_phase__source_and_galaxy__depedent_on_input(
-            self,
-            masked_imaging_fit_x2_galaxy_7x7,
-            hyper_galaxy_image_0_7x7,
-            include_all,
-            plot_path,
-            plot_patch,
+        self,
+        masked_imaging_fit_x2_galaxy_7x7,
+        hyper_galaxy_image_0_7x7,
+        include_all,
+        plot_path,
+        plot_patch,
     ):
         visualizer = vis.HyperGalaxyVisualizer(image_path=plot_path)
 

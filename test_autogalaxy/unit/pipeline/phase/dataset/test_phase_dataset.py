@@ -16,9 +16,7 @@ directory = path.dirname(path.realpath(__file__))
 
 class TestPhase:
     def test__extend_with_hyper_and_pixelizations(self):
-        phase_no_pixelization = ag.PhaseImaging(
-            search=mock.MockSearch("test_phase")
-        )
+        phase_no_pixelization = ag.PhaseImaging(search=mock.MockSearch("test_phase"))
 
         phase_extended = phase_no_pixelization.extend_with_multiple_hyper_phases(
             setup_hyper=ag.SetupHyper(hyper_galaxies_search=None, inversion_search=None)
@@ -121,7 +119,7 @@ class TestMakeAnalysis:
         assert analysis.masked_imaging.mask.pixel_scales == mask_input.pixel_scales
 
     def test__mask_changes_sub_size_depending_on_phase_attribute(
-            self, phase_imaging_7x7, imaging_7x7
+        self, phase_imaging_7x7, imaging_7x7
     ):
         # If an input mask is supplied we use mask input.
 

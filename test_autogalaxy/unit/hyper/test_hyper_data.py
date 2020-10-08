@@ -5,9 +5,6 @@ import numpy as np
 import pytest
 
 
-
-
-
 class TestHyperImageSky:
     def test__scale_sky_in_image__increases_all_image_values(self):
 

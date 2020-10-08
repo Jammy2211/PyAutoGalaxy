@@ -19,11 +19,7 @@ from autoarray import TransformerNUFFT
 from autoarray import SettingsInversion
 from autoarray import SettingsPixelization
 from autoarray.structures.arrays import Array
-from autoarray.structures.grids import (
-    Grid,
-    GridRectangular,
-    GridVoronoi,
-)
+from autoarray.structures.grids import Grid, GridRectangular, GridVoronoi
 from autoarray.structures.kernel import Kernel
 from autoarray.structures.visibilities import Visibilities
 from autoarray.dataset.imaging import Imaging
@@ -55,7 +51,7 @@ from .pipeline.pipeline import PipelineDataset
 from .pipeline.setup import (
     SetupPipeline,
     SetupHyper,
-    SetupLight,
+    SetupLightParametric,
     SetupLightInversion,
     SetupMassTotal,
     SetupMassLightDark,

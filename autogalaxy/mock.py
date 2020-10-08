@@ -70,7 +70,7 @@ class MockHyperGalaxy:
         self.noise_power = noise_power
 
     def contributions_from_model_image_and_galaxy_image(
-            self, model_image, galaxy_image, minimum_value
+        self, model_image, galaxy_image, minimum_value
     ):
         contributions = galaxy_image / (model_image + self.contribution_factor)
         contributions = contributions / np.max(contributions)
@@ -94,11 +94,11 @@ class Value:
 
 class MockCosmology:
     def __init__(
-            self,
-            arcsec_per_kpc=0.5,
-            kpc_per_arcsec=2.0,
-            critical_surface_density=2.0,
-            cosmic_average_density=2.0,
+        self,
+        arcsec_per_kpc=0.5,
+        kpc_per_arcsec=2.0,
+        critical_surface_density=2.0,
+        cosmic_average_density=2.0,
     ):
         self.arcsec_per_kpc = arcsec_per_kpc
         self.kpc_per_arcsec = kpc_per_arcsec
@@ -116,7 +116,7 @@ class MockCosmology:
 
     def angular_diameter_distance_z1z2(self, z1, z2):
         const = constants.c.to("kpc / s") ** 2.0 / (
-                4 * math.pi * constants.G.to("kpc3 / (solMass s2)")
+            4 * math.pi * constants.G.to("kpc3 / (solMass s2)")
         )
         return Value(value=self.critical_surface_density * const.value)
 
@@ -129,20 +129,20 @@ class MockCosmology:
 
 class MockResult(af.MockResult):
     def __init__(
-            self,
-            samples=None,
-            instance=None,
-            model=None,
-            analysis=None,
-            search=None,
-            mask=None,
-            model_image=None,
-            hyper_galaxy_image_path_dict=None,
-            hyper_model_image=None,
-            hyper_galaxy_visibilities_path_dict=None,
-            hyper_model_visibilities=None,
-            pixelization=None,
-            use_as_hyper_dataset=False,
+        self,
+        samples=None,
+        instance=None,
+        model=None,
+        analysis=None,
+        search=None,
+        mask=None,
+        model_image=None,
+        hyper_galaxy_image_path_dict=None,
+        hyper_model_image=None,
+        hyper_galaxy_visibilities_path_dict=None,
+        hyper_model_visibilities=None,
+        pixelization=None,
+        use_as_hyper_dataset=False,
     ):
         super().__init__(
             samples=samples,
@@ -171,20 +171,20 @@ class MockResult(af.MockResult):
 
 class MockResults(af.ResultsCollection):
     def __init__(
-            self,
-            samples=None,
-            instance=None,
-            model=None,
-            analysis=None,
-            search=None,
-            mask=None,
-            model_image=None,
-            hyper_galaxy_image_path_dict=None,
-            hyper_model_image=None,
-            hyper_galaxy_visibilities_path_dict=None,
-            hyper_model_visibilities=None,
-            pixelization=None,
-            use_as_hyper_dataset=False,
+        self,
+        samples=None,
+        instance=None,
+        model=None,
+        analysis=None,
+        search=None,
+        mask=None,
+        model_image=None,
+        hyper_galaxy_image_path_dict=None,
+        hyper_model_image=None,
+        hyper_galaxy_visibilities_path_dict=None,
+        hyper_model_visibilities=None,
+        pixelization=None,
+        use_as_hyper_dataset=False,
     ):
         """
         A collection of results from previous phases. Results can be obtained using an index or the name of the phase
@@ -327,7 +327,9 @@ def make_gal_x1_lp():
 
 
 def make_gal_x2_lp():
-    return ag.Galaxy(redshift=0.5, light_profile_0=make_lp_0(), light_profile_1=make_lp_1())
+    return ag.Galaxy(
+        redshift=0.5, light_profile_0=make_lp_0(), light_profile_1=make_lp_1()
+    )
 
 
 def make_gal_x1_mp():
@@ -335,11 +337,15 @@ def make_gal_x1_mp():
 
 
 def make_gal_x2_mp():
-    return ag.Galaxy(redshift=0.5, mass_profile_0=make_mp_0(), mass_profile_1=make_mp_1())
+    return ag.Galaxy(
+        redshift=0.5, mass_profile_0=make_mp_0(), mass_profile_1=make_mp_1()
+    )
 
 
 def make_gal_x1_lp_x1_mp():
-    return ag.Galaxy(redshift=0.5, light_profile_0=make_lp_0(), mass_profile_0=make_mp_0())
+    return ag.Galaxy(
+        redshift=0.5, light_profile_0=make_lp_0(), mass_profile_0=make_mp_0()
+    )
 
 
 def make_hyper_galaxy():
@@ -368,7 +374,9 @@ def make_plane_x2_galaxy_inversion_7x7():
 
 def make_gal_data_7x7():
     return ag.GalaxyData(
-        image=make_image_7x7(), noise_map=make_noise_map_7x7(), pixel_scales=make_image_7x7().pixel_scales
+        image=make_image_7x7(),
+        noise_map=make_noise_map_7x7(),
+        pixel_scales=make_image_7x7().pixel_scales,
     )
 
 
@@ -392,13 +400,17 @@ def make_gal_fit_data_7x7_potential():
 
 def make_gal_fit_data_7x7_deflections_y():
     return ag.MaskedGalaxyDataset(
-        galaxy_data=make_gal_data_7x7(), mask=make_sub_mask_7x7(), use_deflections_y=True
+        galaxy_data=make_gal_data_7x7(),
+        mask=make_sub_mask_7x7(),
+        use_deflections_y=True,
     )
 
 
 def make_gal_fit_data_7x7_deflections_x():
     return ag.MaskedGalaxyDataset(
-        galaxy_data=make_gal_data_7x7(), mask=make_sub_mask_7x7(), use_deflections_x=True
+        galaxy_data=make_gal_data_7x7(),
+        mask=make_sub_mask_7x7(),
+        use_deflections_x=True,
     )
 
 
@@ -407,31 +419,36 @@ def make_gal_fit_data_7x7_deflections_x():
 
 def make_gal_fit_7x7_image():
     return ag.FitGalaxy(
-        masked_galaxy_dataset=make_gal_fit_data_7x7_image(), model_galaxies=[make_gal_x1_lp()]
+        masked_galaxy_dataset=make_gal_fit_data_7x7_image(),
+        model_galaxies=[make_gal_x1_lp()],
     )
 
 
 def make_gal_fit_7x7_convergence():
     return ag.FitGalaxy(
-        masked_galaxy_dataset=make_gal_fit_data_7x7_convergence(), model_galaxies=[make_gal_x1_mp()]
+        masked_galaxy_dataset=make_gal_fit_data_7x7_convergence(),
+        model_galaxies=[make_gal_x1_mp()],
     )
 
 
 def make_gal_fit_7x7_potential():
     return ag.FitGalaxy(
-        masked_galaxy_dataset=make_gal_fit_data_7x7_potential(), model_galaxies=[make_gal_x1_mp()]
+        masked_galaxy_dataset=make_gal_fit_data_7x7_potential(),
+        model_galaxies=[make_gal_x1_mp()],
     )
 
 
 def make_gal_fit_7x7_deflections_y():
     return ag.FitGalaxy(
-        masked_galaxy_dataset=make_gal_fit_data_7x7_deflections_y(), model_galaxies=[make_gal_x1_mp()]
+        masked_galaxy_dataset=make_gal_fit_data_7x7_deflections_y(),
+        model_galaxies=[make_gal_x1_mp()],
     )
 
 
 def make_gal_fit_7x7_deflections_x():
     return ag.FitGalaxy(
-        masked_galaxy_dataset=make_gal_fit_data_7x7_deflections_x(), model_galaxies=[make_gal_x1_mp()]
+        masked_galaxy_dataset=make_gal_fit_data_7x7_deflections_x(),
+        model_galaxies=[make_gal_x1_mp()],
     )
 
 
@@ -440,20 +457,22 @@ def make_gal_fit_7x7_deflections_x():
 
 def make_hyper_model_image_7x7():
     return ag.Array.manual_mask(
-        np.full(fill_value=5.0, shape=make_mask_7x7().pixels_in_mask), mask=make_mask_7x7()
+        np.full(fill_value=5.0, shape=make_mask_7x7().pixels_in_mask),
+        mask=make_mask_7x7(),
     )
 
 
 def make_hyper_galaxy_image_0_7x7():
     return ag.Array.manual_mask(
-        np.full(fill_value=2.0, shape=make_mask_7x7().pixels_in_mask), mask=make_mask_7x7()
+        np.full(fill_value=2.0, shape=make_mask_7x7().pixels_in_mask),
+        mask=make_mask_7x7(),
     )
 
 
 def make_hyper_galaxy_image_path_dict_7x7():
     hyper_galaxy_image_path_dict = {
         ("g0",): make_hyper_galaxy_image_0_7x7(),
-        ("g1",): make_hyper_galaxy_image_1_7x7()
+        ("g1",): make_hyper_galaxy_image_1_7x7(),
     }
 
     return hyper_galaxy_image_path_dict
@@ -461,12 +480,15 @@ def make_hyper_galaxy_image_path_dict_7x7():
 
 def make_hyper_galaxy_image_1_7x7():
     return ag.Array.manual_mask(
-        np.full(fill_value=3.0, shape=make_mask_7x7().pixels_in_mask), mask=make_mask_7x7()
+        np.full(fill_value=3.0, shape=make_mask_7x7().pixels_in_mask),
+        mask=make_mask_7x7(),
     )
 
 
 def make_masked_imaging_fit_7x7():
-    return ag.FitImaging(masked_imaging=make_masked_imaging_7x7(), plane=make_plane_7x7())
+    return ag.FitImaging(
+        masked_imaging=make_masked_imaging_7x7(), plane=make_plane_7x7()
+    )
 
 
 def make_masked_imaging_fit_x2_galaxy_7x7():
@@ -477,7 +499,8 @@ def make_masked_imaging_fit_x2_galaxy_7x7():
 
 def make_masked_imaging_fit_x2_galaxy_inversion_7x7():
     return ag.FitImaging(
-        masked_imaging=make_masked_imaging_7x7(), plane=make_plane_x2_galaxy_inversion_7x7()
+        masked_imaging=make_masked_imaging_7x7(),
+        plane=make_plane_x2_galaxy_inversion_7x7(),
     )
 
 
@@ -507,27 +530,17 @@ def make_samples_with_result():
 
 def make_phase_data():
     return PhaseDataset(
-        settings=ag.SettingsPhaseImaging(),
-        search=MockSearch(
-            phase_name="test_phase",
-        ),
+        settings=ag.SettingsPhaseImaging(), search=MockSearch(phase_name="test_phase")
     )
 
 
 def make_phase_imaging_7x7():
-    return ag.PhaseImaging(
-        search=MockSearch(
-            phase_name="test_phase",
-        )
-    )
+    return ag.PhaseImaging(search=MockSearch(phase_name="test_phase"))
 
 
 def make_phase_interferometer_7():
     return ag.PhaseInterferometer(
-        search=MockSearch(
-            phase_name="test_phase",
-        ),
-        real_space_mask=make_mask_7x7()
+        search=MockSearch(phase_name="test_phase"), real_space_mask=make_mask_7x7()
     )
 
 

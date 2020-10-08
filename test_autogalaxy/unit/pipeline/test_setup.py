@@ -82,14 +82,7 @@ class TestSetupHyper:
         setup = ag.SetupHyper(hyper_background_noise=True)
         assert setup.hyper_background_noise_tag == "__bg_noise"
 
-    def test__hyper_fixed_after_source(self):
-        hyper = ag.SetupHyper(hyper_fixed_after_source=False)
-        assert hyper.hyper_fixed_after_source_tag == ""
-
-        hyper = ag.SetupHyper(hyper_fixed_after_source=True)
-        assert hyper.hyper_fixed_after_source_tag == "__fixed_from_source"
-
-    def test__hyper_tag(self):
+    def test__tag(self):
 
         setup = ag.SetupHyper(
             hyper_galaxies=False, hyper_image_sky=False, hyper_background_noise=False
@@ -103,89 +96,90 @@ class TestSetupHyper:
 
         assert setup.tag == "hyper[galaxies__bg_sky__bg_noise]"
 
-        setup = ag.SetupHyper(
-            hyper_galaxies=True,
-            hyper_background_noise=True,
-            hyper_fixed_after_source=True,
-        )
+        setup = ag.SetupHyper(hyper_galaxies=True, hyper_background_noise=True)
 
-        assert setup.tag == "hyper[galaxies__bg_noise__fixed_from_source]"
+        assert setup.tag == "hyper[galaxies__bg_noise]"
 
 
-class TestSetupLight:
-
+class TestSetupLightParametric:
     def test__prior_models_and_tags(self):
 
-        setup = ag.SetupLight(bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
-                              disk_prior_model=af.PriorModel(ag.lp.EllipticalExponential))
+        setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            disk_prior_model=af.PriorModel(ag.lp.EllipticalExponential),
+        )
 
         assert setup.bulge_prior_model.cls is ag.lp.EllipticalSersic
         assert setup.disk_prior_model.cls is ag.lp.EllipticalExponential
         assert setup.envelope_prior_model is None
 
-        assert setup.bulge_prior_model_tag == "bulge_sersic"
+        assert setup.bulge_prior_model_tag == "__bulge_sersic"
         assert setup.disk_prior_model_tag == "__disk_exp"
         assert setup.envelope_prior_model_tag == ""
 
-        setup = ag.SetupLight(
+        setup = ag.SetupLightParametric(
             bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
             disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
-            envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic)
-                              )
+            envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic),
+        )
 
-        assert setup.bulge_prior_model_tag == "bulge_sersic_sph"
+        assert setup.bulge_prior_model_tag == "__bulge_sersic_sph"
         assert setup.disk_prior_model_tag == "__disk_exp_sph"
         assert setup.envelope_prior_model_tag == "__envelope_core_sersic"
 
     def test__light_centre_tag(self):
 
-        setup = ag.SetupLight(light_centre=None)
+        setup = ag.SetupLightParametric(light_centre=None)
         assert setup.light_centre_tag == ""
-        setup = ag.SetupLight(light_centre=(2.0, 2.0))
+        setup = ag.SetupLightParametric(light_centre=(2.0, 2.0))
         assert setup.light_centre_tag == "__light_centre_(2.00,2.00)"
-        setup = ag.SetupLight(light_centre=(3.0, 4.0))
+        setup = ag.SetupLightParametric(light_centre=(3.0, 4.0))
         assert setup.light_centre_tag == "__light_centre_(3.00,4.00)"
-        setup = ag.SetupLight(light_centre=(3.027, 4.033))
+        setup = ag.SetupLightParametric(light_centre=(3.027, 4.033))
         assert setup.light_centre_tag == "__light_centre_(3.03,4.03)"
 
     def test__align_centre_to_light_centre(self):
 
         light = af.PriorModel(ag.mp.SphericalIsothermal)
 
-        source = ag.SetupLight(light_centre=(1.0, 2.0))
+        source = ag.SetupLightParametric(light_centre=(1.0, 2.0))
 
         light = source.align_centre_to_light_centre(light_prior_model=light)
 
         assert light.centre == (1.0, 2.0)
 
     def test__align_bulge_disk_tags(self):
-        light = ag.SetupLight(align_bulge_disk_centre=False)
+        light = ag.SetupLightParametric(align_bulge_disk_centre=False)
         assert light.align_bulge_disk_centre_tag == ""
-        light = ag.SetupLight(align_bulge_disk_centre=True)
+        light = ag.SetupLightParametric(align_bulge_disk_centre=True)
         assert light.align_bulge_disk_centre_tag == "_centre"
 
-        light = ag.SetupLight(align_bulge_disk_elliptical_comps=False)
+        light = ag.SetupLightParametric(align_bulge_disk_elliptical_comps=False)
         assert light.align_bulge_disk_elliptical_comps_tag == ""
-        light = ag.SetupLight(align_bulge_disk_elliptical_comps=True)
+        light = ag.SetupLightParametric(align_bulge_disk_elliptical_comps=True)
         assert light.align_bulge_disk_elliptical_comps_tag == "_ell"
 
-    def test__tag_and_type(self):
+    def test__tag(self):
 
-        setup = ag.SetupLight(light_centre=None)
-        assert setup.tag == "light[bulge_sersic__disk_exp]"
-        setup = ag.SetupLight(light_centre=(3.027, 4.033))
-        assert setup.tag == "light[bulge_sersic__disk_exp__light_centre_(3.03,4.03)]"
+        setup = ag.SetupLightParametric(light_centre=None)
+        assert setup.tag == "light[parametric__bulge_sersic__disk_exp]"
 
-        light = ag.SetupLight(
-            align_bulge_disk_centre=True,
-            align_bulge_disk_elliptical_comps=True,
+        setup = ag.SetupLightParametric(light_centre=(3.027, 4.033))
+        assert (
+            setup.tag
+            == "light[parametric__bulge_sersic__disk_exp__light_centre_(3.03,4.03)]"
+        )
+
+        light = ag.SetupLightParametric(
+            align_bulge_disk_centre=True, align_bulge_disk_elliptical_comps=True
         )
 
         assert (
-            light.tag == "light[bulge_sersic__disk_exp__align_bulge_disk_centre_ell]"
+            light.tag
+            == "light[parametric__bulge_sersic__disk_exp__align_bulge_disk_centre_ell]"
         )
 
-        light = ag.SetupLight(
+        light = ag.SetupLightParametric(
             bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
             disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
             envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic),
@@ -195,7 +189,7 @@ class TestSetupLight:
 
         assert (
             light.tag
-            == "light[bulge_sersic_sph__disk_exp_sph__envelope_core_sersic__align_bulge_disk_centre_ell]"
+            == "light[parametric__bulge_sersic_sph__disk_exp_sph__envelope_core_sersic__align_bulge_disk_centre_ell]"
         )
 
 
@@ -204,20 +198,22 @@ class TestSetupLightInversion:
 
         setup = ag.SetupLightInversion(
             pixelization_prior_model=af.PriorModel(ag.pix.Rectangular),
-            regularization_prior_model=af.PriorModel(ag.reg.Regularization)
+            regularization_prior_model=af.PriorModel(ag.reg.Regularization),
         )
 
         assert setup.pixelization_prior_model.cls is ag.pix.Rectangular
 
-        setup = ag.SetupLightInversion(pixelization_prior_model=af.PriorModel(ag.pix.VoronoiBrightnessImage),
-                                       regularization_prior_model=af.PriorModel(ag.reg.Regularization)
-                                       )
+        setup = ag.SetupLightInversion(
+            pixelization_prior_model=af.PriorModel(ag.pix.VoronoiBrightnessImage),
+            regularization_prior_model=af.PriorModel(ag.reg.Regularization),
+        )
 
         assert setup.pixelization_prior_model.cls is ag.pix.VoronoiBrightnessImage
 
         setup = ag.SetupLightInversion(
-            pixelization_prior_model=af.PriorModel(ag.pix.VoronoiBrightnessImage), inversion_pixels_fixed=100,
-            regularization_prior_model=af.PriorModel(ag.reg.Regularization)
+            pixelization_prior_model=af.PriorModel(ag.pix.VoronoiBrightnessImage),
+            inversion_pixels_fixed=100,
+            regularization_prior_model=af.PriorModel(ag.reg.Regularization),
         )
 
         assert isinstance(setup.pixelization_prior_model, af.PriorModel)
@@ -225,73 +221,80 @@ class TestSetupLightInversion:
 
     def test__pixelization_tag(self):
 
-        setup = ag.SetupLightInversion(pixelization_prior_model=af.PriorModel(ag.pix.Rectangular),
-                                       regularization_prior_model=af.PriorModel(ag.reg.Regularization)
-                                       )
-        assert setup.pixelization_tag == "pix_rect"
+        setup = ag.SetupLightInversion(
+            pixelization_prior_model=af.PriorModel(ag.pix.Rectangular),
+            regularization_prior_model=af.PriorModel(ag.reg.Regularization),
+        )
+        assert setup.pixelization_tag == "__pix_rect"
 
-        setup = ag.SetupLightInversion(pixelization_prior_model=af.PriorModel(ag.pix.VoronoiBrightnessImage),
-                                       regularization_prior_model=af.PriorModel(ag.reg.Regularization)
-                                       )
-        assert setup.pixelization_tag == "pix_voro_image"
+        setup = ag.SetupLightInversion(
+            pixelization_prior_model=af.PriorModel(ag.pix.VoronoiBrightnessImage),
+            regularization_prior_model=af.PriorModel(ag.reg.Regularization),
+        )
+        assert setup.pixelization_tag == "__pix_voro_image"
 
     def test__regularization_tag(self):
 
         setup = ag.SetupLightInversion(
             pixelization_prior_model=af.PriorModel(ag.pix.Pixelization),
-                                       regularization_prior_model=af.PriorModel(ag.reg.Constant)
+            regularization_prior_model=af.PriorModel(ag.reg.Constant),
         )
         assert setup.regularization_tag == "__reg_const"
 
-        setup = ag.SetupLightInversion(pixelization_prior_model=af.PriorModel(ag.pix.Pixelization),
-                                       regularization_prior_model=af.PriorModel(ag.reg.AdaptiveBrightness)
-                                       )
+        setup = ag.SetupLightInversion(
+            pixelization_prior_model=af.PriorModel(ag.pix.Pixelization),
+            regularization_prior_model=af.PriorModel(ag.reg.AdaptiveBrightness),
+        )
         assert setup.regularization_tag == "__reg_adapt_bright"
 
     def test__inversion_pixels_fixed_tag(self):
 
-        setup = ag.SetupLightInversion(inversion_pixels_fixed=None,
-                                       pixelization_prior_model=af.PriorModel(ag.pix.Pixelization),
-                                       regularization_prior_model=af.PriorModel(ag.reg.AdaptiveBrightness)
-                                       )
-        assert setup.inversion_pixels_fixed_tag == ""
-
-        setup = ag.SetupLightInversion(inversion_pixels_fixed=100,
-                                       pixelization_prior_model=af.PriorModel(ag.pix.Pixelization),
-                                       regularization_prior_model=af.PriorModel(ag.reg.AdaptiveBrightness)
-                                       )
+        setup = ag.SetupLightInversion(
+            inversion_pixels_fixed=None,
+            pixelization_prior_model=af.PriorModel(ag.pix.Pixelization),
+            regularization_prior_model=af.PriorModel(ag.reg.AdaptiveBrightness),
+        )
         assert setup.inversion_pixels_fixed_tag == ""
 
         setup = ag.SetupLightInversion(
-            inversion_pixels_fixed=100, pixelization_prior_model=af.PriorModel(ag.pix.VoronoiBrightnessImage),
-            regularization_prior_model=af.PriorModel(ag.reg.AdaptiveBrightness)
+            inversion_pixels_fixed=100,
+            pixelization_prior_model=af.PriorModel(ag.pix.Pixelization),
+            regularization_prior_model=af.PriorModel(ag.reg.AdaptiveBrightness),
+        )
+        assert setup.inversion_pixels_fixed_tag == ""
+
+        setup = ag.SetupLightInversion(
+            inversion_pixels_fixed=100,
+            pixelization_prior_model=af.PriorModel(ag.pix.VoronoiBrightnessImage),
+            regularization_prior_model=af.PriorModel(ag.reg.AdaptiveBrightness),
         )
         assert setup.inversion_pixels_fixed_tag == "_100"
 
-    def test__tag_and_type(self):
+    def test__tag(self):
 
         setup = ag.SetupLightInversion(
             pixelization_prior_model=af.PriorModel(ag.pix.Rectangular),
             regularization_prior_model=af.PriorModel(ag.reg.Constant),
             inversion_pixels_fixed=100,
         )
-        assert setup.model_type == "pix_rect__reg_const"
-        assert setup.tag == "light[pix_rect__reg_const]"
+
+        assert setup.tag == "light[inversion__pix_rect__reg_const]"
+
         setup = ag.SetupLightInversion(
             pixelization_prior_model=af.PriorModel(ag.pix.VoronoiBrightnessImage),
             regularization_prior_model=af.PriorModel(ag.reg.AdaptiveBrightness),
             inversion_pixels_fixed=None,
         )
-        assert setup.model_type == "pix_voro_image__reg_adapt_bright"
-        assert setup.tag == "light[pix_voro_image__reg_adapt_bright]"
+
+        assert setup.tag == "light[inversion__pix_voro_image__reg_adapt_bright]"
 
         setup = ag.SetupLightInversion(
             pixelization_prior_model=af.PriorModel(ag.pix.VoronoiBrightnessImage),
             regularization_prior_model=af.PriorModel(ag.reg.AdaptiveBrightness),
             inversion_pixels_fixed=100,
         )
-        assert setup.model_type == "pix_voro_image_100__reg_adapt_bright"
-        assert setup.tag == "light[pix_voro_image_100__reg_adapt_bright]"
+
+        assert setup.tag == "light[inversion__pix_voro_image_100__reg_adapt_bright]"
 
 
 class TestAbstractSetupMass:
@@ -323,6 +326,22 @@ class TestAbstractSetupMass:
 
 
 class TestSetupMassTotal:
+    def test__mass_prior_model_and_tags(self):
+
+        setup = ag.SetupMassTotal(
+            mass_prior_model=af.PriorModel(ag.mp.EllipticalPowerLaw)
+        )
+
+        assert setup.mass_prior_model.cls is ag.mp.EllipticalPowerLaw
+        assert setup.mass_prior_model_tag == "__power_law"
+
+        setup = ag.SetupMassTotal(
+            mass_prior_model=af.PriorModel(ag.mp.EllipticalIsothermal)
+        )
+
+        assert setup.mass_prior_model.cls is ag.mp.EllipticalIsothermal
+        assert setup.mass_prior_model_tag == "__sie"
+
     def test__mass_centre_tag(self):
         setup = ag.SetupMassTotal(mass_centre=None)
         assert setup.mass_centre_tag == ""
@@ -332,26 +351,6 @@ class TestSetupMassTotal:
         assert setup.mass_centre_tag == "__mass_centre_(3.00,4.00)"
         setup = ag.SetupMassTotal(mass_centre=(3.027, 4.033))
         assert setup.mass_centre_tag == "__mass_centre_(3.03,4.03)"
-
-    def test__mass_prior_model_tag(self):
-
-        setup = ag.SetupMassTotal(mass_prior_model=af.PriorModel(ag.mp.EllipticalPowerLaw))
-        assert setup.mass_prior_model_tag == "total_power_law"
-
-        setup = ag.SetupMassTotal(mass_prior_model=af.PriorModel(ag.mp.EllipticalIsothermal))
-        assert setup.mass_prior_model_tag == "total_sie"
-
-    def test__tag_and_type(self):
-
-        setup = ag.SetupMassTotal(mass_centre=None)
-        assert setup.tag == "mass[total_power_law]"
-        setup = ag.SetupMassTotal(mass_centre=(3.027, 4.033))
-        assert setup.tag == "mass[total_power_law__mass_centre_(3.03,4.03)]"
-
-        setup = ag.SetupMassTotal(
-            mass_centre=(3.027, 4.033), mass_prior_model=af.PriorModel(ag.mp.EllipticalIsothermal)
-        )
-        assert setup.tag == "mass[total_sie__mass_centre_(3.03,4.03)]"
 
     def test__align_centre_of_mass_to_light(self):
 
@@ -376,47 +375,64 @@ class TestSetupMassTotal:
 
         assert mass.centre == (1.0, 2.0)
 
+    def test__tag(self):
+
+        setup = ag.SetupMassTotal(mass_centre=None)
+        assert setup.tag == "mass[total__power_law]"
+
+        setup = ag.SetupMassTotal(mass_centre=(3.027, 4.033))
+        assert setup.tag == "mass[total__power_law__mass_centre_(3.03,4.03)]"
+
+        setup = ag.SetupMassTotal(
+            mass_centre=(3.027, 4.033),
+            mass_prior_model=af.PriorModel(ag.mp.EllipticalIsothermal),
+        )
+        assert setup.tag == "mass[total__sie__mass_centre_(3.03,4.03)]"
+
 
 class TestSetupMassLightDark:
-
     def test__prior_models_and_tags(self):
 
-        setup = ag.SetupLight(bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
-                              disk_prior_model=af.PriorModel(ag.lp.EllipticalExponential))
+        setup = ag.SetupMassLightDark(
+            bulge_prior_model=af.PriorModel(ag.lmp.EllipticalSersic),
+            disk_prior_model=af.PriorModel(ag.lmp.EllipticalExponential),
+        )
 
-        assert setup.bulge_prior_model.cls is ag.lp.EllipticalSersic
-        assert setup.disk_prior_model.cls is ag.lp.EllipticalExponential
+        assert setup.bulge_prior_model.cls is ag.lmp.EllipticalSersic
+        assert setup.disk_prior_model.cls is ag.lmp.EllipticalExponential
         assert setup.envelope_prior_model is None
 
-        assert setup.bulge_prior_model_tag == "bulge_sersic"
+        assert setup.bulge_prior_model_tag == "__bulge_sersic"
         assert setup.disk_prior_model_tag == "__disk_exp"
         assert setup.envelope_prior_model_tag == ""
 
-        setup = ag.SetupLight(
-            bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
-            disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
-            envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic)
-                              )
+        setup = ag.SetupMassLightDark(
+            bulge_prior_model=af.PriorModel(ag.lmp.EllipticalDevVaucouleurs),
+            disk_prior_model=af.PriorModel(ag.lmp.SphericalDevVaucouleurs),
+            envelope_prior_model=af.PriorModel(ag.lmp.SphericalExponential),
+        )
 
-        assert setup.bulge_prior_model_tag == "bulge_sersic_sph"
-        assert setup.disk_prior_model_tag == "__disk_exp_sph"
-        assert setup.envelope_prior_model_tag == "__envelope_core_sersic"
+        assert setup.bulge_prior_model.cls is ag.lmp.EllipticalDevVaucouleurs
+        assert setup.disk_prior_model.cls is ag.lmp.SphericalDevVaucouleurs
+        assert setup.envelope_prior_model.cls is ag.lmp.SphericalExponential
+
+        assert setup.bulge_prior_model_tag == "__bulge_dev"
+        assert setup.disk_prior_model_tag == "__disk_dev_sph"
+        assert setup.envelope_prior_model_tag == "__envelope_exp_sph"
 
     def test__constant_mass_to_light_ratio_tag(self):
-        setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=True)
-        assert setup.constant_mass_to_light_ratio_tag == "mlr_const"
-        setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=False)
-        assert setup.constant_mass_to_light_ratio_tag == "mlr_free"
 
-    def test__align_light_dark_tag(self):
-        setup = ag.SetupMassLightDark(align_light_dark_centre=False)
-        assert setup.align_light_dark_centre_tag == ""
-        setup = ag.SetupMassLightDark(align_light_dark_centre=True)
-        assert setup.align_light_dark_centre_tag == "__align_light_dark_centre"
+        setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=True)
+        assert setup.constant_mass_to_light_ratio_tag == "__mlr_const"
+
+        setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=False)
+        assert setup.constant_mass_to_light_ratio_tag == "__mlr_free"
 
     def test__align_bulge_dark_tag(self):
+
         setup = ag.SetupMassLightDark(align_bulge_dark_centre=False)
         assert setup.align_bulge_dark_centre_tag == ""
+
         setup = ag.SetupMassLightDark(align_bulge_dark_centre=True)
         assert setup.align_bulge_dark_centre_tag == "__align_bulge_dark_centre"
 
@@ -450,105 +466,107 @@ class TestSetupMassLightDark:
         assert lmp_0.mass_to_light_ratio == lmp_2.mass_to_light_ratio
         assert lmp_1.mass_to_light_ratio == lmp_2.mass_to_light_ratio
 
-    def test__tag_and_type(self):
+    def test__tag(self):
 
         setup = ag.SetupMassLightDark(
+            bulge_prior_model=af.PriorModel(ag.lmp.EllipticalSersic),
+            disk_prior_model=af.PriorModel(ag.lmp.EllipticalExponential),
             constant_mass_to_light_ratio=True,
-            bulge_mass_to_light_ratio_gradient=True,
-            disk_mass_to_light_ratio_gradient=True,
             align_bulge_dark_centre=True,
         )
         assert (
             setup.tag
-            == "mass[light_dark__mlr_const_grad_bulge_disk__align_bulge_dark_centre]"
-        )
-
-        setup = ag.SetupMassLightDark(
-            constant_mass_to_light_ratio=True,
-            bulge_mass_to_light_ratio_gradient=True,
-            disk_mass_to_light_ratio_gradient=True,
-            envelope_mass_to_light_ratio_gradient=True,
-            disk_as_sersic=True,
-            align_bulge_dark_centre=True,
-            include_envelope=True,
-            envelope_as_sersic=True,
-        )
-        assert (
-            setup.tag
-            == "mass[light_dark__mlr_const_grad_bulge_disk_envelope__align_bulge_dark_centre__disk_sersic__include_envelope__envelope_sersic]"
+            == "mass[light_dark__bulge_sersic__disk_exp__mlr_const__align_bulge_dark_centre]"
         )
 
 
 class TestSMBH:
-    def test__smbh_tag(self):
-        setup = ag.SetupSMBH(include_smbh=False)
-        assert setup.tag == "smbh[]"
+    def test__tag(self):
 
-        setup = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=True)
-        assert setup.tag == "smbh[centre_fixed]"
+        setup = ag.SetupSMBH(smbh_centre_fixed=True)
 
-        setup = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=False)
-        assert setup.tag == "smbh[centre_free]"
+        assert setup.tag == "smbh[point_mass__centre_fixed]"
+
+        setup = ag.SetupSMBH(smbh_centre_fixed=False)
+
+        assert setup.tag == "smbh[point_mass__centre_free]"
 
     def test__smbh_from_centre(self):
 
-        setup = ag.SetupSMBH(include_smbh=False, smbh_centre_fixed=True)
+        setup = ag.SetupSMBH(smbh_centre_fixed=True)
         smbh = setup.smbh_from_centre(centre=(0.0, 0.0))
-        assert smbh is None
 
-        setup = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=True)
-        smbh = setup.smbh_from_centre(centre=(0.0, 0.0))
         assert isinstance(smbh, af.PriorModel)
         assert smbh.centre == (0.0, 0.0)
 
-        setup = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=False)
+        setup = ag.SetupSMBH(smbh_centre_fixed=False)
         smbh = setup.smbh_from_centre(centre=(0.1, 0.2), centre_sigma=0.2)
+
         assert isinstance(smbh, af.PriorModel)
+
         assert isinstance(smbh.centre[0], af.GaussianPrior)
         assert smbh.centre[0].mean == 0.1
         assert smbh.centre[0].sigma == 0.2
+
         assert isinstance(smbh.centre[1], af.GaussianPrior)
         assert smbh.centre[1].mean == 0.2
         assert smbh.centre[1].sigma == 0.2
 
 
 class TestSetupPipeline:
-    def test__tag(self):
+    def test__setup__passes_light_setup_to_mass_light_setup(self):
 
-        source = ag.SetupLightInversion(
-            pixelization_prior_model=ag.pix.Rectangular, regularization_prior_model=ag.reg.Constant
+        setup_light = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            disk_prior_model=af.PriorModel(ag.lp.EllipticalExponential),
         )
 
-        light = ag.SetupLight(light_centre=(1.0, 2.0))
+        setup_mass = ag.SetupMassLightDark()
 
-        setup = ag.SetupPipeline(setup_source=source, setup_light=light)
+        setup_pipeline = ag.SetupPipeline(
+            setup_light=setup_light, setup_mass=setup_mass
+        )
+
+        assert (
+            setup_pipeline.setup_light.bulge_prior_model.cls is ag.lp.EllipticalSersic
+        )
+        assert (
+            setup_pipeline.setup_light.disk_prior_model.cls
+            is ag.lp.EllipticalExponential
+        )
+        assert setup_pipeline.setup_light.envelope_prior_model is None
+
+        assert setup_pipeline.setup_mass.bulge_prior_model.cls is ag.lp.EllipticalSersic
+        assert (
+            setup_pipeline.setup_mass.disk_prior_model.cls
+            is ag.lp.EllipticalExponential
+        )
+        assert setup_pipeline.setup_mass.envelope_prior_model is None
+
+    def test__tag(self):
+
+        setup_light = ag.SetupLightParametric(light_centre=(1.0, 2.0))
+
+        setup = ag.SetupPipeline(setup_light=setup_light)
 
         assert (
             setup.tag == "setup__"
-            "light[bulge_disk__light_centre_(1.00,2.00)]__"
-            "source[pix_rect__reg_const]"
+            "light[parametric__bulge_sersic__disk_exp__light_centre_(1.00,2.00)]"
         )
 
-        hyper = ag.SetupHyper(hyper_galaxies=True, hyper_background_noise=True)
+        setup_hyper = ag.SetupHyper(hyper_galaxies=True, hyper_background_noise=True)
 
-        source = ag.SetupLightInversion(
-            pixelization_prior_model=ag.pix.Rectangular, regularization_prior_model=ag.reg.Constant
-        )
+        setup_light = ag.SetupLightParametric(light_centre=(1.0, 2.0))
 
-        light = ag.SetupLight(light_centre=(1.0, 2.0))
-
-        setup = ag.SetupPipeline(
-            setup_hyper=hyper, setup_source=source, setup_light=light
-        )
+        setup = ag.SetupPipeline(setup_hyper=setup_hyper, setup_light=setup_light)
 
         assert (
             setup.tag == "setup__hyper[galaxies__bg_noise]__"
-            "light[bulge_disk__light_centre_(1.00,2.00)]__"
-            "source[pix_rect__reg_const]"
+            "light[parametric__bulge_sersic__disk_exp__light_centre_(1.00,2.00)]"
         )
 
-        smbh = ag.SetupSMBH(include_smbh=True, smbh_centre_fixed=True)
+        smbh = ag.SetupSMBH(smbh_centre_fixed=True)
 
         setup = ag.SetupPipeline(setup_smbh=smbh)
 
-        assert setup.tag == "setup__smbh[centre_fixed]"
+        assert setup.tag == "setup__smbh[point_mass__centre_fixed]"

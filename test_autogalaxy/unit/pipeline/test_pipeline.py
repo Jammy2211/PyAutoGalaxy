@@ -34,9 +34,7 @@ class DummyPhaseImaging(af.AbstractPhase):
         pass
 
     def __init__(self, search):
-        super().__init__(
-            search=search
-        )
+        super().__init__(search=search)
         self.dataset = None
         self.results = None
         self.mask = None
@@ -96,6 +94,7 @@ class MockSearch:
     def __init__(self, phase_name):
         self.phase_name = phase_name
         self.paths = Paths(phase_name)
+
 
 #
 # class TestMetaData:

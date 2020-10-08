@@ -3,9 +3,10 @@ import numpy as np
 import pytest
 from autogalaxy import exc
 from autogalaxy.util.plane_util import (
-    plane_image_of_galaxies_from, ordered_plane_redshifts_from,
+    plane_image_of_galaxies_from,
+    ordered_plane_redshifts_from,
     ordered_plane_redshifts_with_slicing_from,
-    galaxies_in_redshift_ordered_planes_from
+    galaxies_in_redshift_ordered_planes_from,
 )
 
 
@@ -196,9 +197,7 @@ class TestPlaneRedshifts:
             ag.Galaxy(redshift=0.1),
         ]
 
-        ordered_plane_redshifts = ordered_plane_redshifts_from(
-            galaxies=galaxies
-        )
+        ordered_plane_redshifts = ordered_plane_redshifts_from(galaxies=galaxies)
 
         assert ordered_plane_redshifts == [0.1, 1.0, 2.0]
 
@@ -211,9 +210,7 @@ class TestPlaneRedshifts:
             ag.Galaxy(redshift=0.1),
         ]
 
-        ordered_plane_redshifts = ordered_plane_redshifts_from(
-            galaxies=galaxies
-        )
+        ordered_plane_redshifts = ordered_plane_redshifts_from(galaxies=galaxies)
 
         assert ordered_plane_redshifts == [0.1, 1.0]
 
@@ -227,9 +224,7 @@ class TestPlaneRedshifts:
 
         galaxies = [g0, g1, g2, g3, g4, g5]
 
-        ordered_plane_redshifts = ordered_plane_redshifts_from(
-            galaxies=galaxies
-        )
+        ordered_plane_redshifts = ordered_plane_redshifts_from(galaxies=galaxies)
 
         assert ordered_plane_redshifts == [0.1, 0.95, 1.0, 1.05]
 

@@ -15,65 +15,65 @@ class TestGalaxyFitData:
         assert galaxy_fit_data.pixel_scales == (1.0, 1.0)
         assert (galaxy_fit_data.galaxy_data.image.in_2d == np.ones((7, 7))).all()
         assert (
-                galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
+            galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
 
         assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
         assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
 
         assert (
-                galaxy_fit_data.mask
-                == np.array(
-            [
-                [True, True, True, True, True, True, True],
-                [True, True, True, True, True, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, True, True, True, True, True],
-                [True, True, True, True, True, True, True],
-            ]
-        )
+            galaxy_fit_data.mask
+            == np.array(
+                [
+                    [True, True, True, True, True, True, True],
+                    [True, True, True, True, True, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, True, True, True, True, True],
+                    [True, True, True, True, True, True, True],
+                ]
+            )
         ).all()
 
         assert (
-                galaxy_fit_data.image.in_2d
-                == np.array(
-            [
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            ]
-        )
+            galaxy_fit_data.image.in_2d
+            == np.array(
+                [
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                ]
+            )
         ).all()
 
         assert (
-                galaxy_fit_data.noise_map.in_2d
-                == np.array(
-            [
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            ]
-        )
+            galaxy_fit_data.noise_map.in_2d
+            == np.array(
+                [
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                ]
+            )
         ).all()
 
     def test__grid(
-            self,
-            gal_data_7x7,
-            sub_mask_7x7,
-            grid_7x7,
-            sub_grid_7x7,
-            blurring_grid_7x7,
-            grid_iterate_7x7,
+        self,
+        gal_data_7x7,
+        sub_mask_7x7,
+        grid_7x7,
+        sub_grid_7x7,
+        blurring_grid_7x7,
+        grid_iterate_7x7,
     ):
         galaxy_fit_data = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7,
@@ -119,55 +119,55 @@ class TestGalaxyFitData:
         assert galaxy_fit_data.pixel_scales == (1.0, 1.0)
         assert (galaxy_fit_data.galaxy_data.image.in_2d == np.ones((7, 7))).all()
         assert (
-                galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
+            galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
 
         assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
         assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
 
         assert (
-                galaxy_fit_data.mask
-                == np.array(
-            [
-                [True, True, True, True, True, True, True],
-                [True, True, True, True, True, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, True, True, True, True, True],
-                [True, True, True, True, True, True, True],
-            ]
-        )
+            galaxy_fit_data.mask
+            == np.array(
+                [
+                    [True, True, True, True, True, True, True],
+                    [True, True, True, True, True, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, True, True, True, True, True],
+                    [True, True, True, True, True, True, True],
+                ]
+            )
         ).all()
 
         assert (
-                galaxy_fit_data.image.in_2d
-                == np.array(
-            [
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            ]
-        )
+            galaxy_fit_data.image.in_2d
+            == np.array(
+                [
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                ]
+            )
         ).all()
 
         assert (
-                galaxy_fit_data.noise_map.in_2d
-                == np.array(
-            [
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            ]
-        )
+            galaxy_fit_data.noise_map.in_2d
+            == np.array(
+                [
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                ]
+            )
         ).all()
 
         galaxy = mock.MockGalaxy(value=1, shape=36)
@@ -192,55 +192,55 @@ class TestGalaxyFitData:
         assert galaxy_fit_data.pixel_scales == (1.0, 1.0)
         assert (galaxy_fit_data.galaxy_data.image.in_2d == np.ones((7, 7))).all()
         assert (
-                galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
+            galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
 
         assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
         assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
 
         assert (
-                galaxy_fit_data.mask
-                == np.array(
-            [
-                [True, True, True, True, True, True, True],
-                [True, True, True, True, True, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, True, True, True, True, True],
-                [True, True, True, True, True, True, True],
-            ]
-        )
+            galaxy_fit_data.mask
+            == np.array(
+                [
+                    [True, True, True, True, True, True, True],
+                    [True, True, True, True, True, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, True, True, True, True, True],
+                    [True, True, True, True, True, True, True],
+                ]
+            )
         ).all()
 
         assert (
-                galaxy_fit_data.image.in_2d
-                == np.array(
-            [
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            ]
-        )
+            galaxy_fit_data.image.in_2d
+            == np.array(
+                [
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                ]
+            )
         ).all()
 
         assert (
-                galaxy_fit_data.noise_map.in_2d
-                == np.array(
-            [
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            ]
-        )
+            galaxy_fit_data.noise_map.in_2d
+            == np.array(
+                [
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                ]
+            )
         ).all()
 
         galaxy = mock.MockGalaxy(value=1, shape=36)
@@ -269,55 +269,55 @@ class TestGalaxyFitData:
         assert galaxy_fit_data.pixel_scales == (1.0, 1.0)
         assert (galaxy_fit_data.galaxy_data.image.in_2d == np.ones((7, 7))).all()
         assert (
-                galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
+            galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
 
         assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
         assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
 
         assert (
-                galaxy_fit_data.mask
-                == np.array(
-            [
-                [True, True, True, True, True, True, True],
-                [True, True, True, True, True, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, True, True, True, True, True],
-                [True, True, True, True, True, True, True],
-            ]
-        )
+            galaxy_fit_data.mask
+            == np.array(
+                [
+                    [True, True, True, True, True, True, True],
+                    [True, True, True, True, True, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, True, True, True, True, True],
+                    [True, True, True, True, True, True, True],
+                ]
+            )
         ).all()
 
         assert (
-                galaxy_fit_data.image.in_2d
-                == np.array(
-            [
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            ]
-        )
+            galaxy_fit_data.image.in_2d
+            == np.array(
+                [
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                ]
+            )
         ).all()
 
         assert (
-                galaxy_fit_data.noise_map.in_2d
-                == np.array(
-            [
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            ]
-        )
+            galaxy_fit_data.noise_map.in_2d
+            == np.array(
+                [
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                ]
+            )
         ).all()
 
         galaxy = mock.MockGalaxy(value=1, shape=36)
@@ -343,55 +343,55 @@ class TestGalaxyFitData:
         assert galaxy_fit_data.pixel_scales == (1.0, 1.0)
         assert (galaxy_fit_data.galaxy_data.image.in_2d == np.ones((7, 7))).all()
         assert (
-                galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
+            galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
 
         assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
         assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
 
         assert (
-                galaxy_fit_data.mask
-                == np.array(
-            [
-                [True, True, True, True, True, True, True],
-                [True, True, True, True, True, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, True, True, True, True, True],
-                [True, True, True, True, True, True, True],
-            ]
-        )
+            galaxy_fit_data.mask
+            == np.array(
+                [
+                    [True, True, True, True, True, True, True],
+                    [True, True, True, True, True, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, True, True, True, True, True],
+                    [True, True, True, True, True, True, True],
+                ]
+            )
         ).all()
 
         assert (
-                galaxy_fit_data.image.in_2d
-                == np.array(
-            [
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            ]
-        )
+            galaxy_fit_data.image.in_2d
+            == np.array(
+                [
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                ]
+            )
         ).all()
 
         assert (
-                galaxy_fit_data.noise_map.in_2d
-                == np.array(
-            [
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            ]
-        )
+            galaxy_fit_data.noise_map.in_2d
+            == np.array(
+                [
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                ]
+            )
         ).all()
 
         galaxy = mock.MockGalaxy(value=1, shape=36)
@@ -412,14 +412,14 @@ class TestGalaxyFitData:
                 np.multiply(
                     deflections_gal.mask.sub_fraction,
                     deflections_gal[:, 0]
-                        .reshape(-1, deflections_gal.mask.sub_length)
-                        .sum(axis=1),
+                    .reshape(-1, deflections_gal.mask.sub_length)
+                    .sum(axis=1),
                 ),
                 np.multiply(
                     deflections_gal.mask.sub_fraction,
                     deflections_gal[:, 1]
-                        .reshape(-1, deflections_gal.mask.sub_length)
-                        .sum(axis=1),
+                    .reshape(-1, deflections_gal.mask.sub_length)
+                    .sum(axis=1),
                 ),
             ]
         ).T
@@ -438,55 +438,55 @@ class TestGalaxyFitData:
         assert galaxy_fit_data.pixel_scales == (1.0, 1.0)
         assert (galaxy_fit_data.galaxy_data.image.in_2d == np.ones((7, 7))).all()
         assert (
-                galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
+            galaxy_fit_data.galaxy_data.noise_map.in_2d == 2.0 * np.ones((7, 7))
         ).all()
 
         assert (galaxy_fit_data.image.in_1d == np.ones(9)).all()
         assert (galaxy_fit_data.noise_map.in_1d == 2.0 * np.ones(9)).all()
 
         assert (
-                galaxy_fit_data.mask
-                == np.array(
-            [
-                [True, True, True, True, True, True, True],
-                [True, True, True, True, True, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, False, False, False, True, True],
-                [True, True, True, True, True, True, True],
-                [True, True, True, True, True, True, True],
-            ]
-        )
+            galaxy_fit_data.mask
+            == np.array(
+                [
+                    [True, True, True, True, True, True, True],
+                    [True, True, True, True, True, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, False, False, False, True, True],
+                    [True, True, True, True, True, True, True],
+                    [True, True, True, True, True, True, True],
+                ]
+            )
         ).all()
 
         assert (
-                galaxy_fit_data.image.in_2d
-                == np.array(
-            [
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            ]
-        )
+            galaxy_fit_data.image.in_2d
+            == np.array(
+                [
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                ]
+            )
         ).all()
 
         assert (
-                galaxy_fit_data.noise_map.in_2d
-                == np.array(
-            [
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            ]
-        )
+            galaxy_fit_data.noise_map.in_2d
+            == np.array(
+                [
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 2.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                ]
+            )
         ).all()
 
         galaxy = mock.MockGalaxy(value=1, shape=36)
@@ -507,14 +507,14 @@ class TestGalaxyFitData:
                 np.multiply(
                     deflections_gal.mask.sub_fraction,
                     deflections_gal[:, 0]
-                        .reshape(-1, deflections_gal.mask.sub_length)
-                        .sum(axis=1),
+                    .reshape(-1, deflections_gal.mask.sub_length)
+                    .sum(axis=1),
                 ),
                 np.multiply(
                     deflections_gal.mask.sub_fraction,
                     deflections_gal[:, 1]
-                        .reshape(-1, deflections_gal.mask.sub_length)
-                        .sum(axis=1),
+                    .reshape(-1, deflections_gal.mask.sub_length)
+                    .sum(axis=1),
                 ),
             ]
         ).T
@@ -526,7 +526,7 @@ class TestGalaxyFitData:
         assert (deflections_gal[:, 1] == deflections_gd.in_1d_binned).all()
 
     def test__no_use_method__raises_exception(
-            self, image_7x7, noise_map_7x7, sub_mask_7x7
+        self, image_7x7, noise_map_7x7, sub_mask_7x7
     ):
         gal_data_7x7 = ag.GalaxyData(
             image=image_7x7, noise_map=noise_map_7x7, pixel_scales=3.0
@@ -536,7 +536,7 @@ class TestGalaxyFitData:
             ag.MaskedGalaxyDataset(galaxy_data=gal_data_7x7, mask=sub_mask_7x7)
 
     def test__multiple_use_methods__raises_exception(
-            self, image_7x7, noise_map_7x7, sub_mask_7x7
+        self, image_7x7, noise_map_7x7, sub_mask_7x7
     ):
         gal_data_7x7 = ag.GalaxyData(
             image=image_7x7, noise_map=noise_map_7x7, pixel_scales=3.0

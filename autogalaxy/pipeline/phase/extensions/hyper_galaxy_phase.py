@@ -51,7 +51,9 @@ class Analysis(af.Analysis):
             )
 
             fit_normal = aa_fit.FitImaging(
-                masked_imaging=self.masked_imaging, model_image=self.hyper_model_image, use_mask_in_fit=False
+                masked_imaging=self.masked_imaging,
+                model_image=self.hyper_model_image,
+                use_mask_in_fit=False,
             )
 
             fit_hyper = self.fit_for_hyper_galaxy(
@@ -131,7 +133,9 @@ class Analysis(af.Analysis):
         )
 
         return aa_fit.FitImaging(
-            masked_imaging=masked_imaging, model_image=self.hyper_model_image, use_mask_in_fit=False
+            masked_imaging=masked_imaging,
+            model_image=self.hyper_model_image,
+            use_mask_in_fit=False,
         )
 
     @classmethod

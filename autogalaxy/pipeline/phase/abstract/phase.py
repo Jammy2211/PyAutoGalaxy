@@ -23,13 +23,7 @@ class AbstractPhase(af.AbstractPhase):
 
     Result = Result
 
-    def __init__(
-        self,
-            *,
-            settings,
-            search,
-            galaxies=None, cosmology=cosmo.Planck15
-    ):
+    def __init__(self, *, settings, search, galaxies=None, cosmology=cosmo.Planck15):
         """
         A phase in an lens pipeline. Uses the set non_linear search to try to fit
         models and hyper_galaxies passed to it.

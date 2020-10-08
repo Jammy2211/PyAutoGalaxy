@@ -23,7 +23,7 @@ class TestResult:
                     redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
                 )
             ),
-            search=mock.MockSearch("test_phase_2", ),
+            search=mock.MockSearch("test_phase_2"),
         )
 
         result = phase_imaging_7x7.run(
@@ -33,7 +33,7 @@ class TestResult:
         assert isinstance(result, ag.AbstractPhase.Result)
 
     def test__results_of_phase_include_mask__available_as_property(
-            self, imaging_7x7, mask_7x7, samples_with_result
+        self, imaging_7x7, mask_7x7, samples_with_result
     ):
         phase_imaging_7x7 = ag.PhaseImaging(
             galaxies=dict(
@@ -54,7 +54,7 @@ class TestResult:
         assert (result.mask == mask_7x7).all()
 
     def test__results_of_phase_include_pixelization__available_as_property(
-            self, imaging_7x7, mask_7x7
+        self, imaging_7x7, mask_7x7
     ):
         source = ag.Galaxy(
             redshift=1.0,

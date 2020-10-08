@@ -17,7 +17,7 @@ def make_plotter_setup():
 
 
 def test__individual_attributes_are_output_for_rectangular_inversion(
-        rectangular_inversion_7x7_3x3, positions_7x7, plot_path, plot_patch
+    rectangular_inversion_7x7_3x3, positions_7x7, plot_path, plot_patch
 ):
     critical_curves = ag.GridCoordinates([(0.0, 0.0), (0.1, 0.1)])
     caustics = ag.GridCoordinates([(0.0, 0.0), (0.1, 0.1)])
@@ -117,7 +117,7 @@ def test__individual_attributes_are_output_for_rectangular_inversion(
 
 
 def test__individual_attributes_are_output_for_voronoi_inversion(
-        voronoi_inversion_9_3x3, positions_7x7, mask_7x7, plot_path, plot_patch
+    voronoi_inversion_9_3x3, positions_7x7, mask_7x7, plot_path, plot_patch
 ):
     critical_curves = ag.GridCoordinates([(0.0, 0.0), (0.1, 0.1)])
     caustics = ag.GridCoordinates([(0.0, 0.0), (0.1, 0.1)])
@@ -217,11 +217,11 @@ def test__individual_attributes_are_output_for_voronoi_inversion(
 
 
 def test__inversion_subplot_is_output_for_all_inversions(
-        imaging_7x7,
-        rectangular_inversion_7x7_3x3,
-        voronoi_inversion_9_3x3,
-        plot_path,
-        plot_patch,
+    imaging_7x7,
+    rectangular_inversion_7x7_3x3,
+    voronoi_inversion_9_3x3,
+    plot_path,
+    plot_patch,
 ):
     aplt.Inversion.subplot_inversion(
         inversion=rectangular_inversion_7x7_3x3,
@@ -241,7 +241,7 @@ def test__inversion_subplot_is_output_for_all_inversions(
 
 
 def test__inversion_individuals__output_dependent_on_input(
-        rectangular_inversion_7x7_3x3, positions_7x7, plot_path, plot_patch
+    rectangular_inversion_7x7_3x3, positions_7x7, plot_path, plot_patch
 ):
     aplt.Inversion.individuals(
         inversion=rectangular_inversion_7x7_3x3,

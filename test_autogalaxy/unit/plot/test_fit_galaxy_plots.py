@@ -16,15 +16,15 @@ def make_galaxy_fit_plotter_setup():
 
 
 def test__fit_sub_plot__all_types_of_galaxy_fit(
-        gal_fit_7x7_image,
-        gal_fit_7x7_convergence,
-        gal_fit_7x7_potential,
-        gal_fit_7x7_deflections_y,
-        gal_fit_7x7_deflections_x,
-        positions_7x7,
-        include_all,
-        plot_patch,
-        galaxy_fit_plotter_path,
+    gal_fit_7x7_image,
+    gal_fit_7x7_convergence,
+    gal_fit_7x7_potential,
+    gal_fit_7x7_deflections_y,
+    gal_fit_7x7_deflections_x,
+    positions_7x7,
+    include_all,
+    plot_patch,
+    galaxy_fit_plotter_path,
 ):
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_image,

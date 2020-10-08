@@ -41,10 +41,7 @@ class PhaseInterferometer(dataset.PhaseDataset):
         search.paths.tag = settings.phase_tag_with_inversion
 
         super().__init__(
-            galaxies=galaxies,
-            settings=settings,
-            search=search,
-            cosmology=cosmology,
+            galaxies=galaxies, settings=settings, search=search, cosmology=cosmology
         )
 
         self.hyper_background_noise = hyper_background_noise

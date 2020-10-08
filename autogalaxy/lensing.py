@@ -217,7 +217,9 @@ class LensingObject:
     @property
     def calculation_grid(self):
 
-        convergence_threshold = conf.instance["general"]["calculation_grid"]["convergence_threshold"]
+        convergence_threshold = conf.instance["general"]["calculation_grid"][
+            "convergence_threshold"
+        ]
 
         pixels = conf.instance["general"]["calculation_grid"]["pixels"]
 

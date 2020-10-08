@@ -1,8 +1,0 @@
-galaxies
-    source
-        redshift                                                                          1.0
-        pixelization
-            weight_floor                                                                  0.0
-            weight_power                                                                  0.0
-        regularization
-            coefficient                                                                   1.0

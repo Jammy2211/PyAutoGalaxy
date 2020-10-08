@@ -39,9 +39,9 @@ class MassProfile(lensing.LensingObject):
 class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
     @af.map_types
     def __init__(
-            self,
-            centre: dim.Position = (0.0, 0.0),
-            elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
     ):
         """
         Abstract class for elliptical mass profiles.
@@ -66,12 +66,12 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
             return []
 
     def mass_within_circle_in_units(
-            self,
-            radius: dim.Length,
-            unit_mass="angular",
-            redshift_object=None,
-            redshift_source=None,
-            cosmology=cosmo.Planck15,
+        self,
+        radius: dim.Length,
+        unit_mass="angular",
+        redshift_object=None,
+        redshift_source=None,
+        cosmology=cosmo.Planck15,
     ):
         """ Integrate the mass profiles's convergence profile to compute the total mass within a circle of \
         specified radius. This is centred on the mass profile.
@@ -128,14 +128,14 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         )
 
     def density_between_circular_annuli_in_angular_units(
-            self,
-            inner_annuli_radius: dim.Length,
-            outer_annuli_radius: dim.Length,
-            unit_length="arcsec",
-            unit_mass="angular",
-            redshift_profile=None,
-            redshift_source=None,
-            cosmology=cosmo.Planck15,
+        self,
+        inner_annuli_radius: dim.Length,
+        outer_annuli_radius: dim.Length,
+        unit_length="arcsec",
+        unit_mass="angular",
+        redshift_profile=None,
+        redshift_source=None,
+        cosmology=cosmo.Planck15,
     ):
         """Calculate the mass between two circular annuli and compute the density by dividing by the annuli surface
         area.
@@ -152,7 +152,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
             The radius of the outer annulus inside of which the density is estimated.
         """
         annuli_area = (np.pi * outer_annuli_radius ** 2.0) - (
-                np.pi * inner_annuli_radius ** 2.0
+            np.pi * inner_annuli_radius ** 2.0
         )
 
         outer_mass = self.mass_within_circle_in_units(
@@ -178,7 +178,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         )
 
     def average_convergence_of_1_radius_in_units(
-            self, unit_length="arcsec", redshift_object=None, cosmology=cosmo.Planck15
+        self, unit_length="arcsec", redshift_object=None, cosmology=cosmo.Planck15
     ):
         """The radius a critical curve forms for this mass profile, e.g. where the mean convergence is equal to 1.0.
 
@@ -202,20 +202,20 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         def func(radius, redshift_profile, cosmology):
             radius = dim.Length(radius, unit_length=unit_length)
             return (
-                    self.mass_within_circle_in_units(
-                        unit_mass="angular",
-                        radius=radius,
-                        redshift_object=redshift_profile,
-                        cosmology=cosmology,
-                    )
-                    - np.pi * radius ** 2.0
+                self.mass_within_circle_in_units(
+                    unit_mass="angular",
+                    radius=radius,
+                    redshift_object=redshift_profile,
+                    cosmology=cosmology,
+                )
+                - np.pi * radius ** 2.0
             )
 
         radius = (
-                self.ellipticity_rescale
-                * root_scalar(
-            func, bracket=[1e-4, 1000.0], args=(redshift_object, cosmology)
-        ).root
+            self.ellipticity_rescale
+            * root_scalar(
+                func, bracket=[1e-4, 1000.0], args=(redshift_object, cosmology)
+            ).root
         )
         radius = dim.Length(radius, unit_length)
         return radius.convert(unit_length=unit_length, kpc_per_arcsec=kpc_per_arcsec)

@@ -18,9 +18,7 @@ class TestGeneric:
                     redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
                 )
             ),
-            search=mock.MockSearch(
-                phase_name="test_phase_2",
-            ),
+            search=mock.MockSearch(phase_name="test_phase_2"),
         )
 
         result = phase_dataset_7x7.run(
@@ -44,8 +42,8 @@ class TestPlane:
                 phase_name="test_phase",
                 samples=mock.MockSamples(
                     max_log_likelihood_instance=max_log_likelihood_plane
-                )
-            ),
+                ),
+            )
         )
 
         result = phase_dataset_7x7.run(dataset=imaging_7x7, mask=mask_7x7)

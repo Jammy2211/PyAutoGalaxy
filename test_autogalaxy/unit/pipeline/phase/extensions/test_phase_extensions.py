@@ -201,10 +201,7 @@ class TestHyperAPI:
 
         phase = ag.PhaseImaging(
             galaxies=dict(galaxy=galaxy),
-            search=af.DynestyStatic(
-                n_live_points=1,
-                phase_name="test_phase",
-            ),
+            search=af.DynestyStatic(n_live_points=1, phase_name="test_phase"),
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(bin_up_factor=2)
             ),
@@ -279,9 +276,7 @@ class TestHyperGalaxyPhase:
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=2)
             ),
-            search=mock.MockSearch(
-                phase_name="test_phase",
-            ),
+            search=mock.MockSearch(phase_name="test_phase"),
         )
 
         analysis = phase_imaging_7x7.make_analysis(

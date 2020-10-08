@@ -17,14 +17,14 @@ class PhaseImaging(dataset.PhaseDataset):
     Result = Result
 
     def __init__(
-            self,
-            *,
-            search,
-            galaxies=None,
-            hyper_image_sky=None,
-            hyper_background_noise=None,
-            settings=SettingsPhaseImaging(),
-            cosmology=cosmo.Planck15,
+        self,
+        *,
+        search,
+        galaxies=None,
+        hyper_image_sky=None,
+        hyper_background_noise=None,
+        settings=SettingsPhaseImaging(),
+        cosmology=cosmo.Planck15,
     ):
         """
 
@@ -40,10 +40,7 @@ class PhaseImaging(dataset.PhaseDataset):
         """
 
         super().__init__(
-            search=search,
-            galaxies=galaxies,
-            settings=settings,
-            cosmology=cosmology,
+            search=search, galaxies=galaxies, settings=settings, cosmology=cosmology
         )
 
         self.hyper_image_sky = hyper_image_sky
