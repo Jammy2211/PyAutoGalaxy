@@ -61,7 +61,7 @@ class GalaxyModel(PriorModel):
         redshift : float or Type[g.Redshift]
             The redshift of this model galaxy.
         model_redshift : bool
-            If *True*, the galaxy redshift will be treated as a free-parameter that is fitted for by the non-linear \
+            If `True`, the galaxy redshift will be treated as a free-parameter that is fitted for by the non-linear \
             search.
         pixelization : Pixelization
             The pixelization used to reconstruct the galaxy light and fit the observed if using an inversion.

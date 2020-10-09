@@ -319,7 +319,7 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
         individual images of each galaxy's light profile.
 
         The image is calculated on the sub-grid and binned-up to the original grid by taking the mean
-        value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is *True*.
+        value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
 
         If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
         sub-grid is returned.
@@ -352,7 +352,7 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
         of each galaxy's mass profile.
 
         The convergence is calculated on the sub-grid and binned-up to the original grid by taking the mean
-        value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is *True*.
+        value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
 
         If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
         sub-grid is returned.
@@ -377,7 +377,7 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
         of each galaxy's mass profile.
 
         The potential is calculated on the sub-grid and binned-up to the original grid by taking the mean
-        value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is *True*.
+        value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
 
         If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
         sub-grid is returned.

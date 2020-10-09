@@ -177,7 +177,7 @@ class LensingPlotter(plotters.AbstractPlotter):
             If True, the 2D region of the array corresponding to the rectangle encompassing all unmasked values is \
             plotted, thereby zooming into the region of interest.
         border : bool
-            If a mask is supplied, its borders pixels (e.g. the exterior edge) is plotted if this is *True*.
+            If a mask is supplied, its borders pixels (e.g. the exterior edge) is plotted if this is `True`.
         positions : [[]]
             Lists of (y,x) coordinates on the image which are plotted as colored dots, to highlight specific pixels.
         grid : data.array.aa.Grid
@@ -784,7 +784,7 @@ class Include(plotters.Include):
         fit : datas.fitting.fitting.AbstractLensHyperFit
             The fit to the datas, which includes a lisrt of every model image, residual_map, chi-squareds, etc.
         mask : bool
-            If *True*, the masks is plotted on the fit's datas.
+            If `True`, the masks is plotted on the fit's datas.
         """
         if self.positions:
             try:

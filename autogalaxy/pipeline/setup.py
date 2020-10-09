@@ -292,10 +292,10 @@ class SetupLightParametric(AbstractSetupLight):
             free parameter by the non-linear search.
         align_bulge_disk_centre : bool or None
             If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
-            *True* will align the centre of the bulge and disk components and not fit them separately.
+            `True` will align the centre of the bulge and disk components and not fit them separately.
         align_bulge_disk_elliptical_comps : bool or None
             If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
-            *True* will align the elliptical components the bulge and disk components and not fit them separately.
+            `True` will align the elliptical components the bulge and disk components and not fit them separately.
         """
 
         self.bulge_prior_model = self._cls_to_prior_model(cls=bulge_prior_model)
@@ -625,7 +625,7 @@ class SetupLightInversion(AbstractSetupLight):
         """
         return (
             f"__{conf.instance['notation']['setup_tags']['inversion']['pixelization']}_"
-            f"{conf.instance['notation']['setup_tags']['pixelization'][self._pixelization_prior_model.name]}"
+            f"{conf.instance['notation']['setup_tags']['pixelization_prior_model'][self._pixelization_prior_model.name]}"
         )
 
     @property
@@ -640,7 +640,7 @@ class SetupLightInversion(AbstractSetupLight):
         """
         return (
             f"__{conf.instance['notation']['setup_tags']['inversion']['regularization']}_"
-            f"{conf.instance['notation']['setup_tags']['regularization'][self.regularization_prior_model.name]}"
+            f"{conf.instance['notation']['setup_tags']['regularization_prior_model'][self.regularization_prior_model.name]}"
         )
 
 
@@ -779,6 +779,9 @@ class SetupMassTotal(AbstractSetupMass):
         mass_centre : (float, float) or None
            If input, a fixed (y,x) centre of the mass profile is used which is not treated as a free parameter by the
            non-linear search.
+        align_light_mass_centre : bool
+            If `True` and the galaxy model has both a light and mass component, the function
+            `align_centre_of_mass_to_light` can be used to align their centres.
         """
 
         super().__init__(mass_centre=mass_centre)
@@ -829,12 +832,13 @@ class SetupMassTotal(AbstractSetupMass):
 
     @property
     def align_light_mass_centre_tag(self) -> str:
-        """Generate a tag if the lens mass model is centre is aligned with that of its light profile.
+        """
+        Tags if the lens mass model centre is aligned with that of its light profile.
 
-        This changes the setup folder as follows:
+        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
 
-        align_light_mass_centre = ``False`` -> setup
-        align_light_mass_centre = ``True`` -> setup___align_light_mass_centre
+        align_light_mass_centre = `False` -> setup
+        align_light_mass_centre = `True` -> setup___align_light_mass_centre
         """
         if self.mass_centre is not None:
             return ""
@@ -967,9 +971,9 @@ class SetupMassLightDark(AbstractSetupMass):
         """Generate a tag for whether the mass-to-light ratio in a light-dark mass model is constaant (shared amongst
          all light and mass profiles) or free (all mass-to-light ratios are free parameters).
 
-        This changes the setup folder as follows:
+        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
 
-        constant_mass_to_light_ratio = ``False`` -> mlr_free
+        constant_mass_to_light_ratio = `False` -> mlr_free
         constant_mass_to_light_ratio = ``True`` -> mlr_constant
         """
         if self.constant_mass_to_light_ratio:
@@ -1064,7 +1068,7 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         Tag for if the lens mass model's bulge `PriorModel` is aligned with the dark matter centre.
 
-        This changes the setup folder as follows:
+        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
 
         align_bulge_dark_centre = `False` -> mass[light_dark]
         align_bulge_dark_centre = `True` -> mass[light_dark__align_bulge_dark_centre]
@@ -1256,11 +1260,13 @@ class SetupPipeline:
             The redshift of the galaxy fitted, used by the pipeline for converting arc-seconds to kpc, masses to
             solMass, etc.
         setup_hyper : SetupHyper
-            The settings of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
+            The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
         setup_light : SetupLightParametric or SetupLightInversion
-            The settings of the light profile modeling (e.g. for bulge-disk models if they are geometrically aligned).
+            The setup of the light profile modeling (e.g. for bulge-disk models if they are geometrically aligned).
         setup_mass : SetupMassTotal or SetupMassLighDark
-            The settings of the mass modeling (e.g. if a constant mass to light ratio is used).
+            The setup of the mass modeling (e.g. if a constant mass to light ratio is used).
+        setup_smbh : SetupSMBH
+            The setup of the super-massive black hole modeling (e.g. its `MassProfile` and if its centre is fixed).
         """
 
         self.path_prefix = path_prefix

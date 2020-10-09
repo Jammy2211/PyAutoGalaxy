@@ -1980,7 +1980,7 @@ class TestDecorators:
 
     def test__grid_interp_in__interps_based_on_intepolate_config(self):
 
-        # ``False`` in interpolate.ini
+        # `False` in interpolate.ini
 
         mask = ag.Mask2D.manual(
             mask=[
