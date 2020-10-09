@@ -19,7 +19,7 @@ def make_pipeline(name, path_prefix, search=af.DynestyStatic()):
     bulge_1.centre_1 = 1.0
 
     phase1 = ag.PhaseImaging(
-        phase_name="phase_1",
+        name="phase_1",
         path_prefix=path_prefix,
         galaxies=dict(
             galaxy_0=ag.GalaxyModel(redshift=0.5, bulge=bulge_0),

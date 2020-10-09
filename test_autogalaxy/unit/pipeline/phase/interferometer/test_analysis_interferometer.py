@@ -24,9 +24,7 @@ class TestFit:
                 galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
                 source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
             ),
-            search=mock.MockSearch(
-                samples=samples_with_result, phase_name="test_phase"
-            ),
+            search=mock.MockSearch(samples=samples_with_result, name="test_phase"),
             real_space_mask=mask_7x7,
         )
 
@@ -50,7 +48,7 @@ class TestFit:
                     sub_size=2
                 )
             ),
-            search=mock.MockSearch(phase_name="test_phase"),
+            search=mock.MockSearch(name="test_phase"),
             real_space_mask=mask_7x7,
         )
 
@@ -90,7 +88,7 @@ class TestFit:
                     sub_size=4
                 )
             ),
-            search=mock.MockSearch(phase_name="test_phase"),
+            search=mock.MockSearch(name="test_phase"),
             real_space_mask=mask_7x7,
         )
 

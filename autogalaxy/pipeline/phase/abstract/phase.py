@@ -42,22 +42,6 @@ class AbstractPhase(af.AbstractPhase):
         self.galaxies = galaxies or []
         self.cosmology = cosmology
 
-    @property
-    def phase_property_collections(self):
-        """
-        Returns
-        -------
-        phase_property_collections: [PhaseProperty]
-            A list of phase property collections associated with this phase. This is
-            used in automated prior passing and should be overridden for any phase that
-            contains its own PhasePropertys.
-        """
-        return []
-
-    @property
-    def path(self):
-        return self.search.path
-
     def make_result(self, result, analysis):
 
         return self.Result(
@@ -67,12 +51,6 @@ class AbstractPhase(af.AbstractPhase):
             search=self.search,
             use_as_hyper_dataset=self.use_as_hyper_dataset,
         )
-
-    def run(self, dataset, mask, results=None):
-        raise NotImplementedError()
-
-    def modify_search_paths(self):
-        raise NotImplementedError()
 
     @property
     def pixelization(self):

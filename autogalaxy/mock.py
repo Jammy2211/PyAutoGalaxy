@@ -9,7 +9,7 @@ from autoarray.structures import grids
 from autofit.non_linear.mock.mock_search import MockSamples
 from autogalaxy.pipeline.phase.dataset import PhaseDataset
 from autogalaxy.plot.lensing_plotters import Include
-from test_autofit.mock import MockSearch
+from autofit.mock import MockSearch
 
 
 # MockProfiles #
@@ -530,17 +530,17 @@ def make_samples_with_result():
 
 def make_phase_data():
     return PhaseDataset(
-        settings=ag.SettingsPhaseImaging(), search=MockSearch(phase_name="test_phase")
+        settings=ag.SettingsPhaseImaging(), search=MockSearch(name="test_phase")
     )
 
 
 def make_phase_imaging_7x7():
-    return ag.PhaseImaging(search=MockSearch(phase_name="test_phase"))
+    return ag.PhaseImaging(search=MockSearch(name="test_phase"))
 
 
 def make_phase_interferometer_7():
     return ag.PhaseInterferometer(
-        search=MockSearch(phase_name="test_phase"), real_space_mask=make_mask_7x7()
+        search=MockSearch(name="test_phase"), real_space_mask=make_mask_7x7()
     )
 
 

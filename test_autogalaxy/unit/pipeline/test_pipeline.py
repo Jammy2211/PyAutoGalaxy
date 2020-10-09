@@ -24,8 +24,8 @@ class MockMask:
 
 
 class Optimizer:
-    def __init__(self, phase_name="dummy_phase"):
-        self.phase_name = phase_name
+    def __init__(self, name="dummy_phase"):
+        self.name = name
         self.phase_path = ""
 
 
@@ -91,25 +91,25 @@ def make_mock_file(monkeypatch):
 
 
 class MockSearch:
-    def __init__(self, phase_name):
-        self.phase_name = phase_name
-        self.paths = Paths(phase_name)
+    def __init__(self, name):
+        self.name = name
+        self.paths = Paths(name)
 
 
 #
 # class TestMetaData:
 #     def test_files(self, mock_files):
 #         pipeline = ag.PipelineDataset(
-#             "pipeline_name", DummyPhaseImaging(search=MockSearch("phase_name"))
+#             "pipeline_name", DummyPhaseImaging(search=MockSearch("name"))
 #         )
 #         pipeline.run(dataset=MockImagingData(), mask=MockMask())
 #
 #         assert (
 #                 mock_files[2].text
-#                 == "phase=phase_name\nphase_tag=\npipeline=pipeline_name\npipeline_tag=\nnon_linear_search=search\ndataset_name=data_name"
+#                 == "phase=name\nphase_tag=\npipeline=pipeline_name\npipeline_tag=\nnon_linear_search=search\ndataset_name=data_name"
 #         )
 #
-#         assert "phase_name////non_linear.pickle" in mock_files[3].filename
+#         assert "name////non_linear.pickle" in mock_files[3].filename
 
 
 # class TestPassMask:
@@ -150,11 +150,11 @@ class DummyPhasePositions(af.AbstractPhase):
     def make_result(self, result, analysis):
         pass
 
-    def __init__(self, phase_name):
-        super().__init__(MockSearch(name=phase_name))
+    def __init__(self, name):
+        super().__init__(MockSearch(name=name))
         self.results = None
         self.pixel_scales = None
-        self.search = Optimizer(phase_name)
+        self.search = Optimizer(name)
 
     def run(self, pixel_scales, results):
         self.save_metadata(MockImagingData())

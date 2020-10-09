@@ -20,7 +20,7 @@ def make_pipeline(name, path_prefix, search=af.DynestyStatic()):
     bulge.effective_radius = af.UniformPrior(lower_limit=1.25, upper_limit=1.35)
 
     phase1 = ag.PhaseImaging(
-        phase_name="phase_1",
+        name="phase_1",
         path_prefix=path_prefix,
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, bulge=ag.lp.EllipticalSersic)
@@ -38,7 +38,7 @@ def make_pipeline(name, path_prefix, search=af.DynestyStatic()):
             return [self.model.galaxies.light.bulge.effective_radius]
 
     phase2 = GridPhase(
-        phase_name="phase_2",
+        name="phase_2",
         path_prefix=path_prefix,
         galaxies=dict(galaxy=ag.GalaxyModel(redshift=0.5, bulge=bulge)),
         number_of_steps=2,
@@ -50,7 +50,7 @@ def make_pipeline(name, path_prefix, search=af.DynestyStatic()):
     phase2.search.facc = 0.5
 
     phase3 = ag.PhaseImaging(
-        phase_name="phase_3",
+        name="phase_3",
         path_prefix=path_prefix,
         galaxies=dict(galaxy=phase2.result.model.galaxies.light),
         search=search,

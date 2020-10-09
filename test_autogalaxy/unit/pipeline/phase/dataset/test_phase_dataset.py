@@ -166,7 +166,7 @@ class TestPhasePickle:
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
-            search=mock.MockSearch("phase_name"),
+            search=mock.MockSearch("name"),
         )
 
         result = phase_imaging_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)
@@ -176,7 +176,7 @@ class TestPhasePickle:
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
-            search=mock.MockSearch("phase_name"),
+            search=mock.MockSearch("name"),
         )
 
         result = phase_imaging_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)

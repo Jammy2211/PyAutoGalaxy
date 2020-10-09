@@ -19,7 +19,7 @@ def make_pipeline(name, path_prefix, real_space_mask, search=af.DynestyStatic())
     bulge_1.centre_1 = 1.0
 
     phase1 = ag.PhaseInterferometer(
-        phase_name="phase_1",
+        name="phase_1",
         path_prefix=path_prefix,
         galaxies=dict(
             galaxy_0=ag.GalaxyModel(redshift=0.5, bulge=bulge_0),
@@ -36,7 +36,7 @@ def make_pipeline(name, path_prefix, real_space_mask, search=af.DynestyStatic())
     phase1 = phase1.extend_with_multiple_hyper_phases(hyper_galaxies_search=True)
 
     phase2 = ag.PhaseInterferometer(
-        phase_name="phase_2",
+        name="phase_2",
         path_prefix=path_prefix,
         galaxies=dict(
             galaxy_0=ag.GalaxyModel(

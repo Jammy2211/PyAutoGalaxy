@@ -17,7 +17,7 @@ def make_pipeline(name, path_prefix, search=af.DynestyStatic()):
     sersic.add_assertion(sersic.axis_ratio > sersic.intensity)
 
     phase1 = ag.PhaseImaging(
-        phase_name="phase_1",
+        name="phase_1",
         path_prefix=path_prefix,
         galaxies=dict(galaxy=ag.GalaxyModel(redshift=0.5, sersic=sersic)),
         search=search,
@@ -30,7 +30,7 @@ def make_pipeline(name, path_prefix, search=af.DynestyStatic()):
     # TODO : And even with them not causing errors above, the promise doesnt work.
 
     phase2 = ag.PhaseImaging(
-        phase_name="phase_2",
+        name="phase_2",
         path_prefix=path_prefix,
         galaxies=dict(galaxy=phase1.result.model.galaxies.light),
         search=search,

@@ -9,9 +9,9 @@ from autogalaxy import mock
 
 class MockPhase:
     def __init__(self):
-        self.phase_name = "phase_name"
+        self.name = "name"
         self.paths = autofit.non_linear.paths.Paths(
-            name=self.phase_name, path_prefix="phase_path", tag=""
+            name=self.name, path_prefix="phase_path", tag=""
         )
         self.search = mock.MockSearch(paths=self.paths)
         self.model = af.ModelMapper()
@@ -201,7 +201,7 @@ class TestHyperAPI:
 
         phase = ag.PhaseImaging(
             galaxies=dict(galaxy=galaxy),
-            search=af.DynestyStatic(n_live_points=1, phase_name="test_phase"),
+            search=af.DynestyStatic(n_live_points=1, name="test_phase"),
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(bin_up_factor=2)
             ),
@@ -276,7 +276,7 @@ class TestHyperGalaxyPhase:
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=2)
             ),
-            search=mock.MockSearch(phase_name="test_phase"),
+            search=mock.MockSearch(name="test_phase"),
         )
 
         analysis = phase_imaging_7x7.make_analysis(

@@ -129,7 +129,7 @@ class PhaseGalaxy(abstract.AbstractPhase):
 
     def __init__(
         self,
-        phase_name,
+        name,
         search,
         galaxies=None,
         use_image=False,
@@ -152,7 +152,7 @@ class PhaseGalaxy(abstract.AbstractPhase):
             The side length of the subgrid
         """
 
-        super(PhaseGalaxy, self).__init__(phase_name=phase_name, search=search)
+        super(PhaseGalaxy, self).__init__(name=name, search=search)
         self.cosmology = cosmology
         self.use_image = use_image
         self.use_convergence = use_convergence
