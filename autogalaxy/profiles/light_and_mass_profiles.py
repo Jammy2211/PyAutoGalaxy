@@ -10,7 +10,11 @@ objects as being both mass and light profiles.
 """
 
 
-class EllipticalGaussian(lp.EllipticalGaussian, mp.EllipticalGaussian):
+class LightMassProfile:
+
+    pass
+
+class EllipticalGaussian(lp.EllipticalGaussian, mp.EllipticalGaussian, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -37,7 +41,7 @@ class EllipticalGaussian(lp.EllipticalGaussian, mp.EllipticalGaussian):
         )
 
 
-class EllipticalSersic(lp.EllipticalSersic, mp.EllipticalSersic):
+class EllipticalSersic(lp.EllipticalSersic, mp.EllipticalSersic, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -67,7 +71,7 @@ class EllipticalSersic(lp.EllipticalSersic, mp.EllipticalSersic):
         )
 
 
-class SphericalSersic(EllipticalSersic):
+class SphericalSersic(EllipticalSersic, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -102,7 +106,7 @@ class SphericalSersic(EllipticalSersic):
         )
 
 
-class EllipticalExponential(EllipticalSersic):
+class EllipticalExponential(EllipticalSersic, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -141,7 +145,7 @@ class EllipticalExponential(EllipticalSersic):
         )
 
 
-class SphericalExponential(EllipticalExponential):
+class SphericalExponential(EllipticalExponential, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -174,7 +178,7 @@ class SphericalExponential(EllipticalExponential):
         )
 
 
-class EllipticalDevVaucouleurs(EllipticalSersic):
+class EllipticalDevVaucouleurs(EllipticalSersic, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -212,7 +216,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
         )
 
 
-class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
+class SphericalDevVaucouleurs(EllipticalDevVaucouleurs, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -246,7 +250,7 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
 
 
 class EllipticalSersicRadialGradient(
-    lp.EllipticalSersic, mp.EllipticalSersicRadialGradient
+    lp.EllipticalSersic, mp.EllipticalSersicRadialGradient, LightMassProfile
 ):
     def __init__(
         self,
@@ -300,7 +304,7 @@ class EllipticalSersicRadialGradient(
         )
 
 
-class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
+class SphericalSersicRadialGradient(EllipticalSersicRadialGradient, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -340,7 +344,7 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
         )
 
 
-class EllipticalExponentialRadialGradient(EllipticalSersicRadialGradient):
+class EllipticalExponentialRadialGradient(EllipticalSersicRadialGradient, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -382,7 +386,7 @@ class EllipticalExponentialRadialGradient(EllipticalSersicRadialGradient):
         )
 
 
-class SphericalExponentialRadialGradient(SphericalSersicRadialGradient):
+class SphericalExponentialRadialGradient(SphericalSersicRadialGradient, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),

@@ -347,7 +347,7 @@ class SetupLightParametric(AbstractSetupLight):
         if self.bulge_prior_model is None:
             return ""
 
-        tag = conf.instance["notation"]["setup_tags"]["light_prior_model"][
+        tag = conf.instance["notation"]["prior_model_tags"]["light"][
             self.bulge_prior_model.name
         ]
 
@@ -373,7 +373,7 @@ class SetupLightParametric(AbstractSetupLight):
         if self.disk_prior_model is None:
             return ""
 
-        tag = conf.instance["notation"]["setup_tags"]["light_prior_model"][
+        tag = conf.instance["notation"]["prior_model_tags"]["light"][
             self.disk_prior_model.name
         ]
 
@@ -400,7 +400,7 @@ class SetupLightParametric(AbstractSetupLight):
         if self.envelope_prior_model is None:
             return ""
 
-        tag = conf.instance["notation"]["setup_tags"]["light_prior_model"][
+        tag = conf.instance["notation"]["prior_model_tags"]["light"][
             self.envelope_prior_model.name
         ]
 
@@ -625,7 +625,7 @@ class SetupLightInversion(AbstractSetupLight):
         """
         return (
             f"__{conf.instance['notation']['setup_tags']['inversion']['pixelization']}_"
-            f"{conf.instance['notation']['setup_tags']['pixelization_prior_model'][self._pixelization_prior_model.name]}"
+            f"{conf.instance['notation']['prior_model_tags']['pixelization'][self._pixelization_prior_model.name]}"
         )
 
     @property
@@ -640,7 +640,7 @@ class SetupLightInversion(AbstractSetupLight):
         """
         return (
             f"__{conf.instance['notation']['setup_tags']['inversion']['regularization']}_"
-            f"{conf.instance['notation']['setup_tags']['regularization_prior_model'][self.regularization_prior_model.name]}"
+            f"{conf.instance['notation']['prior_model_tags']['regularization'][self.regularization_prior_model.name]}"
         )
 
 
@@ -828,7 +828,7 @@ class SetupMassTotal(AbstractSetupMass):
         if self.mass_prior_model is None:
             return ""
 
-        return f"__{conf.instance['notation']['setup_tags']['mass_prior_model'][self.mass_prior_model.name]}"
+        return f"__{conf.instance['notation']['prior_model_tags']['mass'][self.mass_prior_model.name]}"
 
     @property
     def align_light_mass_centre_tag(self) -> str:
@@ -898,9 +898,10 @@ class SetupMassTotal(AbstractSetupMass):
 class SetupMassLightDark(AbstractSetupMass):
     def __init__(
         self,
-        bulge_prior_model: af.PriorModel = lmp.EllipticalSersic,
-        disk_prior_model: af.PriorModel = lmp.EllipticalExponential,
-        envelope_prior_model: af.PriorModel = None,
+        bulge_prior_model: af.PriorModel(lmp.LightMassProfile) = lmp.EllipticalSersic,
+        disk_prior_model: af.PriorModel(lmp.LightMassProfile) = lmp.EllipticalExponential,
+        envelope_prior_model: af.PriorModel(lmp.LightMassProfile) = None,
+        dark_prior_model : af.PriorModel(mp.MassProfile) = mp.SphericalNFWMCRLudlow,
         mass_centre: (float, float) = None,
         constant_mass_to_light_ratio: bool = False,
         align_bulge_dark_centre: bool = False,
@@ -918,12 +919,14 @@ class SetupMassLightDark(AbstractSetupMass):
 
         Parameters
         ----------
-        bulge_prior_model : af.PriorModel
-            The `LightProfile` `PriorModel` used to represent the light distribution of a bulge.
-        disk_prior_model : af.PriorModel
-            The `LightProfile` `PriorModel` used to represent the light distribution of a disk.
-        envelope_prior_model : af.PriorModel
-            The `LightProfile` `PriorModel` used to represent the light distribution of a envelope.
+        bulge_prior_model : af.PriorModel(lmp.LightMassProfile)
+            The `LightMassProfile` `PriorModel` used to represent the light and mass distribution of the bulge.
+        disk_prior_model : af.PriorModel(lmp.LightMassProfile)
+            The `LightMassProfile` `PriorModel` used to represent the light and mass distribution of the disk.
+        envelope_prior_model : af.PriorModel(lmp.LightMassProfile)
+            The `LightMassProfile` `PriorModel` used to represent the light and mass distribution of the stellar envelope.
+        dark_prior_model : af.PriorModel(mp.MassProfile)
+            The `MassProfile` `PriorModel` used to represent the dark matter distribution of the dark matter halo.            
         mass_centre : (float, float)
            If input, a fixed (y,x) centre of the mass profile is used which is not treated as a free parameter by the
            non-linear search.
@@ -940,6 +943,7 @@ class SetupMassLightDark(AbstractSetupMass):
         self.bulge_prior_model = self._cls_to_prior_model(cls=bulge_prior_model)
         self.disk_prior_model = self._cls_to_prior_model(cls=disk_prior_model)
         self.envelope_prior_model = self._cls_to_prior_model(cls=envelope_prior_model)
+        self.dark_prior_model = self._cls_to_prior_model(cls=dark_prior_model)
         self.constant_mass_to_light_ratio = constant_mass_to_light_ratio
         self.align_bulge_dark_centre = align_bulge_dark_centre
 
@@ -962,6 +966,7 @@ class SetupMassLightDark(AbstractSetupMass):
             f"{self.disk_prior_model_tag}"
             f"{self.envelope_prior_model_tag}"
             f"{self.constant_mass_to_light_ratio_tag}"
+            f"{self.dark_prior_model_tag}"
             f"{self.mass_centre_tag}"
             f"{self.align_bulge_dark_centre_tag}]"
         )
@@ -1002,7 +1007,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.bulge_prior_model is None:
             return ""
 
-        tag = conf.instance["notation"]["setup_tags"]["light_prior_model"][
+        tag = conf.instance["notation"]["prior_model_tags"]["mass"][
             self.bulge_prior_model.name
         ]
 
@@ -1029,7 +1034,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.disk_prior_model is None:
             return ""
 
-        tag = conf.instance["notation"]["setup_tags"]["light_prior_model"][
+        tag = conf.instance["notation"]["prior_model_tags"]["mass"][
             self.disk_prior_model.name
         ]
 
@@ -1057,11 +1062,38 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.envelope_prior_model is None:
             return ""
 
-        tag = conf.instance["notation"]["setup_tags"]["light_prior_model"][
+        tag = conf.instance["notation"]["prior_model_tags"]["mass"][
             self.envelope_prior_model.name
         ]
 
         return f"__envelope_{tag}"
+
+    @property
+    def dark_prior_model_tag(self) -> str:
+        """
+        The tag of the dark `PriorModel` using the tags specified in the setup_tags.ini config file.
+
+        This tag depends on the `MassProfile` class given to the dark, for example for the default
+        configuration files:
+
+        - `SphericalNFWMCRLudlow` -> nfw_sph_ludlow
+        - `EllipticalNFW` -> nfw
+        - `SphericalTruncatedNFW` -> nfw_trun_sph
+
+        Returns
+        -------
+        str
+            The tag of the dark prior model.
+        """
+
+        if self.dark_prior_model is None:
+            return ""
+
+        tag = conf.instance["notation"]["prior_model_tags"]["mass"][
+            self.dark_prior_model.name
+        ]
+
+        return f"__dark_{tag}"
 
     @property
     def align_bulge_dark_centre_tag(self) -> str:
@@ -1178,7 +1210,7 @@ class SetupSMBH(AbstractSetup):
         str
             The tag of the smbh prior model.
         """
-        return f"{conf.instance['notation']['setup_tags']['mass_prior_model'][self.smbh_prior_model.name]}"
+        return f"{conf.instance['notation']['prior_model_tags']['mass'][self.smbh_prior_model.name]}"
 
     @property
     def smbh_centre_tag(self) -> str:

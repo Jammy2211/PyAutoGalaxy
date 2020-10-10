@@ -132,11 +132,11 @@ class TestSetupLightParametric:
         setup = ag.SetupLightParametric(light_centre=None)
         assert setup.light_centre_tag == ""
         setup = ag.SetupLightParametric(light_centre=(2.0, 2.0))
-        assert setup.light_centre_tag == "__light_centre_(2.00,2.00)"
+        assert setup.light_centre_tag == "__centre_(2.00,2.00)"
         setup = ag.SetupLightParametric(light_centre=(3.0, 4.0))
-        assert setup.light_centre_tag == "__light_centre_(3.00,4.00)"
+        assert setup.light_centre_tag == "__centre_(3.00,4.00)"
         setup = ag.SetupLightParametric(light_centre=(3.027, 4.033))
-        assert setup.light_centre_tag == "__light_centre_(3.03,4.03)"
+        assert setup.light_centre_tag == "__centre_(3.03,4.03)"
 
     def test__align_centre_to_light_centre(self):
 
@@ -167,7 +167,7 @@ class TestSetupLightParametric:
         setup = ag.SetupLightParametric(light_centre=(3.027, 4.033))
         assert (
             setup.tag
-            == "light[parametric__bulge_sersic__disk_exp__light_centre_(3.03,4.03)]"
+            == "light[parametric__bulge_sersic__disk_exp__centre_(3.03,4.03)]"
         )
 
         light = ag.SetupLightParametric(
@@ -346,11 +346,11 @@ class TestSetupMassTotal:
         setup = ag.SetupMassTotal(mass_centre=None)
         assert setup.mass_centre_tag == ""
         setup = ag.SetupMassTotal(mass_centre=(2.0, 2.0))
-        assert setup.mass_centre_tag == "__mass_centre_(2.00,2.00)"
+        assert setup.mass_centre_tag == "__centre_(2.00,2.00)"
         setup = ag.SetupMassTotal(mass_centre=(3.0, 4.0))
-        assert setup.mass_centre_tag == "__mass_centre_(3.00,4.00)"
+        assert setup.mass_centre_tag == "__centre_(3.00,4.00)"
         setup = ag.SetupMassTotal(mass_centre=(3.027, 4.033))
-        assert setup.mass_centre_tag == "__mass_centre_(3.03,4.03)"
+        assert setup.mass_centre_tag == "__centre_(3.03,4.03)"
 
     def test__align_centre_of_mass_to_light(self):
 
@@ -381,13 +381,13 @@ class TestSetupMassTotal:
         assert setup.tag == "mass[total__power_law]"
 
         setup = ag.SetupMassTotal(mass_centre=(3.027, 4.033))
-        assert setup.tag == "mass[total__power_law__mass_centre_(3.03,4.03)]"
+        assert setup.tag == "mass[total__power_law__centre_(3.03,4.03)]"
 
         setup = ag.SetupMassTotal(
             mass_centre=(3.027, 4.033),
             mass_prior_model=af.PriorModel(ag.mp.EllipticalIsothermal),
         )
-        assert setup.tag == "mass[total__sie__mass_centre_(3.03,4.03)]"
+        assert setup.tag == "mass[total__sie__centre_(3.03,4.03)]"
 
 
 class TestSetupMassLightDark:
@@ -401,24 +401,29 @@ class TestSetupMassLightDark:
         assert setup.bulge_prior_model.cls is ag.lmp.EllipticalSersic
         assert setup.disk_prior_model.cls is ag.lmp.EllipticalExponential
         assert setup.envelope_prior_model is None
+        assert setup.dark_prior_model.cls is ag.mp.SphericalNFWMCRLudlow
 
         assert setup.bulge_prior_model_tag == "__bulge_sersic"
         assert setup.disk_prior_model_tag == "__disk_exp"
         assert setup.envelope_prior_model_tag == ""
+        assert setup.dark_prior_model_tag == "__dark_nfw_sph_ludlow"
 
         setup = ag.SetupMassLightDark(
             bulge_prior_model=af.PriorModel(ag.lmp.EllipticalDevVaucouleurs),
             disk_prior_model=af.PriorModel(ag.lmp.SphericalDevVaucouleurs),
             envelope_prior_model=af.PriorModel(ag.lmp.SphericalExponential),
+            dark_prior_model=af.PriorModel(ag.mp.EllipticalNFW)
         )
 
         assert setup.bulge_prior_model.cls is ag.lmp.EllipticalDevVaucouleurs
         assert setup.disk_prior_model.cls is ag.lmp.SphericalDevVaucouleurs
         assert setup.envelope_prior_model.cls is ag.lmp.SphericalExponential
+        assert setup.dark_prior_model.cls is ag.mp.EllipticalNFW
 
         assert setup.bulge_prior_model_tag == "__bulge_dev"
         assert setup.disk_prior_model_tag == "__disk_dev_sph"
         assert setup.envelope_prior_model_tag == "__envelope_exp_sph"
+        assert setup.dark_prior_model_tag == "__dark_nfw"
 
     def test__constant_mass_to_light_ratio_tag(self):
 
@@ -476,7 +481,7 @@ class TestSetupMassLightDark:
         )
         assert (
             setup.tag
-            == "mass[light_dark__bulge_sersic__disk_exp__mlr_const__align_bulge_dark_centre]"
+            == "mass[light_dark__bulge_sersic__disk_exp__mlr_const__dark_nfw_sph_ludlow__align_bulge_dark_centre]"
         )
 
 
@@ -551,7 +556,7 @@ class TestSetupPipeline:
 
         assert (
             setup.tag == "setup__"
-            "light[parametric__bulge_sersic__disk_exp__light_centre_(1.00,2.00)]"
+            "light[parametric__bulge_sersic__disk_exp__centre_(1.00,2.00)]"
         )
 
         setup_hyper = ag.SetupHyper(hyper_galaxies=True, hyper_background_noise=True)
@@ -562,7 +567,7 @@ class TestSetupPipeline:
 
         assert (
             setup.tag == "setup__hyper[galaxies__bg_noise]__"
-            "light[parametric__bulge_sersic__disk_exp__light_centre_(1.00,2.00)]"
+            "light[parametric__bulge_sersic__disk_exp__centre_(1.00,2.00)]"
         )
 
         smbh = ag.SetupSMBH(smbh_centre_fixed=True)
