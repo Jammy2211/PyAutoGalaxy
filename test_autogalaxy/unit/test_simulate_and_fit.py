@@ -28,12 +28,7 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
     plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
     simulator = ag.SimulatorImaging(
-        exposure_time_map=ag.Array.full(
-            fill_value=300.0, shape_2d=grid.shape_2d, pixel_scales=0.2
-        ),
-        psf=psf,
-        background_sky_map=ag.Array.zeros(shape_2d=grid.shape_2d, pixel_scales=0.2),
-        add_noise=False,
+        exposure_time=300.0, psf=psf, add_poisson_noise=False
     )
 
     imaging = simulator.from_plane_and_grid(plane=plane, grid=grid)
@@ -108,12 +103,7 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
     plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
     simulator = ag.SimulatorImaging(
-        exposure_time_map=ag.Array.full(
-            fill_value=300.0, shape_2d=grid.shape_2d, pixel_scales=0.2
-        ),
-        psf=psf,
-        background_sky_map=ag.Array.zeros(shape_2d=grid.shape_2d, pixel_scales=0.2),
-        add_noise=False,
+        exposure_time=300.0, psf=psf, add_poisson_noise=False
     )
 
     imaging = simulator.from_plane_and_grid(plane=plane, grid=grid)
@@ -187,10 +177,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
     simulator = ag.SimulatorInterferometer(
         uv_wavelengths=np.ones(shape=(7, 2)),
         transformer_class=ag.TransformerDFT,
-        exposure_time_map=ag.Array.full(
-            fill_value=300.0, shape_2d=grid.shape_2d, pixel_scales=0.2
-        ),
-        background_sky_map=ag.Array.zeros(shape_2d=grid.shape_2d, pixel_scales=0.2),
+        exposure_time=300.0,
         noise_if_add_noise_false=1.0,
         noise_sigma=None,
     )

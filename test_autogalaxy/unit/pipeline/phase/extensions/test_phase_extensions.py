@@ -30,7 +30,7 @@ class TestModelFixing:
         phase = ag.ModelFixingHyperPhase(
             phase=MockPhase(),
             hyper_name="test",
-            search=mock.MockSearch(),
+            hyper_search=mock.MockSearch(),
             model_classes=(hd.HyperImageSky, hd.HyperBackgroundNoise),
         )
 
@@ -74,7 +74,7 @@ class TestModelFixing:
         phase = ag.ModelFixingHyperPhase(
             phase=MockPhase(),
             hyper_name="mock_phase",
-            search=mock.MockSearch(),
+            hyper_search=mock.MockSearch(),
             model_classes=(ag.pix.Pixelization, ag.reg.Regularization),
         )
 
@@ -95,13 +95,13 @@ def make_combined():
 
     hyper_galaxy_phase = ag.HyperGalaxyPhase(
         phase=normal_phase,
-        search=mock.MockSearch(),
+        hyper_search=mock.MockSearch(),
         include_sky_background=False,
         include_noise_background=False,
     )
     inversion_phase = ag.InversionPhase(
         phase=normal_phase,
-        search=mock.MockSearch(),
+        hyper_search=mock.MockSearch(),
         model_classes=(ag.pix.Pixelization, ag.reg.Regularization),
     )
 
@@ -109,7 +109,7 @@ def make_combined():
     hyper_combined = ag.CombinedHyperPhase(
         phase=normal_phase,
         hyper_phases=(hyper_galaxy_phase, inversion_phase),
-        search=mock.MockSearch(),
+        hyper_search=mock.MockSearch(),
     )
 
     for phase in hyper_combined.hyper_phases:
@@ -175,7 +175,7 @@ class TestHyperAPI:
         # noinspection PyTypeChecker
         phase = ag.HyperGalaxyPhase(
             phase=normal_phase,
-            search=mock.MockSearch(),
+            hyper_search=mock.MockSearch(),
             include_sky_background=False,
             include_noise_background=False,
         )
@@ -208,7 +208,7 @@ class TestHyperAPI:
         )
 
         phase_extended = phase.extend_with_inversion_phase(
-            inversion_search=af.DynestyStatic(n_live_points=1)
+            hyper_search=af.DynestyStatic(n_live_points=1)
         )
 
         phase_extended.paths.path_prefix = "prefix"

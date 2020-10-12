@@ -112,35 +112,35 @@ def simulator_from_instrument(instrument):
             exposure_time_map=ag.Array.full(fill_value=100.0, shape_2d=grid.shape_2d),
             psf=psf,
             background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
-            add_noise=True,
+            add_poisson_noise=True,
         )
     elif instrument in "euclid":
         return ag.SimulatorImaging(
             exposure_time_map=ag.Array.full(fill_value=2260.0, shape_2d=grid.shape_2d),
             psf=psf,
             background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
-            add_noise=True,
+            add_poisson_noise=True,
         )
     elif instrument in "hst":
         return ag.SimulatorImaging(
             exposure_time_map=ag.Array.full(fill_value=2000.0, shape_2d=grid.shape_2d),
             psf=psf,
             background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
-            add_noise=True,
+            add_poisson_noise=True,
         )
     elif instrument in "hst_up":
         return ag.SimulatorImaging(
             exposure_time_map=ag.Array.full(fill_value=2000.0, shape_2d=grid.shape_2d),
             psf=psf,
             background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
-            add_noise=True,
+            add_poisson_noise=True,
         )
     elif instrument in "ao":
         return ag.SimulatorImaging(
             exposure_time_map=ag.Array.full(fill_value=1000.0, shape_2d=grid.shape_2d),
             psf=psf,
             background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
-            add_noise=True,
+            add_poisson_noise=True,
         )
     else:
         raise ValueError("An invalid instrument was entered - ", instrument)

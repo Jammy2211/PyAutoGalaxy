@@ -151,13 +151,15 @@ class HyperGalaxyPhase(HyperPhase):
     def __init__(
         self,
         phase,
-        search,
+        hyper_search,
         include_sky_background,
         include_noise_background,
         hyper_galaxy_names=None,
     ):
 
-        super().__init__(phase=phase, search=search, hyper_name="hyper_galaxy")
+        super().__init__(
+            phase=phase, hyper_search=hyper_search, hyper_name="hyper_galaxy"
+        )
         self.include_sky_background = include_sky_background
         self.include_noise_background = include_noise_background
         self.hyper_galaxy_names = hyper_galaxy_names

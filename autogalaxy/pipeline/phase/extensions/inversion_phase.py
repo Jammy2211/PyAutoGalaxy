@@ -9,12 +9,12 @@ class ModelFixingHyperPhase(HyperPhase):
     def __init__(
         self,
         phase: abstract.AbstractPhase,
-        search,
+        hyper_search,
         hyper_name: str,
         model_classes=tuple(),
     ):
 
-        super().__init__(phase=phase, search=search, hyper_name=hyper_name)
+        super().__init__(phase=phase, hyper_search=hyper_search, hyper_name=hyper_name)
 
         self.model_classes = model_classes
 
@@ -52,10 +52,12 @@ class ModelFixingHyperPhase(HyperPhase):
 
 
 class InversionPhase(ModelFixingHyperPhase):
-    def __init__(self, phase: abstract.AbstractPhase, search, model_classes=tuple()):
+    def __init__(
+        self, phase: abstract.AbstractPhase, hyper_search, model_classes=tuple()
+    ):
         super().__init__(
             phase=phase,
-            search=search,
+            hyper_search=hyper_search,
             model_classes=model_classes,
             hyper_name="inversion",
         )

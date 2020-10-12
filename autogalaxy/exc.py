@@ -1,4 +1,5 @@
 import autofit as af
+from autoarray.exc import DatasetException
 from autofit.exc import PipelineException
 
 

@@ -121,7 +121,9 @@ class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
         return arrays.Array.manual_1d(
-            array=np.zeros(shape=grid.shape[0]), shape_2d=grid.sub_shape_2d
+            array=np.zeros(shape=grid.shape[0]),
+            shape_2d=grid.sub_shape_2d,
+            pixel_scales=grid.pixel_scales,
         )
 
     @grids.grid_like_to_structure

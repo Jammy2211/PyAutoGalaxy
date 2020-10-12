@@ -6,7 +6,7 @@ from autogalaxy.pipeline.phase import abstract
 
 
 class HyperPhase:
-    def __init__(self, phase: abstract.AbstractPhase, search, hyper_name: str):
+    def __init__(self, phase: abstract.AbstractPhase, hyper_search, hyper_name: str):
         """
         Abstract HyperPhase. Wraps a phase, performing that phase before performing the action
         specified by the run_hyper.
@@ -18,7 +18,7 @@ class HyperPhase:
         """
         self.phase = phase
         self.hyper_name = hyper_name
-        self.search = search
+        self.hyper_search = hyper_search
 
     def run_hyper(self, *args, **kwargs) -> af.Result:
         """
@@ -45,7 +45,7 @@ class HyperPhase:
         """
 
         phase = copy.deepcopy(self.phase)
-        phase.search = self.search.copy_with_name_extension(
+        phase.search = self.hyper_search.copy_with_name_extension(
             extension=f"{self.phase.paths.path_prefix}/{self.phase.name}"
         )
         phase.hyper_name = self.hyper_name

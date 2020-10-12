@@ -14,7 +14,10 @@ class LightMassProfile:
 
     pass
 
-class EllipticalGaussian(lp.EllipticalGaussian, mp.EllipticalGaussian, LightMassProfile):
+
+class EllipticalGaussian(
+    lp.EllipticalGaussian, mp.EllipticalGaussian, LightMassProfile
+):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -344,7 +347,9 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient, LightMassPro
         )
 
 
-class EllipticalExponentialRadialGradient(EllipticalSersicRadialGradient, LightMassProfile):
+class EllipticalExponentialRadialGradient(
+    EllipticalSersicRadialGradient, LightMassProfile
+):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -386,7 +391,9 @@ class EllipticalExponentialRadialGradient(EllipticalSersicRadialGradient, LightM
         )
 
 
-class SphericalExponentialRadialGradient(SphericalSersicRadialGradient, LightMassProfile):
+class SphericalExponentialRadialGradient(
+    SphericalSersicRadialGradient, LightMassProfile
+):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),

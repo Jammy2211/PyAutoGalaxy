@@ -162,12 +162,16 @@ class TestSetupLightParametric:
     def test__tag(self):
 
         setup = ag.SetupLightParametric(light_centre=None)
-        assert setup.tag == "light[parametric__bulge_sersic__disk_exp]"
-
-        setup = ag.SetupLightParametric(light_centre=(3.027, 4.033))
         assert (
             setup.tag
-            == "light[parametric__bulge_sersic__disk_exp__centre_(3.03,4.03)]"
+            == "light[parametric__bulge_sersic__disk_exp__align_bulge_disk_centre]"
+        )
+
+        setup = ag.SetupLightParametric(
+            light_centre=(3.027, 4.033), align_bulge_disk_centre=False
+        )
+        assert (
+            setup.tag == "light[parametric__bulge_sersic__disk_exp__centre_(3.03,4.03)]"
         )
 
         light = ag.SetupLightParametric(
@@ -412,7 +416,7 @@ class TestSetupMassLightDark:
             bulge_prior_model=af.PriorModel(ag.lmp.EllipticalDevVaucouleurs),
             disk_prior_model=af.PriorModel(ag.lmp.SphericalDevVaucouleurs),
             envelope_prior_model=af.PriorModel(ag.lmp.SphericalExponential),
-            dark_prior_model=af.PriorModel(ag.mp.EllipticalNFW)
+            dark_prior_model=af.PriorModel(ag.mp.EllipticalNFW),
         )
 
         assert setup.bulge_prior_model.cls is ag.lmp.EllipticalDevVaucouleurs
@@ -550,7 +554,9 @@ class TestSetupPipeline:
 
     def test__tag(self):
 
-        setup_light = ag.SetupLightParametric(light_centre=(1.0, 2.0))
+        setup_light = ag.SetupLightParametric(
+            light_centre=(1.0, 2.0), align_bulge_disk_centre=False
+        )
 
         setup = ag.SetupPipeline(setup_light=setup_light)
 
@@ -567,7 +573,7 @@ class TestSetupPipeline:
 
         assert (
             setup.tag == "setup__hyper[galaxies__bg_noise]__"
-            "light[parametric__bulge_sersic__disk_exp__centre_(1.00,2.00)]"
+            "light[parametric__bulge_sersic__disk_exp__align_bulge_disk_centre__centre_(1.00,2.00)]"
         )
 
         smbh = ag.SetupSMBH(smbh_centre_fixed=True)

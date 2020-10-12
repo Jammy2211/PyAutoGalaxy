@@ -266,7 +266,7 @@ class SetupLightParametric(AbstractSetupLight):
         disk_prior_model: af.PriorModel(lp.LightProfile) = lp.EllipticalExponential,
         envelope_prior_model: af.PriorModel(lp.LightProfile) = None,
         light_centre: (float, float) = None,
-        align_bulge_disk_centre: bool = False,
+        align_bulge_disk_centre: bool = True,
         align_bulge_disk_elliptical_comps: bool = False,
     ):
         """
@@ -323,8 +323,8 @@ class SetupLightParametric(AbstractSetupLight):
             f"{self.bulge_prior_model_tag}"
             f"{self.disk_prior_model_tag}"
             f"{self.envelope_prior_model_tag}"
-            f"{self.light_centre_tag}"
-            f"{self.align_bulge_disk_tag}]"
+            f"{self.align_bulge_disk_tag}"
+            f"{self.light_centre_tag}]"
         )
 
     @property
@@ -527,7 +527,7 @@ class SetupLightInversion(AbstractSetupLight):
     ):
         """
         The setup of the inversion light modeling of a pipeline, which controls how PyAutoGalaxy template pipelines run,
-        for example controlling the `Pixelization` and `Regularization` used by the _Inversion_.
+        for example controlling the `Pixelization` and `Regularization` used by the `Inversion`.
 
         Users can write their own pipelines which do not use or require the `SetupLightInversion` class.
 
@@ -899,9 +899,11 @@ class SetupMassLightDark(AbstractSetupMass):
     def __init__(
         self,
         bulge_prior_model: af.PriorModel(lmp.LightMassProfile) = lmp.EllipticalSersic,
-        disk_prior_model: af.PriorModel(lmp.LightMassProfile) = lmp.EllipticalExponential,
+        disk_prior_model: af.PriorModel(
+            lmp.LightMassProfile
+        ) = lmp.EllipticalExponential,
         envelope_prior_model: af.PriorModel(lmp.LightMassProfile) = None,
-        dark_prior_model : af.PriorModel(mp.MassProfile) = mp.SphericalNFWMCRLudlow,
+        dark_prior_model: af.PriorModel(mp.MassProfile) = mp.SphericalNFWMCRLudlow,
         mass_centre: (float, float) = None,
         constant_mass_to_light_ratio: bool = False,
         align_bulge_dark_centre: bool = False,

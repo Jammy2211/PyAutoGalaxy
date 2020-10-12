@@ -137,21 +137,20 @@ class TestSimulatorImaging:
 
         simulator = ag.SimulatorImaging(
             psf=psf,
-            exposure_time_map=ag.Array.full(
-                fill_value=10000.0, shape_2d=grid.shape_2d, pixel_scales=0.05
-            ),
-            background_sky_map=ag.Array.full(
-                fill_value=100.0, shape_2d=grid.shape_2d, pixel_scales=0.05
-            ),
-            add_noise=True,
-            noise_seed=1,
+            exposure_time=10000.0,
+            background_sky_level=100.0,
+            add_poisson_noise=False,
         )
 
         imaging = simulator.from_plane_and_grid(plane=plane, grid=grid)
 
-        assert (imaging.image.in_2d == imaging.image.in_2d).all()
-        assert (imaging.psf == imaging.psf).all()
-        assert (imaging.noise_map == imaging.noise_map).all()
+        imaging_via_image = simulator.from_image(image=plane.image_from_grid(grid=grid))
+
+        assert imaging.shape_2d == (20, 20)
+        assert imaging.image.in_2d[0, 0] != imaging_via_image.image.in_2d[0, 0]
+        assert imaging.image.in_2d[10, 10] == imaging_via_image.image.in_2d[10, 10]
+        assert (imaging.psf == imaging_via_image.psf).all()
+        assert (imaging.noise_map == imaging_via_image.noise_map).all()
 
     def test__simulate_imaging_from_galaxy__source_galaxy__compare_to_imaging(self):
 
@@ -179,13 +178,9 @@ class TestSimulatorImaging:
 
         simulator = ag.SimulatorImaging(
             psf=psf,
-            exposure_time_map=ag.Array.full(
-                fill_value=10000.0, shape_2d=grid.shape_2d, pixel_scales=0.2
-            ),
-            background_sky_map=ag.Array.full(
-                fill_value=100.0, shape_2d=grid.shape_2d, pixel_scales=0.2
-            ),
-            add_noise=True,
+            exposure_time=10000.0,
+            background_sky_level=100.0,
+            add_poisson_noise=True,
             noise_seed=1,
         )
 
@@ -197,6 +192,7 @@ class TestSimulatorImaging:
 
         imaging_via_image = simulator.from_image(image=plane.image_from_grid(grid=grid))
 
+        assert imaging.shape_2d == (11, 11)
         assert (imaging.image == imaging_via_image.image).all()
         assert (imaging.psf == imaging_via_image.psf).all()
         assert imaging.noise_map == imaging_via_image.noise_map
