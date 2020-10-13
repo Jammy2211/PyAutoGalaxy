@@ -53,7 +53,11 @@ class ModelFixingHyperPhase(HyperPhase):
 
 class InversionPhase(ModelFixingHyperPhase):
     def __init__(
-        self, phase: abstract.AbstractPhase, hyper_search, model_classes=tuple()
+        self,
+        phase: abstract.AbstractPhase,
+        hyper_search,
+        model_classes=tuple(),
+        inversion_pixels_fixed=None,
     ):
         super().__init__(
             phase=phase,
@@ -61,3 +65,15 @@ class InversionPhase(ModelFixingHyperPhase):
             model_classes=model_classes,
             hyper_name="inversion",
         )
+
+        self.inversion_pixels_fixed = inversion_pixels_fixed
+
+    def make_model(self, instance):
+        model = instance.as_model(self.model_classes)
+
+        # TODO : More checks here... Need Rich to build a more clever method.
+
+        if self.inversion_pixels_fixed is not None and self.uses_cluster_inversion:
+            if hasattr(model.galaxies, "source"):
+                model.galaxies.source.pixelization.pixels = self.inversion_pixels_fixed
+        return model

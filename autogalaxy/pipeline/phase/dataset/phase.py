@@ -125,15 +125,18 @@ class PhaseDataset(abstract.AbstractPhase):
                 f"{hyper_tag}{self.settings.phase_tag_with_inversion}"
             )
 
-    def extend_with_inversion_phase(self, hyper_search):
+    def extend_with_inversion_phase(self, hyper_search, inversion_pixels_fixed=None):
 
         return extensions.InversionPhase(
             phase=self,
             hyper_search=hyper_search,
             model_classes=(pix.Pixelization, reg.Regularization),
+            inversion_pixels_fixed=inversion_pixels_fixed,
         )
 
-    def extend_with_multiple_hyper_phases(self, setup_hyper, include_inversion=False):
+    def extend_with_multiple_hyper_phases(
+        self, setup_hyper, include_inversion=False, inversion_pixels_fixed=None
+    ):
 
         self.use_as_hyper_dataset = True
 
@@ -150,6 +153,7 @@ class PhaseDataset(abstract.AbstractPhase):
                         phase=self,
                         hyper_search=setup_hyper.inversion_search,
                         model_classes=(pix.Pixelization, reg.Regularization),
+                        inversion_pixels_fixed=inversion_pixels_fixed,
                     )
                 elif (
                     setup_hyper.hyper_image_sky
@@ -163,6 +167,7 @@ class PhaseDataset(abstract.AbstractPhase):
                             reg.Regularization,
                             hd.HyperImageSky,
                         ),
+                        inversion_pixels_fixed=inversion_pixels_fixed,
                     )
                 elif (
                     not setup_hyper.hyper_image_sky
@@ -176,6 +181,7 @@ class PhaseDataset(abstract.AbstractPhase):
                             reg.Regularization,
                             hd.HyperBackgroundNoise,
                         ),
+                        inversion_pixels_fixed=inversion_pixels_fixed,
                     )
                 else:
                     phase_inversion = extensions.InversionPhase(
@@ -187,6 +193,7 @@ class PhaseDataset(abstract.AbstractPhase):
                             hd.HyperImageSky,
                             hd.HyperBackgroundNoise,
                         ),
+                        inversion_pixels_fixed=inversion_pixels_fixed,
                     )
 
                 hyper_phases.append(phase_inversion)
