@@ -306,6 +306,30 @@ class SetupLightParametric(AbstractSetupLight):
         self.align_bulge_disk_centre = align_bulge_disk_centre
         self.align_bulge_disk_elliptical_comps = align_bulge_disk_elliptical_comps
 
+        if self.bulge_prior_model is not None and self.disk_prior_model is not None:
+
+            if self.align_bulge_disk_centre:
+                self.bulge_prior_model.centre = self.disk_prior_model.centre
+
+            if self.align_bulge_disk_elliptical_comps:
+                if hasattr(self.bulge_prior_model, "elliptical_comps") and hasattr(
+                    self.disk_prior_model, "elliptical_comps"
+                ):
+                    self.bulge_prior_model.elliptical_comps = (
+                        self.disk_prior_model.elliptical_comps
+                    )
+
+        if self.light_centre is not None:
+
+            if self.bulge_prior_model is not None:
+                self.bulge_prior_model.centre = self.light_centre
+
+            if self.disk_prior_model is not None:
+                self.disk_prior_model.centre = self.light_centre
+
+            if self.envelope_prior_model is not None:
+                self.envelope_prior_model.centre = self.light_centre
+
     @property
     def tag(self):
         """
@@ -478,44 +502,6 @@ class SetupLightParametric(AbstractSetupLight):
             return ""
 
         return f"__{conf.instance['notation']['setup_tags']['light']['align_bulge_disk']}{self.align_bulge_disk_centre_tag}{self.align_bulge_disk_elliptical_comps_tag}"
-
-    def align_centre_to_light_centre(
-        self, light_prior_model: af.PriorModel(lp.LightProfile)
-    ) -> af.PriorModel:
-        """
-        Align the centre of an input `LightProfile` `PriorModel` to the `light_centre` of this pipeline setup, such
-        that in the model the centre of the light profile is fixed and not a free parameters that is fitted for.
-
-        If the `light_centre` is None the light profile centre is unchanged and remains a model.
-
-        Parameters
-        ----------
-        light_prior_model : af.PriorModel(ag.lp.LightProfile)
-            The `LightProfile` whose centre may be aligned with the light_centre attribute.
-        """
-        if self.light_centre is not None:
-            light_prior_model.centre = self.light_centre
-        return light_prior_model
-
-    def align_bulge_and_disk_centre_and_elliptical_comps(
-        self, bulge_prior_model, disk_prior_model
-    ) -> None:
-        """
-        Align the centre and elliptical components of input bulge and disk `PriorModel`'s depending on the
-        `align_bulge_disk_centre` and `align_bulge_disk_elliptical_comps` attributes of the `SetupLightParametric` instance.
-
-        Parameters
-        ----------
-        bulge_prior_model : af.PriorModel(ag.lp.LightProfile)
-            The `LightProfile` representing the bulge whose geometry is aligned with that of the disk.
-        disk_prior_model : af.PriorModel(ag.lp.LightProfile)
-            The `LightProfile` representing the disk whose geometry is aligned with that of the bulge.
-        """
-        if self.align_bulge_disk_centre:
-            bulge_prior_model.centre = disk_prior_model.centre
-
-        if self.align_bulge_disk_elliptical_comps:
-            bulge_prior_model.elliptical_comps = disk_prior_model.elliptical_comps
 
 
 class SetupLightInversion(AbstractSetupLight):

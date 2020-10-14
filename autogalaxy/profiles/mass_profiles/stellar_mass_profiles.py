@@ -729,3 +729,173 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
             mass_to_light_ratio=mass_to_light_ratio,
             mass_to_light_gradient=mass_to_light_gradient,
         )
+
+
+class EllipticalChamelon(mp.EllipticalMassProfile, StellarProfile):
+    @af.map_types
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: dim.Luminosity = 0.1,
+        core_radius_0: dim.Length = 0.01,
+        core_radius_1: dim.Length = 0.005,
+        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+    ):
+        """ The elliptical Chamelon mass profile.
+        
+        Parameters
+        ----------
+        centre : (float, float)
+            The (y,x) arc-second coordinates of the profile centre.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+        intensity : float
+            Overall intensity normalisation of the light profiles (electrons per second).
+        core_radius_0 : the core size of the first elliptical cored Isothermal profile.
+        core_radius_1 : core_radius_0 + core_radius_1 is the core size of the second elliptical cored Isothermal profile.
+            We use core_radius_1 here is to avoid negative values.
+
+        Profile form:
+            mass_to_light_ratio * intensity *\
+                (1.0 / Sqrt(x^2 + (y/q)^2 + core_radius_0^2) - 1.0 / Sqrt(x^2 + (y/q)^2 + (core_radius_0 + core_radius_1)**2.0))
+        """
+
+        super(EllipticalChamelon, self).__init__(
+            centre=centre, elliptical_comps=elliptical_comps
+        )
+        super(mp.EllipticalMassProfile, self).__init__(
+            centre=centre, elliptical_comps=elliptical_comps
+        )
+        self.mass_to_light_ratio = mass_to_light_ratio
+        self.intensity = intensity
+        self.core_radius_0 = core_radius_0
+        self.core_radius_1 = core_radius_1
+
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
+    def deflections_from_grid(self, grid):
+        """
+        Calculate the deflection angles at a given set of arc-second gridded coordinates.
+        Following Eq. (15) and (16), but the parameters are slightly different.
+
+        Parameters
+        ----------
+        grid : aa.Grid
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+
+        """
+
+        factor = (
+            2.0
+            * self.mass_to_light_ratio
+            * self.intensity
+            * self.axis_ratio
+            / np.sqrt(1.0 - self.axis_ratio ** 2.0)
+        )
+        # scale factor
+
+        psi1 = np.sqrt(
+            np.add(
+                np.multiply(
+                    self.axis_ratio ** 2.0,
+                    np.add(np.square(grid[:, 1]), self.core_radius_0 ** 2.0),
+                ),
+                np.square(grid[:, 0]),
+            )
+        )
+        # psi of the first elliptical core profile
+
+        psi2 = np.sqrt(
+            np.add(
+                np.multiply(
+                    self.axis_ratio ** 2.0,
+                    np.add(np.square(grid[:, 1]), self.core_radius_1 ** 2.0),
+                ),
+                np.square(grid[:, 0]),
+            )
+        )
+        # psi of the second elliptical core profile
+
+        deflection_y1 = np.arctanh(
+            np.divide(
+                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 0]),
+                np.add(psi1, self.axis_ratio ** 2.0 * self.core_radius_0),
+            )
+        )
+        # y deflection angle of the first elliptical core profile
+
+        deflection_x1 = np.arctan(
+            np.divide(
+                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 1]),
+                np.add(psi1, self.core_radius_0),
+            )
+        )
+        # x deflection angle of the first elliptical core profile
+
+        deflection_y2 = np.arctanh(
+            np.divide(
+                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 0]),
+                np.add(psi2, self.axis_ratio ** 2.0 * self.core_radius_1),
+            )
+        )
+        # y deflection angle of the second elliptical core profile
+
+        deflection_x2 = np.arctan(
+            np.divide(
+                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 1]),
+                np.add(psi2, self.core_radius_1),
+            )
+        )
+        # x deflection angle of the second elliptical core profile
+
+        deflection_y = np.subtract(deflection_y1, deflection_y2)
+        deflection_x = np.subtract(deflection_x1, deflection_x2)
+
+        return self.rotate_grid_from_profile(
+            np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
+        )
+
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
+    def convergence_from_grid(self, grid):
+        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
+        Parameters
+        ----------
+        grid : aa.Grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
+        return self.convergence_func(self.grid_to_elliptical_radii(grid))
+
+    def convergence_func(self, grid_radius):
+        return self.mass_to_light_ratio * self.intensity_at_radius(grid_radius)
+
+    def intensity_at_radius(self, grid_radii):
+        """Calculate the intensity of the Gaussian light profile on a grid of radial coordinates.
+
+        Parameters
+        ----------
+        grid_radii : float
+            The radial distance from the centre of the profile. for each coordinate on the grid.
+        """
+        return np.multiply(
+            self.intensity,
+            np.add(
+                np.divide(
+                    1.0,
+                    np.sqrt(np.add(np.square(grid_radii), self.core_radius_0 ** 2.0)),
+                ),
+                -np.divide(
+                    1.0,
+                    np.sqrt(
+                        np.add(
+                            np.square(grid_radii),
+                            (self.core_radius_0 + self.core_radius_1) ** 2.0,
+                        )
+                    ),
+                ),
+            ),
+        )

@@ -127,6 +127,43 @@ class TestSetupLightParametric:
         assert setup.disk_prior_model_tag == "__disk_exp_sph"
         assert setup.envelope_prior_model_tag == "__envelope_core_sersic"
 
+    def test__input_light_centre__centres_of_prior_models_are_aligned(self):
+
+        setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
+            disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
+            envelope_prior_model=af.PriorModel(ag.lp.SphericalExponential),
+            light_centre=(0.0, 0.0),
+        )
+
+        assert setup.bulge_prior_model.centre == (0.0, 0.0)
+        assert setup.disk_prior_model.centre == (0.0, 0.0)
+        assert setup.envelope_prior_model.centre == (0.0, 0.0)
+
+    def test__input_align_centre_and_elliptical_comps__components_are_aligned(self):
+
+        setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            disk_prior_model=af.PriorModel(ag.lp.EllipticalExponential),
+            align_bulge_disk_centre=True,
+            align_bulge_disk_elliptical_comps=True,
+        )
+
+        assert setup.bulge_prior_model.centre == setup.disk_prior_model.centre
+        assert (
+            setup.bulge_prior_model.elliptical_comps
+            == setup.disk_prior_model.elliptical_comps
+        )
+
+        setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
+            disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
+            align_bulge_disk_centre=True,
+            align_bulge_disk_elliptical_comps=True,
+        )
+
+        assert setup.bulge_prior_model.centre == setup.disk_prior_model.centre
+
     def test__light_centre_tag(self):
 
         setup = ag.SetupLightParametric(light_centre=None)

@@ -873,6 +873,101 @@ class TestCoreSersic:
         assert image.shape_2d == (2, 2)
 
 
+class TestChameleon:
+    def test__intensity_at_radius__correct_value(self):
+
+        chameleon = ag.lp.EllipticalChameleon(
+            elliptical_comps=(0.0, 0.0),
+            intensity=1.0,
+            core_radius_0=0.1,
+            core_radius_1=0.3,
+        )
+
+        image = chameleon.image_from_grid_radii(grid_radii=1.0)
+
+        assert image == pytest.approx(0.018605, 1e-3)
+
+        chameleon = ag.lp.EllipticalChameleon(
+            elliptical_comps=(0.5, 0.0),
+            intensity=3.0,
+            core_radius_0=0.2,
+            core_radius_1=0.4,
+        )
+        # 3.0 * exp(-3.67206544592 * (1,5/2.0) ** (1.0 / 2.0)) - 1) = 0.351797
+
+        image = chameleon.image_from_grid_radii(grid_radii=1.5)
+
+        assert image == pytest.approx(0.07816, 1e-3)
+
+    def test__intensity_from_grid__correct_values_for_input_parameters(self):
+
+        chameleon = ag.lp.EllipticalChameleon(
+            elliptical_comps=(0.0, 0.333333),
+            intensity=3.0,
+            core_radius_0=0.2,
+            core_radius_1=0.4,
+        )
+
+        image = chameleon.image_from_grid(grid=np.array([[1.0, 0.0]]))
+
+        assert image == pytest.approx(0.024993, 1e-3)
+
+    def test__image_from_grid__change_geometry(self):
+
+        chameleon_0 = ag.lp.EllipticalChameleon(
+            elliptical_comps=(0.0, 0.333333),
+            intensity=3.0,
+            core_radius_0=0.2,
+            core_radius_1=0.4,
+        )
+
+        chameleon_1 = ag.lp.EllipticalChameleon(
+            elliptical_comps=(0.0, -0.333333),
+            intensity=3.0,
+            core_radius_0=0.2,
+            core_radius_1=0.4,
+        )
+
+        image_0 = chameleon_0.image_from_grid(grid=np.array([[0.0, 1.0]]))
+
+        image_1 = chameleon_1.image_from_grid(grid=np.array([[1.0, 0.0]]))
+
+        assert (image_0 == image_1).all()
+
+    def test__spherical_and_elliptical_match(self):
+        elliptical = ag.lp.EllipticalChameleon(
+            elliptical_comps=(0.0, 0.0),
+            intensity=3.0,
+            core_radius_0=0.2,
+            core_radius_1=0.4,
+        )
+
+        spherical = ag.lp.SphericalChameleon(
+            intensity=3.0, core_radius_0=0.2, core_radius_1=0.4
+        )
+
+        image_elliptical = elliptical.image_from_grid(grid=grid)
+
+        image_spherical = spherical.image_from_grid(grid=grid)
+
+        assert (image_elliptical == image_spherical).all()
+
+    def test__output_image_is_autoarray(self):
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+
+        chameleon = ag.lp.EllipticalChameleon()
+
+        image = chameleon.image_from_grid(grid=grid)
+
+        assert image.shape_2d == (2, 2)
+
+        chameleon = ag.lp.SphericalChameleon()
+
+        image = chameleon.image_from_grid(grid=grid)
+
+        assert image.shape_2d == (2, 2)
+
+
 class TestBlurredProfileImages:
     def test__blurred_image_from_grid_and_psf(
         self, sub_grid_7x7, blurring_grid_7x7, psf_3x3, convolver_7x7
