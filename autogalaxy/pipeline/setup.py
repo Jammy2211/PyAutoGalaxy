@@ -744,7 +744,7 @@ class SetupMassTotal(AbstractSetupMass):
         self,
         mass_prior_model: af.PriorModel(mp.MassProfile) = mp.EllipticalPowerLaw,
         mass_centre: (float, float) = None,
-        align_light_mass_centre: bool = False,
+        align_bulge_mass_centre: bool = False,
     ):
         """
         The setup of the mass modeling in a pipeline for `MassProfile`'s representing the total (e.g. stars + dark
@@ -765,7 +765,7 @@ class SetupMassTotal(AbstractSetupMass):
         mass_centre : (float, float) or None
            If input, a fixed (y,x) centre of the mass profile is used which is not treated as a free parameter by the
            non-linear search.
-        align_light_mass_centre : bool
+        align_bulge_mass_centre : bool
             If `True` and the galaxy model has both a light and mass component, the function
             `align_centre_of_mass_to_light` can be used to align their centres.
         """
@@ -774,7 +774,10 @@ class SetupMassTotal(AbstractSetupMass):
 
         self.mass_prior_model = self._cls_to_prior_model(cls=mass_prior_model)
 
-        self.align_light_mass_centre = align_light_mass_centre
+        self.align_bulge_mass_centre = align_bulge_mass_centre
+
+        if self.mass_centre is not None:
+            self.mass_prior_model.centre = self.mass_centre
 
     @property
     def tag(self):
@@ -792,7 +795,7 @@ class SetupMassTotal(AbstractSetupMass):
             f"{self.component_name}[total"
             f"{self.mass_prior_model_tag}"
             f"{self.mass_centre_tag}"
-            f"{self.align_light_mass_centre_tag}]"
+            f"{self.align_bulge_mass_centre_tag}]"
         )
 
     @property
@@ -817,28 +820,28 @@ class SetupMassTotal(AbstractSetupMass):
         return f"__{conf.instance['notation']['prior_model_tags']['mass'][self.mass_prior_model.name]}"
 
     @property
-    def align_light_mass_centre_tag(self) -> str:
+    def align_bulge_mass_centre_tag(self) -> str:
         """
         Tags if the lens mass model centre is aligned with that of its light profile.
 
         For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
 
-        align_light_mass_centre = `False` -> setup
-        align_light_mass_centre = `True` -> setup___align_light_mass_centre
+        align_bulge_mass_centre = `False` -> setup
+        align_bulge_mass_centre = `True` -> setup___align_bulge_mass_centre
         """
         if self.mass_centre is not None:
             return ""
 
-        if not self.align_light_mass_centre:
+        if not self.align_bulge_mass_centre:
             return ""
-        return f"__{conf.instance['notation']['setup_tags']['mass']['align_light_mass_centre']}"
+        return f"__{conf.instance['notation']['setup_tags']['mass']['align_bulge_mass_centre']}"
 
     def align_centre_of_mass_to_light(
         self,
         mass_prior_model: af.PriorModel(mp.MassProfile),
         light_centre: (float, float),
     ):
-        """Align the centre of a mass profile to the centre of a light profile, if the align_light_mass_centre
+        """Align the centre of a mass profile to the centre of a light profile, if the align_bulge_mass_centre
         SLaM setting is True.
 
         Parameters
@@ -848,7 +851,7 @@ class SetupMassTotal(AbstractSetupMass):
         light : (float, float)
             The centre of the light profile the mass profile is aligned with.
         """
-        if self.align_light_mass_centre:
+        if self.align_bulge_mass_centre:
             mass_prior_model.centre = light_centre
         else:
             mass_prior_model.centre.centre_0 = af.GaussianPrior(
@@ -870,7 +873,7 @@ class SetupMassTotal(AbstractSetupMass):
         mass_prior_model : af.PriorModel(ag.mp.MassProfile)
             The `MassProfile` whose centre may be aligned with the `LightProfile` centre.
         """
-        if self.align_light_mass_centre:
+        if self.align_bulge_mass_centre:
 
             mass_prior_model.centre = af.last[-3].model.galaxies.lens.bulge.centre
 
@@ -879,6 +882,36 @@ class SetupMassTotal(AbstractSetupMass):
             mass_prior_model.centre = af.last[-1].model.galaxies.lens.mass.centre
 
         return mass_prior_model
+
+    def mass_prior_model_with_updated_priors(self, index=0, unfix_mass_centre=False):
+        """
+        Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
+        pipeline.
+
+        This function generically links any `MassProfile` to any `MassProfile`, pairing parameters which share the
+        same path.
+
+        Parameters
+        ----------
+        index : int
+            The index of the previous phase whose results are used to link priors.
+
+        Returns
+        -------
+        af.PriorModel(mp.MassProfile)
+            The total mass profile whose priors are initialized from a previous result.
+        """
+        mass = self.mass_prior_model
+
+        if not unfix_mass_centre:
+            mass.centre = af.last[index].model.galaxies.lens.mass.centre
+
+        if mass.cls is mp.EllipticalIsothermal or mass.cls is mp.EllipticalPowerLaw:
+
+            mass.elliptical_comps = af.last[index].model.galaxies.lens.mass.elliptical_comps
+            mass.einstein_radius = af.last[index].model.galaxies.lens.mass.einstein_radius
+
+        return mass
 
 
 class SetupMassLightDark(AbstractSetupMass):
@@ -931,9 +964,22 @@ class SetupMassLightDark(AbstractSetupMass):
         self.bulge_prior_model = self._cls_to_prior_model(cls=bulge_prior_model)
         self.disk_prior_model = self._cls_to_prior_model(cls=disk_prior_model)
         self.envelope_prior_model = self._cls_to_prior_model(cls=envelope_prior_model)
+
         self.dark_prior_model = self._cls_to_prior_model(cls=dark_prior_model)
+
         self.constant_mass_to_light_ratio = constant_mass_to_light_ratio
         self.align_bulge_dark_centre = align_bulge_dark_centre
+
+        if self.constant_mass_to_light_ratio:
+            for profile in self.light_and_mass_prior_models:
+                profile.mass_to_light_ratio = self.light_and_mass_prior_models[0]
+
+        if self.align_bulge_dark_centre:
+            self.dark_prior_model.centre = self.bulge_prior_model.centre
+
+    @property
+    def light_and_mass_prior_models(self):
+        return list(filter(None, [self.bulge_prior_model, self.disk_prior_model, self.envelope_prior_model]))
 
     @property
     def tag(self):
@@ -1097,27 +1143,6 @@ class SetupMassLightDark(AbstractSetupMass):
             return ""
         return f"__{conf.instance['notation']['setup_tags']['mass']['align_bulge_dark_centre']}"
 
-    def set_mass_to_light_ratios_of_light_and_mass_prior_models(
-        self, light_and_mass_prior_models: [af.PriorModel(mp.MassProfile)]
-    ):
-        """
-        For an input list of `LightMassProfile` `PriorModel`'s, set all the mass-to-light ratios of every light and
-        mass profile to the same value if a constant mass-to-light ratio is being used, else keep them as free
-        parameters.
-
-        Parameters
-        ----------
-        light_and_mass_prior_models : [af.PriorModel(LightMassProfile)]
-            The `LightMassProfile` `PriorModel`'s which have their mass-to-light ratios changed.
-        """
-
-        if self.constant_mass_to_light_ratio:
-
-            for profile in list(filter(None, light_and_mass_prior_models[1:])):
-                profile.mass_to_light_ratio = light_and_mass_prior_models[
-                    0
-                ].mass_to_light_ratio
-
     def align_bulge_and_dark_centre(self, bulge_prior_model, dark_prior_model):
         """
         Align the centre of input bulge `PriorModel` with that of the `PriorModel` representing the dark `MassProfile`,
@@ -1134,6 +1159,318 @@ class SetupMassLightDark(AbstractSetupMass):
             dark_prior_model.centre = bulge_prior_model.centre
         else:
             dark_prior_model.centre = af.last.model.galaxies.lens.bulge.centre
+
+    def bulge_prior_model_with_updated_priors(self, index=0):
+        """
+        Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
+        pipeline.
+
+        This function generically links any `MassProfile` to any `MassProfile`, pairing parameters which share the
+        same path.
+
+        Parameters
+        ----------
+        index : int
+            The index of the previous phase whose results are used to link priors.
+
+        Returns
+        -------
+        af.PriorModel(mp.MassProfile)
+            The total mass profile whose priors are initialized from a previous result.
+        """
+        bulge = self.bulge_prior_model
+
+        if bulge.cls is lmp.EllipticalExponential or bulge.cls is lmp.EllipticalSersic:
+
+            bulge = af.PriorModel(lmp.EllipticalSersic)
+
+            bulge.centre = af.last[index].model.galaxies.lens.bulge.centre
+            bulge.elliptical_comps = (
+                af.last[index].model.galaxies.lens.bulge.elliptical_comps
+            )
+            bulge.intensity = af.last[index].model.galaxies.lens.bulge.intensity
+            bulge.effective_radius = (
+                af.last[index].model.galaxies.lens.bulge.effective_radius
+            )
+
+            if bulge.cls is lp.EllipticalSersic:
+                bulge.sersic_index = af.last[index].model.galaxies.lens.bulge.sersic_index
+
+        elif bulge.cls is lmp.EllipticalChameleon:
+            
+            bulge.centre = af.last[index].model.galaxies.lens.bulge.centre
+            bulge.elliptical_comps = (
+                af.last[index].model.galaxies.lens.bulge.elliptical_comps
+            )
+            bulge.intensity = af.last[index].model.galaxies.lens.bulge.intensity
+            bulge.core_radius_0 = (
+                af.last[index].model.galaxies.lens.bulge.core_radius_0
+            )
+            bulge.core_radius_1 = (
+                af.last[index].model.galaxies.lens.bulge.core_radius_1
+            )
+
+        return bulge
+
+    def disk_prior_model_with_updated_priors(self, index=0):
+        """
+        Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
+        pipeline.
+
+        This function generically links any `MassProfile` to any `MassProfile`, pairing parameters which share the
+        same path.
+
+        Parameters
+        ----------
+        index : int
+            The index of the previous phase whose results are used to link priors.
+
+        Returns
+        -------
+        af.PriorModel(mp.MassProfile)
+            The total mass profile whose priors are initialized from a previous result.
+        """
+        disk = self.disk_prior_model
+
+        if disk.cls is lmp.EllipticalExponential or disk.cls is lmp.EllipticalSersic:
+
+            disk = af.PriorModel(lmp.EllipticalSersic)
+
+            disk.centre = af.last[index].model.galaxies.lens.disk.centre
+            disk.elliptical_comps = (
+                af.last[index].model.galaxies.lens.disk.elliptical_comps
+            )
+            disk.intensity = af.last[index].model.galaxies.lens.disk.intensity
+            disk.effective_radius = (
+                af.last[index].model.galaxies.lens.disk.effective_radius
+            )
+
+            if disk.cls is lp.EllipticalSersic:
+                disk.sersic_index = af.last[index].model.galaxies.lens.disk.sersic_index
+
+        elif disk.cls is lmp.EllipticalChameleon:
+
+            disk.centre = af.last[index].model.galaxies.lens.disk.centre
+            disk.elliptical_comps = (
+                af.last[index].model.galaxies.lens.disk.elliptical_comps
+            )
+            disk.intensity = af.last[index].model.galaxies.lens.disk.intensity
+            disk.core_radius_0 = (
+                af.last[index].model.galaxies.lens.disk.core_radius_0
+            )
+            disk.core_radius_1 = (
+                af.last[index].model.galaxies.lens.disk.core_radius_1
+            )
+
+        return disk
+
+    def envelope_prior_model_with_updated_priors(self, index=0):
+        """
+        Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
+        pipeline.
+
+        This function generically links any `MassProfile` to any `MassProfile`, pairing parameters which share the
+        same path.
+
+        Parameters
+        ----------
+        index : int
+            The index of the previous phase whose results are used to link priors.
+
+        Returns
+        -------
+        af.PriorModel(mp.MassProfile)
+            The total mass profile whose priors are initialized from a previous result.
+        """
+        envelope = self.envelope_prior_model
+
+        if envelope.cls is lmp.EllipticalExponential or envelope.cls is lmp.EllipticalSersic:
+
+            envelope = af.PriorModel(lmp.EllipticalSersic)
+
+            envelope.centre = af.last[index].model.galaxies.lens.envelope.centre
+            envelope.elliptical_comps = (
+                af.last[index].model.galaxies.lens.envelope.elliptical_comps
+            )
+            envelope.intensity = af.last[index].model.galaxies.lens.envelope.intensity
+            envelope.effective_radius = (
+                af.last[index].model.galaxies.lens.envelope.effective_radius
+            )
+
+            if envelope.cls is lp.EllipticalSersic:
+                envelope.sersic_index = af.last[index].model.galaxies.lens.envelope.sersic_index
+
+        elif envelope.cls is lmp.EllipticalChameleon:
+
+            envelope.centre = af.last[index].model.galaxies.lens.envelope.centre
+            envelope.elliptical_comps = (
+                af.last[index].model.galaxies.lens.envelope.elliptical_comps
+            )
+            envelope.intensity = af.last[index].model.galaxies.lens.envelope.intensity
+            envelope.core_radius_0 = (
+                af.last[index].model.galaxies.lens.envelope.core_radius_0
+            )
+            envelope.core_radius_1 = (
+                af.last[index].model.galaxies.lens.envelope.core_radius_1
+            )
+
+        return envelope
+
+    def bulge_prior_instance_with_updated_priors(self, index=0):
+        """
+        Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
+        pipeline.
+
+        This function generically links any `MassProfile` to any `MassProfile`, pairing parameters which share the
+        same path.
+
+        Parameters
+        ----------
+        index : int
+            The index of the previous phase whose results are used to link priors.
+
+        Returns
+        -------
+        af.PriorModel(mp.MassProfile)
+            The total mass profile whose priors are initialized from a previous result.
+        """
+        bulge = self.bulge_prior_model
+
+        if bulge.cls is lmp.EllipticalExponential or bulge.cls is lmp.EllipticalSersic:
+
+            bulge = af.PriorModel(lmp.EllipticalSersic)
+
+            bulge.centre = af.last[index].instance.galaxies.lens.bulge.centre
+            bulge.elliptical_comps = (
+                af.last[index].instance.galaxies.lens.bulge.elliptical_comps
+            )
+            bulge.intensity = af.last[index].instance.galaxies.lens.bulge.intensity
+            bulge.effective_radius = (
+                af.last[index].instance.galaxies.lens.bulge.effective_radius
+            )
+
+            if bulge.cls is lp.EllipticalSersic:
+                bulge.sersic_index = af.last[index].instance.galaxies.lens.bulge.sersic_index
+
+        elif bulge.cls is lmp.EllipticalChameleon:
+
+            bulge.centre = af.last[index].instance.galaxies.lens.bulge.centre
+            bulge.elliptical_comps = (
+                af.last[index].instance.galaxies.lens.bulge.elliptical_comps
+            )
+            bulge.intensity = af.last[index].instance.galaxies.lens.bulge.intensity
+            bulge.core_radius_0 = (
+                af.last[index].instance.galaxies.lens.bulge.core_radius_0
+            )
+            bulge.core_radius_1 = (
+                af.last[index].instance.galaxies.lens.bulge.core_radius_1
+            )
+
+        return bulge
+
+    def disk_prior_instance_with_updated_priors(self, index=0):
+        """
+        Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
+        pipeline.
+
+        This function generically links any `MassProfile` to any `MassProfile`, pairing parameters which share the
+        same path.
+
+        Parameters
+        ----------
+        index : int
+            The index of the previous phase whose results are used to link priors.
+
+        Returns
+        -------
+        af.PriorModel(mp.MassProfile)
+            The total mass profile whose priors are initialized from a previous result.
+        """
+        disk = self.disk_prior_model
+
+        if disk.cls is lmp.EllipticalExponential or disk.cls is lmp.EllipticalSersic:
+
+            disk = af.PriorModel(lmp.EllipticalSersic)
+
+            disk.centre = af.last[index].instance.galaxies.lens.disk.centre
+            disk.elliptical_comps = (
+                af.last[index].instance.galaxies.lens.disk.elliptical_comps
+            )
+            disk.intensity = af.last[index].instance.galaxies.lens.disk.intensity
+            disk.effective_radius = (
+                af.last[index].instance.galaxies.lens.disk.effective_radius
+            )
+
+            if disk.cls is lp.EllipticalSersic:
+                disk.sersic_index = af.last[index].instance.galaxies.lens.disk.sersic_index
+
+        elif disk.cls is lmp.EllipticalChameleon:
+
+            disk.centre = af.last[index].instance.galaxies.lens.disk.centre
+            disk.elliptical_comps = (
+                af.last[index].instance.galaxies.lens.disk.elliptical_comps
+            )
+            disk.intensity = af.last[index].instance.galaxies.lens.disk.intensity
+            disk.core_radius_0 = (
+                af.last[index].instance.galaxies.lens.disk.core_radius_0
+            )
+            disk.core_radius_1 = (
+                af.last[index].instance.galaxies.lens.disk.core_radius_1
+            )
+
+        return disk
+
+    def envelope_prior_instance_with_updated_priors(self, index=0):
+        """
+        Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
+        pipeline.
+
+        This function generically links any `MassProfile` to any `MassProfile`, pairing parameters which share the
+        same path.
+
+        Parameters
+        ----------
+        index : int
+            The index of the previous phase whose results are used to link priors.
+
+        Returns
+        -------
+        af.PriorModel(mp.MassProfile)
+            The total mass profile whose priors are initialized from a previous result.
+        """
+        envelope = self.envelope_prior_model
+
+        if envelope.cls is lmp.EllipticalExponential or envelope.cls is lmp.EllipticalSersic:
+
+            envelope = af.PriorModel(lmp.EllipticalSersic)
+
+            envelope.centre = af.last[index].instance.galaxies.lens.envelope.centre
+            envelope.elliptical_comps = (
+                af.last[index].instance.galaxies.lens.envelope.elliptical_comps
+            )
+            envelope.intensity = af.last[index].instance.galaxies.lens.envelope.intensity
+            envelope.effective_radius = (
+                af.last[index].instance.galaxies.lens.envelope.effective_radius
+            )
+
+            if envelope.cls is lp.EllipticalSersic:
+                envelope.sersic_index = af.last[index].instance.galaxies.lens.envelope.sersic_index
+
+        elif envelope.cls is lmp.EllipticalChameleon:
+
+            envelope.centre = af.last[index].instance.galaxies.lens.envelope.centre
+            envelope.elliptical_comps = (
+                af.last[index].instance.galaxies.lens.envelope.elliptical_comps
+            )
+            envelope.intensity = af.last[index].instance.galaxies.lens.envelope.intensity
+            envelope.core_radius_0 = (
+                af.last[index].instance.galaxies.lens.envelope.core_radius_0
+            )
+            envelope.core_radius_1 = (
+                af.last[index].instance.galaxies.lens.envelope.core_radius_1
+            )
+
+        return envelope
 
 
 class SetupSMBH(AbstractSetup):
