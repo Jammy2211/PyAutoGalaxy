@@ -431,3 +431,68 @@ class SphericalExponentialRadialGradient(
             mass_to_light_ratio=mass_to_light_ratio,
             mass_to_light_gradient=mass_to_light_gradient,
         )
+
+
+class EllipticalChameleon(lp.EllipticalChameleon, mp.EllipticalChameleon, LightMassProfile):
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: dim.Luminosity = 0.1,
+        core_radius_0: dim.Length = 0.01,
+        core_radius_1: dim.Length = 0.005,
+        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+    ):
+
+        lp.EllipticalChameleon.__init__(
+            self,
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            intensity=intensity,
+            core_radius_0=core_radius_0,
+            core_radius_1=core_radius_1,
+        )
+        mp.EllipticalChameleon.__init__(
+            self,
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            intensity=intensity,
+            core_radius_0=core_radius_0,
+            core_radius_1=core_radius_1,
+            mass_to_light_ratio=mass_to_light_ratio,
+        )
+
+
+class SphericalChameleon(EllipticalChameleon, LightMassProfile):
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        intensity: dim.Luminosity = 0.1,
+        core_radius_0: dim.Length = 0.01,
+        core_radius_1: dim.Length = 0.005,
+        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+    ):
+        """
+        The SphericalChameleon mass profile, the mass profiles of the light profiles that are used to fit_normal and
+        subtract the lens model_galaxy's light.
+
+        Parameters
+        ----------
+        centre: (float, float)
+            The grid of the origin of the profiles
+        intensity : float
+            Overall flux intensity normalisation in the light profiles (electrons per second)
+        effective_radius : float
+            The radius containing half the light of this model_mapper
+        mass_to_light_ratio : float
+            The mass-to-light ratio of the light profiles
+        """
+        EllipticalChameleon.__init__(
+            self,
+            centre=centre,
+            elliptical_comps=(0.0, 0.0),
+            intensity=intensity,
+            core_radius_0=core_radius_0,
+            core_radius_1=core_radius_1,
+            mass_to_light_ratio=mass_to_light_ratio,
+        )

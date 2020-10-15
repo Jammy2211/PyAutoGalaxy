@@ -34,5 +34,7 @@ from .stellar_mass_profiles import (
     SphericalDevVaucouleurs,
     EllipticalSersicRadialGradient,
     SphericalSersicRadialGradient,
+    EllipticalChameleon,
+    SphericalChameleon,
 )
 from .mass_sheets import ExternalShear, MassSheet, InputDeflections

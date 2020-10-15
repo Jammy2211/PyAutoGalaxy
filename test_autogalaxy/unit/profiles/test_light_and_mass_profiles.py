@@ -788,3 +788,67 @@ class TestExponentialRadialGradient:
             elliptical.deflections_from_grid(grid=grid),
             spherical.deflections_from_grid(grid=grid),
         )
+
+
+class TestChameleon:
+
+    def test__grid_calculations__same_as_chameleon(self):
+        chameleon_lp = ag.lmp.EllipticalChameleon(
+            elliptical_comps=(0.1, 0.05),
+            intensity=1.0,
+            core_radius_0=0.1,
+            core_radius_1=0.3,
+        )
+        chameleon_mp = ag.lmp.EllipticalChameleon(
+            elliptical_comps=(0.1, 0.05),
+            intensity=1.0,
+            core_radius_0=0.1,
+            core_radius_1=0.3,
+            mass_to_light_ratio=2.0,
+        )
+        chameleon_lmp = ag.lmp.EllipticalChameleon(
+            elliptical_comps=(0.1, 0.05),
+            intensity=1.0,
+            core_radius_0=0.1,
+            core_radius_1=0.3,
+            mass_to_light_ratio=2.0,
+        )
+
+        assert (
+            chameleon_lp.image_from_grid(grid=grid)
+            == chameleon_lmp.image_from_grid(grid=grid)
+        ).all()
+        assert (
+            chameleon_mp.convergence_from_grid(grid=grid)
+            == chameleon_lmp.convergence_from_grid(grid=grid)
+        ).all()
+        #    assert (chameleon_mp.potential_from_grid(grid=grid) == chameleon_lmp.potential_from_grid(grid=grid)).all()
+        assert (
+            chameleon_mp.deflections_from_grid(grid=grid)
+            == chameleon_lmp.deflections_from_grid(grid=grid)
+        ).all()
+
+    def test__spherical_and_elliptical_identical(self):
+        elliptical = ag.lmp.EllipticalChameleon(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.0),
+            intensity=1.0,
+            core_radius_0=0.1,
+            core_radius_1=0.3,
+            mass_to_light_ratio=2.0,
+        )
+        spherical = ag.lmp.SphericalChameleon(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            core_radius_0=0.1,
+            core_radius_1=0.3,
+            mass_to_light_ratio=2.0,
+        )
+
+        assert elliptical.image_from_grid(grid=grid) == pytest.approx(spherical.image_from_grid(grid=grid), 1.0e-4)
+        assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(spherical.convergence_from_grid(grid=grid), 1.0e4)
+        # assert (elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)).all()
+        np.testing.assert_almost_equal(
+            elliptical.deflections_from_grid(grid=grid),
+            spherical.deflections_from_grid(grid=grid),
+        )

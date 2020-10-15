@@ -6,6 +6,7 @@ from autoarray.structures import arrays
 from autoarray.structures import grids
 from autogalaxy import dimensions as dim
 from autogalaxy.profiles import mass_profiles as mp
+from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 from pyquad import quad_grid
 from scipy.special import wofz
 import typing
@@ -731,7 +732,7 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
         )
 
 
-class EllipticalChamelon(mp.EllipticalMassProfile, StellarProfile):
+class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
     @af.map_types
     def __init__(
         self,
@@ -739,7 +740,7 @@ class EllipticalChamelon(mp.EllipticalMassProfile, StellarProfile):
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         intensity: dim.Luminosity = 0.1,
         core_radius_0: dim.Length = 0.01,
-        core_radius_1: dim.Length = 0.005,
+        core_radius_1: dim.Length = 0.02,
         mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
     ):
         """ The elliptical Chamelon mass profile.
@@ -762,7 +763,7 @@ class EllipticalChamelon(mp.EllipticalMassProfile, StellarProfile):
                 (1.0 / Sqrt(x^2 + (y/q)^2 + core_radius_0^2) - 1.0 / Sqrt(x^2 + (y/q)^2 + (core_radius_0 + core_radius_1)**2.0))
         """
 
-        super(EllipticalChamelon, self).__init__(
+        super(EllipticalChameleon, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         super(mp.EllipticalMassProfile, self).__init__(
@@ -772,6 +773,8 @@ class EllipticalChamelon(mp.EllipticalMassProfile, StellarProfile):
         self.intensity = intensity
         self.core_radius_0 = core_radius_0
         self.core_radius_1 = core_radius_1
+        if self.axis_ratio > 0.99999:
+            self.axis_ratio = 0.99999
 
     @grids.grid_like_to_structure
     @grids.transform
@@ -792,67 +795,55 @@ class EllipticalChamelon(mp.EllipticalMassProfile, StellarProfile):
             2.0
             * self.mass_to_light_ratio
             * self.intensity
+            / (1 + self.axis_ratio)
             * self.axis_ratio
             / np.sqrt(1.0 - self.axis_ratio ** 2.0)
         )
-        # scale factor
 
-        psi1 = np.sqrt(
-            np.add(
-                np.multiply(
-                    self.axis_ratio ** 2.0,
-                    np.add(np.square(grid[:, 1]), self.core_radius_0 ** 2.0),
-                ),
-                np.square(grid[:, 0]),
+        core_radius_0 = np.sqrt(
+            (4.0 * self.core_radius_0 ** 2.0) / (1.0 + self.axis_ratio) ** 2
+        )
+        core_radius_1 = np.sqrt(
+            (4.0 * self.core_radius_1 ** 2.0) / (1.0 + self.axis_ratio) ** 2
+        )
+
+        psi0 = psi_from(
+            grid=grid, axis_ratio=self.axis_ratio, core_radius=core_radius_0
+        )
+        psi1 = psi_from(
+            grid=grid, axis_ratio=self.axis_ratio, core_radius=core_radius_1
+        )
+
+        deflection_y0 = np.arctanh(
+            np.divide(
+                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 0]),
+                np.add(psi0, self.axis_ratio ** 2.0 * core_radius_0),
             )
         )
-        # psi of the first elliptical core profile
 
-        psi2 = np.sqrt(
-            np.add(
-                np.multiply(
-                    self.axis_ratio ** 2.0,
-                    np.add(np.square(grid[:, 1]), self.core_radius_1 ** 2.0),
-                ),
-                np.square(grid[:, 0]),
+        deflection_x0 = np.arctan(
+            np.divide(
+                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 1]),
+                np.add(psi0, core_radius_0),
             )
         )
-        # psi of the second elliptical core profile
 
         deflection_y1 = np.arctanh(
             np.divide(
                 np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 0]),
-                np.add(psi1, self.axis_ratio ** 2.0 * self.core_radius_0),
+                np.add(psi1, self.axis_ratio ** 2.0 * core_radius_1),
             )
         )
-        # y deflection angle of the first elliptical core profile
 
         deflection_x1 = np.arctan(
             np.divide(
                 np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 1]),
-                np.add(psi1, self.core_radius_0),
+                np.add(psi1, core_radius_1),
             )
         )
-        # x deflection angle of the first elliptical core profile
 
-        deflection_y2 = np.arctanh(
-            np.divide(
-                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 0]),
-                np.add(psi2, self.axis_ratio ** 2.0 * self.core_radius_1),
-            )
-        )
-        # y deflection angle of the second elliptical core profile
-
-        deflection_x2 = np.arctan(
-            np.divide(
-                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 1]),
-                np.add(psi2, self.core_radius_1),
-            )
-        )
-        # x deflection angle of the second elliptical core profile
-
-        deflection_y = np.subtract(deflection_y1, deflection_y2)
-        deflection_x = np.subtract(deflection_x1, deflection_x2)
+        deflection_y = np.subtract(deflection_y0, deflection_y1)
+        deflection_x = np.subtract(deflection_x0, deflection_x1)
 
         return self.rotate_grid_from_profile(
             np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
@@ -874,28 +865,76 @@ class EllipticalChamelon(mp.EllipticalMassProfile, StellarProfile):
         return self.mass_to_light_ratio * self.intensity_at_radius(grid_radius)
 
     def intensity_at_radius(self, grid_radii):
-        """Calculate the intensity of the Gaussian light profile on a grid of radial coordinates.
+        """Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.
 
         Parameters
         ----------
         grid_radii : float
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
+
+        axis_ratio_factor = (1.0 + self.axis_ratio) ** 2.0
+
         return np.multiply(
-            self.intensity,
+            self.intensity / (1 + self.axis_ratio),
             np.add(
                 np.divide(
                     1.0,
-                    np.sqrt(np.add(np.square(grid_radii), self.core_radius_0 ** 2.0)),
+                    np.sqrt(
+                        np.add(
+                            np.square(grid_radii),
+                            (4.0 * self.core_radius_0 ** 2.0) / axis_ratio_factor,
+                        )
+                    ),
                 ),
                 -np.divide(
                     1.0,
                     np.sqrt(
                         np.add(
                             np.square(grid_radii),
-                            (self.core_radius_0 + self.core_radius_1) ** 2.0,
+                            (4.0 * self.core_radius_1 ** 2.0) / axis_ratio_factor,
                         )
                     ),
                 ),
             ),
+        )
+
+
+class SphericalChameleon(EllipticalChameleon):
+    @af.map_types
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        intensity: dim.Luminosity = 0.1,
+        core_radius_0: dim.Length = 0.01,
+        core_radius_1: dim.Length = 0.02,
+        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+    ):
+        """ The spherica; Chameleon mass profile.
+
+        Profile form:
+            mass_to_light_ratio * intensity *\
+                (1.0 / Sqrt(x^2 + (y/q)^2 + core_radius_0^2) - 1.0 / Sqrt(x^2 + (y/q)^2 + (core_radius_0 + core_radius_1)**2.0))
+
+        Parameters
+        ----------
+        centre : (float, float)
+            The (y,x) arc-second coordinates of the profile centre.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+        intensity : float
+            Overall intensity normalisation of the light profiles (electrons per second).
+        core_radius_0 : the core size of the first elliptical cored Isothermal profile.
+        core_radius_1 : core_radius_0 + core_radius_1 is the core size of the second elliptical cored Isothermal profile.
+            We use core_radius_1 here is to avoid negative values.
+       """
+
+        super(SphericalChameleon, self).__init__(
+            centre=centre,
+            elliptical_comps=(0.0, 0.0),
+            intensity=intensity,
+            core_radius_0=core_radius_0,
+            core_radius_1=core_radius_1,
+            mass_to_light_ratio=mass_to_light_ratio,
         )

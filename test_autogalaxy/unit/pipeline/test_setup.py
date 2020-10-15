@@ -175,16 +175,6 @@ class TestSetupLightParametric:
         setup = ag.SetupLightParametric(light_centre=(3.027, 4.033))
         assert setup.light_centre_tag == "__centre_(3.03,4.03)"
 
-    def test__align_centre_to_light_centre(self):
-
-        light = af.PriorModel(ag.mp.SphericalIsothermal)
-
-        source = ag.SetupLightParametric(light_centre=(1.0, 2.0))
-
-        light = source.align_centre_to_light_centre(light_prior_model=light)
-
-        assert light.centre == (1.0, 2.0)
-
     def test__align_bulge_disk_tags(self):
         light = ag.SetupLightParametric(align_bulge_disk_centre=False)
         assert light.align_bulge_disk_centre_tag == ""

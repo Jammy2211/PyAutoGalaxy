@@ -811,6 +811,8 @@ class EllipticalChameleon(EllipticalLightProfile):
         )
         self.core_radius_0 = core_radius_0
         self.core_radius_1 = core_radius_1
+        if self.axis_ratio > 0.99999:
+            self.axis_ratio = 0.99999
 
     def image_from_grid_radii(self, grid_radii):
         """Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.

@@ -6,6 +6,7 @@ from autoarray.structures import grids
 from autogalaxy import dimensions as dim
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
+from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 from pyquad import quad_grid
 from scipy import special
 import typing
@@ -737,12 +738,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
             / np.sqrt(1 - self.axis_ratio ** 2)
         )
 
-        psi = np.sqrt(
-            np.add(
-                np.multiply(self.axis_ratio ** 2, np.square(grid[:, 1])),
-                np.square(grid[:, 0]),
-            )
-        )
+        psi = psi_from(grid=grid, axis_ratio=self.axis_ratio, core_radius=0.0)
 
         deflection_y = np.arctanh(
             np.divide(np.multiply(np.sqrt(1 - self.axis_ratio ** 2), grid[:, 0]), psi)

@@ -472,7 +472,7 @@ class TestSersic:
         assert deflections[1, 0] == pytest.approx(1.1446, 1e-3)
         assert deflections[1, 1] == pytest.approx(0.79374, 1e-3)
 
-    def test__surfce_density__change_geometry(self):
+    def test__convergence__change_geometry(self):
         sersic_0 = ag.mp.EllipticalSersic(centre=(0.0, 0.0))
         sersic_1 = ag.mp.EllipticalSersic(centre=(1.0, 1.0))
 
@@ -1388,5 +1388,175 @@ class TestSersicMassRadialGradient:
         # assert potential.shape == (2, 2)
 
         deflections = sersic.deflections_from_grid(grid=grid)
+
+        assert deflections.shape_2d == (2, 2)
+
+
+class TestChameleon:
+    def test__convergence_correct_values(self):
+
+        chameleon = ag.mp.EllipticalChameleon(
+            elliptical_comps=(0.0, 0.0),
+            intensity=1.0,
+            core_radius_0=0.1,
+            core_radius_1=0.3,
+            mass_to_light_ratio=2.0,
+        )
+
+        convergence = chameleon.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
+
+        assert convergence == pytest.approx(2.0 * 0.018605, 1e-3)
+
+        chameleon = ag.mp.EllipticalChameleon(
+            elliptical_comps=(0.5, 0.0),
+            intensity=3.0,
+            core_radius_0=0.2,
+            core_radius_1=0.4,
+            mass_to_light_ratio=1.0,
+        )
+
+        convergence = chameleon.convergence_from_grid(grid=np.array([[0.0, 1.5]]))
+
+        assert convergence == pytest.approx(0.007814, 1e-3)
+
+    def test__deflections_correct_values(self):
+        chameleon = ag.mp.EllipticalChameleon(
+            centre=(-0.4, -0.2),
+            elliptical_comps=(-0.07142, -0.085116),
+            intensity=5.0,
+            core_radius_0=0.2,
+            core_radius_1=0.4,
+            mass_to_light_ratio=3.0,
+        )
+
+        deflections = chameleon.deflections_from_grid(grid=np.array([[0.1625, 0.1625]]))
+
+        assert deflections[0, 0] == pytest.approx(2.12608, 1e-3)
+        assert deflections[0, 1] == pytest.approx(1.55252, 1e-3)
+
+    def test__convergence__change_geometry(self):
+        chameleon_0 = ag.mp.EllipticalChameleon(
+            centre=(0.0, 0.0), intensity=3.0, core_radius_0=0.2, core_radius_1=0.4
+        )
+        chameleon_1 = ag.mp.EllipticalChameleon(
+            centre=(1.0, 1.0), intensity=3.0, core_radius_0=0.2, core_radius_1=0.4
+        )
+
+        convergence_0 = chameleon_0.convergence_from_grid(grid=np.array([[1.0, 1.0]]))
+
+        convergence_1 = chameleon_1.convergence_from_grid(grid=np.array([[0.0, 0.0]]))
+
+        assert convergence_0 == pytest.approx(convergence_1, 1.0e-6)
+
+        chameleon_0 = ag.mp.EllipticalChameleon(
+            centre=(0.0, 0.0), intensity=3.0, core_radius_0=0.2, core_radius_1=0.4
+        )
+        chameleon_1 = ag.mp.EllipticalChameleon(
+            centre=(0.0, 0.0), intensity=3.0, core_radius_0=0.2, core_radius_1=0.4
+        )
+
+        convergence_0 = chameleon_0.convergence_from_grid(grid=np.array([[1.0, 0.0]]))
+
+        convergence_1 = chameleon_1.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
+
+        assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
+
+        chameleon_0 = ag.mp.EllipticalChameleon(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
+        )
+        chameleon_1 = ag.mp.EllipticalChameleon(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
+        )
+
+        convergence_0 = chameleon_0.convergence_from_grid(grid=np.array([[1.0, 0.0]]))
+
+        convergence_1 = chameleon_1.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
+
+        assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
+
+    def test__deflections__change_geometry(self):
+        chameleon_0 = ag.mp.EllipticalChameleon(centre=(0.0, 0.0))
+        chameleon_1 = ag.mp.EllipticalChameleon(centre=(1.0, 1.0))
+
+        deflections_0 = chameleon_0.deflections_from_grid(grid=np.array([[1.0, 1.0]]))
+        deflections_1 = chameleon_1.deflections_from_grid(grid=np.array([[0.0, 0.0]]))
+
+        assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
+        assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
+
+        chameleon_0 = ag.mp.EllipticalChameleon(centre=(0.0, 0.0))
+        chameleon_1 = ag.mp.EllipticalChameleon(centre=(0.0, 0.0))
+
+        deflections_0 = chameleon_0.deflections_from_grid(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = chameleon_1.deflections_from_grid(grid=np.array([[0.0, 1.0]]))
+
+        assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
+        assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
+
+        chameleon_0 = ag.mp.EllipticalChameleon(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
+        )
+        chameleon_1 = ag.mp.EllipticalChameleon(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
+        )
+
+        deflections_0 = chameleon_0.deflections_from_grid(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = chameleon_1.deflections_from_grid(grid=np.array([[0.0, 1.0]]))
+
+        assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
+        assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
+
+    def test__spherical_and_elliptical_identical(self):
+        elliptical = ag.mp.EllipticalChameleon(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.0),
+            intensity=1.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        spherical = ag.mp.EllipticalChameleon(
+            centre=(0.0, 0.0), intensity=1.0, mass_to_light_ratio=1.0
+        )
+
+        assert (
+            elliptical.convergence_from_grid(grid=grid)
+            == spherical.convergence_from_grid(grid=grid)
+        ).all()
+        # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
+        np.testing.assert_almost_equal(
+            elliptical.deflections_from_grid(grid=grid),
+            spherical.deflections_from_grid(grid=grid),
+        )
+
+    def test__outputs_are_autoarrays(self):
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+
+        chameleon = ag.mp.EllipticalChameleon()
+
+        convergence = chameleon.convergence_from_grid(grid=grid)
+
+        assert convergence.shape_2d == (2, 2)
+
+        # potential = chameleon.potential_from_grid(
+        #     grid=grid)
+        #
+        # assert potential.shape == (2, 2)
+
+        deflections = chameleon.deflections_from_grid(grid=grid)
+
+        assert deflections.shape_2d == (2, 2)
+
+        chameleon = ag.mp.EllipticalChameleon()
+
+        convergence = chameleon.convergence_from_grid(grid=grid)
+
+        assert convergence.shape_2d == (2, 2)
+
+        # potential = chameleon.potential_from_grid(
+        #     grid=grid)
+        #
+        # assert potential.shape == (2, 2)
+
+        deflections = chameleon.deflections_from_grid(grid=grid)
 
         assert deflections.shape_2d == (2, 2)
