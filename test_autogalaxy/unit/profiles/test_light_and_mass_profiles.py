@@ -791,7 +791,6 @@ class TestExponentialRadialGradient:
 
 
 class TestChameleon:
-
     def test__grid_calculations__same_as_chameleon(self):
         chameleon_lp = ag.lmp.EllipticalChameleon(
             elliptical_comps=(0.1, 0.05),
@@ -845,8 +844,12 @@ class TestChameleon:
             mass_to_light_ratio=2.0,
         )
 
-        assert elliptical.image_from_grid(grid=grid) == pytest.approx(spherical.image_from_grid(grid=grid), 1.0e-4)
-        assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(spherical.convergence_from_grid(grid=grid), 1.0e4)
+        assert elliptical.image_from_grid(grid=grid) == pytest.approx(
+            spherical.image_from_grid(grid=grid), 1.0e-4
+        )
+        assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(
+            spherical.convergence_from_grid(grid=grid), 1.0e4
+        )
         # assert (elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)).all()
         np.testing.assert_almost_equal(
             elliptical.deflections_from_grid(grid=grid),
