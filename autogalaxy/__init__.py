@@ -65,4 +65,6 @@ from .profiles import (
 )
 from .util import convert
 
+conf.instance.register(__file__)
+
 __version__ = "0.14.14"

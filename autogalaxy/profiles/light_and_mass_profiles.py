@@ -433,7 +433,9 @@ class SphericalExponentialRadialGradient(
         )
 
 
-class EllipticalChameleon(lp.EllipticalChameleon, mp.EllipticalChameleon, LightMassProfile):
+class EllipticalChameleon(
+    lp.EllipticalChameleon, mp.EllipticalChameleon, LightMassProfile
+):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
