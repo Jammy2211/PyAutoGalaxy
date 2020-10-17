@@ -1,15 +1,16 @@
-import autofit as af
+import typing
+
 import numpy as np
 from astropy import cosmology as cosmo
+from scipy.integrate import quad
+from scipy.optimize import root_scalar
+
+import autofit as af
 from autoarray.structures import grids
-from autofit.text import formatter
 from autogalaxy import dimensions as dim
 from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy.util import cosmology_util
-from scipy.integrate import quad
-from scipy.optimize import root_scalar
-import typing
 
 
 class MassProfile(lensing.LensingObject):
@@ -218,3 +219,37 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         )
         radius = dim.Length(radius, unit_length)
         return radius.convert(unit_length=unit_length, kpc_per_arcsec=kpc_per_arcsec)
+
+
+def psi_from(grid, axis_ratio, core_radius):
+    """
+    Returns the $\Psi$ term in expressions for the calculation of the deflection of an elliptical isothermal mass
+    distribution. This is used in the `Isothermal` and `Chameleon` `MassProfile`'s.
+
+    The expression for Psi is:
+
+    $\Psi = \sqrt(q^2(s^2 + x^2) + y^2)$
+
+    Parameters
+    ----------
+    grid : grid_like
+        The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
+    axis_ratio : float
+        Ratio of profiles ellipse's minor and major axes (b/a)
+    core_radius : float
+        The radius of the inner core
+
+    Returns
+    -------
+    float
+        The value of the Psi term.
+
+    """
+    return np.sqrt(
+        np.add(
+            np.multiply(
+                axis_ratio ** 2.0, np.add(np.square(grid[:, 1]), core_radius ** 2.0)
+            ),
+            np.square(grid[:, 0]),
+        )
+    )

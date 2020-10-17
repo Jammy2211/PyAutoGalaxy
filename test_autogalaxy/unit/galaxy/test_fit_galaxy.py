@@ -1,16 +1,8 @@
-from autoconf import conf
-import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autogalaxy.mock import MockGalaxy
 
-
-@pytest.fixture(autouse=True)
-def reset_config():
-    """
-    Use configuration from the default path. You may want to change this to set a specific path.
-    """
-    conf.instance = conf.default
+import autogalaxy as ag
+from autogalaxy.mock import MockGalaxy
 
 
 class TestLikelihood:
@@ -285,7 +277,6 @@ class TestCompareToManual:
         assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
     def test__deflections_y(self, gal_data_7x7, sub_mask_7x7):
-
         masked_galaxy_dataset = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_y=True
         )
@@ -330,7 +321,6 @@ class TestCompareToManual:
         assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
     def test__deflections_x(self, gal_data_7x7, sub_mask_7x7):
-
         masked_galaxy_dataset = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_x=True
         )

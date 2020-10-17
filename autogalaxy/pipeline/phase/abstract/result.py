@@ -7,7 +7,7 @@ class Result(af.Result):
         self, samples, previous_model, analysis, search, use_as_hyper_dataset=False
     ):
         """
-        The results of a non-linear search performed by a phase.
+        The results of a `NonLinearSearch` performed by a phase.
 
         Parameters
         ----------
@@ -19,7 +19,7 @@ class Result(af.Result):
         analysis : Analysis
             The Analysis class used by this model-fit to fit the model to the data.
         search : af.NonLinearSearch
-            The non-linear search search used by this model fit.
+            The `NonLinearSearch` search used by this model fit.
         use_as_hyper_dataset : bool
             Whether this result's phase contains hyper phases, allowing it to be used a hyper dataset.
         """

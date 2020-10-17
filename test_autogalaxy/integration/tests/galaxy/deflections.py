@@ -12,7 +12,7 @@ test_name = "deflections"
 test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
 output_path = test_path + "output/"
 config_path = test_path + "config"
-conf.instance = conf.Config(config_path=config_path, output_path=output_path)
+conf.instance.push(config_path, output_path=output_path)
 
 
 def galaxy_fit_phase():
@@ -43,7 +43,7 @@ def galaxy_fit_phase():
     )
 
     phase1 = ag.PhaseGalaxy(
-        phase_name=test_name + "/",
+        name=test_name + "/",
         path_prefix=path_prefix,
         galaxies=dict(
             gal=ag.GalaxyModel(redshift=0.5, light=ag.mp.SphericalIsothermal)

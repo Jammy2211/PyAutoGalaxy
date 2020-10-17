@@ -37,7 +37,7 @@ def galaxy_fit_phase():
     data = ag.GalaxyData(image=image, noise_map=noise_map, pixel_scales=pixel_scales)
 
     phase1 = ag.PhaseGalaxy(
-        phase_name=test_name + "/",
+        name=test_name + "/",
         path_prefix=path_prefix,
         galaxies=dict(
             gal=ag.GalaxyModel(redshift=0.5, light=ag.lp.SphericalExponential)

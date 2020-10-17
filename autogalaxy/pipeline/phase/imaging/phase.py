@@ -1,10 +1,11 @@
-import autofit as af
 from astropy import cosmology as cosmo
+
+import autofit as af
 from autogalaxy.dataset import imaging
-from autogalaxy.pipeline.phase.settings import SettingsPhaseImaging
 from autogalaxy.pipeline.phase import dataset
 from autogalaxy.pipeline.phase.imaging.analysis import Analysis
 from autogalaxy.pipeline.phase.imaging.result import Result
+from autogalaxy.pipeline.phase.settings import SettingsPhaseImaging
 
 
 class PhaseImaging(dataset.PhaseDataset):
@@ -15,10 +16,8 @@ class PhaseImaging(dataset.PhaseDataset):
     Analysis = Analysis
     Result = Result
 
-    @af.convert_paths
     def __init__(
         self,
-        paths,
         *,
         search,
         galaxies=None,
@@ -27,7 +26,6 @@ class PhaseImaging(dataset.PhaseDataset):
         settings=SettingsPhaseImaging(),
         cosmology=cosmo.Planck15,
     ):
-
         """
 
         A phase in an lens pipeline. Uses the set non_linear search to try to fit models and hyper_galaxies
@@ -42,11 +40,7 @@ class PhaseImaging(dataset.PhaseDataset):
         """
 
         super().__init__(
-            paths=paths,
-            search=search,
-            galaxies=galaxies,
-            settings=settings,
-            cosmology=cosmology,
+            search=search, galaxies=galaxies, settings=settings, cosmology=cosmology
         )
 
         self.hyper_image_sky = hyper_image_sky
@@ -56,7 +50,7 @@ class PhaseImaging(dataset.PhaseDataset):
 
     def make_analysis(self, dataset, mask, results=None):
         """
-        Create an lens object. Also calls the prior passing and masked_imaging modifying functions to allow child
+        Returns an lens object. Also calls the prior passing and masked_imaging modifying functions to allow child
         classes to change the behaviour of the phase.
 
         Parameters
@@ -71,7 +65,7 @@ class PhaseImaging(dataset.PhaseDataset):
         Returns
         -------
         lens : Analysis
-            An lens object that the non-linear search calls to determine the fit of a set of values
+            An lens object that the `NonLinearSearch` calls to determine the fit of a set of values
         """
 
         masked_imaging = imaging.MaskedImaging(
@@ -89,7 +83,6 @@ class PhaseImaging(dataset.PhaseDataset):
         )
 
     def output_phase_info(self):
-
         file_phase_info = "{}/{}".format(self.search.paths.output_path, "phase.info")
 
         with open(file_phase_info, "w") as phase_info:
@@ -107,3 +100,10 @@ class PhaseImaging(dataset.PhaseDataset):
             phase_info.write("Cosmology = {} \n".format(self.cosmology))
 
             phase_info.close()
+
+
+class PhaseAttributes:
+    def __init__(self, cosmology, hyper_model_image, hyper_galaxy_image_path_dict):
+        self.cosmology = cosmology
+        self.hyper_model_image = hyper_model_image
+        self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict

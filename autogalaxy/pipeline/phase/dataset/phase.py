@@ -1,10 +1,10 @@
-from autoconf import conf
+from astropy import cosmology as cosmo
+
 import autofit as af
 from autoarray.inversion import pixelizations as pix
 from autoarray.inversion import regularization as reg
-from autogalaxy.hyper import hyper_data as hd
-from astropy import cosmology as cosmo
 from autofit.tools.phase import Dataset
+from autogalaxy.hyper import hyper_data as hd
 from autogalaxy.pipeline.phase import abstract
 from autogalaxy.pipeline.phase import extensions
 from autogalaxy.pipeline.phase.dataset.result import Result
@@ -18,10 +18,7 @@ class PhaseDataset(abstract.AbstractPhase):
 
     Result = Result
 
-    @af.convert_paths
-    def __init__(
-        self, paths, settings, search, galaxies=None, cosmology=cosmo.Planck15
-    ):
+    def __init__(self, settings, search, galaxies=None, cosmology=cosmo.Planck15):
         """
 
         A phase in an lens pipeline. Uses the set non_linear search to try to fit models and hyper_galaxies
@@ -34,11 +31,7 @@ class PhaseDataset(abstract.AbstractPhase):
         """
 
         super().__init__(
-            paths,
-            search=search,
-            settings=settings,
-            galaxies=galaxies,
-            cosmology=cosmology,
+            search=search, settings=settings, galaxies=galaxies, cosmology=cosmology
         )
 
         self.hyper_name = None
@@ -93,7 +86,7 @@ class PhaseDataset(abstract.AbstractPhase):
 
     def make_analysis(self, dataset, mask, results=None):
         """
-        Create an lens object. Also calls the prior passing and masked_imaging modifying functions to allow child
+        Returns an lens object. Also calls the prior passing and masked_imaging modifying functions to allow child
         classes to change the behaviour of the phase.
 
         Parameters
@@ -108,7 +101,7 @@ class PhaseDataset(abstract.AbstractPhase):
         Returns
         -------
         lens : Analysis
-            An lens object that the non-linear search calls to determine the fit of a set of values
+            An lens object that the `NonLinearSearch` calls to determine the fit of a set of values
         """
         raise NotImplementedError()
 
@@ -119,7 +112,10 @@ class PhaseDataset(abstract.AbstractPhase):
         pass
 
     def modify_search_paths(self):
-
+        """
+        Modify the output paths of the phase before the non-linear search is run, so that the output path can be
+        customized using the tags of the phase.
+        """
         if self.hyper_name is None:
             hyper_tag = ""
         else:
@@ -132,14 +128,18 @@ class PhaseDataset(abstract.AbstractPhase):
                 f"{hyper_tag}{self.settings.phase_tag_with_inversion}"
             )
 
-    def extend_with_inversion_phase(self, inversion_search):
+    def extend_with_inversion_phase(self, hyper_search, inversion_pixels_fixed=None):
+
         return extensions.InversionPhase(
             phase=self,
-            search=inversion_search,
+            hyper_search=hyper_search,
             model_classes=(pix.Pixelization, reg.Regularization),
+            inversion_pixels_fixed=inversion_pixels_fixed,
         )
 
-    def extend_with_multiple_hyper_phases(self, setup_hyper, include_inversion=False):
+    def extend_with_multiple_hyper_phases(
+        self, setup_hyper, include_inversion=False, inversion_pixels_fixed=None
+    ):
 
         self.use_as_hyper_dataset = True
 
@@ -154,8 +154,9 @@ class PhaseDataset(abstract.AbstractPhase):
                 ):
                     phase_inversion = extensions.InversionPhase(
                         phase=self,
-                        search=setup_hyper.inversion_search,
+                        hyper_search=setup_hyper.inversion_search,
                         model_classes=(pix.Pixelization, reg.Regularization),
+                        inversion_pixels_fixed=inversion_pixels_fixed,
                     )
                 elif (
                     setup_hyper.hyper_image_sky
@@ -163,12 +164,13 @@ class PhaseDataset(abstract.AbstractPhase):
                 ):
                     phase_inversion = extensions.InversionPhase(
                         phase=self,
-                        search=setup_hyper.inversion_search,
+                        hyper_search=setup_hyper.inversion_search,
                         model_classes=(
                             pix.Pixelization,
                             reg.Regularization,
                             hd.HyperImageSky,
                         ),
+                        inversion_pixels_fixed=inversion_pixels_fixed,
                     )
                 elif (
                     not setup_hyper.hyper_image_sky
@@ -176,23 +178,25 @@ class PhaseDataset(abstract.AbstractPhase):
                 ):
                     phase_inversion = extensions.InversionPhase(
                         phase=self,
-                        search=setup_hyper.inversion_search,
+                        hyper_search=setup_hyper.inversion_search,
                         model_classes=(
                             pix.Pixelization,
                             reg.Regularization,
                             hd.HyperBackgroundNoise,
                         ),
+                        inversion_pixels_fixed=inversion_pixels_fixed,
                     )
                 else:
                     phase_inversion = extensions.InversionPhase(
                         phase=self,
-                        search=setup_hyper.inversion_search,
+                        hyper_search=setup_hyper.inversion_search,
                         model_classes=(
                             pix.Pixelization,
                             reg.Regularization,
                             hd.HyperImageSky,
                             hd.HyperBackgroundNoise,
                         ),
+                        inversion_pixels_fixed=inversion_pixels_fixed,
                     )
 
                 hyper_phases.append(phase_inversion)
@@ -200,7 +204,7 @@ class PhaseDataset(abstract.AbstractPhase):
         if setup_hyper.hyper_galaxies_search is not None:
             phase_hyper_galaxy = extensions.HyperGalaxyPhase(
                 phase=self,
-                search=setup_hyper.hyper_galaxies_search,
+                hyper_search=setup_hyper.hyper_galaxies_search,
                 include_sky_background=setup_hyper.hyper_image_sky,
                 include_noise_background=setup_hyper.hyper_background_noise,
                 hyper_galaxy_names=setup_hyper.hyper_galaxy_names,
@@ -218,6 +222,6 @@ class PhaseDataset(abstract.AbstractPhase):
         else:
             return extensions.CombinedHyperPhase(
                 phase=self,
-                search=setup_hyper.hyper_combined_search,
+                hyper_search=setup_hyper.hyper_combined_search,
                 hyper_phases=hyper_phases,
             )

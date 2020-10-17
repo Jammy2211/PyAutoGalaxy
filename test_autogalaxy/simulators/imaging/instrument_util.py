@@ -112,35 +112,35 @@ def simulator_from_instrument(instrument):
             exposure_time_map=ag.Array.full(fill_value=100.0, shape_2d=grid.shape_2d),
             psf=psf,
             background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
-            add_noise=True,
+            add_poisson_noise=True,
         )
     elif instrument in "euclid":
         return ag.SimulatorImaging(
             exposure_time_map=ag.Array.full(fill_value=2260.0, shape_2d=grid.shape_2d),
             psf=psf,
             background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
-            add_noise=True,
+            add_poisson_noise=True,
         )
     elif instrument in "hst":
         return ag.SimulatorImaging(
             exposure_time_map=ag.Array.full(fill_value=2000.0, shape_2d=grid.shape_2d),
             psf=psf,
             background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
-            add_noise=True,
+            add_poisson_noise=True,
         )
     elif instrument in "hst_up":
         return ag.SimulatorImaging(
             exposure_time_map=ag.Array.full(fill_value=2000.0, shape_2d=grid.shape_2d),
             psf=psf,
             background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
-            add_noise=True,
+            add_poisson_noise=True,
         )
     elif instrument in "ao":
         return ag.SimulatorImaging(
             exposure_time_map=ag.Array.full(fill_value=1000.0, shape_2d=grid.shape_2d),
             psf=psf,
             background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
-            add_noise=True,
+            add_poisson_noise=True,
         )
     else:
         raise ValueError("An invalid instrument was entered - ", instrument)
@@ -163,9 +163,7 @@ def simulate_imaging_from_instrument(data_name, instrument, galaxies):
     # Now, lets output this simulated imaging-data to the test_autoarray/simulator folder.
     test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
 
-    dataset_path = af.util.create_path(
-        path=test_path, path_prefix=["dataset", "imaging", data_name, instrument]
-    )
+    dataset_path = f"dataset/imaging/{data_name}/{instrument}"
 
     imaging.output_to_fits(
         image_path=f"{dataset_path}/image.fits",
@@ -197,9 +195,7 @@ def load_test_imaging(instrument, data_name, name=None):
 
     pixel_scales = pixel_scale_from_instrument(instrument=instrument)
 
-    dataset_path = af.util.create_path(
-        path=test_path, path_prefix=["dataset", "imaging", data_name, instrument]
-    )
+    dataset_path = f"dataset/imaging/{data_name}/{instrument}"
 
     return ag.Imaging.from_fits(
         image_path=f"{dataset_path}/image.fits",

@@ -9,7 +9,7 @@ from autogalaxy.plot import lensing_plotters
 
 
 def setting(section, name):
-    return conf.instance.visualize_plots.get(section, name, bool)
+    return conf.instance["visualize"]["plots"][section][name]
 
 
 def plot_setting(section, name):

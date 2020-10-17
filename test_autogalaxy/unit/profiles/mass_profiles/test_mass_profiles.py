@@ -4,7 +4,7 @@ from autoconf import conf
 import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autogalaxy import mock
+from autogalaxy import mock
 
 
 def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
@@ -477,7 +477,7 @@ class TestDecorators:
         self
     ):
 
-        # ``False`` in interpolate.ini
+        # `False` in interpolate.ini
 
         mask = ag.Mask2D.manual(
             mask=[
@@ -505,7 +505,7 @@ class TestDecorators:
 
         assert (convergence == convergence_no_interpolate).all()
 
-        # ``False`` in interpolate.ini
+        # `False` in interpolate.ini
 
         mass_profile = ag.mp.SphericalIsothermal(einstein_radius=1.0)
 
@@ -527,7 +527,7 @@ class TestDecorators:
         self
     ):
 
-        # ``False`` in interpolate.ini
+        # `False` in interpolate.ini
 
         mask = ag.Mask2D.manual(
             mask=[
@@ -555,7 +555,7 @@ class TestDecorators:
 
         assert (potential == potential_no_interpolate).all()
 
-        # ``False`` in interpolate.ini
+        # `False` in interpolate.ini
 
         mass_profile = ag.mp.SphericalIsothermal(einstein_radius=1.0)
 
@@ -575,7 +575,7 @@ class TestDecorators:
         self
     ):
 
-        # ``False`` in interpolate.ini
+        # `False` in interpolate.ini
 
         mask = ag.Mask2D.manual(
             mask=[
@@ -603,7 +603,7 @@ class TestDecorators:
 
         assert (deflections == deflections_no_interpolate).all()
 
-        # ``False`` in interpolate.ini
+        # `False` in interpolate.ini
 
         mass_profile = ag.mp.SphericalIsothermal(einstein_radius=1.0)
 

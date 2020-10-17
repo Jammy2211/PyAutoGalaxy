@@ -1,21 +1,20 @@
 import os
 import shutil
 
-import autogalaxy as ag
 import numpy as np
 import pytest
 
+import autogalaxy as ag
+
 
 def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__noise_normalization_correct():
-
     grid = ag.GridIterate.uniform(shape_2d=(11, 11), pixel_scales=0.2)
 
     psf = ag.Kernel.manual_2d(
-        array=np.array([[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]]),
-        pixel_scales=0.2,
+        array=[[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]], pixel_scales=0.2
     )
 
-    galaxy_galaxy = ag.Galaxy(
+    lens_galaxy = ag.Galaxy(
         redshift=0.5,
         light=ag.lp.EllipticalSersic(centre=(0.1, 0.1), intensity=0.1),
         mass=ag.mp.EllipticalIsothermal(centre=(0.1, 0.1), einstein_radius=1.8),
@@ -26,18 +25,15 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
         light=ag.lp.EllipticalExponential(centre=(0.1, 0.1), intensity=0.5),
     )
 
-    plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
+    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
     simulator = ag.SimulatorImaging(
-        exposure_time_map=ag.Array.full(fill_value=300.0, shape_2d=grid.shape_2d),
-        psf=psf,
-        background_sky_map=ag.Array.zeros(shape_2d=grid.shape_2d),
-        add_noise=False,
+        exposure_time=300.0, psf=psf, add_poisson_noise=False
     )
 
     imaging = simulator.from_plane_and_grid(plane=plane, grid=grid)
 
-    imaging.noise_map = ag.Array.ones(shape_2d=imaging.image.shape_2d)
+    imaging.noise_map = ag.Array.ones(shape_2d=imaging.image.shape_2d, pixel_scales=0.2)
 
     path = "{}/data_temp/simulate_and_fit".format(
         os.path.dirname(os.path.realpath(__file__))
@@ -74,7 +70,7 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
         settings=ag.SettingsMaskedImaging(grid_class=ag.GridIterate),
     )
 
-    plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
+    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
     fit = ag.FitImaging(masked_imaging=masked_imaging, plane=plane)
 
@@ -89,14 +85,13 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
 
 
 def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0__noise_normalization_correct():
-
     grid = ag.Grid.uniform(shape_2d=(11, 11), pixel_scales=0.2, sub_size=1)
 
     psf = ag.Kernel.from_gaussian(
         shape_2d=(3, 3), pixel_scales=0.2, sigma=0.75, renormalize=True
     )
 
-    galaxy_galaxy = ag.Galaxy(
+    lens_galaxy = ag.Galaxy(
         redshift=0.5,
         light=ag.lp.EllipticalSersic(centre=(0.1, 0.1), intensity=0.1),
         mass=ag.mp.EllipticalIsothermal(centre=(0.1, 0.1), einstein_radius=1.8),
@@ -105,17 +100,14 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
         redshift=1.0,
         light=ag.lp.EllipticalExponential(centre=(0.1, 0.1), intensity=0.5),
     )
-    plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
+    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
     simulator = ag.SimulatorImaging(
-        exposure_time_map=ag.Array.full(fill_value=300.0, shape_2d=grid.shape_2d),
-        psf=psf,
-        background_sky_map=ag.Array.zeros(shape_2d=grid.shape_2d),
-        add_noise=False,
+        exposure_time=300.0, psf=psf, add_poisson_noise=False
     )
 
     imaging = simulator.from_plane_and_grid(plane=plane, grid=grid)
-    imaging.noise_map = ag.Array.ones(shape_2d=imaging.image.shape_2d)
+    imaging.noise_map = ag.Array.ones(shape_2d=imaging.image.shape_2d, pixel_scales=0.2)
 
     path = "{}/data_temp/simulate_and_fit".format(
         os.path.dirname(os.path.realpath(__file__))
@@ -152,7 +144,7 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
         settings=ag.SettingsMaskedImaging(grid_class=ag.Grid, sub_size=1),
     )
 
-    plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
+    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
     fit = ag.FitImaging(masked_imaging=masked_imaging, plane=plane)
 
@@ -167,10 +159,9 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
 
 
 def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normalization_correct():
-
     grid = ag.Grid.uniform(shape_2d=(51, 51), pixel_scales=0.1, sub_size=2)
 
-    galaxy_galaxy = ag.Galaxy(
+    lens_galaxy = ag.Galaxy(
         redshift=0.5,
         light=ag.lp.EllipticalSersic(centre=(0.1, 0.1), intensity=0.1),
         mass=ag.mp.EllipticalIsothermal(centre=(0.1, 0.1), einstein_radius=1.0),
@@ -181,13 +172,12 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
         light=ag.lp.EllipticalExponential(centre=(0.1, 0.1), intensity=0.5),
     )
 
-    plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
+    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
     simulator = ag.SimulatorInterferometer(
         uv_wavelengths=np.ones(shape=(7, 2)),
         transformer_class=ag.TransformerDFT,
-        exposure_time_map=ag.Array.full(fill_value=300.0, shape_2d=grid.shape_2d),
-        background_sky_map=ag.Array.zeros(shape_2d=grid.shape_2d),
+        exposure_time=300.0,
         noise_if_add_noise_false=1.0,
         noise_sigma=None,
     )
@@ -233,7 +223,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
         ),
     )
 
-    plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
+    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
     fit = ag.FitInterferometer(
         masked_interferometer=masked_interferometer,
@@ -247,7 +237,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
 
     reg = ag.reg.Constant(coefficient=0.0001)
 
-    galaxy_galaxy = ag.Galaxy(
+    lens_galaxy = ag.Galaxy(
         redshift=0.5,
         light=ag.lp.EllipticalSersic(centre=(0.1, 0.1), intensity=0.1),
         mass=ag.mp.EllipticalIsothermal(centre=(0.1, 0.1), einstein_radius=1.0),
@@ -255,7 +245,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
 
     source_galaxy = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-    plane = ag.Plane(galaxies=[galaxy_galaxy, source_galaxy])
+    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
     fit = ag.FitInterferometer(
         masked_interferometer=masked_interferometer,
@@ -268,5 +258,4 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
         os.path.dirname(os.path.realpath(__file__))
     )  # Setup path so we can output the simulated image.
 
-    if os.path.exists(path) == True:
-        shutil.rmtree(path)
+    shutil.rmtree(path, ignore_errors=True)

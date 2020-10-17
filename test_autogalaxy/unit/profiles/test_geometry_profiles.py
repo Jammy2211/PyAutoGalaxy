@@ -2,18 +2,13 @@ from __future__ import division, print_function
 
 from os import path
 
-from autoconf import conf
-import autogalaxy as ag
 import numpy as np
 import pytest
+
+import autogalaxy as ag
 from autogalaxy.profiles import geometry_profiles
 
 directory = path.dirname(path.realpath(__file__))
-
-
-@pytest.fixture(scope="session", autouse=True)
-def do_something():
-    conf.instance = conf.Config(config_path="{}/config/radial_min".format(directory))
 
 
 class TestGeometryProfile:

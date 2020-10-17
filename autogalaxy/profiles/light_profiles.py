@@ -355,7 +355,8 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
         )
 
     def intensity_at_radius(self, radius):
-        """ Compute the intensity of the profile at a given radius.
+        """
+    Returns the intensity of the profile at a given radius.
 
         Parameters
         ----------
@@ -773,3 +774,129 @@ class SphericalCoreSersic(EllipticalCoreSersic):
         self.intensity_break = intensity_break
         self.alpha = alpha
         self.gamma = gamma
+
+
+class EllipticalChameleon(EllipticalLightProfile):
+    @af.map_types
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: dim.Luminosity = 0.1,
+        core_radius_0: dim.Length = 0.01,
+        core_radius_1: dim.Length = 0.005,
+    ):
+        """ The elliptical Chameleon light profile.
+
+        Profile form:
+            mass_to_light_ratio * intensity *\
+                (1.0 / Sqrt(x^2 + (y/q)^2 + rc^2) - 1.0 / Sqrt(x^2 + (y/q)^2 + (rc + dr)**2.0))
+
+        Parameters
+        ----------
+        centre : (float, float)
+            The (y,x) arc-second coordinates of the profile centre.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+        intensity : float
+            Overall intensity normalisation of the light profiles (electrons per second).
+        core_radius_0 : the core size of the first elliptical cored Isothermal profile.
+        core_radius_1 : rc + dr is the core size of the second elliptical cored Isothermal profile.
+             We use dr here is to avoid negative values.
+        """
+
+        super(EllipticalChameleon, self).__init__(
+            centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
+        )
+        self.core_radius_0 = core_radius_0
+        self.core_radius_1 = core_radius_1
+        if self.axis_ratio > 0.99999:
+            self.axis_ratio = 0.99999
+
+    def image_from_grid_radii(self, grid_radii):
+        """Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.
+
+        Parameters
+        ----------
+        grid_radii : float
+            The radial distance from the centre of the profile. for each coordinate on the grid.
+        """
+
+        axis_ratio_factor = (1.0 + self.axis_ratio) ** 2.0
+
+        return np.multiply(
+            self.intensity / (1 + self.axis_ratio),
+            np.add(
+                np.divide(
+                    1.0,
+                    np.sqrt(
+                        np.add(
+                            np.square(grid_radii),
+                            (4.0 * self.core_radius_0 ** 2.0) / axis_ratio_factor,
+                        )
+                    ),
+                ),
+                -np.divide(
+                    1.0,
+                    np.sqrt(
+                        np.add(
+                            np.square(grid_radii),
+                            (4.0 * self.core_radius_1 ** 2.0) / axis_ratio_factor,
+                        )
+                    ),
+                ),
+            ),
+        )
+
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
+    def image_from_grid(self, grid, grid_radial_minimum=None):
+        """
+        Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
+        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        Parameters
+        ----------
+        grid : grid_like
+            The (y, x) coordinates in the original reference frame of the grid.
+        """
+        return self.image_from_grid_radii(self.grid_to_elliptical_radii(grid))
+
+
+class SphericalChameleon(EllipticalChameleon):
+    @af.map_types
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        intensity: dim.Luminosity = 0.1,
+        core_radius_0: dim.Length = 0.01,
+        core_radius_1: dim.Length = 0.005,
+    ):
+        """ The spherical Chameleon light profile.
+
+        Profile form:
+            mass_to_light_ratio * intensity *\
+                (1.0 / Sqrt(x^2 + (y/q)^2 + rc^2) - 1.0 / Sqrt(x^2 + (y/q)^2 + (rc + dr)**2.0))
+
+        Parameters
+        ----------
+        centre : (float, float)
+            The (y,x) arc-second coordinates of the profile centre.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+        intensity : float
+            Overall intensity normalisation of the light profiles (electrons per second).
+        core_radius_0 : the core size of the first elliptical cored Isothermal profile.
+        core_radius_1 : rc + dr is the core size of the second elliptical cored Isothermal profile.
+             We use dr here is to avoid negative values.
+        """
+
+        super(SphericalChameleon, self).__init__(
+            centre=centre,
+            elliptical_comps=(0.0, 0.0),
+            intensity=intensity,
+            core_radius_0=core_radius_0,
+            core_radius_1=core_radius_1,
+        )

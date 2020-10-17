@@ -1,12 +1,11 @@
-import os
 from os import path
 
-from autoconf import conf
-import autofit as af
-import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autogalaxy import mock
+
+import autofit as af
+import autogalaxy as ag
+from autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -65,13 +64,12 @@ class TestMakeAnalysis:
 
     def test__phase_can_receive_hyper_image_and_noise_maps(self, mask_7x7):
         phase_interferometer_7 = ag.PhaseInterferometer(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=ag.Redshift),
                 galaxy1=ag.GalaxyModel(redshift=ag.Redshift),
             ),
             hyper_background_noise=ag.hyper_data.HyperBackgroundNoise,
-            search=mock.MockSearch(),
+            search=mock.MockSearch("test_phase"),
             real_space_mask=mask_7x7,
         )
 
@@ -84,15 +82,13 @@ class TestMakeAnalysis:
     def test__masked_interferometer__settings_inputs_are_used_in_masked_interferometer(
         self, interferometer_7, mask_7x7
     ):
-
         phase_interferometer_7 = ag.PhaseInterferometer(
-            phase_name="phase_interferometer_7",
             settings=ag.SettingsPhaseInterferometer(
                 settings_masked_interferometer=ag.SettingsMaskedInterferometer(
                     grid_class=ag.Grid, grid_inversion_class=ag.Grid, sub_size=3
                 )
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch("phase_interferometer_7"),
             real_space_mask=mask_7x7,
         )
 
@@ -109,7 +105,6 @@ class TestMakeAnalysis:
         assert isinstance(analysis.masked_dataset.transformer, ag.TransformerNUFFT)
 
         phase_interferometer_7 = ag.PhaseInterferometer(
-            phase_name="phase_interferometer_7",
             settings=ag.SettingsPhaseInterferometer(
                 settings_masked_interferometer=ag.SettingsMaskedInterferometer(
                     grid_class=ag.GridIterate,
@@ -119,7 +114,7 @@ class TestMakeAnalysis:
                     transformer_class=ag.TransformerDFT,
                 )
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch("phase_interferometer_7"),
             real_space_mask=mask_7x7,
         )
 
@@ -138,7 +133,6 @@ class TestHyperMethods:
     def test__phase_is_extended_with_hyper_phases__sets_up_hyper_images(
         self, interferometer_7, mask_7x7
     ):
-
         galaxies = af.ModelInstance()
         galaxies.galaxy = ag.Galaxy(redshift=0.5)
         galaxies.source = ag.Galaxy(redshift=1.0)
@@ -160,7 +154,9 @@ class TestHyperMethods:
 
         results = mock.MockResults(
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
-            hyper_model_image=ag.Array.full(fill_value=3.0, shape_2d=(3, 3)),
+            hyper_model_image=ag.Array.full(
+                fill_value=3.0, shape_2d=(3, 3), pixel_scales=1.0
+            ),
             hyper_galaxy_visibilities_path_dict=hyper_galaxy_visibilities_path_dict,
             hyper_model_visibilities=ag.Visibilities.full(
                 fill_value=6.0, shape_1d=(7,)
@@ -170,7 +166,6 @@ class TestHyperMethods:
         )
 
         phase_interferometer_7 = ag.PhaseInterferometer(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5, hyper_galaxy=ag.HyperGalaxy)
             ),
@@ -178,7 +173,7 @@ class TestHyperMethods:
             real_space_mask=mask_7x7,
         )
 
-        setup_hyper = ag.SetupHyper(hyper_combined_search=mock.MockSearch())
+        setup_hyper = ag.SetupHyper(hyper_combined_search=mock.MockSearch("test_phase"))
 
         phase_interferometer_7.extend_with_multiple_hyper_phases(
             setup_hyper=setup_hyper

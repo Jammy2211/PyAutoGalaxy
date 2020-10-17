@@ -9,7 +9,7 @@ class CombinedHyperPhase(HyperPhase):
     def __init__(
         self,
         phase: PhaseImaging,
-        search: af.NonLinearSearch,
+        hyper_search: af.NonLinearSearch,
         hyper_phases: (HyperPhase,) = tuple(),
     ):
         """
@@ -23,7 +23,9 @@ class CombinedHyperPhase(HyperPhase):
         hyper_phases
             The classes of hyper_galaxies phases to be run following the initial phase
         """
-        super().__init__(phase=phase, search=search, hyper_name="hyper_combined")
+        super().__init__(
+            phase=phase, hyper_search=hyper_search, hyper_name="hyper_combined"
+        )
         self.hyper_phases = hyper_phases
 
     @property

@@ -6,6 +6,7 @@ from autoarray.structures import grids
 from autogalaxy import dimensions as dim
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
+from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 from pyquad import quad_grid
 from scipy import special
 import typing
@@ -121,7 +122,9 @@ class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
         return arrays.Array.manual_1d(
-            array=np.zeros(shape=grid.shape[0]), shape_2d=grid.sub_shape_2d
+            array=np.zeros(shape=grid.shape[0]),
+            shape_2d=grid.sub_shape_2d,
+            pixel_scales=grid.pixel_scales,
         )
 
     @grids.grid_like_to_structure
@@ -282,7 +285,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
-        The `grid_like_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        The `grid_like_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See \
         *aa.grid_like_to_structure* for a description of the output.
 
         Parameters
@@ -735,12 +738,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
             / np.sqrt(1 - self.axis_ratio ** 2)
         )
 
-        psi = np.sqrt(
-            np.add(
-                np.multiply(self.axis_ratio ** 2, np.square(grid[:, 1])),
-                np.square(grid[:, 0]),
-            )
-        )
+        psi = psi_from(grid=grid, axis_ratio=self.axis_ratio, core_radius=0.0)
 
         deflection_y = np.arctanh(
             np.divide(np.multiply(np.sqrt(1 - self.axis_ratio ** 2), grid[:, 0]), psi)

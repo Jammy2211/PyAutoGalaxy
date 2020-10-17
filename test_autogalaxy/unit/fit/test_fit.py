@@ -1,8 +1,9 @@
-import autogalaxy as ag
 import numpy as np
 import pytest
+
+import autogalaxy as ag
 from autoarray.inversion import inversions
-from test_autogalaxy.mock import MockLightProfile
+from autogalaxy.mock import MockLightProfile
 
 
 class TestFitImaging:
@@ -13,25 +14,23 @@ class TestFitImaging:
             # Thus the chi squared is 4.0**2.0 + 3.0**2.0 = 25.0
 
             psf = ag.Kernel.manual_2d(
-                array=(np.array([[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]])),
+                array=[[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]],
                 pixel_scales=1.0,
             )
 
             imaging = ag.Imaging(
-                image=5.0 * ag.Array.ones(shape_2d=(3, 4)),
+                image=5.0 * ag.Array.ones(shape_2d=(3, 4), pixel_scales=1.0),
                 psf=psf,
-                noise_map=ag.Array.ones(shape_2d=(3, 4)),
+                noise_map=ag.Array.ones(shape_2d=(3, 4), pixel_scales=1.0),
             )
             imaging.image[6] = 4.0
 
             mask = ag.Mask2D.manual(
-                mask=np.array(
-                    [
-                        [True, True, True, True],
-                        [True, False, False, True],
-                        [True, True, True, True],
-                    ]
-                ),
+                mask=[
+                    [True, True, True, True],
+                    [True, False, False, True],
+                    [True, True, True, True],
+                ],
                 pixel_scales=1.0,
             )
 
@@ -116,26 +115,24 @@ class TestFitImaging:
             # Thus, the chi squared is 4.0**2.0 + 0.0**2.0 = 16.0
 
             psf = ag.Kernel.manual_2d(
-                array=(np.array([[0.0, 0.0, 0.0], [0.0, 1.0, 3.0], [0.0, 0.0, 0.0]])),
+                array=[[0.0, 0.0, 0.0], [0.0, 1.0, 3.0], [0.0, 0.0, 0.0]],
                 pixel_scales=1.0,
                 renormalize=False,
             )
 
             imaging = ag.Imaging(
-                image=5.0 * ag.Array.ones(shape_2d=(3, 4)),
+                image=5.0 * ag.Array.ones(shape_2d=(3, 4), pixel_scales=1.0),
                 psf=psf,
-                noise_map=ag.Array.ones(shape_2d=(3, 4)),
+                noise_map=ag.Array.ones(shape_2d=(3, 4), pixel_scales=1.0),
             )
             imaging.image[6] = 4.0
 
             mask = ag.Mask2D.manual(
-                mask=np.array(
-                    [
-                        [True, True, True, True],
-                        [True, False, False, True],
-                        [True, True, True, True],
-                    ]
-                ),
+                mask=[
+                    [True, True, True, True],
+                    [True, False, False, True],
+                    [True, True, True, True],
+                ],
                 pixel_scales=1.0,
             )
 
@@ -228,25 +225,23 @@ class TestFitImaging:
             # This reduces the chi squared to 2.0 instead of 4.0
 
             psf = ag.Kernel.manual_2d(
-                array=(np.array([[0.0, 0.0, 0.0], [0.0, 1.0, 3.0], [0.0, 0.0, 0.0]])),
+                array=[[0.0, 0.0, 0.0], [0.0, 1.0, 3.0], [0.0, 0.0, 0.0]],
                 pixel_scales=1.0,
             )
 
             imaging = ag.Imaging(
-                image=5.0 * ag.Array.ones(shape_2d=(3, 4)),
+                image=5.0 * ag.Array.ones(shape_2d=(3, 4), pixel_scales=1.0),
                 psf=psf,
-                noise_map=ag.Array.ones(shape_2d=(3, 4)),
+                noise_map=ag.Array.ones(shape_2d=(3, 4), pixel_scales=1.0),
             )
             imaging.image[6] = 4.0
 
             mask = ag.Mask2D.manual(
-                mask=np.array(
-                    [
-                        [True, True, True, True],
-                        [True, False, False, True],
-                        [True, True, True, True],
-                    ]
-                ),
+                mask=[
+                    [True, True, True, True],
+                    [True, False, False, True],
+                    [True, True, True, True],
+                ],
                 pixel_scales=1.0,
             )
 
@@ -266,8 +261,8 @@ class TestFitImaging:
                 hyper_galaxy=ag.HyperGalaxy(
                     contribution_factor=1.0, noise_factor=1.0, noise_power=1.0
                 ),
-                hyper_model_image=ag.Array.ones(shape_2d=(1, 2)),
-                hyper_galaxy_image=ag.Array.ones(shape_2d=(1, 2)),
+                hyper_model_image=ag.Array.ones(shape_2d=(1, 2), pixel_scales=1.0),
+                hyper_galaxy_image=ag.Array.ones(shape_2d=(1, 2), pixel_scales=1.0),
                 hyper_minimum_value=0.0,
             )
 
@@ -336,27 +331,24 @@ class TestFitImaging:
             )
 
         def test__hyper_image_changes_background_sky__reflected_in_likelihood(self):
-
             psf = ag.Kernel.manual_2d(
-                array=(np.array([[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]])),
+                array=[[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]],
                 pixel_scales=1.0,
             )
 
             imaging = ag.Imaging(
-                image=ag.Array.full(fill_value=4.0, shape_2d=(3, 4)),
+                image=ag.Array.full(fill_value=4.0, shape_2d=(3, 4), pixel_scales=1.0),
                 psf=psf,
-                noise_map=ag.Array.ones(shape_2d=(3, 4)),
+                noise_map=ag.Array.ones(shape_2d=(3, 4), pixel_scales=1.0),
             )
             imaging.image[5] = 5.0
 
             mask = ag.Mask2D.manual(
-                mask=np.array(
-                    [
-                        [True, True, True, True],
-                        [True, False, False, True],
-                        [True, True, True, True],
-                    ]
-                ),
+                mask=[
+                    [True, True, True, True],
+                    [True, False, False, True],
+                    [True, True, True, True],
+                ],
                 pixel_scales=1.0,
             )
 
@@ -444,27 +436,24 @@ class TestFitImaging:
         def test__hyper_background_changes_background_noise_map__reflected_in_likelihood(
             self
         ):
-
             psf = ag.Kernel.manual_2d(
-                array=(np.array([[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]])),
+                array=[[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]],
                 pixel_scales=1.0,
             )
 
             imaging = ag.Imaging(
-                image=5.0 * ag.Array.ones(shape_2d=(3, 4)),
+                image=5.0 * ag.Array.ones(shape_2d=(3, 4), pixel_scales=1.0),
                 psf=psf,
-                noise_map=ag.Array.ones(shape_2d=(3, 4)),
+                noise_map=ag.Array.ones(shape_2d=(3, 4), pixel_scales=1.0),
             )
             imaging.image[6] = 4.0
 
             mask = ag.Mask2D.manual(
-                mask=np.array(
-                    [
-                        [True, True, True, True],
-                        [True, False, False, True],
-                        [True, True, True, True],
-                    ]
-                ),
+                mask=[
+                    [True, True, True, True],
+                    [True, False, False, True],
+                    [True, True, True, True],
+                ],
                 pixel_scales=1.0,
             )
 
@@ -551,7 +540,6 @@ class TestFitImaging:
 
     class TestCompareToManualProfilesOnly:
         def test___all_fit_quantities__no_hyper_methods(self, masked_imaging_7x7):
-
             g0 = ag.Galaxy(
                 redshift=0.5,
                 light_profile=ag.lp.EllipticalSersic(intensity=1.0),
@@ -657,7 +645,6 @@ class TestFitImaging:
         def test___all_fit_quantities__including_hyper_methods(
             self, masked_imaging_7x7
         ):
-
             hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
 
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
@@ -746,7 +733,6 @@ class TestFitImaging:
         def test___blurred_and_model_images_of_galaxies_and_unmasked_blurred_image_properties(
             self, masked_imaging_7x7
         ):
-
             g0 = ag.Galaxy(
                 redshift=0.5,
                 light_profile=ag.lp.EllipticalSersic(intensity=1.0),
@@ -796,7 +782,6 @@ class TestFitImaging:
 
     class TestCompareToManualInversionOnly:
         def test___all_quantities__no_hyper_methods(self, masked_imaging_7x7):
-
             # Ensures the inversion grid is used, as this would cause the test to fail.
             masked_imaging_7x7.grid[0, 0] = -100.0
 
@@ -916,7 +901,6 @@ class TestFitImaging:
             )
 
         def test___all_fit_quantities__include_hyper_methods(self, masked_imaging_7x7):
-
             hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
 
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
@@ -1032,7 +1016,6 @@ class TestFitImaging:
         def test___blurred_and_model_images_of_galaxies_and_unmasked_blurred_image_properties(
             self, masked_imaging_7x7
         ):
-
             pix = ag.pix.Rectangular(shape=(3, 3))
             reg = ag.reg.Constant(coefficient=1.0)
 
@@ -1161,7 +1144,6 @@ class TestFitImaging:
         def test___fit_galaxy_model_image_dict__has_blurred_images_and_inversion_mapped_reconstructed_image(
             self, masked_imaging_7x7
         ):
-
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
             )
@@ -1228,7 +1210,6 @@ class TestFitImaging:
             )
 
         def test___all_fit_quantities__include_hyper_methods(self, masked_imaging_7x7):
-
             hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
 
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
@@ -1247,8 +1228,8 @@ class TestFitImaging:
                 hyper_galaxy=ag.HyperGalaxy(
                     contribution_factor=1.0, noise_factor=1.0, noise_power=1.0
                 ),
-                hyper_model_image=ag.Array.ones(shape_2d=(3, 3)),
-                hyper_galaxy_image=ag.Array.ones(shape_2d=(3, 3)),
+                hyper_model_image=ag.Array.ones(shape_2d=(3, 3), pixel_scales=1.0),
+                hyper_galaxy_image=ag.Array.ones(shape_2d=(3, 3), pixel_scales=1.0),
                 hyper_minimum_value=0.0,
             )
 
@@ -1409,12 +1390,10 @@ class TestFitInterferometer:
 
             # Thus the chi squared is 4.0**2.0 + 3.0**2.0 = 25.0
 
-            uv_wavelengths = np.array([[0.0, 0.0]])
-
             interferometer = ag.Interferometer(
                 visibilities=ag.Visibilities.full(fill_value=5.0, shape_1d=(1,)),
                 noise_map=ag.Visibilities.ones(shape_1d=(1,)),
-                uv_wavelengths=uv_wavelengths,
+                uv_wavelengths=np.array([[0.0, 0.0]]),
             )
 
             interferometer.visibilities[0, 1] = 4.0
@@ -1422,13 +1401,11 @@ class TestFitInterferometer:
             visibilities_mask = np.full(fill_value=False, shape=(1, 2))
 
             real_space_mask = ag.Mask2D.manual(
-                mask=np.array(
-                    [
-                        [True, True, True, True],
-                        [True, False, False, True],
-                        [True, True, True, True],
-                    ]
-                ),
+                mask=[
+                    [True, True, True, True],
+                    [True, False, False, True],
+                    [True, True, True, True],
+                ],
                 pixel_scales=1.0,
             )
 
@@ -1471,7 +1448,6 @@ class TestFitInterferometer:
         def test__hyper_background_changes_background_sky__reflected_in_likelihood(
             self
         ):
-
             uv_wavelengths = np.array([[1.0, 0.0], [1.0, 1.0], [2.0, 2.0]])
 
             interferometer = ag.Interferometer(
@@ -1483,13 +1459,11 @@ class TestFitInterferometer:
             visibilities_mask = np.full(fill_value=False, shape=(1, 2))
 
             real_space_mask = ag.Mask2D.manual(
-                mask=np.array(
-                    [
-                        [True, True, True, True, True],
-                        [True, False, False, False, True],
-                        [True, True, True, True, True],
-                    ]
-                ),
+                mask=[
+                    [True, True, True, True, True],
+                    [True, False, False, False, True],
+                    [True, True, True, True, True],
+                ],
                 pixel_scales=1.0,
             )
 
@@ -1658,7 +1632,6 @@ class TestFitInterferometer:
         def test___all_fit_quantities__hyper_background_noise(
             self, masked_interferometer_7
         ):
-
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
             hyper_noise_map = hyper_background_noise.hyper_noise_map_from_noise_map(
@@ -1687,7 +1660,6 @@ class TestFitInterferometer:
 
     class TestCompareToManualInversionOnly:
         def test___all_fit_quantities__no_hyper_methods(self, masked_interferometer_7):
-
             # Ensures the inversion grid is used, as this would cause the test to fail.
             masked_interferometer_7.grid[0, 0] = -100.0
 
@@ -1857,7 +1829,6 @@ class TestFitInterferometer:
         def test___all_fit_quantities__hyper_background_noise(
             self, masked_interferometer_7
         ):
-
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
             hyper_noise_map = hyper_background_noise.hyper_noise_map_from_noise_map(
@@ -1886,7 +1857,6 @@ class TestFitInterferometer:
         def test___all_fit_quantities__uses_linear_operator_inversion(
             self, masked_interferometer_7_lop
         ):
-
             # Ensures the inversion grid is used, as this would cause the test to fail.
             masked_interferometer_7_lop.grid[0, 0] = -100.0
 
@@ -2108,7 +2078,6 @@ class TestFitInterferometer:
         def test___fit_galaxy_model_visibilities_dict__has_image_and_inversion_mapped_reconstructed_image(
             self, masked_interferometer_7
         ):
-
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
             )
@@ -2171,7 +2140,6 @@ class TestFitInterferometer:
         def test___fit_galaxy_model_visibilities_dict__has_profile_visibilitiess_and_inversion_mapped_reconstructed_visibilities(
             self, masked_interferometer_7
         ):
-
             g0 = ag.Galaxy(
                 redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
             )
@@ -2242,7 +2210,6 @@ class TestFitInterferometer:
         def test___all_fit_quantities__hyper_background_noise(
             self, masked_interferometer_7
         ):
-
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
             hyper_noise_map = hyper_background_noise.hyper_noise_map_from_noise_map(

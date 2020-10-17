@@ -1,27 +1,17 @@
-import os
+import typing
 
-from autoconf import conf
-import autofit as af
-import autogalaxy as ag
 import numpy as np
 import pytest
 from astropy import cosmology as cosmo
-from autoarray.structures import grids
-from autogalaxy import lensing
-from autogalaxy.profiles import geometry_profiles
 from pyquad import quad_grid
 from skimage import measure
-from test_autogalaxy import mock
-import typing
 
-
-@pytest.fixture(autouse=True)
-def reset_config():
-    """
-    Use configuration from the default path. You may want to change this to set a specific path.
-    """
-    test_path = "{}/config/lensing".format(os.path.dirname(os.path.realpath(__file__)))
-    conf.instance = conf.Config(config_path=test_path)
+import autofit as af
+import autogalaxy as ag
+from autoarray.structures import grids
+from autogalaxy import lensing
+from autogalaxy import mock
+from autogalaxy.profiles import geometry_profiles
 
 
 class MockEllipticalIsothermal(
@@ -69,7 +59,7 @@ class MockEllipticalIsothermal(
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
-        The `grid_like_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        The `grid_like_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See \
         *ag.grid_like_to_structure* for a description of the output.
 
         Parameters
@@ -286,7 +276,6 @@ class TestDeflectionsViaPotential:
         assert mean_error < 1e-4
 
     def test__compare_sie_at_phi_45__deflections_via_potential_and_calculation(self):
-
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.111111, 0.0), einstein_radius=2.0
         )
@@ -304,7 +293,6 @@ class TestDeflectionsViaPotential:
         assert mean_error < 1e-4
 
     def test__compare_sie_at_phi_0__deflections_via_potential_and_calculation(self):
-
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
         )
@@ -480,7 +468,6 @@ class TestBoundingBox:
     def test__convergence_bounding_box_for_single_mass_profile__extends_to_threshold(
         self
     ):
-
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
         assert sis.convergence_bounding_box(
@@ -502,7 +489,6 @@ class TestBoundingBox:
     def test__convergence_bounding_box__mass_profiles_are_only_point_masses__uses_their_einstein_radii(
         self
     ):
-
         point_mass_0 = ag.mp.PointMass(einstein_radius=0.1)
 
         convergence_bounding_box = point_mass_0.convergence_bounding_box()
@@ -762,12 +748,11 @@ class TestCriticalCurvesAndCaustics:
         x_centre = np.mean(radial_caustic[:, 1])
 
         assert 0.3 < y_centre < 0.7
-        assert 0.8 < x_centre < 1.2
+        assert 0.7 < x_centre < 1.2
 
     def test__compare_tangential_critical_curves_from_magnification_and_eigen_values(
         self
     ):
-
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
         )
@@ -876,7 +861,6 @@ class TestEinsteinRadiusMassfrom:
     def test__compare_einstein_radius_from_tangential_critical_curve_and_rescaled__sie(
         self
     ):
-
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0, elliptical_comps=(0.0, -0.25)
         )

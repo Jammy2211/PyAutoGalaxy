@@ -2,6 +2,12 @@ import autogalaxy as ag
 import numpy as np
 import pytest
 from autogalaxy import exc
+from autogalaxy.util.plane_util import (
+    plane_image_of_galaxies_from,
+    ordered_plane_redshifts_from,
+    ordered_plane_redshifts_with_slicing_from,
+    galaxies_in_redshift_ordered_planes_from,
+)
 
 
 class TestPlaneImageFromGrid:
@@ -12,7 +18,7 @@ class TestPlaneImageFromGrid:
 
         grid = np.array([[-1.5, -1.5], [1.5, 1.5]])
 
-        plane_image = ag.util.plane.plane_image_of_galaxies_from(
+        plane_image = plane_image_of_galaxies_from(
             shape=(3, 3), grid=grid, galaxies=[galaxy], buffer=0.0
         )
 
@@ -57,7 +63,7 @@ class TestPlaneImageFromGrid:
             ]
         )
 
-        plane_image = ag.util.plane.plane_image_of_galaxies_from(
+        plane_image = plane_image_of_galaxies_from(
             shape=(3, 3), grid=grid, galaxies=[galaxy], buffer=0.0
         )
 
@@ -91,7 +97,7 @@ class TestPlaneImageFromGrid:
 
         grid = np.array([[-1.5, -1.5], [1.5, 1.5]])
 
-        plane_image = ag.util.plane.plane_image_of_galaxies_from(
+        plane_image = plane_image_of_galaxies_from(
             shape=(2, 3), grid=grid, galaxies=[galaxy], buffer=0.0
         )
 
@@ -122,7 +128,7 @@ class TestPlaneImageFromGrid:
 
         grid = np.array([[-1.5, -1.5], [1.5, 1.5]])
 
-        plane_image = ag.util.plane.plane_image_of_galaxies_from(
+        plane_image = plane_image_of_galaxies_from(
             shape=(3, 2), grid=grid, galaxies=[galaxy], buffer=0.0
         )
 
@@ -153,7 +159,7 @@ class TestPlaneImageFromGrid:
 
         grid_without_buffer = np.array([[-1.48, -1.48], [1.48, 1.48]])
 
-        plane_image = ag.util.plane.plane_image_of_galaxies_from(
+        plane_image = plane_image_of_galaxies_from(
             shape=(3, 3), grid=grid_without_buffer, galaxies=[galaxy], buffer=0.02
         )
 
@@ -191,9 +197,7 @@ class TestPlaneRedshifts:
             ag.Galaxy(redshift=0.1),
         ]
 
-        ordered_plane_redshifts = ag.util.plane.ordered_plane_redshifts_from(
-            galaxies=galaxies
-        )
+        ordered_plane_redshifts = ordered_plane_redshifts_from(galaxies=galaxies)
 
         assert ordered_plane_redshifts == [0.1, 1.0, 2.0]
 
@@ -206,9 +210,7 @@ class TestPlaneRedshifts:
             ag.Galaxy(redshift=0.1),
         ]
 
-        ordered_plane_redshifts = ag.util.plane.ordered_plane_redshifts_from(
-            galaxies=galaxies
-        )
+        ordered_plane_redshifts = ordered_plane_redshifts_from(galaxies=galaxies)
 
         assert ordered_plane_redshifts == [0.1, 1.0]
 
@@ -222,14 +224,12 @@ class TestPlaneRedshifts:
 
         galaxies = [g0, g1, g2, g3, g4, g5]
 
-        ordered_plane_redshifts = ag.util.plane.ordered_plane_redshifts_from(
-            galaxies=galaxies
-        )
+        ordered_plane_redshifts = ordered_plane_redshifts_from(galaxies=galaxies)
 
         assert ordered_plane_redshifts == [0.1, 0.95, 1.0, 1.05]
 
     def test__from_main_plane_redshifts_and_slices(self):
-        ordered_plane_redshifts = ag.util.plane.ordered_plane_redshifts_with_slicing_from(
+        ordered_plane_redshifts = ordered_plane_redshifts_with_slicing_from(
             lens_redshifts=[1.0],
             source_plane_redshift=3.0,
             planes_between_lenses=[1, 1],
@@ -238,7 +238,7 @@ class TestPlaneRedshifts:
         assert ordered_plane_redshifts == [0.5, 1.0, 2.0]
 
     def test__different_number_of_slices_between_planes(self):
-        ordered_plane_redshifts = ag.util.plane.ordered_plane_redshifts_with_slicing_from(
+        ordered_plane_redshifts = ordered_plane_redshifts_with_slicing_from(
             lens_redshifts=[1.0],
             source_plane_redshift=2.0,
             planes_between_lenses=[2, 3],
@@ -257,21 +257,21 @@ class TestPlaneRedshifts:
         self
     ):
         with pytest.raises(exc.PlaneException):
-            ag.util.plane.ordered_plane_redshifts_with_slicing_from(
+            ordered_plane_redshifts_with_slicing_from(
                 lens_redshifts=[1.0],
                 source_plane_redshift=2.0,
                 planes_between_lenses=[2, 3, 1],
             )
 
         with pytest.raises(exc.PlaneException):
-            ag.util.plane.ordered_plane_redshifts_with_slicing_from(
+            ordered_plane_redshifts_with_slicing_from(
                 lens_redshifts=[1.0],
                 source_plane_redshift=2.0,
                 planes_between_lenses=[2],
             )
 
         with pytest.raises(exc.PlaneException):
-            ag.util.plane.ordered_plane_redshifts_with_slicing_from(
+            ordered_plane_redshifts_with_slicing_from(
                 lens_redshifts=[1.0, 3.0],
                 source_plane_redshift=2.0,
                 planes_between_lenses=[2],
@@ -290,7 +290,7 @@ class TestGalaxyOrdering:
 
         ordered_plane_redshifts = [0.1, 1.0, 2.0]
 
-        galaxies_in_redshift_ordered_planes = ag.util.plane.galaxies_in_redshift_ordered_planes_from(
+        galaxies_in_redshift_ordered_planes = galaxies_in_redshift_ordered_planes_from(
             galaxies=galaxies, plane_redshifts=ordered_plane_redshifts
         )
 
@@ -309,7 +309,7 @@ class TestGalaxyOrdering:
 
         ordered_plane_redshifts = [0.1, 1.0]
 
-        galaxies_in_redshift_ordered_planes = ag.util.plane.galaxies_in_redshift_ordered_planes_from(
+        galaxies_in_redshift_ordered_planes = galaxies_in_redshift_ordered_planes_from(
             galaxies=galaxies, plane_redshifts=ordered_plane_redshifts
         )
 
@@ -329,7 +329,7 @@ class TestGalaxyOrdering:
 
         ordered_plane_redshifts = [0.1, 0.95, 1.0, 1.05]
 
-        galaxies_in_redshift_ordered_planes = ag.util.plane.galaxies_in_redshift_ordered_planes_from(
+        galaxies_in_redshift_ordered_planes = galaxies_in_redshift_ordered_planes_from(
             galaxies=galaxies, plane_redshifts=ordered_plane_redshifts
         )
 
@@ -356,7 +356,7 @@ class TestGalaxyOrdering:
             ag.Galaxy(redshift=2.9),
         ]
 
-        galaxies_in_redshift_ordered_planes = ag.util.plane.galaxies_in_redshift_ordered_planes_from(
+        galaxies_in_redshift_ordered_planes = galaxies_in_redshift_ordered_planes_from(
             galaxies=galaxies, plane_redshifts=ordered_plane_redshifts
         )
 
@@ -380,7 +380,7 @@ class TestGalaxyOrdering:
             ag.Galaxy(redshift=1.9),
         ]
 
-        galaxies_in_redshift_ordered_planes = ag.util.plane.galaxies_in_redshift_ordered_planes_from(
+        galaxies_in_redshift_ordered_planes = galaxies_in_redshift_ordered_planes_from(
             galaxies=galaxies, plane_redshifts=ordered_plane_redshifts
         )
 

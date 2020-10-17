@@ -1,10 +1,10 @@
 import os
 from os import path
 
-from autoconf import conf
+import pytest
+
 import autogalaxy as ag
 import autogalaxy.plot as aplt
-import pytest
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -16,17 +16,9 @@ def make_plotter_setup():
     )
 
 
-@pytest.fixture(autouse=True)
-def set_config_path():
-    conf.instance = conf.Config(
-        path.join(directory, "files/plotter"), path.join(directory, "output")
-    )
-
-
 def test__individual_attributes_are_output_for_rectangular_inversion(
     rectangular_inversion_7x7_3x3, positions_7x7, plot_path, plot_patch
 ):
-
     critical_curves = ag.GridCoordinates([(0.0, 0.0), (0.1, 0.1)])
     caustics = ag.GridCoordinates([(0.0, 0.0), (0.1, 0.1)])
 
@@ -127,7 +119,6 @@ def test__individual_attributes_are_output_for_rectangular_inversion(
 def test__individual_attributes_are_output_for_voronoi_inversion(
     voronoi_inversion_9_3x3, positions_7x7, mask_7x7, plot_path, plot_patch
 ):
-
     critical_curves = ag.GridCoordinates([(0.0, 0.0), (0.1, 0.1)])
     caustics = ag.GridCoordinates([(0.0, 0.0), (0.1, 0.1)])
 
@@ -252,7 +243,6 @@ def test__inversion_subplot_is_output_for_all_inversions(
 def test__inversion_individuals__output_dependent_on_input(
     rectangular_inversion_7x7_3x3, positions_7x7, plot_path, plot_patch
 ):
-
     aplt.Inversion.individuals(
         inversion=rectangular_inversion_7x7_3x3,
         plot_reconstructed_image=True,

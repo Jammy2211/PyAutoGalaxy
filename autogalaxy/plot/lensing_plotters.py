@@ -1,11 +1,12 @@
 import copy
-from functools import wraps
 import inspect
+from functools import wraps
 
 import numpy as np
-from autoconf import conf
+
 from autoarray.inversion import mappers
 from autoarray.plot import plotters
+from autoconf import conf
 from autogalaxy import lensing
 from autogalaxy.plot import lensing_mat_objs
 
@@ -176,7 +177,7 @@ class LensingPlotter(plotters.AbstractPlotter):
             If True, the 2D region of the array corresponding to the rectangle encompassing all unmasked values is \
             plotted, thereby zooming into the region of interest.
         border : bool
-            If a mask is supplied, its borders pixels (e.g. the exterior edge) is plotted if this is *True*.
+            If a mask is supplied, its borders pixels (e.g. the exterior edge) is plotted if this is `True`.
         positions : [[]]
             Lists of (y,x) coordinates on the image which are plotted as colored dots, to highlight specific pixels.
         grid : data.array.aa.Grid
@@ -580,7 +581,6 @@ class Plotter(LensingPlotter, plotters.Plotter):
         critical_curves_liner=None,
         caustics_liner=None,
     ):
-
         super(Plotter, self).__init__(
             module=module,
             units=units,
@@ -637,7 +637,6 @@ class SubPlotter(LensingPlotter, plotters.SubPlotter):
         critical_curves_liner=None,
         caustics_liner=None,
     ):
-
         super(SubPlotter, self).__init__(
             module=module,
             units=units,
@@ -719,14 +718,9 @@ class Include(plotters.Include):
 
     @staticmethod
     def load_include(value, name):
-
-        return (
-            conf.instance.visualize_general.get(
-                section_name="include", attribute_name=name, attribute_type=bool
-            )
-            if value is None
-            else value
-        )
+        if value is not None:
+            return value
+        return conf.instance["visualize"]["general"]["include"][name]
 
     def positions_from_masked_dataset(self, masked_dataset):
 
@@ -790,7 +784,7 @@ class Include(plotters.Include):
         fit : datas.fitting.fitting.AbstractLensHyperFit
             The fit to the datas, which includes a lisrt of every model image, residual_map, chi-squareds, etc.
         mask : bool
-            If *True*, the masks is plotted on the fit's datas.
+            If `True`, the masks is plotted on the fit's datas.
         """
         if self.positions:
             try:
@@ -908,7 +902,6 @@ def plot_array(
     include=None,
     plotter=None,
 ):
-
     if include is None:
         include = Include()
 
@@ -946,7 +939,6 @@ def plot_grid(
     include=None,
     plotter=None,
 ):
-
     if include is None:
         include = Include()
 
@@ -979,7 +971,6 @@ def plot_line(
     vertical_line_labels=None,
     plotter=None,
 ):
-
     if plotter is None:
         plotter = Plotter()
 
@@ -1005,7 +996,6 @@ def plot_mapper_obj(
     include=None,
     plotter=None,
 ):
-
     if include is None:
         include = Include()
 

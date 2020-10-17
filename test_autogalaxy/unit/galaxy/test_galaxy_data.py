@@ -1,22 +1,13 @@
-from autoconf import conf
-import autogalaxy as ag
 import numpy as np
 import pytest
+
+import autogalaxy as ag
 from autogalaxy import exc
-from test_autogalaxy import mock
-
-
-@pytest.fixture(autouse=True)
-def reset_config():
-    """
-    Use configuration from the default path. You may want to change this to set a specific path.
-    """
-    conf.instance = conf.default
+from autogalaxy import mock
 
 
 class TestGalaxyFitData:
     def test__image_noise_map_and_mask(self, gal_data_7x7, sub_mask_7x7):
-
         galaxy_fit_data = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_image=True
         )
@@ -84,7 +75,6 @@ class TestGalaxyFitData:
         blurring_grid_7x7,
         grid_iterate_7x7,
     ):
-
         galaxy_fit_data = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7,
             mask=sub_mask_7x7,
@@ -122,7 +112,6 @@ class TestGalaxyFitData:
         assert (galaxy_fit_data.grid.wts == grid.wts).all()
 
     def test__gal_data_7x7_image(self, gal_data_7x7, sub_mask_7x7):
-
         galaxy_fit_data = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_image=True
         )
@@ -196,7 +185,6 @@ class TestGalaxyFitData:
         assert (image_gal == image_gd).all()
 
     def test__gal_data_7x7_convergence(self, gal_data_7x7, sub_mask_7x7):
-
         galaxy_fit_data = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_convergence=True
         )
@@ -274,7 +262,6 @@ class TestGalaxyFitData:
         assert (convergence_gal == convergence_gd).all()
 
     def test__gal_data_7x7_potential(self, gal_data_7x7, sub_mask_7x7):
-
         galaxy_fit_data = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_potential=True
         )
@@ -350,7 +337,6 @@ class TestGalaxyFitData:
         assert (potential_gal == potential_gd).all()
 
     def test__gal_data_7x7_deflections_y(self, gal_data_7x7, sub_mask_7x7):
-
         galaxy_fit_data = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_y=True
         )
@@ -445,7 +431,6 @@ class TestGalaxyFitData:
         assert (deflections_gal[:, 0] == deflections_gd.in_1d_binned).all()
 
     def test__gal_data_7x7_deflections_x(self, gal_data_7x7, sub_mask_7x7):
-
         galaxy_fit_data = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_x=True
         )
@@ -543,7 +528,6 @@ class TestGalaxyFitData:
     def test__no_use_method__raises_exception(
         self, image_7x7, noise_map_7x7, sub_mask_7x7
     ):
-
         gal_data_7x7 = ag.GalaxyData(
             image=image_7x7, noise_map=noise_map_7x7, pixel_scales=3.0
         )
@@ -554,7 +538,6 @@ class TestGalaxyFitData:
     def test__multiple_use_methods__raises_exception(
         self, image_7x7, noise_map_7x7, sub_mask_7x7
     ):
-
         gal_data_7x7 = ag.GalaxyData(
             image=image_7x7, noise_map=noise_map_7x7, pixel_scales=3.0
         )

@@ -10,16 +10,16 @@ import pytest
 
 directory = os.path.dirname(os.path.realpath(__file__))
 
-grid_10 = ag.Grid.manual_2d(grid=np.array([[[1.0, 0.0]]]), pixel_scales=1.0, sub_size=1)
+grid_10 = ag.Grid.manual_2d(grid=[[[1.0, 0.0]]], pixel_scales=1.0, sub_size=1)
 grid_zero = ag.Grid.manual_2d(
-    grid=np.array([[[0.0000000001, 0.0]]]), pixel_scales=1.0, sub_size=1
+    grid=[[[0.0000000001, 0.0]]], pixel_scales=1.0, sub_size=1
 )
 
 
 class TestGaussian:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         gaussian = ag.lp.EllipticalGaussian(centre=(0.0, 0.0))
 
@@ -38,7 +38,7 @@ class TestGaussian:
 class TestSersic:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         sersic = ag.lp.EllipticalSersic(centre=(0.0, 0.0))
 
@@ -56,7 +56,7 @@ class TestSersic:
 class TestExponential:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         exponential = ag.lp.EllipticalExponential(centre=(0.0, 0.0))
 
@@ -74,7 +74,7 @@ class TestExponential:
 class TestDevVaucouleurs:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs(centre=(0.0, 0.0))
 
@@ -92,7 +92,7 @@ class TestDevVaucouleurs:
 class TestCoreSersic:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         core_sersic = ag.lp.EllipticalCoreSersic(centre=(0.0, 0.0))
 
@@ -110,51 +110,47 @@ class TestCoreSersic:
 class TestPointMass:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         point_mass = ag.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
 
         deflections_1 = point_mass.deflections_from_grid(grid=grid_10)
-        deflections_0 = point_mass.deflections_from_grid(
-            grid=np.array([[0.00000001, 0.0]])
-        )
+        deflections_0 = point_mass.deflections_from_grid(grid=[[0.00000001, 0.0]])
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
 class TestCoredPowerLaw:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         cored_power_law = ag.mp.EllipticalCoredPowerLaw(
             centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0
         )
 
         convergence_1 = cored_power_law.convergence_from_grid(grid=grid_10)
-        convergence_0 = cored_power_law.convergence_from_grid(
-            grid=np.array([[1e-8, 0.0]])
-        )
+        convergence_0 = cored_power_law.convergence_from_grid(grid=[[1e-8, 0.0]])
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
 
 class TestPowerLaw:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         power_law = ag.mp.EllipticalPowerLaw(
             centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0
         )
 
         convergence_1 = power_law.convergence_from_grid(grid=grid_10)
-        convergence_0 = power_law.convergence_from_grid(grid=np.array([[1.0e-9, 0.0]]))
+        convergence_0 = power_law.convergence_from_grid(grid=[[1.0e-9, 0.0]])
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
 
 class TestCoredIsothermal:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         cored_isothermal = ag.mp.EllipticalCoredIsothermal(
             centre=(0.0, 0.0), einstein_radius=1.0
@@ -208,7 +204,7 @@ class TestCoredIsothermal:
 class TestIsothermal:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         isothermal = ag.mp.EllipticalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
@@ -250,7 +246,7 @@ class TestIsothermal:
 class TestGeneralizedNFW:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         gnfw = ag.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
 
@@ -274,7 +270,7 @@ class TestGeneralizedNFW:
 class TestTruncatedNFW:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         truncated_nfw = ag.mp.SphericalTruncatedNFW(centre=(0.0, 0.0))
 
@@ -298,7 +294,7 @@ class TestTruncatedNFW:
 class TestNFW:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         nfw = ag.mp.EllipticalNFW(centre=(0.0, 0.0))
 
@@ -340,7 +336,7 @@ class TestNFW:
 class TestSersicMass:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         sersic = ag.mp.EllipticalSersic(centre=(0.0, 0.0))
 
@@ -370,7 +366,7 @@ class TestSersicMass:
 class TestExponentialMass:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         exponential = ag.mp.EllipticalExponential(centre=(0.0, 0.0))
 
@@ -400,7 +396,7 @@ class TestExponentialMass:
 class TestDevVaucouleursMass:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         dev_vaucouleurs = ag.mp.EllipticalDevVaucouleurs(centre=(0.0, 0.0))
 
@@ -424,7 +420,7 @@ class TestDevVaucouleursMass:
 class TestSersicMassRadialGradient:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         sersic = ag.mp.EllipticalSersicRadialGradient(centre=(0.0, 0.0))
 
@@ -454,7 +450,7 @@ class TestSersicMassRadialGradient:
 class TestMassSheet:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0))
 
@@ -466,10 +462,10 @@ class TestMassSheet:
 class TestExternalShear:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
-        conf.instance = conf.Config(config_path="{}/files/config/".format(directory))
+        conf.instance.push("{}/files/config/".format(directory))
 
         shear = ag.mp.ExternalShear(elliptical_comps=(0.1, 0.1))
 
-        deflections_1 = shear.deflections_from_grid(grid=np.array([[1e-8, 0.0]]))
-        deflections_0 = shear.deflections_from_grid(grid=np.array([[1e-9, 0.0]]))
+        deflections_1 = shear.deflections_from_grid(grid=[[1e-8, 0.0]])
+        deflections_0 = shear.deflections_from_grid(grid=[[1e-9, 0.0]])
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)

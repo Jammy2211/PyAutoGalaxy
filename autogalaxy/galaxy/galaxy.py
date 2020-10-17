@@ -42,7 +42,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         """Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
         mass profiles, pixelizations, etc.).
         
-        All *has_* methods retun *True* if galaxy has that attribute, ``False`` if not.
+        All *has_* methods retun `True` if galaxy has that attribute, `False` if not.
 
         Parameters
         ----------

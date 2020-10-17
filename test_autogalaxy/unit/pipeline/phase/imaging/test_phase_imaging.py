@@ -1,10 +1,11 @@
 from os import path
 
-import autofit as af
-import autogalaxy as ag
 import numpy as np
 import pytest
-from test_autogalaxy import mock
+
+import autofit as af
+import autogalaxy as ag
+from autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -62,9 +63,7 @@ class TestMakeAnalysis:
     def test__masked_imaging__settings_inputs_are_used_in_masked_imaging(
         self, imaging_7x7, mask_7x7
     ):
-
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="phase_imaging_7x7",
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(
                     grid_class=ag.Grid,
@@ -75,7 +74,7 @@ class TestMakeAnalysis:
                     psf_shape_2d=(3, 3),
                 )
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch("phase_imaging_7x7"),
         )
 
         assert phase_imaging_7x7.settings.settings_masked_imaging.sub_size == 3
@@ -94,7 +93,6 @@ class TestMakeAnalysis:
         assert isinstance(analysis.masked_dataset.grid_inversion, ag.Grid)
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="phase_imaging_7x7",
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(
                     grid_class=ag.GridIterate,
@@ -103,7 +101,7 @@ class TestMakeAnalysis:
                     sub_steps=[2],
                 )
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch("phase_imaging_7x7"),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -118,19 +116,17 @@ class TestMakeAnalysis:
     def test__masked_imaging__uses_signal_to_noise_limit(
         self, imaging_7x7, mask_7x7_1_pix
     ):
-
-        imaging_snr_limit = imaging_7x7.signal_to_noise_limited_from_signal_to_noise_limit(
+        imaging_snr_limit = imaging_7x7.signal_to_noise_limited_from(
             signal_to_noise_limit=1.0
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="phase_imaging_7x7",
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(
                     signal_to_noise_limit=1.0
                 )
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch("phase_imaging_7x7"),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -146,16 +142,15 @@ class TestMakeAnalysis:
         ).all()
 
     def test__masked_imaging__uses_bin_up_factor(self, imaging_7x7, mask_7x7_1_pix):
-        binned_up_imaging = imaging_7x7.binned_from_bin_up_factor(bin_up_factor=2)
+        binned_up_imaging = imaging_7x7.binned_up_from(bin_up_factor=2)
 
         binned_up_mask = mask_7x7_1_pix.binned_mask_from_bin_up_factor(bin_up_factor=2)
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="phase_imaging_7x7",
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(bin_up_factor=2)
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch("phase_imaging_7x7"),
         )
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -179,16 +174,14 @@ class TestMakeAnalysis:
 
 class TestHyperMethods:
     def test__phase_can_receive_hyper_image_and_noise_maps(self):
-
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=ag.Redshift),
                 galaxy1=ag.GalaxyModel(redshift=ag.Redshift),
             ),
             hyper_image_sky=ag.hyper_data.HyperImageSky,
             hyper_background_noise=ag.hyper_data.HyperBackgroundNoise,
-            search=mock.MockSearch(),
+            search=mock.MockSearch("test_phase"),
         )
 
         instance = phase_imaging_7x7.model.instance_from_vector([0.1, 0.2, 0.3, 0.4])
@@ -201,7 +194,6 @@ class TestHyperMethods:
     def test__phase_is_extended_with_hyper_phases__sets_up_hyper_dataset_from_results(
         self, imaging_7x7, mask_7x7
     ):
-
         galaxies = af.ModelInstance()
         galaxies.galaxy = ag.Galaxy(redshift=0.5)
         galaxies.source = ag.Galaxy(redshift=1.0)
@@ -218,17 +210,18 @@ class TestHyperMethods:
 
         results = mock.MockResults(
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
-            hyper_model_image=ag.Array.full(fill_value=3.0, shape_2d=(3, 3)),
+            hyper_model_image=ag.Array.full(
+                fill_value=3.0, shape_2d=(3, 3), pixel_scales=1.0
+            ),
             mask=mask_7x7,
             use_as_hyper_dataset=True,
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5, hyper_galaxy=ag.HyperGalaxy)
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch("test_phase"),
         )
 
         analysis = phase_imaging_7x7.make_analysis(

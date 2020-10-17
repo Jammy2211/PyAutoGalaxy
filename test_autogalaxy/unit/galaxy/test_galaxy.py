@@ -5,7 +5,7 @@ import autogalaxy as ag
 import numpy as np
 import pytest
 from autogalaxy import exc
-from test_autogalaxy import mock
+from autogalaxy import mock
 
 
 class TestUnits:
@@ -1980,7 +1980,7 @@ class TestDecorators:
 
     def test__grid_interp_in__interps_based_on_intepolate_config(self):
 
-        # ``False`` in interpolate.ini
+        # `False` in interpolate.ini
 
         mask = ag.Mask2D.manual(
             mask=[

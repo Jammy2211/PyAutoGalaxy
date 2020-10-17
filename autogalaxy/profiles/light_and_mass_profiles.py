@@ -10,7 +10,14 @@ objects as being both mass and light profiles.
 """
 
 
-class EllipticalGaussian(lp.EllipticalGaussian, mp.EllipticalGaussian):
+class LightMassProfile:
+
+    pass
+
+
+class EllipticalGaussian(
+    lp.EllipticalGaussian, mp.EllipticalGaussian, LightMassProfile
+):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -37,7 +44,7 @@ class EllipticalGaussian(lp.EllipticalGaussian, mp.EllipticalGaussian):
         )
 
 
-class EllipticalSersic(lp.EllipticalSersic, mp.EllipticalSersic):
+class EllipticalSersic(lp.EllipticalSersic, mp.EllipticalSersic, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -67,7 +74,7 @@ class EllipticalSersic(lp.EllipticalSersic, mp.EllipticalSersic):
         )
 
 
-class SphericalSersic(EllipticalSersic):
+class SphericalSersic(EllipticalSersic, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -102,7 +109,7 @@ class SphericalSersic(EllipticalSersic):
         )
 
 
-class EllipticalExponential(EllipticalSersic):
+class EllipticalExponential(EllipticalSersic, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -141,7 +148,7 @@ class EllipticalExponential(EllipticalSersic):
         )
 
 
-class SphericalExponential(EllipticalExponential):
+class SphericalExponential(EllipticalExponential, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -174,7 +181,7 @@ class SphericalExponential(EllipticalExponential):
         )
 
 
-class EllipticalDevVaucouleurs(EllipticalSersic):
+class EllipticalDevVaucouleurs(EllipticalSersic, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -212,7 +219,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
         )
 
 
-class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
+class SphericalDevVaucouleurs(EllipticalDevVaucouleurs, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -246,7 +253,7 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
 
 
 class EllipticalSersicRadialGradient(
-    lp.EllipticalSersic, mp.EllipticalSersicRadialGradient
+    lp.EllipticalSersic, mp.EllipticalSersicRadialGradient, LightMassProfile
 ):
     def __init__(
         self,
@@ -300,7 +307,7 @@ class EllipticalSersicRadialGradient(
         )
 
 
-class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
+class SphericalSersicRadialGradient(EllipticalSersicRadialGradient, LightMassProfile):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -340,7 +347,9 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
         )
 
 
-class EllipticalExponentialRadialGradient(EllipticalSersicRadialGradient):
+class EllipticalExponentialRadialGradient(
+    EllipticalSersicRadialGradient, LightMassProfile
+):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -382,7 +391,9 @@ class EllipticalExponentialRadialGradient(EllipticalSersicRadialGradient):
         )
 
 
-class SphericalExponentialRadialGradient(SphericalSersicRadialGradient):
+class SphericalExponentialRadialGradient(
+    SphericalSersicRadialGradient, LightMassProfile
+):
     def __init__(
         self,
         centre: dim.Position = (0.0, 0.0),
@@ -419,4 +430,71 @@ class SphericalExponentialRadialGradient(SphericalSersicRadialGradient):
             sersic_index=1.0,
             mass_to_light_ratio=mass_to_light_ratio,
             mass_to_light_gradient=mass_to_light_gradient,
+        )
+
+
+class EllipticalChameleon(
+    lp.EllipticalChameleon, mp.EllipticalChameleon, LightMassProfile
+):
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: dim.Luminosity = 0.1,
+        core_radius_0: dim.Length = 0.01,
+        core_radius_1: dim.Length = 0.005,
+        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+    ):
+
+        lp.EllipticalChameleon.__init__(
+            self,
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            intensity=intensity,
+            core_radius_0=core_radius_0,
+            core_radius_1=core_radius_1,
+        )
+        mp.EllipticalChameleon.__init__(
+            self,
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            intensity=intensity,
+            core_radius_0=core_radius_0,
+            core_radius_1=core_radius_1,
+            mass_to_light_ratio=mass_to_light_ratio,
+        )
+
+
+class SphericalChameleon(EllipticalChameleon, LightMassProfile):
+    def __init__(
+        self,
+        centre: dim.Position = (0.0, 0.0),
+        intensity: dim.Luminosity = 0.1,
+        core_radius_0: dim.Length = 0.01,
+        core_radius_1: dim.Length = 0.005,
+        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+    ):
+        """
+        The SphericalChameleon mass profile, the mass profiles of the light profiles that are used to fit_normal and
+        subtract the lens model_galaxy's light.
+
+        Parameters
+        ----------
+        centre: (float, float)
+            The grid of the origin of the profiles
+        intensity : float
+            Overall flux intensity normalisation in the light profiles (electrons per second)
+        effective_radius : float
+            The radius containing half the light of this model_mapper
+        mass_to_light_ratio : float
+            The mass-to-light ratio of the light profiles
+        """
+        EllipticalChameleon.__init__(
+            self,
+            centre=centre,
+            elliptical_comps=(0.0, 0.0),
+            intensity=intensity,
+            core_radius_0=core_radius_0,
+            core_radius_1=core_radius_1,
+            mass_to_light_ratio=mass_to_light_ratio,
         )

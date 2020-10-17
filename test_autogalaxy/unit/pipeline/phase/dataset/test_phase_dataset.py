@@ -1,7 +1,9 @@
 from os import path
-import autogalaxy as ag
+
 import pytest
-from test_autogalaxy import mock
+
+import autogalaxy as ag
+from autogalaxy import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
@@ -14,10 +16,7 @@ directory = path.dirname(path.realpath(__file__))
 
 class TestPhase:
     def test__extend_with_hyper_and_pixelizations(self):
-
-        phase_no_pixelization = ag.PhaseImaging(
-            phase_name="test_phase", search=mock.MockSearch()
-        )
+        phase_no_pixelization = ag.PhaseImaging(search=mock.MockSearch("test_phase"))
 
         phase_extended = phase_no_pixelization.extend_with_multiple_hyper_phases(
             setup_hyper=ag.SetupHyper(hyper_galaxies_search=None, inversion_search=None)
@@ -32,7 +31,6 @@ class TestPhase:
         assert phase_extended == phase_no_pixelization
 
         phase_with_pixelization = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(
                 source=ag.GalaxyModel(
                     redshift=0.5,
@@ -44,7 +42,7 @@ class TestPhase:
         )
 
         phase_extended = phase_with_pixelization.extend_with_multiple_hyper_phases(
-            setup_hyper=ag.SetupHyper(inversion_search=mock.MockSearch()),
+            setup_hyper=ag.SetupHyper(inversion_search=mock.MockSearch("test_phase")),
             include_inversion=True,
         )
         assert isinstance(phase_extended.hyper_phases[0], ag.InversionPhase)
@@ -82,11 +80,10 @@ class TestPhase:
         assert isinstance(phase_extended.hyper_phases[1], ag.InversionPhase)
 
     def test__extend_with_hyper_galaxy_phase__passes_galaxy_names(self):
-
-        phase = ag.PhaseImaging(phase_name="test_phase", search=mock.MockSearch())
+        phase = ag.PhaseImaging(search=mock.MockSearch())
 
         setup_hyper = ag.SetupHyper(
-            hyper_galaxies=True, hyper_galaxies_search=mock.MockSearch()
+            hyper_galaxies=True, hyper_galaxies_search=mock.MockSearch("test_phase")
         )
 
         phase_extended = phase.extend_with_multiple_hyper_phases(
@@ -131,8 +128,7 @@ class TestMakeAnalysis:
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
-            search=mock.MockSearch(),
+            search=mock.MockSearch("test_phase"),
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=1)
             ),
@@ -147,8 +143,7 @@ class TestMakeAnalysis:
         assert analysis.masked_imaging.mask.pixel_scales == mask_input.pixel_scales
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
-            search=mock.MockSearch(),
+            search=mock.MockSearch("test_phase"),
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=2)
             ),
@@ -167,24 +162,21 @@ class TestPhasePickle:
 
     # noinspection PyTypeChecker
     def test_assertion_failure(self, imaging_7x7, mask_7x7):
-
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="phase_name",
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch("name"),
         )
 
         result = phase_imaging_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)
         assert result is not None
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="phase_name",
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch("name"),
         )
 
         result = phase_imaging_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)

@@ -45,7 +45,7 @@ simple analysis which fits a galaxy's light.
     # search (in this case, MultiNest).
     phase = ag.PhaseImaging(
         galaxies=dict(galaxy=galaxy_model),
-        phase_name='example/phase_example',
+        name='example/phase_example',
         search=af.DynestyStatic()
         )
 

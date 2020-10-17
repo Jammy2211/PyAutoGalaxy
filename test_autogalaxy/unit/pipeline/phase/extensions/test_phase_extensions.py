@@ -4,14 +4,14 @@ import autogalaxy as ag
 from autogalaxy.hyper import hyper_data as hd
 import pytest
 from autogalaxy.fit.fit import FitImaging
-from test_autogalaxy import mock
+from autogalaxy import mock
 
 
 class MockPhase:
     def __init__(self):
-        self.phase_name = "phase_name"
+        self.name = "name"
         self.paths = autofit.non_linear.paths.Paths(
-            name=self.phase_name, path_prefix="phase_path", tag=""
+            name=self.name, path_prefix="phase_path", tag=""
         )
         self.search = mock.MockSearch(paths=self.paths)
         self.model = af.ModelMapper()
@@ -30,7 +30,7 @@ class TestModelFixing:
         phase = ag.ModelFixingHyperPhase(
             phase=MockPhase(),
             hyper_name="test",
-            search=mock.MockSearch(),
+            hyper_search=mock.MockSearch(),
             model_classes=(hd.HyperImageSky, hd.HyperBackgroundNoise),
         )
 
@@ -74,7 +74,7 @@ class TestModelFixing:
         phase = ag.ModelFixingHyperPhase(
             phase=MockPhase(),
             hyper_name="mock_phase",
-            search=mock.MockSearch(),
+            hyper_search=mock.MockSearch(),
             model_classes=(ag.pix.Pixelization, ag.reg.Regularization),
         )
 
@@ -95,13 +95,13 @@ def make_combined():
 
     hyper_galaxy_phase = ag.HyperGalaxyPhase(
         phase=normal_phase,
-        search=mock.MockSearch(),
+        hyper_search=mock.MockSearch(),
         include_sky_background=False,
         include_noise_background=False,
     )
     inversion_phase = ag.InversionPhase(
         phase=normal_phase,
-        search=mock.MockSearch(),
+        hyper_search=mock.MockSearch(),
         model_classes=(ag.pix.Pixelization, ag.reg.Regularization),
     )
 
@@ -109,7 +109,7 @@ def make_combined():
     hyper_combined = ag.CombinedHyperPhase(
         phase=normal_phase,
         hyper_phases=(hyper_galaxy_phase, inversion_phase),
-        search=mock.MockSearch(),
+        hyper_search=mock.MockSearch(),
     )
 
     for phase in hyper_combined.hyper_phases:
@@ -175,7 +175,7 @@ class TestHyperAPI:
         # noinspection PyTypeChecker
         phase = ag.HyperGalaxyPhase(
             phase=normal_phase,
-            search=mock.MockSearch(),
+            hyper_search=mock.MockSearch(),
             include_sky_background=False,
             include_noise_background=False,
         )
@@ -200,16 +200,15 @@ class TestHyperAPI:
         )
 
         phase = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(galaxy=galaxy),
-            search=af.DynestyStatic(n_live_points=1),
+            search=af.DynestyStatic(n_live_points=1, name="test_phase"),
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(bin_up_factor=2)
             ),
         )
 
         phase_extended = phase.extend_with_inversion_phase(
-            inversion_search=af.DynestyStatic(n_live_points=1)
+            hyper_search=af.DynestyStatic(n_live_points=1)
         )
 
         phase_extended.paths.path_prefix = "prefix"
@@ -217,7 +216,7 @@ class TestHyperAPI:
         hyper_phase.modify_search_paths()
 
         assert (
-            "unit/output//prefix/test_phase/"
+            "output//prefix/test_phase/"
             "inversion__settings__imaging[grid_sub_2_inv_sub_2__bin_2]__pix[no_border]__inv[mat]/"
             "dynesty_static[nlive_1" in hyper_phase.paths.output_path
         )
@@ -271,14 +270,13 @@ class TestHyperGalaxyPhase:
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
         phase_imaging_7x7 = ag.PhaseImaging(
-            phase_name="test_phase",
             galaxies=dict(galaxy=galaxy),
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
             settings=ag.SettingsPhaseImaging(
                 settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=2)
             ),
-            search=mock.MockSearch(),
+            search=mock.MockSearch(name="test_phase"),
         )
 
         analysis = phase_imaging_7x7.make_analysis(

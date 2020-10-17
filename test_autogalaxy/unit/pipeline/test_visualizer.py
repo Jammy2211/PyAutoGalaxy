@@ -2,10 +2,12 @@ import os
 import shutil
 from os import path
 
-import autogalaxy as ag
 import pytest
+
+import autogalaxy as ag
 from autoconf import conf
 from autogalaxy.pipeline import visualizer as vis
+from autogalaxy.plot import Include
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -18,9 +20,29 @@ def make_visualizer_plotter_setup():
 
 
 @pytest.fixture(autouse=True)
-def set_config_path():
-    conf.instance = conf.Config(
-        path.join(directory, "files/plotter"), path.join(directory, "output")
+def default_config(plot_path):
+    conf.instance.push(f"{directory}/config", output_path=plot_path)
+
+
+@pytest.fixture(name="include_all")
+def make_include_all(default_config):
+    return Include(
+        origin=True,
+        mask=True,
+        grid=True,
+        border=True,
+        positions=True,
+        light_profile_centres=True,
+        mass_profile_centres=True,
+        critical_curves=True,
+        caustics=True,
+        multiple_images=True,
+        inversion_pixelization_grid=True,
+        inversion_grid=True,
+        inversion_border=True,
+        inversion_image_pixelization_grid=True,
+        preloaded_critical_curves=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
+        preload_caustics=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
     )
 
 
@@ -130,7 +152,7 @@ class TestPhaseImagingVisualizer:
         assert plot_path + "subplots/subplot_inversion.png" in plot_patch.paths
         assert plot_path + "inversion/reconstructed_image.png" in plot_patch.paths
         assert plot_path + "inversion/reconstruction.png" in plot_patch.paths
-        assert plot_path + "inversion/errors.png" not in plot_patch.paths
+        # assert plot_path + "inversion/errors.png" not in plot_patch.paths
         assert plot_path + "inversion/residual_map.png" not in plot_patch.paths
         assert (
             plot_path + "inversion/normalized_residual_map.png" not in plot_patch.paths
@@ -191,7 +213,6 @@ class TestPhaseInterferometerVisualizer:
     def test__visualizes_interferometer_using_configs(
         self, masked_interferometer_7, include_all, plot_path, plot_patch
     ):
-
         visualizer = vis.PhaseInterferometerVisualizer(
             masked_dataset=masked_interferometer_7, image_path=plot_path
         )
@@ -216,7 +237,6 @@ class TestPhaseInterferometerVisualizer:
         plot_path,
         plot_patch,
     ):
-
         visualizer = vis.PhaseInterferometerVisualizer(
             masked_dataset=masked_interferometer_7, image_path=plot_path
         )
@@ -281,7 +301,6 @@ class TestHyperGalaxyVisualizer:
         plot_path,
         plot_patch,
     ):
-
         visualizer = vis.HyperGalaxyVisualizer(image_path=plot_path)
 
         visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(

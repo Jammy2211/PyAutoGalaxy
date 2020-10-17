@@ -5,14 +5,6 @@ import autogalaxy as ag
 import pytest
 
 
-@pytest.fixture(autouse=True)
-def reset_config():
-    """
-    Use configuration from the default path. You may want to change this to set a specific path.
-    """
-    conf.instance = conf.default
-
-
 class TestCase:
     def test_integration(self):
         # Create a mapper. This can be used to convert values output by a non linear optimiser into class instances.

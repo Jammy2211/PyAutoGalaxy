@@ -1,21 +1,19 @@
 from __future__ import division, print_function
 
 import math
-import os
 
-from autoconf import conf
-import autogalaxy as ag
 import numpy as np
 import pytest
 import scipy.special
-from test_autogalaxy import mock
+
+import autogalaxy as ag
+from autogalaxy import mock
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestGaussian:
     def test__constructor_and_units(self):
-
         gaussian = ag.lp.EllipticalGaussian(
             centre=(1.0, 2.0),
             elliptical_comps=(0.333333, 0.0),
@@ -66,7 +64,6 @@ class TestGaussian:
         assert gaussian.sigma.unit_length == "arcsec"
 
     def test__intensity_as_radius__correct_value(self):
-
         gaussian = ag.lp.EllipticalGaussian(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
         )
@@ -137,7 +134,6 @@ class TestGaussian:
         assert value == pytest.approx(0.0647, 1e-2)
 
     def test__intensity_from_grid__change_geometry(self):
-
         gaussian = ag.lp.EllipticalGaussian(
             centre=(1.0, 1.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
         )
@@ -232,7 +228,6 @@ class TestGaussian:
 
 class TestSersic:
     def test__constructor_and_units(self):
-
         sersic = ag.lp.EllipticalSersic(
             centre=(1.0, 2.0),
             elliptical_comps=(0.333333, 0.0),
@@ -300,7 +295,6 @@ class TestSersic:
         assert sersic.elliptical_effective_radius == 0.6
 
     def test__intensity_at_radius__correct_value(self):
-
         sersic = ag.lp.EllipticalSersic(
             elliptical_comps=(0.0, 0.0),
             intensity=1.0,
@@ -325,7 +319,6 @@ class TestSersic:
         assert image == pytest.approx(4.90657319276, 1e-3)
 
     def test__intensity_from_grid__correct_values_for_input_parameters(self):
-
         sersic = ag.lp.EllipticalSersic(
             elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
@@ -338,7 +331,6 @@ class TestSersic:
         assert image == pytest.approx(5.38066670129, 1e-3)
 
     def test__image_from_grid__change_geometry(self):
-
         sersic_0 = ag.lp.EllipticalSersic(
             elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
@@ -873,11 +865,102 @@ class TestCoreSersic:
         assert image.shape_2d == (2, 2)
 
 
+class TestChameleon:
+    def test__intensity_at_radius__correct_value(self):
+        chameleon = ag.lp.EllipticalChameleon(
+            elliptical_comps=(0.0, 0.0),
+            intensity=1.0,
+            core_radius_0=0.1,
+            core_radius_1=0.3,
+        )
+
+        image = chameleon.image_from_grid_radii(grid_radii=1.0)
+
+        assert image == pytest.approx(0.018605, 1e-3)
+
+        chameleon = ag.lp.EllipticalChameleon(
+            elliptical_comps=(0.5, 0.0),
+            intensity=3.0,
+            core_radius_0=0.2,
+            core_radius_1=0.4,
+        )
+        # 3.0 * exp(-3.67206544592 * (1,5/2.0) ** (1.0 / 2.0)) - 1) = 0.351797
+
+        image = chameleon.image_from_grid_radii(grid_radii=1.5)
+
+        assert image == pytest.approx(0.07816, 1e-3)
+
+    def test__intensity_from_grid__correct_values_for_input_parameters(self):
+        chameleon = ag.lp.EllipticalChameleon(
+            elliptical_comps=(0.0, 0.333333),
+            intensity=3.0,
+            core_radius_0=0.2,
+            core_radius_1=0.4,
+        )
+
+        image = chameleon.image_from_grid(grid=np.array([[1.0, 0.0]]))
+
+        assert image == pytest.approx(0.024993, 1e-3)
+
+    def test__image_from_grid__change_geometry(self):
+        chameleon_0 = ag.lp.EllipticalChameleon(
+            elliptical_comps=(0.0, 0.333333),
+            intensity=3.0,
+            core_radius_0=0.2,
+            core_radius_1=0.4,
+        )
+
+        chameleon_1 = ag.lp.EllipticalChameleon(
+            elliptical_comps=(0.0, -0.333333),
+            intensity=3.0,
+            core_radius_0=0.2,
+            core_radius_1=0.4,
+        )
+
+        image_0 = chameleon_0.image_from_grid(grid=np.array([[0.0, 1.0]]))
+
+        image_1 = chameleon_1.image_from_grid(grid=np.array([[1.0, 0.0]]))
+
+        assert (image_0 == image_1).all()
+
+    def _test__spherical_and_elliptical_match(self):
+        elliptical = ag.lp.EllipticalChameleon(
+            elliptical_comps=(0.0, 0.0),
+            intensity=3.0,
+            core_radius_0=0.2,
+            core_radius_1=0.4,
+        )
+
+        spherical = ag.lp.SphericalChameleon(
+            intensity=3.0, core_radius_0=0.2, core_radius_1=0.4
+        )
+
+        image_elliptical = elliptical.image_from_grid(grid=grid)
+
+        image_spherical = spherical.image_from_grid(grid=grid)
+
+        assert (image_elliptical == image_spherical).all()
+
+    def test__output_image_is_autoarray(self):
+        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+
+        chameleon = ag.lp.EllipticalChameleon()
+
+        image = chameleon.image_from_grid(grid=grid)
+
+        assert image.shape_2d == (2, 2)
+
+        chameleon = ag.lp.SphericalChameleon()
+
+        image = chameleon.image_from_grid(grid=grid)
+
+        assert image.shape_2d == (2, 2)
+
+
 class TestBlurredProfileImages:
     def test__blurred_image_from_grid_and_psf(
         self, sub_grid_7x7, blurring_grid_7x7, psf_3x3, convolver_7x7
     ):
-
         light_profile = ag.lp.EllipticalSersic(intensity=1.0)
 
         image = light_profile.image_from_grid(grid=sub_grid_7x7)
@@ -902,7 +985,6 @@ class TestBlurredProfileImages:
     def test__blurred_image_from_grid_and_convolver(
         self, sub_grid_7x7, blurring_grid_7x7, convolver_7x7
     ):
-
         light_profile = ag.lp.EllipticalSersic(intensity=1.0)
 
         image = light_profile.image_from_grid(grid=sub_grid_7x7)
@@ -1135,7 +1217,6 @@ class TestLuminosityWithinCircle:
 
 class TestDecorators:
     def test__grid_iterate_in__iterates_grid_correctly(self):
-
         mask = ag.Mask2D.manual(
             mask=[
                 [True, True, True, True, True],
@@ -1182,7 +1263,6 @@ class TestDecorators:
         assert image[4] == image_sub_8[4]
 
     def test__grid_iterate_in__iterates_grid_correctly_for_peak(self):
-
         grid = ag.GridIterate.uniform(
             shape_2d=(100, 100),
             pixel_scales=0.1,
@@ -1201,8 +1281,7 @@ class TestDecorators:
         light.image_from_grid(grid=grid)
 
     def test__grid_interpolate_in__interpolates_based_on_intepolate_config(self):
-
-        # ``False`` in interpolate.ini
+        # `False` in interpolate.ini
 
         mask = ag.Mask2D.manual(
             mask=[
@@ -1228,7 +1307,7 @@ class TestDecorators:
 
         assert (image == image_no_interpolate).all()
 
-        # ``False`` in interpolate.ini
+        # `False` in interpolate.ini
 
         light_profile = ag.lp.SphericalSersic(intensity=1.0)
 
@@ -1245,7 +1324,6 @@ class TestDecorators:
 
 class TestRegression:
     def test__centre_of_profile_in_right_place(self):
-
         grid = ag.Grid.uniform(shape_2d=(7, 7), pixel_scales=1.0)
 
         light_profile = ag.lp.EllipticalSersic(centre=(2.0, 1.0), intensity=1.0)

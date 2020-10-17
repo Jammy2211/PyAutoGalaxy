@@ -1,9 +1,9 @@
 import os
 from os import path
 
-from autoconf import conf
-import autogalaxy.plot as aplt
 import pytest
+
+import autogalaxy.plot as aplt
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -12,13 +12,6 @@ directory = path.dirname(path.realpath(__file__))
 def make_galaxy_fit_plotter_setup():
     return "{}/files/plots/galaxy_fitting/".format(
         os.path.dirname(os.path.realpath(__file__))
-    )
-
-
-@pytest.fixture(autouse=True)
-def set_config_path():
-    conf.instance = conf.Config(
-        path.join(directory, "files/plotter"), path.join(directory, "output")
     )
 
 

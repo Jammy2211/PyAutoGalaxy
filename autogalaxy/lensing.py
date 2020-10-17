@@ -217,11 +217,11 @@ class LensingObject:
     @property
     def calculation_grid(self):
 
-        convergence_threshold = conf.instance.general.get(
-            "calculation_grid", "convergence_threshold", float
-        )
+        convergence_threshold = conf.instance["general"]["calculation_grid"][
+            "convergence_threshold"
+        ]
 
-        pixels = conf.instance.general.get("calculation_grid", "pixels", int)
+        pixels = conf.instance["general"]["calculation_grid"]["pixels"]
 
         # TODO : The error is raised for point mass profile which does not have a convergence, need to think how to
         # TODO : better deal with point masses.
