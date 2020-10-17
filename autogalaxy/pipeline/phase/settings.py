@@ -12,7 +12,7 @@ class SettingsPhase(AbstractSettingsPhase):
         settings_inversion=inv.SettingsInversion(),
         log_likelihood_cap=None,
     ):
-        """The settings of a phase, which customize how a model is fitted to data in a PyAutoGalaxy *Phase*. for
+        """The settings of a phase, which customize how a model is fitted to data in a PyAutoGalaxy `Phase`. for
         example the type of grid used or options or augmenting the data.
 
         The `SettingsPhase` perform phase tagging, whereby the phase settings tag the output path of the results

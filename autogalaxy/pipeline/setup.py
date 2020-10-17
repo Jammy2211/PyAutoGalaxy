@@ -10,6 +10,7 @@ from autogalaxy.profiles import (
 from autogalaxy import exc
 
 from typing import Union
+import copy
 
 
 class AbstractSetup:
@@ -901,15 +902,19 @@ class SetupMassTotal(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
-        mass = self.mass_prior_model
+        mass = copy.copy(self.mass_prior_model)
 
         if not unfix_mass_centre:
             mass.centre = af.last[index].model.galaxies.lens.mass.centre
 
         if mass.cls is mp.EllipticalIsothermal or mass.cls is mp.EllipticalPowerLaw:
 
-            mass.elliptical_comps = af.last[index].model.galaxies.lens.mass.elliptical_comps
-            mass.einstein_radius = af.last[index].model.galaxies.lens.mass.einstein_radius
+            mass.elliptical_comps = af.last[
+                index
+            ].model.galaxies.lens.mass.elliptical_comps
+            mass.einstein_radius = af.last[
+                index
+            ].model.galaxies.lens.mass.einstein_radius
 
         return mass
 
@@ -979,7 +984,16 @@ class SetupMassLightDark(AbstractSetupMass):
 
     @property
     def light_and_mass_prior_models(self):
-        return list(filter(None, [self.bulge_prior_model, self.disk_prior_model, self.envelope_prior_model]))
+        return list(
+            filter(
+                None,
+                [
+                    self.bulge_prior_model,
+                    self.disk_prior_model,
+                    self.envelope_prior_model,
+                ],
+            )
+        )
 
     @property
     def tag(self):
@@ -1013,7 +1027,7 @@ class SetupMassLightDark(AbstractSetupMass):
         For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
 
         constant_mass_to_light_ratio = `False` -> mlr_free
-        constant_mass_to_light_ratio = ``True`` -> mlr_constant
+        constant_mass_to_light_ratio = `True` -> mlr_constant
         """
         if self.constant_mass_to_light_ratio:
             return f"__mlr_{conf.instance['notation']['setup_tags']['mass']['constant_mass_to_light_ratio']}"
@@ -1178,37 +1192,35 @@ class SetupMassLightDark(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
-        bulge = self.bulge_prior_model
+        bulge = copy.copy(self.bulge_prior_model)
 
         if bulge.cls is lmp.EllipticalExponential or bulge.cls is lmp.EllipticalSersic:
 
             bulge = af.PriorModel(lmp.EllipticalSersic)
 
             bulge.centre = af.last[index].model.galaxies.lens.bulge.centre
-            bulge.elliptical_comps = (
-                af.last[index].model.galaxies.lens.bulge.elliptical_comps
-            )
+            bulge.elliptical_comps = af.last[
+                index
+            ].model.galaxies.lens.bulge.elliptical_comps
             bulge.intensity = af.last[index].model.galaxies.lens.bulge.intensity
-            bulge.effective_radius = (
-                af.last[index].model.galaxies.lens.bulge.effective_radius
-            )
+            bulge.effective_radius = af.last[
+                index
+            ].model.galaxies.lens.bulge.effective_radius
 
             if bulge.cls is lp.EllipticalSersic:
-                bulge.sersic_index = af.last[index].model.galaxies.lens.bulge.sersic_index
+                bulge.sersic_index = af.last[
+                    index
+                ].model.galaxies.lens.bulge.sersic_index
 
         elif bulge.cls is lmp.EllipticalChameleon:
-            
+
             bulge.centre = af.last[index].model.galaxies.lens.bulge.centre
-            bulge.elliptical_comps = (
-                af.last[index].model.galaxies.lens.bulge.elliptical_comps
-            )
+            bulge.elliptical_comps = af.last[
+                index
+            ].model.galaxies.lens.bulge.elliptical_comps
             bulge.intensity = af.last[index].model.galaxies.lens.bulge.intensity
-            bulge.core_radius_0 = (
-                af.last[index].model.galaxies.lens.bulge.core_radius_0
-            )
-            bulge.core_radius_1 = (
-                af.last[index].model.galaxies.lens.bulge.core_radius_1
-            )
+            bulge.core_radius_0 = af.last[index].model.galaxies.lens.bulge.core_radius_0
+            bulge.core_radius_1 = af.last[index].model.galaxies.lens.bulge.core_radius_1
 
         return bulge
 
@@ -1230,20 +1242,20 @@ class SetupMassLightDark(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
-        disk = self.disk_prior_model
+        disk = copy.copy(self.disk_prior_model)
 
         if disk.cls is lmp.EllipticalExponential or disk.cls is lmp.EllipticalSersic:
 
             disk = af.PriorModel(lmp.EllipticalSersic)
 
             disk.centre = af.last[index].model.galaxies.lens.disk.centre
-            disk.elliptical_comps = (
-                af.last[index].model.galaxies.lens.disk.elliptical_comps
-            )
+            disk.elliptical_comps = af.last[
+                index
+            ].model.galaxies.lens.disk.elliptical_comps
             disk.intensity = af.last[index].model.galaxies.lens.disk.intensity
-            disk.effective_radius = (
-                af.last[index].model.galaxies.lens.disk.effective_radius
-            )
+            disk.effective_radius = af.last[
+                index
+            ].model.galaxies.lens.disk.effective_radius
 
             if disk.cls is lp.EllipticalSersic:
                 disk.sersic_index = af.last[index].model.galaxies.lens.disk.sersic_index
@@ -1251,16 +1263,12 @@ class SetupMassLightDark(AbstractSetupMass):
         elif disk.cls is lmp.EllipticalChameleon:
 
             disk.centre = af.last[index].model.galaxies.lens.disk.centre
-            disk.elliptical_comps = (
-                af.last[index].model.galaxies.lens.disk.elliptical_comps
-            )
+            disk.elliptical_comps = af.last[
+                index
+            ].model.galaxies.lens.disk.elliptical_comps
             disk.intensity = af.last[index].model.galaxies.lens.disk.intensity
-            disk.core_radius_0 = (
-                af.last[index].model.galaxies.lens.disk.core_radius_0
-            )
-            disk.core_radius_1 = (
-                af.last[index].model.galaxies.lens.disk.core_radius_1
-            )
+            disk.core_radius_0 = af.last[index].model.galaxies.lens.disk.core_radius_0
+            disk.core_radius_1 = af.last[index].model.galaxies.lens.disk.core_radius_1
 
         return disk
 
@@ -1282,37 +1290,42 @@ class SetupMassLightDark(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
-        envelope = self.envelope_prior_model
+        envelope = copy.copy(self.envelope_prior_model)
 
-        if envelope.cls is lmp.EllipticalExponential or envelope.cls is lmp.EllipticalSersic:
+        if (
+            envelope.cls is lmp.EllipticalExponential
+            or envelope.cls is lmp.EllipticalSersic
+        ):
 
             envelope = af.PriorModel(lmp.EllipticalSersic)
 
             envelope.centre = af.last[index].model.galaxies.lens.envelope.centre
-            envelope.elliptical_comps = (
-                af.last[index].model.galaxies.lens.envelope.elliptical_comps
-            )
+            envelope.elliptical_comps = af.last[
+                index
+            ].model.galaxies.lens.envelope.elliptical_comps
             envelope.intensity = af.last[index].model.galaxies.lens.envelope.intensity
-            envelope.effective_radius = (
-                af.last[index].model.galaxies.lens.envelope.effective_radius
-            )
+            envelope.effective_radius = af.last[
+                index
+            ].model.galaxies.lens.envelope.effective_radius
 
             if envelope.cls is lp.EllipticalSersic:
-                envelope.sersic_index = af.last[index].model.galaxies.lens.envelope.sersic_index
+                envelope.sersic_index = af.last[
+                    index
+                ].model.galaxies.lens.envelope.sersic_index
 
         elif envelope.cls is lmp.EllipticalChameleon:
 
             envelope.centre = af.last[index].model.galaxies.lens.envelope.centre
-            envelope.elliptical_comps = (
-                af.last[index].model.galaxies.lens.envelope.elliptical_comps
-            )
+            envelope.elliptical_comps = af.last[
+                index
+            ].model.galaxies.lens.envelope.elliptical_comps
             envelope.intensity = af.last[index].model.galaxies.lens.envelope.intensity
-            envelope.core_radius_0 = (
-                af.last[index].model.galaxies.lens.envelope.core_radius_0
-            )
-            envelope.core_radius_1 = (
-                af.last[index].model.galaxies.lens.envelope.core_radius_1
-            )
+            envelope.core_radius_0 = af.last[
+                index
+            ].model.galaxies.lens.envelope.core_radius_0
+            envelope.core_radius_1 = af.last[
+                index
+            ].model.galaxies.lens.envelope.core_radius_1
 
         return envelope
 
@@ -1334,37 +1347,39 @@ class SetupMassLightDark(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
-        bulge = self.bulge_prior_model
+        bulge = copy.copy(self.bulge_prior_model)
 
         if bulge.cls is lmp.EllipticalExponential or bulge.cls is lmp.EllipticalSersic:
 
             bulge = af.PriorModel(lmp.EllipticalSersic)
 
             bulge.centre = af.last[index].instance.galaxies.lens.bulge.centre
-            bulge.elliptical_comps = (
-                af.last[index].instance.galaxies.lens.bulge.elliptical_comps
-            )
+            bulge.elliptical_comps = af.last[
+                index
+            ].instance.galaxies.lens.bulge.elliptical_comps
             bulge.intensity = af.last[index].instance.galaxies.lens.bulge.intensity
-            bulge.effective_radius = (
-                af.last[index].instance.galaxies.lens.bulge.effective_radius
-            )
+            bulge.effective_radius = af.last[
+                index
+            ].instance.galaxies.lens.bulge.effective_radius
 
             if bulge.cls is lp.EllipticalSersic:
-                bulge.sersic_index = af.last[index].instance.galaxies.lens.bulge.sersic_index
+                bulge.sersic_index = af.last[
+                    index
+                ].instance.galaxies.lens.bulge.sersic_index
 
         elif bulge.cls is lmp.EllipticalChameleon:
 
             bulge.centre = af.last[index].instance.galaxies.lens.bulge.centre
-            bulge.elliptical_comps = (
-                af.last[index].instance.galaxies.lens.bulge.elliptical_comps
-            )
+            bulge.elliptical_comps = af.last[
+                index
+            ].instance.galaxies.lens.bulge.elliptical_comps
             bulge.intensity = af.last[index].instance.galaxies.lens.bulge.intensity
-            bulge.core_radius_0 = (
-                af.last[index].instance.galaxies.lens.bulge.core_radius_0
-            )
-            bulge.core_radius_1 = (
-                af.last[index].instance.galaxies.lens.bulge.core_radius_1
-            )
+            bulge.core_radius_0 = af.last[
+                index
+            ].instance.galaxies.lens.bulge.core_radius_0
+            bulge.core_radius_1 = af.last[
+                index
+            ].instance.galaxies.lens.bulge.core_radius_1
 
         return bulge
 
@@ -1386,37 +1401,39 @@ class SetupMassLightDark(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
-        disk = self.disk_prior_model
+        disk = copy.copy(self.disk_prior_model)
 
         if disk.cls is lmp.EllipticalExponential or disk.cls is lmp.EllipticalSersic:
 
             disk = af.PriorModel(lmp.EllipticalSersic)
 
             disk.centre = af.last[index].instance.galaxies.lens.disk.centre
-            disk.elliptical_comps = (
-                af.last[index].instance.galaxies.lens.disk.elliptical_comps
-            )
+            disk.elliptical_comps = af.last[
+                index
+            ].instance.galaxies.lens.disk.elliptical_comps
             disk.intensity = af.last[index].instance.galaxies.lens.disk.intensity
-            disk.effective_radius = (
-                af.last[index].instance.galaxies.lens.disk.effective_radius
-            )
+            disk.effective_radius = af.last[
+                index
+            ].instance.galaxies.lens.disk.effective_radius
 
             if disk.cls is lp.EllipticalSersic:
-                disk.sersic_index = af.last[index].instance.galaxies.lens.disk.sersic_index
+                disk.sersic_index = af.last[
+                    index
+                ].instance.galaxies.lens.disk.sersic_index
 
         elif disk.cls is lmp.EllipticalChameleon:
 
             disk.centre = af.last[index].instance.galaxies.lens.disk.centre
-            disk.elliptical_comps = (
-                af.last[index].instance.galaxies.lens.disk.elliptical_comps
-            )
+            disk.elliptical_comps = af.last[
+                index
+            ].instance.galaxies.lens.disk.elliptical_comps
             disk.intensity = af.last[index].instance.galaxies.lens.disk.intensity
-            disk.core_radius_0 = (
-                af.last[index].instance.galaxies.lens.disk.core_radius_0
-            )
-            disk.core_radius_1 = (
-                af.last[index].instance.galaxies.lens.disk.core_radius_1
-            )
+            disk.core_radius_0 = af.last[
+                index
+            ].instance.galaxies.lens.disk.core_radius_0
+            disk.core_radius_1 = af.last[
+                index
+            ].instance.galaxies.lens.disk.core_radius_1
 
         return disk
 
@@ -1438,37 +1455,46 @@ class SetupMassLightDark(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
-        envelope = self.envelope_prior_model
+        envelope = copy.copy(self.envelope_prior_model)
 
-        if envelope.cls is lmp.EllipticalExponential or envelope.cls is lmp.EllipticalSersic:
+        if (
+            envelope.cls is lmp.EllipticalExponential
+            or envelope.cls is lmp.EllipticalSersic
+        ):
 
             envelope = af.PriorModel(lmp.EllipticalSersic)
 
             envelope.centre = af.last[index].instance.galaxies.lens.envelope.centre
-            envelope.elliptical_comps = (
-                af.last[index].instance.galaxies.lens.envelope.elliptical_comps
-            )
-            envelope.intensity = af.last[index].instance.galaxies.lens.envelope.intensity
-            envelope.effective_radius = (
-                af.last[index].instance.galaxies.lens.envelope.effective_radius
-            )
+            envelope.elliptical_comps = af.last[
+                index
+            ].instance.galaxies.lens.envelope.elliptical_comps
+            envelope.intensity = af.last[
+                index
+            ].instance.galaxies.lens.envelope.intensity
+            envelope.effective_radius = af.last[
+                index
+            ].instance.galaxies.lens.envelope.effective_radius
 
             if envelope.cls is lp.EllipticalSersic:
-                envelope.sersic_index = af.last[index].instance.galaxies.lens.envelope.sersic_index
+                envelope.sersic_index = af.last[
+                    index
+                ].instance.galaxies.lens.envelope.sersic_index
 
         elif envelope.cls is lmp.EllipticalChameleon:
 
             envelope.centre = af.last[index].instance.galaxies.lens.envelope.centre
-            envelope.elliptical_comps = (
-                af.last[index].instance.galaxies.lens.envelope.elliptical_comps
-            )
-            envelope.intensity = af.last[index].instance.galaxies.lens.envelope.intensity
-            envelope.core_radius_0 = (
-                af.last[index].instance.galaxies.lens.envelope.core_radius_0
-            )
-            envelope.core_radius_1 = (
-                af.last[index].instance.galaxies.lens.envelope.core_radius_1
-            )
+            envelope.elliptical_comps = af.last[
+                index
+            ].instance.galaxies.lens.envelope.elliptical_comps
+            envelope.intensity = af.last[
+                index
+            ].instance.galaxies.lens.envelope.intensity
+            envelope.core_radius_0 = af.last[
+                index
+            ].instance.galaxies.lens.envelope.core_radius_0
+            envelope.core_radius_1 = af.last[
+                index
+            ].instance.galaxies.lens.envelope.core_radius_1
 
         return envelope
 

@@ -959,7 +959,7 @@ class TestChameleon:
 
 class TestBlurredProfileImages:
     def test__blurred_image_from_grid_and_psf(
-            self, sub_grid_7x7, blurring_grid_7x7, psf_3x3, convolver_7x7
+        self, sub_grid_7x7, blurring_grid_7x7, psf_3x3, convolver_7x7
     ):
         light_profile = ag.lp.EllipticalSersic(intensity=1.0)
 
@@ -983,7 +983,7 @@ class TestBlurredProfileImages:
         )
 
     def test__blurred_image_from_grid_and_convolver(
-            self, sub_grid_7x7, blurring_grid_7x7, convolver_7x7
+        self, sub_grid_7x7, blurring_grid_7x7, convolver_7x7
     ):
         light_profile = ag.lp.EllipticalSersic(intensity=1.0)
 
@@ -1009,7 +1009,7 @@ class TestBlurredProfileImages:
 
 class TestVisibilities:
     def test__visibilities_from_grid_and_transformer(
-            self, grid_7x7, sub_grid_7x7, transformer_7x7_7
+        self, grid_7x7, sub_grid_7x7, transformer_7x7_7
     ):
         light_profile = ag.lp.EllipticalSersic(intensity=1.0)
 
@@ -1028,21 +1028,21 @@ class TestVisibilities:
 
 def luminosity_from_radius_and_profile(radius, profile):
     x = profile.sersic_constant * (
-            (radius / profile.effective_radius) ** (1.0 / profile.sersic_index)
+        (radius / profile.effective_radius) ** (1.0 / profile.sersic_index)
     )
 
     return (
-            profile.intensity
-            * profile.effective_radius ** 2
-            * 2
-            * math.pi
-            * profile.sersic_index
-            * (
-                    (math.e ** profile.sersic_constant)
-                    / (profile.sersic_constant ** (2 * profile.sersic_index))
-            )
-            * scipy.special.gamma(2 * profile.sersic_index)
-            * scipy.special.gammainc(2 * profile.sersic_index, x)
+        profile.intensity
+        * profile.effective_radius ** 2
+        * 2
+        * math.pi
+        * profile.sersic_index
+        * (
+            (math.e ** profile.sersic_constant)
+            / (profile.sersic_constant ** (2 * profile.sersic_index))
+        )
+        * scipy.special.gamma(2 * profile.sersic_index)
+        * scipy.special.gammainc(2 * profile.sersic_index, x)
     )
 
 
@@ -1138,7 +1138,7 @@ class TestLuminosityWithinCircle:
         assert luminosity_analytic == pytest.approx(luminosity_integral, 1e-3)
 
     def test__radius_units_conversions__light_profile_updates_units_and_computes_correct_luminosity(
-            self
+        self
     ):
         cosmology = mock.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0)
 

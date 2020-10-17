@@ -7,9 +7,9 @@ autogalaxy.egg-info/
 build
 dist
 autogalaxy.egg-info/
-test_autogalaxy/config/json_priors/autogalaxy.galaxy.galaxy.Redshift.redshift.json
-test_autogalaxy/config/json_priors/autogalaxy.json
-test_autogalaxy/config/json_priors/autogalaxy.json
+test_autogalaxy/config/priors/autogalaxy.galaxy.galaxy.Redshift.redshift.json
+test_autogalaxy/config/priors/autogalaxy.json
+test_autogalaxy/config/priors/autogalaxy.json
 test_autogalaxy/config/notation/.label.ini.swp
 test_autogalaxy/unit/output/
 test_autogalaxy/unit/pipeline/files/plot/visualizer/fit_imaging/fits/chi_squared_map.fits

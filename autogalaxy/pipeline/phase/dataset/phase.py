@@ -112,7 +112,10 @@ class PhaseDataset(abstract.AbstractPhase):
         pass
 
     def modify_search_paths(self):
-
+        """
+        Modify the output paths of the phase before the non-linear search is run, so that the output path can be
+        customized using the tags of the phase.
+        """
         if self.hyper_name is None:
             hyper_tag = ""
         else:

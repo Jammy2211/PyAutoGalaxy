@@ -465,39 +465,73 @@ class TestSetupMassLightDark:
         assert setup.envelope_prior_model_tag == "__envelope_exp_sph"
         assert setup.dark_prior_model_tag == "__dark_nfw"
 
-    def test__consstant_mass_to_light_ratio__sets_mass_to_light_ratios_of_light_and_mass_profiles(self):
+    def test__consstant_mass_to_light_ratio__sets_mass_to_light_ratios_of_light_and_mass_profiles(
+        self
+    ):
 
-        setup = ag.SetupMassLightDark(bulge_prior_model=ag.lmp.EllipticalSersic,
-                                      disk_prior_model=ag.lmp.EllipticalSersic,
-                                      envelope_prior_model=ag.lmp.EllipticalSersic,
-                                      constant_mass_to_light_ratio=False)
+        setup = ag.SetupMassLightDark(
+            bulge_prior_model=ag.lmp.EllipticalSersic,
+            disk_prior_model=ag.lmp.EllipticalSersic,
+            envelope_prior_model=ag.lmp.EllipticalSersic,
+            constant_mass_to_light_ratio=False,
+        )
 
-        assert setup.bulge_prior_model.mass_to_light_ratio != setup.disk_prior_model.mass_to_light_ratio
-        assert setup.bulge_prior_model.mass_to_light_ratio != setup.envelope_prior_model.mass_to_light_ratio
-        assert setup.disk_prior_model.mass_to_light_ratio != setup.envelope_prior_model.mass_to_light_ratio
+        assert (
+            setup.bulge_prior_model.mass_to_light_ratio
+            != setup.disk_prior_model.mass_to_light_ratio
+        )
+        assert (
+            setup.bulge_prior_model.mass_to_light_ratio
+            != setup.envelope_prior_model.mass_to_light_ratio
+        )
+        assert (
+            setup.disk_prior_model.mass_to_light_ratio
+            != setup.envelope_prior_model.mass_to_light_ratio
+        )
 
-        setup = ag.SetupMassLightDark(bulge_prior_model=ag.lmp.EllipticalSersic,
-                                      disk_prior_model=ag.lmp.EllipticalSersic,
-                                      envelope_prior_model=ag.lmp.EllipticalSersic,
-                                      constant_mass_to_light_ratio=True)
+        setup = ag.SetupMassLightDark(
+            bulge_prior_model=ag.lmp.EllipticalSersic,
+            disk_prior_model=ag.lmp.EllipticalSersic,
+            envelope_prior_model=ag.lmp.EllipticalSersic,
+            constant_mass_to_light_ratio=True,
+        )
 
-        assert setup.bulge_prior_model.mass_to_light_ratio == setup.disk_prior_model.mass_to_light_ratio
-        assert setup.bulge_prior_model.mass_to_light_ratio == setup.envelope_prior_model.mass_to_light_ratio
-        assert setup.disk_prior_model.mass_to_light_ratio == setup.envelope_prior_model.mass_to_light_ratio
+        assert (
+            setup.bulge_prior_model.mass_to_light_ratio
+            == setup.disk_prior_model.mass_to_light_ratio
+        )
+        assert (
+            setup.bulge_prior_model.mass_to_light_ratio
+            == setup.envelope_prior_model.mass_to_light_ratio
+        )
+        assert (
+            setup.disk_prior_model.mass_to_light_ratio
+            == setup.envelope_prior_model.mass_to_light_ratio
+        )
 
-        setup = ag.SetupMassLightDark(bulge_prior_model=ag.lmp.EllipticalSersic,
-                                      disk_prior_model=ag.lmp.EllipticalSersic,
-                                      envelope_prior_model=None,
-                                      constant_mass_to_light_ratio=True)
+        setup = ag.SetupMassLightDark(
+            bulge_prior_model=ag.lmp.EllipticalSersic,
+            disk_prior_model=ag.lmp.EllipticalSersic,
+            envelope_prior_model=None,
+            constant_mass_to_light_ratio=True,
+        )
 
-        assert setup.bulge_prior_model.mass_to_light_ratio == setup.disk_prior_model.mass_to_light_ratio
+        assert (
+            setup.bulge_prior_model.mass_to_light_ratio
+            == setup.disk_prior_model.mass_to_light_ratio
+        )
 
-        setup = ag.SetupMassLightDark(bulge_prior_model=ag.lmp.EllipticalSersic,
-                                      disk_prior_model=None,
-                                      envelope_prior_model=None,
-                                      constant_mass_to_light_ratio=True)
+        setup = ag.SetupMassLightDark(
+            bulge_prior_model=ag.lmp.EllipticalSersic,
+            disk_prior_model=None,
+            envelope_prior_model=None,
+            constant_mass_to_light_ratio=True,
+        )
 
-        assert setup.bulge_prior_model.mass_to_light_ratio == setup.bulge_prior_model.mass_to_light_ratio
+        assert (
+            setup.bulge_prior_model.mass_to_light_ratio
+            == setup.bulge_prior_model.mass_to_light_ratio
+        )
 
     def test__constant_mass_to_light_ratio_tag(self):
 
