@@ -40,6 +40,71 @@ class AbstractSetup:
 
         return cls
 
+    def _set_bulge_disk_assertion(self, bulge_prior_model, disk_prior_model):
+        """
+        Sets an assertion on the `bulge_prior_model` and `disk_prior_model` such that the `sersic_index` of the
+        bulge is higher than that of the `disk`, if both components are modeled using Sersic profiles.
+
+        Parameters
+        ----------
+        bulge_prior_model : af.PriorModel
+            The `PriorModel` used to represent the light distribution of a bulge.
+        disk_prior_model : af.PriorModel
+            The `PriorModel` used to represent the light distribution of a disk.
+
+        Returns
+        -------
+        None
+        """
+
+        if bulge_prior_model is not None and disk_prior_model is not None:
+            if bulge_prior_model.cls in [
+                lp.EllipticalSersic,
+                lp.SphericalSersic,
+                mp.EllipticalSersic,
+                mp.SphericalSersic,
+                lmp.EllipticalSersic,
+                lmp.SphericalSersic,
+            ]:
+                if disk_prior_model.cls in [
+                    lp.EllipticalSersic,
+                    lp.SphericalSersic,
+                    mp.EllipticalSersic,
+                    mp.SphericalSersic,
+                    lmp.EllipticalSersic,
+                    lmp.SphericalSersic,
+                ]:
+                    bulge_prior_model.add_assertion(
+                        bulge_prior_model.sersic_index > disk_prior_model.sersic_index
+                    )
+
+    def _set_chameleon_assertions(self, prior_model):
+        """
+        Sets the assertion on all `PriorModels` which are a `Chameleon` profile such that the core radius of the first
+        isothermal profile is lower than the second, preventing negative mass.
+
+        Parameters
+        ----------
+        prior_model : af.PriorModel
+            The `PriorModel` that may contain a `Chameleon` profile.
+
+        Returns
+        -------
+        None
+        """
+        if prior_model is not None:
+            if prior_model.cls in [
+                lp.EllipticalChameleon,
+                lp.SphericalChameleon,
+                mp.EllipticalChameleon,
+                mp.SphericalChameleon,
+                lmp.EllipticalChameleon,
+                lmp.SphericalChameleon,
+            ]:
+                prior_model.add_assertion(
+                    prior_model.core_radius_0 < prior_model.core_radius_1
+                )
+
     @property
     def tag(self):
         raise NotImplementedError
@@ -330,6 +395,15 @@ class SetupLightParametric(AbstractSetupLight):
 
             if self.envelope_prior_model is not None:
                 self.envelope_prior_model.centre = self.light_centre
+
+        self._set_bulge_disk_assertion(
+            bulge_prior_model=self.bulge_prior_model,
+            disk_prior_model=self.disk_prior_model,
+        )
+
+        self._set_chameleon_assertions(prior_model=self.bulge_prior_model)
+        self._set_chameleon_assertions(prior_model=self.disk_prior_model)
+        self._set_chameleon_assertions(prior_model=self.envelope_prior_model)
 
     @property
     def tag(self):
@@ -981,6 +1055,15 @@ class SetupMassLightDark(AbstractSetupMass):
 
         if self.align_bulge_dark_centre:
             self.dark_prior_model.centre = self.bulge_prior_model.centre
+
+        self._set_bulge_disk_assertion(
+            bulge_prior_model=self.bulge_prior_model,
+            disk_prior_model=self.disk_prior_model,
+        )
+
+        self._set_chameleon_assertions(prior_model=self.bulge_prior_model)
+        self._set_chameleon_assertions(prior_model=self.disk_prior_model)
+        self._set_chameleon_assertions(prior_model=self.envelope_prior_model)
 
     @property
     def light_and_mass_prior_models(self):

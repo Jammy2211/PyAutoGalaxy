@@ -785,7 +785,7 @@
             }
         }
     },
-       "SphericalChameleon": {
+    "SphericalChameleon": {
        "centre_0": {
            "type": "Gaussian",
            "lower_limit": "-inf",
