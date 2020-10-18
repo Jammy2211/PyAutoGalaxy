@@ -2,3 +2,4 @@
 include requirements.txt
 
 recursive-include data *
+recursive-include autogalaxy/config *
