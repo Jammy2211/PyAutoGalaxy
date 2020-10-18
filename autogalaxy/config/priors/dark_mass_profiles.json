@@ -198,19 +198,17 @@
                 "upper": "inf"
             }
         },
-        "setup": {
-            "redshift_source": {
-                "type": "Uniform",
-                "lower_limit": 1.0,
-                "upper_limit": 2.0,
-                "width_modifier": {
-                    "type": "Relative",
-                    "value": 0.5
-                },
-                "gaussian_limits": {
-                    "lower": 0.0,
-                    "upper": "inf"
-                }
+        "redshift_source": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
             }
         }
     },
@@ -271,19 +269,17 @@
                 "upper": "inf"
             }
         },
-        "setup": {
-            "redshift_source": {
-                "type": "Uniform",
-                "lower_limit": 1.0,
-                "upper_limit": 2.0,
-                "width_modifier": {
-                    "type": "Relative",
-                    "value": 0.5
-                },
-                "gaussian_limits": {
-                    "lower": 0.0,
-                    "upper": "inf"
-                }
+        "redshift_source": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
             }
         }
     },
@@ -415,19 +411,17 @@
                 "upper": "inf"
             }
         },
-        "setup": {
-            "redshift_source": {
-                "type": "Uniform",
-                "lower_limit": 1.0,
-                "upper_limit": 2.0,
-                "width_modifier": {
-                    "type": "Relative",
-                    "value": 0.5
-                },
-                "gaussian_limits": {
-                    "lower": 0.0,
-                    "upper": "inf"
-                }
+        "redshift_source": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
             }
         }
     },
@@ -488,19 +482,17 @@
                 "upper": "inf"
             }
         },
-        "setup": {
-            "redshift_source": {
-                "type": "Uniform",
-                "lower_limit": 1.0,
-                "upper_limit": 2.0,
-                "width_modifier": {
-                    "type": "Relative",
-                    "value": 0.5
-                },
-                "gaussian_limits": {
-                    "lower": 0.0,
-                    "upper": "inf"
-                }
+        "redshift_source": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
             }
         }
     },
