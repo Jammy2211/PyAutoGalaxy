@@ -571,6 +571,9 @@ class SetupLightParametric(AbstractSetupLight):
         - align_bulge_disk_centre_ell
         """
 
+        if self.bulge_prior_model is None or self.disk_prior_model is None:
+            return ""
+
         if not any(
             [self.align_bulge_disk_centre, self.align_bulge_disk_elliptical_comps]
         ):
