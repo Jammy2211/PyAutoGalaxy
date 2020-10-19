@@ -976,9 +976,21 @@ class SetupMassTotal(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
-        mass = copy.copy(self.mass_prior_model)
+        mass = af.PriorModel(self.mass_prior_model.cls)
 
-        if not unfix_mass_centre:
+        if unfix_mass_centre:
+
+            if self.mass_centre is not None:
+
+                mass.centre.centre_0 = af.GaussianPrior(
+                    mean=self.mass_centre[0], sigma=0.05
+                )
+                mass.centre.centre_1 = af.GaussianPrior(
+                    mean=self.mass_centre[1], sigma=0.05
+                )
+
+        else:
+
             mass.centre = af.last[index].model.galaxies.lens.mass.centre
 
         if mass.cls is mp.EllipticalIsothermal or mass.cls is mp.EllipticalPowerLaw:
@@ -1279,7 +1291,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.bulge_prior_model is None:
             return None
 
-        bulge = copy.copy(self.bulge_prior_model)
+        bulge = af.PriorModel(self.bulge_prior_model.cls)
 
         if bulge.cls is lmp.EllipticalExponential or bulge.cls is lmp.EllipticalSersic:
 
@@ -1333,7 +1345,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.disk_prior_model is None:
             return None
 
-        disk = copy.copy(self.disk_prior_model)
+        disk = af.PriorModel(self.disk_prior_model.cls)
 
         if disk.cls is lmp.EllipticalExponential or disk.cls is lmp.EllipticalSersic:
 
@@ -1385,7 +1397,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.envelope_prior_model is None:
             return None
 
-        envelope = copy.copy(self.envelope_prior_model)
+        envelope = af.PriorModel(self.envelope_prior_model.cls)
 
         if (
             envelope.cls is lmp.EllipticalExponential
@@ -1446,7 +1458,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.bulge_prior_model is None:
             return None
 
-        bulge = copy.copy(self.bulge_prior_model)
+        bulge = af.PriorModel(self.bulge_prior_model.cls)
 
         if bulge.cls is lmp.EllipticalExponential or bulge.cls is lmp.EllipticalSersic:
 
@@ -1504,7 +1516,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.disk_prior_model is None:
             return None
 
-        disk = copy.copy(self.disk_prior_model)
+        disk = af.PriorModel(self.disk_prior_model.cls)
 
         if disk.cls is lmp.EllipticalExponential or disk.cls is lmp.EllipticalSersic:
 
@@ -1562,7 +1574,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.envelope_prior_model is None:
             return None
 
-        envelope = copy.copy(self.envelope_prior_model)
+        envelope = af.PriorModel(self.envelope_prior_model.cls)
 
         if (
             envelope.cls is lmp.EllipticalExponential
