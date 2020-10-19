@@ -1275,6 +1275,10 @@ class SetupMassLightDark(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
+
+        if self.bulge_prior_model is None:
+            return None
+
         bulge = copy.copy(self.bulge_prior_model)
 
         if bulge.cls is lmp.EllipticalExponential or bulge.cls is lmp.EllipticalSersic:
@@ -1325,6 +1329,10 @@ class SetupMassLightDark(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
+
+        if self.disk_prior_model is None:
+            return None
+
         disk = copy.copy(self.disk_prior_model)
 
         if disk.cls is lmp.EllipticalExponential or disk.cls is lmp.EllipticalSersic:
@@ -1373,6 +1381,10 @@ class SetupMassLightDark(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
+
+        if self.envelope_prior_model is None:
+            return None
+
         envelope = copy.copy(self.envelope_prior_model)
 
         if (
@@ -1430,6 +1442,10 @@ class SetupMassLightDark(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
+
+        if self.bulge_prior_model is None:
+            return None
+
         bulge = copy.copy(self.bulge_prior_model)
 
         if bulge.cls is lmp.EllipticalExponential or bulge.cls is lmp.EllipticalSersic:
@@ -1484,6 +1500,10 @@ class SetupMassLightDark(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
+
+        if self.disk_prior_model is None:
+            return None
+
         disk = copy.copy(self.disk_prior_model)
 
         if disk.cls is lmp.EllipticalExponential or disk.cls is lmp.EllipticalSersic:
@@ -1538,6 +1558,10 @@ class SetupMassLightDark(AbstractSetupMass):
         af.PriorModel(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
+
+        if self.envelope_prior_model is None:
+            return None
+
         envelope = copy.copy(self.envelope_prior_model)
 
         if (
