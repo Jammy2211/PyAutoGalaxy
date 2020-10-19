@@ -228,15 +228,37 @@ class TestSetupLightParametric:
         assert setup.light_centre_tag == "__centre_(3.03,4.03)"
 
     def test__align_bulge_disk_tags(self):
+
         light = ag.SetupLightParametric(align_bulge_disk_centre=False)
+
         assert light.align_bulge_disk_centre_tag == ""
+        assert light.align_bulge_disk_tag == ""
+
         light = ag.SetupLightParametric(align_bulge_disk_centre=True)
+
         assert light.align_bulge_disk_centre_tag == "_centre"
+        assert light.align_bulge_disk_tag == "__align_bulge_disk_centre"
 
         light = ag.SetupLightParametric(align_bulge_disk_elliptical_comps=False)
+
         assert light.align_bulge_disk_elliptical_comps_tag == ""
-        light = ag.SetupLightParametric(align_bulge_disk_elliptical_comps=True)
+
+        light = ag.SetupLightParametric(
+            align_bulge_disk_centre=True, align_bulge_disk_elliptical_comps=True
+        )
+
         assert light.align_bulge_disk_elliptical_comps_tag == "_ell"
+        assert light.align_bulge_disk_tag == "__align_bulge_disk_centre_ell"
+
+        light = ag.SetupLightParametric(
+            bulge_prior_model=None, align_bulge_disk_elliptical_comps=True
+        )
+        assert light.align_bulge_disk_tag == ""
+
+        light = ag.SetupLightParametric(
+            disk_prior_model=None, align_bulge_disk_elliptical_comps=True
+        )
+        assert light.align_bulge_disk_tag == ""
 
     def test__tag(self):
 
