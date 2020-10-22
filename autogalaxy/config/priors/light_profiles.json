@@ -824,7 +824,7 @@
         "core_radius_0": {
             "type": "Uniform",
             "lower_limit": 0.0,
-            "upper_limit": 1.0,
+            "upper_limit": 10.0,
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.3
@@ -837,7 +837,7 @@
         "core_radius_1": {
             "type": "Uniform",
             "lower_limit": 0.0,
-            "upper_limit": 1.0,
+            "upper_limit": 10.0,
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.3
@@ -913,7 +913,7 @@
         "core_radius_0": {
             "type": "Uniform",
             "lower_limit": 0.0,
-            "upper_limit": 1.0,
+            "upper_limit": 10.0,
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.3
@@ -926,7 +926,7 @@
         "core_radius_1": {
             "type": "Uniform",
             "lower_limit": 0.0,
-            "upper_limit": 1.0,
+            "upper_limit": 10.0,
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.3

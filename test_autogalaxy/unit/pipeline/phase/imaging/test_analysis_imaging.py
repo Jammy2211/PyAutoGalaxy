@@ -5,7 +5,7 @@ import autogalaxy as ag
 import pytest
 from astropy import cosmology as cosmo
 from autogalaxy.fit.fit import FitImaging
-from autogalaxy import mock
+from autogalaxy.mock import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
