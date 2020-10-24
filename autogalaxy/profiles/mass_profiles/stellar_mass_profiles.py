@@ -864,6 +864,10 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
     def convergence_func(self, grid_radius):
         return self.mass_to_light_ratio * self.intensity_at_radius(grid_radius)
 
+    @grids.grid_like_to_structure
+    def potential_from_grid(self, grid):
+        return np.zeros(shape=grid.shape[0])
+
     def intensity_at_radius(self, grid_radii):
         """Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.
 

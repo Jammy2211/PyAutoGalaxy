@@ -1,14 +1,9 @@
 import numpy as np
 import pytest
 
-# Lens Datasets #
-from autoarray.mock.fixtures import *
 from autogalaxy.mock import fixtures
 
-
-############
-# AutoGalaxy #
-############
+### Datasets ###
 
 
 @pytest.fixture(name="psf_3x3")
