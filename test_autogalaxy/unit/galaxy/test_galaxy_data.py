@@ -3,7 +3,7 @@ import pytest
 
 import autogalaxy as ag
 from autogalaxy import exc
-from autogalaxy import mock
+from autogalaxy.mock import mock
 
 
 class TestGalaxyFitData:

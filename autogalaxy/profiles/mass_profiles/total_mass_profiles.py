@@ -705,16 +705,6 @@ class EllipticalIsothermal(EllipticalPowerLaw):
         if not isinstance(self, SphericalIsothermal) and self.axis_ratio > 0.99999:
             self.axis_ratio = 0.99999
 
-    # @classmethod
-    # def from_mass_in_solar_masses(cls, redshift_lens=0.5, redshift_source=1.0, centre: unit_label.Position = (0.0, 0.0), axis_ratio_=0.9,
-    #                               phi: float = 0.0, mass=10e10):
-    #
-    #     return self.instance_kpc * self.angular_diameter_distance_of_plane_to_earth(j) / \
-    #            (self.angular_diameter_distance_between_planes(i, j) *
-    #             self.angular_diameter_distance_of_plane_to_earth(i))
-
-    # critical_covnergence =
-
     @grids.grid_like_to_structure
     @grids.transform
     @grids.relocate_to_radial_minimum

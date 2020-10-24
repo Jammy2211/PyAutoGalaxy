@@ -10,7 +10,7 @@ import autofit as af
 import autogalaxy as ag
 from autoarray.structures import grids
 from autogalaxy import lensing
-from autogalaxy import mock
+from autogalaxy.mock import mock
 from autogalaxy.profiles import geometry_profiles
 
 

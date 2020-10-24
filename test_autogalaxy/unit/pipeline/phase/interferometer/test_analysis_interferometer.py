@@ -3,7 +3,7 @@ from os import path
 import autogalaxy as ag
 import pytest
 from autogalaxy.fit.fit import FitInterferometer
-from autogalaxy import mock
+from autogalaxy.mock import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "

@@ -883,30 +883,30 @@
             }
         },
         "core_radius_0": {
-        "type": "Uniform",
-        "lower_limit": 0.0,
-        "upper_limit": 10.0,
-        "width_modifier": {
-            "type": "Absolute",
-            "value": 0.3
-        },
-        "gaussian_limits": {
-            "lower": 0.0,
-            "upper": "inf"
-        }
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 10.0,
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.3
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
+            }
     },
-    "core_radius_1": {
-        "type": "Uniform",
-        "lower_limit": 0.0,
-        "upper_limit": 10.0,
-        "width_modifier": {
-            "type": "Absolute",
-            "value": 0.3
-        },
-        "gaussian_limits": {
-            "lower": 0.0,
-            "upper": "inf"
-        }
+        "core_radius_1": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 10.0,
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.3
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
+            }
     },
         "mass_to_light_ratio": {
     "type": "LogUniform",
@@ -985,30 +985,30 @@
             }
         },
         "core_radius_0": {
-        "type": "Uniform",
-        "lower_limit": 0.0,
-        "upper_limit": 10.0,
-        "width_modifier": {
-            "type": "Absolute",
-            "value": 0.3
-        },
-        "gaussian_limits": {
-            "lower": 0.0,
-            "upper": "inf"
-        }
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 10.0,
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.3
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
+            }
     },
-    "core_radius_1": {
-        "type": "Uniform",
-        "lower_limit": 0.0,
-        "upper_limit": 10.0,
-        "width_modifier": {
-            "type": "Absolute",
-            "value": 0.3
-        },
-        "gaussian_limits": {
-            "lower": 0.0,
-            "upper": "inf"
-        }
+        "core_radius_1": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 10.0,
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.3
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
+            }
     },
         "mass_to_light_ratio": {
     "type": "LogUniform",
