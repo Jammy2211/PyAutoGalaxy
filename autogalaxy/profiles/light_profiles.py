@@ -38,7 +38,7 @@ class LightProfile:
         intensity : np.ndarray
             The value of intensity at the given radius
         """
-        raise NotImplementedError("intensity_from_grid should be overridden")
+        raise NotImplementedError("image_from_grid should be overridden")
 
     def luminosity_within_circle_in_units(
         self,
@@ -236,10 +236,17 @@ class EllipticalGaussian(EllipticalLightProfile):
         ----------
         grid_radii : float
             The radial distance from the centre of the profile. for each coordinate on the grid.
+
+        Note: sigma is divided by sqrt(q) here.
         """
         return np.multiply(
-            np.divide(self.intensity, self.sigma * np.sqrt(2.0 * np.pi)),
-            np.exp(-0.5 * np.square(np.divide(grid_radii, self.sigma))),
+            self.intensity,
+            np.exp(
+                -0.5
+                * np.square(
+                    np.divide(grid_radii, self.sigma / np.sqrt(self.axis_ratio))
+                )
+            ),
         )
 
     @grids.grid_like_to_structure
@@ -257,7 +264,7 @@ class EllipticalGaussian(EllipticalLightProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
 
-        return self.image_from_grid_radii(self.grid_to_elliptical_radii(grid))
+        return self.image_from_grid_radii(self.grid_to_eccentric_radii(grid))
 
 
 class SphericalGaussian(EllipticalGaussian):
