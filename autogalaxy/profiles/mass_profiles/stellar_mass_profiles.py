@@ -17,6 +17,24 @@ class StellarProfile:
     pass
 
 
+import warnings
+
+import autofit as af
+import numpy as np
+from autoarray.structures import arrays
+from autoarray.structures import grids
+from autogalaxy import dimensions as dim
+from autogalaxy.profiles import mass_profiles as mp
+from pyquad import quad_grid
+from scipy.special import wofz
+import typing
+
+
+class StellarProfile:
+
+    pass
+
+
 class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
     @af.map_types
     def __init__(
@@ -80,14 +98,6 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
 
     def zeta_from_grid(self, grid):
 
-        """
-        Compute equ (44) of Shajib (2019).
-
-        The difference of two wofz function in scipy is not stable when y < 0 (z = x + iy).
-        Because elliptical profile is axis-symmetric, if y < 0, we first compute the value at
-        z = x - iy, and then take the opposite sign.
-        """
-
         q2 = self.axis_ratio ** 2.0
         ind_pos_y = grid[:, 0] >= 0
         shape_grid = np.shape(grid)
@@ -116,17 +126,10 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
 
         return output_grid
 
-    def deflections_from_grid(self, grid):
-
-        ##########################################
-        return self.deflections_from_grid_via_analytic(grid=grid)
-        ###########################################
-        # return self.deflections_from_grid_via_integrator(grid=grid)
-
     @grids.grid_like_to_structure
     @grids.transform
     @grids.relocate_to_radial_minimum
-    def deflections_from_grid_via_analytic(self, grid):
+    def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -163,6 +166,8 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
         grid : aa.Grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
+        Note: sigma is divided by sqrt(q) here.
+
         """
 
         def calculate_deflection_component(npow, index):
@@ -176,7 +181,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
                     0.0,
                     1.0,
                     grid,
-                    args=(npow, self.axis_ratio, self.sigma),
+                    args=(npow, self.axis_ratio, self.sigma / np.sqrt(self.axis_ratio)),
                 )[0]
             )
 
@@ -214,197 +219,26 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
         return self.convergence_func(self.grid_to_eccentric_radii(grid))
 
     def convergence_func(self, grid_radius):
-        return self.mass_to_light_ratio * self.intensity_at_radius(grid_radius)
+        return self.mass_to_light_ratio * self.image_from_grid_radii(grid_radius)
 
-    def intensity_at_radius(self, grid_radii):
+    def image_from_grid_radii(self, grid_radii):
         """Calculate the intensity of the Gaussian light profile on a grid of radial coordinates.
 
         Parameters
         ----------
         grid_radii : float
             The radial distance from the centre of the profile. for each coordinate on the grid.
+
+        Note: sigma is divided by sqrt(q) here.
         """
         return np.multiply(
-            self.intensity, np.exp(-0.5 * np.square(np.divide(grid_radii, self.sigma)))
-        )
-
-
-class EllipticalGaussian2(mp.EllipticalMassProfile, StellarProfile):
-    @af.map_types
-    def __init__(
-        self,
-        centre: dim.Position = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        sigma: dim.Length = 0.01,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
-    ):
-        """ The elliptical Gaussian light profile.
-
-        Parameters
-        ----------
-        centre : (float, float)
-            The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
-        intensity : float
-            Overall intensity normalisation of the light profiles (electrons per second).
-        sigma : float
-            The sigma value of the Gaussian.
-        """
-
-        super(EllipticalGaussian, self).__init__(
-            centre=centre, elliptical_comps=elliptical_comps
-        )
-        super(mp.EllipticalMassProfile, self).__init__(
-            centre=centre, elliptical_comps=elliptical_comps
-        )
-        self.mass_to_light_ratio = mass_to_light_ratio
-        self.intensity = intensity
-        self.sigma = sigma
-
-        if self.axis_ratio > 0.9999:
-            self.axis_ratio = 0.9999
-
-    def omega_from_grid_and_q(self, grid_complex, q):
-        x = np.real(grid_complex)
-        y = np.imag(grid_complex)
-        faddeeva = wofz((q * x) + (1j * y / q))
-        return (
-            np.exp(-x ** 2.0 - 2.0 * 1j * x * y) * np.exp(y ** 2.0)
-            - (
-                1j
-                * np.exp(
-                    -x ** 2.0 * (1.0 - q ** 2.0) - y ** 2.0 * ((1.0 / q ** 2.0) - 1.0)
+            self.intensity,
+            np.exp(
+                -0.5
+                * np.square(
+                    np.divide(grid_radii, self.sigma / np.sqrt(self.axis_ratio))
                 )
-            )
-            * faddeeva
-        )
-
-    def sigma_from_grid(self, grid):
-        input_grid = (self.axis_ratio * (grid[:, 1] + 1j * grid[:, 0])) / (
-            self.sigma * np.sqrt(2 * (1.0 - self.axis_ratio ** 2.0))
-        )
-        return self.omega_from_grid_and_q(
-            grid_complex=input_grid, q=1
-        ) - self.omega_from_grid_and_q(grid_complex=input_grid, q=self.axis_ratio)
-
-    def deflections_from_grid(self, grid):
-
-        with warnings.catch_warnings():
-            warnings.filterwarnings("error")
-            try:
-                return self.deflections_from_grid_via_analytic(grid=grid)
-            except RuntimeWarning:
-                return self.deflections_from_grid_via_integrator(grid=grid)
-
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
-    def deflections_from_grid_via_analytic(self, grid):
-        """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid : aa.Grid
-            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
-        """
-
-        deflections = (
-            self.mass_to_light_ratio
-            * self.intensity
-            * (1.0 / self.sigma * np.sqrt(2.0 * np.pi))
-            * self.sigma
-            * np.sqrt((2 * np.pi) / (1.0 - self.axis_ratio ** 2.0))
-            * self.sigma_from_grid(grid=grid)
-        )
-
-        return self.rotate_grid_from_profile(
-            np.multiply(
-                1.0, np.vstack((-1.0 * np.imag(deflections), np.real(deflections))).T
-            )
-        )
-
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
-    def deflections_from_grid_via_integrator(self, grid):
-        """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid : aa.Grid
-            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
-        """
-
-        def calculate_deflection_component(npow, index):
-
-            deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= (
-                (1.0 / self.sigma * np.sqrt(2.0 * np.pi))
-                * self.intensity
-                * self.mass_to_light_ratio
-                * quad_grid(
-                    self.deflection_func,
-                    0.0,
-                    1.0,
-                    grid,
-                    args=(npow, self.axis_ratio, self.sigma),
-                )[0]
-            )
-
-            return deflection_grid
-
-        deflection_y = calculate_deflection_component(1.0, 0)
-        deflection_x = calculate_deflection_component(0.0, 1)
-
-        return self.rotate_grid_from_profile(
-            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
-        )
-
-    @staticmethod
-    def deflection_func(u, y, x, npow, axis_ratio, sigma):
-        eta_u = np.sqrt(axis_ratio) * np.sqrt(
-            (u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u))))
-        )
-
-        return np.exp(-0.5 * np.square(np.divide(eta_u, sigma))) / (
-            (1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5)
-        )
-
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
-    def convergence_from_grid(self, grid):
-        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid : aa.Grid
-            The grid of (y,x) arc-second coordinates the convergence is computed on.
-
-        """
-        return self.convergence_func(self.grid_to_eccentric_radii(grid))
-
-    def convergence_func(self, grid_radius):
-        return self.mass_to_light_ratio * self.intensity_at_radius(grid_radius)
-
-    def intensity_at_radius(self, grid_radii):
-        """Calculate the intensity of the Gaussian light profile on a grid of radial coordinates.
-
-        Parameters
-        ----------
-        grid_radii : float
-            The radial distance from the centre of the profile. for each coordinate on the grid.
-        """
-        return np.multiply(
-            np.divide(self.intensity, self.sigma * np.sqrt(2.0 * np.pi)),
-            np.exp(-0.5 * np.square(np.divide(grid_radii, self.sigma))),
+            ),
         )
 
 
@@ -467,7 +301,7 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
         return self.convergence_func(self.grid_to_eccentric_radii(grid))
 
     def convergence_func(self, grid_radius):
-        return self.mass_to_light_ratio * self.intensity_at_radius(grid_radius)
+        return self.mass_to_light_ratio * self.image_from_grid_radii(grid_radius)
 
     @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
@@ -481,7 +315,7 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
     def ellipticity_rescale(self):
         return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
 
-    def intensity_at_radius(self, radius):
+    def image_from_grid_radii(self, radius):
         """
     Returns the intensity of the profile at a given radius.
 
@@ -874,7 +708,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
                 ((self.axis_ratio * grid_radius) / self.effective_radius)
                 ** -self.mass_to_light_gradient
             )
-            * self.intensity_at_radius(grid_radius)
+            * self.image_from_grid_radii(grid_radius)
         )
 
     @staticmethod
@@ -1074,13 +908,13 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
         return self.convergence_func(self.grid_to_elliptical_radii(grid))
 
     def convergence_func(self, grid_radius):
-        return self.mass_to_light_ratio * self.intensity_at_radius(grid_radius)
+        return self.mass_to_light_ratio * self.image_from_grid_radii(grid_radius)
 
     @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    def intensity_at_radius(self, grid_radii):
+    def image_from_grid_radii(self, grid_radii):
         """Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.
 
         Parameters

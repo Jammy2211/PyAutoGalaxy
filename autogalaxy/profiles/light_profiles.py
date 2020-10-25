@@ -22,7 +22,7 @@ class LightProfile:
         grid_radii : float
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
-        raise NotImplementedError("intensity_at_radius should be overridden")
+        raise NotImplementedError("image_from_grid_radii should be overridden")
 
     # noinspection PyMethodMayBeStatic
     def image_from_grid(self, grid, grid_radial_minimum=None):
@@ -361,7 +361,7 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
             - (2194697.0 / (30690717750.0 * self.sersic_index ** 4))
         )
 
-    def intensity_at_radius(self, radius):
+    def image_from_grid_radii(self, radius):
         """
     Returns the intensity of the profile at a given radius.
 
