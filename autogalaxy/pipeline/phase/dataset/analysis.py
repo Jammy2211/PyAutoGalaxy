@@ -86,35 +86,35 @@ class Analysis(af.Analysis):
 
         return instance
 
-    def save_for_aggregator(self, paths):
+    def save_for_aggregator(self, paths: af.Paths):
 
         self.save_dataset(paths=paths)
         self.save_mask(paths=paths)
         self.save_settings(paths=paths)
         self.save_attributes(paths=paths)
 
-    def save_dataset(self, paths):
+    def save_dataset(self, paths: af.Paths):
         """
         Save the dataset associated with the phase
         """
         with open(f"{paths.pickle_path}/dataset.pickle", "wb") as f:
             pickle.dump(self.masked_dataset.dataset, f)
 
-    def save_mask(self, paths):
+    def save_mask(self, paths: af.Paths):
         """
         Save the mask associated with the phase
         """
         with open(f"{paths.pickle_path}/mask.pickle", "wb") as f:
             dill.dump(self.masked_dataset.mask, f)
 
-    def save_settings(self, paths):
+    def save_settings(self, paths: af.Paths):
         with open(f"{paths.pickle_path}/settings.pickle", "wb+") as f:
             pickle.dump(self.settings, f)
 
     def make_attributes(self):
         raise NotImplementedError
 
-    def save_attributes(self, paths):
+    def save_attributes(self, paths: af.Paths):
 
         attributes = self.make_attributes()
         with open(f"{paths.pickle_path}/attributes.pickle", "wb+") as f:
