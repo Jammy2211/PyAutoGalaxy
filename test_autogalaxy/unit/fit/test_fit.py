@@ -3,7 +3,7 @@ import pytest
 
 import autogalaxy as ag
 from autoarray.inversion import inversions
-from autogalaxy.mock import MockLightProfile
+from autogalaxy.mock.mock import MockLightProfile
 
 
 class TestFitImaging:

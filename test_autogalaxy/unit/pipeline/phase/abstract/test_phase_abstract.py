@@ -3,7 +3,7 @@ import pytest
 import autofit as af
 import autogalaxy as ag
 from autogalaxy.pipeline.phase.dataset import PhaseDataset
-from autogalaxy import mock
+from autogalaxy.mock import mock
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "

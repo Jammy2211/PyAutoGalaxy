@@ -127,6 +127,58 @@ class TestSetupLightParametric:
         assert setup.disk_prior_model_tag == "__disk_exp_sph"
         assert setup.envelope_prior_model_tag == "__envelope_core_sersic"
 
+    def test__set_bulge_disk_prior_model_assertions(self):
+
+        setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            disk_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+        )
+
+        assert isinstance(
+            setup.bulge_prior_model._assertions[0], af.GreaterThanLessThanAssertion
+        )
+
+        setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.mp.EllipticalSersic),
+            disk_prior_model=af.PriorModel(ag.mp.EllipticalExponential),
+        )
+
+        assert setup.bulge_prior_model._assertions == []
+
+    def test__set_chameleon_prior_model_assertions(self):
+
+        setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.lp.EllipticalChameleon),
+            disk_prior_model=af.PriorModel(ag.lp.SphericalChameleon),
+            envelope_prior_model=af.PriorModel(ag.lmp.EllipticalChameleon),
+        )
+
+        assert isinstance(
+            setup.bulge_prior_model._assertions[0], af.GreaterThanLessThanAssertion
+        )
+        assert isinstance(
+            setup.disk_prior_model._assertions[0], af.GreaterThanLessThanAssertion
+        )
+        assert isinstance(
+            setup.envelope_prior_model._assertions[0], af.GreaterThanLessThanAssertion
+        )
+
+        setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.mp.EllipticalChameleon),
+            disk_prior_model=af.PriorModel(ag.mp.SphericalChameleon),
+            envelope_prior_model=af.PriorModel(ag.lmp.SphericalChameleon),
+        )
+
+        assert isinstance(
+            setup.bulge_prior_model._assertions[0], af.GreaterThanLessThanAssertion
+        )
+        assert isinstance(
+            setup.disk_prior_model._assertions[0], af.GreaterThanLessThanAssertion
+        )
+        assert isinstance(
+            setup.envelope_prior_model._assertions[0], af.GreaterThanLessThanAssertion
+        )
+
     def test__input_light_centre__centres_of_prior_models_are_aligned(self):
 
         setup = ag.SetupLightParametric(
@@ -176,15 +228,37 @@ class TestSetupLightParametric:
         assert setup.light_centre_tag == "__centre_(3.03,4.03)"
 
     def test__align_bulge_disk_tags(self):
+
         light = ag.SetupLightParametric(align_bulge_disk_centre=False)
+
         assert light.align_bulge_disk_centre_tag == ""
+        assert light.align_bulge_disk_tag == ""
+
         light = ag.SetupLightParametric(align_bulge_disk_centre=True)
+
         assert light.align_bulge_disk_centre_tag == "_centre"
+        assert light.align_bulge_disk_tag == "__align_bulge_disk_centre"
 
         light = ag.SetupLightParametric(align_bulge_disk_elliptical_comps=False)
+
         assert light.align_bulge_disk_elliptical_comps_tag == ""
-        light = ag.SetupLightParametric(align_bulge_disk_elliptical_comps=True)
+
+        light = ag.SetupLightParametric(
+            align_bulge_disk_centre=True, align_bulge_disk_elliptical_comps=True
+        )
+
         assert light.align_bulge_disk_elliptical_comps_tag == "_ell"
+        assert light.align_bulge_disk_tag == "__align_bulge_disk_centre_ell"
+
+        light = ag.SetupLightParametric(
+            bulge_prior_model=None, align_bulge_disk_elliptical_comps=True
+        )
+        assert light.align_bulge_disk_tag == ""
+
+        light = ag.SetupLightParametric(
+            disk_prior_model=None, align_bulge_disk_elliptical_comps=True
+        )
+        assert light.align_bulge_disk_tag == ""
 
     def test__tag(self):
 
@@ -373,6 +447,15 @@ class TestSetupMassTotal:
         assert setup.mass_prior_model.cls is ag.mp.EllipticalIsothermal
         assert setup.mass_prior_model_tag == "__sie"
 
+    def test__mass_centre_updates_mass_prior_model(self):
+
+        setup = ag.SetupMassTotal(
+            mass_prior_model=af.PriorModel(ag.mp.EllipticalIsothermal),
+            mass_centre=(0.0, 1.0),
+        )
+
+        assert setup.mass_prior_model.centre == (0.0, 1.0)
+
     def test__mass_centre_tag(self):
         setup = ag.SetupMassTotal(mass_centre=None)
         assert setup.mass_centre_tag == ""
@@ -387,7 +470,7 @@ class TestSetupMassTotal:
 
         mass = af.PriorModel(ag.mp.SphericalIsothermal)
 
-        source = ag.SetupMassTotal(align_light_mass_centre=False)
+        source = ag.SetupMassTotal(align_bulge_mass_centre=False)
 
         mass = source.align_centre_of_mass_to_light(
             mass_prior_model=mass, light_centre=(1.0, 2.0)
@@ -398,7 +481,7 @@ class TestSetupMassTotal:
         assert mass.centre.centre_0.mean == 1.0
         assert mass.centre.centre_0.sigma == 0.1
 
-        source = ag.SetupMassTotal(align_light_mass_centre=True)
+        source = ag.SetupMassTotal(align_bulge_mass_centre=True)
 
         mass = source.align_centre_of_mass_to_light(
             mass_prior_model=mass, light_centre=(1.0, 2.0)
@@ -456,6 +539,108 @@ class TestSetupMassLightDark:
         assert setup.envelope_prior_model_tag == "__envelope_exp_sph"
         assert setup.dark_prior_model_tag == "__dark_nfw"
 
+    def test__set_chameleon_prior_model_assertions(self):
+
+        setup = ag.SetupMassLightDark(
+            bulge_prior_model=af.PriorModel(ag.lp.EllipticalChameleon),
+            disk_prior_model=af.PriorModel(ag.lp.SphericalChameleon),
+            envelope_prior_model=af.PriorModel(ag.lmp.EllipticalChameleon),
+        )
+
+        assert isinstance(
+            setup.bulge_prior_model._assertions[0], af.GreaterThanLessThanAssertion
+        )
+        assert isinstance(
+            setup.disk_prior_model._assertions[0], af.GreaterThanLessThanAssertion
+        )
+        assert isinstance(
+            setup.envelope_prior_model._assertions[0], af.GreaterThanLessThanAssertion
+        )
+
+        setup = ag.SetupMassLightDark(
+            bulge_prior_model=af.PriorModel(ag.mp.EllipticalChameleon),
+            disk_prior_model=af.PriorModel(ag.mp.SphericalChameleon),
+            envelope_prior_model=af.PriorModel(ag.lmp.SphericalChameleon),
+        )
+
+        assert isinstance(
+            setup.bulge_prior_model._assertions[0], af.GreaterThanLessThanAssertion
+        )
+        assert isinstance(
+            setup.disk_prior_model._assertions[0], af.GreaterThanLessThanAssertion
+        )
+        assert isinstance(
+            setup.envelope_prior_model._assertions[0], af.GreaterThanLessThanAssertion
+        )
+
+    def test__consstant_mass_to_light_ratio__sets_mass_to_light_ratios_of_light_and_mass_profiles(
+        self
+    ):
+
+        setup = ag.SetupMassLightDark(
+            bulge_prior_model=ag.lmp.EllipticalSersic,
+            disk_prior_model=ag.lmp.EllipticalSersic,
+            envelope_prior_model=ag.lmp.EllipticalSersic,
+            constant_mass_to_light_ratio=False,
+        )
+
+        assert (
+            setup.bulge_prior_model.mass_to_light_ratio
+            != setup.disk_prior_model.mass_to_light_ratio
+        )
+        assert (
+            setup.bulge_prior_model.mass_to_light_ratio
+            != setup.envelope_prior_model.mass_to_light_ratio
+        )
+        assert (
+            setup.disk_prior_model.mass_to_light_ratio
+            != setup.envelope_prior_model.mass_to_light_ratio
+        )
+
+        setup = ag.SetupMassLightDark(
+            bulge_prior_model=ag.lmp.EllipticalSersic,
+            disk_prior_model=ag.lmp.EllipticalSersic,
+            envelope_prior_model=ag.lmp.EllipticalSersic,
+            constant_mass_to_light_ratio=True,
+        )
+
+        assert (
+            setup.bulge_prior_model.mass_to_light_ratio
+            == setup.disk_prior_model.mass_to_light_ratio
+        )
+        assert (
+            setup.bulge_prior_model.mass_to_light_ratio
+            == setup.envelope_prior_model.mass_to_light_ratio
+        )
+        assert (
+            setup.disk_prior_model.mass_to_light_ratio
+            == setup.envelope_prior_model.mass_to_light_ratio
+        )
+
+        setup = ag.SetupMassLightDark(
+            bulge_prior_model=ag.lmp.EllipticalSersic,
+            disk_prior_model=ag.lmp.EllipticalSersic,
+            envelope_prior_model=None,
+            constant_mass_to_light_ratio=True,
+        )
+
+        assert (
+            setup.bulge_prior_model.mass_to_light_ratio
+            == setup.disk_prior_model.mass_to_light_ratio
+        )
+
+        setup = ag.SetupMassLightDark(
+            bulge_prior_model=ag.lmp.EllipticalSersic,
+            disk_prior_model=None,
+            envelope_prior_model=None,
+            constant_mass_to_light_ratio=True,
+        )
+
+        assert (
+            setup.bulge_prior_model.mass_to_light_ratio
+            == setup.bulge_prior_model.mass_to_light_ratio
+        )
+
     def test__constant_mass_to_light_ratio_tag(self):
 
         setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=True)
@@ -471,36 +656,6 @@ class TestSetupMassLightDark:
 
         setup = ag.SetupMassLightDark(align_bulge_dark_centre=True)
         assert setup.align_bulge_dark_centre_tag == "__align_bulge_dark_centre"
-
-    def test__set_mass_to_light_ratios_of_light_and_mass_profiles(self):
-
-        lmp_0 = af.PriorModel(ag.lmp.EllipticalSersic)
-        lmp_1 = af.PriorModel(ag.lmp.EllipticalSersic)
-        lmp_2 = af.PriorModel(ag.lmp.EllipticalSersic)
-
-        setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=False)
-
-        setup.set_mass_to_light_ratios_of_light_and_mass_prior_models(
-            light_and_mass_prior_models=[lmp_0, lmp_1, lmp_2]
-        )
-
-        assert lmp_0.mass_to_light_ratio != lmp_1.mass_to_light_ratio
-        assert lmp_0.mass_to_light_ratio != lmp_2.mass_to_light_ratio
-        assert lmp_1.mass_to_light_ratio != lmp_2.mass_to_light_ratio
-
-        lmp_0 = af.PriorModel(ag.lmp.EllipticalSersic)
-        lmp_1 = af.PriorModel(ag.lmp.EllipticalSersic)
-        lmp_2 = af.PriorModel(ag.lmp.EllipticalSersic)
-
-        setup = ag.SetupMassLightDark(constant_mass_to_light_ratio=True)
-
-        setup.set_mass_to_light_ratios_of_light_and_mass_prior_models(
-            light_and_mass_prior_models=[lmp_0, lmp_1, lmp_2]
-        )
-
-        assert lmp_0.mass_to_light_ratio == lmp_1.mass_to_light_ratio
-        assert lmp_0.mass_to_light_ratio == lmp_2.mass_to_light_ratio
-        assert lmp_1.mass_to_light_ratio == lmp_2.mass_to_light_ratio
 
     def test__tag(self):
 

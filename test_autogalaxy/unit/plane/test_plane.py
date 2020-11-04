@@ -5,7 +5,7 @@ from astropy import cosmology as cosmo
 from autogalaxy import exc
 from autogalaxy.plane import plane
 from skimage import measure
-from test_autoarray import mock
+from autoarray.mock import mock
 
 planck = cosmo.Planck15
 

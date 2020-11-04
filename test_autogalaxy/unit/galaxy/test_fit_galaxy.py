@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 import autogalaxy as ag
-from autogalaxy.mock import MockGalaxy
+from autogalaxy.mock.mock import MockGalaxy
 
 
 class TestLikelihood:

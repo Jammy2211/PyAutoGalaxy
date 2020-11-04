@@ -7,80 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestEllipticalGaussian:
-    def test__omega_from_grid_and_q(self):
-        gaussian = ag.mp.EllipticalGaussian()
-
-        omega = gaussian.omega_from_grid_and_q(
-            grid_complex=np.array([[1.0j + 0.0]]), q=1
-        )
-
-        assert np.real(omega[0]) == pytest.approx(2.71828183, 1.0e-4)
-        assert np.imag(omega[0]) == pytest.approx(-0.42758, 1.0e-4)
-
-        omega = gaussian.omega_from_grid_and_q(
-            grid_complex=np.array([[1.0j + 0.0]]), q=0.5
-        )
-
-        assert np.real(omega[0]) == pytest.approx(2.71828, 1.0e-4)
-        assert np.imag(omega[0]) == pytest.approx(-0.012715, 1.0e-4)
-
-        omega = gaussian.omega_from_grid_and_q(
-            grid_complex=np.array([[1.0j + 0.5]]), q=0.8
-        )
-
-        assert np.real(omega[0]) == pytest.approx(1.18568, 1.0e-4)
-        assert np.imag(omega[0]) == pytest.approx(-1.9643, 1.0e-4)
-
-        omega = gaussian.omega_from_grid_and_q(
-            grid_complex=np.array([[0.7j + 0.5]]), q=0.8
-        )
-
-        assert np.real(omega[0]) == pytest.approx(1.05562, 1.0e-4)
-        assert np.imag(omega[0]) == pytest.approx(-1.12107, 1.0e-4)
-
-        omega = gaussian.omega_from_grid_and_q(
-            grid_complex=np.array([[1.0j + 0.5], [0.7j + 0.5]]), q=0.8
-        )
-
-        assert np.real(omega[0]) == pytest.approx(1.18568, 1.0e-4)
-        assert np.imag(omega[0]) == pytest.approx(-1.9643, 1.0e-4)
-        assert np.real(omega[1]) == pytest.approx(1.05562, 1.0e-4)
-        assert np.imag(omega[1]) == pytest.approx(-1.12107, 1.0e-4)
-
-    def test__sigma_from_grid(self):
-        gaussian = ag.mp.EllipticalGaussian(elliptical_comps=(0.0, 0.05263), sigma=2.0)
-
-        sigma = gaussian.sigma_from_grid(grid=np.array([[1.0, 0.0]]))
-
-        assert np.real(sigma[0]) == pytest.approx(0.0, 1.0e-4)
-        assert np.imag(sigma[0]) == pytest.approx(-0.086128, 1.0e-4)
-
-        gaussian = ag.mp.EllipticalGaussian(elliptical_comps=(0.0, 0.05263), sigma=3.0)
-
-        sigma = gaussian.sigma_from_grid(grid=np.array([[1.0, 0.0]]))
-
-        assert np.real(sigma[0]) == pytest.approx(0.0, 1.0e-4)
-        assert np.imag(sigma[0]) == pytest.approx(-0.059380, 1.0e-4)
-
-        sigma = gaussian.sigma_from_grid(grid=np.array([[1.0, 0.5]]))
-
-        assert np.real(sigma[0]) == pytest.approx(0.026596, 1.0e-4)
-        assert np.imag(sigma[0]) == pytest.approx(-0.059033, 1.0e-4)
-
-        gaussian = ag.mp.EllipticalGaussian(elliptical_comps=(0.0, 0.111111), sigma=3.0)
-
-        sigma = gaussian.sigma_from_grid(grid=np.array([[1.0, 0.5]]))
-
-        assert np.real(sigma[0]) == pytest.approx(0.0344443, 1.0e-4)
-        assert np.imag(sigma[0]) == pytest.approx(-0.085903, 1.0e-4)
-
-        sigma = gaussian.sigma_from_grid(grid=np.array([[0.3, 0.5], [0.3, 0.5]]))
-
-        assert np.real(sigma[0]) == pytest.approx(0.03522, 1.0e-4)
-        assert np.imag(sigma[0]) == pytest.approx(-0.026401, 1.0e-4)
-        assert np.real(sigma[1]) == pytest.approx(0.03522, 1.0e-4)
-        assert np.imag(sigma[1]) == pytest.approx(-0.026401, 1.0e-4)
-
     def test__deflections_correct_values(self):
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
@@ -92,7 +18,7 @@ class TestEllipticalGaussian:
 
         deflections = gaussian.deflections_from_grid(grid=np.array([[1.0, 0.0]]))
 
-        assert deflections[0, 0] == pytest.approx(0.85595, 1.0e-4)
+        assert deflections[0, 0] == pytest.approx(1.024423, 1.0e-4)
         assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
 
         gaussian = ag.mp.EllipticalGaussian(
@@ -105,8 +31,8 @@ class TestEllipticalGaussian:
 
         deflections = gaussian.deflections_from_grid(grid=np.array([[0.5, 0.2]]))
 
-        assert deflections[0, 0] == pytest.approx(0.277765, 1.0e-4)
-        assert deflections[0, 1] == pytest.approx(0.088903, 1.0e-4)
+        assert deflections[0, 0] == pytest.approx(0.554062, 1.0e-4)
+        assert deflections[0, 1] == pytest.approx(0.177336, 1.0e-4)
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
@@ -118,8 +44,8 @@ class TestEllipticalGaussian:
 
         deflections = gaussian.deflections_from_grid(grid=np.array([[0.5, 0.2]]))
 
-        assert deflections[0, 0] == pytest.approx(0.55553, 1.0e-4)
-        assert deflections[0, 1] == pytest.approx(0.177806, 1.0e-4)
+        assert deflections[0, 0] == pytest.approx(1.108125, 1.0e-4)
+        assert deflections[0, 1] == pytest.approx(0.35467, 1.0e-4)
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
@@ -131,10 +57,11 @@ class TestEllipticalGaussian:
 
         deflections = gaussian.deflections_from_grid(grid=np.array([[0.5, 0.2]]))
 
-        assert deflections[0, 0] == pytest.approx(0.555531, 1.0e-4)
-        assert deflections[0, 1] == pytest.approx(0.177806, 1.0e-4)
+        assert deflections[0, 0] == pytest.approx(1.10812, 1.0e-4)
+        assert deflections[0, 1] == pytest.approx(0.35467, 1.0e-4)
 
     def test__deflections_via_integrator_and_analytic_agree(self):
+
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.4, 0.2),
             elliptical_comps=(0.0, 0.17647),
@@ -145,9 +72,7 @@ class TestEllipticalGaussian:
 
         grid = ag.Grid.uniform(shape_2d=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
 
-        deflections_via_analytic = gaussian.deflections_from_grid_via_analytic(
-            grid=grid
-        )
+        deflections_via_analytic = gaussian.deflections_from_grid(grid=grid)
         deflections_via_integrator = gaussian.deflections_from_grid_via_integrator(
             grid=grid
         )
@@ -166,9 +91,7 @@ class TestEllipticalGaussian:
 
         grid = ag.Grid.uniform(shape_2d=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
 
-        deflections_via_analytic = gaussian.deflections_from_grid_via_analytic(
-            grid=grid
-        )
+        deflections_via_analytic = gaussian.deflections_from_grid(grid=grid)
         deflections_via_integrator = gaussian.deflections_from_grid_via_integrator(
             grid=grid
         )
@@ -177,86 +100,64 @@ class TestEllipticalGaussian:
             deflections_via_integrator, 1.0e-2
         )
 
-    def test__deflections_via_grid__uses_integrator_if_analytic_fails_else_analytic(
-        self
-    ):
-        gaussian = ag.mp.EllipticalGaussian(
-            centre=(-0.7, -0.4),
-            elliptical_comps=(0.0, 0.05263),
-            intensity=3.0,
-            sigma=5.0,
-            mass_to_light_ratio=7.0,
+    def test__intensity_and_convergence_match_for_mass_light_ratio_1(self):
+
+        gaussian_light_profile = ag.lp.EllipticalGaussian(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.333333),
+            intensity=2.0,
+            sigma=3.0,
         )
 
-        deflections = gaussian.deflections_from_grid(grid=np.array([[-1.0, 0.0]]))
-        deflections_via_analytic = gaussian.deflections_from_grid_via_analytic(
-            grid=np.array([[-1.0, 0.0]])
-        )
-        deflections_via_integrator = gaussian.deflections_from_grid_via_integrator(
-            grid=np.array([[-1.0, 0.0]])
-        )
-
-        assert deflections[0, 0] == deflections_via_analytic[0, 0]
-        assert deflections[0, 1] == deflections_via_analytic[0, 1]
-        assert deflections[0, 0] != deflections_via_integrator[0, 0]
-        assert deflections[0, 1] != deflections_via_integrator[0, 1]
-
-        gaussian = ag.mp.EllipticalGaussian(
-            centre=(-0.0, -0.0),
-            elliptical_comps=(0.0, 0.666666),
-            intensity=3.0,
-            sigma=0.1,
-            mass_to_light_ratio=7.0,
+        gaussian_mass_profile = ag.mp.EllipticalGaussian(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.333333),
+            intensity=2.0,
+            sigma=3.0,
+            mass_to_light_ratio=1.0,
         )
 
-        pytest.warns(RuntimeWarning)
-        deflections = gaussian.deflections_from_grid(grid=np.array([[-5.0, 0.0]]))
-        deflections_via_analytic = gaussian.deflections_from_grid_via_analytic(
-            grid=np.array([[-5.0, 0.0]])
-        )
-        deflections_via_integrator = gaussian.deflections_from_grid_via_integrator(
-            grid=np.array([[-5.0, 0.0]])
+        intensity = gaussian_light_profile.image_from_grid(grid=np.array([[1.0, 0.0]]))
+        convergence = gaussian_mass_profile.convergence_from_grid(
+            grid=np.array([[1.0, 0.0]])
         )
 
-        assert deflections[0, 0] != deflections_via_analytic[0, 0]
-        assert deflections[0, 1] != deflections_via_analytic[0, 1]
-        # pytest wont raise the warning so these fail >_>.
+        print(intensity, convergence)
 
-    #   assert deflections[0, 0] == deflections_via_integrator[0, 0]
-    #   assert deflections[0, 1] == deflections_via_integrator[0, 1]
+        assert (intensity == convergence).all()
 
-    def test__intensity_as_radius__correct_value(self):
+    def test__image_from_grid_radii__correct_value(self):
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
         )
 
-        intensity = gaussian.intensity_at_radius(grid_radii=1.0)
+        intensity = gaussian.image_from_grid_radii(grid_radii=1.0)
 
-        assert intensity == pytest.approx(0.24197, 1e-2)
+        assert intensity == pytest.approx(0.60653, 1e-2)
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=2.0, sigma=1.0
         )
 
-        intensity = gaussian.intensity_at_radius(grid_radii=1.0)
+        intensity = gaussian.image_from_grid_radii(grid_radii=1.0)
 
-        assert intensity == pytest.approx(2.0 * 0.24197, 1e-2)
-
-        gaussian = ag.mp.EllipticalGaussian(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
-        )
-
-        intensity = gaussian.intensity_at_radius(grid_radii=1.0)
-
-        assert intensity == pytest.approx(0.1760, 1e-2)
+        assert intensity == pytest.approx(2.0 * 0.60653, 1e-2)
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
         )
 
-        intensity = gaussian.intensity_at_radius(grid_radii=3.0)
+        intensity = gaussian.image_from_grid_radii(grid_radii=1.0)
 
-        assert intensity == pytest.approx(0.0647, 1e-2)
+        assert intensity == pytest.approx(0.882496, 1e-2)
+
+        gaussian = ag.mp.EllipticalGaussian(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
+        )
+
+        intensity = gaussian.image_from_grid_radii(grid_radii=3.0)
+
+        assert intensity == pytest.approx(0.32465, 1e-2)
 
     def test__convergence_from_grid__correct_value(self):
         gaussian = ag.mp.EllipticalGaussian(
@@ -269,7 +170,7 @@ class TestEllipticalGaussian:
 
         convergence = gaussian.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
 
-        assert convergence == pytest.approx(0.24197, 1e-2)
+        assert convergence == pytest.approx(0.60653, 1e-2)
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
@@ -281,19 +182,7 @@ class TestEllipticalGaussian:
 
         convergence = gaussian.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
 
-        assert convergence == pytest.approx(2.0 * 0.24197, 1e-2)
-
-        gaussian = ag.mp.EllipticalGaussian(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=2.0,
-            sigma=1.0,
-            mass_to_light_ratio=1.0,
-        )
-
-        convergence = gaussian.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
-
-        assert convergence == pytest.approx(2.0 * 0.24197, 1e-2)
+        assert convergence == pytest.approx(2.0 * 0.60653, 1e-2)
 
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
@@ -305,7 +194,7 @@ class TestEllipticalGaussian:
 
         convergence = gaussian.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
 
-        assert convergence == pytest.approx(1.03470, 1e-2)
+        assert convergence == pytest.approx(7.88965, 1e-2)
 
 
 class TestSersic:

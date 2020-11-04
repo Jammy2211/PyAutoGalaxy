@@ -9,7 +9,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "centre_1": {
             "type": "Gaussian",
@@ -20,7 +24,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "kappa_s": {
             "type": "Uniform",
@@ -59,7 +67,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "centre_1": {
             "type": "Gaussian",
@@ -70,7 +82,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "elliptical_comps_0": {
             "type": "Uniform",
@@ -135,7 +151,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "centre_1": {
             "type": "Gaussian",
@@ -146,7 +166,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "mass_at_200": {
             "type": "LogUniform",
@@ -174,19 +198,17 @@
                 "upper": "inf"
             }
         },
-        "setup": {
-            "redshift_source": {
-                "type": "Uniform",
-                "lower_limit": 1.0,
-                "upper_limit": 2.0,
-                "width_modifier": {
-                    "type": "Relative",
-                    "value": 0.5
-                },
-                "gaussian_limits": {
-                    "lower": 0.0,
-                    "upper": "inf"
-                }
+        "redshift_source": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
             }
         }
     },
@@ -200,7 +222,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "centre_1": {
             "type": "Gaussian",
@@ -211,7 +237,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "mass_at_200": {
             "type": "LogUniform",
@@ -239,19 +269,17 @@
                 "upper": "inf"
             }
         },
-        "setup": {
-            "redshift_source": {
-                "type": "Uniform",
-                "lower_limit": 1.0,
-                "upper_limit": 2.0,
-                "width_modifier": {
-                    "type": "Relative",
-                    "value": 0.5
-                },
-                "gaussian_limits": {
-                    "lower": 0.0,
-                    "upper": "inf"
-                }
+        "redshift_source": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
             }
         }
     },
@@ -265,7 +293,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "centre_1": {
             "type": "Gaussian",
@@ -276,7 +308,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "kappa_s": {
             "type": "Uniform",
@@ -328,7 +364,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "centre_1": {
             "type": "Gaussian",
@@ -339,7 +379,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "mass_at_200": {
             "type": "LogUniform",
@@ -367,19 +411,17 @@
                 "upper": "inf"
             }
         },
-        "setup": {
-            "redshift_source": {
-                "type": "Uniform",
-                "lower_limit": 1.0,
-                "upper_limit": 2.0,
-                "width_modifier": {
-                    "type": "Relative",
-                    "value": 0.5
-                },
-                "gaussian_limits": {
-                    "lower": 0.0,
-                    "upper": "inf"
-                }
+        "redshift_source": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
             }
         }
     },
@@ -393,7 +435,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "centre_1": {
             "type": "Gaussian",
@@ -404,7 +450,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "mass_at_200": {
             "type": "LogUniform",
@@ -432,19 +482,17 @@
                 "upper": "inf"
             }
         },
-        "setup": {
-            "redshift_source": {
-                "type": "Uniform",
-                "lower_limit": 1.0,
-                "upper_limit": 2.0,
-                "width_modifier": {
-                    "type": "Relative",
-                    "value": 0.5
-                },
-                "gaussian_limits": {
-                    "lower": 0.0,
-                    "upper": "inf"
-                }
+        "redshift_source": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
             }
         }
     },
@@ -458,7 +506,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "centre_1": {
             "type": "Gaussian",
@@ -469,7 +521,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "kappa_s": {
             "type": "Uniform",
@@ -508,7 +564,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "centre_1": {
             "type": "Gaussian",
@@ -519,7 +579,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "mass_at_200": {
             "type": "LogUniform",
@@ -545,7 +609,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "centre_1": {
             "type": "Gaussian",
@@ -556,7 +624,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "kappa_s": {
             "type": "Uniform",
@@ -608,7 +680,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "centre_1": {
             "type": "Gaussian",
@@ -619,7 +695,11 @@
                 "value": 0.05
             },
             "mean": 0.0,
-            "sigma": 0.1
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
         },
         "elliptical_comps_0": {
             "type": "Uniform",

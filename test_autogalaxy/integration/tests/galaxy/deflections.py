@@ -12,7 +12,7 @@ test_name = "deflections"
 test_path = "{}/../../".format(os.path.dirname(os.path.realpath(__file__)))
 output_path = test_path + "output/"
 config_path = test_path + "config"
-conf.instance.push(config_path, output_path=output_path)
+conf.instance.push(new_path, output_path=output_path)
 
 
 def galaxy_fit_phase():

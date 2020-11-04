@@ -2,7 +2,7 @@ import autofit as af
 import autogalaxy as ag
 import numpy as np
 from astropy import cosmology as cosmo
-from autogalaxy import mock
+from autogalaxy.mock import mock
 
 
 class TestImagePassing:

@@ -59,13 +59,13 @@
         "pixels": {
             "type": "Uniform",
             "lower_limit": 50.0,
-            "upper_limit": 2500.0,
+            "upper_limit": 1500.0,
             "width_modifier": {
                 "type": "Absolute",
-                "value": 100.0
+                "value": 400.0
             },
             "gaussian_limits": {
-                "lower": 50.0,
+                "lower": 0.0,
                 "upper": "inf"
             }
         },
