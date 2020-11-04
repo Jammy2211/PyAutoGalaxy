@@ -3,7 +3,6 @@ import numpy as np
 from astropy import cosmology as cosmo
 from autoarray.structures import arrays, grids
 from autoarray.util import array_util
-from autogalaxy import dimensions as dim
 from autogalaxy.util import cosmology_util
 from scipy.optimize import root_scalar
 from skimage import measure
@@ -324,55 +323,3 @@ class LensingObject:
         x, y = tangential_critical_curve[:, 0], tangential_critical_curve[:, 1]
 
         return np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
-
-    def einstein_radius_in_units(
-        self, unit_length="arcsec", redshift_object=None, cosmology=cosmo.Planck15
-    ):
-
-        einstein_radius = dim.Length(
-            value=np.sqrt(self.area_within_tangential_critical_curve / np.pi),
-            unit_length=self.unit_length,
-        )
-
-        if unit_length is "kpc":
-
-            kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
-                redshift=redshift_object, cosmology=cosmology
-            )
-
-        else:
-
-            kpc_per_arcsec = None
-
-        return einstein_radius.convert(
-            unit_length=unit_length, kpc_per_arcsec=kpc_per_arcsec
-        )
-
-    def einstein_mass_in_units(
-        self,
-        redshift_object=None,
-        redshift_source=None,
-        cosmology=cosmo.Planck15,
-        unit_mass="solMass",
-    ):
-
-        einstein_radius = self.einstein_radius_in_units()
-        einstein_mass = dim.Mass(np.pi * (einstein_radius ** 2))
-
-        if unit_mass is "solMass":
-
-            critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from(
-                redshift_0=redshift_object,
-                redshift_1=redshift_source,
-                cosmology=cosmology,
-                unit_length=self.unit_length,
-                unit_mass=unit_mass,
-            )
-
-        else:
-
-            critical_surface_density = None
-
-        return einstein_mass.convert(
-            unit_mass=unit_mass, critical_surface_density=critical_surface_density
-        )

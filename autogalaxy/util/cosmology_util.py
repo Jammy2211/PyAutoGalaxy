@@ -1,7 +1,6 @@
 import math
 
 from astropy import constants
-from autogalaxy import dimensions as dim
 from autogalaxy import exc
 
 
@@ -25,7 +24,7 @@ def angular_diameter_distance_to_earth_from(*, redshift, cosmology, unit_length=
         arcsec_per_kpc = arcsec_per_kpc_from(redshift=redshift, cosmology=cosmology)
         angular_diameter_distance = arcsec_per_kpc * angular_diameter_distance_kpc
 
-    return dim.Length(angular_diameter_distance.value, unit_length)
+    return angular_diameter_distance.value
 
 
 def angular_diameter_distance_between_redshifts_from(

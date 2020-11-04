@@ -1,5 +1,4 @@
 from . import aggregator as agg
-from . import dimensions as dim
 from . import plot
 from . import util
 from .dataset.imaging import MaskedImaging, SettingsMaskedImaging, SimulatorImaging
