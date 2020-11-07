@@ -12,9 +12,7 @@ from .hyper_phase import HyperPhase
 
 
 class Analysis(af.Analysis):
-    def __init__(
-        self, masked_imaging, hyper_model_image, hyper_galaxy_image, image_path
-    ):
+    def __init__(self, masked_imaging, hyper_model_image, hyper_galaxy_image):
         """
         An analysis to fit the noise for a single galaxy image.
         Parameters
@@ -31,12 +29,12 @@ class Analysis(af.Analysis):
 
         self.masked_imaging = masked_imaging
 
-        self.visualizer = visualizer.HyperGalaxyVisualizer(image_path=image_path)
+        self.visualizer = visualizer.HyperGalaxyVisualizer()
 
         self.hyper_model_image = hyper_model_image
         self.hyper_galaxy_image = hyper_galaxy_image
 
-    def visualize(self, instance, during_analysis):
+    def visualize(self, paths, instance, during_analysis):
 
         if self.visualizer.plot_hyper_galaxy_subplot:
             hyper_image_sky = self.hyper_image_sky_for_instance(instance=instance)
@@ -230,7 +228,6 @@ class HyperGalaxyPhase(HyperPhase):
                             hyper_galaxy_image=hyper_result.analysis.hyper_galaxy_image_path_dict[
                                 path
                             ],
-                            image_path=search.paths.image_path,
                         )
 
                         result = search.fit(

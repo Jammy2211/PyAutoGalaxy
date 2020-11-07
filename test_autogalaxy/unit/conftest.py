@@ -1,9 +1,24 @@
+from os import path
+from pathlib import Path
+
 import numpy as np
 import pytest
 
+from autoconf import conf
 from autogalaxy.mock import fixtures
 
 ### Datasets ###
+
+
+directory = Path(__file__).parent.parent
+
+
+@pytest.fixture(autouse=True)
+def set_config_path():
+    conf.instance.push(
+        directory / "config",
+        directory / "output"
+    )
 
 
 @pytest.fixture(name="psf_3x3")

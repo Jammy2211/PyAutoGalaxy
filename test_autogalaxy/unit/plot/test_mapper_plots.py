@@ -40,7 +40,7 @@ def test__image_and_mapper_subplot_is_output_for_all_mappers(
         source_pixel_indexes=[[1, 2], [0]],
         sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
     )
-    assert plot_path + "subplot_image_and_mapper.png" in plot_patch.paths
+    assert f"{plot_path}/subplot_image_and_mapper.png" in plot_patch.paths
 
     aplt.Mapper.subplot_image_and_mapper(
         image=imaging_7x7.image,
@@ -54,4 +54,4 @@ def test__image_and_mapper_subplot_is_output_for_all_mappers(
         source_pixel_indexes=[[1, 2], [0]],
         sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
     )
-    assert plot_path + "subplot_image_and_mapper.png" in plot_patch.paths
+    assert f"{plot_path}/subplot_image_and_mapper.png" in plot_patch.paths

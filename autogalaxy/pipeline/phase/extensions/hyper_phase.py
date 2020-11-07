@@ -43,13 +43,11 @@ class HyperPhase:
         hyper_phase
             A copy of the original phase with a modified name and path
         """
-
-        phase = copy.deepcopy(self.phase)
-        phase.search = self.hyper_search.copy_with_name_extension(
+        self.phase.search = self.hyper_search.copy_with_name_extension(
             extension=f"{self.phase.paths.path_prefix}/{self.phase.name}"
         )
-        phase.hyper_name = self.hyper_name
-        return phase
+        self.phase.hyper_name = self.hyper_name
+        return self.phase
 
     def run(
         self,

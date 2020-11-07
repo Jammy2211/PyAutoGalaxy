@@ -8,9 +8,7 @@ from autogalaxy.pipeline.phase.dataset import analysis as analysis_data
 
 
 class Analysis(analysis_data.Analysis):
-    def __init__(
-        self, masked_interferometer, settings, cosmology, image_path=None, results=None
-    ):
+    def __init__(self, masked_interferometer, settings, cosmology, results=None):
 
         super(Analysis, self).__init__(
             masked_dataset=masked_interferometer,
@@ -20,12 +18,7 @@ class Analysis(analysis_data.Analysis):
         )
 
         self.visualizer = visualizer.PhaseInterferometerVisualizer(
-            masked_dataset=masked_interferometer, image_path=image_path
-        )
-
-        self.visualizer.visualize_hyper_images(
-            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
-            hyper_model_image=self.hyper_model_image,
+            masked_dataset=masked_interferometer
         )
 
         result = analysis_data.last_result_with_use_as_hyper_dataset(results=results)
@@ -126,7 +119,15 @@ class Analysis(analysis_data.Analysis):
             settings_inversion=self.settings.settings_inversion,
         )
 
-    def visualize(self, instance, during_analysis):
+    def visualize(self, paths: af.Paths, instance, during_analysis):
+
+        self.visualizer.visualize_interferometer(paths=paths)
+
+        self.visualizer.visualize_hyper_images(
+            paths=paths,
+            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
+            hyper_model_image=self.hyper_model_image,
+        )
 
         self.associate_hyper_images(instance=instance)
         plane = self.plane_for_instance(instance=instance)
@@ -149,7 +150,7 @@ class Analysis(analysis_data.Analysis):
 
             visualizer = self.visualizer
 
-        visualizer.visualize_fit(fit=fit, during_analysis=during_analysis)
+        visualizer.visualize_fit(paths=paths, fit=fit, during_analysis=during_analysis)
 
     def make_attributes(self):
         return Attributes(

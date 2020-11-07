@@ -234,7 +234,7 @@ class TestLensingPlotterPlots:
             include_border=True,
         )
 
-        assert plot_path + "array1.png" in plot_patch.paths
+        assert f"{plot_path}/array1.png" in plot_patch.paths
 
         plotter = aplt.Plotter(
             output=aplt.Output(path=plot_path, filename="array2", format="png")
@@ -252,7 +252,7 @@ class TestLensingPlotterPlots:
             include_border=True,
         )
 
-        assert plot_path + "array2.png" in plot_patch.paths
+        assert f"{plot_path}/array2.png" in plot_patch.paths
 
         aplt.Array(
             array=array,
@@ -269,11 +269,11 @@ class TestLensingPlotterPlots:
             ),
         )
 
-        assert plot_path + "array3.png" in plot_patch.paths
+        assert f"{plot_path}/array3.png" in plot_patch.paths
 
     def test__plot_array__fits_files_output_correctly(self, plot_path):
 
-        plot_path = plot_path + "/fits/"
+        plot_path = f"{plot_path}//fits/"
 
         if os.path.exists(plot_path):
             shutil.rmtree(plot_path)
@@ -287,7 +287,7 @@ class TestLensingPlotterPlots:
         plotter.plot_array(array=arr)
 
         arr = ag.util.array.numpy_array_2d_from_fits(
-            file_path=plot_path + "/array.fits", hdu=0
+            file_path=f"{plot_path}//array.fits", hdu=0
         )
 
         assert (arr == np.ones(shape=(31, 31))).all()
@@ -301,7 +301,7 @@ class TestLensingPlotterPlots:
         plotter.plot_array(array=masked_array)
 
         arr = ag.util.array.numpy_array_2d_from_fits(
-            file_path=plot_path + "/array.fits", hdu=0
+            file_path=f"{plot_path}//array.fits", hdu=0
         )
 
         assert arr.shape == (13, 13)
@@ -327,7 +327,7 @@ class TestLensingPlotterPlots:
             symmetric_around_centre=False,
         )
 
-        assert plot_path + "grid1.png" in plot_patch.paths
+        assert f"{plot_path}/grid1.png" in plot_patch.paths
 
         plotter = aplt.Plotter(
             output=aplt.Output(path=plot_path, filename="grid2", format="png")
@@ -346,7 +346,7 @@ class TestLensingPlotterPlots:
             symmetric_around_centre=True,
         )
 
-        assert plot_path + "grid2.png" in plot_patch.paths
+        assert f"{plot_path}/grid2.png" in plot_patch.paths
 
         aplt.Grid(
             grid=grid,
@@ -364,7 +364,7 @@ class TestLensingPlotterPlots:
             ),
         )
 
-        assert plot_path + "grid3.png" in plot_patch.paths
+        assert f"{plot_path}/grid3.png" in plot_patch.paths
 
     def test__plot_line__works_with_all_extras_included(self, plot_path, plot_patch):
 
@@ -381,7 +381,7 @@ class TestLensingPlotterPlots:
             vertical_line_labels=["line1", "line2"],
         )
 
-        assert plot_path + "line1.png" in plot_patch.paths
+        assert f"{plot_path}/line1.png" in plot_patch.paths
 
         plotter = aplt.Plotter(
             output=aplt.Output(path=plot_path, filename="line2", format="png")
@@ -396,7 +396,7 @@ class TestLensingPlotterPlots:
             vertical_line_labels=["line1", "line2"],
         )
 
-        assert plot_path + "line2.png" in plot_patch.paths
+        assert f"{plot_path}/line2.png" in plot_patch.paths
 
         aplt.Line(
             y=np.array([1.0, 2.0, 3.0]),
@@ -410,7 +410,7 @@ class TestLensingPlotterPlots:
             ),
         )
 
-        assert plot_path + "line3.png" in plot_patch.paths
+        assert f"{plot_path}/line3.png" in plot_patch.paths
 
     def test__plot_rectangular_mapper__works_with_all_extras_included(
         self, rectangular_mapper_7x7_3x3, plot_path, plot_patch
@@ -434,7 +434,7 @@ class TestLensingPlotterPlots:
             source_pixel_indexes=[[0, 1], [2]],
         )
 
-        assert plot_path + "mapper1.png" in plot_patch.paths
+        assert f"{plot_path}/mapper1.png" in plot_patch.paths
 
         plotter = aplt.Plotter(
             output=aplt.Output(path=plot_path, filename="mapper2", format="png")
@@ -454,7 +454,7 @@ class TestLensingPlotterPlots:
             source_pixel_indexes=[[0, 1], [2]],
         )
 
-        assert plot_path + "mapper2.png" in plot_patch.paths
+        assert f"{plot_path}/mapper2.png" in plot_patch.paths
 
         aplt.MapperObj(
             mapper=rectangular_mapper_7x7_3x3,
@@ -470,7 +470,7 @@ class TestLensingPlotterPlots:
             ),
         )
 
-        assert plot_path + "mapper3.png" in plot_patch.paths
+        assert f"{plot_path}/mapper3.png" in plot_patch.paths
 
     def test__plot_voronoi_mapper__works_with_all_extras_included(
         self, voronoi_mapper_9_3x3, plot_path, plot_patch
@@ -489,7 +489,7 @@ class TestLensingPlotterPlots:
             source_pixel_indexes=[[0, 1], [2]],
         )
 
-        assert plot_path + "mapper1.png" in plot_patch.paths
+        assert f"{plot_path}/mapper1.png" in plot_patch.paths
 
         plotter = aplt.Plotter(
             output=aplt.Output(path=plot_path, filename="mapper2", format="png")
@@ -504,7 +504,7 @@ class TestLensingPlotterPlots:
             source_pixel_indexes=[[0, 1], [2]],
         )
 
-        assert plot_path + "mapper2.png" in plot_patch.paths
+        assert f"{plot_path}/mapper2.png" in plot_patch.paths
 
         aplt.MapperObj(
             mapper=voronoi_mapper_9_3x3,
@@ -515,7 +515,7 @@ class TestLensingPlotterPlots:
             ),
         )
 
-        assert plot_path + "mapper3.png" in plot_patch.paths
+        assert f"{plot_path}/mapper3.png" in plot_patch.paths
 
 
 class TestInclude:

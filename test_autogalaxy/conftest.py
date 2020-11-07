@@ -1,9 +1,5 @@
-from os import path
-
 import pytest
 from matplotlib import pyplot
-
-from autoconf import conf
 
 
 class PlotPatch:
@@ -19,14 +15,3 @@ def make_plot_patch(monkeypatch):
     plot_patch = PlotPatch()
     monkeypatch.setattr(pyplot, "savefig", plot_patch)
     return plot_patch
-
-
-directory = path.dirname(path.realpath(__file__))
-
-
-@pytest.fixture(autouse=True)
-def set_config_path():
-    conf.instance.push(
-        f"{directory}/config"
-        f"{directory}/output"
-    )
