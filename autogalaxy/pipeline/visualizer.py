@@ -23,7 +23,7 @@ class AbstractVisualizer:
         self.include = lensing_plotters.Include()
 
     @staticmethod
-    def plotter_from_paths(paths, subfolders=None, format="png"):
+    def plotter_from_paths(paths : af.Paths, subfolders=None, format="png"):
         if subfolders is None:
             return lensing_plotters.Plotter(
                 output=mat_objs.Output(path=f"{paths.image_path}", format=format)
@@ -35,7 +35,7 @@ class AbstractVisualizer:
         )
 
     @staticmethod
-    def sub_plotter_from_paths(paths):
+    def sub_plotter_from_paths(paths : af.Paths):
 
         return lensing_plotters.SubPlotter(
             output=mat_objs.Output(path=f"{paths.image_path}/subplots", format="png")
@@ -181,7 +181,6 @@ class PhaseDatasetVisualizer(AbstractVisualizer):
     ):
 
         plotter = self.plotter_from_paths(paths=paths, subfolders="hyper")
-        sub_plotter = self.sub_plotter_from_paths(paths=paths)
 
         if self.plot_hyper_model_image:
             hyper_plots.hyper_model_image(
@@ -192,6 +191,8 @@ class PhaseDatasetVisualizer(AbstractVisualizer):
                 include=self.include,
                 plotter=plotter,
             )
+
+        sub_plotter = self.sub_plotter_from_paths(paths=paths)
 
         if self.plot_hyper_galaxy_images:
             hyper_plots.subplot_hyper_galaxy_images(
@@ -220,17 +221,6 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
     def visualize_imaging(self, paths: af.Paths):
 
         plotter = self.plotter_from_paths(paths=paths, subfolders="imaging")
-        sub_plotter = self.sub_plotter_from_paths(paths=paths)
-
-        if self.plot_subplot_dataset:
-            aa.plot.Imaging.subplot_imaging(
-                imaging=self.masked_imaging.imaging,
-                mask=self.include.mask_from_masked_dataset(
-                    masked_dataset=self.masked_dataset
-                ),
-                include=self.include,
-                sub_plotter=sub_plotter,
-            )
 
         aa.plot.Imaging.individual(
             imaging=self.masked_imaging.imaging,
@@ -248,19 +238,19 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
             plotter=plotter,
         )
 
-    def visualize_fit(self, paths: af.Paths, fit, during_analysis):
-
         sub_plotter = self.sub_plotter_from_paths(paths=paths)
 
-        if self.plot_subplot_fit:
-            fit_imaging_plots.subplot_fit_imaging(
-                fit=fit, include=self.include, sub_plotter=sub_plotter
+        if self.plot_subplot_dataset:
+            aa.plot.Imaging.subplot_imaging(
+                imaging=self.masked_imaging.imaging,
+                mask=self.include.mask_from_masked_dataset(
+                    masked_dataset=self.masked_dataset
+                ),
+                include=self.include,
+                sub_plotter=sub_plotter,
             )
 
-        if self.plot_subplots_of_all_planes_fits:
-            fit_imaging_plots.subplots_of_all_galaxies(
-                fit=fit, include=self.include, sub_plotter=sub_plotter
-            )
+    def visualize_fit(self, paths: af.Paths, fit, during_analysis):
 
         plotter = self.plotter_from_paths(paths=paths, subfolders="fit_imaging")
 
@@ -278,6 +268,18 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
             include=self.include,
             plotter=plotter,
         )
+
+        sub_plotter = self.sub_plotter_from_paths(paths=paths)
+
+        if self.plot_subplot_fit:
+            fit_imaging_plots.subplot_fit_imaging(
+                fit=fit, include=self.include, sub_plotter=sub_plotter
+            )
+
+        if self.plot_subplots_of_all_planes_fits:
+            fit_imaging_plots.subplots_of_all_galaxies(
+                fit=fit, include=self.include, sub_plotter=sub_plotter
+            )
 
         if fit.inversion is not None:
 

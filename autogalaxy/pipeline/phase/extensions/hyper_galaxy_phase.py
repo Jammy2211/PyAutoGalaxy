@@ -34,7 +34,7 @@ class Analysis(af.Analysis):
         self.hyper_model_image = hyper_model_image
         self.hyper_galaxy_image = hyper_galaxy_image
 
-    def visualize(self, instance, during_analysis):
+    def visualize(self, paths, instance, during_analysis):
 
         if self.visualizer.plot_hyper_galaxy_subplot:
             hyper_image_sky = self.hyper_image_sky_for_instance(instance=instance)
