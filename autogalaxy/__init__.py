@@ -62,7 +62,7 @@ from .profiles import (
     mass_profiles as mp,
     light_and_mass_profiles as lmp,
 )
-from .util import convert
+from . import convert
 
 conf.instance.register(__file__)
 

@@ -1,14 +1,11 @@
 import inspect
 import typing
 
-import autofit as af
 import numpy as np
 from astropy import cosmology as cosmo
 from astropy import units
 from autoarray import decorator_util
 from autoarray.structures import arrays, grids
-from autofit.text import formatter
-from autogalaxy import dimensions as dim
 from autogalaxy import exc
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.util import cosmology_util
@@ -21,6 +18,7 @@ from scipy import LowLevelCallable
 from scipy import special
 from scipy.integrate import quad
 from scipy.optimize import fsolve
+from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
 
 
 def jit_integrand(integrand_function):
@@ -100,18 +98,17 @@ class DarkProfile:
 
 # noinspection PyAbstractClass
 class AbstractEllipticalGeneralizedNFW(
-    mp.EllipticalMassProfile, mp.MassProfile, DarkProfile
+    mp.EllipticalMassProfile, mp.MassProfile, DarkProfile, MassProfileMGE
 ):
     epsrel = 1.49e-5
 
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
         inner_slope: float = 1.0,
-        scale_radius: dim.Length = 1.0,
+        scale_radius: float = 1.0,
     ):
         """
         The elliptical NFW profiles, used to fit the dark matter halo of the lens.
@@ -137,6 +134,8 @@ class AbstractEllipticalGeneralizedNFW(
             centre=centre, elliptical_comps=elliptical_comps
         )
         super(mp.MassProfile, self).__init__()
+        super(MassProfileMGE, self).__init__()
+
         self.kappa_s = kappa_s
         self.scale_radius = scale_radius
         self.inner_slope = inner_slope
@@ -177,6 +176,23 @@ class AbstractEllipticalGeneralizedNFW(
         grid_eta = self.grid_to_elliptical_radii(grid=grid)
 
         return self.convergence_func(grid_radius=grid_eta)
+
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
+    def convergence_from_grid_via_gaussians(self, grid):
+        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
+
+        Parameters
+        ----------
+        grid : aa.Grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+
+        """
+
+        elliptical_radii = self.grid_to_elliptical_radii(grid)
+
+        return self._convergence_from_grid_via_gaussians(grid_radii=elliptical_radii)
 
     @property
     def ellipticity_rescale(self):
@@ -263,48 +279,29 @@ class AbstractEllipticalGeneralizedNFW(
     def coord_func_h(self, grid_radius):
         return np.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
 
-    def rho_at_scale_radius_for_units(
-        self,
-        redshift_object,
-        redshift_source,
-        unit_length="arcsec",
-        unit_mass="solMass",
-        cosmology=cosmo.Planck15,
+    def rho_at_scale_radius_solar_mass_per_kpc3(
+        self, redshift_object, redshift_source, cosmology=cosmo.Planck15
     ):
         """The Cosmic average density is defined at the redshift of the profile."""
+
+        critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+            redshift_0=redshift_object, redshift_1=redshift_source, cosmology=cosmology
+        )
 
         kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
             redshift=redshift_object, cosmology=cosmology
         )
 
-        critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from(
-            redshift_0=redshift_object,
-            redshift_1=redshift_source,
-            cosmology=cosmology,
-            unit_length=self.unit_length,
-            unit_mass=unit_mass,
+        return (
+            self.kappa_s
+            * critical_surface_density
+            / (self.scale_radius * kpc_per_arcsec)
         )
 
-        rho_at_scale_radius = (
-            self.kappa_s * critical_surface_density / self.scale_radius
-        )
-
-        rho_at_scale_radius = dim.MassOverLength3(
-            value=rho_at_scale_radius, unit_length=self.unit_length, unit_mass=unit_mass
-        )
-        return rho_at_scale_radius.convert(
-            unit_length=unit_length,
-            unit_mass=unit_mass,
-            kpc_per_arcsec=kpc_per_arcsec,
-            critical_surface_density=critical_surface_density,
-        )
-
-    def delta_concentration_for_units(
+    def delta_concentration(
         self,
         redshift_object,
         redshift_source,
-        unit_length="arcsec",
-        unit_mass="solMass",
         redshift_of_cosmic_average_density="profile",
         cosmology=cosmo.Planck15,
     ):
@@ -319,16 +316,11 @@ class AbstractEllipticalGeneralizedNFW(
                 "string. Must be {local, profile}"
             )
 
-        cosmic_average_density = cosmology_util.cosmic_average_density_from(
-            redshift=redshift_calc,
-            cosmology=cosmology,
-            unit_length=unit_length,
-            unit_mass=unit_mass,
+        cosmic_average_density = cosmology_util.cosmic_average_density_solar_mass_per_kpc3_from(
+            redshift=redshift_calc, cosmology=cosmology
         )
 
-        rho_scale_radius = self.rho_at_scale_radius_for_units(
-            unit_length=unit_length,
-            unit_mass=unit_mass,
+        rho_scale_radius = self.rho_at_scale_radius_solar_mass_per_kpc3(
             redshift_object=redshift_object,
             redshift_source=redshift_source,
             cosmology=cosmology,
@@ -336,20 +328,17 @@ class AbstractEllipticalGeneralizedNFW(
 
         return rho_scale_radius / cosmic_average_density
 
-    def concentration_for_units(
+    def concentration(
         self,
         redshift_profile,
         redshift_source,
-        unit_length="arcsec",
-        unit_mass="solMass",
         redshift_of_cosmic_average_density="profile",
         cosmology=cosmo.Planck15,
     ):
-        delta_concentration = self.delta_concentration_for_units(
+
+        delta_concentration = self.delta_concentration(
             redshift_object=redshift_profile,
             redshift_source=redshift_source,
-            unit_length=unit_length,
-            unit_mass=unit_mass,
             redshift_of_cosmic_average_density=redshift_of_cosmic_average_density,
             cosmology=cosmology,
         )
@@ -372,43 +361,27 @@ class AbstractEllipticalGeneralizedNFW(
             - delta_concentration
         )
 
-    def radius_at_200_for_units(
+    def radius_at_200(
         self,
         redshift_object,
         redshift_source,
-        unit_length="arcsec",
-        unit_mass="solMass",
         redshift_of_cosmic_average_density="profile",
         cosmology=cosmo.Planck15,
     ):
 
-        kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
-            redshift=redshift_object, cosmology=cosmology
-        )
-
-        concentration = self.concentration_for_units(
+        concentration = self.concentration(
             redshift_profile=redshift_object,
             redshift_source=redshift_source,
-            unit_length=unit_length,
-            unit_mass=unit_mass,
             redshift_of_cosmic_average_density=redshift_of_cosmic_average_density,
             cosmology=cosmology,
         )
 
-        radius_at_200 = dim.Length(
-            value=concentration * self.scale_radius, unit_length=self.unit_length
-        )
+        return concentration * self.scale_radius
 
-        return radius_at_200.convert(
-            unit_length=unit_length, kpc_per_arcsec=kpc_per_arcsec
-        )
-
-    def mass_at_200_for_units(
+    def mass_at_200_solar_masses(
         self,
         redshift_object,
         redshift_source,
-        unit_length="arcsec",
-        unit_mass="solMass",
         redshift_of_cosmic_average_density="profile",
         cosmology=cosmo.Planck15,
     ):
@@ -423,45 +396,52 @@ class AbstractEllipticalGeneralizedNFW(
                 "string. Must be {local, profile}"
             )
 
-        cosmic_average_density = cosmology_util.cosmic_average_density_from(
-            redshift=redshift_calc,
-            cosmology=cosmology,
-            unit_length=unit_length,
-            unit_mass=unit_mass,
+        cosmic_average_density = cosmology_util.cosmic_average_density_solar_mass_per_kpc3_from(
+            redshift=redshift_calc, cosmology=cosmology
         )
 
-        critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from(
-            redshift_0=redshift_object,
-            redshift_1=redshift_source,
-            cosmology=cosmology,
-            unit_length=self.unit_length,
-            unit_mass=unit_mass,
-        )
-
-        radius_at_200 = self.radius_at_200_for_units(
+        radius_at_200 = self.radius_at_200(
             redshift_object=redshift_object,
             redshift_source=redshift_source,
-            unit_length=unit_length,
-            unit_mass=unit_mass,
             redshift_of_cosmic_average_density=redshift_of_cosmic_average_density,
             cosmology=cosmology,
         )
 
-        mass_at_200 = dim.Mass(
+        kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
+            redshift=redshift_object, cosmology=cosmology
+        )
+
+        radius_at_200_kpc = radius_at_200 * kpc_per_arcsec
+
+        return (
             200.0
             * ((4.0 / 3.0) * np.pi)
             * cosmic_average_density
-            * (radius_at_200 ** 3.0),
-            unit_mass=unit_mass,
+            * (radius_at_200_kpc ** 3.0)
         )
 
-        return mass_at_200.convert(
-            unit_mass=unit_mass, critical_surface_density=critical_surface_density
-        )
+    def decompose_convergence_into_gaussians(self):
 
-    @property
-    def unit_mass(self):
-        return "angular"
+        rho_at_scale_radius = (
+            self.kappa_s / self.scale_radius
+        )  # density parameter of 3D gNFW
+
+        radii_min = self.scale_radius / 2000.0
+        radii_max = self.scale_radius * 30.0
+
+        def gnfw_3d(r):
+            x = r / self.scale_radius
+            return (
+                rho_at_scale_radius
+                * x ** (-self.inner_slope)
+                * (1.0 + x) ** (self.inner_slope - 3.0)
+            )
+
+        amps, sigmas = self._decompose_convergence_into_gaussians(
+            func=gnfw_3d, radii_min=radii_min, radii_max=radii_max
+        )
+        amps *= np.sqrt(2.0 * np.pi) * sigmas
+        return amps, sigmas
 
 
 class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
@@ -520,6 +500,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
             )
 
         for i in range(grid.shape[0]):
+
             potential_grid[i] = (2.0 * self.kappa_s * self.axis_ratio) * quad(
                 self.potential_func,
                 a=0.0,
@@ -541,7 +522,16 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
     @grids.grid_like_to_structure
     @grids.transform
     @grids.relocate_to_radial_minimum
-    def deflections_from_grid(self, grid, tabulate_bins=1000):
+    def deflections_from_grid(self, grid):
+
+        return self._deflections_from_grid_via_gaussians(
+            grid=grid, sigmas_factor=self.axis_ratio
+        )
+
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
+    def deflections_from_grid_via_integrator(self, grid, tabulate_bins=1000):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -562,25 +552,36 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
                 * (1 - np.sqrt(1 - x * x))
             )
 
-        def calculate_deflection_component(npow, index):
-            deflection_grid = 2.0 * self.kappa_s * self.axis_ratio * grid[:, index]
-            deflection_grid *= quad_grid(
-                self.deflection_func,
-                0.0,
-                1.0,
-                grid,
-                args=(
-                    npow,
-                    self.axis_ratio,
-                    minimum_log_eta,
-                    maximum_log_eta,
-                    tabulate_bins,
-                    surface_density_integral,
-                ),
-                epsrel=EllipticalGeneralizedNFW.epsrel,
-            )[0]
+        def calculate_deflection_component(npow, yx_index):
 
-            return deflection_grid
+            deflection_grid = np.zeros(grid.shape[0])
+
+            for i in range(grid.shape[0]):
+
+                deflection_grid[i] = (
+                    2.0
+                    * self.kappa_s
+                    * self.axis_ratio
+                    * grid[i, yx_index]
+                    * quad(
+                        self.deflection_func,
+                        a=0.0,
+                        b=1.0,
+                        args=(
+                            grid[i, 0],
+                            grid[i, 1],
+                            npow,
+                            self.axis_ratio,
+                            minimum_log_eta,
+                            maximum_log_eta,
+                            tabulate_bins,
+                            surface_density_integral,
+                        ),
+                        epsrel=EllipticalGeneralizedNFW.epsrel,
+                    )[0]
+                )
+
+                return deflection_grid
 
         eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size = self.tabulate_integral(
             grid, tabulate_bins
@@ -603,8 +604,8 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
                 (eta / self.scale_radius) ** (1 - self.inner_slope)
             ) * (((1 + eta / self.scale_radius) ** (self.inner_slope - 3)) + integral)
 
-        deflection_y = calculate_deflection_component(1.0, 0)
-        deflection_x = calculate_deflection_component(0.0, 1)
+        deflection_y = calculate_deflection_component(npow=1.0, yx_index=0)
+        deflection_x = calculate_deflection_component(npow=0.0, yx_index=1)
 
         return self.rotate_grid_from_profile(
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
@@ -639,8 +640,6 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
         return grid_radius
 
     @staticmethod
-    # TODO : Decorator needs to know that potential_integral is 1D arrays
-    #    @jit_integrand
     def potential_func(
         u,
         y,
@@ -662,8 +661,6 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
         return eta_u * (phi / u) / (1.0 - (1.0 - axis_ratio ** 2) * u) ** 0.5
 
     @staticmethod
-    # TODO : Decorator needs to know that surface_density_integral is 1D arrays
-    #    @jit_integrand
     def deflection_func(
         u,
         y,
@@ -688,13 +685,12 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
 
 
 class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
         inner_slope: float = 1.0,
-        scale_radius: dim.Length = 1.0,
+        scale_radius: float = 1.0,
     ):
         """
         The spherical NFW profiles, used to fit the dark matter halo of the lens.
@@ -724,7 +720,7 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
     @grids.grid_like_to_structure
     @grids.transform
     @grids.relocate_to_radial_minimum
-    def deflections_from_grid(self, grid, **kwargs):
+    def deflections_from_grid_via_integrator(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -767,13 +763,12 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
 
 
 class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
-        scale_radius: dim.Length = 1.0,
-        truncation_radius: dim.Length = 2.0,
+        scale_radius: float = 1.0,
+        truncation_radius: float = 2.0,
     ):
         super(SphericalTruncatedNFW, self).__init__(
             centre=centre,
@@ -864,20 +859,16 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
 
         return self.grid_to_grid_cartesian(grid, deflection_grid)
 
-    def mass_at_truncation_radius(
+    def mass_at_truncation_radius_solar_mass(
         self,
         redshift_profile,
         redshift_source,
-        unit_length="arcsec",
-        unit_mass="solMass",
         redshift_of_cosmic_average_density="profile",
         cosmology=cosmo.Planck15,
     ):
-        mass_at_200 = self.mass_at_200_for_units(
+        mass_at_200 = self.mass_at_200_solar_masses(
             redshift_object=redshift_profile,
             redshift_source=redshift_source,
-            unit_length=unit_length,
-            unit_mass=unit_mass,
             redshift_of_cosmic_average_density=redshift_of_cosmic_average_density,
             cosmology=cosmology,
         )
@@ -905,10 +896,9 @@ class SphericalTruncatedNFWMCRDuffy(SphericalTruncatedNFW):
     A truncated NFW halo at z = 0.6 with tau = 2.0
     """
 
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
@@ -934,10 +924,9 @@ class SphericalTruncatedNFWMCRDuffy(SphericalTruncatedNFW):
 
 
 class SphericalTruncatedNFWMCRLudlow(SphericalTruncatedNFW):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
@@ -963,12 +952,11 @@ class SphericalTruncatedNFWMCRLudlow(SphericalTruncatedNFW):
 
 
 class SphericalTruncatedNFWChallenge(SphericalTruncatedNFW):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
-        scale_radius: dim.Length = 1.0,
+        scale_radius: float = 1.0,
     ):
         def solve_c(c, de_c):
             """
@@ -1005,8 +993,9 @@ class SphericalTruncatedNFWMCRChallenge(SphericalTruncatedNFW):
     A truncated NFW halo at z = 0.6 with tau = 2.0
     """
 
-    @af.map_types
-    def __init__(self, centre: dim.Position = (0.0, 0.0), mass_at_200: float = 1e9):
+    def __init__(
+        self, centre: typing.Tuple[float, float] = (0.0, 0.0), mass_at_200: float = 1e9
+    ):
         """
         Input m200: The m200 of the NFW part of the corresponding tNFW part. Unit: M_sun.
         """
@@ -1048,14 +1037,13 @@ class SphericalTruncatedNFWMCRChallenge(SphericalTruncatedNFW):
         )
 
 
-class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
-    @af.map_types
+class EllipticalNFW(EllipticalGeneralizedNFW):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
-        scale_radius: dim.Length = 1.0,
+        scale_radius: float = 1.0,
     ):
         """
         The elliptical NFW profiles, used to fit the dark matter halo of the lens.
@@ -1119,7 +1107,7 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
     @grids.grid_like_to_structure
     @grids.transform
     @grids.relocate_to_radial_minimum
-    def deflections_from_grid(self, grid):
+    def deflections_from_grid_via_integrator(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -1209,12 +1197,11 @@ class EllipticalNFW(AbstractEllipticalGeneralizedNFW):
 
 
 class SphericalNFW(EllipticalNFW):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
-        scale_radius: dim.Length = 1.0,
+        scale_radius: float = 1.0,
     ):
         """
         The spherical NFW profiles, used to fit the dark matter halo of the lens.
@@ -1288,10 +1275,9 @@ class SphericalNFW(EllipticalNFW):
 
 
 class SphericalNFWMCRDuffy(SphericalNFW):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
@@ -1311,10 +1297,9 @@ class SphericalNFWMCRDuffy(SphericalNFW):
 
 
 class SphericalNFWMCRLudlow(SphericalNFW):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
@@ -1341,12 +1326,8 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
         cosmology.critical_density(redshift_object).to(units.solMass / units.kpc ** 3)
     ).value
 
-    critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from(
-        redshift_0=redshift_object,
-        redshift_1=redshift_source,
-        cosmology=cosmology,
-        unit_length="kpc",
-        unit_mass="solMass",
+    critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+        redshift_0=redshift_object, redshift_1=redshift_source, cosmology=cosmology
     )
 
     kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
@@ -1395,12 +1376,8 @@ def kappa_s_and_scale_radius_for_ludlow(mass_at_200, redshift_object, redshift_s
         cosmology.critical_density(redshift_object).to(units.solMass / units.kpc ** 3)
     ).value
 
-    critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_from(
-        redshift_0=redshift_object,
-        redshift_1=redshift_source,
-        cosmology=cosmology,
-        unit_length="kpc",
-        unit_mass="solMass",
+    critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+        redshift_0=redshift_object, redshift_1=redshift_source, cosmology=cosmology
     )
 
     kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(

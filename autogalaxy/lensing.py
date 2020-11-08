@@ -34,14 +34,6 @@ class LensingObject:
     def mass_profile_centres(self):
         raise NotImplementedError("mass profile centres should be overridden")
 
-    @property
-    def unit_length(self):
-        raise NotImplementedError("unit_length should be overridden")
-
-    @property
-    def unit_mass(self):
-        raise NotImplementedError("unit_mass should be overridden")
-
     def mass_integral(self, x):
         """Routine to integrate an elliptical light profiles - set axis ratio to 1 to compute the luminosity within a \
         circle"""
@@ -323,3 +315,11 @@ class LensingObject:
         x, y = tangential_critical_curve[:, 0], tangential_critical_curve[:, 1]
 
         return np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
+
+    @property
+    def einstein_radius_via_tangential_critical_curve(self):
+        return np.sqrt(self.area_within_tangential_critical_curve / np.pi)
+
+    @property
+    def einstein_mass_angular_via_tangential_critical_curve(self):
+        return np.pi * (self.einstein_radius_via_tangential_critical_curve ** 2)

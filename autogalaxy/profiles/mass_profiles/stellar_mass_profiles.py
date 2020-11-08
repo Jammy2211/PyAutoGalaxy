@@ -1,33 +1,13 @@
-import warnings
-
-import autofit as af
-import numpy as np
-from autoarray.structures import arrays
-from autoarray.structures import grids
-from autogalaxy import dimensions as dim
-from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
-from pyquad import quad_grid
-from scipy.special import wofz
-import typing
-
-
-class StellarProfile:
-
-    pass
-
-
-import warnings
-
-import autofit as af
 import numpy as np
 from autoarray.structures import arrays
 from autoarray.structures import grids
-from autogalaxy import dimensions as dim
 from autogalaxy.profiles import mass_profiles as mp
 from pyquad import quad_grid
 from scipy.special import wofz
 import typing
+
+from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
 
 
 class StellarProfile:
@@ -36,14 +16,13 @@ class StellarProfile:
 
 
 class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        sigma: dim.Length = 0.01,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        intensity: float = 0.1,
+        sigma: float = 0.01,
+        mass_to_light_ratio: float = 1.0,
     ):
         """ The elliptical Gaussian light profile.
 
@@ -72,29 +51,6 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
 
         if self.axis_ratio > 0.9999:
             self.axis_ratio = 0.9999
-
-    # def omega_from_grid_and_q(self, grid_complex, q):
-    #    x = np.real(grid_complex)
-    #    y = np.imag(grid_complex)
-    #    faddeeva = wofz((q * x) + (1j * y / q))
-    #    return (
-    #        np.exp(-x ** 2.0 - 2.0 * 1j * x * y) * np.exp(y ** 2.0)
-    #        - (
-    #            1j
-    #            * np.exp(
-    #                -x ** 2.0 * (1.0 - q ** 2.0) - y ** 2.0 * ((1.0 / q ** 2.0) - 1.0)
-    #            )
-    #        )
-    #        * faddeeva
-    #    )
-
-    def sigma_from_grid(self, grid):
-        input_grid = (self.axis_ratio * (grid[:, 1] + 1j * grid[:, 0])) / (
-            self.sigma * np.sqrt(2 * (1.0 - self.axis_ratio ** 2.0))
-        )
-        return self.omega_from_grid_and_q(
-            grid_complex=input_grid, q=1
-        ) - self.omega_from_grid_and_q(grid_complex=input_grid, q=self.axis_ratio)
 
     def zeta_from_grid(self, grid):
 
@@ -243,16 +199,17 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
 
 
 # noinspection PyAbstractClass
-class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
-    @af.map_types
+class AbstractEllipticalSersic(
+    mp.EllipticalMassProfile, StellarProfile, MassProfileMGE
+):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
         sersic_index: float = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        mass_to_light_ratio: float = 1.0,
     ):
         """
         The Sersic mass profile, the mass profiles of the light profiles that are used to fit and subtract the lens \
@@ -281,6 +238,7 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
         super(mp.EllipticalMassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
+        super(MassProfileMGE, self).__init__()
         self.mass_to_light_ratio = mass_to_light_ratio
         self.intensity = intensity
         self.effective_radius = effective_radius
@@ -302,6 +260,27 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
 
     def convergence_func(self, grid_radius):
         return self.mass_to_light_ratio * self.image_from_grid_radii(grid_radius)
+
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
+    def convergence_from_grid_via_gaussians(self, grid):
+        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
+
+        Parameters
+        ----------
+        grid : aa.Grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+
+        """
+
+        eccentric_radii = self.grid_to_eccentric_radii(grid=grid)
+
+        convergence = self._convergence_from_grid_via_gaussians(
+            grid_radii=eccentric_radii
+        )
+
+        return np.multiply(self.mass_to_light_ratio, convergence)
 
     @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
@@ -353,29 +332,36 @@ class AbstractEllipticalSersic(mp.EllipticalMassProfile, StellarProfile):
         half the light, and may be more appropriate for highly flattened systems like disk galaxies."""
         return self.effective_radius / np.sqrt(self.axis_ratio)
 
-    @property
-    def unit_mass(self):
-        return self.mass_to_light_ratio.unit_mass
+    def decompose_convergence_into_gaussians(self):
 
+        radii_min = self.effective_radius / 100.0
+        radii_max = self.effective_radius * 20.0
 
-class EllipticalSersic(AbstractEllipticalSersic):
-    @staticmethod
-    def deflection_func(
-        u, y, x, npow, axis_ratio, sersic_index, effective_radius, sersic_constant
-    ):
-        eta_u = np.sqrt(axis_ratio) * np.sqrt(
-            (u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u))))
+        def sersic_2d(r):
+            return self.intensity * np.exp(
+                -self.sersic_constant
+                * (((r / self.effective_radius) ** (1.0 / self.sersic_index)) - 1.0)
+            )
+
+        return self._decompose_convergence_into_gaussians(
+            func=sersic_2d, radii_min=radii_min, radii_max=radii_max
         )
 
-        return np.exp(
-            -sersic_constant
-            * (((eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
-        ) / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
 
+class EllipticalSersic(AbstractEllipticalSersic, MassProfileMGE):
     @grids.grid_like_to_structure
     @grids.transform
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
+
+        return self._deflections_from_grid_via_gaussians(
+            grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
+        )
+
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
+    def deflections_from_grid_via_integrator(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -417,16 +403,28 @@ class EllipticalSersic(AbstractEllipticalSersic):
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
+    @staticmethod
+    def deflection_func(
+        u, y, x, npow, axis_ratio, sersic_index, effective_radius, sersic_constant
+    ):
+        eta_u = np.sqrt(axis_ratio) * np.sqrt(
+            (u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u))))
+        )
+
+        return np.exp(
+            -sersic_constant
+            * (((eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
+        ) / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
+
 
 class SphericalSersic(EllipticalSersic):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
         sersic_index: float = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        mass_to_light_ratio: float = 1.0,
     ):
         """
         The Sersic mass profile, the mass profiles of the light profiles that are used to fit and subtract the lens
@@ -457,14 +455,13 @@ class SphericalSersic(EllipticalSersic):
 
 
 class EllipticalExponential(EllipticalSersic):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        mass_to_light_ratio: float = 1.0,
     ):
         """
         The EllipticalExponential mass profile, the mass profiles of the light profiles that are used to fit and
@@ -495,13 +492,12 @@ class EllipticalExponential(EllipticalSersic):
 
 
 class SphericalExponential(EllipticalExponential):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        mass_to_light_ratio: float = 1.0,
     ):
         """
         The Exponential mass profile, the mass profiles of the light profiles that are used to fit and subtract the lens
@@ -528,14 +524,13 @@ class SphericalExponential(EllipticalExponential):
 
 
 class EllipticalDevVaucouleurs(EllipticalSersic):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        mass_to_light_ratio: float = 1.0,
     ):
         """
         The EllipticalDevVaucouleurs mass profile, the mass profiles of the light profiles that are used to fit and
@@ -566,13 +561,12 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
 
 
 class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        mass_to_light_ratio: float = 1.0,
     ):
         """
         The DevVaucouleurs mass profile, the mass profiles of the light profiles that are used to fit and subtract the
@@ -599,15 +593,14 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
 
 
 class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
         sersic_index: float = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        mass_to_light_ratio: float = 1.0,
         mass_to_light_gradient: float = 0.0,
     ):
         """
@@ -738,14 +731,13 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
 
 
 class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
         sersic_index: float = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        mass_to_light_ratio: float = 1.0,
         mass_to_light_gradient: float = 0.0,
     ):
         """
@@ -779,15 +771,14 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
 
 
 class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        core_radius_0: dim.Length = 0.01,
-        core_radius_1: dim.Length = 0.02,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        intensity: float = 0.1,
+        core_radius_0: float = 0.01,
+        core_radius_1: float = 0.02,
+        mass_to_light_ratio: float = 1.0,
     ):
         """ The elliptical Chamelon mass profile.
         
@@ -951,14 +942,13 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
 
 
 class SphericalChameleon(EllipticalChameleon):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        core_radius_0: dim.Length = 0.01,
-        core_radius_1: dim.Length = 0.02,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        core_radius_0: float = 0.01,
+        core_radius_1: float = 0.02,
+        mass_to_light_ratio: float = 1.0,
     ):
         """ The spherica; Chameleon mass profile.
 

@@ -75,10 +75,10 @@ class TestMassAndLightProfiles:
             galaxy_model.profile.centre.centre_1: 0.2,
             galaxy_model.profile.elliptical_comps.elliptical_comps_0: 0.4,
             galaxy_model.profile.elliptical_comps.elliptical_comps_1: 0.5,
-            galaxy_model.profile.intensity.value: 0.6,
-            galaxy_model.profile.effective_radius.value: 0.7,
+            galaxy_model.profile.intensity: 0.6,
+            galaxy_model.profile.effective_radius: 0.7,
             galaxy_model.profile.sersic_index: 0.8,
-            galaxy_model.profile.mass_to_light_ratio.value: 0.5,
+            galaxy_model.profile.mass_to_light_ratio: 0.5,
         }
 
         galaxy = galaxy_model.instance_for_arguments(arguments)
@@ -167,11 +167,11 @@ class TestResultForArguments:
             galaxy_model.redshift.redshift: 0.5,
             galaxy_model.mass_profile.centre.centre_0: 0.9,
             galaxy_model.mass_profile.centre.centre_1: 0.3,
-            galaxy_model.mass_profile.einstein_radius.value: 0.3,
+            galaxy_model.mass_profile.einstein_radius: 0.3,
             galaxy_model.light_profile.elliptical_comps.elliptical_comps_0: 0.5,
             galaxy_model.light_profile.elliptical_comps.elliptical_comps_1: 0.6,
-            galaxy_model.light_profile.intensity.value: 0.6,
-            galaxy_model.light_profile.effective_radius.value: 0.7,
+            galaxy_model.light_profile.intensity: 0.6,
+            galaxy_model.light_profile.effective_radius: 0.7,
             galaxy_model.light_profile.sersic_index: 0.5,
         }
 
@@ -197,15 +197,15 @@ class TestResultForArguments:
             galaxy_model.redshift.redshift: redshift_prior,
             galaxy_model.mass_profile.centre.centre_0: af.GaussianPrior(2, 1),
             galaxy_model.mass_profile.centre.centre_1: af.GaussianPrior(3, 1),
-            galaxy_model.mass_profile.einstein_radius.value: einstein_radius_prior,
+            galaxy_model.mass_profile.einstein_radius: einstein_radius_prior,
             galaxy_model.light_profile.elliptical_comps.elliptical_comps_0: af.GaussianPrior(
                 6, 1
             ),
             galaxy_model.light_profile.elliptical_comps.elliptical_comps_1: af.GaussianPrior(
                 6, 1
             ),
-            galaxy_model.light_profile.intensity.value: intensity_prior,
-            galaxy_model.light_profile.effective_radius.value: af.GaussianPrior(8, 1),
+            galaxy_model.light_profile.intensity: intensity_prior,
+            galaxy_model.light_profile.effective_radius: af.GaussianPrior(8, 1),
             galaxy_model.light_profile.sersic_index: af.GaussianPrior(9, 1),
         }
 
@@ -215,12 +215,10 @@ class TestResultForArguments:
 
         assert gaussian_galaxy_model_model.redshift.redshift == redshift_prior
         assert (
-            gaussian_galaxy_model_model.mass_profile.einstein_radius.value
+            gaussian_galaxy_model_model.mass_profile.einstein_radius
             == einstein_radius_prior
         )
-        assert (
-            gaussian_galaxy_model_model.light_profile.intensity.value == intensity_prior
-        )
+        assert gaussian_galaxy_model_model.light_profile.intensity == intensity_prior
 
 
 class TestPixelization:
@@ -369,8 +367,8 @@ class TestFixedProfiles:
             galaxy_model.redshift.redshift: 0.2,
             galaxy_model.model_light.elliptical_comps.elliptical_comps_0: 0.5,
             galaxy_model.model_light.elliptical_comps.elliptical_comps_1: 0.6,
-            galaxy_model.model_light.intensity.value: 0.6,
-            galaxy_model.model_light.effective_radius.value: 0.7,
+            galaxy_model.model_light.intensity: 0.6,
+            galaxy_model.model_light.effective_radius: 0.7,
             galaxy_model.model_light.sersic_index: 0.8,
             galaxy_model.model_light.centre.centre_0: 0,
             galaxy_model.model_light.centre.centre_1: 0,

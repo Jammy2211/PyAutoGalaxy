@@ -8,143 +8,6 @@ from autogalaxy import exc
 from autogalaxy.mock import mock
 
 
-class TestUnits:
-    def test__light_profiles_conversions(self):
-
-        profile_0 = ag.lp.EllipticalGaussian(
-            centre=(
-                ag.dim.Length(value=3.0, unit_length="arcsec"),
-                ag.dim.Length(value=3.0, unit_length="arcsec"),
-            ),
-            intensity=ag.dim.Luminosity(value=2.0, unit_luminosity="eps"),
-        )
-
-        profile_1 = ag.lp.EllipticalGaussian(
-            centre=(
-                ag.dim.Length(value=4.0, unit_length="arcsec"),
-                ag.dim.Length(value=4.0, unit_length="arcsec"),
-            ),
-            intensity=ag.dim.Luminosity(value=5.0, unit_luminosity="eps"),
-        )
-
-        galaxy = ag.Galaxy(light_0=profile_0, light_1=profile_1, redshift=1.0)
-
-        assert galaxy.light_0.centre == (3.0, 3.0)
-        assert galaxy.light_0.unit_length == "arcsec"
-        assert galaxy.light_0.intensity == 2.0
-        assert galaxy.light_0.intensity.unit_luminosity == "eps"
-        assert galaxy.light_1.centre == (4.0, 4.0)
-        assert galaxy.light_1.unit_length == "arcsec"
-        assert galaxy.light_1.intensity == 5.0
-        assert galaxy.light_1.intensity.unit_luminosity == "eps"
-
-        galaxy = galaxy.new_object_with_units_converted(
-            unit_length="kpc",
-            kpc_per_arcsec=2.0,
-            unit_luminosity="counts",
-            exposure_time=0.5,
-        )
-
-        assert galaxy.light_0.centre == (6.0, 6.0)
-        assert galaxy.light_0.unit_length == "kpc"
-        assert galaxy.light_0.intensity == 1.0
-        assert galaxy.light_0.intensity.unit_luminosity == "counts"
-        assert galaxy.light_1.centre == (8.0, 8.0)
-        assert galaxy.light_1.unit_length == "kpc"
-        assert galaxy.light_1.intensity == 2.5
-        assert galaxy.light_1.intensity.unit_luminosity == "counts"
-
-    def test__mass_profiles_conversions(self):
-
-        profile_0 = ag.mp.EllipticalSersic(
-            centre=(
-                ag.dim.Length(value=3.0, unit_length="arcsec"),
-                ag.dim.Length(value=3.0, unit_length="arcsec"),
-            ),
-            intensity=ag.dim.Luminosity(value=2.0, unit_luminosity="eps"),
-            mass_to_light_ratio=ag.dim.MassOverLuminosity(
-                value=5.0, unit_mass="angular", unit_luminosity="eps"
-            ),
-        )
-
-        profile_1 = ag.mp.EllipticalSersic(
-            centre=(
-                ag.dim.Length(value=4.0, unit_length="arcsec"),
-                ag.dim.Length(value=4.0, unit_length="arcsec"),
-            ),
-            intensity=ag.dim.Luminosity(value=5.0, unit_luminosity="eps"),
-            mass_to_light_ratio=ag.dim.MassOverLuminosity(
-                value=10.0, unit_mass="angular", unit_luminosity="eps"
-            ),
-        )
-
-        galaxy = ag.Galaxy(mass_0=profile_0, mass_1=profile_1, redshift=1.0)
-
-        assert galaxy.mass_0.centre == (3.0, 3.0)
-        assert galaxy.mass_0.unit_length == "arcsec"
-        assert galaxy.mass_0.intensity == 2.0
-        assert galaxy.mass_0.intensity.unit_luminosity == "eps"
-        assert galaxy.mass_0.mass_to_light_ratio == 5.0
-        assert galaxy.mass_0.mass_to_light_ratio.unit_mass == "angular"
-        assert galaxy.mass_1.centre == (4.0, 4.0)
-        assert galaxy.mass_1.unit_length == "arcsec"
-        assert galaxy.mass_1.intensity == 5.0
-        assert galaxy.mass_1.intensity.unit_luminosity == "eps"
-        assert galaxy.mass_1.mass_to_light_ratio == 10.0
-        assert galaxy.mass_1.mass_to_light_ratio.unit_mass == "angular"
-
-        galaxy = galaxy.new_object_with_units_converted(
-            unit_length="kpc",
-            kpc_per_arcsec=2.0,
-            unit_luminosity="counts",
-            exposure_time=0.5,
-            unit_mass="solMass",
-            critical_surface_density=3.0,
-        )
-
-        assert galaxy.mass_0.centre == (6.0, 6.0)
-        assert galaxy.mass_0.unit_length == "kpc"
-        assert galaxy.mass_0.intensity == 1.0
-        assert galaxy.mass_0.intensity.unit_luminosity == "counts"
-        assert galaxy.mass_0.mass_to_light_ratio == 30.0
-        assert galaxy.mass_0.mass_to_light_ratio.unit_mass == "solMass"
-        assert galaxy.mass_1.centre == (8.0, 8.0)
-        assert galaxy.mass_1.unit_length == "kpc"
-        assert galaxy.mass_1.intensity == 2.5
-        assert galaxy.mass_1.intensity.unit_luminosity == "counts"
-        assert galaxy.mass_1.mass_to_light_ratio == 60.0
-        assert galaxy.mass_1.mass_to_light_ratio.unit_mass == "solMass"
-
-    def test__galaxy_keeps_attributes(self):
-
-        profile_0 = ag.lp.EllipticalGaussian(
-            centre=(
-                ag.dim.Length(value=3.0, unit_length="arcsec"),
-                ag.dim.Length(value=3.0, unit_length="arcsec"),
-            ),
-            intensity=ag.dim.Luminosity(value=2.0, unit_luminosity="eps"),
-        )
-
-        galaxy = ag.Galaxy(
-            light_0=profile_0, redshift=1.0, pixelization=1, regularization=2
-        )
-
-        assert galaxy.redshift == 1.0
-        assert galaxy.pixelization == 1
-        assert galaxy.regularization == 2
-
-        galaxy = galaxy.new_object_with_units_converted(
-            unit_length="kpc",
-            kpc_per_arcsec=2.0,
-            unit_luminosity="counts",
-            exposure_time=0.5,
-        )
-
-        assert galaxy.redshift == 1.0
-        assert galaxy.pixelization == 1
-        assert galaxy.regularization == 2
-
-
 class TestLightProfiles:
     class TestProfileImage:
         def test__no_light_profiles__image_returned_as_0s_of_shape_grid(
@@ -224,65 +87,20 @@ class TestLightProfiles:
 
     class TestLuminosityWithin:
         def test__two_profile_galaxy__is_sum_of_individual_profiles(
-            self, lp_0, lp_1, gal_x1_lp, gal_x2_lp
+            self, lp_0, lp_1, gal_x2_lp
         ):
 
-            radius = ag.dim.Length(0.5, "arcsec")
+            lp_0_luminosity = lp_0.luminosity_within_circle(radius=0.5)
 
-            lp_luminosity = lp_0.luminosity_within_circle_in_units(
-                radius=radius, unit_luminosity="eps"
-            )
-            gal_luminosity = gal_x1_lp.luminosity_within_circle_in_units(
-                radius=radius, unit_luminosity="eps"
-            )
+            lp_1_luminosity = lp_1.luminosity_within_circle(radius=0.5)
+            gal_luminosity = gal_x2_lp.luminosity_within_circle(radius=0.5)
 
-            assert lp_luminosity == gal_luminosity
-
-        def test__radius_unit_conversions__multiply_by_kpc_per_arcsec(
-            self, lp_0, gal_x1_lp
-        ):
-            cosmology = mock.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0)
-
-            radius = ag.dim.Length(0.5, "arcsec")
-
-            lp_luminosity_arcsec = lp_0.luminosity_within_circle_in_units(radius=radius)
-            gal_luminosity_arcsec = gal_x1_lp.luminosity_within_circle_in_units(
-                radius=radius
-            )
-
-            assert lp_luminosity_arcsec == gal_luminosity_arcsec
-
-            radius = ag.dim.Length(0.5, "kpc")
-
-            lp_luminosity_kpc = lp_0.luminosity_within_circle_in_units(
-                radius=radius, redshift_object=0.5, cosmology=cosmology
-            )
-            gal_luminosity_kpc = gal_x1_lp.luminosity_within_circle_in_units(
-                radius=radius, cosmology=cosmology
-            )
-
-            assert lp_luminosity_kpc == gal_luminosity_kpc
-
-        def test__luminosity_unit_conversions__multiply_by_exposure_time(
-            self, lp_0, gal_x1_lp
-        ):
-
-            radius = 3.0
-
-            lp_luminosity_counts = lp_0.luminosity_within_circle_in_units(
-                radius=radius, unit_luminosity="counts", exposure_time=2.0
-            )
-
-            gal_luminosity_counts = gal_x1_lp.luminosity_within_circle_in_units(
-                radius=radius, unit_luminosity="counts", exposure_time=2.0
-            )
-
-            assert lp_luminosity_counts == gal_luminosity_counts
+            assert lp_0_luminosity + lp_1_luminosity == gal_luminosity
 
         def test__no_light_profile__returns_none(self):
             gal_no_lp = ag.Galaxy(redshift=0.5, mass=ag.mp.SphericalIsothermal())
 
-            assert gal_no_lp.luminosity_within_circle_in_units(radius=1.0) == None
+            assert gal_no_lp.luminosity_within_circle(radius=1.0) == None
 
     class TestSymmetricProfiles:
         def test_1d_symmetry(self):
@@ -834,93 +652,21 @@ class TestMassProfiles:
 
     class TestMassWithin:
         def test__two_profile_galaxy__is_sum_of_individual_profiles(
-            self, mp_0, gal_x1_mp, mp_1, gal_x2_mp
+            self, mp_0, mp_1, gal_x2_mp
         ):
-            radius = ag.dim.Length(0.5, "arcsec")
 
-            mp_mass = mp_0.mass_within_circle_in_units(
-                radius=radius, unit_mass="angular"
-            )
+            mp_0_mass = mp_0.mass_angular_within_circle(radius=0.5)
 
-            gal_mass = gal_x1_mp.mass_within_circle_in_units(
-                radius=radius, unit_mass="angular"
-            )
+            mp_1_mass = mp_1.mass_angular_within_circle(radius=0.5)
+            gal_mass = gal_x2_mp.mass_angular_within_circle(radius=0.5)
 
-            assert mp_mass == gal_mass
-
-        def test__radius_unit_conversions__multiply_by_kpc_per_arcsec(
-            self, mp_0, gal_x1_mp
-        ):
-            cosmology = mock.MockCosmology(
-                arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=1.0
-            )
-
-            radius = ag.dim.Length(0.5, "arcsec")
-
-            mp_mass_arcsec = mp_0.mass_within_circle_in_units(
-                radius=radius,
-                unit_mass="solMass",
-                redshift_object=0.5,
-                redshift_source=1.0,
-                cosmology=cosmology,
-            )
-
-            gal_mass_arcsec = gal_x1_mp.mass_within_circle_in_units(
-                radius=radius,
-                unit_mass="solMass",
-                redshift_source=1.0,
-                cosmology=cosmology,
-            )
-            assert mp_mass_arcsec == gal_mass_arcsec
-
-            radius = ag.dim.Length(0.5, "kpc")
-
-            mp_mass_kpc = mp_0.mass_within_circle_in_units(
-                radius=radius,
-                unit_mass="solMass",
-                redshift_object=0.5,
-                redshift_source=1.0,
-                cosmology=cosmology,
-            )
-
-            gal_mass_kpc = gal_x1_mp.mass_within_circle_in_units(
-                radius=radius,
-                unit_mass="solMass",
-                redshift_source=1.0,
-                cosmology=cosmology,
-            )
-            assert mp_mass_kpc == gal_mass_kpc
-
-        def test__mass_unit_conversions__same_as_individual_profile(
-            self, mp_0, gal_x1_mp
-        ):
-            cosmology = mock.MockCosmology(
-                arcsec_per_kpc=1.0, kpc_per_arcsec=1.0, critical_surface_density=2.0
-            )
-
-            radius = ag.dim.Length(0.5, "arcsec")
-
-            mp_mass_sol = mp_0.mass_within_circle_in_units(
-                radius=radius,
-                unit_mass="solMass",
-                redshift_object=0.5,
-                redshift_source=1.0,
-                cosmology=cosmology,
-            )
-
-            gal_mass_sol = gal_x1_mp.mass_within_circle_in_units(
-                radius=radius,
-                unit_mass="solMass",
-                redshift_source=1.0,
-                cosmology=cosmology,
-            )
-            assert mp_mass_sol == gal_mass_sol
+            assert mp_0_mass + mp_1_mass == gal_mass
 
         def test__no_mass_profile__returns_none(self):
             gal_no_mp = ag.Galaxy(redshift=0.5, light=ag.lp.SphericalSersic())
 
             with pytest.raises(exc.GalaxyException):
-                gal_no_mp.mass_within_circle_in_units(radius=1.0)
+                gal_no_mp.mass_angular_within_circle(radius=1.0)
 
     class TestStellar:
         def test__stellar_profiles__is_list_of_stellar_profiles(self):
@@ -953,7 +699,7 @@ class TestMassProfiles:
 
             assert galaxy.stellar_profiles == [stellar_0, stellar_1, stellar_2]
 
-        def test__stellar_mass_within_galaxy__is_sum_of_individual_profiles(
+        def test__stellar_mass_angular_within_galaxy__is_sum_of_individual_profiles(
             self, smp_0, smp_1
         ):
 
@@ -963,28 +709,9 @@ class TestMassProfiles:
                 non_stellar_profile=ag.mp.EllipticalIsothermal(einstein_radius=1.0),
             )
 
-            radius = ag.dim.Length(0.5, "arcsec")
+            stellar_mass_0 = smp_0.mass_angular_within_circle(radius=0.5)
 
-            stellar_mass_0 = smp_0.mass_within_circle_in_units(
-                radius=radius, unit_mass="angular"
-            )
-
-            gal_mass = galaxy.stellar_mass_within_circle_in_units(
-                radius=radius, unit_mass="angular"
-            )
-
-            assert stellar_mass_0 == gal_mass
-
-            stellar_mass_0 = smp_0.mass_within_circle_in_units(
-                radius=radius,
-                unit_mass="solMass",
-                redshift_object=0.5,
-                redshift_source=1.0,
-            )
-
-            gal_mass = galaxy.stellar_mass_within_circle_in_units(
-                radius=radius, unit_mass="solMass", redshift_source=1.0
-            )
+            gal_mass = galaxy.stellar_mass_angular_within_circle(radius=0.5)
 
             assert stellar_mass_0 == gal_mass
 
@@ -995,30 +722,23 @@ class TestMassProfiles:
                 non_stellar_profile=ag.mp.EllipticalIsothermal(einstein_radius=1.0),
             )
 
-            stellar_mass_1 = smp_1.mass_within_circle_in_units(
-                radius=radius,
-                unit_mass="solMass",
-                redshift_object=0.5,
-                redshift_source=1.0,
-            )
+            stellar_mass_1 = smp_1.mass_angular_within_circle(radius=0.5)
 
-            gal_mass = galaxy.stellar_mass_within_circle_in_units(
-                radius=radius, unit_mass="solMass", redshift_source=1.0
-            )
+            gal_mass = galaxy.stellar_mass_angular_within_circle(radius=0.5)
 
             assert stellar_mass_0 + stellar_mass_1 == gal_mass
 
             galaxy = ag.Galaxy(redshift=0.5)
 
             with pytest.raises(exc.GalaxyException):
-                galaxy.stellar_mass_within_circle_in_units(radius=1.0)
+                galaxy.stellar_mass_angular_within_circle(radius=1.0)
 
         def test__stellar_fraction_at_radius(self, dmp_0, dmp_1, smp_0, smp_1):
 
             galaxy = ag.Galaxy(redshift=0.5, stellar_0=smp_0, dark_0=dmp_0)
 
-            stellar_mass_0 = smp_0.mass_within_circle_in_units(radius=1.0)
-            dark_mass_0 = dmp_0.mass_within_circle_in_units(radius=1.0)
+            stellar_mass_0 = smp_0.mass_angular_within_circle(radius=1.0)
+            dark_mass_0 = dmp_0.mass_angular_within_circle(radius=1.0)
 
             stellar_fraction = galaxy.stellar_fraction_at_radius(radius=1.0)
 
@@ -1031,7 +751,7 @@ class TestMassProfiles:
             )
 
             stellar_fraction = galaxy.stellar_fraction_at_radius(radius=1.0)
-            stellar_mass_1 = smp_1.mass_within_circle_in_units(radius=1.0)
+            stellar_mass_1 = smp_1.mass_angular_within_circle(radius=1.0)
 
             assert stellar_fraction == pytest.approx(
                 (stellar_mass_0 + stellar_mass_1)
@@ -1048,7 +768,7 @@ class TestMassProfiles:
             )
 
             stellar_fraction = galaxy.stellar_fraction_at_radius(radius=1.0)
-            dark_mass_1 = dmp_1.mass_within_circle_in_units(radius=1.0)
+            dark_mass_1 = dmp_1.mass_angular_within_circle(radius=1.0)
 
             assert stellar_fraction == pytest.approx(
                 (stellar_mass_0 + stellar_mass_1)
@@ -1094,28 +814,9 @@ class TestMassProfiles:
                 non_dark_profile=ag.mp.EllipticalIsothermal(einstein_radius=1.0),
             )
 
-            radius = ag.dim.Length(0.5, "arcsec")
+            dark_mass_0 = dmp_0.mass_angular_within_circle(radius=0.5)
 
-            dark_mass_0 = dmp_0.mass_within_circle_in_units(
-                radius=radius, unit_mass="angular"
-            )
-
-            gal_mass = galaxy.dark_mass_within_circle_in_units(
-                radius=radius, unit_mass="angular"
-            )
-
-            assert dark_mass_0 == gal_mass
-
-            dark_mass_0 = dmp_0.mass_within_circle_in_units(
-                radius=radius,
-                unit_mass="solMass",
-                redshift_object=0.5,
-                redshift_source=1.0,
-            )
-
-            gal_mass = galaxy.dark_mass_within_circle_in_units(
-                radius=radius, unit_mass="solMass", redshift_source=1.0
-            )
+            gal_mass = galaxy.dark_mass_angular_within_circle(radius=0.5)
 
             assert dark_mass_0 == gal_mass
 
@@ -1126,30 +827,23 @@ class TestMassProfiles:
                 non_dark_profile=ag.mp.EllipticalIsothermal(einstein_radius=1.0),
             )
 
-            dark_mass_1 = dmp_1.mass_within_circle_in_units(
-                radius=radius,
-                unit_mass="solMass",
-                redshift_object=0.5,
-                redshift_source=1.0,
-            )
+            dark_mass_1 = dmp_1.mass_angular_within_circle(radius=0.5)
 
-            gal_mass = galaxy.dark_mass_within_circle_in_units(
-                radius=radius, unit_mass="solMass", redshift_source=1.0
-            )
+            gal_mass = galaxy.dark_mass_angular_within_circle(radius=0.5)
 
             assert dark_mass_0 + dark_mass_1 == gal_mass
 
             galaxy = ag.Galaxy(redshift=0.5)
 
             with pytest.raises(exc.GalaxyException):
-                galaxy.dark_mass_within_circle_in_units(radius=1.0)
+                galaxy.dark_mass_angular_within_circle(radius=1.0)
 
         def test__dark_fraction_at_radius(self, dmp_0, dmp_1, smp_0, smp_1):
 
             galaxy = ag.Galaxy(redshift=0.5, dark_0=dmp_0, stellar_0=smp_0)
 
-            stellar_mass_0 = smp_0.mass_within_circle_in_units(radius=1.0)
-            dark_mass_0 = dmp_0.mass_within_circle_in_units(radius=1.0)
+            stellar_mass_0 = smp_0.mass_angular_within_circle(radius=1.0)
+            dark_mass_0 = dmp_0.mass_angular_within_circle(radius=1.0)
 
             dark_fraction = galaxy.dark_fraction_at_radius(radius=1.0)
 
@@ -1160,7 +854,7 @@ class TestMassProfiles:
             )
 
             dark_fraction = galaxy.dark_fraction_at_radius(radius=1.0)
-            dark_mass_1 = dmp_1.mass_within_circle_in_units(radius=1.0)
+            dark_mass_1 = dmp_1.mass_angular_within_circle(radius=1.0)
 
             assert dark_fraction == pytest.approx(
                 (dark_mass_0 + dark_mass_1)
@@ -1177,7 +871,7 @@ class TestMassProfiles:
             )
 
             dark_fraction = galaxy.dark_fraction_at_radius(radius=1.0)
-            stellar_mass_1 = smp_1.mass_within_circle_in_units(radius=1.0)
+            stellar_mass_1 = smp_1.mass_angular_within_circle(radius=1.0)
 
             assert dark_fraction == pytest.approx(
                 (dark_mass_0 + dark_mass_1)
@@ -1576,8 +1270,9 @@ class TestMassProfiles:
 
             galaxy = ag.Galaxy(mass_profile_0=sis_0, mass_profile_1=sis_1, redshift=0.5)
 
-            assert galaxy.einstein_mass_in_units(unit_mass="angular") == pytest.approx(
-                np.pi * 3.0 ** 2.0, 1.0e-1
+            assert (
+                galaxy.einstein_mass_angular_via_tangential_critical_curve
+                == pytest.approx(np.pi * 3.0 ** 2.0, 1.0e-1)
             )
 
 

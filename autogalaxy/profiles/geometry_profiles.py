@@ -1,14 +1,11 @@
-import autofit as af
 import numpy as np
 from autoarray.structures import grids
-from autogalaxy import dimensions as dim
-from autogalaxy.util import cosmology_util, convert
+from autogalaxy import convert
 import typing
 
 
-class GeometryProfile(dim.DimensionsProfile):
-    @af.map_types
-    def __init__(self, centre: dim.Position = (0.0, 0.0)):
+class GeometryProfile:
+    def __init__(self, centre: typing.Tuple[float, float] = (0.0, 0.0)):
         """An abstract geometry profile, which describes profiles with y and x centre Cartesian coordinates
         
         Parameters
@@ -36,8 +33,7 @@ class GeometryProfile(dim.DimensionsProfile):
 
 
 class SphericalProfile(GeometryProfile):
-    @af.map_types
-    def __init__(self, centre: dim.Position = (0.0, 0.0)):
+    def __init__(self, centre: typing.Tuple[float, float] = (0.0, 0.0)):
         """ A spherical profile, which describes profiles with y and x centre Cartesian coordinates.
 
         Parameters
@@ -116,10 +112,9 @@ class SphericalProfile(GeometryProfile):
 
 
 class EllipticalProfile(SphericalProfile):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
     ):
         """ An elliptical profile, which describes profiles with y and x centre Cartesian coordinates, an axis-ratio \
@@ -154,7 +149,7 @@ class EllipticalProfile(SphericalProfile):
     @classmethod
     def from_axis_ratio_and_phi(
         cls,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         axis_ratio: float = 1.0,
         phi: float = 0.0,
     ):

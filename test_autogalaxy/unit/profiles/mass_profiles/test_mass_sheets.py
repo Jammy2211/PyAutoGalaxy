@@ -1,29 +1,13 @@
-from autoconf import conf
 import autogalaxy as ag
 import numpy as np
 import pytest
 from autogalaxy import exc
-
-from scipy.interpolate import griddata
 
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestMassSheet:
-    def test__constructor_and_units(self):
-
-        mass_sheet = ag.mp.MassSheet(centre=(1.0, 2.0), kappa=2.0)
-
-        assert mass_sheet.centre == (1.0, 2.0)
-        assert isinstance(mass_sheet.centre[0], ag.dim.Length)
-        assert isinstance(mass_sheet.centre[1], ag.dim.Length)
-        assert mass_sheet.centre[0].unit == "arcsec"
-        assert mass_sheet.centre[1].unit == "arcsec"
-
-        assert mass_sheet.kappa == 2.0
-        assert isinstance(mass_sheet.kappa, float)
-
     def test__convergence__correct_values(self):
 
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
@@ -271,16 +255,6 @@ class TestMassSheet:
 
 
 class TestExternalShear:
-    def test__constructor_and_units(self):
-
-        shear = ag.mp.ExternalShear(elliptical_comps=(0.05, 0.0))
-
-        assert shear.magnitude == pytest.approx(0.05, 1.0e-4)
-        assert isinstance(shear.magnitude, float)
-
-        assert shear.phi == pytest.approx(45.0, 1.0e-4)
-        assert isinstance(shear.phi, float)
-
     def test__convergence_returns_zeros(self):
 
         shear = ag.mp.ExternalShear(elliptical_comps=(0.1, 0.0))

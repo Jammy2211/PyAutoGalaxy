@@ -29,250 +29,51 @@ def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
 
 
 class TestMassWithinCircle:
-    def test__mass_in_angular_units__singular_isothermal_sphere__compare_to_analytic(
-        self
-    ):
+    def test__compare_to_analytic_and_grid_calculations(self):
 
         sis = ag.mp.SphericalIsothermal(einstein_radius=2.0)
 
-        radius = ag.dim.Length(2.0, "arcsec")
-
-        mass = sis.mass_within_circle_in_units(
-            radius=radius, redshift_object=0.5, redshift_source=1.0, unit_mass="angular"
-        )
-        assert math.pi * sis.einstein_radius * radius == pytest.approx(mass, 1e-3)
+        mass = sis.mass_angular_within_circle(radius=2.0)
+        assert math.pi * sis.einstein_radius * 2.0 == pytest.approx(mass, 1e-3)
 
         sis = ag.mp.SphericalIsothermal(einstein_radius=4.0)
 
-        radius = ag.dim.Length(4.0, "arcsec")
-
-        mass = sis.mass_within_circle_in_units(
-            radius=radius, redshift_object=0.5, redshift_source=1.0, unit_mass="angular"
-        )
-        assert math.pi * sis.einstein_radius * radius == pytest.approx(mass, 1e-3)
-
-    def test__mass_in_angular_units__singular_isothermal__compare_to_grid(self):
+        mass = sis.mass_angular_within_circle(radius=4.0)
+        assert math.pi * sis.einstein_radius * 4.0 == pytest.approx(mass, 1e-3)
 
         sis = ag.mp.SphericalIsothermal(einstein_radius=2.0)
-
-        radius = ag.dim.Length(1.0, "arcsec")
 
         mass_grid = mass_within_radius_of_profile_from_grid_calculation(
-            radius=radius, profile=sis
+            radius=1.0, profile=sis
         )
 
-        mass = sis.mass_within_circle_in_units(
-            radius=radius, redshift_object=0.5, redshift_source=1.0, unit_mass="angular"
-        )
+        mass = sis.mass_angular_within_circle(radius=1.0)
 
         assert mass_grid == pytest.approx(mass, 0.02)
-
-    def test__radius_units_conversions__mass_profile_updates_units_and_computes_correct_mass(
-        self
-    ):
-
-        cosmology = mock.MockCosmology(kpc_per_arcsec=2.0)
-
-        # arcsec -> arcsec
-
-        sis_arcsec = ag.mp.SphericalIsothermal(
-            centre=(ag.dim.Length(0.0, "arcsec"), ag.dim.Length(0.0, "arcsec")),
-            einstein_radius=ag.dim.Length(2.0, "arcsec"),
-        )
-
-        radius = ag.dim.Length(2.0, "arcsec")
-        mass = sis_arcsec.mass_within_circle_in_units(
-            radius=radius, redshift_object=0.5, redshift_source=1.0, unit_mass="angular"
-        )
-        assert math.pi * sis_arcsec.einstein_radius * radius == pytest.approx(
-            mass, 1e-3
-        )
-
-        # arcsec -> kpc
-
-        radius = ag.dim.Length(2.0, "kpc")
-        mass = sis_arcsec.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
-            cosmology=cosmology,
-        )
-        assert math.pi * sis_arcsec.einstein_radius * 1.0 == pytest.approx(mass, 1e-3)
-
-        # 2.0 arcsec = 4.0 kpc, same masses.
-
-        radius = ag.dim.Length(2.0, "arcsec")
-        mass_arcsec = sis_arcsec.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
-            cosmology=cosmology,
-        )
-        radius = ag.dim.Length(4.0, "kpc")
-        mass_kpc = sis_arcsec.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
-            cosmology=cosmology,
-        )
-        assert mass_arcsec == mass_kpc
-
-        # kpc -> kpc
-
-        sis_kpc = ag.mp.SphericalIsothermal(
-            centre=(ag.dim.Length(0.0, "kpc"), ag.dim.Length(0.0, "kpc")),
-            einstein_radius=ag.dim.Length(2.0, "kpc"),
-        )
-
-        sis_kpc.core_radius = ag.dim.Length(value=0.0, unit_length="kpc")
-
-        radius = ag.dim.Length(2.0, "kpc")
-        mass = sis_kpc.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
-            cosmology=cosmology,
-        )
-        assert math.pi * sis_kpc.einstein_radius * radius == pytest.approx(mass, 1e-3)
-
-        # kpc -> arcsec
-
-        radius = ag.dim.Length(2.0, "arcsec")
-        mass = sis_kpc.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
-            cosmology=cosmology,
-        )
-        assert 2.0 * math.pi * sis_kpc.einstein_radius * radius == pytest.approx(
-            mass, 1e-3
-        )
-
-        # 2.0 arcsec = 4.0 kpc, same masses.
-
-        radius = ag.dim.Length(2.0, "arcsec")
-        mass_arcsec = sis_kpc.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
-            cosmology=cosmology,
-        )
-        radius = ag.dim.Length(4.0, "kpc")
-        mass_kpc = sis_kpc.mass_within_circle_in_units(
-            radius=radius, redshift_object=0.5, redshift_source=1.0, unit_mass="angular"
-        )
-        assert mass_arcsec == mass_kpc
-
-    def test__mass_units_conversions__multiplies_by_critical_surface_density_factor(
-        self
-    ):
-
-        cosmology = mock.MockCosmology(critical_surface_density=2.0)
-
-        sis = ag.mp.SphericalIsothermal(einstein_radius=2.0)
-        radius = ag.dim.Length(2.0, "arcsec")
-
-        mass = sis.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
-            cosmology=cosmology,
-        )
-        assert math.pi * sis.einstein_radius * radius == pytest.approx(mass, 1e-3)
-
-        mass = sis.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="solMass",
-            cosmology=cosmology,
-        )
-        assert 2.0 * math.pi * sis.einstein_radius * radius == pytest.approx(mass, 1e-3)
-
-        mass = sis.mass_within_circle_in_units(
-            radius=radius,
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="solMass",
-            cosmology=cosmology,
-        )
-        assert 2.0 * math.pi * sis.einstein_radius * radius == pytest.approx(mass, 1e-3)
 
 
 class TestDensityBetweenAnnuli:
     def test__circular_annuli__sis__analyic_density_agrees(self):
 
-        cosmology = mock.MockCosmology(kpc_per_arcsec=2.0, critical_surface_density=2.0)
-
         einstein_radius = 1.0
-        sis_arcsec = ag.mp.SphericalIsothermal(
+
+        sis = ag.mp.SphericalIsothermal(
             centre=(0.0, 0.0), einstein_radius=einstein_radius
         )
 
-        inner_annuli_radius = ag.dim.Length(2.0, "arcsec")
-        outer_annuli_radius = ag.dim.Length(3.0, "arcsec")
+        inner_annuli_radius = 2.0
+        outer_annuli_radius = 3.0
 
         inner_mass = math.pi * einstein_radius * inner_annuli_radius
         outer_mass = math.pi * einstein_radius * outer_annuli_radius
 
-        density_between_annuli = sis_arcsec.density_between_circular_annuli_in_angular_units(
+        density_between_annuli = sis.density_between_circular_annuli(
             inner_annuli_radius=inner_annuli_radius,
             outer_annuli_radius=outer_annuli_radius,
-            unit_length="arcsec",
-            unit_mass="angular",
-            redshift_profile=0.5,
-            redshift_source=1.0,
-            cosmology=cosmology,
         )
 
         annuli_area = (np.pi * outer_annuli_radius ** 2.0) - (
             np.pi * inner_annuli_radius ** 2.0
-        )
-
-        assert (outer_mass - inner_mass) / annuli_area == pytest.approx(
-            density_between_annuli, 1e-4
-        )
-
-        density_between_annuli = sis_arcsec.density_between_circular_annuli_in_angular_units(
-            inner_annuli_radius=inner_annuli_radius,
-            outer_annuli_radius=outer_annuli_radius,
-            unit_length="arcsec",
-            unit_mass="solMass",
-            redshift_profile=0.5,
-            redshift_source=1.0,
-            cosmology=cosmology,
-        )
-
-        annuli_area = (np.pi * outer_annuli_radius ** 2.0) - (
-            np.pi * inner_annuli_radius ** 2.0
-        )
-
-        assert (2.0 * outer_mass - 2.0 * inner_mass) / annuli_area == pytest.approx(
-            density_between_annuli, 1e-4
-        )
-
-        density_between_annuli = sis_arcsec.density_between_circular_annuli_in_angular_units(
-            inner_annuli_radius=inner_annuli_radius,
-            outer_annuli_radius=outer_annuli_radius,
-            unit_length="kpc",
-            unit_mass="angular",
-            redshift_profile=0.5,
-            redshift_source=1.0,
-            cosmology=cosmology,
-        )
-
-        inner_mass = math.pi * 2.0 * einstein_radius * inner_annuli_radius
-        outer_mass = math.pi * 2.0 * einstein_radius * outer_annuli_radius
-
-        annuli_area = (np.pi * 2.0 * outer_annuli_radius ** 2.0) - (
-            np.pi * 2.0 * inner_annuli_radius ** 2.0
         )
 
         assert (outer_mass - inner_mass) / annuli_area == pytest.approx(
@@ -281,34 +82,16 @@ class TestDensityBetweenAnnuli:
 
     def test__circular_annuli__nfw_profile__compare_to_manual_mass(self):
 
-        cosmology = mock.MockCosmology(kpc_per_arcsec=2.0, critical_surface_density=2.0)
-
         nfw = ag.mp.EllipticalNFW(
             centre=(0.0, 0.0), elliptical_comps=(0.111111, 0.0), kappa_s=1.0
         )
 
-        inner_mass = nfw.mass_within_circle_in_units(
-            radius=ag.dim.Length(1.0),
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
-        )
+        inner_mass = nfw.mass_angular_within_circle(radius=1.0)
 
-        outer_mass = nfw.mass_within_circle_in_units(
-            radius=ag.dim.Length(2.0),
-            redshift_object=0.5,
-            redshift_source=1.0,
-            unit_mass="angular",
-        )
+        outer_mass = nfw.mass_angular_within_circle(radius=2.0)
 
-        density_between_annuli = nfw.density_between_circular_annuli_in_angular_units(
-            inner_annuli_radius=ag.dim.Length(1.0),
-            outer_annuli_radius=ag.dim.Length(2.0),
-            unit_length="arcsec",
-            unit_mass="angular",
-            redshift_profile=0.5,
-            redshift_source=1.0,
-            cosmology=cosmology,
+        density_between_annuli = nfw.density_between_circular_annuli(
+            inner_annuli_radius=1.0, outer_annuli_radius=2.0
         )
 
         annuli_area = (np.pi * 2.0 ** 2.0) - (np.pi * 1.0 ** 2.0)
@@ -331,7 +114,7 @@ class TestLensingObject:
 
         sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        assert sis.einstein_mass_in_units(unit_mass="angular") == pytest.approx(
+        assert sis.einstein_mass_angular_via_tangential_critical_curve == pytest.approx(
             np.pi * 2.0 ** 2.0, 1.0e-1
         )
 

@@ -14,6 +14,7 @@ from .total_mass_profiles import (
 )
 from .dark_mass_profiles import (
     EllipticalGeneralizedNFW,
+    #    EllipticalGeneralizedNFW3,
     SphericalGeneralizedNFW,
     SphericalTruncatedNFW,
     SphericalTruncatedNFWMCRDuffy,

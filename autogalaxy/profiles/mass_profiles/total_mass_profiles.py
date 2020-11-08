@@ -1,9 +1,6 @@
-import autofit as af
 import numpy as np
-from astropy import cosmology as cosmo
 from autoarray.structures import arrays
 from autoarray.structures import grids
-from autogalaxy import dimensions as dim
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
@@ -13,9 +10,10 @@ import typing
 
 
 class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
-    @af.map_types
     def __init__(
-        self, centre: dim.Position = (0.0, 0.0), einstein_radius: dim.Length = 1.0
+        self,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        einstein_radius: float = 1.0,
     ):
         """
         Represents a point-mass.
@@ -58,12 +56,12 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
 class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        einstein_radius: dim.Length = 1.0,
+        einstein_radius: float = 1.0,
         inner_slope: float = 1.5,
         outer_slope: float = 2.5,
-        break_radius: dim.Length = 0.01,
+        break_radius: float = 0.01,
     ):
         """
         Elliptical, homoeoidal mass model with an inner_slope
@@ -210,11 +208,11 @@ class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 class SphericalBrokenPowerLaw(EllipticalBrokenPowerLaw):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        einstein_radius: dim.Length = 1.0,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        einstein_radius: float = 1.0,
         inner_slope: float = 1.5,
         outer_slope: float = 2.5,
-        break_radius: dim.Length = 0.01,
+        break_radius: float = 0.01,
     ):
         """
         Elliptical, homoeoidal mass model with an inner_slope
@@ -238,14 +236,13 @@ class SphericalBrokenPowerLaw(EllipticalBrokenPowerLaw):
 
 
 class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        einstein_radius: dim.Length = 1.0,
+        einstein_radius: float = 1.0,
         slope: float = 2.0,
-        core_radius: dim.Length = 0.01,
+        core_radius: float = 0.01,
     ):
         """
         Represents a cored elliptical power-law density distribution
@@ -401,13 +398,12 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
 
 class SphericalCoredPowerLaw(EllipticalCoredPowerLaw):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        einstein_radius: dim.Length = 1.0,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        einstein_radius: float = 1.0,
         slope: float = 2.0,
-        core_radius: dim.Length = 0.01,
+        core_radius: float = 0.01,
     ):
         """
         Represents a cored spherical power-law density distribution
@@ -462,12 +458,11 @@ class SphericalCoredPowerLaw(EllipticalCoredPowerLaw):
 
 
 class EllipticalPowerLaw(EllipticalCoredPowerLaw):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        einstein_radius: dim.Length = 1.0,
+        einstein_radius: float = 1.0,
         slope: float = 2.0,
     ):
         """
@@ -491,7 +486,7 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
             elliptical_comps=elliptical_comps,
             einstein_radius=einstein_radius,
             slope=slope,
-            core_radius=dim.Length(0.0),
+            core_radius=0.0,
         )
 
     @grids.grid_like_to_structure
@@ -565,11 +560,10 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
 
 
 class SphericalPowerLaw(EllipticalPowerLaw):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        einstein_radius: dim.Length = 1.0,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        einstein_radius: float = 1.0,
         slope: float = 2.0,
     ):
         """
@@ -610,13 +604,12 @@ class SphericalPowerLaw(EllipticalPowerLaw):
 
 
 class EllipticalCoredIsothermal(EllipticalCoredPowerLaw):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        einstein_radius: dim.Length = 1.0,
-        core_radius: dim.Length = 0.01,
+        einstein_radius: float = 1.0,
+        core_radius: float = 0.01,
     ):
         """
         Represents a cored elliptical isothermal density distribution, which is equivalent to the elliptical power-law
@@ -644,12 +637,11 @@ class EllipticalCoredIsothermal(EllipticalCoredPowerLaw):
 
 
 class SphericalCoredIsothermal(SphericalCoredPowerLaw):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        einstein_radius: dim.Length = 1.0,
-        core_radius: dim.Length = 0.01,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        einstein_radius: float = 1.0,
+        core_radius: float = 0.01,
     ):
         """
         Represents a cored spherical isothermal density distribution, which is equivalent to the elliptical power-law
@@ -673,12 +665,11 @@ class SphericalCoredIsothermal(SphericalCoredPowerLaw):
 
 
 class EllipticalIsothermal(EllipticalPowerLaw):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        einstein_radius: dim.Length = 1.0,
+        einstein_radius: float = 1.0,
     ):
         """
         Represents an elliptical isothermal density distribution, which is equivalent to the elliptical power-law
@@ -742,9 +733,10 @@ class EllipticalIsothermal(EllipticalPowerLaw):
 
 
 class SphericalIsothermal(EllipticalIsothermal):
-    @af.map_types
     def __init__(
-        self, centre: dim.Position = (0.0, 0.0), einstein_radius: dim.Length = 1.0
+        self,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        einstein_radius: float = 1.0,
     ):
         """
         Represents a spherical isothermal density distribution, which is equivalent to the spherical power-law

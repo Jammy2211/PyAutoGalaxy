@@ -1,11 +1,9 @@
-import autofit as af
 import numpy as np
 from astropy import cosmology as cosmo
 from autoarray.structures import grids
-from autogalaxy import dimensions as dim
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
-from autogalaxy.util import convert
+from autogalaxy import convert
 import typing
 
 from scipy.interpolate import griddata
@@ -13,8 +11,9 @@ from autogalaxy import exc
 
 
 class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
-    @af.map_types
-    def __init__(self, centre: dim.Position = (0.0, 0.0), kappa: float = 0.0):
+    def __init__(
+        self, centre: typing.Tuple[float, float] = (0.0, 0.0), kappa: float = 0.0
+    ):
         """
         Represents a mass-sheet
 
@@ -53,7 +52,6 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
 
 # noinspection PyAbstractClass
 class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
-    @af.map_types
     def __init__(self, elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0)):
         """
         An `ExternalShear` term, to model the line-of-sight contribution of other galaxies / satellites.
@@ -83,13 +81,7 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
     def convergence_func(self, grid_radius):
         return 0.0
 
-    def average_convergence_of_1_radius_in_units(
-        self,
-        unit_length="arcsec",
-        redshift_profile=None,
-        cosmology=cosmo.Planck15,
-        **kwargs,
-    ):
+    def average_convergence_of_1_radius(self,):
         return dim.Length(value=0.0, unit_length=self.unit_length)
 
     @grids.grid_like_to_structure

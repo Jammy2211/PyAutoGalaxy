@@ -1,12 +1,9 @@
 from itertools import count
 
 import numpy as np
-from astropy import cosmology as cosmo
 from autoarray.inversion import pixelizations as pix
 from autoarray.structures import arrays, grids
 from autofit.mapper.model_object import ModelObject
-from autofit.text import formatter
-from autogalaxy import dimensions as dim
 from autogalaxy import exc
 from autogalaxy import lensing
 from autogalaxy.profiles import light_profiles as lp
@@ -15,7 +12,6 @@ from autogalaxy.profiles.mass_profiles import (
     dark_mass_profiles as dmp,
     stellar_mass_profiles as smp,
 )
-from autogalaxy.util import cosmology_util
 
 
 def is_light_profile(obj):
@@ -290,23 +286,11 @@ class Galaxy(ModelObject, lensing.LensingObject):
             if isinstance(profile, dmp.DarkProfile)
         ]
 
-    def stellar_mass_within_circle_in_units(
-        self,
-        radius: dim.Length,
-        unit_mass="angular",
-        redshift_source=None,
-        cosmology=cosmo.Planck15,
-    ):
+    def stellar_mass_angular_within_circle(self, radius: float):
         if self.has_stellar_profile:
             return sum(
                 [
-                    profile.mass_within_circle_in_units(
-                        radius=radius,
-                        unit_mass=unit_mass,
-                        redshift_object=self.redshift,
-                        redshift_source=redshift_source,
-                        cosmology=cosmology,
-                    )
+                    profile.mass_angular_within_circle(radius=radius)
                     for profile in self.stellar_profiles
                 ]
             )
@@ -315,23 +299,11 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 "You cannot perform a stellar mass-based calculation on a galaxy which does not have a stellar mass-profile"
             )
 
-    def dark_mass_within_circle_in_units(
-        self,
-        radius: dim.Length,
-        unit_mass="angular",
-        redshift_source=None,
-        cosmology=cosmo.Planck15,
-    ):
+    def dark_mass_angular_within_circle(self, radius: float):
         if self.has_dark_profile:
             return sum(
                 [
-                    profile.mass_within_circle_in_units(
-                        radius=radius,
-                        unit_mass=unit_mass,
-                        redshift_object=self.redshift,
-                        redshift_source=redshift_source,
-                        cosmology=cosmology,
-                    )
+                    profile.mass_angular_within_circle(radius=radius)
                     for profile in self.dark_profiles
                 ]
             )
@@ -345,49 +317,10 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     def dark_fraction_at_radius(self, radius):
 
-        stellar_mass = self.stellar_mass_within_circle_in_units(radius=radius)
-        dark_mass = self.dark_mass_within_circle_in_units(radius=radius)
+        stellar_mass = self.stellar_mass_angular_within_circle(radius=radius)
+        dark_mass = self.dark_mass_angular_within_circle(radius=radius)
 
         return dark_mass / (stellar_mass + dark_mass)
-
-    @property
-    def cosmology(self):
-        return cosmo.Planck15
-
-    @property
-    def arcsec_per_kpc(self):
-        return cosmology_util.arcsec_per_kpc_from(
-            redshift=self.redshift, cosmology=self.cosmology
-        )
-
-    @property
-    def kpc_per_arcsec(self):
-        return 1.0 / self.arcsec_per_kpc
-
-    @property
-    def unit_length(self):
-        if self.has_light_profile:
-            return self.light_profiles[0].unit_length
-        elif self.has_mass_profile:
-            return self.mass_profiles[0].unit_length
-        else:
-            return None
-
-    @property
-    def unit_luminosity(self):
-        if self.has_light_profile:
-            return self.light_profiles[0].unit_luminosity
-        elif self.has_mass_profile:
-            return self.mass_profiles[0].unit_luminosity
-        else:
-            return None
-
-    @property
-    def unit_mass(self):
-        if self.has_mass_profile:
-            return self.mass_profiles[0].unit_mass
-        else:
-            return None
 
     def __repr__(self):
         string = "Redshift: {}".format(self.redshift)
@@ -418,32 +351,6 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 self.mass_profiles == other.mass_profiles,
             )
         )
-
-    def new_object_with_units_converted(
-        self,
-        unit_length=None,
-        unit_luminosity=None,
-        unit_mass=None,
-        kpc_per_arcsec=None,
-        exposure_time=None,
-        critical_surface_density=None,
-    ):
-
-        new_dict = {
-            key: value.new_object_with_units_converted(
-                unit_length=unit_length,
-                unit_luminosity=unit_luminosity,
-                unit_mass=unit_mass,
-                kpc_per_arcsec=kpc_per_arcsec,
-                exposure_time=exposure_time,
-                critical_surface_density=critical_surface_density,
-            )
-            if is_light_profile(value) or is_mass_profile(value)
-            else value
-            for key, value in self.__dict__.items()
-        }
-
-        return self.__class__(**new_dict)
 
     @grids.grid_like_to_structure
     def image_from_grid(self, grid):
@@ -490,14 +397,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         return transformer.visibilities_from_image(image=image.in_1d_binned)
 
-    def luminosity_within_circle_in_units(
-        self,
-        radius: dim.Length,
-        unit_luminosity="eps",
-        exposure_time=None,
-        cosmology=cosmo.Planck15,
-        **kwargs,
-    ):
+    def luminosity_within_circle(self, radius: float):
         """
     Returns the total luminosity of the galaxy's light profiles within a circle of specified radius.
 
@@ -515,23 +415,15 @@ class Galaxy(ModelObject, lensing.LensingObject):
         if self.has_light_profile:
             return sum(
                 map(
-                    lambda p: p.luminosity_within_circle_in_units(
-                        radius=radius,
-                        unit_luminosity=unit_luminosity,
-                        redshift_object=self.redshift,
-                        exposure_time=exposure_time,
-                        cosmology=cosmology,
-                        kwargs=kwargs,
-                    ),
+                    lambda p: p.luminosity_within_circle(radius=radius),
                     self.light_profiles,
                 )
             )
-        return None
 
     @grids.grid_like_to_structure
     def convergence_from_grid(self, grid):
         """
-    Returns the summed convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
+        Returns the summed convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
         If the galaxy has no mass profiles, a grid of zeros is returned.
         
@@ -555,7 +447,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
     @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
         """
-    Returns the summed gravitational potential of the galaxy's mass profiles \
+        Returns the summed gravitational potential of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
 
         If the galaxy has no mass profiles, a grid of zeros is returned.
@@ -580,7 +472,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
     @grids.grid_like_to_structure
     def deflections_from_grid(self, grid):
         """
-    Returns the summed (y,x) deflection angles of the galaxy's mass profiles \
+        Returns the summed (y,x) deflection angles of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
 
         If the galaxy has no mass profiles, two grid of zeros are returned.
@@ -598,13 +490,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0], 2))
 
-    def mass_within_circle_in_units(
-        self,
-        radius: dim.Length,
-        unit_mass="angular",
-        redshift_source=None,
-        cosmology=cosmo.Planck15,
-    ):
+    def mass_angular_within_circle(self, radius: float):
         """ Integrate the mass profiles's convergence profile to compute the total mass within a circle of \
         specified radius. This is centred on the mass profile.
 
@@ -626,13 +512,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         if self.has_mass_profile:
             return sum(
                 map(
-                    lambda p: p.mass_within_circle_in_units(
-                        radius=radius,
-                        unit_mass=unit_mass,
-                        redshift_object=self.redshift,
-                        redshift_source=redshift_source,
-                        cosmology=cosmology,
-                    ),
+                    lambda p: p.mass_angular_within_circle(radius=radius),
                     self.mass_profiles,
                 )
             )

@@ -13,56 +13,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestGaussian:
-    def test__constructor_and_units(self):
-        gaussian = ag.lp.EllipticalGaussian(
-            centre=(1.0, 2.0),
-            elliptical_comps=(0.333333, 0.0),
-            intensity=1.0,
-            sigma=0.1,
-        )
-
-        assert gaussian.centre == (1.0, 2.0)
-        assert isinstance(gaussian.centre[0], ag.dim.Length)
-        assert isinstance(gaussian.centre[1], ag.dim.Length)
-        assert gaussian.centre[0].unit == "arcsec"
-        assert gaussian.centre[1].unit == "arcsec"
-
-        assert gaussian.axis_ratio == pytest.approx(0.5, 1.0e-4)
-        assert isinstance(gaussian.axis_ratio, float)
-
-        assert gaussian.phi == pytest.approx(45.0, 1.0e-4)
-        assert isinstance(gaussian.phi, float)
-
-        assert gaussian.intensity == 1.0
-        assert isinstance(gaussian.intensity, ag.dim.Luminosity)
-        assert gaussian.intensity.unit == "eps"
-
-        assert gaussian.sigma == 0.1
-        assert isinstance(gaussian.sigma, ag.dim.Length)
-        assert gaussian.sigma.unit_length == "arcsec"
-
-        gaussian = ag.lp.SphericalGaussian(centre=(1.0, 2.0), intensity=1.0, sigma=0.1)
-
-        assert gaussian.centre == (1.0, 2.0)
-        assert isinstance(gaussian.centre[0], ag.dim.Length)
-        assert isinstance(gaussian.centre[1], ag.dim.Length)
-        assert gaussian.centre[0].unit == "arcsec"
-        assert gaussian.centre[1].unit == "arcsec"
-
-        assert gaussian.axis_ratio == 1.0
-        assert isinstance(gaussian.axis_ratio, float)
-
-        assert gaussian.phi == 0.0
-        assert isinstance(gaussian.phi, float)
-
-        assert gaussian.intensity == 1.0
-        assert isinstance(gaussian.intensity, ag.dim.Luminosity)
-        assert gaussian.intensity.unit == "eps"
-
-        assert gaussian.sigma == 0.1
-        assert isinstance(gaussian.sigma, ag.dim.Length)
-        assert gaussian.sigma.unit_length == "arcsec"
-
     def test__intensity_as_radius__correct_value(self):
         gaussian = ag.lp.EllipticalGaussian(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
@@ -223,73 +173,6 @@ class TestGaussian:
 
 
 class TestSersic:
-    def test__constructor_and_units(self):
-        sersic = ag.lp.EllipticalSersic(
-            centre=(1.0, 2.0),
-            elliptical_comps=(0.333333, 0.0),
-            intensity=1.0,
-            effective_radius=0.6,
-            sersic_index=4.0,
-        )
-
-        assert sersic.centre == (1.0, 2.0)
-        assert isinstance(sersic.centre[0], ag.dim.Length)
-        assert isinstance(sersic.centre[1], ag.dim.Length)
-        assert sersic.centre[0].unit == "arcsec"
-        assert sersic.centre[1].unit == "arcsec"
-
-        assert sersic.axis_ratio == pytest.approx(0.5, 1.0e-4)
-        assert isinstance(sersic.axis_ratio, float)
-
-        assert sersic.phi == pytest.approx(45.0, 1.0e-4)
-        assert isinstance(sersic.phi, float)
-
-        assert sersic.intensity == 1.0
-        assert isinstance(sersic.intensity, ag.dim.Luminosity)
-        assert sersic.intensity.unit == "eps"
-
-        assert sersic.effective_radius == 0.6
-        assert isinstance(sersic.effective_radius, ag.dim.Length)
-        assert sersic.effective_radius.unit_length == "arcsec"
-
-        assert sersic.sersic_index == 4.0
-        assert isinstance(sersic.sersic_index, float)
-
-        assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
-        assert sersic.elliptical_effective_radius == pytest.approx(
-            0.6 / np.sqrt(0.5), 1.0e-4
-        )
-
-        sersic = ag.lp.SphericalSersic(
-            centre=(1.0, 2.0), intensity=1.0, effective_radius=0.6, sersic_index=4.0
-        )
-
-        assert sersic.centre == (1.0, 2.0)
-        assert isinstance(sersic.centre[0], ag.dim.Length)
-        assert isinstance(sersic.centre[1], ag.dim.Length)
-        assert sersic.centre[0].unit == "arcsec"
-        assert sersic.centre[1].unit == "arcsec"
-
-        assert sersic.axis_ratio == 1.0
-        assert isinstance(sersic.axis_ratio, float)
-
-        assert sersic.phi == 0.0
-        assert isinstance(sersic.phi, float)
-
-        assert sersic.intensity == 1.0
-        assert isinstance(sersic.intensity, ag.dim.Luminosity)
-        assert sersic.intensity.unit == "eps"
-
-        assert sersic.effective_radius == 0.6
-        assert isinstance(sersic.effective_radius, ag.dim.Length)
-        assert sersic.effective_radius.unit_length == "arcsec"
-
-        assert sersic.sersic_index == 4.0
-        assert isinstance(sersic.sersic_index, float)
-
-        assert sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
-        assert sersic.elliptical_effective_radius == 0.6
-
     def test__image_from_grid_radii__correct_value(self):
         sersic = ag.lp.EllipticalSersic(
             elliptical_comps=(0.0, 0.0),
@@ -382,72 +265,6 @@ class TestSersic:
 
 
 class TestExponential:
-    def test__constructor_and_units(self):
-        exponential = ag.lp.EllipticalExponential(
-            centre=(1.0, 2.0),
-            elliptical_comps=(0.333333, 0.0),
-            intensity=1.0,
-            effective_radius=0.6,
-        )
-
-        assert exponential.centre == (1.0, 2.0)
-        assert isinstance(exponential.centre[0], ag.dim.Length)
-        assert isinstance(exponential.centre[1], ag.dim.Length)
-        assert exponential.centre[0].unit == "arcsec"
-        assert exponential.centre[1].unit == "arcsec"
-
-        assert exponential.axis_ratio == pytest.approx(0.5, 1.0e-4)
-        assert isinstance(exponential.axis_ratio, float)
-
-        assert exponential.phi == pytest.approx(45.0, 1.0e-4)
-        assert isinstance(exponential.phi, float)
-
-        assert exponential.intensity == 1.0
-        assert isinstance(exponential.intensity, ag.dim.Luminosity)
-        assert exponential.intensity.unit == "eps"
-
-        assert exponential.effective_radius == 0.6
-        assert isinstance(exponential.effective_radius, ag.dim.Length)
-        assert exponential.effective_radius.unit_length == "arcsec"
-
-        assert exponential.sersic_index == 1.0
-        assert isinstance(exponential.sersic_index, float)
-
-        assert exponential.sersic_constant == pytest.approx(1.67838, 1e-3)
-        assert exponential.elliptical_effective_radius == pytest.approx(
-            0.6 / np.sqrt(0.5), 1.0e-4
-        )
-
-        exponential = ag.lp.SphericalExponential(
-            centre=(1.0, 2.0), intensity=1.0, effective_radius=0.6
-        )
-
-        assert exponential.centre == (1.0, 2.0)
-        assert isinstance(exponential.centre[0], ag.dim.Length)
-        assert isinstance(exponential.centre[1], ag.dim.Length)
-        assert exponential.centre[0].unit == "arcsec"
-        assert exponential.centre[1].unit == "arcsec"
-
-        assert exponential.axis_ratio == 1.0
-        assert isinstance(exponential.axis_ratio, float)
-
-        assert exponential.phi == 0.0
-        assert isinstance(exponential.phi, float)
-
-        assert exponential.intensity == 1.0
-        assert isinstance(exponential.intensity, ag.dim.Luminosity)
-        assert exponential.intensity.unit == "eps"
-
-        assert exponential.effective_radius == 0.6
-        assert isinstance(exponential.effective_radius, ag.dim.Length)
-        assert exponential.effective_radius.unit_length == "arcsec"
-
-        assert exponential.sersic_index == 1.0
-        assert isinstance(exponential.sersic_index, float)
-
-        assert exponential.sersic_constant == pytest.approx(1.67838, 1e-3)
-        assert exponential.elliptical_effective_radius == 0.6
-
     def test__image_from_grid_radii__correct_value(self):
         exponential = ag.lp.EllipticalExponential(
             elliptical_comps=(0.0, 0.0), intensity=1.0, effective_radius=0.6
@@ -538,72 +355,6 @@ class TestExponential:
 
 
 class TestDevVaucouleurs:
-    def test__constructor_and_units(self):
-        dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs(
-            centre=(1.0, 2.0),
-            elliptical_comps=(0.333333, 0.0),
-            intensity=1.0,
-            effective_radius=0.6,
-        )
-
-        assert dev_vaucouleurs.centre == (1.0, 2.0)
-        assert isinstance(dev_vaucouleurs.centre[0], ag.dim.Length)
-        assert isinstance(dev_vaucouleurs.centre[1], ag.dim.Length)
-        assert dev_vaucouleurs.centre[0].unit == "arcsec"
-        assert dev_vaucouleurs.centre[1].unit == "arcsec"
-
-        assert dev_vaucouleurs.axis_ratio == pytest.approx(0.5, 1.0e-4)
-        assert isinstance(dev_vaucouleurs.axis_ratio, float)
-
-        assert dev_vaucouleurs.phi == pytest.approx(45.0, 1.0e-4)
-        assert isinstance(dev_vaucouleurs.phi, float)
-
-        assert dev_vaucouleurs.intensity == 1.0
-        assert isinstance(dev_vaucouleurs.intensity, ag.dim.Luminosity)
-        assert dev_vaucouleurs.intensity.unit == "eps"
-
-        assert dev_vaucouleurs.effective_radius == 0.6
-        assert isinstance(dev_vaucouleurs.effective_radius, ag.dim.Length)
-        assert dev_vaucouleurs.effective_radius.unit_length == "arcsec"
-
-        assert dev_vaucouleurs.sersic_index == 4.0
-        assert isinstance(dev_vaucouleurs.sersic_index, float)
-
-        assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
-        assert dev_vaucouleurs.elliptical_effective_radius == pytest.approx(
-            0.6 / np.sqrt(0.5), 1.0e-4
-        )
-
-        dev_vaucouleurs = ag.lp.SphericalDevVaucouleurs(
-            centre=(1.0, 2.0), intensity=1.0, effective_radius=0.6
-        )
-
-        assert dev_vaucouleurs.centre == (1.0, 2.0)
-        assert isinstance(dev_vaucouleurs.centre[0], ag.dim.Length)
-        assert isinstance(dev_vaucouleurs.centre[1], ag.dim.Length)
-        assert dev_vaucouleurs.centre[0].unit == "arcsec"
-        assert dev_vaucouleurs.centre[1].unit == "arcsec"
-
-        assert dev_vaucouleurs.axis_ratio == 1.0
-        assert isinstance(dev_vaucouleurs.axis_ratio, float)
-
-        assert dev_vaucouleurs.phi == 0.0
-        assert isinstance(dev_vaucouleurs.phi, float)
-
-        assert dev_vaucouleurs.intensity == 1.0
-        assert isinstance(dev_vaucouleurs.intensity, ag.dim.Luminosity)
-        assert dev_vaucouleurs.intensity.unit == "eps"
-
-        assert dev_vaucouleurs.effective_radius == 0.6
-        assert isinstance(dev_vaucouleurs.effective_radius, ag.dim.Length)
-        assert dev_vaucouleurs.effective_radius.unit_length == "arcsec"
-
-        assert dev_vaucouleurs.sersic_index == 4.0
-        assert isinstance(dev_vaucouleurs.sersic_index, float)
-
-        assert dev_vaucouleurs.sersic_constant == pytest.approx(7.66924, 1e-3)
-        assert dev_vaucouleurs.elliptical_effective_radius == 0.6
-
     def test__image_from_grid_radii__correct_value(self):
         dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs(
             elliptical_comps=(0.0, 0.0), intensity=1.0, effective_radius=0.6
@@ -695,112 +446,6 @@ class TestDevVaucouleurs:
 
 
 class TestCoreSersic:
-    def test__constructor_and_units(self):
-        core_sersic = ag.lp.EllipticalCoreSersic(
-            centre=(1.0, 2.0),
-            elliptical_comps=(0.333333, 0.0),
-            intensity=1.0,
-            effective_radius=0.6,
-            sersic_index=4.0,
-            radius_break=0.01,
-            intensity_break=0.1,
-            gamma=1.0,
-            alpha=2.0,
-        )
-
-        assert core_sersic.centre == (1.0, 2.0)
-        assert isinstance(core_sersic.centre[0], ag.dim.Length)
-        assert isinstance(core_sersic.centre[1], ag.dim.Length)
-        assert core_sersic.centre[0].unit == "arcsec"
-        assert core_sersic.centre[1].unit == "arcsec"
-
-        assert core_sersic.axis_ratio == pytest.approx(0.5, 1.0e-4)
-        assert isinstance(core_sersic.axis_ratio, float)
-
-        assert core_sersic.phi == pytest.approx(45.0, 1.0e-4)
-        assert isinstance(core_sersic.phi, float)
-
-        assert core_sersic.intensity == 1.0
-        assert isinstance(core_sersic.intensity, ag.dim.Luminosity)
-        assert core_sersic.intensity.unit == "eps"
-
-        assert core_sersic.effective_radius == 0.6
-        assert isinstance(core_sersic.effective_radius, ag.dim.Length)
-        assert core_sersic.effective_radius.unit_length == "arcsec"
-
-        assert core_sersic.sersic_index == 4.0
-        assert isinstance(core_sersic.sersic_index, float)
-
-        assert core_sersic.radius_break == 0.01
-        assert isinstance(core_sersic.radius_break, ag.dim.Length)
-        assert core_sersic.radius_break.unit_length == "arcsec"
-
-        assert core_sersic.intensity_break == 0.1
-        assert isinstance(core_sersic.intensity_break, ag.dim.Luminosity)
-        assert core_sersic.intensity_break.unit == "eps"
-
-        assert core_sersic.gamma == 1.0
-        assert isinstance(core_sersic.gamma, float)
-
-        assert core_sersic.alpha == 2.0
-        assert isinstance(core_sersic.alpha, float)
-
-        assert core_sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
-        assert core_sersic.elliptical_effective_radius == pytest.approx(
-            0.6 / np.sqrt(0.5), 1.0e-4
-        )
-
-        core_sersic = ag.lp.SphericalCoreSersic(
-            centre=(1.0, 2.0),
-            intensity=1.0,
-            effective_radius=0.6,
-            sersic_index=4.0,
-            radius_break=0.01,
-            intensity_break=0.1,
-            gamma=1.0,
-            alpha=2.0,
-        )
-
-        assert core_sersic.centre == (1.0, 2.0)
-        assert isinstance(core_sersic.centre[0], ag.dim.Length)
-        assert isinstance(core_sersic.centre[1], ag.dim.Length)
-        assert core_sersic.centre[0].unit == "arcsec"
-        assert core_sersic.centre[1].unit == "arcsec"
-
-        assert core_sersic.axis_ratio == 1.0
-        assert isinstance(core_sersic.axis_ratio, float)
-
-        assert core_sersic.phi == 0.0
-        assert isinstance(core_sersic.phi, float)
-
-        assert core_sersic.intensity == 1.0
-        assert isinstance(core_sersic.intensity, ag.dim.Luminosity)
-        assert core_sersic.intensity.unit == "eps"
-
-        assert core_sersic.effective_radius == 0.6
-        assert isinstance(core_sersic.effective_radius, ag.dim.Length)
-        assert core_sersic.effective_radius.unit_length == "arcsec"
-
-        assert core_sersic.sersic_index == 4.0
-        assert isinstance(core_sersic.sersic_index, float)
-
-        assert core_sersic.radius_break == 0.01
-        assert isinstance(core_sersic.radius_break, ag.dim.Length)
-        assert core_sersic.radius_break.unit_length == "arcsec"
-
-        assert core_sersic.intensity_break == 0.1
-        assert isinstance(core_sersic.intensity_break, ag.dim.Luminosity)
-        assert core_sersic.intensity_break.unit == "eps"
-
-        assert core_sersic.gamma == 1.0
-        assert isinstance(core_sersic.gamma, float)
-
-        assert core_sersic.alpha == 2.0
-        assert isinstance(core_sersic.alpha, float)
-
-        assert core_sersic.sersic_constant == pytest.approx(7.66925, 1e-3)
-        assert core_sersic.elliptical_effective_radius == 0.6
-
     def test__image_from_grid_radii__correct_value(self):
         core_sersic = ag.lp.EllipticalCoreSersic(
             elliptical_comps=(0.0, 0.333333),
@@ -1043,172 +688,25 @@ def luminosity_from_radius_and_profile(radius, profile):
 
 
 class TestLuminosityWithinCircle:
-    def test__luminosity_in_eps__spherical_sersic_index_2__compare_to_analytic(self):
+    def test__compare_to_analytic_and_gridded_luminosity_calculations(self):
+
         sersic = ag.lp.SphericalSersic(
             intensity=3.0, effective_radius=2.0, sersic_index=2.0
         )
 
-        radius = ag.dim.Length(0.5, "arcsec")
-
         luminosity_analytic = luminosity_from_radius_and_profile(
-            radius=radius, profile=sersic
+            radius=0.5, profile=sersic
         )
 
-        luminosity_integral = sersic.luminosity_within_circle_in_units(
-            radius=0.5, unit_luminosity="eps"
-        )
+        luminosity_integral = sersic.luminosity_within_circle(radius=0.5)
 
         assert luminosity_analytic == pytest.approx(luminosity_integral, 1e-3)
 
-    def test__luminosity_in_eps__spherical_sersic_2__compare_to_grid(self):
-        sersic = ag.lp.SphericalSersic(
-            intensity=3.0, effective_radius=2.0, sersic_index=2.0
-        )
+        luminosity_grid = luminosity_from_radius_and_profile(radius=1.0, profile=sersic)
 
-        radius = ag.dim.Length(1.0, "arcsec")
-
-        luminosity_grid = luminosity_from_radius_and_profile(
-            radius=radius, profile=sersic
-        )
-
-        luminosity_integral = sersic.luminosity_within_circle_in_units(
-            radius=radius, unit_luminosity="eps"
-        )
+        luminosity_integral = sersic.luminosity_within_circle(radius=1.0)
 
         assert luminosity_grid == pytest.approx(luminosity_integral, 0.02)
-
-    def test__luminosity_units_conversions__uses_exposure_time(self):
-        sersic_eps = ag.lp.SphericalSersic(
-            intensity=ag.dim.Luminosity(3.0, "eps"),
-            effective_radius=2.0,
-            sersic_index=1.0,
-        )
-
-        radius = ag.dim.Length(0.5, "arcsec")
-
-        luminosity_analytic = luminosity_from_radius_and_profile(
-            radius=radius, profile=sersic_eps
-        )
-
-        luminosity_integral = sersic_eps.luminosity_within_circle_in_units(
-            radius=radius, unit_luminosity="eps", exposure_time=3.0
-        )
-
-        # eps -> eps
-
-        assert luminosity_analytic == pytest.approx(luminosity_integral, 1e-3)
-
-        # eps -> counts
-
-        luminosity_integral = sersic_eps.luminosity_within_circle_in_units(
-            radius=radius, unit_luminosity="counts", exposure_time=3.0
-        )
-
-        assert 3.0 * luminosity_analytic == pytest.approx(luminosity_integral, 1e-3)
-
-        sersic_counts = ag.lp.SphericalSersic(
-            intensity=ag.dim.Luminosity(3.0, "counts"),
-            effective_radius=2.0,
-            sersic_index=1.0,
-        )
-
-        radius = ag.dim.Length(0.5, "arcsec")
-
-        luminosity_analytic = luminosity_from_radius_and_profile(
-            radius=radius, profile=sersic_counts
-        )
-        luminosity_integral = sersic_counts.luminosity_within_circle_in_units(
-            radius=radius, unit_luminosity="eps", exposure_time=3.0
-        )
-
-        # counts -> eps
-
-        assert luminosity_analytic / 3.0 == pytest.approx(luminosity_integral, 1e-3)
-
-        luminosity_integral = sersic_counts.luminosity_within_circle_in_units(
-            radius=radius, unit_luminosity="counts", exposure_time=3.0
-        )
-
-        # counts -> counts
-
-        assert luminosity_analytic == pytest.approx(luminosity_integral, 1e-3)
-
-    def test__radius_units_conversions__light_profile_updates_units_and_computes_correct_luminosity(
-        self
-    ):
-        cosmology = mock.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0)
-
-        sersic_arcsec = ag.lp.SphericalSersic(
-            centre=(ag.dim.Length(0.0, "arcsec"), ag.dim.Length(0.0, "arcsec")),
-            intensity=ag.dim.Luminosity(3.0, "eps"),
-            effective_radius=ag.dim.Length(2.0, "arcsec"),
-            sersic_index=1.0,
-        )
-
-        sersic_kpc = ag.lp.SphericalSersic(
-            centre=(ag.dim.Length(0.0, "kpc"), ag.dim.Length(0.0, "kpc")),
-            intensity=ag.dim.Luminosity(3.0, "eps"),
-            effective_radius=ag.dim.Length(4.0, "kpc"),
-            sersic_index=1.0,
-        )
-
-        radius = ag.dim.Length(0.5, "arcsec")
-
-        luminosity_analytic = luminosity_from_radius_and_profile(
-            radius=radius, profile=sersic_arcsec
-        )
-
-        # arcsec -> arcsec
-
-        luminosity = sersic_arcsec.luminosity_within_circle_in_units(radius=radius)
-
-        assert luminosity_analytic == pytest.approx(luminosity, 1e-3)
-
-        # kpc -> arcsec
-
-        luminosity_analytic = luminosity_from_radius_and_profile(
-            radius=1.0, profile=sersic_kpc
-        )
-
-        luminosity = sersic_kpc.luminosity_within_circle_in_units(
-            radius=radius, redshift_object=0.5, cosmology=cosmology
-        )
-
-        assert luminosity_analytic == pytest.approx(luminosity, 1e-3)
-
-        radius = ag.dim.Length(0.5, "kpc")
-
-        luminosity_analytic = luminosity_from_radius_and_profile(
-            radius=radius, profile=sersic_kpc
-        )
-
-        # kpc -> kpc
-
-        luminosity = sersic_kpc.luminosity_within_circle_in_units(radius=radius)
-
-        assert luminosity_analytic == pytest.approx(luminosity, 1e-3)
-
-        # kpc -> arcsec
-
-        luminosity_analytic = luminosity_from_radius_and_profile(
-            radius=0.25, profile=sersic_arcsec
-        )
-
-        luminosity = sersic_arcsec.luminosity_within_circle_in_units(
-            radius=radius, redshift_object=0.5, cosmology=cosmology
-        )
-
-        assert luminosity_analytic == pytest.approx(luminosity, 1e-3)
-
-        radius = ag.dim.Length(2.0, "arcsec")
-        luminosity_arcsec = sersic_arcsec.luminosity_within_circle_in_units(
-            radius=radius, redshift_object=0.5, unit_mass="angular", cosmology=cosmology
-        )
-        radius = ag.dim.Length(4.0, "kpc")
-        luminosity_kpc = sersic_arcsec.luminosity_within_circle_in_units(
-            radius=radius, redshift_object=0.5, unit_mass="angular", cosmology=cosmology
-        )
-        assert luminosity_arcsec == luminosity_kpc
 
 
 class TestDecorators:

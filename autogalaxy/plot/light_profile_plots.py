@@ -42,12 +42,7 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
     )
 
     luminosities = list(
-        map(
-            lambda radius: light_profile.luminosity_within_circle_in_units(
-                radius=radius
-            ),
-            radii,
-        )
+        map(lambda radius: light_profile.luminosity_within_circle(radius=radius), radii)
     )
 
     plotter.plot_array(

@@ -1,6 +1,7 @@
 import math
 
 from astropy import constants
+from autogalaxy import convert
 from autogalaxy import exc
 
 
@@ -12,29 +13,18 @@ def kpc_per_arcsec_from(*, redshift, cosmology):
     return 1.0 / cosmology.arcsec_per_kpc_proper(z=redshift).value
 
 
-def angular_diameter_distance_to_earth_from(*, redshift, cosmology, unit_length="kpc"):
+def angular_diameter_distance_to_earth_in_kpc_from(*, redshift, cosmology):
 
     angular_diameter_distance_kpc = cosmology.angular_diameter_distance(z=redshift).to(
         "kpc"
     )
 
-    if unit_length is not "arcsec":
-        angular_diameter_distance = angular_diameter_distance_kpc.to(unit_length)
-    else:
-        arcsec_per_kpc = arcsec_per_kpc_from(redshift=redshift, cosmology=cosmology)
-        angular_diameter_distance = arcsec_per_kpc * angular_diameter_distance_kpc
-
-    return angular_diameter_distance.value
+    return angular_diameter_distance_kpc.value
 
 
-def angular_diameter_distance_between_redshifts_from(
-    *, redshift_0, redshift_1, cosmology, unit_length="kpc"
+def angular_diameter_distance_between_redshifts_in_kpc_from(
+    *, redshift_0, redshift_1, cosmology
 ):
-
-    if unit_length is "arcsec":
-        raise exc.UnitsException(
-            "The angular diameter distance between redshifts cannot have unit_label of length"
-        )
 
     angular_diameter_distance_between_redshifts_kpc = cosmology.angular_diameter_distance_z1z2(
         redshift_0, redshift_1
@@ -42,93 +32,70 @@ def angular_diameter_distance_between_redshifts_from(
         "kpc"
     )
 
-    if unit_length is not "arcsec":
-        angular_diameter_distance = angular_diameter_distance_between_redshifts_kpc.to(
-            unit_length
-        )
-
-    return dim.Length(angular_diameter_distance.value, unit_length)
+    return angular_diameter_distance_between_redshifts_kpc.value
 
 
-def cosmic_average_density_from(
-    *, redshift, cosmology, unit_length="arcsec", unit_mass="solMass"
-):
+def cosmic_average_density_from(*, redshift, cosmology):
 
-    cosmic_average_density_kpc = cosmology.critical_density(z=redshift).to(
-        unit_mass + " / kpc^3"
+    cosmic_average_density_kpc = (
+        cosmology.critical_density(z=redshift).to("solMass / kpc^3").value
     )
 
-    cosmic_average_density_kpc = dim.MassOverLength3(
-        value=cosmic_average_density_kpc.value, unit_length="kpc", unit_mass=unit_mass
+    kpc_per_arcsec = kpc_per_arcsec_from(redshift=redshift, cosmology=cosmology)
+
+    return cosmic_average_density_kpc * kpc_per_arcsec ** 3.0
+
+
+def cosmic_average_density_solar_mass_per_kpc3_from(*, redshift, cosmology):
+
+    cosmic_average_density_kpc = (
+        cosmology.critical_density(z=redshift).to("solMass / kpc^3").value
     )
 
-    if unit_length is not "arcsec":
-        cosmic_average_density = cosmic_average_density_kpc.convert(
-            unit_length=unit_length, unit_mass=unit_mass
-        )
-    else:
-        kpc_per_arcsec = kpc_per_arcsec_from(redshift=redshift, cosmology=cosmology)
-        cosmic_average_density = cosmic_average_density_kpc.convert(
-            unit_length=unit_length, unit_mass=unit_mass, kpc_per_arcsec=kpc_per_arcsec
-        )
-
-    return cosmic_average_density
+    return cosmic_average_density_kpc
 
 
 def critical_surface_density_between_redshifts_from(
-    *, redshift_0, redshift_1, cosmology, unit_length="arcsec", unit_mass="solMass"
+    *, redshift_0, redshift_1, cosmology
 ):
 
-    if unit_mass is "angular":
-        return dim.MassOverLength2(
-            value=1.0, unit_mass=unit_mass, unit_length=unit_length
-        )
+    critical_surface_density_kpc = critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+        redshift_0=redshift_0, redshift_1=redshift_1, cosmology=cosmology
+    )
+
+    kpc_per_arcsec = kpc_per_arcsec_from(redshift=redshift_0, cosmology=cosmology)
+
+    return critical_surface_density_kpc * kpc_per_arcsec ** 2.0
+
+
+def critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+    *, redshift_0, redshift_1, cosmology
+):
 
     const = constants.c.to("kpc / s") ** 2.0 / (
-        4 * math.pi * constants.G.to("kpc3 / (" + unit_mass + " s2)")
+        4 * math.pi * constants.G.to("kpc3 / (solMass s2)")
     )
 
-    angular_diameter_distance_of_redshift_0_to_earth_kpc = angular_diameter_distance_to_earth_from(
-        redshift=redshift_0, cosmology=cosmology, unit_length="kpc"
+    angular_diameter_distance_of_redshift_0_to_earth_kpc = angular_diameter_distance_to_earth_in_kpc_from(
+        redshift=redshift_0, cosmology=cosmology
     )
 
-    angular_diameter_distance_of_redshift_1_to_earth_kpc = angular_diameter_distance_to_earth_from(
-        redshift=redshift_1, cosmology=cosmology, unit_length="kpc"
+    angular_diameter_distance_of_redshift_1_to_earth_kpc = angular_diameter_distance_to_earth_in_kpc_from(
+        redshift=redshift_1, cosmology=cosmology
     )
 
-    angular_diameter_distance_between_redshifts_kpc = angular_diameter_distance_between_redshifts_from(
-        redshift_0=redshift_0,
-        redshift_1=redshift_1,
-        cosmology=cosmology,
-        unit_length="kpc",
+    angular_diameter_distance_between_redshifts_kpc = angular_diameter_distance_between_redshifts_in_kpc_from(
+        redshift_0=redshift_0, redshift_1=redshift_1, cosmology=cosmology
     )
 
-    critical_surface_density_kpc = (
+    return (
         const
         * angular_diameter_distance_of_redshift_1_to_earth_kpc
         / (
             angular_diameter_distance_between_redshifts_kpc
             * angular_diameter_distance_of_redshift_0_to_earth_kpc
         )
-    )
-
-    critical_surface_density_kpc = dim.MassOverLength2(
-        value=critical_surface_density_kpc.value, unit_mass=unit_mass, unit_length="kpc"
-    )
-
-    if unit_length not in "arcsec":
-
-        critical_surface_density = critical_surface_density_kpc.convert(
-            unit_length=unit_length, unit_mass=unit_mass
-        )
-
-    elif unit_length in "arcsec":
-        kpc_per_arcsec = kpc_per_arcsec_from(redshift=redshift_0, cosmology=cosmology)
-        critical_surface_density = critical_surface_density_kpc.convert(
-            unit_mass=unit_mass, unit_length=unit_length, kpc_per_arcsec=kpc_per_arcsec
-        )
-
-    return critical_surface_density
+    ).value
 
 
 def scaling_factor_between_redshifts_from(

@@ -1,9 +1,6 @@
-import autofit as af
 import numpy as np
 from astropy import cosmology as cosmo
 from autoarray.structures import grids
-from autofit.text import formatter
-from autogalaxy import dimensions as dim
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy.util import cosmology_util
 from scipy.integrate import quad
@@ -40,15 +37,7 @@ class LightProfile:
         """
         raise NotImplementedError("image_from_grid should be overridden")
 
-    def luminosity_within_circle_in_units(
-        self,
-        radius: dim.Length,
-        unit_luminosity="eps",
-        exposure_time=None,
-        redshift_profile=None,
-        cosmology=cosmo.Planck15,
-        **kwargs
-    ):
+    def luminosity_within_circle(self, radius: float):
         raise NotImplementedError()
 
 
@@ -56,12 +45,11 @@ class LightProfile:
 class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
     """Generic class for an elliptical light profiles"""
 
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
+        intensity: float = 0.1,
     ):
         """  Abstract class for an elliptical light-profile.
 
@@ -145,15 +133,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
         return transformer.visibilities_from_image(image=image.in_1d_binned)
 
-    def luminosity_within_circle_in_units(
-        self,
-        radius: dim.Length,
-        unit_luminosity="eps",
-        exposure_time=None,
-        redshift_object=None,
-        cosmology=cosmo.Planck15,
-        **kwargs
-    ):
+    def luminosity_within_circle(self, radius: float) -> float:
         """Integrate the light profile to compute the total luminosity within a circle of specified radius. This is \
         centred on the light profile's centre.
 
@@ -172,26 +152,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
             The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
         """
 
-        if not hasattr(radius, "unit_length"):
-            radius = dim.Length(value=radius, unit_length="arcsec")
-
-        if self.unit_length is not radius.unit_length:
-
-            kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
-                redshift=redshift_object, cosmology=cosmology
-            )
-
-            radius = radius.convert(
-                unit_length=self.unit_length, kpc_per_arcsec=kpc_per_arcsec
-            )
-
-        luminosity = dim.Luminosity(
-            value=quad(self.luminosity_integral, a=0.0, b=radius)[0],
-            unit_luminosity=self.unit_luminosity,
-        )
-        return luminosity.convert(
-            unit_luminosity=unit_luminosity, exposure_time=exposure_time
-        )
+        return quad(func=self.luminosity_integral, a=0.0, b=radius)[0]
 
     def luminosity_integral(self, x):
         """Routine to integrate the luminosity of an elliptical light profile.
@@ -201,13 +162,12 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
 
 class EllipticalGaussian(EllipticalLightProfile):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        sigma: dim.Length = 0.01,
+        intensity: float = 0.1,
+        sigma: float = 0.01,
     ):
         """ The elliptical Gaussian light profile.
 
@@ -268,12 +228,11 @@ class EllipticalGaussian(EllipticalLightProfile):
 
 
 class SphericalGaussian(EllipticalGaussian):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        sigma: dim.Length = 0.01,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        sigma: float = 0.01,
     ):
         """ The spherical Gaussian light profile.
 
@@ -292,13 +251,12 @@ class SphericalGaussian(EllipticalGaussian):
 
 
 class AbstractEllipticalSersic(EllipticalLightProfile):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
         sersic_index: float = 4.0,
     ):
         """ Abstract base class for an elliptical Sersic light profile, used for computing its effective radius and
@@ -377,13 +335,12 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
 
 
 class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
         sersic_index: float = 4.0,
     ):
         """ The elliptical Sersic light profile.
@@ -454,12 +411,11 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
 
 
 class SphericalSersic(EllipticalSersic):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
         sersic_index: float = 4.0,
     ):
         """ The spherical Sersic light profile.
@@ -485,13 +441,12 @@ class SphericalSersic(EllipticalSersic):
 
 
 class EllipticalExponential(EllipticalSersic):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
     ):
         """ The elliptical exponential profile.
 
@@ -519,12 +474,11 @@ class EllipticalExponential(EllipticalSersic):
 
 
 class SphericalExponential(EllipticalExponential):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
     ):
         """ The spherical exponential profile.
 
@@ -548,13 +502,12 @@ class SphericalExponential(EllipticalExponential):
 
 
 class EllipticalDevVaucouleurs(EllipticalSersic):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
     ):
         """ The elliptical Dev Vaucouleurs light profile.
 
@@ -582,12 +535,11 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
 
 
 class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
     ):
         """ The spherical Dev Vaucouleurs light profile.
 
@@ -611,16 +563,15 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
 
 
 class EllipticalCoreSersic(EllipticalSersic):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
         sersic_index: float = 4.0,
-        radius_break: dim.Length = 0.01,
-        intensity_break: dim.Luminosity = 0.05,
+        radius_break: float = 0.01,
+        intensity_break: float = 0.05,
         gamma: float = 0.25,
         alpha: float = 3.0,
     ):
@@ -660,21 +611,6 @@ class EllipticalCoreSersic(EllipticalSersic):
         self.intensity_break = intensity_break
         self.alpha = alpha
         self.gamma = gamma
-
-    def new_profile_with_units_distance_converted(
-        self, units_distance, kpc_per_arcsec=None
-    ):
-        self.units_distance = units_distance
-        self.centre = self.centre.convert(
-            unit_distance=units_distance, kpc_per_arcsec=kpc_per_arcsec
-        )
-        self.effective_radius = self.effective_radius.convert(
-            unit_distance=units_distance, kpc_per_arcsec=kpc_per_arcsec
-        )
-        self.radius_break = self.radius_break.convert(
-            unit_distance=units_distance, kpc_per_arcsec=kpc_per_arcsec
-        )
-        return self
 
     @property
     def intensity_prime(self):
@@ -732,15 +668,14 @@ class EllipticalCoreSersic(EllipticalSersic):
 
 
 class SphericalCoreSersic(EllipticalCoreSersic):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
         sersic_index: float = 4.0,
-        radius_break: dim.Length = 0.01,
-        intensity_break: dim.Luminosity = 0.05,
+        radius_break: float = 0.01,
+        intensity_break: float = 0.05,
         gamma: float = 0.25,
         alpha: float = 3.0,
     ):
@@ -784,14 +719,13 @@ class SphericalCoreSersic(EllipticalCoreSersic):
 
 
 class EllipticalChameleon(EllipticalLightProfile):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        core_radius_0: dim.Length = 0.01,
-        core_radius_1: dim.Length = 0.005,
+        intensity: float = 0.1,
+        core_radius_0: float = 0.01,
+        core_radius_1: float = 0.05,
     ):
         """ The elliptical Chameleon light profile.
 
@@ -872,13 +806,12 @@ class EllipticalChameleon(EllipticalLightProfile):
 
 
 class SphericalChameleon(EllipticalChameleon):
-    @af.map_types
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        core_radius_0: dim.Length = 0.01,
-        core_radius_1: dim.Length = 0.005,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        core_radius_0: float = 0.01,
+        core_radius_1: float = 0.05,
     ):
         """ The spherical Chameleon light profile.
 

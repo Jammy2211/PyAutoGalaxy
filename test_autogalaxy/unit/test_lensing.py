@@ -2,27 +2,23 @@ import typing
 
 import numpy as np
 import pytest
-from astropy import cosmology as cosmo
 from pyquad import quad_grid
 from skimage import measure
 
-import autofit as af
 import autogalaxy as ag
 from autoarray.structures import grids
 from autogalaxy import lensing
-from autogalaxy.mock import mock
 from autogalaxy.profiles import geometry_profiles
 
 
 class MockEllipticalIsothermal(
     geometry_profiles.EllipticalProfile, lensing.LensingObject
 ):
-    @af.map_types
     def __init__(
         self,
-        centre: ag.dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        einstein_radius: ag.dim.Length = 1.0,
+        einstein_radius: float = 1.0,
     ):
         """
         Abstract class for elliptical mass profiles.
@@ -39,10 +35,6 @@ class MockEllipticalIsothermal(
             centre=centre, elliptical_comps=elliptical_comps
         )
         self.einstein_radius = einstein_radius
-
-    @property
-    def unit_mass(self):
-        return "angular"
 
     @property
     def einstein_radius_rescaled(self):
@@ -162,9 +154,10 @@ class MockEllipticalIsothermal(
 
 
 class MockSphericalIsothermal(MockEllipticalIsothermal):
-    @af.map_types
     def __init__(
-        self, centre: ag.dim.Position = (0.0, 0.0), einstein_radius: ag.dim.Length = 1.0
+        self,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        einstein_radius: float = 1.0,
     ):
         """
         Abstract class for elliptical mass profiles.
@@ -841,95 +834,27 @@ class TestEinsteinRadiusMassfrom:
             area_calc, 1e-1
         )
 
-    def test__einstein_radius_from_tangential_critical_curve__spherical_isothermal(
-        self
-    ):
+    def test__einstein_radius_from_tangential_critical_curve_values(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        einstein_radius = sis.einstein_radius_in_units(unit_length="arcsec")
+        einstein_radius = sis.einstein_radius_via_tangential_critical_curve
 
         assert einstein_radius == pytest.approx(2.0, 1e-1)
 
-        cosmology = mock.MockCosmology(arcsec_per_kpc=2.0, kpc_per_arcsec=0.5)
-
-        einstein_radius = sis.einstein_radius_in_units(
-            unit_length="kpc", redshift_object=2.0, cosmology=cosmology
-        )
-
-        assert einstein_radius == pytest.approx(1.0, 1e-1)
-
-    def test__compare_einstein_radius_from_tangential_critical_curve_and_rescaled__sie(
-        self
-    ):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2.0, elliptical_comps=(0.0, -0.25)
         )
 
-        einstein_radius = sie.einstein_radius_in_units(unit_length="arcsec")
+        einstein_radius = sie.einstein_radius_via_tangential_critical_curve
 
         assert einstein_radius == pytest.approx(1.9360, 1e-1)
 
-        cosmology = mock.MockCosmology(arcsec_per_kpc=2.0, kpc_per_arcsec=0.5)
-
-        einstein_radius = sie.einstein_radius_in_units(
-            unit_length="kpc", redshift_object=2.0, cosmology=cosmology
-        )
-
-        assert einstein_radius == pytest.approx(0.5 * 1.9360, 1e-1)
-
-    def test__einstein_mass_from_tangential_critical_curve_and_kappa__spherical_isothermal(
-        self
-    ):
+    def test__einstein_mass_from_tangential_critical_curve_values(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        einstein_mass = sis.einstein_mass_in_units(
-            redshift_object=1, redshift_source=2, unit_mass="angular"
-        )
+        einstein_mass = sis.einstein_mass_angular_via_tangential_critical_curve
 
         assert einstein_mass == pytest.approx(np.pi * 2.0 ** 2.0, 1e-1)
-
-        cosmology = mock.MockCosmology(
-            kpc_per_arcsec=1.0, arcsec_per_kpc=1.0, critical_surface_density=0.5
-        )
-
-        einstein_mass = sis.einstein_mass_in_units(
-            redshift_object=1,
-            redshift_source=2,
-            unit_mass="solMass",
-            cosmology=cosmology,
-        )
-
-        assert einstein_mass == pytest.approx(2.0 * np.pi * 2.0 ** 2.0, 1e-1)
-
-    def test__einstein_mass_from_tangential_critical_curve_and_radius_rescaled_calc__sie(
-        self
-    ):
-        sie = MockEllipticalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=2.0, elliptical_comps=(0.0, -0.25)
-        )
-
-        einstein_mass_from_critical_curve = sie.einstein_mass_in_units(
-            redshift_object=1,
-            redshift_source=2,
-            unit_mass="solMass",
-            cosmology=cosmo.Planck15,
-        )
-
-        einstein_radius = sie.einstein_radius_in_units(unit_length="arcsec")
-
-        sigma_crit = ag.util.cosmology.critical_surface_density_between_redshifts_from(
-            redshift_0=1,
-            redshift_1=2,
-            unit_length="arcsec",
-            unit_mass="solMass",
-            cosmology=cosmo.Planck15,
-        )
-
-        einstein_mass_vie_einstein_radius = np.pi * einstein_radius ** 2 * sigma_crit
-
-        assert einstein_mass_vie_einstein_radius == pytest.approx(
-            einstein_mass_from_critical_curve, 1e-1
-        )
 
 
 class TestGridBinning:

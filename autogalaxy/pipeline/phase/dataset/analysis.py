@@ -45,7 +45,7 @@ class Analysis(af.Analysis):
             return instance.hyper_background_noise
 
     def plane_for_instance(self, instance):
-        return pl.Plane(galaxies=instance.galaxies, cosmology=self.cosmology)
+        return pl.Plane(galaxies=instance.galaxies)
 
     def associate_hyper_images(self, instance: af.ModelInstance) -> af.ModelInstance:
         """

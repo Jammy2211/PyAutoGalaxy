@@ -10,47 +10,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestPointMass:
-    def test__constructor_and_units(self):
-        point_mass = ag.mp.PointMass(centre=(1.0, 2.0), einstein_radius=2.0)
-
-        assert point_mass.centre == (1.0, 2.0)
-        assert isinstance(point_mass.centre[0], ag.dim.Length)
-        assert isinstance(point_mass.centre[1], ag.dim.Length)
-        assert point_mass.centre[0].unit == "arcsec"
-        assert point_mass.centre[1].unit == "arcsec"
-
-        assert point_mass.einstein_radius == 2.0
-        assert isinstance(point_mass.einstein_radius, ag.dim.Length)
-        assert point_mass.einstein_radius.unit_length == "arcsec"
-
-    # def test__converence__correct_values(self):
-    #
-    #     grid = np.array([[0.0, -1.0], [0.0, 0.0], [0.0, 1.0]])
-    #
-    #     point_mass = ag.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
-    #
-    #     convergence = point_mass.convergence_from_grid(
-    #         grid=grid)
-    #
-    #     assert convergence == pytest.approx(np.array([0.0, np.pi, 0.0]), 1e-3)
-    #
-    #     point_mass = ag.mp.PointMass(centre=(0.0, 0.8), einstein_radius=2.0)
-    #
-    #     convergence = point_mass.convergence_from_grid(
-    #         grid=grid)
-    #
-    #     assert convergence == pytest.approx(np.array([0.0, 0.0, 4.0*np.pi]), 1e-3)
-    #
-    #     grid = ag.Grid.uniform(shape_2d=(5,5), pixel_scales=1.0, sub_size=2)
-    #
-    #     point_mass = ag.mp.PointMass(centre=(1.0, -1.0), einstein_radius=1.0)
-    #
-    #     convergence = point_mass.convergence_from_grid(
-    #         grid=grid)
-    #
-    #     assert convergence[14] == 0.0
-    #     assert convergence[24] == np.pi
-
     def test__deflections__correct_values(self):
 
         # The radial coordinate at (1.0, 1.0) is sqrt(2)
@@ -492,71 +451,6 @@ class TestBrokenPowerLaw:
 
 
 class TestCoredPowerLaw:
-    def test__constructor_and_units(self):
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
-            centre=(1.0, 2.0),
-            elliptical_comps=(0.333333, 0.0),
-            einstein_radius=1.0,
-            slope=2.2,
-            core_radius=0.1,
-        )
-
-        assert cored_power_law.centre == (1.0, 2.0)
-        assert isinstance(cored_power_law.centre[0], ag.dim.Length)
-        assert isinstance(cored_power_law.centre[1], ag.dim.Length)
-        assert cored_power_law.centre[0].unit == "arcsec"
-        assert cored_power_law.centre[1].unit == "arcsec"
-
-        assert cored_power_law.axis_ratio == pytest.approx(0.5, 1.0e-4)
-        assert isinstance(cored_power_law.axis_ratio, float)
-
-        assert cored_power_law.phi == pytest.approx(45.0, 1.0e-4)
-        assert isinstance(cored_power_law.phi, float)
-
-        assert cored_power_law.einstein_radius == 1.0
-        assert isinstance(cored_power_law.einstein_radius, ag.dim.Length)
-        assert cored_power_law.einstein_radius.unit_length == "arcsec"
-
-        assert cored_power_law.slope == 2.2
-        assert isinstance(cored_power_law.slope, float)
-
-        assert cored_power_law.core_radius == 0.1
-        assert isinstance(cored_power_law.core_radius, ag.dim.Length)
-        assert cored_power_law.core_radius.unit_length == "arcsec"
-
-        assert cored_power_law.einstein_radius_rescaled == pytest.approx(
-            0.53333333, 1.0e-4
-        )
-
-        cored_power_law = ag.mp.SphericalCoredPowerLaw(
-            centre=(1.0, 2.0), einstein_radius=1.0, slope=2.2, core_radius=0.1
-        )
-
-        assert cored_power_law.centre == (1.0, 2.0)
-        assert isinstance(cored_power_law.centre[0], ag.dim.Length)
-        assert isinstance(cored_power_law.centre[1], ag.dim.Length)
-        assert cored_power_law.centre[0].unit == "arcsec"
-        assert cored_power_law.centre[1].unit == "arcsec"
-
-        assert cored_power_law.axis_ratio == 1.0
-        assert isinstance(cored_power_law.axis_ratio, float)
-
-        assert cored_power_law.phi == 0.0
-        assert isinstance(cored_power_law.phi, float)
-
-        assert cored_power_law.einstein_radius == 1.0
-        assert isinstance(cored_power_law.einstein_radius, ag.dim.Length)
-        assert cored_power_law.einstein_radius.unit_length == "arcsec"
-
-        assert cored_power_law.slope == 2.2
-        assert isinstance(cored_power_law.slope, float)
-
-        assert cored_power_law.core_radius == 0.1
-        assert isinstance(cored_power_law.core_radius, ag.dim.Length)
-        assert cored_power_law.core_radius.unit_length == "arcsec"
-
-        assert cored_power_law.einstein_radius_rescaled == pytest.approx(0.4, 1.0e-4)
-
     def test__convergence_correct_values(self):
 
         cored_power_law = ag.mp.SphericalCoredPowerLaw(
@@ -804,53 +698,6 @@ class TestCoredPowerLaw:
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
-    def test__multiple_coordinates_in__multiple_quantities_out(self):
-
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.333333),
-            einstein_radius=1.0,
-            slope=2.3,
-            core_radius=0.2,
-        )
-
-        convergence = cored_power_law.convergence_from_grid(
-            grid=np.array([[0.0, 1.0], [0.0, 1.0]])
-        )
-
-        assert convergence[0] == pytest.approx(0.45492, 1e-3)
-        assert convergence[1] == pytest.approx(0.45492, 1e-3)
-
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
-            centre=(0.2, -0.2),
-            elliptical_comps=(-0.216506, -0.125),
-            einstein_radius=0.5,
-            slope=2.4,
-            core_radius=0.5,
-        )
-
-        convergence = cored_power_law.potential_from_grid(
-            grid=np.array([[0.1625, 0.1625], [0.1625, 0.1625]])
-        )
-
-        assert convergence[0] == pytest.approx(0.02319, 1e-3)
-        assert convergence[1] == pytest.approx(0.02319, 1e-3)
-
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
-            centre=(-0.7, 0.5),
-            elliptical_comps=(0.152828, -0.088235),
-            einstein_radius=1.3,
-            slope=1.8,
-            core_radius=0.2,
-        )
-        deflections = cored_power_law.deflections_from_grid(
-            grid=np.array([[0.1625, 0.1625], [0.1625, 0.1625]])
-        )
-        assert deflections[0, 0] == pytest.approx(0.9869, 1e-3)
-        assert deflections[0, 1] == pytest.approx(-0.54882, 1e-3)
-        assert deflections[1, 0] == pytest.approx(0.9869, 1e-3)
-        assert deflections[1, 1] == pytest.approx(-0.54882, 1e-3)
-
     def test__spherical_and_elliptical_match(self):
         elliptical = ag.mp.EllipticalCoredPowerLaw(
             centre=(1.1, 1.1),
@@ -907,68 +754,6 @@ class TestCoredPowerLaw:
 
 
 class TestPowerLaw:
-    def test__constructor_and_units(self):
-        power_law = ag.mp.EllipticalPowerLaw(
-            centre=(1.0, 2.0),
-            elliptical_comps=(0.333333, 0.0),
-            einstein_radius=1.0,
-            slope=2.0,
-        )
-
-        assert power_law.centre == (1.0, 2.0)
-        assert isinstance(power_law.centre[0], ag.dim.Length)
-        assert isinstance(power_law.centre[1], ag.dim.Length)
-        assert power_law.centre[0].unit == "arcsec"
-        assert power_law.centre[1].unit == "arcsec"
-
-        assert power_law.axis_ratio == pytest.approx(0.5, 1.0e-4)
-        assert isinstance(power_law.axis_ratio, float)
-
-        assert power_law.phi == pytest.approx(45.0, 1.0e-4)
-        assert isinstance(power_law.phi, float)
-
-        assert power_law.einstein_radius == 1.0
-        assert isinstance(power_law.einstein_radius, ag.dim.Length)
-        assert power_law.einstein_radius.unit_length == "arcsec"
-
-        assert power_law.slope == 2.0
-        assert isinstance(power_law.slope, float)
-
-        assert power_law.core_radius == 0.0
-        assert isinstance(power_law.core_radius, ag.dim.Length)
-        assert power_law.core_radius.unit_length == "arcsec"
-
-        assert power_law.einstein_radius_rescaled == pytest.approx(0.6666666666, 1.0e-4)
-
-        power_law = ag.mp.SphericalPowerLaw(
-            centre=(1.0, 2.0), einstein_radius=1.0, slope=2.0
-        )
-
-        assert power_law.centre == (1.0, 2.0)
-        assert isinstance(power_law.centre[0], ag.dim.Length)
-        assert isinstance(power_law.centre[1], ag.dim.Length)
-        assert power_law.centre[0].unit == "arcsec"
-        assert power_law.centre[1].unit == "arcsec"
-
-        assert power_law.axis_ratio == 1.0
-        assert isinstance(power_law.axis_ratio, float)
-
-        assert power_law.phi == 0.0
-        assert isinstance(power_law.phi, float)
-
-        assert power_law.einstein_radius == 1.0
-        assert isinstance(power_law.einstein_radius, ag.dim.Length)
-        assert power_law.einstein_radius.unit_length == "arcsec"
-
-        assert power_law.slope == 2.0
-        assert isinstance(power_law.slope, float)
-
-        assert power_law.core_radius == 0.0
-        assert isinstance(power_law.core_radius, ag.dim.Length)
-        assert power_law.core_radius.unit_length == "arcsec"
-
-        assert power_law.einstein_radius_rescaled == pytest.approx(0.5, 1.0e-4)
-
     def test__convergence_correct_values(self):
 
         power_law = ag.mp.SphericalPowerLaw(
@@ -1220,70 +1005,6 @@ class TestPowerLaw:
 
 
 class TestCoredIsothermal:
-    def test__constructor_and_units(self):
-        cored_isothermal = ag.mp.EllipticalCoredIsothermal(
-            centre=(1.0, 2.0),
-            elliptical_comps=(0.333333, 0.0),
-            einstein_radius=1.0,
-            core_radius=0.1,
-        )
-
-        assert cored_isothermal.centre == (1.0, 2.0)
-        assert isinstance(cored_isothermal.centre[0], ag.dim.Length)
-        assert isinstance(cored_isothermal.centre[1], ag.dim.Length)
-        assert cored_isothermal.centre[0].unit == "arcsec"
-        assert cored_isothermal.centre[1].unit == "arcsec"
-
-        assert cored_isothermal.axis_ratio == pytest.approx(0.5, 1.0e-4)
-        assert isinstance(cored_isothermal.axis_ratio, float)
-
-        assert cored_isothermal.phi == pytest.approx(45.0, 1.0e-4)
-        assert isinstance(cored_isothermal.phi, float)
-
-        assert cored_isothermal.einstein_radius == 1.0
-        assert isinstance(cored_isothermal.einstein_radius, ag.dim.Length)
-        assert cored_isothermal.einstein_radius.unit_length == "arcsec"
-
-        assert cored_isothermal.slope == 2.0
-        assert isinstance(cored_isothermal.slope, float)
-
-        assert cored_isothermal.core_radius == 0.1
-        assert isinstance(cored_isothermal.core_radius, ag.dim.Length)
-        assert cored_isothermal.core_radius.unit_length == "arcsec"
-
-        assert cored_isothermal.einstein_radius_rescaled == pytest.approx(
-            0.6666666666, 1.0e-4
-        )
-
-        cored_isothermal = ag.mp.SphericalCoredIsothermal(
-            centre=(1.0, 2.0), einstein_radius=1.0, core_radius=0.1
-        )
-
-        assert cored_isothermal.centre == (1.0, 2.0)
-        assert isinstance(cored_isothermal.centre[0], ag.dim.Length)
-        assert isinstance(cored_isothermal.centre[1], ag.dim.Length)
-        assert cored_isothermal.centre[0].unit == "arcsec"
-        assert cored_isothermal.centre[1].unit == "arcsec"
-
-        assert cored_isothermal.axis_ratio == 1.0
-        assert isinstance(cored_isothermal.axis_ratio, float)
-
-        assert cored_isothermal.phi == 0.0
-        assert isinstance(cored_isothermal.phi, float)
-
-        assert cored_isothermal.einstein_radius == 1.0
-        assert isinstance(cored_isothermal.einstein_radius, ag.dim.Length)
-        assert cored_isothermal.einstein_radius.unit_length == "arcsec"
-
-        assert cored_isothermal.slope == 2.0
-        assert isinstance(cored_isothermal.slope, float)
-
-        assert cored_isothermal.core_radius == 0.1
-        assert isinstance(cored_isothermal.core_radius, ag.dim.Length)
-        assert cored_isothermal.core_radius.unit_length == "arcsec"
-
-        assert cored_isothermal.einstein_radius_rescaled == pytest.approx(0.5, 1.0e-4)
-
     def test__convergence_correct_values(self):
 
         cored_isothermal = ag.mp.SphericalCoredIsothermal(
@@ -1562,65 +1283,6 @@ class TestCoredIsothermal:
 
 
 class TestIsothermal:
-    def test__constructor_and_units(self):
-        isothermal = ag.mp.EllipticalIsothermal(
-            centre=(1.0, 2.0), elliptical_comps=(0.333333, 0.0), einstein_radius=1.0
-        )
-
-        assert isothermal.centre == (1.0, 2.0)
-        assert isinstance(isothermal.centre[0], ag.dim.Length)
-        assert isinstance(isothermal.centre[1], ag.dim.Length)
-        assert isothermal.centre[0].unit == "arcsec"
-        assert isothermal.centre[1].unit == "arcsec"
-
-        assert isothermal.axis_ratio == pytest.approx(0.5, 1.0e-4)
-        assert isinstance(isothermal.axis_ratio, float)
-
-        assert isothermal.phi == pytest.approx(45.0, 1.0e-4)
-        assert isinstance(isothermal.phi, float)
-
-        assert isothermal.einstein_radius == 1.0
-        assert isinstance(isothermal.einstein_radius, ag.dim.Length)
-        assert isothermal.einstein_radius.unit_length == "arcsec"
-
-        assert isothermal.slope == 2.0
-        assert isinstance(isothermal.slope, float)
-
-        assert isothermal.core_radius == 0.0
-        assert isinstance(isothermal.core_radius, ag.dim.Length)
-        assert isothermal.core_radius.unit_length == "arcsec"
-
-        assert isothermal.einstein_radius_rescaled == pytest.approx(
-            0.6666666666, 1.0e-4
-        )
-
-        isothermal = ag.mp.SphericalIsothermal(centre=(1.0, 2.0), einstein_radius=1.0)
-
-        assert isothermal.centre == (1.0, 2.0)
-        assert isinstance(isothermal.centre[0], ag.dim.Length)
-        assert isinstance(isothermal.centre[1], ag.dim.Length)
-        assert isothermal.centre[0].unit == "arcsec"
-        assert isothermal.centre[1].unit == "arcsec"
-
-        assert isothermal.axis_ratio == 1.0
-        assert isinstance(isothermal.axis_ratio, float)
-
-        assert isothermal.phi == 0.0
-        assert isinstance(isothermal.phi, float)
-
-        assert isothermal.einstein_radius == 1.0
-        assert isinstance(isothermal.einstein_radius, ag.dim.Length)
-        assert isothermal.einstein_radius.unit_length == "arcsec"
-
-        assert isothermal.slope == 2.0
-        assert isinstance(isothermal.slope, float)
-
-        assert isothermal.core_radius == 0.0
-        assert isinstance(isothermal.core_radius, ag.dim.Length)
-        assert isothermal.core_radius.unit_length == "arcsec"
-
-        assert isothermal.einstein_radius_rescaled == pytest.approx(0.5, 1.0e-4)
-
     def test__convergence__correct_values(self):
 
         # eta = 1.0
@@ -1760,33 +1422,25 @@ class TestIsothermal:
 
         sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        assert sis.average_convergence_of_1_radius_in_units(
-            unit_length="arcsec"
-        ) == pytest.approx(2.0, 1e-4)
+        assert sis.average_convergence_of_1_radius == pytest.approx(2.0, 1e-4)
 
         sie = ag.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=1.0, elliptical_comps=(0.0, 0.111111)
         )
 
-        assert sie.average_convergence_of_1_radius_in_units(
-            unit_length="arcsec"
-        ) == pytest.approx(1.0, 1e-4)
+        assert sie.average_convergence_of_1_radius == pytest.approx(1.0, 1e-4)
 
         sie = ag.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=3.0, elliptical_comps=(0.0, 0.333333)
         )
 
-        assert sie.average_convergence_of_1_radius_in_units(
-            unit_length="arcsec"
-        ) == pytest.approx(3.0, 1e-4)
+        assert sie.average_convergence_of_1_radius == pytest.approx(3.0, 1e-4)
 
         sie = ag.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=8.0, elliptical_comps=(0.0, 0.666666)
         )
 
-        assert sie.average_convergence_of_1_radius_in_units(
-            unit_length="arcsec"
-        ) == pytest.approx(8.0, 1e-4)
+        assert sie.average_convergence_of_1_radius == pytest.approx(8.0, 1e-4)
 
     def test__output_are_autoarrays(self):
 

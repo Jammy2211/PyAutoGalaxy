@@ -9,9 +9,6 @@ from autogalaxy.pipeline.phase import abstract
 from autogalaxy.pipeline.phase import extensions
 from autogalaxy.pipeline.phase.dataset.result import Result
 
-import shutil
-import os
-
 
 class PhaseDataset(abstract.AbstractPhase):
     galaxies = af.PhaseProperty("galaxies")

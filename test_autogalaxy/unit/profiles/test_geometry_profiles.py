@@ -11,36 +11,7 @@ from autogalaxy.profiles import geometry_profiles
 directory = path.dirname(path.realpath(__file__))
 
 
-class TestGeometryProfile:
-    def test__constructor_and_units(self):
-        profile = geometry_profiles.GeometryProfile(centre=(1.0, 2.0))
-
-        assert profile.centre == (1.0, 2.0)
-        assert isinstance(profile.centre[0], ag.dim.Length)
-        assert isinstance(profile.centre[1], ag.dim.Length)
-        assert profile.centre[0].unit == "arcsec"
-        assert profile.centre[1].unit == "arcsec"
-
-
 class TestEllipticalProfile:
-    class TestConstuctorUnits:
-        def test__constructor_and_units(self):
-            profile = geometry_profiles.EllipticalProfile.from_axis_ratio_and_phi(
-                centre=(1.0, 2.0), axis_ratio=0.5, phi=45.0
-            )
-
-            assert profile.centre == (1.0, 2.0)
-            assert isinstance(profile.centre[0], ag.dim.Length)
-            assert isinstance(profile.centre[1], ag.dim.Length)
-            assert profile.centre[0].unit == "arcsec"
-            assert profile.centre[1].unit == "arcsec"
-
-            assert profile.axis_ratio == pytest.approx(0.5, 1.0e-4)
-            assert isinstance(profile.axis_ratio, float)
-
-            assert profile.phi == pytest.approx(45.0, 1.0e-4)
-            assert isinstance(profile.phi, float)
-
     class TestAnglesFromXAxis:
         def test__profile_angle_phi_is_0__cosine_and_sin_of_phi_is_1_and_0(self):
             elliptical_profile = geometry_profiles.EllipticalProfile(
@@ -368,16 +339,6 @@ class TestEllipticalProfile:
 
 
 class TestSphericalProfile:
-    class TestConstuctorUnits:
-        def test__constructor_and_unit_conversions(self):
-            profile = geometry_profiles.SphericalProfile(centre=(1.0, 2.0))
-
-            assert profile.centre == (1.0, 2.0)
-            assert isinstance(profile.centre[0], ag.dim.Length)
-            assert isinstance(profile.centre[1], ag.dim.Length)
-            assert profile.centre[0].unit == "arcsec"
-            assert profile.centre[1].unit == "arcsec"
-
     class TestCoordinatesMovement:
         def test__profile_cenre_y_0_x_0__grid_y_1_x_1__no_coordinate_movement_so_y_1_x_1(
             self

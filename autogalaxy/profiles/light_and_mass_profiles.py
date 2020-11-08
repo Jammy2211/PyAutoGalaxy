@@ -1,4 +1,3 @@
-from autogalaxy import dimensions as dim
 from autogalaxy.profiles import light_profiles as lp
 from autogalaxy.profiles import mass_profiles as mp
 import typing
@@ -20,11 +19,11 @@ class EllipticalGaussian(
 ):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        sigma: dim.Length = 0.01,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        intensity: float = 0.1,
+        sigma: float = 0.01,
+        mass_to_light_ratio: float = 1.0,
     ):
 
         lp.EllipticalGaussian.__init__(
@@ -47,12 +46,12 @@ class EllipticalGaussian(
 class EllipticalSersic(lp.EllipticalSersic, mp.EllipticalSersic, LightMassProfile):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
         sersic_index: float = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        mass_to_light_ratio: float = 1.0,
     ):
 
         lp.EllipticalSersic.__init__(
@@ -77,11 +76,11 @@ class EllipticalSersic(lp.EllipticalSersic, mp.EllipticalSersic, LightMassProfil
 class SphericalSersic(EllipticalSersic, LightMassProfile):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
         sersic_index: float = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        mass_to_light_ratio: float = 1.0,
     ):
         """
         The SphericalSersic mass profile, the mass profiles of the light profiles that are used to fit_normal and
@@ -112,11 +111,11 @@ class SphericalSersic(EllipticalSersic, LightMassProfile):
 class EllipticalExponential(EllipticalSersic, LightMassProfile):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        mass_to_light_ratio: float = 1.0,
     ):
         """
         The EllipticalExponential mass profile, the mass profiles of the light profiles that are used to fit_normal and
@@ -151,10 +150,10 @@ class EllipticalExponential(EllipticalSersic, LightMassProfile):
 class SphericalExponential(EllipticalExponential, LightMassProfile):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        mass_to_light_ratio: float = 1.0,
     ):
         """
         The SphericalExponential mass profile, the mass profiles of the light profiles that are used to fit_normal and
@@ -184,11 +183,11 @@ class SphericalExponential(EllipticalExponential, LightMassProfile):
 class EllipticalDevVaucouleurs(EllipticalSersic, LightMassProfile):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        mass_to_light_ratio: float = 1.0,
     ):
         """
         The EllipticalDevVaucouleurs mass profile, the mass profiles of the light profiles that are used to fit_normal and
@@ -222,10 +221,10 @@ class EllipticalDevVaucouleurs(EllipticalSersic, LightMassProfile):
 class SphericalDevVaucouleurs(EllipticalDevVaucouleurs, LightMassProfile):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        mass_to_light_ratio: float = 1.0,
     ):
         """
         The SphericalDevVaucouleurs mass profile, the mass profiles of the light profiles that are used to fit_normal and
@@ -257,12 +256,12 @@ class EllipticalSersicRadialGradient(
 ):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
         sersic_index: float = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        mass_to_light_ratio: float = 1.0,
         mass_to_light_gradient: float = 0.0,
     ):
         """
@@ -310,11 +309,11 @@ class EllipticalSersicRadialGradient(
 class SphericalSersicRadialGradient(EllipticalSersicRadialGradient, LightMassProfile):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
         sersic_index: float = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        mass_to_light_ratio: float = 1.0,
         mass_to_light_gradient: float = 0.0,
     ):
         """
@@ -352,11 +351,11 @@ class EllipticalExponentialRadialGradient(
 ):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        mass_to_light_ratio: float = 1.0,
         mass_to_light_gradient: float = 0.0,
     ):
         """
@@ -396,10 +395,10 @@ class SphericalExponentialRadialGradient(
 ):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        effective_radius: dim.Length = 0.6,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        mass_to_light_ratio: float = 1.0,
         mass_to_light_gradient: float = 0.0,
     ):
         """
@@ -438,12 +437,12 @@ class EllipticalChameleon(
 ):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        core_radius_0: dim.Length = 0.01,
-        core_radius_1: dim.Length = 0.005,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        intensity: float = 0.1,
+        core_radius_0: float = 0.01,
+        core_radius_1: float = 0.005,
+        mass_to_light_ratio: float = 1.0,
     ):
 
         lp.EllipticalChameleon.__init__(
@@ -468,11 +467,11 @@ class EllipticalChameleon(
 class SphericalChameleon(EllipticalChameleon, LightMassProfile):
     def __init__(
         self,
-        centre: dim.Position = (0.0, 0.0),
-        intensity: dim.Luminosity = 0.1,
-        core_radius_0: dim.Length = 0.01,
-        core_radius_1: dim.Length = 0.005,
-        mass_to_light_ratio: dim.MassOverLuminosity = 1.0,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        core_radius_0: float = 0.01,
+        core_radius_1: float = 0.005,
+        mass_to_light_ratio: float = 1.0,
     ):
         """
         The SphericalChameleon mass profile, the mass profiles of the light profiles that are used to fit_normal and

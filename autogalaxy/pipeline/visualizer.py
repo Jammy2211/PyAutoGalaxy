@@ -23,22 +23,22 @@ class AbstractVisualizer:
         self.include = lensing_plotters.Include()
 
     @staticmethod
-    def plotter_from_paths(paths : af.Paths, subfolders=None, format="png"):
+    def plotter_from_paths(paths: af.Paths, subfolders=None, format="png"):
         if subfolders is None:
             return lensing_plotters.Plotter(
                 output=mat_objs.Output(path=f"{paths.image_path}", format=format)
             )
         return lensing_plotters.Plotter(
             output=mat_objs.Output(
-                path=f"{paths.image_path}/{subfolders}", format=format
+                path=f"{paths.image_path}{subfolders}", format=format
             )
         )
 
     @staticmethod
-    def sub_plotter_from_paths(paths : af.Paths):
+    def sub_plotter_from_paths(paths: af.Paths):
 
         return lensing_plotters.SubPlotter(
-            output=mat_objs.Output(path=f"{paths.image_path}/subplots", format="png")
+            output=mat_objs.Output(path=f"{paths.image_path}subplots", format="png")
         )
 
     def new_visualizer_with_preloaded_critical_curves_and_caustics(

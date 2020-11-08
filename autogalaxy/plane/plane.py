@@ -1,19 +1,16 @@
 import numpy as np
-from astropy import cosmology as cosmo
 
 from autoarray.inversion import inversions as inv
 from autoarray.inversion import pixelizations as pix
 from autoarray.structures import arrays, grids, visibilities as vis
-from autogalaxy import dimensions as dim
 from autogalaxy import exc
 from autogalaxy import lensing
 from autogalaxy.galaxy import galaxy as g
-from autogalaxy.util import cosmology_util
 from autogalaxy.util import plane_util
 
 
 class AbstractPlane(lensing.LensingObject):
-    def __init__(self, redshift, galaxies, cosmology):
+    def __init__(self, redshift, galaxies):
         """A plane of galaxies where all galaxies are at the same redshift.
 
         Parameters
@@ -22,8 +19,6 @@ class AbstractPlane(lensing.LensingObject):
             The redshift of the plane.
         galaxies : [Galaxy]
             The list of galaxies in this plane.
-        cosmology : astropy.cosmology
-            The cosmology associated with the plane, used to convert arc-second coordinates to physical values.
         """
 
         if redshift is None:
@@ -42,7 +37,6 @@ class AbstractPlane(lensing.LensingObject):
 
         self.redshift = redshift
         self.galaxies = galaxies
-        self.cosmology = cosmology
 
     @property
     def galaxy_redshifts(self):
@@ -244,9 +238,7 @@ class AbstractPlane(lensing.LensingObject):
             )
         )
 
-        return self.__class__(
-            galaxies=new_galaxies, redshift=self.redshift, cosmology=self.cosmology
-        )
+        return self.__class__(galaxies=new_galaxies, redshift=self.redshift)
 
     @property
     def unit_length(self):
@@ -274,43 +266,9 @@ class AbstractPlane(lensing.LensingObject):
             return None
 
 
-class AbstractPlaneCosmology(AbstractPlane):
-    def __init__(self, redshift, galaxies, cosmology):
-        super(AbstractPlaneCosmology, self).__init__(
-            redshift=redshift, galaxies=galaxies, cosmology=cosmology
-        )
-
-    @property
-    def arcsec_per_kpc(self):
-        return cosmology_util.arcsec_per_kpc_from(
-            redshift=self.redshift, cosmology=self.cosmology
-        )
-
-    @property
-    def kpc_per_arcsec(self):
-        return 1.0 / self.arcsec_per_kpc
-
-    def angular_diameter_distance_to_earth_in_units(self, unit_length="arcsec"):
-        return cosmology_util.angular_diameter_distance_to_earth_from(
-            redshift=self.redshift, cosmology=self.cosmology, unit_length=unit_length
-        )
-
-    def cosmic_average_density_in_units(
-        self, unit_length="arcsec", unit_mass="angular"
-    ):
-        return cosmology_util.cosmic_average_density_from(
-            redshift=self.redshift,
-            cosmology=self.cosmology,
-            unit_length=unit_length,
-            unit_mass=unit_mass,
-        )
-
-
-class AbstractPlaneLensing(AbstractPlaneCosmology):
-    def __init__(self, redshift, galaxies, cosmology):
-        super(AbstractPlaneCosmology, self).__init__(
-            redshift=redshift, galaxies=galaxies, cosmology=cosmology
-        )
+class AbstractPlaneLensing(AbstractPlane):
+    def __init__(self, redshift, galaxies):
+        super().__init__(redshift=redshift, galaxies=galaxies)
 
     @grids.grid_like_to_structure
     def image_from_grid(self, grid):
@@ -406,73 +364,11 @@ class AbstractPlaneLensing(AbstractPlaneCosmology):
 
         return grid - self.deflections_from_grid(grid=grid)
 
-    def luminosities_of_galaxies_within_circles_in_units(
-        self, radius: dim.Length, unit_luminosity="eps", exposure_time=None
-    ):
-        """
-    Returns the total luminosity of all galaxies in this plane within a circle of specified radius.
-
-        See *galaxy.light_within_circle* and *light_profiles.light_within_circle* for details \
-        of how this is performed.
-
-        Parameters
-        ----------
-        radius : float
-            The radius of the circle to compute the dimensionless mass within.
-        unit_luminosity : str
-            The unit_label the luminosity is returned in {esp, counts}.
-        exposure_time : float
-            The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
-        """
-        return list(
-            map(
-                lambda galaxy: galaxy.luminosity_within_circle_in_units(
-                    radius=radius,
-                    unit_luminosity=unit_luminosity,
-                    exposure_time=exposure_time,
-                    cosmology=self.cosmology,
-                ),
-                self.galaxies,
-            )
-        )
-
-    def masses_of_galaxies_within_circles_in_units(
-        self, radius: dim.Length, unit_mass="angular", redshift_source=None
-    ):
-        """
-    Returns the total mass of all galaxies in this plane within a circle of specified radius.
-
-        See *galaxy.angular_mass_within_circle* and *mass_profiles.angular_mass_within_circle* for details
-        of how this is performed.
-
-        Parameters
-        ----------
-        redshift_source
-        radius : float
-            The radius of the circle to compute the dimensionless mass within.
-        unit_mass : str
-            The unit_label the mass is returned in {angular, angular}.
-
-        """
-        return list(
-            map(
-                lambda galaxy: galaxy.mass_within_circle_in_units(
-                    radius=radius,
-                    unit_mass=unit_mass,
-                    redshift_source=redshift_source,
-                    cosmology=self.cosmology,
-                ),
-                self.galaxies,
-            )
-        )
-
 
 class AbstractPlaneData(AbstractPlaneLensing):
-    def __init__(self, redshift, galaxies, cosmology):
+    def __init__(self, redshift, galaxies):
 
-        super(AbstractPlaneData, self).__init__(
-            redshift=redshift, galaxies=galaxies, cosmology=cosmology
-        )
+        super().__init__(redshift=redshift, galaxies=galaxies)
 
     def blurred_image_from_grid_and_psf(self, grid, psf, blurring_grid):
 
@@ -793,10 +689,8 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
 
 class Plane(AbstractPlaneData):
-    def __init__(self, redshift=None, galaxies=None, cosmology=cosmo.Planck15):
-        super(Plane, self).__init__(
-            redshift=redshift, galaxies=galaxies, cosmology=cosmology
-        )
+    def __init__(self, redshift=None, galaxies=None):
+        super(Plane, self).__init__(redshift=redshift, galaxies=galaxies)
 
 
 class PlaneImage:
