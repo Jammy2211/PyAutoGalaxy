@@ -4,6 +4,7 @@ import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
 
+from autoarray import decorator_util
 from autoarray.structures import grids
 from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
@@ -139,7 +140,9 @@ class MassProfileMGE:
         self.zq = 0
         self.expv = 0
 
-    def zeta_from_grid(self, grid, amps, sigmas, axis_ratio):
+    @staticmethod
+    #  @decorator_util.jit()
+    def zeta_from_grid(grid, amps, sigmas, axis_ratio):
 
         """
         The key part to compute the deflection angle of each Gaussian.
@@ -174,9 +177,7 @@ class MassProfileMGE:
                 zq /= sigmas[i] / sigmas[i - 1]
                 expv /= (sigmas[i] / sigmas[i - 1]) ** 2.0
 
-            output_grid = -1j * (
-                self.w_f_approx(z) - np.exp(expv) * self.w_f_approx(zq)
-            )
+            output_grid = -1j * (w_f_approx(z) - np.exp(expv) * w_f_approx(zq))
 
             output_grid[ys_minus] = np.conj(output_grid[ys_minus])
 
@@ -212,98 +213,6 @@ class MassProfileMGE:
             )
 
         return eta_list
-
-    @staticmethod
-    def w_f_approx(z):
-        """
-        Compute the Faddeeva function :math:`w_{\mathrm F}(z)` using the
-        approximation given in Zaghloul (2017).
-        :param z: complex number
-        :type z: ``complex`` or ``numpy.array(dtype=complex)``
-        :return: :math:`w_\mathrm{F}(z)`
-        :rtype: ``complex``
-
-        # This function is copied from
-        # "https://github.com/sibirrer/lenstronomy/tree/master/lenstronomy/LensModel/Profiles"
-        # written by Anowar J. Shajib (see 1906.08263)
-        """
-
-        reg_minus_imag = z.imag < 0.0
-        z[reg_minus_imag] = np.conj(z[reg_minus_imag])
-
-        sqrt_pi = 1 / np.sqrt(np.pi)
-        i_sqrt_pi = 1j * sqrt_pi
-
-        wz = np.empty_like(z)
-
-        z_imag2 = z.imag ** 2
-        abs_z2 = z.real ** 2 + z_imag2
-
-        reg1 = abs_z2 >= 38000.0
-        if np.any(reg1):
-            wz[reg1] = i_sqrt_pi / z[reg1]
-
-        reg2 = (256.0 <= abs_z2) & (abs_z2 < 38000.0)
-        if np.any(reg2):
-            t = z[reg2]
-            wz[reg2] = i_sqrt_pi * t / (t * t - 0.5)
-
-        reg3 = (62.0 <= abs_z2) & (abs_z2 < 256.0)
-        if np.any(reg3):
-            t = z[reg3]
-            wz[reg3] = (i_sqrt_pi / t) * (1 + 0.5 / (t * t - 1.5))
-
-        reg4 = (30.0 <= abs_z2) & (abs_z2 < 62.0) & (z_imag2 >= 1e-13)
-        if np.any(reg4):
-            t = z[reg4]
-            tt = t * t
-            wz[reg4] = (i_sqrt_pi * t) * (tt - 2.5) / (tt * (tt - 3.0) + 0.75)
-
-        reg5 = (
-            (62.0 > abs_z2) & np.logical_not(reg4) & (abs_z2 > 2.5) & (z_imag2 < 0.072)
-        )
-        if np.any(reg5):
-            t = z[reg5]
-            u = -t * t
-            f1 = sqrt_pi
-            f2 = 1
-            s1 = [1.320522, 35.7668, 219.031, 1540.787, 3321.99, 36183.31]
-            s2 = [1.841439, 61.57037, 364.2191, 2186.181, 9022.228, 24322.84, 32066.6]
-
-            for s in s1:
-                f1 = s - f1 * u
-            for s in s2:
-                f2 = s - f2 * u
-
-            wz[reg5] = np.exp(u) + 1j * t * f1 / f2
-
-        reg6 = (30.0 > abs_z2) & np.logical_not(reg5)
-        if np.any(reg6):
-            t3 = -1j * z[reg6]
-
-            f1 = sqrt_pi
-            f2 = 1
-            s1 = [5.9126262, 30.180142, 93.15558, 181.92853, 214.38239, 122.60793]
-            s2 = [
-                10.479857,
-                53.992907,
-                170.35400,
-                348.70392,
-                457.33448,
-                352.73063,
-                122.60793,
-            ]
-
-            for s in s1:
-                f1 = f1 * t3 + s
-            for s in s2:
-                f2 = f2 * t3 + s
-
-            wz[reg6] = f1 / f2
-
-        # wz[reg_minus_imag] = np.conj(wz[reg_minus_imag])
-
-        return wz
 
     def decompose_convergence_into_gaussians(self):
         raise NotImplementedError()
@@ -406,6 +315,96 @@ class MassProfileMGE:
         angle *= np.sqrt((2.0 * np.pi) / (1.0 - axis_ratio ** 2.0))
 
         return self.rotate_grid_from_profile(np.vstack((-angle.imag, angle.real)).T)
+
+
+def w_f_approx(z):
+    """
+    Compute the Faddeeva function :math:`w_{\mathrm F}(z)` using the
+    approximation given in Zaghloul (2017).
+    :param z: complex number
+    :type z: ``complex`` or ``numpy.array(dtype=complex)``
+    :return: :math:`w_\mathrm{F}(z)`
+    :rtype: ``complex``
+
+    # This function is copied from
+    # "https://github.com/sibirrer/lenstronomy/tree/master/lenstronomy/LensModel/Profiles"
+    # written by Anowar J. Shajib (see 1906.08263)
+    """
+
+    reg_minus_imag = z.imag < 0.0
+    z[reg_minus_imag] = np.conj(z[reg_minus_imag])
+
+    sqrt_pi = 1 / np.sqrt(np.pi)
+    i_sqrt_pi = 1j * sqrt_pi
+
+    wz = np.empty_like(z)
+
+    z_imag2 = z.imag ** 2
+    abs_z2 = z.real ** 2 + z_imag2
+
+    reg1 = abs_z2 >= 38000.0
+    if np.any(reg1):
+        wz[reg1] = i_sqrt_pi / z[reg1]
+
+    reg2 = (256.0 <= abs_z2) & (abs_z2 < 38000.0)
+    if np.any(reg2):
+        t = z[reg2]
+        wz[reg2] = i_sqrt_pi * t / (t * t - 0.5)
+
+    reg3 = (62.0 <= abs_z2) & (abs_z2 < 256.0)
+    if np.any(reg3):
+        t = z[reg3]
+        wz[reg3] = (i_sqrt_pi / t) * (1 + 0.5 / (t * t - 1.5))
+
+    reg4 = (30.0 <= abs_z2) & (abs_z2 < 62.0) & (z_imag2 >= 1e-13)
+    if np.any(reg4):
+        t = z[reg4]
+        tt = t * t
+        wz[reg4] = (i_sqrt_pi * t) * (tt - 2.5) / (tt * (tt - 3.0) + 0.75)
+
+    reg5 = (62.0 > abs_z2) & np.logical_not(reg4) & (abs_z2 > 2.5) & (z_imag2 < 0.072)
+    if np.any(reg5):
+        t = z[reg5]
+        u = -t * t
+        f1 = sqrt_pi
+        f2 = 1
+        s1 = [1.320522, 35.7668, 219.031, 1540.787, 3321.99, 36183.31]
+        s2 = [1.841439, 61.57037, 364.2191, 2186.181, 9022.228, 24322.84, 32066.6]
+
+        for s in s1:
+            f1 = s - f1 * u
+        for s in s2:
+            f2 = s - f2 * u
+
+        wz[reg5] = np.exp(u) + 1j * t * f1 / f2
+
+    reg6 = (30.0 > abs_z2) & np.logical_not(reg5)
+    if np.any(reg6):
+        t3 = -1j * z[reg6]
+
+        f1 = sqrt_pi
+        f2 = 1
+        s1 = [5.9126262, 30.180142, 93.15558, 181.92853, 214.38239, 122.60793]
+        s2 = [
+            10.479857,
+            53.992907,
+            170.35400,
+            348.70392,
+            457.33448,
+            352.73063,
+            122.60793,
+        ]
+
+        for s in s1:
+            f1 = f1 * t3 + s
+        for s in s2:
+            f2 = f2 * t3 + s
+
+        wz[reg6] = f1 / f2
+
+    # wz[reg_minus_imag] = np.conj(wz[reg_minus_imag])
+
+    return wz
 
 
 def psi_from(grid, axis_ratio, core_radius):
