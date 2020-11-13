@@ -7,7 +7,7 @@ import typing
 class GeometryProfile:
     def __init__(self, centre: typing.Tuple[float, float] = (0.0, 0.0)):
         """An abstract geometry profile, which describes profiles with y and x centre Cartesian coordinates
-        
+
         Parameters
         -----------
         centre : (float, float)
@@ -34,7 +34,7 @@ class GeometryProfile:
 
 class SphericalProfile(GeometryProfile):
     def __init__(self, centre: typing.Tuple[float, float] = (0.0, 0.0)):
-        """ A spherical profile, which describes profiles with y and x centre Cartesian coordinates.
+        """A spherical profile, which describes profiles with y and x centre Cartesian coordinates.
 
         Parameters
         ----------
@@ -59,7 +59,7 @@ class SphericalProfile(GeometryProfile):
 
     def grid_angle_to_profile(self, grid_thetas):
         """The angle between each (y,x) coordinate on the grid and the profile, in radians.
-        
+
         Parameters
         -----------
         grid_thetas : np.ndarray
@@ -70,7 +70,7 @@ class SphericalProfile(GeometryProfile):
     @grids.grid_like_to_structure
     def grid_to_grid_cartesian(self, grid, radius):
         """
-        Convert a grid of (y,x) coordinates with their specified circular radii to their original (y,x) Cartesian 
+        Convert a grid of (y,x) coordinates with their specified circular radii to their original (y,x) Cartesian
         coordinates.
 
         Parameters
@@ -214,14 +214,14 @@ class EllipticalProfile(SphericalProfile):
     @grids.relocate_to_radial_minimum
     def grid_to_elliptical_radii(self, grid):
         """
-    Convert a grid of (y,x) coordinates to an elliptical radius.
+        Convert a grid of (y,x) coordinates to an elliptical radius.
 
-        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+            If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
 
-        Parameters
-        ----------
-        grid : grid_like
-            The (y, x) coordinates in the reference frame of the elliptical profile.
+            Parameters
+            ----------
+            grid : grid_like
+                The (y, x) coordinates in the reference frame of the elliptical profile.
         """
         return np.sqrt(
             np.add(

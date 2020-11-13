@@ -370,7 +370,7 @@ class TestExternalShear:
 
 class TestInputDeflections:
     def test__deflections_from_grid__grid_coordinates_overlap_image_grid_of_deflections(
-        self
+        self,
     ):
 
         deflections_y = ag.Array.manual_2d(
@@ -427,7 +427,7 @@ class TestInputDeflections:
         # assert deflections[:, 1] == pytest.approx([16.0, 10.0, 6.0], 1.0e-4)
 
     def test__deflections_from_grid__grid_coordinates_dont_overlap_image_grid_of_deflections__uses_interpolation(
-        self
+        self,
     ):
 
         deflections_y = ag.Array.manual_2d(
@@ -463,7 +463,7 @@ class TestInputDeflections:
         assert deflections[:, 1] == pytest.approx([6.2, 5.5, 3.0], 1.0e-4)
 
     def test__deflections_from_grid__preload_grid_deflections_used_if_preload_grid_input(
-        self
+        self,
     ):
 
         deflections_y = ag.Array.manual_2d(
@@ -515,7 +515,7 @@ class TestInputDeflections:
         # assert (deflections == 2.0 * input_deflections.preload_deflections).all()
 
     def test__deflections_from_grid__input_grid_extends_beyond_image_plane_grid__raises_exception(
-        self
+        self,
     ):
 
         deflections_y = ag.Array.manual_2d(

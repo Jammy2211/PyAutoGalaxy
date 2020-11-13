@@ -66,7 +66,7 @@ def potential(galaxy, grid, positions=None, include=None, plotter=None):
          The galaxy whose potential is plotted.
     grid : grid_like or datas.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
-     """
+    """
     plotter.plot_array(
         array=galaxy.potential_from_grid(grid=grid),
         mask=include.mask_from_grid(grid=grid),
@@ -121,7 +121,7 @@ def deflections_x(galaxy, grid, positions=None, include=None, plotter=None):
          The galaxy whose x deflecton angles are plotted.
      grid : grid_like or datas.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
-     """
+    """
     deflections = galaxy.deflections_from_grid(grid=grid)
     deflections_x = arrays.Array.manual_mask(
         array=deflections.in_1d[:, 1], mask=grid.mask
@@ -150,7 +150,7 @@ def magnification(galaxy, grid, positions=None, include=None, plotter=None):
          The galaxy whose magnification is plotted.
     grid : grid_like or datas.arrays.grid_stacks.Grid
          The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
-     """
+    """
 
     plotter.plot_array(
         array=galaxy.magnification_from_grid(grid=grid),

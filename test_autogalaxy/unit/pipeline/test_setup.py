@@ -574,7 +574,7 @@ class TestSetupMassLightDark:
         )
 
     def test__consstant_mass_to_light_ratio__sets_mass_to_light_ratios_of_light_and_mass_profiles(
-        self
+        self,
     ):
 
         setup = ag.SetupMassLightDark(

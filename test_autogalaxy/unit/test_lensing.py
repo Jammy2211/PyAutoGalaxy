@@ -2,7 +2,8 @@ import typing
 
 import numpy as np
 import pytest
-from pyquad import quad_grid
+
+# from pyquad import quad_grid
 from skimage import measure
 
 import autogalaxy as ag
@@ -379,7 +380,7 @@ class TestMagnification:
         assert mean_error < 1e-4
 
     def test__compare_magnification_from_determinant_and_from_convergence_and_shear(
-        self
+        self,
     ):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
@@ -459,7 +460,7 @@ class TestBoundingBox:
         assert galaxy.mass_profile_bounding_box == [0.0, 18.0, -16.0, 90.0]
 
     def test__convergence_bounding_box_for_single_mass_profile__extends_to_threshold(
-        self
+        self,
     ):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
@@ -480,7 +481,7 @@ class TestBoundingBox:
         )
 
     def test__convergence_bounding_box__mass_profiles_are_only_point_masses__uses_their_einstein_radii(
-        self
+        self,
     ):
         point_mass_0 = ag.mp.PointMass(einstein_radius=0.1)
 
@@ -528,8 +529,10 @@ def critical_curve_via_magnification_from_mass_profile_and_grid(mass_profile, gr
         contour_x, contour_y = contours[jj].T
         pixel_coord = np.stack((contour_x, contour_y), axis=-1)
 
-        critical_curve = grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
-            grid_pixels_1d=pixel_coord, shape_2d=magnification.sub_shape_2d
+        critical_curve = (
+            grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
+                grid_pixels_1d=pixel_coord, shape_2d=magnification.sub_shape_2d
+            )
         )
 
         critical_curves.append(critical_curve)
@@ -599,7 +602,7 @@ class TestConvergenceViajacobian:
 
 class TestCriticalCurvesAndCaustics:
     def test_compare_magnification_from_determinant_and_from_convergence_and_shear(
-        self
+        self,
     ):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
@@ -744,27 +747,27 @@ class TestCriticalCurvesAndCaustics:
         assert 0.7 < x_centre < 1.2
 
     def test__compare_tangential_critical_curves_from_magnification_and_eigen_values(
-        self
+        self,
     ):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
         )
 
-        tangential_critical_curve_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
-            mass_profile=sie, grid=sie.calculation_grid
-        )[
-            0
-        ]
+        tangential_critical_curve_from_magnification = (
+            critical_curve_via_magnification_from_mass_profile_and_grid(
+                mass_profile=sie, grid=sie.calculation_grid
+            )[0]
+        )
 
         assert sie.tangential_critical_curve == pytest.approx(
             tangential_critical_curve_from_magnification, 5e-1
         )
 
-        tangential_critical_curve_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
-            mass_profile=sie, grid=sie.calculation_grid
-        )[
-            0
-        ]
+        tangential_critical_curve_from_magnification = (
+            critical_curve_via_magnification_from_mass_profile_and_grid(
+                mass_profile=sie, grid=sie.calculation_grid
+            )[0]
+        )
 
         assert sie.tangential_critical_curve == pytest.approx(
             tangential_critical_curve_from_magnification, 5e-1
@@ -775,11 +778,11 @@ class TestCriticalCurvesAndCaustics:
             centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
         )
 
-        critical_curve_radial_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
-            mass_profile=sie, grid=sie.calculation_grid
-        )[
-            1
-        ]
+        critical_curve_radial_from_magnification = (
+            critical_curve_via_magnification_from_mass_profile_and_grid(
+                mass_profile=sie, grid=sie.calculation_grid
+            )[1]
+        )
 
         assert sum(critical_curve_radial_from_magnification) == pytest.approx(
             sum(sie.radial_critical_curve), abs=0.7
@@ -790,11 +793,11 @@ class TestCriticalCurvesAndCaustics:
             centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
         )
 
-        tangential_caustic_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
-            mass_profile=sie, grid=sie.calculation_grid
-        )[
-            0
-        ]
+        tangential_caustic_from_magnification = (
+            caustics_via_magnification_from_mass_profile_and_grid(
+                mass_profile=sie, grid=sie.calculation_grid
+            )[0]
+        )
 
         assert sum(sie.tangential_caustic) == pytest.approx(
             sum(tangential_caustic_from_magnification), 5e-1
@@ -805,11 +808,11 @@ class TestCriticalCurvesAndCaustics:
             centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
         )
 
-        caustic_radial_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
-            mass_profile=sie, grid=sie.calculation_grid
-        )[
-            1
-        ]
+        caustic_radial_from_magnification = (
+            caustics_via_magnification_from_mass_profile_and_grid(
+                mass_profile=sie, grid=sie.calculation_grid
+            )[1]
+        )
 
         assert sum(sie.radial_caustic) == pytest.approx(
             sum(caustic_radial_from_magnification), 7e-1
@@ -818,7 +821,7 @@ class TestCriticalCurvesAndCaustics:
 
 class TestEinsteinRadiusMassfrom:
     def test__tangential_critical_curve_area_from_critical_curve_and_calculation__spherical_isothermal(
-        self
+        self,
     ):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 

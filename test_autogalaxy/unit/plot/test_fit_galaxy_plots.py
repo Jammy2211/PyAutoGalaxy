@@ -33,7 +33,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
-    assert f"{plot_path}/subplot_fit_galaxy.png" in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
 
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_convergence,
@@ -42,7 +42,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
-    assert f"{plot_path}/subplot_fit_galaxy.png" in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
 
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_potential,
@@ -51,7 +51,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
-    assert f"{plot_path}/subplot_fit_galaxy.png" in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
 
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_deflections_y,
@@ -60,7 +60,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
-    assert f"{plot_path}/subplot_fit_galaxy.png" in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
 
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_deflections_x,
@@ -69,4 +69,4 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
-    assert f"{plot_path}/subplot_fit_galaxy.png" in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths

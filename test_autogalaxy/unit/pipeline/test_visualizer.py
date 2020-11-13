@@ -15,14 +15,17 @@ directory = path.dirname(path.realpath(__file__))
 
 @pytest.fixture(name="plot_path")
 def make_visualizer_plotter_setup():
-    return "{}/files/plot/visualizer".format(
-        os.path.dirname(os.path.realpath(__file__))
+    return path.join(
+        "{}".format(os.path.dirname(os.path.realpath(__file__))),
+        "files",
+        "plot",
+        "visualizer",
     )
 
 
 @pytest.fixture(autouse=True)
 def default_config(plot_path):
-    conf.instance.push(f"{directory}/config", output_path=plot_path)
+    conf.instance.push(path.join(directory, "config"), output_path=plot_path)
 
 
 @pytest.fixture(name="include_all")
@@ -56,8 +59,10 @@ class TestAbstractPhaseVisualizer:
         assert visualizer.include.preloaded_critical_curves == None
         assert visualizer.include.preloaded_caustics == None
 
-        visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=1, preloaded_caustics=2
+        visualizer = (
+            visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
+                preloaded_critical_curves=1, preloaded_caustics=2
+            )
         )
 
         assert visualizer.include.preloaded_critical_curves == 1
@@ -77,27 +82,39 @@ class TestPhaseImagingVisualizer:
 
         visualizer = vis.PhaseImagingVisualizer(masked_dataset=masked_imaging_7x7)
 
-        visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=include_all.preloaded_critical_curves,
-            preloaded_caustics=include_all.preloaded_caustics,
+        visualizer = (
+            visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
+                preloaded_critical_curves=include_all.preloaded_critical_curves,
+                preloaded_caustics=include_all.preloaded_caustics,
+            )
         )
 
         visualizer.visualize_imaging(paths=af.Paths())
 
-        assert f"{plot_path}/image/subplots/subplot_imaging.png" in plot_patch.paths
-        assert f"{plot_path}/image/imaging/image.png" in plot_patch.paths
-        assert f"{plot_path}/image/imaging/noise_map.png" not in plot_patch.paths
-        assert f"{plot_path}/image/imaging/psf.png" in plot_patch.paths
-        assert f"{plot_path}/image/imaging/inverse_noise_map.png" in plot_patch.paths
         assert (
-            f"{plot_path}/image/imaging/signal_to_noise_map.png" not in plot_patch.paths
+            path.join(plot_path, "image", "subplots", "subplot_imaging.png")
+            in plot_patch.paths
+        )
+        assert path.join(plot_path, "image", "imaging", "image.png") in plot_patch.paths
+        assert (
+            path.join(plot_path, "image", "imaging", "noise_map.png")
+            not in plot_patch.paths
+        )
+        assert path.join(plot_path, "image", "imaging", "psf.png") in plot_patch.paths
+        assert (
+            path.join(plot_path, "image", "imaging", "inverse_noise_map.png")
+            in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/imaging/absolute_signal_to_noise_map.png"
+            path.join(plot_path, "image", "imaging", "signal_to_noise_map.png")
             not in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/imaging/potential_chi_squared_map.png"
+            path.join(plot_path, "image", "imaging", "absolute_signal_to_noise_map.png")
+            not in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "imaging", "potential_chi_squared_map.png")
             in plot_patch.paths
         )
 
@@ -115,9 +132,11 @@ class TestPhaseImagingVisualizer:
 
         visualizer = vis.PhaseImagingVisualizer(masked_dataset=masked_imaging_7x7)
 
-        visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=include_all.preloaded_critical_curves,
-            preloaded_caustics=include_all.preloaded_caustics,
+        visualizer = (
+            visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
+                preloaded_critical_curves=include_all.preloaded_critical_curves,
+                preloaded_caustics=include_all.preloaded_caustics,
+            )
         )
 
         visualizer.visualize_fit(
@@ -126,69 +145,116 @@ class TestPhaseImagingVisualizer:
             during_analysis=False,
         )
 
-        assert f"{plot_path}/image/subplots/subplot_fit_imaging.png" in plot_patch.paths
-        assert f"{plot_path}/image/fit_imaging/image.png" in plot_patch.paths
-        assert f"{plot_path}/image/fit_imaging/noise_map.png" not in plot_patch.paths
         assert (
-            f"{plot_path}/image/fit_imaging/signal_to_noise_map.png"
-            not in plot_patch.paths
-        )
-        assert f"{plot_path}/image/fit_imaging/model_image.png" in plot_patch.paths
-        assert f"{plot_path}/image/fit_imaging/residual_map.png" not in plot_patch.paths
-        assert (
-            f"{plot_path}/image/fit_imaging/normalized_residual_map.png"
-            in plot_patch.paths
-        )
-        assert f"{plot_path}/image/fit_imaging/chi_squared_map.png" in plot_patch.paths
-        assert (
-            f"{plot_path}/image/fit_imaging/subtracted_image_of_galaxy_0.png"
+            path.join(plot_path, "image", "subplots", "subplot_fit_imaging.png")
             in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/fit_imaging/subtracted_image_of_galaxy_1.png"
+            path.join(plot_path, "image", "fit_imaging", "image.png")
             in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/fit_imaging/model_image_of_galaxy_0.png"
+            path.join(plot_path, "image", "fit_imaging", "noise_map.png")
             not in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/fit_imaging/model_image_of_galaxy_1.png"
+            path.join(plot_path, "image", "fit_imaging", "signal_to_noise_map.png")
+            not in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "fit_imaging", "model_image.png")
+            in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "fit_imaging", "residual_map.png")
+            not in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "fit_imaging", "normalized_residual_map.png")
+            in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "fit_imaging", "chi_squared_map.png")
+            in plot_patch.paths
+        )
+        assert (
+            path.join(
+                plot_path, "image", "fit_imaging", "subtracted_image_of_galaxy_0.png"
+            )
+            in plot_patch.paths
+        )
+        assert (
+            path.join(
+                plot_path, "image", "fit_imaging", "subtracted_image_of_galaxy_1.png"
+            )
+            in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "fit_imaging", "model_image_of_galaxy_0.png")
+            not in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "fit_imaging", "model_image_of_galaxy_1.png")
             not in plot_patch.paths
         )
 
-        assert f"{plot_path}/image/subplots/subplot_inversion.png" in plot_patch.paths
         assert (
-            f"{plot_path}/image/inversion/reconstructed_image.png" in plot_patch.paths
-        )
-        assert f"{plot_path}/image/inversion/reconstruction.png" in plot_patch.paths
-        # assert f"{plot_path}/image/inversion/errors.png" not in plot_patch.paths
-        assert f"{plot_path}/image/inversion/residual_map.png" not in plot_patch.paths
-        assert (
-            f"{plot_path}/image/inversion/normalized_residual_map.png"
-            not in plot_patch.paths
-        )
-        assert f"{plot_path}/image/inversion/chi_squared_map.png" in plot_patch.paths
-        assert (
-            f"{plot_path}/image/inversion/regularization_weight_map.png"
-            not in plot_patch.paths
+            path.join(plot_path, "image", "subplots", "subplot_inversion.png")
+            in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/inversion/interpolated_reconstruction.png"
+            path.join(plot_path, "image", "inversion", "reconstructed_image.png")
+            in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "inversion", "reconstruction.png")
+            in plot_patch.paths
+        )
+        # assert path.join(plot_path, "image","inversion","errors.png") not in plot_patch.paths
+        assert (
+            path.join(plot_path, "image", "inversion", "residual_map.png")
             not in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/inversion/interpolated_errors.png" in plot_patch.paths
+            path.join(plot_path, "image", "inversion", "normalized_residual_map.png")
+            not in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "inversion", "chi_squared_map.png")
+            in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "inversion", "regularization_weight_map.png")
+            not in plot_patch.paths
+        )
+        assert (
+            path.join(
+                plot_path, "image", "inversion", "interpolated_reconstruction.png"
+            )
+            not in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "inversion", "interpolated_errors.png")
+            in plot_patch.paths
         )
 
         image = ag.util.array.numpy_array_2d_from_fits(
-            file_path=f"{plot_path}/image/fit_imaging/fits/image.fits", hdu=0
+            file_path=path.join(
+                plot_path, "image", "fit_imaging", "fits", "image.fits"
+            ),
+            hdu=0,
         )
 
         assert image.shape == (5, 5)
 
         image = ag.util.array.numpy_array_2d_from_fits(
-            file_path=f"{plot_path}/image/inversion/fits/interpolated_reconstruction.fits",
+            file_path=path.join(
+                plot_path,
+                "image",
+                "inversion",
+                "fits",
+                "interpolated_reconstruction.fits",
+            ),
             hdu=0,
         )
 
@@ -206,9 +272,11 @@ class TestPhaseImagingVisualizer:
 
         visualizer = vis.PhaseImagingVisualizer(masked_dataset=masked_imaging_7x7)
 
-        visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=include_all.preloaded_critical_curves,
-            preloaded_caustics=include_all.preloaded_caustics,
+        visualizer = (
+            visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
+                preloaded_critical_curves=include_all.preloaded_critical_curves,
+                preloaded_caustics=include_all.preloaded_caustics,
+            )
         )
 
         visualizer.visualize_hyper_images(
@@ -217,9 +285,12 @@ class TestPhaseImagingVisualizer:
             hyper_model_image=hyper_model_image_7x7,
         )
 
-        assert f"{plot_path}/image/hyper/hyper_model_image.png" in plot_patch.paths
         assert (
-            f"{plot_path}/image/subplots/subplot_hyper_galaxy_images.png"
+            path.join(plot_path, "image", "hyper", "hyper_model_image.png")
+            in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "subplots", "subplot_hyper_galaxy_images.png")
             in plot_patch.paths
         )
 
@@ -232,23 +303,29 @@ class TestPhaseInterferometerVisualizer:
             masked_dataset=masked_interferometer_7
         )
 
-        visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=include_all.preloaded_critical_curves,
-            preloaded_caustics=include_all.preloaded_caustics,
+        visualizer = (
+            visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
+                preloaded_critical_curves=include_all.preloaded_critical_curves,
+                preloaded_caustics=include_all.preloaded_caustics,
+            )
         )
 
         visualizer.visualize_interferometer(paths=af.Paths())
 
         assert (
-            f"{plot_path}/image/subplots/subplot_interferometer.png" in plot_patch.paths
+            path.join(plot_path, "image", "subplots", "subplot_interferometer.png")
+            in plot_patch.paths
         )
-        assert f"{plot_path}/image/interferometer/visibilities.png" in plot_patch.paths
         assert (
-            f"{plot_path}/image/interferometer/u_wavelengths.png"
+            path.join(plot_path, "image", "interferometer", "visibilities.png")
+            in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "interferometer", "u_wavelengths.png")
             not in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/interferometer/v_wavelengths.png"
+            path.join(plot_path, "image", "interferometer", "v_wavelengths.png")
             not in plot_patch.paths
         )
 
@@ -264,9 +341,11 @@ class TestPhaseInterferometerVisualizer:
             masked_dataset=masked_interferometer_7
         )
 
-        visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=include_all.preloaded_critical_curves,
-            preloaded_caustics=include_all.preloaded_caustics,
+        visualizer = (
+            visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
+                preloaded_critical_curves=include_all.preloaded_critical_curves,
+                preloaded_caustics=include_all.preloaded_caustics,
+            )
         )
 
         visualizer.visualize_fit(
@@ -276,56 +355,88 @@ class TestPhaseInterferometerVisualizer:
         )
 
         assert (
-            f"{plot_path}/image/subplots/subplot_fit_interferometer_real.png"
+            path.join(
+                plot_path, "image", "subplots", "subplot_fit_interferometer_real.png"
+            )
             in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/fit_interferometer/visibilities.png" in plot_patch.paths
-        )
-        assert (
-            f"{plot_path}/image/fit_interferometer/noise_map.png"
-            not in plot_patch.paths
-        )
-        assert (
-            f"{plot_path}/image/fit_interferometer/signal_to_noise_map.png"
-            not in plot_patch.paths
-        )
-        assert (
-            f"{plot_path}/image/fit_interferometer/model_visibilities.png"
+            path.join(plot_path, "image", "fit_interferometer", "visibilities.png")
             in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/fit_interferometer/residual_map_vs_uv_distances_real.png"
+            path.join(plot_path, "image", "fit_interferometer", "noise_map.png")
             not in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/fit_interferometer/normalized_residual_map_vs_uv_distances_real.png"
+            path.join(
+                plot_path, "image", "fit_interferometer", "signal_to_noise_map.png"
+            )
+            not in plot_patch.paths
+        )
+        assert (
+            path.join(
+                plot_path, "image", "fit_interferometer", "model_visibilities.png"
+            )
             in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/fit_interferometer/chi_squared_map_vs_uv_distances_real.png"
+            path.join(
+                plot_path,
+                "image",
+                "fit_interferometer",
+                "residual_map_vs_uv_distances_real.png",
+            )
+            not in plot_patch.paths
+        )
+        assert (
+            path.join(
+                plot_path,
+                "image",
+                "fit_interferometer",
+                "normalized_residual_map_vs_uv_distances_real.png",
+            )
+            in plot_patch.paths
+        )
+        assert (
+            path.join(
+                plot_path,
+                "image",
+                "fit_interferometer",
+                "chi_squared_map_vs_uv_distances_real.png",
+            )
             in plot_patch.paths
         )
 
-        #    assert f"{plot_path}/image/subplots/subplot_inversion.png" in plot_patch.paths
+        #    assert path.join(plot_path, "image","subplots","subplot_inversion.png") in plot_patch.paths
         assert (
-            f"{plot_path}/image/inversion/reconstructed_image.png" in plot_patch.paths
+            path.join(plot_path, "image", "inversion", "reconstructed_image.png")
+            in plot_patch.paths
         )
-        assert f"{plot_path}/image/inversion/reconstruction.png" in plot_patch.paths
-        assert f"{plot_path}/image/inversion/errors.png" not in plot_patch.paths
-        #  assert f"{plot_path}/image/inversion/residual_map.png" not in plot_patch.paths
-        #  assert f"{plot_path}/image/inversion/normalized_residual_map.png" not in plot_patch.paths
-        #  assert f"{plot_path}/image/inversion/chi_squared_map.png" in plot_patch.paths
         assert (
-            f"{plot_path}/image/inversion/regularization_weight_map.png"
+            path.join(plot_path, "image", "inversion", "reconstruction.png")
+            in plot_patch.paths
+        )
+        assert (
+            path.join(plot_path, "image", "inversion", "errors.png")
+            not in plot_patch.paths
+        )
+        #  assert path.join(plot_path, "image","inversion","residual_map.png") not in plot_patch.paths
+        #  assert path.join(plot_path, "image","inversion","normalized_residual_map.png") not in plot_patch.paths
+        #  assert path.join(plot_path, "image","inversion","chi_squared_map.png") in plot_patch.paths
+        assert (
+            path.join(plot_path, "image", "inversion", "regularization_weight_map.png")
             not in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/inversion/interpolated_reconstruction.png"
+            path.join(
+                plot_path, "image", "inversion", "interpolated_reconstruction.png"
+            )
             not in plot_patch.paths
         )
         assert (
-            f"{plot_path}/image/inversion/interpolated_errors.png" in plot_patch.paths
+            path.join(plot_path, "image", "inversion", "interpolated_errors.png")
+            in plot_patch.paths
         )
 
 
@@ -340,9 +451,11 @@ class TestHyperGalaxyVisualizer:
     ):
         visualizer = vis.HyperGalaxyVisualizer()
 
-        visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=include_all.preloaded_critical_curves,
-            preloaded_caustics=include_all.preloaded_caustics,
+        visualizer = (
+            visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
+                preloaded_critical_curves=include_all.preloaded_critical_curves,
+                preloaded_caustics=include_all.preloaded_caustics,
+            )
         )
 
         visualizer.visualize_hyper_galaxy(
@@ -354,6 +467,6 @@ class TestHyperGalaxyVisualizer:
         )
 
         assert (
-            f"{plot_path}/image/subplots/subplot_fit_hyper_galaxy.png"
+            path.join(plot_path, "image", "subplots", "subplot_fit_hyper_galaxy.png")
             in plot_patch.paths
         )

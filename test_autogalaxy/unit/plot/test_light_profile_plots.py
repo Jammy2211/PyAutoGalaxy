@@ -19,7 +19,7 @@ def make_profile_plotter_setup():
 @pytest.fixture(autouse=True)
 def set_config_path():
     conf.instance = conf.Config(
-        path.join(directory, "files/plotter"), path.join(directory, "output")
+        path.join(directory, "files", "plotter"), path.join(directory, "output")
     )
 
 
@@ -35,4 +35,4 @@ def test__all_quantities_are_output(
         plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
-    assert f"{plot_path}/image.png" in plot_patch.paths
+    assert path.join(plot_path, "image.png") in plot_patch.paths

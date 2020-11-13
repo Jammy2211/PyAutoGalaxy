@@ -1,4 +1,5 @@
 import copy
+from os import path
 
 from autoconf import conf
 import autofit as af
@@ -26,11 +27,11 @@ class AbstractVisualizer:
     def plotter_from_paths(paths: af.Paths, subfolders=None, format="png"):
         if subfolders is None:
             return lensing_plotters.Plotter(
-                output=mat_objs.Output(path=f"{paths.image_path}", format=format)
+                output=mat_objs.Output(path=paths.image_path, format=format)
             )
         return lensing_plotters.Plotter(
             output=mat_objs.Output(
-                path=f"{paths.image_path}{subfolders}", format=format
+                path=path.join(paths.image_path, subfolders), format=format
             )
         )
 
@@ -38,7 +39,9 @@ class AbstractVisualizer:
     def sub_plotter_from_paths(paths: af.Paths):
 
         return lensing_plotters.SubPlotter(
-            output=mat_objs.Output(path=f"{paths.image_path}subplots", format="png")
+            output=mat_objs.Output(
+                path=path.join(paths.image_path, "subplots"), format="png"
+            )
         )
 
     def new_visualizer_with_preloaded_critical_curves_and_caustics(
@@ -47,9 +50,11 @@ class AbstractVisualizer:
 
         visualizer = copy.deepcopy(self)
 
-        visualizer.include = visualizer.include.new_include_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=preloaded_critical_curves,
-            preloaded_caustics=preloaded_caustics,
+        visualizer.include = (
+            visualizer.include.new_include_with_preloaded_critical_curves_and_caustics(
+                preloaded_critical_curves=preloaded_critical_curves,
+                preloaded_caustics=preloaded_caustics,
+            )
         )
 
         return visualizer

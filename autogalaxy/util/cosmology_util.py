@@ -26,10 +26,8 @@ def angular_diameter_distance_between_redshifts_in_kpc_from(
     *, redshift_0, redshift_1, cosmology
 ):
 
-    angular_diameter_distance_between_redshifts_kpc = cosmology.angular_diameter_distance_z1z2(
-        redshift_0, redshift_1
-    ).to(
-        "kpc"
+    angular_diameter_distance_between_redshifts_kpc = (
+        cosmology.angular_diameter_distance_z1z2(redshift_0, redshift_1).to("kpc")
     )
 
     return angular_diameter_distance_between_redshifts_kpc.value
@@ -59,8 +57,10 @@ def critical_surface_density_between_redshifts_from(
     *, redshift_0, redshift_1, cosmology
 ):
 
-    critical_surface_density_kpc = critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-        redshift_0=redshift_0, redshift_1=redshift_1, cosmology=cosmology
+    critical_surface_density_kpc = (
+        critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+            redshift_0=redshift_0, redshift_1=redshift_1, cosmology=cosmology
+        )
     )
 
     kpc_per_arcsec = kpc_per_arcsec_from(redshift=redshift_0, cosmology=cosmology)
@@ -76,16 +76,22 @@ def critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
         4 * math.pi * constants.G.to("kpc3 / (solMass s2)")
     )
 
-    angular_diameter_distance_of_redshift_0_to_earth_kpc = angular_diameter_distance_to_earth_in_kpc_from(
-        redshift=redshift_0, cosmology=cosmology
+    angular_diameter_distance_of_redshift_0_to_earth_kpc = (
+        angular_diameter_distance_to_earth_in_kpc_from(
+            redshift=redshift_0, cosmology=cosmology
+        )
     )
 
-    angular_diameter_distance_of_redshift_1_to_earth_kpc = angular_diameter_distance_to_earth_in_kpc_from(
-        redshift=redshift_1, cosmology=cosmology
+    angular_diameter_distance_of_redshift_1_to_earth_kpc = (
+        angular_diameter_distance_to_earth_in_kpc_from(
+            redshift=redshift_1, cosmology=cosmology
+        )
     )
 
-    angular_diameter_distance_between_redshifts_kpc = angular_diameter_distance_between_redshifts_in_kpc_from(
-        redshift_0=redshift_0, redshift_1=redshift_1, cosmology=cosmology
+    angular_diameter_distance_between_redshifts_kpc = (
+        angular_diameter_distance_between_redshifts_in_kpc_from(
+            redshift_0=redshift_0, redshift_1=redshift_1, cosmology=cosmology
+        )
     )
 
     return (

@@ -19,7 +19,7 @@ def make_mp_plotter_setup():
 @pytest.fixture(autouse=True)
 def set_config_path():
     conf.instance = conf.Config(
-        path.join(directory, "files/plotter"), path.join(directory, "output")
+        path.join(directory, "files", "plotter"), path.join(directory, "output")
     )
 
 
@@ -35,7 +35,7 @@ def test__all_quantities_are_output(
         plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
-    assert f"{plot_path}/convergence.png" in plot_patch.paths
+    assert path.join(plot_path, "convergence.png") in plot_patch.paths
 
     ag.plot.MassProfile.potential(
         mass_profile=mp_0,
@@ -45,7 +45,7 @@ def test__all_quantities_are_output(
         plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
-    assert f"{plot_path}/potential.png" in plot_patch.paths
+    assert path.join(plot_path, "potential.png") in plot_patch.paths
 
     ag.plot.MassProfile.deflections_y(
         mass_profile=mp_0,
@@ -55,7 +55,7 @@ def test__all_quantities_are_output(
         plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
-    assert f"{plot_path}/deflections_y.png" in plot_patch.paths
+    assert path.join(plot_path, "deflections_y.png") in plot_patch.paths
 
     ag.plot.MassProfile.deflections_x(
         mass_profile=mp_0,
@@ -65,7 +65,7 @@ def test__all_quantities_are_output(
         plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
-    assert f"{plot_path}/deflections_x.png" in plot_patch.paths
+    assert path.join(plot_path, "deflections_x.png") in plot_patch.paths
 
     ag.plot.MassProfile.magnification(
         mass_profile=mp_0,
@@ -75,4 +75,4 @@ def test__all_quantities_are_output(
         plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
-    assert f"{plot_path}/magnification.png" in plot_patch.paths
+    assert path.join(plot_path, "magnification.png") in plot_patch.paths

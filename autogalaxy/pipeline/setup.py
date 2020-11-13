@@ -210,7 +210,7 @@ class SetupHyper(AbstractSetup):
     @property
     def component_name(self) -> str:
         """
-        The name of the hyper component of a `hyper` pipeline which preceeds the `Setup` tag contained within square 
+        The name of the hyper component of a `hyper` pipeline which preceeds the `Setup` tag contained within square
         brackets.
 
         For the default configuration files in `config/notation/setup_tags.ini` this tag appears as `hyper[tag]`.
@@ -312,9 +312,9 @@ class AbstractSetupLight(AbstractSetup):
     @property
     def component_name(self) -> str:
         """
-        The name of the light component of a `Light` pipeline which preceeds the `Setup` tag contained within square 
+        The name of the light component of a `Light` pipeline which preceeds the `Setup` tag contained within square
         brackets.
-        
+
         For the default configuration files this tag appears as `light[tag]`.
 
         Returns
@@ -733,7 +733,7 @@ class AbstractSetupMass(AbstractSetup):
     @property
     def component_name(self) -> str:
         """
-        The name of the mass component of a `mass` pipeline which preceeds the `Setup` tag contained within square 
+        The name of the mass component of a `mass` pipeline which preceeds the `Setup` tag contained within square
         brackets.
 
         For the default configuration files this tag appears as `mass[tag]`.
@@ -1041,7 +1041,7 @@ class SetupMassLightDark(AbstractSetupMass):
         envelope_prior_model : af.PriorModel(lmp.LightMassProfile)
             The `LightMassProfile` `PriorModel` used to represent the light and mass distribution of the stellar envelope.
         dark_prior_model : af.PriorModel(mp.MassProfile)
-            The `MassProfile` `PriorModel` used to represent the dark matter distribution of the dark matter halo.            
+            The `MassProfile` `PriorModel` used to represent the dark matter distribution of the dark matter halo.
         mass_centre : (float, float)
            If input, a fixed (y,x) centre of the mass profile is used which is not treated as a free parameter by the
            non-linear search.
@@ -1650,7 +1650,7 @@ class SetupSMBH(AbstractSetup):
     @property
     def component_name(self) -> str:
         """
-        The name of the smbh component of a `smbh` pipeline which preceeds the `Setup` tag contained within square 
+        The name of the smbh component of a `smbh` pipeline which preceeds the `Setup` tag contained within square
         brackets.
 
         For the default configuration files this tag appears as `smbh[tag]`.

@@ -867,7 +867,7 @@ class TestTruncatedNFW:
         assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
 
     def test__compare_nfw_and_truncated_nfw_with_large_truncation_radius__convergence_and_deflections_identical(
-        self
+        self,
     ):
 
         truncated_nfw = ag.mp.SphericalTruncatedNFW(

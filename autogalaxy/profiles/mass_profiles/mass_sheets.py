@@ -1,5 +1,4 @@
 import numpy as np
-from astropy import cosmology as cosmo
 from autoarray.structures import grids
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
@@ -81,7 +80,9 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
     def convergence_func(self, grid_radius):
         return 0.0
 
-    def average_convergence_of_1_radius(self,):
+    def average_convergence_of_1_radius(
+        self,
+    ):
         return dim.Length(value=0.0, unit_length=self.unit_length)
 
     @grids.grid_like_to_structure
@@ -123,7 +124,7 @@ class InputDeflections(mp.MassProfile):
         """
         Represents a known deflection angle map (e.g. from an already performed lens model or particle simulation
         of a mass distribution) which can be used for model fitting.
-        
+
         The image-plane grid of the delflection angles is used to align an input grid to the input deflections, so that
         a new deflection angle map can be computed via interpolation using the scipy.interpolate.griddata method.
 

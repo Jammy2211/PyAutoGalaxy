@@ -61,6 +61,7 @@ class Analysis(af.Analysis):
             )
 
             self.visualizer.visualize_hyper_galaxy(
+                paths=paths,
                 fit=fit_normal,
                 hyper_fit=fit_hyper,
                 galaxy_image=self.hyper_galaxy_image,

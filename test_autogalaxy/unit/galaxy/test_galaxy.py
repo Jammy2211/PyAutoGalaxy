@@ -1308,7 +1308,7 @@ class TestHyperGalaxy:
             assert (contribution_map == np.ones((3,))).all()
 
         def test__different_values__factor_is_1__contributions_are_value_divided_by_factor_and_max(
-            self
+            self,
         ):
             hyper_image = np.array([0.5, 1.0, 1.5])
 
