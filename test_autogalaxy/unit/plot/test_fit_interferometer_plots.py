@@ -1,4 +1,4 @@
-import os
+from os import path
 
 import autogalaxy.plot as aplt
 import pytest
@@ -6,7 +6,9 @@ import pytest
 
 @pytest.fixture(name="plot_path")
 def make_fit_interferometer_plotter_setup():
-    return "{}/files/plots/fit/".format(os.path.dirname(os.path.realpath(__file__)))
+    return path.join(
+        "{}".format(path.dirname(path.realpath(__file__))), "files", "plots", "fit"
+    )
 
 
 def test__fit_quantities_are_output(fit_interferometer_7, plot_path, plot_patch):

@@ -11,7 +11,9 @@ directory = path.dirname(path.realpath(__file__))
 
 @pytest.fixture(name="plot_path")
 def make_galaxy_plotter_setup():
-    return "{}/files/plots/galaxy/".format(os.path.dirname(os.path.realpath(__file__)))
+    return path.join(
+        "{}".format(path.dirname(path.realpath(__file__))), "files", "plots", "galaxy"
+    )
 
 
 @pytest.fixture(autouse=True)

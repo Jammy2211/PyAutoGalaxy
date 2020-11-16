@@ -1,4 +1,3 @@
-import os
 import shutil
 from os import path
 
@@ -14,7 +13,7 @@ directory = path.dirname(path.realpath(__file__))
 @pytest.fixture(name="plot_path")
 def make_plotter_setup():
     return path.join(
-        "{}".format(os.path.dirname(os.path.realpath(__file__))), "files", "plots"
+        "{}".format(path.dirname(path.realpath(__file__))), "files", "plots"
     )
 
 
@@ -277,7 +276,7 @@ class TestLensingPlotterPlots:
 
         plot_path = path.join(plot_path, "fits")
 
-        if os.path.exists(plot_path):
+        if path.exists(plot_path):
             shutil.rmtree(plot_path)
 
         arr = ag.Array.ones(shape_2d=(31, 31), pixel_scales=(1.0, 1.0), sub_size=2)

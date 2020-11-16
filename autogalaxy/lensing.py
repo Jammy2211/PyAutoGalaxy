@@ -241,11 +241,9 @@ class LensingObject:
         if len(tangential_critical_curve_indices) == 0:
             return []
 
-        tangential_critical_curve = (
-            grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
-                grid_pixels_1d=tangential_critical_curve_indices[0],
-                shape_2d=tangential_eigen_values.sub_shape_2d,
-            )
+        tangential_critical_curve = grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
+            grid_pixels_1d=tangential_critical_curve_indices[0],
+            shape_2d=tangential_eigen_values.sub_shape_2d,
         )
 
         return grids.GridCoordinates(tangential_critical_curve)
@@ -264,11 +262,9 @@ class LensingObject:
         if len(radial_critical_curve_indices) == 0:
             return []
 
-        radial_critical_curve = (
-            grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
-                grid_pixels_1d=radial_critical_curve_indices[0],
-                shape_2d=radial_eigen_values.sub_shape_2d,
-            )
+        radial_critical_curve = grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
+            grid_pixels_1d=radial_critical_curve_indices[0],
+            shape_2d=radial_eigen_values.sub_shape_2d,
         )
 
         return grids.GridCoordinates(radial_critical_curve)

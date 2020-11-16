@@ -1,4 +1,3 @@
-import os
 from os import path
 
 from autoconf import conf
@@ -11,8 +10,8 @@ directory = path.dirname(path.realpath(__file__))
 
 @pytest.fixture(name="plot_path")
 def make_mp_plotter_setup():
-    return "{}/files/plots/profiles/".format(
-        os.path.dirname(os.path.realpath(__file__))
+    return path.join(
+        "{}".format(path.dirname(path.realpath(__file__))), "files", "plots", "profiles"
     )
 
 

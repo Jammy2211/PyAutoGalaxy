@@ -1,4 +1,4 @@
-import os
+from os import path
 
 import autogalaxy.plot as aplt
 import pytest
@@ -6,8 +6,11 @@ import pytest
 
 @pytest.fixture(name="plot_path")
 def make_hyper_plotter_setup():
-    return "{}/files/plots/hyper_galaxies/".format(
-        os.path.dirname(os.path.realpath(__file__))
+    return path.join(
+        "{}".format(path.dirname(path.realpath(__file__))),
+        "files",
+        "plots",
+        "hyper_galaxies",
     )
 
 

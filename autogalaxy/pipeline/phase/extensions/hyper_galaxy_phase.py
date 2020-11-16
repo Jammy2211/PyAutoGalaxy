@@ -1,5 +1,5 @@
 import copy
-
+from os import path
 import autofit as af
 import numpy as np
 from autoarray.fit import fit as aa_fit
@@ -196,14 +196,14 @@ class HyperGalaxyPhase(HyperPhase):
             results.last.hyper_galaxy_image_path_dict
         )
 
-        for path, galaxy in results.last.path_galaxy_tuples:
+        for path_galaxy, galaxy in results.last.path_galaxy_tuples:
 
             if self.hyper_galaxy_names is not None:
-                if path[-1] in self.hyper_galaxy_names:
+                if path_galaxy[-1] in self.hyper_galaxy_names:
 
                     model = copy.deepcopy(phase.model)
                     search = copy.deepcopy(phase.search)
-                    search.paths.tag += f"/{path[-1]}"
+                    search.paths.tag = path.join(search.paths.tag, path_galaxy[-1])
 
                     # TODO : This is a HACK :O
 
@@ -219,7 +219,8 @@ class HyperGalaxyPhase(HyperPhase):
 
                     # If arrays is all zeros, galaxy did not have image in previous phase and hyper phase is omitted.
                     if not np.all(
-                        hyper_result.analysis.hyper_galaxy_image_path_dict[path] == 0
+                        hyper_result.analysis.hyper_galaxy_image_path_dict[path_galaxy]
+                        == 0
                     ):
                         hyper_model_image = hyper_result.analysis.hyper_model_image
 
@@ -227,7 +228,7 @@ class HyperGalaxyPhase(HyperPhase):
                             masked_imaging=masked_imaging,
                             hyper_model_image=hyper_model_image,
                             hyper_galaxy_image=hyper_result.analysis.hyper_galaxy_image_path_dict[
-                                path
+                                path_galaxy
                             ],
                         )
 
@@ -241,12 +242,12 @@ class HyperGalaxyPhase(HyperPhase):
                         def transfer_field(name):
                             if hasattr(result._instance, name):
                                 setattr(
-                                    hyper_result._instance.object_for_path(path),
+                                    hyper_result._instance.object_for_path(path_galaxy),
                                     name,
                                     getattr(result._instance, name),
                                 )
                                 setattr(
-                                    hyper_result.model.object_for_path(path),
+                                    hyper_result.model.object_for_path(path_galaxy),
                                     name,
                                     getattr(result.model, name),
                                 )
