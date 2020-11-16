@@ -38,7 +38,7 @@ class TestMakeAnalysis:
             dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
 
-        file_phase_info = "{}/{}".format(
+        file_phase_info = path.join(
             phase_imaging_7x7.search.paths.output_path, "phase.info"
         )
 

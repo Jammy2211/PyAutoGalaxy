@@ -1,13 +1,14 @@
 from astropy.io import fits
 
 import os
+from os import path
 import numpy as np
 import autogalaxy as ag
 
 
 def create_fits(fits_path, array):
 
-    if os.path.exists(fits_path):
+    if path.exists(fits_path):
         os.remove(fits_path)
 
     hdu_list = fits.HDUList()
@@ -20,15 +21,17 @@ def create_fits(fits_path, array):
 class TestImaging:
     def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9(self):
 
-        fits_path = "{}/files".format(os.path.dirname(os.path.realpath(__file__)))
-        image_path = f"{fits_path}/image.fits"
+        fits_path = path.join(
+            "{}".format(path.dirname(path.realpath(__file__))), "files"
+        )
+        image_path = path.join(fits_path, "image.fits")
 
         create_fits(fits_path=image_path, array=[[1.0, 0.0], [0.0, 0.0]])
 
-        noise_map_path = f"{fits_path}/noise_map.fits"
+        noise_map_path = path.join(fits_path, "noise_map.fits")
         create_fits(fits_path=noise_map_path, array=[[2.0, 0.0], [0.0, 0.0]])
 
-        psf_path = f"{fits_path}/psf.fits"
+        psf_path = path.join(fits_path, "psf.fits")
         create_fits(fits_path=psf_path, array=[[1.0, 1.0], [0.0, 0.0]])
 
         imaging = ag.Imaging.from_fits(

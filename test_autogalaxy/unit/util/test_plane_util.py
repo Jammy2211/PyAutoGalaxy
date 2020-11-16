@@ -12,7 +12,7 @@ from autogalaxy.util.plane_util import (
 
 class TestPlaneImageFromGrid:
     def test__3x3_grid__extracts_max_min_coordinates__creates_grid_including_half_pixel_offset_from_edge(
-        self
+        self,
     ):
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
 
@@ -48,7 +48,7 @@ class TestPlaneImageFromGrid:
         assert (plane_image.array == plane_image_galaxy).all()
 
     def test__3x3_grid__extracts_max_min_coordinates__ignores_other_coordinates_more_central(
-        self
+        self,
     ):
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
 
@@ -202,7 +202,7 @@ class TestPlaneRedshifts:
         assert ordered_plane_redshifts == [0.1, 1.0, 2.0]
 
     def test_from_galaxies__3_galaxies_two_same_redshift_planes_redshift_order_is_size_2_with_redshifts(
-        self
+        self,
     ):
         galaxies = [
             ag.Galaxy(redshift=1.0),
@@ -254,7 +254,7 @@ class TestPlaneRedshifts:
         ]
 
     def test__if_number_of_input_slices_is_not_equal_to_number_of_plane_intervals__raises_errror(
-        self
+        self,
     ):
         with pytest.raises(exc.PlaneException):
             ordered_plane_redshifts_with_slicing_from(
@@ -280,7 +280,7 @@ class TestPlaneRedshifts:
 
 class TestGalaxyOrdering:
     def test__3_galaxies_reordered_in_ascending_redshift__planes_match_galaxy_redshifts(
-        self
+        self,
     ):
         galaxies = [
             ag.Galaxy(redshift=2.0),
@@ -299,7 +299,7 @@ class TestGalaxyOrdering:
         assert galaxies_in_redshift_ordered_planes[2][0].redshift == 2.0
 
     def test_3_galaxies_x2_same_redshift__order_is_size_2_with_redshifts__plane_match_galaxy_redshifts(
-        self
+        self,
     ):
         galaxies = [
             ag.Galaxy(redshift=1.0),

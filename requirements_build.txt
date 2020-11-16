@@ -1,0 +1,5 @@
+autoconf==0.7.2
+colossus==1.2.14
+astropy>=3.0.0
+numpy>=1.18.0
+pyquad==0.6.2

@@ -4,7 +4,6 @@ import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
 
-from autoarray import decorator_util
 from autoarray.structures import grids
 from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
@@ -168,7 +167,7 @@ class MassProfileMGE:
         z = xs + 1j * ys
         zq = axis_ratio * xs + 1j * ys / axis_ratio
 
-        expv = -xs ** 2.0 * (1.0 - q2) - ys ** 2.0 * (1.0 / q2 - 1.0)
+        expv = -(xs ** 2.0) * (1.0 - q2) - ys ** 2.0 * (1.0 / q2 - 1.0)
 
         for i in range(len(sigmas)):
 
@@ -188,7 +187,7 @@ class MassProfileMGE:
     @staticmethod
     def kesi(p):
         """
-            see Eq.(6) of 1906.08263
+        see Eq.(6) of 1906.08263
         """
         n_list = np.arange(0, 2 * p + 1, 1)
         return (2.0 * p * np.log(10) / 3.0 + 2.0 * np.pi * n_list * 1j) ** (0.5)
@@ -196,7 +195,7 @@ class MassProfileMGE:
     @staticmethod
     def eta(p):
         """
-            see Eq.(6) of 1906.00263
+        see Eq.(6) of 1906.00263
         """
         eta_list = np.zeros(int(2 * p + 1))
         kesi_list = np.zeros(int(2 * p + 1))
@@ -265,7 +264,7 @@ class MassProfileMGE:
         raise NotImplementedError()
 
     def _convergence_from_grid_via_gaussians(self, grid_radii):
-        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
+        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
         ----------

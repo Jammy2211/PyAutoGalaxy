@@ -1,4 +1,3 @@
-import os
 from os import path
 
 import pytest
@@ -10,8 +9,11 @@ directory = path.dirname(path.realpath(__file__))
 
 @pytest.fixture(name="plot_path")
 def make_galaxy_fit_plotter_setup():
-    return "{}/files/plots/galaxy_fitting/".format(
-        os.path.dirname(os.path.realpath(__file__))
+    return path.join(
+        "{}".format(path.dirname(path.realpath(__file__))),
+        "files",
+        "plots",
+        "galaxy_fitting",
     )
 
 
@@ -33,7 +35,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
-    assert f"{plot_path}/subplot_fit_galaxy.png" in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
 
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_convergence,
@@ -42,7 +44,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
-    assert f"{plot_path}/subplot_fit_galaxy.png" in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
 
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_potential,
@@ -51,7 +53,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
-    assert f"{plot_path}/subplot_fit_galaxy.png" in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
 
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_deflections_y,
@@ -60,7 +62,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
-    assert f"{plot_path}/subplot_fit_galaxy.png" in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
 
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_deflections_x,
@@ -69,4 +71,4 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
-    assert f"{plot_path}/subplot_fit_galaxy.png" in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths

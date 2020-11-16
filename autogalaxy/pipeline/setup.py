@@ -210,7 +210,7 @@ class SetupHyper(AbstractSetup):
     @property
     def component_name(self) -> str:
         """
-        The name of the hyper component of a `hyper` pipeline which preceeds the `Setup` tag contained within square 
+        The name of the hyper component of a `hyper` pipeline which preceeds the `Setup` tag contained within square
         brackets.
 
         For the default configuration files in `config/notation/setup_tags.ini` this tag appears as `hyper[tag]`.
@@ -312,9 +312,9 @@ class AbstractSetupLight(AbstractSetup):
     @property
     def component_name(self) -> str:
         """
-        The name of the light component of a `Light` pipeline which preceeds the `Setup` tag contained within square 
+        The name of the light component of a `Light` pipeline which preceeds the `Setup` tag contained within square
         brackets.
-        
+
         For the default configuration files this tag appears as `light[tag]`.
 
         Returns
@@ -334,6 +334,7 @@ class SetupLightParametric(AbstractSetupLight):
         light_centre: (float, float) = None,
         align_bulge_disk_centre: bool = True,
         align_bulge_disk_elliptical_comps: bool = False,
+        align_bulge_envelope_centre: bool = False,
     ):
         """
         The setup of the parametric light modeling in a pipeline, which controls how PyAutoGalaxy template pipelines
@@ -362,6 +363,9 @@ class SetupLightParametric(AbstractSetupLight):
         align_bulge_disk_elliptical_comps : bool or None
             If a bulge + disk light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the galaxy,
             `True` will align the elliptical components the bulge and disk components and not fit them separately.
+        align_bulge_envelope_centre : bool or None
+            If a bulge + envelope light model (e.g. EllipticalSersic + EllipticalExponential) is used to fit the
+            galaxy, `True` will align the centre of the bulge and envelope components and not fit them separately.
         """
 
         self.bulge_prior_model = self._cls_to_prior_model(cls=bulge_prior_model)
@@ -384,6 +388,13 @@ class SetupLightParametric(AbstractSetupLight):
                     self.bulge_prior_model.elliptical_comps = (
                         self.disk_prior_model.elliptical_comps
                     )
+
+        self.align_bulge_envelope_centre = align_bulge_envelope_centre
+
+        if self.bulge_prior_model is not None and self.envelope_prior_model is not None:
+
+            if self.align_bulge_envelope_centre:
+                self.envelope_prior_model.centre = self.bulge_prior_model.centre
 
         if self.light_centre is not None:
 
@@ -423,6 +434,7 @@ class SetupLightParametric(AbstractSetupLight):
             f"{self.disk_prior_model_tag}"
             f"{self.envelope_prior_model_tag}"
             f"{self.align_bulge_disk_tag}"
+            f"{self.align_bulge_envelope_centre_tag}"
             f"{self.light_centre_tag}]"
         )
 
@@ -535,6 +547,9 @@ class SetupLightParametric(AbstractSetupLight):
         - align_bulge_disk_centre = `False` -> No Tag
         - align_bulge_disk_centre = `True `-> align_bulge_disk_centre
         """
+        if self.bulge_prior_model is None or self.disk_prior_model is None:
+            return ""
+
         if not self.align_bulge_disk_centre:
             return ""
         elif self.align_bulge_disk_centre:
@@ -551,10 +566,32 @@ class SetupLightParametric(AbstractSetupLight):
         - align_bulge_disk_elliptical_comps = `False` -> No Tag
         - align_bulge_disk_elliptical_comps = `True `-> align_bulge_disk_ell
         """
+        if self.bulge_prior_model is None or self.disk_prior_model is None:
+            return ""
+
         if not self.align_bulge_disk_elliptical_comps:
             return ""
         elif self.align_bulge_disk_elliptical_comps:
             return f"_{conf.instance['notation']['setup_tags']['light']['align_bulge_disk_elliptical_comps']}"
+
+    @property
+    def align_bulge_envelope_centre_tag(self) -> str:
+        """
+        Tag for if the bulge and envelope of a bulge-envelope system are aligned or not, to customize pipeline
+        output paths based on the bulge-envelope model.
+
+        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
+
+        - align_bulge_envelope_centre = `False` -> No Tag
+        - align_bulge_envelope_centre = `True `-> align_bulge_envelope_centre
+        """
+        if self.bulge_prior_model is None or self.envelope_prior_model is None:
+            return ""
+
+        if not self.align_bulge_envelope_centre:
+            return ""
+        elif self.align_bulge_envelope_centre:
+            return f"_{conf.instance['notation']['setup_tags']['light']['align_bulge_envelope_centre']}"
 
     @property
     def align_bulge_disk_tag(self) -> str:
@@ -571,15 +608,12 @@ class SetupLightParametric(AbstractSetupLight):
         - align_bulge_disk_centre_ell
         """
 
-        if self.bulge_prior_model is None or self.disk_prior_model is None:
+        align_bulge_disk_tag = f"{self.align_bulge_disk_centre_tag}{self.align_bulge_disk_elliptical_comps_tag}"
+
+        if align_bulge_disk_tag == "":
             return ""
 
-        if not any(
-            [self.align_bulge_disk_centre, self.align_bulge_disk_elliptical_comps]
-        ):
-            return ""
-
-        return f"__{conf.instance['notation']['setup_tags']['light']['align_bulge_disk']}{self.align_bulge_disk_centre_tag}{self.align_bulge_disk_elliptical_comps_tag}"
+        return f"__{conf.instance['notation']['setup_tags']['light']['align_bulge_disk']}{align_bulge_disk_tag}"
 
 
 class SetupLightInversion(AbstractSetupLight):
@@ -733,7 +767,7 @@ class AbstractSetupMass(AbstractSetup):
     @property
     def component_name(self) -> str:
         """
-        The name of the mass component of a `mass` pipeline which preceeds the `Setup` tag contained within square 
+        The name of the mass component of a `mass` pipeline which preceeds the `Setup` tag contained within square
         brackets.
 
         For the default configuration files this tag appears as `mass[tag]`.
@@ -1041,7 +1075,7 @@ class SetupMassLightDark(AbstractSetupMass):
         envelope_prior_model : af.PriorModel(lmp.LightMassProfile)
             The `LightMassProfile` `PriorModel` used to represent the light and mass distribution of the stellar envelope.
         dark_prior_model : af.PriorModel(mp.MassProfile)
-            The `MassProfile` `PriorModel` used to represent the dark matter distribution of the dark matter halo.            
+            The `MassProfile` `PriorModel` used to represent the dark matter distribution of the dark matter halo.
         mass_centre : (float, float)
            If input, a fixed (y,x) centre of the mass profile is used which is not treated as a free parameter by the
            non-linear search.
@@ -1650,7 +1684,7 @@ class SetupSMBH(AbstractSetup):
     @property
     def component_name(self) -> str:
         """
-        The name of the smbh component of a `smbh` pipeline which preceeds the `Setup` tag contained within square 
+        The name of the smbh component of a `smbh` pipeline which preceeds the `Setup` tag contained within square
         brackets.
 
         For the default configuration files this tag appears as `smbh[tag]`.

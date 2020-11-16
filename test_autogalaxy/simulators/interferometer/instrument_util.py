@@ -112,9 +112,9 @@ def simulate_interferometer_from_instrument(data_name, instrument, galaxies):
     dataset_path = f"dataset/interferometer/{data_name}/{instrument}"
 
     interferometer.output_to_fits(
-        visibilities_path=f"{dataset_path}/visibilities.fits",
-        noise_map_path=f"{dataset_path}/noise_map.fits",
-        uv_wavelengths_path=f"{dataset_path}/uv_wavelengths.fits",
+        visibilities_path=path.join(dataset_path, "visibilities.fits"),
+        noise_map_path=path.join(dataset_path, "noise_map.fits"),
+        uv_wavelengths_path=path.join(dataset_path, "uv_wavelengths.fits"),
         overwrite=True,
     )
 
@@ -139,7 +139,7 @@ def load_test_interferometer(data_name, instrument):
     dataset_path = f"dataset/interferometer/{data_name}/{instrument}"
 
     return ag.Interferometer.from_fits(
-        visibilities_path=f"{dataset_path}/visibilities.fits",
-        noise_map_path=f"{dataset_path}/noise_map.fits",
-        uv_wavelengths_path=f"{dataset_path}/uv_wavelengths.fits",
+        visibilities_path=path.join(dataset_path, "visibilities.fits"),
+        noise_map_path=path.join(dataset_path, "noise_map.fits"),
+        uv_wavelengths_path=path.join(dataset_path, "uv_wavelengths.fits"),
     )

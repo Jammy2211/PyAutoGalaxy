@@ -86,15 +86,15 @@ def deflections_y(mass_profile, grid, positions=None, include=None, plotter=None
 def deflections_x(mass_profile, grid, positions=None, include=None, plotter=None):
     """Plot the x component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
 
-     Set *autogalaxy.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
+    Set *autogalaxy.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
 
-     Parameters
-     -----------
-     mass_profile : model.profiles.mass_profiles.MassProfile
-         The mass profile whose x deflecton angles are plotted.
-     grid : grid_like
-         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
-     """
+    Parameters
+    -----------
+    mass_profile : model.profiles.mass_profiles.MassProfile
+        The mass profile whose x deflecton angles are plotted.
+    grid : grid_like
+        The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
+    """
     deflections = mass_profile.deflections_from_grid(grid=grid)
     deflections_x = arrays.Array.manual_mask(
         array=deflections.in_1d[:, 1], mask=grid.mask

@@ -3,6 +3,7 @@ import numpy as np
 from autoarray.structures import arrays
 from autoarray.structures import grids
 from autogalaxy.profiles import mass_profiles as mp
+
 from pyquad import quad_grid
 from scipy.special import wofz
 import typing
@@ -24,7 +25,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
         sigma: float = 0.01,
         mass_to_light_ratio: float = 1.0,
     ):
-        """ The elliptical Gaussian light profile.
+        """The elliptical Gaussian light profile.
 
         Parameters
         ----------
@@ -67,7 +68,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
 
         output_grid[ind_pos_y] = -1j * (
             wofz(xs_0 + 1j * ys_0)
-            - np.exp(-xs_0 ** 2.0 * (1.0 - q2) - ys_0 * ys_0 * (1.0 / q2 - 1.0))
+            - np.exp(-(xs_0 ** 2.0) * (1.0 - q2) - ys_0 * ys_0 * (1.0 / q2 - 1.0))
             * wofz(self.axis_ratio * xs_0 + 1j * ys_0 / self.axis_ratio)
         )
 
@@ -75,7 +76,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
             -1j
             * (
                 wofz(xs_1 + 1j * ys_1)
-                - np.exp(-xs_1 ** 2.0 * (1.0 - q2) - ys_1 * ys_1 * (1.0 / q2 - 1.0))
+                - np.exp(-(xs_1 ** 2.0) * (1.0 - q2) - ys_1 * ys_1 * (1.0 / q2 - 1.0))
                 * wofz(self.axis_ratio * xs_1 + 1j * ys_1 / self.axis_ratio)
             )
         )
@@ -164,7 +165,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
     @grids.transform
     @grids.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
-        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
+        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
         ----------
@@ -248,7 +249,7 @@ class AbstractEllipticalSersic(
     @grids.transform
     @grids.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
-        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
+        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
         ----------
@@ -265,7 +266,7 @@ class AbstractEllipticalSersic(
     @grids.transform
     @grids.relocate_to_radial_minimum
     def convergence_from_grid_via_gaussians(self, grid):
-        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
+        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
         ----------
@@ -296,12 +297,12 @@ class AbstractEllipticalSersic(
 
     def image_from_grid_radii(self, radius):
         """
-    Returns the intensity of the profile at a given radius.
+        Returns the intensity of the profile at a given radius.
 
-        Parameters
-        ----------
-        radius : float
-            The distance from the centre of the profile.
+            Parameters
+            ----------
+            radius : float
+                The distance from the centre of the profile.
         """
         return self.intensity * np.exp(
             -self.sersic_constant
@@ -310,7 +311,7 @@ class AbstractEllipticalSersic(
 
     @property
     def sersic_constant(self):
-        """ A parameter derived from Sersic index which ensures that effective radius contains 50% of the profile's
+        """A parameter derived from Sersic index which ensures that effective radius contains 50% of the profile's
         total integrated light.
         """
         return (
@@ -639,7 +640,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
     @grids.transform
     @grids.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
-        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
+        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
         ----------
@@ -890,7 +891,7 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
     @grids.transform
     @grids.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
-        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
+        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
         Parameters
         ----------
         grid : aa.Grid

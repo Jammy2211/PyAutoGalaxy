@@ -1,5 +1,4 @@
-import copy
-
+from os import path
 import autofit as af
 from autofit.tools.phase import Dataset
 from autogalaxy.pipeline.phase import abstract
@@ -44,7 +43,7 @@ class HyperPhase:
             A copy of the original phase with a modified name and path
         """
         self.phase.search = self.hyper_search.copy_with_name_extension(
-            extension=f"{self.phase.paths.path_prefix}/{self.phase.name}"
+            extension=self.phase.name, path_prefix=self.phase.paths.path_prefix
         )
         self.phase.hyper_name = self.hyper_name
         return self.phase

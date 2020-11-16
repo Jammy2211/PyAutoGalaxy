@@ -257,7 +257,7 @@ class TestDecorators:
         assert deflections[4, 0] == deflections_sub_8[4, 0]
 
     def test__grid_interpolate_in__convergence__interpolates_based_on_intepolate_config(
-        self
+        self,
     ):
 
         # `False` in interpolate.ini
@@ -307,7 +307,7 @@ class TestDecorators:
         assert (convergence_interpolate == interpolated_array).all()
 
     def test__grid_interpolate_in__potential__interpolates_based_on_intepolate_config(
-        self
+        self,
     ):
 
         # `False` in interpolate.ini
@@ -355,7 +355,7 @@ class TestDecorators:
         assert (potential_interpolate == interpolated_array).all()
 
     def test__grid_interpolate_in__deflections__interpolates_based_on_intepolate_config(
-        self
+        self,
     ):
 
         # `False` in interpolate.ini

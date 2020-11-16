@@ -247,7 +247,7 @@ class TestAbstractPlane:
             assert plane.regularization is None
 
         def test__1_galaxy_in_plane__it_has_regularization__returns_regularization(
-            self
+            self,
         ):
             galaxy_reg = ag.Galaxy(
                 redshift=0.5,
@@ -343,7 +343,7 @@ class TestAbstractPlane:
             ]
 
         def test__extract_centres_of_all_mass_profiles_of_all_galaxies__ignores_mass_sheets(
-            self
+            self,
         ):
 
             g0 = ag.Galaxy(
@@ -1160,7 +1160,7 @@ class TestAbstractPlaneProfiles:
 
     class TestLensingObject:
         def test__correct_einstein_mass_caclulated_for_multiple_mass_profiles__means_all_innherited_methods_work(
-            self
+            self,
         ):
             sis_0 = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=0.2)
 
@@ -1983,7 +1983,7 @@ class TestAbstractPlaneData:
             assert plane.contribution_maps_of_galaxies[2] == None
 
         def test__contribution_map_is_sum_of_galaxy_contribution_maps__handles_nones_correctly(
-            self
+            self,
         ):
             hyper_galaxy_0 = ag.HyperGalaxy(
                 contribution_factor=0.0, noise_factor=0.0, noise_power=1.0
@@ -2037,7 +2037,7 @@ class TestAbstractPlaneData:
 
     class TestHyperNoiseMap:
         def test__x2_hyper_galaxy__use_numerical_values_of_hyper_noise_map_scaling(
-            self
+            self,
         ):
             noise_map = ag.Array.manual_2d(array=[[1.0, 2.0, 3.0]], pixel_scales=1.0)
 
@@ -2231,7 +2231,7 @@ class TestAbstractPlaneData:
             assert hyper_noise_maps[3].in_1d == np.zeros(shape=(3, 1))
 
         def test__hyper_noise_map_from_noise_map__is_sum_of_galaxy_hyper_noise_maps__filters_nones(
-            self
+            self,
         ):
             noise_map = ag.Array.manual_2d(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
 
@@ -2310,7 +2310,7 @@ class TestAbstractPlaneData:
             ).all()
 
         def test__plane_has_no_hyper_galaxies__hyper_noise_map_function_returns_none(
-            self
+            self,
         ):
             noise_map = ag.Array.manual_2d(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
 

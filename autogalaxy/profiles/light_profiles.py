@@ -51,7 +51,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
     ):
-        """  Abstract class for an elliptical light-profile.
+        """Abstract class for an elliptical light-profile.
 
         Parameters
         ----------
@@ -169,7 +169,7 @@ class EllipticalGaussian(EllipticalLightProfile):
         intensity: float = 0.1,
         sigma: float = 0.01,
     ):
-        """ The elliptical Gaussian light profile.
+        """The elliptical Gaussian light profile.
 
         Parameters
         ----------
@@ -234,7 +234,7 @@ class SphericalGaussian(EllipticalGaussian):
         intensity: float = 0.1,
         sigma: float = 0.01,
     ):
-        """ The spherical Gaussian light profile.
+        """The spherical Gaussian light profile.
 
         Parameters
         ----------
@@ -307,7 +307,7 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
 
     @property
     def sersic_constant(self):
-        """ A parameter derived from Sersic index which ensures that effective radius contains 50% of the profile's
+        """A parameter derived from Sersic index which ensures that effective radius contains 50% of the profile's
         total integrated light.
         """
         return (
@@ -321,12 +321,12 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
 
     def image_from_grid_radii(self, radius):
         """
-    Returns the intensity of the profile at a given radius.
+        Returns the intensity of the profile at a given radius.
 
-        Parameters
-        ----------
-        radius : float
-            The distance from the centre of the profile.
+            Parameters
+            ----------
+            radius : float
+                The distance from the centre of the profile.
         """
         return self.intensity * np.exp(
             -self.sersic_constant
@@ -398,7 +398,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
     @grids.transform
     @grids.relocate_to_radial_minimum
     def image_from_grid(self, grid, grid_radial_minimum=None):
-        """ Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
+        """Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 
         If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
 
@@ -418,7 +418,7 @@ class SphericalSersic(EllipticalSersic):
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
     ):
-        """ The spherical Sersic light profile.
+        """The spherical Sersic light profile.
 
         Parameters
         ----------
@@ -448,7 +448,7 @@ class EllipticalExponential(EllipticalSersic):
         intensity: float = 0.1,
         effective_radius: float = 0.6,
     ):
-        """ The elliptical exponential profile.
+        """The elliptical exponential profile.
 
         This is a subset of the elliptical Sersic profile, specific to the case that sersic_index = 1.0.
 
@@ -480,7 +480,7 @@ class SphericalExponential(EllipticalExponential):
         intensity: float = 0.1,
         effective_radius: float = 0.6,
     ):
-        """ The spherical exponential profile.
+        """The spherical exponential profile.
 
         This is a subset of the elliptical Sersic profile, specific to the case that sersic_index = 1.0.
 
@@ -509,7 +509,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
         intensity: float = 0.1,
         effective_radius: float = 0.6,
     ):
-        """ The elliptical Dev Vaucouleurs light profile.
+        """The elliptical Dev Vaucouleurs light profile.
 
         This is a subset of the elliptical Sersic profile, specific to the case that sersic_index = 4.0.
 
@@ -541,7 +541,7 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
         intensity: float = 0.1,
         effective_radius: float = 0.6,
     ):
-        """ The spherical Dev Vaucouleurs light profile.
+        """The spherical Dev Vaucouleurs light profile.
 
         This is a subset of the elliptical Sersic profile, specific to the case that sersic_index = 1.0.
 

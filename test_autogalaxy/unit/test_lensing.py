@@ -2,6 +2,7 @@ import typing
 
 import numpy as np
 import pytest
+
 from pyquad import quad_grid
 from skimage import measure
 
@@ -379,7 +380,7 @@ class TestMagnification:
         assert mean_error < 1e-4
 
     def test__compare_magnification_from_determinant_and_from_convergence_and_shear(
-        self
+        self,
     ):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
@@ -459,7 +460,7 @@ class TestBoundingBox:
         assert galaxy.mass_profile_bounding_box == [0.0, 18.0, -16.0, 90.0]
 
     def test__convergence_bounding_box_for_single_mass_profile__extends_to_threshold(
-        self
+        self,
     ):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
@@ -480,7 +481,7 @@ class TestBoundingBox:
         )
 
     def test__convergence_bounding_box__mass_profiles_are_only_point_masses__uses_their_einstein_radii(
-        self
+        self,
     ):
         point_mass_0 = ag.mp.PointMass(einstein_radius=0.1)
 
@@ -599,7 +600,7 @@ class TestConvergenceViajacobian:
 
 class TestCriticalCurvesAndCaustics:
     def test_compare_magnification_from_determinant_and_from_convergence_and_shear(
-        self
+        self,
     ):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
@@ -744,7 +745,7 @@ class TestCriticalCurvesAndCaustics:
         assert 0.7 < x_centre < 1.2
 
     def test__compare_tangential_critical_curves_from_magnification_and_eigen_values(
-        self
+        self,
     ):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
@@ -818,7 +819,7 @@ class TestCriticalCurvesAndCaustics:
 
 class TestEinsteinRadiusMassfrom:
     def test__tangential_critical_curve_area_from_critical_curve_and_calculation__spherical_isothermal(
-        self
+        self,
     ):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 

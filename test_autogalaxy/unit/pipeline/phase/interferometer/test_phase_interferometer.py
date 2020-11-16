@@ -42,7 +42,7 @@ class TestMakeAnalysis:
             results=mock.MockResults(),
         )
 
-        file_phase_info = "{}/{}".format(
+        file_phase_info = path.join(
             phase_interferometer_7.search.paths.output_path, "phase.info"
         )
 

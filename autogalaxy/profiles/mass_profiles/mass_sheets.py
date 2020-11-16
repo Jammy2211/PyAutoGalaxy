@@ -1,5 +1,4 @@
 import numpy as np
-from astropy import cosmology as cosmo
 from autoarray.structures import grids
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
@@ -123,7 +122,7 @@ class InputDeflections(mp.MassProfile):
         """
         Represents a known deflection angle map (e.g. from an already performed lens model or particle simulation
         of a mass distribution) which can be used for model fitting.
-        
+
         The image-plane grid of the delflection angles is used to align an input grid to the input deflections, so that
         a new deflection angle map can be computed via interpolation using the scipy.interpolate.griddata method.
 

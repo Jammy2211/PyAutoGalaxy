@@ -216,6 +216,26 @@ class TestSetupLightParametric:
 
         assert setup.bulge_prior_model.centre == setup.disk_prior_model.centre
 
+        setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            disk_prior_model=None,
+            envelope_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            align_bulge_envelope_centre=True,
+        )
+
+        assert setup.bulge_prior_model.centre == setup.envelope_prior_model.centre
+
+        setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            disk_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            envelope_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            align_bulge_disk_centre=True,
+            align_bulge_envelope_centre=True,
+        )
+
+        assert setup.bulge_prior_model.centre == setup.disk_prior_model.centre
+        assert setup.bulge_prior_model.centre == setup.envelope_prior_model.centre
+
     def test__light_centre_tag(self):
 
         setup = ag.SetupLightParametric(light_centre=None)
@@ -260,6 +280,44 @@ class TestSetupLightParametric:
         )
         assert light.align_bulge_disk_tag == ""
 
+    def test__align_bulge_envelope_centre_tag(self):
+
+        light = ag.SetupLightParametric(align_bulge_envelope_centre=False)
+
+        assert light.align_bulge_envelope_centre_tag == ""
+
+        light = ag.SetupLightParametric(
+            align_bulge_envelope_centre=True,
+            bulge_prior_model=None,
+            envelope_prior_model=None,
+        )
+
+        assert light.align_bulge_envelope_centre_tag == ""
+
+        light = ag.SetupLightParametric(
+            align_bulge_envelope_centre=True,
+            bulge_prior_model=None,
+            envelope_prior_model=ag.lp.EllipticalSersic,
+        )
+
+        assert light.align_bulge_envelope_centre_tag == ""
+
+        light = ag.SetupLightParametric(
+            align_bulge_envelope_centre=True,
+            bulge_prior_model=ag.lp.EllipticalSersic,
+            envelope_prior_model=None,
+        )
+
+        assert light.align_bulge_envelope_centre_tag == ""
+
+        light = ag.SetupLightParametric(
+            align_bulge_envelope_centre=True,
+            bulge_prior_model=ag.lp.EllipticalSersic,
+            envelope_prior_model=ag.lp.EllipticalSersic,
+        )
+
+        assert light.align_bulge_envelope_centre_tag == "_bulge_envelope_centre"
+
     def test__tag(self):
 
         setup = ag.SetupLightParametric(light_centre=None)
@@ -290,11 +348,12 @@ class TestSetupLightParametric:
             envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic),
             align_bulge_disk_centre=True,
             align_bulge_disk_elliptical_comps=True,
+            align_bulge_envelope_centre=True,
         )
 
         assert (
             light.tag
-            == "light[parametric__bulge_sersic_sph__disk_exp_sph__envelope_core_sersic__align_bulge_disk_centre_ell]"
+            == "light[parametric__bulge_sersic_sph__disk_exp_sph__envelope_core_sersic__align_bulge_disk_centre_ell_bulge_envelope_centre]"
         )
 
 
@@ -574,7 +633,7 @@ class TestSetupMassLightDark:
         )
 
     def test__consstant_mass_to_light_ratio__sets_mass_to_light_ratios_of_light_and_mass_profiles(
-        self
+        self,
     ):
 
         setup = ag.SetupMassLightDark(

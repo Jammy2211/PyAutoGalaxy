@@ -214,7 +214,7 @@ class TestFitImaging:
             )
 
         def test_hyper_galaxy_changes_noise_above_from_1_to_2__reflected_in_likelihood(
-            self
+            self,
         ):
             # This PSF changes the blurred image plane image from [1.0, 1.0] to [1.0, 5.0]
 
@@ -434,7 +434,7 @@ class TestFitImaging:
             )
 
         def test__hyper_background_changes_background_noise_map__reflected_in_likelihood(
-            self
+            self,
         ):
             psf = ag.Kernel.manual_2d(
                 array=[[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]],
@@ -1446,7 +1446,7 @@ class TestFitInterferometer:
             )
 
         def test__hyper_background_changes_background_sky__reflected_in_likelihood(
-            self
+            self,
         ):
             uv_wavelengths = np.array([[1.0, 0.0], [1.0, 1.0], [2.0, 2.0]])
 

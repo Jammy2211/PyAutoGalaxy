@@ -39,13 +39,13 @@ class HyperBackgroundNoise:
 
     def hyper_noise_map_from_noise_map(self, noise_map):
         """
-    Returns a hyper noise_maps from the background noise_maps grid.
+        Returns a hyper noise_maps from the background noise_maps grid.
 
-        Parameters
-        -----------
-        noise_map : np.ndarray
-            The noise_maps before scaling (electrons per second).
-        background_noise : np.ndarray
-            The background noise_maps values (electrons per second).
+            Parameters
+            -----------
+            noise_map : np.ndarray
+                The noise_maps before scaling (electrons per second).
+            background_noise : np.ndarray
+                The background noise_maps values (electrons per second).
         """
         return noise_map + self.noise_scale

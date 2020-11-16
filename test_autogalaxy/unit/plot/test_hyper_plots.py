@@ -1,4 +1,4 @@
-import os
+from os import path
 
 import autogalaxy.plot as aplt
 import pytest
@@ -6,8 +6,11 @@ import pytest
 
 @pytest.fixture(name="plot_path")
 def make_hyper_plotter_setup():
-    return "{}/files/plots/hyper_galaxies/".format(
-        os.path.dirname(os.path.realpath(__file__))
+    return path.join(
+        "{}".format(path.dirname(path.realpath(__file__))),
+        "files",
+        "plots",
+        "hyper_galaxies",
     )
 
 
@@ -21,7 +24,7 @@ def test__plot_individual_images(
         plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
-    assert f"{plot_path}/hyper_galaxy_image.png" in plot_patch.paths
+    assert path.join(plot_path, "hyper_galaxy_image.png") in plot_patch.paths
 
     aplt.hyper.contribution_map(
         contribution_map_in=contribution_map_7x7,
@@ -29,7 +32,7 @@ def test__plot_individual_images(
         plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
-    assert f"{plot_path}/contribution_map.png" in plot_patch.paths
+    assert path.join(plot_path, "contribution_map.png") in plot_patch.paths
 
 
 def test__plot_subplot_of_hyper_galaxy(
@@ -49,7 +52,7 @@ def test__plot_subplot_of_hyper_galaxy(
         sub_plotter=aplt.SubPlotter(output=aplt.Output(plot_path, format="png")),
     )
 
-    assert f"{plot_path}/subplot_fit_hyper_galaxy.png" in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit_hyper_galaxy.png") in plot_patch.paths
 
 
 def test__plot_hyper_galaxy_images(
@@ -63,4 +66,4 @@ def test__plot_hyper_galaxy_images(
         sub_plotter=aplt.SubPlotter(output=aplt.Output(plot_path, format="png")),
     )
 
-    assert f"{plot_path}/subplot_hyper_galaxy_images.png" in plot_patch.paths
+    assert path.join(plot_path, "subplot_hyper_galaxy_images.png") in plot_patch.paths

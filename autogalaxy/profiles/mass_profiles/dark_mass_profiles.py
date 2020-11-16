@@ -13,6 +13,7 @@ from colossus.cosmology import cosmology as col_cosmology
 from colossus.halo.concentration import concentration as col_concentration
 from numba import cfunc
 from numba.types import intc, CPointer, float64
+
 from pyquad import quad_grid
 from scipy import LowLevelCallable
 from scipy import special
@@ -164,7 +165,7 @@ class AbstractEllipticalGeneralizedNFW(
     @grids.transform
     @grids.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
-        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
+        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
         ----------
@@ -181,7 +182,7 @@ class AbstractEllipticalGeneralizedNFW(
     @grids.transform
     @grids.relocate_to_radial_minimum
     def convergence_from_grid_via_gaussians(self, grid):
-        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
+        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
         ----------
@@ -306,9 +307,9 @@ class AbstractEllipticalGeneralizedNFW(
         cosmology=cosmo.Planck15,
     ):
 
-        if redshift_of_cosmic_average_density is "profile":
+        if redshift_of_cosmic_average_density == "profile":
             redshift_calc = redshift_object
-        elif redshift_of_cosmic_average_density is "local":
+        elif redshift_of_cosmic_average_density == "local":
             redshift_calc = 0.0
         else:
             raise exc.UnitsException(
@@ -386,9 +387,9 @@ class AbstractEllipticalGeneralizedNFW(
         cosmology=cosmo.Planck15,
     ):
 
-        if redshift_of_cosmic_average_density is "profile":
+        if redshift_of_cosmic_average_density == "profile":
             redshift_calc = redshift_object
-        elif redshift_of_cosmic_average_density is "local":
+        elif redshift_of_cosmic_average_density == "local":
             redshift_calc = 0.0
         else:
             raise exc.UnitsException(
@@ -467,9 +468,13 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
                 (1 - np.sqrt(1 - x ** 2)) / x
             )
 
-        eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size = self.tabulate_integral(
-            grid, tabulate_bins
-        )
+        (
+            eta_min,
+            eta_max,
+            minimum_log_eta,
+            maximum_log_eta,
+            bin_size,
+        ) = self.tabulate_integral(grid, tabulate_bins)
 
         potential_grid = np.zeros(grid.shape[0])
 
@@ -583,9 +588,13 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
 
                 return deflection_grid
 
-        eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size = self.tabulate_integral(
-            grid, tabulate_bins
-        )
+        (
+            eta_min,
+            eta_max,
+            minimum_log_eta,
+            maximum_log_eta,
+            bin_size,
+        ) = self.tabulate_integral(grid, tabulate_bins)
 
         surface_density_integral = np.zeros((tabulate_bins,))
 
@@ -1001,8 +1010,8 @@ class SphericalTruncatedNFWMCRChallenge(SphericalTruncatedNFW):
         """
 
         cosmic_average_density = (
-            262.30319684751
-        )  # Critical Density at z=0.6 M_sun/kpc^3
+            262.30319684751  # Critical Density at z=0.6 M_sun/kpc^3
+        )
         critical_surface_density = (
             1940654909.413325
         )  # Lensing Critical Surface Density for lens at z=0.6, source at z=2.5. M_sun/kpc^2

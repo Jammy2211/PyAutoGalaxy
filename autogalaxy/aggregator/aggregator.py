@@ -71,7 +71,7 @@ def masked_imaging_generator_from_aggregator(aggregator):
 def masked_imaging_from_agg_obj(agg_obj):
     """
     Returns a *MaskedImaging* object from an aggregator's *PhaseOutput* class, which we call an 'agg_obj' to describe
-     that it acts as the aggregator object for one result in the *Aggregator*. This uses the aggregator's generator 
+     that it acts as the aggregator object for one result in the *Aggregator*. This uses the aggregator's generator
      outputs such that the function can use the *Aggregator*'s map function to to create a *MaskedImaging* generator.
 
      The *MaskedImaging* is created following the same method as the PyAutoGalaxy `Phase` classes, including using the
@@ -108,7 +108,7 @@ def fit_imaging_generator_from_aggregator(aggregator):
 def fit_imaging_from_agg_obj(agg_obj):
     """
     Returns a `FitImaging` object from an aggregator's *PhaseOutput* class, which we call an 'agg_obj' to describe
-     that it acts as the aggregator object for one result in the *Aggregator*. This uses the aggregator's generator 
+     that it acts as the aggregator object for one result in the *Aggregator*. This uses the aggregator's generator
      outputs such that the function can use the *Aggregator*'s map function to to create a `FitImaging` generator.
 
      The `FitImaging` is created following the same method as the PyAutoGalaxy `Phase` classes.
@@ -174,8 +174,8 @@ def masked_interferometer_from_agg_obj(agg_obj):
 def fit_interferometer_generator_from_aggregator(aggregator):
     """
     Returns a *FitInterferometer* object from an aggregator's *PhaseOutput* class, which we call an 'agg_obj' to
-    describe that it acts as the aggregator object for one result in the *Aggregator*. This uses the aggregator's 
-    generator outputs such that the function can use the *Aggregator*'s map function to to create a *FitInterferometer* 
+    describe that it acts as the aggregator object for one result in the *Aggregator*. This uses the aggregator's
+    generator outputs such that the function can use the *Aggregator*'s map function to to create a *FitInterferometer*
     generator.
 
     The *FitInterferometer* is created following the same method as the PyAutoGalaxy `Phase` classes.

@@ -115,15 +115,15 @@ class AbstractPlane(lensing.LensingObject):
     @property
     def light_profile_centres(self):
         """
-    Returns the light profile centres of the plane as a `GridCoordinates` object, which structures the centres
-        in lists according to which galaxy they come from.
+        Returns the light profile centres of the plane as a `GridCoordinates` object, which structures the centres
+            in lists according to which galaxy they come from.
 
-        Fo example, if a plane has two galaxies, the first with one light profile and second with two light profiles
-        this  returns:
+            Fo example, if a plane has two galaxies, the first with one light profile and second with two light profiles
+            this  returns:
 
-        [[(y0, x0)], [(y0, x0), (y1, x1)]]
-        
-        This is used for visualization, for example plotting the centres of all light profiles colored by their galaxy.
+            [[(y0, x0)], [(y0, x0), (y1, x1)]]
+
+            This is used for visualization, for example plotting the centres of all light profiles colored by their galaxy.
         """
         return grids.GridCoordinates(
             [
@@ -150,17 +150,17 @@ class AbstractPlane(lensing.LensingObject):
     @property
     def mass_profile_centres(self):
         """
-    Returns the mass profile centres of the plane as a `GridCoordinates` object, which structures the centres
-        in lists according to which galaxy they come from.
+        Returns the mass profile centres of the plane as a `GridCoordinates` object, which structures the centres
+            in lists according to which galaxy they come from.
 
-        Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
-        this  returns:
+            Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
+            this  returns:
 
-        [[(y0, x0)], [(y0, x0), (y1, x1)]]
+            [[(y0, x0)], [(y0, x0), (y1, x1)]]
 
-        This is used for visualization, for example plotting the centres of all mass profiles colored by their galaxy.
+            This is used for visualization, for example plotting the centres of all mass profiles colored by their galaxy.
 
-        The centres of mass-sheets are filtered out, as their centres are not relevant to lensing calculations.
+            The centres of mass-sheets are filtered out, as their centres are not relevant to lensing calculations.
         """
         return grids.GridCoordinates(
             [
@@ -173,16 +173,16 @@ class AbstractPlane(lensing.LensingObject):
     @property
     def mass_profile_axis_ratios(self):
         """
-    Returns the mass profile axis-ratios of the plane as a `GridCoordinates` object, which structures the axis-ratios
-        in lists according to which galaxy they come from.
+        Returns the mass profile axis-ratios of the plane as a `GridCoordinates` object, which structures the axis-ratios
+            in lists according to which galaxy they come from.
 
-        Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
-        this  returns:
+            Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
+            this  returns:
 
-        [[axis_ratio_0], [axis_ratio_0, axis_ratio_1]]
+            [[axis_ratio_0], [axis_ratio_0, axis_ratio_1]]
 
-        This is used for visualization, for example plotting ellipses of axis-ratios of all mass profiles colored by 
-        their galaxy.
+            This is used for visualization, for example plotting ellipses of axis-ratios of all mass profiles colored by
+            their galaxy.
         """
         return arrays.Values(
             [
@@ -195,16 +195,16 @@ class AbstractPlane(lensing.LensingObject):
     @property
     def mass_profile_phis(self):
         """
-    Returns the mass profile phis of the plane as a `GridCoordinates` object, which structures the phis
-        in lists according to which galaxy they come from.
+        Returns the mass profile phis of the plane as a `GridCoordinates` object, which structures the phis
+            in lists according to which galaxy they come from.
 
-        Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
-        this  returns:
+            Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
+            this  returns:
 
-        [[phi_0], [phi_0, phi_1]]
+            [[phi_0], [phi_0, phi_1]]
 
-        This is used for visualization, for example plotting ellipses of phis of all mass profiles colored by 
-        their galaxy.
+            This is used for visualization, for example plotting ellipses of phis of all mass profiles colored by
+            their galaxy.
         """
         return arrays.Values(
             [
@@ -273,17 +273,17 @@ class AbstractPlaneLensing(AbstractPlane):
     @grids.grid_like_to_structure
     def image_from_grid(self, grid):
         """
-    Returns the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
-        individual images of each galaxy's light profile.
+        Returns the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
+            individual images of each galaxy's light profile.
 
-        The image is calculated on the sub-grid and binned-up to the original grid by taking the mean
-        value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
+            The image is calculated on the sub-grid and binned-up to the original grid by taking the mean
+            value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
 
-        If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
-        sub-grid is returned.
+            If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
+            sub-grid is returned.
 
-        Parameters
-        -----------
+            Parameters
+            -----------
 
         """
         if self.galaxies:

@@ -144,19 +144,19 @@ class Galaxy(ModelObject, lensing.LensingObject):
     @property
     def light_profile_centres(self):
         """
-    Returns the light profile centres of the galaxy as a `GridCoordinates` object, which structures the centres
-        in lists according to which light profile they come from. 
-        
-        Fo example, if a galaxy has two light profiles, the first with one centre and second with two centres this 
-        returns:
-        
-        [[(y0, x0)], [(y0, x0), (y1, x1)]]
+        Returns the light profile centres of the galaxy as a `GridCoordinates` object, which structures the centres
+            in lists according to which light profile they come from.
 
-        This is used for visualization, for example plotting the centres of all light profiles colored by their profile.
+            Fo example, if a galaxy has two light profiles, the first with one centre and second with two centres this
+            returns:
 
-        NOTE: Currently, no light profiles can have more than one centre (it unlikely one ever will). The structure of 
-        the output follows this convention to follow other methods in the `Galaxy` class that return profile
-        attributes."""
+            [[(y0, x0)], [(y0, x0), (y1, x1)]]
+
+            This is used for visualization, for example plotting the centres of all light profiles colored by their profile.
+
+            NOTE: Currently, no light profiles can have more than one centre (it unlikely one ever will). The structure of
+            the output follows this convention to follow other methods in the `Galaxy` class that return profile
+            attributes."""
 
         centres = [[light_profile.centre] for light_profile in self.light_profiles]
 
@@ -173,21 +173,21 @@ class Galaxy(ModelObject, lensing.LensingObject):
     @property
     def mass_profile_centres(self):
         """
-    Returns the mass profile centres of the galaxy as a `GridCoordinates` object, which structures the centres
-        in lists according to which mass profile they come from. 
+        Returns the mass profile centres of the galaxy as a `GridCoordinates` object, which structures the centres
+            in lists according to which mass profile they come from.
 
-        Fo example, if a galaxy has two mass profiles, the first with one centre and second with two centres this 
-        returns:
+            Fo example, if a galaxy has two mass profiles, the first with one centre and second with two centres this
+            returns:
 
-        [[(y0, x0)], [(y0, x0), (y1, x1)]]
+            [[(y0, x0)], [(y0, x0), (y1, x1)]]
 
-        This is used for visualization, for example plotting the centres of all mass profiles colored by their profile.
+            This is used for visualization, for example plotting the centres of all mass profiles colored by their profile.
 
-        NOTE: Currently, no mass profiles can have more than one centre (it unlikely one ever will). The structure of 
-        the output follows this convention to follow other methods in the `Galaxy` class that return profile
-        attributes.
+            NOTE: Currently, no mass profiles can have more than one centre (it unlikely one ever will). The structure of
+            the output follows this convention to follow other methods in the `Galaxy` class that return profile
+            attributes.
 
-        The centres of mass-sheets are omitted, as their centres are not relevant to lensing calculations."""
+            The centres of mass-sheets are omitted, as their centres are not relevant to lensing calculations."""
         centres = [
             [mass_profile.centre]
             for mass_profile in self.mass_profiles
@@ -208,16 +208,16 @@ class Galaxy(ModelObject, lensing.LensingObject):
     @property
     def mass_profile_axis_ratios(self):
         """
-    Returns the mass profile axis-ratios of the galaxy as a *Values* object, which structures the axis-ratios
-        in lists according to which mass profile they come from. 
+        Returns the mass profile axis-ratios of the galaxy as a *Values* object, which structures the axis-ratios
+            in lists according to which mass profile they come from.
 
-        Fo example, if a galaxy has two mass profiles, the first with one axis-ratio and second with two axis-ratios
-        this returns:
+            Fo example, if a galaxy has two mass profiles, the first with one axis-ratio and second with two axis-ratios
+            this returns:
 
-        [[axis_ratio_0], [axis_ratio_0, axis_ratio_1]]
+            [[axis_ratio_0], [axis_ratio_0, axis_ratio_1]]
 
-        This is used for visualization, for example plotting the axis-ratios of all mass profiles colored by their
-        profile.
+            This is used for visualization, for example plotting the axis-ratios of all mass profiles colored by their
+            profile.
 
         """
 
@@ -236,14 +236,14 @@ class Galaxy(ModelObject, lensing.LensingObject):
     @property
     def mass_profile_phis(self):
         """
-    Returns the mass profile phis of the galaxy as a *Values* object, which structures the phis in lists
-        according to which mass profile they come from.
+        Returns the mass profile phis of the galaxy as a *Values* object, which structures the phis in lists
+            according to which mass profile they come from.
 
-        Fo example, if a galaxy has two mass profiles, the first with one phi and second with two phis this returns:
+            Fo example, if a galaxy has two mass profiles, the first with one phi and second with two phis this returns:
 
-        [[phi_0], [phi_0, phi_1]]
+            [[phi_0], [phi_0, phi_1]]
 
-        This is used for visualization, for example plotting the phis of all mass profiles colored by their profile.
+            This is used for visualization, for example plotting the phis of all mass profiles colored by their profile.
 
         """
         phis = [[mass_profile.phi] for mass_profile in self.mass_profiles]
@@ -399,18 +399,18 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     def luminosity_within_circle(self, radius: float):
         """
-    Returns the total luminosity of the galaxy's light profiles within a circle of specified radius.
+        Returns the total luminosity of the galaxy's light profiles within a circle of specified radius.
 
-        See *light_profiles.luminosity_within_circle* for details of how this is performed.
+            See *light_profiles.luminosity_within_circle* for details of how this is performed.
 
-        Parameters
-        ----------
-        radius : float
-            The radius of the circle to compute the dimensionless mass within.
-        unit_luminosity : str
-            The unit_label the luminosity is returned in {esp, counts}.
-        exposure_time : float
-            The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
+            Parameters
+            ----------
+            radius : float
+                The radius of the circle to compute the dimensionless mass within.
+            unit_luminosity : str
+                The unit_label the luminosity is returned in {esp, counts}.
+            exposure_time : float
+                The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
         """
         if self.has_light_profile:
             return sum(
@@ -620,17 +620,17 @@ class HyperGalaxy:
 
     def hyper_noise_map_from_contribution_map(self, noise_map, contribution_map):
         """
-    Returns a hyper galaxy hyper_galaxies noise-map from a baseline noise-map.
+        Returns a hyper galaxy hyper_galaxies noise-map from a baseline noise-map.
 
-        This uses the galaxy contribution map and the *noise_factor* and *noise_power*
-        hyper_galaxies-parameters.
+            This uses the galaxy contribution map and the *noise_factor* and *noise_power*
+            hyper_galaxies-parameters.
 
-        Parameters
-        -----------
-        noise_map : np.ndarray
-            The observed noise-map (before scaling).
-        contribution_map : np.ndarray
-            The galaxy contribution map.
+            Parameters
+            -----------
+            noise_map : np.ndarray
+                The observed noise-map (before scaling).
+            contribution_map : np.ndarray
+                The galaxy contribution map.
         """
         return self.noise_factor * (noise_map * contribution_map) ** self.noise_power
 
