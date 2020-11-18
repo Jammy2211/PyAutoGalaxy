@@ -68,7 +68,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
     @property
     def light_profile_centres(self):
-        return grids.GridCoordinates([self.centre])
+        return grids.GridIrregularGrouped([self.centre])
 
     def blurred_image_from_grid_and_psf(self, grid, psf, blurring_grid):
         """Evaluate the light profile image on an input `Grid` of coordinates and then convolve it with a PSF.
@@ -78,7 +78,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         their light is blurred into it by the PSF.
 
         The grid and blurring_grid must be a `Grid` objects so the evaluated image can be mapped to a uniform 2D array
-        and binned up for convolution. They therefore cannot be `GridCoordinates` objects.
+        and binned up for convolution. They therefore cannot be `GridIrregularGrouped` objects.
 
         Parameters
         ----------
@@ -107,7 +107,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         their light is blurred into it by the Convolver.
 
         The grid and blurring_grid must be a `Grid` objects so the evaluated image can be mapped to a uniform 2D array
-        and binned up for convolution. They therefore cannot be `GridCoordinates` objects.
+        and binned up for convolution. They therefore cannot be `GridIrregularGrouped` objects.
 
         Parameters
         ----------

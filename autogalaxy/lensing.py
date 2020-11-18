@@ -246,7 +246,7 @@ class LensingObject:
             shape_2d=tangential_eigen_values.sub_shape_2d,
         )
 
-        return grids.GridCoordinates(tangential_critical_curve)
+        return grids.GridIrregularGrouped(tangential_critical_curve)
 
     @property
     def radial_critical_curve(self):
@@ -267,11 +267,11 @@ class LensingObject:
             shape_2d=radial_eigen_values.sub_shape_2d,
         )
 
-        return grids.GridCoordinates(radial_critical_curve)
+        return grids.GridIrregularGrouped(radial_critical_curve)
 
     @property
     def critical_curves(self):
-        return grids.GridCoordinates(
+        return grids.GridIrregularGrouped(
             [self.tangential_critical_curve, self.radial_critical_curve]
         )
 
@@ -305,7 +305,9 @@ class LensingObject:
 
     @property
     def caustics(self):
-        return grids.GridCoordinates([self.tangential_caustic, self.radial_caustic])
+        return grids.GridIrregularGrouped(
+            [self.tangential_caustic, self.radial_caustic]
+        )
 
     @property
     @array_util.Memoizer()

@@ -57,7 +57,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
     @property
     def mass_profile_centres(self):
         if not self.is_mass_sheet:
-            return grids.GridCoordinates([self.centre])
+            return grids.GridIrregularGrouped([self.centre])
         else:
             return []
 
