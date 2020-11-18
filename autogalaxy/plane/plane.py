@@ -115,7 +115,7 @@ class AbstractPlane(lensing.LensingObject):
     @property
     def light_profile_centres(self):
         """
-        Returns the light profile centres of the plane as a `GridCoordinates` object, which structures the centres
+        Returns the light profile centres of the plane as a `GridIrregularGrouped` object, which structures the centres
             in lists according to which galaxy they come from.
 
             Fo example, if a plane has two galaxies, the first with one light profile and second with two light profiles
@@ -125,7 +125,7 @@ class AbstractPlane(lensing.LensingObject):
 
             This is used for visualization, for example plotting the centres of all light profiles colored by their galaxy.
         """
-        return grids.GridCoordinates(
+        return grids.GridIrregularGrouped(
             [
                 list(galaxy.light_profile_centres)
                 for galaxy in self.galaxies
@@ -150,7 +150,7 @@ class AbstractPlane(lensing.LensingObject):
     @property
     def mass_profile_centres(self):
         """
-        Returns the mass profile centres of the plane as a `GridCoordinates` object, which structures the centres
+        Returns the mass profile centres of the plane as a `GridIrregularGrouped` object, which structures the centres
             in lists according to which galaxy they come from.
 
             Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
@@ -162,7 +162,7 @@ class AbstractPlane(lensing.LensingObject):
 
             The centres of mass-sheets are filtered out, as their centres are not relevant to lensing calculations.
         """
-        return grids.GridCoordinates(
+        return grids.GridIrregularGrouped(
             [
                 list(galaxy.mass_profile_centres)
                 for galaxy in self.galaxies
@@ -173,7 +173,7 @@ class AbstractPlane(lensing.LensingObject):
     @property
     def mass_profile_axis_ratios(self):
         """
-        Returns the mass profile axis-ratios of the plane as a `GridCoordinates` object, which structures the axis-ratios
+        Returns the mass profile axis-ratios of the plane as a `GridIrregularGrouped` object, which structures the axis-ratios
             in lists according to which galaxy they come from.
 
             Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
@@ -195,7 +195,7 @@ class AbstractPlane(lensing.LensingObject):
     @property
     def mass_profile_phis(self):
         """
-        Returns the mass profile phis of the plane as a `GridCoordinates` object, which structures the phis
+        Returns the mass profile phis of the plane as a `GridIrregularGrouped` object, which structures the phis
             in lists according to which galaxy they come from.
 
             Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles

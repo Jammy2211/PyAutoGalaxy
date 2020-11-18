@@ -7,10 +7,13 @@ from .dataset.interferometer import (
     SettingsMaskedInterferometer,
     SimulatorInterferometer,
 )
+
 from autoarray import GridIterate
 from autoarray import GridInterpolate
 from autoarray import Mask2D
-from autoarray import GridCoordinates
+from autoarray import GridIrregular
+from autoarray import GridIrregularGrouped
+from autoarray import VectorFieldIrregular
 from autoarray import TransformerDFT
 from autoarray import pix
 from autoarray import reg
@@ -66,4 +69,4 @@ from . import convert
 
 conf.instance.register(__file__)
 
-__version__ = '0.16.0'
+__version__ = "0.16.0"

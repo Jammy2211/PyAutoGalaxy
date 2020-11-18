@@ -325,6 +325,6 @@ def make_include_all():
         inversion_grid=True,
         inversion_border=True,
         inversion_image_pixelization_grid=True,
-        preloaded_critical_curves=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
-        preload_caustics=ag.GridCoordinates([(1.0, 1.0), (2.0, 2.0)]),
+        preloaded_critical_curves=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
+        preload_caustics=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
     )

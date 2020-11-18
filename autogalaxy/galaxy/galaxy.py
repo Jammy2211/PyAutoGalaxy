@@ -144,7 +144,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
     @property
     def light_profile_centres(self):
         """
-        Returns the light profile centres of the galaxy as a `GridCoordinates` object, which structures the centres
+        Returns the light profile centres of the galaxy as a `GridIrregularGrouped` object, which structures the centres
             in lists according to which light profile they come from.
 
             Fo example, if a galaxy has two light profiles, the first with one centre and second with two centres this
@@ -168,12 +168,12 @@ class Galaxy(ModelObject, lensing.LensingObject):
         for key, centre in zip(self.light_profile_keys, centres):
             centres_dict[key] = centre
 
-        return grids.GridCoordinates(coordinates=centres_dict)
+        return grids.GridIrregularGrouped(grid=centres_dict)
 
     @property
     def mass_profile_centres(self):
         """
-        Returns the mass profile centres of the galaxy as a `GridCoordinates` object, which structures the centres
+        Returns the mass profile centres of the galaxy as a `GridIrregularGrouped` object, which structures the centres
             in lists according to which mass profile they come from.
 
             Fo example, if a galaxy has two mass profiles, the first with one centre and second with two centres this
@@ -203,7 +203,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             if centre is not None:
                 centres_dict[key] = centre
 
-        return grids.GridCoordinates(coordinates=centres_dict)
+        return grids.GridIrregularGrouped(grid=centres_dict)
 
     @property
     def mass_profile_axis_ratios(self):

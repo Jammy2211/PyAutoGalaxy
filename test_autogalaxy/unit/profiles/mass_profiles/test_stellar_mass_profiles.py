@@ -333,7 +333,7 @@ class TestSersic:
         )
 
         deflections = sersic.deflections_from_grid_via_integrator(
-            grid=ag.GridCoordinates([[(0.1625, 0.1625), (0.1625, 0.1625)]])
+            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
@@ -367,7 +367,7 @@ class TestSersic:
         )
 
         deflections = sersic.deflections_from_grid(
-            grid=ag.GridCoordinates([[(0.1625, 0.1625), (0.1625, 0.1625)]])
+            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
@@ -648,7 +648,7 @@ class TestExponential:
         )
 
         deflections = exponential.deflections_from_grid_via_integrator(
-            grid=ag.GridCoordinates([[(0.1625, 0.1625)]])
+            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
@@ -679,7 +679,7 @@ class TestExponential:
         )
 
         deflections = exponential.deflections_from_grid(
-            grid=ag.GridCoordinates([[(0.1625, 0.1625)]])
+            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
@@ -873,7 +873,7 @@ class TestDevVaucouleurs:
         )
 
         deflections = dev.deflections_from_grid_via_integrator(
-            grid=ag.GridCoordinates([[(0.1625, 0.1625)]])
+            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(-24.528, 1e-3)
@@ -889,7 +889,7 @@ class TestDevVaucouleurs:
         )
 
         deflections = dev.deflections_from_grid(
-            grid=ag.GridCoordinates([[(0.1625, 0.1625)]])
+            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625)]])
         )
 
         # assert deflections[0, 0] == pytest.approx(-24.528, 1e-3)
@@ -1049,7 +1049,7 @@ class TestSersicMassRadialGradient:
         )
 
         deflections = sersic.deflections_from_grid(
-            grid=ag.GridCoordinates([[(0.1625, 0.1625)]])
+            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.97806399756448, 1e-3)
