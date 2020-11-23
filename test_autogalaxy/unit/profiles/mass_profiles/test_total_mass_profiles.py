@@ -1473,3 +1473,8 @@ class TestIsothermal:
         deflections = isothermal.deflections_from_grid(grid=grid)
 
         assert deflections.shape_2d == (2, 2)
+
+
+
+
+

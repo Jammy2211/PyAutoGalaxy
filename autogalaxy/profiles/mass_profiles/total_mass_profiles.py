@@ -1,6 +1,6 @@
 import numpy as np
 from autoarray.structures import arrays
-from autoarray.structures import grids
+from autoarray.structures import grids, vector_fields
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
@@ -731,6 +731,42 @@ class EllipticalIsothermal(EllipticalPowerLaw):
         return self.rotate_grid_from_profile(
             np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
         )
+
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
+    def gamma_x_from_grid(self, grid):
+
+        kappa=self.convergence_from_grid(grid=grid)
+
+        gamma_1 = -kappa * np.divide(grid[:, 1]**2-grid[:, 0]**2, grid[:, 1]**2+grid[:, 0]**2)
+
+        return gamma_1
+
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
+    def gamma_y_from_grid(self, grid):
+        kappa = self.convergence_from_grid(grid=grid)
+
+        gamma_y = -2*kappa * np.divide(grid[:, 1]*grid[:, 0], grid[:, 1] ** 2 + grid[:, 0] ** 2)
+
+        return gamma_y
+
+    def shear_field_from_grid(self, grid):
+
+        gamma_y = self.gamma_y_from_grid(grid=grid)
+        gamma_x = self.gamma_x_from_grid(grid=grid)
+
+        return vector_fields.VectorFieldIrregular(grid=grid, vectors=(gamma_y, gamma_x))
+
+    def shear_from_grid(self, grid):
+        gamma_y = self.gamma_y_from_grid(grid=grid)
+        gamma_x = self.gamma_x_from_grid(grid=grid)
+
+        return np.sqrt(gamma_y**2 + gamma_x**2)
+
+
 
 
 class SphericalIsothermal(EllipticalIsothermal):
