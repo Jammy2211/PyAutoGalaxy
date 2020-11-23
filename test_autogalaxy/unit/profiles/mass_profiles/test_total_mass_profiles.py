@@ -1378,6 +1378,29 @@ class TestIsothermal:
         assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)
 
+    def test__shear__correct_values(self):
+
+        isothermal = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        convergence = isothermal.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
+
+        shear = isothermal.shear_from_grid(grid=np.array([[0.0, 1.0]]))
+
+        assert shear[0,0] == pytest.approx(0.0, 1e-4)
+        assert shear[0,1] == pytest.approx(-convergence, 1e-4)
+
+        convergence = isothermal.convergence_from_grid(grid=np.array([[2.0, 1.0]]))
+        shear = isothermal.shear_from_grid(grid=np.array([[2.0, 1.0]]))
+
+        assert shear[0,0] == pytest.approx(-(4.0/5.0)*convergence, 1e-4)
+        assert shear[0,1] == pytest.approx((3.0/5.0)*convergence, 1e-4)
+
+        convergence = isothermal.convergence_from_grid(grid=np.array([[3.0, 5.0]]))
+        shear = isothermal.shear_from_grid(grid=np.array([[3.0, 5.0]]))
+
+        assert shear[0,0] == pytest.approx(-(30.0/34.0)*convergence, 1e-4)
+        assert shear[0,1] == pytest.approx(-(16.0/34.0)*convergence, 1e-4)
+
     def test__compare_to_cored_power_law(self):
         isothermal = ag.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.333333, 0.0), einstein_radius=1.0

@@ -5,7 +5,7 @@ from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 
-from pyquad import quad_grid
+# from pyquad import quad_grid
 from scipy import special
 import typing
 
@@ -281,7 +281,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     @grids.transform
     @grids.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
-        """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
+        """ Calculate the projected convergence on a grid of (y,x) arc-second coordinates.
 
         The `grid_like_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See \
         *aa.grid_like_to_structure* for a description of the output.
@@ -307,7 +307,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     @grids.relocate_to_radial_minimum
     def potential_from_grid(self, grid):
         """
-        Calculate the potential at a given set of arc-second gridded coordinates.
+        Calculate the potential on a grid of (y,x) arc-second coordinates.
 
         Parameters
         ----------
@@ -331,7 +331,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
+        Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
         Parameters
         ----------
@@ -433,7 +433,7 @@ class SphericalCoredPowerLaw(EllipticalCoredPowerLaw):
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
+        Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
         Parameters
         ----------
@@ -495,7 +495,7 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
+        Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
         ​
         For coordinates (0.0, 0.0) the analytic calculation of the deflection angle gives a NaN. Therefore, \
         coordinates at (0.0, 0.0) are shifted slightly to (1.0e-8, 1.0e-8).
@@ -702,7 +702,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
+        Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
         For coordinates (0.0, 0.0) the analytic calculation of the deflection angle gives a NaN. Therefore, \
         coordinates at (0.0, 0.0) are shifted slightly to (1.0e-8, 1.0e-8).
@@ -735,38 +735,22 @@ class EllipticalIsothermal(EllipticalPowerLaw):
     @grids.grid_like_to_structure
     @grids.transform
     @grids.relocate_to_radial_minimum
-    def gamma_x_from_grid(self, grid):
-
-        kappa=self.convergence_from_grid(grid=grid)
-
-        gamma_1 = -kappa * np.divide(grid[:, 1]**2-grid[:, 0]**2, grid[:, 1]**2+grid[:, 0]**2)
-
-        return gamma_1
-
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
-    def gamma_y_from_grid(self, grid):
-        kappa = self.convergence_from_grid(grid=grid)
-
-        gamma_y = -2*kappa * np.divide(grid[:, 1]*grid[:, 0], grid[:, 1] ** 2 + grid[:, 0] ** 2)
-
-        return gamma_y
-
-    def shear_field_from_grid(self, grid):
-
-        gamma_y = self.gamma_y_from_grid(grid=grid)
-        gamma_x = self.gamma_x_from_grid(grid=grid)
-
-        return vector_fields.VectorFieldIrregular(grid=grid, vectors=(gamma_y, gamma_x))
-
     def shear_from_grid(self, grid):
-        gamma_y = self.gamma_y_from_grid(grid=grid)
-        gamma_x = self.gamma_x_from_grid(grid=grid)
+        """
+        Calculate the (gamma_y, gamma_x) shear vector field on a grid of (y,x) arc-second coordinates.
 
-        return np.sqrt(gamma_y**2 + gamma_x**2)
+        Parameters
+        ----------
+        grid : aa.Grid
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+        """
+        
+        convergence = self.convergence_from_grid(grid=grid)
 
+        gamma_y = -2 * convergence * np.divide(grid[:, 1]*grid[:, 0], grid[:, 1] ** 2 + grid[:, 0] ** 2)
+        gamma_x = - convergence * np.divide(grid[:, 1]**2-grid[:, 0]**2, grid[:, 1]**2+grid[:, 0]**2)
 
+        return vector_fields.VectorFieldIrregular(vectors=np.stack((gamma_y, gamma_x), axis=-1), grid=grid)
 
 
 class SphericalIsothermal(EllipticalIsothermal):
@@ -795,7 +779,7 @@ class SphericalIsothermal(EllipticalIsothermal):
     @grids.relocate_to_radial_minimum
     def potential_from_grid(self, grid):
         """
-        Calculate the potential at a given set of arc-second gridded coordinates.
+        Calculate the potential on a grid of (y,x) arc-second coordinates.
 
         Parameters
         ----------
@@ -810,7 +794,7 @@ class SphericalIsothermal(EllipticalIsothermal):
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
+        Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
         Parameters
         ----------
