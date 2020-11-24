@@ -744,10 +744,12 @@ class EllipticalIsothermal(EllipticalPowerLaw):
         
         convergence = self.convergence_from_grid(grid=grid)
 
-        gamma_y = -2 * convergence * np.divide(grid[:, 1]*grid[:, 0], grid[:, 1] ** 2 + grid[:, 0] ** 2)
-        gamma_x = - convergence * np.divide(grid[:, 1]**2-grid[:, 0]**2, grid[:, 1]**2+grid[:, 0]**2)
+        shear_y = -2 * convergence * np.divide(grid[:, 1]*grid[:, 0], grid[:, 1] ** 2 + grid[:, 0] ** 2)
+        shear_x = - convergence * np.divide(grid[:, 1]**2-grid[:, 0]**2, grid[:, 1]**2+grid[:, 0]**2)
 
-        return vector_fields.VectorFieldIrregular(vectors=np.stack((gamma_y, gamma_x), axis=-1), grid=grid)
+        shear_field = self.rotate_grid_from_profile(np.vstack((shear_y, shear_x)).T)
+
+        return vector_fields.VectorFieldIrregular(vectors=shear_field, grid=grid)
 
 
 class SphericalIsothermal(EllipticalIsothermal):
