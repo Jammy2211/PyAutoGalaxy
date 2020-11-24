@@ -741,11 +741,17 @@ class EllipticalIsothermal(EllipticalPowerLaw):
         grid : aa.Grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        
+
         convergence = self.convergence_from_grid(grid=grid)
 
-        shear_y = -2 * convergence * np.divide(grid[:, 1]*grid[:, 0], grid[:, 1] ** 2 + grid[:, 0] ** 2)
-        shear_x = - convergence * np.divide(grid[:, 1]**2-grid[:, 0]**2, grid[:, 1]**2+grid[:, 0]**2)
+        shear_y = (
+            -2
+            * convergence
+            * np.divide(grid[:, 1] * grid[:, 0], grid[:, 1] ** 2 + grid[:, 0] ** 2)
+        )
+        shear_x = -convergence * np.divide(
+            grid[:, 1] ** 2 - grid[:, 0] ** 2, grid[:, 1] ** 2 + grid[:, 0] ** 2
+        )
 
         shear_field = self.rotate_grid_from_profile(np.vstack((shear_y, shear_x)).T)
 

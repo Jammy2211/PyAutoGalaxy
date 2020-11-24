@@ -6,7 +6,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestGaussian(object):
-
     def test__grid_calculations__same_as_gaussian(self):
 
         gaussian_lp = ag.lmp.EllipticalGaussian(
@@ -41,7 +40,6 @@ class TestGaussian(object):
 
 
 class TestSersic:
-
     def test__grid_calculations__same_as_sersic(self):
         sersic_lp = ag.lmp.EllipticalSersic(
             elliptical_comps=(0.1, 0.05),
@@ -95,8 +93,12 @@ class TestSersic:
             mass_to_light_ratio=2.0,
         )
 
-        assert elliptical.image_from_grid(grid=grid) == pytest.approx(spherical.image_from_grid(grid=grid), 1.0e-4)
-        assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(spherical.convergence_from_grid(grid=grid), 1.0e-4)
+        assert elliptical.image_from_grid(grid=grid) == pytest.approx(
+            spherical.image_from_grid(grid=grid), 1.0e-4
+        )
+        assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(
+            spherical.convergence_from_grid(grid=grid), 1.0e-4
+        )
         # assert (elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)).all()
         np.testing.assert_almost_equal(
             elliptical.deflections_from_grid(grid=grid),
@@ -105,7 +107,6 @@ class TestSersic:
 
 
 class TestExponential:
-
     def test__grid_calculations__same_as_exponential(self):
         sersic_lp = ag.lmp.EllipticalExponential(
             elliptical_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
@@ -148,8 +149,12 @@ class TestExponential:
             centre=(0.0, 0.0), intensity=1.0, effective_radius=1.0
         )
 
-        assert elliptical.image_from_grid(grid=grid) == pytest.approx(spherical.image_from_grid(grid=grid), 1.0e-4)
-        assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(spherical.convergence_from_grid(grid=grid), 1.0e-4)
+        assert elliptical.image_from_grid(grid=grid) == pytest.approx(
+            spherical.image_from_grid(grid=grid), 1.0e-4
+        )
+        assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(
+            spherical.convergence_from_grid(grid=grid), 1.0e-4
+        )
         # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
         np.testing.assert_almost_equal(
             elliptical.deflections_from_grid(grid=grid),
@@ -158,7 +163,6 @@ class TestExponential:
 
 
 class TestDevVaucouleurs:
-
     def test__grid_calculations__same_as_dev_vaucouleurs(self):
         sersic_lp = ag.lmp.EllipticalDevVaucouleurs(
             elliptical_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
@@ -201,8 +205,12 @@ class TestDevVaucouleurs:
             centre=(0.0, 0.0), intensity=1.0, effective_radius=1.0
         )
 
-        assert elliptical.image_from_grid(grid=grid) == pytest.approx(spherical.image_from_grid(grid=grid), 1.0e-4)
-        assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(spherical.convergence_from_grid(grid=grid), 1.0e-4)
+        assert elliptical.image_from_grid(grid=grid) == pytest.approx(
+            spherical.image_from_grid(grid=grid), 1.0e-4
+        )
+        assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(
+            spherical.convergence_from_grid(grid=grid), 1.0e-4
+        )
         # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
         np.testing.assert_almost_equal(
             elliptical.deflections_from_grid(grid=grid),
@@ -211,7 +219,6 @@ class TestDevVaucouleurs:
 
 
 class TestSersicRadialGradient:
-
     def test__grid_calculations__same_as_sersic_radial_gradient(self):
         sersic_lp = ag.lmp.EllipticalSersic(
             elliptical_comps=(0.1, 0.05),
@@ -236,10 +243,16 @@ class TestSersicRadialGradient:
             mass_to_light_gradient=0.5,
         )
 
-        assert sersic_lp.image_from_grid(grid=grid) == pytest.approx(sersic_lmp.image_from_grid(grid=grid), 1.0e-4)
-        assert sersic_mp.convergence_from_grid(grid=grid) == pytest.approx(sersic_lmp.convergence_from_grid(grid=grid), 1.0e-4)
+        assert sersic_lp.image_from_grid(grid=grid) == pytest.approx(
+            sersic_lmp.image_from_grid(grid=grid), 1.0e-4
+        )
+        assert sersic_mp.convergence_from_grid(grid=grid) == pytest.approx(
+            sersic_lmp.convergence_from_grid(grid=grid), 1.0e-4
+        )
         #    assert (sersic_mp.potential_from_grid(grid=grid) == sersic_lmp.potential_from_grid(grid=grid)).all()
-        assert sersic_mp.deflections_from_grid(grid=grid) == pytest.approx(sersic_lmp.deflections_from_grid(grid=grid), 1.0e-4)
+        assert sersic_mp.deflections_from_grid(grid=grid) == pytest.approx(
+            sersic_lmp.deflections_from_grid(grid=grid), 1.0e-4
+        )
 
     def test__spherical_and_elliptical_identical(self):
         elliptical = ag.lmp.EllipticalSersicRadialGradient(
@@ -252,8 +265,12 @@ class TestSersicRadialGradient:
             centre=(0.0, 0.0), intensity=1.0, effective_radius=1.0
         )
 
-        assert elliptical.image_from_grid(grid=grid) == pytest.approx(spherical.image_from_grid(grid=grid), 1.0e-4)
-        assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(spherical.convergence_from_grid(grid=grid), 1.0e-4)
+        assert elliptical.image_from_grid(grid=grid) == pytest.approx(
+            spherical.image_from_grid(grid=grid), 1.0e-4
+        )
+        assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(
+            spherical.convergence_from_grid(grid=grid), 1.0e-4
+        )
         # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
         np.testing.assert_almost_equal(
             elliptical.deflections_from_grid(grid=grid),
@@ -262,7 +279,6 @@ class TestSersicRadialGradient:
 
 
 class TestExponentialRadialGradient:
-
     def test__grid_calculations__same_as_sersic_radial_gradient(self):
         sersic_lp = ag.lmp.EllipticalExponential(
             elliptical_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
@@ -282,10 +298,16 @@ class TestExponentialRadialGradient:
             mass_to_light_gradient=0.5,
         )
 
-        assert sersic_lp.image_from_grid(grid=grid) == pytest.approx(sersic_lmp.image_from_grid(grid=grid), 1.0e-4)
-        assert sersic_mp.convergence_from_grid(grid=grid) == pytest.approx(sersic_lmp.convergence_from_grid(grid=grid), 1.0e-4)
+        assert sersic_lp.image_from_grid(grid=grid) == pytest.approx(
+            sersic_lmp.image_from_grid(grid=grid), 1.0e-4
+        )
+        assert sersic_mp.convergence_from_grid(grid=grid) == pytest.approx(
+            sersic_lmp.convergence_from_grid(grid=grid), 1.0e-4
+        )
         #    assert (sersic_mp.potential_from_grid(grid=grid) == sersic_lmp.potential_from_grid(grid=grid)).all()
-        assert sersic_mp.deflections_from_grid(grid=grid) == pytest.approx(sersic_lmp.deflections_from_grid(grid=grid), 1.0e-4)
+        assert sersic_mp.deflections_from_grid(grid=grid) == pytest.approx(
+            sersic_lmp.deflections_from_grid(grid=grid), 1.0e-4
+        )
 
     def test__spherical_and_elliptical_identical(self):
         elliptical = ag.lmp.EllipticalExponentialRadialGradient(
@@ -298,8 +320,12 @@ class TestExponentialRadialGradient:
             centre=(0.0, 0.0), intensity=1.0, effective_radius=1.0
         )
 
-        assert elliptical.image_from_grid(grid=grid) == pytest.approx(spherical.image_from_grid(grid=grid), 1.0e-4)
-        assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(spherical.convergence_from_grid(grid=grid), 1.0e-4)
+        assert elliptical.image_from_grid(grid=grid) == pytest.approx(
+            spherical.image_from_grid(grid=grid), 1.0e-4
+        )
+        assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(
+            spherical.convergence_from_grid(grid=grid), 1.0e-4
+        )
         # assert elliptical.potential_from_grid(grid=grid) == spherical.potential_from_grid(grid=grid)
         np.testing.assert_almost_equal(
             elliptical.deflections_from_grid(grid=grid),

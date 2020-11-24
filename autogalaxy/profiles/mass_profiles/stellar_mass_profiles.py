@@ -348,9 +348,13 @@ class AbstractEllipticalSersic(
         radii_max = self.effective_radius * 20.0
 
         def sersic_2d(r):
-            return self.mass_to_light_ratio * self.intensity * np.exp(
-                -self.sersic_constant
-                * (((r / self.effective_radius) ** (1.0 / self.sersic_index)) - 1.0)
+            return (
+                self.mass_to_light_ratio
+                * self.intensity
+                * np.exp(
+                    -self.sersic_constant
+                    * (((r / self.effective_radius) ** (1.0 / self.sersic_index)) - 1.0)
+                )
             )
 
         return self._decompose_convergence_into_gaussians(
@@ -359,7 +363,6 @@ class AbstractEllipticalSersic(
 
 
 class EllipticalSersic(AbstractEllipticalSersic, MassProfileMGE):
-
     @grids.grid_like_to_structure
     @grids.transform
     @grids.relocate_to_radial_minimum
@@ -737,12 +740,17 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         radii_max = self.effective_radius * 20.0
 
         def sersic_radial_gradient_2D(r):
-            return self.mass_to_light_ratio * self.intensity * (
-                ((self.axis_ratio * r) / self.effective_radius)
-                ** -self.mass_to_light_gradient
-            ) * np.exp(
-                -self.sersic_constant
-                * (((r / self.effective_radius) ** (1.0 / self.sersic_index)) - 1.0)
+            return (
+                self.mass_to_light_ratio
+                * self.intensity
+                * (
+                    ((self.axis_ratio * r) / self.effective_radius)
+                    ** -self.mass_to_light_gradient
+                )
+                * np.exp(
+                    -self.sersic_constant
+                    * (((r / self.effective_radius) ** (1.0 / self.sersic_index)) - 1.0)
+                )
             )
 
         return self._decompose_convergence_into_gaussians(
@@ -902,17 +910,21 @@ class EllipticalCoreSersic(EllipticalSersic):
         radii_max = self.effective_radius * 20.0
 
         def core_sersic_2D(r):
-            return self.mass_to_light_ratio * self.intensity * (
-                self.intensity_prime
-                * (1.0 + (self.radius_break / r) ** self.alpha)
-                ** (self.gamma / self.alpha)
-                * np.exp(
-                    -self.sersic_constant
-                    * (
-                        (r ** self.alpha + self.radius_break ** self.alpha)
-                        / self.effective_radius ** self.alpha
+            return (
+                self.mass_to_light_ratio
+                * self.intensity
+                * (
+                    self.intensity_prime
+                    * (1.0 + (self.radius_break / r) ** self.alpha)
+                    ** (self.gamma / self.alpha)
+                    * np.exp(
+                        -self.sersic_constant
+                        * (
+                            (r ** self.alpha + self.radius_break ** self.alpha)
+                            / self.effective_radius ** self.alpha
+                        )
+                        ** (1.0 / (self.sersic_index * self.alpha))
                     )
-                    ** (1.0 / (self.sersic_index * self.alpha))
                 )
             )
 
