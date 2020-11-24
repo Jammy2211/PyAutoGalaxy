@@ -14,7 +14,7 @@ from colossus.halo.concentration import concentration as col_concentration
 from numba import cfunc
 from numba.types import intc, CPointer, float64
 
-# from pyquad import quad_grid
+from pyquad import quad_grid
 from scipy import LowLevelCallable
 from scipy import special
 from scipy.integrate import quad
@@ -317,10 +317,8 @@ class AbstractEllipticalGeneralizedNFW(
                 "string. Must be {local, profile}"
             )
 
-        cosmic_average_density = (
-            cosmology_util.cosmic_average_density_solar_mass_per_kpc3_from(
-                redshift=redshift_calc, cosmology=cosmology
-            )
+        cosmic_average_density = cosmology_util.cosmic_average_density_solar_mass_per_kpc3_from(
+            redshift=redshift_calc, cosmology=cosmology
         )
 
         rho_scale_radius = self.rho_at_scale_radius_solar_mass_per_kpc3(
@@ -399,10 +397,8 @@ class AbstractEllipticalGeneralizedNFW(
                 "string. Must be {local, profile}"
             )
 
-        cosmic_average_density = (
-            cosmology_util.cosmic_average_density_solar_mass_per_kpc3_from(
-                redshift=redshift_calc, cosmology=cosmology
-            )
+        cosmic_average_density = cosmology_util.cosmic_average_density_solar_mass_per_kpc3_from(
+            redshift=redshift_calc, cosmology=cosmology
         )
 
         radius_at_200 = self.radius_at_200(
@@ -1016,7 +1012,9 @@ class SphericalTruncatedNFWMCRChallenge(SphericalTruncatedNFW):
         cosmic_average_density = (
             262.30319684751  # Critical Density at z=0.6 M_sun/kpc^3
         )
-        critical_surface_density = 1940654909.413325  # Lensing Critical Surface Density for lens at z=0.6, source at z=2.5. M_sun/kpc^2
+        critical_surface_density = (
+            1940654909.413325
+        )  # Lensing Critical Surface Density for lens at z=0.6, source at z=2.5. M_sun/kpc^2
         kpc_per_arcsec = 6.685491486088  # 1 arcsec = 6.685491486 kpc at z=0.6
 
         concentration = 11.5 * (mass_at_200 / 1e10 + (mass_at_200 / 1e10) ** 2.0) ** (
@@ -1131,13 +1129,16 @@ class EllipticalNFW(EllipticalGeneralizedNFW):
 
         def calculate_deflection_component(npow, index):
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= self.kappa_s * quad_grid(
-                self.deflection_func,
-                0.0,
-                1.0,
-                grid,
-                args=(npow, self.axis_ratio, self.scale_radius),
-            )[0]
+            deflection_grid *= (
+                self.kappa_s
+                * quad_grid(
+                    self.deflection_func,
+                    0.0,
+                    1.0,
+                    grid,
+                    args=(npow, self.axis_ratio, self.scale_radius),
+                )[0]
+            )
 
             return deflection_grid
 

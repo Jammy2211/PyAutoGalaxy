@@ -529,10 +529,8 @@ def critical_curve_via_magnification_from_mass_profile_and_grid(mass_profile, gr
         contour_x, contour_y = contours[jj].T
         pixel_coord = np.stack((contour_x, contour_y), axis=-1)
 
-        critical_curve = (
-            grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
-                grid_pixels_1d=pixel_coord, shape_2d=magnification.sub_shape_2d
-            )
+        critical_curve = grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
+            grid_pixels_1d=pixel_coord, shape_2d=magnification.sub_shape_2d
         )
 
         critical_curves.append(critical_curve)
@@ -753,21 +751,21 @@ class TestCriticalCurvesAndCaustics:
             centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
         )
 
-        tangential_critical_curve_from_magnification = (
-            critical_curve_via_magnification_from_mass_profile_and_grid(
-                mass_profile=sie, grid=sie.calculation_grid
-            )[0]
-        )
+        tangential_critical_curve_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
+            mass_profile=sie, grid=sie.calculation_grid
+        )[
+            0
+        ]
 
         assert sie.tangential_critical_curve == pytest.approx(
             tangential_critical_curve_from_magnification, 5e-1
         )
 
-        tangential_critical_curve_from_magnification = (
-            critical_curve_via_magnification_from_mass_profile_and_grid(
-                mass_profile=sie, grid=sie.calculation_grid
-            )[0]
-        )
+        tangential_critical_curve_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
+            mass_profile=sie, grid=sie.calculation_grid
+        )[
+            0
+        ]
 
         assert sie.tangential_critical_curve == pytest.approx(
             tangential_critical_curve_from_magnification, 5e-1
@@ -778,11 +776,11 @@ class TestCriticalCurvesAndCaustics:
             centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
         )
 
-        critical_curve_radial_from_magnification = (
-            critical_curve_via_magnification_from_mass_profile_and_grid(
-                mass_profile=sie, grid=sie.calculation_grid
-            )[1]
-        )
+        critical_curve_radial_from_magnification = critical_curve_via_magnification_from_mass_profile_and_grid(
+            mass_profile=sie, grid=sie.calculation_grid
+        )[
+            1
+        ]
 
         assert sum(critical_curve_radial_from_magnification) == pytest.approx(
             sum(sie.radial_critical_curve), abs=0.7
@@ -793,11 +791,11 @@ class TestCriticalCurvesAndCaustics:
             centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
         )
 
-        tangential_caustic_from_magnification = (
-            caustics_via_magnification_from_mass_profile_and_grid(
-                mass_profile=sie, grid=sie.calculation_grid
-            )[0]
-        )
+        tangential_caustic_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
+            mass_profile=sie, grid=sie.calculation_grid
+        )[
+            0
+        ]
 
         assert sum(sie.tangential_caustic) == pytest.approx(
             sum(tangential_caustic_from_magnification), 5e-1
@@ -808,11 +806,11 @@ class TestCriticalCurvesAndCaustics:
             centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
         )
 
-        caustic_radial_from_magnification = (
-            caustics_via_magnification_from_mass_profile_and_grid(
-                mass_profile=sie, grid=sie.calculation_grid
-            )[1]
-        )
+        caustic_radial_from_magnification = caustics_via_magnification_from_mass_profile_and_grid(
+            mass_profile=sie, grid=sie.calculation_grid
+        )[
+            1
+        ]
 
         assert sum(sie.radial_caustic) == pytest.approx(
             sum(caustic_radial_from_magnification), 7e-1

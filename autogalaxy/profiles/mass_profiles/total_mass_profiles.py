@@ -5,7 +5,7 @@ from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 
-# from pyquad import quad_grid
+from pyquad import quad_grid
 from scipy import special
 import typing
 
@@ -344,13 +344,16 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
             einstein_radius_rescaled = self.einstein_radius_rescaled
 
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= einstein_radius_rescaled * quad_grid(
-                self.deflection_func,
-                0.0,
-                1.0,
-                grid,
-                args=(npow, self.axis_ratio, self.slope, self.core_radius),
-            )[0]
+            deflection_grid *= (
+                einstein_radius_rescaled
+                * quad_grid(
+                    self.deflection_func,
+                    0.0,
+                    1.0,
+                    grid,
+                    args=(npow, self.axis_ratio, self.slope, self.core_radius),
+                )[0]
+            )
 
             return deflection_grid
 

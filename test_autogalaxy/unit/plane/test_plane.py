@@ -23,10 +23,8 @@ def critical_curve_via_magnification_from_plane_and_grid(plane, grid):
         contour_x, contour_y = contours[jj].T
         pixel_coord = np.stack((contour_x, contour_y), axis=-1)
 
-        critical_curve = (
-            grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
-                grid_pixels_1d=pixel_coord, shape_2d=magnification.sub_shape_2d
-            )
+        critical_curve = grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
+            grid_pixels_1d=pixel_coord, shape_2d=magnification.sub_shape_2d
         )
 
         critical_curve = np.array(grid=critical_curve)
@@ -1288,10 +1286,8 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
-            blurred_images_of_galaxies = (
-                plane.blurred_images_of_galaxies_from_grid_and_psf(
-                    grid=sub_grid_7x7, blurring_grid=blurring_grid_7x7, psf=psf_3x3
-                )
+            blurred_images_of_galaxies = plane.blurred_images_of_galaxies_from_grid_and_psf(
+                grid=sub_grid_7x7, blurring_grid=blurring_grid_7x7, psf=psf_3x3
             )
 
             assert blurred_g0_image.shape_1d == 9
@@ -1372,12 +1368,10 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
-            blurred_images_of_galaxies = (
-                plane.blurred_images_of_galaxies_from_grid_and_convolver(
-                    grid=sub_grid_7x7,
-                    blurring_grid=blurring_grid_7x7,
-                    convolver=convolver_7x7,
-                )
+            blurred_images_of_galaxies = plane.blurred_images_of_galaxies_from_grid_and_convolver(
+                grid=sub_grid_7x7,
+                blurring_grid=blurring_grid_7x7,
+                convolver=convolver_7x7,
             )
 
             assert blurred_g0_image.shape_1d == 9
@@ -1433,12 +1427,10 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
 
-            blurred_image_dict = (
-                plane.galaxy_blurred_image_dict_from_grid_and_convolver(
-                    grid=sub_grid_7x7,
-                    convolver=convolver_7x7,
-                    blurring_grid=blurring_grid_7x7,
-                )
+            blurred_image_dict = plane.galaxy_blurred_image_dict_from_grid_and_convolver(
+                grid=sub_grid_7x7,
+                convolver=convolver_7x7,
+                blurring_grid=blurring_grid_7x7,
             )
 
             assert (blurred_image_dict[g0].in_1d == g0_blurred_image.in_1d).all()
@@ -1497,10 +1489,8 @@ class TestAbstractPlaneData:
                 1.0e-4,
             )
 
-            unmasked_blurred_image_of_galaxies = (
-                plane.unmasked_blurred_image_of_galaxies_from_grid_and_psf(
-                    grid=grid, psf=psf
-                )
+            unmasked_blurred_image_of_galaxies = plane.unmasked_blurred_image_of_galaxies_from_grid_and_psf(
+                grid=grid, psf=psf
             )
 
             assert unmasked_blurred_image_of_galaxies[0].in_2d == pytest.approx(
@@ -1581,10 +1571,8 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
-            plane_visibilities_of_galaxies = (
-                plane.profile_visibilities_of_galaxies_from_grid_and_transformer(
-                    grid=sub_grid_7x7, transformer=transformer_7x7_7
-                )
+            plane_visibilities_of_galaxies = plane.profile_visibilities_of_galaxies_from_grid_and_transformer(
+                grid=sub_grid_7x7, transformer=transformer_7x7_7
             )
 
             assert (g0_visibilities == plane_visibilities_of_galaxies[0]).all()
@@ -1633,10 +1621,8 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
 
-            visibilities_dict = (
-                plane.galaxy_profile_visibilities_dict_from_grid_and_transformer(
-                    grid=sub_grid_7x7, transformer=transformer_7x7_7
-                )
+            visibilities_dict = plane.galaxy_profile_visibilities_dict_from_grid_and_transformer(
+                grid=sub_grid_7x7, transformer=transformer_7x7_7
             )
 
             assert (visibilities_dict[g0] == g0_visibilities).all()
@@ -1842,21 +1828,17 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(galaxies=[galaxy], redshift=None)
 
-            plane_image_from_func = (
-                ag.plane.plane.plane_util.plane_image_of_galaxies_from(
-                    shape=(7, 7),
-                    grid=sub_grid_7x7.geometry.unmasked_grid_sub_1,
-                    galaxies=[galaxy],
-                )
+            plane_image_from_func = ag.plane.plane.plane_util.plane_image_of_galaxies_from(
+                shape=(7, 7),
+                grid=sub_grid_7x7.geometry.unmasked_grid_sub_1,
+                galaxies=[galaxy],
             )
 
             plane_image_from_plane = plane.plane_image_from_grid(grid=sub_grid_7x7)
 
             assert (plane_image_from_func.array == plane_image_from_plane.array).all()
 
-        def test__ensure_index_of_plane_image_has_negative_arcseconds_at_start(
-            self,
-        ):
+        def test__ensure_index_of_plane_image_has_negative_arcseconds_at_start(self,):
             # The grid coordinates -2.0 -> 2.0 mean a plane of shape (5,5) has arc second coordinates running over
             # -1.6, -0.8, 0.0, 0.8, 1.6. The origin -1.6, -1.6 of the model_galaxy means its brighest pixel should be
             # index 0 of the 1D grid and (0,0) of the 2d plane datas_.
