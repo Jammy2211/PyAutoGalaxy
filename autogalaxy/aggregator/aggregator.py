@@ -54,8 +54,8 @@ def plane_from_agg_obj(agg_obj):
 
 def masked_imaging_generator_from_aggregator(aggregator):
     """
-    Returns a generator of *MaskedImaging* objects from an input aggregator, which generates a list of the
-    *MaskedImaging* objects for every set of results loaded in the aggregator.
+    Returns a generator of `MaskImaging` objects from an input aggregator, which generates a list of the
+    `MaskImaging` objects for every set of results loaded in the aggregator.
 
     This is performed by mapping the *masked_imaging_from_agg_obj* with the aggregator, which sets up each masked
     imaging using only generators ensuring that manipulating the masked imaging of large sets of results is done in a
@@ -70,12 +70,12 @@ def masked_imaging_generator_from_aggregator(aggregator):
 
 def masked_imaging_from_agg_obj(agg_obj):
     """
-    Returns a *MaskedImaging* object from an aggregator's *PhaseOutput* class, which we call an 'agg_obj' to describe
+    Returns a `MaskImaging` object from an aggregator's *PhaseOutput* class, which we call an 'agg_obj' to describe
      that it acts as the aggregator object for one result in the *Aggregator*. This uses the aggregator's generator
-     outputs such that the function can use the *Aggregator*'s map function to to create a *MaskedImaging* generator.
+     outputs such that the function can use the *Aggregator*'s map function to to create a `MaskImaging` generator.
 
-     The *MaskedImaging* is created following the same method as the PyAutoGalaxy `Phase` classes, including using the
-     *SettingsMaskedImaging* instance output by the phase to load inputs of the *MaskedImaging* (e.g. psf_shape_2d).
+     The `MaskImaging` is created following the same method as the PyAutoGalaxy `Phase` classes, including using the
+     *SettingsMaskedImaging* instance output by the phase to load inputs of the `MaskImaging` (e.g. psf_shape_2d).
 
     Parameters
     ----------

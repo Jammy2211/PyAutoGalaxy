@@ -291,6 +291,15 @@ class AbstractEllipticalSersic(
             pixel_scales=grid.pixel_scales,
         )
 
+    @grids.grid_like_to_structure
+    @grids.transform
+    @grids.relocate_to_radial_minimum
+    def deflections_from_grid(self, grid):
+
+        return self._deflections_from_grid_via_gaussians(
+            grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
+        )
+
     @property
     def ellipticity_rescale(self):
         return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
@@ -339,7 +348,7 @@ class AbstractEllipticalSersic(
         radii_max = self.effective_radius * 20.0
 
         def sersic_2d(r):
-            return self.intensity * np.exp(
+            return self.mass_to_light_ratio * self.intensity * np.exp(
                 -self.sersic_constant
                 * (((r / self.effective_radius) ** (1.0 / self.sersic_index)) - 1.0)
             )
@@ -350,14 +359,6 @@ class AbstractEllipticalSersic(
 
 
 class EllipticalSersic(AbstractEllipticalSersic, MassProfileMGE):
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
-    def deflections_from_grid(self, grid):
-
-        return self._deflections_from_grid_via_gaussians(
-            grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
-        )
 
     @grids.grid_like_to_structure
     @grids.transform
@@ -653,7 +654,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
     @grids.grid_like_to_structure
     @grids.transform
     @grids.relocate_to_radial_minimum
-    def deflections_from_grid(self, grid):
+    def deflections_via_integrator_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -730,6 +731,24 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
             / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
         )
 
+    def decompose_convergence_into_gaussians(self):
+
+        radii_min = self.effective_radius / 100.0
+        radii_max = self.effective_radius * 20.0
+
+        def sersic_radial_gradient_2D(r):
+            return self.mass_to_light_ratio * self.intensity * (
+                ((self.axis_ratio * r) / self.effective_radius)
+                ** -self.mass_to_light_gradient
+            ) * np.exp(
+                -self.sersic_constant
+                * (((r / self.effective_radius) ** (1.0 / self.sersic_index)) - 1.0)
+            )
+
+        return self._decompose_convergence_into_gaussians(
+            func=sersic_radial_gradient_2D, radii_min=radii_min, radii_max=radii_max
+        )
+
 
 class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
     def __init__(
@@ -769,6 +788,188 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
             mass_to_light_ratio=mass_to_light_ratio,
             mass_to_light_gradient=mass_to_light_gradient,
         )
+
+
+class EllipticalCoreSersic(EllipticalSersic):
+    def __init__(
+        self,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        sersic_index: float = 4.0,
+        radius_break: float = 0.01,
+        intensity_break: float = 0.05,
+        gamma: float = 0.25,
+        alpha: float = 3.0,
+        mass_to_light_ratio: float = 1.0,
+    ):
+        """ The elliptical cored-Sersic light profile.
+
+        Parameters
+        ----------
+        centre : (float, float)
+            The (y,x) arc-second coordinates of the profile centre.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+        intensity : float
+            Overall intensity normalisation of the light profiles (electrons per second).
+        effective_radius : float
+            The circular radius containing half the light of this profile.
+        sersic_index : Int
+            Controls the concentration of the of the profile (lower value -> less concentrated, \
+            higher value -> more concentrated).
+        radius_break : Float
+            The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
+        intensity_break : Float
+            The intensity at the break radius.
+        gamma : Float
+            The logarithmic power-law slope of the inner core profiles
+        alpha :
+            Controls the sharpness of the transition between the inner core / outer Sersic profiles.
+        """
+        super(EllipticalCoreSersic, self).__init__(
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            intensity=intensity,
+            effective_radius=effective_radius,
+            sersic_index=sersic_index,
+            mass_to_light_ratio=mass_to_light_ratio,
+        )
+        self.radius_break = radius_break
+        self.intensity_break = intensity_break
+        self.alpha = alpha
+        self.gamma = gamma
+
+    @property
+    def intensity_prime(self):
+        """Overall intensity normalisation in the rescaled Core-Sersic light profiles (electrons per second)"""
+        return (
+            self.intensity_break
+            * (2.0 ** (-self.gamma / self.alpha))
+            * np.exp(
+                self.sersic_constant
+                * (
+                    ((2.0 ** (1.0 / self.alpha)) * self.radius_break)
+                    / self.effective_radius
+                )
+                ** (1.0 / self.sersic_index)
+            )
+        )
+
+    def image_from_grid_radii(self, grid_radii):
+        """Calculate the intensity of the cored-Sersic light profile on a grid of radial coordinates.
+
+        Parameters
+        ----------
+        grid_radii : float
+            The radial distance from the centre of the profile. for each coordinate on the grid.
+        """
+        return np.multiply(
+            np.multiply(
+                self.intensity_prime,
+                np.power(
+                    np.add(
+                        1,
+                        np.power(np.divide(self.radius_break, grid_radii), self.alpha),
+                    ),
+                    (self.gamma / self.alpha),
+                ),
+            ),
+            np.exp(
+                np.multiply(
+                    -self.sersic_constant,
+                    (
+                        np.power(
+                            np.divide(
+                                np.add(
+                                    np.power(grid_radii, self.alpha),
+                                    (self.radius_break ** self.alpha),
+                                ),
+                                (self.effective_radius ** self.alpha),
+                            ),
+                            (1.0 / (self.alpha * self.sersic_index)),
+                        )
+                    ),
+                )
+            ),
+        )
+
+    def decompose_convergence_into_gaussians(self):
+
+        radii_min = self.effective_radius / 50.0
+        radii_max = self.effective_radius * 20.0
+
+        def core_sersic_2D(r):
+            return self.mass_to_light_ratio * self.intensity * (
+                self.intensity_prime
+                * (1.0 + (self.radius_break / r) ** self.alpha)
+                ** (self.gamma / self.alpha)
+                * np.exp(
+                    -self.sersic_constant
+                    * (
+                        (r ** self.alpha + self.radius_break ** self.alpha)
+                        / self.effective_radius ** self.alpha
+                    )
+                    ** (1.0 / (self.sersic_index * self.alpha))
+                )
+            )
+
+        return self._decompose_convergence_into_gaussians(
+            func=core_sersic_2D, radii_min=radii_min, radii_max=radii_max
+        )
+
+
+class SphericalCoreSersic(EllipticalCoreSersic):
+    def __init__(
+        self,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        sersic_index: float = 4.0,
+        radius_break: float = 0.01,
+        intensity_break: float = 0.05,
+        gamma: float = 0.25,
+        alpha: float = 3.0,
+    ):
+        """ The elliptical cored-Sersic light profile.
+
+        Parameters
+        ----------
+        centre : (float, float)
+            The (y,x) arc-second coordinates of the profile centre.
+        intensity : float
+            Overall intensity normalisation of the light profiles (electrons per second).
+        effective_radius : float
+            The circular radius containing half the light of this profile.
+        sersic_index : Int
+            Controls the concentration of the of the profile (lower value -> less concentrated, \
+            higher value -> more concentrated).
+        radius_break : Float
+            The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
+        intensity_break : Float
+            The intensity at the break radius.
+        gamma : Float
+            The logarithmic power-law slope of the inner core profiles
+        alpha :
+            Controls the sharpness of the transition between the inner core / outer Sersic profiles.
+        """
+        super(SphericalCoreSersic, self).__init__(
+            centre=centre,
+            elliptical_comps=(0.0, 0.0),
+            intensity=intensity,
+            effective_radius=effective_radius,
+            sersic_index=sersic_index,
+            radius_break=radius_break,
+            intensity_break=intensity_break,
+            gamma=gamma,
+            alpha=alpha,
+        )
+        self.radius_break = radius_break
+        self.intensity_break = intensity_break
+        self.alpha = alpha
+        self.gamma = gamma
 
 
 class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):

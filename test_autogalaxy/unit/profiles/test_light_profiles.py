@@ -636,8 +636,12 @@ class TestBlurredProfileImages:
             image=image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
         )
 
-        light_profile_blurred_image = light_profile.blurred_image_from_grid_and_convolver(
-            grid=sub_grid_7x7, convolver=convolver_7x7, blurring_grid=blurring_grid_7x7
+        light_profile_blurred_image = (
+            light_profile.blurred_image_from_grid_and_convolver(
+                grid=sub_grid_7x7,
+                convolver=convolver_7x7,
+                blurring_grid=blurring_grid_7x7,
+            )
         )
 
         assert blurred_image.in_1d == pytest.approx(
@@ -660,8 +664,10 @@ class TestVisibilities:
             image=image.in_1d_binned
         )
 
-        light_profile_visibilities = light_profile.profile_visibilities_from_grid_and_transformer(
-            grid=grid_7x7, transformer=transformer_7x7_7
+        light_profile_visibilities = (
+            light_profile.profile_visibilities_from_grid_and_transformer(
+                grid=grid_7x7, transformer=transformer_7x7_7
+            )
         )
 
         assert visibilities == pytest.approx(light_profile_visibilities, 1.0e-4)

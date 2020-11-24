@@ -96,10 +96,12 @@ class FitImaging(aa_fit.FitImaging):
         A dictionary associating galaxies with their corresponding model images
         """
 
-        galaxy_model_image_dict = self.plane.galaxy_blurred_image_dict_from_grid_and_convolver(
-            grid=self.grid,
-            convolver=self.masked_imaging.convolver,
-            blurring_grid=self.masked_imaging.blurring_grid,
+        galaxy_model_image_dict = (
+            self.plane.galaxy_blurred_image_dict_from_grid_and_convolver(
+                grid=self.grid,
+                convolver=self.masked_imaging.convolver,
+                blurring_grid=self.masked_imaging.blurring_grid,
+            )
         )
 
         for galaxy in self.galaxies:
@@ -115,10 +117,12 @@ class FitImaging(aa_fit.FitImaging):
     @property
     def model_images_of_galaxies(self):
 
-        model_images_of_galaxies = self.plane.blurred_images_of_galaxies_from_grid_and_psf(
-            grid=self.grid,
-            psf=self.masked_imaging.psf,
-            blurring_grid=self.masked_imaging.blurring_grid,
+        model_images_of_galaxies = (
+            self.plane.blurred_images_of_galaxies_from_grid_and_psf(
+                grid=self.grid,
+                psf=self.masked_imaging.psf,
+                blurring_grid=self.masked_imaging.blurring_grid,
+            )
         )
 
         for galaxy_index, galaxy in enumerate(self.galaxies):
@@ -183,9 +187,11 @@ class FitInterferometer(aa_fit.FitInterferometer):
 
         self.plane = plane
 
-        self.profile_visibilities = plane.profile_visibilities_from_grid_and_transformer(
-            grid=masked_interferometer.grid,
-            transformer=masked_interferometer.transformer,
+        self.profile_visibilities = (
+            plane.profile_visibilities_from_grid_and_transformer(
+                grid=masked_interferometer.grid,
+                transformer=masked_interferometer.transformer,
+            )
         )
 
         self.profile_subtracted_visibilities = (
@@ -255,9 +261,11 @@ class FitInterferometer(aa_fit.FitInterferometer):
         """
         A dictionary associating galaxies with their corresponding model images
         """
-        galaxy_model_visibilities_dict = self.plane.galaxy_profile_visibilities_dict_from_grid_and_transformer(
-            grid=self.masked_interferometer.grid,
-            transformer=self.masked_interferometer.transformer,
+        galaxy_model_visibilities_dict = (
+            self.plane.galaxy_profile_visibilities_dict_from_grid_and_transformer(
+                grid=self.masked_interferometer.grid,
+                transformer=self.masked_interferometer.transformer,
+            )
         )
 
         # TODO : Extend to multiple inversioons across Planes
@@ -274,9 +282,11 @@ class FitInterferometer(aa_fit.FitInterferometer):
 
     def model_visibilities_of_galaxies(self):
 
-        model_visibilities_of_galaxies = self.plane.profile_visibilities_of_galaxies_from_grid_and_transformer(
-            grid=self.masked_interferometer.grid,
-            transformer=self.masked_interferometer.transformer,
+        model_visibilities_of_galaxies = (
+            self.plane.profile_visibilities_of_galaxies_from_grid_and_transformer(
+                grid=self.masked_interferometer.grid,
+                transformer=self.masked_interferometer.transformer,
+            )
         )
 
         for (galaxy_index, galaxy) in enumerate(self.galaxies):
