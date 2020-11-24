@@ -14,7 +14,6 @@ from .total_mass_profiles import (
 )
 from .dark_mass_profiles import (
     EllipticalGeneralizedNFW,
-    #    EllipticalGeneralizedNFW3,
     SphericalGeneralizedNFW,
     SphericalTruncatedNFW,
     SphericalTruncatedNFWMCRDuffy,
@@ -33,6 +32,8 @@ from .stellar_mass_profiles import (
     SphericalExponential,
     EllipticalDevVaucouleurs,
     SphericalDevVaucouleurs,
+    EllipticalCoreSersic,
+    SphericalCoreSersic,
     EllipticalSersicRadialGradient,
     SphericalSersicRadialGradient,
     EllipticalChameleon,

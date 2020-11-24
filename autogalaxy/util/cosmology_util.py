@@ -1,8 +1,6 @@
 import math
 
 from astropy import constants
-from autogalaxy import convert
-from autogalaxy import exc
 
 
 def arcsec_per_kpc_from(*, redshift, cosmology):
