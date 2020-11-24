@@ -1,0 +1,5 @@
+{
+  "test_autoastro/unit/galaxy/test_galaxy.py::TestMassProfiles::()::TestRadiusandMassfromTangentialCriticalCurve::()::test__einstein_mass_from_tangential_critical_curve_and_kappa__two_sis_profiles": true,
+  "test_autoastro/unit/profiles/mass_profiles/test_mass_profiles.py": true,
+  "test_autogalaxy/unit/profiles/mass_profiles/test_total_mass_profiles.py::TestIsothermal::()::test__shear_analytic_equal_to_via_jacobian": true
+}
