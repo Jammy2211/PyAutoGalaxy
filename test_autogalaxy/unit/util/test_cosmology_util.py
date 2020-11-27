@@ -34,18 +34,14 @@ def test__arcsec_to_kpc_conversion():
 
 def test__angular_diameter_distances():
 
-    angular_diameter_distance_to_earth_kpc = (
-        ag.util.cosmology.angular_diameter_distance_to_earth_in_kpc_from(
-            redshift=0.1, cosmology=planck
-        )
+    angular_diameter_distance_to_earth_kpc = ag.util.cosmology.angular_diameter_distance_to_earth_in_kpc_from(
+        redshift=0.1, cosmology=planck
     )
 
     assert angular_diameter_distance_to_earth_kpc == pytest.approx(392840, 1e-5)
 
-    angular_diameter_distance_between_redshifts_kpc = (
-        ag.util.cosmology.angular_diameter_distance_between_redshifts_in_kpc_from(
-            redshift_0=0.1, redshift_1=1.0, cosmology=planck
-        )
+    angular_diameter_distance_between_redshifts_kpc = ag.util.cosmology.angular_diameter_distance_between_redshifts_in_kpc_from(
+        redshift_0=0.1, redshift_1=1.0, cosmology=planck
     )
 
     assert angular_diameter_distance_between_redshifts_kpc == pytest.approx(
@@ -61,10 +57,8 @@ def test__cosmic_average_densities_solar_mass_per_kpc3():
 
     assert cosmic_average_density == pytest.approx(81280.09116133313, 1.0e-4)
 
-    cosmic_average_density = (
-        ag.util.cosmology.cosmic_average_density_solar_mass_per_kpc3_from(
-            redshift=0.6, cosmology=planck
-        )
+    cosmic_average_density = ag.util.cosmology.cosmic_average_density_solar_mass_per_kpc3_from(
+        redshift=0.6, cosmology=planck
     )
 
     assert cosmic_average_density == pytest.approx(249.20874, 1.0e-4)
@@ -72,10 +66,8 @@ def test__cosmic_average_densities_solar_mass_per_kpc3():
 
 def test__critical_surface_mass_densities():
 
-    critical_surface_density = (
-        ag.util.cosmology.critical_surface_density_between_redshifts_from(
-            redshift_0=0.1, redshift_1=1.0, cosmology=planck
-        )
+    critical_surface_density = ag.util.cosmology.critical_surface_density_between_redshifts_from(
+        redshift_0=0.1, redshift_1=1.0, cosmology=planck
     )
 
     assert critical_surface_density == pytest.approx(17593241668, 1e-2)

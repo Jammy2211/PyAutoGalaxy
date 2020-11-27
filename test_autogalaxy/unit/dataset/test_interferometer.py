@@ -90,8 +90,12 @@ class TestMaskedInterferometer:
             real_space_mask=real_space_mask,
         )
 
-        assert (masked_interferometer.visibilities.in_1d == 1.0+1.0j * np.ones((19,))).all()
-        assert (masked_interferometer.noise_map.in_1d == 2.0+2.0j * np.ones((19,))).all()
+        assert (
+            masked_interferometer.visibilities.in_1d == 1.0 + 1.0j * np.ones((19,))
+        ).all()
+        assert (
+            masked_interferometer.noise_map.in_1d == 2.0 + 2.0j * np.ones((19,))
+        ).all()
         assert (
             masked_interferometer.interferometer.uv_wavelengths
             == 3.0 * np.ones((19, 2))

@@ -37,9 +37,7 @@ def make_mapper():
 
 
 @pytest.fixture(name="galaxy_model_2")
-def make_galaxy_model_2(
-    mapper,
-):
+def make_galaxy_model_2(mapper,):
     galaxy_model_2 = ag.GalaxyModel(
         redshift=ag.Redshift,
         light_profile=ag.lp.EllipticalDevVaucouleurs,
@@ -50,9 +48,7 @@ def make_galaxy_model_2(
 
 
 @pytest.fixture(name="galaxy_model")
-def make_galaxy_model(
-    mapper,
-):
+def make_galaxy_model(mapper,):
     galaxy_model_1 = ag.GalaxyModel(
         redshift=ag.Redshift,
         light_profile=ag.lp.EllipticalDevVaucouleurs,
@@ -302,9 +298,7 @@ class TestRegularization:
 
 
 class TestHyperGalaxy:
-    def test_hyper_galaxy(
-        self,
-    ):
+    def test_hyper_galaxy(self,):
         galaxy_model = ag.GalaxyModel(redshift=ag.Redshift, hyper_galaxy=ag.HyperGalaxy)
 
         arguments = {
@@ -322,9 +316,7 @@ class TestHyperGalaxy:
 
         assert galaxy.hyper_galaxy_image is None
 
-    def test_fixed_hyper_galaxy(
-        self,
-    ):
+    def test_fixed_hyper_galaxy(self,):
         galaxy_model = ag.GalaxyModel(
             redshift=ag.Redshift, hyper_galaxy=ag.HyperGalaxy()
         )

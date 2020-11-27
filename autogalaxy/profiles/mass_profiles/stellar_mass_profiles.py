@@ -277,11 +277,7 @@ class AbstractEllipticalSersic(
 
         eccentric_radii = self.grid_to_eccentric_radii(grid=grid)
 
-        convergence = self._convergence_from_grid_via_gaussians(
-            grid_radii=eccentric_radii
-        )
-
-        return np.multiply(self.mass_to_light_ratio, convergence)
+        return self._convergence_from_grid_via_gaussians(grid_radii=eccentric_radii)
 
     @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
