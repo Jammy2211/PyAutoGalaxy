@@ -18,11 +18,11 @@ directory = path.dirname(path.realpath(__file__))
 
 class TestMakeAnalysis:
     def test__masks_visibilities_and_noise_map_correctly(
-        self, phase_interferometer_7, interferometer_7, visibilities_mask_7x2
+        self, phase_interferometer_7, interferometer_7, visibilities_mask_7
     ):
         analysis = phase_interferometer_7.make_analysis(
             dataset=interferometer_7,
-            mask=visibilities_mask_7x2,
+            mask=visibilities_mask_7,
             results=mock.MockResults(),
         )
 
@@ -34,11 +34,11 @@ class TestMakeAnalysis:
         ).all()
 
     def test__phase_info_is_made(
-        self, phase_interferometer_7, interferometer_7, visibilities_mask_7x2
+        self, phase_interferometer_7, interferometer_7, visibilities_mask_7
     ):
         phase_interferometer_7.make_analysis(
             dataset=interferometer_7,
-            mask=visibilities_mask_7x2,
+            mask=visibilities_mask_7,
             results=mock.MockResults(),
         )
 

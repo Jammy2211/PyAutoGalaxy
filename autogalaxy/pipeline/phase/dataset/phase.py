@@ -3,7 +3,6 @@ from astropy import cosmology as cosmo
 import autofit as af
 from autoarray.inversion import pixelizations as pix
 from autoarray.inversion import regularization as reg
-from autofit.tools.phase import Dataset
 from autogalaxy.hyper import hyper_data as hd
 from autogalaxy.pipeline.phase import abstract
 from autogalaxy.pipeline.phase import extensions
@@ -37,7 +36,7 @@ class PhaseDataset(abstract.AbstractPhase):
 
     def run(
         self,
-        dataset: Dataset,
+        dataset,
         mask,
         results=None,
         info=None,

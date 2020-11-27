@@ -16,7 +16,7 @@ directory = path.dirname(path.realpath(__file__))
 
 class TestFit:
     def test__fit_using_interferometer(
-        self, interferometer_7, mask_7x7, visibilities_mask_7x2, samples_with_result
+        self, interferometer_7, mask_7x7, visibilities_mask_7, samples_with_result
     ):
 
         phase_interferometer_7 = ag.PhaseInterferometer(
@@ -30,14 +30,14 @@ class TestFit:
 
         result = phase_interferometer_7.run(
             dataset=interferometer_7,
-            mask=visibilities_mask_7x2,
+            mask=visibilities_mask_7,
             results=mock.MockResults(),
         )
         assert isinstance(result.instance.galaxies[0], ag.Galaxy)
         assert isinstance(result.instance.galaxies[0], ag.Galaxy)
 
     def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
-        self, interferometer_7, mask_7x7, visibilities_mask_7x2
+        self, interferometer_7, mask_7x7, visibilities_mask_7
     ):
         galalxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
@@ -54,7 +54,7 @@ class TestFit:
 
         analysis = phase_interferometer_7.make_analysis(
             dataset=interferometer_7,
-            mask=visibilities_mask_7x2,
+            mask=visibilities_mask_7,
             results=mock.MockResults(),
         )
         instance = phase_interferometer_7.model.instance_from_unit_vector([])
@@ -62,7 +62,7 @@ class TestFit:
 
         masked_interferometer = ag.MaskedInterferometer(
             interferometer=interferometer_7,
-            visibilities_mask=visibilities_mask_7x2,
+            visibilities_mask=visibilities_mask_7,
             real_space_mask=mask_7x7,
         )
         plane = analysis.plane_for_instance(instance=instance)
@@ -74,7 +74,7 @@ class TestFit:
         assert fit.log_likelihood == fit_figure_of_merit
 
     def test__fit_figure_of_merit__includes_hyper_image_and_noise__matches_fit(
-        self, interferometer_7, mask_7x7, visibilities_mask_7x2
+        self, interferometer_7, mask_7x7, visibilities_mask_7
     ):
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
@@ -94,7 +94,7 @@ class TestFit:
 
         analysis = phase_interferometer_7.make_analysis(
             dataset=interferometer_7,
-            mask=visibilities_mask_7x2,
+            mask=visibilities_mask_7,
             results=mock.MockResults(),
         )
         instance = phase_interferometer_7.model.instance_from_unit_vector([])
@@ -104,7 +104,7 @@ class TestFit:
 
         masked_interferometer = ag.MaskedInterferometer(
             interferometer=interferometer_7,
-            visibilities_mask=visibilities_mask_7x2,
+            visibilities_mask=visibilities_mask_7,
             real_space_mask=mask_7x7,
             settings=ag.SettingsMaskedInterferometer(sub_size=4),
         )

@@ -80,8 +80,8 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
     def convergence_func(self, grid_radius):
         return 0.0
 
-    def average_convergence_of_1_radius(self,):
-        return dim.Length(value=0.0, unit_length=self.unit_length)
+    def average_convergence_of_1_radius(self):
+        return 0.0
 
     @grids.grid_like_to_structure
     def convergence_from_grid(self, grid):

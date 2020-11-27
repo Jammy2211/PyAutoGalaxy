@@ -632,8 +632,10 @@ class TestFitImaging:
                 hyper_background_noise=hyper_background_noise,
             )
 
-            hyper_noise_map_background = hyper_background_noise.hyper_noise_map_from_noise_map(
-                noise_map=masked_imaging_7x7.noise_map
+            hyper_noise_map_background = (
+                hyper_background_noise.hyper_noise_map_from_noise_map(
+                    noise_map=masked_imaging_7x7.noise_map
+                )
             )
 
             hyper_noise = plane.hyper_noise_map_from_noise_map(
@@ -702,10 +704,12 @@ class TestFitImaging:
 
             fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
-            blurred_images_of_galaxies = plane.blurred_images_of_galaxies_from_grid_and_convolver(
-                grid=masked_imaging_7x7.grid,
-                convolver=masked_imaging_7x7.convolver,
-                blurring_grid=masked_imaging_7x7.blurring_grid,
+            blurred_images_of_galaxies = (
+                plane.blurred_images_of_galaxies_from_grid_and_convolver(
+                    grid=masked_imaging_7x7.grid,
+                    convolver=masked_imaging_7x7.convolver,
+                    blurring_grid=masked_imaging_7x7.blurring_grid,
+                )
             )
 
             assert blurred_images_of_galaxies[0].in_2d == pytest.approx(
@@ -722,8 +726,10 @@ class TestFitImaging:
 
             assert (unmasked_blurred_image == fit.unmasked_blurred_image).all()
 
-            unmasked_blurred_image_of_galaxies = plane.unmasked_blurred_image_of_galaxies_from_grid_and_psf(
-                grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
+            unmasked_blurred_image_of_galaxies = (
+                plane.unmasked_blurred_image_of_galaxies_from_grid_and_psf(
+                    grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
+                )
             )
 
             assert (
@@ -752,12 +758,14 @@ class TestFitImaging:
             mapper = pix.mapper_from_grid_and_sparse_grid(
                 grid=masked_imaging_7x7.grid_inversion, sparse_grid=None
             )
-            inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
-                mapper=mapper,
-                regularization=reg,
-                image=masked_imaging_7x7.image,
-                noise_map=masked_imaging_7x7.noise_map,
-                convolver=masked_imaging_7x7.convolver,
+            inversion = (
+                inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+                    mapper=mapper,
+                    regularization=reg,
+                    image=masked_imaging_7x7.image,
+                    noise_map=masked_imaging_7x7.noise_map,
+                    convolver=masked_imaging_7x7.convolver,
+                )
             )
 
             assert inversion.mapped_reconstructed_image.in_2d == pytest.approx(
@@ -799,10 +807,12 @@ class TestFitImaging:
 
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-            log_likelihood_with_regularization = ag.util.fit.log_likelihood_with_regularization_from(
-                chi_squared=chi_squared,
-                regularization_term=inversion.regularization_term,
-                noise_normalization=noise_normalization,
+            log_likelihood_with_regularization = (
+                ag.util.fit.log_likelihood_with_regularization_from(
+                    chi_squared=chi_squared,
+                    regularization_term=inversion.regularization_term,
+                    noise_normalization=noise_normalization,
+                )
             )
 
             assert log_likelihood_with_regularization == pytest.approx(
@@ -837,12 +847,14 @@ class TestFitImaging:
                 grid=masked_imaging_7x7.grid, sparse_grid=None
             )
 
-            inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
-                mapper=mapper,
-                regularization=reg,
-                image=masked_imaging_7x7.image,
-                noise_map=masked_imaging_7x7.noise_map,
-                convolver=masked_imaging_7x7.convolver,
+            inversion = (
+                inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+                    mapper=mapper,
+                    regularization=reg,
+                    image=masked_imaging_7x7.image,
+                    noise_map=masked_imaging_7x7.noise_map,
+                    convolver=masked_imaging_7x7.convolver,
+                )
             )
 
             assert (fit.galaxy_model_image_dict[g0] == np.zeros(9)).all()
@@ -864,8 +876,10 @@ class TestFitImaging:
                 image=masked_imaging_7x7.image
             )
 
-            hyper_noise_map_background = hyper_background_noise.hyper_noise_map_from_noise_map(
-                noise_map=masked_imaging_7x7.noise_map
+            hyper_noise_map_background = (
+                hyper_background_noise.hyper_noise_map_from_noise_map(
+                    noise_map=masked_imaging_7x7.noise_map
+                )
             )
 
             pix = ag.pix.Rectangular(shape=(3, 3))
@@ -903,12 +917,14 @@ class TestFitImaging:
                 grid=masked_imaging_7x7.grid,
                 settings=ag.SettingsPixelization(use_border=False),
             )
-            inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
-                mapper=mapper,
-                regularization=reg,
-                image=image,
-                noise_map=hyper_noise_map,
-                convolver=masked_imaging_7x7.convolver,
+            inversion = (
+                inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+                    mapper=mapper,
+                    regularization=reg,
+                    image=image,
+                    noise_map=hyper_noise_map,
+                    convolver=masked_imaging_7x7.convolver,
+                )
             )
 
             assert inversion.mapped_reconstructed_image.in_2d == pytest.approx(
@@ -947,10 +963,12 @@ class TestFitImaging:
 
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-            log_likelihood_with_regularization = ag.util.fit.log_likelihood_with_regularization_from(
-                chi_squared=chi_squared,
-                regularization_term=inversion.regularization_term,
-                noise_normalization=noise_normalization,
+            log_likelihood_with_regularization = (
+                ag.util.fit.log_likelihood_with_regularization_from(
+                    chi_squared=chi_squared,
+                    regularization_term=inversion.regularization_term,
+                    noise_normalization=noise_normalization,
+                )
             )
 
             assert log_likelihood_with_regularization == pytest.approx(
@@ -985,12 +1003,14 @@ class TestFitImaging:
                 settings=ag.SettingsPixelization(use_border=False),
             )
 
-            inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
-                mapper=mapper,
-                regularization=reg,
-                image=masked_imaging_7x7.image,
-                noise_map=masked_imaging_7x7.noise_map,
-                convolver=masked_imaging_7x7.convolver,
+            inversion = (
+                inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+                    mapper=mapper,
+                    regularization=reg,
+                    image=masked_imaging_7x7.image,
+                    noise_map=masked_imaging_7x7.noise_map,
+                    convolver=masked_imaging_7x7.convolver,
+                )
             )
 
             assert (fit.model_images_of_galaxies[0].in_2d == np.zeros((7, 7))).all()
@@ -1031,12 +1051,14 @@ class TestFitImaging:
                 settings=ag.SettingsPixelization(use_border=False),
             )
 
-            inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
-                image=profile_subtracted_image,
-                noise_map=masked_imaging_7x7.noise_map,
-                convolver=masked_imaging_7x7.convolver,
-                mapper=mapper,
-                regularization=reg,
+            inversion = (
+                inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+                    image=profile_subtracted_image,
+                    noise_map=masked_imaging_7x7.noise_map,
+                    convolver=masked_imaging_7x7.convolver,
+                    mapper=mapper,
+                    regularization=reg,
+                )
             )
 
             model_image = blurred_image + inversion.mapped_reconstructed_image
@@ -1075,10 +1097,12 @@ class TestFitImaging:
 
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-            log_likelihood_with_regularization = ag.util.fit.log_likelihood_with_regularization_from(
-                chi_squared=chi_squared,
-                regularization_term=inversion.regularization_term,
-                noise_normalization=noise_normalization,
+            log_likelihood_with_regularization = (
+                ag.util.fit.log_likelihood_with_regularization_from(
+                    chi_squared=chi_squared,
+                    regularization_term=inversion.regularization_term,
+                    noise_normalization=noise_normalization,
+                )
             )
 
             assert log_likelihood_with_regularization == pytest.approx(
@@ -1137,12 +1161,14 @@ class TestFitImaging:
                 settings=ag.SettingsPixelization(use_border=False),
             )
 
-            inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
-                image=profile_subtracted_image,
-                noise_map=masked_imaging_7x7.noise_map,
-                convolver=masked_imaging_7x7.convolver,
-                mapper=mapper,
-                regularization=reg,
+            inversion = (
+                inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+                    image=profile_subtracted_image,
+                    noise_map=masked_imaging_7x7.noise_map,
+                    convolver=masked_imaging_7x7.convolver,
+                    mapper=mapper,
+                    regularization=reg,
+                )
             )
 
             assert (fit.galaxy_model_image_dict[g2] == np.zeros(9)).all()
@@ -1173,8 +1199,10 @@ class TestFitImaging:
                 image=masked_imaging_7x7.image
             )
 
-            hyper_noise_map_background = hyper_background_noise.hyper_noise_map_from_noise_map(
-                noise_map=masked_imaging_7x7.noise_map
+            hyper_noise_map_background = (
+                hyper_background_noise.hyper_noise_map_from_noise_map(
+                    noise_map=masked_imaging_7x7.noise_map
+                )
             )
 
             galaxy_light = ag.Galaxy(
@@ -1227,12 +1255,14 @@ class TestFitImaging:
                 settings=ag.SettingsPixelization(use_border=False),
             )
 
-            inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
-                image=profile_subtracted_image,
-                noise_map=hyper_noise_map,
-                convolver=masked_imaging_7x7.convolver,
-                mapper=mapper,
-                regularization=reg,
+            inversion = (
+                inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+                    image=profile_subtracted_image,
+                    noise_map=hyper_noise_map,
+                    convolver=masked_imaging_7x7.convolver,
+                    mapper=mapper,
+                    regularization=reg,
+                )
             )
 
             model_image = blurred_image + inversion.mapped_reconstructed_image
@@ -1273,10 +1303,12 @@ class TestFitImaging:
 
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-            log_likelihood_with_regularization = ag.util.fit.log_likelihood_with_regularization_from(
-                chi_squared=chi_squared,
-                regularization_term=inversion.regularization_term,
-                noise_normalization=noise_normalization,
+            log_likelihood_with_regularization = (
+                ag.util.fit.log_likelihood_with_regularization_from(
+                    chi_squared=chi_squared,
+                    regularization_term=inversion.regularization_term,
+                    noise_normalization=noise_normalization,
+                )
             )
 
             assert log_likelihood_with_regularization == pytest.approx(
@@ -1322,12 +1354,14 @@ class TestFitImaging:
                 settings=ag.SettingsPixelization(use_border=False),
             )
 
-            inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
-                image=profile_subtracted_image,
-                noise_map=masked_imaging_7x7.noise_map,
-                convolver=masked_imaging_7x7.convolver,
-                mapper=mapper,
-                regularization=reg,
+            inversion = (
+                inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+                    image=profile_subtracted_image,
+                    noise_map=masked_imaging_7x7.noise_map,
+                    convolver=masked_imaging_7x7.convolver,
+                    mapper=mapper,
+                    regularization=reg,
+                )
             )
 
             assert blurred_image.in_2d == pytest.approx(
@@ -1351,9 +1385,9 @@ class TestFitInterferometer:
                 uv_wavelengths=np.array([[0.0, 0.0]]),
             )
 
-            interferometer.visibilities[0, 1] = 4.0
+            interferometer.visibilities[0] = 5.0 + 4.0j
 
-            visibilities_mask = np.full(fill_value=False, shape=(1, 2))
+            visibilities_mask = np.full(fill_value=False, shape=(1,))
 
             real_space_mask = ag.Mask2D.manual(
                 mask=[
@@ -1384,17 +1418,16 @@ class TestFitInterferometer:
                 masked_interferometer=masked_interferometer, plane=plane
             )
 
-            assert (fit.visibilities_mask == np.array([False, False])).all()
+            assert (fit.visibilities_mask == np.array([False])).all()
 
-            assert (fit.visibilities.in_1d == np.array([[5.0, 4.0]])).all()
-            assert (fit.noise_map.in_1d == np.array([[1.0, 1.0]])).all()
-            assert (fit.model_visibilities.in_1d == np.array([2.0, 0.0])).all()
-            assert (fit.residual_map.in_1d == np.array([3.0, 4.0])).all()
-            assert (fit.normalized_residual_map.in_1d == np.array([3.0, 4.0])).all()
-            assert (fit.chi_squared_map.in_1d == np.array([9.0, 16.0])).all()
+            assert (fit.visibilities.in_1d == np.array([5.0 + 4.0j])).all()
+            assert (fit.noise_map.in_1d == np.array([1.0 + 1.0j])).all()
+            assert (fit.model_visibilities.in_1d == np.array([2.0 + 0.0j])).all()
+            assert (fit.residual_map.in_1d == np.array([3.0 + 4.0j])).all()
+            assert (fit.normalized_residual_map.in_1d == np.array([3.0 + 4.0j])).all()
+            assert (fit.chi_squared_map.in_1d == np.array([9.0 + 16.0j])).all()
 
             assert fit.chi_squared == 25.0
-            assert fit.reduced_chi_squared == 25.0 / 2.0
             assert fit.noise_normalization == (2.0 * np.log(2 * np.pi * 1.0 ** 2.0))
             assert fit.log_likelihood == -0.5 * (
                 25.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
@@ -1411,7 +1444,7 @@ class TestFitInterferometer:
                 uv_wavelengths=uv_wavelengths,
             )
 
-            visibilities_mask = np.full(fill_value=False, shape=(1, 2))
+            visibilities_mask = np.full(fill_value=False, shape=(1,))
 
             real_space_mask = ag.Mask2D.manual(
                 mask=[
@@ -1447,10 +1480,12 @@ class TestFitInterferometer:
             )
 
             assert (
-                fit.visibilities.in_1d == np.full(fill_value=5.0, shape=(3, 2))
+                fit.visibilities.in_1d == np.array([5.0 + 5.0j, 5.0 + 5.0j, 5.0 + 5.0j])
             ).all()
 
-            assert (fit.noise_map.in_1d == np.full(fill_value=3.0, shape=(3, 2))).all()
+            assert (
+                fit.noise_map.in_1d == np.array([3.0 + 3.0j, 3.0 + 3.0j, 3.0 + 3.0j])
+            ).all()
 
     class TestCompareToManualProfilesOnly:
         def test___all_fit_quantities__no_hyper_methods(self, masked_interferometer_7):
@@ -1485,7 +1520,7 @@ class TestFitInterferometer:
 
             assert residual_map == pytest.approx(fit.residual_map, 1e-4)
 
-            normalized_residual_map = ag.util.fit.normalized_residual_map_from(
+            normalized_residual_map = ag.util.fit.normalized_residual_map_complex_from(
                 residual_map=residual_map, noise_map=masked_interferometer_7.noise_map
             )
 
@@ -1493,17 +1528,17 @@ class TestFitInterferometer:
                 fit.normalized_residual_map, 1e-4
             )
 
-            chi_squared_map = ag.util.fit.chi_squared_map_from(
+            chi_squared_map = ag.util.fit.chi_squared_map_complex_from(
                 residual_map=residual_map, noise_map=masked_interferometer_7.noise_map
             )
 
             assert chi_squared_map == pytest.approx(fit.chi_squared_map, 1e-4)
 
-            chi_squared = ag.util.fit.chi_squared_from(
+            chi_squared = ag.util.fit.chi_squared_complex_from(
                 chi_squared_map=fit.chi_squared_map
             )
 
-            noise_normalization = ag.util.fit.noise_normalization_from(
+            noise_normalization = ag.util.fit.noise_normalization_complex_from(
                 noise_map=masked_interferometer_7.noise_map
             )
 
@@ -1589,8 +1624,10 @@ class TestFitInterferometer:
         ):
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-            hyper_noise_map = hyper_background_noise.hyper_noise_map_from_noise_map(
-                noise_map=masked_interferometer_7.noise_map
+            hyper_noise_map = (
+                hyper_background_noise.hyper_noise_map_from_complex_noise_map(
+                    noise_map=masked_interferometer_7.noise_map
+                )
             )
 
             g0 = ag.Galaxy(
@@ -1652,7 +1689,7 @@ class TestFitInterferometer:
 
             assert residual_map.in_1d == pytest.approx(fit.residual_map.in_1d, 1.0e-4)
 
-            normalized_residual_map = ag.util.fit.normalized_residual_map_from(
+            normalized_residual_map = ag.util.fit.normalized_residual_map_complex_from(
                 residual_map=residual_map, noise_map=masked_interferometer_7.noise_map
             )
 
@@ -1660,7 +1697,7 @@ class TestFitInterferometer:
                 fit.normalized_residual_map.in_1d, 1.0e-4
             )
 
-            chi_squared_map = ag.util.fit.chi_squared_map_from(
+            chi_squared_map = ag.util.fit.chi_squared_map_complex_from(
                 residual_map=residual_map, noise_map=masked_interferometer_7.noise_map
             )
 
@@ -1668,9 +1705,11 @@ class TestFitInterferometer:
                 fit.chi_squared_map.in_1d, 1.0e-4
             )
 
-            chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
+            chi_squared = ag.util.fit.chi_squared_complex_from(
+                chi_squared_map=chi_squared_map
+            )
 
-            noise_normalization = ag.util.fit.noise_normalization_from(
+            noise_normalization = ag.util.fit.noise_normalization_complex_from(
                 noise_map=masked_interferometer_7.noise_map
             )
 
@@ -1680,10 +1719,12 @@ class TestFitInterferometer:
 
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-            log_likelihood_with_regularization = ag.util.fit.log_likelihood_with_regularization_from(
-                chi_squared=chi_squared,
-                regularization_term=inversion.regularization_term,
-                noise_normalization=noise_normalization,
+            log_likelihood_with_regularization = (
+                ag.util.fit.log_likelihood_with_regularization_from(
+                    chi_squared=chi_squared,
+                    regularization_term=inversion.regularization_term,
+                    noise_normalization=noise_normalization,
+                )
             )
 
             assert log_likelihood_with_regularization == pytest.approx(
@@ -1701,9 +1742,11 @@ class TestFitInterferometer:
             assert log_evidence == fit.log_evidence
             assert log_evidence == fit.figure_of_merit
 
-            mapped_reconstructed_image = ag.util.inversion.mapped_reconstructed_data_from(
-                mapping_matrix=fit.inversion.mapper.mapping_matrix,
-                reconstruction=fit.inversion.reconstruction,
+            mapped_reconstructed_image = (
+                ag.util.inversion.mapped_reconstructed_data_from(
+                    mapping_matrix=fit.inversion.mapper.mapping_matrix,
+                    reconstruction=fit.inversion.reconstruction,
+                )
             )
 
             assert (
@@ -1771,7 +1814,9 @@ class TestFitInterferometer:
                 transformer=masked_interferometer_7.transformer,
             )
 
-            assert (fit.galaxy_model_visibilities_dict[g0] == np.zeros((7, 2))).all()
+            assert (
+                fit.galaxy_model_visibilities_dict[g0] == 0.0 + 0.0j * np.zeros((7,))
+            ).all()
 
             assert fit.galaxy_model_visibilities_dict[g1].in_1d == pytest.approx(
                 inversion.mapped_reconstructed_visibilities.in_1d, 1.0e-4
@@ -1786,8 +1831,10 @@ class TestFitInterferometer:
         ):
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-            hyper_noise_map = hyper_background_noise.hyper_noise_map_from_noise_map(
-                noise_map=masked_interferometer_7.noise_map
+            hyper_noise_map = (
+                hyper_background_noise.hyper_noise_map_from_complex_noise_map(
+                    noise_map=masked_interferometer_7.noise_map
+                )
             )
 
             pix = ag.pix.Rectangular(shape=(3, 3))
@@ -1852,7 +1899,7 @@ class TestFitInterferometer:
 
             assert residual_map.in_1d == pytest.approx(fit.residual_map.in_1d, 1.0e-4)
 
-            normalized_residual_map = ag.util.fit.normalized_residual_map_from(
+            normalized_residual_map = ag.util.fit.normalized_residual_map_complex_from(
                 residual_map=residual_map,
                 noise_map=masked_interferometer_7_lop.noise_map,
             )
@@ -1861,7 +1908,7 @@ class TestFitInterferometer:
                 fit.normalized_residual_map.in_1d, 1.0e-4
             )
 
-            chi_squared_map = ag.util.fit.chi_squared_map_from(
+            chi_squared_map = ag.util.fit.chi_squared_map_complex_from(
                 residual_map=residual_map,
                 noise_map=masked_interferometer_7_lop.noise_map,
             )
@@ -1870,9 +1917,11 @@ class TestFitInterferometer:
                 fit.chi_squared_map.in_1d, 1.0e-4
             )
 
-            chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
+            chi_squared = ag.util.fit.chi_squared_complex_from(
+                chi_squared_map=chi_squared_map
+            )
 
-            noise_normalization = ag.util.fit.noise_normalization_from(
+            noise_normalization = ag.util.fit.noise_normalization_complex_from(
                 noise_map=masked_interferometer_7_lop.noise_map
             )
 
@@ -1882,10 +1931,12 @@ class TestFitInterferometer:
 
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-            log_likelihood_with_regularization = ag.util.fit.log_likelihood_with_regularization_from(
-                chi_squared=chi_squared,
-                regularization_term=inversion.regularization_term,
-                noise_normalization=noise_normalization,
+            log_likelihood_with_regularization = (
+                ag.util.fit.log_likelihood_with_regularization_from(
+                    chi_squared=chi_squared,
+                    regularization_term=inversion.regularization_term,
+                    noise_normalization=noise_normalization,
+                )
             )
 
             assert log_likelihood_with_regularization == pytest.approx(
@@ -1903,9 +1954,11 @@ class TestFitInterferometer:
             assert log_evidence == fit.log_evidence
             assert log_evidence == fit.figure_of_merit
 
-            mapped_reconstructed_image = ag.util.inversion.mapped_reconstructed_data_from(
-                mapping_matrix=fit.inversion.mapper.mapping_matrix,
-                reconstruction=fit.inversion.reconstruction,
+            mapped_reconstructed_image = (
+                ag.util.inversion.mapped_reconstructed_data_from(
+                    mapping_matrix=fit.inversion.mapper.mapping_matrix,
+                    reconstruction=fit.inversion.reconstruction,
+                )
             )
 
             assert (
@@ -1973,7 +2026,7 @@ class TestFitInterferometer:
 
             assert residual_map.in_1d == pytest.approx(fit.residual_map.in_1d)
 
-            normalized_residual_map = ag.util.fit.normalized_residual_map_from(
+            normalized_residual_map = ag.util.fit.normalized_residual_map_complex_from(
                 residual_map=residual_map, noise_map=masked_interferometer_7.noise_map
             )
 
@@ -1981,15 +2034,17 @@ class TestFitInterferometer:
                 fit.normalized_residual_map.in_1d
             )
 
-            chi_squared_map = ag.util.fit.chi_squared_map_from(
+            chi_squared_map = ag.util.fit.chi_squared_map_complex_from(
                 residual_map=residual_map, noise_map=masked_interferometer_7.noise_map
             )
 
             assert chi_squared_map.in_1d == pytest.approx(fit.chi_squared_map.in_1d)
 
-            chi_squared = ag.util.fit.chi_squared_from(chi_squared_map=chi_squared_map)
+            chi_squared = ag.util.fit.chi_squared_complex_from(
+                chi_squared_map=chi_squared_map
+            )
 
-            noise_normalization = ag.util.fit.noise_normalization_from(
+            noise_normalization = ag.util.fit.noise_normalization_complex_from(
                 noise_map=masked_interferometer_7.noise_map
             )
 
@@ -1999,10 +2054,12 @@ class TestFitInterferometer:
 
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-            log_likelihood_with_regularization = ag.util.fit.log_likelihood_with_regularization_from(
-                chi_squared=chi_squared,
-                regularization_term=inversion.regularization_term,
-                noise_normalization=noise_normalization,
+            log_likelihood_with_regularization = (
+                ag.util.fit.log_likelihood_with_regularization_from(
+                    chi_squared=chi_squared,
+                    regularization_term=inversion.regularization_term,
+                    noise_normalization=noise_normalization,
+                )
             )
 
             assert log_likelihood_with_regularization == pytest.approx(
@@ -2020,9 +2077,11 @@ class TestFitInterferometer:
             assert log_evidence == fit.log_evidence
             assert log_evidence == fit.figure_of_merit
 
-            mapped_reconstructed_image = ag.util.inversion.mapped_reconstructed_data_from(
-                mapping_matrix=fit.inversion.mapper.mapping_matrix,
-                reconstruction=fit.inversion.reconstruction,
+            mapped_reconstructed_image = (
+                ag.util.inversion.mapped_reconstructed_data_from(
+                    mapping_matrix=fit.inversion.mapper.mapping_matrix,
+                    reconstruction=fit.inversion.reconstruction,
+                )
             )
 
             assert (
@@ -2141,7 +2200,9 @@ class TestFitInterferometer:
                 regularization=reg,
             )
 
-            assert (fit.galaxy_model_visibilities_dict[g2] == np.zeros((7, 2))).all()
+            assert (
+                fit.galaxy_model_visibilities_dict[g2] == 0.0 + 0.0j * np.zeros((7,))
+            ).all()
 
             assert fit.galaxy_model_visibilities_dict[g0].in_1d == pytest.approx(
                 g0_visibilities.in_1d, 1.0e-4
@@ -2167,8 +2228,10 @@ class TestFitInterferometer:
         ):
             hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-            hyper_noise_map = hyper_background_noise.hyper_noise_map_from_noise_map(
-                noise_map=masked_interferometer_7.noise_map
+            hyper_noise_map = (
+                hyper_background_noise.hyper_noise_map_from_complex_noise_map(
+                    noise_map=masked_interferometer_7.noise_map
+                )
             )
 
             galaxy_light = ag.Galaxy(

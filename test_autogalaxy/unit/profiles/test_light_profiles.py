@@ -151,10 +151,10 @@ class TestGaussian:
         )
         spherical = ag.lp.SphericalGaussian(intensity=3.0, sigma=2.0)
 
-        elliptical_image = elliptical.image_from_grid(grid=grid)
-        spherical_image = spherical.image_from_grid(grid=grid)
+        image_elliptical = elliptical.image_from_grid(grid=grid)
+        image_spherical = spherical.image_from_grid(grid=grid)
 
-        assert (elliptical_image == spherical_image).all()
+        assert (image_elliptical == image_spherical).all()
 
     def test__output_image_is_array(self):
         grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
@@ -246,7 +246,7 @@ class TestSersic:
 
         image_spherical = spherical.image_from_grid(grid=grid)
 
-        assert (image_elliptical == image_spherical).all()
+        assert image_elliptical == pytest.approx(image_spherical, 1.0e-4)
 
     def test__output_image_is_autoarray(self):
         grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
@@ -333,10 +333,10 @@ class TestExponential:
 
         spherical = ag.lp.SphericalExponential(intensity=3.0, effective_radius=2.0)
 
-        elliptical_image = elliptical.image_from_grid(grid=grid)
-        spherical_image = spherical.image_from_grid(grid=grid)
+        image_elliptical = elliptical.image_from_grid(grid=grid)
+        image_spherical = spherical.image_from_grid(grid=grid)
 
-        assert (elliptical_image == spherical_image).all()
+        assert image_elliptical == pytest.approx(image_spherical, 1.0e-4)
 
     def test__output_image_is_autoarray(self):
         grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
@@ -423,11 +423,11 @@ class TestDevVaucouleurs:
 
         spherical = ag.lp.SphericalDevVaucouleurs(intensity=3.0, effective_radius=2.0)
 
-        elliptical_image = elliptical.image_from_grid(grid=grid)
+        image_elliptical = elliptical.image_from_grid(grid=grid)
 
-        spherical_image = spherical.image_from_grid(grid=grid)
+        image_spherical = spherical.image_from_grid(grid=grid)
 
-        assert (elliptical_image == spherical_image).all()
+        assert image_elliptical == pytest.approx(image_spherical, 1.0e-4)
 
     def test__output_image_is_autoarray(self):
         grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
@@ -484,11 +484,11 @@ class TestCoreSersic:
             alpha=1.0,
         )
 
-        elliptical_image = elliptical.image_from_grid(grid=grid)
+        image_elliptical = elliptical.image_from_grid(grid=grid)
 
-        spherical_image = spherical.image_from_grid(grid=grid)
+        image_spherical = spherical.image_from_grid(grid=grid)
 
-        assert (elliptical_image == spherical_image).all()
+        assert (image_elliptical == image_spherical).all()
 
     def test__output_image_is_autoarray(self):
         grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
@@ -636,8 +636,12 @@ class TestBlurredProfileImages:
             image=image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
         )
 
-        light_profile_blurred_image = light_profile.blurred_image_from_grid_and_convolver(
-            grid=sub_grid_7x7, convolver=convolver_7x7, blurring_grid=blurring_grid_7x7
+        light_profile_blurred_image = (
+            light_profile.blurred_image_from_grid_and_convolver(
+                grid=sub_grid_7x7,
+                convolver=convolver_7x7,
+                blurring_grid=blurring_grid_7x7,
+            )
         )
 
         assert blurred_image.in_1d == pytest.approx(
@@ -660,8 +664,10 @@ class TestVisibilities:
             image=image.in_1d_binned
         )
 
-        light_profile_visibilities = light_profile.profile_visibilities_from_grid_and_transformer(
-            grid=grid_7x7, transformer=transformer_7x7_7
+        light_profile_visibilities = (
+            light_profile.profile_visibilities_from_grid_and_transformer(
+                grid=grid_7x7, transformer=transformer_7x7_7
+            )
         )
 
         assert visibilities == pytest.approx(light_profile_visibilities, 1.0e-4)

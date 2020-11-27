@@ -576,10 +576,12 @@ class AbstractPlaneData(AbstractPlaneLensing):
         for galaxy in self.galaxies:
             if galaxy.has_hyper_galaxy:
 
-                hyper_noise_map_1d = galaxy.hyper_galaxy.hyper_noise_map_from_hyper_images_and_noise_map(
-                    noise_map=noise_map,
-                    hyper_model_image=galaxy.hyper_model_image,
-                    hyper_galaxy_image=galaxy.hyper_galaxy_image,
+                hyper_noise_map_1d = (
+                    galaxy.hyper_galaxy.hyper_noise_map_from_hyper_images_and_noise_map(
+                        noise_map=noise_map,
+                        hyper_model_image=galaxy.hyper_model_image,
+                        hyper_galaxy_image=galaxy.hyper_galaxy_image,
+                    )
                 )
 
                 hyper_noise_maps.append(hyper_noise_map_1d)
@@ -646,8 +648,10 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         galaxy_blurred_image_dict = dict()
 
-        blurred_images_of_galaxies = self.blurred_images_of_galaxies_from_grid_and_convolver(
-            grid=grid, convolver=convolver, blurring_grid=blurring_grid
+        blurred_images_of_galaxies = (
+            self.blurred_images_of_galaxies_from_grid_and_convolver(
+                grid=grid, convolver=convolver, blurring_grid=blurring_grid
+            )
         )
         for (galaxy_index, galaxy) in enumerate(self.galaxies):
             galaxy_blurred_image_dict[galaxy] = blurred_images_of_galaxies[galaxy_index]
@@ -663,8 +667,10 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         galaxy_profile_visibilities_image_dict = dict()
 
-        profile_visibilities_of_galaxies = self.profile_visibilities_of_galaxies_from_grid_and_transformer(
-            grid=grid, transformer=transformer
+        profile_visibilities_of_galaxies = (
+            self.profile_visibilities_of_galaxies_from_grid_and_transformer(
+                grid=grid, transformer=transformer
+            )
         )
         for (galaxy_index, galaxy) in enumerate(self.galaxies):
             galaxy_profile_visibilities_image_dict[

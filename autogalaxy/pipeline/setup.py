@@ -1332,8 +1332,6 @@ class SetupMassLightDark(AbstractSetupMass):
 
         if bulge.cls is lmp.EllipticalExponential or bulge.cls is lmp.EllipticalSersic:
 
-            bulge = af.PriorModel(lmp.EllipticalSersic)
-
             bulge.centre = af.last[index].model.galaxies.lens.bulge.centre
             bulge.elliptical_comps = af.last[
                 index
@@ -1385,8 +1383,6 @@ class SetupMassLightDark(AbstractSetupMass):
         disk = af.PriorModel(self.disk_prior_model.cls)
 
         if disk.cls is lmp.EllipticalExponential or disk.cls is lmp.EllipticalSersic:
-
-            disk = af.PriorModel(lmp.EllipticalSersic)
 
             disk.centre = af.last[index].model.galaxies.lens.disk.centre
             disk.elliptical_comps = af.last[
@@ -1440,8 +1436,6 @@ class SetupMassLightDark(AbstractSetupMass):
             envelope.cls is lmp.EllipticalExponential
             or envelope.cls is lmp.EllipticalSersic
         ):
-
-            envelope = af.PriorModel(lmp.EllipticalSersic)
 
             envelope.centre = af.last[index].model.galaxies.lens.envelope.centre
             envelope.elliptical_comps = af.last[
@@ -1499,8 +1493,6 @@ class SetupMassLightDark(AbstractSetupMass):
 
         if bulge.cls is lmp.EllipticalExponential or bulge.cls is lmp.EllipticalSersic:
 
-            bulge = af.PriorModel(lmp.EllipticalSersic)
-
             bulge.centre = af.last[index].instance.galaxies.lens.bulge.centre
             bulge.elliptical_comps = af.last[
                 index
@@ -1510,7 +1502,7 @@ class SetupMassLightDark(AbstractSetupMass):
                 index
             ].instance.galaxies.lens.bulge.effective_radius
 
-            if bulge.cls is lp.EllipticalSersic:
+            if bulge.cls is lmp.EllipticalSersic:
                 bulge.sersic_index = af.last[
                     index
                 ].instance.galaxies.lens.bulge.sersic_index
@@ -1557,8 +1549,6 @@ class SetupMassLightDark(AbstractSetupMass):
 
         if disk.cls is lmp.EllipticalExponential or disk.cls is lmp.EllipticalSersic:
 
-            disk = af.PriorModel(lmp.EllipticalSersic)
-
             disk.centre = af.last[index].instance.galaxies.lens.disk.centre
             disk.elliptical_comps = af.last[
                 index
@@ -1568,7 +1558,7 @@ class SetupMassLightDark(AbstractSetupMass):
                 index
             ].instance.galaxies.lens.disk.effective_radius
 
-            if disk.cls is lp.EllipticalSersic:
+            if disk.cls is lmp.EllipticalSersic:
                 disk.sersic_index = af.last[
                     index
                 ].instance.galaxies.lens.disk.sersic_index
@@ -1618,8 +1608,6 @@ class SetupMassLightDark(AbstractSetupMass):
             or envelope.cls is lmp.EllipticalSersic
         ):
 
-            envelope = af.PriorModel(lmp.EllipticalSersic)
-
             envelope.centre = af.last[index].instance.galaxies.lens.envelope.centre
             envelope.elliptical_comps = af.last[
                 index
@@ -1631,7 +1619,7 @@ class SetupMassLightDark(AbstractSetupMass):
                 index
             ].instance.galaxies.lens.envelope.effective_radius
 
-            if envelope.cls is lp.EllipticalSersic:
+            if envelope.cls is lmp.EllipticalSersic:
                 envelope.sersic_index = af.last[
                     index
                 ].instance.galaxies.lens.envelope.sersic_index
