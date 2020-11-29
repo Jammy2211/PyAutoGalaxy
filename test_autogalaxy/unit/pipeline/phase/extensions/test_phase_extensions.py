@@ -351,3 +351,66 @@ class TestHyperGalaxyPhase:
         log_likelihood = analysis.log_likelihood_function(instance=instance)
 
         assert log_likelihood == fit.log_likelihood
+
+    def test__log_likelihood_function_is_same_as_normal_phase_when_noise_factor_exceeds_scale_value(
+        self, imaging_7x7, mask_7x7
+    ):
+
+        hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0e9)
+        hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0e9)
+
+        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
+
+        phase_imaging_7x7 = ag.PhaseImaging(
+            galaxies=dict(galaxy=galaxy),
+            hyper_image_sky=hyper_image_sky,
+            hyper_background_noise=hyper_background_noise,
+            settings=ag.SettingsPhaseImaging(
+                settings_masked_imaging=ag.SettingsMaskedImaging(sub_size=2)
+            ),
+            search=mock.MockSearch(name="test_phase"),
+        )
+
+        analysis = phase_imaging_7x7.make_analysis(
+            dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
+        )
+        instance = phase_imaging_7x7.model.instance_from_unit_vector([])
+
+        assert analysis.masked_dataset.mask.sub_size == 2
+
+        masked_imaging = ag.MaskedImaging(
+            imaging=imaging_7x7,
+            mask=mask_7x7,
+            settings=ag.SettingsMaskedImaging(sub_size=2),
+        )
+        plane = analysis.plane_for_instance(instance=instance)
+        fit = FitImaging(
+            masked_imaging=masked_imaging,
+            plane=plane,
+            hyper_image_sky=hyper_image_sky,
+            hyper_background_noise=hyper_background_noise,
+        )
+
+        phase_imaging_7x7_hyper = phase_imaging_7x7.extend_with_multiple_hyper_phases(
+            setup_hyper=ag.SetupHyper(
+                hyper_galaxies=True, hyper_galaxies_search=mock.MockSearch()
+            )
+        )
+
+        instance = phase_imaging_7x7_hyper.model.instance_from_unit_vector([])
+
+        instance.hyper_galaxy = ag.HyperGalaxy(noise_factor=1.0e9)
+
+        analysis = phase_imaging_7x7_hyper.hyper_phases[0].Analysis(
+            masked_imaging=masked_imaging,
+            hyper_model_image=fit.model_image,
+            hyper_galaxy_image=fit.model_image,
+        )
+
+        fit_hyper = analysis.fit_for_hyper_galaxy(
+            hyper_galaxy=ag.HyperGalaxy(noise_factor=1.0e9),
+            hyper_image_sky=hyper_image_sky,
+            hyper_background_noise=hyper_background_noise,
+        )
+
+        assert fit_hyper.log_likelihood == fit.log_likelihood

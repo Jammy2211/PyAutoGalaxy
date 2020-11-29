@@ -2,6 +2,7 @@ import copy
 from os import path
 import autofit as af
 import numpy as np
+from autoconf import conf
 from autoarray.fit import fit as aa_fit
 from autogalaxy.fit import fit
 from autogalaxy.galaxy import galaxy as g
@@ -126,6 +127,8 @@ class Analysis(af.Analysis):
         )
 
         noise_map = noise_map + hyper_noise_map
+        noise_map_limit = conf.instance["general"]["hyper"]["hyper_noise_limit"]
+        noise_map[noise_map > noise_map_limit] = noise_map_limit
 
         masked_imaging = self.masked_imaging.modify_image_and_noise_map(
             image=image, noise_map=noise_map
