@@ -103,9 +103,9 @@ def make_positions_7x7():
     return fixtures.make_positions_7x7()
 
 
-@pytest.fixture(name="visibilities_mask_7x2")
-def make_visibilities_mask_7x2():
-    return np.full(fill_value=False, shape=(7, 2))
+@pytest.fixture(name="visibilities_mask_7")
+def make_visibilities_mask_7():
+    return fixtures.make_visibilities_mask_7()
 
 
 @pytest.fixture(name="blurring_grid_7x7")
@@ -113,12 +113,12 @@ def make_blurring_grid_7x7():
     return fixtures.make_blurring_grid_7x7()
 
 
-@pytest.fixture(name="noise_map_7x2")
+@pytest.fixture(name="noise_map_7")
 def make_noise_map_7():
-    return fixtures.make_noise_map_7()
+    return fixtures.make_visibilities_noise_map_7()
 
 
-@pytest.fixture(name="visibilities_7x2")
+@pytest.fixture(name="visibilities_7")
 def make_visibilities_7():
     return fixtures.make_visibilities_7()
 

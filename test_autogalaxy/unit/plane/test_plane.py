@@ -1548,7 +1548,7 @@ class TestAbstractPlaneData:
                 grid=sub_grid_7x7, transformer=transformer_7x7_7
             )
 
-            assert (plane_visibilities.in_1d == np.zeros((7, 2))).all()
+            assert (plane_visibilities.in_1d == 0.0 + 0.0j * np.zeros((7,))).all()
 
         def test__visibilities_of_galaxies_from_grid_and_transformer(
             self, sub_grid_7x7, transformer_7x7_7
@@ -1812,8 +1812,8 @@ class TestAbstractPlaneData:
                 settings_inversion=ag.SettingsInversion(use_linear_operators=False),
             )
 
-            assert inversion.mapped_reconstructed_visibilities[:, 0] == pytest.approx(
-                masked_interferometer_7.visibilities[:, 0], 1.0e-2
+            assert inversion.mapped_reconstructed_visibilities.real == pytest.approx(
+                masked_interferometer_7.visibilities.real, 1.0e-2
             )
 
     class TestPlaneImage:

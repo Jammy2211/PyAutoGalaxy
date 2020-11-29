@@ -217,7 +217,7 @@ def visibilities(fit, include=None, plotter=None):
     origin : True
         If true, the origin of the datas's coordinate system is plotted as a 'x'.
     """
-    plotter.plot_grid(grid=fit.visibilities)
+    plotter.plot_grid(grid=fit.visibilities.in_grid)
 
 
 @lensing_plotters.set_include_and_plotter
@@ -234,7 +234,7 @@ def noise_map(fit, include=None, plotter=None):
     origin : True
         If true, the origin of the datas's coordinate system is plotted as a 'x'.
     """
-    plotter.plot_grid(grid=fit.visibilities, color_array=fit.noise_map[:, 0])
+    plotter.plot_grid(grid=fit.visibilities.in_grid, color_array=fit.noise_map.real)
 
 
 @lensing_plotters.set_include_and_plotter
@@ -251,7 +251,9 @@ def signal_to_noise_map(fit, include=None, plotter=None):
     origin : True
     If true, the origin of the datas's coordinate system is plotted as a 'x'.
     """
-    plotter.plot_grid(grid=fit.visibilities, color_array=fit.signal_to_noise_map[:, 0])
+    plotter.plot_grid(
+        grid=fit.visibilities.in_grid, color_array=fit.signal_to_noise_map.real
+    )
 
 
 @lensing_plotters.set_include_and_plotter
@@ -268,7 +270,7 @@ def model_visibilities(fit, include=None, plotter=None):
     visibilities_index : int
         The index of the datas in the datas-set of which the model visibilities is plotted.
     """
-    plotter.plot_grid(grid=fit.visibilities)
+    plotter.plot_grid(grid=fit.visibilities.in_grid)
 
 
 @lensing_plotters.set_include_and_plotter
@@ -294,13 +296,13 @@ def residual_map_vs_uv_distances(
     """
 
     if plot_real:
-        y = fit.residual_map[:, 0]
+        y = fit.residual_map.real
         plotter = plotter.plotter_with_new_labels(title=plotter.labels.title + " Real")
         plotter = plotter.plotter_with_new_output(
             filename=plotter.output.filename + "_real"
         )
     else:
-        y = fit.residual_map[:, 1]
+        y = fit.residual_map.imag
         plotter = plotter.plotter_with_new_labels(title=plotter.labels.title + " Imag")
         plotter = plotter.plotter_with_new_output(
             filename=plotter.output.filename + "_imag"
@@ -336,13 +338,13 @@ def normalized_residual_map_vs_uv_distances(
     """
 
     if plot_real:
-        y = fit.residual_map[:, 0]
+        y = fit.residual_map.real
         plotter = plotter.plotter_with_new_labels(title=plotter.labels.title + " Real")
         plotter = plotter.plotter_with_new_output(
             filename=plotter.output.filename + "_real"
         )
     else:
-        y = fit.residual_map[:, 1]
+        y = fit.residual_map.imag
         plotter = plotter.plotter_with_new_labels(title=plotter.labels.title + " Imag")
         plotter = plotter.plotter_with_new_output(
             filename=plotter.output.filename + "_imag"
@@ -378,13 +380,13 @@ def chi_squared_map_vs_uv_distances(
     """
 
     if plot_real:
-        y = fit.residual_map[:, 0]
+        y = fit.residual_map.real
         plotter = plotter.plotter_with_new_labels(title=plotter.labels.title + " Real")
         plotter = plotter.plotter_with_new_output(
             filename=plotter.output.filename + "_real"
         )
     else:
-        y = fit.residual_map[:, 1]
+        y = fit.residual_map.imag
         plotter = plotter.plotter_with_new_labels(title=plotter.labels.title + " Imag")
         plotter = plotter.plotter_with_new_output(
             filename=plotter.output.filename + "_imag"
