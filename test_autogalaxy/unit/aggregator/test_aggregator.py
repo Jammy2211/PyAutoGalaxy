@@ -169,7 +169,7 @@ def test__masked_interferometer_generator_from_aggregator(
 
 
 def test__fit_interferometer_generator_from_aggregator(
-    interferometer_7, mask_7x7, samples
+    interferometer_7, visibilities_mask_7, mask_7x7, samples
 ):
     phase_interferometer_7x7 = ag.PhaseInterferometer(
         galaxies=dict(
@@ -182,7 +182,7 @@ def test__fit_interferometer_generator_from_aggregator(
 
     phase_interferometer_7x7.run(
         dataset=interferometer_7,
-        mask=mask_7x7,
+        mask=visibilities_mask_7,
         results=mock.MockResults(samples=samples),
     )
 
