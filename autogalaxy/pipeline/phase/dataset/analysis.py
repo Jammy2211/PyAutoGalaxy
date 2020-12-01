@@ -86,7 +86,7 @@ class Analysis(af.Analysis):
 
         return instance
 
-    def save_for_aggregator(self, paths: af.Paths):
+    def save_attributes_for_aggregator(self, paths: af.Paths):
 
         self.save_dataset(paths=paths)
         self.save_mask(paths=paths)
