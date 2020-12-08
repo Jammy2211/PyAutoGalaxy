@@ -432,7 +432,9 @@ class SphericalExponentialRadialGradient(
         )
 
 
-class EllipticalCoreSersic(lp.EllipticalCoreSersic, mp.EllipticalCoreSersic, LightMassProfile):
+class EllipticalCoreSersic(
+    lp.EllipticalCoreSersic, mp.EllipticalCoreSersic, LightMassProfile
+):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -457,7 +459,7 @@ class EllipticalCoreSersic(lp.EllipticalCoreSersic, mp.EllipticalCoreSersic, Lig
             radius_break=radius_break,
             intensity_break=intensity_break,
             gamma=gamma,
-            alpha=alpha
+            alpha=alpha,
         )
         mp.EllipticalCoreSersic.__init__(
             self,
@@ -515,7 +517,6 @@ class SphericalCoreSersic(EllipticalCoreSersic, LightMassProfile):
             alpha=alpha,
             mass_to_light_ratio=mass_to_light_ratio,
         )
-
 
 
 class EllipticalChameleon(

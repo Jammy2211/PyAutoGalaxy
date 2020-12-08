@@ -6,7 +6,6 @@ import pytest
 
 
 class MockResult:
-
     def __init__(self, last):
 
         self.last = last
@@ -14,57 +13,36 @@ class MockResult:
 
 class TestSetupHyper:
     def test__hyper_searches(self):
-        setup = ag.SetupHyper(hyper_galaxies=False)
-        assert setup.hyper_galaxies_search == None
 
-        setup = ag.SetupHyper(hyper_galaxies=True)
-        assert setup.hyper_galaxies_search.n_live_points == 75
-        assert setup.hyper_galaxies_search.evidence_tolerance == pytest.approx(
-            0.084, 1.0e-4
+        setup = ag.SetupHyper(hyper_search_no_inversion=None)
+        assert setup.hyper_search_no_inversion.n_live_points == 50
+        assert setup.hyper_search_no_inversion.evidence_tolerance == pytest.approx(
+            0.059, 1.0e-4
         )
 
         setup = ag.SetupHyper(
-            hyper_galaxies=True,
-            hyper_galaxies_search=af.DynestyStatic(n_live_points=51),
+            hyper_search_no_inversion=af.DynestyStatic(n_live_points=51)
         )
-        assert setup.hyper_galaxies_search.n_live_points == 51
-        assert setup.hyper_galaxies_search.evidence_tolerance == pytest.approx(
-            0.06, 1.0e-4
+        assert setup.hyper_search_no_inversion.n_live_points == 51
+
+        setup = ag.SetupHyper(
+            hyper_search_with_inversion=af.DynestyStatic(n_live_points=51)
         )
-
-        setup = ag.SetupHyper(inversion_search=None)
-        assert setup.inversion_search.n_live_points == 50
-        assert setup.inversion_search.evidence_tolerance == pytest.approx(0.059, 1.0e-4)
-
-        setup = ag.SetupHyper(inversion_search=af.DynestyStatic(n_live_points=51))
-        assert setup.inversion_search.n_live_points == 51
-
-        setup = ag.SetupHyper(hyper_combined_search=af.DynestyStatic(n_live_points=51))
-        assert setup.hyper_combined_search.n_live_points == 51
+        assert setup.hyper_search_with_inversion.n_live_points == 51
 
         setup = ag.SetupHyper(hyper_galaxies=True, evidence_tolerance=0.5)
-        assert setup.hyper_galaxies_search.evidence_tolerance == pytest.approx(
-            0.084, 1.0e-4
-        )
-        assert setup.inversion_search.evidence_tolerance == 0.5
-        assert setup.hyper_combined_search.evidence_tolerance == 0.5
+        assert setup.hyper_search_no_inversion.evidence_tolerance == 0.5
+        assert setup.hyper_search_with_inversion.evidence_tolerance == 0.5
 
         with pytest.raises(exc.PipelineException):
             ag.SetupHyper(
-                hyper_galaxies=True,
-                hyper_galaxies_search=af.DynestyStatic(n_live_points=51),
-                evidence_tolerance=0.5,
-            )
-
-        with pytest.raises(exc.PipelineException):
-            ag.SetupHyper(
-                inversion_search=af.DynestyStatic(n_live_points=51),
+                hyper_search_no_inversion=af.DynestyStatic(n_live_points=51),
                 evidence_tolerance=3.0,
             )
 
         with pytest.raises(exc.PipelineException):
             ag.SetupHyper(
-                hyper_combined_search=af.DynestyStatic(n_live_points=51),
+                hyper_search_with_inversion=af.DynestyStatic(n_live_points=51),
                 evidence_tolerance=3.0,
             )
 

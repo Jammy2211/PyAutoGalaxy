@@ -4,6 +4,8 @@ from astropy import cosmology as cosmo
 import autofit as af
 from autogalaxy.dataset import imaging
 from autogalaxy.pipeline.phase import dataset
+from autoarray.inversion import pixelizations as pix
+from autoarray.inversion import regularization as reg
 from autogalaxy.pipeline.phase.imaging.analysis import Analysis
 from autogalaxy.pipeline.phase.imaging.result import Result
 from autogalaxy.pipeline.phase.settings import SettingsPhaseImaging
@@ -48,6 +50,22 @@ class PhaseImaging(dataset.PhaseDataset):
         self.hyper_background_noise = hyper_background_noise
 
         self.is_hyper_phase = False
+
+    @property
+    def model_classes_for_hyper_phase(self) -> tuple:
+        if self.has_pixelization:
+            return tuple(
+                filter(
+                    None,
+                    [
+                        pix.Pixelization,
+                        reg.Regularization,
+                        self.hyper_image_sky,
+                        self.hyper_background_noise,
+                    ],
+                )
+            )
+        return tuple(filter(None, [self.hyper_image_sky, self.hyper_background_noise]))
 
     def make_analysis(self, dataset, mask, results=None):
         """

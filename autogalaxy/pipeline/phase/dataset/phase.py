@@ -3,7 +3,6 @@ from astropy import cosmology as cosmo
 import autofit as af
 from autoarray.inversion import pixelizations as pix
 from autoarray.inversion import regularization as reg
-from autogalaxy.hyper import hyper_data as hd
 from autogalaxy.pipeline.phase import abstract
 from autogalaxy.pipeline.phase import extensions
 from autogalaxy.pipeline.phase.dataset.result import Result
@@ -124,64 +123,26 @@ class PhaseDataset(abstract.AbstractPhase):
                 f"{hyper_tag}{self.settings.phase_tag_with_inversion}"
             )
 
-    def extend_with_hyper_phase(
-        self, setup_hyper,
-    ):
+    @property
+    def model_classes_for_hyper_phase(self) -> tuple:
+        raise NotImplementedError
+
+    def extend_with_hyper_phase(self, setup_hyper):
+
+        if len(self.model_classes_for_hyper_phase) == 0:
+            return self
+
+        if self.has_pixelization:
+            hyper_search = setup_hyper.hyper_search_with_inversion
+        else:
+            hyper_search = setup_hyper.hyper_search_no_inversion
 
         self.use_as_hyper_dataset = True
 
-        if (
-            not setup_hyper.hyper_image_sky
-            and not setup_hyper.hyper_background_noise
-        ):
-
-            hyper_phase = extensions.HyperPhase(
-                phase=self,
-                hyper_search=setup_hyper.hyper_combined_search,
-                model_classes=(pix.Pixelization, reg.Regularization),
-            )
-
-        elif (
-            setup_hyper.hyper_image_sky
-            and not setup_hyper.hyper_background_noise
-        ):
-
-            hyper_phase = extensions.HyperPhase(
-                phase=self,
-                hyper_search=setup_hyper.hyper_combined_search,
-                model_classes=(
-                    pix.Pixelization,
-                    reg.Regularization,
-                    hd.HyperImageSky,
-                ),
-            )
-
-        elif (
-            not setup_hyper.hyper_image_sky
-            and setup_hyper.hyper_background_noise
-        ):
-
-            hyper_phase = extensions.HyperPhase(
-                phase=self,
-                hyper_search=setup_hyper.hyper_combined_search,
-                model_classes=(
-                    pix.Pixelization,
-                    reg.Regularization,
-                    hd.HyperBackgroundNoise,
-                ),
-            )
-
-        else:
-
-            hyper_phase = extensions.HyperPhase(
-                phase=self,
-                hyper_search=setup_hyper.hyper_combined_search,
-                model_classes=(
-                    pix.Pixelization,
-                    reg.Regularization,
-                    hd.HyperImageSky,
-                    hd.HyperBackgroundNoise,
-                ),
-            )
+        hyper_phase = extensions.HyperPhase(
+            phase=self,
+            hyper_search=hyper_search,
+            model_classes=self.model_classes_for_hyper_phase,
+        )
 
         return hyper_phase

@@ -75,6 +75,32 @@ class Analysis(analysis_dataset.Analysis):
 
         self.visualizer.visualize_imaging(paths=paths)
 
+        if self.visualizer.plot_fit_no_hyper:
+
+            plane = self.plane_for_instance(instance=instance)
+
+            if plane.has_mass_profile:
+
+                visualizer = self.visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
+                    preloaded_critical_curves=plane.critical_curves,
+                    preloaded_caustics=plane.caustics,
+                )
+
+            else:
+
+                visualizer = self.visualizer
+
+            fit = self.masked_imaging_fit_for_plane(
+                plane=plane, hyper_image_sky=None, hyper_background_noise=None
+            )
+
+            visualizer.visualize_fit(
+                paths=paths,
+                fit=fit,
+                during_analysis=during_analysis,
+                subfolders="fit_no_hyper",
+            )
+
         instance = self.associate_hyper_images(instance=instance)
         plane = self.plane_for_instance(instance=instance)
         hyper_image_sky = self.hyper_image_sky_for_instance(instance=instance)

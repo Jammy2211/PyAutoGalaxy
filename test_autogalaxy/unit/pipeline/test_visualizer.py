@@ -426,33 +426,3 @@ class TestPhaseInterferometerVisualizer:
             path.join(plot_path, "image", "inversion", "interpolated_errors.png")
             in plot_patch.paths
         )
-
-
-class TestHyperGalaxyVisualizer:
-    def test__hyper_fit__images_for_phase__source_and_galaxy__depedent_on_input(
-        self,
-        masked_imaging_fit_x2_galaxy_7x7,
-        hyper_galaxy_image_0_7x7,
-        include_all,
-        plot_path,
-        plot_patch,
-    ):
-        visualizer = vis.HyperGalaxyVisualizer()
-
-        visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=include_all.preloaded_critical_curves,
-            preloaded_caustics=include_all.preloaded_caustics,
-        )
-
-        visualizer.visualize_hyper_galaxy(
-            paths=af.Paths(),
-            fit=masked_imaging_fit_x2_galaxy_7x7,
-            hyper_fit=masked_imaging_fit_x2_galaxy_7x7,
-            galaxy_image=hyper_galaxy_image_0_7x7,
-            contribution_map_in=hyper_galaxy_image_0_7x7,
-        )
-
-        assert (
-            path.join(plot_path, "image", "subplots", "subplot_fit_hyper_galaxy.png")
-            in plot_patch.paths
-        )

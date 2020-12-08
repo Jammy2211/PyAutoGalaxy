@@ -7,9 +7,11 @@ from autogalaxy.profiles import (
     mass_profiles as mp,
     light_and_mass_profiles as lmp,
 )
+from autogalaxy.hyper import hyper_data as hd
 from autogalaxy import exc
 
 from typing import Union
+
 
 class AbstractSetup:
     def _cls_to_prior_model(self, cls):
@@ -114,10 +116,8 @@ class SetupHyper(AbstractSetup):
         hyper_galaxies: bool = False,
         hyper_image_sky: bool = False,
         hyper_background_noise: bool = False,
-        hyper_galaxy_phase_first: bool = False,
-        hyper_galaxies_search: af.NonLinearSearch = None,
-        inversion_search: af.NonLinearSearch = None,
-        hyper_combined_search: af.NonLinearSearch = None,
+        hyper_search_no_inversion: af.NonLinearSearch = None,
+        hyper_search_with_inversion: af.NonLinearSearch = None,
         evidence_tolerance: float = None,
     ):
         """
@@ -142,14 +142,9 @@ class SetupHyper(AbstractSetup):
         hyper_background_noise : bool
             If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used include the
             noise-map's background component in the model.
-        hyper_galaxy_phase_first : bool
-            If True, the hyper-galaxy phase which scales the noise map is performed before the inversion phase, else
-            it is performed after.
-        hyper_galaxies_search : af.NonLinearSearch or None
-            The `NonLinearSearch` used by every hyper-galaxies phase.
-        inversion_search : af.NonLinearSearch or None
+        hyper_search_no_inversion : af.NonLinearSearch or None
             The `NonLinearSearch` used by every inversion phase.
-        hyper_combined_search : af.NonLinearSearch or None
+        hyper_search_with_inversion : af.NonLinearSearch or None
             The `NonLinearSearch` used by every hyper combined phase.
         evidence_tolerance : float
             The evidence tolerance of the non-linear searches used in the hyper phases, whereby higher values will
@@ -160,9 +155,8 @@ class SetupHyper(AbstractSetup):
 
         if evidence_tolerance is not None:
             if (
-                hyper_galaxies_search is not None
-                or inversion_search is not None
-                or hyper_combined_search is not None
+                hyper_search_no_inversion is not None
+                or hyper_search_with_inversion is not None
             ):
                 raise exc.PipelineException(
                     "You have manually specified a search in the SetupPipeline, and an evidence_tolerance."
@@ -173,34 +167,25 @@ class SetupHyper(AbstractSetup):
 
         self.hyper_galaxies = hyper_galaxies
 
-        if self.hyper_galaxies and hyper_galaxies_search is None:
-            self.hyper_galaxies_search = af.DynestyStatic(n_live_points=75)
-        elif self.hyper_galaxies and hyper_galaxies_search is not None:
-            self.hyper_galaxies_search = hyper_galaxies_search
-        else:
-            self.hyper_galaxies_search = None
-
         self.hyper_galaxy_names = None
 
-        if inversion_search is None:
-            self.inversion_search = af.DynestyStatic(
+        if hyper_search_no_inversion is None:
+            self.hyper_search_no_inversion = af.DynestyStatic(
                 n_live_points=50,
                 evidence_tolerance=self.evidence_tolerance,
                 sample="rstagger",
             )
-        elif inversion_search is not None:
-            self.inversion_search = inversion_search
+        elif hyper_search_no_inversion is not None:
+            self.hyper_search_no_inversion = hyper_search_no_inversion
 
-        if hyper_combined_search is None:
-            self.hyper_combined_search = af.DynestyStatic(
+        if hyper_search_with_inversion is None:
+            self.hyper_search_with_inversion = af.DynestyStatic(
                 n_live_points=50,
                 evidence_tolerance=self.evidence_tolerance,
                 sample="rstagger",
             )
         else:
-            self.hyper_combined_search = hyper_combined_search
-
-        self.hyper_galaxy_phase_first = hyper_galaxy_phase_first
+            self.hyper_search_with_inversion = hyper_search_with_inversion
 
         self.hyper_image_sky = hyper_image_sky
         self.hyper_background_noise = hyper_background_noise
@@ -305,7 +290,7 @@ class SetupHyper(AbstractSetup):
         elif self.hyper_background_noise:
             return f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_background_noise']}"
 
-    def hyper_image_sky_from_result(self, result : af.Result):
+    def hyper_image_sky_from_result(self, result: af.Result):
 
         if self.hyper_image_sky:
 
@@ -826,7 +811,7 @@ class AbstractSetupMass(AbstractSetup):
         return mass_prior_model
 
     def unfix_mass_centre(
-        self, result : af.Result, mass_prior_model: af.PriorModel(mp.MassProfile),
+        self, result: af.Result, mass_prior_model: af.PriorModel(mp.MassProfile)
     ) -> af.PriorModel:
         """
         If the centre of the mass `PriorModel` was previously fixed to an input value via the `mass_centre` input,
@@ -983,7 +968,9 @@ class SetupMassTotal(AbstractSetupMass):
         return mass_prior_model
 
     def unalign_mass_centre_from_light_centre(
-        self, results : af.ResultsCollection, mass_prior_model: af.PriorModel(mp.MassProfile)
+        self,
+        results: af.ResultsCollection,
+        mass_prior_model: af.PriorModel(mp.MassProfile),
     ):
         """If the centre of a mass model was previously aligned with that of the lens light centre, unaligned them
         by using an earlier model of the light.
@@ -1003,7 +990,9 @@ class SetupMassTotal(AbstractSetupMass):
 
         return mass_prior_model
 
-    def mass_prior_model_with_updated_priors_from_result(self, result : af.Result, unfix_mass_centre=False):
+    def mass_prior_model_with_updated_priors_from_result(
+        self, result: af.Result, unfix_mass_centre=False
+    ):
         """
         Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
         pipeline.
@@ -1286,7 +1275,9 @@ class SetupMassLightDark(AbstractSetupMass):
             return ""
         return f"__{conf.instance['notation']['setup_tags']['mass']['align_bulge_dark_centre']}"
 
-    def align_bulge_and_dark_centre(self, results : af.ResultsCollection, bulge_prior_model, dark_prior_model):
+    def align_bulge_and_dark_centre(
+        self, results: af.ResultsCollection, bulge_prior_model, dark_prior_model
+    ):
         """
         Align the centre of input bulge `PriorModel` with that of the `PriorModel` representing the dark `MassProfile`,
         depending on the `align_bulge_darl_centre` attribute of the `SetupMassLightDark` instance.
@@ -1303,7 +1294,9 @@ class SetupMassLightDark(AbstractSetupMass):
         else:
             dark_prior_model.centre = results.last.model.galaxies.lens.bulge.centre
 
-    def bulge_prior_model_with_updated_priors(self, results : af.ResultsCollection, as_instance=False):
+    def bulge_prior_model_with_updated_priors(
+        self, results: af.ResultsCollection, as_instance=False
+    ):
         """
         Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
         pipeline.
@@ -1334,7 +1327,9 @@ class SetupMassLightDark(AbstractSetupMass):
 
         return bulge
 
-    def disk_prior_model_with_updated_priors(self, results : af.ResultsCollection, as_instance=False):
+    def disk_prior_model_with_updated_priors(
+        self, results: af.ResultsCollection, as_instance=False
+    ):
         """
         Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
         pipeline.
@@ -1365,7 +1360,9 @@ class SetupMassLightDark(AbstractSetupMass):
 
         return disk
 
-    def envelope_prior_model_with_updated_priors(self, results : af.ResultsCollection, as_instance=False):
+    def envelope_prior_model_with_updated_priors(
+        self, results: af.ResultsCollection, as_instance=False
+    ):
         """
         Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
         pipeline.
@@ -1390,11 +1387,14 @@ class SetupMassLightDark(AbstractSetupMass):
         envelope = self.envelope_prior_model.cls
 
         if as_instance:
-            envelope.take_attributes(source=results.last.instance.galaxies.lens.envelope)
+            envelope.take_attributes(
+                source=results.last.instance.galaxies.lens.envelope
+            )
         else:
             envelope.take_attributes(source=results.last.model.galaxies.lens.envelope)
 
         return envelope
+
 
 class SetupSMBH(AbstractSetup):
     def __init__(

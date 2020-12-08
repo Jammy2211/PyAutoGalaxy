@@ -5,7 +5,9 @@ from autogalaxy.pipeline.phase import abstract
 
 
 class HyperPhase:
-    def __init__(self, phase: abstract.AbstractPhase, hyper_search, model_classes=tuple()):
+    def __init__(
+        self, phase: abstract.AbstractPhase, hyper_search, model_classes=tuple()
+    ):
         """
         Abstract HyperPhase. Wraps a phase, performing that phase before performing the action
         specified by the run_hyper.
@@ -85,7 +87,7 @@ class HyperPhase:
         results: af.ResultsCollection,
         info=None,
         pickle_files=None,
-        **kwargs
+        **kwargs,
     ):
         """
         Run the phase, overriding the search's model instance with one created to

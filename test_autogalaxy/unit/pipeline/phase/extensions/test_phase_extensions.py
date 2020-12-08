@@ -83,7 +83,6 @@ class TestModelFixing:
         assert mapper.galaxy.redshift == 1.0
         assert mapper.source_galaxy.light.elliptical_comps[0] == 0.0
 
-
     def test__hyper_phase_result(self):
 
         phase = ag.HyperPhase(
@@ -92,9 +91,7 @@ class TestModelFixing:
             model_classes=(ag.pix.Pixelization, ag.reg.Regularization),
         )
 
-        result = phase.run(
-            dataset=None, mask=None, results=af.ResultsCollection()
-        )
+        result = phase.run(dataset=None, mask=None, results=af.ResultsCollection())
 
         assert hasattr(result, "hyper")
         assert isinstance(result.hyper, mock.MockResult)
@@ -118,8 +115,8 @@ class TestModelFixing:
         phase_extended = phase.extend_with_hyper_phase(
             setup_hyper=ag.SetupHyper(
                 hyper_galaxies=False,
-                hyper_combined_search=af.DynestyStatic(n_live_points=1),
-            ),
+                hyper_search_with_inversion=af.DynestyStatic(n_live_points=1),
+            )
         )
 
         hyper_phase = phase_extended.make_hyper_phase()

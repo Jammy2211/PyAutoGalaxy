@@ -19,9 +19,35 @@ class TestPhase:
         phase_no_pixelization = ag.PhaseImaging(search=mock.MockSearch("test_phase"))
 
         phase_extended = phase_no_pixelization.extend_with_hyper_phase(
-            setup_hyper=ag.SetupHyper(hyper_combined_search=None)
+            setup_hyper=ag.SetupHyper()
         )
-    #    assert phase_extended == phase_no_pixelization
+
+        assert phase_extended == phase_no_pixelization
+
+        phase_with_hyper_sky = ag.PhaseImaging(
+            hyper_image_sky=ag.hyper_data.HyperImageSky, search=mock.MockSearch()
+        )
+
+        phase_extended = phase_with_hyper_sky.extend_with_hyper_phase(
+            setup_hyper=ag.SetupHyper(
+                hyper_search_with_inversion=mock.MockSearch("test_phase")
+            )
+        )
+
+        assert isinstance(phase_extended, ag.HyperPhase)
+
+        phase_with_hyper_sky = ag.PhaseImaging(
+            hyper_background_noise=ag.hyper_data.HyperBackgroundNoise,
+            search=mock.MockSearch(),
+        )
+
+        phase_extended = phase_with_hyper_sky.extend_with_hyper_phase(
+            setup_hyper=ag.SetupHyper(
+                hyper_search_with_inversion=mock.MockSearch("test_phase")
+            )
+        )
+
+        assert isinstance(phase_extended, ag.HyperPhase)
 
         phase_with_pixelization = ag.PhaseImaging(
             galaxies=dict(
@@ -35,31 +61,34 @@ class TestPhase:
         )
 
         phase_extended = phase_with_pixelization.extend_with_hyper_phase(
-            setup_hyper=ag.SetupHyper(hyper_combined_search=mock.MockSearch("test_phase")),
+            setup_hyper=ag.SetupHyper(
+                hyper_search_with_inversion=mock.MockSearch("test_phase")
+            )
         )
+
+        assert isinstance(phase_extended, ag.HyperPhase)
 
     def test__extend_with_hyper_galaxy_phase__passes_galaxy_names(self):
         phase = ag.PhaseImaging(search=mock.MockSearch())
 
         setup_hyper = ag.SetupHyper(
-            hyper_galaxies=True, hyper_galaxies_search=mock.MockSearch("test_phase")
+            hyper_galaxies=True,
+            hyper_search_with_inversion=mock.MockSearch("test_phase"),
         )
 
-        phase_extended = phase.extend_with_hyper_phase(
-            setup_hyper=setup_hyper
-        )
-   #     assert phase_extended.hyper_galaxy_names == None
+        phase_extended = phase.extend_with_hyper_phase(setup_hyper=setup_hyper)
+        #     assert phase_extended.hyper_galaxy_names == None
 
         setup_hyper = ag.SetupHyper(
-            hyper_galaxies=True, hyper_galaxies_search=mock.MockSearch()
+            hyper_galaxies=True, hyper_search_with_inversion=mock.MockSearch()
         )
 
         setup_hyper.hyper_galaxy_names = ["one"]
 
-        phase_extended = phase.extend_with_hyper_phase(
-            setup_hyper=setup_hyper
-        )
-   #     assert phase_extended.hyper_galaxy_names == ["one"]
+        phase_extended = phase.extend_with_hyper_phase(setup_hyper=setup_hyper)
+
+
+#     assert phase_extended.hyper_galaxy_names == ["one"]
 
 
 class TestMakeAnalysis:
