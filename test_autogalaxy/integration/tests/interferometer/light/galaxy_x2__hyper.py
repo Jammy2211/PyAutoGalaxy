@@ -33,7 +33,7 @@ def make_pipeline(name, path_prefix, real_space_mask, search=af.DynestyStatic())
     phase1.search.n_live_points = 40
     phase1.search.facc = 0.8
 
-    phase1 = phase1.extend_with_multiple_hyper_phases(hyper_galaxies_search=True)
+    phase1 = phase1.extend_with_hyper_phase(hyper_galaxies_search=True)
 
     phase2 = ag.PhaseInterferometer(
         name="phase_2",

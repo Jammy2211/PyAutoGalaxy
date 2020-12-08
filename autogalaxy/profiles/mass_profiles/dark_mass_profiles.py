@@ -14,7 +14,7 @@ from colossus.halo.concentration import concentration as col_concentration
 from numba import cfunc
 from numba.types import intc, CPointer, float64
 
-# from puad import quad_grid
+from pyquad import quad_grid
 from scipy import LowLevelCallable
 from scipy import special
 from scipy.integrate import quad

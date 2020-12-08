@@ -24,7 +24,7 @@ def make_pipeline(name, path_prefix, real_space_mask, search=af.DynestyStatic())
     phase1.search.n_live_points = 40
     phase1.search.facc = 0.8
 
-    phase1 = phase1.extend_with_multiple_hyper_phases(
+    phase1 = phase1.extend_with_hyper_phase(
         hyper_galaxies_search=True,
         include_background_sky=True,
         include_background_noise=True,

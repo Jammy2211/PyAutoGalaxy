@@ -175,7 +175,7 @@ class TestHyperMethods:
 
         setup_hyper = ag.SetupHyper(hyper_combined_search=mock.MockSearch("test_phase"))
 
-        phase_interferometer_7.extend_with_multiple_hyper_phases(
+        phase_interferometer_7.extend_with_hyper_phase(
             setup_hyper=setup_hyper
         )
 
