@@ -52,7 +52,7 @@ def subplot_fit_hyper_galaxy(
 
 @lensing_plotters.set_include_and_sub_plotter
 @plotters.set_subplot_filename
-def subplot_hyper_galaxy_images(
+def subplot_hyper_images_of_galaxies(
     hyper_galaxy_image_path_dict, mask=None, include=None, sub_plotter=None
 ):
 
@@ -77,6 +77,40 @@ def subplot_hyper_galaxy_images(
         )
 
         hyper_galaxy_image(galaxy_image=galaxy_image, mask=mask, plotter=sub_plotter)
+
+    sub_plotter.output.subplot_to_figure()
+
+    sub_plotter.figure.close()
+
+
+@lensing_plotters.set_include_and_sub_plotter
+@plotters.set_subplot_filename
+def subplot_contribution_maps_of_galaxies(
+    contribution_maps_of_galaxies, mask=None, include=None, sub_plotter=None
+):
+
+    contribution_maps = list(filter(None, contribution_maps_of_galaxies))
+
+    number_subplots = len(contribution_maps)
+
+    if number_subplots == 0:
+        return
+
+    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
+
+    hyper_index = 0
+
+    for contribution_map in contribution_maps:
+
+        hyper_index += 1
+
+        sub_plotter.setup_subplot(
+            number_subplots=number_subplots, subplot_index=hyper_index
+        )
+
+        contribution_map(
+            contribution_map_in=contribution_map, mask=mask, plotter=sub_plotter
+        )
 
     sub_plotter.output.subplot_to_figure()
 

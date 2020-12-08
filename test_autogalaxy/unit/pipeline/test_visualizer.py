@@ -260,6 +260,7 @@ class TestPhaseImagingVisualizer:
         hyper_model_image_7x7,
         include_all,
         hyper_galaxy_image_path_dict_7x7,
+        masked_imaging_fit_x2_galaxy_inversion_7x7,
         plot_path,
         plot_patch,
     ):
@@ -275,6 +276,7 @@ class TestPhaseImagingVisualizer:
             paths=af.Paths(),
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict_7x7,
             hyper_model_image=hyper_model_image_7x7,
+            contribution_maps_of_galaxies=masked_imaging_fit_x2_galaxy_inversion_7x7.plane.contribution_maps_of_galaxies,
         )
 
         assert (
@@ -282,8 +284,16 @@ class TestPhaseImagingVisualizer:
             in plot_patch.paths
         )
         assert (
-            path.join(plot_path, "image", "subplots", "subplot_hyper_galaxy_images.png")
+            path.join(
+                plot_path, "image", "hyper", "subplot_hyper_images_of_galaxies.png"
+            )
             in plot_patch.paths
+        )
+        assert (
+            path.join(
+                plot_path, "image", "hyper", "subplot_contribution_maps_of_galaxies.png"
+            )
+            not in plot_patch.paths
         )
 
 

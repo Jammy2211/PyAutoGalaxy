@@ -118,6 +118,7 @@ class Analysis(analysis_dataset.Analysis):
             paths=paths,
             hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
             hyper_model_image=self.hyper_model_image,
+            contribution_maps_of_galaxies=plane.contribution_maps_of_galaxies,
         )
 
         if plane.has_mass_profile:

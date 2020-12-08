@@ -294,12 +294,12 @@ class SetupHyper(AbstractSetup):
 
         if self.hyper_image_sky:
 
-            return result.hyper_combined.instance.optional.hyper_image_sky
+            return result.hyper.instance.optional.hyper_image_sky
 
     def hyper_background_noise_from_result(self, result: af.Result):
 
         if self.hyper_image_sky:
-            return result.hyper_combined.instance.optional.hyper_background_noise
+            return result.hyper.instance.optional.hyper_background_noise
 
 
 class AbstractSetupLight(AbstractSetup):

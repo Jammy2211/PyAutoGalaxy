@@ -35,40 +35,6 @@ class Analysis(af.Analysis):
         self.hyper_model_image = hyper_model_image
         self.hyper_galaxy_image = hyper_galaxy_image
 
-    def visualize(self, paths, instance, during_analysis):
-
-        if self.visualizer.plot_hyper_galaxy_subplot:
-            hyper_image_sky = self.hyper_image_sky_for_instance(instance=instance)
-
-            hyper_background_noise = self.hyper_background_noise_for_instance(
-                instance=instance
-            )
-
-            contribution_map = instance.hyper_galaxy.contribution_map_from_hyper_images(
-                hyper_model_image=self.hyper_model_image,
-                hyper_galaxy_image=self.hyper_galaxy_image,
-            )
-
-            fit_normal = aa_fit.FitImaging(
-                masked_imaging=self.masked_imaging,
-                model_image=self.hyper_model_image,
-                use_mask_in_fit=False,
-            )
-
-            fit_hyper = self.fit_for_hyper_galaxy(
-                hyper_galaxy=instance.hyper_galaxy,
-                hyper_image_sky=hyper_image_sky,
-                hyper_background_noise=hyper_background_noise,
-            )
-
-            self.visualizer.visualize_hyper_galaxy(
-                paths=paths,
-                fit=fit_normal,
-                hyper_fit=fit_hyper,
-                galaxy_image=self.hyper_galaxy_image,
-                contribution_map_in=contribution_map,
-            )
-
     def log_likelihood_function(self, instance):
         """
         Fit the model image to the real image by scaling the hyper_galaxies noise.

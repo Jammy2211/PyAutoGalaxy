@@ -55,15 +55,17 @@ def test__plot_subplot_of_hyper_galaxy(
     assert path.join(plot_path, "subplot_fit_hyper_galaxy.png") in plot_patch.paths
 
 
-def test__plot_hyper_galaxy_images(
+def test__plot_hyper_images_of_galaxies(
     hyper_galaxy_image_path_dict_7x7, mask_7x7, include_all, plot_path, plot_patch
 ):
 
-    aplt.hyper.subplot_hyper_galaxy_images(
+    aplt.hyper.subplot_hyper_images_of_galaxies(
         hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict_7x7,
         mask=mask_7x7,
         include=include_all,
         sub_plotter=aplt.SubPlotter(output=aplt.Output(plot_path, format="png")),
     )
 
-    assert path.join(plot_path, "subplot_hyper_galaxy_images.png") in plot_patch.paths
+    assert (
+        path.join(plot_path, "subplot_hyper_images_of_galaxies.png") in plot_patch.paths
+    )

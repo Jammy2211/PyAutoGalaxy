@@ -42,12 +42,12 @@ def make_pipeline(name, path_prefix, real_space_mask, search=af.DynestyStatic())
             galaxy_0=ag.GalaxyModel(
                 redshift=0.5,
                 bulge=phase1.result.model.galaxies.galaxy_0.bulge,
-                hyper_galaxy=phase1.result.hyper_combined.instance.galaxies.galaxy_0.hyper_galaxy,
+                hyper_galaxy=phase1.result.hyper.instance.galaxies.galaxy_0.hyper_galaxy,
             ),
             galaxy_1=ag.GalaxyModel(
                 redshift=0.5,
                 bulge=phase1.result.model.galaxies.galaxy_1.bulge,
-                hyper_galaxy=phase1.result.hyper_combined.instance.galaxies.galaxy_1.hyper_galaxy,
+                hyper_galaxy=phase1.result.hyper.instance.galaxies.galaxy_1.hyper_galaxy,
             ),
         ),
         real_space_mask=real_space_mask,

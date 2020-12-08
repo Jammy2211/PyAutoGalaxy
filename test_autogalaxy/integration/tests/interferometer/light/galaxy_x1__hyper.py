@@ -37,10 +37,10 @@ def make_pipeline(name, path_prefix, real_space_mask, search=af.DynestyStatic())
             galaxy=ag.GalaxyModel(
                 redshift=0.5,
                 bulge=phase1.result.model.galaxies.light.bulge,
-                hyper_galaxy=phase1.result.hyper_combined.instance.galaxies.light.hyper_galaxy,
+                hyper_galaxy=phase1.result.hyper.instance.galaxies.light.hyper_galaxy,
             )
         ),
-        hyper_background_noise=phase1.result.hyper_combined.instance.hyper_background_noise,
+        hyper_background_noise=phase1.result.hyper.instance.hyper_background_noise,
         real_space_mask=real_space_mask,
         search=search,
     )
