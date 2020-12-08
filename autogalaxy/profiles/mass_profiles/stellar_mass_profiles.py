@@ -4,7 +4,7 @@ from autoarray.structures import arrays
 from autoarray.structures import grids
 from autogalaxy.profiles import mass_profiles as mp
 
-from pyquad import quad_grid
+# from puad import quad_grid
 from scipy.special import wofz
 import typing
 

@@ -5,6 +5,13 @@ from autogalaxy import exc
 import pytest
 
 
+class MockResult:
+
+    def __init__(self, last):
+
+        self.last = last
+
+
 class TestSetupHyper:
     def test__hyper_searches(self):
         setup = ag.SetupHyper(hyper_galaxies=False)
@@ -471,22 +478,6 @@ class TestAbstractSetupMass:
         mass = source.align_centre_to_mass_centre(mass_prior_model=mass)
 
         assert mass.centre == (1.0, 2.0)
-
-    def test__unfix_mass_centre(self):
-
-        mass = af.PriorModel(ag.mp.SphericalIsothermal)
-        mass.centre = (1.0, 2.0)
-
-        setup_mass = ag.SetupMassTotal()
-
-        mass = af.PriorModel(ag.mp.SphericalIsothermal)
-
-        mass = setup_mass.unfix_mass_centre(mass_prior_model=mass)
-
-        # assert mass.centre.centre_0.mean == 5.0
-        # assert mass.centre.centre_0.sigma == 0.05
-        # assert mass.centre.centre_1.mean == 6.0
-        # assert mass.centre.centre_1.sigma == 0.05
 
 
 class TestSetupMassTotal:
