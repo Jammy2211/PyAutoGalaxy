@@ -36,8 +36,12 @@ class AbstractVisualizer:
         )
 
     @staticmethod
-    def sub_plotter_from_paths(paths: af.Paths, subfolders="subplots"):
+    def sub_plotter_from_paths(paths: af.Paths, subfolders=None):
 
+        if subfolders is None:
+            return lensing_plotters.SubPlotter(
+                output=mat_objs.Output(path=paths.image_path, format="png")
+            )
         return lensing_plotters.SubPlotter(
             output=mat_objs.Output(
                 path=path.join(paths.image_path, subfolders), format="png"
@@ -257,7 +261,7 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
             plotter=plotter,
         )
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths)
+        sub_plotter = self.sub_plotter_from_paths(paths=paths, subfolders="imaging")
 
         if self.plot_subplot_dataset:
             aa.plot.Imaging.subplot_imaging(
@@ -290,7 +294,7 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
             plotter=plotter,
         )
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths)
+        sub_plotter = self.sub_plotter_from_paths(paths=paths, subfolders=subfolders)
 
         if self.plot_subplot_fit:
             fit_imaging_plots.subplot_fit_imaging(
@@ -305,6 +309,10 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
         if fit.inversion is not None:
 
             if self.plot_subplot_inversion:
+
+                sub_plotter = self.sub_plotter_from_paths(
+                    paths=paths, subfolders="inversion"
+                )
 
                 inversion_plots.subplot_inversion(
                     inversion=fit.inversion,
@@ -462,7 +470,9 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
 
     def visualize_interferometer(self, paths: af.Paths):
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths)
+        sub_plotter = self.sub_plotter_from_paths(
+            paths=paths, subfolders="interferometer"
+        )
 
         if self.plot_subplot_dataset:
             aa.plot.Interferometer.subplot_interferometer(
@@ -484,7 +494,9 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
 
     def visualize_fit(self, paths: af.Paths, fit, during_analysis):
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths)
+        sub_plotter = self.sub_plotter_from_paths(
+            paths=paths, subfolders="fit_interferometer"
+        )
 
         if self.plot_subplot_fit:
             fit_interferometer_plots.subplot_fit_interferometer(

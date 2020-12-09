@@ -51,22 +51,6 @@ class PhaseImaging(dataset.PhaseDataset):
 
         self.is_hyper_phase = False
 
-    @property
-    def model_classes_for_hyper_phase(self) -> tuple:
-        if self.has_pixelization:
-            return tuple(
-                filter(
-                    None,
-                    [
-                        pix.Pixelization,
-                        reg.Regularization,
-                        self.hyper_image_sky,
-                        self.hyper_background_noise,
-                    ],
-                )
-            )
-        return tuple(filter(None, [self.hyper_image_sky, self.hyper_background_noise]))
-
     def make_analysis(self, dataset, mask, results=None):
         """
         Returns an lens object. Also calls the prior passing and masked_imaging modifying functions to allow child

@@ -13,7 +13,7 @@ class HyperImageSky:
 
     def hyper_image_from_image(self, image):
         """
-    Returns a new with the background sky level hyper. This can simply multiple by a instance factor \
+        Returns a new with the background sky level hyper. This can simply multiple by a instance factor \
         (assuming a uniform background sky) because the is in units electrons per second.
 
         Parameters

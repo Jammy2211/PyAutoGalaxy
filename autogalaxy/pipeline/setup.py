@@ -10,7 +10,7 @@ from autogalaxy.profiles import (
 from autogalaxy.hyper import hyper_data as hd
 from autogalaxy import exc
 
-from typing import Union
+from typing import Union, Optional
 
 
 class AbstractSetup:
@@ -114,11 +114,11 @@ class SetupHyper(AbstractSetup):
     def __init__(
         self,
         hyper_galaxies: bool = False,
-        hyper_image_sky: bool = False,
-        hyper_background_noise: bool = False,
-        hyper_search_no_inversion: af.NonLinearSearch = None,
-        hyper_search_with_inversion: af.NonLinearSearch = None,
-        evidence_tolerance: float = None,
+        hyper_image_sky: Optional[type(hd.HyperImageSky)] = None,
+        hyper_background_noise: Optional[type(hd.HyperBackgroundNoise)] = None,
+        hyper_search_no_inversion: Optional[af.NonLinearSearch] = None,
+        hyper_search_with_inversion: Optional[af.NonLinearSearch] = None,
+        evidence_tolerance: Optional[float] = None,
     ):
         """
         The hyper setup of a pipeline, which controls how hyper-features in PyAutoGalaxy template pipelines run,
@@ -206,6 +206,13 @@ class SetupHyper(AbstractSetup):
         return conf.instance["notation"]["setup_tags"]["names"]["hyper"]
 
     @property
+    def hypers_all_off(self):
+        if not self.hyper_galaxies:
+            if self.hyper_image_sky is None and self.hyper_background_noise is None:
+                return True
+        return False
+
+    @property
     def tag(self):
         """
         Tag the pipeline according to the setup of the hyper features, which customizes the pipeline output paths.
@@ -218,9 +225,7 @@ class SetupHyper(AbstractSetup):
         - hyper[galaxies__bg_sky]
         - hyper[bg_sky__bg_noise]
         """
-        if not any(
-            [self.hyper_galaxies, self.hyper_image_sky, self.hyper_background_noise]
-        ):
+        if self.hypers_all_off:
             return ""
 
         return (
@@ -247,8 +252,7 @@ class SetupHyper(AbstractSetup):
         """
         if not self.hyper_galaxies:
             return ""
-        elif self.hyper_galaxies:
-            return conf.instance["notation"]["setup_tags"]["hyper"]["hyper_galaxies"]
+        return conf.instance["notation"]["setup_tags"]["hyper"]["hyper_galaxies"]
 
     @property
     def hyper_image_sky_tag(self) -> str:
@@ -265,10 +269,11 @@ class SetupHyper(AbstractSetup):
 
         This is used to generate an overall tag in `tag`.
         """
-        if not self.hyper_image_sky:
+        if self.hyper_image_sky is None:
             return ""
-        elif self.hyper_image_sky:
-            return f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_image_sky']}"
+        return (
+            f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_image_sky']}"
+        )
 
     @property
     def hyper_background_noise_tag(self) -> str:
@@ -280,26 +285,25 @@ class SetupHyper(AbstractSetup):
 
         For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
 
-        - `hyper_background_noise=False` -> No Tag
+        - `hyper_background_noise=None` -> No Tag
         - `hyper_background_noise=`True` -> hyper[bg_noise]
 
         This is used to generate an overall tag in `tag`.
         """
-        if not self.hyper_background_noise:
+        if self.hyper_background_noise is None:
             return ""
-        elif self.hyper_background_noise:
-            return f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_background_noise']}"
+        return f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_background_noise']}"
 
     def hyper_image_sky_from_result(self, result: af.Result):
 
-        if self.hyper_image_sky:
+        if self.hyper_image_sky is not None:
 
-            return result.hyper.instance.optional.hyper_image_sky
+            return result.hyper.instance.hyper_image_sky
 
     def hyper_background_noise_from_result(self, result: af.Result):
 
-        if self.hyper_image_sky:
-            return result.hyper.instance.optional.hyper_background_noise
+        if self.hyper_image_sky is not None:
+            return result.hyper.instance.hyper_background_noise
 
 
 class AbstractSetupLight(AbstractSetup):
@@ -1015,15 +1019,14 @@ class SetupMassTotal(AbstractSetupMass):
 
         mass.take_attributes(source=result.model.galaxies.lens.mass)
 
-        if unfix_mass_centre:
+        if unfix_mass_centre and isinstance(mass.centre, tuple):
 
-            if self.mass_centre is not None:
-                mass.centre.centre_0 = af.GaussianPrior(
-                    mean=self.mass_centre[0], sigma=0.05
-                )
-                mass.centre.centre_1 = af.GaussianPrior(
-                    mean=self.mass_centre[1], sigma=0.05
-                )
+            centre_tuple = mass.centre
+
+            mass.centre = self.mass_prior_model.centre
+
+            mass.centre.centre_0 = af.GaussianPrior(mean=centre_tuple[0], sigma=0.05)
+            mass.centre.centre_1 = af.GaussianPrior(mean=centre_tuple[1], sigma=0.05)
 
         return mass
 

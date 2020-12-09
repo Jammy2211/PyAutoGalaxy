@@ -24,26 +24,23 @@ class TestPhase:
 
         assert phase_extended == phase_no_pixelization
 
-        phase_with_hyper_sky = ag.PhaseImaging(
-            hyper_image_sky=ag.hyper_data.HyperImageSky, search=mock.MockSearch()
-        )
+        phase_with_hyper_sky = ag.PhaseImaging(search=mock.MockSearch())
 
         phase_extended = phase_with_hyper_sky.extend_with_hyper_phase(
             setup_hyper=ag.SetupHyper(
-                hyper_search_with_inversion=mock.MockSearch("test_phase")
+                hyper_image_sky=ag.hyper_data.HyperImageSky,
+                hyper_search_with_inversion=mock.MockSearch("test_phase"),
             )
         )
 
         assert isinstance(phase_extended, ag.HyperPhase)
 
-        phase_with_hyper_sky = ag.PhaseImaging(
-            hyper_background_noise=ag.hyper_data.HyperBackgroundNoise,
-            search=mock.MockSearch(),
-        )
+        phase_with_hyper_sky = ag.PhaseImaging(search=mock.MockSearch())
 
         phase_extended = phase_with_hyper_sky.extend_with_hyper_phase(
             setup_hyper=ag.SetupHyper(
-                hyper_search_with_inversion=mock.MockSearch("test_phase")
+                hyper_background_noise=ag.hyper_data.HyperBackgroundNoise,
+                hyper_search_with_inversion=mock.MockSearch("test_phase"),
             )
         )
 

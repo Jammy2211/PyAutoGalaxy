@@ -685,6 +685,17 @@ class TestFitImaging:
             assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
             assert log_likelihood == fit.figure_of_merit
 
+            fit = ag.FitImaging(
+                masked_imaging=masked_imaging_7x7,
+                plane=plane,
+                hyper_image_sky=hyper_image_sky,
+                hyper_background_noise=hyper_background_noise,
+                use_hyper_scalings=False,
+            )
+
+            assert fit.image == pytest.approx(masked_imaging_7x7.image, 1.0e-4)
+            assert fit.noise_map == pytest.approx(masked_imaging_7x7.noise_map, 1.0e-4)
+
         def test___blurred_and_model_images_of_galaxies_and_unmasked_blurred_image_properties(
             self, masked_imaging_7x7
         ):

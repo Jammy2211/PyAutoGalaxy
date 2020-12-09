@@ -27,16 +27,31 @@ class MockPhase:
 
 class TestModelFixing:
     def test__defaults_both(self):
+
         # noinspection PyTypeChecker
         phase = ag.HyperPhase(
             phase=MockPhase(),
             hyper_search=mock.MockSearch(),
-            model_classes=(hd.HyperImageSky, hd.HyperBackgroundNoise),
+            hyper_image_sky=None,
+            hyper_background_noise=None,
         )
 
         instance = af.ModelInstance()
-        instance.hyper_image_sky = ag.hyper_data.HyperImageSky()
-        instance.hyper_background_noise = ag.hyper_data.HyperBackgroundNoise()
+
+        mapper = phase.make_model(instance=instance)
+
+        assert mapper.hyper_image_sky is None
+        assert mapper.hyper_background_noise is None
+
+        # noinspection PyTypeChecker
+        phase = ag.HyperPhase(
+            phase=MockPhase(),
+            hyper_search=mock.MockSearch(),
+            hyper_image_sky=hd.HyperImageSky,
+            hyper_background_noise=hd.HyperBackgroundNoise,
+        )
+
+        instance = af.ModelInstance()
 
         mapper = phase.make_model(instance=instance)
 

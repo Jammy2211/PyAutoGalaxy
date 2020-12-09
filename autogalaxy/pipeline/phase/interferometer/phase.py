@@ -89,17 +89,6 @@ class PhaseInterferometer(dataset.PhaseDataset):
 
         return analysis
 
-    @property
-    def model_classes_for_hyper_phase(self) -> tuple:
-        if self.has_pixelization:
-            return tuple(
-                filter(
-                    None,
-                    [pix.Pixelization, reg.Regularization, self.hyper_background_noise],
-                )
-            )
-        return tuple(filter(None, [self.hyper_background_noise]))
-
     def output_phase_info(self):
 
         file_phase_info = path.join(self.search.paths.output_path, "phase.info")

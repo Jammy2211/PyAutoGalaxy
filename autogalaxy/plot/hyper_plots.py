@@ -1,53 +1,5 @@
-import autoarray as aa
 from autoarray.plot import plotters
 from autogalaxy.plot import lensing_plotters
-
-
-@lensing_plotters.set_include_and_sub_plotter
-@plotters.set_subplot_filename
-def subplot_fit_hyper_galaxy(
-    fit, hyper_fit, galaxy_image, contribution_map_in, include=None, sub_plotter=None
-):
-
-    number_subplots = 6
-
-    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
-
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
-
-    hyper_galaxy_image(
-        galaxy_image=galaxy_image,
-        mask=include.mask_from_fit(fit=fit),
-        plotter=sub_plotter,
-    )
-
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
-
-    aa.plot.FitImaging.noise_map(fit=fit, include=include, plotter=sub_plotter)
-
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=3)
-
-    aa.plot.FitImaging.noise_map(fit=hyper_fit, include=include, plotter=sub_plotter)
-
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=4)
-
-    contribution_map(
-        contribution_map_in=contribution_map_in, include=include, plotter=sub_plotter
-    )
-
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=5)
-
-    aa.plot.FitImaging.chi_squared_map(fit=fit, include=include, plotter=sub_plotter)
-
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=6)
-
-    aa.plot.FitImaging.chi_squared_map(
-        fit=hyper_fit, include=include, plotter=sub_plotter
-    )
-
-    sub_plotter.output.subplot_to_figure()
-
-    sub_plotter.figure.close()
 
 
 @lensing_plotters.set_include_and_sub_plotter
@@ -89,7 +41,11 @@ def subplot_contribution_maps_of_galaxies(
     contribution_maps_of_galaxies, mask=None, include=None, sub_plotter=None
 ):
 
-    contribution_maps = list(filter(None, contribution_maps_of_galaxies))
+    contribution_maps = [
+        contribution_map
+        for contribution_map in contribution_maps_of_galaxies
+        if contribution_map is not None
+    ]
 
     number_subplots = len(contribution_maps)
 
@@ -100,7 +56,7 @@ def subplot_contribution_maps_of_galaxies(
 
     hyper_index = 0
 
-    for contribution_map in contribution_maps:
+    for contribution_map_array in contribution_maps:
 
         hyper_index += 1
 
@@ -109,7 +65,7 @@ def subplot_contribution_maps_of_galaxies(
         )
 
         contribution_map(
-            contribution_map_in=contribution_map, mask=mask, plotter=sub_plotter
+            contribution_map_in=contribution_map_array, mask=mask, plotter=sub_plotter
         )
 
     sub_plotter.output.subplot_to_figure()

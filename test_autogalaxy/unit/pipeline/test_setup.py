@@ -54,29 +54,31 @@ class TestSetupHyper:
         assert setup.hyper_galaxies_tag == "galaxies"
 
     def test__hyper_image_sky_tag(self):
-        setup = ag.SetupHyper(hyper_image_sky=False)
+        setup = ag.SetupHyper(hyper_image_sky=None)
         assert setup.hyper_galaxies_tag == ""
 
-        setup = ag.SetupHyper(hyper_image_sky=True)
+        setup = ag.SetupHyper(hyper_image_sky=ag.hyper_data.HyperImageSky)
         assert setup.hyper_image_sky_tag == "__bg_sky"
 
     def test__hyper_background_noise_tag(self):
-        setup = ag.SetupHyper(hyper_background_noise=False)
+        setup = ag.SetupHyper(hyper_background_noise=None)
         assert setup.hyper_galaxies_tag == ""
 
-        setup = ag.SetupHyper(hyper_background_noise=True)
+        setup = ag.SetupHyper(hyper_background_noise=ag.hyper_data.HyperBackgroundNoise)
         assert setup.hyper_background_noise_tag == "__bg_noise"
 
     def test__tag(self):
 
         setup = ag.SetupHyper(
-            hyper_galaxies=False, hyper_image_sky=False, hyper_background_noise=False
+            hyper_galaxies=False, hyper_image_sky=None, hyper_background_noise=None
         )
 
         assert setup.tag == ""
 
         setup = ag.SetupHyper(
-            hyper_galaxies=True, hyper_image_sky=True, hyper_background_noise=True
+            hyper_galaxies=True,
+            hyper_image_sky=ag.hyper_data.HyperImageSky,
+            hyper_background_noise=ag.hyper_data.HyperBackgroundNoise,
         )
 
         assert setup.tag == "hyper[galaxies__bg_sky__bg_noise]"

@@ -123,14 +123,11 @@ class PhaseDataset(abstract.AbstractPhase):
                 f"{hyper_tag}{self.settings.phase_tag_with_inversion}"
             )
 
-    @property
-    def model_classes_for_hyper_phase(self) -> tuple:
-        raise NotImplementedError
-
     def extend_with_hyper_phase(self, setup_hyper):
 
-        if len(self.model_classes_for_hyper_phase) == 0:
-            return self
+        if not self.has_pixelization:
+            if setup_hyper.hypers_all_off:
+                return self
 
         if self.has_pixelization:
             hyper_search = setup_hyper.hyper_search_with_inversion
@@ -139,10 +136,11 @@ class PhaseDataset(abstract.AbstractPhase):
 
         self.use_as_hyper_dataset = True
 
-        hyper_phase = extensions.HyperPhase(
+        return extensions.HyperPhase(
             phase=self,
             hyper_search=hyper_search,
-            model_classes=self.model_classes_for_hyper_phase,
+            model_classes=(pix.Pixelization, reg.Regularization),
+            hyper_image_sky=setup_hyper.hyper_image_sky,
+            hyper_background_noise=setup_hyper.hyper_background_noise,
+            hyper_galaxy_names=setup_hyper.hyper_galaxy_names,
         )
-
-        return hyper_phase

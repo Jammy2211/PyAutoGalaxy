@@ -2,6 +2,7 @@ import autofit as af
 from autogalaxy.galaxy import galaxy as g
 from autogalaxy.plane import plane as pl
 
+import numpy as np
 import pickle
 import dill
 
