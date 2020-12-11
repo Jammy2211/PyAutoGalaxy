@@ -26,6 +26,7 @@ class PhaseInterferometer(dataset.PhaseDataset):
         hyper_background_noise=None,
         settings=SettingsPhaseInterferometer(),
         cosmology=cosmo.Planck15,
+        use_as_hyper_dataset=False
     ):
 
         """
@@ -44,7 +45,11 @@ class PhaseInterferometer(dataset.PhaseDataset):
         search.paths.tag = settings.phase_tag_with_inversion
 
         super().__init__(
-            galaxies=galaxies, settings=settings, search=search, cosmology=cosmology
+            galaxies=galaxies,
+            settings=settings,
+            search=search,
+            cosmology=cosmology,
+            use_as_hyper_dataset=use_as_hyper_dataset,
         )
 
         self.hyper_background_noise = hyper_background_noise

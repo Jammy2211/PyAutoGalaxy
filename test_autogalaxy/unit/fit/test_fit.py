@@ -1625,6 +1625,18 @@ class TestFitInterferometer:
 
             assert hyper_noise_map.in_1d == pytest.approx(fit.noise_map.in_1d)
 
+            fit = ag.FitInterferometer(
+                masked_interferometer=masked_interferometer_7,
+                plane=plane,
+                hyper_background_noise=hyper_background_noise,
+                use_hyper_scalings=False,
+            )
+
+            assert fit.noise_map == pytest.approx(
+                masked_interferometer_7.noise_map, 1.0e-4
+            )
+            assert fit.noise_map != pytest.approx(hyper_noise_map.in_1d, 1.0e-4)
+
     class TestCompareToManualInversionOnly:
         def test___all_fit_quantities__no_hyper_methods(self, masked_interferometer_7):
             # Ensures the inversion grid is used, as this would cause the test to fail.

@@ -1,4 +1,4 @@
-from os import path
+from autoconf import conf
 import autofit as af
 from autogalaxy.galaxy import galaxy as g
 from autofit.tools.phase import Dataset
@@ -34,7 +34,14 @@ class HyperPhase:
 
     @property
     def hyper_name(self):
-        return "hyper"
+
+        backwards_compatible_tag = conf.instance["general"]["hyper"][
+            "backwards_compatible_tag"
+        ]
+
+        if not backwards_compatible_tag:
+            return "hyper"
+        return "hyper_combined"
 
     def make_model(self, instance):
 

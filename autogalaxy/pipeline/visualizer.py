@@ -492,11 +492,11 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
             plotter=plotter,
         )
 
-    def visualize_fit(self, paths: af.Paths, fit, during_analysis):
+    def visualize_fit(
+        self, paths: af.Paths, fit, during_analysis, subfolders="fit_interferometer"
+    ):
 
-        sub_plotter = self.sub_plotter_from_paths(
-            paths=paths, subfolders="fit_interferometer"
-        )
+        sub_plotter = self.sub_plotter_from_paths(paths=paths, subfolders=subfolders)
 
         if self.plot_subplot_fit:
             fit_interferometer_plots.subplot_fit_interferometer(
@@ -507,7 +507,7 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
                 fit=fit, include=self.include, sub_plotter=sub_plotter
             )
 
-        plotter = self.plotter_from_paths(paths=paths, subfolders="fit_interferometer")
+        plotter = self.plotter_from_paths(paths=paths, subfolders=subfolders)
 
         fit_interferometer_plots.individuals(
             fit=fit,

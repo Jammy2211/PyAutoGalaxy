@@ -90,13 +90,6 @@ class Analysis(analysis_dataset.Analysis):
             hyper_background_noise=hyper_background_noise,
         )
 
-        self.visualizer.visualize_hyper_images(
-            paths=paths,
-            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
-            hyper_model_image=self.hyper_model_image,
-            contribution_maps_of_galaxies=plane.contribution_maps_of_galaxies,
-        )
-
         if plane.has_mass_profile:
 
             visualizer = self.visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
@@ -111,10 +104,20 @@ class Analysis(analysis_dataset.Analysis):
         #   visualizer.visualize_plane(plane=fit.plane, during_analysis=during_analysis)
         visualizer.visualize_fit(paths=paths, fit=fit, during_analysis=during_analysis)
 
+        self.visualizer.visualize_hyper_images(
+            paths=paths,
+            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
+            hyper_model_image=self.hyper_model_image,
+            contribution_maps_of_galaxies=plane.contribution_maps_of_galaxies,
+        )
+
         if self.visualizer.plot_fit_no_hyper:
 
             fit = self.masked_imaging_fit_for_plane(
-                plane=plane, hyper_image_sky=None, hyper_background_noise=None
+                plane=plane,
+                hyper_image_sky=None,
+                hyper_background_noise=None,
+                use_hyper_scalings=False,
             )
 
             visualizer.visualize_fit(

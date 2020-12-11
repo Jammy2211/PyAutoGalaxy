@@ -13,7 +13,14 @@ class PhaseDataset(abstract.AbstractPhase):
 
     Result = Result
 
-    def __init__(self, settings, search, galaxies=None, cosmology=cosmo.Planck15):
+    def __init__(
+        self,
+        settings,
+        search,
+        galaxies=None,
+        cosmology=cosmo.Planck15,
+        use_as_hyper_dataset=False,
+    ):
         """
 
         A phase in an lens pipeline. Uses the set non_linear search to try to fit models and hyper_galaxies
@@ -30,7 +37,7 @@ class PhaseDataset(abstract.AbstractPhase):
         )
 
         self.hyper_name = None
-        self.use_as_hyper_dataset = False
+        self.use_as_hyper_dataset = use_as_hyper_dataset
         self.is_hyper_phase = False
 
     def run(
@@ -125,6 +132,8 @@ class PhaseDataset(abstract.AbstractPhase):
 
     def extend_with_hyper_phase(self, setup_hyper):
 
+        self.use_as_hyper_dataset = True
+
         if not self.has_pixelization:
             if setup_hyper.hypers_all_off:
                 return self
@@ -133,8 +142,6 @@ class PhaseDataset(abstract.AbstractPhase):
             hyper_search = setup_hyper.hyper_search_with_inversion
         else:
             hyper_search = setup_hyper.hyper_search_no_inversion
-
-        self.use_as_hyper_dataset = True
 
         return extensions.HyperPhase(
             phase=self,

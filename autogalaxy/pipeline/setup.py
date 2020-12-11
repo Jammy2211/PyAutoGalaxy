@@ -12,6 +12,8 @@ from autogalaxy import exc
 
 from typing import Union, Optional
 
+import copy
+
 
 class AbstractSetup:
     def _cls_to_prior_model(self, cls):
@@ -1321,7 +1323,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.bulge_prior_model is None:
             return None
 
-        bulge = self.bulge_prior_model
+        bulge = copy.deepcopy(self.bulge_prior_model)
 
         if as_instance:
             bulge.take_attributes(source=results.last.instance.galaxies.lens.bulge)
@@ -1354,7 +1356,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.disk_prior_model is None:
             return None
 
-        disk = self.disk_prior_model
+        disk = copy.deepcopy(self.disk_prior_model)
 
         if as_instance:
             disk.take_attributes(source=results.last.instance.galaxies.lens.disk)
@@ -1387,7 +1389,7 @@ class SetupMassLightDark(AbstractSetupMass):
         if self.envelope_prior_model is None:
             return None
 
-        envelope = self.envelope_prior_model.cls
+        envelope = copy.deepcopy(self.envelope_prior_model.cls)
 
         if as_instance:
             envelope.take_attributes(

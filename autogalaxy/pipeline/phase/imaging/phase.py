@@ -28,6 +28,7 @@ class PhaseImaging(dataset.PhaseDataset):
         hyper_background_noise=None,
         settings=SettingsPhaseImaging(),
         cosmology=cosmo.Planck15,
+        use_as_hyper_dataset=False
     ):
         """
 
@@ -43,7 +44,11 @@ class PhaseImaging(dataset.PhaseDataset):
         """
 
         super().__init__(
-            search=search, galaxies=galaxies, settings=settings, cosmology=cosmology
+            search=search,
+            galaxies=galaxies,
+            settings=settings,
+            cosmology=cosmology,
+            use_as_hyper_dataset=use_as_hyper_dataset,
         )
 
         self.hyper_image_sky = hyper_image_sky

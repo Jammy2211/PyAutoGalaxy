@@ -162,6 +162,7 @@ class FitInterferometer(aa_fit.FitInterferometer):
         masked_interferometer,
         plane,
         hyper_background_noise=None,
+        use_hyper_scalings=True,
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
     ):
@@ -176,18 +177,24 @@ class FitInterferometer(aa_fit.FitInterferometer):
             A function which maps the 1D lens hyper_galaxies to its unmasked 2D arrays.
         """
 
-        if hyper_background_noise is not None:
-            noise_map = hyper_background_noise.hyper_noise_map_from_complex_noise_map(
-                noise_map=masked_interferometer.noise_map
-            )
+        if use_hyper_scalings:
+
+            if hyper_background_noise is not None:
+                noise_map = hyper_background_noise.hyper_noise_map_from_complex_noise_map(
+                    noise_map=masked_interferometer.noise_map
+                )
+            else:
+                noise_map = masked_interferometer.noise_map
+
+            if hyper_background_noise is not None:
+
+                masked_interferometer = masked_interferometer.modify_noise_map(
+                    noise_map=noise_map
+                )
+
         else:
+
             noise_map = masked_interferometer.noise_map
-
-        if hyper_background_noise is not None:
-
-            masked_interferometer = masked_interferometer.modify_noise_map(
-                noise_map=noise_map
-            )
 
         self.plane = plane
 
