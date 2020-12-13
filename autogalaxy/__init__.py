@@ -38,12 +38,7 @@ from .galaxy.masked_galaxy_data import MaskedGalaxyDataset
 from .hyper import hyper_data
 from .pipeline.phase.abstract import phase
 from .pipeline.phase.abstract.phase import AbstractPhase
-from .pipeline.phase.extensions import CombinedHyperPhase
-from .pipeline.phase.extensions import HyperGalaxyPhase
-from .pipeline.phase.extensions.hyper_galaxy_phase import HyperGalaxyPhase
 from .pipeline.phase.extensions.hyper_phase import HyperPhase
-from .pipeline.phase.extensions.inversion_phase import InversionPhase
-from .pipeline.phase.extensions.inversion_phase import ModelFixingHyperPhase
 from .pipeline.phase.imaging.phase import PhaseImaging
 from .pipeline.phase.interferometer.phase import PhaseInterferometer
 from .pipeline.phase.phase_galaxy import PhaseGalaxy
@@ -69,4 +64,4 @@ from . import convert
 
 conf.instance.register(__file__)
 
-__version__ = '0.16.5'
+__version__ = '0.16.6'

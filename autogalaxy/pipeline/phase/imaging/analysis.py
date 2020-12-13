@@ -1,3 +1,4 @@
+import autofit as af
 from autoarray.exc import PixelizationException, InversionException, GridException
 from autofit.exc import FitException
 from autogalaxy.fit import fit
@@ -59,7 +60,7 @@ class Analysis(analysis_dataset.Analysis):
             raise FitException from e
 
     def masked_imaging_fit_for_plane(
-        self, plane, hyper_image_sky, hyper_background_noise
+        self, plane, hyper_image_sky, hyper_background_noise, use_hyper_scalings=True
     ):
 
         return fit.FitImaging(
@@ -67,11 +68,12 @@ class Analysis(analysis_dataset.Analysis):
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
+            use_hyper_scalings=use_hyper_scalings,
             settings_pixelization=self.settings.settings_pixelization,
             settings_inversion=self.settings.settings_inversion,
         )
 
-    def visualize(self, instance, paths, during_analysis):
+    def visualize(self, paths: af.Paths, instance, during_analysis):
 
         self.visualizer.visualize_imaging(paths=paths)
 
@@ -88,12 +90,6 @@ class Analysis(analysis_dataset.Analysis):
             hyper_background_noise=hyper_background_noise,
         )
 
-        self.visualizer.visualize_hyper_images(
-            paths=paths,
-            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
-            hyper_model_image=self.hyper_model_image,
-        )
-
         if plane.has_mass_profile:
 
             visualizer = self.visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
@@ -107,6 +103,29 @@ class Analysis(analysis_dataset.Analysis):
 
         #   visualizer.visualize_plane(plane=fit.plane, during_analysis=during_analysis)
         visualizer.visualize_fit(paths=paths, fit=fit, during_analysis=during_analysis)
+
+        self.visualizer.visualize_hyper_images(
+            paths=paths,
+            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
+            hyper_model_image=self.hyper_model_image,
+            contribution_maps_of_galaxies=plane.contribution_maps_of_galaxies,
+        )
+
+        if self.visualizer.plot_fit_no_hyper:
+
+            fit = self.masked_imaging_fit_for_plane(
+                plane=plane,
+                hyper_image_sky=None,
+                hyper_background_noise=None,
+                use_hyper_scalings=False,
+            )
+
+            visualizer.visualize_fit(
+                paths=paths,
+                fit=fit,
+                during_analysis=during_analysis,
+                subfolders="fit_no_hyper",
+            )
 
     def make_attributes(self):
         return Attributes(

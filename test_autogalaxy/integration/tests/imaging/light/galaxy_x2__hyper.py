@@ -32,7 +32,7 @@ def make_pipeline(name, path_prefix, search=af.DynestyStatic()):
     phase1.search.n_live_points = 40
     phase1.search.facc = 0.8
 
-    phase1 = phase1.extend_with_multiple_hyper_phases(hyper_galaxies_search=True)
+    phase1 = phase1.extend_with_hyper_phase(hyper_galaxies_search=True)
 
     phase2 = ag.PhaseImaging(
         name="phase_2",
@@ -41,12 +41,12 @@ def make_pipeline(name, path_prefix, search=af.DynestyStatic()):
             galaxy_0=ag.GalaxyModel(
                 redshift=0.5,
                 bulge=phase1.result.model.galaxies.galaxy_0.bulge,
-                hyper_galaxy=phase1.result.hyper_combined.instance.galaxies.galaxy_0.hyper_galaxy,
+                hyper_galaxy=phase1.result.hyper.instance.galaxies.galaxy_0.hyper_galaxy,
             ),
             galaxy_1=ag.GalaxyModel(
                 redshift=0.5,
                 bulge=phase1.result.model.galaxies.galaxy_1.bulge,
-                hyper_galaxy=phase1.result.hyper_combined.instance.galaxies.galaxy_1.hyper_galaxy,
+                hyper_galaxy=phase1.result.hyper.instance.galaxies.galaxy_1.hyper_galaxy,
             ),
         ),
         search=search,

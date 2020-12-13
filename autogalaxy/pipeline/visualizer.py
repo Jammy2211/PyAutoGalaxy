@@ -36,11 +36,15 @@ class AbstractVisualizer:
         )
 
     @staticmethod
-    def sub_plotter_from_paths(paths: af.Paths):
+    def sub_plotter_from_paths(paths: af.Paths, subfolders=None):
 
+        if subfolders is None:
+            return lensing_plotters.SubPlotter(
+                output=mat_objs.Output(path=paths.image_path, format="png")
+            )
         return lensing_plotters.SubPlotter(
             output=mat_objs.Output(
-                path=path.join(paths.image_path, "subplots"), format="png"
+                path=path.join(paths.image_path, subfolders), format="png"
             )
         )
 
@@ -176,11 +180,19 @@ class PhaseDatasetVisualizer(AbstractVisualizer):
             "inversion", "interpolated_errors"
         )
 
-        self.plot_hyper_model_image = plot_setting("hyper_galaxy", "model_image")
-        self.plot_hyper_galaxy_images = plot_setting("hyper_galaxy", "images")
+        self.plot_fit_no_hyper = plot_setting("hyper", "fit_no_hyper")
+        self.plot_hyper_model_image = plot_setting("hyper", "model_image")
+        self.plot_hyper_images_of_galaxies = plot_setting("hyper", "images_of_galaxies")
+        self.plot_contribution_maps_of_galaxies = plot_setting(
+            "hyper", "contribution_maps_of_galaxies"
+        )
 
     def visualize_hyper_images(
-        self, paths: af.Paths, hyper_galaxy_image_path_dict, hyper_model_image
+        self,
+        paths: af.Paths,
+        hyper_galaxy_image_path_dict,
+        hyper_model_image,
+        contribution_maps_of_galaxies,
     ):
 
         plotter = self.plotter_from_paths(paths=paths, subfolders="hyper")
@@ -195,11 +207,22 @@ class PhaseDatasetVisualizer(AbstractVisualizer):
                 plotter=plotter,
             )
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths)
+        sub_plotter = self.sub_plotter_from_paths(paths=paths, subfolders="hyper")
 
-        if self.plot_hyper_galaxy_images:
-            hyper_plots.subplot_hyper_galaxy_images(
+        if self.plot_hyper_images_of_galaxies:
+
+            hyper_plots.subplot_hyper_images_of_galaxies(
                 hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
+                mask=self.include.mask_from_masked_dataset(
+                    masked_dataset=self.masked_dataset
+                ),
+                include=self.include,
+                sub_plotter=sub_plotter,
+            )
+
+        if self.plot_contribution_maps_of_galaxies:
+            hyper_plots.subplot_contribution_maps_of_galaxies(
+                contribution_maps_of_galaxies=contribution_maps_of_galaxies,
                 mask=self.include.mask_from_masked_dataset(
                     masked_dataset=self.masked_dataset
                 ),
@@ -213,9 +236,6 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
         super(PhaseImagingVisualizer, self).__init__(masked_dataset=masked_dataset)
 
         self.plot_dataset_psf = plot_setting("dataset", "psf")
-
-        self.plot_hyper_model_image = plot_setting("hyper_galaxy", "model_image")
-        self.plot_hyper_galaxy_images = plot_setting("hyper_galaxy", "images")
 
     @property
     def masked_imaging(self):
@@ -241,7 +261,7 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
             plotter=plotter,
         )
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths)
+        sub_plotter = self.sub_plotter_from_paths(paths=paths, subfolders="imaging")
 
         if self.plot_subplot_dataset:
             aa.plot.Imaging.subplot_imaging(
@@ -253,9 +273,11 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
                 sub_plotter=sub_plotter,
             )
 
-    def visualize_fit(self, paths: af.Paths, fit, during_analysis):
+    def visualize_fit(
+        self, paths: af.Paths, fit, during_analysis, subfolders="fit_imaging"
+    ):
 
-        plotter = self.plotter_from_paths(paths=paths, subfolders="fit_imaging")
+        plotter = self.plotter_from_paths(paths=paths, subfolders=subfolders)
 
         fit_imaging_plots.individuals(
             fit=fit,
@@ -272,7 +294,7 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
             plotter=plotter,
         )
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths)
+        sub_plotter = self.sub_plotter_from_paths(paths=paths, subfolders=subfolders)
 
         if self.plot_subplot_fit:
             fit_imaging_plots.subplot_fit_imaging(
@@ -287,6 +309,10 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
         if fit.inversion is not None:
 
             if self.plot_subplot_inversion:
+
+                sub_plotter = self.sub_plotter_from_paths(
+                    paths=paths, subfolders="inversion"
+                )
 
                 inversion_plots.subplot_inversion(
                     inversion=fit.inversion,
@@ -438,16 +464,15 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
 
         self.plot_dataset_uv_wavelengths = plot_setting("dataset", "uv_wavelengths")
 
-        self.plot_hyper_model_image = plot_setting("hyper_galaxy", "model_image")
-        self.plot_hyper_galaxy_images = plot_setting("hyper_galaxy", "images")
-
     @property
     def masked_interferometer(self):
         return self.masked_dataset
 
     def visualize_interferometer(self, paths: af.Paths):
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths)
+        sub_plotter = self.sub_plotter_from_paths(
+            paths=paths, subfolders="interferometer"
+        )
 
         if self.plot_subplot_dataset:
             aa.plot.Interferometer.subplot_interferometer(
@@ -467,9 +492,11 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
             plotter=plotter,
         )
 
-    def visualize_fit(self, paths: af.Paths, fit, during_analysis):
+    def visualize_fit(
+        self, paths: af.Paths, fit, during_analysis, subfolders="fit_interferometer"
+    ):
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths)
+        sub_plotter = self.sub_plotter_from_paths(paths=paths, subfolders=subfolders)
 
         if self.plot_subplot_fit:
             fit_interferometer_plots.subplot_fit_interferometer(
@@ -480,7 +507,7 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
                 fit=fit, include=self.include, sub_plotter=sub_plotter
             )
 
-        plotter = self.plotter_from_paths(paths=paths, subfolders="fit_interferometer")
+        plotter = self.plotter_from_paths(paths=paths, subfolders=subfolders)
 
         fit_interferometer_plots.individuals(
             fit=fit,
@@ -639,25 +666,3 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
                         include=self.include,
                         plotter=fits_plotter,
                     )
-
-
-class HyperGalaxyVisualizer(AbstractVisualizer):
-    def __init__(self):
-        super().__init__()
-        self.plot_hyper_galaxy_subplot = plot_setting(
-            "hyper_galaxy", "subplot_hyper_galaxy"
-        )
-
-    def visualize_hyper_galaxy(
-        self, paths: af.Paths, fit, hyper_fit, galaxy_image, contribution_map_in
-    ):
-        sub_plotter = self.sub_plotter_from_paths(paths=paths)
-
-        hyper_plots.subplot_fit_hyper_galaxy(
-            fit=fit,
-            hyper_fit=hyper_fit,
-            galaxy_image=galaxy_image,
-            contribution_map_in=contribution_map_in,
-            include=self.include,
-            sub_plotter=sub_plotter,
-        )

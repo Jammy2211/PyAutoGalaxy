@@ -1,11 +1,21 @@
-from os import path
+from autoconf import conf
 import autofit as af
+from autogalaxy.galaxy import galaxy as g
 from autofit.tools.phase import Dataset
 from autogalaxy.pipeline.phase import abstract
+import numpy as np
 
 
 class HyperPhase:
-    def __init__(self, phase: abstract.AbstractPhase, hyper_search, hyper_name: str):
+    def __init__(
+        self,
+        phase: abstract.AbstractPhase,
+        hyper_search,
+        model_classes=tuple(),
+        hyper_image_sky=None,
+        hyper_background_noise=None,
+        hyper_galaxy_names=None,
+    ):
         """
         Abstract HyperPhase. Wraps a phase, performing that phase before performing the action
         specified by the run_hyper.
@@ -16,24 +26,46 @@ class HyperPhase:
             A phase
         """
         self.phase = phase
-        self.hyper_name = hyper_name
         self.hyper_search = hyper_search
+        self.model_classes = model_classes
+        self.hyper_image_sky = hyper_image_sky
+        self.hyper_background_noise = hyper_background_noise
+        self.hyper_galaxy_names = hyper_galaxy_names
 
-    def run_hyper(self, *args, **kwargs) -> af.Result:
-        """
-        Run the hyper_galaxies phase.
+    @property
+    def hyper_name(self):
+        return "hyper"
 
-        Parameters
-        ----------
-        args
-        kwargs
+    def make_model(self, instance):
 
-        Returns
-        -------
-        result
-            The result of the hyper_galaxies phase.
-        """
-        raise NotImplementedError()
+        model = instance.as_model(self.model_classes)
+        model.hyper_image_sky = self.hyper_image_sky
+        model.hyper_background_noise = self.hyper_background_noise
+
+        return model
+
+    def add_hyper_galaxies_to_model(
+        self, model, path_galaxy_tuples, hyper_galaxy_image_path_dict
+    ):
+
+        for path_galaxy, galaxy in path_galaxy_tuples:
+            if path_galaxy[-1] in self.hyper_galaxy_names:
+                if not np.all(hyper_galaxy_image_path_dict[path_galaxy] == 0):
+
+                    if "source" in path_galaxy[-1]:
+                        setattr(
+                            model.galaxies.source,
+                            "hyper_galaxy",
+                            af.PriorModel(g.HyperGalaxy),
+                        )
+                    elif "lens" in path_galaxy[-1]:
+                        setattr(
+                            model.galaxies.lens,
+                            "hyper_galaxy",
+                            af.PriorModel(g.HyperGalaxy),
+                        )
+
+        return model
 
     def make_hyper_phase(self) -> abstract.AbstractPhase:
         """
@@ -42,6 +74,7 @@ class HyperPhase:
         hyper_phase
             A copy of the original phase with a modified name and path
         """
+
         self.phase.search = self.hyper_search.copy_with_name_extension(
             extension=self.phase.name, path_prefix=self.phase.paths.path_prefix
         )
@@ -86,6 +119,41 @@ class HyperPhase:
         )
         setattr(result, self.hyper_name, hyper_result)
         return result
+
+    def run_hyper(
+        self,
+        dataset,
+        results: af.ResultsCollection,
+        info=None,
+        pickle_files=None,
+        **kwargs,
+    ):
+        """
+        Run the phase, overriding the search's model instance with one created to
+        only fit pixelization hyperparameters.
+        """
+
+        self.results = results
+
+        phase = self.make_hyper_phase()
+        model = self.make_model(instance=results.last.instance)
+
+        if self.hyper_galaxy_names is not None:
+            model = self.add_hyper_galaxies_to_model(
+                model=model,
+                path_galaxy_tuples=results.last.path_galaxy_tuples,
+                hyper_galaxy_image_path_dict=results.last.hyper_galaxy_image_path_dict,
+            )
+
+        phase.model = model
+
+        return phase.run(
+            dataset,
+            mask=results.last.mask,
+            results=results,
+            info=info,
+            pickle_files=pickle_files,
+        )
 
     def __getattr__(self, item):
         return getattr(self.phase, item)

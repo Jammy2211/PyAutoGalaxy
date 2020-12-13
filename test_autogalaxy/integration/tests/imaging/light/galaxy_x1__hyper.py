@@ -24,7 +24,7 @@ def make_pipeline(name, path_prefix, search=af.DynestyStatic()):
         search=search,
     )
 
-    phase1 = phase1.extend_with_multiple_hyper_phases(
+    phase1 = phase1.extend_with_hyper_phase(
         hyper_galaxies_search=True,
         include_background_sky=True,
         include_background_noise=True,

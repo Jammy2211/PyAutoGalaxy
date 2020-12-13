@@ -13,6 +13,7 @@ class FitImaging(aa_fit.FitImaging):
         plane,
         hyper_image_sky=None,
         hyper_background_noise=None,
+        use_hyper_scalings=True,
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
     ):
@@ -29,25 +30,32 @@ class FitImaging(aa_fit.FitImaging):
 
         self.plane = plane
 
-        image = hyper_image_from_image_and_hyper_image_sky(
-            image=masked_imaging.image, hyper_image_sky=hyper_image_sky
-        )
+        if use_hyper_scalings:
 
-        noise_map = hyper_noise_map_from_noise_map_plane_and_hyper_background_noise(
-            noise_map=masked_imaging.noise_map,
-            plane=plane,
-            hyper_background_noise=hyper_background_noise,
-        )
-
-        if (
-            plane.has_hyper_galaxy
-            or hyper_image_sky is not None
-            or hyper_background_noise is not None
-        ):
-
-            masked_imaging = masked_imaging.modify_image_and_noise_map(
-                image=image, noise_map=noise_map
+            image = hyper_image_from_image_and_hyper_image_sky(
+                image=masked_imaging.image, hyper_image_sky=hyper_image_sky
             )
+
+            noise_map = hyper_noise_map_from_noise_map_plane_and_hyper_background_noise(
+                noise_map=masked_imaging.noise_map,
+                plane=plane,
+                hyper_background_noise=hyper_background_noise,
+            )
+
+            if (
+                plane.has_hyper_galaxy
+                or hyper_image_sky is not None
+                or hyper_background_noise is not None
+            ):
+
+                masked_imaging = masked_imaging.modify_image_and_noise_map(
+                    image=image, noise_map=noise_map
+                )
+
+        else:
+
+            image = masked_imaging.image
+            noise_map = masked_imaging.noise_map
 
         self.blurred_image = plane.blurred_image_from_grid_and_convolver(
             grid=masked_imaging.grid,
@@ -154,6 +162,7 @@ class FitInterferometer(aa_fit.FitInterferometer):
         masked_interferometer,
         plane,
         hyper_background_noise=None,
+        use_hyper_scalings=True,
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
     ):
@@ -168,18 +177,24 @@ class FitInterferometer(aa_fit.FitInterferometer):
             A function which maps the 1D lens hyper_galaxies to its unmasked 2D arrays.
         """
 
-        if hyper_background_noise is not None:
-            noise_map = hyper_background_noise.hyper_noise_map_from_complex_noise_map(
-                noise_map=masked_interferometer.noise_map
-            )
+        if use_hyper_scalings:
+
+            if hyper_background_noise is not None:
+                noise_map = hyper_background_noise.hyper_noise_map_from_complex_noise_map(
+                    noise_map=masked_interferometer.noise_map
+                )
+            else:
+                noise_map = masked_interferometer.noise_map
+
+            if hyper_background_noise is not None:
+
+                masked_interferometer = masked_interferometer.modify_noise_map(
+                    noise_map=noise_map
+                )
+
         else:
+
             noise_map = masked_interferometer.noise_map
-
-        if hyper_background_noise is not None:
-
-            masked_interferometer = masked_interferometer.modify_noise_map(
-                noise_map=noise_map
-            )
 
         self.plane = plane
 

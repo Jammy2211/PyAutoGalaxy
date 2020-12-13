@@ -109,12 +109,15 @@ class Analysis(analysis_data.Analysis):
 
         return instance
 
-    def masked_interferometer_fit_for_plane(self, plane, hyper_background_noise):
+    def masked_interferometer_fit_for_plane(
+        self, plane, hyper_background_noise, use_hyper_scalings=True
+    ):
 
         return fit.FitInterferometer(
             masked_interferometer=self.masked_dataset,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
+            use_hyper_scalings=use_hyper_scalings,
             settings_pixelization=self.settings.settings_pixelization,
             settings_inversion=self.settings.settings_inversion,
         )
@@ -122,12 +125,6 @@ class Analysis(analysis_data.Analysis):
     def visualize(self, paths: af.Paths, instance, during_analysis):
 
         self.visualizer.visualize_interferometer(paths=paths)
-
-        self.visualizer.visualize_hyper_images(
-            paths=paths,
-            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
-            hyper_model_image=self.hyper_model_image,
-        )
 
         self.associate_hyper_images(instance=instance)
         plane = self.plane_for_instance(instance=instance)
@@ -151,6 +148,25 @@ class Analysis(analysis_data.Analysis):
             visualizer = self.visualizer
 
         visualizer.visualize_fit(paths=paths, fit=fit, during_analysis=during_analysis)
+
+        self.visualizer.visualize_hyper_images(
+            paths=paths,
+            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
+            hyper_model_image=self.hyper_model_image,
+            contribution_maps_of_galaxies=plane.contribution_maps_of_galaxies,
+        )
+
+        if self.visualizer.plot_fit_no_hyper:
+            fit = self.masked_interferometer_fit_for_plane(
+                plane=plane, hyper_background_noise=None, use_hyper_scalings=False
+            )
+
+            visualizer.visualize_fit(
+                paths=paths,
+                fit=fit,
+                during_analysis=during_analysis,
+                subfolders="fit_no_hyper",
+            )
 
     def make_attributes(self):
         return Attributes(

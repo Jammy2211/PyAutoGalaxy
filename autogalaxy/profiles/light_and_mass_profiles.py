@@ -432,6 +432,93 @@ class SphericalExponentialRadialGradient(
         )
 
 
+class EllipticalCoreSersic(
+    lp.EllipticalCoreSersic, mp.EllipticalCoreSersic, LightMassProfile
+):
+    def __init__(
+        self,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        sersic_index: float = 4.0,
+        radius_break: float = 0.01,
+        intensity_break: float = 0.05,
+        gamma: float = 0.25,
+        alpha: float = 3.0,
+        mass_to_light_ratio: float = 1.0,
+    ):
+
+        lp.EllipticalCoreSersic.__init__(
+            self,
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            intensity=intensity,
+            effective_radius=effective_radius,
+            sersic_index=sersic_index,
+            radius_break=radius_break,
+            intensity_break=intensity_break,
+            gamma=gamma,
+            alpha=alpha,
+        )
+        mp.EllipticalCoreSersic.__init__(
+            self,
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            intensity=intensity,
+            effective_radius=effective_radius,
+            sersic_index=sersic_index,
+            radius_break=radius_break,
+            intensity_break=intensity_break,
+            gamma=gamma,
+            alpha=alpha,
+            mass_to_light_ratio=mass_to_light_ratio,
+        )
+
+
+class SphericalCoreSersic(EllipticalCoreSersic, LightMassProfile):
+    def __init__(
+        self,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        sersic_index: float = 4.0,
+        radius_break: float = 0.01,
+        intensity_break: float = 0.05,
+        gamma: float = 0.25,
+        alpha: float = 3.0,
+        mass_to_light_ratio: float = 1.0,
+    ):
+        """
+        The SphericalSersic mass profile, the mass profiles of the light profiles that are used to fit_normal and
+        subtract the lens model_galaxy's light.
+
+        Parameters
+        ----------
+        centre: (float, float)
+            The grid of the origin of the profiles
+        intensity : float
+            Overall flux intensity normalisation in the light profiles (electrons per second)
+        effective_radius : float
+            The radius containing half the light of this model_mapper
+        mass_to_light_ratio : float
+            The mass-to-light ratio of the light profiles
+        """
+        EllipticalCoreSersic.__init__(
+            self,
+            centre=centre,
+            elliptical_comps=(0.0, 0.0),
+            intensity=intensity,
+            effective_radius=effective_radius,
+            sersic_index=sersic_index,
+            radius_break=radius_break,
+            intensity_break=intensity_break,
+            gamma=gamma,
+            alpha=alpha,
+            mass_to_light_ratio=mass_to_light_ratio,
+        )
+
+
 class EllipticalChameleon(
     lp.EllipticalChameleon, mp.EllipticalChameleon, LightMassProfile
 ):

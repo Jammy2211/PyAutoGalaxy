@@ -1,20 +1,30 @@
 from astropy import cosmology as cosmo
-
+from autoconf import conf
 import autofit as af
 from autoarray.inversion import pixelizations as pix
 from autoarray.inversion import regularization as reg
-from autogalaxy.hyper import hyper_data as hd
 from autogalaxy.pipeline.phase import abstract
 from autogalaxy.pipeline.phase import extensions
 from autogalaxy.pipeline.phase.dataset.result import Result
 
+import copy
+import os
+import shutil
+from distutils.dir_util import copy_tree
 
 class PhaseDataset(abstract.AbstractPhase):
     galaxies = af.PhaseProperty("galaxies")
 
     Result = Result
 
-    def __init__(self, settings, search, galaxies=None, cosmology=cosmo.Planck15):
+    def __init__(
+        self,
+        settings,
+        search,
+        galaxies=None,
+        cosmology=cosmo.Planck15,
+        use_as_hyper_dataset=False,
+    ):
         """
 
         A phase in an lens pipeline. Uses the set non_linear search to try to fit models and hyper_galaxies
@@ -31,7 +41,7 @@ class PhaseDataset(abstract.AbstractPhase):
         )
 
         self.hyper_name = None
-        self.use_as_hyper_dataset = False
+        self.use_as_hyper_dataset = use_as_hyper_dataset
         self.is_hyper_phase = False
 
     def run(
@@ -124,100 +134,47 @@ class PhaseDataset(abstract.AbstractPhase):
                 f"{hyper_tag}{self.settings.phase_tag_with_inversion}"
             )
 
-    def extend_with_inversion_phase(self, hyper_search, inversion_pixels_fixed=None):
+        if self.hyper_name == "hyper":
 
-        return extensions.InversionPhase(
-            phase=self,
-            hyper_search=hyper_search,
-            model_classes=(pix.Pixelization, reg.Regularization),
-            inversion_pixels_fixed=inversion_pixels_fixed,
-        )
+            rename_hyper_combined = conf.instance["general"]["hyper"][
+                "rename_hyper_combined"
+            ]
 
-    def extend_with_multiple_hyper_phases(
-        self, setup_hyper, include_inversion=False, inversion_pixels_fixed=None
-    ):
+            if rename_hyper_combined:
+
+                output_path_hyper = copy.copy(self.search.paths.output_path)
+                output_path_hyper_combined = output_path_hyper.replace("hyper", "hyper_combined")
+
+                if os.path.exists(output_path_hyper_combined):
+                    copy_tree(output_path_hyper_combined, output_path_hyper)
+                    if os.path.isfile(f"{output_path_hyper_combined}.zip"):
+                        shutil.copyfile(f"{output_path_hyper_combined}.zip", f"{output_path_hyper}.zip")
+                    shutil.rmtree(output_path_hyper_combined)
+
+                if os.path.isfile(f"{output_path_hyper_combined}.zip"):
+                    os.remove(f"{output_path_hyper_combined}.zip")
+
+                if os.path.exists(os.path.join(output_path_hyper_combined, "..")):
+                    shutil.rmtree(os.path.join(output_path_hyper_combined, ".."))
+
+    def extend_with_hyper_phase(self, setup_hyper):
 
         self.use_as_hyper_dataset = True
 
-        hyper_phases = []
+        if not self.has_pixelization:
+            if setup_hyper.hypers_all_off:
+                return self
 
-        if include_inversion:
-            if self.has_pixelization and setup_hyper.inversion_search:
-
-                if (
-                    not setup_hyper.hyper_image_sky
-                    and not setup_hyper.hyper_background_noise
-                ):
-                    phase_inversion = extensions.InversionPhase(
-                        phase=self,
-                        hyper_search=setup_hyper.inversion_search,
-                        model_classes=(pix.Pixelization, reg.Regularization),
-                        inversion_pixels_fixed=inversion_pixels_fixed,
-                    )
-                elif (
-                    setup_hyper.hyper_image_sky
-                    and not setup_hyper.hyper_background_noise
-                ):
-                    phase_inversion = extensions.InversionPhase(
-                        phase=self,
-                        hyper_search=setup_hyper.inversion_search,
-                        model_classes=(
-                            pix.Pixelization,
-                            reg.Regularization,
-                            hd.HyperImageSky,
-                        ),
-                        inversion_pixels_fixed=inversion_pixels_fixed,
-                    )
-                elif (
-                    not setup_hyper.hyper_image_sky
-                    and setup_hyper.hyper_background_noise
-                ):
-                    phase_inversion = extensions.InversionPhase(
-                        phase=self,
-                        hyper_search=setup_hyper.inversion_search,
-                        model_classes=(
-                            pix.Pixelization,
-                            reg.Regularization,
-                            hd.HyperBackgroundNoise,
-                        ),
-                        inversion_pixels_fixed=inversion_pixels_fixed,
-                    )
-                else:
-                    phase_inversion = extensions.InversionPhase(
-                        phase=self,
-                        hyper_search=setup_hyper.inversion_search,
-                        model_classes=(
-                            pix.Pixelization,
-                            reg.Regularization,
-                            hd.HyperImageSky,
-                            hd.HyperBackgroundNoise,
-                        ),
-                        inversion_pixels_fixed=inversion_pixels_fixed,
-                    )
-
-                hyper_phases.append(phase_inversion)
-
-        if setup_hyper.hyper_galaxies_search is not None:
-            phase_hyper_galaxy = extensions.HyperGalaxyPhase(
-                phase=self,
-                hyper_search=setup_hyper.hyper_galaxies_search,
-                include_sky_background=setup_hyper.hyper_image_sky,
-                include_noise_background=setup_hyper.hyper_background_noise,
-                hyper_galaxy_names=setup_hyper.hyper_galaxy_names,
-            )
-            hyper_phases.append(phase_hyper_galaxy)
-
-        if setup_hyper.hyper_galaxy_phase_first:
-            if (
-                include_inversion and setup_hyper.inversion_search is not None
-            ) and setup_hyper.hyper_galaxies_search is not None:
-                hyper_phases = [phase for phase in reversed(hyper_phases)]
-
-        if len(hyper_phases) == 0:
-            return self
+        if self.has_pixelization:
+            hyper_search = setup_hyper.hyper_search_with_inversion
         else:
-            return extensions.CombinedHyperPhase(
-                phase=self,
-                hyper_search=setup_hyper.hyper_combined_search,
-                hyper_phases=hyper_phases,
-            )
+            hyper_search = setup_hyper.hyper_search_no_inversion
+
+        return extensions.HyperPhase(
+            phase=self,
+            hyper_search=hyper_search,
+            model_classes=(pix.Pixelization, reg.Regularization),
+            hyper_image_sky=setup_hyper.hyper_image_sky,
+            hyper_background_noise=setup_hyper.hyper_background_noise,
+            hyper_galaxy_names=setup_hyper.hyper_galaxy_names,
+        )

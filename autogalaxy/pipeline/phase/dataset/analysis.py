@@ -2,17 +2,19 @@ import autofit as af
 from autogalaxy.galaxy import galaxy as g
 from autogalaxy.plane import plane as pl
 
+import numpy as np
 import pickle
 import dill
 
 
 def last_result_with_use_as_hyper_dataset(results):
 
-    if results.last is not None:
-        for index, result in enumerate(reversed(results)):
-            if hasattr(result, "use_as_hyper_dataset"):
-                if result.use_as_hyper_dataset:
-                    return result
+    if results is not None:
+        if results.last is not None:
+            for index, result in enumerate(reversed(results)):
+                if hasattr(result, "use_as_hyper_dataset"):
+                    if result.use_as_hyper_dataset:
+                        return result
 
 
 class Analysis(af.Analysis):
