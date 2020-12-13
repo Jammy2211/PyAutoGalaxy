@@ -34,14 +34,7 @@ class HyperPhase:
 
     @property
     def hyper_name(self):
-
-        backwards_compatible_tag = conf.instance["general"]["hyper"][
-            "backwards_compatible_tag"
-        ]
-
-        if not backwards_compatible_tag:
-            return "hyper"
-        return "hyper_combined"
+        return "hyper"
 
     def make_model(self, instance):
 

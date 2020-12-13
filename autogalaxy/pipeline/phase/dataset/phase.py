@@ -1,5 +1,5 @@
 from astropy import cosmology as cosmo
-
+from autoconf import conf
 import autofit as af
 from autoarray.inversion import pixelizations as pix
 from autoarray.inversion import regularization as reg
@@ -7,6 +7,10 @@ from autogalaxy.pipeline.phase import abstract
 from autogalaxy.pipeline.phase import extensions
 from autogalaxy.pipeline.phase.dataset.result import Result
 
+import copy
+import os
+import shutil
+from distutils.dir_util import copy_tree
 
 class PhaseDataset(abstract.AbstractPhase):
     galaxies = af.PhaseProperty("galaxies")
@@ -129,6 +133,29 @@ class PhaseDataset(abstract.AbstractPhase):
             self.search.paths.tag = (
                 f"{hyper_tag}{self.settings.phase_tag_with_inversion}"
             )
+
+        if self.hyper_name == "hyper":
+
+            rename_hyper_combined = conf.instance["general"]["hyper"][
+                "rename_hyper_combined"
+            ]
+
+            if rename_hyper_combined:
+
+                output_path_hyper = copy.copy(self.search.paths.output_path)
+                output_path_hyper_combined = output_path_hyper.replace("hyper", "hyper_combined")
+
+                if os.path.exists(output_path_hyper_combined):
+                    copy_tree(output_path_hyper_combined, output_path_hyper)
+                    if os.path.isfile(f"{output_path_hyper_combined}.zip"):
+                        shutil.copyfile(f"{output_path_hyper_combined}.zip", f"{output_path_hyper}.zip")
+                    shutil.rmtree(output_path_hyper_combined)
+
+                if os.path.isfile(f"{output_path_hyper_combined}.zip"):
+                    os.remove(f"{output_path_hyper_combined}.zip")
+
+                if os.path.exists(os.path.join(output_path_hyper_combined, "..")):
+                    shutil.rmtree(os.path.join(output_path_hyper_combined, ".."))
 
     def extend_with_hyper_phase(self, setup_hyper):
 
