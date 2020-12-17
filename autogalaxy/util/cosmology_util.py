@@ -1,5 +1,6 @@
 import math
 
+import numpy as np
 from astropy import constants
 
 
@@ -127,3 +128,36 @@ def scaling_factor_between_redshifts_from(
         angular_diameter_distance_of_redshift_1_to_earth
         * angular_diameter_distance_between_redshift_1_and_final
     )
+
+
+def velocity_dispersion_from(*, redshift_0, redshift_1, einstein_radius, cosmology):
+
+    const = constants.c.to("kpc / s")
+
+    angular_diameter_distance_to_redshift_0_kpc = angular_diameter_distance_to_earth_in_kpc_from(
+        redshift=redshift_1, cosmology=cosmology
+    )
+
+    angular_diameter_distance_to_redshift_1_kpc = angular_diameter_distance_to_earth_in_kpc_from(
+        redshift=redshift_1, cosmology=cosmology
+    )
+
+    angular_diameter_distance_between_redshifts_kpc = angular_diameter_distance_between_redshifts_in_kpc_from(
+        redshift_0=redshift_0, redshift_1=redshift_1, cosmology=cosmology
+    )
+
+    kpc_per_arcsec = kpc_per_arcsec_from(redshift=redshift_0, cosmology=cosmology)
+
+    einstein_radius_kpc = einstein_radius * kpc_per_arcsec
+
+    velocity_dispersion_kpc = const * np.sqrt(
+        (einstein_radius_kpc * angular_diameter_distance_to_redshift_1_kpc)
+        / (
+            4
+            * np.pi
+            * angular_diameter_distance_to_redshift_0_kpc
+            * angular_diameter_distance_between_redshifts_kpc
+        )
+    )
+
+    return velocity_dispersion_kpc.to("km/s").value

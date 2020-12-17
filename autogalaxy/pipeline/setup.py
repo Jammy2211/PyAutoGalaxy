@@ -42,7 +42,52 @@ class AbstractSetup:
 
         return cls
 
-    def _set_bulge_disk_assertion(self, bulge_prior_model, disk_prior_model):
+    def set_light_prior_model_assertions(
+        self,
+        bulge_prior_model=None,
+        disk_prior_model=None,
+        envelope_prior_model=None,
+        assert_bulge_sersic_above_disk=True,
+        assert_chameleon_core_radius_0_above_core_radius_1=True,
+    ):
+        """
+        This sets a number of assertions on the bugle, disk and envelope prior models which can be customized via
+        boolean operators. These assertions are:
+        
+        1) That the bulge `sersic_index` is above the disk `sersic_index`, if both components are Sersic profiles.
+        2) That `core_radius_0` of every Chameleon profile is less than `core_radius_1`.
+        
+        Parameters
+        ----------
+        bulge_prior_model : af.PriorModel
+            The `PriorModel` used to represent the light distribution of a bulge.
+        disk_prior_model : af.PriorModel
+            The `PriorModel` used to represent the light distribution of a disk.
+        envelope_prior_model : af.PriorModel
+            The `PriorModel` used to represent the light distribution of a envelope.
+        assert_bulge_sersic_above_disk : bool
+            If `True`, the `sersic_index` of the bulge is above that of the disk.
+        assert_chameleon_core_radius_0_above_core_radius_1 : bool
+            If `True`, `core_radius_0` of every Chameleon profile is above its `core_radius_1` value.
+
+        Returns
+        -------
+        None
+        """
+
+        if assert_bulge_sersic_above_disk:
+
+            self.set_bulge_disk_assertions(
+                bulge_prior_model=bulge_prior_model, disk_prior_model=disk_prior_model
+            )
+
+        if assert_chameleon_core_radius_0_above_core_radius_1:
+
+            self.set_chameleon_assertions(prior_model=bulge_prior_model)
+            self.set_chameleon_assertions(prior_model=disk_prior_model)
+            self.set_chameleon_assertions(prior_model=envelope_prior_model)
+
+    def set_bulge_disk_assertions(self, bulge_prior_model, disk_prior_model):
         """
         Sets an assertion on the `bulge_prior_model` and `disk_prior_model` such that the `sersic_index` of the
         bulge is higher than that of the `disk`, if both components are modeled using Sersic profiles.
@@ -60,27 +105,14 @@ class AbstractSetup:
         """
 
         if bulge_prior_model is not None and disk_prior_model is not None:
-            if bulge_prior_model.cls in [
-                lp.EllipticalSersic,
-                lp.SphericalSersic,
-                mp.EllipticalSersic,
-                mp.SphericalSersic,
-                lmp.EllipticalSersic,
-                lmp.SphericalSersic,
-            ]:
-                if disk_prior_model.cls in [
-                    lp.EllipticalSersic,
-                    lp.SphericalSersic,
-                    mp.EllipticalSersic,
-                    mp.SphericalSersic,
-                    lmp.EllipticalSersic,
-                    lmp.SphericalSersic,
-                ]:
-                    bulge_prior_model.add_assertion(
-                        bulge_prior_model.sersic_index > disk_prior_model.sersic_index
-                    )
+            if hasattr(bulge_prior_model, "sersic_index") and hasattr(
+                disk_prior_model, "sersic_index"
+            ):
+                bulge_prior_model.add_assertion(
+                    bulge_prior_model.sersic_index > disk_prior_model.sersic_index
+                )
 
-    def _set_chameleon_assertions(self, prior_model):
+    def set_chameleon_assertions(self, prior_model):
         """
         Sets the assertion on all `PriorModels` which are a `Chameleon` profile such that the core radius of the first
         isothermal profile is lower than the second, preventing negative mass.
@@ -95,14 +127,9 @@ class AbstractSetup:
         None
         """
         if prior_model is not None:
-            if prior_model.cls in [
-                lp.EllipticalChameleon,
-                lp.SphericalChameleon,
-                mp.EllipticalChameleon,
-                mp.SphericalChameleon,
-                lmp.EllipticalChameleon,
-                lmp.SphericalChameleon,
-            ]:
+            if hasattr(prior_model, "core_radius_0") and hasattr(
+                prior_model, "core_radius_1"
+            ):
                 prior_model.add_assertion(
                     prior_model.core_radius_0 < prior_model.core_radius_1
                 )
@@ -407,14 +434,11 @@ class SetupLightParametric(AbstractSetupLight):
             if self.envelope_prior_model is not None:
                 self.envelope_prior_model.centre = self.light_centre
 
-        self._set_bulge_disk_assertion(
+        self.set_light_prior_model_assertions(
             bulge_prior_model=self.bulge_prior_model,
             disk_prior_model=self.disk_prior_model,
+            envelope_prior_model=self.envelope_prior_model,
         )
-
-        self._set_chameleon_assertions(prior_model=self.bulge_prior_model)
-        self._set_chameleon_assertions(prior_model=self.disk_prior_model)
-        self._set_chameleon_assertions(prior_model=self.envelope_prior_model)
 
     @property
     def tag(self):
@@ -1089,21 +1113,14 @@ class SetupMassLightDark(AbstractSetupMass):
         self.constant_mass_to_light_ratio = constant_mass_to_light_ratio
         self.align_bulge_dark_centre = align_bulge_dark_centre
 
-        if self.constant_mass_to_light_ratio:
-            for profile in self.light_and_mass_prior_models:
-                profile.mass_to_light_ratio = self.light_and_mass_prior_models[0]
-
         if self.align_bulge_dark_centre:
             self.dark_prior_model.centre = self.bulge_prior_model.centre
 
-        self._set_bulge_disk_assertion(
-            bulge_prior_model=self.bulge_prior_model,
-            disk_prior_model=self.disk_prior_model,
-        )
-
-        self._set_chameleon_assertions(prior_model=self.bulge_prior_model)
-        self._set_chameleon_assertions(prior_model=self.disk_prior_model)
-        self._set_chameleon_assertions(prior_model=self.envelope_prior_model)
+        if self.constant_mass_to_light_ratio:
+            for profile in self.light_and_mass_prior_models[1:]:
+                profile.mass_to_light_ratio = self.light_and_mass_prior_models[
+                    0
+                ].mass_to_light_ratio
 
     @property
     def light_and_mass_prior_models(self):
@@ -1299,15 +1316,15 @@ class SetupMassLightDark(AbstractSetupMass):
         else:
             dark_prior_model.centre = results.last.model.galaxies.lens.bulge.centre
 
-    def bulge_prior_model_with_updated_priors(
+    def light_and_mass_prior_models_with_updated_priors(
         self, results: af.ResultsCollection, as_instance=False
     ):
         """
-        Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
-        pipeline.
+        Returns an updated version of the `bulge_prior_model`, `disk_prior_model`_ and `envelope_prior_model`,  whose
+        priors are initialized from previous results of a `Light` pipeline.
 
-        This function generically links any `MassProfile` to any `MassProfile`, pairing parameters which share the
-        same path.
+        This function generically links any `LightProfile` to any `LightProfile`, pairing parameters which share the
+        same path
 
         Parameters
         ----------
@@ -1317,88 +1334,83 @@ class SetupMassLightDark(AbstractSetupMass):
         Returns
         -------
         af.PriorModel(mp.MassProfile)
-            The total mass profile whose priors are initialized from a previous result.
+            The light profiles whose priors are initialized from a previous result.
         """
 
         if self.bulge_prior_model is None:
-            return None
-
-        bulge = copy.deepcopy(self.bulge_prior_model)
-
-        if as_instance:
-            bulge.take_attributes(source=results.last.instance.galaxies.lens.bulge)
+            bulge = None
         else:
-            bulge.take_attributes(source=results.last.model.galaxies.lens.bulge)
+            bulge = copy.deepcopy(self.bulge_prior_model)
 
-        return bulge
-
-    def disk_prior_model_with_updated_priors(
-        self, results: af.ResultsCollection, as_instance=False
-    ):
-        """
-        Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
-        pipeline.
-
-        This function generically links any `MassProfile` to any `MassProfile`, pairing parameters which share the
-        same path.
-
-        Parameters
-        ----------
-        result : af.Result
-            The result of the previous source pipeline.
-
-        Returns
-        -------
-        af.PriorModel(mp.MassProfile)
-            The total mass profile whose priors are initialized from a previous result.
-        """
+            if as_instance:
+                bulge.take_attributes(source=results.last.instance.galaxies.lens.bulge)
+            else:
+                bulge.take_attributes(source=results.last.model.galaxies.lens.bulge)
 
         if self.disk_prior_model is None:
-            return None
-
-        disk = copy.deepcopy(self.disk_prior_model)
-
-        if as_instance:
-            disk.take_attributes(source=results.last.instance.galaxies.lens.disk)
+            disk = None
         else:
-            disk.take_attributes(source=results.last.model.galaxies.lens.disk)
+            disk = copy.deepcopy(self.disk_prior_model)
 
-        return disk
-
-    def envelope_prior_model_with_updated_priors(
-        self, results: af.ResultsCollection, as_instance=False
-    ):
-        """
-        Returns an updated version of the `mass_prior_model` whose priors are initialized from previous results in a
-        pipeline.
-
-        This function generically links any `MassProfile` to any `MassProfile`, pairing parameters which share the
-        same path.
-
-        Parameters
-        ----------
-        results : af.ResultsCollection
-            The results of the previous source pipeline.
-            
-        Returns
-        -------
-        af.PriorModel(mp.MassProfile)
-            The total mass profile whose priors are initialized from a previous result.
-        """
+            if as_instance:
+                disk.take_attributes(source=results.last.instance.galaxies.lens.disk)
+            else:
+                disk.take_attributes(source=results.last.model.galaxies.lens.disk)
 
         if self.envelope_prior_model is None:
-            return None
-
-        envelope = copy.deepcopy(self.envelope_prior_model.cls)
-
-        if as_instance:
-            envelope.take_attributes(
-                source=results.last.instance.galaxies.lens.envelope
-            )
+            envelope = None
         else:
-            envelope.take_attributes(source=results.last.model.galaxies.lens.envelope)
+            envelope = copy.deepcopy(self.envelope_prior_model)
 
-        return envelope
+            if as_instance:
+                envelope.take_attributes(
+                    source=results.last.instance.galaxies.lens.envelope
+                )
+            else:
+                envelope.take_attributes(
+                    source=results.last.model.galaxies.lens.envelope
+                )
+
+        ### TODO : Assertiosn must be after take attributwes, hence this.
+
+        self.set_light_prior_model_assertions(
+            bulge_prior_model=bulge,
+            disk_prior_model=disk,
+            envelope_prior_model=envelope,
+        )
+
+        return bulge, disk, envelope
+
+    def light_prior_models_update_mass_to_light_parameters(
+        self, result, bulge_prior_model, disk_prior_model, envelope_prior_model
+    ):
+
+        if bulge_prior_model is not None:
+            bulge_prior_model.mass_to_light_ratio = (
+                result.model.galaxies.lens.bulge.mass_to_light_ratio
+            )
+            if hasattr(bulge_prior_model, "mass_to_light_gradient"):
+                bulge_prior_model.mass_to_light_gradient = (
+                    result.model.galaxies.lens.bulge.mass_to_light_gradient
+                )
+
+        if disk_prior_model is not None:
+            disk_prior_model.mass_to_light_ratio = (
+                result.model.galaxies.lens.disk.mass_to_light_ratio
+            )
+            if hasattr(disk_prior_model, "mass_to_light_gradient"):
+                disk_prior_model.mass_to_light_gradient = (
+                    result.model.galaxies.lens.disk.mass_to_light_gradient
+                )
+
+        if envelope_prior_model is not None:
+            envelope_prior_model.mass_to_light_ratio = (
+                result.model.galaxies.lens.envelope.mass_to_light_ratio
+            )
+            if hasattr(envelope_prior_model, "mass_to_light_gradient"):
+                envelope_prior_model.mass_to_light_gradient = (
+                    result.model.galaxies.lens.envelope.mass_to_light_gradient
+                )
 
 
 class SetupSMBH(AbstractSetup):

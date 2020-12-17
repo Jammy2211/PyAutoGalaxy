@@ -121,13 +121,44 @@ class TestSetupLightParametric:
             disk_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
         )
 
+        setup.bulge_prior_model._assertions = []
+        setup.disk_prior_model._assertions = []
+
+        setup.set_light_prior_model_assertions(
+            bulge_prior_model=setup.bulge_prior_model,
+            disk_prior_model=setup.disk_prior_model,
+            assert_bulge_sersic_above_disk=True,
+        )
+
         assert isinstance(
             setup.bulge_prior_model._assertions[0], af.GreaterThanLessThanAssertion
         )
 
         setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            disk_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+        )
+
+        setup.bulge_prior_model._assertions = []
+        setup.disk_prior_model._assertions = []
+
+        setup.set_light_prior_model_assertions(
+            bulge_prior_model=setup.bulge_prior_model,
+            disk_prior_model=setup.disk_prior_model,
+            assert_bulge_sersic_above_disk=False,
+        )
+
+        assert setup.bulge_prior_model._assertions == []
+
+        setup = ag.SetupLightParametric(
             bulge_prior_model=af.PriorModel(ag.mp.EllipticalSersic),
             disk_prior_model=af.PriorModel(ag.mp.EllipticalExponential),
+        )
+
+        setup.set_light_prior_model_assertions(
+            bulge_prior_model=setup.bulge_prior_model,
+            disk_prior_model=setup.disk_prior_model,
+            assert_bulge_sersic_above_disk=True,
         )
 
         assert setup.bulge_prior_model._assertions == []
@@ -138,6 +169,13 @@ class TestSetupLightParametric:
             bulge_prior_model=af.PriorModel(ag.lp.EllipticalChameleon),
             disk_prior_model=af.PriorModel(ag.lp.SphericalChameleon),
             envelope_prior_model=af.PriorModel(ag.lmp.EllipticalChameleon),
+        )
+
+        setup.set_light_prior_model_assertions(
+            bulge_prior_model=setup.bulge_prior_model,
+            disk_prior_model=setup.disk_prior_model,
+            envelope_prior_model=setup.envelope_prior_model,
+            assert_chameleon_core_radius_0_above_core_radius_1=True,
         )
 
         assert isinstance(
@@ -156,6 +194,13 @@ class TestSetupLightParametric:
             envelope_prior_model=af.PriorModel(ag.lmp.SphericalChameleon),
         )
 
+        setup.set_light_prior_model_assertions(
+            bulge_prior_model=setup.bulge_prior_model,
+            disk_prior_model=setup.disk_prior_model,
+            envelope_prior_model=setup.envelope_prior_model,
+            assert_chameleon_core_radius_0_above_core_radius_1=True,
+        )
+
         assert isinstance(
             setup.bulge_prior_model._assertions[0], af.GreaterThanLessThanAssertion
         )
@@ -165,6 +210,28 @@ class TestSetupLightParametric:
         assert isinstance(
             setup.envelope_prior_model._assertions[0], af.GreaterThanLessThanAssertion
         )
+
+        setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.lp.EllipticalChameleon),
+            disk_prior_model=af.PriorModel(ag.lp.SphericalChameleon),
+            envelope_prior_model=af.PriorModel(ag.lmp.EllipticalChameleon),
+        )
+
+        setup.bulge_prior_model._assertions = []
+        setup.disk_prior_model._assertions = []
+        setup.envelope_prior_model._assertions = []
+
+        setup.set_light_prior_model_assertions(
+            bulge_prior_model=setup.bulge_prior_model,
+            disk_prior_model=setup.disk_prior_model,
+            envelope_prior_model=setup.envelope_prior_model,
+            assert_bulge_sersic_above_disk=False,
+            assert_chameleon_core_radius_0_above_core_radius_1=False,
+        )
+
+        assert setup.bulge_prior_model._assertions == []
+        assert setup.disk_prior_model._assertions == []
+        assert setup.envelope_prior_model._assertions == []
 
     def test__input_light_centre__centres_of_prior_models_are_aligned(self):
 
@@ -577,6 +644,12 @@ class TestSetupMassLightDark:
             envelope_prior_model=af.PriorModel(ag.lmp.EllipticalChameleon),
         )
 
+        setup.set_light_prior_model_assertions(
+            bulge_prior_model=setup.bulge_prior_model,
+            disk_prior_model=setup.disk_prior_model,
+            envelope_prior_model=setup.envelope_prior_model,
+        )
+
         assert isinstance(
             setup.bulge_prior_model._assertions[0], af.GreaterThanLessThanAssertion
         )
@@ -591,6 +664,12 @@ class TestSetupMassLightDark:
             bulge_prior_model=af.PriorModel(ag.mp.EllipticalChameleon),
             disk_prior_model=af.PriorModel(ag.mp.SphericalChameleon),
             envelope_prior_model=af.PriorModel(ag.lmp.SphericalChameleon),
+        )
+
+        setup.set_light_prior_model_assertions(
+            bulge_prior_model=setup.bulge_prior_model,
+            disk_prior_model=setup.disk_prior_model,
+            envelope_prior_model=setup.envelope_prior_model,
         )
 
         assert isinstance(
