@@ -1,6 +1,7 @@
 import autogalaxy as ag
 import pytest
 from astropy import cosmology as cosmo
+import numpy as np
 
 planck = cosmo.Planck15
 
@@ -77,3 +78,18 @@ def test__critical_surface_mass_densities():
     )
 
     assert critical_surface_density == pytest.approx(4.85e9, 1e-2)
+
+
+def test__velocity_dispersion_from():
+
+    velocity_dispersion = ag.util.cosmology.velocity_dispersion_from(
+        redshift_0=0.5, redshift_1=1.0, einstein_radius=1.0, cosmology=planck
+    )
+
+    assert velocity_dispersion == pytest.approx(249.03449, 1.0e-4)
+
+    velocity_dispersion = ag.util.cosmology.velocity_dispersion_from(
+        redshift_0=0.5, redshift_1=1.0, einstein_radius=2.0, cosmology=planck
+    )
+
+    assert velocity_dispersion == pytest.approx(np.sqrt(2) * 249.03449, 1.0e-4)

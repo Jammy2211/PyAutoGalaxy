@@ -12,6 +12,7 @@ import os
 import shutil
 from distutils.dir_util import copy_tree
 
+
 class PhaseDataset(abstract.AbstractPhase):
     galaxies = af.PhaseProperty("galaxies")
 
@@ -143,12 +144,17 @@ class PhaseDataset(abstract.AbstractPhase):
             if rename_hyper_combined:
 
                 output_path_hyper = copy.copy(self.search.paths.output_path)
-                output_path_hyper_combined = output_path_hyper.replace("hyper", "hyper_combined")
+                output_path_hyper_combined = output_path_hyper.replace(
+                    "hyper", "hyper_combined"
+                )
 
                 if os.path.exists(output_path_hyper_combined):
                     copy_tree(output_path_hyper_combined, output_path_hyper)
                     if os.path.isfile(f"{output_path_hyper_combined}.zip"):
-                        shutil.copyfile(f"{output_path_hyper_combined}.zip", f"{output_path_hyper}.zip")
+                        shutil.copyfile(
+                            f"{output_path_hyper_combined}.zip",
+                            f"{output_path_hyper}.zip",
+                        )
                     shutil.rmtree(output_path_hyper_combined)
 
                 if os.path.isfile(f"{output_path_hyper_combined}.zip"):
