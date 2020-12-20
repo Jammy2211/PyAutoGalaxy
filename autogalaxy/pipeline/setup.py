@@ -242,6 +242,13 @@ class SetupHyper(AbstractSetup):
         return False
 
     @property
+    def hypers_all_except_image_sky_off(self):
+        if not self.hyper_galaxies:
+            if self.hyper_background_noise is None:
+                return True
+        return False
+
+    @property
     def tag(self):
         """
         Tag the pipeline according to the setup of the hyper features, which customizes the pipeline output paths.
@@ -323,16 +330,23 @@ class SetupHyper(AbstractSetup):
             return ""
         return f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_background_noise']}"
 
-    def hyper_image_sky_from_result(self, result: af.Result):
+    def hyper_image_sky_from_result(self, result: af.Result, as_model=True):
 
         if self.hyper_image_sky is not None:
-
-            return result.hyper.instance.hyper_image_sky
+            if as_model:
+                if hasattr(result, "hyper"):
+                    return result.hyper.model.hyper_image_sky
+                return result.model.hyper_image_sky
+            if hasattr(result, "hyper"):
+                return result.hyper.instance.hyper_image_sky
+            return result.instance.hyper_image_sky
 
     def hyper_background_noise_from_result(self, result: af.Result):
 
-        if self.hyper_image_sky is not None:
-            return result.hyper.instance.hyper_background_noise
+        if self.hyper_background_noise is not None:
+            if hasattr(result, "hyper"):
+                return result.hyper.instance.hyper_background_noise
+            return result.instance.hyper_background_noise
 
 
 class AbstractSetupLight(AbstractSetup):

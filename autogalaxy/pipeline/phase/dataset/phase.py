@@ -163,24 +163,32 @@ class PhaseDataset(abstract.AbstractPhase):
                 if os.path.exists(os.path.join(output_path_hyper_combined, "..")):
                     shutil.rmtree(os.path.join(output_path_hyper_combined, ".."))
 
-    def extend_with_hyper_phase(self, setup_hyper):
+    def extend_with_hyper_phase(self, setup_hyper, include_hyper_image_sky=True):
 
         self.use_as_hyper_dataset = True
 
         if not self.has_pixelization:
             if setup_hyper.hypers_all_off:
                 return self
+            if setup_hyper.hypers_all_except_image_sky_off:
+                if not include_hyper_image_sky:
+                    return self
 
         if self.has_pixelization:
             hyper_search = setup_hyper.hyper_search_with_inversion
         else:
             hyper_search = setup_hyper.hyper_search_no_inversion
 
+        if include_hyper_image_sky:
+            hyper_image_sky = setup_hyper.hyper_image_sky
+        else:
+            hyper_image_sky = None
+
         return extensions.HyperPhase(
             phase=self,
             hyper_search=hyper_search,
             model_classes=(pix.Pixelization, reg.Regularization),
-            hyper_image_sky=setup_hyper.hyper_image_sky,
+            hyper_image_sky=hyper_image_sky,
             hyper_background_noise=setup_hyper.hyper_background_noise,
             hyper_galaxy_names=setup_hyper.hyper_galaxy_names,
         )
