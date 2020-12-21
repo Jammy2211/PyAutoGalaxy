@@ -8,7 +8,6 @@ class LightProfileCentreScatterer(mat_objs.Scatterer):
             size=size,
             marker=marker,
             colors=colors,
-            section="light_profile_centres",
             from_subplot_config=from_subplot_config,
         )
 
@@ -26,7 +25,6 @@ class MassProfileCentreScatterer(mat_objs.Scatterer):
             size=size,
             marker=marker,
             colors=colors,
-            section="mass_profile_centres",
             from_subplot_config=from_subplot_config,
         )
 
@@ -44,7 +42,6 @@ class MultipleImagesScatterer(mat_objs.Scatterer):
             size=size,
             marker=marker,
             colors=colors,
-            section="multiple_images",
             from_subplot_config=from_subplot_config,
         )
 
@@ -70,7 +67,6 @@ class CriticalCurvesLiner(mat_objs.Liner):
             style=style,
             colors=colors,
             pointsize=pointsize,
-            section="critical_curves",
             from_subplot_config=from_subplot_config,
         )
 
@@ -100,7 +96,6 @@ class CausticsLiner(mat_objs.Liner):
             style=style,
             colors=colors,
             pointsize=pointsize,
-            section="caustics",
             from_subplot_config=from_subplot_config,
         )
 
