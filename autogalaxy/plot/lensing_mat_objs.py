@@ -1,7 +1,7 @@
 from autoarray.plot import mat_objs
 
 
-class LightProfileCentreScatterer(mat_objs.Scatterer):
+class LightProfileCentreScatterer(mat_objs.AbstractScatterer):
     def __init__(self, size=None, marker=None, colors=None, from_subplot_config=False):
 
         super(LightProfileCentreScatterer, self).__init__(
@@ -18,7 +18,7 @@ class LightProfileCentreScatterer(mat_objs.Scatterer):
         )
 
 
-class MassProfileCentreScatterer(mat_objs.Scatterer):
+class MassProfileCentreScatterer(mat_objs.AbstractScatterer):
     def __init__(self, size=None, marker=None, colors=None, from_subplot_config=False):
 
         super(MassProfileCentreScatterer, self).__init__(
@@ -35,7 +35,7 @@ class MassProfileCentreScatterer(mat_objs.Scatterer):
         )
 
 
-class MultipleImagesScatterer(mat_objs.Scatterer):
+class MultipleImagesScatterer(mat_objs.AbstractScatterer):
     def __init__(self, size=None, marker=None, colors=None, from_subplot_config=False):
 
         super(MultipleImagesScatterer, self).__init__(

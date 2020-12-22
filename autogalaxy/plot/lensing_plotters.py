@@ -20,8 +20,12 @@ class LensingPlotter(plotters.AbstractPlotter):
         cmap=None,
         cb=None,
         legend=None,
-        ticks=None,
-        labels=None,
+        title=None,
+        tickparams=None,
+        yticks=None,
+        xticks=None,
+        ylabel=None,
+        xlabel=None,
         output=None,
         origin_scatterer=None,
         mask_scatterer=None,
@@ -47,8 +51,12 @@ class LensingPlotter(plotters.AbstractPlotter):
             cmap=cmap,
             cb=cb,
             legend=legend,
-            ticks=ticks,
-            labels=labels,
+            title=title,
+            tickparams=tickparams,
+            yticks=yticks,
+            xticks=xticks,
+            ylabel=ylabel,
+            xlabel=xlabel,
             output=output,
             origin_scatterer=origin_scatterer,
             mask_scatterer=mask_scatterer,
@@ -115,18 +123,18 @@ class LensingPlotter(plotters.AbstractPlotter):
     ):
 
         if light_profile_centres is not None:
-            self.light_profile_centres_scatterer.scatter_coordinates(
-                coordinates=light_profile_centres
+            self.light_profile_centres_scatterer.scatter_grouped_grid(
+                grouped_grid=light_profile_centres
             )
 
         if mass_profile_centres is not None:
-            self.mass_profile_centres_scatterer.scatter_coordinates(
-                coordinates=mass_profile_centres
+            self.mass_profile_centres_scatterer.scatter_grouped_grid(
+                grouped_grid=mass_profile_centres
             )
 
         if multiple_images is not None:
-            self.multiple_images_scatterer.scatter_coordinates(
-                coordinates=multiple_images
+            self.multiple_images_scatterer.scatter_grouped_grid(
+                grouped_grid=multiple_images
             )
 
         if critical_curves is not None:
@@ -201,9 +209,9 @@ class LensingPlotter(plotters.AbstractPlotter):
         norm : str
             The normalization of the colormap used to plotters the image, specifically whether it is linear ('linear'), log \
             ('log') or a symmetric log normalization ('symmetric_log').
-        norm_min : float or None
+        vmin : float or None
             The minimum array value the colormap map spans (all values below this value are plotted the same color).
-        norm_max : float or None
+        vmax : float or None
             The maximum array value the colormap map spans (all values above this value are plotted the same color).
         linthresh : float
             For the 'symmetric_log' colormap normalization ,this specifies the range of values within which the colormap \
@@ -217,9 +225,9 @@ class LensingPlotter(plotters.AbstractPlotter):
             The fraction of the figure that the colorbar takes up, which resizes the colorbar relative to the figure.
         cb_pad : float
             Pads the color bar in the figure, which resizes the colorbar relative to the figure.
-        xsize : int
+        labelsize : int
             The fontsize of the x axes label.
-        ysize : int
+        labelsize : int
             The fontsize of the y axes label.
         xyticksize : int
             The font size of the x and y ticks on the figure axes.
@@ -249,9 +257,9 @@ class LensingPlotter(plotters.AbstractPlotter):
             array=image, origin=(0.0, 0.0), mask=circular_mask,
             border=False, points=[[1.0, 1.0], [2.0, 2.0]], grid=None, as_subplot=False,
             unit_label='scaled', kpc_per_arcsec=None, figsize=(7,7), aspect='auto',
-            cmap='jet', norm='linear, norm_min=None, norm_max=None, linthresh=None, linscale=None,
+            cmap='jet', norm='linear, vmin=None, vmax=None, linthresh=None, linscale=None,
             cb_ticksize=10, cb_fraction=0.047, cb_pad=0.01, cb_tick_values=None, cb_tick_labels=None,
-            title='Image', titlesize=16, xsize=16, ysize=16, xyticksize=16,
+            title='Image', titlesize=16, labelsize=16, labelsize=16, xyticksize=16,
             mask_scatterer=10, border_pointsize=2, position_pointsize=10, grid_pointsize=10,
             xticks_manual=None, yticks_manual=None,
             output_path='/path/to/output', output_format='png', output_filename='image')
@@ -342,9 +350,9 @@ class LensingPlotter(plotters.AbstractPlotter):
             The text of the title.
         titlesize : int
             The size of of the title of the figure.
-        xsize : int
+        labelsize : int
             The fontsize of the x axes label.
-        ysize : int
+        labelsize : int
             The fontsize of the y axes label.
         output_path : str
             The path on the hard-disk where the figure is output.
@@ -567,8 +575,12 @@ class Plotter(LensingPlotter, plotters.Plotter):
         figure=None,
         cmap=None,
         cb=None,
-        ticks=None,
-        labels=None,
+        title=None,
+        tickparams=None,
+        yticks=None,
+        xticks=None,
+        ylabel=None,
+        xlabel=None,
         legend=None,
         output=None,
         origin_scatterer=None,
@@ -594,8 +606,12 @@ class Plotter(LensingPlotter, plotters.Plotter):
             cmap=cmap,
             cb=cb,
             legend=legend,
-            ticks=ticks,
-            labels=labels,
+            title=title,
+            tickparams=tickparams,
+            yticks=yticks,
+            xticks=xticks,
+            ylabel=ylabel,
+            xlabel=xlabel,
             output=output,
             origin_scatterer=origin_scatterer,
             mask_scatterer=mask_scatterer,
@@ -624,8 +640,12 @@ class SubPlotter(LensingPlotter, plotters.SubPlotter):
         cmap=None,
         cb=None,
         legend=None,
-        ticks=None,
-        labels=None,
+        title=None,
+        tickparams=None,
+        yticks=None,
+        xticks=None,
+        ylabel=None,
+        xlabel=None,
         output=None,
         origin_scatterer=None,
         mask_scatterer=None,
@@ -650,8 +670,12 @@ class SubPlotter(LensingPlotter, plotters.SubPlotter):
             cmap=cmap,
             cb=cb,
             legend=legend,
-            ticks=ticks,
-            labels=labels,
+            title=title,
+            tickparams=tickparams,
+            yticks=yticks,
+            xticks=xticks,
+            ylabel=ylabel,
+            xlabel=xlabel,
             output=output,
             origin_scatterer=origin_scatterer,
             mask_scatterer=mask_scatterer,

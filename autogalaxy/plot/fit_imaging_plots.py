@@ -248,8 +248,8 @@ def subtracted_image_of_galaxy(fit, galaxy_index, include=None, plotter=None):
         subtracted_image = fit.image
 
     plotter_norm = plotter.plotter_with_new_cmap(
-        norm_max=np.max(fit.model_images_of_galaxies[galaxy_index]),
-        norm_min=np.min(fit.model_images_of_galaxies[galaxy_index]),
+        vmax=np.max(fit.model_images_of_galaxies[galaxy_index]),
+        vmin=np.min(fit.model_images_of_galaxies[galaxy_index]),
     )
 
     plotter_norm.plot_array(
