@@ -40,7 +40,7 @@ class TestLensingPlotterPlots:
             mask=mask,
             grid=grid,
             positions=ag.GridIrregularGrouped([(-1.0, -1.0)]),
-            array_over=array,
+            array_overlay=array,
             light_profile_centres=ag.GridIrregularGrouped([(1.0, 1.0)]),
             mass_profile_centres=ag.GridIrregularGrouped([(1.0, 1.0)]),
             multiple_images=ag.GridIrregularGrouped([(1.0, 1.0)]),

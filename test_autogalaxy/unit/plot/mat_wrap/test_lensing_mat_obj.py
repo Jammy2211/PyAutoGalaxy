@@ -5,11 +5,11 @@ import autogalaxy.plot as aplt
 class TestLensingMatObj:
     def test__all_load_from_config_correctly(self):
 
-        light_profile_centres_scatter = aplt.LightProfileCentreScatter()
+        light_profile_centres_scatter = aplt.LightProfileCentresScatter()
 
         assert light_profile_centres_scatter.kwargs["size"] == 1
 
-        mass_profile_centres_scatter = aplt.MassProfileCentreScatter()
+        mass_profile_centres_scatter = aplt.MassProfileCentresScatter()
 
         assert mass_profile_centres_scatter.kwargs["size"] == 2
 
@@ -17,10 +17,10 @@ class TestLensingMatObj:
 
         assert multiple_images_scatter.kwargs["size"] == 3
 
-        critical_curves_line = aplt.CriticalCurvesLine()
+        critical_curves_plot = aplt.CriticalCurvesPlot()
 
-        assert critical_curves_line.kwargs["width"] == 4
+        assert critical_curves_plot.kwargs["width"] == 4
 
-        caustics_line = aplt.CausticsLine()
+        caustics_plot = aplt.CausticsPlot()
 
-        assert caustics_line.kwargs["width"] == 5
+        assert caustics_plot.kwargs["width"] == 5

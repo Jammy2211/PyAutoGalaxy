@@ -17,7 +17,7 @@ from autoarray.plot.mat_wrap.mat_structure import (
     ArrayOverlay,
     GridScatter,
     VectorFieldQuiver,
-    Patcher,
+    PatchOverlay,
     LinePlot,
     VoronoiDrawer,
 )
@@ -38,11 +38,11 @@ from autoarray.plot.plots import interferometer_plots as Interferometer
 
 
 from autogalaxy.plot.mat_wrap.lensing_mat_obj import (
-    LightProfileCentreScatter,
-    MassProfileCentreScatter,
+    LightProfileCentresScatter,
+    MassProfileCentresScatter,
     MultipleImagesScatter,
-    CriticalCurvesLine,
-    CausticsLine,
+    CriticalCurvesPlot,
+    CausticsPlot,
 )
 
 from autogalaxy.plot.plotter.lensing_include import Include

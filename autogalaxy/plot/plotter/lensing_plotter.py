@@ -16,7 +16,7 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
         units=None,
         figure=None,
         cmap=None,
-        cb=None,
+        colorbar=None,
         legend=None,
         title=None,
         tickparams=None,
@@ -32,16 +32,16 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
         positions_scatter=None,
         index_scatter=None,
         pixelization_grid_scatter=None,
-        vector_quiver=None,
-        patcher=None,
-        array_over=None,
-        line=None,
+        vector_field_quiver=None,
+        patch_overlay=None,
+        array_overlay=None,
+        line_plot=None,
         voronoi_drawer=None,
         light_profile_centres_scatter=None,
         mass_profile_centres_scatter=None,
         multiple_images_scatter=None,
-        critical_curves_line=None,
-        caustics_line=None,
+        critical_curves_plot=None,
+        caustics_plot=None,
     ):
 
         super(LensingPlotter, self).__init__(
@@ -49,7 +49,7 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
             units=units,
             figure=figure,
             cmap=cmap,
-            cb=cb,
+            colorbar=colorbar,
             legend=legend,
             title=title,
             tickparams=tickparams,
@@ -65,10 +65,10 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
             positions_scatter=positions_scatter,
             index_scatter=index_scatter,
             pixelization_grid_scatter=pixelization_grid_scatter,
-            vector_quiver=vector_quiver,
-            patcher=patcher,
-            array_over=array_over,
-            line=line,
+            vector_field_quiver=vector_field_quiver,
+            patch_overlay=patch_overlay,
+            array_overlay=array_overlay,
+            line_plot=line_plot,
             voronoi_drawer=voronoi_drawer,
         )
 
@@ -80,7 +80,7 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
         self.light_profile_centres_scatter = (
             light_profile_centres_scatter
             if light_profile_centres_scatter is not None
-            else lensing_mat_obj.LightProfileCentreScatter(
+            else lensing_mat_obj.LightProfileCentresScatter(
                 use_subplot_defaults=use_subplot_defaults
             )
         )
@@ -88,7 +88,7 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
         self.mass_profile_centres_scatter = (
             mass_profile_centres_scatter
             if mass_profile_centres_scatter is not None
-            else lensing_mat_obj.MassProfileCentreScatter(
+            else lensing_mat_obj.MassProfileCentresScatter(
                 use_subplot_defaults=use_subplot_defaults
             )
         )
@@ -101,18 +101,18 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
             )
         )
 
-        self.critical_curves_line = (
-            critical_curves_line
-            if critical_curves_line is not None
-            else lensing_mat_obj.CriticalCurvesLine(
+        self.critical_curves_plot = (
+            critical_curves_plot
+            if critical_curves_plot is not None
+            else lensing_mat_obj.CriticalCurvesPlot(
                 use_subplot_defaults=use_subplot_defaults
             )
         )
 
-        self.caustics_line = (
-            caustics_line
-            if caustics_line is not None
-            else lensing_mat_obj.CausticsLine(use_subplot_defaults=use_subplot_defaults)
+        self.caustics_plot = (
+            caustics_plot
+            if caustics_plot is not None
+            else lensing_mat_obj.CausticsPlot(use_subplot_defaults=use_subplot_defaults)
         )
 
     def plot_lensing_attributes(
@@ -140,10 +140,10 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
             )
 
         if critical_curves is not None:
-            self.critical_curves_line.plot_grid_grouped(grid_grouped=critical_curves)
+            self.critical_curves_plot.plot_grid_grouped(grid_grouped=critical_curves)
 
         if caustics is not None:
-            self.caustics_line.plot_grid_grouped(grid_grouped=caustics)
+            self.caustics_plot.plot_grid_grouped(grid_grouped=caustics)
 
     def plot_array(
         self,
@@ -155,7 +155,7 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
         vector_field=None,
         extent_manual=None,
         patches=None,
-        array_over=None,
+        array_overlay=None,
         light_profile_centres=None,
         mass_profile_centres=None,
         multiple_images=None,
@@ -212,7 +212,7 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
             lines=lines,
             vector_field=vector_field,
             patches=patches,
-            array_over=array_over,
+            array_overlay=array_overlay,
             extent_manual=extent_manual,
             include_origin=include_origin,
             include_border=include_border,
@@ -478,7 +478,7 @@ class Plotter(LensingPlotter, aa_plotter.Plotter):
         units=None,
         figure=None,
         cmap=None,
-        cb=None,
+        colorbar=None,
         title=None,
         tickparams=None,
         yticks=None,
@@ -494,23 +494,23 @@ class Plotter(LensingPlotter, aa_plotter.Plotter):
         positions_scatter=None,
         index_scatter=None,
         pixelization_grid_scatter=None,
-        vector_quiver=None,
-        patcher=None,
-        array_overer=None,
-        line=None,
+        vector_field_quiver=None,
+        patch_overlay=None,
+        array_overlayer=None,
+        line_plot=None,
         voronoi_drawer=None,
         light_profile_centres_scatter=None,
         mass_profile_centres_scatter=None,
         multiple_images_scatter=None,
-        critical_curves_line=None,
-        caustics_line=None,
+        critical_curves_plot=None,
+        caustics_plot=None,
     ):
         super(Plotter, self).__init__(
             module=module,
             units=units,
             figure=figure,
             cmap=cmap,
-            cb=cb,
+            colorbar=colorbar,
             legend=legend,
             title=title,
             tickparams=tickparams,
@@ -526,16 +526,16 @@ class Plotter(LensingPlotter, aa_plotter.Plotter):
             positions_scatter=positions_scatter,
             index_scatter=index_scatter,
             pixelization_grid_scatter=pixelization_grid_scatter,
-            vector_quiver=vector_quiver,
-            patcher=patcher,
-            array_over=array_overer,
-            line=line,
+            vector_field_quiver=vector_field_quiver,
+            patch_overlay=patch_overlay,
+            array_overlay=array_overlayer,
+            line_plot=line_plot,
             voronoi_drawer=voronoi_drawer,
             light_profile_centres_scatter=light_profile_centres_scatter,
             mass_profile_centres_scatter=mass_profile_centres_scatter,
             multiple_images_scatter=multiple_images_scatter,
-            critical_curves_line=critical_curves_line,
-            caustics_line=caustics_line,
+            critical_curves_plot=critical_curves_plot,
+            caustics_plot=caustics_plot,
         )
 
 
@@ -546,7 +546,7 @@ class SubPlotter(LensingPlotter, aa_plotter.SubPlotter):
         units=None,
         figure=None,
         cmap=None,
-        cb=None,
+        colorbar=None,
         legend=None,
         title=None,
         tickparams=None,
@@ -562,23 +562,23 @@ class SubPlotter(LensingPlotter, aa_plotter.SubPlotter):
         positions_scatter=None,
         index_scatter=None,
         pixelization_grid_scatter=None,
-        vector_quiver=None,
-        patcher=None,
-        array_over=None,
-        line=None,
+        vector_field_quiver=None,
+        patch_overlay=None,
+        array_overlay=None,
+        line_plot=None,
         voronoi_drawer=None,
         light_profile_centres_scatter=None,
         mass_profile_centres_scatter=None,
         multiple_images_scatter=None,
-        critical_curves_line=None,
-        caustics_line=None,
+        critical_curves_plot=None,
+        caustics_plot=None,
     ):
         super(SubPlotter, self).__init__(
             module=module,
             units=units,
             figure=figure,
             cmap=cmap,
-            cb=cb,
+            colorbar=colorbar,
             legend=legend,
             title=title,
             tickparams=tickparams,
@@ -594,16 +594,16 @@ class SubPlotter(LensingPlotter, aa_plotter.SubPlotter):
             positions_scatter=positions_scatter,
             index_scatter=index_scatter,
             pixelization_grid_scatter=pixelization_grid_scatter,
-            array_over=array_over,
-            vector_quiver=vector_quiver,
-            patcher=patcher,
-            line=line,
+            array_overlay=array_overlay,
+            vector_field_quiver=vector_field_quiver,
+            patch_overlay=patch_overlay,
+            line_plot=line_plot,
             voronoi_drawer=voronoi_drawer,
             light_profile_centres_scatter=light_profile_centres_scatter,
             mass_profile_centres_scatter=mass_profile_centres_scatter,
             multiple_images_scatter=multiple_images_scatter,
-            critical_curves_line=critical_curves_line,
-            caustics_line=caustics_line,
+            critical_curves_plot=critical_curves_plot,
+            caustics_plot=caustics_plot,
         )
 
 
@@ -672,7 +672,7 @@ def plot_array(
     grid=None,
     vector_field=None,
     patches=None,
-    array_over=None,
+    array_overlay=None,
     extent_manual=None,
     light_profile_centres=None,
     mass_profile_centres=None,
@@ -693,7 +693,7 @@ def plot_array(
         mask=mask,
         vector_field=vector_field,
         patches=patches,
-        array_over=array_over,
+        array_overlay=array_overlay,
         extent_manual=extent_manual,
         light_profile_centres=light_profile_centres,
         mass_profile_centres=mass_profile_centres,
