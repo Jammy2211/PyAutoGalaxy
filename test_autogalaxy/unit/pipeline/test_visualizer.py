@@ -10,7 +10,7 @@ from autoconf import conf
 from autogalaxy.pipeline import visualizer as vis
 from autogalaxy.plot import Include
 
-directory = path.dirname(path.realpath(__file__))
+directory = path.dirname(path.abspath(__file__))
 
 
 @pytest.fixture(name="plot_path")
@@ -23,13 +23,17 @@ def make_visualizer_plotter_setup():
     )
 
 
-@pytest.fixture(autouse=True)
-def default_config(plot_path):
-    conf.instance.push(path.join(directory, "config"), output_path=plot_path)
+@pytest.fixture()
+def set_config_path(plot_path):
+
+    conf.instance.push(
+        new_path=path.join(directory, "unit", "pipeline", "config"),
+        output_path=path.join(plot_path),
+    )
 
 
 @pytest.fixture(name="include_all")
-def make_include_all(default_config):
+def make_include_all():
     return Include(
         origin=True,
         mask=True,

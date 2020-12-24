@@ -1,118 +1,148 @@
 {
     "profiles": {
-        "light_profiles": {
-            "EllipticalSersic": {
-                "centre": {
-                    "type": "Uniform",
-                    "lower_limit": 0.0,
-                    "upper_limit": 1.0,
-                    "width_modifier": {
-                        "type": "Absolute",
-                        "value": 0.2
+        "mass_profiles": {
+            "total_mass_profiles": {
+                "PointMass": {
+                    "einstein_radius": {
+                        "type": "Uniform",
+                        "lower_limit": 0.0,
+                        "upper_limit": 1.0,
+                        "width_modifier": {
+                            "type": "Absolute",
+                            "value": 0.2
+                        },
+                        "gaussian_limits": {
+                            "lower": 0.0,
+                            "upper": 1.0
+                        }
                     },
-                    "gaussian_limits": {
-                        "lower": 0.0,
-                        "upper": 1.0
-                    }
-                },
-                "elliptical_comps": {
-                    "type": "Uniform",
-                    "lower_limit": 0.0,
-                    "upper_limit": 1.0,
-                    "width_modifier": {
-                        "type": "Absolute",
-                        "value": 0.2
+                    "centre_0": {
+                        "type": "Uniform",
+                        "lower_limit": 0.0,
+                        "upper_limit": 1.0,
+                        "width_modifier": {
+                            "type": "Absolute",
+                            "value": 0.2
+                        },
+                        "gaussian_limits": {
+                            "lower": 0.0,
+                            "upper": 1.0
+                        }
                     },
-                    "gaussian_limits": {
-                        "lower": 0.0,
-                        "upper": 1.0
-                    }
-                },
-                "intensity": {
-                    "type": "Uniform",
-                    "lower_limit": 0.0,
-                    "upper_limit": 1.0,
-                    "width_modifier": {
-                        "type": "Absolute",
-                        "value": 0.2
-                    },
-                    "gaussian_limits": {
-                        "lower": 0.0,
-                        "upper": 1.0
-                    }
-                },
-                "effective_radius": {
-                    "type": "Uniform",
-                    "lower_limit": 0.0,
-                    "upper_limit": 1.0,
-                    "width_modifier": {
-                        "type": "Absolute",
-                        "value": 0.2
-                    },
-                    "gaussian_limits": {
-                        "lower": 0.0,
-                        "upper": 1.0
-                    }
-                },
-                "sersic_index": {
-                    "type": "Uniform",
-                    "lower_limit": 0.0,
-                    "upper_limit": 1.0,
-                    "width_modifier": {
-                        "type": "Absolute",
-                        "value": 0.2
-                    },
-                    "gaussian_limits": {
-                        "lower": 0.0,
-                        "upper": 1.0
+                    "centre_1": {
+                        "type": "Uniform",
+                        "lower_limit": 0.0,
+                        "upper_limit": 1.0,
+                        "width_modifier": {
+                            "type": "Absolute",
+                            "value": 0.2
+                        },
+                        "gaussian_limits": {
+                            "lower": 0.0,
+                            "upper": 1.0
+                        }
                     }
                 }
             },
-            "EllipticalLightProfile": {
-                "centre": {
-                    "type": "Uniform",
-                    "lower_limit": 0.0,
-                    "upper_limit": 1.0,
-                    "width_modifier": {
-                        "type": "Absolute",
-                        "value": 0.2
+            "dark_mass_profiles": {
+                "SphericalNFWMCRLudlow": {
+                    "redshift_source": {
+                        "type": "Uniform",
+                        "lower_limit": 0.0,
+                        "upper_limit": 1.0,
+                        "width_modifier": {
+                            "type": "Absolute",
+                            "value": 0.2
+                        },
+                        "gaussian_limits": {
+                            "lower": 0.0,
+                            "upper": 1.0
+                        }
                     },
-                    "gaussian_limits": {
-                        "lower": 0.0,
-                        "upper": 1.0
-                    }
-                },
-                "elliptical_comps": {
-                    "type": "Uniform",
-                    "lower_limit": 0.0,
-                    "upper_limit": 1.0,
-                    "width_modifier": {
-                        "type": "Absolute",
-                        "value": 0.2
+                    "redshift_object": {
+                        "type": "Uniform",
+                        "lower_limit": 0.0,
+                        "upper_limit": 1.0,
+                        "width_modifier": {
+                            "type": "Absolute",
+                            "value": 0.2
+                        },
+                        "gaussian_limits": {
+                            "lower": 0.0,
+                            "upper": 1.0
+                        }
                     },
-                    "gaussian_limits": {
-                        "lower": 0.0,
-                        "upper": 1.0
-                    }
-                },
-                "intensity": {
-                    "type": "Uniform",
-                    "lower_limit": 0.0,
-                    "upper_limit": 1.0,
-                    "width_modifier": {
-                        "type": "Absolute",
-                        "value": 0.2
+                    "mass_at_200": {
+                        "type": "Uniform",
+                        "lower_limit": 0.0,
+                        "upper_limit": 1.0,
+                        "width_modifier": {
+                            "type": "Absolute",
+                            "value": 0.2
+                        },
+                        "gaussian_limits": {
+                            "lower": 0.0,
+                            "upper": 1.0
+                        }
                     },
-                    "gaussian_limits": {
-                        "lower": 0.0,
-                        "upper": 1.0
+                    "centre_0": {
+                        "type": "Uniform",
+                        "lower_limit": 0.0,
+                        "upper_limit": 1.0,
+                        "width_modifier": {
+                            "type": "Absolute",
+                            "value": 0.2
+                        },
+                        "gaussian_limits": {
+                            "lower": 0.0,
+                            "upper": 1.0
+                        }
+                    },
+                    "centre_1": {
+                        "type": "Uniform",
+                        "lower_limit": 0.0,
+                        "upper_limit": 1.0,
+                        "width_modifier": {
+                            "type": "Absolute",
+                            "value": 0.2
+                        },
+                        "gaussian_limits": {
+                            "lower": 0.0,
+                            "upper": 1.0
+                        }
                     }
                 }
             }
         },
-        "mass_profiles": {
-            "total_mass_profiles.PointMass": {
-                "einstein_radius": {
+        "light_profiles": {
+            "EllipticalLightProfile": {
+                "intensity": {
+                    "type": "Uniform",
+                    "lower_limit": 0.0,
+                    "upper_limit": 1.0,
+                    "width_modifier": {
+                        "type": "Absolute",
+                        "value": 0.2
+                    },
+                    "gaussian_limits": {
+                        "lower": 0.0,
+                        "upper": 1.0
+                    }
+                },
+                "elliptical_comps_0": {
+                    "type": "Uniform",
+                    "lower_limit": 0.0,
+                    "upper_limit": 1.0,
+                    "width_modifier": {
+                        "type": "Absolute",
+                        "value": 0.2
+                    },
+                    "gaussian_limits": {
+                        "lower": 0.0,
+                        "upper": 1.0
+                    }
+                },
+                "elliptical_comps_1": {
                     "type": "Uniform",
                     "lower_limit": 0.0,
                     "upper_limit": 1.0,

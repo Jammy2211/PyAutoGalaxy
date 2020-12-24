@@ -1,18 +1,19 @@
 from os import path
-from pathlib import Path
-
-import numpy as np
 import pytest
 
 from autoconf import conf
 from autogalaxy.mock import fixtures
 
-directory = Path(__file__).parent.parent
+directory = path.dirname(path.realpath(__file__))
 
 
 @pytest.fixture(autouse=True)
-def set_config_path():
-    conf.instance.push(directory / "config", directory / "output")
+def set_config_path(request):
+
+    conf.instance.push(
+        new_path=path.join(directory, "config"),
+        output_path=path.join(directory, "output"),
+    )
 
 
 ### Datasets ###

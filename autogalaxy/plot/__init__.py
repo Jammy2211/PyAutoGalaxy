@@ -1,4 +1,4 @@
-from autoarray.plot.mat_objs import (
+from autoarray.plot.mat_wrap.mat_base import (
     Units,
     Figure,
     Cmap,
@@ -11,42 +11,55 @@ from autoarray.plot.mat_objs import (
     XLabel,
     Legend,
     Output,
-    OriginScatterer,
-    MaskScatterer,
-    BorderScatterer,
-    GridScatterer,
-    PositionsScatterer,
-    IndexScatterer,
-    PixelizationGridScatterer,
-    Liner,
+)
+
+from autoarray.plot.mat_wrap.mat_structure import (
+    ArrayOverlay,
+    GridScatter,
+    VectorFieldQuiver,
+    Patcher,
+    LinePlot,
     VoronoiDrawer,
 )
 
-from autoarray.plot import imaging_plots as Imaging
-from autoarray.plot import interferometer_plots as Interferometer
-
-from autogalaxy.plot.lensing_mat_objs import (
-    LightProfileCentreScatterer,
-    MassProfileCentreScatterer,
-    MultipleImagesScatterer,
-    CriticalCurvesLiner,
-    CausticsLiner,
+from autoarray.plot.mat_wrap.mat_obj import (
+    OriginScatter,
+    MaskScatter,
+    BorderScatter,
+    PositionsScatter,
+    IndexScatter,
+    PixelizationGridScatter,
 )
 
-from autogalaxy.plot.lensing_plotters import Plotter, SubPlotter, Include
+from autoarray.plot.mat_wrap.include import Include
 
-from autogalaxy.plot.lensing_plotters import plot_array as Array
-from autogalaxy.plot.lensing_plotters import plot_grid as Grid
-from autogalaxy.plot.lensing_plotters import plot_line as Line
-from autogalaxy.plot.lensing_plotters import plot_mapper_obj as MapperObj
+from autoarray.plot.plots import imaging_plots as Imaging
+from autoarray.plot.plots import interferometer_plots as Interferometer
 
-from autogalaxy.plot import light_profile_plots as LightProfile
-from autogalaxy.plot import mass_profile_plots as MassProfile
-from autogalaxy.plot import galaxy_plots as Galaxy
-from autogalaxy.plot import fit_galaxy_plots as FitGalaxy
-from autogalaxy.plot import fit_imaging_plots as FitImaging
-from autogalaxy.plot import fit_interferometer_plots as FitInterferometer
-from autogalaxy.plot import plane_plots as Plane
-from autogalaxy.plot import mapper_plots as Mapper
-from autogalaxy.plot import inversion_plots as Inversion
-from autogalaxy.plot import hyper_plots as hyper
+from autogalaxy.plot.mat_wrap.lensing_mat_obj import (
+    LightProfileCentreScatter,
+    MassProfileCentreScatter,
+    MultipleImagesScatter,
+    CriticalCurvesLine,
+    CausticsLine,
+)
+
+from autogalaxy.plot.mat_wrap.lensing_include import Include
+
+from autogalaxy.plot.mat_wrap.lensing_plotters import Plotter, SubPlotter
+
+from autogalaxy.plot.mat_wrap.lensing_plotters import plot_array as Array
+from autogalaxy.plot.mat_wrap.lensing_plotters import plot_grid as Grid
+from autogalaxy.plot.mat_wrap.lensing_plotters import plot_line as Line
+from autogalaxy.plot.mat_wrap.lensing_plotters import plot_mapper_obj as MapperObj
+
+from autogalaxy.plot.plots import light_profile_plots as LightProfile
+from autogalaxy.plot.plots import mass_profile_plots as MassProfile
+from autogalaxy.plot.plots import galaxy_plots as Galaxy
+from autogalaxy.plot.plots import fit_galaxy_plots as FitGalaxy
+from autogalaxy.plot.plots import fit_imaging_plots as FitImaging
+from autogalaxy.plot.plots import fit_interferometer_plots as FitInterferometer
+from autogalaxy.plot.plots import plane_plots as Plane
+from autogalaxy.plot.plots import mapper_plots as Mapper
+from autogalaxy.plot.plots import inversion_plots as Inversion
+from autogalaxy.plot.plots import hyper_plots as hyper
