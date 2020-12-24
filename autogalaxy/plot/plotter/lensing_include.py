@@ -1,7 +1,7 @@
 import copy
 
 from autoconf import conf
-from autoarray.plot.mat_wrap import include as inc
+from autoarray.plot.plotter import include as inc
 from autogalaxy import lensing
 
 

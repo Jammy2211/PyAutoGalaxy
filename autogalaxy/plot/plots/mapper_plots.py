@@ -1,9 +1,9 @@
-from autoarray.plot.mat_wrap import plotters
-from autogalaxy.plot.mat_wrap import lensing_plotters
+from autoarray.plot.plotter import plotter
+from autogalaxy.plot.plotter import lensing_plotter
 
 
-@lensing_plotters.set_include_and_sub_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_sub_plotter
+@plotter.set_labels
 def subplot_image_and_mapper(
     image,
     mapper,

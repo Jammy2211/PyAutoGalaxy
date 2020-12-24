@@ -1,10 +1,10 @@
-from autoarray.plot.mat_wrap import plotters
-from autogalaxy.plot.mat_wrap import lensing_plotters
+from autoarray.plot.plotter import plotter
+from autogalaxy.plot.plotter import lensing_plotter
 from autogalaxy.plot.plots import plane_plots, inversion_plots
 
 
-@lensing_plotters.set_include_and_sub_plotter
-@plotters.set_subplot_filename
+@lensing_plotter.set_include_and_sub_plotter
+@plotter.set_subplot_filename
 def subplot_fit_interferometer(fit, include=None, sub_plotter=None):
 
     number_subplots = 6
@@ -48,8 +48,8 @@ def subplot_fit_interferometer(fit, include=None, sub_plotter=None):
     sub_plotter.figure.close()
 
 
-@lensing_plotters.set_include_and_sub_plotter
-@plotters.set_subplot_filename
+@lensing_plotter.set_include_and_sub_plotter
+@plotter.set_subplot_filename
 def subplot_fit_real_space(fit, include=None, sub_plotter=None):
 
     number_subplots = 2
@@ -203,12 +203,12 @@ def individuals(
         )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def visibilities(fit, include=None, plotter=None):
     """Plot the visibilities of a lens fit.
 
-    Set *autogalaxy.datas.grid.lensing_plotters.Plotters* for a description of all input parameters not described below.
+    Set *autogalaxy.datas.grid.lensing_plotter.Plotters* for a description of all input parameters not described below.
 
     Parameters
     -----------
@@ -220,12 +220,12 @@ def visibilities(fit, include=None, plotter=None):
     plotter.plot_grid(grid=fit.visibilities.in_grid)
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def noise_map(fit, include=None, plotter=None):
     """Plot the noise-map of a lens fit.
 
-    Set *autogalaxy.datas.grid.lensing_plotters.Plotters* for a description of all input parameters not described below.
+    Set *autogalaxy.datas.grid.lensing_plotter.Plotters* for a description of all input parameters not described below.
 
     Parameters
     -----------
@@ -237,12 +237,12 @@ def noise_map(fit, include=None, plotter=None):
     plotter.plot_grid(grid=fit.visibilities.in_grid, color_array=fit.noise_map.real)
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def signal_to_noise_map(fit, include=None, plotter=None):
     """Plot the noise-map of a lens fit.
 
-    Set *autogalaxy.datas.grid.lensing_plotters.Plotters* for a description of all input parameters not described below.
+    Set *autogalaxy.datas.grid.lensing_plotter.Plotters* for a description of all input parameters not described below.
 
     Parameters
     -----------
@@ -256,12 +256,12 @@ def signal_to_noise_map(fit, include=None, plotter=None):
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def model_visibilities(fit, include=None, plotter=None):
     """Plot the model visibilities of a fit.
 
-    Set *autogalaxy.datas.grid.lensing_plotters.Plotters* for a description of all input parameters not described below.
+    Set *autogalaxy.datas.grid.lensing_plotter.Plotters* for a description of all input parameters not described below.
 
     Parameters
     -----------
@@ -273,8 +273,8 @@ def model_visibilities(fit, include=None, plotter=None):
     plotter.plot_grid(grid=fit.visibilities.in_grid)
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def residual_map_vs_uv_distances(
     fit,
     plot_real=True,
@@ -285,7 +285,7 @@ def residual_map_vs_uv_distances(
 ):
     """Plot the residual-map of a lens fit.
 
-    Set *autogalaxy.datas.grid.lensing_plotters.Plotters* for a description of all input parameters not described below.
+    Set *autogalaxy.datas.grid.lensing_plotter.Plotters* for a description of all input parameters not described below.
 
     Parameters
     -----------
@@ -319,8 +319,8 @@ def residual_map_vs_uv_distances(
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def normalized_residual_map_vs_uv_distances(
     fit,
     plot_real=True,
@@ -331,7 +331,7 @@ def normalized_residual_map_vs_uv_distances(
 ):
     """Plot the residual-map of a lens fit.
 
-    Set *autogalaxy.datas.grid.lensing_plotters.Plotters* for a description of all input parameters not described below.
+    Set *autogalaxy.datas.grid.lensing_plotter.Plotters* for a description of all input parameters not described below.
 
     Parameters
     -----------
@@ -365,8 +365,8 @@ def normalized_residual_map_vs_uv_distances(
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def chi_squared_map_vs_uv_distances(
     fit,
     plot_real=True,
@@ -377,7 +377,7 @@ def chi_squared_map_vs_uv_distances(
 ):
     """Plot the residual-map of a lens fit.
 
-    Set *autogalaxy.datas.grid.lensing_plotters.Plotters* for a description of all input parameters not described below.
+    Set *autogalaxy.datas.grid.lensing_plotter.Plotters* for a description of all input parameters not described below.
 
     Parameters
     -----------

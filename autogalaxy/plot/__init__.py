@@ -31,10 +31,11 @@ from autoarray.plot.mat_wrap.mat_obj import (
     PixelizationGridScatter,
 )
 
-from autoarray.plot.mat_wrap.include import Include
+from autoarray.plot.plotter.include import Include
 
 from autoarray.plot.plots import imaging_plots as Imaging
 from autoarray.plot.plots import interferometer_plots as Interferometer
+
 
 from autogalaxy.plot.mat_wrap.lensing_mat_obj import (
     LightProfileCentreScatter,
@@ -44,14 +45,15 @@ from autogalaxy.plot.mat_wrap.lensing_mat_obj import (
     CausticsLine,
 )
 
-from autogalaxy.plot.mat_wrap.lensing_include import Include
+from autogalaxy.plot.plotter.lensing_include import Include
 
-from autogalaxy.plot.mat_wrap.lensing_plotters import Plotter, SubPlotter
+from autogalaxy.plot.plotter.lensing_plotter import Plotter, SubPlotter
 
-from autogalaxy.plot.mat_wrap.lensing_plotters import plot_array as Array
-from autogalaxy.plot.mat_wrap.lensing_plotters import plot_grid as Grid
-from autogalaxy.plot.mat_wrap.lensing_plotters import plot_line as Line
-from autogalaxy.plot.mat_wrap.lensing_plotters import plot_mapper_obj as MapperObj
+from autogalaxy.plot.plotter.lensing_plotter import plot_array as Array
+from autogalaxy.plot.plotter.lensing_plotter import plot_grid as Grid
+from autogalaxy.plot.plotter.lensing_plotter import plot_line as Line
+from autogalaxy.plot.plotter.lensing_plotter import plot_mapper_obj as MapperObj
+
 
 from autogalaxy.plot.plots import light_profile_plots as LightProfile
 from autogalaxy.plot.plots import mass_profile_plots as MassProfile

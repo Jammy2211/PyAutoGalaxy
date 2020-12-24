@@ -12,7 +12,8 @@ from autogalaxy.plot.plots import (
     inversion_plots,
 )
 from autogalaxy.plot.plots import fit_interferometer_plots
-from autogalaxy.plot.mat_wrap import lensing_plotters, lensing_include
+from autogalaxy.plot.plotter import lensing_plotter
+from autogalaxy.plot.plotter import lensing_include
 
 
 def setting(section, name):
@@ -31,10 +32,10 @@ class AbstractVisualizer:
     @staticmethod
     def plotter_from_paths(paths: af.Paths, subfolders=None, format="png"):
         if subfolders is None:
-            return lensing_plotters.Plotter(
+            return lensing_plotter.Plotter(
                 output=mat_base.Output(path=paths.image_path, format=format)
             )
-        return lensing_plotters.Plotter(
+        return lensing_plotter.Plotter(
             output=mat_base.Output(
                 path=path.join(paths.image_path, subfolders), format=format
             )
@@ -44,10 +45,10 @@ class AbstractVisualizer:
     def sub_plotter_from_paths(paths: af.Paths, subfolders=None):
 
         if subfolders is None:
-            return lensing_plotters.SubPlotter(
+            return lensing_plotter.SubPlotter(
                 output=mat_base.Output(path=paths.image_path, format="png")
             )
-        return lensing_plotters.SubPlotter(
+        return lensing_plotter.SubPlotter(
             output=mat_base.Output(
                 path=path.join(paths.image_path, subfolders), format="png"
             )

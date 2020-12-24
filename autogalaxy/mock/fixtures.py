@@ -2,7 +2,7 @@ import autogalaxy as ag
 from autoarray.mock.fixtures import *
 from autofit.mock.mock_search import MockSamples, MockSearch
 from autogalaxy.pipeline.phase.dataset import PhaseDataset
-from autogalaxy.plot.mat_wrap.lensing_include import Include
+from autogalaxy.plot.plotter.lensing_include import Include
 
 
 def make_masked_imaging_7x7():

@@ -15,7 +15,7 @@ def make_plane_plotter_setup():
     )
 
 
-def test__all_individual_plotters__output_file_with_default_name(
+def test__all_individual_plotter__output_file_with_default_name(
     plane_7x7, sub_grid_7x7, mask_7x7, positions_7x7, include_all, plot_path, plot_patch
 ):
 

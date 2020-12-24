@@ -1,9 +1,9 @@
-from autoarray.plot.mat_wrap import plotters
-from autogalaxy.plot.mat_wrap import lensing_plotters
+from autoarray.plot.plotter import plotter
+from autogalaxy.plot.plotter import lensing_plotter
 
 
-@lensing_plotters.set_include_and_sub_plotter
-@plotters.set_subplot_filename
+@lensing_plotter.set_include_and_sub_plotter
+@plotter.set_subplot_filename
 def subplot_hyper_images_of_galaxies(
     hyper_galaxy_image_path_dict, mask=None, include=None, sub_plotter=None
 ):
@@ -35,8 +35,8 @@ def subplot_hyper_images_of_galaxies(
     sub_plotter.figure.close()
 
 
-@lensing_plotters.set_include_and_sub_plotter
-@plotters.set_subplot_filename
+@lensing_plotter.set_include_and_sub_plotter
+@plotter.set_subplot_filename
 def subplot_contribution_maps_of_galaxies(
     contribution_maps_of_galaxies, mask=None, include=None, sub_plotter=None
 ):
@@ -73,8 +73,8 @@ def subplot_contribution_maps_of_galaxies(
     sub_plotter.figure.close()
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def hyper_model_image(
     hyper_model_image,
     mask=None,
@@ -85,7 +85,7 @@ def hyper_model_image(
 ):
     """Plot the image of a hyper_galaxies galaxy image.
 
-    Set *autogalaxy.datas.arrays.plotters.plotters* for a description of all input parameters not described below.
+    Set *autogalaxy.datas.arrays.plotter.plotter* for a description of all input parameters not described below.
 
     Parameters
     -----------
@@ -103,8 +103,8 @@ def hyper_model_image(
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def hyper_galaxy_image(
     galaxy_image,
     mask=None,
@@ -115,7 +115,7 @@ def hyper_galaxy_image(
 ):
     """Plot the image of a hyper_galaxies galaxy image.
 
-    Set *autogalaxy.datas.arrays.plotters.plotters* for a description of all input parameters not described below.
+    Set *autogalaxy.datas.arrays.plotter.plotter* for a description of all input parameters not described below.
 
     Parameters
     -----------
@@ -130,14 +130,14 @@ def hyper_galaxy_image(
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def contribution_map(
     contribution_map_in, mask=None, positions=None, include=None, plotter=None
 ):
     """Plot the summed contribution maps of a hyper_galaxies-fit.
 
-    Set *autogalaxy.datas.arrays.plotters.plotters* for a description of all input parameters not described below.
+    Set *autogalaxy.datas.arrays.plotter.plotter* for a description of all input parameters not described below.
 
     Parameters
     -----------

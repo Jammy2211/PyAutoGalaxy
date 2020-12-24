@@ -1,9 +1,9 @@
-from autoarray.plot.mat_wrap import plotters
-from autogalaxy.plot.mat_wrap import lensing_plotters
+from autoarray.plot.plotter import plotter
+from autogalaxy.plot.plotter import lensing_plotter
 
 
-@lensing_plotters.set_include_and_sub_plotter
-@plotters.set_subplot_filename
+@lensing_plotter.set_include_and_sub_plotter
+@plotter.set_subplot_filename
 def subplot_inversion(
     inversion,
     image_positions=None,
@@ -230,8 +230,8 @@ def individuals(
         )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def reconstructed_image(
     inversion,
     image_positions=None,
@@ -255,8 +255,8 @@ def reconstructed_image(
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def reconstruction(
     inversion,
     source_positions=None,
@@ -285,8 +285,8 @@ def reconstruction(
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def errors(
     inversion,
     source_positions=None,
@@ -315,8 +315,8 @@ def errors(
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def residual_map(
     inversion,
     source_positions=None,
@@ -345,8 +345,8 @@ def residual_map(
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def normalized_residual_map(
     inversion,
     source_positions=None,
@@ -375,8 +375,8 @@ def normalized_residual_map(
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def chi_squared_map(
     inversion,
     source_positions=None,
@@ -405,8 +405,8 @@ def chi_squared_map(
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def regularization_weights(
     inversion,
     source_positions=None,
@@ -435,8 +435,8 @@ def regularization_weights(
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def interpolated_reconstruction(
     inversion,
     source_positions=None,
@@ -455,8 +455,8 @@ def interpolated_reconstruction(
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def interpolated_errors(
     inversion,
     source_positions=None,

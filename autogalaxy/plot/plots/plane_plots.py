@@ -1,10 +1,10 @@
-from autoarray.plot.mat_wrap import plotters
+from autoarray.plot.plotter import plotter
 from autoarray.structures import arrays
-from autogalaxy.plot.mat_wrap import lensing_plotters
+from autogalaxy.plot.plotter import lensing_plotter
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def image(plane, grid, positions=None, include=None, plotter=None):
 
     plotter.plot_array(
@@ -18,8 +18,8 @@ def image(plane, grid, positions=None, include=None, plotter=None):
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def plane_image(plane, grid, positions=None, caustics=None, include=None, plotter=None):
 
     plotter.plot_array(
@@ -33,8 +33,8 @@ def plane_image(plane, grid, positions=None, caustics=None, include=None, plotte
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def convergence(plane, grid, include=None, plotter=None):
 
     plotter.plot_array(
@@ -47,8 +47,8 @@ def convergence(plane, grid, include=None, plotter=None):
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def potential(plane, grid, include=None, plotter=None):
 
     plotter.plot_array(
@@ -61,8 +61,8 @@ def potential(plane, grid, include=None, plotter=None):
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def deflections_y(plane, grid, include=None, plotter=None):
 
     deflections = plane.deflections_from_grid(grid=grid)
@@ -80,8 +80,8 @@ def deflections_y(plane, grid, include=None, plotter=None):
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def deflections_x(plane, grid, include=None, plotter=None):
 
     deflections = plane.deflections_from_grid(grid=grid)
@@ -99,8 +99,8 @@ def deflections_x(plane, grid, include=None, plotter=None):
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def magnification(plane, grid, include=None, plotter=None):
 
     plotter.plot_array(
@@ -113,8 +113,8 @@ def magnification(plane, grid, include=None, plotter=None):
     )
 
 
-@lensing_plotters.set_include_and_sub_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_sub_plotter
+@plotter.set_labels
 def image_and_source_plane_subplot(
     image_plane,
     source_plane,
@@ -162,8 +162,8 @@ def image_and_source_plane_subplot(
     sub_plotter.figure.close()
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def plane_grid(
     plane,
     grid,
@@ -190,8 +190,8 @@ def plane_grid(
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def contribution_map(plane, mask=None, positions=None, include=None, plotter=None):
 
     plotter.plot_array(

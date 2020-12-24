@@ -1,14 +1,14 @@
-from autoarray.plot.mat_wrap import plotters
+from autoarray.plot.plotter import plotter
 from autoarray.util import plotter_util
-from autogalaxy.plot.mat_wrap import lensing_plotters
+from autogalaxy.plot.plotter import lensing_plotter
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def image(light_profile, grid, positions=None, include=None, plotter=None):
     """Plot the image of a light profile, on a grid of (y,x) coordinates.
 
-    Set *autogalaxy.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
+    Set *autogalaxy.hyper_galaxies.arrays.plotter.plotter* for a description of all innput parameters not described below.
 
     Parameters
     -----------

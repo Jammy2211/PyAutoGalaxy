@@ -1,14 +1,14 @@
-from autoarray.plot.mat_wrap import plotters
+from autoarray.plot.plotter import plotter
 from autoarray.structures import arrays
-from autogalaxy.plot.mat_wrap import lensing_plotters
+from autogalaxy.plot.plotter import lensing_plotter
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def convergence(mass_profile, grid, positions=None, include=None, plotter=None):
     """Plot the convergence of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autogalaxy.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
+    Set *autogalaxy.hyper_galaxies.arrays.plotter.plotter* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -27,12 +27,12 @@ def convergence(mass_profile, grid, positions=None, include=None, plotter=None):
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def potential(mass_profile, grid, positions=None, include=None, plotter=None):
     """Plot the potential of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autogalaxy.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
+    Set *autogalaxy.hyper_galaxies.arrays.plotter.plotter* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -51,12 +51,12 @@ def potential(mass_profile, grid, positions=None, include=None, plotter=None):
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def deflections_y(mass_profile, grid, positions=None, include=None, plotter=None):
     """Plot the y component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autogalaxy.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
+    Set *autogalaxy.hyper_galaxies.arrays.plotter.plotter* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -81,12 +81,12 @@ def deflections_y(mass_profile, grid, positions=None, include=None, plotter=None
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def deflections_x(mass_profile, grid, positions=None, include=None, plotter=None):
     """Plot the x component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autogalaxy.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
+    Set *autogalaxy.hyper_galaxies.arrays.plotter.plotter* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -110,12 +110,12 @@ def deflections_x(mass_profile, grid, positions=None, include=None, plotter=None
     )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def magnification(mass_profile, grid, positions=None, include=None, plotter=None):
     """Plot the magnification of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autogalaxy.hyper_galaxies.arrays.plotters.plotters* for a description of all innput parameters not described below.
+    Set *autogalaxy.hyper_galaxies.arrays.plotter.plotter* for a description of all innput parameters not described below.
 
     Parameters
     -----------

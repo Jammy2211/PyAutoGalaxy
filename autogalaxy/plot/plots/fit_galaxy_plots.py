@@ -1,11 +1,11 @@
 import autoarray as aa
-from autoarray.plot.mat_wrap import plotters
+from autoarray.plot.plotter import plotter
 from autogalaxy import exc
-from autogalaxy.plot.mat_wrap import lensing_plotters
+from autogalaxy.plot.plotter import lensing_plotter
 
 
-@lensing_plotters.set_include_and_sub_plotter
-@plotters.set_subplot_filename
+@lensing_plotter.set_include_and_sub_plotter
+@plotter.set_subplot_filename
 def subplot_fit_galaxy(fit, positions=None, include=None, sub_plotter=None):
 
     number_subplots = 4
@@ -92,8 +92,8 @@ def individuals(
         )
 
 
-@lensing_plotters.set_include_and_plotter
-@plotters.set_labels
+@lensing_plotter.set_include_and_plotter
+@plotter.set_labels
 def galaxy_data_array(galaxy_data, positions=None, include=None, plotter=None):
 
     if galaxy_data.use_image:

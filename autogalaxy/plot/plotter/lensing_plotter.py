@@ -4,12 +4,12 @@ from functools import wraps
 import numpy as np
 
 from autoarray.inversion import mappers
-from autoarray.plot.mat_wrap import include as inc
-from autoarray.plot.mat_wrap import plotters
-from autogalaxy.plot.mat_wrap import lensing_include, lensing_mat_obj
+from autoarray.plot.plotter import plotter as aa_plotter
+from autogalaxy.plot.mat_wrap import lensing_mat_obj
+from autogalaxy.plot.plotter import lensing_include
 
 
-class LensingPlotter(plotters.AbstractPlotter):
+class LensingPlotter(aa_plotter.AbstractPlotter):
     def __init__(
         self,
         module=None,
@@ -183,88 +183,13 @@ class LensingPlotter(plotters.AbstractPlotter):
             The origin of the coordinate system of the array, which is plotted as an 'x' on the image if input.
         mask : data.array.mask.Mask2D
             The mask applied to the array, the edge of which is plotted as a set of points over the plotted array.
-        extract_array_from_mask : bool
-            The plotter array is extracted using the mask, such that masked values are plotted as zeros. This ensures \
-            bright features outside the mask do not impact the color map of the plotters.
-        zoom_around_mask : bool
-            If True, the 2D region of the array corresponding to the rectangle encompassing all unmasked values is \
-            plotted, thereby zooming into the region of interest.
         border : bool
             If a mask is supplied, its borders pixels (e.g. the exterior edge) is plotted if this is `True`.
         positions : [[]]
             Lists of (y,x) coordinates on the image which are plotted as colored dots, to highlight specific pixels.
         grid : data.array.aa.Grid
             A grid of (y,x) coordinates which may be plotted over the plotted array.
-        as_subplot : bool
-            Whether the array is plotted as part of a subplot, in which case the grid figure is not opened / closed.
-        unit_label : str
-            The label for the unit_label of the y / x axis of the plots.
-        unit_conversion_factor : float or None
-            The conversion factor between arc-seconds and kiloparsecs, required to plotters the unit_label in kpc.
-        figsize : (int, int)
-            The size of the figure in (rows, columns).
-        aspect : str
-            The aspect ratio of the array, specifically whether it is forced to be square ('equal') or adapts its size to \
-            the figure size ('auto').
-        cmap : str
-            The colormap the array is plotted using, which may be chosen from the standard matplotlib colormaps.
-        norm : str
-            The normalization of the colormap used to plotters the image, specifically whether it is linear ('linear'), log \
-            ('log') or a symmetric log normalization ('symmetric_log').
-        vmin : float or None
-            The minimum array value the colormap map spans (all values below this value are plotted the same color).
-        vmax : float or None
-            The maximum array value the colormap map spans (all values above this value are plotted the same color).
-        linthresh : float
-            For the 'symmetric_log' colormap normalization ,this specifies the range of values within which the colormap \
-            is linear.
-        linscale : float
-            For the 'symmetric_log' colormap normalization, this allowws the linear range set by linthresh to be stretched \
-            relative to the logarithmic range.
-        cb_ticksize : int
-            The size of the tick labels on the colorbar.
-        cb_fraction : float
-            The fraction of the figure that the colorbar takes up, which resizes the colorbar relative to the figure.
-        cb_pad : float
-            Pads the color bar in the figure, which resizes the colorbar relative to the figure.
-        labelsize : int
-            The fontsize of the x axes label.
-        labelsize : int
-            The fontsize of the y axes label.
-        xyticksize : int
-            The font size of the x and y ticks on the figure axes.
-        mask_scatter : int
-            The size of the points plotted to show the mask.
-        xticks_manual :  [] or None
-            If input, the xticks do not use the array's default xticks but instead overwrite them as these values.
-        yticks_manual :  [] or None
-            If input, the yticks do not use the array's default yticks but instead overwrite them as these values.
-        output_path : str
-            The path on the hard-disk where the figure is output.
-        output_filename : str
-            The filename of the figure that is output.
-        output_format : str
-            The format the figue is output:
-            'show' - display on computer screen.
-            'png' - output to hard-disk as a png.
-            'fits' - output to hard-disk as a fits file.'
 
-        Returns
-        --------
-        None
-
-        Examples
-        --------
-            plotters.plot_array(
-            array=image, origin=(0.0, 0.0), mask=circular_mask,
-            border=False, points=[[1.0, 1.0], [2.0, 2.0]], grid=None, as_subplot=False,
-            unit_label='scaled', kpc_per_arcsec=None, figsize=(7,7), aspect='auto',
-            cmap='jet', norm='linear, vmin=None, vmax=None, linthresh=None, linscale=None,
-            cb_ticksize=10, cb_fraction=0.047, cb_pad=0.01, cb_tick_values=None, cb_tick_labels=None,
-            title='Image', titlesize=16, labelsize=16, labelsize=16, xyticksize=16,
-            mask_scatter=10, border_pointsize=2, position_pointsize=10, grid_pointsize=10,
-            xticks_manual=None, yticks_manual=None,
-            output_path='/path/to/output', output_format='png', output_filename='image')
         """
 
         if array is None or np.all(array == 0):
@@ -325,7 +250,7 @@ class LensingPlotter(plotters.AbstractPlotter):
         symmetric_around_centre=True,
         bypass_output=False,
     ):
-        """Plot a grid of (y,x) Cartesian coordinates as a scatter plotters of points.
+        """Plot a grid of (y,x) Cartesian coordinates as a scatter plotter of points.
 
         Parameters
         -----------
@@ -340,30 +265,7 @@ class LensingPlotter(plotters.AbstractPlotter):
             Whether the grid is plotted as part of a subplot, in which case the grid figure is not opened / closed.
         label_yunits : str
             The label of the unit_label of the y / x axis of the plots.
-        unit_conversion_factor : float
-            The conversion factor between arc-seconds and kiloparsecs, required to plotters the unit_label in kpc.
-        figsize : (int, int)
-            The size of the figure in (rows, columns).
-        pointsize : int
-            The size of the points plotted on the grid.
-        xyticksize : int
-            The font size of the x and y ticks on the figure axes.
-        title : str
-            The text of the title.
-        titlesize : int
-            The size of of the title of the figure.
-        labelsize : int
-            The fontsize of the x axes label.
-        labelsize : int
-            The fontsize of the y axes label.
-        output_path : str
-            The path on the hard-disk where the figure is output.
-        output_filename : str
-            The filename of the figure that is output.
-        output_format : str
-            The format the figue is output:
-            'show' - display on computer screen.
-            'png' - output to hard-disk as a png.
+
         """
 
         super(LensingPlotter, self).plot_grid(
@@ -569,7 +471,7 @@ class LensingPlotter(plotters.AbstractPlotter):
             self.figure.close()
 
 
-class Plotter(LensingPlotter, plotters.Plotter):
+class Plotter(LensingPlotter, aa_plotter.Plotter):
     def __init__(
         self,
         module=None,
@@ -637,7 +539,7 @@ class Plotter(LensingPlotter, plotters.Plotter):
         )
 
 
-class SubPlotter(LensingPlotter, plotters.SubPlotter):
+class SubPlotter(LensingPlotter, aa_plotter.SubPlotter):
     def __init__(
         self,
         module=None,
@@ -709,7 +611,7 @@ def set_include_and_plotter(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        include_key = plotters.include_key_from_dictionary(dictionary=kwargs)
+        include_key = aa_plotter.include_key_from_dictionary(dictionary=kwargs)
 
         if include_key is not None:
             include = kwargs[include_key]
@@ -719,7 +621,7 @@ def set_include_and_plotter(func):
 
         kwargs[include_key] = include
 
-        plotter_key = plotters.plotter_key_from_dictionary(dictionary=kwargs)
+        plotter_key = aa_plotter.plotter_key_from_dictionary(dictionary=kwargs)
 
         if plotter_key is not None:
             plotter = kwargs[plotter_key]
@@ -738,7 +640,7 @@ def set_include_and_sub_plotter(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        include_key = plotters.include_key_from_dictionary(dictionary=kwargs)
+        include_key = aa_plotter.include_key_from_dictionary(dictionary=kwargs)
 
         if include_key is not None:
             include = kwargs[include_key]
@@ -748,7 +650,7 @@ def set_include_and_sub_plotter(func):
 
         kwargs[include_key] = include
 
-        sub_plotter_key = plotters.plotter_key_from_dictionary(dictionary=kwargs)
+        sub_plotter_key = aa_plotter.plotter_key_from_dictionary(dictionary=kwargs)
 
         if sub_plotter_key is not None:
             plotter = kwargs[sub_plotter_key]
