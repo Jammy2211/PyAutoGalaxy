@@ -5,73 +5,133 @@ import numpy as np
 
 from autoarray.inversion import mappers
 from autoarray.plot.plotter import plotter as aa_plotter
-from autogalaxy.plot.mat_wrap import lensing_mat_obj
+from autoarray.plot.mat_wrap import mat_base, mat_structure, mat_obj
+from autogalaxy.plot.mat_wrap import lensing_mat_obj as lmo
 from autogalaxy.plot.plotter import lensing_include
 
 
 class LensingPlotter(aa_plotter.Plotter):
     def __init__(
         self,
-        units=None,
-        figure=None,
-        cmap=None,
-        colorbar=None,
-        legend=None,
-        title=None,
-        tickparams=None,
-        yticks=None,
-        xticks=None,
-        ylabel=None,
-        xlabel=None,
-        output=None,
-        origin_scatter=None,
-        mask_scatter=None,
-        border_scatter=None,
-        grid_scatter=None,
-        positions_scatter=None,
-        index_scatter=None,
-        pixelization_grid_scatter=None,
-        vector_field_quiver=None,
-        patch_overlay=None,
-        array_overlay=None,
-        line_plot=None,
-        voronoi_drawer=None,
-        light_profile_centres_scatter=None,
-        mass_profile_centres_scatter=None,
-        multiple_images_scatter=None,
-        critical_curves_plot=None,
-        caustics_plot=None,
+        units: mat_base.Units = mat_base.Units(),
+        figure: mat_base.Figure = mat_base.Figure(),
+        cmap: mat_base.Cmap = mat_base.Cmap(),
+        colorbar: mat_base.Colorbar = mat_base.Colorbar(),
+        tickparams: mat_base.TickParams = mat_base.TickParams(),
+        yticks: mat_base.YTicks = mat_base.YTicks(),
+        xticks: mat_base.XTicks = mat_base.XTicks(),
+        title: mat_base.Title = mat_base.Title(),
+        ylabel: mat_base.YLabel = mat_base.YLabel(),
+        xlabel: mat_base.XLabel = mat_base.XLabel(),
+        legend: mat_base.Legend = mat_base.Legend(),
+        output: mat_base.Output = mat_base.Output(),
+        array_overlay: mat_structure.ArrayOverlay = mat_structure.ArrayOverlay(),
+        grid_scatter: mat_structure.GridScatter = mat_structure.GridScatter(),
+        line_plot: mat_structure.LinePlot = mat_structure.LinePlot(),
+        vector_field_quiver: mat_structure.VectorFieldQuiver = mat_structure.VectorFieldQuiver(),
+        patch_overlay: mat_structure.PatchOverlay = mat_structure.PatchOverlay(),
+        voronoi_drawer: mat_structure.VoronoiDrawer = mat_structure.VoronoiDrawer(),
+        origin_scatter: mat_obj.OriginScatter = mat_obj.OriginScatter(),
+        mask_scatter: mat_obj.MaskScatter = mat_obj.MaskScatter(),
+        border_scatter: mat_obj.BorderScatter = mat_obj.BorderScatter(),
+        positions_scatter: mat_obj.PositionsScatter = mat_obj.PositionsScatter(),
+        index_scatter: mat_obj.IndexScatter = mat_obj.IndexScatter(),
+        pixelization_grid_scatter: mat_obj.PixelizationGridScatter = mat_obj.PixelizationGridScatter(),
+        light_profile_centres_scatter: lmo.LightProfileCentresScatter = lmo.LightProfileCentresScatter(),
+        mass_profile_centres_scatter: lmo.MassProfileCentresScatter = lmo.MassProfileCentresScatter(),
+        multiple_images_scatter: lmo.MultipleImagesScatter = lmo.MultipleImagesScatter(),
+        critical_curves_plot: lmo.CriticalCurvesPlot = lmo.CriticalCurvesPlot(),
+        caustics_plot: lmo.CausticsPlot = lmo.CausticsPlot(),
     ):
+        """
+        Visualizes data structures (e.g an `Array`, `Grid`, `VectorField`, etc.) using Matplotlib.
+        
+        The `Plotter` is passed objects from the `mat_wrap` package which wrap matplotlib plot functions and 
+        customize the appearance of the plots of the data structure. If the values of these matplotlib wrapper 
+        objects are not manually specified, they assume the default values provided in 
+        the `config.visualize.mat_*` `.ini` config files.
+        
+        The following data structures can be plotted using the following matplotlib functions:
+        
+        - `Array`:, using `plt.imshow`.
+        - `Grid`: using `plt.scatter`.
+        - `Line`: using `plt.plot`, `plt.semilogy`, `plt.loglog` or `plt.scatter`.
+        - `VectorField`: using `plt.quiver`.
+        - `RectangularMapper`: using `plt.imshow`.
+        - `VoronoiMapper`: using `plt.fill`.
+        
+        Parameters
+        ----------
+        units : mat_base.Units
+          The units of the figure used to plot the data structure which sets the y and x ticks and labels.
+        figure : mat_base.Figure
+          Opens the matplotlib figure before plotting via `plt.figure` and closes it once plotting is complete
+          via `plt.close`
+        cmap : mat_base.Cmap
+          Customizes the colormap of the plot and its normalization via matplotlib `colors` objects such 
+          as `colors.Normalize` and `colors.LogNorm`.
+        colorbar : mat_base.Colorbar
+          Plots the colorbar of the plot via `plt.colorbar` and customizes its appearance and ticks using methods
+          like `cb.set_yticklabels` and `cb.ax.tick_params`.
+        tickparams : mat_base.TickParams
+          Customizes the appearances of the y and x ticks on the plot, (e.g. the fontsize), using `plt.tick_params`.
+        yticks : mat_base.YTicks
+          Sets the yticks of the plot, including scaling them to new units depending on the `Units` object, via
+          `plt.yticks`.
+        xticks : mat_base.XTicks
+          Sets the xticks of the plot, including scaling them to new units depending on the `Units` object, via
+          `plt.xticks`.
+        title : mat_base.Title
+          Sets the figure title and customizes its appearance using `plt.title`.        
+        ylabel : mat_base.YLabel
+          Sets the figure ylabel and customizes its appearance using `plt.ylabel`.
+        xlabel : mat_base.XLabel
+          Sets the figure xlabel and customizes its appearance using `plt.xlabel`.
+        legend : mat_base.Legend
+          Sets whether the plot inclues a legend and customizes its appearance and labels using `plt.legend`.
+        output : mat_base.Output
+          Sets if the figure is displayed on the user's screen or output to `.png` using `plt.show` and `plt.savefig`
+        array_overlay: mat_structure.ArrayOverlay
+          Overlays an input `Array` over the figure using `plt.imshow`.
+        grid_scatter : mat_structure.GridScatter
+          Scatters a `Grid` of (y,x) coordinates over the figure using `plt.scatter`.
+        line_plot: mat_structure.LinePlot
+          Plots lines of data (e.g. a y versus x plot via `plt.plot`, vertical lines via `plt.avxline`, etc.)
+        vector_field_quiver: mat_structure.VectorFieldQuiver
+          Plots a `VectorField` object using the matplotlib function `plt.quiver`.
+        patch_overlay: mat_structure.PatchOverlay
+          Overlays matplotlib `patches.Patch` objects over the figure, such as an `Ellipse`.
+        voronoi_drawer: mat_structure.VoronoiDrawer
+          Draws a colored Voronoi mesh of pixels using `plt.fill`.
+        origin_scatter : mat_obj.OriginScatter
+          Scatters the (y,x) origin of the data structure on the figure.
+        mask_scatter : mat_obj.MaskScatter
+          Scatters an input `Mask2d` over the plotted data structure's figure.
+        border_scatter : mat_obj.BorderScatter
+          Scatters the border of an input `Mask2d` over the plotted data structure's figure.
+        positions_scatter : mat_obj.PositionsScatter
+          Scatters specific (y,x) coordinates input as a `GridIrregular` object over the figure.
+        index_scatter : mat_obj.IndexScatter
+          Scatters specific coordinates of an input `Grid` based on input values of the `Grid`'s 1D or 2D indexes.
+        pixelization_grid_scatter : mat_obj.PixelizationGridScatter
+          Scatters the `PixelizationGrid` of a `Pixelization` object.
+        light_profile_centres_scatter : lensing_mat_obj.LightProfileCentresScatter
+          Scatters the (y,x) centres of all `LightProfile`'s in the plotted object (e.g. a `Tracer`).
+        mass_profile_centres_scatter : lensing_mat_obj.MassProfileCentresScatter
+          Scatters the (y,x) centres of all `MassProfile`'s in the plotted object (e.g. a `Tracer`).
+        light_profile_centres_scatter : lensing_mat_obj.MultipleImagesScatter
+          Scatters the (y,x) coordinates of the multiple image locations of the lens mass model.
+        critical_curves_plot : lensing_mat_obj.CriticalCurvesPlot
+            Plots the critical curves of the lens mass model as colored lines.
+        caustics_plot : lensing_mat_obj.CauticsPlot
+            Plots the caustics of the lens mass model as colored lines.
+        """
 
-        self.light_profile_centres_scatter = (
-            light_profile_centres_scatter
-            if light_profile_centres_scatter is not None
-            else lensing_mat_obj.LightProfileCentresScatter()
-        )
-
-        self.mass_profile_centres_scatter = (
-            mass_profile_centres_scatter
-            if mass_profile_centres_scatter is not None
-            else lensing_mat_obj.MassProfileCentresScatter()
-        )
-
-        self.multiple_images_scatter = (
-            multiple_images_scatter
-            if multiple_images_scatter is not None
-            else lensing_mat_obj.MultipleImagesScatter()
-        )
-
-        self.critical_curves_plot = (
-            critical_curves_plot
-            if critical_curves_plot is not None
-            else lensing_mat_obj.CriticalCurvesPlot()
-        )
-
-        self.caustics_plot = (
-            caustics_plot
-            if caustics_plot is not None
-            else lensing_mat_obj.CausticsPlot()
-        )
+        self.light_profile_centres_scatter = light_profile_centres_scatter
+        self.mass_profile_centres_scatter = mass_profile_centres_scatter
+        self.multiple_images_scatter = multiple_images_scatter
+        self.critical_curves_plot = critical_curves_plot
+        self.caustics_plot = caustics_plot
 
         super(LensingPlotter, self).__init__(
             units=units,
