@@ -32,7 +32,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         fit=gal_fit_7x7_image,
         positions=positions_7x7,
         include=include_all,
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
@@ -41,7 +41,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         fit=gal_fit_7x7_convergence,
         positions=positions_7x7,
         include=include_all,
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
@@ -50,7 +50,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         fit=gal_fit_7x7_potential,
         positions=positions_7x7,
         include=include_all,
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
@@ -59,7 +59,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         fit=gal_fit_7x7_deflections_y,
         positions=positions_7x7,
         include=include_all,
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
@@ -68,7 +68,7 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
         fit=gal_fit_7x7_deflections_x,
         positions=positions_7x7,
         include=include_all,
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths

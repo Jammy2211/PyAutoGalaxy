@@ -42,13 +42,13 @@ class AbstractVisualizer:
         )
 
     @staticmethod
-    def sub_plotter_from_paths(paths: af.Paths, subfolders=None):
+    def plotter_from_paths(paths: af.Paths, subfolders=None):
 
         if subfolders is None:
-            return lensing_plotter.SubPlotter(
+            return lensing_plotter.Plotter(
                 output=mat_base.Output(path=paths.image_path, format="png")
             )
-        return lensing_plotter.SubPlotter(
+        return lensing_plotter.Plotter(
             output=mat_base.Output(
                 path=path.join(paths.image_path, subfolders), format="png"
             )
@@ -90,11 +90,11 @@ class PhaseGalaxyVisualizer(AbstractVisualizer):
 
     def plot_galaxy_fit_subplot(self, paths: af.Paths, fit):
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths)
+        plotter = self.plotter_from_paths(paths=paths)
 
         if self.plot_subplot_galaxy_fit:
             fit_galaxy_plots.subplot_fit_galaxy(
-                fit=fit, include=self.include, sub_plotter=sub_plotter
+                fit=fit, include=self.include, plotter=plotter
             )
 
     def plot_fit_individuals(self, paths: af.Paths, fit):
@@ -213,7 +213,7 @@ class PhaseDatasetVisualizer(AbstractVisualizer):
                 plotter=plotter,
             )
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths, subfolders="hyper")
+        plotter = self.plotter_from_paths(paths=paths, subfolders="hyper")
 
         if self.plot_hyper_images_of_galaxies:
 
@@ -223,7 +223,7 @@ class PhaseDatasetVisualizer(AbstractVisualizer):
                     masked_dataset=self.masked_dataset
                 ),
                 include=self.include,
-                sub_plotter=sub_plotter,
+                plotter=plotter,
             )
 
         if self.plot_contribution_maps_of_galaxies:
@@ -233,7 +233,7 @@ class PhaseDatasetVisualizer(AbstractVisualizer):
                     masked_dataset=self.masked_dataset
                 ),
                 include=self.include,
-                sub_plotter=sub_plotter,
+                plotter=plotter,
             )
 
 
@@ -267,7 +267,7 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
             plotter=plotter,
         )
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths, subfolders="imaging")
+        plotter = self.plotter_from_paths(paths=paths, subfolders="imaging")
 
         if self.plot_subplot_dataset:
             aa.plot.Imaging.subplot_imaging(
@@ -276,7 +276,7 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
                     masked_dataset=self.masked_dataset
                 ),
                 include=self.include,
-                sub_plotter=sub_plotter,
+                plotter=plotter,
             )
 
     def visualize_fit(
@@ -300,25 +300,23 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
             plotter=plotter,
         )
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths, subfolders=subfolders)
+        plotter = self.plotter_from_paths(paths=paths, subfolders=subfolders)
 
         if self.plot_subplot_fit:
             fit_imaging_plots.subplot_fit_imaging(
-                fit=fit, include=self.include, sub_plotter=sub_plotter
+                fit=fit, include=self.include, plotter=plotter
             )
 
         if self.plot_subplots_of_all_planes_fits:
             fit_imaging_plots.subplots_of_all_galaxies(
-                fit=fit, include=self.include, sub_plotter=sub_plotter
+                fit=fit, include=self.include, plotter=plotter
             )
 
         if fit.inversion is not None:
 
             if self.plot_subplot_inversion:
 
-                sub_plotter = self.sub_plotter_from_paths(
-                    paths=paths, subfolders="inversion"
-                )
+                plotter = self.plotter_from_paths(paths=paths, subfolders="inversion")
 
                 inversion_plots.subplot_inversion(
                     inversion=fit.inversion,
@@ -336,7 +334,7 @@ class PhaseImagingVisualizer(PhaseDatasetVisualizer):
                     ),
                     caustics=self.include.caustics_from_obj(obj=fit.plane),
                     include=self.include,
-                    sub_plotter=sub_plotter,
+                    plotter=plotter,
                 )
 
             plotter = self.plotter_from_paths(paths=paths, subfolders="inversion")
@@ -476,15 +474,13 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
 
     def visualize_interferometer(self, paths: af.Paths):
 
-        sub_plotter = self.sub_plotter_from_paths(
-            paths=paths, subfolders="interferometer"
-        )
+        plotter = self.plotter_from_paths(paths=paths, subfolders="interferometer")
 
         if self.plot_subplot_dataset:
             aa.plot.Interferometer.subplot_interferometer(
                 interferometer=self.masked_dataset.interferometer,
                 include=self.include,
-                sub_plotter=sub_plotter,
+                plotter=plotter,
             )
 
         plotter = self.plotter_from_paths(paths=paths, subfolders="interferometer")
@@ -502,15 +498,15 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
         self, paths: af.Paths, fit, during_analysis, subfolders="fit_interferometer"
     ):
 
-        sub_plotter = self.sub_plotter_from_paths(paths=paths, subfolders=subfolders)
+        plotter = self.plotter_from_paths(paths=paths, subfolders=subfolders)
 
         if self.plot_subplot_fit:
             fit_interferometer_plots.subplot_fit_interferometer(
-                fit=fit, include=self.include, sub_plotter=sub_plotter
+                fit=fit, include=self.include, plotter=plotter
             )
 
             fit_interferometer_plots.subplot_fit_real_space(
-                fit=fit, include=self.include, sub_plotter=sub_plotter
+                fit=fit, include=self.include, plotter=plotter
             )
 
         plotter = self.plotter_from_paths(paths=paths, subfolders=subfolders)
@@ -544,7 +540,7 @@ class PhaseInterferometerVisualizer(PhaseDatasetVisualizer):
             #         critical_curves=self.include.critical_curves_from_obj(obj=fit.plane),
             #         caustics=self.include.caustics_from_obj(obj=fit.plane),
             #         include=self.include,
-            #         sub_plotter=self.sub_plotter,
+            #         plotter=self.plotter,
             #     )
 
             inversion_plots.individuals(

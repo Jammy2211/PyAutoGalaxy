@@ -7,20 +7,20 @@ class TestLensingMatObj:
 
         light_profile_centres_scatter = aplt.LightProfileCentresScatter()
 
-        assert light_profile_centres_scatter.kwargs["size"] == 1
+        assert light_profile_centres_scatter.config_dict["size"] == 1
 
         mass_profile_centres_scatter = aplt.MassProfileCentresScatter()
 
-        assert mass_profile_centres_scatter.kwargs["size"] == 2
+        assert mass_profile_centres_scatter.config_dict["size"] == 2
 
         multiple_images_scatter = aplt.MultipleImagesScatter()
 
-        assert multiple_images_scatter.kwargs["size"] == 3
+        assert multiple_images_scatter.config_dict["size"] == 3
 
         critical_curves_plot = aplt.CriticalCurvesPlot()
 
-        assert critical_curves_plot.kwargs["width"] == 4
+        assert critical_curves_plot.config_dict["width"] == 4
 
         caustics_plot = aplt.CausticsPlot()
 
-        assert caustics_plot.kwargs["width"] == 5
+        assert caustics_plot.config_dict["width"] == 5

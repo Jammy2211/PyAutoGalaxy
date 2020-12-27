@@ -1,10 +1,11 @@
 from autoarray.plot.plotter import plotter
 from autoarray.structures import arrays
-from autogalaxy.plot.plotter import lensing_plotter
+from autogalaxy.plot.plotter import lensing_plotter, lensing_include
 from autogalaxy.plot.plots import light_profile_plots, mass_profile_plots
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def image(galaxy, grid, positions=None, include=None, plotter=None):
     """Plot the image (e.g. the datas) of a galaxy, on a grid of (y,x) coordinates.
@@ -29,7 +30,8 @@ def image(galaxy, grid, positions=None, include=None, plotter=None):
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def convergence(galaxy, grid, positions=None, include=None, plotter=None):
     """Plot the convergence of a galaxy, on a grid of (y,x) coordinates.
@@ -54,7 +56,8 @@ def convergence(galaxy, grid, positions=None, include=None, plotter=None):
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def potential(galaxy, grid, positions=None, include=None, plotter=None):
     """Plot the potential of a galaxy, on a grid of (y,x) coordinates.
@@ -79,7 +82,8 @@ def potential(galaxy, grid, positions=None, include=None, plotter=None):
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def deflections_y(galaxy, grid, positions=None, include=None, plotter=None):
     """Plot the y component of the deflection angles of a galaxy, on a grid of (y,x) coordinates.
@@ -109,7 +113,8 @@ def deflections_y(galaxy, grid, positions=None, include=None, plotter=None):
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def deflections_x(galaxy, grid, positions=None, include=None, plotter=None):
     """Plot the x component of the deflection angles of a galaxy, on a grid of (y,x) coordinates.
@@ -138,7 +143,8 @@ def deflections_x(galaxy, grid, positions=None, include=None, plotter=None):
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def magnification(galaxy, grid, positions=None, include=None, plotter=None):
     """Plot the magnification of a galaxy, on a grid of (y,x) coordinates.
@@ -164,127 +170,133 @@ def magnification(galaxy, grid, positions=None, include=None, plotter=None):
     )
 
 
-@lensing_plotter.set_include_and_sub_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
-def image_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
+def image_subplot(galaxy, grid, positions=None, include=None, plotter=None):
 
     number_subplots = len(galaxy.light_profiles)
 
-    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter.open_subplot_figure(number_subplots=number_subplots)
 
     for i, light_profile in enumerate(galaxy.light_profiles):
 
-        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
+        plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
         light_profile_plots.image(
             light_profile=light_profile,
             grid=grid,
             positions=positions,
             include=include,
-            plotter=sub_plotter,
+            plotter=plotter,
         )
 
-    sub_plotter.output.subplot_to_figure()
-    sub_plotter.figure.close()
+    plotter.output.subplot_to_figure()
+    plotter.figure.close()
 
 
-@lensing_plotter.set_include_and_sub_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
-def convergence_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
+def convergence_subplot(galaxy, grid, positions=None, include=None, plotter=None):
 
     number_subplots = len(galaxy.mass_profiles)
 
-    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter.open_subplot_figure(number_subplots=number_subplots)
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
-        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
+        plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
         mass_profile_plots.convergence(
             mass_profile=mass_profile,
             grid=grid,
             positions=positions,
             include=include,
-            plotter=sub_plotter,
+            plotter=plotter,
         )
 
-    sub_plotter.output.subplot_to_figure()
-    sub_plotter.figure.close()
+    plotter.output.subplot_to_figure()
+    plotter.figure.close()
 
 
-@lensing_plotter.set_include_and_sub_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
-def potential_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
+def potential_subplot(galaxy, grid, positions=None, include=None, plotter=None):
 
     number_subplots = len(galaxy.mass_profiles)
 
-    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter.open_subplot_figure(number_subplots=number_subplots)
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
-        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
+        plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
         mass_profile_plots.potential(
             mass_profile=mass_profile,
             grid=grid,
             positions=positions,
             include=include,
-            plotter=sub_plotter,
+            plotter=plotter,
         )
 
-    sub_plotter.output.subplot_to_figure()
-    sub_plotter.figure.close()
+    plotter.output.subplot_to_figure()
+    plotter.figure.close()
 
 
-@lensing_plotter.set_include_and_sub_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
-def deflections_y_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
+def deflections_y_subplot(galaxy, grid, positions=None, include=None, plotter=None):
 
     number_subplots = len(galaxy.mass_profiles)
 
-    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter.open_subplot_figure(number_subplots=number_subplots)
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
-        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
+        plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
         mass_profile_plots.deflections_y(
             mass_profile=mass_profile,
             grid=grid,
             positions=positions,
             include=include,
-            plotter=sub_plotter,
+            plotter=plotter,
         )
 
-    sub_plotter.output.subplot_to_figure()
-    sub_plotter.figure.close()
+    plotter.output.subplot_to_figure()
+    plotter.figure.close()
 
 
-@lensing_plotter.set_include_and_sub_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
-def deflections_x_subplot(galaxy, grid, positions=None, include=None, sub_plotter=None):
+def deflections_x_subplot(galaxy, grid, positions=None, include=None, plotter=None):
 
     number_subplots = len(galaxy.mass_profiles)
 
-    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter.open_subplot_figure(number_subplots=number_subplots)
 
     for i, mass_profile in enumerate(galaxy.mass_profiles):
 
-        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
+        plotter.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
 
         mass_profile_plots.deflections_x(
             mass_profile=mass_profile,
             grid=grid,
             positions=positions,
             include=include,
-            plotter=sub_plotter,
+            plotter=plotter,
         )
 
-    sub_plotter.output.subplot_to_figure()
-    sub_plotter.figure.close()
+    plotter.output.subplot_to_figure()
+    plotter.figure.close()
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def contribution_map(galaxy, mask=None, positions=None, include=None, plotter=None):
     """Plot the summed contribution maps of a hyper_galaxies-fit.

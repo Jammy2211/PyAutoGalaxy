@@ -1,11 +1,12 @@
 from autoarray.plot.plotter import plotter
-from autogalaxy.plot.plotter import lensing_plotter
+from autogalaxy.plot.plotter import lensing_plotter, lensing_include
 
 
-@lensing_plotter.set_include_and_sub_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_subplot
 @plotter.set_subplot_filename
 def subplot_hyper_images_of_galaxies(
-    hyper_galaxy_image_path_dict, mask=None, include=None, sub_plotter=None
+    hyper_galaxy_image_path_dict, mask=None, include=None, plotter=None
 ):
 
     if hyper_galaxy_image_path_dict is None:
@@ -16,7 +17,7 @@ def subplot_hyper_images_of_galaxies(
     for i in hyper_galaxy_image_path_dict.items():
         number_subplots += 1
 
-    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter.open_subplot_figure(number_subplots=number_subplots)
 
     hyper_index = 0
 
@@ -24,21 +25,22 @@ def subplot_hyper_images_of_galaxies(
 
         hyper_index += 1
 
-        sub_plotter.setup_subplot(
+        plotter.setup_subplot(
             number_subplots=number_subplots, subplot_index=hyper_index
         )
 
-        hyper_galaxy_image(galaxy_image=galaxy_image, mask=mask, plotter=sub_plotter)
+        hyper_galaxy_image(galaxy_image=galaxy_image, mask=mask, plotter=plotter)
 
-    sub_plotter.output.subplot_to_figure()
+    plotter.output.subplot_to_figure()
 
-    sub_plotter.figure.close()
+    plotter.figure.close()
 
 
-@lensing_plotter.set_include_and_sub_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_subplot
 @plotter.set_subplot_filename
 def subplot_contribution_maps_of_galaxies(
-    contribution_maps_of_galaxies, mask=None, include=None, sub_plotter=None
+    contribution_maps_of_galaxies, mask=None, include=None, plotter=None
 ):
 
     contribution_maps = [
@@ -52,7 +54,7 @@ def subplot_contribution_maps_of_galaxies(
     if number_subplots == 0:
         return
 
-    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter.open_subplot_figure(number_subplots=number_subplots)
 
     hyper_index = 0
 
@@ -60,20 +62,21 @@ def subplot_contribution_maps_of_galaxies(
 
         hyper_index += 1
 
-        sub_plotter.setup_subplot(
+        plotter.setup_subplot(
             number_subplots=number_subplots, subplot_index=hyper_index
         )
 
         contribution_map(
-            contribution_map_in=contribution_map_array, mask=mask, plotter=sub_plotter
+            contribution_map_in=contribution_map_array, mask=mask, plotter=plotter
         )
 
-    sub_plotter.output.subplot_to_figure()
+    plotter.output.subplot_to_figure()
 
-    sub_plotter.figure.close()
+    plotter.figure.close()
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def hyper_model_image(
     hyper_model_image,
@@ -103,7 +106,8 @@ def hyper_model_image(
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def hyper_galaxy_image(
     galaxy_image,
@@ -130,7 +134,8 @@ def hyper_galaxy_image(
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def contribution_map(
     contribution_map_in, mask=None, positions=None, include=None, plotter=None

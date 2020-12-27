@@ -1,40 +1,41 @@
 import autoarray as aa
 from autoarray.plot.plotter import plotter
 from autogalaxy import exc
-from autogalaxy.plot.plotter import lensing_plotter
+from autogalaxy.plot.plotter import lensing_plotter, lensing_include
 
 
-@lensing_plotter.set_include_and_sub_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_subplot
 @plotter.set_subplot_filename
-def subplot_fit_galaxy(fit, positions=None, include=None, sub_plotter=None):
+def subplot_fit_galaxy(fit, positions=None, include=None, plotter=None):
 
     number_subplots = 4
 
-    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter.open_subplot_figure(number_subplots=number_subplots)
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
+    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
 
     galaxy_data_array(
-        galaxy_data=fit.masked_galaxy_dataset, positions=positions, plotter=sub_plotter
+        galaxy_data=fit.masked_galaxy_dataset, positions=positions, plotter=plotter
     )
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
+    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
 
     aa.plot.FitImaging.model_image(
-        fit=fit, include=include, positions=positions, plotter=sub_plotter
+        fit=fit, include=include, positions=positions, plotter=plotter
     )
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=3)
+    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=3)
 
-    aa.plot.FitImaging.residual_map(fit=fit, include=include, plotter=sub_plotter)
+    aa.plot.FitImaging.residual_map(fit=fit, include=include, plotter=plotter)
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=4)
+    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=4)
 
-    aa.plot.FitImaging.chi_squared_map(fit=fit, include=include, plotter=sub_plotter)
+    aa.plot.FitImaging.chi_squared_map(fit=fit, include=include, plotter=plotter)
 
-    sub_plotter.output.subplot_to_figure()
+    plotter.output.subplot_to_figure()
 
-    sub_plotter.figure.close()
+    plotter.figure.close()
 
 
 def individuals(
@@ -92,7 +93,8 @@ def individuals(
         )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def galaxy_data_array(galaxy_data, positions=None, include=None, plotter=None):
 

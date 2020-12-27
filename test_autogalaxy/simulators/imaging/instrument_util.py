@@ -173,9 +173,9 @@ def simulate_imaging_from_instrument(data_name, instrument, galaxies):
     )
 
     plotter = aplt.Plotter(output=aplt.Output(path=dataset_path, format="png"))
-    sub_plotter = aplt.SubPlotter(output=aplt.Output(path=dataset_path, format="png"))
+    plotter = aplt.Plotter(output=aplt.Output(path=dataset_path, format="png"))
 
-    aplt.Imaging.subplot_imaging(imaging=imaging, sub_plotter=sub_plotter)
+    aplt.Imaging.subplot_imaging(imaging=imaging, plotter=plotter)
 
     aplt.Imaging.individual(
         imaging=imaging,

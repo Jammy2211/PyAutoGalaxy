@@ -1,9 +1,10 @@
 from autoarray.plot.plotter import plotter
 from autoarray.util import plotter_util
-from autogalaxy.plot.plotter import lensing_plotter
+from autogalaxy.plot.plotter import lensing_plotter, lensing_include
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def image(light_profile, grid, positions=None, include=None, plotter=None):
     """Plot the image of a light profile, on a grid of (y,x) coordinates.

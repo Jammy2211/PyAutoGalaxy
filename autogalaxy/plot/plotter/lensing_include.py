@@ -4,6 +4,27 @@ from autoconf import conf
 from autoarray.plot.plotter import include as inc
 from autogalaxy import lensing
 
+from functools import wraps
+
+
+def set_include(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+
+        include_key = inc.include_key_from_dictionary(dictionary=kwargs)
+
+        if include_key is not None:
+            include = kwargs[include_key]
+        else:
+            include = Include()
+            include_key = "include"
+
+        kwargs[include_key] = include
+
+        return func(*args, **kwargs)
+
+    return wrapper
+
 
 class Include(inc.Include):
     def __init__(

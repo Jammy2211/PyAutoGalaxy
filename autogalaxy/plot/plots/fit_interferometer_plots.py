@@ -1,62 +1,62 @@
 from autoarray.plot.plotter import plotter
-from autogalaxy.plot.plotter import lensing_plotter
+from autogalaxy.plot.plotter import lensing_plotter, lensing_include
 from autogalaxy.plot.plots import plane_plots, inversion_plots
 
 
-@lensing_plotter.set_include_and_sub_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_subplot
 @plotter.set_subplot_filename
-def subplot_fit_interferometer(fit, include=None, sub_plotter=None):
+def subplot_fit_interferometer(fit, include=None, plotter=None):
 
     number_subplots = 6
 
-    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter.open_subplot_figure(number_subplots=number_subplots)
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
+    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
 
-    residual_map_vs_uv_distances(fit=fit, include=include, plotter=sub_plotter)
+    residual_map_vs_uv_distances(fit=fit, include=include, plotter=plotter)
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
+    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
 
-    normalized_residual_map_vs_uv_distances(
-        fit=fit, include=include, plotter=sub_plotter
-    )
+    normalized_residual_map_vs_uv_distances(fit=fit, include=include, plotter=plotter)
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=3)
+    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=3)
 
-    chi_squared_map_vs_uv_distances(fit=fit, include=include, plotter=sub_plotter)
+    chi_squared_map_vs_uv_distances(fit=fit, include=include, plotter=plotter)
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=4)
+    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=4)
 
     residual_map_vs_uv_distances(
-        fit=fit, plot_real=False, include=include, plotter=sub_plotter
+        fit=fit, plot_real=False, include=include, plotter=plotter
     )
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=5)
+    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=5)
 
     normalized_residual_map_vs_uv_distances(
-        fit=fit, plot_real=False, include=include, plotter=sub_plotter
+        fit=fit, plot_real=False, include=include, plotter=plotter
     )
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=6)
+    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=6)
 
     chi_squared_map_vs_uv_distances(
-        fit=fit, plot_real=False, include=include, plotter=sub_plotter
+        fit=fit, plot_real=False, include=include, plotter=plotter
     )
 
-    sub_plotter.output.subplot_to_figure()
+    plotter.output.subplot_to_figure()
 
-    sub_plotter.figure.close()
+    plotter.figure.close()
 
 
-@lensing_plotter.set_include_and_sub_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_subplot
 @plotter.set_subplot_filename
-def subplot_fit_real_space(fit, include=None, sub_plotter=None):
+def subplot_fit_real_space(fit, include=None, plotter=None):
 
     number_subplots = 2
 
-    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter.open_subplot_figure(number_subplots=number_subplots)
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
+    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
 
     if fit.inversion is None:
 
@@ -65,10 +65,10 @@ def subplot_fit_real_space(fit, include=None, sub_plotter=None):
             grid=fit.masked_interferometer.grid,
             positions=include.positions_from_fit(fit=fit),
             include=include,
-            plotter=sub_plotter,
+            plotter=plotter,
         )
 
-        sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
+        plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
 
         plane_plots.plane_image(
             plane=fit.plane,
@@ -77,7 +77,7 @@ def subplot_fit_real_space(fit, include=None, sub_plotter=None):
                 fit=fit, plane_index=-1
             ),
             caustics=include.caustics_from_obj(obj=fit.plane),
-            plotter=sub_plotter,
+            plotter=plotter,
         )
 
     elif fit.inversion is not None:
@@ -89,7 +89,7 @@ def subplot_fit_real_space(fit, include=None, sub_plotter=None):
             critical_curves=include.critical_curves_from_obj(obj=fit.plane),
             image_positions=include.positions_from_fit(fit=fit),
             grid=include.inversion_image_pixelization_grid_from_fit(fit=fit),
-            plotter=sub_plotter,
+            plotter=plotter,
         )
 
         ratio = float(
@@ -103,14 +103,9 @@ def subplot_fit_real_space(fit, include=None, sub_plotter=None):
             )
         )
 
-        if sub_plotter.figure.kwargs["aspect"] in "square":
-            aspect_inv = ratio
-        elif sub_plotter.figure.kwargs["aspect"] in "auto":
-            aspect_inv = 1.0 / ratio
-        elif sub_plotter.figure.kwargs["aspect"] in "equal":
-            aspect_inv = 1.0
+        aspect_inv = plotter.figure.aspect_for_subplot_from_ratio(ratio=ratio)
 
-        sub_plotter.setup_subplot(
+        plotter.setup_subplot(
             number_subplots=number_subplots, subplot_index=2, aspect=float(aspect_inv)
         )
 
@@ -121,12 +116,12 @@ def subplot_fit_real_space(fit, include=None, sub_plotter=None):
             ),
             caustics=include.caustics_from_obj(obj=fit.plane),
             include=include,
-            plotter=sub_plotter,
+            plotter=plotter,
         )
 
-    sub_plotter.output.subplot_to_figure()
+    plotter.output.subplot_to_figure()
 
-    sub_plotter.figure.close()
+    plotter.figure.close()
 
 
 def individuals(
@@ -203,7 +198,8 @@ def individuals(
         )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def visibilities(fit, include=None, plotter=None):
     """Plot the visibilities of a lens fit.
@@ -220,7 +216,8 @@ def visibilities(fit, include=None, plotter=None):
     plotter.plot_grid(grid=fit.visibilities.in_grid)
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def noise_map(fit, include=None, plotter=None):
     """Plot the noise-map of a lens fit.
@@ -237,7 +234,8 @@ def noise_map(fit, include=None, plotter=None):
     plotter.plot_grid(grid=fit.visibilities.in_grid, color_array=fit.noise_map.real)
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def signal_to_noise_map(fit, include=None, plotter=None):
     """Plot the noise-map of a lens fit.
@@ -256,7 +254,8 @@ def signal_to_noise_map(fit, include=None, plotter=None):
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def model_visibilities(fit, include=None, plotter=None):
     """Plot the model visibilities of a fit.
@@ -273,7 +272,8 @@ def model_visibilities(fit, include=None, plotter=None):
     plotter.plot_grid(grid=fit.visibilities.in_grid)
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def residual_map_vs_uv_distances(
     fit,
@@ -319,7 +319,8 @@ def residual_map_vs_uv_distances(
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def normalized_residual_map_vs_uv_distances(
     fit,
@@ -365,7 +366,8 @@ def normalized_residual_map_vs_uv_distances(
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def chi_squared_map_vs_uv_distances(
     fit,

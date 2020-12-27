@@ -9,10 +9,9 @@ from autogalaxy.plot.mat_wrap import lensing_mat_obj
 from autogalaxy.plot.plotter import lensing_include
 
 
-class LensingPlotter(aa_plotter.AbstractPlotter):
+class LensingPlotter(aa_plotter.Plotter):
     def __init__(
         self,
-        module=None,
         units=None,
         figure=None,
         cmap=None,
@@ -44,8 +43,37 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
         caustics_plot=None,
     ):
 
+        self.light_profile_centres_scatter = (
+            light_profile_centres_scatter
+            if light_profile_centres_scatter is not None
+            else lensing_mat_obj.LightProfileCentresScatter()
+        )
+
+        self.mass_profile_centres_scatter = (
+            mass_profile_centres_scatter
+            if mass_profile_centres_scatter is not None
+            else lensing_mat_obj.MassProfileCentresScatter()
+        )
+
+        self.multiple_images_scatter = (
+            multiple_images_scatter
+            if multiple_images_scatter is not None
+            else lensing_mat_obj.MultipleImagesScatter()
+        )
+
+        self.critical_curves_plot = (
+            critical_curves_plot
+            if critical_curves_plot is not None
+            else lensing_mat_obj.CriticalCurvesPlot()
+        )
+
+        self.caustics_plot = (
+            caustics_plot
+            if caustics_plot is not None
+            else lensing_mat_obj.CausticsPlot()
+        )
+
         super(LensingPlotter, self).__init__(
-            module=module,
             units=units,
             figure=figure,
             cmap=cmap,
@@ -70,49 +98,6 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
             array_overlay=array_overlay,
             line_plot=line_plot,
             voronoi_drawer=voronoi_drawer,
-        )
-
-        if isinstance(self, Plotter):
-            use_subplot_defaults = False
-        else:
-            use_subplot_defaults = True
-
-        self.light_profile_centres_scatter = (
-            light_profile_centres_scatter
-            if light_profile_centres_scatter is not None
-            else lensing_mat_obj.LightProfileCentresScatter(
-                use_subplot_defaults=use_subplot_defaults
-            )
-        )
-
-        self.mass_profile_centres_scatter = (
-            mass_profile_centres_scatter
-            if mass_profile_centres_scatter is not None
-            else lensing_mat_obj.MassProfileCentresScatter(
-                use_subplot_defaults=use_subplot_defaults
-            )
-        )
-
-        self.multiple_images_scatter = (
-            multiple_images_scatter
-            if multiple_images_scatter is not None
-            else lensing_mat_obj.MultipleImagesScatter(
-                use_subplot_defaults=use_subplot_defaults
-            )
-        )
-
-        self.critical_curves_plot = (
-            critical_curves_plot
-            if critical_curves_plot is not None
-            else lensing_mat_obj.CriticalCurvesPlot(
-                use_subplot_defaults=use_subplot_defaults
-            )
-        )
-
-        self.caustics_plot = (
-            caustics_plot
-            if caustics_plot is not None
-            else lensing_mat_obj.CausticsPlot(use_subplot_defaults=use_subplot_defaults)
         )
 
     def plot_lensing_attributes(
@@ -169,14 +154,6 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
 
         Parameters
         -----------
-        settings : PlotterSettings
-            Settings
-        include : PlotterInclude
-            Include
-        labels : PlotterLabels
-            labels
-        outputs : PlotterOutputs
-            outputs
         array : data.array.aa.Scaled
             The 2D array of data which is plotted.
         origin : (float, float).
@@ -230,7 +207,7 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
         if not bypass_output:
             self.output.to_figure(structure=array)
 
-        if not isinstance(self, SubPlotter) and not bypass_output:
+        if not self.for_subplot and not bypass_output:
             self.figure.close()
 
     def plot_grid(
@@ -291,7 +268,7 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
         if not bypass_output:
             self.output.to_figure(structure=grid)
 
-        if not isinstance(self, SubPlotter) and not bypass_output:
+        if not self.for_subplot and not bypass_output:
             self.figure.close()
 
     def plot_line(
@@ -318,7 +295,7 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
         if not bypass_output:
             self.output.to_figure(structure=None)
 
-        if not isinstance(self, SubPlotter) and not bypass_output:
+        if not self.for_subplot and not bypass_output:
             self.figure.close()
 
     def plot_mapper(
@@ -421,7 +398,7 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
         if not bypass_output:
             self.output.to_figure(structure=None)
 
-        if not isinstance(self, SubPlotter) and not bypass_output:
+        if not self.for_subplot and not bypass_output:
             self.figure.close()
 
     def plot_voronoi_mapper(
@@ -467,167 +444,23 @@ class LensingPlotter(aa_plotter.AbstractPlotter):
         if not bypass_output:
             self.output.to_figure(structure=None)
 
-        if not isinstance(self, SubPlotter) and not bypass_output:
+        if not self.for_subplot and not bypass_output:
             self.figure.close()
 
 
-class Plotter(LensingPlotter, aa_plotter.Plotter):
-    def __init__(
-        self,
-        module=None,
-        units=None,
-        figure=None,
-        cmap=None,
-        colorbar=None,
-        title=None,
-        tickparams=None,
-        yticks=None,
-        xticks=None,
-        ylabel=None,
-        xlabel=None,
-        legend=None,
-        output=None,
-        origin_scatter=None,
-        mask_scatter=None,
-        border_scatter=None,
-        grid_scatter=None,
-        positions_scatter=None,
-        index_scatter=None,
-        pixelization_grid_scatter=None,
-        vector_field_quiver=None,
-        patch_overlay=None,
-        array_overlayer=None,
-        line_plot=None,
-        voronoi_drawer=None,
-        light_profile_centres_scatter=None,
-        mass_profile_centres_scatter=None,
-        multiple_images_scatter=None,
-        critical_curves_plot=None,
-        caustics_plot=None,
-    ):
-        super(Plotter, self).__init__(
-            module=module,
-            units=units,
-            figure=figure,
-            cmap=cmap,
-            colorbar=colorbar,
-            legend=legend,
-            title=title,
-            tickparams=tickparams,
-            yticks=yticks,
-            xticks=xticks,
-            ylabel=ylabel,
-            xlabel=xlabel,
-            output=output,
-            origin_scatter=origin_scatter,
-            mask_scatter=mask_scatter,
-            border_scatter=border_scatter,
-            grid_scatter=grid_scatter,
-            positions_scatter=positions_scatter,
-            index_scatter=index_scatter,
-            pixelization_grid_scatter=pixelization_grid_scatter,
-            vector_field_quiver=vector_field_quiver,
-            patch_overlay=patch_overlay,
-            array_overlay=array_overlayer,
-            line_plot=line_plot,
-            voronoi_drawer=voronoi_drawer,
-            light_profile_centres_scatter=light_profile_centres_scatter,
-            mass_profile_centres_scatter=mass_profile_centres_scatter,
-            multiple_images_scatter=multiple_images_scatter,
-            critical_curves_plot=critical_curves_plot,
-            caustics_plot=caustics_plot,
-        )
-
-
-class SubPlotter(LensingPlotter, aa_plotter.SubPlotter):
-    def __init__(
-        self,
-        module=None,
-        units=None,
-        figure=None,
-        cmap=None,
-        colorbar=None,
-        legend=None,
-        title=None,
-        tickparams=None,
-        yticks=None,
-        xticks=None,
-        ylabel=None,
-        xlabel=None,
-        output=None,
-        origin_scatter=None,
-        mask_scatter=None,
-        border_scatter=None,
-        grid_scatter=None,
-        positions_scatter=None,
-        index_scatter=None,
-        pixelization_grid_scatter=None,
-        vector_field_quiver=None,
-        patch_overlay=None,
-        array_overlay=None,
-        line_plot=None,
-        voronoi_drawer=None,
-        light_profile_centres_scatter=None,
-        mass_profile_centres_scatter=None,
-        multiple_images_scatter=None,
-        critical_curves_plot=None,
-        caustics_plot=None,
-    ):
-        super(SubPlotter, self).__init__(
-            module=module,
-            units=units,
-            figure=figure,
-            cmap=cmap,
-            colorbar=colorbar,
-            legend=legend,
-            title=title,
-            tickparams=tickparams,
-            yticks=yticks,
-            xticks=xticks,
-            ylabel=ylabel,
-            xlabel=xlabel,
-            output=output,
-            origin_scatter=origin_scatter,
-            mask_scatter=mask_scatter,
-            border_scatter=border_scatter,
-            grid_scatter=grid_scatter,
-            positions_scatter=positions_scatter,
-            index_scatter=index_scatter,
-            pixelization_grid_scatter=pixelization_grid_scatter,
-            array_overlay=array_overlay,
-            vector_field_quiver=vector_field_quiver,
-            patch_overlay=patch_overlay,
-            line_plot=line_plot,
-            voronoi_drawer=voronoi_drawer,
-            light_profile_centres_scatter=light_profile_centres_scatter,
-            mass_profile_centres_scatter=mass_profile_centres_scatter,
-            multiple_images_scatter=multiple_images_scatter,
-            critical_curves_plot=critical_curves_plot,
-            caustics_plot=caustics_plot,
-        )
-
-
-def set_include_and_plotter(func):
+def set_plotter_for_figure(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-
-        include_key = aa_plotter.include_key_from_dictionary(dictionary=kwargs)
-
-        if include_key is not None:
-            include = kwargs[include_key]
-        else:
-            include = lensing_include.Include()
-            include_key = "include"
-
-        kwargs[include_key] = include
 
         plotter_key = aa_plotter.plotter_key_from_dictionary(dictionary=kwargs)
 
         if plotter_key is not None:
             plotter = kwargs[plotter_key]
         else:
-            plotter = Plotter(module=inspect.getmodule(func))
+            plotter = LensingPlotter()
             plotter_key = "plotter"
+
+        plotter.for_subplot = False
 
         kwargs[plotter_key] = plotter
 
@@ -636,29 +469,21 @@ def set_include_and_plotter(func):
     return wrapper
 
 
-def set_include_and_sub_plotter(func):
+def set_plotter_for_subplot(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        include_key = aa_plotter.include_key_from_dictionary(dictionary=kwargs)
+        plotter_key = aa_plotter.plotter_key_from_dictionary(dictionary=kwargs)
 
-        if include_key is not None:
-            include = kwargs[include_key]
+        if plotter_key is not None:
+            plotter = kwargs[plotter_key]
         else:
-            include = lensing_include.Include()
-            include_key = "include"
+            plotter = LensingPlotter()
+            plotter_key = "plotter"
 
-        kwargs[include_key] = include
+        plotter.for_subplot = True
 
-        sub_plotter_key = aa_plotter.plotter_key_from_dictionary(dictionary=kwargs)
-
-        if sub_plotter_key is not None:
-            plotter = kwargs[sub_plotter_key]
-        else:
-            plotter = SubPlotter(module=inspect.getmodule(func))
-            sub_plotter_key = "sub_plotter"
-
-        kwargs[sub_plotter_key] = plotter
+        kwargs[plotter_key] = plotter
 
         return func(*args, **kwargs)
 
@@ -686,7 +511,7 @@ def plot_array(
         include = lensing_include.Include()
 
     if plotter is None:
-        plotter = Plotter()
+        plotter = LensingPlotter()
 
     plotter.plot_array(
         array=array,
@@ -726,7 +551,7 @@ def plot_grid(
         include = lensing_include.Include()
 
     if plotter is None:
-        plotter = Plotter()
+        plotter = LensingPlotter()
 
     plotter.plot_grid(
         grid=grid,
@@ -755,7 +580,7 @@ def plot_line(
     plotter=None,
 ):
     if plotter is None:
-        plotter = Plotter()
+        plotter = LensingPlotter()
 
     plotter.plot_line(
         y=y,
@@ -783,7 +608,7 @@ def plot_mapper_obj(
         include = lensing_include.Include()
 
     if plotter is None:
-        plotter = Plotter()
+        plotter = LensingPlotter()
 
     plotter.plot_mapper(
         mapper=mapper,

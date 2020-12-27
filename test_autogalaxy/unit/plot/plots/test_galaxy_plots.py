@@ -111,7 +111,7 @@ def test__individual_galaxy_quantities__all_are_output(
         grid=sub_grid_7x7,
         positions=positions_7x7,
         include=include_all,
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "image_subplot.png") in plot_patch.paths
@@ -121,7 +121,7 @@ def test__individual_galaxy_quantities__all_are_output(
         grid=sub_grid_7x7,
         positions=positions_7x7,
         include=include_all,
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "convergence_subplot.png") in plot_patch.paths
@@ -131,7 +131,7 @@ def test__individual_galaxy_quantities__all_are_output(
         grid=sub_grid_7x7,
         positions=positions_7x7,
         include=include_all,
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "potential_subplot.png") in plot_patch.paths
@@ -141,7 +141,7 @@ def test__individual_galaxy_quantities__all_are_output(
         grid=sub_grid_7x7,
         positions=positions_7x7,
         include=include_all,
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "deflections_y_subplot.png") in plot_patch.paths
@@ -151,7 +151,7 @@ def test__individual_galaxy_quantities__all_are_output(
         grid=sub_grid_7x7,
         positions=positions_7x7,
         include=include_all,
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "deflections_x_subplot.png") in plot_patch.paths

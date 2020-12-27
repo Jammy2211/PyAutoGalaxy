@@ -32,7 +32,7 @@ def test__image_and_mapper_subplot_is_output_for_all_mappers(
         ),
         image_pixel_indexes=[[0, 1, 2], [3]],
         source_pixel_indexes=[[1, 2], [0]],
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
     )
     assert path.join(plot_path, "subplot_image_and_mapper.png") in plot_patch.paths
 
@@ -46,6 +46,6 @@ def test__image_and_mapper_subplot_is_output_for_all_mappers(
         ),
         image_pixel_indexes=[[0, 1, 2], [3]],
         source_pixel_indexes=[[1, 2], [0]],
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
     )
     assert path.join(plot_path, "subplot_image_and_mapper.png") in plot_patch.paths

@@ -22,7 +22,7 @@ def test__plot_hyper_images_of_galaxies(
         hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict_7x7,
         mask=mask_7x7,
         include=include_all,
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
     assert (
@@ -42,7 +42,7 @@ def test__plot_contribution_maps_of_galaxies(
         ],
         mask=mask_7x7,
         include=include_all,
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
     assert (

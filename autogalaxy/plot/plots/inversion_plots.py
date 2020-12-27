@@ -1,8 +1,9 @@
 from autoarray.plot.plotter import plotter
-from autogalaxy.plot.plotter import lensing_plotter
+from autogalaxy.plot.plotter import lensing_plotter, lensing_include
 
 
-@lensing_plotter.set_include_and_sub_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_subplot
 @plotter.set_subplot_filename
 def subplot_inversion(
     inversion,
@@ -16,7 +17,7 @@ def subplot_inversion(
     image_pixel_indexes=None,
     source_pixel_indexes=None,
     include=None,
-    sub_plotter=None,
+    plotter=None,
 ):
 
     number_subplots = 6
@@ -32,16 +33,11 @@ def subplot_inversion(
         )
     )
 
-    if sub_plotter.figure.kwargs["aspect"] in "square":
-        aspect_inv = ratio
-    elif sub_plotter.figure.kwargs["aspect"] in "auto":
-        aspect_inv = 1.0 / ratio
-    elif sub_plotter.figure.kwargs["aspect"] in "equal":
-        aspect_inv = 1.0
+    aspect_inv = plotter.figure.aspect_for_subplot_from_ratio(ratio=ratio)
 
-    sub_plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter.open_subplot_figure(number_subplots=number_subplots)
 
-    sub_plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
+    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
 
     reconstructed_image(
         inversion=inversion,
@@ -51,10 +47,10 @@ def subplot_inversion(
         mass_profile_centres=mass_profile_centres,
         critical_curves=critical_curves,
         include=include,
-        plotter=sub_plotter,
+        plotter=plotter,
     )
 
-    sub_plotter.setup_subplot(
+    plotter.setup_subplot(
         number_subplots=number_subplots, subplot_index=2, aspect=aspect_inv
     )
 
@@ -65,10 +61,10 @@ def subplot_inversion(
         image_pixel_indexes=image_pixel_indexes,
         source_pixel_indexes=source_pixel_indexes,
         include=include,
-        plotter=sub_plotter,
+        plotter=plotter,
     )
 
-    sub_plotter.setup_subplot(
+    plotter.setup_subplot(
         number_subplots=number_subplots, subplot_index=3, aspect=aspect_inv
     )
 
@@ -78,10 +74,10 @@ def subplot_inversion(
         source_pixel_indexes=source_pixel_indexes,
         caustics=caustics,
         include=include,
-        plotter=sub_plotter,
+        plotter=plotter,
     )
 
-    sub_plotter.setup_subplot(
+    plotter.setup_subplot(
         number_subplots=number_subplots, subplot_index=4, aspect=aspect_inv
     )
 
@@ -91,10 +87,10 @@ def subplot_inversion(
         source_pixel_indexes=source_pixel_indexes,
         caustics=caustics,
         include=include,
-        plotter=sub_plotter,
+        plotter=plotter,
     )
 
-    sub_plotter.setup_subplot(
+    plotter.setup_subplot(
         number_subplots=number_subplots, subplot_index=5, aspect=aspect_inv
     )
 
@@ -104,10 +100,10 @@ def subplot_inversion(
         source_pixel_indexes=source_pixel_indexes,
         caustics=caustics,
         include=include,
-        plotter=sub_plotter,
+        plotter=plotter,
     )
 
-    sub_plotter.setup_subplot(
+    plotter.setup_subplot(
         number_subplots=number_subplots, subplot_index=6, aspect=aspect_inv
     )
 
@@ -118,12 +114,12 @@ def subplot_inversion(
         source_pixel_indexes=source_pixel_indexes,
         caustics=caustics,
         include=include,
-        plotter=sub_plotter,
+        plotter=plotter,
     )
 
-    sub_plotter.output.subplot_to_figure()
+    plotter.output.subplot_to_figure()
 
-    sub_plotter.figure.close()
+    plotter.figure.close()
 
 
 def individuals(
@@ -230,7 +226,8 @@ def individuals(
         )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def reconstructed_image(
     inversion,
@@ -255,7 +252,8 @@ def reconstructed_image(
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def reconstruction(
     inversion,
@@ -285,7 +283,8 @@ def reconstruction(
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def errors(
     inversion,
@@ -315,7 +314,8 @@ def errors(
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def residual_map(
     inversion,
@@ -345,7 +345,8 @@ def residual_map(
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def normalized_residual_map(
     inversion,
@@ -375,7 +376,8 @@ def normalized_residual_map(
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def chi_squared_map(
     inversion,
@@ -405,7 +407,8 @@ def chi_squared_map(
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def regularization_weights(
     inversion,
@@ -435,7 +438,8 @@ def regularization_weights(
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def interpolated_reconstruction(
     inversion,
@@ -455,7 +459,8 @@ def interpolated_reconstruction(
     )
 
 
-@lensing_plotter.set_include_and_plotter
+@lensing_include.set_include
+@lensing_plotter.set_plotter_for_figure
 @plotter.set_labels
 def interpolated_errors(
     inversion,

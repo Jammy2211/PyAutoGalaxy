@@ -229,7 +229,7 @@ def test__inversion_subplot_is_output_for_all_inversions(
         inversion=rectangular_inversion_7x7_3x3,
         image_pixel_indexes=[[0, 1, 2], [3]],
         source_pixel_indexes=[[1, 2], [0]],
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
     )
     assert path.join(plot_path, "subplot_inversion.png") in plot_patch.paths
 
@@ -237,7 +237,7 @@ def test__inversion_subplot_is_output_for_all_inversions(
         inversion=voronoi_inversion_9_3x3,
         image_pixel_indexes=[[0, 1, 2], [3]],
         source_pixel_indexes=[[1, 2], [0]],
-        sub_plotter=aplt.SubPlotter(output=aplt.Output(path=plot_path, format="png")),
+        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
     )
     assert path.join(plot_path, "subplot_inversion.png") in plot_patch.paths
 

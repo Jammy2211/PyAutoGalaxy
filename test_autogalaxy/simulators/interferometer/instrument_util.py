@@ -119,10 +119,10 @@ def simulate_interferometer_from_instrument(data_name, instrument, galaxies):
     )
 
     plotter = aplt.Plotter(output=aplt.Output(path=dataset_path, format="png"))
-    sub_plotter = aplt.SubPlotter(output=aplt.Output(path=dataset_path, format="png"))
+    plotter = aplt.Plotter(output=aplt.Output(path=dataset_path, format="png"))
 
     aplt.Interferometer.subplot_interferometer(
-        interferometer=interferometer, sub_plotter=sub_plotter
+        interferometer=interferometer, plotter=plotter
     )
 
     aplt.Interferometer.individual(
