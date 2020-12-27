@@ -32,25 +32,12 @@ class AbstractVisualizer:
     @staticmethod
     def plotter_from_paths(paths: af.Paths, subfolders=None, format="png"):
         if subfolders is None:
-            return lensing_plotter.Plotter(
+            return lensing_plotter.LensingPlotter(
                 output=mat_base.Output(path=paths.image_path, format=format)
             )
-        return lensing_plotter.Plotter(
+        return lensing_plotter.LensingPlotter(
             output=mat_base.Output(
                 path=path.join(paths.image_path, subfolders), format=format
-            )
-        )
-
-    @staticmethod
-    def plotter_from_paths(paths: af.Paths, subfolders=None):
-
-        if subfolders is None:
-            return lensing_plotter.Plotter(
-                output=mat_base.Output(path=paths.image_path, format="png")
-            )
-        return lensing_plotter.Plotter(
-            output=mat_base.Output(
-                path=path.join(paths.image_path, subfolders), format="png"
             )
         )
 

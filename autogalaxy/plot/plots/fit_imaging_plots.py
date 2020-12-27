@@ -113,12 +113,7 @@ def subplot_of_galaxy(fit, galaxy_index, include=None, plotter=None):
             )
         )
 
-        if plotter.figure.kwargs["aspect"] in "square":
-            aspect_inv = ratio
-        elif plotter.figure.kwargs["aspect"] in "auto":
-            aspect_inv = 1.0 / ratio
-        elif plotter.figure.kwargs["aspect"] in "equal":
-            aspect_inv = 1.0
+        aspect_inv = plotter.figure.aspect_for_subplot_from_ratio(ratio=ratio)
 
         plotter.setup_subplot(
             number_subplots=number_subplots, subplot_index=4, aspect=float(aspect_inv)
