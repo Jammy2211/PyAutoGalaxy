@@ -27,7 +27,7 @@ def set_config_path(plot_path):
     )
 
 
-@pytest.fixture(name="include_all")
+@pytest.fixture(name="include_2d_all")
 def make_include_all():
     return Include(
         origin=True,
@@ -40,10 +40,9 @@ def make_include_all():
         critical_curves=True,
         caustics=True,
         multiple_images=True,
-        inversion_pixelization_grid=True,
-        inversion_grid=True,
-        inversion_border=True,
-        inversion_image_pixelization_grid=True,
+        mapper_source_pixelization_grid=True,,
+        mapper_source_border=True,
+        mapper_data_pixelization_grid=True,
         preloaded_critical_curves=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
         preload_caustics=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
     )
@@ -51,7 +50,7 @@ def make_include_all():
 
 class TestAbstractPhaseVisualizer:
     def test__visualizer_with_preloaded_critical_curves_and_caustics_is_setup(
-        self, masked_imaging_7x7, include_all, plot_path, plot_patch
+        self, masked_imaging_7x7, include_2d_all, plot_path, plot_patch
     ):
         visualizer = vis.PhaseDatasetVisualizer(masked_dataset=masked_imaging_7x7)
 
@@ -71,7 +70,7 @@ class TestAbstractPhaseVisualizer:
 
 class TestPhaseImagingVisualizer:
     def test__visualizes_imaging_using_configs(
-        self, masked_imaging_7x7, include_all, plot_path, plot_patch
+        self, masked_imaging_7x7, include_2d_all, plot_path, plot_patch
     ):
 
         if path.exists(plot_path):
@@ -80,8 +79,8 @@ class TestPhaseImagingVisualizer:
         visualizer = vis.PhaseImagingVisualizer(masked_dataset=masked_imaging_7x7)
 
         visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=include_all.preloaded_critical_curves,
-            preloaded_caustics=include_all.preloaded_caustics,
+            preloaded_critical_curves=include_2d_all.preloaded_critical_curves,
+            preloaded_caustics=include_2d_all.preloaded_caustics,
         )
 
         visualizer.visualize_imaging(paths=af.Paths())
@@ -117,7 +116,7 @@ class TestPhaseImagingVisualizer:
         self,
         masked_imaging_7x7,
         masked_imaging_fit_x2_galaxy_inversion_7x7,
-        include_all,
+        include_2d_all,
         plot_path,
         plot_patch,
     ):
@@ -128,8 +127,8 @@ class TestPhaseImagingVisualizer:
         visualizer = vis.PhaseImagingVisualizer(masked_dataset=masked_imaging_7x7)
 
         visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=include_all.preloaded_critical_curves,
-            preloaded_caustics=include_all.preloaded_caustics,
+            preloaded_critical_curves=include_2d_all.preloaded_critical_curves,
+            preloaded_caustics=include_2d_all.preloaded_caustics,
         )
 
         visualizer.visualize_fit(
@@ -257,7 +256,7 @@ class TestPhaseImagingVisualizer:
         self,
         masked_imaging_7x7,
         hyper_model_image_7x7,
-        include_all,
+        include_2d_all,
         hyper_galaxy_image_path_dict_7x7,
         masked_imaging_fit_x2_galaxy_inversion_7x7,
         plot_path,
@@ -267,8 +266,8 @@ class TestPhaseImagingVisualizer:
         visualizer = vis.PhaseImagingVisualizer(masked_dataset=masked_imaging_7x7)
 
         visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=include_all.preloaded_critical_curves,
-            preloaded_caustics=include_all.preloaded_caustics,
+            preloaded_critical_curves=include_2d_all.preloaded_critical_curves,
+            preloaded_caustics=include_2d_all.preloaded_caustics,
         )
 
         visualizer.visualize_hyper_images(
@@ -298,15 +297,15 @@ class TestPhaseImagingVisualizer:
 
 class TestPhaseInterferometerVisualizer:
     def test__visualizes_interferometer_using_configs(
-        self, masked_interferometer_7, include_all, plot_path, plot_patch
+        self, masked_interferometer_7, include_2d_all, plot_path, plot_patch
     ):
         visualizer = vis.PhaseInterferometerVisualizer(
             masked_dataset=masked_interferometer_7
         )
 
         visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=include_all.preloaded_critical_curves,
-            preloaded_caustics=include_all.preloaded_caustics,
+            preloaded_critical_curves=include_2d_all.preloaded_critical_curves,
+            preloaded_caustics=include_2d_all.preloaded_caustics,
         )
 
         visualizer.visualize_interferometer(paths=af.Paths())
@@ -334,7 +333,7 @@ class TestPhaseInterferometerVisualizer:
         self,
         masked_interferometer_7,
         masked_interferometer_fit_x2_galaxy_inversion_7x7,
-        include_all,
+        include_2d_all,
         plot_path,
         plot_patch,
     ):
@@ -343,8 +342,8 @@ class TestPhaseInterferometerVisualizer:
         )
 
         visualizer = visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-            preloaded_critical_curves=include_all.preloaded_critical_curves,
-            preloaded_caustics=include_all.preloaded_caustics,
+            preloaded_critical_curves=include_2d_all.preloaded_critical_curves,
+            preloaded_caustics=include_2d_all.preloaded_caustics,
         )
 
         visualizer.visualize_fit(

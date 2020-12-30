@@ -1,136 +1,32 @@
-from autoarray.plot.plotter import plotter
-from autogalaxy.plot.plotter import lensing_plotter, lensing_include
+from autoarray.plot.plots import inversion_plots
+from autoarray.plot.mat_wrap import mat_decorators
+from autogalaxy.plot.mat_wrap import lensing_plotter, lensing_include, lensing_visuals
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_subplot
-@plotter.set_subplot_filename
 def subplot_inversion(
     inversion,
-    image_positions=None,
-    source_positions=None,
-    grid=None,
-    light_profile_centres=None,
-    mass_profile_centres=None,
-    critical_curves=None,
-    caustics=None,
-    image_pixel_indexes=None,
-    source_pixel_indexes=None,
-    include=None,
-    plotter=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+    full_indexes=None,
+    pixelization_indexes=None,
 ):
 
-    number_subplots = 6
-
-    ratio = float(
-        (
-            inversion.mapper.grid.scaled_maxima[1]
-            - inversion.mapper.grid.scaled_minima[1]
-        )
-        / (
-            inversion.mapper.grid.scaled_maxima[0]
-            - inversion.mapper.grid.scaled_minima[0]
-        )
-    )
-
-    aspect_inv = plotter.figure.aspect_for_subplot_from_ratio(ratio=ratio)
-
-    plotter.open_subplot_figure(number_subplots=number_subplots)
-
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
-
-    reconstructed_image(
+    inversion_plots.subplot_inversion(
         inversion=inversion,
-        image_positions=image_positions,
-        grid=grid,
-        light_profile_centres=light_profile_centres,
-        mass_profile_centres=mass_profile_centres,
-        critical_curves=critical_curves,
-        include=include,
-        plotter=plotter,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
+        full_indexes=full_indexes,
+        pixelization_indexes=pixelization_indexes,
     )
-
-    plotter.setup_subplot(
-        number_subplots=number_subplots, subplot_index=2, aspect=aspect_inv
-    )
-
-    reconstruction(
-        inversion=inversion,
-        source_positions=source_positions,
-        caustics=caustics,
-        image_pixel_indexes=image_pixel_indexes,
-        source_pixel_indexes=source_pixel_indexes,
-        include=include,
-        plotter=plotter,
-    )
-
-    plotter.setup_subplot(
-        number_subplots=number_subplots, subplot_index=3, aspect=aspect_inv
-    )
-
-    errors(
-        inversion=inversion,
-        image_pixel_indexes=image_pixel_indexes,
-        source_pixel_indexes=source_pixel_indexes,
-        caustics=caustics,
-        include=include,
-        plotter=plotter,
-    )
-
-    plotter.setup_subplot(
-        number_subplots=number_subplots, subplot_index=4, aspect=aspect_inv
-    )
-
-    residual_map(
-        inversion=inversion,
-        image_pixel_indexes=image_pixel_indexes,
-        source_pixel_indexes=source_pixel_indexes,
-        caustics=caustics,
-        include=include,
-        plotter=plotter,
-    )
-
-    plotter.setup_subplot(
-        number_subplots=number_subplots, subplot_index=5, aspect=aspect_inv
-    )
-
-    chi_squared_map(
-        inversion=inversion,
-        image_pixel_indexes=image_pixel_indexes,
-        source_pixel_indexes=source_pixel_indexes,
-        caustics=caustics,
-        include=include,
-        plotter=plotter,
-    )
-
-    plotter.setup_subplot(
-        number_subplots=number_subplots, subplot_index=6, aspect=aspect_inv
-    )
-
-    regularization_weights(
-        inversion=inversion,
-        source_positions=source_positions,
-        image_pixel_indexes=image_pixel_indexes,
-        source_pixel_indexes=source_pixel_indexes,
-        caustics=caustics,
-        include=include,
-        plotter=plotter,
-    )
-
-    plotter.output.subplot_to_figure()
-
-    plotter.figure.close()
 
 
 def individuals(
     inversion,
-    image_positions=None,
-    source_positions=None,
-    grid=None,
-    light_profile_centres=None,
-    mass_profile_centres=None,
-    critical_curves=None,
-    caustics=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
     plot_reconstructed_image=False,
     plot_reconstruction=False,
     plot_errors=False,
@@ -140,8 +36,6 @@ def individuals(
     plot_regularization_weight_map=False,
     plot_interpolated_reconstruction=False,
     plot_interpolated_errors=False,
-    include=None,
-    plotter=None,
 ):
     """Plot the model datas_ of an analysis, using the *Fitter* class object.
 
@@ -158,324 +52,186 @@ def individuals(
         in the python interpreter window.
     """
 
-    if plot_reconstructed_image:
-
-        reconstructed_image(
-            inversion=inversion,
-            image_positions=image_positions,
-            grid=grid,
-            light_profile_centres=light_profile_centres,
-            mass_profile_centres=mass_profile_centres,
-            critical_curves=critical_curves,
-            include=include,
-            plotter=plotter,
-        )
-
-    if plot_reconstruction:
-
-        reconstruction(
-            inversion=inversion,
-            source_positions=source_positions,
-            caustics=caustics,
-            include=include,
-            plotter=plotter,
-        )
-
-    if plot_errors:
-
-        errors(inversion=inversion, include=include, caustics=caustics, plotter=plotter)
-
-    if plot_residual_map:
-
-        residual_map(
-            inversion=inversion, include=include, caustics=caustics, plotter=plotter
-        )
-
-    if plot_normalized_residual_map:
-
-        normalized_residual_map(
-            inversion=inversion, caustics=caustics, include=include, plotter=plotter
-        )
-
-    if plot_chi_squared_map:
-
-        chi_squared_map(
-            inversion=inversion, caustics=caustics, include=include, plotter=plotter
-        )
-
-    if plot_regularization_weight_map:
-
-        regularization_weights(
-            inversion=inversion, caustics=caustics, include=include, plotter=plotter
-        )
-
-    if plot_interpolated_reconstruction:
-
-        interpolated_reconstruction(
-            inversion=inversion,
-            source_positions=source_positions,
-            caustics=caustics,
-            include=include,
-            plotter=plotter,
-        )
-
-    if plot_interpolated_errors:
-
-        interpolated_errors(
-            inversion=inversion, caustics=caustics, include=include, plotter=plotter
-        )
+    inversion_plots.individuals(
+        inversion=inversion,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
+        plot_reconstructed_image=plot_reconstructed_image,
+        plot_reconstruction=plot_reconstruction,
+        plot_errors=plot_errors,
+        plot_residual_map=plot_residual_map,
+        plot_normalized_residual_map=plot_normalized_residual_map,
+        plot_chi_squared_map=plot_chi_squared_map,
+        plot_regularization_weight_map=plot_regularization_weight_map,
+        plot_interpolated_reconstruction=plot_interpolated_reconstruction,
+        plot_interpolated_errors=plot_interpolated_errors,
+    )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def reconstructed_image(
     inversion,
-    image_positions=None,
-    grid=None,
-    light_profile_centres=None,
-    mass_profile_centres=None,
-    critical_curves=None,
-    include=None,
-    plotter=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
 ):
 
-    plotter.plot_array(
-        array=inversion.mapped_reconstructed_image,
-        mask=include.mask_from_grid(grid=inversion.mapper.grid),
-        positions=image_positions,
-        grid=grid,
-        light_profile_centres=light_profile_centres,
-        mass_profile_centres=mass_profile_centres,
-        critical_curves=critical_curves,
-        include_origin=include.origin,
+    inversion_plots.reconstructed_image(
+        inversion=inversion,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def reconstruction(
     inversion,
-    source_positions=None,
-    caustics=None,
-    image_pixel_indexes=None,
-    source_pixel_indexes=None,
-    include=None,
-    plotter=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+    full_indexes=None,
+    pixelization_indexes=None,
 ):
 
-    source_pixel_values = inversion.mapper.reconstructed_pixelization_from_solution_vector(
-        solution_vector=inversion.reconstruction
-    )
-
-    plotter.plot_mapper(
-        mapper=inversion.mapper,
-        source_pixel_values=source_pixel_values,
-        positions=source_positions,
-        caustics=caustics,
-        image_pixel_indexes=image_pixel_indexes,
-        source_pixel_indexes=source_pixel_indexes,
-        include_origin=include.origin,
-        include_pixelization_grid=include.inversion_pixelization_grid,
-        include_grid=include.inversion_grid,
-        include_border=include.inversion_border,
+    inversion_plots.reconstruction(
+        inversion=inversion,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
+        full_indexes=full_indexes,
+        pixelization_indexes=pixelization_indexes,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def errors(
     inversion,
-    source_positions=None,
-    caustics=None,
-    image_pixel_indexes=None,
-    source_pixel_indexes=None,
-    include=None,
-    plotter=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+    full_indexes=None,
+    pixelization_indexes=None,
 ):
 
-    source_pixel_values = inversion.mapper.reconstructed_pixelization_from_solution_vector(
-        solution_vector=inversion.errors
-    )
-
-    plotter.plot_mapper(
-        mapper=inversion.mapper,
-        source_pixel_values=source_pixel_values,
-        positions=source_positions,
-        caustics=caustics,
-        image_pixel_indexes=image_pixel_indexes,
-        source_pixel_indexes=source_pixel_indexes,
-        include_origin=include.origin,
-        include_pixelization_grid=include.inversion_pixelization_grid,
-        include_grid=include.inversion_grid,
-        include_border=include.inversion_border,
+    inversion_plots.errors(
+        inversion=inversion,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
+        full_indexes=full_indexes,
+        pixelization_indexes=pixelization_indexes,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def residual_map(
     inversion,
-    source_positions=None,
-    caustics=None,
-    image_pixel_indexes=None,
-    source_pixel_indexes=None,
-    include=None,
-    plotter=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+    full_indexes=None,
+    pixelization_indexes=None,
 ):
 
-    source_pixel_values = inversion.mapper.reconstructed_pixelization_from_solution_vector(
-        solution_vector=inversion.residual_map
-    )
-
-    plotter.plot_mapper(
-        mapper=inversion.mapper,
-        source_pixel_values=source_pixel_values,
-        positions=source_positions,
-        caustics=caustics,
-        image_pixel_indexes=image_pixel_indexes,
-        source_pixel_indexes=source_pixel_indexes,
-        include_origin=include.origin,
-        include_pixelization_grid=include.inversion_pixelization_grid,
-        include_grid=include.inversion_grid,
-        include_border=include.inversion_border,
+    inversion_plots.residual_map(
+        inversion=inversion,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
+        full_indexes=full_indexes,
+        pixelization_indexes=pixelization_indexes,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def normalized_residual_map(
     inversion,
-    source_positions=None,
-    caustics=None,
-    image_pixel_indexes=None,
-    source_pixel_indexes=None,
-    include=None,
-    plotter=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+    full_indexes=None,
+    pixelization_indexes=None,
 ):
 
-    source_pixel_values = inversion.mapper.reconstructed_pixelization_from_solution_vector(
-        solution_vector=inversion.normalized_residual_map
-    )
-
-    plotter.plot_mapper(
-        mapper=inversion.mapper,
-        source_pixel_values=source_pixel_values,
-        positions=source_positions,
-        caustics=caustics,
-        image_pixel_indexes=image_pixel_indexes,
-        source_pixel_indexes=source_pixel_indexes,
-        include_origin=include.origin,
-        include_pixelization_grid=include.inversion_pixelization_grid,
-        include_grid=include.inversion_grid,
-        include_border=include.inversion_border,
+    inversion_plots.normalized_residual_map(
+        inversion=inversion,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
+        full_indexes=full_indexes,
+        pixelization_indexes=pixelization_indexes,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def chi_squared_map(
     inversion,
-    source_positions=None,
-    caustics=None,
-    image_pixel_indexes=None,
-    source_pixel_indexes=None,
-    include=None,
-    plotter=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+    full_indexes=None,
+    pixelization_indexes=None,
 ):
 
-    source_pixel_values = inversion.mapper.reconstructed_pixelization_from_solution_vector(
-        solution_vector=inversion.chi_squared_map
-    )
-
-    plotter.plot_mapper(
-        mapper=inversion.mapper,
-        source_pixel_values=source_pixel_values,
-        positions=source_positions,
-        caustics=caustics,
-        image_pixel_indexes=image_pixel_indexes,
-        source_pixel_indexes=source_pixel_indexes,
-        include_origin=include.origin,
-        include_pixelization_grid=include.inversion_pixelization_grid,
-        include_grid=include.inversion_grid,
-        include_border=include.inversion_border,
+    inversion_plots.chi_squared_map(
+        inversion=inversion,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
+        full_indexes=full_indexes,
+        pixelization_indexes=pixelization_indexes,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def regularization_weights(
     inversion,
-    source_positions=None,
-    caustics=None,
-    image_pixel_indexes=None,
-    source_pixel_indexes=None,
-    include=None,
-    plotter=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+    full_indexes=None,
+    pixelization_indexes=None,
 ):
 
-    regularization_weights = inversion.regularization.regularization_weights_from_mapper(
-        mapper=inversion.mapper
-    )
-
-    plotter.plot_mapper(
-        mapper=inversion.mapper,
-        source_pixel_values=regularization_weights,
-        positions=source_positions,
-        caustics=caustics,
-        image_pixel_indexes=image_pixel_indexes,
-        source_pixel_indexes=source_pixel_indexes,
-        include_origin=include.origin,
-        include_pixelization_grid=include.inversion_pixelization_grid,
-        include_grid=include.inversion_grid,
-        include_border=include.inversion_border,
+    inversion_plots.regularization_weights(
+        inversion=inversion,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
+        full_indexes=full_indexes,
+        pixelization_indexes=pixelization_indexes,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def interpolated_reconstruction(
     inversion,
-    source_positions=None,
-    grid=None,
-    caustics=None,
-    include=None,
-    plotter=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
 ):
 
-    plotter.plot_array(
-        array=inversion.interpolated_reconstruction_from_shape_2d(),
-        positions=source_positions,
-        grid=grid,
-        caustics=caustics,
-        include_origin=include.origin,
+    inversion_plots.interpolated_reconstruction(
+        inversion=inversion,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def interpolated_errors(
     inversion,
-    source_positions=None,
-    grid=None,
-    caustics=None,
-    include=None,
-    plotter=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
 ):
 
-    plotter.plot_array(
-        array=inversion.interpolated_errors_from_shape_2d(),
-        positions=source_positions,
-        grid=grid,
-        critical_curves=caustics,
-        include_origin=include.origin,
-        include_border=include.border,
+    inversion_plots.interpolated_errors(
+        inversion=inversion,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
     )

@@ -4,7 +4,7 @@ from os import path
 from autoconf import conf
 import autofit as af
 import autoarray as aa
-from autoarray.plot.mat_wrap import mat_base
+from autoarray.plot.mat_wrap.wrap import wrap_base
 from autogalaxy.plot.plots import (
     fit_imaging_plots,
     fit_galaxy_plots,
@@ -12,8 +12,7 @@ from autogalaxy.plot.plots import (
     inversion_plots,
 )
 from autogalaxy.plot.plots import fit_interferometer_plots
-from autogalaxy.plot.plotter import lensing_plotter
-from autogalaxy.plot.plotter import lensing_include
+from autogalaxy.plot.mat_wrap import lensing_plotter, lensing_include
 
 
 def setting(section, name):
@@ -27,16 +26,16 @@ def plot_setting(section, name):
 class AbstractVisualizer:
     def __init__(self):
 
-        self.include = lensing_include.Include()
+        self.include = lensing_include.Include2D()
 
     @staticmethod
     def plotter_from_paths(paths: af.Paths, subfolders=None, format="png"):
         if subfolders is None:
-            return lensing_plotter.LensingPlotter(
-                output=mat_base.Output(path=paths.image_path, format=format)
+            return lensing_plotter.Plotter2D(
+                output=wrap_base.Output(path=paths.image_path, format=format)
             )
-        return lensing_plotter.LensingPlotter(
-            output=mat_base.Output(
+        return lensing_plotter.Plotter2D(
+            output=wrap_base.Output(
                 path=path.join(paths.image_path, subfolders), format=format
             )
         )

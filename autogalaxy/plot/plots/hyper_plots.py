@@ -1,23 +1,28 @@
-from autoarray.plot.plotter import plotter
-from autogalaxy.plot.plotter import lensing_plotter, lensing_include
+from autoarray.plot.mat_wrap import mat_decorators
+from autoarray.plot.plots import structure_plots
+from autogalaxy.plot.mat_wrap import lensing_plotter, lensing_include, lensing_visuals
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_subplot
-@plotter.set_subplot_filename
 def subplot_hyper_images_of_galaxies(
-    hyper_galaxy_image_path_dict, mask=None, include=None, plotter=None
+    hyper_galaxy_image_path_dict,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
 ):
 
     if hyper_galaxy_image_path_dict is None:
         return
+
+    plotter_2d = plotter_2d.plotter_for_subplot_from(
+        func=subplot_hyper_images_of_galaxies
+    )
 
     number_subplots = 0
 
     for i in hyper_galaxy_image_path_dict.items():
         number_subplots += 1
 
-    plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter_2d.open_subplot_figure(number_subplots=number_subplots)
 
     hyper_index = 0
 
@@ -25,23 +30,32 @@ def subplot_hyper_images_of_galaxies(
 
         hyper_index += 1
 
-        plotter.setup_subplot(
+        plotter_2d.setup_subplot(
             number_subplots=number_subplots, subplot_index=hyper_index
         )
 
-        hyper_galaxy_image(galaxy_image=galaxy_image, mask=mask, plotter=plotter)
+        hyper_galaxy_image(
+            galaxy_image=galaxy_image,
+            plotter_2d=plotter_2d,
+            visuals_2d=visuals_2d,
+            include_2d=include_2d,
+        )
 
-    plotter.output.subplot_to_figure()
+    plotter_2d.output.subplot_to_figure()
 
-    plotter.figure.close()
+    plotter_2d.figure.close()
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_subplot
-@plotter.set_subplot_filename
 def subplot_contribution_maps_of_galaxies(
-    contribution_maps_of_galaxies, mask=None, include=None, plotter=None
+    contribution_maps_of_galaxies,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
 ):
+
+    plotter_2d = plotter_2d.plotter_for_subplot_from(
+        func=subplot_contribution_maps_of_galaxies
+    )
 
     contribution_maps = [
         contribution_map
@@ -54,7 +68,7 @@ def subplot_contribution_maps_of_galaxies(
     if number_subplots == 0:
         return
 
-    plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter_2d.open_subplot_figure(number_subplots=number_subplots)
 
     hyper_index = 0
 
@@ -62,33 +76,32 @@ def subplot_contribution_maps_of_galaxies(
 
         hyper_index += 1
 
-        plotter.setup_subplot(
+        plotter_2d.setup_subplot(
             number_subplots=number_subplots, subplot_index=hyper_index
         )
 
         contribution_map(
-            contribution_map_in=contribution_map_array, mask=mask, plotter=plotter
+            contribution_map_in=contribution_map_array,
+            plotter_2d=plotter_2d,
+            visuals_2d=visuals_2d,
+            include_2d=include_2d,
         )
 
-    plotter.output.subplot_to_figure()
+    plotter_2d.output.subplot_to_figure()
 
-    plotter.figure.close()
+    plotter_2d.figure.close()
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def hyper_model_image(
     hyper_model_image,
-    mask=None,
-    positions=None,
-    image_plane_pix_grid=None,
-    include=None,
-    plotter=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
 ):
     """Plot the image of a hyper_galaxies galaxy image.
 
-    Set *autogalaxy.datas.arrays.plotter.plotter* for a description of all input parameters not described below.
+    Set *autogalaxy.datas.arrays.plotter_2d.plotter_2d* for a description of all input parameters not described below.
 
     Parameters
     -----------
@@ -98,28 +111,24 @@ def hyper_model_image(
         If true, the origin of the datas's coordinate system is plotted as a 'x'.
     """
 
-    plotter.plot_array(
+    structure_plots.plot_array(
         array=hyper_model_image,
-        mask=mask,
-        grid=image_plane_pix_grid,
-        positions=positions,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def hyper_galaxy_image(
     galaxy_image,
-    mask=None,
-    positions=None,
-    image_plane_pix_grid=None,
-    include=None,
-    plotter=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
 ):
     """Plot the image of a hyper_galaxies galaxy image.
 
-    Set *autogalaxy.datas.arrays.plotter.plotter* for a description of all input parameters not described below.
+    Set *autogalaxy.datas.arrays.plotter_2d.plotter_2d* for a description of all input parameters not described below.
 
     Parameters
     -----------
@@ -129,20 +138,24 @@ def hyper_galaxy_image(
         If true, the origin of the datas's coordinate system is plotted as a 'x'.
     """
 
-    plotter.plot_array(
-        array=galaxy_image, mask=mask, grid=image_plane_pix_grid, positions=positions
+    structure_plots.plot_array(
+        array=galaxy_image,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def contribution_map(
-    contribution_map_in, mask=None, positions=None, include=None, plotter=None
+    contribution_map_in,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
 ):
     """Plot the summed contribution maps of a hyper_galaxies-fit.
 
-    Set *autogalaxy.datas.arrays.plotter.plotter* for a description of all input parameters not described below.
+    Set *autogalaxy.datas.arrays.plotter_2d.plotter_2d* for a description of all input parameters not described below.
 
     Parameters
     -----------
@@ -152,4 +165,9 @@ def contribution_map(
         The index of the datas in the datas-set of which the contribution_maps are plotted.
     """
 
-    plotter.plot_array(array=contribution_map_in, mask=mask, positions=positions)
+    structure_plots.plot_array(
+        array=contribution_map_in,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
+    )

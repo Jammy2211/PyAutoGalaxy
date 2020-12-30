@@ -1,7 +1,5 @@
 from os import path
 
-from autoconf import conf
-import autogalaxy as ag
 import autogalaxy.plot as aplt
 import pytest
 
@@ -19,33 +17,32 @@ def test__image_and_mapper_subplot_is_output_for_all_mappers(
     imaging_7x7, rectangular_mapper_7x7_3x3, voronoi_mapper_9_3x3, plot_path, plot_patch
 ):
 
-    critical_curves = ag.GridIrregularGrouped([(0.0, 0.0), (0.1, 0.1)])
-    caustics = ag.GridIrregularGrouped([(0.0, 0.0), (0.1, 0.1)])
-
     aplt.Mapper.subplot_image_and_mapper(
         image=imaging_7x7.image,
         mapper=rectangular_mapper_7x7_3x3,
-        critical_curves=critical_curves,
-        caustics=caustics,
-        include=aplt.Include(
-            inversion_pixelization_grid=True, inversion_grid=True, inversion_border=True
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=aplt.Include2D(
+            mapper_data_pixelization_grid=True,
+            mapper_source_pixelization_grid=True,
+            mapper_source_full_grid=True,
+            mapper_source_border=True,
         ),
-        image_pixel_indexes=[[0, 1, 2], [3]],
-        source_pixel_indexes=[[1, 2], [0]],
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        full_indexes=[[0, 1, 2], [3]],
+        pixelization_indexes=[[1, 2], [0]],
     )
     assert path.join(plot_path, "subplot_image_and_mapper.png") in plot_patch.paths
 
     aplt.Mapper.subplot_image_and_mapper(
         image=imaging_7x7.image,
         mapper=voronoi_mapper_9_3x3,
-        critical_curves=critical_curves,
-        caustics=caustics,
-        include=aplt.Include(
-            inversion_pixelization_grid=True, inversion_grid=True, inversion_border=True
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=aplt.Include2D(
+            mapper_data_pixelization_grid=True,
+            mapper_source_pixelization_grid=True,
+            mapper_source_full_grid=True,
+            mapper_source_border=True,
         ),
-        image_pixel_indexes=[[0, 1, 2], [3]],
-        source_pixel_indexes=[[1, 2], [0]],
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        full_indexes=[[0, 1, 2], [3]],
+        pixelization_indexes=[[1, 2], [0]],
     )
     assert path.join(plot_path, "subplot_image_and_mapper.png") in plot_patch.paths

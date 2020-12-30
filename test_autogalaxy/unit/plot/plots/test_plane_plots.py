@@ -16,15 +16,21 @@ def make_plane_plotter_setup():
 
 
 def test__all_individual_plotter__output_file_with_default_name(
-    plane_7x7, sub_grid_7x7, mask_7x7, positions_7x7, include_all, plot_path, plot_patch
+    plane_7x7,
+    sub_grid_7x7,
+    mask_7x7,
+    grid_irregular_grouped_7x7,
+    include_2d_all,
+    plot_path,
+    plot_patch,
 ):
 
     aplt.Plane.image(
         plane=plane_7x7,
         grid=sub_grid_7x7,
-        positions=positions_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        positions=grid_irregular_grouped_7x7,
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "image.png") in plot_patch.paths
@@ -32,9 +38,9 @@ def test__all_individual_plotter__output_file_with_default_name(
     aplt.Plane.plane_image(
         plane=plane_7x7,
         grid=sub_grid_7x7,
-        positions=positions_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        positions=grid_irregular_grouped_7x7,
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "plane_image.png") in plot_patch.paths
@@ -42,8 +48,8 @@ def test__all_individual_plotter__output_file_with_default_name(
     aplt.Plane.convergence(
         plane=plane_7x7,
         grid=sub_grid_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "convergence.png") in plot_patch.paths
@@ -51,8 +57,8 @@ def test__all_individual_plotter__output_file_with_default_name(
     aplt.Plane.potential(
         plane=plane_7x7,
         grid=sub_grid_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "potential.png") in plot_patch.paths
@@ -60,8 +66,8 @@ def test__all_individual_plotter__output_file_with_default_name(
     aplt.Plane.deflections_y(
         plane=plane_7x7,
         grid=sub_grid_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "deflections_y.png") in plot_patch.paths
@@ -69,8 +75,8 @@ def test__all_individual_plotter__output_file_with_default_name(
     aplt.Plane.deflections_x(
         plane=plane_7x7,
         grid=sub_grid_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "deflections_x.png") in plot_patch.paths
@@ -78,8 +84,8 @@ def test__all_individual_plotter__output_file_with_default_name(
     aplt.Plane.magnification(
         plane=plane_7x7,
         grid=sub_grid_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "magnification.png") in plot_patch.paths
@@ -87,8 +93,8 @@ def test__all_individual_plotter__output_file_with_default_name(
     aplt.Plane.plane_grid(
         plane=plane_7x7,
         grid=sub_grid_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "plane_grid.png") in plot_patch.paths
@@ -104,9 +110,9 @@ def test__all_individual_plotter__output_file_with_default_name(
     aplt.Plane.contribution_map(
         plane=plane_7x7,
         mask=mask_7x7,
-        positions=positions_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        positions=grid_irregular_grouped_7x7,
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "contribution_map.png") in plot_patch.paths

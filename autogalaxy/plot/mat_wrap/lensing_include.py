@@ -1,37 +1,22 @@
 import copy
 
 from autoconf import conf
-from autoarray.plot.plotter import include as inc
+from autoarray.plot.mat_wrap import include as inc
 from autogalaxy import lensing
 
-from functools import wraps
+import typing
 
 
-def set_include(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
+class Include1D(inc.Include1D):
 
-        include_key = inc.include_key_from_dictionary(dictionary=kwargs)
-
-        if include_key is not None:
-            include = kwargs[include_key]
-        else:
-            include = Include()
-            include_key = "include"
-
-        kwargs[include_key] = include
-
-        return func(*args, **kwargs)
-
-    return wrapper
+    pass
 
 
-class Include(inc.Include):
+class Include2D(inc.Include2D):
     def __init__(
         self,
         origin=None,
         mask=None,
-        grid=None,
         border=None,
         positions=None,
         light_profile_centres=None,
@@ -39,49 +24,59 @@ class Include(inc.Include):
         critical_curves=None,
         caustics=None,
         multiple_images=None,
-        inversion_pixelization_grid=None,
-        inversion_grid=None,
-        inversion_border=None,
-        inversion_image_pixelization_grid=None,
+        mapper_source_pixelization_grid: typing.Optional[bool] = None,
+        mapper_source_full_grid: typing.Optional[bool] = None,
+        mapper_source_border: typing.Optional[bool] = None,
+        mapper_data_pixelization_grid=None,
         preloaded_critical_curves=None,
         preload_caustics=None,
     ):
 
-        super(Include, self).__init__(
+        super(Include2D, self).__init__(
             origin=origin,
             mask=mask,
-            grid=grid,
             border=border,
-            inversion_pixelization_grid=inversion_pixelization_grid,
-            inversion_grid=inversion_grid,
-            inversion_border=inversion_border,
-            inversion_image_pixelization_grid=inversion_image_pixelization_grid,
+            mapper_source_pixelization_grid=mapper_source_pixelization_grid,
+            mapper_source_full_grid=mapper_source_full_grid,
+            mapper_source_border=mapper_source_border,
+            mapper_data_pixelization_grid=mapper_data_pixelization_grid,
         )
 
-        self.positions = self.load_include(value=positions, name="positions")
-        self.light_profile_centres = self.load_include(
-            value=light_profile_centres, name="light_profile_centres"
-        )
-        self.mass_profile_centres = self.load_include(
-            value=mass_profile_centres, name="mass_profile_centres"
-        )
-        self.critical_curves = self.load_include(
-            value=critical_curves, name="critical_curves"
-        )
-
-        self.caustics = self.load_include(value=caustics, name="caustics")
-        self.multiple_images = self.load_include(
-            value=multiple_images, name="multiple_images"
-        )
+        self._positions = positions
+        self._light_profile_centres = light_profile_centres
+        self._mass_profile_centres = mass_profile_centres
+        self._critical_curves = critical_curves
+        self._caustics = caustics
+        self._multiple_images = multiple_images
 
         self.preloaded_critical_curves = preloaded_critical_curves
         self.preloaded_caustics = preload_caustics
 
-    @staticmethod
-    def load_include(value, name):
-        if value is not None:
-            return value
-        return conf.instance["visualize"]["general"]["include"][name]
+    @property
+    def positions(self):
+        return self.load(value=self._positions, name="positions")
+
+    @property
+    def light_profile_centres(self):
+        return self.load(
+            value=self._light_profile_centres, name="light_profile_centres"
+        )
+
+    @property
+    def mass_profile_centres(self):
+        return self.load(value=self._mass_profile_centres, name="mass_profile_centres")
+
+    @property
+    def critical_curves(self):
+        return self.load(value=self._critical_curves, name="critical_curves")
+
+    @property
+    def caustics(self):
+        return self.load(value=self._caustics, name="caustics")
+
+    @property
+    def multiple_images(self):
+        return self.load(value=self._multiple_images, name="multiple_images")
 
     def positions_from_masked_dataset(self, masked_dataset):
 
@@ -174,8 +169,8 @@ class Include(inc.Include):
     def inversion_image_pixelization_grid_from_fit(self, fit):
 
         if fit.inversion is not None:
-            if self.inversion_image_pixelization_grid:
-                if fit.inversion.mapper.is_image_plane_pixelization:
+            if self.mapper_data_pixelization_grid:
+                if fit.inversion.mapper.is_data_pixelization:
                     return fit.tracer.sparse_image_plane_grids_of_planes_from_grid(
                         grid=fit.grid
                     )[-1]
@@ -184,8 +179,8 @@ class Include(inc.Include):
         self, preloaded_critical_curves, preloaded_caustics
     ):
 
-        include = copy.deepcopy(self)
-        include.preloaded_critical_curves = preloaded_critical_curves
-        include.preloaded_caustics = preloaded_caustics
+        include_2d = copy.deepcopy(self)
+        include_2d.preloaded_critical_curves = preloaded_critical_curves
+        include_2d.preloaded_caustics = preloaded_caustics
 
-        return include
+        return include_2d

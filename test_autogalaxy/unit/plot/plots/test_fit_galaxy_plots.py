@@ -23,52 +23,46 @@ def test__fit_sub_plot__all_types_of_galaxy_fit(
     gal_fit_7x7_potential,
     gal_fit_7x7_deflections_y,
     gal_fit_7x7_deflections_x,
-    positions_7x7,
-    include_all,
+    include_2d_all,
     plot_patch,
     plot_path,
 ):
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_image,
-        positions=positions_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
 
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_convergence,
-        positions=positions_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
 
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_potential,
-        positions=positions_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
 
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_deflections_y,
-        positions=positions_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths
 
     aplt.FitGalaxy.subplot_fit_galaxy(
         fit=gal_fit_7x7_deflections_x,
-        positions=positions_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_fit_galaxy.png") in plot_patch.paths

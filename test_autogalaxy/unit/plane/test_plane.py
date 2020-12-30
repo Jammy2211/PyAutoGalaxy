@@ -647,13 +647,13 @@ class TestAbstractPlaneProfiles:
             assert image == pytest.approx(galaxy_image, 1.0e-4)
 
         def test__image_from_positions__same_as_galaxy_image_with_conversions(
-            self, positions_7x7, gal_x1_lp
+            self, grid_irregular_grouped_7x7, gal_x1_lp
         ):
-            galaxy_image = gal_x1_lp.image_from_grid(grid=positions_7x7)
+            galaxy_image = gal_x1_lp.image_from_grid(grid=grid_irregular_grouped_7x7)
 
             plane = ag.Plane(galaxies=[gal_x1_lp], redshift=None)
 
-            image = plane.image_from_grid(grid=positions_7x7)
+            image = plane.image_from_grid(grid=grid_irregular_grouped_7x7)
 
             assert image.in_grouped_list[0][0] == pytest.approx(
                 galaxy_image.in_grouped_list[0][0], 1.0e-4
@@ -912,17 +912,17 @@ class TestAbstractPlaneProfiles:
 
             assert convergence == pytest.approx(g0_convergence + g1_convergence, 1.0e-8)
 
-        def test__convergence_from_grid_as_positions(self, positions_7x7):
+        def test__convergence_from_grid_as_positions(self, grid_irregular_grouped_7x7):
             g0 = ag.Galaxy(
                 redshift=0.5,
                 mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
             )
 
-            g0_convergence = g0.convergence_from_grid(grid=positions_7x7)
+            g0_convergence = g0.convergence_from_grid(grid=grid_irregular_grouped_7x7)
 
             plane = ag.Plane(galaxies=[g0], redshift=None)
 
-            convergence = plane.convergence_from_grid(grid=positions_7x7)
+            convergence = plane.convergence_from_grid(grid=grid_irregular_grouped_7x7)
 
             assert convergence.in_grouped_list[0][0] == pytest.approx(
                 g0_convergence.in_grouped_list[0][0], 1.0e-8
@@ -1023,19 +1023,19 @@ class TestAbstractPlaneProfiles:
 
             assert potential == pytest.approx(g0_potential + g1_potential, 1.0e-8)
 
-        def test__potential_from_grid_as_positions(self, positions_7x7):
+        def test__potential_from_grid_as_positions(self, grid_irregular_grouped_7x7):
             g0 = ag.Galaxy(
                 redshift=0.5,
                 mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
             )
 
-            print(positions_7x7)
+            print(grid_irregular_grouped_7x7)
 
-            g0_potential = g0.potential_from_grid(grid=positions_7x7)
+            g0_potential = g0.potential_from_grid(grid=grid_irregular_grouped_7x7)
 
             plane = ag.Plane(galaxies=[g0], redshift=None)
 
-            potential = plane.potential_from_grid(grid=positions_7x7)
+            potential = plane.potential_from_grid(grid=grid_irregular_grouped_7x7)
 
             assert potential.in_grouped_list[0][0] == pytest.approx(
                 g0_potential.in_grouped_list[0][0], 1.0e-8
@@ -1149,17 +1149,17 @@ class TestAbstractPlaneProfiles:
 
             assert deflections == pytest.approx(g0_deflections + g1_deflections, 1.0e-4)
 
-        def test__deflections_from_grid_as_positions(self, positions_7x7):
+        def test__deflections_from_grid_as_positions(self, grid_irregular_grouped_7x7):
             g0 = ag.Galaxy(
                 redshift=0.5,
                 mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
             )
 
-            g0_deflections = g0.deflections_from_grid(grid=positions_7x7)
+            g0_deflections = g0.deflections_from_grid(grid=grid_irregular_grouped_7x7)
 
             plane = ag.Plane(galaxies=[g0], redshift=None)
 
-            deflections = plane.deflections_from_grid(grid=positions_7x7)
+            deflections = plane.deflections_from_grid(grid=grid_irregular_grouped_7x7)
 
             assert deflections.in_grouped_list[0][0][0] == pytest.approx(
                 g0_deflections.in_grouped_list[0][0][0], 1.0e-8

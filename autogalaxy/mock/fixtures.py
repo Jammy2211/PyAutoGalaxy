@@ -2,7 +2,7 @@ import autogalaxy as ag
 from autoarray.mock.fixtures import *
 from autofit.mock.mock_search import MockSamples, MockSearch
 from autogalaxy.pipeline.phase.dataset import PhaseDataset
-from autogalaxy.plot.plotter.lensing_include import Include
+from autogalaxy.plot.mat_wrap.lensing_include import Include2D
 
 
 def make_masked_imaging_7x7():
@@ -310,10 +310,9 @@ def make_phase_interferometer_7():
 
 
 def make_include_all():
-    return Include(
+    return Include2D(
         origin=True,
         mask=True,
-        grid=True,
         border=True,
         positions=True,
         light_profile_centres=True,
@@ -321,10 +320,9 @@ def make_include_all():
         critical_curves=True,
         caustics=True,
         multiple_images=True,
-        inversion_pixelization_grid=True,
-        inversion_grid=True,
-        inversion_border=True,
-        inversion_image_pixelization_grid=True,
+        mapper_source_pixelization_grid=True,
+        mapper_source_border=True,
+        mapper_data_pixelization_grid=True,
         preloaded_critical_curves=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
         preload_caustics=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
     )

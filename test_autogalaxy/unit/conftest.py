@@ -99,9 +99,9 @@ def make_transformer_7x7_7():
     return fixtures.make_transformer_7x7_7()
 
 
-@pytest.fixture(name="positions_7x7")
-def make_positions_7x7():
-    return fixtures.make_positions_7x7()
+@pytest.fixture(name="grid_irregular_grouped_7x7")
+def make_grid_irregular_grouped_7x7():
+    return fixtures.make_grid_irregular_grouped_7x7()
 
 
 @pytest.fixture(name="visibilities_mask_7")
@@ -337,6 +337,6 @@ def make_voronoi_mapper_9_3x3():
     return fixtures.make_voronoi_mapper_9_3x3()
 
 
-@pytest.fixture(name="include_all")
+@pytest.fixture(name="include_2d_all")
 def make_include_all():
     return fixtures.make_include_all()

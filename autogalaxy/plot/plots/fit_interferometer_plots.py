@@ -1,131 +1,93 @@
-from autoarray.plot.plotter import plotter
-from autogalaxy.plot.plotter import lensing_plotter, lensing_include
+from autoarray.plot.mat_wrap import mat_decorators
+from autoarray.plot.plots import fit_interferometer_plots
+from autogalaxy.plot.mat_wrap import lensing_plotter, lensing_include, lensing_visuals
 from autogalaxy.plot.plots import plane_plots, inversion_plots
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_subplot
-@plotter.set_subplot_filename
-def subplot_fit_interferometer(fit, include=None, plotter=None):
+def subplot_fit_interferometer(
+    fit,
+    plotter_1d: lensing_plotter.Plotter1D = lensing_plotter.Plotter1D(),
+    visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
+    include_1d: lensing_include.Include1D = lensing_include.Include1D(),
+):
 
-    number_subplots = 6
-
-    plotter.open_subplot_figure(number_subplots=number_subplots)
-
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
-
-    residual_map_vs_uv_distances(fit=fit, include=include, plotter=plotter)
-
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
-
-    normalized_residual_map_vs_uv_distances(fit=fit, include=include, plotter=plotter)
-
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=3)
-
-    chi_squared_map_vs_uv_distances(fit=fit, include=include, plotter=plotter)
-
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=4)
-
-    residual_map_vs_uv_distances(
-        fit=fit, plot_real=False, include=include, plotter=plotter
+    fit_interferometer_plots.subplot_fit_interferometer(
+        fit=fit, plotter_1d=plotter_1d, visuals_1d=visuals_1d, include_1d=include_1d
     )
 
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=5)
 
-    normalized_residual_map_vs_uv_distances(
-        fit=fit, plot_real=False, include=include, plotter=plotter
-    )
+def subplot_fit_real_space(
+    fit,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+):
 
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=6)
-
-    chi_squared_map_vs_uv_distances(
-        fit=fit, plot_real=False, include=include, plotter=plotter
-    )
-
-    plotter.output.subplot_to_figure()
-
-    plotter.figure.close()
-
-
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_subplot
-@plotter.set_subplot_filename
-def subplot_fit_real_space(fit, include=None, plotter=None):
+    plotter_2d = plotter_2d.plotter_for_subplot_from(func=subplot_fit_real_space)
 
     number_subplots = 2
 
-    plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter_2d.open_subplot_figure(number_subplots=number_subplots)
 
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
+    plotter_2d.setup_subplot(number_subplots=number_subplots, subplot_index=1)
 
     if fit.inversion is None:
 
         plane_plots.image(
             plane=fit.plane,
             grid=fit.masked_interferometer.grid,
-            positions=include.positions_from_fit(fit=fit),
-            include=include,
-            plotter=plotter,
+            plotter_2d=plotter_2d,
+            visuals_2d=visuals_2d,
+            include_2d=include_2d,
         )
 
-        plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
+        plotter_2d.setup_subplot(number_subplots=number_subplots, subplot_index=2)
 
         plane_plots.plane_image(
             plane=fit.plane,
             grid=fit.masked_interferometer.grid,
-            positions=include.positions_of_plane_from_fit_and_plane_index(
-                fit=fit, plane_index=-1
-            ),
-            caustics=include.caustics_from_obj(obj=fit.plane),
-            plotter=plotter,
+            plotter_2d=plotter_2d,
+            visuals_2d=visuals_2d,
+            include_2d=include_2d,
         )
 
     elif fit.inversion is not None:
 
         inversion_plots.reconstructed_image(
             inversion=fit.inversion,
-            light_profile_centres=include.light_profile_centres_from_obj(fit.plane),
-            mass_profile_centres=include.mass_profile_centres_from_obj(fit.plane),
-            critical_curves=include.critical_curves_from_obj(obj=fit.plane),
-            image_positions=include.positions_from_fit(fit=fit),
-            grid=include.inversion_image_pixelization_grid_from_fit(fit=fit),
-            plotter=plotter,
+            plotter_2d=plotter_2d,
+            visuals_2d=visuals_2d,
+            include_2d=include_2d,
         )
 
-        ratio = float(
-            (
-                fit.inversion.mapper.grid.scaled_maxima[1]
-                - fit.inversion.mapper.grid.scaled_minima[1]
-            )
-            / (
-                fit.inversion.mapper.grid.scaled_maxima[0]
-                - fit.inversion.mapper.grid.scaled_minima[0]
-            )
+        aspect_inv = plotter_2d.figure.aspect_for_subplot_from_grid(
+            grid=fit.inversion.mapper.source_full_grid
         )
 
-        aspect_inv = plotter.figure.aspect_for_subplot_from_ratio(ratio=ratio)
-
-        plotter.setup_subplot(
+        plotter_2d.setup_subplot(
             number_subplots=number_subplots, subplot_index=2, aspect=float(aspect_inv)
         )
 
         inversion_plots.reconstruction(
             inversion=fit.inversion,
-            source_positions=include.positions_of_plane_from_fit_and_plane_index(
-                fit=fit, plane_index=-1
-            ),
-            caustics=include.caustics_from_obj(obj=fit.plane),
-            include=include,
-            plotter=plotter,
+            plotter_2d=plotter_2d,
+            visuals_2d=visuals_2d,
+            include_2d=include_2d,
         )
 
-    plotter.output.subplot_to_figure()
+    plotter_2d.output.subplot_to_figure()
 
-    plotter.figure.close()
+    plotter_2d.figure.close()
 
 
 def individuals(
     fit,
+    plotter_1d: lensing_plotter.Plotter1D = lensing_plotter.Plotter1D(),
+    visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
+    include_1d: lensing_include.Include1D = lensing_include.Include1D(),
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
     plot_visibilities=False,
     plot_noise_map=False,
     plot_signal_to_noise_map=False,
@@ -133,8 +95,6 @@ def individuals(
     plot_residual_map=False,
     plot_normalized_residual_map=False,
     plot_chi_squared_map=False,
-    include=None,
-    plotter=None,
 ):
     """Plot the model datas_ of an analysis, using the *Fitter* class object.
 
@@ -151,57 +111,25 @@ def individuals(
         in the python interpreter window.
     """
 
-    if plot_visibilities:
-
-        visibilities(fit=fit, include=include, plotter=plotter)
-
-    if plot_noise_map:
-
-        noise_map(fit=fit, include=include, plotter=plotter)
-
-    if plot_signal_to_noise_map:
-
-        signal_to_noise_map(fit=fit, include=include, plotter=plotter)
-
-    if plot_model_visibilities:
-
-        model_visibilities(fit=fit, include=include, plotter=plotter)
-
-    if plot_residual_map:
-
-        residual_map_vs_uv_distances(
-            fit=fit, plot_real=True, include=include, plotter=plotter
-        )
-
-        residual_map_vs_uv_distances(
-            fit=fit, plot_real=False, include=include, plotter=plotter
-        )
-
-    if plot_normalized_residual_map:
-
-        normalized_residual_map_vs_uv_distances(
-            fit=fit, plot_real=True, include=include, plotter=plotter
-        )
-
-        normalized_residual_map_vs_uv_distances(
-            fit=fit, plot_real=False, include=include, plotter=plotter
-        )
-
-    if plot_chi_squared_map:
-
-        chi_squared_map_vs_uv_distances(
-            fit=fit, plot_real=True, include=include, plotter=plotter
-        )
-
-        chi_squared_map_vs_uv_distances(
-            fit=fit, plot_real=False, include=include, plotter=plotter
-        )
+    fit_interferometer_plots.individuals(
+        fit=fit,
+        plot_visibilities=plot_visibilities,
+        plot_noise_map=plot_noise_map,
+        plot_signal_to_noise_map=plot_signal_to_noise_map,
+        plot_model_visibilities=plot_model_visibilities,
+        plot_residual_map=plot_residual_map,
+        plot_normalized_residual_map=plot_normalized_residual_map,
+        plot_chi_squared_map=plot_chi_squared_map,
+    )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
-def visibilities(fit, include=None, plotter=None):
+@mat_decorators.set_labels
+def visibilities(
+    fit,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+):
     """Plot the visibilities of a lens fit.
 
     Set *autogalaxy.datas.grid.lensing_plotter.Plotters* for a description of all input parameters not described below.
@@ -209,55 +137,68 @@ def visibilities(fit, include=None, plotter=None):
     Parameters
     -----------
     visibilities : datas.imaging.datas.Imaging
-        The datas-datas, which include the observed datas, noise_map, PSF, signal-to-noise_map, etc.
+        The datas-datas, which include_2d the observed datas, noise_map, PSF, signal-to-noise_map, etc.
     origin : True
         If true, the origin of the datas's coordinate system is plotted as a 'x'.
     """
-    plotter.plot_grid(grid=fit.visibilities.in_grid)
-
-
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
-def noise_map(fit, include=None, plotter=None):
-    """Plot the noise-map of a lens fit.
-
-    Set *autogalaxy.datas.grid.lensing_plotter.Plotters* for a description of all input parameters not described below.
-
-    Parameters
-    -----------
-    visibilities : datas.imaging.datas.Imaging
-        The datas-datas, which include the observed datas, noise_map, PSF, signal-to-noise_map, etc.
-    origin : True
-        If true, the origin of the datas's coordinate system is plotted as a 'x'.
-    """
-    plotter.plot_grid(grid=fit.visibilities.in_grid, color_array=fit.noise_map.real)
-
-
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
-def signal_to_noise_map(fit, include=None, plotter=None):
-    """Plot the noise-map of a lens fit.
-
-    Set *autogalaxy.datas.grid.lensing_plotter.Plotters* for a description of all input parameters not described below.
-
-    Parameters
-    -----------
-    visibilities : datas.imaging.datas.Imaging
-    The datas-datas, which include the observed datas, signal_to_noise_map, PSF, signal-to-signal_to_noise_map, etc.
-    origin : True
-    If true, the origin of the datas's coordinate system is plotted as a 'x'.
-    """
-    plotter.plot_grid(
-        grid=fit.visibilities.in_grid, color_array=fit.signal_to_noise_map.real
+    fit_interferometer_plots.visibilities(
+        fit=fit, plotter_2d=plotter_2d, visuals_2d=visuals_2d, include_2d=include_2d
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
-def model_visibilities(fit, include=None, plotter=None):
+@mat_decorators.set_labels
+def noise_map(
+    fit,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+):
+    """Plot the noise-map of a lens fit.
+
+    Set *autogalaxy.datas.grid.lensing_plotter.Plotters* for a description of all input parameters not described below.
+
+    Parameters
+    -----------
+    visibilities : datas.imaging.datas.Imaging
+        The datas-datas, which include_2d the observed datas, noise_map, PSF, signal-to-noise_map, etc.
+    origin : True
+        If true, the origin of the datas's coordinate system is plotted as a 'x'.
+    """
+    fit_interferometer_plots.noise_map(
+        fit=fit, plotter_2d=plotter_2d, visuals_2d=visuals_2d, include_2d=include_2d
+    )
+
+
+@mat_decorators.set_labels
+def signal_to_noise_map(
+    fit,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+):
+    """Plot the noise-map of a lens fit.
+
+    Set *autogalaxy.datas.grid.lensing_plotter.Plotters* for a description of all input parameters not described below.
+
+    Parameters
+    -----------
+    visibilities : datas.imaging.datas.Imaging
+    The datas-datas, which include_2d the observed datas, signal_to_noise_map, PSF, signal-to-signal_to_noise_map, etc.
+    origin : True
+    If true, the origin of the datas's coordinate system is plotted as a 'x'.
+    """
+    fit_interferometer_plots.signal_to_noise_map(
+        fit=fit, plotter_2d=plotter_2d, visuals_2d=visuals_2d, include_2d=include_2d
+    )
+
+
+@mat_decorators.set_labels
+def model_visibilities(
+    fit,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+):
     """Plot the model visibilities of a fit.
 
     Set *autogalaxy.datas.grid.lensing_plotter.Plotters* for a description of all input parameters not described below.
@@ -265,23 +206,24 @@ def model_visibilities(fit, include=None, plotter=None):
     Parameters
     -----------
     fit : datas.fitting.fitting.AbstractFitter
-        The fit to the datas, which include a list of every model visibilities, residual_map, chi-squareds, etc.
+        The fit to the datas, which include_2d a list of every model visibilities, residual_map, chi-squareds, etc.
     visibilities_index : int
         The index of the datas in the datas-set of which the model visibilities is plotted.
     """
-    plotter.plot_grid(grid=fit.visibilities.in_grid)
+    fit_interferometer_plots.model_visibilities(
+        fit=fit, plotter_2d=plotter_2d, visuals_2d=visuals_2d, include_2d=include_2d
+    )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def residual_map_vs_uv_distances(
     fit,
+    plotter_1d: lensing_plotter.Plotter1D = lensing_plotter.Plotter1D(),
+    visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
+    include_1d: lensing_include.Include1D = lensing_include.Include1D(),
     plot_real=True,
     label_yunits="V$_{R,data}$ - V$_{R,model}$",
     label_xunits=r"UV$_{distance}$ (k$\lambda$)",
-    include=None,
-    plotter=None,
 ):
     """Plot the residual-map of a lens fit.
 
@@ -290,45 +232,31 @@ def residual_map_vs_uv_distances(
     Parameters
     -----------
     fit : datas.fitting.fitting.AbstractFitter
-        The fit to the datas, which include a list of every model visibilities, residual_map, chi-squareds, etc.
+        The fit to the datas, which include_2d a list of every model visibilities, residual_map, chi-squareds, etc.
     visibilities_index : int
         The index of the datas in the datas-set of which the residual_map are plotted.
     """
 
-    if plot_real:
-        y = fit.residual_map.real
-        plotter = plotter.plotter_with_new_labels(
-            title_label=f"{plotter.title.kwargs['label']} Real"
-        )
-        plotter = plotter.plotter_with_new_output(
-            filename=plotter.output.filename + "_real"
-        )
-    else:
-        y = fit.residual_map.imag
-        plotter = plotter.plotter_with_new_labels(
-            title_label=f"{plotter.title.kwargs['label']} Imag"
-        )
-        plotter = plotter.plotter_with_new_output(
-            filename=plotter.output.filename + "_imag"
-        )
-
-    plotter.plot_line(
-        y=y,
-        x=fit.masked_interferometer.interferometer.uv_distances / 10 ** 3.0,
-        plot_axis_type="scatter",
+    fit_interferometer_plots.residual_map_vs_uv_distances(
+        fit=fit,
+        plotter_1d=plotter_1d,
+        visuals_1d=visuals_1d,
+        include_1d=include_1d,
+        plot_real=plot_real,
+        label_yunits=label_yunits,
+        label_xunits=label_xunits,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def normalized_residual_map_vs_uv_distances(
     fit,
+    plotter_1d: lensing_plotter.Plotter1D = lensing_plotter.Plotter1D(),
+    visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
+    include_1d: lensing_include.Include1D = lensing_include.Include1D(),
     plot_real=True,
     label_yunits="V$_{R,data}$ - V$_{R,model}$",
     label_xunits=r"UV$_{distance}$ (k$\lambda$)",
-    include=None,
-    plotter=None,
 ):
     """Plot the residual-map of a lens fit.
 
@@ -337,45 +265,31 @@ def normalized_residual_map_vs_uv_distances(
     Parameters
     -----------
     fit : datas.fitting.fitting.AbstractFitter
-        The fit to the datas, which include a list of every model visibilities, residual_map, chi-squareds, etc.
+        The fit to the datas, which include_2d a list of every model visibilities, residual_map, chi-squareds, etc.
     visibilities_index : int
         The index of the datas in the datas-set of which the residual_map are plotted.
     """
 
-    if plot_real:
-        y = fit.residual_map.real
-        plotter = plotter.plotter_with_new_labels(
-            title_label=f"{plotter.title.kwargs['label']} Real"
-        )
-        plotter = plotter.plotter_with_new_output(
-            filename=plotter.output.filename + "_real"
-        )
-    else:
-        y = fit.residual_map.imag
-        plotter = plotter.plotter_with_new_labels(
-            title_label=f"{plotter.title.kwargs['label']} Imag"
-        )
-        plotter = plotter.plotter_with_new_output(
-            filename=plotter.output.filename + "_imag"
-        )
-
-    plotter.plot_line(
-        y=y,
-        x=fit.masked_interferometer.interferometer.uv_distances / 10 ** 3.0,
-        plot_axis_type="scatter",
+    fit_interferometer_plots.normalized_residual_map_vs_uv_distances(
+        fit=fit,
+        plotter_1d=plotter_1d,
+        visuals_1d=visuals_1d,
+        include_1d=include_1d,
+        plot_real=plot_real,
+        label_yunits=label_yunits,
+        label_xunits=label_xunits,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def chi_squared_map_vs_uv_distances(
     fit,
+    plotter_1d: lensing_plotter.Plotter1D = lensing_plotter.Plotter1D(),
+    visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
+    include_1d: lensing_include.Include1D = lensing_include.Include1D(),
     plot_real=True,
     label_yunits="V$_{R,data}$ - V$_{R,model}$",
     label_xunits=r"UV$_{distance}$ (k$\lambda$)",
-    include=None,
-    plotter=None,
 ):
     """Plot the residual-map of a lens fit.
 
@@ -384,30 +298,17 @@ def chi_squared_map_vs_uv_distances(
     Parameters
     -----------
     fit : datas.fitting.fitting.AbstractFitter
-        The fit to the datas, which include a list of every model visibilities, residual_map, chi-squareds, etc.
+        The fit to the datas, which include_2d a list of every model visibilities, residual_map, chi-squareds, etc.
     visibilities_index : int
         The index of the datas in the datas-set of which the residual_map are plotted.
     """
 
-    if plot_real:
-        y = fit.residual_map.real
-        plotter = plotter.plotter_with_new_labels(
-            title_label=f"{plotter.title.kwargs['label']} Real"
-        )
-        plotter = plotter.plotter_with_new_output(
-            filename=plotter.output.filename + "_real"
-        )
-    else:
-        y = fit.residual_map.imag
-        plotter = plotter.plotter_with_new_labels(
-            title_label=f"{plotter.title.kwargs['label']} Imag"
-        )
-        plotter = plotter.plotter_with_new_output(
-            filename=plotter.output.filename + "_imag"
-        )
-
-    plotter.plot_line(
-        y=y,
-        x=fit.masked_interferometer.interferometer.uv_distances / 10 ** 3.0,
-        plot_axis_type="scatter",
+    fit_interferometer_plots.chi_squared_map_vs_uv_distances(
+        fit=fit,
+        plotter_1d=plotter_1d,
+        visuals_1d=visuals_1d,
+        include_1d=include_1d,
+        plot_real=plot_real,
+        label_yunits=label_yunits,
+        label_xunits=label_xunits,
     )

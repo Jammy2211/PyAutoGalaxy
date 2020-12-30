@@ -1,102 +1,96 @@
-import autoarray as aa
-from autoarray.plot.plotter import plotter
+from autoarray.plot.plots import fit_imaging_plots
+from autoarray.plot.plots import structure_plots
 from autogalaxy import exc
-from autogalaxy.plot.plotter import lensing_plotter, lensing_include
+from autoarray.plot.mat_wrap import mat_decorators
+from autogalaxy.plot.mat_wrap import lensing_plotter, lensing_include, lensing_visuals
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_subplot
-@plotter.set_subplot_filename
-def subplot_fit_galaxy(fit, positions=None, include=None, plotter=None):
+def subplot_fit_galaxy(
+    fit,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+):
+
+    plotter_2d = plotter_2d.plotter_for_subplot_from(func=subplot_fit_galaxy)
 
     number_subplots = 4
 
-    plotter.open_subplot_figure(number_subplots=number_subplots)
+    plotter_2d.open_subplot_figure(number_subplots=number_subplots)
 
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
+    plotter_2d.setup_subplot(number_subplots=number_subplots, subplot_index=1)
 
     galaxy_data_array(
-        galaxy_data=fit.masked_galaxy_dataset, positions=positions, plotter=plotter
+        galaxy_data=fit.masked_galaxy_dataset,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
     )
 
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
+    plotter_2d.setup_subplot(number_subplots=number_subplots, subplot_index=2)
 
-    aa.plot.FitImaging.model_image(
-        fit=fit, include=include, positions=positions, plotter=plotter
+    fit_imaging_plots.model_image(
+        fit=fit, plotter_2d=plotter_2d, visuals_2d=visuals_2d, include_2d=include_2d
     )
 
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=3)
+    plotter_2d.setup_subplot(number_subplots=number_subplots, subplot_index=3)
 
-    aa.plot.FitImaging.residual_map(fit=fit, include=include, plotter=plotter)
+    fit_imaging_plots.residual_map(
+        fit=fit, plotter_2d=plotter_2d, visuals_2d=visuals_2d, include_2d=include_2d
+    )
 
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=4)
+    plotter_2d.setup_subplot(number_subplots=number_subplots, subplot_index=4)
 
-    aa.plot.FitImaging.chi_squared_map(fit=fit, include=include, plotter=plotter)
+    fit_imaging_plots.chi_squared_map(
+        fit=fit, plotter_2d=plotter_2d, visuals_2d=visuals_2d, include_2d=include_2d
+    )
 
-    plotter.output.subplot_to_figure()
+    plotter_2d.output.subplot_to_figure()
 
-    plotter.figure.close()
+    plotter_2d.figure.close()
 
 
 def individuals(
     fit,
-    positions=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
     plot_image=False,
     plot_noise_map=False,
     plot_model_image=False,
     plot_residual_map=False,
+    plot_normalized_residual_map=False,
     plot_chi_squared_map=False,
-    include=None,
-    plotter=None,
 ):
 
     if plot_image:
 
         galaxy_data_array(
             galaxy_data=fit.masked_galaxy_dataset,
-            mask=fit.mask,
-            positions=positions,
-            include=include,
-            plotter=plotter,
+            plotter_2d=plotter_2d,
+            visuals_2d=visuals_2d,
+            include_2d=include_2d,
         )
 
-    if plot_noise_map:
-
-        aa.plot.FitImaging.noise_map(
-            fit=fit,
-            mask=fit.mask,
-            positions=positions,
-            include=include,
-            plotter=plotter,
-        )
-
-    if plot_model_image:
-
-        aa.plot.FitImaging.model_image(
-            fit=fit,
-            mask=fit.mask,
-            positions=positions,
-            include=include,
-            plotter=plotter,
-        )
-
-    if plot_residual_map:
-
-        aa.plot.FitImaging.residual_map(
-            fit=fit, mask=fit.mask, include=include, plotter=plotter
-        )
-
-    if plot_chi_squared_map:
-
-        aa.plot.FitImaging.chi_squared_map(
-            fit=fit, mask=fit.mask, include=include, plotter=plotter
-        )
+    fit_imaging_plots.individuals(
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
+        plot_noise_map=plot_noise_map,
+        plot_model_image=plot_model_image,
+        plot_residual_map=plot_residual_map,
+        plot_normalized_residual_map=plot_normalized_residual_map,
+        plot_chi_squared_map=plot_chi_squared_map,
+    )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
-def galaxy_data_array(galaxy_data, positions=None, include=None, plotter=None):
+@mat_decorators.set_labels
+def galaxy_data_array(
+    galaxy_data,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+):
 
     if galaxy_data.use_image:
         title = "Galaxy Data Image"
@@ -113,9 +107,9 @@ def galaxy_data_array(galaxy_data, positions=None, include=None, plotter=None):
             "The galaxy data arrays does not have a `True` use_profile_type"
         )
 
-    plotter.plot_array(
+    structure_plots.plot_array(
         array=galaxy_data.image,
-        mask=galaxy_data.mask,
-        positions=positions,
-        include_origin=include.origin,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
     )

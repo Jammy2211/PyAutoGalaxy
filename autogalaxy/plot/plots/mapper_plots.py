@@ -1,66 +1,25 @@
-from autoarray.plot.plotter import plotter
-from autogalaxy.plot.plotter import lensing_plotter, lensing_include
+from autoarray.plot.plots import mapper_plots
+from autoarray.plot.mat_wrap import mat_decorators
+from autogalaxy.plot.mat_wrap import lensing_plotter, lensing_include, lensing_visuals
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
+@mat_decorators.set_labels
 def subplot_image_and_mapper(
     image,
     mapper,
-    image_positions=None,
-    source_positions=None,
-    critical_curves=None,
-    caustics=None,
-    image_pixel_indexes=None,
-    source_pixel_indexes=None,
-    include=None,
-    plotter=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+    full_indexes=None,
+    pixelization_indexes=None,
 ):
 
-    number_subplots = 2
-
-    plotter.open_subplot_figure(number_subplots=number_subplots)
-
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=1)
-
-    plotter.plot_array(
-        array=image,
-        mask=include.mask_from_grid(grid=mapper.grid),
-        positions=image_positions,
-        lines=critical_curves,
-        include_origin=include.origin,
-    )
-
-    if image_pixel_indexes is not None:
-
-        plotter.index_scatter.scatter_grid_indexes(
-            grid=mapper.grid.mask.geometry.masked_grid, indexes=image_pixel_indexes
-        )
-
-    if source_pixel_indexes is not None:
-
-        indexes = mapper.image_pixel_indexes_from_source_pixel_indexes(
-            source_pixel_indexes=source_pixel_indexes
-        )
-
-        plotter.index_scatter.scatter_grid_indexes(
-            grid=mapper.grid.mask.geometry.masked_grid, indexes=indexes
-        )
-
-    plotter.setup_subplot(number_subplots=number_subplots, subplot_index=2)
-
-    plotter.plot_mapper(
+    mapper_plots.subplot_image_and_mapper(
+        image=image,
         mapper=mapper,
-        positions=source_positions,
-        caustics=caustics,
-        image_pixel_indexes=image_pixel_indexes,
-        source_pixel_indexes=source_pixel_indexes,
-        include_origin=include.origin,
-        include_grid=include.inversion_grid,
-        include_pixelization_grid=include.inversion_pixelization_grid,
-        include_border=include.inversion_border,
+        plotter_2d=plotter_2d,
+        visuals_2d=visuals_2d,
+        include_2d=include_2d,
+        full_indexes=full_indexes,
+        pixelization_indexes=pixelization_indexes,
     )
-
-    plotter.output.subplot_to_figure()
-    plotter.figure.close()

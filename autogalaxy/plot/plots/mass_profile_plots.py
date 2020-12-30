@@ -1,15 +1,20 @@
-from autoarray.plot.plotter import plotter
 from autoarray.structures import arrays
-from autogalaxy.plot.plotter import lensing_plotter, lensing_include
+from autoarray.plot.mat_wrap import mat_decorators
+from autogalaxy.plot.mat_wrap import lensing_plotter, lensing_include, lensing_visuals
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
-def convergence(mass_profile, grid, positions=None, include=None, plotter=None):
+@mat_decorators.set_labels
+def convergence(
+    mass_profile,
+    grid,
+    positions=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+):
     """Plot the convergence of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autogalaxy.hyper_galaxies.arrays.plotter.plotter* for a description of all innput parameters not described below.
+    Set *autogalaxy.hyper_galaxies.arrays.plotter_2d.plotter_2d* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -18,23 +23,28 @@ def convergence(mass_profile, grid, positions=None, include=None, plotter=None):
     grid : grid_like
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-    plotter.plot_array(
+    structure_plots.plot_array(
         array=mass_profile.convergence_from_grid(grid=grid),
-        mask=include.mask_from_grid(grid=grid),
+        mask=include_2d.mask_from_grid(grid=grid),
         positions=positions,
-        critical_curves=include.critical_curves_from_obj(obj=mass_profile),
-        mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
-        include_origin=include.origin,
+        critical_curves=include_2d.critical_curves_from_obj(obj=mass_profile),
+        mass_profile_centres=include_2d.mass_profile_centres_from_obj(obj=mass_profile),
+        include_origin=include_2d.origin,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
-def potential(mass_profile, grid, positions=None, include=None, plotter=None):
+@mat_decorators.set_labels
+def potential(
+    mass_profile,
+    grid,
+    positions=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+):
     """Plot the potential of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autogalaxy.hyper_galaxies.arrays.plotter.plotter* for a description of all innput parameters not described below.
+    Set *autogalaxy.hyper_galaxies.arrays.plotter_2d.plotter_2d* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -43,23 +53,28 @@ def potential(mass_profile, grid, positions=None, include=None, plotter=None):
     grid : grid_like
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-    plotter.plot_array(
+    structure_plots.plot_array(
         array=mass_profile.potential_from_grid(grid=grid),
-        mask=include.mask_from_grid(grid=grid),
+        mask=include_2d.mask_from_grid(grid=grid),
         positions=positions,
-        critical_curves=include.critical_curves_from_obj(obj=mass_profile),
-        mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
-        include_origin=include.origin,
+        critical_curves=include_2d.critical_curves_from_obj(obj=mass_profile),
+        mass_profile_centres=include_2d.mass_profile_centres_from_obj(obj=mass_profile),
+        include_origin=include_2d.origin,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
-def deflections_y(mass_profile, grid, positions=None, include=None, plotter=None):
+@mat_decorators.set_labels
+def deflections_y(
+    mass_profile,
+    grid,
+    positions=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+):
     """Plot the y component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autogalaxy.hyper_galaxies.arrays.plotter.plotter* for a description of all innput parameters not described below.
+    Set *autogalaxy.hyper_galaxies.arrays.plotter_2d.plotter_2d* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -74,23 +89,28 @@ def deflections_y(mass_profile, grid, positions=None, include=None, plotter=None
         array=deflections.in_1d[:, 0], mask=grid.mask
     )
 
-    plotter.plot_array(
+    structure_plots.plot_array(
         array=deflections_y,
-        mask=include.mask_from_grid(grid=grid),
+        mask=include_2d.mask_from_grid(grid=grid),
         positions=positions,
-        critical_curves=include.critical_curves_from_obj(obj=mass_profile),
-        mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
-        include_origin=include.origin,
+        critical_curves=include_2d.critical_curves_from_obj(obj=mass_profile),
+        mass_profile_centres=include_2d.mass_profile_centres_from_obj(obj=mass_profile),
+        include_origin=include_2d.origin,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
-def deflections_x(mass_profile, grid, positions=None, include=None, plotter=None):
+@mat_decorators.set_labels
+def deflections_x(
+    mass_profile,
+    grid,
+    positions=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+):
     """Plot the x component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autogalaxy.hyper_galaxies.arrays.plotter.plotter* for a description of all innput parameters not described below.
+    Set *autogalaxy.hyper_galaxies.arrays.plotter_2d.plotter_2d* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -104,23 +124,28 @@ def deflections_x(mass_profile, grid, positions=None, include=None, plotter=None
         array=deflections.in_1d[:, 1], mask=grid.mask
     )
 
-    plotter.plot_array(
+    structure_plots.plot_array(
         array=deflections_x,
-        mask=include.mask_from_grid(grid=grid),
+        mask=include_2d.mask_from_grid(grid=grid),
         positions=positions,
-        critical_curves=include.critical_curves_from_obj(obj=mass_profile),
-        mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
-        include_origin=include.origin,
+        critical_curves=include_2d.critical_curves_from_obj(obj=mass_profile),
+        mass_profile_centres=include_2d.mass_profile_centres_from_obj(obj=mass_profile),
+        include_origin=include_2d.origin,
     )
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
-def magnification(mass_profile, grid, positions=None, include=None, plotter=None):
+@mat_decorators.set_labels
+def magnification(
+    mass_profile,
+    grid,
+    positions=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+):
     """Plot the magnification of a mass profile, on a grid of (y,x) coordinates.
 
-    Set *autogalaxy.hyper_galaxies.arrays.plotter.plotter* for a description of all innput parameters not described below.
+    Set *autogalaxy.hyper_galaxies.arrays.plotter_2d.plotter_2d* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -129,11 +154,11 @@ def magnification(mass_profile, grid, positions=None, include=None, plotter=None
     grid : grid_like
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-    plotter.plot_array(
+    structure_plots.plot_array(
         array=mass_profile.magnification_from_grid(grid=grid),
-        mask=include.mask_from_grid(grid=grid),
+        mask=include_2d.mask_from_grid(grid=grid),
         positions=positions,
-        critical_curves=include.critical_curves_from_obj(obj=mass_profile),
-        mass_profile_centres=include.mass_profile_centres_from_obj(obj=mass_profile),
-        include_origin=include.origin,
+        critical_curves=include_2d.critical_curves_from_obj(obj=mass_profile),
+        mass_profile_centres=include_2d.mass_profile_centres_from_obj(obj=mass_profile),
+        include_origin=include_2d.origin,
     )

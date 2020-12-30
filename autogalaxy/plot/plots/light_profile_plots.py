@@ -1,15 +1,20 @@
-from autoarray.plot.plotter import plotter
 from autoarray.util import plotter_util
-from autogalaxy.plot.plotter import lensing_plotter, lensing_include
+from autoarray.plot.mat_wrap import mat_decorators
+from autogalaxy.plot.mat_wrap import lensing_plotter, lensing_include, lensing_visuals
 
 
-@lensing_include.set_include
-@lensing_plotter.set_plotter_for_figure
-@plotter.set_labels
-def image(light_profile, grid, positions=None, include=None, plotter=None):
+@mat_decorators.set_labels
+def image(
+    light_profile,
+    grid,
+    positions=None,
+    plotter_2d: lensing_plotter.Plotter2D = lensing_plotter.Plotter2D(),
+    visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
+    include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+):
     """Plot the image of a light profile, on a grid of (y,x) coordinates.
 
-    Set *autogalaxy.hyper_galaxies.arrays.plotter.plotter* for a description of all innput parameters not described below.
+    Set *autogalaxy.hyper_galaxies.arrays.plotter_2d.plotter_2d* for a description of all innput parameters not described below.
 
     Parameters
     -----------
@@ -18,12 +23,14 @@ def image(light_profile, grid, positions=None, include=None, plotter=None):
     grid : grid_like
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     """
-    plotter.plot_array(
+    structure_plots.plot_array(
         array=light_profile.image_from_grid(grid=grid),
-        mask=include.mask_from_grid(grid=grid),
+        mask=include_2d.mask_from_grid(grid=grid),
         positions=positions,
-        light_profile_centres=include.light_profile_centres_from_obj(obj=light_profile),
-        include_origin=include.origin,
+        light_profile_centres=include_2d.light_profile_centres_from_obj(
+            obj=light_profile
+        ),
+        include_origin=include_2d.origin,
     )
 
 
@@ -33,7 +40,7 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
     maximum_radius=10.0,
     radii_bins=10,
     plot_axis_type="semilogy",
-    plotter=None,
+    plotter_2d=None,
 ):
 
     radii = plotter_util.quantity_radii_from_minimum_and_maximum_radii_and_radii_points(
@@ -46,6 +53,6 @@ def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
         map(lambda radius: light_profile.luminosity_within_circle(radius=radius), radii)
     )
 
-    plotter.plot_array(
+    structure_plots.plot_array(
         quantity=luminosities, radii=radii, plot_axis_type=plot_axis_type
     )

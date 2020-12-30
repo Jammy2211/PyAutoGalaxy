@@ -31,11 +31,11 @@ class TestLensingPlotterPlots:
 
         grid = ag.Grid.uniform(shape_2d=(11, 11), pixel_scales=0.5)
 
-        plotter = aplt.Plotter(
+        plotter = aplt.Plotter2D(
             output=aplt.Output(path=plot_path, filename="array1", format="png")
         )
 
-        plotter.plot_array(
+        plotter._plot_array(
             array=array,
             mask=mask,
             grid=grid,
@@ -52,11 +52,11 @@ class TestLensingPlotterPlots:
 
         assert path.join(plot_path, "array1.png") in plot_patch.paths
 
-        plotter = aplt.Plotter(
+        plotter = aplt.Plotter2D(
             output=aplt.Output(path=plot_path, filename="array2", format="png")
         )
 
-        plotter.plot_array(
+        plotter._plot_array(
             array=array,
             mask=mask,
             grid=grid,
@@ -82,7 +82,7 @@ class TestLensingPlotterPlots:
             multiple_images=ag.GridIrregularGrouped([(1.0, 1.0)]),
             critical_curves=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
             caustics=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
-            plotter=aplt.Plotter(
+            plotter=aplt.Plotter2D(
                 output=aplt.Output(path=plot_path, filename="array3", format="png")
             ),
         )
@@ -98,11 +98,11 @@ class TestLensingPlotterPlots:
 
         arr = ag.Array.ones(shape_2d=(31, 31), pixel_scales=(1.0, 1.0), sub_size=2)
 
-        plotter = aplt.Plotter(
+        plotter = aplt.Plotter2D(
             output=aplt.Output(path=plot_path, filename="array", format="fits")
         )
 
-        plotter.plot_array(array=arr)
+        plotter._plot_array(array=arr)
 
         arr = ag.util.array.numpy_array_2d_from_fits(
             file_path=path.join(plot_path, "array.fits"), hdu=0
@@ -116,7 +116,7 @@ class TestLensingPlotterPlots:
 
         masked_array = ag.Array.manual_mask(array=arr, mask=mask)
 
-        plotter.plot_array(array=masked_array)
+        plotter._plot_array(array=masked_array)
 
         arr = ag.util.array.numpy_array_2d_from_fits(
             file_path=path.join(plot_path, "array.fits"), hdu=0
@@ -128,11 +128,11 @@ class TestLensingPlotterPlots:
         grid = ag.Grid.uniform(shape_2d=(11, 11), pixel_scales=1.0)
         color_array = np.linspace(start=0.0, stop=1.0, num=grid.shape_1d)
 
-        plotter = aplt.Plotter(
+        plotter = aplt.Plotter2D(
             output=aplt.Output(path=plot_path, filename="grid1", format="png")
         )
 
-        plotter.plot_grid(
+        plotter._plot_grid(
             grid=grid,
             color_array=color_array,
             axis_limits=[-1.5, 1.5, -2.5, 2.5],
@@ -147,11 +147,11 @@ class TestLensingPlotterPlots:
 
         assert path.join(plot_path, "grid1.png") in plot_patch.paths
 
-        plotter = aplt.Plotter(
+        plotter = aplt.Plotter2D(
             output=aplt.Output(path=plot_path, filename="grid2", format="png")
         )
 
-        plotter.plot_grid(
+        plotter._plot_grid(
             grid=grid,
             color_array=color_array,
             axis_limits=[-1.5, 1.5, -2.5, 2.5],
@@ -177,7 +177,7 @@ class TestLensingPlotterPlots:
             caustics=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
             indexes=[0, 1, 2, 14],
             symmetric_around_centre=True,
-            plotter=aplt.Plotter(
+            plotter=aplt.Plotter2D(
                 output=aplt.Output(path=plot_path, filename="grid3", format="png")
             ),
         )
@@ -186,11 +186,11 @@ class TestLensingPlotterPlots:
 
     def test__plot_line__works_with_all_extras_included(self, plot_path, plot_patch):
 
-        plotter = aplt.Plotter(
+        plotter = aplt.Plotter2D(
             output=aplt.Output(path=plot_path, filename="line1", format="png")
         )
 
-        plotter.plot_line(
+        plotter._plot_line(
             y=np.array([1.0, 2.0, 3.0]),
             x=np.array([0.5, 1.0, 1.5]),
             plot_axis_type="loglog",
@@ -201,11 +201,11 @@ class TestLensingPlotterPlots:
 
         assert path.join(plot_path, "line1.png") in plot_patch.paths
 
-        plotter = aplt.Plotter(
+        plotter = aplt.Plotter2D(
             output=aplt.Output(path=plot_path, filename="line2", format="png")
         )
 
-        plotter.plot_line(
+        plotter._plot_line(
             y=np.array([1.0, 2.0, 3.0]),
             x=np.array([0.5, 1.0, 1.5]),
             plot_axis_type="semilogy",
@@ -223,7 +223,7 @@ class TestLensingPlotterPlots:
             vertical_lines=[1.0, 2.0],
             label="line0",
             vertical_line_labels=["line1", "line2"],
-            plotter=aplt.Plotter(
+            plotter=aplt.Plotter2D(
                 output=aplt.Output(path=plot_path, filename="line3", format="png")
             ),
         )
@@ -234,11 +234,11 @@ class TestLensingPlotterPlots:
         self, rectangular_mapper_7x7_3x3, plot_path, plot_patch
     ):
 
-        plotter = aplt.Plotter(
+        plotter = aplt.Plotter2D(
             output=aplt.Output(path=plot_path, filename="mapper1", format="png")
         )
 
-        plotter.plot_rectangular_mapper(
+        plotter._plot_rectangular_mapper(
             mapper=rectangular_mapper_7x7_3x3,
             include_pixelization_grid=True,
             include_grid=True,
@@ -248,17 +248,17 @@ class TestLensingPlotterPlots:
             multiple_images=ag.GridIrregularGrouped([(1.0, 1.0)]),
             critical_curves=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
             caustics=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
-            image_pixel_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
-            source_pixel_indexes=[[0, 1], [2]],
+            full_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
+            pixelization_indexes=[[0, 1], [2]],
         )
 
         assert path.join(plot_path, "mapper1.png") in plot_patch.paths
 
-        plotter = aplt.Plotter(
+        plotter = aplt.Plotter2D(
             output=aplt.Output(path=plot_path, filename="mapper2", format="png")
         )
 
-        plotter.plot_rectangular_mapper(
+        plotter._plot_rectangular_mapper(
             mapper=rectangular_mapper_7x7_3x3,
             include_pixelization_grid=True,
             include_grid=True,
@@ -268,8 +268,8 @@ class TestLensingPlotterPlots:
             multiple_images=ag.GridIrregularGrouped([(1.0, 1.0)]),
             critical_curves=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
             caustics=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
-            image_pixel_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
-            source_pixel_indexes=[[0, 1], [2]],
+            full_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
+            pixelization_indexes=[[0, 1], [2]],
         )
 
         assert path.join(plot_path, "mapper2.png") in plot_patch.paths
@@ -281,9 +281,9 @@ class TestLensingPlotterPlots:
             multiple_images=ag.GridIrregularGrouped([(1.0, 1.0)]),
             critical_curves=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
             caustics=ag.GridIrregularGrouped([(1.0, 1.0), (2.0, 2.0)]),
-            image_pixel_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
-            source_pixel_indexes=[[0, 1], [2]],
-            plotter=aplt.Plotter(
+            full_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
+            pixelization_indexes=[[0, 1], [2]],
+            plotter=aplt.Plotter2D(
                 output=aplt.Output(path=plot_path, filename="mapper3", format="png")
             ),
         )
@@ -294,41 +294,41 @@ class TestLensingPlotterPlots:
         self, voronoi_mapper_9_3x3, plot_path, plot_patch
     ):
 
-        plotter = aplt.Plotter(
+        plotter = aplt.Plotter2D(
             output=aplt.Output(path=plot_path, filename="mapper1", format="png")
         )
 
-        plotter.plot_voronoi_mapper(
+        plotter._plot_voronoi_mapper(
             mapper=voronoi_mapper_9_3x3,
             include_pixelization_grid=True,
             include_grid=True,
             include_border=True,
-            image_pixel_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
-            source_pixel_indexes=[[0, 1], [2]],
+            full_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
+            pixelization_indexes=[[0, 1], [2]],
         )
 
         assert path.join(plot_path, "mapper1.png") in plot_patch.paths
 
-        plotter = aplt.Plotter(
+        plotter = aplt.Plotter2D(
             output=aplt.Output(path=plot_path, filename="mapper2", format="png")
         )
 
-        plotter.plot_voronoi_mapper(
+        plotter._plot_voronoi_mapper(
             mapper=voronoi_mapper_9_3x3,
             include_pixelization_grid=True,
             include_grid=True,
             include_border=True,
-            image_pixel_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
-            source_pixel_indexes=[[0, 1], [2]],
+            full_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
+            pixelization_indexes=[[0, 1], [2]],
         )
 
         assert path.join(plot_path, "mapper2.png") in plot_patch.paths
 
         aplt.MapperObj(
             mapper=voronoi_mapper_9_3x3,
-            image_pixel_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
-            source_pixel_indexes=[[0, 1], [2]],
-            plotter=aplt.Plotter(
+            full_indexes=[[(0, 0), (0, 1)], [(1, 2)]],
+            pixelization_indexes=[[0, 1], [2]],
+            plotter=aplt.Plotter2D(
                 output=aplt.Output(path=plot_path, filename="mapper3", format="png")
             ),
         )
@@ -339,19 +339,19 @@ class TestLensingPlotterPlots:
 class TestInclude:
     def test__critical_curves_from_object(self, lp_0, mp_0):
 
-        include = aplt.Include(critical_curves=False)
+        include = aplt.Include2D(critical_curves=False)
 
         critical_curves = include.critical_curves_from_obj(obj=mp_0)
 
         assert critical_curves == None
 
-        include = aplt.Include(critical_curves=True)
+        include = aplt.Include2D(critical_curves=True)
 
         critical_curves = include.critical_curves_from_obj(obj=lp_0)
 
         assert critical_curves == None
 
-        include = aplt.Include(critical_curves=True)
+        include = aplt.Include2D(critical_curves=True)
 
         critical_curves = include.critical_curves_from_obj(obj=mp_0)
 
@@ -360,19 +360,19 @@ class TestInclude:
 
     def test__caustics_from_object(self, lp_0, mp_0):
 
-        include = aplt.Include(caustics=False)
+        include = aplt.Include2D(caustics=False)
 
         caustics = include.caustics_from_obj(obj=mp_0)
 
         assert caustics == None
 
-        include = aplt.Include(caustics=True)
+        include = aplt.Include2D(caustics=True)
 
         caustics = include.caustics_from_obj(obj=lp_0)
 
         assert caustics == None
 
-        include = aplt.Include(caustics=True)
+        include = aplt.Include2D(caustics=True)
 
         caustics = include.caustics_from_obj(obj=mp_0)
 
@@ -381,7 +381,7 @@ class TestInclude:
 
     def test__new_include_with_preloaded_critical_curves_and_caustics(self):
 
-        include = aplt.Include(mask=True)
+        include = aplt.Include2D(mask=True)
 
         assert include.preloaded_critical_curves == None
         assert include.preloaded_caustics == None

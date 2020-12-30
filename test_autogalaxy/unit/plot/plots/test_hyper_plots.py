@@ -15,14 +15,14 @@ def make_hyper_plotter_setup():
 
 
 def test__plot_hyper_images_of_galaxies(
-    hyper_galaxy_image_path_dict_7x7, mask_7x7, include_all, plot_path, plot_patch
+    hyper_galaxy_image_path_dict_7x7, mask_7x7, include_2d_all, plot_path, plot_patch
 ):
 
     aplt.hyper.subplot_hyper_images_of_galaxies(
         hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict_7x7,
         mask=mask_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert (
@@ -31,7 +31,7 @@ def test__plot_hyper_images_of_galaxies(
 
 
 def test__plot_contribution_maps_of_galaxies(
-    contribution_map_7x7, mask_7x7, include_all, plot_path, plot_patch
+    contribution_map_7x7, mask_7x7, include_2d_all, plot_path, plot_patch
 ):
 
     aplt.hyper.subplot_contribution_maps_of_galaxies(
@@ -41,8 +41,8 @@ def test__plot_contribution_maps_of_galaxies(
             None,
         ],
         mask=mask_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert (
@@ -52,21 +52,25 @@ def test__plot_contribution_maps_of_galaxies(
 
 
 def test__plot_individual_images(
-    hyper_galaxy_image_0_7x7, contribution_map_7x7, include_all, plot_path, plot_patch
+    hyper_galaxy_image_0_7x7,
+    contribution_map_7x7,
+    include_2d_all,
+    plot_path,
+    plot_patch,
 ):
 
     aplt.hyper.hyper_galaxy_image(
         galaxy_image=hyper_galaxy_image_0_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "hyper_galaxy_image.png") in plot_patch.paths
 
     aplt.hyper.contribution_map(
         contribution_map_in=contribution_map_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "contribution_map.png") in plot_patch.paths

@@ -16,72 +16,72 @@ def make_fit_imaging_plotter_setup():
 
 
 def test__fit_quantities_are_output(
-    masked_imaging_fit_x2_galaxy_7x7, include_all, plot_path, plot_patch
+    masked_imaging_fit_x2_galaxy_7x7, include_2d_all, plot_path, plot_patch
 ):
     aplt.FitImaging.image(
         fit=masked_imaging_fit_x2_galaxy_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "image.png") in plot_patch.paths
 
     aplt.FitImaging.noise_map(
         fit=masked_imaging_fit_x2_galaxy_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "noise_map.png") in plot_patch.paths
 
     aplt.FitImaging.signal_to_noise_map(
         fit=masked_imaging_fit_x2_galaxy_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "signal_to_noise_map.png") in plot_patch.paths
 
     aplt.FitImaging.model_image(
         fit=masked_imaging_fit_x2_galaxy_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "model_image.png") in plot_patch.paths
 
     aplt.FitImaging.residual_map(
         fit=masked_imaging_fit_x2_galaxy_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "residual_map.png") in plot_patch.paths
 
     aplt.FitImaging.normalized_residual_map(
         fit=masked_imaging_fit_x2_galaxy_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "normalized_residual_map.png") in plot_patch.paths
 
     aplt.FitImaging.chi_squared_map(
         fit=masked_imaging_fit_x2_galaxy_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "chi_squared_map.png") in plot_patch.paths
 
 
 def test__fit_sub_plot(
-    masked_imaging_fit_x2_galaxy_7x7, include_all, plot_path, plot_patch
+    masked_imaging_fit_x2_galaxy_7x7, include_2d_all, plot_path, plot_patch
 ):
     aplt.FitImaging.subplot_fit_imaging(
         fit=masked_imaging_fit_x2_galaxy_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(path=plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(path=plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_fit_imaging.png") in plot_patch.paths
@@ -90,15 +90,15 @@ def test__fit_sub_plot(
 def test__subtracted_image_of_galaxy_is_output(
     masked_imaging_fit_7x7,
     masked_imaging_fit_x2_galaxy_7x7,
-    include_all,
+    include_2d_all,
     plot_path,
     plot_patch,
 ):
     aplt.FitImaging.subtracted_image_of_galaxy(
         fit=masked_imaging_fit_7x7,
         galaxy_index=0,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subtracted_image_of_galaxy_0.png") in plot_patch.paths
@@ -106,8 +106,8 @@ def test__subtracted_image_of_galaxy_is_output(
     aplt.FitImaging.subtracted_image_of_galaxy(
         fit=masked_imaging_fit_x2_galaxy_7x7,
         galaxy_index=1,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subtracted_image_of_galaxy_1.png") in plot_patch.paths
@@ -116,15 +116,15 @@ def test__subtracted_image_of_galaxy_is_output(
 def test__model_image_of_galaxy_is_output(
     masked_imaging_fit_7x7,
     masked_imaging_fit_x2_galaxy_7x7,
-    include_all,
+    include_2d_all,
     plot_path,
     plot_patch,
 ):
     aplt.FitImaging.model_image_of_galaxy(
         fit=masked_imaging_fit_7x7,
         galaxy_index=0,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "model_image_of_galaxy_0.png") in plot_patch.paths
@@ -132,20 +132,20 @@ def test__model_image_of_galaxy_is_output(
     aplt.FitImaging.model_image_of_galaxy(
         fit=masked_imaging_fit_x2_galaxy_7x7,
         galaxy_index=1,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "model_image_of_galaxy_1.png") in plot_patch.paths
 
 
 def test_subplot_fit_imaging_is_output(
-    masked_imaging_fit_x2_galaxy_7x7, include_all, plot_path, plot_patch
+    masked_imaging_fit_x2_galaxy_7x7, include_2d_all, plot_path, plot_patch
 ):
     aplt.FitImaging.subplot_fit_imaging(
         fit=masked_imaging_fit_x2_galaxy_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_fit_imaging.png") in plot_patch.paths
@@ -154,15 +154,15 @@ def test_subplot_fit_imaging_is_output(
 def test__subplot_of_galaxy(
     masked_imaging_fit_7x7,
     masked_imaging_fit_x2_galaxy_7x7,
-    include_all,
+    include_2d_all,
     plot_path,
     plot_patch,
 ):
     aplt.FitImaging.subplot_of_galaxy(
         fit=masked_imaging_fit_7x7,
         galaxy_index=0,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_of_galaxy_0.png") in plot_patch.paths
@@ -170,16 +170,16 @@ def test__subplot_of_galaxy(
     aplt.FitImaging.subplot_of_galaxy(
         fit=masked_imaging_fit_x2_galaxy_7x7,
         galaxy_index=1,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_of_galaxy_1.png") in plot_patch.paths
 
     aplt.FitImaging.subplots_of_all_galaxies(
         fit=masked_imaging_fit_x2_galaxy_7x7,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "subplot_of_galaxy_0.png") in plot_patch.paths
@@ -189,12 +189,14 @@ def test__subplot_of_galaxy(
 def test__fit_individuals__source_and_galaxy__dependent_on_input(
     masked_imaging_fit_7x7,
     masked_imaging_fit_x2_galaxy_7x7,
-    include_all,
+    include_2d_all,
     plot_path,
     plot_patch,
 ):
     aplt.FitImaging.individuals(
         fit=masked_imaging_fit_7x7,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
         plot_image=True,
         plot_noise_map=False,
         plot_signal_to_noise_map=False,
@@ -202,8 +204,6 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
         plot_chi_squared_map=True,
         plot_subtracted_images_of_galaxies=True,
         plot_model_images_of_galaxies=True,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "image.png") in plot_patch.paths
@@ -226,6 +226,8 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
 
     aplt.FitImaging.individuals(
         fit=masked_imaging_fit_x2_galaxy_7x7,
+        plotter_2d=aplt.Plotter2D(output=aplt.Output(plot_path, format="png")),
+        include_2d=include_2d_all,
         plot_image=True,
         plot_noise_map=False,
         plot_signal_to_noise_map=False,
@@ -233,8 +235,6 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
         plot_chi_squared_map=True,
         plot_subtracted_images_of_galaxies=True,
         plot_model_images_of_galaxies=True,
-        include=include_all,
-        plotter=aplt.Plotter(output=aplt.Output(plot_path, format="png")),
     )
 
     assert path.join(plot_path, "image.png") in plot_patch.paths
