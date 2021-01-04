@@ -8,4 +8,4 @@ mass_profile = ag.mp.EllipticalIsothermal(
     einstein_radius=1.0, elliptical_comps=(0.0, 0.05263)
 )
 
-aplt.MassProfile.convergence(mass_profile=mass_profile, grid=grid)
+aplt.MassProfile.figure_convergence(mass_profile=mass_profile, grid=grid)

@@ -78,21 +78,6 @@ class Include2D(inc.Include2D):
     def multiple_images(self):
         return self.load(value=self._multiple_images, name="multiple_images")
 
-    def positions_from_masked_dataset(self, masked_dataset):
-
-        if self.positions:
-            return masked_dataset.positions
-
-    def light_profile_centres_from_obj(self, obj):
-
-        if self.light_profile_centres:
-            return obj.light_profile_centres
-
-    def mass_profile_centres_from_obj(self, obj):
-
-        if self.mass_profile_centres:
-            return obj.mass_profile_centres
-
     def critical_curves_from_obj(self, obj):
 
         if not hasattr(obj, "has_mass_profile"):
@@ -132,26 +117,10 @@ class Include2D(inc.Include2D):
                     "Caustics could not be calculated due to an unphysical mass model"
                 )
 
-    def positions_from_fit(self, fit):
-        """Get the masks of the fit if the masks should be plotted on the fit.
-
-        Parameters
-        -----------
-        fit : datas.fitting.fitting.AbstractLensHyperFit
-            The fit to the datas, which includes a lisrt of every model image, residual_map, chi-squareds, etc.
-        mask : bool
-            If `True`, the masks is plotted on the fit's datas.
-        """
-        if self.positions:
-            try:
-                return fit.settings_masked_dataset.positions
-            except AttributeError:
-                return None
-
     def traced_grid_of_plane_from_fit_and_plane_index(self, fit, plane_index):
 
         if self.positions is True:
-            return fit.tracer.traced_grids_of_planes_from_grid(grid=fit.grid)[
+            return fit.tracer.traced_grids_of_planes_from_grid(grid=fit.figure_grid)[
                 plane_index
             ]
 
@@ -165,15 +134,6 @@ class Include2D(inc.Include2D):
             return fit.tracer.traced_grids_of_planes_from_grid(grid=positions)[
                 plane_index
             ]
-
-    def inversion_image_pixelization_grid_from_fit(self, fit):
-
-        if fit.inversion is not None:
-            if self.mapper_data_pixelization_grid:
-                if fit.inversion.mapper.is_data_pixelization:
-                    return fit.tracer.sparse_image_plane_grids_of_planes_from_grid(
-                        grid=fit.grid
-                    )[-1]
 
     def new_include_with_preloaded_critical_curves_and_caustics(
         self, preloaded_critical_curves, preloaded_caustics

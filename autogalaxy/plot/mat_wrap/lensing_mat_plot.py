@@ -1,16 +1,16 @@
 from functools import wraps
 
-from autoarray.plot.mat_wrap import plotter as aa_plotter
+from autoarray.plot.mat_wrap import mat_plot
 from autoarray.plot.mat_wrap.wrap import wrap_base, wrap_2d
 from autogalaxy.plot.mat_wrap import lensing_wrap
 
 
-class Plotter1D(aa_plotter.Plotter1D):
+class MatPlot1D(mat_plot.MatPlot1D):
 
     pass
 
 
-class Plotter2D(aa_plotter.Plotter2D):
+class MatPlot2D(mat_plot.MatPlot2D):
     def __init__(
         self,
         units: wrap_base.Units = wrap_base.Units(),
@@ -27,7 +27,7 @@ class Plotter2D(aa_plotter.Plotter2D):
         output: wrap_base.Output = wrap_base.Output(),
         array_overlay: wrap_2d.ArrayOverlay = wrap_2d.ArrayOverlay(),
         grid_scatter: wrap_2d.GridScatter = wrap_2d.GridScatter(),
-        line_plot: wrap_2d.GridPlot = wrap_2d.GridPlot(),
+        grid_plot: wrap_2d.GridPlot = wrap_2d.GridPlot(),
         vector_field_quiver: wrap_2d.VectorFieldQuiver = wrap_2d.VectorFieldQuiver(),
         patch_overlay: wrap_2d.PatchOverlay = wrap_2d.PatchOverlay(),
         voronoi_drawer: wrap_2d.VoronoiDrawer = wrap_2d.VoronoiDrawer(),
@@ -95,7 +95,7 @@ class Plotter2D(aa_plotter.Plotter2D):
           Overlays an input `Array` over the figure using `plt.imshow`.
         grid_scatter : wrap_2d.GridScatter
           Scatters a `Grid` of (y,x) coordinates over the figure using `plt.scatter`.
-        line_plot: wrap_2d.LinePlot
+        grid_plot: wrap_2d.LinePlot
           Plots lines of data (e.g. a y versus x plot via `plt.plot`, vertical lines via `plt.avxline`, etc.)
         vector_field_quiver: wrap_2d.VectorFieldQuiver
           Plots a `VectorField` object using the matplotlib function `plt.quiver`.
@@ -133,7 +133,7 @@ class Plotter2D(aa_plotter.Plotter2D):
         self.critical_curves_plot = critical_curves_plot
         self.caustics_plot = caustics_plot
 
-        super(Plotter2D, self).__init__(
+        super(MatPlot2D, self).__init__(
             units=units,
             figure=figure,
             cmap=cmap,
@@ -156,6 +156,6 @@ class Plotter2D(aa_plotter.Plotter2D):
             vector_field_quiver=vector_field_quiver,
             patch_overlay=patch_overlay,
             array_overlay=array_overlay,
-            line_plot=line_plot,
+            grid_plot=grid_plot,
             voronoi_drawer=voronoi_drawer,
         )

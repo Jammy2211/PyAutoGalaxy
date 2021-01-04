@@ -31,17 +31,34 @@ from autoarray.plot.mat_wrap.wrap.wrap_2d import (
     SerialOverscanPlot,
 )
 
-from autogalaxy.plot.mat_wrap.lensing_plotter import Plotter1D, Plotter2D
+from autoarray.plot.plotters.structure_plotters import ArrayPlotter
+from autoarray.plot.plotters.structure_plotters import FramePlotter
+from autoarray.plot.plotters.structure_plotters import GridPlotter
+from autoarray.plot.plotters.structure_plotters import MapperPlotter
+from autoarray.plot.plotters.structure_plotters import LinePlotter
+from autoarray.plot.plotters.inversion_plotters import InversionPlotter
+from autoarray.plot.plotters.imaging_plotters import ImagingPlotter
+from autoarray.plot.plotters.interferometer_plotters import InterferometerPlotter
+
+from autogalaxy.plot.mat_wrap.lensing_wrap import (
+    LightProfileCentresScatter,
+    MassProfileCentresScatter,
+    CriticalCurvesPlot,
+    CausticsPlot,
+    MultipleImagesScatter,
+)
+
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D, MatPlot2D
 from autogalaxy.plot.mat_wrap.lensing_include import Include1D, Include2D
 from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D, Visuals2D
 
-from autogalaxy.plot.plots import light_profile_plots as LightProfile
-from autogalaxy.plot.plots import mass_profile_plots as MassProfile
-from autogalaxy.plot.plots import galaxy_plots as Galaxy
-from autogalaxy.plot.plots import fit_galaxy_plots as FitGalaxy
-from autogalaxy.plot.plots import fit_imaging_plots as FitImaging
-from autogalaxy.plot.plots import fit_interferometer_plots as FitInterferometer
-from autogalaxy.plot.plots import plane_plots as Plane
-from autogalaxy.plot.plots import mapper_plots as Mapper
-from autogalaxy.plot.plots import inversion_plots as Inversion
-from autogalaxy.plot.plots import hyper_plots as hyper
+from autogalaxy.plot.plotters.light_profile_plotters import LightProfilePlotter
+from autogalaxy.plot.plotters.mass_profile_plotters import MassProfilePlotter
+from autogalaxy.plot.plotters.galaxy_plotters import GalaxyPlotter
+from autogalaxy.plot.plotters.fit_galaxy_plotters import FitGalaxyPlotter
+from autogalaxy.plot.plotters.fit_imaging_plotters import FitImagingPlotter
+from autogalaxy.plot.plotters.fit_interferometer_plotters import (
+    FitInterferometerPlotter,
+)
+from autogalaxy.plot.plotters.plane_plotters import PlanePlotter
+from autogalaxy.plot.plotters.hyper_plotters import HyperPlotter

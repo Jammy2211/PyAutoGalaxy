@@ -10,7 +10,7 @@ class Analysis(af.Analysis):
     def __init__(self, cosmology, results):
         self.cosmology = cosmology
         self.results = results
-        self.visualizer = visualizer.PhaseGalaxyVisualizer()
+        self.visualizer = visualizer.Visualizer()
 
 
 # noinspection PyAbstractClass
@@ -27,19 +27,19 @@ class AnalysisSingle(Analysis):
     def visualize(self, paths, instance, during_analysis):
         fit = self.fit_for_instance(instance=instance)
 
-        self.visualizer.plot_galaxy_fit_subplot(fit)
+        self.visualizer.visualize_galaxy_fit_subplot(fit)
 
         if during_analysis:
-            self.visualizer.plot_fit_individuals(fit)
+            self.visualizer.visualize_fit_individuals(fit)
         else:
 
             if self.visualizer.plot_plane_all_at_end_png:
-                self.visualizer.plot_fit_individuals(
+                self.visualizer.visualize_fit_individuals(
                     fit=fit, plot_all=True, image_format="png"
                 )
 
             if self.visualizer.plot_plane_all_at_end_fits:
-                self.visualizer.plot_fit_individuals(
+                self.visualizer.visualize_fit_individuals(
                     fit=fit, plot_all=True, image_format="fits", path_suffix="/fits/"
                 )
 
@@ -83,26 +83,26 @@ class AnalysisDeflections(Analysis):
         fit_y, fit_x = self.fit_for_instance(instance=instance)
 
         if self.visualizer.plot_subplot_galaxy_fit:
-            self.visualizer.plot_galaxy_fit_subplot(fit_y, path_suffix="/fit_y_")
-            self.visualizer.plot_galaxy_fit_subplot(fit_x, path_suffix="/fit_x_")
+            self.visualizer.visualize_galaxy_fit_subplot(fit_y, path_suffix="/fit_y_")
+            self.visualizer.visualize_galaxy_fit_subplot(fit_x, path_suffix="/fit_x_")
 
         if during_analysis:
-            self.visualizer.plot_fit_individuals(fit_y, path_suffix="/fit_y")
-            self.visualizer.plot_fit_individuals(fit_x, path_suffix="/fit_x")
+            self.visualizer.visualize_fit_individuals(fit_y, path_suffix="/fit_y")
+            self.visualizer.visualize_fit_individuals(fit_x, path_suffix="/fit_x")
         else:
             if self.visualizer.plot_plane_all_at_end_png:
-                self.visualizer.plot_fit_individuals(
+                self.visualizer.visualize_fit_individuals(
                     fit_y, path_suffix="/fits/fit_y", plot_all=True
                 )
-                self.visualizer.plot_fit_individuals(
+                self.visualizer.visualize_fit_individuals(
                     fit_x, path_suffix="/fits/fit_x", plot_all=True
                 )
 
             if self.visualizer.plot_plane_all_at_end_fits:
-                self.visualizer.plot_fit_individuals(
+                self.visualizer.visualize_fit_individuals(
                     fit_y, path_suffix="/fits/fit_y", plot_all=True, image_format="fits"
                 )
-                self.visualizer.plot_fit_individuals(
+                self.visualizer.visualize_fit_individuals(
                     fit_x, path_suffix="/fits/fit_x", plot_all=True, image_format="fits"
                 )
 

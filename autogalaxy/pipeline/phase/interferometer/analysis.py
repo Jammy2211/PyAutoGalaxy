@@ -3,7 +3,7 @@ from autoarray.exc import PixelizationException, InversionException, GridExcepti
 from autofit.exc import FitException
 from autogalaxy.fit import fit
 from autogalaxy.galaxy import galaxy as g
-from autogalaxy.pipeline import visualizer
+from autogalaxy.pipeline import visualizer as vis
 from autogalaxy.pipeline.phase.dataset import analysis as analysis_data
 
 
@@ -15,10 +15,6 @@ class Analysis(analysis_data.Analysis):
             settings=settings,
             cosmology=cosmology,
             results=results,
-        )
-
-        self.visualizer = visualizer.PhaseInterferometerVisualizer(
-            masked_dataset=masked_interferometer
         )
 
         result = analysis_data.last_result_with_use_as_hyper_dataset(results=results)
@@ -124,8 +120,6 @@ class Analysis(analysis_data.Analysis):
 
     def visualize(self, paths: af.Paths, instance, during_analysis):
 
-        self.visualizer.visualize_interferometer(paths=paths)
-
         self.associate_hyper_images(instance=instance)
         plane = self.plane_for_instance(instance=instance)
         hyper_background_noise = self.hyper_background_noise_for_instance(
@@ -136,36 +130,26 @@ class Analysis(analysis_data.Analysis):
             plane=plane, hyper_background_noise=hyper_background_noise
         )
 
-        if plane.has_mass_profile:
-
-            visualizer = self.visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-                preloaded_critical_curves=plane.critical_curves,
-                preloaded_caustics=plane.caustics,
-            )
-
-        else:
-
-            visualizer = self.visualizer
-
-        visualizer.visualize_fit(paths=paths, fit=fit, during_analysis=during_analysis)
-
-        self.visualizer.visualize_hyper_images(
-            paths=paths,
+        visualizer = vis.Visualizer(plot_path=paths.image_path)
+        visualizer.visualize_interferometer(
+            interferometer=self.masked_interferometer.interferometer
+        )
+        visualizer.visualize_fit_interferometer(
+            fit=fit, during_analysis=during_analysis
+        )
+        visualizer.visualize_hyper_images(
             hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
             hyper_model_image=self.hyper_model_image,
             contribution_maps_of_galaxies=plane.contribution_maps_of_galaxies,
         )
 
-        if self.visualizer.plot_fit_no_hyper:
+        if visualizer.plot_fit_no_hyper:
             fit = self.masked_interferometer_fit_for_plane(
                 plane=plane, hyper_background_noise=None, use_hyper_scalings=False
             )
 
-            visualizer.visualize_fit(
-                paths=paths,
-                fit=fit,
-                during_analysis=during_analysis,
-                subfolders="fit_no_hyper",
+            visualizer.visualize_fit_interferometer(
+                fit=fit, during_analysis=during_analysis, subfolders="fit_no_hyper"
             )
 
     def make_attributes(self):

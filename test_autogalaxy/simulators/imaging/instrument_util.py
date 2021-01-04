@@ -172,12 +172,12 @@ def simulate_imaging_from_instrument(data_name, instrument, galaxies):
         overwrite=True,
     )
 
-    plotter = aplt.Plotter(output=aplt.Output(path=dataset_path, format="png"))
-    plotter = aplt.Plotter(output=aplt.Output(path=dataset_path, format="png"))
+    plotter = aplt.MatPlot2D(output=aplt.Output(path=dataset_path, format="png"))
+    plotter = aplt.MatPlot2D(output=aplt.Output(path=dataset_path, format="png"))
 
     aplt.Imaging.subplot_imaging(imaging=imaging, plotter=plotter)
 
-    aplt.Imaging.individual(
+    aplt.imaging.individual(
         imaging=imaging,
         plot_image=True,
         plot_noise_map=True,
@@ -186,7 +186,7 @@ def simulate_imaging_from_instrument(data_name, instrument, galaxies):
         plotter=plotter,
     )
 
-    aplt.Plane.image(plane=plane, grid=grid, plotter=plotter)
+    aplt.plane.image(plane=plane, grid=grid, plotter=plotter)
 
 
 def load_test_imaging(instrument, data_name, name=None):
