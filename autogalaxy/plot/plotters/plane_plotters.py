@@ -55,14 +55,10 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
 
         visuals_2d = super(PlanePlotter, self).visuals_with_include_2d
 
-        light_profile_centres = (
-            self.plane.light_profile_centres
-            if self.include_2d.light_profile_centres
-            else None
-        )
-
         return visuals_2d + lensing_visuals.Visuals2D(
-            light_profile_centres=light_profile_centres
+            light_profile_centres=self.extract_2d(
+                "light_profile_centres", self.lensing_obj.light_profile_centres
+            )
         )
 
     @property

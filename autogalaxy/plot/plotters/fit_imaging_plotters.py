@@ -1,12 +1,10 @@
 import numpy as np
+from autoarray.structures import grids
 from autoarray.plot.plotters import fit_imaging_plotters
 from autoarray.plot.plotters import inversion_plotters
 from autoarray.plot.plotters import abstract_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.fit import fit as f
-
-from functools import wraps
-import copy
 
 
 class FitImagingPlotter(fit_imaging_plotters.FitImagingPlotter):
@@ -32,21 +30,27 @@ class FitImagingPlotter(fit_imaging_plotters.FitImagingPlotter):
     @property
     def visuals_with_include_2d(self):
 
-        visuals_2d = copy.deepcopy(self.visuals_2d)
+        visuals_2d = super(FitImagingPlotter, self).visuals_with_include_2d
 
-        return visuals_2d + lensing_visuals.Visuals2D()
+        return visuals_2d + lensing_visuals.Visuals2D(
+            light_profile_centres=self.extract_2d(
+                "mass_profile_centres", self.plane.light_profile_centres
+            ),
+            mass_profile_centres=self.extract_2d(
+                "mass_profile_centres", self.plane.mass_profile_centres
+            ),
+        )
 
     @property
     def inversion_plotter(self):
         return inversion_plotters.InversionPlotter(
             inversion=self.fit.inversion,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.visuals_2d,
+            visuals_2d=self.visuals_with_include_2d,
             include_2d=self.include_2d,
         )
 
-    @abstract_plotters.for_figure
-    @abstract_plotters.update_filename_and_labels_with_index
+    @abstract_plotters.for_figure_with_index
     def figure_subtracted_image_of_galaxy(self, galaxy_index):
         """Plot the model image of a specific plane of a lens fit.
 
@@ -87,8 +91,7 @@ class FitImagingPlotter(fit_imaging_plotters.FitImagingPlotter):
             array=subtracted_image, visuals_2d=self.visuals_with_include_2d
         )
 
-    @abstract_plotters.for_figure
-    @abstract_plotters.update_filename_and_labels_with_index
+    @abstract_plotters.for_figure_with_index
     def figure_model_image_of_galaxy(self, galaxy_index):
         """Plot the model image of a specific plane of a lens fit.
 
@@ -167,8 +170,7 @@ class FitImagingPlotter(fit_imaging_plotters.FitImagingPlotter):
 
                 self.subplot_of_galaxy(galaxy_index=galaxy_index)
 
-    @abstract_plotters.for_subplot
-    @abstract_plotters.update_filename_and_labels_with_index
+    @abstract_plotters.for_subplot_with_index
     def subplot_of_galaxy(self, galaxy_index):
         """Plot the model datas_ of an analysis, using the *Fitter* class object.
 

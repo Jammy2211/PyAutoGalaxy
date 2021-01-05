@@ -27,9 +27,9 @@ def plot_setting(section, name):
 
 
 class Visualizer:
-    def __init__(self, plot_path):
+    def __init__(self, visualize_path):
 
-        self.image_path = plot_path
+        self.visualize_path = visualize_path
 
         self.plot_fit_no_hyper = plot_setting("hyper", "fit_no_hyper")
 
@@ -38,14 +38,14 @@ class Visualizer:
     def mat_plot_1d_from(self, subfolders, format="png"):
         return lensing_mat_plot.MatPlot1D(
             output=wrap_base.Output(
-                path=path.join(self.image_path, subfolders), format=format
+                path=path.join(self.visualize_path, subfolders), format=format
             )
         )
 
     def mat_plot_2d_from(self, subfolders, format="png"):
         return lensing_mat_plot.MatPlot2D(
             output=wrap_base.Output(
-                path=path.join(self.image_path, subfolders), format=format
+                path=path.join(self.visualize_path, subfolders), format=format
             )
         )
 
@@ -268,10 +268,7 @@ class Visualizer:
             )
 
     def visualize_hyper_images(
-        self,
-        hyper_galaxy_image_path_dict,
-        hyper_model_image,
-        contribution_maps_of_galaxies,
+        self, hyper_galaxy_image_path_dict, hyper_model_image, plane
     ):
         def should_plot(name):
             return plot_setting(section="hyper", name=name)
@@ -291,10 +288,11 @@ class Visualizer:
                 hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict
             )
 
-        if should_plot("contribution_maps_of_galaxies"):
-            hyper_plotter.subplot_contribution_maps_of_galaxies(
-                contribution_maps_of_galaxies=contribution_maps_of_galaxies
-            )
+        if hasattr(plane, "contribution_maps_of_galaxies"):
+            if should_plot("contribution_maps_of_galaxies"):
+                hyper_plotter.subplot_contribution_maps_of_galaxies(
+                    contribution_maps_of_galaxies=plane.contribution_maps_of_galaxies
+                )
 
     def visualize_galaxy_fit(self, fit, visuals_2d=None):
         def should_plot(name):

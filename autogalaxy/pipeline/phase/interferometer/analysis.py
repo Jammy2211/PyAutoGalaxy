@@ -130,17 +130,22 @@ class Analysis(analysis_data.Analysis):
             plane=plane, hyper_background_noise=hyper_background_noise
         )
 
-        visualizer = vis.Visualizer(plot_path=paths.image_path)
+        visualizer = vis.Visualizer(visualize_path=paths.image_path)
         visualizer.visualize_interferometer(
             interferometer=self.masked_interferometer.interferometer
         )
         visualizer.visualize_fit_interferometer(
             fit=fit, during_analysis=during_analysis
         )
+        if fit.inversion is not None:
+            visualizer.visualize_inversion(
+                inversion=fit.inversion, during_analysis=during_analysis
+            )
+
         visualizer.visualize_hyper_images(
             hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
             hyper_model_image=self.hyper_model_image,
-            contribution_maps_of_galaxies=plane.contribution_maps_of_galaxies,
+            plane=plane,
         )
 
         if visualizer.plot_fit_no_hyper:

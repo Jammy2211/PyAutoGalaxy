@@ -55,33 +55,17 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             The collection of attributes that can be plotted by a `Plotter2D` object.
         """
 
-        visuals_2d = copy.deepcopy(self.visuals_2d)
-
-        origin = (
-            grids.GridIrregular(grid=[self.grid.origin])
-            if self.include_2d.origin
-            else None
-        )
-
-        mask = self.grid.mask if self.include_2d.mask else None
-
-        border = (
-            self.grid.mask.geometry.border_grid_sub_1.in_1d_binned
-            if self.include_2d.border
-            else None
-        )
-
-        light_profile_centres = (
-            self.light_profile.light_profile_centres
-            if self.include_2d.light_profile_centres
-            else None
-        )
-
-        return visuals_2d + lensing_visuals.Visuals2D(
-            origin=origin,
-            mask=mask,
-            border=border,
-            light_profile_centres=light_profile_centres,
+        return self.visuals_2d + lensing_visuals.Visuals2D(
+            origin=self.extract_2d(
+                "origin", value=grids.GridIrregular(grid=[self.grid.origin])
+            ),
+            mask=self.extract_2d("mask", value=self.grid.mask),
+            border=self.extract_2d(
+                "border", value=self.grid.mask.geometry.border_grid_sub_1.in_1d_binned
+            ),
+            light_profile_centres=self.extract_2d(
+                "light_profile_centres", self.light_profile.light_profile_centres
+            ),
         )
 
     @abstract_plotters.for_figure

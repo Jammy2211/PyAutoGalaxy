@@ -35,7 +35,7 @@ class TestVisualizer:
         if path.exists(plot_path):
             shutil.rmtree(plot_path)
 
-        visualizer = vis.Visualizer(plot_path=plot_path)
+        visualizer = vis.Visualizer(visualize_path=plot_path)
 
         visualizer.visualize_imaging(imaging=imaging_7x7)
 
@@ -65,7 +65,7 @@ class TestVisualizer:
         if path.exists(plot_path):
             shutil.rmtree(plot_path)
 
-        visualizer = vis.Visualizer(plot_path=plot_path)
+        visualizer = vis.Visualizer(visualize_path=plot_path)
 
         visualizer.visualize_fit_imaging(
             fit=masked_imaging_fit_x2_galaxy_inversion_7x7, during_analysis=False
@@ -103,7 +103,7 @@ class TestVisualizer:
     def test__visualizes_interferometer__uses_configs(
         self, interferometer_7, include_2d_all, plot_path, plot_patch
     ):
-        visualizer = vis.Visualizer(plot_path=plot_path)
+        visualizer = vis.Visualizer(visualize_path=plot_path)
 
         visualizer.visualize_interferometer(interferometer=interferometer_7)
 
@@ -122,7 +122,7 @@ class TestVisualizer:
         plot_path,
         plot_patch,
     ):
-        visualizer = vis.Visualizer(plot_path=plot_path)
+        visualizer = vis.Visualizer(visualize_path=plot_path)
 
         visualizer.visualize_fit_interferometer(
             fit=masked_interferometer_fit_x2_galaxy_inversion_7x7, during_analysis=True
@@ -161,7 +161,7 @@ class TestVisualizer:
         if path.exists(plot_path):
             shutil.rmtree(plot_path)
 
-        visualizer = vis.Visualizer(plot_path=plot_path)
+        visualizer = vis.Visualizer(visualize_path=plot_path)
 
         visualizer.visualize_inversion(
             inversion=voronoi_inversion_9_3x3, during_analysis=True
@@ -198,12 +198,12 @@ class TestVisualizer:
         plot_patch,
     ):
 
-        visualizer = vis.Visualizer(plot_path=plot_path)
+        visualizer = vis.Visualizer(visualize_path=plot_path)
 
         visualizer.visualize_hyper_images(
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict_7x7,
             hyper_model_image=hyper_model_image_7x7,
-            contribution_maps_of_galaxies=masked_imaging_fit_x2_galaxy_inversion_7x7.plane.contribution_maps_of_galaxies,
+            plane=masked_imaging_fit_x2_galaxy_inversion_7x7.plane,
         )
 
         plot_path = path.join(plot_path, "hyper")

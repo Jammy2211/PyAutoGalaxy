@@ -53,38 +53,20 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             The collection of attributes that can be plotted by a `Plotter2D` object.
         """
 
-        visuals_2d = copy.deepcopy(self.visuals_2d)
-
-        origin = (
-            grids.GridIrregular(grid=[self.grid.origin])
-            if self.include_2d.origin
-            else None
-        )
-
-        mask = self.grid.mask if self.include_2d.mask else None
-
-        border = (
-            self.grid.mask.geometry.border_grid_sub_1.in_1d_binned
-            if self.include_2d.border
-            else None
-        )
-
-        mass_profile_centres = (
-            self.lensing_obj.mass_profile_centres
-            if self.include_2d.mass_profile_centres
-            else None
-        )
-
-        critical_curves = self.include_2d.critical_curves_from_obj(obj=self.lensing_obj)
-        caustics = self.include_2d.caustics_from_obj(obj=self.lensing_obj)
-
-        return visuals_2d + lensing_visuals.Visuals2D(
-            origin=origin,
-            mask=mask,
-            border=border,
-            mass_profile_centres=mass_profile_centres,
-            critical_curves=critical_curves,
-            caustics=caustics,
+        return self.visuals_2d + lensing_visuals.Visuals2D(
+            origin=self.extract_2d(
+                "origin", value=grids.GridIrregular(grid=[self.grid.origin])
+            ),
+            mask=self.extract_2d("mask", value=self.grid.mask),
+            border=self.extract_2d(
+                "border", value=self.grid.mask.geometry.border_grid_sub_1.in_1d_binned
+            ),
+            mass_profile_centres=self.extract_2d(
+                "mass_profile_centres", self.lensing_obj.mass_profile_centres
+            ),
+            critical_curves=self.extract_2d(
+                "critical_curves", self.lensing_obj.critical_curves
+            ),
         )
 
     @abstract_plotters.for_figure

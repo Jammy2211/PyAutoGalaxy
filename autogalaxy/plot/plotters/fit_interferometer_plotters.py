@@ -32,12 +32,17 @@ class FitInterferometerPlotter(fit_interferometer_plotters.FitInterferometerPlot
     def plane(self):
         return self.fit.plane
 
+    @property
+    def visuals_with_include_2d(self):
+        visuals_2d = super(FitInterferometerPlotter, self).visuals_with_include_2d
+        return visuals_2d + lensing_visuals.Visuals2D()
+
     def plane_plotter_from(self, plane):
         return plane_plotters.PlanePlotter(
             plane=plane,
             grid=self.fit.masked_interferometer.grid,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.visuals_2d,
+            visuals_2d=self.visuals_with_include_2d,
             include_2d=self.include_2d,
         )
 
@@ -46,7 +51,7 @@ class FitInterferometerPlotter(fit_interferometer_plotters.FitInterferometerPlot
         return inversion_plotters.InversionPlotter(
             inversion=self.fit.inversion,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.visuals_2d,
+            visuals_2d=self.visuals_with_include_2d,
             include_2d=self.include_2d,
         )
 
