@@ -1063,7 +1063,7 @@ class SetupMassTotal(AbstractSetupMass):
 
             centre_tuple = mass.centre
 
-            mass.centre = self.mass_prior_model.centre
+            mass.centre = self._cls_to_prior_model(cls=self.mass_prior_model.cls).centre
 
             mass.centre.centre_0 = af.GaussianPrior(mean=centre_tuple[0], sigma=0.05)
             mass.centre.centre_1 = af.GaussianPrior(mean=centre_tuple[1], sigma=0.05)
@@ -1327,8 +1327,6 @@ class SetupMassLightDark(AbstractSetupMass):
         """
         if self.align_bulge_dark_centre:
             dark_prior_model.centre = bulge_prior_model.centre
-        else:
-            dark_prior_model.centre = results.last.model.galaxies.lens.bulge.centre
 
     def light_and_mass_prior_models_with_updated_priors(
         self, results: af.ResultsCollection, as_instance=False
@@ -1394,37 +1392,6 @@ class SetupMassLightDark(AbstractSetupMass):
         )
 
         return bulge, disk, envelope
-
-    def light_prior_models_update_mass_to_light_parameters(
-        self, result, bulge_prior_model, disk_prior_model, envelope_prior_model
-    ):
-
-        if bulge_prior_model is not None:
-            bulge_prior_model.mass_to_light_ratio = (
-                result.model.galaxies.lens.bulge.mass_to_light_ratio
-            )
-            if hasattr(bulge_prior_model, "mass_to_light_gradient"):
-                bulge_prior_model.mass_to_light_gradient = (
-                    result.model.galaxies.lens.bulge.mass_to_light_gradient
-                )
-
-        if disk_prior_model is not None:
-            disk_prior_model.mass_to_light_ratio = (
-                result.model.galaxies.lens.disk.mass_to_light_ratio
-            )
-            if hasattr(disk_prior_model, "mass_to_light_gradient"):
-                disk_prior_model.mass_to_light_gradient = (
-                    result.model.galaxies.lens.disk.mass_to_light_gradient
-                )
-
-        if envelope_prior_model is not None:
-            envelope_prior_model.mass_to_light_ratio = (
-                result.model.galaxies.lens.envelope.mass_to_light_ratio
-            )
-            if hasattr(envelope_prior_model, "mass_to_light_gradient"):
-                envelope_prior_model.mass_to_light_gradient = (
-                    result.model.galaxies.lens.envelope.mass_to_light_gradient
-                )
 
 
 class SetupSMBH(AbstractSetup):

@@ -3,12 +3,15 @@ import numpy as np
 from astropy import cosmology as cosmo
 from autoarray.structures import arrays, grids
 from autoarray.util import array_util
-from autogalaxy.util import cosmology_util
 from scipy.optimize import root_scalar
 from skimage import measure
 
 
 class LensingObject:
+
+    _preload_critical_curves = None
+    _preload_caustics = None
+
     @property
     def mass_profiles(self):
         raise NotImplementedError("mass profiles list should be overriden")
@@ -271,6 +274,13 @@ class LensingObject:
 
     @property
     def critical_curves(self):
+
+        if self._preload_critical_curves is not None:
+            return self._preload_critical_curves
+
+        if len(self.mass_profiles) == 0:
+            return []
+
         return grids.GridIrregularGrouped(
             [self.tangential_critical_curve, self.radial_critical_curve]
         )
@@ -305,6 +315,13 @@ class LensingObject:
 
     @property
     def caustics(self):
+
+        if self._preload_caustics is not None:
+            return self._preload_caustics
+
+        if len(self.mass_profiles) == 0:
+            return []
+
         return grids.GridIrregularGrouped(
             [self.tangential_caustic, self.radial_caustic]
         )

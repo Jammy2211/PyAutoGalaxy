@@ -17,7 +17,7 @@ def test__tag__mixture_of_values():
     assert settings.phase_tag_no_inversion == "settings__imaging[grid_sub_2__snr_2]"
     assert (
         settings.phase_tag_with_inversion
-        == "settings__imaging[grid_sub_2_inv_sub_2__snr_2]__pix[no_border]__inv[mat]"
+        == "settings__imaging[grid_sub_2_inv_sub_2__snr_2]__pix[use_border]__inv[mat]"
     )
 
     settings = ag.SettingsPhaseImaging(
@@ -38,7 +38,7 @@ def test__tag__mixture_of_values():
     )
     assert (
         settings.phase_tag_with_inversion
-        == "settings__imaging[grid_sub_1_inv_facc_0.1__bin_3__psf_2x2]__pix[no_border]__inv[mat]"
+        == "settings__imaging[grid_sub_1_inv_facc_0.1__bin_3__psf_2x2]__pix[use_border]__inv[mat]"
     )
 
     settings = ag.SettingsPhaseInterferometer(
@@ -59,7 +59,7 @@ def test__tag__mixture_of_values():
     )
     assert (
         settings.phase_tag_with_inversion
-        == "settings__interferometer[grid_facc_0.1_inv_sub_3__dft]__pix[no_border]__inv[mat]__lh_cap_200.0"
+        == "settings__interferometer[grid_facc_0.1_inv_sub_3__dft]__pix[use_border]__inv[mat]__lh_cap_200.0"
     )
 
     settings = ag.SettingsPhaseInterferometer(
@@ -79,5 +79,5 @@ def test__tag__mixture_of_values():
     )
     assert (
         settings.phase_tag_with_inversion
-        == "settings__interferometer[grid_facc_0.1_inv_sub_3__nufft]__pix[no_border]__inv[lop]"
+        == "settings__interferometer[grid_facc_0.1_inv_sub_3__nufft]__pix[use_border]__inv[lop]"
     )

@@ -1,18 +1,19 @@
 from os import path
-from pathlib import Path
-
-import numpy as np
 import pytest
 
 from autoconf import conf
 from autogalaxy.mock import fixtures
 
-directory = Path(__file__).parent.parent
+directory = path.dirname(path.realpath(__file__))
 
 
 @pytest.fixture(autouse=True)
-def set_config_path():
-    conf.instance.push(directory / "config", directory / "output")
+def set_config_path(request):
+
+    conf.instance.push(
+        new_path=path.join(directory, "config"),
+        output_path=path.join(directory, "output"),
+    )
 
 
 ### Datasets ###
@@ -98,9 +99,9 @@ def make_transformer_7x7_7():
     return fixtures.make_transformer_7x7_7()
 
 
-@pytest.fixture(name="positions_7x7")
-def make_positions_7x7():
-    return fixtures.make_positions_7x7()
+@pytest.fixture(name="grid_irregular_grouped_7x7")
+def make_grid_irregular_grouped_7x7():
+    return fixtures.make_grid_irregular_grouped_7x7()
 
 
 @pytest.fixture(name="visibilities_mask_7")
@@ -336,6 +337,6 @@ def make_voronoi_mapper_9_3x3():
     return fixtures.make_voronoi_mapper_9_3x3()
 
 
-@pytest.fixture(name="include_all")
+@pytest.fixture(name="include_2d_all")
 def make_include_all():
     return fixtures.make_include_all()
