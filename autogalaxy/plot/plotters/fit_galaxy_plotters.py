@@ -26,9 +26,7 @@ class FitGalaxyPlotter(fit_imaging_plotters.FitImagingPlotter):
     @property
     def visuals_with_include_2d(self):
 
-        visuals_2d = copy.deepcopy(self.visuals_2d)
-
-        return visuals_2d + lensing_visuals.Visuals2D()
+        return self.visuals_2d + self.visuals_2d.__class__()
 
     @abstract_plotters.for_figure
     def figure_galaxy_data_array(self, galaxy_data):

@@ -1,9 +1,7 @@
-from autoarray.structures import arrays, grids
+from autoarray.structures import grids
 from autoarray.util import plotter_util
 from autoarray.plot.plotters import abstract_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
-
-import copy
 
 
 class LightProfilePlotter(abstract_plotters.AbstractPlotter):
@@ -55,7 +53,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             The collection of attributes that can be plotted by a `Plotter2D` object.
         """
 
-        return self.visuals_2d + lensing_visuals.Visuals2D(
+        return self.visuals_2d + self.visuals_2d.__class__(
             origin=self.extract_2d(
                 "origin", value=grids.GridIrregular(grid=[self.grid.origin])
             ),

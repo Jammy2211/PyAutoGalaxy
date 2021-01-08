@@ -1,8 +1,6 @@
 from autoarray.structures import arrays, grids
 from autoarray.plot.plotters import abstract_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
-from autoarray.plot.plotters import structure_plotters
-import copy
 
 
 class LensingObjPlotter(abstract_plotters.AbstractPlotter):
@@ -53,7 +51,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             The collection of attributes that can be plotted by a `Plotter2D` object.
         """
 
-        return self.visuals_2d + lensing_visuals.Visuals2D(
+        return self.visuals_2d + self.visuals_2d.__class__(
             origin=self.extract_2d(
                 "origin", value=grids.GridIrregular(grid=[self.grid.origin])
             ),
@@ -65,7 +63,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
                 "mass_profile_centres", self.lensing_obj.mass_profile_centres
             ),
             critical_curves=self.extract_2d(
-                "critical_curves", self.lensing_obj.critical_curves
+                "critical_curves", self.lensing_obj.critical_curves, "critical_curves"
             ),
         )
 

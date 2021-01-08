@@ -14,6 +14,7 @@ class Include2D(inc.Include2D):
         origin=None,
         mask=None,
         border=None,
+        grid=None,
         positions=None,
         light_profile_centres=None,
         mass_profile_centres=None,
@@ -22,19 +23,16 @@ class Include2D(inc.Include2D):
         multiple_images=None,
         mapper_source_pixelization_grid: typing.Optional[bool] = None,
         mapper_source_full_grid: typing.Optional[bool] = None,
-        mapper_source_border: typing.Optional[bool] = None,
         mapper_data_pixelization_grid=None,
-        preloaded_critical_curves=None,
-        preload_caustics=None,
     ):
 
         super(Include2D, self).__init__(
             origin=origin,
             mask=mask,
             border=border,
+            grid=grid,
             mapper_source_pixelization_grid=mapper_source_pixelization_grid,
             mapper_source_full_grid=mapper_source_full_grid,
-            mapper_source_border=mapper_source_border,
             mapper_data_pixelization_grid=mapper_data_pixelization_grid,
         )
 
@@ -44,9 +42,6 @@ class Include2D(inc.Include2D):
         self._critical_curves = critical_curves
         self._caustics = caustics
         self._multiple_images = multiple_images
-
-        self.preloaded_critical_curves = preloaded_critical_curves
-        self.preloaded_caustics = preload_caustics
 
     @property
     def positions(self):

@@ -57,7 +57,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
 
         visuals_2d = super(GalaxyPlotter, self).visuals_with_include_2d
 
-        return visuals_2d + lensing_visuals.Visuals2D(
+        return visuals_2d + visuals_2d.__class__(
             light_profile_centres=self.extract_2d(
                 "light_profile_centres", self.lensing_obj.light_profile_centres
             )

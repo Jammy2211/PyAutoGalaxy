@@ -3,7 +3,6 @@ from autoarray.plot.plotters import abstract_plotters
 from autogalaxy.plot.plotters import lensing_obj_plotter
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.plane import plane as pl
-from autoarray.plot.plotters import structure_plotters
 
 
 class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
@@ -57,10 +56,11 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
 
         visuals_2d.mask = None
 
-        return visuals_2d + lensing_visuals.Visuals2D(
+        return visuals_2d + visuals_2d.__class__(
+            grid=self.extract_2d("grid", self.grid),
             light_profile_centres=self.extract_2d(
                 "light_profile_centres", self.lensing_obj.light_profile_centres
-            )
+            ),
         )
 
     @property
@@ -83,41 +83,39 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
         )
 
     @abstract_plotters.for_figure
+    def figure_plane_grid(self, indexes=None, axis_limits=None):
+
+        self.mat_plot_2d.plot_grid(
+            grid=self.grid,
+            visuals_2d=self.visuals_with_include_2d,
+            indexes=indexes,
+            axis_limits=axis_limits,
+        )
+
+    @abstract_plotters.for_figure
     def figure_contribution_map(self):
 
         self.mat_plot_2d.plot_array(
             array=self.plane.contribution_map, visuals_2d=self.visuals_with_include_2d
         )
 
-    @abstract_plotters.for_figure
-    def subplot_image_and_source_plane(
-        self, image_plane, source_plane, grid, indexes=None, axis_limits=None
-    ):
+    @abstract_plotters.for_subplot
+    def subplot_with_source_grid(self, indexes=None, axis_limits=None):
 
         number_subplots = 2
 
-        mat_plot_2d = self.mat_plot_2d.mat_plot_for_subplot_from(
-            func=self.subplot_image_and_source_plane
+        self.open_subplot_figure(number_subplots=number_subplots)
+
+        self.setup_subplot(number_subplots=number_subplots, subplot_index=1)
+        self.figure_plane_grid(indexes=indexes, axis_limits=axis_limits)
+
+        source_plane_grid = self.plane.traced_grid_from_grid(grid=self.grid)
+
+        self.setup_subplot(number_subplots=number_subplots, subplot_index=2)
+
+        self.mat_plot_2d.plot_grid(
+            grid=source_plane_grid, indexes=indexes, axis_limits=axis_limits
         )
 
-        mat_plot_2d.open_subplot_figure(number_subplots=number_subplots)
-
-        mat_plot_2d.setup_subplot(number_subplots=number_subplots, subplot_index=1)
-
-        self.figure_plane_grid(
-            plane=image_plane, grid=grid, indexes=indexes, axis_limits=axis_limits
-        )
-
-        source_plane_grid = image_plane.traced_grid_from_grid(grid=grid)
-
-        mat_plot_2d.setup_subplot(number_subplots=number_subplots, subplot_index=2)
-
-        self.figure_plane_grid(
-            plane=source_plane,
-            grid=source_plane_grid,
-            indexes=indexes,
-            axis_limits=axis_limits,
-        )
-
-        mat_plot_2d.output.subplot_to_figure()
-        mat_plot_2d.figure.close()
+        self.mat_plot_2d.output.subplot_to_figure()
+        self.mat_plot_2d.figure.close()

@@ -6,7 +6,9 @@ from autoarray.plot.plotters import fit_interferometer_plotters
 from autogalaxy.fit import fit as f
 
 
-class FitInterferometerPlotter(fit_interferometer_plotters.FitInterferometerPlotter):
+class FitInterferometerPlotter(
+    fit_interferometer_plotters.AbstractFitInterferometerPlotter
+):
     def __init__(
         self,
         fit: f.FitInterferometer,
@@ -35,7 +37,7 @@ class FitInterferometerPlotter(fit_interferometer_plotters.FitInterferometerPlot
     @property
     def visuals_with_include_2d(self):
         visuals_2d = super(FitInterferometerPlotter, self).visuals_with_include_2d
-        return visuals_2d + lensing_visuals.Visuals2D()
+        return visuals_2d + visuals_2d.__class__()
 
     def plane_plotter_from(self, plane):
         return plane_plotters.PlanePlotter(

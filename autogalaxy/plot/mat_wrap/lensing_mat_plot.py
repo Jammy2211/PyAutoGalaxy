@@ -17,6 +17,7 @@ class MatPlot2D(mat_plot.MatPlot2D):
         figure: wrap_base.Figure = wrap_base.Figure(),
         cmap: wrap_base.Cmap = wrap_base.Cmap(),
         colorbar: wrap_base.Colorbar = wrap_base.Colorbar(),
+        colorbar_tickparams: wrap_base.ColorbarTickParams = wrap_base.ColorbarTickParams(),
         tickparams: wrap_base.TickParams = wrap_base.TickParams(),
         yticks: wrap_base.YTicks = wrap_base.YTicks(),
         xticks: wrap_base.XTicks = wrap_base.XTicks(),
@@ -70,9 +71,11 @@ class MatPlot2D(mat_plot.MatPlot2D):
         cmap : wrap_base.Cmap
           Customizes the colormap of the plot and its normalization via matplotlib `colors` objects such 
           as `colors.Normalize` and `colors.LogNorm`.
-        colorbar : wrap_base.Colorbar
-          Plots the colorbar of the plot via `plt.colorbar` and customizes its appearance and ticks using methods
-          like `cb.set_yticklabels` and `cb.ax.tick_params`.
+        colorbar : mat_wrap.Colorbar
+            Plots the colorbar of the plot via `plt.colorbar` and customizes its tick labels and values using method
+            like `cb.set_yticklabels`.
+        colorbar_tickparams : mat_wrap.ColorbarTickParams
+            Customizes the yticks of the colorbar plotted via `plt.colorbar`.
         tickparams : wrap_base.TickParams
           Customizes the appearances of the y and x ticks on the plot, (e.g. the fontsize), using `plt.tick_params`.
         yticks : wrap_base.YTicks
@@ -138,6 +141,7 @@ class MatPlot2D(mat_plot.MatPlot2D):
             figure=figure,
             cmap=cmap,
             colorbar=colorbar,
+            colorbar_tickparams=colorbar_tickparams,
             legend=legend,
             title=title,
             tickparams=tickparams,

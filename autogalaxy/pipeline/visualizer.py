@@ -15,7 +15,7 @@ from autogalaxy.plot.plotters import (
     fit_galaxy_plotters,
     hyper_plotters,
 )
-from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include
+from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 
 
 def setting(section, name):

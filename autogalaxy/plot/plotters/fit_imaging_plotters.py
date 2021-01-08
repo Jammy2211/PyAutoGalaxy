@@ -1,5 +1,4 @@
 import numpy as np
-from autoarray.structures import grids
 from autoarray.plot.plotters import fit_imaging_plotters
 from autoarray.plot.plotters import inversion_plotters
 from autoarray.plot.plotters import abstract_plotters
@@ -7,7 +6,7 @@ from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_
 from autogalaxy.fit import fit as f
 
 
-class FitImagingPlotter(fit_imaging_plotters.FitImagingPlotter):
+class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
     def __init__(
         self,
         fit: f.FitImaging,
@@ -30,9 +29,9 @@ class FitImagingPlotter(fit_imaging_plotters.FitImagingPlotter):
     @property
     def visuals_with_include_2d(self):
 
-        visuals_2d = super(FitImagingPlotter, self).visuals_with_include_2d
+        visuals_2d = super().visuals_with_include_2d
 
-        return visuals_2d + lensing_visuals.Visuals2D(
+        return visuals_2d + visuals_2d.__class__(
             light_profile_centres=self.extract_2d(
                 "mass_profile_centres", self.plane.light_profile_centres
             ),
