@@ -1,8 +1,6 @@
-import copy
 from os import path
 
 from autoconf import conf
-import autofit as af
 from autoarray.plot.mat_wrap.wrap import wrap_base
 from autoarray.plot.plotters import (
     imaging_plotters,
@@ -242,7 +240,7 @@ class Visualizer:
             inversion_plotter.subplot_inversion()
 
         inversion_plotter.figure_individuals(
-            plot_reconstructed_image=should_plot("reconstruction"),
+            plot_reconstructed_image=should_plot("reconstructed_image"),
             plot_reconstruction=should_plot("reconstruction"),
             plot_errors=should_plot("errors"),
             plot_residual_map=should_plot("residual_map"),
@@ -255,17 +253,19 @@ class Visualizer:
 
         if not during_analysis:
 
-            inversion_plotter.figure_individuals(
-                plot_reconstructed_image=True,
-                plot_reconstruction=True,
-                plot_errors=True,
-                plot_residual_map=True,
-                plot_normalized_residual_map=True,
-                plot_chi_squared_map=True,
-                plot_regularization_weights=True,
-                plot_interpolated_reconstruction=True,
-                plot_interpolated_errors=True,
-            )
+            if should_plot("all_at_end_png"):
+
+                inversion_plotter.figure_individuals(
+                    plot_reconstructed_image=True,
+                    plot_reconstruction=True,
+                    plot_errors=True,
+                    plot_residual_map=True,
+                    plot_normalized_residual_map=True,
+                    plot_chi_squared_map=True,
+                    plot_regularization_weights=True,
+                    plot_interpolated_reconstruction=True,
+                    plot_interpolated_errors=True,
+                )
 
     def visualize_hyper_images(
         self, hyper_galaxy_image_path_dict, hyper_model_image, plane
