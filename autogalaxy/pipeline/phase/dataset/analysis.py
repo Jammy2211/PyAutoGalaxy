@@ -1,4 +1,5 @@
 import autofit as af
+from autogalaxy.pipeline.phase.abstract import analysis as abstract_analysis
 from autogalaxy.galaxy import galaxy as g
 from autogalaxy.plane import plane as pl
 
@@ -17,12 +18,12 @@ def last_result_with_use_as_hyper_dataset(results):
                         return result
 
 
-class Analysis(af.Analysis):
+class Analysis(abstract_analysis.Analysis):
     def __init__(self, masked_dataset, cosmology, settings, results):
 
+        super().__init__(cosmology=cosmology, settings=settings)
+
         self.masked_dataset = masked_dataset
-        self.cosmology = cosmology
-        self.settings = settings
 
         result = last_result_with_use_as_hyper_dataset(results=results)
 
@@ -108,10 +109,6 @@ class Analysis(af.Analysis):
         """
         with open(f"{paths.pickle_path}/mask.pickle", "wb") as f:
             dill.dump(self.masked_dataset.mask, f)
-
-    def save_settings(self, paths: af.Paths):
-        with open(f"{paths.pickle_path}/settings.pickle", "wb+") as f:
-            pickle.dump(self.settings, f)
 
     def make_attributes(self):
         raise NotImplementedError

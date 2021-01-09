@@ -839,6 +839,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         grid_radius = grid_radius + 0j
         return np.real(self.coord_func_m(grid_radius=grid_radius))
 
+    @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 

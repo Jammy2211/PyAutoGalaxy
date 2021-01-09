@@ -161,6 +161,22 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         return 2 * np.pi * x * self.image_from_grid_radii(x)
 
 
+class PointSource(EllipticalLightProfile):
+    def __init__(self, centre: typing.Tuple[float, float] = (0.0, 0.0)):
+
+        super().__init__(centre=centre, elliptical_comps=(0.0, 0.0))
+
+
+class PointSourceFlux(PointSource):
+    def __init__(
+        self, centre: typing.Tuple[float, float] = (0.0, 0.0), flux: float = 0.1
+    ):
+
+        super().__init__(centre=centre)
+
+        self.flux = flux
+
+
 class EllipticalGaussian(EllipticalLightProfile):
     def __init__(
         self,

@@ -50,7 +50,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         vis.Visuals2D
             The collection of attributes that can be plotted by a `Plotter2D` object.
         """
-        print(self.grid.sub_size)
+
         return self.visuals_2d + self.visuals_2d.__class__(
             origin=self.extract_2d(
                 "origin", value=grids.GridIrregular(grid=[self.grid.origin])
@@ -98,7 +98,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         grid : grid_like
             The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
         """
-        print(self.grid.sub_size)
+
         self.mat_plot_2d.plot_array(
             array=self.lensing_obj.potential_from_grid(grid=self.grid),
             visuals_2d=self.visuals_with_include_2d,
