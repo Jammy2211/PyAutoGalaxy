@@ -424,6 +424,46 @@ class TestMagnification:
 
         assert mean_error < 1e-4
 
+    def test__magnification_irregular_from_grid(self):
+
+        # grid = ag.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=1)
+        #
+        # print(grid.in_2d[28, 47])
+        # print(grid.in_2d[67, 48])
+        # print(grid.in_2d[68, 48])
+        #
+        # sis = MockEllipticalIsothermal(
+        #     centre=(0.0, 0.0),
+        #     elliptical_comps=(0.001, 0.001),
+        #     einstein_radius=1.0
+        # )
+        #
+        # print(sis.magnification_from_grid(grid=grid).in_2d[28, 47])
+        # print(sis.magnification_from_grid(grid=grid).in_2d[67, 48])
+        # print(sis.magnification_from_grid(grid=grid).in_2d[68, 48])
+        #
+        # print()
+        #
+        # buffer = 0.001
+        #
+        # print(sis.magnification_irregular_from_grid(grid=ag.GridIrregularGrouped(grid=[[(1.100039, -0.00742)]]), buffer=buffer))
+        # print(sis.magnification_irregular_from_grid(grid=ag.GridIrregularGrouped(grid=[[(-0.90039, -0.00585)]]), buffer=buffer))
+        # print(sis.magnification_irregular_from_grid(grid=ag.GridIrregularGrouped(grid=[[(-0.95039, -0.00585)]]), buffer=buffer))
+        # print(sis.magnification_irregular_from_grid(grid=ag.GridIrregularGrouped(grid=[[(-1.0, -0.00585)]]), buffer=buffer))
+        #
+        # stop
+
+        sie = MockEllipticalIsothermal(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
+        )
+
+        grid = ag.GridIrregularGrouped(grid=[[(0.5, 0.5)], [(1.0, 1.0)]])
+
+        magnification = sie.magnification_irregular_from_grid(grid=grid)
+
+        assert magnification.in_grouped_list[0][0] == pytest.approx(-0.56303, 1.0e-4)
+        assert magnification.in_grouped_list[1][0] == pytest.approx(-2.57591, 1.0e-4)
+
 
 class TestBoundingBox:
     def test__mass_profile_bounding_box__is_drawn_around_centres_of_mass_profies(self):

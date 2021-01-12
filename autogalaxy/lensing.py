@@ -150,6 +150,38 @@ class LensingObject:
 
         return arrays.Array(array=1 / det_jacobian, mask=grid.mask)
 
+    def magnification_irregular_from_grid(self, grid, buffer=0.01):
+
+        grid_shift_y_up = np.zeros(grid.shape)
+        grid_shift_y_up[:,0] = grid[:,0] + buffer
+        grid_shift_y_up[:,1] = grid[:,1]
+
+        grid_shift_y_down = np.zeros(grid.shape)
+        grid_shift_y_down[:,0] = grid[:,0] - buffer
+        grid_shift_y_down[:,1] = grid[:,1]
+
+        grid_shift_x_left = np.zeros(grid.shape)
+        grid_shift_x_left[:,0] = grid[:,0]
+        grid_shift_x_left[:,1] = grid[:,1] - buffer
+
+        grid_shift_x_right = np.zeros(grid.shape)
+        grid_shift_x_right[:,0] = grid[:,0]
+        grid_shift_x_right[:,1] = grid[:,1] + buffer
+
+        deflections_up = self.deflections_from_grid(grid=grid_shift_y_up)
+        deflections_down = self.deflections_from_grid(grid=grid_shift_y_down)
+        deflections_left = self.deflections_from_grid(grid=grid_shift_x_left)
+        deflections_right = self.deflections_from_grid(grid=grid_shift_x_right)
+
+        shear_yy = 0.5 * (deflections_up[:, 0] - deflections_down[:, 0]) / buffer
+        shear_xy = 0.5 * (deflections_up[:, 1] - deflections_down[:, 1]) / buffer
+        shear_yx = 0.5 * (deflections_right[:, 0] - deflections_left[:, 0]) / buffer
+        shear_xx = 0.5 * (deflections_right[:, 1] - deflections_left[:, 1]) / buffer
+
+        det_A = (1 - shear_xx) * (1 - shear_yy) - shear_xy * shear_yx
+
+        return grid.values_from_arr_1d(arr_1d=1./det_A)
+
     @property
     def mass_profile_bounding_box(self):
         y_min = np.min(list(map(lambda centre: centre[0], self.mass_profile_centres)))
@@ -249,7 +281,10 @@ class LensingObject:
             shape_2d=tangential_eigen_values.sub_shape_2d,
         )
 
-        return grids.GridIrregularGrouped(tangential_critical_curve)
+        try:
+            return grids.GridIrregularGrouped(tangential_critical_curve)
+        except IndexError:
+            return []
 
     @property
     def radial_critical_curve(self):
@@ -281,9 +316,12 @@ class LensingObject:
         if len(self.mass_profiles) == 0:
             return []
 
-        return grids.GridIrregularGrouped(
-            [self.tangential_critical_curve, self.radial_critical_curve]
-        )
+        try:
+            return grids.GridIrregularGrouped(
+                [self.tangential_critical_curve, self.radial_critical_curve]
+            )
+        except ValueError:
+            return []
 
     @property
     def tangential_caustic(self):
@@ -322,9 +360,12 @@ class LensingObject:
         if len(self.mass_profiles) == 0:
             return []
 
-        return grids.GridIrregularGrouped(
-            [self.tangential_caustic, self.radial_caustic]
-        )
+        try:
+            return grids.GridIrregularGrouped(
+                [self.tangential_caustic, self.radial_caustic]
+            )
+        except IndexError:
+            return []
 
     @property
     @array_util.Memoizer()
