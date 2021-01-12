@@ -193,15 +193,12 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
         self.open_subplot_figure(number_subplots=number_subplots)
 
         self.setup_subplot(number_subplots=number_subplots, subplot_index=1)
-
         self.figure_image()
 
         self.setup_subplot(number_subplots=number_subplots, subplot_index=2)
-
         self.figure_subtracted_image_of_galaxy(galaxy_index=galaxy_index)
 
         self.setup_subplot(number_subplots=number_subplots, subplot_index=3)
-
         self.figure_model_image_of_galaxy(galaxy_index=galaxy_index)
 
         if self.plane.has_pixelization:
@@ -215,9 +212,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
                 subplot_index=4,
                 aspect=float(aspect_inv),
             )
-
             self.inversion_plotter.figure_reconstruction()
 
         self.mat_plot_2d.output.subplot_to_figure()
-
         self.mat_plot_2d.figure.close()

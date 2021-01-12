@@ -1,14 +1,11 @@
-import os
 import shutil
 from os import path
 
 import pytest
 
-import autofit as af
 import autogalaxy as ag
 from autoconf import conf
 from autogalaxy.pipeline import visualizer as vis
-from autogalaxy.plot.mat_wrap import lensing_include
 
 directory = path.dirname(path.abspath(__file__))
 

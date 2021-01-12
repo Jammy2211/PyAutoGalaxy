@@ -178,7 +178,6 @@ class PointSourceFlux(PointSource):
 
         self.flux = flux
 
-
 class EllipticalGaussian(EllipticalLightProfile):
     def __init__(
         self,
