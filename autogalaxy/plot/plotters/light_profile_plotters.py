@@ -1,4 +1,5 @@
 from autoarray.structures import grids
+from autoarray.plot.mat_wrap import mat_plot as mp
 from autoarray.util import plotter_util
 from autoarray.plot.plotters import abstract_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
@@ -66,23 +67,15 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             ),
         )
 
-    @abstract_plotters.for_figure
-    def figure_image(self):
-        """Plot the image of a light profile, on a grid of (y,x) coordinates.
+    def figures(self, image=False):
 
-        Set *autogalaxy.hyper_galaxies.arrays.mat_plot_2d.mat_plot_2d* for a description of all innput parameters not described below.
+        if image:
 
-        Parameters
-        -----------
-        light_profile : model.profiles.light_profiles.LightProfile
-            The light profile whose image are plotted.
-        grid : grid_like
-            The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
-        """
-        self.mat_plot_2d.plot_array(
-            array=self.light_profile.image_from_grid(grid=self.grid),
-            visuals_2d=self.visuals_with_include_2d,
-        )
+            self.mat_plot_2d.plot_array(
+                array=self.light_profile.image_from_grid(grid=self.grid),
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(title="Image", filename="image"),
+            )
 
     def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
         self,

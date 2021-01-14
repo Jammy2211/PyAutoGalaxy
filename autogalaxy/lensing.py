@@ -153,20 +153,20 @@ class LensingObject:
     def magnification_irregular_from_grid(self, grid, buffer=0.01):
 
         grid_shift_y_up = np.zeros(grid.shape)
-        grid_shift_y_up[:,0] = grid[:,0] + buffer
-        grid_shift_y_up[:,1] = grid[:,1]
+        grid_shift_y_up[:, 0] = grid[:, 0] + buffer
+        grid_shift_y_up[:, 1] = grid[:, 1]
 
         grid_shift_y_down = np.zeros(grid.shape)
-        grid_shift_y_down[:,0] = grid[:,0] - buffer
-        grid_shift_y_down[:,1] = grid[:,1]
+        grid_shift_y_down[:, 0] = grid[:, 0] - buffer
+        grid_shift_y_down[:, 1] = grid[:, 1]
 
         grid_shift_x_left = np.zeros(grid.shape)
-        grid_shift_x_left[:,0] = grid[:,0]
-        grid_shift_x_left[:,1] = grid[:,1] - buffer
+        grid_shift_x_left[:, 0] = grid[:, 0]
+        grid_shift_x_left[:, 1] = grid[:, 1] - buffer
 
         grid_shift_x_right = np.zeros(grid.shape)
-        grid_shift_x_right[:,0] = grid[:,0]
-        grid_shift_x_right[:,1] = grid[:,1] + buffer
+        grid_shift_x_right[:, 0] = grid[:, 0]
+        grid_shift_x_right[:, 1] = grid[:, 1] + buffer
 
         deflections_up = self.deflections_from_grid(grid=grid_shift_y_up)
         deflections_down = self.deflections_from_grid(grid=grid_shift_y_down)
@@ -180,7 +180,7 @@ class LensingObject:
 
         det_A = (1 - shear_xx) * (1 - shear_yy) - shear_xy * shear_yx
 
-        return grid.values_from_arr_1d(arr_1d=1./det_A)
+        return grid.values_from_arr_1d(arr_1d=1.0 / det_A)
 
     @property
     def mass_profile_bounding_box(self):

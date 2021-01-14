@@ -74,5 +74,6 @@ def test__all_quantities_are_output(
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
-    light_profile_plotter.figure_image()
+    light_profile_plotter.figures(image=True)
+
     assert path.join(plot_path, "image.png") in plot_patch.paths

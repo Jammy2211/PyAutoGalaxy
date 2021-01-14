@@ -1,5 +1,6 @@
 from autoarray.structures import arrays, grids
 from autoarray.plot.plotters import abstract_plotters
+from autoarray.plot.mat_wrap import mat_plot as mp
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 
 
@@ -67,102 +68,67 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             ),
         )
 
-    @abstract_plotters.for_figure
-    def figure_convergence(self):
-        """Plot the convergence of a mass profile, on a grid of (y,x) coordinates.
+    def figures(
+        self,
+        convergence=False,
+        potential=False,
+        deflections_y=False,
+        deflections_x=False,
+        magnification=False,
+    ):
 
-        Set *autogalaxy.hyper_galaxies.arrays.mat_plot_2d.mat_plot_2d* for a description of all innput parameters not described below.
+        if convergence:
 
-        Parameters
-        -----------
-        mass_profile : model.profiles.mass_profiles.MassProfile
-            The mass profile whose convergence is plotted.
-        grid : grid_like
-            The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
-        """
-        self.mat_plot_2d.plot_array(
-            array=self.lensing_obj.convergence_from_grid(grid=self.grid),
-            visuals_2d=self.visuals_with_include_2d,
-        )
+            self.mat_plot_2d.plot_array(
+                array=self.lensing_obj.convergence_from_grid(grid=self.grid),
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(title="Convergence", filename="convergence"),
+            )
 
-    @abstract_plotters.for_figure
-    def figure_potential(self):
-        """Plot the potential of a mass profile, on a grid of (y,x) coordinates.
+        if potential:
 
-        Set *autogalaxy.hyper_galaxies.arrays.mat_plot_2d.mat_plot_2d* for a description of all innput parameters not described below.
+            self.mat_plot_2d.plot_array(
+                array=self.lensing_obj.potential_from_grid(grid=self.grid),
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(title="Potential", filename="potential"),
+            )
 
-        Parameters
-        -----------
-        mass_profile : model.profiles.mass_profiles.MassProfile
-            The mass profile whose potential is plotted.
-        grid : grid_like
-            The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
-        """
+        if deflections_y:
 
-        self.mat_plot_2d.plot_array(
-            array=self.lensing_obj.potential_from_grid(grid=self.grid),
-            visuals_2d=self.visuals_with_include_2d,
-        )
+            deflections = self.lensing_obj.deflections_from_grid(grid=self.grid)
+            deflections_y = arrays.Array.manual_mask(
+                array=deflections.in_1d[:, 0], mask=self.grid.mask
+            )
 
-    @abstract_plotters.for_figure
-    def figure_deflections_y(self):
-        """Plot the y component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
+            self.mat_plot_2d.plot_array(
+                array=deflections_y,
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(
+                    title="Deflections Y", filename="deflections_y"
+                ),
+            )
 
-        Set *autogalaxy.hyper_galaxies.arrays.mat_plot_2d.mat_plot_2d* for a description of all innput parameters not described below.
+        if deflections_x:
 
-        Parameters
-        -----------
-        mass_profile : model.profiles.mass_profiles.MassProfile
-            The mass profile whose y deflecton angles are plotted.
-        grid : grid_like
-            The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
-        """
+            deflections = self.lensing_obj.deflections_from_grid(grid=self.grid)
+            deflections_x = arrays.Array.manual_mask(
+                array=deflections.in_1d[:, 1], mask=self.grid.mask
+            )
 
-        deflections = self.lensing_obj.deflections_from_grid(grid=self.grid)
-        deflections_y = arrays.Array.manual_mask(
-            array=deflections.in_1d[:, 0], mask=self.grid.mask
-        )
+            self.mat_plot_2d.plot_array(
+                array=deflections_x,
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(
+                    title="deflections X", filename="deflections_x"
+                ),
+            )
 
-        self.mat_plot_2d.plot_array(
-            array=deflections_y, visuals_2d=self.visuals_with_include_2d
-        )
+        if magnification:
 
-    @abstract_plotters.for_figure
-    def figure_deflections_x(self):
-        """Plot the x component of the deflection angles of a mass profile, on a grid of (y,x) coordinates.
-
-        Set *autogalaxy.hyper_galaxies.arrays.mat_plot_2d.mat_plot_2d* for a description of all innput parameters not described below.
-
-        Parameters
-        -----------
-        mass_profile : model.profiles.mass_profiles.MassProfile
-            The mass profile whose x deflecton angles are plotted.
-        grid : grid_like
-            The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
-        """
-        deflections = self.lensing_obj.deflections_from_grid(grid=self.grid)
-        deflections_x = arrays.Array.manual_mask(
-            array=deflections.in_1d[:, 1], mask=self.grid.mask
-        )
-
-        self.mat_plot_2d.plot_array(
-            array=deflections_x, visuals_2d=self.visuals_with_include_2d
-        )
-
-    @abstract_plotters.for_figure
-    def figure_magnification(self):
-        """Plot the magnification of a mass profile, on a grid of (y,x) coordinates.
-
-        Set *autogalaxy.hyper_galaxies.arrays.mat_plot_2d.mat_plot_2d* for a description of all innput parameters not described below.
-
-        Parameters
-        -----------
-        mass_profile : model.profiles.mass_profiles.MassProfile
-            The mass profile whose magnification is plotted.
-        grid : grid_like
-            The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
-        """
-        self.mat_plot_2d.plot_array(
-            array=self.lensing_obj.magnification_from_grid(grid=self.grid),
-            visuals_2d=self.visuals_with_include_2d,
-        )
+            self.mat_plot_2d.plot_array(
+                array=self.lensing_obj.magnification_from_grid(grid=self.grid),
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(
+                    title="Magnification", filename="magnification"
+                ),
+            )

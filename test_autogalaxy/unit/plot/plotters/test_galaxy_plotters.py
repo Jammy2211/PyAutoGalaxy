@@ -74,11 +74,9 @@ def test__individual_images_are_output(
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
+    galaxy_plotter.figures(image=True, convergence=True)
 
-    galaxy_plotter.figure_image()
     assert path.join(plot_path, "image.png") in plot_patch.paths
-
-    galaxy_plotter.figure_convergence()
     assert path.join(plot_path, "convergence.png") in plot_patch.paths
 
     gal_x1_lp_x1_mp.hyper_galaxy = ag.HyperGalaxy()
@@ -87,7 +85,7 @@ def test__individual_images_are_output(
         shape_2d=(7, 7), pixel_scales=0.1
     )
 
-    galaxy_plotter.figure_contribution_map()
+    galaxy_plotter.figures(contribution_map=True)
     assert path.join(plot_path, "contribution_map.png") in plot_patch.paths
 
 
@@ -106,18 +104,15 @@ def test__subplots_galaxy_quantities__all_are_output(
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
+    galaxy_plotter.subplot_of_light_profiles(image=True)
 
-    galaxy_plotter.subplot_image()
     assert path.join(plot_path, "subplot_image.png") in plot_patch.paths
 
-    galaxy_plotter.subplot_convergence()
+    galaxy_plotter.subplot_of_mass_profiles(
+        convergence=True, potential=True, deflections_y=True, deflections_x=True
+    )
+
     assert path.join(plot_path, "subplot_convergence.png") in plot_patch.paths
-
-    galaxy_plotter.subplot_potential()
     assert path.join(plot_path, "subplot_potential.png") in plot_patch.paths
-
-    galaxy_plotter.subplot_deflections_y()
     assert path.join(plot_path, "subplot_deflections_y.png") in plot_patch.paths
-
-    galaxy_plotter.subplot_deflections_x()
     assert path.join(plot_path, "subplot_deflections_x.png") in plot_patch.paths

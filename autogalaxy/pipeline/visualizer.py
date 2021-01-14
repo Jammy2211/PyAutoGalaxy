@@ -57,16 +57,14 @@ class Visualizer:
             imaging=imaging, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        imaging_plotter.figure_individuals(
-            plot_image=should_plot("data"),
-            plot_noise_map=should_plot("noise_map"),
-            plot_psf=should_plot("psf"),
-            plot_inverse_noise_map=should_plot("inverse_noise_map"),
-            plot_signal_to_noise_map=should_plot("signal_to_noise_map"),
-            plot_absolute_signal_to_noise_map=should_plot(
-                "absolute_signal_to_noise_map"
-            ),
-            plot_potential_chi_squared_map=should_plot("potential_chi_squared_map"),
+        imaging_plotter.figures(
+            image=should_plot("data"),
+            noise_map=should_plot("noise_map"),
+            psf=should_plot("psf"),
+            inverse_noise_map=should_plot("inverse_noise_map"),
+            signal_to_noise_map=should_plot("signal_to_noise_map"),
+            absolute_signal_to_noise_map=should_plot("absolute_signal_to_noise_map"),
+            potential_chi_squared_map=should_plot("potential_chi_squared_map"),
         )
 
         if should_plot("subplot_dataset"):
@@ -83,40 +81,44 @@ class Visualizer:
             fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        fit_imaging_plotter.figure_individuals(
-            plot_image=should_plot("data"),
-            plot_noise_map=should_plot("noise_map"),
-            plot_signal_to_noise_map=should_plot("signal_to_noise_map"),
-            plot_model_image=should_plot("model_data"),
-            plot_residual_map=should_plot("residual_map"),
-            plot_chi_squared_map=should_plot("chi_squared_map"),
-            plot_normalized_residual_map=should_plot("normalized_residual_map"),
-            plot_subtracted_images_of_galaxies=should_plot(
-                "subtracted_images_of_galaxies"
-            ),
-            plot_model_images_of_galaxies=should_plot("model_images_of_galaxies"),
+        fit_imaging_plotter.figures(
+            image=should_plot("data"),
+            noise_map=should_plot("noise_map"),
+            signal_to_noise_map=should_plot("signal_to_noise_map"),
+            model_image=should_plot("model_data"),
+            residual_map=should_plot("residual_map"),
+            chi_squared_map=should_plot("chi_squared_map"),
+            normalized_residual_map=should_plot("normalized_residual_map"),
+        )
+
+        fit_imaging_plotter.figures_of_galaxies(
+            subtracted_image=should_plot("subtracted_images_of_galaxies"),
+            model_image=should_plot("model_images_of_galaxies"),
         )
 
         if should_plot("subplot_fit"):
             fit_imaging_plotter.subplot_fit_imaging()
 
         if should_plot("subplots_of_galaxies_fits"):
-            fit_imaging_plotter.subplots_of_all_galaxies()
+            fit_imaging_plotter.subplots_of_galaxies()
 
         if not during_analysis:
 
             if should_plot("all_at_end_png"):
 
-                fit_imaging_plotter.figure_individuals(
-                    plot_image=True,
-                    plot_noise_map=True,
-                    plot_signal_to_noise_map=True,
-                    plot_model_image=True,
-                    plot_residual_map=True,
-                    plot_normalized_residual_map=True,
-                    plot_chi_squared_map=True,
-                    plot_subtracted_images_of_galaxies=True,
-                    plot_model_images_of_galaxies=True,
+                fit_imaging_plotter.figures(
+                    image=True,
+                    noise_map=True,
+                    signal_to_noise_map=True,
+                    model_image=True,
+                    residual_map=True,
+                    normalized_residual_map=True,
+                    chi_squared_map=True,
+                )
+
+                fit_imaging_plotter.figures_of_galaxies(
+                    subtracted_image=True,
+                    model_image=True,
                 )
 
             if should_plot("all_at_end_fits"):
@@ -129,16 +131,19 @@ class Visualizer:
                     fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
                 )
 
-                fit_imaging_plotter.figure_individuals(
-                    plot_image=True,
-                    plot_noise_map=True,
-                    plot_signal_to_noise_map=True,
-                    plot_model_image=True,
-                    plot_residual_map=True,
-                    plot_normalized_residual_map=True,
-                    plot_chi_squared_map=True,
-                    plot_subtracted_images_of_galaxies=True,
-                    plot_model_images_of_galaxies=True,
+                fit_imaging_plotter.figures(
+                    image=True,
+                    noise_map=True,
+                    signal_to_noise_map=True,
+                    model_image=True,
+                    residual_map=True,
+                    normalized_residual_map=True,
+                    chi_squared_map=True,
+                )
+
+                fit_imaging_plotter.figures_of_galaxies(
+                    subtracted_image=True,
+                    model_image=True,
                 )
 
     def visualize_interferometer(self, interferometer):
@@ -156,10 +161,10 @@ class Visualizer:
         if should_plot("subplot_dataset"):
             interferometer_plotter.subplot_interferometer()
 
-        interferometer_plotter.figure_individuals(
-            plot_visibilities=should_plot("data"),
-            plot_u_wavelengths=should_plot("uv_wavelengths"),
-            plot_v_wavelengths=should_plot("uv_wavelengths"),
+        interferometer_plotter.figures(
+            visibilities=should_plot("data"),
+            u_wavelengths=should_plot("uv_wavelengths"),
+            v_wavelengths=should_plot("uv_wavelengths"),
         )
 
     def visualize_fit_interferometer(
@@ -182,28 +187,34 @@ class Visualizer:
             fit_interferometer_plotter.subplot_fit_interferometer()
             fit_interferometer_plotter.subplot_fit_real_space()
 
-        fit_interferometer_plotter.figure_individuals(
-            plot_visibilities=should_plot("data"),
-            plot_noise_map=should_plot("noise_map"),
-            plot_signal_to_noise_map=should_plot("signal_to_noise_map"),
-            plot_model_visibilities=should_plot("model_data"),
-            plot_residual_map=should_plot("residual_map"),
-            plot_chi_squared_map=should_plot("chi_squared_map"),
-            plot_normalized_residual_map=should_plot("normalized_residual_map"),
+        fit_interferometer_plotter.figures(
+            visibilities=should_plot("data"),
+            noise_map=should_plot("noise_map"),
+            signal_to_noise_map=should_plot("signal_to_noise_map"),
+            model_visibilities=should_plot("model_data"),
+            residual_map_real=should_plot("residual_map"),
+            residual_map_imag=should_plot("residual_map"),
+            chi_squared_map_real=should_plot("chi_squared_map"),
+            chi_squared_map_imag=should_plot("chi_squared_map"),
+            normalized_residual_map_real=should_plot("normalized_residual_map"),
+            normalized_residual_map_imag=should_plot("normalized_residual_map"),
         )
 
         if not during_analysis:
 
             if should_plot("all_at_end_png"):
 
-                fit_interferometer_plotter.figure_individuals(
-                    plot_visibilities=True,
-                    plot_noise_map=True,
-                    plot_signal_to_noise_map=True,
-                    plot_model_visibilities=True,
-                    plot_residual_map=True,
-                    plot_normalized_residual_map=True,
-                    plot_chi_squared_map=True,
+                fit_interferometer_plotter.figures(
+                    visibilities=True,
+                    noise_map=True,
+                    signal_to_noise_map=True,
+                    model_visibilities=True,
+                    residual_map_real=True,
+                    residual_map_imag=True,
+                    chi_squared_map_real=True,
+                    chi_squared_map_imag=True,
+                    normalized_residual_map_real=True,
+                    normalized_residual_map_imag=True,
                 )
 
             if should_plot("all_at_end_fits"):
@@ -216,14 +227,17 @@ class Visualizer:
                     fit=fit, include_2d=self.include_2d, mat_plot_2d=mat_plot_2d
                 )
 
-                fit_interferometer_plotter.figure_individuals(
-                    plot_visibilities=True,
-                    plot_noise_map=True,
-                    plot_signal_to_noise_map=True,
-                    plot_model_visibilities=True,
-                    plot_residual_map=True,
-                    plot_normalized_residual_map=True,
-                    plot_chi_squared_map=True,
+                fit_interferometer_plotter.figures(
+                    visibilities=True,
+                    noise_map=True,
+                    signal_to_noise_map=True,
+                    model_visibilities=True,
+                    residual_map_real=True,
+                    residual_map_imag=True,
+                    chi_squared_map_real=True,
+                    chi_squared_map_imag=True,
+                    normalized_residual_map_real=True,
+                    normalized_residual_map_imag=True,
                 )
 
     def visualize_inversion(self, inversion, during_analysis):
@@ -239,32 +253,32 @@ class Visualizer:
         if should_plot("subplot_inversion"):
             inversion_plotter.subplot_inversion()
 
-        inversion_plotter.figure_individuals(
-            plot_reconstructed_image=should_plot("reconstructed_image"),
-            plot_reconstruction=should_plot("reconstruction"),
-            plot_errors=should_plot("errors"),
-            plot_residual_map=should_plot("residual_map"),
-            plot_normalized_residual_map=should_plot("normalized_residual_map"),
-            plot_chi_squared_map=should_plot("chi_squared_map"),
-            plot_regularization_weights=should_plot("regularization_weights"),
-            plot_interpolated_reconstruction=should_plot("interpolated_reconstruction"),
-            plot_interpolated_errors=should_plot("interpolated_errors"),
+        inversion_plotter.figures(
+            reconstructed_image=should_plot("reconstructed_image"),
+            reconstruction=should_plot("reconstruction"),
+            errors=should_plot("errors"),
+            residual_map=should_plot("residual_map"),
+            normalized_residual_map=should_plot("normalized_residual_map"),
+            chi_squared_map=should_plot("chi_squared_map"),
+            regularization_weights=should_plot("regularization_weights"),
+            interpolated_reconstruction=should_plot("interpolated_reconstruction"),
+            interpolated_errors=should_plot("interpolated_errors"),
         )
 
         if not during_analysis:
 
             if should_plot("all_at_end_png"):
 
-                inversion_plotter.figure_individuals(
-                    plot_reconstructed_image=True,
-                    plot_reconstruction=True,
-                    plot_errors=True,
-                    plot_residual_map=True,
-                    plot_normalized_residual_map=True,
-                    plot_chi_squared_map=True,
-                    plot_regularization_weights=True,
-                    plot_interpolated_reconstruction=True,
-                    plot_interpolated_errors=True,
+                inversion_plotter.figures(
+                    reconstructed_image=True,
+                    reconstruction=True,
+                    errors=True,
+                    residual_map=True,
+                    normalized_residual_map=True,
+                    chi_squared_map=True,
+                    regularization_weights=True,
+                    interpolated_reconstruction=True,
+                    interpolated_errors=True,
                 )
 
     def visualize_hyper_images(
@@ -319,10 +333,10 @@ class Visualizer:
             include_2d=self.include_2d,
         )
 
-        fit_galaxy_plotter.figure_individuals(
-            plot_image=should_plot("image"),
-            plot_noise_map=should_plot("noise_map"),
-            plot_model_image=should_plot("model_image"),
-            plot_residual_map=should_plot("residual_map"),
-            plot_chi_squared_map=should_plot("chi_squared_map"),
+        fit_galaxy_plotter.figures(
+            image=should_plot("image"),
+            noise_map=should_plot("noise_map"),
+            model_image=should_plot("model_image"),
+            residual_map=should_plot("residual_map"),
+            chi_squared_map=should_plot("chi_squared_map"),
         )

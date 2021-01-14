@@ -1,4 +1,5 @@
 from autoarray.plot.plotters import abstract_plotters
+from autoarray.plot.mat_wrap import mat_plot as mp
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 
 
@@ -38,7 +39,6 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
         """
         return self.visuals_2d
 
-    @abstract_plotters.for_figure
     def figure_hyper_model_image(self, hyper_model_image):
         """Plot the image of a hyper_galaxies galaxy image.
 
@@ -52,10 +52,13 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
             If true, the origin of the datas's coordinate system is plotted as a 'x'.
         """
         self.mat_plot_2d.plot_array(
-            array=hyper_model_image, visuals_2d=self.visuals_with_include_2d
+            array=hyper_model_image,
+            visuals_2d=self.visuals_with_include_2d,
+            auto_labels=mp.AutoLabels(
+                title="Hyper Model Image", filename="hyper_model_image"
+            ),
         )
 
-    @abstract_plotters.for_figure
     def figure_hyper_galaxy_image(self, galaxy_image):
         """Plot the image of a hyper_galaxies galaxy image.
 
@@ -69,10 +72,13 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
             If true, the origin of the datas's coordinate system is plotted as a 'x'.
         """
         self.mat_plot_2d.plot_array(
-            array=galaxy_image, visuals_2d=self.visuals_with_include_2d
+            array=galaxy_image,
+            visuals_2d=self.visuals_with_include_2d,
+            auto_labels=mp.AutoLabels(
+                title="Hyper Galaxy Image", filename="hyper_galaxy_image"
+            ),
         )
 
-    @abstract_plotters.for_figure
     def figure_contribution_map(self, contribution_map_in):
         """Plot the summed contribution maps of a hyper_galaxies-fit.
 
@@ -86,7 +92,11 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
             The index of the datas in the datas-set of which the contribution_maps are plotted.
         """
         self.mat_plot_2d.plot_array(
-            array=contribution_map_in, visuals_2d=self.visuals_with_include_2d
+            array=contribution_map_in,
+            visuals_2d=self.visuals_with_include_2d,
+            auto_labels=mp.AutoLabels(
+                title="Contribution Map", filename="contribution_map"
+            ),
         )
 
     @abstract_plotters.for_subplot
@@ -114,7 +124,9 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
 
             self.figure_hyper_galaxy_image(galaxy_image=galaxy_image)
 
-        self.mat_plot_2d.output.subplot_to_figure()
+        self.mat_plot_2d.output.subplot_to_figure(
+            auto_filename="subplot_hyper_images_of_galaxies"
+        )
 
         self.mat_plot_2d.figure.close()
 
@@ -146,6 +158,8 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
 
             self.figure_contribution_map(contribution_map_in=contribution_map_array)
 
-        self.mat_plot_2d.output.subplot_to_figure()
+        self.mat_plot_2d.output.subplot_to_figure(
+            auto_filename="subplot_contribution_maps_of_galaxies"
+        )
 
         self.mat_plot_2d.figure.close()

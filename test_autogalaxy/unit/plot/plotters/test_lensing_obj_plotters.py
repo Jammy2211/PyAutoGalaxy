@@ -70,18 +70,16 @@ def test__all_quantities_are_output(
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
+    lensing_obj_plotter.figures(
+        convergence=True,
+        potential=True,
+        deflections_y=True,
+        deflections_x=True,
+        magnification=True,
+    )
 
-    lensing_obj_plotter.figure_convergence()
     assert path.join(plot_path, "convergence.png") in plot_patch.paths
-
-    lensing_obj_plotter.figure_potential()
     assert path.join(plot_path, "potential.png") in plot_patch.paths
-
-    lensing_obj_plotter.figure_deflections_y()
     assert path.join(plot_path, "deflections_y.png") in plot_patch.paths
-
-    lensing_obj_plotter.figure_deflections_x()
     assert path.join(plot_path, "deflections_x.png") in plot_patch.paths
-
-    lensing_obj_plotter.figure_magnification()
     assert path.join(plot_path, "magnification.png") in plot_patch.paths

@@ -140,6 +140,27 @@ class FitImaging(aa_fit.FitImaging):
         return model_images_of_galaxies
 
     @property
+    def subtracted_images_of_galaxies(self):
+
+        subtracted_images_of_galaxies = []
+
+        model_images_of_galaxies = self.model_images_of_galaxies
+
+        for galaxy_index in range(len(self.galaxies)):
+
+            other_galaxies_model_images = [
+                model_image
+                for i, model_image in enumerate(model_images_of_galaxies)
+                if i != galaxy_index
+            ]
+
+            subtracted_image = self.image - sum(other_galaxies_model_images)
+
+            subtracted_images_of_galaxies.append(subtracted_image)
+
+        return subtracted_images_of_galaxies
+
+    @property
     def unmasked_blurred_image(self):
         return self.plane.unmasked_blurred_image_from_grid_and_psf(
             grid=self.grid, psf=self.masked_imaging.psf

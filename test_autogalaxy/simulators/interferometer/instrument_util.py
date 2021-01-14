@@ -125,8 +125,8 @@ def simulate_interferometer_from_instrument(data_name, instrument, galaxies):
         interferometer=interferometer, plotter=plotter
     )
 
-    aplt.Interferometer.figure_individuals(
-        interferometer=interferometer, plot_visibilities=True, plotter=plotter
+    aplt.Interferometer.figures(
+        interferometer=interferometer, visibilities=True, plotter=plotter
     )
 
     aplt.plane.image(plane=plane, grid=grid, plotter=plotter)

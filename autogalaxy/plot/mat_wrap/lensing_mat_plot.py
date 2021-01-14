@@ -1,5 +1,3 @@
-from functools import wraps
-
 from autoarray.plot.mat_wrap import mat_plot
 from autoarray.plot.mat_wrap.wrap import wrap_base, wrap_2d
 from autogalaxy.plot.mat_wrap import lensing_wrap
@@ -15,6 +13,7 @@ class MatPlot2D(mat_plot.MatPlot2D):
         self,
         units: wrap_base.Units = wrap_base.Units(),
         figure: wrap_base.Figure = wrap_base.Figure(),
+        axis: wrap_base.Axis = wrap_base.Axis(),
         cmap: wrap_base.Cmap = wrap_base.Cmap(),
         colorbar: wrap_base.Colorbar = wrap_base.Colorbar(),
         colorbar_tickparams: wrap_base.ColorbarTickParams = wrap_base.ColorbarTickParams(),
@@ -67,7 +66,9 @@ class MatPlot2D(mat_plot.MatPlot2D):
           The units of the figure used to plot the data structure which sets the y and x ticks and labels.
         figure : wrap_base.Figure
           Opens the matplotlib figure before plotting via `plt.figure` and closes it once plotting is complete
-          via `plt.close`
+          via `plt.close`.
+        axis : mat_wrap.Axis
+            Sets the extent of the figure axis via `plt.axis` and allows for a manual axis range.
         cmap : wrap_base.Cmap
           Customizes the colormap of the plot and its normalization via matplotlib `colors` objects such 
           as `colors.Normalize` and `colors.LogNorm`.
@@ -139,6 +140,7 @@ class MatPlot2D(mat_plot.MatPlot2D):
         super(MatPlot2D, self).__init__(
             units=units,
             figure=figure,
+            axis=axis,
             cmap=cmap,
             colorbar=colorbar,
             colorbar_tickparams=colorbar_tickparams,

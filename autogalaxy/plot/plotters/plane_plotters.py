@@ -1,5 +1,6 @@
-from autoarray.structures import grids
 from autoarray.plot.plotters import abstract_plotters
+from autoarray.plot.mat_wrap import mat_plot as mp
+from autoarray.structures import grids
 from autogalaxy.plot.plotters import lensing_obj_plotter
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.plane import plane as pl
@@ -67,55 +68,103 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
     def plane(self):
         return self.lensing_obj
 
-    @abstract_plotters.for_figure
-    def figure_image(self):
-        self.mat_plot_2d.plot_array(
-            array=self.plane.image_from_grid(grid=self.grid),
-            visuals_2d=self.visuals_with_include_2d,
+    def figures(
+        self,
+        image=False,
+        plane_image=False,
+        plane_grid=False,
+        convergence=False,
+        potential=False,
+        deflections_y=False,
+        deflections_x=False,
+        magnification=False,
+        contribution_map=False,
+    ):
+
+        if image:
+
+            self.mat_plot_2d.plot_array(
+                array=self.plane.image_from_grid(grid=self.grid),
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(title="Image", filename="image"),
+            )
+
+        if plane_image:
+
+            self.mat_plot_2d.plot_array(
+                array=self.plane.plane_image_from_grid(grid=self.grid).array,
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(title="Plane Image", filename="plane_image"),
+            )
+
+        if plane_grid:
+
+            self.mat_plot_2d.plot_grid(
+                grid=self.grid,
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(title="Plane Grid", filename="plane_grid"),
+            )
+
+        super().figures(
+            convergence=convergence,
+            potential=potential,
+            deflections_y=deflections_y,
+            deflections_x=deflections_x,
+            magnification=magnification,
         )
 
-    @abstract_plotters.for_figure
-    def figure_plane_image(self):
+        if contribution_map:
 
-        self.mat_plot_2d.plot_array(
-            array=self.plane.plane_image_from_grid(grid=self.grid).array,
-            visuals_2d=self.visuals_with_include_2d,
-        )
+            self.mat_plot_2d.plot_array(
+                array=self.plane.contribution_map,
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(
+                    title="Contribution Map", filename="contribution_map"
+                ),
+            )
 
-    @abstract_plotters.for_figure
-    def figure_plane_grid(self, indexes=None, axis_limits=None):
+    def subplot(
+        self,
+        image=False,
+        plane_image=False,
+        plane_grid=False,
+        convergence=False,
+        potential=False,
+        deflections_y=False,
+        deflections_x=False,
+        magnification=False,
+        contribution_map=False,
+        auto_filename="subplot_plane",
+    ):
 
-        self.mat_plot_2d.plot_grid(
-            grid=self.grid,
-            visuals_2d=self.visuals_with_include_2d,
-            indexes=indexes,
-            axis_limits=axis_limits,
-        )
-
-    @abstract_plotters.for_figure
-    def figure_contribution_map(self):
-
-        self.mat_plot_2d.plot_array(
-            array=self.plane.contribution_map, visuals_2d=self.visuals_with_include_2d
+        self._subplot_custom_plot(
+            image=image,
+            plane_image=plane_image,
+            plane_grid=plane_grid,
+            convergence=convergence,
+            potential=potential,
+            deflections_y=deflections_y,
+            deflections_x=deflections_x,
+            magnification=magnification,
+            contribution_map=contribution_map,
+            auto_labels=mp.AutoLabels(filename=auto_filename),
         )
 
     @abstract_plotters.for_subplot
-    def subplot_with_source_grid(self, indexes=None, axis_limits=None):
+    def subplot_with_source_grid(self):
 
         number_subplots = 2
 
         self.open_subplot_figure(number_subplots=number_subplots)
 
         self.setup_subplot(number_subplots=number_subplots, subplot_index=1)
-        self.figure_plane_grid(indexes=indexes, axis_limits=axis_limits)
+        self.figures()
 
         source_plane_grid = self.plane.traced_grid_from_grid(grid=self.grid)
 
         self.setup_subplot(number_subplots=number_subplots, subplot_index=2)
 
-        self.mat_plot_2d.plot_grid(
-            grid=source_plane_grid, indexes=indexes, axis_limits=axis_limits
-        )
+        self.mat_plot_2d.plot_grid(grid=source_plane_grid)
 
         self.mat_plot_2d.output.subplot_to_figure()
         self.mat_plot_2d.figure.close()

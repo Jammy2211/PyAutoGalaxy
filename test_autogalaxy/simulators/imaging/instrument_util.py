@@ -179,10 +179,10 @@ def simulate_imaging_from_instrument(data_name, instrument, galaxies):
 
     aplt.imaging.individual(
         imaging=imaging,
-        plot_image=True,
-        plot_noise_map=True,
-        plot_psf=True,
-        plot_signal_to_noise_map=True,
+        image=True,
+        noise_map=True,
+        psf=True,
+        signal_to_noise_map=True,
         plotter=plotter,
     )
 

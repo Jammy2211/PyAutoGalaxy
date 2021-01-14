@@ -84,6 +84,9 @@ class TestVisualizer:
         assert (
             path.join(plot_path, "subtracted_image_of_galaxy_1.png") in plot_patch.paths
         )
+
+        print(plot_patch.paths)
+
         assert (
             path.join(plot_path, "model_image_of_galaxy_0.png") not in plot_patch.paths
         )

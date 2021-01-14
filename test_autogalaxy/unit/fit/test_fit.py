@@ -6,6 +6,12 @@ from autoarray.inversion import inversions
 from autogalaxy.mock.mock import MockLightProfile
 
 
+class MockFitImaging:
+    def __init__(self, model_images_of_galaxies):
+
+        self.model_images_of_galaxies = model_images_of_galaxies
+
+
 class TestFitImaging:
     class TestLikelihood:
         def test__1x2_image__no_psf_blurring__plane_fits_data_with_chi_sq_5(self):
@@ -1347,6 +1353,37 @@ class TestFitImaging:
             assert inversion.mapped_reconstructed_image.in_2d == pytest.approx(
                 fit.model_images_of_galaxies[1].in_2d, 1.0e-4
             )
+
+    class TestAttributes:
+        def test__subtracted_images_of_galaxies(self, masked_imaging_no_blur_7x7):
+
+            g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(value=1.0))
+
+            g1 = ag.Galaxy(redshift=1.0, light_profile=MockLightProfile(value=2.0))
+
+            g2 = ag.Galaxy(redshift=1.0, light_profile=MockLightProfile(value=3.0))
+
+            plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2])
+
+            fit = ag.FitImaging(masked_imaging=masked_imaging_no_blur_7x7, plane=plane)
+
+            assert fit.subtracted_images_of_galaxies[0].in_1d[0] == -4.0
+            assert fit.subtracted_images_of_galaxies[1].in_1d[0] == -3.0
+            assert fit.subtracted_images_of_galaxies[2].in_1d[0] == -2.0
+
+            g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(value=1.0))
+
+            g1 = ag.Galaxy(redshift=0.5)
+
+            g2 = ag.Galaxy(redshift=1.0, light_profile=MockLightProfile(value=3.0))
+
+            plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2])
+
+            fit = ag.FitImaging(masked_imaging=masked_imaging_no_blur_7x7, plane=plane)
+
+            assert fit.subtracted_images_of_galaxies[0].in_1d[0] == -2.0
+            assert fit.subtracted_images_of_galaxies[1].in_1d[0] == -3.0
+            assert fit.subtracted_images_of_galaxies[2].in_1d[0] == 0.0
 
 
 class TestFitInterferometer:

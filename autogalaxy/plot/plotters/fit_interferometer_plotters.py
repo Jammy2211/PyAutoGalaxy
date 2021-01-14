@@ -1,4 +1,4 @@
-from autoarray.plot.plotters import abstract_plotters
+from autoarray.plot.mat_wrap import mat_plot as mp
 from autoarray.plot.plotters import inversion_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.plot.plotters import plane_plotters
@@ -57,41 +57,20 @@ class FitInterferometerPlotter(
             include_2d=self.include_2d,
         )
 
-    @abstract_plotters.for_subplot
     def subplot_fit_real_space(self):
-
-        number_subplots = 2
-
-        self.open_subplot_figure(number_subplots=number_subplots)
-
-        self.setup_subplot(number_subplots=number_subplots, subplot_index=1)
 
         if self.fit.inversion is None:
 
             plane_plotter = self.plane_plotter_from(plane=self.plane)
 
-            plane_plotter.figure_image()
-
-            self.setup_subplot(number_subplots=number_subplots, subplot_index=2)
-
-            plane_plotter.figure_plane_image()
+            plane_plotter.subplot(
+                image=True, plane_image=True, auto_filename="subplot_fit_real_space"
+            )
 
         elif self.fit.inversion is not None:
 
-            self.inversion_plotter.figure_reconstructed_image()
-
-            aspect_inv = self.mat_plot_2d.figure.aspect_for_subplot_from_grid(
-                grid=self.fit.inversion.mapper.source_full_grid
+            self.inversion_plotter.subplot(
+                reconstructed_image=True,
+                reconstruction=True,
+                auto_filename="subplot_fit_real_space",
             )
-
-            self.setup_subplot(
-                number_subplots=number_subplots,
-                subplot_index=2,
-                aspect=float(aspect_inv),
-            )
-
-            self.inversion_plotter.figure_reconstruction()
-
-        self.mat_plot_2d.output.subplot_to_figure()
-
-        self.mat_plot_2d.figure.close()

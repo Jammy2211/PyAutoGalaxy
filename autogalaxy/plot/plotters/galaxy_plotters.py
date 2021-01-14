@@ -1,4 +1,4 @@
-from autoarray.plot.plotters import abstract_plotters
+from autoarray.plot.mat_wrap import mat_plot as mp
 from autogalaxy.plot.plotters import lensing_obj_plotter
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.plot.plotters import light_profile_plotters, mass_profile_plotters
@@ -87,137 +87,84 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             include_1d=self.include_1d,
         )
 
-    @abstract_plotters.for_figure
-    def figure_image(self):
-        """Plot the image (e.g. the datas) of a galaxy, on a grid of (y,x) coordinates.
+    def figures(
+        self,
+        image=False,
+        convergence=False,
+        potential=False,
+        deflections_y=False,
+        deflections_x=False,
+        magnification=False,
+        contribution_map=False,
+    ):
 
-        Set *autogalaxy.datas.arrays.mat_plot_2d.mat_plot_2d* for a description of all innput parameters not described below.
+        if image:
 
-        Parameters
-        -----------
-        galaxy : model.galaxy.ag.Galaxy
-            The galaxy whose image are plotted.
-        grid : grid_like or datas.arrays.grid_stacks.Grid
-            The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
-        """
-        self.mat_plot_2d.plot_array(
-            array=self.galaxy.image_from_grid(grid=self.grid),
-            visuals_2d=self.visuals_with_include_2d,
+            self.mat_plot_2d.plot_array(
+                array=self.galaxy.image_from_grid(grid=self.grid),
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(title="Image", filename="image"),
+            )
+
+        super().figures(
+            convergence=convergence,
+            potential=potential,
+            deflections_y=deflections_y,
+            deflections_x=deflections_x,
+            magnification=magnification,
         )
 
-    @abstract_plotters.for_figure
-    def figure_contribution_map(self):
-        """Plot the summed contribution maps of a hyper_galaxies-fit.
+        if contribution_map:
 
-        Set *autogalaxy.datas.arrays.mat_plot_2d.mat_plot_2d* for a description of all input parameters not described below.
-
-        Parameters
-        -----------
-        fit : datas.fitting.fitting.AbstractLensHyperFit
-            The hyper_galaxies-fit to the datas, which includes a list of every model image, residual_map, chi-squareds, etc.
-        image_index : int
-            The index of the datas in the datas-set of which the contribution_maps are plotted.
-        """
-        self.mat_plot_2d.plot_array(
-            array=self.galaxy.contribution_map, visuals_2d=self.visuals_with_include_2d
-        )
-
-    @abstract_plotters.for_subplot
-    def subplot_image(self):
-
-        number_subplots = len(self.galaxy.light_profiles)
-
-        self.open_subplot_figure(number_subplots=number_subplots)
-
-        for i, light_profile in enumerate(self.galaxy.light_profiles):
-
-            light_profile_plotter = self.light_profile_plotter_from(
-                light_profile=light_profile
+            self.mat_plot_2d.plot_array(
+                array=self.galaxy.contribution_map,
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(
+                    title="Contribution Map", filename="contribution_map"
+                ),
             )
 
-            self.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
+    def subplot_of_light_profiles(self, image=False):
 
-            light_profile_plotter.figure_image()
+        light_profile_plotters = [
+            self.light_profile_plotter_from(light_profile)
+            for light_profile in self.galaxy.light_profiles
+        ]
 
-        self.mat_plot_2d.output.subplot_to_figure()
-        self.mat_plot_2d.figure.close()
-
-    @abstract_plotters.for_subplot
-    def subplot_convergence(self):
-
-        number_subplots = len(self.galaxy.mass_profiles)
-
-        self.open_subplot_figure(number_subplots=number_subplots)
-
-        for i, mass_profile in enumerate(self.galaxy.mass_profiles):
-
-            mass_profile_plotter = self.mass_profile_plotter_from(
-                mass_profile=mass_profile
+        if image:
+            self.subplot_of_plotters_figure(
+                plotters=light_profile_plotters, name="image"
             )
 
-            self.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
+    def subplot_of_mass_profiles(
+        self,
+        convergence=False,
+        potential=False,
+        deflections_y=False,
+        deflections_x=False,
+    ):
 
-            mass_profile_plotter.figure_convergence()
+        mass_profile_plotters = [
+            self.mass_profile_plotter_from(mass_profile)
+            for mass_profile in self.galaxy.mass_profiles
+        ]
 
-        self.mat_plot_2d.output.subplot_to_figure()
-        self.mat_plot_2d.figure.close()
-
-    @abstract_plotters.for_subplot
-    def subplot_potential(self):
-
-        number_subplots = len(self.galaxy.mass_profiles)
-
-        self.open_subplot_figure(number_subplots=number_subplots)
-
-        for i, mass_profile in enumerate(self.galaxy.mass_profiles):
-
-            mass_profile_plotter = self.mass_profile_plotter_from(
-                mass_profile=mass_profile
+        if convergence:
+            self.subplot_of_plotters_figure(
+                plotters=mass_profile_plotters, name="convergence"
             )
 
-            self.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
-
-            mass_profile_plotter.figure_potential()
-
-        self.mat_plot_2d.output.subplot_to_figure()
-        self.mat_plot_2d.figure.close()
-
-    @abstract_plotters.for_subplot
-    def subplot_deflections_y(self):
-
-        number_subplots = len(self.galaxy.mass_profiles)
-
-        self.open_subplot_figure(number_subplots=number_subplots)
-
-        for i, mass_profile in enumerate(self.galaxy.mass_profiles):
-
-            mass_profile_plotter = self.mass_profile_plotter_from(
-                mass_profile=mass_profile
+        if potential:
+            self.subplot_of_plotters_figure(
+                plotters=mass_profile_plotters, name="potential"
             )
 
-            self.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
-
-            mass_profile_plotter.figure_deflections_y()
-
-        self.mat_plot_2d.output.subplot_to_figure()
-        self.mat_plot_2d.figure.close()
-
-    @abstract_plotters.for_subplot
-    def subplot_deflections_x(self):
-
-        number_subplots = len(self.galaxy.mass_profiles)
-
-        self.open_subplot_figure(number_subplots=number_subplots)
-
-        for i, mass_profile in enumerate(self.galaxy.mass_profiles):
-
-            mass_profile_plotter = self.mass_profile_plotter_from(
-                mass_profile=mass_profile
+        if deflections_y:
+            self.subplot_of_plotters_figure(
+                plotters=mass_profile_plotters, name="deflections_y"
             )
 
-            self.setup_subplot(number_subplots=number_subplots, subplot_index=i + 1)
-
-            mass_profile_plotter.figure_deflections_x()
-
-        self.mat_plot_2d.output.subplot_to_figure()
-        self.mat_plot_2d.figure.close()
+        if deflections_x:
+            self.subplot_of_plotters_figure(
+                plotters=mass_profile_plotters, name="deflections_x"
+            )

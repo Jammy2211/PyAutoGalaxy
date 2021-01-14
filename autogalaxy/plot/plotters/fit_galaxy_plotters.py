@@ -1,7 +1,5 @@
+from autoarray.plot.mat_wrap import mat_plot as mp
 from autoarray.plot.plotters import fit_imaging_plotters
-from autoarray.plot.plotters import structure_plotters
-from autogalaxy import exc
-from autoarray.plot.plotters import abstract_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 
 import copy
@@ -28,72 +26,41 @@ class FitGalaxyPlotter(fit_imaging_plotters.FitImagingPlotter):
 
         return self.visuals_2d + self.visuals_2d.__class__()
 
-    @abstract_plotters.for_figure
-    def figure_galaxy_data_array(self, galaxy_data):
-
-        if galaxy_data.use_image:
-            title = "Galaxy Data Image"
-        elif galaxy_data.use_convergence:
-            title = "Galaxy Data Convergence"
-        elif galaxy_data.use_potential:
-            title = "Galaxy Data Potential"
-        elif galaxy_data.use_deflections_y:
-            title = "Galaxy Data Deflections (y)"
-        elif galaxy_data.use_deflections_x:
-            title = "Galaxy Data Deflections (x)"
-        else:
-            raise exc.PlottingException(
-                "The galaxy data arrays does not have a `True` use_profile_type"
-            )
-
-        self.mat_plot_2d.plot_array(
-            array=galaxy_data.image, visuals_2d=self.visuals_with_include_2d
-        )
-
-    def figure_individuals(
+    def figures(
         self,
-        plot_image=False,
-        plot_noise_map=False,
-        plot_model_image=False,
-        plot_residual_map=False,
-        plot_normalized_residual_map=False,
-        plot_chi_squared_map=False,
+        image=False,
+        noise_map=False,
+        signal_to_noise_map=False,
+        model_image=False,
+        residual_map=False,
+        normalized_residual_map=False,
+        chi_squared_map=False,
     ):
 
-        if plot_image:
+        if image:
 
-            self.figure_galaxy_data_array(galaxy_data=self.fit.masked_galaxy_dataset)
+            self.mat_plot_2d.plot_array(
+                array=self.fit.data,
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(title="Image", filename="image"),
+            )
 
-        super(FitGalaxyPlotter, self).figure_individuals(
-            plot_noise_map=plot_noise_map,
-            plot_model_image=plot_model_image,
-            plot_residual_map=plot_residual_map,
-            plot_normalized_residual_map=plot_normalized_residual_map,
-            plot_chi_squared_map=plot_chi_squared_map,
+        super(FitGalaxyPlotter, self).figures(
+            noise_map=noise_map,
+            signal_to_noise_map=signal_to_noise_map,
+            model_image=model_image,
+            residual_map=residual_map,
+            normalized_residual_map=normalized_residual_map,
+            chi_squared_map=chi_squared_map,
         )
 
-    @abstract_plotters.for_subplot
     def subplot_fit_galaxy(self):
-        number_subplots = 4
-
-        self.open_subplot_figure(number_subplots=number_subplots)
-
-        self.setup_subplot(number_subplots=number_subplots, subplot_index=1)
-
-        self.figure_galaxy_data_array(galaxy_data=self.fit.masked_galaxy_dataset)
-
-        self.setup_subplot(number_subplots=number_subplots, subplot_index=2)
-
-        self.figure_model_image()
-
-        self.setup_subplot(number_subplots=number_subplots, subplot_index=3)
-
-        self.figure_residual_map()
-
-        self.setup_subplot(number_subplots=number_subplots, subplot_index=4)
-
-        self.figure_chi_squared_map()
-
-        self.mat_plot_2d.output.subplot_to_figure()
-
-        self.mat_plot_2d.figure.close()
+        return self.subplot(
+            image=True,
+            signal_to_noise_map=True,
+            model_image=True,
+            residual_map=True,
+            normalized_residual_map=True,
+            chi_squared_map=True,
+            auto_filename="subplot_fit_galaxy",
+        )

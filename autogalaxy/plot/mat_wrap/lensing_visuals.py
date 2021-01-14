@@ -4,6 +4,7 @@ from autoarray.plot.mat_wrap import visuals as vis
 
 from matplotlib import patches as ptch
 import typing
+from typing import List
 
 
 class Visuals1D(vis.Visuals1D):
@@ -28,6 +29,8 @@ class Visuals2D(vis.Visuals2D):
         multiple_images: grids.GridIrregular = None,
         critical_curves: grids.GridIrregular = None,
         caustics: grids.GridIrregular = None,
+        indexes: typing.Union[List[int], List[List[int]]] = None,
+        pixelization_indexes: typing.Union[List[int], List[List[int]]] = None,
     ):
 
         super().__init__(
@@ -40,6 +43,8 @@ class Visuals2D(vis.Visuals2D):
             array_overlay=array_overlay,
             origin=origin,
             border=border,
+            indexes=indexes,
+            pixelization_indexes=pixelization_indexes,
         )
 
         self.light_profile_centres = light_profile_centres
@@ -48,9 +53,11 @@ class Visuals2D(vis.Visuals2D):
         self.critical_curves = critical_curves
         self.caustics = caustics
 
-    def plot_via_plotter(self, plotter):
+    def plot_via_plotter(self, plotter, grid_indexes=None, mapper=None):
 
-        super().plot_via_plotter(plotter=plotter)
+        super().plot_via_plotter(
+            plotter=plotter, grid_indexes=grid_indexes, mapper=mapper
+        )
 
         if self.light_profile_centres is not None:
             plotter.light_profile_centres_scatter.scatter_grid_grouped(
