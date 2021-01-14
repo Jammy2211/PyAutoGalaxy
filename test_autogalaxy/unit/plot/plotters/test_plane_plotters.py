@@ -31,13 +31,10 @@ def test__all_individual_plotter__output_file_with_default_name(
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
-    plane_plotter.figure_image()
+    plane_plotter.figures(image=True, plane_image=True, plane_grid=True)
+
     assert path.join(plot_path, "image.png") in plot_patch.paths
-
-    plane_plotter.figure_plane_image()
     assert path.join(plot_path, "plane_image.png") in plot_patch.paths
-
-    plane_plotter.figure_plane_grid()
     assert path.join(plot_path, "plane_grid.png") in plot_patch.paths
 
     plane_7x7.galaxies[0].hyper_galaxy = ag.HyperGalaxy()
@@ -48,6 +45,6 @@ def test__all_individual_plotter__output_file_with_default_name(
         shape_2d=(7, 7), pixel_scales=0.1
     )
 
-    plane_plotter.figure_contribution_map()
+    plane_plotter.figures(contribution_map=True)
 
     assert path.join(plot_path, "contribution_map.png") in plot_patch.paths

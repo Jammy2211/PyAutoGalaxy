@@ -96,7 +96,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
                     ),
                 )
 
-    @abstract_plotters.for_subplot
+
     def subplots_of_galaxies(self, galaxy_index=None):
         """Plot the model datas_ of an analysis, using the *Fitter* class object.
 
@@ -121,33 +121,16 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
 
         for galaxy_index in galaxy_indexes:
 
-            number_subplots = 4
+            self.open_subplot_figure(number_subplots=4)
 
-            self.open_subplot_figure(number_subplots=number_subplots)
-
-            self.setup_subplot(number_subplots=number_subplots, subplot_index=1)
             self.figures(image=True)
-
-            self.setup_subplot(number_subplots=number_subplots, subplot_index=2)
             self.figures_of_galaxies(galaxy_index=galaxy_index, subtracted_image=True)
-
-            self.setup_subplot(number_subplots=number_subplots, subplot_index=3)
             self.figures_of_galaxies(galaxy_index=galaxy_index)
 
             if self.plane.has_pixelization:
-
-                aspect_inv = self.mat_plot_2d.figure.aspect_for_subplot_from_grid(
-                    grid=self.fit.inversion.mapper.source_full_grid
-                )
-
-                self.setup_subplot(
-                    number_subplots=number_subplots,
-                    subplot_index=4,
-                    aspect=float(aspect_inv),
-                )
                 self.inversion_plotter.figures(reconstruction=True)
 
             self.mat_plot_2d.output.subplot_to_figure(
                 auto_filename=f"subplot_of_galaxy_{galaxy_index}"
             )
-            self.mat_plot_2d.figure.close()
+            self.close_subplot_figure()

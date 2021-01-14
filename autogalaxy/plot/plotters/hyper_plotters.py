@@ -99,28 +99,15 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
             ),
         )
 
-    @abstract_plotters.for_subplot
+
     def subplot_hyper_images_of_galaxies(self, hyper_galaxy_image_path_dict):
 
         if hyper_galaxy_image_path_dict is None:
             return
 
-        number_subplots = 0
-
-        for i in hyper_galaxy_image_path_dict.items():
-            number_subplots += 1
-
-        self.open_subplot_figure(number_subplots=number_subplots)
-
-        hyper_index = 0
+        self.open_subplot_figure(number_subplots=len(hyper_galaxy_image_path_dict))
 
         for path, galaxy_image in hyper_galaxy_image_path_dict.items():
-
-            hyper_index += 1
-
-            self.setup_subplot(
-                number_subplots=number_subplots, subplot_index=hyper_index
-            )
 
             self.figure_hyper_galaxy_image(galaxy_image=galaxy_image)
 
@@ -128,9 +115,9 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
             auto_filename="subplot_hyper_images_of_galaxies"
         )
 
-        self.mat_plot_2d.figure.close()
+        self.close_subplot_figure()
 
-    @abstract_plotters.for_subplot
+
     def subplot_contribution_maps_of_galaxies(self, contribution_maps_of_galaxies):
 
         contribution_maps = [
@@ -146,15 +133,7 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
 
         self.open_subplot_figure(number_subplots=number_subplots)
 
-        hyper_index = 0
-
         for contribution_map_array in contribution_maps:
-
-            hyper_index += 1
-
-            self.setup_subplot(
-                number_subplots=number_subplots, subplot_index=hyper_index
-            )
 
             self.figure_contribution_map(contribution_map_in=contribution_map_array)
 
@@ -162,4 +141,4 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
             auto_filename="subplot_contribution_maps_of_galaxies"
         )
 
-        self.mat_plot_2d.figure.close()
+        self.close_subplot_figure()
