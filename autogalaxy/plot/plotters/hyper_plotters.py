@@ -99,7 +99,6 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
             ),
         )
 
-
     def subplot_hyper_images_of_galaxies(self, hyper_galaxy_image_path_dict):
 
         if hyper_galaxy_image_path_dict is None:
@@ -116,7 +115,6 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
         )
 
         self.close_subplot_figure()
-
 
     def subplot_contribution_maps_of_galaxies(self, contribution_maps_of_galaxies):
 

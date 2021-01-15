@@ -117,8 +117,7 @@ class Visualizer:
                 )
 
                 fit_imaging_plotter.figures_of_galaxies(
-                    subtracted_image=True,
-                    model_image=True,
+                    subtracted_image=True, model_image=True
                 )
 
             if should_plot("all_at_end_fits"):
@@ -142,8 +141,7 @@ class Visualizer:
                 )
 
                 fit_imaging_plotter.figures_of_galaxies(
-                    subtracted_image=True,
-                    model_image=True,
+                    subtracted_image=True, model_image=True
                 )
 
     def visualize_interferometer(self, interferometer):

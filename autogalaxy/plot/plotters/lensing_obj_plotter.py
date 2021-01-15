@@ -64,7 +64,9 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
                 "mass_profile_centres", self.lensing_obj.mass_profile_centres
             ),
             critical_curves=self.extract_2d(
-                "critical_curves", self.lensing_obj.critical_curves, "critical_curves"
+                "critical_curves",
+                self.lensing_obj.critical_curves_from_grid,
+                "critical_curves",
             ),
         )
 

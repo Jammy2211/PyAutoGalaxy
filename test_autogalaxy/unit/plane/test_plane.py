@@ -1204,6 +1204,9 @@ class TestAbstractPlaneProfiles:
         def test__correct_einstein_mass_caclulated_for_multiple_mass_profiles__means_all_innherited_methods_work(
             self,
         ):
+
+            grid = ag.Grid.uniform(shape_2d=(50, 50), pixel_scales=0.15)
+
             sis_0 = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=0.2)
 
             sis_1 = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=0.4)
@@ -1221,10 +1224,11 @@ class TestAbstractPlaneProfiles:
 
             plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
-            assert (
-                plane.einstein_mass_angular_via_tangential_critical_curve
-                == pytest.approx(np.pi * 2.0 ** 2.0, 1.0e-1)
+            einstein_mass = plane.einstein_mass_angular_via_tangential_critical_curve_from_grid(
+                grid=grid
             )
+
+            assert einstein_mass == pytest.approx(np.pi * 2.0 ** 2.0, 1.0e-1)
 
 
 class TestAbstractPlaneData:

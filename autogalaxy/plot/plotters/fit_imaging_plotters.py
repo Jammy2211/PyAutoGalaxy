@@ -96,7 +96,6 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
                     ),
                 )
 
-
     def subplots_of_galaxies(self, galaxy_index=None):
         """Plot the model datas_ of an analysis, using the *Fitter* class object.
 

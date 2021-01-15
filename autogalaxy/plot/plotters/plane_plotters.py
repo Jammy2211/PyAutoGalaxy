@@ -80,7 +80,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
         magnification=False,
         contribution_map=False,
         title_suffix="",
-            filename_suffix=""
+        filename_suffix="",
     ):
 
         if image:
@@ -88,7 +88,9 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.plane.image_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mp.AutoLabels(title=f"Image{title_suffix}", filename=f"image{filename_suffix}"),
+                auto_labels=mp.AutoLabels(
+                    title=f"Image{title_suffix}", filename=f"image{filename_suffix}"
+                ),
             )
 
         if plane_image:
@@ -96,7 +98,10 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.plane.plane_image_from_grid(grid=self.grid).array,
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mp.AutoLabels(title=f"Plane Image{title_suffix}", filename=f"plane_image{filename_suffix}"),
+                auto_labels=mp.AutoLabels(
+                    title=f"Plane Image{title_suffix}",
+                    filename=f"plane_image{filename_suffix}",
+                ),
             )
 
         if plane_grid:
@@ -104,7 +109,10 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_2d.plot_grid(
                 grid=self.grid,
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mp.AutoLabels(title=f"Plane Grid{title_suffix}", filename=f"plane_grid{filename_suffix}"),
+                auto_labels=mp.AutoLabels(
+                    title=f"Plane Grid{title_suffix}",
+                    filename=f"plane_grid{filename_suffix}",
+                ),
             )
 
         super().figures(
@@ -152,13 +160,16 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
             auto_labels=mp.AutoLabels(filename=auto_filename),
         )
 
-
     def subplot_with_source_grid(self):
 
         self.open_subplot_figure(number_subplots=2)
 
         self.figures()
-        self.mat_plot_2d.plot_grid(grid=self.plane.traced_grid_from_grid(grid=self.grid), visuals_2d=self.visuals_with_include_2d, auto_labels=mp.AutoLabels())
+        self.mat_plot_2d.plot_grid(
+            grid=self.plane.traced_grid_from_grid(grid=self.grid),
+            visuals_2d=self.visuals_with_include_2d,
+            auto_labels=mp.AutoLabels(),
+        )
 
         self.mat_plot_2d.output.subplot_to_figure()
         self.close_subplot_figure()
