@@ -1,8 +1,6 @@
-from autoconf import conf
 import numpy as np
 from autoarray.structures import arrays, grids
 from autoarray.util import array_util
-from scipy.optimize import root_scalar
 from skimage import measure
 from functools import wraps
 
@@ -19,11 +17,36 @@ def precompute_jacobian(func):
     return wrapper
 
 
+def evaluation_grid(func):
+    @wraps(func)
+    def wrapper(lensing_obj, grid, pixel_scale=0.05):
+
+        if hasattr(grid, "is_evaluation_grid"):
+            if grid.is_evaluation_grid:
+                return func(lensing_obj, grid, pixel_scale)
+
+        pixel_scale_ratio = grid.pixel_scale / pixel_scale
+
+        zoom_shape_2d = grid.mask.geometry.zoom_shape_2d
+        shape_2d = (
+            int(pixel_scale_ratio * zoom_shape_2d[0]),
+            int(pixel_scale_ratio * zoom_shape_2d[1]),
+        )
+
+        grid = grids.Grid.uniform(
+            shape_2d=shape_2d,
+            pixel_scales=(pixel_scale, pixel_scale),
+            origin=grid.mask.geometry.zoom_offset_scaled,
+        )
+
+        grid.is_evaluation_grid = True
+
+        return func(lensing_obj, grid, pixel_scale)
+
+    return wrapper
+
+
 class LensingObject:
-
-    _preload_critical_curves = None
-    _preload_caustics = None
-
     @property
     def mass_profiles(self):
         raise NotImplementedError("mass profiles list should be overriden")
@@ -176,7 +199,8 @@ class LensingObject:
 
         return grid.values_from_arr_1d(arr_1d=1.0 / det_A)
 
-    def tangential_critical_curve_from_grid(self, grid):
+    @evaluation_grid
+    def tangential_critical_curve_from_grid(self, grid, pixel_scale=0.05):
 
         tangential_eigen_values = self.tangential_eigen_value_from_grid(grid=grid)
 
@@ -197,7 +221,8 @@ class LensingObject:
         except IndexError:
             return []
 
-    def radial_critical_curve_from_grid(self, grid):
+    @evaluation_grid
+    def radial_critical_curve_from_grid(self, grid, pixel_scale=0.05):
 
         radial_eigen_values = self.radial_eigen_value_from_grid(grid=grid)
 
@@ -213,12 +238,13 @@ class LensingObject:
             shape_2d=radial_eigen_values.sub_shape_2d,
         )
 
-        return grids.GridIrregularGrouped(radial_critical_curve)
+        try:
+            return grids.GridIrregularGrouped(radial_critical_curve)
+        except IndexError:
+            return []
 
-    def critical_curves_from_grid(self, grid):
-
-        if self._preload_critical_curves is not None:
-            return self._preload_critical_curves
+    @evaluation_grid
+    def critical_curves_from_grid(self, grid, pixel_scale=0.05):
 
         if len(self.mass_profiles) == 0:
             return []
@@ -226,16 +252,23 @@ class LensingObject:
         try:
             return grids.GridIrregularGrouped(
                 [
-                    self.tangential_critical_curve_from_grid(grid=grid),
-                    self.radial_critical_curve_from_grid(grid=grid),
+                    self.tangential_critical_curve_from_grid(
+                        grid=grid, pixel_scale=pixel_scale
+                    ),
+                    self.radial_critical_curve_from_grid(
+                        grid=grid, pixel_scale=pixel_scale
+                    ),
                 ]
             )
-        except ValueError:
+        except (IndexError, ValueError):
             return []
 
-    def tangential_caustic_from_grid(self, grid):
+    @evaluation_grid
+    def tangential_caustic_from_grid(self, grid, pixel_scale=0.05):
 
-        tangential_critical_curve = self.tangential_critical_curve_from_grid(grid=grid)
+        tangential_critical_curve = self.tangential_critical_curve_from_grid(
+            grid=grid, pixel_scale=pixel_scale
+        )
 
         if len(tangential_critical_curve) == 0:
             return []
@@ -246,9 +279,12 @@ class LensingObject:
 
         return tangential_critical_curve - deflections_critical_curve
 
-    def radial_caustic_from_grid(self, grid):
+    @evaluation_grid
+    def radial_caustic_from_grid(self, grid, pixel_scale=0.05):
 
-        radial_critical_curve = self.radial_critical_curve_from_grid(grid=grid)
+        radial_critical_curve = self.radial_critical_curve_from_grid(
+            grid=grid, pixel_scale=pixel_scale
+        )
 
         if len(radial_critical_curve) == 0:
             return []
@@ -259,10 +295,8 @@ class LensingObject:
 
         return radial_critical_curve - deflections_critical_curve
 
-    def caustics_from_grid(self, grid):
-
-        if self._preload_caustics is not None:
-            return self._preload_caustics
+    @evaluation_grid
+    def caustics_from_grid(self, grid, pixel_scale=0.05):
 
         if len(self.mass_profiles) == 0:
             return []
@@ -270,27 +304,37 @@ class LensingObject:
         try:
             return grids.GridIrregularGrouped(
                 [
-                    self.tangential_caustic_from_grid(grid=grid),
-                    self.radial_caustic_from_grid(grid=grid),
+                    self.tangential_caustic_from_grid(
+                        grid=grid, pixel_scale=pixel_scale
+                    ),
+                    self.radial_caustic_from_grid(grid=grid, pixel_scale=pixel_scale),
                 ]
             )
         except IndexError:
             return []
 
-    @array_util.Memoizer()
-    def area_within_tangential_critical_curve_from_grid(self, grid):
+    @evaluation_grid
+    def area_within_tangential_critical_curve_from_grid(self, grid, pixel_scale=0.05):
 
-        tangential_critical_curve = self.tangential_critical_curve_from_grid(grid=grid)
+        tangential_critical_curve = self.tangential_critical_curve_from_grid(
+            grid=grid, pixel_scale=pixel_scale
+        )
         x, y = tangential_critical_curve[:, 0], tangential_critical_curve[:, 1]
 
         return np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
 
-    def einstein_radius_via_tangential_critical_curve_from_grid(self, grid):
+    @evaluation_grid
+    def einstein_radius_from_grid(self, grid, pixel_scale=0.05):
+
         return np.sqrt(
-            self.area_within_tangential_critical_curve_from_grid(grid=grid) / np.pi
+            self.area_within_tangential_critical_curve_from_grid(
+                grid=grid, pixel_scale=pixel_scale
+            )
+            / np.pi
         )
 
-    def einstein_mass_angular_via_tangential_critical_curve_from_grid(self, grid):
+    @evaluation_grid
+    def einstein_mass_angular_from_grid(self, grid, pixel_scale=0.05):
         return np.pi * (
-            self.einstein_radius_via_tangential_critical_curve_from_grid(grid=grid) ** 2
+            self.einstein_radius_from_grid(grid=grid, pixel_scale=pixel_scale) ** 2
         )

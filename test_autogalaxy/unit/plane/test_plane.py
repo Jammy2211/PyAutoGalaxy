@@ -1224,9 +1224,7 @@ class TestAbstractPlaneProfiles:
 
             plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
-            einstein_mass = plane.einstein_mass_angular_via_tangential_critical_curve_from_grid(
-                grid=grid
-            )
+            einstein_mass = plane.einstein_mass_angular_from_grid(grid=grid)
 
             assert einstein_mass == pytest.approx(np.pi * 2.0 ** 2.0, 1.0e-1)
 

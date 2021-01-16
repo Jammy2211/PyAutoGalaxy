@@ -3,7 +3,7 @@ import typing
 import numpy as np
 import pytest
 
-# from pyquad import quad_grid
+from pyquad import quad_grid
 from skimage import measure
 
 import autogalaxy as ag
@@ -550,6 +550,63 @@ class TestConvergenceViajacobian:
         assert mean_error < 1e-1
 
 
+class TestEvaluationGrid:
+    def test__grid_changes_resolution_based_on_pixel_scale_input(self):
+        @lensing.evaluation_grid
+        def mock_func(lensing_obj, grid, pixel_scale=0.05):
+            return grid
+
+        grid = ag.Grid.uniform(shape_2d=(4, 4), pixel_scales=0.05)
+
+        evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=0.05)
+
+        assert (evaluation_grid == grid).all()
+
+        evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=0.1)
+        downscaled_grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=0.1)
+
+        assert (evaluation_grid == downscaled_grid).all()
+
+        evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=0.025)
+        upscaled_grid = ag.Grid.uniform(shape_2d=(8, 8), pixel_scales=0.025)
+
+        assert (evaluation_grid == upscaled_grid).all()
+
+        evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=0.03)
+        upscaled_grid = ag.Grid.uniform(shape_2d=(6, 6), pixel_scales=0.03)
+
+        assert (evaluation_grid == upscaled_grid).all()
+
+    def test__grid_changes_to_uniform_and_zoomed_in_if_masked(self):
+        @lensing.evaluation_grid
+        def mock_func(lensing_obj, grid, pixel_scale=0.05):
+            return grid
+
+        mask = ag.Mask2D.circular(shape_2d=(11, 11), pixel_scales=1.0, radius=3.0)
+
+        grid = ag.Grid.from_mask(mask=mask)
+
+        evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=1.0)
+        grid_uniform = ag.Grid.uniform(shape_2d=(7, 7), pixel_scales=1.0)
+
+        assert (evaluation_grid[0] == np.array([3.0, -3.0])).all()
+        assert (evaluation_grid == grid_uniform).all()
+
+        mask = ag.Mask2D.circular(
+            shape_2d=(29, 29), pixel_scales=1.0, radius=3.0, centre=(5.0, 5.0)
+        )
+
+        grid = ag.Grid.from_mask(mask=mask)
+
+        evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=1.0)
+        grid_uniform = ag.Grid.uniform(
+            shape_2d=(7, 7), pixel_scales=1.0, origin=(5.0, 5.0)
+        )
+
+        assert (evaluation_grid[0] == np.array([8.0, 2.0])).all()
+        assert (evaluation_grid == grid_uniform).all()
+
+
 class TestCriticalCurvesAndCaustics:
     def test_compare_magnification_from_determinant_and_from_convergence_and_shear(
         self,
@@ -737,7 +794,9 @@ class TestCriticalCurvesAndCaustics:
             0
         ]
 
-        tangential_critical_curve = sie.tangential_critical_curve_from_grid(grid=grid)
+        tangential_critical_curve = sie.tangential_critical_curve_from_grid(
+            grid=grid, pixel_scale=0.2
+        )
 
         assert tangential_critical_curve == pytest.approx(
             tangential_critical_curve_from_magnification, 5e-1
@@ -749,7 +808,9 @@ class TestCriticalCurvesAndCaustics:
             0
         ]
 
-        tangential_critical_curve = sie.tangential_critical_curve_from_grid(grid=grid)
+        tangential_critical_curve = sie.tangential_critical_curve_from_grid(
+            grid=grid, pixel_scale=0.2
+        )
 
         assert tangential_critical_curve == pytest.approx(
             tangential_critical_curve_from_magnification, 5e-1
@@ -786,7 +847,9 @@ class TestCriticalCurvesAndCaustics:
             mass_profile=sie, grid=grid
         )[0]
 
-        tangential_caustic = sie.tangential_caustic_from_grid(grid=grid)
+        tangential_caustic = sie.tangential_caustic_from_grid(
+            grid=grid, pixel_scale=0.2
+        )
 
         assert sum(tangential_caustic) == pytest.approx(
             sum(tangential_caustic_from_magnification), 5e-1
@@ -803,14 +866,14 @@ class TestCriticalCurvesAndCaustics:
             mass_profile=sie, grid=grid
         )[1]
 
-        radial_caustic = sie.radial_caustic_from_grid(grid=grid)
+        radial_caustic = sie.radial_caustic_from_grid(grid=grid, pixel_scale=0.08)
 
         assert sum(radial_caustic) == pytest.approx(
             sum(caustic_radial_from_magnification), 7e-1
         )
 
 
-class TestEinsteinRadiusMassfrom:
+class TestEinsteinRadiusMass:
     def test__tangential_critical_curve_area_from_critical_curve_and_calculation__spherical_isothermal(
         self,
     ):
@@ -832,9 +895,7 @@ class TestEinsteinRadiusMassfrom:
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        einstein_radius = sis.einstein_radius_via_tangential_critical_curve_from_grid(
-            grid=grid
-        )
+        einstein_radius = sis.einstein_radius_from_grid(grid=grid)
 
         assert einstein_radius == pytest.approx(2.0, 1e-1)
 
@@ -842,9 +903,7 @@ class TestEinsteinRadiusMassfrom:
             centre=(0.0, 0.0), einstein_radius=2.0, elliptical_comps=(0.0, -0.25)
         )
 
-        einstein_radius = sie.einstein_radius_via_tangential_critical_curve_from_grid(
-            grid=grid
-        )
+        einstein_radius = sie.einstein_radius_from_grid(grid=grid)
 
         assert einstein_radius == pytest.approx(1.9360, 1e-1)
 
@@ -854,9 +913,7 @@ class TestEinsteinRadiusMassfrom:
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        einstein_mass = sis.einstein_mass_angular_via_tangential_critical_curve_from_grid(
-            grid=grid
-        )
+        einstein_mass = sis.einstein_mass_angular_from_grid(grid=grid)
 
         assert einstein_mass == pytest.approx(np.pi * 2.0 ** 2.0, 1e-1)
 

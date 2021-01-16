@@ -1294,9 +1294,7 @@ class TestMassProfiles:
 
             galaxy = ag.Galaxy(mass_profile_0=sis_0, mass_profile_1=sis_1, redshift=0.5)
 
-            einstein_mass = galaxy.einstein_mass_angular_via_tangential_critical_curve_from_grid(
-                grid=grid
-            )
+            einstein_mass = galaxy.einstein_mass_angular_from_grid(grid=grid)
 
             assert einstein_mass == pytest.approx(np.pi * 3.0 ** 2.0, 1.0e-1)
 
