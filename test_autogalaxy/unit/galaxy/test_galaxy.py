@@ -1286,16 +1286,17 @@ class TestMassProfiles:
             self,
         ):
 
+            grid = ag.Grid.uniform(shape_2d=(50, 50), pixel_scales=0.15)
+
             sis_0 = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
             sis_1 = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
             galaxy = ag.Galaxy(mass_profile_0=sis_0, mass_profile_1=sis_1, redshift=0.5)
 
-            assert (
-                galaxy.einstein_mass_angular_via_tangential_critical_curve
-                == pytest.approx(np.pi * 3.0 ** 2.0, 1.0e-1)
-            )
+            einstein_mass = galaxy.einstein_mass_angular_from_grid(grid=grid)
+
+            assert einstein_mass == pytest.approx(np.pi * 3.0 ** 2.0, 1.0e-1)
 
 
 class TestMassAndLightProfiles:

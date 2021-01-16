@@ -26,7 +26,7 @@ def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
     return mass_total
 
 
-class TestMassWithinCircle:
+class TestMassWithin:
     def test__compare_to_analytic_and_grid_calculations(self):
 
         sis = ag.mp.SphericalIsothermal(einstein_radius=2.0)
@@ -48,6 +48,32 @@ class TestMassWithinCircle:
         mass = sis.mass_angular_within_circle(radius=1.0)
 
         assert mass_grid == pytest.approx(mass, 0.02)
+
+
+class TestRadiusAverageConvergenceOne:
+    def test__radius_of_average_convergence(self):
+
+        sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        assert sis.average_convergence_of_1_radius == pytest.approx(2.0, 1e-4)
+
+        sie = ag.mp.EllipticalIsothermal(
+            centre=(0.0, 0.0), einstein_radius=1.0, elliptical_comps=(0.0, 0.111111)
+        )
+
+        assert sie.average_convergence_of_1_radius == pytest.approx(1.0, 1e-4)
+
+        sie = ag.mp.EllipticalIsothermal(
+            centre=(0.0, 0.0), einstein_radius=3.0, elliptical_comps=(0.0, 0.333333)
+        )
+
+        assert sie.average_convergence_of_1_radius == pytest.approx(3.0, 1e-4)
+
+        sie = ag.mp.EllipticalIsothermal(
+            centre=(0.0, 0.0), einstein_radius=8.0, elliptical_comps=(0.0, 0.666666)
+        )
+
+        assert sie.average_convergence_of_1_radius == pytest.approx(8.0, 1e-4)
 
 
 class TestDensityBetweenAnnuli:
@@ -105,16 +131,6 @@ class TestLensingObject:
         sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
         assert sis.mass_profiles == [sis]
-
-    def test__correct_einstein_mass_caclulated__means_all_innherited_methods_work(
-        self,
-    ):
-
-        sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-
-        assert sis.einstein_mass_angular_via_tangential_critical_curve == pytest.approx(
-            np.pi * 2.0 ** 2.0, 1.0e-1
-        )
 
 
 class TestRegression:

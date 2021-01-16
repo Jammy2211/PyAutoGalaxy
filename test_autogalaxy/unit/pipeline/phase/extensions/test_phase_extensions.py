@@ -3,8 +3,6 @@ import autofit as af
 import autofit.non_linear.paths
 import autogalaxy as ag
 from autogalaxy.hyper import hyper_data as hd
-import pytest
-from autogalaxy.fit.fit import FitImaging
 from autogalaxy.mock import mock
 
 
@@ -140,7 +138,7 @@ class TestModelFixing:
         assert (
             path.join(
                 "test_phase",
-                "hyper__settings__imaging[grid_sub_2_inv_sub_2__bin_2]__pix[no_border]__inv[mat]",
+                "hyper__settings__imaging[grid_sub_2_inv_sub_2__bin_2]__pix[use_border]__inv[mat]",
                 "dynesty_static[nlive_1",
             )
             in hyper_phase.paths.output_path

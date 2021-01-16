@@ -184,7 +184,7 @@ class AbstractPlane(lensing.LensingObject):
             This is used for visualization, for example plotting ellipses of axis-ratios of all mass profiles colored by
             their galaxy.
         """
-        return arrays.Values(
+        return arrays.ValuesIrregularGrouped(
             [
                 list(galaxy.mass_profile_axis_ratios)
                 for galaxy in self.galaxies
@@ -206,7 +206,7 @@ class AbstractPlane(lensing.LensingObject):
             This is used for visualization, for example plotting ellipses of phis of all mass profiles colored by
             their galaxy.
         """
-        return arrays.Values(
+        return arrays.ValuesIrregularGrouped(
             [
                 list(galaxy.mass_profile_phis)
                 for galaxy in self.galaxies
@@ -470,7 +470,11 @@ class AbstractPlaneData(AbstractPlaneLensing):
         )
 
     def mapper_from_grid_and_sparse_grid(
-        self, grid, sparse_grid, settings_pixelization=pix.SettingsPixelization()
+        self,
+        grid,
+        sparse_grid,
+        sparse_image_plane_grid=None,
+        settings_pixelization=pix.SettingsPixelization(),
     ):
 
         galaxies_with_pixelization = list(
@@ -486,6 +490,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             return pixelization.mapper_from_grid_and_sparse_grid(
                 grid=grid,
                 sparse_grid=sparse_grid,
+                sparse_image_plane_grid=sparse_image_plane_grid,
                 hyper_image=galaxies_with_pixelization[0].hyper_galaxy_image,
                 settings=settings_pixelization,
             )

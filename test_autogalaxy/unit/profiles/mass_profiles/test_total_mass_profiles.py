@@ -1461,30 +1461,6 @@ class TestIsothermal:
             spherical.deflections_from_grid(grid=grid), 1e-4
         )
 
-    def test__radius_of_critical_curve(self):
-
-        sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-
-        assert sis.average_convergence_of_1_radius == pytest.approx(2.0, 1e-4)
-
-        sie = ag.mp.EllipticalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=1.0, elliptical_comps=(0.0, 0.111111)
-        )
-
-        assert sie.average_convergence_of_1_radius == pytest.approx(1.0, 1e-4)
-
-        sie = ag.mp.EllipticalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=3.0, elliptical_comps=(0.0, 0.333333)
-        )
-
-        assert sie.average_convergence_of_1_radius == pytest.approx(3.0, 1e-4)
-
-        sie = ag.mp.EllipticalIsothermal(
-            centre=(0.0, 0.0), einstein_radius=8.0, elliptical_comps=(0.0, 0.666666)
-        )
-
-        assert sie.average_convergence_of_1_radius == pytest.approx(8.0, 1e-4)
-
     def test__output_are_autoarrays(self):
 
         grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)

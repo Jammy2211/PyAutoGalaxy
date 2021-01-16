@@ -1,8 +1,6 @@
 import numpy as np
-from astropy import cosmology as cosmo
 from autoarray.structures import grids
 from autogalaxy.profiles import geometry_profiles
-from autogalaxy.util import cosmology_util
 from scipy.integrate import quad
 import typing
 
@@ -161,6 +159,26 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         return 2 * np.pi * x * self.image_from_grid_radii(x)
 
 
+class PointSource(EllipticalLightProfile):
+    def __init__(self, centre: typing.Tuple[float, float] = (0.0, 0.0)):
+
+        super().__init__(centre=centre, elliptical_comps=(0.0, 0.0))
+
+    @grids.grid_like_to_structure
+    def image_from_grid(self, grid):
+        return np.zeros(shape=grid.shape[0])
+
+
+class PointSourceFlux(PointSource):
+    def __init__(
+        self, centre: typing.Tuple[float, float] = (0.0, 0.0), flux: float = 0.1
+    ):
+
+        super().__init__(centre=centre)
+
+        self.flux = flux
+
+
 class EllipticalGaussian(EllipticalLightProfile):
     def __init__(
         self,
@@ -282,18 +300,6 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
         )
         self.effective_radius = effective_radius
         self.sersic_index = sersic_index
-
-    def new_profile_with_units_distance_converted(
-        self, units_distance, kpc_per_arcsec=None
-    ):
-        self.units_distance = units_distance
-        self.centre = self.centre.convert(
-            unit_distance=units_distance, kpc_per_arcsec=kpc_per_arcsec
-        )
-        self.effective_radius = self.effective_radius.convert(
-            unit_distance=units_distance, kpc_per_arcsec=kpc_per_arcsec
-        )
-        return self
 
     @property
     def elliptical_effective_radius(self):

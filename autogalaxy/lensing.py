@@ -1,11 +1,49 @@
-from autoconf import conf
 import numpy as np
-from astropy import cosmology as cosmo
 from autoarray.structures import arrays, grids
 from autoarray.util import array_util
-from autogalaxy.util import cosmology_util
-from scipy.optimize import root_scalar
 from skimage import measure
+from functools import wraps
+
+
+def precompute_jacobian(func):
+    @wraps(func)
+    def wrapper(lensing_obj, grid, jacobian=None):
+
+        if jacobian is None:
+            jacobian = lensing_obj.jacobian_from_grid(grid=grid)
+
+        return func(lensing_obj, grid, jacobian)
+
+    return wrapper
+
+
+def evaluation_grid(func):
+    @wraps(func)
+    def wrapper(lensing_obj, grid, pixel_scale=0.05):
+
+        if hasattr(grid, "is_evaluation_grid"):
+            if grid.is_evaluation_grid:
+                return func(lensing_obj, grid, pixel_scale)
+
+        pixel_scale_ratio = grid.pixel_scale / pixel_scale
+
+        zoom_shape_2d = grid.mask.geometry.zoom_shape_2d
+        shape_2d = (
+            int(pixel_scale_ratio * zoom_shape_2d[0]),
+            int(pixel_scale_ratio * zoom_shape_2d[1]),
+        )
+
+        grid = grids.Grid.uniform(
+            shape_2d=shape_2d,
+            pixel_scales=(pixel_scale, pixel_scale),
+            origin=grid.mask.geometry.zoom_offset_scaled,
+        )
+
+        grid.is_evaluation_grid = True
+
+        return func(lensing_obj, grid, pixel_scale)
+
+    return wrapper
 
 
 class LensingObject:
@@ -54,88 +92,70 @@ class LensingObject:
             grid=np.stack((deflections_y_2d, deflections_x_2d), axis=-1), mask=grid.mask
         )
 
-    def jacobian_a11_from_grid(self, grid):
+    def jacobian_from_grid(self, grid):
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        return arrays.Array.manual_mask(
+        a11 = arrays.Array.manual_mask(
             array=1.0
             - np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[0, :, 1], axis=1),
             mask=grid.mask,
         )
 
-    def jacobian_a12_from_grid(self, grid):
-
-        deflections = self.deflections_from_grid(grid=grid)
-
-        return arrays.Array.manual_mask(
+        a12 = arrays.Array.manual_mask(
             array=-1.0
             * np.gradient(deflections.in_2d[:, :, 1], grid.in_2d[:, 0, 0], axis=0),
             mask=grid.mask,
         )
 
-    def jacobian_a21_from_grid(self, grid):
-
-        deflections = self.deflections_from_grid(grid=grid)
-
-        return arrays.Array.manual_mask(
+        a21 = arrays.Array.manual_mask(
             array=-1.0
             * np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[0, :, 1], axis=1),
             mask=grid.mask,
         )
 
-    def jacobian_a22_from_grid(self, grid):
-
-        deflections = self.deflections_from_grid(grid=grid)
-
-        return arrays.Array.manual_mask(
+        a22 = arrays.Array.manual_mask(
             array=1
             - np.gradient(deflections.in_2d[:, :, 0], grid.in_2d[:, 0, 0], axis=0),
             mask=grid.mask,
         )
 
-    def jacobian_from_grid(self, grid):
-
-        a11 = self.jacobian_a11_from_grid(grid=grid)
-
-        a12 = self.jacobian_a12_from_grid(grid=grid)
-
-        a21 = self.jacobian_a21_from_grid(grid=grid)
-
-        a22 = self.jacobian_a22_from_grid(grid=grid)
-
         return [[a11, a12], [a21, a22]]
 
-    def convergence_via_jacobian_from_grid(self, grid):
-
-        jacobian = self.jacobian_from_grid(grid=grid)
+    @precompute_jacobian
+    def convergence_via_jacobian_from_grid(self, grid, jacobian=None):
 
         convergence = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
 
         return arrays.Array(array=convergence, mask=grid.mask)
 
-    def shear_via_jacobian_from_grid(self, grid):
-
-        jacobian = self.jacobian_from_grid(grid=grid)
+    @precompute_jacobian
+    def shear_via_jacobian_from_grid(self, grid, jacobian=None):
 
         gamma_y = -0.5 * (jacobian[0][1] + jacobian[1][0])
         gamma_x = 0.5 * (jacobian[1][1] - jacobian[0][0])
 
         return arrays.Array(array=(gamma_x ** 2 + gamma_y ** 2) ** 0.5, mask=grid.mask)
 
-    def tangential_eigen_value_from_grid(self, grid):
+    @precompute_jacobian
+    def tangential_eigen_value_from_grid(self, grid, jacobian=None):
 
-        convergence = self.convergence_via_jacobian_from_grid(grid=grid)
+        convergence = self.convergence_via_jacobian_from_grid(
+            grid=grid, jacobian=jacobian
+        )
 
-        shear = self.shear_via_jacobian_from_grid(grid=grid)
+        shear = self.shear_via_jacobian_from_grid(grid=grid, jacobian=jacobian)
 
         return arrays.Array(array=1 - convergence - shear, mask=grid.mask)
 
-    def radial_eigen_value_from_grid(self, grid):
+    @precompute_jacobian
+    def radial_eigen_value_from_grid(self, grid, jacobian=None):
 
-        convergence = self.convergence_via_jacobian_from_grid(grid=grid)
+        convergence = self.convergence_via_jacobian_from_grid(
+            grid=grid, jacobian=jacobian
+        )
 
-        shear = self.shear_via_jacobian_from_grid(grid=grid)
+        shear = self.shear_via_jacobian_from_grid(grid=grid, jacobian=jacobian)
 
         return arrays.Array(array=1 - convergence + shear, mask=grid.mask)
 
@@ -147,90 +167,40 @@ class LensingObject:
 
         return arrays.Array(array=1 / det_jacobian, mask=grid.mask)
 
-    @property
-    def mass_profile_bounding_box(self):
-        y_min = np.min(list(map(lambda centre: centre[0], self.mass_profile_centres)))
-        y_max = np.max(list(map(lambda centre: centre[0], self.mass_profile_centres)))
-        x_min = np.min(list(map(lambda centre: centre[1], self.mass_profile_centres)))
-        x_max = np.max(list(map(lambda centre: centre[1], self.mass_profile_centres)))
-        return [y_min, y_max, x_min, x_max]
+    def magnification_irregular_from_grid(self, grid, buffer=0.01):
 
-    def convergence_bounding_box(self, convergence_threshold=0.02):
+        grid_shift_y_up = np.zeros(grid.shape)
+        grid_shift_y_up[:, 0] = grid[:, 0] + buffer
+        grid_shift_y_up[:, 1] = grid[:, 1]
 
-        if all(mass_profile.is_point_mass for mass_profile in self.mass_profiles):
-            einstein_radius = sum(
-                [
-                    mass_profile.einstein_radius
-                    for mass_profile in self.mass_profiles
-                    if mass_profile.is_point_mass
-                ]
-            )
-            return [
-                -3.0 * einstein_radius,
-                3.0 * einstein_radius,
-                -3.0 * einstein_radius,
-                3.0 * einstein_radius,
-            ]
+        grid_shift_y_down = np.zeros(grid.shape)
+        grid_shift_y_down[:, 0] = grid[:, 0] - buffer
+        grid_shift_y_down[:, 1] = grid[:, 1]
 
-        [y_min, y_max, x_min, x_max] = self.mass_profile_bounding_box
+        grid_shift_x_left = np.zeros(grid.shape)
+        grid_shift_x_left[:, 0] = grid[:, 0]
+        grid_shift_x_left[:, 1] = grid[:, 1] - buffer
 
-        def func_for_y_min(y):
-            grid = np.array([[y, x_max], [y, x_min]])
-            return np.max(self.convergence_from_grid(grid=grid) - convergence_threshold)
+        grid_shift_x_right = np.zeros(grid.shape)
+        grid_shift_x_right[:, 0] = grid[:, 0]
+        grid_shift_x_right[:, 1] = grid[:, 1] + buffer
 
-        convergence_y_min = root_scalar(func_for_y_min, bracket=[y_min, -1000.0]).root
+        deflections_up = self.deflections_from_grid(grid=grid_shift_y_up)
+        deflections_down = self.deflections_from_grid(grid=grid_shift_y_down)
+        deflections_left = self.deflections_from_grid(grid=grid_shift_x_left)
+        deflections_right = self.deflections_from_grid(grid=grid_shift_x_right)
 
-        def func_for_y_max(y):
-            grid = np.array([[y, x_max], [y, x_min]])
-            return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
+        shear_yy = 0.5 * (deflections_up[:, 0] - deflections_down[:, 0]) / buffer
+        shear_xy = 0.5 * (deflections_up[:, 1] - deflections_down[:, 1]) / buffer
+        shear_yx = 0.5 * (deflections_right[:, 0] - deflections_left[:, 0]) / buffer
+        shear_xx = 0.5 * (deflections_right[:, 1] - deflections_left[:, 1]) / buffer
 
-        convergence_y_max = root_scalar(func_for_y_max, bracket=[y_max, 1000.0]).root
+        det_A = (1 - shear_xx) * (1 - shear_yy) - shear_xy * shear_yx
 
-        def func_for_x_min(x):
-            grid = np.array([[y_max, x], [y_min, x]])
-            return np.max(self.convergence_from_grid(grid=grid) - convergence_threshold)
+        return grid.values_from_arr_1d(arr_1d=1.0 / det_A)
 
-        convergence_x_min = root_scalar(func_for_x_min, bracket=[x_min, -1000.0]).root
-
-        def func_for_x_max(x):
-            grid = np.array([[y_max, x], [y_min, x]])
-            return np.min(self.convergence_from_grid(grid=grid) - convergence_threshold)
-
-        convergence_x_max = root_scalar(func_for_x_max, bracket=[x_max, 1000.0]).root
-
-        return [
-            convergence_y_min,
-            convergence_y_max,
-            convergence_x_min,
-            convergence_x_max,
-        ]
-
-    @property
-    def calculation_grid(self):
-
-        convergence_threshold = conf.instance["general"]["calculation_grid"][
-            "convergence_threshold"
-        ]
-
-        pixels = conf.instance["general"]["calculation_grid"]["pixels"]
-
-        # TODO : The error is raised for point mass profile which does not have a convergence, need to think how to
-        # TODO : better deal with point masses.
-
-        bounding_box = self.convergence_bounding_box(
-            convergence_threshold=convergence_threshold
-        )
-
-        return grids.Grid.bounding_box(
-            bounding_box=bounding_box,
-            shape_2d=(pixels, pixels),
-            buffer_around_corners=True,
-        )
-
-    @property
-    def tangential_critical_curve(self):
-
-        grid = self.calculation_grid
+    @evaluation_grid
+    def tangential_critical_curve_from_grid(self, grid, pixel_scale=0.05):
 
         tangential_eigen_values = self.tangential_eigen_value_from_grid(grid=grid)
 
@@ -246,12 +216,13 @@ class LensingObject:
             shape_2d=tangential_eigen_values.sub_shape_2d,
         )
 
-        return grids.GridIrregularGrouped(tangential_critical_curve)
+        try:
+            return grids.GridIrregularGrouped(tangential_critical_curve)
+        except IndexError:
+            return []
 
-    @property
-    def radial_critical_curve(self):
-
-        grid = self.calculation_grid
+    @evaluation_grid
+    def radial_critical_curve_from_grid(self, grid, pixel_scale=0.05):
 
         radial_eigen_values = self.radial_eigen_value_from_grid(grid=grid)
 
@@ -267,18 +238,37 @@ class LensingObject:
             shape_2d=radial_eigen_values.sub_shape_2d,
         )
 
-        return grids.GridIrregularGrouped(radial_critical_curve)
+        try:
+            return grids.GridIrregularGrouped(radial_critical_curve)
+        except IndexError:
+            return []
 
-    @property
-    def critical_curves(self):
-        return grids.GridIrregularGrouped(
-            [self.tangential_critical_curve, self.radial_critical_curve]
+    @evaluation_grid
+    def critical_curves_from_grid(self, grid, pixel_scale=0.05):
+
+        if len(self.mass_profiles) == 0:
+            return []
+
+        try:
+            return grids.GridIrregularGrouped(
+                [
+                    self.tangential_critical_curve_from_grid(
+                        grid=grid, pixel_scale=pixel_scale
+                    ),
+                    self.radial_critical_curve_from_grid(
+                        grid=grid, pixel_scale=pixel_scale
+                    ),
+                ]
+            )
+        except (IndexError, ValueError):
+            return []
+
+    @evaluation_grid
+    def tangential_caustic_from_grid(self, grid, pixel_scale=0.05):
+
+        tangential_critical_curve = self.tangential_critical_curve_from_grid(
+            grid=grid, pixel_scale=pixel_scale
         )
-
-    @property
-    def tangential_caustic(self):
-
-        tangential_critical_curve = self.tangential_critical_curve
 
         if len(tangential_critical_curve) == 0:
             return []
@@ -289,10 +279,12 @@ class LensingObject:
 
         return tangential_critical_curve - deflections_critical_curve
 
-    @property
-    def radial_caustic(self):
+    @evaluation_grid
+    def radial_caustic_from_grid(self, grid, pixel_scale=0.05):
 
-        radial_critical_curve = self.radial_critical_curve
+        radial_critical_curve = self.radial_critical_curve_from_grid(
+            grid=grid, pixel_scale=pixel_scale
+        )
 
         if len(radial_critical_curve) == 0:
             return []
@@ -303,25 +295,46 @@ class LensingObject:
 
         return radial_critical_curve - deflections_critical_curve
 
-    @property
-    def caustics(self):
-        return grids.GridIrregularGrouped(
-            [self.tangential_caustic, self.radial_caustic]
+    @evaluation_grid
+    def caustics_from_grid(self, grid, pixel_scale=0.05):
+
+        if len(self.mass_profiles) == 0:
+            return []
+
+        try:
+            return grids.GridIrregularGrouped(
+                [
+                    self.tangential_caustic_from_grid(
+                        grid=grid, pixel_scale=pixel_scale
+                    ),
+                    self.radial_caustic_from_grid(grid=grid, pixel_scale=pixel_scale),
+                ]
+            )
+        except IndexError:
+            return []
+
+    @evaluation_grid
+    def area_within_tangential_critical_curve_from_grid(self, grid, pixel_scale=0.05):
+
+        tangential_critical_curve = self.tangential_critical_curve_from_grid(
+            grid=grid, pixel_scale=pixel_scale
         )
-
-    @property
-    @array_util.Memoizer()
-    def area_within_tangential_critical_curve(self):
-
-        tangential_critical_curve = self.tangential_critical_curve
         x, y = tangential_critical_curve[:, 0], tangential_critical_curve[:, 1]
 
         return np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
 
-    @property
-    def einstein_radius_via_tangential_critical_curve(self):
-        return np.sqrt(self.area_within_tangential_critical_curve / np.pi)
+    @evaluation_grid
+    def einstein_radius_from_grid(self, grid, pixel_scale=0.05):
 
-    @property
-    def einstein_mass_angular_via_tangential_critical_curve(self):
-        return np.pi * (self.einstein_radius_via_tangential_critical_curve ** 2)
+        return np.sqrt(
+            self.area_within_tangential_critical_curve_from_grid(
+                grid=grid, pixel_scale=pixel_scale
+            )
+            / np.pi
+        )
+
+    @evaluation_grid
+    def einstein_mass_angular_from_grid(self, grid, pixel_scale=0.05):
+        return np.pi * (
+            self.einstein_radius_from_grid(grid=grid, pixel_scale=pixel_scale) ** 2
+        )

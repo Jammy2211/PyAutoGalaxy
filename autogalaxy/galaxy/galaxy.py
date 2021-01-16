@@ -208,7 +208,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
     @property
     def mass_profile_axis_ratios(self):
         """
-        Returns the mass profile axis-ratios of the galaxy as a *Values* object, which structures the axis-ratios
+        Returns the mass profile axis-ratios of the galaxy as a *ValuesIrregularGrouped* object, which structures the axis-ratios
             in lists according to which mass profile they come from.
 
             Fo example, if a galaxy has two mass profiles, the first with one axis-ratio and second with two axis-ratios
@@ -231,12 +231,12 @@ class Galaxy(ModelObject, lensing.LensingObject):
         for key, axis_ratio in zip(self.mass_profile_keys, axis_ratios):
             axis_ratios_dict[key] = axis_ratio
 
-        return arrays.Values(values=axis_ratios_dict)
+        return arrays.ValuesIrregularGrouped(values=axis_ratios_dict)
 
     @property
     def mass_profile_phis(self):
         """
-        Returns the mass profile phis of the galaxy as a *Values* object, which structures the phis in lists
+        Returns the mass profile phis of the galaxy as a *ValuesIrregularGrouped* object, which structures the phis in lists
             according to which mass profile they come from.
 
             Fo example, if a galaxy has two mass profiles, the first with one phi and second with two phis this returns:
@@ -256,7 +256,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         for key, phi in zip(self.mass_profile_keys, phis):
             phis_dict[key] = phi
 
-        return arrays.Values(values=phis_dict)
+        return arrays.ValuesIrregularGrouped(values=phis_dict)
 
     @property
     def uses_cluster_inversion(self):

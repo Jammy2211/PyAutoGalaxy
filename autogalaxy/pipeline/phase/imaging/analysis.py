@@ -2,8 +2,8 @@ import autofit as af
 from autoarray.exc import PixelizationException, InversionException, GridException
 from autofit.exc import FitException
 from autogalaxy.fit import fit
-from autogalaxy.pipeline import visualizer
 from autogalaxy.pipeline.phase.dataset import analysis as analysis_dataset
+from autogalaxy.pipeline import visualizer as vis
 
 
 class Analysis(analysis_dataset.Analysis):
@@ -14,10 +14,6 @@ class Analysis(analysis_dataset.Analysis):
             settings=settings,
             cosmology=cosmology,
             results=results,
-        )
-
-        self.visualizer = visualizer.PhaseImagingVisualizer(
-            masked_dataset=masked_imaging
         )
 
     @property
@@ -75,8 +71,6 @@ class Analysis(analysis_dataset.Analysis):
 
     def visualize(self, paths: af.Paths, instance, during_analysis):
 
-        self.visualizer.visualize_imaging(paths=paths)
-
         instance = self.associate_hyper_images(instance=instance)
         plane = self.plane_for_instance(instance=instance)
         hyper_image_sky = self.hyper_image_sky_for_instance(instance=instance)
@@ -90,28 +84,22 @@ class Analysis(analysis_dataset.Analysis):
             hyper_background_noise=hyper_background_noise,
         )
 
-        if plane.has_mass_profile:
+        visualizer = vis.Visualizer(visualize_path=paths.image_path)
+        visualizer.visualize_imaging(imaging=self.masked_imaging.imaging)
+        visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)
 
-            visualizer = self.visualizer.new_visualizer_with_preloaded_critical_curves_and_caustics(
-                preloaded_critical_curves=plane.critical_curves,
-                preloaded_caustics=plane.caustics,
+        if fit.inversion is not None:
+            visualizer.visualize_inversion(
+                inversion=fit.inversion, during_analysis=during_analysis
             )
 
-        else:
-
-            visualizer = self.visualizer
-
-        #   visualizer.visualize_plane(plane=fit.plane, during_analysis=during_analysis)
-        visualizer.visualize_fit(paths=paths, fit=fit, during_analysis=during_analysis)
-
-        self.visualizer.visualize_hyper_images(
-            paths=paths,
+        visualizer.visualize_hyper_images(
             hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
             hyper_model_image=self.hyper_model_image,
-            contribution_maps_of_galaxies=plane.contribution_maps_of_galaxies,
+            plane=plane,
         )
 
-        if self.visualizer.plot_fit_no_hyper:
+        if visualizer.plot_fit_no_hyper:
 
             fit = self.masked_imaging_fit_for_plane(
                 plane=plane,
@@ -120,11 +108,8 @@ class Analysis(analysis_dataset.Analysis):
                 use_hyper_scalings=False,
             )
 
-            visualizer.visualize_fit(
-                paths=paths,
-                fit=fit,
-                during_analysis=during_analysis,
-                subfolders="fit_no_hyper",
+            visualizer.visualize_fit_imaging(
+                fit=fit, during_analysis=during_analysis, subfolders="fit_no_hyper"
             )
 
     def make_attributes(self):
