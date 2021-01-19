@@ -23,7 +23,7 @@ def critical_curve_via_magnification_from_plane_and_grid(plane, grid):
         contour_x, contour_y = contours[jj].T
         pixel_coord = np.stack((contour_x, contour_y), axis=-1)
 
-        critical_curve = grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
+        critical_curve = grid.mask.grid_scaled_from_grid_pixels_1d_for_marching_squares(
             grid_pixels_1d=pixel_coord, shape_2d=magnification.sub_shape_2d
         )
 
@@ -1832,7 +1832,7 @@ class TestAbstractPlaneData:
 
             plane_image_from_func = ag.plane.plane.plane_util.plane_image_of_galaxies_from(
                 shape=(7, 7),
-                grid=sub_grid_7x7.geometry.unmasked_grid_sub_1,
+                grid=sub_grid_7x7.mask.unmasked_grid_sub_1,
                 galaxies=[galaxy],
             )
 

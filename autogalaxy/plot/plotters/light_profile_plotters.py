@@ -60,7 +60,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             ),
             mask=self.extract_2d("mask", value=self.grid.mask),
             border=self.extract_2d(
-                "border", value=self.grid.mask.geometry.border_grid_sub_1.in_1d_binned
+                "border", value=self.grid.mask.border_grid_sub_1.in_1d_binned
             ),
             light_profile_centres=self.extract_2d(
                 "light_profile_centres", self.light_profile.light_profile_centres
@@ -75,6 +75,24 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
                 array=self.light_profile.image_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mp.AutoLabels(title="Image", filename="image"),
+            )
+
+    def figures_1d(self, image=False):
+
+        grid_radii = self.grid.grid_radii_from(centre=self.light_profile.centre)
+
+        if image:
+
+            self.mat_plot_1d.plot_line(
+                y=self.light_profile.image_from_grid(grid=grid_radii),
+                x=grid_radii[:, 1],
+                visuals_1d=self.visuals_1d,
+                auto_labels=mp.AutoLabels(
+                    title="Image vs Radius",
+                    ylabel="Image",
+                    xlabel="Radius",
+                    legend=self.light_profile.__class__.__name__,
+                ),
             )
 
     def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(

@@ -373,7 +373,7 @@ class SetupLightParametric(AbstractSetupLight):
         disk_prior_model: af.PriorModel(lp.LightProfile) = lp.EllipticalExponential,
         envelope_prior_model: af.PriorModel(lp.LightProfile) = None,
         light_centre: (float, float) = None,
-        light_centre_prior : af.Prior = None,
+        light_centre_prior: af.Prior = None,
         align_bulge_disk_centre: bool = True,
         align_bulge_disk_elliptical_comps: bool = False,
         align_bulge_envelope_centre: bool = False,
@@ -1331,9 +1331,7 @@ class SetupMassLightDark(AbstractSetupMass):
             return ""
         return f"__{conf.instance['notation']['setup_tags']['mass']['align_bulge_dark_centre']}"
 
-    def align_bulge_and_dark_centre(
-        self, bulge_prior_model, dark_prior_model
-    ):
+    def align_bulge_and_dark_centre(self, bulge_prior_model, dark_prior_model):
         """
         Align the centre of input bulge `PriorModel` with that of the `PriorModel` representing the dark `MassProfile`,
         depending on the `align_bulge_darl_centre` attribute of the `SetupMassLightDark` instance.
@@ -1395,13 +1393,9 @@ class SetupMassLightDark(AbstractSetupMass):
             envelope = copy.deepcopy(self.envelope_prior_model)
 
             if as_instance:
-                envelope.take_attributes(
-                    source=result.instance.galaxies.lens.envelope
-                )
+                envelope.take_attributes(source=result.instance.galaxies.lens.envelope)
             else:
-                envelope.take_attributes(
-                    source=result.model.galaxies.lens.envelope
-                )
+                envelope.take_attributes(source=result.model.galaxies.lens.envelope)
 
         ### TODO : Assertiosn must be after take attributwes, hence this.
 

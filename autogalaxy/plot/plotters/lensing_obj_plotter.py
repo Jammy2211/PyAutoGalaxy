@@ -58,7 +58,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             ),
             mask=self.extract_2d("mask", value=self.grid.mask),
             border=self.extract_2d(
-                "border", value=self.grid.mask.geometry.border_grid_sub_1.in_1d_binned
+                "border", value=self.grid.mask.border_grid_sub_1.in_1d_binned
             ),
             mass_profile_centres=self.extract_2d(
                 "mass_profile_centres", self.lensing_obj.mass_profile_centres

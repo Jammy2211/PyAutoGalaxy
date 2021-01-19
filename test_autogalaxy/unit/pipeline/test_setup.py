@@ -295,7 +295,7 @@ class TestSetupLightParametric:
         setup = ag.SetupLightParametric(
             bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
             disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
-            envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic)
+            envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic),
         )
 
         print(setup.bulge_prior_model.centre_0.mean)
@@ -317,7 +317,7 @@ class TestSetupLightParametric:
             light_centre_prior=af.GaussianPrior(mean=0.1, sigma=0.4),
             bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
             disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
-            envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic)
+            envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic),
         )
 
         assert setup.bulge_prior_model.centre_0.mean == 0.1

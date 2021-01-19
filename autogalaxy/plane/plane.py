@@ -557,7 +557,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
     def plane_image_from_grid(self, grid):
         return plane_util.plane_image_of_galaxies_from(
             shape=grid.mask.shape,
-            grid=grid.geometry.unmasked_grid_sub_1,
+            grid=grid.mask.unmasked_grid_sub_1,
             galaxies=self.galaxies,
         )
 
@@ -705,8 +705,8 @@ class PlaneImage:
 
     @property
     def xticks(self):
-        return self.array.mask.geometry.xticks
+        return self.array.mask.xticks
 
     @property
     def yticks(self):
-        return self.array.mask.geometry.yticks
+        return self.array.mask.yticks

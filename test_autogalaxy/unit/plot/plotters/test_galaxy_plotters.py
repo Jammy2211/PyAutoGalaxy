@@ -36,7 +36,7 @@ def test__visuals_with_include_2d(gal_x1_lp_x1_mp, grid_7x7):
     assert (galaxy_plotter.visuals_with_include_2d.mask == grid_7x7.mask).all()
     assert (
         galaxy_plotter.visuals_with_include_2d.border
-        == grid_7x7.mask.geometry.border_grid_sub_1.in_1d_binned
+        == grid_7x7.mask.border_grid_sub_1.in_1d_binned
     ).all()
     assert galaxy_plotter.visuals_with_include_2d.light_profile_centres.in_1d_list == [
         gal_x1_lp_x1_mp.light_profile_0.centre

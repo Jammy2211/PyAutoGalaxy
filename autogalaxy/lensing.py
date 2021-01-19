@@ -27,7 +27,7 @@ def evaluation_grid(func):
 
         pixel_scale_ratio = grid.pixel_scale / pixel_scale
 
-        zoom_shape_2d = grid.mask.geometry.zoom_shape_2d
+        zoom_shape_2d = grid.mask.zoom_shape_2d
         shape_2d = (
             int(pixel_scale_ratio * zoom_shape_2d[0]),
             int(pixel_scale_ratio * zoom_shape_2d[1]),
@@ -36,7 +36,7 @@ def evaluation_grid(func):
         grid = grids.Grid.uniform(
             shape_2d=shape_2d,
             pixel_scales=(pixel_scale, pixel_scale),
-            origin=grid.mask.geometry.zoom_offset_scaled,
+            origin=grid.mask.zoom_offset_scaled,
         )
 
         grid.is_evaluation_grid = True
@@ -211,7 +211,7 @@ class LensingObject:
         if len(tangential_critical_curve_indices) == 0:
             return []
 
-        tangential_critical_curve = grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
+        tangential_critical_curve = grid.mask.grid_scaled_from_grid_pixels_1d_for_marching_squares(
             grid_pixels_1d=tangential_critical_curve_indices[0],
             shape_2d=tangential_eigen_values.sub_shape_2d,
         )
@@ -233,7 +233,7 @@ class LensingObject:
         if len(radial_critical_curve_indices) == 0:
             return []
 
-        radial_critical_curve = grid.geometry.grid_scaled_from_grid_pixels_1d_for_marching_squares(
+        radial_critical_curve = grid.mask.grid_scaled_from_grid_pixels_1d_for_marching_squares(
             grid_pixels_1d=radial_critical_curve_indices[0],
             shape_2d=radial_eigen_values.sub_shape_2d,
         )
