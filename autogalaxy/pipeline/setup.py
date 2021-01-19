@@ -1332,7 +1332,7 @@ class SetupMassLightDark(AbstractSetupMass):
         return f"__{conf.instance['notation']['setup_tags']['mass']['align_bulge_dark_centre']}"
 
     def align_bulge_and_dark_centre(
-        self, results: af.ResultsCollection, bulge_prior_model, dark_prior_model
+        self, bulge_prior_model, dark_prior_model
     ):
         """
         Align the centre of input bulge `PriorModel` with that of the `PriorModel` representing the dark `MassProfile`,
@@ -1349,7 +1349,7 @@ class SetupMassLightDark(AbstractSetupMass):
             dark_prior_model.centre = bulge_prior_model.centre
 
     def light_and_mass_prior_models_with_updated_priors(
-        self, results: af.ResultsCollection, as_instance=False
+        self, result: af.Result, as_instance=False
     ):
         """
         Returns an updated version of the `bulge_prior_model`, `disk_prior_model`_ and `envelope_prior_model`,  whose
@@ -1360,7 +1360,7 @@ class SetupMassLightDark(AbstractSetupMass):
 
         Parameters
         ----------
-        results : af.ResultsCollection
+        result : af.ResultsCollection
             The results of the previous source pipeline.
 
         Returns
@@ -1375,9 +1375,9 @@ class SetupMassLightDark(AbstractSetupMass):
             bulge = copy.deepcopy(self.bulge_prior_model)
 
             if as_instance:
-                bulge.take_attributes(source=results.last.instance.galaxies.lens.bulge)
+                bulge.take_attributes(source=result.instance.galaxies.lens.bulge)
             else:
-                bulge.take_attributes(source=results.last.model.galaxies.lens.bulge)
+                bulge.take_attributes(source=result.model.galaxies.lens.bulge)
 
         if self.disk_prior_model is None:
             disk = None
@@ -1385,9 +1385,9 @@ class SetupMassLightDark(AbstractSetupMass):
             disk = copy.deepcopy(self.disk_prior_model)
 
             if as_instance:
-                disk.take_attributes(source=results.last.instance.galaxies.lens.disk)
+                disk.take_attributes(source=result.instance.galaxies.lens.disk)
             else:
-                disk.take_attributes(source=results.last.model.galaxies.lens.disk)
+                disk.take_attributes(source=result.model.galaxies.lens.disk)
 
         if self.envelope_prior_model is None:
             envelope = None
@@ -1396,11 +1396,11 @@ class SetupMassLightDark(AbstractSetupMass):
 
             if as_instance:
                 envelope.take_attributes(
-                    source=results.last.instance.galaxies.lens.envelope
+                    source=result.instance.galaxies.lens.envelope
                 )
             else:
                 envelope.take_attributes(
-                    source=results.last.model.galaxies.lens.envelope
+                    source=result.model.galaxies.lens.envelope
                 )
 
         ### TODO : Assertiosn must be after take attributwes, hence this.

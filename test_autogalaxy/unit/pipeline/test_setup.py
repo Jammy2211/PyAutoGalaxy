@@ -290,6 +290,49 @@ class TestSetupLightParametric:
         assert setup.bulge_prior_model.centre == setup.disk_prior_model.centre
         assert setup.bulge_prior_model.centre == setup.envelope_prior_model.centre
 
+    def test__light_centre_prior_input(self):
+
+        setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
+            disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
+            envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic)
+        )
+
+        print(setup.bulge_prior_model.centre_0.mean)
+
+        assert setup.bulge_prior_model.centre_0.mean == 0.0
+        assert setup.bulge_prior_model.centre_1.mean == 0.0
+        assert setup.bulge_prior_model.centre_0.sigma == 0.3
+        assert setup.bulge_prior_model.centre_1.sigma == 0.3
+        assert setup.disk_prior_model.centre_0.mean == 0.0
+        assert setup.disk_prior_model.centre_1.mean == 0.0
+        assert setup.disk_prior_model.centre_0.sigma == 0.3
+        assert setup.disk_prior_model.centre_1.sigma == 0.3
+        assert setup.envelope_prior_model.centre_0.mean == 0.0
+        assert setup.envelope_prior_model.centre_1.mean == 0.0
+        assert setup.envelope_prior_model.centre_0.sigma == 0.3
+        assert setup.envelope_prior_model.centre_1.sigma == 0.3
+
+        setup = ag.SetupLightParametric(
+            light_centre_prior=af.GaussianPrior(mean=0.1, sigma=0.4),
+            bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
+            disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
+            envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic)
+        )
+
+        assert setup.bulge_prior_model.centre_0.mean == 0.1
+        assert setup.bulge_prior_model.centre_1.mean == 0.1
+        assert setup.bulge_prior_model.centre_0.sigma == 0.4
+        assert setup.bulge_prior_model.centre_1.sigma == 0.4
+        assert setup.disk_prior_model.centre_0.mean == 0.1
+        assert setup.disk_prior_model.centre_1.mean == 0.1
+        assert setup.disk_prior_model.centre_0.sigma == 0.4
+        assert setup.disk_prior_model.centre_1.sigma == 0.4
+        assert setup.envelope_prior_model.centre_0.mean == 0.1
+        assert setup.envelope_prior_model.centre_1.mean == 0.1
+        assert setup.envelope_prior_model.centre_0.sigma == 0.4
+        assert setup.envelope_prior_model.centre_1.sigma == 0.4
+
     def test__light_centre_tag(self):
 
         setup = ag.SetupLightParametric(light_centre=None)
