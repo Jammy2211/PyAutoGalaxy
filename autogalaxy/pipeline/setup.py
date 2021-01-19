@@ -373,6 +373,7 @@ class SetupLightParametric(AbstractSetupLight):
         disk_prior_model: af.PriorModel(lp.LightProfile) = lp.EllipticalExponential,
         envelope_prior_model: af.PriorModel(lp.LightProfile) = None,
         light_centre: (float, float) = None,
+        light_centre_prior : af.Prior = None,
         align_bulge_disk_centre: bool = True,
         align_bulge_disk_elliptical_comps: bool = False,
         align_bulge_envelope_centre: bool = False,
@@ -412,6 +413,25 @@ class SetupLightParametric(AbstractSetupLight):
         self.bulge_prior_model = self._cls_to_prior_model(cls=bulge_prior_model)
         self.disk_prior_model = self._cls_to_prior_model(cls=disk_prior_model)
         self.envelope_prior_model = self._cls_to_prior_model(cls=envelope_prior_model)
+
+        self.light_centre_prior = light_centre_prior
+
+        if self.light_centre_prior is not None:
+
+            if self.bulge_prior_model is not None:
+
+                self.bulge_prior_model.centre_0 = light_centre_prior
+                self.bulge_prior_model.centre_1 = light_centre_prior
+
+            if self.disk_prior_model is not None:
+
+                self.disk_prior_model.centre_0 = light_centre_prior
+                self.disk_prior_model.centre_1 = light_centre_prior
+
+            if self.envelope_prior_model is not None:
+
+                self.envelope_prior_model.centre_0 = light_centre_prior
+                self.envelope_prior_model.centre_1 = light_centre_prior
 
         self.light_centre = light_centre
         self.align_bulge_disk_centre = align_bulge_disk_centre
