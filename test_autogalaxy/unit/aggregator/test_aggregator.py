@@ -33,7 +33,7 @@ def test__dataset_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
         search=mock.MockSearch(samples=samples, name="test_phase_aggregator"),
     )
 
-    imaging_7x7.traced_grid = ag.GridIrregularGrouped([[1.0, 1.0], [2.0, 2.0]])
+    imaging_7x7.positions = ag.GridIrregularGrouped([[1.0, 1.0], [2.0, 2.0]])
 
     phase_imaging_7x7.run(
         dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults(samples=samples)

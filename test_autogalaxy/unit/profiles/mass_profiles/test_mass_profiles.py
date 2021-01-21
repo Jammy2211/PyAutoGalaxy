@@ -127,6 +127,112 @@ class TestDensityBetweenAnnuli:
 
 
 class TestNormalizationEinstienRadius:
+
+    def test__mass_angular_from_normalization_and_radius(self):
+
+        sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        mass_angular_from_normalization = sis.mass_angular_from_normalization_and_radius(
+            normalization=1.0, radius=2.0
+        )
+
+        assert mass_angular_from_normalization == pytest.approx(2.0 * np.pi, 1.0e-2)
+
+        mass_angular_from_normalization = sis.mass_angular_from_normalization_and_radius(
+            normalization=1.0, radius=4.0
+        )
+
+        assert mass_angular_from_normalization == pytest.approx(4.0 * np.pi, 1.0e-2)
+
+        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+
+        mass_angular_from_normalization = nfw.mass_angular_from_normalization_and_radius(
+            normalization=2.0, radius=2.0
+        )
+
+        assert mass_angular_from_normalization == pytest.approx(15.19525, 1.0e-4)
+
+        sersic = ag.mp.SphericalSersic(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=3.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        mass_angular_from_normalization = sersic.mass_angular_from_normalization_and_radius(
+            normalization=2.0, radius=2.0
+        )
+
+        sersic = ag.mp.SphericalSersic(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=3.0,
+            mass_to_light_ratio=2.0,
+        )
+
+        assert mass_angular_from_normalization == pytest.approx(
+            28.32431, 1.0e-4
+        )
+
+        mass_angular_from_normalization = sersic.mass_angular_from_normalization_and_radius(
+            normalization=0.1, radius=2.0
+        )
+
+        assert mass_angular_from_normalization == pytest.approx(1.416215, 1.0e-2)
+
+    def test__normalization_from_mass_angular_and_radius(self):
+
+        sersic = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        normalization = sersic.normalization_from_mass_angular_and_radius(
+            mass_angular=5.0, radius=2.0, normalization_min=0.5, normalization_max=3.0, bins=5
+        )
+
+        assert normalization == pytest.approx(0.79577, 1.0e-2)
+
+        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=3.0, scale_radius=1.0)
+
+        normalization = nfw.normalization_from_mass_angular_and_radius(
+            mass_angular=6.35829,
+            radius=2.0,
+            normalization_min=0.5,
+            normalization_max=3.0,
+            bins=5,
+        )
+
+        assert normalization == pytest.approx(0.83687, 1.0e-2)
+
+        sersic = ag.mp.SphericalSersic(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=3.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        normalization = sersic.normalization_from_mass_angular_and_radius(
+            mass_angular=2.15403,
+            radius=2.0,
+            normalization_min=0.01,
+            normalization_max=30.0,
+            bins=5,
+        )
+
+        sersic = sersic.with_new_normalization(normalization=normalization)
+
+        assert normalization == pytest.approx(0.152097, 1.0e-2)
+
+        with pytest.raises(exc.ProfileException):
+            sersic.normalization_from_mass_angular_and_radius(
+                mass_angular=1.0,
+                radius=2.0,
+                normalization_min=1e-4,
+                normalization_max=1e-3,
+                bins=2,
+            )
+
     def test__einstein_radius_from_normalization(self):
 
         sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)

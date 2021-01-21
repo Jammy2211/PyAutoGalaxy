@@ -134,6 +134,60 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
 
         return self.ellipticity_rescale * root_scalar(func, bracket=[1e-4, 1e4]).root
 
+    def mass_angular_from_normalization_and_radius(self, normalization, radius):
+
+        mass_profile = self.with_new_normalization(normalization=normalization)
+
+        return mass_profile.mass_angular_within_circle(radius=radius)
+
+
+    def normalization_from_mass_angular_and_radius(
+        self, mass_angular,  radius, normalization_min=1e-9, normalization_max=1e9, bins=100
+    ):
+
+        normalizations = np.logspace(
+            np.log10(normalization_min), np.log10(normalization_max), bins
+        )
+
+        mass_angulars = [
+            self.mass_angular_from_normalization_and_radius(normalization=normalization, radius=radius)
+            for normalization in normalizations
+        ]
+
+        normalizations = [
+            normalization
+            for normalization, mass in zip(normalizations, mass_angulars)
+            if mass is not None
+        ]
+        mass_angulars = list(filter(None, mass_angulars))
+
+        if (
+            (len(mass_angulars) < 2)
+            or (mass_angulars[0] > mass_angular)
+            or (mass_angulars[-1] < mass_angular)
+        ):
+            raise exc.ProfileException(
+                "The normalization could not be computed from the Einstein Radius via the average of the convergence. "
+                ""
+                "The input einstein_radius may be too small or large to feasibly be computed by integrating the "
+                "convergence. Alternative the normalization range or number of bins may need to be changed to "
+                "capture the true einstein_radius value."
+            )
+
+        def func(normalization, mass_angular_root, radius):
+
+            mass_angular = self.mass_angular_from_normalization_and_radius(
+                normalization=normalization, radius=radius
+            )
+
+            return mass_angular - mass_angular_root
+
+        return root_scalar(
+            func,
+            bracket=[normalizations[0], normalizations[-1]],
+            args=(mass_angular, radius),
+        ).root
+
     def einstein_radius_from_normalization(self, normalization):
 
         mass_profile = self.with_new_normalization(normalization=normalization)
