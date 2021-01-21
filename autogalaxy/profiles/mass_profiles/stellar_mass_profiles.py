@@ -1,17 +1,18 @@
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 import numpy as np
-from autoarray.structures import arrays
 from autoarray.structures import grids
 from autogalaxy.profiles import mass_profiles as mp
 
 from pyquad import quad_grid
 from scipy.special import wofz
 import typing
+import copy
 
 from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
 
 
 class StellarProfile:
+
     pass
 
 
@@ -195,10 +196,16 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
             ),
         )
 
+    def with_new_normalization(self, normalization):
+
+        mass_profile = copy.copy(self)
+        mass_profile.mass_to_light_ratio = normalization
+        return mass_profile
+
 
 # noinspection PyAbstractClass
 class AbstractEllipticalSersic(
-    mp.EllipticalMassProfile, StellarProfile, MassProfileMGE
+    mp.EllipticalMassProfile, MassProfileMGE, StellarProfile
 ):
     def __init__(
         self,
@@ -347,6 +354,12 @@ class AbstractEllipticalSersic(
         return self._decompose_convergence_into_gaussians(
             func=sersic_2d, radii_min=radii_min, radii_max=radii_max
         )
+
+    def with_new_normalization(self, normalization):
+
+        mass_profile = copy.copy(self)
+        mass_profile.mass_to_light_ratio = normalization
+        return mass_profile
 
 
 class EllipticalSersic(AbstractEllipticalSersic, MassProfileMGE):

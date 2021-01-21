@@ -8,6 +8,7 @@ from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 from pyquad import quad_grid
 from scipy import special
 import typing
+import copy
 
 
 class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
@@ -52,6 +53,12 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
     @property
     def is_point_mass(self):
         return True
+
+    def with_new_normalization(self, normalization):
+
+        mass_profile = copy.copy(self)
+        mass_profile.einstein_radius = normalization
+        return mass_profile
 
 
 class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
@@ -201,6 +208,12 @@ class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
         return F
 
+    def with_new_normalization(self, normalization):
+
+        mass_profile = copy.copy(self)
+        mass_profile.einstein_radius = normalization
+        return mass_profile
+
 
 class SphericalBrokenPowerLaw(EllipticalBrokenPowerLaw):
     def __init__(
@@ -261,6 +274,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
         super(EllipticalCoredPowerLaw, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
+
         self.einstein_radius = einstein_radius
         self.slope = slope
         self.core_radius = core_radius
@@ -392,6 +406,12 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
     @property
     def unit_mass(self):
         return "angular"
+
+    def with_new_normalization(self, normalization):
+
+        mass_profile = copy.copy(self)
+        mass_profile.einstein_radius = normalization
+        return mass_profile
 
 
 class SphericalCoredPowerLaw(EllipticalCoredPowerLaw):

@@ -21,6 +21,8 @@ from scipy.integrate import quad
 from scipy.optimize import fsolve
 from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
 
+import copy
+
 
 def jit_integrand(integrand_function):
 
@@ -443,6 +445,12 @@ class AbstractEllipticalGeneralizedNFW(
         )
         amps *= np.sqrt(2.0 * np.pi) * sigmas
         return amps, sigmas
+
+    def with_new_normalization(self, normalization):
+
+        mass_profile = copy.copy(self)
+        mass_profile.kappa_s = normalization
+        return mass_profile
 
 
 class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
@@ -1290,6 +1298,8 @@ class SphericalNFWMCRDuffy(SphericalNFW):
     ):
 
         self.mass_at_200 = mass_at_200
+        self.redshift_object = redshift_object
+        self.redshift_source = redshift_source
 
         kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_duffy(
             mass_at_200=mass_at_200,
@@ -1300,6 +1310,10 @@ class SphericalNFWMCRDuffy(SphericalNFW):
         super(SphericalNFWMCRDuffy, self).__init__(
             centre=centre, kappa_s=kappa_s, scale_radius=scale_radius
         )
+
+    def with_new_normalization(self, normalization):
+
+        raise NotImplementedError()
 
 
 class SphericalNFWMCRLudlow(SphericalNFW):
@@ -1312,6 +1326,8 @@ class SphericalNFWMCRLudlow(SphericalNFW):
     ):
 
         self.mass_at_200 = mass_at_200
+        self.redshift_object = redshift_object
+        self.redshift_source = redshift_source
 
         kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_ludlow(
             mass_at_200=mass_at_200,
@@ -1322,6 +1338,10 @@ class SphericalNFWMCRLudlow(SphericalNFW):
         super(SphericalNFWMCRLudlow, self).__init__(
             centre=centre, kappa_s=kappa_s, scale_radius=scale_radius
         )
+
+    def with_new_normalization(self, normalization):
+
+        raise NotImplementedError()
 
 
 def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_source):

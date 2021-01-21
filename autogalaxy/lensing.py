@@ -326,12 +326,15 @@ class LensingObject:
     @evaluation_grid
     def einstein_radius_from_grid(self, grid, pixel_scale=0.05):
 
-        return np.sqrt(
-            self.area_within_tangential_critical_curve_from_grid(
-                grid=grid, pixel_scale=pixel_scale
+        try:
+            return np.sqrt(
+                self.area_within_tangential_critical_curve_from_grid(
+                    grid=grid, pixel_scale=pixel_scale
+                )
+                / np.pi
             )
-            / np.pi
-        )
+        except TypeError:
+            raise TypeError("The grid input was unable to estimate the Einstein Radius")
 
     @evaluation_grid
     def einstein_mass_angular_from_grid(self, grid, pixel_scale=0.05):

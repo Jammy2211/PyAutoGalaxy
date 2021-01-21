@@ -1,6 +1,7 @@
 import math
 
 import autogalaxy as ag
+from autogalaxy import exc
 import numpy as np
 import pytest
 
@@ -123,6 +124,107 @@ class TestDensityBetweenAnnuli:
         assert (outer_mass - inner_mass) / annuli_area == pytest.approx(
             density_between_annuli, 1e-4
         )
+
+
+class TestNormalizationEinstienRadius:
+    def test__einstein_radius_from_normalization(self):
+
+        sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        einstein_radius_from_normalization = sis.einstein_radius_from_normalization(
+            normalization=1.0
+        )
+
+        assert einstein_radius_from_normalization == pytest.approx(1.0, 1.0e-2)
+
+        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+
+        einstein_radius_from_normalization = nfw.einstein_radius_from_normalization(
+            normalization=2.0
+        )
+
+        assert einstein_radius_from_normalization == pytest.approx(2.35829, 1.0e-4)
+
+        sersic = ag.mp.SphericalSersic(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=3.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        einstein_radius_from_normalization = sersic.einstein_radius_from_normalization(
+            normalization=1.0
+        )
+        einstein_radius_from_profile = sersic.average_convergence_of_1_radius
+
+        assert einstein_radius_from_normalization == pytest.approx(
+            einstein_radius_from_profile, 1.0e-4
+        )
+
+        einstein_radius_from_normalization = sersic.einstein_radius_from_normalization(
+            normalization=0.1
+        )
+
+        assert einstein_radius_from_normalization == pytest.approx(0.381544, 1.0e-2)
+
+        einstein_radius_from_normalization = sersic.einstein_radius_from_normalization(
+            normalization=1e-4
+        )
+
+        assert einstein_radius_from_normalization == None
+
+        einstein_radius_from_normalization = sersic.einstein_radius_from_normalization(
+            normalization=1e9
+        )
+
+        assert einstein_radius_from_normalization == None
+
+    def test__normalization_from_einstein_radius(self):
+
+        sersic = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        normalization = sersic.normalization_from_einstein_radius(
+            einstein_radius=1.0, normalization_min=0.5, normalization_max=3.0, bins=5
+        )
+
+        assert normalization == pytest.approx(1.0, 1.0e-2)
+
+        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=3.0, scale_radius=1.0)
+
+        normalization = nfw.normalization_from_einstein_radius(
+            einstein_radius=2.35829,
+            normalization_min=0.5,
+            normalization_max=3.0,
+            bins=5,
+        )
+
+        assert normalization == pytest.approx(2.0, 1.0e-2)
+
+        sersic = ag.mp.SphericalSersic(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=3.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        normalization = sersic.normalization_from_einstein_radius(
+            einstein_radius=2.15403,
+            normalization_min=0.01,
+            normalization_max=30.0,
+            bins=5,
+        )
+
+        assert normalization == pytest.approx(1.0, 1.0e-2)
+
+        with pytest.raises(exc.ProfileException):
+            sersic.normalization_from_einstein_radius(
+                einstein_radius=1.0,
+                normalization_min=1e-4,
+                normalization_max=1e-3,
+                bins=2,
+            )
 
 
 class TestLensingObject:
