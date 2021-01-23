@@ -310,7 +310,7 @@ class LensingObject:
                     self.radial_caustic_from_grid(grid=grid, pixel_scale=pixel_scale),
                 ]
             )
-        except IndexError:
+        except (IndexError, ValueError):
             return []
 
     @evaluation_grid

@@ -1152,6 +1152,11 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
             ),
         )
 
+    def with_new_normalization(self, normalization):
+
+        mass_profile = copy.copy(self)
+        mass_profile.mass_to_light_ratio = normalization
+        return mass_profile
 
 class SphericalChameleon(EllipticalChameleon):
     def __init__(

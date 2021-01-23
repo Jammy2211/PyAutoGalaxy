@@ -36,7 +36,7 @@
             }
         },
         "effective_radius": {
-            "type": "LogUniform",
+            "type": "Uniform",
             "lower_limit": 1e-4,
             "upper_limit": 30.0,
             "width_modifier": {
@@ -125,7 +125,7 @@
             }
         },
         "effective_radius": {
-            "type": "LogUniform",
+            "type": "Uniform",
             "lower_limit": 1e-4,
             "upper_limit": 30.0,
             "width_modifier": {
@@ -440,7 +440,7 @@
             }
         },
         "effective_radius": {
-            "type": "LogUniform",
+            "type": "Uniform",
             "lower_limit": 1e-4,
             "upper_limit": 30.0,
             "width_modifier": {
@@ -581,7 +581,7 @@
             }
         },
         "effective_radius": {
-            "type": "LogUniform",
+            "type": "Uniform",
             "lower_limit": 1e-4,
             "upper_limit": 30.0,
             "width_modifier": {
