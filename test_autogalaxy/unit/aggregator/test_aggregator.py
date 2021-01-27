@@ -33,7 +33,7 @@ def test__dataset_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
         search=mock.MockSearch(samples=samples, name="test_phase_aggregator"),
     )
 
-    imaging_7x7.positions = ag.GridIrregularGrouped([[1.0, 1.0], [2.0, 2.0]])
+    imaging_7x7.positions = ag.Grid2DIrregularGrouped([[1.0, 1.0], [2.0, 2.0]])
 
     phase_imaging_7x7.run(
         dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults(samples=samples)
@@ -78,8 +78,8 @@ def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, sample
         ),
         settings=ag.SettingsPhaseImaging(
             settings_masked_imaging=ag.SettingsMaskedImaging(
-                grid_class=ag.GridIterate,
-                grid_inversion_class=ag.GridIterate,
+                grid_class=ag.Grid2DIterate,
+                grid_inversion_class=ag.Grid2DIterate,
                 fractional_accuracy=0.5,
                 sub_steps=[2],
             )
@@ -97,8 +97,8 @@ def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, sample
 
     for masked_imaging in masked_imaging_gen:
         assert (masked_imaging.imaging.image == imaging_7x7.image).all()
-        assert isinstance(masked_imaging.grid, ag.GridIterate)
-        assert isinstance(masked_imaging.grid_inversion, ag.GridIterate)
+        assert isinstance(masked_imaging.grid, ag.Grid2DIterate)
+        assert isinstance(masked_imaging.grid_inversion, ag.Grid2DIterate)
         assert masked_imaging.grid.sub_steps == [2]
         assert masked_imaging.grid.fractional_accuracy == 0.5
 
@@ -134,8 +134,8 @@ def test__masked_interferometer_generator_from_aggregator(
         ),
         settings=ag.SettingsPhaseInterferometer(
             settings_masked_interferometer=ag.SettingsMaskedInterferometer(
-                grid_class=ag.GridIterate,
-                grid_inversion_class=ag.GridIterate,
+                grid_class=ag.Grid2DIterate,
+                grid_inversion_class=ag.Grid2DIterate,
                 fractional_accuracy=0.5,
                 sub_steps=[2],
                 transformer_class=ag.TransformerDFT,
@@ -161,8 +161,8 @@ def test__masked_interferometer_generator_from_aggregator(
             == interferometer_7.visibilities
         ).all()
         assert (masked_interferometer.real_space_mask == mask_7x7).all()
-        assert isinstance(masked_interferometer.grid, ag.GridIterate)
-        assert isinstance(masked_interferometer.grid_inversion, ag.GridIterate)
+        assert isinstance(masked_interferometer.grid, ag.Grid2DIterate)
+        assert isinstance(masked_interferometer.grid_inversion, ag.Grid2DIterate)
         assert masked_interferometer.grid.sub_steps == [2]
         assert masked_interferometer.grid.fractional_accuracy == 0.5
         assert isinstance(masked_interferometer.transformer, ag.TransformerDFT)

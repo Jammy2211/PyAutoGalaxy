@@ -32,16 +32,16 @@ def test__visuals_with_include_2d(gal_x1_lp_x1_mp, grid_7x7):
         galaxy=gal_x1_lp_x1_mp, grid=grid_7x7, visuals_2d=visuals_2d, include_2d=include
     )
 
-    assert galaxy_plotter.visuals_with_include_2d.origin.in_1d_list == [(0.0, 0.0)]
+    assert galaxy_plotter.visuals_with_include_2d.origin.in_list == [(0.0, 0.0)]
     assert (galaxy_plotter.visuals_with_include_2d.mask == grid_7x7.mask).all()
     assert (
         galaxy_plotter.visuals_with_include_2d.border
-        == grid_7x7.mask.border_grid_sub_1.in_1d_binned
+        == grid_7x7.mask.border_grid_sub_1.slim_binned
     ).all()
-    assert galaxy_plotter.visuals_with_include_2d.light_profile_centres.in_1d_list == [
+    assert galaxy_plotter.visuals_with_include_2d.light_profile_centres.in_list == [
         gal_x1_lp_x1_mp.light_profile_0.centre
     ]
-    assert galaxy_plotter.visuals_with_include_2d.mass_profile_centres.in_1d_list == [
+    assert galaxy_plotter.visuals_with_include_2d.mass_profile_centres.in_list == [
         gal_x1_lp_x1_mp.mass_profile_0.centre
     ]
     assert galaxy_plotter.visuals_with_include_2d.vector_field == 2
@@ -80,9 +80,9 @@ def test__individual_images_are_output(
     assert path.join(plot_path, "convergence.png") in plot_patch.paths
 
     gal_x1_lp_x1_mp.hyper_galaxy = ag.HyperGalaxy()
-    gal_x1_lp_x1_mp.hyper_model_image = ag.Array.ones(shape_2d=(7, 7), pixel_scales=0.1)
-    gal_x1_lp_x1_mp.hyper_galaxy_image = ag.Array.ones(
-        shape_2d=(7, 7), pixel_scales=0.1
+    gal_x1_lp_x1_mp.hyper_model_image = ag.Array2D.ones(shape_native=(7, 7), pixel_scales=0.1)
+    gal_x1_lp_x1_mp.hyper_galaxy_image = ag.Array2D.ones(
+        shape_native=(7, 7), pixel_scales=0.1
     )
 
     galaxy_plotter.figures(contribution_map=True)

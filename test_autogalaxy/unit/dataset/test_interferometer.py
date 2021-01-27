@@ -58,13 +58,13 @@ class TestMaskedInterferometer:
             interferometer=interferometer_7,
             visibilities_mask=visibilities_mask_7,
             real_space_mask=sub_mask_7x7,
-            settings=ag.SettingsMaskedInterferometer(grid_class=ag.Grid),
+            settings=ag.SettingsMaskedInterferometer(grid_class=ag.Grid2D),
         )
 
-        assert (masked_interferometer_7.grid.in_1d_binned == grid_7x7).all()
+        assert (masked_interferometer_7.grid.slim_binned == grid_7x7).all()
         assert (masked_interferometer_7.grid == sub_grid_7x7).all()
 
-        grid = ag.Grid.from_mask(mask=sub_mask_7x7)
+        grid = ag.Grid2D.from_mask(mask=sub_mask_7x7)
 
         assert (masked_interferometer_7.grid == grid).all()
 
@@ -72,15 +72,15 @@ class TestMaskedInterferometer:
         self,
     ):
         interferometer = ag.Interferometer(
-            visibilities=ag.Visibilities.ones(shape_1d=(19,)),
-            noise_map=ag.Visibilities.full(fill_value=2.0, shape_1d=(19,)),
+            visibilities=ag.Visibilities.ones(shape_slim=(19,)),
+            noise_map=ag.Visibilities.full(fill_value=2.0, shape_slim=(19,)),
             uv_wavelengths=3.0 * np.ones((19, 2)),
         )
 
         visibilities_mask = np.full(fill_value=False, shape=(19,))
 
         real_space_mask = ag.Mask2D.unmasked(
-            shape_2d=(19, 19), pixel_scales=1.0, invert=True, sub_size=8
+            shape_native=(19, 19), pixel_scales=1.0, invert=True, sub_size=8
         )
         real_space_mask[9, 9] = False
 
@@ -91,10 +91,10 @@ class TestMaskedInterferometer:
         )
 
         assert (
-            masked_interferometer.visibilities.in_1d == 1.0 + 1.0j * np.ones((19,))
+            masked_interferometer.visibilities.slim == 1.0 + 1.0j * np.ones((19,))
         ).all()
         assert (
-            masked_interferometer.noise_map.in_1d == 2.0 + 2.0j * np.ones((19,))
+            masked_interferometer.noise_map.slim == 2.0 + 2.0j * np.ones((19,))
         ).all()
         assert (
             masked_interferometer.interferometer.uv_wavelengths
@@ -105,7 +105,7 @@ class TestMaskedInterferometer:
 class TestSimulatorInterferometer:
     def test__from_plane__same_as_plane_input(self):
 
-        grid = ag.Grid.uniform(shape_2d=(20, 20), pixel_scales=0.05, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 
         galaxy_0 = ag.Galaxy(
             redshift=0.5,
@@ -161,7 +161,7 @@ class TestSimulatorInterferometer:
             ),
         )
 
-        grid = ag.Grid.uniform(shape_2d=(11, 11), pixel_scales=0.05, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.05, sub_size=1)
 
         simulator = ag.SimulatorInterferometer(
             uv_wavelengths=np.ones(shape=(7, 2)),

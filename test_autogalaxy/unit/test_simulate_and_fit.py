@@ -9,9 +9,9 @@ import autogalaxy as ag
 
 
 def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__noise_normalization_correct():
-    grid = ag.GridIterate.uniform(shape_2d=(11, 11), pixel_scales=0.2)
+    grid = ag.Grid2DIterate.uniform(shape_native=(11, 11), pixel_scales=0.2)
 
-    psf = ag.Kernel.manual_2d(
+    psf = ag.Kernel2D.manual_native(
         array=[[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]], pixel_scales=0.2
     )
 
@@ -34,7 +34,7 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
 
     imaging = simulator.from_plane_and_grid(plane=plane, grid=grid)
 
-    imaging.noise_map = ag.Array.ones(shape_2d=imaging.image.shape_2d, pixel_scales=0.2)
+    imaging.noise_map = ag.Array2D.ones(shape_native=imaging.image.shape_native, pixel_scales=0.2)
 
     file_path = path.join(
         "{}".format(path.dirname(path.realpath(__file__))),
@@ -64,13 +64,13 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
     )
 
     mask = ag.Mask2D.circular(
-        shape_2d=imaging.image.shape_2d, pixel_scales=0.2, sub_size=2, radius=0.8
+        shape_native=imaging.image.shape_native, pixel_scales=0.2, sub_size=2, radius=0.8
     )
 
     masked_imaging = ag.MaskedImaging(
         imaging=imaging,
         mask=mask,
-        settings=ag.SettingsMaskedImaging(grid_class=ag.GridIterate),
+        settings=ag.SettingsMaskedImaging(grid_class=ag.Grid2DIterate),
     )
 
     plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
@@ -88,10 +88,10 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
 
 
 def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0__noise_normalization_correct():
-    grid = ag.Grid.uniform(shape_2d=(11, 11), pixel_scales=0.2, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2, sub_size=1)
 
-    psf = ag.Kernel.from_gaussian(
-        shape_2d=(3, 3), pixel_scales=0.2, sigma=0.75, renormalize=True
+    psf = ag.Kernel2D.from_gaussian(
+        shape_native=(3, 3), pixel_scales=0.2, sigma=0.75, renormalize=True
     )
 
     lens_galaxy = ag.Galaxy(
@@ -110,7 +110,7 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
     )
 
     imaging = simulator.from_plane_and_grid(plane=plane, grid=grid)
-    imaging.noise_map = ag.Array.ones(shape_2d=imaging.image.shape_2d, pixel_scales=0.2)
+    imaging.noise_map = ag.Array2D.ones(shape_native=imaging.image.shape_native, pixel_scales=0.2)
 
     file_path = path.join(
         "{}".format(path.dirname(path.realpath(__file__))),
@@ -140,13 +140,13 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
     )
 
     mask = ag.Mask2D.circular(
-        shape_2d=simulator.image.shape_2d, pixel_scales=0.2, sub_size=1, radius=0.8
+        shape_native=simulator.image.shape_native, pixel_scales=0.2, sub_size=1, radius=0.8
     )
 
     masked_imaging = ag.MaskedImaging(
         imaging=simulator,
         mask=mask,
-        settings=ag.SettingsMaskedImaging(grid_class=ag.Grid, sub_size=1),
+        settings=ag.SettingsMaskedImaging(grid_class=ag.Grid2D, sub_size=1),
     )
 
     plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
@@ -164,7 +164,7 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
 
 
 def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normalization_correct():
-    grid = ag.Grid.uniform(shape_2d=(51, 51), pixel_scales=0.1, sub_size=2)
+    grid = ag.Grid2D.uniform(shape_native=(51, 51), pixel_scales=0.1, sub_size=2)
 
     lens_galaxy = ag.Galaxy(
         redshift=0.5,
@@ -218,7 +218,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
     visibilities_mask = np.full(fill_value=False, shape=(7,))
 
     real_space_mask = ag.Mask2D.unmasked(
-        shape_2d=(51, 51), pixel_scales=0.1, sub_size=2
+        shape_native=(51, 51), pixel_scales=0.1, sub_size=2
     )
 
     masked_interferometer = ag.MaskedInterferometer(
@@ -226,7 +226,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
         visibilities_mask=visibilities_mask,
         real_space_mask=real_space_mask,
         settings=ag.SettingsMaskedInterferometer(
-            grid_class=ag.Grid, transformer_class=ag.TransformerDFT, sub_size=2
+            grid_class=ag.Grid2D, transformer_class=ag.TransformerDFT, sub_size=2
         ),
     )
 

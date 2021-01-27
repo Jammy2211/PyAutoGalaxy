@@ -17,8 +17,8 @@ def plane_image_of_galaxies_from(shape, grid, galaxies, buffer=1.0e-2):
     )
     origin = ((y_max + y_min) / 2.0, (x_max + x_min) / 2.0)
 
-    uniform_grid = grids.Grid.uniform(
-        shape_2d=shape, pixel_scales=pixel_scales, sub_size=1, origin=origin
+    uniform_grid = grids.Grid2D.uniform(
+        shape_native=shape, pixel_scales=pixel_scales, sub_size=1, origin=origin
     )
 
     image = sum(map(lambda g: g.image_from_grid(grid=uniform_grid), galaxies))

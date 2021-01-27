@@ -32,16 +32,16 @@ def test__visuals_with_include_2d(lp_0, grid_7x7):
         light_profile=lp_0, grid=grid_7x7, visuals_2d=visuals_2d, include_2d=include
     )
 
-    assert light_profile_plotter.visuals_with_include_2d.origin.in_1d_list == [
+    assert light_profile_plotter.visuals_with_include_2d.origin.in_list == [
         (0.0, 0.0)
     ]
     assert (light_profile_plotter.visuals_with_include_2d.mask == grid_7x7.mask).all()
     assert (
         light_profile_plotter.visuals_with_include_2d.border
-        == grid_7x7.mask.border_grid_sub_1.in_1d_binned
+        == grid_7x7.mask.border_grid_sub_1.slim_binned
     ).all()
     assert (
-        light_profile_plotter.visuals_with_include_2d.light_profile_centres.in_1d_list
+        light_profile_plotter.visuals_with_include_2d.light_profile_centres.in_list
         == [lp_0.centre]
     )
     assert light_profile_plotter.visuals_with_include_2d.vector_field == 2

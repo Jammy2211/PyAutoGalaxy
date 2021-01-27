@@ -17,7 +17,7 @@ class TestLightProfiles:
 
             image = galaxy.image_from_grid(grid=sub_grid_7x7)
 
-            assert (image == np.zeros(shape=sub_grid_7x7.sub_shape_1d)).all()
+            assert (image == np.zeros(shape=sub_grid_7x7.sub_shape_slim)).all()
 
         def test__using_no_light_profiles__check_reshaping_decorator_of_returned_image(
             self, sub_grid_7x7
@@ -26,16 +26,16 @@ class TestLightProfiles:
 
             image = galaxy.image_from_grid(grid=sub_grid_7x7)
 
-            assert (image.in_2d_binned == np.zeros(shape=(7, 7))).all()
+            assert (image.native_binned == np.zeros(shape=(7, 7))).all()
 
             image = galaxy.image_from_grid(grid=sub_grid_7x7)
 
-            assert (image == np.zeros(shape=sub_grid_7x7.sub_shape_1d)).all()
+            assert (image == np.zeros(shape=sub_grid_7x7.sub_shape_slim)).all()
 
             image = galaxy.image_from_grid(grid=sub_grid_7x7)
 
             assert (
-                image.in_1d_binned == np.zeros(shape=sub_grid_7x7.sub_shape_1d // 4)
+                image.slim_binned == np.zeros(shape=sub_grid_7x7.sub_shape_slim // 4)
             ).all()
 
         def test__galaxies_with_x1_and_x2_light_profiles__image_is_same_individual_profiles(
@@ -59,11 +59,11 @@ class TestLightProfiles:
         ):
 
             lp_image = lp_0.image_from_grid(
-                grid=ag.GridIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
             )
 
             gal_lp_image = gal_x1_lp.image_from_grid(
-                grid=ag.GridIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
             )
 
             assert lp_image.in_grouped_list[0][0] == gal_lp_image.in_grouped_list[0][0]
@@ -84,8 +84,8 @@ class TestLightProfiles:
 
             gal_image = gal_x2_lp.image_from_grid(grid=sub_grid_7x7)
 
-            assert gal_image.in_1d_binned[0] == lp_image_0
-            assert gal_image.in_1d_binned[1] == lp_image_1
+            assert gal_image.slim_binned[0] == lp_image_0
+            assert gal_image.slim_binned[1] == lp_image_1
 
     class TestLuminosityWithin:
         def test__two_profile_galaxy__is_sum_of_individual_profiles(
@@ -209,19 +209,19 @@ class TestLightProfiles:
             blurring_image = galaxy.image_from_grid(grid=blurring_grid_7x7)
 
             blurred_image = convolver_7x7.convolved_image_from_image_and_blurring_image(
-                image=image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
+                image=image.slim_binned, blurring_image=blurring_image.slim_binned
             )
 
             light_profile_blurred_image = galaxy.blurred_image_from_grid_and_psf(
                 grid=sub_grid_7x7, blurring_grid=blurring_grid_7x7, psf=psf_3x3
             )
 
-            assert blurred_image.in_1d == pytest.approx(
-                light_profile_blurred_image.in_1d, 1.0e-4
+            assert blurred_image.slim == pytest.approx(
+                light_profile_blurred_image.slim, 1.0e-4
             )
 
-            assert blurred_image.in_2d == pytest.approx(
-                light_profile_blurred_image.in_2d, 1.0e-4
+            assert blurred_image.native == pytest.approx(
+                light_profile_blurred_image.native, 1.0e-4
             )
 
         def test__blurred_image_from_grid_and_convolver(
@@ -241,7 +241,7 @@ class TestLightProfiles:
             blurring_image = galaxy.image_from_grid(grid=blurring_grid_7x7)
 
             blurred_image = convolver_7x7.convolved_image_from_image_and_blurring_image(
-                image=image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
+                image=image.slim_binned, blurring_image=blurring_image.slim_binned
             )
 
             light_profile_blurred_image = galaxy.blurred_image_from_grid_and_convolver(
@@ -250,12 +250,12 @@ class TestLightProfiles:
                 blurring_grid=blurring_grid_7x7,
             )
 
-            assert blurred_image.in_1d == pytest.approx(
-                light_profile_blurred_image.in_1d, 1.0e-4
+            assert blurred_image.slim == pytest.approx(
+                light_profile_blurred_image.slim, 1.0e-4
             )
 
-            assert blurred_image.in_2d == pytest.approx(
-                light_profile_blurred_image.in_2d, 1.0e-4
+            assert blurred_image.native == pytest.approx(
+                light_profile_blurred_image.native, 1.0e-4
             )
 
     class TestVisibilities:
@@ -267,8 +267,8 @@ class TestLightProfiles:
             light_profile_1 = ag.lp.EllipticalSersic(intensity=3.0)
 
             image = (
-                light_profile_0.image_from_grid(grid=sub_grid_7x7).in_1d_binned
-                + light_profile_1.image_from_grid(grid=sub_grid_7x7).in_1d_binned
+                light_profile_0.image_from_grid(grid=sub_grid_7x7).slim_binned
+                + light_profile_1.image_from_grid(grid=sub_grid_7x7).slim_binned
             )
 
             visibilities = transformer_7x7_7.visibilities_from_image(image=image)
@@ -343,7 +343,7 @@ class TestMassProfiles:
             convergence = galaxy.convergence_from_grid(grid=sub_grid_7x7)
 
             assert (
-                convergence.in_1d == np.zeros(shape=sub_grid_7x7.sub_shape_1d)
+                convergence.slim == np.zeros(shape=sub_grid_7x7.sub_shape_slim)
             ).all()
 
         def test__using_no_mass_profiles__check_reshaping_decorator_of_returned_convergence(
@@ -353,19 +353,19 @@ class TestMassProfiles:
 
             convergence = galaxy.convergence_from_grid(grid=sub_grid_7x7)
 
-            assert (convergence.in_2d_binned == np.zeros(shape=(7, 7))).all()
+            assert (convergence.native_binned == np.zeros(shape=(7, 7))).all()
 
             convergence = galaxy.convergence_from_grid(grid=sub_grid_7x7)
 
             assert (
-                convergence.in_1d == np.zeros(shape=sub_grid_7x7.sub_shape_1d)
+                convergence.slim == np.zeros(shape=sub_grid_7x7.sub_shape_slim)
             ).all()
 
             convergence = galaxy.convergence_from_grid(grid=sub_grid_7x7)
 
             assert (
-                convergence.in_1d_binned
-                == np.zeros(shape=sub_grid_7x7.sub_shape_1d // 4)
+                convergence.slim_binned
+                == np.zeros(shape=sub_grid_7x7.sub_shape_slim // 4)
             ).all()
 
         def test__galaxies_with_x1_and_x2_mass_profiles__convergence_is_same_individual_profiles(
@@ -393,11 +393,11 @@ class TestMassProfiles:
         ):
 
             mp_convergence = mp_0.convergence_from_grid(
-                grid=ag.GridIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
             )
 
             gal_mp_convergence = gal_x1_mp.convergence_from_grid(
-                grid=ag.GridIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
             )
 
             assert mp_convergence == gal_mp_convergence
@@ -436,8 +436,8 @@ class TestMassProfiles:
 
             gal_convergence = gal_x2_mp.convergence_from_grid(grid=sub_grid_7x7)
 
-            assert gal_convergence.in_1d_binned[0] == mp_convergence_0
-            assert gal_convergence.in_1d_binned[1] == mp_convergence_1
+            assert gal_convergence.slim_binned[0] == mp_convergence_0
+            assert gal_convergence.slim_binned[1] == mp_convergence_1
 
     class TestPotential:
         def test__no_mass_profiles__potential_returned_as_0s_of_shape_grid(
@@ -447,7 +447,7 @@ class TestMassProfiles:
 
             potential = galaxy.potential_from_grid(grid=sub_grid_7x7)
 
-            assert (potential.in_1d == np.zeros(shape=sub_grid_7x7.sub_shape_1d)).all()
+            assert (potential.slim == np.zeros(shape=sub_grid_7x7.sub_shape_slim)).all()
 
         def test__using_no_mass_profiles__check_reshaping_decorator_of_returned_potential(
             self, sub_grid_7x7
@@ -456,16 +456,16 @@ class TestMassProfiles:
 
             potential = galaxy.potential_from_grid(grid=sub_grid_7x7)
 
-            assert (potential.in_2d_binned == np.zeros(shape=(7, 7))).all()
+            assert (potential.native_binned == np.zeros(shape=(7, 7))).all()
 
             potential = galaxy.potential_from_grid(grid=sub_grid_7x7)
 
-            assert (potential.in_1d == np.zeros(shape=sub_grid_7x7.sub_shape_1d)).all()
+            assert (potential.slim == np.zeros(shape=sub_grid_7x7.sub_shape_slim)).all()
 
             potential = galaxy.potential_from_grid(grid=sub_grid_7x7)
 
             assert (
-                potential.in_1d_binned == np.zeros(shape=sub_grid_7x7.sub_shape_1d // 4)
+                potential.slim_binned == np.zeros(shape=sub_grid_7x7.sub_shape_slim // 4)
             ).all()
 
         def test__galaxies_with_x1_and_x2_mass_profiles__potential_is_same_individual_profiles(
@@ -493,11 +493,11 @@ class TestMassProfiles:
         ):
 
             mp_potential = mp_0.potential_from_grid(
-                grid=ag.GridIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
             )
 
             gal_mp_potential = gal_x1_mp.potential_from_grid(
-                grid=ag.GridIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
             )
 
             assert mp_potential == gal_mp_potential
@@ -530,8 +530,8 @@ class TestMassProfiles:
 
             gal_potential = gal_x2_mp.potential_from_grid(grid=sub_grid_7x7)
 
-            assert gal_potential.in_1d_binned[0] == mp_potential_0
-            assert gal_potential.in_1d_binned[1] == mp_potential_1
+            assert gal_potential.slim_binned[0] == mp_potential_0
+            assert gal_potential.slim_binned[1] == mp_potential_1
 
     class TestDeflectionAngles:
         def test__no_mass_profiles__deflections_returned_as_0s_of_shape_grid(
@@ -542,7 +542,7 @@ class TestMassProfiles:
             deflections = galaxy.deflections_from_grid(grid=sub_grid_7x7)
 
             assert (
-                deflections.in_1d == np.zeros(shape=(sub_grid_7x7.sub_shape_1d, 2))
+                deflections.slim == np.zeros(shape=(sub_grid_7x7.sub_shape_slim, 2))
             ).all()
 
         def test__using_no_mass_profiles__check_reshaping_decorator_of_returned_deflections(
@@ -552,19 +552,19 @@ class TestMassProfiles:
 
             deflections = galaxy.deflections_from_grid(grid=sub_grid_7x7)
 
-            assert (deflections.in_2d_binned == np.zeros(shape=(7, 7, 2))).all()
+            assert (deflections.native_binned == np.zeros(shape=(7, 7, 2))).all()
 
             deflections = galaxy.deflections_from_grid(grid=sub_grid_7x7)
 
             assert (
-                deflections.in_1d == np.zeros(shape=(sub_grid_7x7.sub_shape_1d, 2))
+                deflections.slim == np.zeros(shape=(sub_grid_7x7.sub_shape_slim, 2))
             ).all()
 
             deflections = galaxy.deflections_from_grid(grid=sub_grid_7x7)
 
             assert (
-                deflections.in_1d_binned
-                == np.zeros(shape=(sub_grid_7x7.sub_shape_1d // 4, 2))
+                deflections.slim_binned
+                == np.zeros(shape=(sub_grid_7x7.sub_shape_slim // 4, 2))
             ).all()
 
         def test__galaxies_with_x1_and_x2_mass_profiles__deflections_is_same_individual_profiles(
@@ -592,14 +592,14 @@ class TestMassProfiles:
         ):
 
             mp_deflections = mp_0.deflections_from_grid(
-                grid=ag.GridIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
             )
 
             gal_mp_deflections = gal_x1_mp.deflections_from_grid(
-                grid=ag.GridIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
             )
 
-            assert type(gal_mp_deflections) == ag.GridIrregularGrouped
+            assert type(gal_mp_deflections) == ag.Grid2DIrregularGrouped
             assert (
                 mp_deflections.in_grouped_list[0][0][0]
                 == gal_mp_deflections.in_grouped_list[0][0][0]
@@ -638,8 +638,8 @@ class TestMassProfiles:
 
             gal_deflections = gal_x2_mp.deflections_from_grid(grid=sub_grid_7x7)
 
-            assert gal_deflections.in_1d_binned[0, 0] == mp_deflections_y_0
-            assert gal_deflections.in_1d_binned[1, 0] == mp_deflections_y_1
+            assert gal_deflections.slim_binned[0, 0] == mp_deflections_y_0
+            assert gal_deflections.slim_binned[1, 0] == mp_deflections_y_1
 
             mp_deflections_x_0 = (
                 mp_deflections[0, 1]
@@ -657,8 +657,8 @@ class TestMassProfiles:
 
             gal_deflections = gal_x2_mp.deflections_from_grid(grid=sub_grid_7x7)
 
-            assert gal_deflections.in_1d_binned[0, 1] == mp_deflections_x_0
-            assert gal_deflections.in_1d_binned[1, 1] == mp_deflections_x_1
+            assert gal_deflections.slim_binned[0, 1] == mp_deflections_x_0
+            assert gal_deflections.slim_binned[1, 1] == mp_deflections_x_1
 
     class TestMassWithin:
         def test__two_profile_galaxy__is_sum_of_individual_profiles(
@@ -1286,7 +1286,7 @@ class TestMassProfiles:
             self,
         ):
 
-            grid = ag.Grid.uniform(shape_2d=(50, 50), pixel_scales=0.15)
+            grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.15)
 
             sis_0 = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
@@ -1506,7 +1506,7 @@ class TestBooleanProperties:
 class TestRegression:
     def test__centre_of_profile_in_right_place(self):
 
-        grid = ag.Grid.uniform(shape_2d=(7, 7), pixel_scales=1.0)
+        grid = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
 
         galaxy = ag.Galaxy(
             redshift=0.5,
@@ -1515,18 +1515,18 @@ class TestRegression:
         )
 
         convergence = galaxy.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
         assert max_indexes == (1, 4)
 
         potential = galaxy.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
         assert max_indexes == (1, 4)
 
         deflections = galaxy.deflections_from_grid(grid=grid)
-        assert deflections.in_2d[1, 4, 0] > 0
-        assert deflections.in_2d[2, 4, 0] < 0
-        assert deflections.in_2d[1, 4, 1] > 0
-        assert deflections.in_2d[1, 3, 1] < 0
+        assert deflections.native[1, 4, 0] > 0
+        assert deflections.native[2, 4, 0] < 0
+        assert deflections.native[1, 4, 1] > 0
+        assert deflections.native[1, 3, 1] < 0
 
         galaxy = ag.Galaxy(
             redshift=0.5,
@@ -1534,21 +1534,21 @@ class TestRegression:
             mass_0=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
         convergence = galaxy.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
         assert max_indexes == (1, 4)
 
         potential = galaxy.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
         assert max_indexes == (1, 4)
 
         deflections = galaxy.deflections_from_grid(grid=grid)
-        assert deflections.in_2d[1, 4, 0] > 0
-        assert deflections.in_2d[2, 4, 0] < 0
-        assert deflections.in_2d[1, 4, 1] > 0
-        assert deflections.in_2d[1, 3, 1] < 0
+        assert deflections.native[1, 4, 0] > 0
+        assert deflections.native[2, 4, 0] < 0
+        assert deflections.native[1, 4, 1] > 0
+        assert deflections.native[1, 3, 1] < 0
 
-        grid = ag.GridIterate.uniform(
-            shape_2d=(7, 7),
+        grid = ag.Grid2DIterate.uniform(
+            shape_native=(7, 7),
             pixel_scales=1.0,
             fractional_accuracy=0.99,
             sub_steps=[2, 4],
@@ -1560,36 +1560,36 @@ class TestRegression:
             mass_0=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
         convergence = galaxy.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
         assert max_indexes == (1, 4)
 
         potential = galaxy.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
         assert max_indexes == (1, 4)
 
         deflections = galaxy.deflections_from_grid(grid=grid)
-        assert deflections.in_2d[1, 4, 0] >= 0
-        assert deflections.in_2d[2, 4, 0] <= 0
-        assert deflections.in_2d[1, 4, 1] >= 0
-        assert deflections.in_2d[1, 3, 1] <= 0
+        assert deflections.native[1, 4, 0] >= 0
+        assert deflections.native[2, 4, 0] <= 0
+        assert deflections.native[1, 4, 1] >= 0
+        assert deflections.native[1, 3, 1] <= 0
 
         galaxy = ag.Galaxy(
             redshift=0.5,
             mass=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
         convergence = galaxy.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
         assert max_indexes == (1, 4)
 
         potential = galaxy.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
         assert max_indexes == (1, 4)
 
         deflections = galaxy.deflections_from_grid(grid=grid)
-        assert deflections.in_2d[1, 4, 0] >= 0
-        assert deflections.in_2d[2, 4, 0] <= 0
-        assert deflections.in_2d[1, 4, 1] >= 0
-        assert deflections.in_2d[1, 3, 1] <= 0
+        assert deflections.native[1, 4, 0] >= 0
+        assert deflections.native[2, 4, 0] <= 0
+        assert deflections.native[1, 4, 1] >= 0
+        assert deflections.native[1, 3, 1] <= 0
 
 
 class TestDecorators:
@@ -1606,7 +1606,7 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.GridIterate.from_mask(
+        grid = ag.Grid2DIterate.from_mask(
             mask=mask, fractional_accuracy=1.0, sub_steps=[2]
         )
 
@@ -1615,12 +1615,12 @@ class TestDecorators:
         image = galaxy.image_from_grid(grid=grid)
 
         mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
-        grid_sub_2 = ag.Grid.from_mask(mask=mask_sub_2)
-        image_sub_2 = galaxy.image_from_grid(grid=grid_sub_2).in_1d_binned
+        grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
+        image_sub_2 = galaxy.image_from_grid(grid=grid_sub_2).slim_binned
 
         assert (image == image_sub_2).all()
 
-        grid = ag.GridIterate.from_mask(
+        grid = ag.Grid2DIterate.from_mask(
             mask=mask, fractional_accuracy=0.95, sub_steps=[2, 4, 8]
         )
 
@@ -1632,14 +1632,14 @@ class TestDecorators:
         image = galaxy.image_from_grid(grid=grid)
 
         mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
-        grid_sub_4 = ag.Grid.from_mask(mask=mask_sub_4)
-        image_sub_4 = galaxy.image_from_grid(grid=grid_sub_4).in_1d_binned
+        grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
+        image_sub_4 = galaxy.image_from_grid(grid=grid_sub_4).slim_binned
 
         assert image[0] == image_sub_4[0]
 
         mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
-        grid_sub_8 = ag.Grid.from_mask(mask=mask_sub_8)
-        image_sub_8 = galaxy.image_from_grid(grid=grid_sub_8).in_1d_binned
+        grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
+        image_sub_8 = galaxy.image_from_grid(grid=grid_sub_8).slim_binned
 
         assert image[4] == image_sub_8[4]
 
@@ -1656,7 +1656,7 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.GridIterate.from_mask(
+        grid = ag.Grid2DIterate.from_mask(
             mask=mask, fractional_accuracy=1.0, sub_steps=[2]
         )
 
@@ -1668,12 +1668,12 @@ class TestDecorators:
         deflections = galaxy.deflections_from_grid(grid=grid)
 
         mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
-        grid_sub_2 = ag.Grid.from_mask(mask=mask_sub_2)
-        deflections_sub_2 = galaxy.deflections_from_grid(grid=grid_sub_2).in_1d_binned
+        grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
+        deflections_sub_2 = galaxy.deflections_from_grid(grid=grid_sub_2).slim_binned
 
         assert (deflections == deflections_sub_2).all()
 
-        grid = ag.GridIterate.from_mask(
+        grid = ag.Grid2DIterate.from_mask(
             mask=mask, fractional_accuracy=0.99, sub_steps=[2, 4, 8]
         )
 
@@ -1685,14 +1685,14 @@ class TestDecorators:
         deflections = galaxy.deflections_from_grid(grid=grid)
 
         mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
-        grid_sub_4 = ag.Grid.from_mask(mask=mask_sub_4)
-        deflections_sub_4 = galaxy.deflections_from_grid(grid=grid_sub_4).in_1d_binned
+        grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
+        deflections_sub_4 = galaxy.deflections_from_grid(grid=grid_sub_4).slim_binned
 
         assert deflections[0, 0] == deflections_sub_4[0, 0]
 
         mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
-        grid_sub_8 = ag.Grid.from_mask(mask=mask_sub_8)
-        deflections_sub_8 = galaxy.deflections_from_grid(grid=grid_sub_8).in_1d_binned
+        grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
+        deflections_sub_8 = galaxy.deflections_from_grid(grid=grid_sub_8).slim_binned
 
         assert deflections[4, 0] == deflections_sub_8[4, 0]
 
@@ -1711,9 +1711,9 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.Grid.from_mask(mask=mask)
+        grid = ag.Grid2D.from_mask(mask=mask)
 
-        grid_interp = ag.GridInterpolate.from_mask(mask=mask, pixel_scales_interp=0.1)
+        grid_interp = ag.Grid2DInterpolate.from_mask(mask=mask, pixel_scales_interp=0.1)
 
         light_profile = ag.lp.EllipticalSersic(intensity=1.0)
         light_profile_interp = ag.lp.SphericalSersic(intensity=1.0)

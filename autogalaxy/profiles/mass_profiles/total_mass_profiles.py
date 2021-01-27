@@ -5,7 +5,7 @@ from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 
-from pyquad import quad_grid
+# from pyquad import quad_grid
 from scipy import special
 import typing
 import copy
@@ -298,7 +298,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -321,7 +321,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -345,7 +345,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -453,7 +453,7 @@ class SphericalCoredPowerLaw(EllipticalCoredPowerLaw):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -521,7 +521,7 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
         ​
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -725,7 +725,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -757,7 +757,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -774,7 +774,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
 
         shear_field = self.rotate_grid_from_profile(np.vstack((shear_y, shear_x)).T)
 
-        return vector_fields.VectorFieldIrregular(vectors=shear_field, grid=grid)
+        return vector_fields.VectorField2DIrregular(vectors=shear_field, grid=grid)
 
 
 class SphericalIsothermal(EllipticalIsothermal):
@@ -807,7 +807,7 @@ class SphericalIsothermal(EllipticalIsothermal):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
         eta = self.grid_to_elliptical_radii(grid)
@@ -822,7 +822,7 @@ class SphericalIsothermal(EllipticalIsothermal):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
         return self.grid_to_grid_cartesian(

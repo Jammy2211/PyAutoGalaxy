@@ -14,7 +14,7 @@ from colossus.halo.concentration import concentration as col_concentration
 from numba import cfunc
 from numba.types import intc, CPointer, float64
 
-from pyquad import quad_grid
+# from pyquad import quad_grid
 from scipy import LowLevelCallable
 from scipy import special
 from scipy.integrate import quad
@@ -149,7 +149,7 @@ class AbstractEllipticalGeneralizedNFW(
 
         Parameters
         -----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the potential / deflection_stacks are computed on.
         tabulate_bins : int
             The number of bins to tabulate the inner integral of this profile.
@@ -171,7 +171,7 @@ class AbstractEllipticalGeneralizedNFW(
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -188,7 +188,7 @@ class AbstractEllipticalGeneralizedNFW(
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -463,7 +463,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         tabulate_bins : int
             The number of bins to tabulate the inner integral of this profile.
@@ -550,7 +550,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         tabulate_bins : int
             The number of bins to tabulate the inner integral of this profile.
@@ -743,7 +743,7 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -860,7 +860,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -1103,7 +1103,7 @@ class EllipticalNFW(EllipticalGeneralizedNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1127,7 +1127,7 @@ class EllipticalNFW(EllipticalGeneralizedNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1248,7 +1248,7 @@ class SphericalNFW(EllipticalNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1274,7 +1274,7 @@ class SphericalNFW(EllipticalNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 

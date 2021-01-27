@@ -344,43 +344,43 @@ class TestLensingObject:
 class TestRegression:
     def test__centre_of_profile_in_right_place(self):
 
-        grid = ag.Grid.uniform(shape_2d=(7, 7), pixel_scales=1.0)
+        grid = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
 
         mass_profile = ag.mp.EllipticalIsothermal(
             centre=(2.0, 1.0), einstein_radius=1.0
         )
         convergence = mass_profile.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
         assert max_indexes == (1, 4)
 
         potential = mass_profile.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
         assert max_indexes == (1, 4)
 
         deflections = mass_profile.deflections_from_grid(grid=grid)
-        assert deflections.in_2d[1, 4, 0] > 0
-        assert deflections.in_2d[2, 4, 0] < 0
-        assert deflections.in_2d[1, 4, 1] > 0
-        assert deflections.in_2d[1, 3, 1] < 0
+        assert deflections.native[1, 4, 0] > 0
+        assert deflections.native[2, 4, 0] < 0
+        assert deflections.native[1, 4, 1] > 0
+        assert deflections.native[1, 3, 1] < 0
 
         mass_profile = ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
         convergence = mass_profile.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
         assert max_indexes == (1, 4)
 
         mass_profile = ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
         potential = mass_profile.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
         assert max_indexes == (1, 4)
 
         deflections = mass_profile.deflections_from_grid(grid=grid)
-        assert deflections.in_2d[1, 4, 0] > 0
-        assert deflections.in_2d[2, 4, 0] < 0
-        assert deflections.in_2d[1, 4, 1] > 0
-        assert deflections.in_2d[1, 3, 1] < 0
+        assert deflections.native[1, 4, 0] > 0
+        assert deflections.native[2, 4, 0] < 0
+        assert deflections.native[1, 4, 1] > 0
+        assert deflections.native[1, 3, 1] < 0
 
-        grid = ag.GridIterate.uniform(
-            shape_2d=(7, 7),
+        grid = ag.Grid2DIterate.uniform(
+            shape_native=(7, 7),
             pixel_scales=1.0,
             fractional_accuracy=0.99,
             sub_steps=[2, 4],
@@ -390,34 +390,34 @@ class TestRegression:
             centre=(2.0, 1.0), einstein_radius=1.0
         )
         convergence = mass_profile.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
         assert max_indexes == (1, 4)
 
         potential = mass_profile.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
         assert max_indexes == (1, 4)
 
         deflections = mass_profile.deflections_from_grid(grid=grid)
-        assert deflections.in_2d[1, 4, 0] >= 0
-        assert deflections.in_2d[2, 4, 0] <= 0
-        assert deflections.in_2d[1, 4, 1] >= 0
-        assert deflections.in_2d[1, 3, 1] <= 0
+        assert deflections.native[1, 4, 0] >= 0
+        assert deflections.native[2, 4, 0] <= 0
+        assert deflections.native[1, 4, 1] >= 0
+        assert deflections.native[1, 3, 1] <= 0
 
         mass_profile = ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
 
         convergence = mass_profile.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
         assert max_indexes == (1, 4)
 
         potential = mass_profile.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
         assert max_indexes == (1, 4)
 
         deflections = mass_profile.deflections_from_grid(grid=grid)
-        assert deflections.in_2d[1, 4, 0] >= 0
-        assert deflections.in_2d[2, 4, 0] <= 0
-        assert deflections.in_2d[1, 4, 1] >= 0
-        assert deflections.in_2d[1, 3, 1] <= 0
+        assert deflections.native[1, 4, 0] >= 0
+        assert deflections.native[2, 4, 0] <= 0
+        assert deflections.native[1, 4, 1] >= 0
+        assert deflections.native[1, 3, 1] <= 0
 
 
 class TestDecorators:
@@ -434,7 +434,7 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.GridIterate.from_mask(
+        grid = ag.Grid2DIterate.from_mask(
             mask=mask, fractional_accuracy=1.0, sub_steps=[2]
         )
 
@@ -445,14 +445,14 @@ class TestDecorators:
         deflections = mass_profile.deflections_from_grid(grid=grid)
 
         mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
-        grid_sub_2 = ag.Grid.from_mask(mask=mask_sub_2)
+        grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
         deflections_sub_2 = mass_profile.deflections_from_grid(
             grid=grid_sub_2
-        ).in_1d_binned
+        ).slim_binned
 
         assert deflections == pytest.approx(deflections_sub_2, 1.0e-6)
 
-        grid = ag.GridIterate.from_mask(
+        grid = ag.Grid2DIterate.from_mask(
             mask=mask, fractional_accuracy=0.99, sub_steps=[2, 4, 8]
         )
 
@@ -463,18 +463,18 @@ class TestDecorators:
         deflections = mass_profile.deflections_from_grid(grid=grid)
 
         mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
-        grid_sub_4 = ag.Grid.from_mask(mask=mask_sub_4)
+        grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
         deflections_sub_4 = mass_profile.deflections_from_grid(
             grid=grid_sub_4
-        ).in_1d_binned
+        ).slim_binned
 
         assert deflections[0, 0] == deflections_sub_4[0, 0]
 
         mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
-        grid_sub_8 = ag.Grid.from_mask(mask=mask_sub_8)
+        grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
         deflections_sub_8 = mass_profile.deflections_from_grid(
             grid=grid_sub_8
-        ).in_1d_binned
+        ).slim_binned
 
         assert deflections[4, 0] == deflections_sub_8[4, 0]
 
@@ -495,9 +495,9 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.Grid.from_mask(mask=mask)
+        grid = ag.Grid2D.from_mask(mask=mask)
 
-        grid_interpolate = ag.GridInterpolate.from_mask(
+        grid_interpolate = ag.Grid2DInterpolate.from_mask(
             mask=mask, pixel_scales_interp=0.1
         )
 
@@ -545,9 +545,9 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.Grid.from_mask(mask=mask)
+        grid = ag.Grid2D.from_mask(mask=mask)
 
-        grid_interpolate = ag.GridInterpolate.from_mask(
+        grid_interpolate = ag.Grid2DInterpolate.from_mask(
             mask=mask, pixel_scales_interp=0.1
         )
 
@@ -593,9 +593,9 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.Grid.from_mask(mask=mask)
+        grid = ag.Grid2D.from_mask(mask=mask)
 
-        grid_interpolate = ag.GridInterpolate.from_mask(
+        grid_interpolate = ag.Grid2DInterpolate.from_mask(
             mask=mask, pixel_scales_interp=0.1
         )
 

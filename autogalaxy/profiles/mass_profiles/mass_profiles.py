@@ -62,7 +62,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
     @property
     def mass_profile_centres(self):
         if not self.is_mass_sheet:
-            return grids.GridIrregularGrouped([self.centre])
+            return grids.Grid2DIrregularGrouped([self.centre])
         else:
             return []
 
@@ -383,7 +383,7 @@ class MassProfileMGE:
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """

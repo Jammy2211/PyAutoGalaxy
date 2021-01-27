@@ -22,7 +22,7 @@ class Include2D(inc.Include2D):
         caustics=None,
         multiple_images=None,
         mapper_source_pixelization_grid: typing.Optional[bool] = None,
-        mapper_source_full_grid: typing.Optional[bool] = None,
+        mapper_source_grid_slim: typing.Optional[bool] = None,
         mapper_data_pixelization_grid=None,
     ):
 
@@ -32,7 +32,7 @@ class Include2D(inc.Include2D):
             border=border,
             grid=grid,
             mapper_source_pixelization_grid=mapper_source_pixelization_grid,
-            mapper_source_full_grid=mapper_source_full_grid,
+            mapper_source_grid_slim=mapper_source_grid_slim,
             mapper_data_pixelization_grid=mapper_data_pixelization_grid,
         )
 

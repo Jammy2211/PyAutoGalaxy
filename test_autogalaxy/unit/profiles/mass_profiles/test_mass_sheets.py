@@ -37,7 +37,7 @@ class TestMassSheet:
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         convergence = mass_sheet.convergence_from_grid(
-            grid=ag.Grid.manual_2d(
+            grid=ag.Grid2D.manual_native(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -67,7 +67,7 @@ class TestMassSheet:
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         potential = mass_sheet.potential_from_grid(
-            grid=ag.Grid.manual_2d(
+            grid=ag.Grid2D.manual_native(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -167,7 +167,7 @@ class TestMassSheet:
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         deflections = mass_sheet.deflections_from_grid(
-            grid=ag.Grid.manual_2d(
+            grid=ag.Grid2D.manual_native(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -237,21 +237,21 @@ class TestMassSheet:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         mass_sheet = ag.mp.MassSheet()
 
         convergence = mass_sheet.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = mass_sheet.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = mass_sheet.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestExternalShear:
@@ -268,7 +268,7 @@ class TestExternalShear:
         assert (convergence == np.array([0.0, 0.0, 0.0])).all()
 
         convergence = shear.convergence_from_grid(
-            grid=ag.Grid.manual_2d(
+            grid=ag.Grid2D.manual_native(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -296,7 +296,7 @@ class TestExternalShear:
         assert (potential == np.array([0.0, 0.0, 0.0])).all()
 
         potential = shear.potential_from_grid(
-            grid=ag.Grid.manual_2d(
+            grid=ag.Grid2D.manual_native(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
                 pixel_scales=(1.0, 1.0),
@@ -325,7 +325,7 @@ class TestExternalShear:
         assert deflections[0, 1] == pytest.approx(-0.011895, 1e-3)
 
         deflections = shear.deflections_from_grid(
-            grid=ag.Grid.manual_2d(
+            grid=ag.Grid2D.manual_native(
                 [
                     [[0.1625, 0.1625], [0.1625, 0.1625]],
                     [[0.1625, 0.1625], [0.1625, 0.1625]],
@@ -351,21 +351,21 @@ class TestExternalShear:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         shear = ag.mp.ExternalShear()
 
         convergence = shear.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = shear.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = shear.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestInputDeflections:
@@ -373,19 +373,19 @@ class TestInputDeflections:
         self,
     ):
 
-        deflections_y = ag.Array.manual_2d(
+        deflections_y = ag.Array2D.manual_native(
             [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]],
             pixel_scales=0.1,
             origin=(0.0, 0.0),
         )
-        deflections_x = ag.Array.manual_2d(
+        deflections_x = ag.Array2D.manual_native(
             [[9.0, 8.0, 7.0], [6.0, 5.0, 4.0], [3.0, 2.0, 1.0]],
             pixel_scales=0.1,
             origin=(0.0, 0.0),
         )
 
-        image_plane_grid = ag.Grid.uniform(
-            shape_2d=deflections_y.shape_2d, pixel_scales=deflections_y.pixel_scales
+        image_plane_grid = ag.Grid2D.uniform(
+            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
         )
 
         input_deflections = ag.mp.InputDeflections(
@@ -394,8 +394,8 @@ class TestInputDeflections:
             image_plane_grid=image_plane_grid,
         )
 
-        grid = ag.Grid.uniform(
-            shape_2d=deflections_y.shape_2d, pixel_scales=deflections_y.pixel_scales
+        grid = ag.Grid2D.uniform(
+            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
         )
 
         deflections = input_deflections.deflections_from_grid(grid=grid)
@@ -403,9 +403,9 @@ class TestInputDeflections:
         assert deflections[:, 0] == pytest.approx(deflections_y, 1.0e-4)
         assert deflections[:, 1] == pytest.approx(deflections_x, 1.0e-4)
 
-        grid = ag.Grid.manual_1d(
+        grid = ag.Grid2D.manual_slim(
             grid=np.array([[0.1, 0.0], [0.0, 0.0], [-0.1, -0.1]]),
-            shape_2d=deflections_y.shape_2d,
+            shape_native=deflections_y.shape_native,
             pixel_scales=deflections_y.pixel_scales,
         )
 
@@ -430,19 +430,19 @@ class TestInputDeflections:
         self,
     ):
 
-        deflections_y = ag.Array.manual_2d(
+        deflections_y = ag.Array2D.manual_native(
             [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]],
             pixel_scales=0.1,
             origin=(0.0, 0.0),
         )
-        deflections_x = ag.Array.manual_2d(
+        deflections_x = ag.Array2D.manual_native(
             [[9.0, 8.0, 7.0], [6.0, 5.0, 4.0], [3.0, 2.0, 1.0]],
             pixel_scales=0.1,
             origin=(0.0, 0.0),
         )
 
-        image_plane_grid = ag.Grid.uniform(
-            shape_2d=deflections_y.shape_2d, pixel_scales=deflections_y.pixel_scales
+        image_plane_grid = ag.Grid2D.uniform(
+            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
         )
 
         input_deflections = ag.mp.InputDeflections(
@@ -451,9 +451,9 @@ class TestInputDeflections:
             image_plane_grid=image_plane_grid,
         )
 
-        grid = ag.Grid.manual_1d(
+        grid = ag.Grid2D.manual_slim(
             grid=np.array([[0.05, 0.03], [0.02, 0.01], [-0.08, -0.04]]),
-            shape_2d=deflections_y.shape_2d,
+            shape_native=deflections_y.shape_native,
             pixel_scales=deflections_y.pixel_scales,
         )
 
@@ -466,24 +466,24 @@ class TestInputDeflections:
         self,
     ):
 
-        deflections_y = ag.Array.manual_2d(
+        deflections_y = ag.Array2D.manual_native(
             [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]],
             pixel_scales=0.1,
             origin=(0.0, 0.0),
         )
-        deflections_x = ag.Array.manual_2d(
+        deflections_x = ag.Array2D.manual_native(
             [[9.0, 8.0, 7.0], [6.0, 5.0, 4.0], [3.0, 2.0, 1.0]],
             pixel_scales=0.1,
             origin=(0.0, 0.0),
         )
 
-        image_plane_grid = ag.Grid.uniform(
-            shape_2d=deflections_y.shape_2d, pixel_scales=deflections_y.pixel_scales
+        image_plane_grid = ag.Grid2D.uniform(
+            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
         )
 
-        grid = ag.Grid.manual_1d(
+        grid = ag.Grid2D.manual_slim(
             grid=np.array([[0.05, 0.03], [0.02, 0.01], [-0.08, -0.04]]),
-            shape_2d=deflections_y.shape_2d,
+            shape_native=deflections_y.shape_native,
             pixel_scales=deflections_y.pixel_scales,
         )
 
@@ -518,19 +518,19 @@ class TestInputDeflections:
         self,
     ):
 
-        deflections_y = ag.Array.manual_2d(
+        deflections_y = ag.Array2D.manual_native(
             [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]],
             pixel_scales=0.1,
             origin=(0.0, 0.0),
         )
-        deflections_x = ag.Array.manual_2d(
+        deflections_x = ag.Array2D.manual_native(
             [[9.0, 8.0, 7.0], [6.0, 5.0, 4.0], [3.0, 2.0, 1.0]],
             pixel_scales=0.1,
             origin=(0.0, 0.0),
         )
 
-        image_plane_grid = ag.Grid.uniform(
-            shape_2d=deflections_y.shape_2d, pixel_scales=deflections_y.pixel_scales
+        image_plane_grid = ag.Grid2D.uniform(
+            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
         )
 
         input_deflections = ag.mp.InputDeflections(
@@ -539,51 +539,51 @@ class TestInputDeflections:
             image_plane_grid=image_plane_grid,
         )
 
-        grid = ag.Grid.manual_1d(
+        grid = ag.Grid2D.manual_slim(
             grid=np.array([[0.0999, 0.0]]),
-            shape_2d=deflections_y.shape_2d,
+            shape_native=deflections_y.shape_native,
             pixel_scales=deflections_y.pixel_scales,
         )
         input_deflections.deflections_from_grid(grid=grid)
 
-        grid = ag.Grid.manual_1d(
+        grid = ag.Grid2D.manual_slim(
             grid=np.array([[0.0, 0.0999]]),
-            shape_2d=deflections_y.shape_2d,
+            shape_native=deflections_y.shape_native,
             pixel_scales=deflections_y.pixel_scales,
         )
         input_deflections.deflections_from_grid(grid=grid)
 
         with pytest.raises(exc.ProfileException):
-            grid = ag.Grid.manual_1d(
+            grid = ag.Grid2D.manual_slim(
                 grid=np.array([[0.11, 0.0]]),
-                shape_2d=deflections_y.shape_2d,
+                shape_native=deflections_y.shape_native,
                 pixel_scales=deflections_y.pixel_scales,
             )
             input_deflections.deflections_from_grid(grid=grid)
 
             with pytest.raises(exc.ProfileException):
-                grid = ag.Grid.manual_1d(
+                grid = ag.Grid2D.manual_slim(
                     grid=np.array([[0.0, 0.11]]),
-                    shape_2d=deflections_y.shape_2d,
+                    shape_native=deflections_y.shape_native,
                     pixel_scales=deflections_y.pixel_scales,
                 )
                 input_deflections.deflections_from_grid(grid=grid)
 
     def test__convergence_from_grid_potential_from_grid(self):
 
-        deflections_y = ag.Array.manual_2d(
+        deflections_y = ag.Array2D.manual_native(
             [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]],
             pixel_scales=0.1,
             origin=(0.0, 0.0),
         )
-        deflections_x = ag.Array.manual_2d(
+        deflections_x = ag.Array2D.manual_native(
             [[9.0, 8.0, 7.0], [6.0, 5.0, 4.0], [3.0, 2.0, 1.0]],
             pixel_scales=0.1,
             origin=(0.0, 0.0),
         )
 
-        image_plane_grid = ag.Grid.uniform(
-            shape_2d=deflections_y.shape_2d, pixel_scales=deflections_y.pixel_scales
+        image_plane_grid = ag.Grid2D.uniform(
+            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
         )
 
         input_deflections = ag.mp.InputDeflections(
@@ -592,8 +592,8 @@ class TestInputDeflections:
             image_plane_grid=image_plane_grid,
         )
 
-        grid = ag.Grid.uniform(
-            shape_2d=deflections_y.shape_2d, pixel_scales=deflections_y.pixel_scales
+        grid = ag.Grid2D.uniform(
+            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
         )
 
         convergence = input_deflections.convergence_from_grid(grid=grid)

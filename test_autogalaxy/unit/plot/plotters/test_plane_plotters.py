@@ -38,11 +38,11 @@ def test__all_individual_plotter__output_file_with_default_name(
     assert path.join(plot_path, "plane_grid.png") in plot_patch.paths
 
     plane_7x7.galaxies[0].hyper_galaxy = ag.HyperGalaxy()
-    plane_7x7.galaxies[0].hyper_model_image = ag.Array.ones(
-        shape_2d=(7, 7), pixel_scales=0.1
+    plane_7x7.galaxies[0].hyper_model_image = ag.Array2D.ones(
+        shape_native=(7, 7), pixel_scales=0.1
     )
-    plane_7x7.galaxies[0].hyper_galaxy_image = ag.Array.ones(
-        shape_2d=(7, 7), pixel_scales=0.1
+    plane_7x7.galaxies[0].hyper_galaxy_image = ag.Array2D.ones(
+        shape_native=(7, 7), pixel_scales=0.1
     )
 
     plane_plotter.figures(contribution_map=True)

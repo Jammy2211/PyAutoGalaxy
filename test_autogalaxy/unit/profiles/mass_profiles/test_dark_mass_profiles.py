@@ -751,38 +751,38 @@ class TestGeneralizedNFW:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         # gnfw = ag.EllipticalGeneralizedNFW()
         #
         # convergence = gnfw.convergence_from_grid(
         #     grid=grid)
         #
-        # assert convergence.shape_2d == (2, 2)
+        # assert convergence.shape_native == (2, 2)
         #
         # potential = gnfw.potential_from_grid(
         #     grid=grid)
         #
-        # assert potential.shape_2d == (2, 2)
+        # assert potential.shape_native == (2, 2)
         #
         # deflections = gnfw.deflections_from_grid(
         #     grid=grid)
         #
-        # assert deflections.shape_2d == (2, 2)
+        # assert deflections.shape_native == (2, 2)
 
         gnfw = ag.mp.SphericalGeneralizedNFW()
 
         convergence = gnfw.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = gnfw.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = gnfw.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestTruncatedNFW:
@@ -860,7 +860,7 @@ class TestTruncatedNFW:
         )
 
         deflections = truncated_nfw.deflections_from_grid(
-            grid=ag.GridIrregularGrouped([[(2.0, 0.0)]])
+            grid=ag.Grid2DIrregularGrouped([[(2.0, 0.0)]])
         )
 
         assert deflections[0, 0] == pytest.approx(2.1702661386, 1.0e-4)
@@ -950,21 +950,21 @@ class TestTruncatedNFW:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         truncated_nfw = ag.mp.SphericalTruncatedNFW()
 
         convergence = truncated_nfw.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = truncated_nfw.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = truncated_nfw.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestNFW:
@@ -1165,7 +1165,7 @@ class TestNFW:
         )
 
         deflections = nfw.deflections_from_grid_via_integrator(
-            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(-2.59480, 1e-3)
@@ -1206,7 +1206,7 @@ class TestNFW:
         )
 
         deflections = nfw.deflections_from_grid(
-            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(-2.59480, 1e-3)
@@ -1214,35 +1214,35 @@ class TestNFW:
 
     def test__outputs_are_autoarrays(self):
 
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         nfw = ag.mp.EllipticalNFW(elliptical_comps=(0.0, 0.05263))
 
         convergence = nfw.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = nfw.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = nfw.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
         nfw = ag.mp.SphericalNFW()
 
         convergence = nfw.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = nfw.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = nfw.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestTruncatedNFWMCRDuffy:

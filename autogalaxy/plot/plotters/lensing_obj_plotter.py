@@ -8,7 +8,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
     def __init__(
         self,
         lensing_obj,
-        grid: grids.Grid,
+        grid: grids.Grid2D,
         mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
         visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
         include_1d: lensing_include.Include1D = lensing_include.Include1D(),
@@ -54,11 +54,11 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
 
         return self.visuals_2d + self.visuals_2d.__class__(
             origin=self.extract_2d(
-                "origin", value=grids.GridIrregular(grid=[self.grid.origin])
+                "origin", value=grids.Grid2DIrregular(grid=[self.grid.origin])
             ),
             mask=self.extract_2d("mask", value=self.grid.mask),
             border=self.extract_2d(
-                "border", value=self.grid.mask.border_grid_sub_1.in_1d_binned
+                "border", value=self.grid.mask.border_grid_sub_1.slim_binned
             ),
             mass_profile_centres=self.extract_2d(
                 "mass_profile_centres", self.lensing_obj.mass_profile_centres
@@ -98,8 +98,8 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         if deflections_y:
 
             deflections = self.lensing_obj.deflections_from_grid(grid=self.grid)
-            deflections_y = arrays.Array.manual_mask(
-                array=deflections.in_1d[:, 0], mask=self.grid.mask
+            deflections_y = arrays.Array2D.manual_mask(
+                array=deflections.slim[:, 0], mask=self.grid.mask
             )
 
             self.mat_plot_2d.plot_array(
@@ -113,8 +113,8 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         if deflections_x:
 
             deflections = self.lensing_obj.deflections_from_grid(grid=self.grid)
-            deflections_x = arrays.Array.manual_mask(
-                array=deflections.in_1d[:, 1], mask=self.grid.mask
+            deflections_x = arrays.Array2D.manual_mask(
+                array=deflections.slim[:, 1], mask=self.grid.mask
             )
 
             self.mat_plot_2d.plot_array(

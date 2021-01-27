@@ -8,21 +8,21 @@ from .dataset.interferometer import (
     SimulatorInterferometer,
 )
 
-from autoarray import GridIterate
-from autoarray import GridInterpolate
+from autoarray import Grid2DIterate
+from autoarray import Grid2DInterpolate
 from autoarray import Mask2D
-from autoarray import GridIrregular
-from autoarray import GridIrregularGrouped
-from autoarray import VectorFieldIrregular
+from autoarray import Grid2DIrregular
+from autoarray import Grid2DIrregularGrouped
+from autoarray import VectorField2DIrregular
 from autoarray import TransformerDFT
 from autoarray import pix
 from autoarray import reg
 from autoarray import TransformerNUFFT
 from autoarray import SettingsInversion
 from autoarray import SettingsPixelization
-from autoarray.structures.arrays import Array
-from autoarray.structures.grids import Grid, GridRectangular, GridVoronoi
-from autoarray.structures.kernel import Kernel
+from autoarray.structures.arrays import Array2D
+from autoarray.structures.grids import Grid2D, Grid2DRectangular, Grid2DVoronoi
+from autoarray.structures.kernel import Kernel2D
 from autoarray.structures.visibilities import Visibilities
 from autoarray.dataset.imaging import Imaging
 from autoarray.dataset.interferometer import Interferometer

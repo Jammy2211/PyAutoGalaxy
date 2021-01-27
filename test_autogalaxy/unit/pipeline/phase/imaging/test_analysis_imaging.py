@@ -117,10 +117,10 @@ class TestFit:
         instance = af.ModelInstance()
         instance.galaxies = galaxies
 
-        galaxy_hyper_image = ag.Array.ones(shape_2d=(3, 3), pixel_scales=0.1)
+        galaxy_hyper_image = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=0.1)
         galaxy_hyper_image[4] = 10.0
-        hyper_model_image = ag.Array.full(
-            fill_value=0.5, shape_2d=(3, 3), pixel_scales=0.1
+        hyper_model_image = ag.Array2D.full(
+            fill_value=0.5, shape_native=(3, 3), pixel_scales=0.1
         )
 
         hyper_galaxy_image_path_dict = {("galaxies", "galaxy"): galaxy_hyper_image}

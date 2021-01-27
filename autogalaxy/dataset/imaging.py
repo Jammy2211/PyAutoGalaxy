@@ -11,8 +11,8 @@ from autogalaxy.plane import plane as pl
 class SettingsMaskedImaging(imaging.SettingsMaskedImaging):
     def __init__(
         self,
-        grid_class=grids.Grid,
-        grid_inversion_class=grids.Grid,
+        grid_class=grids.Grid2D,
+        grid_inversion_class=grids.Grid2D,
         sub_size=2,
         fractional_accuracy=0.9999,
         sub_steps=None,
@@ -31,23 +31,23 @@ class SettingsMaskedImaging(imaging.SettingsMaskedImaging):
 
         Parameters
         ----------
-        grid_class : ag.Grid
-            The type of grid used to create the image from the `Galaxy` and `Plane`. The options are `Grid`,
-            `GridIterate` and `GridInterpolate` (see the `Grid` documentation for a description of these options).
-        grid_inversion_class : ag.Grid
+        grid_class : ag.Grid2D
+            The type of grid used to create the image from the `Galaxy` and `Plane`. The options are `Grid2D`,
+            `Grid2DIterate` and `Grid2DInterpolate` (see the `Grid2D` documentation for a description of these options).
+        grid_inversion_class : ag.Grid2D
             The type of grid used to create the grid that maps the `Inversion` source pixels to the data's image-pixels.
-            The options are `Grid`, `GridIterate` and `GridInterpolate` (see the `Grid` documentation for a
+            The options are `Grid2D`, `Grid2DIterate` and `Grid2DInterpolate` (see the `Grid2D` documentation for a
             description of these options).
         sub_size : int
-            If the grid and / or grid_inversion use a `Grid`, this sets the sub-size used by the `Grid`.
+            If the grid and / or grid_inversion use a `Grid2D`, this sets the sub-size used by the `Grid2D`.
         fractional_accuracy : float
-            If the grid and / or grid_inversion use a `GridIterate`, this sets the fractional accuracy it
+            If the grid and / or grid_inversion use a `Grid2DIterate`, this sets the fractional accuracy it
             uses when evaluating functions.
         sub_steps : [int]
-            If the grid and / or grid_inversion use a `GridIterate`, this sets the steps the sub-size is increased by
+            If the grid and / or grid_inversion use a `Grid2DIterate`, this sets the steps the sub-size is increased by
             to meet the fractional accuracy when evaluating functions.
         pixel_scales_interp : float or (float, float)
-            If the grid and / or grid_inversion use a `GridInterpolate`, this sets the resolution of the interpolation
+            If the grid and / or grid_inversion use a `Grid2DInterpolate`, this sets the resolution of the interpolation
             grid.
         signal_to_noise_limit : float
             If input, the dataset's noise-map is rescaled such that no pixel has a signal-to-noise above the
@@ -107,7 +107,7 @@ class SimulatorImaging(imaging.SimulatorImaging):
         self,
         exposure_time: float,
         background_sky_level: float = 0.0,
-        psf: kernel.Kernel = None,
+        psf: kernel.Kernel2D = None,
         renormalize_psf: bool = True,
         read_noise: float = None,
         add_poisson_noise: bool = True,
@@ -119,7 +119,7 @@ class SimulatorImaging(imaging.SimulatorImaging):
 
         Parameters
         ----------
-        psf : Kernel
+        psf : Kernel2D
             An arrays describing the PSF kernel of the image.
         exposure_time : float
             The exposure time of the simulated imaging.
@@ -160,12 +160,12 @@ class SimulatorImaging(imaging.SimulatorImaging):
         """
 
         image = plane.padded_image_from_grid_and_psf_shape(
-            grid=grid, psf_shape_2d=self.psf.shape_2d
+            grid=grid, psf_shape_2d=self.psf.shape_native
         )
 
-        imaging = self.from_image(image=image.in_1d_binned, name=name)
+        imaging = self.from_image(image=image.slim_binned, name=name)
 
-        return imaging.trimmed_after_convolution_from(kernel_shape=self.psf.shape_2d)
+        return imaging.trimmed_after_convolution_from(kernel_shape=self.psf.shape_native)
 
     def from_galaxies_and_grid(self, galaxies, grid, name=None):
         """Simulate imaging data for this data, as follows:

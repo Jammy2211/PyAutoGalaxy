@@ -56,11 +56,11 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
 
         return self.visuals_2d + self.visuals_2d.__class__(
             origin=self.extract_2d(
-                "origin", value=grids.GridIrregular(grid=[self.grid.origin])
+                "origin", value=grids.Grid2DIrregular(grid=[self.grid.origin])
             ),
             mask=self.extract_2d("mask", value=self.grid.mask),
             border=self.extract_2d(
-                "border", value=self.grid.mask.border_grid_sub_1.in_1d_binned
+                "border", value=self.grid.mask.border_grid_sub_1.slim_binned
             ),
             light_profile_centres=self.extract_2d(
                 "light_profile_centres", self.light_profile.light_profile_centres

@@ -71,7 +71,7 @@ class TestEllipticalGaussian:
             mass_to_light_ratio=1.0,
         )
 
-        grid = ag.Grid.uniform(shape_2d=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
+        grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
 
         deflections_via_analytic = gaussian.deflections_from_grid(grid=grid)
         deflections_via_integrator = gaussian.deflections_from_grid_via_integrator(
@@ -90,7 +90,7 @@ class TestEllipticalGaussian:
             mass_to_light_ratio=7.0,
         )
 
-        grid = ag.Grid.uniform(shape_2d=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
+        grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
 
         deflections_via_analytic = gaussian.deflections_from_grid(grid=grid)
         deflections_via_integrator = gaussian.deflections_from_grid_via_integrator(
@@ -334,7 +334,7 @@ class TestSersic:
         )
 
         deflections = sersic.deflections_from_grid_via_integrator(
-            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
@@ -368,7 +368,7 @@ class TestSersic:
         )
 
         deflections = sersic.deflections_from_grid(
-            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
@@ -386,7 +386,7 @@ class TestSersic:
         )
 
         deflections = sersic.deflections_from_grid(
-            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(2.0 * 1.1446, 1e-3)
@@ -404,7 +404,7 @@ class TestSersic:
         )
 
         deflections = sersic.deflections_from_grid(
-            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(2.0 * 1.1446, 1e-3)
@@ -506,13 +506,13 @@ class TestSersic:
         )
 
     def test__outputs_are_autoarrays(self):
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         sersic = ag.mp.EllipticalSersic()
 
         convergence = sersic.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         # potential = sersic.potential_from_grid(
         #     grid=grid)
@@ -521,13 +521,13 @@ class TestSersic:
 
         deflections = sersic.deflections_from_grid_via_integrator(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
         sersic = ag.mp.EllipticalSersic()
 
         convergence = sersic.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         # potential = sersic.potential_from_grid(
         #     grid=grid)
@@ -536,7 +536,7 @@ class TestSersic:
 
         deflections = sersic.deflections_from_grid_via_integrator(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestExponential:
@@ -685,7 +685,7 @@ class TestExponential:
         )
 
         deflections = exponential.deflections_from_grid_via_integrator(
-            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
@@ -716,7 +716,7 @@ class TestExponential:
         )
 
         deflections = exponential.deflections_from_grid(
-            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
@@ -744,13 +744,13 @@ class TestExponential:
         ).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         exponential = ag.mp.EllipticalExponential()
 
         convergence = exponential.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         # potential = exponential.potential_from_grid(
         #     grid=grid)
@@ -759,13 +759,13 @@ class TestExponential:
 
         deflections = exponential.deflections_from_grid_via_integrator(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
         exponential = ag.mp.EllipticalExponential()
 
         convergence = exponential.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         # potential = exponential.potential_from_grid(
         #     grid=grid)
@@ -774,7 +774,7 @@ class TestExponential:
 
         deflections = exponential.deflections_from_grid_via_integrator(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestDevVaucouleurs:
@@ -910,7 +910,7 @@ class TestDevVaucouleurs:
         )
 
         deflections = dev.deflections_from_grid_via_integrator(
-            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(-24.528, 1e-3)
@@ -926,7 +926,7 @@ class TestDevVaucouleurs:
         )
 
         deflections = dev.deflections_from_grid(
-            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
         )
 
         # assert deflections[0, 0] == pytest.approx(-24.528, 1e-3)
@@ -954,13 +954,13 @@ class TestDevVaucouleurs:
         ).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         dev_vaucouleurs = ag.mp.EllipticalDevVaucouleurs()
 
         convergence = dev_vaucouleurs.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         # potential = dev_vaucouleurs.potential_from_grid(
         #     grid=grid)
@@ -969,13 +969,13 @@ class TestDevVaucouleurs:
 
         deflections = dev_vaucouleurs.deflections_from_grid_via_integrator(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
         dev_vaucouleurs = ag.mp.EllipticalDevVaucouleurs()
 
         convergence = dev_vaucouleurs.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         # potential = dev_vaucouleurs.potential_from_grid(
         #     grid=grid)
@@ -984,7 +984,7 @@ class TestDevVaucouleurs:
 
         deflections = dev_vaucouleurs.deflections_from_grid_via_integrator(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestSersicMassRadialGradient:
@@ -1088,7 +1088,7 @@ class TestSersicMassRadialGradient:
         )
 
         deflections = sersic.deflections_via_integrator_from_grid(
-            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.97806399756448, 1e-3)
@@ -1122,7 +1122,7 @@ class TestSersicMassRadialGradient:
         )
 
         deflections = sersic.deflections_from_grid(
-            grid=ag.GridIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
         )
 
         assert deflections[0, 0] == pytest.approx(0.97806399756448, 1e-3)
@@ -1256,13 +1256,13 @@ class TestSersicMassRadialGradient:
         ).all()
 
     def test__outputs_are_autoarrays(self):
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         sersic = ag.mp.EllipticalSersicRadialGradient()
 
         convergence = sersic.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         # potential = sersic.potential_from_grid(
         #     grid=grid)
@@ -1271,13 +1271,13 @@ class TestSersicMassRadialGradient:
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
         sersic = ag.mp.EllipticalSersicRadialGradient()
 
         convergence = sersic.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         # potential = sersic.potential_from_grid(
         #     grid=grid)
@@ -1286,7 +1286,7 @@ class TestSersicMassRadialGradient:
 
         deflections = sersic.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestCoreSersic:
@@ -1493,13 +1493,13 @@ class TestCoreSersic:
         )
 
     def test__outputs_are_autoarrays(self):
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         sersic = ag.mp.EllipticalCoreSersic()
 
         convergence = sersic.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         # potential = sersic.potential_from_grid(
         #     grid=grid)
@@ -1508,13 +1508,13 @@ class TestCoreSersic:
 
         deflections = sersic.deflections_from_grid_via_integrator(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
         sersic = ag.mp.EllipticalCoreSersic()
 
         convergence = sersic.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         # potential = sersic.potential_from_grid(
         #     grid=grid)
@@ -1523,7 +1523,7 @@ class TestCoreSersic:
 
         deflections = sersic.deflections_from_grid_via_integrator(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestChameleon:
@@ -1663,13 +1663,13 @@ class TestChameleon:
         )
 
     def test__outputs_are_autoarrays(self):
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         chameleon = ag.mp.EllipticalChameleon()
 
         convergence = chameleon.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         # potential = chameleon.potential_from_grid(
         #     grid=grid)
@@ -1678,13 +1678,13 @@ class TestChameleon:
 
         deflections = chameleon.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
         chameleon = ag.mp.EllipticalChameleon()
 
         convergence = chameleon.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         # potential = chameleon.potential_from_grid(
         #     grid=grid)
@@ -1693,4 +1693,4 @@ class TestChameleon:
 
         deflections = chameleon.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)

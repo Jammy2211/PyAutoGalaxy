@@ -31,14 +31,14 @@ def test__visuals_with_include_2d(mp_0, grid_7x7):
         lensing_obj=mp_0, grid=grid_7x7, visuals_2d=visuals_2d, include_2d=include
     )
 
-    assert lensing_obj_plotter.visuals_with_include_2d.origin.in_1d_list == [(0.0, 0.0)]
+    assert lensing_obj_plotter.visuals_with_include_2d.origin.in_list == [(0.0, 0.0)]
     assert (lensing_obj_plotter.visuals_with_include_2d.mask == grid_7x7.mask).all()
     assert (
         lensing_obj_plotter.visuals_with_include_2d.border
-        == grid_7x7.mask.border_grid_sub_1.in_1d_binned
+        == grid_7x7.mask.border_grid_sub_1.slim_binned
     ).all()
     assert (
-        lensing_obj_plotter.visuals_with_include_2d.mass_profile_centres.in_1d_list
+        lensing_obj_plotter.visuals_with_include_2d.mass_profile_centres.in_list
         == [mp_0.centre]
     )
     assert lensing_obj_plotter.visuals_with_include_2d.vector_field == 2

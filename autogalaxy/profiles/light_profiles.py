@@ -66,25 +66,25 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
     @property
     def light_profile_centres(self):
-        return grids.GridIrregularGrouped([self.centre])
+        return grids.Grid2DIrregularGrouped([self.centre])
 
     def blurred_image_from_grid_and_psf(self, grid, psf, blurring_grid):
-        """Evaluate the light profile image on an input `Grid` of coordinates and then convolve it with a PSF.
+        """Evaluate the light profile image on an input `Grid2D` of coordinates and then convolve it with a PSF.
 
-        The `Grid` may be masked, in which case values outside but near the edge of the mask will convolve light into
+        The `Grid2D` may be masked, in which case values outside but near the edge of the mask will convolve light into
         the mask. A blurring grid is therefore required, which evaluates the image on pixels on the mask edge such that
         their light is blurred into it by the PSF.
 
-        The grid and blurring_grid must be a `Grid` objects so the evaluated image can be mapped to a uniform 2D array
-        and binned up for convolution. They therefore cannot be `GridIrregularGrouped` objects.
+        The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D array
+        and binned up for convolution. They therefore cannot be `Grid2DIrregularGrouped` objects.
 
         Parameters
         ----------
-        grid : Grid
+        grid : Grid2D
             The (y, x) coordinates in the original reference frame of the grid.
-        psf : aa.Kernel
+        psf : aa.Kernel2D
             The PSF the evaluated light profile image is convolved with.
-        blurring_grid : Grid
+        blurring_grid : Grid2D
             The (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
 
         """
@@ -93,27 +93,27 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         blurring_image = self.image_from_grid(grid=blurring_grid)
 
         return psf.convolved_array_from_array_2d_and_mask(
-            array_2d=image.in_2d_binned + blurring_image.in_2d_binned, mask=grid.mask
+            array_2d=image.native_binned + blurring_image.native_binned, mask=grid.mask
         )
 
     def blurred_image_from_grid_and_convolver(self, grid, convolver, blurring_grid):
-        """Evaluate the light profile image on an input `Grid` of coordinates and then convolve it with a PSF using a
+        """Evaluate the light profile image on an input `Grid2D` of coordinates and then convolve it with a PSF using a
         *Convolver* object.
 
-        The `Grid` may be masked, in which case values outside but near the edge of the mask will convolve light into
+        The `Grid2D` may be masked, in which case values outside but near the edge of the mask will convolve light into
         the mask. A blurring grid is therefore required, which evaluates the image on pixels on the mask edge such that
         their light is blurred into it by the Convolver.
 
-        The grid and blurring_grid must be a `Grid` objects so the evaluated image can be mapped to a uniform 2D array
-        and binned up for convolution. They therefore cannot be `GridIrregularGrouped` objects.
+        The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D array
+        and binned up for convolution. They therefore cannot be `Grid2DIrregularGrouped` objects.
 
         Parameters
         ----------
-        grid : Grid
+        grid : Grid2D
             The (y, x) coordinates in the original reference frame of the grid.
         Convolver : aa.Convolver
             The Convolver object used to blur the PSF.
-        blurring_grid : Grid
+        blurring_grid : Grid2D
             The (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
 
         """
@@ -122,14 +122,14 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         blurring_image = self.image_from_grid(grid=blurring_grid)
 
         return convolver.convolved_image_from_image_and_blurring_image(
-            image=image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
+            image=image.slim_binned, blurring_image=blurring_image.slim_binned
         )
 
     def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
 
         image = self.image_from_grid(grid=grid)
 
-        return transformer.visibilities_from_image(image=image.in_1d_binned)
+        return transformer.visibilities_from_image(image=image.slim_binned)
 
     def luminosity_within_circle(self, radius: float) -> float:
         """Integrate the light profile to compute the total luminosity within a circle of specified radius. This is \
