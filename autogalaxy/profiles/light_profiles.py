@@ -303,12 +303,14 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
 
     @property
     def elliptical_effective_radius(self):
-        """The effective_radius of a Sersic light profile is defined as the circular effective radius. This is the \
-        radius within which a circular aperture contains half the profiles's total integrated light. For elliptical \
+        """
+        The effective_radius of a Sersic light profile is defined as the circular effective radius. This is the
+        radius within which a circular aperture contains half the profiles's total integrated light. For elliptical
         systems, this won't robustly capture the light profile's elliptical shape.
 
-        The elliptical effective radius instead describes the major-axis radius of the ellipse containing \
-        half the light, and may be more appropriate for highly flattened systems like disk galaxies."""
+        The elliptical effective radius instead describes the major-axis radius of the ellipse containing
+        half the light, and may be more appropriate for highly flattened systems like disk galaxies.
+        """
         return self.effective_radius / np.sqrt(self.axis_ratio)
 
     @property

@@ -1471,6 +1471,7 @@ class SetupMassLightDark(AbstractSetupMass):
 
         return prior_model
 
+
 class SetupSMBH(AbstractSetup):
     def __init__(
         self,

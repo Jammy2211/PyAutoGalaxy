@@ -3,7 +3,7 @@ import typing
 import numpy as np
 import pytest
 
-# from pyquad import quad_grid
+from pyquad import quad_grid
 from skimage import measure
 
 import autogalaxy as ag
@@ -333,7 +333,111 @@ class TestJacobian:
         assert mean_error < 1e-4
 
 
+class TestHessian:
+
+    def test__hessian_from_grid(self):
+
+        sie = MockEllipticalIsothermal(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
+        )
+
+        grid = ag.Grid2DIrregularGrouped(grid=[[(0.5, 0.5)], [(1.0, 1.0)]])
+
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from_grid(grid=grid)
+
+        print(hessian_yy, hessian_xy, hessian_yx, hessian_xx)
+
+        assert hessian_yy == pytest.approx(np.array([1.3883822, 0.694127]), 1.0e-4)
+        assert hessian_xy == pytest.approx(np.array([-1.388124, -0.694094]), 1.0e-4)
+        assert hessian_yx == pytest.approx(np.array([-1.388165, -0.694099]), 1.0e-4)
+        assert hessian_xx == pytest.approx(np.array([1.3883824, 0.694127]), 1.0e-4)
+
+        grid = ag.Grid2DIrregularGrouped(grid=[[(1.0, 0.0)], [(0.0, 1.0)]])
+
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from_grid(grid=grid)
+
+        assert hessian_yy == pytest.approx(np.array([0.0, 1.777699]), 1.0e-4)
+        assert hessian_xy == pytest.approx(np.array([0.0, 0.0]), 1.0e-4)
+        assert hessian_yx == pytest.approx(np.array([0.0, 0.0]), 1.0e-4)
+        assert hessian_xx == pytest.approx(np.array([2.22209, 0.0]), 1.0e-4)
+
+
+class TestConvergence:
+
+    def test__convergence_via_hessian_from_grid(self):
+
+        buffer = 0.0001
+        grid = ag.Grid2DIrregularGrouped(grid=[[(1.075, -0.125)], [(-0.875, -0.075)], [(-0.925, -0.075)], [(0.075, 0.925)]])
+
+        sis = MockEllipticalIsothermal(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.001, 0.001),
+            einstein_radius=1.0
+        )
+
+        convergence = sis.convergence_via_hessian_from_grid(grid=grid, buffer=buffer)
+
+        assert convergence.in_grouped_list[0][0] == pytest.approx(0.461447, 1.0e-4)
+        assert convergence.in_grouped_list[1][0] == pytest.approx(0.568875, 1.0e-4)
+        assert convergence.in_grouped_list[2][0] == pytest.approx(0.538326, 1.0e-4)
+        assert convergence.in_grouped_list[3][0] == pytest.approx(0.539390, 1.0e-4)
+
+        sis = ag.mp.EllipticalIsothermal(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.3, 0.4),
+            einstein_radius=1.5
+        )
+
+        print(sis.convergence_from_grid(grid=grid))
+
+        convergence = sis.convergence_via_hessian_from_grid(grid=grid, buffer=buffer)
+
+        print(convergence)
+
+        assert convergence.in_grouped_list[0][0] == pytest.approx(0.35313, 1.0e-4)
+        assert convergence.in_grouped_list[1][0] == pytest.approx(0.46030, 1.0e-4)
+        assert convergence.in_grouped_list[2][0] == pytest.approx(0.43484, 1.0e-4)
+        assert convergence.in_grouped_list[3][0] == pytest.approx(1.00492, 1.0e-4)
+
+
+class TestShear:
+
+    def test__shear_via_hessian_from_grid(self):
+
+        buffer = 0.00001
+        grid = ag.Grid2DIrregularGrouped(grid=[[(1.075, -0.125)], [(-0.875, -0.075)], [(-0.925, -0.075)], [(0.075, 0.925)]])
+
+        sis = ag.mp.EllipticalIsothermal(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.001, 0.001),
+            einstein_radius=1.0
+        )
+
+        shear = sis.shear_via_hessian_from_grid(grid=grid, buffer=buffer)
+
+        assert shear.in_grouped_list[0][0] == pytest.approx(0.461447, 1.0e-4)
+        assert shear.in_grouped_list[1][0] == pytest.approx(0.568875, 1.0e-4)
+        assert shear.in_grouped_list[2][0] == pytest.approx(0.538326, 1.0e-4)
+        assert shear.in_grouped_list[3][0] == pytest.approx(0.539390, 1.0e-4)
+
+        sis =  ag.mp.EllipticalIsothermal(
+            centre=(0.2, 0.1),
+            elliptical_comps=(0.3, 0.4),
+            einstein_radius=1.5
+        )
+
+        shear = sis.shear_from_grid(grid=grid)
+        print((shear[:,0] ** 2 + shear[:,1] ** 2) ** 0.5)
+
+        shear = sis.shear_via_hessian_from_grid(grid=grid, buffer=buffer)
+
+        assert shear.in_grouped_list[0][0] == pytest.approx(0.41597, 1.0e-4)
+        assert shear.in_grouped_list[1][0] == pytest.approx(0.38299, 1.0e-4)
+        assert shear.in_grouped_list[2][0] == pytest.approx(0.36522, 1.0e-4)
+        assert shear.in_grouped_list[3][0] == pytest.approx(0.82750, 1.0e-4)
+
 class TestMagnification:
+
     def test__compare_magnification_from_eigen_values_and_from_determinant(self):
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
@@ -424,34 +528,7 @@ class TestMagnification:
 
         assert mean_error < 1e-4
 
-    def test__magnification_irregular_from_grid(self):
-
-        # grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
-        #
-        # print(grid.native[28, 47])
-        # print(grid.native[67, 48])
-        # print(grid.native[68, 48])
-        #
-        # sis = MockEllipticalIsothermal(
-        #     centre=(0.0, 0.0),
-        #     elliptical_comps=(0.001, 0.001),
-        #     einstein_radius=1.0
-        # )
-        #
-        # print(sis.magnification_from_grid(grid=grid).native[28, 47])
-        # print(sis.magnification_from_grid(grid=grid).native[67, 48])
-        # print(sis.magnification_from_grid(grid=grid).native[68, 48])
-        #
-        # print()
-        #
-        # buffer = 0.001
-        #
-        # print(sis.magnification_irregular_from_grid(grid=ag.Grid2DIrregularGrouped(grid=[[(1.100039, -0.00742)]]), buffer=buffer))
-        # print(sis.magnification_irregular_from_grid(grid=ag.Grid2DIrregularGrouped(grid=[[(-0.90039, -0.00585)]]), buffer=buffer))
-        # print(sis.magnification_irregular_from_grid(grid=ag.Grid2DIrregularGrouped(grid=[[(-0.95039, -0.00585)]]), buffer=buffer))
-        # print(sis.magnification_irregular_from_grid(grid=ag.Grid2DIrregularGrouped(grid=[[(-1.0, -0.00585)]]), buffer=buffer))
-        #
-        # stop
+    def test__magnification_via_hessian_from_grid(self):
 
         sie = MockEllipticalIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
@@ -459,7 +536,7 @@ class TestMagnification:
 
         grid = ag.Grid2DIrregularGrouped(grid=[[(0.5, 0.5)], [(1.0, 1.0)]])
 
-        magnification = sie.magnification_irregular_from_grid(grid=grid)
+        magnification = sie.magnification_via_hessian_from_grid(grid=grid)
 
         assert magnification.in_grouped_list[0][0] == pytest.approx(-0.56303, 1.0e-4)
         assert magnification.in_grouped_list[1][0] == pytest.approx(-2.57591, 1.0e-4)

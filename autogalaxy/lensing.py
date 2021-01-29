@@ -132,10 +132,10 @@ class LensingObject:
     @precompute_jacobian
     def shear_via_jacobian_from_grid(self, grid, jacobian=None):
 
-        gamma_y = -0.5 * (jacobian[0][1] + jacobian[1][0])
-        gamma_x = 0.5 * (jacobian[1][1] - jacobian[0][0])
+        shear_y = -0.5 * (jacobian[0][1] + jacobian[1][0])
+        shear_x = 0.5 * (jacobian[1][1] - jacobian[0][0])
 
-        return arrays.Array2D(array=(gamma_x ** 2 + gamma_y ** 2) ** 0.5, mask=grid.mask)
+        return arrays.Array2D(array=(shear_x ** 2 + shear_y ** 2) ** 0.5, mask=grid.mask)
 
     @precompute_jacobian
     def tangential_eigen_value_from_grid(self, grid, jacobian=None):
@@ -167,7 +167,7 @@ class LensingObject:
 
         return arrays.Array2D(array=1 / det_jacobian, mask=grid.mask)
 
-    def magnification_irregular_from_grid(self, grid, buffer=0.01):
+    def hessian_from_grid(self, grid, buffer=0.01):
 
         grid_shift_y_up = np.zeros(grid.shape)
         grid_shift_y_up[:, 0] = grid[:, 0] + buffer
@@ -190,12 +190,33 @@ class LensingObject:
         deflections_left = self.deflections_from_grid(grid=grid_shift_x_left)
         deflections_right = self.deflections_from_grid(grid=grid_shift_x_right)
 
-        shear_yy = 0.5 * (deflections_up[:, 0] - deflections_down[:, 0]) / buffer
-        shear_xy = 0.5 * (deflections_up[:, 1] - deflections_down[:, 1]) / buffer
-        shear_yx = 0.5 * (deflections_right[:, 0] - deflections_left[:, 0]) / buffer
-        shear_xx = 0.5 * (deflections_right[:, 1] - deflections_left[:, 1]) / buffer
+        hessian_yy = 0.5 * (deflections_up[:, 0] - deflections_down[:, 0]) / buffer
+        hessian_xy = 0.5 * (deflections_up[:, 1] - deflections_down[:, 1]) / buffer
+        hessian_yx = 0.5 * (deflections_right[:, 0] - deflections_left[:, 0]) / buffer
+        hessian_xx = 0.5 * (deflections_right[:, 1] - deflections_left[:, 1]) / buffer
 
-        det_A = (1 - shear_xx) * (1 - shear_yy) - shear_xy * shear_yx
+        return hessian_yy, hessian_xy, hessian_yx, hessian_xx
+
+    def convergence_via_hessian_from_grid(self, grid, buffer=0.01):
+
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(grid=grid, buffer=buffer)
+
+        return grid.values_from_array_slim(array_slim=0.5*(hessian_yy + hessian_xx))
+
+    def shear_via_hessian_from_grid(self, grid, buffer=0.01):
+
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(grid=grid, buffer=buffer)
+
+        shear_y = 0.5 * (hessian_xx - hessian_yy)
+        shear_x = hessian_xy
+
+        return grid.values_from_array_slim(array_slim=(shear_x ** 2 + shear_y ** 2) ** 0.5)
+
+    def magnification_via_hessian_from_grid(self, grid, buffer=0.01):
+
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(grid=grid, buffer=buffer)
+
+        det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx
 
         return grid.values_from_array_slim(array_slim=1.0 / det_A)
 
