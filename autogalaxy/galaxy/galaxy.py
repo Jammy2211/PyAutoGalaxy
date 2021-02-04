@@ -585,7 +585,7 @@ class HyperGalaxy:
 
     def contribution_map_from_hyper_images(self, hyper_model_image, hyper_galaxy_image):
         """
-    Returns the contribution map of a galaxy, which represents the fraction of
+        Returns the contribution map of a galaxy, which represents the fraction of
         flux in each pixel that the galaxy is attributed to contain, hyper to the
         *contribution_factor* hyper_galaxies-parameter.
 
@@ -614,6 +614,7 @@ class HyperGalaxy:
         contribution_map = self.contribution_map_from_hyper_images(
             hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
         )
+
         return self.hyper_noise_map_from_contribution_map(
             noise_map=noise_map, contribution_map=contribution_map
         )
