@@ -174,8 +174,105 @@
         },
         "mass_at_200": {
             "type": "LogUniform",
-            "lower_limit": 1000000.0,
-            "upper_limit": 100000000000.0,
+            "lower_limit":1e8,
+            "upper_limit": 1e15,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
+            }
+        },
+        "redshift_object": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
+            }
+        },
+        "redshift_source": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
+            }
+        }
+    },
+    "EllipticalNFWMCRLudlow": {
+        "centre_0": {
+            "type": "Gaussian",
+            "lower_limit": "-inf",
+            "upper_limit": "inf",
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.05
+            },
+            "mean": 0.0,
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
+        },
+        "centre_1": {
+            "type": "Gaussian",
+            "lower_limit": "-inf",
+            "upper_limit": "inf",
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.05
+            },
+            "mean": 0.0,
+            "sigma": 0.1,
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
+        },
+        "elliptical_comps_0": {
+            "type": "Uniform",
+            "lower_limit": -1.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.2
+            },
+            "gaussian_limits": {
+                "lower": -1.0,
+                "upper": 1.0
+            }
+        },
+        "elliptical_comps_1": {
+            "type": "Uniform",
+            "lower_limit": -1.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.2
+            },
+            "gaussian_limits": {
+                "lower": "-1.0",
+                "upper": "1.0"
+            }
+        },
+        "mass_at_200": {
+            "type": "LogUniform",
+            "lower_limit":1e8,
+            "upper_limit": 1e15,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.5
@@ -245,8 +342,8 @@
         },
         "mass_at_200": {
             "type": "LogUniform",
-            "lower_limit": 1000000.0,
-            "upper_limit": 100000000000.0,
+            "lower_limit":1e8,
+            "upper_limit": 1e15,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.5
@@ -387,8 +484,8 @@
         },
         "mass_at_200": {
             "type": "LogUniform",
-            "lower_limit": 1000000.0,
-            "upper_limit": 100000000000.0,
+            "lower_limit":1e8,
+            "upper_limit": 1e15,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.5
@@ -458,8 +555,8 @@
         },
         "mass_at_200": {
             "type": "LogUniform",
-            "lower_limit": 1000000.0,
-            "upper_limit": 100000000000.0,
+            "lower_limit":1e8,
+            "upper_limit": 1e15,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.5
@@ -587,8 +684,8 @@
         },
         "mass_at_200": {
             "type": "LogUniform",
-            "lower_limit": 1000000.0,
-            "upper_limit": 100000000000.0,
+            "lower_limit":1e8,
+            "upper_limit": 1e15,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.5

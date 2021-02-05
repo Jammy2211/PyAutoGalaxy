@@ -653,12 +653,12 @@ class TestSetupMassLightDark:
         assert setup.bulge_prior_model.cls is ag.lmp.EllipticalSersic
         assert setup.disk_prior_model.cls is ag.lmp.EllipticalExponential
         assert setup.envelope_prior_model is None
-        assert setup.dark_prior_model.cls is ag.mp.SphericalNFWMCRLudlow
+        assert setup.dark_prior_model.cls is ag.mp.EllipticalNFWMCRLudlow
 
         assert setup.bulge_prior_model_tag == "__bulge_sersic"
         assert setup.disk_prior_model_tag == "__disk_exp"
         assert setup.envelope_prior_model_tag == ""
-        assert setup.dark_prior_model_tag == "__dark_nfw_sph_ludlow"
+        assert setup.dark_prior_model_tag == "__dark_nfw_ludlow"
 
         setup = ag.SetupMassLightDark(
             bulge_prior_model=af.PriorModel(ag.lmp.EllipticalDevVaucouleurs),
@@ -817,7 +817,7 @@ class TestSetupMassLightDark:
         )
         assert (
             setup.tag
-            == "mass[light_dark__bulge_sersic__disk_exp__mlr_const__dark_nfw_sph_ludlow__align_bulge_dark_centre]"
+            == "mass[light_dark__bulge_sersic__disk_exp__mlr_const__dark_nfw_ludlow__align_bulge_dark_centre]"
         )
 
 

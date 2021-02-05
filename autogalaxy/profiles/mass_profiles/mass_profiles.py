@@ -142,7 +142,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
 
 
     def normalization_from_mass_angular_and_radius(
-        self, mass_angular,  radius, normalization_min=1e-9, normalization_max=1e9, bins=100
+        self, mass_angular,  radius, normalization_min=1e-15, normalization_max=1e15, bins=200
     ):
 
         normalizations = np.logspace(

@@ -22,6 +22,7 @@ from .dark_mass_profiles import (
     EllipticalNFW,
     SphericalNFW,
     SphericalNFWMCRDuffy,
+    EllipticalNFWMCRLudlow,
     SphericalNFWMCRLudlow,
 )
 from .stellar_mass_profiles import (

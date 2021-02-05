@@ -1158,6 +1158,7 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
         mass_profile.mass_to_light_ratio = normalization
         return mass_profile
 
+
 class SphericalChameleon(EllipticalChameleon):
     def __init__(
         self,

@@ -1102,7 +1102,7 @@ class SetupMassLightDark(AbstractSetupMass):
             lmp.LightMassProfile
         ) = lmp.EllipticalExponential,
         envelope_prior_model: af.PriorModel(lmp.LightMassProfile) = None,
-        dark_prior_model: af.PriorModel(mp.MassProfile) = mp.SphericalNFWMCRLudlow,
+        dark_prior_model: af.PriorModel(mp.MassProfile) = mp.EllipticalNFWMCRLudlow,
         mass_centre: (float, float) = None,
         constant_mass_to_light_ratio: bool = False,
         align_bulge_dark_centre: bool = False,
@@ -1443,11 +1443,7 @@ class SetupMassLightDark(AbstractSetupMass):
         einstein_mass_lower = einstein_mass_range[0] * einstein_mass
         einstein_mass_upper = einstein_mass_range[1] * einstein_mass
 
-        print()
-
         instance = prior_model.instance_from_prior_medians()
-
-        print(instance)
 
         mass_to_light_ratio_lower = instance.normalization_from_mass_angular_and_radius(
             mass_angular=einstein_mass_lower, radius=einstein_radius, bins=bins
@@ -1455,14 +1451,6 @@ class SetupMassLightDark(AbstractSetupMass):
         mass_to_light_ratio_upper = instance.normalization_from_mass_angular_and_radius(
             mass_angular=einstein_mass_upper, radius=einstein_radius, bins=bins
         )
-
-        print(einstein_radius)
-        print(einstein_mass)
-        print(einstein_mass_lower)
-        print(einstein_mass_upper)
-
-        print(mass_to_light_ratio_lower)
-        print(mass_to_light_ratio_upper)
 
         prior_model.mass_to_light_ratio = af.LogUniformPrior(
             lower_limit=mass_to_light_ratio_lower,
