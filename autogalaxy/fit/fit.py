@@ -271,8 +271,8 @@ class FitInterferometer(aa_fit.FitInterferometer):
         galaxy_model_image_dict = self.plane.galaxy_image_dict_from_grid(grid=self.grid)
 
         for path, image in galaxy_model_image_dict.items():
-            if hasattr(image, "in_1d_binned"):
-                galaxy_model_image_dict[path] = image.in_1d_binned
+            if hasattr(image, "slim_binned"):
+                galaxy_model_image_dict[path] = image.slim_binned
 
         # TODO : Extend to multiple inversioons across Planes
 

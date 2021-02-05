@@ -27,17 +27,19 @@ class TestHyperMethods:
         instance.galaxies = galaxies
 
         hyper_galaxy_image_path_dict = {
-            ("galaxies", "galaxy"): ag.Array.ones(shape_2d=(3, 3), pixel_scales=1.0),
-            ("galaxies", "source"): ag.Array.full(
-                fill_value=2.0, shape_2d=(3, 3), pixel_scales=1.0
+            ("galaxies", "galaxy"): ag.Array2D.ones(
+                shape_native=(3, 3), pixel_scales=1.0
+            ),
+            ("galaxies", "source"): ag.Array2D.full(
+                fill_value=2.0, shape_native=(3, 3), pixel_scales=1.0
             ),
         }
 
         results = mock.MockResults(
             instance=instance,
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
-            hyper_model_image=ag.Array.full(
-                fill_value=3.0, shape_2d=(3, 3), pixel_scales=1.0
+            hyper_model_image=ag.Array2D.full(
+                fill_value=3.0, shape_native=(3, 3), pixel_scales=1.0
             ),
             use_as_hyper_dataset=True,
         )
@@ -51,16 +53,16 @@ class TestHyperMethods:
 
         instance = analysis.associate_hyper_images(instance=instance)
 
-        assert instance.galaxies.galaxy.hyper_galaxy_image.in_2d == pytest.approx(
+        assert instance.galaxies.galaxy.hyper_galaxy_image.native == pytest.approx(
             np.ones((3, 3)), 1.0e-4
         )
-        assert instance.galaxies.source.hyper_galaxy_image.in_2d == pytest.approx(
+        assert instance.galaxies.source.hyper_galaxy_image.native == pytest.approx(
             2.0 * np.ones((3, 3)), 1.0e-4
         )
 
-        assert instance.galaxies.galaxy.hyper_model_image.in_2d == pytest.approx(
+        assert instance.galaxies.galaxy.hyper_model_image.native == pytest.approx(
             3.0 * np.ones((3, 3)), 1.0e-4
         )
-        assert instance.galaxies.source.hyper_model_image.in_2d == pytest.approx(
+        assert instance.galaxies.source.hyper_model_image.native == pytest.approx(
             3.0 * np.ones((3, 3)), 1.0e-4
         )

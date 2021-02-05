@@ -21,7 +21,7 @@ class FitGalaxy(fit.FitDataset):
 
         super(FitGalaxy, self).__init__(
             masked_dataset=masked_galaxy_dataset,
-            model_data=model_data.in_1d_binned,
+            model_data=model_data.slim_binned,
             use_mask_in_fit=False,
         )
 

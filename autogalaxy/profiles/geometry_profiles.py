@@ -95,7 +95,7 @@ class SphericalProfile(GeometryProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         transformed = np.subtract(grid, self.centre)
-        return grids.GridTransformedNumpy(grid=transformed)
+        return grids.Grid2DTransformedNumpy(grid=transformed)
 
     @grids.grid_like_to_structure
     def transform_grid_from_reference_frame(self, grid):
@@ -108,7 +108,7 @@ class SphericalProfile(GeometryProfile):
             The (y, x) coordinates in the reference frame of the profile.
         """
         transformed = np.add(grid, self.centre)
-        return transformed.view(grids.GridTransformedNumpy)
+        return transformed.view(grids.Grid2DTransformedNumpy)
 
 
 class EllipticalProfile(SphericalProfile):
@@ -259,7 +259,7 @@ class EllipticalProfile(SphericalProfile):
         """
         if self.__class__.__name__.startswith("Spherical"):
             return super().transform_grid_to_reference_frame(
-                grid=grids.GridTransformedNumpy(grid=grid)
+                grid=grids.Grid2DTransformedNumpy(grid=grid)
             )
         shifted_coordinates = np.subtract(grid, self.centre)
         radius = np.sqrt(np.sum(shifted_coordinates ** 2.0, 1))
@@ -273,7 +273,7 @@ class EllipticalProfile(SphericalProfile):
                 radius * np.cos(theta_coordinate_to_profile),
             )
         ).T
-        return grids.GridTransformedNumpy(grid=transformed)
+        return grids.Grid2DTransformedNumpy(grid=transformed)
 
     @grids.grid_like_to_structure
     def transform_grid_from_reference_frame(self, grid):
@@ -287,7 +287,7 @@ class EllipticalProfile(SphericalProfile):
         """
         if self.__class__.__name__.startswith("Spherical"):
             return super().transform_grid_from_reference_frame(
-                grid=grids.GridTransformedNumpy(grid=grid)
+                grid=grids.Grid2DTransformedNumpy(grid=grid)
             )
 
         y = np.add(

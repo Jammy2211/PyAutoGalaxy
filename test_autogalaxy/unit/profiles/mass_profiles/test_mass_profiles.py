@@ -1,6 +1,7 @@
 import math
 
 import autogalaxy as ag
+from autogalaxy import exc
 import numpy as np
 import pytest
 
@@ -125,6 +126,214 @@ class TestDensityBetweenAnnuli:
         )
 
 
+class TestNormalizationEinstienRadius:
+    def test__mass_angular_from_normalization_and_radius(self):
+
+        sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        mass_angular_from_normalization = sis.mass_angular_from_normalization_and_radius(
+            normalization=1.0, radius=2.0
+        )
+
+        assert mass_angular_from_normalization == pytest.approx(2.0 * np.pi, 1.0e-2)
+
+        mass_angular_from_normalization = sis.mass_angular_from_normalization_and_radius(
+            normalization=1.0, radius=4.0
+        )
+
+        assert mass_angular_from_normalization == pytest.approx(4.0 * np.pi, 1.0e-2)
+
+        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+
+        mass_angular_from_normalization = nfw.mass_angular_from_normalization_and_radius(
+            normalization=2.0, radius=2.0
+        )
+
+        assert mass_angular_from_normalization == pytest.approx(15.19525, 1.0e-4)
+
+        sersic = ag.mp.SphericalSersic(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=3.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        mass_angular_from_normalization = sersic.mass_angular_from_normalization_and_radius(
+            normalization=2.0, radius=2.0
+        )
+
+        sersic = ag.mp.SphericalSersic(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=3.0,
+            mass_to_light_ratio=2.0,
+        )
+
+        assert mass_angular_from_normalization == pytest.approx(28.32431, 1.0e-4)
+
+        mass_angular_from_normalization = sersic.mass_angular_from_normalization_and_radius(
+            normalization=0.1, radius=2.0
+        )
+
+        assert mass_angular_from_normalization == pytest.approx(1.416215, 1.0e-2)
+
+    def test__normalization_from_mass_angular_and_radius(self):
+
+        sersic = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        normalization = sersic.normalization_from_mass_angular_and_radius(
+            mass_angular=5.0,
+            radius=2.0,
+            normalization_min=0.5,
+            normalization_max=3.0,
+            bins=5,
+        )
+
+        assert normalization == pytest.approx(0.79577, 1.0e-2)
+
+        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=3.0, scale_radius=1.0)
+
+        normalization = nfw.normalization_from_mass_angular_and_radius(
+            mass_angular=6.35829,
+            radius=2.0,
+            normalization_min=0.5,
+            normalization_max=3.0,
+            bins=5,
+        )
+
+        assert normalization == pytest.approx(0.83687, 1.0e-2)
+
+        sersic = ag.mp.SphericalSersic(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=3.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        normalization = sersic.normalization_from_mass_angular_and_radius(
+            mass_angular=2.15403,
+            radius=2.0,
+            normalization_min=0.01,
+            normalization_max=30.0,
+            bins=5,
+        )
+
+        sersic = sersic.with_new_normalization(normalization=normalization)
+
+        assert normalization == pytest.approx(0.152097, 1.0e-2)
+
+        with pytest.raises(exc.ProfileException):
+            sersic.normalization_from_mass_angular_and_radius(
+                mass_angular=1.0,
+                radius=2.0,
+                normalization_min=1e-4,
+                normalization_max=1e-3,
+                bins=2,
+            )
+
+    def test__einstein_radius_from_normalization(self):
+
+        sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        einstein_radius_from_normalization = sis.einstein_radius_from_normalization(
+            normalization=1.0
+        )
+
+        assert einstein_radius_from_normalization == pytest.approx(1.0, 1.0e-2)
+
+        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+
+        einstein_radius_from_normalization = nfw.einstein_radius_from_normalization(
+            normalization=2.0
+        )
+
+        assert einstein_radius_from_normalization == pytest.approx(2.35829, 1.0e-4)
+
+        sersic = ag.mp.SphericalSersic(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=3.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        einstein_radius_from_normalization = sersic.einstein_radius_from_normalization(
+            normalization=1.0
+        )
+        einstein_radius_from_profile = sersic.average_convergence_of_1_radius
+
+        assert einstein_radius_from_normalization == pytest.approx(
+            einstein_radius_from_profile, 1.0e-4
+        )
+
+        einstein_radius_from_normalization = sersic.einstein_radius_from_normalization(
+            normalization=0.1
+        )
+
+        assert einstein_radius_from_normalization == pytest.approx(0.381544, 1.0e-2)
+
+        einstein_radius_from_normalization = sersic.einstein_radius_from_normalization(
+            normalization=1e-4
+        )
+
+        assert einstein_radius_from_normalization == None
+
+        einstein_radius_from_normalization = sersic.einstein_radius_from_normalization(
+            normalization=1e9
+        )
+
+        assert einstein_radius_from_normalization == None
+
+    def test__normalization_from_einstein_radius(self):
+
+        sersic = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        normalization = sersic.normalization_from_einstein_radius(
+            einstein_radius=1.0, normalization_min=0.5, normalization_max=3.0, bins=5
+        )
+
+        assert normalization == pytest.approx(1.0, 1.0e-2)
+
+        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=3.0, scale_radius=1.0)
+
+        normalization = nfw.normalization_from_einstein_radius(
+            einstein_radius=2.35829,
+            normalization_min=0.5,
+            normalization_max=3.0,
+            bins=5,
+        )
+
+        assert normalization == pytest.approx(2.0, 1.0e-2)
+
+        sersic = ag.mp.SphericalSersic(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=3.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        normalization = sersic.normalization_from_einstein_radius(
+            einstein_radius=2.15403,
+            normalization_min=0.01,
+            normalization_max=30.0,
+            bins=5,
+        )
+
+        assert normalization == pytest.approx(1.0, 1.0e-2)
+
+        with pytest.raises(exc.ProfileException):
+            sersic.normalization_from_einstein_radius(
+                einstein_radius=1.0,
+                normalization_min=1e-4,
+                normalization_max=1e-3,
+                bins=2,
+            )
+
+
 class TestLensingObject:
     def test__mass_profiles__list__is_list_of_self(self):
 
@@ -136,43 +345,51 @@ class TestLensingObject:
 class TestRegression:
     def test__centre_of_profile_in_right_place(self):
 
-        grid = ag.Grid.uniform(shape_2d=(7, 7), pixel_scales=1.0)
+        grid = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
 
         mass_profile = ag.mp.EllipticalIsothermal(
             centre=(2.0, 1.0), einstein_radius=1.0
         )
         convergence = mass_profile.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = mass_profile.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = mass_profile.deflections_from_grid(grid=grid)
-        assert deflections.in_2d[1, 4, 0] > 0
-        assert deflections.in_2d[2, 4, 0] < 0
-        assert deflections.in_2d[1, 4, 1] > 0
-        assert deflections.in_2d[1, 3, 1] < 0
+        assert deflections.native[1, 4, 0] > 0
+        assert deflections.native[2, 4, 0] < 0
+        assert deflections.native[1, 4, 1] > 0
+        assert deflections.native[1, 3, 1] < 0
 
         mass_profile = ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
         convergence = mass_profile.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         mass_profile = ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
         potential = mass_profile.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = mass_profile.deflections_from_grid(grid=grid)
-        assert deflections.in_2d[1, 4, 0] > 0
-        assert deflections.in_2d[2, 4, 0] < 0
-        assert deflections.in_2d[1, 4, 1] > 0
-        assert deflections.in_2d[1, 3, 1] < 0
+        assert deflections.native[1, 4, 0] > 0
+        assert deflections.native[2, 4, 0] < 0
+        assert deflections.native[1, 4, 1] > 0
+        assert deflections.native[1, 3, 1] < 0
 
-        grid = ag.GridIterate.uniform(
-            shape_2d=(7, 7),
+        grid = ag.Grid2DIterate.uniform(
+            shape_native=(7, 7),
             pixel_scales=1.0,
             fractional_accuracy=0.99,
             sub_steps=[2, 4],
@@ -182,34 +399,42 @@ class TestRegression:
             centre=(2.0, 1.0), einstein_radius=1.0
         )
         convergence = mass_profile.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = mass_profile.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = mass_profile.deflections_from_grid(grid=grid)
-        assert deflections.in_2d[1, 4, 0] >= 0
-        assert deflections.in_2d[2, 4, 0] <= 0
-        assert deflections.in_2d[1, 4, 1] >= 0
-        assert deflections.in_2d[1, 3, 1] <= 0
+        assert deflections.native[1, 4, 0] >= 0
+        assert deflections.native[2, 4, 0] <= 0
+        assert deflections.native[1, 4, 1] >= 0
+        assert deflections.native[1, 3, 1] <= 0
 
         mass_profile = ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
 
         convergence = mass_profile.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.in_2d.argmax(), convergence.shape_2d)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = mass_profile.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.in_2d.argmin(), potential.shape_2d)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = mass_profile.deflections_from_grid(grid=grid)
-        assert deflections.in_2d[1, 4, 0] >= 0
-        assert deflections.in_2d[2, 4, 0] <= 0
-        assert deflections.in_2d[1, 4, 1] >= 0
-        assert deflections.in_2d[1, 3, 1] <= 0
+        assert deflections.native[1, 4, 0] >= 0
+        assert deflections.native[2, 4, 0] <= 0
+        assert deflections.native[1, 4, 1] >= 0
+        assert deflections.native[1, 3, 1] <= 0
 
 
 class TestDecorators:
@@ -226,7 +451,7 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.GridIterate.from_mask(
+        grid = ag.Grid2DIterate.from_mask(
             mask=mask, fractional_accuracy=1.0, sub_steps=[2]
         )
 
@@ -237,14 +462,14 @@ class TestDecorators:
         deflections = mass_profile.deflections_from_grid(grid=grid)
 
         mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
-        grid_sub_2 = ag.Grid.from_mask(mask=mask_sub_2)
+        grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
         deflections_sub_2 = mass_profile.deflections_from_grid(
             grid=grid_sub_2
-        ).in_1d_binned
+        ).slim_binned
 
         assert deflections == pytest.approx(deflections_sub_2, 1.0e-6)
 
-        grid = ag.GridIterate.from_mask(
+        grid = ag.Grid2DIterate.from_mask(
             mask=mask, fractional_accuracy=0.99, sub_steps=[2, 4, 8]
         )
 
@@ -255,18 +480,18 @@ class TestDecorators:
         deflections = mass_profile.deflections_from_grid(grid=grid)
 
         mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
-        grid_sub_4 = ag.Grid.from_mask(mask=mask_sub_4)
+        grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
         deflections_sub_4 = mass_profile.deflections_from_grid(
             grid=grid_sub_4
-        ).in_1d_binned
+        ).slim_binned
 
         assert deflections[0, 0] == deflections_sub_4[0, 0]
 
         mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
-        grid_sub_8 = ag.Grid.from_mask(mask=mask_sub_8)
+        grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
         deflections_sub_8 = mass_profile.deflections_from_grid(
             grid=grid_sub_8
-        ).in_1d_binned
+        ).slim_binned
 
         assert deflections[4, 0] == deflections_sub_8[4, 0]
 
@@ -287,9 +512,9 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.Grid.from_mask(mask=mask)
+        grid = ag.Grid2D.from_mask(mask=mask)
 
-        grid_interpolate = ag.GridInterpolate.from_mask(
+        grid_interpolate = ag.Grid2DInterpolate.from_mask(
             mask=mask, pixel_scales_interp=0.1
         )
 
@@ -337,9 +562,9 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.Grid.from_mask(mask=mask)
+        grid = ag.Grid2D.from_mask(mask=mask)
 
-        grid_interpolate = ag.GridInterpolate.from_mask(
+        grid_interpolate = ag.Grid2DInterpolate.from_mask(
             mask=mask, pixel_scales_interp=0.1
         )
 
@@ -385,9 +610,9 @@ class TestDecorators:
             pixel_scales=(1.0, 1.0),
         )
 
-        grid = ag.Grid.from_mask(mask=mask)
+        grid = ag.Grid2D.from_mask(mask=mask)
 
-        grid_interpolate = ag.GridInterpolate.from_mask(
+        grid_interpolate = ag.Grid2DInterpolate.from_mask(
             mask=mask, pixel_scales_interp=0.1
         )
 

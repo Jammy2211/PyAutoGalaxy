@@ -74,7 +74,7 @@ class Result(dataset.Result):
     def hyper_model_visibilities(self):
 
         hyper_model_visibilities = aa.Visibilities.zeros(
-            shape_1d=(self.max_log_likelihood_fit.visibilities.shape_1d,)
+            shape_slim=(self.max_log_likelihood_fit.visibilities.shape_slim,)
         )
 
         for path, galaxy in self.path_galaxy_tuples:
@@ -133,7 +133,7 @@ class Result(dataset.Result):
     @property
     def hyper_model_image(self):
 
-        hyper_model_image = aa.Array.manual_mask(
+        hyper_model_image = aa.Array2D.manual_mask(
             array=np.zeros(self.real_space_mask.mask_sub_1.pixels_in_mask),
             mask=self.real_space_mask.mask_sub_1,
         )

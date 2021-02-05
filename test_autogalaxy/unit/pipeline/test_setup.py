@@ -290,6 +290,47 @@ class TestSetupLightParametric:
         assert setup.bulge_prior_model.centre == setup.disk_prior_model.centre
         assert setup.bulge_prior_model.centre == setup.envelope_prior_model.centre
 
+    def test__light_centre_gaussian_prior_values_input(self):
+
+        setup = ag.SetupLightParametric(
+            bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
+            disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
+            envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic),
+        )
+
+        assert setup.bulge_prior_model.centre_0.mean == 0.0
+        assert setup.bulge_prior_model.centre_1.mean == 0.0
+        assert setup.bulge_prior_model.centre_0.sigma == 0.3
+        assert setup.bulge_prior_model.centre_1.sigma == 0.3
+        assert setup.disk_prior_model.centre_0.mean == 0.0
+        assert setup.disk_prior_model.centre_1.mean == 0.0
+        assert setup.disk_prior_model.centre_0.sigma == 0.3
+        assert setup.disk_prior_model.centre_1.sigma == 0.3
+        assert setup.envelope_prior_model.centre_0.mean == 0.0
+        assert setup.envelope_prior_model.centre_1.mean == 0.0
+        assert setup.envelope_prior_model.centre_0.sigma == 0.3
+        assert setup.envelope_prior_model.centre_1.sigma == 0.3
+
+        setup = ag.SetupLightParametric(
+            light_centre_gaussian_prior_values=(0.1, 0.4),
+            bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
+            disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
+            envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic),
+        )
+
+        assert setup.bulge_prior_model.centre_0.mean == 0.1
+        assert setup.bulge_prior_model.centre_1.mean == 0.1
+        assert setup.bulge_prior_model.centre_0.sigma == 0.4
+        assert setup.bulge_prior_model.centre_1.sigma == 0.4
+        assert setup.disk_prior_model.centre_0.mean == 0.1
+        assert setup.disk_prior_model.centre_1.mean == 0.1
+        assert setup.disk_prior_model.centre_0.sigma == 0.4
+        assert setup.disk_prior_model.centre_1.sigma == 0.4
+        assert setup.envelope_prior_model.centre_0.mean == 0.1
+        assert setup.envelope_prior_model.centre_1.mean == 0.1
+        assert setup.envelope_prior_model.centre_0.sigma == 0.4
+        assert setup.envelope_prior_model.centre_1.sigma == 0.4
+
     def test__light_centre_tag(self):
 
         setup = ag.SetupLightParametric(light_centre=None)
@@ -612,12 +653,12 @@ class TestSetupMassLightDark:
         assert setup.bulge_prior_model.cls is ag.lmp.EllipticalSersic
         assert setup.disk_prior_model.cls is ag.lmp.EllipticalExponential
         assert setup.envelope_prior_model is None
-        assert setup.dark_prior_model.cls is ag.mp.SphericalNFWMCRLudlow
+        assert setup.dark_prior_model.cls is ag.mp.EllipticalNFWMCRLudlow
 
         assert setup.bulge_prior_model_tag == "__bulge_sersic"
         assert setup.disk_prior_model_tag == "__disk_exp"
         assert setup.envelope_prior_model_tag == ""
-        assert setup.dark_prior_model_tag == "__dark_nfw_sph_ludlow"
+        assert setup.dark_prior_model_tag == "__dark_nfw_ludlow"
 
         setup = ag.SetupMassLightDark(
             bulge_prior_model=af.PriorModel(ag.lmp.EllipticalDevVaucouleurs),
@@ -776,7 +817,7 @@ class TestSetupMassLightDark:
         )
         assert (
             setup.tag
-            == "mass[light_dark__bulge_sersic__disk_exp__mlr_const__dark_nfw_sph_ludlow__align_bulge_dark_centre]"
+            == "mass[light_dark__bulge_sersic__disk_exp__mlr_const__dark_nfw_ludlow__align_bulge_dark_centre]"
         )
 
 

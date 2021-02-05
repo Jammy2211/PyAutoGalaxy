@@ -3,11 +3,13 @@ import typing
 import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
+from scipy.special import wofz, comb
+import copy
 
 from autoarray.structures import grids
 from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
-from scipy.special import wofz, comb
+from autogalaxy import exc
 
 
 class MassProfile(lensing.LensingObject):
@@ -30,6 +32,9 @@ class MassProfile(lensing.LensingObject):
     @property
     def is_mass_sheet(self):
         return False
+
+    def with_new_normalization(self, normalization):
+        raise NotImplementedError()
 
 
 # noinspection PyAbstractClass
@@ -57,7 +62,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
     @property
     def mass_profile_centres(self):
         if not self.is_mass_sheet:
-            return grids.GridIrregularGrouped([self.centre])
+            return grids.Grid2DIrregularGrouped([self.centre])
         else:
             return []
 
@@ -127,7 +132,123 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
                 self.mass_angular_within_circle(radius=radius) - np.pi * radius ** 2.0
             )
 
-        return self.ellipticity_rescale * root_scalar(func, bracket=[1e-4, 1000.0]).root
+        return self.ellipticity_rescale * root_scalar(func, bracket=[1e-4, 1e4]).root
+
+    def mass_angular_from_normalization_and_radius(self, normalization, radius):
+
+        mass_profile = self.with_new_normalization(normalization=normalization)
+
+        return mass_profile.mass_angular_within_circle(radius=radius)
+
+    def normalization_from_mass_angular_and_radius(
+        self,
+        mass_angular,
+        radius,
+        normalization_min=1e-15,
+        normalization_max=1e15,
+        bins=200,
+    ):
+
+        normalizations = np.logspace(
+            np.log10(normalization_min), np.log10(normalization_max), bins
+        )
+
+        mass_angulars = [
+            self.mass_angular_from_normalization_and_radius(
+                normalization=normalization, radius=radius
+            )
+            for normalization in normalizations
+        ]
+
+        normalizations = [
+            normalization
+            for normalization, mass in zip(normalizations, mass_angulars)
+            if mass is not None
+        ]
+        mass_angulars = list(filter(None, mass_angulars))
+
+        if (
+            (len(mass_angulars) < 2)
+            or (mass_angulars[0] > mass_angular)
+            or (mass_angulars[-1] < mass_angular)
+        ):
+            raise exc.ProfileException(
+                "The normalization could not be computed from the Einstein Radius via the average of the convergence. "
+                ""
+                "The input einstein_radius may be too small or large to feasibly be computed by integrating the "
+                "convergence. Alternative the normalization range or number of bins may need to be changed to "
+                "capture the true einstein_radius value."
+            )
+
+        def func(normalization, mass_angular_root, radius):
+
+            mass_angular = self.mass_angular_from_normalization_and_radius(
+                normalization=normalization, radius=radius
+            )
+
+            return mass_angular - mass_angular_root
+
+        return root_scalar(
+            func,
+            bracket=[normalizations[0], normalizations[-1]],
+            args=(mass_angular, radius),
+        ).root
+
+    def einstein_radius_from_normalization(self, normalization):
+
+        mass_profile = self.with_new_normalization(normalization=normalization)
+
+        try:
+            return mass_profile.average_convergence_of_1_radius
+        except ValueError:
+            return None
+
+    def normalization_from_einstein_radius(
+        self, einstein_radius, normalization_min=1e-9, normalization_max=1e9, bins=100
+    ):
+
+        normalizations = np.logspace(
+            np.log10(normalization_min), np.log10(normalization_max), bins
+        )
+
+        einstein_radii = [
+            self.einstein_radius_from_normalization(normalization=normalization)
+            for normalization in normalizations
+        ]
+
+        normalizations = [
+            normalization
+            for normalization, radii in zip(normalizations, einstein_radii)
+            if radii is not None
+        ]
+        einstein_radii = list(filter(None, einstein_radii))
+
+        if (
+            (len(einstein_radii) < 2)
+            or (einstein_radii[0] > einstein_radius)
+            or (einstein_radii[-1] < einstein_radius)
+        ):
+            raise exc.ProfileException(
+                "The normalization could not be computed from the Einstein Radius via the average of the convergence. "
+                ""
+                "The input einstein_radius may be too small or large to feasibly be computed by integrating the "
+                "convergence. Alternative the normalization range or number of bins may need to be changed to "
+                "capture the true einstein_radius value."
+            )
+
+        def func(normalization, einstein_radius_root):
+
+            einstein_radius = self.einstein_radius_from_normalization(
+                normalization=normalization
+            )
+
+            return einstein_radius - einstein_radius_root
+
+        return root_scalar(
+            func,
+            bracket=[normalizations[0], normalizations[-1]],
+            args=(einstein_radius,),
+        ).root
 
 
 class MassProfileMGE:
@@ -268,7 +389,7 @@ class MassProfileMGE:
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """

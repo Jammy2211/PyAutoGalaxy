@@ -100,7 +100,7 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -131,13 +131,13 @@ class InputDeflections(mp.MassProfile):
 
         Parameters
         ----------
-        deflections_y : aa.Array
+        deflections_y : aa.Array2D
             The input array of the y components of the deflection angles.
-        deflections_x : aa.Array
+        deflections_x : aa.Array2D
             The input array of the x components of the deflection angles.
-        image_plane_grid : aa.Grid
+        image_plane_grid : aa.Grid2D
             The image-plane grid from which the deflection angles are defined.
-        grid_interp : aa.Grid
+        grid_interp : aa.Grid2D
             The grid that interpolated quantities are computed on. If this is input in advance, the interpolation
             weights can be precomputed to speed up the calculation time.
         normalization_scale : float
@@ -182,7 +182,7 @@ class InputDeflections(mp.MassProfile):
 
         if self.preload_grid is not None and self.preload_deflections is not None:
 
-            if grid.sub_shape_1d == self.preload_grid.sub_shape_1d:
+            if grid.sub_shape_slim == self.preload_grid.sub_shape_slim:
                 if np.allclose(grid, self.preload_grid, 1e-8):
                     return self.normalization_scale * self.preload_deflections
 
@@ -191,7 +191,7 @@ class InputDeflections(mp.MassProfile):
             and self.preload_blurring_deflections is not None
         ):
 
-            if grid.sub_shape_1d == self.preload_blurring_grid.sub_shape_1d:
+            if grid.sub_shape_slim == self.preload_blurring_grid.sub_shape_slim:
                 if np.allclose(grid, self.preload_blurring_grid, 1e-8):
                     return self.normalization_scale * self.preload_blurring_deflections
 

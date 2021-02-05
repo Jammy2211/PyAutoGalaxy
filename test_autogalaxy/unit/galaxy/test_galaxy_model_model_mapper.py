@@ -1,8 +1,5 @@
-from autoconf import conf
 import autofit as af
 import autogalaxy as ag
-
-import pytest
 
 
 class TestCase:

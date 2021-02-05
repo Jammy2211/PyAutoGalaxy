@@ -103,13 +103,13 @@ class TestPointMass:
 
     def test__output_are_autoarrays(self):
 
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         point_mass = ag.mp.PointMass()
 
         deflections = point_mass.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestBrokenPowerLaw:
@@ -427,27 +427,27 @@ class TestBrokenPowerLaw:
 
     def test__output_are_autoarrays(self):
 
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         cored_power_law = ag.mp.EllipticalBrokenPowerLaw()
 
         convergence = cored_power_law.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         deflections = cored_power_law.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
         cored_power_law = ag.mp.SphericalBrokenPowerLaw()
 
         convergence = cored_power_law.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         deflections = cored_power_law.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestCoredPowerLaw:
@@ -722,35 +722,35 @@ class TestCoredPowerLaw:
 
     def test__output_are_autoarrays(self):
 
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         cored_power_law = ag.mp.EllipticalCoredPowerLaw()
 
         convergence = cored_power_law.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = cored_power_law.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = cored_power_law.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
         cored_power_law = ag.mp.SphericalCoredPowerLaw()
 
         convergence = cored_power_law.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = cored_power_law.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = cored_power_law.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestPowerLaw:
@@ -973,35 +973,35 @@ class TestPowerLaw:
 
     def test__output_are_autoarrays(self):
 
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         power_law = ag.mp.EllipticalPowerLaw()
 
         convergence = power_law.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = power_law.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = power_law.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
         power_law = ag.mp.SphericalPowerLaw()
 
         convergence = power_law.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = power_law.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = power_law.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestCoredIsothermal:
@@ -1251,35 +1251,35 @@ class TestCoredIsothermal:
 
     def test__output_are_autoarrays(self):
 
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         cored_isothermal = ag.mp.EllipticalCoredIsothermal()
 
         convergence = cored_isothermal.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = cored_isothermal.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = cored_isothermal.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
         cored_isothermal = ag.mp.SphericalCoredIsothermal()
 
         convergence = cored_isothermal.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = cored_isothermal.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = cored_isothermal.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
 
 class TestIsothermal:
@@ -1463,32 +1463,32 @@ class TestIsothermal:
 
     def test__output_are_autoarrays(self):
 
-        grid = ag.Grid.uniform(shape_2d=(2, 2), pixel_scales=1.0, sub_size=1)
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         isothermal = ag.mp.EllipticalIsothermal()
 
         convergence = isothermal.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = isothermal.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = isothermal.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)
 
         isothermal = ag.mp.SphericalIsothermal()
 
         convergence = isothermal.convergence_from_grid(grid=grid)
 
-        assert convergence.shape_2d == (2, 2)
+        assert convergence.shape_native == (2, 2)
 
         potential = isothermal.potential_from_grid(grid=grid)
 
-        assert potential.shape_2d == (2, 2)
+        assert potential.shape_native == (2, 2)
 
         deflections = isothermal.deflections_from_grid(grid=grid)
 
-        assert deflections.shape_2d == (2, 2)
+        assert deflections.shape_native == (2, 2)

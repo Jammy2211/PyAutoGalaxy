@@ -1,17 +1,18 @@
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 import numpy as np
-from autoarray.structures import arrays
 from autoarray.structures import grids
 from autogalaxy.profiles import mass_profiles as mp
 
 from pyquad import quad_grid
 from scipy.special import wofz
 import typing
+import copy
 
 from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
 
 
 class StellarProfile:
+
     pass
 
 
@@ -90,7 +91,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -118,7 +119,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         Note: sigma is divided by sqrt(q) here.
@@ -166,7 +167,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -195,10 +196,16 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
             ),
         )
 
+    def with_new_normalization(self, normalization):
+
+        mass_profile = copy.copy(self)
+        mass_profile.mass_to_light_ratio = normalization
+        return mass_profile
+
 
 # noinspection PyAbstractClass
 class AbstractEllipticalSersic(
-    mp.EllipticalMassProfile, StellarProfile, MassProfileMGE
+    mp.EllipticalMassProfile, MassProfileMGE, StellarProfile
 ):
     def __init__(
         self,
@@ -250,7 +257,7 @@ class AbstractEllipticalSersic(
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -267,7 +274,7 @@ class AbstractEllipticalSersic(
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -348,6 +355,12 @@ class AbstractEllipticalSersic(
             func=sersic_2d, radii_min=radii_min, radii_max=radii_max
         )
 
+    def with_new_normalization(self, normalization):
+
+        mass_profile = copy.copy(self)
+        mass_profile.mass_to_light_ratio = normalization
+        return mass_profile
+
 
 class EllipticalSersic(AbstractEllipticalSersic, MassProfileMGE):
     @grids.grid_like_to_structure
@@ -359,7 +372,7 @@ class EllipticalSersic(AbstractEllipticalSersic, MassProfileMGE):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -635,7 +648,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -650,7 +663,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1022,7 +1035,7 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1092,7 +1105,7 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
         return self.convergence_func(self.grid_to_elliptical_radii(grid))
@@ -1138,6 +1151,12 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
                 ),
             ),
         )
+
+    def with_new_normalization(self, normalization):
+
+        mass_profile = copy.copy(self)
+        mass_profile.mass_to_light_ratio = normalization
+        return mass_profile
 
 
 class SphericalChameleon(EllipticalChameleon):

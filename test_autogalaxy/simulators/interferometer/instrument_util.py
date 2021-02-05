@@ -37,7 +37,9 @@ def grid_from_instrument(instrument):
     pixel_scales = pixel_scale_from_instrument(instrument=instrument)
 
     if instrument in "sma":
-        return ag.GridIterate.uniform(shape_2d=(151, 151), pixel_scales=pixel_scales)
+        return ag.Grid2DIterate.uniform(
+            shape_native=(151, 151), pixel_scales=pixel_scales
+        )
     else:
         raise ValueError("An invalid data_name resolution was entered - ", instrument)
 
@@ -84,8 +86,12 @@ def simulator_from_instrument(instrument):
     if instrument in "sma":
         return ag.SimulatorInterferometer(
             uv_wavelengths=uv_wavelengths,
-            exposure_time_map=ag.Array.full(fill_value=100.0, shape_2d=grid.shape_2d),
-            background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
+            exposure_time_map=ag.Array2D.full(
+                fill_value=100.0, shape_native=grid.shape_native
+            ),
+            background_sky_map=ag.Array2D.full(
+                fill_value=1.0, shape_native=grid.shape_native
+            ),
             noise_sigma=0.01,
         )
     else:

@@ -9,8 +9,8 @@ import pytest
 
 directory = path.dirname(path.realpath(__file__))
 
-grid_10 = ag.Grid.manual_2d(grid=[[[1.0, 0.0]]], pixel_scales=1.0, sub_size=1)
-grid_zero = ag.Grid.manual_2d(
+grid_10 = ag.Grid2D.manual_native(grid=[[[1.0, 0.0]]], pixel_scales=1.0, sub_size=1)
+grid_zero = ag.Grid2D.manual_native(
     grid=[[[0.0000000001, 0.0]]], pixel_scales=1.0, sub_size=1
 )
 

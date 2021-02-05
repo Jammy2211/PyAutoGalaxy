@@ -32,7 +32,7 @@ def pixel_scale_from_instrument(instrument):
 
 def grid_from_instrument(instrument):
     """
-    Returns the `Grid` from an instrument type based on real observations.
+    Returns the `Grid2D` from an instrument type based on real observations.
 
     These options are representative of VRO, Euclid, HST, over-sampled HST and Adaptive Optics image.
 
@@ -42,15 +42,15 @@ def grid_from_instrument(instrument):
         A string giving the resolution of the desired instrument (VRO | Euclid | HST | HST_Up | AO).
     """
     if instrument in "vro":
-        return ag.GridIterate.uniform(shape_2d=(80, 80), pixel_scales=0.2)
+        return ag.Grid2DIterate.uniform(shape_native=(80, 80), pixel_scales=0.2)
     elif instrument in "euclid":
-        return ag.GridIterate.uniform(shape_2d=(120, 120), pixel_scales=0.1)
+        return ag.Grid2DIterate.uniform(shape_native=(120, 120), pixel_scales=0.1)
     elif instrument in "hst":
-        return ag.GridIterate.uniform(shape_2d=(200, 200), pixel_scales=0.05)
+        return ag.Grid2DIterate.uniform(shape_native=(200, 200), pixel_scales=0.05)
     elif instrument in "hst_up":
-        return ag.GridIterate.uniform(shape_2d=(300, 300), pixel_scales=0.03)
+        return ag.Grid2DIterate.uniform(shape_native=(300, 300), pixel_scales=0.03)
     elif instrument in "ao":
-        return ag.GridIterate.uniform(shape_2d=(800, 800), pixel_scales=0.01)
+        return ag.Grid2DIterate.uniform(shape_native=(800, 800), pixel_scales=0.01)
     else:
         raise ValueError("An invalid instrument was entered - ", instrument)
 
@@ -67,25 +67,25 @@ def psf_from_instrument(instrument):
         A string giving the resolution of the desired instrument (VRO | Euclid | HST | HST_Up | AO).
     """
     if instrument in "vro":
-        return ag.Kernel.from_gaussian(
-            shape_2d=(31, 31), sigma=0.5, pixel_scales=0.2, renormalize=True
+        return ag.Kernel2D.from_gaussian(
+            shape_native=(31, 31), sigma=0.5, pixel_scales=0.2, renormalize=True
         )
 
     elif instrument in "euclid":
-        return ag.Kernel.from_gaussian(
-            shape_2d=(31, 31), sigma=0.1, pixel_scales=0.1, renormalize=True
+        return ag.Kernel2D.from_gaussian(
+            shape_native=(31, 31), sigma=0.1, pixel_scales=0.1, renormalize=True
         )
     elif instrument in "hst":
-        return ag.Kernel.from_gaussian(
-            shape_2d=(31, 31), sigma=0.05, pixel_scales=0.05, renormalize=True
+        return ag.Kernel2D.from_gaussian(
+            shape_native=(31, 31), sigma=0.05, pixel_scales=0.05, renormalize=True
         )
     elif instrument in "hst_up":
-        return ag.Kernel.from_gaussian(
-            shape_2d=(31, 31), sigma=0.05, pixel_scales=0.03, renormalize=True
+        return ag.Kernel2D.from_gaussian(
+            shape_native=(31, 31), sigma=0.05, pixel_scales=0.03, renormalize=True
         )
     elif instrument in "ao":
-        return ag.Kernel.from_gaussian(
-            shape_2d=(31, 31), sigma=0.025, pixel_scales=0.01, renormalize=True
+        return ag.Kernel2D.from_gaussian(
+            shape_native=(31, 31), sigma=0.025, pixel_scales=0.01, renormalize=True
         )
 
     else:
@@ -109,37 +109,57 @@ def simulator_from_instrument(instrument):
 
     if instrument in "vro":
         return ag.SimulatorImaging(
-            exposure_time_map=ag.Array.full(fill_value=100.0, shape_2d=grid.shape_2d),
+            exposure_time_map=ag.Array2D.full(
+                fill_value=100.0, shape_native=grid.shape_native
+            ),
             psf=psf,
-            background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
+            background_sky_map=ag.Array2D.full(
+                fill_value=1.0, shape_native=grid.shape_native
+            ),
             add_poisson_noise=True,
         )
     elif instrument in "euclid":
         return ag.SimulatorImaging(
-            exposure_time_map=ag.Array.full(fill_value=2260.0, shape_2d=grid.shape_2d),
+            exposure_time_map=ag.Array2D.full(
+                fill_value=2260.0, shape_native=grid.shape_native
+            ),
             psf=psf,
-            background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
+            background_sky_map=ag.Array2D.full(
+                fill_value=1.0, shape_native=grid.shape_native
+            ),
             add_poisson_noise=True,
         )
     elif instrument in "hst":
         return ag.SimulatorImaging(
-            exposure_time_map=ag.Array.full(fill_value=2000.0, shape_2d=grid.shape_2d),
+            exposure_time_map=ag.Array2D.full(
+                fill_value=2000.0, shape_native=grid.shape_native
+            ),
             psf=psf,
-            background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
+            background_sky_map=ag.Array2D.full(
+                fill_value=1.0, shape_native=grid.shape_native
+            ),
             add_poisson_noise=True,
         )
     elif instrument in "hst_up":
         return ag.SimulatorImaging(
-            exposure_time_map=ag.Array.full(fill_value=2000.0, shape_2d=grid.shape_2d),
+            exposure_time_map=ag.Array2D.full(
+                fill_value=2000.0, shape_native=grid.shape_native
+            ),
             psf=psf,
-            background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
+            background_sky_map=ag.Array2D.full(
+                fill_value=1.0, shape_native=grid.shape_native
+            ),
             add_poisson_noise=True,
         )
     elif instrument in "ao":
         return ag.SimulatorImaging(
-            exposure_time_map=ag.Array.full(fill_value=1000.0, shape_2d=grid.shape_2d),
+            exposure_time_map=ag.Array2D.full(
+                fill_value=1000.0, shape_native=grid.shape_native
+            ),
             psf=psf,
-            background_sky_map=ag.Array.full(fill_value=1.0, shape_2d=grid.shape_2d),
+            background_sky_map=ag.Array2D.full(
+                fill_value=1.0, shape_native=grid.shape_native
+            ),
             add_poisson_noise=True,
         )
     else:

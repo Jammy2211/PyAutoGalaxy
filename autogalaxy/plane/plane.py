@@ -115,7 +115,7 @@ class AbstractPlane(lensing.LensingObject):
     @property
     def light_profile_centres(self):
         """
-        Returns the light profile centres of the plane as a `GridIrregularGrouped` object, which structures the centres
+        Returns the light profile centres of the plane as a `Grid2DIrregularGrouped` object, which structures the centres
             in lists according to which galaxy they come from.
 
             Fo example, if a plane has two galaxies, the first with one light profile and second with two light profiles
@@ -125,7 +125,7 @@ class AbstractPlane(lensing.LensingObject):
 
             This is used for visualization, for example plotting the centres of all light profiles colored by their galaxy.
         """
-        return grids.GridIrregularGrouped(
+        return grids.Grid2DIrregularGrouped(
             [
                 list(galaxy.light_profile_centres)
                 for galaxy in self.galaxies
@@ -150,7 +150,7 @@ class AbstractPlane(lensing.LensingObject):
     @property
     def mass_profile_centres(self):
         """
-        Returns the mass profile centres of the plane as a `GridIrregularGrouped` object, which structures the centres
+        Returns the mass profile centres of the plane as a `Grid2DIrregularGrouped` object, which structures the centres
             in lists according to which galaxy they come from.
 
             Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
@@ -162,7 +162,7 @@ class AbstractPlane(lensing.LensingObject):
 
             The centres of mass-sheets are filtered out, as their centres are not relevant to lensing calculations.
         """
-        return grids.GridIrregularGrouped(
+        return grids.Grid2DIrregularGrouped(
             [
                 list(galaxy.mass_profile_centres)
                 for galaxy in self.galaxies
@@ -173,7 +173,7 @@ class AbstractPlane(lensing.LensingObject):
     @property
     def mass_profile_axis_ratios(self):
         """
-        Returns the mass profile axis-ratios of the plane as a `GridIrregularGrouped` object, which structures the axis-ratios
+        Returns the mass profile axis-ratios of the plane as a `Grid2DIrregularGrouped` object, which structures the axis-ratios
             in lists according to which galaxy they come from.
 
             Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
@@ -195,7 +195,7 @@ class AbstractPlane(lensing.LensingObject):
     @property
     def mass_profile_phis(self):
         """
-        Returns the mass profile phis of the plane as a `GridIrregularGrouped` object, which structures the phis
+        Returns the mass profile phis of the plane as a `Grid2DIrregularGrouped` object, which structures the phis
             in lists according to which galaxy they come from.
 
             Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
@@ -299,7 +299,9 @@ class AbstractPlaneLensing(AbstractPlane):
 
     def padded_image_from_grid_and_psf_shape(self, grid, psf_shape_2d):
 
-        padded_grid = grid.padded_grid_from_kernel_shape(kernel_shape_2d=psf_shape_2d)
+        padded_grid = grid.padded_grid_from_kernel_shape(
+            kernel_shape_native=psf_shape_2d
+        )
 
         return self.image_from_grid(grid=padded_grid)
 
@@ -317,7 +319,7 @@ class AbstractPlaneLensing(AbstractPlane):
 
         Parameters
         -----------
-        grid : Grid
+        grid : Grid2D
             The grid (or sub) of (y,x) arc-second coordinates at the centre of every unmasked pixel which the \
             potential is calculated on.
         galaxies : [g.Galaxy]
@@ -342,7 +344,7 @@ class AbstractPlaneLensing(AbstractPlane):
 
         Parameters
         -----------
-        grid : Grid
+        grid : Grid2D
             The grid (or sub) of (y,x) arc-second coordinates at the centre of every unmasked pixel which the \
             potential is calculated on.
         galaxies : [g.Galaxy]
@@ -377,7 +379,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         blurring_image = self.image_from_grid(grid=blurring_grid)
 
         return psf.convolved_array_from_array_2d_and_mask(
-            array_2d=image.in_2d_binned + blurring_image.in_2d_binned, mask=grid.mask
+            array_2d=image.native_binned + blurring_image.native_binned, mask=grid.mask
         )
 
     def blurred_images_of_galaxies_from_grid_and_psf(self, grid, psf, blurring_grid):
@@ -410,7 +412,9 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
     def unmasked_blurred_image_from_grid_and_psf(self, grid, psf):
 
-        padded_grid = grid.padded_grid_from_kernel_shape(kernel_shape_2d=psf.shape_2d)
+        padded_grid = grid.padded_grid_from_kernel_shape(
+            kernel_shape_native=psf.shape_native
+        )
 
         padded_image = self.image_from_grid(grid=padded_grid)
 
@@ -420,7 +424,9 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
     def unmasked_blurred_image_of_galaxies_from_grid_and_psf(self, grid, psf):
 
-        padded_grid = grid.padded_grid_from_kernel_shape(kernel_shape_2d=psf.shape_2d)
+        padded_grid = grid.padded_grid_from_kernel_shape(
+            kernel_shape_native=psf.shape_native
+        )
 
         unmasked_blurred_images_of_galaxies = []
 
@@ -443,7 +449,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             return transformer.visibilities_from_image(image=image)
         else:
             return vis.Visibilities.zeros(
-                shape_1d=(transformer.uv_wavelengths.shape[0],)
+                shape_slim=(transformer.uv_wavelengths.shape[0],)
             )
 
     def profile_visibilities_of_galaxies_from_grid_and_transformer(
@@ -557,7 +563,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
     def plane_image_from_grid(self, grid):
         return plane_util.plane_image_of_galaxies_from(
             shape=grid.mask.shape,
-            grid=grid.geometry.unmasked_grid_sub_1,
+            grid=grid.mask.unmasked_grid_sub_1,
             galaxies=self.galaxies,
         )
 
@@ -591,7 +597,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
             else:
 
-                hyper_noise_map = arrays.Array.manual_mask(
+                hyper_noise_map = arrays.Array2D.manual_mask(
                     array=np.zeros(noise_map.mask.mask_sub_1.pixels_in_mask),
                     mask=noise_map.mask.mask_sub_1,
                 )
@@ -705,8 +711,8 @@ class PlaneImage:
 
     @property
     def xticks(self):
-        return self.array.mask.geometry.xticks
+        return self.array.mask.xticks
 
     @property
     def yticks(self):
-        return self.array.mask.geometry.yticks
+        return self.array.mask.yticks

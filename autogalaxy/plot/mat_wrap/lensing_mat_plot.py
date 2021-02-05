@@ -44,7 +44,7 @@ class MatPlot2D(mat_plot.MatPlot2D):
         caustics_plot: lensing_wrap.CausticsPlot = lensing_wrap.CausticsPlot(),
     ):
         """
-        Visualizes data structures (e.g an `Array`, `Grid`, `VectorField`, etc.) using Matplotlib.
+        Visualizes data structures (e.g an `Array2D`, `Grid2D`, `VectorField`, etc.) using Matplotlib.
         
         The `Plotter` is passed objects from the `mat_wrap` package which wrap matplotlib plot functions and 
         customize the appearance of the plots of the data structure. If the values of these matplotlib wrapper 
@@ -53,8 +53,8 @@ class MatPlot2D(mat_plot.MatPlot2D):
         
         The following data structures can be plotted using the following matplotlib functions:
         
-        - `Array`:, using `plt.imshow`.
-        - `Grid`: using `plt.scatter`.
+        - `Array2D`:, using `plt.imshow`.
+        - `Grid2D`: using `plt.scatter`.
         - `Line`: using `plt.plot`, `plt.semilogy`, `plt.loglog` or `plt.scatter`.
         - `VectorField`: using `plt.quiver`.
         - `RectangularMapper`: using `plt.imshow`.
@@ -96,9 +96,9 @@ class MatPlot2D(mat_plot.MatPlot2D):
         output : wrap_base.Output
           Sets if the figure is displayed on the user's screen or output to `.png` using `plt.show` and `plt.savefig`
         array_overlay: wrap_2d.ArrayOverlay
-          Overlays an input `Array` over the figure using `plt.imshow`.
+          Overlays an input `Array2D` over the figure using `plt.imshow`.
         grid_scatter : wrap_2d.GridScatter
-          Scatters a `Grid` of (y,x) coordinates over the figure using `plt.scatter`.
+          Scatters a `Grid2D` of (y,x) coordinates over the figure using `plt.scatter`.
         grid_plot: wrap_2d.LinePlot
           Plots lines of data (e.g. a y versus x plot via `plt.plot`, vertical lines via `plt.avxline`, etc.)
         vector_field_quiver: wrap_2d.VectorFieldQuiver
@@ -114,9 +114,9 @@ class MatPlot2D(mat_plot.MatPlot2D):
         border_scatter : wrap_2d.BorderScatter
           Scatters the border of an input `Mask2d` over the plotted data structure's figure.
         positions_scatter : wrap_2d.PositionsScatter
-          Scatters specific (y,x) coordinates input as a `GridIrregular` object over the figure.
+          Scatters specific (y,x) coordinates input as a `Grid2DIrregular` object over the figure.
         index_scatter : wrap_2d.IndexScatter
-          Scatters specific coordinates of an input `Grid` based on input values of the `Grid`'s 1D or 2D indexes.
+          Scatters specific coordinates of an input `Grid2D` based on input values of the `Grid2D`'s 1D or 2D indexes.
         pixelization_grid_scatter : wrap_2d.PixelizationGridScatter
           Scatters the `PixelizationGrid` of a `Pixelization` object.
         light_profile_centres_scatter : lensing_wrap_2d.LightProfileCentresScatter

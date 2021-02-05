@@ -21,6 +21,8 @@ from scipy.integrate import quad
 from scipy.optimize import fsolve
 from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
 
+import copy
+
 
 def jit_integrand(integrand_function):
 
@@ -147,7 +149,7 @@ class AbstractEllipticalGeneralizedNFW(
 
         Parameters
         -----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the potential / deflection_stacks are computed on.
         tabulate_bins : int
             The number of bins to tabulate the inner integral of this profile.
@@ -169,7 +171,7 @@ class AbstractEllipticalGeneralizedNFW(
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -186,7 +188,7 @@ class AbstractEllipticalGeneralizedNFW(
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -444,6 +446,12 @@ class AbstractEllipticalGeneralizedNFW(
         amps *= np.sqrt(2.0 * np.pi) * sigmas
         return amps, sigmas
 
+    def with_new_normalization(self, normalization):
+
+        mass_profile = copy.copy(self)
+        mass_profile.kappa_s = normalization
+        return mass_profile
+
 
 class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
     @grids.grid_like_to_structure
@@ -455,7 +463,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         tabulate_bins : int
             The number of bins to tabulate the inner integral of this profile.
@@ -542,7 +550,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         tabulate_bins : int
             The number of bins to tabulate the inner integral of this profile.
@@ -735,7 +743,7 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -852,7 +860,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -1095,7 +1103,7 @@ class EllipticalNFW(EllipticalGeneralizedNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1119,7 +1127,7 @@ class EllipticalNFW(EllipticalGeneralizedNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1240,7 +1248,7 @@ class SphericalNFW(EllipticalNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1266,7 +1274,7 @@ class SphericalNFW(EllipticalNFW):
 
         Parameters
         ----------
-        grid : aa.Grid
+        grid : aa.Grid2D
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -1290,6 +1298,8 @@ class SphericalNFWMCRDuffy(SphericalNFW):
     ):
 
         self.mass_at_200 = mass_at_200
+        self.redshift_object = redshift_object
+        self.redshift_source = redshift_source
 
         kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_duffy(
             mass_at_200=mass_at_200,
@@ -1299,6 +1309,38 @@ class SphericalNFWMCRDuffy(SphericalNFW):
 
         super(SphericalNFWMCRDuffy, self).__init__(
             centre=centre, kappa_s=kappa_s, scale_radius=scale_radius
+        )
+
+    def with_new_normalization(self, normalization):
+
+        raise NotImplementedError()
+
+
+class EllipticalNFWMCRLudlow(EllipticalNFW):
+    def __init__(
+        self,
+        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        mass_at_200: float = 1e9,
+        redshift_object: float = 0.5,
+        redshift_source: float = 1.0,
+    ):
+
+        self.mass_at_200 = mass_at_200
+        self.redshift_object = redshift_object
+        self.redshift_source = redshift_source
+
+        kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_ludlow(
+            mass_at_200=mass_at_200,
+            redshift_object=redshift_object,
+            redshift_source=redshift_source,
+        )
+
+        super().__init__(
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            kappa_s=kappa_s,
+            scale_radius=scale_radius,
         )
 
 
@@ -1312,6 +1354,8 @@ class SphericalNFWMCRLudlow(SphericalNFW):
     ):
 
         self.mass_at_200 = mass_at_200
+        self.redshift_object = redshift_object
+        self.redshift_source = redshift_source
 
         kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_ludlow(
             mass_at_200=mass_at_200,
@@ -1322,6 +1366,10 @@ class SphericalNFWMCRLudlow(SphericalNFW):
         super(SphericalNFWMCRLudlow, self).__init__(
             centre=centre, kappa_s=kappa_s, scale_radius=scale_radius
         )
+
+    def with_new_normalization(self, normalization):
+
+        raise NotImplementedError()
 
 
 def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_source):

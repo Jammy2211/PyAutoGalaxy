@@ -5,8 +5,8 @@ def test__tag__mixture_of_values():
 
     settings = ag.SettingsPhaseImaging(
         settings_masked_imaging=ag.SettingsMaskedImaging(
-            grid_class=ag.Grid,
-            grid_inversion_class=ag.Grid,
+            grid_class=ag.Grid2D,
+            grid_inversion_class=ag.Grid2D,
             sub_size=2,
             signal_to_noise_limit=2,
             bin_up_factor=None,
@@ -22,8 +22,8 @@ def test__tag__mixture_of_values():
 
     settings = ag.SettingsPhaseImaging(
         settings_masked_imaging=ag.SettingsMaskedImaging(
-            grid_class=ag.Grid,
-            grid_inversion_class=ag.GridIterate,
+            grid_class=ag.Grid2D,
+            grid_inversion_class=ag.Grid2DIterate,
             sub_size=1,
             fractional_accuracy=0.1,
             signal_to_noise_limit=None,
@@ -43,8 +43,8 @@ def test__tag__mixture_of_values():
 
     settings = ag.SettingsPhaseInterferometer(
         settings_masked_interferometer=ag.SettingsMaskedInterferometer(
-            grid_class=ag.GridIterate,
-            grid_inversion_class=ag.Grid,
+            grid_class=ag.Grid2DIterate,
+            grid_inversion_class=ag.Grid2D,
             fractional_accuracy=0.1,
             sub_size=3,
             transformer_class=ag.TransformerDFT,
@@ -64,8 +64,8 @@ def test__tag__mixture_of_values():
 
     settings = ag.SettingsPhaseInterferometer(
         settings_masked_interferometer=ag.SettingsMaskedInterferometer(
-            grid_class=ag.GridIterate,
-            grid_inversion_class=ag.Grid,
+            grid_class=ag.Grid2DIterate,
+            grid_inversion_class=ag.Grid2D,
             fractional_accuracy=0.1,
             sub_size=3,
             transformer_class=ag.TransformerNUFFT,

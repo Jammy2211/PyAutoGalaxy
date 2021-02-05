@@ -144,7 +144,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
     @property
     def light_profile_centres(self):
         """
-        Returns the light profile centres of the galaxy as a `GridIrregularGrouped` object, which structures the centres
+        Returns the light profile centres of the galaxy as a `Grid2DIrregularGrouped` object, which structures the centres
             in lists according to which light profile they come from.
 
             Fo example, if a galaxy has two light profiles, the first with one centre and second with two centres this
@@ -168,12 +168,12 @@ class Galaxy(ModelObject, lensing.LensingObject):
         for key, centre in zip(self.light_profile_keys, centres):
             centres_dict[key] = centre
 
-        return grids.GridIrregularGrouped(grid=centres_dict)
+        return grids.Grid2DIrregularGrouped(grid=centres_dict)
 
     @property
     def mass_profile_centres(self):
         """
-        Returns the mass profile centres of the galaxy as a `GridIrregularGrouped` object, which structures the centres
+        Returns the mass profile centres of the galaxy as a `Grid2DIrregularGrouped` object, which structures the centres
             in lists according to which mass profile they come from.
 
             Fo example, if a galaxy has two mass profiles, the first with one centre and second with two centres this
@@ -203,7 +203,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             if centre is not None:
                 centres_dict[key] = centre
 
-        return grids.GridIrregularGrouped(grid=centres_dict)
+        return grids.Grid2DIrregularGrouped(grid=centres_dict)
 
     @property
     def mass_profile_axis_ratios(self):
@@ -378,7 +378,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         blurring_image = self.image_from_grid(grid=blurring_grid)
 
         return psf.convolved_array_from_array_2d_and_mask(
-            array_2d=image.in_2d_binned + blurring_image.in_2d_binned, mask=grid.mask
+            array_2d=image.native_binned + blurring_image.native_binned, mask=grid.mask
         )
 
     def blurred_image_from_grid_and_convolver(self, grid, convolver, blurring_grid):
@@ -388,14 +388,14 @@ class Galaxy(ModelObject, lensing.LensingObject):
         blurring_image = self.image_from_grid(grid=blurring_grid)
 
         return convolver.convolved_image_from_image_and_blurring_image(
-            image=image.in_1d_binned, blurring_image=blurring_image.in_1d_binned
+            image=image.slim_binned, blurring_image=blurring_image.slim_binned
         )
 
     def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
 
         image = self.image_from_grid(grid=grid)
 
-        return transformer.visibilities_from_image(image=image.in_1d_binned)
+        return transformer.visibilities_from_image(image=image.slim_binned)
 
     def luminosity_within_circle(self, radius: float):
         """
@@ -585,7 +585,7 @@ class HyperGalaxy:
 
     def contribution_map_from_hyper_images(self, hyper_model_image, hyper_galaxy_image):
         """
-    Returns the contribution map of a galaxy, which represents the fraction of
+        Returns the contribution map of a galaxy, which represents the fraction of
         flux in each pixel that the galaxy is attributed to contain, hyper to the
         *contribution_factor* hyper_galaxies-parameter.
 
@@ -614,6 +614,7 @@ class HyperGalaxy:
         contribution_map = self.contribution_map_from_hyper_images(
             hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
         )
+
         return self.hyper_noise_map_from_contribution_map(
             noise_map=noise_map, contribution_map=contribution_map
         )

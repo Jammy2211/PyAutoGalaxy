@@ -141,8 +141,8 @@
             }
         },
         "effective_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
+            "type": "LogUniform",
+            "lower_limit": 1e-4,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Absolute",
@@ -251,8 +251,8 @@
             }
         },
         "effective_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
+            "type": "LogUniform",
+            "lower_limit": 1e-4,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Absolute",
@@ -335,8 +335,8 @@
             }
         },
         "effective_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
+            "type": "LogUniform",
+            "lower_limit": 1e-4,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Absolute",
@@ -432,8 +432,8 @@
             }
         },
         "effective_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
+            "type": "LogUniform",
+            "lower_limit": 1e-4,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Absolute",
@@ -503,8 +503,8 @@
             }
         },
         "effective_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
+            "type": "LogUniform",
+            "lower_limit": 1e-4,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Absolute",
@@ -600,8 +600,8 @@
             }
         },
         "effective_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
+            "type": "LogUniform",
+            "lower_limit": 1e-4,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Absolute",
@@ -671,8 +671,8 @@
             }
         },
         "effective_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
+            "type": "LogUniform",
+            "lower_limit": 1e-4,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Absolute",
@@ -794,8 +794,8 @@
             }
         },
         "effective_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
+            "type": "LogUniform",
+            "lower_limit": 1e-4,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Absolute",

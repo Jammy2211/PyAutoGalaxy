@@ -9,7 +9,7 @@ class MassProfilePlotter(lensing_obj_plotter.LensingObjPlotter):
     def __init__(
         self,
         mass_profile: mp.MassProfile,
-        grid: grids.Grid,
+        grid: grids.Grid2D,
         mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
         visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
         include_1d: lensing_include.Include1D = lensing_include.Include1D(),

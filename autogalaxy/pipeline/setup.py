@@ -373,6 +373,7 @@ class SetupLightParametric(AbstractSetupLight):
         disk_prior_model: af.PriorModel(lp.LightProfile) = lp.EllipticalExponential,
         envelope_prior_model: af.PriorModel(lp.LightProfile) = None,
         light_centre: (float, float) = None,
+        light_centre_gaussian_prior_values: (float, float) = None,
         align_bulge_disk_centre: bool = True,
         align_bulge_disk_elliptical_comps: bool = False,
         align_bulge_envelope_centre: bool = False,
@@ -412,6 +413,40 @@ class SetupLightParametric(AbstractSetupLight):
         self.bulge_prior_model = self._cls_to_prior_model(cls=bulge_prior_model)
         self.disk_prior_model = self._cls_to_prior_model(cls=disk_prior_model)
         self.envelope_prior_model = self._cls_to_prior_model(cls=envelope_prior_model)
+
+        self.light_centre_gaussian_prior_values = light_centre_gaussian_prior_values
+
+        if self.light_centre_gaussian_prior_values is not None:
+
+            mean = light_centre_gaussian_prior_values[0]
+            sigma = light_centre_gaussian_prior_values[1]
+
+            if self.bulge_prior_model is not None:
+
+                self.bulge_prior_model.centre_0 = af.GaussianPrior(
+                    mean=mean, sigma=sigma
+                )
+                self.bulge_prior_model.centre_1 = af.GaussianPrior(
+                    mean=mean, sigma=sigma
+                )
+
+            if self.disk_prior_model is not None:
+
+                self.disk_prior_model.centre_0 = af.GaussianPrior(
+                    mean=mean, sigma=sigma
+                )
+                self.disk_prior_model.centre_1 = af.GaussianPrior(
+                    mean=mean, sigma=sigma
+                )
+
+            if self.envelope_prior_model is not None:
+
+                self.envelope_prior_model.centre_0 = af.GaussianPrior(
+                    mean=mean, sigma=sigma
+                )
+                self.envelope_prior_model.centre_1 = af.GaussianPrior(
+                    mean=mean, sigma=sigma
+                )
 
         self.light_centre = light_centre
         self.align_bulge_disk_centre = align_bulge_disk_centre
@@ -1079,7 +1114,7 @@ class SetupMassLightDark(AbstractSetupMass):
             lmp.LightMassProfile
         ) = lmp.EllipticalExponential,
         envelope_prior_model: af.PriorModel(lmp.LightMassProfile) = None,
-        dark_prior_model: af.PriorModel(mp.MassProfile) = mp.SphericalNFWMCRLudlow,
+        dark_prior_model: af.PriorModel(mp.MassProfile) = mp.EllipticalNFWMCRLudlow,
         mass_centre: (float, float) = None,
         constant_mass_to_light_ratio: bool = False,
         align_bulge_dark_centre: bool = False,
@@ -1311,9 +1346,7 @@ class SetupMassLightDark(AbstractSetupMass):
             return ""
         return f"__{conf.instance['notation']['setup_tags']['mass']['align_bulge_dark_centre']}"
 
-    def align_bulge_and_dark_centre(
-        self, results: af.ResultsCollection, bulge_prior_model, dark_prior_model
-    ):
+    def align_bulge_and_dark_centre(self, bulge_prior_model, dark_prior_model):
         """
         Align the centre of input bulge `PriorModel` with that of the `PriorModel` representing the dark `MassProfile`,
         depending on the `align_bulge_darl_centre` attribute of the `SetupMassLightDark` instance.
@@ -1329,7 +1362,7 @@ class SetupMassLightDark(AbstractSetupMass):
             dark_prior_model.centre = bulge_prior_model.centre
 
     def light_and_mass_prior_models_with_updated_priors(
-        self, results: af.ResultsCollection, as_instance=False
+        self, result: af.Result, einstein_mass_range=None, as_instance=False
     ):
         """
         Returns an updated version of the `bulge_prior_model`, `disk_prior_model`_ and `envelope_prior_model`,  whose
@@ -1340,7 +1373,7 @@ class SetupMassLightDark(AbstractSetupMass):
 
         Parameters
         ----------
-        results : af.ResultsCollection
+        result : af.ResultsCollection
             The results of the previous source pipeline.
 
         Returns
@@ -1355,9 +1388,17 @@ class SetupMassLightDark(AbstractSetupMass):
             bulge = copy.deepcopy(self.bulge_prior_model)
 
             if as_instance:
-                bulge.take_attributes(source=results.last.instance.galaxies.lens.bulge)
+                bulge.take_attributes(source=result.instance.galaxies.lens.bulge)
             else:
-                bulge.take_attributes(source=results.last.model.galaxies.lens.bulge)
+                bulge.take_attributes(source=result.model.galaxies.lens.bulge)
+
+            if einstein_mass_range is not None:
+
+                bulge = self.update_stellar_mass_priors_from_result(
+                    prior_model=bulge,
+                    result=result,
+                    einstein_mass_range=einstein_mass_range,
+                )
 
         if self.disk_prior_model is None:
             disk = None
@@ -1365,9 +1406,16 @@ class SetupMassLightDark(AbstractSetupMass):
             disk = copy.deepcopy(self.disk_prior_model)
 
             if as_instance:
-                disk.take_attributes(source=results.last.instance.galaxies.lens.disk)
+                disk.take_attributes(source=result.instance.galaxies.lens.disk)
             else:
-                disk.take_attributes(source=results.last.model.galaxies.lens.disk)
+                disk.take_attributes(source=result.model.galaxies.lens.disk)
+
+            if einstein_mass_range is not None:
+                disk = self.update_stellar_mass_priors_from_result(
+                    prior_model=disk,
+                    result=result,
+                    einstein_mass_range=einstein_mass_range,
+                )
 
         if self.envelope_prior_model is None:
             envelope = None
@@ -1375,12 +1423,15 @@ class SetupMassLightDark(AbstractSetupMass):
             envelope = copy.deepcopy(self.envelope_prior_model)
 
             if as_instance:
-                envelope.take_attributes(
-                    source=results.last.instance.galaxies.lens.envelope
-                )
+                envelope.take_attributes(source=result.instance.galaxies.lens.envelope)
             else:
-                envelope.take_attributes(
-                    source=results.last.model.galaxies.lens.envelope
+                envelope.take_attributes(source=result.model.galaxies.lens.envelope)
+
+            if einstein_mass_range is not None:
+                envelope = self.update_stellar_mass_priors_from_result(
+                    prior_model=envelope,
+                    result=result,
+                    einstein_mass_range=einstein_mass_range,
                 )
 
         ### TODO : Assertiosn must be after take attributwes, hence this.
@@ -1392,6 +1443,41 @@ class SetupMassLightDark(AbstractSetupMass):
         )
 
         return bulge, disk, envelope
+
+    def update_stellar_mass_priors_from_result(
+        self, prior_model, result: af.Result, einstein_mass_range, bins=100
+    ):
+
+        if prior_model is None:
+            return None
+
+        grid = result.max_log_likelihood_fit.grid
+
+        einstein_radius = result.max_log_likelihood_tracer.einstein_radius_from_grid(
+            grid=grid
+        )
+
+        einstein_mass = result.max_log_likelihood_tracer.einstein_mass_angular_from_grid(
+            grid=grid
+        )
+
+        einstein_mass_lower = einstein_mass_range[0] * einstein_mass
+        einstein_mass_upper = einstein_mass_range[1] * einstein_mass
+
+        instance = prior_model.instance_from_prior_medians()
+
+        mass_to_light_ratio_lower = instance.normalization_from_mass_angular_and_radius(
+            mass_angular=einstein_mass_lower, radius=einstein_radius, bins=bins
+        )
+        mass_to_light_ratio_upper = instance.normalization_from_mass_angular_and_radius(
+            mass_angular=einstein_mass_upper, radius=einstein_radius, bins=bins
+        )
+
+        prior_model.mass_to_light_ratio = af.LogUniformPrior(
+            lower_limit=mass_to_light_ratio_lower, upper_limit=mass_to_light_ratio_upper
+        )
+
+        return prior_model
 
 
 class SetupSMBH(AbstractSetup):
