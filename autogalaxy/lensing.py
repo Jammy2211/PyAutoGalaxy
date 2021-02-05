@@ -135,7 +135,9 @@ class LensingObject:
         shear_y = -0.5 * (jacobian[0][1] + jacobian[1][0])
         shear_x = 0.5 * (jacobian[1][1] - jacobian[0][0])
 
-        return arrays.Array2D(array=(shear_x ** 2 + shear_y ** 2) ** 0.5, mask=grid.mask)
+        return arrays.Array2D(
+            array=(shear_x ** 2 + shear_y ** 2) ** 0.5, mask=grid.mask
+        )
 
     @precompute_jacobian
     def tangential_eigen_value_from_grid(self, grid, jacobian=None):
@@ -199,22 +201,30 @@ class LensingObject:
 
     def convergence_via_hessian_from_grid(self, grid, buffer=0.01):
 
-        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(grid=grid, buffer=buffer)
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(
+            grid=grid, buffer=buffer
+        )
 
-        return grid.values_from_array_slim(array_slim=0.5*(hessian_yy + hessian_xx))
+        return grid.values_from_array_slim(array_slim=0.5 * (hessian_yy + hessian_xx))
 
     def shear_via_hessian_from_grid(self, grid, buffer=0.01):
 
-        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(grid=grid, buffer=buffer)
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(
+            grid=grid, buffer=buffer
+        )
 
         shear_y = 0.5 * (hessian_xx - hessian_yy)
         shear_x = hessian_xy
 
-        return grid.values_from_array_slim(array_slim=(shear_x ** 2 + shear_y ** 2) ** 0.5)
+        return grid.values_from_array_slim(
+            array_slim=(shear_x ** 2 + shear_y ** 2) ** 0.5
+        )
 
     def magnification_via_hessian_from_grid(self, grid, buffer=0.01):
 
-        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(grid=grid, buffer=buffer)
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(
+            grid=grid, buffer=buffer
+        )
 
         det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx
 

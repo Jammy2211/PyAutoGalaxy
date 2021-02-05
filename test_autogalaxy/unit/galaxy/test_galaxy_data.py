@@ -103,7 +103,9 @@ class TestGalaxyFitData:
             pixel_scales_interp=1.0,
         )
 
-        grid = ag.Grid2DInterpolate.from_mask(mask=sub_mask_7x7, pixel_scales_interp=1.0)
+        grid = ag.Grid2DInterpolate.from_mask(
+            mask=sub_mask_7x7, pixel_scales_interp=1.0
+        )
 
         assert isinstance(galaxy_fit_data.grid, ag.Grid2DInterpolate)
         assert (galaxy_fit_data.grid == grid).all()

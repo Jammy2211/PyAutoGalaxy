@@ -1340,7 +1340,7 @@ class EllipticalNFWMCRLudlow(EllipticalNFW):
             centre=centre,
             elliptical_comps=elliptical_comps,
             kappa_s=kappa_s,
-            scale_radius=scale_radius
+            scale_radius=scale_radius,
         )
 
 

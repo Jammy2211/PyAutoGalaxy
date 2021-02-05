@@ -140,9 +140,13 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
 
         return mass_profile.mass_angular_within_circle(radius=radius)
 
-
     def normalization_from_mass_angular_and_radius(
-        self, mass_angular,  radius, normalization_min=1e-15, normalization_max=1e15, bins=200
+        self,
+        mass_angular,
+        radius,
+        normalization_min=1e-15,
+        normalization_max=1e15,
+        bins=200,
     ):
 
         normalizations = np.logspace(
@@ -150,7 +154,9 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         )
 
         mass_angulars = [
-            self.mass_angular_from_normalization_and_radius(normalization=normalization, radius=radius)
+            self.mass_angular_from_normalization_and_radius(
+                normalization=normalization, radius=radius
+            )
             for normalization in normalizations
         ]
 

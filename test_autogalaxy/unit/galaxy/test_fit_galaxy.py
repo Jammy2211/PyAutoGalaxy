@@ -71,7 +71,9 @@ class TestLikelihood:
         image = ag.Array2D.full(fill_value=5.0, shape_native=(3, 4), pixel_scales=1.0)
         image[6] = 4.0
 
-        noise_map = ag.Array2D.full(fill_value=2.0, shape_native=(3, 4), pixel_scales=1.0)
+        noise_map = ag.Array2D.full(
+            fill_value=2.0, shape_native=(3, 4), pixel_scales=1.0
+        )
 
         galaxy_data = ag.GalaxyData(image=image, noise_map=noise_map, pixel_scales=3.0)
 

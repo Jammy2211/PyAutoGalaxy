@@ -165,7 +165,9 @@ class SimulatorImaging(imaging.SimulatorImaging):
 
         imaging = self.from_image(image=image.slim_binned, name=name)
 
-        return imaging.trimmed_after_convolution_from(kernel_shape=self.psf.shape_native)
+        return imaging.trimmed_after_convolution_from(
+            kernel_shape=self.psf.shape_native
+        )
 
     def from_galaxies_and_grid(self, galaxies, grid, name=None):
         """Simulate imaging data for this data, as follows:

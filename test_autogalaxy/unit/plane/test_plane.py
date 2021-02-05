@@ -1946,8 +1946,12 @@ class TestAbstractPlaneData:
             ).all()
 
         def test__contribution_maps_are_same_as_hyper_galaxy_calculation(self):
-            hyper_model_image = ag.Array2D.manual_native([[2.0, 4.0, 10.0]], pixel_scales=1.0)
-            hyper_galaxy_image = ag.Array2D.manual_native([[1.0, 5.0, 8.0]], pixel_scales=1.0)
+            hyper_model_image = ag.Array2D.manual_native(
+                [[2.0, 4.0, 10.0]], pixel_scales=1.0
+            )
+            hyper_galaxy_image = ag.Array2D.manual_native(
+                [[1.0, 5.0, 8.0]], pixel_scales=1.0
+            )
 
             hyper_galaxy_0 = ag.HyperGalaxy(contribution_factor=5.0)
             hyper_galaxy_1 = ag.HyperGalaxy(contribution_factor=10.0)
@@ -1998,8 +2002,12 @@ class TestAbstractPlaneData:
             ).all()
 
         def test__contriution_maps_are_none_for_galaxy_without_hyper_galaxy(self):
-            hyper_model_image = ag.Array2D.manual_native([[2.0, 4.0, 10.0]], pixel_scales=1.0)
-            hyper_galaxy_image = ag.Array2D.manual_native([[1.0, 5.0, 8.0]], pixel_scales=1.0)
+            hyper_model_image = ag.Array2D.manual_native(
+                [[2.0, 4.0, 10.0]], pixel_scales=1.0
+            )
+            hyper_galaxy_image = ag.Array2D.manual_native(
+                [[1.0, 5.0, 8.0]], pixel_scales=1.0
+            )
 
             hyper_galaxy = ag.HyperGalaxy(contribution_factor=5.0)
 
@@ -2083,7 +2091,9 @@ class TestAbstractPlaneData:
         def test__x2_hyper_galaxy__use_numerical_values_of_hyper_noise_map_scaling(
             self,
         ):
-            noise_map = ag.Array2D.manual_native(array=[[1.0, 2.0, 3.0]], pixel_scales=1.0)
+            noise_map = ag.Array2D.manual_native(
+                array=[[1.0, 2.0, 3.0]], pixel_scales=1.0
+            )
 
             hyper_galaxy_0 = ag.HyperGalaxy(
                 contribution_factor=0.0, noise_factor=1.0, noise_power=1.0
@@ -2129,7 +2139,9 @@ class TestAbstractPlaneData:
             )
 
         def test__hyper_noise_maps_are_same_as_hyper_galaxy_calculation(self):
-            noise_map = ag.Array2D.manual_native(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
+            noise_map = ag.Array2D.manual_native(
+                array=[[5.0, 3.0, 1.0]], pixel_scales=1.0
+            )
 
             hyper_model_image = ag.Array2D.manual_native(
                 array=[[2.0, 4.0, 10.0]], pixel_scales=1.0
@@ -2196,7 +2208,9 @@ class TestAbstractPlaneData:
             assert (hyper_noise_maps[1].slim == hyper_noise_map_0).all()
 
         def test__hyper_noise_maps_are_none_for_galaxy_without_hyper_galaxy(self):
-            noise_map = ag.Array2D.manual_native(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
+            noise_map = ag.Array2D.manual_native(
+                array=[[5.0, 3.0, 1.0]], pixel_scales=1.0
+            )
 
             hyper_model_image = ag.Array2D.manual_native(
                 array=[[2.0, 4.0, 10.0]], pixel_scales=1.0
@@ -2277,7 +2291,9 @@ class TestAbstractPlaneData:
         def test__hyper_noise_map_from_noise_map__is_sum_of_galaxy_hyper_noise_maps__filters_nones(
             self,
         ):
-            noise_map = ag.Array2D.manual_native(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
+            noise_map = ag.Array2D.manual_native(
+                array=[[5.0, 3.0, 1.0]], pixel_scales=1.0
+            )
 
             hyper_model_image = ag.Array2D.manual_native(
                 array=[[2.0, 4.0, 10.0]], pixel_scales=1.0
@@ -2334,9 +2350,7 @@ class TestAbstractPlaneData:
             plane = ag.Plane(redshift=0.5, galaxies=[galaxy_1, galaxy_0])
 
             hyper_noise_map = plane.hyper_noise_map_from_noise_map(noise_map=noise_map)
-            assert (
-                hyper_noise_map.slim == hyper_noise_map_0 + hyper_noise_map_1
-            ).all()
+            assert (hyper_noise_map.slim == hyper_noise_map_0 + hyper_noise_map_1).all()
 
             plane = ag.Plane(
                 redshift=0.5,
@@ -2349,14 +2363,14 @@ class TestAbstractPlaneData:
             )
 
             hyper_noise_map = plane.hyper_noise_map_from_noise_map(noise_map=noise_map)
-            assert (
-                hyper_noise_map.slim == hyper_noise_map_0 + hyper_noise_map_1
-            ).all()
+            assert (hyper_noise_map.slim == hyper_noise_map_0 + hyper_noise_map_1).all()
 
         def test__plane_has_no_hyper_galaxies__hyper_noise_map_function_returns_none(
             self,
         ):
-            noise_map = ag.Array2D.manual_native(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
+            noise_map = ag.Array2D.manual_native(
+                array=[[5.0, 3.0, 1.0]], pixel_scales=1.0
+            )
 
             plane = ag.Plane(redshift=0.5, galaxies=[ag.Galaxy(redshift=0.5)])
             hyper_noise_map = plane.hyper_noise_map_from_noise_map(noise_map=noise_map)
@@ -2717,11 +2731,15 @@ class TestRegression:
         plane = ag.Plane(galaxies=[galaxy])
 
         convergence = plane.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = plane.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = plane.deflections_from_grid(grid=grid)
@@ -2739,11 +2757,15 @@ class TestRegression:
         plane = ag.Plane(galaxies=[galaxy])
 
         convergence = plane.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = plane.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = plane.deflections_from_grid(grid=grid)
@@ -2768,11 +2790,15 @@ class TestRegression:
         plane = ag.Plane(galaxies=[galaxy])
 
         convergence = plane.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = plane.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = plane.deflections_from_grid(grid=grid)
@@ -2789,11 +2815,15 @@ class TestRegression:
         plane = ag.Plane(galaxies=[galaxy])
 
         convergence = plane.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = plane.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = plane.deflections_from_grid(grid=grid)

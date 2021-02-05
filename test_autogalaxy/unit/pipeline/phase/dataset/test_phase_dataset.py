@@ -88,7 +88,10 @@ class TestMakeAnalysis:
         # If an input mask is supplied we use mask input.
 
         mask_input = ag.Mask2D.circular(
-            shape_native=imaging_7x7.shape_native, pixel_scales=1.0, sub_size=1, radius=1.5
+            shape_native=imaging_7x7.shape_native,
+            pixel_scales=1.0,
+            sub_size=1,
+            radius=1.5,
         )
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -104,7 +107,10 @@ class TestMakeAnalysis:
         # If an input mask is supplied we use mask input.
 
         mask_input = ag.Mask2D.circular(
-            shape_native=imaging_7x7.shape_native, pixel_scales=1, sub_size=1, radius=1.5
+            shape_native=imaging_7x7.shape_native,
+            pixel_scales=1,
+            sub_size=1,
+            radius=1.5,
         )
 
         phase_imaging_7x7 = ag.PhaseImaging(

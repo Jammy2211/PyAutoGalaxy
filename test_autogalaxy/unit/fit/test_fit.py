@@ -267,8 +267,12 @@ class TestFitImaging:
                 hyper_galaxy=ag.HyperGalaxy(
                     contribution_factor=1.0, noise_factor=1.0, noise_power=1.0
                 ),
-                hyper_model_image=ag.Array2D.ones(shape_native=(1, 2), pixel_scales=1.0),
-                hyper_galaxy_image=ag.Array2D.ones(shape_native=(1, 2), pixel_scales=1.0),
+                hyper_model_image=ag.Array2D.ones(
+                    shape_native=(1, 2), pixel_scales=1.0
+                ),
+                hyper_galaxy_image=ag.Array2D.ones(
+                    shape_native=(1, 2), pixel_scales=1.0
+                ),
                 hyper_minimum_value=0.0,
             )
 
@@ -304,7 +308,9 @@ class TestFitImaging:
             )
 
             imaging = ag.Imaging(
-                image=ag.Array2D.full(fill_value=4.0, shape_native=(3, 4), pixel_scales=1.0),
+                image=ag.Array2D.full(
+                    fill_value=4.0, shape_native=(3, 4), pixel_scales=1.0
+                ),
                 psf=psf,
                 noise_map=ag.Array2D.ones(shape_native=(3, 4), pixel_scales=1.0),
             )
@@ -479,8 +485,12 @@ class TestFitImaging:
                 hyper_galaxy=ag.HyperGalaxy(
                     contribution_factor=1.0, noise_factor=1.0e9, noise_power=1.0
                 ),
-                hyper_model_image=ag.Array2D.ones(shape_native=(1, 2), pixel_scales=1.0),
-                hyper_galaxy_image=ag.Array2D.ones(shape_native=(1, 2), pixel_scales=1.0),
+                hyper_model_image=ag.Array2D.ones(
+                    shape_native=(1, 2), pixel_scales=1.0
+                ),
+                hyper_galaxy_image=ag.Array2D.ones(
+                    shape_native=(1, 2), pixel_scales=1.0
+                ),
                 hyper_minimum_value=0.0,
             )
 
@@ -1200,8 +1210,12 @@ class TestFitImaging:
                 hyper_galaxy=ag.HyperGalaxy(
                     contribution_factor=1.0, noise_factor=1.0, noise_power=1.0
                 ),
-                hyper_model_image=ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0),
-                hyper_galaxy_image=ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0),
+                hyper_model_image=ag.Array2D.ones(
+                    shape_native=(3, 3), pixel_scales=1.0
+                ),
+                hyper_galaxy_image=ag.Array2D.ones(
+                    shape_native=(3, 3), pixel_scales=1.0
+                ),
                 hyper_minimum_value=0.0,
             )
 
@@ -1417,7 +1431,9 @@ class TestFitInterferometer:
                 visibilities_mask=visibilities_mask,
                 real_space_mask=real_space_mask,
                 settings=ag.SettingsMaskedInterferometer(
-                    grid_class=ag.Grid2D, sub_size=1, transformer_class=ag.TransformerDFT
+                    grid_class=ag.Grid2D,
+                    sub_size=1,
+                    transformer_class=ag.TransformerDFT,
                 ),
             )
 
@@ -2030,9 +2046,7 @@ class TestFitInterferometer:
                 profile_visibilities + inversion.mapped_reconstructed_visibilities
             )
 
-            assert model_visibilities.slim == pytest.approx(
-                fit.model_visibilities.slim
-            )
+            assert model_visibilities.slim == pytest.approx(fit.model_visibilities.slim)
 
             residual_map = ag.util.fit.residual_map_from(
                 data=masked_interferometer_7.visibilities, model_data=model_visibilities
@@ -2220,9 +2234,7 @@ class TestFitInterferometer:
             assert fit.galaxy_model_visibilities_dict[g1].slim == pytest.approx(
                 g1_visibilities.slim, 1.0e-4
             )
-            assert fit.galaxy_model_visibilities_dict[
-                galaxy_pix
-            ].slim == pytest.approx(
+            assert fit.galaxy_model_visibilities_dict[galaxy_pix].slim == pytest.approx(
                 inversion.mapped_reconstructed_visibilities.slim, 1.0e-4
             )
 

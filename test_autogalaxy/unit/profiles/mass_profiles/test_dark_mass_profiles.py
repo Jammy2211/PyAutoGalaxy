@@ -1506,7 +1506,9 @@ class TestNFWMCRLudlow:
 
         assert nfw_mass.centre == (1.0, 2.0)
 
-        axis_ratio, phi = ag.convert.axis_ratio_and_phi_from(elliptical_comps=(0.1, 0.2))
+        axis_ratio, phi = ag.convert.axis_ratio_and_phi_from(
+            elliptical_comps=(0.1, 0.2)
+        )
 
         assert nfw_mass.axis_ratio == axis_ratio
         assert isinstance(nfw_mass.axis_ratio, float)
@@ -1523,6 +1525,7 @@ class TestNFWMCRLudlow:
         deflections = nfw_kappa_s.deflections_from_grid(grid=grid)
 
         assert (deflections_ludlow == deflections).all()
+
 
 class TestTruncatedNFWMCRChallenge:
     def test__mass_and_concentration_consistent_with_normal_truncated_nfw(self):

@@ -32,9 +32,7 @@ def test__visuals_with_include_2d(lp_0, grid_7x7):
         light_profile=lp_0, grid=grid_7x7, visuals_2d=visuals_2d, include_2d=include
     )
 
-    assert light_profile_plotter.visuals_with_include_2d.origin.in_list == [
-        (0.0, 0.0)
-    ]
+    assert light_profile_plotter.visuals_with_include_2d.origin.in_list == [(0.0, 0.0)]
     assert (light_profile_plotter.visuals_with_include_2d.mask == grid_7x7.mask).all()
     assert (
         light_profile_plotter.visuals_with_include_2d.border

@@ -94,7 +94,9 @@ class TestMaskedImaging:
         masked_imaging_7x7 = ag.MaskedImaging(
             imaging=imaging_7x7,
             mask=sub_mask_7x7,
-            settings=ag.SettingsMaskedImaging(grid_class=ag.Grid2D, psf_shape_2d=(3, 3)),
+            settings=ag.SettingsMaskedImaging(
+                grid_class=ag.Grid2D, psf_shape_2d=(3, 3)
+            ),
         )
 
         grid = ag.Grid2D.from_mask(mask=sub_mask_7x7)
@@ -128,7 +130,9 @@ class TestMaskedImaging:
 class TestSimulatorImaging:
     def test__from_plane_and_grid__same_as_plane_image(self):
 
-        psf = ag.Kernel2D.from_gaussian(shape_native=(7, 7), sigma=0.5, pixel_scales=0.05)
+        psf = ag.Kernel2D.from_gaussian(
+            shape_native=(7, 7), sigma=0.5, pixel_scales=0.05
+        )
 
         grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 

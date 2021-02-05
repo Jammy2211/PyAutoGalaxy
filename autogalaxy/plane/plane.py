@@ -299,7 +299,9 @@ class AbstractPlaneLensing(AbstractPlane):
 
     def padded_image_from_grid_and_psf_shape(self, grid, psf_shape_2d):
 
-        padded_grid = grid.padded_grid_from_kernel_shape(kernel_shape_native=psf_shape_2d)
+        padded_grid = grid.padded_grid_from_kernel_shape(
+            kernel_shape_native=psf_shape_2d
+        )
 
         return self.image_from_grid(grid=padded_grid)
 
@@ -410,7 +412,9 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
     def unmasked_blurred_image_from_grid_and_psf(self, grid, psf):
 
-        padded_grid = grid.padded_grid_from_kernel_shape(kernel_shape_native=psf.shape_native)
+        padded_grid = grid.padded_grid_from_kernel_shape(
+            kernel_shape_native=psf.shape_native
+        )
 
         padded_image = self.image_from_grid(grid=padded_grid)
 
@@ -420,7 +424,9 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
     def unmasked_blurred_image_of_galaxies_from_grid_and_psf(self, grid, psf):
 
-        padded_grid = grid.padded_grid_from_kernel_shape(kernel_shape_native=psf.shape_native)
+        padded_grid = grid.padded_grid_from_kernel_shape(
+            kernel_shape_native=psf.shape_native
+        )
 
         unmasked_blurred_images_of_galaxies = []
 

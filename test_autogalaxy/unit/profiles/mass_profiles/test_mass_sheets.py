@@ -385,7 +385,8 @@ class TestInputDeflections:
         )
 
         image_plane_grid = ag.Grid2D.uniform(
-            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
+            shape_native=deflections_y.shape_native,
+            pixel_scales=deflections_y.pixel_scales,
         )
 
         input_deflections = ag.mp.InputDeflections(
@@ -395,7 +396,8 @@ class TestInputDeflections:
         )
 
         grid = ag.Grid2D.uniform(
-            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
+            shape_native=deflections_y.shape_native,
+            pixel_scales=deflections_y.pixel_scales,
         )
 
         deflections = input_deflections.deflections_from_grid(grid=grid)
@@ -442,7 +444,8 @@ class TestInputDeflections:
         )
 
         image_plane_grid = ag.Grid2D.uniform(
-            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
+            shape_native=deflections_y.shape_native,
+            pixel_scales=deflections_y.pixel_scales,
         )
 
         input_deflections = ag.mp.InputDeflections(
@@ -478,7 +481,8 @@ class TestInputDeflections:
         )
 
         image_plane_grid = ag.Grid2D.uniform(
-            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
+            shape_native=deflections_y.shape_native,
+            pixel_scales=deflections_y.pixel_scales,
         )
 
         grid = ag.Grid2D.manual_slim(
@@ -530,7 +534,8 @@ class TestInputDeflections:
         )
 
         image_plane_grid = ag.Grid2D.uniform(
-            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
+            shape_native=deflections_y.shape_native,
+            pixel_scales=deflections_y.pixel_scales,
         )
 
         input_deflections = ag.mp.InputDeflections(
@@ -583,7 +588,8 @@ class TestInputDeflections:
         )
 
         image_plane_grid = ag.Grid2D.uniform(
-            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
+            shape_native=deflections_y.shape_native,
+            pixel_scales=deflections_y.pixel_scales,
         )
 
         input_deflections = ag.mp.InputDeflections(
@@ -593,7 +599,8 @@ class TestInputDeflections:
         )
 
         grid = ag.Grid2D.uniform(
-            shape_native=deflections_y.shape_native, pixel_scales=deflections_y.pixel_scales
+            shape_native=deflections_y.shape_native,
+            pixel_scales=deflections_y.pixel_scales,
         )
 
         convergence = input_deflections.convergence_from_grid(grid=grid)

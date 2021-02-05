@@ -109,37 +109,57 @@ def simulator_from_instrument(instrument):
 
     if instrument in "vro":
         return ag.SimulatorImaging(
-            exposure_time_map=ag.Array2D.full(fill_value=100.0, shape_native=grid.shape_native),
+            exposure_time_map=ag.Array2D.full(
+                fill_value=100.0, shape_native=grid.shape_native
+            ),
             psf=psf,
-            background_sky_map=ag.Array2D.full(fill_value=1.0, shape_native=grid.shape_native),
+            background_sky_map=ag.Array2D.full(
+                fill_value=1.0, shape_native=grid.shape_native
+            ),
             add_poisson_noise=True,
         )
     elif instrument in "euclid":
         return ag.SimulatorImaging(
-            exposure_time_map=ag.Array2D.full(fill_value=2260.0, shape_native=grid.shape_native),
+            exposure_time_map=ag.Array2D.full(
+                fill_value=2260.0, shape_native=grid.shape_native
+            ),
             psf=psf,
-            background_sky_map=ag.Array2D.full(fill_value=1.0, shape_native=grid.shape_native),
+            background_sky_map=ag.Array2D.full(
+                fill_value=1.0, shape_native=grid.shape_native
+            ),
             add_poisson_noise=True,
         )
     elif instrument in "hst":
         return ag.SimulatorImaging(
-            exposure_time_map=ag.Array2D.full(fill_value=2000.0, shape_native=grid.shape_native),
+            exposure_time_map=ag.Array2D.full(
+                fill_value=2000.0, shape_native=grid.shape_native
+            ),
             psf=psf,
-            background_sky_map=ag.Array2D.full(fill_value=1.0, shape_native=grid.shape_native),
+            background_sky_map=ag.Array2D.full(
+                fill_value=1.0, shape_native=grid.shape_native
+            ),
             add_poisson_noise=True,
         )
     elif instrument in "hst_up":
         return ag.SimulatorImaging(
-            exposure_time_map=ag.Array2D.full(fill_value=2000.0, shape_native=grid.shape_native),
+            exposure_time_map=ag.Array2D.full(
+                fill_value=2000.0, shape_native=grid.shape_native
+            ),
             psf=psf,
-            background_sky_map=ag.Array2D.full(fill_value=1.0, shape_native=grid.shape_native),
+            background_sky_map=ag.Array2D.full(
+                fill_value=1.0, shape_native=grid.shape_native
+            ),
             add_poisson_noise=True,
         )
     elif instrument in "ao":
         return ag.SimulatorImaging(
-            exposure_time_map=ag.Array2D.full(fill_value=1000.0, shape_native=grid.shape_native),
+            exposure_time_map=ag.Array2D.full(
+                fill_value=1000.0, shape_native=grid.shape_native
+            ),
             psf=psf,
-            background_sky_map=ag.Array2D.full(fill_value=1.0, shape_native=grid.shape_native),
+            background_sky_map=ag.Array2D.full(
+                fill_value=1.0, shape_native=grid.shape_native
+            ),
             add_poisson_noise=True,
         )
     else:

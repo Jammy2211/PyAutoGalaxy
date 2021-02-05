@@ -127,7 +127,6 @@ class TestDensityBetweenAnnuli:
 
 
 class TestNormalizationEinstienRadius:
-
     def test__mass_angular_from_normalization_and_radius(self):
 
         sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
@@ -172,9 +171,7 @@ class TestNormalizationEinstienRadius:
             mass_to_light_ratio=2.0,
         )
 
-        assert mass_angular_from_normalization == pytest.approx(
-            28.32431, 1.0e-4
-        )
+        assert mass_angular_from_normalization == pytest.approx(28.32431, 1.0e-4)
 
         mass_angular_from_normalization = sersic.mass_angular_from_normalization_and_radius(
             normalization=0.1, radius=2.0
@@ -187,7 +184,11 @@ class TestNormalizationEinstienRadius:
         sersic = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
         normalization = sersic.normalization_from_mass_angular_and_radius(
-            mass_angular=5.0, radius=2.0, normalization_min=0.5, normalization_max=3.0, bins=5
+            mass_angular=5.0,
+            radius=2.0,
+            normalization_min=0.5,
+            normalization_max=3.0,
+            bins=5,
         )
 
         assert normalization == pytest.approx(0.79577, 1.0e-2)
@@ -350,11 +351,15 @@ class TestRegression:
             centre=(2.0, 1.0), einstein_radius=1.0
         )
         convergence = mass_profile.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = mass_profile.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = mass_profile.deflections_from_grid(grid=grid)
@@ -365,12 +370,16 @@ class TestRegression:
 
         mass_profile = ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
         convergence = mass_profile.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         mass_profile = ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
         potential = mass_profile.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = mass_profile.deflections_from_grid(grid=grid)
@@ -390,11 +399,15 @@ class TestRegression:
             centre=(2.0, 1.0), einstein_radius=1.0
         )
         convergence = mass_profile.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = mass_profile.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = mass_profile.deflections_from_grid(grid=grid)
@@ -406,11 +419,15 @@ class TestRegression:
         mass_profile = ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
 
         convergence = mass_profile.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = mass_profile.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = mass_profile.deflections_from_grid(grid=grid)

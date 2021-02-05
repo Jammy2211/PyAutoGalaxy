@@ -465,7 +465,8 @@ class TestMassProfiles:
             potential = galaxy.potential_from_grid(grid=sub_grid_7x7)
 
             assert (
-                potential.slim_binned == np.zeros(shape=sub_grid_7x7.sub_shape_slim // 4)
+                potential.slim_binned
+                == np.zeros(shape=sub_grid_7x7.sub_shape_slim // 4)
             ).all()
 
         def test__galaxies_with_x1_and_x2_mass_profiles__potential_is_same_individual_profiles(
@@ -1515,11 +1516,15 @@ class TestRegression:
         )
 
         convergence = galaxy.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = galaxy.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = galaxy.deflections_from_grid(grid=grid)
@@ -1534,11 +1539,15 @@ class TestRegression:
             mass_0=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
         convergence = galaxy.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = galaxy.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = galaxy.deflections_from_grid(grid=grid)
@@ -1560,11 +1569,15 @@ class TestRegression:
             mass_0=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
         convergence = galaxy.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = galaxy.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = galaxy.deflections_from_grid(grid=grid)
@@ -1578,11 +1591,15 @@ class TestRegression:
             mass=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
         convergence = galaxy.convergence_from_grid(grid=grid)
-        max_indexes = np.unravel_index(convergence.native.argmax(), convergence.shape_native)
+        max_indexes = np.unravel_index(
+            convergence.native.argmax(), convergence.shape_native
+        )
         assert max_indexes == (1, 4)
 
         potential = galaxy.potential_from_grid(grid=grid)
-        max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
+        max_indexes = np.unravel_index(
+            potential.native.argmin(), potential.shape_native
+        )
         assert max_indexes == (1, 4)
 
         deflections = galaxy.deflections_from_grid(grid=grid)

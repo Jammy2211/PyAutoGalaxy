@@ -37,10 +37,9 @@ def test__visuals_with_include_2d(mp_0, grid_7x7):
         lensing_obj_plotter.visuals_with_include_2d.border
         == grid_7x7.mask.border_grid_sub_1.slim_binned
     ).all()
-    assert (
-        lensing_obj_plotter.visuals_with_include_2d.mass_profile_centres.in_list
-        == [mp_0.centre]
-    )
+    assert lensing_obj_plotter.visuals_with_include_2d.mass_profile_centres.in_list == [
+        mp_0.centre
+    ]
     assert lensing_obj_plotter.visuals_with_include_2d.vector_field == 2
 
     include = aplt.Include2D(origin=False, mask=False, border=False)

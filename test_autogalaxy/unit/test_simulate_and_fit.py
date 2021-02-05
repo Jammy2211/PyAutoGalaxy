@@ -34,7 +34,9 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
 
     imaging = simulator.from_plane_and_grid(plane=plane, grid=grid)
 
-    imaging.noise_map = ag.Array2D.ones(shape_native=imaging.image.shape_native, pixel_scales=0.2)
+    imaging.noise_map = ag.Array2D.ones(
+        shape_native=imaging.image.shape_native, pixel_scales=0.2
+    )
 
     file_path = path.join(
         "{}".format(path.dirname(path.realpath(__file__))),
@@ -64,7 +66,10 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
     )
 
     mask = ag.Mask2D.circular(
-        shape_native=imaging.image.shape_native, pixel_scales=0.2, sub_size=2, radius=0.8
+        shape_native=imaging.image.shape_native,
+        pixel_scales=0.2,
+        sub_size=2,
+        radius=0.8,
     )
 
     masked_imaging = ag.MaskedImaging(
@@ -110,7 +115,9 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
     )
 
     imaging = simulator.from_plane_and_grid(plane=plane, grid=grid)
-    imaging.noise_map = ag.Array2D.ones(shape_native=imaging.image.shape_native, pixel_scales=0.2)
+    imaging.noise_map = ag.Array2D.ones(
+        shape_native=imaging.image.shape_native, pixel_scales=0.2
+    )
 
     file_path = path.join(
         "{}".format(path.dirname(path.realpath(__file__))),
@@ -140,7 +147,10 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
     )
 
     mask = ag.Mask2D.circular(
-        shape_native=simulator.image.shape_native, pixel_scales=0.2, sub_size=1, radius=0.8
+        shape_native=simulator.image.shape_native,
+        pixel_scales=0.2,
+        sub_size=1,
+        radius=0.8,
     )
 
     masked_imaging = ag.MaskedImaging(

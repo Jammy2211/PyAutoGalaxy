@@ -71,7 +71,9 @@ class TestEllipticalGaussian:
             mass_to_light_ratio=1.0,
         )
 
-        grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
+        grid = ag.Grid2D.uniform(
+            shape_native=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0)
+        )
 
         deflections_via_analytic = gaussian.deflections_from_grid(grid=grid)
         deflections_via_integrator = gaussian.deflections_from_grid_via_integrator(
@@ -90,7 +92,9 @@ class TestEllipticalGaussian:
             mass_to_light_ratio=7.0,
         )
 
-        grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0))
+        grid = ag.Grid2D.uniform(
+            shape_native=(3, 3), pixel_scales=0.1, origin=(1.0, 1.0)
+        )
 
         deflections_via_analytic = gaussian.deflections_from_grid(grid=grid)
         deflections_via_integrator = gaussian.deflections_from_grid_via_integrator(

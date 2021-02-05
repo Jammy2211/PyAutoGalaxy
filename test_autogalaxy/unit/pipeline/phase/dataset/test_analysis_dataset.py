@@ -27,7 +27,9 @@ class TestHyperMethods:
         instance.galaxies = galaxies
 
         hyper_galaxy_image_path_dict = {
-            ("galaxies", "galaxy"): ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0),
+            ("galaxies", "galaxy"): ag.Array2D.ones(
+                shape_native=(3, 3), pixel_scales=1.0
+            ),
             ("galaxies", "source"): ag.Array2D.full(
                 fill_value=2.0, shape_native=(3, 3), pixel_scales=1.0
             ),
