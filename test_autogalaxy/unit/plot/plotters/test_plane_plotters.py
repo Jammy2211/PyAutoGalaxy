@@ -18,7 +18,7 @@ def test__all_individual_plotter__output_file_with_default_name(
     plane_7x7,
     sub_grid_7x7,
     mask_7x7,
-    grid_irregular_grouped_7x7,
+    grid_irregular_7x7_list,
     include_2d_all,
     plot_path,
     plot_patch,

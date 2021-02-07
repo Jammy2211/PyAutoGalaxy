@@ -6,12 +6,17 @@ from autoarray.structures import arrays, grids
 from autofit.mapper.model_object import ModelObject
 from autogalaxy import exc
 from autogalaxy import lensing
+from autogalaxy.profiles import point_sources as ps
 from autogalaxy.profiles import light_profiles as lp
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.profiles.mass_profiles import (
     dark_mass_profiles as dmp,
     stellar_mass_profiles as smp,
 )
+
+
+def is_point_source(obj):
+    return isinstance(obj, ps.PointSource)
 
 
 def is_light_profile(obj):
@@ -85,20 +90,18 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return self.id
 
     @property
+    def point_source_dict(self):
+        return {
+            key: value for key, value in self.__dict__.items() if is_point_source(value)
+        }
+
+    @property
     def light_profiles(self):
         return [value for value in self.__dict__.values() if is_light_profile(value)]
 
     @property
-    def light_profile_keys(self):
-        return [key for key, value in self.__dict__.items() if is_light_profile(value)]
-
-    @property
     def mass_profiles(self):
         return [value for value in self.__dict__.values() if is_mass_profile(value)]
-
-    @property
-    def mass_profile_keys(self):
-        return [key for key, value in self.__dict__.items() if is_mass_profile(value)]
 
     @property
     def has_redshift(self):
@@ -125,138 +128,54 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return len(self.mass_profiles) > 0
 
     @property
-    def has_only_mass_sheets(self):
-
-        if not self.has_mass_profile:
-            return False
-
-        mass_sheet_bools = [
-            mass_profile.is_mass_sheet for mass_profile in self.mass_profiles
-        ]
-        total_mass_sheets = sum(mass_sheet_bools)
-
-        return len(self.mass_profiles) == total_mass_sheets
-
-    @property
     def has_profile(self):
         return len(self.mass_profiles) + len(self.light_profiles) > 0
 
-    @property
-    def light_profile_centres(self):
+    def extract_attribute(self, cls, name):
         """
-        Returns the light profile centres of the galaxy as a `Grid2DIrregularGrouped` object, which structures the centres
-            in lists according to which light profile they come from.
+        Returns an attribute of a class and its children profiles in the the galaxy as a `ValueIrregular`
+        or `Grid2DIrregular` object.
 
-            Fo example, if a galaxy has two light profiles, the first with one centre and second with two centres this
-            returns:
+        For example, if a galaxy has two light profiles and we want the `LightProfile` axis-ratios, the following:
 
-            [[(y0, x0)], [(y0, x0), (y1, x1)]]
+        `galaxy.extract_attribute(cls=LightProfile, name="axis_ratio"`
 
-            This is used for visualization, for example plotting the centres of all light profiles colored by their profile.
+        would return:
 
-            NOTE: Currently, no light profiles can have more than one centre (it unlikely one ever will). The structure of
-            the output follows this convention to follow other methods in the `Galaxy` class that return profile
-            attributes."""
+        ValuesIrregular(values=[axis_ratio_0, axis_ratio_1])
 
-        centres = [[light_profile.centre] for light_profile in self.light_profiles]
+        If a galaxy has three mass profiles and we want the `MassProfile` centres, the following:
 
-        if len(centres) == 0:
-            return []
+        `galaxy.extract_attribute(cls=MassProfile, name="centres"`
 
-        centres_dict = {}
+         would return:
 
-        for key, centre in zip(self.light_profile_keys, centres):
-            centres_dict[key] = centre
+        GridIrregular2D(grid=[(centre_y_0, centre_x_0), (centre_y_1, centre_x_1), (centre_y_2, centre_x_2)])
 
-        return grids.Grid2DIrregularGrouped(grid=centres_dict)
-
-    @property
-    def mass_profile_centres(self):
+        This is used for visualization, for example plotting the centres of all light profiles colored by their profile.
         """
-        Returns the mass profile centres of the galaxy as a `Grid2DIrregularGrouped` object, which structures the centres
-            in lists according to which mass profile they come from.
 
-            Fo example, if a galaxy has two mass profiles, the first with one centre and second with two centres this
-            returns:
+        def extract(value, name):
 
-            [[(y0, x0)], [(y0, x0), (y1, x1)]]
+            try:
+                return getattr(value, name)
+            except (AttributeError, IndexError):
+                return None
 
-            This is used for visualization, for example plotting the centres of all mass profiles colored by their profile.
-
-            NOTE: Currently, no mass profiles can have more than one centre (it unlikely one ever will). The structure of
-            the output follows this convention to follow other methods in the `Galaxy` class that return profile
-            attributes.
-
-            The centres of mass-sheets are omitted, as their centres are not relevant to lensing calculations."""
-        centres = [
-            [mass_profile.centre]
-            for mass_profile in self.mass_profiles
-            if not mass_profile.is_mass_sheet
+        attributes = [
+            extract(value, name)
+            for value in self.__dict__.values()
+            if isinstance(value, cls)
         ]
 
-        if len(centres) == 0:
-            return []
+        attributes = list(filter(None, attributes))
 
-        centres_dict = {}
-
-        for key, centre in zip(self.mass_profile_keys, centres):
-            if centre is not None:
-                centres_dict[key] = centre
-
-        return grids.Grid2DIrregularGrouped(grid=centres_dict)
-
-    @property
-    def mass_profile_axis_ratios(self):
-        """
-        Returns the mass profile axis-ratios of the galaxy as a *ValuesIrregularGrouped* object, which structures the axis-ratios
-            in lists according to which mass profile they come from.
-
-            Fo example, if a galaxy has two mass profiles, the first with one axis-ratio and second with two axis-ratios
-            this returns:
-
-            [[axis_ratio_0], [axis_ratio_0, axis_ratio_1]]
-
-            This is used for visualization, for example plotting the axis-ratios of all mass profiles colored by their
-            profile.
-
-        """
-
-        axis_ratios = [[mass_profile.axis_ratio] for mass_profile in self.mass_profiles]
-
-        if len(axis_ratios) == 0:
-            return []
-
-        axis_ratios_dict = {}
-
-        for key, axis_ratio in zip(self.mass_profile_keys, axis_ratios):
-            axis_ratios_dict[key] = axis_ratio
-
-        return arrays.ValuesIrregularGrouped(values=axis_ratios_dict)
-
-    @property
-    def mass_profile_phis(self):
-        """
-        Returns the mass profile phis of the galaxy as a *ValuesIrregularGrouped* object, which structures the phis in lists
-            according to which mass profile they come from.
-
-            Fo example, if a galaxy has two mass profiles, the first with one phi and second with two phis this returns:
-
-            [[phi_0], [phi_0, phi_1]]
-
-            This is used for visualization, for example plotting the phis of all mass profiles colored by their profile.
-
-        """
-        phis = [[mass_profile.phi] for mass_profile in self.mass_profiles]
-
-        if len(phis) == 0:
-            return []
-
-        phis_dict = {}
-
-        for key, phi in zip(self.mass_profile_keys, phis):
-            phis_dict[key] = phi
-
-        return arrays.ValuesIrregularGrouped(values=phis_dict)
+        if attributes == []:
+            return None
+        elif isinstance(attributes[0], float):
+            return arrays.ValuesIrregular(values=attributes)
+        elif isinstance(attributes[0], tuple):
+            return grids.Grid2DIrregular(grid=attributes)
 
     @property
     def uses_cluster_inversion(self):

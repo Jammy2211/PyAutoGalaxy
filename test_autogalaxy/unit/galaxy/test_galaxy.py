@@ -8,6 +8,32 @@ from autogalaxy import exc
 from autogalaxy.mock import mock
 
 
+class TestPointSources:
+    def test__point_source_dict(self, ps_0, ps_1):
+
+        galaxy = ag.Galaxy(redshift=0.5)
+
+        assert galaxy.point_source_dict == {}
+
+        galaxy = ag.Galaxy(redshift=0.5, point_0=ps_0)
+
+        assert galaxy.point_source_dict == {"point_0": ps_0}
+
+        galaxy = ag.Galaxy(redshift=0.5, point_0=ps_0, point_1=ps_1)
+
+        assert galaxy.point_source_dict == {"point_0": ps_0, "point_1": ps_1}
+
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            point_0=ps_0,
+            point_1=ps_1,
+            mass=ag.mp.SphericalIsothermal(),
+            light=ag.lp.EllipticalSersic(),
+        )
+
+        assert galaxy.point_source_dict == {"point_0": ps_0, "point_1": ps_1}
+
+
 class TestLightProfiles:
     class TestProfileImage:
         def test__no_light_profiles__image_returned_as_0s_of_shape_grid(
@@ -58,15 +84,13 @@ class TestLightProfiles:
             self, lp_0, gal_x1_lp, lp_1, gal_x2_lp
         ):
 
-            lp_image = lp_0.image_from_grid(
-                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
-            )
+            lp_image = lp_0.image_from_grid(grid=ag.Grid2DIrregular([(1.05, -0.55)]))
 
             gal_lp_image = gal_x1_lp.image_from_grid(
-                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregular([(1.05, -0.55)])
             )
 
-            assert lp_image.in_grouped_list[0][0] == gal_lp_image.in_grouped_list[0][0]
+            assert lp_image.in_list[0] == gal_lp_image.in_list[0]
 
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_light_profile_values(
             self, sub_grid_7x7, gal_x2_lp
@@ -285,53 +309,6 @@ class TestLightProfiles:
 
             assert visibilities == pytest.approx(galaxy_visibilities, 1.0e-4)
 
-    class TestLightProfileGeometry:
-        def test__extracts_centres_correctly(self):
-
-            galaxy = ag.Galaxy(redshift=0.5)
-
-            assert galaxy.light_profile_centres == []
-
-            galaxy = ag.Galaxy(
-                redshift=0.5, lp_0=ag.lp.EllipticalLightProfile(centre=(0.0, 1.0))
-            )
-
-            assert galaxy.light_profile_centres.in_grouped_list == [[(0.0, 1.0)]]
-            assert galaxy.light_profile_centres.as_dict["lp_0"] == [(0.0, 1.0)]
-
-            galaxy = ag.Galaxy(
-                redshift=0.5,
-                lp_0=ag.lp.EllipticalLightProfile(centre=(0.0, 1.0)),
-                lp_1=ag.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
-                lp_2=ag.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
-            )
-
-            assert galaxy.light_profile_centres.in_grouped_list == [
-                [(0.0, 1.0)],
-                [(2.0, 3.0)],
-                [(4.0, 5.0)],
-            ]
-            assert galaxy.light_profile_centres.as_dict["lp_0"] == [(0.0, 1.0)]
-            assert galaxy.light_profile_centres.as_dict["lp_1"] == [(2.0, 3.0)]
-            assert galaxy.light_profile_centres.as_dict["lp_2"] == [(4.0, 5.0)]
-
-            galaxy = ag.Galaxy(
-                redshift=0.5,
-                lp_0=ag.lp.EllipticalLightProfile(centre=(0.0, 1.0)),
-                lp_1=ag.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
-                mp_0=ag.mp.EllipticalMassProfile(centre=(-1.0, -2.0)),
-                lp_2=ag.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
-            )
-
-            assert galaxy.light_profile_centres.in_grouped_list == [
-                [(0.0, 1.0)],
-                [(2.0, 3.0)],
-                [(4.0, 5.0)],
-            ]
-            assert galaxy.light_profile_centres.as_dict["lp_0"] == [(0.0, 1.0)]
-            assert galaxy.light_profile_centres.as_dict["lp_1"] == [(2.0, 3.0)]
-            assert galaxy.light_profile_centres.as_dict["lp_2"] == [(4.0, 5.0)]
-
 
 class TestMassProfiles:
     class TestConvergence:
@@ -393,19 +370,16 @@ class TestMassProfiles:
         ):
 
             mp_convergence = mp_0.convergence_from_grid(
-                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregular([(1.05, -0.55)])
             )
 
             gal_mp_convergence = gal_x1_mp.convergence_from_grid(
-                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregular([(1.05, -0.55)])
             )
 
             assert mp_convergence == gal_mp_convergence
 
-            assert (
-                mp_convergence.in_grouped_list[0][0]
-                == gal_mp_convergence.in_grouped_list[0][0]
-            )
+            assert mp_convergence.in_list[0] == gal_mp_convergence.in_list[0]
 
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_mass_profile_values(
             self, sub_grid_7x7, gal_x2_mp
@@ -494,19 +468,16 @@ class TestMassProfiles:
         ):
 
             mp_potential = mp_0.potential_from_grid(
-                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregular([(1.05, -0.55)])
             )
 
             gal_mp_potential = gal_x1_mp.potential_from_grid(
-                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregular([(1.05, -0.55)])
             )
 
             assert mp_potential == gal_mp_potential
 
-            assert (
-                mp_potential.in_grouped_list[0][0]
-                == gal_mp_potential.in_grouped_list[0][0]
-            )
+            assert mp_potential.in_list[0] == gal_mp_potential.in_list[0]
 
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_mass_profile_values(
             self, sub_grid_7x7, gal_x2_mp
@@ -593,22 +564,16 @@ class TestMassProfiles:
         ):
 
             mp_deflections = mp_0.deflections_from_grid(
-                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregular([(1.05, -0.55)])
             )
 
             gal_mp_deflections = gal_x1_mp.deflections_from_grid(
-                grid=ag.Grid2DIrregularGrouped([[(1.05, -0.55)]])
+                grid=ag.Grid2DIrregular([(1.05, -0.55)])
             )
 
-            assert type(gal_mp_deflections) == ag.Grid2DIrregularGrouped
-            assert (
-                mp_deflections.in_grouped_list[0][0][0]
-                == gal_mp_deflections.in_grouped_list[0][0][0]
-            )
-            assert (
-                mp_deflections.in_grouped_list[0][0][1]
-                == gal_mp_deflections.in_grouped_list[0][0][1]
-            )
+            assert type(gal_mp_deflections) == ag.Grid2DIrregular
+            assert mp_deflections.in_list[0][0] == gal_mp_deflections.in_list[0][0]
+            assert mp_deflections.in_list[0][1] == gal_mp_deflections.in_list[0][1]
 
         def test__sub_grid_in__grid_is_mapped_to_image_grid_by_wrapper_by_binning_sum_of_mass_profile_values(
             self, sub_grid_7x7, gal_x2_mp
@@ -1061,227 +1026,6 @@ class TestMassProfiles:
                 1e-5,
             )
 
-    class TestMassProfileGeometry:
-        def test__extracts_centres_correctly__ignores_mass_sheets(self):
-
-            galaxy = ag.Galaxy(redshift=0.5)
-
-            assert galaxy.mass_profile_centres == []
-
-            galaxy = ag.Galaxy(
-                redshift=0.5, mp_0=ag.mp.EllipticalMassProfile(centre=(0.0, 1.0))
-            )
-
-            assert galaxy.mass_profile_centres.in_grouped_list == [[(0.0, 1.0)]]
-            assert galaxy.mass_profile_centres.as_dict["mp_0"] == [(0.0, 1.0)]
-
-            galaxy = ag.Galaxy(
-                redshift=0.5,
-                mp_0=ag.mp.EllipticalMassProfile(centre=(0.0, 1.0)),
-                mp_1=ag.mp.EllipticalMassProfile(centre=(2.0, 3.0)),
-                mp_2=ag.mp.EllipticalMassProfile(centre=(4.0, 5.0)),
-            )
-
-            assert galaxy.mass_profile_centres.in_grouped_list == [
-                [(0.0, 1.0)],
-                [(2.0, 3.0)],
-                [(4.0, 5.0)],
-            ]
-            assert galaxy.mass_profile_centres.as_dict["mp_0"] == [(0.0, 1.0)]
-            assert galaxy.mass_profile_centres.as_dict["mp_1"] == [(2.0, 3.0)]
-            assert galaxy.mass_profile_centres.as_dict["mp_2"] == [(4.0, 5.0)]
-
-            galaxy = ag.Galaxy(
-                redshift=0.5,
-                mp_0=ag.mp.EllipticalMassProfile(centre=(0.0, 1.0)),
-                mp_1=ag.mp.EllipticalMassProfile(centre=(2.0, 3.0)),
-                lp_0=ag.lp.EllipticalLightProfile(centre=(-1.0, -2.0)),
-                mp_2=ag.mp.EllipticalMassProfile(centre=(4.0, 5.0)),
-            )
-
-            assert galaxy.mass_profile_centres.in_grouped_list == [
-                [(0.0, 1.0)],
-                [(2.0, 3.0)],
-                [(4.0, 5.0)],
-            ]
-            assert galaxy.mass_profile_centres.as_dict["mp_0"] == [(0.0, 1.0)]
-            assert galaxy.mass_profile_centres.as_dict["mp_1"] == [(2.0, 3.0)]
-            assert galaxy.mass_profile_centres.as_dict["mp_2"] == [(4.0, 5.0)]
-
-            galaxy = ag.Galaxy(
-                redshift=0.5,
-                mp_0=ag.mp.EllipticalMassProfile(centre=(0.0, 1.0)),
-                mp_1=ag.mp.EllipticalMassProfile(centre=(2.0, 3.0)),
-                lp_0=ag.lp.EllipticalLightProfile(centre=(-1.0, -2.0)),
-                mp_2=ag.mp.EllipticalMassProfile(centre=(4.0, 5.0)),
-                sheet=ag.mp.MassSheet(centre=(10.0, 10.0)),
-            )
-
-            assert galaxy.mass_profile_centres.in_grouped_list == [
-                [(0.0, 1.0)],
-                [(2.0, 3.0)],
-                [(4.0, 5.0)],
-            ]
-            assert galaxy.mass_profile_centres.as_dict["mp_0"] == [(0.0, 1.0)]
-            assert galaxy.mass_profile_centres.as_dict["mp_1"] == [(2.0, 3.0)]
-            assert galaxy.mass_profile_centres.as_dict["mp_2"] == [(4.0, 5.0)]
-
-        def test__extracts_axis_ratio_correctly(self):
-
-            galaxy = ag.Galaxy(redshift=0.5)
-
-            assert galaxy.mass_profile_axis_ratios == []
-
-            galaxy = ag.Galaxy(
-                redshift=0.5,
-                mp_0=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.05263)),
-            )
-
-            assert galaxy.mass_profile_axis_ratios.in_grouped_list[0][
-                0
-            ] == pytest.approx(0.9, 1.0e-4)
-            assert galaxy.mass_profile_axis_ratios.as_dict["mp_0"][0] == pytest.approx(
-                0.9, 1.0e-4
-            )
-
-            galaxy = ag.Galaxy(
-                redshift=0.5,
-                mp_0=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.05263)),
-                mp_1=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.111111)),
-                mp_2=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.176470)),
-            )
-
-            assert galaxy.mass_profile_axis_ratios.in_grouped_list[0][
-                0
-            ] == pytest.approx(0.9, 1.0e-4)
-            assert galaxy.mass_profile_axis_ratios.in_grouped_list[1][
-                0
-            ] == pytest.approx(0.8, 1.0e-4)
-            assert galaxy.mass_profile_axis_ratios.in_grouped_list[2][
-                0
-            ] == pytest.approx(0.7, 1.0e-4)
-            assert galaxy.mass_profile_axis_ratios.as_dict["mp_0"][0] == pytest.approx(
-                0.9, 1.0e-4
-            )
-            assert galaxy.mass_profile_axis_ratios.as_dict["mp_1"][0] == pytest.approx(
-                0.8, 1.0e-4
-            )
-            assert galaxy.mass_profile_axis_ratios.as_dict["mp_2"][0] == pytest.approx(
-                0.7, 1.0e-4
-            )
-
-            galaxy = ag.Galaxy(
-                redshift=0.5,
-                mp_0=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.05263)),
-                mp_1=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.111111)),
-                lp_0=ag.lp.EllipticalLightProfile(elliptical_comps=(0.0, 0.8181818)),
-                mp_2=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.176470)),
-            )
-
-            assert galaxy.mass_profile_axis_ratios.in_grouped_list[0][
-                0
-            ] == pytest.approx(0.9, 1.0e-4)
-            assert galaxy.mass_profile_axis_ratios.in_grouped_list[1][
-                0
-            ] == pytest.approx(0.8, 1.0e-4)
-            assert galaxy.mass_profile_axis_ratios.in_grouped_list[2][
-                0
-            ] == pytest.approx(0.7, 1.0e-4)
-            assert galaxy.mass_profile_axis_ratios.as_dict["mp_0"][0] == pytest.approx(
-                0.9, 1.0e-4
-            )
-            assert galaxy.mass_profile_axis_ratios.as_dict["mp_1"][0] == pytest.approx(
-                0.8, 1.0e-4
-            )
-            assert galaxy.mass_profile_axis_ratios.as_dict["mp_2"][0] == pytest.approx(
-                0.7, 1.0e-4
-            )
-
-        def test__extracts_phis_correctly(self):
-
-            galaxy = ag.Galaxy(redshift=0.5)
-
-            assert galaxy.mass_profile_phis == []
-
-            galaxy = ag.Galaxy(
-                redshift=0.5,
-                mp_0=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
-                    axis_ratio=0.5, phi=0.9
-                ),
-            )
-
-            assert galaxy.mass_profile_phis.in_grouped_list == [[0.9]]
-            assert galaxy.mass_profile_phis.as_dict["mp_0"][0] == pytest.approx(
-                0.9, 1.0e-4
-            )
-
-            galaxy = ag.Galaxy(
-                redshift=0.5,
-                mp_0=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
-                    axis_ratio=0.5, phi=0.9
-                ),
-                mp_1=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
-                    axis_ratio=0.5, phi=0.8
-                ),
-                mp_2=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
-                    axis_ratio=0.5, phi=0.7
-                ),
-            )
-
-            assert galaxy.mass_profile_phis.in_grouped_list[0][0] == pytest.approx(
-                0.9, 1.0e-4
-            )
-            assert galaxy.mass_profile_phis.in_grouped_list[1][0] == pytest.approx(
-                0.8, 1.0e-4
-            )
-            assert galaxy.mass_profile_phis.in_grouped_list[2][0] == pytest.approx(
-                0.7, 1.0e-4
-            )
-            assert galaxy.mass_profile_phis.as_dict["mp_0"][0] == pytest.approx(
-                0.9, 1.0e-4
-            )
-            assert galaxy.mass_profile_phis.as_dict["mp_1"][0] == pytest.approx(
-                0.8, 1.0e-4
-            )
-            assert galaxy.mass_profile_phis.as_dict["mp_2"][0] == pytest.approx(
-                0.7, 1.0e-4
-            )
-
-            galaxy = ag.Galaxy(
-                redshift=0.5,
-                mp_0=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
-                    axis_ratio=0.5, phi=0.9
-                ),
-                mp_1=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
-                    axis_ratio=0.5, phi=0.8
-                ),
-                lp_0=ag.lp.EllipticalLightProfile.from_axis_ratio_and_phi(
-                    axis_ratio=0.5, phi=0.1
-                ),
-                mp_2=ag.mp.EllipticalMassProfile.from_axis_ratio_and_phi(
-                    axis_ratio=0.5, phi=0.7
-                ),
-            )
-
-            assert galaxy.mass_profile_phis.in_grouped_list[0][0] == pytest.approx(
-                0.9, 1.0e-4
-            )
-            assert galaxy.mass_profile_phis.in_grouped_list[1][0] == pytest.approx(
-                0.8, 1.0e-4
-            )
-            assert galaxy.mass_profile_phis.in_grouped_list[2][0] == pytest.approx(
-                0.7, 1.0e-4
-            )
-            assert galaxy.mass_profile_phis.as_dict["mp_0"][0] == pytest.approx(
-                0.9, 1.0e-4
-            )
-            assert galaxy.mass_profile_phis.as_dict["mp_1"][0] == pytest.approx(
-                0.8, 1.0e-4
-            )
-            assert galaxy.mass_profile_phis.as_dict["mp_2"][0] == pytest.approx(
-                0.7, 1.0e-4
-            )
-
     class TestLensingObject:
         def test__correct_einstein_mass_caclulated_for_multiple_mass_profiles__means_all_innherited_methods_work(
             self,
@@ -1445,32 +1189,6 @@ class TestBooleanProperties:
             is True
         )
 
-    def test_has_only_mass_sheets(self):
-
-        assert ag.Galaxy(redshift=0.5).has_only_mass_sheets is False
-        assert (
-            ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.LightProfile()
-            ).has_only_mass_sheets
-            is False
-        )
-        assert (
-            ag.Galaxy(
-                redshift=0.5, mass_profile=ag.mp.MassProfile()
-            ).has_only_mass_sheets
-            is False
-        )
-        assert (
-            ag.Galaxy(
-                redshift=0.5, mass_profile=ag.mp.MassProfile(), sheet=ag.mp.MassSheet()
-            ).has_only_mass_sheets
-            is False
-        )
-        assert (
-            ag.Galaxy(redshift=0.5, sheet=ag.mp.MassSheet()).has_only_mass_sheets
-            is True
-        )
-
     def test_has_redshift(self):
         assert ag.Galaxy(redshift=0.1).has_redshift is True
 
@@ -1502,6 +1220,83 @@ class TestBooleanProperties:
     def test__only_regularization_raises_error(self):
         with pytest.raises(exc.GalaxyException):
             ag.Galaxy(redshift=0.5, regularization=object())
+
+
+class TestExtract:
+    def test__extracts_tuple_attributes_correctly(self):
+
+        galaxy = ag.Galaxy(redshift=0.5)
+
+        centres = galaxy.extract_attribute(cls=ag.lp.LightProfile, name="centre")
+
+        assert centres == None
+
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            lp_0=ag.lp.EllipticalLightProfile(centre=(0.0, 1.0)),
+            lp_1=ag.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
+            lp_2=ag.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
+        )
+
+        centres = galaxy.extract_attribute(cls=ag.lp.LightProfile, name="centre")
+
+        assert centres.in_list == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
+
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            lp_0=ag.lp.EllipticalLightProfile(elliptical_comps=(0.0, 1.0)),
+            lp_1=ag.lp.EllipticalLightProfile(elliptical_comps=(2.0, 3.0)),
+            mp_0=ag.mp.EllipticalMassProfile(elliptical_comps=(-1.0, -2.0)),
+            lp_2=ag.lp.EllipticalLightProfile(elliptical_comps=(4.0, 5.0)),
+        )
+
+        elliptical_comps = galaxy.extract_attribute(
+            cls=ag.lp.LightProfile, name="elliptical_comps"
+        )
+
+        assert elliptical_comps.in_list == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
+
+    def test__extracts_float_attributes_correctly(self):
+
+        galaxy = ag.Galaxy(redshift=0.5)
+
+        axis_ratios = galaxy.extract_attribute(
+            cls=ag.lp.LightProfile, name="axis_ratio"
+        )
+
+        assert axis_ratios == None
+
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            lp_0=ag.lp.EllipticalLightProfile(elliptical_comps=(0.0, 0.05263)),
+            lp_1=ag.lp.EllipticalLightProfile(elliptical_comps=(0.0, 0.111111)),
+            lp_2=ag.lp.EllipticalLightProfile(elliptical_comps=(0.0, 0.176470)),
+        )
+
+        axis_ratios = galaxy.extract_attribute(
+            cls=ag.lp.LightProfile, name="axis_ratio"
+        )
+
+        assert axis_ratios.in_list[0] == pytest.approx(0.9, 1.0e-4)
+        assert axis_ratios.in_list[1] == pytest.approx(0.8, 1.0e-4)
+        assert axis_ratios.in_list[2] == pytest.approx(0.7, 1.0e-4)
+
+        galaxy = ag.Galaxy(
+            redshift=0.5,
+            lp_3=ag.lp.LightProfile(),
+            lp_0=ag.lp.SphericalSersic(effective_radius=1.0),
+            lp_1=ag.lp.SphericalSersic(effective_radius=2.0),
+            mp_0=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.8181818)),
+            lp_2=ag.lp.SphericalSersic(effective_radius=3.0),
+        )
+
+        effective_radii = galaxy.extract_attribute(
+            cls=ag.lp.LightProfile, name="effective_radius"
+        )
+
+        assert effective_radii.in_list[0] == pytest.approx(1.0, 1.0e-4)
+        assert effective_radii.in_list[1] == pytest.approx(2.0, 1.0e-4)
+        assert effective_radii.in_list[2] == pytest.approx(3.0, 1.0e-4)
 
 
 class TestRegression:

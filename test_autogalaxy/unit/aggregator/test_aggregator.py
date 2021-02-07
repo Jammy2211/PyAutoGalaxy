@@ -25,6 +25,7 @@ def make_samples():
 
 
 def test__dataset_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
+
     phase_imaging_7x7 = ag.PhaseImaging(
         galaxies=dict(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
@@ -33,7 +34,7 @@ def test__dataset_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
         search=mock.MockSearch(samples=samples, name="test_phase_aggregator"),
     )
 
-    imaging_7x7.positions = ag.Grid2DIrregularGrouped([[1.0, 1.0], [2.0, 2.0]])
+    imaging_7x7.positions = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0]])
 
     phase_imaging_7x7.run(
         dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults(samples=samples)

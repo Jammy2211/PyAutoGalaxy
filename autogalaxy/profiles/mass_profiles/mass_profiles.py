@@ -4,19 +4,13 @@ import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
 from scipy.special import wofz, comb
-import copy
-
-from autoarray.structures import grids
+from autoarray.structures import arrays, grids
 from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy import exc
 
 
 class MassProfile(lensing.LensingObject):
-    @property
-    def mass_profiles(self):
-        return [self]
-
     @property
     def has_mass_profile(self):
         return True
@@ -29,12 +23,42 @@ class MassProfile(lensing.LensingObject):
     def ellipticity_rescale(self):
         return NotImplementedError()
 
-    @property
-    def is_mass_sheet(self):
-        return False
-
     def with_new_normalization(self, normalization):
         raise NotImplementedError()
+
+    def extract_attribute(self, cls, name):
+        """
+        Returns an attribute of a class and its children profiles in the the galaxy as a `ValueIrregular`
+        or `Grid2DIrregular` object.
+
+        For example, if a galaxy has two light profiles and we want the `LightProfile` axis-ratios, the following:
+
+        `galaxy.extract_attribute(cls=LightProfile, name="axis_ratio"`
+
+        would return:
+
+        ValuesIrregular(values=[axis_ratio_0, axis_ratio_1])
+
+        If a galaxy has three mass profiles and we want the `MassProfile` centres, the following:
+
+        `galaxy.extract_attribute(cls=MassProfile, name="centres"`
+
+         would return:
+
+        GridIrregular2D(grid=[(centre_y_0, centre_x_0), (centre_y_1, centre_x_1), (centre_y_2, centre_x_2)])
+
+        This is used for visualization, for example plotting the centres of all light profiles colored by their profile.
+        """
+
+        if isinstance(self, cls):
+            if hasattr(self, name):
+
+                attribute = getattr(self, name)
+
+                if isinstance(attribute, float):
+                    return arrays.ValuesIrregular(values=[attribute])
+                if isinstance(attribute, tuple):
+                    return grids.Grid2DIrregular(grid=[attribute])
 
 
 # noinspection PyAbstractClass
@@ -58,13 +82,6 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
         super(EllipticalMassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
-
-    @property
-    def mass_profile_centres(self):
-        if not self.is_mass_sheet:
-            return grids.Grid2DIrregularGrouped([self.centre])
-        else:
-            return []
 
     def mass_angular_within_circle(self, radius: float):
         """ Integrate the mass profiles's convergence profile to compute the total mass within a circle of \

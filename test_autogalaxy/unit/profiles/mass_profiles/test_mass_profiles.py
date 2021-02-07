@@ -334,12 +334,25 @@ class TestNormalizationEinstienRadius:
             )
 
 
-class TestLensingObject:
-    def test__mass_profiles__list__is_list_of_self(self):
+class TestExtractObject:
+    def test__extract_works(self):
 
         sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        assert sis.mass_profiles == [sis]
+        einstein_radii = sis.extract_attribute(
+            cls=ag.mp.MassProfile, name="einstein_radius"
+        )
+
+        assert einstein_radii.in_list[0] == 2.0
+
+        centres = sis.extract_attribute(cls=ag.mp.MassProfile, name="centre")
+
+        assert centres.in_list[0] == (0.0, 0.0)
+
+        assert (
+            sis.extract_attribute(cls=ag.mp.MassProfile, name="einstein_radiu") == None
+        )
+        sis.extract_attribute(cls=ag.lp.LightProfile, name="einstein_radius")
 
 
 class TestRegression:

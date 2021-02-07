@@ -42,6 +42,10 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
         return convergence
 
     @grids.grid_like_to_structure
+    def potential_from_grid(self, grid):
+        return np.zeros(shape=grid.shape[0])
+
+    @grids.grid_like_to_structure
     @grids.transform
     @grids.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):

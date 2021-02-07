@@ -63,7 +63,8 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
                 "border", value=self.grid.mask.border_grid_sub_1.slim_binned
             ),
             light_profile_centres=self.extract_2d(
-                "light_profile_centres", self.light_profile.light_profile_centres
+                "light_profile_centres",
+                grids.Grid2DIrregular(grid=[self.light_profile.centre]),
             ),
         )
 

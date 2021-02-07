@@ -99,14 +99,19 @@ def make_grid_iterate_7x7():
     return fixtures.make_grid_iterate_7x7()
 
 
+@pytest.fixture(name="grid_irregular_7x7")
+def make_grid_irregular_7x7():
+    return fixtures.make_grid_irregular_7x7()
+
+
 @pytest.fixture(name="transformer_7x7_7")
 def make_transformer_7x7_7():
     return fixtures.make_transformer_7x7_7()
 
 
-@pytest.fixture(name="grid_irregular_grouped_7x7")
-def make_grid_irregular_grouped_7x7():
-    return fixtures.make_grid_irregular_grouped_7x7()
+@pytest.fixture(name="grid_irregular_7x7_list")
+def make_grid_irregular_7x7_list():
+    return fixtures.make_grid_irregular_7x7_list()
 
 
 @pytest.fixture(name="visibilities_mask_7")
@@ -152,6 +157,16 @@ def make_masked_interferometer_7():
 @pytest.fixture(name="masked_interferometer_7_lop")
 def make_masked_interferometer_7_lop():
     return fixtures.make_masked_interferometer_7_lop()
+
+
+@pytest.fixture(name="ps_0")
+def make_ps_0():
+    return fixtures.make_ps_0()
+
+
+@pytest.fixture(name="ps_1")
+def make_ps_1():
+    return fixtures.make_ps_1()
 
 
 @pytest.fixture(name="lp_0")

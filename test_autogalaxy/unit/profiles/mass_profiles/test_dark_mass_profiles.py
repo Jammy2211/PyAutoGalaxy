@@ -860,7 +860,7 @@ class TestTruncatedNFW:
         )
 
         deflections = truncated_nfw.deflections_from_grid(
-            grid=ag.Grid2DIrregularGrouped([[(2.0, 0.0)]])
+            grid=ag.Grid2DIrregular([(2.0, 0.0)])
         )
 
         assert deflections[0, 0] == pytest.approx(2.1702661386, 1.0e-4)
@@ -1165,7 +1165,7 @@ class TestNFW:
         )
 
         deflections = nfw.deflections_from_grid_via_integrator(
-            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625)])
         )
 
         assert deflections[0, 0] == pytest.approx(-2.59480, 1e-3)
@@ -1206,7 +1206,7 @@ class TestNFW:
         )
 
         deflections = nfw.deflections_from_grid(
-            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625)])
         )
 
         assert deflections[0, 0] == pytest.approx(-2.59480, 1e-3)
