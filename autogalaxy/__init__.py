@@ -65,4 +65,4 @@ from . import convert
 
 conf.instance.register(__file__)
 
-__version__ = "0.18.1"
+__version__ = '0.18.2'
