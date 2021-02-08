@@ -113,25 +113,15 @@ class AbstractPlane(lensing.LensingObject):
         return any(list(map(lambda galaxy: galaxy.has_hyper_galaxy, self.galaxies)))
 
     @property
-    def light_profile_centres(self):
-        """
-        Returns the light profile centres of the plane as a `Grid2DIrregularGrouped` object, which structures the centres
-            in lists according to which galaxy they come from.
+    def point_source_dict(self):
 
-            Fo example, if a plane has two galaxies, the first with one light profile and second with two light profiles
-            this  returns:
+        point_source_dict = {}
 
-            [[(y0, x0)], [(y0, x0), (y1, x1)]]
+        for galaxy in self.galaxies:
+            for key, value in galaxy.point_source_dict.items():
+                point_source_dict[key] = value
 
-            This is used for visualization, for example plotting the centres of all light profiles colored by their galaxy.
-        """
-        return grids.Grid2DIrregularGrouped(
-            [
-                list(galaxy.light_profile_centres)
-                for galaxy in self.galaxies
-                if galaxy.has_light_profile
-            ]
-        )
+        return point_source_dict
 
     @property
     def mass_profiles(self):
@@ -147,123 +137,91 @@ class AbstractPlane(lensing.LensingObject):
             galaxy.mass_profiles for galaxy in self.galaxies if galaxy.has_mass_profile
         ]
 
-    @property
-    def mass_profile_centres(self):
+    def extract_attribute(self, cls, name):
         """
-        Returns the mass profile centres of the plane as a `Grid2DIrregularGrouped` object, which structures the centres
-            in lists according to which galaxy they come from.
+        Returns an attribute of a class in `Plane` as a `ValueIrregular` or `Grid2DIrregular` object.
 
-            Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
-            this  returns:
+        For example, if a plane has a galaxy which two light profiles and we want its axis-ratios, the following:
 
-            [[(y0, x0)], [(y0, x0), (y1, x1)]]
+        `plane.extract_attribute(cls=LightProfile, name="axis_ratio")`
 
-            This is used for visualization, for example plotting the centres of all mass profiles colored by their galaxy.
+        would return:
 
-            The centres of mass-sheets are filtered out, as their centres are not relevant to lensing calculations.
+        ValuesIrregular(values=[axis_ratio_0, axis_ratio_1])
+
+        If a galaxy has three mass profiles and we want their centres, the following:
+
+        `plane.extract_attribute(cls=MassProfile, name="centres")`
+
+        would return:
+
+        GridIrregular2D(grid=[(centre_y_0, centre_x_0), (centre_y_1, centre_x_1), (centre_y_2, centre_x_2)])
+
+        This is used for visualization, for example plotting the centres of all mass profiles colored by their profile.
         """
-        return grids.Grid2DIrregularGrouped(
-            [
-                list(galaxy.mass_profile_centres)
-                for galaxy in self.galaxies
-                if galaxy.has_mass_profile and not galaxy.has_only_mass_sheets
-            ]
-        )
 
-    @property
-    def mass_profile_axis_ratios(self):
-        """
-        Returns the mass profile axis-ratios of the plane as a `Grid2DIrregularGrouped` object, which structures the axis-ratios
-            in lists according to which galaxy they come from.
+        def extract(value, name):
 
-            Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
-            this  returns:
+            try:
+                return getattr(value, name)
+            except (AttributeError, IndexError):
+                return None
 
-            [[axis_ratio_0], [axis_ratio_0, axis_ratio_1]]
+        attributes = [
+            extract(value, name)
+            for galaxy in self.galaxies
+            for value in galaxy.__dict__.values()
+            if isinstance(value, cls)
+        ]
 
-            This is used for visualization, for example plotting ellipses of axis-ratios of all mass profiles colored by
-            their galaxy.
-        """
-        return arrays.ValuesIrregularGrouped(
-            [
-                list(galaxy.mass_profile_axis_ratios)
-                for galaxy in self.galaxies
-                if galaxy.has_mass_profile
-            ]
-        )
-
-    @property
-    def mass_profile_phis(self):
-        """
-        Returns the mass profile phis of the plane as a `Grid2DIrregularGrouped` object, which structures the phis
-            in lists according to which galaxy they come from.
-
-            Fo example, if a plane has two galaxies, the first with one mass profile and second with two mass profiles
-            this  returns:
-
-            [[phi_0], [phi_0, phi_1]]
-
-            This is used for visualization, for example plotting ellipses of phis of all mass profiles colored by
-            their galaxy.
-        """
-        return arrays.ValuesIrregularGrouped(
-            [
-                list(galaxy.mass_profile_phis)
-                for galaxy in self.galaxies
-                if galaxy.has_mass_profile
-            ]
-        )
-
-    def new_object_with_units_converted(
-        self,
-        unit_length=None,
-        unit_luminosity=None,
-        unit_mass=None,
-        kpc_per_arcsec=None,
-        exposure_time=None,
-        critical_surface_density=None,
-    ):
-
-        new_galaxies = list(
-            map(
-                lambda galaxy: galaxy.new_object_with_units_converted(
-                    unit_length=unit_length,
-                    unit_luminosity=unit_luminosity,
-                    unit_mass=unit_mass,
-                    kpc_per_arcsec=kpc_per_arcsec,
-                    exposure_time=exposure_time,
-                    critical_surface_density=critical_surface_density,
-                ),
-                self.galaxies,
-            )
-        )
-
-        return self.__class__(galaxies=new_galaxies, redshift=self.redshift)
-
-    @property
-    def unit_length(self):
-        if self.has_light_profile:
-            return self.galaxies_with_light_profile[0].unit_length
-        elif self.has_mass_profile:
-            return self.galaxies_with_mass_profile[0].unit_length
-        else:
+        if attributes == []:
             return None
+        elif isinstance(attributes[0], float):
+            return arrays.ValuesIrregular(values=attributes)
+        elif isinstance(attributes[0], tuple):
+            return grids.Grid2DIrregular(grid=attributes)
 
-    @property
-    def unit_luminosity(self):
-        if self.has_light_profile:
-            return self.galaxies_with_light_profile[0].unit_luminosity
-        elif self.has_mass_profile:
-            return self.galaxies_with_mass_profile[0].unit_luminosity
-        else:
-            return None
+    def extract_attributes_of_galaxies(self, cls, name, filter_nones=False):
+        """
+        Returns an attribute of a class in the plane as a list of `ValueIrregular` or `Grid2DIrregular` objects,
+        where the list indexes correspond to each galaxy in the plane..
 
-    @property
-    def unit_mass(self):
-        if self.has_mass_profile:
-            return self.galaxies_with_mass_profile[0].unit_mass
+        For example, if a plane has two galaxies which each have a light profile the following:
+
+        `plane.extract_attributes_of_galaxies(cls=LightProfile, name="axis_ratio")`
+
+        would return:
+
+        [ValuesIrregular(values=[axis_ratio_0]), ValuesIrregular(values=[axis_ratio_1])]
+
+        If a plane has two galaxies, the first with a mass profile and the second with two mass profiles ,the following:
+
+        `plane.extract_attributes_of_galaxies(cls=MassProfile, name="centres")`
+
+        would return:
+        [
+            Grid2DIrregular(grid=[(centre_y_0, centre_x_0)]),
+            Grid2DIrregular(grid=[(centre_y_0, centre_x_0), (centre_y_1, centre_x_1)])
+        ]
+
+        If a Profile does not have a certain entry, it is replaced with a None. Nones can be removed by
+        setting `filter_nones=True`.
+
+        This is used for visualization, for example plotting the centres of all mass profiles colored by their profile.
+        """
+        if filter_nones:
+
+            return [
+                galaxy.extract_attribute(cls=cls, name=name)
+                for galaxy in self.galaxies
+                if galaxy.extract_attribute(cls=cls, name=name) is not None
+            ]
+
         else:
-            return None
+
+            return [
+                galaxy.extract_attribute(cls=cls, name=name) for galaxy in self.galaxies
+            ]
 
 
 class AbstractPlaneLensing(AbstractPlane):
@@ -308,7 +266,7 @@ class AbstractPlaneLensing(AbstractPlane):
     @grids.grid_like_to_structure
     def convergence_from_grid(self, grid):
         """
-    Returns the convergence of the list of galaxies of the plane's sub-grid, by summing the individual convergences \
+        Returns the convergence of the list of galaxies of the plane's sub-grid, by summing the individual convergences \
         of each galaxy's mass profile.
 
         The convergence is calculated on the sub-grid and binned-up to the original grid by taking the mean
@@ -327,13 +285,12 @@ class AbstractPlaneLensing(AbstractPlane):
         """
         if self.galaxies:
             return sum(map(lambda g: g.convergence_from_grid(grid=grid), self.galaxies))
-        else:
-            return np.zeros(shape=(grid.shape[0],))
+        return np.zeros(shape=(grid.shape[0],))
 
     @grids.grid_like_to_structure
     def potential_from_grid(self, grid):
         """
-    Returns the potential of the list of galaxies of the plane's sub-grid, by summing the individual potentials \
+        Returns the potential of the list of galaxies of the plane's sub-grid, by summing the individual potentials \
         of each galaxy's mass profile.
 
         The potential is calculated on the sub-grid and binned-up to the original grid by taking the mean
@@ -363,7 +320,6 @@ class AbstractPlaneLensing(AbstractPlane):
     @grids.grid_like_to_structure
     def traced_grid_from_grid(self, grid):
         """Trace this plane's grid_stacks to the next plane, using its deflection angles."""
-
         return grid - self.deflections_from_grid(grid=grid)
 
 

@@ -6,6 +6,7 @@ import typing
 
 
 class LightProfile:
+
     """Mixin class that implements functions common to all light profiles"""
 
     def image_from_grid_radii(self, grid_radii):
@@ -64,10 +65,6 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         )
         self.intensity = intensity
 
-    @property
-    def light_profile_centres(self):
-        return grids.Grid2DIrregularGrouped([self.centre])
-
     def blurred_image_from_grid_and_psf(self, grid, psf, blurring_grid):
         """Evaluate the light profile image on an input `Grid2D` of coordinates and then convolve it with a PSF.
 
@@ -76,7 +73,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         their light is blurred into it by the PSF.
 
         The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D array
-        and binned up for convolution. They therefore cannot be `Grid2DIrregularGrouped` objects.
+        and binned up for convolution. They therefore cannot be `Grid2DIrregular` objects.
 
         Parameters
         ----------
@@ -105,7 +102,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         their light is blurred into it by the Convolver.
 
         The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D array
-        and binned up for convolution. They therefore cannot be `Grid2DIrregularGrouped` objects.
+        and binned up for convolution. They therefore cannot be `Grid2DIrregular` objects.
 
         Parameters
         ----------
@@ -157,26 +154,6 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
         The axis ratio is set to 1.0 for computing the luminosity within a circle"""
         return 2 * np.pi * x * self.image_from_grid_radii(x)
-
-
-class PointSource(EllipticalLightProfile):
-    def __init__(self, centre: typing.Tuple[float, float] = (0.0, 0.0)):
-
-        super().__init__(centre=centre, elliptical_comps=(0.0, 0.0))
-
-    @grids.grid_like_to_structure
-    def image_from_grid(self, grid):
-        return np.zeros(shape=grid.shape[0])
-
-
-class PointSourceFlux(PointSource):
-    def __init__(
-        self, centre: typing.Tuple[float, float] = (0.0, 0.0), flux: float = 0.1
-    ):
-
-        super().__init__(centre=centre)
-
-        self.flux = flux
 
 
 class EllipticalGaussian(EllipticalLightProfile):

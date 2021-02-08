@@ -40,6 +40,16 @@ def make_masked_interferometer_7_lop():
 # PROFILES #
 
 
+def make_ps_0():
+    # noinspection PyTypeChecker
+    return ag.ps.PointSourceFlux(flux=0.0)
+
+
+def make_ps_1():
+    # noinspection PyTypeChecker
+    return ag.ps.PointSourceFlux(flux=1.0)
+
+
 def make_lp_0():
     # noinspection PyTypeChecker
     return ag.lp.SphericalSersic(intensity=1.0, effective_radius=2.0, sersic_index=2.0)

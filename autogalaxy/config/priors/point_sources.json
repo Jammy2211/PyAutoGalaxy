@@ -1,0 +1,63 @@
+{
+    "PointSource": {
+        "centre_0": {
+            "type": "Gaussian",
+            "lower_limit": "-inf",
+            "upper_limit": "inf",
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.05
+            },
+            "mean": 0.0,
+            "sigma": 0.3
+        },
+        "centre_1": {
+            "type": "Gaussian",
+            "lower_limit": "-inf",
+            "upper_limit": "inf",
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.05
+            },
+            "mean": 0.0,
+            "sigma": 0.3
+        }
+    },
+    "PointSourceFlux": {
+        "centre_0": {
+            "type": "Gaussian",
+            "lower_limit": "-inf",
+            "upper_limit": "inf",
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.05
+            },
+            "mean": 0.0,
+            "sigma": 0.3
+        },
+        "centre_1": {
+            "type": "Gaussian",
+            "lower_limit": "-inf",
+            "upper_limit": "inf",
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.05
+            },
+            "mean": 0.0,
+            "sigma": 0.3
+        },
+        "flux": {
+            "type": "LogUniform",
+            "lower_limit": 1e-06,
+            "upper_limit": 1000000.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
+            }
+        }
+    }
+}

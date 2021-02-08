@@ -2,6 +2,7 @@ from autoarray.plot.mat_wrap import mat_plot as mp
 from autogalaxy.plot.plotters import lensing_obj_plotter
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.plot.plotters import light_profile_plotters, mass_profile_plotters
+from autogalaxy.profiles import light_profiles
 
 
 class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
@@ -59,7 +60,10 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
 
         return visuals_2d + visuals_2d.__class__(
             light_profile_centres=self.extract_2d(
-                "light_profile_centres", self.lensing_obj.light_profile_centres
+                "light_profile_centres",
+                self.lensing_obj.extract_attribute(
+                    cls=light_profiles.LightProfile, name="centre"
+                ),
             )
         )
 

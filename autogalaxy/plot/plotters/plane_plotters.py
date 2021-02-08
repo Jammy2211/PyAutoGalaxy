@@ -4,6 +4,7 @@ from autoarray.structures import grids
 from autogalaxy.plot.plotters import lensing_obj_plotter
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.plane import plane as pl
+from autogalaxy.profiles import light_profiles
 
 
 class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
@@ -60,7 +61,10 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
         return visuals_2d + visuals_2d.__class__(
             grid=self.extract_2d("grid", self.grid),
             light_profile_centres=self.extract_2d(
-                "light_profile_centres", self.lensing_obj.light_profile_centres
+                "light_profile_centres",
+                self.lensing_obj.extract_attribute(
+                    cls=light_profiles.LightProfile, name="centre"
+                ),
             ),
         )
 

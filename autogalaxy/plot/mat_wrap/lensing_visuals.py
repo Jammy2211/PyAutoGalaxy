@@ -60,24 +60,26 @@ class Visuals2D(vis.Visuals2D):
         )
 
         if self.light_profile_centres is not None:
-            plotter.light_profile_centres_scatter.scatter_grid_grouped(
-                grid_grouped=self.light_profile_centres
+            plotter.light_profile_centres_scatter.scatter_grid(
+                grid=self.light_profile_centres
             )
 
         if self.mass_profile_centres is not None:
-            plotter.mass_profile_centres_scatter.scatter_grid_grouped(
-                grid_grouped=self.mass_profile_centres
+            plotter.mass_profile_centres_scatter.scatter_grid(
+                grid=self.mass_profile_centres
             )
 
         if self.multiple_images is not None:
-            plotter.multiple_images_scatter.scatter_grid_grouped(
-                grid_grouped=self.multiple_images
-            )
+            plotter.multiple_images_scatter.scatter_grid(grid=self.multiple_images)
 
         if self.critical_curves is not None:
-            plotter.critical_curves_plot.plot_grid_grouped(
-                grid_grouped=self.critical_curves
-            )
+            try:
+                plotter.critical_curves_plot.plot_grid(grid=self.critical_curves)
+            except TypeError:
+                pass
 
         if self.caustics is not None:
-            plotter.caustics_plot.plot_grid_grouped(grid_grouped=self.caustics)
+            try:
+                plotter.caustics_plot.plot_grid(grid=self.caustics)
+            except TypeError:
+                pass

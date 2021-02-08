@@ -2,7 +2,6 @@ import numpy as np
 import pytest
 
 import autogalaxy as ag
-from autogalaxy import exc
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
@@ -338,7 +337,7 @@ class TestSersic:
         )
 
         deflections = sersic.deflections_from_grid_via_integrator(
-            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625), (0.1625, 0.1625)])
         )
 
         assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
@@ -372,7 +371,7 @@ class TestSersic:
         )
 
         deflections = sersic.deflections_from_grid(
-            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625), (0.1625, 0.1625)])
         )
 
         assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
@@ -390,7 +389,7 @@ class TestSersic:
         )
 
         deflections = sersic.deflections_from_grid(
-            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625), (0.1625, 0.1625)])
         )
 
         assert deflections[0, 0] == pytest.approx(2.0 * 1.1446, 1e-3)
@@ -408,7 +407,7 @@ class TestSersic:
         )
 
         deflections = sersic.deflections_from_grid(
-            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625), (0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625), (0.1625, 0.1625)])
         )
 
         assert deflections[0, 0] == pytest.approx(2.0 * 1.1446, 1e-3)
@@ -689,7 +688,7 @@ class TestExponential:
         )
 
         deflections = exponential.deflections_from_grid_via_integrator(
-            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625)])
         )
 
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
@@ -720,7 +719,7 @@ class TestExponential:
         )
 
         deflections = exponential.deflections_from_grid(
-            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625)])
         )
 
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
@@ -914,7 +913,7 @@ class TestDevVaucouleurs:
         )
 
         deflections = dev.deflections_from_grid_via_integrator(
-            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625)])
         )
 
         assert deflections[0, 0] == pytest.approx(-24.528, 1e-3)
@@ -930,7 +929,7 @@ class TestDevVaucouleurs:
         )
 
         deflections = dev.deflections_from_grid(
-            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625)])
         )
 
         # assert deflections[0, 0] == pytest.approx(-24.528, 1e-3)
@@ -1092,7 +1091,7 @@ class TestSersicMassRadialGradient:
         )
 
         deflections = sersic.deflections_via_integrator_from_grid(
-            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625)])
         )
 
         assert deflections[0, 0] == pytest.approx(0.97806399756448, 1e-3)
@@ -1126,7 +1125,7 @@ class TestSersicMassRadialGradient:
         )
 
         deflections = sersic.deflections_from_grid(
-            grid=ag.Grid2DIrregularGrouped([[(0.1625, 0.1625)]])
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625)])
         )
 
         assert deflections[0, 0] == pytest.approx(0.97806399756448, 1e-3)

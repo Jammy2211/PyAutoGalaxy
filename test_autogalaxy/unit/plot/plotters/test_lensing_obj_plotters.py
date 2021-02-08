@@ -55,12 +55,7 @@ def test__visuals_with_include_2d(mp_0, grid_7x7):
 
 
 def test__all_quantities_are_output(
-    mp_0,
-    sub_grid_7x7,
-    grid_irregular_grouped_7x7,
-    include_2d_all,
-    plot_path,
-    plot_patch,
+    mp_0, sub_grid_7x7, grid_irregular_7x7_list, include_2d_all, plot_path, plot_patch
 ):
 
     lensing_obj_plotter = lo_plotter.LensingObjPlotter(

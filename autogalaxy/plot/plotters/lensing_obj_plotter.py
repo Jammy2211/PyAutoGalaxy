@@ -1,6 +1,7 @@
 from autoarray.structures import arrays, grids
 from autoarray.plot.plotters import abstract_plotters
 from autoarray.plot.mat_wrap import mat_plot as mp
+from autogalaxy.profiles import mass_profiles
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 
 
@@ -61,7 +62,10 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
                 "border", value=self.grid.mask.border_grid_sub_1.slim_binned
             ),
             mass_profile_centres=self.extract_2d(
-                "mass_profile_centres", self.lensing_obj.mass_profile_centres
+                "mass_profile_centres",
+                self.lensing_obj.extract_attribute(
+                    cls=mass_profiles.MassProfile, name="centre"
+                ),
             ),
             critical_curves=self.extract_2d(
                 "critical_curves",

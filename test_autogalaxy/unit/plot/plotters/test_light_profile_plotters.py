@@ -57,12 +57,7 @@ def test__visuals_with_include_2d(lp_0, grid_7x7):
 
 
 def test__all_quantities_are_output(
-    lp_0,
-    sub_grid_7x7,
-    grid_irregular_grouped_7x7,
-    include_2d_all,
-    plot_path,
-    plot_patch,
+    lp_0, sub_grid_7x7, grid_irregular_7x7_list, include_2d_all, plot_path, plot_patch
 ):
 
     light_profile_plotter = aplt.LightProfilePlotter(

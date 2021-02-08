@@ -1,7 +1,6 @@
 from autoarray.structures import grids
 from autogalaxy.plot.plotters import lensing_obj_plotter
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
-from autoarray.plot.plotters import structure_plotters
 from autogalaxy.profiles.mass_profiles import mass_profiles as mp
 
 

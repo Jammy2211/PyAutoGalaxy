@@ -227,7 +227,7 @@ class TestDeflectionsMagnitudes:
     def test__compare_sis_deflection_magnitudes_to_known_values(self):
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
-        grid = ag.Grid2DIrregularGrouped([(1.0, 0.0), (0.0, 1.0)])
+        grid = ag.Grid2DIrregular([(1.0, 0.0), (0.0, 1.0)])
 
         deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
 
@@ -235,7 +235,7 @@ class TestDeflectionsMagnitudes:
 
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        grid = ag.Grid2DIrregularGrouped([(2.0, 0.0), (0.0, 2.0)])
+        grid = ag.Grid2DIrregular([(2.0, 0.0), (0.0, 2.0)])
 
         deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
 
@@ -340,7 +340,7 @@ class TestHessian:
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
         )
 
-        grid = ag.Grid2DIrregularGrouped(grid=[[(0.5, 0.5)], [(1.0, 1.0)]])
+        grid = ag.Grid2DIrregular(grid=[(0.5, 0.5), (1.0, 1.0)])
 
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from_grid(
             grid=grid
@@ -353,7 +353,7 @@ class TestHessian:
         assert hessian_yx == pytest.approx(np.array([-1.388165, -0.694099]), 1.0e-4)
         assert hessian_xx == pytest.approx(np.array([1.3883824, 0.694127]), 1.0e-4)
 
-        grid = ag.Grid2DIrregularGrouped(grid=[[(1.0, 0.0)], [(0.0, 1.0)]])
+        grid = ag.Grid2DIrregular(grid=[(1.0, 0.0), (0.0, 1.0)])
 
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from_grid(
             grid=grid
@@ -369,13 +369,8 @@ class TestConvergence:
     def test__convergence_via_hessian_from_grid(self):
 
         buffer = 0.0001
-        grid = ag.Grid2DIrregularGrouped(
-            grid=[
-                [(1.075, -0.125)],
-                [(-0.875, -0.075)],
-                [(-0.925, -0.075)],
-                [(0.075, 0.925)],
-            ]
+        grid = ag.Grid2DIrregular(
+            grid=[(1.075, -0.125), (-0.875, -0.075), (-0.925, -0.075), (0.075, 0.925)]
         )
 
         sis = MockEllipticalIsothermal(
@@ -384,38 +379,29 @@ class TestConvergence:
 
         convergence = sis.convergence_via_hessian_from_grid(grid=grid, buffer=buffer)
 
-        assert convergence.in_grouped_list[0][0] == pytest.approx(0.461447, 1.0e-4)
-        assert convergence.in_grouped_list[1][0] == pytest.approx(0.568875, 1.0e-4)
-        assert convergence.in_grouped_list[2][0] == pytest.approx(0.538326, 1.0e-4)
-        assert convergence.in_grouped_list[3][0] == pytest.approx(0.539390, 1.0e-4)
+        assert convergence.in_list[0] == pytest.approx(0.461447, 1.0e-4)
+        assert convergence.in_list[1] == pytest.approx(0.568875, 1.0e-4)
+        assert convergence.in_list[2] == pytest.approx(0.538326, 1.0e-4)
+        assert convergence.in_list[3] == pytest.approx(0.539390, 1.0e-4)
 
         sis = ag.mp.EllipticalIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.3, 0.4), einstein_radius=1.5
         )
 
-        print(sis.convergence_from_grid(grid=grid))
-
         convergence = sis.convergence_via_hessian_from_grid(grid=grid, buffer=buffer)
 
-        print(convergence)
-
-        assert convergence.in_grouped_list[0][0] == pytest.approx(0.35313, 1.0e-4)
-        assert convergence.in_grouped_list[1][0] == pytest.approx(0.46030, 1.0e-4)
-        assert convergence.in_grouped_list[2][0] == pytest.approx(0.43484, 1.0e-4)
-        assert convergence.in_grouped_list[3][0] == pytest.approx(1.00492, 1.0e-4)
+        assert convergence.in_list[0] == pytest.approx(0.35313, 1.0e-4)
+        assert convergence.in_list[1] == pytest.approx(0.46030, 1.0e-4)
+        assert convergence.in_list[2] == pytest.approx(0.43484, 1.0e-4)
+        assert convergence.in_list[3] == pytest.approx(1.00492, 1.0e-4)
 
 
 class TestShear:
     def test__shear_via_hessian_from_grid(self):
 
         buffer = 0.00001
-        grid = ag.Grid2DIrregularGrouped(
-            grid=[
-                [(1.075, -0.125)],
-                [(-0.875, -0.075)],
-                [(-0.925, -0.075)],
-                [(0.075, 0.925)],
-            ]
+        grid = ag.Grid2DIrregular(
+            grid=[(1.075, -0.125), (-0.875, -0.075), (-0.925, -0.075), (0.075, 0.925)]
         )
 
         sis = ag.mp.EllipticalIsothermal(
@@ -424,10 +410,10 @@ class TestShear:
 
         shear = sis.shear_via_hessian_from_grid(grid=grid, buffer=buffer)
 
-        assert shear.in_grouped_list[0][0] == pytest.approx(0.461447, 1.0e-4)
-        assert shear.in_grouped_list[1][0] == pytest.approx(0.568875, 1.0e-4)
-        assert shear.in_grouped_list[2][0] == pytest.approx(0.538326, 1.0e-4)
-        assert shear.in_grouped_list[3][0] == pytest.approx(0.539390, 1.0e-4)
+        assert shear.in_list[0] == pytest.approx(0.461447, 1.0e-4)
+        assert shear.in_list[1] == pytest.approx(0.568875, 1.0e-4)
+        assert shear.in_list[2] == pytest.approx(0.538326, 1.0e-4)
+        assert shear.in_list[3] == pytest.approx(0.539390, 1.0e-4)
 
         sis = ag.mp.EllipticalIsothermal(
             centre=(0.2, 0.1), elliptical_comps=(0.3, 0.4), einstein_radius=1.5
@@ -438,10 +424,10 @@ class TestShear:
 
         shear = sis.shear_via_hessian_from_grid(grid=grid, buffer=buffer)
 
-        assert shear.in_grouped_list[0][0] == pytest.approx(0.41597, 1.0e-4)
-        assert shear.in_grouped_list[1][0] == pytest.approx(0.38299, 1.0e-4)
-        assert shear.in_grouped_list[2][0] == pytest.approx(0.36522, 1.0e-4)
-        assert shear.in_grouped_list[3][0] == pytest.approx(0.82750, 1.0e-4)
+        assert shear.in_list[0] == pytest.approx(0.41597, 1.0e-4)
+        assert shear.in_list[1] == pytest.approx(0.38299, 1.0e-4)
+        assert shear.in_list[2] == pytest.approx(0.36522, 1.0e-4)
+        assert shear.in_list[3] == pytest.approx(0.82750, 1.0e-4)
 
 
 class TestMagnification:
@@ -541,12 +527,12 @@ class TestMagnification:
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
         )
 
-        grid = ag.Grid2DIrregularGrouped(grid=[[(0.5, 0.5)], [(1.0, 1.0)]])
+        grid = ag.Grid2DIrregular(grid=[(0.5, 0.5), (1.0, 1.0)])
 
         magnification = sie.magnification_via_hessian_from_grid(grid=grid)
 
-        assert magnification.in_grouped_list[0][0] == pytest.approx(-0.56303, 1.0e-4)
-        assert magnification.in_grouped_list[1][0] == pytest.approx(-2.57591, 1.0e-4)
+        assert magnification.in_list[0] == pytest.approx(-0.56303, 1.0e-4)
+        assert magnification.in_list[1] == pytest.approx(-2.57591, 1.0e-4)
 
 
 def critical_curve_via_magnification_from(mass_profile, grid):
@@ -725,7 +711,7 @@ class TestCriticalCurvesAndCaustics:
 
         critical_curves = sis.critical_curves_from_grid(grid=grid)
 
-        tangential_critical_curve = np.asarray(critical_curves.in_grouped_list[0])
+        tangential_critical_curve = np.asarray(critical_curves[0])
 
         x_critical_tangential, y_critical_tangential = (
             tangential_critical_curve[:, 1],
@@ -737,13 +723,14 @@ class TestCriticalCurvesAndCaustics:
         ) == pytest.approx(sis.einstein_radius ** 2, 5e-1)
 
     def test__tangential_critical_curve_centres__spherical_isothermal(self):
+
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
         grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
         critical_curves = sis.critical_curves_from_grid(grid=grid)
 
-        tangential_critical_curve = np.asarray(critical_curves.in_grouped_list[0])
+        tangential_critical_curve = np.asarray(critical_curves[0])
 
         y_centre = np.mean(tangential_critical_curve[:, 0])
         x_centre = np.mean(tangential_critical_curve[:, 1])
@@ -755,8 +742,7 @@ class TestCriticalCurvesAndCaustics:
 
         critical_curves = sis.critical_curves_from_grid(grid=grid)
 
-        tangential_critical_curve = np.asarray(critical_curves.in_grouped_list[0])
-
+        tangential_critical_curve = np.asarray(critical_curves[0])
         y_centre = np.mean(tangential_critical_curve[:, 0])
         x_centre = np.mean(tangential_critical_curve[:, 1])
 
@@ -771,7 +757,7 @@ class TestCriticalCurvesAndCaustics:
 
         critical_curves = sis.critical_curves_from_grid(grid=grid)
 
-        radial_critical_curve = np.asarray(critical_curves.in_grouped_list[1])
+        radial_critical_curve = np.asarray(critical_curves[0])
 
         y_centre = np.mean(radial_critical_curve[:, 0])
         x_centre = np.mean(radial_critical_curve[:, 1])
@@ -783,7 +769,7 @@ class TestCriticalCurvesAndCaustics:
 
         critical_curves = sis.critical_curves_from_grid(grid=grid)
 
-        radial_critical_curve = np.asarray(critical_curves.in_grouped_list[1])
+        radial_critical_curve = np.asarray(critical_curves[0])
 
         y_centre = np.mean(radial_critical_curve[:, 0])
         x_centre = np.mean(radial_critical_curve[:, 1])
@@ -792,13 +778,14 @@ class TestCriticalCurvesAndCaustics:
         assert 0.95 < x_centre < 1.05
 
     def test__tangential_caustic_centres__spherical_isothermal(self):
+
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
         grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
         caustics = sis.caustics_from_grid(grid=grid)
 
-        tangential_caustic = np.asarray(caustics.in_grouped_list[0])
+        tangential_caustic = np.asarray(caustics[0])
 
         y_centre = np.mean(tangential_caustic[:, 0])
         x_centre = np.mean(tangential_caustic[:, 1])
@@ -810,7 +797,7 @@ class TestCriticalCurvesAndCaustics:
 
         caustics = sis.caustics_from_grid(grid=grid)
 
-        tangential_caustic = np.asarray(caustics.in_grouped_list[0])
+        tangential_caustic = np.asarray(caustics[0])
 
         y_centre = np.mean(tangential_caustic[:, 0])
         x_centre = np.mean(tangential_caustic[:, 1])
@@ -819,13 +806,14 @@ class TestCriticalCurvesAndCaustics:
         assert 0.97 < x_centre < 1.03
 
     def test__radial_caustics_radii__spherical_isothermal(self):
+
         sis = MockSphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
         grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.2)
 
         caustics = sis.caustics_from_grid(grid=grid)
 
-        caustic_radial = np.asarray(caustics.in_grouped_list[1])
+        caustic_radial = np.asarray(caustics[1])
 
         x_caustic_radial, y_caustic_radial = (
             caustic_radial[:, 1],
@@ -843,7 +831,7 @@ class TestCriticalCurvesAndCaustics:
 
         caustics = sis.caustics_from_grid(grid=grid)
 
-        radial_caustic = np.asarray(caustics.in_grouped_list[1])
+        radial_caustic = np.asarray(caustics[1])
 
         y_centre = np.mean(radial_caustic[:, 0])
         x_centre = np.mean(radial_caustic[:, 1])
@@ -855,7 +843,7 @@ class TestCriticalCurvesAndCaustics:
 
         caustics = sis.caustics_from_grid(grid=grid)
 
-        radial_caustic = np.asarray(caustics.in_grouped_list[1])
+        radial_caustic = np.asarray(caustics[1])
 
         y_centre = np.mean(radial_caustic[:, 0])
         x_centre = np.mean(radial_caustic[:, 1])

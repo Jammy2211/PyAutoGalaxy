@@ -12,17 +12,21 @@ from autofit.mock.mock import MockSearch, MockSamples
 
 
 class MockLightProfile(ag.lp.LightProfile):
-    def __init__(self, value, size=1):
+    def __init__(self, value, size=1, value1=None):
+
         self.value = value
         self.size = size
+        self.value1 = value1
 
     def image_from_grid(self, grid):
         return np.array(self.size * [self.value])
 
 
-class MockMassProfile:
-    def __init__(self, value):
+class MockMassProfile(ag.mp.MassProfile):
+    def __init__(self, value, value1=None):
+
         self.value = value
+        self.value1 = value1
 
     def surface_density_from_grid(self, grid):
         return np.array([self.value])

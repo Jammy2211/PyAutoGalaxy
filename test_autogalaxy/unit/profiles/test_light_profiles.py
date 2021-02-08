@@ -12,19 +12,6 @@ from autogalaxy.mock import mock
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
-class TestPointSources:
-    def test__simple(self):
-
-        point_source = ag.lp.PointSource(centre=(0.0, 0.0))
-
-        assert point_source.centre == (0.0, 0.0)
-
-        point_source = ag.lp.PointSourceFlux(centre=(0.0, 0.0), flux=0.1)
-
-        assert point_source.centre == (0.0, 0.0)
-        assert point_source.flux == 0.1
-
-
 class TestGaussian:
     def test__intensity_as_radius__correct_value(self):
         gaussian = ag.lp.EllipticalGaussian(

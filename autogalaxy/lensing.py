@@ -47,10 +47,6 @@ def evaluation_grid(func):
 
 
 class LensingObject:
-    @property
-    def mass_profiles(self):
-        raise NotImplementedError("mass profiles list should be overriden")
-
     def convergence_func(self, grid_radius):
         raise NotImplementedError("convergence_func should be overridden")
 
@@ -67,10 +63,6 @@ class LensingObject:
 
     def deflections_from_grid(self, grid):
         raise NotImplementedError("deflections_from_grid should be overridden")
-
-    @property
-    def mass_profile_centres(self):
-        raise NotImplementedError("mass profile centres should be overridden")
 
     def mass_integral(self, x):
         """Routine to integrate an elliptical light profiles - set axis ratio to 1 to compute the luminosity within a \
@@ -248,7 +240,7 @@ class LensingObject:
         )
 
         try:
-            return grids.Grid2DIrregularGrouped(tangential_critical_curve)
+            return grids.Grid2DIrregular(tangential_critical_curve)
         except IndexError:
             return []
 
@@ -270,18 +262,15 @@ class LensingObject:
         )
 
         try:
-            return grids.Grid2DIrregularGrouped(radial_critical_curve)
+            return grids.Grid2DIrregular(radial_critical_curve)
         except IndexError:
             return []
 
     @evaluation_grid
     def critical_curves_from_grid(self, grid, pixel_scale=0.05):
 
-        if len(self.mass_profiles) == 0:
-            return []
-
         try:
-            return grids.Grid2DIrregularGrouped(
+            return grids.Grid2DIrregular(
                 [
                     self.tangential_critical_curve_from_grid(
                         grid=grid, pixel_scale=pixel_scale
@@ -329,11 +318,8 @@ class LensingObject:
     @evaluation_grid
     def caustics_from_grid(self, grid, pixel_scale=0.05):
 
-        if len(self.mass_profiles) == 0:
-            return []
-
         try:
-            return grids.Grid2DIrregularGrouped(
+            return grids.Grid2DIrregular(
                 [
                     self.tangential_caustic_from_grid(
                         grid=grid, pixel_scale=pixel_scale

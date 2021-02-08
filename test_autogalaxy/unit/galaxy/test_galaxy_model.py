@@ -60,6 +60,7 @@ def make_galaxy_model(mapper,):
 
 class TestMassAndLightProfiles:
     def test_make_galaxy_from_instance_profile(self, mass_and_light):
+
         prior = ag.GalaxyModel(redshift=0.5, profile=mass_and_light)
 
         galaxy = prior.instance_for_arguments({})
@@ -68,6 +69,7 @@ class TestMassAndLightProfiles:
         assert galaxy.mass_profiles[0] == mass_and_light
 
     def test_make_galaxy_from_model_profile(self):
+
         galaxy_model = ag.GalaxyModel(redshift=0.5, profile=ag.lmp.EllipticalSersic)
 
         arguments = {
@@ -334,6 +336,7 @@ class TestHyperGalaxy:
 
 class TestFixedProfiles:
     def test_fixed_light(self):
+
         galaxy_model = ag.GalaxyModel(
             redshift=ag.Redshift, light_profile=ag.lp.EllipticalSersic()
         )
@@ -356,6 +359,7 @@ class TestFixedProfiles:
         assert len(galaxy.mass_profiles) == 1
 
     def test_fixed_and_model(self):
+
         galaxy_model = ag.GalaxyModel(
             redshift=ag.Redshift,
             mass_profile=ag.mp.SphericalNFW(),

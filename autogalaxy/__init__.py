@@ -12,7 +12,7 @@ from autoarray import Grid2DIterate
 from autoarray import Grid2DInterpolate
 from autoarray import Mask2D
 from autoarray import Grid2DIrregular
-from autoarray import Grid2DIrregularGrouped
+from autoarray import Grid2DIrregular
 from autoarray import VectorField2DIrregular
 from autoarray import TransformerDFT
 from autoarray import pix
@@ -56,6 +56,7 @@ from .pipeline.setup import (
 )
 from .plane.plane import Plane
 from .profiles import (
+    point_sources as ps,
     light_profiles as lp,
     mass_profiles as mp,
     light_and_mass_profiles as lmp,
@@ -64,4 +65,4 @@ from . import convert
 
 conf.instance.register(__file__)
 
-__version__ = '0.18.1'
+__version__ = '0.18.2'
