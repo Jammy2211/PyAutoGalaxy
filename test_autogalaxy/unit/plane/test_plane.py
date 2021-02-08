@@ -2225,21 +2225,18 @@ class TestPlaneImage:
 
 
 class TestExtractAttribute:
-
     def test__extract_attribute(self):
 
         g0 = ag.Galaxy(
-            redshift=0.5,
-            mp_0=mock.MockMassProfile(value=0.9, value1=(1.0, 1.0))
+            redshift=0.5, mp_0=mock.MockMassProfile(value=0.9, value1=(1.0, 1.0))
         )
         g1 = ag.Galaxy(
-            redshift=0.5,
-            mp_0=mock.MockMassProfile(value=0.8, value1=(2.0, 2.0))
+            redshift=0.5, mp_0=mock.MockMassProfile(value=0.8, value1=(2.0, 2.0))
         )
         g2 = ag.Galaxy(
             redshift=0.5,
             mp_0=mock.MockMassProfile(value=0.7),
-            mp_1=mock.MockMassProfile(value=0.6)
+            mp_1=mock.MockMassProfile(value=0.6),
         )
 
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
@@ -2263,30 +2260,26 @@ class TestExtractAttribute:
 
         assert values.in_list == [0.9, 0.8, 0.7, 0.6]
 
-        plane.extract_attribute(
-            cls=ag.mp.MassProfile, name="incorrect_value"
-        )
+        plane.extract_attribute(cls=ag.mp.MassProfile, name="incorrect_value")
 
     def test__extract_attributes_of_galaxies(self):
 
         g0 = ag.Galaxy(
-            redshift=0.5,
-            mp_0=mock.MockMassProfile(value=0.9, value1=(1.0, 1.0))
+            redshift=0.5, mp_0=mock.MockMassProfile(value=0.9, value1=(1.0, 1.0))
         )
         g1 = ag.Galaxy(
-            redshift=0.5,
-            mp_0=mock.MockMassProfile(value=0.8, value1=(2.0, 2.0))
+            redshift=0.5, mp_0=mock.MockMassProfile(value=0.8, value1=(2.0, 2.0))
         )
         g2 = ag.Galaxy(
             redshift=0.5,
             mp_0=mock.MockMassProfile(value=0.7),
-            mp_1=mock.MockMassProfile(value=0.6)
+            mp_1=mock.MockMassProfile(value=0.6),
         )
 
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
         values = plane.extract_attributes_of_galaxies(
-            cls=ag.mp.MassProfile, name="value",
+            cls=ag.mp.MassProfile, name="value"
         )
 
         assert values == [None]
@@ -2294,7 +2287,7 @@ class TestExtractAttribute:
         plane = ag.Plane(galaxies=[g0, g1], redshift=None)
 
         values = plane.extract_attributes_of_galaxies(
-            cls=ag.mp.MassProfile, name="value1",
+            cls=ag.mp.MassProfile, name="value1"
         )
 
         assert values[0].in_list == [(1.0, 1.0)]
@@ -2306,9 +2299,7 @@ class TestExtractAttribute:
         )
 
         values = plane.extract_attributes_of_galaxies(
-            cls=ag.mp.MassProfile,
-            name="value",
-            filter_nones=False,
+            cls=ag.mp.MassProfile, name="value", filter_nones=False
         )
 
         assert values[0].in_list == [0.9]
@@ -2318,9 +2309,7 @@ class TestExtractAttribute:
         assert values[4].in_list == [0.7, 0.6]
 
         values = plane.extract_attributes_of_galaxies(
-            cls=ag.mp.MassProfile,
-            name="value",
-            filter_nones=True,
+            cls=ag.mp.MassProfile, name="value", filter_nones=True
         )
 
         assert values[0].in_list == [0.9]
@@ -2328,10 +2317,9 @@ class TestExtractAttribute:
         assert values[2].in_list == [0.7, 0.6]
 
         plane.extract_attributes_of_galaxies(
-            cls=ag.mp.MassProfile,
-            name="incorrect_value",
-            filter_nones=True,
+            cls=ag.mp.MassProfile, name="incorrect_value", filter_nones=True
         )
+
 
 class TestDecorators:
     def test__grid_iterate_in__iterates_grid_correctly(self, gal_x1_lp):

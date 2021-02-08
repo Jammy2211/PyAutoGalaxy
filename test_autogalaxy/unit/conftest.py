@@ -114,7 +114,6 @@ def make_transformer_7x7_7():
     return fixtures.make_transformer_7x7_7()
 
 
-
 @pytest.fixture(name="visibilities_mask_7")
 def make_visibilities_mask_7():
     return fixtures.make_visibilities_mask_7()

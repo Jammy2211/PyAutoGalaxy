@@ -1223,7 +1223,6 @@ class TestBooleanProperties:
 
 
 class TestExtract:
-
     def test__extract_attribute(self):
 
         galaxy = ag.Galaxy(redshift=0.5)
@@ -1259,6 +1258,7 @@ class TestExtract:
         values = galaxy.extract_attribute(cls=ag.lp.LightProfile, name="value")
 
         assert values.in_list == [1.0, 2.0, 3.0]
+
 
 class TestRegression:
     def test__centre_of_profile_in_right_place(self):

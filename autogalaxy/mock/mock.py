@@ -12,7 +12,6 @@ from autofit.mock.mock import MockSearch, MockSamples
 
 
 class MockLightProfile(ag.lp.LightProfile):
-
     def __init__(self, value, size=1, value1=None):
 
         self.value = value
@@ -24,7 +23,6 @@ class MockLightProfile(ag.lp.LightProfile):
 
 
 class MockMassProfile(ag.mp.MassProfile):
-
     def __init__(self, value, value1=None):
 
         self.value = value

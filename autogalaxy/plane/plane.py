@@ -220,8 +220,7 @@ class AbstractPlane(lensing.LensingObject):
         else:
 
             return [
-                galaxy.extract_attribute(cls=cls, name=name)
-                for galaxy in self.galaxies
+                galaxy.extract_attribute(cls=cls, name=name) for galaxy in self.galaxies
             ]
 
 
