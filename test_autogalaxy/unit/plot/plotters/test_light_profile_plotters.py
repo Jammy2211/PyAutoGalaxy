@@ -38,9 +38,10 @@ def test__visuals_with_include_2d(lp_0, grid_7x7):
         light_profile_plotter.visuals_with_include_2d.border
         == grid_7x7.mask.border_grid_sub_1.slim_binned
     ).all()
-    assert light_profile_plotter.visuals_with_include_2d.light_profile_centres.in_list == [
-        lp_0.centre
-    ]
+    assert (
+        light_profile_plotter.visuals_with_include_2d.light_profile_centres.in_list
+        == [lp_0.centre]
+    )
     assert light_profile_plotter.visuals_with_include_2d.vector_field == 2
 
     include = aplt.Include2D(origin=False, mask=False, border=False)

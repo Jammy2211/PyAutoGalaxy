@@ -4,7 +4,7 @@ import pytest
 from autogalaxy import exc
 from autogalaxy.plane import plane
 from skimage import measure
-from autoarray.mock import mock
+from autogalaxy.mock import mock
 
 
 def critical_curve_via_magnification_from_plane_and_grid(plane, grid):
@@ -367,9 +367,7 @@ class TestAbstractPlaneProfiles:
 
             image = plane.image_from_grid(grid=grid_irregular_7x7)
 
-            assert image.in_list[0] == pytest.approx(
-                galaxy_image.in_list[0], 1.0e-4
-            )
+            assert image.in_list[0] == pytest.approx(galaxy_image.in_list[0], 1.0e-4)
 
         def test__images_of_galaxies(self, sub_grid_7x7):
             # Overwrite one value so intensity in each pixel is different
@@ -548,7 +546,6 @@ class TestAbstractPlaneProfiles:
             assert (image_dict[g2].native == g2_image.native).all()
 
     class TestConvergence:
-
         def test__convergence_same_as_multiple_galaxies__include_reshape_mapping(
             self, sub_grid_7x7
         ):
@@ -2228,249 +2225,113 @@ class TestPlaneImage:
 
 
 class TestExtractAttribute:
-    def test__extracts_tuple_attribute_correctly__no_grouping(self):
+
+    def test__extract_attribute(self):
 
         g0 = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal(
-                centre=(1.0, 1.0), elliptical_comps=(2.0, 2.0)
-            ),
+            mp_0=mock.MockMassProfile(value=0.9, value1=(1.0, 1.0))
         )
         g1 = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal(
-                centre=(2.0, 2.0), elliptical_comps=(1.0, 1.0)
-            ),
+            mp_0=mock.MockMassProfile(value=0.8, value1=(2.0, 2.0))
         )
         g2 = ag.Galaxy(
             redshift=0.5,
-            mass0=ag.mp.EllipticalIsothermal(centre=(3.0, 3.0)),
-            mass1=ag.mp.EllipticalIsothermal(centre=(4.0, 4.0)),
+            mp_0=mock.MockMassProfile(value=0.7),
+            mp_1=mock.MockMassProfile(value=0.6)
         )
 
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
-        centres = plane.extract_attribute(cls=ag.mp.MassProfile, name="centre")
+        values = plane.extract_attribute(cls=ag.mp.MassProfile, name="value")
 
-        assert centres == None
-
-        plane = ag.Plane(galaxies=[g0], redshift=None)
-
-        centres = plane.extract_attribute(cls=ag.mp.MassProfile, name="centre")
-
-        assert centres.in_list == [(1.0, 1.0)]
-
-        plane = ag.Plane(galaxies=[g1], redshift=None)
-
-        centres = plane.extract_attribute(cls=ag.mp.MassProfile, name="centre")
-
-        assert centres.in_list == [(2.0, 2.0)]
+        assert values == None
 
         plane = ag.Plane(galaxies=[g0, g1], redshift=None)
 
-        elliptical_comps = plane.extract_attribute(
-            cls=ag.mp.MassProfile, name="elliptical_comps"
-        )
+        values = plane.extract_attribute(cls=ag.mp.MassProfile, name="value1")
 
-        assert elliptical_comps.in_list == [(2.0, 2.0), (1.0, 1.0)]
+        assert values.in_list == [(1.0, 1.0), (2.0, 2.0)]
 
         plane = ag.Plane(
             galaxies=[g0, ag.Galaxy(redshift=0.5), g1, ag.Galaxy(redshift=0.5), g2],
             redshift=None,
         )
 
-        centres = plane.extract_attribute(cls=ag.mp.MassProfile, name="centre")
+        values = plane.extract_attribute(cls=ag.mp.MassProfile, name="value")
 
-        assert centres.in_list == [(1.0, 1.0), (2.0, 2.0), (3.0, 3.0), (4.0, 4.0)]
+        assert values.in_list == [0.9, 0.8, 0.7, 0.6]
 
-    def test__extracts_tuple_attribute_correctly__grouped_galaxies(self):
+        plane.extract_attribute(
+            cls=ag.mp.MassProfile, name="incorrect_value"
+        )
+
+    def test__extract_attributes_of_galaxies(self):
 
         g0 = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal(
-                centre=(1.0, 1.0), elliptical_comps=(2.0, 2.0)
-            ),
+            mp_0=mock.MockMassProfile(value=0.9, value1=(1.0, 1.0))
         )
         g1 = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal(
-                centre=(2.0, 2.0), elliptical_comps=(1.0, 1.0)
-            ),
+            mp_0=mock.MockMassProfile(value=0.8, value1=(2.0, 2.0))
         )
         g2 = ag.Galaxy(
             redshift=0.5,
-            mass0=ag.mp.EllipticalIsothermal(
-                centre=(3.0, 3.0), elliptical_comps=(3.0, 3.0)
-            ),
-            mass1=ag.mp.EllipticalIsothermal(
-                centre=(4.0, 4.0), elliptical_comps=(4.0, 4.0)
-            ),
+            mp_0=mock.MockMassProfile(value=0.7),
+            mp_1=mock.MockMassProfile(value=0.6)
         )
 
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
-        centres = plane.extract_attribute(
-            cls=ag.mp.MassProfile, name="centre", grouped_galaxies=True
+        values = plane.extract_attributes_of_galaxies(
+            cls=ag.mp.MassProfile, name="value",
         )
 
-        assert centres == [None]
+        assert values == [None]
+
+        plane = ag.Plane(galaxies=[g0, g1], redshift=None)
+
+        values = plane.extract_attributes_of_galaxies(
+            cls=ag.mp.MassProfile, name="value1",
+        )
+
+        assert values[0].in_list == [(1.0, 1.0)]
+        assert values[1].in_list == [(2.0, 2.0)]
 
         plane = ag.Plane(
-            galaxies=[g0, ag.Galaxy(redshift=0.5), g1, ag.Galaxy(redshift=0.5)],
+            galaxies=[g0, ag.Galaxy(redshift=0.5), g1, ag.Galaxy(redshift=0.5), g2],
             redshift=None,
         )
 
-        elliptical_comps = plane.extract_attribute(
+        values = plane.extract_attributes_of_galaxies(
             cls=ag.mp.MassProfile,
-            name="elliptical_comps",
-            grouped_galaxies=True,
+            name="value",
             filter_nones=False,
         )
 
-        assert elliptical_comps[0].in_list == [(2.0, 2.0)]
-        assert elliptical_comps[1] == None
-        assert elliptical_comps[2].in_list == [(1.0, 1.0)]
-        assert elliptical_comps[3] == None
+        assert values[0].in_list == [0.9]
+        assert values[1] == None
+        assert values[2].in_list == [0.8]
+        assert values[3] == None
+        assert values[4].in_list == [0.7, 0.6]
 
-        elliptical_comps = plane.extract_attribute(
+        values = plane.extract_attributes_of_galaxies(
             cls=ag.mp.MassProfile,
-            name="elliptical_comps",
-            grouped_galaxies=True,
+            name="value",
             filter_nones=True,
         )
 
-        assert elliptical_comps[0].in_list == [(2.0, 2.0)]
-        assert elliptical_comps[1].in_list == [(1.0, 1.0)]
+        assert values[0].in_list == [0.9]
+        assert values[1].in_list == [0.8]
+        assert values[2].in_list == [0.7, 0.6]
 
-        plane = ag.Plane(
-            galaxies=[g0, ag.Galaxy(redshift=0.5), g1, ag.Galaxy(redshift=0.5), g2],
-            redshift=None,
-        )
-
-        centres = plane.extract_attribute(
+        plane.extract_attributes_of_galaxies(
             cls=ag.mp.MassProfile,
-            name="centre",
-            grouped_galaxies=True,
+            name="incorrect_value",
             filter_nones=True,
         )
-
-        assert centres[0].in_list == [(1.0, 1.0)]
-        assert centres[1].in_list == [(2.0, 2.0)]
-        assert centres[2].in_list == [(3.0, 3.0), (4.0, 4.0)]
-
-    def test__extracts_float_attributes_correctly__no_grouping(self):
-
-        g0 = ag.Galaxy(
-            redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(
-                axis_ratio=0.9, phi=20.0
-            ),
-        )
-        g1 = ag.Galaxy(
-            redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(
-                axis_ratio=0.8, phi=30.0
-            ),
-        )
-        g2 = ag.Galaxy(
-            redshift=0.5,
-            mass0=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(axis_ratio=0.7),
-            mass1=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(axis_ratio=0.6),
-        )
-
-        plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
-
-        axis_ratios = plane.extract_attribute(cls=ag.mp.MassProfile, name="axis_ratio")
-
-        assert axis_ratios == None
-
-        plane = ag.Plane(galaxies=[g0, g1], redshift=None)
-
-        phis = plane.extract_attribute(cls=ag.mp.MassProfile, name="phi")
-
-        assert phis.in_list[0] == pytest.approx(20.0, 1.0e-4)
-        assert phis.in_list[1] == pytest.approx(30.0, 1.0e-4)
-
-        plane = ag.Plane(
-            galaxies=[g0, ag.Galaxy(redshift=0.5), g1, ag.Galaxy(redshift=0.5), g2],
-            redshift=None,
-        )
-
-        axis_ratios = plane.extract_attribute(cls=ag.mp.MassProfile, name="axis_ratio")
-
-        assert axis_ratios.in_list[0] == pytest.approx(0.9, 1.0e-4)
-        assert axis_ratios.in_list[1] == pytest.approx(0.8, 1.0e-4)
-        assert axis_ratios.in_list[2] == pytest.approx(0.7, 1.0e-4)
-        assert axis_ratios.in_list[3] == pytest.approx(0.6, 1.0e-4)
-
-    def test__extracts_float_attributes_correctly__grouped_galaxies(self):
-
-        g0 = ag.Galaxy(
-            redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(
-                axis_ratio=0.9, phi=20.0
-            ),
-        )
-        g1 = ag.Galaxy(
-            redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(
-                axis_ratio=0.8, phi=30.0
-            ),
-        )
-        g2 = ag.Galaxy(
-            redshift=0.5,
-            mass0=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(axis_ratio=0.7),
-            mass1=ag.mp.EllipticalIsothermal.from_axis_ratio_and_phi(axis_ratio=0.6),
-        )
-
-        plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
-
-        axis_ratios = plane.extract_attribute(
-            cls=ag.mp.MassProfile, name="axis_ratio", grouped_galaxies=True
-        )
-
-        assert axis_ratios == [None]
-
-        plane = ag.Plane(galaxies=[g0, g1], redshift=None)
-
-        phis = plane.extract_attribute(
-            cls=ag.mp.MassProfile, name="phi", grouped_galaxies=True
-        )
-
-        assert phis[0].in_list[0] == pytest.approx(20.0, 1.0e-4)
-        assert phis[1].in_list[0] == pytest.approx(30.0, 1.0e-4)
-
-        plane = ag.Plane(
-            galaxies=[g0, ag.Galaxy(redshift=0.5), g1, ag.Galaxy(redshift=0.5), g2],
-            redshift=None,
-        )
-
-        axis_ratios = plane.extract_attribute(
-            cls=ag.mp.MassProfile,
-            name="axis_ratio",
-            grouped_galaxies=True,
-            filter_nones=False,
-        )
-
-        assert axis_ratios[0].in_list[0] == pytest.approx(0.9, 1.0e-4)
-        assert axis_ratios[1] == None
-        assert axis_ratios[2].in_list[0] == pytest.approx(0.8, 1.0e-4)
-        assert axis_ratios[3] == None
-        assert axis_ratios[4].in_list[0] == pytest.approx(0.7, 1.0e-4)
-        assert axis_ratios[4].in_list[1] == pytest.approx(0.6, 1.0e-4)
-
-        axis_ratios = plane.extract_attribute(
-            cls=ag.mp.MassProfile,
-            name="axis_ratio",
-            grouped_galaxies=True,
-            filter_nones=True,
-        )
-
-        assert axis_ratios[0].in_list[0] == pytest.approx(0.9, 1.0e-4)
-        assert axis_ratios[1].in_list[0] == pytest.approx(0.8, 1.0e-4)
-        assert axis_ratios[2].in_list[0] == pytest.approx(0.7, 1.0e-4)
-        assert axis_ratios[2].in_list[1] == pytest.approx(0.6, 1.0e-4)
-
 
 class TestDecorators:
     def test__grid_iterate_in__iterates_grid_correctly(self, gal_x1_lp):

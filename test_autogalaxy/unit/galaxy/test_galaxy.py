@@ -1223,81 +1223,42 @@ class TestBooleanProperties:
 
 
 class TestExtract:
-    def test__extracts_tuple_attributes_correctly(self):
+
+    def test__extract_attribute(self):
 
         galaxy = ag.Galaxy(redshift=0.5)
 
-        centres = galaxy.extract_attribute(cls=ag.lp.LightProfile, name="centre")
+        values = galaxy.extract_attribute(cls=ag.lp.LightProfile, name="value")
 
-        assert centres == None
-
-        galaxy = ag.Galaxy(
-            redshift=0.5,
-            lp_0=ag.lp.EllipticalLightProfile(centre=(0.0, 1.0)),
-            lp_1=ag.lp.EllipticalLightProfile(centre=(2.0, 3.0)),
-            lp_2=ag.lp.EllipticalLightProfile(centre=(4.0, 5.0)),
-        )
-
-        centres = galaxy.extract_attribute(cls=ag.lp.LightProfile, name="centre")
-
-        assert centres.in_list == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
+        assert values == None
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            lp_0=ag.lp.EllipticalLightProfile(elliptical_comps=(0.0, 1.0)),
-            lp_1=ag.lp.EllipticalLightProfile(elliptical_comps=(2.0, 3.0)),
-            mp_0=ag.mp.EllipticalMassProfile(elliptical_comps=(-1.0, -2.0)),
-            lp_2=ag.lp.EllipticalLightProfile(elliptical_comps=(4.0, 5.0)),
+            lp_0=mock.MockLightProfile(value=0.9, value1=(0.0, 1.0)),
+            lp_1=mock.MockLightProfile(value=0.8, value1=(2.0, 3.0)),
+            lp_2=mock.MockLightProfile(value=0.7, value1=(4.0, 5.0)),
         )
 
-        elliptical_comps = galaxy.extract_attribute(
-            cls=ag.lp.LightProfile, name="elliptical_comps"
-        )
+        values = galaxy.extract_attribute(cls=ag.lp.LightProfile, name="value")
 
-        assert elliptical_comps.in_list == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
+        assert values.in_list == [0.9, 0.8, 0.7]
 
-    def test__extracts_float_attributes_correctly(self):
+        values = galaxy.extract_attribute(cls=ag.lp.LightProfile, name="value1")
 
-        galaxy = ag.Galaxy(redshift=0.5)
-
-        axis_ratios = galaxy.extract_attribute(
-            cls=ag.lp.LightProfile, name="axis_ratio"
-        )
-
-        assert axis_ratios == None
-
-        galaxy = ag.Galaxy(
-            redshift=0.5,
-            lp_0=ag.lp.EllipticalLightProfile(elliptical_comps=(0.0, 0.05263)),
-            lp_1=ag.lp.EllipticalLightProfile(elliptical_comps=(0.0, 0.111111)),
-            lp_2=ag.lp.EllipticalLightProfile(elliptical_comps=(0.0, 0.176470)),
-        )
-
-        axis_ratios = galaxy.extract_attribute(
-            cls=ag.lp.LightProfile, name="axis_ratio"
-        )
-
-        assert axis_ratios.in_list[0] == pytest.approx(0.9, 1.0e-4)
-        assert axis_ratios.in_list[1] == pytest.approx(0.8, 1.0e-4)
-        assert axis_ratios.in_list[2] == pytest.approx(0.7, 1.0e-4)
+        assert values.in_list == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
 
         galaxy = ag.Galaxy(
             redshift=0.5,
             lp_3=ag.lp.LightProfile(),
-            lp_0=ag.lp.SphericalSersic(effective_radius=1.0),
-            lp_1=ag.lp.SphericalSersic(effective_radius=2.0),
-            mp_0=ag.mp.EllipticalMassProfile(elliptical_comps=(0.0, 0.8181818)),
-            lp_2=ag.lp.SphericalSersic(effective_radius=3.0),
+            lp_0=mock.MockLightProfile(value=1.0),
+            lp_1=mock.MockLightProfile(value=2.0),
+            mp_0=mock.MockMassProfile(value=5.0),
+            lp_2=mock.MockLightProfile(value=3.0),
         )
 
-        effective_radii = galaxy.extract_attribute(
-            cls=ag.lp.LightProfile, name="effective_radius"
-        )
+        values = galaxy.extract_attribute(cls=ag.lp.LightProfile, name="value")
 
-        assert effective_radii.in_list[0] == pytest.approx(1.0, 1.0e-4)
-        assert effective_radii.in_list[1] == pytest.approx(2.0, 1.0e-4)
-        assert effective_radii.in_list[2] == pytest.approx(3.0, 1.0e-4)
-
+        assert values.in_list == [1.0, 2.0, 3.0]
 
 class TestRegression:
     def test__centre_of_profile_in_right_place(self):

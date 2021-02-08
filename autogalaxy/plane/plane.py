@@ -137,13 +137,13 @@ class AbstractPlane(lensing.LensingObject):
             galaxy.mass_profiles for galaxy in self.galaxies if galaxy.has_mass_profile
         ]
 
-    def extract_attribute(self, cls, name, grouped_galaxies=False, filter_nones=False):
+    def extract_attribute(self, cls, name):
         """
         Returns an attribute of a class in `Plane` as a `ValueIrregular` or `Grid2DIrregular` object.
 
-        For example, if a plane has a galaxy which two mass profiles and we want its axis-ratios, the following:
+        For example, if a plane has a galaxy which two light profiles and we want its axis-ratios, the following:
 
-        `plane.extract_attribute(cls=LightProfile, name="axis_ratio"`
+        `plane.extract_attribute(cls=LightProfile, name="axis_ratio")`
 
         would return:
 
@@ -151,58 +151,78 @@ class AbstractPlane(lensing.LensingObject):
 
         If a galaxy has three mass profiles and we want their centres, the following:
 
-        `plane.extract_attribute(cls=MassProfile, name="centres"`
+        `plane.extract_attribute(cls=MassProfile, name="centres")`
 
         would return:
 
         GridIrregular2D(grid=[(centre_y_0, centre_x_0), (centre_y_1, centre_x_1), (centre_y_2, centre_x_2)])
 
-        The attributes can be returned in a grouped list. For example, if `grouped_galaxies=True` a list of
-        attributes of each galaxy is returned:
-
-        [
-            Grid2DIrregular(grid=[(centre_y_0, centre_x_0)]),
-            Grid2DIrregular(grid=[(centre_y_1, centre_x_1), (centre_y_2, centre_x_2)])
-        ]
-
-        If a Profile does not have a certain entry, it is replaced with a None, although the nones can be removed
-        by setting `filter_nones=True`.
-
         This is used for visualization, for example plotting the centres of all mass profiles colored by their profile.
         """
 
-        if not grouped_galaxies:
+        def extract(value, name):
 
-            attributes = [
-                getattr(value, name)
-                for galaxy in self.galaxies
-                for value in galaxy.__dict__.values()
-                if isinstance(value, cls)
-            ]
-
-            if attributes == []:
+            try:
+                return getattr(value, name)
+            except (AttributeError, IndexError):
                 return None
-            elif isinstance(attributes[0], float):
-                return arrays.ValuesIrregular(values=attributes)
-            elif isinstance(attributes[0], tuple):
-                return grids.Grid2DIrregular(grid=attributes)
+
+        attributes = [
+            extract(value, name)
+            for galaxy in self.galaxies
+            for value in galaxy.__dict__.values()
+            if isinstance(value, cls)
+        ]
+
+        if attributes == []:
+            return None
+        elif isinstance(attributes[0], float):
+            return arrays.ValuesIrregular(values=attributes)
+        elif isinstance(attributes[0], tuple):
+            return grids.Grid2DIrregular(grid=attributes)
+
+    def extract_attributes_of_galaxies(self, cls, name, filter_nones=False):
+        """
+        Returns an attribute of a class in the plane as a list of `ValueIrregular` or `Grid2DIrregular` objects,
+        where the list indexes correspond to each galaxy in the plane..
+
+        For example, if a plane has two galaxies which each have a light profile the following:
+
+        `plane.extract_attributes_of_galaxies(cls=LightProfile, name="axis_ratio")`
+
+        would return:
+
+        [ValuesIrregular(values=[axis_ratio_0]), ValuesIrregular(values=[axis_ratio_1])]
+
+        If a plane has two galaxies, the first with a mass profile and the second with two mass profiles ,the following:
+
+        `plane.extract_attributes_of_galaxies(cls=MassProfile, name="centres")`
+
+        would return:
+        [
+            Grid2DIrregular(grid=[(centre_y_0, centre_x_0)]),
+            Grid2DIrregular(grid=[(centre_y_0, centre_x_0), (centre_y_1, centre_x_1)])
+        ]
+
+        If a Profile does not have a certain entry, it is replaced with a None. Nones can be removed by
+        setting `filter_nones=True`.
+
+        This is used for visualization, for example plotting the centres of all mass profiles colored by their profile.
+        """
+        if filter_nones:
+
+            return [
+                galaxy.extract_attribute(cls=cls, name=name)
+                for galaxy in self.galaxies
+                if galaxy.extract_attribute(cls=cls, name=name) is not None
+            ]
 
         else:
 
-            if filter_nones:
-
-                return [
-                    galaxy.extract_attribute(cls=cls, name=name)
-                    for galaxy in self.galaxies
-                    if galaxy.extract_attribute(cls=cls, name=name) is not None
-                ]
-
-            else:
-
-                return [
-                    galaxy.extract_attribute(cls=cls, name=name)
-                    for galaxy in self.galaxies
-                ]
+            return [
+                galaxy.extract_attribute(cls=cls, name=name)
+                for galaxy in self.galaxies
+            ]
 
 
 class AbstractPlaneLensing(AbstractPlane):

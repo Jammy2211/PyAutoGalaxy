@@ -104,14 +104,15 @@ def make_grid_irregular_7x7():
     return fixtures.make_grid_irregular_7x7()
 
 
+@pytest.fixture(name="grid_irregular_7x7_list")
+def make_grid_irregular_7x7_list():
+    return fixtures.make_grid_irregular_7x7_list()
+
+
 @pytest.fixture(name="transformer_7x7_7")
 def make_transformer_7x7_7():
     return fixtures.make_transformer_7x7_7()
 
-
-@pytest.fixture(name="grid_irregular_7x7_list")
-def make_grid_irregular_7x7_list():
-    return fixtures.make_grid_irregular_7x7_list()
 
 
 @pytest.fixture(name="visibilities_mask_7")

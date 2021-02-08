@@ -73,7 +73,13 @@ class Visuals2D(vis.Visuals2D):
             plotter.multiple_images_scatter.scatter_grid(grid=self.multiple_images)
 
         if self.critical_curves is not None:
-            plotter.critical_curves_plot.plot_grid(grid=self.critical_curves)
+            try:
+                plotter.critical_curves_plot.plot_grid(grid=self.critical_curves)
+            except TypeError:
+                pass
 
         if self.caustics is not None:
-            plotter.caustics_plot.plot_grid(grid=self.caustics)
+            try:
+                plotter.caustics_plot.plot_grid(grid=self.caustics)
+            except TypeError:
+                pass

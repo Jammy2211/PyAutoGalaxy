@@ -3,7 +3,7 @@ import typing
 import numpy as np
 import pytest
 
-from pyquad import quad_grid
+# from pyquad import quad_grid
 from skimage import measure
 
 import autogalaxy as ag
