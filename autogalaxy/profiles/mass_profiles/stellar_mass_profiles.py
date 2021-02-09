@@ -798,6 +798,7 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
 
 
 class EllipticalCoreSersic(EllipticalSersic):
+
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -932,6 +933,7 @@ class EllipticalCoreSersic(EllipticalSersic):
 
 
 class SphericalCoreSersic(EllipticalCoreSersic):
+
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
