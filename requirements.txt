@@ -1,6 +1,4 @@
 autoconf==0.7.7
-autofit==0.73.1
-autoarray==0.19.0
 colossus==1.2.14
 astropy>=3.0.0
 numpy>=1.18.0
