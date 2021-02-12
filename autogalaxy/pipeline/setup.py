@@ -16,6 +16,7 @@ import copy
 
 
 class AbstractSetup:
+
     def _cls_to_prior_model(self, cls):
         """
         Convert an input class to a `af.PriorModel` so that if a user specifies the models input into a `Setup` not as
@@ -367,6 +368,7 @@ class AbstractSetupLight(AbstractSetup):
 
 
 class SetupLightParametric(AbstractSetupLight):
+
     def __init__(
         self,
         bulge_prior_model: af.PriorModel(lp.LightProfile) = lp.EllipticalSersic,
@@ -455,32 +457,37 @@ class SetupLightParametric(AbstractSetupLight):
         if self.bulge_prior_model is not None and self.disk_prior_model is not None:
 
             if self.align_bulge_disk_centre:
+
                 self.bulge_prior_model.centre = self.disk_prior_model.centre
 
             if self.align_bulge_disk_elliptical_comps:
+
                 if hasattr(self.bulge_prior_model, "elliptical_comps") and hasattr(
                     self.disk_prior_model, "elliptical_comps"
                 ):
                     self.bulge_prior_model.elliptical_comps = (
                         self.disk_prior_model.elliptical_comps
                     )
-
         self.align_bulge_envelope_centre = align_bulge_envelope_centre
 
         if self.bulge_prior_model is not None and self.envelope_prior_model is not None:
 
             if self.align_bulge_envelope_centre:
+
                 self.envelope_prior_model.centre = self.bulge_prior_model.centre
 
         if self.light_centre is not None:
 
             if self.bulge_prior_model is not None:
+
                 self.bulge_prior_model.centre = self.light_centre
 
             if self.disk_prior_model is not None:
+
                 self.disk_prior_model.centre = self.light_centre
 
             if self.envelope_prior_model is not None:
+
                 self.envelope_prior_model.centre = self.light_centre
 
         self.set_light_prior_model_assertions(

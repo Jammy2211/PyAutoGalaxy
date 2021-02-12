@@ -640,35 +640,17 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         return galaxy_profile_visibilities_image_dict
 
-    @property
-    def yticks(self):
-        """
-    Returns the yticks labels of this grid, used for plotting the y-axis ticks when visualizing an image \
-        """
-        return np.linspace(np.amin(self.grid[:, 0]), np.amax(self.grid[:, 0]), 4)
-
-    @property
-    def xticks(self):
-        """
-    Returns the xticks labels of this grid, used for plotting the x-axis ticks when visualizing an \
-        image"""
-        return np.linspace(np.amin(self.grid[:, 1]), np.amax(self.grid[:, 1]), 4)
-
 
 class Plane(AbstractPlaneData):
+
     def __init__(self, redshift=None, galaxies=None):
+
         super(Plane, self).__init__(redshift=redshift, galaxies=galaxies)
 
 
 class PlaneImage:
+
     def __init__(self, array, grid):
+
         self.array = array
         self.grid = grid
-
-    @property
-    def xticks(self):
-        return self.array.mask.xticks
-
-    @property
-    def yticks(self):
-        return self.array.mask.yticks
