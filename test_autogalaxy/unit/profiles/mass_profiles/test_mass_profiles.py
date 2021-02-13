@@ -578,7 +578,7 @@ class TestDecorators:
         grid = ag.Grid2D.from_mask(mask=mask)
 
         grid_interpolate = ag.Grid2DInterpolate.from_mask(
-            mask=mask, pixel_scales_interp=0.1
+            mask=mask, pixel_scales_interp=0.5
         )
 
         mass_profile = ag.mp.EllipticalIsothermal(einstein_radius=1.0)
@@ -596,6 +596,10 @@ class TestDecorators:
 
         potential = mass_profile.potential_from_grid(grid=grid)
         potential_interpolate = mass_profile.potential_from_grid(grid=grid_interpolate)
+
+        print(potential)
+        print(potential_interpolate)
+
         assert (potential != potential_interpolate).all()
 
         array_interp = mass_profile.potential_from_grid(

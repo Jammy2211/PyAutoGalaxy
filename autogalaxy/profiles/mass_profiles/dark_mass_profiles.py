@@ -21,6 +21,7 @@ from scipy.integrate import quad
 from scipy.optimize import fsolve
 from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
 
+import warnings
 import copy
 
 
@@ -1417,6 +1418,8 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
 
 
 def kappa_s_and_scale_radius_for_ludlow(mass_at_200, redshift_object, redshift_source):
+
+    warnings.filterwarnings('ignore')
 
     cosmology = cosmo.Planck15
 
