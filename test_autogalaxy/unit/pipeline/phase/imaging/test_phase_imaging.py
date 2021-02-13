@@ -17,7 +17,6 @@ directory = path.dirname(path.realpath(__file__))
 
 
 class TestMakeAnalysis:
-
     def test__masks_image_and_noise_map_correctly(
         self, phase_imaging_7x7, imaging_7x7, mask_7x7
     ):
@@ -141,8 +140,8 @@ class TestMakeAnalysis:
             == imaging_snr_limit.noise_map.native * np.invert(mask_7x7_1_pix)
         ).all()
 
-class TestHyperMethods:
 
+class TestHyperMethods:
     def test__phase_can_receive_hyper_image_and_noise_maps(self):
 
         phase_imaging_7x7 = ag.PhaseImaging(

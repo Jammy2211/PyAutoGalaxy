@@ -642,14 +642,12 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
 
 class Plane(AbstractPlaneData):
-
     def __init__(self, redshift=None, galaxies=None):
 
         super(Plane, self).__init__(redshift=redshift, galaxies=galaxies)
 
 
 class PlaneImage:
-
     def __init__(self, array, grid):
 
         self.array = array

@@ -2175,8 +2175,8 @@ class TestPlane:
             assert plane.redshift == 1.0
             assert plane.galaxy_redshifts == [1.0, 1.0, 1.0]
 
-class TestExtractAttribute:
 
+class TestExtractAttribute:
     def test__extract_attribute(self):
 
         g0 = ag.Galaxy(

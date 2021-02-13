@@ -16,7 +16,6 @@ import copy
 
 
 class AbstractSetup:
-
     def _cls_to_prior_model(self, cls):
         """
         Convert an input class to a `af.PriorModel` so that if a user specifies the models input into a `Setup` not as
@@ -368,7 +367,6 @@ class AbstractSetupLight(AbstractSetup):
 
 
 class SetupLightParametric(AbstractSetupLight):
-
     def __init__(
         self,
         bulge_prior_model: af.PriorModel(lp.LightProfile) = lp.EllipticalSersic,

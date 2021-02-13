@@ -1419,7 +1419,7 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
 
 def kappa_s_and_scale_radius_for_ludlow(mass_at_200, redshift_object, redshift_source):
 
-    warnings.filterwarnings('ignore')
+    warnings.filterwarnings("ignore")
 
     cosmology = cosmo.Planck15
 

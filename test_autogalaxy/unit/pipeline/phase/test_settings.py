@@ -30,10 +30,7 @@ def test__tag__mixture_of_values():
         )
     )
 
-    assert (
-        settings.phase_tag_no_inversion
-        == "settings__imaging[grid_sub_1__psf_2x2]"
-    )
+    assert settings.phase_tag_no_inversion == "settings__imaging[grid_sub_1__psf_2x2]"
     assert (
         settings.phase_tag_with_inversion
         == "settings__imaging[grid_sub_1_inv_facc_0.1__psf_2x2]__pix[use_border]__inv[mat]"
