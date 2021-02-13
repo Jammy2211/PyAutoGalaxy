@@ -1,5 +1,4 @@
-from autoarray.util import array_util as array
-from autoarray.util import binning_util as binning
+from autoarray.structures.arrays import array_util as array
 from autoarray.util import fit_util as fit
 from autoarray.util import grid_util as grid
 from autoarray.util import mask_util as mask

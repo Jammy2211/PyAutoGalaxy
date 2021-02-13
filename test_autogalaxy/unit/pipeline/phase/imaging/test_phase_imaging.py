@@ -17,9 +17,11 @@ directory = path.dirname(path.realpath(__file__))
 
 
 class TestMakeAnalysis:
+
     def test__masks_image_and_noise_map_correctly(
         self, phase_imaging_7x7, imaging_7x7, mask_7x7
     ):
+
         analysis = phase_imaging_7x7.make_analysis(
             dataset=imaging_7x7, mask=mask_7x7, results=mock.MockResults()
         )
@@ -70,7 +72,6 @@ class TestMakeAnalysis:
                     grid_inversion_class=ag.Grid2D,
                     sub_size=3,
                     signal_to_noise_limit=1.0,
-                    bin_up_factor=2,
                     psf_shape_2d=(3, 3),
                 )
             ),
@@ -82,7 +83,6 @@ class TestMakeAnalysis:
             phase_imaging_7x7.settings.settings_masked_imaging.signal_to_noise_limit
             == 1.0
         )
-        assert phase_imaging_7x7.settings.settings_masked_imaging.bin_up_factor == 2
         assert phase_imaging_7x7.settings.settings_masked_imaging.psf_shape_2d == (3, 3)
 
         analysis = phase_imaging_7x7.make_analysis(
@@ -141,39 +141,10 @@ class TestMakeAnalysis:
             == imaging_snr_limit.noise_map.native * np.invert(mask_7x7_1_pix)
         ).all()
 
-    def test__masked_imaging__uses_bin_up_factor(self, imaging_7x7, mask_7x7_1_pix):
-        binned_up_imaging = imaging_7x7.binned_up_from(bin_up_factor=2)
-
-        binned_up_mask = mask_7x7_1_pix.binned_mask_from_bin_up_factor(bin_up_factor=2)
-
-        phase_imaging_7x7 = ag.PhaseImaging(
-            settings=ag.SettingsPhaseImaging(
-                settings_masked_imaging=ag.SettingsMaskedImaging(bin_up_factor=2)
-            ),
-            search=mock.MockSearch("phase_imaging_7x7"),
-        )
-
-        analysis = phase_imaging_7x7.make_analysis(
-            dataset=imaging_7x7, mask=mask_7x7_1_pix, results=mock.MockResults()
-        )
-        assert (
-            analysis.masked_dataset.image.native
-            == binned_up_imaging.image.native * np.invert(binned_up_mask)
-        ).all()
-
-        assert (
-            analysis.masked_dataset.psf == (1.0 / 9.0) * binned_up_imaging.psf
-        ).all()
-        assert (
-            analysis.masked_dataset.noise_map.native
-            == binned_up_imaging.noise_map.native * np.invert(binned_up_mask)
-        ).all()
-
-        assert (analysis.masked_dataset.mask == binned_up_mask).all()
-
-
 class TestHyperMethods:
+
     def test__phase_can_receive_hyper_image_and_noise_maps(self):
+
         phase_imaging_7x7 = ag.PhaseImaging(
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=ag.Redshift),

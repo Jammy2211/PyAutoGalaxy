@@ -9,7 +9,6 @@ def test__tag__mixture_of_values():
             grid_inversion_class=ag.Grid2D,
             sub_size=2,
             signal_to_noise_limit=2,
-            bin_up_factor=None,
             psf_shape_2d=None,
         )
     )
@@ -27,18 +26,17 @@ def test__tag__mixture_of_values():
             sub_size=1,
             fractional_accuracy=0.1,
             signal_to_noise_limit=None,
-            bin_up_factor=3,
             psf_shape_2d=(2, 2),
         )
     )
 
     assert (
         settings.phase_tag_no_inversion
-        == "settings__imaging[grid_sub_1__bin_3__psf_2x2]"
+        == "settings__imaging[grid_sub_1__psf_2x2]"
     )
     assert (
         settings.phase_tag_with_inversion
-        == "settings__imaging[grid_sub_1_inv_facc_0.1__bin_3__psf_2x2]__pix[use_border]__inv[mat]"
+        == "settings__imaging[grid_sub_1_inv_facc_0.1__psf_2x2]__pix[use_border]__inv[mat]"
     )
 
     settings = ag.SettingsPhaseInterferometer(

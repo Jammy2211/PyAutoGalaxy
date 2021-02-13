@@ -121,7 +121,7 @@ class TestModelFixing:
             galaxies=dict(galaxy=galaxy),
             search=af.DynestyStatic(n_live_points=1, name="test_phase"),
             settings=ag.SettingsPhaseImaging(
-                settings_masked_imaging=ag.SettingsMaskedImaging(bin_up_factor=2)
+                settings_masked_imaging=ag.SettingsMaskedImaging()
             ),
         )
 
@@ -138,7 +138,7 @@ class TestModelFixing:
         assert (
             path.join(
                 "test_phase",
-                "hyper__settings__imaging[grid_sub_2_inv_sub_2__bin_2]__pix[use_border]__inv[mat]",
+                "hyper__settings__imaging[grid_sub_2_inv_sub_2]__pix[use_border]__inv[mat]",
                 "dynesty_static[nlive_1",
             )
             in hyper_phase.paths.output_path

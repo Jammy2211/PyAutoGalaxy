@@ -2175,56 +2175,8 @@ class TestPlane:
             assert plane.redshift == 1.0
             assert plane.galaxy_redshifts == [1.0, 1.0, 1.0]
 
-
-class TestPlaneImage:
-    def test__compute_xticks_from_grid_correctly(self):
-
-        array = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=(5.0, 1.0))
-
-        plane_image = plane.PlaneImage(array=array, grid=None)
-        assert plane_image.xticks == pytest.approx(
-            np.array([-1.5, -0.5, 0.5, 1.5]), 1e-3
-        )
-
-        array = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=(5.0, 0.5))
-
-        plane_image = plane.PlaneImage(array=array, grid=None)
-        assert plane_image.xticks == pytest.approx(
-            np.array([-0.75, -0.25, 0.25, 0.75]), 1e-3
-        )
-
-        array = ag.Array2D.ones(shape_native=(1, 6), pixel_scales=(5.0, 1.0))
-
-        plane_image = plane.PlaneImage(array=array, grid=None)
-        assert plane_image.xticks == pytest.approx(
-            np.array([-3.0, -1.0, 1.0, 3.0]), 1e-2
-        )
-
-    def test__compute_yticks_from_grid_correctly(self):
-
-        array = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=(1.0, 5.0))
-
-        plane_image = plane.PlaneImage(array=array, grid=None)
-        assert plane_image.yticks == pytest.approx(
-            np.array([-1.5, -0.5, 0.5, 1.5]), 1e-3
-        )
-
-        array = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=(0.5, 5.0))
-
-        plane_image = plane.PlaneImage(array=array, grid=None)
-        assert plane_image.yticks == pytest.approx(
-            np.array([-0.75, -0.25, 0.25, 0.75]), 1e-3
-        )
-
-        array = ag.Array2D.ones(shape_native=(6, 1), pixel_scales=(1.0, 5.0))
-
-        plane_image = plane.PlaneImage(array=array, grid=None)
-        assert plane_image.yticks == pytest.approx(
-            np.array([-3.0, -1.0, 1.0, 3.0]), 1e-2
-        )
-
-
 class TestExtractAttribute:
+
     def test__extract_attribute(self):
 
         g0 = ag.Galaxy(

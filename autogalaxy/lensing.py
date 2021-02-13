@@ -1,6 +1,5 @@
 import numpy as np
 from autoarray.structures import arrays, grids
-from autoarray.util import array_util
 from skimage import measure
 from functools import wraps
 

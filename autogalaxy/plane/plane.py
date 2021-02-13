@@ -232,16 +232,16 @@ class AbstractPlaneLensing(AbstractPlane):
     def image_from_grid(self, grid):
         """
         Returns the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
-            individual images of each galaxy's light profile.
+        individual images of each galaxy's light profile.
 
-            The image is calculated on the sub-grid and binned-up to the original grid by taking the mean
-            value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
+        The image is calculated on the sub-grid and binned-up to the original grid by taking the mean
+        value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
 
-            If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
-            sub-grid is returned.
+        If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
+        sub-grid is returned.
 
-            Parameters
-            -----------
+        Parameters
+        -----------
 
         """
         if self.galaxies:
