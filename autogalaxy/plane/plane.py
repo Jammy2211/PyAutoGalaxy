@@ -541,6 +541,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         hyper_noise_maps = []
 
         for galaxy in self.galaxies:
+
             if galaxy.has_hyper_galaxy:
 
                 hyper_noise_map_1d = galaxy.hyper_galaxy.hyper_noise_map_from_hyper_images_and_noise_map(
@@ -566,8 +567,8 @@ class AbstractPlaneData(AbstractPlaneLensing):
     def contribution_map(self):
 
         contribution_maps = self.contribution_maps_of_galaxies
-        if None in contribution_maps:
-            contribution_maps = [i for i in contribution_maps if i is not None]
+
+        contribution_maps = [i for i in contribution_maps if i is not None]
 
         if contribution_maps:
             return sum(contribution_maps)

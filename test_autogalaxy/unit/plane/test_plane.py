@@ -1798,6 +1798,7 @@ class TestAbstractPlaneData:
             assert plane.contribution_map == None
 
     class TestHyperNoiseMap:
+
         def test__x2_hyper_galaxy__use_numerical_values_of_hyper_noise_map_scaling(
             self,
         ):
@@ -1918,6 +1919,7 @@ class TestAbstractPlaneData:
             assert (hyper_noise_maps[1].slim == hyper_noise_map_0).all()
 
         def test__hyper_noise_maps_are_none_for_galaxy_without_hyper_galaxy(self):
+
             noise_map = ag.Array2D.manual_native(
                 array=[[5.0, 3.0, 1.0]], pixel_scales=1.0
             )
@@ -1970,14 +1972,14 @@ class TestAbstractPlaneData:
                 noise_map=noise_map
             )
             assert (hyper_noise_maps[0].slim == hyper_noise_map_0).all()
-            assert hyper_noise_maps[1].slim == np.zeros(shape=(3, 1))
+            assert (hyper_noise_maps[1].slim == np.zeros(shape=(3, 1))).all()
 
             plane = ag.Plane(redshift=0.5, galaxies=[ag.Galaxy(redshift=0.5), galaxy_1])
 
             hyper_noise_maps = plane.hyper_noise_maps_of_galaxies_from_noise_map(
                 noise_map=noise_map
             )
-            assert hyper_noise_maps[0].slim == np.zeros(shape=(3, 1))
+            assert (hyper_noise_maps[0].slim == np.zeros(shape=(3, 1))).all()
             assert (hyper_noise_maps[1].slim == hyper_noise_map_1).all()
 
             plane = ag.Plane(
@@ -1993,10 +1995,10 @@ class TestAbstractPlaneData:
             hyper_noise_maps = plane.hyper_noise_maps_of_galaxies_from_noise_map(
                 noise_map=noise_map
             )
-            assert hyper_noise_maps[0].slim == np.zeros(shape=(3, 1))
+            assert (hyper_noise_maps[0].slim == np.zeros(shape=(3, 1))).all()
             assert (hyper_noise_maps[1].slim == hyper_noise_map_1).all()
             assert (hyper_noise_maps[2].slim == hyper_noise_map_0).all()
-            assert hyper_noise_maps[3].slim == np.zeros(shape=(3, 1))
+            assert (hyper_noise_maps[3].slim == np.zeros(shape=(3, 1))).all()
 
         def test__hyper_noise_map_from_noise_map__is_sum_of_galaxy_hyper_noise_maps__filters_nones(
             self,
@@ -2085,11 +2087,13 @@ class TestAbstractPlaneData:
             plane = ag.Plane(redshift=0.5, galaxies=[ag.Galaxy(redshift=0.5)])
             hyper_noise_map = plane.hyper_noise_map_from_noise_map(noise_map=noise_map)
 
-            assert hyper_noise_map == np.zeros((3, 1))
+            assert (hyper_noise_map == np.zeros((3, 1))).all()
 
 
 class TestPlane:
+    
     class TestTracedGrid:
+
         def test__traced_grid_same_as_manual_deflections_calc_via_galaxy___use_multiple_galaxies(
             self, sub_grid_7x7
         ):

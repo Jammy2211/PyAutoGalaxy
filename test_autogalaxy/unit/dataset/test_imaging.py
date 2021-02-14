@@ -19,6 +19,7 @@ def create_fits(fits_path, array):
 
 
 class TestImaging:
+
     def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9(self):
 
         fits_path = path.join(
@@ -202,4 +203,4 @@ class TestSimulatorImaging:
         assert imaging.shape_native == (11, 11)
         assert (imaging.image == imaging_via_image.image).all()
         assert (imaging.psf == imaging_via_image.psf).all()
-        assert imaging.noise_map == imaging_via_image.noise_map
+        assert (imaging.noise_map == imaging_via_image.noise_map).all()
