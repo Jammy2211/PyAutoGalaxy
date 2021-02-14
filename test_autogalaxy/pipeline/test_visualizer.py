@@ -12,7 +12,7 @@ directory = path.dirname(path.abspath(__file__))
 
 @pytest.fixture(name="plot_path")
 def make_visualizer_plotter_setup():
-    return path.join("{}".format(directory), "files", "plot", "visualizer")
+    return path.join("{}".format(directory), "files")
 
 
 @pytest.fixture()
@@ -25,6 +25,7 @@ def set_config_path(plot_path):
 
 
 class TestVisualizer:
+
     def test__visualizes_imaging__uses_configs(
         self, imaging_7x7, include_2d_all, plot_path, plot_patch
     ):
@@ -85,8 +86,6 @@ class TestVisualizer:
             path.join(plot_path, "subtracted_image_of_galaxy_1.png") in plot_patch.paths
         )
 
-        print(plot_patch.paths)
-
         assert (
             path.join(plot_path, "model_image_of_galaxy_0.png") not in plot_patch.paths
         )
@@ -103,6 +102,7 @@ class TestVisualizer:
     def test__visualizes_interferometer__uses_configs(
         self, interferometer_7, include_2d_all, plot_path, plot_patch
     ):
+
         visualizer = vis.Visualizer(visualize_path=plot_path)
 
         visualizer.visualize_interferometer(interferometer=interferometer_7)
