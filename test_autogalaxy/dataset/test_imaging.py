@@ -19,7 +19,6 @@ def create_fits(fits_path, array):
 
 
 class TestImaging:
-
     def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9(self):
 
         fits_path = path.join(

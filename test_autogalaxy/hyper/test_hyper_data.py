@@ -6,7 +6,6 @@ import pytest
 
 
 class TestHyperImageSky:
-
     def test__scale_sky_in_image__increases_all_image_values(self):
 
         image = np.array([1.0, 2.0, 3.0])
@@ -19,7 +18,6 @@ class TestHyperImageSky:
 
 
 class TestHyperNoiseMapBackground:
-
     def test__scaled_background_noise__adds_to_input_noise(self):
 
         noise_map = np.array([1.0, 2.0, 3.0])

@@ -3,7 +3,6 @@ import autogalaxy as ag
 
 
 class TestCase:
-
     def test_integration(self):
 
         # Create a mapper. This can be used to convert values output by a non linear optimiser into class instances.

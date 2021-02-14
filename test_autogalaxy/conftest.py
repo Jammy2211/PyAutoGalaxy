@@ -5,6 +5,7 @@ from os import path
 from autoconf import conf
 from autogalaxy.mock import fixtures
 
+
 class PlotPatch:
     def __init__(self):
         self.paths = []
@@ -22,6 +23,7 @@ def make_plot_patch(monkeypatch):
 
 directory = path.dirname(path.realpath(__file__))
 
+
 @pytest.fixture(autouse=True)
 def set_config_path(request):
 
@@ -30,7 +32,9 @@ def set_config_path(request):
         output_path=path.join(directory, "output"),
     )
 
+
 ### Datasets ###
+
 
 @pytest.fixture(name="psf_3x3")
 def make_psf_3x3():

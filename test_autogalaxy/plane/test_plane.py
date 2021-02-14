@@ -1799,7 +1799,6 @@ class TestAbstractPlaneData:
             assert plane.contribution_map == None
 
     class TestHyperNoiseMap:
-
         def test__x2_hyper_galaxy__use_numerical_values_of_hyper_noise_map_scaling(
             self,
         ):
@@ -2092,9 +2091,7 @@ class TestAbstractPlaneData:
 
 
 class TestPlane:
-
     class TestTracedGrid:
-
         def test__traced_grid_same_as_manual_deflections_calc_via_galaxy___use_multiple_galaxies(
             self, sub_grid_7x7
         ):
