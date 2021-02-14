@@ -13,7 +13,7 @@ with open(join(this_dir, "requirements.txt")) as f:
 
 setup(
     name="autogalaxy",
-    version=environ.get("VERSION", "0.18.5"),
+    version=environ.get("VERSION", "1.0.dev0"),
     description="Open Source Galaxy Model-Fitting",
     long_description=long_description,
     long_description_content_type="text/markdown",
