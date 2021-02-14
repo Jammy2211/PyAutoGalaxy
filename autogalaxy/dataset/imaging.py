@@ -1,9 +1,8 @@
 import copy
 
 import numpy as np
-from autoarray.structures import arrays
-from autoarray.structures import grids
-from autoarray.structures import kernel
+from autoarray.structures.grids.two_d import grid_2d
+from autoarray.structures import kernel_2d
 from autoarray.dataset import imaging
 from autogalaxy.plane import plane as pl
 
@@ -11,8 +10,8 @@ from autogalaxy.plane import plane as pl
 class SettingsMaskedImaging(imaging.SettingsMaskedImaging):
     def __init__(
         self,
-        grid_class=grids.Grid2D,
-        grid_inversion_class=grids.Grid2D,
+        grid_class=grid_2d.Grid2D,
+        grid_inversion_class=grid_2d.Grid2D,
         sub_size=2,
         sub_size_inversion=2,
         fractional_accuracy=0.9999,
@@ -107,7 +106,7 @@ class SimulatorImaging(imaging.SimulatorImaging):
         self,
         exposure_time: float,
         background_sky_level: float = 0.0,
-        psf: kernel.Kernel2D = None,
+        psf: kernel_2d.Kernel2D = None,
         renormalize_psf: bool = True,
         read_noise: float = None,
         add_poisson_noise: bool = True,

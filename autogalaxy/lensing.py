@@ -1,5 +1,7 @@
 import numpy as np
-from autoarray.structures import arrays, grids
+from autoarray.structures.arrays.two_d import array_2d
+from autoarray.structures.grids.two_d import grid_2d
+from autoarray.structures.grids.two_d import grid_2d_irregular
 from skimage import measure
 from functools import wraps
 
@@ -32,7 +34,7 @@ def evaluation_grid(func):
             int(pixel_scale_ratio * zoom_shape_native[1]),
         )
 
-        grid = grids.Grid2D.uniform(
+        grid = grid_2d.Grid2D.uniform(
             shape_native=shape_native,
             pixel_scales=(pixel_scale, pixel_scale),
             origin=grid.mask.zoom_offset_scaled,
@@ -79,7 +81,7 @@ class LensingObject:
         deflections_y_2d = np.gradient(potential.native, grid.native[:, 0, 0], axis=0)
         deflections_x_2d = np.gradient(potential.native, grid.native[0, :, 1], axis=1)
 
-        return grids.Grid2D.manual_mask(
+        return grid_2d.Grid2D.manual_mask(
             grid=np.stack((deflections_y_2d, deflections_x_2d), axis=-1), mask=grid.mask
         )
 
@@ -87,25 +89,25 @@ class LensingObject:
 
         deflections = self.deflections_from_grid(grid=grid)
 
-        a11 = arrays.Array2D.manual_mask(
+        a11 = array_2d.Array2D.manual_mask(
             array=1.0
             - np.gradient(deflections.native[:, :, 1], grid.native[0, :, 1], axis=1),
             mask=grid.mask,
         )
 
-        a12 = arrays.Array2D.manual_mask(
+        a12 = array_2d.Array2D.manual_mask(
             array=-1.0
             * np.gradient(deflections.native[:, :, 1], grid.native[:, 0, 0], axis=0),
             mask=grid.mask,
         )
 
-        a21 = arrays.Array2D.manual_mask(
+        a21 = array_2d.Array2D.manual_mask(
             array=-1.0
             * np.gradient(deflections.native[:, :, 0], grid.native[0, :, 1], axis=1),
             mask=grid.mask,
         )
 
-        a22 = arrays.Array2D.manual_mask(
+        a22 = array_2d.Array2D.manual_mask(
             array=1
             - np.gradient(deflections.native[:, :, 0], grid.native[:, 0, 0], axis=0),
             mask=grid.mask,
@@ -118,7 +120,7 @@ class LensingObject:
 
         convergence = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
 
-        return arrays.Array2D(array=convergence, mask=grid.mask)
+        return array_2d.Array2D(array=convergence, mask=grid.mask)
 
     @precompute_jacobian
     def shear_via_jacobian_from_grid(self, grid, jacobian=None):
@@ -126,7 +128,7 @@ class LensingObject:
         shear_y = -0.5 * (jacobian[0][1] + jacobian[1][0])
         shear_x = 0.5 * (jacobian[1][1] - jacobian[0][0])
 
-        return arrays.Array2D(
+        return array_2d.Array2D(
             array=(shear_x ** 2 + shear_y ** 2) ** 0.5, mask=grid.mask
         )
 
@@ -139,7 +141,7 @@ class LensingObject:
 
         shear = self.shear_via_jacobian_from_grid(grid=grid, jacobian=jacobian)
 
-        return arrays.Array2D(array=1 - convergence - shear, mask=grid.mask)
+        return array_2d.Array2D(array=1 - convergence - shear, mask=grid.mask)
 
     @precompute_jacobian
     def radial_eigen_value_from_grid(self, grid, jacobian=None):
@@ -150,7 +152,7 @@ class LensingObject:
 
         shear = self.shear_via_jacobian_from_grid(grid=grid, jacobian=jacobian)
 
-        return arrays.Array2D(array=1 - convergence + shear, mask=grid.mask)
+        return array_2d.Array2D(array=1 - convergence + shear, mask=grid.mask)
 
     def magnification_from_grid(self, grid):
 
@@ -158,7 +160,7 @@ class LensingObject:
 
         det_jacobian = jacobian[0][0] * jacobian[1][1] - jacobian[0][1] * jacobian[1][0]
 
-        return arrays.Array2D(array=1 / det_jacobian, mask=grid.mask)
+        return array_2d.Array2D(array=1 / det_jacobian, mask=grid.mask)
 
     def hessian_from_grid(self, grid, buffer=0.01):
 
@@ -239,7 +241,7 @@ class LensingObject:
         )
 
         try:
-            return grids.Grid2DIrregular(tangential_critical_curve)
+            return grid_2d_irregular.Grid2DIrregular(tangential_critical_curve)
         except IndexError:
             return []
 
@@ -261,7 +263,7 @@ class LensingObject:
         )
 
         try:
-            return grids.Grid2DIrregular(radial_critical_curve)
+            return grid_2d_irregular.Grid2DIrregular(radial_critical_curve)
         except IndexError:
             return []
 
@@ -269,7 +271,7 @@ class LensingObject:
     def critical_curves_from_grid(self, grid, pixel_scale=0.05):
 
         try:
-            return grids.Grid2DIrregular(
+            return grid_2d_irregular.Grid2DIrregular(
                 [
                     self.tangential_critical_curve_from_grid(
                         grid=grid, pixel_scale=pixel_scale
@@ -318,7 +320,7 @@ class LensingObject:
     def caustics_from_grid(self, grid, pixel_scale=0.05):
 
         try:
-            return grids.Grid2DIrregular(
+            return grid_2d_irregular.Grid2DIrregular(
                 [
                     self.tangential_caustic_from_grid(
                         grid=grid, pixel_scale=pixel_scale

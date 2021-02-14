@@ -4,14 +4,13 @@ from astropy import cosmology as cosmo
 import autofit as af
 from autogalaxy.dataset import imaging
 from autogalaxy.pipeline.phase import dataset
-from autoarray.inversion import pixelizations as pix
-from autoarray.inversion import regularization as reg
 from autogalaxy.pipeline.phase.imaging.analysis import Analysis
 from autogalaxy.pipeline.phase.imaging.result import Result
 from autogalaxy.pipeline.phase.settings import SettingsPhaseImaging
 
 
 class PhaseImaging(dataset.PhaseDataset):
+
     galaxies = af.PhaseProperty("galaxies")
     hyper_image_sky = af.PhaseProperty("hyper_image_sky")
     hyper_background_noise = af.PhaseProperty("hyper_background_noise")

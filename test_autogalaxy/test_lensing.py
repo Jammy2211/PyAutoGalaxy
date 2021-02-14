@@ -7,7 +7,7 @@ from pyquad import quad_grid
 from skimage import measure
 
 import autogalaxy as ag
-from autoarray.structures import grids
+from autoarray.structures.grids import grid_decorators
 from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
 
@@ -46,9 +46,9 @@ class MockEllipticalIsothermal(
     def convergence_func(self, grid_radius):
         return self.einstein_radius_rescaled * (grid_radius ** 2) ** (-0.5)
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -81,9 +81,9 @@ class MockEllipticalIsothermal(
             / ((1 - (1 - axis_ratio ** 2) * u) ** 0.5)
         )
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def potential_from_grid(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -101,9 +101,9 @@ class MockEllipticalIsothermal(
 
         return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -175,9 +175,9 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
             centre=centre, elliptical_comps=(0.0, 0.0), einstein_radius=einstein_radius
         )
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def potential_from_grid(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -191,9 +191,9 @@ class MockSphericalIsothermal(MockEllipticalIsothermal):
         eta = self.grid_to_elliptical_radii(grid)
         return 2.0 * self.einstein_radius_rescaled * eta
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.

@@ -46,19 +46,19 @@ class MockGalaxy:
         self.value = value
         self.shape = shape
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def image_from_grid(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def convergence_from_grid(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def potential_from_grid(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def deflections_from_grid(self, grid):
         return np.full(shape=(self.shape, 2), fill_value=self.value)
 

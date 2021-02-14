@@ -1,12 +1,12 @@
 from autoarray.geometry import geometry_util as geometry
 from autoarray.mask import mask_1d_util as mask_1d
 from autoarray.mask import mask_2d_util as mask_2d
-from autoarray.structures.arrays import array_util as array
+from autoarray.structures.arrays.one_d import array_1d_util as array_1d
+from autoarray.structures.arrays.two_d import array_2d_util as array
 from autoarray.structures.grids.one_d import grid_1d_util as grid_1d
 from autoarray.structures.grids.two_d import grid_2d_util as grid_2d
 from autoarray.structures.grids.two_d import sparse_util as sparse
 from autoarray.structures.frames import frame_util as frame
-from autoarray.structures.lines import line_util as line
 from autoarray.fit import fit_util as fit
 from autoarray.inversion import pixelization_util as pixelization
 from autoarray.inversion import mapper_util as mapper

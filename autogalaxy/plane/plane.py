@@ -2,7 +2,11 @@ import numpy as np
 
 from autoarray.inversion import inversions as inv
 from autoarray.inversion import pixelizations as pix
-from autoarray.structures import arrays, grids, visibilities as vis
+from autoarray.structures.arrays import values
+from autoarray.structures.arrays.two_d import array_2d
+from autoarray.structures.grids.two_d import grid_2d_irregular
+from autoarray.structures.grids import grid_decorators
+from autoarray.structures import visibilities as vis
 from autogalaxy import exc
 from autogalaxy import lensing
 from autogalaxy.galaxy import galaxy as g
@@ -177,9 +181,9 @@ class AbstractPlane(lensing.LensingObject):
         if attributes == []:
             return None
         elif isinstance(attributes[0], float):
-            return arrays.ValuesIrregular(values=attributes)
+            return values.ValuesIrregular(values=attributes)
         elif isinstance(attributes[0], tuple):
-            return grids.Grid2DIrregular(grid=attributes)
+            return grid_2d_irregular.Grid2DIrregular(grid=attributes)
 
     def extract_attributes_of_galaxies(self, cls, name, filter_nones=False):
         """
@@ -228,7 +232,7 @@ class AbstractPlaneLensing(AbstractPlane):
     def __init__(self, redshift, galaxies):
         super().__init__(redshift=redshift, galaxies=galaxies)
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def image_from_grid(self, grid):
         """
         Returns the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
@@ -263,7 +267,7 @@ class AbstractPlaneLensing(AbstractPlane):
 
         return self.image_from_grid(grid=padded_grid)
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def convergence_from_grid(self, grid):
         """
         Returns the convergence of the list of galaxies of the plane's sub-grid, by summing the individual convergences \
@@ -287,7 +291,7 @@ class AbstractPlaneLensing(AbstractPlane):
             return sum(map(lambda g: g.convergence_from_grid(grid=grid), self.galaxies))
         return np.zeros(shape=(grid.shape[0],))
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def potential_from_grid(self, grid):
         """
         Returns the potential of the list of galaxies of the plane's sub-grid, by summing the individual potentials \
@@ -311,13 +315,13 @@ class AbstractPlaneLensing(AbstractPlane):
             return sum(map(lambda g: g.potential_from_grid(grid=grid), self.galaxies))
         return np.zeros((grid.shape[0]))
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def deflections_from_grid(self, grid):
         if self.galaxies:
             return sum(map(lambda g: g.deflections_from_grid(grid=grid), self.galaxies))
         return np.zeros(shape=(grid.shape[0], 2))
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def traced_grid_from_grid(self, grid):
         """Trace this plane's grid_stacks to the next plane, using its deflection angles."""
         return grid - self.deflections_from_grid(grid=grid)
@@ -334,8 +338,8 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         blurring_image = self.image_from_grid(grid=blurring_grid)
 
-        return psf.convolved_array_from_array_2d_and_mask(
-            array_2d=image.native_binned + blurring_image.native_binned, mask=grid.mask
+        return psf.convolved_array_from_array_and_mask(
+            array=image.native_binned + blurring_image.native_binned, mask=grid.mask
         )
 
     def blurred_images_of_galaxies_from_grid_and_psf(self, grid, psf, blurring_grid):
@@ -554,7 +558,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
             else:
 
-                hyper_noise_map = arrays.Array2D.manual_mask(
+                hyper_noise_map = array_2d.Array2D.manual_mask(
                     array=np.zeros(noise_map.mask.mask_sub_1.pixels_in_mask),
                     mask=noise_map.mask.mask_sub_1,
                 )

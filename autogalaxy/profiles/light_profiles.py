@@ -1,5 +1,6 @@
 import numpy as np
-from autoarray.structures import grids
+from autoarray.structures.grids.two_d import grid_2d
+from autoarray.structures.grids import grid_decorators
 from autogalaxy.profiles import geometry_profiles
 from scipy.integrate import quad
 import typing
@@ -89,8 +90,8 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
         blurring_image = self.image_from_grid(grid=blurring_grid)
 
-        return psf.convolved_array_from_array_2d_and_mask(
-            array_2d=image.native_binned + blurring_image.native_binned, mask=grid.mask
+        return psf.convolved_array_from_array_and_mask(
+            array=image.native_binned + blurring_image.native_binned, mask=grid.mask
         )
 
     def blurred_image_from_grid_and_convolver(self, grid, convolver, blurring_grid):
@@ -204,9 +205,9 @@ class EllipticalGaussian(EllipticalLightProfile):
             ),
         )
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def image_from_grid(self, grid, grid_radial_minimum=None):
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
@@ -379,9 +380,9 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
             ),
         )
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def image_from_grid(self, grid, grid_radial_minimum=None):
         """Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 
@@ -775,9 +776,9 @@ class EllipticalChameleon(EllipticalLightProfile):
             ),
         )
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def image_from_grid(self, grid, grid_radial_minimum=None):
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.

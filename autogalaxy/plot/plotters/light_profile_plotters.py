@@ -1,4 +1,4 @@
-from autoarray.structures import grids
+from autoarray.structures.grids.two_d import grid_2d_irregular
 from autoarray.plot.mat_wrap import mat_plot as mp
 from autoarray.util import plotter_util
 from autoarray.plot.plotters import abstract_plotters
@@ -56,7 +56,8 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
 
         return self.visuals_2d + self.visuals_2d.__class__(
             origin=self.extract_2d(
-                "origin", value=grids.Grid2DIrregular(grid=[self.grid.origin])
+                "origin",
+                value=grid_2d_irregular.Grid2DIrregular(grid=[self.grid.origin]),
             ),
             mask=self.extract_2d("mask", value=self.grid.mask),
             border=self.extract_2d(
@@ -64,7 +65,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             ),
             light_profile_centres=self.extract_2d(
                 "light_profile_centres",
-                grids.Grid2DIrregular(grid=[self.light_profile.centre]),
+                grid_2d_irregular.Grid2DIrregular(grid=[self.light_profile.centre]),
             ),
         )
 

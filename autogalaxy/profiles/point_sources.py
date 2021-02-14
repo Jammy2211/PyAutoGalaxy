@@ -1,5 +1,4 @@
 import numpy as np
-from autoarray.structures import grids
 import typing
 
 

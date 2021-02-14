@@ -1,5 +1,5 @@
 import numpy as np
-from autoarray.structures import grids
+from autoarray.structures.grids.two_d import grid_2d
 from autogalaxy import exc
 from autogalaxy.plane import plane as pl
 
@@ -17,7 +17,7 @@ def plane_image_of_galaxies_from(shape, grid, galaxies, buffer=1.0e-2):
     )
     origin = ((y_max + y_min) / 2.0, (x_max + x_min) / 2.0)
 
-    uniform_grid = grids.Grid2D.uniform(
+    uniform_grid = grid_2d.Grid2D.uniform(
         shape_native=shape, pixel_scales=pixel_scales, sub_size=1, origin=origin
     )
 

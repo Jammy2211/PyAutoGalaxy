@@ -1,5 +1,5 @@
 import numpy as np
-from autoarray.structures import grids
+from autoarray.structures.grids.two_d import grid_2d
 from autoarray.dataset import interferometer
 from autoarray.operators import transformer
 from autogalaxy.plane import plane as pl
@@ -8,8 +8,8 @@ from autogalaxy.plane import plane as pl
 class SettingsMaskedInterferometer(interferometer.SettingsMaskedInterferometer):
     def __init__(
         self,
-        grid_class=grids.Grid2D,
-        grid_inversion_class=grids.Grid2D,
+        grid_class=grid_2d.Grid2D,
+        grid_inversion_class=grid_2d.Grid2D,
         sub_size=2,
         sub_size_inversion=2,
         fractional_accuracy=0.9999,

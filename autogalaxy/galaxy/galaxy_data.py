@@ -1,6 +1,7 @@
 class GalaxyData:
     def __init__(self, image, noise_map, pixel_scales):
-        """ A galaxy-fit data is a collection of fit data components which are used to fit a galaxy to another galaxy. \
+        """
+        A galaxy-fit data is a collection of fit data components which are used to fit a galaxy to another galaxy. \
         This is where a component of a galaxy's light profiles (e.g. image) or mass profiles (e.g. convergence \
         , potential or deflection angles) are fitted to one another.
 

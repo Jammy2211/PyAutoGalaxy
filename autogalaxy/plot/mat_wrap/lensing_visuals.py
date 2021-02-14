@@ -1,5 +1,8 @@
 from autoarray.mask import mask_2d
-from autoarray.structures import arrays, grids, vector_fields
+from autoarray.structures.arrays.two_d import array_2d
+from autoarray.structures.grids.two_d import grid_2d
+from autoarray.structures.grids.two_d import grid_2d_irregular
+from autoarray.structures.vector_fields import vector_field_irregular
 from autoarray.plot.mat_wrap import visuals as vis
 
 from matplotlib import patches as ptch
@@ -15,20 +18,20 @@ class Visuals1D(vis.Visuals1D):
 class Visuals2D(vis.Visuals2D):
     def __init__(
         self,
-        origin: grids.Grid2D = None,
-        border: grids.Grid2D = None,
+        origin: grid_2d.Grid2D = None,
+        border: grid_2d.Grid2D = None,
         mask: mask_2d.Mask2D = None,
-        positions: grids.Grid2DIrregular = None,
-        grid: grids.Grid2D = None,
-        pixelization_grid: grids.Grid2D = None,
-        vector_field: vector_fields.VectorField2DIrregular = None,
+        positions: grid_2d_irregular.Grid2DIrregular = None,
+        grid: grid_2d.Grid2D = None,
+        pixelization_grid: grid_2d.Grid2D = None,
+        vector_field: vector_field_irregular.VectorField2DIrregular = None,
         patches: typing.Union[ptch.Patch] = None,
-        array_overlay: arrays.Array2D = None,
-        light_profile_centres: grids.Grid2DIrregular = None,
-        mass_profile_centres: grids.Grid2DIrregular = None,
-        multiple_images: grids.Grid2DIrregular = None,
-        critical_curves: grids.Grid2DIrregular = None,
-        caustics: grids.Grid2DIrregular = None,
+        array_overlay: array_2d.Array2D = None,
+        light_profile_centres: grid_2d_irregular.Grid2DIrregular = None,
+        mass_profile_centres: grid_2d_irregular.Grid2DIrregular = None,
+        multiple_images: grid_2d_irregular.Grid2DIrregular = None,
+        critical_curves: grid_2d_irregular.Grid2DIrregular = None,
+        caustics: grid_2d_irregular.Grid2DIrregular = None,
         indexes: typing.Union[List[int], List[List[int]]] = None,
         pixelization_indexes: typing.Union[List[int], List[List[int]]] = None,
     ):

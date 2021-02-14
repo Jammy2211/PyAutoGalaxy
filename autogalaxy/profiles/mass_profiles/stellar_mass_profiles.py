@@ -1,6 +1,6 @@
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 import numpy as np
-from autoarray.structures import grids
+from autoarray.structures.grids import grid_decorators
 from autogalaxy.profiles import mass_profiles as mp
 
 from pyquad import quad_grid
@@ -82,9 +82,9 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
 
         return output_grid
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -110,9 +110,9 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
             )
         )
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid_via_integrator(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -159,9 +159,9 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
             (1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5)
         )
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -249,9 +249,9 @@ class AbstractEllipticalSersic(
         self.effective_radius = effective_radius
         self.sersic_index = sersic_index
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -266,9 +266,9 @@ class AbstractEllipticalSersic(
     def convergence_func(self, grid_radius):
         return self.mass_to_light_ratio * self.image_from_grid_radii(grid_radius)
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid_via_gaussians(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -283,13 +283,13 @@ class AbstractEllipticalSersic(
 
         return self._convergence_from_grid_via_gaussians(grid_radii=eccentric_radii)
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         return self._deflections_from_grid_via_gaussians(
             grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
@@ -363,9 +363,9 @@ class AbstractEllipticalSersic(
 
 
 class EllipticalSersic(AbstractEllipticalSersic, MassProfileMGE):
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid_via_integrator(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -640,9 +640,9 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         )
         self.mass_to_light_gradient = mass_to_light_gradient
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -654,9 +654,9 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         """
         return self.convergence_func(self.grid_to_eccentric_radii(grid))
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def deflections_via_integrator_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -1025,9 +1025,9 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
         if self.axis_ratio > 0.99999:
             self.axis_ratio = 0.99999
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -1098,9 +1098,9 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
             np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
         )
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
         Parameters
@@ -1113,7 +1113,7 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
     def convergence_func(self, grid_radius):
         return self.mass_to_light_ratio * self.image_from_grid_radii(grid_radius)
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 

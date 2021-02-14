@@ -4,7 +4,9 @@ import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
 from scipy.special import wofz, comb
-from autoarray.structures import arrays, grids
+from autoarray.structures.arrays import values
+from autoarray.structures.grids.two_d import grid_2d_irregular
+from autoarray.structures.grids import grid_decorators
 from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy import exc
@@ -56,9 +58,9 @@ class MassProfile(lensing.LensingObject):
                 attribute = getattr(self, name)
 
                 if isinstance(attribute, float):
-                    return arrays.ValuesIrregular(values=[attribute])
+                    return values.ValuesIrregular(values=[attribute])
                 if isinstance(attribute, tuple):
-                    return grids.Grid2DIrregular(grid=[attribute])
+                    return grid_2d_irregular.Grid2DIrregular(grid=[attribute])
 
 
 # noinspection PyAbstractClass

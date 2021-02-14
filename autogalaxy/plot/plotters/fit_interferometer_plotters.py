@@ -1,4 +1,3 @@
-from autoarray.plot.mat_wrap import mat_plot as mp
 from autoarray.plot.plotters import inversion_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.plot.plotters import plane_plotters

@@ -2,7 +2,9 @@ from itertools import count
 
 import numpy as np
 from autoarray.inversion import pixelizations as pix
-from autoarray.structures import arrays, grids
+from autoarray.structures.arrays import values
+from autoarray.structures.grids.two_d import grid_2d_irregular
+from autoarray.structures.grids import grid_decorators
 from autofit.mapper.model_object import ModelObject
 from autogalaxy import exc
 from autogalaxy import lensing
@@ -173,9 +175,9 @@ class Galaxy(ModelObject, lensing.LensingObject):
         if attributes == []:
             return None
         elif isinstance(attributes[0], float):
-            return arrays.ValuesIrregular(values=attributes)
+            return values.ValuesIrregular(values=attributes)
         elif isinstance(attributes[0], tuple):
-            return grids.Grid2DIrregular(grid=attributes)
+            return grid_2d_irregular.Grid2DIrregular(grid=attributes)
 
     @property
     def uses_cluster_inversion(self):
@@ -271,7 +273,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         )
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def image_from_grid(self, grid):
         """Calculate the summed image of all of the galaxy's light profiles using a grid of Cartesian (y,x) \
         coordinates.
@@ -296,8 +298,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         blurring_image = self.image_from_grid(grid=blurring_grid)
 
-        return psf.convolved_array_from_array_2d_and_mask(
-            array_2d=image.native_binned + blurring_image.native_binned, mask=grid.mask
+        return psf.convolved_array_from_array_and_mask(
+            array=image.native_binned + blurring_image.native_binned, mask=grid.mask
         )
 
     def blurred_image_from_grid_and_convolver(self, grid, convolver, blurring_grid):
@@ -339,7 +341,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 )
             )
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def convergence_from_grid(self, grid):
         """
         Returns the summed convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
@@ -363,7 +365,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0],))
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def potential_from_grid(self, grid):
         """
         Returns the summed gravitational potential of the galaxy's mass profiles \
@@ -388,7 +390,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0],))
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def deflections_from_grid(self, grid):
         """
         Returns the summed (y,x) deflection angles of the galaxy's mass profiles \

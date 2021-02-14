@@ -1,4 +1,6 @@
-from autoarray.structures import arrays, grids
+from autoarray.structures.arrays.two_d import array_2d
+from autoarray.structures.grids.two_d import grid_2d
+from autoarray.structures.grids.two_d import grid_2d_irregular
 from autoarray.plot.plotters import abstract_plotters
 from autoarray.plot.mat_wrap import mat_plot as mp
 from autogalaxy.profiles import mass_profiles
@@ -9,7 +11,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
     def __init__(
         self,
         lensing_obj,
-        grid: grids.Grid2D,
+        grid: grid_2d.Grid2D,
         mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
         visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
         include_1d: lensing_include.Include1D = lensing_include.Include1D(),
@@ -55,7 +57,8 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
 
         return self.visuals_2d + self.visuals_2d.__class__(
             origin=self.extract_2d(
-                "origin", value=grids.Grid2DIrregular(grid=[self.grid.origin])
+                "origin",
+                value=grid_2d_irregular.Grid2DIrregular(grid=[self.grid.origin]),
             ),
             mask=self.extract_2d("mask", value=self.grid.mask),
             border=self.extract_2d(
@@ -102,7 +105,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         if deflections_y:
 
             deflections = self.lensing_obj.deflections_from_grid(grid=self.grid)
-            deflections_y = arrays.Array2D.manual_mask(
+            deflections_y = array_2d.Array2D.manual_mask(
                 array=deflections.slim[:, 0], mask=self.grid.mask
             )
 
@@ -117,7 +120,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         if deflections_x:
 
             deflections = self.lensing_obj.deflections_from_grid(grid=self.grid)
-            deflections_x = arrays.Array2D.manual_mask(
+            deflections_x = array_2d.Array2D.manual_mask(
                 array=deflections.slim[:, 1], mask=self.grid.mask
             )
 

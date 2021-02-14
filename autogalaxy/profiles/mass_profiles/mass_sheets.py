@@ -1,5 +1,5 @@
 import numpy as np
-from autoarray.structures import grids
+from autoarray.structures.grids import grid_decorators
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy import convert
@@ -29,17 +29,17 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
     def convergence_func(self, grid_radius):
         return 0.0
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def convergence_from_grid(self, grid):
         return np.full(shape=grid.shape[0], fill_value=self.kappa)
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         grid_radii = self.grid_to_grid_radii(grid=grid)
         return self.grid_to_grid_cartesian(grid=grid, radius=self.kappa * grid_radii)
@@ -79,17 +79,17 @@ class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
     def average_convergence_of_1_radius(self):
         return 0.0
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def convergence_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grids.grid_like_to_structure
-    @grids.transform
-    @grids.relocate_to_radial_minimum
+    @grid_decorators.grid_like_to_structure
+    @grid_decorators.transform
+    @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -165,15 +165,15 @@ class InputDeflections(mp.MassProfile):
 
         self.normalization_scale = 1.0  # normalization_scale
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def convergence_from_grid(self, grid):
         return self.convergence_via_jacobian_from_grid(grid=grid)
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grids.grid_like_to_structure
+    @grid_decorators.grid_like_to_structure
     def deflections_from_grid(self, grid):
 
         if self.preload_grid is not None and self.preload_deflections is not None:

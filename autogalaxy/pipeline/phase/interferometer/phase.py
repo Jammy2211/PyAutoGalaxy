@@ -2,8 +2,6 @@ from os import path
 import autofit as af
 from astropy import cosmology as cosmo
 from autogalaxy.dataset import interferometer
-from autoarray.inversion import pixelizations as pix
-from autoarray.inversion import regularization as reg
 from autogalaxy.pipeline.phase.settings import SettingsPhaseInterferometer
 from autogalaxy.pipeline.phase import dataset
 from autogalaxy.pipeline.phase.interferometer.analysis import Analysis
