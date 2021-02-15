@@ -1592,6 +1592,7 @@ class TestNFWMCRLudlow:
 
         assert (deflections_ludlow == deflections).all()
 
+
 class TestTruncatedNFWMCRChallenge:
     def test__mass_and_concentration_consistent_with_normal_truncated_nfw(self):
 
