@@ -7,7 +7,9 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestEllipticalGaussian:
+
     def test__deflections_correct_values(self):
+
         gaussian = ag.mp.EllipticalGaussian(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.05263),
@@ -202,7 +204,9 @@ class TestEllipticalGaussian:
 
 
 class TestSersic:
+
     def test__convergence_correct_values(self):
+
         sersic = ag.mp.EllipticalSersic(
             centre=(0.0, 0.0),
             intensity=3.0,
@@ -543,6 +547,7 @@ class TestSersic:
 
 
 class TestExponential:
+
     def test__convergence_correct_values(self):
         exponential = ag.mp.EllipticalExponential(
             elliptical_comps=(0.0, 0.333333),
@@ -781,6 +786,7 @@ class TestExponential:
 
 
 class TestDevVaucouleurs:
+
     def test__convergence_correct_values(self):
         dev = ag.mp.EllipticalDevVaucouleurs(
             elliptical_comps=(0.0, 0.333333),
@@ -991,6 +997,7 @@ class TestDevVaucouleurs:
 
 
 class TestSersicMassRadialGradient:
+
     def test__convergence_correct_values(self):
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1/0.6)**-1.0 = 0.6
         sersic = ag.mp.EllipticalSersicRadialGradient(
@@ -1293,11 +1300,11 @@ class TestSersicMassRadialGradient:
 
 
 class TestCoreSersic:
+
     def test__convergence_correct_values(self):
 
         core_sersic = ag.mp.EllipticalCoreSersic(
             elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
             effective_radius=5.0,
             sersic_index=4.0,
             radius_break=0.01,
@@ -1313,7 +1320,6 @@ class TestCoreSersic:
 
         core_sersic = ag.mp.EllipticalCoreSersic(
             elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
             effective_radius=5.0,
             sersic_index=4.0,
             radius_break=0.01,
@@ -1331,7 +1337,6 @@ class TestCoreSersic:
 
         core_sersic = ag.mp.EllipticalCoreSersic(
             elliptical_comps=(0.2, 0.4),
-            intensity=1.0,
             effective_radius=5.0,
             sersic_index=4.0,
             radius_break=0.01,
@@ -1353,7 +1358,6 @@ class TestCoreSersic:
         sersic = ag.mp.EllipticalCoreSersic(
             centre=(1.0, 2.0),
             elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=70.0),
-            intensity=1.0,
             intensity_break=0.45,
             effective_radius=0.5,
             radius_break=0.01,
@@ -1370,8 +1374,7 @@ class TestCoreSersic:
         sersic = ag.mp.EllipticalCoreSersic(
             centre=(1.0, 2.0),
             elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=70.0),
-            intensity=2.0,
-            intensity_break=0.45,
+            intensity_break=2.0 * 0.45,
             effective_radius=0.5,
             radius_break=0.01,
             gamma=0.0,
@@ -1387,7 +1390,6 @@ class TestCoreSersic:
         sersic = ag.mp.EllipticalCoreSersic(
             centre=(1.0, 2.0),
             elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=70.0),
-            intensity=1.0,
             intensity_break=0.45,
             effective_radius=0.5,
             radius_break=0.01,
@@ -1403,6 +1405,7 @@ class TestCoreSersic:
         assert deflections[0, 1] == pytest.approx(2.0 * -0.004493, 1e-4)
 
     def test__convergence__change_geometry(self):
+
         sersic_0 = ag.mp.EllipticalCoreSersic(centre=(0.0, 0.0))
         sersic_1 = ag.mp.EllipticalCoreSersic(centre=(1.0, 1.0))
 
@@ -1468,10 +1471,10 @@ class TestCoreSersic:
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
 
     def test__spherical_and_elliptical_identical(self):
+
         elliptical = ag.mp.EllipticalCoreSersic(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
             effective_radius=1.0,
             sersic_index=4.0,
             mass_to_light_ratio=1.0,
@@ -1479,7 +1482,6 @@ class TestCoreSersic:
 
         spherical = ag.mp.EllipticalCoreSersic(
             centre=(0.0, 0.0),
-            intensity=1.0,
             effective_radius=1.0,
             sersic_index=4.0,
             mass_to_light_ratio=1.0,
@@ -1496,6 +1498,7 @@ class TestCoreSersic:
         )
 
     def test__outputs_are_autoarrays(self):
+        
         grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         sersic = ag.mp.EllipticalCoreSersic()

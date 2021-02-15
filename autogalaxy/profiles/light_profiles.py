@@ -43,7 +43,6 @@ class LightProfile:
 
 # noinspection PyAbstractClass
 class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
-    """Generic class for an elliptical light profiles"""
 
     def __init__(
         self,
@@ -158,6 +157,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
 
 class EllipticalGaussian(EllipticalLightProfile):
+
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -247,6 +247,7 @@ class SphericalGaussian(EllipticalGaussian):
 
 
 class AbstractEllipticalSersic(EllipticalLightProfile):
+
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -321,6 +322,7 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
 
 
 class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
+
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -397,6 +399,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
 
 
 class SphericalSersic(EllipticalSersic):
+
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -427,6 +430,7 @@ class SphericalSersic(EllipticalSersic):
 
 
 class EllipticalExponential(EllipticalSersic):
+
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -488,6 +492,7 @@ class SphericalExponential(EllipticalExponential):
 
 
 class EllipticalDevVaucouleurs(EllipticalSersic):
+
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -521,6 +526,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
 
 
 class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
+
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -549,11 +555,11 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
 
 
 class EllipticalCoreSersic(EllipticalSersic):
+
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
         radius_break: float = 0.01,
@@ -570,8 +576,6 @@ class EllipticalCoreSersic(EllipticalSersic):
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
-        intensity : float
-            Overall intensity normalisation of the light profiles (electrons per second).
         effective_radius : float
             The circular radius containing half the light of this profile.
         sersic_index : Int
@@ -586,13 +590,15 @@ class EllipticalCoreSersic(EllipticalSersic):
         alpha :
             Controls the sharpness of the transition between the inner core / outer Sersic profiles.
         """
+
         super(EllipticalCoreSersic, self).__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
-            intensity=intensity,
+            intensity=intensity_break,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
         )
+
         self.radius_break = radius_break
         self.intensity_break = intensity_break
         self.alpha = alpha
@@ -657,7 +663,6 @@ class SphericalCoreSersic(EllipticalCoreSersic):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
         radius_break: float = 0.01,
@@ -671,8 +676,6 @@ class SphericalCoreSersic(EllipticalCoreSersic):
         ----------
         centre : (float, float)
             The (y,x) arc-second coordinates of the profile centre.
-        intensity : float
-            Overall intensity normalisation of the light profiles (electrons per second).
         effective_radius : float
             The circular radius containing half the light of this profile.
         sersic_index : Int
@@ -687,10 +690,10 @@ class SphericalCoreSersic(EllipticalCoreSersic):
         alpha :
             Controls the sharpness of the transition between the inner core / outer Sersic profiles.
         """
+
         super(SphericalCoreSersic, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
-            intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
             radius_break=radius_break,
@@ -698,6 +701,7 @@ class SphericalCoreSersic(EllipticalCoreSersic):
             gamma=gamma,
             alpha=alpha,
         )
+
         self.radius_break = radius_break
         self.intensity_break = intensity_break
         self.alpha = alpha

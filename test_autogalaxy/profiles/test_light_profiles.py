@@ -13,6 +13,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestGaussian:
+
     def test__intensity_as_radius__correct_value(self):
         gaussian = ag.lp.EllipticalGaussian(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
@@ -173,6 +174,7 @@ class TestGaussian:
 
 
 class TestSersic:
+
     def test__image_from_grid_radii__correct_value(self):
         sersic = ag.lp.EllipticalSersic(
             elliptical_comps=(0.0, 0.0),
@@ -265,6 +267,7 @@ class TestSersic:
 
 
 class TestExponential:
+
     def test__image_from_grid_radii__correct_value(self):
         exponential = ag.lp.EllipticalExponential(
             elliptical_comps=(0.0, 0.0), intensity=1.0, effective_radius=0.6
@@ -355,6 +358,7 @@ class TestExponential:
 
 
 class TestDevVaucouleurs:
+
     def test__image_from_grid_radii__correct_value(self):
         dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs(
             elliptical_comps=(0.0, 0.0), intensity=1.0, effective_radius=0.6
@@ -446,10 +450,11 @@ class TestDevVaucouleurs:
 
 
 class TestCoreSersic:
+
     def test__image_from_grid_radii__correct_value(self):
+
         core_sersic = ag.lp.EllipticalCoreSersic(
             elliptical_comps=(0.0, 0.333333),
-            intensity=1.0,
             effective_radius=5.0,
             sersic_index=4.0,
             radius_break=0.01,
@@ -463,9 +468,9 @@ class TestCoreSersic:
         assert image == 0.1
 
     def test__spherical_and_elliptical_match(self):
+
         elliptical = ag.lp.EllipticalCoreSersic(
             elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
             effective_radius=5.0,
             sersic_index=4.0,
             radius_break=0.01,
@@ -475,7 +480,6 @@ class TestCoreSersic:
         )
 
         spherical = ag.lp.SphericalCoreSersic(
-            intensity=1.0,
             effective_radius=5.0,
             sersic_index=4.0,
             radius_break=0.01,
@@ -491,6 +495,7 @@ class TestCoreSersic:
         assert (image_elliptical == image_spherical).all()
 
     def test__output_image_is_autoarray(self):
+
         grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
         core_sersic = ag.lp.EllipticalCoreSersic()
