@@ -17,7 +17,6 @@ class StellarProfile:
 
 
 class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -799,7 +798,6 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
 
 
 class EllipticalCoreSersic(EllipticalSersic):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -914,8 +912,8 @@ class EllipticalCoreSersic(EllipticalSersic):
 
         def core_sersic_2D(r):
             return (
-                self.mass_to_light_ratio *
-                self.intensity_prime
+                self.mass_to_light_ratio
+                * self.intensity_prime
                 * (1.0 + (self.radius_break / r) ** self.alpha)
                 ** (self.gamma / self.alpha)
                 * np.exp(
@@ -934,7 +932,6 @@ class EllipticalCoreSersic(EllipticalSersic):
 
 
 class SphericalCoreSersic(EllipticalCoreSersic):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),

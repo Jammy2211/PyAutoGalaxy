@@ -29,13 +29,10 @@ class TestGeneric:
 
 
 class TestPlane:
-
     def test__max_log_likelihood_plane_available_as_result(self, imaging_7x7, mask_7x7):
 
         galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
-        galaxy_1 = ag.Galaxy(
-            redshift=0.5, light=ag.lp.EllipticalSersic(intensity=2.0)
-        )
+        galaxy_1 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=2.0))
 
         max_log_likelihood_plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 

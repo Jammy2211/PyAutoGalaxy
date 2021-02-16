@@ -11,7 +11,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestAbstractNFW:
-
     def test__coord_function_f__correct_values(self):
 
         truncated_nfw = ag.mp.SphericalTruncatedNFW(
@@ -1409,7 +1408,6 @@ class TestNFWMCRDuffy:
 
 
 class TestNFWMCRLudlow:
-
     def test__mass_and_concentration_consistent_with_normal_nfw(self):
 
         cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)

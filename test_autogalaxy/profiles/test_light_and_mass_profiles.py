@@ -6,7 +6,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestGaussian(object):
-
     def test__grid_calculations__same_as_gaussian(self):
 
         gaussian_lp = ag.lmp.EllipticalGaussian(
@@ -41,7 +40,6 @@ class TestGaussian(object):
 
 
 class TestSersic:
-
     def test__grid_calculations__same_as_sersic(self):
 
         sersic_lp = ag.lmp.EllipticalSersic(
@@ -110,7 +108,6 @@ class TestSersic:
 
 
 class TestExponential:
-
     def test__grid_calculations__same_as_exponential(self):
 
         sersic_lp = ag.lmp.EllipticalExponential(
@@ -168,7 +165,6 @@ class TestExponential:
 
 
 class TestDevVaucouleurs:
-
     def test__grid_calculations__same_as_dev_vaucouleurs(self):
 
         sersic_lp = ag.lmp.EllipticalDevVaucouleurs(
@@ -226,7 +222,6 @@ class TestDevVaucouleurs:
 
 
 class TestSersicRadialGradient:
-
     def test__grid_calculations__same_as_sersic_radial_gradient(self):
 
         sersic_lp = ag.lmp.EllipticalSersic(
@@ -288,7 +283,6 @@ class TestSersicRadialGradient:
 
 
 class TestExponentialRadialGradient:
-
     def test__grid_calculations__same_as_sersic_radial_gradient(self):
 
         sersic_lp = ag.lmp.EllipticalExponential(
@@ -345,13 +339,10 @@ class TestExponentialRadialGradient:
 
 
 class TestCoreSersic:
-
     def test__grid_calculations__same_as_core_sersic(self):
 
         sersic_lp = ag.lmp.EllipticalCoreSersic(
-            elliptical_comps=(0.1, 0.05),
-            effective_radius=0.6,
-            sersic_index=2.0,
+            elliptical_comps=(0.1, 0.05), effective_radius=0.6, sersic_index=2.0
         )
         sersic_mp = ag.lmp.EllipticalCoreSersic(
             elliptical_comps=(0.1, 0.05),
@@ -410,7 +401,6 @@ class TestCoreSersic:
 
 
 class TestChameleon:
-
     def test__grid_calculations__same_as_chameleon(self):
 
         chameleon_lp = ag.lmp.EllipticalChameleon(

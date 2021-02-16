@@ -43,7 +43,6 @@ class LightProfile:
 
 # noinspection PyAbstractClass
 class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -157,7 +156,6 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
 
 class EllipticalGaussian(EllipticalLightProfile):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -247,7 +245,6 @@ class SphericalGaussian(EllipticalGaussian):
 
 
 class AbstractEllipticalSersic(EllipticalLightProfile):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -322,7 +319,6 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
 
 
 class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -399,7 +395,6 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
 
 
 class SphericalSersic(EllipticalSersic):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -430,7 +425,6 @@ class SphericalSersic(EllipticalSersic):
 
 
 class EllipticalExponential(EllipticalSersic):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -492,7 +486,6 @@ class SphericalExponential(EllipticalExponential):
 
 
 class EllipticalDevVaucouleurs(EllipticalSersic):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -526,7 +519,6 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
 
 
 class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -555,7 +547,6 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
 
 
 class EllipticalCoreSersic(EllipticalSersic):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),

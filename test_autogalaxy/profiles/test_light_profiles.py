@@ -13,7 +13,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestGaussian:
-
     def test__intensity_as_radius__correct_value(self):
         gaussian = ag.lp.EllipticalGaussian(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
@@ -174,7 +173,6 @@ class TestGaussian:
 
 
 class TestSersic:
-
     def test__image_from_grid_radii__correct_value(self):
         sersic = ag.lp.EllipticalSersic(
             elliptical_comps=(0.0, 0.0),
@@ -267,7 +265,6 @@ class TestSersic:
 
 
 class TestExponential:
-
     def test__image_from_grid_radii__correct_value(self):
         exponential = ag.lp.EllipticalExponential(
             elliptical_comps=(0.0, 0.0), intensity=1.0, effective_radius=0.6
@@ -358,7 +355,6 @@ class TestExponential:
 
 
 class TestDevVaucouleurs:
-
     def test__image_from_grid_radii__correct_value(self):
         dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs(
             elliptical_comps=(0.0, 0.0), intensity=1.0, effective_radius=0.6
@@ -450,7 +446,6 @@ class TestDevVaucouleurs:
 
 
 class TestCoreSersic:
-
     def test__image_from_grid_radii__correct_value(self):
 
         core_sersic = ag.lp.EllipticalCoreSersic(

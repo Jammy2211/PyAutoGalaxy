@@ -455,7 +455,6 @@ class AbstractEllipticalGeneralizedNFW(
 
 
 class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
-
     @grid_decorators.grid_like_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
@@ -1375,7 +1374,6 @@ class SphericalNFWMCRLudlow(SphericalNFW):
 
 
 class EllipticalGeneralizedNFWMCRLudlow(EllipticalGeneralizedNFW):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),

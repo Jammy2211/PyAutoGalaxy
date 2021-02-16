@@ -1486,7 +1486,6 @@ class SetupMassLightDark(AbstractSetupMass):
 
 
 class SetupSMBH(AbstractSetup):
-
     def __init__(
         self,
         smbh_prior_model: af.PriorModel(mp.MassProfile) = mp.PointMass,
@@ -1603,7 +1602,6 @@ class SetupSMBH(AbstractSetup):
 
 
 class SetupPipeline:
-
     def __init__(
         self,
         path_prefix: str = None,

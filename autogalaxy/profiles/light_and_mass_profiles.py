@@ -17,7 +17,6 @@ class LightMassProfile:
 class EllipticalGaussian(
     lp.EllipticalGaussian, mp.EllipticalGaussian, LightMassProfile
 ):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -45,7 +44,6 @@ class EllipticalGaussian(
 
 
 class EllipticalSersic(lp.EllipticalSersic, mp.EllipticalSersic, LightMassProfile):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -111,7 +109,6 @@ class SphericalSersic(EllipticalSersic, LightMassProfile):
 
 
 class EllipticalExponential(EllipticalSersic, LightMassProfile):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -184,7 +181,6 @@ class SphericalExponential(EllipticalExponential, LightMassProfile):
 
 
 class EllipticalDevVaucouleurs(EllipticalSersic, LightMassProfile):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -223,7 +219,6 @@ class EllipticalDevVaucouleurs(EllipticalSersic, LightMassProfile):
 
 
 class SphericalDevVaucouleurs(EllipticalDevVaucouleurs, LightMassProfile):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -259,7 +254,6 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs, LightMassProfile):
 class EllipticalSersicRadialGradient(
     lp.EllipticalSersic, mp.EllipticalSersicRadialGradient, LightMassProfile
 ):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -313,7 +307,6 @@ class EllipticalSersicRadialGradient(
 
 
 class SphericalSersicRadialGradient(EllipticalSersicRadialGradient, LightMassProfile):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -357,7 +350,6 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient, LightMassPro
 class EllipticalExponentialRadialGradient(
     EllipticalSersicRadialGradient, LightMassProfile
 ):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -403,7 +395,6 @@ class EllipticalExponentialRadialGradient(
 class SphericalExponentialRadialGradient(
     SphericalSersicRadialGradient, LightMassProfile
 ):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -447,7 +438,6 @@ class SphericalExponentialRadialGradient(
 class EllipticalCoreSersic(
     lp.EllipticalCoreSersic, mp.EllipticalCoreSersic, LightMassProfile
 ):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -487,7 +477,6 @@ class EllipticalCoreSersic(
 
 
 class SphericalCoreSersic(EllipticalCoreSersic, LightMassProfile):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -531,7 +520,6 @@ class SphericalCoreSersic(EllipticalCoreSersic, LightMassProfile):
 class EllipticalChameleon(
     lp.EllipticalChameleon, mp.EllipticalChameleon, LightMassProfile
 ):
-
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),

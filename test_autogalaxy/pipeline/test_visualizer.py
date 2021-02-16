@@ -25,7 +25,6 @@ def set_config_path(plot_path):
 
 
 class TestVisualizer:
-
     def test__visualizes_imaging__uses_configs(
         self, imaging_7x7, include_2d_all, plot_path, plot_patch
     ):
