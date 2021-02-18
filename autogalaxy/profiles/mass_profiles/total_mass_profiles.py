@@ -5,7 +5,7 @@ from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 
-from pyquad import quad_grid
+ from pyquad import quad_grid
 from scipy import special
 import typing
 import copy
