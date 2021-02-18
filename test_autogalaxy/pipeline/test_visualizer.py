@@ -15,13 +15,9 @@ def make_visualizer_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
-@pytest.fixture()
-def set_config_path(plot_path):
-
-    conf.instance.push(
-        new_path=path.join(directory, "unit", "pipeline", "config"),
-        output_path=path.join(plot_path),
-    )
+@pytest.fixture(autouse=True)
+def push_config(plot_path):
+    conf.instance.push(path.join(directory, "config"), output_path=plot_path)
 
 
 class TestVisualizer:
@@ -92,7 +88,7 @@ class TestVisualizer:
             path.join(plot_path, "model_image_of_galaxy_1.png") not in plot_patch.paths
         )
 
-        image = ag.util.array.numpy_array_2d_from_fits(
+        image = ag.util.array_2d.numpy_array_2d_from_fits(
             file_path=path.join(plot_path, "fits", "image.fits"), hdu=0
         )
 
