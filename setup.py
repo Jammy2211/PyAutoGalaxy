@@ -13,8 +13,9 @@ with open(join(this_dir, "requirements.txt")) as f:
 
 requirements.extend([
     'autofit==0.73.1',
-    'autoarray==0.18.3'
+    'autoarray==0.19.0'
 ])
+
 
 setup(
     name="autogalaxy",
