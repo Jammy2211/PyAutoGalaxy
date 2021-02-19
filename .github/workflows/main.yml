@@ -24,11 +24,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: PyAutoGalaxy
-    - name: Checkout PyAutoLens
-      uses: actions/checkout@v2
-      with:
-        repository: Jammy2211/PyAutoLens
-        path: PyAutoLens
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -47,13 +42,11 @@ jobs:
         pip install -r PyAutoFit/requirements.txt
         pip install -r PyAutoArray/requirements.txt
         pip install -r PyAutoGalaxy/requirements.txt
-        pip install -r PyAutoLens/requirements.txt
     - name: Run tests
       run: |
         export ROOT_DIR=`pwd`
         export PYTHONPATH=$PYTHONPATH:$ROOT_DIR/PyAutoArray
         export PYTHONPATH=$PYTHONPATH:$ROOT_DIR/PyAutoGalaxy
-        export PYTHONPATH=$PYTHONPATH:$ROOT_DIR/PyAutoLens
         export PYTHONPATH=$PYTHONPATH:$ROOT_DIR/PyAutoFit
         pushd PyAutoGalaxy
         pytest
