@@ -137,7 +137,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
 
         if image:
             self.subplot_of_plotters_figure(
-                plotters=light_profile_plotters, name="image"
+                plotter_list=light_profile_plotters, name="image"
             )
 
     def subplot_of_mass_profiles(
@@ -155,20 +155,20 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
 
         if convergence:
             self.subplot_of_plotters_figure(
-                plotters=mass_profile_plotters, name="convergence"
+                plotter_list=mass_profile_plotters, name="convergence"
             )
 
         if potential:
             self.subplot_of_plotters_figure(
-                plotters=mass_profile_plotters, name="potential"
+                plotter_list=mass_profile_plotters, name="potential"
             )
 
         if deflections_y:
             self.subplot_of_plotters_figure(
-                plotters=mass_profile_plotters, name="deflections_y"
+                plotter_list=mass_profile_plotters, name="deflections_y"
             )
 
         if deflections_x:
             self.subplot_of_plotters_figure(
-                plotters=mass_profile_plotters, name="deflections_x"
+                plotter_list=mass_profile_plotters, name="deflections_x"
             )

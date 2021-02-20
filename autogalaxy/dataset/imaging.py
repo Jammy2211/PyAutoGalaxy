@@ -18,6 +18,7 @@ class SettingsMaskedImaging(imaging.SettingsMaskedImaging):
         sub_steps=None,
         pixel_scales_interp=None,
         signal_to_noise_limit=None,
+        signal_to_noise_limit_radii=None,
         psf_shape_2d=None,
         renormalize_psf=True,
     ):
@@ -62,6 +63,7 @@ class SettingsMaskedImaging(imaging.SettingsMaskedImaging):
             sub_steps=sub_steps,
             pixel_scales_interp=pixel_scales_interp,
             signal_to_noise_limit=signal_to_noise_limit,
+            signal_to_noise_limit_radii=signal_to_noise_limit_radii,
             psf_shape_2d=psf_shape_2d,
             renormalize_psf=renormalize_psf,
         )
