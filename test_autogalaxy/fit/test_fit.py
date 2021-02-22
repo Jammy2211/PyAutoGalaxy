@@ -110,10 +110,12 @@ class TestFitImaging:
 
             assert fit.chi_squared == 25.0
             assert fit.reduced_chi_squared == 25.0 / 2.0
-            assert fit.noise_normalization == pytest.approx(2.0 * np.log(2 * np.pi * 1.0 ** 2.0), 1.0e-4)
-            assert fit.log_likelihood == pytest.approx(-0.5 * (
-                25.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
-            ), 1.0e-4)
+            assert fit.noise_normalization == pytest.approx(
+                2.0 * np.log(2 * np.pi * 1.0 ** 2.0), 1.0e-4
+            )
+            assert fit.log_likelihood == pytest.approx(
+                -0.5 * (25.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)), 1.0e-4
+            )
 
         def test__1x2_image__include_psf_blurring__plane_fits_data_with_chi_sq_4(self):
             # This PSF changes the blurred image plane image from [1.0, 1.0] to [1.0, 5.0]
@@ -214,10 +216,12 @@ class TestFitImaging:
 
             assert fit.chi_squared == 16.0
             assert fit.reduced_chi_squared == 16.0 / 2.0
-            assert fit.noise_normalization == pytest.approx(2.0 * np.log(2 * np.pi * 1.0 ** 2.0), 1.0e-4)
-            assert fit.log_likelihood == pytest.approx(-0.5 * (
-                16.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
-            ), 1.0e-4)
+            assert fit.noise_normalization == pytest.approx(
+                2.0 * np.log(2 * np.pi * 1.0 ** 2.0), 1.0e-4
+            )
+            assert fit.log_likelihood == pytest.approx(
+                -0.5 * (16.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)), 1.0e-4
+            )
 
         def test__hyper_galaxy_changes_noise_above_from_1_to_2__reflected_in_likelihood(
             self,
@@ -296,10 +300,12 @@ class TestFitImaging:
 
             assert fit.chi_squared == 4.0
             assert fit.reduced_chi_squared == 4.0 / 2.0
-            assert fit.noise_normalization == pytest.approx(2.0 * np.log(2 * np.pi * 2.0 ** 2.0), 1.0e-4)
-            assert fit.log_likelihood == pytest.approx(-0.5 * (
-                4.0 + 2.0 * np.log(2 * np.pi * 2.0 ** 2.0)
-            ), 1.0e-4)
+            assert fit.noise_normalization == pytest.approx(
+                2.0 * np.log(2 * np.pi * 2.0 ** 2.0), 1.0e-4
+            )
+            assert fit.log_likelihood == pytest.approx(
+                -0.5 * (4.0 + 2.0 * np.log(2 * np.pi * 2.0 ** 2.0)), 1.0e-4
+            )
 
         def test__hyper_image_changes_background_sky__reflected_in_likelihood(self):
             psf = ag.Kernel2D.manual_native(
@@ -373,10 +379,12 @@ class TestFitImaging:
 
             assert fit.chi_squared == 41.0
             assert fit.reduced_chi_squared == 41.0 / 2.0
-            assert fit.noise_normalization == pytest.approx(2.0 * np.log(2 * np.pi * 1.0 ** 2.0), 1.0e-4)
-            assert fit.log_likelihood == pytest.approx(-0.5 * (
-                41.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
-            ), 1.0e-4)
+            assert fit.noise_normalization == pytest.approx(
+                2.0 * np.log(2 * np.pi * 1.0 ** 2.0), 1.0e-4
+            )
+            assert fit.log_likelihood == pytest.approx(
+                -0.5 * (41.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)), 1.0e-4
+            )
 
         def test__hyper_background_changes_background_noise_map__reflected_in_likelihood(
             self,
@@ -432,10 +440,12 @@ class TestFitImaging:
 
             assert fit.chi_squared == 6.25
             assert fit.reduced_chi_squared == 6.25 / 2.0
-            assert fit.noise_normalization == pytest.approx(2.0 * np.log(2 * np.pi * 2.0 ** 2.0), 1.0e-4)
-            assert fit.log_likelihood == pytest.approx(-0.5 * (
-                6.25 + 2.0 * np.log(2 * np.pi * 2.0 ** 2.0)
-            ), 1.0e-4)
+            assert fit.noise_normalization == pytest.approx(
+                2.0 * np.log(2 * np.pi * 2.0 ** 2.0), 1.0e-4
+            )
+            assert fit.log_likelihood == pytest.approx(
+                -0.5 * (6.25 + 2.0 * np.log(2 * np.pi * 2.0 ** 2.0)), 1.0e-4
+            )
 
         def test__hyper_galaxy_changes_noise_above_hyper_noise_limit__rounded_down_to_limit(
             self,
@@ -1458,10 +1468,12 @@ class TestFitInterferometer:
             assert (fit.chi_squared_map.slim == np.array([9.0 + 16.0j])).all()
 
             assert fit.chi_squared == 25.0
-            assert fit.noise_normalization == pytest.approx(2.0 * np.log(2 * np.pi * 1.0 ** 2.0), 1.0e-4)
-            assert fit.log_likelihood == pytest.approx(-0.5 * (
-                25.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)
-            ), 1.0e-4)
+            assert fit.noise_normalization == pytest.approx(
+                2.0 * np.log(2 * np.pi * 1.0 ** 2.0), 1.0e-4
+            )
+            assert fit.log_likelihood == pytest.approx(
+                -0.5 * (25.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)), 1.0e-4
+            )
 
         def test__hyper_background_changes_background_sky__reflected_in_likelihood(
             self,

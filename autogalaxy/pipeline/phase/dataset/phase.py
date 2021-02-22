@@ -135,34 +135,6 @@ class PhaseDataset(abstract.AbstractPhase):
                 f"{hyper_tag}{self.settings.phase_tag_with_inversion}"
             )
 
-        if self.hyper_name == "hyper":
-
-            rename_hyper_combined = conf.instance["general"]["hyper"][
-                "rename_hyper_combined"
-            ]
-
-            if rename_hyper_combined:
-
-                output_path_hyper = copy.copy(self.search.paths.output_path)
-                output_path_hyper_combined = output_path_hyper.replace(
-                    "hyper", "hyper_combined"
-                )
-
-                if os.path.exists(output_path_hyper_combined):
-                    copy_tree(output_path_hyper_combined, output_path_hyper)
-                    if os.path.isfile(f"{output_path_hyper_combined}.zip"):
-                        shutil.copyfile(
-                            f"{output_path_hyper_combined}.zip",
-                            f"{output_path_hyper}.zip",
-                        )
-                    shutil.rmtree(output_path_hyper_combined)
-
-                if os.path.isfile(f"{output_path_hyper_combined}.zip"):
-                    os.remove(f"{output_path_hyper_combined}.zip")
-
-                if os.path.exists(os.path.join(output_path_hyper_combined, "..")):
-                    shutil.rmtree(os.path.join(output_path_hyper_combined, ".."))
-
     def extend_with_hyper_phase(self, setup_hyper, include_hyper_image_sky=True):
 
         self.use_as_hyper_dataset = True

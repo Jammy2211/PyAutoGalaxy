@@ -109,6 +109,7 @@ class HyperPhase:
         result = self.phase.run(
             dataset, results=results, info=info, pickle_files=pickle_files, **kwargs
         )
+
         results.add(self.phase.paths.name, result)
         hyper_result = self.run_hyper(
             dataset=dataset,
@@ -136,6 +137,12 @@ class HyperPhase:
         self.results = results
 
         phase = self.make_hyper_phase()
+
+        try:
+            phase.settings.settings_masked_imaging.signal_to_noise_limit = None
+        except AttributeError:
+            pass
+
         model = self.make_model(instance=results.last.instance)
 
         if self.hyper_galaxy_names is not None:
