@@ -80,12 +80,6 @@ class GalaxyModel(PriorModel):
             hyper_galaxy=hyper_galaxy,
             **kwargs
         )
-        profile_models = []
-
-        for name, prior_model in self.prior_model_tuples:
-            cls = prior_model.cls
-            if is_mass_profile_class(cls) or is_light_profile_class(cls):
-                profile_models.append(prior_model)
 
         if pixelization is not None and regularization is None:
             raise AssertionError(
