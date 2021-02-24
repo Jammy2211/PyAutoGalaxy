@@ -271,6 +271,13 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
 
 
 class MassProfileMGE:
+    """
+    This class speeds up deflection angle calculations of certain mass profiles by decompositing them into many
+    Gaussians.
+
+    This follows the method of Shajib 2019 - https://academic.oup.com/mnras/article/488/1/1387/5526256
+    """
+
     def __init__(self):
 
         self.count = 0
