@@ -19,7 +19,7 @@ def last_result_with_use_as_hyper_dataset(results):
 
 
 class Analysis(abstract_analysis.Analysis):
-    def __init__(self, masked_dataset, cosmology, settings, results):
+    def __init__(self, masked_dataset, cosmology, settings, results, preloads=None):
 
         super().__init__(cosmology=cosmology, settings=settings)
 
@@ -36,6 +36,8 @@ class Analysis(abstract_analysis.Analysis):
 
             self.hyper_galaxy_image_path_dict = None
             self.hyper_model_image = None
+
+        self.preloads = preloads
 
     def hyper_image_sky_for_instance(self, instance):
 

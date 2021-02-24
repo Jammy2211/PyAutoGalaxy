@@ -1,17 +1,10 @@
 from astropy import cosmology as cosmo
-from autoconf import conf
 import autofit as af
 from autoarray.inversion import pixelizations as pix
 from autoarray.inversion import regularization as reg
 from autogalaxy.pipeline.phase import abstract
 from autogalaxy.pipeline.phase import extensions
 from autogalaxy.pipeline.phase.dataset.result import Result
-
-import copy
-import os
-import shutil
-from distutils.dir_util import copy_tree
-
 
 class PhaseDataset(abstract.AbstractPhase):
     galaxies = af.PhaseProperty("galaxies")
@@ -44,6 +37,8 @@ class PhaseDataset(abstract.AbstractPhase):
         self.hyper_name = None
         self.use_as_hyper_dataset = use_as_hyper_dataset
         self.is_hyper_phase = False
+        self.preload_inversion = False
+
 
     def run(
         self,
@@ -79,8 +74,9 @@ class PhaseDataset(abstract.AbstractPhase):
         self.modify_dataset(dataset=dataset, results=results)
         self.modify_settings(dataset=dataset, results=results)
         self.modify_search_paths()
+        preloads = self.setup_preloads(results=results)
 
-        analysis = self.make_analysis(dataset=dataset, mask=mask, results=results)
+        analysis = self.make_analysis(dataset=dataset, mask=mask, results=results, preloads=preloads)
 
         result = self.run_analysis(
             analysis=analysis,
@@ -91,7 +87,7 @@ class PhaseDataset(abstract.AbstractPhase):
 
         return self.make_result(result=result, analysis=analysis)
 
-    def make_analysis(self, dataset, mask, results=None):
+    def make_analysis(self, dataset, mask, results=None, preloads=None):
         """
         Returns an lens object. Also calls the prior passing and masked_imaging modifying functions to allow child
         classes to change the behaviour of the phase.
@@ -134,6 +130,9 @@ class PhaseDataset(abstract.AbstractPhase):
             self.search.paths.tag = (
                 f"{hyper_tag}{self.settings.phase_tag_with_inversion}"
             )
+
+    def setup_preloads(self, results):
+        pass
 
     def extend_with_hyper_phase(self, setup_hyper, include_hyper_image_sky=True):
 

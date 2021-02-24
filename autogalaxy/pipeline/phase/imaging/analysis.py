@@ -7,13 +7,14 @@ from autogalaxy.pipeline import visualizer as vis
 
 
 class Analysis(analysis_dataset.Analysis):
-    def __init__(self, masked_imaging, settings, cosmology, results=None):
+    def __init__(self, masked_imaging, settings, cosmology, results=None, preloads=None):
 
         super(Analysis, self).__init__(
             masked_dataset=masked_imaging,
             settings=settings,
             cosmology=cosmology,
             results=results,
+            preloads=preloads
         )
 
     @property

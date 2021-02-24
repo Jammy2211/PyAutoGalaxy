@@ -1,5 +1,6 @@
 import autofit as af
 from autoarray.inversion import pixelizations as pix
+from autogalaxy.galaxy.galaxy_model import is_light_profile_class
 from autogalaxy.pipeline.phase.abstract.result import Result
 from astropy import cosmology as cosmo
 

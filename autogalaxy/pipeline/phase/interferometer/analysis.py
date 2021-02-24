@@ -8,13 +8,14 @@ from autogalaxy.pipeline.phase.dataset import analysis as analysis_data
 
 
 class Analysis(analysis_data.Analysis):
-    def __init__(self, masked_interferometer, settings, cosmology, results=None):
+    def __init__(self, masked_interferometer, settings, cosmology, results=None, preloads=None):
 
         super(Analysis, self).__init__(
             masked_dataset=masked_interferometer,
             settings=settings,
             cosmology=cosmology,
             results=results,
+            preloads=preloads,
         )
 
         result = analysis_data.last_result_with_use_as_hyper_dataset(results=results)

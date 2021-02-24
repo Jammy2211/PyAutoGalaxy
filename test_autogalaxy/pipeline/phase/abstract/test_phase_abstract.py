@@ -157,6 +157,53 @@ class TestModel:
         assert instance.galaxies[1].sis.einstein_radius == 0.7
         assert instance.galaxies[1].redshift == 0.8
 
+    # def test__parametric_light_only_model(self):
+    #
+    #     phase_imaging_7x7 = ag.PhaseImaging(
+    #         galaxies=af.CollectionPriorModel(
+    #             galaxy_0=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic)
+    #         ),
+    #         search=mock.MockSearch(name="test_phase")
+    #     )
+    #
+    #     assert phase_imaging_7x7.parametric_light_only_model == True
+    #
+    #     phase_imaging_7x7 = ag.PhaseImaging(
+    #         galaxies=af.CollectionPriorModel(
+    #             galaxy_0=ag.GalaxyModel(
+    #                 redshift=0.5,
+    #                 light=ag.lp.EllipticalSersic,
+    #                 mass=ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+    #             )
+    #         ),
+    #         search=mock.MockSearch(name="test_phase")
+    #     )
+    #
+    #     assert phase_imaging_7x7.parametric_light_only_model == True
+    #
+    #     phase_imaging_7x7 = ag.PhaseImaging(
+    #         galaxies=af.CollectionPriorModel(
+    #             galaxy_0=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic, mass=ag.mp.SphericalIsothermal)
+    #         ),
+    #         search=mock.MockSearch(name="test_phase")
+    #     )
+    #
+    #     assert phase_imaging_7x7.parametric_light_only_model == False
+    #
+    #     phase_imaging_7x7 = ag.PhaseImaging(
+    #         galaxies=af.CollectionPriorModel(
+    #             galaxy_0=ag.GalaxyModel(
+    #                 redshift=0.5,
+    #                 light=ag.lp.EllipticalSersic,
+    #                 mass=ag.mp.SphericalIsothermal(centre=(0.0, 0.0))
+    #             )
+    #         ),
+    #         search=mock.MockSearch(name="test_phase")
+    #     )
+    #
+    #     assert phase_imaging_7x7.parametric_light_only_model == False
+
+
     def test__pixelization_property_extracts_pixelization(self, imaging_7x7, mask_7x7):
 
         source_galaxy = ag.Galaxy(redshift=0.5)
@@ -301,6 +348,7 @@ class TestModel:
         )
 
         assert phase_imaging_7x7.uses_cluster_inversion is True
+
 
 
 class TestSetup:
