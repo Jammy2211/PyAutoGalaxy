@@ -203,7 +203,6 @@ class TestModel:
     #
     #     assert phase_imaging_7x7.parametric_light_only_model == False
 
-
     def test__pixelization_property_extracts_pixelization(self, imaging_7x7, mask_7x7):
 
         source_galaxy = ag.Galaxy(redshift=0.5)
@@ -348,7 +347,6 @@ class TestModel:
         )
 
         assert phase_imaging_7x7.uses_cluster_inversion is True
-
 
 
 class TestSetup:

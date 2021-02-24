@@ -8,7 +8,9 @@ from autogalaxy.pipeline.phase.dataset import analysis as analysis_data
 
 
 class Analysis(analysis_data.Analysis):
-    def __init__(self, masked_interferometer, settings, cosmology, results=None, preloads=None):
+    def __init__(
+        self, masked_interferometer, settings, cosmology, results=None, preloads=None
+    ):
 
         super(Analysis, self).__init__(
             masked_dataset=masked_interferometer,

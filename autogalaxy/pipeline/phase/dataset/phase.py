@@ -6,6 +6,7 @@ from autogalaxy.pipeline.phase import abstract
 from autogalaxy.pipeline.phase import extensions
 from autogalaxy.pipeline.phase.dataset.result import Result
 
+
 class PhaseDataset(abstract.AbstractPhase):
     galaxies = af.PhaseProperty("galaxies")
 
@@ -38,7 +39,6 @@ class PhaseDataset(abstract.AbstractPhase):
         self.use_as_hyper_dataset = use_as_hyper_dataset
         self.is_hyper_phase = False
         self.preload_inversion = False
-
 
     def run(
         self,
@@ -76,7 +76,9 @@ class PhaseDataset(abstract.AbstractPhase):
         self.modify_search_paths()
         preloads = self.setup_preloads(results=results)
 
-        analysis = self.make_analysis(dataset=dataset, mask=mask, results=results, preloads=preloads)
+        analysis = self.make_analysis(
+            dataset=dataset, mask=mask, results=results, preloads=preloads
+        )
 
         result = self.run_analysis(
             analysis=analysis,
