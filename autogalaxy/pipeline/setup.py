@@ -377,6 +377,7 @@ class SetupLightParametric(AbstractSetupLight):
         align_bulge_disk_centre: bool = True,
         align_bulge_disk_elliptical_comps: bool = False,
         align_bulge_envelope_centre: bool = False,
+        assert_bulge_sersic_above_disk=True,
     ):
         """
         The setup of the parametric light modeling in a pipeline, which controls how PyAutoGalaxy template pipelines
@@ -492,6 +493,7 @@ class SetupLightParametric(AbstractSetupLight):
             bulge_prior_model=self.bulge_prior_model,
             disk_prior_model=self.disk_prior_model,
             envelope_prior_model=self.envelope_prior_model,
+            assert_bulge_sersic_above_disk=assert_bulge_sersic_above_disk
         )
 
     @property
