@@ -303,7 +303,7 @@ def make_samples_with_result():
     return MockSamples(max_log_likelihood_instance=plane)
 
 
-def make_phase_data():
+def make_analysis_dataset():
     return PhaseDataset(
         settings=ag.SettingsPhaseImaging(), search=MockSearch(name="test_phase")
     )

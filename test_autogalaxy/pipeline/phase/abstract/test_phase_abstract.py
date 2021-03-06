@@ -13,13 +13,13 @@ pytestmark = pytest.mark.filterwarnings(
 
 
 class TestModel:
-    def test__set_instances(self, phase_dataset_7x7):
-        phase_dataset_7x7.galaxies = [ag.Galaxy(redshift=0.5)]
-        assert phase_dataset_7x7.model.galaxies == [ag.Galaxy(redshift=0.5)]
+    def test__set_instances(self, analysis_dataset_7x7):
+        analysis_dataset_7x7.galaxies = [ag.Galaxy(redshift=0.5)]
+        assert analysis_dataset_7x7.model.galaxies == [ag.Galaxy(redshift=0.5)]
 
-    def test__set_models(self, phase_dataset_7x7):
-        phase_dataset_7x7.galaxies = [ag.GalaxyModel(redshift=0.5)]
-        assert phase_dataset_7x7.model.galaxies == [ag.GalaxyModel(redshift=0.5)]
+    def test__set_models(self, analysis_dataset_7x7):
+        analysis_dataset_7x7.galaxies = [ag.GalaxyModel(redshift=0.5)]
+        assert analysis_dataset_7x7.model.galaxies == [ag.GalaxyModel(redshift=0.5)]
 
     def test__promise_attrbutes(self):
         phase = PhaseDataset(
@@ -38,7 +38,7 @@ class TestModel:
         print(hasattr(af.last.result.instance.galaxies.light, "mas2s"))
 
     def test__duplication(self):
-        phase_dataset_7x7 = ag.PhaseImaging(
+        analysis_dataset_7x7 = ag.PhaseImaging(
             galaxies=dict(
                 galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
             ),
@@ -47,11 +47,11 @@ class TestModel:
 
         ag.PhaseImaging(search=mock.MockSearch(name="test_phase"))
 
-        assert phase_dataset_7x7.galaxies is not None
+        assert analysis_dataset_7x7.galaxies is not None
 
     def test__phase_can_receive_list_of_galaxy_models(self):
 
-        phase_dataset_7x7 = ag.PhaseImaging(
+        analysis_dataset_7x7 = ag.PhaseImaging(
             galaxies=dict(
                 galaxy=ag.GalaxyModel(
                     sersic=ag.lp.EllipticalSersic,
@@ -65,12 +65,12 @@ class TestModel:
             search=mock.MockSearch(name="test_phase"),
         )
 
-        for item in phase_dataset_7x7.model.path_priors_tuples:
+        for item in analysis_dataset_7x7.model.path_priors_tuples:
             print(item)
 
-        sersic = phase_dataset_7x7.model.galaxies[0].sersic
-        sis = phase_dataset_7x7.model.galaxies[0].sis
-        galaxy_1_sis = phase_dataset_7x7.model.galaxies[1].sis
+        sersic = analysis_dataset_7x7.model.galaxies[0].sersic
+        sis = analysis_dataset_7x7.model.galaxies[0].sis
+        galaxy_1_sis = analysis_dataset_7x7.model.galaxies[1].sis
 
         arguments = {
             sersic.centre[0]: 0.2,
@@ -83,14 +83,16 @@ class TestModel:
             sis.centre[0]: 0.1,
             sis.centre[1]: 0.2,
             sis.einstein_radius: 0.3,
-            phase_dataset_7x7.model.galaxies[0].redshift.priors[0]: 0.4,
+            analysis_dataset_7x7.model.galaxies[0].redshift.priors[0]: 0.4,
             galaxy_1_sis.centre[0]: 0.6,
             galaxy_1_sis.centre[1]: 0.5,
             galaxy_1_sis.einstein_radius: 0.7,
-            phase_dataset_7x7.model.galaxies[1].redshift.priors[0]: 0.8,
+            analysis_dataset_7x7.model.galaxies[1].redshift.priors[0]: 0.8,
         }
 
-        instance = phase_dataset_7x7.model.instance_for_arguments(arguments=arguments)
+        instance = analysis_dataset_7x7.model.instance_for_arguments(
+            arguments=arguments
+        )
 
         assert instance.galaxies[0].sersic.centre[0] == 0.2
         assert instance.galaxies[0].sis.centre[0] == 0.1
@@ -107,7 +109,7 @@ class TestModel:
             def pass_models(self, results):
                 self.galaxies[0].sis.einstein_radius = 10.0
 
-        phase_dataset_7x7 = LensPlanePhase2(
+        analysis_dataset_7x7 = LensPlanePhase2(
             galaxies=dict(
                 galaxy=ag.GalaxyModel(
                     sersic=ag.lp.EllipticalSersic,
@@ -122,11 +124,11 @@ class TestModel:
         )
 
         # noinspection PyTypeChecker
-        phase_dataset_7x7.pass_models(None)
+        analysis_dataset_7x7.pass_models(None)
 
-        sersic = phase_dataset_7x7.model.galaxies[0].sersic
-        sis = phase_dataset_7x7.model.galaxies[0].sis
-        galaxy_1_sis = phase_dataset_7x7.model.galaxies[1].sis
+        sersic = analysis_dataset_7x7.model.galaxies[0].sersic
+        sis = analysis_dataset_7x7.model.galaxies[0].sis
+        galaxy_1_sis = analysis_dataset_7x7.model.galaxies[1].sis
 
         arguments = {
             sersic.centre[0]: 0.01,
@@ -138,14 +140,14 @@ class TestModel:
             sersic.intensity: 0.6,
             sis.centre[0]: 0.1,
             sis.centre[1]: 0.2,
-            phase_dataset_7x7.model.galaxies[0].redshift.priors[0]: 0.4,
+            analysis_dataset_7x7.model.galaxies[0].redshift.priors[0]: 0.4,
             galaxy_1_sis.centre[0]: 0.6,
             galaxy_1_sis.centre[1]: 0.5,
             galaxy_1_sis.einstein_radius: 0.7,
-            phase_dataset_7x7.model.galaxies[1].redshift.priors[0]: 0.8,
+            analysis_dataset_7x7.model.galaxies[1].redshift.priors[0]: 0.8,
         }
 
-        instance = phase_dataset_7x7.model.instance_for_arguments(arguments)
+        instance = analysis_dataset_7x7.model.instance_for_arguments(arguments)
 
         assert instance.galaxies[0].sersic.centre[0] == 0.01
         assert instance.galaxies[0].sis.centre[0] == 0.1
@@ -353,7 +355,7 @@ class TestSetup:
 
     # noinspection PyTypeChecker
     def test_assertion_failure(self, imaging_7x7, mask_7x7):
-        phase_dataset_7x7 = ag.PhaseImaging(
+        analysis_dataset_7x7 = ag.PhaseImaging(
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
@@ -361,15 +363,19 @@ class TestSetup:
             search=mock.MockSearch(name="name"),
         )
 
-        result = phase_dataset_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)
+        result = analysis_dataset_7x7.run(
+            dataset=imaging_7x7, mask=mask_7x7, results=None
+        )
         assert result is not None
 
-        phase_dataset_7x7 = ag.PhaseImaging(
+        analysis_dataset_7x7 = ag.PhaseImaging(
             galaxies=dict(
                 galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
             ),
             settings=ag.SettingsPhaseImaging(),
             search=mock.MockSearch(name="name"),
         )
-        result = phase_dataset_7x7.run(dataset=imaging_7x7, mask=mask_7x7, results=None)
+        result = analysis_dataset_7x7.run(
+            dataset=imaging_7x7, mask=mask_7x7, results=None
+        )
         assert result is not None

@@ -52,33 +52,3 @@ class AbstractPhase(af.AbstractPhase):
             search=self.search,
             use_as_hyper_dataset=self.use_as_hyper_dataset,
         )
-
-    @property
-    def pixelization(self):
-        for galaxy in self.galaxies:
-            if hasattr(galaxy, "pixelization"):
-                if galaxy.pixelization is not None:
-                    if isinstance(galaxy.pixelization, af.PriorModel):
-                        return galaxy.pixelization.cls
-                    else:
-                        return galaxy.pixelization
-
-    @property
-    def has_pixelization(self):
-        return self.pixelization is not None
-
-    @property
-    def uses_cluster_inversion(self):
-        if self.galaxies:
-            for galaxy in self.galaxies:
-                if isinstance_or_prior(galaxy.pixelization, pix.VoronoiBrightnessImage):
-                    return True
-        return False
-
-    @property
-    def pixelization_is_model(self):
-        if self.galaxies:
-            for galaxy in self.galaxies:
-                if isprior(galaxy.pixelization):
-                    return True
-        return False

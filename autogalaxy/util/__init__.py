@@ -13,4 +13,5 @@ from autoarray.inversion import mapper_util as mapper
 from autoarray.inversion import regularization_util as regularization
 from autoarray.inversion import inversion_util as inversion
 from autoarray.operators import transformer_util as transformer
-from ..util import cosmology_util as cosmology
+from autogalaxy.analysis import model_util as model
+from autogalaxy.util import cosmology_util as cosmology

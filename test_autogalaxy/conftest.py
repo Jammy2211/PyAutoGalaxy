@@ -349,12 +349,22 @@ def make_masked_interferometer_fit_x2_galaxy_inversion_7x7():
     return fixtures.make_masked_interferometer_fit_x2_galaxy_inversion_7x7()
 
 
+@pytest.fixture(name="voronoi_mapper_9_3x3")
+def make_voronoi_mapper_9_3x3():
+    return fixtures.make_voronoi_mapper_9_3x3()
+
+
+@pytest.fixture(name="include_2d_all")
+def make_include_all():
+    return fixtures.make_include_all()
+
+
 @pytest.fixture(name="samples_with_result")
 def make_samples_with_result():
     return fixtures.make_samples_with_result()
 
 
-@pytest.fixture(name="phase_dataset_7x7")
+@pytest.fixture(name="analysis_dataset_7x7")
 def make_phase_data():
     return fixtures.make_phase_data()
 
@@ -367,13 +377,3 @@ def make_phase_imaging_7x7():
 @pytest.fixture(name="phase_interferometer_7")
 def make_phase_interferometer_7():
     return fixtures.make_phase_interferometer_7()
-
-
-@pytest.fixture(name="voronoi_mapper_9_3x3")
-def make_voronoi_mapper_9_3x3():
-    return fixtures.make_voronoi_mapper_9_3x3()
-
-
-@pytest.fixture(name="include_2d_all")
-def make_include_all():
-    return fixtures.make_include_all()
