@@ -176,7 +176,6 @@ class ResultImaging(ResultDataset):
 
 
 class ResultInterferometer(ResultDataset):
-
     @property
     def max_log_likelihood_fit(self):
 
@@ -303,7 +302,7 @@ class ResultInterferometer(ResultDataset):
     @property
     def hyper_model_image(self):
 
-        hyper_model_image = aa.Array2D.manual_mask(
+        hyper_model_image = array_2d.Array2D.manual_mask(
             array=np.zeros(self.real_space_mask.mask_sub_1.pixels_in_mask),
             mask=self.real_space_mask.mask_sub_1,
         )
@@ -312,4 +311,3 @@ class ResultInterferometer(ResultDataset):
             hyper_model_image += self.hyper_galaxy_image_path_dict[path]
 
         return hyper_model_image
-

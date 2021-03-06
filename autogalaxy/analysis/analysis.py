@@ -237,15 +237,18 @@ class AnalysisImaging(AnalysisDataset):
 
 
 class AnalysisInterferometer(AnalysisDataset):
-
     def __init__(
-        self, interferometer, cosmology, results=None,         settings_pixelization=pix.SettingsPixelization(),
+        self,
+        dataset,
+        results=None,
+        cosmology=cosmo.Planck15,
+        settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
         preloads=None,
     ):
 
-        super(Analysis, self).__init__(
-            dataset=interferometer,
+        super().__init__(
+            dataset=dataset,
             cosmology=cosmology,
             results=results,
             settings_pixelization=settings_pixelization,
@@ -267,7 +270,6 @@ class AnalysisInterferometer(AnalysisDataset):
 
             self.hyper_galaxy_visibilities_path_dict = None
             self.hyper_model_visibilities = None
-
 
     @property
     def interferometer(self):

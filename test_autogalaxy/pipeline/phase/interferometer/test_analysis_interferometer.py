@@ -15,27 +15,6 @@ directory = path.dirname(path.realpath(__file__))
 
 
 class TestFit:
-    def test__fit_using_interferometer(
-        self, interferometer_7, mask_7x7, visibilities_mask_7, samples_with_result
-    ):
-
-        phase_interferometer_7 = ag.PhaseInterferometer(
-            galaxies=dict(
-                galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
-                source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
-            ),
-            search=mock.MockSearch(samples=samples_with_result, name="test_phase"),
-            real_space_mask=mask_7x7,
-        )
-
-        result = phase_interferometer_7.run(
-            dataset=interferometer_7,
-            mask=visibilities_mask_7,
-            results=mock.MockResults(),
-        )
-        assert isinstance(result.instance.galaxies[0], ag.Galaxy)
-        assert isinstance(result.instance.galaxies[0], ag.Galaxy)
-
     def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
         self, interferometer_7, mask_7x7, visibilities_mask_7
     ):

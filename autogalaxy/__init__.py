@@ -49,6 +49,7 @@ from .galaxy.galaxy_model import GalaxyModel
 from .galaxy.masked_galaxy_data import MaskedGalaxyDataset
 from .hyper import hyper_data
 from .analysis.analysis import AnalysisImaging
+from .analysis.analysis import AnalysisInterferometer
 from .pipeline.phase.abstract import phase
 from .pipeline.phase.abstract.phase import AbstractPhase
 from .pipeline.phase.extensions.hyper_phase import HyperPhase

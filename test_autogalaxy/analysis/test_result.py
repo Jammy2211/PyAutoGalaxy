@@ -150,7 +150,6 @@ class TestResultDataset:
 
 
 class TestResultImaging:
-
     def test___image_dict(self, masked_imaging_7x7):
 
         galaxies = af.ModelInstance()
@@ -161,8 +160,7 @@ class TestResultImaging:
         instance.galaxies = galaxies
 
         analysis = ag.AnalysisImaging(
-            dataset=masked_imaging_7x7,
-            results=mock.MockResults(),
+            dataset=masked_imaging_7x7, results=mock.MockResults()
         )
 
         result = res.ResultImaging(
@@ -181,3 +179,8 @@ class TestResultImaging:
         image_dict = result.image_galaxy_dict
         assert (image_dict[("galaxies", "galaxy")].native == np.zeros((7, 7))).all()
         assert isinstance(image_dict[("galaxies", "source")], np.ndarray)
+
+
+class TestResultInterferometer:
+
+    pass

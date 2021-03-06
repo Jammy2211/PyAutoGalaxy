@@ -167,3 +167,56 @@ class TestAnalysisImaging:
 
         assert (fit.plane.galaxies[0].hyper_galaxy_image == galaxy_hyper_image).all()
         assert fit_likelihood == fit.log_likelihood
+
+
+class TestAnalysisInterferometer:
+    def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
+        self, masked_interferometer_7
+    ):
+
+        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
+
+        model = af.CollectionPriorModel(galaxies=af.CollectionPriorModel(galaxy=galaxy))
+
+        analysis = ag.AnalysisInterferometer(
+            dataset=masked_interferometer_7, results=mock.MockResults()
+        )
+
+        instance = model.instance_from_unit_vector([])
+        fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
+
+        plane = analysis.plane_for_instance(instance=instance)
+
+        fit = ag.FitInterferometer(
+            masked_interferometer=masked_interferometer_7, plane=plane
+        )
+
+        assert fit.log_likelihood == fit_figure_of_merit
+
+    def test__fit_figure_of_merit__includes_hyper_image_and_noise__matches_fit(
+        self, masked_interferometer_7
+    ):
+        hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
+
+        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
+
+        model = af.CollectionPriorModel(
+            hyper_background_noise=hyper_background_noise,
+            galaxies=af.CollectionPriorModel(galaxy=galaxy),
+        )
+
+        analysis = ag.AnalysisInterferometer(
+            dataset=masked_interferometer_7, results=mock.MockResults()
+        )
+
+        instance = model.instance_from_unit_vector([])
+        fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
+
+        plane = analysis.plane_for_instance(instance=instance)
+        fit = ag.FitInterferometer(
+            masked_interferometer=masked_interferometer_7,
+            plane=plane,
+            hyper_background_noise=hyper_background_noise,
+        )
+
+        assert fit.log_likelihood == fit_figure_of_merit
