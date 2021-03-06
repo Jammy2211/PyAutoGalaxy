@@ -99,7 +99,7 @@ class ResultImaging(ResultDataset):
             instance=self.instance
         )
 
-        return self.analysis.masked_imaging_fit_for_plane(
+        return self.analysis.imaging_fit_for_plane(
             plane=self.max_log_likelihood_plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
