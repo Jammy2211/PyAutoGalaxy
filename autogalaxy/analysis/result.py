@@ -52,7 +52,6 @@ class Result(af.Result):
 
 
 class ResultDataset(Result):
-
     @property
     def max_log_likelihood_fit(self):
 

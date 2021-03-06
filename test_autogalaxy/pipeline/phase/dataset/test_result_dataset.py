@@ -16,7 +16,6 @@ directory = path.dirname(path.realpath(__file__))
 
 
 class TestResult:
-
     def test__results_of_phase_include_mask__available_as_property(
         self, imaging_7x7, mask_7x7, samples_with_result
     ):
@@ -37,7 +36,6 @@ class TestResult:
         )
 
         assert (result.mask == mask_7x7).all()
-
 
     def test__results_of_phase_include_pixelization__available_as_property(
         self, imaging_7x7, mask_7x7

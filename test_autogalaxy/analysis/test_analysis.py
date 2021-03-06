@@ -13,7 +13,6 @@ pytestmark = pytest.mark.filterwarnings(
 
 
 class TestAnalysisDataset:
-
     def test__associate_hyper_images(self, masked_imaging_7x7):
 
         galaxies = af.ModelInstance()
@@ -41,10 +40,7 @@ class TestAnalysisDataset:
             use_as_hyper_dataset=True,
         )
 
-        analysis = ag.AnalysisImaging(
-            dataset=masked_imaging_7x7,
-            results=results,
-        )
+        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7, results=results)
 
         instance = analysis.associate_hyper_images(instance=instance)
 
@@ -61,7 +57,6 @@ class TestAnalysisDataset:
         assert instance.galaxies.source.hyper_model_image.native == pytest.approx(
             3.0 * np.ones((3, 3)), 1.0e-4
         )
-
 
 
 class TestAnalysisImaging:

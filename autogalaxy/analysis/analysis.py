@@ -231,4 +231,6 @@ class AnalysisImaging(AnalysisDataset):
         model: af.CollectionPriorModel,
         search: af.NonLinearSearch,
     ):
-        return res.ResultDataset(samples=samples, model=model, analysis=self, search=search)
+        return res.ResultDataset(
+            samples=samples, model=model, analysis=self, search=search
+        )
