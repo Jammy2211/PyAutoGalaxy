@@ -14,6 +14,26 @@ pytestmark = pytest.mark.filterwarnings(
 
 
 class TestResultAbstract:
+    def test__result_contains_instance_with_galaxies(
+        self, masked_imaging_7x7, samples_with_result
+    ):
+
+        model = af.CollectionPriorModel(
+            galaxies=af.CollectionPriorModel(
+                galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
+                source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
+            )
+        )
+
+        search = mock.MockSearch(samples=samples_with_result, name="test_phase")
+
+        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
+
+        result = search.fit(model=model, analysis=analysis)
+
+        assert isinstance(result.instance.galaxies[0], ag.Galaxy)
+        assert isinstance(result.instance.galaxies[1], ag.Galaxy)
+
     def test__results_of_phase_are_available_as_properties(self, masked_imaging_7x7):
 
         model = af.CollectionPriorModel(
@@ -127,3 +147,8 @@ class TestResultDataset:
 
         assert isinstance(result.pixelization, ag.pix.VoronoiBrightnessImage)
         assert result.pixelization.pixels == 6
+
+
+class TestResultImaging:
+
+    pass
