@@ -13,6 +13,7 @@ def last_result_with_use_as_hyper_dataset(results):
 
 
 class Result(af.Result):
+
     def __init__(
         self, samples, previous_model, analysis, search, use_as_hyper_dataset=False
     ):

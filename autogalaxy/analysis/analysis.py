@@ -1,5 +1,3 @@
-import autofit as af
-import pickle
 from astropy import cosmology as cosmo
 import autofit as af
 from autoarray.exc import PixelizationException, InversionException, GridException
@@ -108,6 +106,8 @@ class AnalysisDataset(Analysis):
 
         return instance
 
+    def make_result(self, samples : af.PDFSamples, model : af.CollectionPriorModel, search : af.NonLinearSearch):
+        return res.Result(samples=samples, previous_model=model, analysis=self, search=search)
 
 class AnalysisImaging(AnalysisDataset):
     def __init__(
