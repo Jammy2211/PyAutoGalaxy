@@ -2,6 +2,16 @@ import autofit as af
 from autogalaxy.galaxy import galaxy as g
 
 
+def last_result_with_use_as_hyper_dataset(results):
+
+    if results is not None:
+        if results.last is not None:
+            for index, result in enumerate(reversed(results)):
+                if hasattr(result, "use_as_hyper_dataset"):
+                    if result.use_as_hyper_dataset:
+                        return result
+
+
 class Result(af.Result):
     def __init__(
         self, samples, previous_model, analysis, search, use_as_hyper_dataset=False

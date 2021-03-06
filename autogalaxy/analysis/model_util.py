@@ -1,8 +1,5 @@
 import autofit as af
 from autoarray.inversion import pixelizations as pix
-from autogalaxy.galaxy.galaxy_model import is_light_profile_class
-from autogalaxy.pipeline.phase.abstract.result import Result
-from astropy import cosmology as cosmo
 
 
 def isprior(obj):
@@ -19,7 +16,7 @@ def isinstance_or_prior(obj, cls):
     return False
 
 
-def pixelization_from_model(model : af.CollectionPriorModel) -> pix.Pixelization:
+def pixelization_from_model(model: af.CollectionPriorModel) -> pix.Pixelization:
     """
     For a model containing one or more galaxies, inspect its attributes and return the `pixelization` of a galaxy
     provided one galaxy has a pixelization, otherwise it returns none. There cannot be more than one `Pixelization` in
@@ -42,7 +39,7 @@ def pixelization_from_model(model : af.CollectionPriorModel) -> pix.Pixelization
     pix.Pixelization or None:
         The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
     """
-    
+
     for galaxy in model.galaxies:
         if hasattr(galaxy, "pixelization"):
             if galaxy.pixelization is not None:
@@ -52,7 +49,7 @@ def pixelization_from_model(model : af.CollectionPriorModel) -> pix.Pixelization
                     return galaxy.pixelization
 
 
-def has_pixelization_from_model(model : af.CollectionPriorModel):
+def has_pixelization_from_model(model: af.CollectionPriorModel):
     """
     For a model containing one or more galaxies, inspect its attributes and return `True` if a galaxy has a
     `Pixelization` otherwise return `False`.
@@ -79,7 +76,7 @@ def has_pixelization_from_model(model : af.CollectionPriorModel):
     return pixelization is not None
 
 
-def pixelization_is_model_from_model(model : af.CollectionPriorModel):
+def pixelization_is_model_from_model(model: af.CollectionPriorModel):
     """
     For a model containing one or more galaxies, inspect its attributes and return `True` if a galaxy has a
     `Pixelization` which is a model-component with free parameters, otherwise return `False`. Therefore, a `False`
@@ -108,5 +105,3 @@ def pixelization_is_model_from_model(model : af.CollectionPriorModel):
             if isprior(galaxy.pixelization):
                 return True
     return False
-
-

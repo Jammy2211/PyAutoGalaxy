@@ -29,7 +29,9 @@ def test__pixelization_from_model():
 
     galaxies = af.CollectionPriorModel(
         galaxy=ag.GalaxyModel(
-            redshift=0.5, pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
+            redshift=0.5,
+            pixelization=ag.pix.Rectangular,
+            regularization=ag.reg.Constant,
         )
     )
 
@@ -38,6 +40,7 @@ def test__pixelization_from_model():
     )
 
     assert type(pixelization) == type(ag.pix.Rectangular)
+
 
 def test__has_pixelization():
 
@@ -65,7 +68,9 @@ def test__has_pixelization():
 
     galaxies = af.CollectionPriorModel(
         galaxy=ag.Galaxy(
-            redshift=0.5, pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
+            redshift=0.5,
+            pixelization=ag.pix.Rectangular,
+            regularization=ag.reg.Constant,
         )
     )
 
@@ -102,7 +107,9 @@ def test__pixelization_is_model():
 
     galaxies = af.CollectionPriorModel(
         galaxy=ag.GalaxyModel(
-            redshift=0.5, pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
+            redshift=0.5,
+            pixelization=ag.pix.Rectangular,
+            regularization=ag.reg.Constant,
         )
     )
 

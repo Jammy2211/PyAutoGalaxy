@@ -11,123 +11,21 @@ pytestmark = pytest.mark.filterwarnings(
 )
 
 
-class TestModel:
-    def test__check_if_phase_uses_cluster_inversion(self):
-        phase_imaging_7x7 = ag.PhaseImaging(
-            galaxies=dict(
-                galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
-            ),
-            search=mock.MockSearch(name="test_phase"),
-        )
-
-        assert phase_imaging_7x7.uses_cluster_inversion is False
-
-        phase_imaging_7x7 = ag.PhaseImaging(
-            galaxies=dict(
-                galaxy=ag.GalaxyModel(
-                    redshift=0.5,
-                    pixelization=ag.pix.Rectangular,
-                    regularization=ag.reg.Constant,
-                ),
-                source=ag.GalaxyModel(redshift=1.0),
-            ),
-            search=mock.MockSearch(name="test_phase"),
-        )
-        assert phase_imaging_7x7.uses_cluster_inversion is False
-
-        source = ag.GalaxyModel(
-            redshift=1.0,
-            pixelization=ag.pix.VoronoiBrightnessImage,
-            regularization=ag.reg.Constant,
-        )
-
-        phase_imaging_7x7 = ag.PhaseImaging(
-            galaxies=dict(galaxy=ag.GalaxyModel(redshift=0.5), source=source),
-            search=mock.MockSearch(name="test_phase"),
-        )
-
-        assert phase_imaging_7x7.uses_cluster_inversion is True
-
-        phase_imaging_7x7 = ag.PhaseImaging(
-            galaxies=dict(
-                galaxy=ag.GalaxyModel(redshift=0.5), source=ag.GalaxyModel(redshift=1.0)
-            ),
-            search=mock.MockSearch(name="test_phase"),
-        )
-
-        assert phase_imaging_7x7.uses_cluster_inversion is False
-
-        phase_imaging_7x7 = ag.PhaseImaging(
-            galaxies=dict(
-                galaxy=ag.GalaxyModel(
-                    redshift=0.5,
-                    pixelization=ag.pix.Rectangular,
-                    regularization=ag.reg.Constant,
-                ),
-                source=ag.GalaxyModel(redshift=1.0),
-            ),
-            search=mock.MockSearch(name="test_phase"),
-        )
-
-        assert phase_imaging_7x7.uses_cluster_inversion is False
-
-        phase_imaging_7x7 = ag.PhaseImaging(
-            galaxies=dict(
-                galaxy=ag.GalaxyModel(redshift=0.5),
-                source=ag.GalaxyModel(
-                    redshift=1.0,
-                    pixelization=ag.pix.VoronoiBrightnessImage,
-                    regularization=ag.reg.Constant,
-                ),
-            ),
-            search=mock.MockSearch(name="test_phase"),
-        )
-
-        assert phase_imaging_7x7.uses_cluster_inversion is True
-
-        pixelization = af.PriorModel(ag.pix.VoronoiBrightnessImage)
-        pixelization.pixels = 100
-
-        phase_imaging_7x7 = ag.PhaseImaging(
-            galaxies=dict(
-                galaxy=ag.GalaxyModel(redshift=0.5),
-                source=ag.GalaxyModel(
-                    redshift=1.0,
-                    pixelization=pixelization,
-                    regularization=ag.reg.Constant,
-                ),
-            ),
-            search=mock.MockSearch(name="test_phase"),
-        )
-
-        assert phase_imaging_7x7.uses_cluster_inversion is True
-
-
-class TestSetup:
+class TestAnalysisImaging:
 
     # noinspection PyTypeChecker
-    def test_assertion_failure(self, imaging_7x7, mask_7x7):
-        analysis_dataset_7x7 = ag.PhaseImaging(
-            galaxies=dict(
-                galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
-            ),
-            settings=ag.SettingsPhaseImaging(),
-            search=mock.MockSearch(name="name"),
+    def test__mock_search_runs_without_exception(self, masked_imaging_7x7):
+
+        search = mock.MockSearch(name="name")
+
+        model = af.CollectionPriorModel(
+            galaxies=af.CollectionPriorModel(
+                galaxy=ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalLightProfile)
+            )
         )
 
-        result = analysis_dataset_7x7.run(
-            dataset=imaging_7x7, mask=mask_7x7, results=None
-        )
-        assert result is not None
+        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
 
-        analysis_dataset_7x7 = ag.PhaseImaging(
-            galaxies=dict(
-                galaxy=ag.Galaxy(light=ag.lp.EllipticalLightProfile, redshift=1)
-            ),
-            settings=ag.SettingsPhaseImaging(),
-            search=mock.MockSearch(name="name"),
-        )
-        result = analysis_dataset_7x7.run(
-            dataset=imaging_7x7, mask=mask_7x7, results=None
-        )
+        result = search.fit(model=model, analysis=analysis)
+
         assert result is not None
