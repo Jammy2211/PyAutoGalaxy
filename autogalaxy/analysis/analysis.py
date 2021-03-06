@@ -106,14 +106,6 @@ class AnalysisDataset(Analysis):
 
         return instance
 
-    def make_result(
-        self,
-        samples: af.PDFSamples,
-        model: af.CollectionPriorModel,
-        search: af.NonLinearSearch,
-    ):
-        return res.Result(samples=samples, model=model, analysis=self, search=search)
-
 
 class AnalysisImaging(AnalysisDataset):
     def __init__(
@@ -232,3 +224,11 @@ class AnalysisImaging(AnalysisDataset):
             visualizer.visualize_fit_imaging(
                 fit=fit, during_analysis=during_analysis, subfolders="fit_no_hyper"
             )
+
+    def make_result(
+        self,
+        samples: af.PDFSamples,
+        model: af.CollectionPriorModel,
+        search: af.NonLinearSearch,
+    ):
+        return res.ResultDataset(samples=samples, model=model, analysis=self, search=search)
