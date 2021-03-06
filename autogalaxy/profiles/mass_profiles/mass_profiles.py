@@ -136,14 +136,15 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
 
     @property
     def average_convergence_of_1_radius(self):
-        """The radius a critical curve forms for this mass profile, e.g. where the mean convergence is equal to 1.0.
+        """
+        The radius a critical curve forms for this mass profile, e.g. where the mean convergence is equal to 1.0.
 
-         In case of ellipitical mass profiles, the 'average' critical curve is used, whereby the convergence is \
-         rescaled into a circle using the axis ratio.
+        In case of ellipitical mass profiles, the 'average' critical curve is used, whereby the convergence is \
+        rescaled into a circle using the axis ratio.
 
-         This radius corresponds to the Einstein radius of the mass profile, and is a property of a number of \
-         mass profiles below.
-         """
+        This radius corresponds to the Einstein radius of the mass profile, and is a property of a number of \
+        mass profiles below.
+        """
 
         def func(radius):
 

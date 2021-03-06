@@ -153,6 +153,7 @@ class TestVisualizer:
         plot_path,
         plot_patch,
     ):
+
         if path.exists(plot_path):
             shutil.rmtree(plot_path)
 

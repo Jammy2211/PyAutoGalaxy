@@ -425,7 +425,7 @@ class TestSersic:
 
         convergence_1 = sersic_1.convergence_from_grid(grid=np.array([[0.0, 0.0]]))
 
-        assert convergence_0 == convergence_1
+        assert convergence_0 == pytest.approx(convergence_1, 1.0e-6)
 
         sersic_0 = ag.mp.EllipticalSersic(centre=(0.0, 0.0))
         sersic_1 = ag.mp.EllipticalSersic(centre=(0.0, 0.0))

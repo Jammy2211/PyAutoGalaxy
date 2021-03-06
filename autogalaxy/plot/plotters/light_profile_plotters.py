@@ -1,6 +1,5 @@
 from autoarray.structures.grids.two_d import grid_2d_irregular
 from autoarray.plot.mat_wrap import mat_plot as mp
-from autoarray.util import plotter_util
 from autoarray.plot.plotters import abstract_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 
@@ -96,27 +95,3 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
                     legend=self.light_profile.__class__.__name__,
                 ),
             )
-
-    def luminosity_within_circle_in_electrons_per_second_as_function_of_radius(
-        self,
-        light_profile,
-        minimum_radius=1.0e-4,
-        maximum_radius=10.0,
-        radii_bins=10,
-        plot_axis_type="semilogy",
-    ):
-
-        radii = plotter_util.quantity_radii_from_minimum_and_maximum_radii_and_radii_points(
-            minimum_radius=minimum_radius,
-            maximum_radius=maximum_radius,
-            radii_points=radii_bins,
-        )
-
-        luminosities = list(
-            map(
-                lambda radius: light_profile.luminosity_within_circle(radius=radius),
-                radii,
-            )
-        )
-
-        self.line(quantity=luminosities, radii=radii, plot_axis_type=plot_axis_type)
