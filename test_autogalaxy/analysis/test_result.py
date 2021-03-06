@@ -31,23 +31,27 @@ class TestGeneric:
 
 
 class TestPlane:
-    def test__max_log_likelihood_plane_available_as_result(self, imaging_7x7, mask_7x7):
+    def test__max_log_likelihood_plane_available_as_result(self, masked_imaging_7x7):
 
         galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
         galaxy_1 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=2.0))
 
-        max_log_likelihood_plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
-
-        analysis_dataset_7x7 = ag.PhaseImaging(
-            search=mock.MockSearch(
-                name="test_phase",
-                samples=mock.MockSamples(
-                    max_log_likelihood_instance=max_log_likelihood_plane
-                ),
-            )
+        model = af.CollectionPriorModel(
+            galaxies=af.CollectionPriorModel(galaxy_0=galaxy_0, galaxy_1=galaxy_1)
         )
 
-        result = analysis_dataset_7x7.run(dataset=imaging_7x7, mask=mask_7x7)
+        max_log_likelihood_plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
+
+        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
+
+        search = mock.MockSearch(
+            name="test_phase",
+            samples=mock.MockSamples(
+                max_log_likelihood_instance=max_log_likelihood_plane
+            ),
+        )
+
+        result = search.fit(model=model, analysis=analysis)
 
         assert isinstance(result.max_log_likelihood_plane, ag.Plane)
         assert result.max_log_likelihood_plane.galaxies[0].light.intensity == 1.0

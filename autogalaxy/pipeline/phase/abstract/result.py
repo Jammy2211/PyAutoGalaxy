@@ -3,9 +3,7 @@ from autogalaxy.galaxy import galaxy as g
 
 
 class Result(af.Result):
-    def __init__(
-        self, samples, model, analysis, search, use_as_hyper_dataset=False
-    ):
+    def __init__(self, samples, model, analysis, search, use_as_hyper_dataset=False):
         """
         The results of a `NonLinearSearch` performed by a phase.
 
