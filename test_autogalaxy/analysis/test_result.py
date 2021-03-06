@@ -150,6 +150,20 @@ class TestResultDataset:
 
 
 class TestResultImaging:
+    def test__result_imaging_is_returned(self, masked_imaging_7x7):
+
+        model = af.CollectionPriorModel(
+            galaxies=af.CollectionPriorModel(galaxy_0=ag.Galaxy(redshift=0.5))
+        )
+
+        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
+
+        search = mock.MockSearch(name="test_phase")
+
+        result = search.fit(model=model, analysis=analysis)
+
+        assert isinstance(result, res.ResultImaging)
+
     def test___image_dict(self, masked_imaging_7x7):
 
         galaxies = af.ModelInstance()
@@ -182,5 +196,16 @@ class TestResultImaging:
 
 
 class TestResultInterferometer:
+    def test__result_interferometer_is_returned(self, masked_interferometer_7):
 
-    pass
+        model = af.CollectionPriorModel(
+            galaxies=af.CollectionPriorModel(galaxy_0=ag.Galaxy(redshift=0.5))
+        )
+
+        analysis = ag.AnalysisInterferometer(dataset=masked_interferometer_7)
+
+        search = mock.MockSearch(name="test_phase")
+
+        result = search.fit(model=model, analysis=analysis)
+
+        assert isinstance(result, res.ResultInterferometer)

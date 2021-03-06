@@ -1,5 +1,6 @@
 from astropy import cosmology as cosmo
 import autofit as af
+from autoarray import preloads as pload
 from autoarray.exc import PixelizationException, InversionException, GridException
 from autofit.exc import FitException
 from autoarray.inversion import pixelizations as pix, inversions as inv
@@ -31,7 +32,7 @@ class AnalysisDataset(Analysis):
         cosmology=cosmo.Planck15,
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
-        preloads=None,
+        preloads=pload.Preloads(),
     ):
 
         super().__init__(cosmology=cosmology)
@@ -115,7 +116,7 @@ class AnalysisImaging(AnalysisDataset):
         cosmology=cosmo.Planck15,
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
-        preloads=None,
+        preloads=pload.Preloads(),
     ):
 
         super().__init__(
@@ -231,7 +232,7 @@ class AnalysisImaging(AnalysisDataset):
         model: af.CollectionPriorModel,
         search: af.NonLinearSearch,
     ):
-        return res.ResultDataset(
+        return res.ResultImaging(
             samples=samples, model=model, analysis=self, search=search
         )
 
@@ -244,7 +245,7 @@ class AnalysisInterferometer(AnalysisDataset):
         cosmology=cosmo.Planck15,
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
-        preloads=None,
+        preloads=pload.Preloads(),
     ):
 
         super().__init__(
@@ -395,3 +396,13 @@ class AnalysisInterferometer(AnalysisDataset):
             visualizer.visualize_fit_interferometer(
                 fit=fit, during_analysis=during_analysis, subfolders="fit_no_hyper"
             )
+
+    def make_result(
+        self,
+        samples: af.PDFSamples,
+        model: af.CollectionPriorModel,
+        search: af.NonLinearSearch,
+    ):
+        return res.ResultInterferometer(
+            samples=samples, model=model, analysis=self, search=search
+        )
