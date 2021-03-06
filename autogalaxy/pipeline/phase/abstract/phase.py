@@ -47,7 +47,7 @@ class AbstractPhase(af.AbstractPhase):
 
         return self.Result(
             samples=result.samples,
-            previous_model=result.previous_model,
+            model=result.model,
             analysis=analysis,
             search=self.search,
             use_as_hyper_dataset=self.use_as_hyper_dataset,

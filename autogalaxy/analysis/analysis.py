@@ -107,7 +107,7 @@ class AnalysisDataset(Analysis):
         return instance
 
     def make_result(self, samples : af.PDFSamples, model : af.CollectionPriorModel, search : af.NonLinearSearch):
-        return res.Result(samples=samples, previous_model=model, analysis=self, search=search)
+        return res.Result(samples=samples, model=model, analysis=self, search=search)
 
 class AnalysisImaging(AnalysisDataset):
     def __init__(
