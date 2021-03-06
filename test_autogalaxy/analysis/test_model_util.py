@@ -28,7 +28,7 @@ def test__pixelization_from_model():
     assert isinstance(pixelization, ag.pix.Rectangular)
 
     galaxies = af.CollectionPriorModel(
-        galaxy=ag.Galaxy(
+        galaxy=ag.GalaxyModel(
             redshift=0.5, pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
         )
     )
@@ -39,113 +39,75 @@ def test__pixelization_from_model():
 
     assert type(pixelization) == type(ag.pix.Rectangular)
 
-    pixelization = af.PriorModel(ag.pix.VoronoiBrightnessImage)
-    pixelization.pixels = 100
-
-    galaxies = af.CollectionPriorModel(
-        galaxy=ag.Galaxy(
-            redshift=0.5, pixelization=pixelization, regularization=ag.reg.Constant
-        )
-    )
-
-    pixelization = ag.util.model.pixelization_from_model(
-        model=af.CollectionPriorModel(galaxies=galaxies)
-    )
-
-    assert type(pixelization) == type(ag.pix.Rectangular)
-
-
 def test__has_pixelization():
-
-    source_galaxy = ag.Galaxy(redshift=0.5)
-
-    phase_imaging_7x7 = ag.PhaseImaging(
-        galaxies=[source_galaxy], search=mock.MockSearch(name="test_phase")
-    )
 
     galaxies = af.CollectionPriorModel(galaxy=ag.GalaxyModel(redshift=0.5))
 
-    assert phase_imaging_7x7.has_pixelization is False
-
-    source_galaxy = ag.Galaxy(
-        redshift=0.5,
-        pixelization=ag.pix.Rectangular(),
-        regularization=ag.reg.Constant(),
+    has_pixelization = ag.util.model.has_pixelization_from_model(
+        model=af.CollectionPriorModel(galaxies=galaxies)
     )
 
-    phase_imaging_7x7 = ag.PhaseImaging(
-        galaxies=[source_galaxy], search=mock.MockSearch(name="test_phase")
+    assert has_pixelization is False
+
+    galaxies = af.CollectionPriorModel(
+        galaxy=ag.Galaxy(
+            redshift=0.5,
+            pixelization=ag.pix.Rectangular(),
+            regularization=ag.reg.Constant(),
+        )
     )
 
-    assert phase_imaging_7x7.has_pixelization is True
-
-    source_galaxy = ag.GalaxyModel(
-        redshift=0.5, pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
+    has_pixelization = ag.util.model.has_pixelization_from_model(
+        model=af.CollectionPriorModel(galaxies=galaxies)
     )
 
-    phase_imaging_7x7 = ag.PhaseImaging(
-        galaxies=[source_galaxy], search=mock.MockSearch(name="test_phase")
+    assert has_pixelization is True
+
+    galaxies = af.CollectionPriorModel(
+        galaxy=ag.Galaxy(
+            redshift=0.5, pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
+        )
     )
 
-    assert phase_imaging_7x7.has_pixelization is True
-
-    pixelization = af.PriorModel(ag.pix.VoronoiBrightnessImage)
-    pixelization.pixels = 100
-
-    source_galaxy = ag.GalaxyModel(
-        redshift=0.5, pixelization=pixelization, regularization=ag.reg.Constant
+    has_pixelization = ag.util.model.has_pixelization_from_model(
+        model=af.CollectionPriorModel(galaxies=galaxies)
     )
 
-    phase_imaging_7x7 = ag.PhaseImaging(
-        galaxies=[source_galaxy], search=mock.MockSearch(name="test_phase")
-    )
-
-    assert phase_imaging_7x7.has_pixelization is True
+    assert has_pixelization is True
 
 
 def test__pixelization_is_model():
 
-    source_galaxy = ag.Galaxy(redshift=0.5)
-
-    phase_imaging_7x7 = ag.PhaseImaging(
-        galaxies=[source_galaxy], search=mock.MockSearch(name="test_phase")
-    )
-
     galaxies = af.CollectionPriorModel(galaxy=ag.GalaxyModel(redshift=0.5))
 
-    assert phase_imaging_7x7.pixelization_is_model == False
-
-    source_galaxy = ag.Galaxy(
-        redshift=0.5,
-        pixelization=ag.pix.Rectangular(),
-        regularization=ag.reg.Constant(),
+    pixelization_is_model = ag.util.model.pixelization_is_model_from_model(
+        model=af.CollectionPriorModel(galaxies=galaxies)
     )
 
-    phase_imaging_7x7 = ag.PhaseImaging(
-        galaxies=[source_galaxy], search=mock.MockSearch(name="test_phase")
+    assert pixelization_is_model == False
+
+    galaxies = af.CollectionPriorModel(
+        galaxy=ag.Galaxy(
+            redshift=0.5,
+            pixelization=ag.pix.Rectangular(),
+            regularization=ag.reg.Constant(),
+        )
     )
 
-    assert phase_imaging_7x7.pixelization_is_model == False
-
-    source_galaxy = ag.GalaxyModel(
-        redshift=0.5, pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
+    pixelization_is_model = ag.util.model.pixelization_is_model_from_model(
+        model=af.CollectionPriorModel(galaxies=galaxies)
     )
 
-    phase_imaging_7x7 = ag.PhaseImaging(
-        galaxies=[source_galaxy], search=mock.MockSearch(name="test_phase")
+    assert pixelization_is_model == False
+
+    galaxies = af.CollectionPriorModel(
+        galaxy=ag.GalaxyModel(
+            redshift=0.5, pixelization=ag.pix.Rectangular, regularization=ag.reg.Constant
+        )
     )
 
-    assert phase_imaging_7x7.pixelization_is_model == True
-
-    pixelization = af.PriorModel(ag.pix.VoronoiBrightnessImage)
-    pixelization.pixels = 100
-
-    source_galaxy = ag.GalaxyModel(
-        redshift=0.5, pixelization=pixelization, regularization=ag.reg.Constant
+    pixelization_is_model = ag.util.model.pixelization_is_model_from_model(
+        model=af.CollectionPriorModel(galaxies=galaxies)
     )
 
-    phase_imaging_7x7 = ag.PhaseImaging(
-        galaxies=[source_galaxy], search=mock.MockSearch(name="test_phase")
-    )
-
-    assert phase_imaging_7x7.pixelization_is_model == True
+    assert pixelization_is_model == True

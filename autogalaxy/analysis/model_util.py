@@ -29,9 +29,19 @@ def pixelization_from_model(model):
                     return galaxy.pixelization
 
 
-@property
-def has_pixelization(self):
-    return self.pixelization is not None
+def has_pixelization_from_model(model):
+
+    pixelization = pixelization_from_model(model=model)
+
+    return pixelization is not None
+
+
+def pixelization_is_model_from_model(model):
+    if model.galaxies:
+        for galaxy in model.galaxies:
+            if isprior(galaxy.pixelization):
+                return True
+    return False
 
 
 @property
@@ -43,10 +53,3 @@ def uses_cluster_inversion(self):
     return False
 
 
-@property
-def pixelization_is_model(self):
-    if self.galaxies:
-        for galaxy in self.galaxies:
-            if isprior(galaxy.pixelization):
-                return True
-    return False
