@@ -15,7 +15,7 @@ pytestmark = pytest.mark.filterwarnings(
 
 class TestResultAbstract:
     def test__result_contains_instance_with_galaxies(
-        self, masked_imaging_7x7, samples_with_result
+        self, analysis_imaging_7x7, samples_with_result
     ):
 
         model = af.CollectionPriorModel(
@@ -25,32 +25,17 @@ class TestResultAbstract:
             )
         )
 
-        search = mock.MockSearch(samples=samples_with_result, name="test_phase")
-
-        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
-
-        result = search.fit(model=model, analysis=analysis)
+        result = res.Result(
+            samples=samples_with_result,
+            analysis=analysis_imaging_7x7,
+            model=model,
+            search=None,
+        )
 
         assert isinstance(result.instance.galaxies[0], ag.Galaxy)
         assert isinstance(result.instance.galaxies[1], ag.Galaxy)
 
-    def test__results_of_phase_are_available_as_properties(self, masked_imaging_7x7):
-
-        model = af.CollectionPriorModel(
-            galaxies=af.CollectionPriorModel(
-                galaxy=ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalLightProfile)
-            )
-        )
-
-        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
-
-        search = mock.MockSearch(name="test_phase_2")
-
-        result = search.fit(model=model, analysis=analysis)
-
-        assert isinstance(result, res.Result)
-
-    def test__max_log_likelihood_plane_available_as_result(self, masked_imaging_7x7):
+    def test__max_log_likelihood_plane_available_as_result(self, analysis_imaging_7x7):
 
         galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
         galaxy_1 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=2.0))
@@ -61,8 +46,6 @@ class TestResultAbstract:
 
         max_log_likelihood_plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
-        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
-
         search = mock.MockSearch(
             name="test_phase",
             samples=mock.MockSamples(
@@ -70,7 +53,7 @@ class TestResultAbstract:
             ),
         )
 
-        result = search.fit(model=model, analysis=analysis)
+        result = search.fit(model=model, analysis=analysis_imaging_7x7)
 
         assert isinstance(result.max_log_likelihood_plane, ag.Plane)
         assert result.max_log_likelihood_plane.galaxies[0].light.intensity == 1.0
@@ -78,29 +61,22 @@ class TestResultAbstract:
 
 
 class TestResultDataset:
-    def test__results_of_include_masked_dataset_and_mask(
-        self, masked_imaging_7x7, samples_with_result
+    def test__results_include_masked_dataset_and_mask(
+        self, analysis_imaging_7x7, masked_imaging_7x7, samples_with_result
     ):
 
-        model = af.CollectionPriorModel(
-            galaxies=af.CollectionPriorModel(
-                galaxy=ag.Galaxy(
-                    redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
-                )
-            )
+        result = res.ResultDataset(
+            samples=samples_with_result,
+            analysis=analysis_imaging_7x7,
+            model=None,
+            search=None,
         )
 
-        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
-
-        search = mock.MockSearch("test_phase_2", samples=samples_with_result)
-
-        result = search.fit(model=model, analysis=analysis)
-
         assert (result.mask == masked_imaging_7x7.mask).all()
-        assert result.dataset == masked_imaging_7x7
+        assert (result.dataset.image == masked_imaging_7x7.image).all()
 
-    def test__results_of_phase_include_pixelization__available_as_property(
-        self, masked_imaging_7x7
+    def test__results_include_pixelization__available_as_property(
+        self, analysis_imaging_7x7
     ):
         source = ag.Galaxy(
             redshift=1.0,
@@ -112,15 +88,9 @@ class TestResultDataset:
 
         samples = mock.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
 
-        model = af.CollectionPriorModel(
-            galaxies=af.CollectionPriorModel(galaxy=ag.Galaxy(redshift=0.5))
+        result = res.ResultDataset(
+            samples=samples, analysis=analysis_imaging_7x7, model=None, search=None
         )
-
-        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
-
-        search = mock.MockSearch("test_phase_2", samples=samples)
-
-        result = search.fit(model=model, analysis=analysis)
 
         assert isinstance(result.pixelization, ag.pix.VoronoiMagnification)
         assert result.pixelization.shape == (2, 3)
@@ -137,34 +107,16 @@ class TestResultDataset:
 
         samples = mock.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
 
-        model = af.CollectionPriorModel(galaxies=af.CollectionPriorModel(source=source))
-
-        model.galaxies.source.hyper_galaxy_image = np.ones(9)
-
-        search = mock.MockSearch("test_phase_2", samples=samples)
-
-        result = search.fit(model=model, analysis=analysis)
+        result = res.ResultDataset(
+            samples=samples, analysis=analysis_imaging_7x7, model=None, search=None
+        )
 
         assert isinstance(result.pixelization, ag.pix.VoronoiBrightnessImage)
         assert result.pixelization.pixels == 6
 
 
 class TestResultImaging:
-    def test__result_imaging_is_returned(self, masked_imaging_7x7):
-
-        model = af.CollectionPriorModel(
-            galaxies=af.CollectionPriorModel(galaxy_0=ag.Galaxy(redshift=0.5))
-        )
-
-        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
-
-        search = mock.MockSearch(name="test_phase")
-
-        result = search.fit(model=model, analysis=analysis)
-
-        assert isinstance(result, res.ResultImaging)
-
-    def test___image_dict(self, masked_imaging_7x7):
+    def test___image_dict(self, analysis_imaging_7x7):
 
         galaxies = af.ModelInstance()
         galaxies.galaxy = ag.Galaxy(redshift=0.5)
@@ -173,15 +125,10 @@ class TestResultImaging:
         instance = af.ModelInstance()
         instance.galaxies = galaxies
 
-        analysis = ag.AnalysisImaging(
-            dataset=masked_imaging_7x7, results=mock.MockResults()
-        )
+        samples = mock.MockSamples(max_log_likelihood_instance=instance)
 
         result = res.ResultImaging(
-            samples=mock.MockSamples(max_log_likelihood_instance=instance),
-            model=af.ModelMapper(),
-            analysis=analysis,
-            search=None,
+            samples=samples, analysis=analysis_imaging_7x7, model=None, search=None
         )
 
         image_dict = result.image_galaxy_dict
@@ -196,16 +143,5 @@ class TestResultImaging:
 
 
 class TestResultInterferometer:
-    def test__result_interferometer_is_returned(self, masked_interferometer_7):
 
-        model = af.CollectionPriorModel(
-            galaxies=af.CollectionPriorModel(galaxy_0=ag.Galaxy(redshift=0.5))
-        )
-
-        analysis = ag.AnalysisInterferometer(dataset=masked_interferometer_7)
-
-        search = mock.MockSearch(name="test_phase")
-
-        result = search.fit(model=model, analysis=analysis)
-
-        assert isinstance(result, res.ResultInterferometer)
+    pass

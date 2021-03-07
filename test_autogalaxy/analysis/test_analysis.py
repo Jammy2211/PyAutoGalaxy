@@ -1,11 +1,10 @@
 import pytest
 import numpy as np
-from astropy import cosmology as cosmo
 from os import path
 
 import autofit as af
 import autogalaxy as ag
-from autogalaxy.fit.fit import FitImaging
+from autogalaxy.analysis import result as res
 from autogalaxy.mock import mock
 
 pytestmark = pytest.mark.filterwarnings(
@@ -65,6 +64,20 @@ class TestAnalysisDataset:
 
 
 class TestAnalysisImaging:
+    def test__make_result__result_imaging_is_returned(self, masked_imaging_7x7):
+
+        model = af.CollectionPriorModel(
+            galaxies=af.CollectionPriorModel(galaxy_0=ag.Galaxy(redshift=0.5))
+        )
+
+        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
+
+        search = mock.MockSearch(name="test_phase")
+
+        result = search.fit(model=model, analysis=analysis)
+
+        assert isinstance(result, res.ResultImaging)
+
     def test__figure_of_merit__matches_correct_fit_given_galaxy_profiles(
         self, masked_imaging_7x7
     ):
@@ -104,7 +117,7 @@ class TestAnalysisImaging:
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
         plane = analysis.plane_for_instance(instance=instance)
-        fit = FitImaging(
+        fit = ag.FitImaging(
             masked_imaging=masked_imaging_7x7,
             plane=plane,
             hyper_image_sky=hyper_image_sky,
@@ -163,13 +176,29 @@ class TestAnalysisImaging:
 
         plane = ag.Plane(galaxies=[g0, g1])
 
-        fit = FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
 
         assert (fit.plane.galaxies[0].hyper_galaxy_image == galaxy_hyper_image).all()
         assert fit_likelihood == fit.log_likelihood
 
 
 class TestAnalysisInterferometer:
+    def test__make_result__result_interferometer_is_returned(
+        self, masked_interferometer_7
+    ):
+
+        model = af.CollectionPriorModel(
+            galaxies=af.CollectionPriorModel(galaxy_0=ag.Galaxy(redshift=0.5))
+        )
+
+        analysis = ag.AnalysisInterferometer(dataset=masked_interferometer_7)
+
+        search = mock.MockSearch(name="test_phase")
+
+        result = search.fit(model=model, analysis=analysis)
+
+        assert isinstance(result, res.ResultInterferometer)
+
     def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
         self, masked_interferometer_7
     ):

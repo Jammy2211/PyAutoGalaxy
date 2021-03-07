@@ -364,6 +364,16 @@ def make_samples_with_result():
     return fixtures.make_samples_with_result()
 
 
+@pytest.fixture(name="analysis_imaging_7x7")
+def make_analysis_imaging_7x7():
+    return fixtures.make_analysis_imaging_7x7()
+
+
+@pytest.fixture(name="analysis_interferometer_7")
+def make_analysis_interferometer_7():
+    return fixtures.make_analysis_interferometer_7()
+
+
 @pytest.fixture(name="analysis_dataset_7x7")
 def make_phase_data():
     return fixtures.make_phase_data()

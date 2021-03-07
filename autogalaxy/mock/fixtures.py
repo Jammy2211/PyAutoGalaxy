@@ -309,6 +309,14 @@ def make_analysis_dataset():
     )
 
 
+def make_analysis_imaging_7x7():
+    return ag.AnalysisImaging(dataset=make_masked_imaging_7x7())
+
+
+def make_analysis_interferometer_7():
+    return ag.AnalysisInterferometer(dataset=make_masked_interferometer_7())
+
+
 def make_phase_imaging_7x7():
     return ag.PhaseImaging(search=MockSearch(name="test_phase"))
 
