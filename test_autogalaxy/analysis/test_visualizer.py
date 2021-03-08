@@ -5,7 +5,7 @@ import pytest
 
 import autogalaxy as ag
 from autoconf import conf
-from autogalaxy.pipeline import visualizer as vis
+from autogalaxy.analysis import visualizer as vis
 
 directory = path.dirname(path.abspath(__file__))
 

@@ -60,6 +60,7 @@ class TestModelFixing:
         assert mapper.hyper_background_noise.cls == ag.hyper_data.HyperBackgroundNoise
 
     def test__make_pixelization_model(self):
+
         instance = af.ModelInstance()
         mapper = af.ModelMapper()
 

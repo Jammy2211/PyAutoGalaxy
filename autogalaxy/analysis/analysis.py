@@ -1,4 +1,6 @@
 from astropy import cosmology as cosmo
+import numpy as np
+
 import autofit as af
 from autoarray import preloads as pload
 from autoarray.exc import PixelizationException, InversionException, GridException
@@ -406,3 +408,67 @@ class AnalysisInterferometer(AnalysisDataset):
         return res.ResultInterferometer(
             samples=samples, model=model, analysis=self, search=search
         )
+
+
+class AnalysisHyper:
+    def __init__(
+        self,
+        analysis,
+        search,
+        result,
+        model_classes=tuple(),
+        hyper_image_sky=None,
+        hyper_background_noise=None,
+        hyper_galaxy_names=None,
+    ):
+
+        self.analysis = analysis
+        self.search = search
+        self.model_classes = model_classes
+        self.hyper_image_sky = hyper_image_sky
+        self.hyper_background_noise = hyper_background_noise
+        self.hyper_galaxy_names = hyper_galaxy_names
+
+    @property
+    def name(self):
+        return "hyper"
+
+    def make_model(self, instance):
+
+        model = instance.as_model(self.model_classes)
+        model.hyper_image_sky = self.hyper_image_sky
+        model.hyper_background_noise = self.hyper_background_noise
+
+        return model
+
+    def add_hyper_galaxies_to_model(
+        self, model, path_galaxy_tuples, hyper_galaxy_image_path_dict
+    ):
+
+        for path_galaxy, galaxy in path_galaxy_tuples:
+            if path_galaxy[-1] in self.hyper_galaxy_names:
+                if not np.all(hyper_galaxy_image_path_dict[path_galaxy] == 0):
+
+                    if "source" in path_galaxy[-1]:
+                        setattr(
+                            model.galaxies.source,
+                            "hyper_galaxy",
+                            af.PriorModel(g.HyperGalaxy),
+                        )
+                    elif "lens" in path_galaxy[-1]:
+                        setattr(
+                            model.galaxies.lens,
+                            "hyper_galaxy",
+                            af.PriorModel(g.HyperGalaxy),
+                        )
+
+        return model
+
+    def make_result(
+        self,
+        samples: af.PDFSamples,
+        model: af.CollectionPriorModel,
+        search: af.NonLinearSearch,
+    ):
+        result = self.analysis.make_result(samples=samples, model=model, search=search)
+        result.add(self.name, result)

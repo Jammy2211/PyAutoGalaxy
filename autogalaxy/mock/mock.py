@@ -137,6 +137,7 @@ class MockResult(af.MockResult):
         search=None,
         mask=None,
         model_image=None,
+        path_galaxy_tuples=None,
         hyper_galaxy_image_path_dict=None,
         hyper_model_image=None,
         hyper_galaxy_visibilities_path_dict=None,
@@ -155,6 +156,7 @@ class MockResult(af.MockResult):
         self.mask = mask
         self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
         self.hyper_model_image = hyper_model_image
+        self.path_galaxy_tuples = path_galaxy_tuples
         self.hyper_galaxy_visibilities_path_dict = hyper_galaxy_visibilities_path_dict
         self.hyper_model_visibilities = hyper_model_visibilities
         self.model_image = model_image
