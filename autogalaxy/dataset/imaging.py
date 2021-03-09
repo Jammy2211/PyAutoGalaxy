@@ -90,9 +90,6 @@ class MaskedImaging(imaging.MaskedImaging):
         psf_shape_2d : (int, int)
             The shape of the PSF used for convolving model image generated using analytic light profiles. A smaller \
             shape will trim the PSF relative to the input image PSF, giving a faster analysis run-time.
-        positions : [[]]
-            Lists of image-pixel coordinates (arc-seconds) that mappers close to one another in the source-plane(s), \
-            used to speed up the non-linear sampling.
         pixel_scales_interp : float
             If `True`, expensive to compute mass profile deflection angles will be computed on a sparse grid and \
             interpolated to the grid, sub and blurring grids.

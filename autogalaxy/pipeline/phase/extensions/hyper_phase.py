@@ -111,6 +111,12 @@ class HyperPhase:
         )
 
         results.add(self.phase.paths.name, result)
+
+        if hasattr(self.phase, "preload_inversion"):
+            self.phase.preload_inversion = False
+        if hasattr(self, "preload_inversion"):
+            self.preload_inversion = False
+
         hyper_result = self.run_hyper(
             dataset=dataset,
             results=results,

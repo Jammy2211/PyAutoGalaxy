@@ -3,7 +3,6 @@ import numpy as np
 import autofit as af
 from autoarray.inversion import pixelizations as pix, regularization as reg
 from autogalaxy.galaxy import galaxy as g
-from autogalaxy import hyper_data as hd
 
 from typing import List, Optional
 
@@ -116,8 +115,8 @@ def pixelization_is_model_from_model(model: af.CollectionPriorModel):
 def make_hyper_model_from(
     result: af.Result,
     hyper_galaxy_names: Optional[List[str]] = None,
-    hyper_image_sky: Optional[hd.HyperImageSky] = None,
-    hyper_background_noise: Optional[hd.HyperBackgroundNoise] = None,
+    hyper_image_sky=None,
+    hyper_background_noise=None,
 ) -> af.CollectionPriorModel:
     """
     Make a hyper model from the result of an `Analysis`, where a hyper-model corresponnds the maximum log likelihood

@@ -14,8 +14,9 @@ from autogalaxy.analysis import result as res
 
 
 class Analysis(af.Analysis):
-    def __init__(self, cosmology=cosmo.Planck15):
+    def __init__(self, results=None, cosmology=cosmo.Planck15):
 
+        self.results = results
         self.cosmology = cosmology
 
     # def save_settings(self, paths: af.Paths):
@@ -37,7 +38,7 @@ class AnalysisDataset(Analysis):
         preloads=pload.Preloads(),
     ):
 
-        super().__init__(cosmology=cosmology)
+        super().__init__(results=results, cosmology=cosmology)
 
         self.dataset = dataset
 
@@ -252,8 +253,8 @@ class AnalysisInterferometer(AnalysisDataset):
 
         super().__init__(
             dataset=dataset,
-            cosmology=cosmology,
             results=results,
+            cosmology=cosmology,
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
             preloads=preloads,

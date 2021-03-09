@@ -87,9 +87,6 @@ class MaskedInterferometer(interferometer.MaskedInterferometer):
         sub_size : int
             The size of the sub-grid used for each lens SubGrid. E.g. a value of 2 grid each image-pixel on a 2x2 \
             sub-grid.
-        positions : [[]]
-            Lists of image-pixel coordinates (arc-seconds) that mappers close to one another in the source-plane(s), \
-            used to speed up the non-linear sampling.
         pixel_scales_interp : float
             If `True`, expensive to compute mass profile deflection angles will be computed on a sparse grid and \
             interpolated to the grid, sub and blurring grids.
