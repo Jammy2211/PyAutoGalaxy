@@ -1,7 +1,10 @@
 import numpy as np
 
 import autofit as af
+from autofit.exc import PriorException
 from autoarray.inversion import pixelizations as pix, regularization as reg
+from autogalaxy.profiles import light_profiles as lp
+from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.galaxy import galaxy as g
 
 from typing import List, Optional
@@ -21,7 +24,7 @@ def isinstance_or_prior(obj, cls):
     return False
 
 
-def pixelization_from_model(model: af.CollectionPriorModel) -> pix.Pixelization:
+def pixelization_from(model: af.CollectionPriorModel) -> pix.Pixelization:
     """
     For a model containing one or more galaxies, inspect its attributes and return the `pixelization` of a galaxy
     provided one galaxy has a pixelization, otherwise it returns none. There cannot be more than one `Pixelization` in
@@ -76,12 +79,12 @@ def has_pixelization_from_model(model: af.CollectionPriorModel):
     pix.Pixelization or None:
         The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
     """
-    pixelization = pixelization_from_model(model=model)
+    pixelization = pixelization_from(model=model)
 
     return pixelization is not None
 
 
-def pixelization_is_model_from_model(model: af.CollectionPriorModel):
+def pixelization_is_model_from(model: af.CollectionPriorModel):
     """
     For a model containing one or more galaxies, inspect its attributes and return `True` if a galaxy has a
     `Pixelization` which is a model-component with free parameters, otherwise return `False`. Therefore, a `False`
@@ -150,6 +153,13 @@ def make_hyper_model_from(
         model components now free parameters.
     """
 
+    # if not self.has_pixelization:
+    #     if setup_hyper.hypers_all_off:
+    #         return self
+    #     if setup_hyper.hypers_all_except_image_sky_off:
+    #         if not include_hyper_image_sky:
+    #             return self
+
     model = result.instance.as_model((pix.Pixelization, reg.Regularization))
 
     if not has_pixelization_from_model(model=model):
@@ -176,5 +186,39 @@ def make_hyper_model_from(
                             "hyper_galaxy",
                             af.PriorModel(g.HyperGalaxy),
                         )
+
+    return model
+
+
+def make_stochastic_model_from(
+    model,
+    result,
+    include_lens_light=False,
+    include_pixelization=False,
+    include_regularization=False,
+):
+
+    if not hasattr(model.galaxies, "lens"):
+        raise PriorException(
+            "Cannot extend a phase with a stochastic phase if the lens galaxy `GalaxyModel` "
+            "is not named `lens`. "
+        )
+
+    model_classes = [mp.MassProfile]
+
+    if include_lens_light:
+        model_classes.append(lp.LightProfile)
+
+    if include_pixelization:
+        model_classes.append(pix.Pixelization)
+
+    if include_regularization:
+        model_classes.append(reg.Regularization)
+
+    model = result.instance.as_model(model_classes)
+
+    model.galaxies.lens.take_attributes(source=result.model.galaxies.lens)
+    if hasattr(model.galaxies, "subhalo"):
+        model.galaxies.subhalo.take_attributes(source=result.model.galaxies.subhalo)
 
     return model

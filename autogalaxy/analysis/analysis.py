@@ -1,5 +1,7 @@
 from astropy import cosmology as cosmo
 import numpy as np
+import pickle
+import dill
 
 import autofit as af
 from autoarray import preloads as pload
@@ -109,6 +111,24 @@ class AnalysisDataset(Analysis):
                     ]
 
         return instance
+
+    def save_settings(self, paths: af.Paths):
+
+        with open(f"{paths.pickle_path}/settings_inversion.pickle", "wb+") as f:
+            pickle.dump(self.settings_inversion, f)
+
+        with open(f"{paths.pickle_path}/settings_pixelization.pickle", "wb+") as f:
+            pickle.dump(self.settings_pixelization, f)
+
+    def save_attributes_for_aggregator(self, paths: af.Paths):
+
+        with open(f"{paths.pickle_path}/dataset.pickle", "wb") as f:
+            pickle.dump(self.dataset.dataset, f)
+
+        with open(f"{paths.pickle_path}/mask.pickle", "wb") as f:
+            dill.dump(self.dataset.mask, f)
+
+        self.save_settings(paths=paths)
 
 
 class AnalysisImaging(AnalysisDataset):

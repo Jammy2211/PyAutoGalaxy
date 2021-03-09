@@ -1,4 +1,5 @@
 import autofit as af
+from autofit.mapper.prior.prior import TuplePrior
 import autogalaxy as ag
 from autogalaxy.mock import mock
 from autogalaxy import hyper_data as hd
@@ -8,7 +9,7 @@ def test__pixelization_from_model():
 
     galaxies = af.CollectionPriorModel(galaxy=ag.GalaxyModel(redshift=0.5))
 
-    pixelization = ag.util.model.pixelization_from_model(
+    pixelization = ag.util.model.pixelization_from(
         model=af.CollectionPriorModel(galaxies=galaxies)
     )
 
@@ -22,7 +23,7 @@ def test__pixelization_from_model():
         )
     )
 
-    pixelization = ag.util.model.pixelization_from_model(
+    pixelization = ag.util.model.pixelization_from(
         model=af.CollectionPriorModel(galaxies=galaxies)
     )
 
@@ -36,7 +37,7 @@ def test__pixelization_from_model():
         )
     )
 
-    pixelization = ag.util.model.pixelization_from_model(
+    pixelization = ag.util.model.pixelization_from(
         model=af.CollectionPriorModel(galaxies=galaxies)
     )
 
@@ -86,7 +87,7 @@ def test__pixelization_is_model():
 
     galaxies = af.CollectionPriorModel(galaxy=ag.GalaxyModel(redshift=0.5))
 
-    pixelization_is_model = ag.util.model.pixelization_is_model_from_model(
+    pixelization_is_model = ag.util.model.pixelization_is_model_from(
         model=af.CollectionPriorModel(galaxies=galaxies)
     )
 
@@ -100,7 +101,7 @@ def test__pixelization_is_model():
         )
     )
 
-    pixelization_is_model = ag.util.model.pixelization_is_model_from_model(
+    pixelization_is_model = ag.util.model.pixelization_is_model_from(
         model=af.CollectionPriorModel(galaxies=galaxies)
     )
 
@@ -114,7 +115,7 @@ def test__pixelization_is_model():
         )
     )
 
-    pixelization_is_model = ag.util.model.pixelization_is_model_from_model(
+    pixelization_is_model = ag.util.model.pixelization_is_model_from(
         model=af.CollectionPriorModel(galaxies=galaxies)
     )
 
@@ -220,3 +221,83 @@ def test__make_hyper_model_from__no_pixelization_or_reg_returns_none():
 #     )
 #
 #     assert model.galaxies.lens.cls is ag.HyperGalaxy
+
+
+def test__extend_with_stochastic_phase__sets_up_model_correctly():
+
+    instance = af.ModelInstance()
+    instance.galaxies = []
+
+    instance.galaxies.append(
+        ag.Galaxy(
+            redshift=0.5,
+            light=ag.lp.SphericalSersic(),
+            mass=ag.mp.SphericalIsothermal(),
+        )
+    )
+    instance.galaxies.append(
+        ag.Galaxy(
+            redshift=1.0,
+            pixelization=ag.pix.VoronoiBrightnessImage(),
+            regularization=ag.reg.AdaptiveBrightness(),
+        )
+    )
+
+    result = mock.MockResult(instance=instance)
+
+    model = af.CollectionPriorModel(
+        galaxies=af.CollectionPriorModel(lens=ag.GalaxyModel(redshift=0.5))
+    )
+
+    model = ag.util.model.make_stochastic_model_from(model=model, result=result)
+
+    assert isinstance(model.lens.mass.centre, TuplePrior)
+    assert isinstance(model.lens.light.intensity, float)
+    assert isinstance(model.source.pixelization.pixels, int)
+    assert isinstance(model.source.regularization.inner_coefficient, float)
+
+    stop
+
+    phase_extended = phase.extend_with_stochastic_phase(include_lens_light=True)
+
+    model = phase_extended.make_model(instance=instance)
+
+    assert isinstance(model.lens.mass.centre, TuplePrior)
+    assert isinstance(model.lens.light.intensity, af.UniformPrior)
+    assert isinstance(model.source.pixelization.pixels, int)
+    assert isinstance(model.source.regularization.inner_coefficient, float)
+
+    phase_extended = phase.extend_with_stochastic_phase(include_pixelization=True)
+
+    model = phase_extended.make_model(instance=instance)
+
+    assert isinstance(model.lens.mass.centre, TuplePrior)
+    assert isinstance(model.lens.light.intensity, float)
+    assert isinstance(model.source.pixelization.pixels, af.UniformPrior)
+    assert not isinstance(
+        model.source.regularization.inner_coefficient, af.UniformPrior
+    )
+
+    phase_extended = phase.extend_with_stochastic_phase(include_regularization=True)
+
+    model = phase_extended.make_model(instance=instance)
+
+    assert isinstance(model.lens.mass.centre, TuplePrior)
+    assert isinstance(model.lens.light.intensity, float)
+    assert isinstance(model.source.pixelization.pixels, int)
+    assert isinstance(model.source.regularization.inner_coefficient, af.UniformPrior)
+
+    phase = ag.PhaseInterferometer(
+        search=mock.MockSearch(),
+        real_space_mask=mask_7x7,
+        galaxies=af.CollectionPriorModel(lens=ag.GalaxyModel(redshift=0.5)),
+    )
+
+    phase_extended = phase.extend_with_stochastic_phase()
+
+    model = phase_extended.make_model(instance=instance)
+
+    assert isinstance(model.lens.mass.centre, TuplePrior)
+    assert isinstance(model.lens.light.intensity, float)
+    assert isinstance(model.source.pixelization.pixels, int)
+    assert isinstance(model.source.regularization.inner_coefficient, float)
