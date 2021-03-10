@@ -23,15 +23,17 @@ def make_samples():
 
     return mock.MockSamples(max_log_likelihood_instance=plane)
 
-
-def test__dataset_generator_from_aggregator(masked_imaging_7x7, samples):
-
-    model = af.CollectionPriorModel(
+@pytest.fixture(name="model")
+def make_model():
+    return af.CollectionPriorModel(
         galaxies=af.CollectionPriorModel(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         )
     )
+
+
+def test__dataset_generator_from_aggregator(masked_imaging_7x7, samples, model):
 
     search = mock.MockSearch(
         samples=samples, paths=af.Paths(path_prefix="aggregator_dataset_gen")
@@ -41,23 +43,12 @@ def test__dataset_generator_from_aggregator(masked_imaging_7x7, samples):
 
     search.fit(model=model, analysis=analysis)
 
-    print(search.paths.output_path)
-
     agg = af.Aggregator(directory=search.paths.output_path)
 
     dataset = list(agg.values("dataset"))
 
-    print(dataset)
 
-
-def test__plane_generator_from_aggregator(masked_imaging_7x7, samples):
-
-    model = af.CollectionPriorModel(
-        galaxies=af.CollectionPriorModel(
-            galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
-            source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
-        )
-    )
+def test__plane_generator_from_aggregator(masked_imaging_7x7, samples, model):
 
     search = mock.MockSearch(
         samples=samples, paths=af.Paths(path_prefix="aggregator_plane_gen")
@@ -78,7 +69,7 @@ def test__plane_generator_from_aggregator(masked_imaging_7x7, samples):
         assert plane.galaxies[1].redshift == 1.0
 
 
-def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, samples):
+def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, samples, model):
 
     masked_imaging_7x7 = ag.MaskedImaging(
         imaging=imaging_7x7,
@@ -89,13 +80,6 @@ def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, sample
             fractional_accuracy=0.5,
             sub_steps=[2],
         ),
-    )
-
-    model = af.CollectionPriorModel(
-        galaxies=af.CollectionPriorModel(
-            galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
-            source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
-        )
     )
 
     search = mock.MockSearch(
@@ -118,14 +102,7 @@ def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, sample
         assert masked_imaging.grid.fractional_accuracy == 0.5
 
 
-def test__fit_imaging_generator_from_aggregator(masked_imaging_7x7, samples):
-
-    model = af.CollectionPriorModel(
-        galaxies=af.CollectionPriorModel(
-            galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
-            source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
-        )
-    )
+def test__fit_imaging_generator_from_aggregator(masked_imaging_7x7, samples, model):
 
     search = mock.MockSearch(
         samples=samples, paths=af.Paths(path_prefix="aggregator_fit_imaging_gen")
@@ -146,7 +123,7 @@ def test__fit_imaging_generator_from_aggregator(masked_imaging_7x7, samples):
 
 
 def test__masked_interferometer_generator_from_aggregator(
-    interferometer_7, visibilities_mask_7, mask_7x7, samples
+    interferometer_7, visibilities_mask_7, mask_7x7, samples, model
 ):
 
     masked_interferometer = ag.MaskedInterferometer(
@@ -160,13 +137,6 @@ def test__masked_interferometer_generator_from_aggregator(
             sub_steps=[2],
             transformer_class=ag.TransformerDFT,
         ),
-    )
-
-    model = af.CollectionPriorModel(
-        galaxies=af.CollectionPriorModel(
-            galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
-            source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
-        )
     )
 
     search = mock.MockSearch(
@@ -195,15 +165,8 @@ def test__masked_interferometer_generator_from_aggregator(
 
 
 def test__fit_interferometer_generator_from_aggregator(
-    masked_interferometer_7, mask_7x7, samples
+    masked_interferometer_7, mask_7x7, samples, model
 ):
-
-    model = af.CollectionPriorModel(
-        galaxies=af.CollectionPriorModel(
-            galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
-            source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
-        )
-    )
 
     search = mock.MockSearch(
         samples=samples, paths=af.Paths(path_prefix="aggregator_fit_interferometer_gen")
