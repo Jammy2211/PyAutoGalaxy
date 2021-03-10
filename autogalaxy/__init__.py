@@ -19,15 +19,7 @@ from .galaxy.masked_galaxy_data import MaskedGalaxyDataset
 from .hyper import hyper_data
 from .analysis.analysis import AnalysisImaging
 from .analysis.analysis import AnalysisInterferometer
-from .pipeline.phase.abstract import phase
-from .pipeline.phase.abstract.phase import AbstractPhase
-from .pipeline.phase.extensions.hyper_phase import HyperPhase
-from .pipeline.phase.imaging.phase import PhaseImaging
-from .pipeline.phase.interferometer.phase import PhaseInterferometer
-from .pipeline.phase.settings import SettingsPhaseImaging
-from .pipeline.phase.settings import SettingsPhaseInterferometer
-from .pipeline.pipeline import PipelineDataset
-from .pipeline.setup import (
+from autogalaxy.analysis.setup import (
     SetupPipeline,
     SetupHyper,
     SetupLightParametric,
