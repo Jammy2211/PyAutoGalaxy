@@ -29,7 +29,7 @@ from autoarray.structures.visibilities import Visibilities
 from autoarray.dataset.imaging import Imaging
 from autoarray.dataset.interferometer import Interferometer
 from autoarray.operators.convolver import Convolver
-from . import aggregator as agg
+from .analysis import aggregator as agg
 from . import plot
 from . import util
 from .dataset.imaging import MaskedImaging, SettingsMaskedImaging, SimulatorImaging
