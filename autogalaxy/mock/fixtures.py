@@ -1,7 +1,6 @@
 import autogalaxy as ag
 from autoarray.mock.fixtures import *
 from autofit.mock.mock_search import MockSamples, MockSearch
-from autogalaxy.pipeline.phase.dataset import PhaseDataset
 from autogalaxy.plot.mat_wrap.lensing_include import Include2D
 
 
@@ -303,28 +302,12 @@ def make_samples_with_result():
     return MockSamples(max_log_likelihood_instance=plane)
 
 
-def make_analysis_dataset():
-    return PhaseDataset(
-        settings=ag.SettingsPhaseImaging(), search=MockSearch(name="test_phase")
-    )
-
-
 def make_analysis_imaging_7x7():
     return ag.AnalysisImaging(dataset=make_masked_imaging_7x7())
 
 
 def make_analysis_interferometer_7():
     return ag.AnalysisInterferometer(dataset=make_masked_interferometer_7())
-
-
-def make_phase_imaging_7x7():
-    return ag.PhaseImaging(search=MockSearch(name="test_phase"))
-
-
-def make_phase_interferometer_7():
-    return ag.PhaseInterferometer(
-        search=MockSearch(name="test_phase"), real_space_mask=make_mask_7x7()
-    )
 
 
 def make_include_all():

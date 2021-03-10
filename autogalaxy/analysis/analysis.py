@@ -112,7 +112,13 @@ class AnalysisDataset(Analysis):
 
         return instance
 
+    def make_attributes(self):
+        raise NotImplementedError
+
     def save_settings(self, paths: af.Paths):
+
+        with open(f"{paths.pickle_path}/settings_masked_dataset.pickle", "wb+") as f:
+            pickle.dump(self.dataset.settings, f)
 
         with open(f"{paths.pickle_path}/settings_inversion.pickle", "wb+") as f:
             pickle.dump(self.settings_inversion, f)
@@ -129,6 +135,10 @@ class AnalysisDataset(Analysis):
             dill.dump(self.dataset.mask, f)
 
         self.save_settings(paths=paths)
+
+        attributes = self.make_attributes()
+        with open(f"{paths.pickle_path}/attributes.pickle", "wb+") as f:
+            pickle.dump(attributes, f)
 
 
 class AnalysisImaging(AnalysisDataset):
@@ -257,6 +267,13 @@ class AnalysisImaging(AnalysisDataset):
     ):
         return res.ResultImaging(
             samples=samples, model=model, analysis=self, search=search
+        )
+
+    def make_attributes(self):
+        return AttributesImaging(
+            cosmology=self.cosmology,
+            hyper_model_image=self.hyper_model_image,
+            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
         )
 
 
@@ -430,6 +447,14 @@ class AnalysisInterferometer(AnalysisDataset):
             samples=samples, model=model, analysis=self, search=search
         )
 
+    def make_attributes(self):
+        return AttributesInterferometer(
+            cosmology=self.cosmology,
+            real_space_mask=self.dataset.real_space_mask,
+            hyper_model_image=self.hyper_model_image,
+            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
+        )
+
 
 class AnalysisHyper:
     def __init__(
@@ -493,3 +518,25 @@ class AnalysisHyper:
     ):
         result = self.analysis.make_result(samples=samples, model=model, search=search)
         result.add(self.name, result)
+
+
+class AttributesImaging:
+    def __init__(self, cosmology, hyper_model_image, hyper_galaxy_image_path_dict):
+        self.cosmology = cosmology
+        self.hyper_model_image = hyper_model_image
+        self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
+
+
+class AttributesInterferometer:
+    def __init__(
+        self,
+        cosmology,
+        real_space_mask,
+        hyper_model_image,
+        hyper_galaxy_image_path_dict,
+    ):
+
+        self.cosmology = cosmology
+        self.real_space_mask = real_space_mask
+        self.hyper_model_image = hyper_model_image
+        self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict

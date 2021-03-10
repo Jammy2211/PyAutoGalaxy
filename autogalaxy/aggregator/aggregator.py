@@ -86,7 +86,7 @@ def masked_imaging_from_agg_obj(agg_obj):
     return ag.MaskedImaging(
         imaging=agg_obj.dataset,
         mask=agg_obj.mask,
-        settings=agg_obj.settings.settings_masked_imaging,
+        settings=agg_obj.settings_masked_dataset,
     )
 
 
@@ -125,8 +125,8 @@ def fit_imaging_from_agg_obj(agg_obj):
     return ag.FitImaging(
         masked_imaging=masked_imaging,
         plane=plane,
-        settings_pixelization=agg_obj.settings.settings_pixelization,
-        settings_inversion=agg_obj.settings.settings_inversion,
+        settings_pixelization=agg_obj.settings_pixelization,
+        settings_inversion=agg_obj.settings_inversion,
     )
 
 
@@ -167,7 +167,7 @@ def masked_interferometer_from_agg_obj(agg_obj):
         interferometer=agg_obj.dataset,
         visibilities_mask=agg_obj.mask,
         real_space_mask=agg_obj.attributes.real_space_mask,
-        settings=agg_obj.settings.settings_masked_interferometer,
+        settings=agg_obj.settings_masked_dataset,
     )
 
 
@@ -207,6 +207,6 @@ def fit_interferometer_from_agg_obj(agg_obj):
     return ag.FitInterferometer(
         masked_interferometer=masked_interferometer,
         plane=plane,
-        settings_pixelization=agg_obj.settings.settings_pixelization,
-        settings_inversion=agg_obj.settings.settings_inversion,
+        settings_pixelization=agg_obj.settings_pixelization,
+        settings_inversion=agg_obj.settings_inversion,
     )

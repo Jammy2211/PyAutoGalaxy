@@ -134,10 +134,6 @@ class AbstractSetup:
                     prior_model.core_radius_0 < prior_model.core_radius_1
                 )
 
-    @property
-    def tag(self):
-        raise NotImplementedError
-
 
 class SetupHyper(AbstractSetup):
     def __init__(
@@ -155,10 +151,6 @@ class SetupHyper(AbstractSetup):
         in these phases.
 
         Users can write their own pipelines which do not use or require the *SetupHyper* class.
-
-        This class enables pipeline tagging, whereby the hyper setup of the pipeline is used in the template pipeline
-        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
-        different models to a dataset in a structured path format.
 
         Parameters
         ----------
@@ -220,21 +212,6 @@ class SetupHyper(AbstractSetup):
         self.hyper_background_noise = hyper_background_noise
 
     @property
-    def component_name(self) -> str:
-        """
-        The name of the hyper component of a `hyper` pipeline which preceeds the `Setup` tag contained within square
-        brackets.
-
-        For the default configuration files in `config/notation/setup_tags.ini` this tag appears as `hyper[tag]`.
-
-        Returns
-        -------
-        str
-            The component name of the hyper pipeline.
-        """
-        return conf.instance["notation"]["setup_tags"]["names"]["hyper"]
-
-    @property
     def hypers_all_off(self):
         if not self.hyper_galaxies:
             if self.hyper_image_sky is None and self.hyper_background_noise is None:
@@ -247,88 +224,6 @@ class SetupHyper(AbstractSetup):
             if self.hyper_background_noise is None:
                 return True
         return False
-
-    @property
-    def tag(self):
-        """
-        Tag the pipeline according to the setup of the hyper features, which customizes the pipeline output paths.
-
-        This includes tags for whether hyper-galaxies are used to scale the noise-map and whether the background sky or
-        noise are fitted for by the pipeline.
-
-        For the default configuration files in `config/notation/setup_tags.ini` example tags appear as:
-
-        - hyper[galaxies__bg_sky]
-        - hyper[bg_sky__bg_noise]
-        """
-        if self.hypers_all_off:
-            return ""
-
-        return (
-            f"{self.component_name}["
-            f"{self.hyper_galaxies_tag}"
-            f"{self.hyper_image_sky_tag}"
-            f"{self.hyper_background_noise_tag}]"
-        )
-
-    @property
-    def hyper_galaxies_tag(self) -> str:
-        """
-        Tag for if hyper-galaxies are used in a hyper pipeline to scale the noise-map during model fitting, which
-        customizes the pipeline's output paths.
-
-        This tag depends on the `hyper_galaxies` bool of the `SetupHyper`.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        - `hyper_galaxies=`False` -> No Tag
-        - `hyper_galaxies=`True` -> hyper[galaxies]
-
-        This is used to generate an overall tag in `tag`.
-        """
-        if not self.hyper_galaxies:
-            return ""
-        return conf.instance["notation"]["setup_tags"]["hyper"]["hyper_galaxies"]
-
-    @property
-    def hyper_image_sky_tag(self) -> str:
-        """
-        Tag for if the sky-background is a fitted for as a parameter in a hyper pipeline, which customizes the
-        pipeline' output paths.
-
-        This tag depends on the `hyper_image_sky` bool of the `SetupHyper`.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        - `hyper_image_sky=`False` -> No Tag
-        - `hyper_image_sky=`True` -> hyper[bg_sky]
-
-        This is used to generate an overall tag in `tag`.
-        """
-        if self.hyper_image_sky is None:
-            return ""
-        return (
-            f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_image_sky']}"
-        )
-
-    @property
-    def hyper_background_noise_tag(self) -> str:
-        """
-        Tag for if the background noise level is a fitted for as a parameter in a hyper pipeline, which customizes the
-        pipeline' output paths.
-
-        This tag depends on the `hyper_background_noise` bool of the `SetupHyper`.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        - `hyper_background_noise=None` -> No Tag
-        - `hyper_background_noise=`True` -> hyper[bg_noise]
-
-        This is used to generate an overall tag in `tag`.
-        """
-        if self.hyper_background_noise is None:
-            return ""
-        return f"__{conf.instance['notation']['setup_tags']['hyper']['hyper_background_noise']}"
 
     def hyper_image_sky_from_result(self, result: af.Result, as_model=True):
 
@@ -350,20 +245,8 @@ class SetupHyper(AbstractSetup):
 
 
 class AbstractSetupLight(AbstractSetup):
-    @property
-    def component_name(self) -> str:
-        """
-        The name of the light component of a `Light` pipeline which preceeds the `Setup` tag contained within square
-        brackets.
 
-        For the default configuration files this tag appears as `light[tag]`.
-
-        Returns
-        -------
-        str
-            The component name of the light pipeline.
-        """
-        return conf.instance["notation"]["setup_tags"]["names"]["light"]
+    pass
 
 
 class SetupLightParametric(AbstractSetupLight):
@@ -384,10 +267,6 @@ class SetupLightParametric(AbstractSetupLight):
         run, for example controlling assumptions about the bulge-disk model.
 
         Users can write their own pipelines which do not use or require the `SetupLightParametric` class.
-
-        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
-        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
-        different models to a dataset in a structured path format.
 
         Parameters
         ----------
@@ -496,205 +375,6 @@ class SetupLightParametric(AbstractSetupLight):
             assert_bulge_sersic_above_disk=assert_bulge_sersic_above_disk,
         )
 
-    @property
-    def tag(self):
-        """
-        Tag the pipeline according to the setup of the light pipeline which customizes the pipeline output paths.
-
-        This includes tags for the `LightProfile` `PriorModel`'s and the alignment of different components in the model.
-
-        For the default configuration files in `config/notation/setup_tags.ini` example tags appear as:
-
-        - light[bulge_sersic__align_bulge_disk_centre]
-        - light[bulge_core_sersic__disk_exp__envelope_exp]
-        """
-        return (
-            f"{self.component_name}[parametric"
-            f"{self.bulge_prior_model_tag}"
-            f"{self.disk_prior_model_tag}"
-            f"{self.envelope_prior_model_tag}"
-            f"{self.align_bulge_disk_tag}"
-            f"{self.align_bulge_envelope_centre_tag}"
-            f"{self.light_centre_tag}]"
-        )
-
-    @property
-    def bulge_prior_model_tag(self) -> str:
-        """
-        The tag of the bulge `PriorModel` the `LightProfile` class given to the `bulge_prior_model`.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        - `EllipticalSersic` -> sersic
-        - `EllipticalExponential` -> exp
-        - `SphericalSersic` -> sersic_sph
-
-        Returns
-        -------
-        str
-            The tag of the bulge prior model.
-        """
-
-        if self.bulge_prior_model is None:
-            return ""
-
-        tag = conf.instance["notation"]["prior_model_tags"]["light"][
-            self.bulge_prior_model.name
-        ]
-
-        return f"__bulge_{tag}"
-
-    @property
-    def disk_prior_model_tag(self) -> str:
-        """
-        The tag of the disk `PriorModel` the `LightProfile` class given to the `disk_prior_model`.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        - `EllipticalSersic` -> sersic
-        - `EllipticalExponential` -> exp
-        - `SphericalSersic` -> sersic_sph
-
-        Returns
-        -------
-        str
-            The tag of the disk prior model.
-        """
-
-        if self.disk_prior_model is None:
-            return ""
-
-        tag = conf.instance["notation"]["prior_model_tags"]["light"][
-            self.disk_prior_model.name
-        ]
-
-        return f"__disk_{tag}"
-
-    @property
-    def envelope_prior_model_tag(self) -> str:
-        """
-        The tag of the envelope `PriorModel` the `LightProfile` class given to the `envelope_prior_model`.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        - `EllipticalSersic` -> sersic
-        - `EllipticalExponential` -> exp
-        - `SphericalSersic` -> sersic_sph
-
-        Returns
-        -------
-        str
-            The tag of the envelope prior model.
-
-        """
-
-        if self.envelope_prior_model is None:
-            return ""
-
-        tag = conf.instance["notation"]["prior_model_tags"]["light"][
-            self.envelope_prior_model.name
-        ]
-
-        return f"__envelope_{tag}"
-
-    @property
-    def light_centre_tag(self) -> str:
-        """
-        The tag for whether the centre of the lens light `PriorModel`'s of the pipeline are fixed to an input value
-        to customize pipeline output paths.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        light_centre = None -> setup
-        light_centre = (1.0, 1.0) -> setup___light_centre_(1.0, 1.0)
-        light_centre = (3.0, -2.0) -> setup___light_centre_(3.0, -2.0)
-        """
-        if self.light_centre is None:
-            return ""
-        else:
-            y = "{0:.2f}".format(self.light_centre[0])
-            x = "{0:.2f}".format(self.light_centre[1])
-            return f"__{conf.instance['notation']['setup_tags']['light']['light_centre']}_({y},{x})"
-
-    @property
-    def align_bulge_disk_centre_tag(self) -> str:
-        """
-        Tag for if the bulge and disk of a bulge-disk system are aligned or not, to customize pipeline
-        output paths based on the bulge-disk model.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        - align_bulge_disk_centre = `False` -> No Tag
-        - align_bulge_disk_centre = `True `-> align_bulge_disk_centre
-        """
-        if self.bulge_prior_model is None or self.disk_prior_model is None:
-            return ""
-
-        if not self.align_bulge_disk_centre:
-            return ""
-        elif self.align_bulge_disk_centre:
-            return f"_{conf.instance['notation']['setup_tags']['light']['align_bulge_disk_centre']}"
-
-    @property
-    def align_bulge_disk_elliptical_comps_tag(self) -> str:
-        """
-        Tag if the elliptical components of the bulge and disk `PriorModel`s are aligned or not, to customize pipeline
-        output paths based on the bulge-disk model.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        - align_bulge_disk_elliptical_comps = `False` -> No Tag
-        - align_bulge_disk_elliptical_comps = `True `-> align_bulge_disk_ell
-        """
-        if self.bulge_prior_model is None or self.disk_prior_model is None:
-            return ""
-
-        if not self.align_bulge_disk_elliptical_comps:
-            return ""
-        elif self.align_bulge_disk_elliptical_comps:
-            return f"_{conf.instance['notation']['setup_tags']['light']['align_bulge_disk_elliptical_comps']}"
-
-    @property
-    def align_bulge_envelope_centre_tag(self) -> str:
-        """
-        Tag for if the bulge and envelope of a bulge-envelope system are aligned or not, to customize pipeline
-        output paths based on the bulge-envelope model.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        - align_bulge_envelope_centre = `False` -> No Tag
-        - align_bulge_envelope_centre = `True `-> align_bulge_envelope_centre
-        """
-        if self.bulge_prior_model is None or self.envelope_prior_model is None:
-            return ""
-
-        if not self.align_bulge_envelope_centre:
-            return ""
-        elif self.align_bulge_envelope_centre:
-            return f"_{conf.instance['notation']['setup_tags']['light']['align_bulge_envelope_centre']}"
-
-    @property
-    def align_bulge_disk_tag(self) -> str:
-        """
-        Tag the alignment of the the bulge and disk `PriorModel`'s, to customize  pipeline output
-        paths based on the bulge-disk model.
-
-        This adds the bulge_disk tags generated in the functions `align_bulge_disk_centre_tag` and
-        `align_bulge_disk_elliptical_comps_tag`.
-
-        For the the default configuration files `config/notation/setup_tags.ini` example tags are:
-
-        - align_bulge_disk_ell
-        - align_bulge_disk_centre_ell
-        """
-
-        align_bulge_disk_tag = f"{self.align_bulge_disk_centre_tag}{self.align_bulge_disk_elliptical_comps_tag}"
-
-        if align_bulge_disk_tag == "":
-            return ""
-
-        return f"__{conf.instance['notation']['setup_tags']['light']['align_bulge_disk']}{align_bulge_disk_tag}"
-
 
 class SetupLightInversion(AbstractSetupLight):
     def __init__(
@@ -708,10 +388,6 @@ class SetupLightInversion(AbstractSetupLight):
         for example controlling the `Pixelization` and `Regularization` used by the `Inversion`.
 
         Users can write their own pipelines which do not use or require the `SetupLightInversion` class.
-
-        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
-        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
-        different models to a dataset in a structured path format.
 
         Parameters
         ----------
@@ -736,21 +412,6 @@ class SetupLightInversion(AbstractSetupLight):
         self.inversion_pixels_fixed = inversion_pixels_fixed
 
     @property
-    def tag(self) -> str:
-        """
-        Tag the pipeline according to the setup of the `Inversion` used in a light pipeline which customizes the
-        pipeline output paths.
-
-        This includes tags for the `Pixelization` `PriorModel` and `Regularization` `PriorModel`.
-
-        For the default configuration files in `config/notation/setup_tags.ini` example tags appear as:
-
-        - light[pix_rect__reg_const]
-        - light[pix_voro_image_1200__reg_adapt_bright]
-        """
-        return f"{self.component_name}[inversion{self.pixelization_tag}{self.inversion_pixels_fixed_tag}{self.regularization_tag}]"
-
-    @property
     def pixelization_prior_model(self) -> af.PriorModel:
         """
         The `PriorModel` of the `Pixelization` in the pipeline.
@@ -768,59 +429,6 @@ class SetupLightInversion(AbstractSetupLight):
         pixelization_prior_model.pixels = self.inversion_pixels_fixed
         return pixelization_prior_model
 
-    @property
-    def inversion_pixels_fixed_tag(self) -> str:
-        """
-        The tag for the number of fixed pixels used by the `Inversion` if an fixed input value is used.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        - `inversion_pixels_fixed=None` -> No Tag
-        - `inversion_pixels_fixed=1200` -> '_1200'
-
-        Returns
-        -------
-        str
-            The tag of the number of fixed inversion pixels.
-        """
-        if (
-            self.inversion_pixels_fixed is None
-            or self._pixelization_prior_model.cls is not pix.VoronoiBrightnessImage
-        ):
-            return ""
-
-        return f"_{str(self.inversion_pixels_fixed)}"
-
-    @property
-    def pixelization_tag(self) -> str:
-        """
-        The tag for the `Pixelization` `PriorModel` used by the light `Inversion` pipeline.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        `pixelization = af.PriorModel(pix.Rectangular)` -> light[pix_rect]
-        `pixelization = af.PriorModel(pix.VoronoiMagnification)` -> light[pix_voro_mag]
-        """
-        return (
-            f"__{conf.instance['notation']['setup_tags']['inversion']['pixelization']}_"
-            f"{conf.instance['notation']['prior_model_tags']['pixelization'][self._pixelization_prior_model.name]}"
-        )
-
-    @property
-    def regularization_tag(self) -> str:
-        """
-        The tag for the `Regularization` `PriorModel` used by the light `Inversion` pipeline.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        `regularization = reg.Constant` -> light[reg_const]
-        `regularization = reg.AdaptiveBrightness` -> light[reg_adapt_bright]
-        """
-        return (
-            f"__{conf.instance['notation']['setup_tags']['inversion']['regularization']}_"
-            f"{conf.instance['notation']['prior_model_tags']['regularization'][self.regularization_prior_model.name]}"
-        )
-
 
 class AbstractSetupMass(AbstractSetup):
     def __init__(self, mass_centre: (float, float) = None):
@@ -831,10 +439,6 @@ class AbstractSetupMass(AbstractSetup):
 
         Users can write their own pipelines which do not use or require the `` class.
 
-        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
-        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
-        different models to a dataset in a structured path format.
-
         Parameters
         ----------
         mass_centre : (float, float)
@@ -843,40 +447,6 @@ class AbstractSetupMass(AbstractSetup):
         """
 
         self.mass_centre = mass_centre
-
-    @property
-    def component_name(self) -> str:
-        """
-        The name of the mass component of a `mass` pipeline which preceeds the `Setup` tag contained within square
-        brackets.
-
-        For the default configuration files this tag appears as `mass[tag]`.
-
-        Returns
-        -------
-        str
-            The component name of the mass pipeline.
-        """
-        return conf.instance["notation"]["setup_tags"]["names"]["mass"]
-
-    @property
-    def mass_centre_tag(self) -> str:
-        """
-        The tag for whether the centre of the lens mass `PriorModel`'s of the pipeline are fixed to an input value
-        to customize pipeline output paths.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        mass_centre = None -> setup
-        mass_centre = (1.0, 1.0) -> setup___mass_centre_(1.0, 1.0)
-        mass_centre = (3.0, -2.0) -> setup___mass_centre_(3.0, -2.0)
-        """
-        if self.mass_centre is None:
-            return ""
-
-        y = "{0:.2f}".format(self.mass_centre[0])
-        x = "{0:.2f}".format(self.mass_centre[1])
-        return f"__{conf.instance['notation']['setup_tags']['mass']['mass_centre']}_({y},{x})"
 
     def align_centre_to_mass_centre(
         self, mass_prior_model: af.PriorModel(mp.MassProfile)
@@ -944,10 +514,6 @@ class SetupMassTotal(AbstractSetupMass):
 
         Users can write their own pipelines which do not use or require the `SetupMassTotal` class.
 
-        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
-        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
-        different models to a dataset in a structured path format.
-
         Parameters
         ----------
         mass_prior_model : af.PriorModel(mp.MassProfile)
@@ -969,63 +535,6 @@ class SetupMassTotal(AbstractSetupMass):
 
         if self.mass_centre is not None:
             self.mass_prior_model.centre = self.mass_centre
-
-    @property
-    def tag(self):
-        """
-        Tag the pipeline according to the setup of the total mass pipeline which customizes the pipeline output paths.
-
-        This includes tags for the `MassProfile` `PriorModel`'s and the alignment of different components in the model.
-
-        For the default configuration files in `config/notation/setup_tags.ini` example tags appear as:
-
-        - mass[total__sie]
-        - mass[total__power_law__centre_(0.0,0.0)]
-        """
-        return (
-            f"{self.component_name}[total"
-            f"{self.mass_prior_model_tag}"
-            f"{self.mass_centre_tag}"
-            f"{self.align_bulge_mass_centre_tag}]"
-        )
-
-    @property
-    def mass_prior_model_tag(self) -> str:
-        """
-        The tag of the mass `PriorModel` the `MassProfile` class given to the `mass_prior_model`.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        - `EllipticalIsothermal` -> sie
-        - `EllipticalPowerLaw` -> power_law
-
-        Returns
-        -------
-        str
-            The tag of the mass prior model.
-        """
-
-        if self.mass_prior_model is None:
-            return ""
-
-        return f"__{conf.instance['notation']['prior_model_tags']['mass'][self.mass_prior_model.name]}"
-
-    @property
-    def align_bulge_mass_centre_tag(self) -> str:
-        """
-        Tags if the lens mass model centre is aligned with that of its light profile.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        align_bulge_mass_centre = `False` -> setup
-        align_bulge_mass_centre = `True` -> setup___align_bulge_mass_centre
-        """
-        if self.mass_centre is not None:
-            return ""
-
-        if not self.align_bulge_mass_centre:
-            return ""
-        return f"__{conf.instance['notation']['setup_tags']['mass']['align_bulge_mass_centre']}"
 
     def align_centre_of_mass_to_light(
         self,
@@ -1133,10 +642,6 @@ class SetupMassLightDark(AbstractSetupMass):
 
         Users can write their own pipelines which do not use or require the `SetupMassLightDark` class.
 
-        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
-        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
-        different models to a dataset in a structured path format.
-
         Parameters
         ----------
         bulge_prior_model : af.PriorModel(lmp.LightMassProfile)
@@ -1190,168 +695,6 @@ class SetupMassLightDark(AbstractSetupMass):
                 ],
             )
         )
-
-    @property
-    def tag(self):
-        """
-        Tag the pipeline according to the setup of the decomposed light and dark mass pipeline which customizes
-        the pipeline output paths.
-
-        This includes tags for the `MassProfile` `PriorModel`'s and the alignment of different components in the model.
-
-        For the default configuration files in `config/notation/setup_tags.ini` example tags appear as:
-
-        - mass[light_dark__bulge_]
-        - mass[total_power_law__centre_(0.0,0.0)]
-        """
-        return (
-            f"{self.component_name}[light_dark"
-            f"{self.bulge_prior_model_tag}"
-            f"{self.disk_prior_model_tag}"
-            f"{self.envelope_prior_model_tag}"
-            f"{self.constant_mass_to_light_ratio_tag}"
-            f"{self.dark_prior_model_tag}"
-            f"{self.mass_centre_tag}"
-            f"{self.align_bulge_dark_centre_tag}]"
-        )
-
-    @property
-    def constant_mass_to_light_ratio_tag(self) -> str:
-        """Generate a tag for whether the mass-to-light ratio in a light-dark mass model is constaant (shared amongst
-         all light and mass profiles) or free (all mass-to-light ratios are free parameters).
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        constant_mass_to_light_ratio = `False` -> mlr_free
-        constant_mass_to_light_ratio = `True` -> mlr_constant
-        """
-        if self.constant_mass_to_light_ratio:
-            return f"__mlr_{conf.instance['notation']['setup_tags']['mass']['constant_mass_to_light_ratio']}"
-        return f"__mlr_{conf.instance['notation']['setup_tags']['mass']['free_mass_to_light_ratio']}"
-
-    @property
-    def bulge_prior_model_tag(self) -> str:
-        """
-        The tag of the bulge `PriorModel` using the tags specified in the setup_tags.ini config file.
-
-        This tag depends on the `LightMassProfile` class given to the bulge, for example for the default configuration
-        files:
-
-        - `EllipticalSersic` -> sersic
-        - `EllipticalExponential` -> exp
-        - `SphericalSersic` -> sersic_sph
-
-        Returns
-        -------
-        str
-            The tag of the bulge prior model.
-
-        """
-
-        if self.bulge_prior_model is None:
-            return ""
-
-        tag = conf.instance["notation"]["prior_model_tags"]["mass"][
-            self.bulge_prior_model.name
-        ]
-
-        return f"__bulge_{tag}"
-
-    @property
-    def disk_prior_model_tag(self) -> str:
-        """
-        The tag of the disk `PriorModel` using the tags specified in the setup_tags.ini config file.
-
-        This tag depends on the `LightMassProfile` class given to the disk, for example for the default configuration
-        files:
-
-        - `EllipticalSersic` -> sersic
-        - `EllipticalExponential` -> exp
-        - `SphericalSersic` -> sersic_sph
-
-        Returns
-        -------
-        str
-            The tag of the disk prior model.
-        """
-
-        if self.disk_prior_model is None:
-            return ""
-
-        tag = conf.instance["notation"]["prior_model_tags"]["mass"][
-            self.disk_prior_model.name
-        ]
-
-        return f"__disk_{tag}"
-
-    @property
-    def envelope_prior_model_tag(self) -> str:
-        """
-        The tag of the envelope `PriorModel` using the tags specified in the setup_tags.ini config file.
-
-        This tag depends on the `LightMassProfile` class given to the envelope, for example for the default
-        configuration files:
-
-        - `EllipticalSersic` -> sersic
-        - `EllipticalExponential` -> exp
-        - `SphericalSersic` -> sersic_sph
-
-        Returns
-        -------
-        str
-            The tag of the envelope prior model.
-
-        """
-
-        if self.envelope_prior_model is None:
-            return ""
-
-        tag = conf.instance["notation"]["prior_model_tags"]["mass"][
-            self.envelope_prior_model.name
-        ]
-
-        return f"__envelope_{tag}"
-
-    @property
-    def dark_prior_model_tag(self) -> str:
-        """
-        The tag of the dark `PriorModel` using the tags specified in the setup_tags.ini config file.
-
-        This tag depends on the `MassProfile` class given to the dark, for example for the default
-        configuration files:
-
-        - `SphericalNFWMCRLudlow` -> nfw_sph_ludlow
-        - `EllipticalNFW` -> nfw
-        - `SphericalTruncatedNFW` -> nfw_trun_sph
-
-        Returns
-        -------
-        str
-            The tag of the dark prior model.
-        """
-
-        if self.dark_prior_model is None:
-            return ""
-
-        tag = conf.instance["notation"]["prior_model_tags"]["mass"][
-            self.dark_prior_model.name
-        ]
-
-        return f"__dark_{tag}"
-
-    @property
-    def align_bulge_dark_centre_tag(self) -> str:
-        """
-        Tag for if the lens mass model's bulge `PriorModel` is aligned with the dark matter centre.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        align_bulge_dark_centre = `False` -> mass[light_dark]
-        align_bulge_dark_centre = `True` -> mass[light_dark__align_bulge_dark_centre]
-        """
-        if not self.align_bulge_dark_centre:
-            return ""
-        return f"__{conf.instance['notation']['setup_tags']['mass']['align_bulge_dark_centre']}"
 
     def align_bulge_and_dark_centre(self, bulge_prior_model, dark_prior_model):
         """
@@ -1498,10 +841,6 @@ class SetupSMBH(AbstractSetup):
 
         Users can write their own pipelines which do not use or require the *SetupSMBH* class.
 
-        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
-        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
-        different models to a dataset in a structured path format.
-
         Parameters
         ----------
         smbh_prior_model : af.PriorModel(mp.MassProfile)
@@ -1512,69 +851,6 @@ class SetupSMBH(AbstractSetup):
         """
         self.smbh_prior_model = self._cls_to_prior_model(cls=smbh_prior_model)
         self.smbh_centre_fixed = smbh_centre_fixed
-
-    @property
-    def component_name(self) -> str:
-        """
-        The name of the smbh component of a `smbh` pipeline which preceeds the `Setup` tag contained within square
-        brackets.
-
-        For the default configuration files this tag appears as `smbh[tag]`.
-
-        Returns
-        -------
-        str
-            The component name of the smbh pipeline.
-        """
-        return conf.instance["notation"]["setup_tags"]["names"]["smbh"]
-
-    @property
-    def tag(self):
-        return (
-            f"{self.component_name}[{self.smbh_prior_model_tag}{self.smbh_centre_tag}]"
-        )
-
-    @property
-    def smbh_prior_model_tag(self) -> str:
-        """
-        The tag of the smbh `PriorModel` the `MassProfile` class given to the `smbh_prior_model`.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        - `EllipticalIsothermal` -> sie
-        - `EllipticalPowerLaw` -> power_law
-
-        Returns
-        -------
-        str
-            The tag of the smbh prior model.
-        """
-        return f"{conf.instance['notation']['prior_model_tags']['mass'][self.smbh_prior_model.name]}"
-
-    @property
-    def smbh_centre_tag(self) -> str:
-        """
-        Tag whether the smbh `PriorModel` centre is fixed or fitted for as a free parameter.
-
-        For the the default configuration files `config/notation/setup_tags.ini` tagging is performed as follows:
-
-        smbh_centre_fixed=True -> smbh[centre_fixed]
-        smbh_centre_fixed=False -> smbh[centre_free]
-        """
-
-        if self.smbh_centre_fixed:
-
-            smbh_centre_tag = conf.instance["notation"]["setup_tags"]["smbh"][
-                "smbh_centre_fixed"
-            ]
-
-        else:
-
-            smbh_centre_tag = conf.instance["notation"]["setup_tags"]["smbh"][
-                "smbh_centre_free"
-            ]
-
-        return f"__{smbh_centre_tag}"
 
     def smbh_from_centre(self, centre, centre_sigma=0.1) -> af.PriorModel:
         """
@@ -1619,14 +895,10 @@ class SetupPipeline:
 
         Users can write their own pipelines which do not use or require the *SetupPipeline* class.
 
-        This class enables pipeline tagging, whereby the setup of the pipeline is used in the template pipeline
-        scripts to tag the output path of the results depending on the setup parameters. This allows one to fit
-        different models to a dataset in a structured path format.
-
         Parameters
         ----------
         path_prefix : str or None
-            The prefix of folders between the output path of the pipeline and the pipeline name, tags and phase folders.
+            The prefix of folders between the output path and the search folders.
         redshift_galaxy : float
             The redshift of the galaxy fitted, used by the pipeline for converting arc-seconds to kpc, masses to
             solMass, etc.
@@ -1653,39 +925,3 @@ class SetupPipeline:
             self.setup_mass.bulge_prior_model = self.setup_light.bulge_prior_model
             self.setup_mass.disk_prior_model = self.setup_light.disk_prior_model
             self.setup_mass_envelope_prior_model = self.setup_light.envelope_prior_model
-
-    def _pipeline_tag_from_setup(self, setup: AbstractSetup) -> str:
-        """
-        Returns the tag of a pipeline from the tag of an indiviual `Setup` object.
-
-        Parameters
-        ----------
-        setup_tag : str
-            The tag of the `Setup` object which is converted to the pipeline tag.
-
-        Returns
-        -------
-        str
-            The pipeline tag.
-        """
-        return f"__{setup.tag}" if setup is not None else ""
-
-    @property
-    def tag(self) -> str:
-        """
-        The overall pipeline tag, which customizes the 'setup' folder the results are output to.
-
-        For the the default configuration files `config/notation/setup_tags.ini` examples of tagging are as follows:
-
-        - setup__hyper[galaxies__bg_noise]__light[bulge_sersic__disk__exp_light_centre_(1.00,2.00)]
-        - "setup__smbh[point_mass__centre_fixed]"
-        """
-
-        setup_tag = conf.instance["notation"]["setup_tags"]["pipeline"]["pipeline"]
-
-        hyper_tag = self._pipeline_tag_from_setup(setup=self.setup_hyper)
-        light_tag = self._pipeline_tag_from_setup(setup=self.setup_light)
-        mass_tag = self._pipeline_tag_from_setup(setup=self.setup_mass)
-        smbh_tag = self._pipeline_tag_from_setup(setup=self.setup_smbh)
-
-        return f"{setup_tag}{hyper_tag}{light_tag}{mass_tag}{smbh_tag}"
