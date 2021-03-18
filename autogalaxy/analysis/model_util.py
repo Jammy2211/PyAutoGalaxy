@@ -115,11 +115,10 @@ def pixelization_is_model_from(model: af.CollectionPriorModel):
     return False
 
 
-def make_hyper_model_from(
+def hyper_model_from(
+    setup_hyper,
     result: af.Result,
-    hyper_galaxy_names: Optional[List[str]] = None,
-    hyper_image_sky=None,
-    hyper_background_noise=None,
+    include_hyper_image_sky=False,
 ) -> af.CollectionPriorModel:
     """
     Make a hyper model from the result of an `Analysis`, where a hyper-model corresponnds the maximum log likelihood
@@ -153,25 +152,25 @@ def make_hyper_model_from(
         model components now free parameters.
     """
 
-    # if not self.has_pixelization:
-    #     if setup_hyper.hypers_all_off:
-    #         return self
-    #     if setup_hyper.hypers_all_except_image_sky_off:
-    #         if not include_hyper_image_sky:
-    #             return self
-
     model = result.instance.as_model((pix.Pixelization, reg.Regularization))
 
-    if not has_pixelization_from_model(model=model):
+    if setup_hyper is None:
         return None
 
-    model.hyper_image_sky = hyper_image_sky
-    model.hyper_background_noise = hyper_background_noise
+    if not has_pixelization_from_model(model=model):
+        if setup_hyper.hypers_all_off:
+            return None
+        if setup_hyper.hypers_all_except_image_sky_off:
+            if not include_hyper_image_sky:
+                return None
 
-    if hyper_galaxy_names is not None:
+    model.hyper_image_sky = setup_hyper.hyper_image_sky
+    model.hyper_background_noise = setup_hyper.hyper_background_noise
+
+    if setup_hyper.hyper_galaxy_names is not None:
 
         for path_galaxy, galaxy in result.path_galaxy_tuples:
-            if path_galaxy[-1] in hyper_galaxy_names:
+            if path_galaxy[-1] in setup_hyper.hyper_galaxy_names:
                 if not np.all(result.hyper_galaxy_image_path_dict[path_galaxy] == 0):
 
                     if "source" in path_galaxy[-1]:
@@ -190,7 +189,28 @@ def make_hyper_model_from(
     return model
 
 
-def make_stochastic_model_from(
+def hyper_fit(setup_hyper, result, search, analysis, include_hyper_image_sky=False):
+
+    hyper_model = hyper_model_from(setup_hyper=setup_hyper, result=result, include_hyper_image_sky=include_hyper_image_sky)
+
+    if hyper_model is None:
+        return result
+
+    hyper_search = setup_hyper.hyper_search_no_inversion.copy_with_name_extension(
+        extension=f"{search.paths.name}_hyper", path_prefix=search.paths.path_prefix
+    )
+
+    result.use_as_hyper_dataset = True
+    analysis.set_hyper_dataset(result=result)
+
+    hyper_result = hyper_search.fit(model=hyper_model, analysis=analysis)
+
+    setattr(result, "hyper", hyper_result)
+
+    return result
+
+
+def stochastic_model_from(
     model,
     result,
     include_lens_light=False,

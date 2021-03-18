@@ -179,7 +179,7 @@ def test__make_hyper_model_from__no_pixelization_or_reg_returns_none():
 
     result = mock.MockResult(instance=instance)
 
-    model = ag.util.model.make_hyper_model_from(result=result)
+    model = ag.util.model.hyper_model_from(result=result, setup_hyper=None)
 
     assert model == None
 

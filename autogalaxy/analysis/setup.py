@@ -141,8 +141,7 @@ class SetupHyper(AbstractSetup):
         hyper_galaxies: bool = False,
         hyper_image_sky: Optional[type(hd.HyperImageSky)] = None,
         hyper_background_noise: Optional[type(hd.HyperBackgroundNoise)] = None,
-        hyper_search_no_inversion: Optional[af.NonLinearSearch] = None,
-        hyper_search_with_inversion: Optional[af.NonLinearSearch] = None,
+        hyper_search: Optional[af.NonLinearSearch] = None,
         evidence_tolerance: Optional[float] = None,
     ):
         """
@@ -176,8 +175,7 @@ class SetupHyper(AbstractSetup):
 
         if evidence_tolerance is not None:
             if (
-                hyper_search_no_inversion is not None
-                or hyper_search_with_inversion is not None
+                hyper_search is not None
             ):
                 raise exc.PipelineException(
                     "You have manually specified a search in the SetupPipeline, and an evidence_tolerance."
@@ -190,23 +188,14 @@ class SetupHyper(AbstractSetup):
 
         self.hyper_galaxy_names = None
 
-        if hyper_search_no_inversion is None:
+        if hyper_search is None:
             self.hyper_search_no_inversion = af.DynestyStatic(
                 n_live_points=50,
                 evidence_tolerance=self.evidence_tolerance,
                 sample="rstagger",
             )
-        elif hyper_search_no_inversion is not None:
-            self.hyper_search_no_inversion = hyper_search_no_inversion
-
-        if hyper_search_with_inversion is None:
-            self.hyper_search_with_inversion = af.DynestyStatic(
-                n_live_points=50,
-                evidence_tolerance=self.evidence_tolerance,
-                sample="rstagger",
-            )
-        else:
-            self.hyper_search_with_inversion = hyper_search_with_inversion
+        elif hyper_search is not None:
+            self.hyper_search = hyper_search
 
         self.hyper_image_sky = hyper_image_sky
         self.hyper_background_noise = hyper_background_noise
