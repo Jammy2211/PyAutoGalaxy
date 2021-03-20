@@ -118,7 +118,7 @@ def pixelization_is_model_from(model: af.CollectionPriorModel):
 
 
 def hyper_model_from(
-    setup_hyper, result: af.Result, include_hyper_image_sky=False
+    setup_hyper, result: af.Result, include_hyper_image_sky : bool=False
 ) -> af.CollectionPriorModel:
     """
     Make a hyper model from the `Result` of a model-fit, where the hyper-model is the maximum log likelihood instance
@@ -178,11 +178,11 @@ def hyper_model_from(
     return model
 
 
-def hyper_fit(hyper_model, setup_hyper, result, analysis):
+def hyper_fit(hyper_model : af.CollectionPriorModel, setup_hyper, result : af.Result, analysis):
     """
-    Perform a hyper-fit, which extends a model-fit with an additional fit which fixes non-hyper components of the model
-    (e.g., `LightProfile`'s, `MassProfile`) to their maximum likelihood values in the `Result` and fits only the
-    hyper-model components, which are any of the following model components:
+    Perform a hyper-fit, which extends a model-fit with an additional fit which fixes the non-hyper components of the
+    model (e.g., `LightProfile`'s, `MassProfile`) to the `Result`'s maximum likelihood fit. The hyper-fit then treats
+    only the hyper-model components as free parameters, which are any of the following model components:
 
     1) The `Pixelization` of any `Galaxy` in the model.
     2) The `Regularization` of any `Galaxy` in the model.
@@ -206,23 +206,21 @@ def hyper_fit(hyper_model, setup_hyper, result, analysis):
 
     Returns
     -------
-    af.CollectionPriorModel
-        The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
-        model components now free parameters.
+    af.Result
+        The result of the hyper model-fit, which has a new attribute `result.hyper` that contains updated parameter
+        values for the hyper-model components for passing to later model-fits.
     """
 
     if hyper_model is None:
         return result
 
-    search = setup_hyper.search.copy_with_name_extension(
-        extension=f"{result.search.paths.name}_hyper",
-        path_prefix=result.search.paths.path_prefix,
-    )
+    setup_hyper.search.paths.path_prefix = result.search.paths.path_prefix
+    setup_hyper.search.paths.name = f"{result.search.paths.name}__hyper"
 
     result.use_as_hyper_dataset = True
     analysis.set_hyper_dataset(result=result)
 
-    hyper_result = search.fit(model=hyper_model, analysis=analysis)
+    hyper_result = setup_hyper.search.fit(model=hyper_model, analysis=analysis)
 
     setattr(result, "hyper", hyper_result)
 
@@ -311,15 +309,15 @@ def stochastic_model_from(
     return model
 
 
-def stochastic_fit(stochastic_model, result, analysis, search):
+def stochastic_fit(stochastic_model, result, analysis):
     """
     Perform a stochastic model-fit, which refits a model but introduces a log likelihood cap whereby all model-samples
     with a likelihood above this cap are rounded down to the value of the cap.
 
-    This `log_likelihood_cap` is determined by sampling ~250 log likeilhood values from the original model's, but where
-    each model evaluation uses a different KMeans seed of the pixelization to derive a unique pixelization with which
-    to reconstruct the source galaxy (therefore a pixelization which uses the KMeans method, like the
-    `VoronoiBrightnessImage` must be used to perform a stochastic fit).
+    This `log_likelihood_cap` is determined by sampling ~250 log likelihood values from the original model's maximum
+    log likelihood model. However, the pixelization used to reconstruct the source of each model evaluation uses a
+    different KMeans seed, such that each reconstruction uses a unique pixel-grid. The model must therefore use a
+    pixelization which uses the KMeans method to construct the pixel-grid, for example the `VoronoiBrightnessImage`.
 
     The cap is computed as the mean of these ~250 values and it is introduced to avoid underestimated errors due
     to artificial likelihood boosts.
@@ -343,10 +341,8 @@ def stochastic_fit(stochastic_model, result, analysis, search):
     mean, sigma = norm.fit(result.stochastic_log_evidences)
     log_likelihood_cap = mean
 
-    search = search.copy_with_name_extension(
-        extension=f"{result.search.paths.name}_stochastic_{log_likelihood_cap}",
-        path_prefix=result.search.paths.path_prefix,
-    )
+    search = result.search
+    search.paths.name = f"{result.search.paths.name}__stochastic_likelihood_cap_" + "{0:.1f}".format(log_likelihood_cap)
 
     stochastic_log_evidences_pickle_file = path.join(
         search.paths.pickle_path, "stochastic_log_evidences.pickle"
