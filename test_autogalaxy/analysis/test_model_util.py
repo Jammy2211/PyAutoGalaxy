@@ -261,16 +261,14 @@ def test__stochastic_model_from():
 
     result = mock.MockResult(instance=instance, model=model)
 
-    model = ag.util.model.stochastic_model_from(model=model, result=result)
+    model = ag.util.model.stochastic_model_from(result=result)
 
     assert isinstance(model.galaxies.lens.mass.centre, TuplePrior)
     assert isinstance(model.galaxies.lens.light.intensity, float)
     assert isinstance(model.galaxies.source.pixelization.pixels, int)
     assert isinstance(model.galaxies.source.regularization.inner_coefficient, float)
 
-    model = ag.util.model.stochastic_model_from(
-        model=model, result=result, include_lens_light=True
-    )
+    model = ag.util.model.stochastic_model_from(result=result, include_lens_light=True)
 
     assert isinstance(model.galaxies.lens.mass.centre, TuplePrior)
     assert isinstance(model.galaxies.lens.light.intensity, af.UniformPrior)
@@ -278,7 +276,7 @@ def test__stochastic_model_from():
     assert isinstance(model.galaxies.source.regularization.inner_coefficient, float)
 
     model = ag.util.model.stochastic_model_from(
-        model=model, result=result, include_pixelization=True
+        result=result, include_pixelization=True
     )
 
     assert isinstance(model.galaxies.lens.mass.centre, TuplePrior)
@@ -289,7 +287,7 @@ def test__stochastic_model_from():
     )
 
     model = ag.util.model.stochastic_model_from(
-        model=model, result=result, include_regularization=True
+        result=result, include_regularization=True
     )
 
     assert isinstance(model.galaxies.lens.mass.centre, TuplePrior)

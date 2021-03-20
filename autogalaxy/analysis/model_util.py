@@ -1,5 +1,3 @@
-import numpy as np
-
 import autofit as af
 from autofit.exc import PriorException
 from autoarray.inversion import pixelizations as pix, regularization as reg
@@ -7,7 +5,11 @@ from autogalaxy.profiles import light_profiles as lp
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.galaxy import galaxy as g
 
+import numpy as np
+from os import path
+from scipy.stats import norm
 from typing import List, Optional
+import pickle
 
 
 def isprior(obj):
@@ -176,7 +178,7 @@ def hyper_model_from(
     return model
 
 
-def hyper_fit(setup_hyper, result, analysis, include_hyper_image_sky=False):
+def hyper_fit(hyper_model, setup_hyper, result, analysis):
     """
     Perform a hyper-fit, which extends a model-fit with an additional fit which fixes non-hyper components of the model
     (e.g., `LightProfile`'s, `MassProfile`) to their maximum likelihood values in the `Result` and fits only the
@@ -193,12 +195,14 @@ def hyper_fit(setup_hyper, result, analysis, include_hyper_image_sky=False):
 
     Parameters
     ----------
+    hyper_model : CollectionPriorModel
+        The hyper model used by the hyper-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
     setup_hyper : SetupHyper
         The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
     result : af.Result
         The result of a previous `Analysis` phase whose maximum log likelihood model forms the basis of the hyper model.
-    include_hyper_image_sky : hd.HyperImageSky
-        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_hyper`.
+    analysis : Analysis
+        An analysis class used to fit imaging or interferometer data with a model.
 
     Returns
     -------
@@ -206,12 +210,6 @@ def hyper_fit(setup_hyper, result, analysis, include_hyper_image_sky=False):
         The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
         model components now free parameters.
     """
-
-    hyper_model = hyper_model_from(
-        setup_hyper=setup_hyper,
-        result=result,
-        include_hyper_image_sky=include_hyper_image_sky,
-    )
 
     if hyper_model is None:
         return result
@@ -232,11 +230,12 @@ def hyper_fit(setup_hyper, result, analysis, include_hyper_image_sky=False):
 
 
 def stochastic_model_from(
-    model,
     result,
     include_lens_light=False,
     include_pixelization=False,
     include_regularization=False,
+    subhalo_centre_width=None,
+    subhalo_mass_at_200_log_uniform=True,
 ):
     """
     Make a stochastic model from  the `Result` of a model-fit, where the stochastic model uses the same model
@@ -244,9 +243,15 @@ def stochastic_model_from(
     to free parameters.
 
     The stochastic model is used to perform a stochastic model-fit, which refits a model but introduces a log
-    likelihood cap which is determined by computing how stochastic the original model's log likelihood is when the
-    KMeans seed of the `VoronoiBrightnessImage` pixelization is varied. This cap is introduced to avoid underestimated
-    errors due to artificial likelihood boosts.
+    likelihood cap whereby all model-samples with a likelihood above this cap are rounded down to the value of the cap.
+
+    This `log_likelihood_cap` is determined by sampling ~250 log likeilhood values from the original model's, but where
+    each model evaluation uses a different KMeans seed of the pixelization to derive a unique pixelization with which
+     to reconstruct the source galaxy (therefore a pixelization which uses the KMeans method, like the
+     `VoronoiBrightnessImage` must be used to perform a stochastic fit).
+
+     The cap is computed as the mean of these ~250 values and it is introduced to avoid underestimated errors due
+     to artificial likelihood boosts.
 
     Parameters
     ----------
@@ -258,13 +263,18 @@ def stochastic_model_from(
         If `True` the `VoronoiBrightnessImage` pixelization in the model is fitted for.
     include_regularization : bool
         If `True` the regularization in the model is fitted for.
+    subhalo_centre_width : float
+        The `sigma` value of the `GaussianPrior` on the centre of the subhalo, if it is included in the lens model.
+    subhalo_mass_at_200_log_uniform : bool
+        if `True`, the subhalo mass (if included) does not assume a `GaussianPrior` from the previous fit, but instead
+        retains the default `LogUniformPrior`.
 
     Returns
     -------
     af.CollectionPriorModel
         The stochastic model, which is the same model as the input model but may fit for or fix additional parameters.
     """
-    if not hasattr(model.galaxies, "lens"):
+    if not hasattr(result.model.galaxies, "lens"):
         raise PriorException(
             "Cannot extend a phase with a stochastic phase if the lens galaxy `GalaxyModel` "
             "is not named `lens`. "
@@ -284,7 +294,71 @@ def stochastic_model_from(
     model = result.instance.as_model(model_classes)
 
     model.galaxies.lens.take_attributes(source=result.model.galaxies.lens)
+
     if hasattr(model.galaxies, "subhalo"):
         model.galaxies.subhalo.take_attributes(source=result.model.galaxies.subhalo)
 
+        if subhalo_centre_width is not None:
+            model.galaxies.subhalo.mass.centre = result.model_absolute(
+                a=subhalo_centre_width
+            ).galaxies.subhalo.mass.centre
+
+        if subhalo_mass_at_200_log_uniform:
+            model.galaxies.subhalo.mass.mass_at_200 = af.LogUniformPrior(
+                lower_limit=1e6, upper_limit=1e11
+            )
+
     return model
+
+
+def stochastic_fit(stochastic_model, result, analysis, search):
+    """
+    Perform a stochastic model-fit, which refits a model but introduces a log likelihood cap whereby all model-samples
+    with a likelihood above this cap are rounded down to the value of the cap.
+
+    This `log_likelihood_cap` is determined by sampling ~250 log likeilhood values from the original model's, but where
+    each model evaluation uses a different KMeans seed of the pixelization to derive a unique pixelization with which
+    to reconstruct the source galaxy (therefore a pixelization which uses the KMeans method, like the
+    `VoronoiBrightnessImage` must be used to perform a stochastic fit).
+
+    The cap is computed as the mean of these ~250 values and it is introduced to avoid underestimated errors due
+    to artificial likelihood boosts.
+
+    Parameters
+    ----------
+    setup_hyper : SetupHyper
+        The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
+    result : af.Result
+        The result of a previous `Analysis` phase whose maximum log likelihood model forms the basis of the hyper model.
+    include_hyper_image_sky : hd.HyperImageSky
+        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_hyper`.
+
+    Returns
+    -------
+    af.CollectionPriorModel
+        The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
+        model components now free parameters.
+    """
+
+    mean, sigma = norm.fit(result.stochastic_log_evidences)
+    log_likelihood_cap = mean
+
+    search = search.copy_with_name_extension(
+        extension=f"{result.search.paths.name}_stochastic_{log_likelihood_cap}",
+        path_prefix=result.search.paths.path_prefix,
+    )
+
+    stochastic_log_evidences_pickle_file = path.join(
+        search.paths.pickle_path, "stochastic_log_evidences.pickle"
+    )
+
+    with open(stochastic_log_evidences_pickle_file, "wb") as f:
+        pickle.dump(result.stochastic_log_evidences, f)
+
+    stochastic_result = search.fit(
+        model=stochastic_model, analysis=analysis, log_likelihood_cap=log_likelihood_cap
+    )
+
+    setattr(result, "stochastic", stochastic_result)
+
+    return result
