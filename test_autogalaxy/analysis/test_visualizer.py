@@ -1,6 +1,5 @@
 import shutil
 from os import path
-
 import pytest
 
 import autogalaxy as ag
