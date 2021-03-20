@@ -104,7 +104,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
             * self.zeta_from_grid(grid=grid)
         )
 
-        return self.rotate_grid_from_profile(
+        return self.rotate_grid_from_reference_frame(
             np.multiply(
                 1.0, np.vstack((-1.0 * np.imag(deflections), np.real(deflections))).T
             )
@@ -145,7 +145,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
         deflection_y = calculate_deflection_component(1.0, 0)
         deflection_x = calculate_deflection_component(0.0, 1)
 
-        return self.rotate_grid_from_profile(
+        return self.rotate_grid_from_reference_frame(
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
@@ -404,7 +404,7 @@ class EllipticalSersic(AbstractEllipticalSersic, MassProfileMGE):
         deflection_y = calculate_deflection_component(1.0, 0)
         deflection_x = calculate_deflection_component(0.0, 1)
 
-        return self.rotate_grid_from_profile(
+        return self.rotate_grid_from_reference_frame(
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
@@ -695,7 +695,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         deflection_y = calculate_deflection_component(1.0, 0)
         deflection_x = calculate_deflection_component(0.0, 1)
 
-        return self.rotate_grid_from_profile(
+        return self.rotate_grid_from_reference_frame(
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
@@ -1092,7 +1092,7 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
         deflection_y = np.subtract(deflection_y0, deflection_y1)
         deflection_x = np.subtract(deflection_x0, deflection_x1)
 
-        return self.rotate_grid_from_profile(
+        return self.rotate_grid_from_reference_frame(
             np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
         )
 

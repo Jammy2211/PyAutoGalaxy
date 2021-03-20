@@ -185,8 +185,10 @@ class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
             inner_part * (R <= self.break_radius) + outer_part * (R > self.break_radius)
         ).conjugate()
 
-        return self.rotate_grid_from_profile(
-            np.multiply(1.0, np.vstack((np.imag(deflections), np.real(deflections))).T)
+        return self.rotate_grid_from_reference_frame(
+            grid=np.multiply(
+                1.0, np.vstack((np.imag(deflections), np.real(deflections))).T
+            )
         )
 
     @staticmethod
@@ -374,8 +376,8 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
         deflection_y = calculate_deflection_component(1.0, 0)
         deflection_x = calculate_deflection_component(0.0, 1)
 
-        return self.rotate_grid_from_profile(
-            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
+        return self.rotate_grid_from_reference_frame(
+            grid=np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
     def convergence_func(self, grid_radius):
@@ -561,7 +563,9 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
         deflection_y *= rescale_factor
         deflection_x *= rescale_factor
 
-        return self.rotate_grid_from_profile(np.vstack((deflection_y, deflection_x)).T)
+        return self.rotate_grid_from_reference_frame(
+            grid=np.vstack((deflection_y, deflection_x)).T
+        )
 
     def convergence_func(self, grid_radius):
         if grid_radius > 0.0:
@@ -748,8 +752,10 @@ class EllipticalIsothermal(EllipticalPowerLaw):
         deflection_x = np.arctan(
             np.divide(np.multiply(np.sqrt(1 - self.axis_ratio ** 2), grid[:, 1]), psi)
         )
-        return self.rotate_grid_from_profile(
-            np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
+        return self.rotate_grid_from_reference_frame(
+            grid=np.multiply(
+                factor, np.vstack((deflection_y, deflection_x)).T
+            )
         )
 
     @grid_decorators.grid_like_to_structure
@@ -776,7 +782,9 @@ class EllipticalIsothermal(EllipticalPowerLaw):
             grid[:, 1] ** 2 - grid[:, 0] ** 2, grid[:, 1] ** 2 + grid[:, 0] ** 2
         )
 
-        shear_field = self.rotate_grid_from_profile(np.vstack((shear_y, shear_x)).T)
+        shear_field = self.rotate_grid_from_reference_frame(
+            grid=np.vstack((shear_y, shear_x)).T
+        )
 
         return vector_field_irregular.VectorField2DIrregular(
             vectors=shear_field, grid=grid

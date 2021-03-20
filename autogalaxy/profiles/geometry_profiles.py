@@ -1,4 +1,5 @@
 import numpy as np
+from autoarray.geometry import geometry_util
 from autoarray.structures.grids.two_d import grid_2d
 from autoarray.structures.grids import grid_decorators
 from autogalaxy import convert
@@ -188,27 +189,25 @@ class EllipticalProfile(SphericalProfile):
         return np.cos(theta_coordinate_to_profile), np.sin(theta_coordinate_to_profile)
 
     @grid_decorators.grid_like_to_structure
-    def rotate_grid_from_profile(self, grid_elliptical):
-        """ Rotate a grid of elliptical (y,x) coordinates from the reference frame of the profile back to the \
-        unrotated coordinate grid reference frame (coordinates are not shifted back to their original centre).
+    def rotate_grid_from_reference_frame(self, grid):
+        """
+        Rotate a grid of (y,x) coordinates which have been transformed to the elliptical reference frame of a profile
+        back to the original unrotated coordinate grid reference frame.
 
-        This routine is used after computing deflection angles in the reference frame of the profile, so that the \
+        Note that unlike the method `transform_grid_from_reference_frame` the the coordinates are not
+        translated back to the profile's original centre.
+
+        This routine is used after computing deflection angles in the reference frame of the profile, so that the
         deflection angles can be re-rotated to the frame of the original coordinates before performing ray-tracing.
 
         Parameters
         ----------
-        grid_elliptical : grid_like
+        grid : grid_like
             The (y, x) coordinates in the reference frame of an elliptical profile.
         """
-        y = np.add(
-            np.multiply(grid_elliptical[:, 1], self.sin_phi),
-            np.multiply(grid_elliptical[:, 0], self.cos_phi),
+        return geometry_util.transform_grid_2d_from_reference_frame(
+            grid_2d=grid, centre=(0.0, 0.0), angle=self.phi
         )
-        x = np.add(
-            np.multiply(grid_elliptical[:, 1], self.cos_phi),
-            -np.multiply(grid_elliptical[:, 0], self.sin_phi),
-        )
-        return np.vstack((y, x)).T
 
     @grid_decorators.grid_like_to_structure
     @grid_decorators.transform
@@ -217,12 +216,12 @@ class EllipticalProfile(SphericalProfile):
         """
         Convert a grid of (y,x) coordinates to an elliptical radius.
 
-            If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
 
-            Parameters
-            ----------
-            grid : grid_like
-                The (y, x) coordinates in the reference frame of the elliptical profile.
+        Parameters
+        ----------
+        grid : grid_like
+            The (y, x) coordinates in the reference frame of the elliptical profile.
         """
         return np.sqrt(
             np.add(
@@ -234,7 +233,8 @@ class EllipticalProfile(SphericalProfile):
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def grid_to_eccentric_radii(self, grid):
-        """Convert a grid of (y,x) coordinates to an eccentric radius, which is (1.0/axis_ratio) * elliptical radius \
+        """
+        Convert a grid of (y,x) coordinates to an eccentric radius, which is (1.0/axis_ratio) * elliptical radius \
         and used to define light profile half-light radii using circular radii.
 
         If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
@@ -250,7 +250,8 @@ class EllipticalProfile(SphericalProfile):
 
     @grid_decorators.grid_like_to_structure
     def transform_grid_to_reference_frame(self, grid):
-        """Transform a grid of (y,x) coordinates to the reference frame of the profile, including a translation to \
+        """
+        Transform a grid of (y,x) coordinates to the reference frame of the profile, including a translation to \
         its centre and a rotation to it orientation.
 
         Parameters
@@ -262,18 +263,9 @@ class EllipticalProfile(SphericalProfile):
             return super().transform_grid_to_reference_frame(
                 grid=grid_2d.Grid2DTransformedNumpy(grid=grid)
             )
-        shifted_coordinates = np.subtract(grid, self.centre)
-        radius = np.sqrt(np.sum(shifted_coordinates ** 2.0, 1))
-        theta_coordinate_to_profile = (
-            np.arctan2(shifted_coordinates[:, 0], shifted_coordinates[:, 1])
-            - self.phi_radians
+        transformed = geometry_util.transform_grid_2d_to_reference_frame(
+            grid_2d=grid, centre=self.centre, angle=self.phi
         )
-        transformed = np.vstack(
-            (
-                radius * np.sin(theta_coordinate_to_profile),
-                radius * np.cos(theta_coordinate_to_profile),
-            )
-        ).T
         return grid_2d.Grid2DTransformedNumpy(grid=transformed)
 
     @grid_decorators.grid_like_to_structure
@@ -291,21 +283,9 @@ class EllipticalProfile(SphericalProfile):
                 grid=grid_2d.Grid2DTransformedNumpy(grid=grid)
             )
 
-        y = np.add(
-            np.add(
-                np.multiply(grid[:, 1], self.sin_phi),
-                np.multiply(grid[:, 0], self.cos_phi),
-            ),
-            self.centre[0],
+        return geometry_util.transform_grid_2d_from_reference_frame(
+            grid_2d=grid, centre=self.centre, angle=self.phi
         )
-        x = np.add(
-            np.add(
-                np.multiply(grid[:, 1], self.cos_phi),
-                -np.multiply(grid[:, 0], self.sin_phi),
-            ),
-            self.centre[1],
-        )
-        return np.vstack((y, x)).T
 
     def eta_u(self, u, coordinates):
         return np.sqrt(

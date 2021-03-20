@@ -137,7 +137,7 @@ class MockEllipticalIsothermal(
         deflection_x = np.arctan(
             np.divide(np.multiply(np.sqrt(1 - self.axis_ratio ** 2), grid[:, 1]), psi)
         )
-        return self.rotate_grid_from_profile(
+        return self.rotate_grid_from_reference_frame(
             np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
         )
 
