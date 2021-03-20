@@ -23,6 +23,7 @@ def make_samples():
 
     return mock.MockSamples(max_log_likelihood_instance=plane)
 
+
 @pytest.fixture(name="model")
 def make_model():
     return af.CollectionPriorModel(
@@ -69,7 +70,9 @@ def test__plane_generator_from_aggregator(masked_imaging_7x7, samples, model):
         assert plane.galaxies[1].redshift == 1.0
 
 
-def test__masked_imaging_generator_from_aggregator(imaging_7x7, mask_7x7, samples, model):
+def test__masked_imaging_generator_from_aggregator(
+    imaging_7x7, mask_7x7, samples, model
+):
 
     masked_imaging_7x7 = ag.MaskedImaging(
         imaging=imaging_7x7,

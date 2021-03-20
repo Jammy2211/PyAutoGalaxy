@@ -141,7 +141,7 @@ class SetupHyper(AbstractSetup):
         hyper_galaxies: bool = False,
         hyper_image_sky: Optional[type(hd.HyperImageSky)] = None,
         hyper_background_noise: Optional[type(hd.HyperBackgroundNoise)] = None,
-        hyper_search: Optional[af.NonLinearSearch] = None,
+        search: Optional[af.NonLinearSearch] = None,
         evidence_tolerance: Optional[float] = None,
     ):
         """
@@ -174,9 +174,7 @@ class SetupHyper(AbstractSetup):
         self.evidence_tolerance = evidence_tolerance
 
         if evidence_tolerance is not None:
-            if (
-                hyper_search is not None
-            ):
+            if search is not None:
                 raise exc.PipelineException(
                     "You have manually specified a search in the SetupPipeline, and an evidence_tolerance."
                     "You cannot manually specify both - remove one."
@@ -188,14 +186,14 @@ class SetupHyper(AbstractSetup):
 
         self.hyper_galaxy_names = None
 
-        if hyper_search is None:
-            self.hyper_search_no_inversion = af.DynestyStatic(
+        if search is None:
+            self.search = af.DynestyStatic(
                 n_live_points=50,
                 evidence_tolerance=self.evidence_tolerance,
                 sample="rstagger",
             )
-        elif hyper_search is not None:
-            self.hyper_search = hyper_search
+        elif search is not None:
+            self.search = search
 
         self.hyper_image_sky = hyper_image_sky
         self.hyper_background_noise = hyper_background_noise

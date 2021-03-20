@@ -15,15 +15,13 @@ class TestSetupHyper:
     def test__hyper_searches(self):
 
         setup = ag.SetupHyper(hyper_search_no_inversion=None)
-        assert setup.hyper_search_no_inversion.n_live_points == 50
-        assert setup.hyper_search_no_inversion.evidence_tolerance == pytest.approx(
-            0.059, 1.0e-4
-        )
+        assert setup.search.n_live_points == 50
+        assert setup.search.evidence_tolerance == pytest.approx(0.059, 1.0e-4)
 
         setup = ag.SetupHyper(
             hyper_search_no_inversion=af.DynestyStatic(n_live_points=51)
         )
-        assert setup.hyper_search_no_inversion.n_live_points == 51
+        assert setup.search.n_live_points == 51
 
         setup = ag.SetupHyper(
             hyper_search_with_inversion=af.DynestyStatic(n_live_points=51)
@@ -31,7 +29,7 @@ class TestSetupHyper:
         assert setup.hyper_search_with_inversion.n_live_points == 51
 
         setup = ag.SetupHyper(hyper_galaxies=True, evidence_tolerance=0.5)
-        assert setup.hyper_search_no_inversion.evidence_tolerance == 0.5
+        assert setup.search.evidence_tolerance == 0.5
         assert setup.hyper_search_with_inversion.evidence_tolerance == 0.5
 
         with pytest.raises(exc.PipelineException):

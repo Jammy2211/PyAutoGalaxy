@@ -166,7 +166,7 @@ class AnalysisImaging(AnalysisDataset):
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
             preloads=preloads,
-            use_result_as_hyper_dataset=use_result_as_hyper_dataset
+            use_result_as_hyper_dataset=use_result_as_hyper_dataset,
         )
 
         self.dataset = dataset
@@ -274,7 +274,11 @@ class AnalysisImaging(AnalysisDataset):
         search: af.NonLinearSearch,
     ):
         return res.ResultImaging(
-            samples=samples, model=model, analysis=self, search=search, use_as_hyper_dataset=self.use_result_as_hyper_dataset
+            samples=samples,
+            model=model,
+            analysis=self,
+            search=search,
+            use_as_hyper_dataset=self.use_result_as_hyper_dataset,
         )
 
     def make_attributes(self):
@@ -294,7 +298,7 @@ class AnalysisInterferometer(AnalysisDataset):
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
         preloads=pload.Preloads(),
-        use_result_as_hyper_dataset=False
+        use_result_as_hyper_dataset=False,
     ):
 
         super().__init__(
@@ -304,7 +308,7 @@ class AnalysisInterferometer(AnalysisDataset):
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
             preloads=preloads,
-            use_result_as_hyper_dataset=use_result_as_hyper_dataset
+            use_result_as_hyper_dataset=use_result_as_hyper_dataset,
         )
 
         result = res.last_result_with_use_as_hyper_dataset(results=results)
@@ -324,7 +328,6 @@ class AnalysisInterferometer(AnalysisDataset):
 
         self.hyper_galaxy_image_path_dict = result.hyper_galaxy_image_path_dict
         self.hyper_model_image = result.hyper_model_image
-
 
     @property
     def interferometer(self):
@@ -458,7 +461,11 @@ class AnalysisInterferometer(AnalysisDataset):
         search: af.NonLinearSearch,
     ):
         return res.ResultInterferometer(
-            samples=samples, model=model, analysis=self, search=search, use_as_hyper_dataset=self.use_result_as_hyper_dataset
+            samples=samples,
+            model=model,
+            analysis=self,
+            search=search,
+            use_as_hyper_dataset=self.use_result_as_hyper_dataset,
         )
 
     def make_attributes(self):

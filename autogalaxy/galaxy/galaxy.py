@@ -1,7 +1,7 @@
 from itertools import count
 
 import numpy as np
-from autoarray.inversion import pixelizations as pix
+from autoarray.inversion import pixelizations as pix, regularization as reg
 from autoarray.structures.arrays import values
 from autoarray.structures.grids.two_d import grid_2d_irregular
 from autoarray.structures.grids import grid_decorators
@@ -15,6 +15,8 @@ from autogalaxy.profiles.mass_profiles import (
     dark_mass_profiles as dmp,
     stellar_mass_profiles as smp,
 )
+
+from typing import Optional
 
 
 def is_point_source(obj):
@@ -36,10 +38,10 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     def __init__(
         self,
-        redshift,
-        pixelization=None,
-        regularization=None,
-        hyper_galaxy=None,
+        redshift: float,
+        pixelization: Optional[pix.Pixelization] = None,
+        regularization: Optional[reg.Regularization] = None,
+        hyper_galaxy: Optional["HyperGalaxy"] = None,
         **kwargs,
     ):
         """Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
