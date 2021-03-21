@@ -2,7 +2,7 @@ import autogalaxy as ag
 from autoarray.mock.fixtures import *
 from autofit.mock.mock_search import MockSamples, MockSearch
 from autogalaxy.pipeline.phase.dataset import PhaseDataset
-from autogalaxy.plot.mat_wrap.lensing_include import Include2D
+from autogalaxy.plot.mat_wrap.lensing_include import Include1D, Include2D
 
 
 def make_masked_imaging_7x7():
@@ -319,7 +319,11 @@ def make_phase_interferometer_7():
     )
 
 
-def make_include_all():
+def make_include_1d_all():
+    return Include1D(origin=True, mask=True)
+
+
+def make_include_2d_all():
     return Include2D(
         origin=True,
         mask=True,

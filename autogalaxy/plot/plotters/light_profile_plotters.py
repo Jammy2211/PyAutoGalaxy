@@ -69,26 +69,18 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             ),
         )
 
-    def figures(self, image=False):
-
-        if image:
-
-            self.mat_plot_2d.plot_array(
-                array=self.light_profile.image_from_grid(grid=self.grid),
-                visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mp.AutoLabels(title="Image", filename="image"),
-            )
-
     def figures_1d(self, image=False):
 
         grid_2d_radial_projected = self.grid.grid_2d_radial_projected_from(
-            centre=self.light_profile.centre,
-            angle=self.light_profile.phi
+            centre=self.light_profile.centre, angle=self.light_profile.phi
         )
 
         radial_distances = grid_2d_radial_projected.distances_from_coordinate()
 
-        grid_1d_radial_distances = grid_1d.Grid1D.manual_native(grid=radial_distances, pixel_scales=abs(radial_distances[0] - radial_distances[1]))
+        grid_1d_radial_distances = grid_1d.Grid1D.manual_native(
+            grid=radial_distances,
+            pixel_scales=abs(radial_distances[0] - radial_distances[1]),
+        )
 
         if image:
 
@@ -101,5 +93,16 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
                     ylabel="Image",
                     xlabel="Radius",
                     legend=self.light_profile.__class__.__name__,
+                    filename="image_1d",
                 ),
+            )
+
+    def figures(self, image=False):
+
+        if image:
+
+            self.mat_plot_2d.plot_array(
+                array=self.light_profile.image_from_grid(grid=self.grid),
+                visuals_2d=self.visuals_with_include_2d,
+                auto_labels=mp.AutoLabels(title="Image", filename="image"),
             )

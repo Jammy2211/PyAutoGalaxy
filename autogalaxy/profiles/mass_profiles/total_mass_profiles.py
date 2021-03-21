@@ -753,9 +753,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
             np.divide(np.multiply(np.sqrt(1 - self.axis_ratio ** 2), grid[:, 1]), psi)
         )
         return self.rotate_grid_from_reference_frame(
-            grid=np.multiply(
-                factor, np.vstack((deflection_y, deflection_x)).T
-            )
+            grid=np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
         )
 
     @grid_decorators.grid_like_to_structure
