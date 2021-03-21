@@ -1,4 +1,8 @@
-from autoarray.plot.mat_wrap.wrap import wrap_2d
+from autoarray.plot.mat_wrap.wrap import wrap_1d, wrap_2d
+
+
+class HalfLightRadiusAXVLine(wrap_1d.AXVLine):
+    pass
 
 
 class LightProfileCentresScatter(wrap_2d.GridScatter):

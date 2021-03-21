@@ -320,7 +320,7 @@ def make_phase_interferometer_7():
 
 
 def make_include_1d_all():
-    return Include1D(origin=True, mask=True)
+    return Include1D(half_light_radius=True)
 
 
 def make_include_2d_all():

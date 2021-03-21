@@ -4,8 +4,15 @@ import typing
 
 
 class Include1D(inc.Include1D):
+    def __init__(self, half_light_radius=None):
 
-    pass
+        super().__init__()
+
+        self._half_light_radius = half_light_radius
+
+    @property
+    def half_light_radius(self):
+        return self.load(value=self._half_light_radius, name="half_light_radius")
 
 
 class Include2D(inc.Include2D):
@@ -26,7 +33,7 @@ class Include2D(inc.Include2D):
         mapper_data_pixelization_grid=None,
     ):
 
-        super(Include2D, self).__init__(
+        super().__init__(
             origin=origin,
             mask=mask,
             border=border,

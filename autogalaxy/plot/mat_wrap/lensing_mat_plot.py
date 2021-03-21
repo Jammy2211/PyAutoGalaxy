@@ -1,11 +1,96 @@
 from autoarray.plot.mat_wrap import mat_plot
-from autoarray.plot.mat_wrap.wrap import wrap_base, wrap_2d
+from autoarray.plot.mat_wrap.wrap import wrap_base, wrap_1d, wrap_2d
 from autogalaxy.plot.mat_wrap import lensing_wrap
 
 
 class MatPlot1D(mat_plot.MatPlot1D):
+    def __init__(
+        self,
+        units: wrap_base.Units = wrap_base.Units(),
+        figure: wrap_base.Figure = wrap_base.Figure(),
+        axis: wrap_base.Axis = wrap_base.Axis(),
+        cmap: wrap_base.Cmap = wrap_base.Cmap(),
+        colorbar: wrap_base.Colorbar = wrap_base.Colorbar(),
+        colorbar_tickparams: wrap_base.ColorbarTickParams = wrap_base.ColorbarTickParams(),
+        tickparams: wrap_base.TickParams = wrap_base.TickParams(),
+        yticks: wrap_base.YTicks = wrap_base.YTicks(),
+        xticks: wrap_base.XTicks = wrap_base.XTicks(),
+        title: wrap_base.Title = wrap_base.Title(),
+        ylabel: wrap_base.YLabel = wrap_base.YLabel(),
+        xlabel: wrap_base.XLabel = wrap_base.XLabel(),
+        legend: wrap_base.Legend = wrap_base.Legend(),
+        output: wrap_base.Output = wrap_base.Output(),
+        yx_plot: wrap_1d.YXPlot = wrap_1d.YXPlot(),
+        half_light_radius_axvline: lensing_wrap.HalfLightRadiusAXVLine = lensing_wrap.HalfLightRadiusAXVLine(),
+    ):
+        """
+        Visualizes 1D data structures as a y versus x plot using Matplotlib.
 
-    pass
+        The `Plotter` is passed objects from the `wrap_base` package which wrap matplotlib plot functions and customize
+        the appearance of the plots of the data structure. If the values of these matplotlib wrapper objects are not
+        manually specified, they assume the default values provided in the `config.visualize.mat_*` `.ini` config files.
+
+        Parameters
+        ----------
+        units : wrap_base.Units
+            The units of the figure used to plot the data structure which sets the y and x ticks and labels.
+        figure : wrap_base.Figure
+            Opens the matplotlib figure before plotting via `plt.figure` and closes it once plotting is complete
+            via `plt.close`.
+        axis : wrap_base.Axis
+            Sets the extent of the figure axis via `plt.axis` and allows for a manual axis range.
+        cmap : wrap_base.Cmap
+            Customizes the colormap of the plot and its normalization via matplotlib `colors` objects such
+            as `colors.Normalize` and `colors.LogNorm`.
+        colorbar : wrap_base.Colorbar
+            Plots the colorbar of the plot via `plt.colorbar` and customizes its tick labels and values using method
+            like `cb.set_yticklabels`.
+        colorbar_tickparams : wrap_base.ColorbarTickParams
+            Customizes the yticks of the colorbar plotted via `plt.colorbar`.
+        tickparams : wrap_base.TickParams
+            Customizes the appearances of the y and x ticks on the plot, (e.g. the fontsize), using `plt.tick_params`.
+        yticks : wrap_base.YTicks
+            Sets the yticks of the plot, including scaling them to new units depending on the `Units` object, via
+            `plt.yticks`.
+        xticks : wrap_base.XTicks
+            Sets the xticks of the plot, including scaling them to new units depending on the `Units` object, via
+            `plt.xticks`.
+        title : wrap_base.Title
+            Sets the figure title and customizes its appearance using `plt.title`.
+        ylabel : wrap_base.YLabel
+            Sets the figure ylabel and customizes its appearance using `plt.ylabel`.
+        xlabel : wrap_base.XLabel
+            Sets the figure xlabel and customizes its appearance using `plt.xlabel`.
+        legend : wrap_base.Legend
+            Sets whether the plot inclues a legend and customizes its appearance and labels using `plt.legend`.
+        output : wrap_base.Output
+            Sets if the figure is displayed on the user's screen or output to `.png` using `plt.show` and `plt.savefig`
+        yx_plot : wrap_1d.YXPlot
+            Sets how the y versus x plot appears, for example if it each axis is linear or log, using `plt.plot`.
+        half_light_radius_axvline : lensing_wrap.HalfLightRadiusAXVLine
+            Sets how a vertical line representing the half light radius of a `LightProfile` is plotted on the figure
+            using the `plt.axvline` method.
+        """
+
+        super().__init__(
+            units=units,
+            figure=figure,
+            axis=axis,
+            cmap=cmap,
+            colorbar=colorbar,
+            colorbar_tickparams=colorbar_tickparams,
+            tickparams=tickparams,
+            yticks=yticks,
+            xticks=xticks,
+            title=title,
+            ylabel=ylabel,
+            xlabel=xlabel,
+            legend=legend,
+            output=output,
+            yx_plot=yx_plot,
+        )
+
+        self.half_light_radius_axvline = half_light_radius_axvline
 
 
 class MatPlot2D(mat_plot.MatPlot2D):

@@ -1,5 +1,5 @@
 import numpy as np
-from autoarray.structures.grids.two_d import grid_2d
+from autoarray.structures.arrays.two_d import array_2d
 from autoarray.structures.grids import grid_decorators
 from autogalaxy.profiles import geometry_profiles
 from scipy.integrate import quad
@@ -22,7 +22,7 @@ class LightProfile:
         raise NotImplementedError("image_from_grid_radii should be overridden")
 
     # noinspection PyMethodMayBeStatic
-    def image_from_grid(self, grid, grid_radial_minimum=None):
+    def image_from_grid(self, grid, grid_radial_minimum=None) -> array_2d.Array2D:
         """
         Abstract method for obtaining intensity at a grid of Cartesian (y,x) coordinates.
 
@@ -30,10 +30,11 @@ class LightProfile:
         ----------
         grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
+
         Returns
         -------
-        intensity : np.ndarray
-            The value of intensity at the given radius
+        image : array_2d.Array2D
+            The image of the `LightProfile` evaluated at every (y,x) coordinate on the grid.
         """
         raise NotImplementedError("image_from_grid should be overridden")
 
@@ -153,6 +154,12 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
         The axis ratio is set to 1.0 for computing the luminosity within a circle"""
         return 2 * np.pi * x * self.image_from_grid_radii(x)
+
+    @property
+    def half_light_radius(self):
+
+        if hasattr(self, "effective_radius"):
+            return self.effective_radius
 
 
 class EllipticalGaussian(EllipticalLightProfile):
