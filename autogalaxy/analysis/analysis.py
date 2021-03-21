@@ -326,8 +326,8 @@ class AnalysisInterferometer(AnalysisDataset):
 
         super().set_hyper_dataset(result=result)
 
-        self.hyper_galaxy_image_path_dict = result.hyper_galaxy_image_path_dict
-        self.hyper_model_image = result.hyper_model_image
+        self.hyper_model_visibilities = result.hyper_model_visibilities
+        self.hyper_galaxy_visibilities_path_dict = result.hyper_galaxy_visibilities_path_dict
 
     @property
     def interferometer(self):
