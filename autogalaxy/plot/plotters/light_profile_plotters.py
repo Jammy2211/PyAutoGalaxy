@@ -1,3 +1,4 @@
+from autoarray.structures.grids.one_d import grid_1d
 from autoarray.structures.grids.two_d import grid_2d_irregular
 from autoarray.plot.mat_wrap import mat_plot as mp
 from autoarray.plot.plotters import abstract_plotters
@@ -80,13 +81,20 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
 
     def figures_1d(self, image=False):
 
-        grid_radii = self.grid.grid_radii_from(centre=self.light_profile.centre)
+        grid_2d_radial_projected = self.grid.grid_2d_radial_projected_from(
+            centre=self.light_profile.centre,
+            angle=self.light_profile.phi
+        )
+
+        radial_distances = grid_2d_radial_projected.distances_from_coordinate()
+
+        grid_1d_radial_distances = grid_1d.Grid1D.manual_native(grid=radial_distances, pixel_scales=abs(radial_distances[0] - radial_distances[1]))
 
         if image:
 
-            self.mat_plot_1d.plot_line(
-                y=self.light_profile.image_from_grid(grid=grid_radii),
-                x=grid_radii[:, 1],
+            self.mat_plot_1d.plot_yx(
+                y=self.light_profile.image_from_grid(grid=grid_2d_radial_projected),
+                x=grid_1d_radial_distances,
                 visuals_1d=self.visuals_1d,
                 auto_labels=mp.AutoLabels(
                     title="Image vs Radius",
