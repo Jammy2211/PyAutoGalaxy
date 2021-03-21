@@ -34,7 +34,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
     @property
     def visuals_with_include_1d(self) -> lensing_visuals.Visuals1D:
         """
-        Extracts from a `Structure` attributes that can be plotted and return them in a `Visuals1D` object.
+        Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals1D` object.
 
         Only attributes with `True` entries in the `Include` object are extracted for plotting.
 
@@ -54,7 +54,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
     @property
     def visuals_with_include_2d(self) -> lensing_visuals.Visuals2D:
         """
-        Extracts from a `Structure` attributes that can be plotted and return them in a `Visuals2D` object.
+        Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals2D` object.
 
         Only attributes with `True` entries in the `Include` object are extracted for plotting.
 

@@ -43,6 +43,8 @@ from autoarray.plot.plotters.imaging_plotters import ImagingPlotter
 from autoarray.plot.plotters.interferometer_plotters import InterferometerPlotter
 
 from autogalaxy.plot.mat_wrap.lensing_wrap import (
+    HalfLightRadiusAXVLine,
+    EinsteinRadiusAXVLine,
     LightProfileCentresScatter,
     MassProfileCentresScatter,
     CriticalCurvesPlot,

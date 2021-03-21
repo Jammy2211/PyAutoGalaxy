@@ -5,6 +5,10 @@ class HalfLightRadiusAXVLine(wrap_1d.AXVLine):
     pass
 
 
+class EinsteinRadiusAXVLine(wrap_1d.AXVLine):
+    pass
+
+
 class LightProfileCentresScatter(wrap_2d.GridScatter):
     pass
 

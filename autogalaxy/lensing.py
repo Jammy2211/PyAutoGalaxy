@@ -48,6 +48,10 @@ def evaluation_grid(func):
 
 
 class LensingObject:
+
+    centre = None
+    phi = None
+
     def convergence_func(self, grid_radius):
         raise NotImplementedError("convergence_func should be overridden")
 
