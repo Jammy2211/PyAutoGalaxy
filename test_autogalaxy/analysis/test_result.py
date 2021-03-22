@@ -18,8 +18,8 @@ class TestResultAbstract:
         self, analysis_imaging_7x7, samples_with_result
     ):
 
-        model = af.CollectionPriorModel(
-            galaxies=af.CollectionPriorModel(
+        model = af.Collection(
+            galaxies=af.Collection(
                 galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
                 source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
             )
@@ -40,8 +40,8 @@ class TestResultAbstract:
         galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
         galaxy_1 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=2.0))
 
-        model = af.CollectionPriorModel(
-            galaxies=af.CollectionPriorModel(galaxy_0=galaxy_0, galaxy_1=galaxy_1)
+        model = af.Collection(
+            galaxies=af.Collection(galaxy_0=galaxy_0, galaxy_1=galaxy_1)
         )
 
         max_log_likelihood_plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])

@@ -268,10 +268,7 @@ class AnalysisImaging(AnalysisDataset):
             )
 
     def make_result(
-        self,
-        samples: af.PDFSamples,
-        model: af.CollectionPriorModel,
-        search: af.NonLinearSearch,
+        self, samples: af.PDFSamples, model: af.Collection, search: af.NonLinearSearch
     ):
         return res.ResultImaging(
             samples=samples,
@@ -327,7 +324,9 @@ class AnalysisInterferometer(AnalysisDataset):
         super().set_hyper_dataset(result=result)
 
         self.hyper_model_visibilities = result.hyper_model_visibilities
-        self.hyper_galaxy_visibilities_path_dict = result.hyper_galaxy_visibilities_path_dict
+        self.hyper_galaxy_visibilities_path_dict = (
+            result.hyper_galaxy_visibilities_path_dict
+        )
 
     @property
     def interferometer(self):
@@ -455,10 +454,7 @@ class AnalysisInterferometer(AnalysisDataset):
             )
 
     def make_result(
-        self,
-        samples: af.PDFSamples,
-        model: af.CollectionPriorModel,
-        search: af.NonLinearSearch,
+        self, samples: af.PDFSamples, model: af.Collection, search: af.NonLinearSearch
     ):
         return res.ResultInterferometer(
             samples=samples,

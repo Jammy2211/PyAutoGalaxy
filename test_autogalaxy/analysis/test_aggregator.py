@@ -26,8 +26,8 @@ def make_samples():
 
 @pytest.fixture(name="model")
 def make_model():
-    return af.CollectionPriorModel(
-        galaxies=af.CollectionPriorModel(
+    return af.Collection(
+        galaxies=af.Collection(
             galaxy=ag.GalaxyModel(redshift=0.5, light=ag.lp.EllipticalSersic),
             source=ag.GalaxyModel(redshift=1.0, light=ag.lp.EllipticalSersic),
         )

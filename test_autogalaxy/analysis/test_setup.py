@@ -18,9 +18,7 @@ class TestSetupHyper:
         assert setup.search.n_live_points == 50
         assert setup.search.evidence_tolerance == pytest.approx(0.059, 1.0e-4)
 
-        setup = ag.SetupHyper(
-            search=af.DynestyStatic(n_live_points=51)
-        )
+        setup = ag.SetupHyper(search=af.DynestyStatic(n_live_points=51))
         assert setup.search.n_live_points == 51
 
         setup = ag.SetupHyper(hyper_galaxies=True, evidence_tolerance=0.5)
@@ -29,8 +27,7 @@ class TestSetupHyper:
 
         with pytest.raises(exc.PipelineException):
             ag.SetupHyper(
-                search=af.DynestyStatic(n_live_points=51),
-                evidence_tolerance=3.0,
+                search=af.DynestyStatic(n_live_points=51), evidence_tolerance=3.0
             )
 
 
@@ -38,8 +35,8 @@ class TestSetupLightParametric:
     def test__prior_models(self):
 
         setup = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
-            disk_prior_model=af.PriorModel(ag.lp.EllipticalExponential),
+            bulge_prior_model=af.Model(ag.lp.EllipticalSersic),
+            disk_prior_model=af.Model(ag.lp.EllipticalExponential),
         )
 
         assert setup.bulge_prior_model.cls is ag.lp.EllipticalSersic
@@ -49,8 +46,8 @@ class TestSetupLightParametric:
     def test__set_bulge_disk_prior_model_assertions(self):
 
         setup = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
-            disk_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            bulge_prior_model=af.Model(ag.lp.EllipticalSersic),
+            disk_prior_model=af.Model(ag.lp.EllipticalSersic),
         )
 
         setup.bulge_prior_model._assertions = []
@@ -67,8 +64,8 @@ class TestSetupLightParametric:
         )
 
         setup = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
-            disk_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            bulge_prior_model=af.Model(ag.lp.EllipticalSersic),
+            disk_prior_model=af.Model(ag.lp.EllipticalSersic),
         )
 
         setup.bulge_prior_model._assertions = []
@@ -83,8 +80,8 @@ class TestSetupLightParametric:
         assert setup.bulge_prior_model._assertions == []
 
         setup = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.mp.EllipticalSersic),
-            disk_prior_model=af.PriorModel(ag.mp.EllipticalExponential),
+            bulge_prior_model=af.Model(ag.mp.EllipticalSersic),
+            disk_prior_model=af.Model(ag.mp.EllipticalExponential),
         )
 
         setup.set_light_prior_model_assertions(
@@ -98,9 +95,9 @@ class TestSetupLightParametric:
     def test__set_chameleon_prior_model_assertions(self):
 
         setup = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.lp.EllipticalChameleon),
-            disk_prior_model=af.PriorModel(ag.lp.SphericalChameleon),
-            envelope_prior_model=af.PriorModel(ag.lmp.EllipticalChameleon),
+            bulge_prior_model=af.Model(ag.lp.EllipticalChameleon),
+            disk_prior_model=af.Model(ag.lp.SphericalChameleon),
+            envelope_prior_model=af.Model(ag.lmp.EllipticalChameleon),
         )
 
         setup.set_light_prior_model_assertions(
@@ -121,9 +118,9 @@ class TestSetupLightParametric:
         )
 
         setup = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.mp.EllipticalChameleon),
-            disk_prior_model=af.PriorModel(ag.mp.SphericalChameleon),
-            envelope_prior_model=af.PriorModel(ag.lmp.SphericalChameleon),
+            bulge_prior_model=af.Model(ag.mp.EllipticalChameleon),
+            disk_prior_model=af.Model(ag.mp.SphericalChameleon),
+            envelope_prior_model=af.Model(ag.lmp.SphericalChameleon),
         )
 
         setup.set_light_prior_model_assertions(
@@ -144,9 +141,9 @@ class TestSetupLightParametric:
         )
 
         setup = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.lp.EllipticalChameleon),
-            disk_prior_model=af.PriorModel(ag.lp.SphericalChameleon),
-            envelope_prior_model=af.PriorModel(ag.lmp.EllipticalChameleon),
+            bulge_prior_model=af.Model(ag.lp.EllipticalChameleon),
+            disk_prior_model=af.Model(ag.lp.SphericalChameleon),
+            envelope_prior_model=af.Model(ag.lmp.EllipticalChameleon),
         )
 
         setup.bulge_prior_model._assertions = []
@@ -168,9 +165,9 @@ class TestSetupLightParametric:
     def test__input_light_centre__centres_of_prior_models_are_aligned(self):
 
         setup = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
-            disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
-            envelope_prior_model=af.PriorModel(ag.lp.SphericalExponential),
+            bulge_prior_model=af.Model(ag.lp.SphericalSersic),
+            disk_prior_model=af.Model(ag.lp.SphericalExponential),
+            envelope_prior_model=af.Model(ag.lp.SphericalExponential),
             light_centre=(0.0, 0.0),
         )
 
@@ -181,8 +178,8 @@ class TestSetupLightParametric:
     def test__input_align_centre_and_elliptical_comps__components_are_aligned(self):
 
         setup = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
-            disk_prior_model=af.PriorModel(ag.lp.EllipticalExponential),
+            bulge_prior_model=af.Model(ag.lp.EllipticalSersic),
+            disk_prior_model=af.Model(ag.lp.EllipticalExponential),
             align_bulge_disk_centre=True,
             align_bulge_disk_elliptical_comps=True,
         )
@@ -194,8 +191,8 @@ class TestSetupLightParametric:
         )
 
         setup = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
-            disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
+            bulge_prior_model=af.Model(ag.lp.SphericalSersic),
+            disk_prior_model=af.Model(ag.lp.SphericalExponential),
             align_bulge_disk_centre=True,
             align_bulge_disk_elliptical_comps=True,
         )
@@ -203,18 +200,18 @@ class TestSetupLightParametric:
         assert setup.bulge_prior_model.centre == setup.disk_prior_model.centre
 
         setup = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            bulge_prior_model=af.Model(ag.lp.EllipticalSersic),
             disk_prior_model=None,
-            envelope_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            envelope_prior_model=af.Model(ag.lp.EllipticalSersic),
             align_bulge_envelope_centre=True,
         )
 
         assert setup.bulge_prior_model.centre == setup.envelope_prior_model.centre
 
         setup = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
-            disk_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
-            envelope_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
+            bulge_prior_model=af.Model(ag.lp.EllipticalSersic),
+            disk_prior_model=af.Model(ag.lp.EllipticalSersic),
+            envelope_prior_model=af.Model(ag.lp.EllipticalSersic),
             align_bulge_disk_centre=True,
             align_bulge_envelope_centre=True,
         )
@@ -225,9 +222,9 @@ class TestSetupLightParametric:
     def test__light_centre_gaussian_prior_values_input(self):
 
         setup = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
-            disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
-            envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic),
+            bulge_prior_model=af.Model(ag.lp.SphericalSersic),
+            disk_prior_model=af.Model(ag.lp.SphericalExponential),
+            envelope_prior_model=af.Model(ag.lp.EllipticalCoreSersic),
         )
 
         assert setup.bulge_prior_model.centre_0.mean == 0.0
@@ -245,9 +242,9 @@ class TestSetupLightParametric:
 
         setup = ag.SetupLightParametric(
             light_centre_gaussian_prior_values=(0.1, 0.4),
-            bulge_prior_model=af.PriorModel(ag.lp.SphericalSersic),
-            disk_prior_model=af.PriorModel(ag.lp.SphericalExponential),
-            envelope_prior_model=af.PriorModel(ag.lp.EllipticalCoreSersic),
+            bulge_prior_model=af.Model(ag.lp.SphericalSersic),
+            disk_prior_model=af.Model(ag.lp.SphericalExponential),
+            envelope_prior_model=af.Model(ag.lp.EllipticalCoreSersic),
         )
 
         assert setup.bulge_prior_model.centre_0.mean == 0.1
@@ -268,33 +265,33 @@ class TestSetupLightInversion:
     def test__pixelization_prior_model__model_depends_on_inversion_pixels_fixed(self):
 
         setup = ag.SetupLightInversion(
-            pixelization_prior_model=af.PriorModel(ag.pix.Rectangular),
-            regularization_prior_model=af.PriorModel(ag.reg.Regularization),
+            pixelization_prior_model=af.Model(ag.pix.Rectangular),
+            regularization_prior_model=af.Model(ag.reg.Regularization),
         )
 
         assert setup.pixelization_prior_model.cls is ag.pix.Rectangular
 
         setup = ag.SetupLightInversion(
-            pixelization_prior_model=af.PriorModel(ag.pix.VoronoiBrightnessImage),
-            regularization_prior_model=af.PriorModel(ag.reg.Regularization),
+            pixelization_prior_model=af.Model(ag.pix.VoronoiBrightnessImage),
+            regularization_prior_model=af.Model(ag.reg.Regularization),
         )
 
         assert setup.pixelization_prior_model.cls is ag.pix.VoronoiBrightnessImage
 
         setup = ag.SetupLightInversion(
-            pixelization_prior_model=af.PriorModel(ag.pix.VoronoiBrightnessImage),
+            pixelization_prior_model=af.Model(ag.pix.VoronoiBrightnessImage),
             inversion_pixels_fixed=100,
-            regularization_prior_model=af.PriorModel(ag.reg.Regularization),
+            regularization_prior_model=af.Model(ag.reg.Regularization),
         )
 
-        assert isinstance(setup.pixelization_prior_model, af.PriorModel)
+        assert isinstance(setup.pixelization_prior_model, af.Model)
         assert setup.pixelization_prior_model.pixels == 100
 
 
 class TestAbstractSetupMass:
     def test__align_centre_to_mass_centre(self):
 
-        mass = af.PriorModel(ag.mp.SphericalIsothermal)
+        mass = af.Model(ag.mp.SphericalIsothermal)
 
         source = ag.SetupMassTotal(mass_centre=(1.0, 2.0))
 
@@ -306,22 +303,18 @@ class TestAbstractSetupMass:
 class TestSetupMassTotal:
     def test__mass_prior_model(self):
 
-        setup = ag.SetupMassTotal(
-            mass_prior_model=af.PriorModel(ag.mp.EllipticalPowerLaw)
-        )
+        setup = ag.SetupMassTotal(mass_prior_model=af.Model(ag.mp.EllipticalPowerLaw))
 
         assert setup.mass_prior_model.cls is ag.mp.EllipticalPowerLaw
 
-        setup = ag.SetupMassTotal(
-            mass_prior_model=af.PriorModel(ag.mp.EllipticalIsothermal)
-        )
+        setup = ag.SetupMassTotal(mass_prior_model=af.Model(ag.mp.EllipticalIsothermal))
 
         assert setup.mass_prior_model.cls is ag.mp.EllipticalIsothermal
 
     def test__mass_centre_updates_mass_prior_model(self):
 
         setup = ag.SetupMassTotal(
-            mass_prior_model=af.PriorModel(ag.mp.EllipticalIsothermal),
+            mass_prior_model=af.Model(ag.mp.EllipticalIsothermal),
             mass_centre=(0.0, 1.0),
         )
 
@@ -329,7 +322,7 @@ class TestSetupMassTotal:
 
     def test__align_centre_of_mass_to_light(self):
 
-        mass = af.PriorModel(ag.mp.SphericalIsothermal)
+        mass = af.Model(ag.mp.SphericalIsothermal)
 
         source = ag.SetupMassTotal(align_bulge_mass_centre=False)
 
@@ -355,8 +348,8 @@ class TestSetupMassLightDark:
     def test__prior_models(self):
 
         setup = ag.SetupMassLightDark(
-            bulge_prior_model=af.PriorModel(ag.lmp.EllipticalSersic),
-            disk_prior_model=af.PriorModel(ag.lmp.EllipticalExponential),
+            bulge_prior_model=af.Model(ag.lmp.EllipticalSersic),
+            disk_prior_model=af.Model(ag.lmp.EllipticalExponential),
         )
 
         assert setup.bulge_prior_model.cls is ag.lmp.EllipticalSersic
@@ -365,10 +358,10 @@ class TestSetupMassLightDark:
         assert setup.dark_prior_model.cls is ag.mp.EllipticalNFWMCRLudlow
 
         setup = ag.SetupMassLightDark(
-            bulge_prior_model=af.PriorModel(ag.lmp.EllipticalDevVaucouleurs),
-            disk_prior_model=af.PriorModel(ag.lmp.SphericalDevVaucouleurs),
-            envelope_prior_model=af.PriorModel(ag.lmp.SphericalExponential),
-            dark_prior_model=af.PriorModel(ag.mp.EllipticalNFW),
+            bulge_prior_model=af.Model(ag.lmp.EllipticalDevVaucouleurs),
+            disk_prior_model=af.Model(ag.lmp.SphericalDevVaucouleurs),
+            envelope_prior_model=af.Model(ag.lmp.SphericalExponential),
+            dark_prior_model=af.Model(ag.mp.EllipticalNFW),
         )
 
         assert setup.bulge_prior_model.cls is ag.lmp.EllipticalDevVaucouleurs
@@ -379,9 +372,9 @@ class TestSetupMassLightDark:
     def test__set_chameleon_prior_model_assertions(self):
 
         setup = ag.SetupMassLightDark(
-            bulge_prior_model=af.PriorModel(ag.lp.EllipticalChameleon),
-            disk_prior_model=af.PriorModel(ag.lp.SphericalChameleon),
-            envelope_prior_model=af.PriorModel(ag.lmp.EllipticalChameleon),
+            bulge_prior_model=af.Model(ag.lp.EllipticalChameleon),
+            disk_prior_model=af.Model(ag.lp.SphericalChameleon),
+            envelope_prior_model=af.Model(ag.lmp.EllipticalChameleon),
         )
 
         setup.set_light_prior_model_assertions(
@@ -401,9 +394,9 @@ class TestSetupMassLightDark:
         )
 
         setup = ag.SetupMassLightDark(
-            bulge_prior_model=af.PriorModel(ag.mp.EllipticalChameleon),
-            disk_prior_model=af.PriorModel(ag.mp.SphericalChameleon),
-            envelope_prior_model=af.PriorModel(ag.lmp.SphericalChameleon),
+            bulge_prior_model=af.Model(ag.mp.EllipticalChameleon),
+            disk_prior_model=af.Model(ag.mp.SphericalChameleon),
+            envelope_prior_model=af.Model(ag.lmp.SphericalChameleon),
         )
 
         setup.set_light_prior_model_assertions(
@@ -497,13 +490,13 @@ class TestSMBH:
         setup = ag.SetupSMBH(smbh_centre_fixed=True)
         smbh = setup.smbh_from_centre(centre=(0.0, 0.0))
 
-        assert isinstance(smbh, af.PriorModel)
+        assert isinstance(smbh, af.Model)
         assert smbh.centre == (0.0, 0.0)
 
         setup = ag.SetupSMBH(smbh_centre_fixed=False)
         smbh = setup.smbh_from_centre(centre=(0.1, 0.2), centre_sigma=0.2)
 
-        assert isinstance(smbh, af.PriorModel)
+        assert isinstance(smbh, af.Model)
 
         assert isinstance(smbh.centre[0], af.GaussianPrior)
         assert smbh.centre[0].mean == 0.1
@@ -518,8 +511,8 @@ class TestSetupPipeline:
     def test__setup__passes_light_setup_to_mass_light_setup(self):
 
         setup_light = ag.SetupLightParametric(
-            bulge_prior_model=af.PriorModel(ag.lp.EllipticalSersic),
-            disk_prior_model=af.PriorModel(ag.lp.EllipticalExponential),
+            bulge_prior_model=af.Model(ag.lp.EllipticalSersic),
+            disk_prior_model=af.Model(ag.lp.EllipticalExponential),
         )
 
         setup_mass = ag.SetupMassLightDark()

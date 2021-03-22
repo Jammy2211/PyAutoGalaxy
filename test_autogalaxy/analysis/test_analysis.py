@@ -66,9 +66,7 @@ class TestAnalysisDataset:
 class TestAnalysisImaging:
     def test__make_result__result_imaging_is_returned(self, masked_imaging_7x7):
 
-        model = af.CollectionPriorModel(
-            galaxies=af.CollectionPriorModel(galaxy_0=ag.Galaxy(redshift=0.5))
-        )
+        model = af.Collection(galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5)))
 
         analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
 
@@ -83,7 +81,7 @@ class TestAnalysisImaging:
     ):
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
-        model = af.CollectionPriorModel(galaxies=af.CollectionPriorModel(galaxy=galaxy))
+        model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
         analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
 
@@ -105,10 +103,10 @@ class TestAnalysisImaging:
 
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
-        model = af.CollectionPriorModel(
+        model = af.Collection(
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
-            galaxies=af.CollectionPriorModel(galaxy=galaxy),
+            galaxies=af.Collection(galaxy=galaxy),
         )
 
         analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
@@ -187,9 +185,7 @@ class TestAnalysisInterferometer:
         self, masked_interferometer_7
     ):
 
-        model = af.CollectionPriorModel(
-            galaxies=af.CollectionPriorModel(galaxy_0=ag.Galaxy(redshift=0.5))
-        )
+        model = af.Collection(galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5)))
 
         analysis = ag.AnalysisInterferometer(dataset=masked_interferometer_7)
 
@@ -205,7 +201,7 @@ class TestAnalysisInterferometer:
 
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
-        model = af.CollectionPriorModel(galaxies=af.CollectionPriorModel(galaxy=galaxy))
+        model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
         analysis = ag.AnalysisInterferometer(
             dataset=masked_interferometer_7, results=mock.MockResults()
@@ -229,9 +225,9 @@ class TestAnalysisInterferometer:
 
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
-        model = af.CollectionPriorModel(
+        model = af.Collection(
             hyper_background_noise=hyper_background_noise,
-            galaxies=af.CollectionPriorModel(galaxy=galaxy),
+            galaxies=af.Collection(galaxy=galaxy),
         )
 
         analysis = ag.AnalysisInterferometer(

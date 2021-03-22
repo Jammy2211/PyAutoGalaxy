@@ -18,27 +18,27 @@ import copy
 class AbstractSetup:
     def _cls_to_prior_model(self, cls):
         """
-        Convert an input class to a `af.PriorModel` so that if a user specifies the models input into a `Setup` not as
-        a `PriorModel` (or uses the default inputs which are not `PriorModel`'s) they are converted to a `PriorModel`
+        Convert an input class to a `af.Model` so that if a user specifies the models input into a `Setup` not as
+        a `Model` (or uses the default inputs which are not `Model`'s) they are converted to a `Model`
         for the pipeline.
 
-        If `None` or a `PriorModel` is input it is not converted to a `PriorModel`.
+        If `None` or a `Model` is input it is not converted to a `Model`.
 
         Parameters
         ----------
         cls : cls
-            The class which is converted to a `PriorModel`' if it is not a `PriorModel`.
+            The class which is converted to a `Model`' if it is not a `Model`.
 
         Returns
         -------
-        af.PriorModel or None
+        af.Model or None
             The converted class.
 
         """
 
         if cls is not None:
-            if not isinstance(cls, af.PriorModel):
-                return af.PriorModel(cls)
+            if not isinstance(cls, af.Model):
+                return af.Model(cls)
 
         return cls
 
@@ -59,12 +59,12 @@ class AbstractSetup:
         
         Parameters
         ----------
-        bulge_prior_model : af.PriorModel
-            The `PriorModel` used to represent the light distribution of a bulge.
-        disk_prior_model : af.PriorModel
-            The `PriorModel` used to represent the light distribution of a disk.
-        envelope_prior_model : af.PriorModel
-            The `PriorModel` used to represent the light distribution of a envelope.
+        bulge_prior_model : af.Model
+            The `Model` used to represent the light distribution of a bulge.
+        disk_prior_model : af.Model
+            The `Model` used to represent the light distribution of a disk.
+        envelope_prior_model : af.Model
+            The `Model` used to represent the light distribution of a envelope.
         assert_bulge_sersic_above_disk : bool
             If `True`, the `sersic_index` of the bulge is above that of the disk.
         assert_chameleon_core_radius_0_above_core_radius_1 : bool
@@ -94,10 +94,10 @@ class AbstractSetup:
 
         Parameters
         ----------
-        bulge_prior_model : af.PriorModel
-            The `PriorModel` used to represent the light distribution of a bulge.
-        disk_prior_model : af.PriorModel
-            The `PriorModel` used to represent the light distribution of a disk.
+        bulge_prior_model : af.Model
+            The `Model` used to represent the light distribution of a bulge.
+        disk_prior_model : af.Model
+            The `Model` used to represent the light distribution of a disk.
 
         Returns
         -------
@@ -119,8 +119,8 @@ class AbstractSetup:
 
         Parameters
         ----------
-        prior_model : af.PriorModel
-            The `PriorModel` that may contain a `Chameleon` profile.
+        prior_model : af.Model
+            The `Model` that may contain a `Chameleon` profile.
 
         Returns
         -------
@@ -239,9 +239,9 @@ class AbstractSetupLight(AbstractSetup):
 class SetupLightParametric(AbstractSetupLight):
     def __init__(
         self,
-        bulge_prior_model: af.PriorModel(lp.LightProfile) = lp.EllipticalSersic,
-        disk_prior_model: af.PriorModel(lp.LightProfile) = lp.EllipticalExponential,
-        envelope_prior_model: af.PriorModel(lp.LightProfile) = None,
+        bulge_prior_model: af.Model(lp.LightProfile) = lp.EllipticalSersic,
+        disk_prior_model: af.Model(lp.LightProfile) = lp.EllipticalExponential,
+        envelope_prior_model: af.Model(lp.LightProfile) = None,
         light_centre: (float, float) = None,
         light_centre_gaussian_prior_values: (float, float) = None,
         align_bulge_disk_centre: bool = True,
@@ -257,12 +257,12 @@ class SetupLightParametric(AbstractSetupLight):
 
         Parameters
         ----------
-        bulge_prior_model : af.PriorModel(lp.LightProfile)
-            The `LightProfile` `PriorModel` used to represent the light distribution of a bulge.
-        disk_prior_model : af.PriorModel(lp.LightProfile)
-            The `LightProfile` `PriorModel` used to represent the light distribution of a disk.
-        envelope_prior_model : af.PriorModel(lp.LightProfile)
-            The `LightProfile` `PriorModel` used to represent the light distribution of a envelope.
+        bulge_prior_model : af.Model(lp.LightProfile)
+            The `LightProfile` `Model` used to represent the light distribution of a bulge.
+        disk_prior_model : af.Model(lp.LightProfile)
+            The `LightProfile` `Model` used to represent the light distribution of a disk.
+        envelope_prior_model : af.Model(lp.LightProfile)
+            The `LightProfile` `Model` used to represent the light distribution of a envelope.
         light_centre : (float, float) or None
            If input, a fixed (y,x) centre of the galaxy is used for the light profile model which is not treated as a
             free parameter by the non-linear search.
@@ -366,8 +366,8 @@ class SetupLightParametric(AbstractSetupLight):
 class SetupLightInversion(AbstractSetupLight):
     def __init__(
         self,
-        pixelization_prior_model: af.PriorModel(pix.Pixelization),
-        regularization_prior_model: af.PriorModel(reg.Regularization),
+        pixelization_prior_model: af.Model(pix.Pixelization),
+        regularization_prior_model: af.Model(reg.Regularization),
         inversion_pixels_fixed: float = None,
     ):
         """
@@ -378,10 +378,10 @@ class SetupLightInversion(AbstractSetupLight):
 
         Parameters
         ----------
-        pixelization_prior_model : af.PriorModel(pix.Pixelization)
+        pixelization_prior_model : af.Model(pix.Pixelization)
            If the pipeline uses an `Inversion` to reconstruct the galaxy's light, this determines the `Pixelization`
            used.
-        regularization_prior_model : af.PriorModel(reg.Regularization)
+        regularization_prior_model : af.Model(reg.Regularization)
             If the pipeline uses an `Inversion` to reconstruct the galaxy's light, this determines the `Regularization`
             scheme used.
         inversion_pixels_fixed : float
@@ -399,11 +399,11 @@ class SetupLightInversion(AbstractSetupLight):
         self.inversion_pixels_fixed = inversion_pixels_fixed
 
     @property
-    def pixelization_prior_model(self) -> af.PriorModel:
+    def pixelization_prior_model(self) -> af.Model:
         """
-        The `PriorModel` of the `Pixelization` in the pipeline.
+        The `Model` of the `Pixelization` in the pipeline.
 
-        This `PriorModel` has its number of pixels fixed to a certain value if the `inversion_pixels_fixed` parameter
+        This `Model` has its number of pixels fixed to a certain value if the `inversion_pixels_fixed` parameter
         is input.
         """
         if (
@@ -436,17 +436,17 @@ class AbstractSetupMass(AbstractSetup):
         self.mass_centre = mass_centre
 
     def align_centre_to_mass_centre(
-        self, mass_prior_model: af.PriorModel(mp.MassProfile)
-    ) -> af.PriorModel:
+        self, mass_prior_model: af.Model(mp.MassProfile)
+    ) -> af.Model:
         """
-        Align the centre of an input `MassProfile` `PriorModel` to the `mass_centre` of this pipeline setup, such
+        Align the centre of an input `MassProfile` `Model` to the `mass_centre` of this pipeline setup, such
         that in the model the centre of the mass profile is fixed and not a free parameters that is fitted for.
 
         If the `mass_centre` is None the mass profile centre is unchanged and remains a model.
 
         Parameters
         ----------
-        mass_prior_model : af.PriorModel(ag.mp.MassProfile)
+        mass_prior_model : af.Model(ag.mp.MassProfile)
             The `MassProfile` whose centre may be aligned with the mass_centre attribute.
         """
         if self.mass_centre is not None:
@@ -454,10 +454,10 @@ class AbstractSetupMass(AbstractSetup):
         return mass_prior_model
 
     def unfix_mass_centre(
-        self, result: af.Result, mass_prior_model: af.PriorModel(mp.MassProfile)
-    ) -> af.PriorModel:
+        self, result: af.Result, mass_prior_model: af.Model(mp.MassProfile)
+    ) -> af.Model:
         """
-        If the centre of the mass `PriorModel` was previously fixed to an input value via the `mass_centre` input,
+        If the centre of the mass `Model` was previously fixed to an input value via the `mass_centre` input,
         unalign them by making their centre `GaussianPrior`'s with `mean` centred on the input `mass_centre`.
 
         If `mass_centre` was not input an the centre was fixed in the pipeline itsef, this function can be used to
@@ -467,7 +467,7 @@ class AbstractSetupMass(AbstractSetup):
         ----------
         result : af.Result
             The result of the previous source or light pipeline.        
-        mass_prior_model : af.PriorModel(ag.mp.MassProfile)
+        mass_prior_model : af.Model(ag.mp.MassProfile)
             The mass profile whose centre may be unfixed from a previous model.
         """
 
@@ -490,7 +490,7 @@ class AbstractSetupMass(AbstractSetup):
 class SetupMassTotal(AbstractSetupMass):
     def __init__(
         self,
-        mass_prior_model: af.PriorModel(mp.MassProfile) = mp.EllipticalPowerLaw,
+        mass_prior_model: af.Model(mp.MassProfile) = mp.EllipticalPowerLaw,
         mass_centre: (float, float) = None,
         align_bulge_mass_centre: bool = False,
     ):
@@ -503,7 +503,7 @@ class SetupMassTotal(AbstractSetupMass):
 
         Parameters
         ----------
-        mass_prior_model : af.PriorModel(mp.MassProfile)
+        mass_prior_model : af.Model(mp.MassProfile)
             The `MassProfile` fitted by the `Pipeline` (the pipeline must specifically use this option to use this
             mass profile)
         mass_centre : (float, float) or None
@@ -524,16 +524,14 @@ class SetupMassTotal(AbstractSetupMass):
             self.mass_prior_model.centre = self.mass_centre
 
     def align_centre_of_mass_to_light(
-        self,
-        mass_prior_model: af.PriorModel(mp.MassProfile),
-        light_centre: (float, float),
+        self, mass_prior_model: af.Model(mp.MassProfile), light_centre: (float, float)
     ):
         """Align the centre of a mass profile to the centre of a light profile, if the align_bulge_mass_centre
         SLaM setting is True.
 
         Parameters
         ----------
-        mass_prior_model : af.PriorModel(ag.mp.MassProfile)
+        mass_prior_model : af.Model(ag.mp.MassProfile)
             The mass profile whose centre may be aligned with the light_centre attribute.
         light : (float, float)
             The centre of the light profile the mass profile is aligned with.
@@ -550,16 +548,14 @@ class SetupMassTotal(AbstractSetupMass):
         return mass_prior_model
 
     def unalign_mass_centre_from_light_centre(
-        self,
-        results: af.ResultsCollection,
-        mass_prior_model: af.PriorModel(mp.MassProfile),
+        self, results: af.ResultsCollection, mass_prior_model: af.Model(mp.MassProfile)
     ):
         """If the centre of a mass model was previously aligned with that of the lens light centre, unaligned them
         by using an earlier model of the light.
 
         Parameters
         ----------
-        mass_prior_model : af.PriorModel(ag.mp.MassProfile)
+        mass_prior_model : af.Model(ag.mp.MassProfile)
             The `MassProfile` whose centre may be aligned with the `LightProfile` centre.
         """
         if self.align_bulge_mass_centre:
@@ -589,7 +585,7 @@ class SetupMassTotal(AbstractSetupMass):
 
         Returns
         -------
-        af.PriorModel(mp.MassProfile)
+        af.Model(mp.MassProfile)
             The total mass profile whose priors are initialized from a previous result.
         """
 
@@ -612,12 +608,10 @@ class SetupMassTotal(AbstractSetupMass):
 class SetupMassLightDark(AbstractSetupMass):
     def __init__(
         self,
-        bulge_prior_model: af.PriorModel(lmp.LightMassProfile) = lmp.EllipticalSersic,
-        disk_prior_model: af.PriorModel(
-            lmp.LightMassProfile
-        ) = lmp.EllipticalExponential,
-        envelope_prior_model: af.PriorModel(lmp.LightMassProfile) = None,
-        dark_prior_model: af.PriorModel(mp.MassProfile) = mp.EllipticalNFWMCRLudlow,
+        bulge_prior_model: af.Model(lmp.LightMassProfile) = lmp.EllipticalSersic,
+        disk_prior_model: af.Model(lmp.LightMassProfile) = lmp.EllipticalExponential,
+        envelope_prior_model: af.Model(lmp.LightMassProfile) = None,
+        dark_prior_model: af.Model(mp.MassProfile) = mp.EllipticalNFWMCRLudlow,
         mass_centre: (float, float) = None,
         constant_mass_to_light_ratio: bool = False,
         align_bulge_dark_centre: bool = False,
@@ -631,14 +625,14 @@ class SetupMassLightDark(AbstractSetupMass):
 
         Parameters
         ----------
-        bulge_prior_model : af.PriorModel(lmp.LightMassProfile)
-            The `LightMassProfile` `PriorModel` used to represent the light and mass distribution of the bulge.
-        disk_prior_model : af.PriorModel(lmp.LightMassProfile)
-            The `LightMassProfile` `PriorModel` used to represent the light and mass distribution of the disk.
-        envelope_prior_model : af.PriorModel(lmp.LightMassProfile)
-            The `LightMassProfile` `PriorModel` used to represent the light and mass distribution of the stellar envelope.
-        dark_prior_model : af.PriorModel(mp.MassProfile)
-            The `MassProfile` `PriorModel` used to represent the dark matter distribution of the dark matter halo.
+        bulge_prior_model : af.Model(lmp.LightMassProfile)
+            The `LightMassProfile` `Model` used to represent the light and mass distribution of the bulge.
+        disk_prior_model : af.Model(lmp.LightMassProfile)
+            The `LightMassProfile` `Model` used to represent the light and mass distribution of the disk.
+        envelope_prior_model : af.Model(lmp.LightMassProfile)
+            The `LightMassProfile` `Model` used to represent the light and mass distribution of the stellar envelope.
+        dark_prior_model : af.Model(mp.MassProfile)
+            The `MassProfile` `Model` used to represent the dark matter distribution of the dark matter halo.
         mass_centre : (float, float)
            If input, a fixed (y,x) centre of the mass profile is used which is not treated as a free parameter by the
            non-linear search.
@@ -685,14 +679,14 @@ class SetupMassLightDark(AbstractSetupMass):
 
     def align_bulge_and_dark_centre(self, bulge_prior_model, dark_prior_model):
         """
-        Align the centre of input bulge `PriorModel` with that of the `PriorModel` representing the dark `MassProfile`,
+        Align the centre of input bulge `Model` with that of the `Model` representing the dark `MassProfile`,
         depending on the `align_bulge_darl_centre` attribute of the `SetupMassLightDark` instance.
 
         Parameters
         ----------
-        bulge_prior_model : af.PriorModel(ag.lmp.LightMassProfile)
+        bulge_prior_model : af.Model(ag.lmp.LightMassProfile)
             The `LightMassProfile` representing the bulge whose centre is aligned with that of the dark matter.
-        disk_prior_model : af.PriorModel(ag.lmp.LightMassProfile)
+        disk_prior_model : af.Model(ag.lmp.LightMassProfile)
             The `LightMassProfile` representing the dark matter whose centre is aligned with that of the bulge.
         """
         if self.align_bulge_dark_centre:
@@ -715,7 +709,7 @@ class SetupMassLightDark(AbstractSetupMass):
 
         Returns
         -------
-        af.PriorModel(mp.MassProfile)
+        af.Model(mp.MassProfile)
             The light profiles whose priors are initialized from a previous result.
         """
 
@@ -820,7 +814,7 @@ class SetupMassLightDark(AbstractSetupMass):
 class SetupSMBH(AbstractSetup):
     def __init__(
         self,
-        smbh_prior_model: af.PriorModel(mp.MassProfile) = mp.PointMass,
+        smbh_prior_model: af.Model(mp.MassProfile) = mp.PointMass,
         smbh_centre_fixed: bool = True,
     ):
         """
@@ -830,7 +824,7 @@ class SetupSMBH(AbstractSetup):
 
         Parameters
         ----------
-        smbh_prior_model : af.PriorModel(mp.MassProfile)
+        smbh_prior_model : af.Model(mp.MassProfile)
             The `MassProfile` used to model the mass of the super massive black hole.
         smbh_centre_fixed : bool
             If True, the super-massive black hole's centre is fixed to a value input by the pipeline, else it is
@@ -839,9 +833,9 @@ class SetupSMBH(AbstractSetup):
         self.smbh_prior_model = self._cls_to_prior_model(cls=smbh_prior_model)
         self.smbh_centre_fixed = smbh_centre_fixed
 
-    def smbh_from_centre(self, centre, centre_sigma=0.1) -> af.PriorModel:
+    def smbh_from_centre(self, centre, centre_sigma=0.1) -> af.Model:
         """
-        Returns a `PriorModel` of the `smbh_prior_model` which is fitted for in the mass-model representing a
+        Returns a `Model` of the `smbh_prior_model` which is fitted for in the mass-model representing a
         super-massive black-hole (smbh).
 
         The centre of the smbh is an input parameter of the function, and this centre is either fixed to the input
@@ -855,7 +849,7 @@ class SetupSMBH(AbstractSetup):
             If the centre is free, this is the sigma value of each centre's _GaussianPrior_.
         """
 
-        smbh = af.PriorModel(mp.PointMass)
+        smbh = af.Model(mp.PointMass)
 
         if self.smbh_centre_fixed:
             smbh.centre = centre

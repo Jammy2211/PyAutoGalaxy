@@ -13,7 +13,7 @@ import pickle
 
 
 def isprior(obj):
-    if isinstance(obj, af.PriorModel):
+    if isinstance(obj, af.Model):
         return True
     return False
 
@@ -21,19 +21,19 @@ def isprior(obj):
 def isinstance_or_prior(obj, cls):
     if isinstance(obj, cls):
         return True
-    if isinstance(obj, af.PriorModel) and obj.cls == cls:
+    if isinstance(obj, af.Model) and obj.cls == cls:
         return True
     return False
 
 
-def pixelization_from(model: af.CollectionPriorModel) -> pix.Pixelization:
+def pixelization_from(model: af.Collection) -> pix.Pixelization:
     """
     For a model containing one or more galaxies, inspect its attributes and return the `pixelization` of a galaxy
     provided one galaxy has a pixelization, otherwise it returns none. There cannot be more than one `Pixelization` in
     a model.
     
-    This function expects that the input model is a `CollectionPriorModel` where the first model-component has the
-    name `galaxies`, and is itself a `CollectionPriorModel` of `Galaxy` and `GalaxyModel` instances. This is the
+    This function expects that the input model is a `Collection` where the first model-component has the
+    name `galaxies`, and is itself a `Collection` of `Galaxy` and `GalaxyModel` instances. This is the
     standard API for creating a model in PyAutoGalaxy.
 
     The result of `pixelization_from_model` is used by the preloading to determine whether certain parts of a
@@ -41,7 +41,7 @@ def pixelization_from(model: af.CollectionPriorModel) -> pix.Pixelization:
 
     Parameters
     ----------
-    model : af.CollectionPriorModel
+    model : af.Collection
         Contains the `galaxies` in the model that will be fitted via the non-linear search.
 
     Returns
@@ -53,19 +53,19 @@ def pixelization_from(model: af.CollectionPriorModel) -> pix.Pixelization:
     for galaxy in model.galaxies:
         if hasattr(galaxy, "pixelization"):
             if galaxy.pixelization is not None:
-                if isinstance(galaxy.pixelization, af.PriorModel):
+                if isinstance(galaxy.pixelization, af.Model):
                     return galaxy.pixelization.cls
                 else:
                     return galaxy.pixelization
 
 
-def has_pixelization_from_model(model: af.CollectionPriorModel):
+def has_pixelization_from_model(model: af.Collection):
     """
     For a model containing one or more galaxies, inspect its attributes and return `True` if a galaxy has a
     `Pixelization` otherwise return `False`.
 
-    This function expects that the input model is a `CollectionPriorModel` where the first model-component has the
-    name `galaxies`, and is itself a `CollectionPriorModel` of `Galaxy` and `GalaxyModel` instances. This is the
+    This function expects that the input model is a `Collection` where the first model-component has the
+    name `galaxies`, and is itself a `Collection` of `Galaxy` and `GalaxyModel` instances. This is the
     standard API for creating a model in PyAutoGalaxy.
 
     The result of `has_pixelization_from_model` is used by the preloading to determine whether certain parts of a
@@ -73,7 +73,7 @@ def has_pixelization_from_model(model: af.CollectionPriorModel):
 
     Parameters
     ----------
-    model : af.CollectionPriorModel
+    model : af.Collection
         Contains the `galaxies` in the model that will be fitted via the non-linear search.
 
     Returns
@@ -86,15 +86,15 @@ def has_pixelization_from_model(model: af.CollectionPriorModel):
     return pixelization is not None
 
 
-def pixelization_is_model_from(model: af.CollectionPriorModel):
+def pixelization_is_model_from(model: af.Collection):
     """
     For a model containing one or more galaxies, inspect its attributes and return `True` if a galaxy has a
     `Pixelization` which is a model-component with free parameters, otherwise return `False`. Therefore, a `False`
     may be returned if a galaxy has a `Pixelization` but it is an `instance` where no parameters are free parameters
     in the non-linear search.
 
-    This function expects that the input model is a `CollectionPriorModel` where the first model-component has the
-    name `galaxies`, and is itself a `CollectionPriorModel` of `Galaxy` and `GalaxyModel` instances. This is the
+    This function expects that the input model is a `Collection` where the first model-component has the
+    name `galaxies`, and is itself a `Collection` of `Galaxy` and `GalaxyModel` instances. This is the
     standard API for creating a model in PyAutoGalaxy.
 
     The result of `pixelization_is_model_from_model` is used by the preloading to determine whether certain parts of a
@@ -102,7 +102,7 @@ def pixelization_is_model_from(model: af.CollectionPriorModel):
 
     Parameters
     ----------
-    model : af.CollectionPriorModel
+    model : af.Collection
         Contains the `galaxies` in the model that will be fitted via the non-linear search.
 
     Returns
@@ -118,8 +118,8 @@ def pixelization_is_model_from(model: af.CollectionPriorModel):
 
 
 def hyper_model_from(
-    setup_hyper, result: af.Result, include_hyper_image_sky : bool=False
-) -> af.CollectionPriorModel:
+    setup_hyper, result: af.Result, include_hyper_image_sky: bool = False
+) -> af.Collection:
     """
     Make a hyper model from the `Result` of a model-fit, where the hyper-model is the maximum log likelihood instance
     of the inferred model but turns the following hyper components of the model to free parameters:
@@ -144,7 +144,7 @@ def hyper_model_from(
 
     Returns
     -------
-    af.CollectionPriorModel
+    af.Collection
         The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
         model components now free parameters.
     """
@@ -173,12 +173,12 @@ def hyper_model_from(
 
                     galaxy = getattr(model.galaxies, path_galaxy[-1])
 
-                    setattr(galaxy, "hyper_galaxy", af.PriorModel(g.HyperGalaxy))
+                    setattr(galaxy, "hyper_galaxy", af.Model(g.HyperGalaxy))
 
     return model
 
 
-def hyper_fit(hyper_model : af.CollectionPriorModel, setup_hyper, result : af.Result, analysis):
+def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analysis):
     """
     Perform a hyper-fit, which extends a model-fit with an additional fit which fixes the non-hyper components of the
     model (e.g., `LightProfile`'s, `MassProfile`) to the `Result`'s maximum likelihood fit. The hyper-fit then treats
@@ -195,7 +195,7 @@ def hyper_fit(hyper_model : af.CollectionPriorModel, setup_hyper, result : af.Re
 
     Parameters
     ----------
-    hyper_model : CollectionPriorModel
+    hyper_model : Collection
         The hyper model used by the hyper-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
     setup_hyper : SetupHyper
         The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
@@ -269,7 +269,7 @@ def stochastic_model_from(
 
     Returns
     -------
-    af.CollectionPriorModel
+    af.Collection
         The stochastic model, which is the same model as the input model but may fit for or fix additional parameters.
     """
     if not hasattr(result.model.galaxies, "lens"):
@@ -333,7 +333,7 @@ def stochastic_fit(stochastic_model, result, analysis):
 
     Returns
     -------
-    af.CollectionPriorModel
+    af.Collection
         The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
         model components now free parameters.
     """
@@ -342,7 +342,10 @@ def stochastic_fit(stochastic_model, result, analysis):
     log_likelihood_cap = mean
 
     search = result.search
-    search.paths.name = f"{result.search.paths.name}__stochastic_likelihood_cap_" + "{0:.1f}".format(log_likelihood_cap)
+    search.paths.name = (
+        f"{result.search.paths.name}__stochastic_likelihood_cap_"
+        + "{0:.1f}".format(log_likelihood_cap)
+    )
 
     stochastic_log_evidences_pickle_file = path.join(
         search.paths.pickle_path, "stochastic_log_evidences.pickle"

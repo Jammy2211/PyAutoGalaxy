@@ -7,15 +7,15 @@ from autogalaxy import hyper_data as hd
 
 # def test__pixelization_from_model():
 #
-#     galaxies = af.CollectionPriorModel(galaxy=af.Model(ag.Galaxy, redshift=0.5))
+#     galaxies = af.Collection(galaxy=af.Model(ag.Galaxy, redshift=0.5))
 #
 #     pixelization = ag.util.model.pixelization_from(
-#         model=af.CollectionPriorModel(galaxies=galaxies)
+#         model=af.Collection(galaxies=galaxies)
 #     )
 #
 #     assert pixelization is None
 #
-#     galaxies = af.CollectionPriorModel(
+#     galaxies = af.Collection(
 #         galaxy=ag.Galaxy(
 #             redshift=0.5,
 #             pixelization=ag.pix.Rectangular(),
@@ -24,12 +24,12 @@ from autogalaxy import hyper_data as hd
 #     )
 #
 #     pixelization = ag.util.model.pixelization_from(
-#         model=af.CollectionPriorModel(galaxies=galaxies)
+#         model=af.Collection(galaxies=galaxies)
 #     )
 #
 #     assert isinstance(pixelization, ag.pix.Rectangular)
 #
-#     galaxies = af.CollectionPriorModel(
+#     galaxies = af.Collection(
 #         galaxy=af.Model(ag.Galaxy,
 #             redshift=0.5,
 #             pixelization=ag.pix.Rectangular,
@@ -38,7 +38,7 @@ from autogalaxy import hyper_data as hd
 #     )
 #
 #     pixelization = ag.util.model.pixelization_from(
-#         model=af.CollectionPriorModel(galaxies=galaxies)
+#         model=af.Collection(galaxies=galaxies)
 #     )
 #
 #     assert type(pixelization) == type(ag.pix.Rectangular)
@@ -46,11 +46,11 @@ from autogalaxy import hyper_data as hd
 #
 # def test__has_pixelization():
 #
-#     galaxies = af.CollectionPriorModel(galaxy=af.Model(ag.Galaxy, redshift=0.5))
+#     galaxies = af.Collection(galaxy=af.Model(ag.Galaxy, redshift=0.5))
 #
 #     assert galaxies.has_model(cls=ag.pix.Pixelization) is False
 #
-#     galaxies = af.CollectionPriorModel(
+#     galaxies = af.Collection(
 #         galaxy=af.Model(ag.Galaxy,
 #             redshift=0.5,
 #             pixelization=ag.pix.Rectangular(),
@@ -61,7 +61,7 @@ from autogalaxy import hyper_data as hd
 #     assert galaxies.has_instance(cls=ag.pix.Pixelization) is True
 #     assert galaxies.has_model(cls=ag.pix.Pixelization) is False
 #
-#     galaxies = af.CollectionPriorModel(
+#     galaxies = af.Collection(
 #         galaxy=af.Model(
 #             ag.Galaxy,
 #             redshift=0.5,
@@ -76,15 +76,15 @@ from autogalaxy import hyper_data as hd
 #
 # def test__pixelization_is_model():
 #
-#     galaxies = af.CollectionPriorModel(galaxy=af.Model(ag.Galaxy, redshift=0.5))
+#     galaxies = af.Collection(galaxy=af.Model(ag.Galaxy, redshift=0.5))
 #
 #     pixelization_is_model = ag.util.model.pixelization_is_model_from(
-#         model=af.CollectionPriorModel(galaxies=galaxies)
+#         model=af.Collection(galaxies=galaxies)
 #     )
 #
 #     assert pixelization_is_model == False
 #
-#     galaxies = af.CollectionPriorModel(
+#     galaxies = af.Collection(
 #         galaxy=ag.Galaxy(
 #             redshift=0.5,
 #             pixelization=ag.pix.Rectangular(),
@@ -93,12 +93,12 @@ from autogalaxy import hyper_data as hd
 #     )
 #
 #     pixelization_is_model = ag.util.model.pixelization_is_model_from(
-#         model=af.CollectionPriorModel(galaxies=galaxies)
+#         model=af.Collection(galaxies=galaxies)
 #     )
 #
 #     assert pixelization_is_model == False
 #
-#     galaxies = af.CollectionPriorModel(
+#     galaxies = af.Collection(
 #         galaxy=af.Model(ag.Galaxy,
 #             redshift=0.5,
 #             pixelization=ag.pix.Rectangular,
@@ -107,7 +107,7 @@ from autogalaxy import hyper_data as hd
 #     )
 #
 #     pixelization_is_model = ag.util.model.pixelization_is_model_from(
-#         model=af.CollectionPriorModel(galaxies=galaxies)
+#         model=af.Collection(galaxies=galaxies)
 #     )
 #
 #     assert pixelization_is_model == True
@@ -115,8 +115,8 @@ from autogalaxy import hyper_data as hd
 
 def test__hyper_model_from():
 
-    model = af.CollectionPriorModel(
-        galaxies=af.CollectionPriorModel(
+    model = af.Collection(
+        galaxies=af.Collection(
             galaxy=af.Model(
                 ag.Galaxy,
                 redshift=0.5,
@@ -133,8 +133,8 @@ def test__hyper_model_from():
 
     model = ag.util.model.hyper_model_from(setup_hyper=ag.SetupHyper(), result=result)
 
-    assert isinstance(model.galaxies.galaxy.pixelization, af.PriorModel)
-    assert isinstance(model.galaxies.galaxy.regularization, af.PriorModel)
+    assert isinstance(model.galaxies.galaxy.pixelization, af.Model)
+    assert isinstance(model.galaxies.galaxy.regularization, af.Model)
 
     assert model.galaxies.galaxy.pixelization.cls is ag.pix.Rectangular
     assert model.galaxies.galaxy.regularization.cls is ag.reg.Constant
@@ -156,16 +156,16 @@ def test__hyper_model_from():
         include_hyper_image_sky=True,
     )
 
-    assert isinstance(model.galaxies.galaxy.pixelization, af.PriorModel)
-    assert isinstance(model.galaxies.galaxy.regularization, af.PriorModel)
-    assert isinstance(model.hyper_image_sky, af.PriorModel)
-    assert isinstance(model.hyper_background_noise, af.PriorModel)
+    assert isinstance(model.galaxies.galaxy.pixelization, af.Model)
+    assert isinstance(model.galaxies.galaxy.regularization, af.Model)
+    assert isinstance(model.hyper_image_sky, af.Model)
+    assert isinstance(model.hyper_background_noise, af.Model)
 
     assert model.hyper_image_sky.cls == ag.hyper_data.HyperImageSky
     assert model.hyper_background_noise.cls == ag.hyper_data.HyperBackgroundNoise
 
-    model = af.CollectionPriorModel(
-        galaxies=af.CollectionPriorModel(
+    model = af.Collection(
+        galaxies=af.Collection(
             galaxy=af.Model(ag.Galaxy, redshift=0.5),
             galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllipticalSersic),
         )
@@ -182,8 +182,8 @@ def test__hyper_model_from():
 
 def test__hyper_model_from__adds_hyper_galaxies():
 
-    model = af.CollectionPriorModel(
-        galaxies=af.CollectionPriorModel(
+    model = af.Collection(
+        galaxies=af.Collection(
             galaxy_0=af.Model(ag.Galaxy, redshift=0.5),
             galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllipticalSersic),
         )
@@ -216,7 +216,7 @@ def test__hyper_model_from__adds_hyper_galaxies():
 
     model = ag.util.model.hyper_model_from(result=result, setup_hyper=setup_hyper)
 
-    assert isinstance(model.galaxies.galaxy_0, af.PriorModel)
+    assert isinstance(model.galaxies.galaxy_0, af.Model)
     assert model.galaxies.galaxy_0.redshift == 0.5
     assert model.galaxies.galaxy_0.hyper_galaxy.cls is ag.HyperGalaxy
     assert model.galaxies.galaxy_1.hyper_galaxy is None
@@ -226,18 +226,18 @@ def test__hyper_model_from__adds_hyper_galaxies():
 
     model = ag.util.model.hyper_model_from(result=result, setup_hyper=setup_hyper)
 
-    assert isinstance(model.galaxies.galaxy_0, af.PriorModel)
+    assert isinstance(model.galaxies.galaxy_0, af.Model)
     assert model.galaxies.galaxy_0.redshift == 0.5
     assert model.galaxies.galaxy_0.hyper_galaxy.cls is ag.HyperGalaxy
-    assert isinstance(model.galaxies.galaxy_1, af.PriorModel)
+    assert isinstance(model.galaxies.galaxy_1, af.Model)
     assert model.galaxies.galaxy_1.redshift == 1.0
     assert model.galaxies.galaxy_1.hyper_galaxy.cls is ag.HyperGalaxy
 
 
 def test__stochastic_model_from():
 
-    model = af.CollectionPriorModel(
-        galaxies=af.CollectionPriorModel(
+    model = af.Collection(
+        galaxies=af.Collection(
             lens=af.Model(
                 ag.Galaxy,
                 redshift=0.5,
@@ -255,8 +255,8 @@ def test__stochastic_model_from():
 
     instance = model.instance_from_prior_medians()
 
-    model = af.CollectionPriorModel(
-        galaxies=af.CollectionPriorModel(lens=af.Model(ag.Galaxy, redshift=0.5))
+    model = af.Collection(
+        galaxies=af.Collection(lens=af.Model(ag.Galaxy, redshift=0.5))
     )
 
     result = mock.MockResult(instance=instance, model=model)
