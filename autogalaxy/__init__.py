@@ -50,15 +50,7 @@ from .galaxy.masked_galaxy_data import MaskedGalaxyDataset
 from .hyper import hyper_data
 from .analysis.analysis import AnalysisImaging
 from .analysis.analysis import AnalysisInterferometer
-from autogalaxy.analysis.setup import (
-    SetupPipeline,
-    SetupHyper,
-    SetupLightParametric,
-    SetupLightInversion,
-    SetupMassTotal,
-    SetupMassLightDark,
-    SetupSMBH,
-)
+from autogalaxy.analysis.setup import SetupHyper
 from .plane.plane import Plane
 from .profiles import (
     point_sources as ps,
