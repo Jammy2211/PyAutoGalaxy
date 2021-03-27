@@ -79,7 +79,7 @@ class AnalysisDataset(Analysis):
 
     def associate_hyper_images(self, instance: af.ModelInstance) -> af.ModelInstance:
         """
-        Takes images from the last result, if there is one, and associates them with galaxies in this phase
+        Takes images from the last result, if there is one, and associates them with galaxies in this search
         where full-path galaxy names match.
 
         If the galaxy collection has a different name then an association is not made.
@@ -359,7 +359,7 @@ class AnalysisInterferometer(AnalysisDataset):
         self, instance: af.ModelInstance
     ) -> af.ModelInstance:
         """
-        Takes visibilities from the last result, if there is one, and associates them with galaxies in this phase
+        Takes visibilities from the last result, if there is one, and associates them with galaxies in this search
         where full-path galaxy names match.
 
         If the galaxy collection has a different name then an association is not made.

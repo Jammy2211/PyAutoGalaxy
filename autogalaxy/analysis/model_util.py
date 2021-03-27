@@ -138,7 +138,7 @@ def hyper_model_from(
     setup_hyper : SetupHyper
         The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
     result : af.Result
-        The result of a previous `Analysis` phase whose maximum log likelihood model forms the basis of the hyper model.
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
     include_hyper_image_sky : hd.HyperImageSky
         This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_hyper`.
 
@@ -200,7 +200,7 @@ def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analys
     setup_hyper : SetupHyper
         The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
     result : af.Result
-        The result of a previous `Analysis` phase whose maximum log likelihood model forms the basis of the hyper model.
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
     analysis : Analysis
         An analysis class used to fit imaging or interferometer data with a model.
 
@@ -253,7 +253,7 @@ def stochastic_model_from(
     Parameters
     ----------
     result : af.Result
-        The result of a previous `Analysis` phase whose maximum log likelihood model forms the basis of the hyper model.
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
     include_lens_light : bool
         If `True` and the model includes any `LightProfile`'s, these are fitted for in the model.
     include_pixelization : bool
@@ -273,7 +273,7 @@ def stochastic_model_from(
     """
     if not hasattr(result.model.galaxies, "lens"):
         raise PriorException(
-            "Cannot extend a phase with a stochastic phase if the lens galaxy `Model` "
+            "Cannot extend a search with a stochastic search if the lens galaxy `Model` "
             "is not named `lens`. "
         )
 
@@ -326,7 +326,7 @@ def stochastic_fit(stochastic_model, result, analysis):
     setup_hyper : SetupHyper
         The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
     result : af.Result
-        The result of a previous `Analysis` phase whose maximum log likelihood model forms the basis of the hyper model.
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
     include_hyper_image_sky : hd.HyperImageSky
         This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_hyper`.
 

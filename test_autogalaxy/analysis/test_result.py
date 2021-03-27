@@ -47,7 +47,7 @@ class TestResultAbstract:
         max_log_likelihood_plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
         search = mock.MockSearch(
-            name="test_phase",
+            name="test_search",
             samples=mock.MockSamples(
                 max_log_likelihood_instance=max_log_likelihood_plane
             ),

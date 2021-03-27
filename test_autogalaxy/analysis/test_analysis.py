@@ -69,7 +69,7 @@ class TestAnalysisImaging:
 
         analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
 
-        search = mock.MockSearch(name="test_phase")
+        search = mock.MockSearch(name="test_search")
 
         result = search.fit(model=model, analysis=analysis)
 
@@ -187,7 +187,7 @@ class TestAnalysisInterferometer:
 
         analysis = ag.AnalysisInterferometer(dataset=masked_interferometer_7)
 
-        search = mock.MockSearch(name="test_phase")
+        search = mock.MockSearch(name="test_search")
 
         result = search.fit(model=model, analysis=analysis)
 
@@ -201,9 +201,7 @@ class TestAnalysisInterferometer:
 
         model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
-        analysis = ag.AnalysisInterferometer(
-            dataset=masked_interferometer_7,
-        )
+        analysis = ag.AnalysisInterferometer(dataset=masked_interferometer_7)
 
         instance = model.instance_from_unit_vector([])
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
@@ -228,9 +226,7 @@ class TestAnalysisInterferometer:
             galaxies=af.Collection(galaxy=galaxy),
         )
 
-        analysis = ag.AnalysisInterferometer(
-            dataset=masked_interferometer_7,
-        )
+        analysis = ag.AnalysisInterferometer(dataset=masked_interferometer_7)
 
         instance = model.instance_from_unit_vector([])
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)

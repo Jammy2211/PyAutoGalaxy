@@ -9,7 +9,7 @@ from autogalaxy.galaxy import galaxy as g
 class Result(af.Result):
     def __init__(self, samples, model, analysis, search):
         """
-        The results of a `NonLinearSearch` performed by a phase.
+        The results of a `NonLinearSearch` performed by a search.
 
         Parameters
         ----------
@@ -79,7 +79,7 @@ class ResultDataset(Result):
         Parameters
         ----------
         galaxy
-            A galaxy used in this phase
+            A galaxy used in this search
 
         Returns
         -------
@@ -193,7 +193,7 @@ class ResultInterferometer(ResultDataset):
         Parameters
         ----------
         galaxy
-            A galaxy used in this phase
+            A galaxy used in this search
 
         Returns
         -------

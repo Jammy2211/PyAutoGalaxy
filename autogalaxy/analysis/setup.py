@@ -27,7 +27,7 @@ class SetupHyper:
         """
         The hyper setup of a pipeline, which controls how hyper-features in PyAutoGalaxy template pipelines run,
         for example controlling whether hyper galaxies are used to scale the noise and the non-linear searches used
-        in these phases.
+        in these searchs.
 
         Users can write their own pipelines which do not use or require the *SetupHyper* class.
 
@@ -43,11 +43,11 @@ class SetupHyper:
             If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used include the
             noise-map's background component in the model.
         hyper_search_no_inversion : af.NonLinearSearch or None
-            The `NonLinearSearch` used by every inversion phase.
+            The `NonLinearSearch` used by every inversion search.
         hyper_search_with_inversion : af.NonLinearSearch or None
-            The `NonLinearSearch` used by every hyper combined phase.
+            The `NonLinearSearch` used by every hyper combined search.
         evidence_tolerance : float
-            The evidence tolerance of the non-linear searches used in the hyper phases, whereby higher values will
+            The evidence tolerance of the non-linear searches used in the hyper searchs, whereby higher values will
             lead them to end earlier at the expense of accuracy.
         """
 

@@ -459,11 +459,11 @@ class Galaxy(ModelObject, lensing.LensingObject):
         -----------
         hyper_model_image : np.ndarray
             The best-fit model image to the observed image from a previous analysis
-            phase. This provides the total light attributed to each image pixel by the
+            search. This provides the total light attributed to each image pixel by the
             model.
         hyper_galaxy_image : np.ndarray
             A model image of the galaxy (from light profiles or an inversion) from a
-            previous analysis phase.
+            previous analysis search.
         """
         return self.hyper_galaxy.contribution_map_from_hyper_images(
             hyper_model_image=self.hyper_model_image,
@@ -483,7 +483,7 @@ class HyperGalaxy:
         which determines the fraction of flux in every pixel of the image that can be \
         associated with this particular hyper_galaxies-galaxy. This is computed using \
         hyper_galaxies-hyper_galaxies set (e.g. fitting.fit_data.FitDataHyper), which includes  best-fit \
-        unblurred_image_1d of the galaxy's light from a previous analysis phase.
+        unblurred_image_1d of the galaxy's light from a previous analysis search.
          
         The *HyperGalaxy* class contains the hyper_galaxies-parameters which are associated \
         with this galaxy for scaling the noise-map.
@@ -520,11 +520,11 @@ class HyperGalaxy:
         -----------
         hyper_model_image : np.ndarray
             The best-fit model image to the observed image from a previous analysis
-            phase. This provides the total light attributed to each image pixel by the
+            search. This provides the total light attributed to each image pixel by the
             model.
         hyper_galaxy_image : np.ndarray
             A model image of the galaxy (from light profiles or an inversion) from a
-            previous analysis phase.
+            previous analysis search.
         """
         contribution_map = np.divide(
             hyper_galaxy_image, np.add(hyper_model_image, self.contribution_factor)
