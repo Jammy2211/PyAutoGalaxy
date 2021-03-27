@@ -4,7 +4,7 @@ import typing
 
 """
 Mass and light profiles describe both mass distributions and light distributions with a single set of parameters. This
-means that the light and mass of these profiles are tied together. Galaxy and GalaxyModel instances interpret these
+means that the light and mass of these profiles are tied together. Galaxy instances interpret these
 objects as being both mass and light profiles. 
 """
 

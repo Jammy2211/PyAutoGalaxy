@@ -6,18 +6,8 @@ import numpy as np
 from autogalaxy.galaxy import galaxy as g
 
 
-def last_result_with_use_as_hyper_dataset(results):
-
-    if results is not None:
-        if results.last is not None:
-            for index, result in enumerate(reversed(results)):
-                if hasattr(result, "use_as_hyper_dataset"):
-                    if result.use_as_hyper_dataset:
-                        return result
-
-
 class Result(af.Result):
-    def __init__(self, samples, model, analysis, search, use_as_hyper_dataset=False):
+    def __init__(self, samples, model, analysis, search):
         """
         The results of a `NonLinearSearch` performed by a phase.
 
@@ -32,13 +22,10 @@ class Result(af.Result):
             The Analysis class used by this model-fit to fit the model to the data.
         search : af.NonLinearSearch
             The `NonLinearSearch` search used by this model fit.
-        use_as_hyper_dataset : bool
-            Whether this result's phase contains hyper phases, allowing it to be used a hyper dataset.
         """
         super().__init__(samples=samples, model=model, search=search)
 
         self.analysis = analysis
-        self.use_as_hyper_dataset = use_as_hyper_dataset
 
     @property
     def max_log_likelihood_plane(self):

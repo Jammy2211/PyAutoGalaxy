@@ -143,7 +143,6 @@ class MockResult(af.MockResult):
         hyper_galaxy_visibilities_path_dict=None,
         hyper_model_visibilities=None,
         pixelization=None,
-        use_as_hyper_dataset=False,
     ):
         super().__init__(
             samples=samples,
@@ -162,7 +161,6 @@ class MockResult(af.MockResult):
         self.model_image = model_image
         self.unmasked_model_image = model_image
         self.pixelization = pixelization
-        self.use_as_hyper_dataset = use_as_hyper_dataset
 
         self.max_log_likelihood_plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)])
 
@@ -186,7 +184,6 @@ class MockResults(af.ResultsCollection):
         hyper_galaxy_visibilities_path_dict=None,
         hyper_model_visibilities=None,
         pixelization=None,
-        use_as_hyper_dataset=False,
     ):
         """
         A collection of results from previous phases. Results can be obtained using an index or the name of the phase
@@ -208,7 +205,6 @@ class MockResults(af.ResultsCollection):
             hyper_galaxy_visibilities_path_dict=hyper_galaxy_visibilities_path_dict,
             hyper_model_visibilities=hyper_model_visibilities,
             pixelization=pixelization,
-            use_as_hyper_dataset=use_as_hyper_dataset,
         )
 
         self.__result_list = [result]

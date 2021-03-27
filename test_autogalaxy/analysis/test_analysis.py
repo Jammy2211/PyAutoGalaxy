@@ -35,16 +35,15 @@ class TestAnalysisDataset:
             ),
         }
 
-        results = mock.MockResults(
+        result = mock.MockResult(
             instance=instance,
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
             hyper_model_image=ag.Array2D.full(
                 fill_value=3.0, shape_native=(3, 3), pixel_scales=1.0
             ),
-            use_as_hyper_dataset=True,
         )
 
-        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7, results=results)
+        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7, hyper_result=result)
 
         instance = analysis.associate_hyper_images(instance=instance)
 
@@ -145,13 +144,12 @@ class TestAnalysisImaging:
 
         hyper_galaxy_image_path_dict = {("galaxies", "galaxy"): galaxy_hyper_image}
 
-        results = mock.MockResults(
-            use_as_hyper_dataset=True,
+        result = mock.MockResult(
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
             hyper_model_image=hyper_model_image,
         )
 
-        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7, results=results)
+        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7, hyper_result=result)
 
         hyper_galaxy = ag.HyperGalaxy(
             contribution_factor=1.0, noise_factor=1.0, noise_power=1.0
@@ -204,7 +202,7 @@ class TestAnalysisInterferometer:
         model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
         analysis = ag.AnalysisInterferometer(
-            dataset=masked_interferometer_7, results=mock.MockResults()
+            dataset=masked_interferometer_7,
         )
 
         instance = model.instance_from_unit_vector([])
@@ -231,7 +229,7 @@ class TestAnalysisInterferometer:
         )
 
         analysis = ag.AnalysisInterferometer(
-            dataset=masked_interferometer_7, results=mock.MockResults()
+            dataset=masked_interferometer_7,
         )
 
         instance = model.instance_from_unit_vector([])

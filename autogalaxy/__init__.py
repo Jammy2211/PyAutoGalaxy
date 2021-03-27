@@ -45,7 +45,6 @@ from .fit.fit import FitImaging, FitInterferometer
 from .galaxy.fit_galaxy import FitGalaxy
 from .galaxy.galaxy import Galaxy, HyperGalaxy, Redshift
 from .galaxy.galaxy_data import GalaxyData
-from .galaxy.galaxy_model import GalaxyModel
 from .galaxy.masked_galaxy_data import MaskedGalaxyDataset
 from .hyper import hyper_data
 from .analysis.analysis import AnalysisImaging

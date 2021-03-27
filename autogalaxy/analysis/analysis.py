@@ -16,9 +16,9 @@ from autogalaxy.analysis import result as res
 
 
 class Analysis(af.Analysis):
-    def __init__(self, results=None, cosmology=cosmo.Planck15):
+    def __init__(self, hyper_result=None, cosmology=cosmo.Planck15):
 
-        self.results = results
+        self.hyper_result = hyper_result
         self.cosmology = cosmology
 
     # def save_settings(self, paths: af.Paths):
@@ -33,7 +33,7 @@ class AnalysisDataset(Analysis):
     def __init__(
         self,
         dataset,
-        results=None,
+        hyper_result=None,
         cosmology=cosmo.Planck15,
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
@@ -41,15 +41,13 @@ class AnalysisDataset(Analysis):
         use_result_as_hyper_dataset=False,
     ):
 
-        super().__init__(results=results, cosmology=cosmology)
+        super().__init__(hyper_result=hyper_result, cosmology=cosmology)
 
         self.dataset = dataset
 
-        result = res.last_result_with_use_as_hyper_dataset(results=results)
+        if self.hyper_result is not None:
 
-        if result is not None:
-
-            self.set_hyper_dataset(result=result)
+            self.set_hyper_dataset(result=self.hyper_result)
 
         else:
 
@@ -151,7 +149,7 @@ class AnalysisImaging(AnalysisDataset):
     def __init__(
         self,
         dataset,
-        results=None,
+        hyper_result=None,
         cosmology=cosmo.Planck15,
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
@@ -161,7 +159,7 @@ class AnalysisImaging(AnalysisDataset):
 
         super().__init__(
             dataset=dataset,
-            results=results,
+            hyper_result=hyper_result,
             cosmology=cosmology,
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
@@ -271,11 +269,7 @@ class AnalysisImaging(AnalysisDataset):
         self, samples: af.PDFSamples, model: af.Collection, search: af.NonLinearSearch
     ):
         return res.ResultImaging(
-            samples=samples,
-            model=model,
-            analysis=self,
-            search=search,
-            use_as_hyper_dataset=self.use_result_as_hyper_dataset,
+            samples=samples, model=model, analysis=self, search=search
         )
 
     def make_attributes(self):
@@ -290,7 +284,7 @@ class AnalysisInterferometer(AnalysisDataset):
     def __init__(
         self,
         dataset,
-        results=None,
+        hyper_result=None,
         cosmology=cosmo.Planck15,
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
@@ -300,7 +294,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         super().__init__(
             dataset=dataset,
-            results=results,
+            hyper_result=hyper_result,
             cosmology=cosmology,
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
@@ -308,11 +302,9 @@ class AnalysisInterferometer(AnalysisDataset):
             use_result_as_hyper_dataset=use_result_as_hyper_dataset,
         )
 
-        result = res.last_result_with_use_as_hyper_dataset(results=results)
+        if self.hyper_result is not None:
 
-        if result is not None:
-
-            self.set_hyper_dataset(result=result)
+            self.set_hyper_dataset(result=self.hyper_result)
 
         else:
 
@@ -457,11 +449,7 @@ class AnalysisInterferometer(AnalysisDataset):
         self, samples: af.PDFSamples, model: af.Collection, search: af.NonLinearSearch
     ):
         return res.ResultInterferometer(
-            samples=samples,
-            model=model,
-            analysis=self,
-            search=search,
-            use_as_hyper_dataset=self.use_result_as_hyper_dataset,
+            samples=samples, model=model, analysis=self, search=search
         )
 
     def make_attributes(self):

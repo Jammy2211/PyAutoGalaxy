@@ -19,39 +19,57 @@ simple analysis which fits a galaxy's light.
 
     import os
 
-    # In this example, we'll fit an image of a single galaxy .
-    dataset_path = '{}/../data/'.format(os.path.dirname(os.path.realpath(__file__)))
-
-    galaxy_name = 'example_galaxy'
-
-    # Use the relative path to the dataset to load the imaging data.
+    """
+    Load Imaging data of the strong lens from the dataset folder of the workspace.
+    """
     imaging = ag.Imaging.from_fits(
-        image_path=dataset_path + galaxy_name + '/image.fits',
-        psf_path=dataset_path+galaxy_name+'/psf.fits',
-        noise_map_path=dataset_path+galaxy_name+'/noise_map.fits',
-        pixel_scales=0.1)
+        image_path="/path/to/dataset/image.fits",
+        noise_map_path="/path/to/dataset/noise_map.fits",
+        psf_path="/path/to/dataset/psf.fits",
+        pixel_scales=0.1,
+    )
 
-    # Create a mask for the data, which we setup as a 3.0" circle.
-    mask = ag.Mask2D.circular(shape_native=imaging.shape_native, pixel_scales=imaging.pixel_scales, radius=3.0)
+    """
+    Create a mask for the data, which we setup as a 3.0" circle.
+    """
+    mask = ag.Mask2D.circular(
+        shape_native=imaging.shape_native, pixel_scales=imaging.pixel_scales, radius=3.0
+    )
 
-    # We model our galaxy using a light profile (an elliptical Sersic).
+    """
+    We model the galaxy using an EllipticalSersic LightProfile.
+    """
     light_profile = ag.lp.EllipticalSersic
 
-    # To setup our model galaxy, we use the GalaxyModel class, which represents a galaxy whose parameters
-    # are free & fitted for by PyAutoGalaxy. The galaxy is also assigned a redshift.
-    galaxy_model = ag.GalaxyModel(redshift=1.0, light=light_profile)
+    """
+    We next setup this profile as model components whose parameters are free & fitted for
+    by setting up a Galaxy as a Model.
+    """
+    galaxy_model = af.Model(ag.Galaxy, redshift=1.0, light=light_profile)
+    model = af.Collection(galaxy=_galaxy_model)
 
-    # To perform the analysis we set up a phase, which takes our galaxy model & fits its parameters using a non-linear
-    # search (in this case, MultiNest).
-    phase = ag.PhaseImaging(
-        galaxies=dict(galaxy=galaxy_model),
-        name='example/phase_example',
-        search=af.DynestyStatic()
-        )
+    """
+    We define the non-linear search used to fit the model to the data (in this case, Dynesty).
+    """
+    search = af.DynestyStatic(name="search[example]", n_live_points=50)
+    
+    """
+    We next set up the `Analysis`, which contains the `log likelihood function` that the
+    non-linear search calls to fit the lens model to the data.
+    """
+    analysis = ag.AnalysisImaging(dataset=masked_imaging)
 
-    # We pass the imaging ``data`` and mask to the phase, thereby fitting it with the galaxy model & plot the resulting fit.
-    result = phase.run(data=imaging, mask=mask)
-    ag.plot.FitImaging.subplot_fit_imaging(fit=result.max_log_likelihood_fit)
+    """
+    To perform the model-fit we pass the model and analysis to the search's fit method. This will
+    output results (e.g., dynesty samples, model parameters, visualization) to hard-disk.
+    """
+    result = search.fit(model=model, analysis=analysis)
+
+    """
+    The results contain information on the fit, for example the maximum likelihood
+    model from the Dynesty parameter space search.
+    """
+    print(result.samples.max_log_likelihood_instance)
 
 Getting Started
 ---------------

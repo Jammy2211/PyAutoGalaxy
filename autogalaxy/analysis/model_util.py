@@ -33,7 +33,7 @@ def pixelization_from(model: af.Collection) -> pix.Pixelization:
     a model.
     
     This function expects that the input model is a `Collection` where the first model-component has the
-    name `galaxies`, and is itself a `Collection` of `Galaxy` and `GalaxyModel` instances. This is the
+    name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
     standard API for creating a model in PyAutoGalaxy.
 
     The result of `pixelization_from_model` is used by the preloading to determine whether certain parts of a
@@ -65,7 +65,7 @@ def has_pixelization_from_model(model: af.Collection):
     `Pixelization` otherwise return `False`.
 
     This function expects that the input model is a `Collection` where the first model-component has the
-    name `galaxies`, and is itself a `Collection` of `Galaxy` and `GalaxyModel` instances. This is the
+    name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
     standard API for creating a model in PyAutoGalaxy.
 
     The result of `has_pixelization_from_model` is used by the preloading to determine whether certain parts of a
@@ -94,7 +94,7 @@ def pixelization_is_model_from(model: af.Collection):
     in the non-linear search.
 
     This function expects that the input model is a `Collection` where the first model-component has the
-    name `galaxies`, and is itself a `Collection` of `Galaxy` and `GalaxyModel` instances. This is the
+    name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
     standard API for creating a model in PyAutoGalaxy.
 
     The result of `pixelization_is_model_from_model` is used by the preloading to determine whether certain parts of a
@@ -217,7 +217,6 @@ def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analys
     setup_hyper.search.paths.path_prefix = result.search.paths.path_prefix
     setup_hyper.search.paths.name = f"{result.search.paths.name}__hyper"
 
-    result.use_as_hyper_dataset = True
     analysis.set_hyper_dataset(result=result)
 
     hyper_result = setup_hyper.search.fit(model=hyper_model, analysis=analysis)
@@ -274,7 +273,7 @@ def stochastic_model_from(
     """
     if not hasattr(result.model.galaxies, "lens"):
         raise PriorException(
-            "Cannot extend a phase with a stochastic phase if the lens galaxy `GalaxyModel` "
+            "Cannot extend a phase with a stochastic phase if the lens galaxy `Model` "
             "is not named `lens`. "
         )
 
