@@ -36,13 +36,13 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
             light_profile_centres=self.extract_2d(
                 "light_profile_centres",
                 self.plane.extract_attribute(
-                    cls=light_profiles.LightProfile, name="centre"
+                    cls=light_profiles.LightProfile, attr_name="centre"
                 ),
             ),
             mass_profile_centres=self.extract_2d(
                 "mass_profile_centres",
                 self.plane.extract_attribute(
-                    cls=mass_profiles.MassProfile, name="centre"
+                    cls=mass_profiles.MassProfile, attr_name="centre"
                 ),
             ),
         )

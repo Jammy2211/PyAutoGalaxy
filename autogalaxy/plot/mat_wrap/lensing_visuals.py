@@ -7,7 +7,7 @@ from autoarray.plot.mat_wrap import visuals as vis
 
 from matplotlib import patches as ptch
 import typing
-from typing import List
+from typing import List, Union, Optional
 
 
 class Visuals1D(vis.Visuals1D):
@@ -21,7 +21,7 @@ class Visuals2D(vis.Visuals2D):
         origin: grid_2d.Grid2D = None,
         border: grid_2d.Grid2D = None,
         mask: mask_2d.Mask2D = None,
-        positions: grid_2d_irregular.Grid2DIrregular = None,
+        positions: Optional[Union[grid_2d_irregular.Grid2DIrregular, List[grid_2d_irregular.Grid2DIrregular]]] = None,
         grid: grid_2d.Grid2D = None,
         pixelization_grid: grid_2d.Grid2D = None,
         vector_field: vector_field_irregular.VectorField2DIrregular = None,

@@ -340,19 +340,19 @@ class TestExtractObject:
         sis = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
         einstein_radii = sis.extract_attribute(
-            cls=ag.mp.MassProfile, name="einstein_radius"
+            cls=ag.mp.MassProfile, attr_name="einstein_radius"
         )
 
         assert einstein_radii.in_list[0] == 2.0
 
-        centres = sis.extract_attribute(cls=ag.mp.MassProfile, name="centre")
+        centres = sis.extract_attribute(cls=ag.mp.MassProfile, attr_name="centre")
 
         assert centres.in_list[0] == (0.0, 0.0)
 
         assert (
-            sis.extract_attribute(cls=ag.mp.MassProfile, name="einstein_radiu") == None
+                sis.extract_attribute(cls=ag.mp.MassProfile, attr_name="einstein_radiu") == None
         )
-        sis.extract_attribute(cls=ag.lp.LightProfile, name="einstein_radius")
+        sis.extract_attribute(cls=ag.lp.LightProfile, attr_name="einstein_radius")
 
 
 class TestRegression:

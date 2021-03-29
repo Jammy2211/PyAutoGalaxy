@@ -62,7 +62,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             light_profile_centres=self.extract_2d(
                 "light_profile_centres",
                 self.lensing_obj.extract_attribute(
-                    cls=light_profiles.LightProfile, name="centre"
+                    cls=light_profiles.LightProfile, attr_name="centre"
                 ),
             )
         )

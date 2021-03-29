@@ -1227,7 +1227,7 @@ class TestExtract:
 
         galaxy = ag.Galaxy(redshift=0.5)
 
-        values = galaxy.extract_attribute(cls=ag.lp.LightProfile, name="value")
+        values = galaxy.extract_attribute(cls=ag.lp.LightProfile, attr_name="value")
 
         assert values == None
 
@@ -1238,11 +1238,11 @@ class TestExtract:
             lp_2=mock.MockLightProfile(value=0.7, value1=(4.0, 5.0)),
         )
 
-        values = galaxy.extract_attribute(cls=ag.lp.LightProfile, name="value")
+        values = galaxy.extract_attribute(cls=ag.lp.LightProfile, attr_name="value")
 
         assert values.in_list == [0.9, 0.8, 0.7]
 
-        values = galaxy.extract_attribute(cls=ag.lp.LightProfile, name="value1")
+        values = galaxy.extract_attribute(cls=ag.lp.LightProfile, attr_name="value1")
 
         assert values.in_list == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
 
@@ -1255,7 +1255,7 @@ class TestExtract:
             lp_2=mock.MockLightProfile(value=3.0),
         )
 
-        values = galaxy.extract_attribute(cls=ag.lp.LightProfile, name="value")
+        values = galaxy.extract_attribute(cls=ag.lp.LightProfile, attr_name="value")
 
         assert values.in_list == [1.0, 2.0, 3.0]
 

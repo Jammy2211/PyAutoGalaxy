@@ -141,7 +141,7 @@ class AbstractPlane(lensing.LensingObject):
             galaxy.mass_profiles for galaxy in self.galaxies if galaxy.has_mass_profile
         ]
 
-    def extract_attribute(self, cls, name):
+    def extract_attribute(self, cls, attr_name):
         """
         Returns an attribute of a class in `Plane` as a `ValueIrregular` or `Grid2DIrregular` object.
 
@@ -172,7 +172,7 @@ class AbstractPlane(lensing.LensingObject):
                 return None
 
         attributes = [
-            extract(value, name)
+            extract(value, attr_name)
             for galaxy in self.galaxies
             for value in galaxy.__dict__.values()
             if isinstance(value, cls)
@@ -185,7 +185,7 @@ class AbstractPlane(lensing.LensingObject):
         elif isinstance(attributes[0], tuple):
             return grid_2d_irregular.Grid2DIrregular(grid=attributes)
 
-    def extract_attributes_of_galaxies(self, cls, name, filter_nones=False):
+    def extract_attributes_of_galaxies(self, cls, attr_name, filter_nones=False):
         """
         Returns an attribute of a class in the plane as a list of `ValueIrregular` or `Grid2DIrregular` objects,
         where the list indexes correspond to each galaxy in the plane..
@@ -216,15 +216,15 @@ class AbstractPlane(lensing.LensingObject):
         if filter_nones:
 
             return [
-                galaxy.extract_attribute(cls=cls, name=name)
+                galaxy.extract_attribute(cls=cls, attr_name=attr_name)
                 for galaxy in self.galaxies
-                if galaxy.extract_attribute(cls=cls, name=name) is not None
+                if galaxy.extract_attribute(cls=cls, attr_name=attr_name) is not None
             ]
 
         else:
 
             return [
-                galaxy.extract_attribute(cls=cls, name=name) for galaxy in self.galaxies
+                galaxy.extract_attribute(cls=cls, attr_name=attr_name) for galaxy in self.galaxies
             ]
 
 

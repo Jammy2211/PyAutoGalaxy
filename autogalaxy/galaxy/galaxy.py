@@ -135,7 +135,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
     def has_profile(self):
         return len(self.mass_profiles) + len(self.light_profiles) > 0
 
-    def extract_attribute(self, cls, name):
+    def extract_attribute(self, cls, attr_name):
         """
         Returns an attribute of a class and its children profiles in the the galaxy as a `ValueIrregular`
         or `Grid2DIrregular` object.
@@ -167,7 +167,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 return None
 
         attributes = [
-            extract(value, name)
+            extract(value, attr_name)
             for value in self.__dict__.values()
             if isinstance(value, cls)
         ]

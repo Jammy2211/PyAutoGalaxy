@@ -162,7 +162,10 @@ class LensingObject:
 
         return array_2d.Array2D(array=1 / det_jacobian, mask=grid.mask)
 
-    def hessian_from_grid(self, grid, buffer=0.01):
+    def hessian_from_grid(self, grid, buffer=0.01, deflections_func=None):
+
+        if deflections_func is None:
+            deflections_func = self.deflections_from_grid
 
         grid_shift_y_up = np.zeros(grid.shape)
         grid_shift_y_up[:, 0] = grid[:, 0] + buffer
@@ -180,10 +183,10 @@ class LensingObject:
         grid_shift_x_right[:, 0] = grid[:, 0]
         grid_shift_x_right[:, 1] = grid[:, 1] + buffer
 
-        deflections_up = self.deflections_from_grid(grid=grid_shift_y_up)
-        deflections_down = self.deflections_from_grid(grid=grid_shift_y_down)
-        deflections_left = self.deflections_from_grid(grid=grid_shift_x_left)
-        deflections_right = self.deflections_from_grid(grid=grid_shift_x_right)
+        deflections_up = deflections_func(grid=grid_shift_y_up)
+        deflections_down = deflections_func(grid=grid_shift_y_down)
+        deflections_left = deflections_func(grid=grid_shift_x_left)
+        deflections_right = deflections_func(grid=grid_shift_x_right)
 
         hessian_yy = 0.5 * (deflections_up[:, 0] - deflections_down[:, 0]) / buffer
         hessian_xy = 0.5 * (deflections_up[:, 1] - deflections_down[:, 1]) / buffer
@@ -213,10 +216,10 @@ class LensingObject:
             array_slim=(shear_x ** 2 + shear_y ** 2) ** 0.5
         )
 
-    def magnification_via_hessian_from_grid(self, grid, buffer=0.01):
+    def magnification_via_hessian_from_grid(self, grid, buffer=0.01, deflections_func=None):
 
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(
-            grid=grid, buffer=buffer
+            grid=grid, buffer=buffer, deflections_func=deflections_func
         )
 
         det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx

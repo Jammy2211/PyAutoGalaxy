@@ -6,7 +6,6 @@ from scipy.optimize import root_scalar
 from scipy.special import wofz, comb
 from autoarray.structures.arrays import values
 from autoarray.structures.grids.two_d import grid_2d_irregular
-from autoarray.structures.grids import grid_decorators
 from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy import exc
@@ -28,7 +27,7 @@ class MassProfile(lensing.LensingObject):
     def with_new_normalization(self, normalization):
         raise NotImplementedError()
 
-    def extract_attribute(self, cls, name):
+    def extract_attribute(self, cls, attr_name):
         """
         Returns an attribute of a class and its children profiles in the the galaxy as a `ValueIrregular`
         or `Grid2DIrregular` object.
@@ -53,9 +52,9 @@ class MassProfile(lensing.LensingObject):
         """
 
         if isinstance(self, cls):
-            if hasattr(self, name):
+            if hasattr(self, attr_name):
 
-                attribute = getattr(self, name)
+                attribute = getattr(self, attr_name)
 
                 if isinstance(attribute, float):
                     return values.ValuesIrregular(values=[attribute])

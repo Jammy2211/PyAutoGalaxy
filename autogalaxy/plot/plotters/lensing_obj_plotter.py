@@ -67,7 +67,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             mass_profile_centres=self.extract_2d(
                 "mass_profile_centres",
                 self.lensing_obj.extract_attribute(
-                    cls=mass_profiles.MassProfile, name="centre"
+                    cls=mass_profiles.MassProfile, attr_name="centre"
                 ),
             ),
             critical_curves=self.extract_2d(
