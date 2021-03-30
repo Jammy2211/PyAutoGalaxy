@@ -460,7 +460,9 @@ class MassProfileMGE:
 
         angle *= np.sqrt((2.0 * np.pi) / (1.0 - axis_ratio ** 2.0))
 
-        return self.rotate_grid_from_profile(np.vstack((-angle.imag, angle.real)).T)
+        return self.rotate_grid_from_reference_frame(
+            np.vstack((-angle.imag, angle.real)).T
+        )
 
 
 def w_f_approx(z):

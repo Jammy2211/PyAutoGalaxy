@@ -10,9 +10,32 @@ import typing
 from typing import List, Union, Optional
 
 
-class Visuals1D(vis.Visuals1D):
 
-    pass
+class Visuals1D(vis.Visuals1D):
+    def __init__(
+        self,
+        half_light_radius: Optional[float] = None,
+        einstein_radius: Optional[float] = None,
+    ):
+
+        super().__init__()
+
+        self.half_light_radius = half_light_radius
+        self.einstein_radius = einstein_radius
+
+    def plot_via_plotter(self, plotter, grid_indexes=None, mapper=None):
+
+        super().plot_via_plotter(plotter=plotter)
+
+        if self.half_light_radius is not None:
+            plotter.half_light_radius_axvline.axvline_vertical_line(
+                vertical_line=self.half_light_radius, label="Half-light Radius"
+            )
+
+        if self.einstein_radius is not None:
+            plotter.einstein_radius_axvline.axvline_vertical_line(
+                vertical_line=self.einstein_radius, label="Einstein Radius"
+            )
 
 
 class Visuals2D(vis.Visuals2D):

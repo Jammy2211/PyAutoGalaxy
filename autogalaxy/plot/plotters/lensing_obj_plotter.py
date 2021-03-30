@@ -1,8 +1,10 @@
 from autoarray.structures.arrays.two_d import array_2d
+from autoarray.structures.grids.one_d import grid_1d
 from autoarray.structures.grids.two_d import grid_2d
 from autoarray.structures.grids.two_d import grid_2d_irregular
 from autoarray.plot.plotters import abstract_plotters
 from autoarray.plot.mat_wrap import mat_plot as mp
+from autogalaxy import lensing
 from autogalaxy.profiles import mass_profiles
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 
@@ -10,7 +12,7 @@ from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_
 class LensingObjPlotter(abstract_plotters.AbstractPlotter):
     def __init__(
         self,
-        lensing_obj,
+        lensing_obj: lensing.LensingObject,
         grid: grid_2d.Grid2D,
         mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
         visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
@@ -32,9 +34,29 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         self.grid = grid
 
     @property
+    def visuals_with_include_1d(self) -> lensing_visuals.Visuals1D:
+        """
+        Extract from the `LensingObj` attributes that can be plotted and return them in a `Visuals1D` object.
+
+        Only attributes with `True` entries in the `Include` object are extracted for plotting.
+
+        From a `LensingObjProfilePlotter` the following 1D attributes can be extracted for plotting:
+
+        - einstein_radius: the Einstein radius of the `MassProfile`.
+
+        Returns
+        -------
+        vis.Visuals1D
+            The collection of attributes that can be plotted by a `Plotter1D` object.
+        """
+        return self.visuals_1d + self.visuals_1d.__class__(
+            einstein_radius=self.lensing_obj.einstein_radius_from_grid(grid=self.grid)
+        )
+
+    @property
     def visuals_with_include_2d(self) -> lensing_visuals.Visuals2D:
         """
-        Extracts from a `Structure` attributes that can be plotted and return them in a `Visuals` object.
+        Extract from the `LensingObj` attributes that can be plotted and return them in a `Visuals` object.
 
         Only attributes with `True` entries in the `Include` object are extracted for plotting.
 
@@ -76,6 +98,49 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
                 "critical_curves",
             ),
         )
+
+    def figures_1d(self, convergence=False, potential=False):
+
+        grid_2d_radial_projected = self.grid.grid_2d_radial_projected_from(
+            centre=self.lensing_obj.centre, angle=self.lensing_obj.phi
+        )
+
+        radial_distances = grid_2d_radial_projected.distances_from_coordinate()
+
+        grid_1d_radial_distances = grid_1d.Grid1D.manual_native(
+            grid=radial_distances,
+            pixel_scales=abs(radial_distances[0] - radial_distances[1]),
+        )
+
+        if convergence:
+
+            self.mat_plot_1d.plot_yx(
+                y=self.lensing_obj.convergence_from_grid(grid=grid_2d_radial_projected),
+                x=grid_1d_radial_distances,
+                visuals_1d=self.visuals_with_include_1d,
+                auto_labels=mp.AutoLabels(
+                    title="Convergence vs Radius",
+                    ylabel="Convergence ",
+                    xlabel="Radius",
+                    legend=self.lensing_obj.__class__.__name__,
+                    filename="convergence_1d",
+                ),
+            )
+
+        if potential:
+
+            self.mat_plot_1d.plot_yx(
+                y=self.lensing_obj.potential_from_grid(grid=grid_2d_radial_projected),
+                x=grid_1d_radial_distances,
+                visuals_1d=self.visuals_with_include_1d,
+                auto_labels=mp.AutoLabels(
+                    title="Potential vs Radius",
+                    ylabel="Potential ",
+                    xlabel="Radius",
+                    legend=self.lensing_obj.__class__.__name__,
+                    filename="potential_1d",
+                ),
+            )
 
     def figures(
         self,

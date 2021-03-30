@@ -354,9 +354,14 @@ def make_voronoi_mapper_9_3x3():
     return fixtures.make_voronoi_mapper_9_3x3()
 
 
+@pytest.fixture(name="include_1d_all")
+def make_include_1d_all():
+    return fixtures.make_include_1d_all()
+
+
 @pytest.fixture(name="include_2d_all")
-def make_include_all():
-    return fixtures.make_include_all()
+def make_include_2d_all():
+    return fixtures.make_include_2d_all()
 
 
 @pytest.fixture(name="samples_with_result")
@@ -372,3 +377,4 @@ def make_analysis_imaging_7x7():
 @pytest.fixture(name="analysis_interferometer_7")
 def make_analysis_interferometer_7():
     return fixtures.make_analysis_interferometer_7()
+
