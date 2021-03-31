@@ -161,7 +161,7 @@ class SimulatorImaging(imaging.SimulatorImaging):
             grid=grid, psf_shape_2d=self.psf.shape_native
         )
 
-        imaging = self.from_image(image=image.slim_binned, name=name)
+        imaging = self.from_image(image=image.binned, name=name)
 
         return imaging.trimmed_after_convolution_from(
             kernel_shape=self.psf.shape_native

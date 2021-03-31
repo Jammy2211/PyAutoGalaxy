@@ -93,7 +93,7 @@ class TestGalaxyFitData:
         )
 
         assert isinstance(galaxy_fit_data.grid, ag.Grid2DIterate)
-        assert (galaxy_fit_data.grid.slim_binned == grid_iterate_7x7).all()
+        assert (galaxy_fit_data.grid.binned == grid_iterate_7x7).all()
 
         galaxy_fit_data = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7,
@@ -176,7 +176,7 @@ class TestGalaxyFitData:
 
         image = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
 
-        assert (image.slim_binned == np.ones(9)).all()
+        assert (image.binned == np.ones(9)).all()
 
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.SphericalSersic(intensity=1.0))
 
@@ -249,7 +249,7 @@ class TestGalaxyFitData:
 
         convergence = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
 
-        assert (convergence.slim_binned == np.ones(9)).all()
+        assert (convergence.binned == np.ones(9)).all()
 
         galaxy = ag.Galaxy(
             redshift=0.5, mass=ag.mp.SphericalIsothermal(einstein_radius=1.0)
@@ -326,7 +326,7 @@ class TestGalaxyFitData:
 
         potential = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
 
-        assert (potential.slim_binned == np.ones(9)).all()
+        assert (potential.binned == np.ones(9)).all()
 
         galaxy = ag.Galaxy(
             redshift=0.5, mass=ag.mp.SphericalIsothermal(einstein_radius=1.0)
@@ -402,7 +402,7 @@ class TestGalaxyFitData:
             galaxies=[galaxy]
         )
 
-        assert (deflections_y.slim_binned == np.ones(9)).all()
+        assert (deflections_y.binned == np.ones(9)).all()
 
         galaxy = ag.Galaxy(
             redshift=0.5, mass=ag.mp.SphericalIsothermal(einstein_radius=1.0)
@@ -430,7 +430,7 @@ class TestGalaxyFitData:
             galaxies=[galaxy]
         )
 
-        assert (deflections_gal[:, 0] == deflections_gd.slim_binned).all()
+        assert (deflections_gal[:, 0] == deflections_gd.binned).all()
 
     def test__gal_data_7x7_deflections_x(self, gal_data_7x7, sub_mask_7x7):
         galaxy_fit_data = ag.MaskedGalaxyDataset(
@@ -497,7 +497,7 @@ class TestGalaxyFitData:
             galaxies=[galaxy]
         )
 
-        assert (deflections_x.slim_binned == np.ones(9)).all()
+        assert (deflections_x.binned == np.ones(9)).all()
 
         galaxy = ag.Galaxy(
             redshift=0.5, mass=ag.mp.SphericalIsothermal(einstein_radius=1.0)
@@ -525,7 +525,7 @@ class TestGalaxyFitData:
             galaxies=[galaxy]
         )
 
-        assert (deflections_gal[:, 1] == deflections_gd.slim_binned).all()
+        assert (deflections_gal[:, 1] == deflections_gd.binned).all()
 
     def test__no_use_method__raises_exception(
         self, image_7x7, noise_map_7x7, sub_mask_7x7

@@ -61,7 +61,7 @@ class TestMaskedInterferometer:
             settings=ag.SettingsMaskedInterferometer(grid_class=ag.Grid2D),
         )
 
-        assert (masked_interferometer_7.grid.slim_binned == grid_7x7).all()
+        assert (masked_interferometer_7.grid.binned == grid_7x7).all()
         assert (masked_interferometer_7.grid == sub_grid_7x7).all()
 
         grid = ag.Grid2D.from_mask(mask=sub_mask_7x7)

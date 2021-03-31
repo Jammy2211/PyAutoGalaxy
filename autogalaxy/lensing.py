@@ -220,7 +220,9 @@ class LensingObject:
             array_slim=(shear_x ** 2 + shear_y ** 2) ** 0.5
         )
 
-    def magnification_via_hessian_from_grid(self, grid, buffer=0.01, deflections_func=None):
+    def magnification_via_hessian_from_grid(
+        self, grid, buffer=0.01, deflections_func=None
+    ):
 
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(
             grid=grid, buffer=buffer, deflections_func=deflections_func

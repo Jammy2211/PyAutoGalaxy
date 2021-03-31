@@ -184,7 +184,7 @@ class TestCompareToManual:
         model_data = galaxy.image_from_grid(grid=masked_galaxy_dataset.grid)
 
         residual_map = ag.util.fit.residual_map_from(
-            data=masked_galaxy_dataset.image, model_data=model_data.slim_binned
+            data=masked_galaxy_dataset.image, model_data=model_data.binned
         )
 
         assert residual_map == pytest.approx(fit.residual_map, 1e-4)
@@ -225,7 +225,7 @@ class TestCompareToManual:
         model_data = galaxy.convergence_from_grid(grid=masked_galaxy_dataset.grid)
 
         residual_map = ag.util.fit.residual_map_from(
-            data=masked_galaxy_dataset.image, model_data=model_data.slim_binned
+            data=masked_galaxy_dataset.image, model_data=model_data.binned
         )
         assert residual_map == pytest.approx(fit.residual_map, 1e-4)
 
@@ -265,7 +265,7 @@ class TestCompareToManual:
         model_data = galaxy.potential_from_grid(grid=masked_galaxy_dataset.grid)
 
         residual_map = ag.util.fit.residual_map_from(
-            data=masked_galaxy_dataset.image, model_data=model_data.slim_binned
+            data=masked_galaxy_dataset.image, model_data=model_data.binned
         )
 
         assert residual_map == pytest.approx(fit.residual_map, 1e-4)
@@ -306,7 +306,7 @@ class TestCompareToManual:
 
         model_data = galaxy.deflections_from_grid(
             grid=masked_galaxy_dataset.grid
-        ).slim_binned[:, 0]
+        ).binned[:, 0]
 
         residual_map = ag.util.fit.residual_map_from(
             data=masked_galaxy_dataset.image, model_data=model_data
@@ -349,7 +349,7 @@ class TestCompareToManual:
 
         model_data = galaxy.deflections_from_grid(
             grid=masked_galaxy_dataset.grid
-        ).slim_binned[:, 1]
+        ).binned[:, 1]
 
         residual_map = ag.util.fit.residual_map_from(
             data=masked_galaxy_dataset.image, model_data=model_data

@@ -593,7 +593,7 @@ class TestConvergenceViajacobian:
             convergence_via_jacobian.slim - convergence_via_calculation.slim
         )
 
-        assert convergence_via_jacobian.native_binned.shape == (20, 20)
+        assert convergence_via_jacobian.binned.native.shape == (20, 20)
         assert mean_error < 1e-1
 
         mean_error = np.mean(
@@ -1004,7 +1004,7 @@ class TestGridBinning:
             deflections[0] + deflections[1] + deflections[2] + deflections[3]
         ) / 4
 
-        assert deflections.slim_binned[0] == pytest.approx(
+        assert deflections.binned[0] == pytest.approx(
             deflections_first_binned_pixel, 1e-4
         )
 
@@ -1012,7 +1012,7 @@ class TestGridBinning:
             deflections[399] + deflections[398] + deflections[397] + deflections[396]
         ) / 4
 
-        assert deflections.slim_binned[99] == pytest.approx(
+        assert deflections.binned[99] == pytest.approx(
             deflections_100th_binned_pixel, 1e-4
         )
 
@@ -1025,9 +1025,9 @@ class TestGridBinning:
             + jacobian[0][0][3]
         ) / 4
 
-        assert jacobian[0][0].native_binned.shape == (10, 10)
+        assert jacobian[0][0].binned.native.shape == (10, 10)
         assert jacobian[0][0].sub_shape_native == (20, 20)
-        assert jacobian[0][0].slim_binned[0] == pytest.approx(
+        assert jacobian[0][0].binned[0] == pytest.approx(
             jacobian_1st_pixel_binned_up, 1e-4
         )
 
@@ -1038,7 +1038,7 @@ class TestGridBinning:
             + jacobian[0][0][396]
         ) / 4
 
-        assert jacobian[0][0].slim_binned[99] == pytest.approx(
+        assert jacobian[0][0].binned[99] == pytest.approx(
             jacobian_last_pixel_binned_up, 1e-4
         )
 
@@ -1051,7 +1051,7 @@ class TestGridBinning:
             + shear_via_jacobian[3]
         ) / 4
 
-        assert shear_via_jacobian.slim_binned[0] == pytest.approx(
+        assert shear_via_jacobian.binned[0] == pytest.approx(
             shear_1st_pixel_binned_up, 1e-4
         )
 
@@ -1062,7 +1062,7 @@ class TestGridBinning:
             + shear_via_jacobian[396]
         ) / 4
 
-        assert shear_via_jacobian.slim_binned[99] == pytest.approx(
+        assert shear_via_jacobian.binned[99] == pytest.approx(
             shear_last_pixel_binned_up, 1e-4
         )
 
@@ -1075,7 +1075,7 @@ class TestGridBinning:
             + tangential_eigen_values[3]
         ) / 4
 
-        assert tangential_eigen_values.slim_binned[0] == pytest.approx(
+        assert tangential_eigen_values.binned[0] == pytest.approx(
             first_pixel_binned_up, 1e-4
         )
 
@@ -1086,7 +1086,7 @@ class TestGridBinning:
             + tangential_eigen_values[396]
         ) / 4
 
-        assert tangential_eigen_values.slim_binned[99] == pytest.approx(
+        assert tangential_eigen_values.binned[99] == pytest.approx(
             pixel_10000_from_av_sub_grid, 1e-4
         )
 
@@ -1099,7 +1099,7 @@ class TestGridBinning:
             + radial_eigen_values[3]
         ) / 4
 
-        assert radial_eigen_values.slim_binned[0] == pytest.approx(
+        assert radial_eigen_values.binned[0] == pytest.approx(
             first_pixel_binned_up, 1e-4
         )
 
@@ -1110,6 +1110,6 @@ class TestGridBinning:
             + radial_eigen_values[396]
         ) / 4
 
-        assert radial_eigen_values.slim_binned[99] == pytest.approx(
+        assert radial_eigen_values.binned[99] == pytest.approx(
             pixel_10000_from_av_sub_grid, 1e-4
         )

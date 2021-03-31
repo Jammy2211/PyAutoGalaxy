@@ -90,7 +90,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         blurring_image = self.image_from_grid(grid=blurring_grid)
 
         return psf.convolved_array_from_array_and_mask(
-            array=image.native_binned + blurring_image.native_binned, mask=grid.mask
+            array=image.binned.native + blurring_image.binned.native, mask=grid.mask
         )
 
     def blurred_image_from_grid_and_convolver(self, grid, convolver, blurring_grid):
@@ -119,14 +119,14 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
         blurring_image = self.image_from_grid(grid=blurring_grid)
 
         return convolver.convolved_image_from_image_and_blurring_image(
-            image=image.slim_binned, blurring_image=blurring_image.slim_binned
+            image=image.binned, blurring_image=blurring_image.binned
         )
 
     def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
 
         image = self.image_from_grid(grid=grid)
 
-        return transformer.visibilities_from_image(image=image.slim_binned)
+        return transformer.visibilities_from_image(image=image.binned)
 
     def luminosity_within_circle(self, radius: float) -> float:
         """Integrate the light profile to compute the total luminosity within a circle of specified radius. This is \

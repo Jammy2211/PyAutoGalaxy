@@ -344,8 +344,8 @@ class TestAbstractPlaneProfiles:
 
             image = plane.image_from_grid(grid=sub_grid_7x7)
 
-            assert (image.slim_binned[0] == lp_image_pixel_0).all()
-            assert (image.slim_binned[1] == lp_image_pixel_1).all()
+            assert (image.binned[0] == lp_image_pixel_0).all()
+            assert (image.binned[1] == lp_image_pixel_1).all()
             assert (image == lp_image).all()
 
         def test__image_from_grid__same_as_its_galaxy_image(
@@ -405,19 +405,19 @@ class TestAbstractPlaneProfiles:
 
             image = plane.image_from_grid(grid=sub_grid_7x7)
 
-            assert image.slim_binned[0] == pytest.approx(
+            assert image.binned[0] == pytest.approx(
                 lp0_image_pixel_0 + lp1_image_pixel_0, 1.0e-4
             )
-            assert image.slim_binned[1] == pytest.approx(
+            assert image.binned[1] == pytest.approx(
                 lp0_image_pixel_1 + lp1_image_pixel_1, 1.0e-4
             )
 
             image_of_galaxies = plane.images_of_galaxies_from_grid(grid=sub_grid_7x7)
 
-            assert image_of_galaxies[0].slim_binned[0] == lp0_image_pixel_0
-            assert image_of_galaxies[0].slim_binned[1] == lp0_image_pixel_1
-            assert image_of_galaxies[1].slim_binned[0] == lp1_image_pixel_0
-            assert image_of_galaxies[1].slim_binned[1] == lp1_image_pixel_1
+            assert image_of_galaxies[0].binned[0] == lp0_image_pixel_0
+            assert image_of_galaxies[0].binned[1] == lp0_image_pixel_1
+            assert image_of_galaxies[1].binned[0] == lp1_image_pixel_0
+            assert image_of_galaxies[1].binned[1] == lp1_image_pixel_1
 
         def test__same_as_above__use_multiple_galaxies(self, sub_grid_7x7):
             # Overwrite one value so intensity in each pixel is different
@@ -595,10 +595,10 @@ class TestAbstractPlaneProfiles:
 
             convergence = plane.convergence_from_grid(grid=sub_grid_7x7)
 
-            assert convergence.native_binned[2, 2] == pytest.approx(
+            assert convergence.binned.native[2, 2] == pytest.approx(
                 mp_convergence_pixel_0, 1.0e-4
             )
-            assert convergence.native_binned[2, 3] == pytest.approx(
+            assert convergence.binned.native[2, 3] == pytest.approx(
                 mp_convergence_pixel_1, 1.0e-4
             )
 
@@ -707,10 +707,10 @@ class TestAbstractPlaneProfiles:
 
             potential = plane.potential_from_grid(grid=sub_grid_7x7)
 
-            assert potential.native_binned[2, 2] == pytest.approx(
+            assert potential.binned.native[2, 2] == pytest.approx(
                 mp_potential_pixel_0, 1.0e-4
             )
-            assert potential.native_binned[2, 3] == pytest.approx(
+            assert potential.binned.native[2, 3] == pytest.approx(
                 mp_potential_pixel_1, 1.0e-4
             )
 
@@ -822,16 +822,16 @@ class TestAbstractPlaneProfiles:
 
             deflections = plane.deflections_from_grid(grid=sub_grid_7x7)
 
-            assert deflections.slim_binned[0, 0] == pytest.approx(
+            assert deflections.binned[0, 0] == pytest.approx(
                 mp0_image_pixel_0x + mp1_image_pixel_0x, 1.0e-4
             )
-            assert deflections.slim_binned[1, 0] == pytest.approx(
+            assert deflections.binned[1, 0] == pytest.approx(
                 mp0_image_pixel_1x + mp1_image_pixel_1x, 1.0e-4
             )
-            assert deflections.slim_binned[0, 1] == pytest.approx(
+            assert deflections.binned[0, 1] == pytest.approx(
                 mp0_image_pixel_0y + mp1_image_pixel_0y, 1.0e-4
             )
-            assert deflections.slim_binned[1, 1] == pytest.approx(
+            assert deflections.binned[1, 1] == pytest.approx(
                 mp0_image_pixel_1y + mp1_image_pixel_1y, 1.0e-4
             )
 
@@ -906,10 +906,10 @@ class TestAbstractPlaneProfiles:
             deflections = plane.deflections_from_grid(grid=sub_grid_7x7)
 
             assert deflections.shape_native == (7, 7)
-            assert (deflections.slim_binned[0, 0] == 0.0).all()
-            assert (deflections.slim_binned[0, 1] == 0.0).all()
-            assert (deflections.slim_binned[1, 0] == 0.0).all()
-            assert (deflections.slim_binned[0] == 0.0).all()
+            assert (deflections.binned[0, 0] == 0.0).all()
+            assert (deflections.binned[0, 1] == 0.0).all()
+            assert (deflections.binned[1, 0] == 0.0).all()
+            assert (deflections.binned[0] == 0.0).all()
 
     class TestLensingObject:
         def test__correct_einstein_mass_caclulated_for_multiple_mass_profiles__means_all_innherited_methods_work(
@@ -1197,8 +1197,8 @@ class TestAbstractPlaneData:
             )
 
             assert unmasked_blurred_image.native == pytest.approx(
-                manual_blurred_image_0.native_binned[1:4, 1:4]
-                + manual_blurred_image_1.native_binned[1:4, 1:4],
+                manual_blurred_image_0.binned.native[1:4, 1:4]
+                + manual_blurred_image_1.binned.native[1:4, 1:4],
                 1.0e-4,
             )
 
@@ -1207,11 +1207,11 @@ class TestAbstractPlaneData:
             )
 
             assert unmasked_blurred_image_of_galaxies[0].native == pytest.approx(
-                manual_blurred_image_0.native_binned[1:4, 1:4], 1.0e-4
+                manual_blurred_image_0.binned.native[1:4, 1:4], 1.0e-4
             )
 
             assert unmasked_blurred_image_of_galaxies[1].native == pytest.approx(
-                manual_blurred_image_1.native_binned[1:4, 1:4], 1.0e-4
+                manual_blurred_image_1.binned.native[1:4, 1:4], 1.0e-4
             )
 
     class TestVisibilities:
@@ -2300,7 +2300,7 @@ class TestDecorators:
 
         mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
-        image_sub_2 = plane.image_from_grid(grid=grid_sub_2).slim_binned
+        image_sub_2 = plane.image_from_grid(grid=grid_sub_2).binned
 
         assert (image == image_sub_2).all()
 
@@ -2319,13 +2319,13 @@ class TestDecorators:
 
         mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
-        image_sub_4 = plane.image_from_grid(grid=grid_sub_4).slim_binned
+        image_sub_4 = plane.image_from_grid(grid=grid_sub_4).binned
 
         assert image[0] == image_sub_4[0]
 
         mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
-        image_sub_8 = plane.image_from_grid(grid=grid_sub_8).slim_binned
+        image_sub_8 = plane.image_from_grid(grid=grid_sub_8).binned
 
         assert image[4] == image_sub_8[4]
 
@@ -2357,7 +2357,7 @@ class TestDecorators:
 
         mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
-        deflections_sub_2 = galaxy.deflections_from_grid(grid=grid_sub_2).slim_binned
+        deflections_sub_2 = galaxy.deflections_from_grid(grid=grid_sub_2).binned
 
         assert (deflections == deflections_sub_2).all()
 
@@ -2376,13 +2376,13 @@ class TestDecorators:
 
         mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
-        deflections_sub_4 = galaxy.deflections_from_grid(grid=grid_sub_4).slim_binned
+        deflections_sub_4 = galaxy.deflections_from_grid(grid=grid_sub_4).binned
 
         assert deflections[0, 0] == deflections_sub_4[0, 0]
 
         mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
-        deflections_sub_8 = galaxy.deflections_from_grid(grid=grid_sub_8).slim_binned
+        deflections_sub_8 = galaxy.deflections_from_grid(grid=grid_sub_8).binned
 
         assert deflections[4, 0] == deflections_sub_8[4, 0]
 

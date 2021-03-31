@@ -609,7 +609,7 @@ class TestBlurredProfileImages:
         blurring_image = light_profile.image_from_grid(grid=blurring_grid_7x7)
 
         blurred_image = convolver_7x7.convolved_image_from_image_and_blurring_image(
-            image=image.slim_binned, blurring_image=blurring_image.slim_binned
+            image=image.binned, blurring_image=blurring_image.binned
         )
 
         light_profile_blurred_image = light_profile.blurred_image_from_grid_and_psf(
@@ -633,7 +633,7 @@ class TestBlurredProfileImages:
         blurring_image = light_profile.image_from_grid(grid=blurring_grid_7x7)
 
         blurred_image = convolver_7x7.convolved_image_from_image_and_blurring_image(
-            image=image.slim_binned, blurring_image=blurring_image.slim_binned
+            image=image.binned, blurring_image=blurring_image.binned
         )
 
         light_profile_blurred_image = light_profile.blurred_image_from_grid_and_convolver(
@@ -656,9 +656,7 @@ class TestVisibilities:
 
         image = light_profile.image_from_grid(grid=grid_7x7)
 
-        visibilities = transformer_7x7_7.visibilities_from_image(
-            image=image.slim_binned
-        )
+        visibilities = transformer_7x7_7.visibilities_from_image(image=image.binned)
 
         light_profile_visibilities = light_profile.profile_visibilities_from_grid_and_transformer(
             grid=grid_7x7, transformer=transformer_7x7_7
@@ -732,7 +730,7 @@ class TestDecorators:
 
         mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
-        image_sub_2 = light_profile.image_from_grid(grid=grid_sub_2).slim_binned
+        image_sub_2 = light_profile.image_from_grid(grid=grid_sub_2).binned
 
         assert (image == image_sub_2).all()
 
@@ -746,13 +744,13 @@ class TestDecorators:
 
         mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
-        image_sub_4 = light_profile.image_from_grid(grid=grid_sub_4).slim_binned
+        image_sub_4 = light_profile.image_from_grid(grid=grid_sub_4).binned
 
         assert image[0] == image_sub_4[0]
 
         mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
-        image_sub_8 = light_profile.image_from_grid(grid=grid_sub_8).slim_binned
+        image_sub_8 = light_profile.image_from_grid(grid=grid_sub_8).binned
 
         assert image[4] == image_sub_8[4]
 

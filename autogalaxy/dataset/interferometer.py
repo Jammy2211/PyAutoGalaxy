@@ -165,7 +165,7 @@ class SimulatorInterferometer(interferometer.SimulatorInterferometer):
 
         image = plane.image_from_grid(grid=grid)
 
-        return self.from_image(image=image.slim_binned, name=name)
+        return self.from_image(image=image.binned, name=name)
 
     def from_galaxies_and_grid(self, galaxies, grid, name=None):
         """Simulate imaging data for this data, as follows:

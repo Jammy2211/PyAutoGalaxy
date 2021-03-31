@@ -224,7 +224,8 @@ class AbstractPlane(lensing.LensingObject):
         else:
 
             return [
-                galaxy.extract_attribute(cls=cls, attr_name=attr_name) for galaxy in self.galaxies
+                galaxy.extract_attribute(cls=cls, attr_name=attr_name)
+                for galaxy in self.galaxies
             ]
 
 
@@ -339,7 +340,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         blurring_image = self.image_from_grid(grid=blurring_grid)
 
         return psf.convolved_array_from_array_and_mask(
-            array=image.native_binned + blurring_image.native_binned, mask=grid.mask
+            array=image.binned.native + blurring_image.binned.native, mask=grid.mask
         )
 
     def blurred_images_of_galaxies_from_grid_and_psf(self, grid, psf, blurring_grid):
