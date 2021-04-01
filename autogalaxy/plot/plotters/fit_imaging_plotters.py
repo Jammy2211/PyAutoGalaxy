@@ -4,13 +4,13 @@ from autoarray.plot.plotters import fit_imaging_plotters
 from autoarray.plot.plotters import inversion_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.profiles import light_profiles, mass_profiles
-from autogalaxy.fit import fit as f
+from autogalaxy.fit import fit_imaging
 
 
 class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
     def __init__(
         self,
-        fit: f.FitImaging,
+        fit: fit_imaging.FitImaging,
         mat_plot_2d: lensing_mat_plot.MatPlot2D = lensing_mat_plot.MatPlot2D(),
         visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
         include_2d: lensing_include.Include2D = lensing_include.Include2D(),

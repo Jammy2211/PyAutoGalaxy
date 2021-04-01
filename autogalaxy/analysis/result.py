@@ -66,7 +66,7 @@ class ResultDataset(Result):
 
     @property
     def dataset(self):
-        return self.max_log_likelihood_fit.masked_dataset
+        return self.max_log_likelihood_fit.dataset
 
     @property
     def pixelization(self):

@@ -65,68 +65,6 @@ class TestImaging:
         assert (psf == np.array([[0.5, 0.5], [0.0, 0.0]])).all()
 
 
-class TestMaskedImaging:
-    def test__masked_dataset_via_autoarray(self, imaging_7x7, sub_mask_7x7):
-
-        masked_imaging_7x7 = ag.MaskedImaging(imaging=imaging_7x7, mask=sub_mask_7x7)
-
-        assert (masked_imaging_7x7.image.slim == np.ones(9)).all()
-
-        assert (
-            masked_imaging_7x7.image.native == np.ones((7, 7)) * np.invert(sub_mask_7x7)
-        ).all()
-
-        assert (masked_imaging_7x7.noise_map.slim == 2.0 * np.ones(9)).all()
-        assert (
-            masked_imaging_7x7.noise_map.native
-            == 2.0 * np.ones((7, 7)) * np.invert(sub_mask_7x7)
-        ).all()
-
-        assert (masked_imaging_7x7.psf.slim == (1.0 / 9.0) * np.ones(9)).all()
-        assert (masked_imaging_7x7.psf.native == (1.0 / 9.0) * np.ones((3, 3))).all()
-
-        assert type(masked_imaging_7x7.convolver) == ag.Convolver
-
-    def test__inheritance_from_autoarray(
-        self, imaging_7x7, sub_mask_7x7, blurring_grid_7x7
-    ):
-
-        masked_imaging_7x7 = ag.MaskedImaging(
-            imaging=imaging_7x7,
-            mask=sub_mask_7x7,
-            settings=ag.SettingsMaskedImaging(
-                grid_class=ag.Grid2D, psf_shape_2d=(3, 3)
-            ),
-        )
-
-        grid = ag.Grid2D.from_mask(mask=sub_mask_7x7)
-
-        assert (masked_imaging_7x7.grid == grid).all()
-
-        blurring_grid = grid.blurring_grid_from_kernel_shape(kernel_shape_native=(3, 3))
-
-        assert (masked_imaging_7x7.blurring_grid.slim == blurring_grid_7x7).all()
-        assert (masked_imaging_7x7.blurring_grid == blurring_grid).all()
-
-    def test__modified_image_and_noise_map(
-        self, image_7x7, noise_map_7x7, imaging_7x7, sub_mask_7x7
-    ):
-
-        masked_imaging_7x7 = ag.MaskedImaging(imaging=imaging_7x7, mask=sub_mask_7x7)
-
-        image_7x7[0] = 10.0
-        noise_map_7x7[0] = 11.0
-
-        masked_imaging_7x7 = masked_imaging_7x7.modify_image_and_noise_map(
-            image=image_7x7, noise_map=noise_map_7x7
-        )
-
-        assert masked_imaging_7x7.image.slim[0] == 10.0
-        assert masked_imaging_7x7.image.native[0, 0] == 10.0
-        assert masked_imaging_7x7.noise_map.slim[0] == 11.0
-        assert masked_imaging_7x7.noise_map.native[0, 0] == 11.0
-
-
 class TestSimulatorImaging:
     def test__from_plane_and_grid__same_as_plane_image(self):
 

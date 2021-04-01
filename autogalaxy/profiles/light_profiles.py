@@ -118,7 +118,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
 
         blurring_image = self.image_from_grid(grid=blurring_grid)
 
-        return convolver.convolved_image_from_image_and_blurring_image(
+        return convolver.convolve_image(
             image=image.binned, blurring_image=blurring_image.binned
         )
 

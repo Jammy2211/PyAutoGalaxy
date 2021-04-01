@@ -20,14 +20,14 @@ class FitGalaxy(fit.FitDataset):
         )
 
         super(FitGalaxy, self).__init__(
-            masked_dataset=masked_galaxy_dataset,
+            dataset=masked_galaxy_dataset,
             model_data=model_data.binned,
             use_mask_in_fit=False,
         )
 
     @property
     def masked_galaxy_dataset(self):
-        return self.masked_dataset
+        return self.dataset
 
     @property
     def grid(self):

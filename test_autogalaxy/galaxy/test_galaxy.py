@@ -232,7 +232,7 @@ class TestLightProfiles:
 
             blurring_image = galaxy.image_from_grid(grid=blurring_grid_7x7)
 
-            blurred_image = convolver_7x7.convolved_image_from_image_and_blurring_image(
+            blurred_image = convolver_7x7.convolve_image(
                 image=image.binned, blurring_image=blurring_image.binned
             )
 
@@ -264,7 +264,7 @@ class TestLightProfiles:
 
             blurring_image = galaxy.image_from_grid(grid=blurring_grid_7x7)
 
-            blurred_image = convolver_7x7.convolved_image_from_image_and_blurring_image(
+            blurred_image = convolver_7x7.convolve_image(
                 image=image.binned, blurring_image=blurring_image.binned
             )
 
@@ -1385,7 +1385,7 @@ class TestDecorators:
 
         image = galaxy.image_from_grid(grid=grid)
 
-        mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
+        mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
         image_sub_2 = galaxy.image_from_grid(grid=grid_sub_2).binned
 
@@ -1402,13 +1402,13 @@ class TestDecorators:
 
         image = galaxy.image_from_grid(grid=grid)
 
-        mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
+        mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
         image_sub_4 = galaxy.image_from_grid(grid=grid_sub_4).binned
 
         assert image[0] == image_sub_4[0]
 
-        mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
+        mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
         image_sub_8 = galaxy.image_from_grid(grid=grid_sub_8).binned
 
@@ -1438,7 +1438,7 @@ class TestDecorators:
 
         deflections = galaxy.deflections_from_grid(grid=grid)
 
-        mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
+        mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
         deflections_sub_2 = galaxy.deflections_from_grid(grid=grid_sub_2).binned
 
@@ -1455,13 +1455,13 @@ class TestDecorators:
 
         deflections = galaxy.deflections_from_grid(grid=grid)
 
-        mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
+        mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
         deflections_sub_4 = galaxy.deflections_from_grid(grid=grid_sub_4).binned
 
         assert deflections[0, 0] == deflections_sub_4[0, 0]
 
-        mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
+        mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
         deflections_sub_8 = galaxy.deflections_from_grid(grid=grid_sub_8).binned
 

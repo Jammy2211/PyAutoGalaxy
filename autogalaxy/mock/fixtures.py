@@ -5,30 +5,11 @@ from autogalaxy.plot.mat_wrap.lensing_include import Include1D, Include2D
 
 
 def make_masked_imaging_7x7():
-    return ag.MaskedImaging(
-        imaging=make_imaging_7x7(),
-        mask=make_sub_mask_7x7(),
-        settings=ag.SettingsMaskedImaging(sub_size=1),
-    )
 
+    imaging_7x7 = make_imaging_7x7()
 
-def make_masked_interferometer_7():
-    return ag.MaskedInterferometer(
-        interferometer=make_interferometer_7(),
-        visibilities_mask=make_visibilities_mask_7(),
-        real_space_mask=make_mask_7x7(),
-        settings=ag.SettingsMaskedInterferometer(
-            sub_size=1, transformer_class=ag.TransformerDFT
-        ),
-    )
-
-
-def make_masked_interferometer_7_lop():
-    return ag.MaskedInterferometer(
-        interferometer=make_interferometer_7(),
-        visibilities_mask=make_visibilities_mask_7(),
-        real_space_mask=make_mask_7x7(),
-        settings=ag.SettingsMaskedInterferometer(transformer_class=ag.TransformerNUFFT),
+    return imaging_7x7.apply_mask(
+        mask=make_sub_mask_7x7(), settings=ag.SettingsImaging(sub_size=1)
     )
 
 
@@ -259,34 +240,31 @@ def make_hyper_galaxy_image_1_7x7():
     )
 
 
-def make_masked_imaging_fit_7x7():
-    return ag.FitImaging(
-        masked_imaging=make_masked_imaging_7x7(), plane=make_plane_7x7()
-    )
+def make_imaging_fit_7x7():
+    return ag.FitImaging(imaging=make_masked_imaging_7x7(), plane=make_plane_7x7())
 
 
-def make_masked_imaging_fit_x2_galaxy_7x7():
+def make_imaging_fit_x2_galaxy_7x7():
     plane = ag.Plane(galaxies=[make_gal_x1_lp(), make_gal_x1_lp()])
 
-    return ag.FitImaging(masked_imaging=make_masked_imaging_7x7(), plane=plane)
+    return ag.FitImaging(imaging=make_masked_imaging_7x7(), plane=plane)
 
 
-def make_masked_imaging_fit_x2_galaxy_inversion_7x7():
+def make_imaging_fit_x2_galaxy_inversion_7x7():
     return ag.FitImaging(
-        masked_imaging=make_masked_imaging_7x7(),
-        plane=make_plane_x2_galaxy_inversion_7x7(),
+        imaging=make_masked_imaging_7x7(), plane=make_plane_x2_galaxy_inversion_7x7()
     )
 
 
-def make_masked_interferometer_fit_7x7():
+def make_interferometer_fit_7x7():
     return ag.FitInterferometer(
-        masked_interferometer=make_masked_interferometer_7(), plane=make_plane_7x7()
+        interferometer=make_interferometer_7(), plane=make_plane_7x7()
     )
 
 
-def make_masked_interferometer_fit_x2_galaxy_inversion_7x7():
+def make_interferometer_fit_x2_galaxy_inversion_7x7():
     return ag.FitInterferometer(
-        masked_interferometer=make_masked_interferometer_7(),
+        interferometer=make_interferometer_7(),
         plane=make_plane_x2_galaxy_inversion_7x7(),
     )
 
@@ -307,7 +285,7 @@ def make_analysis_imaging_7x7():
 
 
 def make_analysis_interferometer_7():
-    return ag.AnalysisInterferometer(dataset=make_masked_interferometer_7())
+    return ag.AnalysisInterferometer(dataset=make_interferometer_7())
 
 
 def make_include_1d_all():

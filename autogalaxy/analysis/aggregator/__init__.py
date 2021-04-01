@@ -5,12 +5,12 @@ from autogalaxy.analysis.aggregator.aggregator import (
 from autogalaxy.analysis.aggregator.aggregator import (
     fit_interferometer_generator_from_aggregator as FitInterferometer,
 )
-from autogalaxy.analysis.aggregator.aggregator import masked_imaging_from_agg_obj
+from autogalaxy.analysis.aggregator.aggregator import imaging_from_agg_obj
 from autogalaxy.analysis.aggregator.aggregator import (
-    masked_imaging_generator_from_aggregator as MaskedImaging,
+    imaging_generator_from_aggregator as Imaging,
 )
 from autogalaxy.analysis.aggregator.aggregator import (
-    masked_interferometer_generator_from_aggregator as MaskedInterferometer,
+    interferometer_generator_from_aggregator as Interferometer,
 )
 from autogalaxy.analysis.aggregator.aggregator import plane_from_agg_obj
 from autogalaxy.analysis.aggregator.aggregator import (

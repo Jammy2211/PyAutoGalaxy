@@ -89,7 +89,7 @@ class TestAnalysisImaging:
 
         plane = analysis.plane_for_instance(instance=instance)
 
-        fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
 
         assert fit.log_likelihood == fit_figure_of_merit
 
@@ -115,7 +115,7 @@ class TestAnalysisImaging:
 
         plane = analysis.plane_for_instance(instance=instance)
         fit = ag.FitImaging(
-            masked_imaging=masked_imaging_7x7,
+            imaging=masked_imaging_7x7,
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
@@ -172,20 +172,18 @@ class TestAnalysisImaging:
 
         plane = ag.Plane(galaxies=[g0, g1])
 
-        fit = ag.FitImaging(masked_imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
 
         assert (fit.plane.galaxies[0].hyper_galaxy_image == galaxy_hyper_image).all()
         assert fit_likelihood == fit.log_likelihood
 
 
 class TestAnalysisInterferometer:
-    def test__make_result__result_interferometer_is_returned(
-        self, masked_interferometer_7
-    ):
+    def test__make_result__result_interferometer_is_returned(self, interferometer_7):
 
         model = af.Collection(galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5)))
 
-        analysis = ag.AnalysisInterferometer(dataset=masked_interferometer_7)
+        analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
 
         search = mock.MockSearch(name="test_search")
 
@@ -194,28 +192,26 @@ class TestAnalysisInterferometer:
         assert isinstance(result, res.ResultInterferometer)
 
     def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
-        self, masked_interferometer_7
+        self, interferometer_7
     ):
 
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
 
         model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
-        analysis = ag.AnalysisInterferometer(dataset=masked_interferometer_7)
+        analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
 
         instance = model.instance_from_unit_vector([])
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
         plane = analysis.plane_for_instance(instance=instance)
 
-        fit = ag.FitInterferometer(
-            masked_interferometer=masked_interferometer_7, plane=plane
-        )
+        fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
 
         assert fit.log_likelihood == fit_figure_of_merit
 
     def test__fit_figure_of_merit__includes_hyper_image_and_noise__matches_fit(
-        self, masked_interferometer_7
+        self, interferometer_7
     ):
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
@@ -226,14 +222,14 @@ class TestAnalysisInterferometer:
             galaxies=af.Collection(galaxy=galaxy),
         )
 
-        analysis = ag.AnalysisInterferometer(dataset=masked_interferometer_7)
+        analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
 
         instance = model.instance_from_unit_vector([])
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
         plane = analysis.plane_for_instance(instance=instance)
         fit = ag.FitInterferometer(
-            masked_interferometer=masked_interferometer_7,
+            interferometer=interferometer_7,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
         )

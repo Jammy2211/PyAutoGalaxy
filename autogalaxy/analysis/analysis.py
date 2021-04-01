@@ -10,7 +10,7 @@ from autofit.exc import FitException
 from autoarray.inversion import pixelizations as pix, inversions as inv
 from autogalaxy.galaxy import galaxy as g
 from autogalaxy.plane import plane as pl
-from autogalaxy.fit import fit
+from autogalaxy.fit import fit_imaging, fit_interferometer
 from autogalaxy.analysis import visualizer as vis
 from autogalaxy.analysis import result as res
 
@@ -121,7 +121,7 @@ class AnalysisDataset(Analysis):
 
     def save_settings(self, paths: af.Paths):
 
-        with open(f"{paths.pickle_path}/settings_masked_dataset.pickle", "wb+") as f:
+        with open(f"{paths.pickle_path}/settings_dataset.pickle", "wb+") as f:
             pickle.dump(self.dataset.settings, f)
 
         with open(f"{paths.pickle_path}/settings_inversion.pickle", "wb+") as f:
@@ -133,7 +133,7 @@ class AnalysisDataset(Analysis):
     def save_attributes_for_aggregator(self, paths: af.Paths):
 
         with open(f"{paths.pickle_path}/dataset.pickle", "wb") as f:
-            pickle.dump(self.dataset.dataset, f)
+            pickle.dump(self.dataset, f)
 
         with open(f"{paths.pickle_path}/mask.pickle", "wb") as f:
             dill.dump(self.dataset.mask, f)
@@ -212,8 +212,8 @@ class AnalysisImaging(AnalysisDataset):
         self, plane, hyper_image_sky, hyper_background_noise, use_hyper_scalings=True
     ):
 
-        return fit.FitImaging(
-            masked_imaging=self.dataset,
+        return fit_imaging.FitImaging(
+            imaging=self.dataset,
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
@@ -238,7 +238,7 @@ class AnalysisImaging(AnalysisDataset):
         )
 
         visualizer = vis.Visualizer(visualize_path=paths.image_path)
-        visualizer.visualize_imaging(imaging=self.imaging.imaging)
+        visualizer.visualize_imaging(imaging=self.imaging)
         visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)
 
         if fit.inversion is not None:
@@ -397,8 +397,8 @@ class AnalysisInterferometer(AnalysisDataset):
         self, plane, hyper_background_noise, use_hyper_scalings=True
     ):
 
-        return fit.FitInterferometer(
-            masked_interferometer=self.dataset,
+        return fit_interferometer.FitInterferometer(
+            interferometer=self.dataset,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
             use_hyper_scalings=use_hyper_scalings,
@@ -419,9 +419,7 @@ class AnalysisInterferometer(AnalysisDataset):
         )
 
         visualizer = vis.Visualizer(visualize_path=paths.image_path)
-        visualizer.visualize_interferometer(
-            interferometer=self.interferometer.interferometer
-        )
+        visualizer.visualize_interferometer(interferometer=self.interferometer)
         visualizer.visualize_fit_interferometer(
             fit=fit, during_analysis=during_analysis
         )

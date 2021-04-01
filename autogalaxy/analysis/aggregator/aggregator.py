@@ -52,30 +52,30 @@ def plane_from_agg_obj(agg_obj):
     return ag.Plane(galaxies=galaxies)
 
 
-def masked_imaging_generator_from_aggregator(aggregator):
+def imaging_generator_from_aggregator(aggregator):
     """
     Returns a generator of `MaskImaging` objects from an input aggregator, which generates a list of the
     `MaskImaging` objects for every set of results loaded in the aggregator.
 
-    This is performed by mapping the `masked_imaging_from_agg_obj` with the aggregator, which sets up each masked
-    imaging using only generators ensuring that manipulating the masked imaging of large sets of results is done in a
+    This is performed by mapping the `imaging_from_agg_obj` with the aggregator, which sets up each
+    imaging using only generators ensuring that manipulating the imaging of large sets of results is done in a
     memory efficient way.
 
     Parameters
     ----------
     aggregator : af.Aggregator
         A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits."""
-    return aggregator.map(func=masked_imaging_from_agg_obj)
+    return aggregator.map(func=imaging_from_agg_obj)
 
 
-def masked_imaging_from_agg_obj(agg_obj):
+def imaging_from_agg_obj(agg_obj):
     """
     Returns a `MaskImaging` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to describe
      that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's generator
      outputs such that the function can use the `Aggregator`'s map function to to create a `MaskImaging` generator.
 
      The `MaskImaging` is created following the same method as the PyAutoGalaxy `Search` classes, including using the
-     `SettingsMaskedImaging` instance output by the Search to load inputs of the `MaskImaging` (e.g. psf_shape_2d).
+     `SettingsImaging` instance output by the Search to load inputs of the `MaskImaging` (e.g. psf_shape_2d).
 
     Parameters
     ----------
@@ -83,11 +83,7 @@ def masked_imaging_from_agg_obj(agg_obj):
         A PyAutoFit aggregator's SearchOutput object containing the generators of the results of PyAutoGalaxy model-fits.
     """
 
-    return ag.MaskedImaging(
-        imaging=agg_obj.dataset,
-        mask=agg_obj.mask,
-        settings=agg_obj.settings_masked_dataset,
-    )
+    return agg_obj.dataset
 
 
 def fit_imaging_generator_from_aggregator(aggregator):
@@ -119,56 +115,52 @@ def fit_imaging_from_agg_obj(agg_obj):
         A PyAutoFit aggregator's SearchOutput object containing the generators of the results of PyAutoGalaxy model-fits.
     """
 
-    masked_imaging = masked_imaging_from_agg_obj(agg_obj=agg_obj)
+    imaging = imaging_from_agg_obj(agg_obj=agg_obj)
     plane = plane_from_agg_obj(agg_obj=agg_obj)
 
     return ag.FitImaging(
-        masked_imaging=masked_imaging,
+        imaging=imaging,
         plane=plane,
         settings_pixelization=agg_obj.settings_pixelization,
         settings_inversion=agg_obj.settings_inversion,
     )
 
 
-def masked_interferometer_generator_from_aggregator(aggregator):
+def interferometer_generator_from_aggregator(aggregator):
     """
-    Returns a generator of `MaskedInterferometer` objects from an input aggregator, which generates a list of the
-    `MaskedInterferometer` objects for every set of results loaded in the aggregator.
+    Returns a generator of `Interferometer` objects from an input aggregator, which generates a list of the
+    `Interferometer` objects for every set of results loaded in the aggregator.
 
-    This is performed by mapping the `masked_interferometer_from_agg_obj` with the aggregator, which sets up each masked
-    interferometer object using only generators ensuring that manipulating the masked interferometer objects of large
+    This is performed by mapping the `interferometer_from_agg_obj` with the aggregator, which sets up each
+    interferometer object using only generators ensuring that manipulating the interferometer objects of large
     sets of results is done in a memory efficient  way.
 
     Parameters
     ----------
     aggregator : af.Aggregator
         A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits."""
-    return aggregator.map(func=masked_interferometer_from_agg_obj)
+    return aggregator.map(func=interferometer_from_agg_obj)
 
 
-def masked_interferometer_from_agg_obj(agg_obj):
+def interferometer_from_agg_obj(agg_obj):
     """
-    Returns a `MaskedInterferometer` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to
+    Returns a `Interferometer` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to
     describe that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's
     generator outputs such that the function can use the `Aggregator`'s map function to to create a
-    `MaskedInterferometer` generator.
+    `Interferometer` generator.
 
-    The `MaskedInterferometer` is created following the same method as the PyAutoGalaxy `Search` classes, including
-    using the `SettingsMaskedInterferometer` instance output by the Search to load inputs of the `MaskedInterferometer`
+    The `Interferometer` is created following the same method as the PyAutoGalaxy `Search` classes, including
+    using the `SettingsInterferometer` instance output by the Search to load inputs of the `Interferometer`
     (e.g. psf_shape_2d).
 
     Parameters
     ----------
     agg_obj : af.SearchOutput
-        A PyAutoFit aggregator's SearchOutput object containing the generators of the results of PyAutoGalaxy model-fits.
+        A PyAutoFit aggregator's SearchOutput object containing the generators of the results of PyAutoGalaxy
+        model-fits.
     """
 
-    return ag.MaskedInterferometer(
-        interferometer=agg_obj.dataset,
-        visibilities_mask=agg_obj.mask,
-        real_space_mask=agg_obj.attributes.real_space_mask,
-        settings=agg_obj.settings_masked_dataset,
-    )
+    return agg_obj.dataset
 
 
 def fit_interferometer_generator_from_aggregator(aggregator):
@@ -201,11 +193,11 @@ def fit_interferometer_from_agg_obj(agg_obj):
     ----------
     aggregator : af.Aggregator
         A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits."""
-    masked_interferometer = masked_interferometer_from_agg_obj(agg_obj=agg_obj)
+    interferometer = interferometer_from_agg_obj(agg_obj=agg_obj)
     plane = plane_from_agg_obj(agg_obj=agg_obj)
 
     return ag.FitInterferometer(
-        masked_interferometer=masked_interferometer,
+        interferometer=interferometer,
         plane=plane,
         settings_pixelization=agg_obj.settings_pixelization,
         settings_inversion=agg_obj.settings_inversion,

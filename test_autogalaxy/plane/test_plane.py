@@ -1504,10 +1504,10 @@ class TestAbstractPlaneData:
             )
 
         def test__x1_inversion_interferometer_in_plane__performs_inversion_correctly(
-            self, sub_grid_7x7, masked_interferometer_7
+            self, sub_grid_7x7, interferometer_7
         ):
 
-            masked_interferometer_7.visibilities = ag.Visibilities.ones(shape_slim=(7,))
+            interferometer_7.data = ag.Visibilities.ones(shape_slim=(7,))
 
             pix = ag.pix.Rectangular(shape=(7, 7))
             reg = ag.reg.Constant(coefficient=0.0)
@@ -1518,15 +1518,15 @@ class TestAbstractPlaneData:
 
             inversion = plane.inversion_interferometer_from_grid_and_data(
                 grid=sub_grid_7x7,
-                visibilities=masked_interferometer_7.visibilities,
-                noise_map=masked_interferometer_7.noise_map,
-                transformer=masked_interferometer_7.transformer,
+                visibilities=interferometer_7.visibilities,
+                noise_map=interferometer_7.noise_map,
+                transformer=interferometer_7.transformer,
                 settings_pixelization=ag.SettingsPixelization(use_border=False),
                 settings_inversion=ag.SettingsInversion(use_linear_operators=False),
             )
 
             assert inversion.mapped_reconstructed_visibilities.real == pytest.approx(
-                masked_interferometer_7.visibilities.real, 1.0e-2
+                interferometer_7.visibilities.real, 1.0e-2
             )
 
     class TestPlaneImage:
@@ -2298,7 +2298,7 @@ class TestDecorators:
 
         image = plane.image_from_grid(grid=grid)
 
-        mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
+        mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
         image_sub_2 = plane.image_from_grid(grid=grid_sub_2).binned
 
@@ -2317,13 +2317,13 @@ class TestDecorators:
 
         image = plane.image_from_grid(grid=grid)
 
-        mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
+        mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
         image_sub_4 = plane.image_from_grid(grid=grid_sub_4).binned
 
         assert image[0] == image_sub_4[0]
 
-        mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
+        mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
         image_sub_8 = plane.image_from_grid(grid=grid_sub_8).binned
 
@@ -2355,7 +2355,7 @@ class TestDecorators:
 
         deflections = plane.deflections_from_grid(grid=grid)
 
-        mask_sub_2 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=2)
+        mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
         deflections_sub_2 = galaxy.deflections_from_grid(grid=grid_sub_2).binned
 
@@ -2374,13 +2374,13 @@ class TestDecorators:
 
         deflections = plane.deflections_from_grid(grid=grid)
 
-        mask_sub_4 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=4)
+        mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
         deflections_sub_4 = galaxy.deflections_from_grid(grid=grid_sub_4).binned
 
         assert deflections[0, 0] == deflections_sub_4[0, 0]
 
-        mask_sub_8 = mask.mask_new_sub_size_from_mask(mask=mask, sub_size=8)
+        mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
         deflections_sub_8 = galaxy.deflections_from_grid(grid=grid_sub_8).binned
 
