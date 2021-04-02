@@ -91,7 +91,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             include_1d=self.include_1d,
         )
 
-    def figures(
+    def figures_2d(
         self,
         image=False,
         convergence=False,
@@ -110,7 +110,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
                 auto_labels=mp.AutoLabels(title="Image", filename="image"),
             )
 
-        super().figures(
+        super().figures_2d(
             convergence=convergence,
             potential=potential,
             deflections_y=deflections_y,

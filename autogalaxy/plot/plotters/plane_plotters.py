@@ -71,7 +71,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
     def plane(self):
         return self.lensing_obj
 
-    def figures(
+    def figures_2d(
         self,
         image=False,
         plane_image=False,
@@ -118,7 +118,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
                 ),
             )
 
-        super().figures(
+        super().figures_2d(
             convergence=convergence,
             potential=potential,
             deflections_y=deflections_y,
@@ -167,7 +167,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
 
         self.open_subplot_figure(number_subplots=2)
 
-        self.figures()
+        self.figures_2d()
         self.mat_plot_2d.plot_grid(
             grid=self.plane.traced_grid_from_grid(grid=self.grid),
             visuals_2d=self.visuals_with_include_2d,

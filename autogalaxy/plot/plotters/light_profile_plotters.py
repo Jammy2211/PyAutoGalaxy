@@ -113,7 +113,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
                 ),
             )
 
-    def figures(self, image=False):
+    def figures_2d(self, image=False):
 
         if image:
 

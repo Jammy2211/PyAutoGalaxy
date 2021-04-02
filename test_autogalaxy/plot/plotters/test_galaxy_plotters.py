@@ -74,7 +74,7 @@ def test__individual_images_are_output(
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
-    galaxy_plotter.figures(image=True, convergence=True)
+    galaxy_plotter.figures_2d(image=True, convergence=True)
 
     assert path.join(plot_path, "image.png") in plot_patch.paths
     assert path.join(plot_path, "convergence.png") in plot_patch.paths
@@ -87,7 +87,7 @@ def test__individual_images_are_output(
         shape_native=(7, 7), pixel_scales=0.1
     )
 
-    galaxy_plotter.figures(contribution_map=True)
+    galaxy_plotter.figures_2d(contribution_map=True)
     assert path.join(plot_path, "contribution_map.png") in plot_patch.paths
 
 

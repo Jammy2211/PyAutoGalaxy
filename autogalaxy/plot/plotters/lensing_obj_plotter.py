@@ -142,7 +142,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
                 ),
             )
 
-    def figures(
+    def figures_2d(
         self,
         convergence=False,
         potential=False,

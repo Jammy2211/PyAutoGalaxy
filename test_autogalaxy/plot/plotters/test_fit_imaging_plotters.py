@@ -24,7 +24,7 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
-    fit_imaging_plotter.figures(
+    fit_imaging_plotter.figures_2d(
         image=True,
         noise_map=False,
         signal_to_noise_map=False,
@@ -51,26 +51,26 @@ def test__figures_of_galaxies(
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
-    fit_imaging_plotter.figures_of_galaxies(subtracted_image=True)
+    fit_imaging_plotter.figures_2d_of_galaxies(subtracted_image=True)
 
     assert path.join(plot_path, "subtracted_image_of_galaxy_0.png") in plot_patch.paths
     assert path.join(plot_path, "subtracted_image_of_galaxy_1.png") in plot_patch.paths
 
-    fit_imaging_plotter.figures_of_galaxies(model_image=True)
+    fit_imaging_plotter.figures_2d_of_galaxies(model_image=True)
 
     assert path.join(plot_path, "model_image_of_galaxy_0.png") in plot_patch.paths
     assert path.join(plot_path, "model_image_of_galaxy_1.png") in plot_patch.paths
 
     plot_patch.paths = []
 
-    fit_imaging_plotter.figures_of_galaxies(subtracted_image=True, galaxy_index=0)
+    fit_imaging_plotter.figures_2d_of_galaxies(subtracted_image=True, galaxy_index=0)
 
     assert path.join(plot_path, "subtracted_image_of_galaxy_0.png") in plot_patch.paths
     assert (
         path.join(plot_path, "subtracted_image_of_galaxy_1.png") not in plot_patch.paths
     )
 
-    fit_imaging_plotter.figures_of_galaxies(model_image=True, galaxy_index=1)
+    fit_imaging_plotter.figures_2d_of_galaxies(model_image=True, galaxy_index=1)
 
     assert path.join(plot_path, "model_image_of_galaxy_0.png") not in plot_patch.paths
     assert path.join(plot_path, "model_image_of_galaxy_1.png") in plot_patch.paths
