@@ -57,7 +57,7 @@ class Visualizer:
             imaging=imaging, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        imaging_plotter.figures(
+        imaging_plotter.figures_2d(
             image=should_plot("data"),
             noise_map=should_plot("noise_map"),
             psf=should_plot("psf"),
@@ -81,7 +81,7 @@ class Visualizer:
             fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        fit_imaging_plotter.figures(
+        fit_imaging_plotter.figures_2d(
             image=should_plot("data"),
             noise_map=should_plot("noise_map"),
             signal_to_noise_map=should_plot("signal_to_noise_map"),
@@ -91,7 +91,7 @@ class Visualizer:
             normalized_residual_map=should_plot("normalized_residual_map"),
         )
 
-        fit_imaging_plotter.figures_of_galaxies(
+        fit_imaging_plotter.figures_2d_of_galaxies(
             subtracted_image=should_plot("subtracted_images_of_galaxies"),
             model_image=should_plot("model_images_of_galaxies"),
         )
@@ -106,7 +106,7 @@ class Visualizer:
 
             if should_plot("all_at_end_png"):
 
-                fit_imaging_plotter.figures(
+                fit_imaging_plotter.figures_2d(
                     image=True,
                     noise_map=True,
                     signal_to_noise_map=True,
@@ -116,7 +116,7 @@ class Visualizer:
                     chi_squared_map=True,
                 )
 
-                fit_imaging_plotter.figures_of_galaxies(
+                fit_imaging_plotter.figures_2d_of_galaxies(
                     subtracted_image=True, model_image=True
                 )
 
@@ -130,7 +130,7 @@ class Visualizer:
                     fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
                 )
 
-                fit_imaging_plotter.figures(
+                fit_imaging_plotter.figures_2d(
                     image=True,
                     noise_map=True,
                     signal_to_noise_map=True,
@@ -140,7 +140,7 @@ class Visualizer:
                     chi_squared_map=True,
                 )
 
-                fit_imaging_plotter.figures_of_galaxies(
+                fit_imaging_plotter.figures_2d_of_galaxies(
                     subtracted_image=True, model_image=True
                 )
 
@@ -159,7 +159,7 @@ class Visualizer:
         if should_plot("subplot_dataset"):
             interferometer_plotter.subplot_interferometer()
 
-        interferometer_plotter.figures(
+        interferometer_plotter.figures_2d(
             visibilities=should_plot("data"),
             u_wavelengths=should_plot("uv_wavelengths"),
             v_wavelengths=should_plot("uv_wavelengths"),
@@ -185,7 +185,7 @@ class Visualizer:
             fit_interferometer_plotter.subplot_fit_interferometer()
             fit_interferometer_plotter.subplot_fit_real_space()
 
-        fit_interferometer_plotter.figures(
+        fit_interferometer_plotter.figures_2d(
             visibilities=should_plot("data"),
             noise_map=should_plot("noise_map"),
             signal_to_noise_map=should_plot("signal_to_noise_map"),
@@ -202,7 +202,7 @@ class Visualizer:
 
             if should_plot("all_at_end_png"):
 
-                fit_interferometer_plotter.figures(
+                fit_interferometer_plotter.figures_2d(
                     visibilities=True,
                     noise_map=True,
                     signal_to_noise_map=True,
@@ -225,7 +225,7 @@ class Visualizer:
                     fit=fit, include_2d=self.include_2d, mat_plot_2d=mat_plot_2d
                 )
 
-                fit_interferometer_plotter.figures(
+                fit_interferometer_plotter.figures_2d(
                     visibilities=True,
                     noise_map=True,
                     signal_to_noise_map=True,
@@ -251,7 +251,7 @@ class Visualizer:
         if should_plot("subplot_inversion"):
             inversion_plotter.subplot_inversion()
 
-        inversion_plotter.figures(
+        inversion_plotter.figures_2d(
             reconstructed_image=should_plot("reconstructed_image"),
             reconstruction=should_plot("reconstruction"),
             errors=should_plot("errors"),
@@ -267,7 +267,7 @@ class Visualizer:
 
             if should_plot("all_at_end_png"):
 
-                inversion_plotter.figures(
+                inversion_plotter.figures_2d(
                     reconstructed_image=True,
                     reconstruction=True,
                     errors=True,
@@ -331,7 +331,7 @@ class Visualizer:
             include_2d=self.include_2d,
         )
 
-        fit_galaxy_plotter.figures(
+        fit_galaxy_plotter.figures_2d(
             image=should_plot("image"),
             noise_map=should_plot("noise_map"),
             model_image=should_plot("model_image"),

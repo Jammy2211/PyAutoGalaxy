@@ -81,7 +81,7 @@ def test__figures_2d__all_quantities_are_output(
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
-    lensing_obj_plotter.figures(
+    lensing_obj_plotter.figures_2d(
         convergence=True,
         potential=True,
         deflections_y=True,

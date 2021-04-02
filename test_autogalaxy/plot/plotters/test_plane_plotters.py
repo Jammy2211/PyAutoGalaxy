@@ -31,7 +31,7 @@ def test__all_individual_plotter__output_file_with_default_name(
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
-    plane_plotter.figures(image=True, plane_image=True, plane_grid=True)
+    plane_plotter.figures_2d(image=True, plane_image=True, plane_grid=True)
 
     assert path.join(plot_path, "image.png") in plot_patch.paths
     assert path.join(plot_path, "plane_image.png") in plot_patch.paths
@@ -45,6 +45,6 @@ def test__all_individual_plotter__output_file_with_default_name(
         shape_native=(7, 7), pixel_scales=0.1
     )
 
-    plane_plotter.figures(contribution_map=True)
+    plane_plotter.figures_2d(contribution_map=True)
 
     assert path.join(plot_path, "contribution_map.png") in plot_patch.paths

@@ -26,7 +26,7 @@ class FitGalaxyPlotter(fit_imaging_plotters.FitImagingPlotter):
 
         return self.visuals_2d + self.visuals_2d.__class__()
 
-    def figures(
+    def figures_2d(
         self,
         image=False,
         noise_map=False,
@@ -45,7 +45,7 @@ class FitGalaxyPlotter(fit_imaging_plotters.FitImagingPlotter):
                 auto_labels=mp.AutoLabels(title="Image", filename="image"),
             )
 
-        super(FitGalaxyPlotter, self).figures(
+        super(FitGalaxyPlotter, self).figures_2d(
             noise_map=noise_map,
             signal_to_noise_map=signal_to_noise_map,
             model_image=model_image,

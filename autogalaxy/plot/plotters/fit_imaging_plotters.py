@@ -63,7 +63,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
         else:
             return [galaxy_index]
 
-    def figures_of_galaxies(
+    def figures_2d_of_galaxies(
         self, subtracted_image=False, model_image=False, galaxy_index=None
     ):
 
@@ -128,12 +128,12 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
 
             self.open_subplot_figure(number_subplots=4)
 
-            self.figures(image=True)
-            self.figures_of_galaxies(galaxy_index=galaxy_index, subtracted_image=True)
-            self.figures_of_galaxies(galaxy_index=galaxy_index)
+            self.figures_2d(image=True)
+            self.figures_2d_of_galaxies(galaxy_index=galaxy_index, subtracted_image=True)
+            self.figures_2d_of_galaxies(galaxy_index=galaxy_index)
 
             if self.plane.has_pixelization:
-                self.inversion_plotter.figures(reconstruction=True)
+                self.inversion_plotter.figures_2d(reconstruction=True)
 
             self.mat_plot_2d.output.subplot_to_figure(
                 auto_filename=f"subplot_of_galaxy_{galaxy_index}"
