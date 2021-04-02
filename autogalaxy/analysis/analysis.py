@@ -25,9 +25,6 @@ class Analysis(af.Analysis):
     #     with open(f"{paths.pickle_path}/settings.pickle", "wb+") as f:
     #         pickle.dump(self.settings, f)
 
-    def modify_before_fit(self, model, paths: af.Paths):
-        return self
-
 
 class AnalysisDataset(Analysis):
     def __init__(
@@ -38,7 +35,6 @@ class AnalysisDataset(Analysis):
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
         preloads=pload.Preloads(),
-        use_result_as_hyper_dataset=False,
     ):
 
         super().__init__(hyper_result=hyper_result, cosmology=cosmology)
@@ -56,7 +52,6 @@ class AnalysisDataset(Analysis):
 
         self.settings_pixelization = settings_pixelization
         self.settings_inversion = settings_inversion
-        self.use_result_as_hyper_dataset = use_result_as_hyper_dataset
         self.preloads = preloads
 
     def set_hyper_dataset(self, result):
@@ -154,7 +149,6 @@ class AnalysisImaging(AnalysisDataset):
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
         preloads=pload.Preloads(),
-        use_result_as_hyper_dataset=False,
     ):
 
         super().__init__(
@@ -164,7 +158,6 @@ class AnalysisImaging(AnalysisDataset):
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
             preloads=preloads,
-            use_result_as_hyper_dataset=use_result_as_hyper_dataset,
         )
 
         self.dataset = dataset
@@ -289,7 +282,6 @@ class AnalysisInterferometer(AnalysisDataset):
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
         preloads=pload.Preloads(),
-        use_result_as_hyper_dataset=False,
     ):
 
         super().__init__(
@@ -299,7 +291,6 @@ class AnalysisInterferometer(AnalysisDataset):
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
             preloads=preloads,
-            use_result_as_hyper_dataset=use_result_as_hyper_dataset,
         )
 
         if self.hyper_result is not None:
