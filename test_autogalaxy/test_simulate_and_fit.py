@@ -18,13 +18,12 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
 
     lens_galaxy = ag.Galaxy(
         redshift=0.5,
-        light=ag.lp.EllipticalSersic(centre=(0.1, 0.1), intensity=0.1),
-        mass=ag.mp.EllipticalIsothermal(centre=(0.1, 0.1), einstein_radius=1.8),
+        light=ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1),
+        mass=ag.mp.EllIsothermal(centre=(0.1, 0.1), einstein_radius=1.8),
     )
 
     source_galaxy = ag.Galaxy(
-        redshift=1.0,
-        light=ag.lp.EllipticalExponential(centre=(0.1, 0.1), intensity=0.5),
+        redshift=1.0, light=ag.lp.EllExponential(centre=(0.1, 0.1), intensity=0.5)
     )
 
     plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
@@ -100,12 +99,11 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
 
     lens_galaxy = ag.Galaxy(
         redshift=0.5,
-        light=ag.lp.EllipticalSersic(centre=(0.1, 0.1), intensity=0.1),
-        mass=ag.mp.EllipticalIsothermal(centre=(0.1, 0.1), einstein_radius=1.8),
+        light=ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1),
+        mass=ag.mp.EllIsothermal(centre=(0.1, 0.1), einstein_radius=1.8),
     )
     source_galaxy = ag.Galaxy(
-        redshift=1.0,
-        light=ag.lp.EllipticalExponential(centre=(0.1, 0.1), intensity=0.5),
+        redshift=1.0, light=ag.lp.EllExponential(centre=(0.1, 0.1), intensity=0.5)
     )
     plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
@@ -175,13 +173,12 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
 
     lens_galaxy = ag.Galaxy(
         redshift=0.5,
-        light=ag.lp.EllipticalSersic(centre=(0.1, 0.1), intensity=0.1),
-        mass=ag.mp.EllipticalIsothermal(centre=(0.1, 0.1), einstein_radius=1.0),
+        light=ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1),
+        mass=ag.mp.EllIsothermal(centre=(0.1, 0.1), einstein_radius=1.0),
     )
 
     source_galaxy = ag.Galaxy(
-        redshift=1.0,
-        light=ag.lp.EllipticalExponential(centre=(0.1, 0.1), intensity=0.5),
+        redshift=1.0, light=ag.lp.EllExponential(centre=(0.1, 0.1), intensity=0.5)
     )
 
     plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
@@ -246,8 +243,8 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
 
     lens_galaxy = ag.Galaxy(
         redshift=0.5,
-        light=ag.lp.EllipticalSersic(centre=(0.1, 0.1), intensity=0.1),
-        mass=ag.mp.EllipticalIsothermal(centre=(0.1, 0.1), einstein_radius=1.0),
+        light=ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1),
+        mass=ag.mp.EllIsothermal(centre=(0.1, 0.1), einstein_radius=1.0),
     )
 
     source_galaxy = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)

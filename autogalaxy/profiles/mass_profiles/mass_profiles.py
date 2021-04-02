@@ -63,7 +63,7 @@ class MassProfile(lensing.LensingObject):
 
 
 # noinspection PyAbstractClass
-class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
+class EllMassProfile(geometry_profiles.EllProfile, MassProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -80,7 +80,7 @@ class EllipticalMassProfile(geometry_profiles.EllipticalProfile, MassProfile):
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         """
-        super(EllipticalMassProfile, self).__init__(
+        super(EllMassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
 

@@ -112,10 +112,10 @@ class TestPointMass:
         assert deflections.shape_native == (2, 2)
 
 
-class TestBrokenPowerLaw:
+class TestPowerLawBroken:
     def test__convergence_correct_values(self):
 
-        broken_power_law = ag.mp.SphericalBrokenPowerLaw(
+        broken_power_law = ag.mp.SphPowerLawBroken(
             centre=(0, 0),
             einstein_radius=1.0,
             inner_slope=1.5,
@@ -135,7 +135,7 @@ class TestBrokenPowerLaw:
 
         assert convergence == pytest.approx([0.0355237, 0.0355237], 1e-4)
 
-        broken_power_law = ag.mp.EllipticalBrokenPowerLaw(
+        broken_power_law = ag.mp.EllPowerLawBroken(
             centre=(0, 0),
             elliptical_comps=(0.096225, 0.055555),
             einstein_radius=1.0,
@@ -150,7 +150,7 @@ class TestBrokenPowerLaw:
 
         assert convergence == pytest.approx(0.05006035, 1e-4)
 
-        broken_power_law = ag.mp.EllipticalBrokenPowerLaw(
+        broken_power_law = ag.mp.EllPowerLawBroken(
             centre=(0, 0),
             elliptical_comps=(-0.113433, 0.135184),
             einstein_radius=1.0,
@@ -165,7 +165,7 @@ class TestBrokenPowerLaw:
 
         assert convergence == pytest.approx(0.034768, 1e-4)
 
-        broken_power_law = ag.mp.EllipticalBrokenPowerLaw(
+        broken_power_law = ag.mp.EllPowerLawBroken(
             centre=(0, 0),
             elliptical_comps=(0.113433, -0.135184),
             einstein_radius=1.0,
@@ -180,7 +180,7 @@ class TestBrokenPowerLaw:
 
         assert convergence == pytest.approx(0.03622852, 1e-4)
 
-        broken_power_law = ag.mp.EllipticalBrokenPowerLaw(
+        broken_power_law = ag.mp.EllPowerLawBroken(
             centre=(0, 0),
             elliptical_comps=(-0.173789, -0.030643),
             einstein_radius=1.0,
@@ -197,7 +197,7 @@ class TestBrokenPowerLaw:
 
     def test__deflections__correct_values(self):
 
-        broken_power_law = ag.mp.SphericalBrokenPowerLaw(
+        broken_power_law = ag.mp.SphPowerLawBroken(
             centre=(0, 0),
             einstein_radius=1.0,
             inner_slope=1.5,
@@ -221,7 +221,7 @@ class TestBrokenPowerLaw:
         assert deflections[1, 0] == pytest.approx(0.404076, 1e-3)
         assert deflections[1, 1] == pytest.approx(0.808152, 1e-3)
 
-        broken_power_law = ag.mp.EllipticalBrokenPowerLaw(
+        broken_power_law = ag.mp.EllPowerLawBroken(
             centre=(0, 0),
             elliptical_comps=(0.096225, 0.055555),
             einstein_radius=1.0,
@@ -237,7 +237,7 @@ class TestBrokenPowerLaw:
         assert deflections[0, 0] == pytest.approx(0.40392, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.811619, 1e-3)
 
-        broken_power_law = ag.mp.EllipticalBrokenPowerLaw(
+        broken_power_law = ag.mp.EllPowerLawBroken(
             centre=(0, 0),
             elliptical_comps=(-0.07142, -0.085116),
             einstein_radius=1.0,
@@ -253,7 +253,7 @@ class TestBrokenPowerLaw:
         assert deflections[0, 0] == pytest.approx(0.4005338, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.8067221, 1e-3)
 
-        broken_power_law = ag.mp.EllipticalBrokenPowerLaw(
+        broken_power_law = ag.mp.EllPowerLawBroken(
             centre=(0, 0),
             elliptical_comps=(0.109423, 0.019294),
             einstein_radius=1.0,
@@ -269,7 +269,7 @@ class TestBrokenPowerLaw:
         assert deflections[0, 0] == pytest.approx(0.399651, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.813372, 1e-3)
 
-        broken_power_law = ag.mp.EllipticalBrokenPowerLaw(
+        broken_power_law = ag.mp.EllPowerLawBroken(
             centre=(0, 0),
             elliptical_comps=(-0.216506, -0.125),
             einstein_radius=1.0,
@@ -287,8 +287,8 @@ class TestBrokenPowerLaw:
 
     def test__convergence__change_geometry(self):
 
-        broken_power_law_0 = ag.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
-        broken_power_law_1 = ag.mp.SphericalBrokenPowerLaw(centre=(1.0, 1.0))
+        broken_power_law_0 = ag.mp.SphPowerLawBroken(centre=(0.0, 0.0))
+        broken_power_law_1 = ag.mp.SphPowerLawBroken(centre=(1.0, 1.0))
 
         convergence_0 = broken_power_law_0.convergence_from_grid(
             grid=np.array([[1.0, 1.0]])
@@ -300,8 +300,8 @@ class TestBrokenPowerLaw:
 
         assert convergence_0 == convergence_1
 
-        broken_power_law_0 = ag.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
-        broken_power_law_1 = ag.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
+        broken_power_law_0 = ag.mp.SphPowerLawBroken(centre=(0.0, 0.0))
+        broken_power_law_1 = ag.mp.SphPowerLawBroken(centre=(0.0, 0.0))
 
         convergence_0 = broken_power_law_0.convergence_from_grid(
             grid=np.array([[1.0, 0.0]])
@@ -313,10 +313,10 @@ class TestBrokenPowerLaw:
 
         assert convergence_0 == convergence_1
 
-        broken_power_law_0 = ag.mp.EllipticalBrokenPowerLaw(
+        broken_power_law_0 = ag.mp.EllPowerLawBroken(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
         )
-        broken_power_law_1 = ag.mp.EllipticalBrokenPowerLaw(
+        broken_power_law_1 = ag.mp.EllPowerLawBroken(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
 
@@ -332,8 +332,8 @@ class TestBrokenPowerLaw:
 
     def test__deflections__change_geometry(self):
 
-        broken_power_law_0 = ag.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
-        broken_power_law_1 = ag.mp.SphericalBrokenPowerLaw(centre=(1.0, 1.0))
+        broken_power_law_0 = ag.mp.SphPowerLawBroken(centre=(0.0, 0.0))
+        broken_power_law_1 = ag.mp.SphPowerLawBroken(centre=(1.0, 1.0))
 
         deflections_0 = broken_power_law_0.deflections_from_grid(
             grid=np.array([[1.0, 1.0]])
@@ -345,8 +345,8 @@ class TestBrokenPowerLaw:
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
 
-        broken_power_law_0 = ag.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
-        broken_power_law_1 = ag.mp.SphericalBrokenPowerLaw(centre=(0.0, 0.0))
+        broken_power_law_0 = ag.mp.SphPowerLawBroken(centre=(0.0, 0.0))
+        broken_power_law_1 = ag.mp.SphPowerLawBroken(centre=(0.0, 0.0))
 
         deflections_0 = broken_power_law_0.deflections_from_grid(
             grid=np.array([[1.0, 0.0]])
@@ -358,10 +358,10 @@ class TestBrokenPowerLaw:
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
-        broken_power_law_0 = ag.mp.EllipticalBrokenPowerLaw(
+        broken_power_law_0 = ag.mp.EllPowerLawBroken(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
         )
-        broken_power_law_1 = ag.mp.EllipticalBrokenPowerLaw(
+        broken_power_law_1 = ag.mp.EllPowerLawBroken(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
 
@@ -377,7 +377,7 @@ class TestBrokenPowerLaw:
 
     def test__deflections__compare_to_power_law(self):
 
-        broken_power_law = ag.mp.SphericalBrokenPowerLaw(
+        broken_power_law = ag.mp.SphPowerLawBroken(
             centre=(0, 0),
             einstein_radius=2.0,
             inner_slope=1.999,
@@ -392,16 +392,14 @@ class TestBrokenPowerLaw:
 
         broken_yx_ratio = deflections[0, 0] / deflections[0, 1]
 
-        power_law = ag.mp.SphericalPowerLaw(
-            centre=(0, 0), einstein_radius=2.0, slope=2.0
-        )
+        power_law = ag.mp.SphPowerLaw(centre=(0, 0), einstein_radius=2.0, slope=2.0)
         deflections = power_law.deflections_from_grid(grid=np.array([[0.5, 1.0]]))
 
         power_law_yx_ratio = deflections[0, 0] / deflections[0, 1]
 
         assert broken_yx_ratio == pytest.approx(power_law_yx_ratio, 1.0e-4)
 
-        broken_power_law = ag.mp.SphericalBrokenPowerLaw(
+        broken_power_law = ag.mp.SphPowerLawBroken(
             centre=(0, 0),
             einstein_radius=2.0,
             inner_slope=2.399,
@@ -416,9 +414,7 @@ class TestBrokenPowerLaw:
 
         broken_yx_ratio = deflections[0, 0] / deflections[0, 1]
 
-        power_law = ag.mp.SphericalPowerLaw(
-            centre=(0, 0), einstein_radius=2.0, slope=2.4
-        )
+        power_law = ag.mp.SphPowerLaw(centre=(0, 0), einstein_radius=2.0, slope=2.4)
         deflections = power_law.deflections_from_grid(grid=np.array([[0.5, 1.0]]))
 
         power_law_yx_ratio = deflections[0, 0] / deflections[0, 1]
@@ -429,7 +425,7 @@ class TestBrokenPowerLaw:
 
         grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
-        cored_power_law = ag.mp.EllipticalBrokenPowerLaw()
+        cored_power_law = ag.mp.EllPowerLawBroken()
 
         convergence = cored_power_law.convergence_from_grid(grid=grid)
 
@@ -439,7 +435,7 @@ class TestBrokenPowerLaw:
 
         assert deflections.shape_native == (2, 2)
 
-        cored_power_law = ag.mp.SphericalBrokenPowerLaw()
+        cored_power_law = ag.mp.SphPowerLawBroken()
 
         convergence = cored_power_law.convergence_from_grid(grid=grid)
 
@@ -450,10 +446,10 @@ class TestBrokenPowerLaw:
         assert deflections.shape_native == (2, 2)
 
 
-class TestCoredPowerLaw:
+class TestPowerLawCored:
     def test__convergence_correct_values(self):
 
-        cored_power_law = ag.mp.SphericalCoredPowerLaw(
+        cored_power_law = ag.mp.SphPowerLawCored(
             centre=(1, 1), einstein_radius=1.0, slope=2.2, core_radius=0.1
         )
 
@@ -461,7 +457,7 @@ class TestCoredPowerLaw:
 
         assert convergence == pytest.approx(0.39762, 1e-4)
 
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law = ag.mp.EllPowerLawCored(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.333333),
             einstein_radius=1.0,
@@ -473,7 +469,7 @@ class TestCoredPowerLaw:
 
         assert convergence == pytest.approx(0.45492, 1e-3)
 
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law = ag.mp.EllPowerLawCored(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.333333),
             einstein_radius=2.0,
@@ -486,7 +482,7 @@ class TestCoredPowerLaw:
         assert convergence == pytest.approx(1.3887, 1e-3)
 
     def test__potential_correct_values(self):
-        power_law = ag.mp.SphericalCoredPowerLaw(
+        power_law = ag.mp.SphPowerLawCored(
             centre=(-0.7, 0.5), einstein_radius=1.0, slope=1.8, core_radius=0.2
         )
 
@@ -494,7 +490,7 @@ class TestCoredPowerLaw:
 
         assert potential == pytest.approx(0.54913, 1e-3)
 
-        power_law = ag.mp.SphericalCoredPowerLaw(
+        power_law = ag.mp.SphPowerLawCored(
             centre=(0.2, -0.2), einstein_radius=0.5, slope=2.4, core_radius=0.5
         )
 
@@ -502,7 +498,7 @@ class TestCoredPowerLaw:
 
         assert potential == pytest.approx(0.01820, 1e-3)
 
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law = ag.mp.EllPowerLawCored(
             centre=(0.2, -0.2),
             elliptical_comps=(-0.216506, -0.125),
             einstein_radius=0.5,
@@ -516,7 +512,7 @@ class TestCoredPowerLaw:
 
         assert potential == pytest.approx(0.02319, 1e-3)
 
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law = ag.mp.EllPowerLawCored(
             centre=(-0.7, 0.5),
             elliptical_comps=(0.152828, -0.088235),
             einstein_radius=1.3,
@@ -532,7 +528,7 @@ class TestCoredPowerLaw:
 
     def test__deflections__correct_values(self):
 
-        power_law = ag.mp.SphericalCoredPowerLaw(
+        power_law = ag.mp.SphPowerLawCored(
             centre=(-0.7, 0.5), einstein_radius=1.0, slope=1.8, core_radius=0.2
         )
 
@@ -541,7 +537,7 @@ class TestCoredPowerLaw:
         assert deflections[0, 0] == pytest.approx(0.80677, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.30680, 1e-3)
 
-        power_law = ag.mp.SphericalCoredPowerLaw(
+        power_law = ag.mp.SphPowerLawCored(
             centre=(0.2, -0.2), einstein_radius=0.5, slope=2.4, core_radius=0.5
         )
 
@@ -550,7 +546,7 @@ class TestCoredPowerLaw:
         assert deflections[0, 0] == pytest.approx(-0.00321, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.09316, 1e-3)
 
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law = ag.mp.EllPowerLawCored(
             centre=(-0.7, 0.5),
             elliptical_comps=(0.152828, -0.088235),
             einstein_radius=1.3,
@@ -565,7 +561,7 @@ class TestCoredPowerLaw:
         assert deflections[0, 0] == pytest.approx(0.9869, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.54882, 1e-3)
 
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law = ag.mp.EllPowerLawCored(
             centre=(0.2, -0.2),
             elliptical_comps=(-0.216506, -0.125),
             einstein_radius=0.5,
@@ -580,8 +576,8 @@ class TestCoredPowerLaw:
         assert deflections[0, 1] == pytest.approx(0.11403, 1e-3)
 
     def test__convergence__change_geometry(self):
-        cored_power_law_0 = ag.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
-        cored_power_law_1 = ag.mp.SphericalCoredPowerLaw(centre=(1.0, 1.0))
+        cored_power_law_0 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
+        cored_power_law_1 = ag.mp.SphPowerLawCored(centre=(1.0, 1.0))
 
         convergence_0 = cored_power_law_0.convergence_from_grid(
             grid=np.array([[1.0, 1.0]])
@@ -593,8 +589,8 @@ class TestCoredPowerLaw:
 
         assert convergence_0 == convergence_1
 
-        cored_power_law_0 = ag.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
-        cored_power_law_1 = ag.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
+        cored_power_law_0 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
+        cored_power_law_1 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
 
         convergence_0 = cored_power_law_0.convergence_from_grid(
             grid=np.array([[1.0, 0.0]])
@@ -606,10 +602,10 @@ class TestCoredPowerLaw:
 
         assert convergence_0 == convergence_1
 
-        cored_power_law_0 = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law_0 = ag.mp.EllPowerLawCored(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
         )
-        cored_power_law_1 = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law_1 = ag.mp.EllPowerLawCored(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
 
@@ -624,8 +620,8 @@ class TestCoredPowerLaw:
         assert convergence_0 == convergence_1
 
     def test__potential__change_geometry(self):
-        cored_power_law_0 = ag.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
-        cored_power_law_1 = ag.mp.SphericalCoredPowerLaw(centre=(1.0, 1.0))
+        cored_power_law_0 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
+        cored_power_law_1 = ag.mp.SphPowerLawCored(centre=(1.0, 1.0))
 
         potential_0 = cored_power_law_0.potential_from_grid(grid=np.array([[1.0, 1.0]]))
 
@@ -633,8 +629,8 @@ class TestCoredPowerLaw:
 
         assert potential_0 == potential_1
 
-        cored_power_law_0 = ag.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
-        cored_power_law_1 = ag.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
+        cored_power_law_0 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
+        cored_power_law_1 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
 
         potential_0 = cored_power_law_0.potential_from_grid(grid=np.array([[1.0, 0.0]]))
 
@@ -642,10 +638,10 @@ class TestCoredPowerLaw:
 
         assert potential_0 == potential_1
 
-        cored_power_law_0 = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law_0 = ag.mp.EllPowerLawCored(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
         )
-        cored_power_law_1 = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law_1 = ag.mp.EllPowerLawCored(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
         potential_0 = cored_power_law_0.potential_from_grid(grid=np.array([[1.0, 0.0]]))
@@ -655,8 +651,8 @@ class TestCoredPowerLaw:
         assert potential_0 == potential_1
 
     def test__deflections__change_geometry(self):
-        cored_power_law_0 = ag.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
-        cored_power_law_1 = ag.mp.SphericalCoredPowerLaw(centre=(1.0, 1.0))
+        cored_power_law_0 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
+        cored_power_law_1 = ag.mp.SphPowerLawCored(centre=(1.0, 1.0))
 
         deflections_0 = cored_power_law_0.deflections_from_grid(
             grid=np.array([[1.0, 1.0]])
@@ -668,8 +664,8 @@ class TestCoredPowerLaw:
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
 
-        cored_power_law_0 = ag.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
-        cored_power_law_1 = ag.mp.SphericalCoredPowerLaw(centre=(0.0, 0.0))
+        cored_power_law_0 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
+        cored_power_law_1 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
 
         deflections_0 = cored_power_law_0.deflections_from_grid(
             grid=np.array([[1.0, 0.0]])
@@ -681,10 +677,10 @@ class TestCoredPowerLaw:
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
-        cored_power_law_0 = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law_0 = ag.mp.EllPowerLawCored(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
         )
-        cored_power_law_1 = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law_1 = ag.mp.EllPowerLawCored(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
 
@@ -699,14 +695,14 @@ class TestCoredPowerLaw:
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
     def test__spherical_and_elliptical_match(self):
-        elliptical = ag.mp.EllipticalCoredPowerLaw(
+        elliptical = ag.mp.EllPowerLawCored(
             centre=(1.1, 1.1),
             elliptical_comps=(0.0, 0.0),
             einstein_radius=3.0,
             slope=2.2,
             core_radius=0.1,
         )
-        spherical = ag.mp.SphericalCoredPowerLaw(
+        spherical = ag.mp.SphPowerLawCored(
             centre=(1.1, 1.1), einstein_radius=3.0, slope=2.2, core_radius=0.1
         )
 
@@ -724,7 +720,7 @@ class TestCoredPowerLaw:
 
         grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw()
+        cored_power_law = ag.mp.EllPowerLawCored()
 
         convergence = cored_power_law.convergence_from_grid(grid=grid)
 
@@ -738,7 +734,7 @@ class TestCoredPowerLaw:
 
         assert deflections.shape_native == (2, 2)
 
-        cored_power_law = ag.mp.SphericalCoredPowerLaw()
+        cored_power_law = ag.mp.SphPowerLawCored()
 
         convergence = cored_power_law.convergence_from_grid(grid=grid)
 
@@ -756,31 +752,25 @@ class TestCoredPowerLaw:
 class TestPowerLaw:
     def test__convergence_correct_values(self):
 
-        power_law = ag.mp.SphericalPowerLaw(
-            centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0
-        )
+        power_law = ag.mp.SphPowerLaw(centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0)
 
         convergence = power_law.convergence_from_grid(grid=np.array([[1.0, 0.0]]))
 
         assert convergence == pytest.approx(0.5, 1e-3)
 
-        power_law = ag.mp.SphericalPowerLaw(
-            centre=(0.0, 0.0), einstein_radius=2.0, slope=2.2
-        )
+        power_law = ag.mp.SphPowerLaw(centre=(0.0, 0.0), einstein_radius=2.0, slope=2.2)
 
         convergence = power_law.convergence_from_grid(grid=np.array([[2.0, 0.0]]))
 
         assert convergence == pytest.approx(0.4, 1e-3)
 
-        power_law = ag.mp.SphericalPowerLaw(
-            centre=(0.0, 0.0), einstein_radius=2.0, slope=2.2
-        )
+        power_law = ag.mp.SphPowerLaw(centre=(0.0, 0.0), einstein_radius=2.0, slope=2.2)
 
         convergence = power_law.convergence_from_grid(grid=np.array([[2.0, 0.0]]))
 
         assert convergence == pytest.approx(0.4, 1e-3)
 
-        power_law = ag.mp.EllipticalPowerLaw(
+        power_law = ag.mp.EllPowerLaw(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.333333),
             einstein_radius=1.0,
@@ -791,7 +781,7 @@ class TestPowerLaw:
 
         assert convergence == pytest.approx(0.466666, 1e-3)
 
-        power_law = ag.mp.EllipticalPowerLaw(
+        power_law = ag.mp.EllPowerLaw(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.333333),
             einstein_radius=2.0,
@@ -803,7 +793,7 @@ class TestPowerLaw:
         assert convergence == pytest.approx(1.4079, 1e-3)
 
     def test__potential_correct_values(self):
-        power_law = ag.mp.SphericalPowerLaw(
+        power_law = ag.mp.SphPowerLaw(
             centre=(-0.7, 0.5), einstein_radius=1.3, slope=2.3
         )
 
@@ -811,7 +801,7 @@ class TestPowerLaw:
 
         assert potential == pytest.approx(1.90421, 1e-3)
 
-        power_law = ag.mp.SphericalPowerLaw(
+        power_law = ag.mp.SphPowerLaw(
             centre=(-0.7, 0.5), einstein_radius=1.3, slope=1.8
         )
 
@@ -819,7 +809,7 @@ class TestPowerLaw:
 
         assert potential == pytest.approx(0.93758, 1e-3)
 
-        power_law = ag.mp.EllipticalPowerLaw(
+        power_law = ag.mp.EllPowerLaw(
             centre=(-0.7, 0.5),
             elliptical_comps=(0.152828, -0.088235),
             einstein_radius=1.3,
@@ -830,7 +820,7 @@ class TestPowerLaw:
 
         assert potential == pytest.approx(1.53341, 1e-3)
 
-        power_law = ag.mp.EllipticalPowerLaw(
+        power_law = ag.mp.EllPowerLaw(
             centre=(-0.7, 0.5),
             elliptical_comps=(0.152828, -0.088235),
             einstein_radius=1.3,
@@ -843,34 +833,28 @@ class TestPowerLaw:
 
     def test__deflections__correct_values(self):
 
-        power_law = ag.mp.SphericalPowerLaw(
-            centre=(0.2, 0.2), einstein_radius=1.0, slope=2.0
-        )
+        power_law = ag.mp.SphPowerLaw(centre=(0.2, 0.2), einstein_radius=1.0, slope=2.0)
 
         deflections = power_law.deflections_from_grid(grid=np.array([[0.1875, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(-0.31622, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.94868, 1e-3)
 
-        power_law = ag.mp.SphericalPowerLaw(
-            centre=(0.2, 0.2), einstein_radius=1.0, slope=2.5
-        )
+        power_law = ag.mp.SphPowerLaw(centre=(0.2, 0.2), einstein_radius=1.0, slope=2.5)
 
         deflections = power_law.deflections_from_grid(grid=np.array([[0.1875, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(-1.59054, 1e-3)
         assert deflections[0, 1] == pytest.approx(-4.77162, 1e-3)
 
-        power_law = ag.mp.SphericalPowerLaw(
-            centre=(0.2, 0.2), einstein_radius=1.0, slope=1.5
-        )
+        power_law = ag.mp.SphPowerLaw(centre=(0.2, 0.2), einstein_radius=1.0, slope=1.5)
 
         deflections = power_law.deflections_from_grid(grid=np.array([[0.1875, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(-0.06287, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.18861, 1e-3)
 
-        power_law = ag.mp.EllipticalPowerLaw(
+        power_law = ag.mp.EllPowerLaw(
             centre=(0, 0),
             elliptical_comps=(0.0, 0.333333),
             einstein_radius=1.0,
@@ -882,7 +866,7 @@ class TestPowerLaw:
         assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)
 
-        power_law = ag.mp.EllipticalPowerLaw(
+        power_law = ag.mp.EllPowerLaw(
             centre=(0, 0),
             elliptical_comps=(0.0, 0.333333),
             einstein_radius=1.0,
@@ -894,7 +878,7 @@ class TestPowerLaw:
         assert deflections[0, 0] == pytest.approx(1.29641, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.99629, 1e-3)
 
-        power_law = ag.mp.EllipticalPowerLaw(
+        power_law = ag.mp.EllPowerLaw(
             centre=(0, 0),
             elliptical_comps=(0.0, 0.333333),
             einstein_radius=1.0,
@@ -906,7 +890,7 @@ class TestPowerLaw:
         assert deflections[0, 0] == pytest.approx(0.48036, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.26729, 1e-3)
 
-        power_law = ag.mp.EllipticalPowerLaw(
+        power_law = ag.mp.EllPowerLaw(
             centre=(-0.7, 0.5),
             elliptical_comps=(0.152828, -0.088235),
             einstein_radius=1.3,
@@ -920,14 +904,14 @@ class TestPowerLaw:
 
     def test__compare_to_cored_power_law(self):
 
-        power_law = ag.mp.EllipticalPowerLaw(
+        power_law = ag.mp.EllPowerLaw(
             centre=(0.0, 0.0),
             elliptical_comps=(0.333333, 0.0),
             einstein_radius=1.0,
             slope=2.3,
         )
 
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law = ag.mp.EllPowerLawCored(
             centre=(0.0, 0.0),
             elliptical_comps=(0.333333, 0.0),
             einstein_radius=1.0,
@@ -950,16 +934,14 @@ class TestPowerLaw:
 
     def test__spherical_and_elliptical_match(self):
 
-        elliptical = ag.mp.EllipticalPowerLaw(
+        elliptical = ag.mp.EllPowerLaw(
             centre=(1.1, 1.1),
             elliptical_comps=(0.0, 0.0),
             einstein_radius=3.0,
             slope=2.4,
         )
 
-        spherical = ag.mp.SphericalPowerLaw(
-            centre=(1.1, 1.1), einstein_radius=3.0, slope=2.4
-        )
+        spherical = ag.mp.SphPowerLaw(centre=(1.1, 1.1), einstein_radius=3.0, slope=2.4)
 
         assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(
             spherical.convergence_from_grid(grid=grid), 1e-4
@@ -975,7 +957,7 @@ class TestPowerLaw:
 
         grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
-        power_law = ag.mp.EllipticalPowerLaw()
+        power_law = ag.mp.EllPowerLaw()
 
         convergence = power_law.convergence_from_grid(grid=grid)
 
@@ -989,7 +971,7 @@ class TestPowerLaw:
 
         assert deflections.shape_native == (2, 2)
 
-        power_law = ag.mp.SphericalPowerLaw()
+        power_law = ag.mp.SphPowerLaw()
 
         convergence = power_law.convergence_from_grid(grid=grid)
 
@@ -1004,10 +986,10 @@ class TestPowerLaw:
         assert deflections.shape_native == (2, 2)
 
 
-class TestCoredIsothermal:
+class TestIsothermalCored:
     def test__convergence_correct_values(self):
 
-        cored_isothermal = ag.mp.SphericalCoredIsothermal(
+        cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(1, 1), einstein_radius=1.0, core_radius=0.1
         )
 
@@ -1015,7 +997,7 @@ class TestCoredIsothermal:
 
         assert convergence == pytest.approx(0.49752, 1e-4)
 
-        cored_isothermal = ag.mp.SphericalCoredIsothermal(
+        cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(1, 1), einstein_radius=1.0, core_radius=0.1
         )
 
@@ -1023,7 +1005,7 @@ class TestCoredIsothermal:
 
         assert convergence == pytest.approx(0.49752, 1e-4)
 
-        cored_isothermal = ag.mp.SphericalCoredIsothermal(
+        cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(0.0, 0.0), einstein_radius=1.0, core_radius=0.2
         )
 
@@ -1033,7 +1015,7 @@ class TestCoredIsothermal:
 
         assert convergence == pytest.approx(0.49029, 1e-3)
 
-        cored_isothermal = ag.mp.SphericalCoredIsothermal(
+        cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(0.0, 0.0), einstein_radius=2.0, core_radius=0.2
         )
 
@@ -1043,7 +1025,7 @@ class TestCoredIsothermal:
 
         assert convergence == pytest.approx(2.0 * 0.49029, 1e-3)
 
-        cored_isothermal = ag.mp.SphericalCoredIsothermal(
+        cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(0.0, 0.0), einstein_radius=1.0, core_radius=0.2
         )
 
@@ -1054,7 +1036,7 @@ class TestCoredIsothermal:
         assert convergence == pytest.approx(0.49029, 1e-3)
 
         # axis ratio changes only einstein_rescaled, so wwe can use the above value and times by 1.0/1.5.
-        cored_isothermal = ag.mp.EllipticalCoredIsothermal(
+        cored_isothermal = ag.mp.EllIsothermalCored(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.333333),
             einstein_radius=1.0,
@@ -1067,7 +1049,7 @@ class TestCoredIsothermal:
 
         assert convergence == pytest.approx(0.49029 * 1.33333, 1e-3)
 
-        cored_isothermal = ag.mp.EllipticalCoredIsothermal(
+        cored_isothermal = ag.mp.EllIsothermalCored(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
             einstein_radius=2.0,
@@ -1085,7 +1067,7 @@ class TestCoredIsothermal:
         # So the change in the value is 0.5 / (1/1.5) = 1.0 / 0.75
         # axis ratio changes only einstein_rescaled, so wwe can use the above value and times by 1.0/1.5.
 
-        cored_isothermal = ag.mp.EllipticalCoredIsothermal(
+        cored_isothermal = ag.mp.EllIsothermalCored(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.333333),
             einstein_radius=1.0,
@@ -1100,7 +1082,7 @@ class TestCoredIsothermal:
 
     def test__potential__correct_values(self):
 
-        cored_isothermal = ag.mp.SphericalCoredIsothermal(
+        cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(-0.7, 0.5), einstein_radius=1.3, core_radius=0.2
         )
 
@@ -1110,7 +1092,7 @@ class TestCoredIsothermal:
 
         assert potential == pytest.approx(0.72231, 1e-3)
 
-        cored_isothermal = ag.mp.SphericalCoredIsothermal(
+        cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(0.2, -0.2), einstein_radius=0.5, core_radius=0.5
         )
 
@@ -1120,7 +1102,7 @@ class TestCoredIsothermal:
 
         assert potential == pytest.approx(0.03103, 1e-3)
 
-        cored_isothermal = ag.mp.EllipticalCoredIsothermal(
+        cored_isothermal = ag.mp.EllIsothermalCored(
             centre=(-0.7, 0.5),
             elliptical_comps=(0.152828, -0.088235),
             einstein_radius=1.3,
@@ -1133,7 +1115,7 @@ class TestCoredIsothermal:
 
         assert potential == pytest.approx(0.74354, 1e-3)
 
-        cored_isothermal = ag.mp.EllipticalCoredIsothermal(
+        cored_isothermal = ag.mp.EllIsothermalCored(
             centre=(0.2, -0.2),
             elliptical_comps=(-0.216506, -0.125),
             einstein_radius=0.5,
@@ -1148,7 +1130,7 @@ class TestCoredIsothermal:
 
     def test__deflections__correct_values(self):
 
-        cored_isothermal = ag.mp.SphericalCoredIsothermal(
+        cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(-0.7, 0.5), einstein_radius=1.3, core_radius=0.2
         )
 
@@ -1159,7 +1141,7 @@ class TestCoredIsothermal:
         assert deflections[0, 0] == pytest.approx(0.98582, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.37489, 1e-3)
 
-        cored_isothermal = ag.mp.SphericalCoredIsothermal(
+        cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(0.2, -0.2), einstein_radius=0.5, core_radius=0.5
         )
 
@@ -1170,7 +1152,7 @@ class TestCoredIsothermal:
         assert deflections[0, 0] == pytest.approx(-0.00559, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.16216, 1e-3)
 
-        cored_isothermal = ag.mp.EllipticalCoredIsothermal(
+        cored_isothermal = ag.mp.EllIsothermalCored(
             centre=(-0.7, 0.5),
             elliptical_comps=(0.152828, -0.088235),
             einstein_radius=1.3,
@@ -1184,7 +1166,7 @@ class TestCoredIsothermal:
         assert deflections[0, 0] == pytest.approx(0.95429, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.52047, 1e-3)
 
-        cored_isothermal = ag.mp.EllipticalCoredIsothermal(
+        cored_isothermal = ag.mp.EllIsothermalCored(
             centre=(0.2, -0.2),
             elliptical_comps=(-0.216506, -0.125),
             einstein_radius=0.5,
@@ -1200,14 +1182,14 @@ class TestCoredIsothermal:
 
     def test__compare_to_cored_power_law(self):
 
-        power_law = ag.mp.EllipticalCoredIsothermal(
+        power_law = ag.mp.EllIsothermalCored(
             centre=(0.0, 0.0),
             elliptical_comps=(0.333333, 0.0),
             einstein_radius=1.0,
             core_radius=0.1,
         )
 
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law = ag.mp.EllPowerLawCored(
             centre=(0.0, 0.0),
             elliptical_comps=(0.333333, 0.0),
             einstein_radius=1.0,
@@ -1229,13 +1211,13 @@ class TestCoredIsothermal:
         )
 
     def test__spherical_and_elliptical_match(self):
-        elliptical = ag.mp.EllipticalCoredIsothermal(
+        elliptical = ag.mp.EllIsothermalCored(
             centre=(1.1, 1.1),
             elliptical_comps=(0.0, 0.0),
             einstein_radius=3.0,
             core_radius=1.0,
         )
-        spherical = ag.mp.SphericalCoredIsothermal(
+        spherical = ag.mp.SphIsothermalCored(
             centre=(1.1, 1.1), einstein_radius=3.0, core_radius=1.0
         )
 
@@ -1253,7 +1235,7 @@ class TestCoredIsothermal:
 
         grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
-        cored_isothermal = ag.mp.EllipticalCoredIsothermal()
+        cored_isothermal = ag.mp.EllIsothermalCored()
 
         convergence = cored_isothermal.convergence_from_grid(grid=grid)
 
@@ -1267,7 +1249,7 @@ class TestCoredIsothermal:
 
         assert deflections.shape_native == (2, 2)
 
-        cored_isothermal = ag.mp.SphericalCoredIsothermal()
+        cored_isothermal = ag.mp.SphIsothermalCored()
 
         convergence = cored_isothermal.convergence_from_grid(grid=grid)
 
@@ -1288,13 +1270,13 @@ class TestIsothermal:
         # eta = 1.0
         # kappa = 0.5 * 1.0 ** 1.0
 
-        isothermal = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+        isothermal = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
         convergence = isothermal.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
 
         assert convergence == pytest.approx(0.5 * 2.0, 1e-3)
 
-        isothermal = ag.mp.EllipticalIsothermal(
+        isothermal = ag.mp.EllIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=1.0
         )
 
@@ -1302,7 +1284,7 @@ class TestIsothermal:
 
         assert convergence == pytest.approx(0.5, 1e-3)
 
-        isothermal = ag.mp.EllipticalIsothermal(
+        isothermal = ag.mp.EllIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=2.0
         )
 
@@ -1310,7 +1292,7 @@ class TestIsothermal:
 
         assert convergence == pytest.approx(0.5 * 2.0, 1e-3)
 
-        isothermal = ag.mp.EllipticalIsothermal(
+        isothermal = ag.mp.EllIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.333333), einstein_radius=1.0
         )
 
@@ -1320,13 +1302,13 @@ class TestIsothermal:
 
     def test__potential__correct_values(self):
 
-        isothermal = ag.mp.SphericalIsothermal(centre=(-0.7, 0.5), einstein_radius=1.3)
+        isothermal = ag.mp.SphIsothermal(centre=(-0.7, 0.5), einstein_radius=1.3)
 
         potential = isothermal.potential_from_grid(grid=np.array([[0.1875, 0.1625]]))
 
         assert potential == pytest.approx(1.23435, 1e-3)
 
-        isothermal = ag.mp.EllipticalIsothermal(
+        isothermal = ag.mp.EllIsothermal(
             centre=(-0.7, 0.5),
             elliptical_comps=(0.152828, -0.088235),
             einstein_radius=1.3,
@@ -1338,7 +1320,7 @@ class TestIsothermal:
 
     def test__deflections__correct_values(self):
 
-        isothermal = ag.mp.SphericalIsothermal(centre=(-0.7, 0.5), einstein_radius=1.3)
+        isothermal = ag.mp.SphIsothermal(centre=(-0.7, 0.5), einstein_radius=1.3)
 
         deflections = isothermal.deflections_from_grid(
             grid=np.array([[0.1875, 0.1625]])
@@ -1347,7 +1329,7 @@ class TestIsothermal:
         assert deflections[0, 0] == pytest.approx(1.21510, 1e-4)
         assert deflections[0, 1] == pytest.approx(-0.46208, 1e-4)
 
-        isothermal = ag.mp.SphericalIsothermal(centre=(-0.1, 0.1), einstein_radius=5.0)
+        isothermal = ag.mp.SphIsothermal(centre=(-0.1, 0.1), einstein_radius=5.0)
 
         deflections = isothermal.deflections_from_grid(
             grid=np.array([[0.1875, 0.1625]])
@@ -1356,7 +1338,7 @@ class TestIsothermal:
         assert deflections[0, 0] == pytest.approx(4.88588, 1e-4)
         assert deflections[0, 1] == pytest.approx(1.06214, 1e-4)
 
-        isothermal = ag.mp.EllipticalIsothermal(
+        isothermal = ag.mp.EllIsothermal(
             centre=(0, 0), elliptical_comps=(0.0, 0.333333), einstein_radius=1.0
         )
 
@@ -1367,7 +1349,7 @@ class TestIsothermal:
         assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)
 
-        isothermal = ag.mp.EllipticalIsothermal(
+        isothermal = ag.mp.EllIsothermal(
             centre=(0, 0), elliptical_comps=(0.0, 0.333333), einstein_radius=1.0
         )
 
@@ -1380,7 +1362,7 @@ class TestIsothermal:
 
     def test__shear__correct_values(self):
 
-        isothermal = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+        isothermal = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
         convergence = isothermal.convergence_from_grid(grid=np.array([[0.0, 1.0]]))
 
@@ -1401,7 +1383,7 @@ class TestIsothermal:
         assert shear[0, 0] == pytest.approx(-(30.0 / 34.0) * convergence, 1e-4)
         assert shear[0, 1] == pytest.approx(-(16.0 / 34.0) * convergence, 1e-4)
 
-        isothermal = ag.mp.EllipticalIsothermal(
+        isothermal = ag.mp.EllIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=2.0
         )
 
@@ -1412,7 +1394,7 @@ class TestIsothermal:
         assert shear[0, 0] == pytest.approx(0.0, 1e-4)
         assert shear[0, 1] == pytest.approx(-convergence, 1e-4)
 
-        isothermal = ag.mp.EllipticalIsothermal(
+        isothermal = ag.mp.EllIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.3, 0.4), einstein_radius=2.0
         )
 
@@ -1422,10 +1404,10 @@ class TestIsothermal:
         assert shear[0, 1] == pytest.approx(-1.06066, 1e-4)
 
     def test__compare_to_cored_power_law(self):
-        isothermal = ag.mp.EllipticalIsothermal(
+        isothermal = ag.mp.EllIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.333333, 0.0), einstein_radius=1.0
         )
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law = ag.mp.EllPowerLawCored(
             centre=(0.0, 0.0),
             elliptical_comps=(0.333333, 0.0),
             einstein_radius=1.0,
@@ -1446,10 +1428,10 @@ class TestIsothermal:
         )
 
     def test__spherical_and_elliptical_match(self):
-        elliptical = ag.mp.EllipticalIsothermal(
+        elliptical = ag.mp.EllIsothermal(
             centre=(1.1, 1.1), elliptical_comps=(0.0, 0.0), einstein_radius=3.0
         )
-        spherical = ag.mp.SphericalIsothermal(centre=(1.1, 1.1), einstein_radius=3.0)
+        spherical = ag.mp.SphIsothermal(centre=(1.1, 1.1), einstein_radius=3.0)
 
         assert elliptical.convergence_from_grid(grid=grid) == pytest.approx(
             spherical.convergence_from_grid(grid=grid), 1e-4
@@ -1465,7 +1447,7 @@ class TestIsothermal:
 
         grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
-        isothermal = ag.mp.EllipticalIsothermal()
+        isothermal = ag.mp.EllIsothermal()
 
         convergence = isothermal.convergence_from_grid(grid=grid)
 
@@ -1479,7 +1461,7 @@ class TestIsothermal:
 
         assert deflections.shape_native == (2, 2)
 
-        isothermal = ag.mp.SphericalIsothermal()
+        isothermal = ag.mp.SphIsothermal()
 
         convergence = isothermal.convergence_from_grid(grid=grid)
 

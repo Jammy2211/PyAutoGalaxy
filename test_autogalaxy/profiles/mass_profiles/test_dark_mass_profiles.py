@@ -13,7 +13,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 class TestAbstractNFW:
     def test__coord_function_f__correct_values(self):
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
         )
 
@@ -36,7 +36,7 @@ class TestAbstractNFW:
         assert (coord_f == np.array([1.0, 1.0])).all()
 
     def test__coord_function_g__correct_values(self):
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
         )
 
@@ -62,7 +62,7 @@ class TestAbstractNFW:
 
     def test__coord_function_h__correct_values(self):
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
         )
 
@@ -72,7 +72,7 @@ class TestAbstractNFW:
 
     def test__coord_function_k__correct_values(self):
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=2.0
         )
 
@@ -80,7 +80,7 @@ class TestAbstractNFW:
 
         assert coord_k == pytest.approx(np.array([-0.09983408, -0.06661738]), 1.0e-4)
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=4.0
         )
 
@@ -90,7 +90,7 @@ class TestAbstractNFW:
 
     def test__coord_function_l__correct_values(self):
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=2.0
         )
 
@@ -98,7 +98,7 @@ class TestAbstractNFW:
 
         assert coord_l == pytest.approx(np.array([0.00080191, 0.00080191]), 1.0e-4)
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
         )
 
@@ -106,7 +106,7 @@ class TestAbstractNFW:
 
         assert coord_l == pytest.approx(np.array([0.00178711, 0.00178711]), 1.0e-4)
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
         )
 
@@ -116,7 +116,7 @@ class TestAbstractNFW:
 
     def test__coord_function_m__correct_values(self):
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=2.0
         )
 
@@ -124,7 +124,7 @@ class TestAbstractNFW:
 
         assert coord_m == pytest.approx(np.array([0.0398826, 0.0398826]), 1.0e-4)
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
         )
 
@@ -132,7 +132,7 @@ class TestAbstractNFW:
 
         assert coord_m == pytest.approx(np.array([0.06726646, 0.06726646]), 1.0e-4)
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
         )
 
@@ -146,7 +146,7 @@ class TestAbstractNFW:
             arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0
         )
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
         # When converting to kpc, the critical convergence is divided by kpc_per_arcsec**2.0 = 2.0**2.0
         # The scale radius also becomes scale_radius*kpc_per_arcsec = 2.0
@@ -175,7 +175,7 @@ class TestAbstractNFW:
         assert rho == pytest.approx(0.25 / 4.0, 1e-3)
 
     def test__delta_concentration_value_in_default_units(self):
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
         cosmology = mock.MockCosmology(
             arcsec_per_kpc=1.0,
@@ -189,13 +189,13 @@ class TestAbstractNFW:
         )
         assert delta_concentration == pytest.approx(1.0, 1e-3)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=3.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=3.0, scale_radius=1.0)
         delta_concentration = nfw.delta_concentration(
             redshift_object=0.5, redshift_source=1.0, cosmology=cosmology
         )
         assert delta_concentration == pytest.approx(3.0, 1e-3)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0)
         delta_concentration = nfw.delta_concentration(
             redshift_object=0.5, redshift_source=1.0, cosmology=cosmology
         )
@@ -210,7 +210,7 @@ class TestAbstractNFW:
             cosmic_average_density=1.0,
         )
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
         concentration = nfw.concentration(
             redshift_profile=0.5, redshift_source=1.0, cosmology=cosmology
@@ -219,7 +219,7 @@ class TestAbstractNFW:
         assert concentration == pytest.approx(0.0074263, 1.0e-4)
 
     def test__radius_at_200__different_length_units_include_conversions(self):
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
         cosmology = mock.MockCosmology(arcsec_per_kpc=0.2, kpc_per_arcsec=5.0)
 
@@ -235,7 +235,7 @@ class TestAbstractNFW:
 
     def test__mass_at_200__unit_conversions_work(self):
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
         cosmology = mock.MockCosmology(
             arcsec_per_kpc=1.0,
@@ -276,7 +276,7 @@ class TestAbstractNFW:
 
         cosmology = cosmo.LambdaCDM(H0=70.0, Om0=0.3, Ode0=0.7)
 
-        nfw = ag.mp.SphericalTruncatedNFW(
+        nfw = ag.mp.SphNFWTruncated(
             kappa_s=0.5, scale_radius=5.0, truncation_radius=10.0
         )
 
@@ -376,7 +376,7 @@ class TestAbstractNFW:
 class TestGeneralizedNFW:
     def test__convergence_correct_values(self):
 
-        gnfw = ag.mp.SphericalGeneralizedNFW(
+        gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
         )
 
@@ -384,7 +384,7 @@ class TestGeneralizedNFW:
 
         assert convergence == pytest.approx(0.30840, 1e-3)
 
-        gnfw = ag.mp.SphericalGeneralizedNFW(
+        gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=2.0, inner_slope=1.5, scale_radius=1.0
         )
 
@@ -392,7 +392,7 @@ class TestGeneralizedNFW:
 
         assert convergence == pytest.approx(0.30840 * 2, 1e-3)
 
-        gnfw = ag.mp.EllipticalGeneralizedNFW(
+        gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
             kappa_s=1.0,
             elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=90.0),
@@ -403,7 +403,7 @@ class TestGeneralizedNFW:
             0.30840, 1e-3
         )
 
-        gnfw = ag.mp.EllipticalGeneralizedNFW(
+        gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
             kappa_s=2.0,
             elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=90.0),
@@ -416,7 +416,7 @@ class TestGeneralizedNFW:
 
     def test__convergence_from_grid_via_gaussians__correct_values(self):
 
-        gnfw = ag.mp.SphericalGeneralizedNFW(
+        gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
         )
 
@@ -426,7 +426,7 @@ class TestGeneralizedNFW:
 
         assert convergence == pytest.approx(0.30840, 1e-2)
 
-        gnfw = ag.mp.SphericalGeneralizedNFW(
+        gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=2.0, inner_slope=1.5, scale_radius=1.0
         )
 
@@ -436,7 +436,7 @@ class TestGeneralizedNFW:
 
         assert convergence == pytest.approx(0.30840 * 2, 1e-2)
 
-        gnfw = ag.mp.EllipticalGeneralizedNFW(
+        gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
             kappa_s=1.0,
             elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=90.0),
@@ -447,7 +447,7 @@ class TestGeneralizedNFW:
             grid=np.array([[0.0, 1.0]])
         ) == pytest.approx(0.30840, 1e-2)
 
-        gnfw = ag.mp.EllipticalGeneralizedNFW(
+        gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
             kappa_s=2.0,
             elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=90.0),
@@ -460,7 +460,7 @@ class TestGeneralizedNFW:
 
     def test__potential_correct_values(self):
 
-        gnfw = ag.mp.SphericalGeneralizedNFW(
+        gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=0.5, scale_radius=8.0
         )
 
@@ -468,7 +468,7 @@ class TestGeneralizedNFW:
 
         assert potential == pytest.approx(0.00920, 1e-3)
 
-        gnfw = ag.mp.SphericalGeneralizedNFW(
+        gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=8.0
         )
 
@@ -476,7 +476,7 @@ class TestGeneralizedNFW:
 
         assert potential == pytest.approx(0.17448, 1e-3)
 
-        gnfw = ag.mp.EllipticalGeneralizedNFW(
+        gnfw = ag.mp.EllNFWGeneralized(
             centre=(1.0, 1.0),
             kappa_s=5.0,
             elliptical_comps=ag.convert.elliptical_comps_from(
@@ -491,7 +491,7 @@ class TestGeneralizedNFW:
 
     def test__deflections_via_integrator_correct_values(self):
 
-        gnfw = ag.mp.SphericalGeneralizedNFW(
+        gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=0.5, scale_radius=8.0
         )
 
@@ -502,7 +502,7 @@ class TestGeneralizedNFW:
         assert deflections[0, 0] == pytest.approx(0.43501, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.37701, 1e-3)
 
-        gnfw = ag.mp.SphericalGeneralizedNFW(
+        gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.3, 0.2), kappa_s=2.5, inner_slope=1.5, scale_radius=4.0
         )
 
@@ -513,7 +513,7 @@ class TestGeneralizedNFW:
         assert deflections[0, 0] == pytest.approx(-9.31254, 1e-3)
         assert deflections[0, 1] == pytest.approx(-3.10418, 1e-3)
 
-        gnfw = ag.mp.EllipticalGeneralizedNFW(
+        gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
             kappa_s=1.0,
             elliptical_comps=ag.convert.elliptical_comps_from(
@@ -528,7 +528,7 @@ class TestGeneralizedNFW:
         assert deflections[0, 0] == pytest.approx(0.26604, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.58988, 1e-3)
 
-        gnfw = ag.mp.EllipticalGeneralizedNFW(
+        gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.3, 0.2),
             kappa_s=2.5,
             elliptical_comps=ag.convert.elliptical_comps_from(
@@ -545,7 +545,7 @@ class TestGeneralizedNFW:
 
     def test__deflections_from_grid_close_to_integrator_values(self):
 
-        gnfw = ag.mp.SphericalGeneralizedNFW(
+        gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=0.5, scale_radius=8.0
         )
 
@@ -554,7 +554,7 @@ class TestGeneralizedNFW:
         assert deflections[0, 0] == pytest.approx(0.43501, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.37701, 1e-3)
 
-        gnfw = ag.mp.SphericalGeneralizedNFW(
+        gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.3, 0.2), kappa_s=2.5, inner_slope=1.5, scale_radius=4.0
         )
 
@@ -563,7 +563,7 @@ class TestGeneralizedNFW:
         assert deflections[0, 0] == pytest.approx(-9.31254, 1e-3)
         assert deflections[0, 1] == pytest.approx(-3.10418, 1e-3)
 
-        gnfw = ag.mp.EllipticalGeneralizedNFW(
+        gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
             kappa_s=1.0,
             elliptical_comps=ag.convert.elliptical_comps_from(
@@ -576,7 +576,7 @@ class TestGeneralizedNFW:
         assert deflections[0, 0] == pytest.approx(0.26604, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.58988, 1e-3)
 
-        gnfw = ag.mp.EllipticalGeneralizedNFW(
+        gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.3, 0.2),
             kappa_s=2.5,
             elliptical_comps=ag.convert.elliptical_comps_from(
@@ -591,8 +591,8 @@ class TestGeneralizedNFW:
 
     def test__convergence__change_geometry(self):
 
-        gnfw_0 = ag.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
-        gnfw_1 = ag.mp.SphericalGeneralizedNFW(centre=(1.0, 1.0))
+        gnfw_0 = ag.mp.SphNFWGeneralized(centre=(0.0, 0.0))
+        gnfw_1 = ag.mp.SphNFWGeneralized(centre=(1.0, 1.0))
 
         convergence_0 = gnfw_0.convergence_from_grid(grid=np.array([[1.0, 1.0]]))
 
@@ -600,8 +600,8 @@ class TestGeneralizedNFW:
 
         assert convergence_0 == convergence_1
 
-        gnfw_0 = ag.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
-        gnfw_1 = ag.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
+        gnfw_0 = ag.mp.SphNFWGeneralized(centre=(0.0, 0.0))
+        gnfw_1 = ag.mp.SphNFWGeneralized(centre=(0.0, 0.0))
 
         convergence_0 = gnfw_0.convergence_from_grid(grid=np.array([[1.0, 0.0]]))
 
@@ -609,10 +609,10 @@ class TestGeneralizedNFW:
 
         assert convergence_0 == convergence_1
 
-        gnfw_0 = ag.mp.EllipticalGeneralizedNFW(
+        gnfw_0 = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
         )
-        gnfw_1 = ag.mp.EllipticalGeneralizedNFW(
+        gnfw_1 = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
 
@@ -622,8 +622,8 @@ class TestGeneralizedNFW:
 
     def test__potential__change_geometry(self):
 
-        gnfw_0 = ag.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
-        gnfw_1 = ag.mp.SphericalGeneralizedNFW(centre=(1.0, 1.0))
+        gnfw_0 = ag.mp.SphNFWGeneralized(centre=(0.0, 0.0))
+        gnfw_1 = ag.mp.SphNFWGeneralized(centre=(1.0, 1.0))
 
         potential_0 = gnfw_0.potential_from_grid(grid=np.array([[1.0, 1.0]]))
 
@@ -631,8 +631,8 @@ class TestGeneralizedNFW:
 
         assert potential_0 == potential_1
 
-        gnfw_0 = ag.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
-        gnfw_1 = ag.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
+        gnfw_0 = ag.mp.SphNFWGeneralized(centre=(0.0, 0.0))
+        gnfw_1 = ag.mp.SphNFWGeneralized(centre=(0.0, 0.0))
 
         potential_0 = gnfw_0.potential_from_grid(grid=np.array([[1.0, 0.0]]))
 
@@ -640,10 +640,10 @@ class TestGeneralizedNFW:
 
         assert potential_0 == potential_1
 
-        gnfw_0 = ag.mp.EllipticalGeneralizedNFW(
+        gnfw_0 = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
         )
-        gnfw_1 = ag.mp.EllipticalGeneralizedNFW(
+        gnfw_1 = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
         assert gnfw_0.potential_from_grid(
@@ -652,10 +652,10 @@ class TestGeneralizedNFW:
 
     def test__deflections__change_geometry(self):
 
-        gnfw_0 = ag.mp.SphericalGeneralizedNFW(
+        gnfw_0 = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
         )
-        gnfw_1 = ag.mp.SphericalGeneralizedNFW(
+        gnfw_1 = ag.mp.SphNFWGeneralized(
             centre=(1.0, 1.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
         )
 
@@ -665,10 +665,10 @@ class TestGeneralizedNFW:
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
 
-        gnfw_0 = ag.mp.SphericalGeneralizedNFW(
+        gnfw_0 = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
         )
-        gnfw_1 = ag.mp.SphericalGeneralizedNFW(
+        gnfw_1 = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
         )
 
@@ -678,14 +678,14 @@ class TestGeneralizedNFW:
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
 
-        gnfw_0 = ag.mp.EllipticalGeneralizedNFW(
+        gnfw_0 = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.111111),
             kappa_s=1.0,
             inner_slope=1.5,
             scale_radius=1.0,
         )
-        gnfw_1 = ag.mp.EllipticalGeneralizedNFW(
+        gnfw_1 = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, -0.111111),
             kappa_s=1.0,
@@ -699,13 +699,13 @@ class TestGeneralizedNFW:
 
     def test__compare_to_nfw(self):
 
-        nfw = ag.mp.EllipticalNFW(
+        nfw = ag.mp.EllNFW(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.111111),
             kappa_s=1.0,
             scale_radius=5.0,
         )
-        gnfw = ag.mp.EllipticalGeneralizedNFW(
+        gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.111111),
             kappa_s=1.0,
@@ -728,14 +728,14 @@ class TestGeneralizedNFW:
 
     def test__spherical_and_elliptical_match(self):
 
-        elliptical = ag.mp.EllipticalGeneralizedNFW(
+        elliptical = ag.mp.EllNFWGeneralized(
             centre=(0.1, 0.2),
             elliptical_comps=(0.0, 0.0),
             kappa_s=2.0,
             inner_slope=1.5,
             scale_radius=3.0,
         )
-        spherical = ag.mp.SphericalGeneralizedNFW(
+        spherical = ag.mp.SphNFWGeneralized(
             centre=(0.1, 0.2), kappa_s=2.0, inner_slope=1.5, scale_radius=3.0
         )
 
@@ -753,7 +753,7 @@ class TestGeneralizedNFW:
 
         grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
-        # gnfw = ag.EllipticalGeneralizedNFW()
+        # gnfw = ag.EllNFWGeneralized()
         #
         # convergence = gnfw.convergence_from_grid(
         #     grid=grid)
@@ -770,7 +770,7 @@ class TestGeneralizedNFW:
         #
         # assert deflections.shape_native == (2, 2)
 
-        gnfw = ag.mp.SphericalGeneralizedNFW()
+        gnfw = ag.mp.SphNFWGeneralized()
 
         convergence = gnfw.convergence_from_grid(grid=grid)
 
@@ -788,7 +788,7 @@ class TestGeneralizedNFW:
 class TestTruncatedNFW:
     def test__convergence_correct_values(self):
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=2.0
         )
 
@@ -800,7 +800,7 @@ class TestTruncatedNFW:
 
         assert convergence == pytest.approx(2.0 * 0.10549515, 1.0e-4)
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=3.0, scale_radius=1.0, truncation_radius=2.0
         )
 
@@ -808,7 +808,7 @@ class TestTruncatedNFW:
 
         assert convergence == pytest.approx(6.0 * 0.046409642, 1.0e-4)
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=3.0, scale_radius=5.0, truncation_radius=2.0
         )
 
@@ -818,7 +818,7 @@ class TestTruncatedNFW:
 
     def test__deflections_correct_values(self):
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=2.0
         )
 
@@ -845,7 +845,7 @@ class TestTruncatedNFW:
             (1.0 / np.sqrt(2)) * factor * 0.3125838, 1.0e-4
         )
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0, truncation_radius=2.0
         )
 
@@ -855,7 +855,7 @@ class TestTruncatedNFW:
         assert deflections[0, 0] == pytest.approx(factor * 0.38209715, 1.0e-4)
         assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0, truncation_radius=2.0
         )
 
@@ -870,11 +870,11 @@ class TestTruncatedNFW:
         self,
     ):
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0, truncation_radius=50000.0
         )
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0)
 
         truncated_nfw_convergence = truncated_nfw.convergence_from_grid(
             grid=np.array([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
@@ -896,7 +896,7 @@ class TestTruncatedNFW:
 
     def test__mass_at_truncation_radius__values(self):
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=1.0
         )
 
@@ -913,7 +913,7 @@ class TestTruncatedNFW:
 
         assert mass_at_truncation_radius == pytest.approx(0.00009792581, 1.0e-5)
 
-        # truncated_nfw = ag.mp.SphericalTruncatedNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0,
+        # truncated_nfw = ag.mp.SphNFWTruncated(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0,
         #                                          truncation_radius=1.0)
         #
         # cosmology = mock.MockCosmology(arcsec_per_kpc=1.0, kpc_per_arcsec=1.0, critical_surface_density=2.0,
@@ -924,7 +924,7 @@ class TestTruncatedNFW:
         #
         # assert mass_at_truncation_radius == pytest.approx(0.00008789978, 1.0e-5)
         #
-        # truncated_nfw = ag.mp.SphericalTruncatedNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0,
+        # truncated_nfw = ag.mp.SphNFWTruncated(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0,
         #                                          truncation_radius=1.0)
         #
         # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,
@@ -932,7 +932,7 @@ class TestTruncatedNFW:
         #
         # assert mass_at_truncation_radius == pytest.approx(0.0000418378, 1.0e-5)
         #
-        # truncated_nfw = ag.mp.SphericalTruncatedNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=8.0,
+        # truncated_nfw = ag.mp.SphNFWTruncated(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=8.0,
         #                                          truncation_radius=4.0)
         #
         # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,
@@ -940,7 +940,7 @@ class TestTruncatedNFW:
         #
         # assert mass_at_truncation_radius == pytest.approx(0.0000421512, 1.0e-4)
         #
-        # truncated_nfw = ag.mp.SphericalTruncatedNFW(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=8.0,
+        # truncated_nfw = ag.mp.SphNFWTruncated(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=8.0,
         #                                          truncation_radius=4.0)
         #
         # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,
@@ -952,7 +952,7 @@ class TestTruncatedNFW:
 
         grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW()
+        truncated_nfw = ag.mp.SphNFWTruncated()
 
         convergence = truncated_nfw.convergence_from_grid(grid=grid)
 
@@ -974,31 +974,31 @@ class TestNFW:
         # F(r) = (1/(sqrt(3))*atan(sqrt(3)) = 0.60459978807
         # kappa(r) = 2 * kappa_s * (1 - 0.60459978807) / (4-1) = 0.263600141
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
         convergence = nfw.convergence_from_grid(grid=np.array([[2.0, 0.0]]))
 
         assert convergence == pytest.approx(0.263600141, 1e-3)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
         convergence = nfw.convergence_from_grid(grid=np.array([[0.5, 0.0]]))
 
         assert convergence == pytest.approx(1.388511, 1e-3)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0)
 
         convergence = nfw.convergence_from_grid(grid=np.array([[0.5, 0.0]]))
 
         assert convergence == pytest.approx(2.0 * 1.388511, 1e-3)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0)
 
         convergence = nfw.convergence_from_grid(grid=np.array([[1.0, 0.0]]))
 
         assert convergence == pytest.approx(1.388511, 1e-3)
 
-        nfw = ag.mp.EllipticalNFW(
+        nfw = ag.mp.EllNFW(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.333333),
             kappa_s=1.0,
@@ -1015,7 +1015,7 @@ class TestNFW:
         # F(r) = (1/(sqrt(3))*atan(sqrt(3)) = 0.60459978807
         # kappa(r) = 2 * kappa_s * (1 - 0.60459978807) / (4-1) = 0.263600141
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
         convergence = nfw.convergence_from_grid_via_gaussians(
             grid=np.array([[2.0, 0.0]])
@@ -1023,7 +1023,7 @@ class TestNFW:
 
         assert convergence == pytest.approx(0.263600141, 1e-2)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
         convergence = nfw.convergence_from_grid_via_gaussians(
             grid=np.array([[0.5, 0.0]])
@@ -1031,7 +1031,7 @@ class TestNFW:
 
         assert convergence == pytest.approx(1.388511, 1e-2)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0)
 
         convergence = nfw.convergence_from_grid_via_gaussians(
             grid=np.array([[0.5, 0.0]])
@@ -1039,7 +1039,7 @@ class TestNFW:
 
         assert convergence == pytest.approx(2.0 * 1.388511, 1e-2)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0)
 
         convergence = nfw.convergence_from_grid_via_gaussians(
             grid=np.array([[1.0, 0.0]])
@@ -1047,7 +1047,7 @@ class TestNFW:
 
         assert convergence == pytest.approx(1.388511, 1e-2)
 
-        nfw = ag.mp.EllipticalNFW(
+        nfw = ag.mp.EllNFW(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.333333),
             kappa_s=1.0,
@@ -1062,19 +1062,19 @@ class TestNFW:
 
     def test__potential_correct_values(self):
 
-        nfw = ag.mp.SphericalNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
+        nfw = ag.mp.SphNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
 
         potential = nfw.potential_from_grid(grid=np.array([[0.1875, 0.1625]]))
 
         assert potential == pytest.approx(0.03702, 1e-3)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
+        nfw = ag.mp.SphNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
 
         potential = nfw.potential_from_grid(grid=np.array([[0.1875, 0.1625]]))
 
         assert potential == pytest.approx(0.03702, 1e-3)
 
-        nfw = ag.mp.EllipticalNFW(
+        nfw = ag.mp.EllNFW(
             centre=(0.3, 0.2),
             elliptical_comps=(0.03669, 0.172614),
             kappa_s=2.5,
@@ -1087,10 +1087,8 @@ class TestNFW:
 
     def test__potential__spherical_and_elliptical_are_same(self):
 
-        nfw_spherical = ag.mp.SphericalNFW(
-            centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0
-        )
-        nfw_elliptical = ag.mp.EllipticalNFW(
+        nfw_spherical = ag.mp.SphNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
+        nfw_elliptical = ag.mp.EllNFW(
             centre=(0.3, 0.2),
             elliptical_comps=(0.0, 0.0),
             kappa_s=2.5,
@@ -1125,7 +1123,7 @@ class TestNFW:
         assert potential_spherical == pytest.approx(potential_elliptical, 1e-3)
 
     def test__deflections_via_integrator_correct_values(self):
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
         deflections = nfw.deflections_from_grid_via_integrator(
             grid=np.array([[0.1625, 0.1625]])
@@ -1134,7 +1132,7 @@ class TestNFW:
         assert deflections[0, 0] == pytest.approx(0.56194, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.56194, 1e-3)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
+        nfw = ag.mp.SphNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
 
         deflections = nfw.deflections_from_grid_via_integrator(
             grid=np.array([[0.1875, 0.1625]])
@@ -1143,7 +1141,7 @@ class TestNFW:
         assert deflections[0, 0] == pytest.approx(-2.08909, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.69636, 1e-3)
 
-        nfw = ag.mp.EllipticalNFW(
+        nfw = ag.mp.EllNFW(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
             kappa_s=1.0,
@@ -1157,7 +1155,7 @@ class TestNFW:
         assert deflections[0, 0] == pytest.approx(0.56194, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.56194, 1e-3)
 
-        nfw = ag.mp.EllipticalNFW(
+        nfw = ag.mp.EllNFW(
             centre=(0.3, 0.2),
             elliptical_comps=(0.03669, 0.172614),
             kappa_s=2.5,
@@ -1172,21 +1170,21 @@ class TestNFW:
         assert deflections[0, 1] == pytest.approx(-0.44204, 1e-3)
 
     def test__deflections_from_grid_close_to_integrator_correct_values(self):
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
         deflections = nfw.deflections_from_grid(grid=np.array([[0.1625, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(0.56194, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.56194, 1e-3)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
+        nfw = ag.mp.SphNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
 
         deflections = nfw.deflections_from_grid(grid=np.array([[0.1875, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(-2.08909, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.69636, 1e-3)
 
-        nfw = ag.mp.EllipticalNFW(
+        nfw = ag.mp.EllNFW(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
             kappa_s=1.0,
@@ -1198,7 +1196,7 @@ class TestNFW:
         assert deflections[0, 0] == pytest.approx(0.56194, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.56194, 1e-3)
 
-        nfw = ag.mp.EllipticalNFW(
+        nfw = ag.mp.EllNFW(
             centre=(0.3, 0.2),
             elliptical_comps=(0.03669, 0.172614),
             kappa_s=2.5,
@@ -1216,7 +1214,7 @@ class TestNFW:
 
         grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
 
-        nfw = ag.mp.EllipticalNFW(elliptical_comps=(0.0, 0.05263))
+        nfw = ag.mp.EllNFW(elliptical_comps=(0.0, 0.05263))
 
         convergence = nfw.convergence_from_grid(grid=grid)
 
@@ -1230,7 +1228,7 @@ class TestNFW:
 
         assert deflections.shape_native == (2, 2)
 
-        nfw = ag.mp.SphericalNFW()
+        nfw = ag.mp.SphNFW()
 
         convergence = nfw.convergence_from_grid(grid=grid)
 
@@ -1250,7 +1248,7 @@ class TestTruncatedNFWMCRDuffy:
 
         cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
-        truncated_nfw_mass = ag.mp.SphericalTruncatedNFWMCRDuffy(
+        truncated_nfw_mass = ag.mp.SphNFWTruncatedMCRDuffy(
             centre=(1.0, 2.0),
             mass_at_200=1.0e9,
             redshift_object=0.6,
@@ -1264,7 +1262,7 @@ class TestTruncatedNFWMCRDuffy:
             redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
         )
 
-        truncated_nfw_kappa_s = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw_kappa_s = ag.mp.SphNFWTruncated(
             centre=(1.0, 2.0),
             kappa_s=truncated_nfw_mass.kappa_s,
             scale_radius=truncated_nfw_mass.scale_radius,
@@ -1278,7 +1276,7 @@ class TestTruncatedNFWMCRDuffy:
             redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
         )
 
-        # We uare using the SphericalTruncatedNFW to check the mass gives a conosistnt kappa_s, given certain radii.
+        # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
         assert mass_at_200_via_kappa_s == mass_at_200_via_mass
         assert concentration_via_kappa_s == concentration_via_mass
@@ -1304,7 +1302,7 @@ class TestTruncatedNFWMCRLludlow:
 
         cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
-        truncated_nfw_mass = ag.mp.SphericalTruncatedNFWMCRLudlow(
+        truncated_nfw_mass = ag.mp.SphNFWTruncatedMCRLudlow(
             centre=(1.0, 2.0),
             mass_at_200=1.0e9,
             redshift_object=0.6,
@@ -1318,7 +1316,7 @@ class TestTruncatedNFWMCRLludlow:
             redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
         )
 
-        truncated_nfw_kappa_s = ag.mp.SphericalTruncatedNFW(
+        truncated_nfw_kappa_s = ag.mp.SphNFWTruncated(
             centre=(1.0, 2.0),
             kappa_s=truncated_nfw_mass.kappa_s,
             scale_radius=truncated_nfw_mass.scale_radius,
@@ -1332,7 +1330,7 @@ class TestTruncatedNFWMCRLludlow:
             redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
         )
 
-        # We uare using the SphericalTruncatedNFW to check the mass gives a conosistnt kappa_s, given certain radii.
+        # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
         assert mass_at_200_via_kappa_s == mass_at_200_via_mass
         assert concentration_via_kappa_s == concentration_via_mass
@@ -1359,7 +1357,7 @@ class TestNFWMCRDuffy:
 
         cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
-        nfw_mass = ag.mp.SphericalNFWMCRDuffy(
+        nfw_mass = ag.mp.SphNFWMCRDuffy(
             centre=(1.0, 2.0),
             mass_at_200=1.0e9,
             redshift_object=0.6,
@@ -1373,7 +1371,7 @@ class TestNFWMCRDuffy:
             redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
         )
 
-        nfw_kappa_s = ag.mp.SphericalNFW(
+        nfw_kappa_s = ag.mp.SphNFW(
             centre=(1.0, 2.0),
             kappa_s=nfw_mass.kappa_s,
             scale_radius=nfw_mass.scale_radius,
@@ -1386,7 +1384,7 @@ class TestNFWMCRDuffy:
             redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
         )
 
-        # We uare using the SphericalTruncatedNFW to check the mass gives a conosistnt kappa_s, given certain radii.
+        # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
         assert mass_at_200_via_kappa_s == mass_at_200_via_mass
         assert concentration_via_kappa_s == concentration_via_mass
@@ -1412,7 +1410,7 @@ class TestNFWMCRLudlow:
 
         cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
-        nfw_mass = ag.mp.SphericalNFWMCRLudlow(
+        nfw_mass = ag.mp.SphNFWMCRLudlow(
             centre=(1.0, 2.0),
             mass_at_200=1.0e9,
             redshift_object=0.6,
@@ -1426,7 +1424,7 @@ class TestNFWMCRLudlow:
             redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
         )
 
-        nfw_kappa_s = ag.mp.SphericalNFW(
+        nfw_kappa_s = ag.mp.SphNFW(
             centre=(1.0, 2.0),
             kappa_s=nfw_mass.kappa_s,
             scale_radius=nfw_mass.scale_radius,
@@ -1439,7 +1437,7 @@ class TestNFWMCRLudlow:
             redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
         )
 
-        # We uare using the SphericalTruncatedNFW to check the mass gives a conosistnt kappa_s, given certain radii.
+        # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
         assert mass_at_200_via_kappa_s == mass_at_200_via_mass
         assert concentration_via_kappa_s == concentration_via_mass
@@ -1468,7 +1466,7 @@ class TestNFWMCRLudlow:
 
         cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
-        nfw_mass = ag.mp.EllipticalNFWMCRLudlow(
+        nfw_mass = ag.mp.EllNFWMCRLudlow(
             centre=(1.0, 2.0),
             elliptical_comps=(0.1, 0.2),
             mass_at_200=1.0e9,
@@ -1483,7 +1481,7 @@ class TestNFWMCRLudlow:
             redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
         )
 
-        nfw_kappa_s = ag.mp.EllipticalNFW(
+        nfw_kappa_s = ag.mp.EllNFW(
             centre=(1.0, 2.0),
             elliptical_comps=(0.1, 0.2),
             kappa_s=nfw_mass.kappa_s,
@@ -1497,7 +1495,7 @@ class TestNFWMCRLudlow:
             redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
         )
 
-        # We uare using the SphericalTruncatedNFW to check the mass gives a conosistnt kappa_s, given certain radii.
+        # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
         assert mass_at_200_via_kappa_s == mass_at_200_via_mass
         assert concentration_via_kappa_s == concentration_via_mass
@@ -1530,7 +1528,7 @@ class TestNFWMCRLudlow:
 
         cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
-        nfw_mass = ag.mp.EllipticalGeneralizedNFWMCRLudlow(
+        nfw_mass = ag.mp.EllNFWGeneralizedMCRLudlow(
             centre=(1.0, 2.0),
             elliptical_comps=(0.1, 0.2),
             mass_at_200=1.0e9,
@@ -1546,7 +1544,7 @@ class TestNFWMCRLudlow:
             redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
         )
 
-        nfw_kappa_s = ag.mp.EllipticalGeneralizedNFW(
+        nfw_kappa_s = ag.mp.EllNFWGeneralized(
             centre=(1.0, 2.0),
             elliptical_comps=(0.1, 0.2),
             kappa_s=nfw_mass.kappa_s,
@@ -1561,7 +1559,7 @@ class TestNFWMCRLudlow:
             redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
         )
 
-        # We uare using the SphericalTruncatedNFW to check the mass gives a conosistnt kappa_s, given certain radii.
+        # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
         assert mass_at_200_via_kappa_s == mass_at_200_via_mass
         assert concentration_via_kappa_s == concentration_via_mass
@@ -1589,58 +1587,3 @@ class TestNFWMCRLudlow:
         deflections = nfw_kappa_s.deflections_from_grid(grid=grid)
 
         assert (deflections_ludlow == deflections).all()
-
-
-class TestTruncatedNFWMCRChallenge:
-    def test__mass_and_concentration_consistent_with_normal_truncated_nfw(self):
-
-        cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
-
-        truncated_nfw_mass = ag.mp.SphericalTruncatedNFWMCRChallenge(
-            centre=(1.0, 2.0), mass_at_200=1.0e9
-        )
-
-        mass_at_200_via_mass = truncated_nfw_mass.mass_at_200_solar_masses(
-            redshift_object=0.6, redshift_source=2.5, cosmology=cosmology
-        )
-        concentration_via_mass = truncated_nfw_mass.concentration(
-            redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
-        )
-
-        truncated_nfw_kappa_s = ag.mp.SphericalTruncatedNFW(
-            centre=(1.0, 2.0),
-            kappa_s=truncated_nfw_mass.kappa_s,
-            scale_radius=truncated_nfw_mass.scale_radius,
-            truncation_radius=truncated_nfw_mass.truncation_radius,
-        )
-
-        mass_at_200_via_kappa_s = truncated_nfw_kappa_s.mass_at_200_solar_masses(
-            redshift_object=0.6, redshift_source=2.5, cosmology=cosmology
-        )
-        concentration_via_kappa_s = truncated_nfw_kappa_s.concentration(
-            redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
-        )
-
-        # We uare using the SphericalTruncatedNFW to check the mass gives a conosistnt kappa_s, given certain radii.
-
-        assert mass_at_200_via_kappa_s == mass_at_200_via_mass
-        assert concentration_via_kappa_s == concentration_via_mass
-
-        assert isinstance(truncated_nfw_mass.kappa_s, float)
-
-        assert truncated_nfw_mass.centre == (1.0, 2.0)
-
-        assert truncated_nfw_mass.axis_ratio == 1.0
-        assert isinstance(truncated_nfw_mass.axis_ratio, float)
-
-        assert truncated_nfw_mass.phi == 0.0
-        assert isinstance(truncated_nfw_mass.phi, float)
-
-        assert truncated_nfw_mass.inner_slope == 1.0
-        assert isinstance(truncated_nfw_mass.inner_slope, float)
-
-        assert truncated_nfw_mass.scale_radius == pytest.approx(0.193017, 1.0e-4)
-
-        assert truncated_nfw_mass.truncation_radius == pytest.approx(
-            33.1428053449, 1.0e-4
-        )

@@ -16,8 +16,8 @@ def make_path():
 
 @pytest.fixture(name="samples")
 def make_samples():
-    galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(centre=(0.0, 1.0)))
-    galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.EllipticalSersic())
+    galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(centre=(0.0, 1.0)))
+    galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.EllSersic())
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
@@ -28,8 +28,8 @@ def make_samples():
 def make_model():
     return af.Collection(
         galaxies=af.Collection(
-            galaxy=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.EllipticalSersic),
-            source=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.EllipticalSersic),
+            galaxy=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.EllSersic),
+            source=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.EllSersic),
         )
     )
 

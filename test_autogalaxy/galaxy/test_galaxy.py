@@ -27,8 +27,8 @@ class TestPointSources:
             redshift=0.5,
             point_0=ps_0,
             point_1=ps_1,
-            mass=ag.mp.SphericalIsothermal(),
-            light=ag.lp.EllipticalSersic(),
+            mass=ag.mp.SphIsothermal(),
+            light=ag.lp.EllSersic(),
         )
 
         assert galaxy.point_source_dict == {"point_0": ps_0, "point_1": ps_1}
@@ -124,15 +124,15 @@ class TestLightProfiles:
             assert lp_0_luminosity + lp_1_luminosity == gal_luminosity
 
         def test__no_light_profile__returns_none(self):
-            gal_no_lp = ag.Galaxy(redshift=0.5, mass=ag.mp.SphericalIsothermal())
+            gal_no_lp = ag.Galaxy(redshift=0.5, mass=ag.mp.SphIsothermal())
 
             assert gal_no_lp.luminosity_within_circle(radius=1.0) == None
 
     class TestSymmetricProfiles:
         def test_1d_symmetry(self):
-            lp_0 = ag.lp.EllipticalSersic(centre=(0.0, 0.0), intensity=1.0)
+            lp_0 = ag.lp.EllSersic(centre=(0.0, 0.0), intensity=1.0)
 
-            lp_1 = ag.lp.EllipticalSersic(centre=(100.0, 0.0), intensity=1.0)
+            lp_1 = ag.lp.EllSersic(centre=(100.0, 0.0), intensity=1.0)
 
             gal_x2_lp = ag.Galaxy(
                 redshift=0.5, light_profile_0=lp_0, light_profile_1=lp_1
@@ -151,14 +151,14 @@ class TestLightProfiles:
             )
 
         def test_2d_symmetry(self):
-            lp_0 = ag.lp.EllipticalSersic(
+            lp_0 = ag.lp.EllSersic(
                 elliptical_comps=(0.0, 0.0),
                 intensity=1.0,
                 effective_radius=0.6,
                 sersic_index=4.0,
             )
 
-            lp_1 = ag.lp.EllipticalSersic(
+            lp_1 = ag.lp.EllSersic(
                 elliptical_comps=(0.0, 0.0),
                 intensity=1.0,
                 effective_radius=0.6,
@@ -166,7 +166,7 @@ class TestLightProfiles:
                 centre=(100, 0),
             )
 
-            lp_2 = ag.lp.EllipticalSersic(
+            lp_2 = ag.lp.EllSersic(
                 elliptical_comps=(0.0, 0.0),
                 intensity=1.0,
                 effective_radius=0.6,
@@ -174,7 +174,7 @@ class TestLightProfiles:
                 centre=(0, 100),
             )
 
-            lp_3 = ag.lp.EllipticalSersic(
+            lp_3 = ag.lp.EllSersic(
                 elliptical_comps=(0.0, 0.0),
                 intensity=1.0,
                 effective_radius=0.6,
@@ -219,8 +219,8 @@ class TestLightProfiles:
             self, sub_grid_7x7, blurring_grid_7x7, psf_3x3, convolver_7x7
         ):
 
-            light_profile_0 = ag.lp.EllipticalSersic(intensity=2.0)
-            light_profile_1 = ag.lp.EllipticalSersic(intensity=3.0)
+            light_profile_0 = ag.lp.EllSersic(intensity=2.0)
+            light_profile_1 = ag.lp.EllSersic(intensity=3.0)
 
             galaxy = ag.Galaxy(
                 light_profile_0=light_profile_0,
@@ -251,8 +251,8 @@ class TestLightProfiles:
         def test__blurred_image_from_grid_and_convolver(
             self, sub_grid_7x7, blurring_grid_7x7, convolver_7x7
         ):
-            light_profile_0 = ag.lp.EllipticalSersic(intensity=2.0)
-            light_profile_1 = ag.lp.EllipticalSersic(intensity=3.0)
+            light_profile_0 = ag.lp.EllSersic(intensity=2.0)
+            light_profile_1 = ag.lp.EllSersic(intensity=3.0)
 
             galaxy = ag.Galaxy(
                 light_profile_0=light_profile_0,
@@ -287,8 +287,8 @@ class TestLightProfiles:
             self, sub_grid_7x7, transformer_7x7_7
         ):
 
-            light_profile_0 = ag.lp.EllipticalSersic(intensity=2.0)
-            light_profile_1 = ag.lp.EllipticalSersic(intensity=3.0)
+            light_profile_0 = ag.lp.EllSersic(intensity=2.0)
+            light_profile_1 = ag.lp.EllSersic(intensity=3.0)
 
             image = (
                 light_profile_0.image_from_grid(grid=sub_grid_7x7).binned
@@ -637,7 +637,7 @@ class TestMassProfiles:
             assert mp_0_mass + mp_1_mass == gal_mass
 
         def test__no_mass_profile__returns_none(self):
-            gal_no_mp = ag.Galaxy(redshift=0.5, light=ag.lp.SphericalSersic())
+            gal_no_mp = ag.Galaxy(redshift=0.5, light=ag.lp.SphSersic())
 
             with pytest.raises(exc.GalaxyException):
                 gal_no_mp.mass_angular_within_circle(radius=1.0)
@@ -649,21 +649,19 @@ class TestMassProfiles:
             assert galaxy.stellar_profiles == []
 
             galaxy = ag.Galaxy(
-                redshift=0.5,
-                light=ag.lp.EllipticalGaussian(),
-                mass=ag.mp.EllipticalIsothermal(),
+                redshift=0.5, light=ag.lp.EllGaussian(), mass=ag.mp.EllIsothermal()
             )
 
             assert galaxy.stellar_profiles == []
 
-            stellar_0 = ag.lmp.EllipticalSersic()
+            stellar_0 = ag.lmp.EllSersic()
             galaxy = ag.Galaxy(redshift=0.5, stellar_0=stellar_0)
 
             assert galaxy.stellar_profiles == [stellar_0]
 
-            stellar_0 = ag.lmp.SphericalDevVaucouleurs()
-            stellar_1 = ag.lmp.EllipticalDevVaucouleurs()
-            stellar_2 = ag.lmp.EllipticalGaussian()
+            stellar_0 = ag.lmp.SphDevVaucouleurs()
+            stellar_1 = ag.lmp.EllDevVaucouleurs()
+            stellar_2 = ag.lmp.EllGaussian()
             galaxy = ag.Galaxy(
                 redshift=0.5,
                 stellar_0=stellar_0,
@@ -680,7 +678,7 @@ class TestMassProfiles:
             galaxy = ag.Galaxy(
                 redshift=0.5,
                 stellar_0=smp_0,
-                non_stellar_profile=ag.mp.EllipticalIsothermal(einstein_radius=1.0),
+                non_stellar_profile=ag.mp.EllIsothermal(einstein_radius=1.0),
             )
 
             stellar_mass_0 = smp_0.mass_angular_within_circle(radius=0.5)
@@ -693,7 +691,7 @@ class TestMassProfiles:
                 redshift=0.5,
                 stellar_0=smp_0,
                 stellar_1=smp_1,
-                non_stellar_profile=ag.mp.EllipticalIsothermal(einstein_radius=1.0),
+                non_stellar_profile=ag.mp.EllIsothermal(einstein_radius=1.0),
             )
 
             stellar_mass_1 = smp_1.mass_angular_within_circle(radius=0.5)
@@ -757,21 +755,19 @@ class TestMassProfiles:
             assert galaxy.dark_profiles == []
 
             galaxy = ag.Galaxy(
-                redshift=0.5,
-                light=ag.lp.EllipticalGaussian(),
-                mass=ag.mp.EllipticalIsothermal(),
+                redshift=0.5, light=ag.lp.EllGaussian(), mass=ag.mp.EllIsothermal()
             )
 
             assert galaxy.dark_profiles == []
 
-            dark_0 = ag.mp.SphericalNFW()
+            dark_0 = ag.mp.SphNFW()
             galaxy = ag.Galaxy(redshift=0.5, dark_0=dark_0)
 
             assert galaxy.dark_profiles == [dark_0]
 
-            dark_0 = ag.mp.SphericalNFW()
-            dark_1 = ag.mp.EllipticalNFW()
-            dark_2 = ag.mp.EllipticalGeneralizedNFW()
+            dark_0 = ag.mp.SphNFW()
+            dark_1 = ag.mp.EllNFW()
+            dark_2 = ag.mp.EllNFWGeneralized()
             galaxy = ag.Galaxy(
                 redshift=0.5, dark_0=dark_0, dark_1=dark_1, dark_2=dark_2
             )
@@ -785,7 +781,7 @@ class TestMassProfiles:
             galaxy = ag.Galaxy(
                 redshift=0.5,
                 dark_0=dmp_0,
-                non_dark_profile=ag.mp.EllipticalIsothermal(einstein_radius=1.0),
+                non_dark_profile=ag.mp.EllIsothermal(einstein_radius=1.0),
             )
 
             dark_mass_0 = dmp_0.mass_angular_within_circle(radius=0.5)
@@ -798,7 +794,7 @@ class TestMassProfiles:
                 redshift=0.5,
                 dark_0=dmp_0,
                 dark_1=dmp_1,
-                non_dark_profile=ag.mp.EllipticalIsothermal(einstein_radius=1.0),
+                non_dark_profile=ag.mp.EllIsothermal(einstein_radius=1.0),
             )
 
             dark_mass_1 = dmp_1.mass_angular_within_circle(radius=0.5)
@@ -855,11 +851,11 @@ class TestMassProfiles:
 
     class TestSymmetricProfiles:
         def test_1d_symmetry(self):
-            mp_0 = ag.mp.EllipticalIsothermal(
+            mp_0 = ag.mp.EllIsothermal(
                 elliptical_comps=(0.333333, 0.0), einstein_radius=1.0
             )
 
-            mp_1 = ag.mp.EllipticalIsothermal(
+            mp_1 = ag.mp.EllIsothermal(
                 centre=(100, 0), elliptical_comps=(0.333333, 0.0), einstein_radius=1.0
             )
 
@@ -904,13 +900,13 @@ class TestMassProfiles:
             )
 
         def test_2d_symmetry(self):
-            mp_0 = ag.mp.SphericalIsothermal(einstein_radius=1.0)
+            mp_0 = ag.mp.SphIsothermal(einstein_radius=1.0)
 
-            mp_1 = ag.mp.SphericalIsothermal(centre=(100, 0), einstein_radius=1.0)
+            mp_1 = ag.mp.SphIsothermal(centre=(100, 0), einstein_radius=1.0)
 
-            mp_2 = ag.mp.SphericalIsothermal(centre=(0, 100), einstein_radius=1.0)
+            mp_2 = ag.mp.SphIsothermal(centre=(0, 100), einstein_radius=1.0)
 
-            mp_3 = ag.mp.SphericalIsothermal(centre=(100, 100), einstein_radius=1.0)
+            mp_3 = ag.mp.SphIsothermal(centre=(100, 100), einstein_radius=1.0)
 
             gal_x4_mp = ag.Galaxy(
                 redshift=0.5,
@@ -1031,9 +1027,9 @@ class TestMassProfiles:
 
             grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.15)
 
-            sis_0 = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+            sis_0 = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-            sis_1 = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+            sis_1 = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
             galaxy = ag.Galaxy(mass_profile_0=sis_0, mass_profile_1=sis_1, redshift=0.5)
 
@@ -1265,8 +1261,8 @@ class TestRegression:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
-            mass_0=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass_0=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
 
         convergence = galaxy.convergence_from_grid(grid=grid)
@@ -1289,8 +1285,8 @@ class TestRegression:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
-            mass_0=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass=ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass_0=ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
         convergence = galaxy.convergence_from_grid(grid=grid)
         max_indexes = np.unravel_index(
@@ -1319,8 +1315,8 @@ class TestRegression:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
-            mass_0=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass_0=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
         convergence = galaxy.convergence_from_grid(grid=grid)
         max_indexes = np.unravel_index(
@@ -1342,7 +1338,7 @@ class TestRegression:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass=ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
         convergence = galaxy.convergence_from_grid(grid=grid)
         max_indexes = np.unravel_index(
@@ -1381,7 +1377,7 @@ class TestDecorators:
             mask=mask, fractional_accuracy=1.0, sub_steps=[2]
         )
 
-        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
+        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=1.0))
 
         image = galaxy.image_from_grid(grid=grid)
 
@@ -1396,8 +1392,7 @@ class TestDecorators:
         )
 
         galaxy = ag.Galaxy(
-            redshift=0.5,
-            light=ag.lp.EllipticalSersic(centre=(0.08, 0.08), intensity=1.0),
+            redshift=0.5, light=ag.lp.EllSersic(centre=(0.08, 0.08), intensity=1.0)
         )
 
         image = galaxy.image_from_grid(grid=grid)
@@ -1433,7 +1428,7 @@ class TestDecorators:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal(centre=(0.08, 0.08), einstein_radius=1.0),
+            mass=ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0),
         )
 
         deflections = galaxy.deflections_from_grid(grid=grid)
@@ -1450,7 +1445,7 @@ class TestDecorators:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal(centre=(0.08, 0.08), einstein_radius=1.0),
+            mass=ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0),
         )
 
         deflections = galaxy.deflections_from_grid(grid=grid)
@@ -1486,8 +1481,8 @@ class TestDecorators:
 
         grid_interp = ag.Grid2DInterpolate.from_mask(mask=mask, pixel_scales_interp=0.1)
 
-        light_profile = ag.lp.EllipticalSersic(intensity=1.0)
-        light_profile_interp = ag.lp.SphericalSersic(intensity=1.0)
+        light_profile = ag.lp.EllSersic(intensity=1.0)
+        light_profile_interp = ag.lp.SphSersic(intensity=1.0)
 
         image_no_interp = light_profile.image_from_grid(grid=grid)
 
@@ -1504,8 +1499,8 @@ class TestDecorators:
 
         assert (image == image_no_interp + image_interp).all()
 
-        mass_profile = ag.mp.EllipticalIsothermal(einstein_radius=1.0)
-        mass_profile_interp = ag.mp.SphericalIsothermal(einstein_radius=1.0)
+        mass_profile = ag.mp.EllIsothermal(einstein_radius=1.0)
+        mass_profile_interp = ag.mp.SphIsothermal(einstein_radius=1.0)
 
         convergence_no_interp = mass_profile.convergence_from_grid(grid=grid)
 

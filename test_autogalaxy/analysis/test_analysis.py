@@ -78,7 +78,7 @@ class TestAnalysisImaging:
     def test__figure_of_merit__matches_correct_fit_given_galaxy_profiles(
         self, masked_imaging_7x7
     ):
-        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
+        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=0.1))
 
         model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
@@ -100,7 +100,7 @@ class TestAnalysisImaging:
         hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
+        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=0.1))
 
         model = af.Collection(
             hyper_image_sky=hyper_image_sky,
@@ -127,11 +127,9 @@ class TestAnalysisImaging:
 
         galaxies = af.ModelInstance()
         galaxies.galaxy = ag.Galaxy(
-            redshift=0.5,
-            light=ag.lp.EllipticalSersic(intensity=1.0),
-            mass=ag.mp.SphericalIsothermal,
+            redshift=0.5, light=ag.lp.EllSersic(intensity=1.0), mass=ag.mp.SphIsothermal
         )
-        galaxies.source = ag.Galaxy(redshift=1.0, light=ag.lp.EllipticalSersic())
+        galaxies.source = ag.Galaxy(redshift=1.0, light=ag.lp.EllSersic())
 
         instance = af.ModelInstance()
         instance.galaxies = galaxies
@@ -195,7 +193,7 @@ class TestAnalysisInterferometer:
         self, interferometer_7
     ):
 
-        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
+        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=0.1))
 
         model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
@@ -215,7 +213,7 @@ class TestAnalysisInterferometer:
     ):
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=0.1))
+        galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=0.1))
 
         model = af.Collection(
             hyper_background_noise=hyper_background_noise,

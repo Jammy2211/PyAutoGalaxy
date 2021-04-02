@@ -173,7 +173,7 @@ class TestCompareToManual:
         )
 
         galaxy = ag.Galaxy(
-            redshift=0.5, light=ag.lp.SphericalSersic(centre=(1.0, 2.0), intensity=1.0)
+            redshift=0.5, light=ag.lp.SphSersic(centre=(1.0, 2.0), intensity=1.0)
         )
         fit = ag.FitGalaxy(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[galaxy]
@@ -214,7 +214,7 @@ class TestCompareToManual:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.SphericalIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
+            mass=ag.mp.SphIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
         fit = ag.FitGalaxy(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[galaxy]
@@ -253,7 +253,7 @@ class TestCompareToManual:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.SphericalIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
+            mass=ag.mp.SphIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
 
         fit = ag.FitGalaxy(
@@ -295,7 +295,7 @@ class TestCompareToManual:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.SphericalIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
+            mass=ag.mp.SphIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
 
         fit = ag.FitGalaxy(
@@ -339,7 +339,7 @@ class TestCompareToManual:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.SphericalIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
+            mass=ag.mp.SphIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
         fit = ag.FitGalaxy(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[galaxy]

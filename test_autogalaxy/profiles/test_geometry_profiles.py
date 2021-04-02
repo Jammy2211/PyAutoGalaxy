@@ -11,10 +11,10 @@ from autogalaxy.profiles import geometry_profiles
 directory = path.dirname(path.realpath(__file__))
 
 
-class TestEllipticalProfile:
+class TestEllProfile:
     def test__cos_and_sin_from_x(self):
 
-        elliptical_profile = geometry_profiles.EllipticalProfile(
+        elliptical_profile = geometry_profiles.EllProfile(
             centre=(1.0, 1.0), elliptical_comps=(0.0, 0.0)
         )
 
@@ -23,7 +23,7 @@ class TestEllipticalProfile:
         assert cos_phi == 1.0
         assert sin_phi == 0.0
 
-        elliptical_profile = geometry_profiles.EllipticalProfile.from_axis_ratio_and_phi(
+        elliptical_profile = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
             centre=(1, 1), axis_ratio=0.1, phi=45.0
         )
 
@@ -32,7 +32,7 @@ class TestEllipticalProfile:
         assert cos_phi == pytest.approx(0.707, 1e-3)
         assert sin_phi == pytest.approx(0.707, 1e-3)
 
-        elliptical_profile = geometry_profiles.EllipticalProfile.from_axis_ratio_and_phi(
+        elliptical_profile = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
             centre=(1, 1), axis_ratio=0.1, phi=60.0
         )
 
@@ -41,7 +41,7 @@ class TestEllipticalProfile:
         assert cos_phi == pytest.approx(0.5, 1e-3)
         assert sin_phi == pytest.approx(0.866, 1e-3)
 
-        elliptical_profile = geometry_profiles.EllipticalProfile.from_axis_ratio_and_phi(
+        elliptical_profile = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
             centre=(1, 1), axis_ratio=0.1, phi=225.0
         )
 
@@ -52,9 +52,7 @@ class TestEllipticalProfile:
 
     def test__transform_grid_to_and_from_reference_frame(self):
 
-        elliptical_profile = geometry_profiles.EllipticalProfile(
-            elliptical_comps=(0.0, 0.0)
-        )
+        elliptical_profile = geometry_profiles.EllProfile(elliptical_comps=(0.0, 0.0))
 
         transformed_grid = elliptical_profile.transform_grid_to_reference_frame(
             grid=np.array([[1.0, 1.0]])
@@ -74,7 +72,7 @@ class TestEllipticalProfile:
 
         assert transformed_back_grid == pytest.approx(np.array([[1.0, 1.0]]), 1e-3)
 
-        elliptical_profile = geometry_profiles.EllipticalProfile.from_axis_ratio_and_phi(
+        elliptical_profile = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
             axis_ratio=0.1, phi=90.0, centre=(2.0, 3.0)
         )
 
@@ -90,7 +88,7 @@ class TestEllipticalProfile:
 
         assert transformed_back_grid == pytest.approx(np.array([[3.0, 4.0]]), 1e-3)
 
-        elliptical_profile = geometry_profiles.EllipticalProfile.from_axis_ratio_and_phi(
+        elliptical_profile = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
             axis_ratio=0.1, phi=45.0
         )
 
@@ -107,14 +105,14 @@ class TestEllipticalProfile:
         assert transformed_grid == pytest.approx(grid_original, 1e-5)
 
     def test__transform_grids_with_mapped_centres(self,):
-        elliptical_profile1 = geometry_profiles.EllipticalProfile(
+        elliptical_profile1 = geometry_profiles.EllProfile(
             elliptical_comps=(0.0, 0.0), centre=(0, 0)
         )
         grid1 = elliptical_profile1.transform_grid_to_reference_frame(
             grid=np.array([[1.0, 1.0]])
         )
 
-        elliptical_profile2 = geometry_profiles.EllipticalProfile(
+        elliptical_profile2 = geometry_profiles.EllProfile(
             elliptical_comps=(0.0, 0.0), centre=(-1, -1)
         )
         grid2 = elliptical_profile2.transform_grid_to_reference_frame(
@@ -123,14 +121,14 @@ class TestEllipticalProfile:
 
         assert (grid1 == grid2).all()
 
-        elliptical_profile1 = geometry_profiles.EllipticalProfile.from_axis_ratio_and_phi(
+        elliptical_profile1 = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
             axis_ratio=0.1, phi=55.0, centre=(0, 0)
         )
         grid1 = elliptical_profile1.transform_grid_to_reference_frame(
             grid=np.array([[1.0, 1.0]])
         )
 
-        elliptical_profile2 = geometry_profiles.EllipticalProfile.from_axis_ratio_and_phi(
+        elliptical_profile2 = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
             axis_ratio=0.1, phi=55.0, centre=(-1, -1)
         )
         grid2 = elliptical_profile2.transform_grid_to_reference_frame(
@@ -139,14 +137,14 @@ class TestEllipticalProfile:
 
         assert (grid1 == grid2).all()
 
-        elliptical_profile1 = geometry_profiles.EllipticalProfile.from_axis_ratio_and_phi(
+        elliptical_profile1 = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
             axis_ratio=0.1, phi=55.0, centre=(1, 1)
         )
         grid1 = elliptical_profile1.transform_grid_to_reference_frame(
             grid=np.array([[1.0, 1.0]])
         )
 
-        elliptical_profile2 = geometry_profiles.EllipticalProfile.from_axis_ratio_and_phi(
+        elliptical_profile2 = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
             axis_ratio=0.1, phi=55.0, centre=(-1, -1)
         )
         grid2 = elliptical_profile2.transform_grid_to_reference_frame(
@@ -156,9 +154,7 @@ class TestEllipticalProfile:
         assert (grid1 == grid2).all()
 
     def test__grid_to_eccentric_radii(self,):
-        elliptical_profile = geometry_profiles.EllipticalProfile(
-            elliptical_comps=(0.0, 0.0)
-        )
+        elliptical_profile = geometry_profiles.EllProfile(elliptical_comps=(0.0, 0.0))
 
         eccentric_radius = elliptical_profile.grid_to_eccentric_radii(
             grid=np.array([[1.0, 1.0]])
@@ -176,7 +172,7 @@ class TestEllipticalProfile:
         # eccentric_radius =        sqrt(0.5) * sqrt(1.0**2 + (1.0**2 /        0.5**2))
         # eccentric radius =        sqrt(0.5) * sqrt( 5 ) = 1.58113
 
-        elliptical_profile = geometry_profiles.EllipticalProfile.from_axis_ratio_and_phi(
+        elliptical_profile = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
             axis_ratio=0.5, phi=0.0
         )
 
@@ -187,10 +183,10 @@ class TestEllipticalProfile:
         assert eccentric_radius == pytest.approx(1.58113, 1e-3)
 
 
-class TestSphericalProfile:
+class TestSphProfile:
     def test__transform_to_reference_frame__coordinate_shifts_using_centre(self):
 
-        spherical_profile = geometry_profiles.SphericalProfile(centre=(0.0, 0.0))
+        spherical_profile = geometry_profiles.SphProfile(centre=(0.0, 0.0))
 
         transformed_grid = spherical_profile.transform_grid_from_reference_frame(
             np.array([[1.0, 1.0]])
@@ -198,25 +194,25 @@ class TestSphericalProfile:
 
         assert (transformed_grid == np.array([[1.0, 1.0]])).all()
 
-        spherical_profile1 = geometry_profiles.SphericalProfile(centre=(0, 0))
+        spherical_profile1 = geometry_profiles.SphProfile(centre=(0, 0))
 
         grid1 = spherical_profile1.transform_grid_to_reference_frame(
             grid=np.array([[1.0, 1.0]])
         )
 
-        spherical_profile2 = geometry_profiles.SphericalProfile(centre=(-1, -1))
+        spherical_profile2 = geometry_profiles.SphProfile(centre=(-1, -1))
         grid2 = spherical_profile2.transform_grid_to_reference_frame(
             grid=np.array([[0.0, 0.0]])
         )
 
         assert (grid1 == grid2).all()
 
-        spherical_profile1 = geometry_profiles.SphericalProfile(centre=(1, 1))
+        spherical_profile1 = geometry_profiles.SphProfile(centre=(1, 1))
         grid1 = spherical_profile1.transform_grid_to_reference_frame(
             grid=np.array([[1.0, 1.0]])
         )
 
-        spherical_profile2 = geometry_profiles.SphericalProfile(centre=(-1, -1))
+        spherical_profile2 = geometry_profiles.SphProfile(centre=(-1, -1))
         grid2 = spherical_profile2.transform_grid_to_reference_frame(
             grid=np.array([[-1.0, -1.0]])
         )
@@ -225,7 +221,7 @@ class TestSphericalProfile:
 
     def test__transform_to_and_from_reference_frame(self,):
 
-        spherical_profile = geometry_profiles.SphericalProfile(centre=(0.0, 0.0))
+        spherical_profile = geometry_profiles.SphProfile(centre=(0.0, 0.0))
 
         grid = np.array([[1.0, 1.0]])
 
@@ -233,7 +229,7 @@ class TestSphericalProfile:
 
         assert transformed_grid == pytest.approx(np.array([[1.0, 1.0]]), 1e-3)
 
-        spherical_profile = geometry_profiles.SphericalProfile(centre=(0.0, 0.0))
+        spherical_profile = geometry_profiles.SphProfile(centre=(0.0, 0.0))
 
         grid_original = np.array([[5.2221, 2.6565]])
 

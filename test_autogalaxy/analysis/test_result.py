@@ -20,8 +20,8 @@ class TestResultAbstract:
 
         model = af.Collection(
             galaxies=af.Collection(
-                galaxy=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.EllipticalSersic),
-                source=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.EllipticalSersic),
+                galaxy=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.EllSersic),
+                source=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.EllSersic),
             )
         )
 
@@ -37,8 +37,8 @@ class TestResultAbstract:
 
     def test__max_log_likelihood_plane_available_as_result(self, analysis_imaging_7x7):
 
-        galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
-        galaxy_1 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=2.0))
+        galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=1.0))
+        galaxy_1 = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=2.0))
 
         model = af.Collection(
             galaxies=af.Collection(galaxy_0=galaxy_0, galaxy_1=galaxy_1)

@@ -45,7 +45,7 @@
                 }
             },
             "dark_mass_profiles": {
-                "SphericalNFWMCRLudlow": {
+                "SphNFWMCRLudlow": {
                     "redshift_source": {
                         "type": "Uniform",
                         "lower_limit": 0.0,
@@ -115,7 +115,7 @@
             }
         },
         "light_profiles": {
-            "EllipticalLightProfile": {
+            "EllLightProfile": {
                 "intensity": {
                     "type": "Uniform",
                     "lower_limit": 0.0,

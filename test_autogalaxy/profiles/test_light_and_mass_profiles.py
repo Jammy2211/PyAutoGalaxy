@@ -8,16 +8,16 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 class TestGaussian(object):
     def test__grid_calculations__same_as_gaussian(self):
 
-        gaussian_lp = ag.lmp.EllipticalGaussian(
+        gaussian_lp = ag.lmp.EllGaussian(
             elliptical_comps=(0.1, 0.05), intensity=1.0, sigma=5.0
         )
-        gaussian_mp = ag.lmp.EllipticalGaussian(
+        gaussian_mp = ag.lmp.EllGaussian(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             sigma=5.0,
             mass_to_light_ratio=2.0,
         )
-        gaussian_lmp = ag.lmp.EllipticalGaussian(
+        gaussian_lmp = ag.lmp.EllGaussian(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             sigma=5.0,
@@ -42,20 +42,20 @@ class TestGaussian(object):
 class TestSersic:
     def test__grid_calculations__same_as_sersic(self):
 
-        sersic_lp = ag.lmp.EllipticalSersic(
+        sersic_lp = ag.lmp.EllSersic(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=2.0,
         )
-        sersic_mp = ag.lmp.EllipticalSersic(
+        sersic_mp = ag.lmp.EllSersic(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=2.0,
             mass_to_light_ratio=2.0,
         )
-        sersic_lmp = ag.lmp.EllipticalSersic(
+        sersic_lmp = ag.lmp.EllSersic(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
@@ -78,7 +78,7 @@ class TestSersic:
         ).all()
 
     def test__spherical_and_elliptical_identical(self):
-        elliptical = ag.lmp.EllipticalSersic(
+        elliptical = ag.lmp.EllSersic(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
             intensity=1.0,
@@ -86,7 +86,7 @@ class TestSersic:
             sersic_index=2.0,
             mass_to_light_ratio=2.0,
         )
-        spherical = ag.lmp.SphericalSersic(
+        spherical = ag.lmp.SphSersic(
             centre=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
@@ -110,16 +110,16 @@ class TestSersic:
 class TestExponential:
     def test__grid_calculations__same_as_exponential(self):
 
-        sersic_lp = ag.lmp.EllipticalExponential(
+        sersic_lp = ag.lmp.EllExponential(
             elliptical_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
         )
-        sersic_mp = ag.lmp.EllipticalExponential(
+        sersic_mp = ag.lmp.EllExponential(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             mass_to_light_ratio=2.0,
         )
-        sersic_lmp = ag.lmp.EllipticalExponential(
+        sersic_lmp = ag.lmp.EllExponential(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
@@ -141,13 +141,13 @@ class TestExponential:
         ).all()
 
     def test__spherical_and_elliptical_identical(self):
-        elliptical = ag.lmp.EllipticalExponential(
+        elliptical = ag.lmp.EllExponential(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
         )
-        spherical = ag.lmp.SphericalExponential(
+        spherical = ag.lmp.SphExponential(
             centre=(0.0, 0.0), intensity=1.0, effective_radius=1.0
         )
 
@@ -167,16 +167,16 @@ class TestExponential:
 class TestDevVaucouleurs:
     def test__grid_calculations__same_as_dev_vaucouleurs(self):
 
-        sersic_lp = ag.lmp.EllipticalDevVaucouleurs(
+        sersic_lp = ag.lmp.EllDevVaucouleurs(
             elliptical_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
         )
-        sersic_mp = ag.lmp.EllipticalDevVaucouleurs(
+        sersic_mp = ag.lmp.EllDevVaucouleurs(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             mass_to_light_ratio=2.0,
         )
-        sersic_lmp = ag.lmp.EllipticalDevVaucouleurs(
+        sersic_lmp = ag.lmp.EllDevVaucouleurs(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
@@ -198,13 +198,13 @@ class TestDevVaucouleurs:
         ).all()
 
     def test__spherical_and_elliptical_identical(self):
-        elliptical = ag.lmp.EllipticalDevVaucouleurs(
+        elliptical = ag.lmp.EllDevVaucouleurs(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
         )
-        spherical = ag.lmp.SphericalDevVaucouleurs(
+        spherical = ag.lmp.SphDevVaucouleurs(
             centre=(0.0, 0.0), intensity=1.0, effective_radius=1.0
         )
 
@@ -224,13 +224,13 @@ class TestDevVaucouleurs:
 class TestSersicRadialGradient:
     def test__grid_calculations__same_as_sersic_radial_gradient(self):
 
-        sersic_lp = ag.lmp.EllipticalSersic(
+        sersic_lp = ag.lmp.EllSersic(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             sersic_index=2.0,
         )
-        sersic_mp = ag.lmp.EllipticalSersicRadialGradient(
+        sersic_mp = ag.lmp.EllSersicRadialGradient(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
@@ -238,7 +238,7 @@ class TestSersicRadialGradient:
             mass_to_light_ratio=2.0,
             mass_to_light_gradient=0.5,
         )
-        sersic_lmp = ag.lmp.EllipticalSersicRadialGradient(
+        sersic_lmp = ag.lmp.EllSersicRadialGradient(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
@@ -259,13 +259,13 @@ class TestSersicRadialGradient:
         )
 
     def test__spherical_and_elliptical_identical(self):
-        elliptical = ag.lmp.EllipticalSersicRadialGradient(
+        elliptical = ag.lmp.EllSersicRadialGradient(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
         )
-        spherical = ag.lmp.SphericalSersicRadialGradient(
+        spherical = ag.lmp.SphSersicRadialGradient(
             centre=(0.0, 0.0), intensity=1.0, effective_radius=1.0
         )
 
@@ -285,17 +285,17 @@ class TestSersicRadialGradient:
 class TestExponentialRadialGradient:
     def test__grid_calculations__same_as_sersic_radial_gradient(self):
 
-        sersic_lp = ag.lmp.EllipticalExponential(
+        sersic_lp = ag.lmp.EllExponential(
             elliptical_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
         )
-        sersic_mp = ag.lmp.EllipticalExponentialRadialGradient(
+        sersic_mp = ag.lmp.EllExponentialRadialGradient(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             mass_to_light_ratio=2.0,
             mass_to_light_gradient=0.5,
         )
-        sersic_lmp = ag.lmp.EllipticalExponentialRadialGradient(
+        sersic_lmp = ag.lmp.EllExponentialRadialGradient(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
@@ -315,13 +315,13 @@ class TestExponentialRadialGradient:
         )
 
     def test__spherical_and_elliptical_identical(self):
-        elliptical = ag.lmp.EllipticalExponentialRadialGradient(
+        elliptical = ag.lmp.EllExponentialRadialGradient(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=1.0,
         )
-        spherical = ag.lmp.SphericalExponentialRadialGradient(
+        spherical = ag.lmp.SphExponentialRadialGradient(
             centre=(0.0, 0.0), intensity=1.0, effective_radius=1.0
         )
 
@@ -338,19 +338,19 @@ class TestExponentialRadialGradient:
         )
 
 
-class TestCoreSersic:
+class TestSersicCore:
     def test__grid_calculations__same_as_core_sersic(self):
 
-        sersic_lp = ag.lmp.EllipticalCoreSersic(
+        sersic_lp = ag.lmp.EllSersicCore(
             elliptical_comps=(0.1, 0.05), effective_radius=0.6, sersic_index=2.0
         )
-        sersic_mp = ag.lmp.EllipticalCoreSersic(
+        sersic_mp = ag.lmp.EllSersicCore(
             elliptical_comps=(0.1, 0.05),
             effective_radius=0.6,
             sersic_index=2.0,
             mass_to_light_ratio=2.0,
         )
-        sersic_lmp = ag.lmp.EllipticalCoreSersic(
+        sersic_lmp = ag.lmp.EllSersicCore(
             elliptical_comps=(0.1, 0.05),
             effective_radius=0.6,
             sersic_index=2.0,
@@ -373,14 +373,14 @@ class TestCoreSersic:
 
     def test__spherical_and_elliptical_identical(self):
 
-        elliptical = ag.lmp.EllipticalCoreSersic(
+        elliptical = ag.lmp.EllSersicCore(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
             effective_radius=1.0,
             sersic_index=2.0,
             mass_to_light_ratio=2.0,
         )
-        spherical = ag.lmp.SphericalCoreSersic(
+        spherical = ag.lmp.SphSersicCore(
             centre=(0.0, 0.0),
             effective_radius=1.0,
             sersic_index=2.0,
@@ -403,20 +403,20 @@ class TestCoreSersic:
 class TestChameleon:
     def test__grid_calculations__same_as_chameleon(self):
 
-        chameleon_lp = ag.lmp.EllipticalChameleon(
+        chameleon_lp = ag.lmp.EllChameleon(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             core_radius_0=0.1,
             core_radius_1=0.3,
         )
-        chameleon_mp = ag.lmp.EllipticalChameleon(
+        chameleon_mp = ag.lmp.EllChameleon(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             core_radius_0=0.1,
             core_radius_1=0.3,
             mass_to_light_ratio=2.0,
         )
-        chameleon_lmp = ag.lmp.EllipticalChameleon(
+        chameleon_lmp = ag.lmp.EllChameleon(
             elliptical_comps=(0.1, 0.05),
             intensity=1.0,
             core_radius_0=0.1,
@@ -439,7 +439,7 @@ class TestChameleon:
         ).all()
 
     def test__spherical_and_elliptical_identical(self):
-        elliptical = ag.lmp.EllipticalChameleon(
+        elliptical = ag.lmp.EllChameleon(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
             intensity=1.0,
@@ -447,7 +447,7 @@ class TestChameleon:
             core_radius_1=0.3,
             mass_to_light_ratio=2.0,
         )
-        spherical = ag.lmp.SphericalChameleon(
+        spherical = ag.lmp.SphChameleon(
             centre=(0.0, 0.0),
             intensity=1.0,
             core_radius_0=0.1,

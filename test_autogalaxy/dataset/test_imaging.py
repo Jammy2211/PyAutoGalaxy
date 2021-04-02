@@ -74,9 +74,9 @@ class TestSimulatorImaging:
 
         grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 
-        galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0))
+        galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=1.0))
 
-        galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.EllipticalSersic(intensity=0.3))
+        galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.EllSersic(intensity=0.3))
 
         plane = ag.Plane(redshift=0.75, galaxies=[galaxy_0, galaxy_1])
 
@@ -101,14 +101,14 @@ class TestSimulatorImaging:
 
         galaxy_0 = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal(
+            mass=ag.mp.EllIsothermal(
                 centre=(0.0, 0.0), einstein_radius=1.6, elliptical_comps=(0.17647, 0.0)
             ),
         )
 
         galaxy_1 = ag.Galaxy(
             redshift=1.0,
-            light=ag.lp.EllipticalSersic(
+            light=ag.lp.EllSersic(
                 centre=(0.1, 0.1),
                 elliptical_comps=(0.096225, -0.055555),
                 intensity=0.3,

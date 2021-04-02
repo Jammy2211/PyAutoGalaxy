@@ -37,9 +37,9 @@ simple analysis which fits a galaxy's light.
     )
 
     """
-    We model the galaxy using an EllipticalSersic LightProfile.
+    We model the galaxy using an EllSersic LightProfile.
     """
-    light_profile = ag.lp.EllipticalSersic
+    light_profile = ag.lp.EllSersic
 
     """
     We next setup this profile as model components whose parameters are free & fitted for

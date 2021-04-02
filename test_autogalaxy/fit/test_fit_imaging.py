@@ -488,13 +488,11 @@ class TestCompareToManualProfilesOnly:
     def test___all_fit_quantities__no_hyper_methods(self, masked_imaging_7x7):
         g0 = ag.Galaxy(
             redshift=0.5,
-            light_profile=ag.lp.EllipticalSersic(intensity=1.0),
-            mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
+            light_profile=ag.lp.EllSersic(intensity=1.0),
+            mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
         )
 
-        g1 = ag.Galaxy(
-            redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-        )
+        g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=1.0))
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
@@ -550,12 +548,10 @@ class TestCompareToManualProfilesOnly:
     ):
         g0 = ag.Galaxy(
             redshift=0.5,
-            light_profile=ag.lp.EllipticalSersic(intensity=1.0),
-            mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
+            light_profile=ag.lp.EllSersic(intensity=1.0),
+            mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
         )
-        g1 = ag.Galaxy(
-            redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-        )
+        g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=1.0))
         g2 = ag.Galaxy(redshift=1.0)
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2])
@@ -597,8 +593,8 @@ class TestCompareToManualProfilesOnly:
 
         g0 = ag.Galaxy(
             redshift=0.5,
-            light_profile=ag.lp.EllipticalSersic(intensity=1.0),
-            mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
+            light_profile=ag.lp.EllSersic(intensity=1.0),
+            mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
             hyper_galaxy=ag.HyperGalaxy(
                 contribution_factor=1.0, noise_factor=1.0, noise_power=1.0
             ),
@@ -606,9 +602,7 @@ class TestCompareToManualProfilesOnly:
             hyper_galaxy_image=np.ones(9),
             hyper_minimum_value=0.0,
         )
-        g1 = ag.Galaxy(
-            redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-        )
+        g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=1.0))
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
@@ -686,13 +680,11 @@ class TestCompareToManualProfilesOnly:
     ):
         g0 = ag.Galaxy(
             redshift=0.5,
-            light_profile=ag.lp.EllipticalSersic(intensity=1.0),
-            mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
+            light_profile=ag.lp.EllSersic(intensity=1.0),
+            mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
         )
 
-        g1 = ag.Galaxy(
-            redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-        )
+        g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=1.0))
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
@@ -997,7 +989,7 @@ class TestCompareToManualInversionOnly:
 class TestCompareToManualProfilesAndInversion:
     def test___all_fit_quantities__no_hyper_methods(self, masked_imaging_7x7):
         galaxy_light = ag.Galaxy(
-            redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
+            redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0)
         )
 
         pix = ag.pix.Rectangular(shape=(3, 3))
@@ -1095,12 +1087,8 @@ class TestCompareToManualProfilesAndInversion:
     def test___fit_galaxy_model_image_dict__has_blurred_images_and_inversion_mapped_reconstructed_image(
         self, masked_imaging_7x7
     ):
-        g0 = ag.Galaxy(
-            redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-        )
-        g1 = ag.Galaxy(
-            redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
-        )
+        g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+        g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
         g2 = ag.Galaxy(redshift=0.5)
 
         pix = ag.pix.Rectangular(shape=(3, 3))
@@ -1173,7 +1161,7 @@ class TestCompareToManualProfilesAndInversion:
 
         galaxy_light = ag.Galaxy(
             redshift=0.5,
-            light_profile=ag.lp.EllipticalSersic(intensity=1.0),
+            light_profile=ag.lp.EllSersic(intensity=1.0),
             hyper_galaxy=ag.HyperGalaxy(
                 contribution_factor=1.0, noise_factor=1.0, noise_power=1.0
             ),
@@ -1290,7 +1278,7 @@ class TestCompareToManualProfilesAndInversion:
         self, masked_imaging_7x7
     ):
         galaxy_light = ag.Galaxy(
-            redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
+            redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0)
         )
 
         pix = ag.pix.Rectangular(shape=(3, 3))

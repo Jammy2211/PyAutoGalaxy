@@ -9,7 +9,7 @@ from scipy.interpolate import griddata
 from autogalaxy import exc
 
 
-class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
+class MassSheet(geometry_profiles.SphProfile, mp.MassProfile):
     def __init__(
         self, centre: typing.Tuple[float, float] = (0.0, 0.0), kappa: float = 0.0
     ):
@@ -46,7 +46,7 @@ class MassSheet(geometry_profiles.SphericalProfile, mp.MassProfile):
 
 
 # noinspection PyAbstractClass
-class ExternalShear(geometry_profiles.EllipticalProfile, mp.MassProfile):
+class ExternalShear(geometry_profiles.EllProfile, mp.MassProfile):
     def __init__(self, elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0)):
         """
         An `ExternalShear` term, to model the line-of-sight contribution of other galaxies / satellites.

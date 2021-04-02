@@ -1,5 +1,5 @@
 {
-    "SphericalNFW": {
+    "SphNFW": {
         "centre_0": {
             "type": "Gaussian",
             "lower_limit": "-inf",
@@ -57,7 +57,7 @@
             }
         }
     },
-    "EllipticalNFW": {
+    "EllNFW": {
         "centre_0": {
             "type": "Gaussian",
             "lower_limit": "-inf",
@@ -145,7 +145,7 @@
             }
         }
     },
-    "SphericalNFWMCRDuffy": {
+    "SphNFWMCRDuffy": {
         "centre_0": {
             "type": "Gaussian",
             "lower_limit": "-inf",
@@ -216,7 +216,7 @@
             }
         }
     },
-    "EllipticalNFWMCRLudlow": {
+    "EllNFWMCRLudlow": {
         "centre_0": {
             "type": "Gaussian",
             "lower_limit": "-inf",
@@ -317,7 +317,7 @@
             }
         }
     },
-    "SphericalNFWMCRLudlow": {
+    "SphNFWMCRLudlow": {
         "centre_0": {
             "type": "Gaussian",
             "lower_limit": "-inf",
@@ -388,7 +388,7 @@
             }
         }
     },
-    "EllipticalGeneralizedNFWMCRLudlow": {
+    "EllNFWGeneralizedMCRLudlow": {
         "centre_0": {
             "type": "Gaussian",
             "lower_limit": "-inf",
@@ -502,7 +502,7 @@
             }
         }
     },
-    "SphericalTruncatedNFW": {
+    "SphNFWTruncated": {
         "centre_0": {
             "type": "Gaussian",
             "lower_limit": "-inf",
@@ -573,7 +573,7 @@
             }
         }
     },
-    "SphericalTruncatedNFWMCRDuffy": {
+    "SphNFWTruncatedMCRDuffy": {
         "centre_0": {
             "type": "Gaussian",
             "lower_limit": "-inf",
@@ -644,7 +644,7 @@
             }
         }
     },
-    "SphericalTruncatedNFWMCRLudlow": {
+    "SphNFWTruncatedMCRLudlow": {
         "centre_0": {
             "type": "Gaussian",
             "lower_limit": "-inf",
@@ -715,110 +715,7 @@
             }
         }
     },
-    "SphericalTruncatedNFWChallenge": {
-        "centre_0": {
-            "type": "Gaussian",
-            "lower_limit": "-inf",
-            "upper_limit": "inf",
-            "width_modifier": {
-                "type": "Absolute",
-                "value": 0.05
-            },
-            "mean": 0.0,
-            "sigma": 0.1,
-            "gaussian_limits": {
-                "lower": "-inf",
-                "upper": "inf"
-            }
-        },
-        "centre_1": {
-            "type": "Gaussian",
-            "lower_limit": "-inf",
-            "upper_limit": "inf",
-            "width_modifier": {
-                "type": "Absolute",
-                "value": 0.05
-            },
-            "mean": 0.0,
-            "sigma": 0.1,
-            "gaussian_limits": {
-                "lower": "-inf",
-                "upper": "inf"
-            }
-        },
-        "kappa_s": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 1.0,
-            "width_modifier": {
-                "type": "Relative",
-                "value": 0.2
-            },
-            "gaussian_limits": {
-                "lower": 0.0,
-                "upper": "inf"
-            }
-        },
-        "scale_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 30.0,
-            "width_modifier": {
-                "type": "Relative",
-                "value": 0.2
-            },
-            "gaussian_limits": {
-                "lower": 0.0,
-                "upper": "inf"
-            }
-        }
-    },
-    "SphericalTruncatedNFWMCRChallenge": {
-        "centre_0": {
-            "type": "Gaussian",
-            "lower_limit": "-inf",
-            "upper_limit": "inf",
-            "width_modifier": {
-                "type": "Absolute",
-                "value": 0.05
-            },
-            "mean": 0.0,
-            "sigma": 0.1,
-            "gaussian_limits": {
-                "lower": "-inf",
-                "upper": "inf"
-            }
-        },
-        "centre_1": {
-            "type": "Gaussian",
-            "lower_limit": "-inf",
-            "upper_limit": "inf",
-            "width_modifier": {
-                "type": "Absolute",
-                "value": 0.05
-            },
-            "mean": 0.0,
-            "sigma": 0.1,
-            "gaussian_limits": {
-                "lower": "-inf",
-                "upper": "inf"
-            }
-        },
-        "mass_at_200": {
-            "type": "LogUniform",
-            "lower_limit":1e8,
-            "upper_limit": 1e15,
-            "width_modifier": {
-                "type": "Relative",
-                "value": 0.5
-            },
-            "gaussian_limits": {
-                "lower": 0.0,
-                "upper": "inf"
-            }
-        }
-    },
-    "SphericalGeneralizedNFW": {
+    "SphNFWGeneralized": {
         "centre_0": {
             "type": "Gaussian",
             "lower_limit": "-inf",
@@ -889,7 +786,7 @@
             }
         }
     },
-    "EllipticalGeneralizedNFW": {
+    "EllNFWGeneralized": {
         "centre_0": {
             "type": "Gaussian",
             "lower_limit": "-inf",

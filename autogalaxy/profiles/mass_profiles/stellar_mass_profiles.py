@@ -16,7 +16,7 @@ class StellarProfile:
     pass
 
 
-class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
+class EllGaussian(mp.EllMassProfile, StellarProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -40,10 +40,10 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
             The sigma value of the Gaussian.
         """
 
-        super(EllipticalGaussian, self).__init__(
+        super(EllGaussian, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
-        super(mp.EllipticalMassProfile, self).__init__(
+        super(mp.EllMassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         self.mass_to_light_ratio = mass_to_light_ratio
@@ -204,9 +204,7 @@ class EllipticalGaussian(mp.EllipticalMassProfile, StellarProfile):
 
 
 # noinspection PyAbstractClass
-class AbstractEllipticalSersic(
-    mp.EllipticalMassProfile, MassProfileMGE, StellarProfile
-):
+class AbstractEllSersic(mp.EllMassProfile, MassProfileMGE, StellarProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -237,10 +235,10 @@ class AbstractEllipticalSersic(
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles
         """
-        super(AbstractEllipticalSersic, self).__init__(
+        super(AbstractEllSersic, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
-        super(mp.EllipticalMassProfile, self).__init__(
+        super(mp.EllMassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         super(MassProfileMGE, self).__init__()
@@ -362,7 +360,7 @@ class AbstractEllipticalSersic(
         return mass_profile
 
 
-class EllipticalSersic(AbstractEllipticalSersic, MassProfileMGE):
+class EllSersic(AbstractEllSersic, MassProfileMGE):
     @grid_decorators.grid_like_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
@@ -422,7 +420,7 @@ class EllipticalSersic(AbstractEllipticalSersic, MassProfileMGE):
         ) / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
 
 
-class SphericalSersic(EllipticalSersic):
+class SphSersic(EllSersic):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -449,7 +447,7 @@ class SphericalSersic(EllipticalSersic):
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profile.
         """
-        super(SphericalSersic, self).__init__(
+        super(SphSersic, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,
@@ -459,7 +457,7 @@ class SphericalSersic(EllipticalSersic):
         )
 
 
-class EllipticalExponential(EllipticalSersic):
+class EllExponential(EllSersic):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -469,7 +467,7 @@ class EllipticalExponential(EllipticalSersic):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The EllipticalExponential mass profile, the mass profiles of the light profiles that are used to fit and
+        The EllExponential mass profile, the mass profiles of the light profiles that are used to fit and
         subtract the lens model_galaxy's light.
 
         Parameters
@@ -486,7 +484,7 @@ class EllipticalExponential(EllipticalSersic):
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles
         """
-        super(EllipticalExponential, self).__init__(
+        super(EllExponential, self).__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity,
@@ -496,7 +494,7 @@ class EllipticalExponential(EllipticalSersic):
         )
 
 
-class SphericalExponential(EllipticalExponential):
+class SphExponential(EllExponential):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -519,7 +517,7 @@ class SphericalExponential(EllipticalExponential):
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles.
         """
-        super(SphericalExponential, self).__init__(
+        super(SphExponential, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,
@@ -528,7 +526,7 @@ class SphericalExponential(EllipticalExponential):
         )
 
 
-class EllipticalDevVaucouleurs(EllipticalSersic):
+class EllDevVaucouleurs(EllSersic):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -538,7 +536,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The EllipticalDevVaucouleurs mass profile, the mass profiles of the light profiles that are used to fit and
+        The EllDevVaucouleurs mass profile, the mass profiles of the light profiles that are used to fit and
         subtract the lens model_galaxy's light.
 
         Parameters
@@ -555,7 +553,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profile.
         """
-        super(EllipticalDevVaucouleurs, self).__init__(
+        super(EllDevVaucouleurs, self).__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity,
@@ -565,7 +563,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
         )
 
 
-class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
+class SphDevVaucouleurs(EllDevVaucouleurs):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -588,7 +586,7 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles.
         """
-        super(SphericalDevVaucouleurs, self).__init__(
+        super(SphDevVaucouleurs, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,
@@ -597,7 +595,7 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
         )
 
 
-class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
+class EllSersicRadialGradient(AbstractEllSersic):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -630,7 +628,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         mass_to_light_gradient : float
             The mass-to-light radial gradient.
         """
-        super(EllipticalSersicRadialGradient, self).__init__(
+        super(EllSersicRadialGradient, self).__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity,
@@ -757,7 +755,7 @@ class EllipticalSersicRadialGradient(AbstractEllipticalSersic):
         )
 
 
-class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
+class SphSersicRadialGradient(EllSersicRadialGradient):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -786,7 +784,7 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
         mass_to_light_gradient : float
             The mass-to-light radial gradient.
         """
-        super(SphericalSersicRadialGradient, self).__init__(
+        super(SphSersicRadialGradient, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,
@@ -797,7 +795,7 @@ class SphericalSersicRadialGradient(EllipticalSersicRadialGradient):
         )
 
 
-class EllipticalCoreSersic(EllipticalSersic):
+class EllSersicCore(EllSersic):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -836,7 +834,7 @@ class EllipticalCoreSersic(EllipticalSersic):
             Controls the sharpness of the transition between the inner core / outer Sersic profiles.
         """
 
-        super(EllipticalCoreSersic, self).__init__(
+        super(EllSersicCore, self).__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity_break,
@@ -931,7 +929,7 @@ class EllipticalCoreSersic(EllipticalSersic):
         )
 
 
-class SphericalCoreSersic(EllipticalCoreSersic):
+class SphSersicCore(EllSersicCore):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -964,7 +962,7 @@ class SphericalCoreSersic(EllipticalCoreSersic):
         alpha :
             Controls the sharpness of the transition between the inner core / outer Sersic profiles.
         """
-        super(SphericalCoreSersic, self).__init__(
+        super(SphSersicCore, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             effective_radius=effective_radius,
@@ -980,7 +978,7 @@ class SphericalCoreSersic(EllipticalCoreSersic):
         self.gamma = gamma
 
 
-class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
+class EllChameleon(mp.EllMassProfile, StellarProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -1010,10 +1008,10 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
                 (1.0 / Sqrt(x^2 + (y/q)^2 + core_radius_0^2) - 1.0 / Sqrt(x^2 + (y/q)^2 + (core_radius_0 + core_radius_1)**2.0))
         """
 
-        super(EllipticalChameleon, self).__init__(
+        super(EllChameleon, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
-        super(mp.EllipticalMassProfile, self).__init__(
+        super(mp.EllMassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         self.mass_to_light_ratio = mass_to_light_ratio
@@ -1157,7 +1155,7 @@ class EllipticalChameleon(mp.EllipticalMassProfile, StellarProfile):
         return mass_profile
 
 
-class SphericalChameleon(EllipticalChameleon):
+class SphChameleon(EllChameleon):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -1186,7 +1184,7 @@ class SphericalChameleon(EllipticalChameleon):
             We use core_radius_1 here is to avoid negative values.
        """
 
-        super(SphericalChameleon, self).__init__(
+        super(SphChameleon, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,

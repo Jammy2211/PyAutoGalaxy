@@ -34,7 +34,7 @@ class GeometryProfile:
         return self.__dict__ == other.__dict__
 
 
-class SphericalProfile(GeometryProfile):
+class SphProfile(GeometryProfile):
     def __init__(self, centre: typing.Tuple[float, float] = (0.0, 0.0)):
         """A spherical profile, which describes profiles with y and x centre Cartesian coordinates.
 
@@ -43,7 +43,7 @@ class SphericalProfile(GeometryProfile):
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
         """
-        super(SphericalProfile, self).__init__(centre=centre)
+        super(SphProfile, self).__init__(centre=centre)
 
     @grid_decorators.grid_like_to_structure
     @grid_decorators.transform
@@ -113,7 +113,7 @@ class SphericalProfile(GeometryProfile):
         return transformed.view(grid_2d.Grid2DTransformedNumpy)
 
 
-class EllipticalProfile(SphericalProfile):
+class EllProfile(SphProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -137,7 +137,7 @@ class EllipticalProfile(SphericalProfile):
         phi : float
             Rotation angle of light profile counter-clockwise from positive x-axis.
         """
-        super(EllipticalProfile, self).__init__(centre=centre)
+        super(EllProfile, self).__init__(centre=centre)
 
         self.elliptical_comps = elliptical_comps
 
@@ -259,7 +259,7 @@ class EllipticalProfile(SphericalProfile):
         grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
         """
-        if self.__class__.__name__.startswith("Spherical"):
+        if self.__class__.__name__.startswith("Sph"):
             return super().transform_grid_to_reference_frame(
                 grid=grid_2d.Grid2DTransformedNumpy(grid=grid)
             )
@@ -278,7 +278,7 @@ class EllipticalProfile(SphericalProfile):
         grid : grid_like
             The (y, x) coordinates in the reference frame of the profile.
         """
-        if self.__class__.__name__.startswith("Spherical"):
+        if self.__class__.__name__.startswith("Sph"):
             return super().transform_grid_from_reference_frame(
                 grid=grid_2d.Grid2DTransformedNumpy(grid=grid)
             )

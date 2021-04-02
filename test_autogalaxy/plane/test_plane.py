@@ -182,9 +182,9 @@ class TestAbstractPlane:
 
             assert plane.mass_profiles == []
 
-            sis_0 = ag.mp.SphericalIsothermal(einstein_radius=1.0)
-            sis_1 = ag.mp.SphericalIsothermal(einstein_radius=2.0)
-            sis_2 = ag.mp.SphericalIsothermal(einstein_radius=3.0)
+            sis_0 = ag.mp.SphIsothermal(einstein_radius=1.0)
+            sis_1 = ag.mp.SphIsothermal(einstein_radius=2.0)
+            sis_2 = ag.mp.SphIsothermal(einstein_radius=3.0)
 
             plane = ag.Plane(
                 galaxies=[ag.Galaxy(redshift=0.5, mass_profile=sis_0)], redshift=None
@@ -374,12 +374,8 @@ class TestAbstractPlaneProfiles:
             # Overwrite one value so intensity in each pixel is different
             sub_grid_7x7[5] = np.array([2.0, 2.0])
 
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-            )
-            g1 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+            g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
 
             lp0 = g0.light_profiles[0]
             lp1 = g1.light_profiles[0]
@@ -423,12 +419,8 @@ class TestAbstractPlaneProfiles:
             # Overwrite one value so intensity in each pixel is different
             sub_grid_7x7[5] = np.array([2.0, 2.0])
 
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-            )
-            g1 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+            g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
 
             g0_image = g0.image_from_grid(grid=sub_grid_7x7)
 
@@ -445,12 +437,8 @@ class TestAbstractPlaneProfiles:
             # Overwrite one value so intensity in each pixel is different
             positions = ag.Grid2DIrregular(grid=[(2.0, 2.0), (3.0, 3.0)])
 
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-            )
-            g1 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+            g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
 
             g0_image = g0.image_from_grid(grid=positions)
 
@@ -486,15 +474,9 @@ class TestAbstractPlaneProfiles:
                 kernel_shape_native=(3, 3)
             )
 
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-            )
-            g1 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
-            )
-            g2 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=3.0)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+            g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
+            g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
 
             padded_g0_image = g0.image_from_grid(grid=padded_grid)
 
@@ -515,18 +497,14 @@ class TestAbstractPlaneProfiles:
 
         def test__galaxy_image_dict_from_grid(self, sub_grid_7x7):
 
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
             g1 = ag.Galaxy(
                 redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
-                light_profile=ag.lp.EllipticalSersic(intensity=2.0),
+                mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
+                light_profile=ag.lp.EllSersic(intensity=2.0),
             )
 
-            g2 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=3.0)
-            )
+            g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
 
             g0_image = g0.image_from_grid(grid=sub_grid_7x7)
             g1_image = g1.image_from_grid(grid=sub_grid_7x7)
@@ -557,13 +535,13 @@ class TestAbstractPlaneProfiles:
 
             g0 = ag.Galaxy(
                 redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(
+                mass_profile=ag.mp.SphIsothermal(
                     einstein_radius=1.0, centre=(1.0, 0.0)
                 ),
             )
             g1 = ag.Galaxy(
                 redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(
+                mass_profile=ag.mp.SphIsothermal(
                     einstein_radius=2.0, centre=(1.0, 1.0)
                 ),
             )
@@ -606,12 +584,10 @@ class TestAbstractPlaneProfiles:
             self, sub_grid_7x7
         ):
             g0 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
+                redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0)
             )
             g1 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=2.0),
+                redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=2.0)
             )
 
             g0_convergence = g0.convergence_from_grid(grid=sub_grid_7x7)
@@ -627,8 +603,7 @@ class TestAbstractPlaneProfiles:
         def test__convergence_from_grid_as_positions(self, grid_irregular_7x7):
 
             g0 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
+                redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0)
             )
 
             g0_convergence = g0.convergence_from_grid(grid=grid_irregular_7x7)
@@ -669,13 +644,13 @@ class TestAbstractPlaneProfiles:
 
             g0 = ag.Galaxy(
                 redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(
+                mass_profile=ag.mp.SphIsothermal(
                     einstein_radius=1.0, centre=(1.0, 0.0)
                 ),
             )
             g1 = ag.Galaxy(
                 redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(
+                mass_profile=ag.mp.SphIsothermal(
                     einstein_radius=2.0, centre=(1.0, 1.0)
                 ),
             )
@@ -718,12 +693,10 @@ class TestAbstractPlaneProfiles:
             self, sub_grid_7x7
         ):
             g0 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
+                redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0)
             )
             g1 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=2.0),
+                redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=2.0)
             )
 
             g0_potential = g0.potential_from_grid(grid=sub_grid_7x7)
@@ -738,8 +711,7 @@ class TestAbstractPlaneProfiles:
 
         def test__potential_from_grid_as_positions(self, grid_irregular_7x7):
             g0 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
+                redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0)
             )
 
             g0_potential = g0.potential_from_grid(grid=grid_irregular_7x7)
@@ -777,12 +749,10 @@ class TestAbstractPlaneProfiles:
             sub_grid_7x7[5] = np.array([2.0, 2.0])
 
             g0 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
+                redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0)
             )
             g1 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=2.0),
+                redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=2.0)
             )
 
             mp0 = g0.mass_profiles[0]
@@ -842,12 +812,10 @@ class TestAbstractPlaneProfiles:
             sub_grid_7x7[5] = np.array([2.0, 2.0])
 
             g0 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
+                redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0)
             )
             g1 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=2.0),
+                redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=2.0)
             )
 
             g0_deflections = g0.deflections_from_grid(grid=sub_grid_7x7)
@@ -862,8 +830,7 @@ class TestAbstractPlaneProfiles:
 
         def test__deflections_from_grid_as_positions(self, grid_irregular_7x7):
             g0 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
+                redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0)
             )
 
             g0_deflections = g0.deflections_from_grid(grid=grid_irregular_7x7)
@@ -918,13 +885,13 @@ class TestAbstractPlaneProfiles:
 
             grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.15)
 
-            sis_0 = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=0.2)
+            sis_0 = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=0.2)
 
-            sis_1 = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=0.4)
+            sis_1 = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=0.4)
 
-            sis_2 = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=0.6)
+            sis_2 = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=0.6)
 
-            sis_3 = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=0.8)
+            sis_3 = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=0.8)
 
             galaxy_0 = ag.Galaxy(
                 mass_profile_0=sis_0, mass_profile_1=sis_1, redshift=0.5
@@ -946,12 +913,8 @@ class TestAbstractPlaneData:
             self, sub_grid_7x7, blurring_grid_7x7, psf_3x3, convolver_7x7
         ):
 
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-            )
-            g1 = ag.Galaxy(
-                redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+            g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=2.0))
 
             blurred_g0_image = g0.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
@@ -982,12 +945,8 @@ class TestAbstractPlaneData:
         def test__blurred_image_of_galaxies_from_grid_and_psf(
             self, sub_grid_7x7, blurring_grid_7x7, psf_3x3
         ):
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-            )
-            g1 = ag.Galaxy(
-                redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+            g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=2.0))
 
             blurred_g0_image = g0.blurred_image_from_grid_and_psf(
                 grid=sub_grid_7x7, blurring_grid=blurring_grid_7x7, psf=psf_3x3
@@ -1022,12 +981,8 @@ class TestAbstractPlaneData:
         def test__blurred_image_from_grid_and_convolver(
             self, sub_grid_7x7, blurring_grid_7x7, convolver_7x7
         ):
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-            )
-            g1 = ag.Galaxy(
-                redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+            g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=2.0))
 
             blurred_g0_image = g0.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
@@ -1060,12 +1015,8 @@ class TestAbstractPlaneData:
         def test__blurred_image_of_galaxies_from_grid_and_convolver(
             self, sub_grid_7x7, blurring_grid_7x7, convolver_7x7
         ):
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-            )
-            g1 = ag.Galaxy(
-                redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+            g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=2.0))
 
             blurred_g0_image = g0.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
@@ -1107,18 +1058,14 @@ class TestAbstractPlaneData:
             self, sub_grid_7x7, blurring_grid_7x7, convolver_7x7
         ):
 
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
             g1 = ag.Galaxy(
                 redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
-                light_profile=ag.lp.EllipticalSersic(intensity=2.0),
+                mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
+                light_profile=ag.lp.EllSersic(intensity=2.0),
             )
 
-            g2 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=3.0)
-            )
+            g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
 
             g0_blurred_image = g0.blurred_image_from_grid_and_convolver(
                 grid=sub_grid_7x7,
@@ -1165,12 +1112,8 @@ class TestAbstractPlaneData:
 
             grid = ag.Grid2D.from_mask(mask=mask)
 
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=0.1)
-            )
-            g1 = ag.Galaxy(
-                redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=0.2)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=0.1))
+            g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=0.2))
 
             plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
@@ -1218,9 +1161,7 @@ class TestAbstractPlaneData:
         def test__visibilities_from_grid_and_transformer(
             self, sub_grid_7x7, transformer_7x7_7
         ):
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
 
             image = g0.image_from_grid(grid=sub_grid_7x7)
 
@@ -1234,9 +1175,7 @@ class TestAbstractPlaneData:
 
             assert (visibilities == plane_visibilities).all()
 
-            g1 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
-            )
+            g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
 
             image = g0.image_from_grid(grid=sub_grid_7x7) + g1.image_from_grid(
                 grid=sub_grid_7x7
@@ -1266,13 +1205,9 @@ class TestAbstractPlaneData:
         def test__visibilities_of_galaxies_from_grid_and_transformer(
             self, sub_grid_7x7, transformer_7x7_7
         ):
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
 
-            g1 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=2.0)
-            )
+            g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
 
             g0_image = g0.image_from_grid(grid=sub_grid_7x7)
 
@@ -1303,22 +1238,16 @@ class TestAbstractPlaneData:
             self, sub_grid_7x7, transformer_7x7_7
         ):
 
-            g0 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=1.0)
-            )
+            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
             g1 = ag.Galaxy(
                 redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
-                light_profile=ag.lp.EllipticalSersic(intensity=2.0),
+                mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
+                light_profile=ag.lp.EllSersic(intensity=2.0),
             )
 
-            g2 = ag.Galaxy(
-                redshift=0.5, light_profile=ag.lp.EllipticalSersic(intensity=3.0)
-            )
+            g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
 
-            g3 = ag.Galaxy(
-                redshift=1.0, light_profile=ag.lp.EllipticalSersic(intensity=5.0)
-            )
+            g3 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=5.0))
 
             g0_visibilities = g0.profile_visibilities_from_grid_and_transformer(
                 grid=sub_grid_7x7, transformer=transformer_7x7_7
@@ -1535,9 +1464,7 @@ class TestAbstractPlaneData:
         ):
             sub_grid_7x7[1] = np.array([2.0, 2.0])
 
-            galaxy = ag.Galaxy(
-                redshift=0.5, light=ag.lp.EllipticalSersic(intensity=1.0)
-            )
+            galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=1.0))
 
             plane = ag.Plane(galaxies=[galaxy], redshift=None)
 
@@ -1562,7 +1489,7 @@ class TestAbstractPlaneData:
 
             g0 = ag.Galaxy(
                 redshift=0.5,
-                light_profile=ag.lp.EllipticalSersic(centre=(1.6, -1.6), intensity=1.0),
+                light_profile=ag.lp.EllSersic(centre=(1.6, -1.6), intensity=1.0),
             )
             plane = ag.Plane(galaxies=[g0], redshift=None)
 
@@ -1575,7 +1502,7 @@ class TestAbstractPlaneData:
 
             g0 = ag.Galaxy(
                 redshift=0.5,
-                light_profile=ag.lp.EllipticalSersic(centre=(1.6, 1.6), intensity=1.0),
+                light_profile=ag.lp.EllSersic(centre=(1.6, 1.6), intensity=1.0),
             )
             plane = ag.Plane(galaxies=[g0], redshift=None)
 
@@ -1587,9 +1514,7 @@ class TestAbstractPlaneData:
 
             g0 = ag.Galaxy(
                 redshift=0.5,
-                light_profile=ag.lp.EllipticalSersic(
-                    centre=(-1.6, -1.6), intensity=1.0
-                ),
+                light_profile=ag.lp.EllSersic(centre=(-1.6, -1.6), intensity=1.0),
             )
             plane = ag.Plane(galaxies=[g0], redshift=None)
 
@@ -1601,7 +1526,7 @@ class TestAbstractPlaneData:
 
             g0 = ag.Galaxy(
                 redshift=0.5,
-                light_profile=ag.lp.EllipticalSersic(centre=(-1.6, 1.6), intensity=1.0),
+                light_profile=ag.lp.EllSersic(centre=(-1.6, 1.6), intensity=1.0),
             )
             plane = ag.Plane(galaxies=[g0], redshift=None)
 
@@ -2099,12 +2024,10 @@ class TestPlane:
             sub_grid_7x7[5] = np.array([2.0, 2.0])
 
             g0 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=1.0),
+                redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0)
             )
             g1 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphericalIsothermal(einstein_radius=2.0),
+                redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=2.0)
             )
 
             g0_deflections = g0.deflections_from_grid(grid=sub_grid_7x7)
@@ -2309,8 +2232,7 @@ class TestDecorators:
         )
 
         galaxy = ag.Galaxy(
-            redshift=0.5,
-            light=ag.lp.EllipticalSersic(centre=(0.08, 0.08), intensity=1.0),
+            redshift=0.5, light=ag.lp.EllSersic(centre=(0.08, 0.08), intensity=1.0)
         )
 
         plane = ag.Plane(galaxies=[galaxy])
@@ -2348,7 +2270,7 @@ class TestDecorators:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal(centre=(0.08, 0.08), einstein_radius=1.0),
+            mass=ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0),
         )
 
         plane = ag.Plane(galaxies=[galaxy], redshift=None)
@@ -2367,7 +2289,7 @@ class TestDecorators:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal(centre=(0.08, 0.08), einstein_radius=1.0),
+            mass=ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0),
         )
 
         plane = ag.Plane(galaxies=[galaxy], redshift=None)
@@ -2404,8 +2326,8 @@ class TestDecorators:
 
         grid_interp = ag.Grid2DInterpolate.from_mask(mask=mask, pixel_scales_interp=0.1)
 
-        light_profile = ag.lp.EllipticalSersic(intensity=1.0)
-        light_profile_interp = ag.lp.SphericalSersic(intensity=1.0)
+        light_profile = ag.lp.EllSersic(intensity=1.0)
+        light_profile_interp = ag.lp.SphSersic(intensity=1.0)
 
         image_no_interp = light_profile.image_from_grid(grid=grid)
 
@@ -2424,8 +2346,8 @@ class TestDecorators:
 
         assert (image == image_no_interp + image_interp).all()
 
-        mass_profile = ag.mp.EllipticalIsothermal(einstein_radius=1.0)
-        mass_profile_interp = ag.mp.SphericalIsothermal(einstein_radius=1.0)
+        mass_profile = ag.mp.EllIsothermal(einstein_radius=1.0)
+        mass_profile_interp = ag.mp.SphIsothermal(einstein_radius=1.0)
 
         convergence_no_interp = mass_profile.convergence_from_grid(grid=grid)
 
@@ -2485,8 +2407,8 @@ class TestRegression:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
-            mass_0=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass_0=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
 
         plane = ag.Plane(galaxies=[galaxy])
@@ -2511,8 +2433,8 @@ class TestRegression:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
-            mass_0=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass=ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass_0=ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
 
         plane = ag.Plane(galaxies=[galaxy])
@@ -2544,8 +2466,8 @@ class TestRegression:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
-            mass_0=ag.mp.EllipticalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass_0=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
 
         plane = ag.Plane(galaxies=[galaxy])
@@ -2570,7 +2492,7 @@ class TestRegression:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.SphericalIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+            mass=ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
         )
 
         plane = ag.Plane(galaxies=[galaxy])

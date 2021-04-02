@@ -1,7 +1,7 @@
 {
     "profiles": {
         "light_profiles": {
-            "EllipticalDevVaucouleurs": {
+            "EllDevVaucouleurs": {
                 "effective_radius": {
                     "type": "Uniform",
                     "lower_limit": 0.0,
@@ -81,7 +81,7 @@
                     }
                 }
             },
-            "EllipticalSersic": {
+            "EllSersic": {
                 "sersic_index": {
                     "type": "Uniform",
                     "lower_limit": 0.0,
@@ -177,7 +177,7 @@
         },
         "mass_profiles": {
             "total_mass_profiles": {
-                "EllipticalCoredIsothermal": {
+                "EllIsothermalCored": {
                     "core_radius": {
                         "type": "Uniform",
                         "lower_limit": 0.0,
@@ -300,7 +300,7 @@
                 }
             },
             "stellar_mass_profiles": {
-                "EllipticalSersic": {
+                "EllSersic": {
                     "mass_to_light_ratio": {
                         "type": "Uniform",
                         "lower_limit": 0.0,

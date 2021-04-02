@@ -9,7 +9,7 @@ from autogalaxy.profiles import light_profiles as lp
 class LightProfilePlotter(abstract_plotters.AbstractPlotter):
     def __init__(
         self,
-        light_profile: lp.EllipticalLightProfile,
+        light_profile: lp.EllLightProfile,
         grid: abstract_grid_2d.AbstractGrid2D,
         mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
         visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),

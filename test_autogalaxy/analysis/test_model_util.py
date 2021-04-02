@@ -123,7 +123,7 @@ def test__hyper_model_from():
                 pixelization=ag.pix.Rectangular,
                 regularization=ag.reg.Constant,
             ),
-            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllipticalSersic),
+            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllSersic),
         )
     )
 
@@ -167,7 +167,7 @@ def test__hyper_model_from():
     model = af.Collection(
         galaxies=af.Collection(
             galaxy=af.Model(ag.Galaxy, redshift=0.5),
-            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllipticalSersic),
+            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllSersic),
         )
     )
 
@@ -185,7 +185,7 @@ def test__hyper_model_from__adds_hyper_galaxies():
     model = af.Collection(
         galaxies=af.Collection(
             galaxy_0=af.Model(ag.Galaxy, redshift=0.5),
-            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllipticalSersic),
+            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllSersic),
         )
     )
 
@@ -241,8 +241,8 @@ def test__stochastic_model_from():
             lens=af.Model(
                 ag.Galaxy,
                 redshift=0.5,
-                light=ag.lp.SphericalSersic(),
-                mass=ag.mp.SphericalIsothermal(),
+                light=ag.lp.SphSersic(),
+                mass=ag.mp.SphIsothermal(),
             ),
             source=af.Model(
                 ag.Galaxy,

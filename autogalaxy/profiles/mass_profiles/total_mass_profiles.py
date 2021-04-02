@@ -11,7 +11,7 @@ import typing
 import copy
 
 
-class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
+class PointMass(geometry_profiles.SphProfile, mp.MassProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -65,7 +65,7 @@ class PointMass(geometry_profiles.SphericalProfile, mp.MassProfile):
         return mass_profile
 
 
-class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
+class EllPowerLawBroken(mp.EllMassProfile, mp.MassProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -76,7 +76,7 @@ class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
         break_radius: float = 0.01,
     ):
         """
-        Elliptical, homoeoidal mass model with an inner_slope
+        Ell, homoeoidal mass model with an inner_slope
         and outer_slope, continuous in density across break_radius.
         Position angle is defined to be zero on x-axis and
         +ve angle rotates the lens anticlockwise
@@ -86,7 +86,7 @@ class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
         coordinates respectively.~
         """
 
-        super(EllipticalBrokenPowerLaw, self).__init__(
+        super(EllPowerLawBroken, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
 
@@ -116,7 +116,7 @@ class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
         Returns the dimensionless density kappa=Sigma/Sigma_c (eq. 1)
         """
 
-        # Elliptical radius
+        # Ell radius
         radius = np.hypot(grid[:, 1] * self.axis_ratio, grid[:, 0])
 
         # Inside break radius
@@ -143,7 +143,7 @@ class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
         # Rotate coordinates
         z = grid[:, 1] + 1j * grid[:, 0]
 
-        # Elliptical radius
+        # Ell radius
         R = np.hypot(z.real * self.axis_ratio, z.imag)
 
         # Factors common to eq. 18 and 19
@@ -221,7 +221,7 @@ class EllipticalBrokenPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
         return mass_profile
 
 
-class SphericalBrokenPowerLaw(EllipticalBrokenPowerLaw):
+class SphPowerLawBroken(EllPowerLawBroken):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -231,7 +231,7 @@ class SphericalBrokenPowerLaw(EllipticalBrokenPowerLaw):
         break_radius: float = 0.01,
     ):
         """
-        Elliptical, homoeoidal mass model with an inner_slope
+        Ell, homoeoidal mass model with an inner_slope
         and outer_slope, continuous in density across break_radius.
         Position angle is defined to be zero on x-axis and
         +ve angle rotates the lens anticlockwise
@@ -241,7 +241,7 @@ class SphericalBrokenPowerLaw(EllipticalBrokenPowerLaw):
         coordinates respectively.~
         """
 
-        super(SphericalBrokenPowerLaw, self).__init__(
+        super(SphPowerLawBroken, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             einstein_radius=einstein_radius,
@@ -251,7 +251,7 @@ class SphericalBrokenPowerLaw(EllipticalBrokenPowerLaw):
         )
 
 
-class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
+class EllPowerLawCored(mp.EllMassProfile, mp.MassProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -277,7 +277,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
         core_radius : float
             The arc-second radius of the inner core.
         """
-        super(EllipticalCoredPowerLaw, self).__init__(
+        super(EllPowerLawCored, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
 
@@ -420,7 +420,7 @@ class EllipticalCoredPowerLaw(mp.EllipticalMassProfile, mp.MassProfile):
         return mass_profile
 
 
-class SphericalCoredPowerLaw(EllipticalCoredPowerLaw):
+class SphPowerLawCored(EllPowerLawCored):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -442,7 +442,7 @@ class SphericalCoredPowerLaw(EllipticalCoredPowerLaw):
         core_radius : float
             The arc-second radius of the inner core.
         """
-        super(SphericalCoredPowerLaw, self).__init__(
+        super(SphPowerLawCored, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             einstein_radius=einstein_radius,
@@ -480,7 +480,7 @@ class SphericalCoredPowerLaw(EllipticalCoredPowerLaw):
         return self.grid_to_grid_cartesian(grid=grid, radius=deflection)
 
 
-class EllipticalPowerLaw(EllipticalCoredPowerLaw):
+class EllPowerLaw(EllPowerLawCored):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -504,7 +504,7 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
             The density slope of the power-law (lower value -> shallower profile, higher value -> steeper profile).
         """
 
-        super(EllipticalPowerLaw, self).__init__(
+        super(EllPowerLaw, self).__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             einstein_radius=einstein_radius,
@@ -584,7 +584,7 @@ class EllipticalPowerLaw(EllipticalCoredPowerLaw):
         )
 
 
-class SphericalPowerLaw(EllipticalPowerLaw):
+class SphPowerLaw(EllPowerLaw):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -604,7 +604,7 @@ class SphericalPowerLaw(EllipticalPowerLaw):
             The density slope of the power-law (lower value -> shallower profile, higher value -> steeper profile).
         """
 
-        super(SphericalPowerLaw, self).__init__(
+        super(SphPowerLaw, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             einstein_radius=einstein_radius,
@@ -628,7 +628,7 @@ class SphericalPowerLaw(EllipticalPowerLaw):
         return self.grid_to_grid_cartesian(grid, deflection_r)
 
 
-class EllipticalCoredIsothermal(EllipticalCoredPowerLaw):
+class EllIsothermalCored(EllPowerLawCored):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -652,7 +652,7 @@ class EllipticalCoredIsothermal(EllipticalCoredPowerLaw):
         core_radius : float
             The arc-second radius of the inner core.
         """
-        super(EllipticalCoredIsothermal, self).__init__(
+        super(EllIsothermalCored, self).__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             einstein_radius=einstein_radius,
@@ -661,7 +661,7 @@ class EllipticalCoredIsothermal(EllipticalCoredPowerLaw):
         )
 
 
-class SphericalCoredIsothermal(SphericalCoredPowerLaw):
+class SphIsothermalCored(SphPowerLawCored):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -681,7 +681,7 @@ class SphericalCoredIsothermal(SphericalCoredPowerLaw):
         core_radius : float
             The arc-second radius of the inner core.
         """
-        super(SphericalCoredIsothermal, self).__init__(
+        super(SphIsothermalCored, self).__init__(
             centre=centre,
             einstein_radius=einstein_radius,
             slope=2.0,
@@ -689,7 +689,7 @@ class SphericalCoredIsothermal(SphericalCoredPowerLaw):
         )
 
 
-class EllipticalIsothermal(EllipticalPowerLaw):
+class EllIsothermal(EllPowerLaw):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -711,14 +711,14 @@ class EllipticalIsothermal(EllipticalPowerLaw):
             The arc-second Einstein radius.
         """
 
-        super(EllipticalIsothermal, self).__init__(
+        super(EllIsothermal, self).__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             einstein_radius=einstein_radius,
             slope=2.0,
         )
 
-        if not isinstance(self, SphericalIsothermal) and self.axis_ratio > 0.99999:
+        if not isinstance(self, SphIsothermal) and self.axis_ratio > 0.99999:
             self.axis_ratio = 0.99999
 
     @grid_decorators.grid_like_to_structure
@@ -789,7 +789,7 @@ class EllipticalIsothermal(EllipticalPowerLaw):
         )
 
 
-class SphericalIsothermal(EllipticalIsothermal):
+class SphIsothermal(EllIsothermal):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -806,7 +806,7 @@ class SphericalIsothermal(EllipticalIsothermal):
         einstein_radius : float
             The arc-second Einstein radius.
         """
-        super(SphericalIsothermal, self).__init__(
+        super(SphIsothermal, self).__init__(
             centre=centre, elliptical_comps=(0.0, 0.0), einstein_radius=einstein_radius
         )
 

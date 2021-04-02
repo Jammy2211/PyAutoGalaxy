@@ -27,7 +27,7 @@
             "sigma": 0.1
         }
     },
-    "SphericalProfile": {
+    "SphProfile": {
         "centre_0": {
             "type": "Gaussian",
             "lower_limit": "-inf",
@@ -55,7 +55,7 @@
             "sigma": 0.1
         }
     },
-    "EllipticalProfile": {
+    "EllProfile": {
         "centre_0": {
             "type": "Gaussian",
             "lower_limit": "-inf",

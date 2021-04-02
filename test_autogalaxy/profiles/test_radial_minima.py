@@ -22,14 +22,14 @@ class TestGaussian:
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        gaussian = ag.lp.EllipticalGaussian(centre=(0.0, 0.0))
+        gaussian = ag.lp.EllGaussian(centre=(0.0, 0.0))
 
         image_1 = gaussian.image_from_grid(grid=grid_10)
         image_0 = gaussian.image_from_grid(grid=grid_zero)
 
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
-        gaussian = ag.lp.SphericalGaussian(centre=(0.0, 0.0))
+        gaussian = ag.lp.SphGaussian(centre=(0.0, 0.0))
 
         image_1 = gaussian.image_from_grid(grid=grid_10)
         image_0 = gaussian.image_from_grid(grid=grid_zero)
@@ -43,13 +43,13 @@ class TestSersic:
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        sersic = ag.lp.EllipticalSersic(centre=(0.0, 0.0))
+        sersic = ag.lp.EllSersic(centre=(0.0, 0.0))
 
         image_1 = sersic.image_from_grid(grid=grid_10)
         image_0 = sersic.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
-        sersic = ag.lp.SphericalSersic(centre=(0.0, 0.0))
+        sersic = ag.lp.SphSersic(centre=(0.0, 0.0))
 
         image_1 = sersic.image_from_grid(grid=grid_10)
         image_0 = sersic.image_from_grid(grid=grid_zero)
@@ -63,13 +63,13 @@ class TestExponential:
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        exponential = ag.lp.EllipticalExponential(centre=(0.0, 0.0))
+        exponential = ag.lp.EllExponential(centre=(0.0, 0.0))
 
         image_1 = exponential.image_from_grid(grid=grid_10)
         image_0 = exponential.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
-        exponential = ag.lp.SphericalExponential(centre=(0.0, 0.0))
+        exponential = ag.lp.SphExponential(centre=(0.0, 0.0))
 
         image_1 = exponential.image_from_grid(grid=grid_10)
         image_0 = exponential.image_from_grid(grid=grid_zero)
@@ -83,33 +83,33 @@ class TestDevVaucouleurs:
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        dev_vaucouleurs = ag.lp.EllipticalDevVaucouleurs(centre=(0.0, 0.0))
+        dev_vaucouleurs = ag.lp.EllDevVaucouleurs(centre=(0.0, 0.0))
 
         image_1 = dev_vaucouleurs.image_from_grid(grid=grid_10)
         image_0 = dev_vaucouleurs.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
-        dev_vaucouleurs = ag.lp.SphericalDevVaucouleurs(centre=(0.0, 0.0))
+        dev_vaucouleurs = ag.lp.SphDevVaucouleurs(centre=(0.0, 0.0))
 
         image_1 = dev_vaucouleurs.image_from_grid(grid=grid_10)
         image_0 = dev_vaucouleurs.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
 
-class TestCoreSersic:
+class TestSersicCore:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
         conf.instance.push(
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        core_sersic = ag.lp.EllipticalCoreSersic(centre=(0.0, 0.0))
+        core_sersic = ag.lp.EllSersicCore(centre=(0.0, 0.0))
 
         image_1 = core_sersic.image_from_grid(grid=grid_10)
         image_0 = core_sersic.image_from_grid(grid=grid_zero)
         assert image_0 == pytest.approx(image_1, 1.0e-4)
 
-        core_sersic = ag.lp.SphericalCoreSersic(centre=(0.0, 0.0))
+        core_sersic = ag.lp.SphSersicCore(centre=(0.0, 0.0))
 
         image_1 = core_sersic.image_from_grid(grid=grid_10)
         image_0 = core_sersic.image_from_grid(grid=grid_zero)
@@ -130,14 +130,14 @@ class TestPointMass:
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
 
-class TestCoredPowerLaw:
+class TestPowerLawCored:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
         conf.instance.push(
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        cored_power_law = ag.mp.EllipticalCoredPowerLaw(
+        cored_power_law = ag.mp.EllPowerLawCored(
             centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0
         )
 
@@ -153,23 +153,21 @@ class TestPowerLaw:
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        power_law = ag.mp.EllipticalPowerLaw(
-            centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0
-        )
+        power_law = ag.mp.EllPowerLaw(centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0)
 
         convergence_1 = power_law.convergence_from_grid(grid=grid_10)
         convergence_0 = power_law.convergence_from_grid(grid=[[1.0e-9, 0.0]])
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
 
-class TestCoredIsothermal:
+class TestIsothermalCored:
     def test__transform_grid_wrapper_and_move_radial_minimum_wrappers(self):
 
         conf.instance.push(
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        cored_isothermal = ag.mp.EllipticalCoredIsothermal(
+        cored_isothermal = ag.mp.EllIsothermalCored(
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
@@ -177,7 +175,7 @@ class TestCoredIsothermal:
         convergence_0 = cored_isothermal.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        cored_isothermal = ag.mp.SphericalCoredIsothermal(
+        cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
@@ -185,7 +183,7 @@ class TestCoredIsothermal:
         convergence_0 = cored_isothermal.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        cored_isothermal = ag.mp.EllipticalCoredIsothermal(
+        cored_isothermal = ag.mp.EllIsothermalCored(
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
@@ -193,7 +191,7 @@ class TestCoredIsothermal:
         potential_0 = cored_isothermal.potential_from_grid(grid=grid_zero)
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
 
-        cored_isothermal = ag.mp.SphericalCoredIsothermal(
+        cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
@@ -201,7 +199,7 @@ class TestCoredIsothermal:
         potential_0 = cored_isothermal.potential_from_grid(grid=grid_zero)
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
 
-        cored_isothermal = ag.mp.EllipticalCoredIsothermal(
+        cored_isothermal = ag.mp.EllIsothermalCored(
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
@@ -209,7 +207,7 @@ class TestCoredIsothermal:
         deflections_0 = cored_isothermal.deflections_from_grid(grid=grid_zero)
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
-        cored_isothermal = ag.mp.SphericalCoredIsothermal(
+        cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(0.0, 0.0), einstein_radius=1.0
         )
 
@@ -225,37 +223,37 @@ class TestIsothermal:
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        isothermal = ag.mp.EllipticalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+        isothermal = ag.mp.EllIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
         convergence_1 = isothermal.convergence_from_grid(grid=grid_10)
         convergence_0 = isothermal.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        isothermal = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+        isothermal = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
         convergence_1 = isothermal.convergence_from_grid(grid=grid_10)
         convergence_0 = isothermal.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        isothermal = ag.mp.EllipticalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+        isothermal = ag.mp.EllIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
         potential_1 = isothermal.potential_from_grid(grid=grid_10)
         potential_0 = isothermal.potential_from_grid(grid=grid_zero)
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
 
-        isothermal = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+        isothermal = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
         potential_1 = isothermal.potential_from_grid(grid=grid_10)
         potential_0 = isothermal.potential_from_grid(grid=grid_zero)
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
 
-        isothermal = ag.mp.EllipticalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+        isothermal = ag.mp.EllIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
         deflections_1 = isothermal.deflections_from_grid(grid=grid_10)
         deflections_0 = isothermal.deflections_from_grid(grid=grid_zero)
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
-        isothermal = ag.mp.SphericalIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
+        isothermal = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
         deflections_1 = isothermal.deflections_from_grid(grid=grid_10)
         deflections_0 = isothermal.deflections_from_grid(grid=grid_zero)
@@ -269,19 +267,19 @@ class TestGeneralizedNFW:
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        gnfw = ag.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
+        gnfw = ag.mp.SphNFWGeneralized(centre=(0.0, 0.0))
 
         convergence_1 = gnfw.convergence_from_grid(grid=grid_10)
         convergence_0 = gnfw.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        gnfw = ag.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
+        gnfw = ag.mp.SphNFWGeneralized(centre=(0.0, 0.0))
 
         potential_1 = gnfw.potential_from_grid(grid=grid_10)
         potential_0 = gnfw.potential_from_grid(grid=grid_zero)
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
 
-        gnfw = ag.mp.SphericalGeneralizedNFW(centre=(0.0, 0.0))
+        gnfw = ag.mp.SphNFWGeneralized(centre=(0.0, 0.0))
 
         deflections_1 = gnfw.deflections_from_grid(grid=grid_10)
         deflections_0 = gnfw.deflections_from_grid(grid=grid_zero)
@@ -295,19 +293,19 @@ class TestTruncatedNFW:
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(centre=(0.0, 0.0))
+        truncated_nfw = ag.mp.SphNFWTruncated(centre=(0.0, 0.0))
 
         convergence_1 = truncated_nfw.convergence_from_grid(grid=grid_10)
         convergence_0 = truncated_nfw.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(centre=(0.0, 0.0))
+        truncated_nfw = ag.mp.SphNFWTruncated(centre=(0.0, 0.0))
 
         potential_1 = truncated_nfw.potential_from_grid(grid=grid_10)
         potential_0 = truncated_nfw.potential_from_grid(grid=grid_zero)
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
 
-        truncated_nfw = ag.mp.SphericalTruncatedNFW(centre=(0.0, 0.0))
+        truncated_nfw = ag.mp.SphNFWTruncated(centre=(0.0, 0.0))
 
         deflections_1 = truncated_nfw.deflections_from_grid(grid=grid_10)
         deflections_0 = truncated_nfw.deflections_from_grid(grid=grid_zero)
@@ -321,37 +319,37 @@ class TestNFW:
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        nfw = ag.mp.EllipticalNFW(centre=(0.0, 0.0))
+        nfw = ag.mp.EllNFW(centre=(0.0, 0.0))
 
         convergence_1 = nfw.convergence_from_grid(grid=grid_10)
         convergence_0 = nfw.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0))
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0))
 
         convergence_1 = nfw.convergence_from_grid(grid=grid_10)
         convergence_0 = nfw.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        nfw = ag.mp.EllipticalNFW(centre=(0.0, 0.0))
+        nfw = ag.mp.EllNFW(centre=(0.0, 0.0))
 
         potential_1 = nfw.potential_from_grid(grid=grid_10)
         potential_0 = nfw.potential_from_grid(grid=grid_zero)
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0))
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0))
 
         potential_1 = nfw.potential_from_grid(grid=grid_10)
         potential_0 = nfw.potential_from_grid(grid=grid_zero)
         assert potential_0 == pytest.approx(potential_1, 1.0e-4)
 
-        nfw = ag.mp.EllipticalNFW(centre=(0.0, 0.0))
+        nfw = ag.mp.EllNFW(centre=(0.0, 0.0))
 
         deflections_1 = nfw.deflections_from_grid(grid=grid_10)
         deflections_0 = nfw.deflections_from_grid(grid=grid_zero)
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
-        nfw = ag.mp.SphericalNFW(centre=(0.0, 0.0))
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0))
 
         deflections_1 = nfw.deflections_from_grid(grid=grid_10)
         deflections_0 = nfw.deflections_from_grid(grid=grid_zero)
@@ -365,25 +363,25 @@ class TestSersicMass:
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        sersic = ag.mp.EllipticalSersic(centre=(0.0, 0.0))
+        sersic = ag.mp.EllSersic(centre=(0.0, 0.0))
 
         convergence_1 = sersic.convergence_from_grid(grid=grid_10)
         convergence_0 = sersic.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        sersic = ag.mp.SphericalSersic(centre=(0.0, 0.0))
+        sersic = ag.mp.SphSersic(centre=(0.0, 0.0))
 
         convergence_1 = sersic.convergence_from_grid(grid=grid_10)
         convergence_0 = sersic.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        sersic = ag.mp.EllipticalSersic(centre=(0.0, 0.0))
+        sersic = ag.mp.EllSersic(centre=(0.0, 0.0))
 
         deflections_1 = sersic.deflections_from_grid(grid=grid_10)
         deflections_0 = sersic.deflections_from_grid(grid=grid_zero)
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
-        sersic = ag.mp.SphericalSersic(centre=(0.0, 0.0))
+        sersic = ag.mp.SphSersic(centre=(0.0, 0.0))
 
         deflections_1 = sersic.deflections_from_grid(grid=grid_10)
         deflections_0 = sersic.deflections_from_grid(grid=grid_zero)
@@ -397,25 +395,25 @@ class TestExponentialMass:
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        exponential = ag.mp.EllipticalExponential(centre=(0.0, 0.0))
+        exponential = ag.mp.EllExponential(centre=(0.0, 0.0))
 
         convergence_1 = exponential.convergence_from_grid(grid=grid_10)
         convergence_0 = exponential.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        exponential = ag.mp.SphericalExponential(centre=(0.0, 0.0))
+        exponential = ag.mp.SphExponential(centre=(0.0, 0.0))
 
         convergence_1 = exponential.convergence_from_grid(grid=grid_10)
         convergence_0 = exponential.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        exponential = ag.mp.EllipticalExponential(centre=(0.0, 0.0))
+        exponential = ag.mp.EllExponential(centre=(0.0, 0.0))
 
         deflections_1 = exponential.deflections_from_grid(grid=grid_10)
         deflections_0 = exponential.deflections_from_grid(grid=grid_zero)
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
-        exponential = ag.mp.SphericalExponential(centre=(0.0, 0.0))
+        exponential = ag.mp.SphExponential(centre=(0.0, 0.0))
 
         deflections_1 = exponential.deflections_from_grid(grid=grid_10)
         deflections_0 = exponential.deflections_from_grid(grid=grid_zero)
@@ -429,19 +427,19 @@ class TestDevVaucouleursMass:
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        dev_vaucouleurs = ag.mp.EllipticalDevVaucouleurs(centre=(0.0, 0.0))
+        dev_vaucouleurs = ag.mp.EllDevVaucouleurs(centre=(0.0, 0.0))
 
         convergence_1 = dev_vaucouleurs.convergence_from_grid(grid=grid_10)
         convergence_0 = dev_vaucouleurs.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        dev_vaucouleurs = ag.mp.EllipticalDevVaucouleurs(centre=(0.0, 0.0))
+        dev_vaucouleurs = ag.mp.EllDevVaucouleurs(centre=(0.0, 0.0))
 
         deflections_1 = dev_vaucouleurs.deflections_from_grid(grid=grid_10)
         deflections_0 = dev_vaucouleurs.deflections_from_grid(grid=grid_zero)
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
-        dev_vaucouleurs = ag.mp.SphericalDevVaucouleurs(centre=(0.0, 0.0))
+        dev_vaucouleurs = ag.mp.SphDevVaucouleurs(centre=(0.0, 0.0))
 
         deflections_1 = dev_vaucouleurs.deflections_from_grid(grid=grid_10)
         deflections_0 = dev_vaucouleurs.deflections_from_grid(grid=grid_zero)
@@ -455,25 +453,25 @@ class TestSersicMassRadialGradient:
             new_path=path.join("{}".format(directory), "files", "config")
         )
 
-        sersic = ag.mp.EllipticalSersicRadialGradient(centre=(0.0, 0.0))
+        sersic = ag.mp.EllSersicRadialGradient(centre=(0.0, 0.0))
 
         convergence_1 = sersic.convergence_from_grid(grid=grid_10)
         convergence_0 = sersic.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        sersic = ag.mp.SphericalSersicRadialGradient(centre=(0.0, 0.0))
+        sersic = ag.mp.SphSersicRadialGradient(centre=(0.0, 0.0))
 
         convergence_1 = sersic.convergence_from_grid(grid=grid_10)
         convergence_0 = sersic.convergence_from_grid(grid=grid_zero)
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
-        sersic = ag.mp.EllipticalSersicRadialGradient(centre=(0.0, 0.0))
+        sersic = ag.mp.EllSersicRadialGradient(centre=(0.0, 0.0))
 
         deflections_1 = sersic.deflections_from_grid(grid=grid_10)
         deflections_0 = sersic.deflections_from_grid(grid=grid_zero)
         assert deflections_0 == pytest.approx(deflections_1, 1.0e-4)
 
-        sersic = ag.mp.SphericalSersicRadialGradient(centre=(0.0, 0.0))
+        sersic = ag.mp.SphSersicRadialGradient(centre=(0.0, 0.0))
 
         deflections_1 = sersic.deflections_from_grid(grid=grid_10)
         deflections_0 = sersic.deflections_from_grid(grid=grid_zero)

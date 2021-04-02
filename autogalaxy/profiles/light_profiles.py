@@ -43,7 +43,7 @@ class LightProfile:
 
 
 # noinspection PyAbstractClass
-class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
+class EllLightProfile(geometry_profiles.EllProfile, LightProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -60,7 +60,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
         """
-        super(EllipticalLightProfile, self).__init__(
+        super(EllLightProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         self.intensity = intensity
@@ -162,7 +162,7 @@ class EllipticalLightProfile(geometry_profiles.EllipticalProfile, LightProfile):
             return self.effective_radius
 
 
-class EllipticalGaussian(EllipticalLightProfile):
+class EllGaussian(EllLightProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -185,7 +185,7 @@ class EllipticalGaussian(EllipticalLightProfile):
             The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
 
-        super(EllipticalGaussian, self).__init__(
+        super(EllGaussian, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
         )
         self.sigma = sigma
@@ -228,7 +228,7 @@ class EllipticalGaussian(EllipticalLightProfile):
         return self.image_from_grid_radii(self.grid_to_eccentric_radii(grid))
 
 
-class SphericalGaussian(EllipticalGaussian):
+class SphGaussian(EllGaussian):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -246,12 +246,12 @@ class SphericalGaussian(EllipticalGaussian):
         sigma : float
             The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
-        super(SphericalGaussian, self).__init__(
+        super(SphGaussian, self).__init__(
             centre=centre, elliptical_comps=(0.0, 0.0), intensity=intensity, sigma=sigma
         )
 
 
-class AbstractEllipticalSersic(EllipticalLightProfile):
+class AbstractEllSersic(EllLightProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -278,7 +278,7 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
             Controls the concentration of the of the profile (lower value -> less concentrated, \
             higher value -> more concentrated).
         """
-        super(AbstractEllipticalSersic, self).__init__(
+        super(AbstractEllSersic, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
         )
         self.effective_radius = effective_radius
@@ -325,7 +325,7 @@ class AbstractEllipticalSersic(EllipticalLightProfile):
         )
 
 
-class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
+class EllSersic(AbstractEllSersic, EllLightProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -351,7 +351,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
             Controls the concentration of the of the profile (lower value -> less concentrated, \
             higher value -> more concentrated).
         """
-        super(EllipticalSersic, self).__init__(
+        super(EllSersic, self).__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity,
@@ -401,7 +401,7 @@ class EllipticalSersic(AbstractEllipticalSersic, EllipticalLightProfile):
         return self.image_from_grid_radii(self.grid_to_eccentric_radii(grid))
 
 
-class SphericalSersic(EllipticalSersic):
+class SphSersic(EllSersic):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -422,7 +422,7 @@ class SphericalSersic(EllipticalSersic):
         sersic_index : Int
             Controls the concentration of the of the light profile.
         """
-        super(SphericalSersic, self).__init__(
+        super(SphSersic, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,
@@ -431,7 +431,7 @@ class SphericalSersic(EllipticalSersic):
         )
 
 
-class EllipticalExponential(EllipticalSersic):
+class EllExponential(EllSersic):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -455,7 +455,7 @@ class EllipticalExponential(EllipticalSersic):
         effective_radius : float
             The circular radius containing half the light of this profile.
         """
-        super(EllipticalExponential, self).__init__(
+        super(EllExponential, self).__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity,
@@ -464,7 +464,7 @@ class EllipticalExponential(EllipticalSersic):
         )
 
 
-class SphericalExponential(EllipticalExponential):
+class SphExponential(EllExponential):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -484,7 +484,7 @@ class SphericalExponential(EllipticalExponential):
         effective_radius : float
             The circular radius containing half the light of this profile.
         """
-        super(SphericalExponential, self).__init__(
+        super(SphExponential, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,
@@ -492,7 +492,7 @@ class SphericalExponential(EllipticalExponential):
         )
 
 
-class EllipticalDevVaucouleurs(EllipticalSersic):
+class EllDevVaucouleurs(EllSersic):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -516,7 +516,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
         effective_radius : float
             The circular radius containing half the light of this profile.
         """
-        super(EllipticalDevVaucouleurs, self).__init__(
+        super(EllDevVaucouleurs, self).__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity,
@@ -525,7 +525,7 @@ class EllipticalDevVaucouleurs(EllipticalSersic):
         )
 
 
-class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
+class SphDevVaucouleurs(EllDevVaucouleurs):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -545,7 +545,7 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
         effective_radius : float
             The circular radius containing half the light of this profile.
         """
-        super(SphericalDevVaucouleurs, self).__init__(
+        super(SphDevVaucouleurs, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,
@@ -553,7 +553,7 @@ class SphericalDevVaucouleurs(EllipticalDevVaucouleurs):
         )
 
 
-class EllipticalCoreSersic(EllipticalSersic):
+class EllSersicCore(EllSersic):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -589,7 +589,7 @@ class EllipticalCoreSersic(EllipticalSersic):
             Controls the sharpness of the transition between the inner core / outer Sersic profiles.
         """
 
-        super(EllipticalCoreSersic, self).__init__(
+        super(EllSersicCore, self).__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity_break,
@@ -657,7 +657,7 @@ class EllipticalCoreSersic(EllipticalSersic):
         )
 
 
-class SphericalCoreSersic(EllipticalCoreSersic):
+class SphSersicCore(EllSersicCore):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -689,7 +689,7 @@ class SphericalCoreSersic(EllipticalCoreSersic):
             Controls the sharpness of the transition between the inner core / outer Sersic profiles.
         """
 
-        super(SphericalCoreSersic, self).__init__(
+        super(SphSersicCore, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             effective_radius=effective_radius,
@@ -706,7 +706,7 @@ class SphericalCoreSersic(EllipticalCoreSersic):
         self.gamma = gamma
 
 
-class EllipticalChameleon(EllipticalLightProfile):
+class EllChameleon(EllLightProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -735,7 +735,7 @@ class EllipticalChameleon(EllipticalLightProfile):
              We use dr here is to avoid negative values.
         """
 
-        super(EllipticalChameleon, self).__init__(
+        super(EllChameleon, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
         )
         self.core_radius_0 = core_radius_0
@@ -793,7 +793,7 @@ class EllipticalChameleon(EllipticalLightProfile):
         return self.image_from_grid_radii(self.grid_to_elliptical_radii(grid))
 
 
-class SphericalChameleon(EllipticalChameleon):
+class SphChameleon(EllChameleon):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -821,7 +821,7 @@ class SphericalChameleon(EllipticalChameleon):
              We use dr here is to avoid negative values.
         """
 
-        super(SphericalChameleon, self).__init__(
+        super(SphChameleon, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,

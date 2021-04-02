@@ -101,8 +101,8 @@ class DarkProfile:
 
 
 # noinspection PyAbstractClass
-class AbstractEllipticalGeneralizedNFW(
-    mp.EllipticalMassProfile, mp.MassProfile, DarkProfile, MassProfileMGE
+class AbstractEllNFWGeneralized(
+    mp.EllMassProfile, mp.MassProfile, DarkProfile, MassProfileMGE
 ):
     epsrel = 1.49e-5
 
@@ -134,7 +134,7 @@ class AbstractEllipticalGeneralizedNFW(
             the Universe..
         """
 
-        super(AbstractEllipticalGeneralizedNFW, self).__init__(
+        super(AbstractEllNFWGeneralized, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         super(mp.MassProfile, self).__init__()
@@ -454,7 +454,7 @@ class AbstractEllipticalGeneralizedNFW(
         return mass_profile
 
 
-class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
+class EllNFWGeneralized(AbstractEllNFWGeneralized):
     @grid_decorators.grid_like_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
@@ -497,7 +497,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
                 a=0.0,
                 b=1.0,
                 args=(eta, self.scale_radius, self.inner_slope),
-                epsrel=EllipticalGeneralizedNFW.epsrel,
+                epsrel=EllNFWGeneralized.epsrel,
             )[0]
 
             deflection_integral[i] = (
@@ -528,7 +528,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
                     tabulate_bins,
                     deflection_integral,
                 ),
-                epsrel=EllipticalGeneralizedNFW.epsrel,
+                epsrel=EllNFWGeneralized.epsrel,
             )[0]
 
         return potential_grid
@@ -591,7 +591,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
                             tabulate_bins,
                             surface_density_integral,
                         ),
-                        epsrel=EllipticalGeneralizedNFW.epsrel,
+                        epsrel=EllNFWGeneralized.epsrel,
                     )[0]
                 )
 
@@ -615,7 +615,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
                 a=0.0,
                 b=1.0,
                 args=(eta, self.scale_radius, self.inner_slope),
-                epsrel=EllipticalGeneralizedNFW.epsrel,
+                epsrel=EllNFWGeneralized.epsrel,
             )[0]
 
             surface_density_integral[i] = (
@@ -642,7 +642,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
                 a=0.0,
                 b=1.0,
                 args=grid_radius[index],
-                epsrel=EllipticalGeneralizedNFW.epsrel,
+                epsrel=EllNFWGeneralized.epsrel,
             )[0]
 
             grid_radius[index] = (
@@ -702,7 +702,7 @@ class EllipticalGeneralizedNFW(AbstractEllipticalGeneralizedNFW):
         return kap / (1.0 - (1.0 - axis_ratio ** 2) * u) ** (npow + 0.5)
 
 
-class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
+class SphNFWGeneralized(EllNFWGeneralized):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -727,7 +727,7 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
             the Universe..
         """
 
-        super(SphericalGeneralizedNFW, self).__init__(
+        super(SphNFWGeneralized, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             kappa_s=kappa_s,
@@ -780,7 +780,7 @@ class SphericalGeneralizedNFW(EllipticalGeneralizedNFW):
         )
 
 
-class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
+class SphNFWTruncated(AbstractEllNFWGeneralized):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -788,7 +788,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         scale_radius: float = 1.0,
         truncation_radius: float = 2.0,
     ):
-        super(SphericalTruncatedNFW, self).__init__(
+        super(SphNFWTruncated, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             kappa_s=kappa_s,
@@ -899,7 +899,7 @@ class SphericalTruncatedNFW(AbstractEllipticalGeneralizedNFW):
         )
 
 
-class SphericalTruncatedNFWMCRDuffy(SphericalTruncatedNFW):
+class SphNFWTruncatedMCRDuffy(SphNFWTruncated):
     """
     This function only applies for the lens configuration as follows:
     Cosmology: FlatLamdaCDM
@@ -930,7 +930,7 @@ class SphericalTruncatedNFWMCRDuffy(SphericalTruncatedNFW):
             redshift_source=redshift_source,
         )
 
-        super(SphericalTruncatedNFWMCRDuffy, self).__init__(
+        super(SphNFWTruncatedMCRDuffy, self).__init__(
             centre=centre,
             kappa_s=kappa_s,
             scale_radius=scale_radius,
@@ -938,7 +938,7 @@ class SphericalTruncatedNFWMCRDuffy(SphericalTruncatedNFW):
         )
 
 
-class SphericalTruncatedNFWMCRLudlow(SphericalTruncatedNFW):
+class SphNFWTruncatedMCRLudlow(SphNFWTruncated):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -958,7 +958,7 @@ class SphericalTruncatedNFWMCRLudlow(SphericalTruncatedNFW):
             redshift_source=redshift_source,
         )
 
-        super(SphericalTruncatedNFWMCRLudlow, self).__init__(
+        super(SphNFWTruncatedMCRLudlow, self).__init__(
             centre=centre,
             kappa_s=kappa_s,
             scale_radius=scale_radius,
@@ -966,93 +966,7 @@ class SphericalTruncatedNFWMCRLudlow(SphericalTruncatedNFW):
         )
 
 
-class SphericalTruncatedNFWChallenge(SphericalTruncatedNFW):
-    def __init__(
-        self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        kappa_s: float = 0.05,
-        scale_radius: float = 1.0,
-    ):
-        def solve_c(c, de_c):
-            """
-            Equation need for solving concentration c for a given delta_c
-            """
-            return 200.0 / 3.0 * (c * c * c / (np.log(1 + c) - c / (1 + c))) - de_c
-
-        kpc_per_arcsec = 6.68549148608755
-        scale_radius_kpc = scale_radius * kpc_per_arcsec
-        cosmic_average_density = 262.30319684750657
-        critical_surface_density = 1940654909.413325
-        rho_s = kappa_s * critical_surface_density / scale_radius_kpc
-        de_c = rho_s / cosmic_average_density  # delta_c
-        concentration = fsolve(solve_c, 10.0, args=(de_c,))[0]
-        r200 = concentration * scale_radius_kpc / kpc_per_arcsec  # R_200
-
-        super(SphericalTruncatedNFWChallenge, self).__init__(
-            centre=centre,
-            kappa_s=kappa_s,
-            scale_radius=scale_radius,
-            truncation_radius=2.0 * r200,
-        )
-
-
-class SphericalTruncatedNFWMCRChallenge(SphericalTruncatedNFW):
-    """
-    This function only applies for the lens configuration as follows:
-    Cosmology: FlatLamdaCDM
-    H0 = 70.0 km/sec/Mpc
-    Omega_Lambda = 0.7
-    Omega_m = 0.3
-    Redshfit of Main Lens: 0.6
-    Redshift of Source: 2.5
-    A truncated NFW halo at z = 0.6 with tau = 2.0
-    """
-
-    def __init__(
-        self, centre: typing.Tuple[float, float] = (0.0, 0.0), mass_at_200: float = 1e9
-    ):
-        """
-        Input m200: The m200 of the NFW part of the corresponding tNFW part. Unit: M_sun.
-        """
-
-        cosmic_average_density = (
-            262.30319684751  # Critical Density at z=0.6 M_sun/kpc^3
-        )
-        critical_surface_density = (
-            1940654909.413325
-        )  # Lensing Critical Surface Density for lens at z=0.6, source at z=2.5. M_sun/kpc^2
-        kpc_per_arcsec = 6.685491486088  # 1 arcsec = 6.685491486 kpc at z=0.6
-
-        concentration = 11.5 * (mass_at_200 / 1e10 + (mass_at_200 / 1e10) ** 2.0) ** (
-            -0.05
-        )  # This is the challenge setting.
-        radius_at_200 = (
-            mass_at_200 / (200.0 * cosmic_average_density * (4.0 * np.pi / 3.0))
-        ) ** (1.0 / 3.0)
-        de_c = (
-            200.0
-            / 3.0
-            * (
-                concentration
-                * concentration
-                * concentration
-                / (np.log(1.0 + concentration) - concentration / (1.0 + concentration))
-            )
-        )
-        scale_radius_kpc = radius_at_200 / concentration
-        rho_s = cosmic_average_density * de_c
-        kappa_s = rho_s * scale_radius_kpc / critical_surface_density
-        scale_radius = scale_radius_kpc / kpc_per_arcsec
-
-        super(SphericalTruncatedNFWMCRChallenge, self).__init__(
-            centre=centre,
-            kappa_s=kappa_s,
-            scale_radius=scale_radius,
-            truncation_radius=2.0 * radius_at_200,
-        )
-
-
-class EllipticalNFW(EllipticalGeneralizedNFW):
+class EllNFW(EllNFWGeneralized):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -1078,7 +992,7 @@ class EllipticalNFW(EllipticalGeneralizedNFW):
             the Universe..
         """
 
-        super(EllipticalNFW, self).__init__(
+        super(EllNFW, self).__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             kappa_s=kappa_s,
@@ -1211,7 +1125,7 @@ class EllipticalNFW(EllipticalGeneralizedNFW):
         )
 
 
-class SphericalNFW(EllipticalNFW):
+class SphNFW(EllNFW):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -1233,7 +1147,7 @@ class SphericalNFW(EllipticalNFW):
             the Universe..
         """
 
-        super(SphericalNFW, self).__init__(
+        super(SphNFW, self).__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             kappa_s=kappa_s,
@@ -1289,7 +1203,7 @@ class SphericalNFW(EllipticalNFW):
         return self.grid_to_grid_cartesian(grid, deflection_grid)
 
 
-class SphericalNFWMCRDuffy(SphericalNFW):
+class SphNFWMCRDuffy(SphNFW):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -1308,7 +1222,7 @@ class SphericalNFWMCRDuffy(SphericalNFW):
             redshift_source=redshift_source,
         )
 
-        super(SphericalNFWMCRDuffy, self).__init__(
+        super(SphNFWMCRDuffy, self).__init__(
             centre=centre, kappa_s=kappa_s, scale_radius=scale_radius
         )
 
@@ -1317,7 +1231,7 @@ class SphericalNFWMCRDuffy(SphericalNFW):
         raise NotImplementedError()
 
 
-class EllipticalNFWMCRLudlow(EllipticalNFW):
+class EllNFWMCRLudlow(EllNFW):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -1345,7 +1259,7 @@ class EllipticalNFWMCRLudlow(EllipticalNFW):
         )
 
 
-class SphericalNFWMCRLudlow(SphericalNFW):
+class SphNFWMCRLudlow(SphNFW):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -1364,7 +1278,7 @@ class SphericalNFWMCRLudlow(SphericalNFW):
             redshift_source=redshift_source,
         )
 
-        super(SphericalNFWMCRLudlow, self).__init__(
+        super(SphNFWMCRLudlow, self).__init__(
             centre=centre, kappa_s=kappa_s, scale_radius=scale_radius
         )
 
@@ -1373,7 +1287,7 @@ class SphericalNFWMCRLudlow(SphericalNFW):
         raise NotImplementedError()
 
 
-class EllipticalGeneralizedNFWMCRLudlow(EllipticalGeneralizedNFW):
+class EllNFWGeneralizedMCRLudlow(EllNFWGeneralized):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
