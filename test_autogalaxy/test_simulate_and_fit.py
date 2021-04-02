@@ -9,6 +9,7 @@ import autogalaxy as ag
 
 
 def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__noise_normalization_correct():
+
     grid = ag.Grid2DIterate.uniform(shape_native=(11, 11), pixel_scales=0.2)
 
     psf = ag.Kernel2D.manual_native(

@@ -120,7 +120,7 @@ def test__fit_imaging_generator_from_aggregator(masked_imaging_7x7, samples, mod
         assert (fit_imaging.image == masked_imaging_7x7.image).all()
 
 
-def test__masked_interferometer_generator_from_aggregator(
+def test__interferometer_generator_from_aggregator(
     visibilities_7,
     visibilities_noise_map_7,
     uv_wavelengths_7x2,
@@ -144,7 +144,7 @@ def test__masked_interferometer_generator_from_aggregator(
     )
 
     search = mock.MockSearch(
-        samples=samples, paths=af.Paths(path_prefix="aggregator_masked_interferometer")
+        samples=samples, paths=af.Paths(path_prefix="aggregator_interferometer")
     )
 
     analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
@@ -153,9 +153,9 @@ def test__masked_interferometer_generator_from_aggregator(
 
     agg = af.Aggregator(directory=search.paths.output_path)
 
-    masked_interferometer_gen = ag.agg.Interferometer(aggregator=agg)
+    interferometer_gen = ag.agg.Interferometer(aggregator=agg)
 
-    for interferometer in masked_interferometer_gen:
+    for interferometer in interferometer_gen:
         assert (interferometer.visibilities == interferometer_7.visibilities).all()
         assert (interferometer.real_space_mask == mask_7x7).all()
         assert isinstance(interferometer.grid, ag.Grid2DIterate)

@@ -54,8 +54,8 @@ def plane_from_agg_obj(agg_obj):
 
 def imaging_generator_from_aggregator(aggregator):
     """
-    Returns a generator of `MaskImaging` objects from an input aggregator, which generates a list of the
-    `MaskImaging` objects for every set of results loaded in the aggregator.
+    Returns a generator of `Imaging` objects from an input aggregator, which generates a list of the
+    `Imaging` objects for every set of results loaded in the aggregator.
 
     This is performed by mapping the `imaging_from_agg_obj` with the aggregator, which sets up each
     imaging using only generators ensuring that manipulating the imaging of large sets of results is done in a
@@ -70,12 +70,12 @@ def imaging_generator_from_aggregator(aggregator):
 
 def imaging_from_agg_obj(agg_obj):
     """
-    Returns a `MaskImaging` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to describe
+    Returns a `Imaging` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to describe
      that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's generator
-     outputs such that the function can use the `Aggregator`'s map function to to create a `MaskImaging` generator.
+     outputs such that the function can use the `Aggregator`'s map function to to create a `Imaging` generator.
 
-     The `MaskImaging` is created following the same method as the PyAutoGalaxy `Search` classes, including using the
-     `SettingsImaging` instance output by the Search to load inputs of the `MaskImaging` (e.g. psf_shape_2d).
+     The `Imaging` is created following the same method as the PyAutoGalaxy `Search` classes, including using the
+     `SettingsImaging` instance output by the Search to load inputs of the `Imaging` (e.g. psf_shape_2d).
 
     Parameters
     ----------
