@@ -1,15 +1,12 @@
+import numpy as np
+from scipy.stats import norm
+
 import autofit as af
-from autofit.exc import PriorException
 from autoarray.inversion import pixelizations as pix, regularization as reg
+from autofit.exc import PriorException
+from autogalaxy.galaxy import galaxy as g
 from autogalaxy.profiles import light_profiles as lp
 from autogalaxy.profiles import mass_profiles as mp
-from autogalaxy.galaxy import galaxy as g
-
-import numpy as np
-from os import path
-from scipy.stats import norm
-from typing import List, Optional
-import pickle
 
 
 def isprior(obj):
@@ -118,7 +115,7 @@ def pixelization_is_model_from(model: af.Collection):
 
 
 def hyper_model_from(
-    setup_hyper, result: af.Result, include_hyper_image_sky: bool = False
+        setup_hyper, result: af.Result, include_hyper_image_sky: bool = False
 ) -> af.Collection:
     """
     Make a hyper model from the `Result` of a model-fit, where the hyper-model is the maximum log likelihood instance
@@ -227,12 +224,12 @@ def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analys
 
 
 def stochastic_model_from(
-    result,
-    include_lens_light=False,
-    include_pixelization=False,
-    include_regularization=False,
-    subhalo_centre_width=None,
-    subhalo_mass_at_200_log_uniform=True,
+        result,
+        include_lens_light=False,
+        include_pixelization=False,
+        include_regularization=False,
+        subhalo_centre_width=None,
+        subhalo_mass_at_200_log_uniform=True,
 ):
     """
     Make a stochastic model from  the `Result` of a model-fit, where the stochastic model uses the same model
@@ -342,16 +339,14 @@ def stochastic_fit(stochastic_model, result, analysis):
 
     search = result.search
     search.paths.name = (
-        f"{result.search.paths.name}__stochastic_likelihood_cap_"
-        + "{0:.1f}".format(log_likelihood_cap)
+            f"{result.search.paths.name}__stochastic_likelihood_cap_"
+            + "{0:.1f}".format(log_likelihood_cap)
     )
 
-    stochastic_log_evidences_pickle_file = path.join(
-        search.paths.pickle_path, "stochastic_log_evidences.pickle"
+    search.paths.save_object(
+        "stochastic_log_evidences",
+        result.stochastic_log_evidences
     )
-
-    with open(stochastic_log_evidences_pickle_file, "wb") as f:
-        pickle.dump(result.stochastic_log_evidences, f)
 
     stochastic_result = search.fit(
         model=stochastic_model, analysis=analysis, log_likelihood_cap=log_likelihood_cap
