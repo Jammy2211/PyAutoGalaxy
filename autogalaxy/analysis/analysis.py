@@ -106,7 +106,7 @@ class AnalysisDataset(Analysis):
     def make_attributes(self):
         raise NotImplementedError
 
-    def save_settings(self, paths: af.Paths):
+    def save_settings(self, paths: af.DirectoryPaths):
         paths.save_object(
             "settings_dataset",
             self.dataset.settings
@@ -120,7 +120,7 @@ class AnalysisDataset(Analysis):
             self.settings_pixelization
         )
 
-    def save_attributes_for_aggregator(self, paths: af.Paths):
+    def save_attributes_for_aggregator(self, paths: af.DirectoryPaths):
         paths.save_object(
             "dataset",
             self.dataset
@@ -215,7 +215,7 @@ class AnalysisImaging(AnalysisDataset):
             settings_inversion=self.settings_inversion,
         )
 
-    def visualize(self, paths: af.Paths, instance, during_analysis):
+    def visualize(self, paths: af.DirectoryPaths, instance, during_analysis):
 
         instance = self.associate_hyper_images(instance=instance)
         plane = self.plane_for_instance(instance=instance)
@@ -397,7 +397,7 @@ class AnalysisInterferometer(AnalysisDataset):
             settings_inversion=self.settings_inversion,
         )
 
-    def visualize(self, paths: af.Paths, instance, during_analysis):
+    def visualize(self, paths: af.DirectoryPaths, instance, during_analysis):
 
         self.associate_hyper_images(instance=instance)
         plane = self.plane_for_instance(instance=instance)
