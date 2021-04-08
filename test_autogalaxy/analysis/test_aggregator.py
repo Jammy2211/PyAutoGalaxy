@@ -35,9 +35,7 @@ def make_model():
 
 
 def test__dataset_generator_from_aggregator(masked_imaging_7x7, samples, model):
-    search = mock.MockSearch(
-        samples=samples
-    )
+    search = mock.MockSearch(samples=samples)
     search.paths = af.Paths(path_prefix="aggregator_dataset_gen")
 
     analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
@@ -50,9 +48,7 @@ def test__dataset_generator_from_aggregator(masked_imaging_7x7, samples, model):
 
 
 def test__plane_generator_from_aggregator(masked_imaging_7x7, samples, model):
-    search = mock.MockSearch(
-        samples=samples
-    )
+    search = mock.MockSearch(samples=samples)
     search.paths = af.Paths(path_prefix="aggregator_plane_gen")
 
     analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
@@ -83,9 +79,7 @@ def test__imaging_generator_from_aggregator(imaging_7x7, mask_7x7, samples, mode
         )
     )
 
-    search = mock.MockSearch(
-        samples=samples
-    )
+    search = mock.MockSearch(samples=samples)
     search.paths = af.Paths(path_prefix="aggregator_masked_imaging_gen")
 
     analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
@@ -105,9 +99,7 @@ def test__imaging_generator_from_aggregator(imaging_7x7, mask_7x7, samples, mode
 
 
 def test__fit_imaging_generator_from_aggregator(masked_imaging_7x7, samples, model):
-    search = mock.MockSearch(
-        samples=samples
-    )
+    search = mock.MockSearch(samples=samples)
     search.paths = af.Paths(path_prefix="aggregator_fit_imaging_gen")
 
     analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
@@ -123,12 +115,12 @@ def test__fit_imaging_generator_from_aggregator(masked_imaging_7x7, samples, mod
 
 
 def test__interferometer_generator_from_aggregator(
-        visibilities_7,
-        visibilities_noise_map_7,
-        uv_wavelengths_7x2,
-        mask_7x7,
-        samples,
-        model,
+    visibilities_7,
+    visibilities_noise_map_7,
+    uv_wavelengths_7x2,
+    mask_7x7,
+    samples,
+    model,
 ):
     interferometer_7 = ag.Interferometer(
         visibilities=visibilities_7,
@@ -144,9 +136,7 @@ def test__interferometer_generator_from_aggregator(
         ),
     )
 
-    search = mock.MockSearch(
-        samples=samples
-    )
+    search = mock.MockSearch(samples=samples)
     search.paths = af.Paths(path_prefix="aggregator_interferometer")
 
     analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
@@ -168,11 +158,9 @@ def test__interferometer_generator_from_aggregator(
 
 
 def test__fit_interferometer_generator_from_aggregator(
-        interferometer_7, mask_7x7, samples, model
+    interferometer_7, mask_7x7, samples, model
 ):
-    search = mock.MockSearch(
-        samples=samples
-    )
+    search = mock.MockSearch(samples=samples)
     search.paths = af.Paths(path_prefix="aggregator_fit_interferometer_gen")
 
     analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
@@ -185,7 +173,7 @@ def test__fit_interferometer_generator_from_aggregator(
 
     for fit_interferometer in fit_interferometer_gen:
         assert (
-                fit_interferometer.interferometer.visibilities
-                == interferometer_7.visibilities
+            fit_interferometer.interferometer.visibilities
+            == interferometer_7.visibilities
         ).all()
         assert (fit_interferometer.interferometer.real_space_mask == mask_7x7).all()

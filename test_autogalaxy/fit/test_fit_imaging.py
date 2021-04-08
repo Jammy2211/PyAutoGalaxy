@@ -120,14 +120,14 @@ class TestLikelihood:
         psf = ag.Kernel2D.manual_native(
             array=[[0.0, 0.0, 0.0], [0.0, 1.0, 3.0], [0.0, 0.0, 0.0]],
             pixel_scales=1.0,
-            renormalize=False,
+            normalize=False,
         )
 
         imaging = ag.Imaging(
             image=5.0 * ag.Array2D.ones(shape_native=(3, 4), pixel_scales=1.0),
             psf=psf,
             noise_map=ag.Array2D.ones(shape_native=(3, 4), pixel_scales=1.0),
-            settings=ag.SettingsImaging(renormalize_psf=False),
+            settings=ag.SettingsImaging(use_normalized_psf=False),
         )
         imaging.image[6] = 4.0
 
@@ -143,7 +143,7 @@ class TestLikelihood:
         masked_imaging_7x7 = imaging.apply_mask(mask=mask)
         masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
             settings=ag.SettingsImaging(
-                grid_class=ag.Grid2D, renormalize_psf=False, sub_size=1
+                grid_class=ag.Grid2D, use_normalized_psf=False, sub_size=1
             )
         )
 
@@ -250,7 +250,7 @@ class TestLikelihood:
         masked_imaging_7x7 = imaging.apply_mask(mask=mask)
         masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
             settings=ag.SettingsImaging(
-                grid_class=ag.Grid2D, renormalize_psf=False, sub_size=1
+                grid_class=ag.Grid2D, use_normalized_psf=False, sub_size=1
             )
         )
 
@@ -458,7 +458,7 @@ class TestLikelihood:
         masked_imaging_7x7 = imaging.apply_mask(mask=mask)
         masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
             settings=ag.SettingsImaging(
-                grid_class=ag.Grid2D, renormalize_psf=False, sub_size=1
+                grid_class=ag.Grid2D, use_normalized_psf=False, sub_size=1
             )
         )
 
