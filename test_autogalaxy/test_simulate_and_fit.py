@@ -72,8 +72,9 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
         radius=0.8,
     )
 
-    masked_imaging = imaging.apply_mask(
-        mask=mask, settings=ag.SettingsImaging(grid_class=ag.Grid2DIterate)
+    masked_imaging = imaging.apply_mask(mask=mask)
+    masked_imaging = masked_imaging.apply_settings(
+        settings=ag.SettingsImaging(grid_class=ag.Grid2DIterate)
     )
 
     plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
@@ -150,8 +151,9 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
         radius=0.8,
     )
 
-    masked_imaging = imaging.apply_mask(
-        mask=mask, settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
+    masked_imaging = imaging.apply_mask(mask=mask)
+    masked_imaging = masked_imaging.apply_settings(
+        settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
     )
 
     plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])

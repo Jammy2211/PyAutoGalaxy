@@ -125,7 +125,7 @@ class EllExponential(EllSersic, LightMassProfile):
             The grid of the origin of the profiles
         axis_ratio : float
             Ratio of profiles ellipse's minor and major axes (b/a)
-        phi : float
+        angle : float
             Rotational angle of profiles ellipse counter-clockwise from positive x-axis
         intensity : float
             Overall flux intensity normalisation in the light profiles (electrons per second)
@@ -197,7 +197,7 @@ class EllDevVaucouleurs(EllSersic, LightMassProfile):
             The grid of the origin of the profiles
         axis_ratio : float
             Ratio of profiles ellipse's minor and major axes (b/a)
-        phi : float
+        angle : float
             Rotational angle of profiles ellipse counter-clockwise from positive x-axis
         intensity : float
             Overall flux intensity normalisation in the light profiles (electrons per second)
@@ -271,7 +271,7 @@ class EllSersicRadialGradient(
             The origin of the profiles
         axis_ratio : float
             Ratio of profiles ellipse's minor and major axes (b/a)
-        phi : float
+        angle : float
             Rotational angle of profiles ellipse counter-clockwise from positive x-axis
         intensity : float
             Overall flux intensity normalisation in the light profiles (electrons per second)
@@ -364,7 +364,7 @@ class EllExponentialRadialGradient(EllSersicRadialGradient, LightMassProfile):
             The origin of the profiles
         axis_ratio : float
             Ratio of profiles ellipse's minor and major axes (b/a)
-        phi : float
+        angle : float
             Rotational angle of profiles ellipse counter-clockwise from positive x-axis
         intensity : float
             Overall flux intensity normalisation in the light profiles (electrons per second)
@@ -406,7 +406,7 @@ class SphExponentialRadialGradient(SphSersicRadialGradient, LightMassProfile):
             The origin of the profiles
         axis_ratio : float
             Ratio of profiles ellipse's minor and major axes (b/a)
-        phi : float
+        angle : float
             Rotational angle of profiles ellipse counter-clockwise from positive x-axis
         intensity : float
             Overall flux intensity normalisation in the light profiles (electrons per second)

@@ -78,7 +78,7 @@ class EllMassProfile(geometry_profiles.EllProfile, MassProfile):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         """
         super(EllMassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps

@@ -38,8 +38,9 @@ class TestLikelihood:
             pixel_scales=1.0,
         )
 
-        masked_imaging_7x7 = imaging.apply_mask(
-            mask=mask, settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
+        masked_imaging_7x7 = imaging.apply_mask(mask=mask)
+        masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
+            settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
         )
 
         # Setup as a ray trace instance, using a light profile for the galaxy
@@ -139,11 +140,11 @@ class TestLikelihood:
             pixel_scales=1.0,
         )
 
-        masked_imaging_7x7 = imaging.apply_mask(
-            mask=mask,
+        masked_imaging_7x7 = imaging.apply_mask(mask=mask)
+        masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
             settings=ag.SettingsImaging(
                 grid_class=ag.Grid2D, renormalize_psf=False, sub_size=1
-            ),
+            )
         )
 
         # Setup as a ray trace instance, using a light profile for the galaxy
@@ -246,11 +247,11 @@ class TestLikelihood:
             pixel_scales=1.0,
         )
 
-        masked_imaging_7x7 = imaging.apply_mask(
-            mask=mask,
+        masked_imaging_7x7 = imaging.apply_mask(mask=mask)
+        masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
             settings=ag.SettingsImaging(
                 grid_class=ag.Grid2D, renormalize_psf=False, sub_size=1
-            ),
+            )
         )
 
         # Setup as a ray trace instance, using a light profile for the galaxy
@@ -316,8 +317,9 @@ class TestLikelihood:
             pixel_scales=1.0,
         )
 
-        masked_imaging_7x7 = imaging.apply_mask(
-            mask=mask, settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
+        masked_imaging_7x7 = imaging.apply_mask(mask=mask)
+        masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
+            settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
         )
 
         # Setup as a ray trace instance, using a light profile for the galaxy
@@ -388,8 +390,9 @@ class TestLikelihood:
             pixel_scales=1.0,
         )
 
-        masked_imaging_7x7 = imaging.apply_mask(
-            mask=mask, settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
+        masked_imaging_7x7 = imaging.apply_mask(mask=mask)
+        masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
+            settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
         )
 
         # Setup as a ray trace instance, using a light profile for the galaxy
@@ -452,11 +455,11 @@ class TestLikelihood:
             pixel_scales=1.0,
         )
 
-        masked_imaging_7x7 = imaging.apply_mask(
-            mask=mask,
+        masked_imaging_7x7 = imaging.apply_mask(mask=mask)
+        masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
             settings=ag.SettingsImaging(
                 grid_class=ag.Grid2D, renormalize_psf=False, sub_size=1
-            ),
+            )
         )
 
         # Setup as a ray trace instance, using a light profile for the galaxy

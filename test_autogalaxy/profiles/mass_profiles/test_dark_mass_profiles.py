@@ -395,7 +395,9 @@ class TestGeneralizedNFW:
         gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
             kappa_s=1.0,
-            elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=90.0),
+            elliptical_comps=ag.convert.elliptical_comps_from(
+                axis_ratio=0.5, angle=90.0
+            ),
             inner_slope=1.5,
             scale_radius=1.0,
         )
@@ -406,7 +408,9 @@ class TestGeneralizedNFW:
         gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
             kappa_s=2.0,
-            elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=90.0),
+            elliptical_comps=ag.convert.elliptical_comps_from(
+                axis_ratio=0.5, angle=90.0
+            ),
             inner_slope=1.5,
             scale_radius=1.0,
         )
@@ -439,7 +443,9 @@ class TestGeneralizedNFW:
         gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
             kappa_s=1.0,
-            elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=90.0),
+            elliptical_comps=ag.convert.elliptical_comps_from(
+                axis_ratio=0.5, angle=90.0
+            ),
             inner_slope=1.5,
             scale_radius=1.0,
         )
@@ -450,7 +456,9 @@ class TestGeneralizedNFW:
         gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
             kappa_s=2.0,
-            elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=90.0),
+            elliptical_comps=ag.convert.elliptical_comps_from(
+                axis_ratio=0.5, angle=90.0
+            ),
             inner_slope=1.5,
             scale_radius=1.0,
         )
@@ -480,7 +488,7 @@ class TestGeneralizedNFW:
             centre=(1.0, 1.0),
             kappa_s=5.0,
             elliptical_comps=ag.convert.elliptical_comps_from(
-                axis_ratio=0.5, phi=100.0
+                axis_ratio=0.5, angle=100.0
             ),
             inner_slope=1.0,
             scale_radius=10.0,
@@ -517,7 +525,7 @@ class TestGeneralizedNFW:
             centre=(0.0, 0.0),
             kappa_s=1.0,
             elliptical_comps=ag.convert.elliptical_comps_from(
-                axis_ratio=0.3, phi=100.0
+                axis_ratio=0.3, angle=100.0
             ),
             inner_slope=0.5,
             scale_radius=8.0,
@@ -532,7 +540,7 @@ class TestGeneralizedNFW:
             centre=(0.3, 0.2),
             kappa_s=2.5,
             elliptical_comps=ag.convert.elliptical_comps_from(
-                axis_ratio=0.5, phi=100.0
+                axis_ratio=0.5, angle=100.0
             ),
             inner_slope=1.5,
             scale_radius=4.0,
@@ -567,7 +575,7 @@ class TestGeneralizedNFW:
             centre=(0.0, 0.0),
             kappa_s=1.0,
             elliptical_comps=ag.convert.elliptical_comps_from(
-                axis_ratio=0.3, phi=100.0
+                axis_ratio=0.3, angle=100.0
             ),
             inner_slope=0.5,
             scale_radius=8.0,
@@ -580,7 +588,7 @@ class TestGeneralizedNFW:
             centre=(0.3, 0.2),
             kappa_s=2.5,
             elliptical_comps=ag.convert.elliptical_comps_from(
-                axis_ratio=0.5, phi=100.0
+                axis_ratio=0.5, angle=100.0
             ),
             inner_slope=1.5,
             scale_radius=4.0,
@@ -1288,8 +1296,8 @@ class TestTruncatedNFWMCRDuffy:
         assert truncated_nfw_mass.axis_ratio == 1.0
         assert isinstance(truncated_nfw_mass.axis_ratio, float)
 
-        assert truncated_nfw_mass.phi == 0.0
-        assert isinstance(truncated_nfw_mass.phi, float)
+        assert truncated_nfw_mass.angle == 0.0
+        assert isinstance(truncated_nfw_mass.angle, float)
 
         assert truncated_nfw_mass.inner_slope == 1.0
         assert isinstance(truncated_nfw_mass.inner_slope, float)
@@ -1342,8 +1350,8 @@ class TestTruncatedNFWMCRLludlow:
         assert truncated_nfw_mass.axis_ratio == 1.0
         assert isinstance(truncated_nfw_mass.axis_ratio, float)
 
-        assert truncated_nfw_mass.phi == 0.0
-        assert isinstance(truncated_nfw_mass.phi, float)
+        assert truncated_nfw_mass.angle == 0.0
+        assert isinstance(truncated_nfw_mass.angle, float)
 
         assert truncated_nfw_mass.inner_slope == 1.0
         assert isinstance(truncated_nfw_mass.inner_slope, float)
@@ -1396,8 +1404,8 @@ class TestNFWMCRDuffy:
         assert nfw_mass.axis_ratio == 1.0
         assert isinstance(nfw_mass.axis_ratio, float)
 
-        assert nfw_mass.phi == 0.0
-        assert isinstance(nfw_mass.phi, float)
+        assert nfw_mass.angle == 0.0
+        assert isinstance(nfw_mass.angle, float)
 
         assert nfw_mass.inner_slope == 1.0
         assert isinstance(nfw_mass.inner_slope, float)
@@ -1449,8 +1457,8 @@ class TestNFWMCRLudlow:
         assert nfw_mass.axis_ratio == 1.0
         assert isinstance(nfw_mass.axis_ratio, float)
 
-        assert nfw_mass.phi == 0.0
-        assert isinstance(nfw_mass.phi, float)
+        assert nfw_mass.angle == 0.0
+        assert isinstance(nfw_mass.angle, float)
 
         assert nfw_mass.inner_slope == 1.0
         assert isinstance(nfw_mass.inner_slope, float)
@@ -1504,15 +1512,15 @@ class TestNFWMCRLudlow:
 
         assert nfw_mass.centre == (1.0, 2.0)
 
-        axis_ratio, phi = ag.convert.axis_ratio_and_phi_from(
+        axis_ratio, angle = ag.convert.axis_ratio_and_phi_from(
             elliptical_comps=(0.1, 0.2)
         )
 
         assert nfw_mass.axis_ratio == axis_ratio
         assert isinstance(nfw_mass.axis_ratio, float)
 
-        assert nfw_mass.phi == phi
-        assert isinstance(nfw_mass.phi, float)
+        assert nfw_mass.angle == angle
+        assert isinstance(nfw_mass.angle, float)
 
         assert nfw_mass.inner_slope == 1.0
         assert isinstance(nfw_mass.inner_slope, float)
@@ -1568,15 +1576,15 @@ class TestNFWMCRLudlow:
 
         assert nfw_mass.centre == (1.0, 2.0)
 
-        axis_ratio, phi = ag.convert.axis_ratio_and_phi_from(
+        axis_ratio, angle = ag.convert.axis_ratio_and_phi_from(
             elliptical_comps=(0.1, 0.2)
         )
 
         assert nfw_mass.axis_ratio == axis_ratio
         assert isinstance(nfw_mass.axis_ratio, float)
 
-        assert nfw_mass.phi == phi
-        assert isinstance(nfw_mass.phi, float)
+        assert nfw_mass.angle == angle
+        assert isinstance(nfw_mass.angle, float)
 
         assert nfw_mass.inner_slope == 2.0
         assert isinstance(nfw_mass.inner_slope, float)

@@ -72,14 +72,15 @@ def test__plane_generator_from_aggregator(masked_imaging_7x7, samples, model):
 
 def test__imaging_generator_from_aggregator(imaging_7x7, mask_7x7, samples, model):
 
-    masked_imaging_7x7 = imaging_7x7.apply_mask(
-        mask=mask_7x7,
+    masked_imaging_7x7 = imaging_7x7.apply_mask(mask=mask_7x7)
+
+    masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
         settings=ag.SettingsImaging(
             grid_class=ag.Grid2DIterate,
             grid_inversion_class=ag.Grid2DIterate,
             fractional_accuracy=0.5,
             sub_steps=[2],
-        ),
+        )
     )
 
     search = mock.MockSearch(
