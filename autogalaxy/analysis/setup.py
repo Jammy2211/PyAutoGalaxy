@@ -22,7 +22,7 @@ class SetupHyper:
         hyper_image_sky: Optional[type(hd.HyperImageSky)] = None,
         hyper_background_noise: Optional[type(hd.HyperBackgroundNoise)] = None,
         search: Optional[af.NonLinearSearch] = None,
-        evidence_tolerance: Optional[float] = None,
+        dlogz: Optional[float] = None,
     ):
         """
         The hyper setup of a pipeline, which controls how hyper-features in PyAutoGalaxy template pipelines run,
@@ -46,17 +46,17 @@ class SetupHyper:
             The `NonLinearSearch` used by every inversion search.
         hyper_search_with_inversion : af.NonLinearSearch or None
             The `NonLinearSearch` used by every hyper combined search.
-        evidence_tolerance : float
+        dlogz : float
             The evidence tolerance of the non-linear searches used in the hyper searchs, whereby higher values will
             lead them to end earlier at the expense of accuracy.
         """
 
-        self.evidence_tolerance = evidence_tolerance
+        self.dlogz = dlogz
 
-        if evidence_tolerance is not None:
+        if dlogz is not None:
             if search is not None:
                 raise exc.PipelineException(
-                    "You have manually specified a search in the SetupPipeline, and an evidence_tolerance."
+                    "You have manually specified a search in the SetupPipeline, and an dlogz."
                     "You cannot manually specify both - remove one."
                     "(If you want the hyper search to use a specific evidence tolerance, include the evidence"
                     "tolerance in its parameters"
@@ -68,9 +68,7 @@ class SetupHyper:
 
         if search is None:
             self.search = af.DynestyStatic(
-                n_live_points=50,
-                evidence_tolerance=self.evidence_tolerance,
-                sample="rstagger",
+                n_live_points=50, dlogz=self.dlogz, sample="rstagger"
             )
         elif search is not None:
             self.search = search

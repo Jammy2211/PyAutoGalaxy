@@ -102,10 +102,12 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
     def figures_1d(self, convergence=False, potential=False):
 
         grid_2d_radial_projected = self.grid.grid_2d_radial_projected_from(
-            centre=self.lensing_obj.centre, angle=self.lensing_obj.phi + 90.0
+            centre=self.lensing_obj.centre, angle=self.lensing_obj.angle + 90.0
         )
 
-        radial_distances = grid_2d_radial_projected.distances_from_coordinate()
+        radial_distances = grid_2d_radial_projected.distances_from_coordinate(
+            coordinate=self.lensing_obj.centre
+        )
 
         grid_1d_radial_distances = grid_1d.Grid1D.manual_native(
             grid=radial_distances,

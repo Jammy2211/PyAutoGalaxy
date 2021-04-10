@@ -120,7 +120,7 @@ class EllProfile(SphProfile):
         elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
     ):
         """ An elliptical profile, which describes profiles with y and x centre Cartesian coordinates, an axis-ratio \
-        and rotational angle phi.
+        and rotational angle.
 
         Parameters
         ----------
@@ -128,40 +128,42 @@ class EllProfile(SphProfile):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
 
         Attributes
         ----------
         axis_ratio : float
             Ratio of light profiles ellipse's minor and major axes (b/a).
-        phi : float
+        angle : float
             Rotation angle of light profile counter-clockwise from positive x-axis.
         """
         super(EllProfile, self).__init__(centre=centre)
 
         self.elliptical_comps = elliptical_comps
 
-        axis_ratio, phi = convert.axis_ratio_and_phi_from(
+        axis_ratio, angle = convert.axis_ratio_and_phi_from(
             elliptical_comps=elliptical_comps
         )
 
         self.axis_ratio = axis_ratio
-        self.phi = phi
+        self.angle = angle
 
     @classmethod
     def from_axis_ratio_and_phi(
         cls,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
         axis_ratio: float = 1.0,
-        phi: float = 0.0,
+        angle: float = 0.0,
     ):
 
-        elliptical_comps = convert.elliptical_comps_from(axis_ratio=axis_ratio, phi=phi)
+        elliptical_comps = convert.elliptical_comps_from(
+            axis_ratio=axis_ratio, angle=angle
+        )
         return cls(centre=centre, elliptical_comps=elliptical_comps)
 
     @property
     def phi_radians(self):
-        return np.radians(self.phi)
+        return np.radians(self.angle)
 
     @property
     def cos_phi(self):
@@ -174,7 +176,7 @@ class EllProfile(SphProfile):
     def cos_and_sin_from_x_axis(self):
         """ Determine the sin and cosine of the angle between the profile's ellipse and the positive x-axis, \
         counter-clockwise. """
-        phi_radians = np.radians(self.phi)
+        phi_radians = np.radians(self.angle)
         return np.cos(phi_radians), np.sin(phi_radians)
 
     def grid_angle_to_profile(self, grid_thetas):
@@ -206,7 +208,7 @@ class EllProfile(SphProfile):
             The (y, x) coordinates in the reference frame of an elliptical profile.
         """
         return geometry_util.transform_grid_2d_from_reference_frame(
-            grid_2d=grid, centre=(0.0, 0.0), angle=self.phi
+            grid_2d=grid, centre=(0.0, 0.0), angle=self.angle
         )
 
     @grid_decorators.grid_like_to_structure
@@ -264,7 +266,7 @@ class EllProfile(SphProfile):
                 grid=grid_2d.Grid2DTransformedNumpy(grid=grid)
             )
         transformed = geometry_util.transform_grid_2d_to_reference_frame(
-            grid_2d=grid, centre=self.centre, angle=self.phi
+            grid_2d=grid, centre=self.centre, angle=self.angle
         )
         return grid_2d.Grid2DTransformedNumpy(grid=transformed)
 
@@ -284,7 +286,7 @@ class EllProfile(SphProfile):
             )
 
         return geometry_util.transform_grid_2d_from_reference_frame(
-            grid_2d=grid, centre=self.centre, angle=self.phi
+            grid_2d=grid, centre=self.centre, angle=self.angle
         )
 
     def eta_u(self, u, coordinates):

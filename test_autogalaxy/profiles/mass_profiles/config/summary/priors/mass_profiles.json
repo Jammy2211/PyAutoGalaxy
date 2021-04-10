@@ -15,7 +15,7 @@
             "lower_limit": 0.0,
             "upper_limit": 0.5
         },
-        "phi": {
+        "angle": {
             "type": "Uniform",
             "lower_limit": 0.0,
             "upper_limit": 0.5
@@ -59,7 +59,7 @@
             "lower_limit": 0.0,
             "upper_limit": 0.5
         },
-        "phi": {
+        "angle": {
             "type": "Uniform",
             "lower_limit": 0.0,
             "upper_limit": 0.5

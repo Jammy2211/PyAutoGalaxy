@@ -115,7 +115,7 @@ def pixelization_is_model_from(model: af.Collection):
 
 
 def hyper_model_from(
-        setup_hyper, result: af.Result, include_hyper_image_sky: bool = False
+    setup_hyper, result: af.Result, include_hyper_image_sky: bool = False
 ) -> af.Collection:
     """
     Make a hyper model from the `Result` of a model-fit, where the hyper-model is the maximum log likelihood instance
@@ -224,12 +224,12 @@ def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analys
 
 
 def stochastic_model_from(
-        result,
-        include_lens_light=False,
-        include_pixelization=False,
-        include_regularization=False,
-        subhalo_centre_width=None,
-        subhalo_mass_at_200_log_uniform=True,
+    result,
+    include_lens_light=False,
+    include_pixelization=False,
+    include_regularization=False,
+    subhalo_centre_width=None,
+    subhalo_mass_at_200_log_uniform=True,
 ):
     """
     Make a stochastic model from  the `Result` of a model-fit, where the stochastic model uses the same model
@@ -339,13 +339,12 @@ def stochastic_fit(stochastic_model, result, analysis):
 
     search = result.search
     search.paths.name = (
-            f"{result.search.paths.name}__stochastic_likelihood_cap_"
-            + "{0:.1f}".format(log_likelihood_cap)
+        f"{result.search.paths.name}__stochastic_likelihood_cap_"
+        + "{0:.1f}".format(log_likelihood_cap)
     )
 
     search.paths.save_object(
-        "stochastic_log_evidences",
-        result.stochastic_log_evidences
+        "stochastic_log_evidences", result.stochastic_log_evidences
     )
 
     stochastic_result = search.fit(

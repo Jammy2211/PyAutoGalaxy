@@ -123,7 +123,7 @@ class AbstractEllNFWGeneralized(
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         kappa_s : float
             The overall normalization of the dark matter halo \
             (kappa_s = (rho_s * scale_radius)/lensing_critical_density)
@@ -673,10 +673,10 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
         i = 1 + int((np.log10(eta_u) - minimum_log_eta) / bin_size)
         r1 = 10.0 ** (minimum_log_eta + (i - 1) * bin_size)
         r2 = r1 * 10.0 ** bin_size
-        phi = potential_integral[i] + (
+        angle = potential_integral[i] + (
             potential_integral[i + 1] - potential_integral[i]
         ) * (eta_u - r1) / (r2 - r1)
-        return eta_u * (phi / u) / (1.0 - (1.0 - axis_ratio ** 2) * u) ** 0.5
+        return eta_u * (angle / u) / (1.0 - (1.0 - axis_ratio ** 2) * u) ** 0.5
 
     @staticmethod
     def deflection_func(
@@ -983,7 +983,7 @@ class EllNFW(EllNFWGeneralized):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         kappa_s : float
             The overall normalization of the dark matter halo \
             (kappa_s = (rho_s * scale_radius)/lensing_critical_density)

@@ -1343,7 +1343,9 @@ class TestSersicCore:
 
         sersic = ag.mp.EllSersicCore(
             centre=(1.0, 2.0),
-            elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=70.0),
+            elliptical_comps=ag.convert.elliptical_comps_from(
+                axis_ratio=0.5, angle=70.0
+            ),
             intensity_break=0.45,
             effective_radius=0.5,
             radius_break=0.01,
@@ -1359,7 +1361,9 @@ class TestSersicCore:
 
         sersic = ag.mp.EllSersicCore(
             centre=(1.0, 2.0),
-            elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=70.0),
+            elliptical_comps=ag.convert.elliptical_comps_from(
+                axis_ratio=0.5, angle=70.0
+            ),
             intensity_break=2.0 * 0.45,
             effective_radius=0.5,
             radius_break=0.01,
@@ -1375,7 +1379,9 @@ class TestSersicCore:
 
         sersic = ag.mp.EllSersicCore(
             centre=(1.0, 2.0),
-            elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, phi=70.0),
+            elliptical_comps=ag.convert.elliptical_comps_from(
+                axis_ratio=0.5, angle=70.0
+            ),
             intensity_break=0.45,
             effective_radius=0.5,
             radius_break=0.01,

@@ -24,7 +24,7 @@ class TestEllProfile:
         assert sin_phi == 0.0
 
         elliptical_profile = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
-            centre=(1, 1), axis_ratio=0.1, phi=45.0
+            centre=(1, 1), axis_ratio=0.1, angle=45.0
         )
 
         cos_phi, sin_phi = elliptical_profile.cos_and_sin_from_x_axis()
@@ -33,7 +33,7 @@ class TestEllProfile:
         assert sin_phi == pytest.approx(0.707, 1e-3)
 
         elliptical_profile = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
-            centre=(1, 1), axis_ratio=0.1, phi=60.0
+            centre=(1, 1), axis_ratio=0.1, angle=60.0
         )
 
         cos_phi, sin_phi = elliptical_profile.cos_and_sin_from_x_axis()
@@ -42,7 +42,7 @@ class TestEllProfile:
         assert sin_phi == pytest.approx(0.866, 1e-3)
 
         elliptical_profile = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
-            centre=(1, 1), axis_ratio=0.1, phi=225.0
+            centre=(1, 1), axis_ratio=0.1, angle=225.0
         )
 
         cos_phi, sin_phi = elliptical_profile.cos_and_sin_from_x_axis()
@@ -73,7 +73,7 @@ class TestEllProfile:
         assert transformed_back_grid == pytest.approx(np.array([[1.0, 1.0]]), 1e-3)
 
         elliptical_profile = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
-            axis_ratio=0.1, phi=90.0, centre=(2.0, 3.0)
+            axis_ratio=0.1, angle=90.0, centre=(2.0, 3.0)
         )
 
         transformed_grid = elliptical_profile.transform_grid_to_reference_frame(
@@ -89,7 +89,7 @@ class TestEllProfile:
         assert transformed_back_grid == pytest.approx(np.array([[3.0, 4.0]]), 1e-3)
 
         elliptical_profile = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
-            axis_ratio=0.1, phi=45.0
+            axis_ratio=0.1, angle=45.0
         )
 
         grid_original = np.array([[5.2221, 2.6565]])
@@ -122,14 +122,14 @@ class TestEllProfile:
         assert (grid1 == grid2).all()
 
         elliptical_profile1 = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
-            axis_ratio=0.1, phi=55.0, centre=(0, 0)
+            axis_ratio=0.1, angle=55.0, centre=(0, 0)
         )
         grid1 = elliptical_profile1.transform_grid_to_reference_frame(
             grid=np.array([[1.0, 1.0]])
         )
 
         elliptical_profile2 = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
-            axis_ratio=0.1, phi=55.0, centre=(-1, -1)
+            axis_ratio=0.1, angle=55.0, centre=(-1, -1)
         )
         grid2 = elliptical_profile2.transform_grid_to_reference_frame(
             grid=np.array([[0.0, 0.0]])
@@ -138,14 +138,14 @@ class TestEllProfile:
         assert (grid1 == grid2).all()
 
         elliptical_profile1 = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
-            axis_ratio=0.1, phi=55.0, centre=(1, 1)
+            axis_ratio=0.1, angle=55.0, centre=(1, 1)
         )
         grid1 = elliptical_profile1.transform_grid_to_reference_frame(
             grid=np.array([[1.0, 1.0]])
         )
 
         elliptical_profile2 = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
-            axis_ratio=0.1, phi=55.0, centre=(-1, -1)
+            axis_ratio=0.1, angle=55.0, centre=(-1, -1)
         )
         grid2 = elliptical_profile2.transform_grid_to_reference_frame(
             grid=np.array([[-1.0, -1.0]])
@@ -173,7 +173,7 @@ class TestEllProfile:
         # eccentric radius =        sqrt(0.5) * sqrt( 5 ) = 1.58113
 
         elliptical_profile = geometry_profiles.EllProfile.from_axis_ratio_and_phi(
-            axis_ratio=0.5, phi=0.0
+            axis_ratio=0.5, angle=0.0
         )
 
         eccentric_radius = elliptical_profile.grid_to_eccentric_radii(

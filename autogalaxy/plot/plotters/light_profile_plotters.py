@@ -88,7 +88,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
     def figures_1d(self, image=False):
 
         grid_2d_radial_projected = self.grid.grid_2d_radial_projected_from(
-            centre=self.light_profile.centre, angle=self.light_profile.phi
+            centre=self.light_profile.centre, angle=self.light_profile.angle
         )
 
         radial_distances = grid_2d_radial_projected.distances_from_coordinate()

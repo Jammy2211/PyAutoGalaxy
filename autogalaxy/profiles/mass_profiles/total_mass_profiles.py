@@ -269,7 +269,7 @@ class EllPowerLawCored(mp.EllMassProfile, mp.MassProfile):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         einstein_radius : float
             The arc-second Einstein radius.
         slope : float
@@ -497,7 +497,7 @@ class EllPowerLaw(EllPowerLawCored):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         einstein_radius : float
             The arc-second Einstein radius.
         slope : float
@@ -538,13 +538,15 @@ class EllPowerLaw(EllPowerLawCored):
 
         factor = np.divide(1.0 - self.axis_ratio, 1.0 + self.axis_ratio)
         b = np.multiply(einstein_radius, np.sqrt(self.axis_ratio))
-        phi = np.arctan2(
+        angle = np.arctan2(
             grid[:, 0], np.multiply(self.axis_ratio, grid[:, 1])
-        )  # Note, this phi is not the position angle
+        )  # Note, this angle is not the position angle
         R = np.sqrt(
             np.add(np.multiply(self.axis_ratio ** 2, grid[:, 1] ** 2), grid[:, 0] ** 2)
         )
-        z = np.add(np.multiply(np.cos(phi), 1 + 0j), np.multiply(np.sin(phi), 0 + 1j))
+        z = np.add(
+            np.multiply(np.cos(angle), 1 + 0j), np.multiply(np.sin(angle), 0 + 1j)
+        )
 
         complex_angle = (
             2.0
@@ -646,7 +648,7 @@ class EllIsothermalCored(EllPowerLawCored):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         einstein_radius : float
             The arc-second Einstein radius.
         core_radius : float
@@ -706,7 +708,7 @@ class EllIsothermal(EllPowerLaw):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         einstein_radius : float
             The arc-second Einstein radius.
         """

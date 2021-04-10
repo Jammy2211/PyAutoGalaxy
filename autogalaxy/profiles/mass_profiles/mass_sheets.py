@@ -51,14 +51,14 @@ class ExternalShear(geometry_profiles.EllProfile, mp.MassProfile):
         """
         An `ExternalShear` term, to model the line-of-sight contribution of other galaxies / satellites.
 
-        The shear angle phi is defined in the direction of stretching of the image. Therefore, if an object located \
-        outside the lens is responsible for the shear, it will be offset 90 degrees from the value of phi.
+        The shear angle is defined in the direction of stretching of the image. Therefore, if an object located \
+        outside the lens is responsible for the shear, it will be offset 90 degrees from the value of angle.
 
         Parameters
         ----------
         magnitude : float
             The overall magnitude of the shear (gamma).
-        phi : float
+        angle : float
             The rotation axis of the shear.
         """
 
@@ -66,12 +66,12 @@ class ExternalShear(geometry_profiles.EllProfile, mp.MassProfile):
             centre=(0.0, 0.0), elliptical_comps=elliptical_comps
         )
 
-        magnitude, phi = convert.shear_magnitude_and_phi_from(
+        magnitude, angle = convert.shear_magnitude_and_phi_from(
             elliptical_comps=elliptical_comps
         )
 
         self.magnitude = magnitude
-        self.phi = phi
+        self.angle = angle
 
     def convergence_func(self, grid_radius):
         return 0.0

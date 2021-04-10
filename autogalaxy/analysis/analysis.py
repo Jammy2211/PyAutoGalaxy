@@ -20,13 +20,13 @@ class Analysis(af.Analysis):
 
 class AnalysisDataset(Analysis):
     def __init__(
-            self,
-            dataset,
-            hyper_result=None,
-            cosmology=cosmo.Planck15,
-            settings_pixelization=pix.SettingsPixelization(),
-            settings_inversion=inv.SettingsInversion(),
-            preloads=pload.Preloads(),
+        self,
+        dataset,
+        hyper_result=None,
+        cosmology=cosmo.Planck15,
+        settings_pixelization=pix.SettingsPixelization(),
+        settings_inversion=inv.SettingsInversion(),
+        preloads=pload.Preloads(),
     ):
 
         super().__init__(hyper_result=hyper_result, cosmology=cosmology)
@@ -92,7 +92,7 @@ class AnalysisDataset(Analysis):
         if self.hyper_galaxy_image_path_dict is not None:
 
             for galaxy_path, galaxy in instance.path_instance_tuples_for_class(
-                    g.Galaxy
+                g.Galaxy
             ):
                 if galaxy_path in self.hyper_galaxy_image_path_dict:
                     galaxy.hyper_model_image = self.hyper_model_image
@@ -107,48 +107,30 @@ class AnalysisDataset(Analysis):
         raise NotImplementedError
 
     def save_settings(self, paths: af.DirectoryPaths):
-        paths.save_object(
-            "settings_dataset",
-            self.dataset.settings
-        )
-        paths.save_object(
-            "settings_inversion",
-            self.settings_inversion
-        )
-        paths.save_object(
-            "settings_pixelization",
-            self.settings_pixelization
-        )
+        paths.save_object("settings_dataset", self.dataset.settings)
+        paths.save_object("settings_inversion", self.settings_inversion)
+        paths.save_object("settings_pixelization", self.settings_pixelization)
 
     def save_attributes_for_aggregator(self, paths: af.DirectoryPaths):
-        paths.save_object(
-            "dataset",
-            self.dataset
-        )
-        paths.save_object(
-            "mask",
-            self.dataset.mask
-        )
+        paths.save_object("dataset", self.dataset)
+        paths.save_object("mask", self.dataset.mask)
 
         self.save_settings(paths=paths)
 
         attributes = self.make_attributes()
 
-        paths.save_object(
-            "attributes",
-            attributes
-        )
+        paths.save_object("attributes", attributes)
 
 
 class AnalysisImaging(AnalysisDataset):
     def __init__(
-            self,
-            dataset,
-            hyper_result=None,
-            cosmology=cosmo.Planck15,
-            settings_pixelization=pix.SettingsPixelization(),
-            settings_inversion=inv.SettingsInversion(),
-            preloads=pload.Preloads(),
+        self,
+        dataset,
+        hyper_result=None,
+        cosmology=cosmo.Planck15,
+        settings_pixelization=pix.SettingsPixelization(),
+        settings_inversion=inv.SettingsInversion(),
+        preloads=pload.Preloads(),
     ):
 
         super().__init__(
@@ -202,7 +184,7 @@ class AnalysisImaging(AnalysisDataset):
             raise FitException from e
 
     def imaging_fit_for_plane(
-            self, plane, hyper_image_sky, hyper_background_noise, use_hyper_scalings=True
+        self, plane, hyper_image_sky, hyper_background_noise, use_hyper_scalings=True
     ):
 
         return fit_imaging.FitImaging(
@@ -259,7 +241,7 @@ class AnalysisImaging(AnalysisDataset):
             )
 
     def make_result(
-            self, samples: af.PDFSamples, model: af.Collection, search: af.NonLinearSearch
+        self, samples: af.PDFSamples, model: af.Collection, search: af.NonLinearSearch
     ):
         return res.ResultImaging(
             samples=samples, model=model, analysis=self, search=search
@@ -275,13 +257,13 @@ class AnalysisImaging(AnalysisDataset):
 
 class AnalysisInterferometer(AnalysisDataset):
     def __init__(
-            self,
-            dataset,
-            hyper_result=None,
-            cosmology=cosmo.Planck15,
-            settings_pixelization=pix.SettingsPixelization(),
-            settings_inversion=inv.SettingsInversion(),
-            preloads=pload.Preloads(),
+        self,
+        dataset,
+        hyper_result=None,
+        cosmology=cosmo.Planck15,
+        settings_pixelization=pix.SettingsPixelization(),
+        settings_inversion=inv.SettingsInversion(),
+        preloads=pload.Preloads(),
     ):
 
         super().__init__(
@@ -347,7 +329,7 @@ class AnalysisInterferometer(AnalysisDataset):
             raise FitException from e
 
     def associate_hyper_visibilities(
-            self, instance: af.ModelInstance
+        self, instance: af.ModelInstance
     ) -> af.ModelInstance:
         """
         Takes visibilities from the last result, if there is one, and associates them with galaxies in this search
@@ -374,7 +356,7 @@ class AnalysisInterferometer(AnalysisDataset):
         """
         if self.hyper_galaxy_visibilities_path_dict is not None:
             for galaxy_path, galaxy in instance.path_instance_tuples_for_class(
-                    g.Galaxy
+                g.Galaxy
             ):
                 if galaxy_path in self.hyper_galaxy_visibilities_path_dict:
                     galaxy.hyper_model_visibilities = self.hyper_model_visibilities
@@ -385,7 +367,7 @@ class AnalysisInterferometer(AnalysisDataset):
         return instance
 
     def interferometer_fit_for_plane(
-            self, plane, hyper_background_noise, use_hyper_scalings=True
+        self, plane, hyper_background_noise, use_hyper_scalings=True
     ):
 
         return fit_interferometer.FitInterferometer(
@@ -435,7 +417,7 @@ class AnalysisInterferometer(AnalysisDataset):
             )
 
     def make_result(
-            self, samples: af.PDFSamples, model: af.Collection, search: af.NonLinearSearch
+        self, samples: af.PDFSamples, model: af.Collection, search: af.NonLinearSearch
     ):
         return res.ResultInterferometer(
             samples=samples, model=model, analysis=self, search=search
@@ -459,11 +441,11 @@ class AttributesImaging:
 
 class AttributesInterferometer:
     def __init__(
-            self,
-            cosmology,
-            real_space_mask,
-            hyper_model_image,
-            hyper_galaxy_image_path_dict,
+        self,
+        cosmology,
+        real_space_mask,
+        hyper_model_image,
+        hyper_galaxy_image_path_dict,
     ):
         self.cosmology = cosmology
         self.real_space_mask = real_space_mask

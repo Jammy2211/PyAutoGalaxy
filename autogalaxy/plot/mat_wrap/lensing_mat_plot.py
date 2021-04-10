@@ -97,6 +97,28 @@ class MatPlot1D(mat_plot.MatPlot1D):
         self.half_light_radius_axvline = half_light_radius_axvline
         self.einstein_radius_axvline = einstein_radius_axvline
 
+    def set_for_multi_plot(self, is_for_multi_plot: bool, color: str):
+        """
+        Sets the `is_for_subplot` attribute for every `MatWrap` object in this `MatPlot` object by updating
+        the `is_for_subplot`. By changing this tag:
+
+            - The [subplot] section of the config file of every `MatWrap` object is used instead of [figure].
+            - Calls which output or close the matplotlib figure are over-ridden so that the subplot is not removed.
+
+        Parameters
+        ----------
+        is_for_subplot : bool
+            The entry the `is_for_subplot` attribute of every `MatWrap` object is set too.
+        """
+
+        super().set_for_multi_plot(is_for_multi_plot=is_for_multi_plot, color=color)
+
+        self.half_light_radius_axvline.kwargs["c"] = color
+        self.einstein_radius_axvline.kwargs["c"] = color
+
+        self.half_light_radius_axvline.no_label = True
+        self.einstein_radius_axvline.no_label = True
+
 
 class MatPlot2D(mat_plot.MatPlot2D):
     def __init__(

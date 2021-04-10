@@ -58,7 +58,7 @@ class EllLightProfile(geometry_profiles.EllProfile, LightProfile):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         """
         super(EllLightProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
@@ -178,7 +178,7 @@ class EllGaussian(EllLightProfile):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity : float
             Overall intensity normalisation of the light profiles (electrons per second).
         sigma : float
@@ -269,7 +269,7 @@ class AbstractEllSersic(EllLightProfile):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity : float
             Overall intensity normalisation in the light profiles (electrons per second)
         effective_radius : float
@@ -342,7 +342,7 @@ class EllSersic(AbstractEllSersic, EllLightProfile):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity : float
             Overall intensity normalisation of the light profiles (electrons per second).
         effective_radius : float
@@ -449,7 +449,7 @@ class EllExponential(EllSersic):
             The (y,x) arc-second centre of the light profile.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity : float
             Overall intensity normalisation of the light profiles (electrons per second).
         effective_radius : float
@@ -510,7 +510,7 @@ class EllDevVaucouleurs(EllSersic):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity : float
             Overall intensity normalisation of the light profiles (electrons per second).
         effective_radius : float
@@ -573,7 +573,7 @@ class EllSersicCore(EllSersic):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         effective_radius : float
             The circular radius containing half the light of this profile.
         sersic_index : Int
@@ -727,7 +727,7 @@ class EllChameleon(EllLightProfile):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity : float
             Overall intensity normalisation of the light profiles (electrons per second).
         core_radius_0 : the core size of the first elliptical cored Isothermal profile.
@@ -813,7 +813,7 @@ class SphChameleon(EllChameleon):
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*phi) and ellip_x = fac * cos(2*phi).
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity : float
             Overall intensity normalisation of the light profiles (electrons per second).
         core_radius_0 : the core size of the first elliptical cored Isothermal profile.
