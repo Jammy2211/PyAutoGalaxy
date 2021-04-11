@@ -1,4 +1,4 @@
-from autoarray.plot.mat_wrap import mat_plot as mp
+from autoarray.plot.mat_wrap import mat_plot
 from autoarray.plot.plotters import fit_imaging_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 
@@ -42,7 +42,7 @@ class FitGalaxyPlotter(fit_imaging_plotters.FitImagingPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.fit.data,
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mp.AutoLabels(title="Image", filename="image"),
+                auto_labels=mat_plot.AutoLabels(title="Image", filename="image"),
             )
 
         super(FitGalaxyPlotter, self).figures_2d(

@@ -2,14 +2,14 @@
     "GeometryProfile": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -30,14 +30,14 @@
     "SphProfile": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -58,14 +58,14 @@
     "EllProfile": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -73,14 +73,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"

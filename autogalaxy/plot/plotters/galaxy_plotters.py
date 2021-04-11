@@ -1,8 +1,9 @@
-from autoarray.plot.mat_wrap import mat_plot as mp
+from autoarray.structures.arrays import values
+from autoarray.plot.mat_wrap import mat_plot
 from autogalaxy.plot.plotters import lensing_obj_plotter
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.plot.plotters import light_profile_plotters, mass_profile_plotters
-from autogalaxy.profiles import light_profiles
+from autogalaxy.profiles import light_profiles as lp, mass_profiles as mp
 
 
 class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
@@ -56,18 +57,18 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             The collection of attributes that can be plotted by a `Plotter2D` object.
         """
 
-        visuals_2d = super(GalaxyPlotter, self).visuals_with_include_2d
+        visuals_2d = super().visuals_with_include_2d
 
         return visuals_2d + visuals_2d.__class__(
             light_profile_centres=self.extract_2d(
                 "light_profile_centres",
                 self.lensing_obj.extract_attribute(
-                    cls=light_profiles.LightProfile, attr_name="centre"
+                    cls=lp.LightProfile, attr_name="centre"
                 ),
             )
         )
 
-    def light_profile_plotter_from(self, light_profile):
+    def light_profile_plotter_from(self, light_profile : lp.EllLightProfile) -> light_profile_plotters.LightProfilePlotter:
         return light_profile_plotters.LightProfilePlotter(
             light_profile=light_profile,
             grid=self.grid,
@@ -79,7 +80,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             include_1d=self.include_1d,
         )
 
-    def mass_profile_plotter_from(self, mass_profile):
+    def mass_profile_plotter_from(self, mass_profile : mp.EllMassProfile) -> mass_profile_plotters.MassProfilePlotter:
         return mass_profile_plotters.MassProfilePlotter(
             mass_profile=mass_profile,
             grid=self.grid,
@@ -90,6 +91,47 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             visuals_1d=self.visuals_1d,
             include_1d=self.include_1d,
         )
+
+    # def figures_1d(self, convergence=False, potential=False):
+    #
+    #     if convergence:
+    #
+    #         galaxy_convergence = values.ValuesIrregular
+    #
+    #         for mass_profile in self.galaxy.mass_profiles:
+    #
+    #             mass_profile_plotter = self.mass_profile_plotter_from(mass_profile=mass_profile)
+    #
+    #             convergence = mass_profile_plotter.mass_profile.convergence_from_grid(grid=mass_profile_plotter.grid_2d_radial_projected)
+    #             grid_1d_radial_distances = mass_profile_plotter.grid_1d_radial_distances
+    #
+    #             self.mat_plot_1d.plot_yx(
+    #                 y=self.lensing_obj.convergence_from_grid(grid=self.grid_2d_radial_projected),
+    #                 x=self.grid_1d_radial_distances,
+    #                 visuals_1d=self.visuals_with_include_1d,
+    #                 auto_labels=mat_plot.AutoLabels(
+    #                     title="Convergence vs Radius",
+    #                     ylabel="Convergence ",
+    #                     xlabel="Radius",
+    #                     legend=self.lensing_obj.__class__.__name__,
+    #                     filename="convergence_1d",
+    #                 ),
+    #             )
+
+        # if potential:
+        #
+        #     self.mat_plot_1d.plot_yx(
+        #         y=self.lensing_obj.potential_from_grid(grid=self.grid_2d_radial_projected),
+        #         x=self.grid_1d_radial_distances,
+        #         visuals_1d=self.visuals_with_include_1d,
+        #         auto_labels=mat_plot.AutoLabels(
+        #             title="Potential vs Radius",
+        #             ylabel="Potential ",
+        #             xlabel="Radius",
+        #             legend=self.lensing_obj.__class__.__name__,
+        #             filename="potential_1d",
+        #         ),
+        #     )
 
     def figures_2d(
         self,
@@ -107,7 +149,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.image_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mp.AutoLabels(title="Image", filename="image"),
+                auto_labels=mat_plot.AutoLabels(title="Image", filename="image"),
             )
 
         super().figures_2d(
@@ -123,7 +165,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.contribution_map,
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mp.AutoLabels(
+                auto_labels=mat_plot.AutoLabels(
                     title="Contribution Map", filename="contribution_map"
                 ),
             )

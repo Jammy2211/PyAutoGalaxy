@@ -2,14 +2,14 @@
     "EllGaussian": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -17,14 +17,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -103,14 +103,14 @@
     "SphSersic": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -118,14 +118,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -145,8 +145,8 @@
             }
         },
         "effective_radius": {
-            "type": "LogUniform",
-            "lower_limit": 1e-4,
+            "type": "Uniform",
+            "lower_limit": 0.0,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Relative",
@@ -160,7 +160,7 @@
         "sersic_index": {
             "type": "Uniform",
             "lower_limit": 0.5,
-            "upper_limit": 8.0,
+            "upper_limit": 5.0,
             "width_modifier": {
                 "type": "Absolute",
                 "value": 1.5
@@ -187,14 +187,14 @@
     "EllSersic": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -202,14 +202,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -259,8 +259,8 @@
             }
         },
         "effective_radius": {
-            "type": "LogUniform",
-            "lower_limit": 1e-4,
+            "type": "Uniform",
+            "lower_limit": 0.0,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Relative",
@@ -274,7 +274,7 @@
         "sersic_index": {
             "type": "Uniform",
             "lower_limit": 0.5,
-            "upper_limit": 8.0,
+            "upper_limit": 5.0,
             "width_modifier": {
                 "type": "Absolute",
                 "value": 1.5
@@ -301,14 +301,14 @@
     "SphExponential": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -316,14 +316,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -343,8 +343,8 @@
             }
         },
         "effective_radius": {
-            "type": "LogUniform",
-            "lower_limit": 1e-4,
+            "type": "Uniform",
+            "lower_limit": 0.0,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Relative",
@@ -372,14 +372,14 @@
     "EllExponential": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -387,14 +387,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -444,8 +444,8 @@
             }
         },
         "effective_radius": {
-            "type": "LogUniform",
-            "lower_limit": 1e-4,
+            "type": "Uniform",
+            "lower_limit": 0.0,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Relative",
@@ -473,14 +473,14 @@
     "SphDevVaucouleurs": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -488,14 +488,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -515,8 +515,8 @@
             }
         },
         "effective_radius": {
-            "type": "LogUniform",
-            "lower_limit": 1e-4,
+            "type": "Uniform",
+            "lower_limit": 0.0,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Relative",
@@ -544,14 +544,14 @@
     "EllDevVaucouleurs": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -559,14 +559,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -616,8 +616,8 @@
             }
         },
         "effective_radius": {
-            "type": "LogUniform",
-            "lower_limit": 1e-4,
+            "type": "Uniform",
+            "lower_limit": 0.0,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Relative",
@@ -645,14 +645,14 @@
     "SphSersicRadialGradient": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -660,14 +660,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -687,8 +687,8 @@
             }
         },
         "effective_radius": {
-            "type": "LogUniform",
-            "lower_limit": 1e-4,
+            "type": "Uniform",
+            "lower_limit": 0.0,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Relative",
@@ -702,7 +702,7 @@
         "sersic_index": {
             "type": "Uniform",
             "lower_limit": 0.5,
-            "upper_limit": 8.0,
+            "upper_limit": 5.0,
             "width_modifier": {
                 "type": "Absolute",
                 "value": 1.5
@@ -742,14 +742,14 @@
     "EllSersicRadialGradient": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -757,14 +757,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -814,8 +814,8 @@
             }
         },
         "effective_radius": {
-            "type": "LogUniform",
-            "lower_limit": 1e-4,
+            "type": "Uniform",
+            "lower_limit": 0.0,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Relative",
@@ -829,7 +829,7 @@
         "sersic_index": {
             "type": "Uniform",
             "lower_limit": 0.5,
-            "upper_limit": 8.0,
+            "upper_limit": 5.0,
             "width_modifier": {
                 "type": "Absolute",
                 "value": 1.5
@@ -890,8 +890,8 @@
             "sigma": 0.3
         },
         "effective_radius": {
-            "type": "LogUniform",
-            "lower_limit": 1e-4,
+            "type": "Uniform",
+            "lower_limit": 0.0,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Relative",
@@ -905,7 +905,7 @@
         "sersic_index": {
             "type": "Uniform",
             "lower_limit": 0.5,
-            "upper_limit": 8.0,
+            "upper_limit": 5.0,
             "width_modifier": {
                 "type": "Absolute",
                 "value": 1.5
@@ -1035,8 +1035,8 @@
             }
         },
         "effective_radius": {
-            "type": "LogUniform",
-            "lower_limit": 1e-4,
+            "type": "Uniform",
+            "lower_limit": 0.0,
             "upper_limit": 30.0,
             "width_modifier": {
                 "type": "Relative",
@@ -1050,7 +1050,7 @@
         "sersic_index": {
             "type": "Uniform",
             "lower_limit": 0.5,
-            "upper_limit": 8.0,
+            "upper_limit": 5.0,
             "width_modifier": {
                 "type": "Absolute",
                 "value": 1.5

@@ -2,14 +2,14 @@
     "PointMass": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -17,14 +17,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -47,14 +47,14 @@
     "SphIsothermal": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -62,14 +62,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -92,14 +92,14 @@
     "EllIsothermal": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -107,14 +107,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -167,14 +167,14 @@
     "SphIsothermalCored": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -182,14 +182,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -225,14 +225,14 @@
     "EllIsothermalCored": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -240,14 +240,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -313,14 +313,14 @@
     "SphPowerLaw": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -328,14 +328,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -371,14 +371,14 @@
     "EllPowerLaw": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -386,14 +386,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -459,14 +459,14 @@
     "SphPowerLawCored": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -474,14 +474,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -530,14 +530,14 @@
     "EllPowerLawCored": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -545,14 +545,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -631,14 +631,14 @@
     "SphericaPowerLawBroken": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -646,14 +646,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -715,14 +715,14 @@
     "EllPowerLawBroken": {
         "centre_0": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"
@@ -730,14 +730,14 @@
         },
         "centre_1": {
             "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.1,
             "lower_limit": "-inf",
             "upper_limit": "inf",
             "width_modifier": {
                 "type": "Absolute",
                 "value": 0.05
             },
-            "mean": 0.0,
-            "sigma": 0.1,
             "gaussian_limits": {
                 "lower": "-inf",
                 "upper": "inf"

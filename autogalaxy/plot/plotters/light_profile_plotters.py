@@ -1,6 +1,6 @@
 from autoarray.structures.grids.one_d import grid_1d
 from autoarray.structures.grids.two_d import abstract_grid_2d, grid_2d_irregular
-from autoarray.plot.mat_wrap import mat_plot as mp
+from autoarray.plot.mat_wrap import mat_plot
 from autoarray.plot.plotters import abstract_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.profiles import light_profiles as lp
@@ -104,7 +104,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
                 y=self.light_profile.image_from_grid(grid=grid_2d_radial_projected),
                 x=grid_1d_radial_distances,
                 visuals_1d=self.visuals_with_include_1d,
-                auto_labels=mp.AutoLabels(
+                auto_labels=mat_plot.AutoLabels(
                     title="Image vs Radius",
                     ylabel="Image",
                     xlabel="Radius",
@@ -120,5 +120,5 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.light_profile.image_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mp.AutoLabels(title="Image", filename="image"),
+                auto_labels=mat_plot.AutoLabels(title="Image", filename="image"),
             )

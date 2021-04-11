@@ -1,9 +1,8 @@
 from autoarray.structures.arrays.two_d import array_2d
-from autoarray.structures.grids.one_d import grid_1d
 from autoarray.structures.grids.two_d import grid_2d
 from autoarray.structures.grids.two_d import grid_2d_irregular
 from autoarray.plot.plotters import abstract_plotters
-from autoarray.plot.mat_wrap import mat_plot as mp
+from autoarray.plot.mat_wrap import mat_plot
 from autogalaxy import lensing
 from autogalaxy.profiles import mass_profiles
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
@@ -99,51 +98,6 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             ),
         )
 
-    def figures_1d(self, convergence=False, potential=False):
-
-        grid_2d_radial_projected = self.grid.grid_2d_radial_projected_from(
-            centre=self.lensing_obj.centre, angle=self.lensing_obj.angle + 90.0
-        )
-
-        radial_distances = grid_2d_radial_projected.distances_from_coordinate(
-            coordinate=self.lensing_obj.centre
-        )
-
-        grid_1d_radial_distances = grid_1d.Grid1D.manual_native(
-            grid=radial_distances,
-            pixel_scales=abs(radial_distances[0] - radial_distances[1]),
-        )
-
-        if convergence:
-
-            self.mat_plot_1d.plot_yx(
-                y=self.lensing_obj.convergence_from_grid(grid=grid_2d_radial_projected),
-                x=grid_1d_radial_distances,
-                visuals_1d=self.visuals_with_include_1d,
-                auto_labels=mp.AutoLabels(
-                    title="Convergence vs Radius",
-                    ylabel="Convergence ",
-                    xlabel="Radius",
-                    legend=self.lensing_obj.__class__.__name__,
-                    filename="convergence_1d",
-                ),
-            )
-
-        if potential:
-
-            self.mat_plot_1d.plot_yx(
-                y=self.lensing_obj.potential_from_grid(grid=grid_2d_radial_projected),
-                x=grid_1d_radial_distances,
-                visuals_1d=self.visuals_with_include_1d,
-                auto_labels=mp.AutoLabels(
-                    title="Potential vs Radius",
-                    ylabel="Potential ",
-                    xlabel="Radius",
-                    legend=self.lensing_obj.__class__.__name__,
-                    filename="potential_1d",
-                ),
-            )
-
     def figures_2d(
         self,
         convergence=False,
@@ -158,7 +112,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.lensing_obj.convergence_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mp.AutoLabels(title="Convergence", filename="convergence"),
+                auto_labels=mat_plot.AutoLabels(title="Convergence", filename="convergence"),
             )
 
         if potential:
@@ -166,7 +120,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.lensing_obj.potential_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mp.AutoLabels(title="Potential", filename="potential"),
+                auto_labels=mat_plot.AutoLabels(title="Potential", filename="potential"),
             )
 
         if deflections_y:
@@ -179,7 +133,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             self.mat_plot_2d.plot_array(
                 array=deflections_y,
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mp.AutoLabels(
+                auto_labels=mat_plot.AutoLabels(
                     title="Deflections Y", filename="deflections_y"
                 ),
             )
@@ -194,7 +148,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             self.mat_plot_2d.plot_array(
                 array=deflections_x,
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mp.AutoLabels(
+                auto_labels=mat_plot.AutoLabels(
                     title="deflections X", filename="deflections_x"
                 ),
             )
@@ -204,7 +158,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.lensing_obj.magnification_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mp.AutoLabels(
+                auto_labels=mat_plot.AutoLabels(
                     title="Magnification", filename="magnification"
                 ),
             )
