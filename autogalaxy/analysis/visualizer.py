@@ -2,18 +2,14 @@ from os import path
 
 from autoconf import conf
 from autoarray.plot.mat_wrap.wrap import wrap_base
-from autoarray.plot.plotters import (
-    imaging_plotters,
-    interferometer_plotters,
-    inversion_plotters,
-)
-from autogalaxy.plot.plotters import (
-    fit_imaging_plotters,
-    fit_interferometer_plotters,
+from autoarray.plot import inversion_plotters, interferometer_plotters, imaging_plotters
+from autogalaxy.plot import (
     fit_galaxy_plotters,
+    fit_interferometer_plotters,
+    fit_imaging_plotters,
     hyper_plotters,
 )
-from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
+from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include
 
 
 def setting(section, name):

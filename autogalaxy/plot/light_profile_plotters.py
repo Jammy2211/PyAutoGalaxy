@@ -1,7 +1,7 @@
 from autoarray.structures.grids.one_d import grid_1d
 from autoarray.structures.grids.two_d import abstract_grid_2d, grid_2d_irregular
 from autoarray.plot.mat_wrap import mat_plot
-from autoarray.plot.plotters import abstract_plotters
+from autoarray.plot import abstract_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.profiles import light_profiles as lp
 

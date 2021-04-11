@@ -1,7 +1,6 @@
-from autoarray.plot.plotters import inversion_plotters
+from autoarray.plot import inversion_plotters, fit_interferometer_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
-from autogalaxy.plot.plotters import plane_plotters
-from autoarray.plot.plotters import fit_interferometer_plotters
+from autogalaxy.plot import plane_plotters
 from autogalaxy.fit import fit_interferometer
 
 

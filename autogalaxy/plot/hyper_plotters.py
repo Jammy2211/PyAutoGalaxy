@@ -1,4 +1,4 @@
-from autoarray.plot.plotters import abstract_plotters
+from autoarray.plot import abstract_plotters
 from autoarray.plot.mat_wrap import mat_plot
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 

@@ -1,8 +1,6 @@
 from autoarray.plot.mat_wrap import mat_plot
-from autoarray.plot.plotters import fit_imaging_plotters
+from autoarray.plot import fit_imaging_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
-
-import copy
 
 
 class FitGalaxyPlotter(fit_imaging_plotters.FitImagingPlotter):

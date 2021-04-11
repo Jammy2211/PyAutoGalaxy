@@ -1,6 +1,6 @@
 from autoarray.structures.arrays.two_d import array_2d
 from autoarray.structures.grids.two_d import grid_2d_irregular
-from autoarray.plot.plotters import abstract_plotters
+from autoarray.plot import abstract_plotters
 from autoarray.plot.mat_wrap import mat_plot
 from autogalaxy.profiles import mass_profiles
 from autogalaxy.plot.mat_wrap import lensing_visuals

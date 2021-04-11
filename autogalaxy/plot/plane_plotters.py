@@ -1,6 +1,6 @@
 from autoarray.plot.mat_wrap import mat_plot
 from autoarray.structures.grids.two_d import grid_2d
-from autogalaxy.plot.plotters import lensing_obj_plotter
+from autogalaxy.plot import lensing_obj_plotter
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.plane import plane as pl
 from autogalaxy.profiles import light_profiles

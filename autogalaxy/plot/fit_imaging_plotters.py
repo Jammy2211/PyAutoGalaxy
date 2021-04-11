@@ -1,7 +1,6 @@
 import numpy as np
 from autoarray.plot.mat_wrap import mat_plot
-from autoarray.plot.plotters import fit_imaging_plotters
-from autoarray.plot.plotters import inversion_plotters
+from autoarray.plot import inversion_plotters, fit_imaging_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.profiles import light_profiles, mass_profiles
 from autogalaxy.fit import fit_imaging

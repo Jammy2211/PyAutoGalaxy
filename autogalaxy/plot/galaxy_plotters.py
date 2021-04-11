@@ -1,7 +1,10 @@
 from autoarray.plot.mat_wrap import mat_plot
-from autogalaxy.plot.plotters import lensing_obj_plotter
+from autogalaxy.plot import (
+    lensing_obj_plotter,
+    light_profile_plotters,
+    mass_profile_plotters,
+)
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
-from autogalaxy.plot.plotters import light_profile_plotters, mass_profile_plotters
 from autogalaxy.profiles import light_profiles as lp, mass_profiles as mp
 
 
