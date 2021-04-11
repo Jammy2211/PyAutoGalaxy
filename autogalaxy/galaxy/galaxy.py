@@ -276,7 +276,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         )
 
     @grid_decorators.grid_2d_to_structure
-    def image_from_grid(self, grid):
+    def image_2d_from_grid(self, grid):
         """Calculate the summed image of all of the galaxy's light profiles using a grid of Cartesian (y,x) \
         coordinates.
         
@@ -291,24 +291,26 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         """
         if self.has_light_profile:
-            return sum(map(lambda p: p.image_from_grid(grid=grid), self.light_profiles))
+            return sum(
+                map(lambda p: p.image_2d_from_grid(grid=grid), self.light_profiles)
+            )
         return np.zeros((grid.shape[0],))
 
-    def blurred_image_from_grid_and_psf(self, grid, psf, blurring_grid=None):
+    def blurred_image_2d_from_grid_and_psf(self, grid, psf, blurring_grid=None):
 
-        image = self.image_from_grid(grid=grid)
+        image = self.image_2d_from_grid(grid=grid)
 
-        blurring_image = self.image_from_grid(grid=blurring_grid)
+        blurring_image = self.image_2d_from_grid(grid=blurring_grid)
 
         return psf.convolved_array_from_array_and_mask(
             array=image.binned.native + blurring_image.binned.native, mask=grid.mask
         )
 
-    def blurred_image_from_grid_and_convolver(self, grid, convolver, blurring_grid):
+    def blurred_image_2d_from_grid_and_convolver(self, grid, convolver, blurring_grid):
 
-        image = self.image_from_grid(grid=grid)
+        image = self.image_2d_from_grid(grid=grid)
 
-        blurring_image = self.image_from_grid(grid=blurring_grid)
+        blurring_image = self.image_2d_from_grid(grid=blurring_grid)
 
         return convolver.convolve_image(
             image=image.binned.slim, blurring_image=blurring_image.binned.slim
@@ -316,7 +318,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
     def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
 
-        image = self.image_from_grid(grid=grid)
+        image = self.image_2d_from_grid(grid=grid)
 
         return transformer.visibilities_from_image(image=image.binned.slim)
 
@@ -344,7 +346,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
 
     @grid_decorators.grid_2d_to_structure
-    def convergence_from_grid(self, grid):
+    def convergence_2d_from_grid(self, grid):
         """
         Returns the summed convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
@@ -363,12 +365,12 @@ class Galaxy(ModelObject, lensing.LensingObject):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.convergence_from_grid(grid=grid), self.mass_profiles)
+                map(lambda p: p.convergence_2d_from_grid(grid=grid), self.mass_profiles)
             )
         return np.zeros((grid.shape[0],))
 
     @grid_decorators.grid_2d_to_structure
-    def potential_from_grid(self, grid):
+    def potential_2d_from_grid(self, grid):
         """
         Returns the summed gravitational potential of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
@@ -388,12 +390,12 @@ class Galaxy(ModelObject, lensing.LensingObject):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.potential_from_grid(grid=grid), self.mass_profiles)
+                map(lambda p: p.potential_2d_from_grid(grid=grid), self.mass_profiles)
             )
         return np.zeros((grid.shape[0],))
 
     @grid_decorators.grid_2d_to_structure
-    def deflections_from_grid(self, grid):
+    def deflections_2d_from_grid(self, grid):
         """
         Returns the summed (y,x) deflection angles of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
@@ -409,7 +411,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.deflections_from_grid(grid=grid), self.mass_profiles)
+                map(lambda p: p.deflections_2d_from_grid(grid=grid), self.mass_profiles)
             )
         return np.zeros((grid.shape[0], 2))
 

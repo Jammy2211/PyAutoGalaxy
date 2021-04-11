@@ -68,7 +68,7 @@ class SimulatorInterferometer(interferometer.SimulatorInterferometer):
             A seed for random noise_maps generation
         """
 
-        image = plane.image_from_grid(grid=grid)
+        image = plane.image_2d_from_grid(grid=grid)
 
         return self.from_image(image=image.binned, name=name)
 

@@ -53,21 +53,25 @@ class LensingObject:
     angle = None
 
     def convergence_func(self, grid_radius):
-        raise NotImplementedError("convergence_func should be overridden")
+        raise NotImplementedError
 
-    def convergence_from_grid(self, grid):
-        raise NotImplementedError("convergence_from_grid should be overridden")
+    def convergence_1d_from_grid(self, grid):
+        raise NotImplementedError
+
+    def convergence_2d_from_grid(self, grid):
+        raise NotImplementedError
 
     def potential_func(self, u, y, x):
-        raise NotImplementedError("potential_func should be overridden")
+        raise NotImplementedError
 
-    def potential_from_grid(self, grid):
-        raise NotImplementedError(
-            f"{self.__class__.__name__} does not implement potential_from_grid"
-        )
+    def potential_1d_from_grid(self, grid):
+        raise NotImplementedError
 
-    def deflections_from_grid(self, grid):
-        raise NotImplementedError("deflections_from_grid should be overridden")
+    def potential_2d_from_grid(self, grid):
+        raise NotImplementedError
+
+    def deflections_2d_from_grid(self, grid):
+        raise NotImplementedError
 
     def mass_integral(self, x):
         """Routine to integrate an elliptical light profiles - set axis ratio to 1 to compute the luminosity within a \
@@ -75,12 +79,12 @@ class LensingObject:
         return 2 * np.pi * x * self.convergence_func(grid_radius=x)
 
     def deflection_magnitudes_from_grid(self, grid):
-        deflections = self.deflections_from_grid(grid=grid)
+        deflections = self.deflections_2d_from_grid(grid=grid)
         return deflections.distances_from_coordinate(coordinate=(0.0, 0.0))
 
-    def deflections_via_potential_from_grid(self, grid):
+    def deflections_2d_via_potential_2d_from_grid(self, grid):
 
-        potential = self.potential_from_grid(grid=grid)
+        potential = self.potential_2d_from_grid(grid=grid)
 
         deflections_y_2d = np.gradient(potential.native, grid.native[:, 0, 0], axis=0)
         deflections_x_2d = np.gradient(potential.native, grid.native[0, :, 1], axis=1)
@@ -91,7 +95,7 @@ class LensingObject:
 
     def jacobian_from_grid(self, grid):
 
-        deflections = self.deflections_from_grid(grid=grid)
+        deflections = self.deflections_2d_from_grid(grid=grid)
 
         a11 = array_2d.Array2D.manual_mask(
             array=1.0
@@ -158,7 +162,7 @@ class LensingObject:
 
         return array_2d.Array2D(array=1 - convergence + shear, mask=grid.mask)
 
-    def magnification_from_grid(self, grid):
+    def magnification_2d_from_grid(self, grid):
 
         jacobian = self.jacobian_from_grid(grid=grid)
 
@@ -169,7 +173,7 @@ class LensingObject:
     def hessian_from_grid(self, grid, buffer=0.01, deflections_func=None):
 
         if deflections_func is None:
-            deflections_func = self.deflections_from_grid
+            deflections_func = self.deflections_2d_from_grid
 
         grid_shift_y_up = np.zeros(grid.shape)
         grid_shift_y_up[:, 0] = grid[:, 0] + buffer
@@ -303,7 +307,7 @@ class LensingObject:
         if len(tangential_critical_curve) == 0:
             return []
 
-        deflections_critical_curve = self.deflections_from_grid(
+        deflections_critical_curve = self.deflections_2d_from_grid(
             grid=tangential_critical_curve
         )
 
@@ -319,7 +323,7 @@ class LensingObject:
         if len(radial_critical_curve) == 0:
             return []
 
-        deflections_critical_curve = self.deflections_from_grid(
+        deflections_critical_curve = self.deflections_2d_from_grid(
             grid=radial_critical_curve
         )
 

@@ -89,7 +89,9 @@ class TestSimulatorImaging:
 
         imaging = simulator.from_plane_and_grid(plane=plane, grid=grid)
 
-        imaging_via_image = simulator.from_image(image=plane.image_from_grid(grid=grid))
+        imaging_via_image = simulator.from_image(
+            image=plane.image_2d_from_grid(grid=grid)
+        )
 
         assert imaging.shape_native == (20, 20)
         assert imaging.image.native[0, 0] != imaging_via_image.image.native[0, 0]
@@ -135,7 +137,9 @@ class TestSimulatorImaging:
 
         plane = ag.Plane(redshift=0.75, galaxies=[galaxy_0, galaxy_1])
 
-        imaging_via_image = simulator.from_image(image=plane.image_from_grid(grid=grid))
+        imaging_via_image = simulator.from_image(
+            image=plane.image_2d_from_grid(grid=grid)
+        )
 
         assert imaging.shape_native == (11, 11)
         assert (imaging.image == imaging_via_image.image).all()

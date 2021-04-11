@@ -174,9 +174,9 @@ class TestCompareToManualProfilesOnly:
 
         fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
 
-        g0_image = g0.image_from_grid(grid=interferometer_7.grid)
+        g0_image = g0.image_2d_from_grid(grid=interferometer_7.grid)
 
-        g1_image = g1.image_from_grid(grid=interferometer_7.grid)
+        g1_image = g1.image_2d_from_grid(grid=interferometer_7.grid)
 
         assert fit.galaxy_model_image_dict[g0].slim == pytest.approx(g0_image, 1.0e-4)
         assert fit.galaxy_model_image_dict[g1].slim == pytest.approx(g1_image, 1.0e-4)
@@ -692,9 +692,9 @@ class TestCompareToManualProfilesAndInversion:
             regularization=reg,
         )
 
-        g0_image = g0.image_from_grid(grid=interferometer_7.grid)
+        g0_image = g0.image_2d_from_grid(grid=interferometer_7.grid)
 
-        g1_image = g1.image_from_grid(grid=interferometer_7.grid)
+        g1_image = g1.image_2d_from_grid(grid=interferometer_7.grid)
 
         assert fit.galaxy_model_image_dict[g0].slim == pytest.approx(
             g0_image.slim, 1.0e-4

@@ -1,4 +1,3 @@
-from autoarray.structures.arrays import values
 from autoarray.plot.mat_wrap import mat_plot
 from autogalaxy.plot.plotters import lensing_obj_plotter
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
@@ -19,8 +18,6 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
         include_2d: lensing_include.Include2D = lensing_include.Include2D(),
     ):
         super().__init__(
-            lensing_obj=galaxy,
-            grid=grid,
             mat_plot_2d=mat_plot_2d,
             include_2d=include_2d,
             visuals_2d=visuals_2d,
@@ -29,9 +26,12 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             visuals_1d=visuals_1d,
         )
 
+        self.galaxy = galaxy
+        self.grid = grid
+
     @property
-    def galaxy(self):
-        return self.lensing_obj
+    def lensing_obj(self):
+        return self.galaxy
 
     @property
     def visuals_with_include_2d(self) -> "vis.Visuals2D":
@@ -62,9 +62,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
         return visuals_2d + visuals_2d.__class__(
             light_profile_centres=self.extract_2d(
                 "light_profile_centres",
-                self.lensing_obj.extract_attribute(
-                    cls=lp.LightProfile, attr_name="centre"
-                ),
+                self.galaxy.extract_attribute(cls=lp.LightProfile, attr_name="centre"),
             )
         )
 
@@ -106,18 +104,18 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
     #
     #             mass_profile_plotter = self.mass_profile_plotter_from(mass_profile=mass_profile)
     #
-    #             convergence = mass_profile_plotter.mass_profile.convergence_from_grid(grid=mass_profile_plotter.grid_2d_radial_projected)
+    #             convergence = mass_profile_plotter.mass_profile.convergence_2d_from_grid(grid=mass_profile_plotter.grid_2d_radial_projected)
     #             grid_1d_radial_distances = mass_profile_plotter.grid_1d_radial_distances
     #
     #             self.mat_plot_1d.plot_yx(
-    #                 y=self.lensing_obj.convergence_from_grid(grid=self.grid_2d_radial_projected),
+    #                 y=self.galaxy.convergence_2d_from_grid(grid=self.grid_2d_radial_projected),
     #                 x=self.grid_1d_radial_distances,
     #                 visuals_1d=self.visuals_with_include_1d,
     #                 auto_labels=mat_plot.AutoLabels(
     #                     title="Convergence vs Radius",
     #                     ylabel="Convergence ",
     #                     xlabel="Radius",
-    #                     legend=self.lensing_obj.__class__.__name__,
+    #                     legend=self.galaxy.__class__.__name__,
     #                     filename="convergence_1d",
     #                 ),
     #             )
@@ -125,14 +123,14 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
     # if potential:
     #
     #     self.mat_plot_1d.plot_yx(
-    #         y=self.lensing_obj.potential_from_grid(grid=self.grid_2d_radial_projected),
+    #         y=self.galaxy.potential_2d_from_grid(grid=self.grid_2d_radial_projected),
     #         x=self.grid_1d_radial_distances,
     #         visuals_1d=self.visuals_with_include_1d,
     #         auto_labels=mat_plot.AutoLabels(
     #             title="Potential vs Radius",
     #             ylabel="Potential ",
     #             xlabel="Radius",
-    #             legend=self.lensing_obj.__class__.__name__,
+    #             legend=self.galaxy.__class__.__name__,
     #             filename="potential_1d",
     #         ),
     #     )
@@ -151,7 +149,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
         if image:
 
             self.mat_plot_2d.plot_array(
-                array=self.galaxy.image_from_grid(grid=self.grid),
+                array=self.galaxy.image_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(title="Image", filename="image"),
             )

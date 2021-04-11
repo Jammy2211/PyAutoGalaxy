@@ -18,7 +18,7 @@ class MockLightProfile(ag.lp.LightProfile):
         self.size = size
         self.value1 = value1
 
-    def image_from_grid(self, grid):
+    def image_2d_from_grid(self, grid):
         return np.array(self.size * [self.value])
 
 
@@ -31,10 +31,10 @@ class MockMassProfile(ag.mp.MassProfile):
     def surface_density_from_grid(self, grid):
         return np.array([self.value])
 
-    def potential_from_grid(self, grid):
+    def potential_2d_from_grid(self, grid):
         return np.array([self.value])
 
-    def deflections_from_grid(self, grid):
+    def deflections_2d_from_grid(self, grid):
         return np.array([self.value, self.value])
 
 
@@ -47,19 +47,19 @@ class MockGalaxy:
         self.shape = shape
 
     @grid_decorators.grid_2d_to_structure
-    def image_from_grid(self, grid):
+    def image_2d_from_grid(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 
     @grid_decorators.grid_2d_to_structure
-    def convergence_from_grid(self, grid):
+    def convergence_2d_from_grid(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 
     @grid_decorators.grid_2d_to_structure
-    def potential_from_grid(self, grid):
+    def potential_2d_from_grid(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 
     @grid_decorators.grid_2d_to_structure
-    def deflections_from_grid(self, grid):
+    def deflections_2d_from_grid(self, grid):
         return np.full(shape=(self.shape, 2), fill_value=self.value)
 
 

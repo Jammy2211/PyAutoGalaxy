@@ -39,7 +39,7 @@ class Test1DFromGrid:
         )
 
         convergence_1d = sie.convergence_1d_from_grid(grid=grid_2d)
-        convergence_2d = sie.convergence_from_grid(grid=grid_2d)
+        convergence_2d = sie.convergence_2d_from_grid(grid=grid_2d)
 
         assert convergence_1d[0] == pytest.approx(convergence_2d.native[2, 2], 1.0e-4)
         assert convergence_1d[1] == pytest.approx(convergence_2d.native[2, 3], 1.0e-4)
@@ -55,7 +55,7 @@ class Test1DFromGrid:
             centre=sie.centre, angle=sie.angle + 90.0
         )
 
-        convergence_projected = sie.convergence_from_grid(grid=grid_2d_projected)
+        convergence_projected = sie.convergence_2d_from_grid(grid=grid_2d_projected)
 
         assert convergence_1d == pytest.approx(convergence_projected, 1.0e-4)
         assert (convergence_1d.grid_radial == np.array([0.0, 1.0, 2.0])).all()
@@ -69,7 +69,7 @@ class Test1DFromGrid:
         )
 
         convergence_1d = sie.convergence_1d_from_grid(grid=grid_2d)
-        convergence_2d = sie.convergence_from_grid(grid=grid_2d)
+        convergence_2d = sie.convergence_2d_from_grid(grid=grid_2d)
 
         print(convergence_1d)
 
@@ -82,7 +82,7 @@ class Test1DFromGrid:
         )
 
         convergence_1d = sie.convergence_1d_from_grid(grid=grid_2d)
-        convergence_2d = sie.convergence_from_grid(grid=grid_2d)
+        convergence_2d = sie.convergence_2d_from_grid(grid=grid_2d)
 
         assert convergence_1d[0] == pytest.approx(convergence_2d[0], 1.0e-4)
         assert convergence_1d[1] == pytest.approx(convergence_2d[1], 1.0e-4)
@@ -99,7 +99,7 @@ class Test1DFromGrid:
         )
 
         convergence_1d = sie.convergence_1d_from_grid(grid=grid_1d)
-        convergence_2d = sie.convergence_from_grid(grid=grid_1d)
+        convergence_2d = sie.convergence_2d_from_grid(grid=grid_1d)
 
         assert convergence_1d[0] == pytest.approx(convergence_2d[0], 1.0e-4)
         assert convergence_1d[1] == pytest.approx(convergence_2d[1], 1.0e-4)
@@ -113,7 +113,7 @@ class Test1DFromGrid:
 
         grid_2d_radial = grid_1d.project_to_radial_grid_2d(angle=sie.angle + 90.0)
 
-        convergence_2d = sie.convergence_from_grid(grid=grid_2d_radial)
+        convergence_2d = sie.convergence_2d_from_grid(grid=grid_2d_radial)
 
         assert convergence_1d[0] == pytest.approx(convergence_2d[0], 1.0e-4)
         assert convergence_1d[1] == pytest.approx(convergence_2d[1], 1.0e-4)
@@ -130,7 +130,7 @@ class Test1DFromGrid:
         )
 
         potential_1d = sie.potential_1d_from_grid(grid=grid_2d)
-        potential_2d = sie.potential_from_grid(grid=grid_2d)
+        potential_2d = sie.potential_2d_from_grid(grid=grid_2d)
 
         assert potential_1d[0] == pytest.approx(potential_2d.native[2, 2], 1.0e-4)
         assert potential_1d[1] == pytest.approx(potential_2d.native[2, 3], 1.0e-4)
@@ -146,7 +146,7 @@ class Test1DFromGrid:
             centre=sie.centre, angle=sie.angle + 90.0
         )
 
-        potential_projected = sie.potential_from_grid(grid=grid_2d_projected)
+        potential_projected = sie.potential_2d_from_grid(grid=grid_2d_projected)
 
         assert potential_1d == pytest.approx(potential_projected, 1.0e-4)
         assert (potential_1d.grid_radial == np.array([0.0, 1.0, 2.0])).all()
@@ -485,39 +485,39 @@ class TestRegression:
         grid = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
 
         mass_profile = ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
-        convergence = mass_profile.convergence_from_grid(grid=grid)
+        convergence = mass_profile.convergence_2d_from_grid(grid=grid)
         max_indexes = np.unravel_index(
             convergence.native.argmax(), convergence.shape_native
         )
         assert max_indexes == (1, 4)
 
-        potential = mass_profile.potential_from_grid(grid=grid)
+        potential = mass_profile.potential_2d_from_grid(grid=grid)
         max_indexes = np.unravel_index(
             potential.native.argmin(), potential.shape_native
         )
         assert max_indexes == (1, 4)
 
-        deflections = mass_profile.deflections_from_grid(grid=grid)
+        deflections = mass_profile.deflections_2d_from_grid(grid=grid)
         assert deflections.native[1, 4, 0] > 0
         assert deflections.native[2, 4, 0] < 0
         assert deflections.native[1, 4, 1] > 0
         assert deflections.native[1, 3, 1] < 0
 
         mass_profile = ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
-        convergence = mass_profile.convergence_from_grid(grid=grid)
+        convergence = mass_profile.convergence_2d_from_grid(grid=grid)
         max_indexes = np.unravel_index(
             convergence.native.argmax(), convergence.shape_native
         )
         assert max_indexes == (1, 4)
 
         mass_profile = ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
-        potential = mass_profile.potential_from_grid(grid=grid)
+        potential = mass_profile.potential_2d_from_grid(grid=grid)
         max_indexes = np.unravel_index(
             potential.native.argmin(), potential.shape_native
         )
         assert max_indexes == (1, 4)
 
-        deflections = mass_profile.deflections_from_grid(grid=grid)
+        deflections = mass_profile.deflections_2d_from_grid(grid=grid)
         assert deflections.native[1, 4, 0] > 0
         assert deflections.native[2, 4, 0] < 0
         assert deflections.native[1, 4, 1] > 0
@@ -531,19 +531,19 @@ class TestRegression:
         )
 
         mass_profile = ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
-        convergence = mass_profile.convergence_from_grid(grid=grid)
+        convergence = mass_profile.convergence_2d_from_grid(grid=grid)
         max_indexes = np.unravel_index(
             convergence.native.argmax(), convergence.shape_native
         )
         assert max_indexes == (1, 4)
 
-        potential = mass_profile.potential_from_grid(grid=grid)
+        potential = mass_profile.potential_2d_from_grid(grid=grid)
         max_indexes = np.unravel_index(
             potential.native.argmin(), potential.shape_native
         )
         assert max_indexes == (1, 4)
 
-        deflections = mass_profile.deflections_from_grid(grid=grid)
+        deflections = mass_profile.deflections_2d_from_grid(grid=grid)
         assert deflections.native[1, 4, 0] >= 0
         assert deflections.native[2, 4, 0] <= 0
         assert deflections.native[1, 4, 1] >= 0
@@ -551,19 +551,19 @@ class TestRegression:
 
         mass_profile = ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
 
-        convergence = mass_profile.convergence_from_grid(grid=grid)
+        convergence = mass_profile.convergence_2d_from_grid(grid=grid)
         max_indexes = np.unravel_index(
             convergence.native.argmax(), convergence.shape_native
         )
         assert max_indexes == (1, 4)
 
-        potential = mass_profile.potential_from_grid(grid=grid)
+        potential = mass_profile.potential_2d_from_grid(grid=grid)
         max_indexes = np.unravel_index(
             potential.native.argmin(), potential.shape_native
         )
         assert max_indexes == (1, 4)
 
-        deflections = mass_profile.deflections_from_grid(grid=grid)
+        deflections = mass_profile.deflections_2d_from_grid(grid=grid)
         assert deflections.native[1, 4, 0] >= 0
         assert deflections.native[2, 4, 0] <= 0
         assert deflections.native[1, 4, 1] >= 0
@@ -590,11 +590,13 @@ class TestDecorators:
 
         mass_profile = ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0)
 
-        deflections = mass_profile.deflections_from_grid(grid=grid)
+        deflections = mass_profile.deflections_2d_from_grid(grid=grid)
 
         mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
-        deflections_sub_2 = mass_profile.deflections_from_grid(grid=grid_sub_2).binned
+        deflections_sub_2 = mass_profile.deflections_2d_from_grid(
+            grid=grid_sub_2
+        ).binned
 
         assert deflections == pytest.approx(deflections_sub_2, 1.0e-6)
 
@@ -604,17 +606,21 @@ class TestDecorators:
 
         mass_profile = ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0)
 
-        deflections = mass_profile.deflections_from_grid(grid=grid)
+        deflections = mass_profile.deflections_2d_from_grid(grid=grid)
 
         mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
-        deflections_sub_4 = mass_profile.deflections_from_grid(grid=grid_sub_4).binned
+        deflections_sub_4 = mass_profile.deflections_2d_from_grid(
+            grid=grid_sub_4
+        ).binned
 
         assert deflections[0, 0] == deflections_sub_4[0, 0]
 
         mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
-        deflections_sub_8 = mass_profile.deflections_from_grid(grid=grid_sub_8).binned
+        deflections_sub_8 = mass_profile.deflections_2d_from_grid(
+            grid=grid_sub_8
+        ).binned
 
         assert deflections[4, 0] == deflections_sub_8[4, 0]
 
@@ -643,8 +649,8 @@ class TestDecorators:
 
         mass_profile = ag.mp.EllIsothermal(einstein_radius=1.0)
 
-        convergence = mass_profile.convergence_from_grid(grid=grid)
-        convergence_no_interpolate = mass_profile.convergence_from_grid(
+        convergence = mass_profile.convergence_2d_from_grid(grid=grid)
+        convergence_no_interpolate = mass_profile.convergence_2d_from_grid(
             grid=grid_interpolate
         )
 
@@ -654,13 +660,13 @@ class TestDecorators:
 
         mass_profile = ag.mp.SphIsothermal(einstein_radius=1.0)
 
-        convergence = mass_profile.convergence_from_grid(grid=grid)
-        convergence_interpolate = mass_profile.convergence_from_grid(
+        convergence = mass_profile.convergence_2d_from_grid(grid=grid)
+        convergence_interpolate = mass_profile.convergence_2d_from_grid(
             grid=grid_interpolate
         )
         assert (convergence != convergence_interpolate).all()
 
-        array_interp = mass_profile.convergence_from_grid(
+        array_interp = mass_profile.convergence_2d_from_grid(
             grid=grid_interpolate.grid_interp
         )
         interpolated_array = grid_interpolate.interpolated_array_from_array_interp(
@@ -693,8 +699,8 @@ class TestDecorators:
 
         mass_profile = ag.mp.EllIsothermal(einstein_radius=1.0)
 
-        potential = mass_profile.potential_from_grid(grid=grid)
-        potential_no_interpolate = mass_profile.potential_from_grid(
+        potential = mass_profile.potential_2d_from_grid(grid=grid)
+        potential_no_interpolate = mass_profile.potential_2d_from_grid(
             grid=grid_interpolate
         )
 
@@ -704,15 +710,17 @@ class TestDecorators:
 
         mass_profile = ag.mp.SphIsothermal(einstein_radius=1.0)
 
-        potential = mass_profile.potential_from_grid(grid=grid)
-        potential_interpolate = mass_profile.potential_from_grid(grid=grid_interpolate)
+        potential = mass_profile.potential_2d_from_grid(grid=grid)
+        potential_interpolate = mass_profile.potential_2d_from_grid(
+            grid=grid_interpolate
+        )
 
         print(potential)
         print(potential_interpolate)
 
         assert (potential != potential_interpolate).all()
 
-        array_interp = mass_profile.potential_from_grid(
+        array_interp = mass_profile.potential_2d_from_grid(
             grid=grid_interpolate.grid_interp
         )
         interpolated_array = grid_interpolate.interpolated_array_from_array_interp(
@@ -745,8 +753,8 @@ class TestDecorators:
 
         mass_profile = ag.mp.EllIsothermal(einstein_radius=1.0)
 
-        deflections = mass_profile.deflections_from_grid(grid=grid)
-        deflections_no_interpolate = mass_profile.deflections_from_grid(
+        deflections = mass_profile.deflections_2d_from_grid(grid=grid)
+        deflections_no_interpolate = mass_profile.deflections_2d_from_grid(
             grid=grid_interpolate
         )
 
@@ -756,11 +764,11 @@ class TestDecorators:
 
         mass_profile = ag.mp.SphIsothermal(einstein_radius=1.0)
 
-        deflections_interpolate = mass_profile.deflections_from_grid(
+        deflections_interpolate = mass_profile.deflections_2d_from_grid(
             grid=grid_interpolate
         )
 
-        grid_interp = mass_profile.deflections_from_grid(
+        grid_interp = mass_profile.deflections_2d_from_grid(
             grid=grid_interpolate.grid_interp
         )
         interpolated_grid = grid_interpolate.interpolated_grid_from_grid_interp(

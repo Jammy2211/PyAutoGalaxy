@@ -19,8 +19,6 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
         include_2d: lensing_include.Include2D = lensing_include.Include2D(),
     ):
         super().__init__(
-            lensing_obj=plane,
-            grid=grid,
             mat_plot_2d=mat_plot_2d,
             include_2d=include_2d,
             visuals_2d=visuals_2d,
@@ -28,6 +26,13 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
             include_1d=include_1d,
             visuals_1d=visuals_1d,
         )
+
+        self.plane = plane
+        self.grid = grid
+
+    @property
+    def lensing_obj(self):
+        return self.plane
 
     @property
     def visuals_with_include_2d(self) -> "vis.Visuals2D":
@@ -61,15 +66,11 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
             grid=self.extract_2d("grid", self.grid),
             light_profile_centres=self.extract_2d(
                 "light_profile_centres",
-                self.lensing_obj.extract_attribute(
+                self.plane.extract_attribute(
                     cls=light_profiles.LightProfile, attr_name="centre"
                 ),
             ),
         )
-
-    @property
-    def plane(self):
-        return self.lensing_obj
 
     def figures_2d(
         self,
@@ -89,7 +90,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
         if image:
 
             self.mat_plot_2d.plot_array(
-                array=self.plane.image_from_grid(grid=self.grid),
+                array=self.plane.image_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(
                     title=f"Image{title_suffix}", filename=f"image{filename_suffix}"
@@ -99,7 +100,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
         if plane_image:
 
             self.mat_plot_2d.plot_array(
-                array=self.plane.plane_image_from_grid(grid=self.grid).array,
+                array=self.plane.plane_image_2d_from_grid(grid=self.grid).array,
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(
                     title=f"Plane Image{title_suffix}",

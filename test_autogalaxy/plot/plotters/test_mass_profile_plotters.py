@@ -13,6 +13,47 @@ def make_mp_plotter_setup():
     )
 
 
+def test__visuals_with_include_2d(mp_0, grid_7x7):
+
+    visuals_2d = aplt.Visuals2D(vector_field=2)
+
+    include = aplt.Include2D(
+        origin=True,
+        mask=True,
+        border=True,
+        mass_profile_centres=True,
+        critical_curves=True,
+        caustics=True,
+    )
+
+    mass_profile_plotter = aplt.MassProfilePlotter(
+        mass_profile=mp_0, grid=grid_7x7, visuals_2d=visuals_2d, include_2d=include
+    )
+
+    assert mass_profile_plotter.visuals_with_include_2d.origin.in_list == [(0.0, 0.0)]
+    assert (mass_profile_plotter.visuals_with_include_2d.mask == grid_7x7.mask).all()
+    assert (
+        mass_profile_plotter.visuals_with_include_2d.border
+        == grid_7x7.mask.border_grid_sub_1.binned
+    ).all()
+    assert (
+        mass_profile_plotter.visuals_with_include_2d.mass_profile_centres.in_list
+        == [mp_0.centre]
+    )
+    assert mass_profile_plotter.visuals_with_include_2d.vector_field == 2
+
+    include = aplt.Include2D(origin=False, mask=False, border=False)
+
+    mass_profile_plotter = aplt.MassProfilePlotter(
+        mass_profile=mp_0, grid=grid_7x7, visuals_2d=visuals_2d, include_2d=include
+    )
+
+    assert mass_profile_plotter.visuals_with_include_2d.origin == None
+    assert mass_profile_plotter.visuals_with_include_2d.mask == None
+    assert mass_profile_plotter.visuals_with_include_2d.border == None
+    assert mass_profile_plotter.visuals_with_include_2d.vector_field == 2
+
+
 def test__figures_1d__all_quantities_are_output(
     mp_0, sub_grid_7x7, grid_irregular_7x7_list, include_1d_all, plot_path, plot_patch
 ):

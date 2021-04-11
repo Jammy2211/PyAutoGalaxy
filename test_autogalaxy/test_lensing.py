@@ -47,7 +47,7 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
     @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
-    def convergence_from_grid(self, grid):
+    def convergence_2d_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See \
@@ -82,7 +82,7 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
     @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
-    def potential_from_grid(self, grid):
+    def potential_2d_from_grid(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -102,7 +102,7 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
     @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
-    def deflections_from_grid(self, grid):
+    def deflections_2d_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -176,7 +176,7 @@ class MockSphIsothermal(MockEllIsothermal):
     @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
-    def potential_from_grid(self, grid):
+    def potential_2d_from_grid(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -192,7 +192,7 @@ class MockSphIsothermal(MockEllIsothermal):
     @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
-    def deflections_from_grid(self, grid):
+    def deflections_2d_from_grid(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -241,7 +241,7 @@ class TestDeflectionsMagnitudes:
 
         grid = ag.Grid2D.uniform(shape_native=(5, 5), pixel_scales=0.1, sub_size=1)
 
-        deflections = sis.deflections_from_grid(grid=grid)
+        deflections = sis.deflections_2d_from_grid(grid=grid)
         magitudes_manual = np.sqrt(
             np.square(deflections[:, 0]) + np.square(deflections[:, 1])
         )
@@ -257,9 +257,11 @@ class TestDeflectionsViaPotential:
 
         grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
 
-        deflections_via_calculation = sis.deflections_from_grid(grid=grid)
+        deflections_via_calculation = sis.deflections_2d_from_grid(grid=grid)
 
-        deflections_via_potential = sis.deflections_via_potential_from_grid(grid=grid)
+        deflections_via_potential = sis.deflections_2d_via_potential_2d_from_grid(
+            grid=grid
+        )
 
         mean_error = np.mean(
             deflections_via_potential.slim - deflections_via_calculation.slim
@@ -274,9 +276,11 @@ class TestDeflectionsViaPotential:
 
         grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
 
-        deflections_via_calculation = sie.deflections_from_grid(grid=grid)
+        deflections_via_calculation = sie.deflections_2d_from_grid(grid=grid)
 
-        deflections_via_potential = sie.deflections_via_potential_from_grid(grid=grid)
+        deflections_via_potential = sie.deflections_2d_via_potential_2d_from_grid(
+            grid=grid
+        )
 
         mean_error = np.mean(
             deflections_via_potential.slim - deflections_via_calculation.slim
@@ -291,9 +295,11 @@ class TestDeflectionsViaPotential:
 
         grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
 
-        deflections_via_calculation = sie.deflections_from_grid(grid=grid)
+        deflections_via_calculation = sie.deflections_2d_from_grid(grid=grid)
 
-        deflections_via_potential = sie.deflections_via_potential_from_grid(grid=grid)
+        deflections_via_potential = sie.deflections_2d_via_potential_2d_from_grid(
+            grid=grid
+        )
 
         mean_error = np.mean(
             deflections_via_potential.slim - deflections_via_calculation.slim
@@ -417,7 +423,7 @@ class TestShear:
             centre=(0.2, 0.1), elliptical_comps=(0.3, 0.4), einstein_radius=1.5
         )
 
-        shear = sis.shear_from_grid(grid=grid)
+        shear = sis.shear_2d_from_grid(grid=grid)
         print((shear[:, 0] ** 2 + shear[:, 1] ** 2) ** 0.5)
 
         shear = sis.shear_via_hessian_from_grid(grid=grid, buffer=buffer)
@@ -436,7 +442,7 @@ class TestMagnification:
 
         grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
 
-        magnification_via_determinant = sie.magnification_from_grid(grid=grid)
+        magnification_via_determinant = sie.magnification_2d_from_grid(grid=grid)
 
         tangential_eigen_value = sie.tangential_eigen_value_from_grid(grid=grid)
 
@@ -458,7 +464,7 @@ class TestMagnification:
 
         grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
 
-        magnification_via_determinant = sie.magnification_from_grid(grid=grid)
+        magnification_via_determinant = sie.magnification_2d_from_grid(grid=grid)
 
         tangential_eigen_value = sie.tangential_eigen_value_from_grid(grid=grid)
 
@@ -483,7 +489,7 @@ class TestMagnification:
 
         grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
 
-        magnification_via_determinant = sie.magnification_from_grid(grid=grid)
+        magnification_via_determinant = sie.magnification_2d_from_grid(grid=grid)
 
         convergence = sie.convergence_via_jacobian_from_grid(grid=grid)
 
@@ -502,7 +508,7 @@ class TestMagnification:
 
         grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
 
-        magnification_via_determinant = sie.magnification_from_grid(grid=grid)
+        magnification_via_determinant = sie.magnification_2d_from_grid(grid=grid)
 
         convergence = sie.convergence_via_jacobian_from_grid(grid=grid)
 
@@ -534,7 +540,7 @@ class TestMagnification:
 
 
 def critical_curve_via_magnification_from(mass_profile, grid):
-    magnification = mass_profile.magnification_from_grid(grid=grid)
+    magnification = mass_profile.magnification_2d_from_grid(grid=grid)
 
     inverse_magnification = 1 / magnification
 
@@ -568,7 +574,7 @@ def caustics_via_magnification_from(mass_profile, grid):
     for i in range(len(critical_curves)):
         critical_curve = critical_curves[i]
 
-        deflections_1d = mass_profile.deflections_from_grid(grid=critical_curve)
+        deflections_1d = mass_profile.deflections_2d_from_grid(grid=critical_curve)
 
         caustic = critical_curve - deflections_1d
 
@@ -583,7 +589,7 @@ class TestConvergenceViajacobian:
 
         grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 
-        convergence_via_calculation = sis.convergence_from_grid(grid=grid)
+        convergence_via_calculation = sis.convergence_2d_from_grid(grid=grid)
 
         convergence_via_jacobian = sis.convergence_via_jacobian_from_grid(grid=grid)
 
@@ -607,7 +613,7 @@ class TestConvergenceViajacobian:
 
         grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 
-        convergence_via_calculation = sie.convergence_from_grid(grid=grid)
+        convergence_via_calculation = sie.convergence_2d_from_grid(grid=grid)
 
         convergence_via_jacobian = sie.convergence_via_jacobian_from_grid(grid=grid)
 
@@ -685,7 +691,7 @@ class TestCriticalCurvesAndCaustics:
 
         grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
 
-        magnification_via_determinant = sie.magnification_from_grid(grid=grid)
+        magnification_via_determinant = sie.magnification_2d_from_grid(grid=grid)
 
         convergence = sie.convergence_via_jacobian_from_grid(grid=grid)
 
@@ -996,7 +1002,7 @@ class TestGridBinning:
 
         grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=2)
 
-        deflections = sie.deflections_via_potential_from_grid(grid=grid)
+        deflections = sie.deflections_2d_via_potential_2d_from_grid(grid=grid)
 
         deflections_first_binned_pixel = (
             deflections[0] + deflections[1] + deflections[2] + deflections[3]

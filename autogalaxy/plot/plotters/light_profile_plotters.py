@@ -101,7 +101,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
         if image:
 
             self.mat_plot_1d.plot_yx(
-                y=self.light_profile.image_from_grid(grid=grid_2d_radial_projected),
+                y=self.light_profile.image_2d_from_grid(grid=grid_2d_radial_projected),
                 x=grid_1d_radial_distances,
                 visuals_1d=self.visuals_with_include_1d,
                 auto_labels=mat_plot.AutoLabels(
@@ -118,7 +118,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
         if image:
 
             self.mat_plot_2d.plot_array(
-                array=self.light_profile.image_from_grid(grid=self.grid),
+                array=self.light_profile.image_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(title="Image", filename="image"),
             )

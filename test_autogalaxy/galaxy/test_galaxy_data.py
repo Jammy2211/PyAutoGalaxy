@@ -180,7 +180,7 @@ class TestGalaxyFitData:
 
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.SphSersic(intensity=1.0))
 
-        image_gal = galaxy.image_from_grid(grid=galaxy_fit_data.grid)
+        image_gal = galaxy.image_2d_from_grid(grid=galaxy_fit_data.grid)
 
         image_gd = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
 
@@ -253,7 +253,7 @@ class TestGalaxyFitData:
 
         galaxy = ag.Galaxy(redshift=0.5, mass=ag.mp.SphIsothermal(einstein_radius=1.0))
 
-        convergence_gal = galaxy.convergence_from_grid(grid=galaxy_fit_data.grid)
+        convergence_gal = galaxy.convergence_2d_from_grid(grid=galaxy_fit_data.grid)
 
         convergence_gd = galaxy_fit_data.profile_quantity_from_galaxies(
             galaxies=[galaxy]
@@ -328,7 +328,7 @@ class TestGalaxyFitData:
 
         galaxy = ag.Galaxy(redshift=0.5, mass=ag.mp.SphIsothermal(einstein_radius=1.0))
 
-        potential_gal = galaxy.potential_from_grid(grid=galaxy_fit_data.grid)
+        potential_gal = galaxy.potential_2d_from_grid(grid=galaxy_fit_data.grid)
 
         potential_gd = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
 
@@ -402,7 +402,7 @@ class TestGalaxyFitData:
 
         galaxy = ag.Galaxy(redshift=0.5, mass=ag.mp.SphIsothermal(einstein_radius=1.0))
 
-        deflections_gal = galaxy.deflections_from_grid(grid=galaxy_fit_data.grid)
+        deflections_gal = galaxy.deflections_2d_from_grid(grid=galaxy_fit_data.grid)
         deflections_gal = np.asarray(
             [
                 np.multiply(
@@ -495,7 +495,7 @@ class TestGalaxyFitData:
 
         galaxy = ag.Galaxy(redshift=0.5, mass=ag.mp.SphIsothermal(einstein_radius=1.0))
 
-        deflections_gal = galaxy.deflections_from_grid(grid=galaxy_fit_data.grid)
+        deflections_gal = galaxy.deflections_2d_from_grid(grid=galaxy_fit_data.grid)
         deflections_gal = np.asarray(
             [
                 np.multiply(

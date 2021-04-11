@@ -1,36 +1,15 @@
 from autoarray.structures.arrays.two_d import array_2d
-from autoarray.structures.grids.two_d import grid_2d
 from autoarray.structures.grids.two_d import grid_2d_irregular
 from autoarray.plot.plotters import abstract_plotters
 from autoarray.plot.mat_wrap import mat_plot
-from autogalaxy import lensing
 from autogalaxy.profiles import mass_profiles
-from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
+from autogalaxy.plot.mat_wrap import lensing_visuals
 
 
 class LensingObjPlotter(abstract_plotters.AbstractPlotter):
-    def __init__(
-        self,
-        lensing_obj: lensing.LensingObject,
-        grid: grid_2d.Grid2D,
-        mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
-        visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
-        include_1d: lensing_include.Include1D = lensing_include.Include1D(),
-        mat_plot_2d: lensing_mat_plot.MatPlot2D = lensing_mat_plot.MatPlot2D(),
-        visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
-        include_2d: lensing_include.Include2D = lensing_include.Include2D(),
-    ):
-        super().__init__(
-            mat_plot_2d=mat_plot_2d,
-            include_2d=include_2d,
-            visuals_2d=visuals_2d,
-            mat_plot_1d=mat_plot_1d,
-            include_1d=include_1d,
-            visuals_1d=visuals_1d,
-        )
 
-        self.lensing_obj = lensing_obj
-        self.grid = grid
+    lensing_obj = None
+    grid = None
 
     @property
     def visuals_with_include_1d(self) -> lensing_visuals.Visuals1D:
@@ -110,7 +89,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         if convergence:
 
             self.mat_plot_2d.plot_array(
-                array=self.lensing_obj.convergence_from_grid(grid=self.grid),
+                array=self.lensing_obj.convergence_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(
                     title="Convergence", filename="convergence"
@@ -120,7 +99,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         if potential:
 
             self.mat_plot_2d.plot_array(
-                array=self.lensing_obj.potential_from_grid(grid=self.grid),
+                array=self.lensing_obj.potential_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(
                     title="Potential", filename="potential"
@@ -129,7 +108,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
 
         if deflections_y:
 
-            deflections = self.lensing_obj.deflections_from_grid(grid=self.grid)
+            deflections = self.lensing_obj.deflections_2d_from_grid(grid=self.grid)
             deflections_y = array_2d.Array2D.manual_mask(
                 array=deflections.slim[:, 0], mask=self.grid.mask
             )
@@ -144,7 +123,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
 
         if deflections_x:
 
-            deflections = self.lensing_obj.deflections_from_grid(grid=self.grid)
+            deflections = self.lensing_obj.deflections_2d_from_grid(grid=self.grid)
             deflections_x = array_2d.Array2D.manual_mask(
                 array=deflections.slim[:, 1], mask=self.grid.mask
             )
@@ -160,7 +139,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         if magnification:
 
             self.mat_plot_2d.plot_array(
-                array=self.lensing_obj.magnification_from_grid(grid=self.grid),
+                array=self.lensing_obj.magnification_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(
                     title="Magnification", filename="magnification"

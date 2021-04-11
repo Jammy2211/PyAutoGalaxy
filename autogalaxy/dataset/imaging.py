@@ -64,7 +64,7 @@ class SimulatorImaging(imaging.SimulatorImaging):
         ----------
         """
 
-        image = plane.padded_image_from_grid_and_psf_shape(
+        image = plane.padded_image_2d_from_grid_and_psf_shape(
             grid=grid, psf_shape_2d=self.psf.shape_native
         )
 

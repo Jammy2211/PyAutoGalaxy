@@ -47,11 +47,11 @@ class MassProfile(geometry_profiles.EllProfile, lensing.LensingObject):
 
     @grid_decorators.grid_1d_to_structure
     def convergence_1d_from_grid(self, grid):
-        return self.convergence_from_grid(grid=grid)
+        return self.convergence_2d_from_grid(grid=grid)
 
     @grid_decorators.grid_1d_to_structure
     def potential_1d_from_grid(self, grid):
-        return self.potential_from_grid(grid=grid)
+        return self.potential_2d_from_grid(grid=grid)
 
     def mass_angular_within_circle(self, radius: float):
         """ Integrate the mass profiles's convergence profile to compute the total mass within a circle of \
@@ -410,10 +410,10 @@ class MassProfileMGE:
 
         return amps, sigmas
 
-    def convergence_from_grid_via_gaussians(self, grid_radii):
+    def convergence_2d_from_grid_via_gaussians(self, grid_radii):
         raise NotImplementedError()
 
-    def _convergence_from_grid_via_gaussians(self, grid_radii):
+    def _convergence_2d_from_grid_via_gaussians(self, grid_radii):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -447,7 +447,7 @@ class MassProfileMGE:
             intensity, np.exp(-0.5 * np.square(np.divide(grid_radii, sigma)))
         )
 
-    def _deflections_from_grid_via_gaussians(self, grid, sigmas_factor=1.0):
+    def _deflections_2d_from_grid_via_gaussians(self, grid, sigmas_factor=1.0):
 
         axis_ratio = self.axis_ratio
 
