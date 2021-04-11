@@ -11,7 +11,7 @@ import typing
 import copy
 
 
-class PointMass(geometry_profiles.SphProfile, mp.MassProfile):
+class PointMass(mp.MassProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -27,7 +27,7 @@ class PointMass(geometry_profiles.SphProfile, mp.MassProfile):
         einstein_radius : float
             The arc-second Einstein radius of the point-mass.
         """
-        super(PointMass, self).__init__(centre=centre)
+        super().__init__(centre=centre, elliptical_comps=(0.0, 0.0))
         self.einstein_radius = einstein_radius
 
     def convergence_from_grid(self, grid):
@@ -41,11 +41,11 @@ class PointMass(geometry_profiles.SphProfile, mp.MassProfile):
         #    convergence[central_pixel] = np.pi * self.einstein_radius ** 2.0
         return convergence
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -65,7 +65,7 @@ class PointMass(geometry_profiles.SphProfile, mp.MassProfile):
         return mass_profile
 
 
-class EllPowerLawBroken(mp.EllMassProfile, mp.MassProfile):
+class EllPowerLawBroken(mp.MassProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -86,9 +86,7 @@ class EllPowerLawBroken(mp.EllMassProfile, mp.MassProfile):
         coordinates respectively.~
         """
 
-        super(EllPowerLawBroken, self).__init__(
-            centre=centre, elliptical_comps=elliptical_comps
-        )
+        super().__init__(centre=centre, elliptical_comps=elliptical_comps)
 
         self.einstein_radius = np.sqrt(self.axis_ratio) * einstein_radius
         self.break_radius = break_radius
@@ -108,7 +106,7 @@ class EllPowerLawBroken(mp.EllMassProfile, mp.MassProfile):
         else:
             self.kB = (2 - self.inner_slope) / (2 * self.nu ** 2)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -129,11 +127,11 @@ class EllPowerLawBroken(mp.EllMassProfile, mp.MassProfile):
             radius > self.break_radius
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid, max_terms=20):
@@ -251,7 +249,7 @@ class SphPowerLawBroken(EllPowerLawBroken):
         )
 
 
-class EllPowerLawCored(mp.EllMassProfile, mp.MassProfile):
+class EllPowerLawCored(mp.MassProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -277,9 +275,7 @@ class EllPowerLawCored(mp.EllMassProfile, mp.MassProfile):
         core_radius : float
             The arc-second radius of the inner core.
         """
-        super(EllPowerLawCored, self).__init__(
-            centre=centre, elliptical_comps=elliptical_comps
-        )
+        super().__init__(centre=centre, elliptical_comps=elliptical_comps)
 
         self.einstein_radius = einstein_radius
         self.slope = slope
@@ -293,14 +289,14 @@ class EllPowerLawCored(mp.EllMassProfile, mp.MassProfile):
             self.slope - 1
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence on a grid of (y,x) arc-second coordinates.
 
-        The `grid_like_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See \
-        *aa.grid_like_to_structure* for a description of the output.
+        The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See \
+        *aa.grid_2d_to_structure* for a description of the output.
 
         Parameters
         ----------
@@ -318,7 +314,7 @@ class EllPowerLawCored(mp.EllMassProfile, mp.MassProfile):
 
         return covnergence_grid
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -342,7 +338,7 @@ class EllPowerLawCored(mp.EllMassProfile, mp.MassProfile):
 
         return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -450,7 +446,7 @@ class SphPowerLawCored(EllPowerLawCored):
             core_radius=core_radius,
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -512,7 +508,7 @@ class EllPowerLaw(EllPowerLawCored):
             core_radius=0.0,
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -613,7 +609,7 @@ class SphPowerLaw(EllPowerLaw):
             slope=slope,
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -723,7 +719,7 @@ class EllIsothermal(EllPowerLaw):
         if not isinstance(self, SphIsothermal) and self.axis_ratio > 0.99999:
             self.axis_ratio = 0.99999
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -758,7 +754,7 @@ class EllIsothermal(EllPowerLaw):
             grid=np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def shear_from_grid(self, grid):
@@ -812,7 +808,7 @@ class SphIsothermal(EllIsothermal):
             centre=centre, elliptical_comps=(0.0, 0.0), einstein_radius=einstein_radius
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -827,7 +823,7 @@ class SphIsothermal(EllIsothermal):
         eta = self.grid_to_elliptical_radii(grid)
         return 2.0 * self.einstein_radius_rescaled * eta
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):

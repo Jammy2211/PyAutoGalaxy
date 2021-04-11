@@ -275,7 +275,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def image_from_grid(self, grid):
         """Calculate the summed image of all of the galaxy's light profiles using a grid of Cartesian (y,x) \
         coordinates.
@@ -343,7 +343,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 )
             )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def convergence_from_grid(self, grid):
         """
         Returns the summed convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
@@ -352,8 +352,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
         
         See *profiles.mass_profiles* module for details of how this is performed.
 
-        The `grid_like_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See \
-        *aa.grid_like_to_structure* for a description of the output.
+        The `grid_2d_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        *aa.grid_2d_to_structure* for a description of the output.
 
         Parameters
         ----------
@@ -367,7 +367,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0],))
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def potential_from_grid(self, grid):
         """
         Returns the summed gravitational potential of the galaxy's mass profiles \
@@ -377,8 +377,8 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         See *profiles.mass_profiles* module for details of how this is performed.
 
-        The `grid_like_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See \
-        *aa.grid_like_to_structure* for a description of the output.
+        The `grid_2d_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See \
+        *aa.grid_2d_to_structure* for a description of the output.
 
         Parameters
         ----------
@@ -392,7 +392,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0],))
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def deflections_from_grid(self, grid):
         """
         Returns the summed (y,x) deflection angles of the galaxy's mass profiles \

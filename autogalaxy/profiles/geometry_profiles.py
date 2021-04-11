@@ -43,9 +43,9 @@ class SphProfile(GeometryProfile):
         centre: (float, float)
             The (y,x) arc-second coordinates of the profile centre.
         """
-        super(SphProfile, self).__init__(centre=centre)
+        super().__init__(centre=centre)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     def grid_to_grid_radii(self, grid):
         """Convert a grid of (y, x) coordinates to a grid of their circular radii.
@@ -69,7 +69,7 @@ class SphProfile(GeometryProfile):
         """
         return np.cos(grid_thetas), np.sin(grid_thetas)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def grid_to_grid_cartesian(self, grid, radius):
         """
         Convert a grid of (y,x) coordinates with their specified circular radii to their original (y,x) Cartesian
@@ -86,7 +86,7 @@ class SphProfile(GeometryProfile):
         cos_theta, sin_theta = self.grid_angle_to_profile(grid_thetas=grid_thetas)
         return np.multiply(radius[:, None], np.vstack((sin_theta, cos_theta)).T)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def transform_grid_to_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates to the reference frame of the profile, including a translation to \
         its centre.
@@ -99,7 +99,7 @@ class SphProfile(GeometryProfile):
         transformed = np.subtract(grid, self.centre)
         return grid_2d.Grid2DTransformedNumpy(grid=transformed)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def transform_grid_from_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
         reference frame, including a translation from the profile's centre.
@@ -190,7 +190,7 @@ class EllProfile(SphProfile):
         theta_coordinate_to_profile = np.add(grid_thetas, -self.phi_radians)
         return np.cos(theta_coordinate_to_profile), np.sin(theta_coordinate_to_profile)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def rotate_grid_from_reference_frame(self, grid):
         """
         Rotate a grid of (y,x) coordinates which have been transformed to the elliptical reference frame of a profile
@@ -211,7 +211,7 @@ class EllProfile(SphProfile):
             grid_2d=grid, centre=(0.0, 0.0), angle=self.angle
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def grid_to_elliptical_radii(self, grid):
@@ -231,7 +231,7 @@ class EllProfile(SphProfile):
             )
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def grid_to_eccentric_radii(self, grid):
@@ -250,7 +250,7 @@ class EllProfile(SphProfile):
             np.sqrt(self.axis_ratio), self.grid_to_elliptical_radii(grid)
         ).view(np.ndarray)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def transform_grid_to_reference_frame(self, grid):
         """
         Transform a grid of (y,x) coordinates to the reference frame of the profile, including a translation to \
@@ -270,7 +270,7 @@ class EllProfile(SphProfile):
         )
         return grid_2d.Grid2DTransformedNumpy(grid=transformed)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def transform_grid_from_reference_frame(self, grid):
         """Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
         reference frame, including a rotation to its original orientation and a translation from the profile's centre.

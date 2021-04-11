@@ -56,7 +56,9 @@ class MassProfilePlotter(lensing_obj_plotter.LensingObjPlotter):
         if convergence:
 
             self.mat_plot_1d.plot_yx(
-                y=self.lensing_obj.convergence_from_grid(grid=self.grid_2d_radial_projected),
+                y=self.lensing_obj.convergence_from_grid(
+                    grid=self.grid_2d_radial_projected
+                ),
                 x=self.grid_1d_radial_distances,
                 visuals_1d=self.visuals_with_include_1d,
                 auto_labels=mat_plot.AutoLabels(
@@ -71,7 +73,9 @@ class MassProfilePlotter(lensing_obj_plotter.LensingObjPlotter):
         if potential:
 
             self.mat_plot_1d.plot_yx(
-                y=self.lensing_obj.potential_from_grid(grid=self.grid_2d_radial_projected),
+                y=self.lensing_obj.potential_from_grid(
+                    grid=self.grid_2d_radial_projected
+                ),
                 x=self.grid_1d_radial_distances,
                 visuals_1d=self.visuals_with_include_1d,
                 auto_labels=mat_plot.AutoLabels(

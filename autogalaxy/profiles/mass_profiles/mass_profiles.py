@@ -5,65 +5,15 @@ from scipy.integrate import quad
 from scipy.optimize import root_scalar
 from scipy.special import wofz, comb
 from autoarray.structures.arrays import values
+from autoarray.structures.grids import grid_decorators
 from autoarray.structures.grids.two_d import grid_2d_irregular
 from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy import exc
 
 
-class MassProfile(lensing.LensingObject):
-    @property
-    def has_mass_profile(self):
-        return True
-
-    @property
-    def is_point_mass(self):
-        return False
-
-    @property
-    def ellipticity_rescale(self):
-        return NotImplementedError()
-
-    def with_new_normalization(self, normalization):
-        raise NotImplementedError()
-
-    def extract_attribute(self, cls, attr_name):
-        """
-        Returns an attribute of a class and its children profiles in the the galaxy as a `ValueIrregular`
-        or `Grid2DIrregular` object.
-
-        For example, if a galaxy has two light profiles and we want the `LightProfile` axis-ratios, the following:
-
-        `galaxy.extract_attribute(cls=LightProfile, name="axis_ratio"`
-
-        would return:
-
-        ValuesIrregular(values=[axis_ratio_0, axis_ratio_1])
-
-        If a galaxy has three mass profiles and we want the `MassProfile` centres, the following:
-
-        `galaxy.extract_attribute(cls=MassProfile, name="centres"`
-
-         would return:
-
-        GridIrregular2D(grid=[(centre_y_0, centre_x_0), (centre_y_1, centre_x_1), (centre_y_2, centre_x_2)])
-
-        This is used for visualization, for example plotting the centres of all light profiles colored by their profile.
-        """
-
-        if isinstance(self, cls):
-            if hasattr(self, attr_name):
-
-                attribute = getattr(self, attr_name)
-
-                if isinstance(attribute, float):
-                    return values.ValuesIrregular(values=[attribute])
-                if isinstance(attribute, tuple):
-                    return grid_2d_irregular.Grid2DIrregular(grid=[attribute])
-
-
 # noinspection PyAbstractClass
-class EllMassProfile(geometry_profiles.EllProfile, MassProfile):
+class MassProfile(geometry_profiles.EllProfile, lensing.LensingObject):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -80,9 +30,28 @@ class EllMassProfile(geometry_profiles.EllProfile, MassProfile):
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         """
-        super(EllMassProfile, self).__init__(
+        super(MassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
+
+    @property
+    def has_mass_profile(self):
+        return True
+
+    @property
+    def ellipticity_rescale(self):
+        return NotImplementedError()
+
+    def with_new_normalization(self, normalization):
+        raise NotImplementedError()
+
+    @grid_decorators.grid_1d_to_structure
+    def convergence_1d_from_grid(self, grid):
+        return self.convergence_from_grid(grid=grid)
+
+    @grid_decorators.grid_1d_to_structure
+    def potential_1d_from_grid(self, grid):
+        return self.potential_from_grid(grid=grid)
 
     def mass_angular_within_circle(self, radius: float):
         """ Integrate the mass profiles's convergence profile to compute the total mass within a circle of \
@@ -268,6 +237,40 @@ class EllMassProfile(geometry_profiles.EllProfile, MassProfile):
             bracket=[normalizations[0], normalizations[-1]],
             args=(einstein_radius,),
         ).root
+
+    def extract_attribute(self, cls, attr_name):
+        """
+        Returns an attribute of a class and its children profiles in the the galaxy as a `ValueIrregular`
+        or `Grid2DIrregular` object.
+
+        For example, if a galaxy has two light profiles and we want the `LightProfile` axis-ratios, the following:
+
+        `galaxy.extract_attribute(cls=LightProfile, name="axis_ratio"`
+
+        would return:
+
+        ValuesIrregular(values=[axis_ratio_0, axis_ratio_1])
+
+        If a galaxy has three mass profiles and we want the `MassProfile` centres, the following:
+
+        `galaxy.extract_attribute(cls=MassProfile, name="centres"`
+
+         would return:
+
+        GridIrregular2D(grid=[(centre_y_0, centre_x_0), (centre_y_1, centre_x_1), (centre_y_2, centre_x_2)])
+
+        This is used for visualization, for example plotting the centres of all light profiles colored by their profile.
+        """
+
+        if isinstance(self, cls):
+            if hasattr(self, attr_name):
+
+                attribute = getattr(self, attr_name)
+
+                if isinstance(attribute, float):
+                    return values.ValuesIrregular(values=[attribute])
+                if isinstance(attribute, tuple):
+                    return grid_2d_irregular.Grid2DIrregular(grid=[attribute])
 
 
 class MassProfileMGE:

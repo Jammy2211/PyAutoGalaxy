@@ -6,44 +6,7 @@ from scipy.integrate import quad
 import typing
 
 
-class LightProfile:
-
-    """Mixin class that implements functions common to all light profiles"""
-
-    def image_from_grid_radii(self, grid_radii):
-        """
-        Abstract method for obtaining intensity at on a grid of radii.
-
-        Parameters
-        ----------
-        grid_radii : float
-            The radial distance from the centre of the profile. for each coordinate on the grid.
-        """
-        raise NotImplementedError("image_from_grid_radii should be overridden")
-
-    # noinspection PyMethodMayBeStatic
-    def image_from_grid(self, grid, grid_radial_minimum=None) -> array_2d.Array2D:
-        """
-        Abstract method for obtaining intensity at a grid of Cartesian (y,x) coordinates.
-
-        Parameters
-        ----------
-        grid : grid_like
-            The (y, x) coordinates in the original reference frame of the grid.
-
-        Returns
-        -------
-        image : array_2d.Array2D
-            The image of the `LightProfile` evaluated at every (y,x) coordinate on the grid.
-        """
-        raise NotImplementedError("image_from_grid should be overridden")
-
-    def luminosity_within_circle(self, radius: float):
-        raise NotImplementedError()
-
-
-# noinspection PyAbstractClass
-class EllLightProfile(geometry_profiles.EllProfile, LightProfile):
+class LightProfile(geometry_profiles.EllProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -60,13 +23,43 @@ class EllLightProfile(geometry_profiles.EllProfile, LightProfile):
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         """
-        super(EllLightProfile, self).__init__(
-            centre=centre, elliptical_comps=elliptical_comps
-        )
+        super().__init__(centre=centre, elliptical_comps=elliptical_comps)
         self.intensity = intensity
 
+    def image_from_grid(self, grid) -> array_2d.Array2D:
+        """
+        Abstract method for obtaining intensity at a grid of Cartesian (y,x) coordinates.
+
+        Parameters
+        ----------
+        grid : grid_like
+            The (y, x) coordinates in the original reference frame of the grid.
+
+        Returns
+        -------
+        image : array_2d.Array2D
+            The image of the `LightProfile` evaluated at every (y,x) coordinate on the grid.
+        """
+        raise NotImplementedError()
+
+    def image_from_grid_radii(self, grid_radii):
+        """
+        Abstract method for obtaining intensity at on a grid of radii.
+
+        Parameters
+        ----------
+        grid_radii : float
+            The radial distance from the centre of the profile. for each coordinate on the grid.
+        """
+        raise NotImplementedError()
+
+    @grid_decorators.grid_1d_to_structure
+    def image_1d_from_grid(self, grid):
+        return self.image_from_grid(grid=grid)
+
     def blurred_image_from_grid_and_psf(self, grid, psf, blurring_grid):
-        """Evaluate the light profile image on an input `Grid2D` of coordinates and then convolve it with a PSF.
+        """
+        Evaluate the light profile image on an input `Grid2D` of coordinates and then convolve it with a PSF.
 
         The `Grid2D` may be masked, in which case values outside but near the edge of the mask will convolve light into
         the mask. A blurring grid is therefore required, which evaluates the image on pixels on the mask edge such that
@@ -94,7 +87,8 @@ class EllLightProfile(geometry_profiles.EllProfile, LightProfile):
         )
 
     def blurred_image_from_grid_and_convolver(self, grid, convolver, blurring_grid):
-        """Evaluate the light profile image on an input `Grid2D` of coordinates and then convolve it with a PSF using a
+        """
+        Evaluate the light profile image on an input `Grid2D` of coordinates and then convolve it with a PSF using a
         *Convolver* object.
 
         The `Grid2D` may be masked, in which case values outside but near the edge of the mask will convolve light into
@@ -162,7 +156,7 @@ class EllLightProfile(geometry_profiles.EllProfile, LightProfile):
             return self.effective_radius
 
 
-class EllGaussian(EllLightProfile):
+class EllGaussian(LightProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -210,7 +204,7 @@ class EllGaussian(EllLightProfile):
             ),
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def image_from_grid(self, grid, grid_radial_minimum=None):
@@ -251,7 +245,7 @@ class SphGaussian(EllGaussian):
         )
 
 
-class AbstractEllSersic(EllLightProfile):
+class AbstractEllSersic(LightProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -325,7 +319,7 @@ class AbstractEllSersic(EllLightProfile):
         )
 
 
-class EllSersic(AbstractEllSersic, EllLightProfile):
+class EllSersic(AbstractEllSersic, LightProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -385,7 +379,7 @@ class EllSersic(AbstractEllSersic, EllLightProfile):
             ),
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def image_from_grid(self, grid, grid_radial_minimum=None):
@@ -706,7 +700,7 @@ class SphSersicCore(EllSersicCore):
         self.gamma = gamma
 
 
-class EllChameleon(EllLightProfile):
+class EllChameleon(LightProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -778,7 +772,7 @@ class EllChameleon(EllLightProfile):
             ),
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def image_from_grid(self, grid, grid_radial_minimum=None):

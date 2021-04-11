@@ -233,7 +233,7 @@ class AbstractPlaneLensing(AbstractPlane):
     def __init__(self, redshift, galaxies):
         super().__init__(redshift=redshift, galaxies=galaxies)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def image_from_grid(self, grid):
         """
         Returns the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
@@ -268,7 +268,7 @@ class AbstractPlaneLensing(AbstractPlane):
 
         return self.image_from_grid(grid=padded_grid)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def convergence_from_grid(self, grid):
         """
         Returns the convergence of the list of galaxies of the plane's sub-grid, by summing the individual convergences \
@@ -292,7 +292,7 @@ class AbstractPlaneLensing(AbstractPlane):
             return sum(map(lambda g: g.convergence_from_grid(grid=grid), self.galaxies))
         return np.zeros(shape=(grid.shape[0],))
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def potential_from_grid(self, grid):
         """
         Returns the potential of the list of galaxies of the plane's sub-grid, by summing the individual potentials \
@@ -316,13 +316,13 @@ class AbstractPlaneLensing(AbstractPlane):
             return sum(map(lambda g: g.potential_from_grid(grid=grid), self.galaxies))
         return np.zeros((grid.shape[0]))
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def deflections_from_grid(self, grid):
         if self.galaxies:
             return sum(map(lambda g: g.deflections_from_grid(grid=grid), self.galaxies))
         return np.zeros(shape=(grid.shape[0], 2))
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def traced_grid_from_grid(self, grid):
         """Trace this plane's grid_stacks to the next plane, using its deflection angles."""
         return grid - self.deflections_from_grid(grid=grid)

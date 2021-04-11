@@ -27,6 +27,131 @@ def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
     return mass_total
 
 
+class Test1DFromGrid:
+    def test__convergence_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities(
+        self
+    ):
+
+        grid_2d = ag.Grid2D.uniform(shape_native=(5, 5), pixel_scales=1.0)
+
+        sie = ag.mp.EllIsothermal(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=1.0
+        )
+
+        convergence_1d = sie.convergence_1d_from_grid(grid=grid_2d)
+        convergence_2d = sie.convergence_from_grid(grid=grid_2d)
+
+        assert convergence_1d[0] == pytest.approx(convergence_2d.native[2, 2], 1.0e-4)
+        assert convergence_1d[1] == pytest.approx(convergence_2d.native[2, 3], 1.0e-4)
+        assert convergence_1d[2] == pytest.approx(convergence_2d.native[2, 4], 1.0e-4)
+
+        sie = ag.mp.EllIsothermal(
+            centre=(0.2, 0.2), elliptical_comps=(0.3, 0.3), einstein_radius=1.0
+        )
+
+        convergence_1d = sie.convergence_1d_from_grid(grid=grid_2d)
+
+        grid_2d_projected = grid_2d.grid_2d_radial_projected_from(
+            centre=sie.centre, angle=sie.angle + 90.0
+        )
+
+        convergence_projected = sie.convergence_from_grid(grid=grid_2d_projected)
+
+        assert convergence_1d == pytest.approx(convergence_projected, 1.0e-4)
+        assert (convergence_1d.grid_radial == np.array([0.0, 1.0, 2.0])).all()
+
+    def test__convergence_1d_from__grid_2d_irregular_in__returns_1d_quantities(self):
+
+        grid_2d = ag.Grid2DIrregular(grid=[[1.0, 1.0], [2.0, 2.0], [4.0, 4.0]])
+
+        sie = ag.mp.EllIsothermal(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=1.0
+        )
+
+        convergence_1d = sie.convergence_1d_from_grid(grid=grid_2d)
+        convergence_2d = sie.convergence_from_grid(grid=grid_2d)
+
+        print(convergence_1d)
+
+        assert convergence_1d[0] == pytest.approx(convergence_2d[0], 1.0e-4)
+        assert convergence_1d[1] == pytest.approx(convergence_2d[1], 1.0e-4)
+        assert convergence_1d[2] == pytest.approx(convergence_2d[2], 1.0e-4)
+
+        sie = ag.mp.EllIsothermal(
+            centre=(0.2, 0.2), elliptical_comps=(0.3, 0.3), einstein_radius=1.0
+        )
+
+        convergence_1d = sie.convergence_1d_from_grid(grid=grid_2d)
+        convergence_2d = sie.convergence_from_grid(grid=grid_2d)
+
+        assert convergence_1d[0] == pytest.approx(convergence_2d[0], 1.0e-4)
+        assert convergence_1d[1] == pytest.approx(convergence_2d[1], 1.0e-4)
+        assert convergence_1d[2] == pytest.approx(convergence_2d[2], 1.0e-4)
+
+    def test__convergence_1d_from__grid_1d_in__returns_1d_quantities_via_projection(
+        self
+    ):
+
+        grid_1d = ag.Grid1D.manual_native(grid=[1.0, 2.0, 3.0], pixel_scales=1.0)
+
+        sie = ag.mp.EllIsothermal(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=1.0
+        )
+
+        convergence_1d = sie.convergence_1d_from_grid(grid=grid_1d)
+        convergence_2d = sie.convergence_from_grid(grid=grid_1d)
+
+        assert convergence_1d[0] == pytest.approx(convergence_2d[0], 1.0e-4)
+        assert convergence_1d[1] == pytest.approx(convergence_2d[1], 1.0e-4)
+        assert convergence_1d[2] == pytest.approx(convergence_2d[2], 1.0e-4)
+
+        sie = ag.mp.EllIsothermal(
+            centre=(0.5, 0.5), elliptical_comps=(0.2, 0.2), einstein_radius=1.0
+        )
+
+        convergence_1d = sie.convergence_1d_from_grid(grid=grid_1d)
+
+        grid_2d_radial = grid_1d.project_to_radial_grid_2d(angle=sie.angle + 90.0)
+
+        convergence_2d = sie.convergence_from_grid(grid=grid_2d_radial)
+
+        assert convergence_1d[0] == pytest.approx(convergence_2d[0], 1.0e-4)
+        assert convergence_1d[1] == pytest.approx(convergence_2d[1], 1.0e-4)
+        assert convergence_1d[2] == pytest.approx(convergence_2d[2], 1.0e-4)
+
+    def test__potential_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities(
+        self
+    ):
+
+        grid_2d = ag.Grid2D.uniform(shape_native=(5, 5), pixel_scales=1.0)
+
+        sie = ag.mp.EllIsothermal(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=1.0
+        )
+
+        potential_1d = sie.potential_1d_from_grid(grid=grid_2d)
+        potential_2d = sie.potential_from_grid(grid=grid_2d)
+
+        assert potential_1d[0] == pytest.approx(potential_2d.native[2, 2], 1.0e-4)
+        assert potential_1d[1] == pytest.approx(potential_2d.native[2, 3], 1.0e-4)
+        assert potential_1d[2] == pytest.approx(potential_2d.native[2, 4], 1.0e-4)
+
+        sie = ag.mp.EllIsothermal(
+            centre=(0.2, 0.2), elliptical_comps=(0.3, 0.3), einstein_radius=1.0
+        )
+
+        potential_1d = sie.potential_1d_from_grid(grid=grid_2d)
+
+        grid_2d_projected = grid_2d.grid_2d_radial_projected_from(
+            centre=sie.centre, angle=sie.angle + 90.0
+        )
+
+        potential_projected = sie.potential_from_grid(grid=grid_2d_projected)
+
+        assert potential_1d == pytest.approx(potential_projected, 1.0e-4)
+        assert (potential_1d.grid_radial == np.array([0.0, 1.0, 2.0])).all()
+
+
 class TestMassWithin:
     def test__compare_to_analytic_and_grid_calculations(self):
 

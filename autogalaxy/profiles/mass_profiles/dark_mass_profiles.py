@@ -101,9 +101,7 @@ class DarkProfile:
 
 
 # noinspection PyAbstractClass
-class AbstractEllNFWGeneralized(
-    mp.EllMassProfile, mp.MassProfile, DarkProfile, MassProfileMGE
-):
+class AbstractEllNFWGeneralized(mp.MassProfile, DarkProfile, MassProfileMGE):
     epsrel = 1.49e-5
 
     def __init__(
@@ -134,10 +132,7 @@ class AbstractEllNFWGeneralized(
             the Universe..
         """
 
-        super(AbstractEllNFWGeneralized, self).__init__(
-            centre=centre, elliptical_comps=elliptical_comps
-        )
-        super(mp.MassProfile, self).__init__()
+        super().__init__(centre=centre, elliptical_comps=elliptical_comps)
         super(MassProfileMGE, self).__init__()
 
         self.kappa_s = kappa_s
@@ -164,7 +159,7 @@ class AbstractEllNFWGeneralized(
 
         return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -181,7 +176,7 @@ class AbstractEllNFWGeneralized(
 
         return self.convergence_func(grid_radius=grid_eta)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid_via_gaussians(self, grid):
@@ -455,7 +450,7 @@ class AbstractEllNFWGeneralized(
 
 
 class EllNFWGeneralized(AbstractEllNFWGeneralized):
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def potential_from_grid(self, grid, tabulate_bins=1000):
@@ -533,7 +528,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
 
         return potential_grid
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -542,7 +537,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
             grid=grid, sigmas_factor=self.axis_ratio
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid_via_integrator(self, grid, tabulate_bins=1000):
@@ -735,7 +730,7 @@ class SphNFWGeneralized(EllNFWGeneralized):
             scale_radius=scale_radius,
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid_via_integrator(self, grid, **kwargs):
@@ -848,11 +843,11 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
         grid_radius = grid_radius + 0j
         return np.real(self.coord_func_m(grid_radius=grid_radius))
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid, **kwargs):
@@ -1009,7 +1004,7 @@ class EllNFW(EllNFWGeneralized):
         elif r == 1:
             return 1
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -1033,7 +1028,7 @@ class EllNFW(EllNFWGeneralized):
 
         return potential_grid
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid_via_integrator(self, grid):
@@ -1154,7 +1149,7 @@ class SphNFW(EllNFW):
             scale_radius=scale_radius,
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -1180,7 +1175,7 @@ class SphNFW(EllNFW):
     def potential_func_sph(eta):
         return ((np.log(eta / 2.0)) ** 2) - (np.arctanh(np.sqrt(1 - eta ** 2))) ** 2
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid, **kwargs):

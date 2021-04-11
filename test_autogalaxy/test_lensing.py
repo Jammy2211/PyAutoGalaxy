@@ -44,14 +44,14 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
     def convergence_func(self, grid_radius):
         return self.einstein_radius_rescaled * (grid_radius ** 2) ** (-0.5)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
-        The `grid_like_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See \
-        *ag.grid_like_to_structure* for a description of the output.
+        The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See \
+        *ag.grid_2d_to_structure* for a description of the output.
 
         Parameters
         ----------
@@ -79,7 +79,7 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
             / ((1 - (1 - axis_ratio ** 2) * u) ** 0.5)
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -99,7 +99,7 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
 
         return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -173,7 +173,7 @@ class MockSphIsothermal(MockEllIsothermal):
             centre=centre, elliptical_comps=(0.0, 0.0), einstein_radius=einstein_radius
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def potential_from_grid(self, grid):
@@ -189,7 +189,7 @@ class MockSphIsothermal(MockEllIsothermal):
         eta = self.grid_to_elliptical_radii(grid)
         return 2.0 * self.einstein_radius_rescaled * eta
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):

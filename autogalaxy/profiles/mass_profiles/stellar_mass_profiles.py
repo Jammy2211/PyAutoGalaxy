@@ -16,7 +16,7 @@ class StellarProfile:
     pass
 
 
-class EllGaussian(mp.EllMassProfile, StellarProfile):
+class EllGaussian(mp.MassProfile, StellarProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -43,7 +43,7 @@ class EllGaussian(mp.EllMassProfile, StellarProfile):
         super(EllGaussian, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
-        super(mp.EllMassProfile, self).__init__(
+        super(mp.MassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         self.mass_to_light_ratio = mass_to_light_ratio
@@ -82,7 +82,7 @@ class EllGaussian(mp.EllMassProfile, StellarProfile):
 
         return output_grid
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -110,7 +110,7 @@ class EllGaussian(mp.EllMassProfile, StellarProfile):
             )
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid_via_integrator(self, grid):
@@ -159,7 +159,7 @@ class EllGaussian(mp.EllMassProfile, StellarProfile):
             (1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5)
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -204,7 +204,7 @@ class EllGaussian(mp.EllMassProfile, StellarProfile):
 
 
 # noinspection PyAbstractClass
-class AbstractEllSersic(mp.EllMassProfile, MassProfileMGE, StellarProfile):
+class AbstractEllSersic(mp.MassProfile, MassProfileMGE, StellarProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -238,7 +238,7 @@ class AbstractEllSersic(mp.EllMassProfile, MassProfileMGE, StellarProfile):
         super(AbstractEllSersic, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
-        super(mp.EllMassProfile, self).__init__(
+        super(mp.MassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         super(MassProfileMGE, self).__init__()
@@ -247,7 +247,7 @@ class AbstractEllSersic(mp.EllMassProfile, MassProfileMGE, StellarProfile):
         self.effective_radius = effective_radius
         self.sersic_index = sersic_index
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -264,7 +264,7 @@ class AbstractEllSersic(mp.EllMassProfile, MassProfileMGE, StellarProfile):
     def convergence_func(self, grid_radius):
         return self.mass_to_light_ratio * self.image_from_grid_radii(grid_radius)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid_via_gaussians(self, grid):
@@ -281,11 +281,11 @@ class AbstractEllSersic(mp.EllMassProfile, MassProfileMGE, StellarProfile):
 
         return self._convergence_from_grid_via_gaussians(grid_radii=eccentric_radii)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -361,7 +361,7 @@ class AbstractEllSersic(mp.EllMassProfile, MassProfileMGE, StellarProfile):
 
 
 class EllSersic(AbstractEllSersic, MassProfileMGE):
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid_via_integrator(self, grid):
@@ -638,7 +638,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
         )
         self.mass_to_light_gradient = mass_to_light_gradient
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -652,7 +652,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
         """
         return self.convergence_func(self.grid_to_eccentric_radii(grid))
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_via_integrator_from_grid(self, grid):
@@ -978,7 +978,7 @@ class SphSersicCore(EllSersicCore):
         self.gamma = gamma
 
 
-class EllChameleon(mp.EllMassProfile, StellarProfile):
+class EllChameleon(mp.MassProfile, StellarProfile):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -1011,7 +1011,7 @@ class EllChameleon(mp.EllMassProfile, StellarProfile):
         super(EllChameleon, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
-        super(mp.EllMassProfile, self).__init__(
+        super(mp.MassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         self.mass_to_light_ratio = mass_to_light_ratio
@@ -1021,7 +1021,7 @@ class EllChameleon(mp.EllMassProfile, StellarProfile):
         if self.axis_ratio > 0.99999:
             self.axis_ratio = 0.99999
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -1094,7 +1094,7 @@ class EllChameleon(mp.EllMassProfile, StellarProfile):
             np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
         )
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def convergence_from_grid(self, grid):
@@ -1109,7 +1109,7 @@ class EllChameleon(mp.EllMassProfile, StellarProfile):
     def convergence_func(self, grid_radius):
         return self.mass_to_light_ratio * self.image_from_grid_radii(grid_radius)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 

@@ -1,4 +1,4 @@
-from .mass_profiles import MassProfile, EllMassProfile
+from .mass_profiles import MassProfile, MassProfile
 from .total_mass_profiles import (
     PointMass,
     EllPowerLawCored,

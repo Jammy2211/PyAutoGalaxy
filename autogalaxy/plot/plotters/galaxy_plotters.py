@@ -68,7 +68,9 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             )
         )
 
-    def light_profile_plotter_from(self, light_profile : lp.EllLightProfile) -> light_profile_plotters.LightProfilePlotter:
+    def light_profile_plotter_from(
+        self, light_profile: lp.LightProfile
+    ) -> light_profile_plotters.LightProfilePlotter:
         return light_profile_plotters.LightProfilePlotter(
             light_profile=light_profile,
             grid=self.grid,
@@ -80,7 +82,9 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             include_1d=self.include_1d,
         )
 
-    def mass_profile_plotter_from(self, mass_profile : mp.EllMassProfile) -> mass_profile_plotters.MassProfilePlotter:
+    def mass_profile_plotter_from(
+        self, mass_profile: mp.MassProfile
+    ) -> mass_profile_plotters.MassProfilePlotter:
         return mass_profile_plotters.MassProfilePlotter(
             mass_profile=mass_profile,
             grid=self.grid,
@@ -118,20 +122,20 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
     #                 ),
     #             )
 
-        # if potential:
-        #
-        #     self.mat_plot_1d.plot_yx(
-        #         y=self.lensing_obj.potential_from_grid(grid=self.grid_2d_radial_projected),
-        #         x=self.grid_1d_radial_distances,
-        #         visuals_1d=self.visuals_with_include_1d,
-        #         auto_labels=mat_plot.AutoLabels(
-        #             title="Potential vs Radius",
-        #             ylabel="Potential ",
-        #             xlabel="Radius",
-        #             legend=self.lensing_obj.__class__.__name__,
-        #             filename="potential_1d",
-        #         ),
-        #     )
+    # if potential:
+    #
+    #     self.mat_plot_1d.plot_yx(
+    #         y=self.lensing_obj.potential_from_grid(grid=self.grid_2d_radial_projected),
+    #         x=self.grid_1d_radial_distances,
+    #         visuals_1d=self.visuals_with_include_1d,
+    #         auto_labels=mat_plot.AutoLabels(
+    #             title="Potential vs Radius",
+    #             ylabel="Potential ",
+    #             xlabel="Radius",
+    #             legend=self.lensing_obj.__class__.__name__,
+    #             filename="potential_1d",
+    #         ),
+    #     )
 
     def figures_2d(
         self,

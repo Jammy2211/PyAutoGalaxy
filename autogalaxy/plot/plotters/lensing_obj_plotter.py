@@ -112,7 +112,9 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.lensing_obj.convergence_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mat_plot.AutoLabels(title="Convergence", filename="convergence"),
+                auto_labels=mat_plot.AutoLabels(
+                    title="Convergence", filename="convergence"
+                ),
             )
 
         if potential:
@@ -120,7 +122,9 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.lensing_obj.potential_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mat_plot.AutoLabels(title="Potential", filename="potential"),
+                auto_labels=mat_plot.AutoLabels(
+                    title="Potential", filename="potential"
+                ),
             )
 
         if deflections_y:

@@ -9,7 +9,7 @@ from scipy.interpolate import griddata
 from autogalaxy import exc
 
 
-class MassSheet(geometry_profiles.SphProfile, mp.MassProfile):
+class MassSheet(mp.MassProfile):
     def __init__(
         self, centre: typing.Tuple[float, float] = (0.0, 0.0), kappa: float = 0.0
     ):
@@ -23,21 +23,21 @@ class MassSheet(geometry_profiles.SphProfile, mp.MassProfile):
         kappa : float
             The magnitude of the convergence of the mass-sheet.
         """
-        super(MassSheet, self).__init__(centre=centre)
+        super().__init__(centre=centre, elliptical_comps=(0.0, 0.0))
         self.kappa = kappa
 
     def convergence_func(self, grid_radius):
         return 0.0
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def convergence_from_grid(self, grid):
         return np.full(shape=grid.shape[0], fill_value=self.kappa)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -46,7 +46,7 @@ class MassSheet(geometry_profiles.SphProfile, mp.MassProfile):
 
 
 # noinspection PyAbstractClass
-class ExternalShear(geometry_profiles.EllProfile, mp.MassProfile):
+class ExternalShear(mp.MassProfile):
     def __init__(self, elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0)):
         """
         An `ExternalShear` term, to model the line-of-sight contribution of other galaxies / satellites.
@@ -62,9 +62,7 @@ class ExternalShear(geometry_profiles.EllProfile, mp.MassProfile):
             The rotation axis of the shear.
         """
 
-        super(ExternalShear, self).__init__(
-            centre=(0.0, 0.0), elliptical_comps=elliptical_comps
-        )
+        super().__init__(centre=(0.0, 0.0), elliptical_comps=elliptical_comps)
 
         magnitude, angle = convert.shear_magnitude_and_phi_from(
             elliptical_comps=elliptical_comps
@@ -79,15 +77,15 @@ class ExternalShear(geometry_profiles.EllProfile, mp.MassProfile):
     def average_convergence_of_1_radius(self):
         return 0.0
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def convergence_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
     def deflections_from_grid(self, grid):
@@ -167,15 +165,15 @@ class InputDeflections(mp.MassProfile):
 
         self.normalization_scale = 1.0  # normalization_scale
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def convergence_from_grid(self, grid):
         return self.convergence_via_jacobian_from_grid(grid=grid)
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def potential_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grid_decorators.grid_like_to_structure
+    @grid_decorators.grid_2d_to_structure
     def deflections_from_grid(self, grid):
 
         if self.preload_grid is not None and self.preload_deflections is not None:
