@@ -166,8 +166,8 @@
                 "value": 1.5
             },
             "gaussian_limits": {
-                "lower": 0.5,
-                "upper": "inf"
+                "lower": 0.8,
+                "upper": 5.0
             }
         },
         "mass_to_light_ratio": {
@@ -280,8 +280,8 @@
                 "value": 1.5
             },
             "gaussian_limits": {
-                "lower": 0.5,
-                "upper": "inf"
+                "lower": 0.8,
+                "upper": 5.0
             }
         },
         "mass_to_light_ratio": {
@@ -708,8 +708,8 @@
                 "value": 1.5
             },
             "gaussian_limits": {
-                "lower": 0.5,
-                "upper": "inf"
+                "lower": 0.8,
+                "upper": 5.0
             }
         },
         "mass_to_light_ratio": {
@@ -835,8 +835,8 @@
                 "value": 1.5
             },
             "gaussian_limits": {
-                "lower": 0.5,
-                "upper": "inf"
+                "lower": 0.8,
+                "upper": 5.0
             }
         },
         "mass_to_light_ratio": {
@@ -911,8 +911,8 @@
                 "value": 1.5
             },
             "gaussian_limits": {
-                "lower": 0.5,
-                "upper": "inf"
+                "lower": 0.8,
+                "upper": 5.0
             }
         },
         "radius_break": {
@@ -1056,8 +1056,8 @@
                 "value": 1.5
             },
             "gaussian_limits": {
-                "lower": 0.5,
-                "upper": "inf"
+                "lower": 0.8,
+                "upper": 5.0
             }
         },
         "radius_break": {
