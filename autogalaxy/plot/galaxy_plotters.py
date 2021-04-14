@@ -1,4 +1,5 @@
 from autoarray.plot.mat_wrap import mat_plot
+from autoarray.plot import multi_plotters
 from autogalaxy.plot import (
     lensing_obj_plotter,
     light_profile_plotters,
@@ -97,46 +98,80 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             include_1d=self.include_1d,
         )
 
-    # def figures_1d(self, convergence=False, potential=False):
-    #
-    #     if convergence:
-    #
-    #         galaxy_convergence = values.ValuesIrregular
-    #
-    #         for mass_profile in self.galaxy.mass_profiles:
-    #
-    #             mass_profile_plotter = self.mass_profile_plotter_from(mass_profile=mass_profile)
-    #
-    #             convergence = mass_profile_plotter.mass_profile.convergence_2d_from_grid(grid=mass_profile_plotter.grid_2d_radial_projected)
-    #             grid_1d_radial_distances = mass_profile_plotter.grid_1d_radial_distances
-    #
-    #             self.mat_plot_1d.plot_yx(
-    #                 y=self.galaxy.convergence_2d_from_grid(grid=self.grid_2d_radial_projected),
-    #                 x=self.grid_1d_radial_distances,
-    #                 visuals_1d=self.visuals_with_include_1d,
-    #                 auto_labels=mat_plot.AutoLabels(
-    #                     title="Convergence vs Radius",
-    #                     ylabel="Convergence ",
-    #                     xlabel="Radius",
-    #                     legend=self.galaxy.__class__.__name__,
-    #                     filename="convergence_1d",
-    #                 ),
-    #             )
+    def figures_1d(self, image=False, convergence=False, potential=False):
 
-    # if potential:
-    #
-    #     self.mat_plot_1d.plot_yx(
-    #         y=self.galaxy.potential_2d_from_grid(grid=self.grid_2d_radial_projected),
-    #         x=self.grid_1d_radial_distances,
-    #         visuals_1d=self.visuals_with_include_1d,
-    #         auto_labels=mat_plot.AutoLabels(
-    #             title="Potential vs Radius",
-    #             ylabel="Potential ",
-    #             xlabel="Radius",
-    #             legend=self.galaxy.__class__.__name__,
-    #             filename="potential_1d",
-    #         ),
-    #     )
+        if self.mat_plot_1d.yx_plot.plot_axis_type is None:
+            plot_axis_type_override = "semilogy"
+        else:
+            plot_axis_type_override = None
+
+        if image:
+
+            image_1d = self.galaxy.image_1d_from_grid(grid=self.grid)
+
+            self.mat_plot_1d.plot_yx(
+                y=image_1d,
+                x=image_1d.grid_radial,
+                visuals_1d=self.visuals_with_include_1d,
+                auto_labels=mat_plot.AutoLabels(
+                    title="Image vs Radius",
+                    ylabel="Image ",
+                    xlabel="Radius",
+                    legend=self.lensing_obj.__class__.__name__,
+                    filename="image_1d",
+                ),
+                plot_axis_type_override=plot_axis_type_override,
+            )
+
+        if convergence:
+
+            convergence_1d = self.galaxy.convergence_1d_from_grid(grid=self.grid)
+
+            self.mat_plot_1d.plot_yx(
+                y=convergence_1d,
+                x=convergence_1d.grid_radial,
+                visuals_1d=self.visuals_with_include_1d,
+                auto_labels=mat_plot.AutoLabels(
+                    title="Convergence vs Radius",
+                    ylabel="Convergence ",
+                    xlabel="Radius",
+                    legend=self.lensing_obj.__class__.__name__,
+                    filename="convergence_1d",
+                ),
+                plot_axis_type_override=plot_axis_type_override,
+            )
+
+        if potential:
+
+            potential_1d = self.galaxy.potential_1d_from_grid(grid=self.grid)
+
+            self.mat_plot_1d.plot_yx(
+                y=potential_1d,
+                x=potential_1d.grid_radial,
+                visuals_1d=self.visuals_with_include_1d,
+                auto_labels=mat_plot.AutoLabels(
+                    title="Potential vs Radius",
+                    ylabel="Potential ",
+                    xlabel="Radius",
+                    legend=self.lensing_obj.__class__.__name__,
+                    filename="potential_1d",
+                ),
+                plot_axis_type_override=plot_axis_type_override,
+            )
+
+    def figures_1d_with_mass_profiles(self, convergence=False, potential=False):
+
+        plotter_list = [self]
+
+        for mass_profile in self.galaxy.mass_profiles:
+            mass_profile_plotter = self.mass_profile_plotter_from(
+                mass_profile=mass_profile
+            )
+            plotter_list.append(mass_profile_plotter)
+
+        if convergence:
+            multi_plotter = multi_plotters.MultiYX1DPlotter(plotter_list=plotter_list)
+            multi_plotter.figure_1d(func_name="figures_1d", figure_name=convergence)
 
     def figures_2d(
         self,
