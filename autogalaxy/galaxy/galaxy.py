@@ -275,14 +275,37 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         )
 
+    @grid_decorators.grid_1d_to_structure
+    def image_1d_from_grid(self, grid):
+        """
+        Returns the summed 1D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
+        coordinates.
+
+        If the galaxy has no light profiles, a grid of zeros is returned.
+
+        See `profiles.light_profiles` for a description of how light profile images are computed.
+
+        Parameters
+        ----------
+        grid : grid_like
+            The (y, x) coordinates in the original reference frame of the grid.
+
+        """
+        if self.has_light_profile:
+            return sum(
+                map(lambda p: p.image_1d_from_grid(grid=grid), self.light_profiles)
+            )
+        return np.zeros((grid.shape[0],))
+
     @grid_decorators.grid_2d_to_structure
     def image_2d_from_grid(self, grid):
-        """Calculate the summed image of all of the galaxy's light profiles using a grid of Cartesian (y,x) \
+        """
+        Returns the summed 2D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
         coordinates.
         
         If the galaxy has no light profiles, a grid of zeros is returned.
         
-        See *profiles.light_profiles* for a description of how light profile image are computed.
+        See `profiles.light_profiles` for a description of how light profile images are computed.
 
         Parameters
         ----------
