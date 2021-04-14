@@ -92,7 +92,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
                 array=self.lensing_obj.convergence_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(
-                    title="Convergence", filename="convergence"
+                    title="Convergence", filename="convergence_2d"
                 ),
             )
 
@@ -102,7 +102,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
                 array=self.lensing_obj.potential_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(
-                    title="Potential", filename="potential"
+                    title="Potential", filename="potential_2d"
                 ),
             )
 
@@ -117,7 +117,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
                 array=deflections_y,
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(
-                    title="Deflections Y", filename="deflections_y"
+                    title="Deflections Y", filename="deflections_y_2d"
                 ),
             )
 
@@ -132,7 +132,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
                 array=deflections_x,
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(
-                    title="deflections X", filename="deflections_x"
+                    title="deflections X", filename="deflections_x_2d"
                 ),
             )
 
@@ -142,6 +142,6 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
                 array=self.lensing_obj.magnification_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(
-                    title="Magnification", filename="magnification"
+                    title="Magnification", filename="magnification_2d"
                 ),
             )

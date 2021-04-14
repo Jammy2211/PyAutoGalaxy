@@ -40,7 +40,7 @@ class FitGalaxyPlotter(fit_imaging_plotters.FitImagingPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.fit.data,
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mat_plot.AutoLabels(title="Image", filename="image"),
+                auto_labels=mat_plot.AutoLabels(title="Image", filename="image_2d"),
             )
 
         super(FitGalaxyPlotter, self).figures_2d(

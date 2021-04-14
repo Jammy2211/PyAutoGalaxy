@@ -99,8 +99,8 @@ def test__figures_2d__all_quantities_are_output(
         magnification=True,
     )
 
-    assert path.join(plot_path, "convergence.png") in plot_patch.paths
-    assert path.join(plot_path, "potential.png") in plot_patch.paths
-    assert path.join(plot_path, "deflections_y.png") in plot_patch.paths
-    assert path.join(plot_path, "deflections_x.png") in plot_patch.paths
-    assert path.join(plot_path, "magnification.png") in plot_patch.paths
+    assert path.join(plot_path, "convergence_2d.png") in plot_patch.paths
+    assert path.join(plot_path, "potential_2d.png") in plot_patch.paths
+    assert path.join(plot_path, "deflections_y_2d.png") in plot_patch.paths
+    assert path.join(plot_path, "deflections_x_2d.png") in plot_patch.paths
+    assert path.join(plot_path, "magnification_2d.png") in plot_patch.paths

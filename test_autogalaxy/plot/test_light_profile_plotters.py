@@ -97,4 +97,4 @@ def test__figures_2d__all_quantities_are_output(
 
     light_profile_plotter.figures_2d(image=True)
 
-    assert path.join(plot_path, "image.png") in plot_patch.paths
+    assert path.join(plot_path, "image_2d.png") in plot_patch.paths

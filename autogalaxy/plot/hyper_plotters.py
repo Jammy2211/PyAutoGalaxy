@@ -95,7 +95,7 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
             array=contribution_map_in,
             visuals_2d=self.visuals_with_include_2d,
             auto_labels=mat_plot.AutoLabels(
-                title="Contribution Map", filename="contribution_map"
+                title="Contribution Map", filename="contribution_map_2d"
             ),
         )
 

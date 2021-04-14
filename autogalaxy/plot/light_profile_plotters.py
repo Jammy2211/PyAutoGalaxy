@@ -120,5 +120,5 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.light_profile.image_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mat_plot.AutoLabels(title="Image", filename="image"),
+                auto_labels=mat_plot.AutoLabels(title="Image", filename="image_2d"),
             )

@@ -93,7 +93,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
                 array=self.plane.image_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(
-                    title=f"Image{title_suffix}", filename=f"image{filename_suffix}"
+                    title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
                 ),
             )
 
@@ -133,7 +133,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
                 array=self.plane.contribution_map,
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=mat_plot.AutoLabels(
-                    title="Contribution Map", filename="contribution_map"
+                    title="Contribution Map", filename="contribution_map_2d"
                 ),
             )
 

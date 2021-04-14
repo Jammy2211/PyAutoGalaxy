@@ -34,7 +34,7 @@ class TestVisualizer:
         plot_path = path.join(plot_path, "imaging")
 
         assert path.join(plot_path, "subplot_imaging.png") in plot_patch.paths
-        assert path.join(plot_path, "image.png") in plot_patch.paths
+        assert path.join(plot_path, "image_2d.png") in plot_patch.paths
         assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
         assert path.join(plot_path, "psf.png") in plot_patch.paths
         assert path.join(plot_path, "inverse_noise_map.png") in plot_patch.paths
@@ -66,7 +66,7 @@ class TestVisualizer:
         plot_path = path.join(plot_path, "fit_imaging")
 
         assert path.join(plot_path, "subplot_fit_imaging.png") in plot_patch.paths
-        assert path.join(plot_path, "image.png") in plot_patch.paths
+        assert path.join(plot_path, "image_2d.png") in plot_patch.paths
         assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
         assert path.join(plot_path, "signal_to_noise_map.png") not in plot_patch.paths
         assert path.join(plot_path, "model_image.png") in plot_patch.paths
@@ -88,7 +88,7 @@ class TestVisualizer:
         )
 
         image = ag.util.array_2d.numpy_array_2d_from_fits(
-            file_path=path.join(plot_path, "fits", "image.fits"), hdu=0
+            file_path=path.join(plot_path, "fits", "image_2d.fits"), hdu=0
         )
 
         assert image.shape == (5, 5)

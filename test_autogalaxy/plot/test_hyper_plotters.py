@@ -69,4 +69,4 @@ def test__plot_individual_images(
 
     hyper_plotter.figure_contribution_map(contribution_map_in=contribution_map_7x7)
 
-    assert path.join(plot_path, "contribution_map.png") in plot_patch.paths
+    assert path.join(plot_path, "contribution_map_2d.png") in plot_patch.paths

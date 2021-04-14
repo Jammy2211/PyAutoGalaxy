@@ -33,7 +33,7 @@ def test__all_individual_plotter__output_file_with_default_name(
 
     plane_plotter.figures_2d(image=True, plane_image=True, plane_grid=True)
 
-    assert path.join(plot_path, "image.png") in plot_patch.paths
+    assert path.join(plot_path, "image_2d.png") in plot_patch.paths
     assert path.join(plot_path, "plane_image.png") in plot_patch.paths
     assert path.join(plot_path, "plane_grid.png") in plot_patch.paths
 
@@ -47,4 +47,4 @@ def test__all_individual_plotter__output_file_with_default_name(
 
     plane_plotter.figures_2d(contribution_map=True)
 
-    assert path.join(plot_path, "contribution_map.png") in plot_patch.paths
+    assert path.join(plot_path, "contribution_map_2d.png") in plot_patch.paths
