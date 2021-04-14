@@ -66,9 +66,9 @@ def make_noise_map_7x7():
     return fixtures.make_noise_map_7x7()
 
 
-@pytest.fixture(name="sub_mask_7x7")
-def make_sub_mask_7x7():
-    return fixtures.make_sub_mask_7x7()
+@pytest.fixture(name="sub_mask_2d_7x7")
+def make_sub_mask_2d_7x7():
+    return fixtures.make_sub_mask_2d_7x7()
 
 
 @pytest.fixture(name="imaging_7x7")
@@ -101,9 +101,9 @@ def make_interferometer_7_lop():
     return fixtures.make_interferometer_7_lop()
 
 
-@pytest.fixture(name="mask_7x7")
-def make_mask_7x7():
-    return fixtures.make_mask_7x7()
+@pytest.fixture(name="mask_2d_7x7")
+def make_mask_2d_7x7():
+    return fixtures.make_mask_2d_7x7()
 
 
 @pytest.fixture(name="convolver_7x7")
@@ -111,24 +111,34 @@ def make_convolver_7x7():
     return fixtures.make_convolver_7x7()
 
 
-@pytest.fixture(name="mask_7x7_1_pix")
-def make_mask_7x7_1_pix():
-    return fixtures.make_mask_7x7_1_pix()
+@pytest.fixture(name="mask_2d_7x7_1_pix")
+def make_mask_2d_7x7_1_pix():
+    return fixtures.make_mask_2d_7x7_1_pix()
 
 
-@pytest.fixture(name="grid_iterate_7x7")
-def make_grid_iterate_7x7():
-    return fixtures.make_grid_iterate_7x7()
+@pytest.fixture(name="grid_1d_7")
+def make_grid_1d_7():
+    return fixtures.make_grid_1d_7()
 
 
-@pytest.fixture(name="grid_irregular_7x7")
-def make_grid_irregular_7x7():
-    return fixtures.make_grid_irregular_7x7()
+@pytest.fixture(name="sub_grid_1d_7")
+def make_sub_grid_1d_7():
+    return fixtures.make_sub_grid_1d_7()
 
 
-@pytest.fixture(name="grid_irregular_7x7_list")
-def make_grid_irregular_7x7_list():
-    return fixtures.make_grid_irregular_7x7_list()
+@pytest.fixture(name="grid_2d_iterate_7x7")
+def make_grid_2d_iterate_7x7():
+    return fixtures.make_grid_2d_iterate_7x7()
+
+
+@pytest.fixture(name="grid_2d_irregular_7x7")
+def make_grid_2d_irregular_7x7():
+    return fixtures.make_grid_2d_irregular_7x7()
+
+
+@pytest.fixture(name="grid_2d_irregular_7x7_list")
+def make_grid_2d_irregular_7x7_list():
+    return fixtures.make_grid_2d_irregular_7x7_list()
 
 
 @pytest.fixture(name="transformer_7x7_7")
@@ -136,9 +146,9 @@ def make_transformer_7x7_7():
     return fixtures.make_transformer_7x7_7()
 
 
-@pytest.fixture(name="blurring_grid_7x7")
-def make_blurring_grid_7x7():
-    return fixtures.make_blurring_grid_7x7()
+@pytest.fixture(name="blurring_grid_2d_7x7")
+def make_blurring_grid_2d_7x7():
+    return fixtures.make_blurring_grid_2d_7x7()
 
 
 @pytest.fixture(name="visibilities_7")
@@ -156,19 +166,19 @@ def make_uv_wavelengths_7x2():
     return fixtures.make_uv_wavelengths_7x2()
 
 
-@pytest.fixture(name="grid_7x7")
-def make_grid_7x7():
-    return fixtures.make_grid_7x7()
+@pytest.fixture(name="grid_2d_7x7")
+def make_grid_2d_7x7():
+    return fixtures.make_grid_2d_7x7()
 
 
-@pytest.fixture(name="sub_grid_7x7")
-def make_sub_grid_7x7():
-    return fixtures.make_sub_grid_7x7()
+@pytest.fixture(name="sub_grid_2d_7x7")
+def make_sub_grid_2d_7x7():
+    return fixtures.make_sub_grid_2d_7x7()
 
 
-@pytest.fixture(name="sub_grid_7x7_simple")
-def make_sub_grid_7x7_simple():
-    return fixtures.make_sub_grid_7x7_simple()
+@pytest.fixture(name="sub_grid_2d_7x7_simple")
+def make_sub_grid_2d_7x7_simple():
+    return fixtures.make_sub_grid_2d_7x7_simple()
 
 
 @pytest.fixture(name="ps_0")

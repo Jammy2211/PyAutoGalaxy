@@ -14,7 +14,7 @@ def make_galaxy_plotter_setup():
     )
 
 
-def test__visuals_with_include_2d(gal_x1_lp_x1_mp, grid_7x7):
+def test__visuals_with_include_2d(gal_x1_lp_x1_mp, grid_2d_7x7):
 
     visuals_2d = aplt.Visuals2D(vector_field=2)
 
@@ -29,14 +29,17 @@ def test__visuals_with_include_2d(gal_x1_lp_x1_mp, grid_7x7):
     )
 
     galaxy_plotter = aplt.GalaxyPlotter(
-        galaxy=gal_x1_lp_x1_mp, grid=grid_7x7, visuals_2d=visuals_2d, include_2d=include
+        galaxy=gal_x1_lp_x1_mp,
+        grid=grid_2d_7x7,
+        visuals_2d=visuals_2d,
+        include_2d=include,
     )
 
     assert galaxy_plotter.visuals_with_include_2d.origin.in_list == [(0.0, 0.0)]
-    assert (galaxy_plotter.visuals_with_include_2d.mask == grid_7x7.mask).all()
+    assert (galaxy_plotter.visuals_with_include_2d.mask == grid_2d_7x7.mask).all()
     assert (
         galaxy_plotter.visuals_with_include_2d.border
-        == grid_7x7.mask.border_grid_sub_1.binned
+        == grid_2d_7x7.mask.border_grid_sub_1.binned
     ).all()
     assert galaxy_plotter.visuals_with_include_2d.light_profile_centres.in_list == [
         gal_x1_lp_x1_mp.light_profile_0.centre
@@ -49,7 +52,10 @@ def test__visuals_with_include_2d(gal_x1_lp_x1_mp, grid_7x7):
     include = aplt.Include2D(origin=False, mask=False, border=False)
 
     galaxy_plotter = aplt.GalaxyPlotter(
-        galaxy=gal_x1_lp_x1_mp, grid=grid_7x7, visuals_2d=visuals_2d, include_2d=include
+        galaxy=gal_x1_lp_x1_mp,
+        grid=grid_2d_7x7,
+        visuals_2d=visuals_2d,
+        include_2d=include,
     )
 
     assert galaxy_plotter.visuals_with_include_2d.origin == None
@@ -60,9 +66,9 @@ def test__visuals_with_include_2d(gal_x1_lp_x1_mp, grid_7x7):
 
 def test__individual_images_are_output(
     gal_x1_lp_x1_mp,
-    sub_grid_7x7,
-    mask_7x7,
-    grid_irregular_7x7_list,
+    sub_grid_2d_7x7,
+    mask_2d_7x7,
+    grid_2d_irregular_7x7_list,
     include_2d_all,
     plot_path,
     plot_patch,
@@ -70,7 +76,7 @@ def test__individual_images_are_output(
 
     galaxy_plotter = aplt.GalaxyPlotter(
         galaxy=gal_x1_lp_x1_mp,
-        grid=sub_grid_7x7,
+        grid=sub_grid_2d_7x7,
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
@@ -93,8 +99,8 @@ def test__individual_images_are_output(
 
 def test__subplots_galaxy_quantities__all_are_output(
     gal_x1_lp_x1_mp,
-    sub_grid_7x7,
-    grid_irregular_7x7_list,
+    sub_grid_2d_7x7,
+    grid_2d_irregular_7x7_list,
     include_2d_all,
     plot_path,
     plot_patch,
@@ -102,7 +108,7 @@ def test__subplots_galaxy_quantities__all_are_output(
 
     galaxy_plotter = aplt.GalaxyPlotter(
         galaxy=gal_x1_lp_x1_mp,
-        grid=sub_grid_7x7,
+        grid=sub_grid_2d_7x7,
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )

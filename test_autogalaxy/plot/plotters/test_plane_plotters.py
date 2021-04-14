@@ -16,9 +16,9 @@ def make_plane_plotter_setup():
 
 def test__all_individual_plotter__output_file_with_default_name(
     plane_7x7,
-    sub_grid_7x7,
-    mask_7x7,
-    grid_irregular_7x7_list,
+    sub_grid_2d_7x7,
+    mask_2d_7x7,
+    grid_2d_irregular_7x7_list,
     include_2d_all,
     plot_path,
     plot_patch,
@@ -26,7 +26,7 @@ def test__all_individual_plotter__output_file_with_default_name(
 
     plane_plotter = aplt.PlanePlotter(
         plane=plane_7x7,
-        grid=sub_grid_7x7,
+        grid=sub_grid_2d_7x7,
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )

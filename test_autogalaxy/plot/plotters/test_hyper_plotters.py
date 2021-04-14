@@ -15,7 +15,7 @@ def make_hyper_plotter_setup():
 
 
 def test__plot_hyper_images_of_galaxies(
-    hyper_galaxy_image_path_dict_7x7, mask_7x7, include_2d_all, plot_path, plot_patch
+    hyper_galaxy_image_path_dict_7x7, mask_2d_7x7, include_2d_all, plot_path, plot_patch
 ):
 
     hyper_plotter = aplt.HyperPlotter(
@@ -32,7 +32,7 @@ def test__plot_hyper_images_of_galaxies(
 
 
 def test__plot_contribution_maps_of_galaxies(
-    contribution_map_7x7, mask_7x7, include_2d_all, plot_path, plot_patch
+    contribution_map_7x7, mask_2d_7x7, include_2d_all, plot_path, plot_patch
 ):
 
     hyper_plotter = aplt.HyperPlotter(

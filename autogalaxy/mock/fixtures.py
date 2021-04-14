@@ -8,7 +8,7 @@ def make_masked_imaging_7x7():
 
     imaging_7x7 = make_imaging_7x7()
 
-    masked_imaging_7x7 = imaging_7x7.apply_mask(mask=make_sub_mask_7x7())
+    masked_imaging_7x7 = imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
 
     return masked_imaging_7x7.apply_settings(settings=ag.SettingsImaging(sub_size=1))
 
@@ -137,26 +137,28 @@ def make_gal_data_7x7():
 
 def make_gal_fit_data_7x7_image():
     return ag.MaskedGalaxyDataset(
-        galaxy_data=make_gal_data_7x7(), mask=make_sub_mask_7x7(), use_image=True
+        galaxy_data=make_gal_data_7x7(), mask=make_sub_mask_2d_7x7(), use_image=True
     )
 
 
 def make_gal_fit_data_7x7_convergence():
     return ag.MaskedGalaxyDataset(
-        galaxy_data=make_gal_data_7x7(), mask=make_sub_mask_7x7(), use_convergence=True
+        galaxy_data=make_gal_data_7x7(),
+        mask=make_sub_mask_2d_7x7(),
+        use_convergence=True,
     )
 
 
 def make_gal_fit_data_7x7_potential():
     return ag.MaskedGalaxyDataset(
-        galaxy_data=make_gal_data_7x7(), mask=make_sub_mask_7x7(), use_potential=True
+        galaxy_data=make_gal_data_7x7(), mask=make_sub_mask_2d_7x7(), use_potential=True
     )
 
 
 def make_gal_fit_data_7x7_deflections_y():
     return ag.MaskedGalaxyDataset(
         galaxy_data=make_gal_data_7x7(),
-        mask=make_sub_mask_7x7(),
+        mask=make_sub_mask_2d_7x7(),
         use_deflections_y=True,
     )
 
@@ -164,7 +166,7 @@ def make_gal_fit_data_7x7_deflections_y():
 def make_gal_fit_data_7x7_deflections_x():
     return ag.MaskedGalaxyDataset(
         galaxy_data=make_gal_data_7x7(),
-        mask=make_sub_mask_7x7(),
+        mask=make_sub_mask_2d_7x7(),
         use_deflections_x=True,
     )
 
@@ -212,15 +214,15 @@ def make_gal_fit_7x7_deflections_x():
 
 def make_hyper_model_image_7x7():
     return ag.Array2D.manual_mask(
-        np.full(fill_value=5.0, shape=make_mask_7x7().pixels_in_mask),
-        mask=make_mask_7x7(),
+        np.full(fill_value=5.0, shape=make_mask_2d_7x7().pixels_in_mask),
+        mask=make_mask_2d_7x7(),
     )
 
 
 def make_hyper_galaxy_image_0_7x7():
     return ag.Array2D.manual_mask(
-        np.full(fill_value=2.0, shape=make_mask_7x7().pixels_in_mask),
-        mask=make_mask_7x7(),
+        np.full(fill_value=2.0, shape=make_mask_2d_7x7().pixels_in_mask),
+        mask=make_mask_2d_7x7(),
     )
 
 
@@ -235,8 +237,8 @@ def make_hyper_galaxy_image_path_dict_7x7():
 
 def make_hyper_galaxy_image_1_7x7():
     return ag.Array2D.manual_mask(
-        np.full(fill_value=3.0, shape=make_mask_7x7().pixels_in_mask),
-        mask=make_mask_7x7(),
+        np.full(fill_value=3.0, shape=make_mask_2d_7x7().pixels_in_mask),
+        mask=make_mask_2d_7x7(),
     )
 
 

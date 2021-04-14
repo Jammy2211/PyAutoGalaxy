@@ -68,9 +68,9 @@ def test__plane_generator_from_aggregator(masked_imaging_7x7, samples, model):
         assert plane.galaxies[1].redshift == 1.0
 
 
-def test__imaging_generator_from_aggregator(imaging_7x7, mask_7x7, samples, model):
+def test__imaging_generator_from_aggregator(imaging_7x7, mask_2d_7x7, samples, model):
 
-    masked_imaging_7x7 = imaging_7x7.apply_mask(mask=mask_7x7)
+    masked_imaging_7x7 = imaging_7x7.apply_mask(mask=mask_2d_7x7)
 
     masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
         settings=ag.SettingsImaging(
@@ -121,7 +121,7 @@ def test__interferometer_generator_from_aggregator(
     visibilities_7,
     visibilities_noise_map_7,
     uv_wavelengths_7x2,
-    mask_7x7,
+    mask_2d_7x7,
     samples,
     model,
 ):
@@ -129,7 +129,7 @@ def test__interferometer_generator_from_aggregator(
         visibilities=visibilities_7,
         noise_map=visibilities_noise_map_7,
         uv_wavelengths=uv_wavelengths_7x2,
-        real_space_mask=mask_7x7,
+        real_space_mask=mask_2d_7x7,
         settings=ag.SettingsInterferometer(
             grid_class=ag.Grid2DIterate,
             grid_inversion_class=ag.Grid2DIterate,
@@ -152,7 +152,7 @@ def test__interferometer_generator_from_aggregator(
 
     for interferometer in interferometer_gen:
         assert (interferometer.visibilities == interferometer_7.visibilities).all()
-        assert (interferometer.real_space_mask == mask_7x7).all()
+        assert (interferometer.real_space_mask == mask_2d_7x7).all()
         assert isinstance(interferometer.grid, ag.Grid2DIterate)
         assert isinstance(interferometer.grid_inversion, ag.Grid2DIterate)
         assert interferometer.grid.sub_steps == [2]
@@ -161,7 +161,7 @@ def test__interferometer_generator_from_aggregator(
 
 
 def test__fit_interferometer_generator_from_aggregator(
-    interferometer_7, mask_7x7, samples, model
+    interferometer_7, mask_2d_7x7, samples, model
 ):
 
     search = mock.MockSearch(samples=samples)
@@ -180,4 +180,4 @@ def test__fit_interferometer_generator_from_aggregator(
             fit_interferometer.interferometer.visibilities
             == interferometer_7.visibilities
         ).all()
-        assert (fit_interferometer.interferometer.real_space_mask == mask_7x7).all()
+        assert (fit_interferometer.interferometer.real_space_mask == mask_2d_7x7).all()

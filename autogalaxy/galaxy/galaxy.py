@@ -368,17 +368,41 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 )
             )
 
+    @grid_decorators.grid_1d_to_structure
+    def convergence_1d_from_grid(self, grid):
+        """
+        Returns the summed 1D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
+
+        If the galaxy has no mass profiles, a grid of zeros is returned.
+
+        See `profiles.mass_profiles` module for details of how this is performed.
+
+        The `grid_1d_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See
+        `aa.grid_1d_to_structure` for a description of the output.
+
+        Parameters
+        ----------
+        grid : grid_like
+            The (y, x) coordinates in the original reference frame of the grid.
+
+        """
+        if self.has_mass_profile:
+            return sum(
+                map(lambda p: p.convergence_1d_from_grid(grid=grid), self.mass_profiles)
+            )
+        return np.zeros((grid.shape[0],))
+
     @grid_decorators.grid_2d_to_structure
     def convergence_2d_from_grid(self, grid):
         """
-        Returns the summed convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
+        Returns the summed 2D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
         If the galaxy has no mass profiles, a grid of zeros is returned.
         
-        See *profiles.mass_profiles* module for details of how this is performed.
+        See `profiles.mass_profiles` module for details of how this is performed.
 
-        The `grid_2d_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See \
-        *aa.grid_2d_to_structure* for a description of the output.
+        The `grid_2d_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See
+        `aa.grid_2d_to_structure` for a description of the output.
 
         Parameters
         ----------
@@ -392,24 +416,47 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0],))
 
-    @grid_decorators.grid_2d_to_structure
-    def potential_2d_from_grid(self, grid):
+    @grid_decorators.grid_1d_to_structure
+    def potential_1d_from_grid(self, grid):
         """
-        Returns the summed gravitational potential of the galaxy's mass profiles \
-        using a grid of Cartesian (y,x) coordinates.
+        Returns the summed 2D gravitational potential of the galaxy's mass profiles using a grid of 
+        Cartesian (y,x) coordinates.
 
         If the galaxy has no mass profiles, a grid of zeros is returned.
 
-        See *profiles.mass_profiles* module for details of how this is performed.
+        See `profiles.mass_profiles` module for details of how this is performed.
 
-        The `grid_2d_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See \
-        *aa.grid_2d_to_structure* for a description of the output.
+        The `grid_2d_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See 
+        `aa.grid_2d_to_structure` for a description of the output.
 
         Parameters
         ----------
         grid : grid_like
             The (y, x) coordinates in the original reference frame of the grid.
+        """
+        if self.has_mass_profile:
+            return sum(
+                map(lambda p: p.potential_1d_from_grid(grid=grid), self.mass_profiles)
+            )
+        return np.zeros((grid.shape[0],))
 
+    @grid_decorators.grid_2d_to_structure
+    def potential_2d_from_grid(self, grid):
+        """
+        Returns the summed 2D gravitational potential of the galaxy's mass profiles using a grid of 
+        Cartesian (y,x) coordinates.
+
+        If the galaxy has no mass profiles, a grid of zeros is returned.
+
+        See `profiles.mass_profiles` module for details of how this is performed.
+
+        The `grid_2d_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See 
+        `aa.grid_2d_to_structure` for a description of the output.
+
+        Parameters
+        ----------
+        grid : grid_like
+            The (y, x) coordinates in the original reference frame of the grid.
         """
         if self.has_mass_profile:
             return sum(

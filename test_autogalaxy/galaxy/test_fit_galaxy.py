@@ -167,9 +167,9 @@ class TestLikelihood:
 
 
 class TestCompareToManual:
-    def test__image(self, gal_data_7x7, sub_mask_7x7):
+    def test__image(self, gal_data_7x7, sub_mask_2d_7x7):
         masked_galaxy_dataset = ag.MaskedGalaxyDataset(
-            galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_image=True
+            galaxy_data=gal_data_7x7, mask=sub_mask_2d_7x7, use_image=True
         )
 
         galaxy = ag.Galaxy(
@@ -207,9 +207,9 @@ class TestCompareToManual:
 
         assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-    def test__convergence(self, gal_data_7x7, sub_mask_7x7):
+    def test__convergence(self, gal_data_7x7, sub_mask_2d_7x7):
         masked_galaxy_dataset = ag.MaskedGalaxyDataset(
-            galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_convergence=True
+            galaxy_data=gal_data_7x7, mask=sub_mask_2d_7x7, use_convergence=True
         )
 
         galaxy = ag.Galaxy(
@@ -246,9 +246,9 @@ class TestCompareToManual:
 
         assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-    def test__potential(self, gal_data_7x7, sub_mask_7x7):
+    def test__potential(self, gal_data_7x7, sub_mask_2d_7x7):
         masked_galaxy_dataset = ag.MaskedGalaxyDataset(
-            galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_potential=True
+            galaxy_data=gal_data_7x7, mask=sub_mask_2d_7x7, use_potential=True
         )
 
         galaxy = ag.Galaxy(
@@ -288,9 +288,9 @@ class TestCompareToManual:
 
         assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-    def test__deflections_y(self, gal_data_7x7, sub_mask_7x7):
+    def test__deflections_y(self, gal_data_7x7, sub_mask_2d_7x7):
         masked_galaxy_dataset = ag.MaskedGalaxyDataset(
-            galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_y=True
+            galaxy_data=gal_data_7x7, mask=sub_mask_2d_7x7, use_deflections_y=True
         )
 
         galaxy = ag.Galaxy(
@@ -332,9 +332,9 @@ class TestCompareToManual:
 
         assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
-    def test__deflections_x(self, gal_data_7x7, sub_mask_7x7):
+    def test__deflections_x(self, gal_data_7x7, sub_mask_2d_7x7):
         masked_galaxy_dataset = ag.MaskedGalaxyDataset(
-            galaxy_data=gal_data_7x7, mask=sub_mask_7x7, use_deflections_x=True
+            galaxy_data=gal_data_7x7, mask=sub_mask_2d_7x7, use_deflections_x=True
         )
 
         galaxy = ag.Galaxy(

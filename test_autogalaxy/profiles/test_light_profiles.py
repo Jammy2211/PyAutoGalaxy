@@ -46,20 +46,20 @@ class TestImage1DFrom:
 
 class TestBlurredProfileImages:
     def test__blurred_image_2d_from_grid_and_psf(
-        self, sub_grid_7x7, blurring_grid_7x7, psf_3x3, convolver_7x7
+        self, sub_grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3, convolver_7x7
     ):
         light_profile = ag.lp.EllSersic(intensity=1.0)
 
-        image = light_profile.image_2d_from_grid(grid=sub_grid_7x7)
+        image = light_profile.image_2d_from_grid(grid=sub_grid_2d_7x7)
 
-        blurring_image = light_profile.image_2d_from_grid(grid=blurring_grid_7x7)
+        blurring_image = light_profile.image_2d_from_grid(grid=blurring_grid_2d_7x7)
 
         blurred_image = convolver_7x7.convolve_image(
             image=image.binned, blurring_image=blurring_image.binned
         )
 
         light_profile_blurred_image = light_profile.blurred_image_2d_from_grid_and_psf(
-            grid=sub_grid_7x7, blurring_grid=blurring_grid_7x7, psf=psf_3x3
+            grid=sub_grid_2d_7x7, blurring_grid=blurring_grid_2d_7x7, psf=psf_3x3
         )
 
         assert blurred_image.slim == pytest.approx(
@@ -70,20 +70,22 @@ class TestBlurredProfileImages:
         )
 
     def test__blurred_image_2d_from_grid_and_convolver(
-        self, sub_grid_7x7, blurring_grid_7x7, convolver_7x7
+        self, sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7x7
     ):
         light_profile = ag.lp.EllSersic(intensity=1.0)
 
-        image = light_profile.image_2d_from_grid(grid=sub_grid_7x7)
+        image = light_profile.image_2d_from_grid(grid=sub_grid_2d_7x7)
 
-        blurring_image = light_profile.image_2d_from_grid(grid=blurring_grid_7x7)
+        blurring_image = light_profile.image_2d_from_grid(grid=blurring_grid_2d_7x7)
 
         blurred_image = convolver_7x7.convolve_image(
             image=image.binned, blurring_image=blurring_image.binned
         )
 
         light_profile_blurred_image = light_profile.blurred_image_2d_from_grid_and_convolver(
-            grid=sub_grid_7x7, convolver=convolver_7x7, blurring_grid=blurring_grid_7x7
+            grid=sub_grid_2d_7x7,
+            convolver=convolver_7x7,
+            blurring_grid=blurring_grid_2d_7x7,
         )
 
         assert blurred_image.slim == pytest.approx(
@@ -96,16 +98,16 @@ class TestBlurredProfileImages:
 
 class TestVisibilities:
     def test__visibilities_from_grid_and_transformer(
-        self, grid_7x7, sub_grid_7x7, transformer_7x7_7
+        self, grid_2d_7x7, sub_grid_2d_7x7, transformer_7x7_7
     ):
         light_profile = ag.lp.EllSersic(intensity=1.0)
 
-        image = light_profile.image_2d_from_grid(grid=grid_7x7)
+        image = light_profile.image_2d_from_grid(grid=grid_2d_7x7)
 
         visibilities = transformer_7x7_7.visibilities_from_image(image=image.binned)
 
         light_profile_visibilities = light_profile.profile_visibilities_from_grid_and_transformer(
-            grid=grid_7x7, transformer=transformer_7x7_7
+            grid=grid_2d_7x7, transformer=transformer_7x7_7
         )
 
         assert visibilities == pytest.approx(light_profile_visibilities, 1.0e-4)
