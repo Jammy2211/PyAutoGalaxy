@@ -5,8 +5,8 @@ from autoarray import Grid2DIrregular
 from autoarray import Grid2DIrregular
 from autoarray import VectorField2DIrregular
 from autoarray import TransformerDFT
-from autoarray import pix 
-from autoarray import reg
+from autoarray import pix
+from autoarray import reg 
 from autoarray import TransformerNUFFT
 from autoarray import SettingsInversion
 from autoarray import SettingsPixelization
