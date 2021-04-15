@@ -10,7 +10,7 @@ from autoarray import reg
 from autoarray import TransformerNUFFT
 from autoarray import SettingsInversion
 from autoarray import SettingsPixelization
-from autoarray.structures.arrays.one_d.array_1d import Array1D 
+from autoarray.structures.arrays.one_d.array_1d import Array1D
 from autoarray.structures.arrays.two_d.array_2d import Array2D
 from autoarray.structures.arrays.values import ValuesIrregular
 from autoarray.structures.grids.one_d.grid_1d import Grid1D
@@ -58,4 +58,4 @@ from . import convert
 
 conf.instance.register(__file__)
 
-__version__ = "0.19.0"
+__version__ = "0.20.0"

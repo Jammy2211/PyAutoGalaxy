@@ -21,9 +21,9 @@ from .dark_mass_profiles import (
     EllNFW,
     SphNFW,
     SphNFWMCRDuffy,
+    SphNFWMCRLudlow,
     EllNFWMCRLudlow,
     EllNFWGeneralizedMCRLudlow,
-    SphNFWMCRLudlow,
 )
 from .stellar_mass_profiles import (
     EllGaussian,
