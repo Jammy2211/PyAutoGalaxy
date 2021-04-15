@@ -87,7 +87,7 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
         "{}".format(path.dirname(path.realpath(__file__))), "data_temp"
     )
 
-    if path.exists(file_path) == True:
+    if path.exists(file_path) is True:
         shutil.rmtree(file_path)
 
 
@@ -166,7 +166,7 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
         "{}".format(path.dirname(path.realpath(__file__))), "data_temp"
     )
 
-    if path.exists(file_path) == True:
+    if path.exists(file_path) is True:
         shutil.rmtree(file_path)
 
 

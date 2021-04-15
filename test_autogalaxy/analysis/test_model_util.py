@@ -82,7 +82,7 @@ from autogalaxy import hyper_data as hd
 #         model=af.Collection(galaxies=galaxies)
 #     )
 #
-#     assert pixelization_is_model == False
+#     assert pixelization_is_model is False
 #
 #     galaxies = af.Collection(
 #         galaxy=ag.Galaxy(
@@ -96,7 +96,7 @@ from autogalaxy import hyper_data as hd
 #         model=af.Collection(galaxies=galaxies)
 #     )
 #
-#     assert pixelization_is_model == False
+#     assert pixelization_is_model is False
 #
 #     galaxies = af.Collection(
 #         galaxy=af.Model(ag.Galaxy,
@@ -110,7 +110,7 @@ from autogalaxy import hyper_data as hd
 #         model=af.Collection(galaxies=galaxies)
 #     )
 #
-#     assert pixelization_is_model == True
+#     assert pixelization_is_model is True
 
 
 def test__hyper_model_from():
