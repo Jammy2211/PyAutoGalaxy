@@ -58,7 +58,7 @@ def test__visuals_with_include_2d(lp_0, grid_2d_7x7):
     assert light_profile_plotter.visuals_with_include_2d.vector_field == 2
 
 
-def test__figures_1d__all_quantities_are_output(
+def test__figures_1d__all_are_output(
     lp_0,
     sub_grid_2d_7x7,
     grid_2d_irregular_7x7_list,
@@ -79,7 +79,7 @@ def test__figures_1d__all_quantities_are_output(
     assert path.join(plot_path, "image_1d.png") in plot_patch.paths
 
 
-def test__figures_2d__all_quantities_are_output(
+def test__figures_2d__all_are_output(
     lp_0,
     sub_grid_2d_7x7,
     grid_2d_irregular_7x7_list,

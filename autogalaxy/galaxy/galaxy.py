@@ -275,7 +275,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         )
 
-    @grid_decorators.grid_1d_to_structure
+    @grid_decorators.grid_1d_output_structure
     def image_1d_from_grid(self, grid):
         """
         Returns the summed 1D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
@@ -368,7 +368,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
                 )
             )
 
-    @grid_decorators.grid_1d_to_structure
+    @grid_decorators.grid_1d_output_structure
     def convergence_1d_from_grid(self, grid):
         """
         Returns the summed 1D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
@@ -416,7 +416,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0],))
 
-    @grid_decorators.grid_1d_to_structure
+    @grid_decorators.grid_1d_output_structure
     def potential_1d_from_grid(self, grid):
         """
         Returns the summed 2D gravitational potential of the galaxy's mass profiles using a grid of 

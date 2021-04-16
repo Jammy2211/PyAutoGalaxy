@@ -98,6 +98,46 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             include_1d=self.include_1d,
         )
 
+    @property
+    def visuals_with_include_1d_light(self) -> lensing_visuals.Visuals1D:
+        """
+        Extracts from the `Galaxy` attributes that can be plotted which are associated with light profiles and returns
+        them in a `Visuals1D` object.
+
+        Only attributes with `True` entries in the `Include` object are extracted for plotting.
+
+        From a `GalaxyPlotter` the following 1D attributes can be extracted for plotting:
+
+        - half_light_radius: the radius containing 50% of the `LightProfile`'s total integrated luminosity.
+
+        Returns
+        -------
+        vis.Visuals1D
+            The collection of attributes that can be plotted by a `Plotter1D` object.
+        """
+        return self.visuals_1d
+
+    @property
+    def visuals_with_include_1d_mass(self) -> lensing_visuals.Visuals1D:
+        """
+        Extracts from the `Galaxy` attributes that can be plotted which are associated with mass profiles and returns
+        them in a `Visuals1D` object.
+
+        Only attributes with `True` entries in the `Include` object are extracted for plotting.
+
+        From a `GalaxyPlotter` the following 1D attributes can be extracted for plotting:
+
+        - half_light_radius: the radius containing 50% of the `LightProfile`'s total integrated luminosity.
+
+        Returns
+        -------
+        vis.Visuals1D
+            The collection of attributes that can be plotted by a `Plotter1D` object.
+        """
+        return self.visuals_1d + self.visuals_1d.__class__(
+            einstein_radius=self.lensing_obj.einstein_radius_from_grid(grid=self.grid)
+        )
+
     def figures_1d(self, image=False, convergence=False, potential=False):
 
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
@@ -112,7 +152,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_1d.plot_yx(
                 y=image_1d,
                 x=image_1d.grid_radial,
-                visuals_1d=self.visuals_with_include_1d,
+                visuals_1d=self.visuals_with_include_1d_light,
                 auto_labels=mat_plot.AutoLabels(
                     title="Image vs Radius",
                     ylabel="Image ",
@@ -130,7 +170,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
                 x=convergence_1d.grid_radial,
-                visuals_1d=self.visuals_with_include_1d,
+                visuals_1d=self.visuals_with_include_1d_mass,
                 auto_labels=mat_plot.AutoLabels(
                     title="Convergence vs Radius",
                     ylabel="Convergence ",
@@ -148,7 +188,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
                 x=potential_1d.grid_radial,
-                visuals_1d=self.visuals_with_include_1d,
+                visuals_1d=self.visuals_with_include_1d_mass,
                 auto_labels=mat_plot.AutoLabels(
                     title="Potential vs Radius",
                     ylabel="Potential ",
@@ -159,19 +199,40 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
                 plot_axis_type_override=plot_axis_type_override,
             )
 
-    def figures_1d_with_mass_profiles(self, convergence=False, potential=False):
+    def figures_1d_decomposed(self, image=False, convergence=False, potential=False):
 
-        plotter_list = [self]
+        plotter_list = [self] + [
+            self.light_profile_plotter_from(light_profile=light_profile)
+            for light_profile in self.galaxy.light_profiles
+        ]
 
-        for mass_profile in self.galaxy.mass_profiles:
-            mass_profile_plotter = self.mass_profile_plotter_from(
-                mass_profile=mass_profile
-            )
-            plotter_list.append(mass_profile_plotter)
+        multi_plotter = multi_plotters.MultiYX1DPlotter(plotter_list=plotter_list)
+
+        if image:
+
+            multi_plotter.plotter_list[0].set_filename(filename="image_1d_decomposed")
+            multi_plotter.figure_1d(func_name="figures_1d", figure_name="image")
+
+        plotter_list = [self] + [
+            self.mass_profile_plotter_from(mass_profile=mass_profile)
+            for mass_profile in self.galaxy.mass_profiles
+        ]
+
+        multi_plotter = multi_plotters.MultiYX1DPlotter(plotter_list=plotter_list)
 
         if convergence:
-            multi_plotter = multi_plotters.MultiYX1DPlotter(plotter_list=plotter_list)
-            multi_plotter.figure_1d(func_name="figures_1d", figure_name=convergence)
+
+            multi_plotter.plotter_list[0].set_filename(
+                filename="convergence_1d_decomposed"
+            )
+            multi_plotter.figure_1d(func_name="figures_1d", figure_name="convergence")
+
+        if potential:
+
+            multi_plotter.plotter_list[0].set_filename(
+                filename="potential_1d_decomposed"
+            )
+            multi_plotter.figure_1d(func_name="figures_1d", figure_name="potential")
 
     def figures_2d(
         self,

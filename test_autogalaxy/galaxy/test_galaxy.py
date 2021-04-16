@@ -47,9 +47,9 @@ class TestLightProfiles:
 
         lp_image = lp_0.image_1d_from_grid(grid=grid)
 
-        gal_lp_image = gal_x1_lp.image_1d_from_grid(grid=grid)
+        gal_image = gal_x1_lp.image_1d_from_grid(grid=grid)
 
-        assert lp_image == gal_lp_image
+        assert lp_image == gal_image
 
         lp_image = lp_0.image_1d_from_grid(grid=grid)
         lp_image += lp_1.image_1d_from_grid(grid=grid)
@@ -62,9 +62,26 @@ class TestLightProfiles:
 
         lp_image = lp_0.image_1d_from_grid(grid=grid)
 
-        gal_lp_image = gal_x1_lp.image_1d_from_grid(grid=grid)
+        gal_image = gal_x1_lp.image_1d_from_grid(grid=grid)
 
-        assert lp_image.in_list[0] == gal_lp_image.in_list[0]
+        assert lp_image.in_list[0] == gal_image.in_list[0]
+
+        # Test explicitly for a profile with an offset centre and ellipticity, given the 1D to 2D projections are nasty.
+
+        grid = ag.Grid2D.manual_native(
+            [[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0
+        )
+
+        elliptical_lp = ag.lp.EllSersic(
+            centre=(0.5, 1.0), elliptical_comps=(0.2, 0.3), intensity=1.0
+        )
+
+        galaxy = ag.Galaxy(redshift=0.5, mass=elliptical_lp)
+
+        lp_image = elliptical_lp.image_1d_from_grid(grid=grid)
+        gal_lp_image = galaxy.image_1d_from_grid(grid=grid)
+
+        assert (lp_image == gal_lp_image).all()
 
     def test__image_2d_from_grid(
         self, sub_grid_2d_7x7, lp_0, gal_x1_lp, lp_1, gal_x2_lp
@@ -77,9 +94,9 @@ class TestLightProfiles:
 
         lp_image = lp_0.image_2d_from_grid(grid=np.array([[1.05, -0.55]]))
 
-        gal_lp_image = gal_x1_lp.image_2d_from_grid(grid=np.array([[1.05, -0.55]]))
+        gal_image = gal_x1_lp.image_2d_from_grid(grid=np.array([[1.05, -0.55]]))
 
-        assert lp_image == gal_lp_image
+        assert lp_image == gal_image
 
         lp_image = lp_0.image_2d_from_grid(grid=np.array([[1.05, -0.55]]))
         lp_image += lp_1.image_2d_from_grid(grid=np.array([[1.05, -0.55]]))
@@ -90,11 +107,11 @@ class TestLightProfiles:
 
         lp_image = lp_0.image_2d_from_grid(grid=ag.Grid2DIrregular([(1.05, -0.55)]))
 
-        gal_lp_image = gal_x1_lp.image_2d_from_grid(
+        gal_image = gal_x1_lp.image_2d_from_grid(
             grid=ag.Grid2DIrregular([(1.05, -0.55)])
         )
 
-        assert lp_image.in_list[0] == gal_lp_image.in_list[0]
+        assert lp_image.in_list[0] == gal_image.in_list[0]
 
     def test__image_2d_from_grid__sub_grid_binned_still_works(
         self, sub_grid_2d_7x7, gal_x2_lp
@@ -209,7 +226,9 @@ class TestMassProfiles:
         self, sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp
     ):
 
-        grid = ag.Grid2D.manual_native([[[1.05, -0.55]]], pixel_scales=1.0)
+        grid = ag.Grid2D.manual_native(
+            [[[1.05, -0.55], [2.05, -0.55]]], pixel_scales=1.0
+        )
 
         galaxy = ag.Galaxy(redshift=0.5)
 
@@ -219,9 +238,9 @@ class TestMassProfiles:
 
         mp_convergence = mp_0.convergence_1d_from_grid(grid=grid)
 
-        gal_mp_convergence = gal_x1_mp.convergence_1d_from_grid(grid=grid)
+        gal_convergence = gal_x1_mp.convergence_1d_from_grid(grid=grid)
 
-        assert mp_convergence == gal_mp_convergence
+        assert mp_convergence == gal_convergence
 
         mp_convergence = mp_0.convergence_1d_from_grid(grid=grid)
         mp_convergence += mp_1.convergence_1d_from_grid(grid=grid)
@@ -230,15 +249,32 @@ class TestMassProfiles:
 
         assert mp_convergence == gal_convergence
 
-        grid = ag.Grid2DIrregular([(1.05, -0.55)])
+        grid = ag.Grid2DIrregular([(1.05, -0.55), (2.05, -0.55)])
 
         mp_convergence = mp_0.convergence_1d_from_grid(grid=grid)
 
-        gal_mp_convergence = gal_x1_mp.convergence_1d_from_grid(grid=grid)
+        gal_convergence = gal_x1_mp.convergence_1d_from_grid(grid=grid)
 
-        assert mp_convergence == gal_mp_convergence
+        assert (mp_convergence == gal_convergence).all()
 
-        assert mp_convergence.in_list[0] == gal_mp_convergence.in_list[0]
+        assert mp_convergence.in_list[0] == gal_convergence.in_list[0]
+
+        # Test explicitly for a profile with an offset centre and ellipticity, given the 1D to 2D projections are nasty.
+
+        grid = ag.Grid2D.manual_native(
+            [[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0
+        )
+
+        elliptical_mp = ag.mp.EllIsothermal(
+            centre=(0.5, 1.0), elliptical_comps=(0.2, 0.3), einstein_radius=1.0
+        )
+
+        galaxy = ag.Galaxy(redshift=0.5, mass=elliptical_mp)
+
+        mp_convergence = elliptical_mp.convergence_1d_from_grid(grid=grid)
+        gal_convergence = galaxy.convergence_1d_from_grid(grid=grid)
+
+        assert (mp_convergence == gal_convergence).all()
 
     def test__convergence_2d_from_grid(
         self, sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp
@@ -256,9 +292,9 @@ class TestMassProfiles:
 
         mp_convergence = mp_0.convergence_2d_from_grid(grid=grid)
 
-        gal_mp_convergence = gal_x1_mp.convergence_2d_from_grid(grid=grid)
+        gal_convergence = gal_x1_mp.convergence_2d_from_grid(grid=grid)
 
-        assert mp_convergence == gal_mp_convergence
+        assert mp_convergence == gal_convergence
 
         mp_convergence = mp_0.convergence_2d_from_grid(grid=grid)
         mp_convergence += mp_1.convergence_2d_from_grid(grid=grid)
@@ -271,11 +307,11 @@ class TestMassProfiles:
 
         mp_convergence = mp_0.convergence_2d_from_grid(grid=grid)
 
-        gal_mp_convergence = gal_x1_mp.convergence_2d_from_grid(grid=grid)
+        gal_convergence = gal_x1_mp.convergence_2d_from_grid(grid=grid)
 
-        assert mp_convergence == gal_mp_convergence
+        assert mp_convergence == gal_convergence
 
-        assert mp_convergence.in_list[0] == gal_mp_convergence.in_list[0]
+        assert mp_convergence.in_list[0] == gal_convergence.in_list[0]
 
     def test__convergence_from_grid_2d__sub_grid_binned_works(
         self, sub_grid_2d_7x7, gal_x2_mp
@@ -318,32 +354,49 @@ class TestMassProfiles:
 
         galaxy = ag.Galaxy(redshift=0.5)
 
-        convergence = galaxy.potential_1d_from_grid(grid=sub_grid_1d_7)
+        potential = galaxy.potential_1d_from_grid(grid=sub_grid_1d_7)
 
-        assert (convergence.slim == np.zeros(shape=sub_grid_1d_7.sub_shape_slim)).all()
+        assert (potential.slim == np.zeros(shape=sub_grid_1d_7.sub_shape_slim)).all()
 
-        mp_convergence = mp_0.potential_1d_from_grid(grid=grid)
+        mp_potential = mp_0.potential_1d_from_grid(grid=grid)
 
-        gal_mp_convergence = gal_x1_mp.potential_1d_from_grid(grid=grid)
+        gal_potential = gal_x1_mp.potential_1d_from_grid(grid=grid)
 
-        assert mp_convergence == gal_mp_convergence
+        assert mp_potential == gal_potential
 
-        mp_convergence = mp_0.potential_1d_from_grid(grid=grid)
-        mp_convergence += mp_1.potential_1d_from_grid(grid=grid)
+        mp_potential = mp_0.potential_1d_from_grid(grid=grid)
+        mp_potential += mp_1.potential_1d_from_grid(grid=grid)
 
         gal_convergence = gal_x2_mp.potential_1d_from_grid(grid=grid)
 
-        assert mp_convergence == gal_convergence
+        assert mp_potential == gal_convergence
 
         grid = ag.Grid2DIrregular([(1.05, -0.55)])
 
-        mp_convergence = mp_0.potential_1d_from_grid(grid=grid)
+        mp_potential = mp_0.potential_1d_from_grid(grid=grid)
 
-        gal_mp_convergence = gal_x1_mp.potential_1d_from_grid(grid=grid)
+        gal_potential = gal_x1_mp.potential_1d_from_grid(grid=grid)
 
-        assert mp_convergence == gal_mp_convergence
+        assert mp_potential == gal_potential
 
-        assert mp_convergence.in_list[0] == gal_mp_convergence.in_list[0]
+        assert mp_potential.in_list[0] == gal_potential.in_list[0]
+
+        # Test explicitly for a profile with an offset centre and ellipticity, given the 1D to 2D projections are nasty.
+
+        grid = ag.Grid2D.manual_native(
+            [[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0
+        )
+
+        elliptical_mp = ag.mp.EllIsothermal(
+            centre=(0.5, 1.0), elliptical_comps=(0.2, 0.3), einstein_radius=1.0
+        )
+
+        galaxy = ag.Galaxy(redshift=0.5, mass=elliptical_mp)
+
+        mp_potential = elliptical_mp.potential_1d_from_grid(grid=grid)
+        gal_mp_potential = galaxy.potential_1d_from_grid(grid=grid)
+
+        assert (mp_potential == gal_mp_potential).all()
 
     def test__potential_2d_from_grid__no_mass_profiles__potential_returned_as_0s_of_shape_grid(
         self, sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp
@@ -359,11 +412,9 @@ class TestMassProfiles:
 
         mp_potential = mp_0.potential_2d_from_grid(grid=grid)
 
-        gal_mp_potential = gal_x1_mp.potential_2d_from_grid(
-            grid=np.array([[1.05, -0.55]])
-        )
+        gal_potential = gal_x1_mp.potential_2d_from_grid(grid=np.array([[1.05, -0.55]]))
 
-        assert mp_potential == gal_mp_potential
+        assert mp_potential == gal_potential
 
         mp_potential = mp_0.potential_2d_from_grid(grid=grid)
         mp_potential += mp_1.potential_2d_from_grid(grid=grid)
@@ -376,11 +427,11 @@ class TestMassProfiles:
 
         mp_potential = mp_0.potential_2d_from_grid(grid=grid)
 
-        gal_mp_potential = gal_x1_mp.potential_2d_from_grid(grid=grid)
+        gal_potential = gal_x1_mp.potential_2d_from_grid(grid=grid)
 
-        assert mp_potential == gal_mp_potential
+        assert mp_potential == gal_potential
 
-        assert mp_potential.in_list[0] == gal_mp_potential.in_list[0]
+        assert mp_potential.in_list[0] == gal_potential.in_list[0]
 
     def test__potential_2d_from_grid__sub_grid_binning_works(
         self, sub_grid_2d_7x7, gal_x2_mp
@@ -430,11 +481,11 @@ class TestMassProfiles:
 
         mp_deflections = mp_0.deflections_2d_from_grid(grid=grid)
 
-        gal_mp_deflections = gal_x1_mp.deflections_2d_from_grid(
+        gal_deflections = gal_x1_mp.deflections_2d_from_grid(
             grid=np.array([[1.05, -0.55]])
         )
 
-        assert (mp_deflections == gal_mp_deflections).all()
+        assert (mp_deflections == gal_deflections).all()
 
         mp_deflections = mp_0.deflections_2d_from_grid(grid=grid)
         mp_deflections += mp_1.deflections_2d_from_grid(grid=grid)
@@ -449,11 +500,11 @@ class TestMassProfiles:
 
         mp_deflections = mp_0.deflections_2d_from_grid(grid=grid)
 
-        gal_mp_deflections = gal_x1_mp.deflections_2d_from_grid(grid=grid)
+        gal_deflections = gal_x1_mp.deflections_2d_from_grid(grid=grid)
 
-        assert type(gal_mp_deflections) == ag.Grid2DIrregular
-        assert mp_deflections.in_list[0][0] == gal_mp_deflections.in_list[0][0]
-        assert mp_deflections.in_list[0][1] == gal_mp_deflections.in_list[0][1]
+        assert type(gal_deflections) == ag.Grid2DIrregular
+        assert mp_deflections.in_list[0][0] == gal_deflections.in_list[0][0]
+        assert mp_deflections.in_list[0][1] == gal_deflections.in_list[0][1]
 
     def test__deflections_2d_from_grid__sub_grid_binning_still_works(
         self, sub_grid_2d_7x7, gal_x2_mp

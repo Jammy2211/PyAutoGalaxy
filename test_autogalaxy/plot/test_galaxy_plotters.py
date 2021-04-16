@@ -64,7 +64,7 @@ def test__visuals_with_include_2d(gal_x1_lp_x1_mp, grid_2d_7x7):
     assert galaxy_plotter.visuals_with_include_2d.vector_field == 2
 
 
-def test__individual_1d_images_are_output(
+def test__figures_1d__all_are_output(
     gal_x1_lp_x1_mp, sub_grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch
 ):
 
@@ -81,7 +81,26 @@ def test__individual_1d_images_are_output(
     assert path.join(plot_path, "potential_1d.png") in plot_patch.paths
 
 
-def test__individual_2d_images_are_output(
+def test__figures_1d_decomposed__all_are_output(
+    gal_x1_lp_x1_mp, sub_grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch
+):
+
+    galaxy_plotter = aplt.GalaxyPlotter(
+        galaxy=gal_x1_lp_x1_mp,
+        grid=sub_grid_2d_7x7,
+        include_1d=include_1d_all,
+        mat_plot_1d=aplt.MatPlot1D(output=aplt.Output(plot_path, format="png")),
+    )
+    galaxy_plotter.figures_1d_decomposed(convergence=True)
+
+    #  assert path.join(plot_path, "image_1d.png") in plot_patch.paths
+    assert path.join(plot_path, "convergence_1d_decomposed.png") in plot_patch.paths
+
+
+#  assert path.join(plot_path, "potential_1d.png") in plot_patch.paths
+
+
+def test__figures_2d__all_are_output(
     gal_x1_lp_x1_mp,
     sub_grid_2d_7x7,
     mask_2d_7x7,

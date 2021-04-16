@@ -87,22 +87,18 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
 
     def figures_1d(self, image=False):
 
-        grid_2d_radial_projected = self.grid.grid_2d_radial_projected_from(
-            centre=self.light_profile.centre, angle=self.light_profile.angle
-        )
-
-        radial_distances = grid_2d_radial_projected.distances_from_coordinate()
-
-        grid_1d_radial_distances = grid_1d.Grid1D.manual_native(
-            grid=radial_distances,
-            pixel_scales=abs(radial_distances[0] - radial_distances[1]),
-        )
+        if self.mat_plot_1d.yx_plot.plot_axis_type is None:
+            plot_axis_type_override = "semilogy"
+        else:
+            plot_axis_type_override = None
 
         if image:
 
+            image_1d = self.light_profile.image_1d_from_grid(grid=self.grid)
+
             self.mat_plot_1d.plot_yx(
-                y=self.light_profile.image_2d_from_grid(grid=grid_2d_radial_projected),
-                x=grid_1d_radial_distances,
+                y=image_1d,
+                x=image_1d.grid_radial,
                 visuals_1d=self.visuals_with_include_1d,
                 auto_labels=mat_plot.AutoLabels(
                     title="Image vs Radius",
@@ -111,6 +107,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
                     legend=self.light_profile.__class__.__name__,
                     filename="image_1d",
                 ),
+                plot_axis_type_override=plot_axis_type_override,
             )
 
     def figures_2d(self, image=False):
