@@ -59,6 +59,9 @@ class Visuals2D(vis.Visuals2D):
         multiple_images: grid_2d_irregular.Grid2DIrregular = None,
         critical_curves: grid_2d_irregular.Grid2DIrregular = None,
         caustics: grid_2d_irregular.Grid2DIrregular = None,
+        parallel_overscan=None,
+        serial_prescan=None,
+        serial_overscan=None,
         indexes: typing.Union[List[int], List[List[int]]] = None,
         pixelization_indexes: typing.Union[List[int], List[List[int]]] = None,
     ):
@@ -73,6 +76,9 @@ class Visuals2D(vis.Visuals2D):
             array_overlay=array_overlay,
             origin=origin,
             border=border,
+            parallel_overscan=parallel_overscan,
+            serial_prescan=serial_prescan,
+            serial_overscan=serial_overscan,
             indexes=indexes,
             pixelization_indexes=pixelization_indexes,
         )

@@ -272,7 +272,7 @@ class AbstractEllSersic(LightProfile):
             Controls the concentration of the of the profile (lower value -> less concentrated, \
             higher value -> more concentrated).
         """
-        super(AbstractEllSersic, self).__init__(
+        super().__init__(
             centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
         )
         self.effective_radius = effective_radius

@@ -210,7 +210,11 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
 
         if image:
 
-            multi_plotter.plotter_list[0].set_filename(filename="image_1d_decomposed")
+            if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
+                multi_plotter.plotter_list[0].set_filename(
+                    filename="image_1d_decomposed"
+                )
+
             multi_plotter.figure_1d(func_name="figures_1d", figure_name="image")
 
         plotter_list = [self] + [
@@ -222,16 +226,20 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
 
         if convergence:
 
-            multi_plotter.plotter_list[0].set_filename(
-                filename="convergence_1d_decomposed"
-            )
+            if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
+                multi_plotter.plotter_list[0].set_filename(
+                    filename="convergence_1d_decomposed"
+                )
+
             multi_plotter.figure_1d(func_name="figures_1d", figure_name="convergence")
 
         if potential:
 
-            multi_plotter.plotter_list[0].set_filename(
-                filename="potential_1d_decomposed"
-            )
+            if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
+                multi_plotter.plotter_list[0].set_filename(
+                    filename="potential_1d_decomposed"
+                )
+
             multi_plotter.figure_1d(func_name="figures_1d", figure_name="potential")
 
     def figures_2d(

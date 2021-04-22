@@ -137,7 +137,7 @@ class EllProfile(SphProfile):
         angle : float
             Rotation angle of light profile counter-clockwise from positive x-axis.
         """
-        super(EllProfile, self).__init__(centre=centre)
+        super().__init__(centre=centre)
 
         self.elliptical_comps = elliptical_comps
 
