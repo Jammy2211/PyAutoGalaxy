@@ -48,7 +48,7 @@ class TestVisualizer:
     def test__visualizes_fit_imaging__uses_configs(
         self,
         masked_imaging_7x7,
-        imaging_fit_x2_galaxy_inversion_7x7,
+        fit_imaging_x2_galaxy_inversion_7x7,
         include_2d_all,
         plot_path,
         plot_patch,
@@ -60,7 +60,7 @@ class TestVisualizer:
         visualizer = vis.Visualizer(visualize_path=plot_path)
 
         visualizer.visualize_fit_imaging(
-            fit=imaging_fit_x2_galaxy_inversion_7x7, during_analysis=False
+            fit=fit_imaging_x2_galaxy_inversion_7x7, during_analysis=False
         )
 
         plot_path = path.join(plot_path, "fit_imaging")
@@ -111,7 +111,7 @@ class TestVisualizer:
     def test__visualizes_fit_interferometer__uses_configs(
         self,
         interferometer_7,
-        interferometer_fit_x2_galaxy_inversion_7x7,
+        fit_interferometer_x2_galaxy_inversion_7x7,
         include_2d_all,
         plot_path,
         plot_patch,
@@ -119,7 +119,7 @@ class TestVisualizer:
         visualizer = vis.Visualizer(visualize_path=plot_path)
 
         visualizer.visualize_fit_interferometer(
-            fit=interferometer_fit_x2_galaxy_inversion_7x7, during_analysis=True
+            fit=fit_interferometer_x2_galaxy_inversion_7x7, during_analysis=True
         )
 
         plot_path = path.join(plot_path, "fit_interferometer")
@@ -188,7 +188,7 @@ class TestVisualizer:
         hyper_model_image_7x7,
         include_2d_all,
         hyper_galaxy_image_path_dict_7x7,
-        imaging_fit_x2_galaxy_inversion_7x7,
+        fit_imaging_x2_galaxy_inversion_7x7,
         plot_path,
         plot_patch,
     ):
@@ -198,7 +198,7 @@ class TestVisualizer:
         visualizer.visualize_hyper_images(
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict_7x7,
             hyper_model_image=hyper_model_image_7x7,
-            plane=imaging_fit_x2_galaxy_inversion_7x7.plane,
+            plane=fit_imaging_x2_galaxy_inversion_7x7.plane,
         )
 
         plot_path = path.join(plot_path, "hyper")

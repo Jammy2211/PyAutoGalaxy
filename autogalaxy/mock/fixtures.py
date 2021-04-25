@@ -242,29 +242,29 @@ def make_hyper_galaxy_image_1_7x7():
     )
 
 
-def make_imaging_fit_7x7():
+def make_fit_imaging_7x7():
     return ag.FitImaging(imaging=make_masked_imaging_7x7(), plane=make_plane_7x7())
 
 
-def make_imaging_fit_x2_galaxy_7x7():
+def make_fit_imaging_x2_galaxy_7x7():
     plane = ag.Plane(galaxies=[make_gal_x1_lp(), make_gal_x1_lp()])
 
     return ag.FitImaging(imaging=make_masked_imaging_7x7(), plane=plane)
 
 
-def make_imaging_fit_x2_galaxy_inversion_7x7():
+def make_fit_imaging_x2_galaxy_inversion_7x7():
     return ag.FitImaging(
         imaging=make_masked_imaging_7x7(), plane=make_plane_x2_galaxy_inversion_7x7()
     )
 
 
-def make_interferometer_fit_7x7():
+def make_fit_interferometer_7x7():
     return ag.FitInterferometer(
         interferometer=make_interferometer_7(), plane=make_plane_7x7()
     )
 
 
-def make_interferometer_fit_x2_galaxy_inversion_7x7():
+def make_fit_interferometer_x2_galaxy_inversion_7x7():
     return ag.FitInterferometer(
         interferometer=make_interferometer_7(),
         plane=make_plane_x2_galaxy_inversion_7x7(),

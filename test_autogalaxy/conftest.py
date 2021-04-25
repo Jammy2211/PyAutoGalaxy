@@ -57,8 +57,8 @@ def make_rectangular_mapper_7x7_3x3():
 
 
 @pytest.fixture(name="fit_interferometer_7")
-def make_interferometer_fit_x1_plane_7(interferometer_7):
-    return fixtures.make_interferometer_fit_x1_plane_7()
+def make_fit_interferometer_7(interferometer_7):
+    return fixtures.make_fit_interferometer_7()
 
 
 @pytest.fixture(name="noise_map_7x7")
@@ -329,29 +329,29 @@ def make_contribution_map_7x7(
 ### FITS ###
 
 
-@pytest.fixture(name="imaging_fit_7x7")
-def make_imaging_fit_7x7():
-    return fixtures.make_imaging_fit_7x7()
+@pytest.fixture(name="fit_imaging_7x7")
+def make_fit_imaging_7x7():
+    return fixtures.make_fit_imaging_7x7()
 
 
-@pytest.fixture(name="imaging_fit_x2_galaxy_7x7")
-def make_imaging_fit_x2_galaxy_7x7():
-    return fixtures.make_imaging_fit_x2_galaxy_7x7()
+@pytest.fixture(name="fit_imaging_x2_galaxy_7x7")
+def make_fit_imaging_x2_galaxy_7x7():
+    return fixtures.make_fit_imaging_x2_galaxy_7x7()
 
 
-@pytest.fixture(name="imaging_fit_x2_galaxy_inversion_7x7")
-def make_imaging_fit_x2_galaxy_inversion_7x7():
-    return fixtures.make_imaging_fit_x2_galaxy_inversion_7x7()
+@pytest.fixture(name="fit_imaging_x2_galaxy_inversion_7x7")
+def make_fit_imaging_x2_galaxy_inversion_7x7():
+    return fixtures.make_fit_imaging_x2_galaxy_inversion_7x7()
 
 
-@pytest.fixture(name="interferometer_fit_7x7")
-def make_interferometer_fit_7x7():
-    return fixtures.make_interferometer_fit_7x7()
+@pytest.fixture(name="fit_interferometer_7x7")
+def make_fit_interferometer_7x7():
+    return fixtures.make_fit_interferometer_7x7()
 
 
-@pytest.fixture(name="interferometer_fit_x2_galaxy_inversion_7x7")
-def make_interferometer_fit_x2_galaxy_inversion_7x7():
-    return fixtures.make_interferometer_fit_x2_galaxy_inversion_7x7()
+@pytest.fixture(name="fit_interferometer_x2_galaxy_inversion_7x7")
+def make_fit_interferometer_x2_galaxy_inversion_7x7():
+    return fixtures.make_fit_interferometer_x2_galaxy_inversion_7x7()
 
 
 @pytest.fixture(name="voronoi_mapper_9_3x3")

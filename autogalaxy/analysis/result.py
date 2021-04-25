@@ -54,7 +54,7 @@ class ResultDataset(Result):
             instance=self.instance
         )
 
-        return self.analysis.imaging_fit_for_plane(
+        return self.analysis.fit_imaging_for_plane(
             plane=self.max_log_likelihood_plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
@@ -148,7 +148,7 @@ class ResultImaging(ResultDataset):
             instance=self.instance
         )
 
-        return self.analysis.imaging_fit_for_plane(
+        return self.analysis.fit_imaging_for_plane(
             plane=self.max_log_likelihood_plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
@@ -171,7 +171,7 @@ class ResultInterferometer(ResultDataset):
             instance=self.instance
         )
 
-        return self.analysis.interferometer_fit_for_tracer(
+        return self.analysis.fit_interferometer_for_tracer(
             plane=self.max_log_likelihood_tracer,
             hyper_background_noise=hyper_background_noise,
         )
