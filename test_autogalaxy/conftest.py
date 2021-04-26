@@ -56,6 +56,11 @@ def make_rectangular_mapper_7x7_3x3():
     return fixtures.make_rectangular_mapper_7x7_3x3()
 
 
+@pytest.fixture(name="interferometer_7_lop")
+def make_interferometer_7_lop():
+    return fixtures.make_interferometer_7_lop()
+
+
 @pytest.fixture(name="fit_interferometer_7")
 def make_fit_interferometer_7(interferometer_7):
     return fixtures.make_fit_interferometer_7()
@@ -94,11 +99,6 @@ def make_masked_imaging_no_blur_7x7():
 @pytest.fixture(name="interferometer_7")
 def make_interferometer_7():
     return fixtures.make_interferometer_7()
-
-
-@pytest.fixture(name="interferometer_7_nufft")
-def make_interferometer_7_nufft():
-    return fixtures.make_interferometer_7_nufft()
 
 
 @pytest.fixture(name="mask_2d_7x7")
