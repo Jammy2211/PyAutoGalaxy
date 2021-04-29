@@ -137,7 +137,7 @@ class MassProfile(geometry_profiles.EllProfile, lensing.LensingObject):
         bins=200,
     ):
 
-        normalizations = np.logspace(
+        normalization_list = np.logspace(
             np.log10(normalization_min), np.log10(normalization_max), bins
         )
 
@@ -145,12 +145,12 @@ class MassProfile(geometry_profiles.EllProfile, lensing.LensingObject):
             self.mass_angular_from_normalization_and_radius(
                 normalization=normalization, radius=radius
             )
-            for normalization in normalizations
+            for normalization in normalization_list
         ]
 
-        normalizations = [
+        normalization_list = [
             normalization
-            for normalization, mass in zip(normalizations, mass_angulars)
+            for normalization, mass in zip(normalization_list, mass_angulars)
             if mass is not None
         ]
         mass_angulars = list(filter(None, mass_angulars))
@@ -178,7 +178,7 @@ class MassProfile(geometry_profiles.EllProfile, lensing.LensingObject):
 
         return root_scalar(
             func,
-            bracket=[normalizations[0], normalizations[-1]],
+            bracket=[normalization_list[0], normalization_list[-1]],
             args=(mass_angular, radius),
         ).root
 
@@ -195,18 +195,18 @@ class MassProfile(geometry_profiles.EllProfile, lensing.LensingObject):
         self, einstein_radius, normalization_min=1e-9, normalization_max=1e9, bins=100
     ):
 
-        normalizations = np.logspace(
+        normalization_list = np.logspace(
             np.log10(normalization_min), np.log10(normalization_max), bins
         )
 
         einstein_radii = [
             self.einstein_radius_from_normalization(normalization=normalization)
-            for normalization in normalizations
+            for normalization in normalization_list
         ]
 
-        normalizations = [
+        normalization_list = [
             normalization
-            for normalization, radii in zip(normalizations, einstein_radii)
+            for normalization, radii in zip(normalization_list, einstein_radii)
             if radii is not None
         ]
         einstein_radii = list(filter(None, einstein_radii))
@@ -234,7 +234,7 @@ class MassProfile(geometry_profiles.EllProfile, lensing.LensingObject):
 
         return root_scalar(
             func,
-            bracket=[normalizations[0], normalizations[-1]],
+            bracket=[normalization_list[0], normalization_list[-1]],
             args=(einstein_radius,),
         ).root
 
