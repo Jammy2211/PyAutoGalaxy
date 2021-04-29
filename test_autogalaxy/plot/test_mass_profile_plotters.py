@@ -63,14 +63,19 @@ def test__figures_1d__all_are_output(
     plot_patch,
 ):
 
-    light_profile_plotter = aplt.MassProfilePlotter(
+    mat_plot_1d = aplt.MatPlot1D(
+        einstein_radius_axvline=aplt.EinsteinRadiusAXVLine(color="r"),
+        output=aplt.Output(plot_path, format="png"),
+    )
+
+    mass_profile_plotter = aplt.MassProfilePlotter(
         mass_profile=mp_0,
         grid=sub_grid_2d_7x7,
         include_1d=include_1d_all,
-        mat_plot_1d=aplt.MatPlot1D(output=aplt.Output(plot_path, format="png")),
+        mat_plot_1d=mat_plot_1d,
     )
 
-    light_profile_plotter.figures_1d(convergence=True, potential=True)
+    mass_profile_plotter.figures_1d(convergence=True, potential=True)
 
     assert path.join(plot_path, "convergence_1d.png") in plot_patch.paths
     assert path.join(plot_path, "potential_1d.png") in plot_patch.paths

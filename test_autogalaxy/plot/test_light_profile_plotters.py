@@ -67,11 +67,16 @@ def test__figures_1d__all_are_output(
     plot_patch,
 ):
 
+    mat_plot_1d = aplt.MatPlot1D(
+        einstein_radius_axvline=aplt.EinsteinRadiusAXVLine(color="r"),
+        output=aplt.Output(plot_path, format="png"),
+    )
+
     light_profile_plotter = aplt.LightProfilePlotter(
         light_profile=lp_0,
         grid=sub_grid_2d_7x7,
         include_1d=include_1d_all,
-        mat_plot_1d=aplt.MatPlot1D(output=aplt.Output(plot_path, format="png")),
+        mat_plot_1d=mat_plot_1d,
     )
 
     light_profile_plotter.figures_1d(image=True)
