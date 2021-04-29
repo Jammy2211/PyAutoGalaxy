@@ -64,6 +64,7 @@ def test__figures_1d__all_are_output(
 ):
 
     mat_plot_1d = aplt.MatPlot1D(
+        half_light_radius_axvline=aplt.HalfLightRadiusAXVLine(color="r"),
         einstein_radius_axvline=aplt.EinsteinRadiusAXVLine(color="r"),
         output=aplt.Output(plot_path, format="png"),
     )
