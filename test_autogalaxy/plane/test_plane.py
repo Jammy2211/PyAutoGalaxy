@@ -1483,7 +1483,7 @@ class TestAbstractPlaneData:
         def test__ensure_index_of_plane_image_has_negative_arcseconds_at_start(self,):
             # The grid coordinates -2.0 -> 2.0 mean a plane of shape (5,5) has arc second coordinates running over
             # -1.6, -0.8, 0.0, 0.8, 1.6. The origin -1.6, -1.6 of the model_galaxy means its brighest pixel should be
-            # index 0 of the 1D grid and (0,0) of the 2d plane datas_.
+            # index 0 of the 1D grid and (0,0) of the 2d plane data.
 
             mask = ag.Mask2D.unmasked(shape_native=(5, 5), pixel_scales=1.0, sub_size=1)
 
