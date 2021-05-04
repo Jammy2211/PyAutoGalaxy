@@ -11,11 +11,12 @@ with open(join(this_dir, "README.rst"), encoding="utf-8") as file:
 with open(join(this_dir, "requirements.txt")) as f:
     requirements = f.read().split("\n")
 
-requirements.extend(["autoconf==0.9.0", "autoarray==0.21.1", "autofit==0.76.0"])
+version = environ.get("VERSION", "1.0.dev0"),
+requirements.extend([f"autoconf=={version}", f"autoarray=={version}", f"autofit=={version}"])
 
 setup(
     name="autogalaxy",
-    version=environ.get("VERSION", "1.0.dev0"),
+    version=version
     description="Open Source Galaxy Model-Fitting",
     long_description=long_description,
     long_description_content_type="text/markdown",
