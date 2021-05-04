@@ -213,6 +213,7 @@ def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analys
 
     setup_hyper.search.paths.path_prefix = result.search.paths.path_prefix
     setup_hyper.search.paths.name = f"{result.search.paths.name}__hyper"
+    setup_hyper.search.paths.unique_tag = result.search.paths.unique_tag
 
     analysis.set_hyper_dataset(result=result)
 
@@ -342,6 +343,7 @@ def stochastic_fit(stochastic_model, result, analysis):
         f"{result.search.paths.name}__stochastic_likelihood_cap_"
         + "{0:.1f}".format(log_likelihood_cap)
     )
+    search.paths.unique_tag = result.search.paths.unique_tag
 
     search.paths.save_object(
         "stochastic_log_evidences", result.stochastic_log_evidences
