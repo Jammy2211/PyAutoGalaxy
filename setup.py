@@ -11,9 +11,10 @@ with open(join(this_dir, "README.rst"), encoding="utf-8") as file:
 with open(join(this_dir, "requirements.txt")) as f:
     requirements = f.read().split("\n")
 
-version = environ.get("VERSION", "1.0.dev0"),
+version = environ.get("VERSION", "1.0.dev0")
 #requirements.extend([f"autoconf=={version}", f"autoarray=={version}", f"autofit=={version}"])
 requirements.extend([f"autoconf_tmp=={version}", f"autoarray=={version}", f"autofit=={version}"])
+print(requirements)
 
 setup(
     name="autogalaxy",
