@@ -17,7 +17,7 @@ requirements.extend([f"autoconf-tmp=={version}", f"autoarray=={version}", f"auto
 
 setup(
     name="autogalaxy",
-    version=version
+    version=version,
     description="Open Source Galaxy Model-Fitting",
     long_description=long_description,
     long_description_content_type="text/markdown",
