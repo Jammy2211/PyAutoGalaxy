@@ -35,7 +35,8 @@ class AnalysisDataset(Analysis):
 
         if self.hyper_result is not None:
 
-            hyper_result.search.paths = None
+            if hyper_result.search is not None:
+                hyper_result.search.paths = None
 
             self.set_hyper_dataset(result=self.hyper_result)
 
