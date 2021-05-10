@@ -254,7 +254,7 @@ class Visualizer:
             residual_map=should_plot("residual_map"),
             normalized_residual_map=should_plot("normalized_residual_map"),
             chi_squared_map=should_plot("chi_squared_map"),
-            regularization_weights=should_plot("regularization_weights"),
+            regularization_weight_list=should_plot("regularization_weight_list"),
             interpolated_reconstruction=should_plot("interpolated_reconstruction"),
             interpolated_errors=should_plot("interpolated_errors"),
         )
@@ -270,7 +270,7 @@ class Visualizer:
                     residual_map=True,
                     normalized_residual_map=True,
                     chi_squared_map=True,
-                    regularization_weights=True,
+                    regularization_weight_list=True,
                     interpolated_reconstruction=True,
                     interpolated_errors=True,
                 )

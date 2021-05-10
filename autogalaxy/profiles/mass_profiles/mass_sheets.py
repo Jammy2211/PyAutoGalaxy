@@ -135,7 +135,7 @@ class InputDeflections(mp.MassProfile):
             The image-plane grid from which the deflection angles are defined.
         grid_interp : aa.Grid2D
             The grid that interpolated quantities are computed on. If this is input in advance, the interpolation
-            weights can be precomputed to speed up the calculation time.
+            weight_list can be precomputed to speed up the calculation time.
         normalization_scale : float
             The calculated deflection angles are multiplied by this factor scaling their values up and doown.
         """
