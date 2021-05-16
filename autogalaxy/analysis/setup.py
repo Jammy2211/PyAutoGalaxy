@@ -4,14 +4,15 @@ from autogalaxy.hyper import hyper_data as hd
 
 from typing import Optional
 
+
 class SetupHyper:
     def __init__(
         self,
         hyper_galaxies: bool = False,
         hyper_image_sky: Optional[type(hd.HyperImageSky)] = None,
         hyper_background_noise: Optional[type(hd.HyperBackgroundNoise)] = None,
-        search_cls : Optional[af.NonLinearSearch] = None,
-        search_dict : Optional[dict] = None,
+        search_cls: Optional[af.NonLinearSearch] = None,
+        search_dict: Optional[dict] = None,
     ):
         """
         The hyper setup of a pipeline, which controls how hyper-features in PyAutoGalaxy template pipelines run,
@@ -42,7 +43,11 @@ class SetupHyper:
         self.hyper_galaxy_names = None
 
         self.search_cls = search_cls or af.DynestyStatic
-        self.search_dict = search_dict or {"nlive" : 50, "sample" : "rstagger", "dlogz" : 10}
+        self.search_dict = search_dict or {
+            "nlive": 50,
+            "sample": "rstagger",
+            "dlogz": 10,
+        }
 
         self.hyper_image_sky = hyper_image_sky
         self.hyper_background_noise = hyper_background_noise
