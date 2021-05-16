@@ -211,13 +211,16 @@ def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analys
     if hyper_model is None:
         return result
 
-    setup_hyper.search.paths.path_prefix = result.search.paths.path_prefix
-    setup_hyper.search.paths.name = f"{result.search.paths.name}__hyper"
-    setup_hyper.search.paths.unique_tag = result.search.paths.unique_tag
+    search = setup_hyper.search_cls(
+        path_prefix=result.search.paths.path_prefix,
+        name=f"{result.search.paths.name}__hyper",
+        unique_tag=result.search.paths.unique_tag,
+        **setup_hyper.search_dict
+    )
 
     analysis.set_hyper_dataset(result=result)
 
-    hyper_result = setup_hyper.search.fit(model=hyper_model, analysis=analysis)
+    hyper_result = search.fit(model=hyper_model, analysis=analysis)
 
     setattr(result, "hyper", hyper_result)
 
