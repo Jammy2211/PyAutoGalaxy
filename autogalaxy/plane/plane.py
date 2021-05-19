@@ -117,15 +117,15 @@ class AbstractPlane(lensing.LensingObject):
         return any(list(map(lambda galaxy: galaxy.has_hyper_galaxy, self.galaxies)))
 
     @property
-    def point_source_dict(self):
+    def point_dict(self):
 
-        point_source_dict = {}
+        point_dict = {}
 
         for galaxy in self.galaxies:
-            for key, value in galaxy.point_source_dict.items():
-                point_source_dict[key] = value
+            for key, value in galaxy.point_dict.items():
+                point_dict[key] = value
 
-        return point_source_dict
+        return point_dict
 
     @property
     def mass_profiles(self):

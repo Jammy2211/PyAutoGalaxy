@@ -56,24 +56,24 @@ def caustics_via_magnification_from_plane_and_grid(plane, grid):
 
 class TestAbstractPlane:
     class TestProperties:
-        def test__point_source_dict(self, ps_0, ps_1):
+        def test__point_dict(self, ps_0, ps_1):
 
             plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
-            assert plane.point_source_dict == {}
+            assert plane.point_dict == {}
 
             plane = ag.Plane(
                 galaxies=[ag.Galaxy(redshift=0.5, point_0=ps_0)], redshift=None
             )
 
-            assert plane.point_source_dict == {"point_0": ps_0}
+            assert plane.point_dict == {"point_0": ps_0}
 
             plane = ag.Plane(
                 galaxies=[ag.Galaxy(redshift=0.5, point_0=ps_0, point_1=ps_1)],
                 redshift=None,
             )
 
-            assert plane.point_source_dict == {"point_0": ps_0, "point_1": ps_1}
+            assert plane.point_dict == {"point_0": ps_0, "point_1": ps_1}
 
             plane = ag.Plane(
                 galaxies=[
@@ -83,7 +83,7 @@ class TestAbstractPlane:
                 redshift=None,
             )
 
-            assert plane.point_source_dict == {
+            assert plane.point_dict == {
                 "point_0": ps_0,
                 "point_1": ps_1,
                 "point_2": ps_0,

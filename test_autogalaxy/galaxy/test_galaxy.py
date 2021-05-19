@@ -8,20 +8,20 @@ from autogalaxy import exc
 from autogalaxy.mock import mock
 
 
-class TestPointSources:
-    def test__point_source_dict(self, ps_0, ps_1):
+class TestPoints:
+    def test__point_dict(self, ps_0, ps_1):
 
         galaxy = ag.Galaxy(redshift=0.5)
 
-        assert galaxy.point_source_dict == {}
+        assert galaxy.point_dict == {}
 
         galaxy = ag.Galaxy(redshift=0.5, point_0=ps_0)
 
-        assert galaxy.point_source_dict == {"point_0": ps_0}
+        assert galaxy.point_dict == {"point_0": ps_0}
 
         galaxy = ag.Galaxy(redshift=0.5, point_0=ps_0, point_1=ps_1)
 
-        assert galaxy.point_source_dict == {"point_0": ps_0, "point_1": ps_1}
+        assert galaxy.point_dict == {"point_0": ps_0, "point_1": ps_1}
 
         galaxy = ag.Galaxy(
             redshift=0.5,
@@ -31,7 +31,7 @@ class TestPointSources:
             light=ag.lp.EllSersic(),
         )
 
-        assert galaxy.point_source_dict == {"point_0": ps_0, "point_1": ps_1}
+        assert galaxy.point_dict == {"point_0": ps_0, "point_1": ps_1}
 
 
 class TestLightProfiles:

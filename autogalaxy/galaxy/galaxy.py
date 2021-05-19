@@ -20,7 +20,7 @@ from typing import Optional
 
 
 def is_point_source(obj):
-    return isinstance(obj, ps.PointSource)
+    return isinstance(obj, ps.Point)
 
 
 def is_light_profile(obj):
@@ -94,7 +94,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return self.id
 
     @property
-    def point_source_dict(self):
+    def point_dict(self):
         return {
             key: value for key, value in self.__dict__.items() if is_point_source(value)
         }

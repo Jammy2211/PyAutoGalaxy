@@ -1,5 +1,5 @@
 {
-    "PointSource": {
+    "Point": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -31,7 +31,39 @@
             }
         }
     },
-    "PointSourceFlux": {
+    "PointSourceChi": {
+        "centre_0": {
+            "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.3,
+            "lower_limit": "-inf",
+            "upper_limit": "inf",
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.05
+            },
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
+        },
+        "centre_1": {
+            "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.3,
+            "lower_limit": "-inf",
+            "upper_limit": "inf",
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.05
+            },
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
+        }
+    },
+    "PointFlux": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
