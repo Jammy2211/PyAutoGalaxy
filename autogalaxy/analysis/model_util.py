@@ -215,6 +215,7 @@ def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analys
         path_prefix=result.search.path_prefix_no_unique_tag,
         name=f"{result.search.paths.name}__hyper",
         unique_tag=result.search.paths.unique_tag,
+        number_of_cores=result.search.number_of_cores,
         **setup_hyper.search_dict,
     )
 
