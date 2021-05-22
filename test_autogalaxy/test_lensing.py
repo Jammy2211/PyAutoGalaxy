@@ -24,7 +24,7 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
@@ -163,7 +163,7 @@ class MockSphIsothermal(MockEllIsothermal):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where

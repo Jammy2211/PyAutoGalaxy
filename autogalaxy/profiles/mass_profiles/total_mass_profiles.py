@@ -1,28 +1,25 @@
 import numpy as np
 from autoarray.structures.grids import grid_decorators
 from autoarray.structures.vector_fields import vector_field_irregular
-from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 
 from pyquad import quad_grid
 from scipy import special
-import typing
+from typing import Tuple
 import copy
 
 
 class PointMass(mp.MassProfile):
     def __init__(
-        self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        einstein_radius: float = 1.0,
+        self, centre: Tuple[float, float] = (0.0, 0.0), einstein_radius: float = 1.0
     ):
         """
         Represents a point-mass.
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         einstein_radius : float
             The arc-second Einstein radius of the point-mass.
@@ -68,8 +65,8 @@ class PointMass(mp.MassProfile):
 class EllPowerLawBroken(mp.MassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
         inner_slope: float = 1.5,
         outer_slope: float = 2.5,
@@ -222,7 +219,7 @@ class EllPowerLawBroken(mp.MassProfile):
 class SphPowerLawBroken(EllPowerLawBroken):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
         inner_slope: float = 1.5,
         outer_slope: float = 2.5,
@@ -252,8 +249,8 @@ class SphPowerLawBroken(EllPowerLawBroken):
 class EllPowerLawCored(mp.MassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
         slope: float = 2.0,
         core_radius: float = 0.01,
@@ -263,7 +260,7 @@ class EllPowerLawCored(mp.MassProfile):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
@@ -419,7 +416,7 @@ class EllPowerLawCored(mp.MassProfile):
 class SphPowerLawCored(EllPowerLawCored):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
         slope: float = 2.0,
         core_radius: float = 0.01,
@@ -429,7 +426,7 @@ class SphPowerLawCored(EllPowerLawCored):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         einstein_radius : float
             The arc-second Einstein radius.
@@ -479,8 +476,8 @@ class SphPowerLawCored(EllPowerLawCored):
 class EllPowerLaw(EllPowerLawCored):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
         slope: float = 2.0,
     ):
@@ -489,7 +486,7 @@ class EllPowerLaw(EllPowerLawCored):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
@@ -585,7 +582,7 @@ class EllPowerLaw(EllPowerLawCored):
 class SphPowerLaw(EllPowerLaw):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
         slope: float = 2.0,
     ):
@@ -594,7 +591,7 @@ class SphPowerLaw(EllPowerLaw):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         einstein_radius : float
             The arc-second Einstein radius.
@@ -629,8 +626,8 @@ class SphPowerLaw(EllPowerLaw):
 class EllIsothermalCored(EllPowerLawCored):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
         core_radius: float = 0.01,
     ):
@@ -640,7 +637,7 @@ class EllIsothermalCored(EllPowerLawCored):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
@@ -662,7 +659,7 @@ class EllIsothermalCored(EllPowerLawCored):
 class SphIsothermalCored(SphPowerLawCored):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
         core_radius: float = 0.01,
     ):
@@ -672,7 +669,7 @@ class SphIsothermalCored(SphPowerLawCored):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         einstein_radius : float
             The arc-second Einstein radius.
@@ -690,8 +687,8 @@ class SphIsothermalCored(SphPowerLawCored):
 class EllIsothermal(EllPowerLaw):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
     ):
         """
@@ -700,7 +697,7 @@ class EllIsothermal(EllPowerLaw):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
@@ -789,9 +786,7 @@ class EllIsothermal(EllPowerLaw):
 
 class SphIsothermal(EllIsothermal):
     def __init__(
-        self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        einstein_radius: float = 1.0,
+        self, centre: Tuple[float, float] = (0.0, 0.0), einstein_radius: float = 1.0
     ):
         """
         Represents a spherical isothermal density distribution, which is equivalent to the spherical power-law
@@ -799,7 +794,7 @@ class SphIsothermal(EllIsothermal):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         einstein_radius : float
             The arc-second Einstein radius.

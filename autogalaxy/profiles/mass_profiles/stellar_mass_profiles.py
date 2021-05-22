@@ -5,7 +5,7 @@ from autogalaxy.profiles import mass_profiles as mp
 
 from pyquad import quad_grid
 from scipy.special import wofz
-import typing
+from typing import Tuple
 import copy
 
 from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
@@ -19,8 +19,8 @@ class StellarProfile:
 class EllGaussian(mp.MassProfile, StellarProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         sigma: float = 0.01,
         mass_to_light_ratio: float = 1.0,
@@ -29,12 +29,12 @@ class EllGaussian(mp.MassProfile, StellarProfile):
 
         Parameters
         ----------
-        centre : (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        intensity : float
+        intensity
             Overall intensity normalisation of the light profiles (electrons per second).
         sigma : float
             The sigma value of the Gaussian.
@@ -207,8 +207,8 @@ class EllGaussian(mp.MassProfile, StellarProfile):
 class AbstractEllSersic(mp.MassProfile, MassProfileMGE, StellarProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 0.6,
@@ -220,14 +220,14 @@ class AbstractEllSersic(mp.MassProfile, MassProfileMGE, StellarProfile):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
-        effective_radius : float
+        effective_radius
             The radius containing half the light of this profile.
         sersic_index : float
             Controls the concentration of the of the profile (lower value -> less concentrated, \
@@ -423,7 +423,7 @@ class EllSersic(AbstractEllSersic, MassProfileMGE):
 class SphSersic(EllSersic):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 0.6,
@@ -435,11 +435,11 @@ class SphSersic(EllSersic):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
-        effective_radius : float
+        effective_radius
             The circular radius containing half the light of this profile.
         sersic_index : float
             Controls the concentration of the of the profile (lower value -> less concentrated, \
@@ -460,8 +460,8 @@ class SphSersic(EllSersic):
 class EllExponential(EllSersic):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -472,14 +472,14 @@ class EllExponential(EllSersic):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
-        effective_radius : float
+        effective_radius
             The circular radius containing half the light of this profile.
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles
@@ -497,7 +497,7 @@ class EllExponential(EllSersic):
 class SphExponential(EllExponential):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -508,11 +508,11 @@ class SphExponential(EllExponential):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
-        effective_radius : float
+        effective_radius
             The circular radius containing half the light of this profile.
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles.
@@ -529,8 +529,8 @@ class SphExponential(EllExponential):
 class EllDevVaucouleurs(EllSersic):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -541,14 +541,14 @@ class EllDevVaucouleurs(EllSersic):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
-        effective_radius : float
+        effective_radius
             The radius containing half the light of this profile.
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profile.
@@ -566,7 +566,7 @@ class EllDevVaucouleurs(EllSersic):
 class SphDevVaucouleurs(EllDevVaucouleurs):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -577,11 +577,11 @@ class SphDevVaucouleurs(EllDevVaucouleurs):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
-        effective_radius : float
+        effective_radius
             The circular radius containing half the light of this profile.
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles.
@@ -598,8 +598,8 @@ class SphDevVaucouleurs(EllDevVaucouleurs):
 class EllSersicRadialGradient(AbstractEllSersic):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 0.6,
@@ -611,14 +611,14 @@ class EllSersicRadialGradient(AbstractEllSersic):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
-        effective_radius : float
+        effective_radius
             The circular radius containing half the light of this profile.
         sersic_index : float
             Controls the concentration of the of the profile (lower value -> less concentrated, \
@@ -758,7 +758,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
 class SphSersicRadialGradient(EllSersicRadialGradient):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 0.6,
@@ -770,11 +770,11 @@ class SphSersicRadialGradient(EllSersicRadialGradient):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
-        effective_radius : float
+        effective_radius
             The circular radius containing half the light of this profile.
         sersic_index : float
             Controls the concentration of the of the profile (lower value -> less concentrated, \
@@ -798,8 +798,8 @@ class SphSersicRadialGradient(EllSersicRadialGradient):
 class EllSersicCore(EllSersic):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
         radius_break: float = 0.01,
@@ -812,14 +812,14 @@ class EllSersicCore(EllSersic):
 
         Parameters
         ----------
-        centre : (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        intensity : float
+        intensity
             Overall intensity normalisation of the light profiles (electrons per second).
-        effective_radius : float
+        effective_radius
             The circular radius containing half the light of this profile.
         sersic_index : Int
             Controls the concentration of the of the profile (lower value -> less concentrated, \
@@ -932,7 +932,7 @@ class EllSersicCore(EllSersic):
 class SphSersicCore(EllSersicCore):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
         radius_break: float = 0.01,
@@ -944,11 +944,11 @@ class SphSersicCore(EllSersicCore):
 
         Parameters
         ----------
-        centre : (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
-        intensity : float
+        intensity
             Overall intensity normalisation of the light profiles (electrons per second).
-        effective_radius : float
+        effective_radius
             The circular radius containing half the light of this profile.
         sersic_index : Int
             Controls the concentration of the of the profile (lower value -> less concentrated, \
@@ -981,8 +981,8 @@ class SphSersicCore(EllSersicCore):
 class EllChameleon(mp.MassProfile, StellarProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         core_radius_0: float = 0.01,
         core_radius_1: float = 0.02,
@@ -992,12 +992,12 @@ class EllChameleon(mp.MassProfile, StellarProfile):
 
         Parameters
         ----------
-        centre : (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        intensity : float
+        intensity
             Overall intensity normalisation of the light profiles (electrons per second).
         core_radius_0 : the core size of the first elliptical cored Isothermal profile.
         core_radius_1 : core_radius_0 + core_radius_1 is the core size of the second elliptical cored Isothermal profile.
@@ -1158,7 +1158,7 @@ class EllChameleon(mp.MassProfile, StellarProfile):
 class SphChameleon(EllChameleon):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         core_radius_0: float = 0.01,
         core_radius_1: float = 0.02,
@@ -1172,12 +1172,12 @@ class SphChameleon(EllChameleon):
 
         Parameters
         ----------
-        centre : (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        intensity : float
+        intensity
             Overall intensity normalisation of the light profiles (electrons per second).
         core_radius_0 : the core size of the first elliptical cored Isothermal profile.
         core_radius_1 : core_radius_0 + core_radius_1 is the core size of the second elliptical cored Isothermal profile.

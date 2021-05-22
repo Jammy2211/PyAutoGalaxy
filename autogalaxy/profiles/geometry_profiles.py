@@ -3,16 +3,17 @@ from autoarray.geometry import geometry_util
 from autoarray.structures.grids.two_d import grid_2d
 from autoarray.structures.grids import grid_decorators
 from autogalaxy import convert
-import typing
+
+from typing import Tuple
 
 
 class GeometryProfile:
-    def __init__(self, centre: typing.Tuple[float, float] = (0.0, 0.0)):
+    def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
         """An abstract geometry profile, which describes profiles with y and x centre Cartesian coordinates
 
         Parameters
         -----------
-        centre : (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         """
 
@@ -35,12 +36,12 @@ class GeometryProfile:
 
 
 class SphProfile(GeometryProfile):
-    def __init__(self, centre: typing.Tuple[float, float] = (0.0, 0.0)):
+    def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
         """A spherical profile, which describes profiles with y and x centre Cartesian coordinates.
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         """
         super().__init__(centre=centre)
@@ -54,7 +55,7 @@ class SphProfile(GeometryProfile):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the reference frame of the profile.
         """
         return np.sqrt(np.add(np.square(grid[:, 0]), np.square(grid[:, 1])))
@@ -77,7 +78,7 @@ class SphProfile(GeometryProfile):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the reference frame of the profile.
         radius : np.ndarray
             The circular radius of each coordinate from the profile center.
@@ -93,7 +94,7 @@ class SphProfile(GeometryProfile):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
         transformed = np.subtract(grid, self.centre)
@@ -106,7 +107,7 @@ class SphProfile(GeometryProfile):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the reference frame of the profile.
         """
         transformed = np.add(grid, self.centre)
@@ -116,15 +117,15 @@ class SphProfile(GeometryProfile):
 class EllProfile(SphProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
     ):
         """ An elliptical profile, which describes profiles with y and x centre Cartesian coordinates, an axis-ratio \
         and rotational angle.
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
@@ -132,9 +133,9 @@ class EllProfile(SphProfile):
 
         Attributes
         ----------
-        axis_ratio : float
+        axis_ratio
             Ratio of light profiles ellipse's minor and major axes (b/a).
-        angle : float
+        angle
             Rotation angle of light profile counter-clockwise from positive x-axis.
         """
         super().__init__(centre=centre)
@@ -151,7 +152,7 @@ class EllProfile(SphProfile):
     @classmethod
     def from_axis_ratio_and_phi(
         cls,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         axis_ratio: float = 1.0,
         angle: float = 0.0,
     ):
@@ -204,7 +205,7 @@ class EllProfile(SphProfile):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the reference frame of an elliptical profile.
         """
         return geometry_util.transform_grid_2d_from_reference_frame(
@@ -222,7 +223,7 @@ class EllProfile(SphProfile):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the reference frame of the elliptical profile.
         """
         return np.sqrt(
@@ -243,7 +244,7 @@ class EllProfile(SphProfile):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the reference frame of the elliptical profile.
         """
         return np.multiply(
@@ -258,7 +259,7 @@ class EllProfile(SphProfile):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
         if self.__class__.__name__.startswith("Sph"):
@@ -277,7 +278,7 @@ class EllProfile(SphProfile):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the reference frame of the profile.
         """
         if self.__class__.__name__.startswith("Sph"):

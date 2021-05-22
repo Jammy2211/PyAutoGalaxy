@@ -10,10 +10,10 @@ def elliptical_comps_from(axis_ratio, angle):
 
     Parameters
     ----------
-    axis_ratio : float
-        Ratio of light profiles ellipse's minor and major axes (b/a).
-    angle : float
-        Rotation angle of light profile counter-clockwise from positive x-axis.
+    axis_ratio
+            Ratio of light profiles ellipse's minor and major axes (b/a).
+    angle
+            Rotation angle of light profile counter-clockwise from positive x-axis.
     """
     angle *= np.pi / 180.0
     fac = (1 - axis_ratio) / (1 + axis_ratio)

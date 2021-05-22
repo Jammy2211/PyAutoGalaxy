@@ -1,24 +1,22 @@
 import numpy as np
 from autoarray.structures.grids import grid_decorators
-from autogalaxy.profiles import geometry_profiles
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy import convert
-import typing
 
 from scipy.interpolate import griddata
 from autogalaxy import exc
 
+from typing import Tuple
+
 
 class MassSheet(mp.MassProfile):
-    def __init__(
-        self, centre: typing.Tuple[float, float] = (0.0, 0.0), kappa: float = 0.0
-    ):
+    def __init__(self, centre: Tuple[float, float] = (0.0, 0.0), kappa: float = 0.0):
         """
         Represents a mass-sheet
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         kappa : float
             The magnitude of the convergence of the mass-sheet.
@@ -47,7 +45,7 @@ class MassSheet(mp.MassProfile):
 
 # noinspection PyAbstractClass
 class ExternalShear(mp.MassProfile):
-    def __init__(self, elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0)):
+    def __init__(self, elliptical_comps: Tuple[float, float] = (0.0, 0.0)):
         """
         An `ExternalShear` term, to model the line-of-sight contribution of other galaxies / satellites.
 
@@ -58,7 +56,7 @@ class ExternalShear(mp.MassProfile):
         ----------
         magnitude : float
             The overall magnitude of the shear (gamma).
-        angle : float
+        angle
             The rotation axis of the shear.
         """
 

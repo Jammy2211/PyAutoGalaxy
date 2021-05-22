@@ -1,5 +1,3 @@
-import typing
-
 import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
@@ -11,20 +9,21 @@ from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy import exc
 
+from typing import Tuple
 
 # noinspection PyAbstractClass
 class MassProfile(geometry_profiles.EllProfile, lensing.LensingObject):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
     ):
         """
         Abstract class for elliptical mass profiles.
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
@@ -569,10 +568,10 @@ def psi_from(grid, axis_ratio, core_radius):
 
     Parameters
     ----------
-    grid : grid_like
+    grid
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
-    axis_ratio : float
-        Ratio of profiles ellipse's minor and major axes (b/a)
+    axis_ratio
+            Ratio of profiles ellipse's minor and major axes (b/a)
     core_radius : float
         The radius of the inner core
 
