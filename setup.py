@@ -15,7 +15,7 @@ requirements.extend(["autoconf==0.10.0", "autoarray==0.21.2", "autofit==0.77.1"]
 
 setup(
     name="autogalaxy",
-    version=environ.get("VERSION", "0.20.2"),
+    version=environ.get("VERSION", "1.0.dev0"),
     description="Open Source Galaxy Model-Fitting",
     long_description=long_description,
     long_description_content_type="text/markdown",
