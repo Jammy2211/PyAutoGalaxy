@@ -1,5 +1,4 @@
 import inspect
-import typing
 
 import numpy as np
 from astropy import cosmology as cosmo
@@ -23,6 +22,7 @@ from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
 
 import warnings
 import copy
+from typing import Tuple
 
 
 def jit_integrand(integrand_function):
@@ -106,8 +106,8 @@ class AbstractEllNFWGeneralized(mp.MassProfile, DarkProfile, MassProfileMGE):
 
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
         inner_slope: float = 1.0,
         scale_radius: float = 1.0,
@@ -117,7 +117,7 @@ class AbstractEllNFWGeneralized(mp.MassProfile, DarkProfile, MassProfileMGE):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
@@ -700,7 +700,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
 class SphNFWGeneralized(EllNFWGeneralized):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
         inner_slope: float = 1.0,
         scale_radius: float = 1.0,
@@ -710,7 +710,7 @@ class SphNFWGeneralized(EllNFWGeneralized):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         kappa_s : float
             The overall normalization of the dark matter halo \
@@ -778,7 +778,7 @@ class SphNFWGeneralized(EllNFWGeneralized):
 class SphNFWTruncated(AbstractEllNFWGeneralized):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
         scale_radius: float = 1.0,
         truncation_radius: float = 2.0,
@@ -908,7 +908,7 @@ class SphNFWTruncatedMCRDuffy(SphNFWTruncated):
 
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
@@ -936,7 +936,7 @@ class SphNFWTruncatedMCRDuffy(SphNFWTruncated):
 class SphNFWTruncatedMCRLudlow(SphNFWTruncated):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
@@ -964,8 +964,8 @@ class SphNFWTruncatedMCRLudlow(SphNFWTruncated):
 class EllNFW(EllNFWGeneralized):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
         scale_radius: float = 1.0,
     ):
@@ -974,7 +974,7 @@ class EllNFW(EllNFWGeneralized):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
@@ -1123,7 +1123,7 @@ class EllNFW(EllNFWGeneralized):
 class SphNFW(EllNFW):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
         scale_radius: float = 1.0,
     ):
@@ -1132,7 +1132,7 @@ class SphNFW(EllNFW):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The (y,x) arc-second coordinates of the profile centre.
         kappa_s : float
             The overall normalization of the dark matter halo \
@@ -1201,7 +1201,7 @@ class SphNFW(EllNFW):
 class SphNFWMCRDuffy(SphNFW):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
@@ -1229,8 +1229,8 @@ class SphNFWMCRDuffy(SphNFW):
 class EllNFWMCRLudlow(EllNFW):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
@@ -1257,7 +1257,7 @@ class EllNFWMCRLudlow(EllNFW):
 class SphNFWMCRLudlow(SphNFW):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
@@ -1285,8 +1285,8 @@ class SphNFWMCRLudlow(SphNFW):
 class EllNFWGeneralizedMCRLudlow(EllNFWGeneralized):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,

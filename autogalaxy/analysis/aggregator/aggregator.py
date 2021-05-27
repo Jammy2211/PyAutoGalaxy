@@ -1,7 +1,12 @@
+from autofit.database.model.fit import Fit
 import autogalaxy as ag
 
+from typing import Optional
 
-def plane_generator_from_aggregator(aggregator):
+from functools import partial
+
+
+def plane_gen_from(aggregator):
     """
     Returns a generator of `Plane` objects from an input aggregator, which generates a list of the `Plane` objects
     for every set of results loaded in the aggregator.
@@ -13,10 +18,10 @@ def plane_generator_from_aggregator(aggregator):
     ----------
     aggregator : af.Aggregator
         A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits."""
-    return aggregator.map(func=plane_from_agg_obj)
+    return aggregator.map(func=plane_via_database_from)
 
 
-def plane_from_agg_obj(agg_obj):
+def plane_via_database_from(fit: Fit):
     """
     Returns a `Plane` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to describe that
      it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's generator outputs
@@ -28,31 +33,28 @@ def plane_from_agg_obj(agg_obj):
 
     Parameters
     ----------
-    agg_obj : af.SearchOutput
+    fit : af.SearchOutput
         A PyAutoFit aggregator's SearchOutput object containing the generators of the results of PyAutoGalaxy model-fits.
     """
 
-    samples = agg_obj.samples
-    attributes = agg_obj.attributes
-    max_log_likelihood_instance = samples.max_log_likelihood_instance
-    galaxies = max_log_likelihood_instance.galaxies
+    galaxies = fit.instance.galaxies
 
-    if attributes.hyper_galaxy_image_path_dict is not None:
+    hyper_model_image = fit.value(name="hyper_model_image")
+    hyper_galaxy_image_path_dict = fit.value(name="hyper_galaxy_image_path_dict")
 
-        for (
-            galaxy_path,
-            galaxy,
-        ) in max_log_likelihood_instance.path_instance_tuples_for_class(ag.Galaxy):
-            if galaxy_path in attributes.hyper_galaxy_image_path_dict:
-                galaxy.hyper_model_image = attributes.hyper_model_image
-                galaxy.hyper_galaxy_image = attributes.hyper_galaxy_image_path_dict[
-                    galaxy_path
-                ]
+    if hyper_galaxy_image_path_dict is not None:
+
+        for (galaxy_path, galaxy) in fit.instance.path_instance_tuples_for_class(
+            ag.Galaxy
+        ):
+            if galaxy_path in hyper_galaxy_image_path_dict:
+                galaxy.hyper_model_image = hyper_model_image
+                galaxy.hyper_galaxy_image = hyper_galaxy_image_path_dict[galaxy_path]
 
     return ag.Plane(galaxies=galaxies)
 
 
-def imaging_generator_from_aggregator(aggregator):
+def imaging_gen_from(aggregator, settings_imaging: Optional[ag.SettingsImaging] = None):
     """
     Returns a generator of `Imaging` objects from an input aggregator, which generates a list of the
     `Imaging` objects for every set of results loaded in the aggregator.
@@ -65,28 +67,53 @@ def imaging_generator_from_aggregator(aggregator):
     ----------
     aggregator : af.Aggregator
         A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits."""
-    return aggregator.map(func=imaging_from_agg_obj)
+
+    func = partial(imaging_via_database_from, settings_imaging=settings_imaging)
+
+    return aggregator.map(func=func)
 
 
-def imaging_from_agg_obj(agg_obj):
+def imaging_via_database_from(
+    fit: Fit, settings_imaging: Optional[ag.SettingsImaging] = None
+):
     """
     Returns a `Imaging` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to describe
-     that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's generator
-     outputs such that the function can use the `Aggregator`'s map function to to create a `Imaging` generator.
+    that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's generator
+    outputs such that the function can use the `Aggregator`'s map function to to create a `Imaging` generator.
 
      The `Imaging` is created following the same method as the PyAutoGalaxy `Search` classes, including using the
-     `SettingsImaging` instance output by the Search to load inputs of the `Imaging` (e.g. psf_shape_2d).
+    `SettingsImaging` instance output by the Search to load inputs of the `Imaging` (e.g. psf_shape_2d).
 
     Parameters
     ----------
-    agg_obj : af.SearchOutput
+    fit : af.SearchOutput
         A PyAutoFit aggregator's SearchOutput object containing the generators of the results of PyAutoGalaxy model-fits.
     """
 
-    return agg_obj.dataset
+    data = fit.value(name="data")
+    noise_map = fit.value(name="noise_map")
+    psf = fit.value(name="psf")
+    settings_imaging = settings_imaging or fit.value(name="settings_dataset")
+
+    imaging = ag.Imaging(
+        image=data,
+        noise_map=noise_map,
+        psf=psf,
+        settings=settings_imaging,
+        setup_convolver=True,
+    )
+
+    imaging.apply_settings(settings=settings_imaging)
+
+    return imaging
 
 
-def fit_imaging_generator_from_aggregator(aggregator):
+def fit_imaging_gen_from(
+    aggregator,
+    settings_imaging: Optional[ag.SettingsImaging] = None,
+    settings_pixelization: Optional[ag.SettingsPixelization] = None,
+    settings_inversion: Optional[ag.SettingsInversion] = None,
+):
     """
     Returns a generator of `FitImaging` objects from an input aggregator, which generates a list of the
     `FitImaging` objects for every set of results loaded in the aggregator.
@@ -98,10 +125,23 @@ def fit_imaging_generator_from_aggregator(aggregator):
     ----------
     aggregator : af.Aggregator
         A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits."""
-    return aggregator.map(func=fit_imaging_from_agg_obj)
+
+    func = partial(
+        fit_imaging_via_database_from,
+        settings_imaging=settings_imaging,
+        settings_pixelization=settings_pixelization,
+        settings_inversion=settings_inversion,
+    )
+
+    return aggregator.map(func=func)
 
 
-def fit_imaging_from_agg_obj(agg_obj):
+def fit_imaging_via_database_from(
+    fit: Fit,
+    settings_imaging: Optional[ag.SettingsImaging] = None,
+    settings_pixelization: Optional[ag.SettingsPixelization] = None,
+    settings_inversion: Optional[ag.SettingsInversion] = None,
+):
     """
     Returns a `FitImaging` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to describe
      that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's generator
@@ -111,22 +151,31 @@ def fit_imaging_from_agg_obj(agg_obj):
 
     Parameters
     ----------
-    agg_obj : af.SearchOutput
+    fit : af.SearchOutput
         A PyAutoFit aggregator's SearchOutput object containing the generators of the results of PyAutoGalaxy model-fits.
     """
 
-    imaging = imaging_from_agg_obj(agg_obj=agg_obj)
-    plane = plane_from_agg_obj(agg_obj=agg_obj)
+    imaging = imaging_via_database_from(fit=fit, settings_imaging=settings_imaging)
+    plane = plane_via_database_from(fit=fit)
+
+    settings_pixelization = settings_pixelization or fit.value(
+        name="settings_pixelization"
+    )
+    settings_inversion = settings_inversion or fit.value(name="settings_inversion")
 
     return ag.FitImaging(
         imaging=imaging,
         plane=plane,
-        settings_pixelization=agg_obj.settings_pixelization,
-        settings_inversion=agg_obj.settings_inversion,
+        settings_pixelization=settings_pixelization,
+        settings_inversion=settings_inversion,
     )
 
 
-def interferometer_generator_from_aggregator(aggregator):
+def interferometer_gen_from(
+    aggregator,
+    real_space_mask: Optional[ag.Mask2D] = None,
+    settings_interferometer: Optional[ag.SettingsInterferometer] = None,
+):
     """
     Returns a generator of `Interferometer` objects from an input aggregator, which generates a list of the
     `Interferometer` objects for every set of results loaded in the aggregator.
@@ -139,10 +188,21 @@ def interferometer_generator_from_aggregator(aggregator):
     ----------
     aggregator : af.Aggregator
         A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits."""
-    return aggregator.map(func=interferometer_from_agg_obj)
+
+    func = partial(
+        interferometer_via_database_from,
+        real_space_mask=real_space_mask,
+        settings_interferometer=settings_interferometer,
+    )
+
+    return aggregator.map(func=func)
 
 
-def interferometer_from_agg_obj(agg_obj):
+def interferometer_via_database_from(
+    fit: Fit,
+    real_space_mask: Optional[ag.Mask2D] = None,
+    settings_interferometer: Optional[ag.SettingsInterferometer] = None,
+):
     """
     Returns a `Interferometer` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to
     describe that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's
@@ -155,15 +215,38 @@ def interferometer_from_agg_obj(agg_obj):
 
     Parameters
     ----------
-    agg_obj : af.SearchOutput
+    fit : af.SearchOutput
         A PyAutoFit aggregator's SearchOutput object containing the generators of the results of PyAutoGalaxy
         model-fits.
     """
 
-    return agg_obj.dataset
+    data = fit.value(name="data")
+    noise_map = fit.value(name="noise_map")
+    uv_wavelengths = fit.value(name="uv_wavelengths")
+    real_space_mask = real_space_mask or fit.value(name="real_space_mask")
+    settings_interferometer = settings_interferometer or fit.value(
+        name="settings_dataset"
+    )
+
+    interferometer = ag.Interferometer(
+        visibilities=data,
+        noise_map=noise_map,
+        uv_wavelengths=uv_wavelengths,
+        real_space_mask=real_space_mask,
+    )
+
+    interferometer = interferometer.apply_settings(settings=settings_interferometer)
+
+    return interferometer
 
 
-def fit_interferometer_generator_from_aggregator(aggregator):
+def fit_interferometer_gen_from(
+    aggregator,
+    real_space_mask: Optional[ag.Mask2D] = None,
+    settings_interferometer: Optional[ag.SettingsInterferometer] = None,
+    settings_pixelization: Optional[ag.SettingsPixelization] = None,
+    settings_inversion: Optional[ag.SettingsInversion] = None,
+):
     """
     Returns a `FitInterferometer` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to
     describe that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's
@@ -177,10 +260,25 @@ def fit_interferometer_generator_from_aggregator(aggregator):
     agg_obj : af.SearchOutput
         A PyAutoFit aggregator's SearchOutput object containing the generators of the results of PyAutoGalaxy model-fits.
     """
-    return aggregator.map(func=fit_interferometer_from_agg_obj)
+
+    func = partial(
+        fit_interferometer_via_database_from,
+        real_space_mask=real_space_mask,
+        settings_interferometer=settings_interferometer,
+        settings_pixelization=settings_pixelization,
+        settings_inversion=settings_inversion,
+    )
+
+    return aggregator.map(func=func)
 
 
-def fit_interferometer_from_agg_obj(agg_obj):
+def fit_interferometer_via_database_from(
+    fit: Fit,
+    real_space_mask: Optional[ag.Mask2D] = None,
+    settings_interferometer: Optional[ag.SettingsInterferometer] = None,
+    settings_pixelization: Optional[ag.SettingsPixelization] = None,
+    settings_inversion: Optional[ag.SettingsInversion] = None,
+):
     """
     Returns a generator of `FitInterferometer` objects from an input aggregator, which generates a list of the
     `FitInterferometer` objects for every set of results loaded in the aggregator.
@@ -192,13 +290,24 @@ def fit_interferometer_from_agg_obj(agg_obj):
     Parameters
     ----------
     aggregator : af.Aggregator
-        A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits."""
-    interferometer = interferometer_from_agg_obj(agg_obj=agg_obj)
-    plane = plane_from_agg_obj(agg_obj=agg_obj)
+        A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits.
+    """
+
+    settings_pixelization = settings_pixelization or fit.value(
+        name="settings_pixelization"
+    )
+    settings_inversion = settings_inversion or fit.value(name="settings_inversion")
+
+    interferometer = interferometer_via_database_from(
+        fit=fit,
+        real_space_mask=real_space_mask,
+        settings_interferometer=settings_interferometer,
+    )
+    plane = plane_via_database_from(fit=fit)
 
     return ag.FitInterferometer(
         interferometer=interferometer,
         plane=plane,
-        settings_pixelization=agg_obj.settings_pixelization,
-        settings_inversion=agg_obj.settings_inversion,
+        settings_pixelization=settings_pixelization,
+        settings_inversion=settings_inversion,
     )

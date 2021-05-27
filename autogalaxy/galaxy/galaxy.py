@@ -20,7 +20,7 @@ from typing import Optional
 
 
 def is_point_source(obj):
-    return isinstance(obj, ps.PointSource)
+    return isinstance(obj, ps.Point)
 
 
 def is_light_profile(obj):
@@ -51,7 +51,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        redshift: float
+        redshift
             The redshift of the galaxy.
         light_profiles: [lp.LightProfile]
             A list of the galaxy's light profiles.
@@ -94,7 +94,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
         return self.id
 
     @property
-    def point_source_dict(self):
+    def point_dict(self):
         return {
             key: value for key, value in self.__dict__.items() if is_point_source(value)
         }
@@ -287,7 +287,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the original reference frame of the grid.
 
         """
@@ -309,7 +309,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the original reference frame of the grid.
 
         """
@@ -382,7 +382,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the original reference frame of the grid.
 
         """
@@ -406,7 +406,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the original reference frame of the grid.
 
         """
@@ -431,7 +431,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
         if self.has_mass_profile:
@@ -455,7 +455,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
         if self.has_mass_profile:
@@ -476,7 +476,7 @@ class Galaxy(ModelObject, lensing.LensingObject):
 
         Parameters
         ----------
-        grid : grid_like
+        grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
         if self.has_mass_profile:

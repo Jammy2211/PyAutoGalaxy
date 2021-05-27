@@ -30,7 +30,7 @@
         },
         "noise_factor": {
             "type": "LogUniform",
-            "lower_limit": 1e-2,
+            "lower_limit": 1e-4,
             "upper_limit": 1000.0,
             "width_modifier": {
                 "type": "Relative",

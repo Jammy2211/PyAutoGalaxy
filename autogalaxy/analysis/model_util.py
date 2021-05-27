@@ -211,13 +211,17 @@ def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analys
     if hyper_model is None:
         return result
 
-    setup_hyper.search.paths.path_prefix = result.search.paths.path_prefix
-    setup_hyper.search.paths.name = f"{result.search.paths.name}__hyper"
-    setup_hyper.search.paths.unique_tag = result.search.paths.unique_tag
+    search = setup_hyper.search_cls(
+        path_prefix=result.search.path_prefix_no_unique_tag,
+        name=f"{result.search.paths.name}__hyper",
+        unique_tag=result.search.paths.unique_tag,
+        number_of_cores=result.search.number_of_cores,
+        **setup_hyper.search_dict,
+    )
 
     analysis.set_hyper_dataset(result=result)
 
-    hyper_result = setup_hyper.search.fit(model=hyper_model, analysis=analysis)
+    hyper_result = search.fit(model=hyper_model, analysis=analysis)
 
     setattr(result, "hyper", hyper_result)
 
@@ -306,7 +310,7 @@ def stochastic_model_from(
     return model
 
 
-def stochastic_fit(stochastic_model, result, analysis):
+def stochastic_fit(stochastic_model, search_cls, search_dict, result, analysis):
     """
     Perform a stochastic model-fit, which refits a model but introduces a log likelihood cap whereby all model-samples
     with a likelihood above this cap are rounded down to the value of the cap.
@@ -338,12 +342,17 @@ def stochastic_fit(stochastic_model, result, analysis):
     mean, sigma = norm.fit(result.stochastic_log_evidences)
     log_likelihood_cap = mean
 
-    search = result.search
-    search.paths.name = (
-        f"{result.search.paths.name}__stochastic_likelihood_cap_"
-        + "{0:.1f}".format(log_likelihood_cap)
+    name = f"{result.search.paths.name}__stochastic_likelihood_cap_" + "{0:.1f}".format(
+        log_likelihood_cap
     )
-    search.paths.unique_tag = result.search.paths.unique_tag
+
+    search = search_cls(
+        path_prefix=result.search.path_prefix_no_unique_tag,
+        name=name,
+        unique_tag=result.search.paths.unique_tag,
+        number_of_cores=result.search.number_of_cores,
+        **search_dict,
+    )
 
     search.paths.save_object(
         "stochastic_log_evidences", result.stochastic_log_evidences

@@ -106,23 +106,23 @@ class AnalysisDataset(Analysis):
 
         return instance
 
-    def make_attributes(self):
-        raise NotImplementedError
+    def save_attributes_for_aggregator(self, paths: af.DirectoryPaths):
 
-    def save_settings(self, paths: af.DirectoryPaths):
+        paths.save_object("data", self.dataset.data)
+        paths.save_object("noise_map", self.dataset.noise_map)
         paths.save_object("settings_dataset", self.dataset.settings)
         paths.save_object("settings_inversion", self.settings_inversion)
         paths.save_object("settings_pixelization", self.settings_pixelization)
 
-    def save_attributes_for_aggregator(self, paths: af.DirectoryPaths):
-        paths.save_object("dataset", self.dataset)
-        paths.save_object("mask", self.dataset.mask)
+        paths.save_object("cosmology", self.cosmology)
 
-        self.save_settings(paths=paths)
+        if self.hyper_model_image is not None:
+            paths.save_object("hyper_model_image", self.hyper_model_image)
 
-        attributes = self.make_attributes()
-
-        paths.save_object("attributes", attributes)
+        if self.hyper_galaxy_image_path_dict is not None:
+            paths.save_object(
+                "hyper_galaxy_image_path_dict", self.hyper_galaxy_image_path_dict
+            )
 
 
 class AnalysisImaging(AnalysisDataset):
@@ -250,12 +250,12 @@ class AnalysisImaging(AnalysisDataset):
             samples=samples, model=model, analysis=self, search=search
         )
 
-    def make_attributes(self):
-        return AttributesImaging(
-            cosmology=self.cosmology,
-            hyper_model_image=self.hyper_model_image,
-            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
-        )
+    def save_attributes_for_aggregator(self, paths: af.DirectoryPaths):
+
+        super().save_attributes_for_aggregator(paths=paths)
+
+        paths.save_object("psf", self.dataset.psf_unormalized)
+        paths.save_object("mask", self.dataset.mask)
 
 
 class AnalysisInterferometer(AnalysisDataset):
@@ -426,31 +426,9 @@ class AnalysisInterferometer(AnalysisDataset):
             samples=samples, model=model, analysis=self, search=search
         )
 
-    def make_attributes(self):
-        return AttributesInterferometer(
-            cosmology=self.cosmology,
-            real_space_mask=self.dataset.real_space_mask,
-            hyper_model_image=self.hyper_model_image,
-            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
-        )
+    def save_attributes_for_aggregator(self, paths: af.DirectoryPaths):
 
+        super().save_attributes_for_aggregator(paths=paths)
 
-class AttributesImaging:
-    def __init__(self, cosmology, hyper_model_image, hyper_galaxy_image_path_dict):
-        self.cosmology = cosmology
-        self.hyper_model_image = hyper_model_image
-        self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
-
-
-class AttributesInterferometer:
-    def __init__(
-        self,
-        cosmology,
-        real_space_mask,
-        hyper_model_image,
-        hyper_galaxy_image_path_dict,
-    ):
-        self.cosmology = cosmology
-        self.real_space_mask = real_space_mask
-        self.hyper_model_image = hyper_model_image
-        self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
+        paths.save_object("uv_wavelengths", self.dataset.uv_wavelengths)
+        paths.save_object("real_space_mask", self.dataset.real_space_mask)

@@ -1,6 +1,7 @@
 from autogalaxy.profiles import light_profiles as lp
 from autogalaxy.profiles import mass_profiles as mp
-import typing
+
+from typing import Tuple
 
 """
 Mass and light profiles describe both mass distributions and light distributions with a single set of parameters. This
@@ -17,8 +18,8 @@ class LightMassProfile:
 class EllGaussian(lp.EllGaussian, mp.EllGaussian, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         sigma: float = 0.01,
         mass_to_light_ratio: float = 1.0,
@@ -44,8 +45,8 @@ class EllGaussian(lp.EllGaussian, mp.EllGaussian, LightMassProfile):
 class EllSersic(lp.EllSersic, mp.EllSersic, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 0.6,
@@ -74,7 +75,7 @@ class EllSersic(lp.EllSersic, mp.EllSersic, LightMassProfile):
 class SphSersic(EllSersic, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 0.6,
@@ -86,11 +87,11 @@ class SphSersic(EllSersic, LightMassProfile):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The grid of the origin of the profiles
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
-        effective_radius : float
+        effective_radius
             The radius containing half the light of this model_mapper
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles
@@ -109,8 +110,8 @@ class SphSersic(EllSersic, LightMassProfile):
 class EllExponential(EllSersic, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -121,15 +122,15 @@ class EllExponential(EllSersic, LightMassProfile):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The grid of the origin of the profiles
-        axis_ratio : float
+        axis_ratio
             Ratio of profiles ellipse's minor and major axes (b/a)
-        angle : float
+        angle
             Rotational angle of profiles ellipse counter-clockwise from positive x-axis
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
-        effective_radius : float
+        effective_radius
             The radius containing half the light of this model_mapper
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles
@@ -148,7 +149,7 @@ class EllExponential(EllSersic, LightMassProfile):
 class SphExponential(EllExponential, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -159,11 +160,11 @@ class SphExponential(EllExponential, LightMassProfile):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The grid of the origin of the profiles
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
-        effective_radius : float
+        effective_radius
             The radius containing half the light of this model_mapper
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles
@@ -181,8 +182,8 @@ class SphExponential(EllExponential, LightMassProfile):
 class EllDevVaucouleurs(EllSersic, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -193,15 +194,15 @@ class EllDevVaucouleurs(EllSersic, LightMassProfile):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The grid of the origin of the profiles
-        axis_ratio : float
+        axis_ratio
             Ratio of profiles ellipse's minor and major axes (b/a)
-        angle : float
+        angle
             Rotational angle of profiles ellipse counter-clockwise from positive x-axis
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
-        effective_radius : float
+        effective_radius
             The radius containing half the light of this model_mapper
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles
@@ -219,7 +220,7 @@ class EllDevVaucouleurs(EllSersic, LightMassProfile):
 class SphDevVaucouleurs(EllDevVaucouleurs, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -230,11 +231,11 @@ class SphDevVaucouleurs(EllDevVaucouleurs, LightMassProfile):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The grid of the origin of the profiles
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
-        effective_radius : float
+        effective_radius
             The radius containing half the light of this model_mapper
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles
@@ -254,8 +255,8 @@ class EllSersicRadialGradient(
 ):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 0.6,
@@ -267,15 +268,15 @@ class EllSersicRadialGradient(
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The origin of the profiles
-        axis_ratio : float
+        axis_ratio
             Ratio of profiles ellipse's minor and major axes (b/a)
-        angle : float
+        angle
             Rotational angle of profiles ellipse counter-clockwise from positive x-axis
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
-        effective_radius : float
+        effective_radius
             The radius containing half the light of this model_mapper
         sersic_index : Int
             The concentration of the light profiles
@@ -307,7 +308,7 @@ class EllSersicRadialGradient(
 class SphSersicRadialGradient(EllSersicRadialGradient, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 0.6,
@@ -319,11 +320,11 @@ class SphSersicRadialGradient(EllSersicRadialGradient, LightMassProfile):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The origin of the profiles
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
-        effective_radius : float
+        effective_radius
             The radius containing half the light of this model_mapper
         sersic_index : Int
             The concentration of the light profiles
@@ -348,8 +349,8 @@ class SphSersicRadialGradient(EllSersicRadialGradient, LightMassProfile):
 class EllExponentialRadialGradient(EllSersicRadialGradient, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -360,15 +361,15 @@ class EllExponentialRadialGradient(EllSersicRadialGradient, LightMassProfile):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The origin of the profiles
-        axis_ratio : float
+        axis_ratio
             Ratio of profiles ellipse's minor and major axes (b/a)
-        angle : float
+        angle
             Rotational angle of profiles ellipse counter-clockwise from positive x-axis
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
-        effective_radius : float
+        effective_radius
             The radius containing half the light of this model_mapper
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles
@@ -391,7 +392,7 @@ class EllExponentialRadialGradient(EllSersicRadialGradient, LightMassProfile):
 class SphExponentialRadialGradient(SphSersicRadialGradient, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -402,15 +403,15 @@ class SphExponentialRadialGradient(SphSersicRadialGradient, LightMassProfile):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The origin of the profiles
-        axis_ratio : float
+        axis_ratio
             Ratio of profiles ellipse's minor and major axes (b/a)
-        angle : float
+        angle
             Rotational angle of profiles ellipse counter-clockwise from positive x-axis
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
-        effective_radius : float
+        effective_radius
             The radius containing half the light of this model_mapper
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles
@@ -432,8 +433,8 @@ class SphExponentialRadialGradient(SphSersicRadialGradient, LightMassProfile):
 class EllSersicCore(lp.EllSersicCore, mp.EllSersicCore, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
         radius_break: float = 0.01,
@@ -471,7 +472,7 @@ class EllSersicCore(lp.EllSersicCore, mp.EllSersicCore, LightMassProfile):
 class SphSersicCore(EllSersicCore, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
         radius_break: float = 0.01,
@@ -486,11 +487,11 @@ class SphSersicCore(EllSersicCore, LightMassProfile):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The grid of the origin of the profiles
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
-        effective_radius : float
+        effective_radius
             The radius containing half the light of this model_mapper
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles
@@ -512,8 +513,8 @@ class SphSersicCore(EllSersicCore, LightMassProfile):
 class EllChameleon(lp.EllChameleon, mp.EllChameleon, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         core_radius_0: float = 0.01,
         core_radius_1: float = 0.005,
@@ -542,7 +543,7 @@ class EllChameleon(lp.EllChameleon, mp.EllChameleon, LightMassProfile):
 class SphChameleon(EllChameleon, LightMassProfile):
     def __init__(
         self,
-        centre: typing.Tuple[float, float] = (0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         core_radius_0: float = 0.01,
         core_radius_1: float = 0.005,
@@ -554,11 +555,11 @@ class SphChameleon(EllChameleon, LightMassProfile):
 
         Parameters
         ----------
-        centre: (float, float)
+        centre
             The grid of the origin of the profiles
-        intensity : float
+        intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
-        effective_radius : float
+        effective_radius
             The radius containing half the light of this model_mapper
         mass_to_light_ratio : float
             The mass-to-light ratio of the light profiles

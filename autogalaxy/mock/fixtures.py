@@ -22,12 +22,12 @@ def make_masked_imaging_7x7():
 
 def make_ps_0():
     # noinspection PyTypeChecker
-    return ag.ps.PointSourceFlux(flux=0.0)
+    return ag.ps.PointFlux(flux=0.0)
 
 
 def make_ps_1():
     # noinspection PyTypeChecker
-    return ag.ps.PointSourceFlux(flux=1.0)
+    return ag.ps.PointFlux(flux=1.0)
 
 
 def make_lp_0():
