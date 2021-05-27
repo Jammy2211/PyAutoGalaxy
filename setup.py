@@ -11,7 +11,7 @@ with open(join(this_dir, "README.rst"), encoding="utf-8") as file:
 with open(join(this_dir, "requirements.txt")) as f:
     requirements = f.read().split("\n")
 
-requirements.extend(["autoconf==0.10.0", "autoarray==0.21.1", "autofit==0.77.0"])
+requirements.extend(["autoconf==0.10.0", "autoarray==0.21.2", "autofit==0.77.1"])
 
 setup(
     name="autogalaxy",
