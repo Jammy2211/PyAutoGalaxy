@@ -4,29 +4,28 @@ from typing import Tuple
 
 
 class MassLightRelation:
-    def __init__(self, gradient=1.0, intercept=1.0):
+    def __init__(self, gradient=1.0, denominator=1.0, power=0.5):
 
         self.gradient = gradient
-        self.intercept = intercept
+        self.denominator = denominator
+        self.power = power
 
-    def mass_from(self, magnitude):
+    def einstein_radius_from(self, luminosity):
 
-        return magnitude * self.gradient + self.intercept
+        return self.gradient * ((luminosity / self.denominator) ** self.power)
 
 
 class SphIsothermalMLR(mp.SphIsothermal):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        magnitude: float = 1.0,
+        luminosity: float = 1.0,
         relation: MassLightRelation = MassLightRelation(),
     ):
 
-        self.magnitude = magnitude
+        self.luminosity = luminosity
         self.relation = relation
 
-        self.mass = relation.mass_from(magnitude=magnitude)
-
-        einstein_radius = self.mass
+        einstein_radius = relation.einstein_radius_from(luminosity=luminosity)
 
         super().__init__(centre=centre, einstein_radius=einstein_radius)
