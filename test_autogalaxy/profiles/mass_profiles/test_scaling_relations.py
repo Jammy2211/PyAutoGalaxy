@@ -47,9 +47,25 @@ class TestIsothermalMLR:
         relation = ag.sr.MassLightRelation(gradient=2.0, denominator=0.5, power=2.0)
 
         sis = ag.sr.SphIsothermalMLR(
-            centre=(1.0, 1.0), luminosity=4.0, relation=relation
+            relation=relation, luminosity=4.0, centre=(1.0, 1.0)
         )
 
-        assert sis.luminosity == 4.0
         assert sis.relation == relation
+        assert sis.luminosity == 4.0
+        assert sis.centre == (1.0, 1.0)
         assert sis.einstein_radius == 128.0
+
+        relation = ag.sr.MassLightRelation(gradient=2.0, denominator=0.5, power=2.0)
+
+        sie = ag.sr.EllIsothermalMLR(
+            relation=relation,
+            luminosity=4.0,
+            elliptical_comps=(0.5, 0.5),
+            centre=(1.0, 1.0),
+        )
+
+        assert sie.relation == relation
+        assert sie.luminosity == 4.0
+        assert sie.centre == (1.0, 1.0)
+        assert sie.elliptical_comps == (0.5, 0.5)
+        assert sie.einstein_radius == 128.0

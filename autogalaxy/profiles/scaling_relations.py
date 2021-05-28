@@ -18,9 +18,9 @@ class MassLightRelation:
 class SphIsothermalMLR(mp.SphIsothermal):
     def __init__(
         self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        luminosity: float = 1.0,
         relation: MassLightRelation = MassLightRelation(),
+        luminosity: float = 1.0,
+        centre: Tuple[float, float] = (0.0, 0.0),
     ):
 
         self.luminosity = luminosity
@@ -29,3 +29,24 @@ class SphIsothermalMLR(mp.SphIsothermal):
         einstein_radius = relation.einstein_radius_from(luminosity=luminosity)
 
         super().__init__(centre=centre, einstein_radius=einstein_radius)
+
+
+class EllIsothermalMLR(mp.EllIsothermal):
+    def __init__(
+        self,
+        relation: MassLightRelation = MassLightRelation(),
+        luminosity: float = 1.0,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+    ):
+
+        self.luminosity = luminosity
+        self.relation = relation
+
+        einstein_radius = relation.einstein_radius_from(luminosity=luminosity)
+
+        super().__init__(
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            einstein_radius=einstein_radius,
+        )
