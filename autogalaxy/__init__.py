@@ -72,4 +72,4 @@ from autoconf import conf
 
 conf.instance.register(__file__)
 
-__version__ = "0.20.2"
+__version__ = "2021.6.02.1"
