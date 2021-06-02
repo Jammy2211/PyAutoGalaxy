@@ -13,7 +13,6 @@ from colossus.halo.concentration import concentration as col_concentration
 from numba import cfunc
 from numba.types import intc, CPointer, float64
 
-from pyquad import quad_grid
 from scipy import LowLevelCallable
 from scipy import special
 from scipy.integrate import quad
@@ -1017,14 +1016,24 @@ class EllNFW(EllNFWGeneralized):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
-        potential_grid = quad_grid(
-            self.potential_func,
-            0.0,
-            1.0,
-            grid,
-            args=(self.axis_ratio, self.kappa_s, self.scale_radius),
-            epsrel=1.49e-5,
-        )[0]
+
+        potential_grid = np.zeros(grid.shape[0])
+
+        for i in range(grid.shape[0]):
+
+            potential_grid[i] = quad(
+                self.potential_func,
+                a=0.0,
+                b=1.0,
+                args=(
+                    grid[i, 0],
+                    grid[i, 1],
+                    self.axis_ratio,
+                    self.kappa_s,
+                    self.scale_radius,
+                ),
+                epsrel=1.49e-5,
+            )[0]
 
         return potential_grid
 
@@ -1041,6 +1050,15 @@ class EllNFW(EllNFWGeneralized):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
+
+        try:
+            from pyquad import quad_grid
+        except ImportError:
+            print(
+                "You must install the optional library pyquad to use the deflections_2d_from_grid_via_integrator method.\n"
+                "\n"
+                "pip install pyquad"
+            )
 
         def calculate_deflection_component(npow, index):
             deflection_grid = self.axis_ratio * grid[:, index]

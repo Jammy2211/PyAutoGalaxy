@@ -4,7 +4,6 @@ from autoarray.structures.vector_fields import vector_field_irregular
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 
-from pyquad import quad_grid
 from scipy import special
 from typing import Tuple
 import copy
@@ -325,6 +324,15 @@ class EllPowerLawCored(mp.MassProfile):
 
         """
 
+        try:
+            from pyquad import quad_grid
+        except ImportError:
+            print(
+                "You must install the optional library pyquad to use the deflections_2d_from_grid_via_integrator method.\n"
+                "\n"
+                "pip install pyquad"
+            )
+
         potential_grid = quad_grid(
             self.potential_func,
             0.0,
@@ -348,6 +356,15 @@ class EllPowerLawCored(mp.MassProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
+
+        try:
+            from pyquad import quad_grid
+        except ImportError:
+            print(
+                "You must install the optional library pyquad to use the deflections_2d_from_grid_via_integrator method.\n"
+                "\n"
+                "pip install pyquad"
+            )
 
         def calculate_deflection_component(npow, index):
             einstein_radius_rescaled = self.einstein_radius_rescaled

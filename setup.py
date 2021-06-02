@@ -12,7 +12,9 @@ with open(join(this_dir, "requirements.txt")) as f:
     requirements = f.read().split("\n")
 
 version = environ.get("VERSION", "1.0.dev0")
-requirements.extend([f"autoconf=={version}", f"autoarray=={version}", f"autofit=={version}"])
+requirements.extend(
+    [f"autoconf=={version}", f"autoarray=={version}", f"autofit=={version}"]
+)
 print(requirements)
 
 setup(

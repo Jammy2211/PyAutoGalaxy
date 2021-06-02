@@ -11,6 +11,7 @@ from autogalaxy import exc
 
 from typing import Tuple
 
+
 # noinspection PyAbstractClass
 class MassProfile(geometry_profiles.EllProfile, lensing.LensingObject):
     def __init__(

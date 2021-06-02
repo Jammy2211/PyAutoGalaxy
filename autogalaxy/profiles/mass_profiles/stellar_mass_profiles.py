@@ -3,7 +3,6 @@ import numpy as np
 from autoarray.structures.grids import grid_decorators
 from autogalaxy.profiles import mass_profiles as mp
 
-from pyquad import quad_grid
 from scipy.special import wofz
 from typing import Tuple
 import copy
@@ -125,6 +124,15 @@ class EllGaussian(mp.MassProfile, StellarProfile):
         Note: sigma is divided by sqrt(q) here.
 
         """
+
+        try:
+            from pyquad import quad_grid
+        except ImportError:
+            print(
+                "You must install the optional library pyquad to use the deflections_2d_from_grid_via_integrator method.\n"
+                "\n"
+                "pip install pyquad"
+            )
 
         def calculate_deflection_component(npow, index):
             deflection_grid = self.axis_ratio * grid[:, index]
@@ -374,6 +382,15 @@ class EllSersic(AbstractEllSersic, MassProfileMGE):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
+
+        try:
+            from pyquad import quad_grid
+        except ImportError:
+            print(
+                "You must install the optional library pyquad to use the deflections_2d_from_grid_via_integrator method.\n"
+                "\n"
+                "pip install pyquad"
+            )
 
         def calculate_deflection_component(npow, index):
             sersic_constant = self.sersic_constant
@@ -665,6 +682,15 @@ class EllSersicRadialGradient(AbstractEllSersic):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
+
+        try:
+            from pyquad import quad_grid
+        except ImportError:
+            print(
+                "You must install the optional library pyquad to use the deflections_2d_from_grid_via_integrator method.\n"
+                "\n"
+                "pip install pyquad"
+            )
 
         def calculate_deflection_component(npow, index):
             sersic_constant = self.sersic_constant

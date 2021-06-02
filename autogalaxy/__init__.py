@@ -23,7 +23,7 @@ from autoarray.layout.layout import Layout2D
 from autoarray.structures.arrays.one_d.array_1d import Array1D
 from autoarray.structures.arrays.two_d.array_2d import Array2D
 from autoarray.structures.arrays.values import ValuesIrregular
-from autoarray.structures.arrays.abstract_array import ExposureInfo
+from autoarray.structures.arrays.abstract_array import Header
 from autoarray.structures.grids.one_d.grid_1d import Grid1D
 from autoarray.structures.grids.two_d.grid_2d import Grid2D
 from autoarray.structures.grids.two_d.grid_2d import Grid2DSparse
