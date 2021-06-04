@@ -4,6 +4,7 @@ from autoarray.structures.vector_fields import vector_field_irregular
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 
+from scipy.integrate import quad
 from scipy import special
 from typing import Tuple
 import copy
@@ -324,22 +325,22 @@ class EllPowerLawCored(mp.MassProfile):
 
         """
 
-        try:
-            from pyquad import quad_grid
-        except ImportError:
-            print(
-                "You must install the optional library pyquad to use the deflections_2d_from_grid_via_integrator method.\n"
-                "\n"
-                "pip install pyquad"
-            )
+        potential_grid = np.zeros(grid.shape[0])
 
-        potential_grid = quad_grid(
-            self.potential_func,
-            0.0,
-            1.0,
-            grid,
-            args=(self.axis_ratio, self.slope, self.core_radius),
-        )[0]
+        for i in range(grid.shape[0]):
+
+            potential_grid[i] = quad(
+                self.potential_func,
+                a=0.0,
+                b=1.0,
+                args=(
+                    grid[i, 0],
+                    grid[i, 1],
+                    self.axis_ratio,
+                    self.slope,
+                    self.core_radius,
+                ),
+            )[0]
 
         return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
