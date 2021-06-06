@@ -49,6 +49,7 @@ class AnalysisDataset(Analysis):
         self.settings_inversion = settings_inversion
         self.preloads = preloads
 
+
     def set_hyper_dataset(self, result):
 
         self.hyper_galaxy_image_path_dict = result.hyper_galaxy_image_path_dict
