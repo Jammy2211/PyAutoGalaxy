@@ -14,7 +14,7 @@ from autogalaxy.plane import plane as pl
 
 class Analysis(af.Analysis):
     def __init__(self, hyper_result=None, cosmology=cosmo.Planck15):
-        self.hyper_result = hyper_result
+        self.hyper_dataset_result = hyper_result
         self.cosmology = cosmology
 
 
@@ -22,23 +22,23 @@ class AnalysisDataset(Analysis):
     def __init__(
         self,
         dataset,
-        hyper_result=None,
+        hyper_dataset_result=None,
         cosmology=cosmo.Planck15,
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
         preloads=pload.Preloads(),
     ):
 
-        super().__init__(hyper_result=hyper_result, cosmology=cosmology)
+        super().__init__(hyper_result=hyper_dataset_result, cosmology=cosmology)
 
         self.dataset = dataset
 
-        if self.hyper_result is not None:
+        if self.hyper_dataset_result is not None:
 
-            if hyper_result.search is not None:
-                hyper_result.search.paths = None
+            if hyper_dataset_result.search is not None:
+                hyper_dataset_result.search.paths = None
 
-            self.set_hyper_dataset(result=self.hyper_result)
+            self.set_hyper_dataset(result=self.hyper_dataset_result)
 
         else:
 
@@ -48,7 +48,6 @@ class AnalysisDataset(Analysis):
         self.settings_pixelization = settings_pixelization
         self.settings_inversion = settings_inversion
         self.preloads = preloads
-
 
     def set_hyper_dataset(self, result):
 
@@ -130,7 +129,7 @@ class AnalysisImaging(AnalysisDataset):
     def __init__(
         self,
         dataset,
-        hyper_result=None,
+        hyper_dataset_result=None,
         cosmology=cosmo.Planck15,
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
@@ -139,7 +138,7 @@ class AnalysisImaging(AnalysisDataset):
 
         super().__init__(
             dataset=dataset,
-            hyper_result=hyper_result,
+            hyper_dataset_result=hyper_dataset_result,
             cosmology=cosmology,
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
@@ -263,7 +262,7 @@ class AnalysisInterferometer(AnalysisDataset):
     def __init__(
         self,
         dataset,
-        hyper_result=None,
+        hyper_dataset_result=None,
         cosmology=cosmo.Planck15,
         settings_pixelization=pix.SettingsPixelization(),
         settings_inversion=inv.SettingsInversion(),
@@ -272,16 +271,16 @@ class AnalysisInterferometer(AnalysisDataset):
 
         super().__init__(
             dataset=dataset,
-            hyper_result=hyper_result,
+            hyper_dataset_result=hyper_dataset_result,
             cosmology=cosmology,
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
             preloads=preloads,
         )
 
-        if self.hyper_result is not None:
+        if self.hyper_dataset_result is not None:
 
-            self.set_hyper_dataset(result=self.hyper_result)
+            self.set_hyper_dataset(result=self.hyper_dataset_result)
 
         else:
 

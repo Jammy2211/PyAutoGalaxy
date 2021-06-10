@@ -43,7 +43,9 @@ class TestAnalysisDataset:
             ),
         )
 
-        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7, hyper_result=result)
+        analysis = ag.AnalysisImaging(
+            dataset=masked_imaging_7x7, hyper_dataset_result=result
+        )
 
         instance = analysis.associate_hyper_images(instance=instance)
 
@@ -147,7 +149,9 @@ class TestAnalysisImaging:
             hyper_model_image=hyper_model_image,
         )
 
-        analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7, hyper_result=result)
+        analysis = ag.AnalysisImaging(
+            dataset=masked_imaging_7x7, hyper_dataset_result=result
+        )
 
         hyper_galaxy = ag.HyperGalaxy(
             contribution_factor=1.0, noise_factor=1.0, noise_power=1.0

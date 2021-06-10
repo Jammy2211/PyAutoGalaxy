@@ -34,10 +34,7 @@ def set_config_path(request):
     )
 
 
-@pytest.fixture(
-    autouse=True,
-    scope="session"
-)
+@pytest.fixture(autouse=True, scope="session")
 def remove_logs():
     yield
     for d, _, files in os.walk(directory):
@@ -331,7 +328,7 @@ def make_hyper_galaxy_image_path_dict_7x7():
 
 @pytest.fixture(name="contribution_map_7x7")
 def make_contribution_map_7x7(
-        hyper_model_image_7x7, hyper_galaxy_image_0_7x7, hyper_galaxy
+    hyper_model_image_7x7, hyper_galaxy_image_0_7x7, hyper_galaxy
 ):
     return hyper_galaxy.contribution_map_from_hyper_images(
         hyper_model_image=hyper_model_image_7x7,
