@@ -85,13 +85,14 @@ class EllPowerLawBroken(mp.MassProfile):
 
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
 
-        self.einstein_radius = np.sqrt(self.axis_ratio) * einstein_radius
+        self.einstein_radius = einstein_radius
+        self.einstein_radius_elliptical = np.sqrt(self.axis_ratio) * einstein_radius
         self.break_radius = break_radius
         self.inner_slope = inner_slope
         self.outer_slope = outer_slope
 
         # Parameters defined in the notes
-        self.nu = break_radius / self.einstein_radius
+        self.nu = break_radius / self.einstein_radius_elliptical
         self.dt = (2 - self.inner_slope) / (2 - self.outer_slope)
 
         # Normalisation (eq. 5)
@@ -212,7 +213,7 @@ class EllPowerLawBroken(mp.MassProfile):
     def with_new_normalization(self, normalization):
 
         mass_profile = copy.copy(self)
-        mass_profile.einstein_radius = normalization
+        mass_profile.einstein_radius_elliptical = normalization
         return mass_profile
 
 
