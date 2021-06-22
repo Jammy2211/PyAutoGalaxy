@@ -342,9 +342,7 @@ def stochastic_fit(stochastic_model, search_cls, search_dict, result, analysis):
     mean, sigma = norm.fit(result.stochastic_log_evidences)
     log_likelihood_cap = mean
 
-    name = f"{result.search.paths.name}__stochastic_likelihood_cap_" + "{0:.1f}".format(
-        log_likelihood_cap
-    )
+    name = f"{result.search.paths.name}__stochastic"
 
     search = search_cls(
         path_prefix=result.search.path_prefix_no_unique_tag,
@@ -354,13 +352,17 @@ def stochastic_fit(stochastic_model, search_cls, search_dict, result, analysis):
         **search_dict,
     )
 
+    stochastic_result = search.fit(
+        model=stochastic_model, analysis=analysis, log_likelihood_cap=log_likelihood_cap
+    )
+
+    search.paths.restore()
+
     search.paths.save_object(
         "stochastic_log_evidences", result.stochastic_log_evidences
     )
 
-    stochastic_result = search.fit(
-        model=stochastic_model, analysis=analysis, log_likelihood_cap=log_likelihood_cap
-    )
+    search.paths.zip_remove()
 
     setattr(result, "stochastic", stochastic_result)
 
