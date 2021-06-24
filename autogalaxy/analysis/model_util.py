@@ -220,6 +220,7 @@ def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analys
     )
 
     analysis.set_hyper_dataset(result=result)
+    analysis.preloads = None
 
     hyper_result = search.fit(model=hyper_model, analysis=analysis)
 
