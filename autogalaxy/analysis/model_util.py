@@ -2,6 +2,7 @@ import numpy as np
 from scipy.stats import norm
 
 import autofit as af
+from autoarray import preloads as pload
 from autoarray.inversion import pixelizations as pix, regularization as reg
 from autofit.exc import PriorException
 from autogalaxy.galaxy import galaxy as g
@@ -220,7 +221,7 @@ def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analys
     )
 
     analysis.set_hyper_dataset(result=result)
-    analysis.preloads = None
+    analysis.preloads = pload.Preloads()
 
     hyper_result = search.fit(model=hyper_model, analysis=analysis)
 
