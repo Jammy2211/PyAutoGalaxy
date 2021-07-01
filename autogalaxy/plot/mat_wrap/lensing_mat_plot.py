@@ -23,6 +23,7 @@ class MatPlot1D(mat_plot.MatPlot1D):
         yx_plot: wrap_1d.YXPlot = wrap_1d.YXPlot(),
         half_light_radius_axvline: lensing_wrap.HalfLightRadiusAXVLine = lensing_wrap.HalfLightRadiusAXVLine(),
         einstein_radius_axvline: lensing_wrap.EinsteinRadiusAXVLine = lensing_wrap.EinsteinRadiusAXVLine(),
+        model_fluxes_yx_scatter: lensing_wrap.ModelFluxesYXScatter = lensing_wrap.ModelFluxesYXScatter(),
     ):
         """
         Visualizes 1D data structures as a y versus x plot using Matplotlib.
@@ -96,6 +97,7 @@ class MatPlot1D(mat_plot.MatPlot1D):
 
         self.half_light_radius_axvline = half_light_radius_axvline
         self.einstein_radius_axvline = einstein_radius_axvline
+        self.model_fluxes_yx_scatter = model_fluxes_yx_scatter
 
     def set_for_multi_plot(self, is_for_multi_plot: bool, color: str):
         """

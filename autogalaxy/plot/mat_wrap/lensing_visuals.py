@@ -1,5 +1,6 @@
 from autoarray.mask import mask_2d
 from autoarray.structures.arrays.two_d import array_2d
+from autoarray.structures.grids.one_d import grid_1d
 from autoarray.structures.grids.two_d import grid_2d
 from autoarray.structures.grids.two_d import grid_2d_irregular
 from autoarray.structures.vector_fields import vector_field_irregular
@@ -8,6 +9,7 @@ from autoarray.plot.mat_wrap import visuals as vis
 from matplotlib import patches as ptch
 import typing
 from typing import List, Union, Optional
+import numpy as np
 
 
 class Visuals1D(vis.Visuals1D):
@@ -15,12 +17,14 @@ class Visuals1D(vis.Visuals1D):
         self,
         half_light_radius: Optional[float] = None,
         einstein_radius: Optional[float] = None,
+        model_fluxes: Optional[grid_1d.Grid1D] = None,
     ):
 
         super().__init__()
 
         self.half_light_radius = half_light_radius
         self.einstein_radius = einstein_radius
+        self.model_fluxes = model_fluxes
 
     def plot_via_plotter(self, plotter, grid_indexes=None, mapper=None):
 
@@ -34,6 +38,12 @@ class Visuals1D(vis.Visuals1D):
         if self.einstein_radius is not None:
             plotter.einstein_radius_axvline.axvline_vertical_line(
                 vertical_line=self.einstein_radius, label="Einstein Radius"
+            )
+
+        if self.model_fluxes is not None:
+
+            plotter.model_fluxes_yx_scatter.scatter_yx(
+                y=self.model_fluxes, x=np.arange(len(self.model_fluxes))
             )
 
 

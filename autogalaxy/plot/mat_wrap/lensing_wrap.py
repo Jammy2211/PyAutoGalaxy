@@ -9,6 +9,10 @@ class EinsteinRadiusAXVLine(wrap_1d.AXVLine):
     pass
 
 
+class ModelFluxesYXScatter(wrap_1d.YXScatter):
+    pass
+
+
 class LightProfileCentresScatter(wrap_2d.GridScatter):
     pass
 

@@ -47,6 +47,7 @@ from autoarray.plot.multi_plotters import MultiYX1DPlotter
 from autogalaxy.plot.mat_wrap.lensing_wrap import (
     HalfLightRadiusAXVLine,
     EinsteinRadiusAXVLine,
+    ModelFluxesYXScatter,
     LightProfileCentresScatter,
     MassProfileCentresScatter,
     CriticalCurvesPlot,
