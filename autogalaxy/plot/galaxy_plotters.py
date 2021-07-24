@@ -80,7 +80,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             visuals_2d=self.visuals_2d,
             include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.visuals_1d,
+            visuals_1d=self.visuals_with_include_1d_light,
             include_1d=self.include_1d,
         )
 
@@ -134,8 +134,13 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
         vis.Visuals1D
             The collection of attributes that can be plotted by a `Plotter1D` object.
         """
+        if self.include_1d.einstein_radius:
+            einstein_radius = self.lensing_obj.einstein_radius_from_grid(grid=self.grid)
+        else:
+            einstein_radius = None
+
         return self.visuals_1d + self.visuals_1d.__class__(
-            einstein_radius=self.lensing_obj.einstein_radius_from_grid(grid=self.grid)
+            einstein_radius=einstein_radius
         )
 
     def figures_1d(self, image=False, convergence=False, potential=False):
@@ -199,14 +204,18 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
                 plot_axis_type_override=plot_axis_type_override,
             )
 
-    def figures_1d_decomposed(self, image=False, convergence=False, potential=False):
+    def figures_1d_decomposed(
+        self, image=False, convergence=False, potential=False, legend_labels=None
+    ):
 
         plotter_list = [self] + [
             self.light_profile_plotter_from(light_profile=light_profile)
             for light_profile in self.galaxy.light_profiles
         ]
 
-        multi_plotter = multi_plotters.MultiYX1DPlotter(plotter_list=plotter_list)
+        multi_plotter = multi_plotters.MultiYX1DPlotter(
+            plotter_list=plotter_list, legend_labels=legend_labels
+        )
 
         if image:
 
@@ -222,7 +231,9 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             for mass_profile in self.galaxy.mass_profiles
         ]
 
-        multi_plotter = multi_plotters.MultiYX1DPlotter(plotter_list=plotter_list)
+        multi_plotter = multi_plotters.MultiYX1DPlotter(
+            plotter_list=plotter_list, legend_labels=legend_labels
+        )
 
         if convergence:
 

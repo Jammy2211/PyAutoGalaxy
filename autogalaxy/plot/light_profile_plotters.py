@@ -48,7 +48,9 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             The collection of attributes that can be plotted by a `Plotter1D` object.
         """
         return self.visuals_1d + self.visuals_1d.__class__(
-            half_light_radius=self.light_profile.half_light_radius
+            self.extract_1d(
+                "half_light_radius", value=self.light_profile.half_light_radius
+            )
         )
 
     @property

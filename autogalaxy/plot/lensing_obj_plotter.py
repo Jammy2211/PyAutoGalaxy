@@ -27,8 +27,13 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         vis.Visuals1D
             The collection of attributes that can be plotted by a `Plotter1D` object.
         """
+        if self.include_1d.einstein_radius:
+            einstein_radius = self.lensing_obj.einstein_radius_from_grid(grid=self.grid)
+        else:
+            einstein_radius = None
+
         return self.visuals_1d + self.visuals_1d.__class__(
-            einstein_radius=self.lensing_obj.einstein_radius_from_grid(grid=self.grid)
+            self.extract_1d("einstein_radius", value=einstein_radius)
         )
 
     @property

@@ -2,7 +2,7 @@ from autoarray.mask import mask_2d
 from autoarray.structures.arrays.two_d import array_2d
 from autoarray.structures.grids.one_d import grid_1d
 from autoarray.structures.grids.two_d import grid_2d
-from autoarray.structures.grids.two_d import grid_2d_irregular
+from autoarray.structures.grids.two_d.grid_2d_irregular import Grid2DIrregular
 from autoarray.structures.vector_fields import vector_field_irregular
 from autoarray.plot.mat_wrap import visuals as vis
 
@@ -53,22 +53,17 @@ class Visuals2D(vis.Visuals2D):
         origin: grid_2d.Grid2D = None,
         border: grid_2d.Grid2D = None,
         mask: mask_2d.Mask2D = None,
-        positions: Optional[
-            Union[
-                grid_2d_irregular.Grid2DIrregular,
-                List[grid_2d_irregular.Grid2DIrregular],
-            ]
-        ] = None,
+        positions: Optional[Union[Grid2DIrregular, List[Grid2DIrregular]]] = None,
         grid: grid_2d.Grid2D = None,
         pixelization_grid: grid_2d.Grid2D = None,
         vector_field: vector_field_irregular.VectorField2DIrregular = None,
         patches: typing.Union[ptch.Patch] = None,
         array_overlay: array_2d.Array2D = None,
-        light_profile_centres: grid_2d_irregular.Grid2DIrregular = None,
-        mass_profile_centres: grid_2d_irregular.Grid2DIrregular = None,
-        multiple_images: grid_2d_irregular.Grid2DIrregular = None,
-        critical_curves: grid_2d_irregular.Grid2DIrregular = None,
-        caustics: grid_2d_irregular.Grid2DIrregular = None,
+        light_profile_centres: Grid2DIrregular = None,
+        mass_profile_centres: Grid2DIrregular = None,
+        multiple_images: Grid2DIrregular = None,
+        critical_curves: Optional[Union[Grid2DIrregular, List[Grid2DIrregular]]] = None,
+        caustics: Optional[Union[Grid2DIrregular, List[Grid2DIrregular]]] = None,
         parallel_overscan=None,
         serial_prescan=None,
         serial_overscan=None,
