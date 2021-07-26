@@ -7,12 +7,15 @@ from autogalaxy.plot import (
 )
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.profiles import light_profiles as lp, mass_profiles as mp
+from autogalaxy.galaxy import galaxy as g
+
+from typing import List
 
 
 class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
     def __init__(
         self,
-        galaxy,
+        galaxy: g.Galaxy,
         grid,
         mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
         visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
@@ -20,6 +23,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
         mat_plot_2d: lensing_mat_plot.MatPlot2D = lensing_mat_plot.MatPlot2D(),
         visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
         include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+        galaxy_error_list: List[g.Galaxy] = None,
     ):
         super().__init__(
             mat_plot_2d=mat_plot_2d,
@@ -32,6 +36,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
 
         self.galaxy = galaxy
         self.grid = grid
+        self.galaxy_error_list = galaxy_error_list
 
     @property
     def lensing_obj(self):
@@ -71,7 +76,9 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
         )
 
     def light_profile_plotter_from(
-        self, light_profile: lp.LightProfile
+        self,
+        light_profile: lp.LightProfile,
+        light_profile_error_list: List[lp.LightProfile] = None,
     ) -> light_profile_plotters.LightProfilePlotter:
         return light_profile_plotters.LightProfilePlotter(
             light_profile=light_profile,
@@ -82,6 +89,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             mat_plot_1d=self.mat_plot_1d,
             visuals_1d=self.visuals_with_include_1d_light,
             include_1d=self.include_1d,
+            light_profile_error_list=light_profile_error_list,
         )
 
     def mass_profile_plotter_from(
@@ -208,10 +216,24 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
         self, image=False, convergence=False, potential=False, legend_labels=None
     ):
 
-        plotter_list = [self] + [
-            self.light_profile_plotter_from(light_profile=light_profile)
-            for light_profile in self.galaxy.light_profiles
-        ]
+        light_profile_error_list = None
+
+        plotter_list = [self]
+
+        for i, light_profile in enumerate(self.galaxy.light_profiles):
+
+            if self.galaxy_error_list is not None:
+
+                light_profile_error_list = [
+                    galaxy.light_profiles[i] for galaxy in self.galaxy_error_list
+                ]
+
+            light_profile_plotter = self.light_profile_plotter_from(
+                light_profile=light_profile,
+                light_profile_error_list=light_profile_error_list,
+            )
+
+            plotter_list.append(light_profile_plotter)
 
         multi_plotter = multi_plotters.MultiYX1DPlotter(
             plotter_list=plotter_list, legend_labels=legend_labels

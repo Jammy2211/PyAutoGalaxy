@@ -5,6 +5,11 @@ from autoarray.plot import abstract_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.profiles import light_profiles as lp
 
+from autofit.non_linear.samples import quantile
+import math
+
+from typing import List
+
 
 class LightProfilePlotter(abstract_plotters.AbstractPlotter):
     def __init__(
@@ -17,6 +22,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
         mat_plot_2d: lensing_mat_plot.MatPlot2D = lensing_mat_plot.MatPlot2D(),
         visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
         include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+        light_profile_error_list: List[lp.LightProfile] = None,
     ):
 
         self.light_profile = light_profile
@@ -30,6 +36,8 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             include_1d=include_1d,
             visuals_1d=visuals_1d,
         )
+
+        self.light_profile_error_list = light_profile_error_list
 
     @property
     def visuals_with_include_1d(self) -> lensing_visuals.Visuals1D:
@@ -97,6 +105,34 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
         if image:
 
             image_1d = self.light_profile.image_1d_from_grid(grid=self.grid)
+
+            if self.light_profile_error_list is not None:
+
+                sigma = 3.0
+                low_limit = (1 - math.erf(sigma / math.sqrt(2))) / 2
+
+                image_1d_list = [
+                    light_profile.image_1d_from_grid(grid=self.grid)
+                    for light_profile in self.light_profile_error_list
+                ]
+
+                print(image_1d_list[:])
+
+                median_image_1d = quantile(x=image_1d_list, q=0.5)[0]
+                lower_image_1d = quantile(x=image_1d_list, q=low_limit)[0]
+                upper_image_1d = quantile(x=image_1d_list, q=1 - low_limit)[0]
+
+                print(median_image_1d)
+                #         print(lower_image_1d)
+                #         print(upper_image_1d)
+
+                stop
+
+            #               image_1d_shaded_region =
+
+            else:
+
+                pass
 
             self.mat_plot_1d.plot_yx(
                 y=image_1d,

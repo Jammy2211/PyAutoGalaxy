@@ -14,3 +14,4 @@ from autoarray.inversion import inversion_util as inversion
 from autoarray.operators import transformer_util as transformer
 from autogalaxy.analysis import model_util as model
 from autogalaxy.util import cosmology_util as cosmology
+from autogalaxy.util import error_util as error
