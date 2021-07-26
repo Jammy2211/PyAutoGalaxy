@@ -116,7 +116,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
                     for light_profile in self.light_profile_error_list
                 ]
 
-                print(image_1d_list[:])
+                #       print(image_1d_list[:])
 
                 median_image_1d = quantile(x=image_1d_list, q=0.5)[0]
                 lower_image_1d = quantile(x=image_1d_list, q=low_limit)[0]
@@ -125,8 +125,6 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
                 print(median_image_1d)
                 #         print(lower_image_1d)
                 #         print(upper_image_1d)
-
-                stop
 
             #               image_1d_shaded_region =
 
