@@ -1,4 +1,4 @@
-from autofit.non_linear.samples import quantile
+from autofit.non_linear.samples.pdf import quantile
 import autogalaxy as ag
 import numpy as np
 

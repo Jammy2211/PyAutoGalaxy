@@ -1,5 +1,5 @@
 import numpy as np
-from autofit.non_linear.samples import quantile
+from autofit.non_linear.samples.pdf import quantile
 
 
 def quantile_1d_profile(profile_1d_list, q, weights=None):

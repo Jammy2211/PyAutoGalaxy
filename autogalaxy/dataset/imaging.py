@@ -1,7 +1,4 @@
-import copy
-
 import numpy as np
-from autoarray.structures.grids.two_d import grid_2d
 from autoarray.structures import kernel_2d
 from autoarray.dataset import imaging
 from autogalaxy.plane import plane as pl

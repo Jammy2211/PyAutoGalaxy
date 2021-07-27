@@ -5,7 +5,7 @@ from autoarray.plot import abstract_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.profiles import light_profiles as lp
 
-from autofit.non_linear.samples import quantile
+from autofit.non_linear.samples.pdf import quantile
 import math
 
 from typing import List
