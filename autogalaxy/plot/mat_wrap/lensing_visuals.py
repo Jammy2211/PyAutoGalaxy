@@ -1,4 +1,5 @@
 from autoarray.mask import mask_2d
+from autoarray.structures.arrays.one_d import array_1d
 from autoarray.structures.arrays.two_d import array_2d
 from autoarray.structures.grids.one_d import grid_1d
 from autoarray.structures.grids.two_d import grid_2d
@@ -16,13 +17,18 @@ class Visuals1D(vis.Visuals1D):
     def __init__(
         self,
         half_light_radius: Optional[float] = None,
+        half_light_radius_errors: Optional[List[float]] = None,
         einstein_radius: Optional[float] = None,
         model_fluxes: Optional[grid_1d.Grid1D] = None,
+        shaded_region: Optional[
+            Union[List[List], List[array_1d.Array1D], List[np.ndarray]]
+        ] = None,
     ):
 
-        super().__init__()
+        super().__init__(shaded_region=shaded_region)
 
         self.half_light_radius = half_light_radius
+        self.half_light_radius_errors = half_light_radius_errors
         self.einstein_radius = einstein_radius
         self.model_fluxes = model_fluxes
 
@@ -32,7 +38,9 @@ class Visuals1D(vis.Visuals1D):
 
         if self.half_light_radius is not None:
             plotter.half_light_radius_axvline.axvline_vertical_line(
-                vertical_line=self.half_light_radius, label="Half-light Radius"
+                vertical_line=self.half_light_radius,
+                vertical_errors=self.half_light_radius_errors,
+                label="Half-light Radius",
             )
 
         if self.einstein_radius is not None:

@@ -14,7 +14,7 @@ from autoarray.plot.mat_wrap.wrap.wrap_base import (
     Legend,
     Output,
 )
-from autoarray.plot.mat_wrap.wrap.wrap_1d import YXPlot
+from autoarray.plot.mat_wrap.wrap.wrap_1d import YXPlot, FillBetween
 from autoarray.plot.mat_wrap.wrap.wrap_2d import (
     ArrayOverlay,
     GridScatter,
@@ -60,6 +60,7 @@ from autogalaxy.plot.mat_wrap.lensing_include import Include1D, Include2D
 from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D, Visuals2D
 
 from autogalaxy.plot.light_profile_plotters import LightProfilePlotter
+from autogalaxy.plot.light_profile_plotters import LightProfilePDFPlotter
 from autogalaxy.plot.mass_profile_plotters import MassProfilePlotter
 from autogalaxy.plot.galaxy_plotters import GalaxyPlotter
 from autogalaxy.plot.fit_galaxy_plotters import FitGalaxyPlotter

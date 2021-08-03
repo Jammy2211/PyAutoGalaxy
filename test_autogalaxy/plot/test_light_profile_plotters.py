@@ -60,6 +60,7 @@ def test__visuals_with_include_2d(lp_0, grid_2d_7x7):
 
 def test__figures_1d__all_are_output(
     lp_0,
+    lp_1,
     sub_grid_2d_7x7,
     grid_2d_irregular_7x7_list,
     include_1d_all,
@@ -78,6 +79,18 @@ def test__figures_1d__all_are_output(
         grid=sub_grid_2d_7x7,
         include_1d=include_1d_all,
         mat_plot_1d=mat_plot_1d,
+    )
+
+    light_profile_plotter.figures_1d(image=True)
+
+    assert path.join(plot_path, "image_1d.png") in plot_patch.paths
+
+    light_profile_plotter = aplt.LightProfilePDFPlotter(
+        light_profile_pdf_list=[lp_0, lp_1, lp_0, lp_1, lp_0],
+        grid=sub_grid_2d_7x7,
+        include_1d=include_1d_all,
+        mat_plot_1d=mat_plot_1d,
+        sigma=2.0,
     )
 
     light_profile_plotter.figures_1d(image=True)

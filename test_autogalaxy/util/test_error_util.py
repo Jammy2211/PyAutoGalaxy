@@ -10,7 +10,7 @@ def test__quantile_1d_profile():
 
     profile_1d_list = [profile_1d_0, profile_1d_1]
 
-    median_profile_1d = ag.util.error.quantile_1d_profile(
+    median_profile_1d = ag.util.error.quantile_profile_1d(
         profile_1d_list=profile_1d_list, q=0.5
     )
 
@@ -21,7 +21,7 @@ def test__quantile_1d_profile():
 
     profile_1d_list = [profile_1d_0, profile_1d_1]
 
-    median_profile_1d = ag.util.error.quantile_1d_profile(
+    median_profile_1d = ag.util.error.quantile_profile_1d(
         profile_1d_list=profile_1d_list, q=0.5
     )
 
@@ -39,7 +39,7 @@ def test__quantile_1d_profile():
 
     weights = np.array([9.9996, 9.9996, 9.9996, 1e-4, 1e-4, 1e-4, 1e-4])
 
-    median_profile_1d = ag.util.error.quantile_1d_profile(
+    median_profile_1d = ag.util.error.quantile_profile_1d(
         profile_1d_list=profile_1d_list, q=0.5, weights=weights
     )
 
@@ -64,7 +64,7 @@ def test__quantile_1d_profile():
         profile_1d_4,
     ]
 
-    profile_1d_via_error_util = ag.util.error.quantile_1d_profile(
+    profile_1d_via_error_util = ag.util.error.quantile_profile_1d(
         profile_1d_list=profile_1d_list, q=0.23, weights=weights
     )
 
