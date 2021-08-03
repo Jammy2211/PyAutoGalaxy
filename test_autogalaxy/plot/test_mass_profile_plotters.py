@@ -56,6 +56,7 @@ def test__visuals_with_include_2d(mp_0, grid_2d_7x7):
 
 def test__figures_1d__all_are_output(
     mp_0,
+    mp_1,
     sub_grid_2d_7x7,
     grid_2d_irregular_7x7_list,
     include_1d_all,
@@ -71,6 +72,18 @@ def test__figures_1d__all_are_output(
 
     mass_profile_plotter = aplt.MassProfilePlotter(
         mass_profile=mp_0,
+        grid=sub_grid_2d_7x7,
+        include_1d=include_1d_all,
+        mat_plot_1d=mat_plot_1d,
+    )
+
+    mass_profile_plotter.figures_1d(convergence=True, potential=True)
+
+    assert path.join(plot_path, "convergence_1d.png") in plot_patch.paths
+    assert path.join(plot_path, "potential_1d.png") in plot_patch.paths
+
+    mass_profile_plotter = aplt.MassProfilePDFPlotter(
+        mass_profile_pdf_list=[mp_0, mp_1, mp_0, mp_1, mp_0],
         grid=sub_grid_2d_7x7,
         include_1d=include_1d_all,
         mat_plot_1d=mat_plot_1d,

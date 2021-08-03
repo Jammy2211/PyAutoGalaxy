@@ -19,6 +19,7 @@ class Visuals1D(vis.Visuals1D):
         half_light_radius: Optional[float] = None,
         half_light_radius_errors: Optional[List[float]] = None,
         einstein_radius: Optional[float] = None,
+        einstein_radius_errors: Optional[List[float]] = None,
         model_fluxes: Optional[grid_1d.Grid1D] = None,
         shaded_region: Optional[
             Union[List[List], List[array_1d.Array1D], List[np.ndarray]]
@@ -30,6 +31,7 @@ class Visuals1D(vis.Visuals1D):
         self.half_light_radius = half_light_radius
         self.half_light_radius_errors = half_light_radius_errors
         self.einstein_radius = einstein_radius
+        self.einstein_radius_errors = einstein_radius_errors
         self.model_fluxes = model_fluxes
 
     def plot_via_plotter(self, plotter, grid_indexes=None, mapper=None):
@@ -45,7 +47,9 @@ class Visuals1D(vis.Visuals1D):
 
         if self.einstein_radius is not None:
             plotter.einstein_radius_axvline.axvline_vertical_line(
-                vertical_line=self.einstein_radius, label="Einstein Radius"
+                vertical_line=self.einstein_radius,
+                vertical_errors=self.einstein_radius_errors,
+                label="Einstein Radius",
             )
 
         if self.model_fluxes is not None:
