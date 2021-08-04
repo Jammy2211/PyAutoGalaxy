@@ -80,6 +80,18 @@ def test__figures_1d__all_are_output(
     assert path.join(plot_path, "convergence_1d.png") in plot_patch.paths
     assert path.join(plot_path, "potential_1d.png") in plot_patch.paths
 
+    galaxy_plotter = aplt.GalaxyPDFPlotter(
+        galaxy_pdf_list=[gal_x1_lp_x1_mp, gal_x1_lp_x1_mp, gal_x1_lp_x1_mp],
+        grid=sub_grid_2d_7x7,
+        include_1d=include_1d_all,
+        mat_plot_1d=aplt.MatPlot1D(output=aplt.Output(plot_path, format="png")),
+    )
+    galaxy_plotter.figures_1d(image=True, convergence=True, potential=True)
+
+    assert path.join(plot_path, "image_1d.png") in plot_patch.paths
+    assert path.join(plot_path, "convergence_1d.png") in plot_patch.paths
+    assert path.join(plot_path, "potential_1d.png") in plot_patch.paths
+
 
 def test__figures_1d_decomposed__all_are_output(
     gal_x1_lp_x1_mp, sub_grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch

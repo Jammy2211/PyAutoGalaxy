@@ -64,6 +64,7 @@ from autogalaxy.plot.light_profile_plotters import LightProfilePDFPlotter
 from autogalaxy.plot.mass_profile_plotters import MassProfilePlotter
 from autogalaxy.plot.mass_profile_plotters import MassProfilePDFPlotter
 from autogalaxy.plot.galaxy_plotters import GalaxyPlotter
+from autogalaxy.plot.galaxy_plotters import GalaxyPDFPlotter
 from autogalaxy.plot.fit_galaxy_plotters import FitGalaxyPlotter
 from autogalaxy.plot.fit_imaging_plotters import FitImagingPlotter
 from autogalaxy.plot.fit_interferometer_plotters import FitInterferometerPlotter
