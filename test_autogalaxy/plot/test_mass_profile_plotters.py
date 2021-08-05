@@ -82,6 +82,8 @@ def test__figures_1d__all_are_output(
     assert path.join(plot_path, "convergence_1d.png") in plot_patch.paths
     assert path.join(plot_path, "potential_1d.png") in plot_patch.paths
 
+    plot_patch.paths = []
+
     mass_profile_plotter = aplt.MassProfilePDFPlotter(
         mass_profile_pdf_list=[mp_0, mp_1, mp_0, mp_1, mp_0],
         grid=sub_grid_2d_7x7,

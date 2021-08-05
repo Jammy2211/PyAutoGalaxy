@@ -230,12 +230,18 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
 
         if image:
 
+            change_filename = False
+
             if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
                 multi_plotter.plotter_list[0].set_filename(
                     filename="image_1d_decomposed"
                 )
+                change_filename = True
 
             multi_plotter.figure_1d(func_name="figures_1d", figure_name="image")
+
+            if change_filename:
+                multi_plotter.plotter_list[0].set_filename(filename=None)
 
         plotter_list = [self] + [
             self.mass_profile_plotter_from(mass_profile=mass_profile)
@@ -248,21 +254,33 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
 
         if convergence:
 
+            change_filename = False
+
             if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
                 multi_plotter.plotter_list[0].set_filename(
                     filename="convergence_1d_decomposed"
                 )
+                change_filename = True
 
             multi_plotter.figure_1d(func_name="figures_1d", figure_name="convergence")
 
+            if change_filename:
+                multi_plotter.plotter_list[0].set_filename(filename=None)
+
         if potential:
+
+            change_filename = False
 
             if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
                 multi_plotter.plotter_list[0].set_filename(
                     filename="potential_1d_decomposed"
                 )
+                change_filename = True
 
             multi_plotter.figure_1d(func_name="figures_1d", figure_name="potential")
+
+            if change_filename:
+                multi_plotter.plotter_list[0].set_filename(filename=None)
 
     def figures_2d(
         self,
@@ -375,9 +393,21 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         self.sigma = sigma
         self.low_limit = (1 - math.erf(sigma / math.sqrt(2))) / 2
 
+    @property
+    def light_profile_pdf_plotter_list(self):
+        return [
+            self.light_profile_pdf_plotter_from(index=index)
+            for index in range(len(self.galaxy_pdf_list[0].light_profiles))
+        ]
+
     def light_profile_pdf_plotter_from(
-        self, light_profile_pdf_list: List[lp.LightProfile]
-    ) -> light_profile_plotters.LightProfilePlotter:
+        self, index
+    ) -> light_profile_plotters.LightProfilePDFPlotter:
+
+        light_profile_pdf_list = [
+            galaxy.light_profiles[index] for galaxy in self.galaxy_pdf_list
+        ]
+
         return light_profile_plotters.LightProfilePDFPlotter(
             light_profile_pdf_list=light_profile_pdf_list,
             grid=self.grid,
@@ -386,6 +416,32 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
             visuals_1d=self.visuals_with_include_1d_light,
+            include_1d=self.include_1d,
+        )
+
+    @property
+    def mass_profile_pdf_plotter_list(self):
+        return [
+            self.mass_profile_pdf_plotter_from(index=index)
+            for index in range(len(self.galaxy_pdf_list[0].mass_profiles))
+        ]
+
+    def mass_profile_pdf_plotter_from(
+        self, index
+    ) -> mass_profile_plotters.MassProfilePDFPlotter:
+
+        mass_profile_pdf_list = [
+            galaxy.mass_profiles[index] for galaxy in self.galaxy_pdf_list
+        ]
+
+        return mass_profile_plotters.MassProfilePDFPlotter(
+            mass_profile_pdf_list=mass_profile_pdf_list,
+            grid=self.grid,
+            mat_plot_2d=self.mat_plot_2d,
+            visuals_2d=self.visuals_2d,
+            include_2d=self.include_2d,
+            mat_plot_1d=self.mat_plot_1d,
+            visuals_1d=self.visuals_with_include_1d_mass,
             include_1d=self.include_1d,
         )
 
@@ -558,61 +614,65 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         self, image=False, convergence=False, potential=False, legend_labels=None
     ):
 
-        light_profile_error_list = None
+        if image:
 
-        plotter_list = [self]
-
-        for i, light_profile in enumerate(self.galaxy.light_profiles):
-
-            if self.galaxy_error_list is not None:
-
-                light_profile_error_list = [
-                    galaxy.light_profiles[i] for galaxy in self.galaxy_error_list
-                ]
-
-            light_profile_plotter = self.light_profile_plotter_from(
-                light_profile=light_profile,
-                light_profile_error_list=light_profile_error_list,
+            multi_plotter = multi_plotters.MultiYX1DPlotter(
+                plotter_list=[self] + self.light_profile_pdf_plotter_list,
+                legend_labels=legend_labels,
             )
 
-            plotter_list.append(light_profile_plotter)
-
-        multi_plotter = multi_plotters.MultiYX1DPlotter(
-            plotter_list=plotter_list, legend_labels=legend_labels
-        )
-
-        if image:
+            change_filename = False
 
             if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
                 multi_plotter.plotter_list[0].set_filename(
                     filename="image_1d_decomposed"
                 )
 
+                change_filename = True
+
             multi_plotter.figure_1d(func_name="figures_1d", figure_name="image")
 
-        plotter_list = [self] + [
-            self.mass_profile_plotter_from(mass_profile=mass_profile)
-            for mass_profile in self.galaxy.mass_profiles
-        ]
-
-        multi_plotter = multi_plotters.MultiYX1DPlotter(
-            plotter_list=plotter_list, legend_labels=legend_labels
-        )
+            if change_filename:
+                multi_plotter.plotter_list[0].set_filename(filename=None)
 
         if convergence:
+
+            multi_plotter = multi_plotters.MultiYX1DPlotter(
+                plotter_list=[self] + self.mass_profile_pdf_plotter_list,
+                legend_labels=legend_labels,
+            )
+
+            change_filename = False
 
             if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
                 multi_plotter.plotter_list[0].set_filename(
                     filename="convergence_1d_decomposed"
                 )
 
+                change_filename = True
+
             multi_plotter.figure_1d(func_name="figures_1d", figure_name="convergence")
 
+            if change_filename:
+                multi_plotter.plotter_list[0].set_filename(filename=None)
+
         if potential:
+
+            multi_plotter = multi_plotters.MultiYX1DPlotter(
+                plotter_list=[self] + self.mass_profile_pdf_plotter_list,
+                legend_labels=legend_labels,
+            )
+
+            change_filename = False
 
             if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
                 multi_plotter.plotter_list[0].set_filename(
                     filename="potential_1d_decomposed"
                 )
 
+                change_filename = True
+
             multi_plotter.figure_1d(func_name="figures_1d", figure_name="potential")
+
+            if change_filename:
+                multi_plotter.plotter_list[0].set_filename(filename=None)

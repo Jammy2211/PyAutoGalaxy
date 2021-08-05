@@ -220,7 +220,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                     title="Potential vs Radius",
                     ylabel="Potential ",
                     xlabel="Radius",
-                    legend=self.lensing_obj.__class__.__name__,
+                    legend=self.mass_profile_pdf_list[0].__class__.__name__,
                     filename="potential_1d",
                 ),
                 plot_axis_type_override=plot_axis_type_override,
