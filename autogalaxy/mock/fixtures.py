@@ -12,7 +12,7 @@ def make_masked_imaging_7x7():
     masked_imaging_7x7 = imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
 
     return masked_imaging_7x7.apply_settings(
-        settings=ag.SettingsImaging(sub_size=1, sub_size_inversion=1)
+        settings=ag.SettingsImaging(sub_size=1)
     )
 
 
