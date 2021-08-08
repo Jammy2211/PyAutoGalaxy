@@ -10,7 +10,7 @@ from autoarray.fit import fit_util as fit
 from autoarray.inversion import pixelization_util as pixelization
 from autoarray.inversion import mapper_util as mapper
 from autoarray.inversion import regularization_util as regularization
-from autoarray.inversion import inversion_util as inversion
+from autoarray.inversion.inversion import inversion_util as inversion
 from autoarray.operators import transformer_util as transformer
 from autogalaxy.analysis import model_util as model
 from autogalaxy.util import cosmology_util as cosmology

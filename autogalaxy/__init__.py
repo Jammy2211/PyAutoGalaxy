@@ -8,8 +8,13 @@ from autoarray.instruments import acs
 from autoarray.instruments import euclid
 from autoarray.inversion import pixelizations as pix
 from autoarray.inversion import regularization as reg
-from autoarray.inversion.inversions import SettingsInversion
-from autoarray.inversion.inversions import inversion as Inversion
+from autoarray.inversion.inversion.settings import SettingsInversion
+from autoarray.inversion.inversion.imaging import (
+    inversion_imaging_from as InversionImaging,
+)
+from autoarray.inversion.inversion.interferometer import (
+    inversion_interferometer_from as InversionInterferometer,
+)
 from autoarray.inversion.mappers import mapper as Mapper
 from autoarray.inversion.pixelizations import SettingsPixelization
 from autoarray.mask.mask_1d import Mask1D

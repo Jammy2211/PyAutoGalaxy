@@ -3,7 +3,8 @@ from astropy import cosmology as cosmo
 import autofit as af
 from autoarray import preloads as pload
 from autoarray.exc import PixelizationException, InversionException, GridException
-from autoarray.inversion import pixelizations as pix, inversions as inv
+from autoarray.inversion import pixelizations as pix
+from autoarray.inversion.inversion.settings import SettingsInversion
 from autofit.exc import FitException
 from autogalaxy.analysis import result as res
 from autogalaxy.analysis import visualizer as vis
@@ -25,7 +26,7 @@ class AnalysisDataset(Analysis):
         hyper_dataset_result=None,
         cosmology=cosmo.Planck15,
         settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=inv.SettingsInversion(),
+        settings_inversion=SettingsInversion(),
         preloads=pload.Preloads(),
     ):
 
@@ -132,7 +133,7 @@ class AnalysisImaging(AnalysisDataset):
         hyper_dataset_result=None,
         cosmology=cosmo.Planck15,
         settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=inv.SettingsInversion(),
+        settings_inversion=SettingsInversion(),
         preloads=pload.Preloads(),
     ):
 
@@ -265,7 +266,7 @@ class AnalysisInterferometer(AnalysisDataset):
         hyper_dataset_result=None,
         cosmology=cosmo.Planck15,
         settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=inv.SettingsInversion(),
+        settings_inversion=SettingsInversion(),
         preloads=pload.Preloads(),
     ):
 

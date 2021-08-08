@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 import autogalaxy as ag
-from autoarray.inversion import inversions
+from autoarray.inversion.inversion.imaging import InversionImagingMatrix
 from autogalaxy.mock.mock import MockLightProfile
 
 
@@ -744,7 +744,7 @@ class TestCompareToManualInversionOnly:
         mapper = pix.mapper_from_grid_and_sparse_grid(
             grid=masked_imaging_7x7.grid_inversion, sparse_grid=None
         )
-        inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+        inversion = InversionImagingMatrix.from_data_via_pixelization_convolution(
             mapper=mapper,
             regularization=reg,
             image=masked_imaging_7x7.image,
@@ -829,7 +829,7 @@ class TestCompareToManualInversionOnly:
             grid=masked_imaging_7x7.grid, sparse_grid=None
         )
 
-        inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+        inversion = InversionImagingMatrix.from_data_via_pixelization_convolution(
             mapper=mapper,
             regularization=reg,
             image=masked_imaging_7x7.image,
@@ -880,6 +880,7 @@ class TestCompareToManualInversionOnly:
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
+            settings_inversion=ag.SettingsInversion(use_w_tilde=False),
         )
 
         hyper_noise = plane.hyper_noise_map_from_noise_map(
@@ -893,7 +894,7 @@ class TestCompareToManualInversionOnly:
             grid=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
-        inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+        inversion = InversionImagingMatrix.from_data_via_pixelization_convolution(
             mapper=mapper,
             regularization=reg,
             image=image,
@@ -975,7 +976,7 @@ class TestCompareToManualInversionOnly:
             settings=ag.SettingsPixelization(use_border=False),
         )
 
-        inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+        inversion = InversionImagingMatrix.from_data_via_pixelization_convolution(
             mapper=mapper,
             regularization=reg,
             image=masked_imaging_7x7.image,
@@ -1022,7 +1023,7 @@ class TestCompareToManualProfilesAndInversion:
             settings=ag.SettingsPixelization(use_border=False),
         )
 
-        inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+        inversion = InversionImagingMatrix.from_data_via_pixelization_convolution(
             image=profile_subtracted_image,
             noise_map=masked_imaging_7x7.noise_map,
             convolver=masked_imaging_7x7.convolver,
@@ -1124,7 +1125,7 @@ class TestCompareToManualProfilesAndInversion:
             settings=ag.SettingsPixelization(use_border=False),
         )
 
-        inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+        inversion = InversionImagingMatrix.from_data_via_pixelization_convolution(
             image=profile_subtracted_image,
             noise_map=masked_imaging_7x7.noise_map,
             convolver=masked_imaging_7x7.convolver,
@@ -1184,6 +1185,7 @@ class TestCompareToManualProfilesAndInversion:
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
+            settings_inversion=ag.SettingsInversion(use_w_tilde=False),
         )
 
         hyper_noise = plane.hyper_noise_map_from_noise_map(
@@ -1212,7 +1214,7 @@ class TestCompareToManualProfilesAndInversion:
             settings=ag.SettingsPixelization(use_border=False),
         )
 
-        inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+        inversion = InversionImagingMatrix.from_data_via_pixelization_convolution(
             image=profile_subtracted_image,
             noise_map=hyper_noise_map,
             convolver=masked_imaging_7x7.convolver,
@@ -1305,7 +1307,7 @@ class TestCompareToManualProfilesAndInversion:
             settings=ag.SettingsPixelization(use_border=False),
         )
 
-        inversion = inversions.InversionImagingMatrix.from_data_mapper_and_regularization(
+        inversion = InversionImagingMatrix.from_data_via_pixelization_convolution(
             image=profile_subtracted_image,
             noise_map=masked_imaging_7x7.noise_map,
             convolver=masked_imaging_7x7.convolver,

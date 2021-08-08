@@ -1425,7 +1425,9 @@ class TestAbstractPlaneData:
                 image=masked_imaging_7x7.image,
                 noise_map=masked_imaging_7x7.noise_map,
                 convolver=masked_imaging_7x7.convolver,
+                w_tilde=masked_imaging_7x7.w_tilde,
                 settings_pixelization=ag.SettingsPixelization(use_border=False),
+                settings_inversion=ag.SettingsInversion(use_w_tilde=False),
             )
 
             assert inversion.mapped_reconstructed_image == pytest.approx(

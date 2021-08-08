@@ -1,6 +1,10 @@
 import numpy as np
 
-from autoarray.inversion import inversions as inv
+from autoarray.inversion.inversion.imaging import inversion_imaging_unpacked_from
+from autoarray.inversion.inversion.interferometer import (
+    inversion_interferometer_unpacked_from,
+)
+from autoarray.inversion.inversion.settings import SettingsInversion
 from autoarray.inversion import pixelizations as pix
 from autoarray.structures.arrays import values
 from autoarray.structures.arrays.two_d import array_2d
@@ -477,8 +481,9 @@ class AbstractPlaneData(AbstractPlaneLensing):
         image,
         noise_map,
         convolver,
+        w_tilde,
         settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=inv.SettingsInversion(),
+        settings_inversion=SettingsInversion(),
     ):
 
         sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
@@ -489,10 +494,11 @@ class AbstractPlaneData(AbstractPlaneLensing):
             settings_pixelization=settings_pixelization,
         )
 
-        return inv.InversionImagingMatrix.from_data_mapper_and_regularization(
+        return inversion_imaging_unpacked_from(
             image=image,
             noise_map=noise_map,
             convolver=convolver,
+            w_tilde=w_tilde,
             mapper=mapper,
             regularization=self.regularization,
             settings=settings_inversion,
@@ -505,7 +511,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         noise_map,
         transformer,
         settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=inv.SettingsInversion(),
+        settings_inversion=SettingsInversion(),
     ):
 
         sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
@@ -516,7 +522,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             settings_pixelization=settings_pixelization,
         )
 
-        return inv.AbstractInversionInterferometer.from_data_mapper_and_regularization(
+        return inversion_interferometer_unpacked_from(
             visibilities=visibilities,
             noise_map=noise_map,
             transformer=transformer,

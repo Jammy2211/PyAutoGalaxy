@@ -1,5 +1,6 @@
 import autogalaxy as ag
 from autoarray.mock.fixtures import *
+from autoarray.inversion.inversion.settings import SettingsInversion
 from autofit.mock.mock_search import MockSamples, MockSearch
 from autogalaxy.plot.mat_wrap.lensing_include import Include1D, Include2D
 
@@ -10,7 +11,9 @@ def make_masked_imaging_7x7():
 
     masked_imaging_7x7 = imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
 
-    return masked_imaging_7x7.apply_settings(settings=ag.SettingsImaging(sub_size=1))
+    return masked_imaging_7x7.apply_settings(
+        settings=ag.SettingsImaging(sub_size=1, sub_size_inversion=1)
+    )
 
 
 #
@@ -283,7 +286,10 @@ def make_samples_with_result():
 
 
 def make_analysis_imaging_7x7():
-    return ag.AnalysisImaging(dataset=make_masked_imaging_7x7())
+    return ag.AnalysisImaging(
+        dataset=make_masked_imaging_7x7(),
+        settings_inversion=SettingsInversion(use_w_tilde=False),
+    )
 
 
 def make_analysis_interferometer_7():
