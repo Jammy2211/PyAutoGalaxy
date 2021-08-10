@@ -32,7 +32,7 @@ def _imaging_from(fit: Fit, settings_imaging: Optional[ag.SettingsImaging] = Non
         noise_map=noise_map,
         psf=psf,
         settings=settings_imaging,
-        setup_convolver=True,
+        pad_for_convolver=True,
     )
 
     imaging.apply_settings(settings=settings_imaging)

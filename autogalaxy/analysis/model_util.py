@@ -312,7 +312,9 @@ def stochastic_model_from(
     return model
 
 
-def stochastic_fit(stochastic_model, search_cls, search_dict, result, analysis):
+def stochastic_fit(
+    stochastic_model, search_cls, search_dict, result, analysis, info=None
+):
     """
     Perform a stochastic model-fit, which refits a model but introduces a log likelihood cap whereby all model-samples
     with a likelihood above this cap are rounded down to the value of the cap.
@@ -355,7 +357,10 @@ def stochastic_fit(stochastic_model, search_cls, search_dict, result, analysis):
     )
 
     stochastic_result = search.fit(
-        model=stochastic_model, analysis=analysis, log_likelihood_cap=log_likelihood_cap
+        model=stochastic_model,
+        analysis=analysis,
+        log_likelihood_cap=log_likelihood_cap,
+        info=info,
     )
 
     search.paths.restore()
