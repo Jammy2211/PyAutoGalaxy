@@ -11,6 +11,7 @@ from autoarray.plot.mat_wrap.wrap.wrap_base import (
     Title,
     YLabel,
     XLabel,
+    Text,
     Legend,
     Output,
 )
