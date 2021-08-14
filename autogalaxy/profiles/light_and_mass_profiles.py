@@ -1,7 +1,7 @@
+from typing import Tuple
+
 from autogalaxy.profiles import light_profiles as lp
 from autogalaxy.profiles import mass_profiles as mp
-
-from typing import Tuple
 
 """
 Mass and light profiles describe both mass distributions and light distributions with a single set of parameters. This

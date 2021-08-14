@@ -1,9 +1,9 @@
-from autoarray.plot.mat_wrap import include as inc
+import autoarray.plot as aplt
 
 import typing
 
 
-class Include1D(inc.Include1D):
+class Include1D(aplt.Include1D):
     def __init__(self, half_light_radius=None, einstein_radius=None):
 
         super().__init__()
@@ -20,7 +20,7 @@ class Include1D(inc.Include1D):
         return self.load(value=self._einstein_radius, name="einstein_radius")
 
 
-class Include2D(inc.Include2D):
+class Include2D(aplt.Include2D):
     def __init__(
         self,
         origin=None,

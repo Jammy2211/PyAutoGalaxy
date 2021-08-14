@@ -1,11 +1,5 @@
-from autoarray.mask import mask_2d
-from autoarray.structures.arrays.one_d import array_1d
-from autoarray.structures.arrays.two_d import array_2d
-from autoarray.structures.grids.one_d import grid_1d
-from autoarray.structures.grids.two_d import grid_2d
-from autoarray.structures.grids.two_d.grid_2d_irregular import Grid2DIrregular
-from autoarray.structures.vector_fields import vector_field_irregular
-from autoarray.plot.mat_wrap import visuals as vis
+import autoarray as aa
+import autoarray.plot as aplt
 
 from matplotlib import patches as ptch
 import typing
@@ -13,16 +7,16 @@ from typing import List, Union, Optional
 import numpy as np
 
 
-class Visuals1D(vis.Visuals1D):
+class Visuals1D(aplt.Visuals1D):
     def __init__(
         self,
         half_light_radius: Optional[float] = None,
         half_light_radius_errors: Optional[List[float]] = None,
         einstein_radius: Optional[float] = None,
         einstein_radius_errors: Optional[List[float]] = None,
-        model_fluxes: Optional[grid_1d.Grid1D] = None,
+        model_fluxes: Optional[aa.Grid1D] = None,
         shaded_region: Optional[
-            Union[List[List], List[array_1d.Array1D], List[np.ndarray]]
+            Union[List[List], List[aa.Array1D], List[np.ndarray]]
         ] = None,
     ):
 
@@ -59,23 +53,25 @@ class Visuals1D(vis.Visuals1D):
             )
 
 
-class Visuals2D(vis.Visuals2D):
+class Visuals2D(aplt.Visuals2D):
     def __init__(
         self,
-        origin: grid_2d.Grid2D = None,
-        border: grid_2d.Grid2D = None,
-        mask: mask_2d.Mask2D = None,
-        positions: Optional[Union[Grid2DIrregular, List[Grid2DIrregular]]] = None,
-        grid: grid_2d.Grid2D = None,
-        pixelization_grid: grid_2d.Grid2D = None,
-        vector_field: vector_field_irregular.VectorField2DIrregular = None,
+        origin: aa.Grid2D = None,
+        border: aa.Grid2D = None,
+        mask: aa.Mask2D = None,
+        positions: Optional[Union[aa.Grid2DIrregular, List[aa.Grid2DIrregular]]] = None,
+        grid: aa.Grid2D = None,
+        pixelization_grid: aa.Grid2D = None,
+        vector_field: aa.VectorField2DIrregular = None,
         patches: typing.Union[ptch.Patch] = None,
-        array_overlay: array_2d.Array2D = None,
-        light_profile_centres: Grid2DIrregular = None,
-        mass_profile_centres: Grid2DIrregular = None,
-        multiple_images: Grid2DIrregular = None,
-        critical_curves: Optional[Union[Grid2DIrregular, List[Grid2DIrregular]]] = None,
-        caustics: Optional[Union[Grid2DIrregular, List[Grid2DIrregular]]] = None,
+        array_overlay: aa.Array2D = None,
+        light_profile_centres: aa.Grid2DIrregular = None,
+        mass_profile_centres: aa.Grid2DIrregular = None,
+        multiple_images: aa.Grid2DIrregular = None,
+        critical_curves: Optional[
+            Union[aa.Grid2DIrregular, List[aa.Grid2DIrregular]]
+        ] = None,
+        caustics: Optional[Union[aa.Grid2DIrregular, List[aa.Grid2DIrregular]]] = None,
         parallel_overscan=None,
         serial_prescan=None,
         serial_overscan=None,

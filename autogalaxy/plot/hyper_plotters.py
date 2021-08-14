@@ -1,5 +1,6 @@
+import autoarray.plot as aplt
 from autoarray.plot import abstract_plotters
-from autoarray.plot.mat_wrap import mat_plot
+
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 
 
@@ -54,7 +55,7 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
         self.mat_plot_2d.plot_array(
             array=hyper_model_image,
             visuals_2d=self.visuals_with_include_2d,
-            auto_labels=mat_plot.AutoLabels(
+            auto_labels=aplt.AutoLabels(
                 title="Hyper Model Image", filename="hyper_model_image"
             ),
         )
@@ -74,7 +75,7 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
         self.mat_plot_2d.plot_array(
             array=galaxy_image,
             visuals_2d=self.visuals_with_include_2d,
-            auto_labels=mat_plot.AutoLabels(
+            auto_labels=aplt.AutoLabels(
                 title="Hyper Galaxy Image", filename="hyper_galaxy_image"
             ),
         )
@@ -94,7 +95,7 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
         self.mat_plot_2d.plot_array(
             array=contribution_map_in,
             visuals_2d=self.visuals_with_include_2d,
-            auto_labels=mat_plot.AutoLabels(
+            auto_labels=aplt.AutoLabels(
                 title="Contribution Map", filename="contribution_map_2d"
             ),
         )

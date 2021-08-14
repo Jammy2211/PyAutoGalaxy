@@ -1,12 +1,12 @@
-from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
+import copy
 import numpy as np
-from autoarray.structures.grids import grid_decorators
-from autogalaxy.profiles import mass_profiles as mp
-
 from scipy.special import wofz
 from typing import Tuple
-import copy
 
+from autoarray.structures.grids import grid_decorators
+
+from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
+from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
 
 

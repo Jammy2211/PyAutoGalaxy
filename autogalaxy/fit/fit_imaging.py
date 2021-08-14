@@ -1,13 +1,11 @@
 import numpy as np
 
 from autoconf import conf
-from autoarray.fit import fit as aa_fit
-from autoarray.inversion import pixelizations as pix
-from autoarray.inversion.inversion.settings import SettingsInversion
+import autoarray as aa
 from autogalaxy.galaxy import galaxy as g
 
 
-class FitImaging(aa_fit.FitImaging):
+class FitImaging(aa.FitImaging):
     def __init__(
         self,
         imaging,
@@ -15,10 +13,10 @@ class FitImaging(aa_fit.FitImaging):
         hyper_image_sky=None,
         hyper_background_noise=None,
         use_hyper_scalings=True,
-        settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=SettingsInversion(),
+        settings_pixelization=aa.pix.SettingsPixelization(),
+        settings_inversion=aa.SettingsInversion(),
     ):
-        """ An  lens fitter, which contains the plane's used to perform the fit and functions to manipulate \
+        """ An lens fitter, which contains the plane's used to perform the fit and functions to manipulate \
         the lens dataset's hyper_galaxies.
 
         Parameters

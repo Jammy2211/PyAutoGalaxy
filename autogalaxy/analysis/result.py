@@ -1,8 +1,10 @@
-import autofit as af
-from autoarray.structures.arrays.two_d import array_2d
-from autoarray.structures import visibilities
-from autoconf import conf
 import numpy as np
+
+from autoconf import conf
+import autofit as af
+import autoarray as aa
+
+
 from autogalaxy.galaxy import galaxy as g
 
 
@@ -125,7 +127,7 @@ class ResultDataset(Result):
     @property
     def hyper_model_image(self):
 
-        hyper_model_image = array_2d.Array2D.manual_mask(
+        hyper_model_image = aa.Array2D.manual_mask(
             array=np.zeros(self.mask.mask_sub_1.pixels_in_mask),
             mask=self.mask.mask_sub_1,
         )
@@ -230,7 +232,7 @@ class ResultInterferometer(ResultDataset):
     @property
     def hyper_model_visibilities(self):
 
-        hyper_model_visibilities = visibilities.Visibilities.zeros(
+        hyper_model_visibilities = aa.Visibilities.zeros(
             shape_slim=(self.max_log_likelihood_fit.visibilities.shape_slim,)
         )
 

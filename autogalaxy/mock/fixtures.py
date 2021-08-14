@@ -1,6 +1,6 @@
+import autoarray as aa
 import autogalaxy as ag
 from autoarray.mock.fixtures import *
-from autoarray.inversion.inversion.settings import SettingsInversion
 from autofit.mock.mock_search import MockSamples, MockSearch
 from autogalaxy.plot.mat_wrap.lensing_include import Include1D, Include2D
 
@@ -286,7 +286,7 @@ def make_samples_with_result():
 def make_analysis_imaging_7x7():
     return ag.AnalysisImaging(
         dataset=make_masked_imaging_7x7(),
-        settings_inversion=SettingsInversion(use_w_tilde=False),
+        settings_inversion=aa.SettingsInversion(use_w_tilde=False),
     )
 
 

@@ -1,15 +1,15 @@
 import numpy as np
-from autoarray.structures import kernel_2d
-from autoarray.dataset import imaging
+
+import autoarray as aa
 from autogalaxy.plane import plane as pl
 
 
-class SimulatorImaging(imaging.SimulatorImaging):
+class SimulatorImaging(aa.SimulatorImaging):
     def __init__(
         self,
         exposure_time: float,
         background_sky_level: float = 0.0,
-        psf: kernel_2d.Kernel2D = None,
+        psf: aa.Kernel2D = None,
         normalize_psf: bool = True,
         read_noise: float = None,
         add_poisson_noise: bool = True,

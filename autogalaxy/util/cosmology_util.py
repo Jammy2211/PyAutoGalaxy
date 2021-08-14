@@ -1,7 +1,6 @@
-import math
-
-import numpy as np
 from astropy import constants
+import math
+import numpy as np
 
 
 def arcsec_per_kpc_from(*, redshift, cosmology):

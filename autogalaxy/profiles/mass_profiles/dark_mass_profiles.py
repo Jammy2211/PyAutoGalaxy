@@ -1,27 +1,28 @@
-import inspect
-
-import numpy as np
 from astropy import cosmology as cosmo
 from astropy import units
-from autoarray import decorator_util
-from autoarray.structures.grids import grid_decorators
-from autogalaxy import exc
-from autogalaxy.profiles import mass_profiles as mp
-from autogalaxy.util import cosmology_util
 from colossus.cosmology import cosmology as col_cosmology
 from colossus.halo.concentration import concentration as col_concentration
+import copy
+import inspect
 from numba import cfunc
 from numba.types import intc, CPointer, float64
-
+import numpy as np
 from scipy import LowLevelCallable
 from scipy import special
 from scipy.integrate import quad
 from scipy.optimize import fsolve
-from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
-
 import warnings
-import copy
 from typing import Tuple
+
+from autoarray import decorator_util
+from autoarray.structures.grids import grid_decorators
+
+from autogalaxy import exc
+from autogalaxy.profiles import mass_profiles as mp
+from autogalaxy.util import cosmology_util
+
+
+from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
 
 
 def jit_integrand(integrand_function):

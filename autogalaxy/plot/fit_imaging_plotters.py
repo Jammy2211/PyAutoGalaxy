@@ -1,5 +1,5 @@
 import numpy as np
-from autoarray.plot.mat_wrap import mat_plot
+import autoarray.plot as aplt
 from autoarray.plot import inversion_plotters, fit_imaging_plotters
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.profiles import light_profiles, mass_profiles
@@ -84,7 +84,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
                 self.mat_plot_2d.plot_array(
                     array=self.fit.subtracted_images_of_galaxies[galaxy_index],
                     visuals_2d=self.visuals_with_include_2d,
-                    auto_labels=mat_plot.AutoLabels(
+                    auto_labels=aplt.AutoLabels(
                         title=f"Subtracted Image of Galaxy {galaxy_index}",
                         filename=f"subtracted_image_of_galaxy_{galaxy_index}",
                     ),
@@ -95,7 +95,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
                 self.mat_plot_2d.plot_array(
                     array=self.fit.model_images_of_galaxies[galaxy_index],
                     visuals_2d=self.visuals_with_include_2d,
-                    auto_labels=mat_plot.AutoLabels(
+                    auto_labels=aplt.AutoLabels(
                         title=f"Model Image of Galaxy {galaxy_index}",
                         filename=f"model_image_of_galaxy_{galaxy_index}",
                     ),

@@ -1,20 +1,18 @@
 import numpy as np
 
-from autoarray.fit import fit as aa_fit
-from autoarray.inversion import pixelizations as pix
-from autoarray.inversion.inversion.settings import SettingsInversion
+import autoarray as aa
 from autogalaxy.galaxy import galaxy as g
 
 
-class FitInterferometer(aa_fit.FitInterferometer):
+class FitInterferometer(aa.FitInterferometer):
     def __init__(
         self,
         interferometer,
         plane,
         hyper_background_noise=None,
         use_hyper_scalings=True,
-        settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=SettingsInversion(),
+        settings_pixelization=aa.pix.SettingsPixelization(),
+        settings_inversion=aa.SettingsInversion(),
     ):
         """ An  lens fitter, which contains the plane's used to perform the fit and functions to manipulate \
         the lens dataset's hyper_galaxies.

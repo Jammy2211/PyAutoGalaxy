@@ -1,7 +1,7 @@
 import math
 
-from autoarray.plot.mat_wrap import mat_plot
-from autoarray.plot import multi_plotters
+import autoarray.plot as aplt
+
 from autogalaxy.plot import (
     lensing_obj_plotter,
     light_profile_plotters,
@@ -164,7 +164,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
                 y=image_1d,
                 x=image_1d.grid_radial,
                 visuals_1d=self.visuals_with_include_1d_light,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Image vs Radius",
                     ylabel="Image ",
                     xlabel="Radius",
@@ -182,7 +182,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
                 y=convergence_1d,
                 x=convergence_1d.grid_radial,
                 visuals_1d=self.visuals_with_include_1d_mass,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
                     ylabel="Convergence ",
                     xlabel="Radius",
@@ -200,7 +200,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
                 y=potential_1d,
                 x=potential_1d.grid_radial,
                 visuals_1d=self.visuals_with_include_1d_mass,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",
                     ylabel="Potential ",
                     xlabel="Radius",
@@ -224,7 +224,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
 
             plotter_list.append(light_profile_plotter)
 
-        multi_plotter = multi_plotters.MultiYX1DPlotter(
+        multi_plotter = aplt.MultiYX1DPlotter(
             plotter_list=plotter_list, legend_labels=legend_labels
         )
 
@@ -248,7 +248,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             for mass_profile in self.galaxy.mass_profiles
         ]
 
-        multi_plotter = multi_plotters.MultiYX1DPlotter(
+        multi_plotter = aplt.MultiYX1DPlotter(
             plotter_list=plotter_list, legend_labels=legend_labels
         )
 
@@ -298,7 +298,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.image_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mat_plot.AutoLabels(title="Image", filename="image_2d"),
+                auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
             )
 
         super().figures_2d(
@@ -314,7 +314,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.contribution_map,
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Contribution Map", filename="contribution_map_2d"
                 ),
             )
@@ -530,7 +530,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 y=median_image_1d,
                 x=grid_radial,
                 visuals_1d=visuals_1d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Image vs Radius",
                     ylabel="Image ",
                     xlabel="Radius",
@@ -565,7 +565,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 y=median_convergence_1d,
                 x=grid_radial,
                 visuals_1d=visuals_1d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
                     ylabel="Convergence ",
                     xlabel="Radius",
@@ -600,7 +600,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 y=median_potential_1d,
                 x=grid_radial,
                 visuals_1d=visuals_1d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",
                     ylabel="Potential ",
                     xlabel="Radius",
@@ -616,7 +616,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
         if image:
 
-            multi_plotter = multi_plotters.MultiYX1DPlotter(
+            multi_plotter = aplt.MultiYX1DPlotter(
                 plotter_list=[self] + self.light_profile_pdf_plotter_list,
                 legend_labels=legend_labels,
             )
@@ -637,7 +637,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
         if convergence:
 
-            multi_plotter = multi_plotters.MultiYX1DPlotter(
+            multi_plotter = aplt.MultiYX1DPlotter(
                 plotter_list=[self] + self.mass_profile_pdf_plotter_list,
                 legend_labels=legend_labels,
             )
@@ -658,7 +658,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
         if potential:
 
-            multi_plotter = multi_plotters.MultiYX1DPlotter(
+            multi_plotter = aplt.MultiYX1DPlotter(
                 plotter_list=[self] + self.mass_profile_pdf_plotter_list,
                 legend_labels=legend_labels,
             )

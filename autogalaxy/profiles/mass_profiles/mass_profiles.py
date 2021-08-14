@@ -2,9 +2,10 @@ import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
 from scipy.special import wofz, comb
-from autoarray.structures.arrays import values
+
+import autoarray as aa
 from autoarray.structures.grids import grid_decorators
-from autoarray.structures.grids.two_d import grid_2d_irregular
+
 from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
 from autogalaxy import exc
@@ -268,9 +269,9 @@ class MassProfile(geometry_profiles.EllProfile, lensing.LensingObject):
                 attribute = getattr(self, attr_name)
 
                 if isinstance(attribute, float):
-                    return values.ValuesIrregular(values=[attribute])
+                    return aa.ValuesIrregular(values=[attribute])
                 if isinstance(attribute, tuple):
-                    return grid_2d_irregular.Grid2DIrregular(grid=[attribute])
+                    return aa.Grid2DIrregular(grid=[attribute])
 
 
 class MassProfileMGE:

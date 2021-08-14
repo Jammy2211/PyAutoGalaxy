@@ -1,12 +1,12 @@
 import numpy as np
+from scipy.interpolate import griddata
+from typing import Tuple
+
 from autoarray.structures.grids import grid_decorators
+
 from autogalaxy.profiles import mass_profiles as mp
 from autogalaxy import convert
-
-from scipy.interpolate import griddata
 from autogalaxy import exc
-
-from typing import Tuple
 
 
 class MassSheet(mp.MassProfile):

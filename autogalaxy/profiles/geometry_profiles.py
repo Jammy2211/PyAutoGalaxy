@@ -1,7 +1,9 @@
 import numpy as np
-from autoarray.geometry import geometry_util
-from autoarray.structures.grids.two_d import grid_2d
+
+import autoarray as aa
+from autoarray.structures.grids.two_d import grid_2d as g2d
 from autoarray.structures.grids import grid_decorators
+
 from autogalaxy import convert
 
 from typing import Tuple
@@ -98,7 +100,7 @@ class SphProfile(GeometryProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         transformed = np.subtract(grid, self.centre)
-        return grid_2d.Grid2DTransformedNumpy(grid=transformed)
+        return g2d.Grid2DTransformedNumpy(grid=transformed)
 
     @grid_decorators.grid_2d_to_structure
     def transform_grid_from_reference_frame(self, grid):
@@ -111,7 +113,7 @@ class SphProfile(GeometryProfile):
             The (y, x) coordinates in the reference frame of the profile.
         """
         transformed = np.add(grid, self.centre)
-        return transformed.view(grid_2d.Grid2DTransformedNumpy)
+        return transformed.view(g2d.Grid2DTransformedNumpy)
 
 
 class EllProfile(SphProfile):
@@ -208,7 +210,7 @@ class EllProfile(SphProfile):
         grid
             The (y, x) coordinates in the reference frame of an elliptical profile.
         """
-        return geometry_util.transform_grid_2d_from_reference_frame(
+        return aa.util.geometry.transform_grid_2d_from_reference_frame(
             grid_2d=grid, centre=(0.0, 0.0), angle=self.angle
         )
 
@@ -264,12 +266,12 @@ class EllProfile(SphProfile):
         """
         if self.__class__.__name__.startswith("Sph"):
             return super().transform_grid_to_reference_frame(
-                grid=grid_2d.Grid2DTransformedNumpy(grid=grid)
+                grid=g2d.Grid2DTransformedNumpy(grid=grid)
             )
-        transformed = geometry_util.transform_grid_2d_to_reference_frame(
+        transformed = aa.util.geometry.transform_grid_2d_to_reference_frame(
             grid_2d=grid, centre=self.centre, angle=self.angle
         )
-        return grid_2d.Grid2DTransformedNumpy(grid=transformed)
+        return g2d.Grid2DTransformedNumpy(grid=transformed)
 
     @grid_decorators.grid_2d_to_structure
     def transform_grid_from_reference_frame(self, grid):
@@ -283,10 +285,10 @@ class EllProfile(SphProfile):
         """
         if self.__class__.__name__.startswith("Sph"):
             return super().transform_grid_from_reference_frame(
-                grid=grid_2d.Grid2DTransformedNumpy(grid=grid)
+                grid=g2d.Grid2DTransformedNumpy(grid=grid)
             )
 
-        return geometry_util.transform_grid_2d_from_reference_frame(
+        return aa.util.geometry.transform_grid_2d_from_reference_frame(
             grid_2d=grid, centre=self.centre, angle=self.angle
         )
 

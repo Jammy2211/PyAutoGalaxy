@@ -1,16 +1,14 @@
 import numpy as np
-from autoarray.structures.grids.two_d import grid_2d
-from autoarray.dataset import interferometer
-from autoarray.operators import transformer
+import autoarray as aa
 from autogalaxy.plane import plane as pl
 
 
-class SimulatorInterferometer(interferometer.SimulatorInterferometer):
+class SimulatorInterferometer(aa.SimulatorInterferometer):
     def __init__(
         self,
         uv_wavelengths,
         exposure_time: float,
-        transformer_class=transformer.TransformerDFT,
+        transformer_class=aa.TransformerDFT,
         noise_sigma=0.1,
         noise_if_add_noise_false=0.1,
         noise_seed=-1,

@@ -1,5 +1,7 @@
 import numpy as np
-from autoarray.structures.arrays.two_d import array_2d
+
+import autoarray as aa
+
 from autoarray.structures.grids import grid_decorators
 from autogalaxy.profiles import geometry_profiles
 from scipy.integrate import quad
@@ -27,7 +29,7 @@ class LightProfile(geometry_profiles.EllProfile):
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
         self.intensity = intensity
 
-    def image_2d_from_grid(self, grid) -> array_2d.Array2D:
+    def image_2d_from_grid(self, grid) -> aa.Array2D:
         """
         Abstract method for obtaining intensity at a grid of Cartesian (y,x) coordinates.
 
@@ -38,7 +40,7 @@ class LightProfile(geometry_profiles.EllProfile):
 
         Returns
         -------
-        image : array_2d.Array2D
+        image : aa.Array2D
             The image of the `LightProfile` evaluated at every (y,x) coordinate on the grid.
         """
         raise NotImplementedError()

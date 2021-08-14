@@ -1,8 +1,8 @@
 from os import path
 
 from autoconf import conf
-from autoarray.plot.mat_wrap.wrap import wrap_base
-from autoarray.plot import inversion_plotters, interferometer_plotters, imaging_plotters
+import autoarray.plot as aplt
+
 from autogalaxy.plot import (
     fit_galaxy_plotters,
     fit_interferometer_plotters,
@@ -31,14 +31,14 @@ class Visualizer:
 
     def mat_plot_1d_from(self, subfolders, format="png"):
         return lensing_mat_plot.MatPlot1D(
-            output=wrap_base.Output(
+            output=aplt.Output(
                 path=path.join(self.visualize_path, subfolders), format=format
             )
         )
 
     def mat_plot_2d_from(self, subfolders, format="png"):
         return lensing_mat_plot.MatPlot2D(
-            output=wrap_base.Output(
+            output=aplt.Output(
                 path=path.join(self.visualize_path, subfolders), format=format
             )
         )
@@ -49,7 +49,7 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="imaging")
 
-        imaging_plotter = imaging_plotters.ImagingPlotter(
+        imaging_plotter = aplt.ImagingPlotter(
             imaging=imaging, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
@@ -146,7 +146,7 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="interferometer")
 
-        interferometer_plotter = interferometer_plotters.InterferometerPlotter(
+        interferometer_plotter = aplt.InterferometerPlotter(
             interferometer=interferometer,
             include_2d=self.include_2d,
             mat_plot_2d=mat_plot_2d,
@@ -240,7 +240,7 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="inversion")
 
-        inversion_plotter = inversion_plotters.InversionPlotter(
+        inversion_plotter = aplt.InversionPlotter(
             inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 

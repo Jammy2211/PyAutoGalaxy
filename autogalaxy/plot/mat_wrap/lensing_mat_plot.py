@@ -1,31 +1,30 @@
-from autoarray.plot.mat_wrap import mat_plot
-from autoarray.plot.mat_wrap.wrap import wrap_base, wrap_1d, wrap_2d
+import autoarray.plot as aplt
 from autogalaxy.plot.mat_wrap import lensing_wrap
 
 
-class MatPlot1D(mat_plot.MatPlot1D):
+class MatPlot1D(aplt.MatPlot1D):
     def __init__(
         self,
-        units: wrap_base.Units = wrap_base.Units(),
-        figure: wrap_base.Figure = wrap_base.Figure(),
-        axis: wrap_base.Axis = wrap_base.Axis(),
-        cmap: wrap_base.Cmap = wrap_base.Cmap(),
-        colorbar: wrap_base.Colorbar = wrap_base.Colorbar(),
-        colorbar_tickparams: wrap_base.ColorbarTickParams = wrap_base.ColorbarTickParams(),
-        tickparams: wrap_base.TickParams = wrap_base.TickParams(),
-        yticks: wrap_base.YTicks = wrap_base.YTicks(),
-        xticks: wrap_base.XTicks = wrap_base.XTicks(),
-        title: wrap_base.Title = wrap_base.Title(),
-        ylabel: wrap_base.YLabel = wrap_base.YLabel(),
-        xlabel: wrap_base.XLabel = wrap_base.XLabel(),
-        text: wrap_base.Text = wrap_base.Text(),
-        legend: wrap_base.Legend = wrap_base.Legend(),
-        output: wrap_base.Output = wrap_base.Output(),
-        yx_plot: wrap_1d.YXPlot = wrap_1d.YXPlot(),
+        units: aplt.Units = aplt.Units(),
+        figure: aplt.Figure = aplt.Figure(),
+        axis: aplt.Axis = aplt.Axis(),
+        cmap: aplt.Cmap = aplt.Cmap(),
+        colorbar: aplt.Colorbar = aplt.Colorbar(),
+        colorbar_tickparams: aplt.ColorbarTickParams = aplt.ColorbarTickParams(),
+        tickparams: aplt.TickParams = aplt.TickParams(),
+        yticks: aplt.YTicks = aplt.YTicks(),
+        xticks: aplt.XTicks = aplt.XTicks(),
+        title: aplt.Title = aplt.Title(),
+        ylabel: aplt.YLabel = aplt.YLabel(),
+        xlabel: aplt.XLabel = aplt.XLabel(),
+        text: aplt.Text = aplt.Text(),
+        legend: aplt.Legend = aplt.Legend(),
+        output: aplt.Output = aplt.Output(),
+        yx_plot: aplt.YXPlot = aplt.YXPlot(),
         half_light_radius_axvline: lensing_wrap.HalfLightRadiusAXVLine = lensing_wrap.HalfLightRadiusAXVLine(),
         einstein_radius_axvline: lensing_wrap.EinsteinRadiusAXVLine = lensing_wrap.EinsteinRadiusAXVLine(),
         model_fluxes_yx_scatter: lensing_wrap.ModelFluxesYXScatter = lensing_wrap.ModelFluxesYXScatter(),
-        fill_between: wrap_1d.FillBetween = wrap_1d.FillBetween(),
+        fill_between: aplt.FillBetween = aplt.FillBetween(),
     ):
         """
         Visualizes 1D data structures as a y versus x plot using Matplotlib.
@@ -36,40 +35,40 @@ class MatPlot1D(mat_plot.MatPlot1D):
 
         Parameters
         ----------
-        units : wrap_base.Units
+        units : aplt.Units
             The units of the figure used to plot the data structure which sets the y and x ticks and labels.
-        figure : wrap_base.Figure
+        figure : aplt.Figure
             Opens the matplotlib figure before plotting via `plt.figure` and closes it once plotting is complete
             via `plt.close`.
-        axis : wrap_base.Axis
+        axis : aplt.Axis
             Sets the extent of the figure axis via `plt.axis` and allows for a manual axis range.
-        cmap : wrap_base.Cmap
+        cmap : aplt.Cmap
             Customizes the colormap of the plot and its normalization via matplotlib `colors` objects such
             as `colors.Normalize` and `colors.LogNorm`.
-        colorbar : wrap_base.Colorbar
+        colorbar : aplt.Colorbar
             Plots the colorbar of the plot via `plt.colorbar` and customizes its tick labels and values using method
             like `cb.set_yticklabels`.
-        colorbar_tickparams : wrap_base.ColorbarTickParams
+        colorbar_tickparams : aplt.ColorbarTickParams
             Customizes the yticks of the colorbar plotted via `plt.colorbar`.
-        tickparams : wrap_base.TickParams
+        tickparams : aplt.TickParams
             Customizes the appearances of the y and x ticks on the plot, (e.g. the fontsize), using `plt.tick_params`.
-        yticks : wrap_base.YTicks
+        yticks : aplt.YTicks
             Sets the yticks of the plot, including scaling them to new units depending on the `Units` object, via
             `plt.yticks`.
-        xticks : wrap_base.XTicks
+        xticks : aplt.XTicks
             Sets the xticks of the plot, including scaling them to new units depending on the `Units` object, via
             `plt.xticks`.
-        title : wrap_base.Title
+        title : aplt.Title
             Sets the figure title and customizes its appearance using `plt.title`.
-        ylabel : wrap_base.YLabel
+        ylabel : aplt.YLabel
             Sets the figure ylabel and customizes its appearance using `plt.ylabel`.
-        xlabel : wrap_base.XLabel
+        xlabel : aplt.XLabel
             Sets the figure xlabel and customizes its appearance using `plt.xlabel`.
-        legend : wrap_base.Legend
+        legend : aplt.Legend
             Sets whether the plot inclues a legend and customizes its appearance and labels using `plt.legend`.
-        output : wrap_base.Output
+        output : aplt.Output
             Sets if the figure is displayed on the user's screen or output to `.png` using `plt.show` and `plt.savefig`
-        yx_plot : wrap_1d.YXPlot
+        yx_plot : aplt.YXPlot
             Sets how the y versus x plot appears, for example if it each axis is linear or log, using `plt.plot`.
         half_light_radius_axvline : lensing_wrap.HalfLightRadiusAXVLine
             Sets how a vertical line representing the half light radius of a `LightProfile` is plotted on the figure
@@ -126,36 +125,36 @@ class MatPlot1D(mat_plot.MatPlot1D):
         self.einstein_radius_axvline.no_label = True
 
 
-class MatPlot2D(mat_plot.MatPlot2D):
+class MatPlot2D(aplt.MatPlot2D):
     def __init__(
         self,
-        units: wrap_base.Units = wrap_base.Units(),
-        figure: wrap_base.Figure = wrap_base.Figure(),
-        axis: wrap_base.Axis = wrap_base.Axis(),
-        cmap: wrap_base.Cmap = wrap_base.Cmap(),
-        colorbar: wrap_base.Colorbar = wrap_base.Colorbar(),
-        colorbar_tickparams: wrap_base.ColorbarTickParams = wrap_base.ColorbarTickParams(),
-        tickparams: wrap_base.TickParams = wrap_base.TickParams(),
-        yticks: wrap_base.YTicks = wrap_base.YTicks(),
-        xticks: wrap_base.XTicks = wrap_base.XTicks(),
-        title: wrap_base.Title = wrap_base.Title(),
-        ylabel: wrap_base.YLabel = wrap_base.YLabel(),
-        xlabel: wrap_base.XLabel = wrap_base.XLabel(),
-        text: wrap_base.Text = wrap_base.Text(),
-        legend: wrap_base.Legend = wrap_base.Legend(),
-        output: wrap_base.Output = wrap_base.Output(),
-        array_overlay: wrap_2d.ArrayOverlay = wrap_2d.ArrayOverlay(),
-        grid_scatter: wrap_2d.GridScatter = wrap_2d.GridScatter(),
-        grid_plot: wrap_2d.GridPlot = wrap_2d.GridPlot(),
-        vector_field_quiver: wrap_2d.VectorFieldQuiver = wrap_2d.VectorFieldQuiver(),
-        patch_overlay: wrap_2d.PatchOverlay = wrap_2d.PatchOverlay(),
-        voronoi_drawer: wrap_2d.VoronoiDrawer = wrap_2d.VoronoiDrawer(),
-        origin_scatter: wrap_2d.OriginScatter = wrap_2d.OriginScatter(),
-        mask_scatter: wrap_2d.MaskScatter = wrap_2d.MaskScatter(),
-        border_scatter: wrap_2d.BorderScatter = wrap_2d.BorderScatter(),
-        positions_scatter: wrap_2d.PositionsScatter = wrap_2d.PositionsScatter(),
-        index_scatter: wrap_2d.IndexScatter = wrap_2d.IndexScatter(),
-        pixelization_grid_scatter: wrap_2d.PixelizationGridScatter = wrap_2d.PixelizationGridScatter(),
+        units: aplt.Units = aplt.Units(),
+        figure: aplt.Figure = aplt.Figure(),
+        axis: aplt.Axis = aplt.Axis(),
+        cmap: aplt.Cmap = aplt.Cmap(),
+        colorbar: aplt.Colorbar = aplt.Colorbar(),
+        colorbar_tickparams: aplt.ColorbarTickParams = aplt.ColorbarTickParams(),
+        tickparams: aplt.TickParams = aplt.TickParams(),
+        yticks: aplt.YTicks = aplt.YTicks(),
+        xticks: aplt.XTicks = aplt.XTicks(),
+        title: aplt.Title = aplt.Title(),
+        ylabel: aplt.YLabel = aplt.YLabel(),
+        xlabel: aplt.XLabel = aplt.XLabel(),
+        text: aplt.Text = aplt.Text(),
+        legend: aplt.Legend = aplt.Legend(),
+        output: aplt.Output = aplt.Output(),
+        array_overlay: aplt.ArrayOverlay = aplt.ArrayOverlay(),
+        grid_scatter: aplt.GridScatter = aplt.GridScatter(),
+        grid_plot: aplt.GridPlot = aplt.GridPlot(),
+        vector_field_quiver: aplt.VectorFieldQuiver = aplt.VectorFieldQuiver(),
+        patch_overlay: aplt.PatchOverlay = aplt.PatchOverlay(),
+        voronoi_drawer: aplt.VoronoiDrawer = aplt.VoronoiDrawer(),
+        origin_scatter: aplt.OriginScatter = aplt.OriginScatter(),
+        mask_scatter: aplt.MaskScatter = aplt.MaskScatter(),
+        border_scatter: aplt.BorderScatter = aplt.BorderScatter(),
+        positions_scatter: aplt.PositionsScatter = aplt.PositionsScatter(),
+        index_scatter: aplt.IndexScatter = aplt.IndexScatter(),
+        pixelization_grid_scatter: aplt.PixelizationGridScatter = aplt.PixelizationGridScatter(),
         light_profile_centres_scatter: lensing_wrap.LightProfileCentresScatter = lensing_wrap.LightProfileCentresScatter(),
         mass_profile_centres_scatter: lensing_wrap.MassProfileCentresScatter = lensing_wrap.MassProfileCentresScatter(),
         multiple_images_scatter: lensing_wrap.MultipleImagesScatter = lensing_wrap.MultipleImagesScatter(),
@@ -181,14 +180,14 @@ class MatPlot2D(mat_plot.MatPlot2D):
         
         Parameters
         ----------
-        units : wrap_base.Units
+        units : aplt.Units
           The units of the figure used to plot the data structure which sets the y and x ticks and labels.
-        figure : wrap_base.Figure
+        figure : aplt.Figure
           Opens the matplotlib figure before plotting via `plt.figure` and closes it once plotting is complete
           via `plt.close`.
         axis : mat_wrap.Axis
             Sets the extent of the figure axis via `plt.axis` and allows for a manual axis range.
-        cmap : wrap_base.Cmap
+        cmap : aplt.Cmap
           Customizes the colormap of the plot and its normalization via matplotlib `colors` objects such 
           as `colors.Normalize` and `colors.LogNorm`.
         colorbar : mat_wrap.Colorbar
@@ -196,57 +195,57 @@ class MatPlot2D(mat_plot.MatPlot2D):
             like `cb.set_yticklabels`.
         colorbar_tickparams : mat_wrap.ColorbarTickParams
             Customizes the yticks of the colorbar plotted via `plt.colorbar`.
-        tickparams : wrap_base.TickParams
+        tickparams : aplt.TickParams
           Customizes the appearances of the y and x ticks on the plot, (e.g. the fontsize), using `plt.tick_params`.
-        yticks : wrap_base.YTicks
+        yticks : aplt.YTicks
           Sets the yticks of the plot, including scaling them to new units depending on the `Units` object, via
           `plt.yticks`.
-        xticks : wrap_base.XTicks
+        xticks : aplt.XTicks
           Sets the xticks of the plot, including scaling them to new units depending on the `Units` object, via
           `plt.xticks`.
-        title : wrap_base.Title
+        title : aplt.Title
           Sets the figure title and customizes its appearance using `plt.title`.        
-        ylabel : wrap_base.YLabel
+        ylabel : aplt.YLabel
           Sets the figure ylabel and customizes its appearance using `plt.ylabel`.
-        xlabel : wrap_base.XLabel
+        xlabel : aplt.XLabel
           Sets the figure xlabel and customizes its appearance using `plt.xlabel`.
-        legend : wrap_base.Legend
+        legend : aplt.Legend
           Sets whether the plot inclues a legend and customizes its appearance and labels using `plt.legend`.
-        output : wrap_base.Output
+        output : aplt.Output
           Sets if the figure is displayed on the user's screen or output to `.png` using `plt.show` and `plt.savefig`
-        array_overlay: wrap_2d.ArrayOverlay
+        array_overlay: aplt.ArrayOverlay
           Overlays an input `Array2D` over the figure using `plt.imshow`.
-        grid_scatter : wrap_2d.GridScatter
+        grid_scatter : aplt.GridScatter
           Scatters a `Grid2D` of (y,x) coordinates over the figure using `plt.scatter`.
-        grid_plot: wrap_2d.LinePlot
+        grid_plot: aplt.LinePlot
           Plots lines of data (e.g. a y versus x plot via `plt.plot`, vertical lines via `plt.avxline`, etc.)
-        vector_field_quiver: wrap_2d.VectorFieldQuiver
+        vector_field_quiver: aplt.VectorFieldQuiver
           Plots a `VectorField` object using the matplotlib function `plt.quiver`.
-        patch_overlay: wrap_2d.PatchOverlay
+        patch_overlay: aplt.PatchOverlay
           Overlays matplotlib `patches.Patch` objects over the figure, such as an `Ellipse`.
-        voronoi_drawer: wrap_2d.VoronoiDrawer
+        voronoi_drawer: aplt.VoronoiDrawer
           Draws a colored Voronoi mesh of pixels using `plt.fill`.
-        origin_scatter : wrap_2d.OriginScatter
+        origin_scatter : aplt.OriginScatter
           Scatters the (y,x) origin of the data structure on the figure.
-        mask_scatter : wrap_2d.MaskScatter
+        mask_scatter : aplt.MaskScatter
           Scatters an input `Mask2d` over the plotted data structure's figure.
-        border_scatter : wrap_2d.BorderScatter
+        border_scatter : aplt.BorderScatter
           Scatters the border of an input `Mask2d` over the plotted data structure's figure.
-        positions_scatter : wrap_2d.PositionsScatter
+        positions_scatter : aplt.PositionsScatter
           Scatters specific (y,x) coordinates input as a `Grid2DIrregular` object over the figure.
-        index_scatter : wrap_2d.IndexScatter
+        index_scatter : aplt.IndexScatter
           Scatters specific coordinates of an input `Grid2D` based on input values of the `Grid2D`'s 1D or 2D indexes.
-        pixelization_grid_scatter : wrap_2d.PixelizationGridScatter
+        pixelization_grid_scatter : aplt.PixelizationGridScatter
           Scatters the `PixelizationGrid` of a `Pixelization` object.
-        light_profile_centres_scatter : lensing_wrap_2d.LightProfileCentresScatter
+        light_profile_centres_scatter : lensing_aplt.LightProfileCentresScatter
           Scatters the (y,x) centres of all `LightProfile`'s in the plotted object (e.g. a `Tracer`).
-        mass_profile_centres_scatter : lensing_wrap_2d.MassProfileCentresScatter
+        mass_profile_centres_scatter : lensing_aplt.MassProfileCentresScatter
           Scatters the (y,x) centres of all `MassProfile`'s in the plotted object (e.g. a `Tracer`).
-        light_profile_centres_scatter : lensing_wrap_2d.MultipleImagesScatter
+        light_profile_centres_scatter : lensing_aplt.MultipleImagesScatter
           Scatters the (y,x) coordinates of the multiple image locations of the lens mass model.
-        critical_curves_plot : lensing_wrap_2d.CriticalCurvesPlot
+        critical_curves_plot : lensing_aplt.CriticalCurvesPlot
             Plots the critical curves of the lens mass model as colored lines.
-        caustics_plot : lensing_wrap_2d.CauticsPlot
+        caustics_plot : lensing_aplt.CauticsPlot
             Plots the caustics of the lens mass model as colored lines.
         """
 

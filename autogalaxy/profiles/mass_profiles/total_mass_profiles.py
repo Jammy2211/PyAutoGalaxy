@@ -1,13 +1,14 @@
+import copy
 import numpy as np
-from autoarray.structures.grids import grid_decorators
-from autoarray.structures.vector_fields import vector_field_irregular
-from autogalaxy.profiles import mass_profiles as mp
-from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
-
 from scipy.integrate import quad
 from scipy import special
 from typing import Tuple
-import copy
+
+import autoarray as aa
+from autoarray.structures.grids import grid_decorators
+
+from autogalaxy.profiles import mass_profiles as mp
+from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 
 
 class PointMass(mp.MassProfile):
@@ -798,9 +799,7 @@ class EllIsothermal(EllPowerLaw):
             grid=np.vstack((shear_y, shear_x)).T
         )
 
-        return vector_field_irregular.VectorField2DIrregular(
-            vectors=shear_field, grid=grid
-        )
+        return aa.VectorField2DIrregular(vectors=shear_field, grid=grid)
 
 
 class SphIsothermal(EllIsothermal):

@@ -1,8 +1,8 @@
+from typing import Optional
+
 import autofit as af
 
 from autogalaxy.hyper import hyper_data as hd
-
-from typing import Optional
 
 
 class SetupHyper:

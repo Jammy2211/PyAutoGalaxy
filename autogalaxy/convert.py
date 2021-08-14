@@ -1,7 +1,5 @@
 import numpy as np
 
-from autogalaxy import exc
-
 
 def elliptical_comps_from(axis_ratio, angle):
     """

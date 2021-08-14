@@ -1,11 +1,9 @@
-import math
-
 from astropy import constants
+import math
 
 import autofit as af
 import autogalaxy as ag
 from autoarray.mock.mock import *
-from autoarray.structures import grids
 from autofit.mock.mock import MockSearch, MockSamples
 
 # MockProfiles #

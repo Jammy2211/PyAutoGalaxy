@@ -1,6 +1,8 @@
-from autoarray.structures.grids.two_d import abstract_grid_2d, grid_2d_irregular
-from autoarray.plot.mat_wrap import mat_plot
+import autoarray as aa
+import autoarray.plot as aplt
+from autoarray.structures.grids.two_d import abstract_grid_2d
 from autoarray.plot import abstract_plotters
+
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.profiles import light_profiles as lp
 from autogalaxy.util import error_util
@@ -78,8 +80,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
 
         return self.visuals_2d + self.visuals_2d.__class__(
             origin=self.extract_2d(
-                "origin",
-                value=grid_2d_irregular.Grid2DIrregular(grid=[self.grid.origin]),
+                "origin", value=aa.Grid2DIrregular(grid=[self.grid.origin])
             ),
             mask=self.extract_2d("mask", value=self.grid.mask),
             border=self.extract_2d(
@@ -87,7 +88,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             ),
             light_profile_centres=self.extract_2d(
                 "light_profile_centres",
-                grid_2d_irregular.Grid2DIrregular(grid=[self.light_profile.centre]),
+                aa.Grid2DIrregular(grid=[self.light_profile.centre]),
             ),
         )
 
@@ -106,7 +107,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
                 y=image_1d,
                 x=image_1d.grid_radial,
                 visuals_1d=self.visuals_with_include_1d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Image vs Radius",
                     ylabel="Image",
                     xlabel="Radius",
@@ -123,7 +124,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.light_profile.image_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mat_plot.AutoLabels(title="Image", filename="image_2d"),
+                auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
             )
 
 
@@ -226,7 +227,7 @@ class LightProfilePDFPlotter(LightProfilePlotter):
                 y=median_image_1d,
                 x=grid_radial,
                 visuals_1d=visuals_1d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Image vs Radius",
                     ylabel="Image",
                     xlabel="Radius",

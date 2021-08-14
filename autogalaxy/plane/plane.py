@@ -1,16 +1,12 @@
 import numpy as np
 
+import autoarray as aa
 from autoarray.inversion.inversion.imaging import inversion_imaging_unpacked_from
 from autoarray.inversion.inversion.interferometer import (
     inversion_interferometer_unpacked_from,
 )
-from autoarray.inversion.inversion.settings import SettingsInversion
-from autoarray.inversion import pixelizations as pix
-from autoarray.structures.arrays import values
-from autoarray.structures.arrays.two_d import array_2d
-from autoarray.structures.grids.two_d import grid_2d_irregular
 from autoarray.structures.grids import grid_decorators
-from autoarray.structures import visibilities as vis
+
 from autogalaxy import exc
 from autogalaxy import lensing
 from autogalaxy.galaxy import galaxy as g
@@ -185,9 +181,9 @@ class AbstractPlane(lensing.LensingObject):
         if attributes == []:
             return None
         elif isinstance(attributes[0], float):
-            return values.ValuesIrregular(values=attributes)
+            return aa.ValuesIrregular(values=attributes)
         elif isinstance(attributes[0], tuple):
-            return grid_2d_irregular.Grid2DIrregular(grid=attributes)
+            return aa.Grid2DIrregular(grid=attributes)
 
     def extract_attributes_of_galaxies(self, cls, attr_name, filter_nones=False):
         """
@@ -417,7 +413,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             image = self.image_2d_from_grid(grid=grid)
             return transformer.visibilities_from_image(image=image)
         else:
-            return vis.Visibilities.zeros(
+            return aa.Visibilities.zeros(
                 shape_slim=(transformer.uv_wavelengths.shape[0],)
             )
 
@@ -432,7 +428,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         ]
 
     def sparse_image_plane_grid_from_grid(
-        self, grid, settings_pixelization=pix.SettingsPixelization()
+        self, grid, settings_pixelization=aa.pix.SettingsPixelization()
     ):
 
         if not self.has_pixelization:
@@ -449,7 +445,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         grid,
         sparse_grid,
         sparse_image_plane_grid=None,
-        settings_pixelization=pix.SettingsPixelization(),
+        settings_pixelization=aa.pix.SettingsPixelization(),
     ):
 
         galaxies_with_pixelization = list(
@@ -482,8 +478,8 @@ class AbstractPlaneData(AbstractPlaneLensing):
         noise_map,
         convolver,
         w_tilde,
-        settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=SettingsInversion(),
+        settings_pixelization=aa.pix.SettingsPixelization(),
+        settings_inversion=aa.SettingsInversion(),
     ):
 
         sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
@@ -510,8 +506,8 @@ class AbstractPlaneData(AbstractPlaneLensing):
         visibilities,
         noise_map,
         transformer,
-        settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=SettingsInversion(),
+        settings_pixelization=aa.pix.SettingsPixelization(),
+        settings_inversion=aa.SettingsInversion(),
     ):
 
         sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
@@ -569,7 +565,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
             else:
 
-                hyper_noise_map = array_2d.Array2D.manual_mask(
+                hyper_noise_map = aa.Array2D.manual_mask(
                     array=np.zeros(noise_map.mask.mask_sub_1.pixels_in_mask),
                     mask=noise_map.mask.mask_sub_1,
                 )
@@ -660,7 +656,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 class Plane(AbstractPlaneData):
     def __init__(self, redshift=None, galaxies=None):
 
-        super(Plane, self).__init__(redshift=redshift, galaxies=galaxies)
+        super().__init__(redshift=redshift, galaxies=galaxies)
 
 
 class PlaneImage:

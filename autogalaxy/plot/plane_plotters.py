@@ -1,5 +1,6 @@
-from autoarray.plot.mat_wrap import mat_plot
-from autoarray.structures.grids.two_d import grid_2d
+import autoarray as aa
+import autoarray.plot as aplt
+
 from autogalaxy.plot import lensing_obj_plotter
 from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
 from autogalaxy.plane import plane as pl
@@ -10,7 +11,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
     def __init__(
         self,
         plane: pl.Plane,
-        grid: grid_2d.Grid2D,
+        grid: aa.Grid2D,
         mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
         visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
         include_1d: lensing_include.Include1D = lensing_include.Include1D(),
@@ -92,7 +93,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.plane.image_2d_from_grid(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
                 ),
             )
@@ -102,7 +103,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.plane.plane_image_2d_from_grid(grid=self.grid).array,
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title=f"Plane Image{title_suffix}",
                     filename=f"plane_image{filename_suffix}",
                 ),
@@ -113,7 +114,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_2d.plot_grid(
                 grid=self.grid,
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title=f"Plane Grid2D{title_suffix}",
                     filename=f"plane_grid{filename_suffix}",
                 ),
@@ -132,7 +133,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.plane.contribution_map,
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Contribution Map", filename="contribution_map_2d"
                 ),
             )
@@ -161,7 +162,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
             deflections_x=deflections_x,
             magnification=magnification,
             contribution_map=contribution_map,
-            auto_labels=mat_plot.AutoLabels(filename=auto_filename),
+            auto_labels=aplt.AutoLabels(filename=auto_filename),
         )
 
     def subplot_with_source_grid(self):
@@ -172,7 +173,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
         self.mat_plot_2d.plot_grid(
             grid=self.plane.traced_grid_from_grid(grid=self.grid),
             visuals_2d=self.visuals_with_include_2d,
-            auto_labels=mat_plot.AutoLabels(),
+            auto_labels=aplt.AutoLabels(),
         )
 
         self.mat_plot_2d.output.subplot_to_figure()

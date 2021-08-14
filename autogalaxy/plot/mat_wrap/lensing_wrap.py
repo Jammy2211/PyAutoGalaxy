@@ -1,33 +1,33 @@
-from autoarray.plot.mat_wrap.wrap import wrap_1d, wrap_2d
+import autoarray.plot as aplt
 
 
-class HalfLightRadiusAXVLine(wrap_1d.AXVLine):
+class HalfLightRadiusAXVLine(aplt.AXVLine):
     pass
 
 
-class EinsteinRadiusAXVLine(wrap_1d.AXVLine):
+class EinsteinRadiusAXVLine(aplt.AXVLine):
     pass
 
 
-class ModelFluxesYXScatter(wrap_1d.YXScatter):
+class ModelFluxesYXScatter(aplt.YXScatter):
     pass
 
 
-class LightProfileCentresScatter(wrap_2d.GridScatter):
+class LightProfileCentresScatter(aplt.GridScatter):
     pass
 
 
-class MassProfileCentresScatter(wrap_2d.GridScatter):
+class MassProfileCentresScatter(aplt.GridScatter):
     pass
 
 
-class MultipleImagesScatter(wrap_2d.GridScatter):
+class MultipleImagesScatter(aplt.GridScatter):
     pass
 
 
-class CriticalCurvesPlot(wrap_2d.GridPlot):
+class CriticalCurvesPlot(aplt.GridPlot):
     pass
 
 
-class CausticsPlot(wrap_2d.GridPlot):
+class CausticsPlot(aplt.GridPlot):
     pass

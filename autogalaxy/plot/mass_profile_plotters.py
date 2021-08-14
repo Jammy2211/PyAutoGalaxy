@@ -1,12 +1,13 @@
-from autoarray.structures.grids.two_d import abstract_grid_2d
-from autogalaxy.plot import lensing_obj_plotter
-from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
-from autoarray.plot.mat_wrap import mat_plot
-from autogalaxy.profiles.mass_profiles import mass_profiles as mp
-from autogalaxy.util import error_util
-
 import math
 from typing import List, Optional
+
+import autoarray.plot as aplt
+from autoarray.structures.grids.two_d import abstract_grid_2d
+
+from autogalaxy.plot import lensing_obj_plotter
+from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
+from autogalaxy.profiles.mass_profiles import mass_profiles as mp
+from autogalaxy.util import error_util
 
 
 class MassProfilePlotter(lensing_obj_plotter.LensingObjPlotter):
@@ -53,7 +54,7 @@ class MassProfilePlotter(lensing_obj_plotter.LensingObjPlotter):
                 y=convergence_1d,
                 x=convergence_1d.grid_radial,
                 visuals_1d=self.visuals_with_include_1d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
                     ylabel="Convergence ",
                     xlabel="Radius",
@@ -71,7 +72,7 @@ class MassProfilePlotter(lensing_obj_plotter.LensingObjPlotter):
                 y=potential_1d,
                 x=potential_1d.grid_radial,
                 visuals_1d=self.visuals_with_include_1d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",
                     ylabel="Potential ",
                     xlabel="Radius",
@@ -181,7 +182,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 y=median_convergence_1d,
                 x=grid_radial,
                 visuals_1d=visuals_1d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
                     ylabel="Convergence ",
                     xlabel="Radius",
@@ -216,7 +217,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 y=median_potential_1d,
                 x=grid_radial,
                 visuals_1d=visuals_1d,
-                auto_labels=mat_plot.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",
                     ylabel="Potential ",
                     xlabel="Radius",

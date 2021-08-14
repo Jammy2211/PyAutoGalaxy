@@ -1,7 +1,7 @@
-from autoarray.fit import fit
+import autoarray as aa
 
 
-class FitGalaxy(fit.FitDataset):
+class FitGalaxy(aa.FitDataset):
     def __init__(self, masked_galaxy_dataset, model_galaxies):
         """Class which fits a set of galaxy-datas to a model galaxy, using either the galaxy's image, \
         surface-density or potential.

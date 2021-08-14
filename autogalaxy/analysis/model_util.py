@@ -2,12 +2,13 @@ import numpy as np
 from scipy.stats import norm
 
 import autofit as af
-from autoarray import preloads as pload
-from autoarray.inversion import pixelizations as pix, regularization as reg
-from autofit.exc import PriorException
+import autoarray as aa
+
 from autogalaxy.galaxy import galaxy as g
 from autogalaxy.profiles import light_profiles as lp
 from autogalaxy.profiles import mass_profiles as mp
+
+from autogalaxy import exc
 
 
 def isprior(obj):
@@ -24,7 +25,7 @@ def isinstance_or_prior(obj, cls):
     return False
 
 
-def pixelization_from(model: af.Collection) -> pix.Pixelization:
+def pixelization_from(model: af.Collection) -> aa.pix.Pixelization:
     """
     For a model containing one or more galaxies, inspect its attributes and return the `pixelization` of a galaxy
     provided one galaxy has a pixelization, otherwise it returns none. There cannot be more than one `Pixelization` in
@@ -44,7 +45,7 @@ def pixelization_from(model: af.Collection) -> pix.Pixelization:
 
     Returns
     -------
-    pix.Pixelization or None:
+    aa.pix.Pixelization or None:
         The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
     """
 
@@ -76,7 +77,7 @@ def has_pixelization_from_model(model: af.Collection):
 
     Returns
     -------
-    pix.Pixelization or None:
+    aa.pix.Pixelization or None:
         The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
     """
     pixelization = pixelization_from(model=model)
@@ -105,7 +106,7 @@ def pixelization_is_model_from(model: af.Collection):
 
     Returns
     -------
-    pix.Pixelization or None:
+    aa.pix.Pixelization or None:
         The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
     """
     if model.galaxies:
@@ -133,11 +134,11 @@ def hyper_model_from(
 
     Parameters
     ----------
-    setup_hyper : SetupHyper
+    setup_hyper
         The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
-    result : af.Result
+    result
         The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
-    include_hyper_image_sky : hd.HyperImageSky
+    include_hyper_image_sky
         This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_hyper`.
 
     Returns
@@ -147,7 +148,7 @@ def hyper_model_from(
         model components now free parameters.
     """
 
-    model = result.instance.as_model((pix.Pixelization, reg.Regularization))
+    model = result.instance.as_model((aa.pix.Pixelization, aa.reg.Regularization))
 
     if setup_hyper is None:
         return None
@@ -221,7 +222,7 @@ def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analys
     )
 
     analysis.set_hyper_dataset(result=result)
-    analysis.preloads = pload.Preloads()
+    analysis.preloads = aa.Preloads()
 
     hyper_result = search.fit(model=hyper_model, analysis=analysis)
 
@@ -276,7 +277,7 @@ def stochastic_model_from(
         The stochastic model, which is the same model as the input model but may fit for or fix additional parameters.
     """
     if not hasattr(result.model.galaxies, "lens"):
-        raise PriorException(
+        raise exc.PriorException(
             "Cannot extend a search with a stochastic search if the lens galaxy `Model` "
             "is not named `lens`. "
         )
@@ -287,10 +288,10 @@ def stochastic_model_from(
         model_classes.append(lp.LightProfile)
 
     if include_pixelization:
-        model_classes.append(pix.Pixelization)
+        model_classes.append(aa.pix.Pixelization)
 
     if include_regularization:
-        model_classes.append(reg.Regularization)
+        model_classes.append(aa.reg.Regularization)
 
     model = result.instance.as_model(model_classes)
 

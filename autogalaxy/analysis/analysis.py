@@ -1,21 +1,19 @@
 from astropy import cosmology as cosmo
 
 import autofit as af
-from autoarray import preloads as pload
-from autoarray.exc import PixelizationException, InversionException, GridException
-from autoarray.inversion import pixelizations as pix
-from autoarray.inversion.inversion.settings import SettingsInversion
-from autofit.exc import FitException
+import autoarray as aa
 from autogalaxy.analysis import result as res
 from autogalaxy.analysis import visualizer as vis
 from autogalaxy.fit import fit_imaging, fit_interferometer
 from autogalaxy.galaxy import galaxy as g
 from autogalaxy.plane import plane as pl
 
+from autogalaxy import exc
+
 
 class Analysis(af.Analysis):
-    def __init__(self, hyper_result=None, cosmology=cosmo.Planck15):
-        self.hyper_dataset_result = hyper_result
+    def __init__(self, hyper_dataset_result=None, cosmology=cosmo.Planck15):
+        self.hyper_dataset_result = hyper_dataset_result
         self.cosmology = cosmology
 
 
@@ -25,12 +23,12 @@ class AnalysisDataset(Analysis):
         dataset,
         hyper_dataset_result=None,
         cosmology=cosmo.Planck15,
-        settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=SettingsInversion(),
-        preloads=pload.Preloads(),
+        settings_pixelization=aa.pix.SettingsPixelization(),
+        settings_inversion=aa.SettingsInversion(),
+        preloads=aa.Preloads(),
     ):
 
-        super().__init__(hyper_result=hyper_dataset_result, cosmology=cosmology)
+        super().__init__(hyper_dataset_result=hyper_dataset_result, cosmology=cosmology)
 
         self.dataset = dataset
 
@@ -132,9 +130,9 @@ class AnalysisImaging(AnalysisDataset):
         dataset,
         hyper_dataset_result=None,
         cosmology=cosmo.Planck15,
-        settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=SettingsInversion(),
-        preloads=pload.Preloads(),
+        settings_pixelization=aa.pix.SettingsPixelization(),
+        settings_inversion=aa.SettingsInversion(),
+        preloads=aa.Preloads(),
     ):
 
         super().__init__(
@@ -184,8 +182,12 @@ class AnalysisImaging(AnalysisDataset):
             )
 
             return fit.figure_of_merit
-        except (PixelizationException, InversionException, GridException) as e:
-            raise FitException from e
+        except (
+            exc.PixelizationException,
+            exc.InversionException,
+            exc.GridException,
+        ) as e:
+            raise exc.FitException from e
 
     def fit_imaging_for_plane(
         self, plane, hyper_image_sky, hyper_background_noise, use_hyper_scalings=True
@@ -265,9 +267,9 @@ class AnalysisInterferometer(AnalysisDataset):
         dataset,
         hyper_dataset_result=None,
         cosmology=cosmo.Planck15,
-        settings_pixelization=pix.SettingsPixelization(),
-        settings_inversion=SettingsInversion(),
-        preloads=pload.Preloads(),
+        settings_pixelization=aa.pix.SettingsPixelization(),
+        settings_inversion=aa.SettingsInversion(),
+        preloads=aa.Preloads(),
     ):
 
         super().__init__(
@@ -329,8 +331,12 @@ class AnalysisInterferometer(AnalysisDataset):
             )
 
             return fit.figure_of_merit
-        except (PixelizationException, InversionException, GridException) as e:
-            raise FitException from e
+        except (
+            exc.PixelizationException,
+            exc.InversionException,
+            exc.GridException,
+        ) as e:
+            raise exc.FitException from e
 
     def associate_hyper_visibilities(
         self, instance: af.ModelInstance
