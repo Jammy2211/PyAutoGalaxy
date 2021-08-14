@@ -1,16 +1,11 @@
 from functools import partial
 from typing import Optional
 
-from autofit.database.aggregator import Aggregator
-from autofit.database.model.fit import Fit
-from autoarray.dataset.imaging import SettingsImaging
-from autoarray.dataset.imaging import Imaging
-from autoarray.dataset.interferometer import SettingsInterferometer
-from autoarray.dataset.interferometer import Interferometer
-from autoarray.mask.mask_2d import Mask2D
+import autofit as af
+import autoarray as aa
 
 
-def _imaging_from(fit: Fit, settings_imaging: Optional[SettingsImaging] = None):
+def _imaging_from(fit: af.Fit, settings_imaging: Optional[aa.SettingsImaging] = None):
     """
     Returns a `Imaging` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to describe
     that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's generator
@@ -44,9 +39,9 @@ def _imaging_from(fit: Fit, settings_imaging: Optional[SettingsImaging] = None):
 
 
 def _interferometer_from(
-    fit: Fit,
-    real_space_mask: Optional[Mask2D] = None,
-    settings_interferometer: Optional[SettingsInterferometer] = None,
+    fit: af.Fit,
+    real_space_mask: Optional[aa.Mask2D] = None,
+    settings_interferometer: Optional[aa.SettingsInterferometer] = None,
 ):
     """
     Returns a `Interferometer` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to
@@ -73,7 +68,7 @@ def _interferometer_from(
         name="settings_dataset"
     )
 
-    interferometer = Interferometer(
+    interferometer = aa.Interferometer(
         visibilities=data,
         noise_map=noise_map,
         uv_wavelengths=uv_wavelengths,
@@ -86,11 +81,11 @@ def _interferometer_from(
 
 
 class ImagingAgg:
-    def __init__(self, aggregator: Aggregator):
+    def __init__(self, aggregator: af.Aggregator):
 
         self.aggregator = aggregator
 
-    def imaging_gen(self, settings_imaging: Optional[SettingsImaging] = None):
+    def imaging_gen(self, settings_imaging: Optional[aa.SettingsImaging] = None):
         """
         Returns a generator of `Imaging` objects from an input aggregator, which generates a list of the
         `Imaging` objects for every set of results loaded in the aggregator.
@@ -110,14 +105,14 @@ class ImagingAgg:
 
 
 class InterferometerAgg:
-    def __init__(self, aggregator: Aggregator):
+    def __init__(self, aggregator: af.Aggregator):
 
         self.aggregator = aggregator
 
     def interferometer_gen(
         self,
-        real_space_mask: Optional[Mask2D] = None,
-        settings_interferometer: Optional[SettingsInterferometer] = None,
+        real_space_mask: Optional[aa.Mask2D] = None,
+        settings_interferometer: Optional[aa.SettingsInterferometer] = None,
     ):
         """
         Returns a generator of `Interferometer` objects from an input aggregator, which generates a list of the
