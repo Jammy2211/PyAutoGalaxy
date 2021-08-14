@@ -1,16 +1,9 @@
-import pytest
 import numpy as np
 
 import autofit as af
 import autogalaxy as ag
 from autogalaxy.analysis import result as res
 from autogalaxy.mock import mock
-
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of "
-    "`arr[seq]`. In the future this will be interpreted as an arrays index, `arr[np.arrays(seq)]`, which will result "
-    "either in an error or a different result."
-)
 
 
 class TestResultAbstract:
@@ -113,33 +106,6 @@ class TestResultDataset:
 
         assert isinstance(result.pixelization, ag.pix.VoronoiBrightnessImage)
         assert result.pixelization.pixels == 6
-
-
-class TestResultImaging:
-    def test___image_dict(self, analysis_imaging_7x7):
-
-        galaxies = af.ModelInstance()
-        galaxies.galaxy = ag.Galaxy(redshift=0.5)
-        galaxies.source = ag.Galaxy(redshift=1.0)
-
-        instance = af.ModelInstance()
-        instance.galaxies = galaxies
-
-        samples = mock.MockSamples(max_log_likelihood_instance=instance)
-
-        result = res.ResultImaging(
-            samples=samples, analysis=analysis_imaging_7x7, model=None, search=None
-        )
-
-        image_dict = result.image_galaxy_dict
-        assert isinstance(image_dict[("galaxies", "galaxy")], np.ndarray)
-        assert isinstance(image_dict[("galaxies", "source")], np.ndarray)
-
-        result.instance.galaxies.light = ag.Galaxy(redshift=0.5)
-
-        image_dict = result.image_galaxy_dict
-        assert (image_dict[("galaxies", "galaxy")].native == np.zeros((7, 7))).all()
-        assert isinstance(image_dict[("galaxies", "source")], np.ndarray)
 
 
 class TestResultInterferometer:

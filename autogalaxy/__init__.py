@@ -53,14 +53,14 @@ from . import util
 from .dataset.imaging import SimulatorImaging
 from .dataset.interferometer import SimulatorInterferometer
 
-from .fit.fit_imaging import FitImaging
+from .imaging.fit_imaging import FitImaging
+from .imaging.model.analysis import AnalysisImaging
 from .fit.fit_interferometer import FitInterferometer
 from .galaxy.fit_galaxy import FitGalaxy
 from .galaxy.galaxy import Galaxy, HyperGalaxy, Redshift
 from .galaxy.galaxy_data import GalaxyData
 from .galaxy.masked_galaxy_data import MaskedGalaxyDataset
 from .hyper import hyper_data
-from .analysis.analysis import AnalysisImaging
 from .analysis.analysis import AnalysisInterferometer
 from autogalaxy.analysis.setup import SetupHyper
 from .plane.plane import Plane

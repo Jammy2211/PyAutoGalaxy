@@ -1,15 +1,22 @@
 from astropy.io import fits
-
+import numpy as np
 import os
 from os import path
-import numpy as np
+
+import shutil
+
 import autogalaxy as ag
 
 
 def create_fits(fits_path, array):
 
-    if path.exists(fits_path):
-        os.remove(fits_path)
+    file_dir = os.path.split(fits_path)[0]
+
+    if path.exists(file_dir):
+        shutil.rmtree(file_dir)
+
+    if not path.exists(file_dir):
+        os.makedirs(file_dir)
 
     hdu_list = fits.HDUList()
 

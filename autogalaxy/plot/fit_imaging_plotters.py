@@ -5,7 +5,7 @@ from autoarray.plot import fit_imaging_plotters
 
 from autogalaxy.profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
-from autogalaxy.fit.fit_imaging import FitImaging
+from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
 from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
 from autogalaxy.plot.mat_wrap.lensing_include import Include2D

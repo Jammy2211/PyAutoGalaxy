@@ -6,9 +6,7 @@ import shutil
 from autoconf import conf
 import autofit as af
 import autogalaxy as ag
-
 from autofit.non_linear.samples import Sample
-
 from autogalaxy.mock import mock
 
 directory = path.dirname(path.realpath(__file__))
@@ -60,56 +58,44 @@ def clean(database_file, result_path):
         shutil.rmtree(result_path)
 
 
-def test__interferometer_generator_from_aggregator(
-    visibilities_7,
-    visibilities_noise_map_7,
-    uv_wavelengths_7x2,
-    mask_2d_7x7,
-    samples,
-    model,
-):
+def test__imaging_generator_from_aggregator(imaging_7x7, mask_2d_7x7, samples, model):
 
-    path_prefix = "aggregator_interferometer"
+    path_prefix = "aggregator_imaging_gen"
 
-    database_file = path.join(conf.instance.output_path, "interferometer.sqlite")
+    database_file = path.join(conf.instance.output_path, "imaging.sqlite")
     result_path = path.join(conf.instance.output_path, path_prefix)
 
     clean(database_file=database_file, result_path=result_path)
 
-    interferometer_7 = ag.Interferometer(
-        visibilities=visibilities_7,
-        noise_map=visibilities_noise_map_7,
-        uv_wavelengths=uv_wavelengths_7x2,
-        real_space_mask=mask_2d_7x7,
-        settings=ag.SettingsInterferometer(
+    masked_imaging_7x7 = imaging_7x7.apply_mask(mask=mask_2d_7x7)
+
+    masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
+        settings=ag.SettingsImaging(
             grid_class=ag.Grid2DIterate,
             grid_inversion_class=ag.Grid2DIterate,
             fractional_accuracy=0.5,
             sub_steps=[2],
-            transformer_class=ag.TransformerDFT,
-        ),
+        )
     )
 
     search = mock.MockSearch(samples=samples)
     search.paths = af.DirectoryPaths(path_prefix=path_prefix)
 
-    analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
+    analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
 
     search.fit(model=model, analysis=analysis)
 
     agg = af.Aggregator.from_database(filename=database_file)
     agg.add_directory(directory=result_path)
 
-    interferometer_agg = ag.agg.InterferometerAgg(aggregator=agg)
-    interferometer_gen = interferometer_agg.interferometer_gen()
+    imaging_agg = ag.agg.ImagingAgg(aggregator=agg)
+    imaging_gen = imaging_agg.imaging_gen()
 
-    for interferometer in interferometer_gen:
-        assert (interferometer.visibilities == interferometer_7.visibilities).all()
-        assert (interferometer.real_space_mask == mask_2d_7x7).all()
-        assert isinstance(interferometer.grid, ag.Grid2DIterate)
-        assert isinstance(interferometer.grid_inversion, ag.Grid2DIterate)
-        assert interferometer.grid.sub_steps == [2]
-        assert interferometer.grid.fractional_accuracy == 0.5
-        assert isinstance(interferometer.transformer, ag.TransformerDFT)
+    for imaging in imaging_gen:
+        assert (imaging.image == masked_imaging_7x7.image).all()
+        assert isinstance(imaging.grid, ag.Grid2DIterate)
+        assert isinstance(imaging.grid_inversion, ag.Grid2DIterate)
+        assert imaging.grid.sub_steps == [2]
+        assert imaging.grid.fractional_accuracy == 0.5
 
     clean(database_file=database_file, result_path=result_path)
