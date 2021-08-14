@@ -3,7 +3,6 @@ import numpy as np
 
 import autofit as af
 import autoarray as aa
-from autoarray.structures.grids import grid_decorators
 
 from autogalaxy import exc
 from autogalaxy import lensing
@@ -182,7 +181,7 @@ class Galaxy(af.ModelObject, lensing.LensingObject):
 
     @property
     def uses_cluster_inversion(self):
-        return type(self.pixelization) is pix.VoronoiBrightnessImage
+        return type(self.pixelization) is aa.pix.VoronoiBrightnessImage
 
     @property
     def has_stellar_profile(self):
@@ -274,7 +273,7 @@ class Galaxy(af.ModelObject, lensing.LensingObject):
             )
         )
 
-    @grid_decorators.grid_1d_output_structure
+    @aa.grid_dec.grid_1d_output_structure
     def image_1d_from_grid(self, grid):
         """
         Returns the summed 1D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
@@ -296,7 +295,7 @@ class Galaxy(af.ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0],))
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def image_2d_from_grid(self, grid):
         """
         Returns the summed 2D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
@@ -367,7 +366,7 @@ class Galaxy(af.ModelObject, lensing.LensingObject):
                 )
             )
 
-    @grid_decorators.grid_1d_output_structure
+    @aa.grid_dec.grid_1d_output_structure
     def convergence_1d_from_grid(self, grid):
         """
         Returns the summed 1D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
@@ -391,7 +390,7 @@ class Galaxy(af.ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0],))
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def convergence_2d_from_grid(self, grid):
         """
         Returns the summed 2D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
@@ -415,7 +414,7 @@ class Galaxy(af.ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0],))
 
-    @grid_decorators.grid_1d_output_structure
+    @aa.grid_dec.grid_1d_output_structure
     def potential_1d_from_grid(self, grid):
         """
         Returns the summed 2D gravitational potential of the galaxy's mass profiles using a grid of 
@@ -439,7 +438,7 @@ class Galaxy(af.ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0],))
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def potential_2d_from_grid(self, grid):
         """
         Returns the summed 2D gravitational potential of the galaxy's mass profiles using a grid of 
@@ -463,7 +462,7 @@ class Galaxy(af.ModelObject, lensing.LensingObject):
             )
         return np.zeros((grid.shape[0],))
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def deflections_2d_from_grid(self, grid):
         """
         Returns the summed (y,x) deflection angles of the galaxy's mass profiles \

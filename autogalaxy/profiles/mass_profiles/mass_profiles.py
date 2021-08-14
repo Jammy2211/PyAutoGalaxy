@@ -4,7 +4,6 @@ from scipy.optimize import root_scalar
 from scipy.special import wofz, comb
 
 import autoarray as aa
-from autoarray.structures.grids import grid_decorators
 
 from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
@@ -46,11 +45,11 @@ class MassProfile(geometry_profiles.EllProfile, lensing.LensingObject):
     def with_new_normalization(self, normalization):
         raise NotImplementedError()
 
-    @grid_decorators.grid_1d_to_structure
+    @aa.grid_dec.grid_1d_to_structure
     def convergence_1d_from_grid(self, grid):
         return self.convergence_2d_from_grid(grid=grid)
 
-    @grid_decorators.grid_1d_to_structure
+    @aa.grid_dec.grid_1d_to_structure
     def potential_1d_from_grid(self, grid):
         return self.potential_2d_from_grid(grid=grid)
 
@@ -291,7 +290,7 @@ class MassProfileMGE:
         self.expv = 0
 
     @staticmethod
-    #  @decorator_util.jit()
+    #  @aa.util.numba.jit()
     def zeta_from_grid(grid, amps, sigmas, axis_ratio):
 
         """

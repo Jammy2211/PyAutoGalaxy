@@ -45,6 +45,8 @@ from autoarray.plot.interferometer_plotters import InterferometerPlotter
 from autoarray.plot.multi_plotters import MultiFigurePlotter
 from autoarray.plot.multi_plotters import MultiYX1DPlotter
 
+from autoarray.plot.mat_wrap.mat_plot import AutoLabels
+
 from autogalaxy.plot.mat_wrap.lensing_wrap import (
     HalfLightRadiusAXVLine,
     EinsteinRadiusAXVLine,

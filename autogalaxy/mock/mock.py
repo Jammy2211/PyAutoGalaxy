@@ -2,6 +2,7 @@ from astropy import constants
 import math
 
 import autofit as af
+import autoarray as aa
 import autogalaxy as ag
 from autoarray.mock.mock import *
 from autofit.mock.mock import MockSearch, MockSamples
@@ -44,19 +45,19 @@ class MockGalaxy:
         self.value = value
         self.shape = shape
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def image_2d_from_grid(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def convergence_2d_from_grid(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def potential_2d_from_grid(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def deflections_2d_from_grid(self, grid):
         return np.full(shape=(self.shape, 2), fill_value=self.value)
 

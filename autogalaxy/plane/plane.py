@@ -5,8 +5,6 @@ from autoarray.inversion.inversion.imaging import inversion_imaging_unpacked_fro
 from autoarray.inversion.inversion.interferometer import (
     inversion_interferometer_unpacked_from,
 )
-from autoarray.structures.grids import grid_decorators
-
 from autogalaxy import exc
 from autogalaxy import lensing
 from autogalaxy.galaxy import galaxy as g
@@ -233,7 +231,7 @@ class AbstractPlaneLensing(AbstractPlane):
     def __init__(self, redshift, galaxies):
         super().__init__(redshift=redshift, galaxies=galaxies)
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def image_2d_from_grid(self, grid):
         """
         Returns the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
@@ -268,7 +266,7 @@ class AbstractPlaneLensing(AbstractPlane):
 
         return self.image_2d_from_grid(grid=padded_grid)
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def convergence_2d_from_grid(self, grid):
         """
         Returns the convergence of the list of galaxies of the plane's sub-grid, by summing the individual convergences \
@@ -294,7 +292,7 @@ class AbstractPlaneLensing(AbstractPlane):
             )
         return np.zeros(shape=(grid.shape[0],))
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def potential_2d_from_grid(self, grid):
         """
         Returns the potential of the list of galaxies of the plane's sub-grid, by summing the individual potentials \
@@ -320,7 +318,7 @@ class AbstractPlaneLensing(AbstractPlane):
             )
         return np.zeros((grid.shape[0]))
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def deflections_2d_from_grid(self, grid):
         if self.galaxies:
             return sum(
@@ -328,7 +326,7 @@ class AbstractPlaneLensing(AbstractPlane):
             )
         return np.zeros(shape=(grid.shape[0], 2))
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def traced_grid_from_grid(self, grid):
         """Trace this plane's grid_stacks to the next plane, using its deflection angles."""
         return grid - self.deflections_2d_from_grid(grid=grid)

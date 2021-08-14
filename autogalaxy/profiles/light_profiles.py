@@ -2,7 +2,6 @@ import numpy as np
 
 import autoarray as aa
 
-from autoarray.structures.grids import grid_decorators
 from autogalaxy.profiles import geometry_profiles
 from scipy.integrate import quad
 
@@ -56,7 +55,7 @@ class LightProfile(geometry_profiles.EllProfile):
         """
         raise NotImplementedError()
 
-    @grid_decorators.grid_1d_to_structure
+    @aa.grid_dec.grid_1d_to_structure
     def image_1d_from_grid(self, grid):
         return self.image_2d_from_grid(grid=grid)
 
@@ -207,9 +206,9 @@ class EllGaussian(LightProfile):
             ),
         )
 
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from_grid(self, grid, grid_radial_minimum=None):
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
@@ -382,9 +381,9 @@ class EllSersic(AbstractEllSersic, LightProfile):
             ),
         )
 
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from_grid(self, grid, grid_radial_minimum=None):
         """Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 
@@ -775,9 +774,9 @@ class EllChameleon(LightProfile):
             ),
         )
 
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from_grid(self, grid, grid_radial_minimum=None):
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.

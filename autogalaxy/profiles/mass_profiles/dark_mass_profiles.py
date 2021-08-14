@@ -14,8 +14,7 @@ from scipy.optimize import fsolve
 import warnings
 from typing import Tuple
 
-from autoarray import decorator_util
-from autoarray.structures.grids import grid_decorators
+import autoarray as aa
 
 from autogalaxy import exc
 from autogalaxy.profiles import mass_profiles as mp
@@ -27,7 +26,7 @@ from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
 
 def jit_integrand(integrand_function):
 
-    jitted_function = decorator_util.jit(nopython=True, cache=True)(integrand_function)
+    jitted_function = aa.util.numba.jit(nopython=True, cache=True)(integrand_function)
     no_args = len(inspect.getfullargspec(integrand_function).args)
 
     wrapped = None
@@ -159,9 +158,9 @@ class AbstractEllNFWGeneralized(mp.MassProfile, DarkProfile, MassProfileMGE):
 
         return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
 
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from_grid(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -176,9 +175,9 @@ class AbstractEllNFWGeneralized(mp.MassProfile, DarkProfile, MassProfileMGE):
 
         return self.convergence_func(grid_radius=grid_eta)
 
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from_grid_via_gaussians(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -207,7 +206,7 @@ class AbstractEllNFWGeneralized(mp.MassProfile, DarkProfile, MassProfileMGE):
             return self.coord_func_f_float_jit(grid_radius=grid_radius)
 
     @staticmethod
-    @decorator_util.jit()
+    @aa.util.numba.jit()
     def coord_func_f_jit(grid_radius, f):
 
         for index in range(f.shape[0]):
@@ -224,7 +223,7 @@ class AbstractEllNFWGeneralized(mp.MassProfile, DarkProfile, MassProfileMGE):
         return f
 
     @staticmethod
-    @decorator_util.jit()
+    @aa.util.numba.jit()
     def coord_func_f_float_jit(grid_radius):
 
         if np.real(grid_radius) > 1.0:
@@ -251,7 +250,7 @@ class AbstractEllNFWGeneralized(mp.MassProfile, DarkProfile, MassProfileMGE):
             return self.coord_func_g_float_jit(grid_radius=grid_radius, f_r=f_r)
 
     @staticmethod
-    @decorator_util.jit()
+    @aa.util.numba.jit()
     def coord_func_g_jit(grid_radius, f_r, g):
 
         for index in range(f_r.shape[0]):
@@ -265,7 +264,7 @@ class AbstractEllNFWGeneralized(mp.MassProfile, DarkProfile, MassProfileMGE):
         return g
 
     @staticmethod
-    @decorator_util.jit()
+    @aa.util.numba.jit()
     def coord_func_g_float_jit(grid_radius, f_r):
 
         if np.real(grid_radius) > 1.0:
@@ -450,9 +449,9 @@ class AbstractEllNFWGeneralized(mp.MassProfile, DarkProfile, MassProfileMGE):
 
 
 class EllNFWGeneralized(AbstractEllNFWGeneralized):
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from_grid(self, grid, tabulate_bins=1000):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -528,18 +527,18 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
 
         return potential_grid
 
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_from_grid(self, grid):
 
         return self._deflections_2d_from_grid_via_gaussians(
             grid=grid, sigmas_factor=self.axis_ratio
         )
 
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_from_grid_via_integrator(self, grid, tabulate_bins=1000):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -730,9 +729,9 @@ class SphNFWGeneralized(EllNFWGeneralized):
             scale_radius=scale_radius,
         )
 
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_from_grid_via_integrator(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -843,13 +842,13 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
         grid_radius = grid_radius + 0j
         return np.real(self.coord_func_m(grid_radius=grid_radius))
 
-    @grid_decorators.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure
     def potential_2d_from_grid(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_from_grid(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -1004,9 +1003,9 @@ class EllNFW(EllNFWGeneralized):
         elif r == 1:
             return 1
 
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from_grid(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -1038,9 +1037,9 @@ class EllNFW(EllNFWGeneralized):
 
         return potential_grid
 
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_from_grid_via_integrator(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -1168,9 +1167,9 @@ class SphNFW(EllNFW):
             scale_radius=scale_radius,
         )
 
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from_grid(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -1194,9 +1193,9 @@ class SphNFW(EllNFW):
     def potential_func_sph(eta):
         return ((np.log(eta / 2.0)) ** 2) - (np.arctanh(np.sqrt(1 - eta ** 2))) ** 2
 
-    @grid_decorators.grid_2d_to_structure
-    @grid_decorators.transform
-    @grid_decorators.relocate_to_radial_minimum
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_from_grid(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
