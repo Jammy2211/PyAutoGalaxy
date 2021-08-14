@@ -1,7 +1,8 @@
 import numpy as np
 
 import autoarray as aa
-from autogalaxy.galaxy import galaxy as g
+
+from autogalaxy.galaxy.galaxy import Galaxy
 
 
 class FitInterferometer(aa.FitInterferometer):
@@ -88,7 +89,7 @@ class FitInterferometer(aa.FitInterferometer):
         return self.plane.galaxies
 
     @property
-    def galaxy_model_image_dict(self) -> {g.Galaxy: np.ndarray}:
+    def galaxy_model_image_dict(self) -> {Galaxy: np.ndarray}:
         """
         A dictionary associating galaxies with their corresponding model images
         """
@@ -110,7 +111,7 @@ class FitInterferometer(aa.FitInterferometer):
         return galaxy_model_image_dict
 
     @property
-    def galaxy_model_visibilities_dict(self) -> {g.Galaxy: np.ndarray}:
+    def galaxy_model_visibilities_dict(self) -> {Galaxy: np.ndarray}:
         """
         A dictionary associating galaxies with their corresponding model images
         """

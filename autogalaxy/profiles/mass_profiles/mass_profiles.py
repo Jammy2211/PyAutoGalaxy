@@ -2,18 +2,18 @@ import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
 from scipy.special import wofz, comb
+from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy import lensing
-from autogalaxy.profiles import geometry_profiles
-from autogalaxy import exc
+from autogalaxy.lensing import LensingObject
+from autogalaxy.profiles.geometry_profiles import EllProfile
 
-from typing import Tuple
+from autogalaxy import exc
 
 
 # noinspection PyAbstractClass
-class MassProfile(geometry_profiles.EllProfile, lensing.LensingObject):
+class MassProfile(EllProfile, LensingObject):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

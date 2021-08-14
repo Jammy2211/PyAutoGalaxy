@@ -1,18 +1,23 @@
 import numpy as np
+
 import autoarray.plot as aplt
-from autoarray.plot import inversion_plotters, fit_imaging_plotters
-from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
-from autogalaxy.profiles import light_profiles, mass_profiles
-from autogalaxy.fit import fit_imaging
+from autoarray.plot import fit_imaging_plotters
+
+from autogalaxy.profiles.light_profiles import LightProfile
+from autogalaxy.profiles.mass_profiles import MassProfile
+from autogalaxy.fit.fit_imaging import FitImaging
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.lensing_include import Include2D
 
 
 class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
     def __init__(
         self,
-        fit: fit_imaging.FitImaging,
-        mat_plot_2d: lensing_mat_plot.MatPlot2D = lensing_mat_plot.MatPlot2D(),
-        visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
-        include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+        fit: FitImaging,
+        mat_plot_2d: MatPlot2D = MatPlot2D(),
+        visuals_2d: Visuals2D = Visuals2D(),
+        include_2d: Include2D = Include2D(),
     ):
 
         super().__init__(
@@ -34,21 +39,17 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
         return visuals_2d + visuals_2d.__class__(
             light_profile_centres=self.extract_2d(
                 "light_profile_centres",
-                self.plane.extract_attribute(
-                    cls=light_profiles.LightProfile, attr_name="centre"
-                ),
+                self.plane.extract_attribute(cls=LightProfile, attr_name="centre"),
             ),
             mass_profile_centres=self.extract_2d(
                 "mass_profile_centres",
-                self.plane.extract_attribute(
-                    cls=mass_profiles.MassProfile, attr_name="centre"
-                ),
+                self.plane.extract_attribute(cls=MassProfile, attr_name="centre"),
             ),
         )
 
     @property
     def inversion_plotter(self):
-        return inversion_plotters.InversionPlotter(
+        return aplt.InversionPlotter(
             inversion=self.fit.inversion,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.visuals_with_include_2d,

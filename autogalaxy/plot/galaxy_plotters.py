@@ -1,31 +1,37 @@
 import math
+from typing import List, Optional
 
 import autoarray.plot as aplt
 
-from autogalaxy.plot import (
-    lensing_obj_plotter,
-    light_profile_plotters,
-    mass_profile_plotters,
-)
-from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
-from autogalaxy.profiles import light_profiles as lp, mass_profiles as mp
-from autogalaxy.galaxy import galaxy as g
+from autogalaxy.plot.lensing_obj_plotter import LensingObjPlotter
+from autogalaxy.profiles.light_profiles import LightProfile
+from autogalaxy.profiles.mass_profiles import MassProfile
+from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D
+from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.lensing_include import Include1D
+from autogalaxy.plot.mat_wrap.lensing_include import Include2D
+from autogalaxy.plot.light_profile_plotters import LightProfilePlotter
+from autogalaxy.plot.light_profile_plotters import LightProfilePDFPlotter
+from autogalaxy.plot.mass_profile_plotters import MassProfilePlotter
+from autogalaxy.plot.mass_profile_plotters import MassProfilePDFPlotter
+
 from autogalaxy.util import error_util
 
-from typing import List, Optional
 
-
-class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
+class GalaxyPlotter(LensingObjPlotter):
     def __init__(
         self,
-        galaxy: g.Galaxy,
+        galaxy: Galaxy,
         grid,
-        mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
-        visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
-        include_1d: lensing_include.Include1D = lensing_include.Include1D(),
-        mat_plot_2d: lensing_mat_plot.MatPlot2D = lensing_mat_plot.MatPlot2D(),
-        visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
-        include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+        mat_plot_1d: MatPlot1D = MatPlot1D(),
+        visuals_1d: Visuals1D = Visuals1D(),
+        include_1d: Include1D = Include1D(),
+        mat_plot_2d: MatPlot2D = MatPlot2D(),
+        visuals_2d: Visuals2D = Visuals2D(),
+        include_2d: Include2D = Include2D(),
     ):
         super().__init__(
             mat_plot_2d=mat_plot_2d,
@@ -44,7 +50,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
         return self.galaxy
 
     @property
-    def visuals_with_include_2d(self) -> "vis.Visuals2D":
+    def visuals_with_include_2d(self) -> "Visuals2D":
         """
         Extracts from a `Structure` attributes that can be plotted and return them in a `Visuals` object.
 
@@ -72,14 +78,14 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
         return visuals_2d + visuals_2d.__class__(
             light_profile_centres=self.extract_2d(
                 "light_profile_centres",
-                self.galaxy.extract_attribute(cls=lp.LightProfile, attr_name="centre"),
+                self.galaxy.extract_attribute(cls=LightProfile, attr_name="centre"),
             )
         )
 
     def light_profile_plotter_from(
-        self, light_profile: lp.LightProfile
-    ) -> light_profile_plotters.LightProfilePlotter:
-        return light_profile_plotters.LightProfilePlotter(
+        self, light_profile: LightProfile
+    ) -> LightProfilePlotter:
+        return LightProfilePlotter(
             light_profile=light_profile,
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
@@ -91,9 +97,9 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
         )
 
     def mass_profile_plotter_from(
-        self, mass_profile: mp.MassProfile
-    ) -> mass_profile_plotters.MassProfilePlotter:
-        return mass_profile_plotters.MassProfilePlotter(
+        self, mass_profile: MassProfile
+    ) -> MassProfilePlotter:
+        return MassProfilePlotter(
             mass_profile=mass_profile,
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
@@ -105,7 +111,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
         )
 
     @property
-    def visuals_with_include_1d_light(self) -> lensing_visuals.Visuals1D:
+    def visuals_with_include_1d_light(self) -> Visuals1D:
         """
         Extracts from the `Galaxy` attributes that can be plotted which are associated with light profiles and returns
         them in a `Visuals1D` object.
@@ -124,7 +130,7 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
         return self.visuals_1d
 
     @property
-    def visuals_with_include_1d_mass(self) -> lensing_visuals.Visuals1D:
+    def visuals_with_include_1d_mass(self) -> Visuals1D:
         """
         Extracts from the `Galaxy` attributes that can be plotted which are associated with mass profiles and returns
         them in a `Visuals1D` object.
@@ -368,14 +374,14 @@ class GalaxyPlotter(lensing_obj_plotter.LensingObjPlotter):
 class GalaxyPDFPlotter(GalaxyPlotter):
     def __init__(
         self,
-        galaxy_pdf_list: List[g.Galaxy],
+        galaxy_pdf_list: List[Galaxy],
         grid,
-        mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
-        visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
-        include_1d: lensing_include.Include1D = lensing_include.Include1D(),
-        mat_plot_2d: lensing_mat_plot.MatPlot2D = lensing_mat_plot.MatPlot2D(),
-        visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
-        include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+        mat_plot_1d: MatPlot1D = MatPlot1D(),
+        visuals_1d: Visuals1D = Visuals1D(),
+        include_1d: Include1D = Include1D(),
+        mat_plot_2d: MatPlot2D = MatPlot2D(),
+        visuals_2d: Visuals2D = Visuals2D(),
+        include_2d: Include2D = Include2D(),
         sigma: Optional[float] = 3.0,
     ):
         super().__init__(
@@ -400,15 +406,13 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             for index in range(len(self.galaxy_pdf_list[0].light_profiles))
         ]
 
-    def light_profile_pdf_plotter_from(
-        self, index
-    ) -> light_profile_plotters.LightProfilePDFPlotter:
+    def light_profile_pdf_plotter_from(self, index) -> LightProfilePDFPlotter:
 
         light_profile_pdf_list = [
             galaxy.light_profiles[index] for galaxy in self.galaxy_pdf_list
         ]
 
-        return light_profile_plotters.LightProfilePDFPlotter(
+        return LightProfilePDFPlotter(
             light_profile_pdf_list=light_profile_pdf_list,
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
@@ -426,15 +430,13 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             for index in range(len(self.galaxy_pdf_list[0].mass_profiles))
         ]
 
-    def mass_profile_pdf_plotter_from(
-        self, index
-    ) -> mass_profile_plotters.MassProfilePDFPlotter:
+    def mass_profile_pdf_plotter_from(self, index) -> MassProfilePDFPlotter:
 
         mass_profile_pdf_list = [
             galaxy.mass_profiles[index] for galaxy in self.galaxy_pdf_list
         ]
 
-        return mass_profile_plotters.MassProfilePDFPlotter(
+        return MassProfilePDFPlotter(
             mass_profile_pdf_list=mass_profile_pdf_list,
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
@@ -446,7 +448,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         )
 
     @property
-    def visuals_with_include_1d_light(self) -> lensing_visuals.Visuals1D:
+    def visuals_with_include_1d_light(self) -> Visuals1D:
         """
         Extracts from the `Galaxy` attributes that can be plotted which are associated with light profiles and returns
         them in a `Visuals1D` object.
@@ -465,7 +467,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         return self.visuals_1d
 
     @property
-    def visuals_with_include_1d_mass(self) -> lensing_visuals.Visuals1D:
+    def visuals_with_include_1d_mass(self) -> Visuals1D:
         """
         Extracts from the `Galaxy` attributes that can be plotted which are associated with mass profiles and returns
         them in a `Visuals1D` object.

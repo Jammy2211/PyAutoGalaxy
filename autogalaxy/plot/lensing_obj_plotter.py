@@ -2,8 +2,9 @@ import autoarray as aa
 import autoarray.plot as aplt
 from autoarray.plot import abstract_plotters
 
-from autogalaxy.profiles import mass_profiles
-from autogalaxy.plot.mat_wrap import lensing_visuals
+from autogalaxy.profiles.mass_profiles import MassProfile
+from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D
+from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
 
 
 class LensingObjPlotter(abstract_plotters.AbstractPlotter):
@@ -12,7 +13,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
     grid = None
 
     @property
-    def visuals_with_include_1d(self) -> lensing_visuals.Visuals1D:
+    def visuals_with_include_1d(self) -> Visuals1D:
         """
         Extract from the `LensingObj` attributes that can be plotted and return them in a `Visuals1D` object.
 
@@ -37,7 +38,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         )
 
     @property
-    def visuals_with_include_2d(self) -> lensing_visuals.Visuals2D:
+    def visuals_with_include_2d(self) -> Visuals2D:
         """
         Extract from the `LensingObj` attributes that can be plotted and return them in a `Visuals` object.
 
@@ -70,9 +71,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             ),
             mass_profile_centres=self.extract_2d(
                 "mass_profile_centres",
-                self.lensing_obj.extract_attribute(
-                    cls=mass_profiles.MassProfile, attr_name="centre"
-                ),
+                self.lensing_obj.extract_attribute(cls=MassProfile, attr_name="centre"),
             ),
             critical_curves=self.extract_2d(
                 "critical_curves",

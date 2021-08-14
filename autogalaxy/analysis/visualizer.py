@@ -3,13 +3,14 @@ from os import path
 from autoconf import conf
 import autoarray.plot as aplt
 
-from autogalaxy.plot import (
-    fit_galaxy_plotters,
-    fit_interferometer_plotters,
-    fit_imaging_plotters,
-    hyper_plotters,
-)
-from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include
+from autogalaxy.plot.fit_galaxy_plotters import FitGalaxyPlotter
+from autogalaxy.plot.fit_imaging_plotters import FitImagingPlotter
+from autogalaxy.plot.fit_interferometer_plotters import FitInterferometerPlotter
+from autogalaxy.plot.hyper_plotters import HyperPlotter
+
+from autogalaxy.plot.mat_wrap.lensing_include import Include2D
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
 
 
 def setting(section, name):
@@ -27,17 +28,17 @@ class Visualizer:
 
         self.plot_fit_no_hyper = plot_setting("hyper", "fit_no_hyper")
 
-        self.include_2d = lensing_include.Include2D()
+        self.include_2d = Include2D()
 
     def mat_plot_1d_from(self, subfolders, format="png"):
-        return lensing_mat_plot.MatPlot1D(
+        return MatPlot1D(
             output=aplt.Output(
                 path=path.join(self.visualize_path, subfolders), format=format
             )
         )
 
     def mat_plot_2d_from(self, subfolders, format="png"):
-        return lensing_mat_plot.MatPlot2D(
+        return MatPlot2D(
             output=aplt.Output(
                 path=path.join(self.visualize_path, subfolders), format=format
             )
@@ -73,7 +74,7 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
 
-        fit_imaging_plotter = fit_imaging_plotters.FitImagingPlotter(
+        fit_imaging_plotter = FitImagingPlotter(
             fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
@@ -122,7 +123,7 @@ class Visualizer:
                     subfolders="fit_imaging/fits", format="fits"
                 )
 
-                fit_imaging_plotter = fit_imaging_plotters.FitImagingPlotter(
+                fit_imaging_plotter = FitImagingPlotter(
                     fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
                 )
 
@@ -170,7 +171,7 @@ class Visualizer:
         mat_plot_1d = self.mat_plot_1d_from(subfolders=subfolders)
         mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
 
-        fit_interferometer_plotter = fit_interferometer_plotters.FitInterferometerPlotter(
+        fit_interferometer_plotter = FitInterferometerPlotter(
             fit=fit,
             include_2d=self.include_2d,
             mat_plot_1d=mat_plot_1d,
@@ -217,7 +218,7 @@ class Visualizer:
                     subfolders="fit_interferometer/fits", format="fits"
                 )
 
-                fit_interferometer_plotter = fit_interferometer_plotters.FitInterferometerPlotter(
+                fit_interferometer_plotter = FitInterferometerPlotter(
                     fit=fit, include_2d=self.include_2d, mat_plot_2d=mat_plot_2d
                 )
 
@@ -283,7 +284,7 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="hyper")
 
-        hyper_plotter = hyper_plotters.HyperPlotter(
+        hyper_plotter = HyperPlotter(
             mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
@@ -308,7 +309,7 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="galaxy_fit")
 
-        fit_galaxy_plotter = fit_galaxy_plotters.FitGalaxyPlotter(
+        fit_galaxy_plotter = FitGalaxyPlotter(
             fit=fit,
             mat_plot_2d=mat_plot_2d,
             visuals_2d=visuals_2d,
@@ -320,7 +321,7 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="galaxy_fit")
 
-        fit_galaxy_plotter = fit_galaxy_plotters.FitGalaxyPlotter(
+        fit_galaxy_plotter = FitGalaxyPlotter(
             fit=fit,
             mat_plot_2d=mat_plot_2d,
             visuals_2d=visuals_2d,

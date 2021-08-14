@@ -4,23 +4,29 @@ from typing import List, Optional
 import autoarray.plot as aplt
 from autoarray.structures.grids.two_d import abstract_grid_2d
 
-from autogalaxy.plot import lensing_obj_plotter
-from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
-from autogalaxy.profiles.mass_profiles import mass_profiles as mp
+from autogalaxy.plot.lensing_obj_plotter import LensingObjPlotter
+from autogalaxy.profiles.mass_profiles import MassProfile
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D
+from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.lensing_include import Include1D
+from autogalaxy.plot.mat_wrap.lensing_include import Include2D
+
 from autogalaxy.util import error_util
 
 
-class MassProfilePlotter(lensing_obj_plotter.LensingObjPlotter):
+class MassProfilePlotter(LensingObjPlotter):
     def __init__(
         self,
-        mass_profile: mp.MassProfile,
+        mass_profile: MassProfile,
         grid: abstract_grid_2d.AbstractGrid2D,
-        mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
-        visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
-        include_1d: lensing_include.Include1D = lensing_include.Include1D(),
-        mat_plot_2d: lensing_mat_plot.MatPlot2D = lensing_mat_plot.MatPlot2D(),
-        visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
-        include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+        mat_plot_1d: MatPlot1D = MatPlot1D(),
+        visuals_1d: Visuals1D = Visuals1D(),
+        include_1d: Include1D = Include1D(),
+        mat_plot_2d: MatPlot2D = MatPlot2D(),
+        visuals_2d: Visuals2D = Visuals2D(),
+        include_2d: Include2D = Include2D(),
     ):
 
         super().__init__(
@@ -86,14 +92,14 @@ class MassProfilePlotter(lensing_obj_plotter.LensingObjPlotter):
 class MassProfilePDFPlotter(MassProfilePlotter):
     def __init__(
         self,
-        mass_profile_pdf_list: List[mp.MassProfile],
+        mass_profile_pdf_list: List[MassProfile],
         grid: abstract_grid_2d.AbstractGrid2D,
-        mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
-        visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
-        include_1d: lensing_include.Include1D = lensing_include.Include1D(),
-        mat_plot_2d: lensing_mat_plot.MatPlot2D = lensing_mat_plot.MatPlot2D(),
-        visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
-        include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+        mat_plot_1d: MatPlot1D = MatPlot1D(),
+        visuals_1d: Visuals1D = Visuals1D(),
+        include_1d: Include1D = Include1D(),
+        mat_plot_2d: MatPlot2D = MatPlot2D(),
+        visuals_2d: Visuals2D = Visuals2D(),
+        include_2d: Include2D = Include2D(),
         sigma: Optional[float] = 3.0,
     ):
 
@@ -113,7 +119,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         self.low_limit = (1 - math.erf(sigma / math.sqrt(2))) / 2
 
     @property
-    def visuals_with_include_1d(self) -> lensing_visuals.Visuals1D:
+    def visuals_with_include_1d(self) -> Visuals1D:
         """
         Extracts from the `MassProfile` attributes that can be plotted and return them in a `Visuals1D` object.
 

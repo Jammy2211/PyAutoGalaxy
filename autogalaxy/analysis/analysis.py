@@ -2,11 +2,14 @@ from astropy import cosmology as cosmo
 
 import autofit as af
 import autoarray as aa
-from autogalaxy.analysis import result as res
-from autogalaxy.analysis import visualizer as vis
-from autogalaxy.fit import fit_imaging, fit_interferometer
-from autogalaxy.galaxy import galaxy as g
-from autogalaxy.plane import plane as pl
+
+from autogalaxy.analysis.result import ResultImaging
+from autogalaxy.analysis.result import ResultInterferometer
+from autogalaxy.analysis.visualizer import Visualizer
+from autogalaxy.fit.fit_imaging import FitImaging
+from autogalaxy.fit.fit_interferometer import FitInterferometer
+from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.plane.plane import Plane
 
 from autogalaxy import exc
 
@@ -64,7 +67,7 @@ class AnalysisDataset(Analysis):
             return instance.hyper_background_noise
 
     def plane_for_instance(self, instance):
-        return pl.Plane(galaxies=instance.galaxies)
+        return Plane(galaxies=instance.galaxies)
 
     def associate_hyper_images(self, instance: af.ModelInstance) -> af.ModelInstance:
         """
@@ -93,9 +96,7 @@ class AnalysisDataset(Analysis):
 
         if self.hyper_galaxy_image_path_dict is not None:
 
-            for galaxy_path, galaxy in instance.path_instance_tuples_for_class(
-                g.Galaxy
-            ):
+            for galaxy_path, galaxy in instance.path_instance_tuples_for_class(Galaxy):
                 if galaxy_path in self.hyper_galaxy_image_path_dict:
                     galaxy.hyper_model_image = self.hyper_model_image
 
@@ -193,7 +194,7 @@ class AnalysisImaging(AnalysisDataset):
         self, plane, hyper_image_sky, hyper_background_noise, use_hyper_scalings=True
     ):
 
-        return fit_imaging.FitImaging(
+        return FitImaging(
             imaging=self.dataset,
             plane=plane,
             hyper_image_sky=hyper_image_sky,
@@ -218,7 +219,7 @@ class AnalysisImaging(AnalysisDataset):
             hyper_background_noise=hyper_background_noise,
         )
 
-        visualizer = vis.Visualizer(visualize_path=paths.image_path)
+        visualizer = Visualizer(visualize_path=paths.image_path)
         visualizer.visualize_imaging(imaging=self.imaging)
         visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)
 
@@ -249,9 +250,7 @@ class AnalysisImaging(AnalysisDataset):
     def make_result(
         self, samples: af.PDFSamples, model: af.Collection, search: af.NonLinearSearch
     ):
-        return res.ResultImaging(
-            samples=samples, model=model, analysis=self, search=search
-        )
+        return ResultImaging(samples=samples, model=model, analysis=self, search=search)
 
     def save_attributes_for_aggregator(self, paths: af.DirectoryPaths):
 
@@ -365,9 +364,7 @@ class AnalysisInterferometer(AnalysisDataset):
            The input instance with visibilities associated with galaxies where possible.
         """
         if self.hyper_galaxy_visibilities_path_dict is not None:
-            for galaxy_path, galaxy in instance.path_instance_tuples_for_class(
-                g.Galaxy
-            ):
+            for galaxy_path, galaxy in instance.path_instance_tuples_for_class(Galaxy):
                 if galaxy_path in self.hyper_galaxy_visibilities_path_dict:
                     galaxy.hyper_model_visibilities = self.hyper_model_visibilities
                     galaxy.hyper_galaxy_visibilities = self.hyper_galaxy_visibilities_path_dict[
@@ -380,7 +377,7 @@ class AnalysisInterferometer(AnalysisDataset):
         self, plane, hyper_background_noise, use_hyper_scalings=True
     ):
 
-        return fit_interferometer.FitInterferometer(
+        return FitInterferometer(
             interferometer=self.dataset,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
@@ -401,7 +398,7 @@ class AnalysisInterferometer(AnalysisDataset):
             plane=plane, hyper_background_noise=hyper_background_noise
         )
 
-        visualizer = vis.Visualizer(visualize_path=paths.image_path)
+        visualizer = Visualizer(visualize_path=paths.image_path)
         visualizer.visualize_interferometer(interferometer=self.interferometer)
         visualizer.visualize_fit_interferometer(
             fit=fit, during_analysis=during_analysis
@@ -429,7 +426,7 @@ class AnalysisInterferometer(AnalysisDataset):
     def make_result(
         self, samples: af.PDFSamples, model: af.Collection, search: af.NonLinearSearch
     ):
-        return res.ResultInterferometer(
+        return ResultInterferometer(
             samples=samples, model=model, analysis=self, search=search
         )
 

@@ -6,11 +6,12 @@ from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles import mass_profiles as mp
+from autogalaxy.profiles.mass_profiles import MassProfile
+
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 
 
-class PointMass(mp.MassProfile):
+class PointMass(MassProfile):
     def __init__(
         self, centre: Tuple[float, float] = (0.0, 0.0), einstein_radius: float = 1.0
     ):
@@ -62,7 +63,7 @@ class PointMass(mp.MassProfile):
         return mass_profile
 
 
-class EllPowerLawBroken(mp.MassProfile):
+class EllPowerLawBroken(MassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -247,7 +248,7 @@ class SphPowerLawBroken(EllPowerLawBroken):
         )
 
 
-class EllPowerLawCored(mp.MassProfile):
+class EllPowerLawCored(MassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

@@ -2,8 +2,9 @@ import numpy as np
 
 import autoarray as aa
 
+from autogalaxy.plane.plane import PlaneImage
+
 from autogalaxy import exc
-from autogalaxy.plane import plane as pl
 
 
 def plane_image_of_galaxies_from(shape, grid, galaxies, buffer=1.0e-2):
@@ -25,7 +26,7 @@ def plane_image_of_galaxies_from(shape, grid, galaxies, buffer=1.0e-2):
 
     image = sum(map(lambda g: g.image_2d_from_grid(grid=uniform_grid), galaxies))
 
-    return pl.PlaneImage(array=image, grid=grid)
+    return PlaneImage(array=image, grid=grid)
 
 
 def ordered_plane_redshifts_from(galaxies):

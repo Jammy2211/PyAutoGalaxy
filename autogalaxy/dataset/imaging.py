@@ -1,7 +1,8 @@
 import numpy as np
 
 import autoarray as aa
-from autogalaxy.plane import plane as pl
+
+from autogalaxy.plane.plane import Plane
 
 
 class SimulatorImaging(aa.SimulatorImaging):
@@ -42,7 +43,7 @@ class SimulatorImaging(aa.SimulatorImaging):
 
         """
 
-        super(SimulatorImaging, self).__init__(
+        super().__init__(
             psf=psf,
             exposure_time=exposure_time,
             background_sky_level=background_sky_level,
@@ -87,7 +88,7 @@ class SimulatorImaging(aa.SimulatorImaging):
         5) Output the dataset to .fits format if a dataset_path and data_name are specified. Otherwise, return the simulated \
            imaging data instance."""
 
-        plane = pl.Plane(
+        plane = Plane(
             redshift=float(np.mean([galaxy.redshift for galaxy in galaxies])),
             galaxies=galaxies,
         )

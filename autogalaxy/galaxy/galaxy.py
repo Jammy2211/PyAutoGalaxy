@@ -1,35 +1,33 @@
 from itertools import count
 import numpy as np
+from typing import Optional
 
 import autofit as af
 import autoarray as aa
 
-from autogalaxy import exc
-from autogalaxy import lensing
-from autogalaxy.profiles import point_sources as ps
-from autogalaxy.profiles import light_profiles as lp
-from autogalaxy.profiles import mass_profiles as mp
-from autogalaxy.profiles.mass_profiles import (
-    dark_mass_profiles as dmp,
-    stellar_mass_profiles as smp,
-)
+from autogalaxy.lensing import LensingObject
+from autogalaxy.profiles.point_sources import Point
+from autogalaxy.profiles.light_profiles import LightProfile
+from autogalaxy.profiles.mass_profiles import MassProfile
+from autogalaxy.profiles.mass_profiles.dark_mass_profiles import DarkProfile
+from autogalaxy.profiles.mass_profiles.stellar_mass_profiles import StellarProfile
 
-from typing import Optional
+from autogalaxy import exc
 
 
 def is_point_source(obj):
-    return isinstance(obj, ps.Point)
+    return isinstance(obj, Point)
 
 
 def is_light_profile(obj):
-    return isinstance(obj, lp.LightProfile)
+    return isinstance(obj, LightProfile)
 
 
 def is_mass_profile(obj):
-    return isinstance(obj, mp.MassProfile)
+    return isinstance(obj, MassProfile)
 
 
-class Galaxy(af.ModelObject, lensing.LensingObject):
+class Galaxy(af.ModelObject, LensingObject):
     """
     @DynamicAttrs
     """
@@ -196,7 +194,7 @@ class Galaxy(af.ModelObject, lensing.LensingObject):
         return [
             profile
             for profile in self.mass_profiles
-            if isinstance(profile, smp.StellarProfile)
+            if isinstance(profile, StellarProfile)
         ]
 
     @property
@@ -204,7 +202,7 @@ class Galaxy(af.ModelObject, lensing.LensingObject):
         return [
             profile
             for profile in self.mass_profiles
-            if isinstance(profile, dmp.DarkProfile)
+            if isinstance(profile, DarkProfile)
         ]
 
     def stellar_mass_angular_within_circle(self, radius: float):

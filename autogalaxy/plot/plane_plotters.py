@@ -1,23 +1,28 @@
 import autoarray as aa
 import autoarray.plot as aplt
 
-from autogalaxy.plot import lensing_obj_plotter
-from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
-from autogalaxy.plane import plane as pl
-from autogalaxy.profiles import light_profiles
+from autogalaxy.plane.plane import Plane
+from autogalaxy.profiles.light_profiles import LightProfile
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D
+from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.lensing_include import Include1D
+from autogalaxy.plot.mat_wrap.lensing_include import Include2D
+from autogalaxy.plot.lensing_obj_plotter import LensingObjPlotter
 
 
-class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
+class PlanePlotter(LensingObjPlotter):
     def __init__(
         self,
-        plane: pl.Plane,
+        plane: Plane,
         grid: aa.Grid2D,
-        mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
-        visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
-        include_1d: lensing_include.Include1D = lensing_include.Include1D(),
-        mat_plot_2d: lensing_mat_plot.MatPlot2D = lensing_mat_plot.MatPlot2D(),
-        visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
-        include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+        mat_plot_1d: MatPlot1D = MatPlot1D(),
+        visuals_1d: Visuals1D = Visuals1D(),
+        include_1d: Include1D = Include1D(),
+        mat_plot_2d: MatPlot2D = MatPlot2D(),
+        visuals_2d: Visuals2D = Visuals2D(),
+        include_2d: Include2D = Include2D(),
     ):
         super().__init__(
             mat_plot_2d=mat_plot_2d,
@@ -67,9 +72,7 @@ class PlanePlotter(lensing_obj_plotter.LensingObjPlotter):
             grid=self.extract_2d("grid", self.grid),
             light_profile_centres=self.extract_2d(
                 "light_profile_centres",
-                self.plane.extract_attribute(
-                    cls=light_profiles.LightProfile, attr_name="centre"
-                ),
+                self.plane.extract_attribute(cls=LightProfile, attr_name="centre"),
             ),
         )
 

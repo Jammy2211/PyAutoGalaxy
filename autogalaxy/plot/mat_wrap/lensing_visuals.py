@@ -1,10 +1,9 @@
+from matplotlib import patches as ptch
+import numpy as np
+from typing import List, Union, Optional
+
 import autoarray as aa
 import autoarray.plot as aplt
-
-from matplotlib import patches as ptch
-import typing
-from typing import List, Union, Optional
-import numpy as np
 
 
 class Visuals1D(aplt.Visuals1D):
@@ -63,7 +62,7 @@ class Visuals2D(aplt.Visuals2D):
         grid: aa.Grid2D = None,
         pixelization_grid: aa.Grid2D = None,
         vector_field: aa.VectorField2DIrregular = None,
-        patches: typing.Union[ptch.Patch] = None,
+        patches: Union[ptch.Patch] = None,
         array_overlay: aa.Array2D = None,
         light_profile_centres: aa.Grid2DIrregular = None,
         mass_profile_centres: aa.Grid2DIrregular = None,
@@ -75,8 +74,8 @@ class Visuals2D(aplt.Visuals2D):
         parallel_overscan=None,
         serial_prescan=None,
         serial_overscan=None,
-        indexes: typing.Union[List[int], List[List[int]]] = None,
-        pixelization_indexes: typing.Union[List[int], List[List[int]]] = None,
+        indexes: Union[List[int], List[List[int]]] = None,
+        pixelization_indexes: Union[List[int], List[List[int]]] = None,
     ):
 
         super().__init__(

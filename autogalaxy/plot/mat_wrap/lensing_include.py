@@ -1,6 +1,6 @@
-import autoarray.plot as aplt
+from typing import Optional
 
-import typing
+import autoarray.plot as aplt
 
 
 class Include1D(aplt.Include1D):
@@ -33,8 +33,8 @@ class Include2D(aplt.Include2D):
         critical_curves=None,
         caustics=None,
         multiple_images=None,
-        mapper_source_pixelization_grid: typing.Optional[bool] = None,
-        mapper_source_grid_slim: typing.Optional[bool] = None,
+        mapper_source_pixelization_grid: Optional[bool] = None,
+        mapper_source_grid_slim: Optional[bool] = None,
         mapper_data_pixelization_grid=None,
     ):
 

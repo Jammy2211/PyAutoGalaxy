@@ -16,12 +16,12 @@ from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy import exc
-from autogalaxy.profiles import mass_profiles as mp
-from autogalaxy.util import cosmology_util
-
+from autogalaxy.profiles.mass_profiles import MassProfile
 
 from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
+
+from autogalaxy import exc
+from autogalaxy.util import cosmology_util
 
 
 def jit_integrand(integrand_function):
@@ -100,7 +100,7 @@ class DarkProfile:
 
 
 # noinspection PyAbstractClass
-class AbstractEllNFWGeneralized(mp.MassProfile, DarkProfile, MassProfileMGE):
+class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
     epsrel = 1.49e-5
 
     def __init__(

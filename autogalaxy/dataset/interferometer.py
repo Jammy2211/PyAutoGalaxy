@@ -1,6 +1,7 @@
 import numpy as np
 import autoarray as aa
-from autogalaxy.plane import plane as pl
+
+from autogalaxy.plane.plane import Plane
 
 
 class SimulatorInterferometer(aa.SimulatorInterferometer):
@@ -29,7 +30,7 @@ class SimulatorInterferometer(aa.SimulatorInterferometer):
             The exposure time of an observation using this data.
         """
 
-        super(SimulatorInterferometer, self).__init__(
+        super().__init__(
             uv_wavelengths=uv_wavelengths,
             exposure_time=exposure_time,
             transformer_class=transformer_class,
@@ -80,7 +81,7 @@ class SimulatorInterferometer(aa.SimulatorInterferometer):
         5) Output the dataset to .fits format if a dataset_path and data_name are specified. Otherwise, return the simulated \
            imaging data instance."""
 
-        plane = pl.Plane(
+        plane = Plane(
             redshift=float(np.mean([galaxy.redshift for galaxy in galaxies])),
             galaxies=galaxies,
         )

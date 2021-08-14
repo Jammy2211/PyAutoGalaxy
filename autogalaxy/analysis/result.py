@@ -4,8 +4,7 @@ from autoconf import conf
 import autofit as af
 import autoarray as aa
 
-
-from autogalaxy.galaxy import galaxy as g
+from autogalaxy.galaxy.galaxy import Galaxy
 
 
 class Result(af.Result):
@@ -37,11 +36,11 @@ class Result(af.Result):
         return self.analysis.plane_for_instance(instance=instance)
 
     @property
-    def path_galaxy_tuples(self) -> [(str, g.Galaxy)]:
+    def path_galaxy_tuples(self) -> [(str, Galaxy)]:
         """
         Tuples associating the names of galaxies with instances from the best fit
         """
-        return self.instance.path_instance_tuples_for_class(cls=g.Galaxy)
+        return self.instance.path_instance_tuples_for_class(cls=Galaxy)
 
 
 class ResultDataset(Result):
@@ -76,7 +75,7 @@ class ResultDataset(Result):
             if galaxy.pixelization is not None:
                 return galaxy.pixelization
 
-    def image_for_galaxy(self, galaxy: g.Galaxy) -> np.ndarray:
+    def image_for_galaxy(self, galaxy: Galaxy) -> np.ndarray:
         """
         Parameters
         ----------
@@ -91,7 +90,7 @@ class ResultDataset(Result):
         return self.max_log_likelihood_fit.galaxy_model_image_dict[galaxy]
 
     @property
-    def image_galaxy_dict(self) -> {str: g.Galaxy}:
+    def image_galaxy_dict(self) -> {str: Galaxy}:
         """
         A dictionary associating galaxy names with model images of those galaxies
         """
@@ -190,7 +189,7 @@ class ResultInterferometer(ResultDataset):
     def unmasked_model_visibilities_of_galaxies(self):
         return self.max_log_likelihood_fit.unmasked_blurred_image_of_galaxies
 
-    def visibilities_for_galaxy(self, galaxy: g.Galaxy) -> np.ndarray:
+    def visibilities_for_galaxy(self, galaxy: Galaxy) -> np.ndarray:
         """
         Parameters
         ----------
@@ -205,7 +204,7 @@ class ResultInterferometer(ResultDataset):
         return self.max_log_likelihood_fit.galaxy_model_visibilities_dict[galaxy]
 
     @property
-    def visibilities_galaxy_dict(self) -> {str: g.Galaxy}:
+    def visibilities_galaxy_dict(self) -> {str: Galaxy}:
         """
         A dictionary associating galaxy names with model visibilities of those galaxies
         """

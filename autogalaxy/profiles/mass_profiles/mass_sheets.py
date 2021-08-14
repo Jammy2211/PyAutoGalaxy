@@ -4,12 +4,13 @@ from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles import mass_profiles as mp
+from autogalaxy.profiles.mass_profiles import MassProfile
+
 from autogalaxy import convert
 from autogalaxy import exc
 
 
-class MassSheet(mp.MassProfile):
+class MassSheet(MassProfile):
     def __init__(self, centre: Tuple[float, float] = (0.0, 0.0), kappa: float = 0.0):
         """
         Represents a mass-sheet
@@ -44,7 +45,7 @@ class MassSheet(mp.MassProfile):
 
 
 # noinspection PyAbstractClass
-class ExternalShear(mp.MassProfile):
+class ExternalShear(MassProfile):
     def __init__(self, elliptical_comps: Tuple[float, float] = (0.0, 0.0)):
         """
         An `ExternalShear` term, to model the line-of-sight contribution of other galaxies / satellites.
@@ -103,7 +104,7 @@ class ExternalShear(mp.MassProfile):
         )
 
 
-class InputDeflections(mp.MassProfile):
+class InputDeflections(MassProfile):
     def __init__(
         self,
         deflections_y,

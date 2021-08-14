@@ -2,7 +2,8 @@ import numpy as np
 
 from autoconf import conf
 import autoarray as aa
-from autogalaxy.galaxy import galaxy as g
+
+from autogalaxy.galaxy.galaxy import Galaxy
 
 
 class FitImaging(aa.FitImaging):
@@ -99,7 +100,7 @@ class FitImaging(aa.FitImaging):
         return self.imaging.grid
 
     @property
-    def galaxy_model_image_dict(self) -> {g.Galaxy: np.ndarray}:
+    def galaxy_model_image_dict(self) -> {Galaxy: np.ndarray}:
         """
         A dictionary associating galaxies with their corresponding model images
         """

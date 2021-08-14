@@ -1,14 +1,13 @@
 import numpy as np
+from scipy.integrate import quad
+from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles import geometry_profiles
-from scipy.integrate import quad
-
-from typing import Tuple
+from autogalaxy.profiles.geometry_profiles import EllProfile
 
 
-class LightProfile(geometry_profiles.EllProfile):
+class LightProfile(EllProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

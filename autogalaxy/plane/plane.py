@@ -5,13 +5,15 @@ from autoarray.inversion.inversion.imaging import inversion_imaging_unpacked_fro
 from autoarray.inversion.inversion.interferometer import (
     inversion_interferometer_unpacked_from,
 )
+
+from autogalaxy.lensing import LensingObject
+from autogalaxy.galaxy.galaxy import Galaxy
+
 from autogalaxy import exc
-from autogalaxy import lensing
-from autogalaxy.galaxy import galaxy as g
 from autogalaxy.util import plane_util
 
 
-class AbstractPlane(lensing.LensingObject):
+class AbstractPlane(LensingObject):
     def __init__(self, redshift, galaxies):
         """A plane of galaxies where all galaxies are at the same redshift.
 
@@ -283,7 +285,7 @@ class AbstractPlaneLensing(AbstractPlane):
         grid : Grid2D
             The grid (or sub) of (y,x) arc-second coordinates at the centre of every unmasked pixel which the \
             potential is calculated on.
-        galaxies : [g.Galaxy]
+        galaxies : [Galaxy]
             The galaxies whose mass profiles are used to compute the surface densities.
         """
         if self.galaxies:
@@ -309,7 +311,7 @@ class AbstractPlaneLensing(AbstractPlane):
         grid : Grid2D
             The grid (or sub) of (y,x) arc-second coordinates at the centre of every unmasked pixel which the \
             potential is calculated on.
-        galaxies : [g.Galaxy]
+        galaxies : [Galaxy]
             The galaxies whose mass profiles are used to compute the surface densities.
         """
         if self.galaxies:
@@ -601,7 +603,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         return contribution_maps
 
-    def galaxy_image_dict_from_grid(self, grid) -> {g.Galaxy: np.ndarray}:
+    def galaxy_image_dict_from_grid(self, grid) -> {Galaxy: np.ndarray}:
         """
         A dictionary associating galaxies with their corresponding model images
         """
@@ -616,7 +618,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
     def galaxy_blurred_image_dict_from_grid_and_convolver(
         self, grid, convolver, blurring_grid
-    ) -> {g.Galaxy: np.ndarray}:
+    ) -> {Galaxy: np.ndarray}:
         """
         A dictionary associating galaxies with their corresponding model images
         """
@@ -633,7 +635,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
     def galaxy_profile_visibilities_dict_from_grid_and_transformer(
         self, grid, transformer
-    ) -> {g.Galaxy: np.ndarray}:
+    ) -> {Galaxy: np.ndarray}:
         """
         A dictionary associating galaxies with their corresponding model images
         """

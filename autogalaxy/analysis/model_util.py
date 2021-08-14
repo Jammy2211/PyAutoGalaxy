@@ -4,9 +4,10 @@ from scipy.stats import norm
 import autofit as af
 import autoarray as aa
 
-from autogalaxy.galaxy import galaxy as g
-from autogalaxy.profiles import light_profiles as lp
-from autogalaxy.profiles import mass_profiles as mp
+from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.galaxy.galaxy import HyperGalaxy
+from autogalaxy.profiles.light_profiles import LightProfile
+from autogalaxy.profiles.mass_profiles import MassProfile
 
 from autogalaxy import exc
 
@@ -172,7 +173,7 @@ def hyper_model_from(
 
                     galaxy = getattr(model.galaxies, path_galaxy[-1])
 
-                    setattr(galaxy, "hyper_galaxy", af.Model(g.HyperGalaxy))
+                    setattr(galaxy, "hyper_galaxy", af.Model(HyperGalaxy))
 
     return model
 
@@ -282,10 +283,10 @@ def stochastic_model_from(
             "is not named `lens`. "
         )
 
-    model_classes = [mp.MassProfile]
+    model_classes = [MassProfile]
 
     if include_lens_light:
-        model_classes.append(lp.LightProfile)
+        model_classes.append(LightProfile)
 
     if include_pixelization:
         model_classes.append(aa.pix.Pixelization)

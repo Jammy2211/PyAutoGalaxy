@@ -1,7 +1,15 @@
-from autoarray.plot import inversion_plotters, fit_interferometer_plotters
-from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
-from autogalaxy.plot import plane_plotters
-from autogalaxy.fit import fit_interferometer
+import autoarray.plot as aplt
+from autoarray.plot import fit_interferometer_plotters
+
+from autogalaxy.fit.fit_interferometer import FitInterferometer
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D
+from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.lensing_include import Include1D
+from autogalaxy.plot.mat_wrap.lensing_include import Include2D
+
+from autogalaxy.plot.plane_plotters import PlanePlotter
 
 
 class FitInterferometerPlotter(
@@ -9,13 +17,13 @@ class FitInterferometerPlotter(
 ):
     def __init__(
         self,
-        fit: fit_interferometer.FitInterferometer,
-        mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
-        visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
-        include_1d: lensing_include.Include1D = lensing_include.Include1D(),
-        mat_plot_2d: lensing_mat_plot.MatPlot2D = lensing_mat_plot.MatPlot2D(),
-        visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
-        include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+        fit: FitInterferometer,
+        mat_plot_1d: MatPlot1D = MatPlot1D(),
+        visuals_1d: Visuals1D = Visuals1D(),
+        include_1d: Include1D = Include1D(),
+        mat_plot_2d: MatPlot2D = MatPlot2D(),
+        visuals_2d: Visuals2D = Visuals2D(),
+        include_2d: Include2D = Include2D(),
     ):
 
         super().__init__(
@@ -38,7 +46,7 @@ class FitInterferometerPlotter(
         return visuals_2d + visuals_2d.__class__()
 
     def plane_plotter_from(self, plane):
-        return plane_plotters.PlanePlotter(
+        return PlanePlotter(
             plane=plane,
             grid=self.fit.interferometer.grid,
             mat_plot_2d=self.mat_plot_2d,
@@ -48,7 +56,7 @@ class FitInterferometerPlotter(
 
     @property
     def inversion_plotter(self):
-        return inversion_plotters.InversionPlotter(
+        return aplt.InversionPlotter(
             inversion=self.fit.inversion,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.visuals_with_include_2d,

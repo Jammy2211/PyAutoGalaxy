@@ -2,15 +2,16 @@ from typing import Optional
 
 import autofit as af
 
-from autogalaxy.hyper import hyper_data as hd
+from autogalaxy.hyper.hyper_data import HyperImageSky
+from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 
 
 class SetupHyper:
     def __init__(
         self,
         hyper_galaxies: bool = False,
-        hyper_image_sky: Optional[type(hd.HyperImageSky)] = None,
-        hyper_background_noise: Optional[type(hd.HyperBackgroundNoise)] = None,
+        hyper_image_sky: Optional[type(HyperImageSky)] = None,
+        hyper_background_noise: Optional[type(HyperBackgroundNoise)] = None,
         search_cls: Optional[af.NonLinearSearch] = None,
         search_dict: Optional[dict] = None,
     ):

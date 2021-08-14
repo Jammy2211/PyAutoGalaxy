@@ -3,8 +3,14 @@ import autoarray.plot as aplt
 from autoarray.structures.grids.two_d import abstract_grid_2d
 from autoarray.plot import abstract_plotters
 
-from autogalaxy.plot.mat_wrap import lensing_mat_plot, lensing_include, lensing_visuals
-from autogalaxy.profiles import light_profiles as lp
+from autogalaxy.profiles.light_profiles import LightProfile
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
+from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D
+from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.lensing_include import Include1D
+from autogalaxy.plot.mat_wrap.lensing_include import Include2D
+
 from autogalaxy.util import error_util
 
 import math
@@ -15,14 +21,14 @@ from typing import List, Optional
 class LightProfilePlotter(abstract_plotters.AbstractPlotter):
     def __init__(
         self,
-        light_profile: lp.LightProfile,
+        light_profile: LightProfile,
         grid: abstract_grid_2d.AbstractGrid2D,
-        mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
-        visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
-        include_1d: lensing_include.Include1D = lensing_include.Include1D(),
-        mat_plot_2d: lensing_mat_plot.MatPlot2D = lensing_mat_plot.MatPlot2D(),
-        visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
-        include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+        mat_plot_1d: MatPlot1D = MatPlot1D(),
+        visuals_1d: Visuals1D = Visuals1D(),
+        include_1d: Include1D = Include1D(),
+        mat_plot_2d: MatPlot2D = MatPlot2D(),
+        visuals_2d: Visuals2D = Visuals2D(),
+        include_2d: Include2D = Include2D(),
     ):
 
         self.light_profile = light_profile
@@ -38,7 +44,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
         )
 
     @property
-    def visuals_with_include_1d(self) -> lensing_visuals.Visuals1D:
+    def visuals_with_include_1d(self) -> Visuals1D:
         """
         Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals1D` object.
 
@@ -60,7 +66,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
         )
 
     @property
-    def visuals_with_include_2d(self) -> lensing_visuals.Visuals2D:
+    def visuals_with_include_2d(self) -> Visuals2D:
         """
         Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals2D` object.
 
@@ -131,14 +137,14 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
 class LightProfilePDFPlotter(LightProfilePlotter):
     def __init__(
         self,
-        light_profile_pdf_list: List[lp.LightProfile],
+        light_profile_pdf_list: List[LightProfile],
         grid: abstract_grid_2d.AbstractGrid2D,
-        mat_plot_1d: lensing_mat_plot.MatPlot1D = lensing_mat_plot.MatPlot1D(),
-        visuals_1d: lensing_visuals.Visuals1D = lensing_visuals.Visuals1D(),
-        include_1d: lensing_include.Include1D = lensing_include.Include1D(),
-        mat_plot_2d: lensing_mat_plot.MatPlot2D = lensing_mat_plot.MatPlot2D(),
-        visuals_2d: lensing_visuals.Visuals2D = lensing_visuals.Visuals2D(),
-        include_2d: lensing_include.Include2D = lensing_include.Include2D(),
+        mat_plot_1d: MatPlot1D = MatPlot1D(),
+        visuals_1d: Visuals1D = Visuals1D(),
+        include_1d: Include1D = Include1D(),
+        mat_plot_2d: MatPlot2D = MatPlot2D(),
+        visuals_2d: Visuals2D = Visuals2D(),
+        include_2d: Include2D = Include2D(),
         sigma: Optional[float] = 3.0,
     ):
 
@@ -158,7 +164,7 @@ class LightProfilePDFPlotter(LightProfilePlotter):
         self.low_limit = (1 - math.erf(sigma / math.sqrt(2))) / 2
 
     @property
-    def visuals_with_include_1d(self) -> lensing_visuals.Visuals1D:
+    def visuals_with_include_1d(self) -> Visuals1D:
         """
         Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals1D` object.
 

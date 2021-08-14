@@ -5,9 +5,10 @@ from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
-from autogalaxy.profiles import mass_profiles as mp
+from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
+
+from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 
 
 class StellarProfile:
@@ -15,7 +16,7 @@ class StellarProfile:
     pass
 
 
-class EllGaussian(mp.MassProfile, StellarProfile):
+class EllGaussian(MassProfile, StellarProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -42,7 +43,7 @@ class EllGaussian(mp.MassProfile, StellarProfile):
         super(EllGaussian, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
-        super(mp.MassProfile, self).__init__(
+        super(MassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         self.mass_to_light_ratio = mass_to_light_ratio
@@ -212,7 +213,7 @@ class EllGaussian(mp.MassProfile, StellarProfile):
 
 
 # noinspection PyAbstractClass
-class AbstractEllSersic(mp.MassProfile, MassProfileMGE, StellarProfile):
+class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -246,7 +247,7 @@ class AbstractEllSersic(mp.MassProfile, MassProfileMGE, StellarProfile):
         super(AbstractEllSersic, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
-        super(mp.MassProfile, self).__init__(
+        super(MassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         super(MassProfileMGE, self).__init__()
@@ -1004,7 +1005,7 @@ class SphSersicCore(EllSersicCore):
         self.gamma = gamma
 
 
-class EllChameleon(mp.MassProfile, StellarProfile):
+class EllChameleon(MassProfile, StellarProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -1037,7 +1038,7 @@ class EllChameleon(mp.MassProfile, StellarProfile):
         super(EllChameleon, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
-        super(mp.MassProfile, self).__init__(
+        super(MassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         self.mass_to_light_ratio = mass_to_light_ratio
