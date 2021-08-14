@@ -50,19 +50,19 @@ from autoarray.structures.visibilities import VisibilitiesNoiseMap
 from .analysis import aggregator as agg
 from . import plot
 from . import util
-from .dataset.imaging import SimulatorImaging
-from .dataset.interferometer import SimulatorInterferometer
-
 from .imaging.fit_imaging import FitImaging
 from .imaging.model.analysis import AnalysisImaging
-from .fit.fit_interferometer import FitInterferometer
+from .imaging.imaging import SimulatorImaging
+from .interferometer.interferometer import SimulatorInterferometer
+from .interferometer.fit_interferometer import FitInterferometer
+from .interferometer.model.analysis import AnalysisInterferometer
+
 from .galaxy.fit_galaxy import FitGalaxy
 from .galaxy.galaxy import Galaxy, HyperGalaxy, Redshift
 from .galaxy.galaxy_data import GalaxyData
 from .galaxy.masked_galaxy_data import MaskedGalaxyDataset
 from .hyper import hyper_data
-from .analysis.analysis import AnalysisInterferometer
-from autogalaxy.analysis.setup import SetupHyper
+from .analysis.setup import SetupHyper
 from .plane.plane import Plane
 from .profiles import (
     point_sources as ps,

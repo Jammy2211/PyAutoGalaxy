@@ -12,17 +12,23 @@ def create_fits(fits_path, array):
 
     file_dir = os.path.split(fits_path)[0]
 
-    if path.exists(file_dir):
-        shutil.rmtree(file_dir)
-
-    if not path.exists(file_dir):
+    if not os.path.exists(file_dir):
         os.makedirs(file_dir)
+
+    if os.path.exists(fits_path):
+        os.remove(fits_path)
 
     hdu_list = fits.HDUList()
 
     hdu_list.append(fits.ImageHDU(array))
 
     hdu_list.writeto(f"{fits_path}")
+
+
+def clean_fits(fits_path):
+
+    if path.exists(fits_path):
+        shutil.rmtree(fits_path)
 
 
 class TestImaging:
@@ -32,13 +38,11 @@ class TestImaging:
             "{}".format(path.dirname(path.realpath(__file__))), "files"
         )
         image_path = path.join(fits_path, "image.fits")
+        noise_map_path = path.join(fits_path, "noise_map.fits")
+        psf_path = path.join(fits_path, "psf.fits")
 
         create_fits(fits_path=image_path, array=[[1.0, 0.0], [0.0, 0.0]])
-
-        noise_map_path = path.join(fits_path, "noise_map.fits")
         create_fits(fits_path=noise_map_path, array=[[2.0, 0.0], [0.0, 0.0]])
-
-        psf_path = path.join(fits_path, "psf.fits")
         create_fits(fits_path=psf_path, array=[[1.0, 1.0], [0.0, 0.0]])
 
         imaging = ag.Imaging.from_fits(
@@ -70,6 +74,8 @@ class TestImaging:
         hdu_list = fits.open(psf_path)
         psf = np.array(hdu_list[0].data).astype("float64")
         assert (psf == np.array([[0.5, 0.5], [0.0, 0.0]])).all()
+
+        clean_fits(fits_path=fits_path)
 
 
 class TestSimulatorImaging:

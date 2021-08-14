@@ -1,18 +1,14 @@
 import numpy as np
 import pytest
 
-import autogalaxy as ag
 from autoarray.inversion.inversion.interferometer import InversionInterferometerMatrix
 from autoarray.inversion.inversion.interferometer import (
     InversionInterferometerLinearOperator,
 )
+
+import autogalaxy as ag
+
 from autogalaxy.mock.mock import MockLightProfile
-
-
-class MockFitImaging:
-    def __init__(self, model_images_of_galaxies):
-
-        self.model_images_of_galaxies = model_images_of_galaxies
 
 
 class TestLikelihood:

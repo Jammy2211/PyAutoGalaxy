@@ -4,7 +4,6 @@ from scipy.stats import norm
 import autofit as af
 import autoarray as aa
 
-from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxy import HyperGalaxy
 from autogalaxy.profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile

@@ -2,7 +2,6 @@ import shutil
 from os import path
 import pytest
 
-import autogalaxy as ag
 from autoconf import conf
 from autogalaxy.analysis import visualizer as vis
 
@@ -59,42 +58,6 @@ class TestVisualizer:
         assert path.join(plot_path, "visibilities.png") in plot_patch.paths
         assert path.join(plot_path, "u_wavelengths.png") not in plot_patch.paths
         assert path.join(plot_path, "v_wavelengths.png") not in plot_patch.paths
-
-    def test__visualizes_fit_interferometer__uses_configs(
-        self,
-        interferometer_7,
-        fit_interferometer_x2_galaxy_inversion_7x7,
-        include_2d_all,
-        plot_path,
-        plot_patch,
-    ):
-        visualizer = vis.Visualizer(visualize_path=plot_path)
-
-        visualizer.visualize_fit_interferometer(
-            fit=fit_interferometer_x2_galaxy_inversion_7x7, during_analysis=True
-        )
-
-        plot_path = path.join(plot_path, "fit_interferometer")
-
-        assert (
-            path.join(plot_path, "subplot_fit_interferometer.png") in plot_patch.paths
-        )
-        assert path.join(plot_path, "visibilities.png") in plot_patch.paths
-        assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
-        assert path.join(plot_path, "signal_to_noise_map.png") not in plot_patch.paths
-        assert path.join(plot_path, "model_visibilities.png") in plot_patch.paths
-        assert (
-            path.join(plot_path, "real_residual_map_vs_uv_distances.png")
-            not in plot_patch.paths
-        )
-        assert (
-            path.join(plot_path, "real_normalized_residual_map_vs_uv_distances.png")
-            in plot_patch.paths
-        )
-        assert (
-            path.join(plot_path, "real_chi_squared_map_vs_uv_distances.png")
-            in plot_patch.paths
-        )
 
     def test__visualize_inversion__uses_configs(
         self,

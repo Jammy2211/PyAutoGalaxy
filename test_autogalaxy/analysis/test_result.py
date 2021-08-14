@@ -106,8 +106,3 @@ class TestResultDataset:
 
         assert isinstance(result.pixelization, ag.pix.VoronoiBrightnessImage)
         assert result.pixelization.pixels == 6
-
-
-class TestResultInterferometer:
-
-    pass
