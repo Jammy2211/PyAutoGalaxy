@@ -1,7 +1,7 @@
 import numpy as np
 
 import autoarray.plot as aplt
-from autoarray.plot import fit_imaging_plotters
+from autoarray.fit.plot import fit_imaging_plotters
 
 from autogalaxy.profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile

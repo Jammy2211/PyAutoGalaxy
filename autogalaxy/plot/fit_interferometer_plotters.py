@@ -1,5 +1,5 @@
 import autoarray.plot as aplt
-from autoarray.plot import fit_interferometer_plotters
+from autoarray.fit.plot import fit_interferometer_plotters
 
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D

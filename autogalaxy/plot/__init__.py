@@ -1,4 +1,4 @@
-from autoarray.plot.mat_wrap.wrap.wrap_base import (
+from autoarray.plot.wrap.wrap_base import (
     Units,
     Figure,
     Axis,
@@ -15,8 +15,8 @@ from autoarray.plot.mat_wrap.wrap.wrap_base import (
     Legend,
     Output,
 )
-from autoarray.plot.mat_wrap.wrap.wrap_1d import YXPlot, FillBetween
-from autoarray.plot.mat_wrap.wrap.wrap_2d import (
+from autoarray.plot.wrap.wrap_1d import YXPlot, FillBetween
+from autoarray.plot.wrap.wrap_2d import (
     ArrayOverlay,
     GridScatter,
     GridPlot,
@@ -34,13 +34,13 @@ from autoarray.plot.mat_wrap.wrap.wrap_2d import (
     SerialOverscanPlot,
 )
 
-from autoarray.plot.structure_plotters import Array2DPlotter
-from autoarray.plot.structure_plotters import Grid2DPlotter
-from autoarray.plot.structure_plotters import MapperPlotter
-from autoarray.plot.structure_plotters import YX1DPlotter
-from autoarray.plot.inversion_plotters import InversionPlotter
-from autoarray.plot.imaging_plotters import ImagingPlotter
-from autoarray.plot.interferometer_plotters import InterferometerPlotter
+from autoarray.structures.plot.structure_plotters import Array2DPlotter
+from autoarray.structures.plot.structure_plotters import Grid2DPlotter
+from autoarray.structures.plot.structure_plotters import YX1DPlotter
+from autoarray.inversion.plot.mapper_plotters import MapperPlotter
+from autoarray.inversion.plot.inversion_plotters import InversionPlotter
+from autoarray.dataset.plot.imaging_plotters import ImagingPlotter
+from autoarray.dataset.plot.interferometer_plotters import InterferometerPlotter
 
 from autoarray.plot.multi_plotters import MultiFigurePlotter
 from autoarray.plot.multi_plotters import MultiYX1DPlotter
