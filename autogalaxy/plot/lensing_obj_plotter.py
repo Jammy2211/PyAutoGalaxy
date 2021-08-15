@@ -82,11 +82,11 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
 
     def figures_2d(
         self,
-        convergence=False,
-        potential=False,
-        deflections_y=False,
-        deflections_x=False,
-        magnification=False,
+        convergence: bool = False,
+        potential: bool = False,
+        deflections_y: bool = False,
+        deflections_x: bool = False,
+        magnification: bool = False,
     ):
 
         if convergence:

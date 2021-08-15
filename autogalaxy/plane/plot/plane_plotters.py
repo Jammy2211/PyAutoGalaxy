@@ -37,11 +37,11 @@ class PlanePlotter(LensingObjPlotter):
         self.grid = grid
 
     @property
-    def lensing_obj(self):
+    def lensing_obj(self) -> Plane:
         return self.plane
 
     @property
-    def visuals_with_include_2d(self) -> "vis.Visuals2D":
+    def visuals_with_include_2d(self) -> Visuals2D:
         """
         Extracts from a `Structure` attributes that can be plotted and return them in a `Visuals` object.
 
@@ -64,7 +64,7 @@ class PlanePlotter(LensingObjPlotter):
             The collection of attributes that can be plotted by a `Plotter2D` object.
         """
 
-        visuals_2d = super(PlanePlotter, self).visuals_with_include_2d
+        visuals_2d = super().visuals_with_include_2d
 
         visuals_2d.mask = None
 
@@ -78,17 +78,17 @@ class PlanePlotter(LensingObjPlotter):
 
     def figures_2d(
         self,
-        image=False,
-        plane_image=False,
-        plane_grid=False,
-        convergence=False,
-        potential=False,
-        deflections_y=False,
-        deflections_x=False,
-        magnification=False,
-        contribution_map=False,
-        title_suffix="",
-        filename_suffix="",
+        image: bool = False,
+        plane_image: bool = False,
+        plane_grid: bool = False,
+        convergence: bool = False,
+        potential: bool = False,
+        deflections_y: bool = False,
+        deflections_x: bool = False,
+        magnification: bool = False,
+        contribution_map: bool = False,
+        title_suffix: str = "",
+        filename_suffix: str = "",
     ):
 
         if image:
@@ -143,16 +143,16 @@ class PlanePlotter(LensingObjPlotter):
 
     def subplot(
         self,
-        image=False,
-        plane_image=False,
-        plane_grid=False,
-        convergence=False,
-        potential=False,
-        deflections_y=False,
-        deflections_x=False,
-        magnification=False,
-        contribution_map=False,
-        auto_filename="subplot_plane",
+        image: bool = False,
+        plane_image: bool = False,
+        plane_grid: bool = False,
+        convergence: bool = False,
+        potential: bool = False,
+        deflections_y: bool = False,
+        deflections_x: bool = False,
+        magnification: bool = False,
+        contribution_map: bool = False,
+        auto_filename: str = "subplot_plane",
     ):
 
         self._subplot_custom_plot(

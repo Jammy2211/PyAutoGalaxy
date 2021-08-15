@@ -1,6 +1,10 @@
+from typing import Dict, List
+
+import autoarray as aa
 import autoarray.plot as aplt
 from autoarray.plot import abstract_plotters
 
+from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
 from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
 from autogalaxy.plot.mat_wrap.lensing_include import Include2D
@@ -42,7 +46,7 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
         """
         return self.visuals_2d
 
-    def figure_hyper_model_image(self, hyper_model_image):
+    def figure_hyper_model_image(self, hyper_model_image: aa.Array2D):
         """Plot the image of a hyper_galaxies galaxy image.
 
         Set *autogalaxy.datas.arrays.mat_plot_2d.mat_plot_2d* for a description of all input parameters not described below.
@@ -62,7 +66,7 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
             ),
         )
 
-    def figure_hyper_galaxy_image(self, galaxy_image):
+    def figure_hyper_galaxy_image(self, galaxy_image: aa.Array2D):
         """Plot the image of a hyper_galaxies galaxy image.
 
         Set *autogalaxy.datas.arrays.mat_plot_2d.mat_plot_2d* for a description of all input parameters not described below.
@@ -82,7 +86,7 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
             ),
         )
 
-    def figure_contribution_map(self, contribution_map_in):
+    def figure_contribution_map(self, contribution_map_in: aa.Array2D):
         """Plot the summed contribution maps of a hyper_galaxies-fit.
 
         Set *autogalaxy.datas.arrays.mat_plot_2d.mat_plot_2d* for a description of all input parameters not described below.
@@ -102,7 +106,9 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
             ),
         )
 
-    def subplot_hyper_images_of_galaxies(self, hyper_galaxy_image_path_dict):
+    def subplot_hyper_images_of_galaxies(
+        self, hyper_galaxy_image_path_dict: Dict[Galaxy, aa.Array2D]
+    ):
 
         if hyper_galaxy_image_path_dict is None:
             return
@@ -119,7 +125,9 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
 
         self.close_subplot_figure()
 
-    def subplot_contribution_maps_of_galaxies(self, contribution_maps_of_galaxies):
+    def subplot_contribution_maps_of_galaxies(
+        self, contribution_maps_of_galaxies: List[aa.Array2D]
+    ):
 
         contribution_maps = [
             contribution_map

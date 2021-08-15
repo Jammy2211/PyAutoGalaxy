@@ -1,10 +1,12 @@
 import numpy as np
+from typing import List, Optional
 
 import autoarray.plot as aplt
 from autoarray.fit.plot import fit_imaging_plotters
 
 from autogalaxy.profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
+from autogalaxy.plane.plane import Plane
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
 from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
@@ -28,11 +30,11 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
         )
 
     @property
-    def plane(self):
+    def plane(self) -> Plane:
         return self.fit.plane
 
     @property
-    def visuals_with_include_2d(self):
+    def visuals_with_include_2d(self) -> Visuals2D:
 
         visuals_2d = super().visuals_with_include_2d
 
@@ -48,7 +50,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
         )
 
     @property
-    def inversion_plotter(self):
+    def inversion_plotter(self) -> aplt.InversionPlotter:
         return aplt.InversionPlotter(
             inversion=self.fit.inversion,
             mat_plot_2d=self.mat_plot_2d,
@@ -56,15 +58,20 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
             include_2d=self.include_2d,
         )
 
-    def galaxy_indexes_from_galaxy_index(self, galaxy_index):
+    def galaxy_indexes_from_galaxy_index(
+        self, galaxy_index: Optional[int]
+    ) -> List[int]:
 
         if galaxy_index is None:
-            return range(len(self.fit.galaxies))
+            return list(range(len(self.fit.galaxies)))
         else:
             return [galaxy_index]
 
     def figures_2d_of_galaxies(
-        self, subtracted_image=False, model_image=False, galaxy_index=None
+        self,
+        subtracted_image: bool = False,
+        model_image: bool = False,
+        galaxy_index: Optional[int] = None,
     ):
 
         galaxy_indexes = self.galaxy_indexes_from_galaxy_index(
@@ -102,7 +109,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
                     ),
                 )
 
-    def subplots_of_galaxies(self, galaxy_index=None):
+    def subplots_of_galaxies(self, galaxy_index: Optional[int] = None):
         """Plot the model data of an analysis, using the *Fitter* class object.
 
         The visualization and output type can be fully customized.

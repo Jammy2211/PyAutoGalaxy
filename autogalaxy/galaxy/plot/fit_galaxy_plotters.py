@@ -22,19 +22,19 @@ class FitGalaxyPlotter(aplt.FitImagingPlotter):
         )
 
     @property
-    def visuals_with_include_2d(self):
+    def visuals_with_include_2d(self) -> Visuals2D:
 
         return self.visuals_2d + self.visuals_2d.__class__()
 
     def figures_2d(
         self,
-        image=False,
-        noise_map=False,
-        signal_to_noise_map=False,
-        model_image=False,
-        residual_map=False,
-        normalized_residual_map=False,
-        chi_squared_map=False,
+        image: bool = False,
+        noise_map: bool = False,
+        signal_to_noise_map: bool = False,
+        model_image: bool = False,
+        residual_map: bool = False,
+        normalized_residual_map: bool = False,
+        chi_squared_map: bool = False,
     ):
 
         if image:
@@ -45,7 +45,7 @@ class FitGalaxyPlotter(aplt.FitImagingPlotter):
                 auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
             )
 
-        super(FitGalaxyPlotter, self).figures_2d(
+        super().figures_2d(
             noise_map=noise_map,
             signal_to_noise_map=signal_to_noise_map,
             model_image=model_image,

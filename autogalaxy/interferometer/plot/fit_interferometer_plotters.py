@@ -1,6 +1,7 @@
 import autoarray.plot as aplt
 from autoarray.fit.plot import fit_interferometer_plotters
 
+from autogalaxy.plane.plane import Plane
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
 from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
@@ -37,15 +38,15 @@ class FitInterferometerPlotter(
         )
 
     @property
-    def plane(self):
+    def plane(self) -> Plane:
         return self.fit.plane
 
     @property
-    def visuals_with_include_2d(self):
+    def visuals_with_include_2d(self) -> Visuals2D:
         visuals_2d = super(FitInterferometerPlotter, self).visuals_with_include_2d
         return visuals_2d + visuals_2d.__class__()
 
-    def plane_plotter_from(self, plane):
+    def plane_plotter_from(self, plane) -> PlanePlotter:
         return PlanePlotter(
             plane=plane,
             grid=self.fit.interferometer.grid,
@@ -55,7 +56,7 @@ class FitInterferometerPlotter(
         )
 
     @property
-    def inversion_plotter(self):
+    def inversion_plotter(self) -> aplt.InversionPlotter:
         return aplt.InversionPlotter(
             inversion=self.fit.inversion,
             mat_plot_2d=self.mat_plot_2d,

@@ -1,6 +1,7 @@
 import math
 from typing import List, Optional
 
+import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.plot.lensing_obj_plotter import LensingObjPlotter
@@ -25,7 +26,7 @@ class GalaxyPlotter(LensingObjPlotter):
     def __init__(
         self,
         galaxy: Galaxy,
-        grid,
+        grid: aa.Grid2D,
         mat_plot_1d: MatPlot1D = MatPlot1D(),
         visuals_1d: Visuals1D = Visuals1D(),
         include_1d: Include1D = Include1D(),
@@ -46,11 +47,11 @@ class GalaxyPlotter(LensingObjPlotter):
         self.grid = grid
 
     @property
-    def lensing_obj(self):
+    def lensing_obj(self) -> Galaxy:
         return self.galaxy
 
     @property
-    def visuals_with_include_2d(self) -> "Visuals2D":
+    def visuals_with_include_2d(self) -> Visuals2D:
         """
         Extracts from a `Structure` attributes that can be plotted and return them in a `Visuals` object.
 
@@ -155,7 +156,9 @@ class GalaxyPlotter(LensingObjPlotter):
             einstein_radius=einstein_radius
         )
 
-    def figures_1d(self, image=False, convergence=False, potential=False):
+    def figures_1d(
+        self, image: bool = False, convergence: bool = False, potential: bool = False
+    ):
 
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
@@ -217,7 +220,11 @@ class GalaxyPlotter(LensingObjPlotter):
             )
 
     def figures_1d_decomposed(
-        self, image=False, convergence=False, potential=False, legend_labels=None
+        self,
+        image: bool = False,
+        convergence: bool = False,
+        potential: bool = False,
+        legend_labels: List[str] = None,
     ):
 
         plotter_list = [self]
@@ -290,13 +297,13 @@ class GalaxyPlotter(LensingObjPlotter):
 
     def figures_2d(
         self,
-        image=False,
-        convergence=False,
-        potential=False,
-        deflections_y=False,
-        deflections_x=False,
-        magnification=False,
-        contribution_map=False,
+        image: bool = False,
+        convergence: bool = False,
+        potential: bool = False,
+        deflections_y: bool = False,
+        deflections_x: bool = False,
+        magnification: bool = False,
+        contribution_map: bool = False,
     ):
 
         if image:
@@ -325,7 +332,7 @@ class GalaxyPlotter(LensingObjPlotter):
                 ),
             )
 
-    def subplot_of_light_profiles(self, image=False):
+    def subplot_of_light_profiles(self, image: bool = False):
 
         light_profile_plotters = [
             self.light_profile_plotter_from(light_profile)
@@ -339,10 +346,10 @@ class GalaxyPlotter(LensingObjPlotter):
 
     def subplot_of_mass_profiles(
         self,
-        convergence=False,
-        potential=False,
-        deflections_y=False,
-        deflections_x=False,
+        convergence: bool = False,
+        potential: bool = False,
+        deflections_y: bool = False,
+        deflections_x: bool = False,
     ):
 
         mass_profile_plotters = [
@@ -375,7 +382,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
     def __init__(
         self,
         galaxy_pdf_list: List[Galaxy],
-        grid,
+        grid: aa.Grid2D,
         mat_plot_1d: MatPlot1D = MatPlot1D(),
         visuals_1d: Visuals1D = Visuals1D(),
         include_1d: Include1D = Include1D(),
@@ -400,7 +407,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         self.low_limit = (1 - math.erf(sigma / math.sqrt(2))) / 2
 
     @property
-    def light_profile_pdf_plotter_list(self):
+    def light_profile_pdf_plotter_list(self) -> List[LightProfilePDFPlotter]:
         return [
             self.light_profile_pdf_plotter_from(index=index)
             for index in range(len(self.galaxy_pdf_list[0].light_profiles))
@@ -424,7 +431,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         )
 
     @property
-    def mass_profile_pdf_plotter_list(self):
+    def mass_profile_pdf_plotter_list(self) -> List[MassProfilePDFPlotter]:
         return [
             self.mass_profile_pdf_plotter_from(index=index)
             for index in range(len(self.galaxy_pdf_list[0].mass_profiles))
@@ -502,7 +509,9 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             self.extract_1d("einstein_radius", value=einstein_radius_errors),
         )
 
-    def figures_1d(self, image=False, convergence=False, potential=False):
+    def figures_1d(
+        self, image: bool = False, convergence: bool = False, potential: bool = False
+    ):
 
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
@@ -613,7 +622,11 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             )
 
     def figures_1d_decomposed(
-        self, image=False, convergence=False, potential=False, legend_labels=None
+        self,
+        image: bool = False,
+        convergence: bool = False,
+        potential: bool = False,
+        legend_labels: List[str] = None,
     ):
 
         if image:

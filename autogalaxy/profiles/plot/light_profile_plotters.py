@@ -98,7 +98,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             ),
         )
 
-    def figures_1d(self, image=False):
+    def figures_1d(self, image: bool = False):
 
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
@@ -123,7 +123,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
                 plot_axis_type_override=plot_axis_type_override,
             )
 
-    def figures_2d(self, image=False):
+    def figures_2d(self, image: bool = False):
 
         if image:
 
@@ -201,7 +201,7 @@ class LightProfilePDFPlotter(LightProfilePlotter):
             self.extract_1d("half_light_radius", value=half_light_radius_errors),
         )
 
-    def figures_1d(self, image=False):
+    def figures_1d(self, image: bool = False):
 
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
