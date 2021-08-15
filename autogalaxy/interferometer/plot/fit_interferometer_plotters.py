@@ -9,7 +9,7 @@ from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
 from autogalaxy.plot.mat_wrap.lensing_include import Include1D
 from autogalaxy.plot.mat_wrap.lensing_include import Include2D
 
-from autogalaxy.plot.plane_plotters import PlanePlotter
+from autogalaxy.plane.plot.plane_plotters import PlanePlotter
 
 
 class FitInterferometerPlotter(

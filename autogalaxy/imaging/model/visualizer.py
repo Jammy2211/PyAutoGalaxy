@@ -1,4 +1,4 @@
-from autogalaxy.plot.fit_imaging_plotters import FitImagingPlotter
+from autogalaxy.imaging.plot.fit_imaging_plotters import FitImagingPlotter
 from autogalaxy.analysis.visualizer import Visualizer
 
 from autogalaxy.analysis.visualizer import plot_setting

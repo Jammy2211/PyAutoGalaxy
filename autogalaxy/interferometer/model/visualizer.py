@@ -1,4 +1,6 @@
-from autogalaxy.plot.fit_interferometer_plotters import FitInterferometerPlotter
+from autogalaxy.interferometer.plot.fit_interferometer_plotters import (
+    FitInterferometerPlotter,
+)
 from autogalaxy.analysis.visualizer import Visualizer
 
 from autogalaxy.analysis.visualizer import plot_setting

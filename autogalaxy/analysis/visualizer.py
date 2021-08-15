@@ -3,8 +3,8 @@ from os import path
 from autoconf import conf
 import autoarray.plot as aplt
 
-from autogalaxy.plot.fit_galaxy_plotters import FitGalaxyPlotter
-from autogalaxy.plot.hyper_plotters import HyperPlotter
+from autogalaxy.galaxy.plot.fit_galaxy_plotters import FitGalaxyPlotter
+from autogalaxy.galaxy.plot.hyper_galaxy_plotters import HyperPlotter
 
 from autogalaxy.plot.mat_wrap.lensing_include import Include2D
 from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D

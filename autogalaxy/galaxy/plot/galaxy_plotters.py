@@ -13,10 +13,10 @@ from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D
 from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
 from autogalaxy.plot.mat_wrap.lensing_include import Include1D
 from autogalaxy.plot.mat_wrap.lensing_include import Include2D
-from autogalaxy.plot.light_profile_plotters import LightProfilePlotter
-from autogalaxy.plot.light_profile_plotters import LightProfilePDFPlotter
-from autogalaxy.plot.mass_profile_plotters import MassProfilePlotter
-from autogalaxy.plot.mass_profile_plotters import MassProfilePDFPlotter
+from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
+from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePDFPlotter
+from autogalaxy.profiles.plot.mass_profile_plotters import MassProfilePlotter
+from autogalaxy.profiles.plot.mass_profile_plotters import MassProfilePDFPlotter
 
 from autogalaxy.util import error_util
 
