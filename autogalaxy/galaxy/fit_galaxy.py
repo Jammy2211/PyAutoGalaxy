@@ -19,11 +19,15 @@ class FitGalaxy(aa.FitDataset):
             galaxies=model_galaxies
         )
 
-        super(FitGalaxy, self).__init__(
-            dataset=masked_galaxy_dataset,
+        fit = aa.FitData(
+            data=masked_galaxy_dataset.image,
+            noise_map=masked_galaxy_dataset.noise_map,
             model_data=model_data.binned,
+            mask=masked_galaxy_dataset.mask,
             use_mask_in_fit=False,
         )
+
+        super().__init__(dataset=masked_galaxy_dataset, fit=fit)
 
     @property
     def masked_galaxy_dataset(self):
