@@ -31,8 +31,6 @@ class AnalysisImaging(AnalysisDataset):
             preloads=preloads,
         )
 
-        self.dataset = dataset
-
     @property
     def imaging(self):
         return self.dataset

@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.stats import norm
+from typing import List
 
 import autofit as af
 import autoarray as aa
@@ -58,7 +59,7 @@ def pixelization_from(model: af.Collection) -> aa.pix.Pixelization:
                     return galaxy.pixelization
 
 
-def has_pixelization_from_model(model: af.Collection):
+def has_pixelization_from_model(model: af.Collection) -> bool:
     """
     For a model containing one or more galaxies, inspect its attributes and return `True` if a galaxy has a
     `Pixelization` otherwise return `False`.
@@ -112,6 +113,134 @@ def pixelization_is_model_from(model: af.Collection):
     if model.galaxies:
         for galaxy in model.galaxies:
             if isprior(galaxy.pixelization):
+                return True
+    return False
+
+
+def hyper_galaxy_model_list_from(model: af.Collection) -> List:
+    """
+    For a model containing one or more galaxies, inspect its attributes and return the `pixelization` of a galaxy
+    provided one galaxy has a pixelization, otherwise it returns none. There cannot be more than one `Pixelization` in
+    a model.
+
+    This function expects that the input model is a `Collection` where the first model-component has the
+    name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
+    standard API for creating a model in PyAutoGalaxy.
+
+    The result of `hyper_galaxy_list_from_model` is used by the preloading to determine whether certain parts of a
+    calculation can be cached before the non-linear search begins for efficiency.
+
+    Parameters
+    ----------
+    model : af.Collection
+        Contains the `galaxies` in the model that will be fitted via the non-linear search.
+
+    Returns
+    -------
+    aa.pix.Pixelization or None:
+        The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
+    """
+
+    hyper_galaxy_model_list = []
+
+    for galaxy in model.galaxies:
+        if hasattr(galaxy, "hyper_galaxy"):
+            if galaxy.hyper_galaxy is not None:
+                hyper_galaxy_model_list.append(galaxy.hyper_galaxy)
+
+    return hyper_galaxy_model_list
+
+
+def has_hyper_galaxy_from_model(model: af.Collection) -> bool:
+    """
+    For a model containing one or more galaxies, inspect its attributes and return `True` if a galaxy has a
+    `Pixelization` which is a model-component with free parameters, otherwise return `False`. Therefore, a `False`
+    may be returned if a galaxy has a `Pixelization` but it is an `instance` where no parameters are free parameters
+    in the non-linear search.
+
+    This function expects that the input model is a `Collection` where the first model-component has the
+    name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
+    standard API for creating a model in PyAutoGalaxy.
+
+    The result of `pixelization_is_model_from_model` is used by the preloading to determine whether certain parts of a
+    calculation can be cached before the non-linear search begins for efficiency.
+
+    Parameters
+    ----------
+    model : af.Collection
+        Contains the `galaxies` in the model that will be fitted via the non-linear search.
+
+    Returns
+    -------
+    aa.pix.Pixelization or None:
+        The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
+    """
+    hyper_galaxy_model_list = hyper_galaxy_model_list_from(model=model)
+    if len(hyper_galaxy_model_list) > 0:
+        return True
+    return False
+
+
+def has_hyper_galaxy_model_from_model(model: af.Collection) -> bool:
+    """
+    For a model containing one or more galaxies, inspect its attributes and return `True` if a galaxy has a
+    `Pixelization` which is a model-component with free parameters, otherwise return `False`. Therefore, a `False`
+    may be returned if a galaxy has a `Pixelization` but it is an `instance` where no parameters are free parameters
+    in the non-linear search.
+
+    This function expects that the input model is a `Collection` where the first model-component has the
+    name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
+    standard API for creating a model in PyAutoGalaxy.
+
+    The result of `pixelization_is_model_from_model` is used by the preloading to determine whether certain parts of a
+    calculation can be cached before the non-linear search begins for efficiency.
+
+    Parameters
+    ----------
+    model : af.Collection
+        Contains the `galaxies` in the model that will be fitted via the non-linear search.
+
+    Returns
+    -------
+    aa.pix.Pixelization or None:
+        The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
+    """
+    hyper_galaxy_model_list = hyper_galaxy_model_list_from(model=model)
+    for hyper_galaxy_model in hyper_galaxy_model_list:
+        if hasattr(hyper_galaxy_model, "cls"):
+            if hyper_galaxy_model.prior_count > 0:
+                return True
+    return False
+
+
+def has_hyper_galaxy_instance_from_model(model: af.Collection) -> bool:
+    """
+    For a model containing one or more galaxies, inspect its attributes and return `True` if a galaxy has a
+    `Pixelization` which is a model-component with free parameters, otherwise return `False`. Therefore, a `False`
+    may be returned if a galaxy has a `Pixelization` but it is an `instance` where no parameters are free parameters
+    in the non-linear search.
+
+    This function expects that the input model is a `Collection` where the first model-component has the
+    name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
+    standard API for creating a model in PyAutoGalaxy.
+
+    The result of `pixelization_is_model_from_model` is used by the preloading to determine whether certain parts of a
+    calculation can be cached before the non-linear search begins for efficiency.
+
+    Parameters
+    ----------
+    model : af.Collection
+        Contains the `galaxies` in the model that will be fitted via the non-linear search.
+
+    Returns
+    -------
+    aa.pix.Pixelization or None:
+        The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
+    """
+    hyper_galaxy_model_list = hyper_galaxy_model_list_from(model=model)
+    for hyper_galaxy_model in hyper_galaxy_model_list:
+        if hasattr(hyper_galaxy_model, "cls"):
+            if hyper_galaxy_model.prior_count == 0:
                 return True
     return False
 
