@@ -1,120 +1,118 @@
 import autofit as af
-from autofit.mapper.prior.prior import TuplePrior
 import autogalaxy as ag
+from autofit.mapper.prior.prior import TuplePrior
 from autogalaxy.mock import mock
-from autogalaxy import hyper_data as hd
 
 
-# def test__pixelization_from_model():
-#
-#     galaxies = af.Collection(galaxy=af.Model(ag.Galaxy, redshift=0.5))
-#
-#     pixelization = ag.util.model.pixelization_from(
-#         model=af.Collection(galaxies=galaxies)
-#     )
-#
-#     assert pixelization is None
-#
-#     galaxies = af.Collection(
-#         galaxy=ag.Galaxy(
-#             redshift=0.5,
-#             pixelization=ag.pix.Rectangular(),
-#             regularization=ag.reg.Constant(),
-#         )
-#     )
-#
-#     pixelization = ag.util.model.pixelization_from(
-#         model=af.Collection(galaxies=galaxies)
-#     )
-#
-#     assert isinstance(pixelization, ag.pix.Rectangular)
-#
-#     galaxies = af.Collection(
-#         galaxy=af.Model(ag.Galaxy,
-#             redshift=0.5,
-#             pixelization=ag.pix.Rectangular,
-#             regularization=ag.reg.Constant,
-#         )
-#     )
-#
-#     pixelization = ag.util.model.pixelization_from(
-#         model=af.Collection(galaxies=galaxies)
-#     )
-#
-#     assert type(pixelization) == type(ag.pix.Rectangular)
-#
-#
-# def test__has_pixelization():
-#
-#     galaxies = af.Collection(galaxy=af.Model(ag.Galaxy, redshift=0.5))
-#
-#     assert galaxies.has_model(cls=ag.pix.Pixelization) is False
-#
-#     galaxies = af.Collection(
-#         galaxy=af.Model(ag.Galaxy,
-#             redshift=0.5,
-#             pixelization=ag.pix.Rectangular(),
-#             regularization=ag.reg.Constant(),
-#         )
-#     )
-#
-#     assert galaxies.has_instance(cls=ag.pix.Pixelization) is True
-#     assert galaxies.has_model(cls=ag.pix.Pixelization) is False
-#
-#     galaxies = af.Collection(
-#         galaxy=af.Model(
-#             ag.Galaxy,
-#             redshift=0.5,
-#             pixelization=ag.pix.Rectangular,
-#             regularization=ag.reg.Constant,
-#         )
-#     )
-#
-#     assert galaxies.has_instance(cls=ag.pix.Pixelization) is False
-#     assert galaxies.has_model(cls=ag.pix.Pixelization) is True
-#
-#
-# def test__pixelization_is_model():
-#
-#     galaxies = af.Collection(galaxy=af.Model(ag.Galaxy, redshift=0.5))
-#
-#     pixelization_is_model = ag.util.model.pixelization_is_model_from(
-#         model=af.Collection(galaxies=galaxies)
-#     )
-#
-#     assert pixelization_is_model is False
-#
-#     galaxies = af.Collection(
-#         galaxy=ag.Galaxy(
-#             redshift=0.5,
-#             pixelization=ag.pix.Rectangular(),
-#             regularization=ag.reg.Constant(),
-#         )
-#     )
-#
-#     pixelization_is_model = ag.util.model.pixelization_is_model_from(
-#         model=af.Collection(galaxies=galaxies)
-#     )
-#
-#     assert pixelization_is_model is False
-#
-#     galaxies = af.Collection(
-#         galaxy=af.Model(ag.Galaxy,
-#             redshift=0.5,
-#             pixelization=ag.pix.Rectangular,
-#             regularization=ag.reg.Constant,
-#         )
-#     )
-#
-#     pixelization_is_model = ag.util.model.pixelization_is_model_from(
-#         model=af.Collection(galaxies=galaxies)
-#     )
-#
-#     assert pixelization_is_model is True
+def test__pixelization_from_model():
+
+    galaxies = af.Collection(galaxy=af.Model(ag.Galaxy, redshift=0.5))
+
+    pixelization = ag.util.model.pixelization_from(
+        model=af.Collection(galaxies=galaxies)
+    )
+
+    assert pixelization is None
+
+    galaxies = af.Collection(
+        galaxy=ag.Galaxy(
+            redshift=0.5,
+            pixelization=ag.pix.Rectangular(),
+            regularization=ag.reg.Constant(),
+        )
+    )
+
+    pixelization = ag.util.model.pixelization_from(
+        model=af.Collection(galaxies=galaxies)
+    )
+
+    assert isinstance(pixelization, ag.pix.Rectangular)
+
+    galaxies = af.Collection(
+        galaxy=af.Model(ag.Galaxy,
+            redshift=0.5,
+            pixelization=ag.pix.Rectangular,
+            regularization=ag.reg.Constant,
+        )
+    )
+
+    pixelization = ag.util.model.pixelization_from(
+        model=af.Collection(galaxies=galaxies)
+    )
+
+    assert type(pixelization) == type(ag.pix.Rectangular)
+
+
+def test__has_pixelization():
+    galaxies = af.Collection(galaxy=af.Model(ag.Galaxy, redshift=0.5))
+
+    assert galaxies.has_model(cls=ag.pix.Pixelization) is False
+
+    galaxies = af.Collection(
+        galaxy=af.Model(
+            ag.Galaxy,
+            redshift=0.5,
+            pixelization=ag.pix.Rectangular(),
+            regularization=ag.reg.Constant(),
+        )
+    )
+
+    assert galaxies.has_instance(cls=ag.pix.Pixelization) is True
+    assert galaxies.has_model(cls=ag.pix.Pixelization) is False
+
+    galaxies = af.Collection(
+        galaxy=af.Model(
+            ag.Galaxy,
+            redshift=0.5,
+            pixelization=ag.pix.Rectangular,
+            regularization=ag.reg.Constant,
+        )
+    )
+
+    assert galaxies.has_instance(cls=ag.pix.Pixelization) is False
+    assert galaxies.has_model(cls=ag.pix.Pixelization) is True
+
+
+def test__pixelization_is_model():
+
+    galaxies = af.Collection(galaxy=af.Model(ag.Galaxy, redshift=0.5))
+
+    pixelization_is_model = ag.util.model.pixelization_is_model_from(
+        model=af.Collection(galaxies=galaxies)
+    )
+
+    assert pixelization_is_model is False
+
+    galaxies = af.Collection(
+        galaxy=ag.Galaxy(
+            redshift=0.5,
+            pixelization=ag.pix.Rectangular(),
+            regularization=ag.reg.Constant(),
+        )
+    )
+
+    pixelization_is_model = ag.util.model.pixelization_is_model_from(
+        model=af.Collection(galaxies=galaxies)
+    )
+
+    assert pixelization_is_model is False
+
+    galaxies = af.Collection(
+        galaxy=af.Model(ag.Galaxy,
+            redshift=0.5,
+            pixelization=ag.pix.Rectangular,
+            regularization=ag.reg.Constant,
+        )
+    )
+
+    pixelization_is_model = ag.util.model.pixelization_is_model_from(
+        model=af.Collection(galaxies=galaxies)
+    )
+
+    assert pixelization_is_model is True
 
 
 def test__hyper_model_from():
-
     model = af.Collection(
         galaxies=af.Collection(
             galaxy=af.Model(
@@ -181,7 +179,6 @@ def test__hyper_model_from():
 
 
 def test__hyper_model_from__adds_hyper_galaxies():
-
     model = af.Collection(
         galaxies=af.Collection(
             galaxy_0=af.Model(ag.Galaxy, redshift=0.5),
@@ -235,7 +232,6 @@ def test__hyper_model_from__adds_hyper_galaxies():
 
 
 def test__stochastic_model_from():
-
     model = af.Collection(
         galaxies=af.Collection(
             lens=af.Model(
