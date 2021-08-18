@@ -122,3 +122,4 @@ class TestAnalysisImaging:
 
         assert (fit.plane.galaxies[0].hyper_galaxy_image == galaxy_hyper_image).all()
         assert fit_likelihood == fit.log_likelihood
+

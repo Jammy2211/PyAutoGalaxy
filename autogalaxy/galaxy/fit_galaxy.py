@@ -42,7 +42,3 @@ class FitGalaxy(aa.FitDataset):
 
     def model_image(self):
         return self.model_data
-
-    @property
-    def figure_of_merit(self):
-        return self.log_likelihood
