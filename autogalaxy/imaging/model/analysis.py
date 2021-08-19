@@ -19,7 +19,6 @@ class AnalysisImaging(AnalysisDataset):
         cosmology=cosmo.Planck15,
         settings_pixelization=aa.pix.SettingsPixelization(),
         settings_inversion=aa.SettingsInversion(),
-        preloads=aa.Preloads(),
     ):
 
         super().__init__(
@@ -28,7 +27,6 @@ class AnalysisImaging(AnalysisDataset):
             cosmology=cosmology,
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
-            preloads=preloads,
         )
 
     @property

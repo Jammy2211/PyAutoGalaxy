@@ -21,7 +21,6 @@ class AnalysisDataset(Analysis):
         cosmology=cosmo.Planck15,
         settings_pixelization=aa.pix.SettingsPixelization(),
         settings_inversion=aa.SettingsInversion(),
-        preloads=aa.Preloads(),
     ):
 
         super().__init__(hyper_dataset_result=hyper_dataset_result, cosmology=cosmology)
@@ -42,7 +41,8 @@ class AnalysisDataset(Analysis):
 
         self.settings_pixelization = settings_pixelization
         self.settings_inversion = settings_inversion
-        self.preloads = preloads
+
+        self.preloads = aa.Preloads()
 
     def set_hyper_dataset(self, result):
 
