@@ -46,34 +46,34 @@ def test__pixelization_from_model():
     assert type(pixelization) == type(ag.pix.Rectangular)
 
 
-def test__has_pixelization():
-    galaxies = af.Collection(galaxy=af.Model(ag.Galaxy, redshift=0.5))
-
-    assert galaxies.has_model(cls=ag.pix.Pixelization) is False
-
-    galaxies = af.Collection(
-        galaxy=af.Model(
-            ag.Galaxy,
-            redshift=0.5,
-            pixelization=ag.pix.Rectangular(),
-            regularization=ag.reg.Constant(),
-        )
-    )
-
-    assert galaxies.has_instance(cls=ag.pix.Pixelization) is True
-    assert galaxies.has_model(cls=ag.pix.Pixelization) is False
-
-    galaxies = af.Collection(
-        galaxy=af.Model(
-            ag.Galaxy,
-            redshift=0.5,
-            pixelization=ag.pix.Rectangular,
-            regularization=ag.reg.Constant,
-        )
-    )
-
-    assert galaxies.has_instance(cls=ag.pix.Pixelization) is False
-    assert galaxies.has_model(cls=ag.pix.Pixelization) is True
+# def test__has_pixelization():
+#     galaxies = af.Collection(galaxy=af.Model(ag.Galaxy, redshift=0.5))
+#
+#     assert galaxies.has_model(cls=ag.pix.Pixelization) is False
+#
+#     galaxies = af.Collection(
+#         galaxy=af.Model(
+#             ag.Galaxy,
+#             redshift=0.5,
+#             pixelization=ag.pix.Rectangular(),
+#             regularization=ag.reg.Constant(),
+#         )
+#     )
+#
+#     assert galaxies.has_instance(cls=ag.pix.Pixelization) is True
+#     assert galaxies.has_model(cls=ag.pix.Pixelization) is False
+#
+#     galaxies = af.Collection(
+#         galaxy=af.Model(
+#             ag.Galaxy,
+#             redshift=0.5,
+#             pixelization=ag.pix.Rectangular,
+#             regularization=ag.reg.Constant,
+#         )
+#     )
+#
+#     assert galaxies.has_instance(cls=ag.pix.Pixelization) is False
+#     assert galaxies.has_model(cls=ag.pix.Pixelization) is True
 
 
 def test__hyper_model_from():
@@ -231,7 +231,7 @@ def test__stochastic_model_from():
     model = ag.util.model.stochastic_model_from(result=result, include_lens_light=True)
 
     assert isinstance(model.galaxies.lens.mass.centre, TuplePrior)
-    assert isinstance(model.galaxies.lens.light.intensity, af.UniformPrior)
+    assert isinstance(model.galaxies.lens.light.intensity, af.LogUniformPrior)
     assert isinstance(model.galaxies.source.pixelization.pixels, int)
     assert isinstance(model.galaxies.source.regularization.inner_coefficient, float)
 

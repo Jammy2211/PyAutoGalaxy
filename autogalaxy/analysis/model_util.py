@@ -85,6 +85,7 @@ def has_pixelization_from_model(model: af.Collection) -> bool:
 
     return pixelization is not None
 
+
 def hyper_model_from(
     setup_hyper, result: af.Result, include_hyper_image_sky: bool = False
 ) -> af.Collection:

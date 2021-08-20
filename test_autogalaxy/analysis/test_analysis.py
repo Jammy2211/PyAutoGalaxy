@@ -12,7 +12,6 @@ directory = path.dirname(path.realpath(__file__))
 
 
 class TestAnalysisDataset:
-
     def test__associate_hyper_images(self, masked_imaging_7x7):
 
         galaxies = af.ModelInstance()
