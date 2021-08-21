@@ -1,8 +1,13 @@
 from astropy import cosmology as cosmo
+import json
+import numpy as np
+from os import path
 
+from autoconf import conf
 import autofit as af
 import autoarray as aa
 
+from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
 
@@ -46,8 +51,11 @@ class AnalysisDataset(Analysis):
 
     def set_hyper_dataset(self, result):
 
-        self.hyper_galaxy_image_path_dict = result.hyper_galaxy_image_path_dict
-        self.hyper_model_image = result.hyper_model_image
+        hyper_galaxy_image_path_dict = result.hyper_galaxy_image_path_dict
+        hyper_model_image = result.hyper_model_image
+
+        self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
+        self.hyper_model_image = hyper_model_image
 
     def hyper_image_sky_for_instance(self, instance):
 
@@ -116,3 +124,34 @@ class AnalysisDataset(Analysis):
             paths.save_object(
                 "hyper_galaxy_image_path_dict", self.hyper_galaxy_image_path_dict
             )
+
+    def output_or_check_figure_of_merit_sanity(
+        self, paths: af.DirectoryPaths, result: af.Result
+    ):
+
+        figure_of_merit = result.max_log_likelihood_fit.figure_of_merit
+
+        figure_of_merit_sanity_file = path.join(
+            paths.output_path, "figure_of_merit_sanity.json"
+        )
+
+        if not path.exists(figure_of_merit_sanity_file):
+
+            with open(figure_of_merit_sanity_file, "w+") as f:
+                json.dump(figure_of_merit, f)
+
+        else:
+
+            with open(figure_of_merit_sanity_file) as json_file:
+                figure_of_merit_sanity = json.load(json_file)
+
+            if conf.instance["general"]["test"]["check_figure_of_merit_sanity"]:
+
+                if not np.isclose(figure_of_merit, figure_of_merit_sanity):
+
+                    raise exc.AnalysisException(
+                        "Figure of merit sanity check failed. "
+                        ""
+                        "This means that the existing results of a model fit used a different "
+                        "likelihood function compared to the one implemented now."
+                    )

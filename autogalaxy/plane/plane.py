@@ -446,6 +446,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         sparse_grid,
         sparse_image_plane_grid=None,
         settings_pixelization=aa.pix.SettingsPixelization(),
+        preloads=aa.Preloads(),
     ):
 
         galaxies_with_pixelization = list(
@@ -464,6 +465,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
                 sparse_image_plane_grid=sparse_image_plane_grid,
                 hyper_image=galaxies_with_pixelization[0].hyper_galaxy_image,
                 settings=settings_pixelization,
+                preloads=preloads,
             )
 
         elif len(galaxies_with_pixelization) > 1:
