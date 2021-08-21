@@ -802,6 +802,11 @@ class EllIsothermal(EllPowerLaw):
         return aa.VectorField2DIrregular(vectors=shear_field, grid=grid)
 
 
+class EllIsothermalInitialize(EllIsothermal):
+
+    pass
+
+
 class SphIsothermal(EllIsothermal):
     def __init__(
         self, centre: Tuple[float, float] = (0.0, 0.0), einstein_radius: float = 1.0

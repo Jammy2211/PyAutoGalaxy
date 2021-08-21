@@ -10,6 +10,7 @@ from .total_mass_profiles import (
     EllPowerLaw,
     SphPowerLaw,
     EllIsothermal,
+    EllIsothermalInitialize,
     SphIsothermal,
 )
 from .dark_mass_profiles import (

@@ -426,6 +426,11 @@ class SphSersic(EllSersic):
         )
 
 
+class EllSersicInitialize(EllSersic):
+
+    pass
+
+
 class EllExponential(EllSersic):
     def __init__(
         self,
