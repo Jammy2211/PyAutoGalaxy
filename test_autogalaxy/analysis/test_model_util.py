@@ -1,9 +1,9 @@
+import pytest
+
 import autofit as af
 import autogalaxy as ag
 from autofit.mapper.prior.tuple_prior import TuplePrior
 from autogalaxy.mock import mock
-
-from autogalaxy import hyper_data as hd
 
 
 def test__pixelization_from_model():
@@ -100,7 +100,7 @@ def test__hyper_model_from():
 
     assert model.galaxies.galaxy.pixelization.cls is ag.pix.Rectangular
     assert model.galaxies.galaxy.regularization.cls is ag.reg.Constant
-    assert model.galaxies.galaxy_1.bulge.intensity == 1.0
+    assert model.galaxies.galaxy_1.bulge.intensity == pytest.approx(1.0, 1.0e-4)
 
     assert model.hyper_image_sky is None
     assert model.hyper_background_noise is None
