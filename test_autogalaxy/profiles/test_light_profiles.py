@@ -921,11 +921,12 @@ class TestEff:
             elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=2.0,
+            eta=2.0
         )
 
         image = eff.image_2d_from_grid_radii(grid_radii=3.0)
 
-        assert image == pytest.approx(0.17067, 1e-2)
+        assert image == pytest.approx(0.09467, 1e-2)
 
     def test__image_2d_from_grid__same_values_as_above(self):
         eff = ag.lp.EllEff(

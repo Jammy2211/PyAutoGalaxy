@@ -838,6 +838,7 @@ class EllEff(LightProfile):
         elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
+        eta: float = 1.5,
     ):
         """
         The elliptical eff light profile, which is commonly used to represent the clumps of Lyman-alpha emitter
@@ -854,6 +855,8 @@ class EllEff(LightProfile):
             Overall intensity normalisation of the light profiles (electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
+        eta
+            Scales the intensity gradient of the profile.
         """
 
         super().__init__(
@@ -861,6 +864,7 @@ class EllEff(LightProfile):
         )
 
         self.effective_radius = effective_radius
+        self.eta = eta
 
     def image_2d_from_grid_radii(self, grid_radii):
         """
@@ -873,7 +877,7 @@ class EllEff(LightProfile):
         """
         np.seterr(all="ignore")
         return self.intensity * (1 + (grid_radii / self.effective_radius) ** 2) ** (
-            -1.5
+            -self.eta
         )
 
     @aa.grid_dec.grid_2d_to_structure
@@ -899,10 +903,15 @@ class SphEff(EllEff):
         centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
+        eta: float = 1.5,
     ):
         """
         The spherical eff light profile, which is commonly used to represent the clumps of Lyman-alpha emitter
         galaxies.
+
+        This profile is introduced in the following paper:
+
+        https://arxiv.org/abs/1708.08854
 
         Parameters
         ----------
@@ -919,4 +928,5 @@ class SphEff(EllEff):
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
+            eta=eta
         )
