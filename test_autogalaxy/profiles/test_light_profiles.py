@@ -880,7 +880,5 @@ class TestChameleon:
         assert image.shape_native == (2, 2)
 
 
-
-
-
+# class TestEff:
 

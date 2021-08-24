@@ -49,7 +49,7 @@ class LightProfile(EllProfile):
 
         Parameters
         ----------
-        grid_radii : float
+        grid_radii
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
         raise NotImplementedError()
@@ -134,11 +134,11 @@ class LightProfile(EllProfile):
 
         Parameters
         ----------
-        radius : float
+        radius
             The radius of the circle to compute the dimensionless mass within.
         unit_luminosity : str
             The unit_label the luminosity is returned in {esp, counts}.
-        exposure_time : float or None
+        exposure_time or None
             The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
         """
 
@@ -176,7 +176,7 @@ class EllGaussian(LightProfile):
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity
             Overall intensity normalisation of the light profiles (electrons per second).
-        sigma : float
+        sigma
             The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
 
@@ -190,7 +190,7 @@ class EllGaussian(LightProfile):
 
         Parameters
         ----------
-        grid_radii : float
+        grid_radii
             The radial distance from the centre of the profile. for each coordinate on the grid.
 
         Note: sigma is divided by sqrt(q) here.
@@ -238,7 +238,7 @@ class SphGaussian(EllGaussian):
             The (y,x) arc-second coordinates of the profile centre.
         intensity
             Overall intensity normalisation of the light profiles (electrons per second).
-        sigma : float
+        sigma
             The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
         super(SphGaussian, self).__init__(
@@ -311,7 +311,7 @@ class AbstractEllSersic(LightProfile):
 
             Parameters
             ----------
-            radius : float
+            radius
                 The distance from the centre of the profile.
         """
         return self.intensity * np.exp(
@@ -361,7 +361,7 @@ class EllSersic(AbstractEllSersic, LightProfile):
 
         Parameters
         ----------
-        grid_radii : float
+        grid_radii
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
         np.seterr(all="ignore")
@@ -580,11 +580,11 @@ class EllSersicCore(EllSersic):
         sersic_index : Int
             Controls the concentration of the of the profile (lower value -> less concentrated, \
             higher value -> more concentrated).
-        radius_break : Float
+        radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
-        intensity_break : Float
+        intensity_break
             The intensity at the break radius.
-        gamma : Float
+        gamma
             The logarithmic power-law slope of the inner core profiles
         alpha :
             Controls the sharpness of the transition between the inner core / outer Sersic profiles.
@@ -624,7 +624,7 @@ class EllSersicCore(EllSersic):
 
         Parameters
         ----------
-        grid_radii : float
+        grid_radii
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
         return np.multiply(
@@ -680,11 +680,11 @@ class SphSersicCore(EllSersicCore):
         sersic_index : Int
             Controls the concentration of the of the profile (lower value -> less concentrated, \
             higher value -> more concentrated).
-        radius_break : Float
+        radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
-        intensity_break : Float
+        intensity_break
             The intensity at the break radius.
-        gamma : Float
+        gamma
             The logarithmic power-law slope of the inner core profiles
         alpha :
             Controls the sharpness of the transition between the inner core / outer Sersic profiles.
@@ -749,7 +749,7 @@ class EllChameleon(LightProfile):
 
         Parameters
         ----------
-        grid_radii : float
+        grid_radii
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
 
@@ -831,14 +831,13 @@ class SphChameleon(EllChameleon):
         )
 
 
-class EllipticalEff(LightProfile):
-
+class EllEff(LightProfile):
     def __init__(
-            self,
-            centre: Tuple[float, float] = (0.0, 0.0),
-            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
-            intensity: float = 0.1,
-            effective_radius: float = 0.6,
+        self,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
     ):
         """
         The elliptical eff light profile, which is commonly used to represent the clumps of Lyman-alpha emitter
@@ -869,18 +868,18 @@ class EllipticalEff(LightProfile):
 
         Parameters
         ----------
-        grid_radii : float
+        grid_radii
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
         np.seterr(all="ignore")
-        return self.intensity * (1 + (grid_radii / self.effective_radius) ** 2) ** (-1.5)
+        return self.intensity * (1 + (grid_radii / self.effective_radius) ** 2) ** (
+            -1.5
+        )
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def image_2d_from_grid(
-            self, grid, grid_radial_minimum=None
-    ):
+    def image_2d_from_grid(self, grid, grid_radial_minimum=None):
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 
@@ -892,3 +891,29 @@ class EllipticalEff(LightProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         return self.image_2d_from_grid_radii(self.grid_to_eccentric_radii(grid))
+
+
+class SphEff(EllEff):
+    def __init__(
+        self,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+    ):
+        """
+        The spherical eff light profile, which is commonly used to represent the clumps of Lyman-alpha emitter
+        galaxies.
+
+        Parameters
+        ----------
+        centre
+            The (y,x) arc-second coordinates of the profile centre.
+        intensity
+            Overall intensity normalisation of the light profiles (electrons per second).
+        effective_radius
+            The circular radius containing half the light of this profile.
+        """
+
+        super().__init__(
+            centre=centre, elliptical_comps=(0.0, 0.0), intensity=intensity, effective_radius=effective_radius
+        )

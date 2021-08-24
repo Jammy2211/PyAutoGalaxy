@@ -19,7 +19,7 @@ class MassSheet(MassProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        kappa : float
+        kappa
             The magnitude of the convergence of the mass-sheet.
         """
         super().__init__(centre=centre, elliptical_comps=(0.0, 0.0))
@@ -55,7 +55,7 @@ class ExternalShear(MassProfile):
 
         Parameters
         ----------
-        magnitude : float
+        magnitude
             The overall magnitude of the shear (gamma).
         angle
             The rotation axis of the shear.
@@ -135,7 +135,7 @@ class InputDeflections(MassProfile):
         grid_interp : aa.Grid2D
             The grid that interpolated quantities are computed on. If this is input in advance, the interpolation
             weight_list can be precomputed to speed up the calculation time.
-        normalization_scale : float
+        normalization_scale
             The calculated deflection angles are multiplied by this factor scaling their values up and doown.
         """
         super().__init__()

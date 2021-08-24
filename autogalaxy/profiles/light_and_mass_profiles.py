@@ -93,7 +93,7 @@ class SphSersic(EllSersic, LightMassProfile):
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
             The radius containing half the light of this model_mapper
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
         EllSersic.__init__(
@@ -132,7 +132,7 @@ class EllExponential(EllSersic, LightMassProfile):
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
             The radius containing half the light of this model_mapper
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
         EllSersic.__init__(
@@ -166,7 +166,7 @@ class SphExponential(EllExponential, LightMassProfile):
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
             The radius containing half the light of this model_mapper
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
         EllExponential.__init__(
@@ -204,7 +204,7 @@ class EllDevVaucouleurs(EllSersic, LightMassProfile):
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
             The radius containing half the light of this model_mapper
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
         super(EllDevVaucouleurs, self).__init__(
@@ -237,7 +237,7 @@ class SphDevVaucouleurs(EllDevVaucouleurs, LightMassProfile):
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
             The radius containing half the light of this model_mapper
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
         EllDevVaucouleurs.__init__(
@@ -280,9 +280,9 @@ class EllSersicRadialGradient(
             The radius containing half the light of this model_mapper
         sersic_index : Int
             The concentration of the light profiles
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles
-        mass_to_light_gradient : float
+        mass_to_light_gradient
             The mass-to-light radial gradient.
         """
         lp.EllSersic.__init__(
@@ -328,9 +328,9 @@ class SphSersicRadialGradient(EllSersicRadialGradient, LightMassProfile):
             The radius containing half the light of this model_mapper
         sersic_index : Int
             The concentration of the light profiles
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles
-        mass_to_light_gradient : float
+        mass_to_light_gradient
             The mass-to-light radial gradient.
         """
 
@@ -371,9 +371,9 @@ class EllExponentialRadialGradient(EllSersicRadialGradient, LightMassProfile):
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
             The radius containing half the light of this model_mapper
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles
-        mass_to_light_gradient : float
+        mass_to_light_gradient
             The mass-to-light radial gradient.
         """
 
@@ -413,9 +413,9 @@ class SphExponentialRadialGradient(SphSersicRadialGradient, LightMassProfile):
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
             The radius containing half the light of this model_mapper
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles
-        mass_to_light_gradient : float
+        mass_to_light_gradient
             The mass-to-light radial gradient.
         """
 
@@ -493,7 +493,7 @@ class SphSersicCore(EllSersicCore, LightMassProfile):
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
             The radius containing half the light of this model_mapper
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
         EllSersicCore.__init__(
@@ -561,7 +561,7 @@ class SphChameleon(EllChameleon, LightMassProfile):
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
             The radius containing half the light of this model_mapper
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
         EllChameleon.__init__(

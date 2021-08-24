@@ -121,12 +121,12 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        kappa_s : float
+        kappa_s
             The overall normalization of the dark matter halo \
             (kappa_s = (rho_s * scale_radius)/lensing_critical_density)
-        inner_slope : float
+        inner_slope
             The inner slope of the dark matter halo
-        scale_radius : float
+        scale_radius
             The arc-second radius where the average density within this radius is 200 times the critical density of \
             the Universe..
         """
@@ -711,12 +711,12 @@ class SphNFWGeneralized(EllNFWGeneralized):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        kappa_s : float
+        kappa_s
             The overall normalization of the dark matter halo \
             (kappa_s = (rho_s * scale_radius)/lensing_critical_density)
-        inner_slope : float
+        inner_slope
             The inner slope of the dark matter halo.
-        scale_radius : float
+        scale_radius
             The arc-second radius where the average density within this radius is 200 times the critical density of \
             the Universe..
         """
@@ -978,10 +978,10 @@ class EllNFW(EllNFWGeneralized):
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        kappa_s : float
+        kappa_s
             The overall normalization of the dark matter halo \
             (kappa_s = (rho_s * scale_radius)/lensing_critical_density)
-        scale_radius : float
+        scale_radius
             The arc-second radius where the average density within this radius is 200 times the critical density of \
             the Universe..
         """
@@ -1152,10 +1152,10 @@ class SphNFW(EllNFW):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        kappa_s : float
+        kappa_s
             The overall normalization of the dark matter halo \
             (kappa_s = (rho_s * scale_radius)/lensing_critical_density)
-        scale_radius : float
+        scale_radius
             The arc-second radius where the average density within this radius is 200 times the critical density of \
             the Universe..
         """

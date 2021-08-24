@@ -22,7 +22,7 @@ class PointMass(MassProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        einstein_radius : float
+        einstein_radius
             The arc-second Einstein radius of the point-mass.
         """
         super().__init__(centre=centre, elliptical_comps=(0.0, 0.0))
@@ -267,11 +267,11 @@ class EllPowerLawCored(MassProfile):
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        einstein_radius : float
+        einstein_radius
             The arc-second Einstein radius.
-        slope : float
+        slope
             The density slope of the power-law (lower value -> shallower profile, higher value -> steeper profile).
-        core_radius : float
+        core_radius
             The arc-second radius of the inner core.
         """
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
@@ -448,11 +448,11 @@ class SphPowerLawCored(EllPowerLawCored):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        einstein_radius : float
+        einstein_radius
             The arc-second Einstein radius.
-        slope : float
+        slope
             The density slope of the power-law (lower value -> shallower profile, higher value -> steeper profile).
-        core_radius : float
+        core_radius
             The arc-second radius of the inner core.
         """
         super(SphPowerLawCored, self).__init__(
@@ -511,9 +511,9 @@ class EllPowerLaw(EllPowerLawCored):
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        einstein_radius : float
+        einstein_radius
             The arc-second Einstein radius.
-        slope : float
+        slope
             The density slope of the power-law (lower value -> shallower profile, higher value -> steeper profile).
         """
 
@@ -613,9 +613,9 @@ class SphPowerLaw(EllPowerLaw):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        einstein_radius : float
+        einstein_radius
             The arc-second Einstein radius.
-        slope : float
+        slope
             The density slope of the power-law (lower value -> shallower profile, higher value -> steeper profile).
         """
 
@@ -662,9 +662,9 @@ class EllIsothermalCored(EllPowerLawCored):
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        einstein_radius : float
+        einstein_radius
             The arc-second Einstein radius.
-        core_radius : float
+        core_radius
             The arc-second radius of the inner core.
         """
         super(EllIsothermalCored, self).__init__(
@@ -691,9 +691,9 @@ class SphIsothermalCored(SphPowerLawCored):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        einstein_radius : float
+        einstein_radius
             The arc-second Einstein radius.
-        core_radius : float
+        core_radius
             The arc-second radius of the inner core.
         """
         super(SphIsothermalCored, self).__init__(
@@ -722,7 +722,7 @@ class EllIsothermal(EllPowerLaw):
         elliptical_comps : (float, float)
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
-        einstein_radius : float
+        einstein_radius
             The arc-second Einstein radius.
         """
 
@@ -819,7 +819,7 @@ class SphIsothermal(EllIsothermal):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        einstein_radius : float
+        einstein_radius
             The arc-second Einstein radius.
         """
         super(SphIsothermal, self).__init__(

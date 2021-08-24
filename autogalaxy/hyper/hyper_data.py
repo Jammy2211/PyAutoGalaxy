@@ -4,9 +4,9 @@ class HyperImageSky:
 
         Parameters
         -----------
-        sky_scale : float
+        sky_scale
             The value by which the background scale is increased or decreased (electrons per second).
-        noise_scale : float
+        noise_scale
             The factor by which the background noise_maps is increased.
         """
         self.sky_scale = sky_scale
@@ -30,9 +30,9 @@ class HyperBackgroundNoise:
 
         Parameters
         -----------
-        sky_scale : float
+        sky_scale
             The value by which the background scale is increased or decreased (electrons per second).
-        noise_scale : float
+        noise_scale
             The factor by which the background noise_maps is increased.
         """
         self.noise_scale = noise_scale

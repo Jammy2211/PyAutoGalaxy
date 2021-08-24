@@ -19,7 +19,7 @@ class AbstractPlane(LensingObject):
 
         Parameters
         -----------
-        redshift : float or None
+        redshift or None
             The redshift of the plane.
         galaxies : [Galaxy]
             The list of galaxies in this plane.

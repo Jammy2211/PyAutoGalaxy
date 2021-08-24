@@ -525,7 +525,7 @@ def stochastic_model_from(
         If `True` the `VoronoiBrightnessImage` pixelization in the model is fitted for.
     include_regularization : bool
         If `True` the regularization in the model is fitted for.
-    subhalo_centre_width : float
+    subhalo_centre_width
         The `sigma` value of the `GaussianPrior` on the centre of the subhalo, if it is included in the lens model.
     subhalo_mass_at_200_log_uniform : bool
         if `True`, the subhalo mass (if included) does not assume a `GaussianPrior` from the previous fit, but instead
