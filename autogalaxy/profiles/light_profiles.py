@@ -915,5 +915,8 @@ class SphEff(EllEff):
         """
 
         super().__init__(
-            centre=centre, elliptical_comps=(0.0, 0.0), intensity=intensity, effective_radius=effective_radius
+            centre=centre,
+            elliptical_comps=(0.0, 0.0),
+            intensity=intensity,
+            effective_radius=effective_radius,
         )
