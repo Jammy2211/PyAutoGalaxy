@@ -12,6 +12,38 @@ from autogalaxy.mock import mock
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
+class TestRegression:
+    def test__centre_of_profile_in_right_place(self):
+        grid = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
+
+        light_profile = ag.lp.EllSersic(centre=(2.0, 1.0), intensity=1.0)
+        image = light_profile.image_2d_from_grid(grid=grid)
+        max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
+        assert max_indexes == (1, 4)
+
+        light_profile = ag.lp.SphSersic(centre=(2.0, 1.0), intensity=1.0)
+        image = light_profile.image_2d_from_grid(grid=grid)
+        max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
+        assert max_indexes == (1, 4)
+
+        grid = ag.Grid2DIterate.uniform(
+            shape_native=(7, 7),
+            pixel_scales=1.0,
+            fractional_accuracy=0.99,
+            sub_steps=[2, 4],
+        )
+
+        light_profile = ag.lp.EllSersic(centre=(2.0, 1.0), intensity=1.0)
+        image = light_profile.image_2d_from_grid(grid=grid)
+        max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
+        assert max_indexes == (1, 4)
+
+        light_profile = ag.lp.SphSersic(centre=(2.0, 1.0), intensity=1.0)
+        image = light_profile.image_2d_from_grid(grid=grid)
+        max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
+        assert max_indexes == (1, 4)
+
+
 class TestImage1DFrom:
     def test__grid_2d_in__returns_1d_image_via_projected_quantities(self):
 
@@ -848,33 +880,7 @@ class TestChameleon:
         assert image.shape_native == (2, 2)
 
 
-class TestRegression:
-    def test__centre_of_profile_in_right_place(self):
-        grid = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
 
-        light_profile = ag.lp.EllSersic(centre=(2.0, 1.0), intensity=1.0)
-        image = light_profile.image_2d_from_grid(grid=grid)
-        max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
-        assert max_indexes == (1, 4)
 
-        light_profile = ag.lp.SphSersic(centre=(2.0, 1.0), intensity=1.0)
-        image = light_profile.image_2d_from_grid(grid=grid)
-        max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
-        assert max_indexes == (1, 4)
 
-        grid = ag.Grid2DIterate.uniform(
-            shape_native=(7, 7),
-            pixel_scales=1.0,
-            fractional_accuracy=0.99,
-            sub_steps=[2, 4],
-        )
 
-        light_profile = ag.lp.EllSersic(centre=(2.0, 1.0), intensity=1.0)
-        image = light_profile.image_2d_from_grid(grid=grid)
-        max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
-        assert max_indexes == (1, 4)
-
-        light_profile = ag.lp.SphSersic(centre=(2.0, 1.0), intensity=1.0)
-        image = light_profile.image_2d_from_grid(grid=grid)
-        max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
-        assert max_indexes == (1, 4)

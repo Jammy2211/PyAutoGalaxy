@@ -329,7 +329,8 @@ class EllSersic(AbstractEllSersic, LightProfile):
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
     ):
-        """ The elliptical Sersic light profile.
+        """
+        The elliptical Sersic light profile.
 
         Parameters
         ----------
@@ -828,3 +829,66 @@ class SphChameleon(EllChameleon):
             core_radius_0=core_radius_0,
             core_radius_1=core_radius_1,
         )
+
+
+class EllipticalEff(LightProfile):
+
+    def __init__(
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            effective_radius: float = 0.6,
+    ):
+        """
+        The elliptical eff light profile, which is commonly used to represent the clumps of Lyman-alpha emitter
+        galaxies.
+
+        Parameters
+        ----------
+        centre
+            The (y,x) arc-second coordinates of the profile centre.
+        elliptical_comps : (float, float)
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+        intensity
+            Overall intensity normalisation of the light profiles (electrons per second).
+        effective_radius
+            The circular radius containing half the light of this profile.
+        """
+
+        super().__init__(
+            centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
+        )
+
+        self.effective_radius = effective_radius
+
+    def image_2d_from_grid_radii(self, grid_radii):
+        """
+        Calculate the intensity of the Eff light profile on a grid of radial coordinates.
+
+        Parameters
+        ----------
+        grid_radii : float
+            The radial distance from the centre of the profile. for each coordinate on the grid.
+        """
+        np.seterr(all="ignore")
+        return self.intensity * (1 + (grid_radii / self.effective_radius) ** 2) ** (-1.5)
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def image_2d_from_grid(
+            self, grid, grid_radial_minimum=None
+    ):
+        """
+        Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
+
+        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+
+        Parameters
+        ----------
+        grid
+            The (y, x) coordinates in the original reference frame of the grid.
+        """
+        return self.image_2d_from_grid_radii(self.grid_to_eccentric_radii(grid))
