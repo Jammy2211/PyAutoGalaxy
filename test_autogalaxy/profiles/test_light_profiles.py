@@ -921,7 +921,7 @@ class TestEff:
             elliptical_comps=(0.0, 0.0),
             intensity=1.0,
             effective_radius=2.0,
-            eta=2.0
+            eta=2.0,
         )
 
         image = eff.image_2d_from_grid_radii(grid_radii=3.0)
@@ -1067,3 +1067,9 @@ class TestEff:
         image = eff.image_2d_from_grid(grid=grid)
 
         assert image.shape_native == (2, 2)
+
+    def test__half_light_radius(self):
+
+        eff = ag.lp.EllEff(effective_radius=2.0, eta=4.0)
+
+        assert eff.half_light_radius == pytest.approx(1.01964, 1e-2)

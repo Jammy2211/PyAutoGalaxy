@@ -896,6 +896,10 @@ class EllEff(LightProfile):
         """
         return self.image_2d_from_grid_radii(self.grid_to_eccentric_radii(grid))
 
+    @property
+    def half_light_radius(self):
+        return self.effective_radius * np.sqrt(0.5 ** (1.0 / (1.0 - self.eta)) - 1.0)
+
 
 class SphEff(EllEff):
     def __init__(
@@ -928,5 +932,5 @@ class SphEff(EllEff):
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
-            eta=eta
+            eta=eta,
         )
