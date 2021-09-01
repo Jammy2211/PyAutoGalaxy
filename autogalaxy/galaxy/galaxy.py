@@ -543,7 +543,8 @@ class HyperGalaxy:
     _ids = count()
 
     def __init__(self, contribution_factor=0.0, noise_factor=0.0, noise_power=1.0):
-        """ If a `Galaxy` is given a *HyperGalaxy* as an attribute, the noise-map in \
+        """
+        If a `Galaxy` is given a *HyperGalaxy* as an attribute, the noise-map in \
         the regions of the image that the galaxy is located will be hyper, to prevent \
         over-fitting of the galaxy.
         

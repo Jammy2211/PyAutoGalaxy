@@ -2,7 +2,7 @@ import pytest
 
 import autofit as af
 import autogalaxy as ag
-from autofit.mapper.prior.tuple_prior import TuplePrior
+
 from autogalaxy.mock import mock
 
 
@@ -365,15 +365,15 @@ def test__stochastic_model_from():
 
     model = ag.util.model.stochastic_model_from(result=result)
 
-    assert isinstance(model.galaxies.lens.mass.centre, TuplePrior)
+    assert isinstance(model.galaxies.lens.mass.centre, af.TuplePrior)
     assert isinstance(model.galaxies.lens.light.intensity, float)
     assert isinstance(model.galaxies.source.pixelization.pixels, int)
     assert isinstance(model.galaxies.source.regularization.inner_coefficient, float)
 
     model = ag.util.model.stochastic_model_from(result=result, include_lens_light=True)
 
-    assert isinstance(model.galaxies.lens.mass.centre, TuplePrior)
- #   assert isinstance(model.galaxies.lens.light.intensity, af.LogUniformPrior)
+    assert isinstance(model.galaxies.lens.mass.centre, af.TuplePrior)
+    assert isinstance(model.galaxies.lens.light.intensity, af.LogUniformPrior)
     assert isinstance(model.galaxies.source.pixelization.pixels, int)
     assert isinstance(model.galaxies.source.regularization.inner_coefficient, float)
 
@@ -381,9 +381,9 @@ def test__stochastic_model_from():
         result=result, include_pixelization=True
     )
 
-    assert isinstance(model.galaxies.lens.mass.centre, TuplePrior)
+    assert isinstance(model.galaxies.lens.mass.centre, af.TuplePrior)
     assert isinstance(model.galaxies.lens.light.intensity, float)
-  #  assert isinstance(model.galaxies.source.pixelization.pixels, af.UniformPrior)
+    assert isinstance(model.galaxies.source.pixelization.pixels, af.UniformPrior)
     assert not isinstance(
         model.galaxies.source.regularization.inner_coefficient, af.UniformPrior
     )
@@ -392,9 +392,9 @@ def test__stochastic_model_from():
         result=result, include_regularization=True
     )
 
-    assert isinstance(model.galaxies.lens.mass.centre, TuplePrior)
+    assert isinstance(model.galaxies.lens.mass.centre, af.TuplePrior)
     assert isinstance(model.galaxies.lens.light.intensity, float)
     assert isinstance(model.galaxies.source.pixelization.pixels, int)
-    # assert isinstance(
-    #     model.galaxies.source.regularization.inner_coefficient, af.UniformPrior
-    # )
+    assert isinstance(
+        model.galaxies.source.regularization.inner_coefficient, af.UniformPrior
+    )

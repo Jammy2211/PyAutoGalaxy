@@ -14,8 +14,10 @@ class SetupHyper:
         hyper_background_noise: Optional[type(HyperBackgroundNoise)] = None,
         search_inversion_cls: Optional[af.NonLinearSearch] = None,
         search_noise_cls: Optional[af.NonLinearSearch] = None,
+        search_bc_cls: Optional[af.NonLinearSearch] = None,
         search_inversion_dict: Optional[dict] = None,
         search_noise_dict: Optional[dict] = None,
+        search_bc_dict: Optional[dict] = None,
     ):
         """
         The hyper setup of a pipeline, which controls how hyper-features in PyAutoGalaxy template pipelines run,
@@ -56,6 +58,13 @@ class SetupHyper:
 
         self.search_noise_cls = search_noise_cls or af.DynestyStatic
         self.search_noise_dict = search_noise_dict or {"nlive": 50, "sample": "rwalk"}
+
+        self.search_bc_cls = search_bc_cls or af.DynestyStatic
+        self.search_bc_dict = search_bc_dict or {
+            "nlive": 50,
+            "sample": "rstagger",
+            "dlogz": 10,
+        }
 
         self.hyper_image_sky = hyper_image_sky
         self.hyper_background_noise = hyper_background_noise

@@ -15,7 +15,12 @@ from autogalaxy.util import plane_util
 
 
 class AbstractPlane(LensingObject):
-    def __init__(self, galaxies, redshift: Optional[float]=None, profiling_dict: Optional[Dict] = None):
+    def __init__(
+        self,
+        galaxies,
+        redshift: Optional[float] = None,
+        profiling_dict: Optional[Dict] = None,
+    ):
         """A plane of galaxies where all galaxies are at the same redshift.
 
         Parameters
@@ -232,7 +237,6 @@ class AbstractPlane(LensingObject):
 
 
 class AbstractPlaneLensing(AbstractPlane):
-
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from_grid(self, grid):
         """
@@ -335,7 +339,6 @@ class AbstractPlaneLensing(AbstractPlane):
 
 
 class AbstractPlaneData(AbstractPlaneLensing):
-
     def blurred_image_2d_from_grid_and_psf(self, grid, psf, blurring_grid):
 
         image = self.image_2d_from_grid(grid=grid)
@@ -463,7 +466,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
                 hyper_image=galaxies_with_pixelization[0].hyper_galaxy_image,
                 settings=settings_pixelization,
                 preloads=preloads,
-                profiling_dict=self.profiling_dict
+                profiling_dict=self.profiling_dict,
             )
 
         elif len(galaxies_with_pixelization) > 1:
@@ -498,7 +501,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             mapper=mapper,
             regularization=self.regularization,
             settings=settings_inversion,
-            profiling_dict=self.profiling_dict
+            profiling_dict=self.profiling_dict,
         )
 
     def inversion_interferometer_from_grid_and_data(
@@ -526,7 +529,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             mapper=mapper,
             regularization=self.regularization,
             settings=settings_inversion,
-            profiling_dict=self.profiling_dict
+            profiling_dict=self.profiling_dict,
         )
 
     def plane_image_2d_from_grid(self, grid):

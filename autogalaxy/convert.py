@@ -67,7 +67,8 @@ def phi_from(elliptical_comps):
         The first and second ellipticity components of the elliptical coordinate system, where
         fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
     """
-    return axis_ratio_and_phi_from(elliptical_comps=elliptical_comps)
+    axis_ratio, angle = axis_ratio_and_phi_from(elliptical_comps=elliptical_comps)
+    return angle
 
 
 def shear_elliptical_comps_from(magnitude, angle):

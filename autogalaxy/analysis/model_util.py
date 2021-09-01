@@ -123,6 +123,16 @@ def set_upper_limit_of_pixelization_pixels_prior(
                 )
 
 
+def clean_model_of_hyper_images(model):
+
+    for galaxy in model.galaxies:
+
+        del galaxy.hyper_model_image
+        del galaxy.hyper_galaxy_image
+
+    return model
+
+
 def hyper_noise_model_from(
     setup_hyper, result: af.Result, include_hyper_image_sky: bool = False
 ) -> af.Collection:
@@ -166,6 +176,8 @@ def hyper_noise_model_from(
                 return None
 
     model = result.instance.as_model()
+
+    model = clean_model_of_hyper_images(model=model)
 
     model.hyper_image_sky = setup_hyper.hyper_image_sky
     model.hyper_background_noise = setup_hyper.hyper_background_noise
@@ -222,6 +234,8 @@ def hyper_inversion_model_from(
 
     if not has_pixelization_from_model(model=model):
         return None
+
+    model = clean_model_of_hyper_images(model=model)
 
     model.hyper_image_sky = None
     model.hyper_background_noise = None
@@ -411,6 +425,8 @@ def hyper_model_from(
 
     model = result.instance.as_model((aa.pix.Pixelization, aa.reg.Regularization))
 
+    model = clean_model_of_hyper_images(model=model)
+
     if setup_hyper is None:
         return None
 
@@ -479,7 +495,7 @@ def hyper_fit_bc(hyper_model: af.Collection, setup_hyper, result: af.Result, ana
         name=f"{result.search.paths.name}__hyper",
         unique_tag=result.search.paths.unique_tag,
         number_of_cores=result.search.number_of_cores,
-        **setup_hyper.search_inversion_dict,
+        **setup_hyper.search_bc_dict,
     )
 
     analysis.set_hyper_dataset(result=result)
@@ -512,7 +528,7 @@ def stochastic_model_from(
      to reconstruct the source galaxy (therefore a pixelization which uses the KMeans method, like the
      `VoronoiBrightnessImage` must be used to perform a stochastic fit).
 
-     The cap is computed as the mean of these ~250 values and it is introduced to avoid underestimated errors due
+     The cap is computed as the mean of these ~250 values and it is introduced o avoid underestimated errors due
      to artificial likelihood boosts.
 
     Parameters

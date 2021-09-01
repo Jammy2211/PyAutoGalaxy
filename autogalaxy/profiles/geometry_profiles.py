@@ -1,5 +1,7 @@
 import numpy as np
 
+from autoconf import cached_property
+
 import autoarray as aa
 from autoarray.structures.grids.two_d import grid_2d as g2d
 
@@ -46,6 +48,14 @@ class SphProfile(GeometryProfile):
             The (y,x) arc-second coordinates of the profile centre.
         """
         super().__init__(centre=centre)
+
+    @cached_property
+    def angle(self):
+        return 0.0
+
+    @cached_property
+    def axis_ratio(self):
+        return 1.0
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
@@ -143,13 +153,6 @@ class EllProfile(SphProfile):
 
         self.elliptical_comps = elliptical_comps
 
-        axis_ratio, angle = convert.axis_ratio_and_phi_from(
-            elliptical_comps=elliptical_comps
-        )
-
-        self.axis_ratio = axis_ratio
-        self.angle = angle
-
     @classmethod
     def from_axis_ratio_and_phi(
         cls,
@@ -162,6 +165,16 @@ class EllProfile(SphProfile):
             axis_ratio=axis_ratio, angle=angle
         )
         return cls(centre=centre, elliptical_comps=elliptical_comps)
+
+    @cached_property
+    def angle(self):
+
+        return convert.phi_from(elliptical_comps=self.elliptical_comps)
+
+    @cached_property
+    def axis_ratio(self):
+
+        return convert.axis_ratio_from(elliptical_comps=self.elliptical_comps)
 
     @property
     def phi_radians(self):
