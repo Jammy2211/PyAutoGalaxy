@@ -274,7 +274,7 @@ def hyper_fit_no_noise(
 
     hyper_inversion_result = search.fit(model=hyper_model_inversion, analysis=analysis)
 
-    setattr(result, "hyper", hyper_inversion_result)
+    result.hyper = hyper_inversion_result
 
     return result
 
@@ -355,7 +355,7 @@ def hyper_fit(
 
     if hyper_inversion_model is None:
 
-        setattr(result, "hyper", hyper_noise_result)
+        result.hyper = hyper_noise_result
 
         return result
 
@@ -376,7 +376,7 @@ def hyper_fit(
 
     hyper_inversion_result = search.fit(model=hyper_inversion_model, analysis=analysis)
 
-    setattr(result, "hyper", hyper_inversion_result)
+    result.hyper = hyper_inversion_result
 
     return result
 
@@ -438,7 +438,7 @@ def hyper_model_from(
     return model
 
 
-def hyper_fit_old(hyper_model: af.Collection, setup_hyper, result: af.Result, analysis):
+def hyper_fit_bc(hyper_model: af.Collection, setup_hyper, result: af.Result, analysis):
     """
     Perform a hyper-fit, which extends a model-fit with an additional fit which fixes the non-hyper components of the
     model (e.g., `LightProfile`'s, `MassProfile`) to the `Result`'s maximum likelihood fit. The hyper-fit then treats
@@ -486,7 +486,7 @@ def hyper_fit_old(hyper_model: af.Collection, setup_hyper, result: af.Result, an
 
     hyper_result = search.fit(model=hyper_model, analysis=analysis)
 
-    setattr(result, "hyper", hyper_result)
+    result.hyper = hyper_result
 
     return result
 
@@ -632,6 +632,6 @@ def stochastic_fit(
 
     search.paths.zip_remove()
 
-    setattr(result, "stochastic", stochastic_result)
+    result.stochastic = stochastic_result
 
     return result
