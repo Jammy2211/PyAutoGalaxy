@@ -81,7 +81,7 @@ def ordered_plane_redshifts_with_slicing_from(
     planes_between_lenses : [int]
         The number of slices between each main plane. The first entry in this list determines the number of slices \
         between Earth (redshift 0.0) and main plane 0, the next between main planes 0 and 1, etc.
-    source_plane_redshift : float
+    source_plane_redshift
         The redshift of the source-plane, which is input explicitly to ensure galaxies are not placed in the \
         source-plane.
     """

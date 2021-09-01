@@ -349,11 +349,11 @@ class Galaxy(af.ModelObject, LensingObject):
 
             Parameters
             ----------
-            radius : float
+            radius
                 The radius of the circle to compute the dimensionless mass within.
             unit_luminosity : str
                 The unit_label the luminosity is returned in {esp, counts}.
-            exposure_time : float
+            exposure_time
                 The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
         """
         if self.has_light_profile:
@@ -496,7 +496,7 @@ class Galaxy(af.ModelObject, LensingObject):
             The radius of the circle to compute the dimensionless mass within.
         unit_mass : str
             The unit_label the mass is returned in {angular, angular}.
-        critical_surface_density : float or None
+        critical_surface_density or None
             The critical surface mass density of the strong lens configuration, which converts mass from angulalr \
             unit_label to phsical unit_label (e.g. solar masses).
         """
@@ -558,13 +558,13 @@ class HyperGalaxy:
         
         Parameters
         -----------
-        contribution_factor : float
+        contribution_factor
             Factor that adjusts how much of the galaxy's light is attributed to the
             contribution map.
-        noise_factor : float
+        noise_factor
             Factor by which the noise-map is increased in the regions of the galaxy's
             contribution map.
-        noise_power : float
+        noise_power
             The power to which the contribution map is raised when scaling the
             noise-map.
         """

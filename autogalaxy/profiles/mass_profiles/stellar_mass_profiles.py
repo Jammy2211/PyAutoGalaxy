@@ -36,7 +36,7 @@ class EllGaussian(MassProfile, StellarProfile):
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity
             Overall intensity normalisation of the light profiles (electrons per second).
-        sigma : float
+        sigma
             The sigma value of the Gaussian.
         """
 
@@ -190,7 +190,7 @@ class EllGaussian(MassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid_radii : float
+        grid_radii
             The radial distance from the centre of the profile. for each coordinate on the grid.
 
         Note: sigma is divided by sqrt(q) here.
@@ -238,10 +238,10 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
             The radius containing half the light of this profile.
-        sersic_index : float
+        sersic_index
             Controls the concentration of the of the profile (lower value -> less concentrated, \
             higher value -> more concentrated).
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
         super(AbstractEllSersic, self).__init__(
@@ -312,7 +312,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
 
             Parameters
             ----------
-            radius : float
+            radius
                 The distance from the centre of the profile.
         """
         return self.intensity * np.exp(
@@ -459,10 +459,10 @@ class SphSersic(EllSersic):
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
             The circular radius containing half the light of this profile.
-        sersic_index : float
+        sersic_index
             Controls the concentration of the of the profile (lower value -> less concentrated, \
             higher value -> more concentrated).
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profile.
         """
         super(SphSersic, self).__init__(
@@ -499,7 +499,7 @@ class EllExponential(EllSersic):
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
         super(EllExponential, self).__init__(
@@ -532,7 +532,7 @@ class SphExponential(EllExponential):
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles.
         """
         super(SphExponential, self).__init__(
@@ -568,7 +568,7 @@ class EllDevVaucouleurs(EllSersic):
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
             The radius containing half the light of this profile.
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profile.
         """
         super(EllDevVaucouleurs, self).__init__(
@@ -601,7 +601,7 @@ class SphDevVaucouleurs(EllDevVaucouleurs):
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profiles.
         """
         super(SphDevVaucouleurs, self).__init__(
@@ -638,12 +638,12 @@ class EllSersicRadialGradient(AbstractEllSersic):
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
-        sersic_index : float
+        sersic_index
             Controls the concentration of the of the profile (lower value -> less concentrated, \
             higher value -> more concentrated).
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profile.
-        mass_to_light_gradient : float
+        mass_to_light_gradient
             The mass-to-light radial gradient.
         """
         super(EllSersicRadialGradient, self).__init__(
@@ -803,12 +803,12 @@ class SphSersicRadialGradient(EllSersicRadialGradient):
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
-        sersic_index : float
+        sersic_index
             Controls the concentration of the of the profile (lower value -> less concentrated, \
             higher value -> more concentrated).
-        mass_to_light_ratio : float
+        mass_to_light_ratio
             The mass-to-light ratio of the light profile.
-        mass_to_light_gradient : float
+        mass_to_light_gradient
             The mass-to-light radial gradient.
         """
         super(SphSersicRadialGradient, self).__init__(
@@ -851,11 +851,11 @@ class EllSersicCore(EllSersic):
         sersic_index : Int
             Controls the concentration of the of the profile (lower value -> less concentrated, \
             higher value -> more concentrated).
-        radius_break : Float
+        radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
-        intensity_break : Float
+        intensity_break
             The intensity at the break radius.
-        gamma : Float
+        gamma
             The logarithmic power-law slope of the inner core profiles
         alpha :
             Controls the sharpness of the transition between the inner core / outer Sersic profiles.
@@ -897,7 +897,7 @@ class EllSersicCore(EllSersic):
 
         Parameters
         ----------
-        grid_radii : float
+        grid_radii
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
         return np.multiply(
@@ -980,11 +980,11 @@ class SphSersicCore(EllSersicCore):
         sersic_index : Int
             Controls the concentration of the of the profile (lower value -> less concentrated, \
             higher value -> more concentrated).
-        radius_break : Float
+        radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
-        intensity_break : Float
+        intensity_break
             The intensity at the break radius.
-        gamma : Float
+        gamma
             The logarithmic power-law slope of the inner core profiles
         alpha :
             Controls the sharpness of the transition between the inner core / outer Sersic profiles.
@@ -1145,7 +1145,7 @@ class EllChameleon(MassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid_radii : float
+        grid_radii
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
 

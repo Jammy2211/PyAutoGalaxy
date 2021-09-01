@@ -86,7 +86,44 @@ def has_pixelization_from_model(model: af.Collection) -> bool:
     return pixelization is not None
 
 
-def hyper_model_from(
+def set_upper_limit_of_pixelization_pixels_prior(
+    hyper_model: af.Collection, result: af.Result
+):
+    """
+    If the pixelization being fitted in the hyper-model fit is a `VoronoiBrightnessImage` pixelization, this function
+    sets the upper limit of its `pixels` prior to the number of data points in the mask.
+
+    This ensures the KMeans algorithm does not raise an exception due to having fewer data points than source pixels.
+
+    Parameters
+    ----------
+    hyper_model : Collection
+        The hyper model used by the hyper-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
+    result
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
+    """
+
+    if hasattr(hyper_model, "galaxies"):
+
+        pixels_in_mask = result.analysis.dataset.mask.pixels_in_mask
+
+        if pixels_in_mask < hyper_model.galaxies.source.pixelization.pixels.upper_limit:
+
+            if (
+                hyper_model.galaxies.source.pixelization.cls
+                is aa.pix.VoronoiBrightnessImage
+            ):
+
+                lower_limit = (
+                    hyper_model.galaxies.source.pixelization.pixels.lower_limit
+                )
+
+                hyper_model.galaxies.source.pixelization.pixels = af.UniformPrior(
+                    lower_limit=lower_limit, upper_limit=pixels_in_mask
+                )
+
+
+def hyper_noise_model_from(
     setup_hyper, result: af.Result, include_hyper_image_sky: bool = False
 ) -> af.Collection:
     """
@@ -111,6 +148,260 @@ def hyper_model_from(
     include_hyper_image_sky
         This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_hyper`.
 
+    Returns
+    -------
+    af.Collection
+        The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
+        model components now free parameters.
+    """
+
+    if setup_hyper is None:
+        return None
+
+    if setup_hyper.hyper_galaxy_names is None:
+        if setup_hyper.hypers_all_off:
+            return None
+        if setup_hyper.hypers_all_except_image_sky_off:
+            if not include_hyper_image_sky:
+                return None
+
+    model = result.instance.as_model()
+
+    model.hyper_image_sky = setup_hyper.hyper_image_sky
+    model.hyper_background_noise = setup_hyper.hyper_background_noise
+
+    if setup_hyper.hyper_galaxy_names is not None:
+
+        for path_galaxy, galaxy in result.path_galaxy_tuples:
+            if path_galaxy[-1] in setup_hyper.hyper_galaxy_names:
+                if not np.all(result.hyper_galaxy_image_path_dict[path_galaxy] == 0):
+
+                    galaxy = getattr(model.galaxies, path_galaxy[-1])
+
+                    setattr(galaxy, "hyper_galaxy", af.Model(HyperGalaxy))
+
+    return model
+
+
+def hyper_inversion_model_from(
+    setup_hyper, result: af.Result, include_hyper_image_sky: bool = False
+) -> af.Collection:
+    """
+    Make a hyper model from the `Result` of a model-fit, where the hyper-model is the maximum log likelihood instance
+    of the inferred model but turns the following hyper components of the model to free parameters:
+
+    1) The `Pixelization` of any `Galaxy` in the model.
+    2) The `Regularization` of any `Galaxy` in the model.
+    3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
+    4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
+    data which are fit poorly.
+
+    The hyper model is typically used in pipelines to refine and improve an `Inversion` after model-fits that fit the
+    `Galaxy` light and mass components.
+
+    Parameters
+    ----------
+    setup_hyper
+        The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
+    result
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
+    include_hyper_image_sky
+        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_hyper`.
+
+    Returns
+    -------
+    af.Collection
+        The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
+        model components now free parameters.
+    """
+
+    if setup_hyper is None:
+        return None
+
+    model = result.instance.as_model((aa.pix.Pixelization, aa.reg.Regularization))
+
+    if not has_pixelization_from_model(model=model):
+        return None
+
+    model.hyper_image_sky = None
+    model.hyper_background_noise = None
+
+    if setup_hyper.hyper_image_sky is not None and include_hyper_image_sky:
+        model.hyper_image_sky = setup_hyper.hyper_image_sky
+
+    if setup_hyper.hyper_background_noise is not None:
+        try:
+            model.hyper_background_noise = result.instance.hyper_background_noise
+        except AttributeError:
+            pass
+
+    if setup_hyper.hyper_galaxy_names is not None:
+
+        for path_galaxy, galaxy in result.path_galaxy_tuples:
+            if path_galaxy[-1] in setup_hyper.hyper_galaxy_names:
+                if not np.all(result.hyper_galaxy_image_path_dict[path_galaxy] == 0):
+
+                    model_galaxy = getattr(model.galaxies, path_galaxy[-1])
+
+                    setattr(model_galaxy, "hyper_galaxy", galaxy.hyper_galaxy)
+
+    return model
+
+
+def hyper_fit_no_noise(
+    setup_hyper, result: af.Result, analysis, include_hyper_image_sky: bool = False
+):
+
+    analysis.set_hyper_dataset(result=result)
+
+    hyper_model_inversion = hyper_inversion_model_from(
+        setup_hyper=setup_hyper,
+        result=result,
+        include_hyper_image_sky=include_hyper_image_sky,
+    )
+
+    if hyper_model_inversion is None:
+
+        return result
+
+    search = setup_hyper.search_inversion_cls(
+        path_prefix=result.search.path_prefix_no_unique_tag,
+        name=f"{result.search.paths.name}__hyper_inversion",
+        unique_tag=result.search.paths.unique_tag,
+        number_of_cores=result.search.number_of_cores,
+        **setup_hyper.search_inversion_dict,
+    )
+
+    hyper_inversion_result = search.fit(model=hyper_model_inversion, analysis=analysis)
+
+    result.hyper = hyper_inversion_result
+
+    return result
+
+
+def hyper_fit(
+    setup_hyper, result: af.Result, analysis, include_hyper_image_sky: bool = False
+):
+    """
+    Perform a hyper-fit, which extends a model-fit with an additional fit which fixes the non-hyper components of the
+    model (e.g., `LightProfile`'s, `MassProfile`) to the `Result`'s maximum likelihood fit. The hyper-fit then treats
+    only the hyper-model components as free parameters, which are any of the following model components:
+
+    1) The `Pixelization` of any `Galaxy` in the model.
+    2) The `Regularization` of any `Galaxy` in the model.
+    3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
+    4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
+    data which are fit poorly.
+
+    The hyper model is typically used in pipelines to refine and improve an `Inversion` after model-fits that fit the
+    `Galaxy` light and mass components.
+
+    Parameters
+    ----------
+    hyper_model : Collection
+        The hyper model used by the hyper-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
+    setup_hyper : SetupHyper
+        The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
+    result : af.Result
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
+    analysis : Analysis
+        An analysis class used to fit imaging or interferometer data with a model.
+
+    Returns
+    -------
+    af.Result
+        The result of the hyper model-fit, which has a new attribute `result.hyper` that contains updated parameter
+        values for the hyper-model components for passing to later model-fits.
+    """
+
+    if analysis.hyper_model_image is None:
+
+        analysis.set_hyper_dataset(result=result)
+
+    hyper_noise_model = hyper_noise_model_from(
+        setup_hyper=setup_hyper,
+        result=result,
+        include_hyper_image_sky=include_hyper_image_sky,
+    )
+
+    if hyper_noise_model is None:
+
+        return hyper_fit_no_noise(
+            setup_hyper=setup_hyper,
+            result=result,
+            analysis=analysis,
+            include_hyper_image_sky=include_hyper_image_sky,
+        )
+
+    if hyper_noise_model is not None:
+
+        search = setup_hyper.search_inversion_cls(
+            path_prefix=result.search.path_prefix_no_unique_tag,
+            name=f"{result.search.paths.name}__hyper_noise",
+            unique_tag=result.search.paths.unique_tag,
+            number_of_cores=result.search.number_of_cores,
+            **setup_hyper.search_noise_dict,
+        )
+
+        hyper_noise_result = search.fit(model=hyper_noise_model, analysis=analysis)
+
+    analysis.set_hyper_dataset(result=result)
+
+    hyper_inversion_model = hyper_inversion_model_from(
+        setup_hyper=setup_hyper,
+        result=hyper_noise_result,
+        include_hyper_image_sky=include_hyper_image_sky,
+    )
+
+    if hyper_inversion_model is None:
+
+        result.hyper = hyper_noise_result
+
+        return result
+
+    try:
+        set_upper_limit_of_pixelization_pixels_prior(
+            hyper_model=hyper_inversion_model, result=result
+        )
+    except AttributeError:
+        pass
+
+    search = setup_hyper.search_inversion_cls(
+        path_prefix=result.search.path_prefix_no_unique_tag,
+        name=f"{result.search.paths.name}__hyper_inversion",
+        unique_tag=result.search.paths.unique_tag,
+        number_of_cores=result.search.number_of_cores,
+        **setup_hyper.search_inversion_dict,
+    )
+
+    hyper_inversion_result = search.fit(model=hyper_inversion_model, analysis=analysis)
+
+    result.hyper = hyper_inversion_result
+
+    return result
+
+
+def hyper_model_from(
+    setup_hyper, result: af.Result, include_hyper_image_sky: bool = False
+) -> af.Collection:
+    """
+    Make a hyper model from the `Result` of a model-fit, where the hyper-model is the maximum log likelihood instance
+    of the inferred model but turns the following hyper components of the model to free parameters:
+    1) The `Pixelization` of any `Galaxy` in the model.
+    2) The `Regularization` of any `Galaxy` in the model.
+    3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
+    4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
+    data which are fit poorly.
+    The hyper model is typically used in pipelines to refine and improve an `Inversion` after model-fits that fit the
+    `Galaxy` light and mass components.
+    Parameters
+    ----------
+    setup_hyper
+        The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
+    result
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
+    include_hyper_image_sky
+        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_hyper`.
     Returns
     -------
     af.Collection
@@ -147,7 +438,7 @@ def hyper_model_from(
     return model
 
 
-def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analysis):
+def hyper_fit_bc(hyper_model: af.Collection, setup_hyper, result: af.Result, analysis):
     """
     Perform a hyper-fit, which extends a model-fit with an additional fit which fixes the non-hyper components of the
     model (e.g., `LightProfile`'s, `MassProfile`) to the `Result`'s maximum likelihood fit. The hyper-fit then treats
@@ -183,19 +474,19 @@ def hyper_fit(hyper_model: af.Collection, setup_hyper, result: af.Result, analys
     if hyper_model is None:
         return result
 
-    search = setup_hyper.search_cls(
+    search = setup_hyper.search_inversion_cls(
         path_prefix=result.search.path_prefix_no_unique_tag,
         name=f"{result.search.paths.name}__hyper",
         unique_tag=result.search.paths.unique_tag,
         number_of_cores=result.search.number_of_cores,
-        **setup_hyper.search_dict,
+        **setup_hyper.search_inversion_dict,
     )
 
     analysis.set_hyper_dataset(result=result)
 
     hyper_result = search.fit(model=hyper_model, analysis=analysis)
 
-    setattr(result, "hyper", hyper_result)
+    result.hyper = hyper_result
 
     return result
 
@@ -234,7 +525,7 @@ def stochastic_model_from(
         If `True` the `VoronoiBrightnessImage` pixelization in the model is fitted for.
     include_regularization : bool
         If `True` the regularization in the model is fitted for.
-    subhalo_centre_width : float
+    subhalo_centre_width
         The `sigma` value of the `GaussianPrior` on the centre of the subhalo, if it is included in the lens model.
     subhalo_mass_at_200_log_uniform : bool
         if `True`, the subhalo mass (if included) does not assume a `GaussianPrior` from the previous fit, but instead
@@ -283,7 +574,7 @@ def stochastic_model_from(
 
 
 def stochastic_fit(
-    stochastic_model, search_cls, search_dict, result, analysis, info=None
+    stochastic_model, search_cls, search_inversion_dict, result, analysis, info=None
 ):
     """
     Perform a stochastic model-fit, which refits a model but introduces a log likelihood cap whereby all model-samples
@@ -323,7 +614,7 @@ def stochastic_fit(
         name=name,
         unique_tag=result.search.paths.unique_tag,
         number_of_cores=result.search.number_of_cores,
-        **search_dict,
+        **search_inversion_dict,
     )
 
     stochastic_result = search.fit(
@@ -341,6 +632,6 @@ def stochastic_fit(
 
     search.paths.zip_remove()
 
-    setattr(result, "stochastic", stochastic_result)
+    result.stochastic = stochastic_result
 
     return result

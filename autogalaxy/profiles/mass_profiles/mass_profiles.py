@@ -68,7 +68,7 @@ class MassProfile(EllProfile, LensingObject):
             The radius of the circle to compute the dimensionless mass within.
         unit_mass : str
             The unit_label the mass is returned in {angular, angular}.
-        critical_surface_density : float or None
+        critical_surface_density or None
             The critical surface mass density of the strong lens configuration, which converts mass from angulalr \
             unit_label to phsical unit_label (e.g. solar masses).
         """
@@ -87,9 +87,9 @@ class MassProfile(EllProfile, LensingObject):
 
         Parameters
         -----------
-        inner_annuli_radius : float
+        inner_annuli_radius
             The radius of the inner annulus outside of which the density are estimated.
-        outer_annuli_radius : float
+        outer_annuli_radius
             The radius of the outer annulus inside of which the density is estimated.
         """
         annuli_area = (np.pi * outer_annuli_radius ** 2.0) - (
@@ -375,7 +375,7 @@ class MassProfileMGE:
         ----------
         func : func
             The function representing the profile that is decomposed into Gaussians.
-        normalization : float
+        normalization
             A normalization factor tyh
         func_terms : int
             The number of terms used to approximate the input func.
@@ -573,7 +573,7 @@ def psi_from(grid, axis_ratio, core_radius):
         The (y,x) coordinates of the grid, in an arrays of shape (total_coordinates, 2)
     axis_ratio
             Ratio of profiles ellipse's minor and major axes (b/a)
-    core_radius : float
+    core_radius
         The radius of the inner core
 
     Returns
