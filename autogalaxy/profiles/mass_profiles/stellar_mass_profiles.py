@@ -50,15 +50,15 @@ class EllGaussian(MassProfile, StellarProfile):
         self.intensity = intensity
         self.sigma = sigma
 
-        if self.axis_ratio > 0.9999:
-            self.axis_ratio = 0.9999
+        if self._axis_ratio > 0.9999:
+            self._axis_ratio = 0.9999
 
     def zeta_from_grid(self, grid):
-        q2 = self.axis_ratio ** 2.0
+        q2 = self._axis_ratio ** 2.0
         ind_pos_y = grid[:, 0] >= 0
         shape_grid = np.shape(grid)
         output_grid = np.zeros((shape_grid[0]), dtype=np.complex128)
-        scale_factor = self.axis_ratio / (self.sigma * np.sqrt(2.0 * (1.0 - q2)))
+        scale_factor = self._axis_ratio / (self.sigma * np.sqrt(2.0 * (1.0 - q2)))
 
         xs_0 = grid[:, 1][ind_pos_y] * scale_factor
         ys_0 = grid[:, 0][ind_pos_y] * scale_factor
@@ -68,7 +68,7 @@ class EllGaussian(MassProfile, StellarProfile):
         output_grid[ind_pos_y] = -1j * (
             wofz(xs_0 + 1j * ys_0)
             - np.exp(-(xs_0 ** 2.0) * (1.0 - q2) - ys_0 * ys_0 * (1.0 / q2 - 1.0))
-            * wofz(self.axis_ratio * xs_0 + 1j * ys_0 / self.axis_ratio)
+            * wofz(self._axis_ratio * xs_0 + 1j * ys_0 / self._axis_ratio)
         )
 
         output_grid[~ind_pos_y] = np.conj(
@@ -76,7 +76,7 @@ class EllGaussian(MassProfile, StellarProfile):
             * (
                 wofz(xs_1 + 1j * ys_1)
                 - np.exp(-(xs_1 ** 2.0) * (1.0 - q2) - ys_1 * ys_1 * (1.0 / q2 - 1.0))
-                * wofz(self.axis_ratio * xs_1 + 1j * ys_1 / self.axis_ratio)
+                * wofz(self._axis_ratio * xs_1 + 1j * ys_1 / self._axis_ratio)
             )
         )
 
@@ -100,7 +100,7 @@ class EllGaussian(MassProfile, StellarProfile):
             self.mass_to_light_ratio
             * self.intensity
             * self.sigma
-            * np.sqrt((2 * np.pi) / (1.0 - self.axis_ratio ** 2.0))
+            * np.sqrt((2 * np.pi) / (1.0 - self._axis_ratio ** 2.0))
             * self.zeta_from_grid(grid=grid)
         )
 
@@ -136,7 +136,7 @@ class EllGaussian(MassProfile, StellarProfile):
             )
 
         def calculate_deflection_component(npow, index):
-            deflection_grid = self.axis_ratio * grid[:, index]
+            deflection_grid = self._axis_ratio * grid[:, index]
             deflection_grid *= (
                 self.intensity
                 * self.mass_to_light_ratio
@@ -145,7 +145,11 @@ class EllGaussian(MassProfile, StellarProfile):
                     0.0,
                     1.0,
                     grid,
-                    args=(npow, self.axis_ratio, self.sigma / np.sqrt(self.axis_ratio)),
+                    args=(
+                        npow,
+                        self._axis_ratio,
+                        self.sigma / np.sqrt(self._axis_ratio),
+                    ),
                 )[0]
             )
 
@@ -200,7 +204,7 @@ class EllGaussian(MassProfile, StellarProfile):
             np.exp(
                 -0.5
                 * np.square(
-                    np.divide(grid_radii, self.sigma / np.sqrt(self.axis_ratio))
+                    np.divide(grid_radii, self.sigma / np.sqrt(self._axis_ratio))
                 )
             ),
         )
@@ -299,12 +303,12 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_from_grid(self, grid):
         return self._deflections_2d_from_grid_via_gaussians(
-            grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
+            grid=grid, sigmas_factor=np.sqrt(self._axis_ratio)
         )
 
     @property
     def ellipticity_rescale(self):
-        return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
+        return 1.0 - ((1.0 - self._axis_ratio) / 2.0)
 
     def image_2d_from_grid_radii(self, radius):
         """
@@ -342,7 +346,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
 
         The elliptical effective radius instead describes the major-axis radius of the ellipse containing \
         half the light, and may be more appropriate for highly flattened systems like disk galaxies."""
-        return self.effective_radius / np.sqrt(self.axis_ratio)
+        return self.effective_radius / np.sqrt(self._axis_ratio)
 
     def decompose_convergence_into_gaussians(self):
         radii_min = self.effective_radius / 100.0
@@ -396,7 +400,7 @@ class EllSersic(AbstractEllSersic, MassProfileMGE):
         def calculate_deflection_component(npow, index):
             sersic_constant = self.sersic_constant
 
-            deflection_grid = self.axis_ratio * grid[:, index]
+            deflection_grid = self._axis_ratio * grid[:, index]
             deflection_grid *= (
                 self.intensity
                 * self.mass_to_light_ratio
@@ -407,7 +411,7 @@ class EllSersic(AbstractEllSersic, MassProfileMGE):
                     grid,
                     args=(
                         npow,
-                        self.axis_ratio,
+                        self._axis_ratio,
                         self.sersic_index,
                         self.effective_radius,
                         sersic_constant,
@@ -696,7 +700,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
         def calculate_deflection_component(npow, index):
             sersic_constant = self.sersic_constant
 
-            deflection_grid = self.axis_ratio * grid[:, index]
+            deflection_grid = self._axis_ratio * grid[:, index]
             deflection_grid *= (
                 self.intensity
                 * self.mass_to_light_ratio
@@ -707,7 +711,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
                     grid,
                     args=(
                         npow,
-                        self.axis_ratio,
+                        self._axis_ratio,
                         self.sersic_index,
                         self.effective_radius,
                         self.mass_to_light_gradient,
@@ -728,7 +732,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
         return (
             self.mass_to_light_ratio
             * (
-                ((self.axis_ratio * grid_radius) / self.effective_radius)
+                ((self._axis_ratio * grid_radius) / self.effective_radius)
                 ** -self.mass_to_light_gradient
             )
             * self.image_2d_from_grid_radii(grid_radius)
@@ -768,7 +772,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
                 self.mass_to_light_ratio
                 * self.intensity
                 * (
-                    ((self.axis_ratio * r) / self.effective_radius)
+                    ((self._axis_ratio * r) / self.effective_radius)
                     ** -self.mass_to_light_gradient
                 )
                 * np.exp(
@@ -1045,8 +1049,8 @@ class EllChameleon(MassProfile, StellarProfile):
         self.intensity = intensity
         self.core_radius_0 = core_radius_0
         self.core_radius_1 = core_radius_1
-        if self.axis_ratio > 0.99999:
-            self.axis_ratio = 0.99999
+        if self._axis_ratio > 0.99999:
+            self._axis_ratio = 0.99999
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
@@ -1067,49 +1071,49 @@ class EllChameleon(MassProfile, StellarProfile):
             2.0
             * self.mass_to_light_ratio
             * self.intensity
-            / (1 + self.axis_ratio)
-            * self.axis_ratio
-            / np.sqrt(1.0 - self.axis_ratio ** 2.0)
+            / (1 + self._axis_ratio)
+            * self._axis_ratio
+            / np.sqrt(1.0 - self._axis_ratio ** 2.0)
         )
 
         core_radius_0 = np.sqrt(
-            (4.0 * self.core_radius_0 ** 2.0) / (1.0 + self.axis_ratio) ** 2
+            (4.0 * self.core_radius_0 ** 2.0) / (1.0 + self._axis_ratio) ** 2
         )
         core_radius_1 = np.sqrt(
-            (4.0 * self.core_radius_1 ** 2.0) / (1.0 + self.axis_ratio) ** 2
+            (4.0 * self.core_radius_1 ** 2.0) / (1.0 + self._axis_ratio) ** 2
         )
 
         psi0 = psi_from(
-            grid=grid, axis_ratio=self.axis_ratio, core_radius=core_radius_0
+            grid=grid, axis_ratio=self._axis_ratio, core_radius=core_radius_0
         )
         psi1 = psi_from(
-            grid=grid, axis_ratio=self.axis_ratio, core_radius=core_radius_1
+            grid=grid, axis_ratio=self._axis_ratio, core_radius=core_radius_1
         )
 
         deflection_y0 = np.arctanh(
             np.divide(
-                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 0]),
-                np.add(psi0, self.axis_ratio ** 2.0 * core_radius_0),
+                np.multiply(np.sqrt(1.0 - self._axis_ratio ** 2.0), grid[:, 0]),
+                np.add(psi0, self._axis_ratio ** 2.0 * core_radius_0),
             )
         )
 
         deflection_x0 = np.arctan(
             np.divide(
-                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 1]),
+                np.multiply(np.sqrt(1.0 - self._axis_ratio ** 2.0), grid[:, 1]),
                 np.add(psi0, core_radius_0),
             )
         )
 
         deflection_y1 = np.arctanh(
             np.divide(
-                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 0]),
-                np.add(psi1, self.axis_ratio ** 2.0 * core_radius_1),
+                np.multiply(np.sqrt(1.0 - self._axis_ratio ** 2.0), grid[:, 0]),
+                np.add(psi1, self._axis_ratio ** 2.0 * core_radius_1),
             )
         )
 
         deflection_x1 = np.arctan(
             np.divide(
-                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 1]),
+                np.multiply(np.sqrt(1.0 - self._axis_ratio ** 2.0), grid[:, 1]),
                 np.add(psi1, core_radius_1),
             )
         )
@@ -1149,10 +1153,10 @@ class EllChameleon(MassProfile, StellarProfile):
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
 
-        axis_ratio_factor = (1.0 + self.axis_ratio) ** 2.0
+        axis_ratio_factor = (1.0 + self._axis_ratio) ** 2.0
 
         return np.multiply(
-            self.intensity / (1 + self.axis_ratio),
+            self.intensity / (1 + self._axis_ratio),
             np.add(
                 np.divide(
                     1.0,

@@ -1309,11 +1309,11 @@ class TestTruncatedNFWMCRDuffy:
 
         assert truncated_nfw_mass.centre == (1.0, 2.0)
 
-        assert truncated_nfw_mass.axis_ratio == 1.0
-        assert isinstance(truncated_nfw_mass.axis_ratio, float)
+        assert truncated_nfw_mass._axis_ratio == 1.0
+        assert isinstance(truncated_nfw_mass._axis_ratio, float)
 
-        assert truncated_nfw_mass.angle == 0.0
-        assert isinstance(truncated_nfw_mass.angle, float)
+        assert truncated_nfw_mass._angle == 0.0
+        assert isinstance(truncated_nfw_mass._angle, float)
 
         assert truncated_nfw_mass.inner_slope == 1.0
         assert isinstance(truncated_nfw_mass.inner_slope, float)
@@ -1363,11 +1363,11 @@ class TestTruncatedNFWMCRLludlow:
 
         assert truncated_nfw_mass.centre == (1.0, 2.0)
 
-        assert truncated_nfw_mass.axis_ratio == 1.0
-        assert isinstance(truncated_nfw_mass.axis_ratio, float)
+        assert truncated_nfw_mass._axis_ratio == 1.0
+        assert isinstance(truncated_nfw_mass._axis_ratio, float)
 
-        assert truncated_nfw_mass.angle == 0.0
-        assert isinstance(truncated_nfw_mass.angle, float)
+        assert truncated_nfw_mass._angle == 0.0
+        assert isinstance(truncated_nfw_mass._angle, float)
 
         assert truncated_nfw_mass.inner_slope == 1.0
         assert isinstance(truncated_nfw_mass.inner_slope, float)
@@ -1417,11 +1417,11 @@ class TestNFWMCRDuffy:
 
         assert nfw_mass.centre == (1.0, 2.0)
 
-        assert nfw_mass.axis_ratio == 1.0
-        assert isinstance(nfw_mass.axis_ratio, float)
+        assert nfw_mass._axis_ratio == 1.0
+        assert isinstance(nfw_mass._axis_ratio, float)
 
-        assert nfw_mass.angle == 0.0
-        assert isinstance(nfw_mass.angle, float)
+        assert nfw_mass._angle == 0.0
+        assert isinstance(nfw_mass._angle, float)
 
         assert nfw_mass.inner_slope == 1.0
         assert isinstance(nfw_mass.inner_slope, float)
@@ -1470,11 +1470,11 @@ class TestNFWMCRLudlow:
 
         assert nfw_mass.centre == (1.0, 2.0)
 
-        assert nfw_mass.axis_ratio == 1.0
-        assert isinstance(nfw_mass.axis_ratio, float)
+        assert nfw_mass._axis_ratio == 1.0
+        assert isinstance(nfw_mass._axis_ratio, float)
 
-        assert nfw_mass.angle == 0.0
-        assert isinstance(nfw_mass.angle, float)
+        assert nfw_mass._angle == 0.0
+        assert isinstance(nfw_mass._angle, float)
 
         assert nfw_mass.inner_slope == 1.0
         assert isinstance(nfw_mass.inner_slope, float)
@@ -1532,11 +1532,11 @@ class TestNFWMCRLudlow:
             elliptical_comps=(0.1, 0.2)
         )
 
-        assert nfw_mass.axis_ratio == axis_ratio
-        assert isinstance(nfw_mass.axis_ratio, float)
+        assert nfw_mass._axis_ratio == axis_ratio
+        assert isinstance(nfw_mass._axis_ratio, float)
 
-        assert nfw_mass.angle == angle
-        assert isinstance(nfw_mass.angle, float)
+        assert nfw_mass._angle == angle
+        assert isinstance(nfw_mass._angle, float)
 
         assert nfw_mass.inner_slope == 1.0
         assert isinstance(nfw_mass.inner_slope, float)
@@ -1596,11 +1596,11 @@ class TestNFWMCRLudlow:
             elliptical_comps=(0.1, 0.2)
         )
 
-        assert nfw_mass.axis_ratio == axis_ratio
-        assert isinstance(nfw_mass.axis_ratio, float)
+        assert nfw_mass._axis_ratio == axis_ratio
+        assert isinstance(nfw_mass._axis_ratio, float)
 
-        assert nfw_mass.angle == angle
-        assert isinstance(nfw_mass.angle, float)
+        assert nfw_mass._angle == angle
+        assert isinstance(nfw_mass._angle, float)
 
         assert nfw_mass.inner_slope == 2.0
         assert isinstance(nfw_mass.inner_slope, float)

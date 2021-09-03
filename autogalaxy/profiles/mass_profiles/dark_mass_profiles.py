@@ -194,7 +194,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
 
     @property
     def ellipticity_rescale(self):
-        return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
+        return 1.0 - ((1.0 - self._axis_ratio) / 2.0)
 
     def coord_func_f(self, grid_radius):
         if isinstance(grid_radius, np.ndarray):
@@ -509,14 +509,14 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
 
         for i in range(grid.shape[0]):
 
-            potential_grid[i] = (2.0 * self.kappa_s * self.axis_ratio) * quad(
+            potential_grid[i] = (2.0 * self.kappa_s * self._axis_ratio) * quad(
                 self.potential_func,
                 a=0.0,
                 b=1.0,
                 args=(
                     grid[i, 0],
                     grid[i, 1],
-                    self.axis_ratio,
+                    self._axis_ratio,
                     minimum_log_eta,
                     maximum_log_eta,
                     tabulate_bins,
@@ -533,7 +533,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
     def deflections_2d_from_grid(self, grid):
 
         return self._deflections_2d_from_grid_via_gaussians(
-            grid=grid, sigmas_factor=self.axis_ratio
+            grid=grid, sigmas_factor=self._axis_ratio
         )
 
     @aa.grid_dec.grid_2d_to_structure
@@ -569,7 +569,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
                 deflection_grid[i] = (
                     2.0
                     * self.kappa_s
-                    * self.axis_ratio
+                    * self._axis_ratio
                     * grid[i, yx_index]
                     * quad(
                         self.deflection_func,
@@ -579,7 +579,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
                             grid[i, 0],
                             grid[i, 1],
                             npow,
-                            self.axis_ratio,
+                            self._axis_ratio,
                             minimum_log_eta,
                             maximum_log_eta,
                             tabulate_bins,
@@ -1028,7 +1028,7 @@ class EllNFW(EllNFWGeneralized):
                 args=(
                     grid[i, 0],
                     grid[i, 1],
-                    self.axis_ratio,
+                    self._axis_ratio,
                     self.kappa_s,
                     self.scale_radius,
                 ),
@@ -1061,7 +1061,7 @@ class EllNFW(EllNFWGeneralized):
             )
 
         def calculate_deflection_component(npow, index):
-            deflection_grid = self.axis_ratio * grid[:, index]
+            deflection_grid = self._axis_ratio * grid[:, index]
             deflection_grid *= (
                 self.kappa_s
                 * quad_grid(
@@ -1069,7 +1069,7 @@ class EllNFW(EllNFWGeneralized):
                     0.0,
                     1.0,
                     grid,
-                    args=(npow, self.axis_ratio, self.scale_radius),
+                    args=(npow, self._axis_ratio, self.scale_radius),
                 )[0]
             )
 

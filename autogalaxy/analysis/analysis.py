@@ -153,5 +153,7 @@ class AnalysisDataset(Analysis):
                         "Figure of merit sanity check failed. "
                         ""
                         "This means that the existing results of a model fit used a different "
-                        "likelihood function compared to the one implemented now."
+                        "likelihood function compared to the one implemented now.\n\n"
+                        f"Old Figure of Merit = {figure_of_merit_sanity}\n"
+                        f"New Figure of Merit = {figure_of_merit}"
                     )

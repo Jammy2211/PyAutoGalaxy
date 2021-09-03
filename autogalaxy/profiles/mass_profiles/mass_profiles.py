@@ -431,8 +431,8 @@ class MassProfileMGE:
 
         amps, sigmas = self.decompose_convergence_into_gaussians()
 
-        if self.axis_ratio > 0.9999:
-            self.axis_ratio = 0.9999
+        if self._axis_ratio > 0.9999:
+            self._axis_ratio = 0.9999
 
         convergence = 0.0
 
@@ -449,9 +449,9 @@ class MassProfileMGE:
 
     def _deflections_2d_from_grid_via_gaussians(self, grid, sigmas_factor=1.0):
 
-        axis_ratio = self.axis_ratio
+        axis_ratio = self._axis_ratio
 
-        if self.axis_ratio > 0.9999:
+        if self._axis_ratio > 0.9999:
             axis_ratio = 0.9999
 
         amps, sigmas = self.decompose_convergence_into_gaussians()

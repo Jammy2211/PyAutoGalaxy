@@ -67,7 +67,7 @@ class TestImage1DFrom:
         image_1d = gaussian.image_1d_from_grid(grid=grid_2d)
 
         grid_2d_projected = grid_2d.grid_2d_radial_projected_from(
-            centre=gaussian.centre, angle=gaussian.angle + 90.0
+            centre=gaussian.centre, angle=gaussian._angle + 90.0
         )
 
         image_projected = gaussian.image_2d_from_grid(grid=grid_2d_projected)

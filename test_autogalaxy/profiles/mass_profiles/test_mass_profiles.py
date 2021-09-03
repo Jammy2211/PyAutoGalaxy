@@ -52,7 +52,7 @@ class Test1DFromGrid:
         convergence_1d = sie.convergence_1d_from_grid(grid=grid_2d)
 
         grid_2d_projected = grid_2d.grid_2d_radial_projected_from(
-            centre=sie.centre, angle=sie.angle + 90.0
+            centre=sie.centre, angle=sie._angle + 90.0
         )
 
         convergence_projected = sie.convergence_2d_from_grid(grid=grid_2d_projected)
@@ -111,7 +111,7 @@ class Test1DFromGrid:
 
         convergence_1d = sie.convergence_1d_from_grid(grid=grid_1d)
 
-        grid_2d_radial = grid_1d.project_to_radial_grid_2d(angle=sie.angle + 90.0)
+        grid_2d_radial = grid_1d.project_to_radial_grid_2d(angle=sie._angle + 90.0)
 
         convergence_2d = sie.convergence_2d_from_grid(grid=grid_2d_radial)
 
@@ -143,7 +143,7 @@ class Test1DFromGrid:
         potential_1d = sie.potential_1d_from_grid(grid=grid_2d)
 
         grid_2d_projected = grid_2d.grid_2d_radial_projected_from(
-            centre=sie.centre, angle=sie.angle + 90.0
+            centre=sie.centre, angle=sie._angle + 90.0
         )
 
         potential_projected = sie.potential_2d_from_grid(grid=grid_2d_projected)

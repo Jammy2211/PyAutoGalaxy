@@ -200,7 +200,7 @@ class EllGaussian(LightProfile):
             np.exp(
                 -0.5
                 * np.square(
-                    np.divide(grid_radii, self.sigma / np.sqrt(self.axis_ratio))
+                    np.divide(grid_radii, self.sigma / np.sqrt(self._axis_ratio))
                 )
             ),
         )
@@ -289,7 +289,7 @@ class AbstractEllSersic(LightProfile):
         The elliptical effective radius instead describes the major-axis radius of the ellipse containing
         half the light, and may be more appropriate for highly flattened systems like disk galaxies.
         """
-        return self.effective_radius / np.sqrt(self.axis_ratio)
+        return self.effective_radius / np.sqrt(self._axis_ratio)
 
     @property
     def sersic_constant(self):
@@ -741,8 +741,8 @@ class EllChameleon(LightProfile):
         )
         self.core_radius_0 = core_radius_0
         self.core_radius_1 = core_radius_1
-        if self.axis_ratio > 0.99999:
-            self.axis_ratio = 0.99999
+        if self._axis_ratio > 0.99999:
+            self._axis_ratio = 0.99999
 
     def image_2d_from_grid_radii(self, grid_radii):
         """Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.
@@ -753,10 +753,10 @@ class EllChameleon(LightProfile):
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
 
-        axis_ratio_factor = (1.0 + self.axis_ratio) ** 2.0
+        axis_ratio_factor = (1.0 + self._axis_ratio) ** 2.0
 
         return np.multiply(
-            self.intensity / (1 + self.axis_ratio),
+            self.intensity / (1 + self._axis_ratio),
             np.add(
                 np.divide(
                     1.0,

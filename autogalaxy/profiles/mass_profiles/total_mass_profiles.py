@@ -87,7 +87,7 @@ class EllPowerLawBroken(MassProfile):
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
 
         self.einstein_radius = einstein_radius
-        self.einstein_radius_elliptical = np.sqrt(self.axis_ratio) * einstein_radius
+        self.einstein_radius_elliptical = np.sqrt(self._axis_ratio) * einstein_radius
         self.break_radius = break_radius
         self.inner_slope = inner_slope
         self.outer_slope = outer_slope
@@ -114,7 +114,7 @@ class EllPowerLawBroken(MassProfile):
         """
 
         # Ell radius
-        radius = np.hypot(grid[:, 1] * self.axis_ratio, grid[:, 0])
+        radius = np.hypot(grid[:, 1] * self._axis_ratio, grid[:, 0])
 
         # Inside break radius
         kappa_inner = self.kB * (self.break_radius / radius) ** self.inner_slope
@@ -141,14 +141,14 @@ class EllPowerLawBroken(MassProfile):
         z = grid[:, 1] + 1j * grid[:, 0]
 
         # Ell radius
-        R = np.hypot(z.real * self.axis_ratio, z.imag)
+        R = np.hypot(z.real * self._axis_ratio, z.imag)
 
         # Factors common to eq. 18 and 19
         factors = (
             2
             * self.kB
             * (self.break_radius ** 2)
-            / (self.axis_ratio * z * (2 - self.inner_slope))
+            / (self._axis_ratio * z * (2 - self.inner_slope))
         )
 
         # Hypergeometric functions
@@ -156,16 +156,24 @@ class EllPowerLawBroken(MassProfile):
         # These can also be computed with scipy.special.hyp2f1(), it's
         # much slower can be a useful test
         F1 = self.hyp2f1_series(
-            self.inner_slope, self.axis_ratio, R, z, max_terms=max_terms
+            self.inner_slope, self._axis_ratio, R, z, max_terms=max_terms
         )
         F2 = self.hyp2f1_series(
-            self.inner_slope, self.axis_ratio, self.break_radius, z, max_terms=max_terms
+            self.inner_slope,
+            self._axis_ratio,
+            self.break_radius,
+            z,
+            max_terms=max_terms,
         )
         F3 = self.hyp2f1_series(
-            self.outer_slope, self.axis_ratio, R, z, max_terms=max_terms
+            self.outer_slope, self._axis_ratio, R, z, max_terms=max_terms
         )
         F4 = self.hyp2f1_series(
-            self.outer_slope, self.axis_ratio, self.break_radius, z, max_terms=max_terms
+            self.outer_slope,
+            self._axis_ratio,
+            self.break_radius,
+            z,
+            max_terms=max_terms,
         )
 
         # theta < break radius (eq. 18)
@@ -284,7 +292,7 @@ class EllPowerLawCored(MassProfile):
     def einstein_radius_rescaled(self):
         """Rescale the einstein radius by slope and axis_ratio, to reduce its degeneracy with other mass-profiles
         parameters"""
-        return ((3 - self.slope) / (1 + self.axis_ratio)) * self.einstein_radius ** (
+        return ((3 - self.slope) / (1 + self._axis_ratio)) * self.einstein_radius ** (
             self.slope - 1
         )
 
@@ -338,13 +346,13 @@ class EllPowerLawCored(MassProfile):
                 args=(
                     grid[i, 0],
                     grid[i, 1],
-                    self.axis_ratio,
+                    self._axis_ratio,
                     self.slope,
                     self.core_radius,
                 ),
             )[0]
 
-        return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
+        return self.einstein_radius_rescaled * self._axis_ratio * potential_grid
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
@@ -372,7 +380,7 @@ class EllPowerLawCored(MassProfile):
         def calculate_deflection_component(npow, index):
             einstein_radius_rescaled = self.einstein_radius_rescaled
 
-            deflection_grid = self.axis_ratio * grid[:, index]
+            deflection_grid = self._axis_ratio * grid[:, index]
             deflection_grid *= (
                 einstein_radius_rescaled
                 * quad_grid(
@@ -380,7 +388,7 @@ class EllPowerLawCored(MassProfile):
                     0.0,
                     1.0,
                     grid,
-                    args=(npow, self.axis_ratio, self.slope, self.core_radius),
+                    args=(npow, self._axis_ratio, self.slope, self.core_radius),
                 )[0]
             )
 
@@ -420,7 +428,7 @@ class EllPowerLawCored(MassProfile):
 
     @property
     def ellipticity_rescale(self):
-        return (1.0 + self.axis_ratio) / 2.0
+        return (1.0 + self._axis_ratio) / 2.0
 
     @property
     def unit_mass(self):
@@ -546,16 +554,16 @@ class EllPowerLaw(EllPowerLawCored):
 
         slope = self.slope - 1.0
         einstein_radius = (
-            2.0 / (self.axis_ratio ** -0.5 + self.axis_ratio ** 0.5)
+            2.0 / (self._axis_ratio ** -0.5 + self._axis_ratio ** 0.5)
         ) * self.einstein_radius
 
-        factor = np.divide(1.0 - self.axis_ratio, 1.0 + self.axis_ratio)
-        b = np.multiply(einstein_radius, np.sqrt(self.axis_ratio))
+        factor = np.divide(1.0 - self._axis_ratio, 1.0 + self._axis_ratio)
+        b = np.multiply(einstein_radius, np.sqrt(self._axis_ratio))
         angle = np.arctan2(
-            grid[:, 0], np.multiply(self.axis_ratio, grid[:, 1])
+            grid[:, 0], np.multiply(self._axis_ratio, grid[:, 1])
         )  # Note, this angle is not the position angle
         R = np.sqrt(
-            np.add(np.multiply(self.axis_ratio ** 2, grid[:, 1] ** 2), grid[:, 0] ** 2)
+            np.add(np.multiply(self._axis_ratio ** 2, grid[:, 1] ** 2), grid[:, 0] ** 2)
         )
         z = np.add(
             np.multiply(np.cos(angle), 1 + 0j), np.multiply(np.sin(angle), 0 + 1j)
@@ -564,7 +572,7 @@ class EllPowerLaw(EllPowerLawCored):
         complex_angle = (
             2.0
             * b
-            / (1.0 + self.axis_ratio)
+            / (1.0 + self._axis_ratio)
             * (b / R) ** (slope - 1.0)
             * z
             * special.hyp2f1(1.0, 0.5 * slope, 2.0 - 0.5 * slope, -factor * z ** 2)
@@ -733,8 +741,8 @@ class EllIsothermal(EllPowerLaw):
             slope=2.0,
         )
 
-        if not isinstance(self, SphIsothermal) and self.axis_ratio > 0.99999:
-            self.axis_ratio = 0.99999
+        if not isinstance(self, SphIsothermal) and self._axis_ratio > 0.99999:
+            self._axis_ratio = 0.99999
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
@@ -755,17 +763,17 @@ class EllIsothermal(EllPowerLaw):
         factor = (
             2.0
             * self.einstein_radius_rescaled
-            * self.axis_ratio
-            / np.sqrt(1 - self.axis_ratio ** 2)
+            * self._axis_ratio
+            / np.sqrt(1 - self._axis_ratio ** 2)
         )
 
-        psi = psi_from(grid=grid, axis_ratio=self.axis_ratio, core_radius=0.0)
+        psi = psi_from(grid=grid, axis_ratio=self._axis_ratio, core_radius=0.0)
 
         deflection_y = np.arctanh(
-            np.divide(np.multiply(np.sqrt(1 - self.axis_ratio ** 2), grid[:, 0]), psi)
+            np.divide(np.multiply(np.sqrt(1 - self._axis_ratio ** 2), grid[:, 0]), psi)
         )
         deflection_x = np.arctan(
-            np.divide(np.multiply(np.sqrt(1 - self.axis_ratio ** 2), grid[:, 1]), psi)
+            np.divide(np.multiply(np.sqrt(1 - self._axis_ratio ** 2), grid[:, 1]), psi)
         )
         return self.rotate_grid_from_reference_frame(
             grid=np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)

@@ -67,8 +67,12 @@ class ExternalShear(MassProfile):
             elliptical_comps=elliptical_comps
         )
 
-        self.magnitude = magnitude
-        self.angle = angle
+        self._magnitude = magnitude
+        self._angle = angle
+
+    @property
+    def magnitude(self):
+        return self._magnitude
 
     def convergence_func(self, grid_radius):
         return 0.0
@@ -97,8 +101,8 @@ class ExternalShear(MassProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
-        deflection_y = -np.multiply(self.magnitude, grid[:, 0])
-        deflection_x = np.multiply(self.magnitude, grid[:, 1])
+        deflection_y = -np.multiply(self._magnitude, grid[:, 0])
+        deflection_x = np.multiply(self._magnitude, grid[:, 1])
         return self.rotate_grid_from_reference_frame(
             np.vstack((deflection_y, deflection_x)).T
         )

@@ -49,7 +49,7 @@ def evaluation_grid(func):
 class LensingObject:
 
     centre = None
-    angle = None
+    _angle = None
 
     def convergence_func(self, grid_radius):
         raise NotImplementedError
