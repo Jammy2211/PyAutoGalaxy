@@ -37,7 +37,7 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
     def einstein_radius_rescaled(self):
         """Rescale the einstein radius by slope and axis_ratio, to reduce its degeneracy with other mass-profiles
         parameters"""
-        return (1.0 / (1 + self._axis_ratio)) * self.einstein_radius
+        return (1.0 / (1 + self.axis_ratio)) * self.einstein_radius
 
     def convergence_func(self, grid_radius):
         return self.einstein_radius_rescaled * (grid_radius ** 2) ** (-0.5)
@@ -92,10 +92,10 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
         """
 
         potential_grid = quad_grid(
-            self.potential_func, 0.0, 1.0, grid, args=(self._axis_ratio)
+            self.potential_func, 0.0, 1.0, grid, args=(self.axis_ratio)
         )[0]
 
-        return self.einstein_radius_rescaled * self._axis_ratio * potential_grid
+        return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
     @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
@@ -116,22 +116,22 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
         factor = (
             2.0
             * self.einstein_radius_rescaled
-            * self._axis_ratio
-            / np.sqrt(1 - self._axis_ratio ** 2)
+            * self.axis_ratio
+            / np.sqrt(1 - self.axis_ratio ** 2)
         )
 
         psi = np.sqrt(
             np.add(
-                np.multiply(self._axis_ratio ** 2, np.square(grid[:, 1])),
+                np.multiply(self.axis_ratio ** 2, np.square(grid[:, 1])),
                 np.square(grid[:, 0]),
             )
         )
 
         deflection_y = np.arctanh(
-            np.divide(np.multiply(np.sqrt(1 - self._axis_ratio ** 2), grid[:, 0]), psi)
+            np.divide(np.multiply(np.sqrt(1 - self.axis_ratio ** 2), grid[:, 0]), psi)
         )
         deflection_x = np.arctan(
-            np.divide(np.multiply(np.sqrt(1 - self._axis_ratio ** 2), grid[:, 1]), psi)
+            np.divide(np.multiply(np.sqrt(1 - self.axis_ratio ** 2), grid[:, 1]), psi)
         )
         return self.rotate_grid_from_reference_frame(
             np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)

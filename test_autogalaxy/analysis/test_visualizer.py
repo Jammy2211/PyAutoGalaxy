@@ -114,7 +114,6 @@ class TestVisualizer:
         visualizer.visualize_hyper_images(
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict_7x7,
             hyper_model_image=hyper_model_image_7x7,
-            plane=fit_imaging_x2_galaxy_inversion_7x7.plane,
         )
 
         plot_path = path.join(plot_path, "hyper")
@@ -124,6 +123,11 @@ class TestVisualizer:
             path.join(plot_path, "subplot_hyper_images_of_galaxies.png")
             in plot_patch.paths
         )
+
+        visualizer.visualize_contribution_maps(
+            plane=fit_imaging_x2_galaxy_inversion_7x7.plane
+        )
+
         assert (
             path.join(plot_path, "subplot_contribution_maps_of_galaxies.png")
             not in plot_patch.paths

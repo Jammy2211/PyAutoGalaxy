@@ -95,24 +95,6 @@ class TestGalaxyFitData:
         assert isinstance(galaxy_fit_data.grid, ag.Grid2DIterate)
         assert (galaxy_fit_data.grid.binned == grid_2d_iterate_7x7).all()
 
-        galaxy_fit_data = ag.MaskedGalaxyDataset(
-            galaxy_data=gal_data_7x7,
-            mask=sub_mask_2d_7x7,
-            use_image=True,
-            grid_class=ag.Grid2DInterpolate,
-            pixel_scales_interp=1.0,
-        )
-
-        grid = ag.Grid2DInterpolate.from_mask(
-            mask=sub_mask_2d_7x7, pixel_scales_interp=1.0
-        )
-
-        assert isinstance(galaxy_fit_data.grid, ag.Grid2DInterpolate)
-        assert (galaxy_fit_data.grid == grid).all()
-        assert (galaxy_fit_data.grid.grid_interp == grid.grid_interp).all()
-        assert (galaxy_fit_data.grid.vtx == grid.vtx).all()
-        assert (galaxy_fit_data.grid.wts == grid.wts).all()
-
     def test__gal_data_7x7_image(self, gal_data_7x7, sub_mask_2d_7x7):
         galaxy_fit_data = ag.MaskedGalaxyDataset(
             galaxy_data=gal_data_7x7, mask=sub_mask_2d_7x7, use_image=True

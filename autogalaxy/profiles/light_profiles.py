@@ -20,7 +20,7 @@ class LightProfile(EllProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         """
@@ -171,7 +171,7 @@ class EllGaussian(LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity
@@ -180,7 +180,7 @@ class EllGaussian(LightProfile):
             The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
 
-        super(EllGaussian, self).__init__(
+        super().__init__(
             centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
         )
         self.sigma = sigma
@@ -200,7 +200,7 @@ class EllGaussian(LightProfile):
             np.exp(
                 -0.5
                 * np.square(
-                    np.divide(grid_radii, self.sigma / np.sqrt(self._axis_ratio))
+                    np.divide(grid_radii, self.sigma / np.sqrt(self.axis_ratio))
                 )
             ),
         )
@@ -241,7 +241,7 @@ class SphGaussian(EllGaussian):
         sigma
             The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
-        super(SphGaussian, self).__init__(
+        super().__init__(
             centre=centre, elliptical_comps=(0.0, 0.0), intensity=intensity, sigma=sigma
         )
 
@@ -262,7 +262,7 @@ class AbstractEllSersic(LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity
@@ -289,7 +289,7 @@ class AbstractEllSersic(LightProfile):
         The elliptical effective radius instead describes the major-axis radius of the ellipse containing
         half the light, and may be more appropriate for highly flattened systems like disk galaxies.
         """
-        return self.effective_radius / np.sqrt(self._axis_ratio)
+        return self.effective_radius / np.sqrt(self.axis_ratio)
 
     @property
     def sersic_constant(self):
@@ -336,7 +336,7 @@ class EllSersic(AbstractEllSersic, LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity
@@ -347,7 +347,7 @@ class EllSersic(AbstractEllSersic, LightProfile):
             Controls the concentration of the of the profile (lower value -> less concentrated, \
             higher value -> more concentrated).
         """
-        super(EllSersic, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity,
@@ -418,7 +418,7 @@ class SphSersic(EllSersic):
         sersic_index : Int
             Controls the concentration of the of the light profile.
         """
-        super(SphSersic, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,
@@ -448,7 +448,7 @@ class EllExponential(EllSersic):
         ----------
         centre
             The (y,x) arc-second centre of the light profile.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity
@@ -456,7 +456,7 @@ class EllExponential(EllSersic):
         effective_radius
             The circular radius containing half the light of this profile.
         """
-        super(EllExponential, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity,
@@ -485,7 +485,7 @@ class SphExponential(EllExponential):
         effective_radius
             The circular radius containing half the light of this profile.
         """
-        super(SphExponential, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,
@@ -509,7 +509,7 @@ class EllDevVaucouleurs(EllSersic):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity
@@ -517,7 +517,7 @@ class EllDevVaucouleurs(EllSersic):
         effective_radius
             The circular radius containing half the light of this profile.
         """
-        super(EllDevVaucouleurs, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity,
@@ -546,7 +546,7 @@ class SphDevVaucouleurs(EllDevVaucouleurs):
         effective_radius
             The circular radius containing half the light of this profile.
         """
-        super(SphDevVaucouleurs, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,
@@ -572,7 +572,7 @@ class EllSersicCore(EllSersic):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         effective_radius
@@ -590,7 +590,7 @@ class EllSersicCore(EllSersic):
             Controls the sharpness of the transition between the inner core / outer Sersic profiles.
         """
 
-        super(EllSersicCore, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity_break,
@@ -690,7 +690,7 @@ class SphSersicCore(EllSersicCore):
             Controls the sharpness of the transition between the inner core / outer Sersic profiles.
         """
 
-        super(SphSersicCore, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             effective_radius=effective_radius,
@@ -726,7 +726,7 @@ class EllChameleon(LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity
@@ -736,13 +736,16 @@ class EllChameleon(LightProfile):
              We use dr here is to avoid negative values.
         """
 
-        super(EllChameleon, self).__init__(
+        super().__init__(
             centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
         )
         self.core_radius_0 = core_radius_0
         self.core_radius_1 = core_radius_1
-        if self._axis_ratio > 0.99999:
-            self._axis_ratio = 0.99999
+
+    @property
+    def axis_ratio(self):
+        axis_ratio = super().axis_ratio
+        return axis_ratio if axis_ratio < 0.99999 else 0.99999
 
     def image_2d_from_grid_radii(self, grid_radii):
         """Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.
@@ -753,10 +756,10 @@ class EllChameleon(LightProfile):
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
 
-        axis_ratio_factor = (1.0 + self._axis_ratio) ** 2.0
+        axis_ratio_factor = (1.0 + self.axis_ratio) ** 2.0
 
         return np.multiply(
-            self.intensity / (1 + self._axis_ratio),
+            self.intensity / (1 + self.axis_ratio),
             np.add(
                 np.divide(
                     1.0,
@@ -812,7 +815,7 @@ class SphChameleon(EllChameleon):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity
@@ -822,7 +825,7 @@ class SphChameleon(EllChameleon):
              We use dr here is to avoid negative values.
         """
 
-        super(SphChameleon, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             intensity=intensity,
@@ -848,7 +851,7 @@ class EllEff(LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         intensity

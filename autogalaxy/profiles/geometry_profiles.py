@@ -35,14 +35,6 @@ class GeometryProfile:
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
 
-    @property
-    def axis_ratio(self):
-        return self._axis_ratio
-
-    @property
-    def angle(self):
-        return self._angle
-
 
 class SphProfile(GeometryProfile):
     def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
@@ -136,7 +128,7 @@ class EllProfile(SphProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
 
@@ -151,12 +143,13 @@ class EllProfile(SphProfile):
 
         self.elliptical_comps = elliptical_comps
 
-        axis_ratio, angle = convert.axis_ratio_and_phi_from(
-            elliptical_comps=elliptical_comps
-        )
+    @property
+    def axis_ratio(self):
+        return convert.axis_ratio_from(elliptical_comps=self.elliptical_comps)
 
-        self._axis_ratio = axis_ratio
-        self._angle = angle
+    @property
+    def angle(self):
+        return convert.angle_from(elliptical_comps=self.elliptical_comps)
 
     @classmethod
     def from_axis_ratio_and_phi(
@@ -173,7 +166,7 @@ class EllProfile(SphProfile):
 
     @property
     def phi_radians(self):
-        return np.radians(self._angle)
+        return np.radians(self.angle)
 
     @property
     def cos_phi(self):
@@ -186,7 +179,7 @@ class EllProfile(SphProfile):
     def cos_and_sin_from_x_axis(self):
         """ Determine the sin and cosine of the angle between the profile's ellipse and the positive x-axis, \
         counter-clockwise. """
-        phi_radians = np.radians(self._angle)
+        phi_radians = np.radians(self.angle)
         return np.cos(phi_radians), np.sin(phi_radians)
 
     def grid_angle_to_profile(self, grid_thetas):
@@ -218,7 +211,7 @@ class EllProfile(SphProfile):
             The (y, x) coordinates in the reference frame of an elliptical profile.
         """
         return aa.util.geometry.transform_grid_2d_from_reference_frame(
-            grid_2d=grid, centre=(0.0, 0.0), angle=self._angle
+            grid_2d=grid, centre=(0.0, 0.0), angle=self.angle
         )
 
     @aa.grid_dec.grid_2d_to_structure
@@ -237,8 +230,7 @@ class EllProfile(SphProfile):
         """
         return np.sqrt(
             np.add(
-                np.square(grid[:, 1]),
-                np.square(np.divide(grid[:, 0], self._axis_ratio)),
+                np.square(grid[:, 1]), np.square(np.divide(grid[:, 0], self.axis_ratio))
             )
         )
 
@@ -258,7 +250,7 @@ class EllProfile(SphProfile):
             The (y, x) coordinates in the reference frame of the elliptical profile.
         """
         return np.multiply(
-            np.sqrt(self._axis_ratio), self.grid_to_elliptical_radii(grid)
+            np.sqrt(self.axis_ratio), self.grid_to_elliptical_radii(grid)
         ).view(np.ndarray)
 
     @aa.grid_dec.grid_2d_to_structure
@@ -277,7 +269,7 @@ class EllProfile(SphProfile):
                 grid=g2d.Grid2DTransformedNumpy(grid=grid)
             )
         transformed = aa.util.geometry.transform_grid_2d_to_reference_frame(
-            grid_2d=grid, centre=self.centre, angle=self._angle
+            grid_2d=grid, centre=self.centre, angle=self.angle
         )
         return g2d.Grid2DTransformedNumpy(grid=transformed)
 
@@ -297,7 +289,7 @@ class EllProfile(SphProfile):
             )
 
         return aa.util.geometry.transform_grid_2d_from_reference_frame(
-            grid_2d=grid, centre=self.centre, angle=self._angle
+            grid_2d=grid, centre=self.centre, angle=self.angle
         )
 
     def eta_u(self, u, coordinates):
@@ -306,7 +298,7 @@ class EllProfile(SphProfile):
                 u
                 * (
                     (coordinates[1] ** 2)
-                    + (coordinates[0] ** 2 / (1 - (1 - self._axis_ratio ** 2) * u))
+                    + (coordinates[0] ** 2 / (1 - (1 - self.axis_ratio ** 2) * u))
                 )
             )
         )

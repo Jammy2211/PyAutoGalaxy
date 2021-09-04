@@ -207,7 +207,7 @@ class EllDevVaucouleurs(EllSersic, LightMassProfile):
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
-        super(EllDevVaucouleurs, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity,

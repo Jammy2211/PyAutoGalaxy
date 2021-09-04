@@ -12,7 +12,6 @@ class MaskedGalaxyDataset:
         grid_class=aa.Grid2D,
         fractional_accuracy=0.9999,
         sub_steps=None,
-        pixel_scales_interp=None,
         use_image=False,
         use_convergence=False,
         use_potential=False,
@@ -67,7 +66,6 @@ class MaskedGalaxyDataset:
             grid_class=grid_class,
             fractional_accuracy=fractional_accuracy,
             sub_steps=sub_steps,
-            pixel_scales_interp=pixel_scales_interp,
         )
 
         if all(

@@ -67,7 +67,7 @@ class TestImage1DFrom:
         image_1d = gaussian.image_1d_from_grid(grid=grid_2d)
 
         grid_2d_projected = grid_2d.grid_2d_radial_projected_from(
-            centre=gaussian.centre, angle=gaussian._angle + 90.0
+            centre=gaussian.centre, angle=gaussian.angle + 90.0
         )
 
         image_projected = gaussian.image_2d_from_grid(grid=grid_2d_projected)
@@ -249,49 +249,6 @@ class TestDecorators:
         )
 
         light.image_2d_from_grid(grid=grid)
-
-    def test__grid_interpolate_in__interpolates_based_on_intepolate_config(self):
-        # `False` in interpolate.ini
-
-        mask = ag.Mask2D.manual(
-            mask=[
-                [True, True, True, True, True],
-                [True, False, False, False, True],
-                [True, False, False, False, True],
-                [True, False, False, False, True],
-                [True, True, True, True, True],
-            ],
-            pixel_scales=(1.0, 1.0),
-        )
-
-        grid = ag.Grid2D.from_mask(mask=mask)
-
-        grid_interpolate = ag.Grid2DInterpolate.from_mask(
-            mask=mask, pixel_scales_interp=0.1
-        )
-
-        light_profile = ag.lp.EllSersic(intensity=1.0)
-
-        image = light_profile.image_2d_from_grid(grid=grid)
-        image_no_interpolate = light_profile.image_2d_from_grid(grid=grid_interpolate)
-
-        assert (image == image_no_interpolate).all()
-
-        # `False` in interpolate.ini
-
-        light_profile = ag.lp.SphSersic(intensity=1.0)
-
-        image = light_profile.image_2d_from_grid(grid=grid)
-        image_interpolate = light_profile.image_2d_from_grid(grid=grid_interpolate)
-        assert (image != image_interpolate).all()
-
-        array_interp = light_profile.image_2d_from_grid(
-            grid=grid_interpolate.grid_interp
-        )
-        interpolated_array = grid_interpolate.interpolated_array_from_array_interp(
-            array_interp=array_interp
-        )
-        assert (image_interpolate == interpolated_array).all()
 
 
 class TestGaussian:

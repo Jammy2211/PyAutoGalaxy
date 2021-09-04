@@ -32,7 +32,6 @@ from autoarray.structures.arrays.abstract_array import Header
 from autoarray.structures.grids.one_d.grid_1d import Grid1D
 from autoarray.structures.grids.two_d.grid_2d import Grid2D
 from autoarray.structures.grids.two_d.grid_2d import Grid2DSparse
-from autoarray.structures.grids.two_d.grid_2d_interpolate import Grid2DInterpolate
 from autoarray.structures.grids.two_d.grid_2d_iterate import Grid2DIterate
 from autoarray.structures.grids.two_d.grid_2d_irregular import Grid2DIrregular
 from autoarray.structures.grids.two_d.grid_2d_irregular import Grid2DIrregularUniform

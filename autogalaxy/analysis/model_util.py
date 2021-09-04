@@ -349,7 +349,7 @@ def hyper_fit(
 
     if hyper_noise_model is not None:
 
-        search = setup_hyper.search_inversion_cls(
+        search = setup_hyper.search_noise_cls(
             path_prefix=result.search.path_prefix_no_unique_tag,
             name=f"{result.search.paths.name}__hyper_noise",
             unique_tag=result.search.paths.unique_tag,

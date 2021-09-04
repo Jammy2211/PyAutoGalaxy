@@ -20,7 +20,7 @@ def elliptical_comps_from(axis_ratio, angle):
     return (ellip_y, ellip_x)
 
 
-def axis_ratio_and_phi_from(elliptical_comps):
+def axis_ratio_and_angle_from(elliptical_comps):
     """
     Convert the ellipitical components e1 and e2 to an axis ratio (0.0 > q > 1.0) and rotation position angle
     defined counter clockwise from the positive x-axis(0.0 > angle > 180) to .
@@ -52,11 +52,11 @@ def axis_ratio_from(elliptical_comps):
         The first and second ellipticity components of the elliptical coordinate system, where
         fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
     """
-    axis_ratio, angle = axis_ratio_and_phi_from(elliptical_comps=elliptical_comps)
+    axis_ratio, angle = axis_ratio_and_angle_from(elliptical_comps=elliptical_comps)
     return axis_ratio
 
 
-def phi_from(elliptical_comps):
+def angle_from(elliptical_comps):
     """
     Convert the ellipitical components e1 and e2 to an axis ratio (0.0 > q > 1.0) and rotation position angle
     defined counter clockwise from the positive x-axis(0.0 > angle > 180) to .
@@ -67,7 +67,8 @@ def phi_from(elliptical_comps):
         The first and second ellipticity components of the elliptical coordinate system, where
         fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
     """
-    return axis_ratio_and_phi_from(elliptical_comps=elliptical_comps)
+    axis_ratio, angle = axis_ratio_and_angle_from(elliptical_comps=elliptical_comps)
+    return angle
 
 
 def shear_elliptical_comps_from(magnitude, angle):
@@ -81,7 +82,7 @@ def shear_elliptical_comps_from(magnitude, angle):
     return (ellip_y, ellip_x)
 
 
-def shear_magnitude_and_phi_from(elliptical_comps):
+def shear_magnitude_and_angle_from(elliptical_comps):
     """
     :param e1: ellipticity component
     :param e2: ellipticity component
@@ -91,8 +92,7 @@ def shear_magnitude_and_phi_from(elliptical_comps):
     magnitude = np.sqrt(elliptical_comps[1] ** 2 + elliptical_comps[0] ** 2)
     if angle < 0:
         return magnitude, angle + 180.0
-    else:
-        return magnitude, angle
+    return magnitude, angle
 
 
 def shear_magnitude_from(elliptical_comps):
@@ -101,15 +101,15 @@ def shear_magnitude_from(elliptical_comps):
     :param e2: ellipticity component
     :return: angle and abs value of ellipticity
     """
-    magnitude, angle = shear_magnitude_and_phi_from(elliptical_comps=elliptical_comps)
+    magnitude, angle = shear_magnitude_and_angle_from(elliptical_comps=elliptical_comps)
     return magnitude
 
 
-def shear_phi_from(elliptical_comps):
+def shear_angle_from(elliptical_comps):
     """
     :param e1: ellipticity component
     :param e2: ellipticity component
     :return: angle and abs value of ellipticity
     """
-    magnitude, angle = shear_magnitude_and_phi_from(elliptical_comps=elliptical_comps)
+    magnitude, angle = shear_magnitude_and_angle_from(elliptical_comps=elliptical_comps)
     return angle

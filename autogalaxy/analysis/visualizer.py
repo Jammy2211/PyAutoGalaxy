@@ -128,9 +128,7 @@ class Visualizer:
                     interpolated_errors=True,
                 )
 
-    def visualize_hyper_images(
-        self, hyper_galaxy_image_path_dict, hyper_model_image, plane
-    ):
+    def visualize_hyper_images(self, hyper_galaxy_image_path_dict, hyper_model_image):
         def should_plot(name):
             return plot_setting(section="hyper", name=name)
 
@@ -148,6 +146,16 @@ class Visualizer:
             hyper_plotter.subplot_hyper_images_of_galaxies(
                 hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict
             )
+
+    def visualize_contribution_maps(self, plane):
+        def should_plot(name):
+            return plot_setting(section="hyper", name=name)
+
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="hyper")
+
+        hyper_plotter = HyperPlotter(
+            mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+        )
 
         if hasattr(plane, "contribution_maps_of_galaxies"):
             if should_plot("contribution_maps_of_galaxies"):

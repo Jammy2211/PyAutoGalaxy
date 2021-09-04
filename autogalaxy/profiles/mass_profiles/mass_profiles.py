@@ -26,7 +26,7 @@ class MassProfile(EllProfile, LensingObject):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         """
@@ -431,9 +431,6 @@ class MassProfileMGE:
 
         amps, sigmas = self.decompose_convergence_into_gaussians()
 
-        if self._axis_ratio > 0.9999:
-            self._axis_ratio = 0.9999
-
         convergence = 0.0
 
         for i in range(len(sigmas)):
@@ -449,9 +446,9 @@ class MassProfileMGE:
 
     def _deflections_2d_from_grid_via_gaussians(self, grid, sigmas_factor=1.0):
 
-        axis_ratio = self._axis_ratio
+        axis_ratio = self.axis_ratio
 
-        if self._axis_ratio > 0.9999:
+        if axis_ratio > 0.9999:
             axis_ratio = 0.9999
 
         amps, sigmas = self.decompose_convergence_into_gaussians()

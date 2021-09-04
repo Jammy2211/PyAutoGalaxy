@@ -118,7 +118,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         kappa_s
@@ -194,7 +194,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
 
     @property
     def ellipticity_rescale(self):
-        return 1.0 - ((1.0 - self._axis_ratio) / 2.0)
+        return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
 
     def coord_func_f(self, grid_radius):
         if isinstance(grid_radius, np.ndarray):
@@ -509,14 +509,14 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
 
         for i in range(grid.shape[0]):
 
-            potential_grid[i] = (2.0 * self.kappa_s * self._axis_ratio) * quad(
+            potential_grid[i] = (2.0 * self.kappa_s * self.axis_ratio) * quad(
                 self.potential_func,
                 a=0.0,
                 b=1.0,
                 args=(
                     grid[i, 0],
                     grid[i, 1],
-                    self._axis_ratio,
+                    self.axis_ratio,
                     minimum_log_eta,
                     maximum_log_eta,
                     tabulate_bins,
@@ -533,7 +533,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
     def deflections_2d_from_grid(self, grid):
 
         return self._deflections_2d_from_grid_via_gaussians(
-            grid=grid, sigmas_factor=self._axis_ratio
+            grid=grid, sigmas_factor=self.axis_ratio
         )
 
     @aa.grid_dec.grid_2d_to_structure
@@ -569,7 +569,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
                 deflection_grid[i] = (
                     2.0
                     * self.kappa_s
-                    * self._axis_ratio
+                    * self.axis_ratio
                     * grid[i, yx_index]
                     * quad(
                         self.deflection_func,
@@ -579,7 +579,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
                             grid[i, 0],
                             grid[i, 1],
                             npow,
-                            self._axis_ratio,
+                            self.axis_ratio,
                             minimum_log_eta,
                             maximum_log_eta,
                             tabulate_bins,
@@ -721,7 +721,7 @@ class SphNFWGeneralized(EllNFWGeneralized):
             the Universe..
         """
 
-        super(SphNFWGeneralized, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             kappa_s=kappa_s,
@@ -782,7 +782,7 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
         scale_radius: float = 1.0,
         truncation_radius: float = 2.0,
     ):
-        super(SphNFWTruncated, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             kappa_s=kappa_s,
@@ -924,7 +924,7 @@ class SphNFWTruncatedMCRDuffy(SphNFWTruncated):
             redshift_source=redshift_source,
         )
 
-        super(SphNFWTruncatedMCRDuffy, self).__init__(
+        super().__init__(
             centre=centre,
             kappa_s=kappa_s,
             scale_radius=scale_radius,
@@ -952,7 +952,7 @@ class SphNFWTruncatedMCRLudlow(SphNFWTruncated):
             redshift_source=redshift_source,
         )
 
-        super(SphNFWTruncatedMCRLudlow, self).__init__(
+        super().__init__(
             centre=centre,
             kappa_s=kappa_s,
             scale_radius=scale_radius,
@@ -975,7 +975,7 @@ class EllNFW(EllNFWGeneralized):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps : (float, float)
+        elliptical_comps
             The first and second ellipticity components of the elliptical coordinate system, where
             fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
         kappa_s
@@ -986,7 +986,7 @@ class EllNFW(EllNFWGeneralized):
             the Universe..
         """
 
-        super(EllNFW, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
             kappa_s=kappa_s,
@@ -1028,7 +1028,7 @@ class EllNFW(EllNFWGeneralized):
                 args=(
                     grid[i, 0],
                     grid[i, 1],
-                    self._axis_ratio,
+                    self.axis_ratio,
                     self.kappa_s,
                     self.scale_radius,
                 ),
@@ -1061,7 +1061,7 @@ class EllNFW(EllNFWGeneralized):
             )
 
         def calculate_deflection_component(npow, index):
-            deflection_grid = self._axis_ratio * grid[:, index]
+            deflection_grid = self.axis_ratio * grid[:, index]
             deflection_grid *= (
                 self.kappa_s
                 * quad_grid(
@@ -1069,7 +1069,7 @@ class EllNFW(EllNFWGeneralized):
                     0.0,
                     1.0,
                     grid,
-                    args=(npow, self._axis_ratio, self.scale_radius),
+                    args=(npow, self.axis_ratio, self.scale_radius),
                 )[0]
             )
 
@@ -1160,7 +1160,7 @@ class SphNFW(EllNFW):
             the Universe..
         """
 
-        super(SphNFW, self).__init__(
+        super().__init__(
             centre=centre,
             elliptical_comps=(0.0, 0.0),
             kappa_s=kappa_s,
@@ -1235,9 +1235,7 @@ class SphNFWMCRDuffy(SphNFW):
             redshift_source=redshift_source,
         )
 
-        super(SphNFWMCRDuffy, self).__init__(
-            centre=centre, kappa_s=kappa_s, scale_radius=scale_radius
-        )
+        super().__init__(centre=centre, kappa_s=kappa_s, scale_radius=scale_radius)
 
     def with_new_normalization(self, normalization):
 
@@ -1291,9 +1289,7 @@ class SphNFWMCRLudlow(SphNFW):
             redshift_source=redshift_source,
         )
 
-        super(SphNFWMCRLudlow, self).__init__(
-            centre=centre, kappa_s=kappa_s, scale_radius=scale_radius
-        )
+        super().__init__(centre=centre, kappa_s=kappa_s, scale_radius=scale_radius)
 
     def with_new_normalization(self, normalization):
 
