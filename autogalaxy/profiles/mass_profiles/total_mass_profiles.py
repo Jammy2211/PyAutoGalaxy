@@ -703,7 +703,6 @@ class SphIsothermalCored(SphPowerLawCored):
             core_radius=core_radius,
         )
 
-
 class EllIsothermal(EllPowerLaw):
     def __init__(
         self,
@@ -827,6 +826,10 @@ class SphIsothermal(EllIsothermal):
         super().__init__(
             centre=centre, elliptical_comps=(0.0, 0.0), einstein_radius=einstein_radius
         )
+
+    @property
+    def axis_ratio(self):
+        return 1.0
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform

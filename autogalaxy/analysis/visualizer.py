@@ -1,3 +1,4 @@
+import os
 from os import path
 
 from autoconf import conf
@@ -27,6 +28,11 @@ class Visualizer:
         self.plot_fit_no_hyper = plot_setting("hyper", "fit_no_hyper")
 
         self.include_2d = Include2D()
+
+        try:
+            os.makedirs(visualize_path)
+        except FileExistsError:
+            pass
 
     def mat_plot_1d_from(self, subfolders, format="png"):
         return MatPlot1D(
