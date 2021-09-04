@@ -47,7 +47,8 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
         return self.visuals_2d
 
     def figure_hyper_model_image(self, hyper_model_image: aa.Array2D):
-        """Plot the image of a hyper_galaxies galaxy image.
+        """
+        Plot the image of a hyper_galaxies galaxy image.
 
         Set *autogalaxy.datas.arrays.mat_plot_2d.mat_plot_2d* for a description of all input parameters not described below.
 
@@ -58,6 +59,7 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
         origin : True
             If true, the origin of the datas's coordinate system is plotted as a 'x'.
         """
+
         self.mat_plot_2d.plot_array(
             array=hyper_model_image,
             visuals_2d=self.visuals_with_include_2d,
@@ -67,7 +69,8 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
         )
 
     def figure_hyper_galaxy_image(self, galaxy_image: aa.Array2D):
-        """Plot the image of a hyper_galaxies galaxy image.
+        """
+        Plot the image of a hyper_galaxies galaxy image.
 
         Set *autogalaxy.datas.arrays.mat_plot_2d.mat_plot_2d* for a description of all input parameters not described below.
 
