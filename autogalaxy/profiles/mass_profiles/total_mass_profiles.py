@@ -703,6 +703,7 @@ class SphIsothermalCored(SphPowerLawCored):
             core_radius=core_radius,
         )
 
+
 class EllIsothermal(EllPowerLaw):
     def __init__(
         self,
