@@ -5,6 +5,9 @@ from typing import List
 import autofit as af
 import autoarray as aa
 
+from autoarray.inversion.pixelization.abstract import AbstractPixelization
+from autoarray.inversion.regularizations.abstract import AbstractRegularization
+
 from autogalaxy.galaxy.galaxy import HyperGalaxy
 from autogalaxy.profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
@@ -26,7 +29,7 @@ def isinstance_or_prior(obj, cls):
     return False
 
 
-def pixelization_from(model: af.Collection) -> aa.pix.Pixelization:
+def pixelization_from(model: af.Collection) -> AbstractPixelization:
     """
     For a model containing one or more galaxies, inspect its attributes and return the `pixelization` of a galaxy
     provided one galaxy has a pixelization, otherwise it returns none. There cannot be more than one `Pixelization` in
@@ -230,7 +233,7 @@ def hyper_inversion_model_from(
     if setup_hyper is None:
         return None
 
-    model = result.instance.as_model((aa.pix.Pixelization, aa.reg.Regularization))
+    model = result.instance.as_model((AbstractPixelization, AbstractRegularization))
 
     if not has_pixelization_from_model(model=model):
         return None
@@ -423,7 +426,7 @@ def hyper_model_from(
         model components now free parameters.
     """
 
-    model = result.instance.as_model((aa.pix.Pixelization, aa.reg.Regularization))
+    model = result.instance.as_model((AbstractPixelization, AbstractRegularization))
 
     model = clean_model_of_hyper_images(model=model)
 
@@ -564,10 +567,10 @@ def stochastic_model_from(
         model_classes.append(LightProfile)
 
     if include_pixelization:
-        model_classes.append(aa.pix.Pixelization)
+        model_classes.append(AbstractPixelization)
 
     if include_regularization:
-        model_classes.append(aa.reg.Regularization)
+        model_classes.append(AbstractRegularization)
 
     model = result.instance.as_model(model_classes)
 

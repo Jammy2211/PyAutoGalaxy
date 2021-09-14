@@ -1,10 +1,15 @@
-import autogalaxy as ag
 import numpy as np
 import pytest
-from autogalaxy import exc
-from autogalaxy.plane import plane
 from skimage import measure
+
+from autoarray.inversion.pixelization.abstract import AbstractPixelization
+from autoarray.inversion.regularizations.abstract import AbstractRegularization
+
+import autogalaxy as ag
+
+from autogalaxy import exc
 from autogalaxy.mock import mock
+from autogalaxy.plane import plane
 
 
 def critical_curve_via_magnification_from_plane_and_grid(plane, grid):
@@ -134,8 +139,8 @@ class TestAbstractPlane:
 
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=ag.pix.Pixelization(),
-                regularization=ag.reg.Regularization(),
+                pixelization=AbstractPixelization(),
+                regularization=AbstractRegularization(),
             )
 
             plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
@@ -152,8 +157,8 @@ class TestAbstractPlane:
 
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=ag.pix.Pixelization(),
-                regularization=ag.reg.Regularization(),
+                pixelization=AbstractPixelization(),
+                regularization=AbstractRegularization(),
             )
 
             plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
@@ -203,8 +208,8 @@ class TestAbstractPlane:
         def test__hyper_image_of_galaxy_with_pixelization(self):
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=ag.pix.Pixelization(),
-                regularization=ag.reg.Regularization(),
+                pixelization=AbstractPixelization(),
+                regularization=AbstractRegularization(),
             )
 
             plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
@@ -212,8 +217,8 @@ class TestAbstractPlane:
 
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=ag.pix.Pixelization(),
-                regularization=ag.reg.Regularization(),
+                pixelization=AbstractPixelization(),
+                regularization=AbstractRegularization(),
                 hyper_galaxy_image=1,
             )
 

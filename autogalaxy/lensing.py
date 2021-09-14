@@ -208,14 +208,17 @@ class LensingObject:
 
         return grid.values_from_array_slim(array_slim=0.5 * (hessian_yy + hessian_xx))
 
-    def shear_via_hessian_from_grid(self, grid, buffer=0.01):
+    def shear_yx_via_hessian_from_grid(self, grid, buffer=0.01):
 
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(
             grid=grid, buffer=buffer
         )
 
-        shear_y = 0.5 * (hessian_xx - hessian_yy)
-        shear_x = hessian_xy
+        return 0.5 * (hessian_xx - hessian_yy), hessian_xy
+
+    def shear_via_hessian_from_grid(self, grid, buffer=0.01):
+
+        shear_y, shear_x = self.shear_yx_via_hessian_from_grid(grid=grid, buffer=buffer)
 
         return grid.values_from_array_slim(
             array_slim=(shear_x ** 2 + shear_y ** 2) ** 0.5

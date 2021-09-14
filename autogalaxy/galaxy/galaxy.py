@@ -5,6 +5,9 @@ from typing import Optional
 import autofit as af
 import autoarray as aa
 
+from autoarray.inversion.pixelization.abstract import AbstractPixelization
+from autoarray.inversion.regularizations.abstract import AbstractRegularization
+
 from autogalaxy.lensing import LensingObject
 from autogalaxy.profiles.point_sources import Point
 from autogalaxy.profiles.light_profiles import LightProfile
@@ -35,8 +38,8 @@ class Galaxy(af.ModelObject, LensingObject):
     def __init__(
         self,
         redshift: float,
-        pixelization: Optional[aa.pix.Pixelization] = None,
-        regularization: Optional[aa.reg.Regularization] = None,
+        pixelization: Optional[AbstractPixelization] = None,
+        regularization: Optional[AbstractRegularization] = None,
         hyper_galaxy: Optional["HyperGalaxy"] = None,
         **kwargs,
     ):

@@ -14,7 +14,7 @@ class FitImaging(aa.FitImaging):
         hyper_image_sky=None,
         hyper_background_noise=None,
         use_hyper_scalings=True,
-        settings_pixelization=aa.pix.SettingsPixelization(),
+        settings_pixelization=aa.SettingsPixelization(),
         settings_inversion=aa.SettingsInversion(),
     ):
         """ An lens fitter, which contains the plane's used to perform the fit and functions to manipulate \

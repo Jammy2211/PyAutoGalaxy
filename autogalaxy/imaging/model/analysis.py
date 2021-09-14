@@ -17,7 +17,7 @@ class AnalysisImaging(AnalysisDataset):
         dataset,
         hyper_dataset_result=None,
         cosmology=cosmo.Planck15,
-        settings_pixelization=aa.pix.SettingsPixelization(),
+        settings_pixelization=aa.SettingsPixelization(),
         settings_inversion=aa.SettingsInversion(),
     ):
 

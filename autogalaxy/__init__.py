@@ -15,8 +15,8 @@ from autoarray.inversion.inversion.imaging import (
 from autoarray.inversion.inversion.interferometer import (
     inversion_interferometer_from as InversionInterferometer,
 )
-from autoarray.inversion.mappers import mapper as Mapper
-from autoarray.inversion.pixelizations import SettingsPixelization
+from autoarray.inversion.mappers.abstract import mapper as Mapper
+from autoarray.inversion.pixelization.settings import SettingsPixelization
 from autoarray.mask.mask_1d import Mask1D
 from autoarray.mask.mask_2d import Mask2D
 from autoarray.mock import fixtures

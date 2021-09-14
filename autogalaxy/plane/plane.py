@@ -2,6 +2,7 @@ import numpy as np
 from typing import Dict, Optional
 
 import autoarray as aa
+
 from autoarray.inversion.inversion.imaging import inversion_imaging_unpacked_from
 from autoarray.inversion.inversion.interferometer import (
     inversion_interferometer_unpacked_from,
@@ -428,7 +429,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         ]
 
     def sparse_image_plane_grid_from_grid(
-        self, grid, settings_pixelization=aa.pix.SettingsPixelization()
+        self, grid, settings_pixelization=aa.SettingsPixelization()
     ):
 
         if not self.has_pixelization:
@@ -445,7 +446,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         grid,
         sparse_grid,
         sparse_image_plane_grid=None,
-        settings_pixelization=aa.pix.SettingsPixelization(),
+        settings_pixelization=aa.SettingsPixelization(),
         preloads=aa.Preloads(),
     ):
 
@@ -481,7 +482,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         noise_map,
         convolver,
         w_tilde,
-        settings_pixelization=aa.pix.SettingsPixelization(),
+        settings_pixelization=aa.SettingsPixelization(),
         settings_inversion=aa.SettingsInversion(),
     ):
 
@@ -510,7 +511,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         visibilities,
         noise_map,
         transformer,
-        settings_pixelization=aa.pix.SettingsPixelization(),
+        settings_pixelization=aa.SettingsPixelization(),
         settings_inversion=aa.SettingsInversion(),
     ):
 
