@@ -348,8 +348,6 @@ class TestHessian:
             grid=grid
         )
 
-        print(hessian_yy, hessian_xy, hessian_yx, hessian_xx)
-
         assert hessian_yy == pytest.approx(np.array([1.3883822, 0.694127]), 1.0e-4)
         assert hessian_xy == pytest.approx(np.array([-1.388124, -0.694094]), 1.0e-4)
         assert hessian_yx == pytest.approx(np.array([-1.388165, -0.694099]), 1.0e-4)

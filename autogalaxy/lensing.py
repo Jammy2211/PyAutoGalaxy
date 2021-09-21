@@ -130,10 +130,17 @@ class LensingObject:
         return aa.Array2D(array=convergence, mask=grid.mask)
 
     @precompute_jacobian
-    def shear_via_jacobian_from_grid(self, grid, jacobian=None):
+    def shear_yx_via_jacobian_from_grid(self, grid, jacobian=None):
 
         shear_y = -0.5 * (jacobian[0][1] + jacobian[1][0])
         shear_x = 0.5 * (jacobian[1][1] - jacobian[0][0])
+
+        return shear_y, shear_x
+
+    @precompute_jacobian
+    def shear_via_jacobian_from_grid(self, grid, jacobian=None):
+
+        shear_y, shear_x = self.shear_yx_via_jacobian_from_grid(grid=grid)
 
         return aa.Array2D(array=(shear_x ** 2 + shear_y ** 2) ** 0.5, mask=grid.mask)
 
