@@ -9,7 +9,8 @@ from autoarray.structures.grids.two_d import sparse_util as sparse
 from autoarray.fit import fit_util as fit
 from autoarray.inversion.pixelization import pixelization_util as pixelization
 from autoarray.inversion.mappers import mapper_util as mapper
-from autoarray.inversion.regularizations import regularization_util as regularization
+from autoarray.inversion.regularization import regularization_util as regularization
+from autoarray.inversion.linear_eqn import linear_eqn_util as linear_eqn
 from autoarray.inversion.inversion import inversion_util as inversion
 from autoarray.operators import transformer_util as transformer
 from autogalaxy.analysis import model_util as model

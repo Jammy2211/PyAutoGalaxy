@@ -6,7 +6,7 @@ import autofit as af
 import autoarray as aa
 
 from autoarray.inversion.pixelization.abstract import AbstractPixelization
-from autoarray.inversion.regularizations.abstract import AbstractRegularization
+from autoarray.inversion.regularization.abstract import AbstractRegularization
 
 from autogalaxy.lensing import LensingObject
 from autogalaxy.profiles.point_sources import Point

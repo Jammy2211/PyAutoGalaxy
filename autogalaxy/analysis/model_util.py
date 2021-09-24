@@ -6,7 +6,7 @@ import autofit as af
 import autoarray as aa
 
 from autoarray.inversion.pixelization.abstract import AbstractPixelization
-from autoarray.inversion.regularizations.abstract import AbstractRegularization
+from autoarray.inversion.regularization.abstract import AbstractRegularization
 
 from autogalaxy.galaxy.galaxy import HyperGalaxy
 from autogalaxy.profiles.light_profiles import LightProfile
@@ -149,7 +149,7 @@ def hyper_noise_model_from(
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
     data which are fit poorly.
 
-    The hyper model is typically used in pipelines to refine and improve an `Inversion` after model-fits that fit the
+    The hyper model is typically used in pipelines to refine and improve an `LinearEqn` after model-fits that fit the
     `Galaxy` light and mass components.
 
     Parameters
@@ -211,7 +211,7 @@ def hyper_inversion_model_from(
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
     data which are fit poorly.
 
-    The hyper model is typically used in pipelines to refine and improve an `Inversion` after model-fits that fit the
+    The hyper model is typically used in pipelines to refine and improve an `LinearEqn` after model-fits that fit the
     `Galaxy` light and mass components.
 
     Parameters
@@ -310,7 +310,7 @@ def hyper_fit(
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
     data which are fit poorly.
 
-    The hyper model is typically used in pipelines to refine and improve an `Inversion` after model-fits that fit the
+    The hyper model is typically used in pipelines to refine and improve an `LinearEqn` after model-fits that fit the
     `Galaxy` light and mass components.
 
     Parameters
@@ -409,7 +409,7 @@ def hyper_model_from(
     3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
     data which are fit poorly.
-    The hyper model is typically used in pipelines to refine and improve an `Inversion` after model-fits that fit the
+    The hyper model is typically used in pipelines to refine and improve an `LinearEqn` after model-fits that fit the
     `Galaxy` light and mass components.
     Parameters
     ----------
@@ -469,7 +469,7 @@ def hyper_fit_bc(hyper_model: af.Collection, setup_hyper, result: af.Result, ana
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
     data which are fit poorly.
 
-    The hyper model is typically used in pipelines to refine and improve an `Inversion` after model-fits that fit the
+    The hyper model is typically used in pipelines to refine and improve an `LinearEqn` after model-fits that fit the
     `Galaxy` light and mass components.
 
     Parameters

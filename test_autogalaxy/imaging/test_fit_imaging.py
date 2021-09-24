@@ -2,8 +2,6 @@ import numpy as np
 import pytest
 
 import autogalaxy as ag
-from autoarray.inversion.inversion.imaging import InversionImagingWTilde
-from autoarray.inversion.inversion.imaging import InversionImagingMapping
 from autogalaxy.mock.mock import MockLightProfile
 
 
@@ -745,12 +743,9 @@ class TestCompareToManualInversionOnly:
         mapper = pix.mapper_from_grid_and_sparse_grid(
             grid=masked_imaging_7x7.grid_inversion, sparse_grid=None
         )
-        inversion = InversionImagingMapping(
-            mapper=mapper,
-            regularization=reg,
-            image=masked_imaging_7x7.image,
-            noise_map=masked_imaging_7x7.noise_map,
-            convolver=masked_imaging_7x7.convolver,
+
+        inversion = ag.Inversion(
+            dataset=masked_imaging_7x7, mapper=mapper, regularization=reg
         )
 
         assert inversion.mapped_reconstructed_image.native == pytest.approx(
@@ -830,12 +825,8 @@ class TestCompareToManualInversionOnly:
             grid=masked_imaging_7x7.grid, sparse_grid=None
         )
 
-        inversion = InversionImagingMapping(
-            mapper=mapper,
-            regularization=reg,
-            image=masked_imaging_7x7.image,
-            noise_map=masked_imaging_7x7.noise_map,
-            convolver=masked_imaging_7x7.convolver,
+        inversion = ag.Inversion(
+            dataset=masked_imaging_7x7, mapper=mapper, regularization=reg
         )
 
         assert (fit.galaxy_model_image_dict[g0] == np.zeros(9)).all()
@@ -895,12 +886,14 @@ class TestCompareToManualInversionOnly:
             grid=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
-        inversion = InversionImagingMapping(
-            mapper=mapper,
-            regularization=reg,
+        inversion = ag.InversionImaging(
             image=image,
             noise_map=hyper_noise_map,
             convolver=masked_imaging_7x7.convolver,
+            w_tilde=masked_imaging_7x7.w_tilde,
+            mapper=mapper,
+            regularization=reg,
+            settings=ag.SettingsInversion(use_w_tilde=False),
         )
 
         assert inversion.mapped_reconstructed_image.native == pytest.approx(
@@ -977,12 +970,8 @@ class TestCompareToManualInversionOnly:
             settings=ag.SettingsPixelization(use_border=False),
         )
 
-        inversion = InversionImagingMapping(
-            mapper=mapper,
-            regularization=reg,
-            image=masked_imaging_7x7.image,
-            noise_map=masked_imaging_7x7.noise_map,
-            convolver=masked_imaging_7x7.convolver,
+        inversion = ag.Inversion(
+            dataset=masked_imaging_7x7, mapper=mapper, regularization=reg
         )
 
         assert (fit.model_images_of_galaxies[0].native == np.zeros((7, 7))).all()
@@ -1024,10 +1013,11 @@ class TestCompareToManualProfilesAndInversion:
             settings=ag.SettingsPixelization(use_border=False),
         )
 
-        inversion = InversionImagingMapping(
+        inversion = ag.InversionImaging(
             image=profile_subtracted_image,
             noise_map=masked_imaging_7x7.noise_map,
             convolver=masked_imaging_7x7.convolver,
+            w_tilde=masked_imaging_7x7.w_tilde,
             mapper=mapper,
             regularization=reg,
         )
@@ -1126,10 +1116,11 @@ class TestCompareToManualProfilesAndInversion:
             settings=ag.SettingsPixelization(use_border=False),
         )
 
-        inversion = InversionImagingMapping(
+        inversion = ag.InversionImaging(
             image=profile_subtracted_image,
             noise_map=masked_imaging_7x7.noise_map,
             convolver=masked_imaging_7x7.convolver,
+            w_tilde=masked_imaging_7x7.w_tilde,
             mapper=mapper,
             regularization=reg,
         )
@@ -1215,12 +1206,14 @@ class TestCompareToManualProfilesAndInversion:
             settings=ag.SettingsPixelization(use_border=False),
         )
 
-        inversion = InversionImagingMapping(
+        inversion = ag.InversionImaging(
             image=profile_subtracted_image,
             noise_map=hyper_noise_map,
             convolver=masked_imaging_7x7.convolver,
+            w_tilde=masked_imaging_7x7.w_tilde,
             mapper=mapper,
             regularization=reg,
+            settings=ag.SettingsInversion(use_w_tilde=False),
         )
 
         model_image = blurred_image + inversion.mapped_reconstructed_image
@@ -1308,10 +1301,11 @@ class TestCompareToManualProfilesAndInversion:
             settings=ag.SettingsPixelization(use_border=False),
         )
 
-        inversion = InversionImagingMapping(
+        inversion = ag.InversionImaging(
             image=profile_subtracted_image,
             noise_map=masked_imaging_7x7.noise_map,
             convolver=masked_imaging_7x7.convolver,
+            w_tilde=masked_imaging_7x7.w_tilde,
             mapper=mapper,
             regularization=reg,
         )

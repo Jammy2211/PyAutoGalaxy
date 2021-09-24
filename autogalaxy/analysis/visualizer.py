@@ -107,6 +107,11 @@ class Visualizer:
             inversion_plotter.subplot_inversion()
 
         inversion_plotter.figures_2d(
+            reconstructed_image=should_plot("reconstructed_image")
+        )
+
+        inversion_plotter.figures_2d_of_mapper(
+            mapper_index=0,
             reconstructed_image=should_plot("reconstructed_image"),
             reconstruction=should_plot("reconstruction"),
             errors=should_plot("errors"),
@@ -114,15 +119,16 @@ class Visualizer:
             normalized_residual_map=should_plot("normalized_residual_map"),
             chi_squared_map=should_plot("chi_squared_map"),
             regularization_weight_list=should_plot("regularization_weight_list"),
-            interpolated_reconstruction=should_plot("interpolated_reconstruction"),
-            interpolated_errors=should_plot("interpolated_errors"),
         )
 
         if not during_analysis:
 
             if should_plot("all_at_end_png"):
 
-                inversion_plotter.figures_2d(
+                inversion_plotter.figures_2d(reconstructed_image=True)
+
+                inversion_plotter.figures_2d_of_mapper(
+                    mapper_index=0,
                     reconstructed_image=True,
                     reconstruction=True,
                     errors=True,
@@ -130,8 +136,6 @@ class Visualizer:
                     normalized_residual_map=True,
                     chi_squared_map=True,
                     regularization_weight_list=True,
-                    interpolated_reconstruction=True,
-                    interpolated_errors=True,
                 )
 
     def visualize_hyper_images(self, hyper_galaxy_image_path_dict, hyper_model_image):

@@ -79,7 +79,7 @@ class TestVisualizer:
 
         plot_path = path.join(plot_path, "inversion")
 
-        assert path.join(plot_path, "subplot_inversion.png") in plot_patch.paths
+        #        assert path.join(plot_path, "subplot_inversion.png") in plot_patch.paths
         assert path.join(plot_path, "reconstructed_image.png") in plot_patch.paths
         assert path.join(plot_path, "reconstruction.png") in plot_patch.paths
         # assert path.join(plot_path,"inversion","errors.png") not in plot_patch.paths
@@ -93,10 +93,6 @@ class TestVisualizer:
             path.join(plot_path, "regularization_weight_list.png")
             not in plot_patch.paths
         )
-        assert (
-            path.join(plot_path, "interpolated_reconstruction.png") in plot_patch.paths
-        )
-        assert path.join(plot_path, "interpolated_errors.png") in plot_patch.paths
 
     def test__visualize_hyper_images__uses_config(
         self,
