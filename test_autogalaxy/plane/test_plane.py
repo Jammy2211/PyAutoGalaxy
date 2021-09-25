@@ -222,7 +222,7 @@ class TestAbstractPlane:
 
         assert plane.hyper_galaxy_image_of_galaxy_with_pixelization is None
 
-    def test__pixelization_of_plane_extracts_from_galaxies(self):
+    def test__pixelization__extracts_from_galaxies(self):
         galaxy_pix = ag.Galaxy(
             redshift=0.5,
             pixelization=MockPixelization(mapper=1),
@@ -255,7 +255,7 @@ class TestAbstractPlane:
 
         assert plane.pixelization is None
 
-    def test__regularization_of_plane_extracts_from_galaxies(self):
+    def test__regularization__extracts_from_galaxies(self):
 
         galaxy_reg = ag.Galaxy(
             redshift=0.5,
