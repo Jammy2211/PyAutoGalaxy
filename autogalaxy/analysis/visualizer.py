@@ -118,7 +118,7 @@ class Visualizer:
             residual_map=should_plot("residual_map"),
             normalized_residual_map=should_plot("normalized_residual_map"),
             chi_squared_map=should_plot("chi_squared_map"),
-            regularization_weight_list=should_plot("regularization_weight_list"),
+            regularization_weights=should_plot("regularization_weights"),
         )
 
         if not during_analysis:
@@ -135,7 +135,7 @@ class Visualizer:
                     residual_map=True,
                     normalized_residual_map=True,
                     chi_squared_map=True,
-                    regularization_weight_list=True,
+                    regularization_weights=True,
                 )
 
     def visualize_hyper_images(self, hyper_galaxy_image_path_dict, hyper_model_image):

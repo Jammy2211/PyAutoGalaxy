@@ -198,31 +198,7 @@ class TestAbstractPlane:
         )
         assert plane.mass_profiles == [sis_0, sis_1, sis_2, sis_1]
 
-    def test__hyper_image_of_galaxy_with_pixelization(self):
-        galaxy_pix = ag.Galaxy(
-            redshift=0.5,
-            pixelization=AbstractPixelization(),
-            regularization=AbstractRegularization(),
-        )
-
-        plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
-        assert plane.hyper_galaxy_image_of_galaxy_with_pixelization is None
-
-        galaxy_pix = ag.Galaxy(
-            redshift=0.5,
-            pixelization=AbstractPixelization(),
-            regularization=AbstractRegularization(),
-            hyper_galaxy_image=1,
-        )
-
-        plane = ag.Plane(galaxies=[galaxy_pix, ag.Galaxy(redshift=0.5)], redshift=None)
-        assert plane.hyper_galaxy_image_of_galaxy_with_pixelization == 1
-
-        plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
-
-        assert plane.hyper_galaxy_image_of_galaxy_with_pixelization is None
-
-    def test__pixelization__extracts_from_galaxies(self):
+    def test__pixelization_list(self):
         galaxy_pix = ag.Galaxy(
             redshift=0.5,
             pixelization=MockPixelization(mapper=1),
@@ -231,7 +207,7 @@ class TestAbstractPlane:
 
         plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
 
-        assert plane.pixelization.mapper == 1
+        assert plane.pixelization_list[0].mapper == 1
 
         galaxy_pix_0 = ag.Galaxy(
             redshift=0.5,
@@ -246,16 +222,16 @@ class TestAbstractPlane:
 
         plane = ag.Plane(galaxies=[galaxy_pix_0, galaxy_pix_1], redshift=None)
 
-        with pytest.raises(exc.PixelizationException):
-            plane.pixelization
+        assert plane.pixelization_list[0].mapper == 1
+        assert plane.pixelization_list[1].mapper == 2
 
         galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
         plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=None)
 
-        assert plane.pixelization is None
+        assert plane.pixelization_list == []
 
-    def test__regularization__extracts_from_galaxies(self):
+    def test__regularization_list(self):
 
         galaxy_reg = ag.Galaxy(
             redshift=0.5,
@@ -265,7 +241,7 @@ class TestAbstractPlane:
 
         plane = ag.Plane(galaxies=[galaxy_reg], redshift=None)
 
-        assert plane.regularization.regularization_matrix == 1
+        assert plane.regularization_list[0].regularization_matrix == 1
 
         galaxy_reg_0 = ag.Galaxy(
             redshift=0.5,
@@ -280,14 +256,38 @@ class TestAbstractPlane:
 
         plane = ag.Plane(galaxies=[galaxy_reg_0, galaxy_reg_1], redshift=None)
 
-        with pytest.raises(exc.PixelizationException):
-            print(plane.regularization)
+        assert plane.regularization_list[0].regularization_matrix == 1
+        assert plane.regularization_list[1].regularization_matrix == 2
 
         galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
         plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=None)
 
-        assert plane.regularization is None
+        assert plane.regularization_list == []
+
+    def test__hyper_galaxy_image_list(self):
+        galaxy_pix = ag.Galaxy(
+            redshift=0.5,
+            pixelization=AbstractPixelization(),
+            regularization=AbstractRegularization(),
+        )
+
+        plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
+        assert plane.hyper_galaxy_image_list[0] is None
+
+        galaxy_pix = ag.Galaxy(
+            redshift=0.5,
+            pixelization=AbstractPixelization(),
+            regularization=AbstractRegularization(),
+            hyper_galaxy_image=1,
+        )
+
+        plane = ag.Plane(galaxies=[galaxy_pix, ag.Galaxy(redshift=0.5)], redshift=None)
+        assert plane.hyper_galaxy_image_list[0] == 1
+
+        plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
+
+        assert plane.hyper_galaxy_image_list == []
 
 
 class TestAbstractPlaneProfiles:
@@ -1246,7 +1246,7 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=0.5)
 
-            sparse_grid = plane.sparse_image_plane_grid_from_grid(grid=sub_grid_2d_7x7)
+            sparse_grid = plane.sparse_image_plane_grid_list_from(grid=sub_grid_2d_7x7)
 
             assert sparse_grid is None
 
@@ -1261,7 +1261,7 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
-            sparse_grid = plane.sparse_image_plane_grid_from_grid(grid=sub_grid_2d_7x7)
+            sparse_grid = plane.sparse_image_plane_grid_list_from(grid=sub_grid_2d_7x7)
 
             assert (sparse_grid == np.array([[1.0, 1.0]])).all()
 
@@ -1277,98 +1277,50 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
-            sparse_grid = plane.sparse_image_plane_grid_from_grid(grid=sub_grid_2d_7x7)
+            sparse_grid = plane.sparse_image_plane_grid_list_from(grid=sub_grid_2d_7x7)
 
             assert (sparse_grid == np.array([[2.0, 2.0]])).all()
 
     class TestMapper:
-        def test__no_galaxies_with_pixelizations_in_plane__returns_none(
-            self, sub_grid_2d_7x7
-        ):
+        def test__mapper_list_from(self, sub_grid_2d_7x7):
+
+            galaxy_pix = ag.Galaxy(
+                redshift=0.5,
+                pixelization=MockPixelization(mapper=1, sparse_grid=sub_grid_2d_7x7),
+                regularization=MockRegularization(),
+            )
+            galaxy_no_pix = ag.Galaxy(redshift=0.5)
+
+            plane = ag.Plane(galaxies=[galaxy_no_pix, galaxy_pix], redshift=0.5)
+
+            mapper_list = plane.mapper_list_from(grid=sub_grid_2d_7x7)
+
+            assert mapper_list[0] == 1
+
+            galaxy_pix_2 = ag.Galaxy(
+                redshift=0.5,
+                pixelization=MockPixelization(mapper=2, sparse_grid=sub_grid_2d_7x7),
+                regularization=MockRegularization(),
+            )
+            galaxy_no_pix = ag.Galaxy(redshift=0.5)
+
+            plane = ag.Plane(
+                galaxies=[galaxy_no_pix, galaxy_pix, galaxy_no_pix, galaxy_pix_2],
+                redshift=0.5,
+            )
+
+            mapper_list = plane.mapper_list_from(grid=sub_grid_2d_7x7)
+
+            assert mapper_list[0] == 1
+            assert mapper_list[1] == 2
+
             galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
             plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=0.5)
 
-            mapper = plane.mapper_from_grid_and_sparse_grid(
-                grid=sub_grid_2d_7x7, sparse_grid=sub_grid_2d_7x7
-            )
+            mapper_list = plane.mapper_list_from(grid=sub_grid_2d_7x7)
 
-            assert mapper is None
-
-        def test__plane_includes_galaxy_with_pixelization__returns_mapper(
-            self, sub_grid_2d_7x7
-        ):
-            galaxy_pix = ag.Galaxy(
-                redshift=0.5,
-                pixelization=MockPixelization(mapper=1),
-                regularization=MockRegularization(),
-            )
-
-            plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
-
-            mapper = plane.mapper_from_grid_and_sparse_grid(
-                grid=sub_grid_2d_7x7, sparse_grid=sub_grid_2d_7x7
-            )
-
-            assert mapper == 1
-
-            galaxy_pix = ag.Galaxy(
-                redshift=0.5,
-                pixelization=MockPixelization(mapper=1),
-                regularization=MockRegularization(),
-            )
-            galaxy_no_pix = ag.Galaxy(redshift=0.5)
-
-            plane = ag.Plane(galaxies=[galaxy_no_pix, galaxy_pix], redshift=0.5)
-
-            mapper = plane.mapper_from_grid_and_sparse_grid(
-                grid=sub_grid_2d_7x7, sparse_grid=sub_grid_2d_7x7
-            )
-
-            assert mapper == 1
-
-        def test__inversion_use_border_is_false__still_returns_mapper(
-            self, sub_grid_2d_7x7
-        ):
-            galaxy_pix = ag.Galaxy(
-                redshift=0.5,
-                pixelization=MockPixelization(mapper=1),
-                regularization=MockRegularization(),
-            )
-            galaxy_no_pix = ag.Galaxy(redshift=0.5)
-
-            plane = ag.Plane(galaxies=[galaxy_no_pix, galaxy_pix], redshift=0.5)
-
-            mapper = plane.mapper_from_grid_and_sparse_grid(
-                grid=sub_grid_2d_7x7,
-                sparse_grid=sub_grid_2d_7x7,
-                settings_pixelization=ag.SettingsPixelization(use_border=False),
-            )
-
-            assert mapper == 1
-
-        def test__plane_has_2_galaxies_with_pixelization__raises_error(
-            self, sub_grid_2d_7x7
-        ):
-            galaxy_pix_0 = ag.Galaxy(
-                redshift=0.5,
-                pixelization=MockPixelization(mapper=1),
-                regularization=MockRegularization(),
-            )
-            galaxy_pix_1 = ag.Galaxy(
-                redshift=0.5,
-                pixelization=MockPixelization(mapper=2),
-                regularization=MockRegularization(),
-            )
-
-            plane = ag.Plane(galaxies=[galaxy_pix_0, galaxy_pix_1], redshift=None)
-
-            with pytest.raises(exc.PixelizationException):
-                plane.mapper_from_grid_and_sparse_grid(
-                    grid=sub_grid_2d_7x7,
-                    sparse_grid=sub_grid_2d_7x7,
-                    settings_pixelization=ag.SettingsPixelization(use_border=False),
-                )
+            assert mapper_list is None
 
     class TestLinearEqn:
         def test__x1_inversion_imaging_in_plane__performs_inversion_correctly(

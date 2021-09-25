@@ -3,7 +3,9 @@ import numpy as np
 import autofit as af
 import autogalaxy as ag
 from autogalaxy.analysis import result as res
-from autogalaxy.mock import mock
+
+from autofit.mock.mock import MockSearch, MockSamples
+from autogalaxy.mock.mock import MockPixelization, MockRegularization
 
 
 class TestResultAbstract:
@@ -39,11 +41,9 @@ class TestResultAbstract:
 
         max_log_likelihood_plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
-        search = mock.MockSearch(
+        search = MockSearch(
             name="test_search",
-            samples=mock.MockSamples(
-                max_log_likelihood_instance=max_log_likelihood_plane
-            ),
+            samples=MockSamples(max_log_likelihood_instance=max_log_likelihood_plane),
         )
 
         result = search.fit(model=model, analysis=analysis_imaging_7x7)
@@ -73,36 +73,17 @@ class TestResultDataset:
     ):
         source = ag.Galaxy(
             redshift=1.0,
-            pixelization=ag.pix.VoronoiMagnification(shape=(2, 3)),
-            regularization=ag.reg.Constant(),
+            pixelization=MockPixelization(mapper=1),
+            regularization=MockRegularization(),
         )
 
         max_log_likelihood_plane = ag.Plane(galaxies=[source])
 
-        samples = mock.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
+        samples = MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
 
         result = res.ResultDataset(
             samples=samples, analysis=analysis_imaging_7x7, model=None, search=None
         )
 
-        assert isinstance(result.pixelization, ag.pix.VoronoiMagnification)
-        assert result.pixelization.shape == (2, 3)
-
-        source = ag.Galaxy(
-            redshift=1.0,
-            pixelization=ag.pix.VoronoiBrightnessImage(pixels=6),
-            regularization=ag.reg.Constant(),
-        )
-
-        source.hyper_galaxy_image = np.ones(9)
-
-        max_log_likelihood_plane = ag.Plane(galaxies=[source])
-
-        samples = mock.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
-
-        result = res.ResultDataset(
-            samples=samples, analysis=analysis_imaging_7x7, model=None, search=None
-        )
-
-        assert isinstance(result.pixelization, ag.pix.VoronoiBrightnessImage)
-        assert result.pixelization.pixels == 6
+        assert isinstance(result.pixelization_list[0], MockPixelization)
+        assert result.pixelization_list[0].mapper == 1

@@ -260,12 +260,10 @@ class TestCompareToManualInversionOnly:
 
         fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
 
-        mapper = pix.mapper_from_grid_and_sparse_grid(
-            grid=interferometer_7.grid_inversion, sparse_grid=None
-        )
+        mapper = pix.mapper_from(grid=interferometer_7.grid_inversion, sparse_grid=None)
 
         inversion = ag.Inversion(
-            dataset=interferometer_7, mapper=mapper, regularization=reg
+            dataset=interferometer_7, mapper_list=[mapper], regularization_list=[reg]
         )
 
         assert inversion.mapped_reconstructed_visibilities == pytest.approx(
@@ -329,7 +327,7 @@ class TestCompareToManualInversionOnly:
         assert log_evidence == fit.figure_of_merit
 
         mapped_reconstructed_image = ag.util.linear_eqn.mapped_reconstructed_data_via_mapping_matrix_from(
-            mapping_matrix=fit.inversion.mapper.mapping_matrix,
+            mapping_matrix=fit.inversion.mapper_list[0].mapping_matrix,
             reconstruction=fit.inversion.reconstruction,
         )
 
@@ -350,12 +348,10 @@ class TestCompareToManualInversionOnly:
 
         fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
 
-        mapper = pix.mapper_from_grid_and_sparse_grid(
-            grid=interferometer_7.grid, sparse_grid=None
-        )
+        mapper = pix.mapper_from(grid=interferometer_7.grid, sparse_grid=None)
 
         inversion = ag.Inversion(
-            dataset=interferometer_7, mapper=mapper, regularization=reg
+            dataset=interferometer_7, mapper_list=[mapper], regularization_list=[reg]
         )
 
         assert (fit.galaxy_model_image_dict[g0].native == np.zeros((7, 7))).all()
@@ -377,12 +373,10 @@ class TestCompareToManualInversionOnly:
 
         fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
 
-        mapper = pix.mapper_from_grid_and_sparse_grid(
-            grid=interferometer_7.grid, sparse_grid=None
-        )
+        mapper = pix.mapper_from(grid=interferometer_7.grid, sparse_grid=None)
 
         inversion = ag.Inversion(
-            dataset=interferometer_7, mapper=mapper, regularization=reg
+            dataset=interferometer_7, mapper_list=[mapper], regularization_list=[reg]
         )
 
         assert (
@@ -440,14 +434,14 @@ class TestCompareToManualInversionOnly:
             settings_inversion=ag.SettingsInversion(use_linear_operators=True),
         )
 
-        mapper = pix.mapper_from_grid_and_sparse_grid(
+        mapper = pix.mapper_from(
             grid=interferometer_7_lop.grid_inversion, sparse_grid=None
         )
 
         inversion = ag.Inversion(
             dataset=interferometer_7_lop,
-            mapper=mapper,
-            regularization=reg,
+            mapper_list=[mapper],
+            regularization_list=[reg],
             settings=ag.SettingsInversion(use_linear_operators=True),
         )
 
@@ -512,7 +506,7 @@ class TestCompareToManualInversionOnly:
         assert log_evidence == fit.figure_of_merit
 
         mapped_reconstructed_image = ag.util.linear_eqn.mapped_reconstructed_data_via_mapping_matrix_from(
-            mapping_matrix=fit.inversion.mapper.mapping_matrix,
+            mapping_matrix=fit.inversion.mapper_list[0].mapping_matrix,
             reconstruction=fit.inversion.reconstruction,
         )
 
@@ -549,7 +543,7 @@ class TestCompareToManualProfilesAndInversion:
             fit.profile_subtracted_visibilities.slim
         )
 
-        mapper = pix.mapper_from_grid_and_sparse_grid(
+        mapper = pix.mapper_from(
             grid=interferometer_7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
@@ -558,8 +552,8 @@ class TestCompareToManualProfilesAndInversion:
             visibilities=profile_subtracted_visibilities,
             noise_map=interferometer_7.noise_map,
             transformer=interferometer_7.transformer,
-            mapper=mapper,
-            regularization=reg,
+            mapper_list=[mapper],
+            regularization_list=[reg],
         )
 
         model_visibilities = (
@@ -624,7 +618,7 @@ class TestCompareToManualProfilesAndInversion:
         assert log_evidence == fit.figure_of_merit
 
         mapped_reconstructed_image = ag.util.linear_eqn.mapped_reconstructed_data_via_mapping_matrix_from(
-            mapping_matrix=fit.inversion.mapper.mapping_matrix,
+            mapping_matrix=fit.inversion.mapper_list[0].mapping_matrix,
             reconstruction=fit.inversion.reconstruction,
         )
 
@@ -659,7 +653,7 @@ class TestCompareToManualProfilesAndInversion:
         profile_subtracted_visibilities = (
             interferometer_7.visibilities - profile_visibilities
         )
-        mapper = pix.mapper_from_grid_and_sparse_grid(
+        mapper = pix.mapper_from(
             grid=interferometer_7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
@@ -668,8 +662,8 @@ class TestCompareToManualProfilesAndInversion:
             visibilities=profile_subtracted_visibilities,
             noise_map=interferometer_7.noise_map,
             transformer=interferometer_7.transformer,
-            mapper=mapper,
-            regularization=reg,
+            mapper_list=[mapper],
+            regularization_list=[reg],
         )
 
         g0_image = g0.image_2d_from_grid(grid=interferometer_7.grid)
@@ -714,7 +708,7 @@ class TestCompareToManualProfilesAndInversion:
         profile_subtracted_visibilities = (
             interferometer_7.visibilities - profile_visibilities
         )
-        mapper = pix.mapper_from_grid_and_sparse_grid(
+        mapper = pix.mapper_from(
             grid=interferometer_7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
@@ -723,8 +717,8 @@ class TestCompareToManualProfilesAndInversion:
             visibilities=profile_subtracted_visibilities,
             noise_map=interferometer_7.noise_map,
             transformer=interferometer_7.transformer,
-            mapper=mapper,
-            regularization=reg,
+            mapper_list=[mapper],
+            regularization_list=[reg],
         )
 
         assert (

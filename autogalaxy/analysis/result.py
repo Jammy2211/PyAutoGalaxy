@@ -70,10 +70,8 @@ class ResultDataset(Result):
         return self.max_log_likelihood_fit.dataset
 
     @property
-    def pixelization(self):
-        for galaxy in self.max_log_likelihood_fit.galaxies:
-            if galaxy.pixelization is not None:
-                return galaxy.pixelization
+    def pixelization_list(self):
+        return self.max_log_likelihood_plane.pixelization_list
 
     def image_for_galaxy(self, galaxy: Galaxy) -> np.ndarray:
         """

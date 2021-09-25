@@ -90,8 +90,7 @@ class TestVisualizer:
         )
         assert path.join(plot_path, "chi_squared_map.png") in plot_patch.paths
         assert (
-            path.join(plot_path, "regularization_weight_list.png")
-            not in plot_patch.paths
+            path.join(plot_path, "regularization_weights.png") not in plot_patch.paths
         )
 
     def test__visualize_hyper_images__uses_config(

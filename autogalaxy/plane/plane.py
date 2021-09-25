@@ -73,6 +73,10 @@ class AbstractPlane(LensingObject):
         return any([galaxy.regularization for galaxy in self.galaxies])
 
     @property
+    def has_hyper_galaxy(self):
+        return any(list(map(lambda galaxy: galaxy.has_hyper_galaxy, self.galaxies)))
+
+    @property
     def galaxies_with_light_profile(self):
         return list(filter(lambda galaxy: galaxy.has_light_profile, self.galaxies))
 
@@ -89,38 +93,16 @@ class AbstractPlane(LensingObject):
         return list(filter(lambda galaxy: galaxy.has_regularization, self.galaxies))
 
     @property
-    def pixelization(self):
-
-        if len(self.galaxies_with_pixelization) == 0:
-            return None
-        if len(self.galaxies_with_pixelization) == 1:
-            return self.galaxies_with_pixelization[0].pixelization
-        elif len(self.galaxies_with_pixelization) > 1:
-            raise exc.PixelizationException(
-                "The number of galaxies with pixelizations in one plane is above 1"
-            )
+    def pixelization_list(self):
+        return [galaxy.pixelization for galaxy in self.galaxies_with_pixelization]
 
     @property
-    def regularization(self):
-
-        if len(self.galaxies_with_regularization) == 0:
-            return None
-        if len(self.galaxies_with_regularization) == 1:
-            return self.galaxies_with_regularization[0].regularization
-        elif len(self.galaxies_with_regularization) > 1:
-            raise exc.PixelizationException(
-                "The number of galaxies with regularizations in one plane is above 1"
-            )
+    def regularization_list(self):
+        return [galaxy.regularization for galaxy in self.galaxies_with_pixelization]
 
     @property
-    def hyper_galaxy_image_of_galaxy_with_pixelization(self):
-        galaxies_with_pixelization = self.galaxies_with_pixelization
-        if galaxies_with_pixelization:
-            return galaxies_with_pixelization[0].hyper_galaxy_image
-
-    @property
-    def has_hyper_galaxy(self):
-        return any(list(map(lambda galaxy: galaxy.has_hyper_galaxy, self.galaxies)))
+    def hyper_galaxy_image_list(self):
+        return [galaxy.hyper_galaxy_image for galaxy in self.galaxies_with_pixelization]
 
     @property
     def point_dict(self):
@@ -426,52 +408,77 @@ class AbstractPlaneData(AbstractPlaneLensing):
             for galaxy in self.galaxies
         ]
 
-    def sparse_image_plane_grid_from_grid(
+    def sparse_image_plane_grid_list_from(
         self, grid, settings_pixelization=aa.SettingsPixelization()
     ):
 
         if not self.has_pixelization:
             return None
 
-        hyper_galaxy_image = self.hyper_galaxy_image_of_galaxy_with_pixelization
+        return [
+            pixelization.sparse_grid_from_grid(
+                grid=grid,
+                hyper_image=hyper_galaxy_image,
+                settings=settings_pixelization,
+            )
+            for pixelization, hyper_galaxy_image in zip(
+                self.pixelization_list, self.hyper_galaxy_image_list
+            )
+        ]
 
-        return self.pixelization.sparse_grid_from_grid(
-            grid=grid, hyper_image=hyper_galaxy_image, settings=settings_pixelization
-        )
-
-    def mapper_from_grid_and_sparse_grid(
+    def mapper_from(
         self,
         grid,
         sparse_grid,
+        pixelization,
+        hyper_galaxy_image,
         sparse_image_plane_grid=None,
         settings_pixelization=aa.SettingsPixelization(),
         preloads=aa.Preloads(),
     ):
 
-        galaxies_with_pixelization = list(
-            filter(lambda galaxy: galaxy.pixelization is not None, self.galaxies)
+        return pixelization.mapper_from(
+            grid=grid,
+            sparse_grid=sparse_grid,
+            sparse_image_plane_grid=sparse_image_plane_grid,
+            hyper_image=hyper_galaxy_image,
+            settings=settings_pixelization,
+            preloads=preloads,
+            profiling_dict=self.profiling_dict,
         )
 
-        if len(galaxies_with_pixelization) == 0:
+    def mapper_list_from(
+        self,
+        grid,
+        settings_pixelization=aa.SettingsPixelization(),
+        preloads=aa.Preloads(),
+    ):
+
+        if not self.has_pixelization:
             return None
-        if len(galaxies_with_pixelization) == 1:
 
-            pixelization = galaxies_with_pixelization[0].pixelization
+        sparse_grid_list = self.sparse_image_plane_grid_list_from(grid=grid)
 
-            return pixelization.mapper_from_grid_and_sparse_grid(
+        mapper_list = []
+
+        pixelization_list = self.pixelization_list
+        hyper_galaxy_image_list = self.hyper_galaxy_image_list
+
+        for mapper_index in range(len(sparse_grid_list)):
+
+            mapper = self.mapper_from(
                 grid=grid,
-                sparse_grid=sparse_grid,
-                sparse_image_plane_grid=sparse_image_plane_grid,
-                hyper_image=galaxies_with_pixelization[0].hyper_galaxy_image,
-                settings=settings_pixelization,
+                sparse_grid=sparse_grid_list,
+                pixelization=pixelization_list[mapper_index],
+                hyper_galaxy_image=hyper_galaxy_image_list[mapper_index],
+                sparse_image_plane_grid=sparse_grid_list[mapper_index],
+                settings_pixelization=settings_pixelization,
                 preloads=preloads,
-                profiling_dict=self.profiling_dict,
             )
 
-        elif len(galaxies_with_pixelization) > 1:
-            raise exc.PixelizationException(
-                "The number of galaxies with pixelizations in one plane is above 1"
-            )
+            mapper_list.append(mapper)
+
+        return mapper_list
 
     def inversion_imaging_from_grid_and_data(
         self,
@@ -482,14 +489,11 @@ class AbstractPlaneData(AbstractPlaneLensing):
         w_tilde,
         settings_pixelization=aa.SettingsPixelization(),
         settings_inversion=aa.SettingsInversion(),
+        preloads=aa.Preloads(),
     ):
 
-        sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
-
-        mapper = self.mapper_from_grid_and_sparse_grid(
-            grid=grid,
-            sparse_grid=sparse_grid,
-            settings_pixelization=settings_pixelization,
+        mapper_list = self.mapper_list_from(
+            grid=grid, settings_pixelization=settings_pixelization, preloads=preloads
         )
 
         return inversion_imaging_unpacked_from(
@@ -497,8 +501,8 @@ class AbstractPlaneData(AbstractPlaneLensing):
             noise_map=noise_map,
             convolver=convolver,
             w_tilde=w_tilde,
-            mapper=mapper,
-            regularization=self.regularization,
+            mapper_list=mapper_list,
+            regularization_list=self.regularization_list,
             settings=settings_inversion,
             profiling_dict=self.profiling_dict,
         )
@@ -511,22 +515,19 @@ class AbstractPlaneData(AbstractPlaneLensing):
         transformer,
         settings_pixelization=aa.SettingsPixelization(),
         settings_inversion=aa.SettingsInversion(),
+        preloads=aa.Preloads(),
     ):
 
-        sparse_grid = self.sparse_image_plane_grid_from_grid(grid=grid)
-
-        mapper = self.mapper_from_grid_and_sparse_grid(
-            grid=grid,
-            sparse_grid=sparse_grid,
-            settings_pixelization=settings_pixelization,
+        mapper_list = self.mapper_list_from(
+            grid=grid, settings_pixelization=settings_pixelization, preloads=preloads
         )
 
         return inversion_interferometer_unpacked_from(
             visibilities=visibilities,
             noise_map=noise_map,
             transformer=transformer,
-            mapper=mapper,
-            regularization=self.regularization,
+            mapper_list=mapper_list,
+            regularization_list=self.regularization_list,
             settings=settings_inversion,
             profiling_dict=self.profiling_dict,
         )

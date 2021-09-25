@@ -740,12 +740,12 @@ class TestCompareToManualInversionOnly:
 
         fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
 
-        mapper = pix.mapper_from_grid_and_sparse_grid(
+        mapper = pix.mapper_from(
             grid=masked_imaging_7x7.grid_inversion, sparse_grid=None
         )
 
         inversion = ag.Inversion(
-            dataset=masked_imaging_7x7, mapper=mapper, regularization=reg
+            dataset=masked_imaging_7x7, mapper_list=[mapper], regularization_list=[reg]
         )
 
         assert inversion.mapped_reconstructed_image.native == pytest.approx(
@@ -821,12 +821,10 @@ class TestCompareToManualInversionOnly:
 
         fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
 
-        mapper = pix.mapper_from_grid_and_sparse_grid(
-            grid=masked_imaging_7x7.grid, sparse_grid=None
-        )
+        mapper = pix.mapper_from(grid=masked_imaging_7x7.grid, sparse_grid=None)
 
         inversion = ag.Inversion(
-            dataset=masked_imaging_7x7, mapper=mapper, regularization=reg
+            dataset=masked_imaging_7x7, mapper_list=[mapper], regularization_list=[reg]
         )
 
         assert (fit.galaxy_model_image_dict[g0] == np.zeros(9)).all()
@@ -882,7 +880,7 @@ class TestCompareToManualInversionOnly:
 
         assert hyper_noise_map.native == pytest.approx(fit.noise_map.native)
 
-        mapper = pix.mapper_from_grid_and_sparse_grid(
+        mapper = pix.mapper_from(
             grid=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
@@ -891,8 +889,8 @@ class TestCompareToManualInversionOnly:
             noise_map=hyper_noise_map,
             convolver=masked_imaging_7x7.convolver,
             w_tilde=masked_imaging_7x7.w_tilde,
-            mapper=mapper,
-            regularization=reg,
+            mapper_list=[mapper],
+            regularization_list=[reg],
             settings=ag.SettingsInversion(use_w_tilde=False),
         )
 
@@ -965,13 +963,13 @@ class TestCompareToManualInversionOnly:
 
         fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
 
-        mapper = pix.mapper_from_grid_and_sparse_grid(
+        mapper = pix.mapper_from(
             grid=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
 
         inversion = ag.Inversion(
-            dataset=masked_imaging_7x7, mapper=mapper, regularization=reg
+            dataset=masked_imaging_7x7, mapper_list=[mapper], regularization_list=[reg]
         )
 
         assert (fit.model_images_of_galaxies[0].native == np.zeros((7, 7))).all()
@@ -1008,7 +1006,7 @@ class TestCompareToManualProfilesAndInversion:
             fit.profile_subtracted_image.native
         )
 
-        mapper = pix.mapper_from_grid_and_sparse_grid(
+        mapper = pix.mapper_from(
             grid=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
@@ -1018,8 +1016,8 @@ class TestCompareToManualProfilesAndInversion:
             noise_map=masked_imaging_7x7.noise_map,
             convolver=masked_imaging_7x7.convolver,
             w_tilde=masked_imaging_7x7.w_tilde,
-            mapper=mapper,
-            regularization=reg,
+            mapper_list=[mapper],
+            regularization_list=[reg],
         )
 
         model_image = blurred_image + inversion.mapped_reconstructed_image
@@ -1111,7 +1109,7 @@ class TestCompareToManualProfilesAndInversion:
         blurred_image = g0_blurred_image + g1_blurred_image
 
         profile_subtracted_image = masked_imaging_7x7.image - blurred_image
-        mapper = pix.mapper_from_grid_and_sparse_grid(
+        mapper = pix.mapper_from(
             grid=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
@@ -1121,8 +1119,8 @@ class TestCompareToManualProfilesAndInversion:
             noise_map=masked_imaging_7x7.noise_map,
             convolver=masked_imaging_7x7.convolver,
             w_tilde=masked_imaging_7x7.w_tilde,
-            mapper=mapper,
-            regularization=reg,
+            mapper_list=[mapper],
+            regularization_list=[reg],
         )
 
         assert (fit.galaxy_model_image_dict[g2] == np.zeros(9)).all()
@@ -1201,7 +1199,7 @@ class TestCompareToManualProfilesAndInversion:
             fit.profile_subtracted_image.native
         )
 
-        mapper = pix.mapper_from_grid_and_sparse_grid(
+        mapper = pix.mapper_from(
             grid=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
@@ -1211,8 +1209,8 @@ class TestCompareToManualProfilesAndInversion:
             noise_map=hyper_noise_map,
             convolver=masked_imaging_7x7.convolver,
             w_tilde=masked_imaging_7x7.w_tilde,
-            mapper=mapper,
-            regularization=reg,
+            mapper_list=[mapper],
+            regularization_list=[reg],
             settings=ag.SettingsInversion(use_w_tilde=False),
         )
 
@@ -1296,7 +1294,7 @@ class TestCompareToManualProfilesAndInversion:
 
         profile_subtracted_image = masked_imaging_7x7.image - blurred_image
 
-        mapper = pix.mapper_from_grid_and_sparse_grid(
+        mapper = pix.mapper_from(
             grid=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
@@ -1306,8 +1304,8 @@ class TestCompareToManualProfilesAndInversion:
             noise_map=masked_imaging_7x7.noise_map,
             convolver=masked_imaging_7x7.convolver,
             w_tilde=masked_imaging_7x7.w_tilde,
-            mapper=mapper,
-            regularization=reg,
+            mapper_list=[mapper],
+            regularization_list=[reg],
         )
 
         assert blurred_image.native == pytest.approx(

@@ -110,18 +110,21 @@ def set_upper_limit_of_pixelization_pixels_prior(
 
         pixels_in_mask = result.analysis.dataset.mask.pixels_in_mask
 
-        if pixels_in_mask < hyper_model.galaxies.source.pixelization.pixels.upper_limit:
+        if (
+            pixels_in_mask
+            < hyper_model.galaxies.source.pixelization_list.pixels.upper_limit
+        ):
 
             if (
-                hyper_model.galaxies.source.pixelization.cls
+                hyper_model.galaxies.source.pixelization_list.cls
                 is aa.pix.VoronoiBrightnessImage
             ):
 
                 lower_limit = (
-                    hyper_model.galaxies.source.pixelization.pixels.lower_limit
+                    hyper_model.galaxies.source.pixelization_list.pixels.lower_limit
                 )
 
-                hyper_model.galaxies.source.pixelization.pixels = af.UniformPrior(
+                hyper_model.galaxies.source.pixelization_list.pixels = af.UniformPrior(
                     lower_limit=lower_limit, upper_limit=pixels_in_mask
                 )
 
