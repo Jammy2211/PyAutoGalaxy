@@ -12,7 +12,7 @@ class TestHyperImageSky:
 
         hyper_sky = ag.hyper_data.HyperImageSky(sky_scale=10.0)
 
-        scaled_image = hyper_sky.hyper_image_from_image(image=image)
+        scaled_image = hyper_sky.hyper_image_from(image=image)
 
         assert (scaled_image == np.array([11.0, 12.0, 13.0])).all()
 
@@ -24,7 +24,7 @@ class TestHyperNoiseMapBackground:
 
         hyper_background_noise_map = ag.hyper_data.HyperBackgroundNoise(noise_scale=2.0)
 
-        hyper_noise_map = hyper_background_noise_map.hyper_noise_map_from_noise_map(
+        hyper_noise_map = hyper_background_noise_map.hyper_noise_map_from(
             noise_map=noise_map
         )
 
@@ -32,7 +32,7 @@ class TestHyperNoiseMapBackground:
 
         hyper_noise_map_background = ag.hyper_data.HyperBackgroundNoise(noise_scale=3.0)
 
-        scaled_noise = hyper_noise_map_background.hyper_noise_map_from_noise_map(
+        scaled_noise = hyper_noise_map_background.hyper_noise_map_from(
             noise_map=noise_map
         )
 
@@ -46,7 +46,7 @@ class TestHyperNoiseMapBackground:
 
         hyper_background_noise_map = ag.hyper_data.HyperBackgroundNoise(noise_scale=2.0)
 
-        hyper_noise_map = hyper_background_noise_map.hyper_noise_map_from_complex_noise_map(
+        hyper_noise_map = hyper_background_noise_map.hyper_noise_map_complex_from(
             noise_map=noise_map
         )
 
@@ -54,7 +54,7 @@ class TestHyperNoiseMapBackground:
 
         hyper_noise_map_background = ag.hyper_data.HyperBackgroundNoise(noise_scale=3.0)
 
-        scaled_noise = hyper_noise_map_background.hyper_noise_map_from_complex_noise_map(
+        scaled_noise = hyper_noise_map_background.hyper_noise_map_complex_from(
             noise_map=noise_map
         )
 

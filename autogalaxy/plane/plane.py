@@ -539,13 +539,11 @@ class AbstractPlaneData(AbstractPlaneLensing):
             galaxies=self.galaxies,
         )
 
-    def hyper_noise_map_from_noise_map(self, noise_map):
-        hyper_noise_maps = self.hyper_noise_maps_of_galaxies_from_noise_map(
-            noise_map=noise_map
-        )
+    def hyper_noise_map_from(self, noise_map):
+        hyper_noise_maps = self.hyper_noise_maps_of_galaxies_from(noise_map=noise_map)
         return sum(hyper_noise_maps)
 
-    def hyper_noise_maps_of_galaxies_from_noise_map(self, noise_map):
+    def hyper_noise_maps_of_galaxies_from(self, noise_map):
         """For a contribution map and noise-map, use the model hyper_galaxy galaxies to compute a hyper noise-map.
 
         Parameters

@@ -29,7 +29,7 @@ class FitInterferometer(aa.FitInterferometer):
         if use_hyper_scalings:
 
             if hyper_background_noise is not None:
-                noise_map = hyper_background_noise.hyper_noise_map_from_complex_noise_map(
+                noise_map = hyper_background_noise.hyper_noise_map_complex_from(
                     noise_map=interferometer.noise_map
                 )
             else:
@@ -56,7 +56,7 @@ class FitInterferometer(aa.FitInterferometer):
 
         else:
 
-            inversion = plane.inversion_interferometer_from_grid_and_data(
+            inversion = plane.inversion_interferometer_from(
                 grid=interferometer.grid_inversion,
                 visibilities=self.profile_subtracted_visibilities,
                 noise_map=noise_map,

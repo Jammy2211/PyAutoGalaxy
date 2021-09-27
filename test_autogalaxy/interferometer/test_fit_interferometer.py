@@ -213,7 +213,7 @@ class TestCompareToManualProfilesOnly:
     def test___all_fit_quantities__hyper_background_noise(self, interferometer_7):
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-        hyper_noise_map = hyper_background_noise.hyper_noise_map_from_complex_noise_map(
+        hyper_noise_map = hyper_background_noise.hyper_noise_map_complex_from(
             noise_map=interferometer_7.noise_map
         )
 
@@ -394,7 +394,7 @@ class TestCompareToManualInversionOnly:
     def test___all_fit_quantities__hyper_background_noise(self, interferometer_7):
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-        hyper_noise_map = hyper_background_noise.hyper_noise_map_from_complex_noise_map(
+        hyper_noise_map = hyper_background_noise.hyper_noise_map_complex_from(
             noise_map=interferometer_7.noise_map
         )
 
@@ -745,7 +745,7 @@ class TestCompareToManualProfilesAndInversion:
     def test___all_fit_quantities__hyper_background_noise(self, interferometer_7):
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-        hyper_noise_map = hyper_background_noise.hyper_noise_map_from_complex_noise_map(
+        hyper_noise_map = hyper_background_noise.hyper_noise_map_complex_from(
             noise_map=interferometer_7.noise_map
         )
 

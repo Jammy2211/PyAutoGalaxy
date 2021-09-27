@@ -591,7 +591,7 @@ class TestCompareToManualProfilesOnly:
 
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-        image = hyper_image_sky.hyper_image_from_image(image=masked_imaging_7x7.image)
+        image = hyper_image_sky.hyper_image_from(image=masked_imaging_7x7.image)
 
         g0 = ag.Galaxy(
             redshift=0.5,
@@ -615,13 +615,11 @@ class TestCompareToManualProfilesOnly:
             hyper_background_noise=hyper_background_noise,
         )
 
-        hyper_noise_map_background = hyper_background_noise.hyper_noise_map_from_noise_map(
+        hyper_noise_map_background = hyper_background_noise.hyper_noise_map_from(
             noise_map=masked_imaging_7x7.noise_map
         )
 
-        hyper_noise = plane.hyper_noise_map_from_noise_map(
-            noise_map=masked_imaging_7x7.noise_map
-        )
+        hyper_noise = plane.hyper_noise_map_from(noise_map=masked_imaging_7x7.noise_map)
 
         hyper_noise_map = hyper_noise_map_background + hyper_noise
 
@@ -842,9 +840,9 @@ class TestCompareToManualInversionOnly:
 
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-        image = hyper_image_sky.hyper_image_from_image(image=masked_imaging_7x7.image)
+        image = hyper_image_sky.hyper_image_from(image=masked_imaging_7x7.image)
 
-        hyper_noise_map_background = hyper_background_noise.hyper_noise_map_from_noise_map(
+        hyper_noise_map_background = hyper_background_noise.hyper_noise_map_from(
             noise_map=masked_imaging_7x7.noise_map
         )
 
@@ -873,9 +871,7 @@ class TestCompareToManualInversionOnly:
             settings_inversion=ag.SettingsInversion(use_w_tilde=False),
         )
 
-        hyper_noise = plane.hyper_noise_map_from_noise_map(
-            noise_map=masked_imaging_7x7.noise_map
-        )
+        hyper_noise = plane.hyper_noise_map_from(noise_map=masked_imaging_7x7.noise_map)
         hyper_noise_map = hyper_noise_map_background + hyper_noise
 
         assert hyper_noise_map.native == pytest.approx(fit.noise_map.native)
@@ -1147,9 +1143,9 @@ class TestCompareToManualProfilesAndInversion:
 
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-        image = hyper_image_sky.hyper_image_from_image(image=masked_imaging_7x7.image)
+        image = hyper_image_sky.hyper_image_from(image=masked_imaging_7x7.image)
 
-        hyper_noise_map_background = hyper_background_noise.hyper_noise_map_from_noise_map(
+        hyper_noise_map_background = hyper_background_noise.hyper_noise_map_from(
             noise_map=masked_imaging_7x7.noise_map
         )
 
@@ -1178,9 +1174,7 @@ class TestCompareToManualProfilesAndInversion:
             settings_inversion=ag.SettingsInversion(use_w_tilde=False),
         )
 
-        hyper_noise = plane.hyper_noise_map_from_noise_map(
-            noise_map=masked_imaging_7x7.noise_map
-        )
+        hyper_noise = plane.hyper_noise_map_from(noise_map=masked_imaging_7x7.noise_map)
         hyper_noise_map = hyper_noise_map_background + hyper_noise
 
         assert hyper_noise_map.native == pytest.approx(fit.noise_map.native, 1.0e-4)

@@ -266,7 +266,7 @@ class Galaxy(af.ModelObject, LensingObject):
         return all(
             (
                 isinstance(other, Galaxy),
-                self.pixelization == other.pixelization_list,
+                self.pixelization == other.pixelization,
                 self.redshift == other.redshift,
                 self.hyper_galaxy == other.hyper_galaxy,
                 self.light_profiles == other.light_profiles,
