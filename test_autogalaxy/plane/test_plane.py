@@ -4,7 +4,7 @@ from skimage import measure
 
 import autogalaxy as ag
 
-from autoarray.inversion.pixelization.abstract import AbstractPixelization
+from autoarray.inversion.pixelizations.abstract import AbstractPixelization
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 
 from autoarray.mock.mock import MockPixelization, MockRegularization
@@ -1334,7 +1334,7 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
-            inversion = plane.inversion_imaging_from_grid_and_data(
+            inversion = plane.inversion_imaging_from(
                 grid=sub_grid_2d_7x7,
                 image=masked_imaging_7x7.image,
                 noise_map=masked_imaging_7x7.noise_map,
@@ -1361,7 +1361,7 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
-            inversion = plane.inversion_interferometer_from_grid_and_data(
+            inversion = plane.inversion_interferometer_from(
                 grid=sub_grid_2d_7x7,
                 visibilities=interferometer_7.visibilities,
                 noise_map=interferometer_7.noise_map,
@@ -1370,7 +1370,7 @@ class TestAbstractPlaneData:
                 settings_inversion=ag.SettingsInversion(use_linear_operators=False),
             )
 
-            assert inversion.mapped_reconstructed_visibilities.real == pytest.approx(
+            assert inversion.mapped_reconstructed_data.real == pytest.approx(
                 interferometer_7.visibilities.real, 1.0e-2
             )
 

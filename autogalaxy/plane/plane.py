@@ -480,7 +480,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         return mapper_list
 
-    def inversion_imaging_from_grid_and_data(
+    def inversion_imaging_from(
         self,
         grid,
         image,
@@ -507,7 +507,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             profiling_dict=self.profiling_dict,
         )
 
-    def inversion_interferometer_from_grid_and_data(
+    def inversion_interferometer_from(
         self,
         grid,
         visibilities,

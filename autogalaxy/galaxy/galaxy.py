@@ -5,7 +5,7 @@ from typing import Optional
 import autofit as af
 import autoarray as aa
 
-from autoarray.inversion.pixelization.abstract import AbstractPixelization
+from autoarray.inversion.pixelizations.abstract import AbstractPixelization
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 
 from autogalaxy.lensing import LensingObject

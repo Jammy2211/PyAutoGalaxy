@@ -1,7 +1,7 @@
 import numpy as np
 
 import autoarray as aa
-from autoarray.structures.grids.two_d import grid_2d as g2d
+from autoarray.structures.grids.two_d.grid_transformed import Grid2DTransformedNumpy
 
 from autogalaxy import convert
 
@@ -99,7 +99,7 @@ class SphProfile(GeometryProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         transformed = np.subtract(grid, self.centre)
-        return g2d.Grid2DTransformedNumpy(grid=transformed)
+        return Grid2DTransformedNumpy(grid=transformed)
 
     @aa.grid_dec.grid_2d_to_structure
     def transform_grid_from_reference_frame(self, grid):
@@ -112,7 +112,7 @@ class SphProfile(GeometryProfile):
             The (y, x) coordinates in the reference frame of the profile.
         """
         transformed = np.add(grid, self.centre)
-        return transformed.view(g2d.Grid2DTransformedNumpy)
+        return transformed.view(Grid2DTransformedNumpy)
 
 
 class EllProfile(SphProfile):
@@ -266,12 +266,12 @@ class EllProfile(SphProfile):
         """
         if self.__class__.__name__.startswith("Sph"):
             return super().transform_grid_to_reference_frame(
-                grid=g2d.Grid2DTransformedNumpy(grid=grid)
+                grid=Grid2DTransformedNumpy(grid=grid)
             )
         transformed = aa.util.geometry.transform_grid_2d_to_reference_frame(
             grid_2d=grid, centre=self.centre, angle=self.angle
         )
-        return g2d.Grid2DTransformedNumpy(grid=transformed)
+        return Grid2DTransformedNumpy(grid=transformed)
 
     @aa.grid_dec.grid_2d_to_structure
     def transform_grid_from_reference_frame(self, grid):
@@ -285,7 +285,7 @@ class EllProfile(SphProfile):
         """
         if self.__class__.__name__.startswith("Sph"):
             return super().transform_grid_from_reference_frame(
-                grid=g2d.Grid2DTransformedNumpy(grid=grid)
+                grid=Grid2DTransformedNumpy(grid=grid)
             )
 
         return aa.util.geometry.transform_grid_2d_from_reference_frame(

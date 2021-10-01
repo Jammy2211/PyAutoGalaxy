@@ -6,7 +6,7 @@ from autoarray.dataset.interferometer import Interferometer
 from autoarray.dataset.interferometer import SettingsInterferometer
 from autoarray.instruments import acs
 from autoarray.instruments import euclid
-from autoarray.inversion.pixelization import pixelizations as pix
+from autoarray.inversion.pixelizations import pixelizations as pix
 from autoarray.inversion.regularization import regularization as reg
 from autoarray.inversion.inversion.settings import SettingsInversion
 from autoarray.inversion.inversion.factory import inversion_from as Inversion
@@ -17,7 +17,7 @@ from autoarray.inversion.inversion.factory import (
     inversion_interferometer_unpacked_from as InversionInterferometer,
 )
 from autoarray.inversion.mappers.abstract import mapper as Mapper
-from autoarray.inversion.pixelization.settings import SettingsPixelization
+from autoarray.inversion.pixelizations.settings import SettingsPixelization
 from autoarray.mask.mask_1d import Mask1D
 from autoarray.mask.mask_2d import Mask2D
 from autoarray.mock import fixtures

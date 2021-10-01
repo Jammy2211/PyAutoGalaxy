@@ -66,7 +66,7 @@ class FitInterferometer(aa.FitInterferometer):
             )
 
             model_visibilities = (
-                self.profile_visibilities + inversion.mapped_reconstructed_visibilities
+                self.profile_visibilities + inversion.mapped_reconstructed_data
             )
 
         fit = aa.FitDataComplex(
@@ -125,7 +125,7 @@ class FitInterferometer(aa.FitInterferometer):
             if galaxy.has_pixelization:
 
                 galaxy_model_visibilities_dict.update(
-                    {galaxy: self.inversion.mapped_reconstructed_visibilities}
+                    {galaxy: self.inversion.mapped_reconstructed_data}
                 )
 
         return galaxy_model_visibilities_dict

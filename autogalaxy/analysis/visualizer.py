@@ -104,7 +104,8 @@ class Visualizer:
         )
 
         if should_plot("subplot_inversion"):
-            inversion_plotter.subplot_inversion()
+            for mapper_index in range(len(inversion.mapper_list)):
+                inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
 
         inversion_plotter.figures_2d(
             reconstructed_image=should_plot("reconstructed_image")

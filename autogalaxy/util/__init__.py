@@ -7,7 +7,7 @@ from autoarray.structures.grids.one_d import grid_1d_util as grid_1d
 from autoarray.structures.grids.two_d import grid_2d_util as grid_2d
 from autoarray.structures.grids.two_d import sparse_util as sparse
 from autoarray.fit import fit_util as fit
-from autoarray.inversion.pixelization import pixelization_util as pixelization
+from autoarray.inversion.pixelizations import pixelization_util as pixelization
 from autoarray.inversion.mappers import mapper_util as mapper
 from autoarray.inversion.regularization import regularization_util as regularization
 from autoarray.inversion.linear_eqn import linear_eqn_util as linear_eqn

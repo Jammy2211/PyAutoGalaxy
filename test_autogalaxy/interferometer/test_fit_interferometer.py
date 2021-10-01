@@ -266,13 +266,13 @@ class TestCompareToManualInversionOnly:
             dataset=interferometer_7, mapper_list=[mapper], regularization_list=[reg]
         )
 
-        assert inversion.mapped_reconstructed_visibilities == pytest.approx(
+        assert inversion.mapped_reconstructed_data == pytest.approx(
             fit.model_visibilities, 1.0e-4
         )
 
         residual_map = ag.util.fit.residual_map_from(
             data=interferometer_7.visibilities,
-            model_data=inversion.mapped_reconstructed_visibilities,
+            model_data=inversion.mapped_reconstructed_data,
         )
 
         assert residual_map.slim == pytest.approx(fit.residual_map.slim, 1.0e-4)
@@ -384,7 +384,7 @@ class TestCompareToManualInversionOnly:
         ).all()
 
         assert fit.galaxy_model_visibilities_dict[g1].slim == pytest.approx(
-            inversion.mapped_reconstructed_visibilities.slim, 1.0e-4
+            inversion.mapped_reconstructed_data.slim, 1.0e-4
         )
 
         assert fit.model_visibilities.slim == pytest.approx(
@@ -445,13 +445,13 @@ class TestCompareToManualInversionOnly:
             settings=ag.SettingsInversion(use_linear_operators=True),
         )
 
-        assert inversion.mapped_reconstructed_visibilities == pytest.approx(
+        assert inversion.mapped_reconstructed_data == pytest.approx(
             fit.model_visibilities, 1.0e-4
         )
 
         residual_map = ag.util.fit.residual_map_from(
             data=interferometer_7_lop.visibilities,
-            model_data=inversion.mapped_reconstructed_visibilities,
+            model_data=inversion.mapped_reconstructed_data,
         )
 
         assert residual_map.slim == pytest.approx(fit.residual_map.slim, 1.0e-4)
@@ -556,9 +556,7 @@ class TestCompareToManualProfilesAndInversion:
             regularization_list=[reg],
         )
 
-        model_visibilities = (
-            profile_visibilities + inversion.mapped_reconstructed_visibilities
-        )
+        model_visibilities = profile_visibilities + inversion.mapped_reconstructed_data
 
         assert model_visibilities.slim == pytest.approx(fit.model_visibilities.slim)
 
@@ -732,13 +730,13 @@ class TestCompareToManualProfilesAndInversion:
             g1_visibilities.slim, 1.0e-4
         )
         assert fit.galaxy_model_visibilities_dict[galaxy_pix].slim == pytest.approx(
-            inversion.mapped_reconstructed_visibilities.slim, 1.0e-4
+            inversion.mapped_reconstructed_data.slim, 1.0e-4
         )
 
         assert fit.model_visibilities.slim == pytest.approx(
             fit.galaxy_model_visibilities_dict[g0].slim
             + fit.galaxy_model_visibilities_dict[g1].slim
-            + inversion.mapped_reconstructed_visibilities.slim,
+            + inversion.mapped_reconstructed_data.slim,
             1.0e-4,
         )
 
