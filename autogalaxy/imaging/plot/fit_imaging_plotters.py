@@ -52,7 +52,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
     @property
     def inversion_plotter(self) -> aplt.InversionPlotter:
         return aplt.InversionPlotter(
-            inversion=self.fit.linear_eqn_list,
+            inversion=self.fit.linear_eqn,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.visuals_with_include_2d,
             include_2d=self.include_2d,
