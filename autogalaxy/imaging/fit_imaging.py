@@ -168,7 +168,7 @@ class FitImaging(aa.FitImaging):
         )
 
     @property
-    def total_inversions(self):
+    def total_mappers(self):
         return 1
 
 

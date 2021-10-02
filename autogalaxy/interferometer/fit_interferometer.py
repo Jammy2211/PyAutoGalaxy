@@ -147,5 +147,5 @@ class FitInterferometer(aa.FitInterferometer):
         return model_visibilities_of_galaxies
 
     @property
-    def total_inversions(self):
+    def total_mappers(self):
         return 1
