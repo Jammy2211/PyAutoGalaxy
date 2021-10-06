@@ -113,7 +113,7 @@ def set_upper_limit_of_pixelization_pixels_prior(
         if pixels_in_mask < hyper_model.galaxies.source.pixelization.pixels.upper_limit:
 
             if (
-                hyper_model.galaxies.source.pixelization_list.cls
+                hyper_model.galaxies.source.pixelization.cls
                 is aa.pix.VoronoiBrightnessImage
             ):
 
