@@ -61,7 +61,7 @@ class MaskedGalaxyDataset:
 
         self.sub_size = mask.sub_size
 
-        self.grid = abstract_dataset.grid_from_mask_and_grid_class(
+        self.grid = abstract_dataset.grid_via_grid_class_from(
             mask=mask,
             grid_class=grid_class,
             fractional_accuracy=fractional_accuracy,
@@ -105,29 +105,29 @@ class MaskedGalaxyDataset:
         self.use_deflections_y = use_deflections_y
         self.use_deflections_x = use_deflections_x
 
-    def profile_quantity_from_galaxies(self, galaxies):
+    def profile_quantity_from(self, galaxies):
 
         if self.use_image:
-            image = sum(map(lambda g: g.image_2d_from_grid(grid=self.grid), galaxies))
+            image = sum(map(lambda g: g.image_2d_from(grid=self.grid), galaxies))
             return aa.Array2D.manual_mask(array=image, mask=self.mask)
         elif self.use_convergence:
             convergence = sum(
-                map(lambda g: g.convergence_2d_from_grid(grid=self.grid), galaxies)
+                map(lambda g: g.convergence_2d_from(grid=self.grid), galaxies)
             )
             return aa.Array2D.manual_mask(array=convergence, mask=self.mask)
         elif self.use_potential:
             potential = sum(
-                map(lambda g: g.potential_2d_from_grid(grid=self.grid), galaxies)
+                map(lambda g: g.potential_2d_from(grid=self.grid), galaxies)
             )
             return aa.Array2D.manual_mask(array=potential, mask=self.mask)
         elif self.use_deflections_y:
             deflections = sum(
-                map(lambda g: g.deflections_2d_from_grid(grid=self.grid), galaxies)
+                map(lambda g: g.deflections_2d_from(grid=self.grid), galaxies)
             )
             return aa.Array2D.manual_mask(array=deflections[:, 0], mask=self.grid.mask)
         elif self.use_deflections_x:
             deflections = sum(
-                map(lambda g: g.deflections_2d_from_grid(grid=self.grid), galaxies)
+                map(lambda g: g.deflections_2d_from(grid=self.grid), galaxies)
             )
             return aa.Array2D.manual_mask(array=deflections[:, 1], mask=self.grid.mask)
 

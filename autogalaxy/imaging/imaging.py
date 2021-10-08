@@ -54,7 +54,7 @@ class SimulatorImaging(aa.SimulatorImaging):
             noise_seed=noise_seed,
         )
 
-    def from_plane_and_grid(self, plane, grid, name=None):
+    def via_plane_from(self, plane, grid, name=None):
         """
         Returns a realistic simulated image by applying effects to a plain simulated image.
 
@@ -62,17 +62,17 @@ class SimulatorImaging(aa.SimulatorImaging):
         ----------
         """
 
-        image = plane.padded_image_2d_from_grid_and_psf_shape(
+        image = plane.padded_image_2d_from(
             grid=grid, psf_shape_2d=self.psf.shape_native
         )
 
-        imaging = self.from_image(image=image.binned, name=name)
+        imaging = self.via_image_from(image=image.binned, name=name)
 
         return imaging.trimmed_after_convolution_from(
             kernel_shape=self.psf.shape_native
         )
 
-    def from_galaxies_and_grid(self, galaxies, grid, name=None):
+    def via_galaxies_from(self, galaxies, grid, name=None):
         """Simulate imaging data for this data, as follows:
 
         1)  Setup the image-plane grid of the Imaging arrays, which defines the coordinates used for the ray-tracing.
@@ -93,4 +93,4 @@ class SimulatorImaging(aa.SimulatorImaging):
             galaxies=galaxies,
         )
 
-        return self.from_plane_and_grid(plane=plane, grid=grid, name=name)
+        return self.via_plane_from(plane=plane, grid=grid, name=name)

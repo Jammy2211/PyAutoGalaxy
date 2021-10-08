@@ -22,8 +22,6 @@ class FitInterferometer(aa.FitInterferometer):
         -----------
         plane : plane.Tracer
             The plane, which describes the ray-tracing and strong lens configuration.
-        scaled_array_2d_from_array_1d : func
-            A function which maps the 1D lens hyper_galaxies to its unmasked 2D arrays.
         """
 
         if use_hyper_scalings:
@@ -41,7 +39,7 @@ class FitInterferometer(aa.FitInterferometer):
 
         self.plane = plane
 
-        self.profile_visibilities = plane.profile_visibilities_from_grid_and_transformer(
+        self.profile_visibilities = plane.profile_visibilities_via_transformer_from(
             grid=interferometer.grid, transformer=interferometer.transformer
         )
 
@@ -92,7 +90,7 @@ class FitInterferometer(aa.FitInterferometer):
         """
         A dictionary associating galaxies with their corresponding model images
         """
-        galaxy_model_image_dict = self.plane.galaxy_image_dict_from_grid(grid=self.grid)
+        galaxy_model_image_dict = self.plane.galaxy_image_dict_from(grid=self.grid)
 
         for path, image in galaxy_model_image_dict.items():
             galaxy_model_image_dict[path] = image.binned
@@ -114,7 +112,7 @@ class FitInterferometer(aa.FitInterferometer):
         """
         A dictionary associating galaxies with their corresponding model images
         """
-        galaxy_model_visibilities_dict = self.plane.galaxy_profile_visibilities_dict_from_grid_and_transformer(
+        galaxy_model_visibilities_dict = self.plane.galaxy_profile_visibilities_dict_via_transformer_from(
             grid=self.interferometer.grid, transformer=self.interferometer.transformer
         )
 
@@ -132,7 +130,7 @@ class FitInterferometer(aa.FitInterferometer):
 
     def model_visibilities_of_galaxies(self):
 
-        model_visibilities_of_galaxies = self.plane.profile_visibilities_of_galaxies_from_grid_and_transformer(
+        model_visibilities_of_galaxies = self.plane.profile_visibilities_of_galaxies_via_transformer_from(
             grid=self.interferometer.grid, transformer=self.interferometer.transformer
         )
 

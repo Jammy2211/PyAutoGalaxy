@@ -27,7 +27,7 @@ class LightProfile(EllProfile):
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
         self.intensity = intensity
 
-    def image_2d_from_grid(self, grid) -> aa.Array2D:
+    def image_2d_from(self, grid) -> aa.Array2D:
         """
         Abstract method for obtaining intensity at a grid of Cartesian (y,x) coordinates.
 
@@ -43,7 +43,7 @@ class LightProfile(EllProfile):
         """
         raise NotImplementedError()
 
-    def image_2d_from_grid_radii(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii):
         """
         Abstract method for obtaining intensity at on a grid of radii.
 
@@ -55,10 +55,10 @@ class LightProfile(EllProfile):
         raise NotImplementedError()
 
     @aa.grid_dec.grid_1d_to_structure
-    def image_1d_from_grid(self, grid):
-        return self.image_2d_from_grid(grid=grid)
+    def image_1d_from(self, grid):
+        return self.image_2d_from(grid=grid)
 
-    def blurred_image_2d_from_grid_and_psf(self, grid, psf, blurring_grid):
+    def blurred_image_2d_via_psf_from(self, grid, psf, blurring_grid):
         """
         Evaluate the light profile image on an input `Grid2D` of coordinates and then convolve it with a PSF.
 
@@ -79,15 +79,15 @@ class LightProfile(EllProfile):
             The (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
 
         """
-        image = self.image_2d_from_grid(grid=grid)
+        image = self.image_2d_from(grid=grid)
 
-        blurring_image = self.image_2d_from_grid(grid=blurring_grid)
+        blurring_image = self.image_2d_from(grid=blurring_grid)
 
-        return psf.convolved_array_from_array_and_mask(
+        return psf.convolved_array_with_mask_from(
             array=image.binned.native + blurring_image.binned.native, mask=grid.mask
         )
 
-    def blurred_image_2d_from_grid_and_convolver(self, grid, convolver, blurring_grid):
+    def blurred_image_2d_via_convolver_from(self, grid, convolver, blurring_grid):
         """
         Evaluate the light profile image on an input `Grid2D` of coordinates and then convolve it with a PSF using a
         *Convolver* object.
@@ -109,19 +109,19 @@ class LightProfile(EllProfile):
             The (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
 
         """
-        image = self.image_2d_from_grid(grid=grid)
+        image = self.image_2d_from(grid=grid)
 
-        blurring_image = self.image_2d_from_grid(grid=blurring_grid)
+        blurring_image = self.image_2d_from(grid=blurring_grid)
 
         return convolver.convolve_image(
             image=image.binned, blurring_image=blurring_image.binned
         )
 
-    def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
+    def profile_visibilities_via_transformer_from(self, grid, transformer):
 
-        image = self.image_2d_from_grid(grid=grid)
+        image = self.image_2d_from(grid=grid)
 
-        return transformer.visibilities_from_image(image=image.binned)
+        return transformer.visibilities_from(image=image.binned)
 
     def luminosity_within_circle(self, radius: float) -> float:
         """Integrate the light profile to compute the total luminosity within a circle of specified radius. This is \
@@ -148,7 +148,7 @@ class LightProfile(EllProfile):
         """Routine to integrate the luminosity of an elliptical light profile.
 
         The axis ratio is set to 1.0 for computing the luminosity within a circle"""
-        return 2 * np.pi * x * self.image_2d_from_grid_radii(x)
+        return 2 * np.pi * x * self.image_2d_via_radii_from(x)
 
     @property
     def half_light_radius(self):
@@ -185,7 +185,7 @@ class EllGaussian(LightProfile):
         )
         self.sigma = sigma
 
-    def image_2d_from_grid_radii(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii):
         """Calculate the intensity of the Gaussian light profile on a grid of radial coordinates.
 
         Parameters
@@ -208,7 +208,7 @@ class EllGaussian(LightProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def image_2d_from_grid(self, grid, grid_radial_minimum=None):
+    def image_2d_from(self, grid, grid_radial_minimum=None):
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 
@@ -220,7 +220,7 @@ class EllGaussian(LightProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
 
-        return self.image_2d_from_grid_radii(self.grid_to_eccentric_radii(grid))
+        return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
 
 
 class SphGaussian(EllGaussian):
@@ -305,7 +305,7 @@ class AbstractEllSersic(LightProfile):
             - (2194697.0 / (30690717750.0 * self.sersic_index ** 4))
         )
 
-    def image_2d_from_grid_radii(self, radius):
+    def image_2d_via_radii_from(self, radius):
         """
         Returns the intensity of the profile at a given radius.
 
@@ -355,7 +355,7 @@ class EllSersic(AbstractEllSersic, LightProfile):
             sersic_index=sersic_index,
         )
 
-    def image_2d_from_grid_radii(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii):
         """
         Calculate the intensity of the Sersic light profile on a grid of radial coordinates.
 
@@ -384,7 +384,7 @@ class EllSersic(AbstractEllSersic, LightProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def image_2d_from_grid(self, grid, grid_radial_minimum=None):
+    def image_2d_from(self, grid, grid_radial_minimum=None):
         """Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 
         If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
@@ -394,7 +394,7 @@ class EllSersic(AbstractEllSersic, LightProfile):
         grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
-        return self.image_2d_from_grid_radii(self.grid_to_eccentric_radii(grid))
+        return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
 
 
 class SphSersic(EllSersic):
@@ -619,7 +619,7 @@ class EllSersicCore(EllSersic):
             )
         )
 
-    def image_2d_from_grid_radii(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii):
         """Calculate the intensity of the cored-Sersic light profile on a grid of radial coordinates.
 
         Parameters
@@ -747,7 +747,7 @@ class EllChameleon(LightProfile):
         axis_ratio = super().axis_ratio
         return axis_ratio if axis_ratio < 0.99999 else 0.99999
 
-    def image_2d_from_grid_radii(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii):
         """Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.
 
         Parameters
@@ -785,7 +785,7 @@ class EllChameleon(LightProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def image_2d_from_grid(self, grid, grid_radial_minimum=None):
+    def image_2d_from(self, grid, grid_radial_minimum=None):
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
         If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
@@ -794,7 +794,7 @@ class EllChameleon(LightProfile):
         grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
-        return self.image_2d_from_grid_radii(self.grid_to_elliptical_radii(grid))
+        return self.image_2d_via_radii_from(self.grid_to_elliptical_radii(grid))
 
 
 class SphChameleon(EllChameleon):
@@ -869,7 +869,7 @@ class EllEff(LightProfile):
         self.effective_radius = effective_radius
         self.eta = eta
 
-    def image_2d_from_grid_radii(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii):
         """
         Calculate the intensity of the Eff light profile on a grid of radial coordinates.
 
@@ -886,7 +886,7 @@ class EllEff(LightProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def image_2d_from_grid(self, grid, grid_radial_minimum=None):
+    def image_2d_from(self, grid, grid_radial_minimum=None):
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 
@@ -897,7 +897,7 @@ class EllEff(LightProfile):
         grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
-        return self.image_2d_from_grid_radii(self.grid_to_eccentric_radii(grid))
+        return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
 
     @property
     def half_light_radius(self):

@@ -18,7 +18,7 @@ class TestEllProfile:
             centre=(1.0, 1.0), elliptical_comps=(0.0, 0.0)
         )
 
-        cos_phi, sin_phi = elliptical_profile.cos_and_sin_from_x_axis()
+        cos_phi, sin_phi = elliptical_profile.cos_and_sin_to_x_axis()
 
         assert cos_phi == 1.0
         assert sin_phi == 0.0
@@ -27,7 +27,7 @@ class TestEllProfile:
             centre=(1, 1), axis_ratio=0.1, angle=45.0
         )
 
-        cos_phi, sin_phi = elliptical_profile.cos_and_sin_from_x_axis()
+        cos_phi, sin_phi = elliptical_profile.cos_and_sin_to_x_axis()
 
         assert cos_phi == pytest.approx(0.707, 1e-3)
         assert sin_phi == pytest.approx(0.707, 1e-3)
@@ -36,7 +36,7 @@ class TestEllProfile:
             centre=(1, 1), axis_ratio=0.1, angle=60.0
         )
 
-        cos_phi, sin_phi = elliptical_profile.cos_and_sin_from_x_axis()
+        cos_phi, sin_phi = elliptical_profile.cos_and_sin_to_x_axis()
 
         assert cos_phi == pytest.approx(0.5, 1e-3)
         assert sin_phi == pytest.approx(0.866, 1e-3)
@@ -45,7 +45,7 @@ class TestEllProfile:
             centre=(1, 1), axis_ratio=0.1, angle=225.0
         )
 
-        cos_phi, sin_phi = elliptical_profile.cos_and_sin_from_x_axis()
+        cos_phi, sin_phi = elliptical_profile.cos_and_sin_to_x_axis()
 
         assert cos_phi == pytest.approx(0.707, 1e-3)
         assert sin_phi == pytest.approx(0.707, 1e-3)

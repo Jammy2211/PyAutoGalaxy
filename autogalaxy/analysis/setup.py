@@ -83,7 +83,7 @@ class SetupHyper:
                 return True
         return False
 
-    def hyper_image_sky_from_result(self, result: af.Result, as_model=True):
+    def hyper_image_sky_from(self, result: af.Result, as_model=True):
 
         if self.hyper_image_sky is not None:
             if as_model:
@@ -94,7 +94,7 @@ class SetupHyper:
                 return result.hyper.instance.hyper_image_sky
             return result.instance.hyper_image_sky
 
-    def hyper_background_noise_from_result(self, result: af.Result):
+    def hyper_background_noise_from(self, result: af.Result):
 
         if self.hyper_background_noise is not None:
             if hasattr(result, "hyper"):

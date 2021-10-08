@@ -6,8 +6,8 @@ from autoarray.dataset.interferometer import Interferometer
 from autoarray.dataset.interferometer import SettingsInterferometer
 from autoarray.instruments import acs
 from autoarray.instruments import euclid
-from autoarray.inversion.pixelizations import pixelizations as pix
-from autoarray.inversion.regularization import regularization as reg
+from autoarray.inversion import pixelizations as pix
+from autoarray.inversion import regularization as reg
 from autoarray.inversion.inversion.settings import SettingsInversion
 from autoarray.inversion.inversion.factory import inversion_from as Inversion
 from autoarray.inversion.inversion.factory import (

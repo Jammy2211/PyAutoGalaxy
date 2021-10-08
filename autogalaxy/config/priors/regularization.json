@@ -1,5 +1,5 @@
 {
-    "Constant": {
+    "constant.Constant": {
         "coefficient": {
             "type": "LogUniform",
             "lower_limit": 1e-06,
@@ -14,7 +14,7 @@
             }
         }
     },
-    "AdaptiveBrightness": {
+    "adaptive_brightness.AdaptiveBrightness": {
         "inner_coefficient": {
             "type": "LogUniform",
             "lower_limit": 1e-06,

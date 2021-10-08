@@ -107,7 +107,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
 
         if image:
 
-            image_1d = self.light_profile.image_1d_from_grid(grid=self.grid)
+            image_1d = self.light_profile.image_1d_from(grid=self.grid)
 
             self.mat_plot_1d.plot_yx(
                 y=image_1d,
@@ -128,7 +128,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
         if image:
 
             self.mat_plot_2d.plot_array(
-                array=self.light_profile.image_2d_from_grid(grid=self.grid),
+                array=self.light_profile.image_2d_from(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
             )
@@ -212,12 +212,12 @@ class LightProfilePDFPlotter(LightProfilePlotter):
 
             grid_radial = (
                 self.light_profile_pdf_list[0]
-                .image_1d_from_grid(grid=self.grid)
+                .image_1d_from(grid=self.grid)
                 .grid_radial
             )
 
             image_1d_list = [
-                light_profile.image_1d_from_grid(grid=self.grid)
+                light_profile.image_1d_from(grid=self.grid)
                 for light_profile in self.light_profile_pdf_list
             ]
 

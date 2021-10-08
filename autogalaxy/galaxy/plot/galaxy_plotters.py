@@ -148,7 +148,7 @@ class GalaxyPlotter(LensingObjPlotter):
             The collection of attributes that can be plotted by a `Plotter1D` object.
         """
         if self.include_1d.einstein_radius:
-            einstein_radius = self.lensing_obj.einstein_radius_from_grid(grid=self.grid)
+            einstein_radius = self.lensing_obj.einstein_radius_from(grid=self.grid)
         else:
             einstein_radius = None
 
@@ -167,7 +167,7 @@ class GalaxyPlotter(LensingObjPlotter):
 
         if image:
 
-            image_1d = self.galaxy.image_1d_from_grid(grid=self.grid)
+            image_1d = self.galaxy.image_1d_from(grid=self.grid)
 
             self.mat_plot_1d.plot_yx(
                 y=image_1d,
@@ -185,7 +185,7 @@ class GalaxyPlotter(LensingObjPlotter):
 
         if convergence:
 
-            convergence_1d = self.galaxy.convergence_1d_from_grid(grid=self.grid)
+            convergence_1d = self.galaxy.convergence_1d_from(grid=self.grid)
 
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
@@ -203,7 +203,7 @@ class GalaxyPlotter(LensingObjPlotter):
 
         if potential:
 
-            potential_1d = self.galaxy.potential_1d_from_grid(grid=self.grid)
+            potential_1d = self.galaxy.potential_1d_from(grid=self.grid)
 
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
@@ -309,7 +309,7 @@ class GalaxyPlotter(LensingObjPlotter):
         if image:
 
             self.mat_plot_2d.plot_array(
-                array=self.galaxy.image_2d_from_grid(grid=self.grid),
+                array=self.galaxy.image_2d_from(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
             )
@@ -491,7 +491,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         if self.include_1d.einstein_radius:
 
             einstein_radius_list = [
-                galaxy.einstein_radius_from_grid(grid=self.grid)
+                galaxy.einstein_radius_from(grid=self.grid)
                 for galaxy in self.galaxy_pdf_list
             ]
 
@@ -521,11 +521,11 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         if image:
 
             grid_radial = (
-                self.galaxy_pdf_list[0].image_1d_from_grid(grid=self.grid).grid_radial
+                self.galaxy_pdf_list[0].image_1d_from(grid=self.grid).grid_radial
             )
 
             image_1d_list = [
-                light_profile.image_1d_from_grid(grid=self.grid)
+                light_profile.image_1d_from(grid=self.grid)
                 for light_profile in self.galaxy_pdf_list
             ]
 
@@ -555,12 +555,12 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             grid_radial = (
                 self.galaxy_pdf_list[0]
-                .convergence_1d_from_grid(grid=self.grid)
+                .convergence_1d_from(grid=self.grid)
                 .grid_radial
             )
 
             convergence_1d_list = [
-                light_profile.convergence_1d_from_grid(grid=self.grid)
+                light_profile.convergence_1d_from(grid=self.grid)
                 for light_profile in self.galaxy_pdf_list
             ]
 
@@ -590,12 +590,12 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             grid_radial = (
                 self.galaxy_pdf_list[0]
-                .potential_1d_from_grid(grid=self.grid)
+                .potential_1d_from(grid=self.grid)
                 .grid_radial
             )
 
             potential_1d_list = [
-                light_profile.potential_1d_from_grid(grid=self.grid)
+                light_profile.potential_1d_from(grid=self.grid)
                 for light_profile in self.galaxy_pdf_list
             ]
 

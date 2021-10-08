@@ -58,7 +58,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
             include_2d=self.include_2d,
         )
 
-    def galaxy_indexes_from_galaxy_index(
+    def galaxy_indexes_from(
         self, galaxy_index: Optional[int]
     ) -> List[int]:
 
@@ -74,7 +74,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
         galaxy_index: Optional[int] = None,
     ):
 
-        galaxy_indexes = self.galaxy_indexes_from_galaxy_index(
+        galaxy_indexes = self.galaxy_indexes_from(
             galaxy_index=galaxy_index
         )
 
@@ -127,7 +127,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
             in the python interpreter window.
         """
 
-        galaxy_indexes = self.galaxy_indexes_from_galaxy_index(
+        galaxy_indexes = self.galaxy_indexes_from(
             galaxy_index=galaxy_index
         )
 

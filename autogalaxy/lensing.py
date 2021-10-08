@@ -10,7 +10,7 @@ def precompute_jacobian(func):
     def wrapper(lensing_obj, grid, jacobian=None):
 
         if jacobian is None:
-            jacobian = lensing_obj.jacobian_from_grid(grid=grid)
+            jacobian = lensing_obj.jacobian_from(grid=grid)
 
         return func(lensing_obj, grid, jacobian)
 
@@ -54,22 +54,22 @@ class LensingObject:
     def convergence_func(self, grid_radius):
         raise NotImplementedError
 
-    def convergence_1d_from_grid(self, grid):
+    def convergence_1d_from(self, grid):
         raise NotImplementedError
 
-    def convergence_2d_from_grid(self, grid):
+    def convergence_2d_from(self, grid):
         raise NotImplementedError
 
     def potential_func(self, u, y, x):
         raise NotImplementedError
 
-    def potential_1d_from_grid(self, grid):
+    def potential_1d_from(self, grid):
         raise NotImplementedError
 
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         raise NotImplementedError
 
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         raise NotImplementedError
 
     def mass_integral(self, x):
@@ -77,13 +77,13 @@ class LensingObject:
         circle"""
         return 2 * np.pi * x * self.convergence_func(grid_radius=x)
 
-    def deflection_magnitudes_from_grid(self, grid):
-        deflections = self.deflections_2d_from_grid(grid=grid)
-        return deflections.distances_from_coordinate(coordinate=(0.0, 0.0))
+    def deflection_magnitudes_from(self, grid):
+        deflections = self.deflections_2d_from(grid=grid)
+        return deflections.distances_to_coordinate(coordinate=(0.0, 0.0))
 
-    def deflections_2d_via_potential_2d_from_grid(self, grid):
+    def deflections_2d_via_potential_2d_from(self, grid):
 
-        potential = self.potential_2d_from_grid(grid=grid)
+        potential = self.potential_2d_from(grid=grid)
 
         deflections_y_2d = np.gradient(potential.native, grid.native[:, 0, 0], axis=0)
         deflections_x_2d = np.gradient(potential.native, grid.native[0, :, 1], axis=1)
@@ -92,9 +92,9 @@ class LensingObject:
             grid=np.stack((deflections_y_2d, deflections_x_2d), axis=-1), mask=grid.mask
         )
 
-    def jacobian_from_grid(self, grid):
+    def jacobian_from(self, grid):
 
-        deflections = self.deflections_2d_from_grid(grid=grid)
+        deflections = self.deflections_2d_from(grid=grid)
 
         a11 = aa.Array2D.manual_mask(
             array=1.0
@@ -123,14 +123,14 @@ class LensingObject:
         return [[a11, a12], [a21, a22]]
 
     @precompute_jacobian
-    def convergence_via_jacobian_from_grid(self, grid, jacobian=None):
+    def convergence_via_jacobian_from(self, grid, jacobian=None):
 
         convergence = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
 
         return aa.Array2D(array=convergence, mask=grid.mask)
 
     @precompute_jacobian
-    def shear_yx_via_jacobian_from_grid(self, grid, jacobian=None):
+    def shear_yx_via_jacobian_from(self, grid, jacobian=None):
 
         shear_y = -0.5 * (jacobian[0][1] + jacobian[1][0])
         shear_x = 0.5 * (jacobian[1][1] - jacobian[0][0])
@@ -138,46 +138,46 @@ class LensingObject:
         return shear_y, shear_x
 
     @precompute_jacobian
-    def shear_via_jacobian_from_grid(self, grid, jacobian=None):
+    def shear_via_jacobian_from(self, grid, jacobian=None):
 
-        shear_y, shear_x = self.shear_yx_via_jacobian_from_grid(grid=grid)
+        shear_y, shear_x = self.shear_yx_via_jacobian_from(grid=grid)
 
         return aa.Array2D(array=(shear_x ** 2 + shear_y ** 2) ** 0.5, mask=grid.mask)
 
     @precompute_jacobian
-    def tangential_eigen_value_from_grid(self, grid, jacobian=None):
+    def tangential_eigen_value_from(self, grid, jacobian=None):
 
-        convergence = self.convergence_via_jacobian_from_grid(
+        convergence = self.convergence_via_jacobian_from(
             grid=grid, jacobian=jacobian
         )
 
-        shear = self.shear_via_jacobian_from_grid(grid=grid, jacobian=jacobian)
+        shear = self.shear_via_jacobian_from(grid=grid, jacobian=jacobian)
 
         return aa.Array2D(array=1 - convergence - shear, mask=grid.mask)
 
     @precompute_jacobian
-    def radial_eigen_value_from_grid(self, grid, jacobian=None):
+    def radial_eigen_value_from(self, grid, jacobian=None):
 
-        convergence = self.convergence_via_jacobian_from_grid(
+        convergence = self.convergence_via_jacobian_from(
             grid=grid, jacobian=jacobian
         )
 
-        shear = self.shear_via_jacobian_from_grid(grid=grid, jacobian=jacobian)
+        shear = self.shear_via_jacobian_from(grid=grid, jacobian=jacobian)
 
         return aa.Array2D(array=1 - convergence + shear, mask=grid.mask)
 
-    def magnification_2d_from_grid(self, grid):
+    def magnification_2d_from(self, grid):
 
-        jacobian = self.jacobian_from_grid(grid=grid)
+        jacobian = self.jacobian_from(grid=grid)
 
         det_jacobian = jacobian[0][0] * jacobian[1][1] - jacobian[0][1] * jacobian[1][0]
 
         return aa.Array2D(array=1 / det_jacobian, mask=grid.mask)
 
-    def hessian_from_grid(self, grid, buffer=0.01, deflections_func=None):
+    def hessian_from(self, grid, buffer=0.01, deflections_func=None):
 
         if deflections_func is None:
-            deflections_func = self.deflections_2d_from_grid
+            deflections_func = self.deflections_2d_from
 
         grid_shift_y_up = np.zeros(grid.shape)
         grid_shift_y_up[:, 0] = grid[:, 0] + buffer
@@ -207,46 +207,46 @@ class LensingObject:
 
         return hessian_yy, hessian_xy, hessian_yx, hessian_xx
 
-    def convergence_via_hessian_from_grid(self, grid, buffer=0.01):
+    def convergence_via_hessian_from(self, grid, buffer=0.01):
 
-        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
             grid=grid, buffer=buffer
         )
 
-        return grid.values_from_array_slim(array_slim=0.5 * (hessian_yy + hessian_xx))
+        return grid.values_from(array_slim=0.5 * (hessian_yy + hessian_xx))
 
-    def shear_yx_via_hessian_from_grid(self, grid, buffer=0.01):
+    def shear_yx_via_hessian_from(self, grid, buffer=0.01):
 
-        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
             grid=grid, buffer=buffer
         )
 
         return 0.5 * (hessian_xx - hessian_yy), hessian_xy
 
-    def shear_via_hessian_from_grid(self, grid, buffer=0.01):
+    def shear_via_hessian_from(self, grid, buffer=0.01):
 
-        shear_y, shear_x = self.shear_yx_via_hessian_from_grid(grid=grid, buffer=buffer)
+        shear_y, shear_x = self.shear_yx_via_hessian_from(grid=grid, buffer=buffer)
 
-        return grid.values_from_array_slim(
+        return grid.values_from(
             array_slim=(shear_x ** 2 + shear_y ** 2) ** 0.5
         )
 
-    def magnification_via_hessian_from_grid(
+    def magnification_via_hessian_from(
         self, grid, buffer=0.01, deflections_func=None
     ):
 
-        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from_grid(
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
             grid=grid, buffer=buffer, deflections_func=deflections_func
         )
 
         det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx
 
-        return grid.values_from_array_slim(array_slim=1.0 / det_A)
+        return grid.values_from(array_slim=1.0 / det_A)
 
     @evaluation_grid
-    def tangential_critical_curve_from_grid(self, grid, pixel_scale=0.05):
+    def tangential_critical_curve_from(self, grid, pixel_scale=0.05):
 
-        tangential_eigen_values = self.tangential_eigen_value_from_grid(grid=grid)
+        tangential_eigen_values = self.tangential_eigen_value_from(grid=grid)
 
         tangential_critical_curve_indices = measure.find_contours(
             tangential_eigen_values.native, 0
@@ -255,7 +255,7 @@ class LensingObject:
         if len(tangential_critical_curve_indices) == 0:
             return []
 
-        tangential_critical_curve = grid.mask.grid_scaled_from_grid_pixels_1d_for_marching_squares(
+        tangential_critical_curve = grid.mask.grid_scaled_for_marching_squares_from(
             grid_pixels_1d=tangential_critical_curve_indices[0],
             shape_native=tangential_eigen_values.sub_shape_native,
         )
@@ -266,9 +266,9 @@ class LensingObject:
             return []
 
     @evaluation_grid
-    def radial_critical_curve_from_grid(self, grid, pixel_scale=0.05):
+    def radial_critical_curve_from(self, grid, pixel_scale=0.05):
 
-        radial_eigen_values = self.radial_eigen_value_from_grid(grid=grid)
+        radial_eigen_values = self.radial_eigen_value_from(grid=grid)
 
         radial_critical_curve_indices = measure.find_contours(
             radial_eigen_values.native, 0
@@ -277,7 +277,7 @@ class LensingObject:
         if len(radial_critical_curve_indices) == 0:
             return []
 
-        radial_critical_curve = grid.mask.grid_scaled_from_grid_pixels_1d_for_marching_squares(
+        radial_critical_curve = grid.mask.grid_scaled_for_marching_squares_from(
             grid_pixels_1d=radial_critical_curve_indices[0],
             shape_native=radial_eigen_values.sub_shape_native,
         )
@@ -288,15 +288,15 @@ class LensingObject:
             return []
 
     @evaluation_grid
-    def critical_curves_from_grid(self, grid, pixel_scale=0.05):
+    def critical_curves_from(self, grid, pixel_scale=0.05):
 
         try:
             return aa.Grid2DIrregular(
                 [
-                    self.tangential_critical_curve_from_grid(
+                    self.tangential_critical_curve_from(
                         grid=grid, pixel_scale=pixel_scale
                     ),
-                    self.radial_critical_curve_from_grid(
+                    self.radial_critical_curve_from(
                         grid=grid, pixel_scale=pixel_scale
                     ),
                 ]
@@ -305,56 +305,56 @@ class LensingObject:
             return []
 
     @evaluation_grid
-    def tangential_caustic_from_grid(self, grid, pixel_scale=0.05):
+    def tangential_caustic_from(self, grid, pixel_scale=0.05):
 
-        tangential_critical_curve = self.tangential_critical_curve_from_grid(
+        tangential_critical_curve = self.tangential_critical_curve_from(
             grid=grid, pixel_scale=pixel_scale
         )
 
         if len(tangential_critical_curve) == 0:
             return []
 
-        deflections_critical_curve = self.deflections_2d_from_grid(
+        deflections_critical_curve = self.deflections_2d_from(
             grid=tangential_critical_curve
         )
 
         return tangential_critical_curve - deflections_critical_curve
 
     @evaluation_grid
-    def radial_caustic_from_grid(self, grid, pixel_scale=0.05):
+    def radial_caustic_from(self, grid, pixel_scale=0.05):
 
-        radial_critical_curve = self.radial_critical_curve_from_grid(
+        radial_critical_curve = self.radial_critical_curve_from(
             grid=grid, pixel_scale=pixel_scale
         )
 
         if len(radial_critical_curve) == 0:
             return []
 
-        deflections_critical_curve = self.deflections_2d_from_grid(
+        deflections_critical_curve = self.deflections_2d_from(
             grid=radial_critical_curve
         )
 
         return radial_critical_curve - deflections_critical_curve
 
     @evaluation_grid
-    def caustics_from_grid(self, grid, pixel_scale=0.05):
+    def caustics_from(self, grid, pixel_scale=0.05):
 
         try:
             return aa.Grid2DIrregular(
                 [
-                    self.tangential_caustic_from_grid(
+                    self.tangential_caustic_from(
                         grid=grid, pixel_scale=pixel_scale
                     ),
-                    self.radial_caustic_from_grid(grid=grid, pixel_scale=pixel_scale),
+                    self.radial_caustic_from(grid=grid, pixel_scale=pixel_scale),
                 ]
             )
         except (IndexError, ValueError):
             return []
 
     @evaluation_grid
-    def area_within_tangential_critical_curve_from_grid(self, grid, pixel_scale=0.05):
+    def area_within_tangential_critical_curve_from(self, grid, pixel_scale=0.05):
 
-        tangential_critical_curve = self.tangential_critical_curve_from_grid(
+        tangential_critical_curve = self.tangential_critical_curve_from(
             grid=grid, pixel_scale=pixel_scale
         )
         x, y = tangential_critical_curve[:, 0], tangential_critical_curve[:, 1]
@@ -362,11 +362,11 @@ class LensingObject:
         return np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
 
     @evaluation_grid
-    def einstein_radius_from_grid(self, grid, pixel_scale=0.05):
+    def einstein_radius_from(self, grid, pixel_scale=0.05):
 
         try:
             return np.sqrt(
-                self.area_within_tangential_critical_curve_from_grid(
+                self.area_within_tangential_critical_curve_from(
                     grid=grid, pixel_scale=pixel_scale
                 )
                 / np.pi
@@ -375,7 +375,7 @@ class LensingObject:
             raise TypeError("The grid input was unable to estimate the Einstein Radius")
 
     @evaluation_grid
-    def einstein_mass_angular_from_grid(self, grid, pixel_scale=0.05):
+    def einstein_mass_angular_from(self, grid, pixel_scale=0.05):
         return np.pi * (
-            self.einstein_radius_from_grid(grid=grid, pixel_scale=pixel_scale) ** 2
+            self.einstein_radius_from(grid=grid, pixel_scale=pixel_scale) ** 2
         )

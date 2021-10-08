@@ -55,7 +55,7 @@ class EllGaussian(MassProfile, StellarProfile):
         axis_ratio = super().axis_ratio
         return axis_ratio if axis_ratio < 0.9999 else 0.9999
 
-    def zeta_from_grid(self, grid):
+    def zeta_from(self, grid):
         q2 = self.axis_ratio ** 2.0
         ind_pos_y = grid[:, 0] >= 0
         shape_grid = np.shape(grid)
@@ -87,7 +87,7 @@ class EllGaussian(MassProfile, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -103,7 +103,7 @@ class EllGaussian(MassProfile, StellarProfile):
             * self.intensity
             * self.sigma
             * np.sqrt((2 * np.pi) / (1.0 - self.axis_ratio ** 2.0))
-            * self.zeta_from_grid(grid=grid)
+            * self.zeta_from(grid=grid)
         )
 
         return self.rotate_grid_from_reference_frame(
@@ -115,7 +115,7 @@ class EllGaussian(MassProfile, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid_via_integrator(self, grid):
+    def deflections_2d_via_integrator_from(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -132,7 +132,7 @@ class EllGaussian(MassProfile, StellarProfile):
             from pyquad import quad_grid
         except ImportError:
             print(
-                "You must install the optional library pyquad to use the deflections_2d_from_grid_via_integrator method.\n"
+                "You must install the optional library pyquad to use the deflections_2d_via_integrator_from method.\n"
                 "\n"
                 "pip install pyquad"
             )
@@ -173,7 +173,7 @@ class EllGaussian(MassProfile, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from_grid(self, grid):
+    def convergence_2d_from(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -185,9 +185,9 @@ class EllGaussian(MassProfile, StellarProfile):
         return self.convergence_func(self.grid_to_eccentric_radii(grid))
 
     def convergence_func(self, grid_radius):
-        return self.mass_to_light_ratio * self.image_2d_from_grid_radii(grid_radius)
+        return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
-    def image_2d_from_grid_radii(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii):
         """Calculate the intensity of the Gaussian light profile on a grid of radial coordinates.
 
         Parameters
@@ -261,7 +261,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from_grid(self, grid):
+    def convergence_2d_from(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -273,12 +273,12 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
         return self.convergence_func(self.grid_to_eccentric_radii(grid))
 
     def convergence_func(self, grid_radius):
-        return self.mass_to_light_ratio * self.image_2d_from_grid_radii(grid_radius)
+        return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from_grid_via_gaussians(self, grid):
+    def convergence_2d_via_gaussians_from(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -290,17 +290,17 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
 
         eccentric_radii = self.grid_to_eccentric_radii(grid=grid)
 
-        return self._convergence_2d_from_grid_via_gaussians(grid_radii=eccentric_radii)
+        return self._convergence_2d_via_gaussians_from(grid_radii=eccentric_radii)
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         return np.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid):
-        return self._deflections_2d_from_grid_via_gaussians(
+    def deflections_2d_from(self, grid):
+        return self._deflections_2d_via_gaussians_from(
             grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
         )
 
@@ -308,7 +308,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
     def ellipticity_rescale(self):
         return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
 
-    def image_2d_from_grid_radii(self, radius):
+    def image_2d_via_radii_from(self, radius):
         """
         Returns the intensity of the profile at a given radius.
 
@@ -375,7 +375,7 @@ class EllSersic(AbstractEllSersic, MassProfileMGE):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid_via_integrator(self, grid):
+    def deflections_2d_via_integrator_from(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -390,7 +390,7 @@ class EllSersic(AbstractEllSersic, MassProfileMGE):
             from pyquad import quad_grid
         except ImportError:
             print(
-                "You must install the optional library pyquad to use the deflections_2d_from_grid_via_integrator method.\n"
+                "You must install the optional library pyquad to use the deflections_2d_via_integrator_from method.\n"
                 "\n"
                 "pip install pyquad"
             )
@@ -661,7 +661,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from_grid(self, grid):
+    def convergence_2d_from(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -675,7 +675,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_via_integrator_from_grid(self, grid):
+    def deflections_2d_via_integrator_from(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -690,7 +690,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
             from pyquad import quad_grid
         except ImportError:
             print(
-                "You must install the optional library pyquad to use the deflections_2d_from_grid_via_integrator method.\n"
+                "You must install the optional library pyquad to use the deflections_2d_via_integrator_from method.\n"
                 "\n"
                 "pip install pyquad"
             )
@@ -733,7 +733,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
                 ((self.axis_ratio * grid_radius) / self.effective_radius)
                 ** -self.mass_to_light_gradient
             )
-            * self.image_2d_from_grid_radii(grid_radius)
+            * self.image_2d_via_radii_from(grid_radius)
         )
 
     @staticmethod
@@ -893,7 +893,7 @@ class EllSersicCore(EllSersic):
             )
         )
 
-    def image_2d_from_grid_radii(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii):
         """
         Calculate the intensity of the cored-Sersic light profile on a grid of radial coordinates.
 
@@ -1056,7 +1056,7 @@ class EllChameleon(MassProfile, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
         Following Eq. (15) and (16), but the parameters are slightly different.
@@ -1129,7 +1129,7 @@ class EllChameleon(MassProfile, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from_grid(self, grid):
+    def convergence_2d_from(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
         Parameters
         ----------
@@ -1139,13 +1139,13 @@ class EllChameleon(MassProfile, StellarProfile):
         return self.convergence_func(self.grid_to_elliptical_radii(grid))
 
     def convergence_func(self, grid_radius):
-        return self.mass_to_light_ratio * self.image_2d_from_grid_radii(grid_radius)
+        return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         return np.zeros(shape=grid.shape[0])
 
-    def image_2d_from_grid_radii(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii):
         """Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.
 
         Parameters

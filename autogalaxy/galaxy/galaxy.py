@@ -275,7 +275,7 @@ class Galaxy(af.ModelObject, LensingObject):
         )
 
     @aa.grid_dec.grid_1d_output_structure
-    def image_1d_from_grid(self, grid):
+    def image_1d_from(self, grid):
         """
         Returns the summed 1D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
         coordinates.
@@ -292,12 +292,12 @@ class Galaxy(af.ModelObject, LensingObject):
         """
         if self.has_light_profile:
             return sum(
-                map(lambda p: p.image_1d_from_grid(grid=grid), self.light_profiles)
+                map(lambda p: p.image_1d_from(grid=grid), self.light_profiles)
             )
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
-    def image_2d_from_grid(self, grid):
+    def image_2d_from(self, grid):
         """
         Returns the summed 2D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
         coordinates.
@@ -314,35 +314,35 @@ class Galaxy(af.ModelObject, LensingObject):
         """
         if self.has_light_profile:
             return sum(
-                map(lambda p: p.image_2d_from_grid(grid=grid), self.light_profiles)
+                map(lambda p: p.image_2d_from(grid=grid), self.light_profiles)
             )
         return np.zeros((grid.shape[0],))
 
-    def blurred_image_2d_from_grid_and_psf(self, grid, psf, blurring_grid=None):
+    def blurred_image_2d_via_psf_from(self, grid, psf, blurring_grid=None):
 
-        image = self.image_2d_from_grid(grid=grid)
+        image = self.image_2d_from(grid=grid)
 
-        blurring_image = self.image_2d_from_grid(grid=blurring_grid)
+        blurring_image = self.image_2d_from(grid=blurring_grid)
 
-        return psf.convolved_array_from_array_and_mask(
+        return psf.convolved_array_with_mask_from(
             array=image.binned.native + blurring_image.binned.native, mask=grid.mask
         )
 
-    def blurred_image_2d_from_grid_and_convolver(self, grid, convolver, blurring_grid):
+    def blurred_image_2d_via_convolver_from(self, grid, convolver, blurring_grid):
 
-        image = self.image_2d_from_grid(grid=grid)
+        image = self.image_2d_from(grid=grid)
 
-        blurring_image = self.image_2d_from_grid(grid=blurring_grid)
+        blurring_image = self.image_2d_from(grid=blurring_grid)
 
         return convolver.convolve_image(
             image=image.binned.slim, blurring_image=blurring_image.binned.slim
         )
 
-    def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
+    def profile_visibilities_via_transformer_from(self, grid, transformer):
 
-        image = self.image_2d_from_grid(grid=grid)
+        image = self.image_2d_from(grid=grid)
 
-        return transformer.visibilities_from_image(image=image.binned.slim)
+        return transformer.visibilities_from(image=image.binned.slim)
 
     def luminosity_within_circle(self, radius: float):
         """
@@ -368,7 +368,7 @@ class Galaxy(af.ModelObject, LensingObject):
             )
 
     @aa.grid_dec.grid_1d_output_structure
-    def convergence_1d_from_grid(self, grid):
+    def convergence_1d_from(self, grid):
         """
         Returns the summed 1D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
@@ -387,12 +387,12 @@ class Galaxy(af.ModelObject, LensingObject):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.convergence_1d_from_grid(grid=grid), self.mass_profiles)
+                map(lambda p: p.convergence_1d_from(grid=grid), self.mass_profiles)
             )
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
-    def convergence_2d_from_grid(self, grid):
+    def convergence_2d_from(self, grid):
         """
         Returns the summed 2D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
@@ -411,12 +411,12 @@ class Galaxy(af.ModelObject, LensingObject):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.convergence_2d_from_grid(grid=grid), self.mass_profiles)
+                map(lambda p: p.convergence_2d_from(grid=grid), self.mass_profiles)
             )
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_1d_output_structure
-    def potential_1d_from_grid(self, grid):
+    def potential_1d_from(self, grid):
         """
         Returns the summed 2D gravitational potential of the galaxy's mass profiles using a grid of 
         Cartesian (y,x) coordinates.
@@ -435,12 +435,12 @@ class Galaxy(af.ModelObject, LensingObject):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.potential_1d_from_grid(grid=grid), self.mass_profiles)
+                map(lambda p: p.potential_1d_from(grid=grid), self.mass_profiles)
             )
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         """
         Returns the summed 2D gravitational potential of the galaxy's mass profiles using a grid of 
         Cartesian (y,x) coordinates.
@@ -459,12 +459,12 @@ class Galaxy(af.ModelObject, LensingObject):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.potential_2d_from_grid(grid=grid), self.mass_profiles)
+                map(lambda p: p.potential_2d_from(grid=grid), self.mass_profiles)
             )
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         """
         Returns the summed (y,x) deflection angles of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
@@ -480,7 +480,7 @@ class Galaxy(af.ModelObject, LensingObject):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.deflections_2d_from_grid(grid=grid), self.mass_profiles)
+                map(lambda p: p.deflections_2d_from(grid=grid), self.mass_profiles)
             )
         return np.zeros((grid.shape[0], 2))
 
@@ -536,7 +536,7 @@ class Galaxy(af.ModelObject, LensingObject):
             A model image of the galaxy (from light profiles or an inversion) from a
             previous analysis search.
         """
-        return self.hyper_galaxy.contribution_map_from_hyper_images(
+        return self.hyper_galaxy.contribution_map_from(
             hyper_model_image=self.hyper_model_image,
             hyper_galaxy_image=self.hyper_galaxy_image,
         )
@@ -578,7 +578,7 @@ class HyperGalaxy:
 
         self.component_number = next(self._ids)
 
-    def contribution_map_from_hyper_images(self, hyper_model_image, hyper_galaxy_image):
+    def contribution_map_from(self, hyper_model_image, hyper_galaxy_image):
         """
         Returns the contribution map of a galaxy, which represents the fraction of
         flux in each pixel that the galaxy is attributed to contain, hyper to the
@@ -603,18 +603,18 @@ class HyperGalaxy:
         )
         return np.divide(contribution_map, np.max(contribution_map))
 
-    def hyper_noise_map_from_hyper_images_and_noise_map(
+    def hyper_noise_map_via_hyper_images_from(
         self, hyper_model_image, hyper_galaxy_image, noise_map
     ):
-        contribution_map = self.contribution_map_from_hyper_images(
+        contribution_map = self.contribution_map_from(
             hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
         )
 
-        return self.hyper_noise_map_from_contribution_map(
+        return self.hyper_noise_map_from(
             noise_map=noise_map, contribution_map=contribution_map
         )
 
-    def hyper_noise_map_from_contribution_map(self, noise_map, contribution_map):
+    def hyper_noise_map_from(self, noise_map, contribution_map):
         """
         Returns a hyper galaxy hyper_galaxies noise-map from a baseline noise-map.
 

@@ -62,7 +62,7 @@ class TestVisualizer:
             path.join(plot_path, "model_image_of_galaxy_1.png") not in plot_patch.paths
         )
 
-        image = ag.util.array_2d.numpy_array_2d_from_fits(
+        image = ag.util.array_2d.numpy_array_2d_via_fits_from(
             file_path=path.join(plot_path, "fits", "image_2d.fits"), hdu=0
         )
 

@@ -79,7 +79,7 @@ class TestImaging:
 
 
 class TestSimulatorImaging:
-    def test__from_plane_and_grid__same_as_plane_image(self):
+    def test__via_plane_from__same_as_plane_image(self):
 
         psf = ag.Kernel2D.from_gaussian(
             shape_native=(7, 7), sigma=0.5, pixel_scales=0.05
@@ -100,10 +100,10 @@ class TestSimulatorImaging:
             add_poisson_noise=False,
         )
 
-        imaging = simulator.from_plane_and_grid(plane=plane, grid=grid)
+        imaging = simulator.via_plane_from(plane=plane, grid=grid)
 
-        imaging_via_image = simulator.from_image(
-            image=plane.image_2d_from_grid(grid=grid)
+        imaging_via_image = simulator.via_image_from(
+            image=plane.image_2d_from(grid=grid)
         )
 
         assert imaging.shape_native == (20, 20)
@@ -144,14 +144,14 @@ class TestSimulatorImaging:
             noise_seed=1,
         )
 
-        imaging = simulator.from_galaxies_and_grid(
+        imaging = simulator.via_galaxies_from(
             galaxies=[galaxy_0, galaxy_1], grid=grid
         )
 
         plane = ag.Plane(redshift=0.75, galaxies=[galaxy_0, galaxy_1])
 
-        imaging_via_image = simulator.from_image(
-            image=plane.image_2d_from_grid(grid=grid)
+        imaging_via_image = simulator.via_image_from(
+            image=plane.image_2d_from(grid=grid)
         )
 
         assert imaging.shape_native == (11, 11)

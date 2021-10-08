@@ -170,13 +170,13 @@ class EllProfile(SphProfile):
 
     @property
     def cos_phi(self):
-        return self.cos_and_sin_from_x_axis()[0]
+        return self.cos_and_sin_to_x_axis()[0]
 
     @property
     def sin_phi(self):
-        return self.cos_and_sin_from_x_axis()[1]
+        return self.cos_and_sin_to_x_axis()[1]
 
-    def cos_and_sin_from_x_axis(self):
+    def cos_and_sin_to_x_axis(self):
         """ Determine the sin and cosine of the angle between the profile's ellipse and the positive x-axis, \
         counter-clockwise. """
         phi_radians = np.radians(self.angle)

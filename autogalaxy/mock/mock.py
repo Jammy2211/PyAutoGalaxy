@@ -17,7 +17,7 @@ class MockLightProfile(ag.lp.LightProfile):
         self.size = size
         self.value1 = value1
 
-    def image_2d_from_grid(self, grid):
+    def image_2d_from(self, grid):
         return np.array(self.size * [self.value])
 
 
@@ -27,13 +27,13 @@ class MockMassProfile(ag.mp.MassProfile):
         self.value = value
         self.value1 = value1
 
-    def surface_density_from_grid(self, grid):
+    def convergence_from(self, grid):
         return np.array([self.value])
 
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         return np.array([self.value])
 
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         return np.array([self.value, self.value])
 
 
@@ -46,38 +46,20 @@ class MockGalaxy:
         self.shape = shape
 
     @aa.grid_dec.grid_2d_to_structure
-    def image_2d_from_grid(self, grid):
+    def image_2d_from(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 
     @aa.grid_dec.grid_2d_to_structure
-    def convergence_2d_from_grid(self, grid):
+    def convergence_2d_from(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 
     @aa.grid_dec.grid_2d_to_structure
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         return np.full(shape=(self.shape, 2), fill_value=self.value)
-
-
-class MockHyperGalaxy:
-    def __init__(self, contribution_factor=0.0, noise_factor=0.0, noise_power=1.0):
-        self.contribution_factor = contribution_factor
-        self.noise_factor = noise_factor
-        self.noise_power = noise_power
-
-    def contributions_from_model_image_and_galaxy_image(
-        self, model_image, galaxy_image, minimum_value
-    ):
-        contributions = galaxy_image / (model_image + self.contribution_factor)
-        contributions = contributions / np.max(contributions)
-        contributions[contributions < minimum_value] = 0.0
-        return contributions
-
-    def hyper_noise_from_contributions(self, noise_map, contributions):
-        return self.noise_factor * (noise_map * contributions) ** self.noise_power
 
 
 # Mock Cosmology #

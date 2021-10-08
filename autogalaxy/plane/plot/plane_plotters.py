@@ -94,7 +94,7 @@ class PlanePlotter(LensingObjPlotter):
         if image:
 
             self.mat_plot_2d.plot_array(
-                array=self.plane.image_2d_from_grid(grid=self.grid),
+                array=self.plane.image_2d_from(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=aplt.AutoLabels(
                     title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
@@ -104,7 +104,7 @@ class PlanePlotter(LensingObjPlotter):
         if plane_image:
 
             self.mat_plot_2d.plot_array(
-                array=self.plane.plane_image_2d_from_grid(grid=self.grid).array,
+                array=self.plane.plane_image_2d_from(grid=self.grid).array,
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=aplt.AutoLabels(
                     title=f"Plane Image{title_suffix}",
@@ -174,7 +174,7 @@ class PlanePlotter(LensingObjPlotter):
 
         self.figures_2d()
         self.mat_plot_2d.plot_grid(
-            grid=self.plane.traced_grid_from_grid(grid=self.grid),
+            grid=self.plane.traced_grid_from(grid=self.grid),
             visuals_2d=self.visuals_with_include_2d,
             auto_labels=aplt.AutoLabels(),
         )

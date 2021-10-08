@@ -29,7 +29,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             The collection of attributes that can be plotted by a `Plotter1D` object.
         """
         if self.include_1d.einstein_radius:
-            einstein_radius = self.lensing_obj.einstein_radius_from_grid(grid=self.grid)
+            einstein_radius = self.lensing_obj.einstein_radius_from(grid=self.grid)
         else:
             einstein_radius = None
 
@@ -75,7 +75,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
             ),
             critical_curves=self.extract_2d(
                 "critical_curves",
-                self.lensing_obj.critical_curves_from_grid(grid=self.grid),
+                self.lensing_obj.critical_curves_from(grid=self.grid),
                 "critical_curves",
             ),
         )
@@ -92,7 +92,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         if convergence:
 
             self.mat_plot_2d.plot_array(
-                array=self.lensing_obj.convergence_2d_from_grid(grid=self.grid),
+                array=self.lensing_obj.convergence_2d_from(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=aplt.AutoLabels(
                     title="Convergence", filename="convergence_2d"
@@ -102,14 +102,14 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         if potential:
 
             self.mat_plot_2d.plot_array(
-                array=self.lensing_obj.potential_2d_from_grid(grid=self.grid),
+                array=self.lensing_obj.potential_2d_from(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=aplt.AutoLabels(title="Potential", filename="potential_2d"),
             )
 
         if deflections_y:
 
-            deflections = self.lensing_obj.deflections_2d_from_grid(grid=self.grid)
+            deflections = self.lensing_obj.deflections_2d_from(grid=self.grid)
             deflections_y = aa.Array2D.manual_mask(
                 array=deflections.slim[:, 0], mask=self.grid.mask
             )
@@ -124,7 +124,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
 
         if deflections_x:
 
-            deflections = self.lensing_obj.deflections_2d_from_grid(grid=self.grid)
+            deflections = self.lensing_obj.deflections_2d_from(grid=self.grid)
             deflections_x = aa.Array2D.manual_mask(
                 array=deflections.slim[:, 1], mask=self.grid.mask
             )
@@ -140,7 +140,7 @@ class LensingObjPlotter(abstract_plotters.AbstractPlotter):
         if magnification:
 
             self.mat_plot_2d.plot_array(
-                array=self.lensing_obj.magnification_2d_from_grid(grid=self.grid),
+                array=self.lensing_obj.magnification_2d_from(grid=self.grid),
                 visuals_2d=self.visuals_with_include_2d,
                 auto_labels=aplt.AutoLabels(
                     title="Magnification", filename="magnification_2d"

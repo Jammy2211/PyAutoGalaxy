@@ -15,7 +15,7 @@ class FitGalaxy(aa.FitDataset):
         """
         self.model_galaxies = model_galaxies
 
-        model_data = masked_galaxy_dataset.profile_quantity_from_galaxies(
+        model_data = masked_galaxy_dataset.profile_quantity_from(
             galaxies=model_galaxies
         )
 

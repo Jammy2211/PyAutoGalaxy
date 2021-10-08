@@ -181,7 +181,7 @@ class TestCompareToManual:
 
         assert fit.model_galaxies == [galaxy]
 
-        model_data = galaxy.image_2d_from_grid(grid=masked_galaxy_dataset.grid)
+        model_data = galaxy.image_2d_from(grid=masked_galaxy_dataset.grid)
 
         residual_map = ag.util.fit.residual_map_from(
             data=masked_galaxy_dataset.image, model_data=model_data.binned
@@ -222,7 +222,7 @@ class TestCompareToManual:
 
         assert fit.model_galaxies == [galaxy]
 
-        model_data = galaxy.convergence_2d_from_grid(grid=masked_galaxy_dataset.grid)
+        model_data = galaxy.convergence_2d_from(grid=masked_galaxy_dataset.grid)
 
         residual_map = ag.util.fit.residual_map_from(
             data=masked_galaxy_dataset.image, model_data=model_data.binned
@@ -262,7 +262,7 @@ class TestCompareToManual:
 
         assert fit.model_galaxies == [galaxy]
 
-        model_data = galaxy.potential_2d_from_grid(grid=masked_galaxy_dataset.grid)
+        model_data = galaxy.potential_2d_from(grid=masked_galaxy_dataset.grid)
 
         residual_map = ag.util.fit.residual_map_from(
             data=masked_galaxy_dataset.image, model_data=model_data.binned
@@ -304,7 +304,7 @@ class TestCompareToManual:
 
         assert fit.model_galaxies == [galaxy]
 
-        model_data = galaxy.deflections_2d_from_grid(
+        model_data = galaxy.deflections_2d_from(
             grid=masked_galaxy_dataset.grid
         ).binned[:, 0]
 
@@ -347,7 +347,7 @@ class TestCompareToManual:
 
         assert fit.model_galaxies == [galaxy]
 
-        model_data = galaxy.deflections_2d_from_grid(
+        model_data = galaxy.deflections_2d_from(
             grid=masked_galaxy_dataset.grid
         ).binned[:, 1]
 

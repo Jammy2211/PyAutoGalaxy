@@ -54,7 +54,7 @@ class MassProfilePlotter(LensingObjPlotter):
 
         if convergence:
 
-            convergence_1d = self.mass_profile.convergence_1d_from_grid(grid=self.grid)
+            convergence_1d = self.mass_profile.convergence_1d_from(grid=self.grid)
 
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
@@ -72,7 +72,7 @@ class MassProfilePlotter(LensingObjPlotter):
 
         if potential:
 
-            potential_1d = self.mass_profile.potential_1d_from_grid(grid=self.grid)
+            potential_1d = self.mass_profile.potential_1d_from(grid=self.grid)
 
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
@@ -138,7 +138,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         if self.include_1d.einstein_radius:
 
             einstein_radius_list = [
-                mass_profile.einstein_radius_from_grid(grid=self.grid)
+                mass_profile.einstein_radius_from(grid=self.grid)
                 for mass_profile in self.mass_profile_pdf_list
             ]
 
@@ -167,12 +167,12 @@ class MassProfilePDFPlotter(MassProfilePlotter):
 
             grid_radial = (
                 self.mass_profile_pdf_list[0]
-                .convergence_1d_from_grid(grid=self.grid)
+                .convergence_1d_from(grid=self.grid)
                 .grid_radial
             )
 
             convergence_1d_list = [
-                mass_profile.convergence_1d_from_grid(grid=self.grid)
+                mass_profile.convergence_1d_from(grid=self.grid)
                 for mass_profile in self.mass_profile_pdf_list
             ]
 
@@ -202,12 +202,12 @@ class MassProfilePDFPlotter(MassProfilePlotter):
 
             grid_radial = (
                 self.mass_profile_pdf_list[0]
-                .potential_1d_from_grid(grid=self.grid)
+                .potential_1d_from(grid=self.grid)
                 .grid_radial
             )
 
             potential_1d_list = [
-                mass_profile.potential_1d_from_grid(grid=self.grid)
+                mass_profile.potential_1d_from(grid=self.grid)
                 for mass_profile in self.mass_profile_pdf_list
             ]
 

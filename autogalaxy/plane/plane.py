@@ -219,7 +219,7 @@ class AbstractPlane(LensingObject):
 
 class AbstractPlaneLensing(AbstractPlane):
     @aa.grid_dec.grid_2d_to_structure
-    def image_2d_from_grid(self, grid):
+    def image_2d_from(self, grid):
         """
         Returns the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
         individual images of each galaxy's light profile.
@@ -236,25 +236,25 @@ class AbstractPlaneLensing(AbstractPlane):
         """
         if self.galaxies:
             return sum(
-                map(lambda galaxy: galaxy.image_2d_from_grid(grid=grid), self.galaxies)
+                map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies)
             )
         return np.zeros((grid.shape[0],))
 
-    def images_of_galaxies_from_grid(self, grid):
+    def images_of_galaxies_from(self, grid):
         return list(
-            map(lambda galaxy: galaxy.image_2d_from_grid(grid=grid), self.galaxies)
+            map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies)
         )
 
-    def padded_image_2d_from_grid_and_psf_shape(self, grid, psf_shape_2d):
+    def padded_image_2d_from(self, grid, psf_shape_2d):
 
-        padded_grid = grid.padded_grid_from_kernel_shape(
+        padded_grid = grid.padded_grid_from(
             kernel_shape_native=psf_shape_2d
         )
 
-        return self.image_2d_from_grid(grid=padded_grid)
+        return self.image_2d_from(grid=padded_grid)
 
     @aa.grid_dec.grid_2d_to_structure
-    def convergence_2d_from_grid(self, grid):
+    def convergence_2d_from(self, grid):
         """
         Returns the convergence of the list of galaxies of the plane's sub-grid, by summing the individual convergences \
         of each galaxy's mass profile.
@@ -275,12 +275,12 @@ class AbstractPlaneLensing(AbstractPlane):
         """
         if self.galaxies:
             return sum(
-                map(lambda g: g.convergence_2d_from_grid(grid=grid), self.galaxies)
+                map(lambda g: g.convergence_2d_from(grid=grid), self.galaxies)
             )
         return np.zeros(shape=(grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         """
         Returns the potential of the list of galaxies of the plane's sub-grid, by summing the individual potentials \
         of each galaxy's mass profile.
@@ -301,76 +301,76 @@ class AbstractPlaneLensing(AbstractPlane):
         """
         if self.galaxies:
             return sum(
-                map(lambda g: g.potential_2d_from_grid(grid=grid), self.galaxies)
+                map(lambda g: g.potential_2d_from(grid=grid), self.galaxies)
             )
         return np.zeros((grid.shape[0]))
 
     @aa.grid_dec.grid_2d_to_structure
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         if self.galaxies:
             return sum(
-                map(lambda g: g.deflections_2d_from_grid(grid=grid), self.galaxies)
+                map(lambda g: g.deflections_2d_from(grid=grid), self.galaxies)
             )
         return np.zeros(shape=(grid.shape[0], 2))
 
     @aa.grid_dec.grid_2d_to_structure
-    def traced_grid_from_grid(self, grid):
+    def traced_grid_from(self, grid):
         """Trace this plane's grid_stacks to the next plane, using its deflection angles."""
-        return grid - self.deflections_2d_from_grid(grid=grid)
+        return grid - self.deflections_2d_from(grid=grid)
 
 
 class AbstractPlaneData(AbstractPlaneLensing):
-    def blurred_image_2d_from_grid_and_psf(self, grid, psf, blurring_grid):
+    def blurred_image_2d_via_psf_from(self, grid, psf, blurring_grid):
 
-        image = self.image_2d_from_grid(grid=grid)
+        image = self.image_2d_from(grid=grid)
 
-        blurring_image = self.image_2d_from_grid(grid=blurring_grid)
+        blurring_image = self.image_2d_from(grid=blurring_grid)
 
-        return psf.convolved_array_from_array_and_mask(
+        return psf.convolved_array_with_mask_from(
             array=image.binned.native + blurring_image.binned.native, mask=grid.mask
         )
 
-    def blurred_images_of_galaxies_from_grid_and_psf(self, grid, psf, blurring_grid):
+    def blurred_images_of_galaxies_via_psf_from(self, grid, psf, blurring_grid):
         return [
-            galaxy.blurred_image_2d_from_grid_and_psf(
+            galaxy.blurred_image_2d_via_psf_from(
                 grid=grid, psf=psf, blurring_grid=blurring_grid
             )
             for galaxy in self.galaxies
         ]
 
-    def blurred_image_2d_from_grid_and_convolver(self, grid, convolver, blurring_grid):
+    def blurred_image_2d_via_convolver_from(self, grid, convolver, blurring_grid):
 
-        image = self.image_2d_from_grid(grid=grid)
+        image = self.image_2d_from(grid=grid)
 
-        blurring_image = self.image_2d_from_grid(grid=blurring_grid)
+        blurring_image = self.image_2d_from(grid=blurring_grid)
 
         return convolver.convolve_image(image=image, blurring_image=blurring_image)
 
-    def blurred_images_of_galaxies_from_grid_and_convolver(
+    def blurred_images_of_galaxies_via_convolver_from(
         self, grid, convolver, blurring_grid
     ):
         return [
-            galaxy.blurred_image_2d_from_grid_and_convolver(
+            galaxy.blurred_image_2d_via_convolver_from(
                 grid=grid, convolver=convolver, blurring_grid=blurring_grid
             )
             for galaxy in self.galaxies
         ]
 
-    def unmasked_blurred_image_2d_from_grid_and_psf(self, grid, psf):
+    def unmasked_blurred_image_2d_via_psf_from(self, grid, psf):
 
-        padded_grid = grid.padded_grid_from_kernel_shape(
+        padded_grid = grid.padded_grid_from(
             kernel_shape_native=psf.shape_native
         )
 
-        padded_image = self.image_2d_from_grid(grid=padded_grid)
+        padded_image = self.image_2d_from(grid=padded_grid)
 
-        return padded_grid.mask.unmasked_blurred_array_from_padded_array_psf_and_image_shape(
+        return padded_grid.mask.unmasked_blurred_array_from(
             padded_array=padded_image, psf=psf, image_shape=grid.mask.shape
         )
 
-    def unmasked_blurred_image_of_galaxies_from_grid_and_psf(self, grid, psf):
+    def unmasked_blurred_image_of_galaxies_via_psf_from(self, grid, psf):
 
-        padded_grid = grid.padded_grid_from_kernel_shape(
+        padded_grid = grid.padded_grid_from(
             kernel_shape_native=psf.shape_native
         )
 
@@ -378,9 +378,9 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         for galaxy in self.galaxies:
 
-            padded_image_1d = galaxy.image_2d_from_grid(grid=padded_grid)
+            padded_image_1d = galaxy.image_2d_from(grid=padded_grid)
 
-            unmasked_blurred_array_2d = padded_grid.mask.unmasked_blurred_array_from_padded_array_psf_and_image_shape(
+            unmasked_blurred_array_2d = padded_grid.mask.unmasked_blurred_array_from(
                 padded_array=padded_image_1d, psf=psf, image_shape=grid.mask.shape
             )
 
@@ -388,21 +388,21 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         return unmasked_blurred_images_of_galaxies
 
-    def profile_visibilities_from_grid_and_transformer(self, grid, transformer):
+    def profile_visibilities_via_transformer_from(self, grid, transformer):
 
         if self.galaxies:
-            image = self.image_2d_from_grid(grid=grid)
-            return transformer.visibilities_from_image(image=image)
+            image = self.image_2d_from(grid=grid)
+            return transformer.visibilities_from(image=image)
         else:
             return aa.Visibilities.zeros(
                 shape_slim=(transformer.uv_wavelengths.shape[0],)
             )
 
-    def profile_visibilities_of_galaxies_from_grid_and_transformer(
+    def profile_visibilities_of_galaxies_via_transformer_from(
         self, grid, transformer
     ):
         return [
-            galaxy.profile_visibilities_from_grid_and_transformer(
+            galaxy.profile_visibilities_via_transformer_from(
                 grid=grid, transformer=transformer
             )
             for galaxy in self.galaxies
@@ -416,7 +416,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             return None
 
         return [
-            pixelization.sparse_grid_from_grid(
+            pixelization.sparse_grid_from(
                 grid=grid,
                 hyper_image=hyper_galaxy_image,
                 settings=settings_pixelization,
@@ -532,7 +532,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
             profiling_dict=self.profiling_dict,
         )
 
-    def plane_image_2d_from_grid(self, grid):
+    def plane_image_2d_from(self, grid):
         return plane_util.plane_image_of_galaxies_from(
             shape=grid.mask.shape,
             grid=grid.mask.unmasked_grid_sub_1,
@@ -558,7 +558,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
             if galaxy.has_hyper_galaxy:
 
-                hyper_noise_map_1d = galaxy.hyper_galaxy.hyper_noise_map_from_hyper_images_and_noise_map(
+                hyper_noise_map_1d = galaxy.hyper_galaxy.hyper_noise_map_via_hyper_images_from(
                     noise_map=noise_map,
                     hyper_model_image=galaxy.hyper_model_image,
                     hyper_galaxy_image=galaxy.hyper_galaxy_image,
@@ -606,20 +606,20 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         return contribution_maps
 
-    def galaxy_image_dict_from_grid(self, grid) -> {Galaxy: np.ndarray}:
+    def galaxy_image_dict_from(self, grid) -> {Galaxy: np.ndarray}:
         """
         A dictionary associating galaxies with their corresponding model images
         """
 
         galaxy_image_dict = dict()
 
-        images_of_galaxies = self.images_of_galaxies_from_grid(grid=grid)
+        images_of_galaxies = self.images_of_galaxies_from(grid=grid)
         for (galaxy_index, galaxy) in enumerate(self.galaxies):
             galaxy_image_dict[galaxy] = images_of_galaxies[galaxy_index]
 
         return galaxy_image_dict
 
-    def galaxy_blurred_image_dict_from_grid_and_convolver(
+    def galaxy_blurred_image_dict_via_convolver_from(
         self, grid, convolver, blurring_grid
     ) -> {Galaxy: np.ndarray}:
         """
@@ -628,7 +628,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         galaxy_blurred_image_dict = dict()
 
-        blurred_images_of_galaxies = self.blurred_images_of_galaxies_from_grid_and_convolver(
+        blurred_images_of_galaxies = self.blurred_images_of_galaxies_via_convolver_from(
             grid=grid, convolver=convolver, blurring_grid=blurring_grid
         )
         for (galaxy_index, galaxy) in enumerate(self.galaxies):
@@ -636,7 +636,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         return galaxy_blurred_image_dict
 
-    def galaxy_profile_visibilities_dict_from_grid_and_transformer(
+    def galaxy_profile_visibilities_dict_via_transformer_from(
         self, grid, transformer
     ) -> {Galaxy: np.ndarray}:
         """
@@ -645,7 +645,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         galaxy_profile_visibilities_image_dict = dict()
 
-        profile_visibilities_of_galaxies = self.profile_visibilities_of_galaxies_from_grid_and_transformer(
+        profile_visibilities_of_galaxies = self.profile_visibilities_of_galaxies_via_transformer_from(
             grid=grid, transformer=transformer
         )
         for (galaxy_index, galaxy) in enumerate(self.galaxies):

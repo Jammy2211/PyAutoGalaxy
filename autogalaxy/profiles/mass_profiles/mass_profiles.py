@@ -46,12 +46,12 @@ class MassProfile(EllProfile, LensingObject):
         raise NotImplementedError()
 
     @aa.grid_dec.grid_1d_to_structure
-    def convergence_1d_from_grid(self, grid):
-        return self.convergence_2d_from_grid(grid=grid)
+    def convergence_1d_from(self, grid):
+        return self.convergence_2d_from(grid=grid)
 
     @aa.grid_dec.grid_1d_to_structure
-    def potential_1d_from_grid(self, grid):
-        return self.potential_2d_from_grid(grid=grid)
+    def potential_1d_from(self, grid):
+        return self.potential_2d_from(grid=grid)
 
     def mass_angular_within_circle(self, radius: float):
         """ Integrate the mass profiles's convergence profile to compute the total mass within a circle of \
@@ -122,13 +122,13 @@ class MassProfile(EllProfile, LensingObject):
 
         return self.ellipticity_rescale * root_scalar(func, bracket=[1e-4, 1e4]).root
 
-    def mass_angular_from_normalization_and_radius(self, normalization, radius):
+    def mass_angular_via_normalization_from(self, normalization, radius):
 
         mass_profile = self.with_new_normalization(normalization=normalization)
 
         return mass_profile.mass_angular_within_circle(radius=radius)
 
-    def normalization_from_mass_angular_and_radius(
+    def normalization_via_mass_angular_from(
         self,
         mass_angular,
         radius,
@@ -142,7 +142,7 @@ class MassProfile(EllProfile, LensingObject):
         )
 
         mass_angulars = [
-            self.mass_angular_from_normalization_and_radius(
+            self.mass_angular_via_normalization_from(
                 normalization=normalization, radius=radius
             )
             for normalization in normalization_list
@@ -170,7 +170,7 @@ class MassProfile(EllProfile, LensingObject):
 
         def func(normalization, mass_angular_root, radius):
 
-            mass_angular = self.mass_angular_from_normalization_and_radius(
+            mass_angular = self.mass_angular_via_normalization_from(
                 normalization=normalization, radius=radius
             )
 
@@ -182,7 +182,7 @@ class MassProfile(EllProfile, LensingObject):
             args=(mass_angular, radius),
         ).root
 
-    def einstein_radius_from_normalization(self, normalization):
+    def einstein_radius_via_normalization_from(self, normalization):
 
         mass_profile = self.with_new_normalization(normalization=normalization)
 
@@ -191,7 +191,7 @@ class MassProfile(EllProfile, LensingObject):
         except ValueError:
             return None
 
-    def normalization_from_einstein_radius(
+    def normalization_via_einstein_radius_from(
         self, einstein_radius, normalization_min=1e-9, normalization_max=1e9, bins=100
     ):
 
@@ -200,7 +200,7 @@ class MassProfile(EllProfile, LensingObject):
         )
 
         einstein_radii = [
-            self.einstein_radius_from_normalization(normalization=normalization)
+            self.einstein_radius_via_normalization_from(normalization=normalization)
             for normalization in normalization_list
         ]
 
@@ -226,7 +226,7 @@ class MassProfile(EllProfile, LensingObject):
 
         def func(normalization, einstein_radius_root):
 
-            einstein_radius = self.einstein_radius_from_normalization(
+            einstein_radius = self.einstein_radius_via_normalization_from(
                 normalization=normalization
             )
 
@@ -291,7 +291,7 @@ class MassProfileMGE:
 
     @staticmethod
     #  @aa.util.numba.jit()
-    def zeta_from_grid(grid, amps, sigmas, axis_ratio):
+    def zeta_from(grid, amps, sigmas, axis_ratio):
 
         """
         The key part to compute the deflection angle of each Gaussian.
@@ -410,10 +410,10 @@ class MassProfileMGE:
 
         return amps, sigmas
 
-    def convergence_2d_from_grid_via_gaussians(self, grid_radii):
+    def convergence_2d_via_gaussians_from(self, grid_radii):
         raise NotImplementedError()
 
-    def _convergence_2d_from_grid_via_gaussians(self, grid_radii):
+    def _convergence_2d_via_gaussians_from(self, grid_radii):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -444,7 +444,7 @@ class MassProfileMGE:
             intensity, np.exp(-0.5 * np.square(np.divide(grid_radii, sigma)))
         )
 
-    def _deflections_2d_from_grid_via_gaussians(self, grid, sigmas_factor=1.0):
+    def _deflections_2d_via_gaussians_from(self, grid, sigmas_factor=1.0):
 
         axis_ratio = self.axis_ratio
 
@@ -454,7 +454,7 @@ class MassProfileMGE:
         amps, sigmas = self.decompose_convergence_into_gaussians()
         sigmas *= sigmas_factor
 
-        angle = self.zeta_from_grid(
+        angle = self.zeta_from(
             grid=grid, amps=amps, sigmas=sigmas, axis_ratio=axis_ratio
         )
 

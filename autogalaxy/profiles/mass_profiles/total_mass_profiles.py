@@ -28,7 +28,7 @@ class PointMass(MassProfile):
         super().__init__(centre=centre, elliptical_comps=(0.0, 0.0))
         self.einstein_radius = einstein_radius
 
-    def convergence_2d_from_grid(self, grid):
+    def convergence_2d_from(self, grid):
 
         squared_distances = np.square(grid[:, 0] - self.centre[0]) + np.square(
             grid[:, 1] - self.centre[1]
@@ -40,13 +40,13 @@ class PointMass(MassProfile):
         return convergence
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         return np.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         grid_radii = self.grid_to_grid_radii(grid=grid)
         return self.grid_to_grid_cartesian(
             grid=grid, radius=self.einstein_radius ** 2 / grid_radii
@@ -108,7 +108,7 @@ class EllPowerLawBroken(MassProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from_grid(self, grid):
+    def convergence_2d_from(self, grid):
         """
         Returns the dimensionless density kappa=Sigma/Sigma_c (eq. 1)
         """
@@ -127,13 +127,13 @@ class EllPowerLawBroken(MassProfile):
         )
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         return np.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid, max_terms=20):
+    def deflections_2d_from(self, grid, max_terms=20):
         """
         Returns the complex deflection angle from eq. 18 and 19
         """
@@ -291,7 +291,7 @@ class EllPowerLawCored(MassProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from_grid(self, grid):
+    def convergence_2d_from(self, grid):
         """ Calculate the projected convergence on a grid of (y,x) arc-second coordinates.
 
         The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See \
@@ -316,7 +316,7 @@ class EllPowerLawCored(MassProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         """
         Calculate the potential on a grid of (y,x) arc-second coordinates.
 
@@ -349,7 +349,7 @@ class EllPowerLawCored(MassProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -364,7 +364,7 @@ class EllPowerLawCored(MassProfile):
             from pyquad import quad_grid
         except ImportError:
             print(
-                "You must install the optional library pyquad to use the deflections_2d_from_grid_via_integrator method.\n"
+                "You must install the optional library pyquad to use the deflections_2d_via_integrator_from method.\n"
                 "\n"
                 "pip install pyquad"
             )
@@ -466,7 +466,7 @@ class SphPowerLawCored(EllPowerLawCored):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -528,7 +528,7 @@ class EllPowerLaw(EllPowerLawCored):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
         ​
@@ -629,7 +629,7 @@ class SphPowerLaw(EllPowerLaw):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
 
         eta = self.grid_to_grid_radii(grid)
         deflection_r = (
@@ -741,7 +741,7 @@ class EllIsothermal(EllPowerLaw):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -776,7 +776,7 @@ class EllIsothermal(EllPowerLaw):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def shear_2d_from_grid(self, grid):
+    def shear_2d_from(self, grid):
         """
         Calculate the (gamma_y, gamma_x) shear vector field on a grid of (y,x) arc-second coordinates.
 
@@ -786,7 +786,7 @@ class EllIsothermal(EllPowerLaw):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
-        convergence = self.convergence_2d_from_grid(grid=grid)
+        convergence = self.convergence_2d_from(grid=grid)
 
         shear_y = (
             -2
@@ -835,7 +835,7 @@ class SphIsothermal(EllIsothermal):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         """
         Calculate the potential on a grid of (y,x) arc-second coordinates.
 
@@ -850,7 +850,7 @@ class SphIsothermal(EllIsothermal):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 

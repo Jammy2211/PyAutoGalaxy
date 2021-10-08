@@ -156,15 +156,15 @@ class TestGalaxyFitData:
 
         galaxy = mock.MockGalaxy(value=1, shape=36)
 
-        image = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
+        image = galaxy_fit_data.profile_quantity_from(galaxies=[galaxy])
 
         assert (image.binned == np.ones(9)).all()
 
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.SphSersic(intensity=1.0))
 
-        image_gal = galaxy.image_2d_from_grid(grid=galaxy_fit_data.grid)
+        image_gal = galaxy.image_2d_from(grid=galaxy_fit_data.grid)
 
-        image_gd = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
+        image_gd = galaxy_fit_data.profile_quantity_from(galaxies=[galaxy])
 
         assert (image_gal == image_gd).all()
 
@@ -229,15 +229,15 @@ class TestGalaxyFitData:
 
         galaxy = mock.MockGalaxy(value=1, shape=36)
 
-        convergence = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
+        convergence = galaxy_fit_data.profile_quantity_from(galaxies=[galaxy])
 
         assert (convergence.binned == np.ones(9)).all()
 
         galaxy = ag.Galaxy(redshift=0.5, mass=ag.mp.SphIsothermal(einstein_radius=1.0))
 
-        convergence_gal = galaxy.convergence_2d_from_grid(grid=galaxy_fit_data.grid)
+        convergence_gal = galaxy.convergence_2d_from(grid=galaxy_fit_data.grid)
 
-        convergence_gd = galaxy_fit_data.profile_quantity_from_galaxies(
+        convergence_gd = galaxy_fit_data.profile_quantity_from(
             galaxies=[galaxy]
         )
 
@@ -304,15 +304,15 @@ class TestGalaxyFitData:
 
         galaxy = mock.MockGalaxy(value=1, shape=36)
 
-        potential = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
+        potential = galaxy_fit_data.profile_quantity_from(galaxies=[galaxy])
 
         assert (potential.binned == np.ones(9)).all()
 
         galaxy = ag.Galaxy(redshift=0.5, mass=ag.mp.SphIsothermal(einstein_radius=1.0))
 
-        potential_gal = galaxy.potential_2d_from_grid(grid=galaxy_fit_data.grid)
+        potential_gal = galaxy.potential_2d_from(grid=galaxy_fit_data.grid)
 
-        potential_gd = galaxy_fit_data.profile_quantity_from_galaxies(galaxies=[galaxy])
+        potential_gd = galaxy_fit_data.profile_quantity_from(galaxies=[galaxy])
 
         assert (potential_gal == potential_gd).all()
 
@@ -376,7 +376,7 @@ class TestGalaxyFitData:
 
         galaxy = mock.MockGalaxy(value=1, shape=36)
 
-        deflections_y = galaxy_fit_data.profile_quantity_from_galaxies(
+        deflections_y = galaxy_fit_data.profile_quantity_from(
             galaxies=[galaxy]
         )
 
@@ -384,7 +384,7 @@ class TestGalaxyFitData:
 
         galaxy = ag.Galaxy(redshift=0.5, mass=ag.mp.SphIsothermal(einstein_radius=1.0))
 
-        deflections_gal = galaxy.deflections_2d_from_grid(grid=galaxy_fit_data.grid)
+        deflections_gal = galaxy.deflections_2d_from(grid=galaxy_fit_data.grid)
         deflections_gal = np.asarray(
             [
                 np.multiply(
@@ -402,7 +402,7 @@ class TestGalaxyFitData:
             ]
         ).T
 
-        deflections_gd = galaxy_fit_data.profile_quantity_from_galaxies(
+        deflections_gd = galaxy_fit_data.profile_quantity_from(
             galaxies=[galaxy]
         )
 
@@ -469,7 +469,7 @@ class TestGalaxyFitData:
 
         galaxy = mock.MockGalaxy(value=1, shape=36)
 
-        deflections_x = galaxy_fit_data.profile_quantity_from_galaxies(
+        deflections_x = galaxy_fit_data.profile_quantity_from(
             galaxies=[galaxy]
         )
 
@@ -477,7 +477,7 @@ class TestGalaxyFitData:
 
         galaxy = ag.Galaxy(redshift=0.5, mass=ag.mp.SphIsothermal(einstein_radius=1.0))
 
-        deflections_gal = galaxy.deflections_2d_from_grid(grid=galaxy_fit_data.grid)
+        deflections_gal = galaxy.deflections_2d_from(grid=galaxy_fit_data.grid)
         deflections_gal = np.asarray(
             [
                 np.multiply(
@@ -495,7 +495,7 @@ class TestGalaxyFitData:
             ]
         ).T
 
-        deflections_gd = galaxy_fit_data.profile_quantity_from_galaxies(
+        deflections_gd = galaxy_fit_data.profile_quantity_from(
             galaxies=[galaxy]
         )
 

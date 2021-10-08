@@ -25,10 +25,10 @@ class TestSimulatorInterferometer:
             noise_seed=1,
         )
 
-        interferometer = simulator.from_plane_and_grid(plane=plane, grid=grid)
+        interferometer = simulator.via_plane_from(plane=plane, grid=grid)
 
-        interferometer_via_image = simulator.from_image(
-            image=plane.image_2d_from_grid(grid=grid)
+        interferometer_via_image = simulator.via_image_from(
+            image=plane.image_2d_from(grid=grid)
         )
 
         assert (
@@ -70,14 +70,14 @@ class TestSimulatorInterferometer:
             noise_seed=1,
         )
 
-        interferometer = simulator.from_galaxies_and_grid(
+        interferometer = simulator.via_galaxies_from(
             galaxies=[galaxy_0, galaxy_1], grid=grid
         )
 
         plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
-        interferometer_via_image = simulator.from_image(
-            image=plane.image_2d_from_grid(grid=grid)
+        interferometer_via_image = simulator.via_image_from(
+            image=plane.image_2d_from(grid=grid)
         )
 
         assert interferometer.visibilities == pytest.approx(

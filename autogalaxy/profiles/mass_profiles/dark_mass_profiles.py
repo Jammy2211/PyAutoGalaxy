@@ -161,7 +161,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from_grid(self, grid):
+    def convergence_2d_from(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -178,7 +178,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from_grid_via_gaussians(self, grid):
+    def convergence_2d_via_gaussians_from(self, grid):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -190,7 +190,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
 
         elliptical_radii = self.grid_to_elliptical_radii(grid)
 
-        return self._convergence_2d_from_grid_via_gaussians(grid_radii=elliptical_radii)
+        return self._convergence_2d_via_gaussians_from(grid_radii=elliptical_radii)
 
     @property
     def ellipticity_rescale(self):
@@ -452,7 +452,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from_grid(self, grid, tabulate_bins=1000):
+    def potential_2d_from(self, grid, tabulate_bins=1000):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -530,16 +530,16 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
 
-        return self._deflections_2d_from_grid_via_gaussians(
+        return self._deflections_2d_via_gaussians_from(
             grid=grid, sigmas_factor=self.axis_ratio
         )
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid_via_integrator(self, grid, tabulate_bins=1000):
+    def deflections_2d_via_integrator_from(self, grid, tabulate_bins=1000):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -732,7 +732,7 @@ class SphNFWGeneralized(EllNFWGeneralized):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid_via_integrator(self, grid, **kwargs):
+    def deflections_2d_via_integrator_from(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -843,13 +843,13 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
         return np.real(self.coord_func_m(grid_radius=grid_radius))
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         return np.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid, **kwargs):
+    def deflections_2d_from(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -1006,7 +1006,7 @@ class EllNFW(EllNFWGeneralized):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -1040,7 +1040,7 @@ class EllNFW(EllNFWGeneralized):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid_via_integrator(self, grid):
+    def deflections_2d_via_integrator_from(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -1055,7 +1055,7 @@ class EllNFW(EllNFWGeneralized):
             from pyquad import quad_grid
         except ImportError:
             print(
-                "You must install the optional library pyquad to use the deflections_2d_from_grid_via_integrator method.\n"
+                "You must install the optional library pyquad to use the deflections_2d_via_integrator_from method.\n"
                 "\n"
                 "pip install pyquad"
             )
@@ -1170,7 +1170,7 @@ class SphNFW(EllNFW):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -1196,7 +1196,7 @@ class SphNFW(EllNFW):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid, **kwargs):
+    def deflections_2d_from(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 

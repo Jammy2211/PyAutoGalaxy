@@ -24,19 +24,17 @@ class FitImaging(aa.FitImaging):
         -----------
         plane : plane.Tracer
             The plane, which describes the ray-tracing and strong lens configuration.
-        scaled_array_2d_from_array_1d : func
-            A function which maps the 1D lens hyper_galaxies to its unmasked 2D arrays.
         """
 
         self.plane = plane
 
         if use_hyper_scalings:
 
-            image = hyper_image_from_image_and_hyper_image_sky(
+            image = hyper_image_from(
                 image=imaging.image, hyper_image_sky=hyper_image_sky
             )
 
-            noise_map = hyper_noise_map_from_noise_map_plane_and_hyper_background_noise(
+            noise_map = hyper_noise_map_from(
                 noise_map=imaging.noise_map,
                 plane=plane,
                 hyper_background_noise=hyper_background_noise,
@@ -47,7 +45,7 @@ class FitImaging(aa.FitImaging):
             image = imaging.image
             noise_map = imaging.noise_map
 
-        self.blurred_image = plane.blurred_image_2d_from_grid_and_convolver(
+        self.blurred_image = plane.blurred_image_2d_via_convolver_from(
             grid=imaging.grid,
             convolver=imaging.convolver,
             blurring_grid=imaging.blurring_grid,
@@ -99,7 +97,7 @@ class FitImaging(aa.FitImaging):
         A dictionary associating galaxies with their corresponding model images
         """
 
-        galaxy_model_image_dict = self.plane.galaxy_blurred_image_dict_from_grid_and_convolver(
+        galaxy_model_image_dict = self.plane.galaxy_blurred_image_dict_via_convolver_from(
             grid=self.grid,
             convolver=self.imaging.convolver,
             blurring_grid=self.imaging.blurring_grid,
@@ -118,7 +116,7 @@ class FitImaging(aa.FitImaging):
     @property
     def model_images_of_galaxies(self):
 
-        model_images_of_galaxies = self.plane.blurred_images_of_galaxies_from_grid_and_psf(
+        model_images_of_galaxies = self.plane.blurred_images_of_galaxies_via_psf_from(
             grid=self.grid,
             psf=self.imaging.psf,
             blurring_grid=self.imaging.blurring_grid,
@@ -157,13 +155,13 @@ class FitImaging(aa.FitImaging):
 
     @property
     def unmasked_blurred_image(self):
-        return self.plane.unmasked_blurred_image_2d_from_grid_and_psf(
+        return self.plane.unmasked_blurred_image_2d_via_psf_from(
             grid=self.grid, psf=self.imaging.psf
         )
 
     @property
     def unmasked_blurred_image_of_galaxies(self):
-        return self.plane.unmasked_blurred_image_of_galaxies_from_grid_and_psf(
+        return self.plane.unmasked_blurred_image_of_galaxies_via_psf_from(
             grid=self.grid, psf=self.imaging.psf
         )
 
@@ -172,7 +170,7 @@ class FitImaging(aa.FitImaging):
         return 1
 
 
-def hyper_image_from_image_and_hyper_image_sky(image, hyper_image_sky):
+def hyper_image_from(image, hyper_image_sky):
 
     if hyper_image_sky is not None:
         return hyper_image_sky.hyper_image_from(image=image)
@@ -180,7 +178,7 @@ def hyper_image_from_image_and_hyper_image_sky(image, hyper_image_sky):
         return image
 
 
-def hyper_noise_map_from_noise_map_plane_and_hyper_background_noise(
+def hyper_noise_map_from(
     noise_map, plane, hyper_background_noise
 ):
 

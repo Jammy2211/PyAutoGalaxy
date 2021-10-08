@@ -45,7 +45,7 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
     @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
-    def convergence_2d_from_grid(self, grid):
+    def convergence_2d_from(self, grid):
         """ Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See \
@@ -80,7 +80,7 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
     @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -100,7 +100,7 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
     @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -174,7 +174,7 @@ class MockSphIsothermal(MockEllIsothermal):
     @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
-    def potential_2d_from_grid(self, grid):
+    def potential_2d_from(self, grid):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -190,7 +190,7 @@ class MockSphIsothermal(MockEllIsothermal):
     @grid_decorators.grid_2d_to_structure
     @grid_decorators.transform
     @grid_decorators.relocate_to_radial_minimum
-    def deflections_2d_from_grid(self, grid):
+    def deflections_2d_from(self, grid):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -225,7 +225,7 @@ class TestDeflectionsMagnitudes:
 
         grid = ag.Grid2DIrregular([(1.0, 0.0), (0.0, 1.0)])
 
-        deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
+        deflection_magnitudes = sis.deflection_magnitudes_from(grid=grid)
 
         assert deflection_magnitudes == pytest.approx(np.array([1.0, 1.0]), 1.0e-4)
 
@@ -233,18 +233,18 @@ class TestDeflectionsMagnitudes:
 
         grid = ag.Grid2DIrregular([(2.0, 0.0), (0.0, 2.0)])
 
-        deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
+        deflection_magnitudes = sis.deflection_magnitudes_from(grid=grid)
 
         assert deflection_magnitudes == pytest.approx(np.array([2.0, 2.0]), 1.0e-4)
 
         grid = ag.Grid2D.uniform(shape_native=(5, 5), pixel_scales=0.1, sub_size=1)
 
-        deflections = sis.deflections_2d_from_grid(grid=grid)
+        deflections = sis.deflections_2d_from(grid=grid)
         magitudes_manual = np.sqrt(
             np.square(deflections[:, 0]) + np.square(deflections[:, 1])
         )
 
-        deflection_magnitudes = sis.deflection_magnitudes_from_grid(grid=grid)
+        deflection_magnitudes = sis.deflection_magnitudes_from(grid=grid)
 
         assert deflection_magnitudes == pytest.approx(magitudes_manual, 1.0e-4)
 
@@ -255,9 +255,9 @@ class TestDeflectionsViaPotential:
 
         grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
 
-        deflections_via_calculation = sis.deflections_2d_from_grid(grid=grid)
+        deflections_via_calculation = sis.deflections_2d_from(grid=grid)
 
-        deflections_via_potential = sis.deflections_2d_via_potential_2d_from_grid(
+        deflections_via_potential = sis.deflections_2d_via_potential_2d_from(
             grid=grid
         )
 
@@ -274,9 +274,9 @@ class TestDeflectionsViaPotential:
 
         grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
 
-        deflections_via_calculation = sie.deflections_2d_from_grid(grid=grid)
+        deflections_via_calculation = sie.deflections_2d_from(grid=grid)
 
-        deflections_via_potential = sie.deflections_2d_via_potential_2d_from_grid(
+        deflections_via_potential = sie.deflections_2d_via_potential_2d_from(
             grid=grid
         )
 
@@ -293,9 +293,9 @@ class TestDeflectionsViaPotential:
 
         grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
 
-        deflections_via_calculation = sie.deflections_2d_from_grid(grid=grid)
+        deflections_via_calculation = sie.deflections_2d_from(grid=grid)
 
-        deflections_via_potential = sie.deflections_2d_via_potential_2d_from_grid(
+        deflections_via_potential = sie.deflections_2d_via_potential_2d_from(
             grid=grid
         )
 
@@ -314,7 +314,7 @@ class TestJacobian:
 
         grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
 
-        jacobian = sie.jacobian_from_grid(grid=grid)
+        jacobian = sie.jacobian_from(grid=grid)
 
         A_12 = jacobian[0][1]
         A_21 = jacobian[1][0]
@@ -325,7 +325,7 @@ class TestJacobian:
 
         grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
 
-        jacobian = sie.jacobian_from_grid(grid=grid)
+        jacobian = sie.jacobian_from(grid=grid)
 
         A_12 = jacobian[0][1]
         A_21 = jacobian[1][0]
@@ -336,7 +336,7 @@ class TestJacobian:
 
 
 class TestHessian:
-    def test__hessian_from_grid(self):
+    def test__hessian_from(self):
 
         sie = MockEllIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
@@ -344,7 +344,7 @@ class TestHessian:
 
         grid = ag.Grid2DIrregular(grid=[(0.5, 0.5), (1.0, 1.0)])
 
-        hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from_grid(
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from(
             grid=grid
         )
 
@@ -355,7 +355,7 @@ class TestHessian:
 
         grid = ag.Grid2DIrregular(grid=[(1.0, 0.0), (0.0, 1.0)])
 
-        hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from_grid(
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from(
             grid=grid
         )
 
@@ -366,7 +366,7 @@ class TestHessian:
 
 
 class TestConvergence:
-    def test__convergence_via_hessian_from_grid(self):
+    def test__convergence_via_hessian_from(self):
 
         buffer = 0.0001
         grid = ag.Grid2DIrregular(
@@ -377,7 +377,7 @@ class TestConvergence:
             centre=(0.0, 0.0), elliptical_comps=(0.001, 0.001), einstein_radius=1.0
         )
 
-        convergence = sis.convergence_via_hessian_from_grid(grid=grid, buffer=buffer)
+        convergence = sis.convergence_via_hessian_from(grid=grid, buffer=buffer)
 
         assert convergence.in_list[0] == pytest.approx(0.461447, 1.0e-4)
         assert convergence.in_list[1] == pytest.approx(0.568875, 1.0e-4)
@@ -388,7 +388,7 @@ class TestConvergence:
             centre=(0.0, 0.0), elliptical_comps=(0.3, 0.4), einstein_radius=1.5
         )
 
-        convergence = sis.convergence_via_hessian_from_grid(grid=grid, buffer=buffer)
+        convergence = sis.convergence_via_hessian_from(grid=grid, buffer=buffer)
 
         assert convergence.in_list[0] == pytest.approx(0.35313, 1.0e-4)
         assert convergence.in_list[1] == pytest.approx(0.46030, 1.0e-4)
@@ -397,7 +397,7 @@ class TestConvergence:
 
 
 class TestShear:
-    def test__shear_via_hessian_from_grid(self):
+    def test__shear_via_hessian_from(self):
 
         buffer = 0.00001
         grid = ag.Grid2DIrregular(
@@ -408,7 +408,7 @@ class TestShear:
             centre=(0.0, 0.0), elliptical_comps=(0.001, 0.001), einstein_radius=1.0
         )
 
-        shear = sis.shear_via_hessian_from_grid(grid=grid, buffer=buffer)
+        shear = sis.shear_via_hessian_from(grid=grid, buffer=buffer)
 
         assert shear.in_list[0] == pytest.approx(0.461447, 1.0e-4)
         assert shear.in_list[1] == pytest.approx(0.568875, 1.0e-4)
@@ -419,10 +419,10 @@ class TestShear:
             centre=(0.2, 0.1), elliptical_comps=(0.3, 0.4), einstein_radius=1.5
         )
 
-        shear = sis.shear_2d_from_grid(grid=grid)
+        shear = sis.shear_2d_from(grid=grid)
         print((shear[:, 0] ** 2 + shear[:, 1] ** 2) ** 0.5)
 
-        shear = sis.shear_via_hessian_from_grid(grid=grid, buffer=buffer)
+        shear = sis.shear_via_hessian_from(grid=grid, buffer=buffer)
 
         assert shear.in_list[0] == pytest.approx(0.41597, 1.0e-4)
         assert shear.in_list[1] == pytest.approx(0.38299, 1.0e-4)
@@ -438,11 +438,11 @@ class TestMagnification:
 
         grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
 
-        magnification_via_determinant = sie.magnification_2d_from_grid(grid=grid)
+        magnification_via_determinant = sie.magnification_2d_from(grid=grid)
 
-        tangential_eigen_value = sie.tangential_eigen_value_from_grid(grid=grid)
+        tangential_eigen_value = sie.tangential_eigen_value_from(grid=grid)
 
-        radal_eigen_value = sie.radial_eigen_value_from_grid(grid=grid)
+        radal_eigen_value = sie.radial_eigen_value_from(grid=grid)
 
         magnification_via_eigen_values = 1 / (
             tangential_eigen_value * radal_eigen_value
@@ -460,11 +460,11 @@ class TestMagnification:
 
         grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
 
-        magnification_via_determinant = sie.magnification_2d_from_grid(grid=grid)
+        magnification_via_determinant = sie.magnification_2d_from(grid=grid)
 
-        tangential_eigen_value = sie.tangential_eigen_value_from_grid(grid=grid)
+        tangential_eigen_value = sie.tangential_eigen_value_from(grid=grid)
 
-        radal_eigen_value = sie.radial_eigen_value_from_grid(grid=grid)
+        radal_eigen_value = sie.radial_eigen_value_from(grid=grid)
 
         magnification_via_eigen_values = 1 / (
             tangential_eigen_value * radal_eigen_value
@@ -485,11 +485,11 @@ class TestMagnification:
 
         grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
 
-        magnification_via_determinant = sie.magnification_2d_from_grid(grid=grid)
+        magnification_via_determinant = sie.magnification_2d_from(grid=grid)
 
-        convergence = sie.convergence_via_jacobian_from_grid(grid=grid)
+        convergence = sie.convergence_via_jacobian_from(grid=grid)
 
-        shear = sie.shear_via_jacobian_from_grid(grid=grid)
+        shear = sie.shear_via_jacobian_from(grid=grid)
 
         magnification_via_convergence_and_shear = 1 / (
             (1 - convergence) ** 2 - shear ** 2
@@ -504,11 +504,11 @@ class TestMagnification:
 
         grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
 
-        magnification_via_determinant = sie.magnification_2d_from_grid(grid=grid)
+        magnification_via_determinant = sie.magnification_2d_from(grid=grid)
 
-        convergence = sie.convergence_via_jacobian_from_grid(grid=grid)
+        convergence = sie.convergence_via_jacobian_from(grid=grid)
 
-        shear = sie.shear_via_jacobian_from_grid(grid=grid)
+        shear = sie.shear_via_jacobian_from(grid=grid)
 
         magnification_via_convergence_and_shear = 1 / (
             (1 - convergence) ** 2 - shear ** 2
@@ -521,7 +521,7 @@ class TestMagnification:
 
         assert mean_error < 1e-4
 
-    def test__magnification_via_hessian_from_grid(self):
+    def test__magnification_via_hessian_from(self):
 
         sie = MockEllIsothermal(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
@@ -529,14 +529,14 @@ class TestMagnification:
 
         grid = ag.Grid2DIrregular(grid=[(0.5, 0.5), (1.0, 1.0)])
 
-        magnification = sie.magnification_via_hessian_from_grid(grid=grid)
+        magnification = sie.magnification_via_hessian_from(grid=grid)
 
         assert magnification.in_list[0] == pytest.approx(-0.56303, 1.0e-4)
         assert magnification.in_list[1] == pytest.approx(-2.57591, 1.0e-4)
 
 
 def critical_curve_via_magnification_from(mass_profile, grid):
-    magnification = mass_profile.magnification_2d_from_grid(grid=grid)
+    magnification = mass_profile.magnification_2d_from(grid=grid)
 
     inverse_magnification = 1 / magnification
 
@@ -551,7 +551,7 @@ def critical_curve_via_magnification_from(mass_profile, grid):
         contour_x, contour_y = contours[jj].T
         pixel_coord = np.stack((contour_x, contour_y), axis=-1)
 
-        critical_curve = grid.mask.grid_scaled_from_grid_pixels_1d_for_marching_squares(
+        critical_curve = grid.mask.grid_scaled_for_marching_squares_from(
             grid_pixels_1d=pixel_coord, shape_native=magnification.sub_shape_native
         )
 
@@ -570,7 +570,7 @@ def caustics_via_magnification_from(mass_profile, grid):
     for i in range(len(critical_curves)):
         critical_curve = critical_curves[i]
 
-        deflections_1d = mass_profile.deflections_2d_from_grid(grid=critical_curve)
+        deflections_1d = mass_profile.deflections_2d_from(grid=critical_curve)
 
         caustic = critical_curve - deflections_1d
 
@@ -585,9 +585,9 @@ class TestConvergenceViajacobian:
 
         grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 
-        convergence_via_calculation = sis.convergence_2d_from_grid(grid=grid)
+        convergence_via_calculation = sis.convergence_2d_from(grid=grid)
 
-        convergence_via_jacobian = sis.convergence_via_jacobian_from_grid(grid=grid)
+        convergence_via_jacobian = sis.convergence_via_jacobian_from(grid=grid)
 
         mean_error = np.mean(
             convergence_via_jacobian.slim - convergence_via_calculation.slim
@@ -609,9 +609,9 @@ class TestConvergenceViajacobian:
 
         grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 
-        convergence_via_calculation = sie.convergence_2d_from_grid(grid=grid)
+        convergence_via_calculation = sie.convergence_2d_from(grid=grid)
 
-        convergence_via_jacobian = sie.convergence_via_jacobian_from_grid(grid=grid)
+        convergence_via_jacobian = sie.convergence_via_jacobian_from(grid=grid)
 
         mean_error = np.mean(
             convergence_via_jacobian.slim - convergence_via_calculation.slim
@@ -687,11 +687,11 @@ class TestCriticalCurvesAndCaustics:
 
         grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
 
-        magnification_via_determinant = sie.magnification_2d_from_grid(grid=grid)
+        magnification_via_determinant = sie.magnification_2d_from(grid=grid)
 
-        convergence = sie.convergence_via_jacobian_from_grid(grid=grid)
+        convergence = sie.convergence_via_jacobian_from(grid=grid)
 
-        shear = sie.shear_via_jacobian_from_grid(grid=grid)
+        shear = sie.shear_via_jacobian_from(grid=grid)
 
         magnification_via_convergence_and_shear = 1 / (
             (1 - convergence) ** 2 - shear ** 2
@@ -709,7 +709,7 @@ class TestCriticalCurvesAndCaustics:
 
         grid = ag.Grid2D.uniform(shape_native=(15, 15), pixel_scales=0.3)
 
-        critical_curves = sis.critical_curves_from_grid(grid=grid)
+        critical_curves = sis.critical_curves_from(grid=grid)
 
         tangential_critical_curve = np.asarray(critical_curves[0])
 
@@ -728,7 +728,7 @@ class TestCriticalCurvesAndCaustics:
 
         grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-        critical_curves = sis.critical_curves_from_grid(grid=grid)
+        critical_curves = sis.critical_curves_from(grid=grid)
 
         tangential_critical_curve = np.asarray(critical_curves[0])
 
@@ -740,7 +740,7 @@ class TestCriticalCurvesAndCaustics:
 
         sis = MockSphIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        critical_curves = sis.critical_curves_from_grid(grid=grid)
+        critical_curves = sis.critical_curves_from(grid=grid)
 
         tangential_critical_curve = np.asarray(critical_curves[0])
         y_centre = np.mean(tangential_critical_curve[:, 0])
@@ -755,7 +755,7 @@ class TestCriticalCurvesAndCaustics:
 
         grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-        critical_curves = sis.critical_curves_from_grid(grid=grid)
+        critical_curves = sis.critical_curves_from(grid=grid)
 
         radial_critical_curve = np.asarray(critical_curves[0])
 
@@ -767,7 +767,7 @@ class TestCriticalCurvesAndCaustics:
 
         sis = MockSphIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        critical_curves = sis.critical_curves_from_grid(grid=grid)
+        critical_curves = sis.critical_curves_from(grid=grid)
 
         radial_critical_curve = np.asarray(critical_curves[0])
 
@@ -783,7 +783,7 @@ class TestCriticalCurvesAndCaustics:
 
         grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-        caustics = sis.caustics_from_grid(grid=grid)
+        caustics = sis.caustics_from(grid=grid)
 
         tangential_caustic = np.asarray(caustics[0])
 
@@ -795,7 +795,7 @@ class TestCriticalCurvesAndCaustics:
 
         sis = MockSphIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        caustics = sis.caustics_from_grid(grid=grid)
+        caustics = sis.caustics_from(grid=grid)
 
         tangential_caustic = np.asarray(caustics[0])
 
@@ -811,7 +811,7 @@ class TestCriticalCurvesAndCaustics:
 
         grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.2)
 
-        caustics = sis.caustics_from_grid(grid=grid)
+        caustics = sis.caustics_from(grid=grid)
 
         caustic_radial = np.asarray(caustics[1])
 
@@ -829,7 +829,7 @@ class TestCriticalCurvesAndCaustics:
 
         grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-        caustics = sis.caustics_from_grid(grid=grid)
+        caustics = sis.caustics_from(grid=grid)
 
         radial_caustic = np.asarray(caustics[1])
 
@@ -841,7 +841,7 @@ class TestCriticalCurvesAndCaustics:
 
         sis = MockSphIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
 
-        caustics = sis.caustics_from_grid(grid=grid)
+        caustics = sis.caustics_from(grid=grid)
 
         radial_caustic = np.asarray(caustics[1])
 
@@ -866,7 +866,7 @@ class TestCriticalCurvesAndCaustics:
             0
         ]
 
-        tangential_critical_curve = sie.tangential_critical_curve_from_grid(
+        tangential_critical_curve = sie.tangential_critical_curve_from(
             grid=grid, pixel_scale=0.2
         )
 
@@ -880,7 +880,7 @@ class TestCriticalCurvesAndCaustics:
             0
         ]
 
-        tangential_critical_curve = sie.tangential_critical_curve_from_grid(
+        tangential_critical_curve = sie.tangential_critical_curve_from(
             grid=grid, pixel_scale=0.2
         )
 
@@ -902,7 +902,7 @@ class TestCriticalCurvesAndCaustics:
             1
         ]
 
-        radial_critical_curve = sie.radial_critical_curve_from_grid(grid=grid)
+        radial_critical_curve = sie.radial_critical_curve_from(grid=grid)
 
         assert sum(critical_curve_radial_from_magnification) == pytest.approx(
             sum(radial_critical_curve), abs=0.7
@@ -919,7 +919,7 @@ class TestCriticalCurvesAndCaustics:
             mass_profile=sie, grid=grid
         )[0]
 
-        tangential_caustic = sie.tangential_caustic_from_grid(
+        tangential_caustic = sie.tangential_caustic_from(
             grid=grid, pixel_scale=0.2
         )
 
@@ -938,7 +938,7 @@ class TestCriticalCurvesAndCaustics:
             mass_profile=sie, grid=grid
         )[1]
 
-        radial_caustic = sie.radial_caustic_from_grid(grid=grid, pixel_scale=0.08)
+        radial_caustic = sie.radial_caustic_from(grid=grid, pixel_scale=0.08)
 
         assert sum(radial_caustic) == pytest.approx(
             sum(caustic_radial_from_magnification), 7e-1
@@ -955,7 +955,7 @@ class TestEinsteinRadiusMass:
 
         area_calc = np.pi * sis.einstein_radius ** 2
 
-        area_within_tangential_critical_curve = sis.area_within_tangential_critical_curve_from_grid(
+        area_within_tangential_critical_curve = sis.area_within_tangential_critical_curve_from(
             grid=grid
         )
 
@@ -967,7 +967,7 @@ class TestEinsteinRadiusMass:
 
         sis = MockSphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        einstein_radius = sis.einstein_radius_from_grid(grid=grid)
+        einstein_radius = sis.einstein_radius_from(grid=grid)
 
         assert einstein_radius == pytest.approx(2.0, 1e-1)
 
@@ -975,7 +975,7 @@ class TestEinsteinRadiusMass:
             centre=(0.0, 0.0), einstein_radius=2.0, elliptical_comps=(0.0, -0.25)
         )
 
-        einstein_radius = sie.einstein_radius_from_grid(grid=grid)
+        einstein_radius = sie.einstein_radius_from(grid=grid)
 
         assert einstein_radius == pytest.approx(1.9360, 1e-1)
 
@@ -985,7 +985,7 @@ class TestEinsteinRadiusMass:
 
         sis = MockSphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        einstein_mass = sis.einstein_mass_angular_from_grid(grid=grid)
+        einstein_mass = sis.einstein_mass_angular_from(grid=grid)
 
         assert einstein_mass == pytest.approx(np.pi * 2.0 ** 2.0, 1e-1)
 
@@ -998,7 +998,7 @@ class TestGridBinning:
 
         grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=2)
 
-        deflections = sie.deflections_2d_via_potential_2d_from_grid(grid=grid)
+        deflections = sie.deflections_2d_via_potential_2d_from(grid=grid)
 
         deflections_first_binned_pixel = (
             deflections[0] + deflections[1] + deflections[2] + deflections[3]
@@ -1016,7 +1016,7 @@ class TestGridBinning:
             deflections_100th_binned_pixel, 1e-4
         )
 
-        jacobian = sie.jacobian_from_grid(grid=grid)
+        jacobian = sie.jacobian_from(grid=grid)
 
         jacobian_1st_pixel_binned_up = (
             jacobian[0][0][0]
@@ -1042,7 +1042,7 @@ class TestGridBinning:
             jacobian_last_pixel_binned_up, 1e-4
         )
 
-        shear_via_jacobian = sie.shear_via_jacobian_from_grid(grid=grid)
+        shear_via_jacobian = sie.shear_via_jacobian_from(grid=grid)
 
         shear_1st_pixel_binned_up = (
             shear_via_jacobian[0]
@@ -1066,7 +1066,7 @@ class TestGridBinning:
             shear_last_pixel_binned_up, 1e-4
         )
 
-        tangential_eigen_values = sie.tangential_eigen_value_from_grid(grid=grid)
+        tangential_eigen_values = sie.tangential_eigen_value_from(grid=grid)
 
         first_pixel_binned_up = (
             tangential_eigen_values[0]
@@ -1090,7 +1090,7 @@ class TestGridBinning:
             pixel_10000_from_av_sub_grid, 1e-4
         )
 
-        radial_eigen_values = sie.radial_eigen_value_from_grid(grid=grid)
+        radial_eigen_values = sie.radial_eigen_value_from(grid=grid)
 
         first_pixel_binned_up = (
             radial_eigen_values[0]

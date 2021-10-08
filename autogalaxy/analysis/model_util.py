@@ -39,7 +39,7 @@ def pixelization_from(model: af.Collection) -> AbstractPixelization:
     name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
     standard API for creating a model in PyAutoGalaxy.
 
-    The result of `pixelization_from_model` is used by the preloading to determine whether certain parts of a
+    The result of `pixelization_from` is used by the preloading to determine whether certain parts of a
     calculation can be cached before the non-linear search begins for efficiency.
 
     Parameters
@@ -62,7 +62,7 @@ def pixelization_from(model: af.Collection) -> AbstractPixelization:
                     return galaxy.pixelization
 
 
-def has_pixelization_from_model(model: af.Collection) -> bool:
+def has_pixelization_from(model: af.Collection) -> bool:
     """
     For a model containing one or more galaxies, inspect its attributes and return `True` if a galaxy has a
     `Pixelization` otherwise return `False`.
@@ -71,7 +71,7 @@ def has_pixelization_from_model(model: af.Collection) -> bool:
     name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
     standard API for creating a model in PyAutoGalaxy.
 
-    The result of `has_pixelization_from_model` is used by the preloading to determine whether certain parts of a
+    The result of `has_pixelization_from` is used by the preloading to determine whether certain parts of a
     calculation can be cached before the non-linear search begins for efficiency.
 
     Parameters
@@ -235,7 +235,7 @@ def hyper_inversion_model_from(
 
     model = result.instance.as_model((AbstractPixelization, AbstractRegularization))
 
-    if not has_pixelization_from_model(model=model):
+    if not has_pixelization_from(model=model):
         return None
 
     model = clean_model_of_hyper_images(model=model)
@@ -434,7 +434,7 @@ def hyper_model_from(
         return None
 
     if setup_hyper.hyper_galaxy_names is None:
-        if not has_pixelization_from_model(model=model):
+        if not has_pixelization_from(model=model):
             if setup_hyper.hypers_all_off:
                 return None
             if setup_hyper.hypers_all_except_image_sky_off:
