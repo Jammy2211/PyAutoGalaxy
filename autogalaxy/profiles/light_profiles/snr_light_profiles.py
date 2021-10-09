@@ -1,7 +1,10 @@
 import numpy as np
 from typing import Tuple
 
+import autoarray as aa
+
 from autogalaxy.profiles.light_profiles import light_profiles as lp
+from scipy.optimize import root_scalar
 
 
 class SNRCalc:
@@ -12,11 +15,29 @@ class SNRCalc:
         self.light_profile = light_profile
         self.signal_to_noise_ratio = signal_to_noise_ratio
 
-    def set_intensity_from(self):
+    def set_intensity_from(
+        self,
+        grid: aa.type.Grid2DLike,
+        exposure_time: float,
+        background_sky_level: float = 0.0,
+    ):
 
-        #  brightest_pixel = np.max(self.light_profile.image_2d_from(grid=))
+        self.light_profile.intensity = 1.0
 
-        pass
+        background_sky_level_counts = background_sky_level * exposure_time
+
+        brightest_value = np.max(self.light_profile.image_2d_from(grid=grid))
+
+        def func(intensity_factor):
+
+            signal = intensity_factor * brightest_value * exposure_time
+            noise = np.sqrt(signal + background_sky_level_counts)
+
+            return signal / noise - self.signal_to_noise_ratio
+
+        intensity_factor = root_scalar(func, bracket=[1.0e-8, 1.0e8]).root
+
+        self.light_profile.intensity *= intensity_factor
 
 
 class EllSersic(lp.EllSersic):

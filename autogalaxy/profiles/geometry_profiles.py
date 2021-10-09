@@ -91,7 +91,8 @@ class SphProfile(GeometryProfile):
 
     @aa.grid_dec.grid_2d_to_structure
     def transform_grid_to_reference_frame(self, grid):
-        """Transform a grid of (y,x) coordinates to the reference frame of the profile, including a translation to \
+        """
+        Transform a grid of (y,x) coordinates to the reference frame of the profile, including a translation to \
         its centre.
 
         Parameters
@@ -104,7 +105,8 @@ class SphProfile(GeometryProfile):
 
     @aa.grid_dec.grid_2d_to_structure
     def transform_grid_from_reference_frame(self, grid):
-        """Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
+        """
+        Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
         reference frame, including a translation from the profile's centre.
 
         Parameters
@@ -277,7 +279,8 @@ class EllProfile(SphProfile):
 
     @aa.grid_dec.grid_2d_to_structure
     def transform_grid_from_reference_frame(self, grid):
-        """Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
+        """
+        Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
         reference frame, including a rotation to its original orientation and a translation from the profile's centre.
 
         Parameters
