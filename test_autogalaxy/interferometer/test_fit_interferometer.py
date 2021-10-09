@@ -35,7 +35,9 @@ class TestLikelihood:
 
         # Setup as a ray trace instance, using a light profile for the galaxy
 
-        g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(value=1.0, size=2))
+        g0 = ag.Galaxy(
+            redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(2))
+        )
         plane = ag.Plane(galaxies=[g0])
 
         fit = ag.FitInterferometer(interferometer=interferometer, plane=plane)
@@ -77,7 +79,9 @@ class TestLikelihood:
 
         # Setup as a ray trace instance, using a light profile for the galaxy
 
-        g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(value=1.0, size=2))
+        g0 = ag.Galaxy(
+            redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(2))
+        )
         plane = ag.Plane(galaxies=[g0])
 
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)

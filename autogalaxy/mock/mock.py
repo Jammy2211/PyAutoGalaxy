@@ -11,11 +11,13 @@ from autofit.mock.mock import MockSearch, MockSamples
 
 
 class MockLightProfile(ag.lp.LightProfile):
-    def __init__(self, image_2d=None):
+    def __init__(self, image_2d=None, value=None, value1=None):
 
         super().__init__()
 
         self.image_2d = image_2d
+        self.value = value
+        self.value1 = value1
 
     def image_2d_from(self, grid):
         return self.image_2d

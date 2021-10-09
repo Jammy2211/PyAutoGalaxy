@@ -8,12 +8,25 @@ from scipy.optimize import root_scalar
 
 
 class SNRCalc:
-    def __init__(
-        self, light_profile: lp.LightProfile, signal_to_noise_ratio: float = 10.0
-    ):
+    def __init__(self, signal_to_noise_ratio: float = 10.0):
 
-        self.light_profile = light_profile
         self.signal_to_noise_ratio = signal_to_noise_ratio
+
+    def image_2d_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
+        """
+        Abstract method for obtaining intensity at a grid of Cartesian (y,x) coordinates.
+
+        Parameters
+        ----------
+        grid
+            The (y, x) coordinates in the original reference frame of the grid.
+
+        Returns
+        -------
+        image : aa.Array2D
+            The image of the `LightProfile` evaluated at every (y,x) coordinate on the grid.
+        """
+        raise NotImplementedError()
 
     def set_intensity_from(
         self,
@@ -22,11 +35,11 @@ class SNRCalc:
         background_sky_level: float = 0.0,
     ):
 
-        self.light_profile.intensity = 1.0
+        self.intensity = 1.0
 
         background_sky_level_counts = background_sky_level * exposure_time
 
-        brightest_value = np.max(self.light_profile.image_2d_from(grid=grid))
+        brightest_value = np.max(self.image_2d_from(grid=grid))
 
         def func(intensity_factor):
 
@@ -37,10 +50,10 @@ class SNRCalc:
 
         intensity_factor = root_scalar(func, bracket=[1.0e-8, 1.0e8]).root
 
-        self.light_profile.intensity *= intensity_factor
+        self.intensity *= intensity_factor
 
 
-class EllSersic(lp.EllSersic):
+class EllSersic(lp.EllSersic, SNRCalc):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,
@@ -75,6 +88,4 @@ class EllSersic(lp.EllSersic):
             sersic_index=sersic_index,
         )
 
-        self.snr_calc = SNRCalc(
-            light_profile=self, signal_to_noise_ratio=signal_to_noise_ratio
-        )
+        SNRCalc.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)

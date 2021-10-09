@@ -44,7 +44,9 @@ class TestLikelihood:
 
         # Setup as a ray trace instance, using a light profile for the galaxy
 
-        g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(value=1.0, size=2))
+        g0 = ag.Galaxy(
+            redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(2))
+        )
         plane = ag.Plane(galaxies=[g0])
 
         fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
@@ -148,7 +150,9 @@ class TestLikelihood:
 
         # Setup as a ray trace instance, using a light profile for the galaxy
 
-        g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(value=1.0, size=2))
+        g0 = ag.Galaxy(
+            redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(2))
+        )
         plane = ag.Plane(galaxies=[g0])
 
         fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
@@ -257,7 +261,7 @@ class TestLikelihood:
 
         g0 = ag.Galaxy(
             redshift=0.5,
-            light_profile=MockLightProfile(value=1.0, size=2),
+            light_profile=MockLightProfile(image_2d=np.ones(2)),
             hyper_galaxy=ag.HyperGalaxy(
                 contribution_factor=1.0, noise_factor=1.0, noise_power=1.0
             ),
@@ -323,7 +327,9 @@ class TestLikelihood:
 
         # Setup as a ray trace instance, using a light profile for the galaxy
 
-        g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(value=1.0, size=2))
+        g0 = ag.Galaxy(
+            redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(2))
+        )
         plane = ag.Plane(galaxies=[g0])
 
         hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
@@ -396,7 +402,9 @@ class TestLikelihood:
 
         # Setup as a ray trace instance, using a light profile for the galaxy
 
-        g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(value=1.0, size=2))
+        g0 = ag.Galaxy(
+            redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(2))
+        )
         plane = ag.Plane(galaxies=[g0])
 
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
@@ -465,7 +473,7 @@ class TestLikelihood:
 
         g0 = ag.Galaxy(
             redshift=0.5,
-            light_profile=MockLightProfile(value=1.0, size=2),
+            light_profile=MockLightProfile(image_2d=np.ones(2)),
             hyper_galaxy=ag.HyperGalaxy(
                 contribution_factor=1.0, noise_factor=1.0e9, noise_power=1.0
             ),
@@ -1313,11 +1321,17 @@ class TestCompareToManualProfilesAndInversion:
 class TestAttributes:
     def test__subtracted_images_of_galaxies(self, masked_imaging_no_blur_7x7):
 
-        g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(value=1.0))
+        g0 = ag.Galaxy(
+            redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(1))
+        )
 
-        g1 = ag.Galaxy(redshift=1.0, light_profile=MockLightProfile(value=2.0))
+        g1 = ag.Galaxy(
+            redshift=1.0, light_profile=MockLightProfile(image_2d=2.0 * np.ones(1))
+        )
 
-        g2 = ag.Galaxy(redshift=1.0, light_profile=MockLightProfile(value=3.0))
+        g2 = ag.Galaxy(
+            redshift=1.0, light_profile=MockLightProfile(image_2d=3.0 * np.ones(1))
+        )
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2])
 
@@ -1327,11 +1341,15 @@ class TestAttributes:
         assert fit.subtracted_images_of_galaxies[1].slim[0] == -3.0
         assert fit.subtracted_images_of_galaxies[2].slim[0] == -2.0
 
-        g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(value=1.0))
+        g0 = ag.Galaxy(
+            redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(1))
+        )
 
         g1 = ag.Galaxy(redshift=0.5)
 
-        g2 = ag.Galaxy(redshift=1.0, light_profile=MockLightProfile(value=3.0))
+        g2 = ag.Galaxy(
+            redshift=1.0, light_profile=MockLightProfile(image_2d=3.0 * np.ones(1))
+        )
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2])
 
