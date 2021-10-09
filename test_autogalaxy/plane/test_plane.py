@@ -2098,6 +2098,37 @@ class TestExtractAttribute:
         )
 
 
+class TestSNRLightProfiles:
+    def test__signal_to_noise_via_simulator_correct(self):
+
+        background_sky_level = 10.0
+        exposure_time = 300.0
+
+        grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=1.0)
+
+        sersic_0 = ag.lp_snr.EllSersic(
+            signal_to_noise_ratio=10.0, centre=(1.0, 1.0), effective_radius=0.01
+        )
+        sersic_1 = ag.lp_snr.EllSersic(
+            signal_to_noise_ratio=20.0, centre=(-1.0, -1.0), effective_radius=0.01
+        )
+
+        plane = ag.Plane(
+            galaxies=[ag.Galaxy(redshift=0.5, light_0=sersic_0, light_1=sersic_1)]
+        )
+
+        simulator = ag.SimulatorImaging(
+            exposure_time=exposure_time,
+            noise_seed=1,
+            background_sky_level=background_sky_level,
+        )
+
+        imaging = simulator.via_plane_from(plane=plane, grid=grid)
+
+        assert 9.0 < imaging.signal_to_noise_map.native[0, 2] < 11.0
+        assert 11.0 < imaging.signal_to_noise_map.native[2, 0] < 21.0
+
+
 class TestDecorators:
     def test__grid_iterate_in__iterates_grid_correctly(self, gal_x1_lp):
 

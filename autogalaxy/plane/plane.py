@@ -7,6 +7,7 @@ from autoarray.inversion.inversion.factory import inversion_imaging_unpacked_fro
 from autoarray.inversion.inversion.factory import inversion_interferometer_unpacked_from
 
 from autogalaxy.lensing import LensingObject
+from autogalaxy.profiles.light_profiles.snr_light_profiles import LightProfileSNR
 from autogalaxy.galaxy.galaxy import Galaxy
 
 from autogalaxy import exc
@@ -638,6 +639,22 @@ class AbstractPlaneData(AbstractPlaneLensing):
             ] = profile_visibilities_of_galaxies[galaxy_index]
 
         return galaxy_profile_visibilities_image_dict
+
+    def set_snr_of_snr_light_profiles(
+        self,
+        grid: aa.type.Grid2DLike,
+        exposure_time: float,
+        background_sky_level: float = 0.0,
+    ):
+
+        for galaxy in self.galaxies:
+            for light_profile in galaxy.light_profiles:
+                if isinstance(light_profile, LightProfileSNR):
+                    light_profile.set_intensity_from(
+                        grid=grid,
+                        exposure_time=exposure_time,
+                        background_sky_level=background_sky_level,
+                    )
 
 
 class Plane(AbstractPlaneData):

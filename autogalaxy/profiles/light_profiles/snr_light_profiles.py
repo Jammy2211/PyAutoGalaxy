@@ -7,7 +7,7 @@ from autogalaxy.profiles.light_profiles import light_profiles as lp
 from scipy.optimize import root_scalar
 
 
-class SNRCalc:
+class LightProfileSNR:
     def __init__(self, signal_to_noise_ratio: float = 10.0):
 
         self.signal_to_noise_ratio = signal_to_noise_ratio
@@ -53,7 +53,7 @@ class SNRCalc:
         self.intensity *= intensity_factor
 
 
-class EllSersic(lp.EllSersic, SNRCalc):
+class EllSersic(lp.EllSersic, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,
@@ -88,4 +88,4 @@ class EllSersic(lp.EllSersic, SNRCalc):
             sersic_index=sersic_index,
         )
 
-        SNRCalc.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
+        LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
