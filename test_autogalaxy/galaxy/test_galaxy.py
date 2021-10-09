@@ -83,9 +83,7 @@ class TestLightProfiles:
 
         assert (lp_image == gal_lp_image).all()
 
-    def test__image_2d_from(
-        self, sub_grid_2d_7x7, lp_0, gal_x1_lp, lp_1, gal_x2_lp
-    ):
+    def test__image_2d_from(self, sub_grid_2d_7x7, lp_0, gal_x1_lp, lp_1, gal_x2_lp):
         galaxy = ag.Galaxy(redshift=0.5)
 
         image = galaxy.image_2d_from(grid=sub_grid_2d_7x7)
@@ -107,9 +105,7 @@ class TestLightProfiles:
 
         lp_image = lp_0.image_2d_from(grid=ag.Grid2DIrregular([(1.05, -0.55)]))
 
-        gal_image = gal_x1_lp.image_2d_from(
-            grid=ag.Grid2DIrregular([(1.05, -0.55)])
-        )
+        gal_image = gal_x1_lp.image_2d_from(grid=ag.Grid2DIrregular([(1.05, -0.55)]))
 
         assert lp_image.in_list[0] == gal_image.in_list[0]
 
@@ -346,9 +342,7 @@ class TestMassProfiles:
         assert gal_convergence.binned[0] == mp_convergence_0
         assert gal_convergence.binned[1] == mp_convergence_1
 
-    def test__potential_1d_from(
-        self, sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp
-    ):
+    def test__potential_1d_from(self, sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
 
         grid = ag.Grid2D.manual_native([[[1.05, -0.55]]], pixel_scales=1.0)
 
@@ -481,18 +475,14 @@ class TestMassProfiles:
 
         mp_deflections = mp_0.deflections_2d_from(grid=grid)
 
-        gal_deflections = gal_x1_mp.deflections_2d_from(
-            grid=np.array([[1.05, -0.55]])
-        )
+        gal_deflections = gal_x1_mp.deflections_2d_from(grid=np.array([[1.05, -0.55]]))
 
         assert (mp_deflections == gal_deflections).all()
 
         mp_deflections = mp_0.deflections_2d_from(grid=grid)
         mp_deflections += mp_1.deflections_2d_from(grid=grid)
 
-        gal_deflections = gal_x2_mp.deflections_2d_from(
-            grid=np.array([[1.05, -0.55]])
-        )
+        gal_deflections = gal_x2_mp.deflections_2d_from(grid=np.array([[1.05, -0.55]]))
 
         assert (mp_deflections == gal_deflections).all()
 
@@ -1004,15 +994,11 @@ class TestRegression:
 
         gal_x2_lp = ag.Galaxy(redshift=0.5, light_profile_0=lp_0, light_profile_1=lp_1)
 
-        assert gal_x2_lp.image_2d_from(
-            grid=np.array([[0.0, 0.0]])
-        ) == pytest.approx(
+        assert gal_x2_lp.image_2d_from(grid=np.array([[0.0, 0.0]])) == pytest.approx(
             gal_x2_lp.image_2d_from(grid=np.array([[100.0, 0.0]])), 1.0e-4
         )
 
-        assert gal_x2_lp.image_2d_from(
-            grid=np.array([[49.0, 0.0]])
-        ) == pytest.approx(
+        assert gal_x2_lp.image_2d_from(grid=np.array([[49.0, 0.0]])) == pytest.approx(
             gal_x2_lp.image_2d_from(grid=np.array([[51.0, 0.0]])), 1.0e-4
         )
 
@@ -1055,27 +1041,19 @@ class TestRegression:
             light_profile_4=lp_3,
         )
 
-        assert gal_x4_lp.image_2d_from(
-            grid=np.array([[49.0, 0.0]])
-        ) == pytest.approx(
+        assert gal_x4_lp.image_2d_from(grid=np.array([[49.0, 0.0]])) == pytest.approx(
             gal_x4_lp.image_2d_from(grid=np.array([[51.0, 0.0]])), 1e-5
         )
 
-        assert gal_x4_lp.image_2d_from(
-            grid=np.array([[0.0, 49.0]])
-        ) == pytest.approx(
+        assert gal_x4_lp.image_2d_from(grid=np.array([[0.0, 49.0]])) == pytest.approx(
             gal_x4_lp.image_2d_from(grid=np.array([[0.0, 51.0]])), 1e-5
         )
 
-        assert gal_x4_lp.image_2d_from(
-            grid=np.array([[100.0, 49.0]])
-        ) == pytest.approx(
+        assert gal_x4_lp.image_2d_from(grid=np.array([[100.0, 49.0]])) == pytest.approx(
             gal_x4_lp.image_2d_from(grid=np.array([[100.0, 51.0]])), 1e-5
         )
 
-        assert gal_x4_lp.image_2d_from(
-            grid=np.array([[49.0, 49.0]])
-        ) == pytest.approx(
+        assert gal_x4_lp.image_2d_from(grid=np.array([[49.0, 49.0]])) == pytest.approx(
             gal_x4_lp.image_2d_from(grid=np.array([[51.0, 51.0]])), 1e-5
         )
 
@@ -1208,15 +1186,13 @@ class TestRegression:
         assert 1.0 * gal_x4_mp.deflections_2d_from(grid=np.array([[100.0, 49.0]]))[
             0, 0
         ] == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[100.0, 51.0]]))[0, 0],
-            1e-5,
+            gal_x4_mp.deflections_2d_from(grid=np.array([[100.0, 51.0]]))[0, 0], 1e-5
         )
 
         assert -1.0 * gal_x4_mp.deflections_2d_from(grid=np.array([[49.0, 49.0]]))[
             0, 0
         ] == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[51.0, 51.0]]))[0, 0],
-            1e-5,
+            gal_x4_mp.deflections_2d_from(grid=np.array([[51.0, 51.0]]))[0, 0], 1e-5
         )
 
         assert 1.0 * gal_x4_mp.deflections_2d_from(grid=np.array([[49.0, 0.0]]))[
@@ -1231,18 +1207,16 @@ class TestRegression:
             gal_x4_mp.deflections_2d_from(grid=np.array([[0.0, 51.0]]))[0, 1], 1e-5
         )
 
-        assert -1.0 * gal_x4_mp.deflections_2d_from(
-            grid=np.array([[100.0, 49.0]])
-        )[0, 1] == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[100.0, 51.0]]))[0, 1],
-            1e-5,
+        assert -1.0 * gal_x4_mp.deflections_2d_from(grid=np.array([[100.0, 49.0]]))[
+            0, 1
+        ] == pytest.approx(
+            gal_x4_mp.deflections_2d_from(grid=np.array([[100.0, 51.0]]))[0, 1], 1e-5
         )
 
         assert -1.0 * gal_x4_mp.deflections_2d_from(grid=np.array([[49.0, 49.0]]))[
             0, 1
         ] == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[51.0, 51.0]]))[0, 1],
-            1e-5,
+            gal_x4_mp.deflections_2d_from(grid=np.array([[51.0, 51.0]]))[0, 1], 1e-5
         )
 
     def test__centre_of_profile_in_right_place(self):

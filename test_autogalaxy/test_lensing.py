@@ -257,9 +257,7 @@ class TestDeflectionsViaPotential:
 
         deflections_via_calculation = sis.deflections_2d_from(grid=grid)
 
-        deflections_via_potential = sis.deflections_2d_via_potential_2d_from(
-            grid=grid
-        )
+        deflections_via_potential = sis.deflections_2d_via_potential_2d_from(grid=grid)
 
         mean_error = np.mean(
             deflections_via_potential.slim - deflections_via_calculation.slim
@@ -276,9 +274,7 @@ class TestDeflectionsViaPotential:
 
         deflections_via_calculation = sie.deflections_2d_from(grid=grid)
 
-        deflections_via_potential = sie.deflections_2d_via_potential_2d_from(
-            grid=grid
-        )
+        deflections_via_potential = sie.deflections_2d_via_potential_2d_from(grid=grid)
 
         mean_error = np.mean(
             deflections_via_potential.slim - deflections_via_calculation.slim
@@ -295,9 +291,7 @@ class TestDeflectionsViaPotential:
 
         deflections_via_calculation = sie.deflections_2d_from(grid=grid)
 
-        deflections_via_potential = sie.deflections_2d_via_potential_2d_from(
-            grid=grid
-        )
+        deflections_via_potential = sie.deflections_2d_via_potential_2d_from(grid=grid)
 
         mean_error = np.mean(
             deflections_via_potential.slim - deflections_via_calculation.slim
@@ -344,9 +338,7 @@ class TestHessian:
 
         grid = ag.Grid2DIrregular(grid=[(0.5, 0.5), (1.0, 1.0)])
 
-        hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from(
-            grid=grid
-        )
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from(grid=grid)
 
         assert hessian_yy == pytest.approx(np.array([1.3883822, 0.694127]), 1.0e-4)
         assert hessian_xy == pytest.approx(np.array([-1.388124, -0.694094]), 1.0e-4)
@@ -355,9 +347,7 @@ class TestHessian:
 
         grid = ag.Grid2DIrregular(grid=[(1.0, 0.0), (0.0, 1.0)])
 
-        hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from(
-            grid=grid
-        )
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from(grid=grid)
 
         assert hessian_yy == pytest.approx(np.array([0.0, 1.777699]), 1.0e-4)
         assert hessian_xy == pytest.approx(np.array([0.0, 0.0]), 1.0e-4)
@@ -919,9 +909,7 @@ class TestCriticalCurvesAndCaustics:
             mass_profile=sie, grid=grid
         )[0]
 
-        tangential_caustic = sie.tangential_caustic_from(
-            grid=grid, pixel_scale=0.2
-        )
+        tangential_caustic = sie.tangential_caustic_from(grid=grid, pixel_scale=0.2)
 
         assert sum(tangential_caustic) == pytest.approx(
             sum(tangential_caustic_from_magnification), 5e-1

@@ -29,17 +29,17 @@ class MassSheet(MassProfile):
         return 0.0
 
     @aa.grid_dec.grid_2d_to_structure
-    def convergence_2d_from(self, grid):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
         return np.full(shape=grid.shape[0], fill_value=self.kappa)
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid):
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
         grid_radii = self.grid_to_grid_radii(grid=grid)
         return self.grid_to_grid_cartesian(grid=grid, radius=self.kappa * grid_radii)
 
@@ -78,17 +78,17 @@ class ExternalShear(MassProfile):
         return 0.0
 
     @aa.grid_dec.grid_2d_to_structure
-    def convergence_2d_from(self, grid):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid):
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -166,15 +166,15 @@ class InputDeflections(MassProfile):
         self.normalization_scale = 1.0  # normalization_scale
 
     @aa.grid_dec.grid_2d_to_structure
-    def convergence_2d_from(self, grid):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
         return self.convergence_via_jacobian_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.grid_2d_to_structure
-    def deflections_2d_from(self, grid):
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
 
         if self.preload_grid is not None and self.preload_deflections is not None:
 

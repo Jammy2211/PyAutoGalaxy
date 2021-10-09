@@ -64,8 +64,7 @@ class TestSersic:
         )
 
         assert (
-            sersic_lp.image_2d_from(grid=grid)
-            == sersic_lmp.image_2d_from(grid=grid)
+            sersic_lp.image_2d_from(grid=grid) == sersic_lmp.image_2d_from(grid=grid)
         ).all()
         assert (
             sersic_mp.convergence_2d_from(grid=grid)
@@ -127,8 +126,7 @@ class TestExponential:
         )
 
         assert (
-            sersic_lp.image_2d_from(grid=grid)
-            == sersic_lmp.image_2d_from(grid=grid)
+            sersic_lp.image_2d_from(grid=grid) == sersic_lmp.image_2d_from(grid=grid)
         ).all()
         assert (
             sersic_mp.convergence_2d_from(grid=grid)
@@ -184,8 +182,7 @@ class TestDevVaucouleurs:
         )
 
         assert (
-            sersic_lp.image_2d_from(grid=grid)
-            == sersic_lmp.image_2d_from(grid=grid)
+            sersic_lp.image_2d_from(grid=grid) == sersic_lmp.image_2d_from(grid=grid)
         ).all()
         assert (
             sersic_mp.convergence_2d_from(grid=grid)
@@ -358,8 +355,7 @@ class TestSersicCore:
         )
 
         assert (
-            sersic_lp.image_2d_from(grid=grid)
-            == sersic_lmp.image_2d_from(grid=grid)
+            sersic_lp.image_2d_from(grid=grid) == sersic_lmp.image_2d_from(grid=grid)
         ).all()
         assert (
             sersic_mp.convergence_2d_from(grid=grid)

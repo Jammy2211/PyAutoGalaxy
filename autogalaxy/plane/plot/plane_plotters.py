@@ -2,7 +2,7 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.plane.plane import Plane
-from autogalaxy.profiles.light_profiles import LightProfile
+from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
 from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
 from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D

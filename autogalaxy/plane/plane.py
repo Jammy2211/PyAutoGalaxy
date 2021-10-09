@@ -241,15 +241,11 @@ class AbstractPlaneLensing(AbstractPlane):
         return np.zeros((grid.shape[0],))
 
     def images_of_galaxies_from(self, grid):
-        return list(
-            map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies)
-        )
+        return list(map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies))
 
     def padded_image_2d_from(self, grid, psf_shape_2d):
 
-        padded_grid = grid.padded_grid_from(
-            kernel_shape_native=psf_shape_2d
-        )
+        padded_grid = grid.padded_grid_from(kernel_shape_native=psf_shape_2d)
 
         return self.image_2d_from(grid=padded_grid)
 
@@ -274,9 +270,7 @@ class AbstractPlaneLensing(AbstractPlane):
             The galaxies whose mass profiles are used to compute the surface densities.
         """
         if self.galaxies:
-            return sum(
-                map(lambda g: g.convergence_2d_from(grid=grid), self.galaxies)
-            )
+            return sum(map(lambda g: g.convergence_2d_from(grid=grid), self.galaxies))
         return np.zeros(shape=(grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
@@ -300,17 +294,13 @@ class AbstractPlaneLensing(AbstractPlane):
             The galaxies whose mass profiles are used to compute the surface densities.
         """
         if self.galaxies:
-            return sum(
-                map(lambda g: g.potential_2d_from(grid=grid), self.galaxies)
-            )
+            return sum(map(lambda g: g.potential_2d_from(grid=grid), self.galaxies))
         return np.zeros((grid.shape[0]))
 
     @aa.grid_dec.grid_2d_to_structure
     def deflections_2d_from(self, grid):
         if self.galaxies:
-            return sum(
-                map(lambda g: g.deflections_2d_from(grid=grid), self.galaxies)
-            )
+            return sum(map(lambda g: g.deflections_2d_from(grid=grid), self.galaxies))
         return np.zeros(shape=(grid.shape[0], 2))
 
     @aa.grid_dec.grid_2d_to_structure
@@ -358,9 +348,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
     def unmasked_blurred_image_2d_via_psf_from(self, grid, psf):
 
-        padded_grid = grid.padded_grid_from(
-            kernel_shape_native=psf.shape_native
-        )
+        padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
 
         padded_image = self.image_2d_from(grid=padded_grid)
 
@@ -370,9 +358,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
     def unmasked_blurred_image_of_galaxies_via_psf_from(self, grid, psf):
 
-        padded_grid = grid.padded_grid_from(
-            kernel_shape_native=psf.shape_native
-        )
+        padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
 
         unmasked_blurred_images_of_galaxies = []
 
@@ -398,9 +384,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
                 shape_slim=(transformer.uv_wavelengths.shape[0],)
             )
 
-    def profile_visibilities_of_galaxies_via_transformer_from(
-        self, grid, transformer
-    ):
+    def profile_visibilities_of_galaxies_via_transformer_from(self, grid, transformer):
         return [
             galaxy.profile_visibilities_via_transformer_from(
                 grid=grid, transformer=transformer

@@ -46,11 +46,11 @@ class MassProfile(EllProfile, LensingObject):
         raise NotImplementedError()
 
     @aa.grid_dec.grid_1d_to_structure
-    def convergence_1d_from(self, grid):
+    def convergence_1d_from(self, grid: aa.type.Grid1D2DLike):
         return self.convergence_2d_from(grid=grid)
 
     @aa.grid_dec.grid_1d_to_structure
-    def potential_1d_from(self, grid):
+    def potential_1d_from(self, grid: aa.type.Grid1D2DLike):
         return self.potential_2d_from(grid=grid)
 
     def mass_angular_within_circle(self, radius: float):

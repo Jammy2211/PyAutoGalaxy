@@ -56,23 +56,15 @@ class TestPointMass:
 
         point_mass_0 = ag.mp.PointMass(centre=(0.0, 0.0))
         point_mass_1 = ag.mp.PointMass(centre=(1.0, 1.0))
-        deflections_0 = point_mass_0.deflections_2d_from(
-            grid=np.array([[1.0, 1.0]])
-        )
-        deflections_1 = point_mass_1.deflections_2d_from(
-            grid=np.array([[0.0, 0.0]])
-        )
+        deflections_0 = point_mass_0.deflections_2d_from(grid=np.array([[1.0, 1.0]]))
+        deflections_1 = point_mass_1.deflections_2d_from(grid=np.array([[0.0, 0.0]]))
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
 
         point_mass_0 = ag.mp.PointMass(centre=(0.0, 0.0))
         point_mass_1 = ag.mp.PointMass(centre=(0.0, 0.0))
-        deflections_0 = point_mass_0.deflections_2d_from(
-            grid=np.array([[1.0, 0.0]])
-        )
-        deflections_1 = point_mass_1.deflections_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        deflections_0 = point_mass_0.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = point_mass_1.deflections_2d_from(grid=np.array([[0.0, 1.0]]))
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
@@ -131,9 +123,7 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        convergence = broken_power_law.convergence_2d_from(
-            grid=np.array([[0.5, 1.0]])
-        )
+        convergence = broken_power_law.convergence_2d_from(grid=np.array([[0.5, 1.0]]))
 
         assert convergence == pytest.approx(0.0355237, 1e-4)
 
@@ -152,9 +142,7 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        convergence = broken_power_law.convergence_2d_from(
-            grid=np.array([[0.5, 1.0]])
-        )
+        convergence = broken_power_law.convergence_2d_from(grid=np.array([[0.5, 1.0]]))
 
         assert convergence == pytest.approx(0.05006035, 1e-4)
 
@@ -167,9 +155,7 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        convergence = broken_power_law.convergence_2d_from(
-            grid=np.array([[0.5, 1.0]])
-        )
+        convergence = broken_power_law.convergence_2d_from(grid=np.array([[0.5, 1.0]]))
 
         assert convergence == pytest.approx(0.034768, 1e-4)
 
@@ -182,9 +168,7 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        convergence = broken_power_law.convergence_2d_from(
-            grid=np.array([[0.5, 1.0]])
-        )
+        convergence = broken_power_law.convergence_2d_from(grid=np.array([[0.5, 1.0]]))
 
         assert convergence == pytest.approx(0.03622852, 1e-4)
 
@@ -197,9 +181,7 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        convergence = broken_power_law.convergence_2d_from(
-            grid=np.array([[0.5, 1.0]])
-        )
+        convergence = broken_power_law.convergence_2d_from(grid=np.array([[0.5, 1.0]]))
 
         assert convergence == pytest.approx(0.026469, 1e-4)
 
@@ -213,9 +195,7 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        deflections = broken_power_law.deflections_2d_from(
-            grid=np.array([[0.5, 1.0]])
-        )
+        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
 
         assert deflections[0, 0] == pytest.approx(0.404076, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.808152, 1e-3)
@@ -238,9 +218,7 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        deflections = broken_power_law.deflections_2d_from(
-            grid=np.array([[0.5, 1.0]])
-        )
+        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
 
         assert deflections[0, 0] == pytest.approx(0.40392, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.811619, 1e-3)
@@ -254,9 +232,7 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        deflections = broken_power_law.deflections_2d_from(
-            grid=np.array([[0.5, 1.0]])
-        )
+        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
 
         assert deflections[0, 0] == pytest.approx(0.4005338, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.8067221, 1e-3)
@@ -270,9 +246,7 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        deflections = broken_power_law.deflections_2d_from(
-            grid=np.array([[0.5, 1.0]])
-        )
+        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
 
         assert deflections[0, 0] == pytest.approx(0.399651, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.813372, 1e-3)
@@ -286,9 +260,7 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        deflections = broken_power_law.deflections_2d_from(
-            grid=np.array([[0.5, 1.0]])
-        )
+        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
 
         assert deflections[0, 0] == pytest.approx(0.402629, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.798795, 1e-3)
@@ -392,9 +364,7 @@ class TestPowerLawBroken:
             outer_slope=2.0001,
             break_radius=0.0001,
         )
-        deflections = broken_power_law.deflections_2d_from(
-            grid=np.array([[0.5, 1.0]])
-        )
+        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
 
         # Use of ratio avoids normalization definition difference effects
 
@@ -414,9 +384,7 @@ class TestPowerLawBroken:
             outer_slope=2.4001,
             break_radius=0.0001,
         )
-        deflections = broken_power_law.deflections_2d_from(
-            grid=np.array([[0.5, 1.0]])
-        )
+        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
 
         # Use of ratio avoids normalization difference effects
 
@@ -473,9 +441,7 @@ class TestPowerLawCored:
             core_radius=0.2,
         )
 
-        convergence = cored_power_law.convergence_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        convergence = cored_power_law.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert convergence == pytest.approx(0.45492, 1e-3)
 
@@ -487,9 +453,7 @@ class TestPowerLawCored:
             core_radius=0.2,
         )
 
-        convergence = cored_power_law.convergence_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        convergence = cored_power_law.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert convergence == pytest.approx(1.3887, 1e-3)
 
@@ -518,9 +482,7 @@ class TestPowerLawCored:
             core_radius=0.5,
         )
 
-        potential = cored_power_law.potential_2d_from(
-            grid=np.array([[0.1625, 0.1625]])
-        )
+        potential = cored_power_law.potential_2d_from(grid=np.array([[0.1625, 0.1625]]))
 
         assert potential == pytest.approx(0.02319, 1e-3)
 
@@ -532,9 +494,7 @@ class TestPowerLawCored:
             core_radius=0.2,
         )
 
-        potential = cored_power_law.potential_2d_from(
-            grid=np.array([[0.1625, 0.1625]])
-        )
+        potential = cored_power_law.potential_2d_from(grid=np.array([[0.1625, 0.1625]]))
 
         assert potential == pytest.approx(0.71185, 1e-3)
 
@@ -544,9 +504,7 @@ class TestPowerLawCored:
             centre=(-0.7, 0.5), einstein_radius=1.0, slope=1.8, core_radius=0.2
         )
 
-        deflections = power_law.deflections_2d_from(
-            grid=np.array([[0.1875, 0.1625]])
-        )
+        deflections = power_law.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(0.80677, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.30680, 1e-3)
@@ -555,9 +513,7 @@ class TestPowerLawCored:
             centre=(0.2, -0.2), einstein_radius=0.5, slope=2.4, core_radius=0.5
         )
 
-        deflections = power_law.deflections_2d_from(
-            grid=np.array([[0.1875, 0.1625]])
-        )
+        deflections = power_law.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(-0.00321, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.09316, 1e-3)
@@ -639,26 +595,18 @@ class TestPowerLawCored:
         cored_power_law_0 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
         cored_power_law_1 = ag.mp.SphPowerLawCored(centre=(1.0, 1.0))
 
-        potential_0 = cored_power_law_0.potential_2d_from(
-            grid=np.array([[1.0, 1.0]])
-        )
+        potential_0 = cored_power_law_0.potential_2d_from(grid=np.array([[1.0, 1.0]]))
 
-        potential_1 = cored_power_law_1.potential_2d_from(
-            grid=np.array([[0.0, 0.0]])
-        )
+        potential_1 = cored_power_law_1.potential_2d_from(grid=np.array([[0.0, 0.0]]))
 
         assert potential_0 == potential_1
 
         cored_power_law_0 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
         cored_power_law_1 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
 
-        potential_0 = cored_power_law_0.potential_2d_from(
-            grid=np.array([[1.0, 0.0]])
-        )
+        potential_0 = cored_power_law_0.potential_2d_from(grid=np.array([[1.0, 0.0]]))
 
-        potential_1 = cored_power_law_1.potential_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        potential_1 = cored_power_law_1.potential_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert potential_0 == potential_1
 
@@ -668,13 +616,9 @@ class TestPowerLawCored:
         cored_power_law_1 = ag.mp.EllPowerLawCored(
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
-        potential_0 = cored_power_law_0.potential_2d_from(
-            grid=np.array([[1.0, 0.0]])
-        )
+        potential_0 = cored_power_law_0.potential_2d_from(grid=np.array([[1.0, 0.0]]))
 
-        potential_1 = cored_power_law_1.potential_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        potential_1 = cored_power_law_1.potential_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert potential_0 == potential_1
 
@@ -863,27 +807,21 @@ class TestPowerLaw:
 
         power_law = ag.mp.SphPowerLaw(centre=(0.2, 0.2), einstein_radius=1.0, slope=2.0)
 
-        deflections = power_law.deflections_2d_from(
-            grid=np.array([[0.1875, 0.1625]])
-        )
+        deflections = power_law.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(-0.31622, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.94868, 1e-3)
 
         power_law = ag.mp.SphPowerLaw(centre=(0.2, 0.2), einstein_radius=1.0, slope=2.5)
 
-        deflections = power_law.deflections_2d_from(
-            grid=np.array([[0.1875, 0.1625]])
-        )
+        deflections = power_law.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(-1.59054, 1e-3)
         assert deflections[0, 1] == pytest.approx(-4.77162, 1e-3)
 
         power_law = ag.mp.SphPowerLaw(centre=(0.2, 0.2), einstein_radius=1.0, slope=1.5)
 
-        deflections = power_law.deflections_2d_from(
-            grid=np.array([[0.1875, 0.1625]])
-        )
+        deflections = power_law.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(-0.06287, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.18861, 1e-3)
@@ -895,9 +833,7 @@ class TestPowerLaw:
             slope=2.0,
         )
 
-        deflections = power_law.deflections_2d_from(
-            grid=np.array([[0.1625, 0.1625]])
-        )
+        deflections = power_law.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)
@@ -909,9 +845,7 @@ class TestPowerLaw:
             slope=2.5,
         )
 
-        deflections = power_law.deflections_2d_from(
-            grid=np.array([[0.1625, 0.1625]])
-        )
+        deflections = power_law.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(1.29641, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.99629, 1e-3)
@@ -923,9 +857,7 @@ class TestPowerLaw:
             slope=1.5,
         )
 
-        deflections = power_law.deflections_2d_from(
-            grid=np.array([[0.1625, 0.1625]])
-        )
+        deflections = power_law.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(0.48036, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.26729, 1e-3)
@@ -937,9 +869,7 @@ class TestPowerLaw:
             slope=1.9,
         )
 
-        deflections = power_law.deflections_2d_from(
-            grid=np.array([[0.1625, 0.1625]])
-        )
+        deflections = power_law.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
 
         # assert deflections[0, 0] == pytest.approx(1.12841, 1e-3)
         # assert deflections[0, 1] == pytest.approx(-0.60205, 1e-3)
@@ -1051,9 +981,7 @@ class TestIsothermalCored:
             centre=(0.0, 0.0), einstein_radius=1.0, core_radius=0.2
         )
 
-        convergence = cored_isothermal.convergence_2d_from(
-            grid=np.array([[1.0, 0.0]])
-        )
+        convergence = cored_isothermal.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
 
         assert convergence == pytest.approx(0.49029, 1e-3)
 
@@ -1061,9 +989,7 @@ class TestIsothermalCored:
             centre=(0.0, 0.0), einstein_radius=2.0, core_radius=0.2
         )
 
-        convergence = cored_isothermal.convergence_2d_from(
-            grid=np.array([[1.0, 0.0]])
-        )
+        convergence = cored_isothermal.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
 
         assert convergence == pytest.approx(2.0 * 0.49029, 1e-3)
 
@@ -1071,9 +997,7 @@ class TestIsothermalCored:
             centre=(0.0, 0.0), einstein_radius=1.0, core_radius=0.2
         )
 
-        convergence = cored_isothermal.convergence_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        convergence = cored_isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert convergence == pytest.approx(0.49029, 1e-3)
 
@@ -1085,9 +1009,7 @@ class TestIsothermalCored:
             core_radius=0.2,
         )
 
-        convergence = cored_isothermal.convergence_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        convergence = cored_isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert convergence == pytest.approx(0.49029 * 1.33333, 1e-3)
 
@@ -1098,9 +1020,7 @@ class TestIsothermalCored:
             core_radius=0.2,
         )
 
-        convergence = cored_isothermal.convergence_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        convergence = cored_isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert convergence == pytest.approx(2.0 * 0.49029, 1e-3)
 
@@ -1116,9 +1036,7 @@ class TestIsothermalCored:
             core_radius=0.2,
         )
 
-        convergence = cored_isothermal.convergence_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        convergence = cored_isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert convergence == pytest.approx((1.0 / 0.75) * 0.49029, 1e-3)
 
@@ -1364,18 +1282,14 @@ class TestIsothermal:
 
         isothermal = ag.mp.SphIsothermal(centre=(-0.7, 0.5), einstein_radius=1.3)
 
-        deflections = isothermal.deflections_2d_from(
-            grid=np.array([[0.1875, 0.1625]])
-        )
+        deflections = isothermal.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(1.21510, 1e-4)
         assert deflections[0, 1] == pytest.approx(-0.46208, 1e-4)
 
         isothermal = ag.mp.SphIsothermal(centre=(-0.1, 0.1), einstein_radius=5.0)
 
-        deflections = isothermal.deflections_2d_from(
-            grid=np.array([[0.1875, 0.1625]])
-        )
+        deflections = isothermal.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(4.88588, 1e-4)
         assert deflections[0, 1] == pytest.approx(1.06214, 1e-4)
@@ -1384,9 +1298,7 @@ class TestIsothermal:
             centre=(0, 0), elliptical_comps=(0.0, 0.333333), einstein_radius=1.0
         )
 
-        deflections = isothermal.deflections_2d_from(
-            grid=np.array([[0.1625, 0.1625]])
-        )
+        deflections = isothermal.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)
@@ -1395,9 +1307,7 @@ class TestIsothermal:
             centre=(0, 0), elliptical_comps=(0.0, 0.333333), einstein_radius=1.0
         )
 
-        deflections = isothermal.deflections_2d_from(
-            grid=np.array([[0.1625, 0.1625]])
-        )
+        deflections = isothermal.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)

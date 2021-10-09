@@ -178,9 +178,7 @@ def hyper_image_from(image, hyper_image_sky):
         return image
 
 
-def hyper_noise_map_from(
-    noise_map, plane, hyper_background_noise
-):
+def hyper_noise_map_from(noise_map, plane, hyper_background_noise):
 
     hyper_noise_map = plane.hyper_noise_map_from(noise_map=noise_map)
 

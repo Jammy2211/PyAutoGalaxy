@@ -401,9 +401,9 @@ class TestGeneralizedNFW:
             inner_slope=1.5,
             scale_radius=1.0,
         )
-        assert gnfw.convergence_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        ) == pytest.approx(0.30840, 1e-3)
+        assert gnfw.convergence_2d_from(grid=np.array([[0.0, 1.0]])) == pytest.approx(
+            0.30840, 1e-3
+        )
 
         gnfw = ag.mp.EllNFWGeneralized(
             centre=(0.0, 0.0),
@@ -414,9 +414,9 @@ class TestGeneralizedNFW:
             inner_slope=1.5,
             scale_radius=1.0,
         )
-        assert gnfw.convergence_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        ) == pytest.approx(0.30840 * 2, 1e-3)
+        assert gnfw.convergence_2d_from(grid=np.array([[0.0, 1.0]])) == pytest.approx(
+            0.30840 * 2, 1e-3
+        )
 
     def test__convergence_2d_via_gaussians_from__correct_values(self):
 
@@ -493,9 +493,9 @@ class TestGeneralizedNFW:
             inner_slope=1.0,
             scale_radius=10.0,
         )
-        assert gnfw.potential_2d_from(
-            grid=np.array([[2.0, 2.0]])
-        ) == pytest.approx(2.4718, 1e-4)
+        assert gnfw.potential_2d_from(grid=np.array([[2.0, 2.0]])) == pytest.approx(
+            2.4718, 1e-4
+        )
 
     def test__deflections_via_integrator_correct_values(self):
 
@@ -800,15 +800,11 @@ class TestTruncatedNFW:
             centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=2.0
         )
 
-        convergence = truncated_nfw.convergence_2d_from(
-            grid=np.array([[2.0, 0.0]])
-        )
+        convergence = truncated_nfw.convergence_2d_from(grid=np.array([[2.0, 0.0]]))
 
         assert convergence == pytest.approx(2.0 * 0.046409642, 1.0e-4)
 
-        convergence = truncated_nfw.convergence_2d_from(
-            grid=np.array([[1.0, 1.0]])
-        )
+        convergence = truncated_nfw.convergence_2d_from(grid=np.array([[1.0, 1.0]]))
 
         assert convergence == pytest.approx(2.0 * 0.10549515, 1.0e-4)
 
@@ -816,9 +812,7 @@ class TestTruncatedNFW:
             centre=(0.0, 0.0), kappa_s=3.0, scale_radius=1.0, truncation_radius=2.0
         )
 
-        convergence = truncated_nfw.convergence_2d_from(
-            grid=np.array([[2.0, 0.0]])
-        )
+        convergence = truncated_nfw.convergence_2d_from(grid=np.array([[2.0, 0.0]]))
 
         assert convergence == pytest.approx(6.0 * 0.046409642, 1.0e-4)
 
@@ -826,9 +820,7 @@ class TestTruncatedNFW:
             centre=(0.0, 0.0), kappa_s=3.0, scale_radius=5.0, truncation_radius=2.0
         )
 
-        convergence = truncated_nfw.convergence_2d_from(
-            grid=np.array([[2.0, 0.0]])
-        )
+        convergence = truncated_nfw.convergence_2d_from(grid=np.array([[2.0, 0.0]]))
 
         assert convergence == pytest.approx(1.51047026, 1.0e-4)
 
@@ -840,24 +832,18 @@ class TestTruncatedNFW:
 
         # factor = (4.0 * kappa_s * scale_radius / (r / scale_radius))
 
-        deflections = truncated_nfw.deflections_2d_from(
-            grid=np.array([[2.0, 0.0]])
-        )
+        deflections = truncated_nfw.deflections_2d_from(grid=np.array([[2.0, 0.0]]))
 
         factor = (4.0 * 1.0 * 1.0) / (2.0 / 1.0)
         assert deflections[0, 0] == pytest.approx(factor * 0.38209715, 1.0e-4)
         assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
 
-        deflections = truncated_nfw.deflections_2d_from(
-            grid=np.array([[0.0, 2.0]])
-        )
+        deflections = truncated_nfw.deflections_2d_from(grid=np.array([[0.0, 2.0]]))
 
         assert deflections[0, 0] == pytest.approx(0.0, 1.0e-4)
         assert deflections[0, 1] == pytest.approx(factor * 0.38209715, 1.0e-4)
 
-        deflections = truncated_nfw.deflections_2d_from(
-            grid=np.array([[1.0, 1.0]])
-        )
+        deflections = truncated_nfw.deflections_2d_from(grid=np.array([[1.0, 1.0]]))
 
         factor = (4.0 * 1.0 * 1.0) / (np.sqrt(2) / 1.0)
         assert deflections[0, 0] == pytest.approx(
@@ -871,9 +857,7 @@ class TestTruncatedNFW:
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0, truncation_radius=2.0
         )
 
-        deflections = truncated_nfw.deflections_2d_from(
-            grid=np.array([[2.0, 0.0]])
-        )
+        deflections = truncated_nfw.deflections_2d_from(grid=np.array([[2.0, 0.0]]))
 
         factor = (4.0 * 2.0 * 1.0) / (2.0 / 1.0)
         assert deflections[0, 0] == pytest.approx(factor * 0.38209715, 1.0e-4)
@@ -1041,33 +1025,25 @@ class TestNFW:
 
         nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
-        convergence = nfw.convergence_2d_via_gaussians_from(
-            grid=np.array([[2.0, 0.0]])
-        )
+        convergence = nfw.convergence_2d_via_gaussians_from(grid=np.array([[2.0, 0.0]]))
 
         assert convergence == pytest.approx(0.263600141, 1e-2)
 
         nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
-        convergence = nfw.convergence_2d_via_gaussians_from(
-            grid=np.array([[0.5, 0.0]])
-        )
+        convergence = nfw.convergence_2d_via_gaussians_from(grid=np.array([[0.5, 0.0]]))
 
         assert convergence == pytest.approx(1.388511, 1e-2)
 
         nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0)
 
-        convergence = nfw.convergence_2d_via_gaussians_from(
-            grid=np.array([[0.5, 0.0]])
-        )
+        convergence = nfw.convergence_2d_via_gaussians_from(grid=np.array([[0.5, 0.0]]))
 
         assert convergence == pytest.approx(2.0 * 1.388511, 1e-2)
 
         nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0)
 
-        convergence = nfw.convergence_2d_via_gaussians_from(
-            grid=np.array([[1.0, 0.0]])
-        )
+        convergence = nfw.convergence_2d_via_gaussians_from(grid=np.array([[1.0, 0.0]]))
 
         assert convergence == pytest.approx(1.388511, 1e-2)
 

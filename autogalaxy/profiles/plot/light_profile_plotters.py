@@ -3,7 +3,7 @@ import autoarray.plot as aplt
 from autoarray.structures.grids.two_d import abstract_grid_2d
 from autoarray.plot import abstract_plotters
 
-from autogalaxy.profiles.light_profiles import LightProfile
+from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
 from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
 from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D
@@ -211,9 +211,7 @@ class LightProfilePDFPlotter(LightProfilePlotter):
         if image:
 
             grid_radial = (
-                self.light_profile_pdf_list[0]
-                .image_1d_from(grid=self.grid)
-                .grid_radial
+                self.light_profile_pdf_list[0].image_1d_from(grid=self.grid).grid_radial
             )
 
             image_1d_list = [

@@ -62,7 +62,8 @@ class SphProfile(GeometryProfile):
         return np.sqrt(np.add(np.square(grid[:, 0]), np.square(grid[:, 1])))
 
     def grid_angle_to_profile(self, grid_thetas):
-        """The angle between each (y,x) coordinate on the grid and the profile, in radians.
+        """
+        The angle between each (y,x) coordinate on the grid and the profile, in radians.
 
         Parameters
         -----------
@@ -183,7 +184,8 @@ class EllProfile(SphProfile):
         return np.cos(phi_radians), np.sin(phi_radians)
 
     def grid_angle_to_profile(self, grid_thetas):
-        """The angle between each angle theta on the grid and the profile, in radians.
+        """
+        The angle between each angle theta on the grid and the profile, in radians.
 
         Parameters
         -----------

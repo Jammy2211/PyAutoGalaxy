@@ -1,6 +1,22 @@
+import numpy as np
 from typing import Tuple
 
 from autogalaxy.profiles.light_profiles import light_profiles as lp
+
+
+class SNRCalc:
+    def __init__(
+        self, light_profile: lp.LightProfile, signal_to_noise_ratio: float = 10.0
+    ):
+
+        self.light_profile = light_profile
+        self.signal_to_noise_ratio = signal_to_noise_ratio
+
+    def set_intensity_from(self):
+
+        #  brightest_pixel = np.max(self.light_profile.image_2d_from(grid=))
+
+        pass
 
 
 class EllSersic(lp.EllSersic):
@@ -38,5 +54,6 @@ class EllSersic(lp.EllSersic):
             sersic_index=sersic_index,
         )
 
-        self.signal_to_noise_ratio = signal_to_noise_ratio
-
+        self.snr_calc = SNRCalc(
+            light_profile=self, signal_to_noise_ratio=signal_to_noise_ratio
+        )

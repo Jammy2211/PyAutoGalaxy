@@ -437,9 +437,7 @@ class TestAbstractPlaneProfiles:
             self, sub_grid_2d_7x7
         ):
 
-            padded_grid = sub_grid_2d_7x7.padded_grid_from(
-                kernel_shape_native=(3, 3)
-            )
+            padded_grid = sub_grid_2d_7x7.padded_grid_from(kernel_shape_native=(3, 3))
 
             g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
             g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
@@ -1084,20 +1082,14 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
-            padded_grid = grid.padded_grid_from(
-                kernel_shape_native=psf.shape_native
-            )
+            padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
 
-            manual_blurred_image_0 = plane.images_of_galaxies_from(
-                grid=padded_grid
-            )[0]
+            manual_blurred_image_0 = plane.images_of_galaxies_from(grid=padded_grid)[0]
             manual_blurred_image_0 = psf.convolved_array_from(
                 array=manual_blurred_image_0
             )
 
-            manual_blurred_image_1 = plane.images_of_galaxies_from(
-                grid=padded_grid
-            )[1]
+            manual_blurred_image_1 = plane.images_of_galaxies_from(grid=padded_grid)[1]
             manual_blurred_image_1 = psf.convolved_array_from(
                 array=manual_blurred_image_1
             )
@@ -1390,9 +1382,7 @@ class TestAbstractPlaneData:
                 galaxies=[galaxy],
             )
 
-            plane_image_from_plane = plane.plane_image_2d_from(
-                grid=sub_grid_2d_7x7
-            )
+            plane_image_from_plane = plane.plane_image_2d_from(grid=sub_grid_2d_7x7)
 
             assert (plane_image_from_func.array == plane_image_from_plane.array).all()
 

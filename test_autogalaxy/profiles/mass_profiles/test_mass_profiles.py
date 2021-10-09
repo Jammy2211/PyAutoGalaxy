@@ -592,9 +592,7 @@ class TestDecorators:
 
         mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
-        deflections_sub_2 = mass_profile.deflections_2d_from(
-            grid=grid_sub_2
-        ).binned
+        deflections_sub_2 = mass_profile.deflections_2d_from(grid=grid_sub_2).binned
 
         assert deflections == pytest.approx(deflections_sub_2, 1.0e-6)
 
@@ -608,16 +606,12 @@ class TestDecorators:
 
         mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
-        deflections_sub_4 = mass_profile.deflections_2d_from(
-            grid=grid_sub_4
-        ).binned
+        deflections_sub_4 = mass_profile.deflections_2d_from(grid=grid_sub_4).binned
 
         assert deflections[0, 0] == deflections_sub_4[0, 0]
 
         mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
-        deflections_sub_8 = mass_profile.deflections_2d_from(
-            grid=grid_sub_8
-        ).binned
+        deflections_sub_8 = mass_profile.deflections_2d_from(grid=grid_sub_8).binned
 
         assert deflections[4, 0] == deflections_sub_8[4, 0]

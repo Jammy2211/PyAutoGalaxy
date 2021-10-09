@@ -4,7 +4,7 @@ from typing import List, Optional
 import autoarray.plot as aplt
 from autoarray.fit.plot import fit_imaging_plotters
 
-from autogalaxy.profiles.light_profiles import LightProfile
+from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.plane.plane import Plane
 from autogalaxy.imaging.fit_imaging import FitImaging
@@ -58,9 +58,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
             include_2d=self.include_2d,
         )
 
-    def galaxy_indexes_from(
-        self, galaxy_index: Optional[int]
-    ) -> List[int]:
+    def galaxy_indexes_from(self, galaxy_index: Optional[int]) -> List[int]:
 
         if galaxy_index is None:
             return list(range(len(self.fit.galaxies)))
@@ -74,9 +72,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
         galaxy_index: Optional[int] = None,
     ):
 
-        galaxy_indexes = self.galaxy_indexes_from(
-            galaxy_index=galaxy_index
-        )
+        galaxy_indexes = self.galaxy_indexes_from(galaxy_index=galaxy_index)
 
         for galaxy_index in galaxy_indexes:
 
@@ -127,9 +123,7 @@ class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):
             in the python interpreter window.
         """
 
-        galaxy_indexes = self.galaxy_indexes_from(
-            galaxy_index=galaxy_index
-        )
+        galaxy_indexes = self.galaxy_indexes_from(galaxy_index=galaxy_index)
 
         for galaxy_index in galaxy_indexes:
 

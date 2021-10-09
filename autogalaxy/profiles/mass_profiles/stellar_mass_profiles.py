@@ -25,7 +25,8 @@ class EllGaussian(MassProfile, StellarProfile):
         sigma: float = 0.01,
         mass_to_light_ratio: float = 1.0,
     ):
-        """The elliptical Gaussian light profile.
+        """
+        The elliptical Gaussian light profile.
 
         Parameters
         ----------
@@ -55,7 +56,7 @@ class EllGaussian(MassProfile, StellarProfile):
         axis_ratio = super().axis_ratio
         return axis_ratio if axis_ratio < 0.9999 else 0.9999
 
-    def zeta_from(self, grid):
+    def zeta_from(self, grid: aa.type.Grid2DLike):
         q2 = self.axis_ratio ** 2.0
         ind_pos_y = grid[:, 0] >= 0
         shape_grid = np.shape(grid)
@@ -87,7 +88,7 @@ class EllGaussian(MassProfile, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid):
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -115,7 +116,7 @@ class EllGaussian(MassProfile, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_integrator_from(self, grid):
+    def deflections_2d_via_integrator_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -173,7 +174,7 @@ class EllGaussian(MassProfile, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -187,7 +188,7 @@ class EllGaussian(MassProfile, StellarProfile):
     def convergence_func(self, grid_radius):
         return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
-    def image_2d_via_radii_from(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray):
         """Calculate the intensity of the Gaussian light profile on a grid of radial coordinates.
 
         Parameters
@@ -261,7 +262,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -278,7 +279,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_via_gaussians_from(self, grid):
+    def convergence_2d_via_gaussians_from(self, grid: aa.type.Grid2DLike):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -293,13 +294,13 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
         return self._convergence_2d_via_gaussians_from(grid_radii=eccentric_radii)
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid):
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
         return self._deflections_2d_via_gaussians_from(
             grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
         )
@@ -308,7 +309,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
     def ellipticity_rescale(self):
         return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
 
-    def image_2d_via_radii_from(self, radius):
+    def image_2d_via_radii_from(self, radius: np.ndarray):
         """
         Returns the intensity of the profile at a given radius.
 
@@ -338,7 +339,8 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
 
     @property
     def elliptical_effective_radius(self):
-        """The effective_radius of a Sersic light profile is defined as the circular effective radius. This is the \
+        """
+        The effective_radius of a Sersic light profile is defined as the circular effective radius. This is the \
         radius within which a circular aperture contains half the profiles's total integrated light. For elliptical \
         systems, this won't robustly capture the light profile's elliptical shape.
 
@@ -375,7 +377,7 @@ class EllSersic(AbstractEllSersic, MassProfileMGE):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_integrator_from(self, grid):
+    def deflections_2d_via_integrator_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -661,7 +663,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -675,7 +677,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_integrator_from(self, grid):
+    def deflections_2d_via_integrator_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -837,7 +839,8 @@ class EllSersicCore(EllSersic):
         alpha: float = 3.0,
         mass_to_light_ratio: float = 1.0,
     ):
-        """ The elliptical cored-Sersic light profile.
+        """
+        The elliptical cored-Sersic light profile.
 
         Parameters
         ----------
@@ -893,7 +896,7 @@ class EllSersicCore(EllSersic):
             )
         )
 
-    def image_2d_via_radii_from(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray):
         """
         Calculate the intensity of the cored-Sersic light profile on a grid of radial coordinates.
 
@@ -969,7 +972,8 @@ class SphSersicCore(EllSersicCore):
         gamma: float = 0.25,
         alpha: float = 3.0,
     ):
-        """ The elliptical cored-Sersic light profile.
+        """
+        The elliptical cored-Sersic light profile.
 
         Parameters
         ----------
@@ -1017,7 +1021,8 @@ class EllChameleon(MassProfile, StellarProfile):
         core_radius_1: float = 0.02,
         mass_to_light_ratio: float = 1.0,
     ):
-        """ The elliptical Chamelon mass profile.
+        """
+        The elliptical Chamelon mass profile.
 
         Parameters
         ----------
@@ -1056,7 +1061,7 @@ class EllChameleon(MassProfile, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid):
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
         Following Eq. (15) and (16), but the parameters are slightly different.
@@ -1129,7 +1134,7 @@ class EllChameleon(MassProfile, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
         Parameters
         ----------
@@ -1142,10 +1147,10 @@ class EllChameleon(MassProfile, StellarProfile):
         return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
-    def image_2d_via_radii_from(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray):
         """Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.
 
         Parameters
@@ -1196,7 +1201,8 @@ class SphChameleon(EllChameleon):
         core_radius_1: float = 0.02,
         mass_to_light_ratio: float = 1.0,
     ):
-        """ The spherica; Chameleon mass profile.
+        """
+        The spherica; Chameleon mass profile.
 
         Profile form:
             mass_to_light_ratio * intensity *\

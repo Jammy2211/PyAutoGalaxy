@@ -191,23 +191,15 @@ class TestMassSheet:
     def test__deflections__change_geometry(self):
         mass_sheet_0 = ag.mp.MassSheet(centre=(0.0, 0.0))
         mass_sheet_1 = ag.mp.MassSheet(centre=(1.0, 1.0))
-        deflections_0 = mass_sheet_0.deflections_2d_from(
-            grid=np.array([[1.0, 1.0]])
-        )
-        deflections_1 = mass_sheet_1.deflections_2d_from(
-            grid=np.array([[0.0, 0.0]])
-        )
+        deflections_0 = mass_sheet_0.deflections_2d_from(grid=np.array([[1.0, 1.0]]))
+        deflections_1 = mass_sheet_1.deflections_2d_from(grid=np.array([[0.0, 0.0]]))
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
 
         mass_sheet_0 = ag.mp.MassSheet(centre=(0.0, 0.0))
         mass_sheet_1 = ag.mp.MassSheet(centre=(0.0, 0.0))
-        deflections_0 = mass_sheet_0.deflections_2d_from(
-            grid=np.array([[1.0, 0.0]])
-        )
-        deflections_1 = mass_sheet_1.deflections_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        deflections_0 = mass_sheet_0.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = mass_sheet_1.deflections_2d_from(grid=np.array([[0.0, 1.0]]))
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 

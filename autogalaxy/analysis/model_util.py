@@ -9,7 +9,7 @@ from autoarray.inversion.pixelizations.abstract import AbstractPixelization
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 
 from autogalaxy.galaxy.galaxy import HyperGalaxy
-from autogalaxy.profiles.light_profiles import LightProfile
+from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
 
 from autogalaxy import exc

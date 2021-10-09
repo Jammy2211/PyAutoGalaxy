@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.integrate import quad
-from typing import Tuple
+from typing import Union, Tuple
 
 import autoarray as aa
 
@@ -27,7 +27,7 @@ class LightProfile(EllProfile):
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
         self.intensity = intensity
 
-    def image_2d_from(self, grid) -> aa.Array2D:
+    def image_2d_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
         """
         Abstract method for obtaining intensity at a grid of Cartesian (y,x) coordinates.
 
@@ -43,7 +43,7 @@ class LightProfile(EllProfile):
         """
         raise NotImplementedError()
 
-    def image_2d_via_radii_from(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """
         Abstract method for obtaining intensity at on a grid of radii.
 
@@ -55,10 +55,15 @@ class LightProfile(EllProfile):
         raise NotImplementedError()
 
     @aa.grid_dec.grid_1d_to_structure
-    def image_1d_from(self, grid):
+    def image_1d_from(self, grid: aa.type.Grid1D2DLike) -> aa.Array2D:
         return self.image_2d_from(grid=grid)
 
-    def blurred_image_2d_via_psf_from(self, grid, psf, blurring_grid):
+    def blurred_image_2d_via_psf_from(
+        self,
+        grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        psf: aa.Kernel2D,
+        blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
+    ) -> aa.Array2D:
         """
         Evaluate the light profile image on an input `Grid2D` of coordinates and then convolve it with a PSF.
 
@@ -71,11 +76,11 @@ class LightProfile(EllProfile):
 
         Parameters
         ----------
-        grid : Grid2D
+        grid
             The (y, x) coordinates in the original reference frame of the grid.
         psf : aa.Kernel2D
             The PSF the evaluated light profile image is convolved with.
-        blurring_grid : Grid2D
+        blurring_grid
             The (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
 
         """
@@ -87,7 +92,12 @@ class LightProfile(EllProfile):
             array=image.binned.native + blurring_image.binned.native, mask=grid.mask
         )
 
-    def blurred_image_2d_via_convolver_from(self, grid, convolver, blurring_grid):
+    def blurred_image_2d_via_convolver_from(
+        self,
+        grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        convolver: aa.Convolver,
+        blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
+    ) -> aa.Array2D:
         """
         Evaluate the light profile image on an input `Grid2D` of coordinates and then convolve it with a PSF using a
         *Convolver* object.
@@ -101,11 +111,11 @@ class LightProfile(EllProfile):
 
         Parameters
         ----------
-        grid : Grid2D
+        grid
             The (y, x) coordinates in the original reference frame of the grid.
-        Convolver : aa.Convolver
+        Convolver
             The Convolver object used to blur the PSF.
-        blurring_grid : Grid2D
+        blurring_grid
             The (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
 
         """
@@ -117,7 +127,11 @@ class LightProfile(EllProfile):
             image=image.binned, blurring_image=blurring_image.binned
         )
 
-    def profile_visibilities_via_transformer_from(self, grid, transformer):
+    def profile_visibilities_via_transformer_from(
+        self,
+        grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        transformer: Union[aa.TransformerDFT, aa.TransformerNUFFT],
+    ) -> aa.Visibilities:
 
         image = self.image_2d_from(grid=grid)
 
@@ -144,14 +158,16 @@ class LightProfile(EllProfile):
 
         return quad(func=self.luminosity_integral, a=0.0, b=radius)[0]
 
-    def luminosity_integral(self, x):
-        """Routine to integrate the luminosity of an elliptical light profile.
+    def luminosity_integral(self, x: np.ndarray) -> np.ndarray:
+        """
+        Routine to integrate the luminosity of an elliptical light profile.
 
-        The axis ratio is set to 1.0 for computing the luminosity within a circle"""
+        The axis ratio is set to 1.0 for computing the luminosity within a circle
+        """
         return 2 * np.pi * x * self.image_2d_via_radii_from(x)
 
     @property
-    def half_light_radius(self):
+    def half_light_radius(self) -> float:
 
         if hasattr(self, "effective_radius"):
             return self.effective_radius
@@ -165,7 +181,8 @@ class EllGaussian(LightProfile):
         intensity: float = 0.1,
         sigma: float = 0.01,
     ):
-        """The elliptical Gaussian light profile.
+        """
+        The elliptical Gaussian light profile.
 
         Parameters
         ----------
@@ -185,8 +202,9 @@ class EllGaussian(LightProfile):
         )
         self.sigma = sigma
 
-    def image_2d_via_radii_from(self, grid_radii):
-        """Calculate the intensity of the Gaussian light profile on a grid of radial coordinates.
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
+        """
+        Calculate the intensity of the Gaussian light profile on a grid of radial coordinates.
 
         Parameters
         ----------
@@ -208,7 +226,7 @@ class EllGaussian(LightProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def image_2d_from(self, grid, grid_radial_minimum=None):
+    def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 
@@ -230,7 +248,8 @@ class SphGaussian(EllGaussian):
         intensity: float = 0.1,
         sigma: float = 0.01,
     ):
-        """The spherical Gaussian light profile.
+        """
+        The spherical Gaussian light profile.
 
         Parameters
         ----------
@@ -280,7 +299,7 @@ class AbstractEllSersic(LightProfile):
         self.sersic_index = sersic_index
 
     @property
-    def elliptical_effective_radius(self):
+    def elliptical_effective_radius(self) -> float:
         """
         The effective_radius of a Sersic light profile is defined as the circular effective radius. This is the
         radius within which a circular aperture contains half the profiles's total integrated light. For elliptical
@@ -292,8 +311,9 @@ class AbstractEllSersic(LightProfile):
         return self.effective_radius / np.sqrt(self.axis_ratio)
 
     @property
-    def sersic_constant(self):
-        """A parameter derived from Sersic index which ensures that effective radius contains 50% of the profile's
+    def sersic_constant(self) -> float:
+        """
+        A parameter derived from Sersic index which ensures that effective radius contains 50% of the profile's
         total integrated light.
         """
         return (
@@ -305,7 +325,7 @@ class AbstractEllSersic(LightProfile):
             - (2194697.0 / (30690717750.0 * self.sersic_index ** 4))
         )
 
-    def image_2d_via_radii_from(self, radius):
+    def image_2d_via_radii_from(self, radius: np.ndarray) -> np.ndarray:
         """
         Returns the intensity of the profile at a given radius.
 
@@ -355,7 +375,7 @@ class EllSersic(AbstractEllSersic, LightProfile):
             sersic_index=sersic_index,
         )
 
-    def image_2d_via_radii_from(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """
         Calculate the intensity of the Sersic light profile on a grid of radial coordinates.
 
@@ -384,7 +404,7 @@ class EllSersic(AbstractEllSersic, LightProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def image_2d_from(self, grid, grid_radial_minimum=None):
+    def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 
         If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
@@ -405,7 +425,8 @@ class SphSersic(EllSersic):
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
     ):
-        """The spherical Sersic light profile.
+        """
+        The spherical Sersic light profile.
 
         Parameters
         ----------
@@ -440,7 +461,8 @@ class EllExponential(EllSersic):
         intensity: float = 0.1,
         effective_radius: float = 0.6,
     ):
-        """The elliptical exponential profile.
+        """
+        The elliptical exponential profile.
 
         This is a subset of the elliptical Sersic profile, specific to the case that sersic_index = 1.0.
 
@@ -472,7 +494,8 @@ class SphExponential(EllExponential):
         intensity: float = 0.1,
         effective_radius: float = 0.6,
     ):
-        """The spherical exponential profile.
+        """
+        The spherical exponential profile.
 
         This is a subset of the elliptical Sersic profile, specific to the case that sersic_index = 1.0.
 
@@ -501,7 +524,8 @@ class EllDevVaucouleurs(EllSersic):
         intensity: float = 0.1,
         effective_radius: float = 0.6,
     ):
-        """The elliptical Dev Vaucouleurs light profile.
+        """
+        The elliptical Dev Vaucouleurs light profile.
 
         This is a subset of the elliptical Sersic profile, specific to the case that sersic_index = 4.0.
 
@@ -533,7 +557,8 @@ class SphDevVaucouleurs(EllDevVaucouleurs):
         intensity: float = 0.1,
         effective_radius: float = 0.6,
     ):
-        """The spherical Dev Vaucouleurs light profile.
+        """
+        The spherical Dev Vaucouleurs light profile.
 
         This is a subset of the elliptical Sersic profile, specific to the case that sersic_index = 1.0.
 
@@ -566,7 +591,8 @@ class EllSersicCore(EllSersic):
         gamma: float = 0.25,
         alpha: float = 3.0,
     ):
-        """ The elliptical cored-Sersic light profile.
+        """
+        The elliptical cored-Sersic light profile.
 
         Parameters
         ----------
@@ -604,8 +630,10 @@ class EllSersicCore(EllSersic):
         self.gamma = gamma
 
     @property
-    def intensity_prime(self):
-        """Overall intensity normalisation in the rescaled Core-Sersic light profiles (electrons per second)"""
+    def intensity_prime(self) -> float:
+        """
+        Overall intensity normalisation in the rescaled Core-Sersic light profiles (electrons per second).
+        """
         return (
             self.intensity_break
             * (2.0 ** (-self.gamma / self.alpha))
@@ -619,8 +647,9 @@ class EllSersicCore(EllSersic):
             )
         )
 
-    def image_2d_via_radii_from(self, grid_radii):
-        """Calculate the intensity of the cored-Sersic light profile on a grid of radial coordinates.
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
+        """
+        Calculate the intensity of the cored-Sersic light profile on a grid of radial coordinates.
 
         Parameters
         ----------
@@ -669,7 +698,8 @@ class SphSersicCore(EllSersicCore):
         gamma: float = 0.25,
         alpha: float = 3.0,
     ):
-        """ The elliptical cored-Sersic light profile.
+        """
+        The elliptical cored-Sersic light profile.
 
         Parameters
         ----------
@@ -716,7 +746,8 @@ class EllChameleon(LightProfile):
         core_radius_0: float = 0.01,
         core_radius_1: float = 0.05,
     ):
-        """ The elliptical Chameleon light profile.
+        """
+        The elliptical Chameleon light profile.
 
         Profile form:
             mass_to_light_ratio * intensity *\
@@ -743,12 +774,13 @@ class EllChameleon(LightProfile):
         self.core_radius_1 = core_radius_1
 
     @property
-    def axis_ratio(self):
+    def axis_ratio(self) -> float:
         axis_ratio = super().axis_ratio
         return axis_ratio if axis_ratio < 0.99999 else 0.99999
 
-    def image_2d_via_radii_from(self, grid_radii):
-        """Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
+        """
+        Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.
 
         Parameters
         ----------
@@ -785,7 +817,7 @@ class EllChameleon(LightProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def image_2d_from(self, grid, grid_radial_minimum=None):
+    def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
         If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
@@ -805,7 +837,8 @@ class SphChameleon(EllChameleon):
         core_radius_0: float = 0.01,
         core_radius_1: float = 0.05,
     ):
-        """ The spherical Chameleon light profile.
+        """
+        The spherical Chameleon light profile.
 
         Profile form:
             mass_to_light_ratio * intensity *\
@@ -869,7 +902,7 @@ class EllEff(LightProfile):
         self.effective_radius = effective_radius
         self.eta = eta
 
-    def image_2d_via_radii_from(self, grid_radii):
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """
         Calculate the intensity of the Eff light profile on a grid of radial coordinates.
 
@@ -886,7 +919,7 @@ class EllEff(LightProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def image_2d_from(self, grid, grid_radial_minimum=None):
+    def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 
@@ -900,7 +933,7 @@ class EllEff(LightProfile):
         return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
 
     @property
-    def half_light_radius(self):
+    def half_light_radius(self) -> float:
         return self.effective_radius * np.sqrt(0.5 ** (1.0 / (1.0 - self.eta)) - 1.0)
 
 

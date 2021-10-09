@@ -5,7 +5,7 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.plot.lensing_obj_plotter import LensingObjPlotter
-from autogalaxy.profiles.light_profiles import LightProfile
+from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
@@ -554,9 +554,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         if convergence:
 
             grid_radial = (
-                self.galaxy_pdf_list[0]
-                .convergence_1d_from(grid=self.grid)
-                .grid_radial
+                self.galaxy_pdf_list[0].convergence_1d_from(grid=self.grid).grid_radial
             )
 
             convergence_1d_list = [
@@ -589,9 +587,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         if potential:
 
             grid_radial = (
-                self.galaxy_pdf_list[0]
-                .potential_1d_from(grid=self.grid)
-                .grid_radial
+                self.galaxy_pdf_list[0].potential_1d_from(grid=self.grid).grid_radial
             )
 
             potential_1d_list = [

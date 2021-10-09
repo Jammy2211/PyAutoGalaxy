@@ -122,9 +122,7 @@ class TestEllGaussian:
             mass_to_light_ratio=1.0,
         )
 
-        intensity = gaussian_light_profile.image_2d_from(
-            grid=np.array([[1.0, 0.0]])
-        )
+        intensity = gaussian_light_profile.image_2d_from(grid=np.array([[1.0, 0.0]]))
         convergence = gaussian_mass_profile.convergence_2d_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -699,9 +697,7 @@ class TestExponential:
             mass_to_light_ratio=1.0,
         )
 
-        deflections = exponential.deflections_2d_from(
-            grid=np.array([[0.1625, 0.1625]])
-        )
+        deflections = exponential.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.62569, 1e-3)
@@ -841,9 +837,7 @@ class TestDevVaucouleurs:
             mass_to_light_ratio=1.0,
         )
 
-        convergence = dev.convergence_2d_via_gaussians_from(
-            grid=np.array([[1.0, 0.0]])
-        )
+        convergence = dev.convergence_2d_via_gaussians_from(grid=np.array([[1.0, 0.0]]))
 
         assert convergence == pytest.approx(5.6697, 1e-3)
 
@@ -854,9 +848,7 @@ class TestDevVaucouleurs:
             mass_to_light_ratio=1.0,
         )
 
-        convergence = dev.convergence_2d_via_gaussians_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        convergence = dev.convergence_2d_via_gaussians_from(grid=np.array([[0.0, 1.0]]))
 
         assert convergence == pytest.approx(7.4455, 1e-3)
 
@@ -867,9 +859,7 @@ class TestDevVaucouleurs:
             mass_to_light_ratio=1.0,
         )
 
-        convergence = dev.convergence_2d_via_gaussians_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        convergence = dev.convergence_2d_via_gaussians_from(grid=np.array([[0.0, 1.0]]))
 
         assert convergence == pytest.approx(2.0 * 7.4455, 1e-3)
 
@@ -880,9 +870,7 @@ class TestDevVaucouleurs:
             mass_to_light_ratio=2.0,
         )
 
-        convergence = dev.convergence_2d_via_gaussians_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        convergence = dev.convergence_2d_via_gaussians_from(grid=np.array([[0.0, 1.0]]))
 
         assert convergence == pytest.approx(2.0 * 7.4455, 1e-3)
 
@@ -893,9 +881,7 @@ class TestDevVaucouleurs:
             mass_to_light_ratio=1.0,
         )
 
-        convergence = dev.convergence_2d_via_gaussians_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        convergence = dev.convergence_2d_via_gaussians_from(grid=np.array([[0.0, 1.0]]))
 
         assert convergence == pytest.approx(0.351797, 1e-3)
 
@@ -1093,9 +1079,7 @@ class TestSersicMassRadialGradient:
         assert deflections[0, 0] == pytest.approx(0.97806399756448, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.725459334118341, 1e-3)
 
-    def test__deflections_2d_from_using_mge__same_as_integrator__correct_values(
-        self
-    ):
+    def test__deflections_2d_from_using_mge__same_as_integrator__correct_values(self):
 
         # sersic = ag.mp.EllSersicRadialGradient(
         #     centre=(-0.4, -0.2),
@@ -1185,9 +1169,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_ratio=3.0,
         )
 
-        dev_deflections = dev.deflections_2d_from(
-            grid=np.array([[0.1625, 0.1625]])
-        )
+        dev_deflections = dev.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
 
         # assert sersic_deflections[0, 0] == pytest.approx(dev_deflections[0, 0], 1e-3)
         # assert sersic_deflections[0, 0] == pytest.approx(-24.528, 1e-3)
@@ -1325,9 +1307,7 @@ class TestSersicCore:
 
         assert convergence == pytest.approx(0.2, 1e-3)
 
-    def test__convergence_2d_via_gaussians_from__same_as_convergence_2d_from(
-        self
-    ):
+    def test__convergence_2d_via_gaussians_from__same_as_convergence_2d_from(self):
 
         core_sersic = ag.mp.EllSersicCore(
             elliptical_comps=(0.2, 0.4),
@@ -1569,9 +1549,7 @@ class TestChameleon:
             mass_to_light_ratio=3.0,
         )
 
-        deflections = chameleon.deflections_2d_from(
-            grid=np.array([[0.1625, 0.1625]])
-        )
+        deflections = chameleon.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(2.12608, 1e-3)
         assert deflections[0, 1] == pytest.approx(1.55252, 1e-3)
@@ -1584,13 +1562,9 @@ class TestChameleon:
             centre=(1.0, 1.0), intensity=3.0, core_radius_0=0.2, core_radius_1=0.4
         )
 
-        convergence_0 = chameleon_0.convergence_2d_from(
-            grid=np.array([[1.0, 1.0]])
-        )
+        convergence_0 = chameleon_0.convergence_2d_from(grid=np.array([[1.0, 1.0]]))
 
-        convergence_1 = chameleon_1.convergence_2d_from(
-            grid=np.array([[0.0, 0.0]])
-        )
+        convergence_1 = chameleon_1.convergence_2d_from(grid=np.array([[0.0, 0.0]]))
 
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-6)
 
@@ -1601,13 +1575,9 @@ class TestChameleon:
             centre=(0.0, 0.0), intensity=3.0, core_radius_0=0.2, core_radius_1=0.4
         )
 
-        convergence_0 = chameleon_0.convergence_2d_from(
-            grid=np.array([[1.0, 0.0]])
-        )
+        convergence_0 = chameleon_0.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
 
-        convergence_1 = chameleon_1.convergence_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        convergence_1 = chameleon_1.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
@@ -1618,13 +1588,9 @@ class TestChameleon:
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
 
-        convergence_0 = chameleon_0.convergence_2d_from(
-            grid=np.array([[1.0, 0.0]])
-        )
+        convergence_0 = chameleon_0.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
 
-        convergence_1 = chameleon_1.convergence_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        convergence_1 = chameleon_1.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
 
@@ -1632,12 +1598,8 @@ class TestChameleon:
         chameleon_0 = ag.mp.EllChameleon(centre=(0.0, 0.0))
         chameleon_1 = ag.mp.EllChameleon(centre=(1.0, 1.0))
 
-        deflections_0 = chameleon_0.deflections_2d_from(
-            grid=np.array([[1.0, 1.0]])
-        )
-        deflections_1 = chameleon_1.deflections_2d_from(
-            grid=np.array([[0.0, 0.0]])
-        )
+        deflections_0 = chameleon_0.deflections_2d_from(grid=np.array([[1.0, 1.0]]))
+        deflections_1 = chameleon_1.deflections_2d_from(grid=np.array([[0.0, 0.0]]))
 
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-4)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-4)
@@ -1645,12 +1607,8 @@ class TestChameleon:
         chameleon_0 = ag.mp.EllChameleon(centre=(0.0, 0.0))
         chameleon_1 = ag.mp.EllChameleon(centre=(0.0, 0.0))
 
-        deflections_0 = chameleon_0.deflections_2d_from(
-            grid=np.array([[1.0, 0.0]])
-        )
-        deflections_1 = chameleon_1.deflections_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        deflections_0 = chameleon_0.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = chameleon_1.deflections_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
@@ -1662,12 +1620,8 @@ class TestChameleon:
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
 
-        deflections_0 = chameleon_0.deflections_2d_from(
-            grid=np.array([[1.0, 0.0]])
-        )
-        deflections_1 = chameleon_1.deflections_2d_from(
-            grid=np.array([[0.0, 1.0]])
-        )
+        deflections_0 = chameleon_0.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = chameleon_1.deflections_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)

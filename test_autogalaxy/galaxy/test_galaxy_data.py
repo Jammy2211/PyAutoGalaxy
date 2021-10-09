@@ -237,9 +237,7 @@ class TestGalaxyFitData:
 
         convergence_gal = galaxy.convergence_2d_from(grid=galaxy_fit_data.grid)
 
-        convergence_gd = galaxy_fit_data.profile_quantity_from(
-            galaxies=[galaxy]
-        )
+        convergence_gd = galaxy_fit_data.profile_quantity_from(galaxies=[galaxy])
 
         assert (convergence_gal == convergence_gd).all()
 
@@ -376,9 +374,7 @@ class TestGalaxyFitData:
 
         galaxy = mock.MockGalaxy(value=1, shape=36)
 
-        deflections_y = galaxy_fit_data.profile_quantity_from(
-            galaxies=[galaxy]
-        )
+        deflections_y = galaxy_fit_data.profile_quantity_from(galaxies=[galaxy])
 
         assert (deflections_y.binned == np.ones(9)).all()
 
@@ -402,9 +398,7 @@ class TestGalaxyFitData:
             ]
         ).T
 
-        deflections_gd = galaxy_fit_data.profile_quantity_from(
-            galaxies=[galaxy]
-        )
+        deflections_gd = galaxy_fit_data.profile_quantity_from(galaxies=[galaxy])
 
         assert (deflections_gal[:, 0] == deflections_gd.binned).all()
 
@@ -469,9 +463,7 @@ class TestGalaxyFitData:
 
         galaxy = mock.MockGalaxy(value=1, shape=36)
 
-        deflections_x = galaxy_fit_data.profile_quantity_from(
-            galaxies=[galaxy]
-        )
+        deflections_x = galaxy_fit_data.profile_quantity_from(galaxies=[galaxy])
 
         assert (deflections_x.binned == np.ones(9)).all()
 
@@ -495,9 +487,7 @@ class TestGalaxyFitData:
             ]
         ).T
 
-        deflections_gd = galaxy_fit_data.profile_quantity_from(
-            galaxies=[galaxy]
-        )
+        deflections_gd = galaxy_fit_data.profile_quantity_from(galaxies=[galaxy])
 
         assert (deflections_gal[:, 1] == deflections_gd.binned).all()
 

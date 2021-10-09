@@ -10,7 +10,7 @@ from autoarray.inversion.regularization.abstract import AbstractRegularization
 
 from autogalaxy.lensing import LensingObject
 from autogalaxy.profiles.point_sources import Point
-from autogalaxy.profiles.light_profiles import LightProfile
+from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.profiles.mass_profiles.dark_mass_profiles import DarkProfile
 from autogalaxy.profiles.mass_profiles.stellar_mass_profiles import StellarProfile
@@ -291,9 +291,7 @@ class Galaxy(af.ModelObject, LensingObject):
 
         """
         if self.has_light_profile:
-            return sum(
-                map(lambda p: p.image_1d_from(grid=grid), self.light_profiles)
-            )
+            return sum(map(lambda p: p.image_1d_from(grid=grid), self.light_profiles))
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
@@ -313,9 +311,7 @@ class Galaxy(af.ModelObject, LensingObject):
 
         """
         if self.has_light_profile:
-            return sum(
-                map(lambda p: p.image_2d_from(grid=grid), self.light_profiles)
-            )
+            return sum(map(lambda p: p.image_2d_from(grid=grid), self.light_profiles))
         return np.zeros((grid.shape[0],))
 
     def blurred_image_2d_via_psf_from(self, grid, psf, blurring_grid=None):

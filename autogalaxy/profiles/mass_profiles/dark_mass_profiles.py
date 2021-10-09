@@ -161,7 +161,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -178,7 +178,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_via_gaussians_from(self, grid):
+    def convergence_2d_via_gaussians_from(self, grid: aa.type.Grid2DLike):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -280,7 +280,8 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
     def rho_at_scale_radius_solar_mass_per_kpc3(
         self, redshift_object, redshift_source, cosmology=cosmo.Planck15
     ):
-        """The Cosmic average density is defined at the redshift of the profile."""
+        """
+        The Cosmic average density is defined at the redshift of the profile."""
 
         critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
             redshift_0=redshift_object, redshift_1=redshift_source, cosmology=cosmology
@@ -530,7 +531,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid):
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
 
         return self._deflections_2d_via_gaussians_from(
             grid=grid, sigmas_factor=self.axis_ratio
@@ -843,7 +844,7 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
         return np.real(self.coord_func_m(grid_radius=grid_radius))
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.grid_2d_to_structure
@@ -1006,7 +1007,7 @@ class EllNFW(EllNFWGeneralized):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from(self, grid):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -1040,7 +1041,7 @@ class EllNFW(EllNFWGeneralized):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_integrator_from(self, grid):
+    def deflections_2d_via_integrator_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -1170,7 +1171,7 @@ class SphNFW(EllNFW):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from(self, grid):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 

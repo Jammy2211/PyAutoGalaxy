@@ -304,9 +304,9 @@ class TestCompareToManual:
 
         assert fit.model_galaxies == [galaxy]
 
-        model_data = galaxy.deflections_2d_from(
-            grid=masked_galaxy_dataset.grid
-        ).binned[:, 0]
+        model_data = galaxy.deflections_2d_from(grid=masked_galaxy_dataset.grid).binned[
+            :, 0
+        ]
 
         residual_map = ag.util.fit.residual_map_from(
             data=masked_galaxy_dataset.image, model_data=model_data
@@ -347,9 +347,9 @@ class TestCompareToManual:
 
         assert fit.model_galaxies == [galaxy]
 
-        model_data = galaxy.deflections_2d_from(
-            grid=masked_galaxy_dataset.grid
-        ).binned[:, 1]
+        model_data = galaxy.deflections_2d_from(grid=masked_galaxy_dataset.grid).binned[
+            :, 1
+        ]
 
         residual_map = ag.util.fit.residual_map_from(
             data=masked_galaxy_dataset.image, model_data=model_data

@@ -147,9 +147,7 @@ class LensingObject:
     @precompute_jacobian
     def tangential_eigen_value_from(self, grid, jacobian=None):
 
-        convergence = self.convergence_via_jacobian_from(
-            grid=grid, jacobian=jacobian
-        )
+        convergence = self.convergence_via_jacobian_from(grid=grid, jacobian=jacobian)
 
         shear = self.shear_via_jacobian_from(grid=grid, jacobian=jacobian)
 
@@ -158,9 +156,7 @@ class LensingObject:
     @precompute_jacobian
     def radial_eigen_value_from(self, grid, jacobian=None):
 
-        convergence = self.convergence_via_jacobian_from(
-            grid=grid, jacobian=jacobian
-        )
+        convergence = self.convergence_via_jacobian_from(grid=grid, jacobian=jacobian)
 
         shear = self.shear_via_jacobian_from(grid=grid, jacobian=jacobian)
 
@@ -227,13 +223,9 @@ class LensingObject:
 
         shear_y, shear_x = self.shear_yx_via_hessian_from(grid=grid, buffer=buffer)
 
-        return grid.values_from(
-            array_slim=(shear_x ** 2 + shear_y ** 2) ** 0.5
-        )
+        return grid.values_from(array_slim=(shear_x ** 2 + shear_y ** 2) ** 0.5)
 
-    def magnification_via_hessian_from(
-        self, grid, buffer=0.01, deflections_func=None
-    ):
+    def magnification_via_hessian_from(self, grid, buffer=0.01, deflections_func=None):
 
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
             grid=grid, buffer=buffer, deflections_func=deflections_func
@@ -296,9 +288,7 @@ class LensingObject:
                     self.tangential_critical_curve_from(
                         grid=grid, pixel_scale=pixel_scale
                     ),
-                    self.radial_critical_curve_from(
-                        grid=grid, pixel_scale=pixel_scale
-                    ),
+                    self.radial_critical_curve_from(grid=grid, pixel_scale=pixel_scale),
                 ]
             )
         except (IndexError, ValueError):
@@ -342,9 +332,7 @@ class LensingObject:
         try:
             return aa.Grid2DIrregular(
                 [
-                    self.tangential_caustic_from(
-                        grid=grid, pixel_scale=pixel_scale
-                    ),
+                    self.tangential_caustic_from(grid=grid, pixel_scale=pixel_scale),
                     self.radial_caustic_from(grid=grid, pixel_scale=pixel_scale),
                 ]
             )
