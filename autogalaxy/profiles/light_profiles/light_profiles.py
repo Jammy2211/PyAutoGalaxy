@@ -38,7 +38,7 @@ class LightProfile(EllProfile):
 
         Returns
         -------
-        image : aa.Array2D
+        image
             The image of the `LightProfile` evaluated at every (y,x) coordinate on the grid.
         """
         raise NotImplementedError()
@@ -405,7 +405,8 @@ class EllSersic(AbstractEllSersic, LightProfile):
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
-        """Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
+        """
+        Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
 
         If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
 
