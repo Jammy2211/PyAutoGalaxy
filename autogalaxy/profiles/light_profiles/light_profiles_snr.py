@@ -140,9 +140,7 @@ class SphGaussian(lp.SphGaussian, LightProfileSNR):
         sigma
             The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
-        super().__init__(
-            centre=centre, intensity=0.0, sigma=sigma
-        )
+        super().__init__(centre=centre, intensity=0.0, sigma=sigma)
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
 
 
@@ -273,10 +271,7 @@ class SphExponential(lp.SphExponential, LightProfileSNR):
         effective_radius
             The circular radius containing half the light of this profile.
         """
-        super().__init__(
-            centre=centre,
-            effective_radius=effective_radius,
-        )
+        super().__init__(centre=centre, effective_radius=effective_radius)
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
 
 
@@ -336,9 +331,7 @@ class SphDevVaucouleurs(lp.SphDevVaucouleurs, LightProfileSNR):
             The circular radius containing half the light of this profile.
         """
         super().__init__(
-            centre=centre,
-            intensity=0.0,
-            effective_radius=effective_radius,
+            centre=centre, intensity=0.0, effective_radius=effective_radius
         )
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
 
@@ -374,7 +367,11 @@ class EllChameleon(lp.EllChameleon, LightProfileSNR):
         """
 
         super().__init__(
-            centre=centre, elliptical_comps=elliptical_comps, intensity=0.0, core_radius_0=core_radius_0, core_radius_1=core_radius_1
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            intensity=0.0,
+            core_radius_0=core_radius_0,
+            core_radius_1=core_radius_1,
         )
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
 
@@ -446,7 +443,11 @@ class EllEff(lp.EllEff, LightProfileSNR):
         """
 
         super().__init__(
-            centre=centre, elliptical_comps=elliptical_comps, intensity=0.0, effective_radius=effective_radius, eta=eta
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            intensity=0.0,
+            effective_radius=effective_radius,
+            eta=eta,
         )
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
 
@@ -478,9 +479,6 @@ class SphEff(lp.SphEff, LightProfileSNR):
         """
 
         super().__init__(
-            centre=centre,
-            intensity=0.0,
-            effective_radius=effective_radius,
-            eta=eta,
+            centre=centre, intensity=0.0, effective_radius=effective_radius, eta=eta
         )
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)

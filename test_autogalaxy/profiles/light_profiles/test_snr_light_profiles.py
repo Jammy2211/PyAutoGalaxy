@@ -2,7 +2,7 @@ import numpy as np
 
 import autogalaxy as ag
 
-from autogalaxy.profiles.light_profiles.snr_light_profiles import LightProfileSNR
+from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
 
 from autogalaxy.mock.mock import MockLightProfile
 

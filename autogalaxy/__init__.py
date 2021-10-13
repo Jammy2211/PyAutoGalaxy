@@ -71,7 +71,8 @@ from .profiles import (
     light_and_mass_profiles as lmp,
     scaling_relations as sr,
 )
-from .profiles.light_profiles import snr_light_profiles as lp_snr
+from .profiles.light_profiles import light_profiles_init as lp_init
+from .profiles.light_profiles import light_profiles_snr as lp_snr
 from . import convert
 
 from autoconf import conf
