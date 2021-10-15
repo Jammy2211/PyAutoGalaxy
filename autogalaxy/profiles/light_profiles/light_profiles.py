@@ -733,6 +733,99 @@ class SphSersicCore(EllSersicCore):
         self.gamma = gamma
 
 
+class EllExponentialCore(EllSersicCore):
+    def __init__(
+        self,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        effective_radius: float = 0.6,
+        radius_break: float = 0.01,
+        intensity_break: float = 0.05,
+        gamma: float = 0.25,
+        alpha: float = 3.0,
+    ):
+        """
+        The elliptical cored-Exponential light profile.
+
+        Parameters
+        ----------
+        centre
+            The (y,x) arc-second coordinates of the profile centre.
+        elliptical_comps
+            The first and second ellipticity components of the elliptical coordinate system, where
+            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+        effective_radius
+            The circular radius containing half the light of this profile.
+        sersic_index : Int
+            Controls the concentration of the of the profile (lower value -> less concentrated, \
+            higher value -> more concentrated).
+        radius_break
+            The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
+        intensity_break
+            The intensity at the break radius.
+        gamma
+            The logarithmic power-law slope of the inner core profiles
+        alpha :
+            Controls the sharpness of the transition between the inner core / outer Sersic profiles.
+        """
+
+        super().__init__(
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            intensity_break=intensity_break,
+            effective_radius=effective_radius,
+            sersic_index=1.0,
+            radius_break=radius_break,
+            gamma=gamma,
+            alpha=alpha
+        )
+
+
+class SphExponentialCore(EllExponentialCore):
+    def __init__(
+        self,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        effective_radius: float = 0.6,
+        radius_break: float = 0.01,
+        intensity_break: float = 0.05,
+        gamma: float = 0.25,
+        alpha: float = 3.0,
+    ):
+        """
+        The elliptical cored-Exponential light profile.
+
+        Parameters
+        ----------
+        centre
+            The (y,x) arc-second coordinates of the profile centre.
+        effective_radius
+            The circular radius containing half the light of this profile.
+        radius_break
+            The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
+        intensity_break
+            The intensity at the break radius.
+        gamma
+            The logarithmic power-law slope of the inner core profiles
+        alpha :
+            Controls the sharpness of the transition between the inner core / outer Sersic profiles.
+        """
+
+        super().__init__(
+            centre=centre,
+            elliptical_comps=(0.0, 0.0),
+            effective_radius=effective_radius,
+            radius_break=radius_break,
+            intensity_break=intensity_break,
+            gamma=gamma,
+            alpha=alpha,
+        )
+
+        self.radius_break = radius_break
+        self.intensity_break = intensity_break
+        self.alpha = alpha
+        self.gamma = gamma
+
+
 class EllChameleon(LightProfile):
     def __init__(
         self,

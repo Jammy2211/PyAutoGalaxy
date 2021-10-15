@@ -10,6 +10,8 @@ from .light_profiles import (
     SphDevVaucouleurs,
     EllSersicCore,
     SphSersicCore,
+    EllExponentialCore,
+    SphExponentialCore,
     EllChameleon,
     SphChameleon,
     EllEff,
