@@ -575,16 +575,26 @@ def stochastic_model_from(
     model = result.instance.as_model(model_classes)
 
     model.galaxies.lens.take_attributes(source=result.model.galaxies.lens)
-    model.galaxies.lens.mass.einstein_radius = result.model.galaxies.lens.mass.einstein_radius
+    model.galaxies.lens.mass.einstein_radius = (
+        result.model.galaxies.lens.mass.einstein_radius
+    )
     if hasattr(result.model.galaxies.lens.mass, "inner_slope"):
-        model.galaxies.lens.mass.inner_slope = result.model.galaxies.lens.mass.inner_slope
+        model.galaxies.lens.mass.inner_slope = (
+            result.model.galaxies.lens.mass.inner_slope
+        )
     if hasattr(result.model.galaxies.lens.mass, "outer_slope"):
-        model.galaxies.lens.mass.outer_slope = result.model.galaxies.lens.mass.outer_slope
+        model.galaxies.lens.mass.outer_slope = (
+            result.model.galaxies.lens.mass.outer_slope
+        )
     if hasattr(result.model.galaxies.lens.mass, "break_radius"):
-        model.galaxies.lens.mass.break_radius = result.model.galaxies.lens.mass.break_radius
+        model.galaxies.lens.mass.break_radius = (
+            result.model.galaxies.lens.mass.break_radius
+        )
     if hasattr(result.model.galaxies.lens, "smbh"):
         if result.model.galaxies.lens.smbh is not None:
-            model.galaxies.lens.smbh.einstein_radius = result.model.galaxies.lens.smbh.einstein_radius
+            model.galaxies.lens.smbh.einstein_radius = (
+                result.model.galaxies.lens.smbh.einstein_radius
+            )
 
     if hasattr(model.galaxies, "subhalo"):
         model.galaxies.subhalo.take_attributes(source=result.model.galaxies.subhalo)

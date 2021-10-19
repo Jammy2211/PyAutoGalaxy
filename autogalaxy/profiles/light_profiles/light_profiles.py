@@ -777,7 +777,7 @@ class EllExponentialCore(EllSersicCore):
             sersic_index=1.0,
             radius_break=radius_break,
             gamma=gamma,
-            alpha=alpha
+            alpha=alpha,
         )
 
 

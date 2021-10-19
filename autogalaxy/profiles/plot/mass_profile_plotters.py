@@ -101,6 +101,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         visuals_2d: Visuals2D = Visuals2D(),
         include_2d: Include2D = Include2D(),
         sigma: Optional[float] = 3.0,
+        radial_grid_shape_slim: int = 50,
     ):
 
         super().__init__(
@@ -117,6 +118,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         self.mass_profile_pdf_list = mass_profile_pdf_list
         self.sigma = sigma
         self.low_limit = (1 - math.erf(sigma / math.sqrt(2))) / 2
+        self.radial_grid_shape_slim = radial_grid_shape_slim
 
     @property
     def visuals_with_include_1d(self) -> Visuals1D:
@@ -167,12 +169,16 @@ class MassProfilePDFPlotter(MassProfilePlotter):
 
             grid_radial = (
                 self.mass_profile_pdf_list[0]
-                .convergence_1d_from(grid=self.grid)
+                .convergence_1d_from(
+                    grid=self.grid, radial_grid_shape_slim=self.radial_grid_shape_slim
+                )
                 .grid_radial
             )
 
             convergence_1d_list = [
-                mass_profile.convergence_1d_from(grid=self.grid)
+                mass_profile.convergence_1d_from(
+                    grid=self.grid, radial_grid_shape_slim=self.radial_grid_shape_slim
+                )
                 for mass_profile in self.mass_profile_pdf_list
             ]
 

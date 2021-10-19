@@ -2,7 +2,7 @@ import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
 from scipy.special import wofz, comb
-from typing import Tuple
+from typing import Optional, Tuple
 
 import autoarray as aa
 
@@ -46,11 +46,15 @@ class MassProfile(EllProfile, LensingObject):
         raise NotImplementedError()
 
     @aa.grid_dec.grid_1d_to_structure
-    def convergence_1d_from(self, grid: aa.type.Grid1D2DLike):
+    def convergence_1d_from(
+        self, grid: aa.type.Grid1D2DLike, radial_grid_shape_slim: Optional[int] = None
+    ):
         return self.convergence_2d_from(grid=grid)
 
     @aa.grid_dec.grid_1d_to_structure
-    def potential_1d_from(self, grid: aa.type.Grid1D2DLike):
+    def potential_1d_from(
+        self, grid: aa.type.Grid1D2DLike, radial_grid_shape_slim: Optional[int] = None
+    ):
         return self.potential_2d_from(grid=grid)
 
     def mass_angular_within_circle(self, radius: float):
