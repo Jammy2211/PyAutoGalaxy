@@ -3,6 +3,7 @@ import numpy as np
 from skimage import measure
 
 import autoarray as aa
+from autoconf.dictable import Dictable
 
 
 def precompute_jacobian(func):
@@ -46,10 +47,13 @@ def evaluation_grid(func):
     return wrapper
 
 
-class LensingObject:
+class LensingObject(Dictable):
 
     centre = None
     angle = None
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__ and self.__class__ is other.__class__
 
     def convergence_func(self, grid_radius):
         raise NotImplementedError

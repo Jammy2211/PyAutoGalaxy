@@ -1,25 +1,23 @@
-import numpy as np
 from typing import Dict, Optional
 
-import autoarray as aa
+import numpy as np
 
+import autoarray as aa
 from autoarray.inversion.inversion.factory import inversion_imaging_unpacked_from
 from autoarray.inversion.inversion.factory import inversion_interferometer_unpacked_from
-
+from autogalaxy import exc
+from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.lensing import LensingObject
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
-from autogalaxy.galaxy.galaxy import Galaxy
-
-from autogalaxy import exc
 from autogalaxy.util import plane_util
 
 
 class AbstractPlane(LensingObject):
     def __init__(
-        self,
-        galaxies,
-        redshift: Optional[float] = None,
-        profiling_dict: Optional[Dict] = None,
+            self,
+            galaxies,
+            redshift: Optional[float] = None,
+            profiling_dict: Optional[Dict] = None,
     ):
         """A plane of galaxies where all galaxies are at the same redshift.
 
@@ -39,7 +37,7 @@ class AbstractPlane(LensingObject):
                     "determined"
                 )
             elif not all(
-                [galaxies[0].redshift == galaxy.redshift for galaxy in galaxies]
+                    [galaxies[0].redshift == galaxy.redshift for galaxy in galaxies]
             ):
                 redshift = np.mean([galaxy.redshift for galaxy in galaxies])
             else:
@@ -48,6 +46,15 @@ class AbstractPlane(LensingObject):
         self.redshift = redshift
         self.galaxies = galaxies
         self.profiling_dict = profiling_dict
+
+    def dict(self) -> dict:
+        plane_dict = super().dict()
+        plane_dict["galaxies"] = [
+            galaxy.dict()
+            for galaxy
+            in self.galaxies
+        ]
+        return plane_dict
 
     @property
     def galaxy_redshifts(self):
@@ -338,7 +345,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         return convolver.convolve_image(image=image, blurring_image=blurring_image)
 
     def blurred_images_of_galaxies_via_convolver_from(
-        self, grid, convolver, blurring_grid
+            self, grid, convolver, blurring_grid
     ):
         return [
             galaxy.blurred_image_2d_via_convolver_from(
@@ -394,7 +401,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         ]
 
     def sparse_image_plane_grid_list_from(
-        self, grid, settings_pixelization=aa.SettingsPixelization()
+            self, grid, settings_pixelization=aa.SettingsPixelization()
     ):
 
         if not self.has_pixelization:
@@ -412,14 +419,14 @@ class AbstractPlaneData(AbstractPlaneLensing):
         ]
 
     def mapper_from(
-        self,
-        grid,
-        sparse_grid,
-        pixelization,
-        hyper_galaxy_image,
-        sparse_image_plane_grid=None,
-        settings_pixelization=aa.SettingsPixelization(),
-        preloads=aa.Preloads(),
+            self,
+            grid,
+            sparse_grid,
+            pixelization,
+            hyper_galaxy_image,
+            sparse_image_plane_grid=None,
+            settings_pixelization=aa.SettingsPixelization(),
+            preloads=aa.Preloads(),
     ):
 
         return pixelization.mapper_from(
@@ -433,10 +440,10 @@ class AbstractPlaneData(AbstractPlaneLensing):
         )
 
     def mapper_list_from(
-        self,
-        grid,
-        settings_pixelization=aa.SettingsPixelization(),
-        preloads=aa.Preloads(),
+            self,
+            grid,
+            settings_pixelization=aa.SettingsPixelization(),
+            preloads=aa.Preloads(),
     ):
 
         if not self.has_pixelization:
@@ -466,15 +473,15 @@ class AbstractPlaneData(AbstractPlaneLensing):
         return mapper_list
 
     def inversion_imaging_from(
-        self,
-        grid,
-        image,
-        noise_map,
-        convolver,
-        w_tilde,
-        settings_pixelization=aa.SettingsPixelization(),
-        settings_inversion=aa.SettingsInversion(),
-        preloads=aa.Preloads(),
+            self,
+            grid,
+            image,
+            noise_map,
+            convolver,
+            w_tilde,
+            settings_pixelization=aa.SettingsPixelization(),
+            settings_inversion=aa.SettingsInversion(),
+            preloads=aa.Preloads(),
     ):
 
         mapper_list = self.mapper_list_from(
@@ -493,14 +500,14 @@ class AbstractPlaneData(AbstractPlaneLensing):
         )
 
     def inversion_interferometer_from(
-        self,
-        grid,
-        visibilities,
-        noise_map,
-        transformer,
-        settings_pixelization=aa.SettingsPixelization(),
-        settings_inversion=aa.SettingsInversion(),
-        preloads=aa.Preloads(),
+            self,
+            grid,
+            visibilities,
+            noise_map,
+            transformer,
+            settings_pixelization=aa.SettingsPixelization(),
+            settings_inversion=aa.SettingsInversion(),
+            preloads=aa.Preloads(),
     ):
 
         mapper_list = self.mapper_list_from(
@@ -605,7 +612,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         return galaxy_image_dict
 
     def galaxy_blurred_image_dict_via_convolver_from(
-        self, grid, convolver, blurring_grid
+            self, grid, convolver, blurring_grid
     ) -> {Galaxy: np.ndarray}:
         """
         A dictionary associating galaxies with their corresponding model images
@@ -622,7 +629,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
         return galaxy_blurred_image_dict
 
     def galaxy_profile_visibilities_dict_via_transformer_from(
-        self, grid, transformer
+            self, grid, transformer
     ) -> {Galaxy: np.ndarray}:
         """
         A dictionary associating galaxies with their corresponding model images
@@ -641,10 +648,10 @@ class AbstractPlaneData(AbstractPlaneLensing):
         return galaxy_profile_visibilities_image_dict
 
     def set_snr_of_snr_light_profiles(
-        self,
-        grid: aa.type.Grid2DLike,
-        exposure_time: float,
-        background_sky_level: float = 0.0,
+            self,
+            grid: aa.type.Grid2DLike,
+            exposure_time: float,
+            background_sky_level: float = 0.0,
     ):
 
         for galaxy in self.galaxies:
@@ -658,12 +665,10 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
 
 class Plane(AbstractPlaneData):
-
     pass
 
 
 class PlaneImage:
     def __init__(self, array, grid):
-
         self.array = array
         self.grid = grid
