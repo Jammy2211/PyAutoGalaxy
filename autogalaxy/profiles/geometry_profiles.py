@@ -1,11 +1,12 @@
+import inspect
+from typing import Tuple
+
 import numpy as np
 
 import autoarray as aa
 from autoarray.structures.grids.two_d.grid_transformed import Grid2DTransformedNumpy
-
+from autofit.tools.util import get_class_path
 from autogalaxy import convert
-
-from typing import Tuple
 
 
 class GeometryProfile:
@@ -19,6 +20,23 @@ class GeometryProfile:
         """
 
         self.centre = centre
+
+    def dict(self):
+        argument_dict = {
+            arg: getattr(
+                self, arg
+            )
+            for arg
+            in inspect.getfullargspec(
+                self.__init__
+            ).args[1:]
+        }
+        return {
+            "type": get_class_path(
+                self.__class__
+            ),
+            **argument_dict
+        }
 
     def transform_grid_to_reference_frame(self, grid):
         raise NotImplemented()
@@ -120,9 +138,9 @@ class SphProfile(GeometryProfile):
 
 class EllProfile(SphProfile):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
     ):
         """ An elliptical profile, which describes profiles with y and x centre Cartesian coordinates, an axis-ratio \
         and rotational angle.
@@ -156,10 +174,10 @@ class EllProfile(SphProfile):
 
     @classmethod
     def from_axis_ratio_and_phi(
-        cls,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        angle: float = 0.0,
+            cls,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            axis_ratio: float = 1.0,
+            angle: float = 0.0,
     ):
 
         elliptical_comps = convert.elliptical_comps_from(
@@ -300,10 +318,10 @@ class EllProfile(SphProfile):
     def eta_u(self, u, coordinates):
         return np.sqrt(
             (
-                u
-                * (
-                    (coordinates[1] ** 2)
-                    + (coordinates[0] ** 2 / (1 - (1 - self.axis_ratio ** 2) * u))
-                )
+                    u
+                    * (
+                            (coordinates[1] ** 2)
+                            + (coordinates[0] ** 2 / (1 - (1 - self.axis_ratio ** 2) * u))
+                    )
             )
         )

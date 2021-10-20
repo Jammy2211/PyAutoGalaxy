@@ -1,4 +1,5 @@
 test_autogalaxy/unit/pipeline/files/plot/
+test_autogalaxy/imaging/model/files/
 
 output/
 .envr
