@@ -1,15 +1,14 @@
-import inspect
-from typing import Tuple, cast
+from typing import Tuple
 
 import numpy as np
 
 import autoarray as aa
 from autoarray.structures.grids.two_d.grid_transformed import Grid2DTransformedNumpy
-from autofit.tools.util import get_class_path, get_class
 from autogalaxy import convert
+from autogalaxy.dictable import Dictable
 
 
-class GeometryProfile:
+class GeometryProfile(Dictable):
     def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
         """An abstract geometry profile, which describes profiles with y and x centre Cartesian coordinates
 
@@ -20,60 +19,6 @@ class GeometryProfile:
         """
 
         self.centre = centre
-
-    def dict(self) -> dict:
-        """
-        A dictionary representation of the instance comprising a type
-        field which contains the entire class path by which the type
-        can be imported and constructor arguments.
-        """
-        argument_dict = {
-            arg: getattr(
-                self, arg
-            )
-            for arg
-            in inspect.getfullargspec(
-                self.__init__
-            ).args[1:]
-        }
-        return {
-            "type": get_class_path(
-                self.__class__
-            ),
-            **argument_dict
-        }
-
-    @staticmethod
-    def from_dict(
-            profile_dict
-    ) -> "GeometryProfile":
-        """
-        Instantiate a GeometryProfile from its dictionary representation.
-
-        Parameters
-        ----------
-        profile_dict
-            A dictionary representation of the instance comprising a type
-            field which contains the entire class path by which the type
-            can be imported and constructor arguments.
-
-        Returns
-        -------
-        An instance of the geometry profile specified by the type field in
-        the profile_dict
-        """
-        cls = get_class(
-            profile_dict.pop(
-                "type"
-            )
-        )
-        # noinspection PyArgumentList
-        return cast(
-            GeometryProfile,
-            cls(
-                **profile_dict
-            )
-        )
 
     def transform_grid_to_reference_frame(self, grid):
         raise NotImplemented()

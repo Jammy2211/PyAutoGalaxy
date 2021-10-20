@@ -7,6 +7,7 @@ import autoarray as aa
 
 from autoarray.inversion.pixelizations.abstract import AbstractPixelization
 from autoarray.inversion.regularization.abstract import AbstractRegularization
+from autogalaxy.dictable import Dictable
 
 from autogalaxy.lensing import LensingObject
 from autogalaxy.profiles.point_sources import Point
@@ -30,7 +31,7 @@ def is_mass_profile(obj):
     return isinstance(obj, MassProfile)
 
 
-class Galaxy(af.ModelObject, LensingObject):
+class Galaxy(af.ModelObject, LensingObject, Dictable):
     """
     @DynamicAttrs
     """
@@ -88,6 +89,9 @@ class Galaxy(af.ModelObject, LensingObject):
             )
 
         self.hyper_galaxy = hyper_galaxy
+
+    def dict(self) -> dict:
+        return Dictable.dict(self)
 
     def __hash__(self):
         return self.id
@@ -218,7 +222,8 @@ class Galaxy(af.ModelObject, LensingObject):
             )
         else:
             raise exc.GalaxyException(
-                "You cannot perform a stellar mass-based calculation on a galaxy which does not have a stellar mass-profile"
+                "You cannot perform a stellar mass-based calculation on a galaxy which does not have a stellar "
+                "mass-profile "
             )
 
     def dark_mass_angular_within_circle(self, radius: float):
