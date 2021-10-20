@@ -1,22 +1,21 @@
 from itertools import count
-import numpy as np
 from typing import Optional
 
-import autofit as af
-import autoarray as aa
+import numpy as np
 
+import autoarray as aa
+import autofit as af
 from autoarray.inversion.pixelizations.abstract import AbstractPixelization
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 from autoconf.dictable import Dictable
-
+from autogalaxy import exc
 from autogalaxy.lensing import LensingObject
-from autogalaxy.profiles.point_sources import Point
+from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.profiles.mass_profiles.dark_mass_profiles import DarkProfile
 from autogalaxy.profiles.mass_profiles.stellar_mass_profiles import StellarProfile
-
-from autogalaxy import exc
+from autogalaxy.profiles.point_sources import Point
 
 
 def is_point_source(obj):
@@ -37,12 +36,12 @@ class Galaxy(af.ModelObject, LensingObject, Dictable):
     """
 
     def __init__(
-        self,
-        redshift: float,
-        pixelization: Optional[AbstractPixelization] = None,
-        regularization: Optional[AbstractRegularization] = None,
-        hyper_galaxy: Optional["HyperGalaxy"] = None,
-        **kwargs,
+            self,
+            redshift: float,
+            pixelization: Optional[AbstractPixelization] = None,
+            regularization: Optional[AbstractRegularization] = None,
+            hyper_galaxy: Optional["HyperGalaxy"] = None,
+            **kwargs,
     ):
         """Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
         mass profiles, pixelizations, etc.).
@@ -91,7 +90,14 @@ class Galaxy(af.ModelObject, LensingObject, Dictable):
         self.hyper_galaxy = hyper_galaxy
 
     def dict(self) -> dict:
-        return Dictable.dict(self)
+        return {
+            **{
+                name: profile.dict()
+                for name, profile
+                in self.profile_dict.items()
+            },
+            **Dictable.dict(self)
+        }
 
     def __hash__(self):
         return self.id
@@ -109,6 +115,18 @@ class Galaxy(af.ModelObject, LensingObject, Dictable):
     @property
     def mass_profiles(self):
         return [value for value in self.__dict__.values() if is_mass_profile(value)]
+
+    @property
+    def profile_dict(self):
+        return {
+            key: value
+            for key, value
+            in self.__dict__.items()
+            if isinstance(
+                value,
+                GeometryProfile
+            )
+        }
 
     @property
     def has_redshift(self):
@@ -605,7 +623,7 @@ class HyperGalaxy:
         return np.divide(contribution_map, np.max(contribution_map))
 
     def hyper_noise_map_via_hyper_images_from(
-        self, hyper_model_image, hyper_galaxy_image, noise_map
+            self, hyper_model_image, hyper_galaxy_image, noise_map
     ):
         contribution_map = self.contribution_map_from(
             hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
@@ -634,9 +652,9 @@ class HyperGalaxy:
     def __eq__(self, other):
         if isinstance(other, HyperGalaxy):
             return (
-                self.contribution_factor == other.contribution_factor
-                and self.noise_factor == other.noise_factor
-                and self.noise_power == other.noise_power
+                    self.contribution_factor == other.contribution_factor
+                    and self.noise_factor == other.noise_factor
+                    and self.noise_power == other.noise_power
             )
         return False
 

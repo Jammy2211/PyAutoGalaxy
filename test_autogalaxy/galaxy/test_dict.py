@@ -98,3 +98,35 @@ class TestIzations:
 
 def test_pixelization_equality():
     assert Voronoi() == Voronoi()
+
+
+class TestProfiles:
+    def test_dict(self):
+        galaxy = ag.Galaxy(
+            redshift=2.0,
+            light=ag.lp.EllChameleon(),
+            mass=ag.mp.EllDevVaucouleurs()
+        )
+        assert galaxy.dict() == {
+            'hyper_galaxy': None,
+            'light': {
+                'centre': (0.0, 0.0),
+                'core_radius_0': 0.01,
+                'core_radius_1': 0.05,
+                'elliptical_comps': (0.0, 0.0),
+                'intensity': 0.1,
+                'type': 'autogalaxy.profiles.light_profiles.light_profiles.EllChameleon'
+            },
+            'mass': {
+                'centre': (0.0, 0.0),
+                'effective_radius': 0.6,
+                'elliptical_comps': (0.0, 0.0),
+                'intensity': 0.1,
+                'mass_to_light_ratio': 1.0,
+                'type': 'autogalaxy.profiles.mass_profiles.stellar_mass_profiles.EllDevVaucouleurs'
+            },
+            'pixelization': None,
+            'redshift': 2.0,
+            'regularization': None,
+            'type': 'autogalaxy.galaxy.galaxy.Galaxy'
+        }
