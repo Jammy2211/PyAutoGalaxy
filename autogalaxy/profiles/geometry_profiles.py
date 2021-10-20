@@ -5,7 +5,7 @@ import numpy as np
 
 import autoarray as aa
 from autoarray.structures.grids.two_d.grid_transformed import Grid2DTransformedNumpy
-from autofit.tools.util import get_class_path
+from autofit.tools.util import get_class_path, get_class
 from autogalaxy import convert
 
 
@@ -37,6 +37,18 @@ class GeometryProfile:
             ),
             **argument_dict
         }
+
+    @staticmethod
+    def from_dict(profile_dict):
+        cls = get_class(
+            profile_dict.pop(
+                "type"
+            )
+        )
+        # noinspection PyArgumentList
+        return cls(
+            **profile_dict
+        )
 
     def transform_grid_to_reference_frame(self, grid):
         raise NotImplemented()
