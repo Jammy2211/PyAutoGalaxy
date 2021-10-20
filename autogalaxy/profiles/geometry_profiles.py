@@ -5,7 +5,7 @@ import numpy as np
 import autoarray as aa
 from autoarray.structures.grids.two_d.grid_transformed import Grid2DTransformedNumpy
 from autogalaxy import convert
-from autogalaxy.dictable import Dictable
+from autoconf.dictable import Dictable
 
 
 class GeometryProfile(Dictable):

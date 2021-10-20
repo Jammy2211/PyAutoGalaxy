@@ -7,7 +7,7 @@ import autoarray as aa
 
 from autoarray.inversion.pixelizations.abstract import AbstractPixelization
 from autoarray.inversion.regularization.abstract import AbstractRegularization
-from autogalaxy.dictable import Dictable
+from autoconf.dictable import Dictable
 
 from autogalaxy.lensing import LensingObject
 from autogalaxy.profiles.point_sources import Point
