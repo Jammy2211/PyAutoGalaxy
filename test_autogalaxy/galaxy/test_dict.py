@@ -84,3 +84,17 @@ class TestIzations:
             ization_galaxy_dict
     ):
         assert ization_galaxy.dict() == ization_galaxy_dict
+
+    def test_from_dict(
+            self,
+            ization_galaxy,
+            ization_galaxy_dict
+    ):
+        galaxy = Dictable.from_dict(
+            ization_galaxy_dict
+        )
+        assert galaxy == ization_galaxy
+
+
+def test_pixelization_equality():
+    assert Voronoi() == Voronoi()
