@@ -4,16 +4,12 @@ import autogalaxy as ag
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 
 
-@pytest.fixture(
-    name="ell_sersic"
-)
+@pytest.fixture(name="ell_sersic")
 def make_ell_sersic():
     return ag.mp.EllSersic()
 
 
-@pytest.fixture(
-    name="ell_sersic_dict"
-)
+@pytest.fixture(name="ell_sersic_dict")
 def make_ell_sersic_dict():
     return {
         "type": "autogalaxy.profiles.mass_profiles.stellar_mass_profiles.EllSersic",
@@ -26,17 +22,9 @@ def make_ell_sersic_dict():
     }
 
 
-def test_to_dict(
-        ell_sersic,
-        ell_sersic_dict
-):
+def test_to_dict(ell_sersic, ell_sersic_dict):
     assert ell_sersic.dict() == ell_sersic_dict
 
 
-def test_from_dict(
-        ell_sersic,
-        ell_sersic_dict
-):
-    assert ell_sersic == GeometryProfile.from_dict(
-        ell_sersic_dict
-    )
+def test_from_dict(ell_sersic, ell_sersic_dict):
+    assert ell_sersic == GeometryProfile.from_dict(ell_sersic_dict)

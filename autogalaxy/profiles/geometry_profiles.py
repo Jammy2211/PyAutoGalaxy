@@ -120,9 +120,9 @@ class SphProfile(GeometryProfile):
 
 class EllProfile(SphProfile):
     def __init__(
-            self,
-            centre: Tuple[float, float] = (0.0, 0.0),
-            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        self,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
     ):
         """ An elliptical profile, which describes profiles with y and x centre Cartesian coordinates, an axis-ratio \
         and rotational angle.
@@ -156,10 +156,10 @@ class EllProfile(SphProfile):
 
     @classmethod
     def from_axis_ratio_and_phi(
-            cls,
-            centre: Tuple[float, float] = (0.0, 0.0),
-            axis_ratio: float = 1.0,
-            angle: float = 0.0,
+        cls,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        axis_ratio: float = 1.0,
+        angle: float = 0.0,
     ):
 
         elliptical_comps = convert.elliptical_comps_from(
@@ -300,10 +300,10 @@ class EllProfile(SphProfile):
     def eta_u(self, u, coordinates):
         return np.sqrt(
             (
-                    u
-                    * (
-                            (coordinates[1] ** 2)
-                            + (coordinates[0] ** 2 / (1 - (1 - self.axis_ratio ** 2) * u))
-                    )
+                u
+                * (
+                    (coordinates[1] ** 2)
+                    + (coordinates[0] ** 2 / (1 - (1 - self.axis_ratio ** 2) * u))
+                )
             )
         )
