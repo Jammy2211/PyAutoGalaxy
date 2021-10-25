@@ -417,6 +417,77 @@ class TestSersic:
         assert deflections[1, 0] == pytest.approx(2.0 * 1.1446, 1e-3)
         assert deflections[1, 1] == pytest.approx(2.0 * 0.79374, 1e-3)
 
+    def test__deflections_2d_via_cses_from_close_to_integrator__correct_values(self):
+
+        sersic = ag.mp.EllSersic(
+            centre=(-0.4, -0.2),
+            elliptical_comps=(-0.07142, -0.085116),
+            intensity=5.0,
+            effective_radius=0.2,
+            sersic_index=2.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        deflections = sersic.deflections_2d_via_cses_from(grid=np.array([[0.1625, 0.1625]]))
+
+        assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
+        assert deflections[0, 1] == pytest.approx(0.79374, 1e-3)
+
+        sersic = ag.mp.EllSersic(
+            centre=(-0.4, -0.2),
+            elliptical_comps=(-0.07142, -0.085116),
+            intensity=5.0,
+            effective_radius=0.2,
+            sersic_index=2.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        deflections = sersic.deflections_2d_via_cses_from(
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625), (0.1625, 0.1625)])
+        )
+
+        assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
+        assert deflections[0, 1] == pytest.approx(0.79374, 1e-3)
+        assert deflections[1, 0] == pytest.approx(1.1446, 1e-3)
+        assert deflections[1, 1] == pytest.approx(0.79374, 1e-3)
+
+        sersic = ag.mp.EllSersic(
+            centre=(-0.4, -0.2),
+            elliptical_comps=(-0.07142, -0.085116),
+            intensity=10.0,
+            effective_radius=0.2,
+            sersic_index=2.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        deflections = sersic.deflections_2d_via_cses_from(
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625), (0.1625, 0.1625)])
+        )
+
+        assert deflections[0, 0] == pytest.approx(2.0 * 1.1446, 1e-3)
+        assert deflections[0, 1] == pytest.approx(2.0 * 0.79374, 1e-3)
+        assert deflections[1, 0] == pytest.approx(2.0 * 1.1446, 1e-3)
+        assert deflections[1, 1] == pytest.approx(2.0 * 0.79374, 1e-3)
+
+        sersic = ag.mp.EllSersic(
+            centre=(-0.4, -0.2),
+            elliptical_comps=(-0.07142, -0.085116),
+            intensity=5.0,
+            effective_radius=0.2,
+            sersic_index=2.0,
+            mass_to_light_ratio=2.0,
+        )
+
+        deflections = sersic.deflections_2d_via_cses_from(
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625), (0.1625, 0.1625)])
+        )
+
+        assert deflections[0, 0] == pytest.approx(2.0 * 1.1446, 1e-3)
+        assert deflections[0, 1] == pytest.approx(2.0 * 0.79374, 1e-3)
+        assert deflections[1, 0] == pytest.approx(2.0 * 1.1446, 1e-3)
+        assert deflections[1, 1] == pytest.approx(2.0 * 0.79374, 1e-3)
+
+
     def test__convergence__change_geometry(self):
         sersic_0 = ag.mp.EllSersic(centre=(0.0, 0.0))
         sersic_1 = ag.mp.EllSersic(centre=(1.0, 1.0))
