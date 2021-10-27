@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
@@ -585,11 +586,7 @@ def psi_from(grid, axis_ratio, core_radius):
     )
 
 
-class MassProfileCSE:
-    def __init__(self):
-
-        pass
-
+class MassProfileCSE(ABC):
     @staticmethod
     def convergence_cse_1d_from(
         grid_radii: np.ndarray, core_radius: float
@@ -609,7 +606,6 @@ class MassProfileCSE:
         return 1.0 / (2.0 * (core_radius ** 2.0 + grid_radii ** 2.0) ** (1.5))
 
     @staticmethod
-    #  @aa.util.numba.jit()
     def deflections_via_cse_from(
         term1: float,
         term2: float,
@@ -636,8 +632,9 @@ class MassProfileCSE:
         defl_y = (term4 * (phi + core_radius)) / bottom
         return np.vstack((defl_y, defl_x))
 
+    @abstractmethod
     def decompose_convergence_into_cses(self):
-        raise NotImplementedError()
+        pass
 
     def _decompose_convergence_into_cses_from(
         self,
@@ -663,7 +660,7 @@ class MassProfileCSE:
             The maximum radius to fit
         total_cses : int
             The number of CSEs used to approximate the input func.
-        sample_points: int (should be larger than 'func_CSEs')
+        sample_points: int (should be larger than 'total_cses')
             The number of data points to fit
 
         Returns
@@ -702,7 +699,7 @@ class MassProfileCSE:
         return amplitude_list, core_radius_list
 
     def convergence_2d_via_cses_from(self, grid_radii: np.ndarray) -> np.ndarray:
-        raise NotImplementedError()
+        pass
 
     def _convergence_2d_via_cses_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """
@@ -720,17 +717,13 @@ class MassProfileCSE:
 
         amplitude_list, core_radius_list = self.decompose_convergence_into_cses()
 
-        for i in range(len(core_radius_list)):
-            if i == 0:
-                convergence_2d = amplitude_list[i] * self.convergence_cse_1d_from(
-                    grid_radii=grid_radii, core_radius=core_radius_list[i]
-                )
-            else:
-                convergence_2d += amplitude_list[i] * self.convergence_cse_1d_from(
-                    grid_radii=grid_radii, core_radius=core_radius_list[i]
-                )
-
-        return convergence_2d
+        return sum(
+            amplitude
+            * self.convergence_cse_1d_from(
+                grid_radii=grid_radii, core_radius=core_radius
+            )
+            for amplitude, core_radius in zip(amplitude_list, core_radius_list)
+        )
 
     def _deflections_2d_via_cses_from(self, grid: np.ndarray) -> np.ndarray:
         """
@@ -761,26 +754,17 @@ class MassProfileCSE:
         # To accelarate deflection angle computation, I define term1, term2, term3, term4 to avoid
         # repeated matrix operation. There might be still space for optimization.
 
-        for i in range(len(core_radius_list)):
-
-            if i == 0:
-                deflections_2d = amplitude_list[i] * self.deflections_via_cse_from(
-                    axis_ratio_squared=q2,
-                    core_radius=core_radius_list[i],
-                    term1=term1,
-                    term2=term2,
-                    term3=term3,
-                    term4=term4,
-                )
-
-            else:
-                deflections_2d += amplitude_list[i] * self.deflections_via_cse_from(
-                    axis_ratio_squared=q2,
-                    core_radius=core_radius_list[i],
-                    term1=term1,
-                    term2=term2,
-                    term3=term3,
-                    term4=term4,
-                )
+        deflections_2d = sum(
+            amplitude
+            * self.deflections_via_cse_from(
+                axis_ratio_squared=q2,
+                core_radius=core_radius,
+                term1=term1,
+                term2=term2,
+                term3=term3,
+                term4=term4,
+            )
+            for amplitude, core_radius in zip(amplitude_list, core_radius_list)
+        )
 
         return self.rotate_grid_from_reference_frame(deflections_2d.T)

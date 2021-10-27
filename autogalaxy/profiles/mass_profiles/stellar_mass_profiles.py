@@ -417,7 +417,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
         self,
         lower_dex: float = 3.0,
         upper_dex: float = 1.5,
-        func_CSEs: int = 25,
+        total_cses: int = 25,
         sample_points: int = 50,
     ) -> Tuple[List, List]:
         """
@@ -435,7 +435,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
             The maximum radius to fit
         total_cses : int
             The number of CSEs used to approximate the input func.
-        sample_points: int (should be larger than 'func_CSEs')
+        sample_points: int (should be larger than 'total_cses')
             The number of data points to fit
 
         Returns
@@ -465,7 +465,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
             func=sersic_2d,
             radii_min=radii_min,
             radii_max=radii_max,
-            total_cses=func_CSEs,
+            total_cses=total_cses,
             sample_points=sample_points,
         )
 

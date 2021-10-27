@@ -103,9 +103,7 @@ class DarkProfile:
 
 
 # noinspection PyAbstractClass
-class AbstractEllNFWGeneralized(
-    MassProfile, DarkProfile, MassProfileMGE, MassProfileCSE
-):
+class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
     epsrel = 1.49e-5
 
     def __init__(
@@ -138,7 +136,6 @@ class AbstractEllNFWGeneralized(
 
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
         super(MassProfileMGE, self).__init__()
-        super(MassProfileCSE, self).__init__()
 
         self.kappa_s = kappa_s
         self.scale_radius = scale_radius
@@ -967,7 +964,7 @@ class SphNFWTruncatedMCRLudlow(SphNFWTruncated):
         )
 
 
-class EllNFW(EllNFWGeneralized):
+class EllNFW(EllNFWGeneralized, MassProfileCSE):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -1000,6 +997,7 @@ class EllNFW(EllNFWGeneralized):
             inner_slope=1.0,
             scale_radius=scale_radius,
         )
+        super(MassProfileCSE, self).__init__()
 
     @staticmethod
     def coord_func(r):
@@ -1172,7 +1170,7 @@ class EllNFW(EllNFWGeneralized):
             / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
         )
 
-    def decompose_convergence_into_cses(self, func_CSEs=30, sample_points=60):
+    def decompose_convergence_into_cses(self, total_cses=30, sample_points=60):
         """
         Decompose the convergence of the elliptical NFW mass profile into cored steep elliptical (cse) profiles.
 
@@ -1189,7 +1187,7 @@ class EllNFW(EllNFWGeneralized):
             The maximum radius to fit
         total_cses : int
             The number of CSEs used to approximate the input func.
-        sample_points: int (should be larger than 'func_CSEs')
+        sample_points: int (should be larger than 'total_cses')
             The number of data points to fit
 
         Returns
@@ -1211,7 +1209,7 @@ class EllNFW(EllNFWGeneralized):
             func=nfw_2d,
             radii_min=radii_min,
             radii_max=radii_max,
-            total_cses=func_CSEs,
+            total_cses=total_cses,
             sample_points=sample_points,
         )
 
