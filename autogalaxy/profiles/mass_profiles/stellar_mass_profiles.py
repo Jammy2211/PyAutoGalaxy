@@ -284,11 +284,12 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_via_gaussians_from(self, grid: aa.type.Grid2DLike):
-        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
+        """
+        Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -301,13 +302,18 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_via_cses_from(self, grid: aa.type.Grid2DLike):
-        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
+        """
+        Calculate the projected 2D convergence from a grid of (y,x) arc second coordinates, by computing and summing
+        the convergence of each individual cse used to decompose the mass profile.
+
+        The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
+        profile (e.g. `decompose_convergence_into_cses`) is using equation (12) of
+        Oguri 2021 (https://arxiv.org/abs/2106.11464).
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
-
         """
 
         elliptical_radii = self.grid_to_elliptical_radii(grid=grid)
@@ -330,6 +336,19 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_cses_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the projected 2D deflection angles from a grid of (y,x) arc second coordinates, by computing and
+        summing the convergence of each individual cse used to decompose the mass profile.
+
+        The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
+        profile (e.g. `decompose_convergence_into_cses`) is using equation (12) of
+        Oguri 2021 (https://arxiv.org/abs/2106.11464).
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
         return self._deflections_2d_via_cses_from(grid=grid)
 
     @property
@@ -372,7 +391,8 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
         systems, this won't robustly capture the light profile's elliptical shape.
 
         The elliptical effective radius instead describes the major-axis radius of the ellipse containing \
-        half the light, and may be more appropriate for highly flattened systems like disk galaxies."""
+        half the light, and may be more appropriate for highly flattened systems like disk galaxies.
+        """
         return self.effective_radius / np.sqrt(self.axis_ratio)
 
     def decompose_convergence_into_gaussians(self) -> Tuple[List, List]:

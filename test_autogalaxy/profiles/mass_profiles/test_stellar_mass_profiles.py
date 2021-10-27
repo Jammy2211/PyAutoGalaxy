@@ -7,7 +7,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestEllGaussian:
-    def test__deflections_correct_values(self):
+    def test__deflections_from(self):
 
         gaussian = ag.mp.EllGaussian(
             centre=(0.0, 0.0),
@@ -203,7 +203,7 @@ class TestEllGaussian:
 
 
 class TestSersic:
-    def test__convergence_correct_values(self):
+    def test__convergence_from(self):
 
         sersic = ag.mp.EllSersic(
             centre=(0.0, 0.0),
@@ -254,7 +254,7 @@ class TestSersic:
 
         assert convergence == pytest.approx(5.38066670129, 1e-3)
 
-    def test__convergence_2d_from_gaussians__correct_values(self):
+    def test__convergence_2d_via_gaussians_from(self):
         sersic = ag.mp.EllSersic(
             centre=(0.0, 0.0),
             intensity=3.0,
@@ -312,7 +312,57 @@ class TestSersic:
 
         assert convergence == pytest.approx(5.38066670129, 1e-3)
 
-    def test__deflections_via_integrator__correct_values(self):
+    def test__convergence_2d_via_cses_from(self):
+        sersic = ag.mp.EllSersic(
+            centre=(0.0, 0.0),
+            intensity=3.0,
+            effective_radius=2.0,
+            sersic_index=2.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        convergence = sersic.convergence_2d_via_cses_from(grid=np.array([[0.0, 1.5]]))
+
+        assert convergence == pytest.approx(4.90657319276, 1e-3)
+
+        sersic = ag.mp.EllSersic(
+            centre=(0.0, 0.0),
+            intensity=6.0,
+            effective_radius=2.0,
+            sersic_index=2.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        convergence = sersic.convergence_2d_via_cses_from(grid=np.array([[0.0, 1.5]]))
+
+        assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
+
+        sersic = ag.mp.EllSersic(
+            centre=(0.0, 0.0),
+            intensity=3.0,
+            effective_radius=2.0,
+            sersic_index=2.0,
+            mass_to_light_ratio=2.0,
+        )
+
+        convergence = sersic.convergence_2d_via_cses_from(grid=np.array([[0.0, 1.5]]))
+
+        assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
+
+        sersic = ag.mp.EllSersic(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.333333),
+            intensity=3.0,
+            effective_radius=2.0,
+            sersic_index=2.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        convergence = sersic.convergence_2d_via_cses_from(grid=np.array([[1.0, 0.0]]))
+
+        assert convergence == pytest.approx(5.38066670129, 1e-3)
+
+    def test__deflections_via_integrator_from(self):
         sersic = ag.mp.EllSersic(
             centre=(-0.4, -0.2),
             elliptical_comps=(-0.07142, -0.085116),
@@ -347,7 +397,7 @@ class TestSersic:
         assert deflections[1, 0] == pytest.approx(1.1446, 1e-3)
         assert deflections[1, 1] == pytest.approx(0.79374, 1e-3)
 
-    def test__deflections_2d_from_close_to_integrator__correct_values(self):
+    def test__deflections_2d_from_close_to_integrator_from(self):
 
         sersic = ag.mp.EllSersic(
             centre=(-0.4, -0.2),
@@ -417,7 +467,7 @@ class TestSersic:
         assert deflections[1, 0] == pytest.approx(2.0 * 1.1446, 1e-3)
         assert deflections[1, 1] == pytest.approx(2.0 * 0.79374, 1e-3)
 
-    def test__deflections_2d_via_cses_from_close_to_integrator__correct_values(self):
+    def test__deflections_2d_via_cses_from_close_to_integrator_from(self):
 
         sersic = ag.mp.EllSersic(
             centre=(-0.4, -0.2),
@@ -428,7 +478,9 @@ class TestSersic:
             mass_to_light_ratio=1.0,
         )
 
-        deflections = sersic.deflections_2d_via_cses_from(grid=np.array([[0.1625, 0.1625]]))
+        deflections = sersic.deflections_2d_via_cses_from(
+            grid=np.array([[0.1625, 0.1625]])
+        )
 
         assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.79374, 1e-3)
@@ -486,7 +538,6 @@ class TestSersic:
         assert deflections[0, 1] == pytest.approx(2.0 * 0.79374, 1e-3)
         assert deflections[1, 0] == pytest.approx(2.0 * 1.1446, 1e-3)
         assert deflections[1, 1] == pytest.approx(2.0 * 0.79374, 1e-3)
-
 
     def test__convergence__change_geometry(self):
         sersic_0 = ag.mp.EllSersic(centre=(0.0, 0.0))
@@ -608,7 +659,7 @@ class TestSersic:
 
 
 class TestExponential:
-    def test__convergence_correct_values(self):
+    def test__convergence_from(self):
         exponential = ag.mp.EllExponential(
             elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
@@ -663,7 +714,7 @@ class TestExponential:
 
         assert convergence == pytest.approx(4.8566, 1e-3)
 
-    def test__convergence_2d_via_gaussians_from__correct_values(self):
+    def test__convergence_2d_via_gaussians_from(self):
         exponential = ag.mp.EllExponential(
             elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
@@ -728,7 +779,7 @@ class TestExponential:
 
         assert convergence == pytest.approx(4.8566, 1e-3)
 
-    def test__deflections_via_integrator__correct_values(self):
+    def test__deflections_via_integrator_from(self):
         exponential = ag.mp.EllExponential(
             centre=(-0.4, -0.2),
             elliptical_comps=(-0.07142, -0.085116),
@@ -759,7 +810,7 @@ class TestExponential:
         assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.62569, 1e-3)
 
-    def test__deflections_2d_from_close_to_integrator_correct_values(self):
+    def test__deflections_2d_from_close_to_integrator_from(self):
         exponential = ag.mp.EllExponential(
             centre=(-0.4, -0.2),
             elliptical_comps=(-0.07142, -0.085116),
@@ -844,7 +895,7 @@ class TestExponential:
 
 
 class TestDevVaucouleurs:
-    def test__convergence_correct_values(self):
+    def test__convergence_from(self):
         dev = ag.mp.EllDevVaucouleurs(
             elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
@@ -900,7 +951,7 @@ class TestDevVaucouleurs:
 
         assert convergence == pytest.approx(0.351797, 1e-3)
 
-    def test__convergence_2d_via_gaussians_from__correct_values(self):
+    def test__convergence_2d_via_gaussians_from_from(self):
         dev = ag.mp.EllDevVaucouleurs(
             elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
@@ -956,7 +1007,7 @@ class TestDevVaucouleurs:
 
         assert convergence == pytest.approx(0.351797, 1e-3)
 
-    def test__deflections_via_integrator__correct_values(self):
+    def test__deflections_via_integrator_from(self):
         dev = ag.mp.EllDevVaucouleurs(
             centre=(0.4, 0.2),
             elliptical_comps=(0.0180010, 0.0494575),
@@ -972,7 +1023,7 @@ class TestDevVaucouleurs:
         assert deflections[0, 0] == pytest.approx(-24.528, 1e-3)
         assert deflections[0, 1] == pytest.approx(-3.37605, 1e-3)
 
-    def test__deflections_2d_from_close_to_integrator__correct_values(self):
+    def test__deflections_2d_from_close_to_integrator_from(self):
         dev = ag.mp.EllDevVaucouleurs(
             centre=(0.4, 0.2),
             elliptical_comps=(0.0180010, 0.0494575),
@@ -1044,7 +1095,7 @@ class TestDevVaucouleurs:
 
 
 class TestSersicMassRadialGradient:
-    def test__convergence_correct_values(self):
+    def test__convergence_from(self):
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1/0.6)**-1.0 = 0.6
         sersic = ag.mp.EllSersicRadialGradient(
             centre=(0.0, 0.0),
@@ -1115,7 +1166,7 @@ class TestSersicMassRadialGradient:
 
         assert convergence == pytest.approx(2.836879 * 5.38066670129, abs=2e-01)
 
-    def test__deflections_via_integrator__correct_values(self):
+    def test__deflections_via_integrator_from(self):
         sersic = ag.mp.EllSersicRadialGradient(
             centre=(-0.4, -0.2),
             elliptical_comps=(-0.07142, -0.085116),
@@ -1150,7 +1201,7 @@ class TestSersicMassRadialGradient:
         assert deflections[0, 0] == pytest.approx(0.97806399756448, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.725459334118341, 1e-3)
 
-    def test__deflections_2d_from_using_mge__same_as_integrator__correct_values(self):
+    def test__deflections_2d_via_mge_from(self):
 
         # sersic = ag.mp.EllSersicRadialGradient(
         #     centre=(-0.4, -0.2),
@@ -1346,7 +1397,7 @@ class TestSersicMassRadialGradient:
 
 
 class TestSersicCore:
-    def test__convergence_correct_values(self):
+    def test__convergence_from(self):
 
         core_sersic = ag.mp.EllSersicCore(
             elliptical_comps=(0.0, 0.0),
@@ -1398,7 +1449,7 @@ class TestSersicCore:
 
         assert convergence == pytest.approx(convergence_via_gaussians, 1e-3)
 
-    def test__deflections_2d_from__correct_values(self):
+    def test__deflections_2d_from(self):
 
         sersic = ag.mp.EllSersicCore(
             centre=(1.0, 2.0),
@@ -1584,7 +1635,7 @@ class TestSersicCore:
 
 
 class TestChameleon:
-    def test__convergence_correct_values(self):
+    def test__convergence_from(self):
 
         chameleon = ag.mp.EllChameleon(
             elliptical_comps=(0.0, 0.0),
@@ -1610,7 +1661,7 @@ class TestChameleon:
 
         assert convergence == pytest.approx(0.007814, 1e-3)
 
-    def test__deflections_correct_values(self):
+    def test__deflections_from(self):
         chameleon = ag.mp.EllChameleon(
             centre=(-0.4, -0.2),
             elliptical_comps=(-0.07142, -0.085116),

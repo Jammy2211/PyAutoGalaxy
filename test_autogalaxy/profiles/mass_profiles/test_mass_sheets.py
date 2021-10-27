@@ -8,7 +8,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestMassSheet:
-    def test__convergence__correct_values(self):
+    def test__convergence_from(self):
 
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
@@ -53,7 +53,7 @@ class TestMassSheet:
 
         assert convergence[0] == pytest.approx(1.0, 1e-3)
 
-    def test__potential__correct_values(self):
+    def test__potential_from(self):
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         potential = mass_sheet.potential_2d_from(
@@ -83,7 +83,7 @@ class TestMassSheet:
 
         assert potential[0] == pytest.approx(0.0, 1e-3)
 
-    def test__deflections__correct_values(self):
+    def test__deflections_from(self):
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
         deflections = mass_sheet.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
@@ -312,7 +312,7 @@ class TestExternalShear:
 
         assert potential[0] == pytest.approx(0.0, 1e-3)
 
-    def test__deflections_correct_values(self):
+    def test__deflections_from(self):
 
         shear = ag.mp.ExternalShear(elliptical_comps=(0.1, 0.0))
         deflections = shear.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))

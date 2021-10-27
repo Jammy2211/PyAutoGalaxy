@@ -59,23 +59,14 @@ class MassProfile(EllProfile, LensingObject):
         return self.potential_2d_from(grid=grid)
 
     def mass_angular_within_circle(self, radius: float):
-        """ Integrate the mass profiles's convergence profile to compute the total mass within a circle of \
+        """
+        Integrate the mass profiles's convergence profile to compute the total mass within a circle of
         specified radius. This is centred on the mass profile.
-
-        The following unit_label for mass can be specified and output:
-
-        - Dimensionless angular unit_label (default) - 'angular'.
-        - Solar masses - 'angular' (multiplies the angular mass by the critical surface mass density).
 
         Parameters
         ----------
         radius : dim.Length
             The radius of the circle to compute the dimensionless mass within.
-        unit_mass : str
-            The unit_label the mass is returned in {angular, angular}.
-        critical_surface_density or None
-            The critical surface mass density of the strong lens configuration, which converts mass from angulalr \
-            unit_label to phsical unit_label (e.g. solar masses).
         """
 
         return quad(self.mass_integral, a=0.0, b=radius)[0]

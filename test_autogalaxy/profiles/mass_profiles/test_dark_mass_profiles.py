@@ -11,7 +11,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestAbstractNFW:
-    def test__coord_function_f__correct_values(self):
+    def test__coord_function_f__from(self):
 
         truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
@@ -35,7 +35,7 @@ class TestAbstractNFW:
 
         assert (coord_f == np.array([1.0, 1.0])).all()
 
-    def test__coord_function_g__correct_values(self):
+    def test__coord_function_g__from(self):
         truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
         )
@@ -60,7 +60,7 @@ class TestAbstractNFW:
             np.real(np.array([1.0 / 3.0, 1.0 / 3.0])), 1.0e-4
         )
 
-    def test__coord_function_h__correct_values(self):
+    def test__coord_function_h__from(self):
 
         truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
@@ -70,7 +70,7 @@ class TestAbstractNFW:
 
         assert coord_h == pytest.approx(np.array([0.134395, 0.840674]), 1.0e-4)
 
-    def test__coord_function_k__correct_values(self):
+    def test__coord_function_k__from(self):
 
         truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=2.0
@@ -88,7 +88,7 @@ class TestAbstractNFW:
 
         assert coord_k == pytest.approx(np.array([-0.19869011, -0.1329414]), 1.0e-4)
 
-    def test__coord_function_l__correct_values(self):
+    def test__coord_function_l__from(self):
 
         truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=2.0
@@ -114,7 +114,7 @@ class TestAbstractNFW:
 
         assert coord_l == pytest.approx(np.array([0.00044044, 0.00044044]), 1.0e-4)
 
-    def test__coord_function_m__correct_values(self):
+    def test__coord_function_m__from(self):
 
         truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=2.0
@@ -374,7 +374,7 @@ class TestAbstractNFW:
 
 
 class TestGeneralizedNFW:
-    def test__convergence_correct_values(self):
+    def test__convergence_from(self):
 
         gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
@@ -418,7 +418,7 @@ class TestGeneralizedNFW:
             0.30840 * 2, 1e-3
         )
 
-    def test__convergence_2d_via_gaussians_from__correct_values(self):
+    def test__convergence_2d_via_gaussians_from(self):
 
         gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
@@ -466,7 +466,7 @@ class TestGeneralizedNFW:
             grid=np.array([[0.0, 1.0]])
         ) == pytest.approx(0.30840 * 2, 1e-2)
 
-    def test__potential_correct_values(self):
+    def test__potential_from(self):
 
         gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=0.5, scale_radius=8.0
@@ -497,7 +497,7 @@ class TestGeneralizedNFW:
             2.4718, 1e-4
         )
 
-    def test__deflections_via_integrator_correct_values(self):
+    def test__deflections_via_integrator_from(self):
 
         gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=0.5, scale_radius=8.0
@@ -794,7 +794,7 @@ class TestGeneralizedNFW:
 
 
 class TestTruncatedNFW:
-    def test__convergence_correct_values(self):
+    def test__convergence_from(self):
 
         truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=2.0
@@ -824,7 +824,7 @@ class TestTruncatedNFW:
 
         assert convergence == pytest.approx(1.51047026, 1.0e-4)
 
-    def test__deflections_correct_values(self):
+    def test__deflections_from(self):
 
         truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=2.0
@@ -976,7 +976,7 @@ class TestTruncatedNFW:
 
 
 class TestNFW:
-    def test__convergence_correct_values(self):
+    def test__convergence_from(self):
 
         # r = 2.0 (> 1.0)
         # F(r) = (1/(sqrt(3))*atan(sqrt(3)) = 0.60459978807
@@ -1017,7 +1017,7 @@ class TestNFW:
 
         assert convergence == pytest.approx(1.388511, 1e-3)
 
-    def test__convergence_2d_via_gaussians_from__correct_values(self):
+    def test__convergence_2d_via_gaussians_from(self):
 
         # r = 2.0 (> 1.0)
         # F(r) = (1/(sqrt(3))*atan(sqrt(3)) = 0.60459978807
@@ -1060,7 +1060,48 @@ class TestNFW:
 
         assert convergence == pytest.approx(1.388511, 1e-3)
 
-    def test__potential_correct_values(self):
+    def test__convergence_2d_via_cses_from(self):
+
+        # r = 2.0 (> 1.0)
+        # F(r) = (1/(sqrt(3))*atan(sqrt(3)) = 0.60459978807
+        # kappa(r) = 2 * kappa_s * (1 - 0.60459978807) / (4-1) = 0.263600141
+
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+
+        convergence = nfw.convergence_2d_via_cses_from(grid=np.array([[2.0, 0.0]]))
+
+        assert convergence == pytest.approx(0.263600141, 1e-2)
+
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+
+        convergence = nfw.convergence_2d_via_cses_from(grid=np.array([[0.5, 0.0]]))
+
+        assert convergence == pytest.approx(1.388511, 1e-2)
+
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0)
+
+        convergence = nfw.convergence_2d_via_cses_from(grid=np.array([[0.5, 0.0]]))
+
+        assert convergence == pytest.approx(2.0 * 1.388511, 1e-2)
+
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0)
+
+        convergence = nfw.convergence_2d_via_cses_from(grid=np.array([[1.0, 0.0]]))
+
+        assert convergence == pytest.approx(1.388511, 1e-2)
+
+        nfw = ag.mp.EllNFW(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.333333),
+            kappa_s=1.0,
+            scale_radius=1.0,
+        )
+
+        convergence = nfw.convergence_2d_via_cses_from(grid=np.array([[0.25, 0.0]]))
+
+        assert convergence == pytest.approx(1.388511, 1e-3)
+
+    def test__potential_from(self):
 
         nfw = ag.mp.SphNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
 
@@ -1122,7 +1163,7 @@ class TestNFW:
 
         assert potential_spherical == pytest.approx(potential_elliptical, 1e-3)
 
-    def test__deflections_via_integrator_correct_values(self):
+    def test__deflections_via_integrator_from(self):
         nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
         deflections = nfw.deflections_2d_via_integrator_from(
@@ -1169,7 +1210,7 @@ class TestNFW:
         assert deflections[0, 0] == pytest.approx(-2.59480, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.44204, 1e-3)
 
-    def test__deflections_2d_from_close_to_integrator_correct_values(self):
+    def test__deflections_2d_from(self):
         nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
         deflections = nfw.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
@@ -1204,6 +1245,53 @@ class TestNFW:
         )
 
         deflections = nfw.deflections_2d_from(
+            grid=ag.Grid2DIrregular([(0.1625, 0.1625)])
+        )
+
+        assert deflections[0, 0] == pytest.approx(-2.59480, 1e-3)
+        assert deflections[0, 1] == pytest.approx(-0.44204, 1e-3)
+
+    def test__deflections_2d_via_cses_from(self):
+        nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+
+        deflections = nfw.deflections_2d_via_cses_from(
+            grid=np.array([[0.1625, 0.1625]])
+        )
+
+        assert deflections[0, 0] == pytest.approx(0.56194, 1e-3)
+        assert deflections[0, 1] == pytest.approx(0.56194, 1e-3)
+
+        nfw = ag.mp.SphNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
+
+        deflections = nfw.deflections_2d_via_cses_from(
+            grid=np.array([[0.1875, 0.1625]])
+        )
+
+        assert deflections[0, 0] == pytest.approx(-2.08909, 1e-3)
+        assert deflections[0, 1] == pytest.approx(-0.69636, 1e-3)
+
+        nfw = ag.mp.EllNFW(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.0),
+            kappa_s=1.0,
+            scale_radius=1.0,
+        )
+
+        deflections = nfw.deflections_2d_via_cses_from(
+            grid=np.array([[0.1625, 0.1625]])
+        )
+
+        assert deflections[0, 0] == pytest.approx(0.56194, 1e-3)
+        assert deflections[0, 1] == pytest.approx(0.56194, 1e-3)
+
+        nfw = ag.mp.EllNFW(
+            centre=(0.3, 0.2),
+            elliptical_comps=(0.03669, 0.172614),
+            kappa_s=2.5,
+            scale_radius=4.0,
+        )
+
+        deflections = nfw.deflections_2d_via_cses_from(
             grid=ag.Grid2DIrregular([(0.1625, 0.1625)])
         )
 
