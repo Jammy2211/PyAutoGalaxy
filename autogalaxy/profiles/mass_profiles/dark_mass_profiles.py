@@ -18,7 +18,10 @@ import autoarray as aa
 
 from autogalaxy.profiles.mass_profiles import MassProfile
 
-from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
+from autogalaxy.profiles.mass_profiles.mass_profiles import (
+    MassProfileMGE,
+    MassProfileCSE,
+)
 
 from autogalaxy import exc
 from autogalaxy.util import cosmology_util
@@ -436,11 +439,11 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
                 * (1.0 + x) ** (self.inner_slope - 3.0)
             )
 
-        amps, sigmas = self._decompose_convergence_into_gaussians(
+        amplitude_list, sigma_list = self._decompose_convergence_into_gaussians(
             func=gnfw_3d, radii_min=radii_min, radii_max=radii_max
         )
-        amps *= np.sqrt(2.0 * np.pi) * sigmas
-        return amps, sigmas
+        amplitude_list *= np.sqrt(2.0 * np.pi) * sigma_list
+        return amplitude_list, sigma_list
 
     def with_new_normalization(self, normalization):
 
@@ -961,7 +964,7 @@ class SphNFWTruncatedMCRLudlow(SphNFWTruncated):
         )
 
 
-class EllNFW(EllNFWGeneralized):
+class EllNFW(EllNFWGeneralized, MassProfileCSE):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -994,6 +997,7 @@ class EllNFW(EllNFWGeneralized):
             inner_slope=1.0,
             scale_radius=scale_radius,
         )
+        super(MassProfileCSE, self).__init__()
 
     @staticmethod
     def coord_func(r):
@@ -1003,6 +1007,28 @@ class EllNFW(EllNFWGeneralized):
             return (1.0 / np.sqrt(1 - r ** 2)) * np.arctanh(np.sqrt(1 - r ** 2))
         elif r == 1:
             return 1
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def convergence_2d_via_cses_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the projected 2D convergence from a grid of (y,x) arc second coordinates, by computing and summing
+        the convergence of each individual cse used to decompose the mass profile.
+
+        The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
+        profile (e.g. `decompose_convergence_into_cses`) is using equation (12) of
+        Oguri 2021 (https://arxiv.org/abs/2106.11464).
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
+
+        elliptical_radii = self.grid_to_elliptical_radii(grid)
+
+        return self._convergence_2d_via_cses_from(grid_radii=elliptical_radii)
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
@@ -1083,6 +1109,12 @@ class EllNFW(EllNFWGeneralized):
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def deflections_2d_via_cses_from(self, grid: aa.type.Grid2DLike):
+        return self._deflections_2d_via_cses_from(grid=grid)
+
     def convergence_func(self, grid_radius):
         grid_radius = (1.0 / self.scale_radius) * grid_radius + 0j
         return np.real(2.0 * self.kappa_s * self.coord_func_g(grid_radius=grid_radius))
@@ -1136,6 +1168,49 @@ class EllNFW(EllNFWGeneralized):
             * (1 - eta_u_2)
             / (eta_u ** 2 - 1)
             / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
+        )
+
+    def decompose_convergence_into_cses(self, total_cses=30, sample_points=60):
+        """
+        Decompose the convergence of the elliptical NFW mass profile into cored steep elliptical (cse) profiles.
+
+        This uses an input function `func` which is specific to the elliptical NFW mass profile, and is defined by
+        equation (12) of Oguri 2021 (https://arxiv.org/abs/2106.11464).
+
+        Parameters
+        ----------
+        func
+            The function representing the profile that is decomposed into CSEs.
+        radii_min:
+            The minimum radius to fit
+        radii_max:
+            The maximum radius to fit
+        total_cses : int
+            The number of CSEs used to approximate the input func.
+        sample_points: int (should be larger than 'total_cses')
+            The number of data points to fit
+
+        Returns
+        -------
+        Tuple[List, List]
+            A list of amplitudes and core radii of every cored steep elliptical (cse) the mass profile is decomposed
+            into.
+        """
+        radii_min = 0.005
+        radii_max = 7.5
+
+        def nfw_2d(r):
+            grid_radius = (1.0 / self.scale_radius) * r + 0j
+            return np.real(
+                2.0 * self.kappa_s * self.coord_func_g(grid_radius=grid_radius)
+            )
+
+        return self._decompose_convergence_into_cses_from(
+            func=nfw_2d,
+            radii_min=radii_min,
+            radii_max=radii_max,
+            total_cses=total_cses,
+            sample_points=sample_points,
         )
 
 

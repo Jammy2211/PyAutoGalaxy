@@ -1,12 +1,15 @@
 import copy
 import numpy as np
 from scipy.special import wofz
-from typing import Tuple
+from typing import List, Tuple
 
 import autoarray as aa
 
 from autogalaxy.profiles.mass_profiles import MassProfile
-from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfileMGE
+from autogalaxy.profiles.mass_profiles.mass_profiles import (
+    MassProfileMGE,
+    MassProfileCSE,
+)
 
 from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
 
@@ -216,7 +219,7 @@ class EllGaussian(MassProfile, StellarProfile):
 
 
 # noinspection PyAbstractClass
-class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
+class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -254,6 +257,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
             centre=centre, elliptical_comps=elliptical_comps
         )
         super(MassProfileMGE, self).__init__()
+        super(MassProfileCSE, self).__init__()
         self.mass_to_light_ratio = mass_to_light_ratio
         self.intensity = intensity
         self.effective_radius = effective_radius
@@ -280,11 +284,12 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_via_gaussians_from(self, grid: aa.type.Grid2DLike):
-        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
+        """
+        Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -292,6 +297,28 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
         eccentric_radii = self.grid_to_eccentric_radii(grid=grid)
 
         return self._convergence_2d_via_gaussians_from(grid_radii=eccentric_radii)
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def convergence_2d_via_cses_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the projected 2D convergence from a grid of (y,x) arc second coordinates, by computing and summing
+        the convergence of each individual cse used to decompose the mass profile.
+
+        The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
+        profile (e.g. `decompose_convergence_into_cses`) is using equation (12) of
+        Oguri 2021 (https://arxiv.org/abs/2106.11464).
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
+
+        elliptical_radii = self.grid_to_elliptical_radii(grid=grid)
+
+        return self._convergence_2d_via_cses_from(grid_radii=elliptical_radii)
 
     @aa.grid_dec.grid_2d_to_structure
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
@@ -304,6 +331,25 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
         return self._deflections_2d_via_gaussians_from(
             grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
         )
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def deflections_2d_via_cses_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the projected 2D deflection angles from a grid of (y,x) arc second coordinates, by computing and
+        summing the convergence of each individual cse used to decompose the mass profile.
+
+        The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
+        profile (e.g. `decompose_convergence_into_cses`) is using equation (12) of
+        Oguri 2021 (https://arxiv.org/abs/2106.11464).
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
+        return self._deflections_2d_via_cses_from(grid=grid)
 
     @property
     def ellipticity_rescale(self):
@@ -345,10 +391,11 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
         systems, this won't robustly capture the light profile's elliptical shape.
 
         The elliptical effective radius instead describes the major-axis radius of the ellipse containing \
-        half the light, and may be more appropriate for highly flattened systems like disk galaxies."""
+        half the light, and may be more appropriate for highly flattened systems like disk galaxies.
+        """
         return self.effective_radius / np.sqrt(self.axis_ratio)
 
-    def decompose_convergence_into_gaussians(self):
+    def decompose_convergence_into_gaussians(self) -> Tuple[List, List]:
         radii_min = self.effective_radius / 100.0
         radii_max = self.effective_radius * 20.0
 
@@ -366,6 +413,62 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
             func=sersic_2d, radii_min=radii_min, radii_max=radii_max
         )
 
+    def decompose_convergence_into_cses(
+        self,
+        lower_dex: float = 3.0,
+        upper_dex: float = 1.5,
+        total_cses: int = 25,
+        sample_points: int = 50,
+    ) -> Tuple[List, List]:
+        """
+        Decompose the convergence of the Sersic profile into cored steep elliptical (cse) profiles.
+
+        This decomposition uses the standard 2d profile of a Sersic mass profile.
+
+        Parameters
+        ----------
+        func
+            The function representing the profile that is decomposed into CSEs.
+        radii_min:
+            The minimum radius to fit
+        radii_max:
+            The maximum radius to fit
+        total_cses : int
+            The number of CSEs used to approximate the input func.
+        sample_points: int (should be larger than 'total_cses')
+            The number of data points to fit
+
+        Returns
+        -------
+        Tuple[List, List]
+            A list of amplitudes and core radii of every cored steep elliptical (cse) the mass profile is decomposed
+            into.
+        """
+        scaled_effective_radius = self.effective_radius / np.sqrt(self.axis_ratio)
+        radii_min = scaled_effective_radius / 10.0 ** lower_dex
+        radii_max = scaled_effective_radius * 10.0 ** upper_dex
+
+        def sersic_2d(r):
+            return (
+                self.mass_to_light_ratio
+                * self.intensity
+                * np.exp(
+                    -self.sersic_constant
+                    * (
+                        ((r / scaled_effective_radius) ** (1.0 / self.sersic_index))
+                        - 1.0
+                    )
+                )
+            )
+
+        return self._decompose_convergence_into_cses_from(
+            func=sersic_2d,
+            radii_min=radii_min,
+            radii_max=radii_max,
+            total_cses=total_cses,
+            sample_points=sample_points,
+        )
+
     def with_new_normalization(self, normalization):
 
         mass_profile = copy.copy(self)
@@ -373,7 +476,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, StellarProfile):
         return mass_profile
 
 
-class EllSersic(AbstractEllSersic, MassProfileMGE):
+class EllSersic(AbstractEllSersic, MassProfileMGE, MassProfileCSE):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum

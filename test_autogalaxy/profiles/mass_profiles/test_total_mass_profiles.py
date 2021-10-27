@@ -10,7 +10,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestPointMass:
-    def test__deflections__correct_values(self):
+    def test__deflections_from(self):
 
         # The radial coordinate at (1.0, 1.0) is sqrt(2)
         # This is decomposed into (y,x) angles of sin(45) = cos(45) = sqrt(2) / 2.0
@@ -113,7 +113,7 @@ class TestPointMass:
 
 
 class TestPowerLawBroken:
-    def test__convergence_correct_values(self):
+    def test__convergence_from(self):
 
         broken_power_law = ag.mp.SphPowerLawBroken(
             centre=(0, 0),
@@ -185,7 +185,7 @@ class TestPowerLawBroken:
 
         assert convergence == pytest.approx(0.026469, 1e-4)
 
-    def test__deflections__correct_values(self):
+    def test__deflections_from(self):
 
         broken_power_law = ag.mp.SphPowerLawBroken(
             centre=(0, 0),
@@ -423,7 +423,7 @@ class TestPowerLawBroken:
 
 
 class TestPowerLawCored:
-    def test__convergence_correct_values(self):
+    def test__convergence_from(self):
 
         cored_power_law = ag.mp.SphPowerLawCored(
             centre=(1, 1), einstein_radius=1.0, slope=2.2, core_radius=0.1
@@ -457,7 +457,7 @@ class TestPowerLawCored:
 
         assert convergence == pytest.approx(1.3887, 1e-3)
 
-    def test__potential_correct_values(self):
+    def test__potential_from(self):
         power_law = ag.mp.SphPowerLawCored(
             centre=(-0.7, 0.5), einstein_radius=1.0, slope=1.8, core_radius=0.2
         )
@@ -498,7 +498,7 @@ class TestPowerLawCored:
 
         assert potential == pytest.approx(0.71185, 1e-3)
 
-    def test__deflections__correct_values(self):
+    def test__deflections_from(self):
 
         power_law = ag.mp.SphPowerLawCored(
             centre=(-0.7, 0.5), einstein_radius=1.0, slope=1.8, core_radius=0.2
@@ -722,7 +722,7 @@ class TestPowerLawCored:
 
 
 class TestPowerLaw:
-    def test__convergence_correct_values(self):
+    def test__convergence_from(self):
 
         power_law = ag.mp.SphPowerLaw(centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0)
 
@@ -764,7 +764,7 @@ class TestPowerLaw:
 
         assert convergence == pytest.approx(1.4079, 1e-3)
 
-    def test__potential_correct_values(self):
+    def test__potential_from(self):
         power_law = ag.mp.SphPowerLaw(
             centre=(-0.7, 0.5), einstein_radius=1.3, slope=2.3
         )
@@ -803,7 +803,7 @@ class TestPowerLaw:
 
         assert potential == pytest.approx(0.96723, 1e-3)
 
-    def test__deflections__correct_values(self):
+    def test__deflections_from(self):
 
         power_law = ag.mp.SphPowerLaw(centre=(0.2, 0.2), einstein_radius=1.0, slope=2.0)
 
@@ -959,7 +959,7 @@ class TestPowerLaw:
 
 
 class TestIsothermalCored:
-    def test__convergence_correct_values(self):
+    def test__convergence_from(self):
 
         cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(1, 1), einstein_radius=1.0, core_radius=0.1
@@ -1040,7 +1040,7 @@ class TestIsothermalCored:
 
         assert convergence == pytest.approx((1.0 / 0.75) * 0.49029, 1e-3)
 
-    def test__potential__correct_values(self):
+    def test__potential_from(self):
 
         cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(-0.7, 0.5), einstein_radius=1.3, core_radius=0.2
@@ -1088,7 +1088,7 @@ class TestIsothermalCored:
 
         assert potential == pytest.approx(0.04024, 1e-3)
 
-    def test__deflections__correct_values(self):
+    def test__deflections_from(self):
 
         cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(-0.7, 0.5), einstein_radius=1.3, core_radius=0.2
@@ -1225,7 +1225,7 @@ class TestIsothermalCored:
 
 
 class TestIsothermal:
-    def test__convergence__correct_values(self):
+    def test__convergence_from(self):
 
         # eta = 1.0
         # kappa = 0.5 * 1.0 ** 1.0
@@ -1260,7 +1260,7 @@ class TestIsothermal:
 
         assert convergence == pytest.approx(0.66666, 1e-3)
 
-    def test__potential__correct_values(self):
+    def test__potential_from(self):
 
         isothermal = ag.mp.SphIsothermal(centre=(-0.7, 0.5), einstein_radius=1.3)
 
@@ -1278,7 +1278,7 @@ class TestIsothermal:
 
         assert potential == pytest.approx(1.19268, 1e-3)
 
-    def test__deflections__correct_values(self):
+    def test__deflections_from(self):
 
         isothermal = ag.mp.SphIsothermal(centre=(-0.7, 0.5), einstein_radius=1.3)
 
@@ -1312,7 +1312,7 @@ class TestIsothermal:
         assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)
 
-    def test__shear__correct_values(self):
+    def test__shear_from(self):
 
         isothermal = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
