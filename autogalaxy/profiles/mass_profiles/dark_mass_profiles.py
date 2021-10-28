@@ -1067,6 +1067,15 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+
+        return self._deflections_2d_via_gaussians_from(
+            grid=grid, sigmas_factor=self.axis_ratio
+        )
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integrator_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
