@@ -125,89 +125,25 @@ def make_plane_x2_galaxy_inversion_7x7():
     return ag.Plane(galaxies=[make_gal_x1_lp(), source_gal_inversion])
 
 
-# GALAXY DATA #
+# QUANTITY DATASET AND FIT #
 
 
-def make_gal_data_7x7():
-    return ag.GalaxyData(
-        image=make_image_7x7(),
-        noise_map=make_noise_map_7x7(),
-        pixel_scales=make_image_7x7().pixel_scales,
+def make_dataset_quantity_7x7_array_2d():
+
+    return ag.DatasetQuantity(
+        data=aa.Array2D.ones(shape_native=(7, 7), pixel_scales=1.0),
+        noise_map=aa.Array2D.full(
+            fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0
+        ),
     )
 
 
-def make_gal_fit_data_7x7_image():
-    return ag.MaskedGalaxyDataset(
-        galaxy_data=make_gal_data_7x7(), mask=make_sub_mask_2d_7x7(), use_image=True
-    )
-
-
-def make_gal_fit_data_7x7_convergence():
-    return ag.MaskedGalaxyDataset(
-        galaxy_data=make_gal_data_7x7(),
-        mask=make_sub_mask_2d_7x7(),
-        use_convergence=True,
-    )
-
-
-def make_gal_fit_data_7x7_potential():
-    return ag.MaskedGalaxyDataset(
-        galaxy_data=make_gal_data_7x7(), mask=make_sub_mask_2d_7x7(), use_potential=True
-    )
-
-
-def make_gal_fit_data_7x7_deflections_y():
-    return ag.MaskedGalaxyDataset(
-        galaxy_data=make_gal_data_7x7(),
-        mask=make_sub_mask_2d_7x7(),
-        use_deflections_y=True,
-    )
-
-
-def make_gal_fit_data_7x7_deflections_x():
-    return ag.MaskedGalaxyDataset(
-        galaxy_data=make_gal_data_7x7(),
-        mask=make_sub_mask_2d_7x7(),
-        use_deflections_x=True,
-    )
-
-
-# GALAXY FIT #
-
-
-def make_gal_fit_7x7_image():
-    return ag.FitGalaxy(
-        masked_galaxy_dataset=make_gal_fit_data_7x7_image(),
-        model_galaxies=[make_gal_x1_lp()],
-    )
-
-
-def make_gal_fit_7x7_convergence():
-    return ag.FitGalaxy(
-        masked_galaxy_dataset=make_gal_fit_data_7x7_convergence(),
-        model_galaxies=[make_gal_x1_mp()],
-    )
-
-
-def make_gal_fit_7x7_potential():
-    return ag.FitGalaxy(
-        masked_galaxy_dataset=make_gal_fit_data_7x7_potential(),
-        model_galaxies=[make_gal_x1_mp()],
-    )
-
-
-def make_gal_fit_7x7_deflections_y():
-    return ag.FitGalaxy(
-        masked_galaxy_dataset=make_gal_fit_data_7x7_deflections_y(),
-        model_galaxies=[make_gal_x1_mp()],
-    )
-
-
-def make_gal_fit_7x7_deflections_x():
-    return ag.FitGalaxy(
-        masked_galaxy_dataset=make_gal_fit_data_7x7_deflections_x(),
-        model_galaxies=[make_gal_x1_mp()],
-    )
+# def make_dataset_quantity_7x7_vector_field_2d():
+#
+#     return ag.DatasetQuantity(
+#         data=aa.Array2D.ones(shape_native=(7,7), pixel_scales=1.0),
+#         noise_map=aa.Array2D.full(fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0),
+#     )
 
 
 # HYPER GALAXIES #

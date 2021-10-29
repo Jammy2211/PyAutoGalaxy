@@ -11,7 +11,9 @@ class TestLikelihood:
 
         noise_map = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0)
 
-        galaxy_data = ag.GalaxyData(image=image, noise_map=noise_map, pixel_scales=3.0)
+        galaxy_data = ag.DatasetQuantity(
+            image=image, noise_map=noise_map, pixel_scales=3.0
+        )
 
         mask = ag.Mask2D.manual(
             mask=np.array(
@@ -22,10 +24,10 @@ class TestLikelihood:
         )
         g0 = MockGalaxy(value=1.0)
 
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=galaxy_data, mask=mask, use_image=True
         )
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.model_galaxies == [g0]
@@ -33,10 +35,10 @@ class TestLikelihood:
             -0.5 * np.log(2 * np.pi * 1.0), 1.0e-4
         )
 
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=galaxy_data, mask=mask, use_convergence=True
         )
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.model_galaxies == [g0]
@@ -44,10 +46,10 @@ class TestLikelihood:
             -0.5 * np.log(2 * np.pi * 1.0), 1.0e-4
         )
 
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=galaxy_data, mask=mask, use_potential=True
         )
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.model_galaxies == [g0]
@@ -55,10 +57,10 @@ class TestLikelihood:
             -0.5 * np.log(2 * np.pi * 1.0), 1.0e-4
         )
 
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=galaxy_data, mask=mask, use_deflections_y=True
         )
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.model_galaxies == [g0]
@@ -66,10 +68,10 @@ class TestLikelihood:
             -0.5 * np.log(2 * np.pi * 1.0), 1.0e-4
         )
 
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=galaxy_data, mask=mask, use_deflections_x=True
         )
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.model_galaxies == [g0]
@@ -85,7 +87,9 @@ class TestLikelihood:
             fill_value=2.0, shape_native=(3, 4), pixel_scales=1.0
         )
 
-        galaxy_data = ag.GalaxyData(image=image, noise_map=noise_map, pixel_scales=3.0)
+        galaxy_data = ag.DatasetQuantity(
+            image=image, noise_map=noise_map, pixel_scales=3.0
+        )
 
         mask = ag.Mask2D.manual(
             mask=np.array(
@@ -101,10 +105,10 @@ class TestLikelihood:
 
         g0 = MockGalaxy(value=1.0, shape=2)
 
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=galaxy_data, mask=mask, use_image=True
         )
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
 
@@ -115,10 +119,10 @@ class TestLikelihood:
             -0.5 * ((25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)), 1.0e-4
         )
 
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=galaxy_data, mask=mask, use_convergence=True
         )
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.model_galaxies == [g0]
@@ -128,10 +132,10 @@ class TestLikelihood:
             -0.5 * ((25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)), 1.0e-4
         )
 
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=galaxy_data, mask=mask, use_potential=True
         )
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.model_galaxies == [g0]
@@ -141,10 +145,10 @@ class TestLikelihood:
             -0.5 * ((25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)), 1.0e-4
         )
 
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=galaxy_data, mask=mask, use_deflections_y=True
         )
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.chi_squared == (25.0 / 4.0)
@@ -153,10 +157,10 @@ class TestLikelihood:
             -0.5 * ((25.0 / 4.0) + 2.0 * np.log(2 * np.pi * 2.0 ** 2)), 1.0e-4
         )
 
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=galaxy_data, mask=mask, use_deflections_x=True
         )
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[g0]
         )
         assert fit.chi_squared == (25.0 / 4.0)
@@ -168,14 +172,14 @@ class TestLikelihood:
 
 class TestCompareToManual:
     def test__image(self, gal_data_7x7, sub_mask_2d_7x7):
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=gal_data_7x7, mask=sub_mask_2d_7x7, use_image=True
         )
 
         galaxy = ag.Galaxy(
             redshift=0.5, light=ag.lp.SphSersic(centre=(1.0, 2.0), intensity=1.0)
         )
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[galaxy]
         )
 
@@ -208,7 +212,7 @@ class TestCompareToManual:
         assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
     def test__convergence(self, gal_data_7x7, sub_mask_2d_7x7):
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=gal_data_7x7, mask=sub_mask_2d_7x7, use_convergence=True
         )
 
@@ -216,7 +220,7 @@ class TestCompareToManual:
             redshift=0.5,
             mass=ag.mp.SphIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[galaxy]
         )
 
@@ -247,7 +251,7 @@ class TestCompareToManual:
         assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
     def test__potential(self, gal_data_7x7, sub_mask_2d_7x7):
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=gal_data_7x7, mask=sub_mask_2d_7x7, use_potential=True
         )
 
@@ -256,7 +260,7 @@ class TestCompareToManual:
             mass=ag.mp.SphIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
 
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[galaxy]
         )
 
@@ -289,7 +293,7 @@ class TestCompareToManual:
         assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
     def test__deflections_y(self, gal_data_7x7, sub_mask_2d_7x7):
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=gal_data_7x7, mask=sub_mask_2d_7x7, use_deflections_y=True
         )
 
@@ -298,7 +302,7 @@ class TestCompareToManual:
             mass=ag.mp.SphIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
 
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[galaxy]
         )
 
@@ -333,7 +337,7 @@ class TestCompareToManual:
         assert log_likelihood == pytest.approx(fit.log_likelihood, 1e-4)
 
     def test__deflections_x(self, gal_data_7x7, sub_mask_2d_7x7):
-        masked_galaxy_dataset = ag.MaskedGalaxyDataset(
+        masked_galaxy_dataset = ag.DatasetQuantity(
             galaxy_data=gal_data_7x7, mask=sub_mask_2d_7x7, use_deflections_x=True
         )
 
@@ -341,7 +345,7 @@ class TestCompareToManual:
             redshift=0.5,
             mass=ag.mp.SphIsothermal(centre=(1.0, 2.0), einstein_radius=1.0),
         )
-        fit = ag.FitGalaxy(
+        fit = ag.FitQuantity(
             masked_galaxy_dataset=masked_galaxy_dataset, model_galaxies=[galaxy]
         )
 

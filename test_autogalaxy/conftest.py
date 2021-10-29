@@ -281,34 +281,9 @@ def make_plane_7x7():
     return fixtures.make_plane_7x7()
 
 
-@pytest.fixture(name="gal_data_7x7")
-def make_gal_data_7x7():
-    return fixtures.make_gal_data_7x7()
-
-
-@pytest.fixture(name="gal_fit_7x7_image")
-def make_gal_fit_7x7_image():
-    return fixtures.make_gal_fit_7x7_image()
-
-
-@pytest.fixture(name="gal_fit_7x7_convergence")
-def make_gal_fit_7x7_convergence():
-    return fixtures.make_gal_fit_7x7_convergence()
-
-
-@pytest.fixture(name="gal_fit_7x7_potential")
-def make_gal_fit_7x7_potential():
-    return fixtures.make_gal_fit_7x7_potential()
-
-
-@pytest.fixture(name="gal_fit_7x7_deflections_y")
-def make_gal_fit_7x7_deflections_y():
-    return fixtures.make_gal_fit_7x7_deflections_y()
-
-
-@pytest.fixture(name="gal_fit_7x7_deflections_x")
-def make_gal_fit_7x7_deflections_x():
-    return fixtures.make_gal_fit_7x7_deflections_x()
+@pytest.fixture(name="dataset_quantity_7x7_array_2d")
+def make_dataset_quantity_7x7_array_2d():
+    return fixtures.make_dataset_quantity_7x7_array_2d()
 
 
 @pytest.fixture(name="hyper_model_image_7x7")

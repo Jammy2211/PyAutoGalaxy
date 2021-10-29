@@ -5,7 +5,7 @@ from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
 from autogalaxy.plot.mat_wrap.lensing_include import Include2D
 
 
-class FitGalaxyPlotter(aplt.FitImagingPlotter):
+class FitQuantityPlotter(aplt.FitImagingPlotter):
     def __init__(
         self,
         fit,

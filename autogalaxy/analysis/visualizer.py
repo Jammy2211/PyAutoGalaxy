@@ -4,7 +4,7 @@ from os import path
 from autoconf import conf
 import autoarray.plot as aplt
 
-from autogalaxy.galaxy.plot.fit_galaxy_plotters import FitGalaxyPlotter
+from autogalaxy.quantity.plot.fit_quantity_plotters import FitQuantityPlotter
 from autogalaxy.galaxy.plot.hyper_galaxy_plotters import HyperPlotter
 
 from autogalaxy.plot.mat_wrap.lensing_include import Include2D
@@ -180,7 +180,7 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="galaxy_fit")
 
-        fit_galaxy_plotter = FitGalaxyPlotter(
+        fit_quantity_plotter = FitQuantityPlotter(
             fit=fit,
             mat_plot_2d=mat_plot_2d,
             visuals_2d=visuals_2d,
@@ -188,18 +188,18 @@ class Visualizer:
         )
 
         if should_plot("subplot_galaxy_fit"):
-            fit_galaxy_plotter.subplot_fit_galaxy()
+            fit_quantity_plotter.subplot_fit_galaxy()
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="galaxy_fit")
 
-        fit_galaxy_plotter = FitGalaxyPlotter(
+        fit_quantity_plotter = FitQuantityPlotter(
             fit=fit,
             mat_plot_2d=mat_plot_2d,
             visuals_2d=visuals_2d,
             include_2d=self.include_2d,
         )
 
-        fit_galaxy_plotter.figures_2d(
+        fit_quantity_plotter.figures_2d(
             image=should_plot("image"),
             noise_map=should_plot("noise_map"),
             model_image=should_plot("model_image"),

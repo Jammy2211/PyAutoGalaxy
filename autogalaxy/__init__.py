@@ -57,10 +57,9 @@ from .interferometer.interferometer import SimulatorInterferometer
 from .interferometer.fit_interferometer import FitInterferometer
 from .interferometer.model.analysis import AnalysisInterferometer
 
-from .galaxy.fit_galaxy import FitGalaxy
+from .quantity.fit_quantity import FitQuantity
 from .galaxy.galaxy import Galaxy, HyperGalaxy, Redshift
-from .galaxy.galaxy_data import GalaxyData
-from .galaxy.masked_galaxy_data import MaskedGalaxyDataset
+from .quantity.dataset_quantity import DatasetQuantity
 from .hyper import hyper_data
 from .analysis.setup import SetupHyper
 from .plane.plane import Plane
