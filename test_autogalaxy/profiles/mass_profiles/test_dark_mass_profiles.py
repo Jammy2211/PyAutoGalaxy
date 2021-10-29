@@ -374,7 +374,7 @@ class TestAbstractNFW:
 
 
 class TestGeneralizedNFW:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
 
         gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
@@ -794,7 +794,7 @@ class TestGeneralizedNFW:
 
 
 class TestTruncatedNFW:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
 
         truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=2.0
@@ -976,7 +976,7 @@ class TestTruncatedNFW:
 
 
 class TestNFW:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
 
         # r = 2.0 (> 1.0)
         # F(r) = (1/(sqrt(3))*atan(sqrt(3)) = 0.60459978807

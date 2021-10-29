@@ -1,44 +1,48 @@
 import autoarray as aa
 
+from autogalaxy.quantity.dataset_quantity import DatasetQuantity
+
 
 class FitQuantity(aa.FitDataset):
-    def __init__(self, masked_galaxy_dataset, model_galaxies):
-        """Class which fits a set of galaxy-datas to a model galaxy, using either the galaxy's image, \
-        surface-density or potential.
+    def __init__(self, quantity_dataset: DatasetQuantity, model_func):
+        """
+        Fits a `DatasetQuantity` object with model data.
+
+        This is used to fit a quantity (e.g. a convergence, deflection angles), from an object like
+        a `LightProfile`, `MassProfile`, `Galaxy` or `Plane`, to the same quantity derived from another of that object.
+
+        For example, we may have the 2D convergence of a power-law mass profile and wish to determine how closely the
+        2D convergence of an nfw mass profile's matches it. The `FitQuantity` can fit the two, where a noise-map
+        is associated with the quantity's dataset such that figure of merits like a chi-squared and log likelihood
+        can be computed.
+
+        This is ultimately used in the `AnalysisQuantity` class to perform model-fitting of quantities of different
+        mass profiles, light profiles, galaxies, etc.
 
         Parameters
         ----------
-        masked_galaxy_dataset : DatasetQuantity
-            The galaxy-datas object being fitted.
-        model_galaxies : ag.Galaxy
-            The model galaxy used to fit the galaxy-datas.
+        quantity_dataset
+            The quantity that is to be fitted, which has a noise-map associated it with for computing goodness-of-fit
+            metrics.
         """
-        self.model_galaxies = model_galaxies
+        self.model_func = model_func
 
-        model_data = masked_galaxy_dataset.profile_quantity_from(
-            galaxies=model_galaxies
-        )
+        model_data = model_func(grid=quantity_dataset.grid)
 
         fit = aa.FitData(
-            data=masked_galaxy_dataset.image,
-            noise_map=masked_galaxy_dataset.noise_map,
+            data=quantity_dataset.data,
+            noise_map=quantity_dataset.noise_map,
             model_data=model_data.binned,
-            mask=masked_galaxy_dataset.mask,
+            mask=quantity_dataset.mask,
             use_mask_in_fit=False,
         )
 
-        super().__init__(dataset=masked_galaxy_dataset, fit=fit)
+        super().__init__(dataset=quantity_dataset, fit=fit)
 
     @property
-    def masked_galaxy_dataset(self):
+    def quantity_dataset(self):
         return self.dataset
 
     @property
     def grid(self):
-        return self.masked_galaxy_dataset.grid
-
-    def image(self):
-        return self.data
-
-    def model_image(self):
-        return self.model_data
+        return self.quantity_dataset.grid

@@ -203,7 +203,7 @@ class TestEllGaussian:
 
 
 class TestSersic:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
 
         sersic = ag.mp.EllSersic(
             centre=(0.0, 0.0),
@@ -659,7 +659,7 @@ class TestSersic:
 
 
 class TestExponential:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
         exponential = ag.mp.EllExponential(
             elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
@@ -895,7 +895,7 @@ class TestExponential:
 
 
 class TestDevVaucouleurs:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
         dev = ag.mp.EllDevVaucouleurs(
             elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
@@ -1095,7 +1095,7 @@ class TestDevVaucouleurs:
 
 
 class TestSersicMassRadialGradient:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1/0.6)**-1.0 = 0.6
         sersic = ag.mp.EllSersicRadialGradient(
             centre=(0.0, 0.0),
@@ -1397,7 +1397,7 @@ class TestSersicMassRadialGradient:
 
 
 class TestSersicCore:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
 
         core_sersic = ag.mp.EllSersicCore(
             elliptical_comps=(0.0, 0.0),
@@ -1635,7 +1635,7 @@ class TestSersicCore:
 
 
 class TestChameleon:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
 
         chameleon = ag.mp.EllChameleon(
             elliptical_comps=(0.0, 0.0),
