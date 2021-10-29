@@ -281,11 +281,6 @@ def make_plane_7x7():
     return fixtures.make_plane_7x7()
 
 
-@pytest.fixture(name="dataset_quantity_7x7_array_2d")
-def make_dataset_quantity_7x7_array_2d():
-    return fixtures.make_dataset_quantity_7x7_array_2d()
-
-
 @pytest.fixture(name="hyper_model_image_7x7")
 def make_hyper_model_image_7x7():
     return fixtures.make_hyper_model_image_7x7()
@@ -310,6 +305,17 @@ def make_contribution_map_7x7(
         hyper_galaxy_image=hyper_galaxy_image_0_7x7,
     )
 
+
+
+### QUANTITY ###
+
+@pytest.fixture(name="dataset_quantity_7x7_array_2d")
+def make_dataset_quantity_7x7_array_2d():
+    return fixtures.make_dataset_quantity_7x7_array_2d()
+
+@pytest.fixture(name="fit_quantity_7x7_array_2d")
+def make_fit_quantity_7x7_array_2d():
+    return fixtures.make_fit_quantity_7x7_array_2d()
 
 ### FITS ###
 

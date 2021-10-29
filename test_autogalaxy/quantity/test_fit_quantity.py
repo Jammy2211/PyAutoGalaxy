@@ -12,7 +12,7 @@ def test__fit_via_mock_profile(dataset_quantity_7x7_array_2d):
     )
 
     fit_quantity = ag.FitQuantity(
-        quantity_dataset=dataset_quantity_7x7_array_2d,
+        dataset_quantity=dataset_quantity_7x7_array_2d,
         model_func=model_object.convergence_2d_from,
     )
 

@@ -146,6 +146,16 @@ def make_dataset_quantity_7x7_array_2d():
 #     )
 
 
+def make_fit_quantity_7x7_array_2d():
+
+    mp_0 = make_mp_0()
+
+    return ag.FitQuantity(
+        dataset_quantity=make_dataset_quantity_7x7_array_2d(),
+        model_func=mp_0.convergence_2d_from
+    )
+
+
 # HYPER GALAXIES #
 
 

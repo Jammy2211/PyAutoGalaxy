@@ -42,7 +42,7 @@ class FitQuantityPlotter(aplt.FitImagingPlotter):
             self.mat_plot_2d.plot_array(
                 array=self.fit.data,
                 visuals_2d=self.visuals_with_include_2d,
-                auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
+                auto_labels=aplt.AutoLabels(title="Data", filename="data"),
             )
 
         super().figures_2d(
@@ -54,7 +54,7 @@ class FitQuantityPlotter(aplt.FitImagingPlotter):
             chi_squared_map=chi_squared_map,
         )
 
-    def subplot_fit_galaxy(self):
+    def subplot_fit_quantity(self):
         return self.subplot(
             image=True,
             signal_to_noise_map=True,
@@ -62,5 +62,5 @@ class FitQuantityPlotter(aplt.FitImagingPlotter):
             residual_map=True,
             normalized_residual_map=True,
             chi_squared_map=True,
-            auto_filename="subplot_fit_galaxy",
+            auto_filename="subplot_fit_quantity",
         )

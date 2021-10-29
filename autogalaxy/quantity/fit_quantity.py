@@ -4,7 +4,7 @@ from autogalaxy.quantity.dataset_quantity import DatasetQuantity
 
 
 class FitQuantity(aa.FitDataset):
-    def __init__(self, quantity_dataset: DatasetQuantity, model_func):
+    def __init__(self, dataset_quantity: DatasetQuantity, model_func):
         """
         Fits a `DatasetQuantity` object with model data.
 
@@ -21,23 +21,23 @@ class FitQuantity(aa.FitDataset):
 
         Parameters
         ----------
-        quantity_dataset
+        dataset_quantity
             The quantity that is to be fitted, which has a noise-map associated it with for computing goodness-of-fit
             metrics.
         """
         self.model_func = model_func
 
-        model_data = model_func(grid=quantity_dataset.grid)
+        model_data = model_func(grid=dataset_quantity.grid)
 
         fit = aa.FitData(
-            data=quantity_dataset.data,
-            noise_map=quantity_dataset.noise_map,
+            data=dataset_quantity.data,
+            noise_map=dataset_quantity.noise_map,
             model_data=model_data.binned,
-            mask=quantity_dataset.mask,
+            mask=dataset_quantity.mask,
             use_mask_in_fit=False,
         )
 
-        super().__init__(dataset=quantity_dataset, fit=fit)
+        super().__init__(dataset=dataset_quantity, fit=fit)
 
     @property
     def quantity_dataset(self):

@@ -188,7 +188,7 @@ class Visualizer:
         )
 
         if should_plot("subplot_galaxy_fit"):
-            fit_quantity_plotter.subplot_fit_galaxy()
+            fit_quantity_plotter.subplot_fit_quantity()
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="galaxy_fit")
 
