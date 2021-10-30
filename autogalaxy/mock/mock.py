@@ -25,7 +25,14 @@ class MockLightProfile(ag.lp.LightProfile):
 
 
 class MockMassProfile(ag.mp.MassProfile):
-    def __init__(self, convergence_2d=None, potential_2d=None, deflections_2d=None, value=None, value1=None):
+    def __init__(
+        self,
+        convergence_2d=None,
+        potential_2d=None,
+        deflections_2d=None,
+        value=None,
+        value1=None,
+    ):
 
         super().__init__()
 

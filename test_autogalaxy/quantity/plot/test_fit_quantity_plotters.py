@@ -18,10 +18,7 @@ def make_galaxy_fit_plotter_setup():
 
 
 def test__fit_sub_plot__all_types_of_galaxy_fit(
-    fit_quantity_7x7_array_2d,
-    include_2d_all,
-    plot_patch,
-    plot_path,
+    fit_quantity_7x7_array_2d, include_2d_all, plot_patch, plot_path
 ):
 
     fit_quantity_plotter = aplt.FitQuantityPlotter(

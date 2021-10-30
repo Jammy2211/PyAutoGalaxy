@@ -306,16 +306,18 @@ def make_contribution_map_7x7(
     )
 
 
-
 ### QUANTITY ###
+
 
 @pytest.fixture(name="dataset_quantity_7x7_array_2d")
 def make_dataset_quantity_7x7_array_2d():
     return fixtures.make_dataset_quantity_7x7_array_2d()
 
+
 @pytest.fixture(name="fit_quantity_7x7_array_2d")
 def make_fit_quantity_7x7_array_2d():
     return fixtures.make_fit_quantity_7x7_array_2d()
+
 
 ### FITS ###
 
