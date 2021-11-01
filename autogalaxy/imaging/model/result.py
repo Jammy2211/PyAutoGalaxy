@@ -1,4 +1,9 @@
+from typing import List
+
+import autoarray as aa
+
 from autogalaxy.analysis.result import ResultDataset
+from autogalaxy.imaging.fit_imaging import FitImaging
 
 
 class ResultImaging(ResultDataset):
@@ -15,7 +20,7 @@ class ResultImaging(ResultDataset):
     - The non-linear search used to perform the model fit.
 
     This class contains a number of methods which use the above objects to create the max log likelihood `Plane`,
-    `FitIamging`, hyper-galaxy images,etc.
+    `FitImaging`, hyper-galaxy images,etc.
 
     Parameters
     ----------
@@ -35,8 +40,11 @@ class ResultImaging(ResultDataset):
     """
 
     @property
-    def max_log_likelihood_fit(self):
-
+    def max_log_likelihood_fit(self) -> FitImaging:
+        """
+        An instance of a `FitImaging` corresponding to the maximum log likelihood model inferred by the non-linear
+        search.
+        """
         hyper_image_sky = self.analysis.hyper_image_sky_for_instance(
             instance=self.instance
         )
@@ -52,9 +60,16 @@ class ResultImaging(ResultDataset):
         )
 
     @property
-    def unmasked_model_image(self):
+    def unmasked_model_image(self) -> aa.Array2D:
+        """
+        The model image of the maximum log likelihood model, creating without using a mask.
+        """
         return self.max_log_likelihood_fit.unmasked_blurred_image
 
     @property
-    def unmasked_model_image_of_galaxies(self):
+    def unmasked_model_image_of_galaxies(self) -> List[aa.Array2D]:
+        """
+        A list of the model image of every galaxy in the maximum log likelihood model, whereas all images are created
+        without using a mask.
+        """
         return self.max_log_likelihood_fit.unmasked_blurred_image_of_galaxies
