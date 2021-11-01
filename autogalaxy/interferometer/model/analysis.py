@@ -24,8 +24,15 @@ class AnalysisInterferometer(AnalysisDataset):
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
     ):
         """
-        Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a `Plane`) to an
-        interferometer dataset.
+        Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.
+
+        An Analysis class defines the `log_likelihood_function` which fits the model to the dataset and returns the
+        log likelihood value defining how well the model fitted the data. The Analysis class handles many other tasks,
+        such as visualization, outputting results to hard-disk and storing results in a format that can be loaded after
+        the model-fit is complete using PyAutoFit's database tools.
+
+        This Analysis class is used for all model-fits which fit galaxies (or objects containing galaxies like a
+        `Plane`) to an interferometer dataset.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
         pixelization or inversion), the Cosmology used for the analysis and hyper datasets used for certain model
@@ -244,11 +251,13 @@ class AnalysisInterferometer(AnalysisDataset):
         - If hyper features are used to scale the noise, a `FitInterferometer` with these features turned off may be
         output, to indicate how much these features are altering the dataset.
 
+        The images output by this function are customized using the file `config/visualize/plots.ini`.
+
         Parameters
         ----------
         paths
-            An object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
-            and the pickled objects used by the aggregator output by this function.
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization, and the pickled objects used by the aggregator output by this function.
         instance
             An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
             via a non-linear search).
@@ -356,7 +365,7 @@ class AnalysisInterferometer(AnalysisDataset):
         Parameters
         ----------
         paths
-            An object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
             and the pickled objects used by the aggregator output by this function.
         """
         super().save_attributes_for_aggregator(paths=paths)

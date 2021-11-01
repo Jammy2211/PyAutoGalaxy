@@ -21,8 +21,10 @@ class Analysis(af.Analysis):
         self, hyper_dataset_result: ResultDataset = None, cosmology=cosmo.Planck15
     ):
         """
-        Abstract Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a plane)
-        to imaging or interferometer data.
+        Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.
+
+        This abstract Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a
+        plane), but does not perform a model-fit by itself (and is therefore only inherited from).
 
         This class stores the Cosmology used for the analysis and hyper datasets used for certain model classes.
 
@@ -34,7 +36,7 @@ class Analysis(af.Analysis):
             the dataset, which set up the hyper dataset. These are used by certain classes for adapting the analysis
             to the properties of the dataset.
         cosmology
-            The Cosmology assumed for this analysis.
+            The AstroPy Cosmology assumed for this analysis.
         """
         self.hyper_dataset_result = hyper_dataset_result
         self.cosmology = cosmology
@@ -159,12 +161,12 @@ class AnalysisDataset(Analysis):
 
     def plane_for_instance(self, instance: af.ModelInstance) -> Plane:
         """
-        Create a `Plane` from the galaxies contained in the model instance.
+        Create a `Plane` from the galaxies contained in a model instance.
 
         Parameters
         ----------
         instance
-            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
+            An instance of the model that is fitted to the data by this analysis (whose parameters may have been set
             via a non-linear search).
 
         Returns
@@ -236,7 +238,7 @@ class AnalysisDataset(Analysis):
         Parameters
         ----------
         paths
-            An object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
             and the pickled objects used by the aggregator output by this function.
         """
         paths.save_object("data", self.dataset.data)
@@ -276,7 +278,7 @@ class AnalysisDataset(Analysis):
         Parameters
         ----------
         paths
-            An object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
             and pickled objects used by the database and aggregator.
         result
             The result containing the maximum log likelihood fit of the model.
