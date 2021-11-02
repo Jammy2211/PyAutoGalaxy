@@ -1,14 +1,17 @@
 import autoarray.plot as aplt
+from autoarray.fit.plot.fit_imaging_plotters import AbstractFitImagingPlotter
+
+from autogalaxy.quantity.fit_quantity import FitQuantity
 
 from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
 from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
 from autogalaxy.plot.mat_wrap.lensing_include import Include2D
 
 
-class FitQuantityPlotter(aplt.FitImagingPlotter):
+class FitQuantityPlotter(AbstractFitImagingPlotter):
     def __init__(
         self,
-        fit,
+        fit: FitQuantity,
         mat_plot_2d: MatPlot2D = MatPlot2D(),
         visuals_2d: Visuals2D = Visuals2D(),
         include_2d: Include2D = Include2D(),

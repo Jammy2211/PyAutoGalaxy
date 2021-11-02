@@ -528,11 +528,11 @@ def stochastic_model_from(
 
     This `log_likelihood_cap` is determined by sampling ~250 log likeilhood values from the original model's, but where
     each model evaluation uses a different KMeans seed of the pixelization to derive a unique pixelization with which
-     to reconstruct the source galaxy (therefore a pixelization which uses the KMeans method, like the
-     `VoronoiBrightnessImage` must be used to perform a stochastic fit).
+    to reconstruct the source galaxy (therefore a pixelization which uses the KMeans method, like the
+    `VoronoiBrightnessImage` must be used to perform a stochastic fit).
 
-     The cap is computed as the mean of these ~250 values and it is introduced o avoid underestimated errors due
-     to artificial likelihood boosts.
+    The cap is computed as the mean of these ~250 values and it is introduced o avoid underestimated errors due
+    to artificial likelihood boosts.
 
     Parameters
     ----------
@@ -623,7 +623,7 @@ def stochastic_fit(
         model components now free parameters.
     """
 
-    mean, sigma = norm.fit(result.stochastic_log_evidences)
+    mean, sigma = norm.fit(result.stochastic_log_likelihoods)
     log_likelihood_cap = mean
 
     name = f"{result.search.paths.name}__stochastic"
@@ -646,7 +646,7 @@ def stochastic_fit(
     search.paths.restore()
 
     search.paths.save_object(
-        "stochastic_log_evidences", result.stochastic_log_evidences
+        "stochastic_log_likelihoods", result.stochastic_log_likelihoods
     )
 
     search.paths.zip_remove()
