@@ -6,7 +6,9 @@ from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
 
 
 class VisualizerQuantity(Visualizer):
-    def visualize_fit_quantity(self, fit: FitQuantity, visuals_2d: Visuals2D = None):
+    def visualize_fit_quantity(
+        self, fit: FitQuantity, visuals_2d: Visuals2D = Visuals2D()
+    ):
         """
         Visualizes a `FitQuantity` object, which fits a quantity of a light or mass profile (e.g. an image, potential)
         to the same quantity of another light or mass profile.
@@ -42,10 +44,10 @@ class VisualizerQuantity(Visualizer):
             include_2d=self.include_2d,
         )
 
-        if should_plot("subplot_quantity_fit"):
+        if should_plot("subplot_fit"):
             fit_quantity_plotter.subplot_fit_quantity()
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="quantity_fit")
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="fit_quantity")
 
         fit_quantity_plotter = FitQuantityPlotter(
             fit=fit,
@@ -59,5 +61,26 @@ class VisualizerQuantity(Visualizer):
             noise_map=should_plot("noise_map"),
             model_image=should_plot("model_image"),
             residual_map=should_plot("residual_map"),
+            normalized_residual_map=should_plot("normalized_residual_map"),
             chi_squared_map=should_plot("chi_squared_map"),
         )
+
+        if should_plot("all_at_end_fits"):
+
+            mat_plot_2d = self.mat_plot_2d_from(
+                subfolders="fit_quantity/fits", format="fits"
+            )
+
+            fit_imaging_plotter = FitQuantityPlotter(
+                fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            )
+
+            fit_imaging_plotter.figures_2d(
+                image=True,
+                noise_map=True,
+                signal_to_noise_map=True,
+                model_image=True,
+                residual_map=True,
+                normalized_residual_map=True,
+                chi_squared_map=True,
+            )
