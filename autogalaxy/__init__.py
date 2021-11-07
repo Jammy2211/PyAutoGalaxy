@@ -58,6 +58,7 @@ from .interferometer.fit_interferometer import FitInterferometer
 from .interferometer.model.analysis import AnalysisInterferometer
 
 from .quantity.fit_quantity import FitQuantity
+from .quantity.model.analysis import AnalysisQuantity
 from .galaxy.galaxy import Galaxy, HyperGalaxy, Redshift
 from .quantity.dataset_quantity import DatasetQuantity
 from .hyper import hyper_data

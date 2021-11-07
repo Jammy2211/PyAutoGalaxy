@@ -17,9 +17,7 @@ from autogalaxy.analysis.result import ResultDataset
 
 
 class Analysis(af.Analysis):
-    def __init__(
-        self, hyper_dataset_result: ResultDataset = None, cosmology=cosmo.Planck15
-    ):
+    def __init__(self, cosmology=cosmo.Planck15):
         """
         Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.
 
@@ -28,18 +26,28 @@ class Analysis(af.Analysis):
 
         This class stores the Cosmology used for the analysis and hyper datasets used for certain model classes.
 
-        This
         Parameters
         ----------
-        hyper_dataset_result
-            The result of a previous model-fit which contains the model image and model galaxies images of a fit to
-            the dataset, which set up the hyper dataset. These are used by certain classes for adapting the analysis
-            to the properties of the dataset.
         cosmology
             The AstroPy Cosmology assumed for this analysis.
         """
-        self.hyper_dataset_result = hyper_dataset_result
         self.cosmology = cosmology
+
+    def plane_for_instance(self, instance: af.ModelInstance) -> Plane:
+        """
+        Create a `Plane` from the galaxies contained in a model instance.
+
+        Parameters
+        ----------
+        instance
+            An instance of the model that is fitted to the data by this analysis (whose parameters may have been set
+            via a non-linear search).
+
+        Returns
+        -------
+        An instance of the Plane class that is used to then fit the dataset.
+        """
+        return Plane(galaxies=instance.galaxies)
 
 
 class AnalysisDataset(Analysis):
@@ -75,9 +83,10 @@ class AnalysisDataset(Analysis):
             Settings controlling how an inversion is fitted during the model-fit, for example which linear algebra
             formalism is used.
         """
-        super().__init__(hyper_dataset_result=hyper_dataset_result, cosmology=cosmology)
+        super().__init__(cosmology=cosmology)
 
         self.dataset = dataset
+        self.hyper_dataset_result = hyper_dataset_result
 
         if self.hyper_dataset_result is not None:
 
@@ -158,22 +167,6 @@ class AnalysisDataset(Analysis):
         """
         if hasattr(instance, "hyper_background_noise"):
             return instance.hyper_background_noise
-
-    def plane_for_instance(self, instance: af.ModelInstance) -> Plane:
-        """
-        Create a `Plane` from the galaxies contained in a model instance.
-
-        Parameters
-        ----------
-        instance
-            An instance of the model that is fitted to the data by this analysis (whose parameters may have been set
-            via a non-linear search).
-
-        Returns
-        -------
-        An instance of the Plane class that is used to then fit the dataset.
-        """
-        return Plane(galaxies=instance.galaxies)
 
     def associate_hyper_images(self, instance: af.ModelInstance) -> af.ModelInstance:
         """
