@@ -79,22 +79,16 @@ class AnalysisQuantity(Analysis):
 
     def fit_quantity_for_instance(self, instance: af.ModelInstance) -> FitQuantity:
         """
-        Given a `Plane`, which the analysis constructs from a model instance, create a `FitQuantity` object.
+        Given a model instance create a `FitImaging` object.
 
         This function is used in the `log_likelihood_function` to fit the model to the imaging data and compute the
         log likelihood.
 
         Parameters
         ----------
-        plane
-            The plane of galaxies whose model images are used to fit the imaging data.
-        hyper_image_sky
-            A model component which scales the background sky level of the data before computing the log likelihood.
-        hyper_background_noise
-            A model component which scales the background noise level of the data before computing the log likelihood.
-        use_hyper_scalings
-            If false, the scaling of the background sky and noise are not performed irrespective of the model components
-            themselves.
+        instance
+            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
+            via a non-linear search).
 
         Returns
         -------
@@ -105,7 +99,7 @@ class AnalysisQuantity(Analysis):
         plane = self.plane_for_instance(instance=instance)
 
         return FitQuantity(
-            dataset_quantity=self.dataset, model_func=plane.convergence_2d_from
+            dataset=self.dataset, plane=plane, func_str="convergence_2d_from"
         )
 
     def visualize(
@@ -140,8 +134,6 @@ class AnalysisQuantity(Analysis):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
-
-        plane = self.plane_for_instance(instance=instance)
 
         fit = self.fit_quantity_for_instance(instance=instance)
 

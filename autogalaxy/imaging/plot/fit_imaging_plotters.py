@@ -8,9 +8,9 @@ from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.plane.plane import Plane
 from autogalaxy.imaging.fit_imaging import FitImaging
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
-from autogalaxy.plot.mat_wrap.lensing_include import Include2D
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.include import Include2D
 
 
 class FitImagingPlotter(fit_imaging_plotters.AbstractFitImagingPlotter):

@@ -3,12 +3,12 @@ from autoarray.fit.plot import fit_interferometer_plotters
 
 from autogalaxy.plane.plane import Plane
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
-from autogalaxy.plot.mat_wrap.lensing_include import Include1D
-from autogalaxy.plot.mat_wrap.lensing_include import Include2D
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.visuals import Visuals1D
+from autogalaxy.plot.mat_wrap.visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.include import Include1D
+from autogalaxy.plot.mat_wrap.include import Include2D
 
 from autogalaxy.plane.plot.plane_plotters import PlanePlotter
 

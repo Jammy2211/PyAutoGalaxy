@@ -3,9 +3,9 @@ from autoarray.fit.plot.fit_imaging_plotters import AbstractFitImagingPlotter
 
 from autogalaxy.quantity.fit_quantity import FitQuantity
 
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
-from autogalaxy.plot.mat_wrap.lensing_include import Include2D
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.include import Include2D
 
 
 class FitQuantityPlotter(AbstractFitImagingPlotter):

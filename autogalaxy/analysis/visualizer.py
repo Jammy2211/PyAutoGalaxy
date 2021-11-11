@@ -10,10 +10,10 @@ from autogalaxy.quantity.plot.fit_quantity_plotters import FitQuantityPlotter
 from autogalaxy.galaxy.plot.hyper_galaxy_plotters import HyperPlotter
 from autogalaxy.plane.plane import Plane
 
-from autogalaxy.plot.mat_wrap.lensing_include import Include2D
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.include import Include2D
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.visuals import Visuals2D
 
 
 def setting(section: str, name: str):

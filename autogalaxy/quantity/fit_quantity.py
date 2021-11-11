@@ -1,10 +1,11 @@
 import autoarray as aa
 
 from autogalaxy.quantity.dataset_quantity import DatasetQuantity
+from autogalaxy.plane.plane import Plane
 
 
 class FitQuantity(aa.FitDataset):
-    def __init__(self, dataset_quantity: DatasetQuantity, model_func):
+    def __init__(self, dataset: DatasetQuantity, plane: Plane, func_str: str):
         """
         Fits a `DatasetQuantity` object with model data.
 
@@ -21,23 +22,30 @@ class FitQuantity(aa.FitDataset):
 
         Parameters
         ----------
-        dataset_quantity
+        dataset
             The quantity that is to be fitted, which has a noise-map associated it with for computing goodness-of-fit
             metrics.
+        plane
+            The plane of galaxies whose model quantities are used to fit the imaging data.  
+        func_str
+            A string giving the name of the method of the input `Plane` used to compute the quantity that fits
+            the dataset.          
         """
-        self.model_func = model_func
 
-        model_data = model_func(grid=dataset_quantity.grid)
+        self.plane = plane
+        self.quantity_str = func_str
+
+        model_data = plane.convergence_2d_from(grid=dataset.grid)
 
         fit = aa.FitData(
-            data=dataset_quantity.data,
-            noise_map=dataset_quantity.noise_map,
+            data=dataset.data,
+            noise_map=dataset.noise_map,
             model_data=model_data.binned,
-            mask=dataset_quantity.mask,
+            mask=dataset.mask,
             use_mask_in_fit=False,
         )
 
-        super().__init__(dataset=dataset_quantity, fit=fit)
+        super().__init__(dataset=dataset, fit=fit)
 
     @property
     def quantity_dataset(self):

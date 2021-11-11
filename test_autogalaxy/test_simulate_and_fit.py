@@ -79,7 +79,7 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
 
     plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
-    fit = ag.FitImaging(imaging=masked_imaging, plane=plane)
+    fit = ag.FitImaging(dataset=masked_imaging, plane=plane)
 
     assert fit.chi_squared == 0.0
 
@@ -158,7 +158,7 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
 
     plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
-    fit = ag.FitImaging(imaging=masked_imaging, plane=plane)
+    fit = ag.FitImaging(dataset=masked_imaging, plane=plane)
 
     assert fit.chi_squared == pytest.approx(0.0, 1e-4)
 
@@ -232,7 +232,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
     plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
     fit = ag.FitInterferometer(
-        interferometer=interferometer,
+        dataset=interferometer,
         plane=plane,
         settings_pixelization=ag.SettingsPixelization(use_border=False),
     )
@@ -254,7 +254,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
     plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
 
     fit = ag.FitInterferometer(
-        interferometer=interferometer,
+        dataset=interferometer,
         plane=plane,
         settings_pixelization=ag.SettingsPixelization(use_border=False),
     )

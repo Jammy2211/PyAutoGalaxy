@@ -35,7 +35,7 @@ class TestAnalysisImaging:
 
         plane = analysis.plane_for_instance(instance=instance)
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         assert fit.log_likelihood == fit_figure_of_merit
 
@@ -61,7 +61,7 @@ class TestAnalysisImaging:
 
         plane = analysis.plane_for_instance(instance=instance)
         fit = ag.FitImaging(
-            imaging=masked_imaging_7x7,
+            dataset=masked_imaging_7x7,
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
@@ -118,7 +118,7 @@ class TestAnalysisImaging:
 
         plane = ag.Plane(galaxies=[g0, g1])
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         assert (fit.plane.galaxies[0].hyper_galaxy_image == galaxy_hyper_image).all()
         assert fit_likelihood == fit.log_likelihood

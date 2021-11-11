@@ -1,24 +1,21 @@
-import autoarray as aa
-import autoarray.plot as aplt
-from autoarray.structures.grids.two_d import abstract_grid_2d
-from autoarray.plot import abstract_plotters
-
-from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
-from autogalaxy.plot.mat_wrap.lensing_include import Include1D
-from autogalaxy.plot.mat_wrap.lensing_include import Include2D
-
-from autogalaxy.util import error_util
-
 import math
-
 from typing import List, Optional
 
+import autoarray.plot as aplt
+from autoarray.structures.grids.two_d import abstract_grid_2d
 
-class LightProfilePlotter(abstract_plotters.AbstractPlotter):
+from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
+from autogalaxy.plot import abstract_plotters
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.visuals import Visuals1D
+from autogalaxy.plot.mat_wrap.visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.include import Include1D
+from autogalaxy.plot.mat_wrap.include import Include2D
+from autogalaxy.util import error_util
+
+
+class LightProfilePlotter(abstract_plotters.Plotter):
     def __init__(
         self,
         light_profile: LightProfile,
@@ -43,61 +40,6 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             visuals_1d=visuals_1d,
         )
 
-    @property
-    def visuals_with_include_1d(self) -> Visuals1D:
-        """
-        Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals1D` object.
-
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
-
-        From a `LightProfilePlotter` the following 1D attributes can be extracted for plotting:
-
-        - half_light_radius: the radius containing 50% of the `LightProfile`'s total integrated luminosity.
-
-        Returns
-        -------
-        vis.Visuals1D
-            The collection of attributes that can be plotted by a `Plotter1D` object.
-        """
-        return self.visuals_1d + self.visuals_1d.__class__(
-            self.extract_1d(
-                "half_light_radius", value=self.light_profile.half_light_radius
-            )
-        )
-
-    @property
-    def visuals_with_include_2d(self) -> Visuals2D:
-        """
-        Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals2D` object.
-
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
-
-        From a `LightProfilePlotter` the following 2D attributes can be extracted for plotting:
-
-        - origin: the (y,x) origin of the structure's coordinate system.
-        - mask: the mask of the structure.
-        - border: the border of the structure's mask.
-
-        Returns
-        -------
-        vis.Visuals2D
-            The collection of attributes that can be plotted by a `Plotter2D` object.
-        """
-
-        return self.visuals_2d + self.visuals_2d.__class__(
-            origin=self.extract_2d(
-                "origin", value=aa.Grid2DIrregular(grid=[self.grid.origin])
-            ),
-            mask=self.extract_2d("mask", value=self.grid.mask),
-            border=self.extract_2d(
-                "border", value=self.grid.mask.border_grid_sub_1.binned
-            ),
-            light_profile_centres=self.extract_2d(
-                "light_profile_centres",
-                aa.Grid2DIrregular(grid=[self.light_profile.centre]),
-            ),
-        )
-
     def figures_1d(self, image: bool = False):
 
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
@@ -112,7 +54,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             self.mat_plot_1d.plot_yx(
                 y=image_1d,
                 x=image_1d.grid_radial,
-                visuals_1d=self.visuals_with_include_1d,
+                visuals_1d=self.get_1d.via_light_obj_from(light_obj=self.light_profile),
                 auto_labels=aplt.AutoLabels(
                     title="Image vs Radius",
                     ylabel="Image",
@@ -129,7 +71,9 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.light_profile.image_2d_from(grid=self.grid),
-                visuals_2d=self.visuals_with_include_2d,
+                visuals_2d=self.get_2d.via_light_obj_from(
+                    light_obj=self.light_profile, grid=self.grid
+                ),
                 auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
             )
 
@@ -163,44 +107,6 @@ class LightProfilePDFPlotter(LightProfilePlotter):
         self.sigma = sigma
         self.low_limit = (1 - math.erf(sigma / math.sqrt(2))) / 2
 
-    @property
-    def visuals_with_include_1d(self) -> Visuals1D:
-        """
-        Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals1D` object.
-
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
-
-        From a `LightProfilePlotter` the following 1D attributes can be extracted for plotting:
-
-        - half_light_radius: the radius containing 50% of the `LightProfile`'s total integrated luminosity.
-
-        Returns
-        -------
-        vis.Visuals1D
-            The collection of attributes that can be plotted by a `Plotter1D` object.
-        """
-
-        if self.include_1d.half_light_radius:
-
-            half_light_radius_list = [
-                light_profile.half_light_radius
-                for light_profile in self.light_profile_pdf_list
-            ]
-
-            half_light_radius, half_light_radius_errors = error_util.value_median_and_error_region_via_quantile(
-                value_list=half_light_radius_list, low_limit=self.low_limit
-            )
-
-        else:
-
-            half_light_radius = None
-            half_light_radius_errors = None
-
-        return self.visuals_1d + self.visuals_1d.__class__(
-            self.extract_1d("half_light_radius", value=half_light_radius),
-            self.extract_1d("half_light_radius", value=half_light_radius_errors),
-        )
-
     def figures_1d(self, image: bool = False):
 
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
@@ -223,9 +129,14 @@ class LightProfilePDFPlotter(LightProfilePlotter):
                 profile_1d_list=image_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d = self.visuals_with_include_1d + self.visuals_1d.__class__(
+            visuals_1d_via_light_obj_list = self.get_1d.via_light_obj_list_from(
+                light_obj_list=self.light_profile_pdf_list, low_limit=self.low_limit
+            )
+            visuals_1d_with_shaded_region = self.visuals_1d.__class__(
                 shaded_region=errors_image_1d
             )
+
+            visuals_1d = visuals_1d_via_light_obj_list + visuals_1d_with_shaded_region
 
             self.mat_plot_1d.plot_yx(
                 y=median_image_1d,

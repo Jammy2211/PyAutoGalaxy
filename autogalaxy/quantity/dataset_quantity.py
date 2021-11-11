@@ -144,3 +144,11 @@ class DatasetQuantity(AbstractDataset):
         return DatasetQuantity(
             data=self.data, noise_map=self.noise_map, settings=settings
         )
+
+    @property
+    def shape_native(self):
+        return self.data.shape_native
+
+    @property
+    def pixel_scales(self):
+        return self.data.pixel_scales

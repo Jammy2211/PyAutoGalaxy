@@ -2,7 +2,7 @@ import autoarray as aa
 import autogalaxy as ag
 from autoarray.mock.fixtures import *
 from autofit.mock.mock_search import MockSamples, MockSearch
-from autogalaxy.plot.mat_wrap.lensing_include import Include1D, Include2D
+from autogalaxy.plot.mat_wrap.include import Include1D, Include2D
 
 
 def make_masked_imaging_7x7():
@@ -151,7 +151,7 @@ def make_fit_quantity_7x7_array_2d():
     mp_0 = make_mp_0()
 
     return ag.FitQuantity(
-        dataset_quantity=make_dataset_quantity_7x7_array_2d(),
+        dataset=make_dataset_quantity_7x7_array_2d(),
         model_func=mp_0.convergence_2d_from,
     )
 
@@ -190,31 +190,28 @@ def make_hyper_galaxy_image_1_7x7():
 
 
 def make_fit_imaging_7x7():
-    return ag.FitImaging(imaging=make_masked_imaging_7x7(), plane=make_plane_7x7())
+    return ag.FitImaging(dataset=make_masked_imaging_7x7(), plane=make_plane_7x7())
 
 
 def make_fit_imaging_x2_galaxy_7x7():
     plane = ag.Plane(galaxies=[make_gal_x1_lp(), make_gal_x1_lp()])
 
-    return ag.FitImaging(imaging=make_masked_imaging_7x7(), plane=plane)
+    return ag.FitImaging(dataset=make_masked_imaging_7x7(), plane=plane)
 
 
 def make_fit_imaging_x2_galaxy_inversion_7x7():
     return ag.FitImaging(
-        imaging=make_masked_imaging_7x7(), plane=make_plane_x2_galaxy_inversion_7x7()
+        dataset=make_masked_imaging_7x7(), plane=make_plane_x2_galaxy_inversion_7x7()
     )
 
 
 def make_fit_interferometer_7x7():
-    return ag.FitInterferometer(
-        interferometer=make_interferometer_7(), plane=make_plane_7x7()
-    )
+    return ag.FitInterferometer(dataset=make_interferometer_7(), plane=make_plane_7x7())
 
 
 def make_fit_interferometer_x2_galaxy_inversion_7x7():
     return ag.FitInterferometer(
-        interferometer=make_interferometer_7(),
-        plane=make_plane_x2_galaxy_inversion_7x7(),
+        dataset=make_interferometer_7(), plane=make_plane_x2_galaxy_inversion_7x7()
     )
 
 

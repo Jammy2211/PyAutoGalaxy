@@ -38,8 +38,9 @@ class TestAnalysisQuantity:
         plane = analysis.plane_for_instance(instance=instance)
 
         fit = ag.FitQuantity(
-            dataset_quantity=dataset_quantity_7x7_array_2d,
-            model_func=plane.convergence_2d_from,
+            dataset=dataset_quantity_7x7_array_2d,
+            plane=plane,
+            func_str="convergence_2d_from",
         )
 
         assert fit.log_likelihood == fit_figure_of_merit

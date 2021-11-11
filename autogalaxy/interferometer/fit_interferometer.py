@@ -8,7 +8,7 @@ from autogalaxy.galaxy.galaxy import Galaxy
 class FitInterferometer(aa.FitInterferometer):
     def __init__(
         self,
-        interferometer,
+        dataset,
         plane,
         hyper_background_noise=None,
         use_hyper_scalings=True,
@@ -28,23 +28,23 @@ class FitInterferometer(aa.FitInterferometer):
 
             if hyper_background_noise is not None:
                 noise_map = hyper_background_noise.hyper_noise_map_complex_from(
-                    noise_map=interferometer.noise_map
+                    noise_map=dataset.noise_map
                 )
             else:
-                noise_map = interferometer.noise_map
+                noise_map = dataset.noise_map
 
         else:
 
-            noise_map = interferometer.noise_map
+            noise_map = dataset.noise_map
 
         self.plane = plane
 
         self.profile_visibilities = plane.profile_visibilities_via_transformer_from(
-            grid=interferometer.grid, transformer=interferometer.transformer
+            grid=dataset.grid, transformer=dataset.transformer
         )
 
         self.profile_subtracted_visibilities = (
-            interferometer.visibilities - self.profile_visibilities
+            dataset.visibilities - self.profile_visibilities
         )
 
         if not plane.has_pixelization:
@@ -55,10 +55,10 @@ class FitInterferometer(aa.FitInterferometer):
         else:
 
             inversion = plane.inversion_interferometer_from(
-                grid=interferometer.grid_inversion,
+                grid=dataset.grid_inversion,
                 visibilities=self.profile_subtracted_visibilities,
                 noise_map=noise_map,
-                transformer=interferometer.transformer,
+                transformer=dataset.transformer,
                 settings_pixelization=settings_pixelization,
                 settings_inversion=settings_inversion,
             )
@@ -68,14 +68,14 @@ class FitInterferometer(aa.FitInterferometer):
             )
 
         fit = aa.FitDataComplex(
-            data=interferometer.visibilities,
+            data=dataset.visibilities,
             noise_map=noise_map,
             model_data=model_visibilities,
             inversion=inversion,
             use_mask_in_fit=False,
         )
 
-        super().__init__(interferometer=interferometer, fit=fit)
+        super().__init__(dataset=dataset, fit=fit)
 
     @property
     def grid(self):

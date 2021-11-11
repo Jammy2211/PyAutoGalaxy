@@ -160,7 +160,7 @@ class AnalysisImaging(AnalysisDataset):
             The fit of the plane to the imaging dataset, which includes the log likelihood.
         """
         return FitImaging(
-            imaging=self.dataset,
+            dataset=self.dataset,
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,

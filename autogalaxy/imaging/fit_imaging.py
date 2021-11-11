@@ -4,26 +4,27 @@ from autoconf import conf
 import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.plane.plane import Plane
 
 
 class FitImaging(aa.FitImaging):
     def __init__(
         self,
-        imaging,
-        plane,
+        dataset: aa.Imaging,
+        plane: Plane,
         hyper_image_sky=None,
         hyper_background_noise=None,
-        use_hyper_scalings=True,
-        settings_pixelization=aa.SettingsPixelization(),
-        settings_inversion=aa.SettingsInversion(),
+        use_hyper_scalings: bool = True,
+        settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
+        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
     ):
         """ An lens fitter, which contains the plane's used to perform the fit and functions to manipulate \
         the lens dataset's hyper_galaxies.
 
         Parameters
         -----------
-        plane : plane.Tracer
-            The plane, which describes the ray-tracing and strong lens configuration.
+        plane
+            The plane of galaxies whose model images are used to fit the imaging data.
         """
 
         self.plane = plane
@@ -31,24 +32,24 @@ class FitImaging(aa.FitImaging):
         if use_hyper_scalings:
 
             image = hyper_image_from(
-                image=imaging.image, hyper_image_sky=hyper_image_sky
+                image=dataset.image, hyper_image_sky=hyper_image_sky
             )
 
             noise_map = hyper_noise_map_from(
-                noise_map=imaging.noise_map,
+                noise_map=dataset.noise_map,
                 plane=plane,
                 hyper_background_noise=hyper_background_noise,
             )
 
         else:
 
-            image = imaging.image
-            noise_map = imaging.noise_map
+            image = dataset.image
+            noise_map = dataset.noise_map
 
         self.blurred_image = plane.blurred_image_2d_via_convolver_from(
-            grid=imaging.grid,
-            convolver=imaging.convolver,
-            blurring_grid=imaging.blurring_grid,
+            grid=dataset.grid,
+            convolver=dataset.convolver,
+            blurring_grid=dataset.blurring_grid,
         )
 
         self.profile_subtracted_image = image - self.blurred_image
@@ -61,11 +62,11 @@ class FitImaging(aa.FitImaging):
         else:
 
             inversion = plane.inversion_imaging_from(
-                grid=imaging.grid_inversion,
+                grid=dataset.grid_inversion,
                 image=self.profile_subtracted_image,
                 noise_map=noise_map,
-                convolver=imaging.convolver,
-                w_tilde=imaging.w_tilde,
+                convolver=dataset.convolver,
+                w_tilde=dataset.w_tilde,
                 settings_pixelization=settings_pixelization,
                 settings_inversion=settings_inversion,
             )
@@ -76,12 +77,12 @@ class FitImaging(aa.FitImaging):
             data=image,
             noise_map=noise_map,
             model_data=model_image,
-            mask=imaging.mask,
+            mask=dataset.mask,
             inversion=inversion,
             use_mask_in_fit=False,
         )
 
-        super().__init__(imaging=imaging, fit=fit)
+        super().__init__(dataset=dataset, fit=fit)
 
     @property
     def galaxies(self):

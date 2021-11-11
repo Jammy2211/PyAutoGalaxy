@@ -224,7 +224,7 @@ class AnalysisInterferometer(AnalysisDataset):
             The fit of the plane to the interferometer dataset, which includes the log likelihood.
         """
         return FitInterferometer(
-            interferometer=self.dataset,
+            dataset=self.dataset,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
             use_hyper_scalings=use_hyper_scalings,

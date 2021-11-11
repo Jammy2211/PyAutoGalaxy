@@ -11,9 +11,12 @@ def test__fit_via_mock_profile(dataset_quantity_7x7_array_2d):
         convergence_2d=ag.Array2D.ones((7, 7), pixel_scales=1.0)
     )
 
+    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5, mass=model_object)])
+
     fit_quantity = ag.FitQuantity(
-        dataset_quantity=dataset_quantity_7x7_array_2d,
-        model_func=model_object.convergence_2d_from,
+        dataset=dataset_quantity_7x7_array_2d,
+        plane=plane,
+        func_str="convergence_2d_from",
     )
 
     assert fit_quantity.chi_squared == pytest.approx(0.0, 1.0e-4)

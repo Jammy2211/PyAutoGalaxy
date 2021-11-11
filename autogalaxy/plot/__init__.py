@@ -47,7 +47,7 @@ from autoarray.plot.multi_plotters import MultiYX1DPlotter
 
 from autoarray.plot.mat_wrap.mat_plot import AutoLabels
 
-from autogalaxy.plot.mat_wrap.lensing_wrap import (
+from autogalaxy.plot.mat_wrap.wrap import (
     HalfLightRadiusAXVLine,
     EinsteinRadiusAXVLine,
     ModelFluxesYXScatter,
@@ -58,9 +58,9 @@ from autogalaxy.plot.mat_wrap.lensing_wrap import (
     MultipleImagesScatter,
 )
 
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D, MatPlot2D
-from autogalaxy.plot.mat_wrap.lensing_include import Include1D, Include2D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D, Visuals2D
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D, MatPlot2D
+from autogalaxy.plot.mat_wrap.include import Include1D, Include2D
+from autogalaxy.plot.mat_wrap.visuals import Visuals1D, Visuals2D
 
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePDFPlotter

@@ -6,12 +6,12 @@ from autoarray.structures.grids.two_d import abstract_grid_2d
 
 from autogalaxy.plot.lensing_obj_plotter import LensingObjPlotter
 from autogalaxy.profiles.mass_profiles import MassProfile
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
-from autogalaxy.plot.mat_wrap.lensing_include import Include1D
-from autogalaxy.plot.mat_wrap.lensing_include import Include2D
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.visuals import Visuals1D
+from autogalaxy.plot.mat_wrap.visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.include import Include1D
+from autogalaxy.plot.mat_wrap.include import Include2D
 
 from autogalaxy.util import error_util
 
@@ -59,7 +59,9 @@ class MassProfilePlotter(LensingObjPlotter):
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
                 x=convergence_1d.grid_radial,
-                visuals_1d=self.visuals_with_include_1d,
+                visuals_1d=self.get_1d.via_lensing_obj_from(
+                    lensing_obj=self.mass_profile, grid=self.grid
+                ),
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
                     ylabel="Convergence ",
@@ -77,7 +79,9 @@ class MassProfilePlotter(LensingObjPlotter):
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
                 x=potential_1d.grid_radial,
-                visuals_1d=self.visuals_with_include_1d,
+                visuals_1d=self.get_1d.via_lensing_obj_from(
+                    lensing_obj=self.mass_profile, grid=self.grid
+                ),
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",
                     ylabel="Potential ",
@@ -120,44 +124,6 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         self.low_limit = (1 - math.erf(sigma / math.sqrt(2))) / 2
         self.radial_grid_shape_slim = radial_grid_shape_slim
 
-    @property
-    def visuals_with_include_1d(self) -> Visuals1D:
-        """
-        Extracts from the `MassProfile` attributes that can be plotted and return them in a `Visuals1D` object.
-
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
-
-        From a `MassProfilePlotter` the following 1D attributes can be extracted for plotting:
-
-        - einstein_radius: the radius containing 50% of the `MassProfile`'s total integrated luminosity.
-
-        Returns
-        -------
-        vis.Visuals1D
-            The collection of attributes that can be plotted by a `Plotter1D` object.
-        """
-
-        if self.include_1d.einstein_radius:
-
-            einstein_radius_list = [
-                mass_profile.einstein_radius_from(grid=self.grid)
-                for mass_profile in self.mass_profile_pdf_list
-            ]
-
-            einstein_radius, einstein_radius_errors = error_util.value_median_and_error_region_via_quantile(
-                value_list=einstein_radius_list, low_limit=self.low_limit
-            )
-
-        else:
-
-            einstein_radius = None
-            einstein_radius_errors = None
-
-        return self.visuals_1d + self.visuals_1d.__class__(
-            self.extract_1d("einstein_radius", value=einstein_radius),
-            self.extract_1d("einstein_radius", value=einstein_radius_errors),
-        )
-
     def figures_1d(self, convergence=False, potential=False):
 
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
@@ -186,9 +152,16 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 profile_1d_list=convergence_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d = self.visuals_with_include_1d + self.visuals_1d.__class__(
+            visuals_1d_via_lensing_obj_list = self.get_1d.via_lensing_obj_list_from(
+                lensing_obj_list=self.mass_profile_pdf_list,
+                grid=self.grid,
+                low_limit=self.low_limit,
+            )
+            visuals_1d_with_shaded_region = self.visuals_1d.__class__(
                 shaded_region=errors_convergence_1d
             )
+
+            visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 
             self.mat_plot_1d.plot_yx(
                 y=median_convergence_1d,
@@ -221,9 +194,16 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d = self.visuals_with_include_1d + self.visuals_1d.__class__(
+            visuals_1d_via_lensing_obj_list = self.get_1d.via_lensing_obj_list_from(
+                lensing_obj_list=self.mass_profile_pdf_list,
+                grid=self.grid,
+                low_limit=self.low_limit,
+            )
+            visuals_1d_with_shaded_region = self.visuals_1d.__class__(
                 shaded_region=errors_potential_1d
             )
+
+            visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 
             self.mat_plot_1d.plot_yx(
                 y=median_potential_1d,

@@ -8,12 +8,12 @@ from autogalaxy.plot.lensing_obj_plotter import LensingObjPlotter
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
-from autogalaxy.plot.mat_wrap.lensing_include import Include1D
-from autogalaxy.plot.mat_wrap.lensing_include import Include2D
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.visuals import Visuals1D
+from autogalaxy.plot.mat_wrap.visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.include import Include1D
+from autogalaxy.plot.mat_wrap.include import Include2D
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePDFPlotter
 from autogalaxy.profiles.plot.mass_profile_plotters import MassProfilePlotter
@@ -50,39 +50,6 @@ class GalaxyPlotter(LensingObjPlotter):
     def lensing_obj(self) -> Galaxy:
         return self.galaxy
 
-    @property
-    def visuals_with_include_2d(self) -> Visuals2D:
-        """
-        Extracts from a `Structure` attributes that can be plotted and return them in a `Visuals` object.
-
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
-
-        From an `AbstractStructure` the following attributes can be extracted for plotting:
-
-        - origin: the (y,x) origin of the structure's coordinate system.
-        - mask: the mask of the structure.
-        - border: the border of the structure's mask.
-
-        Parameters
-        ----------
-        structure : abstract_structure.AbstractStructure
-            The structure whose attributes are extracted for plotting.
-
-        Returns
-        -------
-        vis.Visuals2D
-            The collection of attributes that can be plotted by a `Plotter2D` object.
-        """
-
-        visuals_2d = super().visuals_with_include_2d
-
-        return visuals_2d + visuals_2d.__class__(
-            light_profile_centres=self.extract_2d(
-                "light_profile_centres",
-                self.galaxy.extract_attribute(cls=LightProfile, attr_name="centre"),
-            )
-        )
-
     def light_profile_plotter_from(
         self, light_profile: LightProfile
     ) -> LightProfilePlotter:
@@ -90,10 +57,12 @@ class GalaxyPlotter(LensingObjPlotter):
             light_profile=light_profile,
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.visuals_2d,
+            visuals_2d=self.get_2d.via_light_obj_from(
+                light_obj=light_profile, grid=self.grid
+            ),
             include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.visuals_with_include_1d_light,
+            visuals_1d=self.get_1d.via_light_obj_from(light_obj=light_profile),
             include_1d=self.include_1d,
         )
 
@@ -104,56 +73,15 @@ class GalaxyPlotter(LensingObjPlotter):
             mass_profile=mass_profile,
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.visuals_2d,
+            visuals_2d=self.get_2d.via_lensing_obj_from(
+                lensing_obj=mass_profile, grid=self.grid
+            ),
             include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.visuals_1d,
+            visuals_1d=self.get_1d.via_lensing_obj_from(
+                lensing_obj=mass_profile, grid=self.grid
+            ),
             include_1d=self.include_1d,
-        )
-
-    @property
-    def visuals_with_include_1d_light(self) -> Visuals1D:
-        """
-        Extracts from the `Galaxy` attributes that can be plotted which are associated with light profiles and returns
-        them in a `Visuals1D` object.
-
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
-
-        From a `GalaxyPlotter` the following 1D attributes can be extracted for plotting:
-
-        - half_light_radius: the radius containing 50% of the `LightProfile`'s total integrated luminosity.
-
-        Returns
-        -------
-        vis.Visuals1D
-            The collection of attributes that can be plotted by a `Plotter1D` object.
-        """
-        return self.visuals_1d
-
-    @property
-    def visuals_with_include_1d_mass(self) -> Visuals1D:
-        """
-        Extracts from the `Galaxy` attributes that can be plotted which are associated with mass profiles and returns
-        them in a `Visuals1D` object.
-
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
-
-        From a `GalaxyPlotter` the following 1D attributes can be extracted for plotting:
-
-        - half_light_radius: the radius containing 50% of the `LightProfile`'s total integrated luminosity.
-
-        Returns
-        -------
-        vis.Visuals1D
-            The collection of attributes that can be plotted by a `Plotter1D` object.
-        """
-        if self.include_1d.einstein_radius:
-            einstein_radius = self.lensing_obj.einstein_radius_from(grid=self.grid)
-        else:
-            einstein_radius = None
-
-        return self.visuals_1d + self.visuals_1d.__class__(
-            einstein_radius=einstein_radius
         )
 
     def figures_1d(
@@ -172,7 +100,7 @@ class GalaxyPlotter(LensingObjPlotter):
             self.mat_plot_1d.plot_yx(
                 y=image_1d,
                 x=image_1d.grid_radial,
-                visuals_1d=self.visuals_with_include_1d_light,
+                visuals_1d=self.get_1d.via_light_obj_from(light_obj=self.galaxy),
                 auto_labels=aplt.AutoLabels(
                     title="Image vs Radius",
                     ylabel="Image ",
@@ -190,7 +118,9 @@ class GalaxyPlotter(LensingObjPlotter):
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
                 x=convergence_1d.grid_radial,
-                visuals_1d=self.visuals_with_include_1d_mass,
+                visuals_1d=self.get_1d.via_light_lensing_obj_from(
+                    light_lensing_obj=self.galaxy, grid=self.grid
+                ),
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
                     ylabel="Convergence ",
@@ -208,7 +138,9 @@ class GalaxyPlotter(LensingObjPlotter):
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
                 x=potential_1d.grid_radial,
-                visuals_1d=self.visuals_with_include_1d_mass,
+                visuals_1d=self.get_1d.via_light_lensing_obj_from(
+                    light_lensing_obj=self.galaxy, grid=self.grid
+                ),
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",
                     ylabel="Potential ",
@@ -310,7 +242,9 @@ class GalaxyPlotter(LensingObjPlotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.image_2d_from(grid=self.grid),
-                visuals_2d=self.visuals_with_include_2d,
+                visuals_2d=self.get_2d.via_light_obj_from(
+                    light_obj=self.galaxy, grid=self.grid
+                ),
                 auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
             )
 
@@ -326,7 +260,7 @@ class GalaxyPlotter(LensingObjPlotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.contribution_map,
-                visuals_2d=self.visuals_with_include_2d,
+                visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(
                     title="Contribution Map", filename="contribution_map_2d"
                 ),
@@ -426,7 +360,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             visuals_2d=self.visuals_2d,
             include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.visuals_with_include_1d_light,
+            visuals_1d=self.get_1d.via_light_obj_from(light_obj=self.galaxy),
             include_1d=self.include_1d,
         )
 
@@ -450,63 +384,10 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             visuals_2d=self.visuals_2d,
             include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.visuals_with_include_1d_mass,
+            visuals_1d=self.get_1d.via_light_lensing_obj_from(
+                light_lensing_obj=self.galaxy, grid=self.grid
+            ),
             include_1d=self.include_1d,
-        )
-
-    @property
-    def visuals_with_include_1d_light(self) -> Visuals1D:
-        """
-        Extracts from the `Galaxy` attributes that can be plotted which are associated with light profiles and returns
-        them in a `Visuals1D` object.
-
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
-
-        From a `GalaxyPlotter` the following 1D attributes can be extracted for plotting:
-
-        - half_light_radius: the radius containing 50% of the `LightProfile`'s total integrated luminosity.
-
-        Returns
-        -------
-        vis.Visuals1D
-            The collection of attributes that can be plotted by a `Plotter1D` object.
-        """
-        return self.visuals_1d
-
-    @property
-    def visuals_with_include_1d_mass(self) -> Visuals1D:
-        """
-        Extracts from the `Galaxy` attributes that can be plotted which are associated with mass profiles and returns
-        them in a `Visuals1D` object.
-
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
-
-        From a `GalaxyPlotter` the following 1D attributes can be extracted for plotting:
-
-        Returns
-        -------
-        vis.Visuals1D
-            The collection of attributes that can be plotted by a `Plotter1D` object.
-        """
-        if self.include_1d.einstein_radius:
-
-            einstein_radius_list = [
-                galaxy.einstein_radius_from(grid=self.grid)
-                for galaxy in self.galaxy_pdf_list
-            ]
-
-            einstein_radius, einstein_radius_errors = error_util.value_median_and_error_region_via_quantile(
-                value_list=einstein_radius_list, low_limit=self.low_limit
-            )
-
-        else:
-
-            einstein_radius = None
-            einstein_radius_errors = None
-
-        return self.visuals_1d + self.visuals_1d.__class__(
-            self.extract_1d("einstein_radius", value=einstein_radius),
-            self.extract_1d("einstein_radius", value=einstein_radius_errors),
         )
 
     def figures_1d(
@@ -533,9 +414,14 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 profile_1d_list=image_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d = self.visuals_with_include_1d_light + self.visuals_1d.__class__(
+            visuals_1d_via_light_obj_list = self.get_1d.via_light_obj_list_from(
+                light_obj_list=self.galaxy_pdf_list, low_limit=self.low_limit
+            )
+            visuals_1d_with_shaded_region = self.visuals_1d.__class__(
                 shaded_region=errors_image_1d
             )
+
+            visuals_1d = visuals_1d_via_light_obj_list + visuals_1d_with_shaded_region
 
             self.mat_plot_1d.plot_yx(
                 y=median_image_1d,
@@ -566,9 +452,16 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 profile_1d_list=convergence_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d = self.visuals_with_include_1d_mass + self.visuals_1d.__class__(
+            visuals_1d_via_lensing_obj_list = self.get_1d.via_lensing_obj_list_from(
+                lensing_obj_list=self.galaxy_pdf_list,
+                grid=self.grid,
+                low_limit=self.low_limit,
+            )
+            visuals_1d_with_shaded_region = self.visuals_1d.__class__(
                 shaded_region=errors_convergence_1d
             )
+
+            visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 
             self.mat_plot_1d.plot_yx(
                 y=median_convergence_1d,
@@ -599,9 +492,9 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d = self.visuals_with_include_1d_mass + self.visuals_1d.__class__(
-                shaded_region=errors_potential_1d
-            )
+            visuals_1d = self.get_1d.via_light_lensing_obj_from(
+                light_lensing_obj=self.galaxy, grid=self.grid
+            ) + self.visuals_1d.__class__(shaded_region=errors_potential_1d)
 
             self.mat_plot_1d.plot_yx(
                 y=median_potential_1d,
