@@ -14,7 +14,7 @@ from autogalaxy.plane.plot.plane_plotters import PlanePlotter
 
 
 class FitInterferometerPlotter(
-    fit_interferometer_plotters.AbstractFitInterferometerPlotter
+    fit_interferometer_plotters.FitInterferometerMetaPlotter
 ):
     def __init__(
         self,

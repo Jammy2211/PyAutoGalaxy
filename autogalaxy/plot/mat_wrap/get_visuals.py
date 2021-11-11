@@ -12,6 +12,7 @@ from autogalaxy.util import error_util
 from autoarray.structures.grids.two_d.grid_2d import Grid2D
 from autoarray.structures.grids.two_d.grid_2d_irregular import Grid2DIrregular
 
+from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 
 
@@ -194,7 +195,7 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
             + self.visuals.__class__(light_profile_centres=light_profile_centres)
         )
 
-    def via_lensing_obj_from(self, lensing_obj, grid) -> Visuals2D:
+    def via_mass_obj_from(self, mass_obj, grid) -> Visuals2D:
         """
         Extract from the `LensingObj` attributes that can be plotted and return them in a `Visuals` object.
 
@@ -220,12 +221,12 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
         visuals_via_mask = self.via_mask_from(mask=grid.mask)
 
         mass_profile_centres = self.get(
-            "mass_profile_centres", Grid2DIrregular(grid=[lensing_obj.centre])
+            "mass_profile_centres", Grid2DIrregular(grid=[mass_obj.centre])
         )
 
         critical_curves = self.get(
             "critical_curves",
-            lensing_obj.critical_curves_from(grid=grid),
+            mass_obj.critical_curves_from(grid=grid),
             "critical_curves",
         )
 
@@ -238,30 +239,32 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
             )
         )
 
-    def via_light_lensing_obj(self, light_lensing_obj, grid) -> Visuals2D:
+    def via_light_mass_obj(self, light_mass_obj, grid) -> Visuals2D:
         """
-        Extracts from a `Structure` attributes that can be plotted and return them in a `Visuals` object.
+        From an object that contains both light and lensing attributes (e.g. a `Galaxy`, `Plane`), gets the
+        attributes that can be plotted and returns them in a `Visuals2D` object.
 
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
+        Only attributes with `True` entries in the `Include` object are extracted.
 
-        From an `AbstractStructure` the following attributes can be extracted for plotting:
+        From a light and lensing object the following attributes can be extracted for plotting:
 
-        - origin: the (y,x) origin of the structure's coordinate system.
-        - mask: the mask of the structure.
-        - border: the border of the structure's mask.
+        - mask: the mask of the grid used to plot the 2D quantities of the object.
+        - light profile centres: the (y,x) centre of every `LightProfile` in the object.
+        - mass profile centres: the (y,x) centre of every `MassProfile` in the object.
+        - critcal curves: the critical curves of all mass profile combined.
 
         Parameters
         ----------
-        structure : abstract_structure.AbstractStructure
-            The structure whose attributes are extracted for plotting.
+        light_mass_obj
+            The object which has `LightProfile` objects and / or `MassProfile` objects.
 
         Returns
         -------
         vis.Visuals2D
-            The collection of attributes that can be plotted by a `Plotter2D` object.
+            A collection of attributes that can be plotted by a `Plotter2D` object.
         """
 
-        visuals_2d = self.via_lensing_obj_from(lensing_obj=light_lensing_obj, grid=grid)
+        visuals_2d = self.via_mass_obj_from(mass_obj=light_mass_obj, grid=grid)
         visuals_2d.mask = None
 
         visuals_with_grid = self.visuals.__class__(grid=self.get("grid", grid))
@@ -269,5 +272,21 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
         return (
             visuals_2d
             + visuals_with_grid
-            + self.via_light_obj_from(light_obj=light_lensing_obj, grid=grid)
+            + self.via_light_obj_from(light_obj=light_mass_obj, grid=grid)
         )
+
+    def via_galaxy_from(self, galaxy, grid):
+        return self.via_light_mass_obj(light_mass_obj=galaxy, grid=grid)
+
+    def via_plane_from(self, plane, grid):
+        return self.via_light_mass_obj(light_mass_obj=plane, grid=grid)
+
+    def via_fit_from(self, fit: FitImaging) -> Visuals2D:
+
+        visuals_2d_via_fit = super().via_fit_from(fit=fit)
+
+        visuals_2d_via_light_lensing_obj = self.via_light_mass_obj(
+            light_mass_obj=fit.plane, grid=fit.grid
+        )
+
+        return visuals_2d_via_fit + visuals_2d_via_light_lensing_obj

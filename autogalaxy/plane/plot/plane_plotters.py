@@ -2,17 +2,16 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.plane.plane import Plane
-from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
 from autogalaxy.plot.mat_wrap.visuals import Visuals1D
 from autogalaxy.plot.mat_wrap.visuals import Visuals2D
 from autogalaxy.plot.mat_wrap.include import Include1D
 from autogalaxy.plot.mat_wrap.include import Include2D
-from autogalaxy.plot.lensing_obj_plotter import LensingObjPlotter
+from autogalaxy.plot.light_mass_plotter import LightMassPlotter
 
 
-class PlanePlotter(LensingObjPlotter):
+class PlanePlotter(LightMassPlotter):
     def __init__(
         self,
         plane: Plane,
@@ -59,9 +58,7 @@ class PlanePlotter(LensingObjPlotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.plane.image_2d_from(grid=self.grid),
-                visuals_2d=self.get_2d.via_light_lensing_obj(
-                    light_lensing_obj=self.plane
-                ),
+                visuals_2d=self.get_2d.via_light_mass_obj(light_mass_obj=self.plane),
                 auto_labels=aplt.AutoLabels(
                     title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
                 ),
@@ -71,9 +68,7 @@ class PlanePlotter(LensingObjPlotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.plane.plane_image_2d_from(grid=self.grid).array,
-                visuals_2d=self.get_2d.via_light_lensing_obj(
-                    light_lensing_obj=self.plane
-                ),
+                visuals_2d=self.get_2d.via_light_mass_obj(light_mass_obj=self.plane),
                 auto_labels=aplt.AutoLabels(
                     title=f"Plane Image{title_suffix}",
                     filename=f"plane_image{filename_suffix}",
@@ -84,9 +79,7 @@ class PlanePlotter(LensingObjPlotter):
 
             self.mat_plot_2d.plot_grid(
                 grid=self.grid,
-                visuals_2d=self.get_2d.via_light_lensing_obj(
-                    light_lensing_obj=self.plane
-                ),
+                visuals_2d=self.get_2d.via_light_mass_obj(light_mass_obj=self.plane),
                 auto_labels=aplt.AutoLabels(
                     title=f"Plane Grid2D{title_suffix}",
                     filename=f"plane_grid{filename_suffix}",
@@ -105,9 +98,7 @@ class PlanePlotter(LensingObjPlotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.plane.contribution_map,
-                visuals_2d=self.get_2d.via_light_lensing_obj(
-                    light_lensing_obj=self.plane
-                ),
+                visuals_2d=self.get_2d.via_light_mass_obj(light_mass_obj=self.plane),
                 auto_labels=aplt.AutoLabels(
                     title="Contribution Map", filename="contribution_map_2d"
                 ),
@@ -147,7 +138,7 @@ class PlanePlotter(LensingObjPlotter):
         self.figures_2d()
         self.mat_plot_2d.plot_grid(
             grid=self.plane.traced_grid_from(grid=self.grid),
-            visuals_2d=self.get_2d.via_light_lensing_obj(light_lensing_obj=self.plane),
+            visuals_2d=self.get_2d.via_light_mass_obj(light_mass_obj=self.plane),
             auto_labels=aplt.AutoLabels(),
         )
 

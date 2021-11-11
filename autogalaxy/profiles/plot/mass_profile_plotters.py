@@ -4,7 +4,7 @@ from typing import List, Optional
 import autoarray.plot as aplt
 from autoarray.structures.grids.two_d import abstract_grid_2d
 
-from autogalaxy.plot.lensing_obj_plotter import LensingObjPlotter
+from autogalaxy.plot.light_mass_plotter import LightMassPlotter
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
@@ -16,7 +16,7 @@ from autogalaxy.plot.mat_wrap.include import Include2D
 from autogalaxy.util import error_util
 
 
-class MassProfilePlotter(LensingObjPlotter):
+class MassProfilePlotter(LightMassPlotter):
     def __init__(
         self,
         mass_profile: MassProfile,
@@ -59,8 +59,8 @@ class MassProfilePlotter(LensingObjPlotter):
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
                 x=convergence_1d.grid_radial,
-                visuals_1d=self.get_1d.via_lensing_obj_from(
-                    lensing_obj=self.mass_profile, grid=self.grid
+                visuals_1d=self.get_1d.via_mass_obj_from(
+                    mass_obj=self.mass_profile, grid=self.grid
                 ),
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
@@ -79,8 +79,8 @@ class MassProfilePlotter(LensingObjPlotter):
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
                 x=potential_1d.grid_radial,
-                visuals_1d=self.get_1d.via_lensing_obj_from(
-                    lensing_obj=self.mass_profile, grid=self.grid
+                visuals_1d=self.get_1d.via_mass_obj_from(
+                    mass_obj=self.mass_profile, grid=self.grid
                 ),
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",

@@ -4,10 +4,11 @@ from typing import List, Optional
 import autoarray as aa
 import autoarray.plot as aplt
 
-from autogalaxy.plot.lensing_obj_plotter import LensingObjPlotter
+from autogalaxy.plot.light_mass_plotter import LightMassPlotter
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
 from autogalaxy.plot.mat_wrap.visuals import Visuals1D
@@ -22,7 +23,7 @@ from autogalaxy.profiles.plot.mass_profile_plotters import MassProfilePDFPlotter
 from autogalaxy.util import error_util
 
 
-class GalaxyPlotter(LensingObjPlotter):
+class GalaxyPlotter(Plotter):
     def __init__(
         self,
         galaxy: Galaxy,
@@ -46,9 +47,15 @@ class GalaxyPlotter(LensingObjPlotter):
         self.galaxy = galaxy
         self.grid = grid
 
-    @property
-    def lensing_obj(self) -> Galaxy:
-        return self.galaxy
+        self._light_mass_plotter = LightMassPlotter(
+            light_mass_obj=self.galaxy,
+            grid=self.grid,
+            mat_plot_2d=self.mat_plot_2d,
+            include_2d=self.include_2d,
+            visuals_2d=self.visuals_2d,
+        )
+
+        self.figures_2d = self._light_mass_plotter.figures_2d
 
     def light_profile_plotter_from(
         self, light_profile: LightProfile
@@ -73,13 +80,13 @@ class GalaxyPlotter(LensingObjPlotter):
             mass_profile=mass_profile,
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.get_2d.via_lensing_obj_from(
-                lensing_obj=mass_profile, grid=self.grid
+            visuals_2d=self.get_2d.via_mass_obj_from(
+                mass_obj=mass_profile, grid=self.grid
             ),
             include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.get_1d.via_lensing_obj_from(
-                lensing_obj=mass_profile, grid=self.grid
+            visuals_1d=self.get_1d.via_mass_obj_from(
+                mass_obj=mass_profile, grid=self.grid
             ),
             include_1d=self.include_1d,
         )
