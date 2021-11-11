@@ -141,26 +141,6 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
         self.scale_radius = scale_radius
         self.inner_slope = inner_slope
 
-    def tabulate_integral(self, grid, tabulate_bins):
-        """Tabulate an integral over the convergence of deflection potential of a mass profile. This is used in \
-        the GeneralizedNFW profile classes to speed up the integration procedure.
-
-        Parameters
-        -----------
-        grid : aa.Grid2D
-            The grid of (y,x) arc-second coordinates the potential / deflection_stacks are computed on.
-        tabulate_bins : int
-            The number of bins to tabulate the inner integral of this profile.
-        """
-        eta_min = 1.0e-4
-        eta_max = 1.05 * np.max(self.grid_to_elliptical_radii(grid))
-
-        minimum_log_eta = np.log10(eta_min)
-        maximum_log_eta = np.log10(eta_max)
-        bin_size = (maximum_log_eta - minimum_log_eta) / (tabulate_bins - 1)
-
-        return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
-
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
@@ -181,7 +161,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_via_gaussians_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -193,11 +173,50 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
 
         elliptical_radii = self.grid_to_elliptical_radii(grid)
 
-        return self._convergence_2d_via_gaussians_from(grid_radii=elliptical_radii)
+        return self._convergence_2d_via_mge_from(grid_radii=elliptical_radii)
 
-    @property
-    def ellipticity_rescale(self):
-        return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
+    def tabulate_integral(self, grid, tabulate_bins):
+        """Tabulate an integral over the convergence of deflection potential of a mass profile. This is used in \
+        the GeneralizedNFW profile classes to speed up the integration procedure.
+
+        Parameters
+        -----------
+        grid : aa.Grid2D
+            The grid of (y,x) arc-second coordinates the potential / deflection_stacks are computed on.
+        tabulate_bins : int
+            The number of bins to tabulate the inner integral of this profile.
+        """
+        eta_min = 1.0e-4
+        eta_max = 1.05 * np.max(self.grid_to_elliptical_radii(grid))
+
+        minimum_log_eta = np.log10(eta_min)
+        maximum_log_eta = np.log10(eta_max)
+        bin_size = (maximum_log_eta - minimum_log_eta) / (tabulate_bins - 1)
+
+        return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
+
+    def decompose_convergence_via_mge(self):
+
+        rho_at_scale_radius = (
+            self.kappa_s / self.scale_radius
+        )  # density parameter of 3D gNFW
+
+        radii_min = self.scale_radius / 2000.0
+        radii_max = self.scale_radius * 30.0
+
+        def gnfw_3d(r):
+            x = r / self.scale_radius
+            return (
+                rho_at_scale_radius
+                * x ** (-self.inner_slope)
+                * (1.0 + x) ** (self.inner_slope - 3.0)
+            )
+
+        amplitude_list, sigma_list = self._decompose_convergence_via_mge(
+            func=gnfw_3d, radii_min=radii_min, radii_max=radii_max
+        )
+        amplitude_list *= np.sqrt(2.0 * np.pi) * sigma_list
+        return amplitude_list, sigma_list
 
     def coord_func_f(self, grid_radius):
         if isinstance(grid_radius, np.ndarray):
@@ -422,28 +441,9 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
             * (radius_at_200_kpc ** 3.0)
         )
 
-    def decompose_convergence_into_gaussians(self):
-
-        rho_at_scale_radius = (
-            self.kappa_s / self.scale_radius
-        )  # density parameter of 3D gNFW
-
-        radii_min = self.scale_radius / 2000.0
-        radii_max = self.scale_radius * 30.0
-
-        def gnfw_3d(r):
-            x = r / self.scale_radius
-            return (
-                rho_at_scale_radius
-                * x ** (-self.inner_slope)
-                * (1.0 + x) ** (self.inner_slope - 3.0)
-            )
-
-        amplitude_list, sigma_list = self._decompose_convergence_into_gaussians(
-            func=gnfw_3d, radii_min=radii_min, radii_max=radii_max
-        )
-        amplitude_list *= np.sqrt(2.0 * np.pi) * sigma_list
-        return amplitude_list, sigma_list
+    @property
+    def ellipticity_rescale(self):
+        return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
 
     def with_new_normalization(self, normalization):
 
@@ -453,97 +453,25 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
 
 
 class EllNFWGeneralized(AbstractEllNFWGeneralized):
-    @aa.grid_dec.grid_2d_to_structure
-    @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from(self, grid, tabulate_bins=1000):
-        """
-        Calculate the potential at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid : aa.Grid2D
-            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-        tabulate_bins : int
-            The number of bins to tabulate the inner integral of this profile.
-
-        """
-
-        @jit_integrand
-        def deflection_integrand(x, kappa_radius, scale_radius, inner_slope):
-            return (x + kappa_radius / scale_radius) ** (inner_slope - 3) * (
-                (1 - np.sqrt(1 - x ** 2)) / x
-            )
-
-        (
-            eta_min,
-            eta_max,
-            minimum_log_eta,
-            maximum_log_eta,
-            bin_size,
-        ) = self.tabulate_integral(grid, tabulate_bins)
-
-        potential_grid = np.zeros(grid.shape[0])
-
-        deflection_integral = np.zeros((tabulate_bins,))
-
-        for i in range(tabulate_bins):
-            eta = 10.0 ** (minimum_log_eta + (i - 1) * bin_size)
-
-            integral = quad(
-                deflection_integrand,
-                a=0.0,
-                b=1.0,
-                args=(eta, self.scale_radius, self.inner_slope),
-                epsrel=EllNFWGeneralized.epsrel,
-            )[0]
-
-            deflection_integral[i] = (
-                (eta / self.scale_radius) ** (2 - self.inner_slope)
-            ) * (
-                (1.0 / (3 - self.inner_slope))
-                * special.hyp2f1(
-                    3 - self.inner_slope,
-                    3 - self.inner_slope,
-                    4 - self.inner_slope,
-                    -(eta / self.scale_radius),
-                )
-                + integral
-            )
-
-        for i in range(grid.shape[0]):
-
-            potential_grid[i] = (2.0 * self.kappa_s * self.axis_ratio) * quad(
-                self.potential_func,
-                a=0.0,
-                b=1.0,
-                args=(
-                    grid[i, 0],
-                    grid[i, 1],
-                    self.axis_ratio,
-                    minimum_log_eta,
-                    maximum_log_eta,
-                    tabulate_bins,
-                    deflection_integral,
-                ),
-                epsrel=EllNFWGeneralized.epsrel,
-            )[0]
-
-        return potential_grid
-
-    @aa.grid_dec.grid_2d_to_structure
-    @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_from(self, grid: aa.type.Grid2DLike):
 
-        return self._deflections_2d_via_gaussians_from(
+        return self.deflections_2d_via_mge_from(grid=grid)
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike):
+
+        return self._deflections_2d_via_mge_from(
             grid=grid, sigmas_factor=self.axis_ratio
         )
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_integrator_from(self, grid, tabulate_bins=1000):
+    def deflections_2d_via_integral_from(
+        self, grid: aa.type.Grid2DLike, tabulate_bins=1000
+    ):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -627,6 +555,29 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
+    @staticmethod
+    def deflection_func(
+        u,
+        y,
+        x,
+        npow,
+        axis_ratio,
+        minimum_log_eta,
+        maximum_log_eta,
+        tabulate_bins,
+        surface_density_integral,
+    ):
+
+        eta_u = np.sqrt((u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u)))))
+        bin_size = (maximum_log_eta - minimum_log_eta) / (tabulate_bins - 1)
+        i = 1 + int((np.log10(eta_u) - minimum_log_eta) / bin_size)
+        r1 = 10.0 ** (minimum_log_eta + (i - 1) * bin_size)
+        r2 = r1 * 10.0 ** bin_size
+        kap = surface_density_integral[i] + (
+            surface_density_integral[i + 1] - surface_density_integral[i]
+        ) * (eta_u - r1) / (r2 - r1)
+        return kap / (1.0 - (1.0 - axis_ratio ** 2) * u) ** (npow + 0.5)
+
     def convergence_func(self, grid_radius):
         def integral_y(y, eta):
             return (y + eta) ** (self.inner_slope - 4) * (1 - np.sqrt(1 - y ** 2))
@@ -655,6 +606,84 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
 
         return grid_radius
 
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, tabulate_bins=1000):
+        """
+        Calculate the potential at a given set of arc-second gridded coordinates.
+
+        Parameters
+        ----------
+        grid : aa.Grid2D
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+        tabulate_bins : int
+            The number of bins to tabulate the inner integral of this profile.
+
+        """
+
+        @jit_integrand
+        def deflection_integrand(x, kappa_radius, scale_radius, inner_slope):
+            return (x + kappa_radius / scale_radius) ** (inner_slope - 3) * (
+                (1 - np.sqrt(1 - x ** 2)) / x
+            )
+
+        (
+            eta_min,
+            eta_max,
+            minimum_log_eta,
+            maximum_log_eta,
+            bin_size,
+        ) = self.tabulate_integral(grid, tabulate_bins)
+
+        potential_grid = np.zeros(grid.shape[0])
+
+        deflection_integral = np.zeros((tabulate_bins,))
+
+        for i in range(tabulate_bins):
+            eta = 10.0 ** (minimum_log_eta + (i - 1) * bin_size)
+
+            integral = quad(
+                deflection_integrand,
+                a=0.0,
+                b=1.0,
+                args=(eta, self.scale_radius, self.inner_slope),
+                epsrel=EllNFWGeneralized.epsrel,
+            )[0]
+
+            deflection_integral[i] = (
+                (eta / self.scale_radius) ** (2 - self.inner_slope)
+            ) * (
+                (1.0 / (3 - self.inner_slope))
+                * special.hyp2f1(
+                    3 - self.inner_slope,
+                    3 - self.inner_slope,
+                    4 - self.inner_slope,
+                    -(eta / self.scale_radius),
+                )
+                + integral
+            )
+
+        for i in range(grid.shape[0]):
+
+            potential_grid[i] = (2.0 * self.kappa_s * self.axis_ratio) * quad(
+                self.potential_func,
+                a=0.0,
+                b=1.0,
+                args=(
+                    grid[i, 0],
+                    grid[i, 1],
+                    self.axis_ratio,
+                    minimum_log_eta,
+                    maximum_log_eta,
+                    tabulate_bins,
+                    deflection_integral,
+                ),
+                epsrel=EllNFWGeneralized.epsrel,
+            )[0]
+
+        return potential_grid
+
     @staticmethod
     def potential_func(
         u,
@@ -675,29 +704,6 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
             potential_integral[i + 1] - potential_integral[i]
         ) * (eta_u - r1) / (r2 - r1)
         return eta_u * (angle / u) / (1.0 - (1.0 - axis_ratio ** 2) * u) ** 0.5
-
-    @staticmethod
-    def deflection_func(
-        u,
-        y,
-        x,
-        npow,
-        axis_ratio,
-        minimum_log_eta,
-        maximum_log_eta,
-        tabulate_bins,
-        surface_density_integral,
-    ):
-
-        eta_u = np.sqrt((u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u)))))
-        bin_size = (maximum_log_eta - minimum_log_eta) / (tabulate_bins - 1)
-        i = 1 + int((np.log10(eta_u) - minimum_log_eta) / bin_size)
-        r1 = 10.0 ** (minimum_log_eta + (i - 1) * bin_size)
-        r2 = r1 * 10.0 ** bin_size
-        kap = surface_density_integral[i] + (
-            surface_density_integral[i + 1] - surface_density_integral[i]
-        ) * (eta_u - r1) / (r2 - r1)
-        return kap / (1.0 - (1.0 - axis_ratio ** 2) * u) ** (npow + 0.5)
 
 
 class SphNFWGeneralized(EllNFWGeneralized):
@@ -736,7 +742,7 @@ class SphNFWGeneralized(EllNFWGeneralized):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_integrator_from(self, grid, **kwargs):
+    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -797,6 +803,40 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
         self.truncation_radius = truncation_radius
         self.tau = self.truncation_radius / self.scale_radius
 
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+        """
+        Calculate the deflection angles at a given set of arc-second gridded coordinates.
+
+        Parameters
+        ----------
+        grid : aa.Grid2D
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+        """
+
+        eta = np.multiply(1.0 / self.scale_radius, self.grid_to_grid_radii(grid=grid))
+
+        deflection_grid = np.multiply(
+            (4.0 * self.kappa_s * self.scale_radius / eta),
+            self.deflection_func_sph(grid_radius=eta),
+        )
+
+        return self.grid_to_grid_cartesian(grid, deflection_grid)
+
+    def deflection_func_sph(self, grid_radius):
+        grid_radius = grid_radius + 0j
+        return np.real(self.coord_func_m(grid_radius=grid_radius))
+
+    def convergence_func(self, grid_radius):
+        grid_radius = ((1.0 / self.scale_radius) * grid_radius) + 0j
+        return np.real(2.0 * self.kappa_s * self.coord_func_l(grid_radius=grid_radius))
+
+    @aa.grid_dec.grid_2d_to_structure
+    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+        return np.zeros(shape=grid.shape[0])
+
     def coord_func_k(self, grid_radius):
         return np.log(
             np.divide(
@@ -837,40 +877,6 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
                 * (((self.tau ** 2.0 - 1.0) / self.tau) * k_r - np.pi)
             )
         )
-
-    def convergence_func(self, grid_radius):
-        grid_radius = ((1.0 / self.scale_radius) * grid_radius) + 0j
-        return np.real(2.0 * self.kappa_s * self.coord_func_l(grid_radius=grid_radius))
-
-    def deflection_func_sph(self, grid_radius):
-        grid_radius = grid_radius + 0j
-        return np.real(self.coord_func_m(grid_radius=grid_radius))
-
-    @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
-        return np.zeros(shape=grid.shape[0])
-
-    @aa.grid_dec.grid_2d_to_structure
-    @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid, **kwargs):
-        """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid : aa.Grid2D
-            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-        """
-
-        eta = np.multiply(1.0 / self.scale_radius, self.grid_to_grid_radii(grid=grid))
-
-        deflection_grid = np.multiply(
-            (4.0 * self.kappa_s * self.scale_radius / eta),
-            self.deflection_func_sph(grid_radius=eta),
-        )
-
-        return self.grid_to_grid_cartesian(grid, deflection_grid)
 
     def mass_at_truncation_radius_solar_mass(
         self,
@@ -999,25 +1005,94 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
         )
         super(MassProfileCSE, self).__init__()
 
-    @staticmethod
-    def coord_func(r):
-        if r > 1:
-            return (1.0 / np.sqrt(r ** 2 - 1)) * np.arctan(np.sqrt(r ** 2 - 1))
-        elif r < 1:
-            return (1.0 / np.sqrt(1 - r ** 2)) * np.arctanh(np.sqrt(1 - r ** 2))
-        elif r == 1:
-            return 1
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+        return self.deflections_2d_via_cse_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_via_cses_from(self, grid: aa.type.Grid2DLike):
+    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the deflection angles at a given set of arc-second gridded coordinates.
+
+        Parameters
+        ----------
+        grid : aa.Grid2D
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+
+        """
+
+        try:
+            from pyquad import quad_grid
+        except ImportError:
+            print(
+                "You must install the optional library pyquad to use the deflections_2d_via_integral_from method.\n"
+                "\n"
+                "pip install pyquad"
+            )
+
+        def calculate_deflection_component(npow, index):
+            deflection_grid = self.axis_ratio * grid[:, index]
+            deflection_grid *= (
+                self.kappa_s
+                * quad_grid(
+                    self.deflection_func,
+                    0.0,
+                    1.0,
+                    grid,
+                    args=(npow, self.axis_ratio, self.scale_radius),
+                )[0]
+            )
+
+            return deflection_grid
+
+        deflection_y = calculate_deflection_component(1.0, 0)
+        deflection_x = calculate_deflection_component(0.0, 1)
+
+        return self.rotate_grid_from_reference_frame(
+            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
+        )
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike):
+        return self._deflections_2d_via_cse_from(grid=grid)
+
+    @staticmethod
+    def deflection_func(u, y, x, npow, axis_ratio, scale_radius):
+        eta_u = (1.0 / scale_radius) * np.sqrt(
+            (u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u))))
+        )
+
+        if eta_u > 1:
+            eta_u_2 = (1.0 / np.sqrt(eta_u ** 2 - 1)) * np.arctan(
+                np.sqrt(eta_u ** 2 - 1)
+            )
+        elif eta_u < 1:
+            eta_u_2 = (1.0 / np.sqrt(1 - eta_u ** 2)) * np.arctanh(
+                np.sqrt(1 - eta_u ** 2)
+            )
+        else:
+            eta_u_2 = 1
+
+        return (
+            2.0
+            * (1 - eta_u_2)
+            / (eta_u ** 2 - 1)
+            / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
+        )
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the projected 2D convergence from a grid of (y,x) arc second coordinates, by computing and summing
         the convergence of each individual cse used to decompose the mass profile.
 
         The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
-        profile (e.g. `decompose_convergence_into_cses`) is using equation (12) of
+        profile (e.g. `decompose_convergence_via_cse`) is using equation (12) of
         Oguri 2021 (https://arxiv.org/abs/2106.11464).
 
         Parameters
@@ -1028,7 +1103,11 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
 
         elliptical_radii = self.grid_to_elliptical_radii(grid)
 
-        return self._convergence_2d_via_cses_from(grid_radii=elliptical_radii)
+        return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
+
+    def convergence_func(self, grid_radius):
+        grid_radius = (1.0 / self.scale_radius) * grid_radius + 0j
+        return np.real(2.0 * self.kappa_s * self.coord_func_g(grid_radius=grid_radius))
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
@@ -1064,70 +1143,6 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
 
         return potential_grid
 
-    @aa.grid_dec.grid_2d_to_structure
-    @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
-
-        return self._deflections_2d_via_gaussians_from(
-            grid=grid, sigmas_factor=self.axis_ratio
-        )
-
-    @aa.grid_dec.grid_2d_to_structure
-    @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_integrator_from(self, grid: aa.type.Grid2DLike):
-        """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid : aa.Grid2D
-            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
-        """
-
-        try:
-            from pyquad import quad_grid
-        except ImportError:
-            print(
-                "You must install the optional library pyquad to use the deflections_2d_via_integrator_from method.\n"
-                "\n"
-                "pip install pyquad"
-            )
-
-        def calculate_deflection_component(npow, index):
-            deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= (
-                self.kappa_s
-                * quad_grid(
-                    self.deflection_func,
-                    0.0,
-                    1.0,
-                    grid,
-                    args=(npow, self.axis_ratio, self.scale_radius),
-                )[0]
-            )
-
-            return deflection_grid
-
-        deflection_y = calculate_deflection_component(1.0, 0)
-        deflection_x = calculate_deflection_component(0.0, 1)
-
-        return self.rotate_grid_from_reference_frame(
-            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
-        )
-
-    @aa.grid_dec.grid_2d_to_structure
-    @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_cses_from(self, grid: aa.type.Grid2DLike):
-        return self._deflections_2d_via_cses_from(grid=grid)
-
-    def convergence_func(self, grid_radius):
-        grid_radius = (1.0 / self.scale_radius) * grid_radius + 0j
-        return np.real(2.0 * self.kappa_s * self.coord_func_g(grid_radius=grid_radius))
-
     @staticmethod
     def potential_func(u, y, x, axis_ratio, kappa_s, scale_radius):
         eta_u = (1.0 / scale_radius) * np.sqrt(
@@ -1155,31 +1170,7 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
             / ((1 - (1 - axis_ratio ** 2) * u) ** 0.5)
         )
 
-    @staticmethod
-    def deflection_func(u, y, x, npow, axis_ratio, scale_radius):
-        eta_u = (1.0 / scale_radius) * np.sqrt(
-            (u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u))))
-        )
-
-        if eta_u > 1:
-            eta_u_2 = (1.0 / np.sqrt(eta_u ** 2 - 1)) * np.arctan(
-                np.sqrt(eta_u ** 2 - 1)
-            )
-        elif eta_u < 1:
-            eta_u_2 = (1.0 / np.sqrt(1 - eta_u ** 2)) * np.arctanh(
-                np.sqrt(1 - eta_u ** 2)
-            )
-        else:
-            eta_u_2 = 1
-
-        return (
-            2.0
-            * (1 - eta_u_2)
-            / (eta_u ** 2 - 1)
-            / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
-        )
-
-    def decompose_convergence_into_cses(self, total_cses=30, sample_points=60):
+    def decompose_convergence_via_cse(self, total_cses=30, sample_points=60):
         """
         Decompose the convergence of the elliptical NFW mass profile into cored steep elliptical (cse) profiles.
 
@@ -1214,13 +1205,22 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
                 2.0 * self.kappa_s * self.coord_func_g(grid_radius=grid_radius)
             )
 
-        return self._decompose_convergence_into_cses_from(
+        return self._decompose_convergence_via_cse_from(
             func=nfw_2d,
             radii_min=radii_min,
             radii_max=radii_max,
             total_cses=total_cses,
             sample_points=sample_points,
         )
+
+    @staticmethod
+    def coord_func(r):
+        if r > 1:
+            return (1.0 / np.sqrt(r ** 2 - 1)) * np.arctan(np.sqrt(r ** 2 - 1))
+        elif r < 1:
+            return (1.0 / np.sqrt(1 - r ** 2)) * np.arctanh(np.sqrt(1 - r ** 2))
+        elif r == 1:
+            return 1
 
 
 class SphNFW(EllNFW):
@@ -1252,6 +1252,35 @@ class SphNFW(EllNFW):
             scale_radius=scale_radius,
         )
 
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+        return self.deflections_2d_via_analytic_from(grid=grid)
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the deflection angles at a given set of arc-second gridded coordinates.
+
+        Parameters
+        ----------
+        grid : aa.Grid2D
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+        """
+
+        eta = np.multiply(1.0 / self.scale_radius, self.grid_to_grid_radii(grid=grid))
+
+        deflection_grid = np.multiply(
+            (4.0 * self.kappa_s * self.scale_radius / eta),
+            self.deflection_func_sph(grid_radius=eta),
+        )
+
+        return self.grid_to_grid_cartesian(grid, deflection_grid)
+
+    def deflection_func_sph(self, grid_radius):
+        grid_radius = grid_radius + 0j
+        return np.real(self.coord_func_h(grid_radius=grid_radius))
+
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
@@ -1270,35 +1299,9 @@ class SphNFW(EllNFW):
             2.0 * self.scale_radius * self.kappa_s * self.potential_func_sph(eta)
         )
 
-    def deflection_func_sph(self, grid_radius):
-        grid_radius = grid_radius + 0j
-        return np.real(self.coord_func_h(grid_radius=grid_radius))
-
     @staticmethod
     def potential_func_sph(eta):
         return ((np.log(eta / 2.0)) ** 2) - (np.arctanh(np.sqrt(1 - eta ** 2))) ** 2
-
-    @aa.grid_dec.grid_2d_to_structure
-    @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid, **kwargs):
-        """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid : aa.Grid2D
-            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-        """
-
-        eta = np.multiply(1.0 / self.scale_radius, self.grid_to_grid_radii(grid=grid))
-
-        deflection_grid = np.multiply(
-            (4.0 * self.kappa_s * self.scale_radius / eta),
-            self.deflection_func_sph(grid_radius=eta),
-        )
-
-        return self.grid_to_grid_cartesian(grid, deflection_grid)
 
 
 class SphNFWMCRDuffy(SphNFW):
