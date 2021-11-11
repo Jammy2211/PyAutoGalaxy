@@ -364,7 +364,7 @@ class EllPowerLawCored(MassProfile):
             from pyquad import quad_grid
         except ImportError:
             print(
-                "You must install the optional library pyquad to use the deflections_2d_via_integrator_from method.\n"
+                "You must install the optional library pyquad to use the deflections_2d_via_integral_from method.\n"
                 "\n"
                 "pip install pyquad"
             )

@@ -54,44 +54,22 @@ class EllGaussian(MassProfile, StellarProfile):
         self.intensity = intensity
         self.sigma = sigma
 
-    @property
-    def axis_ratio(self):
-        axis_ratio = super().axis_ratio
-        return axis_ratio if axis_ratio < 0.9999 else 0.9999
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
-    def zeta_from(self, grid: aa.type.Grid2DLike):
-        q2 = self.axis_ratio ** 2.0
-        ind_pos_y = grid[:, 0] >= 0
-        shape_grid = np.shape(grid)
-        output_grid = np.zeros((shape_grid[0]), dtype=np.complex128)
-        scale_factor = self.axis_ratio / (self.sigma * np.sqrt(2.0 * (1.0 - q2)))
+        Parameters
+        ----------
+        grid : aa.Grid2D
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
-        xs_0 = grid[:, 1][ind_pos_y] * scale_factor
-        ys_0 = grid[:, 0][ind_pos_y] * scale_factor
-        xs_1 = grid[:, 1][~ind_pos_y] * scale_factor
-        ys_1 = -grid[:, 0][~ind_pos_y] * scale_factor
-
-        output_grid[ind_pos_y] = -1j * (
-            wofz(xs_0 + 1j * ys_0)
-            - np.exp(-(xs_0 ** 2.0) * (1.0 - q2) - ys_0 * ys_0 * (1.0 / q2 - 1.0))
-            * wofz(self.axis_ratio * xs_0 + 1j * ys_0 / self.axis_ratio)
-        )
-
-        output_grid[~ind_pos_y] = np.conj(
-            -1j
-            * (
-                wofz(xs_1 + 1j * ys_1)
-                - np.exp(-(xs_1 ** 2.0) * (1.0 - q2) - ys_1 * ys_1 * (1.0 / q2 - 1.0))
-                * wofz(self.axis_ratio * xs_1 + 1j * ys_1 / self.axis_ratio)
-            )
-        )
-
-        return output_grid
+        """
+        return self.deflections_2d_via_analytic_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -119,7 +97,7 @@ class EllGaussian(MassProfile, StellarProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_integrator_from(self, grid: aa.type.Grid2DLike):
+    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -136,7 +114,7 @@ class EllGaussian(MassProfile, StellarProfile):
             from pyquad import quad_grid
         except ImportError:
             print(
-                "You must install the optional library pyquad to use the deflections_2d_via_integrator_from method.\n"
+                "You must install the optional library pyquad to use the deflections_2d_via_integral_from method.\n"
                 "\n"
                 "pip install pyquad"
             )
@@ -211,6 +189,40 @@ class EllGaussian(MassProfile, StellarProfile):
             ),
         )
 
+    @property
+    def axis_ratio(self):
+        axis_ratio = super().axis_ratio
+        return axis_ratio if axis_ratio < 0.9999 else 0.9999
+
+    def zeta_from(self, grid: aa.type.Grid2DLike):
+        q2 = self.axis_ratio ** 2.0
+        ind_pos_y = grid[:, 0] >= 0
+        shape_grid = np.shape(grid)
+        output_grid = np.zeros((shape_grid[0]), dtype=np.complex128)
+        scale_factor = self.axis_ratio / (self.sigma * np.sqrt(2.0 * (1.0 - q2)))
+
+        xs_0 = grid[:, 1][ind_pos_y] * scale_factor
+        ys_0 = grid[:, 0][ind_pos_y] * scale_factor
+        xs_1 = grid[:, 1][~ind_pos_y] * scale_factor
+        ys_1 = -grid[:, 0][~ind_pos_y] * scale_factor
+
+        output_grid[ind_pos_y] = -1j * (
+            wofz(xs_0 + 1j * ys_0)
+            - np.exp(-(xs_0 ** 2.0) * (1.0 - q2) - ys_0 * ys_0 * (1.0 / q2 - 1.0))
+            * wofz(self.axis_ratio * xs_0 + 1j * ys_0 / self.axis_ratio)
+        )
+
+        output_grid[~ind_pos_y] = np.conj(
+            -1j
+            * (
+                wofz(xs_1 + 1j * ys_1)
+                - np.exp(-(xs_1 ** 2.0) * (1.0 - q2) - ys_1 * ys_1 * (1.0 / q2 - 1.0))
+                * wofz(self.axis_ratio * xs_1 + 1j * ys_1 / self.axis_ratio)
+            )
+        )
+
+        return output_grid
+
     def with_new_normalization(self, normalization):
 
         mass_profile = copy.copy(self)
@@ -263,6 +275,49 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
         self.effective_radius = effective_radius
         self.sersic_index = sersic_index
 
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+        return self.deflections_2d_via_cse_from(grid=grid)
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the projected 2D deflection angles from a grid of (y,x) arc second coordinates, by computing and
+        summing the convergence of each individual cse used to decompose the mass profile.
+
+        The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
+        profile (e.g. `decompose_convergence_via_cse`) is using equation (12) of
+        Oguri 2021 (https://arxiv.org/abs/2106.11464).
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
+        return self._deflections_2d_via_mge_from(
+            grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
+        )
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the projected 2D deflection angles from a grid of (y,x) arc second coordinates, by computing and
+        summing the convergence of each individual cse used to decompose the mass profile.
+
+        The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
+        profile (e.g. `decompose_convergence_via_cse`) is using equation (12) of
+        Oguri 2021 (https://arxiv.org/abs/2106.11464).
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
+        return self._deflections_2d_via_cse_from(grid=grid)
+
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
@@ -277,13 +332,10 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
         """
         return self.convergence_func(self.grid_to_eccentric_radii(grid))
 
-    def convergence_func(self, grid_radius):
-        return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
-
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_via_gaussians_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -296,18 +348,18 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
 
         eccentric_radii = self.grid_to_eccentric_radii(grid=grid)
 
-        return self._convergence_2d_via_gaussians_from(grid_radii=eccentric_radii)
+        return self._convergence_2d_via_mge_from(grid_radii=eccentric_radii)
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_via_cses_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the projected 2D convergence from a grid of (y,x) arc second coordinates, by computing and summing
         the convergence of each individual cse used to decompose the mass profile.
 
         The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
-        profile (e.g. `decompose_convergence_into_cses`) is using equation (12) of
+        profile (e.g. `decompose_convergence_via_cse`) is using equation (12) of
         Oguri 2021 (https://arxiv.org/abs/2106.11464).
 
         Parameters
@@ -318,42 +370,14 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
 
         elliptical_radii = self.grid_to_elliptical_radii(grid=grid)
 
-        return self._convergence_2d_via_cses_from(grid_radii=elliptical_radii)
+        return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
+
+    def convergence_func(self, grid_radius):
+        return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
     @aa.grid_dec.grid_2d_to_structure
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
-
-    @aa.grid_dec.grid_2d_to_structure
-    @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
-        return self._deflections_2d_via_gaussians_from(
-            grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
-        )
-
-    @aa.grid_dec.grid_2d_to_structure
-    @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_cses_from(self, grid: aa.type.Grid2DLike):
-        """
-        Calculate the projected 2D deflection angles from a grid of (y,x) arc second coordinates, by computing and
-        summing the convergence of each individual cse used to decompose the mass profile.
-
-        The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
-        profile (e.g. `decompose_convergence_into_cses`) is using equation (12) of
-        Oguri 2021 (https://arxiv.org/abs/2106.11464).
-
-        Parameters
-        ----------
-        grid
-            The grid of (y,x) arc-second coordinates the convergence is computed on.
-        """
-        return self._deflections_2d_via_cses_from(grid=grid)
-
-    @property
-    def ellipticity_rescale(self):
-        return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
 
     def image_2d_via_radii_from(self, radius: np.ndarray):
         """
@@ -369,33 +393,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
             * (((radius / self.effective_radius) ** (1.0 / self.sersic_index)) - 1)
         )
 
-    @property
-    def sersic_constant(self):
-        """A parameter derived from Sersic index which ensures that effective radius contains 50% of the profile's
-        total integrated light.
-        """
-        return (
-            (2 * self.sersic_index)
-            - (1.0 / 3.0)
-            + (4.0 / (405.0 * self.sersic_index))
-            + (46.0 / (25515.0 * self.sersic_index ** 2))
-            + (131.0 / (1148175.0 * self.sersic_index ** 3))
-            - (2194697.0 / (30690717750.0 * self.sersic_index ** 4))
-        )
-
-    @property
-    def elliptical_effective_radius(self):
-        """
-        The effective_radius of a Sersic light profile is defined as the circular effective radius. This is the \
-        radius within which a circular aperture contains half the profiles's total integrated light. For elliptical \
-        systems, this won't robustly capture the light profile's elliptical shape.
-
-        The elliptical effective radius instead describes the major-axis radius of the ellipse containing \
-        half the light, and may be more appropriate for highly flattened systems like disk galaxies.
-        """
-        return self.effective_radius / np.sqrt(self.axis_ratio)
-
-    def decompose_convergence_into_gaussians(self) -> Tuple[List, List]:
+    def decompose_convergence_via_mge(self) -> Tuple[List, List]:
         radii_min = self.effective_radius / 100.0
         radii_max = self.effective_radius * 20.0
 
@@ -409,17 +407,11 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
                 )
             )
 
-        return self._decompose_convergence_into_gaussians(
+        return self._decompose_convergence_via_mge(
             func=sersic_2d, radii_min=radii_min, radii_max=radii_max
         )
 
-    def decompose_convergence_into_cses(
-        self,
-        lower_dex: float = 3.0,
-        upper_dex: float = 1.5,
-        total_cses: int = 25,
-        sample_points: int = 50,
-    ) -> Tuple[List, List]:
+    def decompose_convergence_via_cse(self,) -> Tuple[List, List]:
         """
         Decompose the convergence of the Sersic profile into cored steep elliptical (cse) profiles.
 
@@ -444,6 +436,14 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
             A list of amplitudes and core radii of every cored steep elliptical (cse) the mass profile is decomposed
             into.
         """
+
+        upper_dex, lower_dex, total_cses, sample_points = cse_settings_from(
+            effective_radius=self.effective_radius,
+            sersic_index=self.sersic_index,
+            sersic_constant=self.sersic_constant,
+            mass_to_light_gradient=0.0,
+        )
+
         scaled_effective_radius = self.effective_radius / np.sqrt(self.axis_ratio)
         radii_min = scaled_effective_radius / 10.0 ** lower_dex
         radii_max = scaled_effective_radius * 10.0 ** upper_dex
@@ -461,13 +461,43 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
                 )
             )
 
-        return self._decompose_convergence_into_cses_from(
+        return self._decompose_convergence_via_cse_from(
             func=sersic_2d,
             radii_min=radii_min,
             radii_max=radii_max,
             total_cses=total_cses,
             sample_points=sample_points,
         )
+
+    @property
+    def sersic_constant(self):
+        """A parameter derived from Sersic index which ensures that effective radius contains 50% of the profile's
+        total integrated light.
+        """
+        return (
+            (2 * self.sersic_index)
+            - (1.0 / 3.0)
+            + (4.0 / (405.0 * self.sersic_index))
+            + (46.0 / (25515.0 * self.sersic_index ** 2))
+            + (131.0 / (1148175.0 * self.sersic_index ** 3))
+            - (2194697.0 / (30690717750.0 * self.sersic_index ** 4))
+        )
+
+    @property
+    def ellipticity_rescale(self):
+        return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
+
+    @property
+    def elliptical_effective_radius(self):
+        """
+        The effective_radius of a Sersic light profile is defined as the circular effective radius. This is the \
+        radius within which a circular aperture contains half the profiles's total integrated light. For elliptical \
+        systems, this won't robustly capture the light profile's elliptical shape.
+
+        The elliptical effective radius instead describes the major-axis radius of the ellipse containing \
+        half the light, and may be more appropriate for highly flattened systems like disk galaxies.
+        """
+        return self.effective_radius / np.sqrt(self.axis_ratio)
 
     def with_new_normalization(self, normalization):
 
@@ -480,7 +510,7 @@ class EllSersic(AbstractEllSersic, MassProfileMGE, MassProfileCSE):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_integrator_from(self, grid: aa.type.Grid2DLike):
+    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -495,7 +525,7 @@ class EllSersic(AbstractEllSersic, MassProfileMGE, MassProfileCSE):
             from pyquad import quad_grid
         except ImportError:
             print(
-                "You must install the optional library pyquad to use the deflections_2d_via_integrator_from method.\n"
+                "You must install the optional library pyquad to use the deflections_2d_via_integral_from method.\n"
                 "\n"
                 "pip install pyquad"
             )
@@ -766,21 +796,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
-        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid : aa.Grid2D
-            The grid of (y,x) arc-second coordinates the convergence is computed on.
-
-        """
-        return self.convergence_func(self.grid_to_eccentric_radii(grid))
-
-    @aa.grid_dec.grid_2d_to_structure
-    @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_integrator_from(self, grid: aa.type.Grid2DLike):
+    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -795,7 +811,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
             from pyquad import quad_grid
         except ImportError:
             print(
-                "You must install the optional library pyquad to use the deflections_2d_via_integrator_from method.\n"
+                "You must install the optional library pyquad to use the deflections_2d_via_integral_from method.\n"
                 "\n"
                 "pip install pyquad"
             )
@@ -831,16 +847,6 @@ class EllSersicRadialGradient(AbstractEllSersic):
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
-    def convergence_func(self, grid_radius):
-        return (
-            self.mass_to_light_ratio
-            * (
-                ((self.axis_ratio * grid_radius) / self.effective_radius)
-                ** -self.mass_to_light_gradient
-            )
-            * self.image_2d_via_radii_from(grid_radius)
-        )
-
     @staticmethod
     def deflection_func(
         u,
@@ -866,7 +872,31 @@ class EllSersicRadialGradient(AbstractEllSersic):
             / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
         )
 
-    def decompose_convergence_into_gaussians(self):
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
+        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
+
+        Parameters
+        ----------
+        grid : aa.Grid2D
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+
+        """
+        return self.convergence_func(self.grid_to_eccentric_radii(grid))
+
+    def convergence_func(self, grid_radius):
+        return (
+            self.mass_to_light_ratio
+            * (
+                ((self.axis_ratio * grid_radius) / self.effective_radius)
+                ** -self.mass_to_light_gradient
+            )
+            * self.image_2d_via_radii_from(grid_radius)
+        )
+
+    def decompose_convergence_via_mge(self):
         radii_min = self.effective_radius / 100.0
         radii_max = self.effective_radius * 20.0
 
@@ -884,8 +914,70 @@ class EllSersicRadialGradient(AbstractEllSersic):
                 )
             )
 
-        return self._decompose_convergence_into_gaussians(
+        return self._decompose_convergence_via_mge(
             func=sersic_radial_gradient_2D, radii_min=radii_min, radii_max=radii_max
+        )
+
+    def decompose_convergence_via_cse(self) -> Tuple[List, List]:
+        """
+        Decompose the convergence of the Sersic profile into singular isothermal elliptical (sie) profiles.
+
+        This decomposition uses the standard 2d profile of a Sersic mass profile.
+
+        Parameters
+        ----------
+        func
+            The function representing the profile that is decomposed into CSEs.
+        radii_min:
+            The minimum radius to fit
+        radii_max:
+            The maximum radius to fit
+        total_sies : int
+            The number of SIEs used to approximate the input func.
+        sample_points: int (should be larger than 'total_sies')
+            The number of data points to fit
+
+        Returns
+        -------
+        Tuple[List, List]
+            A list of amplitudes and core radii of every singular isothernal ellipsoids (sie) the mass profile is decomposed
+            into.
+        """
+
+        upper_dex, lower_dex, total_cses, sample_points = cse_settings_from(
+            effective_radius=self.effective_radius,
+            sersic_index=self.sersic_index,
+            sersic_constant=self.sersic_constant,
+            mass_to_light_gradient=self.mass_to_light_gradient,
+        )
+
+        scaled_effective_radius = self.effective_radius / np.sqrt(self.axis_ratio)
+        radii_min = scaled_effective_radius / 10.0 ** lower_dex
+        radii_max = scaled_effective_radius * 10.0 ** upper_dex
+
+        def sersic_radial_gradient_2D(r):
+            return (
+                self.mass_to_light_ratio
+                * self.intensity
+                * (
+                    ((self.axis_ratio * r) / scaled_effective_radius)
+                    ** -self.mass_to_light_gradient
+                )
+                * np.exp(
+                    -self.sersic_constant
+                    * (
+                        ((r / scaled_effective_radius) ** (1.0 / self.sersic_index))
+                        - 1.0
+                    )
+                )
+            )
+
+        return self._decompose_convergence_via_cse_from(
+            func=sersic_radial_gradient_2D,
+            radii_min=radii_min,
+            radii_max=radii_max,
+            total_cses=total_cses,
+            sample_points=sample_points,
         )
 
 
@@ -983,21 +1075,8 @@ class EllSersicCore(EllSersic):
         self.alpha = alpha
         self.gamma = gamma
 
-    @property
-    def intensity_prime(self):
-        """Overall intensity normalisation in the rescaled Core-Sersic light profiles (electrons per second)"""
-        return (
-            self.intensity_break
-            * (2.0 ** (-self.gamma / self.alpha))
-            * np.exp(
-                self.sersic_constant
-                * (
-                    ((2.0 ** (1.0 / self.alpha)) * self.radius_break)
-                    / self.effective_radius
-                )
-                ** (1.0 / self.sersic_index)
-            )
-        )
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+        return self.deflections_2d_via_mge_from(grid=grid)
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray):
         """
@@ -1038,7 +1117,7 @@ class EllSersicCore(EllSersic):
             ),
         )
 
-    def decompose_convergence_into_gaussians(self):
+    def decompose_convergence_via_mge(self):
 
         radii_min = self.effective_radius / 50.0
         radii_max = self.effective_radius * 20.0
@@ -1059,8 +1138,24 @@ class EllSersicCore(EllSersic):
                 )
             )
 
-        return self._decompose_convergence_into_gaussians(
+        return self._decompose_convergence_via_mge(
             func=core_sersic_2D, radii_min=radii_min, radii_max=radii_max
+        )
+
+    @property
+    def intensity_prime(self):
+        """Overall intensity normalisation in the rescaled Core-Sersic light profiles (electrons per second)"""
+        return (
+            self.intensity_break
+            * (2.0 ** (-self.gamma / self.alpha))
+            * np.exp(
+                self.sersic_constant
+                * (
+                    ((2.0 ** (1.0 / self.alpha)) * self.radius_break)
+                    / self.effective_radius
+                )
+                ** (1.0 / self.sersic_index)
+            )
         )
 
 
@@ -1156,15 +1251,13 @@ class EllChameleon(MassProfile, StellarProfile):
         self.core_radius_0 = core_radius_0
         self.core_radius_1 = core_radius_1
 
-    @property
-    def axis_ratio(self):
-        axis_ratio = super().axis_ratio
-        return axis_ratio if axis_ratio < 0.99999 else 0.99999
+    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+        return self.deflections_2d_via_analytic_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
         Following Eq. (15) and (16), but the parameters are slightly different.
@@ -1288,6 +1381,11 @@ class EllChameleon(MassProfile, StellarProfile):
             ),
         )
 
+    @property
+    def axis_ratio(self):
+        axis_ratio = super().axis_ratio
+        return axis_ratio if axis_ratio < 0.99999 else 0.99999
+
     def with_new_normalization(self, normalization):
 
         mass_profile = copy.copy(self)
@@ -1333,3 +1431,75 @@ class SphChameleon(EllChameleon):
             core_radius_1=core_radius_1,
             mass_to_light_ratio=mass_to_light_ratio,
         )
+
+
+def cse_settings_from(
+    effective_radius, sersic_index, sersic_constant, mass_to_light_gradient
+):
+
+    if mass_to_light_gradient > 0.5:
+
+        if effective_radius > 0.2:
+
+            lower_dex = 6.0
+            upper_dex = np.min(
+                [np.log10((18.0 / sersic_constant) ** sersic_index), 1.1]
+            )
+
+            if sersic_index <= 1.2:
+                total_cses = 50
+                sample_points = 80
+            elif sersic_index > 3.8:
+                total_cses = 40
+                sample_points = 50
+                lower_dex = 6.5
+            else:
+                total_cses = 30
+                sample_points = 50
+
+        else:
+            if sersic_index <= 1.2:
+                upper_dex = 1.0
+                total_cses = 50
+                sample_points = 80
+                lower_dex = 4.5
+
+            elif sersic_index > 3.8:
+                total_cses = 40
+                sample_points = 50
+                lower_dex = 6.0
+                upper_dex = 1.5
+            else:
+                upper_dex = 1.1
+                lower_dex = 6.0
+                total_cses = 30
+                sample_points = 50
+    else:
+
+        upper_dex = np.min(
+            [
+                np.log10((23.0 / sersic_constant) ** sersic_index),
+                0.85 - np.log10(effective_radius),
+            ]
+        )
+
+        if (sersic_index <= 0.9) and (sersic_index > 0.8):
+            total_cses = 50
+            sample_points = 80
+            upper_dex = np.log10((18.0 / sersic_constant) ** sersic_index)
+            lower_dex = 4.3 + np.log10(effective_radius)
+        elif sersic_index <= 0.8:
+            total_cses = 50
+            sample_points = 80
+            upper_dex = np.log10((16.0 / sersic_constant) ** sersic_index)
+            lower_dex = 4.0 + np.log10(effective_radius)
+        elif sersic_index > 3.8:
+            total_cses = 40
+            sample_points = 50
+            lower_dex = 4.5 + np.log10(effective_radius)
+        else:
+            lower_dex = 3.5 + np.log10(effective_radius)
+            total_cses = 30
+            sample_points = 50
+
+    return upper_dex, lower_dex, total_cses, sample_points

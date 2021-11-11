@@ -360,10 +360,10 @@ class MassProfileMGE:
 
         return eta_list
 
-    def decompose_convergence_into_gaussians(self):
+    def decompose_convergence_via_mge(self):
         raise NotImplementedError()
 
-    def _decompose_convergence_into_gaussians(
+    def _decompose_convergence_via_mge(
         self, func, radii_min, radii_max, func_terms=28, func_gaussians=20
     ):
         """
@@ -407,10 +407,10 @@ class MassProfileMGE:
 
         return amplitude_list, sigma_list
 
-    def convergence_2d_via_gaussians_from(self, grid_radii):
+    def convergence_2d_via_mge_from(self, grid_radii):
         raise NotImplementedError()
 
-    def _convergence_2d_via_gaussians_from(self, grid_radii):
+    def _convergence_2d_via_mge_from(self, grid_radii):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -426,7 +426,7 @@ class MassProfileMGE:
         self.zq = 0
         self.expv = 0
 
-        amps, sigmas = self.decompose_convergence_into_gaussians()
+        amps, sigmas = self.decompose_convergence_via_mge()
 
         convergence = 0.0
 
@@ -441,14 +441,14 @@ class MassProfileMGE:
             intensity, np.exp(-0.5 * np.square(np.divide(grid_radii, sigma)))
         )
 
-    def _deflections_2d_via_gaussians_from(self, grid, sigmas_factor=1.0):
+    def _deflections_2d_via_mge_from(self, grid, sigmas_factor=1.0):
 
         axis_ratio = self.axis_ratio
 
         if axis_ratio > 0.9999:
             axis_ratio = 0.9999
 
-        amps, sigmas = self.decompose_convergence_into_gaussians()
+        amps, sigmas = self.decompose_convergence_via_mge()
         sigmas *= sigmas_factor
 
         angle = self.zeta_from(
@@ -633,10 +633,10 @@ class MassProfileCSE(ABC):
         return np.vstack((defl_y, defl_x))
 
     @abstractmethod
-    def decompose_convergence_into_cses(self):
+    def decompose_convergence_via_cse(self):
         pass
 
-    def _decompose_convergence_into_cses_from(
+    def _decompose_convergence_via_cse_from(
         self,
         func: Callable,
         radii_min: float,
@@ -698,10 +698,10 @@ class MassProfileCSE(ABC):
 
         return amplitude_list, core_radius_list
 
-    def convergence_2d_via_cses_from(self, grid_radii: np.ndarray) -> np.ndarray:
+    def convergence_2d_via_cse_from(self, grid_radii: np.ndarray) -> np.ndarray:
         pass
 
-    def _convergence_2d_via_cses_from(self, grid_radii: np.ndarray) -> np.ndarray:
+    def _convergence_2d_via_cse_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """
         Calculate the projected 2D convergence from a grid of radial coordinates, by computing and summing the
         convergence of each individual cse used to decompose the mass profile.
@@ -715,7 +715,7 @@ class MassProfileCSE(ABC):
             The grid of 1D radial arc-second coordinates the convergence is computed on.
         """
 
-        amplitude_list, core_radius_list = self.decompose_convergence_into_cses()
+        amplitude_list, core_radius_list = self.decompose_convergence_via_cse()
 
         return sum(
             amplitude
@@ -725,7 +725,7 @@ class MassProfileCSE(ABC):
             for amplitude, core_radius in zip(amplitude_list, core_radius_list)
         )
 
-    def _deflections_2d_via_cses_from(self, grid: np.ndarray) -> np.ndarray:
+    def _deflections_2d_via_cse_from(self, grid: np.ndarray) -> np.ndarray:
         """
         Calculate the projected 2D deflection angles from a grid of radial coordinates, by computing and summing the
         deflections of each individual cse used to decompose the mass profile.
@@ -739,7 +739,7 @@ class MassProfileCSE(ABC):
             The grid of 1D radial arc-second coordinates the convergence is computed on.
         """
 
-        amplitude_list, core_radius_list = self.decompose_convergence_into_cses()
+        amplitude_list, core_radius_list = self.decompose_convergence_via_cse()
         q = self.axis_ratio
         q2 = q ** 2.0
         grid_y = grid[:, 0]
