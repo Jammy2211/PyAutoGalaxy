@@ -38,15 +38,15 @@ class GetVisuals1D(get_visuals.GetVisuals1D):
             The collection of attributes that can be plotted by a `Plotter1D` object.
         """
 
+        if light_obj is None:
+            return self.visuals
+
         half_light_radius = self.get(
-            "half_light_radius",
-            value=light_obj.extract_attribute(cls=LightProfile, attr_name="centre"),
+            "half_light_radius", value=light_obj.half_light_radius
         )
 
-        return (
-            self.visuals
-            + half_light_radius
-            + self.visuals.__class__(half_light_radius=half_light_radius)
+        return self.visuals + self.visuals.__class__(
+            half_light_radius=half_light_radius
         )
 
     def via_light_obj_list_from(
@@ -73,9 +73,16 @@ class GetVisuals1D(get_visuals.GetVisuals1D):
                 light_profile.half_light_radius for light_profile in light_obj_list
             ]
 
-            half_light_radius, half_light_radius_errors = error_util.value_median_and_error_region_via_quantile(
-                value_list=half_light_radius_list, low_limit=low_limit
-            )
+            if None in half_light_radius_list:
+
+                half_light_radius = None
+                half_light_radius_errors = None
+
+            else:
+
+                half_light_radius, half_light_radius_errors = error_util.value_median_and_error_region_via_quantile(
+                    value_list=half_light_radius_list, low_limit=low_limit
+                )
 
         else:
 
@@ -107,6 +114,10 @@ class GetVisuals1D(get_visuals.GetVisuals1D):
         vis.Visuals1D
             The collection of attributes that can be plotted by a `Plotter1D` object.
         """
+
+        if mass_obj is None:
+            return self.visuals
+
         if self.include.einstein_radius:
             einstein_radius = mass_obj.einstein_radius_from(grid=grid)
         else:
@@ -258,7 +269,7 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
             )
         )
 
-    def via_light_mass_obj(self, light_mass_obj, grid) -> Visuals2D:
+    def via_light_mass_obj_from(self, light_mass_obj, grid) -> Visuals2D:
         """
         From an object that contains both light and lensing attributes (e.g. a `Galaxy`, `Plane`), gets the
         attributes that can be plotted and returns them in a `Visuals2D` object.
@@ -298,7 +309,7 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
 
         visuals_2d_via_fit = super().via_fit_from(fit=fit)
 
-        visuals_2d_via_light_mass_obj = self.via_light_mass_obj(
+        visuals_2d_via_light_mass_obj = self.via_light_mass_obj_from(
             light_mass_obj=fit.plane, grid=fit.grid
         )
 

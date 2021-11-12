@@ -52,14 +52,14 @@ class GalaxyPlotter(Plotter):
         self._mass_plotter = MassPlotter(
             mass_obj=self.galaxy,
             grid=self.grid,
-            get_visuals_2d=self.get_visuals_2d(),
+            get_visuals_2d=self.get_visuals_2d,
             mat_plot_2d=self.mat_plot_2d,
             include_2d=self.include_2d,
             visuals_2d=self.visuals_2d,
         )
 
     def get_visuals_1d_light(self) -> Visuals1D:
-        return self.get_1d.via_light_obj_from(light_obj=self.galaxy, grid=self.grid)
+        return self.get_1d.via_light_obj_from(light_obj=self.galaxy)
 
     def get_visuals_1d_mass(self) -> Visuals1D:
         return self.get_1d.via_mass_obj_from(mass_obj=self.galaxy, grid=self.grid)
@@ -503,7 +503,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d = self.get_visuals_1d_mass + self.visuals_1d.__class__(
+            visuals_1d = self.get_visuals_1d_mass() + self.visuals_1d.__class__(
                 shaded_region=errors_potential_1d
             )
 

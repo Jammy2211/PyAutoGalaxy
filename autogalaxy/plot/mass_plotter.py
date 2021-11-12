@@ -27,7 +27,10 @@ class MassPlotter(Plotter):
 
         self.mass_obj = mass_obj
         self.grid = grid
-        self.get_visuals_2d = get_visuals_2d
+        self._get_visuals_2d = get_visuals_2d
+
+    def get_visuals_2d(self) -> Visuals2D:
+        return self._get_visuals_2d()
 
     def figures_2d(
         self,

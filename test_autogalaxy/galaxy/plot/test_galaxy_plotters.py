@@ -14,7 +14,7 @@ def make_galaxy_plotter_setup():
     )
 
 
-def test__visuals_with_include_2d(gal_x1_lp_x1_mp, grid_2d_7x7):
+def test__get_visuals_2d(gal_x1_lp_x1_mp, grid_2d_7x7):
 
     visuals_2d = aplt.Visuals2D(vector_field=2)
 
@@ -35,19 +35,19 @@ def test__visuals_with_include_2d(gal_x1_lp_x1_mp, grid_2d_7x7):
         include_2d=include,
     )
 
-    assert galaxy_plotter.visuals_with_include_2d.origin.in_list == [(0.0, 0.0)]
-    assert (galaxy_plotter.visuals_with_include_2d.mask == grid_2d_7x7.mask).all()
+    assert galaxy_plotter.get_visuals_2d().origin.in_list == [(0.0, 0.0)]
+    assert (galaxy_plotter.get_visuals_2d().mask == grid_2d_7x7.mask).all()
     assert (
-        galaxy_plotter.visuals_with_include_2d.border
+        galaxy_plotter.get_visuals_2d().border
         == grid_2d_7x7.mask.border_grid_sub_1.binned
     ).all()
-    assert galaxy_plotter.visuals_with_include_2d.light_profile_centres.in_list == [
+    assert galaxy_plotter.get_visuals_2d().light_profile_centres.in_list == [
         gal_x1_lp_x1_mp.light_profile_0.centre
     ]
-    assert galaxy_plotter.visuals_with_include_2d.mass_profile_centres.in_list == [
+    assert galaxy_plotter.get_visuals_2d().mass_profile_centres.in_list == [
         gal_x1_lp_x1_mp.mass_profile_0.centre
     ]
-    assert galaxy_plotter.visuals_with_include_2d.vector_field == 2
+    assert galaxy_plotter.get_visuals_2d().vector_field == 2
 
     include = aplt.Include2D(origin=False, mask=False, border=False)
 
@@ -58,10 +58,10 @@ def test__visuals_with_include_2d(gal_x1_lp_x1_mp, grid_2d_7x7):
         include_2d=include,
     )
 
-    assert galaxy_plotter.visuals_with_include_2d.origin == None
-    assert galaxy_plotter.visuals_with_include_2d.mask == None
-    assert galaxy_plotter.visuals_with_include_2d.border == None
-    assert galaxy_plotter.visuals_with_include_2d.vector_field == 2
+    assert galaxy_plotter.get_visuals_2d().origin == None
+    assert galaxy_plotter.get_visuals_2d().mask == None
+    assert galaxy_plotter.get_visuals_2d().border == None
+    assert galaxy_plotter.get_visuals_2d().vector_field == 2
 
 
 def test__figures_1d__all_are_output(
