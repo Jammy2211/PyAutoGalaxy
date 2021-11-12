@@ -91,7 +91,7 @@ class GetVisuals1D(get_visuals.GetVisuals1D):
             half_light_radius_errors=half_light_radius_errors,
         )
 
-    def via_lensing_obj_from(self, lensing_obj, grid) -> Visuals1D:
+    def via_mass_obj_from(self, mass_obj, grid) -> Visuals1D:
         """
         Extract from the `LensingObj` attributes that can be plotted and return them in a `Visuals1D` object.
 
@@ -107,7 +107,7 @@ class GetVisuals1D(get_visuals.GetVisuals1D):
             The collection of attributes that can be plotted by a `Plotter1D` object.
         """
         if self.include.einstein_radius:
-            einstein_radius = lensing_obj.einstein_radius_from(grid=grid)
+            einstein_radius = mass_obj.einstein_radius_from(grid=grid)
         else:
             einstein_radius = None
 
@@ -115,8 +115,8 @@ class GetVisuals1D(get_visuals.GetVisuals1D):
 
         return self.visuals + self.visuals.__class__(einstein_radius=einstein_radius)
 
-    def via_lensing_obj_list_from(
-        self, lensing_obj_list, grid, low_limit: float
+    def via_mass_obj_list_from(
+        self, mass_obj_list, grid, low_limit: float
     ) -> Visuals1D:
         """
         Extracts from the `MassProfile` attributes that can be plotted and return them in a `Visuals1D` object.
@@ -137,7 +137,7 @@ class GetVisuals1D(get_visuals.GetVisuals1D):
 
             einstein_radius_list = [
                 mass_profile.einstein_radius_from(grid=grid)
-                for mass_profile in lensing_obj_list
+                for mass_profile in mass_obj_list
             ]
 
             einstein_radius, einstein_radius_errors = error_util.value_median_and_error_region_via_quantile(
@@ -274,12 +274,6 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
             + visuals_with_grid
             + self.via_light_obj_from(light_obj=light_mass_obj, grid=grid)
         )
-
-    def via_galaxy_from(self, galaxy, grid):
-        return self.via_light_mass_obj(light_mass_obj=galaxy, grid=grid)
-
-    def via_plane_from(self, plane, grid):
-        return self.via_light_mass_obj(light_mass_obj=plane, grid=grid)
 
     def via_fit_from(self, fit: FitImaging) -> Visuals2D:
 

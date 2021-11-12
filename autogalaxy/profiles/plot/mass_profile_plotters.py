@@ -1,10 +1,13 @@
 import math
 from typing import List, Optional
 
+import autoarray as aa
 import autoarray.plot as aplt
+
 from autoarray.structures.grids.two_d import abstract_grid_2d
 
-from autogalaxy.plot.light_mass_plotter import LightMassPlotter
+from autogalaxy.plot.abstract_plotters import Plotter
+from autogalaxy.plot.mass_plotter import MassPlotter
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
@@ -16,11 +19,11 @@ from autogalaxy.plot.mat_wrap.include import Include2D
 from autogalaxy.util import error_util
 
 
-class MassProfilePlotter(LightMassPlotter):
+class MassProfilePlotter(Plotter):
     def __init__(
         self,
         mass_profile: MassProfile,
-        grid: abstract_grid_2d.AbstractGrid2D,
+        grid: aa.type.Grid2DLike,
         mat_plot_1d: MatPlot1D = MatPlot1D(),
         visuals_1d: Visuals1D = Visuals1D(),
         include_1d: Include1D = Include1D(),
@@ -41,9 +44,24 @@ class MassProfilePlotter(LightMassPlotter):
         self.mass_profile = mass_profile
         self.grid = grid
 
+        self._mass_plotter = MassPlotter(
+            mass_obj=self.mass_profile,
+            grid=self.grid,
+            get_visuals_2d=self.get_visuals_2d,
+            mat_plot_2d=self.mat_plot_2d,
+            include_2d=self.include_2d,
+            visuals_2d=self.visuals_2d,
+        )
+
+        self.figures_2d = self._mass_plotter.figures_2d
+
     @property
-    def lensing_obj(self):
-        return self.mass_profile
+    def get_visuals_1d(self) -> Visuals1D:
+        return self.get_1d.via_mass_obj_from(mass_obj=self.mass_profile, grid=self.grid)
+
+    @property
+    def get_visuals_2d(self) -> Visuals2D:
+        return self.get_2d.via_mass_obj_from(mass_obj=self.mass_profile, grid=self.grid)
 
     def figures_1d(self, convergence=False, potential=False):
 
@@ -59,14 +77,12 @@ class MassProfilePlotter(LightMassPlotter):
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
                 x=convergence_1d.grid_radial,
-                visuals_1d=self.get_1d.via_mass_obj_from(
-                    mass_obj=self.mass_profile, grid=self.grid
-                ),
+                visuals_1d=self.get_visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
                     ylabel="Convergence ",
                     xlabel="Radius",
-                    legend=self.lensing_obj.__class__.__name__,
+                    legend=self.mass_profile.__class__.__name__,
                     filename="convergence_1d",
                 ),
                 plot_axis_type_override=plot_axis_type_override,
@@ -79,14 +95,12 @@ class MassProfilePlotter(LightMassPlotter):
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
                 x=potential_1d.grid_radial,
-                visuals_1d=self.get_1d.via_mass_obj_from(
-                    mass_obj=self.mass_profile, grid=self.grid
-                ),
+                visuals_1d=self.get_visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",
                     ylabel="Potential ",
                     xlabel="Radius",
-                    legend=self.lensing_obj.__class__.__name__,
+                    legend=self.mass_profile.__class__.__name__,
                     filename="potential_1d",
                 ),
                 plot_axis_type_override=plot_axis_type_override,
@@ -152,8 +166,8 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 profile_1d_list=convergence_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d_via_lensing_obj_list = self.get_1d.via_lensing_obj_list_from(
-                lensing_obj_list=self.mass_profile_pdf_list,
+            visuals_1d_via_lensing_obj_list = self.get_1d.via_mass_obj_list_from(
+                mass_obj_list=self.mass_profile_pdf_list,
                 grid=self.grid,
                 low_limit=self.low_limit,
             )
@@ -194,8 +208,8 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d_via_lensing_obj_list = self.get_1d.via_lensing_obj_list_from(
-                lensing_obj_list=self.mass_profile_pdf_list,
+            visuals_1d_via_lensing_obj_list = self.get_1d.via_mass_obj_list_from(
+                mass_obj_list=self.mass_profile_pdf_list,
                 grid=self.grid,
                 low_limit=self.low_limit,
             )
