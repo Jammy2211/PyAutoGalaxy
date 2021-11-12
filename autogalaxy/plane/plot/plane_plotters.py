@@ -12,6 +12,7 @@ from autogalaxy.plot.mass_plotter import MassPlotter
 
 from autogalaxy.plane.plane import Plane
 
+
 class PlanePlotter(Plotter):
     def __init__(
         self,
@@ -46,7 +47,9 @@ class PlanePlotter(Plotter):
         )
 
     def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_light_mass_obj_from(light_mass_obj=self.plane, grid=self.grid)
+        return self.get_2d.via_light_mass_obj_from(
+            light_mass_obj=self.plane, grid=self.grid
+        )
 
     def figures_2d(
         self,

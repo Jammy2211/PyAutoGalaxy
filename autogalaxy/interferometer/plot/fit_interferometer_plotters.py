@@ -15,9 +15,7 @@ from autogalaxy.plot.mat_wrap.include import Include2D
 from autogalaxy.plane.plot.plane_plotters import PlanePlotter
 
 
-class FitInterferometerPlotter(
-    Plotter
-):
+class FitInterferometerPlotter(Plotter):
     def __init__(
         self,
         fit: FitInterferometer,

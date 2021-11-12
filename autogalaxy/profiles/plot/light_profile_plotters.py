@@ -48,7 +48,6 @@ class LightProfilePlotter(abstract_plotters.Plotter):
             light_obj=self.light_profile, grid=self.grid
         )
 
-
     def figures_1d(self, image: bool = False):
 
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
