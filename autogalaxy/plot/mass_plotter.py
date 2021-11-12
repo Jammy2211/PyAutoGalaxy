@@ -1,3 +1,5 @@
+from typing import Callable
+
 import autoarray as aa
 import autoarray.plot as aplt
 
@@ -13,7 +15,7 @@ class MassPlotter(Plotter):
         self,
         mass_obj,
         grid: aa.type.Grid2DLike,
-        get_visuals_2d,
+        get_visuals_2d: Callable,
         mat_plot_2d: MatPlot2D = MatPlot2D(),
         visuals_2d: Visuals2D = Visuals2D(),
         include_2d: Include2D = Include2D(),
@@ -40,7 +42,7 @@ class MassPlotter(Plotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.mass_obj.convergence_2d_from(grid=self.grid),
-                visuals_2d=self.get_visuals_2d,
+                visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title="Convergence", filename="convergence_2d"
                 ),
@@ -50,7 +52,7 @@ class MassPlotter(Plotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.mass_obj.potential_2d_from(grid=self.grid),
-                visuals_2d=self.get_visuals_2d,
+                visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(title="Potential", filename="potential_2d"),
             )
 
@@ -63,7 +65,7 @@ class MassPlotter(Plotter):
 
             self.mat_plot_2d.plot_array(
                 array=deflections_y,
-                visuals_2d=self.get_visuals_2d,
+                visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title="Deflections Y", filename="deflections_y_2d"
                 ),
@@ -78,7 +80,7 @@ class MassPlotter(Plotter):
 
             self.mat_plot_2d.plot_array(
                 array=deflections_x,
-                visuals_2d=self.get_visuals_2d,
+                visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title="deflections X", filename="deflections_x_2d"
                 ),
@@ -88,7 +90,7 @@ class MassPlotter(Plotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.mass_obj.magnification_2d_from(grid=self.grid),
-                visuals_2d=self.get_visuals_2d,
+                visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title="Magnification", filename="magnification_2d"
                 ),

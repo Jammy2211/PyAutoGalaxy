@@ -279,8 +279,8 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
 
         visuals_2d_via_fit = super().via_fit_from(fit=fit)
 
-        visuals_2d_via_light_lensing_obj = self.via_light_mass_obj(
+        visuals_2d_via_light_mass_obj = self.via_light_mass_obj(
             light_mass_obj=fit.plane, grid=fit.grid
         )
 
-        return visuals_2d_via_fit + visuals_2d_via_light_lensing_obj
+        return visuals_2d_via_fit + visuals_2d_via_light_mass_obj

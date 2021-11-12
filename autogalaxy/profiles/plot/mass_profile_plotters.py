@@ -55,11 +55,9 @@ class MassProfilePlotter(Plotter):
 
         self.figures_2d = self._mass_plotter.figures_2d
 
-    @property
     def get_visuals_1d(self) -> Visuals1D:
         return self.get_1d.via_mass_obj_from(mass_obj=self.mass_profile, grid=self.grid)
 
-    @property
     def get_visuals_2d(self) -> Visuals2D:
         return self.get_2d.via_mass_obj_from(mass_obj=self.mass_profile, grid=self.grid)
 
@@ -77,7 +75,7 @@ class MassProfilePlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
                 x=convergence_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d,
+                visuals_1d=self.get_visuals_1d(),
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
                     ylabel="Convergence ",
@@ -95,7 +93,7 @@ class MassProfilePlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
                 x=potential_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d,
+                visuals_1d=self.get_visuals_1d(),
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",
                     ylabel="Potential ",

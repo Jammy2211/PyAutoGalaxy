@@ -52,21 +52,18 @@ class GalaxyPlotter(Plotter):
         self._mass_plotter = MassPlotter(
             mass_obj=self.galaxy,
             grid=self.grid,
-            get_visuals_2d=self.get_visuals_2d,
+            get_visuals_2d=self.get_visuals_2d(),
             mat_plot_2d=self.mat_plot_2d,
             include_2d=self.include_2d,
             visuals_2d=self.visuals_2d,
         )
 
-    @property
     def get_visuals_1d_light(self) -> Visuals1D:
         return self.get_1d.via_light_obj_from(light_obj=self.galaxy, grid=self.grid)
 
-    @property
     def get_visuals_1d_mass(self) -> Visuals1D:
         return self.get_1d.via_mass_obj_from(mass_obj=self.galaxy, grid=self.grid)
 
-    @property
     def get_visuals_2d(self) -> Visuals2D:
         return self.get_2d.via_light_mass_obj_from(light_mass_obj=self.galaxy, grid=self.grid)
 
@@ -120,7 +117,7 @@ class GalaxyPlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=image_1d,
                 x=image_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d_light,
+                visuals_1d=self.get_visuals_1d_light(),
                 auto_labels=aplt.AutoLabels(
                     title="Image vs Radius",
                     ylabel="Image ",
@@ -138,7 +135,7 @@ class GalaxyPlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
                 x=convergence_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d_mass,
+                visuals_1d=self.get_visuals_1d_mass(),
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
                     ylabel="Convergence ",
@@ -156,7 +153,7 @@ class GalaxyPlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
                 x=potential_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d_mass,
+                visuals_1d=self.get_visuals_1d_mass(),
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",
                     ylabel="Potential ",
@@ -258,7 +255,7 @@ class GalaxyPlotter(Plotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.image_2d_from(grid=self.grid),
-                visuals_2d=self.get_visuals_2d,
+                visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
             )
 
@@ -274,7 +271,7 @@ class GalaxyPlotter(Plotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.contribution_map,
-                visuals_2d=self.get_visuals_2d,
+                visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title="Contribution Map", filename="contribution_map_2d"
                 ),
@@ -374,7 +371,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             visuals_2d=self.visuals_2d,
             include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.get_visuals_1d_light,
+            visuals_1d=self.get_visuals_1d_light(),
             include_1d=self.include_1d,
         )
 
@@ -398,7 +395,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             visuals_2d=self.visuals_2d,
             include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.get_visuals_1d_mass,
+            visuals_1d=self.get_visuals_1d_mass(),
             include_1d=self.include_1d,
         )
 

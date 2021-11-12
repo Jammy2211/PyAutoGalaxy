@@ -39,13 +39,12 @@ class PlanePlotter(Plotter):
         self._mass_plotter = MassPlotter(
             mass_obj=self.plane,
             grid=self.grid,
-            get_visuals_2d=self.get_visuals_2d,
+            get_visuals_2d=self.get_visuals_2d(),
             mat_plot_2d=self.mat_plot_2d,
             include_2d=self.include_2d,
             visuals_2d=self.visuals_2d,
         )
 
-    @property
     def get_visuals_2d(self) -> Visuals2D:
         return self.get_2d.via_light_mass_obj_from(light_mass_obj=self.plane, grid=self.grid)
 
@@ -68,7 +67,7 @@ class PlanePlotter(Plotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.plane.image_2d_from(grid=self.grid),
-                visuals_2d=self.get_visuals_2d,
+                visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
                 ),
@@ -78,7 +77,7 @@ class PlanePlotter(Plotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.plane.plane_image_2d_from(grid=self.grid).array,
-                visuals_2d=self.get_visuals_2d,
+                visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title=f"Plane Image{title_suffix}",
                     filename=f"plane_image{filename_suffix}",
@@ -89,7 +88,7 @@ class PlanePlotter(Plotter):
 
             self.mat_plot_2d.plot_grid(
                 grid=self.grid,
-                visuals_2d=self.get_visuals_2d,
+                visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title=f"Plane Grid2D{title_suffix}",
                     filename=f"plane_grid{filename_suffix}",
@@ -108,7 +107,7 @@ class PlanePlotter(Plotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.plane.contribution_map,
-                visuals_2d=self.get_visuals_2d,
+                visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title="Contribution Map", filename="contribution_map_2d"
                 ),
@@ -148,7 +147,7 @@ class PlanePlotter(Plotter):
         self.figures_2d()
         self.mat_plot_2d.plot_grid(
             grid=self.plane.traced_grid_from(grid=self.grid),
-            visuals_2d=self.get_visuals_2d,
+            visuals_2d=self.get_visuals_2d(),
             auto_labels=aplt.AutoLabels(),
         )
 

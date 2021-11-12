@@ -40,6 +40,15 @@ class LightProfilePlotter(abstract_plotters.Plotter):
             visuals_1d=visuals_1d,
         )
 
+    def get_visuals_1d(self) -> Visuals1D:
+        return self.get_1d.via_light_obj_from(light_obj=self.light_profile)
+
+    def get_visuals_2d(self) -> Visuals2D:
+        return self.get_2d.via_light_obj_from(
+            light_obj=self.light_profile, grid=self.grid
+        )
+
+
     def figures_1d(self, image: bool = False):
 
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
@@ -54,7 +63,7 @@ class LightProfilePlotter(abstract_plotters.Plotter):
             self.mat_plot_1d.plot_yx(
                 y=image_1d,
                 x=image_1d.grid_radial,
-                visuals_1d=self.get_1d.via_light_obj_from(light_obj=self.light_profile),
+                visuals_1d=self.get_visuals_1d(),
                 auto_labels=aplt.AutoLabels(
                     title="Image vs Radius",
                     ylabel="Image",
@@ -71,9 +80,7 @@ class LightProfilePlotter(abstract_plotters.Plotter):
 
             self.mat_plot_2d.plot_array(
                 array=self.light_profile.image_2d_from(grid=self.grid),
-                visuals_2d=self.get_2d.via_light_obj_from(
-                    light_obj=self.light_profile, grid=self.grid
-                ),
+                visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
             )
 
