@@ -152,7 +152,8 @@ def make_fit_quantity_7x7_array_2d():
 
     return ag.FitQuantity(
         dataset=make_dataset_quantity_7x7_array_2d(),
-        model_func=mp_0.convergence_2d_from,
+        plane=make_plane_7x7(),
+        func_str="convergence_2d_from",
     )
 
 

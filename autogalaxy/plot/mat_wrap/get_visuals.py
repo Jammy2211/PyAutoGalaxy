@@ -14,6 +14,7 @@ from autoarray.structures.grids.two_d.grid_2d_irregular import Grid2DIrregular
 
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
+from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfile
 
 
 class GetVisuals1D(get_visuals.GetVisuals1D):
@@ -185,9 +186,18 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
 
         visuals_via_mask = self.via_mask_from(mask=grid.mask)
 
-        light_profile_centres = self.get(
-            "light_profile_centres", Grid2DIrregular(grid=[light_obj.centre])
-        )
+        if isinstance(light_obj, LightProfile):
+
+            light_profile_centres = self.get(
+                "light_profile_centres", Grid2DIrregular(grid=[light_obj.centre])
+            )
+
+        else:
+
+            light_profile_centres = self.get(
+                "light_profile_centres",
+                light_obj.extract_attribute(cls=LightProfile, attr_name="centre"),
+            )
 
         return (
             self.visuals
@@ -220,9 +230,18 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
 
         visuals_via_mask = self.via_mask_from(mask=grid.mask)
 
-        mass_profile_centres = self.get(
-            "mass_profile_centres", Grid2DIrregular(grid=[mass_obj.centre])
-        )
+        if isinstance(mass_obj, MassProfile):
+
+            mass_profile_centres = self.get(
+                "mass_profile_centres", Grid2DIrregular(grid=[mass_obj.centre])
+            )
+
+        else:
+
+            mass_profile_centres = self.get(
+                "mass_profile_centres",
+                mass_obj.extract_attribute(cls=MassProfile, attr_name="centre"),
+            )
 
         critical_curves = self.get(
             "critical_curves",
