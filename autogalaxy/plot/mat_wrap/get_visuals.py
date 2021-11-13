@@ -2,7 +2,7 @@ from typing import List, Union
 
 import autoarray as aa
 
-from autoarray.plot.mat_wrap import get_visuals as gv.
+from autoarray.plot.mat_wrap import get_visuals as gv
 
 from autogalaxy.plot.mat_wrap.include import Include1D
 from autogalaxy.plot.mat_wrap.include import Include2D
