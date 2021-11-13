@@ -55,6 +55,11 @@ class GetVisuals1D(gv.GetVisuals1D):
 
         - half_light_radius: the radius containing 50% of the light objects total integrated luminosity.
 
+        Parameters
+        ----------
+        light_obj
+            The light object (e.g. a `LightProfile`, `Galaxy`) whose attributes are extracted for plotting.
+
         Returns
         -------
         Visuals1D
@@ -89,6 +94,15 @@ class GetVisuals1D(gv.GetVisuals1D):
         From a light object lust the following 1D attributes can be extracted for plotting:
 
         - half_light_radius: the radius containing 50% of the light objects total integrated luminosity.
+
+        Parameters
+        ----------
+        light_obj_list
+            The list of light objects (e.g. a `LightProfile`, `Galaxy`) whose mean attributes and error estimates are
+            extracted for plotting.
+        low_limit
+            The value of sigma to which errors are estimated (e.g. 1.0 will estimate errors at the ~0.32 and ~0.68
+            intervals of the probability distribution.
 
         Returns
         -------
@@ -142,6 +156,11 @@ class GetVisuals1D(gv.GetVisuals1D):
 
         - einstein_radius: the einstein radius (e.g. area within critical curve) of the mass object.
 
+        Parameters
+        ----------
+        mass_obj
+            The mass object (e.g. a `MassProfile`, `Galaxy`) whose attributes are extracted for plotting.
+
         Returns
         -------
         Visuals1D
@@ -180,6 +199,15 @@ class GetVisuals1D(gv.GetVisuals1D):
         From a mass object lust the following 1D attributes can be extracted for plotting:
 
         - half_mass_radius: the radius containing 50% of the mass objects total integrated luminosity.
+
+        Parameters
+        ----------
+        mass_obj_list
+            The list of mass objects (e.g. a `MassProfile`, `Galaxy`) whose mean attributes and error estimates are
+            extracted for plotting.
+        low_limit
+            The value of sigma to which errors are estimated (e.g. 1.0 will estimate errors at the ~0.32 and ~0.68
+            intervals of the probability distribution.
 
         Returns
         -------
@@ -253,6 +281,13 @@ class GetVisuals2D(gv.GetVisuals2D):
         - border: the border of this mask.
         - light profile centres: the (y,x) centre of every `LightProfile` in the object.
 
+        Parameters
+        ----------
+        light_obj
+            The light object (e.g. a `LightProfile`, `Galaxy`, `Plane`) whose attributes are extracted for plotting.
+        grid
+            The 2D grid of (y,x) coordinates used to plot the light object's quantities in 2D.
+
         Returns
         -------
         vis.Visuals2D
@@ -297,6 +332,13 @@ class GetVisuals2D(gv.GetVisuals2D):
         - border: the border of this mask.
         - mass profile centres: the (y,x) centre of every `MassProfile` in the mass object.
         - critical curves: the critical curves of the mass object.
+
+        Parameters
+        ----------
+        mass_obj
+            The mass object (e.g. a `MassProfile`, `Galaxy`, `Plane`) whose attributes are extracted for plotting.
+        grid
+            The 2D grid of (y,x) coordinates used to plot the mass object's quantities in 2D.
 
         Returns
         -------
@@ -353,7 +395,9 @@ class GetVisuals2D(gv.GetVisuals2D):
         Parameters
         ----------
         light_mass_obj
-            The object which has `LightProfile` objects and / or `MassProfile` objects.
+            The light and mass object (e.g. a `Galaxy`, `Plane`) whose attributes are extracted for plotting.
+        grid
+            The 2D grid of (y,x) coordinates used to plot the light and mass object's quantities in 2D.
 
         Returns
         -------
