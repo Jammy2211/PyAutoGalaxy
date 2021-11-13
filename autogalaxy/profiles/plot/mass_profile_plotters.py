@@ -31,7 +31,38 @@ class MassProfilePlotter(Plotter):
         visuals_2d: Visuals2D = Visuals2D(),
         include_2d: Include2D = Include2D(),
     ):
+        """
+        Plots the attributes of `MassProfile` objects using the matplotlib methods `plot()` and `imshow()` and many 
+        other matplotlib functions which customize the plot's appearance.
 
+        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default, 
+        the settings passed to every matplotlib function called are those specified in 
+        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to 
+        customize the figure's appearance.
+
+        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be 
+        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in 
+        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+
+        Parameters
+        ----------
+        mass_profile
+            The mass profile the plotter plots.
+        grid
+            The 2D (y,x) grid of coordinates used to evaluate the mass profile quantities that are plotted.
+        mat_plot_1d
+            Contains objects which wrap the matplotlib function calls that make 1D plots.
+        visuals_1d
+            Contains 1D visuals that can be overlaid on 1D plots.
+        include_1d
+            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 1D plots.
+        mat_plot_2d
+            Contains objects which wrap the matplotlib function calls that make 2D plots.
+        visuals_2d
+            Contains 2D visuals that can be overlaid on 2D plots.
+        include_2d
+            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 2D plots.
+        """
         super().__init__(
             mat_plot_2d=mat_plot_2d,
             include_2d=include_2d,
@@ -119,7 +150,44 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         sigma: Optional[float] = 3.0,
         radial_grid_shape_slim: int = 50,
     ):
+        """
+        Plots the attributes of a list of `MassProfile` objects using the matplotlib methods `plot()` and `imshow()` 
+        and many other matplotlib functions which customize the plot's appearance.
 
+        This class uses a list of mass profiles to compute a mean value with errors of each attribute. This is an 
+        effective way to visualize a 1D profile given the probability density function of a model-fit.
+
+        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default, 
+        the settings passed to every matplotlib function called are those specified in 
+        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to 
+        customize the figure's appearance.
+
+        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be 
+        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in 
+        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+
+        Parameters
+        ----------
+        mass_profile_pdf_list
+            The list of mass profiles whose mean and error values the plotter plots.
+        grid
+            The 2D (y,x) grid of coordinates used to evaluate the mass profile quantities that are plotted.
+        mat_plot_1d
+            Contains objects which wrap the matplotlib function calls that make 1D plots.
+        visuals_1d
+            Contains 1D visuals that can be overlaid on 1D plots.
+        include_1d
+            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 1D plots.
+        mat_plot_2d
+            Contains objects which wrap the matplotlib function calls that make 2D plots.
+        visuals_2d
+            Contains 2D visuals that can be overlaid on 2D plots.
+        include_2d
+            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 2D plots.
+        sigma
+            The confidence interval in terms of a sigma value at which the errors are computed (e.g. a value of 
+            sigma=3.0 uses confidence intevals at ~0.01 and 0.99 the PDF).            
+        """
         super().__init__(
             mass_profile=None,
             grid=grid,

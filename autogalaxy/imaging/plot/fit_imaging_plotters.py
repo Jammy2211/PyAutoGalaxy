@@ -21,7 +21,29 @@ class FitImagingPlotter(Plotter):
         visuals_2d: Visuals2D = Visuals2D(),
         include_2d: Include2D = Include2D(),
     ):
+        """
+        Plots the attributes of `FitImaging` objects using the matplotlib method `imshow()` and many other matplotlib
+        functions which customize the plot's appearance.
 
+        The `mat_plot_2d` attribute wraps matplotlib function calls to make the figure. By default, the settings
+        passed to every matplotlib function called are those specified in the `config/visualize/mat_wrap/*.ini` files,
+        but a user can manually input values into `MatPlot2d` to customize the figure's appearance.
+
+        Overlaid on the figure are visuals, contained in the `Visuals2D` object. Attributes may be extracted from
+        the `FitImaging` and plotted via the visuals object, if the corresponding entry is `True` in the `Include2D`
+        object or the `config/visualize/include.ini` file.
+
+        Parameters
+        ----------
+        fit
+            The fit to an imaging dataset the plotter plots.
+        mat_plot_2d
+            Contains objects which wrap the matplotlib function calls that make the plot.
+        visuals_2d
+            Contains visuals that can be overlaid on the plot.
+        include_2d
+            Specifies which attributes of the `FitImaging` are extracted and plotted as visuals.
+        """
         super().__init__(
             mat_plot_2d=mat_plot_2d, include_2d=include_2d, visuals_2d=visuals_2d
         )

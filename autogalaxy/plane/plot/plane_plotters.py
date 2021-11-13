@@ -25,6 +25,38 @@ class PlanePlotter(Plotter):
         visuals_2d: Visuals2D = Visuals2D(),
         include_2d: Include2D = Include2D(),
     ):
+        """
+        Plots the attributes of `Plane` objects using the matplotlib methods `plot()` and `imshow()` and many 
+        other matplotlib functions which customize the plot's appearance.
+
+        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default, 
+        the settings passed to every matplotlib function called are those specified in 
+        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to 
+        customize the figure's appearance.
+
+        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be 
+        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in 
+        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+
+        Parameters
+        ----------
+        plane
+            The plane the plotter plots.
+        grid
+            The 2D (y,x) grid of coordinates used to evaluate the plane's light and mass quantities that are plotted.
+        mat_plot_1d
+            Contains objects which wrap the matplotlib function calls that make 1D plots.
+        visuals_1d
+            Contains 1D visuals that can be overlaid on 1D plots.
+        include_1d
+            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 1D plots.
+        mat_plot_2d
+            Contains objects which wrap the matplotlib function calls that make 2D plots.
+        visuals_2d
+            Contains 2D visuals that can be overlaid on 2D plots.
+        include_2d
+            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 2D plots.
+        """
         super().__init__(
             mat_plot_2d=mat_plot_2d,
             include_2d=include_2d,
