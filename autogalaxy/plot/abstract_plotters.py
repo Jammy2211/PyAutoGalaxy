@@ -2,9 +2,6 @@ from autoarray.plot.wrap.wrap_base import set_backend
 
 set_backend()
 
-import matplotlib.pyplot as plt
-from typing import Optional, Tuple
-
 from autoarray.plot.abstract_plotters import AbstractPlotter
 
 from autogalaxy.plot.mat_wrap.get_visuals import GetVisuals1D

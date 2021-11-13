@@ -40,7 +40,7 @@ class PlanePlotter(Plotter):
         self._mass_plotter = MassPlotter(
             mass_obj=self.plane,
             grid=self.grid,
-            get_visuals_2d=self.get_visuals_2d(),
+            get_visuals_2d=self.get_visuals_2d,
             mat_plot_2d=self.mat_plot_2d,
             include_2d=self.include_2d,
             visuals_2d=self.visuals_2d,
