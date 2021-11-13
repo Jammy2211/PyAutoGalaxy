@@ -2,7 +2,7 @@ from typing import List, Union
 
 import autoarray as aa
 
-from autoarray.plot.mat_wrap import get_visuals
+from autoarray.plot.mat_wrap import get_visuals as gv.
 
 from autogalaxy.plot.mat_wrap.include import Include1D
 from autogalaxy.plot.mat_wrap.include import Include2D
@@ -21,9 +21,26 @@ from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
 
 
-class GetVisuals1D(get_visuals.GetVisuals1D):
+class GetVisuals1D(gv.GetVisuals1D):
     def __init__(self, include: Include1D, visuals: Visuals1D):
+        """
+        Class which gets 1D attributes and adds them to a `Visuals1D` objects, such that they are plotted on 1D figures.
 
+        For a visual to be extracted and added for plotting, it must have a `True` value in its corresponding entry in
+        the `Include1D` object. If this entry is `False`, the `GetVisuals1D.get` method returns a None and the attribute
+        is omitted from the plot.
+
+        The `GetVisuals1D` class adds new visuals to a pre-existing `Visuals1D` object that is passed to its `__init__`
+        method. This only adds a new entry if the visual are not already in this object.
+
+        Parameters
+        ----------
+        include
+            Sets which 1D visuals are included on the figure that is to be plotted (only entries which are `True`
+            are extracted via the `GetVisuals1D` object).
+        visuals
+            The pre-existing visuals of the plotter which new visuals are added too via the `GetVisuals1D` class.
+        """
         super().__init__(include=include, visuals=visuals)
 
     def via_light_obj_from(self, light_obj: Union[LightProfile, Galaxy]) -> Visuals1D:
@@ -197,9 +214,26 @@ class GetVisuals1D(get_visuals.GetVisuals1D):
         )
 
 
-class GetVisuals2D(get_visuals.GetVisuals2D):
+class GetVisuals2D(gv.GetVisuals2D):
     def __init__(self, include: Include2D, visuals: Visuals2D):
+        """
+        Class which gets 2D attributes and adds them to a `Visuals2D` objects, such that they are plotted on 2D figures.
 
+        For a visual to be extracted and added for plotting, it must have a `True` value in its corresponding entry in
+        the `Include2D` object. If this entry is `False`, the `GetVisuals2D.get` method returns a None and the
+        attribute is omitted from the plot.
+
+        The `GetVisuals2D` class adds new visuals to a pre-existing `Visuals2D` object that is passed to
+        its `__init__` method. This only adds a new entry if the visual are not already in this object.
+
+        Parameters
+        ----------
+        include
+            Sets which 2D visuals are included on the figure that is to be plotted (only entries which are `True`
+            are extracted via the `GetVisuals2D` object).
+        visuals
+            The pre-existing visuals of the plotter which new visuals are added too via the `GetVisuals2D` class.
+        """
         super().__init__(include=include, visuals=visuals)
 
     def via_light_obj_from(
