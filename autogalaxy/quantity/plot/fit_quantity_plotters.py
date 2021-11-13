@@ -37,7 +37,7 @@ class FitQuantityPlotter(Plotter):
         self.subplot = self._fit_imaging_meta_plotter.subplot
 
     def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_fit_from(fit=self.fit)
+        return self.get_2d.via_fit_imaging_from(fit=self.fit)
 
     def subplot_fit_quantity(self):
         return self.subplot(

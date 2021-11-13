@@ -1,5 +1,7 @@
 from typing import List, Union
 
+import autoarray as aa
+
 from autoarray.plot.mat_wrap import get_visuals
 
 from autogalaxy.plot.mat_wrap.include import Include1D
@@ -15,6 +17,8 @@ from autoarray.structures.grids.two_d.grid_2d_irregular import Grid2DIrregular
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfile
+from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.plane.plane import Plane
 
 
 class GetVisuals1D(get_visuals.GetVisuals1D):
@@ -22,20 +26,22 @@ class GetVisuals1D(get_visuals.GetVisuals1D):
 
         super().__init__(include=include, visuals=visuals)
 
-    def via_light_obj_from(self, light_obj) -> Visuals1D:
+    def via_light_obj_from(self, light_obj: Union[LightProfile, Galaxy]) -> Visuals1D:
         """
-        Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals1D` object.
+        From an object with light profiles (e.g. a `LightProfile`, `Galaxy`) get its attributes that can be plotted 
+        and return them  in a `Visuals1D` object.
 
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
+        Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted
+        for plotting.
 
-        From a `LightProfilePlotter` the following 1D attributes can be extracted for plotting:
+        From a light object the following 1D attributes can be extracted for plotting:
 
-        - half_light_radius: the radius containing 50% of the `LightProfile`'s total integrated luminosity.
+        - half_light_radius: the radius containing 50% of the light objects total integrated luminosity.
 
         Returns
         -------
-        vis.Visuals1D
-            The collection of attributes that can be plotted by a `Plotter1D` object.
+        Visuals1D
+            The collection of attributes that can be plotted by a `Plotter` object.
         """
 
         if light_obj is None:
@@ -50,21 +56,27 @@ class GetVisuals1D(get_visuals.GetVisuals1D):
         )
 
     def via_light_obj_list_from(
-        self, light_obj_list: List[LightProfile], low_limit: float
+        self, light_obj_list: Union[List[LightProfile], List[Galaxy]], low_limit: float
     ) -> Visuals1D:
         """
-        Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals1D` object.
+        From a list of objects with light profiles (e.g. a `LightProfile`, `Galaxy`) get its attributes that can be 
+        plotted and return them  in a `Visuals1D` object.
 
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
+        Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted
+        for plotting.
+        
+        This function iterates over all light objects in the list and averages over each attribute's values to estimate 
+        the mean value of the attribute and its error, both of which can then be plotted. This is typically used
+        to plot 1D errors on a quantity that are estimated via a Probability Density Function.
 
-        From a `LightProfilePlotter` the following 1D attributes can be extracted for plotting:
+        From a light object lust the following 1D attributes can be extracted for plotting:
 
-        - half_light_radius: the radius containing 50% of the `LightProfile`'s total integrated luminosity.
+        - half_light_radius: the radius containing 50% of the light objects total integrated luminosity.
 
         Returns
         -------
-        vis.Visuals1D
-            The collection of attributes that can be plotted by a `Plotter1D` object.
+        Visuals1D
+            The mean value and errors of each attribute that are plotted in 1D by a `Plotter` object.
         """
 
         if self.include.half_light_radius:
@@ -99,20 +111,24 @@ class GetVisuals1D(get_visuals.GetVisuals1D):
             half_light_radius_errors=half_light_radius_errors,
         )
 
-    def via_mass_obj_from(self, mass_obj, grid) -> Visuals1D:
+    def via_mass_obj_from(
+        self, mass_obj: Union[MassProfile, Galaxy], grid: aa.type.Grid2DLike
+    ) -> Visuals1D:
         """
-        Extract from the `LensingObj` attributes that can be plotted and return them in a `Visuals1D` object.
+        From an object with mass profiles (e.g. a `MassProfile`, `Galaxy`) get its attributes that can be plotted 
+        and return them  in a `Visuals1D` object.
 
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
+        Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted
+        for plotting.
 
-        From a `LensingObjProfilePlotter` the following 1D attributes can be extracted for plotting:
+        From a mass object the following 1D attributes can be extracted for plotting:
 
-        - einstein_radius: the Einstein radius of the `MassProfile`.
+        - einstein_radius: the einstein radius (e.g. area within critical curve) of the mass object.
 
         Returns
         -------
-        vis.Visuals1D
-            The collection of attributes that can be plotted by a `Plotter1D` object.
+        Visuals1D
+            The collection of attributes that can be plotted by a `Plotter` object.
         """
 
         if mass_obj is None:
@@ -128,21 +144,30 @@ class GetVisuals1D(get_visuals.GetVisuals1D):
         return self.visuals + self.visuals.__class__(einstein_radius=einstein_radius)
 
     def via_mass_obj_list_from(
-        self, mass_obj_list, grid, low_limit: float
+        self,
+        mass_obj_list: Union[List[MassProfile], List[Galaxy]],
+        grid: aa.type.Grid2DLike,
+        low_limit: float,
     ) -> Visuals1D:
         """
-        Extracts from the `MassProfile` attributes that can be plotted and return them in a `Visuals1D` object.
+        From a list of objects with mass profiles (e.g. a `MassProfile`, `Galaxy`) get its attributes that can be 
+        plotted and return them  in a `Visuals1D` object.
 
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
+        Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted
+        for plotting.
 
-        From a `MassProfilePlotter` the following 1D attributes can be extracted for plotting:
+        This function iterates over all mass objects in the list and averages over each attribute's values to estimate 
+        the mean value of the attribute and its error, both of which can then be plotted. This is typically used
+        to plot 1D errors on a quantity that are estimated via a Probability Density Function.
 
-        - einstein_radius: the radius containing 50% of the `MassProfile`'s total integrated luminosity.
+        From a mass object lust the following 1D attributes can be extracted for plotting:
+
+        - half_mass_radius: the radius containing 50% of the mass objects total integrated luminosity.
 
         Returns
         -------
-        vis.Visuals1D
-            The collection of attributes that can be plotted by a `Plotter1D` object.
+        Visuals1D
+            The mean value and errors of each attribute that are plotted in 1D by a `Plotter` object.
         """
 
         if self.include.einstein_radius:
@@ -177,22 +202,27 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
 
         super().__init__(include=include, visuals=visuals)
 
-    def via_light_obj_from(self, light_obj: LightProfile, grid) -> Visuals2D:
+    def via_light_obj_from(
+        self, light_obj: Union[LightProfile, Galaxy, Plane], grid
+    ) -> Visuals2D:
         """
-        Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals2D` object.
+        From an object with light profiles (e.g. a `LightProfile`, `Galaxy`, `Plane`) get its attributes that can be 
+        plotted and return them  in a `Visuals2D` object.
 
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
+        Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted
+        for plotting.
 
-        From a `LightProfilePlotter` the following 2D attributes can be extracted for plotting:
+        From a light object the following 2D attributes can be extracted for plotting:
 
-        - origin: the (y,x) origin of the structure's coordinate system.
-        - mask: the mask of the structure.
-        - border: the border of the structure's mask.
+        - origin: the (y,x) origin of the coordinate system used to plot the light object's quantities in 2D.
+        - mask: the mask of the grid used to plot the light object's quantities in 2D.
+        - border: the border of this mask.
+        - light profile centres: the (y,x) centre of every `LightProfile` in the object.
 
         Returns
         -------
         vis.Visuals2D
-            The collection of attributes that can be plotted by a `Plotter2D` object.
+            The collection of attributes that can be plotted by a `Plotter` object.
         """
 
         visuals_via_mask = self.via_mask_from(mask=grid.mask)
@@ -216,27 +246,28 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
             + self.visuals.__class__(light_profile_centres=light_profile_centres)
         )
 
-    def via_mass_obj_from(self, mass_obj, grid) -> Visuals2D:
+    def via_mass_obj_from(
+        self, mass_obj: Union[MassProfile, Galaxy, Plane], grid: aa.type.Grid2DLike
+    ) -> Visuals2D:
         """
-        Extract from the `LensingObj` attributes that can be plotted and return them in a `Visuals` object.
+        From an object with mass profiles (e.g. a `MassProfile`, `Galaxy`, `Plane`) get its attributes that can be 
+        plotted and return them  in a `Visuals2D` object.
 
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
+        Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted
+        for plotting.
 
-        From an `AbstractStructure` the following attributes can be extracted for plotting:
+        From a mass object the following 2D attributes can be extracted for plotting:
 
-        - origin: the (y,x) origin of the structure's coordinate system.
-        - mask: the mask of the structure.
-        - border: the border of the structure's mask.
-
-        Parameters
-        ----------
-        structure : abstract_structure.AbstractStructure
-            The structure whose attributes are extracted for plotting.
+        - origin: the (y,x) origin of the coordinate system used to plot the mass object's quantities in 2D.
+        - mask: the mask of the grid used to plot the mass object's quantities in 2D.
+        - border: the border of this mask.
+        - mass profile centres: the (y,x) centre of every `MassProfile` in the mass object.
+        - critical curves: the critical curves of the mass object.
 
         Returns
         -------
         vis.Visuals2D
-            The collection of attributes that can be plotted by a `Plotter2D` object.
+            The collection of attributes that can be plotted by a `Plotter` object.
         """
 
         visuals_via_mask = self.via_mask_from(mask=grid.mask)
@@ -269,19 +300,21 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
             )
         )
 
-    def via_light_mass_obj_from(self, light_mass_obj, grid) -> Visuals2D:
+    def via_light_mass_obj_from(
+        self, light_mass_obj: Union[Galaxy, Plane], grid
+    ) -> Visuals2D:
         """
-        From an object that contains both light and lensing attributes (e.g. a `Galaxy`, `Plane`), gets the
+        From an object that contains both light profiles and / or mass profiles (e.g. a `Galaxy`, `Plane`), get the
         attributes that can be plotted and returns them in a `Visuals2D` object.
 
         Only attributes with `True` entries in the `Include` object are extracted.
 
         From a light and lensing object the following attributes can be extracted for plotting:
 
-        - mask: the mask of the grid used to plot the 2D quantities of the object.
+        - origin: the (y,x) origin of the coordinate system used to plot the light object's quantities in 2D.
         - light profile centres: the (y,x) centre of every `LightProfile` in the object.
         - mass profile centres: the (y,x) centre of every `MassProfile` in the object.
-        - critcal curves: the critical curves of all mass profile combined.
+        - critical curves: the critical curves of all mass profile combined.
 
         Parameters
         ----------
@@ -291,7 +324,7 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
         Returns
         -------
         vis.Visuals2D
-            A collection of attributes that can be plotted by a `Plotter2D` object.
+            A collection of attributes that can be plotted by a `Plotter` object.
         """
 
         visuals_2d = self.via_mass_obj_from(mass_obj=light_mass_obj, grid=grid)
@@ -305,9 +338,33 @@ class GetVisuals2D(get_visuals.GetVisuals2D):
             + self.via_light_obj_from(light_obj=light_mass_obj, grid=grid)
         )
 
-    def via_fit_from(self, fit: FitImaging) -> Visuals2D:
+    def via_fit_imaging_from(self, fit: FitImaging) -> Visuals2D:
+        """
+        From a `FitImaging` get its attributes that can be plotted and return them in a `Visuals2D` object.
 
-        visuals_2d_via_fit = super().via_fit_from(fit=fit)
+        Only attributes not already in `self.visuals` and with `True` entries in the `Include2D` object are extracted
+        for plotting.
+
+        From a `FitImaging` the following attributes can be extracted for plotting:
+
+        - origin: the (y,x) origin of the 2D coordinate system.
+        - mask: the 2D mask.
+        - border: the border of the 2D mask, which are all of the mask's exterior edge pixels.
+        - light profile centres: the (y,x) centre of every `LightProfile` in the object.
+        - mass profile centres: the (y,x) centre of every `MassProfile` in the object.
+        - critical curves: the critical curves of all mass profile combined.
+
+        Parameters
+        ----------
+        fit
+            The fit imaging object whose attributes are extracted for plotting.
+
+        Returns
+        -------
+        Visuals2D
+            The collection of attributes that are plotted by a `Plotter` object.
+        """
+        visuals_2d_via_fit = super().via_fit_imaging_from(fit=fit)
 
         visuals_2d_via_light_mass_obj = self.via_light_mass_obj_from(
             light_mass_obj=fit.plane, grid=fit.grid

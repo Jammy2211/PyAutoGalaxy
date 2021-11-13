@@ -7,7 +7,10 @@ from autogalaxy.plot.mat_wrap.visuals import Visuals2D
 
 class VisualizerQuantity(Visualizer):
     def visualize_fit_quantity(
-        self, fit: FitQuantity, visuals_2d: Visuals2D = Visuals2D()
+        self,
+        fit: FitQuantity,
+        visuals_2d: Visuals2D = Visuals2D(),
+        fit_quanaity_plotter_cls=FitQuantityPlotter,
     ):
         """
         Visualizes a `FitQuantity` object, which fits a quantity of a light or mass profile (e.g. an image, potential)
@@ -37,7 +40,7 @@ class VisualizerQuantity(Visualizer):
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="fit_quantity")
 
-        fit_quantity_plotter = FitQuantityPlotter(
+        fit_quantity_plotter = fit_quanaity_plotter_cls(
             fit=fit,
             mat_plot_2d=mat_plot_2d,
             visuals_2d=visuals_2d,

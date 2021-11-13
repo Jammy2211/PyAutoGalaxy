@@ -195,7 +195,7 @@ def make_fit_imaging_7x7():
 
 
 def make_fit_imaging_x2_galaxy_7x7():
-    plane = ag.Plane(galaxies=[make_gal_x1_lp(), make_gal_x1_lp()])
+    plane = ag.Plane(galaxies=[make_gal_x1_lp(), make_gal_x1_lp(), make_gal_x1_mp()])
 
     return ag.FitImaging(dataset=make_masked_imaging_7x7(), plane=plane)
 
