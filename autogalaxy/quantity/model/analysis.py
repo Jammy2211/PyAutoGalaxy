@@ -12,7 +12,9 @@ from autogalaxy import exc
 
 
 class AnalysisQuantity(Analysis):
-    def __init__(self, dataset: DatasetQuantity, cosmology=cosmo.Planck15):
+    def __init__(
+        self, dataset: DatasetQuantity, func_str: str, cosmology=cosmo.Planck15
+    ):
         """
         Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.
 
@@ -25,6 +27,10 @@ class AnalysisQuantity(Analysis):
         convergence, potential or deflection angles, to another model for that quantity. For example, one could find
         the `EllPowerLaw` mass profile model that best fits the deflection angles of an `EllNFW` mass profile.
 
+        The `func_str` input defines what quantity is fitted, it corresponds to the function of the model `Plane`
+        objects that is called to create the model quantity. For example, if `func_str="convergence_2d_from"`, the
+        convergence is computed from each model `Plane`.
+
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. the 
         Cosmology used for the analysis).
 
@@ -32,12 +38,16 @@ class AnalysisQuantity(Analysis):
         ----------
         dataset
             The `DatasetQuantity` dataset that the model is fitted too.
+        func_str
+            A string giving the name of the method of the input `Plane` used to compute the quantity that fits
+            the dataset.
         cosmology
             The Cosmology assumed for this analysis.
         """
         super().__init__(cosmology=cosmology)
 
         self.dataset = dataset
+        self.func_str = func_str
 
     def log_likelihood_function(self, instance: af.ModelInstance) -> float:
         """
@@ -98,9 +108,7 @@ class AnalysisQuantity(Analysis):
 
         plane = self.plane_for_instance(instance=instance)
 
-        return FitQuantity(
-            dataset=self.dataset, plane=plane, func_str="convergence_2d_from"
-        )
+        return FitQuantity(dataset=self.dataset, plane=plane, func_str=self.func_str)
 
     def visualize(
         self,
