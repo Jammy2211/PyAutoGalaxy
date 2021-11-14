@@ -35,12 +35,6 @@ class FitQuantityPlotter(Plotter):
         ----------
         fit
             The fit to an interferometer dataset the plotter plots.
-        mat_plot_1d
-            Contains objects which wrap the matplotlib function calls that make 1D plots.
-        visuals_1d
-            Contains 1D visuals that can be overlaid on 1D plots.
-        include_1d
-            Specifies which attributes of the `FitQuantity` are extracted and plotted as visuals for 1D plots.
         mat_plot_2d
             Contains objects which wrap the matplotlib function calls that make 2D plots.
         visuals_2d

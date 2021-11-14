@@ -2,7 +2,6 @@ from typing import Dict, List
 
 import autoarray as aa
 import autoarray.plot as aplt
-from autoarray.plot import abstract_plotters
 
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plot.abstract_plotters import Plotter

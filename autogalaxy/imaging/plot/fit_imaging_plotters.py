@@ -101,7 +101,6 @@ class FitImagingPlotter(Plotter):
         -------
         list
             A list of galaxy indexes corresponding to galaxies in the plane.
-
         """
         if galaxy_index is None:
             return list(range(len(self.fit.galaxies)))
@@ -118,7 +117,7 @@ class FitImagingPlotter(Plotter):
         plotter's 2D grid object.
 
         These images subtract or omit the contribution of other galaxies in the plane, such that plots showing
-        each individual galaxy can be made.
+        each individual galaxy are made.
 
         The API is such that every plottable attribute of the `Galaxy` object is an input parameter of type bool of
         the function, which if switched to `True` means that it is plotted.
@@ -174,13 +173,10 @@ class FitImagingPlotter(Plotter):
         computed via the plotter's 2D grid object.
 
         These images subtract or omit the contribution of other galaxies in the plane, such that plots showing
-        each individual galaxy can be made.
+        each individual galaxy are made.
 
         The subplot plots the subtracted image and model image of each galaxy, where are described in the
         `figures_2d_of_galaxies` function.
-
-        The API is such that every plottable attribute of the `Galaxy` object is an input parameter of type bool of
-        the function, which if switched to `True` means that it is plotted.
 
         Parameters
         ----------

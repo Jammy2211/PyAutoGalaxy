@@ -35,7 +35,9 @@ class FitQuantity(aa.FitDataset):
         self.plane = plane
         self.quantity_str = func_str
 
-        model_data = plane.convergence_2d_from(grid=dataset.grid)
+        func = getattr(plane, func_str)
+
+        model_data = func(grid=dataset.grid)
 
         fit = aa.FitData(
             data=dataset.data,
