@@ -5,12 +5,13 @@ import autoarray.plot as aplt
 from autoarray.plot import abstract_plotters
 
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
 from autogalaxy.plot.mat_wrap.visuals import Visuals2D
 from autogalaxy.plot.mat_wrap.include import Include2D
 
 
-class HyperPlotter(abstract_plotters.AbstractPlotter):
+class HyperPlotter(Plotter):
     def __init__(
         self,
         mat_plot_2d: MatPlot2D = MatPlot2D(),
@@ -21,48 +22,22 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
             mat_plot_2d=mat_plot_2d, include_2d=include_2d, visuals_2d=visuals_2d
         )
 
-    @property
-    def visuals_with_include_2d(self) -> Visuals2D:
-        """
-        Extracts from a `Structure` attributes that can be plotted and return them in a `Visuals` object.
-
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
-
-        From an `AbstractStructure` the following attributes can be extracted for plotting:
-
-        - origin: the (y,x) origin of the structure's coordinate system.
-        - mask: the mask of the structure.
-        - border: the border of the structure's mask.
-
-        Parameters
-        ----------
-        structure : abstract_structure.AbstractStructure
-            The structure whose attributes are extracted for plotting.
-
-        Returns
-        -------
-        vis.Visuals2D
-            The collection of attributes that can be plotted by a `Plotter2D` object.
-        """
+    def get_visuals_2d(self) -> Visuals2D:
         return self.visuals_2d
 
     def figure_hyper_model_image(self, hyper_model_image: aa.Array2D):
         """
-        Plot the image of a hyper_galaxies galaxy image.
-
-        Set *autogalaxy.datas.arrays.mat_plot_2d.mat_plot_2d* for a description of all input parameters not described below.
+        Plot the hyper model image of a hyper galaxy.
 
         Parameters
         -----------
-        hyper_galaxy_image : datas.imaging.datas.Imaging
-            The hyper_galaxies galaxy image.
-        origin : True
-            If true, the origin of the datas's coordinate system is plotted as a 'x'.
+        hyper_model_image
+            The hyper model image that is plotted.
         """
 
         self.mat_plot_2d.plot_array(
             array=hyper_model_image,
-            visuals_2d=self.visuals_with_include_2d,
+            visuals_2d=self.get_visuals_2d(),
             auto_labels=aplt.AutoLabels(
                 title="Hyper Model Image", filename="hyper_model_image"
             ),
@@ -70,40 +45,33 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
 
     def figure_hyper_galaxy_image(self, galaxy_image: aa.Array2D):
         """
-        Plot the image of a hyper_galaxies galaxy image.
-
-        Set *autogalaxy.datas.arrays.mat_plot_2d.mat_plot_2d* for a description of all input parameters not described below.
+        Plot the hyper galaxy image of a hyper galaxy.
 
         Parameters
         -----------
-        hyper_galaxy_image : datas.imaging.datas.Imaging
-            The hyper_galaxies galaxy image.
-        origin : True
-            If true, the origin of the datas's coordinate system is plotted as a 'x'.
+        galaxy_image
+            The hyper galaxy image that is plotted.
         """
         self.mat_plot_2d.plot_array(
             array=galaxy_image,
-            visuals_2d=self.visuals_with_include_2d,
+            visuals_2d=self.get_visuals_2d(),
             auto_labels=aplt.AutoLabels(
                 title="Hyper Galaxy Image", filename="hyper_galaxy_image"
             ),
         )
 
-    def figure_contribution_map(self, contribution_map_in: aa.Array2D):
-        """Plot the summed contribution maps of a hyper_galaxies-fit.
-
-        Set *autogalaxy.datas.arrays.mat_plot_2d.mat_plot_2d* for a description of all input parameters not described below.
+    def figure_contribution_map(self, contribution_map: aa.Array2D):
+        """
+        Plot the contribution map of a hyper galaxy.
 
         Parameters
         -----------
-        fit : datas.fitting.fitting.AbstractLensHyperFit
-            The hyper_galaxies-fit to the datas, which includes a list of every model image, residual_map, chi-squareds, etc.
-        image_index : int
-            The index of the datas in the datas-set of which the contribution_maps are plotted.
+        contribution_map
+            The contribution map that is plotted.
         """
         self.mat_plot_2d.plot_array(
-            array=contribution_map_in,
-            visuals_2d=self.visuals_with_include_2d,
+            array=contribution_map,
+            visuals_2d=self.get_visuals_2d(),
             auto_labels=aplt.AutoLabels(
                 title="Contribution Map", filename="contribution_map_2d"
             ),
@@ -112,7 +80,17 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
     def subplot_hyper_images_of_galaxies(
         self, hyper_galaxy_image_path_dict: Dict[Galaxy, aa.Array2D]
     ):
+        """
+        Plots a subplot of the hyper galaxy image of all hyper galaxies.
 
+        This uses the `hyper_galaxy_image_path_dict` which is a dictionary mapping each galaxy to its corresponding
+        to hyper galaxy image.
+
+        Parameters
+        ----------
+        hyper_galaxy_image_path_dict
+            A dictionary mapping each galaxy to its corresponding to hyper galaxy image.
+        """
         if hyper_galaxy_image_path_dict is None:
             return
 
@@ -129,12 +107,21 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
         self.close_subplot_figure()
 
     def subplot_contribution_maps_of_galaxies(
-        self, contribution_maps_of_galaxies: List[aa.Array2D]
+        self, contribution_maps_of_galaxies_list: List[aa.Array2D]
     ):
+        """
+        Plots a subplot of the contribution maps of all hyper galaxies.
 
+        This uses the `contribution_maps_of_galaxies` which is a list of each galaxy's corresponding contribution map.
+
+        Parameters
+        ----------
+        contribution_maps_of_galaxies_list
+            A list of each galaxy's corresponding contribution map.
+        """
         contribution_maps = [
             contribution_map
-            for contribution_map in contribution_maps_of_galaxies
+            for contribution_map in contribution_maps_of_galaxies_list
             if contribution_map is not None
         ]
 
@@ -147,7 +134,7 @@ class HyperPlotter(abstract_plotters.AbstractPlotter):
 
         for contribution_map_array in contribution_maps:
 
-            self.figure_contribution_map(contribution_map_in=contribution_map_array)
+            self.figure_contribution_map(contribution_map=contribution_map_array)
 
         self.mat_plot_2d.output.subplot_to_figure(
             auto_filename="subplot_contribution_maps_of_galaxies"

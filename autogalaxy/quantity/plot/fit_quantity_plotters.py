@@ -69,6 +69,9 @@ class FitQuantityPlotter(Plotter):
         return self.get_2d.via_fit_imaging_from(fit=self.fit)
 
     def subplot_fit_quantity(self):
+        """
+        Standard subplot of the attributes of the plotter's `FitQuantity` object.
+        """
         return self.subplot(
             image=True,
             signal_to_noise_map=True,

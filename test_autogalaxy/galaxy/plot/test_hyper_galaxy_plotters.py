@@ -41,7 +41,11 @@ def test__plot_contribution_maps_of_galaxies(
     )
 
     hyper_plotter.subplot_contribution_maps_of_galaxies(
-        contribution_maps_of_galaxies=[contribution_map_7x7, contribution_map_7x7, None]
+        contribution_maps_of_galaxies_list=[
+            contribution_map_7x7,
+            contribution_map_7x7,
+            None,
+        ]
     )
 
     assert (
@@ -67,6 +71,6 @@ def test__plot_individual_images(
 
     assert path.join(plot_path, "hyper_galaxy_image.png") in plot_patch.paths
 
-    hyper_plotter.figure_contribution_map(contribution_map_in=contribution_map_7x7)
+    hyper_plotter.figure_contribution_map(contribution_map=contribution_map_7x7)
 
     assert path.join(plot_path, "contribution_map_2d.png") in plot_patch.paths

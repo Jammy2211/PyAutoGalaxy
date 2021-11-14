@@ -325,5 +325,5 @@ class Visualizer:
         if hasattr(plane, "contribution_maps_of_galaxies"):
             if should_plot("contribution_maps_of_galaxies"):
                 hyper_plotter.subplot_contribution_maps_of_galaxies(
-                    contribution_maps_of_galaxies=plane.contribution_maps_of_galaxies
+                    contribution_maps_of_galaxies_list=plane.contribution_maps_of_galaxies
                 )
