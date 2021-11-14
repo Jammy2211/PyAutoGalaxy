@@ -40,7 +40,26 @@ class MassPlotter(Plotter):
         deflections_x: bool = False,
         magnification: bool = False,
     ):
+        """
+        Plots the individual attributes of the plotter's mass object in 2D, which are computed via the plotter's 2D
+        grid object.
 
+        The API is such that every plottable attribute of the `Imaging` object is an input parameter of type bool of
+        the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        convergence
+            Whether or not to make a 2D plot (via `imshow`) of the convergence.
+        potential
+            Whether or not to make a 2D plot (via `imshow`) of the potential.
+        deflections_y
+            Whether or not to make a 2D plot (via `imshow`) of the y component of the deflection angles.
+        deflections_x
+            Whether or not to make a 2D plot (via `imshow`) of the x component of the deflection angles.
+        magnification
+            Whether or not to make a 2D plot (via `imshow`) of the magnification.
+        """
         if convergence:
 
             self.mat_plot_2d.plot_array(

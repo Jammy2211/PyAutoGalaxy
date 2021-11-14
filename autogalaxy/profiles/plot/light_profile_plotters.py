@@ -20,7 +20,7 @@ class LightProfilePlotter(abstract_plotters.Plotter):
     def __init__(
         self,
         light_profile: LightProfile,
-        grid: abstract_grid_2d.AbstractGrid2D,
+        grid: aa.type.Grid1D2DLike,
         mat_plot_1d: MatPlot1D = MatPlot1D(),
         visuals_1d: Visuals1D = Visuals1D(),
         include_1d: Include1D = Include1D(),
@@ -81,7 +81,22 @@ class LightProfilePlotter(abstract_plotters.Plotter):
         )
 
     def figures_1d(self, image: bool = False):
+        """
+        Plots the individual attributes of the plotter's `LightProfile` object in 1D, which are computed via the
+        plotter's grid object.
 
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from the light profile. This is performed by aligning a 1D grid with the  major-axis of the light
+        profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+
+        The API is such that every plottable attribute of the `LightProfile` object is an input parameter of type bool of
+        the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        image
+            Whether or not to make a 1D plot (via `plot`) of the image.
+        """
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
         else:
@@ -108,9 +123,9 @@ class LightProfilePlotter(abstract_plotters.Plotter):
     def figures_2d(self, image: bool = False):
         """
         Plots the individual attributes of the plotter's `LightProfile` object in 2D, which are computed via the 
-        plotters `Grid2D`.
+        plotter's 2D grid object.
 
-        The API is such that every plottable attribute of the `Imaging` object is an input parameter of type bool of 
+        The API is such that every plottable attribute of the `LightProfile` object is an input parameter of type bool of
         the function, which if switched to `True` means that it is plotted.
 
         Parameters
@@ -144,8 +159,10 @@ class LightProfilePDFPlotter(LightProfilePlotter):
         Plots the attributes of a list of `LightProfile` objects using the matplotlib methods `plot()` and `imshow()`
         and many other matplotlib functions which customize the plot's appearance.
 
-        This class uses a list of light profiles to compute a mean value with errors of each attribute. This is an
-        effective way to visualize a 1D profile given the probability density function of a model-fit.
+        Figures plotted by this object average over a list light profiles to computed the average value of each 
+        attribute with errors, where the 1D regions within the errors are plotted as a shaded region to show the range 
+        of plausible models. Therefore, the input list of galaxies is expected to represent the probability density 
+        function of an inferred model-fit.
 
         The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default,
         the settings passed to every matplotlib function called are those specified in
@@ -194,7 +211,30 @@ class LightProfilePDFPlotter(LightProfilePlotter):
         self.low_limit = (1 - math.erf(sigma / math.sqrt(2))) / 2
 
     def figures_1d(self, image: bool = False):
+        """
+        Plots the individual attributes of the plotter's list of ` LightProfile` object in 1D, which are computed via 
+        the plotter's grid object.
 
+        This averages over a list light profiles to compute the average value of each attribute with errors, where the 
+        1D regions within the errors are plotted as a shaded region to show the range of plausible models. Therefore, 
+        the input list of galaxies is expected to represent the probability density function of an inferred model-fit.
+
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from each light profile. This is performed by aligning a 1D grid with the major-axis of
+        each light profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+
+        The API is such that every plottable attribute of the `LightProfile` object is an input parameter of type bool 
+        of the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        image
+            Whether or not to make a 1D plot (via `plot`) of the image.
+        convergence
+            Whether or not to make a 1D plot (via `imshow`) of the convergence.
+        potential
+            Whether or not to make a 1D plot (via `imshow`) of the potential.
+        """
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
         else:

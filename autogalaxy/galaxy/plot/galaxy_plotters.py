@@ -104,6 +104,20 @@ class GalaxyPlotter(Plotter):
     def light_profile_plotter_from(
         self, light_profile: LightProfile
     ) -> LightProfilePlotter:
+        """
+        Returns a `LightProfilePlotter` given an input light profile, which is typically used for plotting the 
+        individual light profiles of the plotter's `Galaxy` (e.g. in the function `figures_1d_decomposed`).
+
+        Parameters
+        ----------
+        light_profile
+            The light profile which is used to create the `LightProfilePlotter`.
+
+        Returns
+        -------
+        LightProfilePlotter
+            An object that plots the light profiles, often used for plotting attributes of the galaxy.
+        """
         return LightProfilePlotter(
             light_profile=light_profile,
             grid=self.grid,
@@ -120,6 +134,20 @@ class GalaxyPlotter(Plotter):
     def mass_profile_plotter_from(
         self, mass_profile: MassProfile
     ) -> MassProfilePlotter:
+        """
+        Returns a `MassProfilePlotter` given an input mass profile, which is typically used for plotting the individual
+        mass profiles of the plotter's `Galaxy` (e.g. in the function `figures_1d_decomposed`).
+
+        Parameters
+        ----------
+        mass_profile
+            The mass profile which is used to create the `MassProfilePlotter`.
+
+        Returns
+        -------
+        MassProfilePlotter
+            An object that plots the mass profiles, often used for plotting attributes of the galaxy.
+        """
         return MassProfilePlotter(
             mass_profile=mass_profile,
             grid=self.grid,
@@ -138,7 +166,29 @@ class GalaxyPlotter(Plotter):
     def figures_1d(
         self, image: bool = False, convergence: bool = False, potential: bool = False
     ):
+        """
+        Plots the individual attributes of the plotter's `Galaxy` object in 1D, which are computed via the plotter's
+        grid object.
 
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from each light profile of the galaxy. This is performed by aligning a 1D grid with the major-axis of
+        each light profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+
+        This means that the summed 1D profile of a galaxy's quantity is the sum of each individual component aligned
+        with the major-axis.
+
+        The API is such that every plottable attribute of the `Galaxy` object is an input parameter of type bool of
+        the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        image
+            Whether or not to make a 1D plot (via `plot`) of the image.
+        convergence
+            Whether or not to make a 1D plot (via `imshow`) of the convergence.
+        potential
+            Whether or not to make a 1D plot (via `imshow`) of the potential.
+        """
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
         else:
@@ -205,7 +255,34 @@ class GalaxyPlotter(Plotter):
         potential: bool = False,
         legend_labels: List[str] = None,
     ):
+        """
+        Plots the individual attributes of the plotter's `Galaxy` object in 1D, which are computed via the plotter's
+        grid object.
 
+        This function makes a decomposed plot shows the 1D plot of the attribute for every light or mass profile in
+        the galaxy, as well as their combined 1D plot.
+
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from each light profile of the galaxy. This is performed by aligning a 1D grid with the major-axis of
+        each light profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+
+        This means that the summed 1D profile of a galaxy's quantity is the sum of each individual component aligned
+        with the major-axis.
+
+        The API is such that every plottable attribute of the `Galaxy` object is an input parameter of type bool of
+        the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        image
+            Whether or not to make a 1D plot (via `plot`) of the image.
+        convergence
+            Whether or not to make a 1D plot (via `imshow`) of the convergence.
+        potential
+            Whether or not to make a 1D plot (via `imshow`) of the potential.
+        legend_labels
+            Manually overrides the labels of the plot's legend.
+        """
         plotter_list = [self]
 
         for i, light_profile in enumerate(self.galaxy.light_profiles):
@@ -284,7 +361,30 @@ class GalaxyPlotter(Plotter):
         magnification: bool = False,
         contribution_map: bool = False,
     ):
+        """
+        Plots the individual attributes of the plotter's `Galaxy` object in 2D, which are computed via the plotter's 2D
+        grid object.
 
+        The API is such that every plottable attribute of the `Galaxy` object is an input parameter of type bool of
+        the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        image
+            Whether or not to make a 2D plot (via `imshow`) of the image.
+        convergence
+            Whether or not to make a 2D plot (via `imshow`) of the convergence.
+        potential
+            Whether or not to make a 2D plot (via `imshow`) of the potential.
+        deflections_y
+            Whether or not to make a 2D plot (via `imshow`) of the y component of the deflection angles.
+        deflections_x
+            Whether or not to make a 2D plot (via `imshow`) of the x component of the deflection angles.
+        magnification
+            Whether or not to make a 2D plot (via `imshow`) of the magnification.
+        contribution_map
+            Whether or not to make a 2D plot (via `imshow`) of the contribution map.
+        """
         if image:
 
             self.mat_plot_2d.plot_array(
@@ -370,6 +470,46 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         include_2d: Include2D = Include2D(),
         sigma: Optional[float] = 3.0,
     ):
+        """
+        Plots the attributes of a list of `GalaxyProfile` objects using the matplotlib methods `plot()` and `imshow()`
+        and many other matplotlib functions which customize the plot's appearance.
+
+        Figures plotted by this object average over a list galaxy profiles to computed the average value of each 
+        attribute with errors, where the 1D regions within the errors are plotted as a shaded region to show the range 
+        of plausible models. Therefore, the input list of galaxies is expected to represent the probability density
+        function of an inferred model-fit.
+
+        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default,
+        the settings passed to every matplotlib function called are those specified in
+        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to
+        customize the figure's appearance.
+
+        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
+        extracted from the `GalaxyProfile` and plotted via the visuals object, if the corresponding entry is `True` in
+        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+
+        Parameters
+        ----------
+        galaxy_profile_pdf_list
+            The list of galaxy profiles whose mean and error values the plotter plots.
+        grid
+            The 2D (y,x) grid of coordinates used to evaluate the galaxy profile quantities that are plotted.
+        mat_plot_1d
+            Contains objects which wrap the matplotlib function calls that make 1D plots.
+        visuals_1d
+            Contains 1D visuals that can be overlaid on 1D plots.
+        include_1d
+            Specifies which attributes of the `GalaxyProfile` are extracted and plotted as visuals for 1D plots.
+        mat_plot_2d
+            Contains objects which wrap the matplotlib function calls that make 2D plots.
+        visuals_2d
+            Contains 2D visuals that can be overlaid on 2D plots.
+        include_2d
+            Specifies which attributes of the `GalaxyProfile` are extracted and plotted as visuals for 2D plots.
+        sigma
+            The confidence interval in terms of a sigma value at which the errors are computed (e.g. a value of
+            sigma=3.0 uses confidence intevals at ~0.01 and 0.99 the PDF).
+        """
         super().__init__(
             galaxy=None,
             grid=grid,
@@ -387,13 +527,34 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
     @property
     def light_profile_pdf_plotter_list(self) -> List[LightProfilePDFPlotter]:
+        """
+        Returns a list of `LightProfilePDFPlotter` objects from the list of galaxies in this object. These are
+        typically used for plotting the individual average value plus errors of the light profiles of the 
+        plotter's `Galaxy` (e.g. in the function `figures_1d_decomposed`).
+
+        Returns
+        -------
+        List[LightProfilePDFPlotter]
+            An object that plots the average value and errors of a list of light profiles, often used for plotting 
+            attributes of the galaxy.
+        """
         return [
             self.light_profile_pdf_plotter_from(index=index)
             for index in range(len(self.galaxy_pdf_list[0].light_profiles))
         ]
 
     def light_profile_pdf_plotter_from(self, index) -> LightProfilePDFPlotter:
+        """
+        Returns the `LightProfilePDFPlotter` of a specific light profile in this plotter's list of galaxies. This is 
+        typically used for plotting the individual average value plus errors of a light profile in plotter's galaxy
+        list (e.g. in the function `figures_1d_decomposed`).
 
+        Returns
+        -------
+        LightProfilePDFPlotter
+            An object that plots the average value and errors of a list of light profiles, often used for plotting 
+            attributes of the galaxy.
+        """
         light_profile_pdf_list = [
             galaxy.light_profiles[index] for galaxy in self.galaxy_pdf_list
         ]
@@ -411,13 +572,34 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
     @property
     def mass_profile_pdf_plotter_list(self) -> List[MassProfilePDFPlotter]:
+        """
+        Returns a list of `MassProfilePDFPlotter` objects from the list of galaxies in this object. These are
+        typically used for plotting the individual average value plus errors of the mass profiles of the 
+        plotter's `Galaxy` (e.g. in the function `figures_1d_decomposed`).
+
+        Returns
+        -------
+        List[MassProfilePDFPlotter]
+            An object that plots the average value and errors of a list of mass profiles, often used for plotting 
+            attributes of the galaxy.
+        """
         return [
             self.mass_profile_pdf_plotter_from(index=index)
             for index in range(len(self.galaxy_pdf_list[0].mass_profiles))
         ]
 
     def mass_profile_pdf_plotter_from(self, index) -> MassProfilePDFPlotter:
+        """
+        Returns the `MassProfilePDFPlotter` of a specific mass profile in this plotter's list of galaxies. This is 
+        typically used for plotting the individual average value plus errors of a mass profile in plotter's galaxy
+        list (e.g. in the function `figures_1d_decomposed`).
 
+        Returns
+        -------
+        MassProfilePDFPlotter
+            An object that plots the average value and errors of a list of mass profiles, often used for plotting 
+            attributes of the galaxy.
+        """
         mass_profile_pdf_list = [
             galaxy.mass_profiles[index] for galaxy in self.galaxy_pdf_list
         ]
@@ -436,7 +618,33 @@ class GalaxyPDFPlotter(GalaxyPlotter):
     def figures_1d(
         self, image: bool = False, convergence: bool = False, potential: bool = False
     ):
+        """
+        Plots the individual attributes of the plotter's list of `Galaxy` object in 1D, which are computed via the
+        plotter's grid object.
 
+        This averages over a list galaxies to compute the average value of each attribute with errors, where the
+        1D regions within the errors are plotted as a shaded region to show the range of plausible models. Therefore,
+        the input list of galaxies is expected to represent the probability density function of an inferred model-fit.
+
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from each light profile of the galaxy. This is performed by aligning a 1D grid with the major-axis of
+        each light profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+
+        This means that the summed 1D profile of a galaxy's quantity is the sum of each individual component aligned
+        with the major-axis.
+
+        The API is such that every plottable attribute of the `Galaxy` object is an input parameter of type bool of
+        the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        image
+            Whether or not to make a 1D plot (via `plot`) of the image.
+        convergence
+            Whether or not to make a 1D plot (via `imshow`) of the convergence.
+        potential
+            Whether or not to make a 1D plot (via `imshow`) of the potential.
+        """
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
         else:
@@ -560,7 +768,39 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         potential: bool = False,
         legend_labels: List[str] = None,
     ):
+        """
+        Plots the individual attributes of the plotter's `Galaxy` object in 1D, which are computed via the plotter's
+        grid object.
 
+        This averages over a list galaxies to compute the average value of each attribute with errors, where the
+        1D regions within the errors are plotted as a shaded region to show the range of plausible models. Therefore,
+        the input list of galaxies is expected to represent the probability density function of an inferred model-fit.
+
+        This function makes a decomposed plot showing the 1D plot of each attribute for every light or mass profile in
+        the galaxy, as well as their combined 1D plot. By plotting the attribute of each profile on the same figure,
+        one can see how much each profile contributes to the galaxy overall.
+
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from each light profile of the galaxy. This is performed by aligning a 1D grid with the major-axis of
+        each light profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+
+        This means that the summed 1D profile of a galaxy's quantity is the sum of each individual component aligned
+        with the major-axis.
+
+        The API is such that every plottable attribute of the `Galaxy` object is an input parameter of type bool of
+        the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        image
+            Whether or not to make a 1D plot (via `plot`) of the image.
+        convergence
+            Whether or not to make a 1D plot (via `imshow`) of the convergence.
+        potential
+            Whether or not to make a 1D plot (via `imshow`) of the potential.
+        legend_labels
+            Manually overrides the labels of the plot's legend.
+        """
         if image:
 
             multi_plotter = aplt.MultiYX1DPlotter(

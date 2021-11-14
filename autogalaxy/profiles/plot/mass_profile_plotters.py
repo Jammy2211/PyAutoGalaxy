@@ -92,8 +92,25 @@ class MassProfilePlotter(Plotter):
     def get_visuals_2d(self) -> Visuals2D:
         return self.get_2d.via_mass_obj_from(mass_obj=self.mass_profile, grid=self.grid)
 
-    def figures_1d(self, convergence=False, potential=False):
+    def figures_1d(self, convergence: bool = False, potential: bool = False):
+        """
+        Plots the individual attributes of the plotter's `MassProfile` object in 1D, which are computed via the 
+        plotter's grid object. 
 
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is 
+        computed from the mass profile. This is performed by aligning a 1D grid with the  major-axis of the mass 
+        profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+
+        The API is such that every plottable attribute of the  `MassProfile` object is an input parameter of type
+        bool of the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        convergence
+            Whether or not to make a 1D plot (via `imshow`) of the convergence.
+        potential
+            Whether or not to make a 1D plot (via `imshow`) of the potential.
+        """
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
         else:
@@ -154,8 +171,10 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         Plots the attributes of a list of `MassProfile` objects using the matplotlib methods `plot()` and `imshow()` 
         and many other matplotlib functions which customize the plot's appearance.
 
-        This class uses a list of mass profiles to compute a mean value with errors of each attribute. This is an 
-        effective way to visualize a 1D profile given the probability density function of a model-fit.
+        Figures plotted by this object average over a list mass profiles to computed the average value of each attribute
+        with errors, where the 1D regions within the errors are plotted as a shaded region to show the range of
+        plausible models. Therefore, the input list of galaxies is expected to represent the probability density
+        function of an inferred model-fit.
 
         The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default, 
         the settings passed to every matplotlib function called are those specified in 
@@ -205,7 +224,28 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         self.radial_grid_shape_slim = radial_grid_shape_slim
 
     def figures_1d(self, convergence=False, potential=False):
+        """
+        Plots the individual attributes of the plotter's list of ` MassProfile` object in 1D, which are computed via
+        the plotter's grid object.
 
+        This averages over a list mass profiles to compute the average value of each attribute with errors, where the
+        1D regions within the errors are plotted as a shaded region to show the range of plausible models. Therefore,
+        the input list of galaxies is expected to represent the probability density function of an inferred model-fit.
+
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from each mass profile. This is performed by aligning a 1D grid with the major-axis of
+        each mass profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+
+        The API is such that every plottable attribute of the `MassProfile` object is an input parameter of type bool
+        of the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        convergence
+            Whether or not to make a 1D plot (via `imshow`) of the convergence.
+        potential
+            Whether or not to make a 1D plot (via `imshow`) of the potential.
+        """
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
         else:
