@@ -94,7 +94,15 @@ class FitInterferometerPlotter(Plotter):
     def plane(self) -> Plane:
         return self.fit.plane
 
-    def plane_plotter_from(self, plane) -> PlanePlotter:
+    def plane_plotter_from(self, plane: Plane) -> PlanePlotter:
+        """
+        Returns an `PlanePlotter` corresponding to an input `Plane` of the fit.
+
+        Returns
+        -------
+        plane
+            The plane used to make the `PlanePlotter`.
+        """
         return PlanePlotter(
             plane=plane,
             grid=self.fit.interferometer.grid,
@@ -105,6 +113,14 @@ class FitInterferometerPlotter(Plotter):
 
     @property
     def inversion_plotter(self) -> aplt.InversionPlotter:
+        """
+        Returns an `InversionPlotter` corresponding to the `Inversion` of the fit.
+
+        Returns
+        -------
+        InversionPlotter
+            An object that plots inversions which is used for plotting attributes of the inversion.
+        """
         return aplt.InversionPlotter(
             inversion=self.fit.inversion,
             mat_plot_2d=self.mat_plot_2d,
@@ -113,7 +129,12 @@ class FitInterferometerPlotter(Plotter):
         )
 
     def subplot_fit_real_space(self):
+        """
+        Standard subplot of the real-space attributes of the plotter's `FitInterferometer` object.
 
+        Depending on whether `LightProfile`'s or an `Inversion` are used to represent galaxies in the `Plane`, different
+        methods are called to create these real-space images.
+        """
         if self.fit.inversion is None:
 
             plane_plotter = self.plane_plotter_from(plane=self.plane)

@@ -67,8 +67,16 @@ class FitImagingPlotter(Plotter):
 
     @property
     def inversion_plotter(self) -> aplt.InversionPlotter:
+        """
+        Returns an `InversionPlotter` corresponding to the `Inversion` of the fit.
+
+        Returns
+        -------
+        InversionPlotter
+            An object that plots inversions which is used for plotting attributes of the inversion.
+        """
         return aplt.InversionPlotter(
-            inversion=self.fit.inversion.linear_eqn,
+            inversion=self.fit.inversion,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.get_visuals_2d(),
             include_2d=self.include_2d,
@@ -79,7 +87,22 @@ class FitImagingPlotter(Plotter):
         return self.fit.plane
 
     def galaxy_indexes_from(self, galaxy_index: Optional[int]) -> List[int]:
+        """
+        Returns a list of all indexes of the galaxies in the fit, which is iterated over in figures that plot
+        individual figures of each galaxy in a plane.
 
+
+        Parameters
+        ----------
+        galaxy_index
+            A specific galaxy index such that only a single galaxy index is returned.
+
+        Returns
+        -------
+        list
+            A list of galaxy indexes corresponding to galaxies in the plane.
+
+        """
         if galaxy_index is None:
             return list(range(len(self.fit.galaxies)))
         return [galaxy_index]
@@ -90,7 +113,28 @@ class FitImagingPlotter(Plotter):
         model_image: bool = False,
         galaxy_index: Optional[int] = None,
     ):
+        """
+        Plots images representing each individual `Galaxy` in the plotter's `Plane` in 2D, which are computed via the
+        plotter's 2D grid object.
 
+        These images subtract or omit the contribution of other galaxies in the plane, such that plots showing
+        each individual galaxy can be made.
+
+        The API is such that every plottable attribute of the `Galaxy` object is an input parameter of type bool of
+        the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        subtracted_image
+            Whether or not to make a 2D plot (via `imshow`) of the subtracted image of a galaxy, where this image is
+            the fit's `data` minus the model images of all other galaxies, thereby showing an individual galaxy in the
+            data.
+        model_image
+            Whether or not to make a 2D plot (via `imshow`) of the model image of a galaxy, where this image is the
+            model image of one galaxy, thereby showing how much it contributes to the overall model image.
+        galaxy_index
+            If input, plots for only a single galaxy based on its index in the plane are created.
+        """
         galaxy_indexes = self.galaxy_indexes_from(galaxy_index=galaxy_index)
 
         for galaxy_index in galaxy_indexes:
@@ -125,21 +169,23 @@ class FitImagingPlotter(Plotter):
                 )
 
     def subplots_of_galaxies(self, galaxy_index: Optional[int] = None):
-        """Plot the model data of an analysis, using the *Fitter* class object.
+        """
+        Plots images representing each individual `Galaxy` in the plotter's `Plane` in 2D on a subplot, which are
+        computed via the plotter's 2D grid object.
 
-        The visualization and output type can be fully customized.
+        These images subtract or omit the contribution of other galaxies in the plane, such that plots showing
+        each individual galaxy can be made.
+
+        The subplot plots the subtracted image and model image of each galaxy, where are described in the
+        `figures_2d_of_galaxies` function.
+
+        The API is such that every plottable attribute of the `Galaxy` object is an input parameter of type bool of
+        the function, which if switched to `True` means that it is plotted.
 
         Parameters
-        -----------
-        fit : autogalaxy.lens.fitting.Fitter
-            Class containing fit between the model data and observed lens data (including residual_map, chi_squared_map etc.)
-        output_path : str
-            The path where the data is output if the output_type is a file format (e.g. png, fits)
-        output_filename : str
-            The name of the file that is output, if the output_type is a file format (e.g. png, fits)
-        output_format : str
-            How the data is output. File formats (e.g. png, fits) output the data to harddisk. 'show' displays the data \
-            in the python interpreter window.
+        ----------
+        galaxy_index
+            If input, plots for only a single galaxy based on its index in the plane are created.
         """
 
         galaxy_indexes = self.galaxy_indexes_from(galaxy_index=galaxy_index)

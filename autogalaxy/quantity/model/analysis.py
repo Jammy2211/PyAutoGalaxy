@@ -74,7 +74,7 @@ class AnalysisQuantity(Analysis):
             fit = self.fit_quantity_for_instance(instance=instance)
 
             return fit.figure_of_merit
-        except (exc.GridException,) as e:
+        except (exc.GridException, ValueError) as e:
             raise exc.FitException from e
 
     def fit_quantity_for_instance(self, instance: af.ModelInstance) -> FitQuantity:
