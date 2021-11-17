@@ -43,7 +43,7 @@ class TestAnalysisQuantity:
 
         fit = ag.FitQuantity(
             dataset=dataset_quantity_7x7_array_2d,
-            plane=plane,
+            light_mass_obj=plane,
             func_str="convergence_2d_from",
         )
 
@@ -51,7 +51,7 @@ class TestAnalysisQuantity:
 
         fit = ag.FitQuantity(
             dataset=dataset_quantity_7x7_array_2d,
-            plane=plane,
+            light_mass_obj=plane,
             func_str="potential_2d_from",
         )
 

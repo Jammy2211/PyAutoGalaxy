@@ -278,7 +278,7 @@ def test__via_fit_imaging_from(fit_imaging_x2_galaxy_7x7, grid_2d_7x7):
     assert visuals_2d_via.mass_profile_centres.in_list == [(0.0, 0.0)]
     assert (
         visuals_2d_via.critical_curves[0]
-        == fit_imaging_x2_galaxy_7x7.plane.critical_curves_from(grid=grid_2d_7x7)[0]
+        == fit_imaging_x2_galaxy_7x7.light_mass_obj.critical_curves_from(grid=grid_2d_7x7)[0]
     ).all()
     assert visuals_2d_via.vector_field == 2
 

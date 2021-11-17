@@ -56,8 +56,8 @@ class AnalysisDataset(Analysis):
         dataset: Union[aa.Imaging, aa.Interferometer],
         hyper_dataset_result: ResultDataset = None,
         cosmology=cosmo.Planck15,
-        settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
-        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        settings_pixelization: aa.SettingsPixelization = None,
+        settings_inversion: aa.SettingsInversion = None,
     ):
         """
         Abstract Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a plane)
@@ -100,8 +100,8 @@ class AnalysisDataset(Analysis):
             self.hyper_galaxy_image_path_dict = None
             self.hyper_model_image = None
 
-        self.settings_pixelization = settings_pixelization
-        self.settings_inversion = settings_inversion
+        self.settings_pixelization = settings_pixelization or aa.SettingsPixelization()
+        self.settings_inversion = settings_inversion or aa.SettingsInversion()
 
         self.preloads = aa.Preloads()
 

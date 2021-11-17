@@ -144,7 +144,7 @@ def make_fit_quantity_7x7_array_2d():
 
     return ag.FitQuantity(
         dataset=make_dataset_quantity_7x7_array_2d(),
-        plane=make_plane_7x7(),
+        light_mass_obj=make_plane_7x7(),
         func_str="convergence_2d_from",
     )
 

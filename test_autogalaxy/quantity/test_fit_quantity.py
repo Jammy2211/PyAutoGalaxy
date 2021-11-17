@@ -18,7 +18,7 @@ def test__fit_via_mock_profile(dataset_quantity_7x7_array_2d):
 
     fit_quantity = ag.FitQuantity(
         dataset=dataset_quantity_7x7_array_2d,
-        plane=plane,
+        light_mass_obj=plane,
         func_str="convergence_2d_from",
     )
 
@@ -29,7 +29,7 @@ def test__fit_via_mock_profile(dataset_quantity_7x7_array_2d):
     )
 
     fit_quantity = ag.FitQuantity(
-        dataset=dataset_quantity_7x7_array_2d, plane=plane, func_str="potential_2d_from"
+        dataset=dataset_quantity_7x7_array_2d, light_mass_obj=plane, func_str="potential_2d_from"
     )
 
     assert fit_quantity.chi_squared == pytest.approx(12.25, 1.0e-4)

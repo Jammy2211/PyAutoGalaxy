@@ -20,8 +20,8 @@ class AnalysisInterferometer(AnalysisDataset):
         dataset: aa.Interferometer,
         hyper_dataset_result: ResultInterferometer = None,
         cosmology=cosmo.Planck15,
-        settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
-        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        settings_pixelization: aa.SettingsPixelization = None,
+        settings_inversion: aa.SettingsInversion = None,
     ):
         """
         Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.

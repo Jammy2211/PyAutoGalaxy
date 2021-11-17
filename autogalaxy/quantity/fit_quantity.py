@@ -1,11 +1,16 @@
+from typing import Union
+
 import autoarray as aa
 
 from autogalaxy.quantity.dataset_quantity import DatasetQuantity
+from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
+from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfile
+from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
 
 
 class FitQuantity(aa.FitDataset):
-    def __init__(self, dataset: DatasetQuantity, plane: Plane, func_str: str):
+    def __init__(self, dataset: DatasetQuantity, light_mass_obj: Union[LightProfile, MassProfile, Galaxy, Plane], func_str: str):
         """
         Fits a `DatasetQuantity` object with model data.
 
@@ -25,17 +30,18 @@ class FitQuantity(aa.FitDataset):
         dataset
             The quantity that is to be fitted, which has a noise-map associated it with for computing goodness-of-fit
             metrics.
-        plane
-            The plane of galaxies whose model quantities are used to fit the imaging data.  
+        light_mass_obj
+            An object containing functions which computes a light and / or mass quantity (e.g. a plane of galaxies)
+            whose model quantities are used to fit the quantity data.
         func_str
             A string giving the name of the method of the input `Plane` used to compute the quantity that fits
             the dataset.          
         """
 
-        self.plane = plane
+        self.light_mass_obj = light_mass_obj
         self.quantity_str = func_str
 
-        func = getattr(plane, func_str)
+        func = getattr(light_mass_obj, func_str)
 
         model_data = func(grid=dataset.grid)
 

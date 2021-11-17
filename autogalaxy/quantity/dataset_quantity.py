@@ -1,5 +1,4 @@
 import logging
-import numpy as np
 from typing import List, Optional, Union
 
 import autoarray as aa
