@@ -14,56 +14,6 @@ def make_galaxy_plotter_setup():
     )
 
 
-def test__visuals_with_include_2d(gal_x1_lp_x1_mp, grid_2d_7x7):
-
-    visuals_2d = aplt.Visuals2D(vector_field=2)
-
-    include = aplt.Include2D(
-        origin=True,
-        mask=True,
-        border=True,
-        light_profile_centres=True,
-        mass_profile_centres=True,
-        critical_curves=True,
-        caustics=True,
-    )
-
-    galaxy_plotter = aplt.GalaxyPlotter(
-        galaxy=gal_x1_lp_x1_mp,
-        grid=grid_2d_7x7,
-        visuals_2d=visuals_2d,
-        include_2d=include,
-    )
-
-    assert galaxy_plotter.visuals_with_include_2d.origin.in_list == [(0.0, 0.0)]
-    assert (galaxy_plotter.visuals_with_include_2d.mask == grid_2d_7x7.mask).all()
-    assert (
-        galaxy_plotter.visuals_with_include_2d.border
-        == grid_2d_7x7.mask.border_grid_sub_1.binned
-    ).all()
-    assert galaxy_plotter.visuals_with_include_2d.light_profile_centres.in_list == [
-        gal_x1_lp_x1_mp.light_profile_0.centre
-    ]
-    assert galaxy_plotter.visuals_with_include_2d.mass_profile_centres.in_list == [
-        gal_x1_lp_x1_mp.mass_profile_0.centre
-    ]
-    assert galaxy_plotter.visuals_with_include_2d.vector_field == 2
-
-    include = aplt.Include2D(origin=False, mask=False, border=False)
-
-    galaxy_plotter = aplt.GalaxyPlotter(
-        galaxy=gal_x1_lp_x1_mp,
-        grid=grid_2d_7x7,
-        visuals_2d=visuals_2d,
-        include_2d=include,
-    )
-
-    assert galaxy_plotter.visuals_with_include_2d.origin == None
-    assert galaxy_plotter.visuals_with_include_2d.mask == None
-    assert galaxy_plotter.visuals_with_include_2d.border == None
-    assert galaxy_plotter.visuals_with_include_2d.vector_field == 2
-
-
 def test__figures_1d__all_are_output(
     gal_x1_lp_x1_mp, sub_grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch
 ):

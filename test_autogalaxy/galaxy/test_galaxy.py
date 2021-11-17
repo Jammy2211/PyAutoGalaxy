@@ -308,7 +308,7 @@ class TestMassProfiles:
 
         assert mp_convergence.in_list[0] == gal_convergence.in_list[0]
 
-    def test__convergence_from_grid_2d__sub_grid_binned_works(
+    def test__convergence_2d_from_grid_2d__sub_grid_binned_works(
         self, sub_grid_2d_7x7, gal_x2_mp
     ):
 

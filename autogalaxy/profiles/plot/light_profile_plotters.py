@@ -1,28 +1,26 @@
+import math
+from typing import List, Optional
+
 import autoarray as aa
 import autoarray.plot as aplt
 from autoarray.structures.grids.two_d import abstract_grid_2d
-from autoarray.plot import abstract_plotters
 
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot1D
-from autogalaxy.plot.mat_wrap.lensing_mat_plot import MatPlot2D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals1D
-from autogalaxy.plot.mat_wrap.lensing_visuals import Visuals2D
-from autogalaxy.plot.mat_wrap.lensing_include import Include1D
-from autogalaxy.plot.mat_wrap.lensing_include import Include2D
-
+from autogalaxy.plot import abstract_plotters
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
+from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
+from autogalaxy.plot.mat_wrap.visuals import Visuals1D
+from autogalaxy.plot.mat_wrap.visuals import Visuals2D
+from autogalaxy.plot.mat_wrap.include import Include1D
+from autogalaxy.plot.mat_wrap.include import Include2D
 from autogalaxy.util import error_util
 
-import math
 
-from typing import List, Optional
-
-
-class LightProfilePlotter(abstract_plotters.AbstractPlotter):
+class LightProfilePlotter(abstract_plotters.Plotter):
     def __init__(
         self,
         light_profile: LightProfile,
-        grid: abstract_grid_2d.AbstractGrid2D,
+        grid: aa.type.Grid1D2DLike,
         mat_plot_1d: MatPlot1D = MatPlot1D(),
         visuals_1d: Visuals1D = Visuals1D(),
         include_1d: Include1D = Include1D(),
@@ -30,7 +28,38 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
         visuals_2d: Visuals2D = Visuals2D(),
         include_2d: Include2D = Include2D(),
     ):
+        """
+        Plots the attributes of `LightProfile` objects using the matplotlib methods `plot()` and `imshow()` and many 
+        other matplotlib functions which customize the plot's appearance.
 
+        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default, 
+        the settings passed to every matplotlib function called are those specified in 
+        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to 
+        customize the figure's appearance.
+
+        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be 
+        extracted from the `LightProfile` and plotted via the visuals object, if the corresponding entry is `True` in 
+        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+
+        Parameters
+        ----------
+        light_profile
+            The light profile the plotter plots.
+        grid
+            The 2D (y,x) grid of coordinates used to evaluate the light profile quantities that are plotted.
+        mat_plot_1d
+            Contains objects which wrap the matplotlib function calls that make 1D plots.
+        visuals_1d
+            Contains 1D visuals that can be overlaid on 1D plots.
+        include_1d
+            Specifies which attributes of the `LightProfile` are extracted and plotted as visuals for 1D plots.
+        mat_plot_2d
+            Contains objects which wrap the matplotlib function calls that make 2D plots.
+        visuals_2d
+            Contains 2D visuals that can be overlaid on 2D plots.
+        include_2d
+            Specifies which attributes of the `LightProfile` are extracted and plotted as visuals for 2D plots.
+        """
         self.light_profile = light_profile
         self.grid = grid
 
@@ -43,63 +72,31 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             visuals_1d=visuals_1d,
         )
 
-    @property
-    def visuals_with_include_1d(self) -> Visuals1D:
-        """
-        Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals1D` object.
+    def get_visuals_1d(self) -> Visuals1D:
+        return self.get_1d.via_light_obj_from(light_obj=self.light_profile)
 
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
-
-        From a `LightProfilePlotter` the following 1D attributes can be extracted for plotting:
-
-        - half_light_radius: the radius containing 50% of the `LightProfile`'s total integrated luminosity.
-
-        Returns
-        -------
-        vis.Visuals1D
-            The collection of attributes that can be plotted by a `Plotter1D` object.
-        """
-        return self.visuals_1d + self.visuals_1d.__class__(
-            self.extract_1d(
-                "half_light_radius", value=self.light_profile.half_light_radius
-            )
-        )
-
-    @property
-    def visuals_with_include_2d(self) -> Visuals2D:
-        """
-        Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals2D` object.
-
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
-
-        From a `LightProfilePlotter` the following 2D attributes can be extracted for plotting:
-
-        - origin: the (y,x) origin of the structure's coordinate system.
-        - mask: the mask of the structure.
-        - border: the border of the structure's mask.
-
-        Returns
-        -------
-        vis.Visuals2D
-            The collection of attributes that can be plotted by a `Plotter2D` object.
-        """
-
-        return self.visuals_2d + self.visuals_2d.__class__(
-            origin=self.extract_2d(
-                "origin", value=aa.Grid2DIrregular(grid=[self.grid.origin])
-            ),
-            mask=self.extract_2d("mask", value=self.grid.mask),
-            border=self.extract_2d(
-                "border", value=self.grid.mask.border_grid_sub_1.binned
-            ),
-            light_profile_centres=self.extract_2d(
-                "light_profile_centres",
-                aa.Grid2DIrregular(grid=[self.light_profile.centre]),
-            ),
+    def get_visuals_2d(self) -> Visuals2D:
+        return self.get_2d.via_light_obj_from(
+            light_obj=self.light_profile, grid=self.grid
         )
 
     def figures_1d(self, image: bool = False):
+        """
+        Plots the individual attributes of the plotter's `LightProfile` object in 1D, which are computed via the
+        plotter's grid object.
 
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from the light profile. This is performed by aligning a 1D grid with the  major-axis of the light
+        profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+
+        The API is such that every plottable attribute of the `LightProfile` object is an input parameter of type bool of
+        the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        image
+            Whether or not to make a 1D plot (via `plot`) of the image.
+        """
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
         else:
@@ -112,7 +109,7 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             self.mat_plot_1d.plot_yx(
                 y=image_1d,
                 x=image_1d.grid_radial,
-                visuals_1d=self.visuals_with_include_1d,
+                visuals_1d=self.get_visuals_1d(),
                 auto_labels=aplt.AutoLabels(
                     title="Image vs Radius",
                     ylabel="Image",
@@ -124,12 +121,23 @@ class LightProfilePlotter(abstract_plotters.AbstractPlotter):
             )
 
     def figures_2d(self, image: bool = False):
+        """
+        Plots the individual attributes of the plotter's `LightProfile` object in 2D, which are computed via the 
+        plotter's 2D grid object.
 
+        The API is such that every plottable attribute of the `LightProfile` object is an input parameter of type bool of
+        the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        image
+            Whether or not to make a 2D plot (via `imshow`) of the image.
+        """
         if image:
 
             self.mat_plot_2d.plot_array(
                 array=self.light_profile.image_2d_from(grid=self.grid),
-                visuals_2d=self.visuals_with_include_2d,
+                visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
             )
 
@@ -138,7 +146,7 @@ class LightProfilePDFPlotter(LightProfilePlotter):
     def __init__(
         self,
         light_profile_pdf_list: List[LightProfile],
-        grid: abstract_grid_2d.AbstractGrid2D,
+        grid: aa.type.Grid2DLike,
         mat_plot_1d: MatPlot1D = MatPlot1D(),
         visuals_1d: Visuals1D = Visuals1D(),
         include_1d: Include1D = Include1D(),
@@ -147,7 +155,46 @@ class LightProfilePDFPlotter(LightProfilePlotter):
         include_2d: Include2D = Include2D(),
         sigma: Optional[float] = 3.0,
     ):
+        """
+        Plots the attributes of a list of `LightProfile` objects using the matplotlib methods `plot()` and `imshow()`
+        and many other matplotlib functions which customize the plot's appearance.
 
+        Figures plotted by this object average over a list light profiles to computed the average value of each 
+        attribute with errors, where the 1D regions within the errors are plotted as a shaded region to show the range 
+        of plausible models. Therefore, the input list of galaxies is expected to represent the probability density 
+        function of an inferred model-fit.
+
+        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default,
+        the settings passed to every matplotlib function called are those specified in
+        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to
+        customize the figure's appearance.
+
+        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
+        extracted from the `LightProfile` and plotted via the visuals object, if the corresponding entry is `True` in
+        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+
+        Parameters
+        ----------
+        light_profile_pdf_list
+            The list of light profiles whose mean and error values the plotter plots.
+        grid
+            The 2D (y,x) grid of coordinates used to evaluate the light profile quantities that are plotted.
+        mat_plot_1d
+            Contains objects which wrap the matplotlib function calls that make 1D plots.
+        visuals_1d
+            Contains 1D visuals that can be overlaid on 1D plots.
+        include_1d
+            Specifies which attributes of the `LightProfile` are extracted and plotted as visuals for 1D plots.
+        mat_plot_2d
+            Contains objects which wrap the matplotlib function calls that make 2D plots.
+        visuals_2d
+            Contains 2D visuals that can be overlaid on 2D plots.
+        include_2d
+            Specifies which attributes of the `LightProfile` are extracted and plotted as visuals for 2D plots.
+        sigma
+            The confidence interval in terms of a sigma value at which the errors are computed (e.g. a value of
+            sigma=3.0 uses confidence intevals at ~0.01 and 0.99 the PDF).
+        """
         super().__init__(
             light_profile=None,
             grid=grid,
@@ -163,46 +210,31 @@ class LightProfilePDFPlotter(LightProfilePlotter):
         self.sigma = sigma
         self.low_limit = (1 - math.erf(sigma / math.sqrt(2))) / 2
 
-    @property
-    def visuals_with_include_1d(self) -> Visuals1D:
-        """
-        Extracts from the `LightProfile` attributes that can be plotted and return them in a `Visuals1D` object.
-
-        Only attributes with `True` entries in the `Include` object are extracted for plotting.
-
-        From a `LightProfilePlotter` the following 1D attributes can be extracted for plotting:
-
-        - half_light_radius: the radius containing 50% of the `LightProfile`'s total integrated luminosity.
-
-        Returns
-        -------
-        vis.Visuals1D
-            The collection of attributes that can be plotted by a `Plotter1D` object.
-        """
-
-        if self.include_1d.half_light_radius:
-
-            half_light_radius_list = [
-                light_profile.half_light_radius
-                for light_profile in self.light_profile_pdf_list
-            ]
-
-            half_light_radius, half_light_radius_errors = error_util.value_median_and_error_region_via_quantile(
-                value_list=half_light_radius_list, low_limit=self.low_limit
-            )
-
-        else:
-
-            half_light_radius = None
-            half_light_radius_errors = None
-
-        return self.visuals_1d + self.visuals_1d.__class__(
-            self.extract_1d("half_light_radius", value=half_light_radius),
-            self.extract_1d("half_light_radius", value=half_light_radius_errors),
-        )
-
     def figures_1d(self, image: bool = False):
+        """
+        Plots the individual attributes of the plotter's list of ` LightProfile` object in 1D, which are computed via 
+        the plotter's grid object.
 
+        This averages over a list light profiles to compute the average value of each attribute with errors, where the 
+        1D regions within the errors are plotted as a shaded region to show the range of plausible models. Therefore, 
+        the input list of galaxies is expected to represent the probability density function of an inferred model-fit.
+
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from each light profile. This is performed by aligning a 1D grid with the major-axis of
+        each light profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+
+        The API is such that every plottable attribute of the `LightProfile` object is an input parameter of type bool 
+        of the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        image
+            Whether or not to make a 1D plot (via `plot`) of the image.
+        convergence
+            Whether or not to make a 1D plot (via `imshow`) of the convergence.
+        potential
+            Whether or not to make a 1D plot (via `imshow`) of the potential.
+        """
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
         else:
@@ -223,9 +255,14 @@ class LightProfilePDFPlotter(LightProfilePlotter):
                 profile_1d_list=image_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d = self.visuals_with_include_1d + self.visuals_1d.__class__(
+            visuals_1d_via_light_obj_list = self.get_1d.via_light_obj_list_from(
+                light_obj_list=self.light_profile_pdf_list, low_limit=self.low_limit
+            )
+            visuals_1d_with_shaded_region = self.visuals_1d.__class__(
                 shaded_region=errors_image_1d
             )
+
+            visuals_1d = visuals_1d_via_light_obj_list + visuals_1d_with_shaded_region
 
             self.mat_plot_1d.plot_yx(
                 y=median_image_1d,

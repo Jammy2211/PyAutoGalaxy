@@ -8,7 +8,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestMassSheet:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
 
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 

@@ -1,5 +1,5 @@
 import autoarray.plot as aplt
-from autogalaxy.plot.mat_wrap import lensing_wrap as lw
+from autogalaxy.plot.mat_wrap import wrap as w
 
 
 class MatPlot1D(aplt.MatPlot1D):
@@ -21,9 +21,9 @@ class MatPlot1D(aplt.MatPlot1D):
         legend: aplt.Legend = aplt.Legend(),
         output: aplt.Output = aplt.Output(),
         yx_plot: aplt.YXPlot = aplt.YXPlot(),
-        half_light_radius_axvline: lw.HalfLightRadiusAXVLine = lw.HalfLightRadiusAXVLine(),
-        einstein_radius_axvline: lw.EinsteinRadiusAXVLine = lw.EinsteinRadiusAXVLine(),
-        model_fluxes_yx_scatter: lw.ModelFluxesYXScatter = lw.ModelFluxesYXScatter(),
+        half_light_radius_axvline: w.HalfLightRadiusAXVLine = w.HalfLightRadiusAXVLine(),
+        einstein_radius_axvline: w.EinsteinRadiusAXVLine = w.EinsteinRadiusAXVLine(),
+        model_fluxes_yx_scatter: w.ModelFluxesYXScatter = w.ModelFluxesYXScatter(),
         fill_between: aplt.FillBetween = aplt.FillBetween(),
     ):
         """
@@ -70,10 +70,10 @@ class MatPlot1D(aplt.MatPlot1D):
             Sets if the figure is displayed on the user's screen or output to `.png` using `plt.show` and `plt.savefig`
         yx_plot : aplt.YXPlot
             Sets how the y versus x plot appears, for example if it each axis is linear or log, using `plt.plot`.
-        half_light_radius_axvline : lw.HalfLightRadiusAXVLine
+        half_light_radius_axvline : w.HalfLightRadiusAXVLine
             Sets how a vertical line representing the half light radius of a `LightProfile` is plotted on the figure
             using the `plt.axvline` method.
-        half_light_radius_axvline : lw.HalfLightRadiusAXVLine
+        half_light_radius_axvline : w.HalfLightRadiusAXVLine
             Sets how a vertical line representing the Einstein radius of a `LensingObj` (e.g. a `MassProfile`) is
             plotted on the figure using the `plt.axvline` method.
         """
@@ -155,11 +155,11 @@ class MatPlot2D(aplt.MatPlot2D):
         positions_scatter: aplt.PositionsScatter = aplt.PositionsScatter(),
         index_scatter: aplt.IndexScatter = aplt.IndexScatter(),
         pixelization_grid_scatter: aplt.PixelizationGridScatter = aplt.PixelizationGridScatter(),
-        light_profile_centres_scatter: lw.LightProfileCentresScatter = lw.LightProfileCentresScatter(),
-        mass_profile_centres_scatter: lw.MassProfileCentresScatter = lw.MassProfileCentresScatter(),
-        multiple_images_scatter: lw.MultipleImagesScatter = lw.MultipleImagesScatter(),
-        critical_curves_plot: lw.CriticalCurvesPlot = lw.CriticalCurvesPlot(),
-        caustics_plot: lw.CausticsPlot = lw.CausticsPlot(),
+        light_profile_centres_scatter: w.LightProfileCentresScatter = w.LightProfileCentresScatter(),
+        mass_profile_centres_scatter: w.MassProfileCentresScatter = w.MassProfileCentresScatter(),
+        multiple_images_scatter: w.MultipleImagesScatter = w.MultipleImagesScatter(),
+        critical_curves_plot: w.CriticalCurvesPlot = w.CriticalCurvesPlot(),
+        caustics_plot: w.CausticsPlot = w.CausticsPlot(),
     ):
         """
         Visualizes data structures (e.g an `Array2D`, `Grid2D`, `VectorField`, etc.) using Matplotlib.

@@ -148,6 +148,10 @@ class Galaxy(af.ModelObject, LensingObject, Dictable):
     def has_profile(self):
         return len(self.mass_profiles) + len(self.light_profiles) > 0
 
+    @property
+    def half_light_radius(self):
+        return None
+
     def extract_attribute(self, cls, attr_name):
         """
         Returns an attribute of a class and its children profiles in the the galaxy as a `ValueIrregular`

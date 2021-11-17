@@ -54,20 +54,6 @@ class TestResultAbstract:
 
 
 class TestResultDataset:
-    def test__results_include_masked_dataset_and_mask(
-        self, analysis_imaging_7x7, masked_imaging_7x7, samples_with_result
-    ):
-
-        result = res.ResultDataset(
-            samples=samples_with_result,
-            analysis=analysis_imaging_7x7,
-            model=None,
-            search=None,
-        )
-
-        assert (result.mask == masked_imaging_7x7.mask).all()
-        assert (result.dataset.image == masked_imaging_7x7.image).all()
-
     def test__results_include_pixelization__available_as_property(
         self, analysis_imaging_7x7
     ):

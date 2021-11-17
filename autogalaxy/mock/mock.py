@@ -16,6 +16,7 @@ class MockLightProfile(ag.lp.LightProfile):
         super().__init__()
 
         self.image_2d = image_2d
+
         self.value = value
         self.value1 = value1
 
@@ -24,19 +25,32 @@ class MockLightProfile(ag.lp.LightProfile):
 
 
 class MockMassProfile(ag.mp.MassProfile):
-    def __init__(self, value, value1=None):
+    def __init__(
+        self,
+        convergence_2d=None,
+        potential_2d=None,
+        deflections_2d=None,
+        value=None,
+        value1=None,
+    ):
+
+        super().__init__()
+
+        self.convergence_2d = convergence_2d
+        self.potential_2d = potential_2d
+        self.deflections_2d = deflections_2d
 
         self.value = value
         self.value1 = value1
 
-    def convergence_from(self, grid):
-        return np.array([self.value])
+    def convergence_2d_from(self, grid):
+        return self.convergence_2d
 
     def potential_2d_from(self, grid):
-        return np.array([self.value])
+        return self.potential_2d
 
     def deflections_2d_from(self, grid):
-        return np.array([self.value, self.value])
+        return self.deflections_2d
 
 
 # Mock Galaxy #

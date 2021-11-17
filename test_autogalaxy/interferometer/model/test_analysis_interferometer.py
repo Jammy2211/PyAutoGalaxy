@@ -39,7 +39,7 @@ class TestAnalysisInterferometer:
 
         plane = analysis.plane_for_instance(instance=instance)
 
-        fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
+        fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
         assert fit.log_likelihood == fit_figure_of_merit
 
@@ -62,7 +62,7 @@ class TestAnalysisInterferometer:
 
         plane = analysis.plane_for_instance(instance=instance)
         fit = ag.FitInterferometer(
-            interferometer=interferometer_7,
+            dataset=interferometer_7,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
         )

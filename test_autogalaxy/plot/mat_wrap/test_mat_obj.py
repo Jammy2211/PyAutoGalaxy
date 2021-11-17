@@ -2,7 +2,7 @@ from os import path
 import autogalaxy.plot as aplt
 
 
-class TestLensingMatObj:
+class TestMatObj:
     def test__all_load_from_config_correctly(self):
 
         light_profile_centres_scatter = aplt.LightProfileCentresScatter()

@@ -49,7 +49,7 @@ class TestLikelihood:
         )
         plane = ag.Plane(galaxies=[g0])
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         assert (
             fit.mask
@@ -155,7 +155,7 @@ class TestLikelihood:
         )
         plane = ag.Plane(galaxies=[g0])
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         assert (
             fit.mask
@@ -272,7 +272,7 @@ class TestLikelihood:
 
         plane = ag.Plane(galaxies=[g0])
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         assert (
             fit.noise_map.native
@@ -335,7 +335,7 @@ class TestLikelihood:
         hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
 
         fit = ag.FitImaging(
-            imaging=masked_imaging_7x7, plane=plane, hyper_image_sky=hyper_image_sky
+            dataset=masked_imaging_7x7, plane=plane, hyper_image_sky=hyper_image_sky
         )
 
         assert (
@@ -410,7 +410,7 @@ class TestLikelihood:
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
         fit = ag.FitImaging(
-            imaging=masked_imaging_7x7,
+            dataset=masked_imaging_7x7,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
         )
@@ -484,7 +484,7 @@ class TestLikelihood:
 
         plane = ag.Plane(galaxies=[g0])
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         assert (
             fit.noise_map.native
@@ -506,7 +506,7 @@ class TestCompareToManualProfilesOnly:
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         assert masked_imaging_7x7.noise_map.native == pytest.approx(
             fit.noise_map.native
@@ -566,7 +566,7 @@ class TestCompareToManualProfilesOnly:
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2])
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         g0_blurred_image = g0.blurred_image_2d_via_convolver_from(
             grid=masked_imaging_7x7.grid,
@@ -617,7 +617,7 @@ class TestCompareToManualProfilesOnly:
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
         fit = ag.FitImaging(
-            imaging=masked_imaging_7x7,
+            dataset=masked_imaging_7x7,
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
@@ -673,7 +673,7 @@ class TestCompareToManualProfilesOnly:
         assert log_likelihood == fit.figure_of_merit
 
         fit = ag.FitImaging(
-            imaging=masked_imaging_7x7,
+            dataset=masked_imaging_7x7,
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
@@ -696,7 +696,7 @@ class TestCompareToManualProfilesOnly:
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         blurred_images_of_galaxies = plane.blurred_images_of_galaxies_via_convolver_from(
             grid=masked_imaging_7x7.grid,
@@ -744,7 +744,7 @@ class TestCompareToManualInversionOnly:
 
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         mapper = pix.mapper_from(
             grid=masked_imaging_7x7.grid_inversion, sparse_grid=None
@@ -825,7 +825,7 @@ class TestCompareToManualInversionOnly:
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         mapper = pix.mapper_from(grid=masked_imaging_7x7.grid, sparse_grid=None)
 
@@ -872,7 +872,7 @@ class TestCompareToManualInversionOnly:
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
         fit = ag.FitImaging(
-            imaging=masked_imaging_7x7,
+            dataset=masked_imaging_7x7,
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
@@ -965,7 +965,7 @@ class TestCompareToManualInversionOnly:
 
         plane = ag.Plane(redshift=0.75, galaxies=[ag.Galaxy(redshift=0.5), g0])
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         mapper = pix.mapper_from(
             grid=masked_imaging_7x7.grid,
@@ -994,7 +994,7 @@ class TestCompareToManualProfilesAndInversion:
 
         plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         blurred_image = plane.blurred_image_2d_via_convolver_from(
             grid=masked_imaging_7x7.grid,
@@ -1096,7 +1096,7 @@ class TestCompareToManualProfilesAndInversion:
 
         masked_imaging_7x7.image[0] = 3.0
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         g0_blurred_image = g0.blurred_image_2d_via_convolver_from(
             grid=masked_imaging_7x7.grid,
@@ -1175,7 +1175,7 @@ class TestCompareToManualProfilesAndInversion:
         plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
 
         fit = ag.FitImaging(
-            imaging=masked_imaging_7x7,
+            dataset=masked_imaging_7x7,
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
@@ -1286,7 +1286,7 @@ class TestCompareToManualProfilesAndInversion:
 
         plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
 
-        fit = ag.FitImaging(imaging=masked_imaging_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         blurred_image = plane.blurred_image_2d_via_convolver_from(
             grid=masked_imaging_7x7.grid,
@@ -1335,7 +1335,7 @@ class TestAttributes:
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2])
 
-        fit = ag.FitImaging(imaging=masked_imaging_no_blur_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_no_blur_7x7, plane=plane)
 
         assert fit.subtracted_images_of_galaxies[0].slim[0] == -4.0
         assert fit.subtracted_images_of_galaxies[1].slim[0] == -3.0
@@ -1353,7 +1353,7 @@ class TestAttributes:
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2])
 
-        fit = ag.FitImaging(imaging=masked_imaging_no_blur_7x7, plane=plane)
+        fit = ag.FitImaging(dataset=masked_imaging_no_blur_7x7, plane=plane)
 
         assert fit.subtracted_images_of_galaxies[0].slim[0] == -2.0
         assert fit.subtracted_images_of_galaxies[1].slim[0] == -3.0

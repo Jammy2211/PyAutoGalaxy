@@ -40,7 +40,7 @@ class TestLikelihood:
         )
         plane = ag.Plane(galaxies=[g0])
 
-        fit = ag.FitInterferometer(interferometer=interferometer, plane=plane)
+        fit = ag.FitInterferometer(dataset=interferometer, plane=plane)
 
         assert (fit.visibilities.slim == np.array([5.0 + 4.0j])).all()
         assert (fit.noise_map.slim == np.array([1.0 + 1.0j])).all()
@@ -87,7 +87,7 @@ class TestLikelihood:
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
         fit = ag.FitInterferometer(
-            interferometer=interferometer,
+            dataset=interferometer,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
         )
@@ -113,7 +113,7 @@ class TestCompareToManualProfilesOnly:
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
-        fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
+        fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
         assert interferometer_7.noise_map == pytest.approx(fit.noise_map)
 
@@ -170,7 +170,7 @@ class TestCompareToManualProfilesOnly:
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
-        fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
+        fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
         g0_image = g0.image_2d_from(grid=interferometer_7.grid)
 
@@ -191,7 +191,7 @@ class TestCompareToManualProfilesOnly:
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
-        fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
+        fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
         g0_profile_visibilities = g0.profile_visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
@@ -232,7 +232,7 @@ class TestCompareToManualProfilesOnly:
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
         fit = ag.FitInterferometer(
-            interferometer=interferometer_7,
+            dataset=interferometer_7,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
         )
@@ -240,7 +240,7 @@ class TestCompareToManualProfilesOnly:
         assert hyper_noise_map.slim == pytest.approx(fit.noise_map.slim)
 
         fit = ag.FitInterferometer(
-            interferometer=interferometer_7,
+            dataset=interferometer_7,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
             use_hyper_scalings=False,
@@ -262,7 +262,7 @@ class TestCompareToManualInversionOnly:
 
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
-        fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
+        fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
         mapper = pix.mapper_from(grid=interferometer_7.grid_inversion, sparse_grid=None)
 
@@ -350,7 +350,7 @@ class TestCompareToManualInversionOnly:
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
-        fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
+        fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
         mapper = pix.mapper_from(grid=interferometer_7.grid, sparse_grid=None)
 
@@ -375,7 +375,7 @@ class TestCompareToManualInversionOnly:
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
-        fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
+        fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
         mapper = pix.mapper_from(grid=interferometer_7.grid, sparse_grid=None)
 
@@ -410,7 +410,7 @@ class TestCompareToManualInversionOnly:
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
         fit = ag.FitInterferometer(
-            interferometer=interferometer_7,
+            dataset=interferometer_7,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
         )
@@ -433,7 +433,7 @@ class TestCompareToManualInversionOnly:
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
         fit = ag.FitInterferometer(
-            interferometer=interferometer_7_lop,
+            dataset=interferometer_7_lop,
             plane=plane,
             settings_inversion=ag.SettingsInversion(use_linear_operators=True),
         )
@@ -531,7 +531,7 @@ class TestCompareToManualProfilesAndInversion:
 
         plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
 
-        fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
+        fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
         profile_visibilities = plane.profile_visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
@@ -640,7 +640,7 @@ class TestCompareToManualProfilesAndInversion:
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, galaxy_pix])
 
-        fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
+        fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
         g0_visibilities = g0.profile_visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
@@ -695,7 +695,7 @@ class TestCompareToManualProfilesAndInversion:
 
         plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2, galaxy_pix])
 
-        fit = ag.FitInterferometer(interferometer=interferometer_7, plane=plane)
+        fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
         g0_visibilities = g0.profile_visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
@@ -762,7 +762,7 @@ class TestCompareToManualProfilesAndInversion:
         plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
 
         fit = ag.FitInterferometer(
-            interferometer=interferometer_7,
+            dataset=interferometer_7,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
         )

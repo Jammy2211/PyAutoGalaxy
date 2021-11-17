@@ -113,7 +113,7 @@ class TestPointMass:
 
 
 class TestPowerLawBroken:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
 
         broken_power_law = ag.mp.SphPowerLawBroken(
             centre=(0, 0),
@@ -423,7 +423,7 @@ class TestPowerLawBroken:
 
 
 class TestPowerLawCored:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
 
         cored_power_law = ag.mp.SphPowerLawCored(
             centre=(1, 1), einstein_radius=1.0, slope=2.2, core_radius=0.1
@@ -722,7 +722,7 @@ class TestPowerLawCored:
 
 
 class TestPowerLaw:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
 
         power_law = ag.mp.SphPowerLaw(centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0)
 
@@ -959,7 +959,7 @@ class TestPowerLaw:
 
 
 class TestIsothermalCored:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
 
         cored_isothermal = ag.mp.SphIsothermalCored(
             centre=(1, 1), einstein_radius=1.0, core_radius=0.1
@@ -1225,7 +1225,7 @@ class TestIsothermalCored:
 
 
 class TestIsothermal:
-    def test__convergence_from(self):
+    def test__convergence_2d_from(self):
 
         # eta = 1.0
         # kappa = 0.5 * 1.0 ** 1.0
