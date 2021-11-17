@@ -138,14 +138,6 @@ def make_dataset_quantity_7x7_array_2d():
     )
 
 
-# def make_dataset_quantity_7x7_vector_field_2d():
-#
-#     return ag.DatasetQuantity(
-#         data=aa.Array2D.ones(shape_native=(7,7), pixel_scales=1.0),
-#         noise_map=aa.Array2D.full(fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0),
-#     )
-
-
 def make_fit_quantity_7x7_array_2d():
 
     mp_0 = make_mp_0()

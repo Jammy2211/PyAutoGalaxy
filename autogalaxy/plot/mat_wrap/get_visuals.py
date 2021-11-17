@@ -66,9 +66,6 @@ class GetVisuals1D(gv.GetVisuals1D):
             The collection of attributes that can be plotted by a `Plotter` object.
         """
 
-        if light_obj is None:
-            return self.visuals
-
         half_light_radius = self.get(
             "half_light_radius", value=light_obj.half_light_radius
         )
@@ -166,9 +163,6 @@ class GetVisuals1D(gv.GetVisuals1D):
         Visuals1D
             The collection of attributes that can be plotted by a `Plotter` object.
         """
-
-        if mass_obj is None:
-            return self.visuals
 
         if self.include.einstein_radius:
             einstein_radius = mass_obj.einstein_radius_from(grid=grid)

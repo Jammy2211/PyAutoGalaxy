@@ -86,7 +86,8 @@ class FitImagingPlotter(Plotter):
     def plane(self) -> Plane:
         return self.fit.plane
 
-    def galaxy_indexes_from(self, galaxy_index: Optional[int]) -> List[int]:
+    @property
+    def galaxy_indices(self) -> List[int]:
         """
         Returns a list of all indexes of the galaxies in the fit, which is iterated over in figures that plot
         individual figures of each galaxy in a plane.
@@ -102,9 +103,7 @@ class FitImagingPlotter(Plotter):
         list
             A list of galaxy indexes corresponding to galaxies in the plane.
         """
-        if galaxy_index is None:
-            return list(range(len(self.fit.galaxies)))
-        return [galaxy_index]
+        return list(range(len(self.fit.galaxies)))
 
     def figures_2d_of_galaxies(
         self,
@@ -134,9 +133,12 @@ class FitImagingPlotter(Plotter):
         galaxy_index
             If input, plots for only a single galaxy based on its index in the plane are created.
         """
-        galaxy_indexes = self.galaxy_indexes_from(galaxy_index=galaxy_index)
+        if galaxy_index is None:
+            galaxy_indices = self.galaxy_indices
+        else:
+            galaxy_indices = [galaxy_index]
 
-        for galaxy_index in galaxy_indexes:
+        for galaxy_index in galaxy_indices:
 
             if subtracted_image:
 
@@ -184,9 +186,12 @@ class FitImagingPlotter(Plotter):
             If input, plots for only a single galaxy based on its index in the plane are created.
         """
 
-        galaxy_indexes = self.galaxy_indexes_from(galaxy_index=galaxy_index)
+        if galaxy_index is None:
+            galaxy_indices = self.galaxy_indices
+        else:
+            galaxy_indices = [galaxy_index]
 
-        for galaxy_index in galaxy_indexes:
+        for galaxy_index in galaxy_indices:
 
             self.open_subplot_figure(number_subplots=4)
 

@@ -566,7 +566,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             visuals_2d=self.visuals_2d,
             include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.get_visuals_1d_light(),
+            visuals_1d=self.visuals_1d,
             include_1d=self.include_1d,
         )
 
@@ -611,7 +611,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             visuals_2d=self.visuals_2d,
             include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.get_visuals_1d_mass(),
+            visuals_1d=self.visuals_1d,
             include_1d=self.include_1d,
         )
 
@@ -743,9 +743,16 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d = self.get_visuals_1d_mass() + self.visuals_1d.__class__(
+            visuals_1d_via_lensing_obj_list = self.get_1d.via_mass_obj_list_from(
+                mass_obj_list=self.galaxy_pdf_list,
+                grid=self.grid,
+                low_limit=self.low_limit,
+            )
+            visuals_1d_with_shaded_region = self.visuals_1d.__class__(
                 shaded_region=errors_potential_1d
             )
+
+            visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 
             self.mat_plot_1d.plot_yx(
                 y=median_potential_1d,
