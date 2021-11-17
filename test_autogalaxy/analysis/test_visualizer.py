@@ -110,7 +110,7 @@ def test__visualize_hyper_images__uses_config(
     )
 
     visualizer.visualize_contribution_maps(
-        plane=fit_imaging_x2_galaxy_inversion_7x7.light_mass_obj
+        plane=fit_imaging_x2_galaxy_inversion_7x7.plane
     )
 
     assert (

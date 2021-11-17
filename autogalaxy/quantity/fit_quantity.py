@@ -66,3 +66,7 @@ class FitQuantity(aa.FitDataset):
     @property
     def grid(self):
         return self.quantity_dataset.grid
+
+    @property
+    def plane(self):
+        return self.light_mass_obj
