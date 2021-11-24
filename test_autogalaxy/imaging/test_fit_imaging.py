@@ -747,7 +747,8 @@ class TestCompareToManualInversionOnly:
         fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         mapper = pix.mapper_from(
-            grid=masked_imaging_7x7.grid_inversion, sparse_grid=None
+            source_grid_slim=masked_imaging_7x7.grid_inversion,
+            source_pixelization_grid=None,
         )
 
         inversion = ag.Inversion(
@@ -827,7 +828,9 @@ class TestCompareToManualInversionOnly:
 
         fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-        mapper = pix.mapper_from(grid=masked_imaging_7x7.grid, sparse_grid=None)
+        mapper = pix.mapper_from(
+            source_grid_slim=masked_imaging_7x7.grid, source_pixelization_grid=None
+        )
 
         inversion = ag.Inversion(
             dataset=masked_imaging_7x7, mapper_list=[mapper], regularization_list=[reg]
@@ -885,7 +888,7 @@ class TestCompareToManualInversionOnly:
         assert hyper_noise_map.native == pytest.approx(fit.noise_map.native)
 
         mapper = pix.mapper_from(
-            grid=masked_imaging_7x7.grid,
+            source_grid_slim=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
         inversion = ag.InversionImaging(
@@ -968,7 +971,7 @@ class TestCompareToManualInversionOnly:
         fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
         mapper = pix.mapper_from(
-            grid=masked_imaging_7x7.grid,
+            source_grid_slim=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
 
@@ -1011,7 +1014,7 @@ class TestCompareToManualProfilesAndInversion:
         )
 
         mapper = pix.mapper_from(
-            grid=masked_imaging_7x7.grid,
+            source_grid_slim=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
 
@@ -1114,7 +1117,7 @@ class TestCompareToManualProfilesAndInversion:
 
         profile_subtracted_image = masked_imaging_7x7.image - blurred_image
         mapper = pix.mapper_from(
-            grid=masked_imaging_7x7.grid,
+            source_grid_slim=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
 
@@ -1202,7 +1205,7 @@ class TestCompareToManualProfilesAndInversion:
         )
 
         mapper = pix.mapper_from(
-            grid=masked_imaging_7x7.grid,
+            source_grid_slim=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
 
@@ -1297,7 +1300,7 @@ class TestCompareToManualProfilesAndInversion:
         profile_subtracted_image = masked_imaging_7x7.image - blurred_image
 
         mapper = pix.mapper_from(
-            grid=masked_imaging_7x7.grid,
+            source_grid_slim=masked_imaging_7x7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
 

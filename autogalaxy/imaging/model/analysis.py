@@ -49,7 +49,7 @@ class AnalysisImaging(AnalysisDataset):
         cosmology
             The Cosmology assumed for this analysis.
         settings_pixelization
-            settings controlling how a pixelization is fitted for example if a border is used when creating the
+            Settings controlling how a pixelization is fitted for example if a border is used when creating the
             pixelization.
         settings_inversion
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.

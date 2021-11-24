@@ -264,7 +264,10 @@ class TestCompareToManualInversionOnly:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        mapper = pix.mapper_from(grid=interferometer_7.grid_inversion, sparse_grid=None)
+        mapper = pix.mapper_from(
+            source_grid_slim=interferometer_7.grid_inversion,
+            source_pixelization_grid=None,
+        )
 
         inversion = ag.Inversion(
             dataset=interferometer_7, mapper_list=[mapper], regularization_list=[reg]
@@ -352,7 +355,9 @@ class TestCompareToManualInversionOnly:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        mapper = pix.mapper_from(grid=interferometer_7.grid, sparse_grid=None)
+        mapper = pix.mapper_from(
+            source_grid_slim=interferometer_7.grid, source_pixelization_grid=None
+        )
 
         inversion = ag.Inversion(
             dataset=interferometer_7, mapper_list=[mapper], regularization_list=[reg]
@@ -377,7 +382,9 @@ class TestCompareToManualInversionOnly:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        mapper = pix.mapper_from(grid=interferometer_7.grid, sparse_grid=None)
+        mapper = pix.mapper_from(
+            source_grid_slim=interferometer_7.grid, source_pixelization_grid=None
+        )
 
         inversion = ag.Inversion(
             dataset=interferometer_7, mapper_list=[mapper], regularization_list=[reg]
@@ -439,7 +446,8 @@ class TestCompareToManualInversionOnly:
         )
 
         mapper = pix.mapper_from(
-            grid=interferometer_7_lop.grid_inversion, sparse_grid=None
+            source_grid_slim=interferometer_7_lop.grid_inversion,
+            source_pixelization_grid=None,
         )
 
         inversion = ag.Inversion(
@@ -548,7 +556,7 @@ class TestCompareToManualProfilesAndInversion:
         )
 
         mapper = pix.mapper_from(
-            grid=interferometer_7.grid,
+            source_grid_slim=interferometer_7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
 
@@ -656,7 +664,7 @@ class TestCompareToManualProfilesAndInversion:
             interferometer_7.visibilities - profile_visibilities
         )
         mapper = pix.mapper_from(
-            grid=interferometer_7.grid,
+            source_grid_slim=interferometer_7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
 
@@ -711,7 +719,7 @@ class TestCompareToManualProfilesAndInversion:
             interferometer_7.visibilities - profile_visibilities
         )
         mapper = pix.mapper_from(
-            grid=interferometer_7.grid,
+            source_grid_slim=interferometer_7.grid,
             settings=ag.SettingsPixelization(use_border=False),
         )
 

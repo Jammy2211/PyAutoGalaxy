@@ -404,8 +404,8 @@ class AbstractPlaneData(AbstractPlaneLensing):
             return None
 
         return [
-            pixelization.sparse_grid_from(
-                grid=grid,
+            pixelization.data_pixelization_grid_from(
+                data_grid_slim=grid,
                 hyper_image=hyper_galaxy_image,
                 settings=settings_pixelization,
             )
@@ -416,19 +416,19 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
     def mapper_from(
         self,
-        grid,
-        sparse_grid,
+        source_grid_slim,
+        source_pixelization_grid,
         pixelization,
         hyper_galaxy_image,
-        sparse_image_plane_grid=None,
+        data_pixelization_grid=None,
         settings_pixelization=aa.SettingsPixelization(),
         preloads=aa.Preloads(),
     ):
 
         return pixelization.mapper_from(
-            grid=grid,
-            sparse_grid=sparse_grid,
-            sparse_image_plane_grid=sparse_image_plane_grid,
+            source_grid_slim=source_grid_slim,
+            source_pixelization_grid=source_pixelization_grid,
+            data_pixelization_grid=data_pixelization_grid,
             hyper_image=hyper_galaxy_image,
             settings=settings_pixelization,
             preloads=preloads,
@@ -455,11 +455,11 @@ class AbstractPlaneData(AbstractPlaneLensing):
         for mapper_index in range(len(sparse_grid_list)):
 
             mapper = self.mapper_from(
-                grid=grid,
-                sparse_grid=sparse_grid_list,
+                source_grid_slim=grid,
+                source_pixelization_grid=sparse_grid_list,
                 pixelization=pixelization_list[mapper_index],
                 hyper_galaxy_image=hyper_galaxy_image_list[mapper_index],
-                sparse_image_plane_grid=sparse_grid_list[mapper_index],
+                data_pixelization_grid=sparse_grid_list[mapper_index],
                 settings_pixelization=settings_pixelization,
                 preloads=preloads,
             )

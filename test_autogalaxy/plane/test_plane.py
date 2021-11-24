@@ -1247,7 +1247,7 @@ class TestAbstractPlaneData:
         ):
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=MockPixelization(sparse_grid=[[1.0, 1.0]]),
+                pixelization=MockPixelization(data_pixelization_grid=[[1.0, 1.0]]),
                 regularization=MockRegularization(),
             )
 
@@ -1262,7 +1262,9 @@ class TestAbstractPlaneData:
 
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=MockPixelization(sparse_grid=np.array([[1.0, 1.0]])),
+                pixelization=MockPixelization(
+                    data_pixelization_grid=np.array([[1.0, 1.0]])
+                ),
                 regularization=MockRegularization(),
                 hyper_galaxy_image=2,
             )
@@ -1278,7 +1280,9 @@ class TestAbstractPlaneData:
 
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
-                pixelization=MockPixelization(mapper=1, sparse_grid=sub_grid_2d_7x7),
+                pixelization=MockPixelization(
+                    mapper=1, data_pixelization_grid=sub_grid_2d_7x7
+                ),
                 regularization=MockRegularization(),
             )
             galaxy_no_pix = ag.Galaxy(redshift=0.5)
@@ -1291,7 +1295,9 @@ class TestAbstractPlaneData:
 
             galaxy_pix_2 = ag.Galaxy(
                 redshift=0.5,
-                pixelization=MockPixelization(mapper=2, sparse_grid=sub_grid_2d_7x7),
+                pixelization=MockPixelization(
+                    mapper=2, data_pixelization_grid=sub_grid_2d_7x7
+                ),
                 regularization=MockRegularization(),
             )
             galaxy_no_pix = ag.Galaxy(redshift=0.5)

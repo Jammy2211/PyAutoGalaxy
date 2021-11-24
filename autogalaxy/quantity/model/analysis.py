@@ -108,7 +108,9 @@ class AnalysisQuantity(Analysis):
 
         plane = self.plane_for_instance(instance=instance)
 
-        return FitQuantity(dataset=self.dataset, light_mass_obj=plane, func_str=self.func_str)
+        return FitQuantity(
+            dataset=self.dataset, light_mass_obj=plane, func_str=self.func_str
+        )
 
     def visualize(
         self,

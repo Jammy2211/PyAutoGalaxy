@@ -10,7 +10,12 @@ from autogalaxy.plane.plane import Plane
 
 
 class FitQuantity(aa.FitDataset):
-    def __init__(self, dataset: DatasetQuantity, light_mass_obj: Union[LightProfile, MassProfile, Galaxy, Plane], func_str: str):
+    def __init__(
+        self,
+        dataset: DatasetQuantity,
+        light_mass_obj: Union[LightProfile, MassProfile, Galaxy, Plane],
+        func_str: str,
+    ):
         """
         Fits a `DatasetQuantity` object with model data.
 
