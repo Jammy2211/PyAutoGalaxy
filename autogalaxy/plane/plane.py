@@ -7,13 +7,13 @@ from autoarray.inversion.inversion.factory import inversion_imaging_unpacked_fro
 from autoarray.inversion.inversion.factory import inversion_interferometer_unpacked_from
 from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.lensing import LensingObject
+from autogalaxy.profiles.mass_profiles.calc_lens import CalcLens
 from autogalaxy.profiles.light_profiles.calc_image import CalcImage
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
 from autogalaxy.util import plane_util
 
 
-class AbstractPlane(LensingObject):
+class AbstractPlane:
     def __init__(
         self,
         galaxies,
@@ -52,6 +52,10 @@ class AbstractPlane(LensingObject):
     def _calc_image(self) -> CalcImage:
         return CalcImage(image_2d_from=self.image_2d_from)
 
+    @property
+    def _calc_lens(self) -> CalcLens:
+        return CalcLens(deflections_2d_from=self.deflections_2d_from)
+
     def __getattr__(self, item):
         """
         This dynamically passes all functions of the `_calc_image` property to the `LightProfile`.
@@ -64,7 +68,7 @@ class AbstractPlane(LensingObject):
 
         `light_profile.blurred_image_2d_via_psf_from`
         """
-        return getattr(self._calc_image, item)
+        return getattr(self._calc_image, item) + getattr(self._calc_lens, item)
 
     def dict(self) -> dict:
         plane_dict = super().dict()

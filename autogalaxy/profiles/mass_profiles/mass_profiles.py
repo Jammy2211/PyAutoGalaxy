@@ -8,14 +8,14 @@ from typing import Callable, List, Optional, Tuple
 
 import autoarray as aa
 
-from autogalaxy.lensing import LensingObject
+from autogalaxy.profiles.mass_profiles.calc_lens import CalcLens
 from autogalaxy.profiles.geometry_profiles import EllProfile
 
 from autogalaxy import exc
 
 
 # noinspection PyAbstractClass
-class MassProfile(EllProfile, LensingObject):
+class MassProfile(EllProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -32,20 +32,47 @@ class MassProfile(EllProfile, LensingObject):
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         """
-        super(MassProfile, self).__init__(
+        super().__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
 
     @property
-    def has_mass_profile(self):
-        return True
+    def _calc_lens(self) -> CalcLens:
+        return CalcLens(deflections_2d_from=self.deflections_2d_from)
 
-    @property
-    def ellipticity_rescale(self):
-        return NotImplementedError()
+    def __getattr__(self, item):
+        """
+        This dynamically passes all functions of the `_calc_image` property to the `LightProfile`.
 
-    def with_new_normalization(self, normalization):
-        raise NotImplementedError()
+        This means that instead of having to call a function using the full path:
+
+        `light_profile._calc_image.blurred_image_2d_via_psf_from`
+
+        We can simply call it using the path:
+
+        `light_profile.blurred_image_2d_via_psf_from`
+        """
+        return getattr(self._calc_image, item)
+
+    def deflections_2d_from(self, grid):
+        raise NotImplementedError
+
+    def deflections_2d_via_potential_2d_from(self, grid):
+
+        potential = self.potential_2d_from(grid=grid)
+
+        deflections_y_2d = np.gradient(potential.native, grid.native[:, 0, 0], axis=0)
+        deflections_x_2d = np.gradient(potential.native, grid.native[0, :, 1], axis=1)
+
+        return aa.Grid2D.manual_mask(
+            grid=np.stack((deflections_y_2d, deflections_x_2d), axis=-1), mask=grid.mask
+        )
+
+    def convergence_2d_from(self, grid):
+        raise NotImplementedError
+
+    def convergence_func(self, grid_radius):
+        raise NotImplementedError
 
     @aa.grid_dec.grid_1d_to_structure
     def convergence_1d_from(
@@ -53,11 +80,28 @@ class MassProfile(EllProfile, LensingObject):
     ):
         return self.convergence_2d_from(grid=grid)
 
+    def potential_2d_from(self, grid):
+        raise NotImplementedError
+
     @aa.grid_dec.grid_1d_to_structure
     def potential_1d_from(
         self, grid: aa.type.Grid1D2DLike, radial_grid_shape_slim: Optional[int] = None
     ):
         return self.potential_2d_from(grid=grid)
+
+    def potential_func(self, u, y, x):
+        raise NotImplementedError
+
+    @property
+    def has_mass_profile(self):
+        return True
+
+    def mass_integral(self, x):
+        return 2 * np.pi * x * self.convergence_func(grid_radius=x)
+
+    @property
+    def ellipticity_rescale(self):
+        return NotImplementedError()
 
     def mass_angular_within_circle(self, radius: float):
         """
@@ -178,6 +222,9 @@ class MassProfile(EllProfile, LensingObject):
             bracket=[normalization_list[0], normalization_list[-1]],
             args=(mass_angular, radius),
         ).root
+
+    def with_new_normalization(self, normalization):
+        raise NotImplementedError()
 
     def einstein_radius_via_normalization_from(self, normalization):
 

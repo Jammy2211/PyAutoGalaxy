@@ -9,7 +9,7 @@ from autoarray.inversion.pixelizations.abstract import AbstractPixelization
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 from autoconf.dictable import Dictable
 from autogalaxy import exc
-from autogalaxy.lensing import LensingObject
+from autogalaxy.profiles.mass_profiles.calc_lens import CalcLens
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.light_profiles.calc_image import CalcImage
@@ -31,7 +31,7 @@ def is_mass_profile(obj):
     return isinstance(obj, MassProfile)
 
 
-class Galaxy(af.ModelObject, LensingObject, Dictable):
+class Galaxy(af.ModelObject, Dictable):
     """
     @DynamicAttrs
     """
@@ -95,6 +95,10 @@ class Galaxy(af.ModelObject, LensingObject, Dictable):
     def _calc_image(self) -> CalcImage:
         return CalcImage(image_2d_from=self.image_2d_from)
 
+    @property
+    def _calc_lens(self) -> CalcLens:
+        return CalcLens(deflections_2d_from=self.deflections_2d_from)
+
     def __getattr__(self, item):
         """
         This dynamically passes all functions of the `_calc_image` property to the `LightProfile`.
@@ -107,7 +111,7 @@ class Galaxy(af.ModelObject, LensingObject, Dictable):
 
         `light_profile.blurred_image_2d_via_psf_from`
         """
-        return getattr(self._calc_image, item)
+        return getattr(self._calc_image, item) + getattr(self._calc_lens, item)
 
     def dict(self) -> dict:
         return {

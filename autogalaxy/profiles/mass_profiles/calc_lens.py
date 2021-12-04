@@ -1,10 +1,14 @@
 from functools import wraps
 import numpy as np
 from skimage import measure
+from typing import Callable
 
 import autoarray as aa
 from autoconf.dictable import Dictable
 
+
+# TODO: This module is a mess. A full refactor better defining conventions and with more rigorous integration tests
+# TODO : Is a priorty.
 
 def precompute_jacobian(func):
     @wraps(func)
@@ -47,106 +51,18 @@ def evaluation_grid(func):
     return wrapper
 
 
-class LensingObject(Dictable):
+class CalcLens(Dictable):
 
-    centre = None
-    angle = None
+    def __init__(self, deflections_2d_from: Callable):
+
+        self.deflections_2d_from = deflections_2d_from
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ is other.__class__
 
-    def convergence_func(self, grid_radius):
-        raise NotImplementedError
-
-    def convergence_1d_from(self, grid):
-        raise NotImplementedError
-
-    def convergence_2d_from(self, grid):
-        raise NotImplementedError
-
-    def potential_func(self, u, y, x):
-        raise NotImplementedError
-
-    def potential_1d_from(self, grid):
-        raise NotImplementedError
-
-    def potential_2d_from(self, grid):
-        raise NotImplementedError
-
-    def deflections_2d_from(self, grid):
-        raise NotImplementedError
-
-    def mass_integral(self, x):
-        """Routine to integrate an elliptical light profiles - set axis ratio to 1 to compute the luminosity within a \
-        circle"""
-        return 2 * np.pi * x * self.convergence_func(grid_radius=x)
-
     def deflection_magnitudes_from(self, grid):
         deflections = self.deflections_2d_from(grid=grid)
         return deflections.distances_to_coordinate(coordinate=(0.0, 0.0))
-
-    def deflections_2d_via_potential_2d_from(self, grid):
-
-        potential = self.potential_2d_from(grid=grid)
-
-        deflections_y_2d = np.gradient(potential.native, grid.native[:, 0, 0], axis=0)
-        deflections_x_2d = np.gradient(potential.native, grid.native[0, :, 1], axis=1)
-
-        return aa.Grid2D.manual_mask(
-            grid=np.stack((deflections_y_2d, deflections_x_2d), axis=-1), mask=grid.mask
-        )
-
-    def jacobian_from(self, grid):
-
-        deflections = self.deflections_2d_from(grid=grid)
-
-        a11 = aa.Array2D.manual_mask(
-            array=1.0
-            - np.gradient(deflections.native[:, :, 1], grid.native[0, :, 1], axis=1),
-            mask=grid.mask,
-        )
-
-        a12 = aa.Array2D.manual_mask(
-            array=-1.0
-            * np.gradient(deflections.native[:, :, 1], grid.native[:, 0, 0], axis=0),
-            mask=grid.mask,
-        )
-
-        a21 = aa.Array2D.manual_mask(
-            array=-1.0
-            * np.gradient(deflections.native[:, :, 0], grid.native[0, :, 1], axis=1),
-            mask=grid.mask,
-        )
-
-        a22 = aa.Array2D.manual_mask(
-            array=1
-            - np.gradient(deflections.native[:, :, 0], grid.native[:, 0, 0], axis=0),
-            mask=grid.mask,
-        )
-
-        return [[a11, a12], [a21, a22]]
-
-    @precompute_jacobian
-    def convergence_via_jacobian_from(self, grid, jacobian=None):
-
-        convergence = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
-
-        return aa.Array2D(array=convergence, mask=grid.mask)
-
-    @precompute_jacobian
-    def shear_yx_via_jacobian_from(self, grid, jacobian=None):
-
-        shear_y = -0.5 * (jacobian[0][1] + jacobian[1][0])
-        shear_x = 0.5 * (jacobian[1][1] - jacobian[0][0])
-
-        return shear_y, shear_x
-
-    @precompute_jacobian
-    def shear_via_jacobian_from(self, grid, jacobian=None):
-
-        shear_y, shear_x = self.shear_yx_via_jacobian_from(grid=grid)
-
-        return aa.Array2D(array=(shear_x ** 2 + shear_y ** 2) ** 0.5, mask=grid.mask)
 
     @precompute_jacobian
     def tangential_eigen_value_from(self, grid, jacobian=None):
@@ -371,3 +287,55 @@ class LensingObject(Dictable):
         return np.pi * (
             self.einstein_radius_from(grid=grid, pixel_scale=pixel_scale) ** 2
         )
+
+    def jacobian_from(self, grid):
+
+        deflections = self.deflections_2d_from(grid=grid)
+
+        a11 = aa.Array2D.manual_mask(
+            array=1.0
+            - np.gradient(deflections.native[:, :, 1], grid.native[0, :, 1], axis=1),
+            mask=grid.mask,
+        )
+
+        a12 = aa.Array2D.manual_mask(
+            array=-1.0
+            * np.gradient(deflections.native[:, :, 1], grid.native[:, 0, 0], axis=0),
+            mask=grid.mask,
+        )
+
+        a21 = aa.Array2D.manual_mask(
+            array=-1.0
+            * np.gradient(deflections.native[:, :, 0], grid.native[0, :, 1], axis=1),
+            mask=grid.mask,
+        )
+
+        a22 = aa.Array2D.manual_mask(
+            array=1
+            - np.gradient(deflections.native[:, :, 0], grid.native[:, 0, 0], axis=0),
+            mask=grid.mask,
+        )
+
+        return [[a11, a12], [a21, a22]]
+
+    @precompute_jacobian
+    def convergence_via_jacobian_from(self, grid, jacobian=None):
+
+        convergence = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
+
+        return aa.Array2D(array=convergence, mask=grid.mask)
+
+    @precompute_jacobian
+    def shear_yx_via_jacobian_from(self, grid, jacobian=None):
+
+        shear_y = -0.5 * (jacobian[0][1] + jacobian[1][0])
+        shear_x = 0.5 * (jacobian[1][1] - jacobian[0][0])
+
+        return shear_y, shear_x
+
+    @precompute_jacobian
+    def shear_via_jacobian_from(self, grid, jacobian=None):
+
+        shear_y, shear_x = self.shear_yx_via_jacobian_from(grid=grid)
+
+        return aa.Array2D(array=(shear_x ** 2 + shear_y ** 2) ** 0.5, mask=grid.mask)

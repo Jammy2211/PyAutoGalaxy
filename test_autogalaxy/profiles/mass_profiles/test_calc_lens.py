@@ -12,7 +12,7 @@ from autogalaxy import lensing
 from autogalaxy.profiles import geometry_profiles
 
 
-class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
+class MockEllIsothermal(geometry_profiles.EllProfile, lensing.CalcLens):
     def __init__(
         self,
         centre: typing.Tuple[float, float] = (0.0, 0.0),
@@ -206,7 +206,7 @@ class MockSphIsothermal(MockEllIsothermal):
         )
 
 
-class MockGalaxy(lensing.LensingObject):
+class MockGalaxy(lensing.CalcLens):
     def __init__(self, mass_profiles):
         self._mass_profiles = mass_profiles
 
