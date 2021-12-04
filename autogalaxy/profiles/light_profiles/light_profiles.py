@@ -38,23 +38,8 @@ class LightProfile(EllProfile):
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
         self.intensity = intensity
 
-    @property
-    def _calc_image(self) -> CalcImage:
-        return CalcImage(image_2d_from=self.image_2d_from)
-
-    def __getattr__(self, item):
-        """
-        This dynamically passes all functions of the `_calc_image` property to the `LightProfile`.
-
-        This means that instead of having to call a function using the full path:
-
-        `light_profile._calc_image.blurred_image_2d_via_psf_from`
-
-        We can simply call it using the path:
-
-        `light_profile.blurred_image_2d_via_psf_from`
-        """
-        return getattr(self._calc_image, item)
+        self._calc_image = CalcImage(image_2d_from=self.image_2d_from)
+        self._calc_image.add_functions(obj=self)
 
     def image_2d_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
         """

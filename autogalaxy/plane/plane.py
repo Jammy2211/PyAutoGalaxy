@@ -46,29 +46,8 @@ class AbstractPlane:
 
         self.redshift = redshift
         self.galaxies = galaxies
+
         self.profiling_dict = profiling_dict
-
-    @property
-    def _calc_image(self) -> CalcImage:
-        return CalcImage(image_2d_from=self.image_2d_from)
-
-    @property
-    def _calc_lens(self) -> CalcLens:
-        return CalcLens(deflections_2d_from=self.deflections_2d_from)
-
-    def __getattr__(self, item):
-        """
-        This dynamically passes all functions of the `_calc_image` property to the `LightProfile`.
-
-        This means that instead of having to call a function using the full path:
-
-        `light_profile._calc_image.blurred_image_2d_via_psf_from`
-
-        We can simply call it using the path:
-
-        `light_profile.blurred_image_2d_via_psf_from`
-        """
-        return getattr(self._calc_image, item) + getattr(self._calc_lens, item)
 
     def dict(self) -> dict:
         plane_dict = super().dict()
@@ -245,6 +224,23 @@ class AbstractPlane:
 
 
 class AbstractPlaneLensing(AbstractPlane):
+    def __init__(
+        self,
+        galaxies,
+        redshift: Optional[float] = None,
+        profiling_dict: Optional[Dict] = None,
+    ):
+
+        super().__init__(
+            galaxies=galaxies, redshift=redshift, profiling_dict=profiling_dict
+        )
+
+        self._calc_image = CalcImage(image_2d_from=self.image_2d_from)
+        self._calc_image.add_functions(obj=self)
+
+        self._calc_lens = CalcLens(deflections_2d_from=self.deflections_2d_from)
+        self._calc_lens.add_functions(obj=self)
+
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(self, grid):
         """

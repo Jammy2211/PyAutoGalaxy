@@ -339,3 +339,40 @@ class CalcLens(Dictable):
         shear_y, shear_x = self.shear_yx_via_jacobian_from(grid=grid)
 
         return aa.Array2D(array=(shear_x ** 2 + shear_y ** 2) ** 0.5, mask=grid.mask)
+
+    def add_functions(self, obj):
+        """
+        This passes all functions of the `_calc_lens` property to the mass object using it.
+
+        This means that instead of having to call a function using the full path:
+
+        `mass_object._calc_lens.magnification_2d_from`
+
+        We can simply call it using the path:
+
+        `mass_object.magnification_2d_from`
+        """
+        obj.deflection_magnitudes_from = self.deflection_magnitudes_from
+        obj.tangential_eigen_value_from = self.tangential_eigen_value_from
+        obj.radial_eigen_value_from = self.radial_eigen_value_from
+        obj.magnification_2d_from = self.magnification_2d_from
+        obj.hessian_from = self.hessian_from
+        obj.convergence_via_hessian_from = self.convergence_via_hessian_from
+        obj.shear_yx_via_hessian_from = self.shear_yx_via_hessian_from
+        obj.shear_via_hessian_from = self.shear_via_hessian_from
+        obj.magnification_via_hessian_from = self.magnification_via_hessian_from
+        obj.tangential_critical_curve_from = self.tangential_critical_curve_from
+        obj.radial_critical_curve_from = self.radial_critical_curve_from
+        obj.critical_curves_from = self.critical_curves_from
+        obj.tangential_caustic_from = self.tangential_caustic_from
+        obj.radial_caustic_from = self.radial_caustic_from
+        obj.caustics_from = self.caustics_from
+        obj.area_within_tangential_critical_curve_from = (
+            self.area_within_tangential_critical_curve_from
+        )
+        obj.einstein_radius_from = self.einstein_radius_from
+        obj.einstein_mass_angular_from = self.einstein_mass_angular_from
+        obj.jacobian_from = self.jacobian_from
+        obj.convergence_via_jacobian_from = self.convergence_via_jacobian_from
+        obj.shear_yx_via_jacobian_from = self.shear_yx_via_jacobian_from
+        obj.shear_via_jacobian_from = self.shear_via_jacobian_from

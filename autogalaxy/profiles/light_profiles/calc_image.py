@@ -102,3 +102,23 @@ class CalcImage:
         image = self.image_2d_from(grid=grid)
 
         return transformer.visibilities_from(image=image.binned)
+
+    def add_functions(self, obj):
+        """
+        This passes all functions of the `_calc_image` property to the `LightProfile`.
+
+        This means that instead of having to call a function using the full path:
+
+        `light_profile._calc_image.blurred_image_2d_via_psf_from`
+
+        We can simply call it using the path:
+
+        `light_profile.blurred_image_2d_via_psf_from`
+        """
+        obj.blurred_image_2d_via_psf_from = self.blurred_image_2d_via_psf_from
+        obj.blurred_image_2d_via_convolver_from = (
+            self.blurred_image_2d_via_convolver_from
+        )
+        obj.profile_visibilities_via_transformer_from = (
+            self.profile_visibilities_via_transformer_from
+        )
