@@ -32,9 +32,7 @@ class MassProfile(EllProfile):
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         """
-        super().__init__(
-            centre=centre, elliptical_comps=elliptical_comps
-        )
+        super().__init__(centre=centre, elliptical_comps=elliptical_comps)
 
     @property
     def _calc_lens(self) -> CalcLens:
@@ -42,17 +40,17 @@ class MassProfile(EllProfile):
 
     def __getattr__(self, item):
         """
-        This dynamically passes all functions of the `_calc_image` property to the `LightProfile`.
+        This dynamically passes all functions of the `_calc_lens` property to the `massProfile`.
 
         This means that instead of having to call a function using the full path:
 
-        `light_profile._calc_image.blurred_image_2d_via_psf_from`
+        `mass_profile._calc_lens.magnification_2d_from`
 
         We can simply call it using the path:
 
-        `light_profile.blurred_image_2d_via_psf_from`
+        `mass_profile.magnification_2d_from`
         """
-        return getattr(self._calc_image, item)
+        return getattr(self._calc_lens, item)
 
     def deflections_2d_from(self, grid):
         raise NotImplementedError

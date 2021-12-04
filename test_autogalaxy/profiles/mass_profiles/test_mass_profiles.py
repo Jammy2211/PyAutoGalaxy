@@ -150,6 +150,57 @@ class Test1DFromGrid:
         assert (potential_1d.grid_radial == np.array([0.0, 1.0, 2.0])).all()
 
 
+class TestDeflectionsViaPotential:
+    def test__compare_sis_deflections_via_potential_and_calculation(self):
+        sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+
+        grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
+
+        deflections_via_calculation = sis.deflections_2d_from(grid=grid)
+
+        deflections_via_potential = sis.deflections_2d_via_potential_2d_from(grid=grid)
+
+        mean_error = np.mean(
+            deflections_via_potential.slim - deflections_via_calculation.slim
+        )
+
+        assert mean_error < 1e-4
+
+    def test__compare_sie_at_phi_45__deflections_via_potential_and_calculation(self):
+        sie = ag.mp.EllIsothermal(
+            centre=(0.0, 0.0), elliptical_comps=(0.111111, 0.0), einstein_radius=2.0
+        )
+
+        grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
+
+        deflections_via_calculation = sie.deflections_2d_from(grid=grid)
+
+        deflections_via_potential = sie.deflections_2d_via_potential_2d_from(grid=grid)
+
+        mean_error = np.mean(
+            deflections_via_potential.slim - deflections_via_calculation.slim
+        )
+
+        assert mean_error < 1e-4
+
+    def test__compare_sie_at_phi_0__deflections_via_potential_and_calculation(self):
+        sie = ag.mp.EllIsothermal(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
+        )
+
+        grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
+
+        deflections_via_calculation = sie.deflections_2d_from(grid=grid)
+
+        deflections_via_potential = sie.deflections_2d_via_potential_2d_from(grid=grid)
+
+        mean_error = np.mean(
+            deflections_via_potential.slim - deflections_via_calculation.slim
+        )
+
+        assert mean_error < 1e-4
+
+
 class TestMassWithin:
     def test__compare_to_analytic_and_grid_calculations(self):
 

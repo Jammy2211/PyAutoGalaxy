@@ -10,6 +10,7 @@ from autoconf.dictable import Dictable
 # TODO: This module is a mess. A full refactor better defining conventions and with more rigorous integration tests
 # TODO : Is a priorty.
 
+
 def precompute_jacobian(func):
     @wraps(func)
     def wrapper(lensing_obj, grid, jacobian=None):
@@ -52,7 +53,6 @@ def evaluation_grid(func):
 
 
 class CalcLens(Dictable):
-
     def __init__(self, deflections_2d_from: Callable):
 
         self.deflections_2d_from = deflections_2d_from
