@@ -8,6 +8,7 @@ from autoarray.inversion.inversion.factory import inversion_interferometer_unpac
 from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.lensing import LensingObject
+from autogalaxy.profiles.light_profiles.calc_image import CalcImage
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
 from autogalaxy.util import plane_util
 
@@ -46,6 +47,24 @@ class AbstractPlane(LensingObject):
         self.redshift = redshift
         self.galaxies = galaxies
         self.profiling_dict = profiling_dict
+
+    @property
+    def _calc_image(self) -> CalcImage:
+        return CalcImage(image_2d_from=self.image_2d_from)
+
+    def __getattr__(self, item):
+        """
+        This dynamically passes all functions of the `_calc_image` property to the `LightProfile`.
+
+        This means that instead of having to call a function using the full path:
+
+        `light_profile._calc_image.blurred_image_2d_via_psf_from`
+
+        We can simply call it using the path:
+
+        `light_profile.blurred_image_2d_via_psf_from`
+        """
+        return getattr(self._calc_image, item)
 
     def dict(self) -> dict:
         plane_dict = super().dict()
@@ -314,16 +333,6 @@ class AbstractPlaneLensing(AbstractPlane):
 
 
 class AbstractPlaneData(AbstractPlaneLensing):
-    def blurred_image_2d_via_psf_from(self, grid, psf, blurring_grid):
-
-        image = self.image_2d_from(grid=grid)
-
-        blurring_image = self.image_2d_from(grid=blurring_grid)
-
-        return psf.convolved_array_with_mask_from(
-            array=image.binned.native + blurring_image.binned.native, mask=grid.mask
-        )
-
     def blurred_images_of_galaxies_via_psf_from(self, grid, psf, blurring_grid):
         return [
             galaxy.blurred_image_2d_via_psf_from(
@@ -331,14 +340,6 @@ class AbstractPlaneData(AbstractPlaneLensing):
             )
             for galaxy in self.galaxies
         ]
-
-    def blurred_image_2d_via_convolver_from(self, grid, convolver, blurring_grid):
-
-        image = self.image_2d_from(grid=grid)
-
-        blurring_image = self.image_2d_from(grid=blurring_grid)
-
-        return convolver.convolve_image(image=image, blurring_image=blurring_image)
 
     def blurred_images_of_galaxies_via_convolver_from(
         self, grid, convolver, blurring_grid
@@ -377,16 +378,6 @@ class AbstractPlaneData(AbstractPlaneLensing):
             unmasked_blurred_images_of_galaxies.append(unmasked_blurred_array_2d)
 
         return unmasked_blurred_images_of_galaxies
-
-    def profile_visibilities_via_transformer_from(self, grid, transformer):
-
-        if self.galaxies:
-            image = self.image_2d_from(grid=grid)
-            return transformer.visibilities_from(image=image)
-        else:
-            return aa.Visibilities.zeros(
-                shape_slim=(transformer.uv_wavelengths.shape[0],)
-            )
 
     def profile_visibilities_of_galaxies_via_transformer_from(self, grid, transformer):
         return [

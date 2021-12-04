@@ -12,6 +12,7 @@ from autogalaxy import exc
 from autogalaxy.lensing import LensingObject
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
+from autogalaxy.profiles.light_profiles.calc_image import CalcImage
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.profiles.mass_profiles.dark_mass_profiles import DarkProfile
 from autogalaxy.profiles.mass_profiles.stellar_mass_profiles import StellarProfile
@@ -43,7 +44,8 @@ class Galaxy(af.ModelObject, LensingObject, Dictable):
         hyper_galaxy: Optional["HyperGalaxy"] = None,
         **kwargs,
     ):
-        """Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
+        """
+        Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
         mass profiles, pixelizations, etc.).
         
         All *has_* methods retun `True` if galaxy has that attribute, `False` if not.
@@ -88,6 +90,24 @@ class Galaxy(af.ModelObject, LensingObject, Dictable):
             )
 
         self.hyper_galaxy = hyper_galaxy
+
+    @property
+    def _calc_image(self) -> CalcImage:
+        return CalcImage(image_2d_from=self.image_2d_from)
+
+    def __getattr__(self, item):
+        """
+        This dynamically passes all functions of the `_calc_image` property to the `LightProfile`.
+
+        This means that instead of having to call a function using the full path:
+
+        `light_profile._calc_image.blurred_image_2d_via_psf_from`
+
+        We can simply call it using the path:
+
+        `light_profile.blurred_image_2d_via_psf_from`
+        """
+        return getattr(self._calc_image, item)
 
     def dict(self) -> dict:
         return {
@@ -332,32 +352,6 @@ class Galaxy(af.ModelObject, LensingObject, Dictable):
         if self.has_light_profile:
             return sum(map(lambda p: p.image_2d_from(grid=grid), self.light_profiles))
         return np.zeros((grid.shape[0],))
-
-    def blurred_image_2d_via_psf_from(self, grid, psf, blurring_grid=None):
-
-        image = self.image_2d_from(grid=grid)
-
-        blurring_image = self.image_2d_from(grid=blurring_grid)
-
-        return psf.convolved_array_with_mask_from(
-            array=image.binned.native + blurring_image.binned.native, mask=grid.mask
-        )
-
-    def blurred_image_2d_via_convolver_from(self, grid, convolver, blurring_grid):
-
-        image = self.image_2d_from(grid=grid)
-
-        blurring_image = self.image_2d_from(grid=blurring_grid)
-
-        return convolver.convolve_image(
-            image=image.binned.slim, blurring_image=blurring_image.binned.slim
-        )
-
-    def profile_visibilities_via_transformer_from(self, grid, transformer):
-
-        image = self.image_2d_from(grid=grid)
-
-        return transformer.visibilities_from(image=image.binned.slim)
 
     def luminosity_within_circle(self, radius: float):
         """
