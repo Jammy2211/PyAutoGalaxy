@@ -1,3 +1,4 @@
+import numpy as np
 from typing import Callable, Union
 
 import autoarray as aa
@@ -91,6 +92,10 @@ class CalcImage:
         The grid must be a `Grid2D` objects for certain Fourier transforms to be valid. It therefore cannot be a
         `Grid2DIrregular` objects.
 
+        If the image is all zeros (e.g. because this light object has no light profiles, for example it is a
+        `Galaxy` object with only mass profiles) the Fourier transformed is skipped for efficiency and a `Visibilities`
+        object with all zeros is returned.
+
         Parameters
         ----------
         grid
@@ -101,7 +106,22 @@ class CalcImage:
         """
         image = self.image_2d_from(grid=grid)
 
+        if not np.any(image):
+            return aa.Visibilities.zeros(
+                shape_slim=(transformer.uv_wavelengths.shape[0],)
+            )
+
         return transformer.visibilities_from(image=image.binned)
+
+    def unmasked_blurred_image_2d_via_psf_from(self, grid, psf):
+
+        padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
+
+        padded_image = self.image_2d_from(grid=padded_grid)
+
+        return padded_grid.mask.unmasked_blurred_array_from(
+            padded_array=padded_image, psf=psf, image_shape=grid.mask.shape
+        )
 
     def add_functions(self, obj):
         """
@@ -121,4 +141,7 @@ class CalcImage:
         )
         obj.profile_visibilities_via_transformer_from = (
             self.profile_visibilities_via_transformer_from
+        )
+        obj.unmasked_blurred_image_2d_via_psf_from = (
+            self.unmasked_blurred_image_2d_via_psf_from
         )

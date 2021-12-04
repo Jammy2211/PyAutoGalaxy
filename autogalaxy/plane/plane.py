@@ -351,16 +351,6 @@ class AbstractPlaneData(AbstractPlaneLensing):
             for galaxy in self.galaxies
         ]
 
-    def unmasked_blurred_image_2d_via_psf_from(self, grid, psf):
-
-        padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
-
-        padded_image = self.image_2d_from(grid=padded_grid)
-
-        return padded_grid.mask.unmasked_blurred_array_from(
-            padded_array=padded_image, psf=psf, image_shape=grid.mask.shape
-        )
-
     def unmasked_blurred_image_of_galaxies_via_psf_from(self, grid, psf):
 
         padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
