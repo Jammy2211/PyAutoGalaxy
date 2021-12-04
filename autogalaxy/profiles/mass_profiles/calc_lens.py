@@ -54,7 +54,20 @@ def evaluation_grid(func):
 
 class CalcLens(Dictable):
     def __init__(self, deflections_2d_from: Callable):
+        """
+        Packages methods which manipulate the 2D deflection angle map returned from the `deflections_2d_from` function
+        of a mass object (e.g. a `MassProfile`, `Galaxy`, `Plane`).
 
+        The majority of methods are those which from the 2D deflection angle map compute lensing quantites like a 2D
+        shear field, magnification map or the Einstein Radius.
+
+        The methods in `CalcLens` are passed to the mass object to provide a concise API.
+
+        Parameters
+        ----------
+        deflections_2d_from
+            The function which returns the mass object's 2D deflection angles.
+        """
         self.deflections_2d_from = deflections_2d_from
 
     def __eq__(self, other):

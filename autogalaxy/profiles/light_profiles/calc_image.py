@@ -6,7 +6,20 @@ import autoarray as aa
 
 class CalcImage:
     def __init__(self, image_2d_from: Callable):
+        """
+        Packages methods which manipulate the 2D image returned from the `image_2d_from` function of a light object
+        (e.g. a `LightProfile`, `Galaxy`, `Plane`).
 
+        The majority of methods apply data operators to the 2D image which perform tasks such as a 2D convolution or
+        Fourier transform.
+
+        The methods in `CalcImage` are passed to the light object to provide a concise API.
+
+        Parameters
+        ----------
+        image_2d_from
+            The function which returns the light object's 2D image.
+        """
         self.image_2d_from = image_2d_from
 
     def blurred_image_2d_via_psf_from(
@@ -114,7 +127,27 @@ class CalcImage:
         return transformer.visibilities_from(image=image.binned)
 
     def unmasked_blurred_image_2d_via_psf_from(self, grid, psf):
+        """
+        Evaluate the light object's 2D image from a input 2D grid of coordinates and convolve it with a PSF, using a
+        grid which is not masked.
 
+        Convolving an unmasked 2D image with a PSF requires care, because at the edges of the 2D image the light
+        profile values will not be evaluated beyond its edge, even though some of its light will be blurred into these
+        edges.
+
+        This function pads the grid first, such that the light profile is evaluated beyond the edge. The function then
+        trims the array the image is evaluated on such that it is the original dimensions of the input 2D grid.
+
+        The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D
+        array and binned up for convolution. They therefore cannot be `Grid2DIrregular` objects.
+
+        Parameters
+        ----------
+        grid
+            The 2D (y,x) coordinates of the (masked) grid, in its original geometric reference frame.
+        psf
+            The PSF the light object 2D image is convolved with.
+        """
         padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
 
         padded_image = self.image_2d_from(grid=padded_grid)
