@@ -14,48 +14,83 @@ class LightProfile(EllProfile):
         elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
     ):
-        """Abstract class for an elliptical light-profile.
+        """
+        Abstract base class for an elliptical light-profile.
+
+        Each light profile has an analytic equation associated with it that describes its 1D surface brightness.
+
+        Given an input grid of 1D or 2D (y,x) coordinates the light profile can be used to evaluate its surface
+        brightness in 1D or as a 2D image.
+
+        Associated with a light profile is a spherical or elliptical geometry, which describes its `centre` of
+        emission and ellipticity. Geometric transformations are performed by decorators linked to the **PyAutoArray**
+        `geometry` package.
 
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system (see the module
+            `autogalaxy -> convert.py` for the convention).
         """
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
         self.intensity = intensity
 
     def image_2d_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
         """
-        Abstract method for obtaining intensity at a grid of Cartesian (y,x) coordinates.
+        Returns the light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates, which may have been
+        transformed using the light profile's geometry.
+
+        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
+            The 2D (y, x) coordinates in the original reference frame of the grid.
 
         Returns
         -------
         image
-            The image of the `LightProfile` evaluated at every (y,x) coordinate on the grid.
+            The image of the `LightProfile` evaluated at every (y,x) coordinate on the transformed grid.
         """
         raise NotImplementedError()
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """
-        Abstract method for obtaining intensity at on a grid of radii.
+        Returns the light profile's 2D image from a 1D grid of coordinates which are the radial distance of each
+        coordinate from the light profile `centre`.
 
         Parameters
         ----------
         grid_radii
-            The radial distance from the centre of the profile. for each coordinate on the grid.
+            The radial distances from the centre of the profile, for each coordinate on the grid.
         """
         raise NotImplementedError()
 
     @aa.grid_dec.grid_1d_to_structure
     def image_1d_from(self, grid: aa.type.Grid1D2DLike) -> aa.Array2D:
+        """
+        Returns the light profile's 1D image from a grid of Cartesian coordinates, which may have been
+        transformed using the light profile's geometry.
+
+        If a 1D grid is input the image is evaluated every coordinate on the grid. If a 2D grid is input, this is
+        converted to a 1D grid by aligning with the major-axis of the light profile's elliptical geometry.
+
+        Internally, this function uses a 2D grid to compute the image, which is mapped to a 1D data structure on return
+        via the `grid_1d_to_structure` decorator. This avoids code repetition by ensuring that light profiles only use
+        their `image_2d_from()`  function to evaluate their image.
+
+        Parameters
+        ----------
+        grid
+            A 1D or 2D grid of coordinates which are used to evaluate the light profile in 1D.
+
+        Returns
+        -------
+        image
+            The 1D image of the light profile evaluated at every (x,) coordinate on the 1D transformed grid.
+        """
         return self.image_2d_from(grid=grid)
 
     def blurred_image_2d_via_psf_from(
@@ -65,24 +100,23 @@ class LightProfile(EllProfile):
         blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
     ) -> aa.Array2D:
         """
-        Evaluate the light profile image on an input `Grid2D` of coordinates and then convolve it with a PSF.
+        Evaluate the light profile's 2D image from a input 2D grid of coordinates and convolve it with a PSF.
 
-        The `Grid2D` may be masked, in which case values outside but near the edge of the mask will convolve light into
-        the mask. A blurring grid is therefore required, which evaluates the image on pixels on the mask edge such that
-        their light is blurred into it by the PSF.
+        The input 2D grid may be masked, in which case values outside but near the edge of the mask will convolve light
+        into the mask. A blurring grid is therefore required, which contains image pixels on the mask edge whose light
+        is blurred into the light profile's image by the PSF.
 
-        The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D array
-        and binned up for convolution. They therefore cannot be `Grid2DIrregular` objects.
+        The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D
+        array and binned up for convolution. They therefore cannot be `Grid2DIrregular` objects.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
-        psf : aa.Kernel2D
-            The PSF the evaluated light profile image is convolved with.
+            The 2D (y,x) coordinates of the (masked) grid, in its original geometric reference frame.
+        psf
+            The PSF the light profile 2D image is convolved with.
         blurring_grid
-            The (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
-
+            The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
         """
         image = self.image_2d_from(grid=grid)
 
@@ -99,25 +133,25 @@ class LightProfile(EllProfile):
         blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
     ) -> aa.Array2D:
         """
-        Evaluate the light profile image on an input `Grid2D` of coordinates and then convolve it with a PSF using a
-        *Convolver* object.
+        Evaluate the light profile's 2D image from a input 2D grid of coordinates and convolve it with a PSF, using a
+        `autoarray.operators.convolver.Convolver` object. The `Convolver` object performs the 2D convolution operations
+        using 1D NumPy arrays without mapping them to 2D, which is more efficient.
 
-        The `Grid2D` may be masked, in which case values outside but near the edge of the mask will convolve light into
-        the mask. A blurring grid is therefore required, which evaluates the image on pixels on the mask edge such that
-        their light is blurred into it by the Convolver.
+        The input 2D grid may be masked, in which case values outside but near the edge of the mask will convolve light
+        into the mask. A blurring grid is therefore required, which contains image pixels on the mask edge whose light
+        is blurred into the light profile's image by the PSF.
 
-        The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D array
-        and binned up for convolution. They therefore cannot be `Grid2DIrregular` objects.
+        The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D
+        array and binned up for convolution. They therefore cannot be `Grid2DIrregular` objects.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
-        Convolver
-            The Convolver object used to blur the PSF.
+            The 2D (y,x) coordinates of the (masked) grid, in its original geometric reference frame.
+        convolver
+            The convolver object used perform PSF convolution on 1D numpy arrays.
         blurring_grid
-            The (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
-
+            The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
         """
         image = self.image_2d_from(grid=grid)
 
@@ -132,28 +166,41 @@ class LightProfile(EllProfile):
         grid: Union[aa.Grid2D, aa.Grid2DIterate],
         transformer: Union[aa.TransformerDFT, aa.TransformerNUFFT],
     ) -> aa.Visibilities:
+        """
+        Evaluate the light profile's 2D image from a input 2D grid of coordinates and transform this to an array of
+        visibilities using a `autoarray.operators.transformer.Transformer` object and therefore a Fourier Transform.
 
+        The input 2D grid may be masked, in which case values outside the mask are not evaluated. This does not impact
+        the Fourier transform.
+
+        The grid must be a `Grid2D` objects for certain Fourier transforms to be valid. It therefore cannot be a
+        `Grid2DIrregular` objects.
+
+        Parameters
+        ----------
+        grid
+            The 2D (y,x) coordinates of the (masked) grid, in its original geometric reference frame.
+        transformer
+            The **PyAutoArray** `Transformer` object describing how the 2D image is Fourier transformed to visiblities
+            in the uv-plane.
+        """
         image = self.image_2d_from(grid=grid)
 
         return transformer.visibilities_from(image=image.binned)
 
     def luminosity_within_circle(self, radius: float) -> float:
-        """Integrate the light profile to compute the total luminosity within a circle of specified radius. This is \
-        centred on the light profile's centre.
+        """
+        Integrate the light profile to compute the total luminosity within a circle of specified radius. This is
+        centred on the light profile's `centre`.
 
-        The following unit_label for mass can be specified and output:
-
-        - Electrons per second (default) - 'eps'.
-        - Counts - 'counts' (multiplies the luminosity in electrons per second by the exposure time).
+        The `intensity` of a light profile is in dimension units, which are given physical meaning when the light
+        profile is compared to data with physical units. The luminosity output by this function therefore is also
+        dimensionless until compared to data.
 
         Parameters
         ----------
         radius
-            The radius of the circle to compute the dimensionless mass within.
-        unit_luminosity : str
-            The unit_label the luminosity is returned in {esp, counts}.
-        exposure_time or None
-            The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
+            The radius of the circle to compute the dimensionless luminosity within.
         """
 
         return quad(func=self.luminosity_integral, a=0.0, b=radius)[0]
@@ -163,6 +210,11 @@ class LightProfile(EllProfile):
         Routine to integrate the luminosity of an elliptical light profile.
 
         The axis ratio is set to 1.0 for computing the luminosity within a circle
+
+        Parameters
+        ----------
+        x
+            The 1D (x) radial coordinates where the luminosity integral is evaluated.
         """
         return 2 * np.pi * x * self.image_2d_via_radii_from(x)
 
@@ -184,17 +236,20 @@ class EllGaussian(LightProfile):
         """
         The elliptical Gaussian light profile.
 
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
+
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         sigma
-            The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.
+            The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
 
         super().__init__(
@@ -204,14 +259,15 @@ class EllGaussian(LightProfile):
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """
-        Calculate the intensity of the Gaussian light profile on a grid of radial coordinates.
+        Returns the 2D image of the Gaussian light profile from a grid of coordinates which are the radial distance of
+        each coordinate from the its `centre`.
+
+        Note: sigma is divided by sqrt(q) here.
 
         Parameters
         ----------
         grid_radii
-            The radial distance from the centre of the profile. for each coordinate on the grid.
-
-        Note: sigma is divided by sqrt(q) here.
+            The radial distances from the centre of the profile, for each coordinate on the grid.
         """
         return np.multiply(
             self.intensity,
@@ -228,14 +284,19 @@ class EllGaussian(LightProfile):
     @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
+        Returns the Gaussian light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
         If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
+            The 2D (y, x) coordinates in the original reference frame of the grid.
+
+        Returns
+        -------
+        image
+            The image of the Gaussian evaluated at every (y,x) coordinate on the transformed grid.
         """
 
         return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
@@ -251,14 +312,17 @@ class SphGaussian(EllGaussian):
         """
         The spherical Gaussian light profile.
 
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
+
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         sigma
-            The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.
+            The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
         super().__init__(
             centre=centre, elliptical_comps=(0.0, 0.0), intensity=intensity, sigma=sigma
@@ -274,23 +338,25 @@ class AbstractEllSersic(LightProfile):
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
     ):
-        """ Abstract base class for an elliptical Sersic light profile, used for computing its effective radius and
-        Sersic instance.
+        """
+        Abstract base class for elliptical Sersic light profiles.
+
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation in the light profiles (electrons per second)
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
-            The circular radius containing half the light of this model_mapper
-        sersic_index : Int
-            Controls the concentration of the of the profile (lower value -> less concentrated, \
-            higher value -> more concentrated).
+            The circular radius containing half the light of this light profile.
+        sersic_index
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         """
         super().__init__(
             centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
@@ -301,9 +367,10 @@ class AbstractEllSersic(LightProfile):
     @property
     def elliptical_effective_radius(self) -> float:
         """
-        The effective_radius of a Sersic light profile is defined as the circular effective radius. This is the
-        radius within which a circular aperture contains half the profiles's total integrated light. For elliptical
-        systems, this won't robustly capture the light profile's elliptical shape.
+        The `effective_radius` of a Sersic light profile is defined as the circular effective radius, which is the
+        radius within which a circular aperture contains half the profile's total integrated light.
+
+        For elliptical systems, this will not robustly capture the light profile's elliptical shape.
 
         The elliptical effective radius instead describes the major-axis radius of the ellipse containing
         half the light, and may be more appropriate for highly flattened systems like disk galaxies.
@@ -327,12 +394,13 @@ class AbstractEllSersic(LightProfile):
 
     def image_2d_via_radii_from(self, radius: np.ndarray) -> np.ndarray:
         """
-        Returns the intensity of the profile at a given radius.
+        Returns the 2D image of the Sersic light profile from a grid of coordinates which are the radial distances of
+        each coordinate from the its `centre`.
 
-            Parameters
-            ----------
-            radius
-                The distance from the centre of the profile.
+        Parameters
+        ----------
+        grid_radii
+            The radial distances from the centre of the profile, for each coordinate on the grid.
         """
         return self.intensity * np.exp(
             -self.sersic_constant
@@ -352,20 +420,22 @@ class EllSersic(AbstractEllSersic, LightProfile):
         """
         The elliptical Sersic light profile.
 
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
+
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
-        sersic_index : Int
-            Controls the concentration of the of the profile (lower value -> less concentrated, \
-            higher value -> more concentrated).
+        sersic_index
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         """
         super().__init__(
             centre=centre,
@@ -377,12 +447,13 @@ class EllSersic(AbstractEllSersic, LightProfile):
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """
-        Calculate the intensity of the Sersic light profile on a grid of radial coordinates.
+        Returns the 2D image of the Sersic light profile from a grid of coordinates which are the radial distances of
+        each coordinate from the its `centre`.
 
         Parameters
         ----------
         grid_radii
-            The radial distance from the centre of the profile. for each coordinate on the grid.
+            The radial distances from the centre of the profile, for each coordinate on the grid.
         """
         np.seterr(all="ignore")
         return np.multiply(
@@ -406,14 +477,19 @@ class EllSersic(AbstractEllSersic, LightProfile):
     @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
+        Returns the Sersic light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
         If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
+            The 2D (y, x) coordinates in the original reference frame of the grid.
+
+        Returns
+        -------
+        image
+            The image of the Sersic evaluated at every (y,x) coordinate on the transformed grid.
         """
         return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
 
@@ -429,15 +505,18 @@ class SphSersic(EllSersic):
         """
         The spherical Sersic light profile.
 
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
+
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
-        sersic_index : Int
+        sersic_index
             Controls the concentration of the of the light profile.
         """
         super().__init__(
@@ -460,17 +539,20 @@ class EllExponential(EllSersic):
         """
         The elliptical exponential profile.
 
-        This is a subset of the elliptical Sersic profile, specific to the case that sersic_index = 1.0.
+        This is a specific case of the elliptical Sersic profile where `sersic_index=1.0`.
+
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
         centre
             The (y,x) arc-second centre of the light profile.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
         """
@@ -493,14 +575,17 @@ class SphExponential(EllExponential):
         """
         The spherical exponential profile.
 
-        This is a subset of the elliptical Sersic profile, specific to the case that sersic_index = 1.0.
+        This is a specific case of the elliptical Sersic profile where `sersic_index=1.0`.
+
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
         """
@@ -523,17 +608,20 @@ class EllDevVaucouleurs(EllSersic):
         """
         The elliptical Dev Vaucouleurs light profile.
 
-        This is a subset of the elliptical Sersic profile, specific to the case that sersic_index = 4.0.
+        This is a specific case of the elliptical Sersic profile where `sersic_index=4.0`.
+
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
         """
@@ -556,14 +644,17 @@ class SphDevVaucouleurs(EllDevVaucouleurs):
         """
         The spherical Dev Vaucouleurs light profile.
 
-        This is a subset of the elliptical Sersic profile, specific to the case that sersic_index = 1.0.
+        This is a specific case of the elliptical Sersic profile where `sersic_index=4.0`.
+
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
         """
@@ -590,18 +681,19 @@ class EllSersicCore(EllSersic):
         """
         The elliptical cored-Sersic light profile.
 
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
+
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         effective_radius
             The circular radius containing half the light of this profile.
-        sersic_index : Int
-            Controls the concentration of the of the profile (lower value -> less concentrated, \
-            higher value -> more concentrated).
+        sersic_index
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
         intensity_break
@@ -628,7 +720,10 @@ class EllSersicCore(EllSersic):
     @property
     def intensity_prime(self) -> float:
         """
-        Overall intensity normalisation in the rescaled Core-Sersic light profiles (electrons per second).
+        Overall intensity normalisation in the rescaled cored Sersic light profile.
+
+        Like the `intensity` parameter, the units of `intensity_prime` are dimensionless and derived from the data
+        the light profile's image is compared too, which are expected to be electrons per second.
         """
         return (
             self.intensity_break
@@ -645,12 +740,13 @@ class EllSersicCore(EllSersic):
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """
-        Calculate the intensity of the cored-Sersic light profile on a grid of radial coordinates.
+        Returns the 2D image of the Sersic light profile from a grid of coordinates which are the radial distances of
+        each coordinate from the its `centre`.
 
         Parameters
         ----------
         grid_radii
-            The radial distance from the centre of the profile. for each coordinate on the grid.
+            The radial distances from the centre of the profile, for each coordinate on the grid.
         """
         return np.multiply(
             np.multiply(
@@ -697,15 +793,16 @@ class SphSersicCore(EllSersicCore):
         """
         The elliptical cored-Sersic light profile.
 
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
+
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         effective_radius
             The circular radius containing half the light of this profile.
-        sersic_index : Int
-            Controls the concentration of the of the profile (lower value -> less concentrated, \
-            higher value -> more concentrated).
+        sersic_index
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
         intensity_break
@@ -747,18 +844,19 @@ class EllExponentialCore(EllSersicCore):
         """
         The elliptical cored-Exponential light profile.
 
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
+
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         effective_radius
             The circular radius containing half the light of this profile.
-        sersic_index : Int
-            Controls the concentration of the of the profile (lower value -> less concentrated, \
-            higher value -> more concentrated).
+        sersic_index
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
         intensity_break
@@ -793,6 +891,8 @@ class SphExponentialCore(EllExponentialCore):
     ):
         """
         The elliptical cored-Exponential light profile.
+
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
@@ -838,22 +938,26 @@ class EllChameleon(LightProfile):
         """
         The elliptical Chameleon light profile.
 
-        Profile form:
-            mass_to_light_ratio * intensity *\
-                (1.0 / Sqrt(x^2 + (y/q)^2 + rc^2) - 1.0 / Sqrt(x^2 + (y/q)^2 + (rc + dr)**2.0))
+        This light profile closely approximes the Elliptical Sersic light profile, by representing it as two cored
+        elliptical isothermal profiles. This is convenient for lensing calculations, because the deflection angles of
+        an isothermal profile can be evaluated analyticially efficiently.
+
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
-        core_radius_0 : the core size of the first elliptical cored Isothermal profile.
-        core_radius_1 : rc + dr is the core size of the second elliptical cored Isothermal profile.
-             We use dr here is to avoid negative values.
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
+        core_radius_0
+            The core size of the first elliptical cored Isothermal profile.
+        core_radius_1
+            The core size of the second elliptical cored Isothermal profile.
         """
 
         super().__init__(
@@ -864,17 +968,22 @@ class EllChameleon(LightProfile):
 
     @property
     def axis_ratio(self) -> float:
+        """
+        The elliptical isothermal mass profile deflection angles break down for perfectly spherical systems where
+        `axis_ratio=1.0`, thus we remove these solutions.
+        """
         axis_ratio = super().axis_ratio
         return axis_ratio if axis_ratio < 0.99999 else 0.99999
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """
-        Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.
+        Returns the 2D image of the Sersic light profile from a grid of coordinates which are the radial distances of
+        each coordinate from the its `centre`.
 
         Parameters
         ----------
         grid_radii
-            The radial distance from the centre of the profile. for each coordinate on the grid.
+            The radial distances from the centre of the profile, for each coordinate on the grid.
         """
 
         axis_ratio_factor = (1.0 + self.axis_ratio) ** 2.0
@@ -908,12 +1017,19 @@ class EllChameleon(LightProfile):
     @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
+        Returns the Chameleon light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
+
         If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
+            The 2D (y, x) coordinates in the original reference frame of the grid.
+
+        Returns
+        -------
+        image
+            The image of the Chameleon evaluated at every (y,x) coordinate on the transformed grid.
         """
         return self.image_2d_via_radii_from(self.grid_to_elliptical_radii(grid))
 
@@ -929,22 +1045,26 @@ class SphChameleon(EllChameleon):
         """
         The spherical Chameleon light profile.
 
-        Profile form:
-            mass_to_light_ratio * intensity *\
-                (1.0 / Sqrt(x^2 + (y/q)^2 + rc^2) - 1.0 / Sqrt(x^2 + (y/q)^2 + (rc + dr)**2.0))
+        This light profile closely approximes the Elliptical Sersic light profile, by representing it as two cored
+        elliptical isothermal profiles. This is convenient for lensing calculations, because the deflection angles of
+        an isothermal profile can be evaluated analyticially efficiently.
+
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
-        core_radius_0 : the core size of the first elliptical cored Isothermal profile.
-        core_radius_1 : rc + dr is the core size of the second elliptical cored Isothermal profile.
-             We use dr here is to avoid negative values.
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
+        core_radius_0
+            The core size of the first elliptical cored Isothermal profile.
+        core_radius_1
+            The core size of the second elliptical cored Isothermal profile.
         """
 
         super().__init__(
@@ -966,18 +1086,19 @@ class EllEff(LightProfile):
         eta: float = 1.5,
     ):
         """
-        The elliptical eff light profile, which is commonly used to represent the clumps of Lyman-alpha emitter
-        galaxies.
+        The elliptical Elson, Fall and Freeman (EFF) light profile, which is commonly used to represent the clumps of
+        Lyman-alpha emitter galaxies (see https://arxiv.org/abs/1708.08854).
 
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
         eta
@@ -993,12 +1114,13 @@ class EllEff(LightProfile):
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """
-        Calculate the intensity of the Eff light profile on a grid of radial coordinates.
+        Returns the 2D image of the Sersic light profile from a grid of coordinates which are the radial distances of
+        each coordinate from the its `centre`.
 
         Parameters
         ----------
         grid_radii
-            The radial distance from the centre of the profile. for each coordinate on the grid.
+            The radial distances from the centre of the profile, for each coordinate on the grid.
         """
         np.seterr(all="ignore")
         return self.intensity * (1 + (grid_radii / self.effective_radius) ** 2) ** (
@@ -1010,14 +1132,19 @@ class EllEff(LightProfile):
     @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Calculate the intensity of the light profile on a grid of Cartesian (y,x) coordinates.
+        Returns the Eff light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
         If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
+            The 2D (y, x) coordinates in the original reference frame of the grid.
+
+        Returns
+        -------
+        image
+            The image of the Eff evaluated at every (y,x) coordinate on the transformed grid.
         """
         return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
 
@@ -1035,21 +1162,22 @@ class SphEff(EllEff):
         eta: float = 1.5,
     ):
         """
-        The spherical eff light profile, which is commonly used to represent the clumps of Lyman-alpha emitter
-        galaxies.
+        The spherical Elson, Fall and Freeman (EFF) light profile, which is commonly used to represent the clumps of
+        Lyman-alpha emitter galaxies (see https://arxiv.org/abs/1708.08854).
 
-        This profile is introduced in the following paper:
-
-        https://arxiv.org/abs/1708.08854
+        See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
+        eta
+            Scales the intensity gradient of the profile.
         """
 
         super().__init__(

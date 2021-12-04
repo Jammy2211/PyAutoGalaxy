@@ -28,8 +28,8 @@ def axis_ratio_and_angle_from(elliptical_comps):
     Parameters
     ----------
     elliptical_comps : (float, float)
-        The first and second ellipticity components of the elliptical coordinate system, where
-        fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+        The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
     """
     angle = np.arctan2(elliptical_comps[0], elliptical_comps[1]) / 2
     angle *= 180.0 / np.pi
@@ -49,8 +49,8 @@ def axis_ratio_from(elliptical_comps):
     Parameters
     ----------
     elliptical_comps : (float, float)
-        The first and second ellipticity components of the elliptical coordinate system, where
-        fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+        The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
     """
     axis_ratio, angle = axis_ratio_and_angle_from(elliptical_comps=elliptical_comps)
     return axis_ratio
@@ -64,8 +64,8 @@ def angle_from(elliptical_comps):
     Parameters
     ----------
     elliptical_comps : (float, float)
-        The first and second ellipticity components of the elliptical coordinate system, where
-        fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+        The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
     """
     axis_ratio, angle = axis_ratio_and_angle_from(elliptical_comps=elliptical_comps)
     return angle

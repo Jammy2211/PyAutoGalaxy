@@ -107,12 +107,13 @@ class EllGaussian(lp.EllGaussian, LightProfileSNR):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         sigma
-            The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.
+            The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
 
         super().__init__(
@@ -136,9 +137,10 @@ class SphGaussian(lp.SphGaussian, LightProfileSNR):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         sigma
-            The sigma value of the Gaussian, correspodning to ~ 1 / sqrt(2 log(2)) the full width half maximum.
+            The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
         super().__init__(centre=centre, intensity=0.0, sigma=sigma)
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
@@ -166,13 +168,12 @@ class EllSersic(lp.EllSersic, LightProfileSNR):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         effective_radius
             The circular radius containing half the light of this profile.
-        sersic_index : Int
-            Controls the concentration of the of the profile (lower value -> less concentrated, \
-            higher value -> more concentrated).
+        sersic_index
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         """
         super().__init__(
             centre=centre,
@@ -201,10 +202,11 @@ class SphSersic(lp.SphSersic, LightProfileSNR):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
-        sersic_index : Int
+        sersic_index
             Controls the concentration of the of the light profile.
         """
         super().__init__(
@@ -234,10 +236,11 @@ class EllExponential(lp.EllExponential, LightProfileSNR):
         centre
             The (y,x) arc-second centre of the light profile.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
         """
@@ -267,7 +270,8 @@ class SphExponential(lp.SphExponential, LightProfileSNR):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
         """
@@ -293,10 +297,11 @@ class EllDevVaucouleurs(lp.EllDevVaucouleurs, LightProfileSNR):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
         """
@@ -326,7 +331,8 @@ class SphDevVaucouleurs(lp.SphDevVaucouleurs, LightProfileSNR):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
         """
@@ -357,10 +363,11 @@ class EllChameleon(lp.EllChameleon, LightProfileSNR):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         core_radius_0 : the core size of the first elliptical cored Isothermal profile.
         core_radius_1 : rc + dr is the core size of the second elliptical cored Isothermal profile.
              We use dr here is to avoid negative values.
@@ -396,10 +403,11 @@ class SphChameleon(lp.SphChameleon, LightProfileSNR):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         core_radius_0 : the core size of the first elliptical cored Isothermal profile.
         core_radius_1 : rc + dr is the core size of the second elliptical cored Isothermal profile.
              We use dr here is to avoid negative values.
@@ -432,10 +440,11 @@ class EllEff(lp.EllEff, LightProfileSNR):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
         eta
@@ -473,7 +482,8 @@ class SphEff(lp.SphEff, LightProfileSNR):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
         """

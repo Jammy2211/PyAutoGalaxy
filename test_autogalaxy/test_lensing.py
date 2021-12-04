@@ -27,8 +27,8 @@ class MockEllIsothermal(geometry_profiles.EllProfile, lensing.LensingObject):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         """
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
         self.einstein_radius = einstein_radius
@@ -164,8 +164,8 @@ class MockSphIsothermal(MockEllIsothermal):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps : (float, float)
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         """
         super().__init__(
             centre=centre, elliptical_comps=(0.0, 0.0), einstein_radius=einstein_radius
