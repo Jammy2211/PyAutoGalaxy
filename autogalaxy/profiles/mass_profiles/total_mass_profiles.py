@@ -299,7 +299,7 @@ class EllPowerLawCored(MassProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -322,7 +322,7 @@ class EllPowerLawCored(MassProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -355,7 +355,7 @@ class EllPowerLawCored(MassProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -472,7 +472,7 @@ class SphPowerLawCored(EllPowerLawCored):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -531,16 +531,16 @@ class EllPowerLaw(EllPowerLawCored):
     def deflections_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
-        ​
+
         For coordinates (0.0, 0.0) the analytic calculation of the deflection angle gives a NaN. Therefore, \
         coordinates at (0.0, 0.0) are shifted slightly to (1.0e-8, 1.0e-8).
 
         This code is an adaption of Tessore & Metcalf 2015:
         https://arxiv.org/abs/1507.01819
-        ​
+
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -750,7 +750,7 @@ class EllIsothermal(EllPowerLaw):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -782,7 +782,7 @@ class EllIsothermal(EllPowerLaw):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -841,7 +841,7 @@ class SphIsothermal(EllIsothermal):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
         eta = self.grid_to_elliptical_radii(grid)
@@ -856,7 +856,7 @@ class SphIsothermal(EllIsothermal):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
         return self.grid_to_grid_cartesian(

@@ -445,7 +445,7 @@ class MassProfileMGE:
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """

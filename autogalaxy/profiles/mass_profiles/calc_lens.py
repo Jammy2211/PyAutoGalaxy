@@ -1,7 +1,7 @@
 from functools import wraps
 import numpy as np
 from skimage import measure
-from typing import Callable
+from typing import Callable, List, Tuple, Union
 
 import autoarray as aa
 from autoconf.dictable import Dictable
@@ -25,7 +25,9 @@ def precompute_jacobian(func):
 
 def evaluation_grid(func):
     @wraps(func)
-    def wrapper(lensing_obj, grid, pixel_scale=0.05):
+    def wrapper(
+        lensing_obj, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
+    ):
 
         if hasattr(grid, "is_evaluation_grid"):
             if grid.is_evaluation_grid:
@@ -73,22 +75,40 @@ class CalcLens(Dictable):
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ is other.__class__
 
-    def deflection_magnitudes_from(self, grid):
-        deflections = self.deflections_2d_from(grid=grid)
-        return deflections.distances_to_coordinate(coordinate=(0.0, 0.0))
-
     @precompute_jacobian
     def tangential_eigen_value_from(self, grid, jacobian=None):
+        """
+        Returns the tangential eigen values of lensing jacobian, which are given by the expression:
 
+        `tangential_eigen_value = 1 - convergence - shear`
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and tangential eigen values are computed
+            on.
+        jacobian
+            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
+        """
         convergence = self.convergence_via_jacobian_from(grid=grid, jacobian=jacobian)
-
         shear = self.shear_via_jacobian_from(grid=grid, jacobian=jacobian)
 
         return aa.Array2D(array=1 - convergence - shear, mask=grid.mask)
 
     @precompute_jacobian
     def radial_eigen_value_from(self, grid, jacobian=None):
+        """
+        Returns the radial eigen values of lensing jacobian, which are given by the expression:
 
+        radial_eigen_value = 1 - convergence + shear
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and radial eigen values are computed on.
+        jacobian
+            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
+        """
         convergence = self.convergence_via_jacobian_from(grid=grid, jacobian=jacobian)
 
         shear = self.shear_via_jacobian_from(grid=grid, jacobian=jacobian)
@@ -96,15 +116,46 @@ class CalcLens(Dictable):
         return aa.Array2D(array=1 - convergence + shear, mask=grid.mask)
 
     def magnification_2d_from(self, grid):
+        """
+        Returns the 2D magnification map of lensing object, which is computed as the inverse of the determinant of the
+        jacobian.
 
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and magnification map are computed on.
+        """
         jacobian = self.jacobian_from(grid=grid)
 
         det_jacobian = jacobian[0][0] * jacobian[1][1] - jacobian[0][1] * jacobian[1][0]
 
         return aa.Array2D(array=1 / det_jacobian, mask=grid.mask)
 
-    def hessian_from(self, grid, buffer=0.01, deflections_func=None):
+    def hessian_from(self, grid, buffer: float = 0.01, deflections_func=None):
+        """
+        Returns the Hessian of the lensing object, where the Hessian is the second partial derivatives of the the
+        potential (see equation 55 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
 
+        `hessian_{i,j} = d^2 / dtheta_i dtheta_j`
+
+        The Hessian is computed by evaluating the 2D deflection angles around every (y,x) coordinate on the input 2D
+        grid map in four directions (positive y, negative y, positive x, negative x), exploiting how the deflection
+        angles are the derivative of the potential.
+
+        By using evaluating the deflection angles around each grid coordinate, the Hessian can therefore be computed
+        using uniform or irregular 2D grids of (y,x). This can be slower, because x4 more deflection angle calculations
+        are required, however it is more flexible in and therefore used throughout **PyAutoLens** by default.
+
+        The Hessian is returned as a 4 entry tuple, which reflect its structure as a 2x2 matrix.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and Hessian are computed on.
+        buffer
+            The spacing in the y and x directions around each grid coordinate where deflection angles are computed and
+            used to estimate the derivative.
+        """
         if deflections_func is None:
             deflections_func = self.deflections_2d_from
 
@@ -136,30 +187,83 @@ class CalcLens(Dictable):
 
         return hessian_yy, hessian_xy, hessian_yx, hessian_xx
 
-    def convergence_via_hessian_from(self, grid, buffer=0.01):
+    def convergence_via_hessian_from(self, grid, buffer: float = 0.01):
+        """
+        Returns the convergence of the lensing object, which is computed from the 2D deflection angle map via the
+        Hessian using the expression (see equation 56 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
 
+        `convergence = 0.5 * (hessian_{0,0} + hessian_{1,1}) = 0.5 * (hessian_xx + hessian_yy)`
+
+        By going via the Hessian, the convergence can be calculated at any (y,x) coordinate therefore using either a
+        2D uniform or irregular grid.
+        
+        This calculation of the convergence is independent of analytic calculations defined within `MassProfile` objects
+        and can therefore be used as a cross-check.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and Hessian are computed on.
+        buffer
+            The spacing in the y and x directions around each grid coordinate where deflection angles are computed and
+            used to estimate the derivative.
+        """
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
             grid=grid, buffer=buffer
         )
 
         return grid.values_from(array_slim=0.5 * (hessian_yy + hessian_xx))
 
-    def shear_yx_via_hessian_from(self, grid, buffer=0.01):
+    def shear_yx_via_hessian_from(self, grid, buffer: float = 0.01):
+        """
+        Returns the 2D (y,x) shear vectors of the lensing object, which are computed from the 2D deflection angle map
+        via the Hessian using the expressions (see equation 57 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
 
+        `shear_y = hessian_{1,0} =  hessian_{0,1} = hessian_yx = hessian_xy`
+        `shear_x = 0.5 * (hessian_{0,0} - hessian_{1,1}) = 0.5 * (hessian_xx - hessian_yy)`
+
+        By going via the Hessian, the shear vectors can be calculated at any (y,x) coordinate, therefore using either a
+        2D uniform or irregular grid.
+
+        This calculation of the shear vectors is independent of analytic calculations defined within `MassProfile`
+        objects and can therefore be used as a cross-check.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and Hessian are computed on.
+        buffer
+            The spacing in the y and x directions around each grid coordinate where deflection angles are computed and
+            used to estimate the derivative.
+        """
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
             grid=grid, buffer=buffer
         )
 
         return 0.5 * (hessian_xx - hessian_yy), hessian_xy
 
-    def shear_via_hessian_from(self, grid, buffer=0.01):
+    def magnification_via_hessian_from(
+        self, grid, buffer: float = 0.01, deflections_func=None
+    ):
+        """
+        Returns the 2D magnification map of lensing object, which is computed from the 2D deflection angle map
+        via the Hessian using the expressions (see equation 60 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
 
-        shear_y, shear_x = self.shear_yx_via_hessian_from(grid=grid, buffer=buffer)
+        `magnification = 1.0 / det(Jacobian) = 1.0 / abs((1.0 - convergence)**2.0 - shear**2.0)`
+        `magnification = (1.0 - hessian_{0,0}) * (1.0 - hessian_{1, 1)) - hessian_{0,1}*hessian_{1,0}`
+        `magnification = (1.0 - hessian_xx) * (1.0 - hessian_yy)) - hessian_xy*hessian_yx`
 
-        return grid.values_from(array_slim=(shear_x ** 2 + shear_y ** 2) ** 0.5)
+        By going via the Hessian, the magnification can be calculated at any (y,x) coordinate, therefore using either a
+        2D uniform or irregular grid.
 
-    def magnification_via_hessian_from(self, grid, buffer=0.01, deflections_func=None):
+        This calculation of the magnification is independent of calculations using the Jacobian and can therefore be
+        used as a cross-check.
 
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and magnification map are computed on.
+        """
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
             grid=grid, buffer=buffer, deflections_func=deflections_func
         )
@@ -169,8 +273,27 @@ class CalcLens(Dictable):
         return grid.values_from(array_slim=1.0 / det_A)
 
     @evaluation_grid
-    def tangential_critical_curve_from(self, grid, pixel_scale=0.05):
+    def tangential_critical_curve_from(
+        self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
+    ) -> aa.Grid2DIrregular:
+        """
+        Returns the tangential critical curve of lensing object, which is computed as follows:
 
+        1) Compute the tangential eigen values for every coordinate on the input grid via the Jacobian.
+        2) Find contours of all values in the tangential eigen values that are zero using a marching squares algorithm.
+
+        Due to the use of a marching squares algorithm that requires the zero values of the tangential eigen values to
+        be computed, critical curves can only be calculated using the Jacobian and a uniform 2D grid.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and tangential eigen values are computed
+            on.
+        pixel_scale
+            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
+            critical curve to be computed more accurately using a higher resolution grid.
+        """
         tangential_eigen_values = self.tangential_eigen_value_from(grid=grid)
 
         tangential_critical_curve_indices = measure.find_contours(
@@ -191,8 +314,27 @@ class CalcLens(Dictable):
             return []
 
     @evaluation_grid
-    def radial_critical_curve_from(self, grid, pixel_scale=0.05):
+    def radial_critical_curve_from(
+        self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
+    ) -> aa.Grid2DIrregular:
+        """
+        Returns the radial critical curve of lensing object, which is computed as follows:
 
+        1) Compute the radial eigen values for every coordinate on the input grid via the Jacobian.
+        2) Find contours of all values in the radial eigen values that are zero using a marching squares algorithm.
+
+        Due to the use of a marching squares algorithm that requires the zero values of the radial eigen values to
+        be computed, this critical curves can only be calculated using the Jacobian and a uniform 2D grid.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and radial eigen values are computed
+            on.
+        pixel_scale
+            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
+            critical curve to be computed more accurately using a higher resolution grid.
+        """
         radial_eigen_values = self.radial_eigen_value_from(grid=grid)
 
         radial_critical_curve_indices = measure.find_contours(
@@ -213,8 +355,28 @@ class CalcLens(Dictable):
             return []
 
     @evaluation_grid
-    def critical_curves_from(self, grid, pixel_scale=0.05):
+    def critical_curves_from(
+        self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
+    ) -> List[aa.Grid2DIrregular]:
+        """
+        Returns the both the tangential and radial critical curves of lensing object as a two entry list of 
+        irregular 2D grids.
 
+        The calculation of each critical curve is described in the functions `tangential_critical_curve_from()` and
+        `radial_critical_curve_from()`.
+
+        Due to the use of a marching squares algorithm used in each function, critical curves can only be calculated 
+        using the Jacobian and a uniform 2D grid.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the critical curves are 
+            computed on.
+        pixel_scale
+            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
+            critical curve to be computed more accurately using a higher resolution grid.
+        """
         try:
             return aa.Grid2DIrregular(
                 [
@@ -228,8 +390,29 @@ class CalcLens(Dictable):
             return []
 
     @evaluation_grid
-    def tangential_caustic_from(self, grid, pixel_scale=0.05):
+    def tangential_caustic_from(
+        self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
+    ) -> aa.Grid2DIrregular:
+        """
+        Returns the tangential caustic of lensing object, which is computed as follows:
 
+        1) Compute the tangential eigen values for every coordinate on the input grid via the Jacobian.
+        2) Find contours of all values in the tangential eigen values that are zero using a marching squares algorithm.
+        3) Compute the lensing objects deflection angle's at the (y,x) coordinates of this tangential critical curve 
+        contour and ray-trace it to the source-plane, therefore forming the tangential caustic.
+
+        Due to the use of a marching squares algorithm that requires the zero values of the tangential eigen values to
+        be computed, caustics can only be calculated using the Jacobian and a uniform 2D grid.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and tangential eigen values are computed
+            on.
+        pixel_scale
+            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
+            caustic to be computed more accurately using a higher resolution grid.
+        """
         tangential_critical_curve = self.tangential_critical_curve_from(
             grid=grid, pixel_scale=pixel_scale
         )
@@ -244,8 +427,29 @@ class CalcLens(Dictable):
         return tangential_critical_curve - deflections_critical_curve
 
     @evaluation_grid
-    def radial_caustic_from(self, grid, pixel_scale=0.05):
+    def radial_caustic_from(
+        self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
+    ) -> aa.Grid2DIrregular:
+        """
+        Returns the radial caustic of lensing object, which is computed as follows:
 
+        1) Compute the radial eigen values for every coordinate on the input grid via the Jacobian.
+        2) Find contours of all values in the radial eigen values that are zero using a marching squares algorithm.
+        3) Compute the lensing objects deflection angle's at the (y,x) coordinates of this radial critical curve 
+        contour and ray-trace it to the source-plane, therefore forming the radial caustic.
+
+        Due to the use of a marching squares algorithm that requires the zero values of the radial eigen values to
+        be computed, this caustics can only be calculated using the Jacobian and a uniform 2D grid.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and radial eigen values are computed
+            on.
+        pixel_scale
+            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
+            caustic to be computed more accurately using a higher resolution grid.
+        """
         radial_critical_curve = self.radial_critical_curve_from(
             grid=grid, pixel_scale=pixel_scale
         )
@@ -260,8 +464,28 @@ class CalcLens(Dictable):
         return radial_critical_curve - deflections_critical_curve
 
     @evaluation_grid
-    def caustics_from(self, grid, pixel_scale=0.05):
+    def caustics_from(
+        self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
+    ) -> List[aa.Grid2DIrregular]:
+        """
+        Returns the both the tangential and radial caustics of lensing object as a two entry list of 
+        irregular 2D grids.
 
+        The calculation of each caustic is described in the functions `tangential_caustic_from()` and
+        `radial_caustic_from()`.
+
+        Due to the use of a marching squares algorithm used in each function, caustics can only be calculated 
+        using the Jacobian and a uniform 2D grid.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the caustics are 
+            computed on.
+        pixel_scale
+            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
+            caustic to be computed more accurately using a higher resolution grid.
+        """
         try:
             return aa.Grid2DIrregular(
                 [
@@ -273,8 +497,27 @@ class CalcLens(Dictable):
             return []
 
     @evaluation_grid
-    def area_within_tangential_critical_curve_from(self, grid, pixel_scale=0.05):
+    def area_within_tangential_critical_curve_from(
+        self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
+    ) -> float:
+        """
+        Returns the surface area within the tangential critical curve, the calculation of whihc is described in the
+        function `tangential_critical_curve_from()`
 
+        The area is computed via a line integral.
+
+        Due to the use of a marching squares algorithm to estimate the critical curve, this function can only use the
+        Jacobian and a uniform 2D grid.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the tangential critical
+            curve are computed on.
+        pixel_scale
+            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
+            caustic to be computed more accurately using a higher resolution grid.
+        """
         tangential_critical_curve = self.tangential_critical_curve_from(
             grid=grid, pixel_scale=pixel_scale
         )
@@ -283,8 +526,31 @@ class CalcLens(Dictable):
         return np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
 
     @evaluation_grid
-    def einstein_radius_from(self, grid, pixel_scale=0.05):
+    def einstein_radius_from(
+        self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
+    ):
+        """
+        Returns the Einstein radius, which is defined as the radius of the circle which contains the same area as the
+        area within the tangential critical curve.
 
+        This definition is sometimes referred to as the "effective Einstein radius" in the literature and is commonly
+        adopted in studies, for example the SLACS series of papers.
+
+        The calculation of the tangential critical curve and its are is described in the functions
+         `tangential_critical_curve_from()` and `area_within_tangential_critical_curve_from()`.
+
+        Due to the use of a marching squares algorithm to estimate the critical curve, this function can only use the
+        Jacobian and a uniform 2D grid.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the tangential critical
+            curve are computed on.
+        pixel_scale
+            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
+            caustic to be computed more accurately using a higher resolution grid.
+        """
         try:
             return np.sqrt(
                 self.area_within_tangential_critical_curve_from(
@@ -296,14 +562,61 @@ class CalcLens(Dictable):
             raise TypeError("The grid input was unable to estimate the Einstein Radius")
 
     @evaluation_grid
-    def einstein_mass_angular_from(self, grid, pixel_scale=0.05):
+    def einstein_mass_angular_from(
+        self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
+    ):
+        """
+        Returns the angular Einstein Mass, which is defined as:
+
+        `einstein_mass = pi * einstein_radius ** 2.0`
+
+        where the Einstein radius is the radius of the circle which contains the same area as the area within the
+        tangential critical curve.
+
+        The Einstein mass is returned in units of arcsecond**2.0 and requires division by the lensing critical surface
+        density \sigma_cr to be converted to physical units like solar masses (see `autogalaxy.util.cosmology_util`).
+
+        This definition of Eisntein radius (and therefore mass) is sometimes referred to as the "effective Einstein
+        radius" in the literature and is commonly adopted in studies, for example the SLACS series of papers.
+
+        The calculation of the einstein radius is described in the function `einstein_radius_from()`.
+
+        Due to the use of a marching squares algorithm to estimate the critical curve, this function can only use the
+        Jacobian and a uniform 2D grid.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the tangential critical
+            curve are computed on.
+        pixel_scale
+            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
+            caustic to be computed more accurately using a higher resolution grid.
+        """
         return np.pi * (
             self.einstein_radius_from(grid=grid, pixel_scale=pixel_scale) ** 2
         )
 
     def jacobian_from(self, grid):
+        """
+        Returns the Jacobian of the lensing object, which is computed by taking the gradient of the 2D deflection
+        angle map in four direction (positive y, negative y, positive x, negative x).
 
+        By using the `np.gradient` method the Jacobian can therefore only be computed using uniform 2D grids of (y,x)
+        coordinates, and does not support irregular grids. For this reason, calculations by default use the Hessian,
+        which is slower to compute because more deflection angle calculations are necessary but more flexible in
+        general.
+
+        The Jacobian is returned as a list of lists, which reflect its structure as a 2x2 matrix.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
+        """
         deflections = self.deflections_2d_from(grid=grid)
+
+        # TODO : Can probably make this work on irregular grid? Is there any point?
 
         a11 = aa.Array2D.manual_mask(
             array=1.0
@@ -332,22 +645,74 @@ class CalcLens(Dictable):
         return [[a11, a12], [a21, a22]]
 
     @precompute_jacobian
-    def convergence_via_jacobian_from(self, grid, jacobian=None):
+    def convergence_via_jacobian_from(self, grid, jacobian=None) -> aa.Array2D:
+        """
+        Returns the convergence of the lensing object, which is computed from the 2D deflection angle map via the
+        Jacobian using the expression (see equation 58 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
 
+        `convergence = 1.0 - 0.5 * (jacobian_{0,0} + jacobian_{1,1}) = 0.5 * (jacobian_xx + jacobian_yy)`
+
+        By going via the Jacobian, the convergence must be calculated using 2D uniform grid.
+
+        This calculation of the convergence is independent of analytic calculations defined within `MassProfile`
+        objects and the calculation via the Hessian. It can therefore be used as a cross-check.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
+        jacobian
+            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
+        """
         convergence = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
 
         return aa.Array2D(array=convergence, mask=grid.mask)
 
     @precompute_jacobian
     def shear_yx_via_jacobian_from(self, grid, jacobian=None):
+        """
+        Returns the 2D (y,x) shear vectors of the lensing object, which are computed from the 2D deflection angle map
+        via the Jacobian using the expression (see equation 58 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
 
+        `shear_y = -0.5 * (jacobian_{0,1} + jacobian_{1,0} = -0.5 * (jacobian_yx + jacobian_xy)`
+        `shear_x = 0.5 * (jacobian_{1,1} + jacobian_{0,0} = 0.5 * (jacobian_yy + jacobian_xx)`
+
+        By going via the Jacobian, the convergence must be calculated using 2D uniform grid.
+
+        This calculation of the shear vectors is independent of analytic calculations defined within `MassProfile`
+        objects and the calculation via the Hessian. It can therefore be used as a cross-check.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
+        jacobian
+            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
+        """
         shear_y = -0.5 * (jacobian[0][1] + jacobian[1][0])
         shear_x = 0.5 * (jacobian[1][1] - jacobian[0][0])
 
         return shear_y, shear_x
 
+    def deflection_magnitudes_from(self, grid):
+
+        # TODO : Replace with use of a VectorField data structure.
+
+        deflections = self.deflections_2d_from(grid=grid)
+        return deflections.distances_to_coordinate(coordinate=(0.0, 0.0))
+
+    def shear_via_hessian_from(self, grid, buffer: float = 0.01):
+
+        # TODO : Replace with use of a VectorField data structure.
+
+        shear_y, shear_x = self.shear_yx_via_hessian_from(grid=grid, buffer=buffer)
+
+        return grid.values_from(array_slim=(shear_x ** 2 + shear_y ** 2) ** 0.5)
+
     @precompute_jacobian
     def shear_via_jacobian_from(self, grid, jacobian=None):
+
+        # TODO : Replace with use of a VectorField data structure.
 
         shear_y, shear_x = self.shear_yx_via_jacobian_from(grid=grid)
 

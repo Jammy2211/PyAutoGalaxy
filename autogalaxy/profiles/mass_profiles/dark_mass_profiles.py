@@ -149,7 +149,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -166,7 +166,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -181,7 +181,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
 
         Parameters
         -----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the potential / deflection_stacks are computed on.
         tabulate_bins : int
             The number of bins to tabulate the inner integral of this profile.
@@ -477,7 +477,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         tabulate_bins : int
             The number of bins to tabulate the inner integral of this profile.
@@ -615,7 +615,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         tabulate_bins : int
             The number of bins to tabulate the inner integral of this profile.
@@ -748,7 +748,7 @@ class SphNFWGeneralized(EllNFWGeneralized):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -812,7 +812,7 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -1017,7 +1017,7 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1118,7 +1118,7 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1264,7 +1264,7 @@ class SphNFW(EllNFW):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -1290,7 +1290,7 @@ class SphNFW(EllNFW):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """

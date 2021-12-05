@@ -61,7 +61,7 @@ class EllGaussian(MassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -76,7 +76,7 @@ class EllGaussian(MassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -104,7 +104,7 @@ class EllGaussian(MassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         Note: sigma is divided by sqrt(q) here.
@@ -161,7 +161,7 @@ class EllGaussian(MassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -326,7 +326,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -516,7 +516,7 @@ class EllSersic(AbstractEllSersic, MassProfileMGE, MassProfileCSE):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -800,7 +800,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -878,7 +878,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -1262,7 +1262,7 @@ class EllChameleon(MassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1332,7 +1332,7 @@ class EllChameleon(MassProfile, StellarProfile):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
         return self.convergence_func(self.grid_to_elliptical_radii(grid))

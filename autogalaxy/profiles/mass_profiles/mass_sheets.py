@@ -94,7 +94,7 @@ class ExternalShear(MassProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -131,7 +131,7 @@ class InputDeflections(MassProfile):
             The input array of the y components of the deflection angles.
         deflections_x : aa.Array2D
             The input array of the x components of the deflection angles.
-        image_plane_grid : aa.Grid2D
+        image_plane_grid
             The image-plane grid from which the deflection angles are defined.
         grid_interp : aa.Grid2D
             The grid that interpolated quantities are computed on. If this is input in advance, the interpolation
