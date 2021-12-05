@@ -74,6 +74,7 @@ from .profiles import (
 from .profiles.light_profiles import light_profiles_init as lp_init
 from .profiles.light_profiles import light_profiles_snr as lp_snr
 from . import convert
+from .util.shear_field import ShearField2DIrregular
 
 from autoconf import conf
 
