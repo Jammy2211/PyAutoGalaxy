@@ -167,7 +167,7 @@ class InputDeflections(MassProfile):
 
     @aa.grid_dec.grid_2d_to_structure
     def convergence_2d_from(self, grid: aa.type.Grid2DLike):
-        return self.convergence_via_jacobian_from(grid=grid)
+        return self.convergence_2d_via_jacobian_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
     def potential_2d_from(self, grid: aa.type.Grid2DLike):

@@ -115,7 +115,7 @@ def test__hessian_from():
     assert hessian_xx == pytest.approx(np.array([2.22209, 0.0]), 1.0e-4)
 
 
-def test__convergence_via_hessian_from():
+def test__convergence_2d_via_hessian_from():
 
     buffer = 0.0001
     grid = ag.Grid2DIrregular(
@@ -126,7 +126,7 @@ def test__convergence_via_hessian_from():
         centre=(0.0, 0.0), elliptical_comps=(0.001, 0.001), einstein_radius=1.0
     )
 
-    convergence = sis.convergence_via_hessian_from(grid=grid, buffer=buffer)
+    convergence = sis.convergence_2d_via_hessian_from(grid=grid, buffer=buffer)
 
     assert convergence.in_list[0] == pytest.approx(0.461447, 1.0e-4)
     assert convergence.in_list[1] == pytest.approx(0.568875, 1.0e-4)
@@ -137,7 +137,7 @@ def test__convergence_via_hessian_from():
         centre=(0.0, 0.0), elliptical_comps=(0.3, 0.4), einstein_radius=1.5
     )
 
-    convergence = sis.convergence_via_hessian_from(grid=grid, buffer=buffer)
+    convergence = sis.convergence_2d_via_hessian_from(grid=grid, buffer=buffer)
 
     assert convergence.in_list[0] == pytest.approx(0.35313, 1.0e-4)
     assert convergence.in_list[1] == pytest.approx(0.46030, 1.0e-4)
@@ -186,7 +186,7 @@ def test__magnification_2d_via_hessian_from():
 
     grid = ag.Grid2DIrregular(grid=[(0.5, 0.5), (1.0, 1.0)])
 
-    magnification = sie.magnification_via_hessian_from(grid=grid)
+    magnification = sie.magnification_2d_via_hessian_from(grid=grid)
 
     assert magnification.in_list[0] == pytest.approx(-0.56303, 1.0e-4)
     assert magnification.in_list[1] == pytest.approx(-2.57591, 1.0e-4)
@@ -431,7 +431,7 @@ def test__magnification_2d_from__compare_determinant_and_convergence_and_shear()
 
     magnification_via_determinant = sie.magnification_2d_from(grid=grid)
 
-    convergence = sie.convergence_via_jacobian_from(grid=grid)
+    convergence = sie.convergence_2d_via_jacobian_from(grid=grid)
 
     shear = sie.shear_via_jacobian_from(grid=grid)
 
@@ -448,7 +448,7 @@ def test__magnification_2d_from__compare_determinant_and_convergence_and_shear()
 
     magnification_via_determinant = sie.magnification_2d_from(grid=grid)
 
-    convergence = sie.convergence_via_jacobian_from(grid=grid)
+    convergence = sie.convergence_2d_via_jacobian_from(grid=grid)
 
     shear = sie.shear_via_jacobian_from(grid=grid)
 
@@ -578,14 +578,14 @@ def test__jacobian_from():
     assert mean_error < 1e-4
 
 
-def test__convergence_via_jacobian_from__compare_via_jacobian_and_analytic():
+def test__convergence_2d_via_jacobian_from__compare_via_jacobian_and_analytic():
     sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 
     convergence_via_analytic = sis.convergence_2d_from(grid=grid)
 
-    convergence_via_jacobian = sis.convergence_via_jacobian_from(grid=grid)
+    convergence_via_jacobian = sis.convergence_2d_via_jacobian_from(grid=grid)
 
     mean_error = np.mean(convergence_via_jacobian.slim - convergence_via_analytic.slim)
 
@@ -604,7 +604,7 @@ def test__convergence_via_jacobian_from__compare_via_jacobian_and_analytic():
 
     convergence_via_analytic = sie.convergence_2d_from(grid=grid)
 
-    convergence_via_jacobian = sie.convergence_via_jacobian_from(grid=grid)
+    convergence_via_jacobian = sie.convergence_2d_via_jacobian_from(grid=grid)
 
     mean_error = np.mean(convergence_via_jacobian.slim - convergence_via_analytic.slim)
 

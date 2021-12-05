@@ -605,7 +605,7 @@ class TestInputDeflections:
 
         convergence = input_deflections.convergence_2d_from(grid=grid)
 
-        convergence_via_jacobian = input_deflections.convergence_via_jacobian_from(
+        convergence_via_jacobian = input_deflections.convergence_2d_via_jacobian_from(
             grid=grid
         )
 
