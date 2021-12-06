@@ -453,7 +453,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
 
 
 class EllNFWGeneralized(AbstractEllNFWGeneralized):
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
 
         return self.deflections_2d_via_mge_from(grid=grid)
 
@@ -803,10 +803,11 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
         self.truncation_radius = truncation_radius
         self.tau = self.truncation_radius / self.scale_radius
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -1005,7 +1006,7 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
         )
         super(MassProfileCSE, self).__init__()
 
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_cse_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
@@ -1252,7 +1253,7 @@ class SphNFW(EllNFW):
             scale_radius=scale_radius,
         )
 
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_analytic_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure

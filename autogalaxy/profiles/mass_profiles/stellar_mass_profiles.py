@@ -55,7 +55,7 @@ class EllGaussian(MassProfile, StellarProfile):
         self.intensity = intensity
         self.sigma = sigma
 
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -275,7 +275,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
         self.effective_radius = effective_radius
         self.sersic_index = sersic_index
 
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_cse_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
@@ -1072,7 +1072,7 @@ class EllSersicCore(EllSersic):
         self.alpha = alpha
         self.gamma = gamma
 
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_mge_from(grid=grid)
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray):
@@ -1249,7 +1249,7 @@ class EllChameleon(MassProfile, StellarProfile):
         self.core_radius_0 = core_radius_0
         self.core_radius_1 = core_radius_1
 
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_analytic_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure

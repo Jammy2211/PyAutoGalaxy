@@ -29,9 +29,7 @@ def test__elliptical_properties_and_patches():
     assert vectors.phis.in_list == pytest.approx([0.0, 45.0, 22.5], 1.0e-4)
 
     assert isinstance(vectors.elliptical_patches[0], Ellipse)
-    assert vectors.elliptical_patches[1].center == pytest.approx(
-        (1.0, 1.0), 1.0e-4
-    )
+    assert vectors.elliptical_patches[1].center == pytest.approx((1.0, 1.0), 1.0e-4)
     assert vectors.elliptical_patches[1].width == pytest.approx(6.0, 1.0e-4)
     assert vectors.elliptical_patches[1].height == pytest.approx(0.0, 1.0e-4)
     assert vectors.elliptical_patches[1].angle == pytest.approx(45.0, 1.0e-4)

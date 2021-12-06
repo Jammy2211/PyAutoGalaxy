@@ -43,10 +43,11 @@ class PointMass(MassProfile):
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         grid_radii = self.grid_to_grid_radii(grid=grid)
         return self.grid_to_grid_cartesian(
             grid=grid, radius=self.einstein_radius ** 2 / grid_radii
@@ -130,10 +131,11 @@ class EllPowerLawBroken(MassProfile):
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid, max_terms=20):
+    def deflections_yx_2d_from(self, grid, max_terms=20):
         """
         Returns the complex deflection angle from eq. 18 and 19
         """
@@ -346,10 +348,11 @@ class EllPowerLawCored(MassProfile):
 
         return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -463,10 +466,11 @@ class SphPowerLawCored(EllPowerLawCored):
             core_radius=core_radius,
         )
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -525,10 +529,11 @@ class EllPowerLaw(EllPowerLawCored):
             core_radius=0.0,
         )
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -626,10 +631,11 @@ class SphPowerLaw(EllPowerLaw):
             slope=slope,
         )
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
 
         eta = self.grid_to_grid_radii(grid)
         deflection_r = (
@@ -738,10 +744,11 @@ class EllIsothermal(EllPowerLaw):
         axis_ratio = super().axis_ratio
         return axis_ratio if axis_ratio < 0.99999 else 0.99999
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -847,10 +854,11 @@ class SphIsothermal(EllIsothermal):
         eta = self.grid_to_elliptical_radii(grid)
         return 2.0 * self.einstein_radius_rescaled * eta
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 

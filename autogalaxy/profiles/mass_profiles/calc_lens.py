@@ -55,9 +55,9 @@ def evaluation_grid(func):
 
 
 class CalcLens(Dictable):
-    def __init__(self, deflections_2d_from: Callable):
+    def __init__(self, deflections_yx_2d_from: Callable):
         """
-        Packages methods which manipulate the 2D deflection angle map returned from the `deflections_2d_from` function
+        Packages methods which manipulate the 2D deflection angle map returned from the `deflections_yx_2d_from` function
         of a mass object (e.g. a `MassProfile`, `Galaxy`, `Plane`).
 
         The majority of methods are those which from the 2D deflection angle map compute lensing quantites like a 2D
@@ -67,16 +67,16 @@ class CalcLens(Dictable):
 
         Parameters
         ----------
-        deflections_2d_from
+        deflections_yx_2d_from
             The function which returns the mass object's 2D deflection angles.
         """
-        self.deflections_2d_from = deflections_2d_from
+        self.deflections_yx_2d_from = deflections_yx_2d_from
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ is other.__class__
 
     @precompute_jacobian
-    def tangential_eigen_value_from(self, grid, jacobian=None):
+    def tangential_eigen_value_from(self, grid, jacobian=None) -> aa.Array2D:
         """
         Returns the tangential eigen values of lensing jacobian, which are given by the expression:
 
@@ -93,12 +93,13 @@ class CalcLens(Dictable):
         convergence = self.convergence_2d_via_jacobian_from(
             grid=grid, jacobian=jacobian
         )
-        shear = self.shear_via_jacobian_from(grid=grid, jacobian=jacobian)
 
-        return aa.Array2D(array=1 - convergence - shear, mask=grid.mask)
+        shear_yx = self.shear_yx_2d_via_jacobian_from(grid=grid, jacobian=jacobian)
+
+        return aa.Array2D(array=1 - convergence - shear_yx.magnitudes, mask=grid.mask)
 
     @precompute_jacobian
-    def radial_eigen_value_from(self, grid, jacobian=None):
+    def radial_eigen_value_from(self, grid, jacobian=None) -> aa.Array2D:
         """
         Returns the radial eigen values of lensing jacobian, which are given by the expression:
 
@@ -115,11 +116,11 @@ class CalcLens(Dictable):
             grid=grid, jacobian=jacobian
         )
 
-        shear = self.shear_via_jacobian_from(grid=grid, jacobian=jacobian)
+        shear = self.shear_yx_2d_via_jacobian_from(grid=grid, jacobian=jacobian)
 
-        return aa.Array2D(array=1 - convergence + shear, mask=grid.mask)
+        return aa.Array2D(array=1 - convergence + shear.magnitudes, mask=grid.mask)
 
-    def magnification_2d_from(self, grid):
+    def magnification_2d_from(self, grid) -> aa.Array2D:
         """
         Returns the 2D magnification map of lensing object, which is computed as the inverse of the determinant of the
         jacobian.
@@ -135,7 +136,7 @@ class CalcLens(Dictable):
 
         return aa.Array2D(array=1 / det_jacobian, mask=grid.mask)
 
-    def hessian_from(self, grid, buffer: float = 0.01, deflections_func=None):
+    def hessian_from(self, grid, buffer: float = 0.01, deflections_func=None) -> Tuple:
         """
         Returns the Hessian of the lensing object, where the Hessian is the second partial derivatives of the the
         potential (see equation 55 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
@@ -161,7 +162,7 @@ class CalcLens(Dictable):
             used to estimate the derivative.
         """
         if deflections_func is None:
-            deflections_func = self.deflections_2d_from
+            deflections_func = self.deflections_yx_2d_from
 
         grid_shift_y_up = np.zeros(grid.shape)
         grid_shift_y_up[:, 0] = grid[:, 0] + buffer
@@ -191,7 +192,9 @@ class CalcLens(Dictable):
 
         return hessian_yy, hessian_xy, hessian_yx, hessian_xx
 
-    def convergence_2d_via_hessian_from(self, grid, buffer: float = 0.01):
+    def convergence_2d_via_hessian_from(
+        self, grid, buffer: float = 0.01
+    ) -> aa.ValuesIrregular:
         """
         Returns the convergence of the lensing object, which is computed from the 2D deflection angle map via the
         Hessian using the expression (see equation 56 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
@@ -218,7 +221,9 @@ class CalcLens(Dictable):
 
         return grid.values_from(array_slim=0.5 * (hessian_yy + hessian_xx))
 
-    def shear_2d_yx_via_hessian_from(self, grid, buffer: float = 0.01):
+    def shear_yx_2d_via_hessian_from(
+        self, grid, buffer: float = 0.01
+    ) -> aa.VectorYX2DIrregular:
         """
         Returns the 2D (y,x) shear vectors of the lensing object, which are computed from the 2D deflection angle map
         via the Hessian using the expressions (see equation 57 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
@@ -244,11 +249,15 @@ class CalcLens(Dictable):
             grid=grid, buffer=buffer
         )
 
-        return 0.5 * (hessian_xx - hessian_yy), hessian_xy
+        shear_yx_2d = np.zeros(shape=(grid.sub_shape_slim, 2))
+        shear_yx_2d[:, 0] = hessian_xy
+        shear_yx_2d[:, 1] = 0.5 * (hessian_xx - hessian_yy)
+
+        return aa.VectorYX2DIrregular(vectors=shear_yx_2d, grid=grid)
 
     def magnification_2d_via_hessian_from(
         self, grid, buffer: float = 0.01, deflections_func=None
-    ):
+    ) -> aa.ValuesIrregular:
         """
         Returns the 2D magnification map of lensing object, which is computed from the 2D deflection angle map
         via the Hessian using the expressions (see equation 60 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
@@ -424,7 +433,7 @@ class CalcLens(Dictable):
         if len(tangential_critical_curve) == 0:
             return []
 
-        deflections_critical_curve = self.deflections_2d_from(
+        deflections_critical_curve = self.deflections_yx_2d_from(
             grid=tangential_critical_curve
         )
 
@@ -461,7 +470,7 @@ class CalcLens(Dictable):
         if len(radial_critical_curve) == 0:
             return []
 
-        deflections_critical_curve = self.deflections_2d_from(
+        deflections_critical_curve = self.deflections_yx_2d_from(
             grid=radial_critical_curve
         )
 
@@ -618,7 +627,7 @@ class CalcLens(Dictable):
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
         """
-        deflections = self.deflections_2d_from(grid=grid)
+        deflections = self.deflections_yx_2d_from(grid=grid)
 
         # TODO : Can probably make this work on irregular grid? Is there any point?
 
@@ -673,7 +682,7 @@ class CalcLens(Dictable):
         return aa.Array2D(array=convergence, mask=grid.mask)
 
     @precompute_jacobian
-    def shear_2d_yx_via_jacobian_from(self, grid, jacobian=None):
+    def shear_yx_2d_via_jacobian_from(self, grid, jacobian=None) -> aa.VectorYX2D:
         """
         Returns the 2D (y,x) shear vectors of the lensing object, which are computed from the 2D deflection angle map
         via the Jacobian using the expression (see equation 58 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
@@ -693,34 +702,14 @@ class CalcLens(Dictable):
         jacobian
             A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
         """
-        shear_y = -0.5 * (jacobian[0][1] + jacobian[1][0])
-        shear_x = 0.5 * (jacobian[1][1] - jacobian[0][0])
 
-        return shear_y, shear_x
+        shear_yx_2d = np.zeros(shape=(grid.sub_shape_slim, 2))
+        shear_yx_2d[:, 0] = -0.5 * (jacobian[0][1] + jacobian[1][0])
+        shear_yx_2d[:, 1] = 0.5 * (jacobian[1][1] - jacobian[0][0])
 
-    def deflection_magnitudes_from(self, grid):
-
-        # TODO : Replace with use of a VectorField data structure.
-
-        deflections = self.deflections_2d_from(grid=grid)
-        return deflections.distances_to_coordinate(coordinate=(0.0, 0.0))
-
-    def shear_via_hessian_from(self, grid, buffer: float = 0.01):
-
-        # TODO : Replace with use of a VectorField data structure.
-
-        shear_y, shear_x = self.shear_2d_yx_via_hessian_from(grid=grid, buffer=buffer)
-
-        return grid.values_from(array_slim=(shear_x ** 2 + shear_y ** 2) ** 0.5)
-
-    @precompute_jacobian
-    def shear_via_jacobian_from(self, grid, jacobian=None):
-
-        # TODO : Replace with use of a VectorField data structure.
-
-        shear_y, shear_x = self.shear_2d_yx_via_jacobian_from(grid=grid)
-
-        return aa.Array2D(array=(shear_x ** 2 + shear_y ** 2) ** 0.5, mask=grid.mask)
+        if isinstance(grid, aa.Grid2DIrregular):
+            return aa.VectorYX2DIrregular(vectors=shear_yx_2d, grid=grid)
+        return aa.VectorYX2D(vectors=shear_yx_2d, grid=grid, mask=grid.mask)
 
     def add_functions(self, obj):
         """
@@ -734,14 +723,12 @@ class CalcLens(Dictable):
 
         `mass_object.magnification_2d_from`
         """
-        obj.deflection_magnitudes_from = self.deflection_magnitudes_from
         obj.tangential_eigen_value_from = self.tangential_eigen_value_from
         obj.radial_eigen_value_from = self.radial_eigen_value_from
         obj.magnification_2d_from = self.magnification_2d_from
         obj.hessian_from = self.hessian_from
         obj.convergence_2d_via_hessian_from = self.convergence_2d_via_hessian_from
-        obj.shear_2d_yx_via_hessian_from = self.shear_2d_yx_via_hessian_from
-        obj.shear_via_hessian_from = self.shear_via_hessian_from
+        obj.shear_yx_2d_via_hessian_from = self.shear_yx_2d_via_hessian_from
         obj.magnification_2d_via_hessian_from = self.magnification_2d_via_hessian_from
         obj.tangential_critical_curve_from = self.tangential_critical_curve_from
         obj.radial_critical_curve_from = self.radial_critical_curve_from
@@ -756,5 +743,4 @@ class CalcLens(Dictable):
         obj.einstein_mass_angular_from = self.einstein_mass_angular_from
         obj.jacobian_from = self.jacobian_from
         obj.convergence_2d_via_jacobian_from = self.convergence_2d_via_jacobian_from
-        obj.shear_2d_yx_via_jacobian_from = self.shear_2d_yx_via_jacobian_from
-        obj.shear_via_jacobian_from = self.shear_via_jacobian_from
+        obj.shear_yx_2d_via_jacobian_from = self.shear_yx_2d_via_jacobian_from

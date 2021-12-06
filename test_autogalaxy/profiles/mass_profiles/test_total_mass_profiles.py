@@ -1,6 +1,3 @@
-import os
-
-from autoconf import conf
 import autogalaxy as ag
 import numpy as np
 import pytest
@@ -18,37 +15,38 @@ class TestPointMass:
 
         point_mass = ag.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
 
-        deflections = point_mass.deflections_2d_from(grid=np.array([[1.0, 1.0]]))
+        deflections = point_mass.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
+
         assert deflections[0, 0] == pytest.approx(0.5, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.5, 1e-3)
 
         point_mass = ag.mp.PointMass(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        deflections = point_mass.deflections_2d_from(grid=np.array([[1.0, 1.0]]))
+        deflections = point_mass.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
         assert deflections[0, 0] == pytest.approx(2.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(2.0, 1e-3)
 
         point_mass = ag.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
 
-        deflections = point_mass.deflections_2d_from(grid=np.array([[2.0, 2.0]]))
+        deflections = point_mass.deflections_yx_2d_from(grid=np.array([[2.0, 2.0]]))
         assert deflections[0, 0] == pytest.approx(0.25, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.25, 1e-3)
 
         point_mass = ag.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
 
-        deflections = point_mass.deflections_2d_from(grid=np.array([[2.0, 1.0]]))
+        deflections = point_mass.deflections_yx_2d_from(grid=np.array([[2.0, 1.0]]))
         assert deflections[0, 0] == pytest.approx(0.4, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.2, 1e-3)
 
         point_mass = ag.mp.PointMass(centre=(0.0, 0.0), einstein_radius=2.0)
 
-        deflections = point_mass.deflections_2d_from(grid=np.array([[4.0, 9.0]]))
+        deflections = point_mass.deflections_yx_2d_from(grid=np.array([[4.0, 9.0]]))
         assert deflections[0, 0] == pytest.approx(16.0 / 97.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(36.0 / 97.0, 1e-3)
 
         point_mass = ag.mp.PointMass(centre=(1.0, 2.0), einstein_radius=1.0)
 
-        deflections = point_mass.deflections_2d_from(grid=np.array([[2.0, 3.0]]))
+        deflections = point_mass.deflections_yx_2d_from(grid=np.array([[2.0, 3.0]]))
         assert deflections[0, 0] == pytest.approx(0.5, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.5, 1e-3)
 
@@ -56,15 +54,15 @@ class TestPointMass:
 
         point_mass_0 = ag.mp.PointMass(centre=(0.0, 0.0))
         point_mass_1 = ag.mp.PointMass(centre=(1.0, 1.0))
-        deflections_0 = point_mass_0.deflections_2d_from(grid=np.array([[1.0, 1.0]]))
-        deflections_1 = point_mass_1.deflections_2d_from(grid=np.array([[0.0, 0.0]]))
+        deflections_0 = point_mass_0.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
+        deflections_1 = point_mass_1.deflections_yx_2d_from(grid=np.array([[0.0, 0.0]]))
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
 
         point_mass_0 = ag.mp.PointMass(centre=(0.0, 0.0))
         point_mass_1 = ag.mp.PointMass(centre=(0.0, 0.0))
-        deflections_0 = point_mass_0.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = point_mass_1.deflections_2d_from(grid=np.array([[0.0, 1.0]]))
+        deflections_0 = point_mass_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = point_mass_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
@@ -72,7 +70,7 @@ class TestPointMass:
 
         point_mass = ag.mp.PointMass(centre=(1.0, 2.0), einstein_radius=1.0)
 
-        deflections = point_mass.deflections_2d_from(
+        deflections = point_mass.deflections_yx_2d_from(
             grid=np.array([[2.0, 3.0], [2.0, 3.0], [2.0, 3.0]])
         )
 
@@ -85,7 +83,7 @@ class TestPointMass:
 
         point_mass = ag.mp.PointMass(centre=(0.0, 0.0), einstein_radius=1.0)
 
-        deflections = point_mass.deflections_2d_from(
+        deflections = point_mass.deflections_yx_2d_from(
             grid=np.array([[1.0, 1.0], [2.0, 2.0], [1.0, 1.0], [2.0, 2.0]])
         )
 
@@ -100,16 +98,6 @@ class TestPointMass:
 
         assert deflections[3, 0] == pytest.approx(0.25, 1e-3)
         assert deflections[3, 1] == pytest.approx(0.25, 1e-3)
-
-    def test__output_are_autoarrays(self):
-
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        point_mass = ag.mp.PointMass()
-
-        deflections = point_mass.deflections_2d_from(grid=grid)
-
-        assert deflections.shape_native == (2, 2)
 
 
 class TestPowerLawBroken:
@@ -195,12 +183,14 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
+        deflections = broken_power_law.deflections_yx_2d_from(
+            grid=np.array([[0.5, 1.0]])
+        )
 
         assert deflections[0, 0] == pytest.approx(0.404076, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.808152, 1e-3)
 
-        deflections = broken_power_law.deflections_2d_from(
+        deflections = broken_power_law.deflections_yx_2d_from(
             grid=np.array([[0.5, 1.0], [0.5, 1.0]])
         )
 
@@ -218,7 +208,9 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
+        deflections = broken_power_law.deflections_yx_2d_from(
+            grid=np.array([[0.5, 1.0]])
+        )
 
         assert deflections[0, 0] == pytest.approx(0.40392, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.811619, 1e-3)
@@ -232,7 +224,9 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
+        deflections = broken_power_law.deflections_yx_2d_from(
+            grid=np.array([[0.5, 1.0]])
+        )
 
         assert deflections[0, 0] == pytest.approx(0.4005338, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.8067221, 1e-3)
@@ -246,7 +240,9 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
+        deflections = broken_power_law.deflections_yx_2d_from(
+            grid=np.array([[0.5, 1.0]])
+        )
 
         assert deflections[0, 0] == pytest.approx(0.399651, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.813372, 1e-3)
@@ -260,7 +256,9 @@ class TestPowerLawBroken:
             break_radius=0.1,
         )
 
-        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
+        deflections = broken_power_law.deflections_yx_2d_from(
+            grid=np.array([[0.5, 1.0]])
+        )
 
         assert deflections[0, 0] == pytest.approx(0.402629, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.798795, 1e-3)
@@ -315,10 +313,10 @@ class TestPowerLawBroken:
         broken_power_law_0 = ag.mp.SphPowerLawBroken(centre=(0.0, 0.0))
         broken_power_law_1 = ag.mp.SphPowerLawBroken(centre=(1.0, 1.0))
 
-        deflections_0 = broken_power_law_0.deflections_2d_from(
+        deflections_0 = broken_power_law_0.deflections_yx_2d_from(
             grid=np.array([[1.0, 1.0]])
         )
-        deflections_1 = broken_power_law_1.deflections_2d_from(
+        deflections_1 = broken_power_law_1.deflections_yx_2d_from(
             grid=np.array([[0.0, 0.0]])
         )
 
@@ -328,10 +326,10 @@ class TestPowerLawBroken:
         broken_power_law_0 = ag.mp.SphPowerLawBroken(centre=(0.0, 0.0))
         broken_power_law_1 = ag.mp.SphPowerLawBroken(centre=(0.0, 0.0))
 
-        deflections_0 = broken_power_law_0.deflections_2d_from(
+        deflections_0 = broken_power_law_0.deflections_yx_2d_from(
             grid=np.array([[1.0, 0.0]])
         )
-        deflections_1 = broken_power_law_1.deflections_2d_from(
+        deflections_1 = broken_power_law_1.deflections_yx_2d_from(
             grid=np.array([[0.0, 1.0]])
         )
 
@@ -345,10 +343,10 @@ class TestPowerLawBroken:
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
 
-        deflections_0 = broken_power_law_0.deflections_2d_from(
+        deflections_0 = broken_power_law_0.deflections_yx_2d_from(
             grid=np.array([[1.0, 0.0]])
         )
-        deflections_1 = broken_power_law_1.deflections_2d_from(
+        deflections_1 = broken_power_law_1.deflections_yx_2d_from(
             grid=np.array([[0.0, 1.0]])
         )
 
@@ -364,14 +362,16 @@ class TestPowerLawBroken:
             outer_slope=2.0001,
             break_radius=0.0001,
         )
-        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
+        deflections = broken_power_law.deflections_yx_2d_from(
+            grid=np.array([[0.5, 1.0]])
+        )
 
         # Use of ratio avoids normalization definition difference effects
 
         broken_yx_ratio = deflections[0, 0] / deflections[0, 1]
 
         power_law = ag.mp.SphPowerLaw(centre=(0, 0), einstein_radius=2.0, slope=2.0)
-        deflections = power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
+        deflections = power_law.deflections_yx_2d_from(grid=np.array([[0.5, 1.0]]))
 
         power_law_yx_ratio = deflections[0, 0] / deflections[0, 1]
 
@@ -384,42 +384,20 @@ class TestPowerLawBroken:
             outer_slope=2.4001,
             break_radius=0.0001,
         )
-        deflections = broken_power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
+        deflections = broken_power_law.deflections_yx_2d_from(
+            grid=np.array([[0.5, 1.0]])
+        )
 
         # Use of ratio avoids normalization difference effects
 
         broken_yx_ratio = deflections[0, 0] / deflections[0, 1]
 
         power_law = ag.mp.SphPowerLaw(centre=(0, 0), einstein_radius=2.0, slope=2.4)
-        deflections = power_law.deflections_2d_from(grid=np.array([[0.5, 1.0]]))
+        deflections = power_law.deflections_yx_2d_from(grid=np.array([[0.5, 1.0]]))
 
         power_law_yx_ratio = deflections[0, 0] / deflections[0, 1]
 
         assert broken_yx_ratio == pytest.approx(power_law_yx_ratio, 1.0e-4)
-
-    def test__output_are_autoarrays(self):
-
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        cored_power_law = ag.mp.EllPowerLawBroken()
-
-        convergence = cored_power_law.convergence_2d_from(grid=grid)
-
-        assert convergence.shape_native == (2, 2)
-
-        deflections = cored_power_law.deflections_2d_from(grid=grid)
-
-        assert deflections.shape_native == (2, 2)
-
-        cored_power_law = ag.mp.SphPowerLawBroken()
-
-        convergence = cored_power_law.convergence_2d_from(grid=grid)
-
-        assert convergence.shape_native == (2, 2)
-
-        deflections = cored_power_law.deflections_2d_from(grid=grid)
-
-        assert deflections.shape_native == (2, 2)
 
 
 class TestPowerLawCored:
@@ -504,7 +482,9 @@ class TestPowerLawCored:
             centre=(-0.7, 0.5), einstein_radius=1.0, slope=1.8, core_radius=0.2
         )
 
-        deflections = power_law.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
+        deflections = power_law.deflections_yx_2d_from(
+            grid=np.array([[0.1875, 0.1625]])
+        )
 
         assert deflections[0, 0] == pytest.approx(0.80677, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.30680, 1e-3)
@@ -513,7 +493,9 @@ class TestPowerLawCored:
             centre=(0.2, -0.2), einstein_radius=0.5, slope=2.4, core_radius=0.5
         )
 
-        deflections = power_law.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
+        deflections = power_law.deflections_yx_2d_from(
+            grid=np.array([[0.1875, 0.1625]])
+        )
 
         assert deflections[0, 0] == pytest.approx(-0.00321, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.09316, 1e-3)
@@ -526,7 +508,7 @@ class TestPowerLawCored:
             core_radius=0.2,
         )
 
-        deflections = cored_power_law.deflections_2d_from(
+        deflections = cored_power_law.deflections_yx_2d_from(
             grid=np.array([[0.1625, 0.1625]])
         )
 
@@ -541,7 +523,7 @@ class TestPowerLawCored:
             core_radius=0.5,
         )
 
-        deflections = cored_power_law.deflections_2d_from(
+        deflections = cored_power_law.deflections_yx_2d_from(
             grid=np.array([[0.1625, 0.1625]])
         )
         assert deflections[0, 0] == pytest.approx(0.01111, 1e-3)
@@ -626,10 +608,10 @@ class TestPowerLawCored:
         cored_power_law_0 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
         cored_power_law_1 = ag.mp.SphPowerLawCored(centre=(1.0, 1.0))
 
-        deflections_0 = cored_power_law_0.deflections_2d_from(
+        deflections_0 = cored_power_law_0.deflections_yx_2d_from(
             grid=np.array([[1.0, 1.0]])
         )
-        deflections_1 = cored_power_law_1.deflections_2d_from(
+        deflections_1 = cored_power_law_1.deflections_yx_2d_from(
             grid=np.array([[0.0, 0.0]])
         )
 
@@ -639,10 +621,10 @@ class TestPowerLawCored:
         cored_power_law_0 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
         cored_power_law_1 = ag.mp.SphPowerLawCored(centre=(0.0, 0.0))
 
-        deflections_0 = cored_power_law_0.deflections_2d_from(
+        deflections_0 = cored_power_law_0.deflections_yx_2d_from(
             grid=np.array([[1.0, 0.0]])
         )
-        deflections_1 = cored_power_law_1.deflections_2d_from(
+        deflections_1 = cored_power_law_1.deflections_yx_2d_from(
             grid=np.array([[0.0, 1.0]])
         )
 
@@ -656,10 +638,10 @@ class TestPowerLawCored:
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
 
-        deflections_0 = cored_power_law_0.deflections_2d_from(
+        deflections_0 = cored_power_law_0.deflections_yx_2d_from(
             grid=np.array([[1.0, 0.0]])
         )
-        deflections_1 = cored_power_law_1.deflections_2d_from(
+        deflections_1 = cored_power_law_1.deflections_yx_2d_from(
             grid=np.array([[0.0, 1.0]])
         )
 
@@ -684,41 +666,9 @@ class TestPowerLawCored:
         assert elliptical.potential_2d_from(grid=grid) == pytest.approx(
             spherical.potential_2d_from(grid=grid), 1e-4
         )
-        assert elliptical.deflections_2d_from(grid=grid) == pytest.approx(
-            spherical.deflections_2d_from(grid=grid), 1e-4
+        assert elliptical.deflections_yx_2d_from(grid=grid) == pytest.approx(
+            spherical.deflections_yx_2d_from(grid=grid), 1e-4
         )
-
-    def test__output_are_autoarrays(self):
-
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        cored_power_law = ag.mp.EllPowerLawCored()
-
-        convergence = cored_power_law.convergence_2d_from(grid=grid)
-
-        assert convergence.shape_native == (2, 2)
-
-        potential = cored_power_law.potential_2d_from(grid=grid)
-
-        assert potential.shape_native == (2, 2)
-
-        deflections = cored_power_law.deflections_2d_from(grid=grid)
-
-        assert deflections.shape_native == (2, 2)
-
-        cored_power_law = ag.mp.SphPowerLawCored()
-
-        convergence = cored_power_law.convergence_2d_from(grid=grid)
-
-        assert convergence.shape_native == (2, 2)
-
-        potential = cored_power_law.potential_2d_from(grid=grid)
-
-        assert potential.shape_native == (2, 2)
-
-        deflections = cored_power_law.deflections_2d_from(grid=grid)
-
-        assert deflections.shape_native == (2, 2)
 
 
 class TestPowerLaw:
@@ -807,21 +757,27 @@ class TestPowerLaw:
 
         power_law = ag.mp.SphPowerLaw(centre=(0.2, 0.2), einstein_radius=1.0, slope=2.0)
 
-        deflections = power_law.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
+        deflections = power_law.deflections_yx_2d_from(
+            grid=np.array([[0.1875, 0.1625]])
+        )
 
         assert deflections[0, 0] == pytest.approx(-0.31622, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.94868, 1e-3)
 
         power_law = ag.mp.SphPowerLaw(centre=(0.2, 0.2), einstein_radius=1.0, slope=2.5)
 
-        deflections = power_law.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
+        deflections = power_law.deflections_yx_2d_from(
+            grid=np.array([[0.1875, 0.1625]])
+        )
 
         assert deflections[0, 0] == pytest.approx(-1.59054, 1e-3)
         assert deflections[0, 1] == pytest.approx(-4.77162, 1e-3)
 
         power_law = ag.mp.SphPowerLaw(centre=(0.2, 0.2), einstein_radius=1.0, slope=1.5)
 
-        deflections = power_law.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
+        deflections = power_law.deflections_yx_2d_from(
+            grid=np.array([[0.1875, 0.1625]])
+        )
 
         assert deflections[0, 0] == pytest.approx(-0.06287, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.18861, 1e-3)
@@ -833,7 +789,9 @@ class TestPowerLaw:
             slope=2.0,
         )
 
-        deflections = power_law.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
+        deflections = power_law.deflections_yx_2d_from(
+            grid=np.array([[0.1625, 0.1625]])
+        )
 
         assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)
@@ -845,7 +803,9 @@ class TestPowerLaw:
             slope=2.5,
         )
 
-        deflections = power_law.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
+        deflections = power_law.deflections_yx_2d_from(
+            grid=np.array([[0.1625, 0.1625]])
+        )
 
         assert deflections[0, 0] == pytest.approx(1.29641, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.99629, 1e-3)
@@ -857,7 +817,9 @@ class TestPowerLaw:
             slope=1.5,
         )
 
-        deflections = power_law.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
+        deflections = power_law.deflections_yx_2d_from(
+            grid=np.array([[0.1625, 0.1625]])
+        )
 
         assert deflections[0, 0] == pytest.approx(0.48036, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.26729, 1e-3)
@@ -869,7 +831,9 @@ class TestPowerLaw:
             slope=1.9,
         )
 
-        deflections = power_law.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
+        deflections = power_law.deflections_yx_2d_from(
+            grid=np.array([[0.1625, 0.1625]])
+        )
 
         # assert deflections[0, 0] == pytest.approx(1.12841, 1e-3)
         # assert deflections[0, 1] == pytest.approx(-0.60205, 1e-3)
@@ -897,11 +861,11 @@ class TestPowerLaw:
         assert power_law.potential_2d_from(grid=grid) == pytest.approx(
             cored_power_law.potential_2d_from(grid=grid), 1e-3
         )
-        assert power_law.deflections_2d_from(grid=grid) == pytest.approx(
-            cored_power_law.deflections_2d_from(grid=grid), 1e-3
+        assert power_law.deflections_yx_2d_from(grid=grid) == pytest.approx(
+            cored_power_law.deflections_yx_2d_from(grid=grid), 1e-3
         )
-        assert power_law.deflections_2d_from(grid=grid) == pytest.approx(
-            cored_power_law.deflections_2d_from(grid=grid), 1e-3
+        assert power_law.deflections_yx_2d_from(grid=grid) == pytest.approx(
+            cored_power_law.deflections_yx_2d_from(grid=grid), 1e-3
         )
 
     def test__spherical_and_elliptical_match(self):
@@ -921,41 +885,9 @@ class TestPowerLaw:
         assert elliptical.potential_2d_from(grid=grid) == pytest.approx(
             spherical.potential_2d_from(grid=grid), 1e-4
         )
-        assert elliptical.deflections_2d_from(grid=grid) == pytest.approx(
-            spherical.deflections_2d_from(grid=grid), 1e-4
+        assert elliptical.deflections_yx_2d_from(grid=grid) == pytest.approx(
+            spherical.deflections_yx_2d_from(grid=grid), 1e-4
         )
-
-    def test__output_are_autoarrays(self):
-
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        power_law = ag.mp.EllPowerLaw()
-
-        convergence = power_law.convergence_2d_from(grid=grid)
-
-        assert convergence.shape_native == (2, 2)
-
-        potential = power_law.potential_2d_from(grid=grid)
-
-        assert potential.shape_native == (2, 2)
-
-        deflections = power_law.deflections_2d_from(grid=grid)
-
-        assert deflections.shape_native == (2, 2)
-
-        power_law = ag.mp.SphPowerLaw()
-
-        convergence = power_law.convergence_2d_from(grid=grid)
-
-        assert convergence.shape_native == (2, 2)
-
-        potential = power_law.potential_2d_from(grid=grid)
-
-        assert potential.shape_native == (2, 2)
-
-        deflections = power_law.deflections_2d_from(grid=grid)
-
-        assert deflections.shape_native == (2, 2)
 
 
 class TestIsothermalCored:
@@ -1094,7 +1026,7 @@ class TestIsothermalCored:
             centre=(-0.7, 0.5), einstein_radius=1.3, core_radius=0.2
         )
 
-        deflections = cored_isothermal.deflections_2d_from(
+        deflections = cored_isothermal.deflections_yx_2d_from(
             grid=np.array([[0.1875, 0.1625]])
         )
 
@@ -1105,7 +1037,7 @@ class TestIsothermalCored:
             centre=(0.2, -0.2), einstein_radius=0.5, core_radius=0.5
         )
 
-        deflections = cored_isothermal.deflections_2d_from(
+        deflections = cored_isothermal.deflections_yx_2d_from(
             grid=np.array([[0.1875, 0.1625]])
         )
 
@@ -1119,7 +1051,7 @@ class TestIsothermalCored:
             core_radius=0.2,
         )
 
-        deflections = cored_isothermal.deflections_2d_from(
+        deflections = cored_isothermal.deflections_yx_2d_from(
             grid=np.array([[0.1625, 0.1625]])
         )
 
@@ -1133,7 +1065,7 @@ class TestIsothermalCored:
             core_radius=0.5,
         )
 
-        deflections = cored_isothermal.deflections_2d_from(
+        deflections = cored_isothermal.deflections_yx_2d_from(
             grid=np.array([[0.1625, 0.1625]])
         )
 
@@ -1163,11 +1095,11 @@ class TestIsothermalCored:
         assert power_law.potential_2d_from(grid=grid) == pytest.approx(
             cored_power_law.potential_2d_from(grid=grid), 1e-3
         )
-        assert power_law.deflections_2d_from(grid=grid) == pytest.approx(
-            cored_power_law.deflections_2d_from(grid=grid), 1e-3
+        assert power_law.deflections_yx_2d_from(grid=grid) == pytest.approx(
+            cored_power_law.deflections_yx_2d_from(grid=grid), 1e-3
         )
-        assert power_law.deflections_2d_from(grid=grid) == pytest.approx(
-            cored_power_law.deflections_2d_from(grid=grid), 1e-3
+        assert power_law.deflections_yx_2d_from(grid=grid) == pytest.approx(
+            cored_power_law.deflections_yx_2d_from(grid=grid), 1e-3
         )
 
     def test__spherical_and_elliptical_match(self):
@@ -1187,41 +1119,9 @@ class TestIsothermalCored:
         assert elliptical.potential_2d_from(grid=grid) == pytest.approx(
             spherical.potential_2d_from(grid=grid), 1e-4
         )
-        assert elliptical.deflections_2d_from(grid=grid) == pytest.approx(
-            spherical.deflections_2d_from(grid=grid), 1e-4
+        assert elliptical.deflections_yx_2d_from(grid=grid) == pytest.approx(
+            spherical.deflections_yx_2d_from(grid=grid), 1e-4
         )
-
-    def test__output_are_autoarrays(self):
-
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        cored_isothermal = ag.mp.EllIsothermalCored()
-
-        convergence = cored_isothermal.convergence_2d_from(grid=grid)
-
-        assert convergence.shape_native == (2, 2)
-
-        potential = cored_isothermal.potential_2d_from(grid=grid)
-
-        assert potential.shape_native == (2, 2)
-
-        deflections = cored_isothermal.deflections_2d_from(grid=grid)
-
-        assert deflections.shape_native == (2, 2)
-
-        cored_isothermal = ag.mp.SphIsothermalCored()
-
-        convergence = cored_isothermal.convergence_2d_from(grid=grid)
-
-        assert convergence.shape_native == (2, 2)
-
-        potential = cored_isothermal.potential_2d_from(grid=grid)
-
-        assert potential.shape_native == (2, 2)
-
-        deflections = cored_isothermal.deflections_2d_from(grid=grid)
-
-        assert deflections.shape_native == (2, 2)
 
 
 class TestIsothermal:
@@ -1282,14 +1182,18 @@ class TestIsothermal:
 
         isothermal = ag.mp.SphIsothermal(centre=(-0.7, 0.5), einstein_radius=1.3)
 
-        deflections = isothermal.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
+        deflections = isothermal.deflections_yx_2d_from(
+            grid=np.array([[0.1875, 0.1625]])
+        )
 
         assert deflections[0, 0] == pytest.approx(1.21510, 1e-4)
         assert deflections[0, 1] == pytest.approx(-0.46208, 1e-4)
 
         isothermal = ag.mp.SphIsothermal(centre=(-0.1, 0.1), einstein_radius=5.0)
 
-        deflections = isothermal.deflections_2d_from(grid=np.array([[0.1875, 0.1625]]))
+        deflections = isothermal.deflections_yx_2d_from(
+            grid=np.array([[0.1875, 0.1625]])
+        )
 
         assert deflections[0, 0] == pytest.approx(4.88588, 1e-4)
         assert deflections[0, 1] == pytest.approx(1.06214, 1e-4)
@@ -1298,7 +1202,9 @@ class TestIsothermal:
             centre=(0, 0), elliptical_comps=(0.0, 0.333333), einstein_radius=1.0
         )
 
-        deflections = isothermal.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
+        deflections = isothermal.deflections_yx_2d_from(
+            grid=np.array([[0.1625, 0.1625]])
+        )
 
         assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)
@@ -1307,7 +1213,9 @@ class TestIsothermal:
             centre=(0, 0), elliptical_comps=(0.0, 0.333333), einstein_radius=1.0
         )
 
-        deflections = isothermal.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
+        deflections = isothermal.deflections_yx_2d_from(
+            grid=np.array([[0.1625, 0.1625]])
+        )
 
         assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)
@@ -1372,11 +1280,11 @@ class TestIsothermal:
         assert isothermal.potential_2d_from(grid=grid) == pytest.approx(
             cored_power_law.potential_2d_from(grid=grid), 1e-3
         )
-        assert isothermal.deflections_2d_from(grid=grid) == pytest.approx(
-            cored_power_law.deflections_2d_from(grid=grid), 1e-3
+        assert isothermal.deflections_yx_2d_from(grid=grid) == pytest.approx(
+            cored_power_law.deflections_yx_2d_from(grid=grid), 1e-3
         )
-        assert isothermal.deflections_2d_from(grid=grid) == pytest.approx(
-            cored_power_law.deflections_2d_from(grid=grid), 1e-3
+        assert isothermal.deflections_yx_2d_from(grid=grid) == pytest.approx(
+            cored_power_law.deflections_yx_2d_from(grid=grid), 1e-3
         )
 
     def test__spherical_and_elliptical_match(self):
@@ -1391,38 +1299,130 @@ class TestIsothermal:
         assert elliptical.potential_2d_from(grid=grid) == pytest.approx(
             spherical.potential_2d_from(grid=grid), 1e-4
         )
-        assert elliptical.deflections_2d_from(grid=grid) == pytest.approx(
-            spherical.deflections_2d_from(grid=grid), 1e-4
+        assert elliptical.deflections_yx_2d_from(grid=grid) == pytest.approx(
+            spherical.deflections_yx_2d_from(grid=grid), 1e-4
         )
 
-    def test__output_are_autoarrays(self):
+
+class TestDectorators:
+    def test__mass_quantity_functions__output_is_autoarray_structure(self):
 
         grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
+
+        point_mass = ag.mp.PointMass()
+        deflections = point_mass.deflections_yx_2d_from(grid=grid)
+        assert isinstance(deflections, ag.VectorYX2D)
+        assert deflections.shape_native == (2, 2)
+
+        cored_power_law = ag.mp.EllPowerLawBroken()
+
+        convergence = cored_power_law.convergence_2d_from(grid=grid)
+        assert convergence.shape_native == (2, 2)
+
+        deflections = cored_power_law.deflections_yx_2d_from(grid=grid)
+        assert deflections.shape_native == (2, 2)
+
+        cored_power_law = ag.mp.SphPowerLawBroken()
+
+        convergence = cored_power_law.convergence_2d_from(grid=grid)
+        assert convergence.shape_native == (2, 2)
+
+        deflections = cored_power_law.deflections_yx_2d_from(grid=grid)
+        assert isinstance(deflections, ag.VectorYX2D)
+        assert deflections.shape_native == (2, 2)
+
+        cored_power_law = ag.mp.EllPowerLawCored()
+
+        convergence = cored_power_law.convergence_2d_from(grid=grid)
+        assert convergence.shape_native == (2, 2)
+
+        potential = cored_power_law.potential_2d_from(grid=grid)
+        assert potential.shape_native == (2, 2)
+
+        deflections = cored_power_law.deflections_yx_2d_from(grid=grid)
+        assert isinstance(deflections, ag.VectorYX2D)
+        assert deflections.shape_native == (2, 2)
+
+        cored_power_law = ag.mp.SphPowerLawCored()
+
+        convergence = cored_power_law.convergence_2d_from(grid=grid)
+        assert convergence.shape_native == (2, 2)
+
+        potential = cored_power_law.potential_2d_from(grid=grid)
+        assert potential.shape_native == (2, 2)
+
+        deflections = cored_power_law.deflections_yx_2d_from(grid=grid)
+        assert isinstance(deflections, ag.VectorYX2D)
+        assert deflections.shape_native == (2, 2)
+
+        power_law = ag.mp.EllPowerLaw()
+
+        convergence = power_law.convergence_2d_from(grid=grid)
+        assert convergence.shape_native == (2, 2)
+
+        potential = power_law.potential_2d_from(grid=grid)
+        assert potential.shape_native == (2, 2)
+
+        deflections = power_law.deflections_yx_2d_from(grid=grid)
+        assert isinstance(deflections, ag.VectorYX2D)
+        assert deflections.shape_native == (2, 2)
+
+        power_law = ag.mp.SphPowerLaw()
+
+        convergence = power_law.convergence_2d_from(grid=grid)
+        assert convergence.shape_native == (2, 2)
+
+        potential = power_law.potential_2d_from(grid=grid)
+        assert potential.shape_native == (2, 2)
+
+        deflections = power_law.deflections_yx_2d_from(grid=grid)
+        assert isinstance(deflections, ag.VectorYX2D)
+        assert deflections.shape_native == (2, 2)
+
+        cored_isothermal = ag.mp.EllIsothermalCored()
+
+        convergence = cored_isothermal.convergence_2d_from(grid=grid)
+        assert convergence.shape_native == (2, 2)
+
+        potential = cored_isothermal.potential_2d_from(grid=grid)
+        assert potential.shape_native == (2, 2)
+
+        deflections = cored_isothermal.deflections_yx_2d_from(grid=grid)
+        assert isinstance(deflections, ag.VectorYX2D)
+        assert deflections.shape_native == (2, 2)
+
+        cored_isothermal = ag.mp.SphIsothermalCored()
+
+        convergence = cored_isothermal.convergence_2d_from(grid=grid)
+        assert convergence.shape_native == (2, 2)
+
+        potential = cored_isothermal.potential_2d_from(grid=grid)
+        assert potential.shape_native == (2, 2)
+
+        deflections = cored_isothermal.deflections_yx_2d_from(grid=grid)
+        assert isinstance(deflections, ag.VectorYX2D)
+        assert deflections.shape_native == (2, 2)
 
         isothermal = ag.mp.EllIsothermal()
 
         convergence = isothermal.convergence_2d_from(grid=grid)
-
         assert convergence.shape_native == (2, 2)
 
         potential = isothermal.potential_2d_from(grid=grid)
-
         assert potential.shape_native == (2, 2)
 
-        deflections = isothermal.deflections_2d_from(grid=grid)
-
+        deflections = isothermal.deflections_yx_2d_from(grid=grid)
+        assert isinstance(deflections, ag.VectorYX2D)
         assert deflections.shape_native == (2, 2)
 
         isothermal = ag.mp.SphIsothermal()
 
         convergence = isothermal.convergence_2d_from(grid=grid)
-
         assert convergence.shape_native == (2, 2)
 
         potential = isothermal.potential_2d_from(grid=grid)
-
         assert potential.shape_native == (2, 2)
 
-        deflections = isothermal.deflections_2d_from(grid=grid)
-
+        deflections = isothermal.deflections_yx_2d_from(grid=grid)
+        assert isinstance(deflections, ag.VectorYX2D)
         assert deflections.shape_native == (2, 2)

@@ -156,7 +156,7 @@ class TestDeflectionsViaPotential:
 
         grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
 
-        deflections_via_calculation = sis.deflections_2d_from(grid=grid)
+        deflections_via_calculation = sis.deflections_yx_2d_from(grid=grid)
 
         deflections_via_potential = sis.deflections_2d_via_potential_2d_from(grid=grid)
 
@@ -173,7 +173,7 @@ class TestDeflectionsViaPotential:
 
         grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
 
-        deflections_via_calculation = sie.deflections_2d_from(grid=grid)
+        deflections_via_calculation = sie.deflections_yx_2d_from(grid=grid)
 
         deflections_via_potential = sie.deflections_2d_via_potential_2d_from(grid=grid)
 
@@ -190,7 +190,7 @@ class TestDeflectionsViaPotential:
 
         grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
 
-        deflections_via_calculation = sie.deflections_2d_from(grid=grid)
+        deflections_via_calculation = sie.deflections_yx_2d_from(grid=grid)
 
         deflections_via_potential = sie.deflections_2d_via_potential_2d_from(grid=grid)
 
@@ -546,7 +546,7 @@ class TestRegression:
         )
         assert max_indexes == (1, 4)
 
-        deflections = mass_profile.deflections_2d_from(grid=grid)
+        deflections = mass_profile.deflections_yx_2d_from(grid=grid)
         assert deflections.native[1, 4, 0] > 0
         assert deflections.native[2, 4, 0] < 0
         assert deflections.native[1, 4, 1] > 0
@@ -566,7 +566,7 @@ class TestRegression:
         )
         assert max_indexes == (1, 4)
 
-        deflections = mass_profile.deflections_2d_from(grid=grid)
+        deflections = mass_profile.deflections_yx_2d_from(grid=grid)
         assert deflections.native[1, 4, 0] > 0
         assert deflections.native[2, 4, 0] < 0
         assert deflections.native[1, 4, 1] > 0
@@ -592,7 +592,7 @@ class TestRegression:
         )
         assert max_indexes == (1, 4)
 
-        deflections = mass_profile.deflections_2d_from(grid=grid)
+        deflections = mass_profile.deflections_yx_2d_from(grid=grid)
         assert deflections.native[1, 4, 0] >= 0
         assert deflections.native[2, 4, 0] <= 0
         assert deflections.native[1, 4, 1] >= 0
@@ -612,7 +612,7 @@ class TestRegression:
         )
         assert max_indexes == (1, 4)
 
-        deflections = mass_profile.deflections_2d_from(grid=grid)
+        deflections = mass_profile.deflections_yx_2d_from(grid=grid)
         assert deflections.native[1, 4, 0] >= 0
         assert deflections.native[2, 4, 0] <= 0
         assert deflections.native[1, 4, 1] >= 0
@@ -639,11 +639,11 @@ class TestDecorators:
 
         mass_profile = ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0)
 
-        deflections = mass_profile.deflections_2d_from(grid=grid)
+        deflections = mass_profile.deflections_yx_2d_from(grid=grid)
 
         mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
-        deflections_sub_2 = mass_profile.deflections_2d_from(grid=grid_sub_2).binned
+        deflections_sub_2 = mass_profile.deflections_yx_2d_from(grid=grid_sub_2).binned
 
         assert deflections == pytest.approx(deflections_sub_2, 1.0e-6)
 
@@ -653,16 +653,16 @@ class TestDecorators:
 
         mass_profile = ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0)
 
-        deflections = mass_profile.deflections_2d_from(grid=grid)
+        deflections = mass_profile.deflections_yx_2d_from(grid=grid)
 
         mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
-        deflections_sub_4 = mass_profile.deflections_2d_from(grid=grid_sub_4).binned
+        deflections_sub_4 = mass_profile.deflections_yx_2d_from(grid=grid_sub_4).binned
 
         assert deflections[0, 0] == deflections_sub_4[0, 0]
 
         mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
-        deflections_sub_8 = mass_profile.deflections_2d_from(grid=grid_sub_8).binned
+        deflections_sub_8 = mass_profile.deflections_yx_2d_from(grid=grid_sub_8).binned
 
         assert deflections[4, 0] == deflections_sub_8[4, 0]

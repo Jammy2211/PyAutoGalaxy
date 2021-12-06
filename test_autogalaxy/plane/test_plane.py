@@ -52,7 +52,7 @@ def caustics_via_magnification_via_plane_from(plane, grid):
     for i in range(len(critical_curves)):
         critical_curve = critical_curves[i]
 
-        deflections_1d = plane.deflections_2d_from(grid=critical_curve)
+        deflections_1d = plane.deflections_yx_2d_from(grid=critical_curve)
 
         caustic = critical_curve - deflections_1d
 
@@ -723,8 +723,8 @@ class TestAbstractPlaneProfiles:
             mp0 = g0.mass_profiles[0]
             mp1 = g1.mass_profiles[0]
 
-            mp0_image = mp0.deflections_2d_from(grid=sub_grid_2d_7x7)
-            mp1_image = mp1.deflections_2d_from(grid=sub_grid_2d_7x7)
+            mp0_image = mp0.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
+            mp1_image = mp1.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
             # Perform sub gridding average manually
             mp0_image_pixel_0x = (
@@ -755,7 +755,7 @@ class TestAbstractPlaneProfiles:
 
             plane = ag.Plane(galaxies=[g0, g1], redshift=None)
 
-            deflections = plane.deflections_2d_from(grid=sub_grid_2d_7x7)
+            deflections = plane.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
             assert deflections.binned[0, 0] == pytest.approx(
                 mp0_image_pixel_0x + mp1_image_pixel_0x, 1.0e-4
@@ -783,26 +783,26 @@ class TestAbstractPlaneProfiles:
                 redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=2.0)
             )
 
-            g0_deflections = g0.deflections_2d_from(grid=sub_grid_2d_7x7)
+            g0_deflections = g0.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
-            g1_deflections = g1.deflections_2d_from(grid=sub_grid_2d_7x7)
+            g1_deflections = g1.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
             plane = ag.Plane(galaxies=[g0, g1], redshift=None)
 
-            deflections = plane.deflections_2d_from(grid=sub_grid_2d_7x7)
+            deflections = plane.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
             assert deflections == pytest.approx(g0_deflections + g1_deflections, 1.0e-4)
 
-        def test__deflections_2d_from_as_positions(self, grid_2d_irregular_7x7):
+        def test__deflections_yx_2d_from_as_positions(self, grid_2d_irregular_7x7):
             g0 = ag.Galaxy(
                 redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0)
             )
 
-            g0_deflections = g0.deflections_2d_from(grid=grid_2d_irregular_7x7)
+            g0_deflections = g0.deflections_yx_2d_from(grid=grid_2d_irregular_7x7)
 
             plane = ag.Plane(galaxies=[g0], redshift=None)
 
-            deflections = plane.deflections_2d_from(grid=grid_2d_irregular_7x7)
+            deflections = plane.deflections_yx_2d_from(grid=grid_2d_irregular_7x7)
 
             assert deflections.in_list[0][0] == pytest.approx(
                 g0_deflections.in_list[0][0], 1.0e-8
@@ -816,7 +816,7 @@ class TestAbstractPlaneProfiles:
         ):
             plane = ag.Plane(galaxies=[gal_x2_mp], redshift=None)
 
-            deflections = plane.deflections_2d_from(grid=grid_2d_7x7)
+            deflections = plane.deflections_yx_2d_from(grid=grid_2d_7x7)
 
             assert deflections[0:2] == pytest.approx(
                 np.array([[3.0 * 0.707, -3.0 * 0.707], [3.0, 0.0]]), 1e-3
@@ -824,7 +824,7 @@ class TestAbstractPlaneProfiles:
 
             plane = ag.Plane(galaxies=[gal_x1_mp, gal_x1_mp], redshift=None)
 
-            deflections = plane.deflections_2d_from(grid=grid_2d_7x7)
+            deflections = plane.deflections_yx_2d_from(grid=grid_2d_7x7)
 
             assert deflections[0:2] == pytest.approx(
                 np.array([[2.0 * 0.707, -2.0 * 0.707], [2.0, 0.0]]), 1e-3
@@ -835,7 +835,7 @@ class TestAbstractPlaneProfiles:
         ):
             plane = ag.Plane(redshift=0.5, galaxies=[])
 
-            deflections = plane.deflections_2d_from(grid=sub_grid_2d_7x7)
+            deflections = plane.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
             assert deflections.shape_native == (7, 7)
             assert (deflections.binned[0, 0] == 0.0).all()
@@ -1805,9 +1805,9 @@ class TestPlane:
                 redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=2.0)
             )
 
-            g0_deflections = g0.deflections_2d_from(grid=sub_grid_2d_7x7)
+            g0_deflections = g0.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
-            g1_deflections = g1.deflections_2d_from(grid=sub_grid_2d_7x7)
+            g1_deflections = g1.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
             traced_grid = sub_grid_2d_7x7 - (g0_deflections + g1_deflections)
 
@@ -2073,11 +2073,11 @@ class TestDecorators:
 
         plane = ag.Plane(galaxies=[galaxy], redshift=None)
 
-        deflections = plane.deflections_2d_from(grid=grid)
+        deflections = plane.deflections_yx_2d_from(grid=grid)
 
         mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
-        deflections_sub_2 = galaxy.deflections_2d_from(grid=grid_sub_2).binned
+        deflections_sub_2 = galaxy.deflections_yx_2d_from(grid=grid_sub_2).binned
 
         assert (deflections == deflections_sub_2).all()
 
@@ -2092,17 +2092,17 @@ class TestDecorators:
 
         plane = ag.Plane(galaxies=[galaxy], redshift=None)
 
-        deflections = plane.deflections_2d_from(grid=grid)
+        deflections = plane.deflections_yx_2d_from(grid=grid)
 
         mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
-        deflections_sub_4 = galaxy.deflections_2d_from(grid=grid_sub_4).binned
+        deflections_sub_4 = galaxy.deflections_yx_2d_from(grid=grid_sub_4).binned
 
         assert deflections[0, 0] == deflections_sub_4[0, 0]
 
         mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
-        deflections_sub_8 = galaxy.deflections_2d_from(grid=grid_sub_8).binned
+        deflections_sub_8 = galaxy.deflections_yx_2d_from(grid=grid_sub_8).binned
 
         assert deflections[4, 0] == deflections_sub_8[4, 0]
 
@@ -2131,7 +2131,7 @@ class TestRegression:
         )
         assert max_indexes == (1, 4)
 
-        deflections = plane.deflections_2d_from(grid=grid)
+        deflections = plane.deflections_yx_2d_from(grid=grid)
         assert deflections.native[1, 4, 0] > 0
         assert deflections.native[2, 4, 0] < 0
         assert deflections.native[1, 4, 1] > 0
@@ -2157,7 +2157,7 @@ class TestRegression:
         )
         assert max_indexes == (1, 4)
 
-        deflections = plane.deflections_2d_from(grid=grid)
+        deflections = plane.deflections_yx_2d_from(grid=grid)
         assert deflections.native[1, 4, 0] > 0
         assert deflections.native[2, 4, 0] < 0
         assert deflections.native[1, 4, 1] > 0
@@ -2190,7 +2190,7 @@ class TestRegression:
         )
         assert max_indexes == (1, 4)
 
-        deflections = plane.deflections_2d_from(grid=grid)
+        deflections = plane.deflections_yx_2d_from(grid=grid)
         assert deflections.native[1, 4, 0] >= 0
         assert deflections.native[2, 4, 0] <= 0
         assert deflections.native[1, 4, 1] >= 0
@@ -2215,7 +2215,7 @@ class TestRegression:
         )
         assert max_indexes == (1, 4)
 
-        deflections = plane.deflections_2d_from(grid=grid)
+        deflections = plane.deflections_yx_2d_from(grid=grid)
         assert deflections.native[1, 4, 0] >= 0
         assert deflections.native[2, 4, 0] <= 0
         assert deflections.native[1, 4, 1] >= 0

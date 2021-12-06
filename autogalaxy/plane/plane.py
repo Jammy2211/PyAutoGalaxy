@@ -238,7 +238,7 @@ class AbstractPlaneLensing(AbstractPlane):
         self._calc_image = CalcImage(image_2d_from=self.image_2d_from)
         self._calc_image.add_functions(obj=self)
 
-        self._calc_lens = CalcLens(deflections_2d_from=self.deflections_2d_from)
+        self._calc_lens = CalcLens(deflections_yx_2d_from=self.deflections_yx_2d_from)
         self._calc_lens.add_functions(obj=self)
 
     @aa.grid_dec.grid_2d_to_structure
@@ -321,15 +321,17 @@ class AbstractPlaneLensing(AbstractPlane):
         return np.zeros((grid.shape[0]))
 
     @aa.grid_dec.grid_2d_to_structure
-    def deflections_2d_from(self, grid):
+    def deflections_yx_2d_from(self, grid):
         if self.galaxies:
-            return sum(map(lambda g: g.deflections_2d_from(grid=grid), self.galaxies))
+            return sum(
+                map(lambda g: g.deflections_yx_2d_from(grid=grid), self.galaxies)
+            )
         return np.zeros(shape=(grid.shape[0], 2))
 
     @aa.grid_dec.grid_2d_to_structure
     def traced_grid_from(self, grid):
         """Trace this plane's grid_stacks to the next plane, using its deflection angles."""
-        return grid - self.deflections_2d_from(grid=grid)
+        return grid - self.deflections_yx_2d_from(grid=grid)
 
 
 class AbstractPlaneData(AbstractPlaneLensing):

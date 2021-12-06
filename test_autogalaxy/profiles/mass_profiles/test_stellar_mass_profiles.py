@@ -176,11 +176,11 @@ class TestEllGaussian:
 
         assert deflections == pytest.approx(deflections_via_analytic, 1.0e-3)
 
-    def test__deflections_2d_from(self):
+    def test__deflections_yx_2d_from(self):
 
         gaussian = ag.mp.EllGaussian()
 
-        deflections = gaussian.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
         deflections_via_integral = gaussian.deflections_2d_via_analytic_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -376,11 +376,11 @@ class TestSersic:
 
         assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-3)
 
-    def test__deflections_2d_from(self):
+    def test__deflections_yx_2d_from(self):
 
         gaussian = ag.mp.EllSersic()
 
-        deflections = gaussian.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
         deflections_via_integral = gaussian.deflections_2d_via_cse_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -389,7 +389,7 @@ class TestSersic:
 
         gaussian = ag.mp.SphSersic()
 
-        deflections = gaussian.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
         deflections_via_integral = gaussian.deflections_2d_via_cse_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -557,8 +557,8 @@ class TestSersic:
 
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-6)
 
-        deflections_0 = sersic_0.deflections_2d_from(grid=np.array([[1.0, 1.0]]))
-        deflections_1 = sersic_1.deflections_2d_from(grid=np.array([[0.0, 0.0]]))
+        deflections_0 = sersic_0.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
+        deflections_1 = sersic_1.deflections_yx_2d_from(grid=np.array([[0.0, 0.0]]))
 
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-4)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-4)
@@ -572,8 +572,8 @@ class TestSersic:
 
         assert convergence_0 == convergence_1
 
-        deflections_0 = sersic_0.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = sersic_1.deflections_2d_from(grid=np.array([[0.0, 1.0]]))
+        deflections_0 = sersic_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = sersic_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
@@ -587,8 +587,8 @@ class TestSersic:
 
         assert convergence_0 == convergence_1
 
-        deflections_0 = sersic_0.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = sersic_1.deflections_2d_from(grid=np.array([[0.0, 1.0]]))
+        deflections_0 = sersic_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = sersic_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
@@ -689,11 +689,11 @@ class TestExponential:
 
         assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
 
-    def test__deflections_2d_from(self):
+    def test__deflections_yx_2d_from(self):
 
         gaussian = ag.mp.EllExponential()
 
-        deflections = gaussian.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
         deflections_via_cse = gaussian.deflections_2d_via_cse_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -702,7 +702,7 @@ class TestExponential:
 
         gaussian = ag.mp.SphExponential()
 
-        deflections = gaussian.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
         deflections_via_cse = gaussian.deflections_2d_via_cse_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -903,11 +903,11 @@ class TestDevVaucouleurs:
 
         assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
 
-    def test__deflections_2d_from(self):
+    def test__deflections_yx_2d_from(self):
 
         gaussian = ag.mp.EllDevVaucouleurs()
 
-        deflections = gaussian.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
         deflections_via_cse = gaussian.deflections_2d_via_cse_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -916,7 +916,7 @@ class TestDevVaucouleurs:
 
         gaussian = ag.mp.SphDevVaucouleurs()
 
-        deflections = gaussian.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
         deflections_via_cse = gaussian.deflections_2d_via_cse_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -1154,11 +1154,11 @@ class TestSersicMassRadialGradient:
 
         assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
 
-    def test__deflections_2d_from(self):
+    def test__deflections_yx_2d_from(self):
 
         gaussian = ag.mp.EllSersicRadialGradient()
 
-        deflections = gaussian.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
         deflections_via_integral = gaussian.deflections_2d_via_cse_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -1167,7 +1167,7 @@ class TestSersicMassRadialGradient:
 
         gaussian = ag.mp.SphSersicRadialGradient()
 
-        deflections = gaussian.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
         deflections_via_integral = gaussian.deflections_2d_via_cse_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -1256,7 +1256,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_gradient=0.0,
         )
 
-        sersic_deflections = sersic.deflections_2d_from(
+        sersic_deflections = sersic.deflections_yx_2d_from(
             grid=np.array([[0.1625, 0.1625]])
         )
 
@@ -1267,7 +1267,7 @@ class TestSersicMassRadialGradient:
             effective_radius=0.2,
             mass_to_light_ratio=1.0,
         )
-        exponential_deflections = exponential.deflections_2d_from(
+        exponential_deflections = exponential.deflections_yx_2d_from(
             grid=np.array([[0.1625, 0.1625]])
         )
 
@@ -1289,7 +1289,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_ratio=3.0,
             mass_to_light_gradient=0.0,
         )
-        sersic_deflections = sersic.deflections_2d_from(
+        sersic_deflections = sersic.deflections_yx_2d_from(
             grid=np.array([[0.1625, 0.1625]])
         )
 
@@ -1301,7 +1301,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_ratio=3.0,
         )
 
-        dev_deflections = dev.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
+        dev_deflections = dev.deflections_yx_2d_from(grid=np.array([[0.1625, 0.1625]]))
 
         # assert sersic_deflections[0, 0] == pytest.approx(dev_deflections[0, 0], 1e-3)
         # assert sersic_deflections[0, 0] == pytest.approx(-24.528, 1e-3)
@@ -1317,7 +1317,7 @@ class TestSersicMassRadialGradient:
             mass_to_light_ratio=1.0,
             mass_to_light_gradient=0.0,
         )
-        sersic_grad_deflections = sersic_grad.deflections_2d_from(
+        sersic_grad_deflections = sersic_grad.deflections_yx_2d_from(
             grid=np.array([[0.1625, 0.1625]])
         )
 
@@ -1329,7 +1329,7 @@ class TestSersicMassRadialGradient:
             sersic_index=2.0,
             mass_to_light_ratio=1.0,
         )
-        sersic_deflections = sersic.deflections_2d_from(
+        sersic_deflections = sersic.deflections_yx_2d_from(
             grid=np.array([[0.1625, 0.1625]])
         )
 
@@ -1368,8 +1368,8 @@ class TestSersicMassRadialGradient:
         ).all()
         # assert elliptical.potential_2d_from(grid=grid) == spherical.potential_2d_from(grid=grid)
         assert (
-            elliptical.deflections_2d_from(grid=grid)
-            == spherical.deflections_2d_from(grid=grid)
+            elliptical.deflections_yx_2d_from(grid=grid)
+            == spherical.deflections_yx_2d_from(grid=grid)
         ).all()
 
 
@@ -1407,7 +1407,7 @@ class TestSersicCore:
             sersic_index=2.2,
         )
 
-        deflections = sersic.deflections_2d_from(grid=np.array([[2.5, -2.5]]))
+        deflections = sersic.deflections_yx_2d_from(grid=np.array([[2.5, -2.5]]))
 
         assert deflections[0, 0] == pytest.approx(2.0 * 0.0015047, 1e-4)
         assert deflections[0, 1] == pytest.approx(2.0 * -0.004493, 1e-4)
@@ -1431,11 +1431,11 @@ class TestSersicCore:
         assert deflections[0, 0] == pytest.approx(2.0 * 0.0015047, 1e-4)
         assert deflections[0, 1] == pytest.approx(2.0 * -0.004493, 1e-4)
 
-    def test__deflections_2d_from(self):
+    def test__deflections_yx_2d_from(self):
 
         sersic_core = ag.mp.EllSersicCore()
 
-        deflections = sersic_core.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = sersic_core.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
         deflections_via_integral = sersic_core.deflections_2d_via_mge_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -1444,7 +1444,7 @@ class TestSersicCore:
 
         sersic_core = ag.mp.SphSersicCore()
 
-        deflections = sersic_core.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = sersic_core.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
         deflections_via_integral = sersic_core.deflections_2d_via_mge_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -1514,8 +1514,8 @@ class TestSersicCore:
 
         assert convergence_0 == convergence_1
 
-        deflections_0 = sersic_0.deflections_2d_from(grid=np.array([[1.0, 1.0]]))
-        deflections_1 = sersic_1.deflections_2d_from(grid=np.array([[0.0, 0.0]]))
+        deflections_0 = sersic_0.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
+        deflections_1 = sersic_1.deflections_yx_2d_from(grid=np.array([[0.0, 0.0]]))
 
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-4)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-4)
@@ -1532,8 +1532,8 @@ class TestSersicCore:
         sersic_0 = ag.mp.EllSersicCore(centre=(0.0, 0.0))
         sersic_1 = ag.mp.EllSersicCore(centre=(0.0, 0.0))
 
-        deflections_0 = sersic_0.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = sersic_1.deflections_2d_from(grid=np.array([[0.0, 1.0]]))
+        deflections_0 = sersic_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = sersic_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
@@ -1558,8 +1558,8 @@ class TestSersicCore:
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
 
-        deflections_0 = sersic_0.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = sersic_1.deflections_2d_from(grid=np.array([[0.0, 1.0]]))
+        deflections_0 = sersic_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = sersic_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
@@ -1644,11 +1644,11 @@ class TestChameleon:
         assert deflections[0, 0] == pytest.approx(2.12608, 1e-3)
         assert deflections[0, 1] == pytest.approx(1.55252, 1e-3)
 
-    def test__deflections_2d_from(self):
+    def test__deflections_yx_2d_from(self):
 
         sersic_core = ag.mp.EllChameleon()
 
-        deflections = sersic_core.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = sersic_core.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
         deflections_via_integral = sersic_core.deflections_2d_via_analytic_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -1657,7 +1657,7 @@ class TestChameleon:
 
         sersic_core = ag.mp.SphChameleon()
 
-        deflections = sersic_core.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = sersic_core.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
         deflections_via_integral = sersic_core.deflections_2d_via_analytic_from(
             grid=np.array([[1.0, 0.0]])
         )
@@ -1704,8 +1704,8 @@ class TestChameleon:
 
         assert convergence_0 == pytest.approx(convergence_1, 1.0e-6)
 
-        deflections_0 = chameleon_0.deflections_2d_from(grid=np.array([[1.0, 1.0]]))
-        deflections_1 = chameleon_1.deflections_2d_from(grid=np.array([[0.0, 0.0]]))
+        deflections_0 = chameleon_0.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
+        deflections_1 = chameleon_1.deflections_yx_2d_from(grid=np.array([[0.0, 0.0]]))
 
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-4)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-4)
@@ -1726,8 +1726,8 @@ class TestChameleon:
         chameleon_0 = ag.mp.EllChameleon(centre=(0.0, 0.0))
         chameleon_1 = ag.mp.EllChameleon(centre=(0.0, 0.0))
 
-        deflections_0 = chameleon_0.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = chameleon_1.deflections_2d_from(grid=np.array([[0.0, 1.0]]))
+        deflections_0 = chameleon_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = chameleon_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
@@ -1751,8 +1751,8 @@ class TestChameleon:
             centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
         )
 
-        deflections_0 = chameleon_0.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = chameleon_1.deflections_2d_from(grid=np.array([[0.0, 1.0]]))
+        deflections_0 = chameleon_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = chameleon_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
@@ -1775,6 +1775,6 @@ class TestChameleon:
         )
 
         np.testing.assert_almost_equal(
-            elliptical.deflections_2d_from(grid=grid),
-            spherical.deflections_2d_from(grid=grid),
+            elliptical.deflections_yx_2d_from(grid=grid),
+            spherical.deflections_yx_2d_from(grid=grid),
         )

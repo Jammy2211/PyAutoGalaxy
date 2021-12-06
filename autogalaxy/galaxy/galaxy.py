@@ -94,7 +94,7 @@ class Galaxy(af.ModelObject, Dictable):
         self._calc_image = CalcImage(image_2d_from=self.image_2d_from)
         self._calc_image.add_functions(obj=self)
 
-        self._calc_lens = CalcLens(deflections_2d_from=self.deflections_2d_from)
+        self._calc_lens = CalcLens(deflections_yx_2d_from=self.deflections_yx_2d_from)
         self._calc_lens.add_functions(obj=self)
 
     def dict(self) -> dict:
@@ -461,7 +461,7 @@ class Galaxy(af.ModelObject, Dictable):
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
-    def deflections_2d_from(self, grid):
+    def deflections_yx_2d_from(self, grid):
         """
         Returns the summed (y,x) deflection angles of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
@@ -477,7 +477,7 @@ class Galaxy(af.ModelObject, Dictable):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.deflections_2d_from(grid=grid), self.mass_profiles)
+                map(lambda p: p.deflections_yx_2d_from(grid=grid), self.mass_profiles)
             )
         return np.zeros((grid.shape[0], 2))
 

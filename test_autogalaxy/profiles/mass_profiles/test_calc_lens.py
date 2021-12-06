@@ -51,43 +51,13 @@ def caustics_via_magnification_from(mass_profile, grid):
     for i in range(len(critical_curves)):
         critical_curve = critical_curves[i]
 
-        deflections_1d = mass_profile.deflections_2d_from(grid=critical_curve)
+        deflections_1d = mass_profile.deflections_yx_2d_from(grid=critical_curve)
 
         caustic = critical_curve - deflections_1d
 
         caustics.append(caustic)
 
     return caustics
-
-
-def test__deflection_magnitudes_from():
-
-    sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=1.0)
-
-    grid = ag.Grid2DIrregular([(1.0, 0.0), (0.0, 1.0)])
-
-    deflection_magnitudes = sis.deflection_magnitudes_from(grid=grid)
-
-    assert deflection_magnitudes == pytest.approx(np.array([1.0, 1.0]), 1.0e-4)
-
-    sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-
-    grid = ag.Grid2DIrregular([(2.0, 0.0), (0.0, 2.0)])
-
-    deflection_magnitudes = sis.deflection_magnitudes_from(grid=grid)
-
-    assert deflection_magnitudes == pytest.approx(np.array([2.0, 2.0]), 1.0e-4)
-
-    grid = ag.Grid2D.uniform(shape_native=(5, 5), pixel_scales=0.1, sub_size=1)
-
-    deflections = sis.deflections_2d_from(grid=grid)
-    magitudes_manual = np.sqrt(
-        np.square(deflections[:, 0]) + np.square(deflections[:, 1])
-    )
-
-    deflection_magnitudes = sis.deflection_magnitudes_from(grid=grid)
-
-    assert deflection_magnitudes == pytest.approx(magitudes_manual, 1.0e-4)
 
 
 def test__hessian_from():
@@ -143,39 +113,6 @@ def test__convergence_2d_via_hessian_from():
     assert convergence.in_list[1] == pytest.approx(0.46030, 1.0e-4)
     assert convergence.in_list[2] == pytest.approx(0.43484, 1.0e-4)
     assert convergence.in_list[3] == pytest.approx(1.00492, 1.0e-4)
-
-
-def test__shear_via_hessian_from():
-
-    buffer = 0.00001
-    grid = ag.Grid2DIrregular(
-        grid=[(1.075, -0.125), (-0.875, -0.075), (-0.925, -0.075), (0.075, 0.925)]
-    )
-
-    sis = ag.mp.EllIsothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.001, 0.001), einstein_radius=1.0
-    )
-
-    shear = sis.shear_via_hessian_from(grid=grid, buffer=buffer)
-
-    assert shear.in_list[0] == pytest.approx(0.461447, 1.0e-4)
-    assert shear.in_list[1] == pytest.approx(0.568875, 1.0e-4)
-    assert shear.in_list[2] == pytest.approx(0.538326, 1.0e-4)
-    assert shear.in_list[3] == pytest.approx(0.539390, 1.0e-4)
-
-    sis = ag.mp.EllIsothermal(
-        centre=(0.2, 0.1), elliptical_comps=(0.3, 0.4), einstein_radius=1.5
-    )
-
-    shear = sis.shear_2d_from(grid=grid)
-    print((shear[:, 0] ** 2 + shear[:, 1] ** 2) ** 0.5)
-
-    shear = sis.shear_via_hessian_from(grid=grid, buffer=buffer)
-
-    assert shear.in_list[0] == pytest.approx(0.41597, 1.0e-4)
-    assert shear.in_list[1] == pytest.approx(0.38299, 1.0e-4)
-    assert shear.in_list[2] == pytest.approx(0.36522, 1.0e-4)
-    assert shear.in_list[3] == pytest.approx(0.82750, 1.0e-4)
 
 
 def test__magnification_2d_via_hessian_from():
@@ -391,6 +328,8 @@ def test__magnification_2d_from__compare_eigen_values_and_determinant():
 
     tangential_eigen_value = sie.tangential_eigen_value_from(grid=grid)
 
+    print(tangential_eigen_value)
+
     radal_eigen_value = sie.radial_eigen_value_from(grid=grid)
 
     magnification_via_eigen_values = 1 / (tangential_eigen_value * radal_eigen_value)
@@ -433,9 +372,11 @@ def test__magnification_2d_from__compare_determinant_and_convergence_and_shear()
 
     convergence = sie.convergence_2d_via_jacobian_from(grid=grid)
 
-    shear = sie.shear_via_jacobian_from(grid=grid)
+    shear = sie.shear_yx_2d_via_jacobian_from(grid=grid)
 
-    magnification_via_convergence_and_shear = 1 / ((1 - convergence) ** 2 - shear ** 2)
+    magnification_via_convergence_and_shear = 1 / (
+        (1 - convergence) ** 2 - shear.magnitudes ** 2
+    )
 
     mean_error = np.mean(
         magnification_via_determinant.slim
@@ -450,9 +391,11 @@ def test__magnification_2d_from__compare_determinant_and_convergence_and_shear()
 
     convergence = sie.convergence_2d_via_jacobian_from(grid=grid)
 
-    shear = sie.shear_via_jacobian_from(grid=grid)
+    shear = sie.shear_yx_2d_via_jacobian_from(grid=grid)
 
-    magnification_via_convergence_and_shear = 1 / ((1 - convergence) ** 2 - shear ** 2)
+    magnification_via_convergence_and_shear = 1 / (
+        (1 - convergence) ** 2 - shear.magnitudes ** 2
+    )
 
     mean_error = np.mean(
         magnification_via_determinant.slim
@@ -710,7 +653,8 @@ def test__binning_works_on_all_from_grid_methods():
         jacobian_last_pixel_binned_up, 1e-4
     )
 
-    shear_via_jacobian = sie.shear_via_jacobian_from(grid=grid)
+    shear_yx_via_jacobian = sie.shear_yx_2d_via_jacobian_from(grid=grid)
+    shear_via_jacobian = shear_yx_via_jacobian.magnitudes
 
     shear_1st_pixel_binned_up = (
         shear_via_jacobian[0]

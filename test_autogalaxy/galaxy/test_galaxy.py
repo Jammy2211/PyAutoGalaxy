@@ -379,7 +379,7 @@ class TestMassProfiles:
         assert gal_potential.binned[0] == mp_potential_0
         assert gal_potential.binned[1] == mp_potential_1
 
-    def test__deflections_2d_from__no_mass_profiles__deflections_returned_as_0s_of_shape_grid(
+    def test__deflections_yx_2d_from__no_mass_profiles__deflections_returned_as_0s_of_shape_grid(
         self, sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp
     ):
 
@@ -387,7 +387,7 @@ class TestMassProfiles:
 
         galaxy = ag.Galaxy(redshift=0.5)
 
-        deflections = galaxy.deflections_2d_from(grid=sub_grid_2d_7x7)
+        deflections = galaxy.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
         assert (
             deflections.slim == np.zeros(shape=(sub_grid_2d_7x7.sub_shape_slim, 2))
@@ -395,41 +395,45 @@ class TestMassProfiles:
 
         galaxy = ag.Galaxy(redshift=0.5)
 
-        deflections = galaxy.deflections_2d_from(grid=sub_grid_2d_7x7)
+        deflections = galaxy.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
         assert (deflections.binned.native == np.zeros(shape=(7, 7, 2))).all()
 
-        mp_deflections = mp_0.deflections_2d_from(grid=grid)
+        mp_deflections = mp_0.deflections_yx_2d_from(grid=grid)
 
-        gal_deflections = gal_x1_mp.deflections_2d_from(grid=np.array([[1.05, -0.55]]))
+        gal_deflections = gal_x1_mp.deflections_yx_2d_from(
+            grid=np.array([[1.05, -0.55]])
+        )
 
         assert (mp_deflections == gal_deflections).all()
 
-        mp_deflections = mp_0.deflections_2d_from(grid=grid)
-        mp_deflections += mp_1.deflections_2d_from(grid=grid)
+        mp_deflections = mp_0.deflections_yx_2d_from(grid=grid)
+        mp_deflections += mp_1.deflections_yx_2d_from(grid=grid)
 
-        gal_deflections = gal_x2_mp.deflections_2d_from(grid=np.array([[1.05, -0.55]]))
+        gal_deflections = gal_x2_mp.deflections_yx_2d_from(
+            grid=np.array([[1.05, -0.55]])
+        )
 
         assert (mp_deflections == gal_deflections).all()
 
         grid = ag.Grid2DIrregular([(1.05, -0.55)])
 
-        mp_deflections = mp_0.deflections_2d_from(grid=grid)
+        mp_deflections = mp_0.deflections_yx_2d_from(grid=grid)
 
-        gal_deflections = gal_x1_mp.deflections_2d_from(grid=grid)
+        gal_deflections = gal_x1_mp.deflections_yx_2d_from(grid=grid)
 
         assert type(gal_deflections) == ag.Grid2DIrregular
         assert mp_deflections.in_list[0][0] == gal_deflections.in_list[0][0]
         assert mp_deflections.in_list[0][1] == gal_deflections.in_list[0][1]
 
-    def test__deflections_2d_from__sub_grid_binning_still_works(
+    def test__deflections_yx_2d_from__sub_grid_binning_still_works(
         self, sub_grid_2d_7x7, gal_x2_mp
     ):
-        mp_0_deflections = gal_x2_mp.mass_profile_0.deflections_2d_from(
+        mp_0_deflections = gal_x2_mp.mass_profile_0.deflections_yx_2d_from(
             grid=sub_grid_2d_7x7
         )
 
-        mp_1_deflections = gal_x2_mp.mass_profile_1.deflections_2d_from(
+        mp_1_deflections = gal_x2_mp.mass_profile_1.deflections_yx_2d_from(
             grid=sub_grid_2d_7x7
         )
 
@@ -449,7 +453,7 @@ class TestMassProfiles:
             + mp_deflections[7, 0]
         ) / 4.0
 
-        gal_deflections = gal_x2_mp.deflections_2d_from(grid=sub_grid_2d_7x7)
+        gal_deflections = gal_x2_mp.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
         assert gal_deflections.binned[0, 0] == mp_deflections_y_0
         assert gal_deflections.binned[1, 0] == mp_deflections_y_1
@@ -468,7 +472,7 @@ class TestMassProfiles:
             + mp_deflections[7, 1]
         ) / 4.0
 
-        gal_deflections = gal_x2_mp.deflections_2d_from(grid=sub_grid_2d_7x7)
+        gal_deflections = gal_x2_mp.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
         assert gal_deflections.binned[0, 1] == mp_deflections_x_0
         assert gal_deflections.binned[1, 1] == mp_deflections_x_1
@@ -1007,16 +1011,16 @@ class TestRegression:
             gal_x4_mp.potential_2d_from(grid=np.array([[51.0, 0.0]])), 1e-6
         )
 
-        assert gal_x4_mp.deflections_2d_from(
+        assert gal_x4_mp.deflections_yx_2d_from(
             grid=np.array([[1.0, 0.0]])
         ) == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[99.0, 0.0]])), 1e-6
+            gal_x4_mp.deflections_yx_2d_from(grid=np.array([[99.0, 0.0]])), 1e-6
         )
 
-        assert gal_x4_mp.deflections_2d_from(
+        assert gal_x4_mp.deflections_yx_2d_from(
             grid=np.array([[49.0, 0.0]])
         ) == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[51.0, 0.0]])), 1e-6
+            gal_x4_mp.deflections_yx_2d_from(grid=np.array([[51.0, 0.0]])), 1e-6
         )
 
         mp_0 = ag.mp.SphIsothermal(einstein_radius=1.0)
@@ -1083,52 +1087,52 @@ class TestRegression:
             gal_x4_mp.potential_2d_from(grid=np.array([[51.0, 51.0]])), 1e-5
         )
 
-        assert -1.0 * gal_x4_mp.deflections_2d_from(grid=np.array([[49.0, 0.0]]))[
+        assert -1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[49.0, 0.0]]))[
             0, 0
         ] == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[51.0, 0.0]]))[0, 0], 1e-5
+            gal_x4_mp.deflections_yx_2d_from(grid=np.array([[51.0, 0.0]]))[0, 0], 1e-5
         )
 
-        assert 1.0 * gal_x4_mp.deflections_2d_from(grid=np.array([[0.0, 49.0]]))[
+        assert 1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[0.0, 49.0]]))[
             0, 0
         ] == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[0.0, 51.0]]))[0, 0], 1e-5
+            gal_x4_mp.deflections_yx_2d_from(grid=np.array([[0.0, 51.0]]))[0, 0], 1e-5
         )
 
-        assert 1.0 * gal_x4_mp.deflections_2d_from(grid=np.array([[100.0, 49.0]]))[
+        assert 1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[100.0, 49.0]]))[
             0, 0
         ] == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[100.0, 51.0]]))[0, 0], 1e-5
+            gal_x4_mp.deflections_yx_2d_from(grid=np.array([[100.0, 51.0]]))[0, 0], 1e-5
         )
 
-        assert -1.0 * gal_x4_mp.deflections_2d_from(grid=np.array([[49.0, 49.0]]))[
+        assert -1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[49.0, 49.0]]))[
             0, 0
         ] == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[51.0, 51.0]]))[0, 0], 1e-5
+            gal_x4_mp.deflections_yx_2d_from(grid=np.array([[51.0, 51.0]]))[0, 0], 1e-5
         )
 
-        assert 1.0 * gal_x4_mp.deflections_2d_from(grid=np.array([[49.0, 0.0]]))[
+        assert 1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[49.0, 0.0]]))[
             0, 1
         ] == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[51.0, 0.0]]))[0, 1], 1e-5
+            gal_x4_mp.deflections_yx_2d_from(grid=np.array([[51.0, 0.0]]))[0, 1], 1e-5
         )
 
-        assert -1.0 * gal_x4_mp.deflections_2d_from(grid=np.array([[0.0, 49.0]]))[
+        assert -1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[0.0, 49.0]]))[
             0, 1
         ] == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[0.0, 51.0]]))[0, 1], 1e-5
+            gal_x4_mp.deflections_yx_2d_from(grid=np.array([[0.0, 51.0]]))[0, 1], 1e-5
         )
 
-        assert -1.0 * gal_x4_mp.deflections_2d_from(grid=np.array([[100.0, 49.0]]))[
+        assert -1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[100.0, 49.0]]))[
             0, 1
         ] == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[100.0, 51.0]]))[0, 1], 1e-5
+            gal_x4_mp.deflections_yx_2d_from(grid=np.array([[100.0, 51.0]]))[0, 1], 1e-5
         )
 
-        assert -1.0 * gal_x4_mp.deflections_2d_from(grid=np.array([[49.0, 49.0]]))[
+        assert -1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[49.0, 49.0]]))[
             0, 1
         ] == pytest.approx(
-            gal_x4_mp.deflections_2d_from(grid=np.array([[51.0, 51.0]]))[0, 1], 1e-5
+            gal_x4_mp.deflections_yx_2d_from(grid=np.array([[51.0, 51.0]]))[0, 1], 1e-5
         )
 
     def test__centre_of_profile_in_right_place(self):
@@ -1153,7 +1157,7 @@ class TestRegression:
         )
         assert max_indexes == (1, 4)
 
-        deflections = galaxy.deflections_2d_from(grid=grid)
+        deflections = galaxy.deflections_yx_2d_from(grid=grid)
         assert deflections.native[1, 4, 0] > 0
         assert deflections.native[2, 4, 0] < 0
         assert deflections.native[1, 4, 1] > 0
@@ -1176,7 +1180,7 @@ class TestRegression:
         )
         assert max_indexes == (1, 4)
 
-        deflections = galaxy.deflections_2d_from(grid=grid)
+        deflections = galaxy.deflections_yx_2d_from(grid=grid)
         assert deflections.native[1, 4, 0] > 0
         assert deflections.native[2, 4, 0] < 0
         assert deflections.native[1, 4, 1] > 0
@@ -1206,7 +1210,7 @@ class TestRegression:
         )
         assert max_indexes == (1, 4)
 
-        deflections = galaxy.deflections_2d_from(grid=grid)
+        deflections = galaxy.deflections_yx_2d_from(grid=grid)
         assert deflections.native[1, 4, 0] >= 0
         assert deflections.native[2, 4, 0] <= 0
         assert deflections.native[1, 4, 1] >= 0
@@ -1228,7 +1232,7 @@ class TestRegression:
         )
         assert max_indexes == (1, 4)
 
-        deflections = galaxy.deflections_2d_from(grid=grid)
+        deflections = galaxy.deflections_yx_2d_from(grid=grid)
         assert deflections.native[1, 4, 0] >= 0
         assert deflections.native[2, 4, 0] <= 0
         assert deflections.native[1, 4, 1] >= 0
@@ -1307,11 +1311,11 @@ class TestDecorators:
             mass=ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0),
         )
 
-        deflections = galaxy.deflections_2d_from(grid=grid)
+        deflections = galaxy.deflections_yx_2d_from(grid=grid)
 
         mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
         grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
-        deflections_sub_2 = galaxy.deflections_2d_from(grid=grid_sub_2).binned
+        deflections_sub_2 = galaxy.deflections_yx_2d_from(grid=grid_sub_2).binned
 
         assert (deflections == deflections_sub_2).all()
 
@@ -1324,17 +1328,17 @@ class TestDecorators:
             mass=ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0),
         )
 
-        deflections = galaxy.deflections_2d_from(grid=grid)
+        deflections = galaxy.deflections_yx_2d_from(grid=grid)
 
         mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
         grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
-        deflections_sub_4 = galaxy.deflections_2d_from(grid=grid_sub_4).binned
+        deflections_sub_4 = galaxy.deflections_yx_2d_from(grid=grid_sub_4).binned
 
         assert deflections[0, 0] == deflections_sub_4[0, 0]
 
         mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
         grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
-        deflections_sub_8 = galaxy.deflections_2d_from(grid=grid_sub_8).binned
+        deflections_sub_8 = galaxy.deflections_yx_2d_from(grid=grid_sub_8).binned
 
         assert deflections[4, 0] == deflections_sub_8[4, 0]
 
