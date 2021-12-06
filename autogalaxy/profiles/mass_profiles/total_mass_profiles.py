@@ -801,7 +801,7 @@ class EllIsothermal(EllPowerLaw):
             grid=np.vstack((shear_y, shear_x)).T
         )
 
-        return aa.VectorField2DIrregular(vectors=shear_field, grid=grid)
+        return aa.VectorYX2DIrregular(vectors=shear_field, grid=grid)
 
 
 class EllIsothermalInitialize(EllIsothermal):

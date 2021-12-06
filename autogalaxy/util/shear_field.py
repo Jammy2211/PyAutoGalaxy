@@ -9,7 +9,7 @@ logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 
-class ShearField2DIrregular(aa.VectorField2DIrregular):
+class ShearField2DIrregular(aa.VectorYX2DIrregular):
     def __new__(
         cls, vectors: np.ndarray or [(float, float)], grid: aa.Grid2DIrregular or list
     ):
@@ -18,9 +18,9 @@ class ShearField2DIrregular(aa.VectorField2DIrregular):
         of (y,x) coordinates.
 
         The structure of this data structure is described in
-        `autoarray.structures.vector_fields.vector_field_irregular.VectorField2DIrregular`
+        `autoarray.structures.vectors.irregular.VectorYX2DIrregular`
 
-        This class extends `VectorField2DIrregular` to include methods that are specific to a shear field, typically
+        This class extends `VectorYX2DIrregular` to include methods that are specific to a shear field, typically
         used for weak lensing calculations.
 
         Parameters

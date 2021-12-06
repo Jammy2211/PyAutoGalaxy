@@ -146,7 +146,7 @@ class MatPlot2D(aplt.MatPlot2D):
         array_overlay: aplt.ArrayOverlay = aplt.ArrayOverlay(),
         grid_scatter: aplt.GridScatter = aplt.GridScatter(),
         grid_plot: aplt.GridPlot = aplt.GridPlot(),
-        vector_field_quiver: aplt.VectorFieldQuiver = aplt.VectorFieldQuiver(),
+        vectors_quiver: aplt.VectorFieldQuiver = aplt.VectorFieldQuiver(),
         patch_overlay: aplt.PatchOverlay = aplt.PatchOverlay(),
         voronoi_drawer: aplt.VoronoiDrawer = aplt.VoronoiDrawer(),
         origin_scatter: aplt.OriginScatter = aplt.OriginScatter(),
@@ -219,7 +219,7 @@ class MatPlot2D(aplt.MatPlot2D):
           Scatters a `Grid2D` of (y,x) coordinates over the figure using `plt.scatter`.
         grid_plot: aplt.LinePlot
           Plots lines of data (e.g. a y versus x plot via `plt.plot`, vertical lines via `plt.avxline`, etc.)
-        vector_field_quiver: aplt.VectorFieldQuiver
+        vectors_quiver: aplt.VectorFieldQuiver
           Plots a `VectorField` object using the matplotlib function `plt.quiver`.
         patch_overlay: aplt.PatchOverlay
           Overlays matplotlib `patches.Patch` objects over the figure, such as an `Ellipse`.
@@ -278,7 +278,7 @@ class MatPlot2D(aplt.MatPlot2D):
             positions_scatter=positions_scatter,
             index_scatter=index_scatter,
             pixelization_grid_scatter=pixelization_grid_scatter,
-            vector_field_quiver=vector_field_quiver,
+            vectors_quiver=vectors_quiver,
             patch_overlay=patch_overlay,
             array_overlay=array_overlay,
             grid_plot=grid_plot,
