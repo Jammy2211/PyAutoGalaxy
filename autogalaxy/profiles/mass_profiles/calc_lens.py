@@ -6,6 +6,9 @@ from typing import Callable, List, Tuple, Union
 import autoarray as aa
 from autoconf.dictable import Dictable
 
+from autogalaxy.util.shear_field import ShearYX2D
+from autogalaxy.util.shear_field import ShearYX2DIrregular
+
 
 # TODO: This module is a mess. A full refactor better defining conventions and with more rigorous integration tests
 # TODO : Is a priorty.
@@ -223,7 +226,7 @@ class CalcLens(Dictable):
 
     def shear_yx_2d_via_hessian_from(
         self, grid, buffer: float = 0.01
-    ) -> aa.VectorYX2DIrregular:
+    ) -> ShearYX2DIrregular:
         """
         Returns the 2D (y,x) shear vectors of the lensing object, which are computed from the 2D deflection angle map
         via the Hessian using the expressions (see equation 57 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
@@ -253,7 +256,7 @@ class CalcLens(Dictable):
         shear_yx_2d[:, 0] = hessian_xy
         shear_yx_2d[:, 1] = 0.5 * (hessian_xx - hessian_yy)
 
-        return aa.VectorYX2DIrregular(vectors=shear_yx_2d, grid=grid)
+        return ShearYX2DIrregular(vectors=shear_yx_2d, grid=grid)
 
     def magnification_2d_via_hessian_from(
         self, grid, buffer: float = 0.01, deflections_func=None
@@ -682,7 +685,7 @@ class CalcLens(Dictable):
         return aa.Array2D(array=convergence, mask=grid.mask)
 
     @precompute_jacobian
-    def shear_yx_2d_via_jacobian_from(self, grid, jacobian=None) -> aa.VectorYX2D:
+    def shear_yx_2d_via_jacobian_from(self, grid, jacobian=None) -> Union[ShearYX2D, ShearYX2DIrregular]:
         """
         Returns the 2D (y,x) shear vectors of the lensing object, which are computed from the 2D deflection angle map
         via the Jacobian using the expression (see equation 58 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
@@ -708,8 +711,8 @@ class CalcLens(Dictable):
         shear_yx_2d[:, 1] = 0.5 * (jacobian[1][1] - jacobian[0][0])
 
         if isinstance(grid, aa.Grid2DIrregular):
-            return aa.VectorYX2DIrregular(vectors=shear_yx_2d, grid=grid)
-        return aa.VectorYX2D(vectors=shear_yx_2d, grid=grid, mask=grid.mask)
+            return ShearYX2DIrregular(vectors=shear_yx_2d, grid=grid)
+        return ShearYX2D(vectors=shear_yx_2d, grid=grid, mask=grid.mask)
 
     def add_functions(self, obj):
         """
