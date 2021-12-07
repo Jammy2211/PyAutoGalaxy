@@ -6,6 +6,25 @@ from autogalaxy import exc
 from autogalaxy.mock import mock
 
 
+def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, sub_mask_2d_7x7):
+
+    data = ag.Array2D.manual_native(array=[[1.0, 2.0], [3.0, 4.0]], pixel_scales=1.0)
+    signal_to_noise_map = ag.Array2D.manual_native(
+        array=[[1.0, 5.0], [15.0, 40.0]], pixel_scales=1.0
+    )
+
+    dataset_quantity = ag.DatasetQuantity.via_signal_to_noise_map(
+        data=data, signal_to_noise_map=signal_to_noise_map
+    )
+
+    assert dataset_quantity.signal_to_noise_map == pytest.approx(
+        signal_to_noise_map, 1.0e-4
+    )
+    assert dataset_quantity.noise_map.native == pytest.approx(
+        np.array([[1.0, 0.4], [0.2, 0.1]]), 1.0e-4
+    )
+
+
 def test__apply_mask__masks_dataset(dataset_quantity_7x7_array_2d, sub_mask_2d_7x7):
 
     dataset_quantity_7x7 = dataset_quantity_7x7_array_2d.apply_mask(
