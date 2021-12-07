@@ -84,7 +84,7 @@ class DatasetQuantity(AbstractDataset):
         data
             The data of the quantity (e.g. 2D convergence, 2D potential, 2D deflections) that is fitted.
         noise_map
-            The 2D noise map of the quantity's data, which is often chosen in an arbritrary way.
+            The 2D noise map of the quantity's data, which is often chosen in an arbitrary way.
         settings
             Controls settings of how the dataset is set up (e.g. the types of grids used to perform calculations).
         """
@@ -92,6 +92,34 @@ class DatasetQuantity(AbstractDataset):
         self.unmasked = None
 
         super().__init__(data=data, noise_map=noise_map, settings=settings)
+
+    @classmethod
+    def via_signal_to_noise_map(
+        cls,
+        data: Union[aa.Array2D],
+        signal_to_noise_map: Union[aa.Array2D],
+        settings: SettingsQuantity = SettingsQuantity(),
+    ):
+        """
+        Represents a derived quantity of a light profile, mass profile, galaxy or plane as a dataset that can be fitted
+        with a model via a non-linear (see `DatasetQuantity.__init__`).
+
+        This classmethod takes as input a signal-to-noise map, as opposed to the noise map used in the `__init__`
+        constructor. The noise-map is then derived from this signal-to-noise map, such that this is the signal to
+        noise of the `DatasetQuantity` that is returned.
+
+        Parameters
+        ----------
+        data
+            The data of the quantity (e.g. 2D convergence, 2D potential, 2D deflections) that is fitted.
+        signal_to_noise_map
+            The 2D signal to noise map of the quantity's data.
+        settings
+            Controls settings of how the dataset is set up (e.g. the types of grids used to perform calculations).
+        """
+        noise_map = data / signal_to_noise_map
+
+        return DatasetQuantity(data=data, noise_map=noise_map, settings=settings)
 
     def apply_mask(self, mask: aa.Mask2D) -> "DatasetQuantity":
         """
