@@ -88,7 +88,7 @@ class FitInterferometer(aa.FitInterferometer):
 
     @property
     def operate_image_of_galaxies(self) -> OperateImage:
-        return OperateImage(light_obj_list=self.plane.galaxies)
+        return OperateImage.from_light_obj(light_obj=self.plane)
 
     @property
     def galaxy_model_image_dict(self) -> {Galaxy: np.ndarray}:

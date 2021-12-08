@@ -47,7 +47,7 @@ class FitImaging(aa.FitImaging):
             image = dataset.image
             noise_map = dataset.noise_map
 
-        self.blurred_image = self.operate_image_of_galaxies.blurred_image_2d_via_convolver_from(
+        self.blurred_image = self.operate_image.blurred_image_2d_via_convolver_from(
             grid=dataset.grid,
             convolver=dataset.convolver,
             blurring_grid=dataset.blurring_grid,
@@ -94,8 +94,8 @@ class FitImaging(aa.FitImaging):
         return self.imaging.grid
 
     @property
-    def operate_image_of_galaxies(self) -> OperateImage:
-        return OperateImage(light_obj_list=self.plane.galaxies)
+    def operate_image(self) -> OperateImage:
+        return OperateImage.from_light_obj(light_obj=self.plane)
 
     @property
     def galaxy_model_image_dict(self) -> {Galaxy: np.ndarray}:
@@ -122,7 +122,7 @@ class FitImaging(aa.FitImaging):
     @property
     def model_images_of_galaxies(self):
 
-        model_images_of_galaxies = self.operate_image_of_galaxies.blurred_image_2d_list_via_psf_from(
+        model_images_of_galaxies = self.operate_image.blurred_image_2d_list_via_psf_from(
             grid=self.grid,
             psf=self.imaging.psf,
             blurring_grid=self.imaging.blurring_grid,
@@ -161,13 +161,13 @@ class FitImaging(aa.FitImaging):
 
     @property
     def unmasked_blurred_image(self):
-        return self.operate_image_of_galaxies.unmasked_blurred_image_2d_via_psf_from(
+        return self.operate_image.unmasked_blurred_image_2d_via_psf_from(
             grid=self.grid, psf=self.imaging.psf
         )
 
     @property
     def unmasked_blurred_image_of_galaxies(self):
-        return self.operate_image_of_galaxies.unmasked_blurred_image_2d_list_via_psf_from(
+        return self.operate_image.unmasked_blurred_image_2d_list_via_psf_from(
             grid=self.grid, psf=self.imaging.psf
         )
 

@@ -375,7 +375,7 @@ class TestAbstractPlaneProfiles:
                 lp0_image_pixel_1 + lp1_image_pixel_1, 1.0e-4
             )
 
-            image_of_galaxies = plane.images_of_galaxies_from(grid=sub_grid_2d_7x7)
+            image_of_galaxies = plane.image_2d_list_from(grid=sub_grid_2d_7x7)
 
             assert image_of_galaxies[0].binned[0] == lp0_image_pixel_0
             assert image_of_galaxies[0].binned[1] == lp0_image_pixel_1

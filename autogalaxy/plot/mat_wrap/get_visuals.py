@@ -214,7 +214,9 @@ class GetVisuals1D(gv.GetVisuals1D):
         if self.include.einstein_radius:
 
             einstein_radius_list = [
-                OperateLens(mass_obj_list=[mass_profile]).einstein_radius_from(grid=grid)
+                OperateLens(mass_obj_list=[mass_profile]).einstein_radius_from(
+                    grid=grid
+                )
                 for mass_profile in mass_obj_list
             ]
 

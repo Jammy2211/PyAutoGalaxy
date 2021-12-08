@@ -256,7 +256,7 @@ class AbstractPlaneLensing(AbstractPlane):
             )
         return np.zeros((grid.shape[0],))
 
-    def images_of_galaxies_from(self, grid):
+    def image_2d_list_from(self, grid):
         return list(map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies))
 
     def padded_image_2d_from(self, grid, psf_shape_2d):
@@ -533,7 +533,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         galaxy_image_dict = dict()
 
-        images_of_galaxies = self.images_of_galaxies_from(grid=grid)
+        images_of_galaxies = self.image_2d_list_from(grid=grid)
         for (galaxy_index, galaxy) in enumerate(self.galaxies):
             galaxy_image_dict[galaxy] = images_of_galaxies[galaxy_index]
 
@@ -548,11 +548,12 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         galaxy_blurred_image_dict = dict()
 
-        calc_image_list = OperateImage(light_obj_list=self.galaxies)
+        operate_image = OperateImage.from_light_obj(light_obj=self)
 
-        blurred_images_of_galaxies = calc_image_list.blurred_image_2d_list_via_convolver_from(
+        blurred_images_of_galaxies = operate_image.blurred_image_2d_list_via_convolver_from(
             grid=grid, convolver=convolver, blurring_grid=blurring_grid
         )
+
         for (galaxy_index, galaxy) in enumerate(self.galaxies):
             galaxy_blurred_image_dict[galaxy] = blurred_images_of_galaxies[galaxy_index]
 
@@ -567,9 +568,9 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         galaxy_visibilities_image_dict = dict()
 
-        calc_image_list = OperateImage(light_obj_list=self.galaxies)
+        operate_image = OperateImage.from_light_obj(light_obj=self)
 
-        visibilities_of_galaxies = calc_image_list.visibilities_list_via_transformer_from(
+        visibilities_of_galaxies = operate_image.visibilities_list_via_transformer_from(
             grid=grid, transformer=transformer
         )
         for (galaxy_index, galaxy) in enumerate(self.galaxies):

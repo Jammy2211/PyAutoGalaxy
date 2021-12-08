@@ -74,7 +74,9 @@ def test__1d__via_mass_obj_from(mp_0, grid_2d_7x7):
 
     visuals_1d_via = get_visuals.via_mass_obj_from(mass_obj=mp_0, grid=grid_2d_7x7)
 
-    assert visuals_1d_via.einstein_radius == operate_lens.einstein_radius_from(grid=grid_2d_7x7)
+    assert visuals_1d_via.einstein_radius == operate_lens.einstein_radius_from(
+        grid=grid_2d_7x7
+    )
 
     include_1d = aplt.Include1D(einstein_radius=False)
 
@@ -98,10 +100,12 @@ def test__1d__via_mass_obj_list_from(mp_0, grid_2d_7x7):
         mass_obj_list=[mp_0, mp_0], grid=grid_2d_7x7, low_limit=1.0
     )
 
-    assert visuals_1d_via.einstein_radius == operate_lens.einstein_radius_from(grid=grid_2d_7x7)
-    assert visuals_1d_via.einstein_radius_errors[0][0] == operate_lens.einstein_radius_from(
+    assert visuals_1d_via.einstein_radius == operate_lens.einstein_radius_from(
         grid=grid_2d_7x7
     )
+    assert visuals_1d_via.einstein_radius_errors[0][
+        0
+    ] == operate_lens.einstein_radius_from(grid=grid_2d_7x7)
 
     include_1d = aplt.Include1D(einstein_radius=False)
 

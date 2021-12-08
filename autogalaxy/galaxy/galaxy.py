@@ -333,6 +333,23 @@ class Galaxy(af.ModelObject, Dictable):
             return sum(map(lambda p: p.image_2d_from(grid=grid), self.light_profiles))
         return np.zeros((grid.shape[0],))
 
+    def image_2d_list_from(self, grid):
+        """
+        Returns the summed 2D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
+        coordinates.
+
+        If the galaxy has no light profiles, a grid of zeros is returned.
+
+        See `profiles.light_profiles` for a description of how light profile images are computed.
+
+        Parameters
+        ----------
+        grid
+            The (y, x) coordinates in the original reference frame of the grid.
+
+        """
+        return list(map(lambda p: p.image_2d_from(grid=grid), self.light_profiles))
+
     def luminosity_within_circle(self, radius: float):
         """
         Returns the total luminosity of the galaxy's light profiles within a circle of specified radius.

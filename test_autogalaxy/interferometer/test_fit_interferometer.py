@@ -117,7 +117,7 @@ class TestCompareToManualProfilesOnly:
 
         assert interferometer_7.noise_map == pytest.approx(fit.noise_map)
 
-        operate_image = ag.OperateImage(light_obj_list=[plane])
+        operate_image = ag.OperateImage.from_light_obj(light_obj=plane)
 
         model_visibilities = operate_image.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
@@ -194,17 +194,23 @@ class TestCompareToManualProfilesOnly:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        operate_image = ag.OperateImage(light_obj_list=[g0, g1])
+        g0_operate_image = ag.OperateImage.from_light_obj(light_obj=g0)
+        g1_operate_image = ag.OperateImage.from_light_obj(light_obj=g1)
 
-        g_visibilities_list = operate_image.visibilities_list_via_transformer_from(
+        g0_visibilities = g0_operate_image.visibilities_via_transformer_from(
+            grid=interferometer_7.grid, transformer=interferometer_7.transformer
+        )
+        g1_visibilities = g1_operate_image.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
+        profile_visibilities = g0_visibilities + g1_visibilities
+
         assert fit.galaxy_model_visibilities_dict[g0].slim == pytest.approx(
-            g_visibilities_list[0], 1.0e-4
+            g0_visibilities, 1.0e-4
         )
         assert fit.galaxy_model_visibilities_dict[g1].slim == pytest.approx(
-            g_visibilities_list[1], 1.0e-4
+            g1_visibilities, 1.0e-4
         )
 
         assert fit.model_visibilities.slim == pytest.approx(
@@ -540,7 +546,7 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        operate_image = ag.OperateImage(light_obj_list=[plane])
+        operate_image = ag.OperateImage.from_light_obj(light_obj=plane)
 
         visibilities = operate_image.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
@@ -649,13 +655,17 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        operate_image = ag.OperateImage(light_obj_list=[g0, g1])
+        g0_operate_image = ag.OperateImage.from_light_obj(light_obj=g0)
+        g1_operate_image = ag.OperateImage.from_light_obj(light_obj=g1)
 
-        g_visibilities = operate_image.visibilities_list_via_transformer_from(
+        g0_visibilities = g0_operate_image.visibilities_via_transformer_from(
+            grid=interferometer_7.grid, transformer=interferometer_7.transformer
+        )
+        g1_visibilities = g1_operate_image.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
-        profile_visibilities = sum(g_visibilities)
+        profile_visibilities = g0_visibilities + g1_visibilities
 
         profile_subtracted_visibilities = (
             interferometer_7.visibilities - profile_visibilities
@@ -701,13 +711,17 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        operate_image = ag.OperateImage(light_obj_list=[g0, g1])
+        g0_operate_image = ag.OperateImage.from_light_obj(light_obj=g0)
+        g1_operate_image = ag.OperateImage.from_light_obj(light_obj=g1)
 
-        g_visibilities = operate_image.visibilities_list_via_transformer_from(
+        g0_visibilities = g0_operate_image.visibilities_via_transformer_from(
+            grid=interferometer_7.grid, transformer=interferometer_7.transformer
+        )
+        g1_visibilities = g1_operate_image.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
-        profile_visibilities = sum(g_visibilities)
+        profile_visibilities = g0_visibilities + g1_visibilities
 
         profile_subtracted_visibilities = (
             interferometer_7.visibilities - profile_visibilities
@@ -730,10 +744,10 @@ class TestCompareToManualProfilesAndInversion:
         ).all()
 
         assert fit.galaxy_model_visibilities_dict[g0].slim == pytest.approx(
-            g_visibilities[0].slim, 1.0e-4
+            g0_visibilities.slim, 1.0e-4
         )
         assert fit.galaxy_model_visibilities_dict[g1].slim == pytest.approx(
-            g_visibilities[1].slim, 1.0e-4
+            g1_visibilities.slim, 1.0e-4
         )
         assert fit.galaxy_model_visibilities_dict[galaxy_pix].slim == pytest.approx(
             inversion.mapped_reconstructed_data.slim, 1.0e-4

@@ -5,7 +5,7 @@ import autoarray as aa
 
 
 class OperateImage:
-    def __init__(self, light_obj_list: List):
+    def __init__(self, image_2d_list_from: Callable):
         """
         Packages methods which manipulate the 2D image returned from the `image_2d_from` function of a light object
         (e.g. a `LightProfile`, `Galaxy`, `Plane`).
@@ -20,11 +20,11 @@ class OperateImage:
         image_2d_from
             The function which returns the light object's 2D image.
         """
-        self.light_obj_list = light_obj_list
+        self.image_2d_list_from = image_2d_list_from
 
-    @property
-    def image_2d_from_list(self):
-        return [light_obj.image_2d_from for light_obj in self.light_obj_list]
+    @classmethod
+    def from_light_obj(cls, light_obj):
+        return OperateImage(image_2d_list_from=light_obj.image_2d_list_from)
 
     def blurred_image_2d_via_psf_from(
         self,
@@ -52,13 +52,8 @@ class OperateImage:
             The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
         """
 
-        image_2d = sum(
-            image_2d_from(grid=grid) for image_2d_from in self.image_2d_from_list
-        )
-        blurring_image_2d = sum(
-            image_2d_from(grid=blurring_grid)
-            for image_2d_from in self.image_2d_from_list
-        )
+        image_2d = sum(self.image_2d_list_from(grid=grid))
+        blurring_image_2d = sum(self.image_2d_list_from(grid=blurring_grid))
 
         return psf.convolved_array_with_mask_from(
             array=image_2d.binned.native + blurring_image_2d.binned.native,
@@ -67,12 +62,12 @@ class OperateImage:
 
     def blurred_image_2d_list_via_psf_from(self, grid, psf, blurring_grid):
 
+        image_2d_list = self.image_2d_list_from(grid=grid)
+        blurring_image_2d_list = self.image_2d_list_from(grid=blurring_grid)
+
         blurred_image_2d_list = []
 
-        for image_2d_from in self.image_2d_from_list:
-
-            image_2d = image_2d_from(grid=grid)
-            blurring_image_2d = image_2d_from(grid=blurring_grid)
+        for image_2d, blurring_image_2d in zip(image_2d_list, blurring_image_2d_list):
 
             blurred_image_2d = psf.convolved_array_with_mask_from(
                 array=image_2d.binned.native + blurring_image_2d.binned.native,
@@ -111,25 +106,21 @@ class OperateImage:
             The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
         """
 
-        image_2d = sum(
-            image_2d_from(grid=grid) for image_2d_from in self.image_2d_from_list
-        )
-        blurring_image_2d = sum(
-            image_2d_from(grid=blurring_grid)
-            for image_2d_from in self.image_2d_from_list
-        )
+        image_2d = sum(self.image_2d_list_from(grid=grid))
+        blurring_image_2d = sum(self.image_2d_list_from(grid=blurring_grid))
 
         return convolver.convolve_image(
             image=image_2d.binned, blurring_image=blurring_image_2d.binned
         )
 
     def blurred_image_2d_list_via_convolver_from(self, grid, convolver, blurring_grid):
+
+        image_2d_list = self.image_2d_list_from(grid=grid)
+        blurring_image_2d_list = self.image_2d_list_from(grid=blurring_grid)
+
         blurred_image_2d_list = []
 
-        for image_2d_from in self.image_2d_from_list:
-
-            image_2d = image_2d_from(grid=grid)
-            blurring_image_2d = image_2d_from(grid=blurring_grid)
+        for image_2d, blurring_image_2d in zip(image_2d_list, blurring_image_2d_list):
 
             blurred_image_2d = convolver.convolve_image(
                 image=image_2d.binned, blurring_image=blurring_image_2d.binned
@@ -163,9 +154,7 @@ class OperateImage:
         """
         padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
 
-        padded_image = sum(
-            image_2d_from(grid=padded_grid) for image_2d_from in self.image_2d_from_list
-        )
+        padded_image = sum(self.image_2d_list_from(grid=padded_grid))
 
         return padded_grid.mask.unmasked_blurred_array_from(
             padded_array=padded_image, psf=psf, image_shape=grid.mask.shape
@@ -175,11 +164,11 @@ class OperateImage:
 
         padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
 
+        padded_image_1d_list = self.image_2d_list_from(grid=padded_grid)
+
         unmasked_blurred_image_list = []
 
-        for image_2d_from in self.image_2d_from_list:
-
-            padded_image_1d = image_2d_from(grid=padded_grid)
+        for padded_image_1d in padded_image_1d_list:
 
             unmasked_blurred_array_2d = padded_grid.mask.unmasked_blurred_array_from(
                 padded_array=padded_image_1d, psf=psf, image_shape=grid.mask.shape
@@ -217,9 +206,7 @@ class OperateImage:
             in the uv-plane.
         """
 
-        image_2d = sum(
-            image_2d_from(grid=grid) for image_2d_from in self.image_2d_from_list
-        )
+        image_2d = sum(self.image_2d_list_from(grid=grid))
 
         if not np.any(image_2d):
             return aa.Visibilities.zeros(
@@ -230,11 +217,11 @@ class OperateImage:
 
     def visibilities_list_via_transformer_from(self, grid, transformer):
 
+        image_2d_list = self.image_2d_list_from(grid=grid)
+
         visibilities_list = []
 
-        for image_2d_from in self.image_2d_from_list:
-
-            image_2d = image_2d_from(grid=grid)
+        for image_2d in image_2d_list:
 
             if not np.any(image_2d):
                 visibilities = aa.Visibilities.zeros(
