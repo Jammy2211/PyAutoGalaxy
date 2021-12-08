@@ -1,19 +1,19 @@
-import numpy as np
-from scipy.integrate import quad
 from typing import Tuple
 
-import autoarray as aa
+import numpy as np
+from scipy.integrate import quad
 
+import autoarray as aa
 from autogalaxy.profiles.geometry_profiles import EllProfile
 from autogalaxy.profiles.light_profiles.calc_image import CalcImage
 
 
 class LightProfile(EllProfile):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
     ):
         """
         Abstract base class for an elliptical light-profile.
@@ -35,10 +35,9 @@ class LightProfile(EllProfile):
             The first and second ellipticity components of the elliptical coordinate system (see the module
             `autogalaxy -> convert.py` for the convention).
         """
+        self._calc_image = CalcImage(image_2d_from=self.image_2d_from)
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
         self.intensity = intensity
-
-        self._calc_image = CalcImage(image_2d_from=self.image_2d_from)
 
     def __getattr__(self, item):
         """
@@ -52,10 +51,10 @@ class LightProfile(EllProfile):
 
         `light_profile.blurred_image_2d_via_psf_from`
         """
-        try:
-            super().__getattr__(item)
-        except AttributeError:
-            return getattr(self._calc_image, item)
+        return getattr(
+            self._calc_image,
+            item
+        )
 
     def image_2d_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
         """
@@ -152,11 +151,11 @@ class LightProfile(EllProfile):
 
 class EllGaussian(LightProfile):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        sigma: float = 0.01,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            sigma: float = 0.01,
     ):
         """
         The elliptical Gaussian light profile.
@@ -229,10 +228,10 @@ class EllGaussian(LightProfile):
 
 class SphGaussian(EllGaussian):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        sigma: float = 0.01,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            sigma: float = 0.01,
     ):
         """
         The spherical Gaussian light profile.
@@ -256,12 +255,12 @@ class SphGaussian(EllGaussian):
 
 class AbstractEllSersic(LightProfile):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        effective_radius: float = 0.6,
-        sersic_index: float = 4.0,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            effective_radius: float = 0.6,
+            sersic_index: float = 4.0,
     ):
         """
         Abstract base class for elliptical Sersic light profiles.
@@ -309,12 +308,12 @@ class AbstractEllSersic(LightProfile):
         total integrated light.
         """
         return (
-            (2 * self.sersic_index)
-            - (1.0 / 3.0)
-            + (4.0 / (405.0 * self.sersic_index))
-            + (46.0 / (25515.0 * self.sersic_index ** 2))
-            + (131.0 / (1148175.0 * self.sersic_index ** 3))
-            - (2194697.0 / (30690717750.0 * self.sersic_index ** 4))
+                (2 * self.sersic_index)
+                - (1.0 / 3.0)
+                + (4.0 / (405.0 * self.sersic_index))
+                + (46.0 / (25515.0 * self.sersic_index ** 2))
+                + (131.0 / (1148175.0 * self.sersic_index ** 3))
+                - (2194697.0 / (30690717750.0 * self.sersic_index ** 4))
         )
 
     def image_2d_via_radii_from(self, radius: np.ndarray) -> np.ndarray:
@@ -335,12 +334,12 @@ class AbstractEllSersic(LightProfile):
 
 class EllSersic(AbstractEllSersic, LightProfile):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        effective_radius: float = 0.6,
-        sersic_index: float = 4.0,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            effective_radius: float = 0.6,
+            sersic_index: float = 4.0,
     ):
         """
         The elliptical Sersic light profile.
@@ -421,11 +420,11 @@ class EllSersic(AbstractEllSersic, LightProfile):
 
 class SphSersic(EllSersic):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        effective_radius: float = 0.6,
-        sersic_index: float = 4.0,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            effective_radius: float = 0.6,
+            sersic_index: float = 4.0,
     ):
         """
         The spherical Sersic light profile.
@@ -455,11 +454,11 @@ class SphSersic(EllSersic):
 
 class EllExponential(EllSersic):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        effective_radius: float = 0.6,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            effective_radius: float = 0.6,
     ):
         """
         The elliptical exponential profile.
@@ -492,10 +491,10 @@ class EllExponential(EllSersic):
 
 class SphExponential(EllExponential):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        effective_radius: float = 0.6,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            effective_radius: float = 0.6,
     ):
         """
         The spherical exponential profile.
@@ -524,11 +523,11 @@ class SphExponential(EllExponential):
 
 class EllDevVaucouleurs(EllSersic):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        effective_radius: float = 0.6,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            effective_radius: float = 0.6,
     ):
         """
         The elliptical Dev Vaucouleurs light profile.
@@ -561,10 +560,10 @@ class EllDevVaucouleurs(EllSersic):
 
 class SphDevVaucouleurs(EllDevVaucouleurs):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        effective_radius: float = 0.6,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            effective_radius: float = 0.6,
     ):
         """
         The spherical Dev Vaucouleurs light profile.
@@ -593,15 +592,15 @@ class SphDevVaucouleurs(EllDevVaucouleurs):
 
 class EllSersicCore(EllSersic):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
-        effective_radius: float = 0.6,
-        sersic_index: float = 4.0,
-        radius_break: float = 0.01,
-        intensity_break: float = 0.05,
-        gamma: float = 0.25,
-        alpha: float = 3.0,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+            effective_radius: float = 0.6,
+            sersic_index: float = 4.0,
+            radius_break: float = 0.01,
+            intensity_break: float = 0.05,
+            gamma: float = 0.25,
+            alpha: float = 3.0,
     ):
         """
         The elliptical cored-Sersic light profile.
@@ -651,16 +650,16 @@ class EllSersicCore(EllSersic):
         the light profile's image is compared too, which are expected to be electrons per second.
         """
         return (
-            self.intensity_break
-            * (2.0 ** (-self.gamma / self.alpha))
-            * np.exp(
-                self.sersic_constant
-                * (
+                self.intensity_break
+                * (2.0 ** (-self.gamma / self.alpha))
+                * np.exp(
+            self.sersic_constant
+            * (
                     ((2.0 ** (1.0 / self.alpha)) * self.radius_break)
                     / self.effective_radius
-                )
-                ** (1.0 / self.sersic_index)
             )
+            ** (1.0 / self.sersic_index)
+        )
         )
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
@@ -706,14 +705,14 @@ class EllSersicCore(EllSersic):
 
 class SphSersicCore(EllSersicCore):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        effective_radius: float = 0.6,
-        sersic_index: float = 4.0,
-        radius_break: float = 0.01,
-        intensity_break: float = 0.05,
-        gamma: float = 0.25,
-        alpha: float = 3.0,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            effective_radius: float = 0.6,
+            sersic_index: float = 4.0,
+            radius_break: float = 0.01,
+            intensity_break: float = 0.05,
+            gamma: float = 0.25,
+            alpha: float = 3.0,
     ):
         """
         The elliptical cored-Sersic light profile.
@@ -757,14 +756,14 @@ class SphSersicCore(EllSersicCore):
 
 class EllExponentialCore(EllSersicCore):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
-        effective_radius: float = 0.6,
-        radius_break: float = 0.01,
-        intensity_break: float = 0.05,
-        gamma: float = 0.25,
-        alpha: float = 3.0,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+            effective_radius: float = 0.6,
+            radius_break: float = 0.01,
+            intensity_break: float = 0.05,
+            gamma: float = 0.25,
+            alpha: float = 3.0,
     ):
         """
         The elliptical cored-Exponential light profile.
@@ -806,13 +805,13 @@ class EllExponentialCore(EllSersicCore):
 
 class SphExponentialCore(EllExponentialCore):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        effective_radius: float = 0.6,
-        radius_break: float = 0.01,
-        intensity_break: float = 0.05,
-        gamma: float = 0.25,
-        alpha: float = 3.0,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            effective_radius: float = 0.6,
+            radius_break: float = 0.01,
+            intensity_break: float = 0.05,
+            gamma: float = 0.25,
+            alpha: float = 3.0,
     ):
         """
         The elliptical cored-Exponential light profile.
@@ -853,12 +852,12 @@ class SphExponentialCore(EllExponentialCore):
 
 class EllChameleon(LightProfile):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        core_radius_0: float = 0.01,
-        core_radius_1: float = 0.05,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            core_radius_0: float = 0.01,
+            core_radius_1: float = 0.05,
     ):
         """
         The elliptical Chameleon light profile.
@@ -961,11 +960,11 @@ class EllChameleon(LightProfile):
 
 class SphChameleon(EllChameleon):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        core_radius_0: float = 0.01,
-        core_radius_1: float = 0.05,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            core_radius_0: float = 0.01,
+            core_radius_1: float = 0.05,
     ):
         """
         The spherical Chameleon light profile.
@@ -1003,12 +1002,12 @@ class SphChameleon(EllChameleon):
 
 class EllEff(LightProfile):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        effective_radius: float = 0.6,
-        eta: float = 1.5,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            effective_radius: float = 0.6,
+            eta: float = 1.5,
     ):
         """
         The elliptical Elson, Fall and Freeman (EFF) light profile, which is commonly used to represent the clumps of
@@ -1080,11 +1079,11 @@ class EllEff(LightProfile):
 
 class SphEff(EllEff):
     def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        effective_radius: float = 0.6,
-        eta: float = 1.5,
+            self,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            intensity: float = 0.1,
+            effective_radius: float = 0.6,
+            eta: float = 1.5,
     ):
         """
         The spherical Elson, Fall and Freeman (EFF) light profile, which is commonly used to represent the clumps of
