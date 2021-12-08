@@ -117,7 +117,7 @@ class TestCompareToManualProfilesOnly:
 
         assert interferometer_7.noise_map == pytest.approx(fit.noise_map)
 
-        model_visibilities = plane.profile_visibilities_via_transformer_from(
+        model_visibilities = plane.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
@@ -193,11 +193,11 @@ class TestCompareToManualProfilesOnly:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        g0_profile_visibilities = g0.profile_visibilities_via_transformer_from(
+        g0_profile_visibilities = g0.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
-        g1_profile_visibilities = g1.profile_visibilities_via_transformer_from(
+        g1_profile_visibilities = g1.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
@@ -541,7 +541,7 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        profile_visibilities = plane.profile_visibilities_via_transformer_from(
+        profile_visibilities = plane.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
@@ -650,11 +650,11 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        g0_visibilities = g0.profile_visibilities_via_transformer_from(
+        g0_visibilities = g0.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
-        g1_visibilities = g1.profile_visibilities_via_transformer_from(
+        g1_visibilities = g1.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
@@ -705,11 +705,11 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        g0_visibilities = g0.profile_visibilities_via_transformer_from(
+        g0_visibilities = g0.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
-        g1_visibilities = g1.profile_visibilities_via_transformer_from(
+        g1_visibilities = g1.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 

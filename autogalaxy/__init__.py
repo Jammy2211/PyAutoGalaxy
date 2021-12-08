@@ -49,9 +49,8 @@ from autoarray.structures.visibilities import VisibilitiesNoiseMap
 from .analysis import aggregator as agg
 from . import plot
 from . import util
-from .calc.image import CalcImage
-from .calc.image import CalcImageList
-from .calc.lens import CalcLens
+from .operate.image import OperateImage
+from .operate.lens import CalcLens
 from .imaging.fit_imaging import FitImaging
 from .imaging.model.analysis import AnalysisImaging
 from .imaging.imaging import SimulatorImaging

@@ -859,9 +859,9 @@ class TestAbstractPlaneData:
 
             g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
 
-            g0_calc_image = ag.CalcImage(light_obj=g0)
-            g1_calc_image = ag.CalcImage(light_obj=g1)
-            g2_calc_image = ag.CalcImage(light_obj=g2)
+            g0_calc_image = ag.OperateImage(light_obj_list=g0)
+            g1_calc_image = ag.OperateImage(light_obj_list=g1)
+            g2_calc_image = ag.OperateImage(light_obj_list=g2)
 
             g0_blurred_image = g0_calc_image.blurred_image_2d_via_convolver_from(
                 grid=sub_grid_2d_7x7,
@@ -893,95 +893,7 @@ class TestAbstractPlaneData:
             assert (blurred_image_dict[g1].slim == g1_blurred_image.slim).all()
             assert (blurred_image_dict[g2].slim == g2_blurred_image.slim).all()
 
-    class TestUnmaskedBlurredProfileImages:
-        def test__unmasked_images_of_plane_planes_and_galaxies(self):
-            psf = ag.Kernel2D.manual_native(
-                array=(np.array([[0.0, 3.0, 0.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0]])),
-                pixel_scales=1.0,
-            )
-
-            mask = ag.Mask2D.manual(
-                mask=[[True, True, True], [True, False, True], [True, True, True]],
-                pixel_scales=1.0,
-                sub_size=1,
-            )
-
-            grid = ag.Grid2D.from_mask(mask=mask)
-
-            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=0.1))
-            g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=0.2))
-
-            plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
-
-            padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
-
-            manual_blurred_image_0 = plane.images_of_galaxies_from(grid=padded_grid)[0]
-            manual_blurred_image_0 = psf.convolved_array_from(
-                array=manual_blurred_image_0
-            )
-
-            manual_blurred_image_1 = plane.images_of_galaxies_from(grid=padded_grid)[1]
-            manual_blurred_image_1 = psf.convolved_array_from(
-                array=manual_blurred_image_1
-            )
-
-            plane_calc_image = ag.CalcImage(light_obj=plane)
-
-            unmasked_blurred_image = plane_calc_image.unmasked_blurred_image_2d_via_psf_from(
-                grid=grid, psf=psf
-            )
-
-            assert unmasked_blurred_image.native == pytest.approx(
-                manual_blurred_image_0.binned.native[1:4, 1:4]
-                + manual_blurred_image_1.binned.native[1:4, 1:4],
-                1.0e-4,
-            )
-
-            unmasked_blurred_image_of_galaxies = plane.unmasked_blurred_image_of_galaxies_via_psf_from(
-                grid=grid, psf=psf
-            )
-
-            assert unmasked_blurred_image_of_galaxies[0].native == pytest.approx(
-                manual_blurred_image_0.binned.native[1:4, 1:4], 1.0e-4
-            )
-
-            assert unmasked_blurred_image_of_galaxies[1].native == pytest.approx(
-                manual_blurred_image_1.binned.native[1:4, 1:4], 1.0e-4
-            )
-
     class TestVisibilities:
-        def test__visibilities_of_galaxies_via_transformer_from(
-            self, sub_grid_2d_7x7, transformer_7x7_7
-        ):
-            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-
-            g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
-
-            g0_image = g0.image_2d_from(grid=sub_grid_2d_7x7)
-            g1_image = g1.image_2d_from(grid=sub_grid_2d_7x7)
-
-            g0_visibilities = transformer_7x7_7.visibilities_from(image=g0_image)
-            g1_visibilities = transformer_7x7_7.visibilities_from(image=g1_image)
-
-            plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
-
-            plane_visibilities_of_galaxies = plane.profile_visibilities_of_galaxies_via_transformer_from(
-                grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
-            )
-
-            assert (g0_visibilities == plane_visibilities_of_galaxies[0]).all()
-            assert (g1_visibilities == plane_visibilities_of_galaxies[1]).all()
-
-            plane_calc_image = ag.CalcImage(light_obj=plane)
-
-            plane_visibilities = plane_calc_image.profile_visibilities_via_transformer_from(
-                grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
-            )
-
-            assert sum(plane_visibilities_of_galaxies) == pytest.approx(
-                plane_visibilities, 1.0e-4
-            )
-
         def test__galaxy_visibilities_dict_from_grid_and_transformer(
             self, sub_grid_2d_7x7, transformer_7x7_7
         ):
@@ -995,17 +907,17 @@ class TestAbstractPlaneData:
             g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
             g3 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=5.0))
 
-            g0_calc_image = ag.CalcImage(light_obj=g0)
-            g1_calc_image = ag.CalcImage(light_obj=g1)
-            g2_calc_image = ag.CalcImage(light_obj=g2)
+            g0_calc_image = ag.OperateImage(light_obj_list=g0)
+            g1_calc_image = ag.OperateImage(light_obj_list=g1)
+            g2_calc_image = ag.OperateImage(light_obj_list=g2)
 
-            g0_visibilities = g0_calc_image.profile_visibilities_via_transformer_from(
+            g0_visibilities = g0_calc_image.visibilities_via_transformer_from(
                 grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
             )
-            g1_visibilities = g1_calc_image.profile_visibilities_via_transformer_from(
+            g1_visibilities = g1_calc_image.visibilities_via_transformer_from(
                 grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
             )
-            g2_visibilities = g2_calc_image.profile_visibilities_via_transformer_from(
+            g2_visibilities = g2_calc_image.visibilities_via_transformer_from(
                 grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
             )
 

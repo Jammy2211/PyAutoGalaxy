@@ -6,7 +6,6 @@ import autoarray as aa
 from autoarray.inversion.inversion.factory import inversion_imaging_unpacked_from
 from autoarray.inversion.inversion.factory import inversion_interferometer_unpacked_from
 from autogalaxy import exc
-from autogalaxy.calc.image import CalcImage
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
 from autogalaxy.util import plane_util
@@ -328,42 +327,6 @@ class AbstractPlaneLensing(AbstractPlane):
 
 
 class AbstractPlaneData(AbstractPlaneLensing):
-    def blurred_images_of_galaxies_via_convolver_from(
-        self, grid, convolver, blurring_grid
-    ):
-        return [
-            CalcImage(light_obj=galaxy).blurred_image_2d_via_convolver_from(
-                grid=grid, convolver=convolver, blurring_grid=blurring_grid
-            )
-            for galaxy in self.galaxies
-        ]
-
-    def unmasked_blurred_image_of_galaxies_via_psf_from(self, grid, psf):
-
-        padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
-
-        unmasked_blurred_images_of_galaxies = []
-
-        for galaxy in self.galaxies:
-
-            padded_image_1d = galaxy.image_2d_from(grid=padded_grid)
-
-            unmasked_blurred_array_2d = padded_grid.mask.unmasked_blurred_array_from(
-                padded_array=padded_image_1d, psf=psf, image_shape=grid.mask.shape
-            )
-
-            unmasked_blurred_images_of_galaxies.append(unmasked_blurred_array_2d)
-
-        return unmasked_blurred_images_of_galaxies
-
-    def profile_visibilities_of_galaxies_via_transformer_from(self, grid, transformer):
-        return [
-            CalcImage(light_obj=galaxy).profile_visibilities_via_transformer_from(
-                grid=grid, transformer=transformer
-            )
-            for galaxy in self.galaxies
-        ]
-
     def sparse_image_plane_grid_list_from(
         self, grid, settings_pixelization=aa.SettingsPixelization()
     ):
@@ -584,7 +547,9 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         galaxy_blurred_image_dict = dict()
 
-        blurred_images_of_galaxies = self.blurred_images_of_galaxies_via_convolver_from(
+        calc_image_list = OperateImageList(light_obj_list=self.galaxies)
+
+        blurred_images_of_galaxies = calc_image_list.blurred_image_2d_list_via_convolver_from(
             grid=grid, convolver=convolver, blurring_grid=blurring_grid
         )
         for (galaxy_index, galaxy) in enumerate(self.galaxies):
@@ -601,7 +566,9 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         galaxy_profile_visibilities_image_dict = dict()
 
-        profile_visibilities_of_galaxies = self.profile_visibilities_of_galaxies_via_transformer_from(
+        calc_image_list = OperateImageList(light_obj_list=self.galaxies)
+
+        profile_visibilities_of_galaxies = calc_image_list.visibilities_list_via_transformer_from(
             grid=grid, transformer=transformer
         )
         for (galaxy_index, galaxy) in enumerate(self.galaxies):

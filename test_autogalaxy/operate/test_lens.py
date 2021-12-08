@@ -13,7 +13,7 @@ from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfile
 from autogalaxy.profiles.mass_profiles.total_mass_profiles import EllIsothermal
 from autogalaxy.galaxy.galaxy import Galaxy
 
-from autogalaxy.profiles.mass_profiles import calc_lens
+from autogalaxy.operate.lens import evaluation_grid
 
 
 def critical_curve_via_magnification_from(mass_profile, grid):
@@ -555,7 +555,7 @@ def test__convergence_2d_via_jacobian_from__compare_via_jacobian_and_analytic():
 
 
 def test__evaluation_grid__changes_resolution_based_on_pixel_scale_input():
-    @calc_lens.evaluation_grid
+    @evaluation_grid
     def mock_func(lensing_obj, grid, pixel_scale=0.05):
         return grid
 
@@ -582,7 +582,7 @@ def test__evaluation_grid__changes_resolution_based_on_pixel_scale_input():
 
 
 def test__evaluation_grid__changes_to_uniform_and_zoomed_in_if_masked():
-    @calc_lens.evaluation_grid
+    @evaluation_grid
     def mock_func(lensing_obj, grid, pixel_scale=0.05):
         return grid
 

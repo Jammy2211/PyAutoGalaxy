@@ -39,7 +39,7 @@ class FitInterferometer(aa.FitInterferometer):
 
         self.plane = plane
 
-        self.profile_visibilities = plane.profile_visibilities_via_transformer_from(
+        self.profile_visibilities = plane.visibilities_via_transformer_from(
             grid=dataset.grid, transformer=dataset.transformer
         )
 
