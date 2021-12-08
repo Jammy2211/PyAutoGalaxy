@@ -92,10 +92,31 @@ class Galaxy(af.ModelObject, Dictable):
         self.hyper_galaxy = hyper_galaxy
 
         self._calc_image = CalcImage(image_2d_from=self.image_2d_from)
-        self._calc_image.add_functions(obj=self)
-
         self._calc_lens = CalcLens(deflections_yx_2d_from=self.deflections_yx_2d_from)
-        self._calc_lens.add_functions(obj=self)
+
+    def __getattr__(self, item):
+        """
+        This dynamically passes all functions of properties such as `_calc_image`.
+
+        This means that instead of having to call a function using the full path:
+
+        `galaxy._calc_image.blurred_image_2d_via_psf_from`
+
+        We can simply call it using the path:
+
+        `galaxy.blurred_image_2d_via_psf_from`
+        """
+
+        try:
+            return super().__getattr__(item)
+        except AttributeError:
+
+            for calc in [self._calc_image, self._calc_lens]:
+
+                try:
+                    return getattr(calc, item)
+                except AttributeError:
+                    continue
 
     def dict(self) -> dict:
         return {

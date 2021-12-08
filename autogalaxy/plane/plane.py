@@ -49,6 +49,30 @@ class AbstractPlane:
 
         self.profiling_dict = profiling_dict
 
+    def __getattr__(self, item):
+        """
+        This dynamically passes all functions of properties such as `_calc_image`.
+
+        This means that instead of having to call a function using the full path:
+
+        `galaxy._calc_image.blurred_image_2d_via_psf_from`
+
+        We can simply call it using the path:
+
+        `galaxy.blurred_image_2d_via_psf_from`
+        """
+
+        try:
+            return super().__getattr__(item)
+        except AttributeError:
+
+            for calc in [self._calc_image, self._calc_lens]:
+
+                try:
+                    return getattr(calc, item)
+                except AttributeError:
+                    continue
+
     def dict(self) -> dict:
         plane_dict = super().dict()
         plane_dict["galaxies"] = [galaxy.dict() for galaxy in self.galaxies]
@@ -236,10 +260,7 @@ class AbstractPlaneLensing(AbstractPlane):
         )
 
         self._calc_image = CalcImage(image_2d_from=self.image_2d_from)
-        self._calc_image.add_functions(obj=self)
-
         self._calc_lens = CalcLens(deflections_yx_2d_from=self.deflections_yx_2d_from)
-        self._calc_lens.add_functions(obj=self)
 
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(self, grid):

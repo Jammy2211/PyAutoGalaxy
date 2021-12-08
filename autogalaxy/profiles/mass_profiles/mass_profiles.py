@@ -35,7 +35,23 @@ class MassProfile(EllProfile):
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
 
         self._calc_lens = CalcLens(deflections_yx_2d_from=self.deflections_yx_2d_from)
-        self._calc_lens.add_functions(obj=self)
+
+    def __getattr__(self, item):
+        """
+        This dynamically passes all functions of the `_calc_lens` property to the `massProfile`.
+
+        This means that instead of having to call a function using the full path:
+
+        `mass_profile._calc_lens.magnification_2d_from`
+
+        We can simply call it using the path:
+
+        `mass_profile.magnification_2d_from`
+        """
+        try:
+            super().__getattr__(item)
+        except AttributeError:
+            return getattr(self._calc_lens, item)
 
     def deflections_yx_2d_from(self, grid):
         raise NotImplementedError
