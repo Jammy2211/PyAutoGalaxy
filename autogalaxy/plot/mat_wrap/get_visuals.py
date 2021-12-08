@@ -164,7 +164,7 @@ class GetVisuals1D(gv.GetVisuals1D):
             The collection of attributes that can be plotted by a `Plotter` object.
         """
 
-        operate_lens = OperateLens(mass_obj_list=[mass_obj])
+        operate_lens = OperateLens.from_mass_obj(mass_obj=mass_obj)
 
         if self.include.einstein_radius:
             einstein_radius = operate_lens.einstein_radius_from(grid=grid)
@@ -214,7 +214,7 @@ class GetVisuals1D(gv.GetVisuals1D):
         if self.include.einstein_radius:
 
             einstein_radius_list = [
-                OperateLens(mass_obj_list=[mass_profile]).einstein_radius_from(
+                OperateLens.from_mass_obj(mass_obj=mass_profile).einstein_radius_from(
                     grid=grid
                 )
                 for mass_profile in mass_obj_list
@@ -344,7 +344,7 @@ class GetVisuals2D(gv.GetVisuals2D):
             The collection of attributes that can be plotted by a `Plotter` object.
         """
 
-        operate_lens = OperateLens(mass_obj_list=[mass_obj])
+        operate_lens = OperateLens.from_mass_obj(mass_obj=mass_obj)
 
         visuals_via_mask = self.via_mask_from(mask=grid.mask)
 

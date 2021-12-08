@@ -10,14 +10,9 @@ from autogalaxy.util.shear_field import ShearYX2D
 from autogalaxy.util.shear_field import ShearYX2DIrregular
 
 
-# TODO: This module is a mess. A full refactor better defining conventions and with more rigorous integration tests
-# TODO : Is a priorty.
-
-
 def precompute_jacobian(func):
     @wraps(func)
     def wrapper(lensing_obj, grid, jacobian=None):
-
         if jacobian is None:
             jacobian = lensing_obj.jacobian_from(grid=grid)
 
@@ -58,7 +53,7 @@ def evaluation_grid(func):
 
 
 class OperateLens(Dictable):
-    def __init__(self, mass_obj_list: List):
+    def __init__(self, deflections_yx_2d_from: Callable):
         """
         Packages methods which manipulate the 2D deflection angle map returned from the `deflections_yx_2d_from` function
         of a mass object (e.g. a `MassProfile`, `Galaxy`, `Plane`).
@@ -66,26 +61,18 @@ class OperateLens(Dictable):
         The majority of methods are those which from the 2D deflection angle map compute lensing quantites like a 2D
         shear field, magnification map or the Einstein Radius.
 
-        The methods in `OperateLens` are passed to the mass object to provide a concise API.
+        The methods in `CalcLens` are passed to the mass object to provide a concise API.
 
         Parameters
         ----------
         deflections_yx_2d_from
             The function which returns the mass object's 2D deflection angles.
         """
-        self.mass_obj_list = mass_obj_list
+        self.deflections_yx_2d_from = deflections_yx_2d_from
 
-    @property
-    def deflections_yx_2d_list_from(self):
-        return [mass_obj.deflections_yx_2d_from for mass_obj in self.mass_obj_list]
-
-    def deflections_yx_2d_from(self, grid):
-        return sum(
-            [
-                deflections_yx_2d_from(grid=grid)
-                for deflections_yx_2d_from in self.deflections_yx_2d_list_from
-            ]
-        )
+    @classmethod
+    def from_mass_obj(cls, mass_obj):
+        return OperateLens(deflections_yx_2d_from=mass_obj.deflections_yx_2d_from)
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ is other.__class__
@@ -103,7 +90,7 @@ class OperateLens(Dictable):
             The 2D grid of (y,x) arc-second coordinates the deflection angles and tangential eigen values are computed
             on.
         jacobian
-            A precomputed lensing jacobian, which is passed throughout the `OperateLens` functions for efficiency.
+            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
         """
         convergence = self.convergence_2d_via_jacobian_from(
             grid=grid, jacobian=jacobian
@@ -125,7 +112,7 @@ class OperateLens(Dictable):
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and radial eigen values are computed on.
         jacobian
-            A precomputed lensing jacobian, which is passed throughout the `OperateLens` functions for efficiency.
+            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
         """
         convergence = self.convergence_2d_via_jacobian_from(
             grid=grid, jacobian=jacobian
@@ -218,7 +205,7 @@ class OperateLens(Dictable):
 
         By going via the Hessian, the convergence can be calculated at any (y,x) coordinate therefore using either a
         2D uniform or irregular grid.
-        
+
         This calculation of the convergence is independent of analytic calculations defined within `MassProfile` objects
         and can therefore be used as a cross-check.
 
@@ -387,19 +374,19 @@ class OperateLens(Dictable):
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> List[aa.Grid2DIrregular]:
         """
-        Returns the both the tangential and radial critical curves of lensing object as a two entry list of 
+        Returns the both the tangential and radial critical curves of lensing object as a two entry list of
         irregular 2D grids.
 
         The calculation of each critical curve is described in the functions `tangential_critical_curve_from()` and
         `radial_critical_curve_from()`.
 
-        Due to the use of a marching squares algorithm used in each function, critical curves can only be calculated 
+        Due to the use of a marching squares algorithm used in each function, critical curves can only be calculated
         using the Jacobian and a uniform 2D grid.
 
         Parameters
         ----------
         grid
-            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the critical curves are 
+            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the critical curves are
             computed on.
         pixel_scale
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
@@ -426,7 +413,7 @@ class OperateLens(Dictable):
 
         1) Compute the tangential eigen values for every coordinate on the input grid via the Jacobian.
         2) Find contours of all values in the tangential eigen values that are zero using a marching squares algorithm.
-        3) Compute the lensing objects deflection angle's at the (y,x) coordinates of this tangential critical curve 
+        3) Compute the lensing objects deflection angle's at the (y,x) coordinates of this tangential critical curve
         contour and ray-trace it to the source-plane, therefore forming the tangential caustic.
 
         Due to the use of a marching squares algorithm that requires the zero values of the tangential eigen values to
@@ -463,7 +450,7 @@ class OperateLens(Dictable):
 
         1) Compute the radial eigen values for every coordinate on the input grid via the Jacobian.
         2) Find contours of all values in the radial eigen values that are zero using a marching squares algorithm.
-        3) Compute the lensing objects deflection angle's at the (y,x) coordinates of this radial critical curve 
+        3) Compute the lensing objects deflection angle's at the (y,x) coordinates of this radial critical curve
         contour and ray-trace it to the source-plane, therefore forming the radial caustic.
 
         Due to the use of a marching squares algorithm that requires the zero values of the radial eigen values to
@@ -496,19 +483,19 @@ class OperateLens(Dictable):
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> List[aa.Grid2DIrregular]:
         """
-        Returns the both the tangential and radial caustics of lensing object as a two entry list of 
+        Returns the both the tangential and radial caustics of lensing object as a two entry list of
         irregular 2D grids.
 
         The calculation of each caustic is described in the functions `tangential_caustic_from()` and
         `radial_caustic_from()`.
 
-        Due to the use of a marching squares algorithm used in each function, caustics can only be calculated 
+        Due to the use of a marching squares algorithm used in each function, caustics can only be calculated
         using the Jacobian and a uniform 2D grid.
 
         Parameters
         ----------
         grid
-            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the caustics are 
+            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the caustics are
             computed on.
         pixel_scale
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
@@ -690,7 +677,7 @@ class OperateLens(Dictable):
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
         jacobian
-            A precomputed lensing jacobian, which is passed throughout the `OperateLens` functions for efficiency.
+            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
         """
         convergence = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
 
@@ -717,7 +704,7 @@ class OperateLens(Dictable):
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
         jacobian
-            A precomputed lensing jacobian, which is passed throughout the `OperateLens` functions for efficiency.
+            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
         """
 
         shear_yx_2d = np.zeros(shape=(grid.sub_shape_slim, 2))
@@ -727,37 +714,3 @@ class OperateLens(Dictable):
         if isinstance(grid, aa.Grid2DIrregular):
             return ShearYX2DIrregular(vectors=shear_yx_2d, grid=grid)
         return ShearYX2D(vectors=shear_yx_2d, grid=grid, mask=grid.mask)
-
-    def add_functions(self, obj):
-        """
-        This passes all functions of the `_calc_lens` property to the mass object using it.
-
-        This means that instead of having to call a function using the full path:
-
-        `mass_object._calc_lens.magnification_2d_from`
-
-        We can simply call it using the path:
-
-        `mass_object.magnification_2d_from`
-        """
-        obj.tangential_eigen_value_from = self.tangential_eigen_value_from
-        obj.radial_eigen_value_from = self.radial_eigen_value_from
-        obj.magnification_2d_from = self.magnification_2d_from
-        obj.hessian_from = self.hessian_from
-        obj.convergence_2d_via_hessian_from = self.convergence_2d_via_hessian_from
-        obj.shear_yx_2d_via_hessian_from = self.shear_yx_2d_via_hessian_from
-        obj.magnification_2d_via_hessian_from = self.magnification_2d_via_hessian_from
-        obj.tangential_critical_curve_from = self.tangential_critical_curve_from
-        obj.radial_critical_curve_from = self.radial_critical_curve_from
-        obj.critical_curves_from = self.critical_curves_from
-        obj.tangential_caustic_from = self.tangential_caustic_from
-        obj.radial_caustic_from = self.radial_caustic_from
-        obj.caustics_from = self.caustics_from
-        obj.area_within_tangential_critical_curve_from = (
-            self.area_within_tangential_critical_curve_from
-        )
-        obj.einstein_radius_from = self.einstein_radius_from
-        obj.einstein_mass_angular_from = self.einstein_mass_angular_from
-        obj.jacobian_from = self.jacobian_from
-        obj.convergence_2d_via_jacobian_from = self.convergence_2d_via_jacobian_from
-        obj.shear_yx_2d_via_jacobian_from = self.shear_yx_2d_via_jacobian_from

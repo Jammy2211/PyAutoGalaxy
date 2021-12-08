@@ -171,7 +171,7 @@ class InputDeflections(MassProfile):
     @aa.grid_dec.grid_2d_to_structure
     def convergence_2d_from(self, grid: aa.type.Grid2DLike):
 
-        operate_lens = OperateLens(mass_obj_list=[self])
+        operate_lens = OperateLens.from_mass_obj(mass_obj=self)
 
         return operate_lens.convergence_2d_via_jacobian_from(grid=grid)
 

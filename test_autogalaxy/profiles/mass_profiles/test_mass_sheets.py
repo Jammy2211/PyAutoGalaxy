@@ -569,7 +569,7 @@ class TestInputDeflections:
 
         convergence = input_deflections.convergence_2d_from(grid=grid)
 
-        operate_lens = ag.OperateLens(mass_obj_list=[input_deflections])
+        operate_lens = ag.OperateLens.from_mass_obj(mass_obj=input_deflections)
 
         convergence_via_jacobian = operate_lens.convergence_2d_via_jacobian_from(
             grid=grid
