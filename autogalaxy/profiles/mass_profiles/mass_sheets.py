@@ -5,6 +5,7 @@ from typing import Tuple
 import autoarray as aa
 
 from autogalaxy.profiles.mass_profiles import MassProfile
+from autogalaxy.operate.lens import OperateLens
 
 from autogalaxy import convert
 from autogalaxy import exc
@@ -169,7 +170,10 @@ class InputDeflections(MassProfile):
 
     @aa.grid_dec.grid_2d_to_structure
     def convergence_2d_from(self, grid: aa.type.Grid2DLike):
-        return self.convergence_2d_via_jacobian_from(grid=grid)
+
+        operate_lens = OperateLens(mass_obj_list=[self])
+
+        return operate_lens.convergence_2d_via_jacobian_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
     def potential_2d_from(self, grid: aa.type.Grid2DLike):

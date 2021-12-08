@@ -11,13 +11,13 @@ from autogalaxy.plot.mat_wrap.visuals import Visuals2D
 
 from autogalaxy.util import error_util
 
-from autoarray.structures.grids.two_d.grid_2d import Grid2D
 from autoarray.structures.grids.two_d.grid_2d_irregular import Grid2DIrregular
 
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.operate.lens import OperateLens
 from autogalaxy.plane.plane import Plane
 
 
@@ -164,8 +164,10 @@ class GetVisuals1D(gv.GetVisuals1D):
             The collection of attributes that can be plotted by a `Plotter` object.
         """
 
+        operate_lens = OperateLens(mass_obj_list=[mass_obj])
+
         if self.include.einstein_radius:
-            einstein_radius = mass_obj.einstein_radius_from(grid=grid)
+            einstein_radius = operate_lens.einstein_radius_from(grid=grid)
         else:
             einstein_radius = None
 
@@ -212,7 +214,7 @@ class GetVisuals1D(gv.GetVisuals1D):
         if self.include.einstein_radius:
 
             einstein_radius_list = [
-                mass_profile.einstein_radius_from(grid=grid)
+                OperateLens(mass_obj_list=[mass_profile]).einstein_radius_from(grid=grid)
                 for mass_profile in mass_obj_list
             ]
 
@@ -340,6 +342,8 @@ class GetVisuals2D(gv.GetVisuals2D):
             The collection of attributes that can be plotted by a `Plotter` object.
         """
 
+        operate_lens = OperateLens(mass_obj_list=[mass_obj])
+
         visuals_via_mask = self.via_mask_from(mask=grid.mask)
 
         if isinstance(mass_obj, MassProfile):
@@ -357,7 +361,7 @@ class GetVisuals2D(gv.GetVisuals2D):
 
         critical_curves = self.get(
             "critical_curves",
-            mass_obj.critical_curves_from(grid=grid),
+            operate_lens.critical_curves_from(grid=grid),
             "critical_curves",
         )
 

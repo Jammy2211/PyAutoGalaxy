@@ -3,6 +3,8 @@ from typing import Callable
 import autoarray as aa
 import autoarray.plot as aplt
 
+from autogalaxy.operate.lens import OperateLens
+
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
 from autogalaxy.plot.mat_wrap.visuals import Visuals2D
 from autogalaxy.plot.mat_wrap.include import Include2D
@@ -110,8 +112,10 @@ class MassPlotter(Plotter):
 
         if magnification:
 
+            operate_lens = OperateLens(mass_obj_list=[self.mass_obj])
+
             self.mat_plot_2d.plot_array(
-                array=self.mass_obj.magnification_2d_from(grid=self.grid),
+                array=operate_lens.magnification_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title="Magnification", filename="magnification_2d"
