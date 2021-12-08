@@ -9,11 +9,11 @@ from autoarray.inversion.pixelizations.abstract import AbstractPixelization
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 from autoconf.dictable import Dictable
 from autogalaxy import exc
-from autogalaxy.profiles.mass_profiles.calc_lens import CalcLens
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
-from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.light_profiles.calc_image import CalcImage
+from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
+from autogalaxy.profiles.mass_profiles.calc_lens import CalcLens
 from autogalaxy.profiles.mass_profiles.dark_mass_profiles import DarkProfile
 from autogalaxy.profiles.mass_profiles.stellar_mass_profiles import StellarProfile
 from autogalaxy.profiles.point_sources import Point
@@ -37,12 +37,12 @@ class Galaxy(af.ModelObject, Dictable):
     """
 
     def __init__(
-        self,
-        redshift: float,
-        pixelization: Optional[AbstractPixelization] = None,
-        regularization: Optional[AbstractRegularization] = None,
-        hyper_galaxy: Optional["HyperGalaxy"] = None,
-        **kwargs,
+            self,
+            redshift: float,
+            pixelization: Optional[AbstractPixelization] = None,
+            regularization: Optional[AbstractRegularization] = None,
+            hyper_galaxy: Optional["HyperGalaxy"] = None,
+            **kwargs,
     ):
         """
         Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
@@ -117,6 +117,8 @@ class Galaxy(af.ModelObject, Dictable):
                     return getattr(calc, item)
                 except AttributeError:
                     continue
+
+        raise AttributeError()
 
     def dict(self) -> dict:
         return {
@@ -622,7 +624,7 @@ class HyperGalaxy:
         return np.divide(contribution_map, np.max(contribution_map))
 
     def hyper_noise_map_via_hyper_images_from(
-        self, hyper_model_image, hyper_galaxy_image, noise_map
+            self, hyper_model_image, hyper_galaxy_image, noise_map
     ):
         contribution_map = self.contribution_map_from(
             hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
@@ -651,9 +653,9 @@ class HyperGalaxy:
     def __eq__(self, other):
         if isinstance(other, HyperGalaxy):
             return (
-                self.contribution_factor == other.contribution_factor
-                and self.noise_factor == other.noise_factor
-                and self.noise_power == other.noise_power
+                    self.contribution_factor == other.contribution_factor
+                    and self.noise_factor == other.noise_factor
+                    and self.noise_power == other.noise_power
             )
         return False
 
