@@ -57,8 +57,8 @@ def evaluation_grid(func):
     return wrapper
 
 
-class CalcLens(Dictable):
-    def __init__(self, mass_obj):
+class OperateLens(Dictable):
+    def __init__(self, mass_obj_list: List):
         """
         Packages methods which manipulate the 2D deflection angle map returned from the `deflections_yx_2d_from` function
         of a mass object (e.g. a `MassProfile`, `Galaxy`, `Plane`).
@@ -66,18 +66,26 @@ class CalcLens(Dictable):
         The majority of methods are those which from the 2D deflection angle map compute lensing quantites like a 2D
         shear field, magnification map or the Einstein Radius.
 
-        The methods in `CalcLens` are passed to the mass object to provide a concise API.
+        The methods in `OperateLens` are passed to the mass object to provide a concise API.
 
         Parameters
         ----------
         deflections_yx_2d_from
             The function which returns the mass object's 2D deflection angles.
         """
-        self.mass_obj = mass_obj
+        self.mass_obj_list = mass_obj_list
 
     @property
-    def deflections_yx_2d_from(self):
-        return self.mass_obj.deflections_yx_2d_from
+    def deflections_yx_2d_list_from(self):
+        return [mass_obj.deflections_yx_2d_from for mass_obj in self.mass_obj_list]
+
+    def deflections_yx_2d_from(self, grid):
+        return sum(
+            [
+                deflections_yx_2d_from(grid=grid)
+                for deflections_yx_2d_from in self.deflections_yx_2d_list_from
+            ]
+        )
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ is other.__class__
@@ -95,7 +103,7 @@ class CalcLens(Dictable):
             The 2D grid of (y,x) arc-second coordinates the deflection angles and tangential eigen values are computed
             on.
         jacobian
-            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
+            A precomputed lensing jacobian, which is passed throughout the `OperateLens` functions for efficiency.
         """
         convergence = self.convergence_2d_via_jacobian_from(
             grid=grid, jacobian=jacobian
@@ -117,7 +125,7 @@ class CalcLens(Dictable):
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and radial eigen values are computed on.
         jacobian
-            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
+            A precomputed lensing jacobian, which is passed throughout the `OperateLens` functions for efficiency.
         """
         convergence = self.convergence_2d_via_jacobian_from(
             grid=grid, jacobian=jacobian
@@ -682,7 +690,7 @@ class CalcLens(Dictable):
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
         jacobian
-            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
+            A precomputed lensing jacobian, which is passed throughout the `OperateLens` functions for efficiency.
         """
         convergence = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
 
@@ -709,7 +717,7 @@ class CalcLens(Dictable):
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
         jacobian
-            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
+            A precomputed lensing jacobian, which is passed throughout the `OperateLens` functions for efficiency.
         """
 
         shear_yx_2d = np.zeros(shape=(grid.sub_shape_slim, 2))

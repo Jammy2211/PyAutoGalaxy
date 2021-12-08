@@ -50,7 +50,7 @@ from .analysis import aggregator as agg
 from . import plot
 from . import util
 from .operate.image import OperateImage
-from .operate.lens import CalcLens
+from .operate.lens import OperateLens
 from .imaging.fit_imaging import FitImaging
 from .imaging.model.analysis import AnalysisImaging
 from .imaging.imaging import SimulatorImaging
