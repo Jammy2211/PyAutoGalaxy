@@ -9,10 +9,8 @@ from autoarray.inversion.pixelizations.abstract import AbstractPixelization
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 from autoconf.dictable import Dictable
 from autogalaxy import exc
-from autogalaxy.profiles.mass_profiles.calc_lens import CalcLens
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
-from autogalaxy.profiles.light_profiles.calc_image import CalcImage
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.profiles.mass_profiles.dark_mass_profiles import DarkProfile
 from autogalaxy.profiles.mass_profiles.stellar_mass_profiles import StellarProfile
@@ -90,12 +88,6 @@ class Galaxy(af.ModelObject, Dictable):
             )
 
         self.hyper_galaxy = hyper_galaxy
-
-        self._calc_image = CalcImage(image_2d_from=self.image_2d_from)
-        self._calc_image.add_functions(obj=self)
-
-        self._calc_lens = CalcLens(deflections_yx_2d_from=self.deflections_yx_2d_from)
-        self._calc_lens.add_functions(obj=self)
 
     def dict(self) -> dict:
         return {

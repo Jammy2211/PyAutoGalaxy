@@ -5,7 +5,7 @@ import autoarray as aa
 
 
 class CalcImage:
-    def __init__(self, image_2d_from: Callable):
+    def __init__(self, light_obj):
         """
         Packages methods which manipulate the 2D image returned from the `image_2d_from` function of a light object
         (e.g. a `LightProfile`, `Galaxy`, `Plane`).
@@ -20,7 +20,11 @@ class CalcImage:
         image_2d_from
             The function which returns the light object's 2D image.
         """
-        self.image_2d_from = image_2d_from
+        self.light_obj = light_obj
+
+    @property
+    def image_2d_from(self):
+        return self.light_obj.image_2d_from
 
     def blurred_image_2d_via_psf_from(
         self,
@@ -156,25 +160,17 @@ class CalcImage:
             padded_array=padded_image, psf=psf, image_shape=grid.mask.shape
         )
 
-    def add_functions(self, obj):
-        """
-        This passes all functions of the `_calc_image` property to the `LightProfile`.
 
-        This means that instead of having to call a function using the full path:
+class CalcImageList:
+    def __init__(self, light_obj_list):
 
-        `light_profile._calc_image.blurred_image_2d_via_psf_from`
+        self.light_obj_list = light_obj_list
 
-        We can simply call it using the path:
+    def blurred_image_list_via_psf_from(self, grid, psf, blurring_grid):
 
-        `light_profile.blurred_image_2d_via_psf_from`
-        """
-        obj.blurred_image_2d_via_psf_from = self.blurred_image_2d_via_psf_from
-        obj.blurred_image_2d_via_convolver_from = (
-            self.blurred_image_2d_via_convolver_from
-        )
-        obj.profile_visibilities_via_transformer_from = (
-            self.profile_visibilities_via_transformer_from
-        )
-        obj.unmasked_blurred_image_2d_via_psf_from = (
-            self.unmasked_blurred_image_2d_via_psf_from
-        )
+        return [
+            CalcImage(light_obj=light_obj).blurred_image_2d_via_psf_from(
+                grid=grid, psf=psf, blurring_grid=blurring_grid
+            )
+            for light_obj in self.light_obj_list
+        ]

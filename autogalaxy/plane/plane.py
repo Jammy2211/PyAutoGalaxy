@@ -6,9 +6,8 @@ import autoarray as aa
 from autoarray.inversion.inversion.factory import inversion_imaging_unpacked_from
 from autoarray.inversion.inversion.factory import inversion_interferometer_unpacked_from
 from autogalaxy import exc
+from autogalaxy.calc.image import CalcImage
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.profiles.mass_profiles.calc_lens import CalcLens
-from autogalaxy.profiles.light_profiles.calc_image import CalcImage
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
 from autogalaxy.util import plane_util
 
@@ -235,12 +234,6 @@ class AbstractPlaneLensing(AbstractPlane):
             galaxies=galaxies, redshift=redshift, profiling_dict=profiling_dict
         )
 
-        self._calc_image = CalcImage(image_2d_from=self.image_2d_from)
-        self._calc_image.add_functions(obj=self)
-
-        self._calc_lens = CalcLens(deflections_yx_2d_from=self.deflections_yx_2d_from)
-        self._calc_lens.add_functions(obj=self)
-
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(self, grid):
         """
@@ -335,19 +328,11 @@ class AbstractPlaneLensing(AbstractPlane):
 
 
 class AbstractPlaneData(AbstractPlaneLensing):
-    def blurred_images_of_galaxies_via_psf_from(self, grid, psf, blurring_grid):
-        return [
-            galaxy.blurred_image_2d_via_psf_from(
-                grid=grid, psf=psf, blurring_grid=blurring_grid
-            )
-            for galaxy in self.galaxies
-        ]
-
     def blurred_images_of_galaxies_via_convolver_from(
         self, grid, convolver, blurring_grid
     ):
         return [
-            galaxy.blurred_image_2d_via_convolver_from(
+            CalcImage(light_obj=galaxy).blurred_image_2d_via_convolver_from(
                 grid=grid, convolver=convolver, blurring_grid=blurring_grid
             )
             for galaxy in self.galaxies
@@ -373,7 +358,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
     def profile_visibilities_of_galaxies_via_transformer_from(self, grid, transformer):
         return [
-            galaxy.profile_visibilities_via_transformer_from(
+            CalcImage(light_obj=galaxy).profile_visibilities_via_transformer_from(
                 grid=grid, transformer=transformer
             )
             for galaxy in self.galaxies

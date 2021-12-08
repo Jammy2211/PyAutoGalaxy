@@ -58,7 +58,7 @@ def evaluation_grid(func):
 
 
 class CalcLens(Dictable):
-    def __init__(self, deflections_yx_2d_from: Callable):
+    def __init__(self, mass_obj):
         """
         Packages methods which manipulate the 2D deflection angle map returned from the `deflections_yx_2d_from` function
         of a mass object (e.g. a `MassProfile`, `Galaxy`, `Plane`).
@@ -73,7 +73,11 @@ class CalcLens(Dictable):
         deflections_yx_2d_from
             The function which returns the mass object's 2D deflection angles.
         """
-        self.deflections_yx_2d_from = deflections_yx_2d_from
+        self.mass_obj = mass_obj
+
+    @property
+    def deflections_yx_2d_from(self):
+        return self.mass_obj.deflections_yx_2d_from
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ is other.__class__
@@ -685,7 +689,9 @@ class CalcLens(Dictable):
         return aa.Array2D(array=convergence, mask=grid.mask)
 
     @precompute_jacobian
-    def shear_yx_2d_via_jacobian_from(self, grid, jacobian=None) -> Union[ShearYX2D, ShearYX2DIrregular]:
+    def shear_yx_2d_via_jacobian_from(
+        self, grid, jacobian=None
+    ) -> Union[ShearYX2D, ShearYX2DIrregular]:
         """
         Returns the 2D (y,x) shear vectors of the lensing object, which are computed from the 2D deflection angle map
         via the Jacobian using the expression (see equation 58 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):

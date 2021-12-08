@@ -8,7 +8,6 @@ from typing import Callable, List, Optional, Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.mass_profiles.calc_lens import CalcLens
 from autogalaxy.profiles.geometry_profiles import EllProfile
 
 from autogalaxy import exc
@@ -33,9 +32,6 @@ class MassProfile(EllProfile):
             `autogalaxy -> convert.py` for the convention).
         """
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
-
-        self._calc_lens = CalcLens(deflections_yx_2d_from=self.deflections_yx_2d_from)
-        self._calc_lens.add_functions(obj=self)
 
     def deflections_yx_2d_from(self, grid):
         raise NotImplementedError

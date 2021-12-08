@@ -5,7 +5,6 @@ from typing import Tuple
 import autoarray as aa
 
 from autogalaxy.profiles.geometry_profiles import EllProfile
-from autogalaxy.profiles.light_profiles.calc_image import CalcImage
 
 
 class LightProfile(EllProfile):
@@ -37,9 +36,6 @@ class LightProfile(EllProfile):
         """
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
         self.intensity = intensity
-
-        self._calc_image = CalcImage(image_2d_from=self.image_2d_from)
-        self._calc_image.add_functions(obj=self)
 
     def image_2d_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
         """
