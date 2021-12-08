@@ -512,7 +512,9 @@ class TestCompareToManualProfilesOnly:
             fit.noise_map.native
         )
 
-        model_image = plane.blurred_image_2d_via_convolver_from(
+        operate_image = ag.OperateImage(light_obj_list=[plane])
+
+        model_image = operate_image.blurred_image_2d_via_convolver_from(
             grid=masked_imaging_7x7.grid,
             convolver=masked_imaging_7x7.convolver,
             blurring_grid=masked_imaging_7x7.blurring_grid,
@@ -568,23 +570,19 @@ class TestCompareToManualProfilesOnly:
 
         fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-        g0_blurred_image = g0.blurred_image_2d_via_convolver_from(
-            grid=masked_imaging_7x7.grid,
-            blurring_grid=masked_imaging_7x7.blurring_grid,
-            convolver=masked_imaging_7x7.convolver,
-        )
+        operate_image = ag.OperateImage(light_obj_list=[g0, g1])
 
-        g1_blurred_image = g1.blurred_image_2d_via_convolver_from(
+        g_blurred_image_2d_list = operate_image.blurred_image_2d_list_via_convolver_from(
             grid=masked_imaging_7x7.grid,
             blurring_grid=masked_imaging_7x7.blurring_grid,
             convolver=masked_imaging_7x7.convolver,
         )
 
         assert fit.galaxy_model_image_dict[g0] == pytest.approx(
-            g0_blurred_image, 1.0e-4
+            g_blurred_image_2d_list[0], 1.0e-4
         )
         assert fit.galaxy_model_image_dict[g1] == pytest.approx(
-            g1_blurred_image, 1.0e-4
+            g_blurred_image_2d_list[1], 1.0e-4
         )
         assert (fit.galaxy_model_image_dict[g2].slim == np.zeros(9)).all()
 
@@ -633,7 +631,9 @@ class TestCompareToManualProfilesOnly:
 
         assert hyper_noise_map.native == pytest.approx(fit.noise_map.native)
 
-        model_image = plane.blurred_image_2d_via_convolver_from(
+        operate_image = ag.OperateImage(light_obj_list=[plane])
+
+        model_image = operate_image.blurred_image_2d_via_convolver_from(
             grid=masked_imaging_7x7.grid,
             convolver=masked_imaging_7x7.convolver,
             blurring_grid=masked_imaging_7x7.blurring_grid,
@@ -698,7 +698,9 @@ class TestCompareToManualProfilesOnly:
 
         fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-        blurred_images_of_galaxies = plane.blurred_images_of_galaxies_via_convolver_from(
+        operate_image = ag.OperateImage(light_obj_list=[g0, g1])
+
+        blurred_images_of_galaxies = operate_image.blurred_image_2d_list_via_convolver_from(
             grid=masked_imaging_7x7.grid,
             convolver=masked_imaging_7x7.convolver,
             blurring_grid=masked_imaging_7x7.blurring_grid,
@@ -712,13 +714,13 @@ class TestCompareToManualProfilesOnly:
             fit.model_images_of_galaxies[1].native, 1.0e-4
         )
 
-        unmasked_blurred_image = plane.unmasked_blurred_image_2d_via_psf_from(
+        unmasked_blurred_image = operate_image.unmasked_blurred_image_2d_via_psf_from(
             grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
         )
 
         assert (unmasked_blurred_image == fit.unmasked_blurred_image).all()
 
-        unmasked_blurred_image_of_galaxies = plane.unmasked_blurred_image_of_galaxies_via_psf_from(
+        unmasked_blurred_image_of_galaxies = operate_image.unmasked_blurred_image_2d_list_via_psf_from(
             grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
         )
 
@@ -999,7 +1001,9 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-        blurred_image = plane.blurred_image_2d_via_convolver_from(
+        operate_image = ag.OperateImage(light_obj_list=[plane])
+
+        blurred_image = operate_image.blurred_image_2d_via_convolver_from(
             grid=masked_imaging_7x7.grid,
             convolver=masked_imaging_7x7.convolver,
             blurring_grid=masked_imaging_7x7.blurring_grid,
@@ -1101,19 +1105,15 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-        g0_blurred_image = g0.blurred_image_2d_via_convolver_from(
+        operate_image = ag.OperateImage(light_obj_list=[g0, g1])
+
+        g_blurred_image_list = operate_image.blurred_image_2d_list_via_convolver_from(
             grid=masked_imaging_7x7.grid,
             convolver=masked_imaging_7x7.convolver,
             blurring_grid=masked_imaging_7x7.blurring_grid,
         )
 
-        g1_blurred_image = g1.blurred_image_2d_via_convolver_from(
-            grid=masked_imaging_7x7.grid,
-            convolver=masked_imaging_7x7.convolver,
-            blurring_grid=masked_imaging_7x7.blurring_grid,
-        )
-
-        blurred_image = g0_blurred_image + g1_blurred_image
+        blurred_image = sum(g_blurred_image_list)
 
         profile_subtracted_image = masked_imaging_7x7.image - blurred_image
         mapper = pix.mapper_from(
@@ -1133,10 +1133,10 @@ class TestCompareToManualProfilesAndInversion:
         assert (fit.galaxy_model_image_dict[g2] == np.zeros(9)).all()
 
         assert fit.galaxy_model_image_dict[g0].native == pytest.approx(
-            g0_blurred_image.native, 1.0e-4
+            g_blurred_image_list[0].native, 1.0e-4
         )
         assert fit.galaxy_model_image_dict[g1].native == pytest.approx(
-            g1_blurred_image.native, 1.0e-4
+            g_blurred_image_list[1].native, 1.0e-4
         )
         assert fit.galaxy_model_image_dict[galaxy_pix].native == pytest.approx(
             inversion.mapped_reconstructed_image.native, 1.0e-4
@@ -1190,7 +1190,9 @@ class TestCompareToManualProfilesAndInversion:
 
         assert hyper_noise_map.native == pytest.approx(fit.noise_map.native, 1.0e-4)
 
-        blurred_image = plane.blurred_image_2d_via_convolver_from(
+        operate_image = ag.OperateImage(light_obj_list=[plane])
+
+        blurred_image = operate_image.blurred_image_2d_via_convolver_from(
             grid=masked_imaging_7x7.grid,
             convolver=masked_imaging_7x7.convolver,
             blurring_grid=masked_imaging_7x7.blurring_grid,
@@ -1291,7 +1293,9 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-        blurred_image = plane.blurred_image_2d_via_convolver_from(
+        operate_image = ag.OperateImage(light_obj_list=[plane])
+
+        blurred_image = operate_image.blurred_image_2d_via_convolver_from(
             grid=masked_imaging_7x7.grid,
             convolver=masked_imaging_7x7.convolver,
             blurring_grid=masked_imaging_7x7.blurring_grid,

@@ -3,6 +3,7 @@ import numpy as np
 import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.operate.image import OperateImage
 
 
 class FitInterferometer(aa.FitInterferometer):
@@ -39,7 +40,7 @@ class FitInterferometer(aa.FitInterferometer):
 
         self.plane = plane
 
-        self.profile_visibilities = plane.visibilities_via_transformer_from(
+        self.profile_visibilities = self.operate_image_of_galaxies.visibilities_via_transformer_from(
             grid=dataset.grid, transformer=dataset.transformer
         )
 
@@ -86,6 +87,10 @@ class FitInterferometer(aa.FitInterferometer):
         return self.plane.galaxies
 
     @property
+    def operate_image_of_galaxies(self) -> OperateImage:
+        return OperateImage(light_obj_list=self.plane.galaxies)
+
+    @property
     def galaxy_model_image_dict(self) -> {Galaxy: np.ndarray}:
         """
         A dictionary associating galaxies with their corresponding model images
@@ -112,7 +117,7 @@ class FitInterferometer(aa.FitInterferometer):
         """
         A dictionary associating galaxies with their corresponding model images
         """
-        galaxy_model_visibilities_dict = self.plane.galaxy_profile_visibilities_dict_via_transformer_from(
+        galaxy_model_visibilities_dict = self.plane.galaxy_visibilities_dict_via_transformer_from(
             grid=self.interferometer.grid, transformer=self.interferometer.transformer
         )
 
@@ -130,7 +135,7 @@ class FitInterferometer(aa.FitInterferometer):
 
     def model_visibilities_of_galaxies(self):
 
-        model_visibilities_of_galaxies = self.plane.profile_visibilities_of_galaxies_via_transformer_from(
+        model_visibilities_of_galaxies = self.operate_image_of_galaxies.visibilities_list_via_transformer_from(
             grid=self.interferometer.grid, transformer=self.interferometer.transformer
         )
 

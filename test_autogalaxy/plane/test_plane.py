@@ -859,23 +859,9 @@ class TestAbstractPlaneData:
 
             g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
 
-            g0_calc_image = ag.OperateImage(light_obj_list=g0)
-            g1_calc_image = ag.OperateImage(light_obj_list=g1)
-            g2_calc_image = ag.OperateImage(light_obj_list=g2)
+            operator_image = ag.OperateImage(light_obj_list=[g0, g1, g2])
 
-            g0_blurred_image = g0_calc_image.blurred_image_2d_via_convolver_from(
-                grid=sub_grid_2d_7x7,
-                convolver=convolver_7x7,
-                blurring_grid=blurring_grid_2d_7x7,
-            )
-
-            g1_blurred_image = g1_calc_image.blurred_image_2d_via_convolver_from(
-                grid=sub_grid_2d_7x7,
-                convolver=convolver_7x7,
-                blurring_grid=blurring_grid_2d_7x7,
-            )
-
-            g2_blurred_image = g2_calc_image.blurred_image_2d_via_convolver_from(
+            g_blurred_image_2d_list = operator_image.blurred_image_2d_list_via_convolver_from(
                 grid=sub_grid_2d_7x7,
                 convolver=convolver_7x7,
                 blurring_grid=blurring_grid_2d_7x7,
@@ -889,9 +875,15 @@ class TestAbstractPlaneData:
                 blurring_grid=blurring_grid_2d_7x7,
             )
 
-            assert (blurred_image_dict[g0].slim == g0_blurred_image.slim).all()
-            assert (blurred_image_dict[g1].slim == g1_blurred_image.slim).all()
-            assert (blurred_image_dict[g2].slim == g2_blurred_image.slim).all()
+            assert (
+                blurred_image_dict[g0].slim == g_blurred_image_2d_list[0].slim
+            ).all()
+            assert (
+                blurred_image_dict[g1].slim == g_blurred_image_2d_list[1].slim
+            ).all()
+            assert (
+                blurred_image_dict[g2].slim == g_blurred_image_2d_list[2].slim
+            ).all()
 
     class TestVisibilities:
         def test__galaxy_visibilities_dict_from_grid_and_transformer(
@@ -905,31 +897,22 @@ class TestAbstractPlaneData:
                 light_profile=ag.lp.EllSersic(intensity=2.0),
             )
             g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
-            g3 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=5.0))
 
-            g0_calc_image = ag.OperateImage(light_obj_list=g0)
-            g1_calc_image = ag.OperateImage(light_obj_list=g1)
-            g2_calc_image = ag.OperateImage(light_obj_list=g2)
+            operator_image = ag.OperateImage(light_obj_list=[g0, g1, g2])
 
-            g0_visibilities = g0_calc_image.visibilities_via_transformer_from(
-                grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
-            )
-            g1_visibilities = g1_calc_image.visibilities_via_transformer_from(
-                grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
-            )
-            g2_visibilities = g2_calc_image.visibilities_via_transformer_from(
+            g_visibilities_list = operator_image.visibilities_list_via_transformer_from(
                 grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
             )
 
             plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
 
-            visibilities_dict = plane.galaxy_profile_visibilities_dict_via_transformer_from(
+            visibilities_dict = plane.galaxy_visibilities_dict_via_transformer_from(
                 grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
             )
 
-            assert (visibilities_dict[g0] == g0_visibilities).all()
-            assert (visibilities_dict[g1] == g1_visibilities).all()
-            assert (visibilities_dict[g2] == g2_visibilities).all()
+            assert (visibilities_dict[g0] == g_visibilities_list[0]).all()
+            assert (visibilities_dict[g1] == g_visibilities_list[1]).all()
+            assert (visibilities_dict[g2] == g_visibilities_list[2]).all()
 
     class TestGrid2DIrregular:
         def test__no_galaxies_with_pixelizations_in_plane__returns_none(

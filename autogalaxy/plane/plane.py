@@ -8,6 +8,7 @@ from autoarray.inversion.inversion.factory import inversion_interferometer_unpac
 from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
+from autogalaxy.operate.image import OperateImage
 from autogalaxy.util import plane_util
 
 
@@ -547,7 +548,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         galaxy_blurred_image_dict = dict()
 
-        calc_image_list = OperateImageList(light_obj_list=self.galaxies)
+        calc_image_list = OperateImage(light_obj_list=self.galaxies)
 
         blurred_images_of_galaxies = calc_image_list.blurred_image_2d_list_via_convolver_from(
             grid=grid, convolver=convolver, blurring_grid=blurring_grid
@@ -557,26 +558,26 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         return galaxy_blurred_image_dict
 
-    def galaxy_profile_visibilities_dict_via_transformer_from(
+    def galaxy_visibilities_dict_via_transformer_from(
         self, grid, transformer
     ) -> {Galaxy: np.ndarray}:
         """
         A dictionary associating galaxies with their corresponding model images
         """
 
-        galaxy_profile_visibilities_image_dict = dict()
+        galaxy_visibilities_image_dict = dict()
 
-        calc_image_list = OperateImageList(light_obj_list=self.galaxies)
+        calc_image_list = OperateImage(light_obj_list=self.galaxies)
 
-        profile_visibilities_of_galaxies = calc_image_list.visibilities_list_via_transformer_from(
+        visibilities_of_galaxies = calc_image_list.visibilities_list_via_transformer_from(
             grid=grid, transformer=transformer
         )
         for (galaxy_index, galaxy) in enumerate(self.galaxies):
-            galaxy_profile_visibilities_image_dict[
-                galaxy
-            ] = profile_visibilities_of_galaxies[galaxy_index]
+            galaxy_visibilities_image_dict[galaxy] = visibilities_of_galaxies[
+                galaxy_index
+            ]
 
-        return galaxy_profile_visibilities_image_dict
+        return galaxy_visibilities_image_dict
 
     def set_snr_of_snr_light_profiles(
         self,
