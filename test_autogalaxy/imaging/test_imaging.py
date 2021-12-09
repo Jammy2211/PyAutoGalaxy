@@ -91,7 +91,7 @@ class TestSimulatorImaging:
 
         galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.EllSersic(intensity=0.3))
 
-        plane = ag.Plane(redshift=0.75, galaxies=[galaxy_0, galaxy_1])
+        plane = ag.Plane(redshift=0.75, galaxy_list=[galaxy_0, galaxy_1])
 
         simulator = ag.SimulatorImaging(
             psf=psf,
@@ -144,9 +144,11 @@ class TestSimulatorImaging:
             noise_seed=1,
         )
 
-        imaging = simulator.via_galaxies_from(galaxies=[galaxy_0, galaxy_1], grid=grid)
+        imaging = simulator.via_galaxies_from(
+            galaxy_list=[galaxy_0, galaxy_1], grid=grid
+        )
 
-        plane = ag.Plane(redshift=0.75, galaxies=[galaxy_0, galaxy_1])
+        plane = ag.Plane(redshift=0.75, galaxy_list=[galaxy_0, galaxy_1])
 
         imaging_via_image = simulator.via_image_from(
             image=plane.image_2d_from(grid=grid)

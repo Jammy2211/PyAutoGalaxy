@@ -31,12 +31,12 @@ def isinstance_or_prior(obj, cls):
 
 def pixelization_from(model: af.Collection) -> AbstractPixelization:
     """
-    For a model containing one or more galaxies, inspect its attributes and return the `pixelization` of a galaxy
+    For a model containing one or more galaxy_list, inspect its attributes and return the `pixelization` of a galaxy
     provided one galaxy has a pixelization, otherwise it returns none. There cannot be more than one `Pixelization` in
     a model.
     
     This function expects that the input model is a `Collection` where the first model-component has the
-    name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
+    name `galaxy_list`, and is itself a `Collection` of `Galaxy` instances. This is the
     standard API for creating a model in PyAutoGalaxy.
 
     The result of `pixelization_from` is used by the preloading to determine whether certain parts of a
@@ -45,7 +45,7 @@ def pixelization_from(model: af.Collection) -> AbstractPixelization:
     Parameters
     ----------
     model : af.Collection
-        Contains the `galaxies` in the model that will be fitted via the non-linear search.
+        Contains the `galaxy_list` in the model that will be fitted via the non-linear search.
 
     Returns
     -------
@@ -53,7 +53,7 @@ def pixelization_from(model: af.Collection) -> AbstractPixelization:
         The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
     """
 
-    for galaxy in model.galaxies:
+    for galaxy in model.galaxy_list:
         if hasattr(galaxy, "pixelization"):
             if galaxy.pixelization is not None:
                 if isinstance(galaxy.pixelization, af.Model):
@@ -64,11 +64,11 @@ def pixelization_from(model: af.Collection) -> AbstractPixelization:
 
 def has_pixelization_from(model: af.Collection) -> bool:
     """
-    For a model containing one or more galaxies, inspect its attributes and return `True` if a galaxy has a
+    For a model containing one or more galaxy_list, inspect its attributes and return `True` if a galaxy has a
     `Pixelization` otherwise return `False`.
 
     This function expects that the input model is a `Collection` where the first model-component has the
-    name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
+    name `galaxy_list`, and is itself a `Collection` of `Galaxy` instances. This is the
     standard API for creating a model in PyAutoGalaxy.
 
     The result of `has_pixelization_from` is used by the preloading to determine whether certain parts of a
@@ -77,7 +77,7 @@ def has_pixelization_from(model: af.Collection) -> bool:
     Parameters
     ----------
     model : af.Collection
-        Contains the `galaxies` in the model that will be fitted via the non-linear search.
+        Contains the `galaxy_list` in the model that will be fitted via the non-linear search.
 
     Returns
     -------
@@ -106,29 +106,32 @@ def set_upper_limit_of_pixelization_pixels_prior(
         The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
     """
 
-    if hasattr(hyper_model, "galaxies"):
+    if hasattr(hyper_model, "galaxy_list"):
 
         pixels_in_mask = result.analysis.dataset.mask.pixels_in_mask
 
-        if pixels_in_mask < hyper_model.galaxies.source.pixelization.pixels.upper_limit:
+        if (
+            pixels_in_mask
+            < hyper_model.galaxy_list.source.pixelization.pixels.upper_limit
+        ):
 
             if (
-                hyper_model.galaxies.source.pixelization.cls
+                hyper_model.galaxy_list.source.pixelization.cls
                 is aa.pix.VoronoiBrightnessImage
             ):
 
                 lower_limit = (
-                    hyper_model.galaxies.source.pixelization.pixels.lower_limit
+                    hyper_model.galaxy_list.source.pixelization.pixels.lower_limit
                 )
 
-                hyper_model.galaxies.source.pixelization.pixels = af.UniformPrior(
+                hyper_model.galaxy_list.source.pixelization.pixels = af.UniformPrior(
                     lower_limit=lower_limit, upper_limit=pixels_in_mask
                 )
 
 
 def clean_model_of_hyper_images(model):
 
-    for galaxy in model.galaxies:
+    for galaxy in model.galaxy_list:
 
         del galaxy.hyper_model_image
         del galaxy.hyper_galaxy_image
@@ -191,7 +194,7 @@ def hyper_noise_model_from(
             if path_galaxy[-1] in setup_hyper.hyper_galaxy_names:
                 if not np.all(result.hyper_galaxy_image_path_dict[path_galaxy] == 0):
 
-                    galaxy = getattr(model.galaxies, path_galaxy[-1])
+                    galaxy = getattr(model.galaxy_list, path_galaxy[-1])
 
                     setattr(galaxy, "hyper_galaxy", af.Model(HyperGalaxy))
 
@@ -258,7 +261,7 @@ def hyper_inversion_model_from(
             if path_galaxy[-1] in setup_hyper.hyper_galaxy_names:
                 if not np.all(result.hyper_galaxy_image_path_dict[path_galaxy] == 0):
 
-                    model_galaxy = getattr(model.galaxies, path_galaxy[-1])
+                    model_galaxy = getattr(model.galaxy_list, path_galaxy[-1])
 
                     setattr(model_galaxy, "hyper_galaxy", galaxy.hyper_galaxy)
 
@@ -450,7 +453,7 @@ def hyper_model_from(
             if path_galaxy[-1] in setup_hyper.hyper_galaxy_names:
                 if not np.all(result.hyper_galaxy_image_path_dict[path_galaxy] == 0):
 
-                    galaxy = getattr(model.galaxies, path_galaxy[-1])
+                    galaxy = getattr(model.galaxy_list, path_galaxy[-1])
 
                     setattr(galaxy, "hyper_galaxy", af.Model(HyperGalaxy))
 
@@ -555,7 +558,7 @@ def stochastic_model_from(
     af.Collection
         The stochastic model, which is the same model as the input model but may fit for or fix additional parameters.
     """
-    if not hasattr(result.model.galaxies, "lens"):
+    if not hasattr(result.model.galaxy_list, "lens"):
         raise exc.PriorException(
             "Cannot extend a search with a stochastic search if the lens galaxy `Model` "
             "is not named `lens`. "
@@ -574,18 +577,20 @@ def stochastic_model_from(
 
     model = result.instance.as_model(model_classes)
 
-    model.galaxies.lens.take_attributes(source=result.model.galaxies.lens)
+    model.galaxy_list.lens.take_attributes(source=result.model.galaxy_list.lens)
 
-    if hasattr(model.galaxies, "subhalo"):
-        model.galaxies.subhalo.take_attributes(source=result.model.galaxies.subhalo)
+    if hasattr(model.galaxy_list, "subhalo"):
+        model.galaxy_list.subhalo.take_attributes(
+            source=result.model.galaxy_list.subhalo
+        )
 
         if subhalo_centre_width is not None:
-            model.galaxies.subhalo.mass.centre = result.model_absolute(
+            model.galaxy_list.subhalo.mass.centre = result.model_absolute(
                 a=subhalo_centre_width
-            ).galaxies.subhalo.mass.centre
+            ).galaxy_list.subhalo.mass.centre
 
         if subhalo_mass_at_200_log_uniform:
-            model.galaxies.subhalo.mass.mass_at_200 = af.LogUniformPrior(
+            model.galaxy_list.subhalo.mass.mass_at_200 = af.LogUniformPrior(
                 lower_limit=1e6, upper_limit=1e11
             )
 

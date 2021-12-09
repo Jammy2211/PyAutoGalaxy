@@ -23,7 +23,7 @@ class AnalysisQuantity(Analysis):
         such as visualization, outputting results to hard-disk and storing results in a format that can be loaded after
         the model-fit is complete using PyAutoFit's database tools.
 
-        This Analysis class is used for model-fits which fit derived quantity of galaxies, for example their 
+        This Analysis class is used for model-fits which fit derived quantity of galaxy_list, for example their
         convergence, potential or deflection angles, to another model for that quantity. For example, one could find
         the `EllPowerLaw` mass profile model that best fits the deflection angles of an `EllNFW` mass profile.
 
@@ -125,7 +125,7 @@ class AnalysisQuantity(Analysis):
 
         The visualization performed by this function includes:
 
-        - Images of the best-fit `Plane`, including the images of each of its galaxies.
+        - Images of the best-fit `Plane`, including the images of each of its galaxy_list.
 
         - Images of the best-fit `FitQuantity`, including the model-image, residuals and chi-squared of its fit to
         the imaging data.
@@ -173,7 +173,7 @@ class AnalysisQuantity(Analysis):
             A PyAutoFit object which contains the samples of the non-linear search, for example the chains of an MCMC
             run of samples of the nested sampler.
         model
-            The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
+            The PyAutoFit model object, which includes model components representing the galaxy_list that are fitted to
             the imaging data.
         search
             The non-linear search used to perform this model-fit.

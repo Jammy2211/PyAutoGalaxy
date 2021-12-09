@@ -26,7 +26,7 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
         redshift=1.0, light=ag.lp.EllExponential(centre=(0.1, 0.1), intensity=0.5)
     )
 
-    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
+    plane = ag.Plane(galaxy_list=[lens_galaxy, source_galaxy])
 
     simulator = ag.SimulatorImaging(
         exposure_time=300.0, psf=psf, add_poisson_noise=False
@@ -77,7 +77,7 @@ def test__simulate_imaging_data_and_fit__no_psf_blurring__chi_squared_is_0__nois
         settings=ag.SettingsImaging(grid_class=ag.Grid2DIterate)
     )
 
-    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
+    plane = ag.Plane(galaxy_list=[lens_galaxy, source_galaxy])
 
     fit = ag.FitImaging(dataset=masked_imaging, plane=plane)
 
@@ -107,7 +107,7 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
     source_galaxy = ag.Galaxy(
         redshift=1.0, light=ag.lp.EllExponential(centre=(0.1, 0.1), intensity=0.5)
     )
-    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
+    plane = ag.Plane(galaxy_list=[lens_galaxy, source_galaxy])
 
     simulator = ag.SimulatorImaging(
         exposure_time=300.0, psf=psf, add_poisson_noise=False
@@ -157,7 +157,7 @@ def test__simulate_imaging_data_and_fit__include_psf_blurring__chi_squared_is_0_
         settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
     )
 
-    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
+    plane = ag.Plane(galaxy_list=[lens_galaxy, source_galaxy])
 
     fit = ag.FitImaging(dataset=masked_imaging, plane=plane)
 
@@ -184,7 +184,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
         redshift=1.0, light=ag.lp.EllExponential(centre=(0.1, 0.1), intensity=0.5)
     )
 
-    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
+    plane = ag.Plane(galaxy_list=[lens_galaxy, source_galaxy])
 
     simulator = ag.SimulatorInterferometer(
         uv_wavelengths=np.ones(shape=(7, 2)),
@@ -230,7 +230,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
         ),
     )
 
-    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
+    plane = ag.Plane(galaxy_list=[lens_galaxy, source_galaxy])
 
     fit = ag.FitInterferometer(
         dataset=interferometer,
@@ -252,7 +252,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
 
     source_galaxy = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-    plane = ag.Plane(galaxies=[lens_galaxy, source_galaxy])
+    plane = ag.Plane(galaxy_list=[lens_galaxy, source_galaxy])
 
     fit = ag.FitInterferometer(
         dataset=interferometer,

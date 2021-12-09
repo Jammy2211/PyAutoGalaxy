@@ -47,7 +47,7 @@ class SimulatorInterferometer(aa.SimulatorInterferometer):
         ----------
         name
         image : np.ndarray
-            The image before simulating (e.g. the lens and source galaxies before optics blurring and Imaging read-out).
+            The image before simulating (e.g. the lens and source galaxy_list before optics blurring and Imaging read-out).
         pixel_scales: float
             The scale of each pixel in arc seconds
         exposure_time_map : np.ndarray
@@ -65,12 +65,12 @@ class SimulatorInterferometer(aa.SimulatorInterferometer):
 
         return self.via_image_from(image=image.binned, name=name)
 
-    def via_galaxies_from(self, galaxies, grid, name=None):
+    def via_galaxies_from(self, galaxy_list, grid, name=None):
         """Simulate imaging data for this data, as follows:
 
         1)  Setup the image-plane grid of the Imaging arrays, which defines the coordinates used for the ray-tracing.
 
-        2) Use this grid and the lens and source galaxies to setup a plane, which generates the image of \
+        2) Use this grid and the lens and source galaxy_list to setup a plane, which generates the image of \
            the simulated imaging data.
 
         3) Simulate the imaging data, using a special image which ensures edge-effects don't
@@ -82,8 +82,8 @@ class SimulatorInterferometer(aa.SimulatorInterferometer):
            imaging data instance."""
 
         plane = Plane(
-            redshift=float(np.mean([galaxy.redshift for galaxy in galaxies])),
-            galaxies=galaxies,
+            redshift=float(np.mean([galaxy.redshift for galaxy in galaxy_list])),
+            galaxy_list=galaxy_list,
         )
 
         return self.via_plane_from(plane=plane, grid=grid, name=name)

@@ -14,7 +14,7 @@ def test__fit_via_mock_profile(dataset_quantity_7x7_array_2d):
         ),
     )
 
-    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5, mass=model_object)])
+    plane = ag.Plane(galaxy_list=[ag.Galaxy(redshift=0.5, mass=model_object)])
 
     fit_quantity = ag.FitQuantity(
         dataset=dataset_quantity_7x7_array_2d,

@@ -25,12 +25,12 @@ class TestResultImaging:
 
     def test___image_dict(self, analysis_imaging_7x7):
 
-        galaxies = af.ModelInstance()
-        galaxies.galaxy = ag.Galaxy(redshift=0.5)
-        galaxies.source = ag.Galaxy(redshift=1.0)
+        galaxy_list = af.ModelInstance()
+        galaxy_list.galaxy = ag.Galaxy(redshift=0.5)
+        galaxy_list.source = ag.Galaxy(redshift=1.0)
 
         instance = af.ModelInstance()
-        instance.galaxies = galaxies
+        instance.galaxy_list = galaxy_list
 
         samples = mock.MockSamples(max_log_likelihood_instance=instance)
 
@@ -39,11 +39,11 @@ class TestResultImaging:
         )
 
         image_dict = result.image_galaxy_dict
-        assert isinstance(image_dict[("galaxies", "galaxy")], np.ndarray)
-        assert isinstance(image_dict[("galaxies", "source")], np.ndarray)
+        assert isinstance(image_dict[("galaxy_list", "galaxy")], np.ndarray)
+        assert isinstance(image_dict[("galaxy_list", "source")], np.ndarray)
 
-        result.instance.galaxies.light = ag.Galaxy(redshift=0.5)
+        result.instance.galaxy_list.light = ag.Galaxy(redshift=0.5)
 
         image_dict = result.image_galaxy_dict
-        assert (image_dict[("galaxies", "galaxy")].native == np.zeros((7, 7))).all()
-        assert isinstance(image_dict[("galaxies", "source")], np.ndarray)
+        assert (image_dict[("galaxy_list", "galaxy")].native == np.zeros((7, 7))).all()
+        assert isinstance(image_dict[("galaxy_list", "source")], np.ndarray)

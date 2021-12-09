@@ -21,7 +21,7 @@ class SetupHyper:
     ):
         """
         The hyper setup of a pipeline, which controls how hyper-features in PyAutoGalaxy template pipelines run,
-        for example controlling whether hyper galaxies are used to scale the noise and the non-linear searches used
+        for example controlling whether hyper galaxy_list are used to scale the noise and the non-linear searches used
         in these searchs.
 
         Users can write their own pipelines which do not use or require the *SetupHyper* class.

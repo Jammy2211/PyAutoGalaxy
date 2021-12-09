@@ -80,7 +80,7 @@ class HyperPlotter(Plotter):
         self, hyper_galaxy_image_path_dict: Dict[Galaxy, aa.Array2D]
     ):
         """
-        Plots a subplot of the hyper galaxy image of all hyper galaxies.
+        Plots a subplot of the hyper galaxy image of all hyper galaxy_list.
 
         This uses the `hyper_galaxy_image_path_dict` which is a dictionary mapping each galaxy to its corresponding
         to hyper galaxy image.
@@ -109,7 +109,7 @@ class HyperPlotter(Plotter):
         self, contribution_map_list_list: List[aa.Array2D]
     ):
         """
-        Plots a subplot of the contribution maps of all hyper galaxies.
+        Plots a subplot of the contribution maps of all hyper galaxy_list.
 
         This uses the `contribution_map_list` which is a list of each galaxy's corresponding contribution map.
 

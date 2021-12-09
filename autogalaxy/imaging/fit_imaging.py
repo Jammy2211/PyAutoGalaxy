@@ -24,7 +24,7 @@ class FitImaging(aa.FitImaging):
         Parameters
         -----------
         plane
-            The plane of galaxies whose model images are used to fit the imaging data.
+            The plane of galaxy_list whose model images are used to fit the imaging data.
         """
 
         self.plane = plane
@@ -85,8 +85,8 @@ class FitImaging(aa.FitImaging):
         super().__init__(dataset=dataset, fit=fit)
 
     @property
-    def galaxies(self):
-        return self.plane.galaxies
+    def galaxy_list(self):
+        return self.plane.galaxy_list
 
     @property
     def grid(self):
@@ -95,7 +95,7 @@ class FitImaging(aa.FitImaging):
     @property
     def galaxy_model_image_dict(self) -> {Galaxy: np.ndarray}:
         """
-        A dictionary associating galaxies with their corresponding model images
+        A dictionary associating galaxy_list with their corresponding model images
         """
 
         galaxy_model_image_dict = self.plane.galaxy_blurred_image_2d_dict_via_convolver_from(
@@ -104,7 +104,7 @@ class FitImaging(aa.FitImaging):
             blurring_grid=self.imaging.blurring_grid,
         )
 
-        for galaxy in self.galaxies:
+        for galaxy in self.galaxy_list:
 
             if galaxy.has_pixelization:
 
@@ -123,7 +123,7 @@ class FitImaging(aa.FitImaging):
             blurring_grid=self.imaging.blurring_grid,
         )
 
-        for galaxy_index, galaxy in enumerate(self.galaxies):
+        for galaxy_index, galaxy in enumerate(self.galaxy_list):
 
             if galaxy.has_pixelization:
 
@@ -140,7 +140,7 @@ class FitImaging(aa.FitImaging):
 
         model_images_of_galaxies = self.model_images_of_galaxies
 
-        for galaxy_index in range(len(self.galaxies)):
+        for galaxy_index in range(len(self.galaxy_list)):
 
             other_galaxies_model_images = [
                 model_image

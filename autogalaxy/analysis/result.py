@@ -37,7 +37,7 @@ class Result(af.Result):
             A PyAutoFit object which contains the samples of the non-linear search, for example the chains of an MCMC
             run of samples of the nested sampler.
         model
-            The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
+            The PyAutoFit model object, which includes model components representing the galaxy_list that are fitted to
             the imaging data.
         analysis
             The `Analysis` object that was used to perform the model-fit from which this result is inferred.
@@ -65,7 +65,7 @@ class Result(af.Result):
     @property
     def path_galaxy_tuples(self) -> [(str, Galaxy)]:
         """
-        Tuples associating the names of galaxies with instances from the best fit
+        Tuples associating the names of galaxy_list with instances from the best fit
         """
         return self.instance.path_instance_tuples_for_class(cls=Galaxy)
 
@@ -114,7 +114,7 @@ class ResultDataset(Result):
     @property
     def image_galaxy_dict(self) -> {str: Galaxy}:
         """
-        A dictionary associating galaxy names with model images of those galaxies.
+        A dictionary associating galaxy names with model images of those galaxy_list.
 
         This is used for creating the hyper-dataset used by Analysis objects to adapt aspects of a model to the dataset
         being fitted.

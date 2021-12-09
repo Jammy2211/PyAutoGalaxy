@@ -7,7 +7,7 @@ from autogalaxy.plane.plane import PlaneImage
 from autogalaxy import exc
 
 
-def plane_image_of_galaxies_from(shape, grid, galaxies, buffer=1.0e-2):
+def plane_image_of_galaxies_from(shape, grid, galaxy_list, buffer=1.0e-2):
 
     y_min = np.min(grid[:, 0]) - buffer
     y_max = np.max(grid[:, 0]) + buffer
@@ -24,23 +24,23 @@ def plane_image_of_galaxies_from(shape, grid, galaxies, buffer=1.0e-2):
         shape_native=shape, pixel_scales=pixel_scales, sub_size=1, origin=origin
     )
 
-    image = sum(map(lambda g: g.image_2d_from(grid=uniform_grid), galaxies))
+    image = sum(map(lambda g: g.image_2d_from(grid=uniform_grid), galaxy_list))
 
     return PlaneImage(array=image, grid=grid)
 
 
-def ordered_plane_redshifts_from(galaxies):
-    """Given a list of galaxies (with redshifts), return a list of the redshifts in ascending order.
+def ordered_plane_redshifts_from(galaxy_list):
+    """Given a list of galaxy_list (with redshifts), return a list of the redshifts in ascending order.
 
-    If two or more galaxies have the same redshift that redshift is not double counted.
+    If two or more galaxy_list have the same redshift that redshift is not double counted.
 
     Parameters
     -----------
-    galaxies : [Galaxy]
-        The list of galaxies in the ray-tracing calculation.
+    galaxy_list : [Galaxy]
+        The list of galaxy_list in the ray-tracing calculation.
     """
     ordered_galaxies = sorted(
-        galaxies, key=lambda galaxy: galaxy.redshift, reverse=False
+        galaxy_list, key=lambda galaxy: galaxy.redshift, reverse=False
     )
 
     # Ideally we'd extract the planes_red_Shfit order from the list above. However, I dont know how to extract it
@@ -61,7 +61,7 @@ def ordered_plane_redshifts_with_slicing_from(
     plane redshifts using these values. A lens redshift corresponds to the 'main' lens galaxy(s),
     whereas the slices collect line-of-sight halos over a range of redshifts.
 
-    The source-plane redshift is removed from the ordered plane redshifts that are returned, so that galaxies are not \
+    The source-plane redshift is removed from the ordered plane redshifts that are returned, so that galaxy_list are not \
     planed at the source-plane redshift.
 
     For example, if the main plane redshifts are [1.0, 2.0], and the bin sizes are [1,3], the following redshift \
@@ -82,7 +82,7 @@ def ordered_plane_redshifts_with_slicing_from(
         The number of slices between each main plane. The first entry in this list determines the number of slices \
         between Earth (redshift 0.0) and main plane 0, the next between main planes 0 and 1, etc.
     source_plane_redshift
-        The redshift of the source-plane, which is input explicitly to ensure galaxies are not placed in the \
+        The redshift of the source-plane, which is input explicitly to ensure galaxy_list are not placed in the \
         source-plane.
     """
 
@@ -113,19 +113,19 @@ def ordered_plane_redshifts_with_slicing_from(
     return plane_redshifts[0:-1]
 
 
-def galaxies_in_redshift_ordered_planes_from(galaxies, plane_redshifts):
-    """Given a list of galaxies (with redshifts), return a list of the galaxies where each entry contains a list \
-    of galaxies at the same redshift in ascending redshift order.
+def galaxies_in_redshift_ordered_planes_from(galaxy_list, plane_redshifts):
+    """Given a list of galaxy_list (with redshifts), return a list of the galaxy_list where each entry contains a list \
+    of galaxy_list at the same redshift in ascending redshift order.
 
     Parameters
     -----------
-    galaxies : [Galaxy]
-        The list of galaxies in the ray-tracing calculation.
+    galaxy_list : [Galaxy]
+        The list of galaxy_list in the ray-tracing calculation.
     """
 
     galaxies_in_redshift_ordered_planes = [[] for i in range(len(plane_redshifts))]
 
-    for galaxy in galaxies:
+    for galaxy in galaxy_list:
 
         index = (np.abs(np.asarray(plane_redshifts) - galaxy.redshift)).argmin()
 

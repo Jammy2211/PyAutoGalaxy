@@ -476,7 +476,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
         Figures plotted by this object average over a list galaxy profiles to computed the average value of each 
         attribute with errors, where the 1D regions within the errors are plotted as a shaded region to show the range 
-        of plausible models. Therefore, the input list of galaxies is expected to represent the probability density
+        of plausible models. Therefore, the input list of galaxy_list is expected to represent the probability density
         function of an inferred model-fit.
 
         The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default,
@@ -528,7 +528,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
     @property
     def light_profile_pdf_plotter_list(self) -> List[LightProfilePDFPlotter]:
         """
-        Returns a list of `LightProfilePDFPlotter` objects from the list of galaxies in this object. These are
+        Returns a list of `LightProfilePDFPlotter` objects from the list of galaxy_list in this object. These are
         typically used for plotting the individual average value plus errors of the light profiles of the 
         plotter's `Galaxy` (e.g. in the function `figures_1d_decomposed`).
 
@@ -545,7 +545,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
     def light_profile_pdf_plotter_from(self, index) -> LightProfilePDFPlotter:
         """
-        Returns the `LightProfilePDFPlotter` of a specific light profile in this plotter's list of galaxies. This is 
+        Returns the `LightProfilePDFPlotter` of a specific light profile in this plotter's list of galaxy_list. This is
         typically used for plotting the individual average value plus errors of a light profile in plotter's galaxy
         list (e.g. in the function `figures_1d_decomposed`).
 
@@ -573,7 +573,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
     @property
     def mass_profile_pdf_plotter_list(self) -> List[MassProfilePDFPlotter]:
         """
-        Returns a list of `MassProfilePDFPlotter` objects from the list of galaxies in this object. These are
+        Returns a list of `MassProfilePDFPlotter` objects from the list of galaxy_list in this object. These are
         typically used for plotting the individual average value plus errors of the mass profiles of the 
         plotter's `Galaxy` (e.g. in the function `figures_1d_decomposed`).
 
@@ -590,7 +590,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
     def mass_profile_pdf_plotter_from(self, index) -> MassProfilePDFPlotter:
         """
-        Returns the `MassProfilePDFPlotter` of a specific mass profile in this plotter's list of galaxies. This is 
+        Returns the `MassProfilePDFPlotter` of a specific mass profile in this plotter's list of galaxy_list. This is
         typically used for plotting the individual average value plus errors of a mass profile in plotter's galaxy
         list (e.g. in the function `figures_1d_decomposed`).
 
@@ -622,9 +622,9 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         Plots the individual attributes of the plotter's list of `Galaxy` object in 1D, which are computed via the
         plotter's grid object.
 
-        This averages over a list galaxies to compute the average value of each attribute with errors, where the
+        This averages over a list galaxy_list to compute the average value of each attribute with errors, where the
         1D regions within the errors are plotted as a shaded region to show the range of plausible models. Therefore,
-        the input list of galaxies is expected to represent the probability density function of an inferred model-fit.
+        the input list of galaxy_list is expected to represent the probability density function of an inferred model-fit.
 
         If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
         computed from each light profile of the galaxy. This is performed by aligning a 1D grid with the major-axis of
@@ -779,9 +779,9 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         Plots the individual attributes of the plotter's `Galaxy` object in 1D, which are computed via the plotter's
         grid object.
 
-        This averages over a list galaxies to compute the average value of each attribute with errors, where the
+        This averages over a list galaxy_list to compute the average value of each attribute with errors, where the
         1D regions within the errors are plotted as a shaded region to show the range of plausible models. Therefore,
-        the input list of galaxies is expected to represent the probability density function of an inferred model-fit.
+        the input list of galaxy_list is expected to represent the probability density function of an inferred model-fit.
 
         This function makes a decomposed plot showing the 1D plot of each attribute for every light or mass profile in
         the galaxy, as well as their combined 1D plot. By plotting the attribute of each profile on the same figure,

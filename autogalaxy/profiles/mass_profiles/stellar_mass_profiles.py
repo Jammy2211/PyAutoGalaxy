@@ -495,7 +495,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
         systems, this won't robustly capture the light profile's elliptical shape.
 
         The elliptical effective radius instead describes the major-axis radius of the ellipse containing \
-        half the light, and may be more appropriate for highly flattened systems like disk galaxies.
+        half the light, and may be more appropriate for highly flattened systems like disk galaxy_list.
         """
         return self.effective_radius / np.sqrt(self.axis_ratio)
 
