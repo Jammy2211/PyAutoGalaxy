@@ -117,7 +117,7 @@ class TestCompareToManualProfilesOnly:
 
         assert interferometer_7.noise_map == pytest.approx(fit.noise_map)
 
-        model_visibilities = plane.profile_visibilities_via_transformer_from(
+        model_visibilities = plane.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
@@ -173,7 +173,6 @@ class TestCompareToManualProfilesOnly:
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
         g0_image = g0.image_2d_from(grid=interferometer_7.grid)
-
         g1_image = g1.image_2d_from(grid=interferometer_7.grid)
 
         assert fit.galaxy_model_image_dict[g0].slim == pytest.approx(g0_image, 1.0e-4)
@@ -193,19 +192,18 @@ class TestCompareToManualProfilesOnly:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        g0_profile_visibilities = g0.profile_visibilities_via_transformer_from(
+        g0_visibilities = g0.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
-
-        g1_profile_visibilities = g1.profile_visibilities_via_transformer_from(
+        g1_visibilities = g1.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
         assert fit.galaxy_model_visibilities_dict[g0].slim == pytest.approx(
-            g0_profile_visibilities, 1.0e-4
+            g0_visibilities, 1.0e-4
         )
         assert fit.galaxy_model_visibilities_dict[g1].slim == pytest.approx(
-            g1_profile_visibilities, 1.0e-4
+            g1_visibilities, 1.0e-4
         )
 
         assert fit.model_visibilities.slim == pytest.approx(
@@ -541,15 +539,13 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        profile_visibilities = plane.profile_visibilities_via_transformer_from(
+        visibilities = plane.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
-        assert profile_visibilities.slim == pytest.approx(fit.profile_visibilities.slim)
+        assert visibilities.slim == pytest.approx(fit.profile_visibilities.slim)
 
-        profile_subtracted_visibilities = (
-            interferometer_7.visibilities - profile_visibilities
-        )
+        profile_subtracted_visibilities = interferometer_7.visibilities - visibilities
 
         assert profile_subtracted_visibilities.slim == pytest.approx(
             fit.profile_subtracted_visibilities.slim
@@ -568,7 +564,7 @@ class TestCompareToManualProfilesAndInversion:
             regularization_list=[reg],
         )
 
-        model_visibilities = profile_visibilities + inversion.mapped_reconstructed_data
+        model_visibilities = visibilities + inversion.mapped_reconstructed_data
 
         assert model_visibilities.slim == pytest.approx(fit.model_visibilities.slim)
 
@@ -650,11 +646,10 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        g0_visibilities = g0.profile_visibilities_via_transformer_from(
+        g0_visibilities = g0.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
-
-        g1_visibilities = g1.profile_visibilities_via_transformer_from(
+        g1_visibilities = g1.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
@@ -677,7 +672,6 @@ class TestCompareToManualProfilesAndInversion:
         )
 
         g0_image = g0.image_2d_from(grid=interferometer_7.grid)
-
         g1_image = g1.image_2d_from(grid=interferometer_7.grid)
 
         assert fit.galaxy_model_image_dict[g0].slim == pytest.approx(
@@ -705,11 +699,10 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        g0_visibilities = g0.profile_visibilities_via_transformer_from(
+        g0_visibilities = g0.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
-
-        g1_visibilities = g1.profile_visibilities_via_transformer_from(
+        g1_visibilities = g1.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 

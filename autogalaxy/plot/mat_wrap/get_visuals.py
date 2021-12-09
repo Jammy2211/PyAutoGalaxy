@@ -11,7 +11,6 @@ from autogalaxy.plot.mat_wrap.visuals import Visuals2D
 
 from autogalaxy.util import error_util
 
-from autoarray.structures.grids.two_d.grid_2d import Grid2D
 from autoarray.structures.grids.two_d.grid_2d_irregular import Grid2DIrregular
 
 from autogalaxy.imaging.fit_imaging import FitImaging
@@ -212,8 +211,7 @@ class GetVisuals1D(gv.GetVisuals1D):
         if self.include.einstein_radius:
 
             einstein_radius_list = [
-                mass_profile.einstein_radius_from(grid=grid)
-                for mass_profile in mass_obj_list
+                mass_obj.einstein_radius_from(grid=grid) for mass_obj in mass_obj_list
             ]
 
             einstein_radius, einstein_radius_errors = error_util.value_median_and_error_region_via_quantile(

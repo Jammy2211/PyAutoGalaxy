@@ -43,10 +43,11 @@ class PointMass(MassProfile):
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         grid_radii = self.grid_to_grid_radii(grid=grid)
         return self.grid_to_grid_cartesian(
             grid=grid, radius=self.einstein_radius ** 2 / grid_radii
@@ -130,10 +131,11 @@ class EllPowerLawBroken(MassProfile):
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid, max_terms=20):
+    def deflections_yx_2d_from(self, grid, max_terms=20):
         """
         Returns the complex deflection angle from eq. 18 and 19
         """
@@ -265,8 +267,8 @@ class EllPowerLawCored(MassProfile):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         einstein_radius
             The arc-second Einstein radius.
         slope
@@ -299,7 +301,7 @@ class EllPowerLawCored(MassProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -322,7 +324,7 @@ class EllPowerLawCored(MassProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -346,16 +348,17 @@ class EllPowerLawCored(MassProfile):
 
         return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -463,16 +466,17 @@ class SphPowerLawCored(EllPowerLawCored):
             core_radius=core_radius,
         )
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -509,8 +513,8 @@ class EllPowerLaw(EllPowerLawCored):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         einstein_radius
             The arc-second Einstein radius.
         slope
@@ -525,22 +529,23 @@ class EllPowerLaw(EllPowerLawCored):
             core_radius=0.0,
         )
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
-        ​
+
         For coordinates (0.0, 0.0) the analytic calculation of the deflection angle gives a NaN. Therefore, \
         coordinates at (0.0, 0.0) are shifted slightly to (1.0e-8, 1.0e-8).
 
         This code is an adaption of Tessore & Metcalf 2015:
         https://arxiv.org/abs/1507.01819
-        ​
+
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -626,10 +631,11 @@ class SphPowerLaw(EllPowerLaw):
             slope=slope,
         )
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
 
         eta = self.grid_to_grid_radii(grid)
         deflection_r = (
@@ -660,8 +666,8 @@ class EllIsothermalCored(EllPowerLawCored):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         einstein_radius
             The arc-second Einstein radius.
         core_radius
@@ -720,8 +726,8 @@ class EllIsothermal(EllPowerLaw):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         einstein_radius
             The arc-second Einstein radius.
         """
@@ -736,12 +742,13 @@ class EllIsothermal(EllPowerLaw):
     @property
     def axis_ratio(self):
         axis_ratio = super().axis_ratio
-        return axis_ratio if axis_ratio < 0.99999 else 0.99999
+        return min(axis_ratio, 0.99999)
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -750,7 +757,7 @@ class EllIsothermal(EllPowerLaw):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -782,7 +789,7 @@ class EllIsothermal(EllPowerLaw):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -801,7 +808,7 @@ class EllIsothermal(EllPowerLaw):
             grid=np.vstack((shear_y, shear_x)).T
         )
 
-        return aa.VectorField2DIrregular(vectors=shear_field, grid=grid)
+        return aa.VectorYX2DIrregular(vectors=shear_field, grid=grid)
 
 
 class EllIsothermalInitialize(EllIsothermal):
@@ -841,22 +848,23 @@ class SphIsothermal(EllIsothermal):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
         eta = self.grid_to_elliptical_radii(grid)
         return 2.0 * self.einstein_radius_rescaled * eta
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
         return self.grid_to_grid_cartesian(

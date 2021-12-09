@@ -36,10 +36,11 @@ class EllGaussian(MassProfile, StellarProfile):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         sigma
             The sigma value of the Gaussian.
         """
@@ -54,13 +55,13 @@ class EllGaussian(MassProfile, StellarProfile):
         self.intensity = intensity
         self.sigma = sigma
 
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -75,7 +76,7 @@ class EllGaussian(MassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -103,7 +104,7 @@ class EllGaussian(MassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         Note: sigma is divided by sqrt(q) here.
@@ -160,7 +161,7 @@ class EllGaussian(MassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -250,15 +251,14 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
             The radius containing half the light of this profile.
         sersic_index
-            Controls the concentration of the of the profile (lower value -> less concentrated, \
-            higher value -> more concentrated).
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
@@ -275,7 +275,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
         self.effective_radius = effective_radius
         self.sersic_index = sersic_index
 
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_cse_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
@@ -326,7 +326,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -516,7 +516,7 @@ class EllSersic(AbstractEllSersic, MassProfileMGE, MassProfileCSE):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -597,8 +597,7 @@ class SphSersic(EllSersic):
         effective_radius
             The circular radius containing half the light of this profile.
         sersic_index
-            Controls the concentration of the of the profile (lower value -> less concentrated, \
-            higher value -> more concentrated).
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         mass_to_light_ratio
             The mass-to-light ratio of the light profile.
         """
@@ -630,8 +629,8 @@ class EllExponential(EllSersic):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
@@ -699,8 +698,8 @@ class EllDevVaucouleurs(EllSersic):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
@@ -769,15 +768,14 @@ class EllSersicRadialGradient(AbstractEllSersic):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
         sersic_index
-            Controls the concentration of the of the profile (lower value -> less concentrated, \
-            higher value -> more concentrated).
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         mass_to_light_ratio
             The mass-to-light ratio of the light profile.
         mass_to_light_gradient
@@ -802,7 +800,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -880,7 +878,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -1003,8 +1001,7 @@ class SphSersicRadialGradient(EllSersicRadialGradient):
         effective_radius
             The circular radius containing half the light of this profile.
         sersic_index
-            Controls the concentration of the of the profile (lower value -> less concentrated, \
-            higher value -> more concentrated).
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         mass_to_light_ratio
             The mass-to-light ratio of the light profile.
         mass_to_light_gradient
@@ -1042,15 +1039,15 @@ class EllSersicCore(EllSersic):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
-        sersic_index : Int
-            Controls the concentration of the of the profile (lower value -> less concentrated, \
-            higher value -> more concentrated).
+        sersic_index
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
         intensity_break
@@ -1075,7 +1072,7 @@ class EllSersicCore(EllSersic):
         self.alpha = alpha
         self.gamma = gamma
 
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_mge_from(grid=grid)
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray):
@@ -1178,12 +1175,12 @@ class SphSersicCore(EllSersicCore):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         effective_radius
             The circular radius containing half the light of this profile.
-        sersic_index : Int
-            Controls the concentration of the of the profile (lower value -> less concentrated, \
-            higher value -> more concentrated).
+        sersic_index
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
         intensity_break
@@ -1227,10 +1224,11 @@ class EllChameleon(MassProfile, StellarProfile):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         core_radius_0 : the core size of the first elliptical cored Isothermal profile.
         core_radius_1 : core_radius_0 + core_radius_1 is the core size of the second elliptical cored Isothermal profile.
             We use core_radius_1 here is to avoid negative values.
@@ -1251,7 +1249,7 @@ class EllChameleon(MassProfile, StellarProfile):
         self.core_radius_0 = core_radius_0
         self.core_radius_1 = core_radius_1
 
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_analytic_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
@@ -1264,7 +1262,7 @@ class EllChameleon(MassProfile, StellarProfile):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1334,7 +1332,7 @@ class EllChameleon(MassProfile, StellarProfile):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
         return self.convergence_func(self.grid_to_elliptical_radii(grid))
@@ -1414,10 +1412,11 @@ class SphChameleon(EllChameleon):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
-            Overall intensity normalisation of the light profiles (electrons per second).
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         core_radius_0 : the core size of the first elliptical cored Isothermal profile.
         core_radius_1 : core_radius_0 + core_radius_1 is the core size of the second elliptical cored Isothermal profile.
             We use core_radius_1 here is to avoid negative values.

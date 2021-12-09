@@ -114,6 +114,6 @@ def test__visualize_hyper_images__uses_config(
     )
 
     assert (
-        path.join(plot_path, "subplot_contribution_maps_of_galaxies.png")
+        path.join(plot_path, "subplot_contribution_map_list.png")
         not in plot_patch.paths
     )

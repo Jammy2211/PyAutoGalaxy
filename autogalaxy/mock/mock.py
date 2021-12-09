@@ -49,7 +49,7 @@ class MockMassProfile(ag.mp.MassProfile):
     def potential_2d_from(self, grid):
         return self.potential_2d
 
-    def deflections_2d_from(self, grid):
+    def deflections_yx_2d_from(self, grid):
         return self.deflections_2d
 
 
@@ -74,7 +74,7 @@ class MockGalaxy:
         return np.full(shape=self.shape, fill_value=self.value)
 
     @aa.grid_dec.grid_2d_to_structure
-    def deflections_2d_from(self, grid):
+    def deflections_yx_2d_from(self, grid):
         return np.full(shape=(self.shape, 2), fill_value=self.value)
 
 

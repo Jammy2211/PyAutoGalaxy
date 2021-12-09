@@ -83,34 +83,34 @@ class TestMassSheet:
 
         assert potential[0] == pytest.approx(0.0, 1e-3)
 
-    def test__deflections_from(self):
+    def test__deflections_yx_2d_from(self):
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
-        deflections = mass_sheet.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = mass_sheet.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
 
         assert deflections[0, 0] == pytest.approx(1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.0, 1e-3)
 
-        deflections = mass_sheet.deflections_2d_from(grid=np.array([[2.0, 0.0]]))
+        deflections = mass_sheet.deflections_yx_2d_from(grid=np.array([[2.0, 0.0]]))
 
         assert deflections[0, 0] == pytest.approx(2.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.0, 1e-3)
 
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=-1.0)
 
-        deflections = mass_sheet.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = mass_sheet.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
 
         assert deflections[0, 0] == pytest.approx(-1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.0, 1e-3)
 
-        deflections = mass_sheet.deflections_2d_from(grid=np.array([[2.0, 0.0]]))
+        deflections = mass_sheet.deflections_yx_2d_from(grid=np.array([[2.0, 0.0]]))
 
         assert deflections[0, 0] == pytest.approx(-2.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.0, 1e-3)
 
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=2.0)
 
-        deflections = mass_sheet.deflections_2d_from(grid=np.array([[2.0, 0.0]]))
+        deflections = mass_sheet.deflections_yx_2d_from(grid=np.array([[2.0, 0.0]]))
 
         assert deflections[0, 0] == pytest.approx(4.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.0, 1e-3)
@@ -121,19 +121,19 @@ class TestMassSheet:
         # This is decomposed into (y,x) angles of sin(45) = cos(45) = sqrt(2) / 2.0
         # Thus, for a mass sheet, the deflection angle is (sqrt(2) * sqrt(2) / 2.0) = 1.0
 
-        deflections = mass_sheet.deflections_2d_from(grid=np.array([[1.0, 1.0]]))
+        deflections = mass_sheet.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
         assert deflections[0, 0] == pytest.approx(1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(1.0, 1e-3)
 
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=2.0)
 
-        deflections = mass_sheet.deflections_2d_from(grid=np.array([[1.0, 1.0]]))
+        deflections = mass_sheet.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
         assert deflections[0, 0] == pytest.approx(2.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(2.0, 1e-3)
 
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=2.0)
 
-        deflections = mass_sheet.deflections_2d_from(grid=np.array([[2.0, 2.0]]))
+        deflections = mass_sheet.deflections_yx_2d_from(grid=np.array([[2.0, 2.0]]))
         assert deflections[0, 0] == pytest.approx(4.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(4.0, 1e-3)
 
@@ -144,29 +144,29 @@ class TestMassSheet:
         # This is decomposed into y angle of cos(26.5650512 degrees) = 0.8944271
         # This is decomposed into x angle of sin(26.5650512 degrees) = 0.4472135
         # Thus, for a mass sheet, the deflection angles are:
-        deflections = mass_sheet.deflections_2d_from(grid=np.array([[2.0, 1.0]]))
+        deflections = mass_sheet.deflections_yx_2d_from(grid=np.array([[2.0, 1.0]]))
         assert deflections[0, 0] == pytest.approx(0.8944271 * np.sqrt(5), 1e-3)
         assert deflections[0, 1] == pytest.approx(0.4472135 * np.sqrt(5), 1e-3)
 
-        deflections = mass_sheet.deflections_2d_from(grid=np.array([[-1.0, -1.0]]))
+        deflections = mass_sheet.deflections_yx_2d_from(grid=np.array([[-1.0, -1.0]]))
         assert deflections[0, 0] == pytest.approx(-1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(-1.0, 1e-3)
 
         mass_sheet = ag.mp.MassSheet(centre=(1.0, 2.0), kappa=1.0)
 
-        deflections = mass_sheet.deflections_2d_from(grid=np.array([[2.0, 3.0]]))
+        deflections = mass_sheet.deflections_yx_2d_from(grid=np.array([[2.0, 3.0]]))
         assert deflections[0, 0] == pytest.approx(1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(1.0, 1e-3)
 
         mass_sheet = ag.mp.MassSheet(centre=(1.0, 2.0), kappa=-1.0)
 
-        deflections = mass_sheet.deflections_2d_from(grid=np.array([[2.0, 3.0]]))
+        deflections = mass_sheet.deflections_yx_2d_from(grid=np.array([[2.0, 3.0]]))
         assert deflections[0, 0] == pytest.approx(-1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(-1.0, 1e-3)
 
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
-        deflections = mass_sheet.deflections_2d_from(
+        deflections = mass_sheet.deflections_yx_2d_from(
             grid=ag.Grid2D.manual_native(
                 [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
                 sub_size=2,
@@ -183,7 +183,7 @@ class TestMassSheet:
         assert deflections[2, 1] == pytest.approx(0.0, 1e-3)
         assert deflections[3, 1] == pytest.approx(0.0, 1e-3)
 
-        deflections = mass_sheet.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections = mass_sheet.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
 
         assert deflections[0, 0] == pytest.approx(1.0, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.0, 1e-3)
@@ -191,22 +191,22 @@ class TestMassSheet:
     def test__deflections__change_geometry(self):
         mass_sheet_0 = ag.mp.MassSheet(centre=(0.0, 0.0))
         mass_sheet_1 = ag.mp.MassSheet(centre=(1.0, 1.0))
-        deflections_0 = mass_sheet_0.deflections_2d_from(grid=np.array([[1.0, 1.0]]))
-        deflections_1 = mass_sheet_1.deflections_2d_from(grid=np.array([[0.0, 0.0]]))
+        deflections_0 = mass_sheet_0.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
+        deflections_1 = mass_sheet_1.deflections_yx_2d_from(grid=np.array([[0.0, 0.0]]))
         assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
 
         mass_sheet_0 = ag.mp.MassSheet(centre=(0.0, 0.0))
         mass_sheet_1 = ag.mp.MassSheet(centre=(0.0, 0.0))
-        deflections_0 = mass_sheet_0.deflections_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = mass_sheet_1.deflections_2d_from(grid=np.array([[0.0, 1.0]]))
+        deflections_0 = mass_sheet_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_1 = mass_sheet_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
         assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-5)
         assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-5)
 
     def test__multiple_coordinates_in__multiple_coordinates_out(self):
         mass_sheet = ag.mp.MassSheet(centre=(1.0, 2.0), kappa=1.0)
 
-        deflections = mass_sheet.deflections_2d_from(
+        deflections = mass_sheet.deflections_yx_2d_from(
             grid=np.array([[2.0, 3.0], [2.0, 3.0], [2.0, 3.0]])
         )
 
@@ -219,7 +219,7 @@ class TestMassSheet:
 
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
-        deflections = mass_sheet.deflections_2d_from(
+        deflections = mass_sheet.deflections_yx_2d_from(
             grid=np.array([[1.0, 1.0], [2.0, 2.0], [1.0, 1.0], [2.0, 2.0]])
         )
 
@@ -234,24 +234,6 @@ class TestMassSheet:
 
         assert deflections[3, 0] == pytest.approx(2.0, 1e-3)
         assert deflections[3, 1] == pytest.approx(2.0, 1e-3)
-
-    def test__outputs_are_autoarrays(self):
-
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        mass_sheet = ag.mp.MassSheet()
-
-        convergence = mass_sheet.convergence_2d_from(grid=grid)
-
-        assert convergence.shape_native == (2, 2)
-
-        potential = mass_sheet.potential_2d_from(grid=grid)
-
-        assert potential.shape_native == (2, 2)
-
-        deflections = mass_sheet.deflections_2d_from(grid=grid)
-
-        assert deflections.shape_native == (2, 2)
 
 
 class TestExternalShear:
@@ -315,16 +297,16 @@ class TestExternalShear:
     def test__deflections_from(self):
 
         shear = ag.mp.ExternalShear(elliptical_comps=(0.1, 0.0))
-        deflections = shear.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
+        deflections = shear.deflections_yx_2d_from(grid=np.array([[0.1625, 0.1625]]))
         assert deflections[0, 0] == pytest.approx(0.01625, 1e-3)
         assert deflections[0, 1] == pytest.approx(0.01625, 1e-3)
 
         shear = ag.mp.ExternalShear(elliptical_comps=(0.1, -0.17320))
-        deflections = shear.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
+        deflections = shear.deflections_yx_2d_from(grid=np.array([[0.1625, 0.1625]]))
         assert deflections[0, 0] == pytest.approx(0.04439, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.011895, 1e-3)
 
-        deflections = shear.deflections_2d_from(
+        deflections = shear.deflections_yx_2d_from(
             grid=ag.Grid2D.manual_native(
                 [
                     [[0.1625, 0.1625], [0.1625, 0.1625]],
@@ -344,32 +326,14 @@ class TestExternalShear:
         assert deflections[2, 1] == pytest.approx(-0.011895, 1e-3)
         assert deflections[3, 1] == pytest.approx(-0.011895, 1e-3)
 
-        deflections = shear.deflections_2d_from(grid=np.array([[0.1625, 0.1625]]))
+        deflections = shear.deflections_yx_2d_from(grid=np.array([[0.1625, 0.1625]]))
 
         assert deflections[0, 0] == pytest.approx(0.04439, 1e-3)
         assert deflections[0, 1] == pytest.approx(-0.011895, 1e-3)
 
-    def test__outputs_are_autoarrays(self):
-
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        shear = ag.mp.ExternalShear()
-
-        convergence = shear.convergence_2d_from(grid=grid)
-
-        assert convergence.shape_native == (2, 2)
-
-        potential = shear.potential_2d_from(grid=grid)
-
-        assert potential.shape_native == (2, 2)
-
-        deflections = shear.deflections_2d_from(grid=grid)
-
-        assert deflections.shape_native == (2, 2)
-
 
 class TestInputDeflections:
-    def test__deflections_2d_from__grid_coordinates_overlap_image_grid_of_deflections(
+    def test__deflections_yx_2d_from__grid_coordinates_overlap_image_grid_of_deflections(
         self,
     ):
 
@@ -400,7 +364,7 @@ class TestInputDeflections:
             pixel_scales=deflections_y.pixel_scales,
         )
 
-        deflections = input_deflections.deflections_2d_from(grid=grid)
+        deflections = input_deflections.deflections_yx_2d_from(grid=grid)
 
         assert deflections[:, 0] == pytest.approx(deflections_y, 1.0e-4)
         assert deflections[:, 1] == pytest.approx(deflections_x, 1.0e-4)
@@ -411,7 +375,7 @@ class TestInputDeflections:
             pixel_scales=deflections_y.pixel_scales,
         )
 
-        deflections = input_deflections.deflections_2d_from(grid=grid)
+        deflections = input_deflections.deflections_yx_2d_from(grid=grid)
 
         assert deflections[:, 0] == pytest.approx([2.0, 5.0, 7.0], 1.0e-4)
         assert deflections[:, 1] == pytest.approx([8.0, 5.0, 3.0], 1.0e-4)
@@ -423,12 +387,12 @@ class TestInputDeflections:
         #     normalization_scale=2.0,
         # )
         #
-        # deflections = input_deflections.deflections_2d_from(grid=grid)
+        # deflections = input_deflections.deflections_yx_2d_from(grid=grid)
         #
         # assert deflections[:, 0] == pytest.approx([4.0, 10.0, 14.0], 1.0e-4)
         # assert deflections[:, 1] == pytest.approx([16.0, 10.0, 6.0], 1.0e-4)
 
-    def test__deflections_2d_from__grid_coordinates_dont_overlap_image_grid_of_deflections__uses_interpolation(
+    def test__deflections_yx_2d_from__grid_coordinates_dont_overlap_image_grid_of_deflections__uses_interpolation(
         self,
     ):
 
@@ -460,12 +424,12 @@ class TestInputDeflections:
             pixel_scales=deflections_y.pixel_scales,
         )
 
-        deflections = input_deflections.deflections_2d_from(grid=grid)
+        deflections = input_deflections.deflections_yx_2d_from(grid=grid)
 
         assert deflections[:, 0] == pytest.approx([3.8, 4.5, 7.0], 1.0e-4)
         assert deflections[:, 1] == pytest.approx([6.2, 5.5, 3.0], 1.0e-4)
 
-    def test__deflections_2d_from__preload_grid_deflections_used_if_preload_grid_input(
+    def test__deflections_yx_2d_from__preload_grid_deflections_used_if_preload_grid_input(
         self,
     ):
 
@@ -500,7 +464,7 @@ class TestInputDeflections:
 
         input_deflections.preload_deflections[0, 0] = 1.0
 
-        deflections = input_deflections.deflections_2d_from(grid=grid)
+        deflections = input_deflections.deflections_yx_2d_from(grid=grid)
 
         assert (deflections == input_deflections.preload_deflections).all()
 
@@ -514,11 +478,11 @@ class TestInputDeflections:
         #
         # input_deflections.preload_deflections[0, 0] = 1.0
         #
-        # deflections = input_deflections.deflections_2d_from(grid=grid)
+        # deflections = input_deflections.deflections_yx_2d_from(grid=grid)
         #
         # assert (deflections == 2.0 * input_deflections.preload_deflections).all()
 
-    def test__deflections_2d_from__input_grid_extends_beyond_image_plane_grid__raises_exception(
+    def test__deflections_yx_2d_from__input_grid_extends_beyond_image_plane_grid__raises_exception(
         self,
     ):
 
@@ -549,14 +513,14 @@ class TestInputDeflections:
             shape_native=deflections_y.shape_native,
             pixel_scales=deflections_y.pixel_scales,
         )
-        input_deflections.deflections_2d_from(grid=grid)
+        input_deflections.deflections_yx_2d_from(grid=grid)
 
         grid = ag.Grid2D.manual_slim(
             grid=np.array([[0.0, 0.0999]]),
             shape_native=deflections_y.shape_native,
             pixel_scales=deflections_y.pixel_scales,
         )
-        input_deflections.deflections_2d_from(grid=grid)
+        input_deflections.deflections_yx_2d_from(grid=grid)
 
         with pytest.raises(exc.ProfileException):
             grid = ag.Grid2D.manual_slim(
@@ -564,7 +528,7 @@ class TestInputDeflections:
                 shape_native=deflections_y.shape_native,
                 pixel_scales=deflections_y.pixel_scales,
             )
-            input_deflections.deflections_2d_from(grid=grid)
+            input_deflections.deflections_yx_2d_from(grid=grid)
 
             with pytest.raises(exc.ProfileException):
                 grid = ag.Grid2D.manual_slim(
@@ -572,7 +536,7 @@ class TestInputDeflections:
                     shape_native=deflections_y.shape_native,
                     pixel_scales=deflections_y.pixel_scales,
                 )
-                input_deflections.deflections_2d_from(grid=grid)
+                input_deflections.deflections_yx_2d_from(grid=grid)
 
     def test__convergence_2d_from_potential_2d_from(self):
 
@@ -605,7 +569,7 @@ class TestInputDeflections:
 
         convergence = input_deflections.convergence_2d_from(grid=grid)
 
-        convergence_via_jacobian = input_deflections.convergence_via_jacobian_from(
+        convergence_via_jacobian = input_deflections.convergence_2d_via_jacobian_from(
             grid=grid
         )
 
@@ -614,3 +578,33 @@ class TestInputDeflections:
         potential = input_deflections.potential_2d_from(grid=grid)
 
         assert (potential == np.zeros(shape=(9,))).all()
+
+
+class TestDectorators:
+    def test__mass_quantity_functions__output_is_autoarray_structure(self):
+
+        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
+
+        mass_sheet = ag.mp.MassSheet()
+
+        convergence = mass_sheet.convergence_2d_from(grid=grid)
+        assert convergence.shape_native == (2, 2)
+
+        potential = mass_sheet.potential_2d_from(grid=grid)
+        assert potential.shape_native == (2, 2)
+
+        deflections = mass_sheet.deflections_yx_2d_from(grid=grid)
+        assert isinstance(deflections, ag.VectorYX2D)
+        assert deflections.shape_native == (2, 2)
+
+        shear = ag.mp.ExternalShear()
+
+        convergence = shear.convergence_2d_from(grid=grid)
+        assert convergence.shape_native == (2, 2)
+
+        potential = shear.potential_2d_from(grid=grid)
+        assert potential.shape_native == (2, 2)
+
+        deflections = shear.deflections_yx_2d_from(grid=grid)
+        assert isinstance(deflections, ag.VectorYX2D)
+        assert deflections.shape_native == (2, 2)

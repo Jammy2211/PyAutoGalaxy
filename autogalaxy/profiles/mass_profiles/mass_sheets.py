@@ -36,10 +36,11 @@ class MassSheet(MassProfile):
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         grid_radii = self.grid_to_grid_radii(grid=grid)
         return self.grid_to_grid_cartesian(grid=grid, radius=self.kappa * grid_radii)
 
@@ -85,16 +86,17 @@ class ExternalShear(MassProfile):
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -131,7 +133,7 @@ class InputDeflections(MassProfile):
             The input array of the y components of the deflection angles.
         deflections_x : aa.Array2D
             The input array of the x components of the deflection angles.
-        image_plane_grid : aa.Grid2D
+        image_plane_grid
             The image-plane grid from which the deflection angles are defined.
         grid_interp : aa.Grid2D
             The grid that interpolated quantities are computed on. If this is input in advance, the interpolation
@@ -155,11 +157,11 @@ class InputDeflections(MassProfile):
 
         if self.preload_grid is not None:
             self.normalization_scale = 1.0
-            self.preload_deflections = self.deflections_2d_from(grid=preload_grid)
+            self.preload_deflections = self.deflections_yx_2d_from(grid=preload_grid)
 
         if self.preload_blurring_grid is not None:
             self.normalization_scale = 1.0
-            self.preload_blurring_deflections = self.deflections_2d_from(
+            self.preload_blurring_deflections = self.deflections_yx_2d_from(
                 grid=preload_blurring_grid
             )
 
@@ -167,14 +169,15 @@ class InputDeflections(MassProfile):
 
     @aa.grid_dec.grid_2d_to_structure
     def convergence_2d_from(self, grid: aa.type.Grid2DLike):
-        return self.convergence_via_jacobian_from(grid=grid)
+        return self.convergence_2d_via_jacobian_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
 
         if self.preload_grid is not None and self.preload_deflections is not None:
 
@@ -200,7 +203,7 @@ class InputDeflections(MassProfile):
 
         if np.isnan(deflections_y).any() or np.isnan(deflections_x).any():
             raise exc.ProfileException(
-                "The grid input into the DefectionsInput.deflections_2d_from() method has (y,x)"
+                "The grid input into the DefectionsInput.deflections_yx_2d_from() method has (y,x)"
                 "coodinates extending beyond the input image_plane_grid."
                 ""
                 "Update the image_plane_grid to include deflection angles reaching to larger"

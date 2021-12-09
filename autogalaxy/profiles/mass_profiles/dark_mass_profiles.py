@@ -122,8 +122,8 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         kappa_s
             The overall normalization of the dark matter halo \
             (kappa_s = (rho_s * scale_radius)/lensing_critical_density)
@@ -149,7 +149,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -166,7 +166,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
@@ -181,7 +181,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
 
         Parameters
         -----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the potential / deflection_stacks are computed on.
         tabulate_bins : int
             The number of bins to tabulate the inner integral of this profile.
@@ -453,7 +453,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
 
 
 class EllNFWGeneralized(AbstractEllNFWGeneralized):
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
 
         return self.deflections_2d_via_mge_from(grid=grid)
 
@@ -477,7 +477,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         tabulate_bins : int
             The number of bins to tabulate the inner integral of this profile.
@@ -615,7 +615,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         tabulate_bins : int
             The number of bins to tabulate the inner integral of this profile.
@@ -748,7 +748,7 @@ class SphNFWGeneralized(EllNFWGeneralized):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -803,16 +803,17 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
         self.truncation_radius = truncation_radius
         self.tau = self.truncation_radius / self.scale_radius
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -986,8 +987,8 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         kappa_s
             The overall normalization of the dark matter halo \
             (kappa_s = (rho_s * scale_radius)/lensing_critical_density)
@@ -1005,7 +1006,7 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
         )
         super(MassProfileCSE, self).__init__()
 
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_cse_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
@@ -1017,7 +1018,7 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1118,7 +1119,7 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
@@ -1252,7 +1253,7 @@ class SphNFW(EllNFW):
             scale_radius=scale_radius,
         )
 
-    def deflections_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_analytic_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
@@ -1264,7 +1265,7 @@ class SphNFW(EllNFW):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
@@ -1290,7 +1291,7 @@ class SphNFW(EllNFW):
 
         Parameters
         ----------
-        grid : aa.Grid2D
+        grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """

@@ -31,7 +31,7 @@ def test__plot_hyper_images_of_galaxies(
     )
 
 
-def test__plot_contribution_maps_of_galaxies(
+def test__plot_contribution_map_list(
     contribution_map_7x7, mask_2d_7x7, include_2d_all, plot_path, plot_patch
 ):
 
@@ -40,18 +40,11 @@ def test__plot_contribution_maps_of_galaxies(
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
-    hyper_plotter.subplot_contribution_maps_of_galaxies(
-        contribution_maps_of_galaxies_list=[
-            contribution_map_7x7,
-            contribution_map_7x7,
-            None,
-        ]
+    hyper_plotter.subplot_contribution_map_list(
+        contribution_map_list_list=[contribution_map_7x7, contribution_map_7x7, None]
     )
 
-    assert (
-        path.join(plot_path, "subplot_contribution_maps_of_galaxies.png")
-        in plot_patch.paths
-    )
+    assert path.join(plot_path, "subplot_contribution_map_list.png") in plot_patch.paths
 
 
 def test__plot_individual_images(

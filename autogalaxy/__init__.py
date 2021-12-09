@@ -38,9 +38,8 @@ from autoarray.structures.grids.two_d.grid_2d_irregular import Grid2DIrregular
 from autoarray.structures.grids.two_d.grid_2d_irregular import Grid2DIrregularUniform
 from autoarray.structures.grids.two_d.grid_2d_pixelization import Grid2DRectangular
 from autoarray.structures.grids.two_d.grid_2d_pixelization import Grid2DVoronoi
-from autoarray.structures.vector_fields.vector_field_irregular import (
-    VectorField2DIrregular,
-)
+from autoarray.structures.vectors.uniform import VectorYX2D
+from autoarray.structures.vectors.irregular import VectorYX2DIrregular
 from autoarray.layout.region import Region1D
 from autoarray.layout.region import Region2D
 from autoarray.structures.kernel_2d import Kernel2D
@@ -50,6 +49,10 @@ from autoarray.structures.visibilities import VisibilitiesNoiseMap
 from .analysis import aggregator as agg
 from . import plot
 from . import util
+from .operate.image import OperateImage
+from .operate.image import OperateImageList
+from .operate.image import OperateImageGalaxies
+from .operate.deflections import OperateDeflections
 from .imaging.fit_imaging import FitImaging
 from .imaging.model.analysis import AnalysisImaging
 from .imaging.imaging import SimulatorImaging
@@ -74,6 +77,8 @@ from .profiles import (
 from .profiles.light_profiles import light_profiles_init as lp_init
 from .profiles.light_profiles import light_profiles_snr as lp_snr
 from . import convert
+from .util.shear_field import ShearYX2D
+from .util.shear_field import ShearYX2DIrregular
 
 from autoconf import conf
 

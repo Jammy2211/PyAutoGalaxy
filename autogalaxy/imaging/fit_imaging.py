@@ -46,7 +46,7 @@ class FitImaging(aa.FitImaging):
             image = dataset.image
             noise_map = dataset.noise_map
 
-        self.blurred_image = plane.blurred_image_2d_via_convolver_from(
+        self.blurred_image = self.plane.blurred_image_2d_via_convolver_from(
             grid=dataset.grid,
             convolver=dataset.convolver,
             blurring_grid=dataset.blurring_grid,
@@ -98,7 +98,7 @@ class FitImaging(aa.FitImaging):
         A dictionary associating galaxies with their corresponding model images
         """
 
-        galaxy_model_image_dict = self.plane.galaxy_blurred_image_dict_via_convolver_from(
+        galaxy_model_image_dict = self.plane.galaxy_blurred_image_2d_dict_via_convolver_from(
             grid=self.grid,
             convolver=self.imaging.convolver,
             blurring_grid=self.imaging.blurring_grid,
@@ -117,7 +117,7 @@ class FitImaging(aa.FitImaging):
     @property
     def model_images_of_galaxies(self):
 
-        model_images_of_galaxies = self.plane.blurred_images_of_galaxies_via_psf_from(
+        model_images_of_galaxies = self.plane.blurred_image_2d_list_via_psf_from(
             grid=self.grid,
             psf=self.imaging.psf,
             blurring_grid=self.imaging.blurring_grid,
@@ -162,7 +162,7 @@ class FitImaging(aa.FitImaging):
 
     @property
     def unmasked_blurred_image_of_galaxies(self):
-        return self.plane.unmasked_blurred_image_of_galaxies_via_psf_from(
+        return self.plane.unmasked_blurred_image_2d_list_via_psf_from(
             grid=self.grid, psf=self.imaging.psf
         )
 

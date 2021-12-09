@@ -105,22 +105,22 @@ class HyperPlotter(Plotter):
 
         self.close_subplot_figure()
 
-    def subplot_contribution_maps_of_galaxies(
-        self, contribution_maps_of_galaxies_list: List[aa.Array2D]
+    def subplot_contribution_map_list(
+        self, contribution_map_list_list: List[aa.Array2D]
     ):
         """
         Plots a subplot of the contribution maps of all hyper galaxies.
 
-        This uses the `contribution_maps_of_galaxies` which is a list of each galaxy's corresponding contribution map.
+        This uses the `contribution_map_list` which is a list of each galaxy's corresponding contribution map.
 
         Parameters
         ----------
-        contribution_maps_of_galaxies_list
+        contribution_map_list_list
             A list of each galaxy's corresponding contribution map.
         """
         contribution_maps = [
             contribution_map
-            for contribution_map in contribution_maps_of_galaxies_list
+            for contribution_map in contribution_map_list_list
             if contribution_map is not None
         ]
 
@@ -136,7 +136,7 @@ class HyperPlotter(Plotter):
             self.figure_contribution_map(contribution_map=contribution_map_array)
 
         self.mat_plot_2d.output.subplot_to_figure(
-            auto_filename="subplot_contribution_maps_of_galaxies"
+            auto_filename="subplot_contribution_map_list"
         )
 
         self.close_subplot_figure()

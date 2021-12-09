@@ -132,8 +132,8 @@ class EllProfile(SphProfile):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         elliptical_comps
-            The first and second ellipticity components of the elliptical coordinate system, where
-            fac = (1 - axis_ratio) / (1 + axis_ratio), ellip_y = fac * sin(2*angle) and ellip_x = fac * cos(2*angle).
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
 
         Attributes
         ----------

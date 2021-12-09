@@ -92,7 +92,7 @@ class SphSersic(EllSersic, LightMassProfile):
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
-            The radius containing half the light of this model_mapper
+            The radius containing half the light of this light profile.
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
@@ -131,7 +131,7 @@ class EllExponential(EllSersic, LightMassProfile):
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
-            The radius containing half the light of this model_mapper
+            The radius containing half the light of this light profile.
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
@@ -165,7 +165,7 @@ class SphExponential(EllExponential, LightMassProfile):
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
-            The radius containing half the light of this model_mapper
+            The radius containing half the light of this light profile.
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
@@ -203,7 +203,7 @@ class EllDevVaucouleurs(EllSersic, LightMassProfile):
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
-            The radius containing half the light of this model_mapper
+            The radius containing half the light of this light profile.
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
@@ -236,7 +236,7 @@ class SphDevVaucouleurs(EllDevVaucouleurs, LightMassProfile):
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
-            The radius containing half the light of this model_mapper
+            The radius containing half the light of this light profile.
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
@@ -277,8 +277,8 @@ class EllSersicRadialGradient(
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
-            The radius containing half the light of this model_mapper
-        sersic_index : Int
+            The radius containing half the light of this light profile.
+        sersic_index
             The concentration of the light profiles
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
@@ -325,8 +325,8 @@ class SphSersicRadialGradient(EllSersicRadialGradient, LightMassProfile):
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
-            The radius containing half the light of this model_mapper
-        sersic_index : Int
+            The radius containing half the light of this light profile.
+        sersic_index
             The concentration of the light profiles
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
@@ -370,7 +370,7 @@ class EllExponentialRadialGradient(EllSersicRadialGradient, LightMassProfile):
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
-            The radius containing half the light of this model_mapper
+            The radius containing half the light of this light profile.
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         mass_to_light_gradient
@@ -412,7 +412,7 @@ class SphExponentialRadialGradient(SphSersicRadialGradient, LightMassProfile):
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
-            The radius containing half the light of this model_mapper
+            The radius containing half the light of this light profile.
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         mass_to_light_gradient
@@ -492,7 +492,7 @@ class SphSersicCore(EllSersicCore, LightMassProfile):
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
-            The radius containing half the light of this model_mapper
+            The radius containing half the light of this light profile.
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
@@ -560,7 +560,7 @@ class SphChameleon(EllChameleon, LightMassProfile):
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
-            The radius containing half the light of this model_mapper
+            The radius containing half the light of this light profile.
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
