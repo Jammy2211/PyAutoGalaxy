@@ -144,9 +144,7 @@ class TestSimulatorImaging:
             noise_seed=1,
         )
 
-        imaging = simulator.via_galaxies_from(
-            galaxies=[galaxy_0, galaxy_1], grid=grid
-        )
+        imaging = simulator.via_galaxies_from(galaxies=[galaxy_0, galaxy_1], grid=grid)
 
         plane = ag.Plane(redshift=0.75, galaxies=[galaxy_0, galaxy_1])
 

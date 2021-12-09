@@ -92,9 +92,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return np.zeros((grid.shape[0],))
 
     def image_2d_list_from(self, grid: aa.type.Grid2DLike) -> List[aa.Array2D]:
-        return list(
-            map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies)
-        )
+        return list(map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies))
 
     def galaxy_image_2d_dict_from(
         self, grid: aa.type.Grid2DLike
@@ -139,9 +137,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     @property
     def has_mass_profile(self) -> bool:
         if self.galaxies is not None:
-            return any(
-                list(map(lambda galaxy: galaxy.has_mass_profile, self.galaxies))
-            )
+            return any(list(map(lambda galaxy: galaxy.has_mass_profile, self.galaxies)))
 
     @property
     def galaxies_with_mass_profile(self) -> List[Galaxy]:
@@ -195,9 +191,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             The galaxies whose mass profiles are used to compute the surface densities.
         """
         if self.galaxies:
-            return sum(
-                map(lambda g: g.convergence_2d_from(grid=grid), self.galaxies)
-            )
+            return sum(map(lambda g: g.convergence_2d_from(grid=grid), self.galaxies))
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure

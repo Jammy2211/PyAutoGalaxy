@@ -13,9 +13,7 @@ class TestAnalysisQuantity:
         self, dataset_quantity_7x7_array_2d
     ):
 
-        model = af.Collection(
-            galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5))
-        )
+        model = af.Collection(galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5)))
 
         analysis = ag.AnalysisQuantity(
             dataset=dataset_quantity_7x7_array_2d, func_str="convergence_2d_from"

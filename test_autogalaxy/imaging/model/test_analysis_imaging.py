@@ -11,9 +11,7 @@ directory = path.dirname(path.realpath(__file__))
 class TestAnalysisImaging:
     def test__make_result__result_imaging_is_returned(self, masked_imaging_7x7):
 
-        model = af.Collection(
-            galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5))
-        )
+        model = af.Collection(galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5)))
 
         analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
 

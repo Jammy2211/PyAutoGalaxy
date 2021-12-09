@@ -14,9 +14,7 @@ directory = path.dirname(path.realpath(__file__))
 class TestAnalysisInterferometer:
     def test__make_result__result_interferometer_is_returned(self, interferometer_7):
 
-        model = af.Collection(
-            galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5))
-        )
+        model = af.Collection(galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5)))
 
         analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
 

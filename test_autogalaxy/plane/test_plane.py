@@ -114,9 +114,7 @@ class TestAbstractPlane:
         plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
         assert plane.has_pixelization is True
 
-        plane = ag.Plane(
-            galaxies=[galaxy_pix, ag.Galaxy(redshift=0.5)], redshift=None
-        )
+        plane = ag.Plane(galaxies=[galaxy_pix, ag.Galaxy(redshift=0.5)], redshift=None)
         assert plane.has_pixelization is True
 
     def test__has_regularization(self):
@@ -132,9 +130,7 @@ class TestAbstractPlane:
         plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
         assert plane.has_regularization is True
 
-        plane = ag.Plane(
-            galaxies=[galaxy_pix, ag.Galaxy(redshift=0.5)], redshift=None
-        )
+        plane = ag.Plane(galaxies=[galaxy_pix, ag.Galaxy(redshift=0.5)], redshift=None)
         assert plane.has_regularization is True
 
     def test__has_hyper_galaxy(self):
@@ -257,9 +253,7 @@ class TestAbstractPlane:
             hyper_galaxy_image=1,
         )
 
-        plane = ag.Plane(
-            galaxies=[galaxy_pix, ag.Galaxy(redshift=0.5)], redshift=None
-        )
+        plane = ag.Plane(galaxies=[galaxy_pix, ag.Galaxy(redshift=0.5)], redshift=None)
         assert plane.hyper_galaxies_with_pixelization_image_list[0] == 1
 
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
@@ -1349,17 +1343,13 @@ class TestAbstractPlaneData:
                 hyper_galaxy_image=hyper_galaxy_image,
             )
 
-            plane = ag.Plane(
-                redshift=0.5, galaxies=[galaxy_0, ag.Galaxy(redshift=0.5)]
-            )
+            plane = ag.Plane(redshift=0.5, galaxies=[galaxy_0, ag.Galaxy(redshift=0.5)])
 
             hyper_noise_maps = plane.hyper_noise_map_list_from(noise_map=noise_map)
             assert (hyper_noise_maps[0].slim == hyper_noise_map_0).all()
             assert (hyper_noise_maps[1].slim == np.zeros(shape=(3, 1))).all()
 
-            plane = ag.Plane(
-                redshift=0.5, galaxies=[ag.Galaxy(redshift=0.5), galaxy_1]
-            )
+            plane = ag.Plane(redshift=0.5, galaxies=[ag.Galaxy(redshift=0.5), galaxy_1])
 
             hyper_noise_maps = plane.hyper_noise_map_list_from(noise_map=noise_map)
             assert (hyper_noise_maps[0].slim == np.zeros(shape=(3, 1))).all()

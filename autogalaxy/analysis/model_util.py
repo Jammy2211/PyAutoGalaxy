@@ -110,10 +110,7 @@ def set_upper_limit_of_pixelization_pixels_prior(
 
         pixels_in_mask = result.analysis.dataset.mask.pixels_in_mask
 
-        if (
-            pixels_in_mask
-            < hyper_model.galaxies.source.pixelization.pixels.upper_limit
-        ):
+        if pixels_in_mask < hyper_model.galaxies.source.pixelization.pixels.upper_limit:
 
             if (
                 hyper_model.galaxies.source.pixelization.cls
@@ -580,9 +577,7 @@ def stochastic_model_from(
     model.galaxies.lens.take_attributes(source=result.model.galaxies.lens)
 
     if hasattr(model.galaxies, "subhalo"):
-        model.galaxies.subhalo.take_attributes(
-            source=result.model.galaxies.subhalo
-        )
+        model.galaxies.subhalo.take_attributes(source=result.model.galaxies.subhalo)
 
         if subhalo_centre_width is not None:
             model.galaxies.subhalo.mass.centre = result.model_absolute(
@@ -598,7 +593,13 @@ def stochastic_model_from(
 
 
 def stochastic_fit(
-    stochastic_model, search_cls, search_inversion_dict, result, analysis, info=None, pickle_files=None,
+    stochastic_model,
+    search_cls,
+    search_inversion_dict,
+    result,
+    analysis,
+    info=None,
+    pickle_files=None,
 ):
     """
     Perform a stochastic model-fit, which refits a model but introduces a log likelihood cap whereby all model-samples
@@ -646,7 +647,7 @@ def stochastic_fit(
         analysis=analysis,
         log_likelihood_cap=log_likelihood_cap,
         info=info,
-        pickle_files=pickle_files
+        pickle_files=pickle_files,
     )
 
     search.paths.restore()
