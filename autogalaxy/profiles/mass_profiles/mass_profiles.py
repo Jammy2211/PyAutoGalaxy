@@ -9,12 +9,13 @@ from typing import Callable, List, Optional, Tuple
 import autoarray as aa
 
 from autogalaxy.profiles.geometry_profiles import EllProfile
+from autogalaxy.operate.lens import OperateLens
 
 from autogalaxy import exc
 
 
 # noinspection PyAbstractClass
-class MassProfile(EllProfile):
+class MassProfile(EllProfile, OperateLens):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

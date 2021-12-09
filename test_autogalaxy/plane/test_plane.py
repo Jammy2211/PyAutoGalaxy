@@ -861,9 +861,7 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
 
-            operator_image = ag.OperateImage.from_light_obj(light_obj=plane)
-
-            blurred_image_2d_list = operator_image.blurred_image_2d_list_via_convolver_from(
+            blurred_image_2d_list = plane.blurred_image_2d_list_via_convolver_from(
                 grid=sub_grid_2d_7x7,
                 convolver=convolver_7x7,
                 blurring_grid=blurring_grid_2d_7x7,
@@ -894,9 +892,7 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
 
-            operator_image = ag.OperateImage.from_light_obj(light_obj=plane)
-
-            visibilities_list = operator_image.visibilities_list_via_transformer_from(
+            visibilities_list = plane.visibilities_list_via_transformer_from(
                 grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
             )
 

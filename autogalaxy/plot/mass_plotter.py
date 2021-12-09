@@ -112,10 +112,8 @@ class MassPlotter(Plotter):
 
         if magnification:
 
-            operate_lens = OperateLens.from_mass_obj(mass_obj=self.mass_obj)
-
             self.mat_plot_2d.plot_array(
-                array=operate_lens.magnification_2d_from(grid=self.grid),
+                array=self.mass_obj.magnification_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title="Magnification", filename="magnification_2d"

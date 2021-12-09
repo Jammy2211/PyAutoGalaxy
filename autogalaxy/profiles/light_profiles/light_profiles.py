@@ -4,10 +4,11 @@ from typing import List, Tuple
 
 import autoarray as aa
 
+from autogalaxy.operate.image import OperateImage
 from autogalaxy.profiles.geometry_profiles import EllProfile
 
 
-class LightProfile(EllProfile):
+class LightProfile(EllProfile, OperateImage):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -55,26 +56,6 @@ class LightProfile(EllProfile):
             The image of the `LightProfile` evaluated at every (y,x) coordinate on the transformed grid.
         """
         raise NotImplementedError()
-
-    def image_2d_list_from(self, grid: aa.type.Grid2DLike) -> List[aa.Array2D]:
-        """
-        Returns the light profile's 2D image (see `image_2d_from()`) as list, where the list has only 1 entry
-        corresponding to the image of this light profile.
-
-        This function interfaces with the object `autogalaxy.operate.image.OperateImage()` so that the light profile's
-        image can easily be combined with operators that perform 2D convolution, a Fourier transform, etc.
-
-        Parameters
-        ----------
-        grid
-            The 2D (y, x) coordinates in the original reference frame of the grid.
-
-        Returns
-        -------
-        image
-            The image of the `LightProfile` evaluated at every (y,x) coordinate on the transformed grid.
-        """
-        return [self.image_2d_from(grid=grid)]
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """

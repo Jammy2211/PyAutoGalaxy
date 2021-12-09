@@ -3,16 +3,21 @@ from typing import Dict, Optional
 import numpy as np
 
 import autoarray as aa
+
+from autoconf.dictable import Dictable
+
 from autoarray.inversion.inversion.factory import inversion_imaging_unpacked_from
 from autoarray.inversion.inversion.factory import inversion_interferometer_unpacked_from
 from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
-from autogalaxy.operate.image import OperateImage
+from autogalaxy.operate.image import OperateImageList
+from autogalaxy.operate.lens import OperateLens
+
 from autogalaxy.util import plane_util
 
 
-class AbstractPlane:
+class AbstractPlane(OperateImageList, OperateLens, Dictable):
     def __init__(
         self,
         galaxies,
@@ -548,9 +553,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         galaxy_blurred_image_dict = dict()
 
-        operate_image = OperateImage.from_light_obj(light_obj=self)
-
-        blurred_images_of_galaxies = operate_image.blurred_image_2d_list_via_convolver_from(
+        blurred_images_of_galaxies = self.blurred_image_2d_list_via_convolver_from(
             grid=grid, convolver=convolver, blurring_grid=blurring_grid
         )
 
@@ -568,9 +571,7 @@ class AbstractPlaneData(AbstractPlaneLensing):
 
         galaxy_visibilities_image_dict = dict()
 
-        operate_image = OperateImage.from_light_obj(light_obj=self)
-
-        visibilities_of_galaxies = operate_image.visibilities_list_via_transformer_from(
+        visibilities_of_galaxies = self.visibilities_list_via_transformer_from(
             grid=grid, transformer=transformer
         )
         for (galaxy_index, galaxy) in enumerate(self.galaxies):

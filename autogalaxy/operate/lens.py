@@ -53,26 +53,23 @@ def evaluation_grid(func):
 
 
 class OperateLens(Dictable):
-    def __init__(self, deflections_yx_2d_from: Callable):
-        """
-        Packages methods which manipulate the 2D deflection angle map returned from the `deflections_yx_2d_from` function
-        of a mass object (e.g. a `MassProfile`, `Galaxy`, `Plane`).
+    """
+    Packages methods which manipulate the 2D deflection angle map returned from the `deflections_yx_2d_from` function
+    of a mass object (e.g. a `MassProfile`, `Galaxy`, `Plane`).
 
-        The majority of methods are those which from the 2D deflection angle map compute lensing quantites like a 2D
-        shear field, magnification map or the Einstein Radius.
+    The majority of methods are those which from the 2D deflection angle map compute lensing quantites like a 2D
+    shear field, magnification map or the Einstein Radius.
 
-        The methods in `CalcLens` are passed to the mass object to provide a concise API.
+    The methods in `CalcLens` are passed to the mass object to provide a concise API.
 
-        Parameters
-        ----------
-        deflections_yx_2d_from
-            The function which returns the mass object's 2D deflection angles.
-        """
-        self.deflections_yx_2d_from = deflections_yx_2d_from
+    Parameters
+    ----------
+    deflections_yx_2d_from
+        The function which returns the mass object's 2D deflection angles.
+    """
 
-    @classmethod
-    def from_mass_obj(cls, mass_obj):
-        return OperateLens(deflections_yx_2d_from=mass_obj.deflections_yx_2d_from)
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+        raise NotImplementedError
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ is other.__class__

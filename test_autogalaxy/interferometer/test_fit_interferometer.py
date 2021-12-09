@@ -117,9 +117,7 @@ class TestCompareToManualProfilesOnly:
 
         assert interferometer_7.noise_map == pytest.approx(fit.noise_map)
 
-        operate_image = ag.OperateImage.from_light_obj(light_obj=plane)
-
-        model_visibilities = operate_image.visibilities_via_transformer_from(
+        model_visibilities = plane.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
@@ -194,17 +192,12 @@ class TestCompareToManualProfilesOnly:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        g0_operate_image = ag.OperateImage.from_light_obj(light_obj=g0)
-        g1_operate_image = ag.OperateImage.from_light_obj(light_obj=g1)
-
-        g0_visibilities = g0_operate_image.visibilities_via_transformer_from(
+        g0_visibilities = g0.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
-        g1_visibilities = g1_operate_image.visibilities_via_transformer_from(
+        g1_visibilities = g1.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
-
-        profile_visibilities = g0_visibilities + g1_visibilities
 
         assert fit.galaxy_model_visibilities_dict[g0].slim == pytest.approx(
             g0_visibilities, 1.0e-4
@@ -546,9 +539,7 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        operate_image = ag.OperateImage.from_light_obj(light_obj=plane)
-
-        visibilities = operate_image.visibilities_via_transformer_from(
+        visibilities = plane.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
@@ -655,13 +646,10 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        g0_operate_image = ag.OperateImage.from_light_obj(light_obj=g0)
-        g1_operate_image = ag.OperateImage.from_light_obj(light_obj=g1)
-
-        g0_visibilities = g0_operate_image.visibilities_via_transformer_from(
+        g0_visibilities = g0.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
-        g1_visibilities = g1_operate_image.visibilities_via_transformer_from(
+        g1_visibilities = g1.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 
@@ -711,13 +699,10 @@ class TestCompareToManualProfilesAndInversion:
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-        g0_operate_image = ag.OperateImage.from_light_obj(light_obj=g0)
-        g1_operate_image = ag.OperateImage.from_light_obj(light_obj=g1)
-
-        g0_visibilities = g0_operate_image.visibilities_via_transformer_from(
+        g0_visibilities = g0.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
-        g1_visibilities = g1_operate_image.visibilities_via_transformer_from(
+        g1_visibilities = g1.visibilities_via_transformer_from(
             grid=interferometer_7.grid, transformer=interferometer_7.transformer
         )
 

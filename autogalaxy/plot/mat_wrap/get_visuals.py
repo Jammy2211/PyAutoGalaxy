@@ -17,7 +17,6 @@ from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.operate.lens import OperateLens
 from autogalaxy.plane.plane import Plane
 
 
@@ -164,10 +163,8 @@ class GetVisuals1D(gv.GetVisuals1D):
             The collection of attributes that can be plotted by a `Plotter` object.
         """
 
-        operate_lens = OperateLens.from_mass_obj(mass_obj=mass_obj)
-
         if self.include.einstein_radius:
-            einstein_radius = operate_lens.einstein_radius_from(grid=grid)
+            einstein_radius = mass_obj.einstein_radius_from(grid=grid)
         else:
             einstein_radius = None
 
@@ -214,10 +211,7 @@ class GetVisuals1D(gv.GetVisuals1D):
         if self.include.einstein_radius:
 
             einstein_radius_list = [
-                OperateLens.from_mass_obj(mass_obj=mass_profile).einstein_radius_from(
-                    grid=grid
-                )
-                for mass_profile in mass_obj_list
+                mass_obj.einstein_radius_from(grid=grid) for mass_obj in mass_obj_list
             ]
 
             einstein_radius, einstein_radius_errors = error_util.value_median_and_error_region_via_quantile(
@@ -344,8 +338,6 @@ class GetVisuals2D(gv.GetVisuals2D):
             The collection of attributes that can be plotted by a `Plotter` object.
         """
 
-        operate_lens = OperateLens.from_mass_obj(mass_obj=mass_obj)
-
         visuals_via_mask = self.via_mask_from(mask=grid.mask)
 
         if isinstance(mass_obj, MassProfile):
@@ -363,7 +355,7 @@ class GetVisuals2D(gv.GetVisuals2D):
 
         critical_curves = self.get(
             "critical_curves",
-            operate_lens.critical_curves_from(grid=grid),
+            mass_obj.critical_curves_from(grid=grid),
             "critical_curves",
         )
 

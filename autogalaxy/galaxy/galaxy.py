@@ -15,6 +15,8 @@ from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.profiles.mass_profiles.dark_mass_profiles import DarkProfile
 from autogalaxy.profiles.mass_profiles.stellar_mass_profiles import StellarProfile
 from autogalaxy.profiles.point_sources import Point
+from autogalaxy.operate.image import OperateImageList
+from autogalaxy.operate.lens import OperateLens
 
 
 def is_point_source(obj):
@@ -29,7 +31,7 @@ def is_mass_profile(obj):
     return isinstance(obj, MassProfile)
 
 
-class Galaxy(af.ModelObject, Dictable):
+class Galaxy(af.ModelObject, OperateImageList, OperateLens, Dictable):
     """
     @DynamicAttrs
     """

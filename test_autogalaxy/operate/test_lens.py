@@ -8,9 +8,7 @@ import autogalaxy as ag
 
 def critical_curve_via_magnification_from(mass_profile, grid):
 
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=mass_profile)
-
-    magnification = operate_lens.magnification_2d_from(grid=grid)
+    magnification = mass_profile.magnification_2d_from(grid=grid)
 
     inverse_magnification = 1 / magnification
 
@@ -60,11 +58,8 @@ def test__hessian_from():
     sie = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sie)
 
-    hessian_yy, hessian_xy, hessian_yx, hessian_xx = operate_lens.hessian_from(
-        grid=grid
-    )
+    hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from(grid=grid)
 
     assert hessian_yy == pytest.approx(np.array([1.3883822, 0.694127]), 1.0e-4)
     assert hessian_xy == pytest.approx(np.array([-1.388124, -0.694094]), 1.0e-4)
@@ -73,9 +68,7 @@ def test__hessian_from():
 
     grid = ag.Grid2DIrregular(grid=[(1.0, 0.0), (0.0, 1.0)])
 
-    hessian_yy, hessian_xy, hessian_yx, hessian_xx = operate_lens.hessian_from(
-        grid=grid
-    )
+    hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from(grid=grid)
 
     assert hessian_yy == pytest.approx(np.array([0.0, 1.777699]), 1.0e-4)
     assert hessian_xy == pytest.approx(np.array([0.0, 0.0]), 1.0e-4)
@@ -93,9 +86,8 @@ def test__convergence_2d_via_hessian_from():
     sis = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.001, 0.001), einstein_radius=1.0
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    convergence = operate_lens.convergence_2d_via_hessian_from(grid=grid, buffer=buffer)
+    convergence = sis.convergence_2d_via_hessian_from(grid=grid, buffer=buffer)
 
     assert convergence.in_list[0] == pytest.approx(0.461447, 1.0e-4)
     assert convergence.in_list[1] == pytest.approx(0.568875, 1.0e-4)
@@ -105,9 +97,8 @@ def test__convergence_2d_via_hessian_from():
     sis = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.3, 0.4), einstein_radius=1.5
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    convergence = operate_lens.convergence_2d_via_hessian_from(grid=grid, buffer=buffer)
+    convergence = sis.convergence_2d_via_hessian_from(grid=grid, buffer=buffer)
 
     assert convergence.in_list[0] == pytest.approx(0.35313, 1.0e-4)
     assert convergence.in_list[1] == pytest.approx(0.46030, 1.0e-4)
@@ -122,9 +113,8 @@ def test__magnification_2d_via_hessian_from():
     sie = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sie)
 
-    magnification = operate_lens.magnification_2d_via_hessian_from(grid=grid)
+    magnification = sie.magnification_2d_via_hessian_from(grid=grid)
 
     assert magnification.in_list[0] == pytest.approx(-0.56303, 1.0e-4)
     assert magnification.in_list[1] == pytest.approx(-2.57591, 1.0e-4)
@@ -135,9 +125,8 @@ def test__critical_curves_from__tangential():
     grid = ag.Grid2D.uniform(shape_native=(15, 15), pixel_scales=0.3)
 
     sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    critical_curves = operate_lens.critical_curves_from(grid=grid)
+    critical_curves = sis.critical_curves_from(grid=grid)
 
     tangential_critical_curve = np.asarray(critical_curves[0])
 
@@ -153,9 +142,8 @@ def test__critical_curves_from__tangential():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    critical_curves = operate_lens.critical_curves_from(grid=grid)
+    critical_curves = sis.critical_curves_from(grid=grid)
 
     tangential_critical_curve = np.asarray(critical_curves[0])
 
@@ -166,9 +154,8 @@ def test__critical_curves_from__tangential():
     assert -0.03 < x_centre < 0.03
 
     sis = ag.mp.SphIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    critical_curves = operate_lens.critical_curves_from(grid=grid)
+    critical_curves = sis.critical_curves_from(grid=grid)
 
     tangential_critical_curve = np.asarray(critical_curves[0])
     y_centre = np.mean(tangential_critical_curve[:, 0])
@@ -183,9 +170,8 @@ def test__critical_curves_from__radial():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    critical_curves = operate_lens.critical_curves_from(grid=grid)
+    critical_curves = sis.critical_curves_from(grid=grid)
 
     radial_critical_curve = np.asarray(critical_curves[0])
 
@@ -196,9 +182,8 @@ def test__critical_curves_from__radial():
     assert -0.05 < x_centre < 0.05
 
     sis = ag.mp.SphIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    critical_curves = operate_lens.critical_curves_from(grid=grid)
+    critical_curves = sis.critical_curves_from(grid=grid)
 
     radial_critical_curve = np.asarray(critical_curves[0])
 
@@ -211,9 +196,8 @@ def test__critical_curves_from__radial():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    caustics = operate_lens.caustics_from(grid=grid)
+    caustics = sis.caustics_from(grid=grid)
 
     tangential_caustic = np.asarray(caustics[0])
 
@@ -224,9 +208,8 @@ def test__critical_curves_from__radial():
     assert -0.03 < x_centre < 0.03
 
     sis = ag.mp.SphIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    caustics = operate_lens.caustics_from(grid=grid)
+    caustics = sis.caustics_from(grid=grid)
 
     tangential_caustic = np.asarray(caustics[0])
 
@@ -242,9 +225,8 @@ def test__caustics_from__radial():
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.2)
 
     sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    caustics = operate_lens.caustics_from(grid=grid)
+    caustics = sis.caustics_from(grid=grid)
 
     caustic_radial = np.asarray(caustics[1])
 
@@ -257,9 +239,8 @@ def test__caustics_from__radial():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    caustics = operate_lens.caustics_from(grid=grid)
+    caustics = sis.caustics_from(grid=grid)
 
     radial_caustic = np.asarray(caustics[1])
 
@@ -270,9 +251,8 @@ def test__caustics_from__radial():
     assert -0.35 < x_centre < 0.35
 
     sis = ag.mp.SphIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    caustics = operate_lens.caustics_from(grid=grid)
+    caustics = sis.caustics_from(grid=grid)
 
     radial_caustic = np.asarray(caustics[1])
 
@@ -288,11 +268,10 @@ def test__area_within_tangential_critical_curve_from():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
     area_calc = np.pi * sis.einstein_radius ** 2
 
-    area_within_tangential_critical_curve = operate_lens.area_within_tangential_critical_curve_from(
+    area_within_tangential_critical_curve = sis.area_within_tangential_critical_curve_from(
         grid=grid
     )
 
@@ -304,18 +283,16 @@ def test__einstein_radius_from():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    einstein_radius = operate_lens.einstein_radius_from(grid=grid)
+    einstein_radius = sis.einstein_radius_from(grid=grid)
 
     assert einstein_radius == pytest.approx(2.0, 1e-1)
 
     sie = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), einstein_radius=2.0, elliptical_comps=(0.0, -0.25)
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sie)
 
-    einstein_radius = operate_lens.einstein_radius_from(grid=grid)
+    einstein_radius = sie.einstein_radius_from(grid=grid)
 
     assert einstein_radius == pytest.approx(1.9360, 1e-1)
 
@@ -325,9 +302,8 @@ def test__einstein_mass_from():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
-    einstein_mass = operate_lens.einstein_mass_angular_from(grid=grid)
+    einstein_mass = sis.einstein_mass_angular_from(grid=grid)
 
     assert einstein_mass == pytest.approx(np.pi * 2.0 ** 2.0, 1e-1)
 
@@ -339,12 +315,11 @@ def test__magnification_2d_from__compare_eigen_values_and_determinant():
     sie = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sie)
 
-    magnification_via_determinant = operate_lens.magnification_2d_from(grid=grid)
-    tangential_eigen_value = operate_lens.tangential_eigen_value_from(grid=grid)
+    magnification_via_determinant = sie.magnification_2d_from(grid=grid)
+    tangential_eigen_value = sie.tangential_eigen_value_from(grid=grid)
 
-    radal_eigen_value = operate_lens.radial_eigen_value_from(grid=grid)
+    radal_eigen_value = sie.radial_eigen_value_from(grid=grid)
     magnification_via_eigen_values = 1 / (tangential_eigen_value * radal_eigen_value)
 
     mean_error = np.mean(
@@ -358,13 +333,12 @@ def test__magnification_2d_from__compare_eigen_values_and_determinant():
     sie = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sie)
 
-    magnification_via_determinant = operate_lens.magnification_2d_from(grid=grid)
+    magnification_via_determinant = sie.magnification_2d_from(grid=grid)
 
-    tangential_eigen_value = operate_lens.tangential_eigen_value_from(grid=grid)
+    tangential_eigen_value = sie.tangential_eigen_value_from(grid=grid)
 
-    radal_eigen_value = operate_lens.radial_eigen_value_from(grid=grid)
+    radal_eigen_value = sie.radial_eigen_value_from(grid=grid)
 
     magnification_via_eigen_values = 1 / (tangential_eigen_value * radal_eigen_value)
 
@@ -382,12 +356,11 @@ def test__magnification_2d_from__compare_determinant_and_convergence_and_shear()
     sie = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sie)
 
-    magnification_via_determinant = operate_lens.magnification_2d_from(grid=grid)
+    magnification_via_determinant = sie.magnification_2d_from(grid=grid)
 
-    convergence = operate_lens.convergence_2d_via_jacobian_from(grid=grid)
-    shear = operate_lens.shear_yx_2d_via_jacobian_from(grid=grid)
+    convergence = sie.convergence_2d_via_jacobian_from(grid=grid)
+    shear = sie.shear_yx_2d_via_jacobian_from(grid=grid)
 
     magnification_via_convergence_and_shear = 1 / (
         (1 - convergence) ** 2 - shear.magnitudes ** 2
@@ -402,10 +375,10 @@ def test__magnification_2d_from__compare_determinant_and_convergence_and_shear()
 
     grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
 
-    magnification_via_determinant = operate_lens.magnification_2d_from(grid=grid)
+    magnification_via_determinant = sie.magnification_2d_from(grid=grid)
 
-    convergence = operate_lens.convergence_2d_via_jacobian_from(grid=grid)
-    shear = operate_lens.shear_yx_2d_via_jacobian_from(grid=grid)
+    convergence = sie.convergence_2d_via_jacobian_from(grid=grid)
+    shear = sie.shear_yx_2d_via_jacobian_from(grid=grid)
 
     magnification_via_convergence_and_shear = 1 / (
         (1 - convergence) ** 2 - shear.magnitudes ** 2
@@ -426,13 +399,12 @@ def test__tangential_critical_curve_from__compare_via_magnification():
     sie = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sie)
 
     tangential_critical_curve_via_magnification = critical_curve_via_magnification_from(
         mass_profile=sie, grid=grid
     )[0]
 
-    tangential_critical_curve = operate_lens.tangential_critical_curve_from(
+    tangential_critical_curve = sie.tangential_critical_curve_from(
         grid=grid, pixel_scale=0.2
     )
 
@@ -444,7 +416,7 @@ def test__tangential_critical_curve_from__compare_via_magnification():
         mass_profile=sie, grid=grid
     )[0]
 
-    tangential_critical_curve = operate_lens.tangential_critical_curve_from(
+    tangential_critical_curve = sie.tangential_critical_curve_from(
         grid=grid, pixel_scale=0.2
     )
 
@@ -460,13 +432,12 @@ def test__radial_critical_curve_from__compare_via_magnification():
     sie = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sie)
 
     critical_curve_radial_via_magnification = critical_curve_via_magnification_from(
         mass_profile=sie, grid=grid
     )[1]
 
-    radial_critical_curve = operate_lens.radial_critical_curve_from(grid=grid)
+    radial_critical_curve = sie.radial_critical_curve_from(grid=grid)
 
     assert sum(critical_curve_radial_via_magnification) == pytest.approx(
         sum(radial_critical_curve), abs=0.7
@@ -480,15 +451,12 @@ def test__tangential_caustic_from___compare_via_magnification():
     sie = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sie)
 
     tangential_caustic_via_magnification = caustics_via_magnification_from(
         mass_profile=sie, grid=grid
     )[0]
 
-    tangential_caustic = operate_lens.tangential_caustic_from(
-        grid=grid, pixel_scale=0.2
-    )
+    tangential_caustic = sie.tangential_caustic_from(grid=grid, pixel_scale=0.2)
 
     assert sum(tangential_caustic) == pytest.approx(
         sum(tangential_caustic_via_magnification), 5e-1
@@ -502,13 +470,12 @@ def test__radial_caustic_from___compare_via_magnification():
     sie = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sie)
 
     caustic_radial_via_magnification = caustics_via_magnification_from(
         mass_profile=sie, grid=grid
     )[1]
 
-    radial_caustic = operate_lens.radial_caustic_from(grid=grid, pixel_scale=0.08)
+    radial_caustic = sie.radial_caustic_from(grid=grid, pixel_scale=0.08)
 
     assert sum(radial_caustic) == pytest.approx(
         sum(caustic_radial_via_magnification), 7e-1
@@ -522,9 +489,8 @@ def test__jacobian_from():
     sie = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sie)
 
-    jacobian = operate_lens.jacobian_from(grid=grid)
+    jacobian = sie.jacobian_from(grid=grid)
 
     A_12 = jacobian[0][1]
     A_21 = jacobian[1][0]
@@ -535,7 +501,7 @@ def test__jacobian_from():
 
     grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
 
-    jacobian = operate_lens.jacobian_from(grid=grid)
+    jacobian = sie.jacobian_from(grid=grid)
 
     A_12 = jacobian[0][1]
     A_21 = jacobian[1][0]
@@ -550,11 +516,10 @@ def test__convergence_2d_via_jacobian_from__compare_via_jacobian_and_analytic():
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 
     sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sis)
 
     convergence_via_analytic = sis.convergence_2d_from(grid=grid)
 
-    convergence_via_jacobian = operate_lens.convergence_2d_via_jacobian_from(grid=grid)
+    convergence_via_jacobian = sis.convergence_2d_via_jacobian_from(grid=grid)
 
     mean_error = np.mean(convergence_via_jacobian.slim - convergence_via_analytic.slim)
 
@@ -570,11 +535,10 @@ def test__convergence_2d_via_jacobian_from__compare_via_jacobian_and_analytic():
     sie = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.111111, 0.0), einstein_radius=2.0
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sie)
 
     convergence_via_analytic = sie.convergence_2d_from(grid=grid)
 
-    convergence_via_jacobian = operate_lens.convergence_2d_via_jacobian_from(grid=grid)
+    convergence_via_jacobian = sie.convergence_2d_via_jacobian_from(grid=grid)
 
     mean_error = np.mean(convergence_via_jacobian.slim - convergence_via_analytic.slim)
 
@@ -648,7 +612,6 @@ def test__binning_works_on_all_from_grid_methods():
     sie = ag.mp.EllIsothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
-    operate_lens = ag.OperateLens.from_mass_obj(mass_obj=sie)
 
     grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=2)
 
@@ -666,7 +629,7 @@ def test__binning_works_on_all_from_grid_methods():
 
     assert deflections.binned[99] == pytest.approx(deflections_100th_binned_pixel, 1e-4)
 
-    jacobian = operate_lens.jacobian_from(grid=grid)
+    jacobian = sie.jacobian_from(grid=grid)
 
     jacobian_1st_pixel_binned_up = (
         jacobian[0][0][0] + jacobian[0][0][1] + jacobian[0][0][2] + jacobian[0][0][3]
@@ -687,7 +650,7 @@ def test__binning_works_on_all_from_grid_methods():
         jacobian_last_pixel_binned_up, 1e-4
     )
 
-    shear_yx_via_jacobian = operate_lens.shear_yx_2d_via_jacobian_from(grid=grid)
+    shear_yx_via_jacobian = sie.shear_yx_2d_via_jacobian_from(grid=grid)
     shear_via_jacobian = shear_yx_via_jacobian.magnitudes
 
     shear_1st_pixel_binned_up = (
@@ -712,7 +675,7 @@ def test__binning_works_on_all_from_grid_methods():
         shear_last_pixel_binned_up, 1e-4
     )
 
-    tangential_eigen_values = operate_lens.tangential_eigen_value_from(grid=grid)
+    tangential_eigen_values = sie.tangential_eigen_value_from(grid=grid)
 
     first_pixel_binned_up = (
         tangential_eigen_values[0]
@@ -736,7 +699,7 @@ def test__binning_works_on_all_from_grid_methods():
         pixel_10000_from_av_sub_grid, 1e-4
     )
 
-    radial_eigen_values = operate_lens.radial_eigen_value_from(grid=grid)
+    radial_eigen_values = sie.radial_eigen_value_from(grid=grid)
 
     first_pixel_binned_up = (
         radial_eigen_values[0]
