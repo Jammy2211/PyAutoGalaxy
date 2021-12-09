@@ -11,13 +11,13 @@ from autoarray.inversion.inversion.factory import inversion_interferometer_unpac
 from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
-from autogalaxy.operate.image import OperateImageList
+from autogalaxy.operate.image import OperateImageGalaxies
 from autogalaxy.operate.deflections import OperateDeflections
 
 from autogalaxy.util import plane_util
 
 
-class AbstractPlane(OperateImageList, OperateDeflections, Dictable):
+class AbstractPlane(OperateImageGalaxies, OperateDeflections, Dictable):
     def __init__(
         self,
         galaxies,
@@ -263,6 +263,19 @@ class AbstractPlaneLensing(AbstractPlane):
 
     def image_2d_list_from(self, grid):
         return list(map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies))
+
+    def galaxy_image_2d_dict_from(self, grid) -> {Galaxy: np.ndarray}:
+        """
+        A dictionary associating galaxies with their corresponding model images
+        """
+
+        galaxy_image_dict = dict()
+
+        images_of_galaxies = self.image_2d_list_from(grid=grid)
+        for (galaxy_index, galaxy) in enumerate(self.galaxies):
+            galaxy_image_dict[galaxy] = images_of_galaxies[galaxy_index]
+
+        return galaxy_image_dict
 
     def padded_image_2d_from(self, grid, psf_shape_2d):
 
@@ -530,56 +543,6 @@ class AbstractPlaneData(AbstractPlaneLensing):
                 contribution_maps.append(None)
 
         return contribution_maps
-
-    def galaxy_image_dict_from(self, grid) -> {Galaxy: np.ndarray}:
-        """
-        A dictionary associating galaxies with their corresponding model images
-        """
-
-        galaxy_image_dict = dict()
-
-        images_of_galaxies = self.image_2d_list_from(grid=grid)
-        for (galaxy_index, galaxy) in enumerate(self.galaxies):
-            galaxy_image_dict[galaxy] = images_of_galaxies[galaxy_index]
-
-        return galaxy_image_dict
-
-    def galaxy_blurred_image_dict_via_convolver_from(
-        self, grid, convolver, blurring_grid
-    ) -> {Galaxy: np.ndarray}:
-        """
-        A dictionary associating galaxies with their corresponding model images
-        """
-
-        galaxy_blurred_image_dict = dict()
-
-        blurred_images_of_galaxies = self.blurred_image_2d_list_via_convolver_from(
-            grid=grid, convolver=convolver, blurring_grid=blurring_grid
-        )
-
-        for (galaxy_index, galaxy) in enumerate(self.galaxies):
-            galaxy_blurred_image_dict[galaxy] = blurred_images_of_galaxies[galaxy_index]
-
-        return galaxy_blurred_image_dict
-
-    def galaxy_visibilities_dict_via_transformer_from(
-        self, grid, transformer
-    ) -> {Galaxy: np.ndarray}:
-        """
-        A dictionary associating galaxies with their corresponding model images
-        """
-
-        galaxy_visibilities_image_dict = dict()
-
-        visibilities_of_galaxies = self.visibilities_list_via_transformer_from(
-            grid=grid, transformer=transformer
-        )
-        for (galaxy_index, galaxy) in enumerate(self.galaxies):
-            galaxy_visibilities_image_dict[galaxy] = visibilities_of_galaxies[
-                galaxy_index
-            ]
-
-        return galaxy_visibilities_image_dict
 
     def set_snr_of_snr_light_profiles(
         self,

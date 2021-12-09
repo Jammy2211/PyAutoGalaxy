@@ -240,3 +240,60 @@ def test__visibilities_list_via_transformer_from(sub_grid_2d_7x7, transformer_7x
 
     assert (lp_0_visibilities == visibilities_list[0]).all()
     assert (lp_1_visibilities == visibilities_list[1]).all()
+
+
+def test__galaxy_blurred_image_2d_dict_via_convolver_from(
+    sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7x7
+):
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g1 = ag.Galaxy(
+        redshift=0.5,
+        mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
+        light_profile=ag.lp.EllSersic(intensity=2.0),
+    )
+
+    g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
+
+    plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
+
+    blurred_image_2d_list = plane.blurred_image_2d_list_via_convolver_from(
+        grid=sub_grid_2d_7x7,
+        convolver=convolver_7x7,
+        blurring_grid=blurring_grid_2d_7x7,
+    )
+
+    blurred_image_dict = plane.galaxy_blurred_image_2d_dict_via_convolver_from(
+        grid=sub_grid_2d_7x7,
+        convolver=convolver_7x7,
+        blurring_grid=blurring_grid_2d_7x7,
+    )
+
+    assert (blurred_image_dict[g0].slim == blurred_image_2d_list[1].slim).all()
+    assert (blurred_image_dict[g1].slim == blurred_image_2d_list[0].slim).all()
+    assert (blurred_image_dict[g2].slim == blurred_image_2d_list[2].slim).all()
+
+
+def test__galaxy_visibilities_dict_from_grid_and_transformer(
+    sub_grid_2d_7x7, transformer_7x7_7
+):
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g1 = ag.Galaxy(
+        redshift=0.5,
+        mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
+        light_profile=ag.lp.EllSersic(intensity=2.0),
+    )
+    g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
+
+    plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
+
+    visibilities_list = plane.visibilities_list_via_transformer_from(
+        grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
+    )
+
+    visibilities_dict = plane.galaxy_visibilities_dict_via_transformer_from(
+        grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
+    )
+
+    assert (visibilities_dict[g0] == visibilities_list[1]).all()
+    assert (visibilities_dict[g1] == visibilities_list[0]).all()
+    assert (visibilities_dict[g2] == visibilities_list[2]).all()

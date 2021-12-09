@@ -460,7 +460,7 @@ class TestAbstractPlaneProfiles:
                 padded_g0_image + padded_g1_image + padded_g2_image, 1.0e-4
             )
 
-        def test__galaxy_image_dict_from(self, sub_grid_2d_7x7):
+        def test__galaxy_image_2d_dict_from(self, sub_grid_2d_7x7):
 
             g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
             g1 = ag.Galaxy(
@@ -477,13 +477,13 @@ class TestAbstractPlaneProfiles:
 
             plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
 
-            image_1d_dict = plane.galaxy_image_dict_from(grid=sub_grid_2d_7x7)
+            image_1d_dict = plane.galaxy_image_2d_dict_from(grid=sub_grid_2d_7x7)
 
             assert (image_1d_dict[g0].slim == g0_image).all()
             assert (image_1d_dict[g1].slim == g1_image).all()
             assert (image_1d_dict[g2].slim == g2_image).all()
 
-            image_dict = plane.galaxy_image_dict_from(grid=sub_grid_2d_7x7)
+            image_dict = plane.galaxy_image_2d_dict_from(grid=sub_grid_2d_7x7)
 
             assert (image_dict[g0].native == g0_image.native).all()
             assert (image_dict[g1].native == g1_image.native).all()
@@ -845,65 +845,6 @@ class TestAbstractPlaneProfiles:
 
 
 class TestAbstractPlaneData:
-    class TestBlurredImagePlaneImage:
-        def test__galaxy_blurred_image_dict_via_convolver_from(
-            self, sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7x7
-        ):
-
-            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-            g1 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
-                light_profile=ag.lp.EllSersic(intensity=2.0),
-            )
-
-            g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
-
-            plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
-
-            blurred_image_2d_list = plane.blurred_image_2d_list_via_convolver_from(
-                grid=sub_grid_2d_7x7,
-                convolver=convolver_7x7,
-                blurring_grid=blurring_grid_2d_7x7,
-            )
-
-            blurred_image_dict = plane.galaxy_blurred_image_dict_via_convolver_from(
-                grid=sub_grid_2d_7x7,
-                convolver=convolver_7x7,
-                blurring_grid=blurring_grid_2d_7x7,
-            )
-
-            assert (blurred_image_dict[g0].slim == blurred_image_2d_list[1].slim).all()
-            assert (blurred_image_dict[g1].slim == blurred_image_2d_list[0].slim).all()
-            assert (blurred_image_dict[g2].slim == blurred_image_2d_list[2].slim).all()
-
-    class TestVisibilities:
-        def test__galaxy_visibilities_dict_from_grid_and_transformer(
-            self, sub_grid_2d_7x7, transformer_7x7_7
-        ):
-
-            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-            g1 = ag.Galaxy(
-                redshift=0.5,
-                mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
-                light_profile=ag.lp.EllSersic(intensity=2.0),
-            )
-            g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
-
-            plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
-
-            visibilities_list = plane.visibilities_list_via_transformer_from(
-                grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
-            )
-
-            visibilities_dict = plane.galaxy_visibilities_dict_via_transformer_from(
-                grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
-            )
-
-            assert (visibilities_dict[g0] == visibilities_list[1]).all()
-            assert (visibilities_dict[g1] == visibilities_list[0]).all()
-            assert (visibilities_dict[g2] == visibilities_list[2]).all()
-
     class TestGrid2DIrregular:
         def test__no_galaxies_with_pixelizations_in_plane__returns_none(
             self, sub_grid_2d_7x7

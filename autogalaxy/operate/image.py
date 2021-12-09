@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Callable, List, Union
+from typing import Callable, Dict, List, Union
 
 import autoarray as aa
 
@@ -338,3 +338,110 @@ class OperateImageList(OperateImage):
             visibilities_list.append(visibilities)
 
         return visibilities_list
+
+
+class OperateImageGalaxies(OperateImageList):
+    """
+    Packages methods which using a list of galaxies returns a dictionary of their 2D images using the function 
+    `galaxy_image_2d_dict_from` (e.g. a `Plane`, a `Tracer` in the library **PyAutoLens**).
+
+    The majority of methods apply data operators to the dictionary of 2D images which perform tasks such as a 2D 
+    convolution of Fourier transform. This retains the keys of the dictionary to maintain information on the galaxies.
+
+    The methods in `OperateImageGalaxies` are inherited by light objects to provide a concise API.
+    """
+
+    def galaxy_image_2d_dict_from(
+        self, grid: Union[aa.Grid2D, aa.Grid2DIterate]
+    ) -> Dict:
+        raise NotImplementedError
+
+    def galaxy_blurred_image_2d_dict_via_convolver_from(
+        self, grid, convolver, blurring_grid
+    ) -> Dict:
+        """
+        Evaluate the light object's dictionary mapping galaixes to their corresponding 2D images and convolve each
+        image with a PSF.
+
+        The input 2D grid may be masked, in which case values outside but near the edge of the mask will convolve light
+        into the mask. A blurring grid is therefore required, which contains image pixels on the mask edge whose light
+        is blurred into the light object's image by the PSF.
+
+        The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D
+        array and binned up for convolution. They therefore cannot be `Grid2DIrregular` objects.
+
+        Parameters
+        ----------
+        grid
+            The 2D (y,x) coordinates of the (masked) grid, in its original geometric reference frame.
+        psf
+            The PSF the light object 2D image is convolved with.
+        blurring_grid
+            The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
+        """
+
+        galaxy_image_2d_dict = self.galaxy_image_2d_dict_from(grid=grid)
+        galaxy_blurring_image_2d_dict = self.galaxy_image_2d_dict_from(
+            grid=blurring_grid
+        )
+
+        galaxy_blurred_image_2d_dict = {}
+
+        for galaxy_key in galaxy_image_2d_dict.keys():
+
+            image_2d = galaxy_image_2d_dict[galaxy_key]
+            blurring_image_2d = galaxy_blurring_image_2d_dict[galaxy_key]
+
+            blurred_image_2d = convolver.convolve_image(
+                image=image_2d.binned, blurring_image=blurring_image_2d.binned
+            )
+
+            galaxy_blurred_image_2d_dict[galaxy_key] = blurred_image_2d
+
+        return galaxy_blurred_image_2d_dict
+
+    def galaxy_visibilities_dict_via_transformer_from(self, grid, transformer) -> Dict:
+        """
+        Evaluate the light object's dictionary mapping galaixes to their corresponding 2D images and transform each
+        image to arrays of visibilities using a `autoarray.operators.transformer.Transformer` object and therefore a
+        Fourier Transform.
+
+        The input 2D grid may be masked, in which case values outside the mask are not evaluated. This does not impact
+        the Fourier transform.
+
+        The grid must be a `Grid2D` objects for certain Fourier transforms to be valid. It therefore cannot be a
+        `Grid2DIrregular` objects.
+
+        If the image is all zeros (e.g. because this light object has no light profiles, for example it is a
+        `Galaxy` object with only mass profiles) the Fourier transformed is skipped for efficiency and a `Visibilities`
+        object with all zeros is returned.
+
+        Parameters
+        ----------
+        grid
+            The 2D (y,x) coordinates of the (masked) grid, in its original geometric reference frame.
+        transformer
+            The **PyAutoArray** `Transformer` object describing how the 2D image is Fourier transformed to visiblities
+            in the uv-plane.
+        """
+
+        galaxy_image_2d_dict = self.galaxy_image_2d_dict_from(grid=grid)
+
+        galaxy_visibilities_dict = {}
+
+        for galaxy_key in galaxy_image_2d_dict.keys():
+
+            image_2d = galaxy_image_2d_dict[galaxy_key]
+
+            if not np.any(image_2d):
+                visibilities = aa.Visibilities.zeros(
+                    shape_slim=(transformer.uv_wavelengths.shape[0],)
+                )
+
+            else:
+
+                visibilities = transformer.visibilities_from(image=image_2d.binned)
+
+            galaxy_visibilities_dict[galaxy_key] = visibilities
+
+        return galaxy_visibilities_dict

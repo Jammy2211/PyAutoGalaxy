@@ -90,7 +90,7 @@ class FitInterferometer(aa.FitInterferometer):
         """
         A dictionary associating galaxies with their corresponding model images
         """
-        galaxy_model_image_dict = self.plane.galaxy_image_dict_from(grid=self.grid)
+        galaxy_model_image_dict = self.plane.galaxy_image_2d_dict_from(grid=self.grid)
 
         for path, image in galaxy_model_image_dict.items():
             galaxy_model_image_dict[path] = image.binned
