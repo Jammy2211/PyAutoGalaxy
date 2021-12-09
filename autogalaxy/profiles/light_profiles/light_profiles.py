@@ -94,7 +94,7 @@ class LightProfile(EllProfile, OperateImage):
         """
         return self.image_2d_from(grid=grid)
 
-    def luminosity_within_circle(self, radius: float) -> float:
+    def luminosity_within_circle_from(self, radius: float) -> float:
         """
         Integrate the light profile to compute the total luminosity within a circle of specified radius. This is
         centred on the light profile's `centre`.

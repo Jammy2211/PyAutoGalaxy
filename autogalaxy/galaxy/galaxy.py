@@ -1,5 +1,5 @@
 from itertools import count
-from typing import Dict, Optional
+from typing import Dict, List, Optional, Union
 
 import numpy as np
 
@@ -12,8 +12,6 @@ from autogalaxy import exc
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
-from autogalaxy.profiles.mass_profiles.dark_mass_profiles import DarkProfile
-from autogalaxy.profiles.mass_profiles.stellar_mass_profiles import StellarProfile
 from autogalaxy.profiles.point_sources import Point
 from autogalaxy.operate.image import OperateImageList
 from autogalaxy.operate.deflections import OperateDeflections
@@ -54,19 +52,26 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         ----------
         redshift
             The redshift of the galaxy.
-        light_profile_list: [lp.LightProfile]
-            A list of the galaxy's light profiles.
-        mass_profile_list: [mp.MassProfile]
-            A list of the galaxy's mass profiles.
-        hyper_galaxy : HyperGalaxy
-            The hyper_galaxies-parameters of the hyper_galaxies-galaxy, which is used for performing a hyper_galaxies-analysis on the noise-map.
-            
-        Attributes
-        ----------
         pixelization : inversion.Pixelization
             The pixelization of the galaxy used to reconstruct an observed image using an inversion.
         regularization : inversion.Regularization
             The regularization of the pixel-grid used to reconstruct an observed using an inversion.
+        hyper_galaxy
+            The hyper_galaxies-parameters of the hyper_galaxies-galaxy, which is used for performing a hyper_galaxies-analysis on the noise-map.
+            
+        Attributes
+        ----------
+        light_profile_list
+            A list of the galaxy's light profiles.
+        mass_profile_list
+            A list of the galaxy's mass profiles.
+        hyper_model_image
+            The best-fit model image to the observed image from a previous analysis
+            search. This provides the total light attributed to each image pixel by the
+            model.
+        hyper_galaxy_image
+            A model image of the galaxy (from light profiles or an inversion) from a
+            previous analysis search.
         """
         super().__init__()
         self.redshift = redshift
@@ -135,20 +140,23 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         return len(self.mass_profile_list) + len(self.light_profile_list) > 0
 
     @property
-    def light_profile_list(self):
+    def light_profile_list(self) -> List[LightProfile]:
         return [value for value in self.__dict__.values() if is_light_profile(value)]
 
     @property
-    def has_light_profile(self):
+    def has_light_profile(self) -> bool:
         return len(self.light_profile_list) > 0
 
     @aa.grid_dec.grid_2d_to_structure
-    def image_2d_from(self, grid):
+    def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Returns the summed 2D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
         coordinates.
 
         If the galaxy has no light profiles, a grid of zeros is returned.
+
+        Internally data structures are treated as ndarrays, however the decorator `grid_2d_to_structure` converts
+        the output to an `Array2D` using the input `grid`'s attributes.
 
         See `profiles.light_profiles` for a description of how light profile images are computed.
 
@@ -164,7 +172,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             )
         return np.zeros((grid.shape[0],))
 
-    def image_2d_list_from(self, grid):
+    def image_2d_list_from(self, grid: aa.type.Grid2DLike) -> List[aa.Array2D]:
         """
         Returns the summed 2D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
         coordinates.
@@ -182,7 +190,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         return list(map(lambda p: p.image_2d_from(grid=grid), self.light_profile_list))
 
     @aa.grid_dec.grid_1d_output_structure
-    def image_1d_from(self, grid):
+    def image_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Returns the summed 1D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
         coordinates.
@@ -204,15 +212,15 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         return np.zeros((grid.shape[0],))
 
     @property
-    def mass_profile_list(self):
+    def mass_profile_list(self) -> List[MassProfile]:
         return [value for value in self.__dict__.values() if is_mass_profile(value)]
 
     @property
-    def has_mass_profile(self):
+    def has_mass_profile(self) -> bool:
         return len(self.mass_profile_list) > 0
 
     @aa.grid_dec.grid_2d_to_structure
-    def deflections_yx_2d_from(self, grid):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Returns the summed (y,x) deflection angles of the galaxy's mass profiles \
         using a grid of Cartesian (y,x) coordinates.
@@ -236,7 +244,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         return np.zeros((grid.shape[0], 2))
 
     @aa.grid_dec.grid_2d_to_structure
-    def convergence_2d_from(self, grid):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Returns the summed 2D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
@@ -244,8 +252,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         See `profiles.mass_profiles` module for details of how this is performed.
 
-        The `grid_2d_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See
-        `aa.grid_2d_to_structure` for a description of the output.
+        Internally data structures are treated as ndarrays, however the decorator `grid_2d_to_structure` converts
+        the output to an `Array2D` using the input `grid`'s attributes.
 
         Parameters
         ----------
@@ -260,7 +268,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_1d_output_structure
-    def convergence_1d_from(self, grid):
+    def convergence_1d_from(self, grid: aa.type.Grid1D2DLike) -> np.ndarray:
         """
         Returns the summed 1D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
@@ -268,14 +276,13 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         See `profiles.mass_profiles` module for details of how this is performed.
 
-        The `grid_1d_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See
-        `aa.grid_1d_to_structure` for a description of the output.
+        Internally data structures are treated as ndarrays, however the decorator `grid_1d_output_structure` converts
+        the output to an `Array1D` using the input `grid`'s attributes.
 
         Parameters
         ----------
         grid
             The (y, x) coordinates in the original reference frame of the grid.
-
         """
         if self.has_mass_profile:
             return sum(
@@ -284,7 +291,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Returns the summed 2D gravitational potential of the galaxy's mass profiles using a grid of
         Cartesian (y,x) coordinates.
@@ -293,8 +300,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         See `profiles.mass_profiles` module for details of how this is performed.
 
-        The `grid_2d_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See
-        `aa.grid_2d_to_structure` for a description of the output.
+        Internally data structures are treated as ndarrays, however the decorator `grid_2d_to_structure` converts
+        the output to an `Array2D` using the input `grid`'s attributes.
 
         Parameters
         ----------
@@ -308,7 +315,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_1d_output_structure
-    def potential_1d_from(self, grid):
+    def potential_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Returns the summed 2D gravitational potential of the galaxy's mass profiles using a grid of
         Cartesian (y,x) coordinates.
@@ -317,8 +324,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         See `profiles.mass_profiles` module for details of how this is performed.
 
-        The `grid_2d_to_structure` decorator reshapes the NumPy arrays the convergence is outputted on. See
-        `aa.grid_2d_to_structure` for a description of the output.
+        Internally data structures are treated as ndarrays, however the decorator `grid_1d_to_structure` converts
+        the output to an `Array1D` using the input `grid`'s attributes.
 
         Parameters
         ----------
@@ -332,21 +339,21 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         return np.zeros((grid.shape[0],))
 
     @property
-    def has_pixelization(self):
+    def has_pixelization(self) -> bool:
         return self.pixelization is not None
 
     @property
-    def has_regularization(self):
+    def has_regularization(self) -> bool:
         return self.regularization is not None
 
     @property
-    def has_hyper_galaxy(self):
+    def has_hyper_galaxy(self) -> bool:
         return self.hyper_galaxy is not None
 
     @property
-    def contribution_map(self):
+    def contribution_map(self) -> aa.Array2D:
         """
-    Returns the contribution map of a galaxy, which represents the fraction of
+        Returns the contribution map of a galaxy, which represents the fraction of
         flux in each pixel that the galaxy is attributed to contain, hyper to the
         *contribution_factor* hyper_galaxies-parameter.
 
@@ -356,13 +363,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         Parameters
         -----------
-        hyper_model_image : np.ndarray
-            The best-fit model image to the observed image from a previous analysis
-            search. This provides the total light attributed to each image pixel by the
-            model.
-        hyper_galaxy_image : np.ndarray
-            A model image of the galaxy (from light profiles or an inversion) from a
-            previous analysis search.
+
         """
         return self.hyper_galaxy.contribution_map_from(
             hyper_model_image=self.hyper_model_image,
@@ -419,68 +420,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         elif isinstance(attributes[0], tuple):
             return aa.Grid2DIrregular(grid=attributes)
 
-    @property
-    def has_stellar_profile(self):
-        return len(self.stellar_profiles) > 0
-
-    @property
-    def has_dark_profile(self):
-        return len(self.dark_profiles) > 0
-
-    @property
-    def stellar_profiles(self):
-        return [
-            profile
-            for profile in self.mass_profile_list
-            if isinstance(profile, StellarProfile)
-        ]
-
-    @property
-    def dark_profiles(self):
-        return [
-            profile
-            for profile in self.mass_profile_list
-            if isinstance(profile, DarkProfile)
-        ]
-
-    def stellar_mass_angular_within_circle(self, radius: float):
-        if self.has_stellar_profile:
-            return sum(
-                [
-                    profile.mass_angular_within_circle(radius=radius)
-                    for profile in self.stellar_profiles
-                ]
-            )
-        else:
-            raise exc.GalaxyException(
-                "You cannot perform a stellar mass-based calculation on a galaxy which does not have a stellar "
-                "mass-profile "
-            )
-
-    def dark_mass_angular_within_circle(self, radius: float):
-        if self.has_dark_profile:
-            return sum(
-                [
-                    profile.mass_angular_within_circle(radius=radius)
-                    for profile in self.dark_profiles
-                ]
-            )
-        else:
-            raise exc.GalaxyException(
-                "You cannot perform a dark mass-based calculation on a galaxy which does not have a dark mass-profile"
-            )
-
-    def stellar_fraction_at_radius(self, radius):
-        return 1.0 - self.dark_fraction_at_radius(radius=radius)
-
-    def dark_fraction_at_radius(self, radius):
-
-        stellar_mass = self.stellar_mass_angular_within_circle(radius=radius)
-        dark_mass = self.dark_mass_angular_within_circle(radius=radius)
-
-        return dark_mass / (stellar_mass + dark_mass)
-
-    def luminosity_within_circle(self, radius: float):
+    def luminosity_within_circle_from(self, radius: float):
         """
         Returns the total luminosity of the galaxy's light profiles within a circle of specified radius.
 
@@ -498,12 +438,12 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         if self.has_light_profile:
             return sum(
                 map(
-                    lambda p: p.luminosity_within_circle(radius=radius),
+                    lambda p: p.luminosity_within_circle_from(radius=radius),
                     self.light_profile_list,
                 )
             )
 
-    def mass_angular_within_circle(self, radius: float):
+    def mass_angular_within_circle_from(self, radius: float):
         """ Integrate the mass profiles's convergence profile to compute the total mass within a circle of \
         specified radius. This is centred on the mass profile.
 
@@ -525,7 +465,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         if self.has_mass_profile:
             return sum(
                 map(
-                    lambda p: p.mass_angular_within_circle(radius=radius),
+                    lambda p: p.mass_angular_within_circle_from(radius=radius),
                     self.mass_profile_list,
                 )
             )
@@ -535,7 +475,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             )
 
     @property
-    def profile_dict(self):
+    def profile_dict(self) -> Dict:
         return {
             key: value
             for key, value in self.__dict__.items()
@@ -546,7 +486,12 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 class HyperGalaxy:
     _ids = count()
 
-    def __init__(self, contribution_factor=0.0, noise_factor=0.0, noise_power=1.0):
+    def __init__(
+        self,
+        contribution_factor: float = 0.0,
+        noise_factor: float = 0.0,
+        noise_power: float = 1.0,
+    ):
         """
         If a `Galaxy` is given a *HyperGalaxy* as an attribute, the noise-map in \
         the regions of the image that the galaxy is located will be hyper, to prevent \
@@ -579,6 +524,18 @@ class HyperGalaxy:
 
         self.component_number = next(self._ids)
 
+    def __eq__(self, other):
+        if isinstance(other, HyperGalaxy):
+            return (
+                self.contribution_factor == other.contribution_factor
+                and self.noise_factor == other.noise_factor
+                and self.noise_power == other.noise_power
+            )
+        return False
+
+    def __str__(self):
+        return "\n".join(["{}: {}".format(k, v) for k, v in self.__dict__.items()])
+
     def contribution_map_from(self, hyper_model_image, hyper_galaxy_image):
         """
         Returns the contribution map of a galaxy, which represents the fraction of
@@ -605,8 +562,11 @@ class HyperGalaxy:
         return np.divide(contribution_map, np.max(contribution_map))
 
     def hyper_noise_map_via_hyper_images_from(
-        self, hyper_model_image, hyper_galaxy_image, noise_map
-    ):
+        self,
+        hyper_model_image: aa.Array2D,
+        hyper_galaxy_image: aa.Array2D,
+        noise_map: aa.Array2D,
+    ) -> aa.Array2D:
         contribution_map = self.contribution_map_from(
             hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
         )
@@ -615,7 +575,9 @@ class HyperGalaxy:
             noise_map=noise_map, contribution_map=contribution_map
         )
 
-    def hyper_noise_map_from(self, noise_map, contribution_map):
+    def hyper_noise_map_from(
+        self, noise_map: aa.Array2D, contribution_map: aa.Array2D
+    ) -> aa.Array2D:
         """
         Returns a hyper galaxy hyper_galaxies noise-map from a baseline noise-map.
 
@@ -630,18 +592,6 @@ class HyperGalaxy:
                 The galaxy contribution map.
         """
         return self.noise_factor * (noise_map * contribution_map) ** self.noise_power
-
-    def __eq__(self, other):
-        if isinstance(other, HyperGalaxy):
-            return (
-                self.contribution_factor == other.contribution_factor
-                and self.noise_factor == other.noise_factor
-                and self.noise_power == other.noise_power
-            )
-        return False
-
-    def __str__(self):
-        return "\n".join(["{}: {}".format(k, v) for k, v in self.__dict__.items()])
 
 
 class Redshift(float):

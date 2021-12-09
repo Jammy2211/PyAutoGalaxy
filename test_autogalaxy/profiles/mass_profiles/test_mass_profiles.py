@@ -206,12 +206,12 @@ class TestMassWithin:
 
         sis = ag.mp.SphIsothermal(einstein_radius=2.0)
 
-        mass = sis.mass_angular_within_circle(radius=2.0)
+        mass = sis.mass_angular_within_circle_from(radius=2.0)
         assert math.pi * sis.einstein_radius * 2.0 == pytest.approx(mass, 1e-3)
 
         sis = ag.mp.SphIsothermal(einstein_radius=4.0)
 
-        mass = sis.mass_angular_within_circle(radius=4.0)
+        mass = sis.mass_angular_within_circle_from(radius=4.0)
         assert math.pi * sis.einstein_radius * 4.0 == pytest.approx(mass, 1e-3)
 
         sis = ag.mp.SphIsothermal(einstein_radius=2.0)
@@ -220,7 +220,7 @@ class TestMassWithin:
             radius=1.0, profile=sis
         )
 
-        mass = sis.mass_angular_within_circle(radius=1.0)
+        mass = sis.mass_angular_within_circle_from(radius=1.0)
 
         assert mass_grid == pytest.approx(mass, 0.02)
 
@@ -283,9 +283,9 @@ class TestDensityBetweenAnnuli:
             centre=(0.0, 0.0), elliptical_comps=(0.111111, 0.0), kappa_s=1.0
         )
 
-        inner_mass = nfw.mass_angular_within_circle(radius=1.0)
+        inner_mass = nfw.mass_angular_within_circle_from(radius=1.0)
 
-        outer_mass = nfw.mass_angular_within_circle(radius=2.0)
+        outer_mass = nfw.mass_angular_within_circle_from(radius=2.0)
 
         density_between_annuli = nfw.density_between_circular_annuli(
             inner_annuli_radius=1.0, outer_annuli_radius=2.0

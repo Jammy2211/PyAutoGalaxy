@@ -93,9 +93,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             return sum(
                 map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies)
             )
-        return aa.Array2D.zeros(
-            shape_native=grid.shape_native, pixel_scales=grid.pixel_scales
-        )
+        return np.zeros((grid.shape[0],))
 
     def image_2d_list_from(self, grid: aa.type.Grid2DLike) -> List[aa.Array2D]:
         return list(map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies))
@@ -166,9 +164,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         ]
 
     @aa.grid_dec.grid_2d_to_structure
-    def deflections_yx_2d_from(
-        self, grid: aa.type.Grid2DLike
-    ) -> Union[aa.VectorYX2D, aa.VectorYX2DIrregular]:
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         if self.galaxies:
             return sum(
                 map(lambda g: g.deflections_yx_2d_from(grid=grid), self.galaxies)
@@ -176,7 +172,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return np.zeros(shape=(grid.shape[0], 2))
 
     @aa.grid_dec.grid_2d_to_structure
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Returns the convergence of the list of galaxies of the plane's sub-grid, by summing the individual convergences \
         of each galaxy's mass profile.
@@ -186,6 +182,9 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
         sub-grid is returned.
+
+        Internally data structures are treated as ndarrays, however the decorator `grid_2d_to_structure` converts
+        the output to an `Array2D` using the input `grid`'s attributes.
 
         Parameters
         -----------
@@ -197,12 +196,10 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         """
         if self.galaxies:
             return sum(map(lambda g: g.convergence_2d_from(grid=grid), self.galaxies))
-        return aa.Array2D.zeros(
-            shape_native=grid.shape_native, pixel_scales=grid.pixel_scales
-        )
+        return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
+    def potential_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Returns the potential of the list of galaxies of the plane's sub-grid, by summing the individual potentials \
         of each galaxy's mass profile.
@@ -212,6 +209,9 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
         sub-grid is returned.
+
+        Internally data structures are treated as ndarrays, however the decorator `grid_2d_to_structure` converts
+        the output to an `Array2D` using the input `grid`'s attributes.
 
         Parameters
         -----------
@@ -223,9 +223,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         """
         if self.galaxies:
             return sum(map(lambda g: g.potential_2d_from(grid=grid), self.galaxies))
-        return aa.Array2D.zeros(
-            shape_native=grid.shape_native, pixel_scales=grid.pixel_scales
-        )
+        return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
     def traced_grid_from(self, grid: aa.type.Grid2DLike) -> aa.type.Grid2DLike:

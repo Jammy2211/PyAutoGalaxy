@@ -83,7 +83,7 @@ class MassProfile(EllProfile, OperateDeflections):
     def ellipticity_rescale(self):
         return NotImplementedError()
 
-    def mass_angular_within_circle(self, radius: float):
+    def mass_angular_within_circle_from(self, radius: float):
         """
         Integrate the mass profiles's convergence profile to compute the total mass within a circle of
         specified radius. This is centred on the mass profile.
@@ -117,9 +117,9 @@ class MassProfile(EllProfile, OperateDeflections):
             np.pi * inner_annuli_radius ** 2.0
         )
 
-        outer_mass = self.mass_angular_within_circle(radius=outer_annuli_radius)
+        outer_mass = self.mass_angular_within_circle_from(radius=outer_annuli_radius)
 
-        inner_mass = self.mass_angular_within_circle(radius=inner_annuli_radius)
+        inner_mass = self.mass_angular_within_circle_from(radius=inner_annuli_radius)
 
         return (outer_mass - inner_mass) / annuli_area
 
@@ -138,7 +138,8 @@ class MassProfile(EllProfile, OperateDeflections):
         def func(radius):
 
             return (
-                self.mass_angular_within_circle(radius=radius) - np.pi * radius ** 2.0
+                self.mass_angular_within_circle_from(radius=radius)
+                - np.pi * radius ** 2.0
             )
 
         return self.ellipticity_rescale * root_scalar(func, bracket=[1e-4, 1e4]).root
@@ -147,7 +148,7 @@ class MassProfile(EllProfile, OperateDeflections):
 
         mass_profile = self.with_new_normalization(normalization=normalization)
 
-        return mass_profile.mass_angular_within_circle(radius=radius)
+        return mass_profile.mass_angular_within_circle_from(radius=radius)
 
     def normalization_via_mass_angular_from(
         self,

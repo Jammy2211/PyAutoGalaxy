@@ -14,9 +14,9 @@ class TestLightProfiles:
 
         galaxy = ag.Galaxy(redshift=0.5)
 
-        image = galaxy.image_1d_from(grid=sub_grid_1d_7)
+        image_1d = galaxy.image_1d_from(grid=sub_grid_1d_7)
 
-        assert (image == np.zeros(shape=sub_grid_1d_7.sub_shape_slim)).all()
+        assert (image_1d == np.zeros(shape=sub_grid_1d_7.sub_shape_slim)).all()
 
         lp_image = lp_0.image_1d_from(grid=grid)
 
@@ -105,16 +105,16 @@ class TestLightProfiles:
         self, lp_0, lp_1, gal_x2_lp
     ):
 
-        lp_0_luminosity = lp_0.luminosity_within_circle(radius=0.5)
+        lp_0_luminosity = lp_0.luminosity_within_circle_from(radius=0.5)
 
-        lp_1_luminosity = lp_1.luminosity_within_circle(radius=0.5)
-        gal_luminosity = gal_x2_lp.luminosity_within_circle(radius=0.5)
+        lp_1_luminosity = lp_1.luminosity_within_circle_from(radius=0.5)
+        gal_luminosity = gal_x2_lp.luminosity_within_circle_from(radius=0.5)
 
         assert lp_0_luminosity + lp_1_luminosity == gal_luminosity
 
         gal_no_lp = ag.Galaxy(redshift=0.5, mass=ag.mp.SphIsothermal())
 
-        assert gal_no_lp.luminosity_within_circle(radius=1.0) == None
+        assert gal_no_lp.luminosity_within_circle_from(radius=1.0) == None
 
 
 class TestMassProfiles:
@@ -455,213 +455,17 @@ class TestMassProfiles:
         self, mp_0, mp_1, gal_x2_mp
     ):
 
-        mp_0_mass = mp_0.mass_angular_within_circle(radius=0.5)
+        mp_0_mass = mp_0.mass_angular_within_circle_from(radius=0.5)
 
-        mp_1_mass = mp_1.mass_angular_within_circle(radius=0.5)
-        gal_mass = gal_x2_mp.mass_angular_within_circle(radius=0.5)
+        mp_1_mass = mp_1.mass_angular_within_circle_from(radius=0.5)
+        gal_mass = gal_x2_mp.mass_angular_within_circle_from(radius=0.5)
 
         assert mp_0_mass + mp_1_mass == gal_mass
 
         gal_no_mp = ag.Galaxy(redshift=0.5, light=ag.lp.SphSersic())
 
         with pytest.raises(exc.GalaxyException):
-            gal_no_mp.mass_angular_within_circle(radius=1.0)
-
-    def test__stellar_profile_quantities__is_list_of_stellar_profiles(self):
-
-        galaxy = ag.Galaxy(redshift=0.5)
-
-        assert galaxy.stellar_profiles == []
-
-        galaxy = ag.Galaxy(
-            redshift=0.5, light=ag.lp.EllGaussian(), mass=ag.mp.EllIsothermal()
-        )
-
-        assert galaxy.stellar_profiles == []
-
-        stellar_0 = ag.lmp.EllSersic()
-        galaxy = ag.Galaxy(redshift=0.5, stellar_0=stellar_0)
-
-        assert galaxy.stellar_profiles == [stellar_0]
-
-        stellar_0 = ag.lmp.SphDevVaucouleurs()
-        stellar_1 = ag.lmp.EllDevVaucouleurs()
-        stellar_2 = ag.lmp.EllGaussian()
-        galaxy = ag.Galaxy(
-            redshift=0.5, stellar_0=stellar_0, stellar_1=stellar_1, stellar_2=stellar_2
-        )
-
-        assert galaxy.stellar_profiles == [stellar_0, stellar_1, stellar_2]
-
-    def test__stellar_mass_angular_within_galaxy__is_sum_of_individual_profiles(
-        self, smp_0, smp_1
-    ):
-
-        galaxy = ag.Galaxy(
-            redshift=0.5,
-            stellar_0=smp_0,
-            non_stellar_profile=ag.mp.EllIsothermal(einstein_radius=1.0),
-        )
-
-        stellar_mass_0 = smp_0.mass_angular_within_circle(radius=0.5)
-
-        gal_mass = galaxy.stellar_mass_angular_within_circle(radius=0.5)
-
-        assert stellar_mass_0 == gal_mass
-
-        galaxy = ag.Galaxy(
-            redshift=0.5,
-            stellar_0=smp_0,
-            stellar_1=smp_1,
-            non_stellar_profile=ag.mp.EllIsothermal(einstein_radius=1.0),
-        )
-
-        stellar_mass_1 = smp_1.mass_angular_within_circle(radius=0.5)
-
-        gal_mass = galaxy.stellar_mass_angular_within_circle(radius=0.5)
-
-        assert stellar_mass_0 + stellar_mass_1 == gal_mass
-
-        galaxy = ag.Galaxy(redshift=0.5)
-
-        with pytest.raises(exc.GalaxyException):
-            galaxy.stellar_mass_angular_within_circle(radius=1.0)
-
-    def test__stellar_fraction_at_radius(self, dmp_0, dmp_1, smp_0, smp_1):
-
-        galaxy = ag.Galaxy(redshift=0.5, stellar_0=smp_0, dark_0=dmp_0)
-
-        stellar_mass_0 = smp_0.mass_angular_within_circle(radius=1.0)
-        dark_mass_0 = dmp_0.mass_angular_within_circle(radius=1.0)
-
-        stellar_fraction = galaxy.stellar_fraction_at_radius(radius=1.0)
-
-        assert stellar_fraction == pytest.approx(
-            stellar_mass_0 / (dark_mass_0 + stellar_mass_0), 1.0e-4
-        )
-
-        galaxy = ag.Galaxy(redshift=0.5, stellar_0=smp_0, stellar_1=smp_1, dark_0=dmp_0)
-
-        stellar_fraction = galaxy.stellar_fraction_at_radius(radius=1.0)
-        stellar_mass_1 = smp_1.mass_angular_within_circle(radius=1.0)
-
-        assert stellar_fraction == pytest.approx(
-            (stellar_mass_0 + stellar_mass_1)
-            / (dark_mass_0 + stellar_mass_0 + stellar_mass_1),
-            1.0e-4,
-        )
-
-        galaxy = ag.Galaxy(
-            redshift=0.5,
-            stellar_0=smp_0,
-            stellar_1=smp_1,
-            dark_0=dmp_0,
-            dark_mass_1=dmp_1,
-        )
-
-        stellar_fraction = galaxy.stellar_fraction_at_radius(radius=1.0)
-        dark_mass_1 = dmp_1.mass_angular_within_circle(radius=1.0)
-
-        assert stellar_fraction == pytest.approx(
-            (stellar_mass_0 + stellar_mass_1)
-            / (dark_mass_0 + dark_mass_1 + stellar_mass_0 + stellar_mass_1),
-            1.0e-4,
-        )
-
-    def test__dark_profiles__is_list_of_dark_profiles(self):
-        galaxy = ag.Galaxy(redshift=0.5)
-
-        assert galaxy.dark_profiles == []
-
-        galaxy = ag.Galaxy(
-            redshift=0.5, light=ag.lp.EllGaussian(), mass=ag.mp.EllIsothermal()
-        )
-
-        assert galaxy.dark_profiles == []
-
-        dark_0 = ag.mp.SphNFW()
-        galaxy = ag.Galaxy(redshift=0.5, dark_0=dark_0)
-
-        assert galaxy.dark_profiles == [dark_0]
-
-        dark_0 = ag.mp.SphNFW()
-        dark_1 = ag.mp.EllNFW()
-        dark_2 = ag.mp.EllNFWGeneralized()
-        galaxy = ag.Galaxy(redshift=0.5, dark_0=dark_0, dark_1=dark_1, dark_2=dark_2)
-
-        assert galaxy.dark_profiles == [dark_0, dark_1, dark_2]
-
-    def test__dark_mass_within_galaxy__is_sum_of_individual_profiles(
-        self, dmp_0, dmp_1
-    ):
-
-        galaxy = ag.Galaxy(
-            redshift=0.5,
-            dark_0=dmp_0,
-            non_dark_profile=ag.mp.EllIsothermal(einstein_radius=1.0),
-        )
-
-        dark_mass_0 = dmp_0.mass_angular_within_circle(radius=0.5)
-
-        gal_mass = galaxy.dark_mass_angular_within_circle(radius=0.5)
-
-        assert dark_mass_0 == gal_mass
-
-        galaxy = ag.Galaxy(
-            redshift=0.5,
-            dark_0=dmp_0,
-            dark_1=dmp_1,
-            non_dark_profile=ag.mp.EllIsothermal(einstein_radius=1.0),
-        )
-
-        dark_mass_1 = dmp_1.mass_angular_within_circle(radius=0.5)
-
-        gal_mass = galaxy.dark_mass_angular_within_circle(radius=0.5)
-
-        assert dark_mass_0 + dark_mass_1 == gal_mass
-
-        galaxy = ag.Galaxy(redshift=0.5)
-
-        with pytest.raises(exc.GalaxyException):
-            galaxy.dark_mass_angular_within_circle(radius=1.0)
-
-    def test__dark_fraction_at_radius(self, dmp_0, dmp_1, smp_0, smp_1):
-
-        galaxy = ag.Galaxy(redshift=0.5, dark_0=dmp_0, stellar_0=smp_0)
-
-        stellar_mass_0 = smp_0.mass_angular_within_circle(radius=1.0)
-        dark_mass_0 = dmp_0.mass_angular_within_circle(radius=1.0)
-
-        dark_fraction = galaxy.dark_fraction_at_radius(radius=1.0)
-
-        assert dark_fraction == dark_mass_0 / (stellar_mass_0 + dark_mass_0)
-
-        galaxy = ag.Galaxy(redshift=0.5, dark_0=dmp_0, dark_1=dmp_1, stellar_0=smp_0)
-
-        dark_fraction = galaxy.dark_fraction_at_radius(radius=1.0)
-        dark_mass_1 = dmp_1.mass_angular_within_circle(radius=1.0)
-
-        assert dark_fraction == pytest.approx(
-            (dark_mass_0 + dark_mass_1) / (stellar_mass_0 + dark_mass_0 + dark_mass_1),
-            1.0e-4,
-        )
-
-        galaxy = ag.Galaxy(
-            redshift=0.5,
-            dark_0=dmp_0,
-            dark_1=dmp_1,
-            stellar_0=smp_0,
-            stellar_mass_1=smp_1,
-        )
-
-        dark_fraction = galaxy.dark_fraction_at_radius(radius=1.0)
-        stellar_mass_1 = smp_1.mass_angular_within_circle(radius=1.0)
-
-        assert dark_fraction == pytest.approx(
-            (dark_mass_0 + dark_mass_1)
-            / (stellar_mass_0 + stellar_mass_1 + dark_mass_0 + dark_mass_1),
-            1.0e-4,
-        )
+            gal_no_mp.mass_angular_within_circle_from(radius=1.0)
 
 
 class TestMassAndLightProfiles:

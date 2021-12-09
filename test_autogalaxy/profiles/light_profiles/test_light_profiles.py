@@ -105,13 +105,13 @@ class TestLuminosityWithinCircle:
             radius=0.5, profile=sersic
         )
 
-        luminosity_integral = sersic.luminosity_within_circle(radius=0.5)
+        luminosity_integral = sersic.luminosity_within_circle_from(radius=0.5)
 
         assert luminosity_analytic == pytest.approx(luminosity_integral, 1e-3)
 
         luminosity_grid = luminosity_from_radius_and_profile(radius=1.0, profile=sersic)
 
-        luminosity_integral = sersic.luminosity_within_circle(radius=1.0)
+        luminosity_integral = sersic.luminosity_within_circle_from(radius=1.0)
 
         assert luminosity_grid == pytest.approx(luminosity_integral, 0.02)
 
