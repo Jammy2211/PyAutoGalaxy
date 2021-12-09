@@ -1,6 +1,6 @@
 {
     "profiles": {
-        "light_profiles": {
+        "light_profile_list": {
             "EllDevVaucouleurs": {
                 "effective_radius": {
                     "type": "Uniform",
@@ -175,7 +175,7 @@
                 }
             }
         },
-        "mass_profiles": {
+        "mass_profile_list": {
             "total_mass_profiles": {
                 "EllIsothermalCored": {
                     "core_radius": {

@@ -150,17 +150,19 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return list(filter(lambda galaxy: galaxy.has_mass_profile, self.galaxies))
 
     @property
-    def mass_profiles(self) -> List:
+    def mass_profile_list(self) -> List:
         return [
             item
-            for mass_profile in self.mass_profiles_of_galaxies
+            for mass_profile in self.mass_profile_list_of_galaxies
             for item in mass_profile
         ]
 
     @property
-    def mass_profiles_of_galaxies(self) -> List:
+    def mass_profile_list_of_galaxies(self) -> List:
         return [
-            galaxy.mass_profiles for galaxy in self.galaxies if galaxy.has_mass_profile
+            galaxy.mass_profile_list
+            for galaxy in self.galaxies
+            if galaxy.has_mass_profile
         ]
 
     @aa.grid_dec.grid_2d_to_structure
@@ -548,7 +550,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     ):
 
         for galaxy in self.galaxies:
-            for light_profile in galaxy.light_profiles:
+            for light_profile in galaxy.light_profile_list:
                 if isinstance(light_profile, LightProfileSNR):
                     light_profile.set_intensity_from(
                         grid=grid,

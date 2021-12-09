@@ -145,11 +145,11 @@ class TestAbstractPlane:
         plane = ag.Plane(galaxies=[galaxy, ag.Galaxy(redshift=0.5)], redshift=None)
         assert plane.has_hyper_galaxy is True
 
-    def test__mass_profiles(self):
+    def test__mass_profile_list(self):
 
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
-        assert plane.mass_profiles == []
+        assert plane.mass_profile_list == []
 
         sis_0 = ag.mp.SphIsothermal(einstein_radius=1.0)
         sis_1 = ag.mp.SphIsothermal(einstein_radius=2.0)
@@ -158,7 +158,7 @@ class TestAbstractPlane:
         plane = ag.Plane(
             galaxies=[ag.Galaxy(redshift=0.5, mass_profile=sis_0)], redshift=None
         )
-        assert plane.mass_profiles == [sis_0]
+        assert plane.mass_profile_list == [sis_0]
 
         plane = ag.Plane(
             galaxies=[
@@ -167,7 +167,7 @@ class TestAbstractPlane:
             ],
             redshift=None,
         )
-        assert plane.mass_profiles == [sis_0, sis_1, sis_2, sis_1]
+        assert plane.mass_profile_list == [sis_0, sis_1, sis_2, sis_1]
 
     def test__pixelization_list(self):
         galaxy_pix = ag.Galaxy(
@@ -266,7 +266,7 @@ class TestAbstractPlaneProfiles:
         def test__image_2d_from__same_as_its_light_image(
             self, sub_grid_2d_7x7, gal_x1_lp
         ):
-            light_profile = gal_x1_lp.light_profiles[0]
+            light_profile = gal_x1_lp.light_profile_list[0]
 
             lp_image = light_profile.image_2d_from(grid=sub_grid_2d_7x7)
 
@@ -315,8 +315,8 @@ class TestAbstractPlaneProfiles:
             g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
             g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
 
-            lp0 = g0.light_profiles[0]
-            lp1 = g1.light_profiles[0]
+            lp0 = g0.light_profile_list[0]
+            lp1 = g1.light_profile_list[0]
 
             lp0_image = lp0.image_2d_from(grid=sub_grid_2d_7x7)
             lp1_image = lp1.image_2d_from(grid=sub_grid_2d_7x7)
@@ -455,8 +455,8 @@ class TestAbstractPlaneProfiles:
                 ),
             )
 
-            mp0 = g0.mass_profiles[0]
-            mp1 = g1.mass_profiles[0]
+            mp0 = g0.mass_profile_list[0]
+            mp1 = g1.mass_profile_list[0]
 
             mp0_sub_convergence = mp0.convergence_2d_from(grid=sub_grid_2d_7x7)
             mp1_sub_convergence = mp1.convergence_2d_from(grid=sub_grid_2d_7x7)
@@ -564,8 +564,8 @@ class TestAbstractPlaneProfiles:
                 ),
             )
 
-            mp0 = g0.mass_profiles[0]
-            mp1 = g1.mass_profiles[0]
+            mp0 = g0.mass_profile_list[0]
+            mp1 = g1.mass_profile_list[0]
 
             mp0_sub_potential = mp0.potential_2d_from(grid=sub_grid_2d_7x7)
             mp1_sub_potential = mp1.potential_2d_from(grid=sub_grid_2d_7x7)
@@ -651,7 +651,7 @@ class TestAbstractPlaneProfiles:
             assert potential.shape_native == (7, 7)
 
     class TestDeflections:
-        def test__deflections_from_plane__same_as_the_galaxy_mass_profiles(
+        def test__deflections_from_plane__same_as_the_galaxy_mass_profile_list(
             self, sub_grid_2d_7x7
         ):
             # Overwrite one value so intensity in each pixel is different
@@ -664,8 +664,8 @@ class TestAbstractPlaneProfiles:
                 redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=2.0)
             )
 
-            mp0 = g0.mass_profiles[0]
-            mp1 = g1.mass_profiles[0]
+            mp0 = g0.mass_profile_list[0]
+            mp1 = g1.mass_profile_list[0]
 
             mp0_image = mp0.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
             mp1_image = mp1.deflections_yx_2d_from(grid=sub_grid_2d_7x7)

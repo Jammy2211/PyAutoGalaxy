@@ -292,7 +292,7 @@ class TestMassProfiles:
 
         assert (mp_potential == gal_mp_potential).all()
 
-    def test__potential_2d_from__no_mass_profiles__potential_returned_as_0s_of_shape_grid(
+    def test__potential_2d_from__no_mass_profile_list__potential_returned_as_0s_of_shape_grid(
         self, sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp
     ):
 
@@ -353,7 +353,7 @@ class TestMassProfiles:
         assert gal_potential.binned[0] == mp_potential_0
         assert gal_potential.binned[1] == mp_potential_1
 
-    def test__deflections_yx_2d_from__no_mass_profiles__deflections_returned_as_0s_of_shape_grid(
+    def test__deflections_yx_2d_from__no_mass_profile_list__deflections_returned_as_0s_of_shape_grid(
         self, sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp
     ):
 
@@ -451,7 +451,7 @@ class TestMassProfiles:
         assert gal_deflections.binned[0, 1] == mp_deflections_x_0
         assert gal_deflections.binned[1, 1] == mp_deflections_x_1
 
-    def test__mass_within_circle__is_sum_of_individual_mass_profiles_if_included(
+    def test__mass_within_circle__is_sum_of_individual_mass_profile_list_if_included(
         self, mp_0, mp_1, gal_x2_mp
     ):
 
@@ -670,18 +670,18 @@ class TestMassAndLightProfiles:
     ):
         gal_x1_lmp = ag.Galaxy(redshift=0.5, profile=lmp_0)
 
-        assert 1 == len(gal_x1_lmp.light_profiles)
-        assert 1 == len(gal_x1_lmp.mass_profiles)
+        assert 1 == len(gal_x1_lmp.light_profile_list)
+        assert 1 == len(gal_x1_lmp.mass_profile_list)
 
-        assert gal_x1_lmp.mass_profiles[0] == lmp_0
-        assert gal_x1_lmp.light_profiles[0] == lmp_0
+        assert gal_x1_lmp.mass_profile_list[0] == lmp_0
+        assert gal_x1_lmp.light_profile_list[0] == lmp_0
 
         gal_multi_profiles = ag.Galaxy(
             redshift=0.5, profile=lmp_0, light=lp_0, sie=mp_0
         )
 
-        assert 2 == len(gal_multi_profiles.light_profiles)
-        assert 2 == len(gal_multi_profiles.mass_profiles)
+        assert 2 == len(gal_multi_profiles.light_profile_list)
+        assert 2 == len(gal_multi_profiles.mass_profile_list)
 
 
 class TestHyperGalaxy:

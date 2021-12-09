@@ -1,6 +1,6 @@
 {
     "profiles": {
-        "mass_profiles": {
+        "mass_profile_list": {
             "total_mass_profiles": {
                 "PointMass": {
                     "einstein_radius": {
@@ -114,7 +114,7 @@
                 }
             }
         },
-        "light_profiles": {
+        "light_profile_list": {
             "EllLightProfile": {
                 "intensity": {
                     "type": "Uniform",

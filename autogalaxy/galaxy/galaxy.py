@@ -54,9 +54,9 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         ----------
         redshift
             The redshift of the galaxy.
-        light_profiles: [lp.LightProfile]
+        light_profile_list: [lp.LightProfile]
             A list of the galaxy's light profiles.
-        mass_profiles: [mp.MassProfile]
+        mass_profile_list: [mp.MassProfile]
             A list of the galaxy's mass profiles.
         hyper_galaxy : HyperGalaxy
             The hyper_galaxies-parameters of the hyper_galaxies-galaxy, which is used for performing a hyper_galaxies-analysis on the noise-map.
@@ -102,13 +102,13 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             string += "\nRegularization:\n{}".format(str(self.regularization))
         if self.hyper_galaxy:
             string += "\nHyper Galaxy:\n{}".format(str(self.hyper_galaxy))
-        if self.light_profiles:
+        if self.light_profile_list:
             string += "\nLight Profiles:\n{}".format(
-                "\n".join(map(str, self.light_profiles))
+                "\n".join(map(str, self.light_profile_list))
             )
-        if self.mass_profiles:
+        if self.mass_profile_list:
             string += "\nMass Profiles:\n{}".format(
-                "\n".join(map(str, self.mass_profiles))
+                "\n".join(map(str, self.mass_profile_list))
             )
         return string
 
@@ -119,8 +119,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
                 self.pixelization == other.pixelization,
                 self.redshift == other.redshift,
                 self.hyper_galaxy == other.hyper_galaxy,
-                self.light_profiles == other.light_profiles,
-                self.mass_profiles == other.mass_profiles,
+                self.light_profile_list == other.light_profile_list,
+                self.mass_profile_list == other.mass_profile_list,
             )
         )
 
@@ -132,15 +132,15 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     @property
     def has_profile(self) -> bool:
-        return len(self.mass_profiles) + len(self.light_profiles) > 0
+        return len(self.mass_profile_list) + len(self.light_profile_list) > 0
 
     @property
-    def light_profiles(self):
+    def light_profile_list(self):
         return [value for value in self.__dict__.values() if is_light_profile(value)]
 
     @property
     def has_light_profile(self):
-        return len(self.light_profiles) > 0
+        return len(self.light_profile_list) > 0
 
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(self, grid):
@@ -159,7 +159,9 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         """
         if self.has_light_profile:
-            return sum(map(lambda p: p.image_2d_from(grid=grid), self.light_profiles))
+            return sum(
+                map(lambda p: p.image_2d_from(grid=grid), self.light_profile_list)
+            )
         return np.zeros((grid.shape[0],))
 
     def image_2d_list_from(self, grid):
@@ -177,7 +179,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             The (y, x) coordinates in the original reference frame of the grid.
 
         """
-        return list(map(lambda p: p.image_2d_from(grid=grid), self.light_profiles))
+        return list(map(lambda p: p.image_2d_from(grid=grid), self.light_profile_list))
 
     @aa.grid_dec.grid_1d_output_structure
     def image_1d_from(self, grid):
@@ -196,16 +198,18 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         """
         if self.has_light_profile:
-            return sum(map(lambda p: p.image_1d_from(grid=grid), self.light_profiles))
+            return sum(
+                map(lambda p: p.image_1d_from(grid=grid), self.light_profile_list)
+            )
         return np.zeros((grid.shape[0],))
 
     @property
-    def mass_profiles(self):
+    def mass_profile_list(self):
         return [value for value in self.__dict__.values() if is_mass_profile(value)]
 
     @property
     def has_mass_profile(self):
-        return len(self.mass_profiles) > 0
+        return len(self.mass_profile_list) > 0
 
     @aa.grid_dec.grid_2d_to_structure
     def deflections_yx_2d_from(self, grid):
@@ -224,7 +228,10 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.deflections_yx_2d_from(grid=grid), self.mass_profiles)
+                map(
+                    lambda p: p.deflections_yx_2d_from(grid=grid),
+                    self.mass_profile_list,
+                )
             )
         return np.zeros((grid.shape[0], 2))
 
@@ -248,7 +255,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.convergence_2d_from(grid=grid), self.mass_profiles)
+                map(lambda p: p.convergence_2d_from(grid=grid), self.mass_profile_list)
             )
         return np.zeros((grid.shape[0],))
 
@@ -272,7 +279,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.convergence_1d_from(grid=grid), self.mass_profiles)
+                map(lambda p: p.convergence_1d_from(grid=grid), self.mass_profile_list)
             )
         return np.zeros((grid.shape[0],))
 
@@ -296,7 +303,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.potential_2d_from(grid=grid), self.mass_profiles)
+                map(lambda p: p.potential_2d_from(grid=grid), self.mass_profile_list)
             )
         return np.zeros((grid.shape[0],))
 
@@ -320,7 +327,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         if self.has_mass_profile:
             return sum(
-                map(lambda p: p.potential_1d_from(grid=grid), self.mass_profiles)
+                map(lambda p: p.potential_1d_from(grid=grid), self.mass_profile_list)
             )
         return np.zeros((grid.shape[0],))
 
@@ -424,7 +431,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     def stellar_profiles(self):
         return [
             profile
-            for profile in self.mass_profiles
+            for profile in self.mass_profile_list
             if isinstance(profile, StellarProfile)
         ]
 
@@ -432,7 +439,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     def dark_profiles(self):
         return [
             profile
-            for profile in self.mass_profiles
+            for profile in self.mass_profile_list
             if isinstance(profile, DarkProfile)
         ]
 
@@ -477,7 +484,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         Returns the total luminosity of the galaxy's light profiles within a circle of specified radius.
 
-            See *light_profiles.luminosity_within_circle* for details of how this is performed.
+            See *light_profile_list.luminosity_within_circle* for details of how this is performed.
 
             Parameters
             ----------
@@ -492,7 +499,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             return sum(
                 map(
                     lambda p: p.luminosity_within_circle(radius=radius),
-                    self.light_profiles,
+                    self.light_profile_list,
                 )
             )
 
@@ -519,7 +526,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             return sum(
                 map(
                     lambda p: p.mass_angular_within_circle(radius=radius),
-                    self.mass_profiles,
+                    self.mass_profile_list,
                 )
             )
         else:
