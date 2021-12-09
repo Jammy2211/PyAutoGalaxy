@@ -12,12 +12,12 @@ from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
 from autogalaxy.operate.image import OperateImageList
-from autogalaxy.operate.lens import OperateLens
+from autogalaxy.operate.deflections import OperateDeflections
 
 from autogalaxy.util import plane_util
 
 
-class AbstractPlane(OperateImageList, OperateLens, Dictable):
+class AbstractPlane(OperateImageList, OperateDeflections, Dictable):
     def __init__(
         self,
         galaxies,

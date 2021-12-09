@@ -78,23 +78,6 @@ class MockGalaxy:
         return np.full(shape=(self.shape, 2), fill_value=self.value)
 
 
-class MockOperateLens:
-    def __init__(self, magnification=None, einstein_radius=None, einstein_mass=None):
-
-        self.magnification = magnification
-        self.einstein_radius = einstein_radius
-        self.einstein_mass = einstein_mass
-
-    def magnification_2d_via_hessian_from(self, grid, deflections_func=None):
-        return self.magnification
-
-    def einstein_radius_from(self, grid):
-        return self.einstein_radius
-
-    def einstein_mass_angular_from(self, grid):
-        return self.einstein_mass
-
-
 # Mock Cosmology #
 
 

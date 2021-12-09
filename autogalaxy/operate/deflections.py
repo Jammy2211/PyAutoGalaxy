@@ -52,7 +52,7 @@ def evaluation_grid(func):
     return wrapper
 
 
-class OperateLens(Dictable):
+class OperateDeflections(Dictable):
     """
     Packages methods which manipulate the 2D deflection angle map returned from the `deflections_yx_2d_from` function
     of a mass object (e.g. a `MassProfile`, `Galaxy`, `Plane`).

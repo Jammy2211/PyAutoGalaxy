@@ -547,7 +547,7 @@ def test__convergence_2d_via_jacobian_from__compare_via_jacobian_and_analytic():
 
 def test__evaluation_grid__changes_resolution_based_on_pixel_scale_input():
 
-    from autogalaxy.operate.lens import evaluation_grid
+    from autogalaxy.operate.deflections import evaluation_grid
 
     @evaluation_grid
     def mock_func(lensing_obj, grid, pixel_scale=0.05):
@@ -577,7 +577,7 @@ def test__evaluation_grid__changes_resolution_based_on_pixel_scale_input():
 
 def test__evaluation_grid__changes_to_uniform_and_zoomed_in_if_masked():
 
-    from autogalaxy.operate.lens import evaluation_grid
+    from autogalaxy.operate.deflections import evaluation_grid
 
     @evaluation_grid
     def mock_func(lensing_obj, grid, pixel_scale=0.05):

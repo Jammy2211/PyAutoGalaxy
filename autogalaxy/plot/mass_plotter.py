@@ -3,7 +3,7 @@ from typing import Callable
 import autoarray as aa
 import autoarray.plot as aplt
 
-from autogalaxy.operate.lens import OperateLens
+from autogalaxy.operate.deflections import OperateDeflections
 
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
 from autogalaxy.plot.mat_wrap.visuals import Visuals2D
