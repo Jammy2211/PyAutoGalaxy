@@ -598,7 +598,7 @@ def stochastic_model_from(
 
 
 def stochastic_fit(
-    stochastic_model, search_cls, search_inversion_dict, result, analysis, info=None
+    stochastic_model, search_cls, search_inversion_dict, result, analysis, info=None, pickle_files=None,
 ):
     """
     Perform a stochastic model-fit, which refits a model but introduces a log likelihood cap whereby all model-samples
@@ -646,6 +646,7 @@ def stochastic_fit(
         analysis=analysis,
         log_likelihood_cap=log_likelihood_cap,
         info=info,
+        pickle_files=pickle_files
     )
 
     search.paths.restore()
