@@ -87,6 +87,30 @@ class OperateImage:
             image=image_2d.binned, blurring_image=blurring_image_2d.binned
         )
 
+    def padded_image_2d_from(self, grid, psf_shape_2d):
+        """
+        Evaluate the light object's 2D image from a input 2D grid of padded coordinates, where this padding is
+        sufficient to encapsulate all surrounding pixels that will blur light into the original image given the
+        2D shape of the PSF's kernel..
+
+        Convolving an unmasked 2D image with a PSF requires care, because at the edges of the 2D image the light
+        profile values will not be evaluated beyond its edge, even though some of its light will be blurred into these
+        edges.
+
+        This function creates the padded image, such that the light profile is evaluated beyond the edge. The
+        array will still require trimming to remove these additional pixels after convolution is performed.
+
+        Parameters
+        ----------
+        grid
+            The 2D (y,x) coordinates of the (masked) grid, in its original geometric reference frame.
+        psf_shape_2d
+            The 2D shape of the PSF the light object 2D image is convolved with.
+        """
+        padded_grid = grid.padded_grid_from(kernel_shape_native=psf_shape_2d)
+
+        return self.image_2d_from(grid=padded_grid)
+
     def unmasked_blurred_image_2d_via_psf_from(self, grid, psf):
         """
         Evaluate the light object's 2D image from a input 2D grid of coordinates and convolve it with a PSF, using a
@@ -118,9 +142,7 @@ class OperateImage:
         )
 
     def visibilities_via_transformer_from(
-        self,
-        grid: Union[aa.Grid2D, aa.Grid2DIterate],
-        transformer: Union[aa.TransformerDFT, aa.TransformerNUFFT],
+        self, grid: Union[aa.Grid2D, aa.Grid2DIterate], transformer: aa.type.Transformer
     ) -> aa.Visibilities:
         """
         Evaluate the light object's 2D image from a input 2D grid of coordinates and transform this to an array of
@@ -295,9 +317,7 @@ class OperateImageList(OperateImage):
         return unmasked_blurred_image_list
 
     def visibilities_list_via_transformer_from(
-        self,
-        grid: Union[aa.Grid2D, aa.Grid2DIterate],
-        transformer: Union[aa.TransformerDFT, aa.TransformerNUFFT],
+        self, grid: Union[aa.Grid2D, aa.Grid2DIterate], transformer: aa.type.Transformer
     ) -> List[aa.Array2D]:
         """
         Evaluate the light object's list of 2D image from a input 2D grid of coordinates and transform each image to

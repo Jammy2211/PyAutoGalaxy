@@ -742,7 +742,7 @@ class EllIsothermal(EllPowerLaw):
     @property
     def axis_ratio(self):
         axis_ratio = super().axis_ratio
-        return axis_ratio if axis_ratio < 0.99999 else 0.99999
+        return min(axis_ratio, 0.99999)
 
     @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure

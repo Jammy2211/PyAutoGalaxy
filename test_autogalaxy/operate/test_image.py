@@ -51,6 +51,33 @@ def test__blurred_image_2d_via_convolver_from(
     assert blurred_image_2d.native == pytest.approx(lp_blurred_image_2d.native, 1.0e-4)
 
 
+def test__x1_plane__padded_image__compare_to_galaxy_images_using_padded_grid_stack(
+    sub_grid_2d_7x7
+):
+    padded_grid = sub_grid_2d_7x7.padded_grid_from(kernel_shape_native=(3, 3))
+
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
+    g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
+
+    padded_g0_image = g0.image_2d_from(grid=padded_grid)
+
+    padded_g1_image = g1.image_2d_from(grid=padded_grid)
+
+    padded_g2_image = g2.image_2d_from(grid=padded_grid)
+
+    plane = ag.Plane(galaxies=[g0, g1, g2])
+
+    padded_plane_image = plane.padded_image_2d_from(
+        grid=sub_grid_2d_7x7, psf_shape_2d=(3, 3)
+    )
+
+    assert padded_plane_image.shape_native == (9, 9)
+    assert padded_plane_image == pytest.approx(
+        padded_g0_image + padded_g1_image + padded_g2_image, 1.0e-4
+    )
+
+
 def test__unmasked_blurred_image_2d_via_psf_from():
 
     psf = ag.Kernel2D.manual_native(

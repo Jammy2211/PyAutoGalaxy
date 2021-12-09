@@ -7,32 +7,6 @@ from autogalaxy.mock.mock import MockLightProfile, MockMassProfile
 from autogalaxy import exc
 
 
-class TestPoints:
-    def test__point_dict(self, ps_0, ps_1):
-
-        galaxy = ag.Galaxy(redshift=0.5)
-
-        assert galaxy.point_dict == {}
-
-        galaxy = ag.Galaxy(redshift=0.5, point_0=ps_0)
-
-        assert galaxy.point_dict == {"point_0": ps_0}
-
-        galaxy = ag.Galaxy(redshift=0.5, point_0=ps_0, point_1=ps_1)
-
-        assert galaxy.point_dict == {"point_0": ps_0, "point_1": ps_1}
-
-        galaxy = ag.Galaxy(
-            redshift=0.5,
-            point_0=ps_0,
-            point_1=ps_1,
-            mass=ag.mp.SphIsothermal(),
-            light=ag.lp.EllSersic(),
-        )
-
-        assert galaxy.point_dict == {"point_0": ps_0, "point_1": ps_1}
-
-
 class TestLightProfiles:
     def test__image_1d_from(self, sub_grid_1d_7, lp_0, gal_x1_lp, lp_1, gal_x2_lp):
 
@@ -828,9 +802,6 @@ class TestBooleanProperties:
             ag.Galaxy(redshift=0.5, mass_profile=ag.mp.MassProfile()).has_mass_profile
             is True
         )
-
-    def test_has_redshift(self):
-        assert ag.Galaxy(redshift=0.1).has_redshift is True
 
     def test_has_pixelization(self):
         assert ag.Galaxy(redshift=0.5).has_pixelization is False

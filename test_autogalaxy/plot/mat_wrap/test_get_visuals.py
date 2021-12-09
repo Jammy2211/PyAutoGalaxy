@@ -34,7 +34,7 @@ def test__1d__via_light_obj_from(lp_0):
 
     visuals_1d_via = get_visuals.via_light_obj_from(light_obj=lp_0)
 
-    assert visuals_1d_via.half_light_radius == None
+    assert visuals_1d_via.half_light_radius is None
 
 
 def test__1d__via_light_obj_list_from(lp_0):
@@ -59,8 +59,8 @@ def test__1d__via_light_obj_list_from(lp_0):
         light_obj_list=[lp_0, lp_0], low_limit=1.0
     )
 
-    assert visuals_1d_via.half_light_radius == None
-    assert visuals_1d_via.half_light_radius_errors == None
+    assert visuals_1d_via.half_light_radius is None
+    assert visuals_1d_via.half_light_radius_errors is None
 
 
 def test__1d__via_mass_obj_from(mp_0, grid_2d_7x7):
@@ -80,7 +80,7 @@ def test__1d__via_mass_obj_from(mp_0, grid_2d_7x7):
 
     visuals_1d_via = get_visuals.via_mass_obj_from(mass_obj=mp_0, grid=grid_2d_7x7)
 
-    assert visuals_1d_via.einstein_radius == None
+    assert visuals_1d_via.einstein_radius is None
 
 
 def test__1d__via_mass_obj_list_from(mp_0, grid_2d_7x7):
@@ -107,8 +107,8 @@ def test__1d__via_mass_obj_list_from(mp_0, grid_2d_7x7):
         mass_obj_list=[mp_0, mp_0], grid=grid_2d_7x7, low_limit=1.0
     )
 
-    assert visuals_1d_via.einstein_radius == None
-    assert visuals_1d_via.einstein_radius_errors == None
+    assert visuals_1d_via.einstein_radius is None
+    assert visuals_1d_via.einstein_radius_errors is None
 
 
 def test__2d__via_light_obj_from(lp_0, grid_2d_7x7):
@@ -136,10 +136,10 @@ def test__2d__via_light_obj_from(lp_0, grid_2d_7x7):
 
     visuals_2d_via = get_visuals.via_light_obj_from(light_obj=lp_0, grid=grid_2d_7x7)
 
-    assert visuals_2d_via.origin == None
-    assert visuals_2d_via.mask == None
-    assert visuals_2d_via.border == None
-    assert visuals_2d_via.light_profile_centres == None
+    assert visuals_2d_via.origin is None
+    assert visuals_2d_via.mask is None
+    assert visuals_2d_via.border is None
+    assert visuals_2d_via.light_profile_centres is None
     assert visuals_2d_via.vectors == 2
 
 
@@ -180,11 +180,11 @@ def test__2d__via_mass_obj(mp_0, grid_2d_7x7):
 
     visuals_2d_via = get_visuals.via_mass_obj_from(mass_obj=mp_0, grid=grid_2d_7x7)
 
-    assert visuals_2d_via.origin == None
-    assert visuals_2d_via.mask == None
-    assert visuals_2d_via.border == None
-    assert visuals_2d_via.mass_profile_centres == None
-    assert visuals_2d_via.critical_curves == None
+    assert visuals_2d_via.origin is None
+    assert visuals_2d_via.mask is None
+    assert visuals_2d_via.border is None
+    assert visuals_2d_via.mass_profile_centres is None
+    assert visuals_2d_via.critical_curves is None
     assert visuals_2d_via.vectors == 2
 
 
@@ -236,12 +236,12 @@ def test__2d__via_light_mass_obj(gal_x1_lp_x1_mp, grid_2d_7x7):
         light_mass_obj=gal_x1_lp_x1_mp, grid=grid_2d_7x7
     )
 
-    assert visuals_2d_via.origin == None
-    assert visuals_2d_via.mask == None
-    assert visuals_2d_via.border == None
-    assert visuals_2d_via.light_profile_centres == None
-    assert visuals_2d_via.mass_profile_centres == None
-    assert visuals_2d_via.critical_curves == None
+    assert visuals_2d_via.origin is None
+    assert visuals_2d_via.mask is None
+    assert visuals_2d_via.border is None
+    assert visuals_2d_via.light_profile_centres is None
+    assert visuals_2d_via.mass_profile_centres is None
+    assert visuals_2d_via.critical_curves is None
     assert visuals_2d_via.vectors == 2
 
 
@@ -288,9 +288,9 @@ def test__via_fit_imaging_from(fit_imaging_x2_galaxy_7x7, grid_2d_7x7):
     visuals_2d_via = get_visuals.via_fit_imaging_from(fit=fit_imaging_x2_galaxy_7x7)
 
     assert visuals_2d_via.origin == (1.0, 1.0)
-    assert visuals_2d_via.mask == None
-    assert visuals_2d_via.border == None
-    assert visuals_2d_via.light_profile_centres == None
-    assert visuals_2d_via.mass_profile_centres == None
-    assert visuals_2d_via.critical_curves == None
+    assert visuals_2d_via.mask is None
+    assert visuals_2d_via.border is None
+    assert visuals_2d_via.light_profile_centres is None
+    assert visuals_2d_via.mass_profile_centres is None
+    assert visuals_2d_via.critical_curves is None
     assert visuals_2d_via.vectors == 2

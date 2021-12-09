@@ -322,8 +322,8 @@ class Visualizer:
             mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        if hasattr(plane, "contribution_maps_of_galaxies"):
-            if should_plot("contribution_maps_of_galaxies"):
-                hyper_plotter.subplot_contribution_maps_of_galaxies(
-                    contribution_maps_of_galaxies_list=plane.contribution_maps_of_galaxies
+        if hasattr(plane, "contribution_map_list"):
+            if should_plot("contribution_map_list"):
+                hyper_plotter.subplot_contribution_map_list(
+                    contribution_map_list_list=plane.contribution_map_list
                 )

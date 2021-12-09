@@ -62,35 +62,6 @@ def caustics_via_magnification_via_plane_from(plane, grid):
 
 
 class TestAbstractPlane:
-    def test__point_dict(self, ps_0, ps_1):
-
-        plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
-
-        assert plane.point_dict == {}
-
-        plane = ag.Plane(
-            galaxies=[ag.Galaxy(redshift=0.5, point_0=ps_0)], redshift=None
-        )
-
-        assert plane.point_dict == {"point_0": ps_0}
-
-        plane = ag.Plane(
-            galaxies=[ag.Galaxy(redshift=0.5, point_0=ps_0, point_1=ps_1)],
-            redshift=None,
-        )
-
-        assert plane.point_dict == {"point_0": ps_0, "point_1": ps_1}
-
-        plane = ag.Plane(
-            galaxies=[
-                ag.Galaxy(redshift=0.5, point_0=ps_0, point_1=ps_1),
-                ag.Galaxy(redshift=0.5, point_2=ps_0),
-            ],
-            redshift=None,
-        )
-
-        assert plane.point_dict == {"point_0": ps_0, "point_1": ps_1, "point_2": ps_0}
-
     def test__has_light_profile(self):
 
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
@@ -273,7 +244,7 @@ class TestAbstractPlane:
         )
 
         plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
-        assert plane.hyper_galaxy_image_list[0] is None
+        assert plane.hyper_galaxies_with_pixelization_image_list[0] is None
 
         galaxy_pix = ag.Galaxy(
             redshift=0.5,
@@ -283,11 +254,11 @@ class TestAbstractPlane:
         )
 
         plane = ag.Plane(galaxies=[galaxy_pix, ag.Galaxy(redshift=0.5)], redshift=None)
-        assert plane.hyper_galaxy_image_list[0] == 1
+        assert plane.hyper_galaxies_with_pixelization_image_list[0] == 1
 
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
-        assert plane.hyper_galaxy_image_list == []
+        assert plane.hyper_galaxies_with_pixelization_image_list == []
 
 
 class TestAbstractPlaneProfiles:
@@ -432,33 +403,6 @@ class TestAbstractPlaneProfiles:
             assert image.shape_native == (7, 7)
             assert (image[0] == 0.0).all()
             assert (image[1] == 0.0).all()
-
-        def test__x1_plane__padded_image__compare_to_galaxy_images_using_padded_grid_stack(
-            self, sub_grid_2d_7x7
-        ):
-
-            padded_grid = sub_grid_2d_7x7.padded_grid_from(kernel_shape_native=(3, 3))
-
-            g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-            g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
-            g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
-
-            padded_g0_image = g0.image_2d_from(grid=padded_grid)
-
-            padded_g1_image = g1.image_2d_from(grid=padded_grid)
-
-            padded_g2_image = g2.image_2d_from(grid=padded_grid)
-
-            plane = ag.Plane(galaxies=[g0, g1, g2])
-
-            padded_plane_image = plane.padded_image_2d_from(
-                grid=sub_grid_2d_7x7, psf_shape_2d=(3, 3)
-            )
-
-            assert padded_plane_image.shape_native == (9, 9)
-            assert padded_plane_image == pytest.approx(
-                padded_g0_image + padded_g1_image + padded_g2_image, 1.0e-4
-            )
 
         def test__galaxy_image_2d_dict_from(self, sub_grid_2d_7x7):
 
@@ -1102,11 +1046,10 @@ class TestAbstractPlaneData:
             plane = ag.Plane(redshift=0.5, galaxies=[galaxy_0, galaxy_1])
 
             assert (
-                plane.contribution_maps_of_galaxies[0].native
-                == np.array([[1.0, 1.0, 1.0]])
+                plane.contribution_map_list[0].native == np.array([[1.0, 1.0, 1.0]])
             ).all()
             assert (
-                plane.contribution_maps_of_galaxies[1].native
+                plane.contribution_map_list[1].native
                 == np.array([[5.0 / 9.0, (1.0 / 2.0) / (1.5 / 2.5), 1.0]])
             ).all()
 
@@ -1147,24 +1090,16 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=0.5, galaxies=[galaxy_0])
 
-            assert (
-                plane.contribution_maps_of_galaxies[0].slim == contribution_map_0
-            ).all()
+            assert (plane.contribution_map_list[0].slim == contribution_map_0).all()
 
             plane = ag.Plane(redshift=0.5, galaxies=[galaxy_1])
 
-            assert (
-                plane.contribution_maps_of_galaxies[0].slim == contribution_map_1
-            ).all()
+            assert (plane.contribution_map_list[0].slim == contribution_map_1).all()
 
             plane = ag.Plane(redshift=0.5, galaxies=[galaxy_1, galaxy_0])
 
-            assert (
-                plane.contribution_maps_of_galaxies[0].slim == contribution_map_1
-            ).all()
-            assert (
-                plane.contribution_maps_of_galaxies[1].slim == contribution_map_0
-            ).all()
+            assert (plane.contribution_map_list[0].slim == contribution_map_1).all()
+            assert (plane.contribution_map_list[1].slim == contribution_map_0).all()
 
         def test__contriution_maps_are_none_for_galaxy_without_hyper_galaxy(self):
             hyper_model_image = ag.Array2D.manual_native(
@@ -1193,11 +1128,9 @@ class TestAbstractPlaneData:
                 galaxies=[galaxy, ag.Galaxy(redshift=0.5), ag.Galaxy(redshift=0.5)],
             )
 
-            assert (
-                plane.contribution_maps_of_galaxies[0].slim == contribution_map
-            ).all()
-            assert plane.contribution_maps_of_galaxies[1] == None
-            assert plane.contribution_maps_of_galaxies[2] == None
+            assert (plane.contribution_map_list[0].slim == contribution_map).all()
+            assert plane.contribution_map_list[1] == None
+            assert plane.contribution_map_list[2] == None
 
         def test__contribution_map_is_sum_of_galaxy_contribution_maps__handles_nones_correctly(
             self,
@@ -1236,9 +1169,7 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=0.5, galaxies=[galaxy_0, galaxy_1])
 
-            assert (
-                sum(plane.contribution_maps_of_galaxies) == plane.contribution_map
-            ).all()
+            assert (sum(plane.contribution_map_list) == plane.contribution_map).all()
 
             galaxy_1 = ag.Galaxy(redshift=0.5)
 
@@ -1294,9 +1225,7 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=0.5, galaxies=[galaxy_0, galaxy_1])
 
-            hyper_noise_maps = plane.hyper_noise_maps_of_galaxies_from(
-                noise_map=noise_map
-            )
+            hyper_noise_maps = plane.hyper_noise_map_list_from(noise_map=noise_map)
 
             assert (hyper_noise_maps[0].slim == np.array([0.0, 2.0, 3.0])).all()
             assert hyper_noise_maps[1].slim == pytest.approx(
@@ -1352,23 +1281,17 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=0.5, galaxies=[galaxy_0])
 
-            hyper_noise_maps = plane.hyper_noise_maps_of_galaxies_from(
-                noise_map=noise_map
-            )
+            hyper_noise_maps = plane.hyper_noise_map_list_from(noise_map=noise_map)
             assert (hyper_noise_maps[0].slim == hyper_noise_map_0).all()
 
             plane = ag.Plane(redshift=0.5, galaxies=[galaxy_1])
 
-            hyper_noise_maps = plane.hyper_noise_maps_of_galaxies_from(
-                noise_map=noise_map
-            )
+            hyper_noise_maps = plane.hyper_noise_map_list_from(noise_map=noise_map)
             assert (hyper_noise_maps[0].slim == hyper_noise_map_1).all()
 
             plane = ag.Plane(redshift=0.5, galaxies=[galaxy_1, galaxy_0])
 
-            hyper_noise_maps = plane.hyper_noise_maps_of_galaxies_from(
-                noise_map=noise_map
-            )
+            hyper_noise_maps = plane.hyper_noise_map_list_from(noise_map=noise_map)
             assert (hyper_noise_maps[0].slim == hyper_noise_map_1).all()
             assert (hyper_noise_maps[1].slim == hyper_noise_map_0).all()
 
@@ -1422,17 +1345,13 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(redshift=0.5, galaxies=[galaxy_0, ag.Galaxy(redshift=0.5)])
 
-            hyper_noise_maps = plane.hyper_noise_maps_of_galaxies_from(
-                noise_map=noise_map
-            )
+            hyper_noise_maps = plane.hyper_noise_map_list_from(noise_map=noise_map)
             assert (hyper_noise_maps[0].slim == hyper_noise_map_0).all()
             assert (hyper_noise_maps[1].slim == np.zeros(shape=(3, 1))).all()
 
             plane = ag.Plane(redshift=0.5, galaxies=[ag.Galaxy(redshift=0.5), galaxy_1])
 
-            hyper_noise_maps = plane.hyper_noise_maps_of_galaxies_from(
-                noise_map=noise_map
-            )
+            hyper_noise_maps = plane.hyper_noise_map_list_from(noise_map=noise_map)
             assert (hyper_noise_maps[0].slim == np.zeros(shape=(3, 1))).all()
             assert (hyper_noise_maps[1].slim == hyper_noise_map_1).all()
 
@@ -1446,9 +1365,7 @@ class TestAbstractPlaneData:
                 ],
             )
 
-            hyper_noise_maps = plane.hyper_noise_maps_of_galaxies_from(
-                noise_map=noise_map
-            )
+            hyper_noise_maps = plane.hyper_noise_map_list_from(noise_map=noise_map)
             assert (hyper_noise_maps[0].slim == np.zeros(shape=(3, 1))).all()
             assert (hyper_noise_maps[1].slim == hyper_noise_map_1).all()
             assert (hyper_noise_maps[2].slim == hyper_noise_map_0).all()
