@@ -1,3 +1,5 @@
+from typing import Optional
+
 import autoarray.plot as aplt
 from autogalaxy.plot.mat_wrap import wrap as w
 
@@ -5,26 +7,26 @@ from autogalaxy.plot.mat_wrap import wrap as w
 class MatPlot1D(aplt.MatPlot1D):
     def __init__(
         self,
-        units: aplt.Units = aplt.Units(),
-        figure: aplt.Figure = aplt.Figure(),
-        axis: aplt.Axis = aplt.Axis(),
-        cmap: aplt.Cmap = aplt.Cmap(),
-        colorbar: aplt.Colorbar = aplt.Colorbar(),
-        colorbar_tickparams: aplt.ColorbarTickParams = aplt.ColorbarTickParams(),
-        tickparams: aplt.TickParams = aplt.TickParams(),
-        yticks: aplt.YTicks = aplt.YTicks(),
-        xticks: aplt.XTicks = aplt.XTicks(),
-        title: aplt.Title = aplt.Title(),
-        ylabel: aplt.YLabel = aplt.YLabel(),
-        xlabel: aplt.XLabel = aplt.XLabel(),
-        text: aplt.Text = aplt.Text(),
-        legend: aplt.Legend = aplt.Legend(),
-        output: aplt.Output = aplt.Output(),
-        yx_plot: aplt.YXPlot = aplt.YXPlot(),
-        half_light_radius_axvline: w.HalfLightRadiusAXVLine = w.HalfLightRadiusAXVLine(),
-        einstein_radius_axvline: w.EinsteinRadiusAXVLine = w.EinsteinRadiusAXVLine(),
-        model_fluxes_yx_scatter: w.ModelFluxesYXScatter = w.ModelFluxesYXScatter(),
-        fill_between: aplt.FillBetween = aplt.FillBetween(),
+        units: Optional[aplt.Units] = None,
+        figure: Optional[aplt.Figure] = None,
+        axis: Optional[aplt.Axis] = None,
+        cmap: Optional[aplt.Cmap] = None,
+        colorbar: Optional[aplt.Colorbar] = None,
+        colorbar_tickparams: Optional[aplt.ColorbarTickParams] = None,
+        tickparams: Optional[aplt.TickParams] = None,
+        yticks: Optional[aplt.YTicks] = None,
+        xticks: Optional[aplt.XTicks] = None,
+        title: Optional[aplt.Title] = None,
+        ylabel: Optional[aplt.YLabel] = None,
+        xlabel: Optional[aplt.XLabel] = None,
+        text: Optional[aplt.Text] = None,
+        legend: Optional[aplt.Legend] = None,
+        output: Optional[aplt.Output] = None,
+        yx_plot: Optional[aplt.YXPlot] = None,
+        fill_between: Optional[aplt.FillBetween] = None,
+        half_light_radius_axvline: Optional[w.HalfLightRadiusAXVLine] = None,
+        einstein_radius_axvline: Optional[w.EinsteinRadiusAXVLine] = None,
+        model_fluxes_yx_scatter: Optional[w.ModelFluxesYXScatter] = None,
     ):
         """
         Visualizes 1D data structures as a y versus x plot using Matplotlib.
@@ -98,9 +100,15 @@ class MatPlot1D(aplt.MatPlot1D):
             fill_between=fill_between,
         )
 
-        self.half_light_radius_axvline = half_light_radius_axvline
-        self.einstein_radius_axvline = einstein_radius_axvline
-        self.model_fluxes_yx_scatter = model_fluxes_yx_scatter
+        self.half_light_radius_axvline = (
+            half_light_radius_axvline or w.HalfLightRadiusAXVLine()
+        )
+        self.einstein_radius_axvline = (
+            einstein_radius_axvline or w.EinsteinRadiusAXVLine()
+        )
+        self.model_fluxes_yx_scatter = (
+            model_fluxes_yx_scatter or w.ModelFluxesYXScatter()
+        )
 
     def set_for_multi_plot(self, is_for_multi_plot: bool, color: str):
         """
@@ -128,38 +136,38 @@ class MatPlot1D(aplt.MatPlot1D):
 class MatPlot2D(aplt.MatPlot2D):
     def __init__(
         self,
-        units: aplt.Units = aplt.Units(),
-        figure: aplt.Figure = aplt.Figure(),
-        axis: aplt.Axis = aplt.Axis(),
-        cmap: aplt.Cmap = aplt.Cmap(),
-        colorbar: aplt.Colorbar = aplt.Colorbar(),
-        colorbar_tickparams: aplt.ColorbarTickParams = aplt.ColorbarTickParams(),
-        tickparams: aplt.TickParams = aplt.TickParams(),
-        yticks: aplt.YTicks = aplt.YTicks(),
-        xticks: aplt.XTicks = aplt.XTicks(),
-        title: aplt.Title = aplt.Title(),
-        ylabel: aplt.YLabel = aplt.YLabel(),
-        xlabel: aplt.XLabel = aplt.XLabel(),
-        text: aplt.Text = aplt.Text(),
-        legend: aplt.Legend = aplt.Legend(),
-        output: aplt.Output = aplt.Output(),
-        array_overlay: aplt.ArrayOverlay = aplt.ArrayOverlay(),
-        grid_scatter: aplt.GridScatter = aplt.GridScatter(),
-        grid_plot: aplt.GridPlot = aplt.GridPlot(),
-        vectors_quiver: aplt.VectorFieldQuiver = aplt.VectorFieldQuiver(),
-        patch_overlay: aplt.PatchOverlay = aplt.PatchOverlay(),
-        voronoi_drawer: aplt.VoronoiDrawer = aplt.VoronoiDrawer(),
-        origin_scatter: aplt.OriginScatter = aplt.OriginScatter(),
-        mask_scatter: aplt.MaskScatter = aplt.MaskScatter(),
-        border_scatter: aplt.BorderScatter = aplt.BorderScatter(),
-        positions_scatter: aplt.PositionsScatter = aplt.PositionsScatter(),
-        index_scatter: aplt.IndexScatter = aplt.IndexScatter(),
-        pixelization_grid_scatter: aplt.PixelizationGridScatter = aplt.PixelizationGridScatter(),
-        light_profile_centres_scatter: w.LightProfileCentresScatter = w.LightProfileCentresScatter(),
-        mass_profile_centres_scatter: w.MassProfileCentresScatter = w.MassProfileCentresScatter(),
-        multiple_images_scatter: w.MultipleImagesScatter = w.MultipleImagesScatter(),
-        critical_curves_plot: w.CriticalCurvesPlot = w.CriticalCurvesPlot(),
-        caustics_plot: w.CausticsPlot = w.CausticsPlot(),
+        units: Optional[aplt.Units] = None,
+        figure: Optional[aplt.Figure] = None,
+        axis: Optional[aplt.Axis] = None,
+        cmap: Optional[aplt.Cmap] = None,
+        colorbar: Optional[aplt.Colorbar] = None,
+        colorbar_tickparams: Optional[aplt.ColorbarTickParams] = None,
+        tickparams: Optional[aplt.TickParams] = None,
+        yticks: Optional[aplt.YTicks] = None,
+        xticks: Optional[aplt.XTicks] = None,
+        title: Optional[aplt.Title] = None,
+        ylabel: Optional[aplt.YLabel] = None,
+        xlabel: Optional[aplt.XLabel] = None,
+        text: Optional[aplt.Text] = None,
+        legend: Optional[aplt.Legend] = None,
+        output: Optional[aplt.Output] = None,
+        array_overlay: Optional[aplt.ArrayOverlay] = None,
+        grid_scatter: Optional[aplt.GridScatter] = None,
+        grid_plot: Optional[aplt.GridPlot] = None,
+        vector_yx_quiver: Optional[aplt.VectorYXQuiver] = None,
+        patch_overlay: Optional[aplt.PatchOverlay] = None,
+        voronoi_drawer: Optional[aplt.VoronoiDrawer] = None,
+        origin_scatter: Optional[aplt.OriginScatter] = None,
+        mask_scatter: Optional[aplt.MaskScatter] = None,
+        border_scatter: Optional[aplt.BorderScatter] = None,
+        positions_scatter: Optional[aplt.PositionsScatter] = None,
+        index_scatter: Optional[aplt.IndexScatter] = None,
+        pixelization_grid_scatter: Optional[aplt.PixelizationGridScatter] = None,
+        light_profile_centres_scatter: Optional[w.LightProfileCentresScatter] = None,
+        mass_profile_centres_scatter: Optional[w.MassProfileCentresScatter] = None,
+        multiple_images_scatter: Optional[w.MultipleImagesScatter] = None,
+        critical_curves_plot: Optional[w.CriticalCurvesPlot] = None,
+        caustics_plot: Optional[w.CausticsPlot] = None,
     ):
         """
         Visualizes data structures (e.g an `Array2D`, `Grid2D`, `VectorField`, etc.) using Matplotlib.
@@ -219,7 +227,7 @@ class MatPlot2D(aplt.MatPlot2D):
           Scatters a `Grid2D` of (y,x) coordinates over the figure using `plt.scatter`.
         grid_plot: aplt.LinePlot
           Plots lines of data (e.g. a y versus x plot via `plt.plot`, vertical lines via `plt.avxline`, etc.)
-        vectors_quiver: aplt.VectorFieldQuiver
+        vector_yx_quiver: aplt.VectorYXQuiver
           Plots a `VectorField` object using the matplotlib function `plt.quiver`.
         patch_overlay: aplt.PatchOverlay
           Overlays matplotlib `patches.Patch` objects over the figure, such as an `Ellipse`.
@@ -249,11 +257,17 @@ class MatPlot2D(aplt.MatPlot2D):
             Plots the caustics of the lens mass model as colored lines.
         """
 
-        self.light_profile_centres_scatter = light_profile_centres_scatter
-        self.mass_profile_centres_scatter = mass_profile_centres_scatter
-        self.multiple_images_scatter = multiple_images_scatter
-        self.critical_curves_plot = critical_curves_plot
-        self.caustics_plot = caustics_plot
+        self.light_profile_centres_scatter = (
+            light_profile_centres_scatter or w.LightProfileCentresScatter()
+        )
+        self.mass_profile_centres_scatter = (
+            mass_profile_centres_scatter or w.MassProfileCentresScatter()
+        )
+        self.multiple_images_scatter = (
+            multiple_images_scatter or w.MultipleImagesScatter()
+        )
+        self.critical_curves_plot = critical_curves_plot or w.CriticalCurvesPlot()
+        self.caustics_plot = caustics_plot or w.CausticsPlot()
 
         super(MatPlot2D, self).__init__(
             units=units,
@@ -278,7 +292,7 @@ class MatPlot2D(aplt.MatPlot2D):
             positions_scatter=positions_scatter,
             index_scatter=index_scatter,
             pixelization_grid_scatter=pixelization_grid_scatter,
-            vectors_quiver=vectors_quiver,
+            vector_yx_quiver=vector_yx_quiver,
             patch_overlay=patch_overlay,
             array_overlay=array_overlay,
             grid_plot=grid_plot,
