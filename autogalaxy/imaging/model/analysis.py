@@ -32,7 +32,7 @@ class AnalysisImaging(AnalysisDataset):
         such as visualization, outputting results to hard-disk and storing results in a format that can be loaded after
         the model-fit is complete using PyAutoFit's database tools.
 
-        This Analysis class is used for model-fits which fit galaxy_list (or objects containing galaxy_list like a `Plane`)
+        This Analysis class is used for model-fits which fit galaxies (or objects containing galaxies like a `Plane`)
         to an imaging dataset.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
@@ -44,7 +44,7 @@ class AnalysisImaging(AnalysisDataset):
         dataset
             The `Imaging` dataset that the model is fitted too.
         hyper_dataset_result
-            The hyper-model image and hyper galaxy_list images of a previous result in a model-fitting pipeline, which are
+            The hyper-model image and hyper galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
@@ -75,13 +75,13 @@ class AnalysisImaging(AnalysisDataset):
 
         For this analysis class, this function performs the following steps:
 
-        1) If the analysis has a hyper dataset, associated the model galaxy images of this dataset to the galaxy_list in
+        1) If the analysis has a hyper dataset, associated the model galaxy images of this dataset to the galaxies in
         the model instance.
 
         2) Extract attributes which model aspects of the data reductions, like the scaling the background sky
         and background noise.
 
-        3) Extracts all galaxy_list from the model instance and set up a `Plane`.
+        3) Extracts all galaxies from the model instance and set up a `Plane`.
 
         4) Use the `Plane` and other attributes to create a `FitImaging` object, which performs steps such as creating
         model images of every galaxy in the plane, blurring them with the imaging dataset's PSF and computing residuals,
@@ -145,7 +145,7 @@ class AnalysisImaging(AnalysisDataset):
         Parameters
         ----------
         plane
-            The plane of galaxy_list whose model images are used to fit the imaging data.
+            The plane of galaxies whose model images are used to fit the imaging data.
         hyper_image_sky
             A model component which scales the background sky level of the data before computing the log likelihood.
         hyper_background_noise
@@ -182,12 +182,12 @@ class AnalysisImaging(AnalysisDataset):
 
         The visualization performed by this function includes:
 
-        - Images of the best-fit `Plane`, including the images of each of its galaxy_list.
+        - Images of the best-fit `Plane`, including the images of each of its galaxies.
 
         - Images of the best-fit `FitImaging`, including the model-image, residuals and chi-squared of its fit to
         the imaging data.
 
-        - The hyper-images of the model-fit showing how the hyper galaxy_list are used to represent different galaxy_list in
+        - The hyper-images of the model-fit showing how the hyper galaxies are used to represent different galaxies in
         the dataset.
 
         - If hyper features are used to scale the noise or background sky, a `FitImaging` with these features turned
@@ -271,7 +271,7 @@ class AnalysisImaging(AnalysisDataset):
             A PyAutoFit object which contains the samples of the non-linear search, for example the chains of an MCMC
             run of samples of the nested sampler.
         model
-            The PyAutoFit model object, which includes model components representing the galaxy_list that are fitted to
+            The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
             the imaging data.
         search
             The non-linear search used to perform this model-fit.

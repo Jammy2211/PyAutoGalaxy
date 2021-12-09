@@ -433,7 +433,7 @@ class EllEff(lp.EllEff, LightProfileSNR):
     ):
         """
         The elliptical eff light profile, which is commonly used to represent the clumps of Lyman-alpha emitter
-        galaxy_list.
+        galaxies.
 
         Parameters
         ----------
@@ -471,7 +471,7 @@ class SphEff(lp.SphEff, LightProfileSNR):
     ):
         """
         The spherical eff light profile, which is commonly used to represent the clumps of Lyman-alpha emitter
-        galaxy_list.
+        galaxies.
 
         This profile is introduced in the following paper:
 

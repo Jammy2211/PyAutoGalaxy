@@ -29,7 +29,7 @@ def test__signal_to_noise_via_simulator_correct():
     )
 
     imaging = simulator.via_galaxies_from(
-        grid=grid, galaxy_list=[ag.Galaxy(redshift=0.5, light=sersic)]
+        grid=grid, galaxies=[ag.Galaxy(redshift=0.5, light=sersic)]
     )
 
     assert 9.0 < imaging.signal_to_noise_max < 11.0

@@ -173,7 +173,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
 
         Figures plotted by this object average over a list mass profiles to computed the average value of each attribute
         with errors, where the 1D regions within the errors are plotted as a shaded region to show the range of
-        plausible models. Therefore, the input list of galaxy_list is expected to represent the probability density
+        plausible models. Therefore, the input list of galaxies is expected to represent the probability density
         function of an inferred model-fit.
 
         The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default, 
@@ -230,7 +230,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
 
         This averages over a list mass profiles to compute the average value of each attribute with errors, where the
         1D regions within the errors are plotted as a shaded region to show the range of plausible models. Therefore,
-        the input list of galaxy_list is expected to represent the probability density function of an inferred model-fit.
+        the input list of galaxies is expected to represent the probability density function of an inferred model-fit.
 
         If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
         computed from each mass profile. This is performed by aligning a 1D grid with the major-axis of

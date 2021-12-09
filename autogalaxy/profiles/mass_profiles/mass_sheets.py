@@ -49,7 +49,7 @@ class MassSheet(MassProfile):
 class ExternalShear(MassProfile):
     def __init__(self, elliptical_comps: Tuple[float, float] = (0.0, 0.0)):
         """
-        An `ExternalShear` term, to model the line-of-sight contribution of other galaxy_list / satellites.
+        An `ExternalShear` term, to model the line-of-sight contribution of other galaxies / satellites.
 
         The shear angle is defined in the direction of stretching of the image. Therefore, if an object located \
         outside the lens is responsible for the shear, it will be offset 90 degrees from the value of angle.

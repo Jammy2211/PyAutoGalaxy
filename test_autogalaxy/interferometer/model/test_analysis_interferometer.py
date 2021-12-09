@@ -15,7 +15,7 @@ class TestAnalysisInterferometer:
     def test__make_result__result_interferometer_is_returned(self, interferometer_7):
 
         model = af.Collection(
-            galaxy_list=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5))
+            galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5))
         )
 
         analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
@@ -32,7 +32,7 @@ class TestAnalysisInterferometer:
 
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=0.1))
 
-        model = af.Collection(galaxy_list=af.Collection(galaxy=galaxy))
+        model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
         analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
 
@@ -54,7 +54,7 @@ class TestAnalysisInterferometer:
 
         model = af.Collection(
             hyper_background_noise=hyper_background_noise,
-            galaxy_list=af.Collection(galaxy=galaxy),
+            galaxies=af.Collection(galaxy=galaxy),
         )
 
         analysis = ag.AnalysisInterferometer(dataset=interferometer_7)

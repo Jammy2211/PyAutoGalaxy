@@ -14,18 +14,18 @@ directory = path.dirname(path.realpath(__file__))
 class TestAnalysisDataset:
     def test__associate_hyper_images(self, masked_imaging_7x7):
 
-        galaxy_list = af.ModelInstance()
-        galaxy_list.galaxy = ag.Galaxy(redshift=0.5)
-        galaxy_list.source = ag.Galaxy(redshift=1.0)
+        galaxies = af.ModelInstance()
+        galaxies.galaxy = ag.Galaxy(redshift=0.5)
+        galaxies.source = ag.Galaxy(redshift=1.0)
 
         instance = af.ModelInstance()
-        instance.galaxy_list = galaxy_list
+        instance.galaxies = galaxies
 
         hyper_galaxy_image_path_dict = {
-            ("galaxy_list", "galaxy"): ag.Array2D.ones(
+            ("galaxies", "galaxy"): ag.Array2D.ones(
                 shape_native=(3, 3), pixel_scales=1.0
             ),
-            ("galaxy_list", "source"): ag.Array2D.full(
+            ("galaxies", "source"): ag.Array2D.full(
                 fill_value=2.0, shape_native=(3, 3), pixel_scales=1.0
             ),
         }
@@ -44,16 +44,16 @@ class TestAnalysisDataset:
 
         instance = analysis.associate_hyper_images(instance=instance)
 
-        assert instance.galaxy_list.galaxy.hyper_galaxy_image.native == pytest.approx(
+        assert instance.galaxies.galaxy.hyper_galaxy_image.native == pytest.approx(
             np.ones((3, 3)), 1.0e-4
         )
-        assert instance.galaxy_list.source.hyper_galaxy_image.native == pytest.approx(
+        assert instance.galaxies.source.hyper_galaxy_image.native == pytest.approx(
             2.0 * np.ones((3, 3)), 1.0e-4
         )
 
-        assert instance.galaxy_list.galaxy.hyper_model_image.native == pytest.approx(
+        assert instance.galaxies.galaxy.hyper_model_image.native == pytest.approx(
             3.0 * np.ones((3, 3)), 1.0e-4
         )
-        assert instance.galaxy_list.source.hyper_model_image.native == pytest.approx(
+        assert instance.galaxies.source.hyper_model_image.native == pytest.approx(
             3.0 * np.ones((3, 3)), 1.0e-4
         )

@@ -2,7 +2,7 @@ PyAutoGalaxy
 ==========
 
 The study of a galaxy's light, structure and dynamics is at the heart of modern day Astrophysical research.
-**PyAutoGalaxy** makes it simple to model galaxy_list, like this one:
+**PyAutoGalaxy** makes it simple to model galaxies, like this one:
 
 Missing for now :(
 

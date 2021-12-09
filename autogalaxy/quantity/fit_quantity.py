@@ -28,7 +28,7 @@ class FitQuantity(aa.FitDataset):
         can be computed.
 
         This is ultimately used in the `AnalysisQuantity` class to perform model-fitting of quantities of different
-        mass profiles, light profiles, galaxy_list, etc.
+        mass profiles, light profiles, galaxies, etc.
 
         Parameters
         ----------
@@ -36,7 +36,7 @@ class FitQuantity(aa.FitDataset):
             The quantity that is to be fitted, which has a noise-map associated it with for computing goodness-of-fit
             metrics.
         light_mass_obj
-            An object containing functions which computes a light and / or mass quantity (e.g. a plane of galaxy_list)
+            An object containing functions which computes a light and / or mass quantity (e.g. a plane of galaxies)
             whose model quantities are used to fit the quantity data.
         func_str
             A string giving the name of the method of the input `Plane` used to compute the quantity that fits

@@ -159,7 +159,7 @@ class MockResult(af.MockResult):
         self.unmasked_model_image = model_image
         self.pixelization = pixelization
 
-        self.max_log_likelihood_plane = ag.Plane(galaxy_list=[ag.Galaxy(redshift=0.5)])
+        self.max_log_likelihood_plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)])
 
     @property
     def last(self):

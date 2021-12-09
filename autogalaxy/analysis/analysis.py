@@ -21,7 +21,7 @@ class Analysis(af.Analysis):
         """
         Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.
 
-        This abstract Analysis class for all model-fits which fit galaxy_list (or objects containing galaxy_list like a
+        This abstract Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a
         plane), but does not perform a model-fit by itself (and is therefore only inherited from).
 
         This class stores the Cosmology used for the analysis and hyper datasets used for certain model classes.
@@ -35,7 +35,7 @@ class Analysis(af.Analysis):
 
     def plane_for_instance(self, instance: af.ModelInstance) -> Plane:
         """
-        Create a `Plane` from the galaxy_list contained in a model instance.
+        Create a `Plane` from the galaxies contained in a model instance.
 
         Parameters
         ----------
@@ -47,7 +47,7 @@ class Analysis(af.Analysis):
         -------
         An instance of the Plane class that is used to then fit the dataset.
         """
-        return Plane(galaxy_list=instance.galaxy_list)
+        return Plane(galaxies=instance.galaxies)
 
 
 class AnalysisDataset(Analysis):
@@ -60,7 +60,7 @@ class AnalysisDataset(Analysis):
         settings_inversion: aa.SettingsInversion = None,
     ):
         """
-        Abstract Analysis class for all model-fits which fit galaxy_list (or objects containing galaxy_list like a plane)
+        Abstract Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a plane)
         to a dataset, like imaging or interferometer data.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
@@ -72,7 +72,7 @@ class AnalysisDataset(Analysis):
         dataset
             The dataset that is the model is fitted too.
         hyper_dataset_result
-            The hyper-model image and hyper galaxy_list images of a previous result in a model-fitting pipeline, which are
+            The hyper-model image and hyper galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
@@ -112,8 +112,8 @@ class AnalysisDataset(Analysis):
         fitted.
 
         This passes the hyper model image and hyper galaxy images of the previous fit. These represent where different
-        galaxy_list in the dataset are located and thus allows the fit to adapt different aspects of the model to different
-        galaxy_list in the data.
+        galaxies in the dataset are located and thus allows the fit to adapt different aspects of the model to different
+        galaxies in the data.
 
         Parameters
         ----------
@@ -171,28 +171,28 @@ class AnalysisDataset(Analysis):
     def associate_hyper_images(self, instance: af.ModelInstance) -> af.ModelInstance:
         """
         Using the model image and galaxy images that were set up as the hyper dataset, associate the galaxy images
-        of that result with the galaxy_list in this model fit.
+        of that result with the galaxies in this model fit.
 
         Association is performed based on galaxy names, whereby if the name of a galaxy in this search matches the
-        full-path name of galaxy_list in the hyper dataset the galaxy image is passed.
+        full-path name of galaxies in the hyper dataset the galaxy image is passed.
 
         If the galaxy collection has a different name then an association is not made.
 
-        For example, `galaxy_list.lens` will match with:
-            `galaxy_list.lens`
+        For example, `galaxies.lens` will match with:
+            `galaxies.lens`
         but not with:
-            `galaxy_list.source`
+            `galaxies.source`
 
         Parameters
         ----------
         instance
         An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
-            via a non-linear search), which has 0 or more galaxy_list in its tree.
+            via a non-linear search), which has 0 or more galaxies in its tree.
 
         Returns
         -------
         instance
-           The input instance with images associated with galaxy_list where possible.
+           The input instance with images associated with galaxies where possible.
         """
 
         if self.hyper_galaxy_image_path_dict is not None:

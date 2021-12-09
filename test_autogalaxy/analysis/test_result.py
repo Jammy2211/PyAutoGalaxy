@@ -14,7 +14,7 @@ class TestResultAbstract:
     ):
 
         model = af.Collection(
-            galaxy_list=af.Collection(
+            galaxies=af.Collection(
                 galaxy=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.EllSersic),
                 source=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.EllSersic),
             )
@@ -27,8 +27,8 @@ class TestResultAbstract:
             search=None,
         )
 
-        assert isinstance(result.instance.galaxy_list[0], ag.Galaxy)
-        assert isinstance(result.instance.galaxy_list[1], ag.Galaxy)
+        assert isinstance(result.instance.galaxies[0], ag.Galaxy)
+        assert isinstance(result.instance.galaxies[1], ag.Galaxy)
 
     def test__max_log_likelihood_plane_available_as_result(self, analysis_imaging_7x7):
 
@@ -36,10 +36,10 @@ class TestResultAbstract:
         galaxy_1 = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=2.0))
 
         model = af.Collection(
-            galaxy_list=af.Collection(galaxy_0=galaxy_0, galaxy_1=galaxy_1)
+            galaxies=af.Collection(galaxy_0=galaxy_0, galaxy_1=galaxy_1)
         )
 
-        max_log_likelihood_plane = ag.Plane(galaxy_list=[galaxy_0, galaxy_1])
+        max_log_likelihood_plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
         search = MockSearch(
             name="test_search",
@@ -49,8 +49,8 @@ class TestResultAbstract:
         result = search.fit(model=model, analysis=analysis_imaging_7x7)
 
         assert isinstance(result.max_log_likelihood_plane, ag.Plane)
-        assert result.max_log_likelihood_plane.galaxy_list[0].light.intensity == 1.0
-        assert result.max_log_likelihood_plane.galaxy_list[1].light.intensity == 2.0
+        assert result.max_log_likelihood_plane.galaxies[0].light.intensity == 1.0
+        assert result.max_log_likelihood_plane.galaxies[1].light.intensity == 2.0
 
 
 class TestResultDataset:
@@ -63,7 +63,7 @@ class TestResultDataset:
             regularization=MockRegularization(),
         )
 
-        max_log_likelihood_plane = ag.Plane(galaxy_list=[source])
+        max_log_likelihood_plane = ag.Plane(galaxies=[source])
 
         samples = MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
 

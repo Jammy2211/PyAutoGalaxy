@@ -89,7 +89,7 @@ class FitImagingPlotter(Plotter):
     @property
     def galaxy_indices(self) -> List[int]:
         """
-        Returns a list of all indexes of the galaxy_list in the fit, which is iterated over in figures that plot
+        Returns a list of all indexes of the galaxies in the fit, which is iterated over in figures that plot
         individual figures of each galaxy in a plane.
 
 
@@ -101,9 +101,9 @@ class FitImagingPlotter(Plotter):
         Returns
         -------
         list
-            A list of galaxy indexes corresponding to galaxy_list in the plane.
+            A list of galaxy indexes corresponding to galaxies in the plane.
         """
-        return list(range(len(self.fit.galaxy_list)))
+        return list(range(len(self.fit.galaxies)))
 
     def figures_2d_of_galaxies(
         self,
@@ -115,7 +115,7 @@ class FitImagingPlotter(Plotter):
         Plots images representing each individual `Galaxy` in the plotter's `Plane` in 2D, which are computed via the
         plotter's 2D grid object.
 
-        These images subtract or omit the contribution of other galaxy_list in the plane, such that plots showing
+        These images subtract or omit the contribution of other galaxies in the plane, such that plots showing
         each individual galaxy are made.
 
         The API is such that every plottable attribute of the `Galaxy` object is an input parameter of type bool of
@@ -125,7 +125,7 @@ class FitImagingPlotter(Plotter):
         ----------
         subtracted_image
             Whether or not to make a 2D plot (via `imshow`) of the subtracted image of a galaxy, where this image is
-            the fit's `data` minus the model images of all other galaxy_list, thereby showing an individual galaxy in the
+            the fit's `data` minus the model images of all other galaxies, thereby showing an individual galaxy in the
             data.
         model_image
             Whether or not to make a 2D plot (via `imshow`) of the model image of a galaxy, where this image is the
@@ -174,7 +174,7 @@ class FitImagingPlotter(Plotter):
         Plots images representing each individual `Galaxy` in the plotter's `Plane` in 2D on a subplot, which are
         computed via the plotter's 2D grid object.
 
-        These images subtract or omit the contribution of other galaxy_list in the plane, such that plots showing
+        These images subtract or omit the contribution of other galaxies in the plane, such that plots showing
         each individual galaxy are made.
 
         The subplot plots the subtracted image and model image of each galaxy, where are described in the

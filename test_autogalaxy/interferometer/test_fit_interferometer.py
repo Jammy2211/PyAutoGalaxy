@@ -38,7 +38,7 @@ class TestLikelihood:
         g0 = ag.Galaxy(
             redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(2))
         )
-        plane = ag.Plane(galaxy_list=[g0])
+        plane = ag.Plane(galaxies=[g0])
 
         fit = ag.FitInterferometer(dataset=interferometer, plane=plane)
 
@@ -82,7 +82,7 @@ class TestLikelihood:
         g0 = ag.Galaxy(
             redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(2))
         )
-        plane = ag.Plane(galaxy_list=[g0])
+        plane = ag.Plane(galaxies=[g0])
 
         hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
@@ -111,7 +111,7 @@ class TestCompareToManualProfilesOnly:
 
         g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=1.0))
 
-        plane = ag.Plane(redshift=0.75, galaxy_list=[g0, g1])
+        plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
@@ -168,7 +168,7 @@ class TestCompareToManualProfilesOnly:
         )
         g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=1.0))
 
-        plane = ag.Plane(redshift=0.75, galaxy_list=[g0, g1])
+        plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
@@ -188,7 +188,7 @@ class TestCompareToManualProfilesOnly:
         )
         g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=1.0))
 
-        plane = ag.Plane(redshift=0.75, galaxy_list=[g0, g1])
+        plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
@@ -227,7 +227,7 @@ class TestCompareToManualProfilesOnly:
 
         g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=1.0))
 
-        plane = ag.Plane(redshift=0.75, galaxy_list=[g0, g1])
+        plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
         fit = ag.FitInterferometer(
             dataset=interferometer_7,
@@ -258,7 +258,7 @@ class TestCompareToManualInversionOnly:
 
         g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
 
-        plane = ag.Plane(galaxy_list=[ag.Galaxy(redshift=0.5), g0])
+        plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
@@ -349,7 +349,7 @@ class TestCompareToManualInversionOnly:
         g0 = ag.Galaxy(redshift=0.5)
         g1 = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-        plane = ag.Plane(redshift=0.75, galaxy_list=[g0, g1])
+        plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
@@ -376,7 +376,7 @@ class TestCompareToManualInversionOnly:
         g0 = ag.Galaxy(redshift=0.5)
         g1 = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-        plane = ag.Plane(redshift=0.75, galaxy_list=[g0, g1])
+        plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
@@ -412,7 +412,7 @@ class TestCompareToManualInversionOnly:
 
         g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
 
-        plane = ag.Plane(galaxy_list=[ag.Galaxy(redshift=0.5), g0])
+        plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
         fit = ag.FitInterferometer(
             dataset=interferometer_7,
@@ -435,7 +435,7 @@ class TestCompareToManualInversionOnly:
 
         g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
 
-        plane = ag.Plane(galaxy_list=[ag.Galaxy(redshift=0.5), g0])
+        plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
         fit = ag.FitInterferometer(
             dataset=interferometer_7_lop,
@@ -535,7 +535,7 @@ class TestCompareToManualProfilesAndInversion:
         reg = ag.reg.Constant(coefficient=1.0)
         galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-        plane = ag.Plane(redshift=0.75, galaxy_list=[galaxy_light, galaxy_pix])
+        plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
@@ -642,7 +642,7 @@ class TestCompareToManualProfilesAndInversion:
         reg = ag.reg.Constant(coefficient=1.0)
         galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-        plane = ag.Plane(redshift=0.75, galaxy_list=[g0, g1, galaxy_pix])
+        plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, galaxy_pix])
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
@@ -695,7 +695,7 @@ class TestCompareToManualProfilesAndInversion:
         reg = ag.reg.Constant(coefficient=1.0)
         galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-        plane = ag.Plane(redshift=0.75, galaxy_list=[g0, g1, g2, galaxy_pix])
+        plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2, galaxy_pix])
 
         fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
@@ -760,7 +760,7 @@ class TestCompareToManualProfilesAndInversion:
         reg = ag.reg.Constant(coefficient=1.0)
         galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-        plane = ag.Plane(redshift=0.75, galaxy_list=[galaxy_light, galaxy_pix])
+        plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
 
         fit = ag.FitInterferometer(
             dataset=interferometer_7,

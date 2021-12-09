@@ -78,12 +78,12 @@ class SimulatorImaging(aa.SimulatorImaging):
             kernel_shape=self.psf.shape_native
         )
 
-    def via_galaxies_from(self, galaxy_list, grid, name=None):
+    def via_galaxies_from(self, galaxies, grid, name=None):
         """Simulate imaging data for this data, as follows:
 
         1)  Setup the image-plane grid of the Imaging arrays, which defines the coordinates used for the ray-tracing.
 
-        2) Use this grid and the lens and source galaxy_list to setup a plane, which generates the image of \
+        2) Use this grid and the lens and source galaxies to setup a plane, which generates the image of \
            the simulated imaging data.
 
         3) Simulate the imaging data, using a special image which ensures edge-effects don't
@@ -95,8 +95,8 @@ class SimulatorImaging(aa.SimulatorImaging):
            imaging data instance."""
 
         plane = Plane(
-            redshift=float(np.mean([galaxy.redshift for galaxy in galaxy_list])),
-            galaxy_list=galaxy_list,
+            redshift=float(np.mean([galaxy.redshift for galaxy in galaxies])),
+            galaxies=galaxies,
         )
 
         return self.via_plane_from(plane=plane, grid=grid, name=name)

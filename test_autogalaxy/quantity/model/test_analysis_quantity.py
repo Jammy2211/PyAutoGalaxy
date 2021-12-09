@@ -14,7 +14,7 @@ class TestAnalysisQuantity:
     ):
 
         model = af.Collection(
-            galaxy_list=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5))
+            galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5))
         )
 
         analysis = ag.AnalysisQuantity(
@@ -32,7 +32,7 @@ class TestAnalysisQuantity:
     ):
         galaxy = ag.Galaxy(redshift=0.5, light=ag.mp.EllIsothermal(einstein_radius=1.0))
 
-        model = af.Collection(galaxy_list=af.Collection(galaxy=galaxy))
+        model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
         analysis = ag.AnalysisQuantity(
             dataset=dataset_quantity_7x7_array_2d, func_str="convergence_2d_from"

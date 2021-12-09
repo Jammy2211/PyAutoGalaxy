@@ -20,80 +20,80 @@ from autogalaxy.util import plane_util
 class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def __init__(
         self,
-        galaxy_list,
+        galaxies,
         redshift: Optional[float] = None,
         profiling_dict: Optional[Dict] = None,
     ):
-        """A plane of galaxy_list where all galaxy_list are at the same redshift.
+        """A plane of galaxies where all galaxies are at the same redshift.
 
         Parameters
         -----------
         redshift or None
             The redshift of the plane.
-        galaxy_list : [Galaxy]
-            The list of galaxy_list in this plane.
+        galaxies : [Galaxy]
+            The list of galaxies in this plane.
         """
 
         if redshift is None:
 
-            if not galaxy_list:
+            if not galaxies:
                 raise exc.PlaneException(
-                    "No redshift and no galaxy_list were input to a Plane. A redshift for the Plane therefore cannot be"
+                    "No redshift and no galaxies were input to a Plane. A redshift for the Plane therefore cannot be"
                     "determined"
                 )
             elif not all(
-                [galaxy_list[0].redshift == galaxy.redshift for galaxy in galaxy_list]
+                [galaxies[0].redshift == galaxy.redshift for galaxy in galaxies]
             ):
-                redshift = np.mean([galaxy.redshift for galaxy in galaxy_list])
+                redshift = np.mean([galaxy.redshift for galaxy in galaxies])
             else:
-                redshift = galaxy_list[0].redshift
+                redshift = galaxies[0].redshift
 
         self.redshift = redshift
-        self.galaxy_list = galaxy_list
+        self.galaxies = galaxies
 
         self.profiling_dict = profiling_dict
 
     def dict(self) -> Dict:
         plane_dict = super().dict()
-        plane_dict["galaxy_list"] = [galaxy.dict() for galaxy in self.galaxy_list]
+        plane_dict["galaxies"] = [galaxy.dict() for galaxy in self.galaxies]
         return plane_dict
 
     @property
     def galaxy_redshifts(self) -> List[float]:
-        return [galaxy.redshift for galaxy in self.galaxy_list]
+        return [galaxy.redshift for galaxy in self.galaxies]
 
     @property
     def has_light_profile(self) -> bool:
-        if self.galaxy_list is not None:
+        if self.galaxies is not None:
             return any(
-                list(map(lambda galaxy: galaxy.has_light_profile, self.galaxy_list))
+                list(map(lambda galaxy: galaxy.has_light_profile, self.galaxies))
             )
 
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
         """
-        Returns the profile-image plane image of the list of galaxy_list of the plane's sub-grid, by summing the
+        Returns the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
         individual images of each galaxy's light profile.
 
         The image is calculated on the sub-grid and binned-up to the original grid by taking the mean
         value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
 
-        If the plane has no galaxy_list (or no galaxy_list have mass profiles) an arrays of all zeros the shape of the plane's
+        If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
         sub-grid is returned.
 
         Parameters
         -----------
 
         """
-        if self.galaxy_list:
+        if self.galaxies:
             return sum(
-                map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxy_list)
+                map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies)
             )
         return np.zeros((grid.shape[0],))
 
     def image_2d_list_from(self, grid: aa.type.Grid2DLike) -> List[aa.Array2D]:
         return list(
-            map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxy_list)
+            map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies)
         )
 
     def galaxy_image_2d_dict_from(
@@ -104,7 +104,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         the instance of each galaxy as the dictionary keys.
 
         This object is used for hyper-features, which use the image of each galaxy in a model-fit in order to
-        adapt quantities like a pixelization or regularization scheme to the surface brightness of the galaxy_list being
+        adapt quantities like a pixelization or regularization scheme to the surface brightness of the galaxies being
         fitted.
 
         By inheriting from `OperateImageGalaxies` functions which apply operations of this dictionary are accessible,
@@ -124,7 +124,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         galaxy_image_dict = dict()
 
         images_of_galaxies = self.image_2d_list_from(grid=grid)
-        for (galaxy_index, galaxy) in enumerate(self.galaxy_list):
+        for (galaxy_index, galaxy) in enumerate(self.galaxies):
             galaxy_image_dict[galaxy] = images_of_galaxies[galaxy_index]
 
         return galaxy_image_dict
@@ -133,19 +133,19 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return plane_util.plane_image_of_galaxies_from(
             shape=grid.mask.shape,
             grid=grid.mask.unmasked_grid_sub_1,
-            galaxy_list=self.galaxy_list,
+            galaxies=self.galaxies,
         )
 
     @property
     def has_mass_profile(self) -> bool:
-        if self.galaxy_list is not None:
+        if self.galaxies is not None:
             return any(
-                list(map(lambda galaxy: galaxy.has_mass_profile, self.galaxy_list))
+                list(map(lambda galaxy: galaxy.has_mass_profile, self.galaxies))
             )
 
     @property
     def galaxies_with_mass_profile(self) -> List[Galaxy]:
-        return list(filter(lambda galaxy: galaxy.has_mass_profile, self.galaxy_list))
+        return list(filter(lambda galaxy: galaxy.has_mass_profile, self.galaxies))
 
     @property
     def mass_profile_list(self) -> List:
@@ -159,28 +159,28 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def mass_profile_list_of_galaxies(self) -> List:
         return [
             galaxy.mass_profile_list
-            for galaxy in self.galaxy_list
+            for galaxy in self.galaxies
             if galaxy.has_mass_profile
         ]
 
     @aa.grid_dec.grid_2d_to_structure
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
-        if self.galaxy_list:
+        if self.galaxies:
             return sum(
-                map(lambda g: g.deflections_yx_2d_from(grid=grid), self.galaxy_list)
+                map(lambda g: g.deflections_yx_2d_from(grid=grid), self.galaxies)
             )
         return np.zeros(shape=(grid.shape[0], 2))
 
     @aa.grid_dec.grid_2d_to_structure
     def convergence_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Returns the convergence of the list of galaxy_list of the plane's sub-grid, by summing the individual convergences \
+        Returns the convergence of the list of galaxies of the plane's sub-grid, by summing the individual convergences \
         of each galaxy's mass profile.
 
         The convergence is calculated on the sub-grid and binned-up to the original grid by taking the mean
         value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
 
-        If the plane has no galaxy_list (or no galaxy_list have mass profiles) an arrays of all zeros the shape of the plane's
+        If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
         sub-grid is returned.
 
         Internally data structures are treated as ndarrays, however the decorator `grid_2d_to_structure` converts
@@ -191,25 +191,25 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         grid : Grid2D
             The grid (or sub) of (y,x) arc-second coordinates at the centre of every unmasked pixel which the \
             potential is calculated on.
-        galaxy_list : [Galaxy]
-            The galaxy_list whose mass profiles are used to compute the surface densities.
+        galaxies : [Galaxy]
+            The galaxies whose mass profiles are used to compute the surface densities.
         """
-        if self.galaxy_list:
+        if self.galaxies:
             return sum(
-                map(lambda g: g.convergence_2d_from(grid=grid), self.galaxy_list)
+                map(lambda g: g.convergence_2d_from(grid=grid), self.galaxies)
             )
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
     def potential_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Returns the potential of the list of galaxy_list of the plane's sub-grid, by summing the individual potentials \
+        Returns the potential of the list of galaxies of the plane's sub-grid, by summing the individual potentials \
         of each galaxy's mass profile.
 
         The potential is calculated on the sub-grid and binned-up to the original grid by taking the mean
         value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
 
-        If the plane has no galaxy_list (or no galaxy_list have mass profiles) an arrays of all zeros the shape of the plane's
+        If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
         sub-grid is returned.
 
         Internally data structures are treated as ndarrays, however the decorator `grid_2d_to_structure` converts
@@ -220,11 +220,11 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         grid : Grid2D
             The grid (or sub) of (y,x) arc-second coordinates at the centre of every unmasked pixel which the \
             potential is calculated on.
-        galaxy_list : [Galaxy]
-            The galaxy_list whose mass profiles are used to compute the surface densities.
+        galaxies : [Galaxy]
+            The galaxies whose mass profiles are used to compute the surface densities.
         """
-        if self.galaxy_list:
-            return sum(map(lambda g: g.potential_2d_from(grid=grid), self.galaxy_list))
+        if self.galaxies:
+            return sum(map(lambda g: g.potential_2d_from(grid=grid), self.galaxies))
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
@@ -252,11 +252,11 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
     @property
     def has_pixelization(self) -> bool:
-        return any([galaxy.pixelization for galaxy in self.galaxy_list])
+        return any([galaxy.pixelization for galaxy in self.galaxies])
 
     @property
     def galaxies_with_pixelization(self) -> List[Galaxy]:
-        return list(filter(lambda galaxy: galaxy.has_pixelization, self.galaxy_list))
+        return list(filter(lambda galaxy: galaxy.has_pixelization, self.galaxies))
 
     @property
     def hyper_galaxies_with_pixelization_image_list(self) -> List[Galaxy]:
@@ -268,11 +268,11 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
     @property
     def has_regularization(self) -> bool:
-        return any([galaxy.regularization for galaxy in self.galaxy_list])
+        return any([galaxy.regularization for galaxy in self.galaxies])
 
     @property
     def galaxies_with_regularization(self) -> List[Galaxy]:
-        return list(filter(lambda galaxy: galaxy.has_regularization, self.galaxy_list))
+        return list(filter(lambda galaxy: galaxy.has_regularization, self.galaxies))
 
     @property
     def regularization_list(self) -> List:
@@ -386,14 +386,14 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
     @property
     def has_hyper_galaxy(self) -> bool:
-        return any(list(map(lambda galaxy: galaxy.has_hyper_galaxy, self.galaxy_list)))
+        return any(list(map(lambda galaxy: galaxy.has_hyper_galaxy, self.galaxies)))
 
     def hyper_noise_map_from(self, noise_map) -> aa.Array2D:
         hyper_noise_maps = self.hyper_noise_map_list_from(noise_map=noise_map)
         return sum(hyper_noise_maps)
 
     def hyper_noise_map_list_from(self, noise_map) -> List[aa.Array2D]:
-        """For a contribution map and noise-map, use the model hyper_galaxy galaxy_list to compute a hyper noise-map.
+        """For a contribution map and noise-map, use the model hyper_galaxy galaxies to compute a hyper noise-map.
 
         Parameters
         -----------
@@ -403,7 +403,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         """
         hyper_noise_maps = []
 
-        for galaxy in self.galaxy_list:
+        for galaxy in self.galaxies:
 
             if galaxy.has_hyper_galaxy:
 
@@ -443,7 +443,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         contribution_map_list = []
 
-        for galaxy in self.galaxy_list:
+        for galaxy in self.galaxies:
 
             if galaxy.hyper_galaxy is not None:
 
@@ -487,7 +487,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         attributes = [
             extract(value, attr_name)
-            for galaxy in self.galaxy_list
+            for galaxy in self.galaxies
             for value in galaxy.__dict__.values()
             if isinstance(value, cls)
         ]
@@ -504,7 +504,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         Returns an attribute of a class in the plane as a list of `ValueIrregular` or `Grid2DIrregular` objects,
         where the list indexes correspond to each galaxy in the plane..
 
-        For example, if a plane has two galaxy_list which each have a light profile the following:
+        For example, if a plane has two galaxies which each have a light profile the following:
 
         `plane.extract_attributes_of_galaxies(cls=LightProfile, name="axis_ratio")`
 
@@ -512,7 +512,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         [ValuesIrregular(values=[axis_ratio_0]), ValuesIrregular(values=[axis_ratio_1])]
 
-        If a plane has two galaxy_list, the first with a mass profile and the second with two mass profiles ,the following:
+        If a plane has two galaxies, the first with a mass profile and the second with two mass profiles ,the following:
 
         `plane.extract_attributes_of_galaxies(cls=MassProfile, name="centres")`
 
@@ -531,7 +531,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
             return [
                 galaxy.extract_attribute(cls=cls, attr_name=attr_name)
-                for galaxy in self.galaxy_list
+                for galaxy in self.galaxies
                 if galaxy.extract_attribute(cls=cls, attr_name=attr_name) is not None
             ]
 
@@ -539,7 +539,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
             return [
                 galaxy.extract_attribute(cls=cls, attr_name=attr_name)
-                for galaxy in self.galaxy_list
+                for galaxy in self.galaxies
             ]
 
     def set_snr_of_snr_light_profiles(
@@ -549,7 +549,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         background_sky_level: float = 0.0,
     ):
 
-        for galaxy in self.galaxy_list:
+        for galaxy in self.galaxies:
             for light_profile in galaxy.light_profile_list:
                 if isinstance(light_profile, LightProfileSNR):
                     light_profile.set_intensity_from(

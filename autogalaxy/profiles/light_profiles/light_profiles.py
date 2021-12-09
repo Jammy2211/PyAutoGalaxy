@@ -279,7 +279,7 @@ class AbstractEllSersic(LightProfile):
         For elliptical systems, this will not robustly capture the light profile's elliptical shape.
 
         The elliptical effective radius instead describes the major-axis radius of the ellipse containing
-        half the light, and may be more appropriate for highly flattened systems like disk galaxy_list.
+        half the light, and may be more appropriate for highly flattened systems like disk galaxies.
         """
         return self.effective_radius / np.sqrt(self.axis_ratio)
 
@@ -993,7 +993,7 @@ class EllEff(LightProfile):
     ):
         """
         The elliptical Elson, Fall and Freeman (EFF) light profile, which is commonly used to represent the clumps of
-        Lyman-alpha emitter galaxy_list (see https://arxiv.org/abs/1708.08854).
+        Lyman-alpha emitter galaxies (see https://arxiv.org/abs/1708.08854).
 
         Parameters
         ----------
@@ -1069,7 +1069,7 @@ class SphEff(EllEff):
     ):
         """
         The spherical Elson, Fall and Freeman (EFF) light profile, which is commonly used to represent the clumps of
-        Lyman-alpha emitter galaxy_list (see https://arxiv.org/abs/1708.08854).
+        Lyman-alpha emitter galaxies (see https://arxiv.org/abs/1708.08854).
 
         See `autogalaxy.profiles.light_profiles.light_profiles.LightProfile` for a description of light profile objects.
 

@@ -12,7 +12,7 @@ class TestAnalysisImaging:
     def test__make_result__result_imaging_is_returned(self, masked_imaging_7x7):
 
         model = af.Collection(
-            galaxy_list=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5))
+            galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5))
         )
 
         analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
@@ -28,7 +28,7 @@ class TestAnalysisImaging:
     ):
         galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=0.1))
 
-        model = af.Collection(galaxy_list=af.Collection(galaxy=galaxy))
+        model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
         analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
 
@@ -53,7 +53,7 @@ class TestAnalysisImaging:
         model = af.Collection(
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
-            galaxy_list=af.Collection(galaxy=galaxy),
+            galaxies=af.Collection(galaxy=galaxy),
         )
 
         analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
@@ -73,14 +73,14 @@ class TestAnalysisImaging:
 
     def test__uses_hyper_fit_correctly(self, masked_imaging_7x7):
 
-        galaxy_list = af.ModelInstance()
-        galaxy_list.galaxy = ag.Galaxy(
+        galaxies = af.ModelInstance()
+        galaxies.galaxy = ag.Galaxy(
             redshift=0.5, light=ag.lp.EllSersic(intensity=1.0), mass=ag.mp.SphIsothermal
         )
-        galaxy_list.source = ag.Galaxy(redshift=1.0, light=ag.lp.EllSersic())
+        galaxies.source = ag.Galaxy(redshift=1.0, light=ag.lp.EllSersic())
 
         instance = af.ModelInstance()
-        instance.galaxy_list = galaxy_list
+        instance.galaxies = galaxies
 
         galaxy_hyper_image = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=0.1)
         galaxy_hyper_image[4] = 10.0
@@ -88,7 +88,7 @@ class TestAnalysisImaging:
             fill_value=0.5, shape_native=(3, 3), pixel_scales=0.1
         )
 
-        hyper_galaxy_image_path_dict = {("galaxy_list", "galaxy"): galaxy_hyper_image}
+        hyper_galaxy_image_path_dict = {("galaxies", "galaxy"): galaxy_hyper_image}
 
         result = mock.MockResult(
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
@@ -103,24 +103,24 @@ class TestAnalysisImaging:
             contribution_factor=1.0, noise_factor=1.0, noise_power=1.0
         )
 
-        instance.galaxy_list.galaxy.hyper_galaxy = hyper_galaxy
+        instance.galaxies.galaxy.hyper_galaxy = hyper_galaxy
 
         fit_likelihood = analysis.log_likelihood_function(instance=instance)
 
         g0 = ag.Galaxy(
             redshift=0.5,
-            light_profile=instance.galaxy_list.galaxy.light,
-            mass_profile=instance.galaxy_list.galaxy.mass,
+            light_profile=instance.galaxies.galaxy.light,
+            mass_profile=instance.galaxies.galaxy.mass,
             hyper_galaxy=hyper_galaxy,
             hyper_model_image=hyper_model_image,
             hyper_galaxy_image=galaxy_hyper_image,
             hyper_minimum_value=0.0,
         )
-        g1 = ag.Galaxy(redshift=1.0, light_profile=instance.galaxy_list.source.light)
+        g1 = ag.Galaxy(redshift=1.0, light_profile=instance.galaxies.source.light)
 
-        plane = ag.Plane(galaxy_list=[g0, g1])
+        plane = ag.Plane(galaxies=[g0, g1])
 
         fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-        assert (fit.plane.galaxy_list[0].hyper_galaxy_image == galaxy_hyper_image).all()
+        assert (fit.plane.galaxies[0].hyper_galaxy_image == galaxy_hyper_image).all()
         assert fit_likelihood == fit.log_likelihood

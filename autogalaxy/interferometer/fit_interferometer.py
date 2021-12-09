@@ -82,13 +82,13 @@ class FitInterferometer(aa.FitInterferometer):
         return self.interferometer.grid
 
     @property
-    def galaxy_list(self):
-        return self.plane.galaxy_list
+    def galaxies(self):
+        return self.plane.galaxies
 
     @property
     def galaxy_model_image_dict(self) -> {Galaxy: np.ndarray}:
         """
-        A dictionary associating galaxy_list with their corresponding model images
+        A dictionary associating galaxies with their corresponding model images
         """
         galaxy_model_image_dict = self.plane.galaxy_image_2d_dict_from(grid=self.grid)
 
@@ -97,7 +97,7 @@ class FitInterferometer(aa.FitInterferometer):
 
         # TODO : Extend to multiple inversioons across Planes
 
-        for galaxy in self.galaxy_list:
+        for galaxy in self.galaxies:
 
             if galaxy.has_pixelization:
 
@@ -110,7 +110,7 @@ class FitInterferometer(aa.FitInterferometer):
     @property
     def galaxy_model_visibilities_dict(self) -> {Galaxy: np.ndarray}:
         """
-        A dictionary associating galaxy_list with their corresponding model images
+        A dictionary associating galaxies with their corresponding model images
         """
         galaxy_model_visibilities_dict = self.plane.galaxy_visibilities_dict_via_transformer_from(
             grid=self.interferometer.grid, transformer=self.interferometer.transformer
@@ -118,7 +118,7 @@ class FitInterferometer(aa.FitInterferometer):
 
         # TODO : Extend to multiple inversioons across Planes
 
-        for galaxy in self.galaxy_list:
+        for galaxy in self.galaxies:
 
             if galaxy.has_pixelization:
 
@@ -134,7 +134,7 @@ class FitInterferometer(aa.FitInterferometer):
             grid=self.interferometer.grid, transformer=self.interferometer.transformer
         )
 
-        for (galaxy_index, galaxy) in enumerate(self.galaxy_list):
+        for (galaxy_index, galaxy) in enumerate(self.galaxies):
 
             if galaxy.has_pixelization:
 

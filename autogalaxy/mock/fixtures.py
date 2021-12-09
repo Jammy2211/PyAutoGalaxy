@@ -112,7 +112,7 @@ def make_hyper_galaxy():
 
 
 def make_plane_7x7():
-    return ag.Plane(galaxy_list=[make_gal_x1_lp_x1_mp()])
+    return ag.Plane(galaxies=[make_gal_x1_lp_x1_mp()])
 
 
 def make_plane_x2_galaxy_inversion_7x7():
@@ -122,7 +122,7 @@ def make_plane_x2_galaxy_inversion_7x7():
         regularization=ag.reg.Constant(),
     )
 
-    return ag.Plane(galaxy_list=[make_gal_x1_lp(), source_gal_inversion])
+    return ag.Plane(galaxies=[make_gal_x1_lp(), source_gal_inversion])
 
 
 # QUANTITY DATASET AND FIT #
@@ -149,7 +149,7 @@ def make_fit_quantity_7x7_array_2d():
     )
 
 
-# HYPER galaxy_list #
+# HYPER galaxies #
 
 
 def make_hyper_model_image_7x7():
@@ -187,7 +187,7 @@ def make_fit_imaging_7x7():
 
 
 def make_fit_imaging_x2_galaxy_7x7():
-    plane = ag.Plane(galaxy_list=[make_gal_x1_lp(), make_gal_x1_lp(), make_gal_x1_mp()])
+    plane = ag.Plane(galaxies=[make_gal_x1_lp(), make_gal_x1_lp(), make_gal_x1_mp()])
 
     return ag.FitImaging(dataset=make_masked_imaging_7x7(), plane=plane)
 
@@ -209,12 +209,12 @@ def make_fit_interferometer_x2_galaxy_inversion_7x7():
 
 
 def make_samples_with_result():
-    galaxy_list = [
+    galaxies = [
         ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=1.0)),
         ag.Galaxy(redshift=1.0, light=ag.lp.EllSersic(intensity=2.0)),
     ]
 
-    plane = ag.Plane(galaxy_list=galaxy_list)
+    plane = ag.Plane(galaxies=galaxies)
 
     return MockSamples(max_log_likelihood_instance=plane)
 

@@ -66,7 +66,7 @@ def test__x1_plane__padded_image__compare_to_galaxy_images_using_padded_grid_sta
 
     padded_g2_image = g2.image_2d_from(grid=padded_grid)
 
-    plane = ag.Plane(galaxy_list=[g0, g1, g2])
+    plane = ag.Plane(galaxies=[g0, g1, g2])
 
     padded_plane_image = plane.padded_image_2d_from(
         grid=sub_grid_2d_7x7, psf_shape_2d=(3, 3)
@@ -281,7 +281,7 @@ def test__galaxy_blurred_image_2d_dict_via_convolver_from(
 
     g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
 
-    plane = ag.Plane(redshift=-0.75, galaxy_list=[g1, g0, g2])
+    plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
 
     blurred_image_2d_list = plane.blurred_image_2d_list_via_convolver_from(
         grid=sub_grid_2d_7x7,
@@ -311,7 +311,7 @@ def test__galaxy_visibilities_dict_from_grid_and_transformer(
     )
     g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
 
-    plane = ag.Plane(redshift=-0.75, galaxy_list=[g1, g0, g2])
+    plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
 
     visibilities_list = plane.visibilities_list_via_transformer_from(
         grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
