@@ -160,9 +160,9 @@ def make_fit_quantity_7x7_array_2d():
 def make_fit_quantity_7x7_vector_yx_2d():
 
     return ag.FitQuantity(
-        dataset=make_dataset_quantity_7x7_array_2d(),
+        dataset=make_dataset_quantity_7x7_vector_yx_2d(),
         light_mass_obj=make_plane_7x7(),
-        func_str="convergence_2d_from",
+        func_str="deflections_yx_2d_from",
     )
 
 
