@@ -159,6 +159,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             if galaxy.has_mass_profile
         ]
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         if self.galaxies:

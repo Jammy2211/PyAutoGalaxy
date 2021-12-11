@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional, Union
 
 import autoarray as aa
 
@@ -15,6 +15,7 @@ class FitQuantity(aa.FitDataset):
         dataset: DatasetQuantity,
         light_mass_obj: Union[LightProfile, MassProfile, Galaxy, Plane],
         func_str: str,
+        model_data_manual: Optional[Union[aa.Array2D, aa.VectorYX2D]] = None,
     ):
         """
         Fits a `DatasetQuantity` object with model data.
@@ -40,15 +41,22 @@ class FitQuantity(aa.FitDataset):
             whose model quantities are used to fit the quantity data.
         func_str
             A string giving the name of the method of the input `Plane` used to compute the quantity that fits
-            the dataset.          
+            the dataset.
+        model_data_manual
+            Manually pass the model-data, omitting its calculation via the function defined by the `func_str`.
         """
 
         self.light_mass_obj = light_mass_obj
-        self.quantity_str = func_str
+        self.func_str = func_str
 
-        func = getattr(light_mass_obj, func_str)
+        if model_data_manual is None:
 
-        model_data = func(grid=dataset.grid)
+            func = getattr(light_mass_obj, func_str)
+            model_data = func(grid=dataset.grid)
+
+        else:
+
+            model_data = model_data_manual
 
         fit = aa.FitData(
             data=dataset.data,
@@ -59,6 +67,42 @@ class FitQuantity(aa.FitDataset):
         )
 
         super().__init__(dataset=dataset, fit=fit)
+
+    @property
+    def y(self) -> "FitQuantity":
+        """
+        If the `FitQuantity` contains a `VectorYX2D` as its data, this property returns a new `FitQuantity`
+        with just the y-values of the vectors as the data, alongside the noise-map. The y values of the model-data are
+        also extracted and used in this fit.
+
+        This is primarily used for visualizing a fit to the `FitQuantity` containing vectors, as it allows one to
+        reuse tools which visualize `Array2D` objects.
+        """
+        if isinstance(self.data, aa.VectorYX2D):
+            return FitQuantity(
+                dataset=self.dataset.y,
+                light_mass_obj=self.light_mass_obj,
+                func_str=self.func_str,
+                model_data_manual=self.model_data.y,
+            )
+
+    @property
+    def x(self) -> "FitQuantity":
+        """
+        If the `FitQuantity` contains a `VectorYX2D` as its data, this property returns a new `FitQuantity`
+        with just the x-values of the vectors as the data, alongside the noise-map. The x values of the model-data are
+        also extracted and used in this fit.
+
+        This is primarily used for visualizing a fit to the `FitQuantity` containing vectors, as it allows one to
+        reuse tools which visualize `Array2D` objects.
+        """
+        if isinstance(self.data, aa.VectorYX2D):
+            return FitQuantity(
+                dataset=self.dataset.x,
+                light_mass_obj=self.light_mass_obj,
+                func_str=self.func_str,
+                model_data_manual=self.model_data.x,
+            )
 
     @property
     def quantity_dataset(self):

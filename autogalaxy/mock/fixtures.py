@@ -138,9 +138,26 @@ def make_dataset_quantity_7x7_array_2d():
     )
 
 
+def make_dataset_quantity_7x7_vector_yx_2d():
+
+    return ag.DatasetQuantity(
+        data=aa.VectorYX2D.ones(shape_native=(7, 7), pixel_scales=1.0),
+        noise_map=aa.VectorYX2D.full(
+            fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0
+        ),
+    )
+
+
 def make_fit_quantity_7x7_array_2d():
 
-    mp_0 = make_mp_0()
+    return ag.FitQuantity(
+        dataset=make_dataset_quantity_7x7_array_2d(),
+        light_mass_obj=make_plane_7x7(),
+        func_str="convergence_2d_from",
+    )
+
+
+def make_fit_quantity_7x7_vector_yx_2d():
 
     return ag.FitQuantity(
         dataset=make_dataset_quantity_7x7_array_2d(),

@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 from typing import List, Optional, Union
 
 import autoarray as aa
@@ -66,8 +67,8 @@ class SettingsQuantity(AbstractSettingsDataset):
 class DatasetQuantity(AbstractDataset):
     def __init__(
         self,
-        data: Union[aa.Array2D],
-        noise_map: Union[aa.Array2D],
+        data: Union[aa.Array2D, aa.VectorYX2D],
+        noise_map: Union[aa.Array2D, aa.VectorYX2D],
         settings: SettingsQuantity = SettingsQuantity(),
     ):
         """
@@ -88,6 +89,17 @@ class DatasetQuantity(AbstractDataset):
         settings
             Controls settings of how the dataset is set up (e.g. the types of grids used to perform calculations).
         """
+
+        if data.shape != noise_map.shape:
+
+            if data.shape[0:-1] == noise_map.shape[0:]:
+
+                noise_map = aa.VectorYX2D.manual_native(
+                    vectors=np.stack((noise_map, noise_map), axis=-1),
+                    pixel_scales=data.pixel_scales,
+                    sub_size=data.sub_size,
+                    origin=data.origin,
+                )
 
         self.unmasked = None
 
@@ -121,6 +133,34 @@ class DatasetQuantity(AbstractDataset):
 
         return DatasetQuantity(data=data, noise_map=noise_map, settings=settings)
 
+    @property
+    def y(self) -> "DatasetQuantity":
+        """
+        If the `DatasetQuantity` contains a `VectorYX2D` as its data, this property returns a new `DatasetQuantity`
+        with just the y-values of the vectors as the data, alongside the noise-map.
+
+        This is primarily used for visualizing a fit to the `DatasetQuantity` containing vectors, as it allows one to
+        reuse tools which visualize `Array2D` objects.
+        """
+        if isinstance(self.data, aa.VectorYX2D):
+            return DatasetQuantity(
+                data=self.data.y, noise_map=self.noise_map.y, settings=self.settings
+            )
+
+    @property
+    def x(self) -> "DatasetQuantity":
+        """
+        If the `DatasetQuantity` contains a `VectorYX2D` as its data, this property returns a new `DatasetQuantity`
+        with just the x-values of the vectors as the data, alongside the noise-map.
+
+        This is primarily used for visualizing a fit to the `DatasetQuantity` containing vectors, as it allows one to
+        reuse tools which visualize `Array2D` objects.
+        """
+        if isinstance(self.data, aa.VectorYX2D):
+            return DatasetQuantity(
+                data=self.data.x, noise_map=self.noise_map.x, settings=self.settings
+            )
+
     def apply_mask(self, mask: aa.Mask2D) -> "DatasetQuantity":
         """
         Apply a mask to the quantity dataset, whereby the mask is applied to the data and noise-map one-by-one.
@@ -139,10 +179,8 @@ class DatasetQuantity(AbstractDataset):
         else:
             unmasked_dataset = self.unmasked
 
-        data = aa.Array2D.manual_mask(array=self.data.native, mask=mask.mask_sub_1)
-        noise_map = aa.Array2D.manual_mask(
-            array=self.noise_map.native, mask=mask.mask_sub_1
-        )
+        data = self.data.apply_mask(mask=mask.mask_sub_1)
+        noise_map = self.noise_map.apply_mask(mask=mask.mask_sub_1)
 
         dataset = DatasetQuantity(
             data=data, noise_map=noise_map, settings=self.settings

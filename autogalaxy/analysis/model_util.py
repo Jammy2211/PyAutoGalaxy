@@ -574,7 +574,30 @@ def stochastic_model_from(
 
     model = result.instance.as_model(model_classes)
 
+    # model.galaxies.lens.bulge.centre.centre_0 = 0.0033909063521568973
+    # model.galaxies.lens.bulge.centre.centre_1 = -0.009346694405826354
+    # model.galaxies.lens.bulge.elliptical_comps.elliptical_comps_0 = 0.0309506766816977
+    # model.galaxies.lens.bulge.elliptical_comps.elliptical_comps_1 = -0.0621964387481318
+    #
+    # model.galaxies.lens.bulge.centre_0 = 0.0033909063521568973
+    # model.galaxies.lens.bulge.centre_1 = -0.009346694405826354
+    # model.galaxies.lens.bulge.elliptical_comps.elliptical_comps_0 = 0.0309506766816977
+    # model.galaxies.lens.bulge.elliptical_comps.elliptical_comps_1 = -0.0621964387481318
+    #
+    # model.galaxies.lens.disk.centre_0 = 0.033660227654696305
+    # model.galaxies.lens.disk.centre_1 = 0.06862843744615527
+    # model.galaxies.lens.disk.elliptical_comps.elliptical_comps_0 = 0.16208666776894873
+    # model.galaxies.lens.disk.elliptical_comps.elliptical_comps_1 = -0.14256415128388042
+    #
+    # print(model.galaxies.lens.disk.centre)
+    # print(model.galaxies.lens.disk.elliptical_comps)
+    # print(model.galaxies.lens.disk.centre.centre_0)
+
     model.galaxies.lens.take_attributes(source=result.model.galaxies.lens)
+
+    # print(model.galaxies.lens.disk.centre)
+    # print(model.galaxies.lens.disk.elliptical_comps)
+    # print(model.galaxies.lens.disk.centre.centre_0)
 
     if hasattr(model.galaxies, "subhalo"):
         model.galaxies.subhalo.take_attributes(source=result.model.galaxies.subhalo)

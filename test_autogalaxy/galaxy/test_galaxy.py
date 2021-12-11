@@ -396,7 +396,7 @@ class TestMassProfiles:
 
         gal_deflections = gal_x1_mp.deflections_yx_2d_from(grid=grid)
 
-        assert type(gal_deflections) == ag.Grid2DIrregular
+        assert type(gal_deflections) == ag.VectorYX2DIrregular
         assert mp_deflections.in_list[0][0] == gal_deflections.in_list[0][0]
         assert mp_deflections.in_list[0][1] == gal_deflections.in_list[0][1]
 

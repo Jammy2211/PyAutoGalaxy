@@ -29,7 +29,7 @@ class MockMassProfile(ag.mp.MassProfile):
         self,
         convergence_2d=None,
         potential_2d=None,
-        deflections_2d=None,
+        deflections_yx_2d=None,
         value=None,
         value1=None,
     ):
@@ -38,7 +38,7 @@ class MockMassProfile(ag.mp.MassProfile):
 
         self.convergence_2d = convergence_2d
         self.potential_2d = potential_2d
-        self.deflections_2d = deflections_2d
+        self.deflections_2d = deflections_yx_2d
 
         self.value = value
         self.value1 = value1

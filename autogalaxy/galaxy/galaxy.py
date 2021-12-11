@@ -219,6 +219,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     def has_mass_profile(self) -> bool:
         return len(self.mass_profile_list) > 0
 
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
