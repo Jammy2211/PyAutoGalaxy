@@ -85,6 +85,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         -----------
 
         """
+
         if self.galaxies:
             return sum(
                 map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies)

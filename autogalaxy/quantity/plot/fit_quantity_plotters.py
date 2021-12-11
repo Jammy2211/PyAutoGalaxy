@@ -202,7 +202,7 @@ class FitQuantityPlotter(Plotter):
             )
 
             fit_plotter_x = FitImagingPlotterMeta(
-                fit=self.fit.y,
+                fit=self.fit.x,
                 get_visuals_2d=self.get_visuals_2d_x,
                 mat_plot_2d=self.mat_plot_2d,
                 include_2d=self.include_2d,
