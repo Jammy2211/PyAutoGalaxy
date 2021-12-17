@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.integrate import quad
-from typing import List, Tuple
+from typing import Tuple
 
 import autoarray as aa
 
