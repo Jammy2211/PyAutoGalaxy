@@ -757,7 +757,7 @@ class TestCompareToManualInversionOnly:
         )
 
         inversion = ag.Inversion(
-            dataset=masked_imaging_7x7, mapper_list=[mapper], regularization_list=[reg]
+            dataset=masked_imaging_7x7, linear_obj_list=[mapper], regularization_list=[reg]
         )
 
         assert inversion.mapped_reconstructed_image.native == pytest.approx(
@@ -838,7 +838,7 @@ class TestCompareToManualInversionOnly:
         )
 
         inversion = ag.Inversion(
-            dataset=masked_imaging_7x7, mapper_list=[mapper], regularization_list=[reg]
+            dataset=masked_imaging_7x7, linear_obj_list=[mapper], regularization_list=[reg]
         )
 
         assert (fit.galaxy_model_image_dict[g0] == np.zeros(9)).all()
@@ -901,7 +901,7 @@ class TestCompareToManualInversionOnly:
             noise_map=hyper_noise_map,
             convolver=masked_imaging_7x7.convolver,
             w_tilde=masked_imaging_7x7.w_tilde,
-            mapper_list=[mapper],
+            linear_obj_list=[mapper],
             regularization_list=[reg],
             settings=ag.SettingsInversion(use_w_tilde=False),
         )
@@ -981,7 +981,7 @@ class TestCompareToManualInversionOnly:
         )
 
         inversion = ag.Inversion(
-            dataset=masked_imaging_7x7, mapper_list=[mapper], regularization_list=[reg]
+            dataset=masked_imaging_7x7, linear_obj_list=[mapper], regularization_list=[reg]
         )
 
         assert (fit.model_images_of_galaxies[0].native == np.zeros((7, 7))).all()
@@ -1028,7 +1028,7 @@ class TestCompareToManualProfilesAndInversion:
             noise_map=masked_imaging_7x7.noise_map,
             convolver=masked_imaging_7x7.convolver,
             w_tilde=masked_imaging_7x7.w_tilde,
-            mapper_list=[mapper],
+            linear_obj_list=[mapper],
             regularization_list=[reg],
         )
 
@@ -1130,7 +1130,7 @@ class TestCompareToManualProfilesAndInversion:
             noise_map=masked_imaging_7x7.noise_map,
             convolver=masked_imaging_7x7.convolver,
             w_tilde=masked_imaging_7x7.w_tilde,
-            mapper_list=[mapper],
+            linear_obj_list=[mapper],
             regularization_list=[reg],
         )
 
@@ -1218,7 +1218,7 @@ class TestCompareToManualProfilesAndInversion:
             noise_map=hyper_noise_map,
             convolver=masked_imaging_7x7.convolver,
             w_tilde=masked_imaging_7x7.w_tilde,
-            mapper_list=[mapper],
+            linear_obj_list=[mapper],
             regularization_list=[reg],
             settings=ag.SettingsInversion(use_w_tilde=False),
         )
@@ -1313,7 +1313,7 @@ class TestCompareToManualProfilesAndInversion:
             noise_map=masked_imaging_7x7.noise_map,
             convolver=masked_imaging_7x7.convolver,
             w_tilde=masked_imaging_7x7.w_tilde,
-            mapper_list=[mapper],
+            linear_obj_list=[mapper],
             regularization_list=[reg],
         )
 

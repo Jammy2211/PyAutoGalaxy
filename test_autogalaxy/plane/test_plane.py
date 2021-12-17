@@ -835,7 +835,7 @@ class TestAbstractPlaneData:
             assert (sparse_grid == np.array([[2.0, 2.0]])).all()
 
     class TestMapper:
-        def test__mapper_list_from(self, sub_grid_2d_7x7):
+        def test__linear_obj_list_from(self, sub_grid_2d_7x7):
 
             galaxy_pix = ag.Galaxy(
                 redshift=0.5,
@@ -848,9 +848,9 @@ class TestAbstractPlaneData:
 
             plane = ag.Plane(galaxies=[galaxy_no_pix, galaxy_pix], redshift=0.5)
 
-            mapper_list = plane.mapper_list_from(grid=sub_grid_2d_7x7)
+            linear_obj_list = plane.linear_obj_list_from(grid=sub_grid_2d_7x7)
 
-            assert mapper_list[0] == 1
+            assert linear_obj_list[0] == 1
 
             galaxy_pix_2 = ag.Galaxy(
                 redshift=0.5,
@@ -866,20 +866,20 @@ class TestAbstractPlaneData:
                 redshift=0.5,
             )
 
-            mapper_list = plane.mapper_list_from(grid=sub_grid_2d_7x7)
+            linear_obj_list = plane.linear_obj_list_from(grid=sub_grid_2d_7x7)
 
-            assert mapper_list[0] == 1
-            assert mapper_list[1] == 2
+            assert linear_obj_list[0] == 1
+            assert linear_obj_list[1] == 2
 
             galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
             plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=0.5)
 
-            mapper_list = plane.mapper_list_from(grid=sub_grid_2d_7x7)
+            linear_obj_list = plane.linear_obj_list_from(grid=sub_grid_2d_7x7)
 
-            assert mapper_list is None
+            assert linear_obj_list is None
 
-    class TestLinearEqn:
+    class TestLEq:
         def test__x1_inversion_imaging_in_plane__performs_inversion_correctly(
             self, sub_grid_2d_7x7, masked_imaging_7x7
         ):
