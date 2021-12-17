@@ -75,7 +75,7 @@ class Visuals2D(aplt.Visuals2D):
         serial_prescan=None,
         serial_overscan=None,
         indexes: Union[List[int], List[List[int]]] = None,
-        pixelization_indexes: Union[List[int], List[List[int]]] = None,
+        pix_indexes: Union[List[int], List[List[int]]] = None,
     ):
 
         super().__init__(
@@ -92,7 +92,7 @@ class Visuals2D(aplt.Visuals2D):
             serial_prescan=serial_prescan,
             serial_overscan=serial_overscan,
             indexes=indexes,
-            pixelization_indexes=pixelization_indexes,
+            pix_indexes=pix_indexes,
         )
 
         self.light_profile_centres = light_profile_centres

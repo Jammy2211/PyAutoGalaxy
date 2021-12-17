@@ -15,7 +15,7 @@ class OperateImage:
     The methods in `OperateImage` are inherited by light objects to provide a concise API.
     """
 
-    def image_2d_from(self, grid: Union[aa.Grid2D, aa.Grid2DIterate]):
+    def image_2d_from(self, grid: Union[aa.Grid2D, aa.Grid2DIterate]) -> aa.Array2D:
         raise NotImplementedError
 
     def blurred_image_2d_via_psf_from(
