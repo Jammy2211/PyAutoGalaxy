@@ -108,7 +108,7 @@ class DatasetQuantity(AbstractDataset):
     @classmethod
     def via_signal_to_noise_map(
         cls,
-        data: Union[aa.Array2D],
+        data: Union[aa.Array2D, aa.VectorYX2D],
         signal_to_noise_map: Union[aa.Array2D],
         settings: SettingsQuantity = SettingsQuantity(),
     ):
@@ -129,7 +129,14 @@ class DatasetQuantity(AbstractDataset):
         settings
             Controls settings of how the dataset is set up (e.g. the types of grids used to perform calculations).
         """
-        noise_map = data / signal_to_noise_map
+        try:
+            noise_map = data / signal_to_noise_map
+        except ValueError:
+            noise_map = aa.VectorYX2D.zeros(
+                shape_native=data.shape_native, pixel_scales=data.pixel_scales
+            )
+            noise_map[:, 0] = data.slim[:, 0] / signal_to_noise_map
+            noise_map[:, 1] = data.slim[:, 1] / signal_to_noise_map
 
         return DatasetQuantity(data=data, noise_map=noise_map, settings=settings)
 
