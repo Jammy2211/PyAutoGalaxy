@@ -955,6 +955,8 @@ class SphNFWTruncatedMCRScatterLudlow(SphNFWTruncated):
 
         self.mass_at_200 = mass_at_200
         self.scatter_sigma = scatter_sigma
+        self.redshift_object = redshift_object
+        self.redshift_source = redshift_source
 
         kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_ludlow(
             mass_at_200=mass_at_200,
@@ -986,9 +988,9 @@ class SphNFWTruncatedMCRLudlow(SphNFWTruncatedMCRScatterLudlow):
         super().__init__(
             centre=centre,
             mass_at_200=mass_at_200,
-            scatter=0.0,
+            scatter_sigma=0.0,
             redshift_object=redshift_object,
-            redshift_source=redshift_source
+            redshift_source=redshift_source,
         )
 
 
@@ -1380,7 +1382,32 @@ class EllNFWMCRLudlow(EllNFW):
         )
 
 
-class SphNFWMCRLudlow(SphNFW):
+class SphNFWMCRScatterLudlow(SphNFW):
+    def __init__(
+        self,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        mass_at_200: float = 1e9,
+        scatter_sigma: float = 0.0,
+        redshift_object: float = 0.5,
+        redshift_source: float = 1.0,
+    ):
+
+        self.mass_at_200 = mass_at_200
+        self.scatter_sigma = scatter_sigma
+        self.redshift_object = redshift_object
+        self.redshift_source = redshift_source
+
+        kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_ludlow(
+            mass_at_200=mass_at_200,
+            scatter_sigma=scatter_sigma,
+            redshift_object=redshift_object,
+            redshift_source=redshift_source,
+        )
+
+        super().__init__(centre=centre, kappa_s=kappa_s, scale_radius=scale_radius)
+
+
+class SphNFWMCRLudlow(SphNFWMCRScatterLudlow):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -1389,21 +1416,13 @@ class SphNFWMCRLudlow(SphNFW):
         redshift_source: float = 1.0,
     ):
 
-        self.mass_at_200 = mass_at_200
-        self.redshift_object = redshift_object
-        self.redshift_source = redshift_source
-
-        kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_ludlow(
+        super().__init__(
+            centre=centre,
             mass_at_200=mass_at_200,
+            scatter_sigma=0.0,
             redshift_object=redshift_object,
             redshift_source=redshift_source,
         )
-
-        super().__init__(centre=centre, kappa_s=kappa_s, scale_radius=scale_radius)
-
-    def with_new_normalization(self, normalization):
-
-        raise NotImplementedError()
 
 
 class EllNFWGeneralizedMCRLudlow(EllNFWGeneralized):
@@ -1480,7 +1499,9 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
     return kappa_s, scale_radius, radius_at_200
 
 
-def kappa_s_and_scale_radius_for_ludlow(mass_at_200, scatter_sigma, redshift_object, redshift_source):
+def kappa_s_and_scale_radius_for_ludlow(
+    mass_at_200, scatter_sigma, redshift_object, redshift_source
+):
 
     warnings.filterwarnings("ignore")
 
@@ -1492,7 +1513,7 @@ def kappa_s_and_scale_radius_for_ludlow(mass_at_200, scatter_sigma, redshift_obj
         m_input, "200c", redshift_object, model="ludlow16"
     )
 
-    concentration = 10.0**(np.log10(concentration) + scatter_sigma * 0.15)
+    concentration = 10.0 ** (np.log10(concentration) + scatter_sigma * 0.15)
 
     cosmic_average_density = (
         cosmology.critical_density(redshift_object).to(units.solMass / units.kpc ** 3)
