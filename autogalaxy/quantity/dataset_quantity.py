@@ -135,8 +135,11 @@ class DatasetQuantity(AbstractDataset):
             noise_map = aa.VectorYX2D.zeros(
                 shape_native=data.shape_native, pixel_scales=data.pixel_scales
             )
-            noise_map[:, 0] = data.slim[:, 0] / signal_to_noise_map
-            noise_map[:, 1] = data.slim[:, 1] / signal_to_noise_map
+
+            signal_to_noise_map[signal_to_noise_map < 1e-8] = 1e-8
+
+            noise_map[:, 0] = np.abs(data.slim[:, 0]) / signal_to_noise_map
+            noise_map[:, 1] = np.abs(data.slim[:, 1]) / signal_to_noise_map
 
         return DatasetQuantity(data=data, noise_map=noise_map, settings=settings)
 
