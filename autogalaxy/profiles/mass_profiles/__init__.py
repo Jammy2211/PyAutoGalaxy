@@ -19,6 +19,7 @@ from .dark_mass_profiles import (
     SphNFWTruncated,
     SphNFWTruncatedMCRDuffy,
     SphNFWTruncatedMCRLudlow,
+    SphNFWTruncatedMCRScatterLudlow,
     EllNFW,
     SphNFW,
     SphNFWMCRDuffy,

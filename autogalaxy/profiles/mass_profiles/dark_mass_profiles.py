@@ -943,7 +943,7 @@ class SphNFWTruncatedMCRDuffy(SphNFWTruncated):
         )
 
 
-class SphNFWTruncatedMCRLudlowScatter(SphNFWTruncated):
+class SphNFWTruncatedMCRScatterLudlow(SphNFWTruncated):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -971,7 +971,7 @@ class SphNFWTruncatedMCRLudlowScatter(SphNFWTruncated):
         )
 
 
-class SphNFWTruncatedMCRLudlow(SphNFWTruncatedMCRLudlowScatter):
+class SphNFWTruncatedMCRLudlow(SphNFWTruncatedMCRScatterLudlow):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

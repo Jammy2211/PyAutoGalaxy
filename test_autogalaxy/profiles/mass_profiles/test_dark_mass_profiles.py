@@ -1251,7 +1251,7 @@ class TestNFWTruncatedMCRDuffy:
 
 
 class TestNFWTruncatedMCRLludlow:
-    def test__mass_and_concentration_consistent_with_normal_truncated_nfw(self):
+    def test__mass_and_concentration_consistent_with_normal_truncated_nfw__scatter_0(self):
 
         cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
@@ -1302,6 +1302,34 @@ class TestNFWTruncatedMCRLludlow:
         assert isinstance(truncated_nfw_mass.inner_slope, float)
 
         assert truncated_nfw_mass.scale_radius == pytest.approx(0.21164, 1.0e-4)
+        assert truncated_nfw_mass.truncation_radius == pytest.approx(33.7134116, 1.0e-4)
+
+    def test__scatter_is_nonzero(self):
+
+        truncated_nfw_mass = ag.mp.SphNFWTruncatedMCRScatterLudlow(
+            centre=(1.0, 2.0),
+            mass_at_200=1.0e9,
+            scatter_sigma=1.0,
+            redshift_object=0.6,
+            redshift_source=2.5,
+        )
+
+        # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
+
+        assert truncated_nfw_mass.scale_radius == pytest.approx(0.14983, 1.0e-4)
+        assert truncated_nfw_mass.truncation_radius == pytest.approx(33.7134116, 1.0e-4)
+
+        truncated_nfw_mass = ag.mp.SphNFWTruncatedMCRScatterLudlow(
+            centre=(1.0, 2.0),
+            mass_at_200=1.0e9,
+            scatter_sigma=-1.0,
+            redshift_object=0.6,
+            redshift_source=2.5,
+        )
+
+        # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
+
+        assert truncated_nfw_mass.scale_radius == pytest.approx(0.29895, 1.0e-4)
         assert truncated_nfw_mass.truncation_radius == pytest.approx(33.7134116, 1.0e-4)
 
 
