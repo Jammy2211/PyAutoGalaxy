@@ -135,6 +135,7 @@ class DatasetQuantity(AbstractDataset):
             noise_map = aa.VectorYX2D.zeros(
                 shape_native=data.shape_native, pixel_scales=data.pixel_scales
             )
+            noise_map = noise_map.apply_mask(mask=data.mask)
 
             signal_to_noise_map[signal_to_noise_map < 1e-8] = 1e-8
 
