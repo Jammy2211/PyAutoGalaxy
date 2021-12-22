@@ -1443,6 +1443,7 @@ class EllNFWGeneralizedMCRLudlow(EllNFWGeneralized):
 
         kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_ludlow(
             mass_at_200=mass_at_200,
+            scatter_sigma=0.0,
             redshift_object=redshift_object,
             redshift_source=redshift_source,
         )
