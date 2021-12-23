@@ -51,6 +51,11 @@ def make_psf_3x3():
     return fixtures.make_psf_3x3()
 
 
+@pytest.fixture(name="psf_3x3_no_blur")
+def make_psf_3x3():
+    return fixtures.make_psf_3x3_no_blur()
+
+
 @pytest.fixture(name="rectangular_inversion_7x7_3x3")
 def make_rectangular_inversion_7x7_3x3():
     return fixtures.make_rectangular_inversion_7x7_3x3()
@@ -101,9 +106,9 @@ def make_masked_imaging_7x7():
     return fixtures.make_masked_imaging_7x7()
 
 
-@pytest.fixture(name="masked_imaging_no_blur_7x7")
-def make_masked_imaging_no_blur_7x7():
-    return fixtures.make_masked_imaging_no_blur_7x7()
+@pytest.fixture(name="masked_imaging_7x7_no_blur")
+def make_masked_imaging_7x7_no_blur():
+    return fixtures.make_masked_imaging_7x7_no_blur()
 
 
 @pytest.fixture(name="interferometer_7")

@@ -268,7 +268,9 @@ class TestCompareToManualInversionOnly:
         )
 
         inversion = ag.Inversion(
-            dataset=interferometer_7, linear_obj_list=[mapper], regularization_list=[reg]
+            dataset=interferometer_7,
+            linear_obj_list=[mapper],
+            regularization_list=[reg],
         )
 
         assert inversion.mapped_reconstructed_data == pytest.approx(
@@ -358,7 +360,9 @@ class TestCompareToManualInversionOnly:
         )
 
         inversion = ag.Inversion(
-            dataset=interferometer_7, linear_obj_list=[mapper], regularization_list=[reg]
+            dataset=interferometer_7,
+            linear_obj_list=[mapper],
+            regularization_list=[reg],
         )
 
         assert (fit.galaxy_model_image_dict[g0].native == np.zeros((7, 7))).all()
@@ -385,7 +389,9 @@ class TestCompareToManualInversionOnly:
         )
 
         inversion = ag.Inversion(
-            dataset=interferometer_7, linear_obj_list=[mapper], regularization_list=[reg]
+            dataset=interferometer_7,
+            linear_obj_list=[mapper],
+            regularization_list=[reg],
         )
 
         assert (

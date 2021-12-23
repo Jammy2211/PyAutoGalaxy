@@ -7,9 +7,9 @@ from autogalaxy.profiles.light_profiles import light_profiles as lp
 
 
 class LightProfileLinear(lp.LightProfile, aa.LinearObj):
-
     def mapping_matrix_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         return self.image_2d_from(grid=grid).slim
+
 
 class EllSersic(lp.AbstractEllSersic, LightProfileLinear):
     def __init__(
