@@ -38,10 +38,7 @@ def test__model_image__with_and_without_psf_blurring(
 
 def test__noise_map__with_and_without_hyper_galaxy(masked_imaging_7x7_no_blur):
 
-    g0 = ag.Galaxy(
-        redshift=0.5,
-        light_profile=MockLightProfile(image_2d_value=1.0, image_2d_first_value=2.0),
-    )
+    g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(image_2d_value=1.0))
 
     plane = ag.Plane(galaxies=[g0])
 
@@ -51,16 +48,16 @@ def test__noise_map__with_and_without_hyper_galaxy(masked_imaging_7x7_no_blur):
         np.full(fill_value=2.0, shape=(9,)), 1.0e-1
     )
 
-    assert fit.log_likelihood == pytest.approx(-14.6337, 1.0e-4)
+    hyper_image = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0)
 
     g0 = ag.Galaxy(
         redshift=0.5,
-        light_profile=MockLightProfile(image_2d_value=1.0, image_2d_first_value=2.0),
+        light_profile=MockLightProfile(image_2d_value=1.0),
         hyper_galaxy=ag.HyperGalaxy(
             contribution_factor=1.0, noise_factor=1.0, noise_power=1.0
         ),
-        hyper_model_image=ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0),
-        hyper_galaxy_image=ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0),
+        hyper_model_image=hyper_image,
+        hyper_galaxy_image=hyper_image,
         hyper_minimum_value=0.0,
     )
 
@@ -71,193 +68,77 @@ def test__noise_map__with_and_without_hyper_galaxy(masked_imaging_7x7_no_blur):
     assert fit.noise_map.slim == pytest.approx(
         np.full(fill_value=4.0, shape=(9,)), 1.0e-1
     )
-
-    assert fit.log_likelihood == pytest.approx(-20.7783, 1.0e-4)
-
-
-def test__hyper_image_changes_background_sky__reflected_in_likelihood():
-    psf = ag.Kernel2D.manual_native(
-        array=[[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]], pixel_scales=1.0
-    )
-
-    imaging = ag.Imaging(
-        image=ag.Array2D.full(fill_value=4.0, shape_native=(3, 4), pixel_scales=1.0),
-        psf=psf,
-        noise_map=ag.Array2D.ones(shape_native=(3, 4), pixel_scales=1.0),
-    )
-    imaging.image[5] = 5.0
-
-    mask = ag.Mask2D.manual(
-        mask=[
-            [True, True, True, True],
-            [True, False, False, True],
-            [True, True, True, True],
-        ],
-        pixel_scales=1.0,
-    )
-
-    masked_imaging_7x7 = imaging.apply_mask(mask=mask)
-    masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
-        settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
-    )
-
-    # Setup as a ray trace instance, using a light profile for the galaxy
-
-    g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(2)))
-    plane = ag.Plane(galaxies=[g0])
-
-    hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
-
-    fit = ag.FitImaging(
-        dataset=masked_imaging_7x7, plane=plane, hyper_image_sky=hyper_image_sky
-    )
-
-    assert (
-        fit.mask
-        == np.array(
-            [
-                [True, True, True, True],
-                [True, False, False, True],
-                [True, True, True, True],
-            ]
-        )
-    ).all()
-
-    assert (
-        fit.image.native
-        == np.array([[0.0, 0.0, 0.0, 0.0], [0.0, 6.0, 5.0, 0.0], [0.0, 0.0, 0.0, 0.0]])
-    ).all()
-
-    assert (
-        fit.chi_squared_map.native
-        == np.array(
-            [[0.0, 0.0, 0.0, 0.0], [0.0, 25.0, 16.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
-        )
-    ).all()
-
-    assert fit.chi_squared == 41.0
-    assert fit.reduced_chi_squared == 41.0 / 2.0
-    assert fit.noise_normalization == pytest.approx(
-        2.0 * np.log(2 * np.pi * 1.0 ** 2.0), 1.0e-4
-    )
-    assert fit.log_likelihood == pytest.approx(
-        -0.5 * (41.0 + 2.0 * np.log(2 * np.pi * 1.0 ** 2.0)), 1.0e-4
-    )
+    assert fit.log_likelihood == pytest.approx(-20.7470, 1.0e-4)
 
 
-def test__hyper_background_changes_background_noise_map__reflected_in_likelihood():
-    psf = ag.Kernel2D.manual_native(
-        array=[[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0]], pixel_scales=1.0
-    )
+def test__noise_map__with_hyper_galaxy_reaches_upper_limit(masked_imaging_7x7_no_blur):
 
-    imaging = ag.Imaging(
-        image=5.0 * ag.Array2D.ones(shape_native=(3, 4), pixel_scales=1.0),
-        psf=psf,
-        noise_map=ag.Array2D.ones(shape_native=(3, 4), pixel_scales=1.0),
-    )
-    imaging.image[6] = 4.0
-
-    mask = ag.Mask2D.manual(
-        mask=[
-            [True, True, True, True],
-            [True, False, False, True],
-            [True, True, True, True],
-        ],
-        pixel_scales=1.0,
-    )
-
-    masked_imaging_7x7 = imaging.apply_mask(mask=mask)
-    masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
-        settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
-    )
-
-    # Setup as a ray trace instance, using a light profile for the galaxy
-
-    g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(2)))
-    plane = ag.Plane(galaxies=[g0])
-
-    hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
-
-    fit = ag.FitImaging(
-        dataset=masked_imaging_7x7,
-        plane=plane,
-        hyper_background_noise=hyper_background_noise,
-    )
-
-    assert (
-        fit.noise_map.native
-        == np.array([[0.0, 0.0, 0.0, 0.0], [0.0, 2.0, 2.0, 0.0], [0.0, 0.0, 0.0, 0.0]])
-    ).all()
-
-    assert fit.chi_squared == 6.25
-    assert fit.reduced_chi_squared == 6.25 / 2.0
-    assert fit.noise_normalization == pytest.approx(
-        2.0 * np.log(2 * np.pi * 2.0 ** 2.0), 1.0e-4
-    )
-    assert fit.log_likelihood == pytest.approx(
-        -0.5 * (6.25 + 2.0 * np.log(2 * np.pi * 2.0 ** 2.0)), 1.0e-4
-    )
-
-
-def test__hyper_galaxy_changes_noise_above_hyper_noise_limit__rounded_down_to_limit():
-    # This PSF changes the blurred image plane image from [1.0, 1.0] to [1.0, 5.0]
-
-    # Thus, the chi squared is 4.0**2.0 + 0.0**2.0 = 16.0
-
-    # The hyper_galaxies galaxy increases the noise in both pixels by 1.0, to 2.0.
-
-    # This reduces the chi squared to 2.0 instead of 4.0
-
-    psf = ag.Kernel2D.manual_native(
-        array=[[0.0, 0.0, 0.0], [0.0, 1.0, 3.0], [0.0, 0.0, 0.0]], pixel_scales=1.0
-    )
-
-    imaging = ag.Imaging(
-        image=5.0 * ag.Array2D.ones(shape_native=(3, 4), pixel_scales=1.0),
-        psf=psf,
-        noise_map=ag.Array2D.ones(shape_native=(3, 4), pixel_scales=1.0),
-    )
-    imaging.image[6] = 4.0
-
-    mask = ag.Mask2D.manual(
-        mask=[
-            [True, True, True, True],
-            [True, False, False, True],
-            [True, True, True, True],
-        ],
-        pixel_scales=1.0,
-    )
-
-    masked_imaging_7x7 = imaging.apply_mask(mask=mask)
-    masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
-        settings=ag.SettingsImaging(
-            grid_class=ag.Grid2D, use_normalized_psf=False, sub_size=1
-        )
-    )
-
-    # Setup as a ray trace instance, using a light profile for the galaxy
+    hyper_image = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0)
 
     g0 = ag.Galaxy(
         redshift=0.5,
-        light_profile=MockLightProfile(image_2d=np.ones(2)),
+        light_profile=MockLightProfile(image_2d_value=1.0),
         hyper_galaxy=ag.HyperGalaxy(
             contribution_factor=1.0, noise_factor=1.0e9, noise_power=1.0
         ),
-        hyper_model_image=ag.Array2D.ones(shape_native=(1, 2), pixel_scales=1.0),
-        hyper_galaxy_image=ag.Array2D.ones(shape_native=(1, 2), pixel_scales=1.0),
+        hyper_model_image=hyper_image,
+        hyper_galaxy_image=hyper_image,
         hyper_minimum_value=0.0,
     )
 
     plane = ag.Plane(galaxies=[g0])
 
-    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
+    fit = ag.FitImaging(dataset=masked_imaging_7x7_no_blur, plane=plane)
 
-    assert (
-        fit.noise_map.native
-        == np.array(
-            [[0.0, 0.0, 0.0, 0.0], [0.0, 1.0e8, 1.0e8, 0.0], [0.0, 0.0, 0.0, 0.0]]
-        )
-    ).all()
+    assert fit.noise_map.slim == pytest.approx(
+        np.full(fill_value=1.0e8, shape=(9,)), 1.0e-1
+    )
+    assert fit.log_likelihood == pytest.approx(-174.0565, 1.0e-4)
+
+
+def test__image__with_and_without_hyper_background_sky(masked_imaging_7x7_no_blur):
+
+    g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(image_2d_value=1.0))
+
+    plane = ag.Plane(galaxies=[g0])
+
+    fit = ag.FitImaging(dataset=masked_imaging_7x7_no_blur, plane=plane)
+
+    assert fit.image.slim == pytest.approx(np.full(fill_value=1.0, shape=(9,)), 1.0e-1)
+
+    hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)
+
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7_no_blur, plane=plane, hyper_image_sky=hyper_image_sky
+    )
+
+    assert fit.image.slim == pytest.approx(np.full(fill_value=2.0, shape=(9,)), 1.0e-1)
+    assert fit.log_likelihood == pytest.approx(-15.6337, 1.0e-4)
+
+
+def test__noise_map__with_and_without_hyper_background(masked_imaging_7x7_no_blur):
+
+    g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(image_2d_value=1.0))
+    plane = ag.Plane(galaxies=[g0])
+
+    fit = ag.FitImaging(dataset=masked_imaging_7x7_no_blur, plane=plane)
+
+    assert fit.noise_map.slim == pytest.approx(
+        np.full(fill_value=2.0, shape=(9,)), 1.0e-1
+    )
+
+    hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
+
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7_no_blur,
+        plane=plane,
+        hyper_background_noise=hyper_background_noise,
+    )
+
+    assert fit.noise_map.slim == pytest.approx(
+        np.full(fill_value=3.0, shape=(9,)), 1.0e-1
+    )
+    assert fit.log_likelihood == pytest.approx(-18.1579, 1.0e-4)
 
 
 class TestCompareToManualProfilesOnly:

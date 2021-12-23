@@ -34,7 +34,8 @@ class MockLightProfile(ag.lp.LightProfile):
         if self.image_2d is not None:
             return self.image_2d
         image_2d = np.ones(shape=(grid.shape[0]))
-        image_2d[0] = self.image_2d_first_value
+        if self.image_2d_first_value is not None:
+            image_2d[0] = self.image_2d_first_value
         return image_2d
 
 
