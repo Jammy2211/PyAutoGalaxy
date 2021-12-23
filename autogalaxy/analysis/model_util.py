@@ -574,8 +574,6 @@ def stochastic_model_from(
 
     model = result.instance.as_model(model_classes)
 
-    print(model)
-
     model.galaxies.lens.take_attributes(source=result.model.galaxies.lens)
 
     if hasattr(model.galaxies, "subhalo"):
