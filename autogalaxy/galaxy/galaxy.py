@@ -150,21 +150,20 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Returns the summed 2D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
-        coordinates.
+        Returns the summed 2D image of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
 
-        If the galaxy has no light profiles, a grid of zeros is returned.
+        If the galaxy has no light profiles, a numpy array of zeros is returned.
 
-        Internally data structures are treated as ndarrays, however the decorator `grid_2d_to_structure` converts
-        the output to an `Array2D` using the input `grid`'s attributes.
+        See the `autogalaxy.profiles.light_profiles` package for details of how images are computed from a light 
+        profile. 
 
-        See `profiles.light_profiles` for a description of how light profile images are computed.
+        The decorator `grid_2d_to_structure` converts the output arrays from ndarrays to an `Array2D` data structure
+        using the input `grid`'s attributes.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
-
+            The 2D (y, x) coordinates where values of the image are evaluated.
         """
         if self.has_light_profile:
             return sum(
@@ -174,36 +173,40 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     def image_2d_list_from(self, grid: aa.type.Grid2DLike) -> List[aa.Array2D]:
         """
-        Returns the summed 2D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
-        coordinates.
+        Returns a list of the 2D images of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
 
-        If the galaxy has no light profiles, a grid of zeros is returned.
+        This function is primarily used in the `autogalaxy.operate.image` package, to output images of the `Galaxy`
+        that have operations such as a 2D convolution or Fourier transform applied to them.
 
-        See `profiles.light_profiles` for a description of how light profile images are computed.
+        If the galaxy has no light profiles, a numpy array of zeros is returned.
+
+        See the `autogalaxy.profiles.light_profiles` package for details of how images are computed from a light
+        profile.
+
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
-
+            The 2D (y, x) coordinates where values of the image are evaluated.
         """
         return list(map(lambda p: p.image_2d_from(grid=grid), self.light_profile_list))
 
     @aa.grid_dec.grid_1d_output_structure
     def image_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Returns the summed 1D image of all of the galaxy's light profiles using an input grid of Cartesian (y,x)
-        coordinates.
+        Returns the summed 1D image of the galaxy's light profiles using a grid of Cartesian (y,x) coordinates.
 
         If the galaxy has no light profiles, a grid of zeros is returned.
 
-        See `profiles.light_profiles` for a description of how light profile images are computed.
+        See `profiles.light_profiles` module for details of how this is performed.
+
+        The decorator `grid_1d_output_structure` converts the output arrays from ndarrays to an `Array1D` data 
+        structure using the input `grid`'s attributes.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
-
+            The 1D (x,) coordinates where values of the image are evaluated.
         """
         if self.has_light_profile:
             return sum(
@@ -223,17 +226,21 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     @aa.grid_dec.grid_2d_to_structure
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Returns the summed (y,x) deflection angles of the galaxy's mass profiles \
-        using a grid of Cartesian (y,x) coordinates.
+        Returns the summed 2D deflection angles of the galaxy's mass profiles from a 2D grid of Cartesian (y,x) 
+        coordinates.
 
-        If the galaxy has no mass profiles, two grid of zeros are returned.
+        If the galaxy has no mass profiles, a numpy array of zeros is returned.
 
-        See *profiles.mass_profiles* module for details of how this is performed.
+        See the `autogalaxy.profiles.mass_profiles` package for details of how deflection angles are computed from a 
+        mass profile. 
+
+        The decorator `grid_2d_to_vector_yx` converts the output arrays from ndarrays to a `VectorYX2D` data structure
+        using the input `grid`'s attributes.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
+            The 2D (y, x) coordinates where values of the deflection angles are evaluated.
         """
         if self.has_mass_profile:
             return sum(
@@ -247,20 +254,20 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     @aa.grid_dec.grid_2d_to_structure
     def convergence_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Returns the summed 2D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
+        Returns the summed 2D convergence of the galaxy's mass profiles from a 2D grid of Cartesian (y,x) coordinates.
 
-        If the galaxy has no mass profiles, a grid of zeros is returned.
+        If the galaxy has no mass profiles, a numpy array of zeros is returned.
 
-        See `profiles.mass_profiles` module for details of how this is performed.
+        See the `autogalaxy.profiles.mass_profiles` package for details of how convergences are computed from a mass 
+        profile. 
 
-        Internally data structures are treated as ndarrays, however the decorator `grid_2d_to_structure` converts
-        the output to an `Array2D` using the input `grid`'s attributes.
+        The decorator `grid_2d_to_structure` converts the output arrays from ndarrays to an `Array2D` data structure
+        using the input `grid`'s attributes.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
-
+            The 2D (y, x) coordinates where values of the convergence are evaluated.
         """
         if self.has_mass_profile:
             return sum(
@@ -277,13 +284,13 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         See `profiles.mass_profiles` module for details of how this is performed.
 
-        Internally data structures are treated as ndarrays, however the decorator `grid_1d_output_structure` converts
-        the output to an `Array1D` using the input `grid`'s attributes.
+        The decorator `grid_1d_output_structure` converts the output arrays from ndarrays to an `Array1D` data 
+        structure using the input `grid`'s attributes.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
+            The 1D (x,) coordinates where values of the convergence are evaluated.
         """
         if self.has_mass_profile:
             return sum(
@@ -294,20 +301,20 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     @aa.grid_dec.grid_2d_to_structure
     def potential_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Returns the summed 2D gravitational potential of the galaxy's mass profiles using a grid of
-        Cartesian (y,x) coordinates.
+        Returns the summed 2D potential of the galaxy's mass profiles from a 2D grid of Cartesian (y,x) coordinates.
 
-        If the galaxy has no mass profiles, a grid of zeros is returned.
+        If the galaxy has no mass profiles, a numpy array of zeros is returned.
 
-        See `profiles.mass_profiles` module for details of how this is performed.
+        See the `autogalaxy.profiles.mass_profiles` package for details of how potentials are computed from a mass 
+        profile. 
 
-        Internally data structures are treated as ndarrays, however the decorator `grid_2d_to_structure` converts
-        the output to an `Array2D` using the input `grid`'s attributes.
+        The decorator `grid_2d_to_structure` converts the output arrays from ndarrays to an `Array2D` data structure
+        using the input `grid`'s attributes.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
+            The 2D (y, x) coordinates where values of the potential are evaluated.
         """
         if self.has_mass_profile:
             return sum(
@@ -318,20 +325,19 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     @aa.grid_dec.grid_1d_output_structure
     def potential_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Returns the summed 2D gravitational potential of the galaxy's mass profiles using a grid of
-        Cartesian (y,x) coordinates.
+        Returns the summed 1D potential of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
         If the galaxy has no mass profiles, a grid of zeros is returned.
 
         See `profiles.mass_profiles` module for details of how this is performed.
 
-        Internally data structures are treated as ndarrays, however the decorator `grid_1d_to_structure` converts
-        the output to an `Array1D` using the input `grid`'s attributes.
+        The decorator `grid_1d_output_structure` converts the output arrays from ndarrays to an `Array1D` data 
+        structure using the input `grid`'s attributes.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the original reference frame of the grid.
+            The 1D (x,) coordinates where values of the potential are evaluated.
         """
         if self.has_mass_profile:
             return sum(
