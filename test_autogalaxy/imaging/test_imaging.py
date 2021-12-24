@@ -2,7 +2,7 @@ from astropy.io import fits
 import numpy as np
 import os
 from os import path
-
+import pytest
 import shutil
 
 import autogalaxy as ag
@@ -134,7 +134,7 @@ class TestSimulatorImaging:
 
         grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2, sub_size=1)
 
-        psf = ag.Kernel2D.no_blur(pixel_scales=0.2)
+        psf = ag.Kernel2D.manual_native(array=[[1.0]], pixel_scales=0.2)
 
         simulator = ag.SimulatorImaging(
             psf=psf,
@@ -153,6 +153,6 @@ class TestSimulatorImaging:
         )
 
         assert imaging.shape_native == (11, 11)
-        assert (imaging.image == imaging_via_image.image).all()
+        assert imaging.image == pytest.approx(imaging_via_image.image, 1.0e-4)
         assert (imaging.psf == imaging_via_image.psf).all()
         assert (imaging.noise_map == imaging_via_image.noise_map).all()

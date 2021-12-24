@@ -52,7 +52,7 @@ def make_psf_3x3():
 
 
 @pytest.fixture(name="psf_3x3_no_blur")
-def make_psf_3x3():
+def make_psf_3x3_no_blur():
     return fixtures.make_psf_3x3_no_blur()
 
 

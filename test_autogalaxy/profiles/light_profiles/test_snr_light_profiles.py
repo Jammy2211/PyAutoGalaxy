@@ -1,10 +1,4 @@
-import numpy as np
-
 import autogalaxy as ag
-
-from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
-
-from autogalaxy.mock.mock import MockLightProfile
 
 
 def test__signal_to_noise_via_simulator_correct():
@@ -22,7 +16,10 @@ def test__signal_to_noise_via_simulator_correct():
         background_sky_level=background_sky_level,
     )
 
+    psf = ag.Kernel2D.manual_native(array=[[1.0]], pixel_scales=0.2)
+
     simulator = ag.SimulatorImaging(
+        psf=psf,
         exposure_time=exposure_time,
         noise_seed=1,
         background_sky_level=background_sky_level,

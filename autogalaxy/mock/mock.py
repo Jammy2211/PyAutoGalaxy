@@ -5,7 +5,8 @@ import autofit as af
 import autoarray as aa
 import autogalaxy as ag
 from autoarray.mock.mock import *
-from autofit.mock.mock import MockSearch, MockSamples
+from autofit.mock.mock import *
+from autofit.mock import mock as af_m
 
 # MockProfiles #
 
@@ -139,7 +140,7 @@ class MockCosmology:
 # Mock Model-Fitting #
 
 
-class MockResult(af.MockResult):
+class MockResult(af_m.MockResult):
     def __init__(
         self,
         samples=None,
