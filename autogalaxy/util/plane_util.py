@@ -2,6 +2,7 @@ import numpy as np
 
 import autoarray as aa
 
+from autogalaxy.plane.plane import Plane
 from autogalaxy.plane.plane import PlaneImage
 
 from autogalaxy import exc
@@ -132,3 +133,23 @@ def galaxies_in_redshift_ordered_planes_from(galaxies, plane_redshifts):
         galaxies_in_redshift_ordered_planes[index].append(galaxy)
 
     return galaxies_in_redshift_ordered_planes
+
+
+def planes_via_galaxies_from(galaxies, profiling_dict=None):
+
+    plane_redshifts = ordered_plane_redshifts_from(galaxies=galaxies)
+
+    galaxies_in_planes = galaxies_in_redshift_ordered_planes_from(
+        galaxies=galaxies, plane_redshifts=plane_redshifts
+    )
+
+    planes = []
+
+    for plane_index in range(0, len(plane_redshifts)):
+        planes.append(
+            Plane(
+                galaxies=galaxies_in_planes[plane_index], profiling_dict=profiling_dict
+            )
+        )
+
+    return planes
