@@ -24,6 +24,7 @@ from .dark_mass_profiles import (
     SphNFW,
     SphNFWMCRDuffy,
     SphNFWMCRLudlow,
+    EllNFWMCRScatterLudlow,
     SphNFWMCRScatterLudlow,
     EllNFWMCRLudlow,
     EllNFWGeneralizedMCRLudlow,

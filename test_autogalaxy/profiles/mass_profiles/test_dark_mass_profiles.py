@@ -1594,3 +1594,34 @@ class TestNFWMCRLudlow:
         # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
         assert nfw.scale_radius == pytest.approx(0.29895, 1.0e-4)
+
+        nfw_ell = ag.mp.EllNFWMCRScatterLudlow(
+            elliptical_comps=(0.5, 0.5),
+            mass_at_200=1.0e9,
+            scatter_sigma=1.0,
+            redshift_object=0.6,
+            redshift_source=2.5,
+        )
+
+        # We uare using the EllNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
+
+        assert nfw_ell.elliptical_comps == (0.5, 0.5)
+        assert nfw_ell.scale_radius == pytest.approx(0.14983, 1.0e-4)
+
+        nfw_ell = ag.mp.EllNFWMCRScatterLudlow(
+            elliptical_comps=(0.5, 0.5),
+            mass_at_200=1.0e9,
+            scatter_sigma=-1.0,
+            redshift_object=0.6,
+            redshift_source=2.5,
+        )
+
+        # We uare using the EllNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
+
+        assert nfw_ell.elliptical_comps == (0.5, 0.5)
+        assert nfw_ell.scale_radius == pytest.approx(0.29895, 1.0e-4)
+
+        deflections_sph = nfw.deflections_yx_2d_from(grid=grid)
+        deflections_ell = nfw_ell.deflections_yx_2d_from(grid=grid)
+
+        assert deflections_sph[0] != pytest.approx(deflections_ell[0], 1.0e-4)
