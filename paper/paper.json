@@ -1,0 +1,23 @@
+{
+  "@context": "https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld",
+  "@type": "Code",
+  "author": [
+    {
+      "@id": "http://orcid.org/0000-0002-8987-7401",
+      "@type": "Person",
+      "email": "james.w.nightingale@durham.ac.uk",
+      "name": "James W. Nightingale",
+      "affiliation": "Institute for Computational Cosmology, Durham University"
+    }
+  ],
+  "identifier": "",
+  "codeRepository": "https://github.com/Jammy2211/PyAutoGalaxy",
+  "datePublished": "2022-01-25",
+  "dateModified": "2022-01-25",
+  "dateCreated": "2022-01-25",
+  "description": "PyAutoGalaxy`: Open-Source Galaxy Modeling",
+  "keywords": "astronomy, Python, galaxy formation and evolution, galaxy morphology, interferometry",
+  "license": "MIT",
+  "title": "PyAutoGalaxy",
+  "version": "v0.64.2"
+}
