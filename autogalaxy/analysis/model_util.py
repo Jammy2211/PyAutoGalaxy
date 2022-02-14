@@ -586,7 +586,7 @@ def stochastic_model_from(
 
         if subhalo_mass_at_200_log_uniform:
             model.galaxies.subhalo.mass.mass_at_200 = af.LogUniformPrior(
-                lower_limit=1e6, upper_limit=1e11
+                lower_limit=1e6, upper_limit=1e12
             )
 
     return model
