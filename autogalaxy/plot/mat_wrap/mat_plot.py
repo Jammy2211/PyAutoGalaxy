@@ -37,45 +37,45 @@ class MatPlot1D(aplt.MatPlot1D):
 
         Parameters
         ----------
-        units : aplt.Units
+        units
             The units of the figure used to plot the data structure which sets the y and x ticks and labels.
-        figure : aplt.Figure
+        figure
             Opens the matplotlib figure before plotting via `plt.figure` and closes it once plotting is complete
             via `plt.close`.
-        axis : aplt.Axis
+        axis
             Sets the extent of the figure axis via `plt.axis` and allows for a manual axis range.
-        cmap : aplt.Cmap
+        cmap
             Customizes the colormap of the plot and its normalization via matplotlib `colors` objects such
             as `colors.Normalize` and `colors.LogNorm`.
-        colorbar : aplt.Colorbar
+        colorbar
             Plots the colorbar of the plot via `plt.colorbar` and customizes its tick labels and values using method
             like `cb.set_yticklabels`.
-        colorbar_tickparams : aplt.ColorbarTickParams
+        colorbar_tickparams
             Customizes the yticks of the colorbar plotted via `plt.colorbar`.
-        tickparams : aplt.TickParams
+        tickparams
             Customizes the appearances of the y and x ticks on the plot, (e.g. the fontsize), using `plt.tick_params`.
-        yticks : aplt.YTicks
+        yticks
             Sets the yticks of the plot, including scaling them to new units depending on the `Units` object, via
             `plt.yticks`.
-        xticks : aplt.XTicks
+        xticks
             Sets the xticks of the plot, including scaling them to new units depending on the `Units` object, via
             `plt.xticks`.
-        title : aplt.Title
+        title
             Sets the figure title and customizes its appearance using `plt.title`.
-        ylabel : aplt.YLabel
+        ylabel
             Sets the figure ylabel and customizes its appearance using `plt.ylabel`.
-        xlabel : aplt.XLabel
+        xlabel
             Sets the figure xlabel and customizes its appearance using `plt.xlabel`.
-        legend : aplt.Legend
+        legend
             Sets whether the plot inclues a legend and customizes its appearance and labels using `plt.legend`.
-        output : aplt.Output
+        output
             Sets if the figure is displayed on the user's screen or output to `.png` using `plt.show` and `plt.savefig`
-        yx_plot : aplt.YXPlot
+        yx_plot
             Sets how the y versus x plot appears, for example if it each axis is linear or log, using `plt.plot`.
-        half_light_radius_axvline : w.HalfLightRadiusAXVLine
+        half_light_radius_axvline
             Sets how a vertical line representing the half light radius of a `LightProfile` is plotted on the figure
             using the `plt.axvline` method.
-        half_light_radius_axvline : w.HalfLightRadiusAXVLine
+        half_light_radius_axvline
             Sets how a vertical line representing the Einstein radius of a `LensingObj` (e.g. a `MassProfile`) is
             plotted on the figure using the `plt.axvline` method.
         """
@@ -120,7 +120,7 @@ class MatPlot1D(aplt.MatPlot1D):
 
         Parameters
         ----------
-        is_for_subplot : bool
+        is_for_subplot
             The entry the `is_for_subplot` attribute of every `MatWrap` object is set too.
         """
 
@@ -156,6 +156,7 @@ class MatPlot2D(aplt.MatPlot2D):
         grid_plot: Optional[aplt.GridPlot] = None,
         vector_yx_quiver: Optional[aplt.VectorYXQuiver] = None,
         patch_overlay: Optional[aplt.PatchOverlay] = None,
+        interpolated_reconstruction: Optional[aplt.InterpolatedReconstruction] = None,
         voronoi_drawer: Optional[aplt.VoronoiDrawer] = None,
         origin_scatter: Optional[aplt.OriginScatter] = None,
         mask_scatter: Optional[aplt.MaskScatter] = None,
@@ -188,72 +189,75 @@ class MatPlot2D(aplt.MatPlot2D):
         
         Parameters
         ----------
-        units : aplt.Units
+        units
           The units of the figure used to plot the data structure which sets the y and x ticks and labels.
-        figure : aplt.Figure
+        figure
           Opens the matplotlib figure before plotting via `plt.figure` and closes it once plotting is complete
           via `plt.close`.
-        axis : mat_wrap.Axis
+        axis
             Sets the extent of the figure axis via `plt.axis` and allows for a manual axis range.
-        cmap : aplt.Cmap
+        cmap
           Customizes the colormap of the plot and its normalization via matplotlib `colors` objects such 
           as `colors.Normalize` and `colors.LogNorm`.
-        colorbar : mat_wrap.Colorbar
+        colorbar
             Plots the colorbar of the plot via `plt.colorbar` and customizes its tick labels and values using method
             like `cb.set_yticklabels`.
-        colorbar_tickparams : mat_wrap.ColorbarTickParams
+        colorbar_tickparams
             Customizes the yticks of the colorbar plotted via `plt.colorbar`.
-        tickparams : aplt.TickParams
+        tickparams
           Customizes the appearances of the y and x ticks on the plot, (e.g. the fontsize), using `plt.tick_params`.
-        yticks : aplt.YTicks
+        yticks
           Sets the yticks of the plot, including scaling them to new units depending on the `Units` object, via
           `plt.yticks`.
-        xticks : aplt.XTicks
+        xticks
           Sets the xticks of the plot, including scaling them to new units depending on the `Units` object, via
           `plt.xticks`.
-        title : aplt.Title
+        title
           Sets the figure title and customizes its appearance using `plt.title`.        
-        ylabel : aplt.YLabel
+        ylabel
           Sets the figure ylabel and customizes its appearance using `plt.ylabel`.
-        xlabel : aplt.XLabel
+        xlabel
           Sets the figure xlabel and customizes its appearance using `plt.xlabel`.
-        legend : aplt.Legend
+        legend
           Sets whether the plot inclues a legend and customizes its appearance and labels using `plt.legend`.
-        output : aplt.Output
+        output
           Sets if the figure is displayed on the user's screen or output to `.png` using `plt.show` and `plt.savefig`
-        array_overlay: aplt.ArrayOverlay
+        array_overlay
           Overlays an input `Array2D` over the figure using `plt.imshow`.
-        grid_scatter : aplt.GridScatter
+        grid_scatter
           Scatters a `Grid2D` of (y,x) coordinates over the figure using `plt.scatter`.
-        grid_plot: aplt.LinePlot
+        grid_plot
           Plots lines of data (e.g. a y versus x plot via `plt.plot`, vertical lines via `plt.avxline`, etc.)
-        vector_yx_quiver: aplt.VectorYXQuiver
+        vector_yx_quiver
           Plots a `VectorField` object using the matplotlib function `plt.quiver`.
-        patch_overlay: aplt.PatchOverlay
+        patch_overlay
           Overlays matplotlib `patches.Patch` objects over the figure, such as an `Ellipse`.
-        voronoi_drawer: aplt.VoronoiDrawer
+        voronoi_drawer
+          Interpolations the reconstruction of a `Mapper` object from its irregular grid (e.g. Delaunay, Voronoi) to a
+          uniform 2D array and plots it via `plt.imshow()`.
+        voronoi_drawer
           Draws a colored Voronoi mesh of pixels using `plt.fill`.
-        origin_scatter : aplt.OriginScatter
+        origin_scatter
           Scatters the (y,x) origin of the data structure on the figure.
-        mask_scatter : aplt.MaskScatter
+        mask_scatter
           Scatters an input `Mask2d` over the plotted data structure's figure.
-        border_scatter : aplt.BorderScatter
+        border_scatter
           Scatters the border of an input `Mask2d` over the plotted data structure's figure.
-        positions_scatter : aplt.PositionsScatter
+        positions_scatter
           Scatters specific (y,x) coordinates input as a `Grid2DIrregular` object over the figure.
-        index_scatter : aplt.IndexScatter
+        index_scatter
           Scatters specific coordinates of an input `Grid2D` based on input values of the `Grid2D`'s 1D or 2D indexes.
-        pixelization_grid_scatter : aplt.PixelizationGridScatter
+        pixelization_grid_scatter
           Scatters the `PixelizationGrid` of a `Pixelization` object.
-        light_profile_centres_scatter : lensing_aplt.LightProfileCentresScatter
+        light_profile_centres_scatter
           Scatters the (y,x) centres of all `LightProfile`'s in the plotted object (e.g. a `Tracer`).
-        mass_profile_centres_scatter : lensing_aplt.MassProfileCentresScatter
+        mass_profile_centres_scatter
           Scatters the (y,x) centres of all `MassProfile`'s in the plotted object (e.g. a `Tracer`).
-        light_profile_centres_scatter : lensing_aplt.MultipleImagesScatter
+        light_profile_centres_scatter
           Scatters the (y,x) coordinates of the multiple image locations of the lens mass model.
-        critical_curves_plot : lensing_aplt.CriticalCurvesPlot
+        critical_curves_plot
             Plots the critical curves of the lens mass model as colored lines.
-        caustics_plot : lensing_aplt.CauticsPlot
+        caustics_plot
             Plots the caustics of the lens mass model as colored lines.
         """
 
@@ -269,7 +273,7 @@ class MatPlot2D(aplt.MatPlot2D):
         self.critical_curves_plot = critical_curves_plot or w.CriticalCurvesPlot()
         self.caustics_plot = caustics_plot or w.CausticsPlot()
 
-        super(MatPlot2D, self).__init__(
+        super().__init__(
             units=units,
             figure=figure,
             axis=axis,
@@ -296,5 +300,6 @@ class MatPlot2D(aplt.MatPlot2D):
             patch_overlay=patch_overlay,
             array_overlay=array_overlay,
             grid_plot=grid_plot,
+            interpolated_reconstruction=interpolated_reconstruction,
             voronoi_drawer=voronoi_drawer,
         )
