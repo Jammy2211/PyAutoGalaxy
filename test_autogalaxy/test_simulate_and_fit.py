@@ -236,6 +236,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
         dataset=interferometer,
         plane=plane,
         settings_pixelization=ag.SettingsPixelization(use_border=False),
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.chi_squared == pytest.approx(0.0)
@@ -258,6 +259,7 @@ def test__simulate_interferometer_data_and_fit__chi_squared_is_0__noise_normaliz
         dataset=interferometer,
         plane=plane,
         settings_pixelization=ag.SettingsPixelization(use_border=False),
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
     assert abs(fit.chi_squared) < 1.0e-4
 

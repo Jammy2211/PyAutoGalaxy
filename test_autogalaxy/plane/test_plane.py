@@ -923,8 +923,11 @@ class TestAbstractPlaneData:
                 visibilities=interferometer_7.visibilities,
                 noise_map=interferometer_7.noise_map,
                 transformer=interferometer_7.transformer,
+                w_tilde=interferometer_7.w_tilde,
                 settings_pixelization=ag.SettingsPixelization(use_border=False),
-                settings_inversion=ag.SettingsInversion(use_linear_operators=False),
+                settings_inversion=ag.SettingsInversion(
+                    use_w_tilde=False, use_linear_operators=False
+                ),
             )
 
             assert inversion.mapped_reconstructed_data.real == pytest.approx(

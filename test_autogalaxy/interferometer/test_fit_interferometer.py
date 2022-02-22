@@ -65,7 +65,11 @@ def test__fit_figure_of_merit(interferometer_7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
-    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+    )
 
     assert (fit.noise_map.slim == np.full(fill_value=2.0 + 2.0j, shape=(7,))).all()
     assert fit.log_evidence == pytest.approx(-66.90612, 1e-4)
@@ -79,7 +83,11 @@ def test__fit_figure_of_merit(interferometer_7):
 
     plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
 
-    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+    )
 
     assert (fit.noise_map.slim == np.full(fill_value=2.0 + 2.0j, shape=(7,))).all()
     assert fit.log_evidence == pytest.approx(-283424.48941, 1e-4)
@@ -104,6 +112,7 @@ def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
         dataset=interferometer_7,
         plane=plane,
         hyper_background_noise=hyper_background_noise,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert (fit.noise_map.slim == np.full(fill_value=3.0 + 3.0j, shape=(7,))).all()
@@ -115,6 +124,7 @@ def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
         plane=plane,
         hyper_background_noise=hyper_background_noise,
         use_hyper_scalings=False,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.noise_map == pytest.approx(interferometer_7.noise_map, 1.0e-4)
@@ -130,6 +140,7 @@ def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
         dataset=interferometer_7,
         plane=plane,
         hyper_background_noise=hyper_background_noise,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert (fit.noise_map.slim == np.full(fill_value=3.0 + 3.0j, shape=(7,))).all()
@@ -148,6 +159,7 @@ def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
         dataset=interferometer_7,
         plane=plane,
         hyper_background_noise=hyper_background_noise,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert (fit.noise_map.slim == np.full(fill_value=3.0 + 3.0j, shape=(7,))).all()
@@ -155,7 +167,9 @@ def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
     assert fit.figure_of_merit == pytest.approx(-161108.8377, 1.0e-4)
 
 
-def test___fit_figure_of_merit__linear_operator(interferometer_7_lop):
+def test___fit_figure_of_merit__different_settings(
+    interferometer_7, interferometer_7_lop
+):
 
     pix = ag.pix.Rectangular(shape=(3, 3))
     reg = ag.reg.Constant(coefficient=0.01)
@@ -165,9 +179,23 @@ def test___fit_figure_of_merit__linear_operator(interferometer_7_lop):
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
     fit = ag.FitInterferometer(
+        dataset=interferometer_7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(
+            use_w_tilde=True, use_linear_operators=False
+        ),
+    )
+
+    assert (fit.noise_map.slim == np.full(fill_value=2.0 + 2.0j, shape=(7,))).all()
+    assert fit.log_evidence == pytest.approx(-66.90612, 1e-4)
+    assert fit.figure_of_merit == pytest.approx(-66.90612, 1.0e-4)
+
+    fit = ag.FitInterferometer(
         dataset=interferometer_7_lop,
         plane=plane,
-        settings_inversion=ag.SettingsInversion(use_linear_operators=True),
+        settings_inversion=ag.SettingsInversion(
+            use_w_tilde=False, use_linear_operators=True
+        ),
     )
 
     assert (fit.noise_map.slim == np.full(fill_value=2.0 + 2.0j, shape=(7,))).all()
@@ -186,7 +214,11 @@ def test___galaxy_model_image_dict(interferometer_7):
 
     plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
-    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+    )
 
     g0_image = g0.image_2d_from(grid=interferometer_7.grid)
     g1_image = g1.image_2d_from(grid=interferometer_7.grid)
@@ -202,14 +234,21 @@ def test___galaxy_model_image_dict(interferometer_7):
 
     plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
-    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+    )
 
     mapper = pix.mapper_from(
         source_grid_slim=interferometer_7.grid, source_pixelization_grid=None
     )
 
     inversion = ag.Inversion(
-        dataset=interferometer_7, linear_obj_list=[mapper], regularization_list=[reg]
+        dataset=interferometer_7,
+        linear_obj_list=[mapper],
+        regularization_list=[reg],
+        settings=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert (fit.galaxy_model_image_dict[g0].native == np.zeros((7, 7))).all()
@@ -227,7 +266,11 @@ def test___galaxy_model_image_dict(interferometer_7):
 
     plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, galaxy_pix])
 
-    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+    )
 
     g0_visibilities = g0.visibilities_via_transformer_from(
         grid=interferometer_7.grid, transformer=interferometer_7.transformer
@@ -250,8 +293,10 @@ def test___galaxy_model_image_dict(interferometer_7):
         visibilities=profile_subtracted_visibilities,
         noise_map=interferometer_7.noise_map,
         transformer=interferometer_7.transformer,
+        w_tilde=interferometer_7.w_tilde,
         linear_obj_list=[mapper],
         regularization_list=[reg],
+        settings=ag.SettingsInversion(use_w_tilde=False),
     )
 
     g0_image = g0.image_2d_from(grid=interferometer_7.grid)
@@ -275,7 +320,11 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
     plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
-    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+    )
 
     g0_visibilities = g0.visibilities_via_transformer_from(
         grid=interferometer_7.grid, transformer=interferometer_7.transformer
@@ -305,14 +354,21 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
     plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
 
-    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+    )
 
     mapper = pix.mapper_from(
         source_grid_slim=interferometer_7.grid, source_pixelization_grid=None
     )
 
     inversion = ag.Inversion(
-        dataset=interferometer_7, linear_obj_list=[mapper], regularization_list=[reg]
+        dataset=interferometer_7,
+        linear_obj_list=[mapper],
+        regularization_list=[reg],
+        settings=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert (fit.galaxy_model_visibilities_dict[g0] == 0.0 + 0.0j * np.zeros((7,))).all()
@@ -333,7 +389,11 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
     plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2, galaxy_pix])
 
-    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+    )
 
     g0_visibilities = g0.visibilities_via_transformer_from(
         grid=interferometer_7.grid, transformer=interferometer_7.transformer
@@ -356,8 +416,10 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
         visibilities=profile_subtracted_visibilities,
         noise_map=interferometer_7.noise_map,
         transformer=interferometer_7.transformer,
+        w_tilde=interferometer_7.w_tilde,
         linear_obj_list=[mapper],
         regularization_list=[reg],
+        settings=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert (fit.galaxy_model_visibilities_dict[g2] == 0.0 + 0.0j * np.zeros((7,))).all()
