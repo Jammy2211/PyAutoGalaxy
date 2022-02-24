@@ -79,7 +79,24 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         self.hyper_model_image = None
         self.hyper_galaxy_image = None
 
+        print(kwargs)
+
         for name, val in kwargs.items():
+
+            if isinstance(val, list):
+                raise exc.GalaxyException(
+                    "One or more of the input light / mass profiles has been passed to the Galaxy object"
+                    "as a list."
+                    ""
+                    "The Galaxy object cannot accept a list of light / mass profiles. "
+                    ""
+                    "Instead, pass these objects as a dictionary, where the key of each dictionary entry is"
+                    "the name of the profile and the value is the profile, e.g.:"
+                    ""
+                    "{bulge : al.lp.EllSersic()}"
+                    ""
+                )
+
             setattr(self, name, val)
 
         self.pixelization = pixelization

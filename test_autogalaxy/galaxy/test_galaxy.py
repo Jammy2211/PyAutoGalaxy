@@ -1013,6 +1013,24 @@ class TestRegression:
         assert deflections.native[1, 4, 1] >= 0
         assert deflections.native[1, 3, 1] <= 0
 
+    def test__cannot_pass_light_or_mass_list(self):
+
+        light_list = [ag.lp.EllSersic(), ag.lp.EllSersic()]
+
+        with pytest.raises(exc.GalaxyException):
+
+            ag.Galaxy(redshift=0.5, light=light_list)
+
+        mass_list = [ag.mp.EllSersic(), ag.mp.EllSersic()]
+
+        with pytest.raises(exc.GalaxyException):
+
+            ag.Galaxy(redshift=0.5, mass=mass_list)
+
+        with pytest.raises(exc.GalaxyException):
+
+            ag.Galaxy(redshift=0.5, light=light_list, mass=mass_list)
+
 
 class TestDecorators:
     def test__grid_iterate_in__iterates_array_result_correctly(self, gal_x1_lp):
