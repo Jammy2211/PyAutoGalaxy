@@ -25,7 +25,7 @@ class MassSheet(MassProfile):
         super().__init__(centre=centre, elliptical_comps=(0.0, 0.0))
         self.kappa = kappa
 
-    def convergence_func(self, grid_radius):
+    def convergence_func(self, grid_radius:float) -> float:
         return 0.0
 
     @aa.grid_dec.grid_2d_to_structure
@@ -72,7 +72,7 @@ class ExternalShear(MassProfile):
     def angle(self):
         return convert.shear_angle_from(elliptical_comps=self.elliptical_comps)
 
-    def convergence_func(self, grid_radius):
+    def convergence_func(self, grid_radius:float) -> float:
         return 0.0
 
     def average_convergence_of_1_radius(self):

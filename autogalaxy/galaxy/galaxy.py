@@ -79,8 +79,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         self.hyper_model_image = None
         self.hyper_galaxy_image = None
 
-        print(kwargs)
-
         for name, val in kwargs.items():
 
             if isinstance(val, list):

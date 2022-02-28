@@ -167,7 +167,7 @@ class EllGaussian(MassProfile, StellarProfile):
         """
         return self.convergence_func(self.grid_to_eccentric_radii(grid))
 
-    def convergence_func(self, grid_radius):
+    def convergence_func(self, grid_radius:float) -> float:
         return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray):
@@ -372,7 +372,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
 
         return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
 
-    def convergence_func(self, grid_radius):
+    def convergence_func(self, grid_radius:float) -> float:
         return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
     @aa.grid_dec.grid_2d_to_structure
@@ -884,7 +884,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
         """
         return self.convergence_func(self.grid_to_eccentric_radii(grid))
 
-    def convergence_func(self, grid_radius):
+    def convergence_func(self, grid_radius:float) -> float:
         return (
             self.mass_to_light_ratio
             * (
@@ -1337,7 +1337,7 @@ class EllChameleon(MassProfile, StellarProfile):
         """
         return self.convergence_func(self.grid_to_elliptical_radii(grid))
 
-    def convergence_func(self, grid_radius):
+    def convergence_func(self, grid_radius:float) -> float:
         return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
     @aa.grid_dec.grid_2d_to_structure
