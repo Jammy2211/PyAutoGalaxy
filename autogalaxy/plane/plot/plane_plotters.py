@@ -17,7 +17,7 @@ class PlanePlotter(Plotter):
     def __init__(
         self,
         plane: Plane,
-        grid: aa.Grid2D,
+        grid: aa.type.Grid1D2DLike,
         mat_plot_1d: MatPlot1D = MatPlot1D(),
         visuals_1d: Visuals1D = Visuals1D(),
         include_1d: Include1D = Include1D(),
