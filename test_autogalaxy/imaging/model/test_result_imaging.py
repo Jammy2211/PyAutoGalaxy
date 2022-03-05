@@ -5,8 +5,6 @@ import autogalaxy as ag
 
 from autogalaxy.imaging.model.result import ResultImaging
 
-from autogalaxy.mock import mock
-
 
 class TestResultImaging:
     def test__results_include_masked_dataset_and_mask(
@@ -32,7 +30,7 @@ class TestResultImaging:
         instance = af.ModelInstance()
         instance.galaxies = galaxies
 
-        samples = mock.MockSamples(max_log_likelihood_instance=instance)
+        samples = ag.m.MockSamples(max_log_likelihood_instance=instance)
 
         result = ResultImaging(
             samples=samples, analysis=analysis_imaging_7x7, model=None, search=None

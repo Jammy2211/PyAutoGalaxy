@@ -3,8 +3,6 @@ import pytest
 import autofit as af
 import autogalaxy as ag
 
-from autogalaxy.mock import mock
-
 
 def test__pixelization_from_model():
 
@@ -91,7 +89,7 @@ def test__hyper_model_noise_from():
 
     instance = model.instance_from_prior_medians()
 
-    result = mock.MockResult(instance=instance)
+    result = ag.m.MockResult(instance=instance)
 
     model = ag.util.model.hyper_noise_model_from(
         setup_hyper=ag.SetupHyper(), result=result
@@ -135,7 +133,7 @@ def test__hyper_model_noise_from():
 
     instance = model.instance_from_prior_medians()
 
-    result = mock.MockResult(instance=instance)
+    result = ag.m.MockResult(instance=instance)
 
     model = ag.util.model.hyper_noise_model_from(
         result=result, setup_hyper=ag.SetupHyper()
@@ -168,7 +166,7 @@ def test__hyper_model_noise_from__adds_hyper_galaxies():
         ),
     }
 
-    result = mock.MockResult(
+    result = ag.m.MockResult(
         instance=instance,
         path_galaxy_tuples=path_galaxy_tuples,
         hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
@@ -213,7 +211,7 @@ def test__hyper_model_inversion_from():
 
     instance = model.instance_from_prior_medians()
 
-    result = mock.MockResult(instance=instance)
+    result = ag.m.MockResult(instance=instance)
 
     model = ag.util.model.hyper_inversion_model_from(
         setup_hyper=ag.SetupHyper(), result=result
@@ -259,7 +257,7 @@ def test__hyper_model_inversion_from():
 
     instance = model.instance_from_prior_medians()
 
-    result = mock.MockResult(instance=instance)
+    result = ag.m.MockResult(instance=instance)
 
     model = ag.util.model.hyper_inversion_model_from(
         result=result, setup_hyper=ag.SetupHyper()
@@ -304,7 +302,7 @@ def test__hyper_model_inversion_from__adds_hyper_galaxies():
         ),
     }
 
-    result = mock.MockResult(
+    result = ag.m.MockResult(
         instance=instance,
         path_galaxy_tuples=path_galaxy_tuples,
         hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
@@ -361,7 +359,7 @@ def test__stochastic_model_from():
         galaxies=af.Collection(lens=af.Model(ag.Galaxy, redshift=0.5))
     )
 
-    result = mock.MockResult(instance=instance, model=model)
+    result = ag.m.MockResult(instance=instance, model=model)
 
     model = ag.util.model.stochastic_model_from(result=result)
 

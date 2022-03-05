@@ -1,12 +1,7 @@
-import numpy as np
-
 import autofit as af
 import autogalaxy as ag
+
 from autogalaxy.analysis import result as res
-
-from autofit.non_linear.mock.mock_search import MockSearch, MockSamples
-from autogalaxy.mock.mock import MockPixelization, MockRegularization
-
 
 class TestResultAbstract:
     def test__result_contains_instance_with_galaxies(
@@ -41,9 +36,9 @@ class TestResultAbstract:
 
         max_log_likelihood_plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
-        search = MockSearch(
+        search = ag.m.MockSearch(
             name="test_search",
-            samples=MockSamples(max_log_likelihood_instance=max_log_likelihood_plane),
+            samples=ag.m.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane),
         )
 
         result = search.fit(model=model, analysis=analysis_imaging_7x7)
@@ -59,17 +54,17 @@ class TestResultDataset:
     ):
         source = ag.Galaxy(
             redshift=1.0,
-            pixelization=MockPixelization(mapper=1),
-            regularization=MockRegularization(),
+            pixelization=ag.m.MockPixelization(mapper=1),
+            regularization=ag.m.MockRegularization(),
         )
 
         max_log_likelihood_plane = ag.Plane(galaxies=[source])
 
-        samples = MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
+        samples = ag.m.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
 
         result = res.ResultDataset(
             samples=samples, analysis=analysis_imaging_7x7, model=None, search=None
         )
 
-        assert isinstance(result.pixelization_list[0], MockPixelization)
+        assert isinstance(result.pixelization_list[0], ag.m.MockPixelization)
         assert result.pixelization_list[0].mapper == 1

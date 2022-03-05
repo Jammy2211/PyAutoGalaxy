@@ -5,9 +5,6 @@ from os import path
 import autofit as af
 import autogalaxy as ag
 
-from autogalaxy.mock import mock
-
-
 directory = path.dirname(path.realpath(__file__))
 
 
@@ -30,7 +27,7 @@ class TestAnalysisDataset:
             ),
         }
 
-        result = mock.MockResult(
+        result = ag.m.MockResult(
             instance=instance,
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
             hyper_model_image=ag.Array2D.full(

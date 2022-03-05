@@ -5,7 +5,7 @@ import pytest
 from matplotlib import pyplot
 
 from autoconf import conf
-from autogalaxy.mock import fixtures
+from autogalaxy import fixtures
 
 
 class PlotPatch:

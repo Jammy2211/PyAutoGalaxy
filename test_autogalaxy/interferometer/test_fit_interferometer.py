@@ -3,12 +3,10 @@ import pytest
 
 import autogalaxy as ag
 
-from autogalaxy.mock.mock import MockLightProfile
-
 
 def test__model_visibilities(interferometer_7):
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(2)))
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d=np.ones(2)))
     plane = ag.Plane(galaxies=[g0])
 
     fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
@@ -21,7 +19,7 @@ def test__model_visibilities(interferometer_7):
 
 def test__noise_map__with_and_without_hyper_background(interferometer_7):
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(2)))
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d=np.ones(2)))
     plane = ag.Plane(galaxies=[g0])
 
     fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)

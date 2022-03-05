@@ -2,8 +2,8 @@ from os import path
 
 import autofit as af
 import autogalaxy as ag
+
 from autogalaxy.imaging.model.result import ResultImaging
-from autogalaxy.mock import mock
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -15,7 +15,7 @@ class TestAnalysisImaging:
 
         analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
 
-        search = mock.MockSearch(name="test_search")
+        search = ag.m.MockSearch(name="test_search")
 
         result = search.fit(model=model, analysis=analysis)
 
@@ -88,7 +88,7 @@ class TestAnalysisImaging:
 
         hyper_galaxy_image_path_dict = {("galaxies", "galaxy"): galaxy_hyper_image}
 
-        result = mock.MockResult(
+        result = ag.m.MockResult(
             hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
             hyper_model_image=hyper_model_image,
         )

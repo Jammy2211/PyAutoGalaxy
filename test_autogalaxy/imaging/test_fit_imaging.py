@@ -2,7 +2,6 @@ import numpy as np
 import pytest
 
 import autogalaxy as ag
-from autogalaxy.mock.mock import MockLightProfile
 
 
 def test__model_image__with_and_without_psf_blurring(
@@ -11,7 +10,7 @@ def test__model_image__with_and_without_psf_blurring(
 
     g0 = ag.Galaxy(
         redshift=0.5,
-        light_profile=MockLightProfile(image_2d_value=1.0, image_2d_first_value=2.0),
+        light_profile=ag.m.MockLightProfile(image_2d_value=1.0, image_2d_first_value=2.0),
     )
     plane = ag.Plane(galaxies=[g0])
 
@@ -32,7 +31,7 @@ def test__model_image__with_and_without_psf_blurring(
 
 def test__noise_map__with_and_without_hyper_galaxy(masked_imaging_7x7_no_blur):
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(image_2d_value=1.0))
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d_value=1.0))
 
     plane = ag.Plane(galaxies=[g0])
 
@@ -46,7 +45,7 @@ def test__noise_map__with_and_without_hyper_galaxy(masked_imaging_7x7_no_blur):
 
     g0 = ag.Galaxy(
         redshift=0.5,
-        light_profile=MockLightProfile(image_2d_value=1.0),
+        light_profile=ag.m.MockLightProfile(image_2d_value=1.0),
         hyper_galaxy=ag.HyperGalaxy(
             contribution_factor=1.0, noise_factor=1.0, noise_power=1.0
         ),
@@ -71,7 +70,7 @@ def test__noise_map__with_hyper_galaxy_reaches_upper_limit(masked_imaging_7x7_no
 
     g0 = ag.Galaxy(
         redshift=0.5,
-        light_profile=MockLightProfile(image_2d_value=1.0),
+        light_profile=ag.m.MockLightProfile(image_2d_value=1.0),
         hyper_galaxy=ag.HyperGalaxy(
             contribution_factor=1.0, noise_factor=1.0e9, noise_power=1.0
         ),
@@ -92,7 +91,7 @@ def test__noise_map__with_hyper_galaxy_reaches_upper_limit(masked_imaging_7x7_no
 
 def test__image__with_and_without_hyper_background_sky(masked_imaging_7x7_no_blur):
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(image_2d_value=1.0))
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d_value=1.0))
 
     plane = ag.Plane(galaxies=[g0])
 
@@ -112,7 +111,7 @@ def test__image__with_and_without_hyper_background_sky(masked_imaging_7x7_no_blu
 
 def test__noise_map__with_and_without_hyper_background(masked_imaging_7x7_no_blur):
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(image_2d_value=1.0))
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d_value=1.0))
     plane = ag.Plane(galaxies=[g0])
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7_no_blur, plane=plane)
@@ -514,14 +513,14 @@ def test___blurred_and_model_image_properties(masked_imaging_7x7):
 
 def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(1)))
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d=np.ones(1)))
 
     g1 = ag.Galaxy(
-        redshift=1.0, light_profile=MockLightProfile(image_2d=2.0 * np.ones(1))
+        redshift=1.0, light_profile=ag.m.MockLightProfile(image_2d=2.0 * np.ones(1))
     )
 
     g2 = ag.Galaxy(
-        redshift=1.0, light_profile=MockLightProfile(image_2d=3.0 * np.ones(1))
+        redshift=1.0, light_profile=ag.m.MockLightProfile(image_2d=3.0 * np.ones(1))
     )
 
     plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2])
@@ -532,12 +531,12 @@ def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
     assert fit.subtracted_images_of_galaxies[1].slim[0] == -3.0
     assert fit.subtracted_images_of_galaxies[2].slim[0] == -2.0
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=MockLightProfile(image_2d=np.ones(1)))
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d=np.ones(1)))
 
     g1 = ag.Galaxy(redshift=0.5)
 
     g2 = ag.Galaxy(
-        redshift=1.0, light_profile=MockLightProfile(image_2d=3.0 * np.ones(1))
+        redshift=1.0, light_profile=ag.m.MockLightProfile(image_2d=3.0 * np.ones(1))
     )
 
     plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2])

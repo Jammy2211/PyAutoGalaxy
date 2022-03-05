@@ -2,8 +2,8 @@ from os import path
 
 import autofit as af
 import autogalaxy as ag
+
 from autogalaxy.quantity.model.result import ResultQuantity
-from autogalaxy.mock import mock
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -19,7 +19,7 @@ class TestAnalysisQuantity:
             dataset=dataset_quantity_7x7_array_2d, func_str="convergence_2d_from"
         )
 
-        search = mock.MockSearch(name="test_search")
+        search = ag.m.MockSearch(name="test_search")
 
         result = search.fit(model=model, analysis=analysis)
 

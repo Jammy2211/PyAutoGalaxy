@@ -2,8 +2,6 @@ import autogalaxy as ag
 import numpy as np
 import pytest
 
-from autogalaxy.mock.mock import MockLightProfile, MockMassProfile
-
 from autogalaxy import exc
 
 
@@ -648,9 +646,9 @@ class TestExtract:
 
         galaxy = ag.Galaxy(
             redshift=0.5,
-            lp_0=MockLightProfile(value=0.9, value1=(0.0, 1.0)),
-            lp_1=MockLightProfile(value=0.8, value1=(2.0, 3.0)),
-            lp_2=MockLightProfile(value=0.7, value1=(4.0, 5.0)),
+            lp_0=ag.m.MockLightProfile(value=0.9, value1=(0.0, 1.0)),
+            lp_1=ag.m.MockLightProfile(value=0.8, value1=(2.0, 3.0)),
+            lp_2=ag.m.MockLightProfile(value=0.7, value1=(4.0, 5.0)),
         )
 
         values = galaxy.extract_attribute(cls=ag.lp.LightProfile, attr_name="value")
@@ -664,10 +662,10 @@ class TestExtract:
         galaxy = ag.Galaxy(
             redshift=0.5,
             lp_3=ag.lp.LightProfile(),
-            lp_0=MockLightProfile(value=1.0),
-            lp_1=MockLightProfile(value=2.0),
-            mp_0=MockMassProfile(value=5.0),
-            lp_2=MockLightProfile(value=3.0),
+            lp_0=ag.m.MockLightProfile(value=1.0),
+            lp_1=ag.m.MockLightProfile(value=2.0),
+            mp_0=ag.m.MockMassProfile(value=5.0),
+            lp_2=ag.m.MockLightProfile(value=3.0),
         )
 
         values = galaxy.extract_attribute(cls=ag.lp.LightProfile, attr_name="value")

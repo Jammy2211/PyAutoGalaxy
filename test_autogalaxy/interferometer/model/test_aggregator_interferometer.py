@@ -9,8 +9,6 @@ import autogalaxy as ag
 
 from autofit.non_linear.samples import Sample
 
-from autogalaxy.mock import mock
-
 directory = path.dirname(path.realpath(__file__))
 
 
@@ -46,7 +44,7 @@ def make_samples(model):
         weight_list=[0.0, 1.0],
     )
 
-    return mock.MockSamples(
+    return ag.m.MockSamples(
         model=model, sample_list=sample_list, max_log_likelihood_instance=plane
     )
 
@@ -90,7 +88,7 @@ def test__interferometer_generator_from_aggregator(
         ),
     )
 
-    search = mock.MockSearch(samples=samples)
+    search = ag.m.MockSearch(samples=samples)
     search.paths = af.DirectoryPaths(path_prefix=path_prefix)
 
     analysis = ag.AnalysisInterferometer(dataset=interferometer_7)

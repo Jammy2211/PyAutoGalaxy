@@ -1,13 +1,7 @@
 from __future__ import division, print_function
-
-import math
-
 import numpy as np
-import pytest
-import scipy.special
 
 import autogalaxy as ag
-from autogalaxy.mock import mock
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 

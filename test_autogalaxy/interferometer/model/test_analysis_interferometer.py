@@ -5,8 +5,6 @@ import autogalaxy as ag
 
 from autogalaxy.interferometer.model.result import ResultInterferometer
 
-from autogalaxy.mock.mock import MockSearch
-
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -18,7 +16,7 @@ class TestAnalysisInterferometer:
 
         analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
 
-        search = MockSearch(name="test_search")
+        search = ag.m.MockSearch(name="test_search")
 
         result = search.fit(model=model, analysis=analysis)
 

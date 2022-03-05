@@ -1,11 +1,8 @@
-import os
-
-from autoconf import conf
-import autogalaxy as ag
+from astropy import cosmology as cosmo
 import numpy as np
 import pytest
-from astropy import cosmology as cosmo
-from autogalaxy.mock import mock
+
+import autogalaxy as ag
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
@@ -142,7 +139,7 @@ class TestAbstractNFW:
 
     def test__rho_at_scale_radius__unit_conversions(self):
 
-        cosmology = mock.MockCosmology(
+        cosmology = ag.m.MockCosmology(
             arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0
         )
 
@@ -156,7 +153,7 @@ class TestAbstractNFW:
         )
         assert rho == pytest.approx(0.5 / 2.0, 1e-3)
 
-        cosmology = mock.MockCosmology(
+        cosmology = ag.m.MockCosmology(
             arcsec_per_kpc=0.25, kpc_per_arcsec=4.0, critical_surface_density=2.0
         )
 
@@ -165,7 +162,7 @@ class TestAbstractNFW:
         )
         assert rho == pytest.approx(0.5 / 4.0, 1e-3)
 
-        cosmology = mock.MockCosmology(
+        cosmology = ag.m.MockCosmology(
             arcsec_per_kpc=0.25, kpc_per_arcsec=4.0, critical_surface_density=4.0
         )
 
@@ -177,7 +174,7 @@ class TestAbstractNFW:
     def test__delta_concentration_value_in_default_units(self):
         nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
-        cosmology = mock.MockCosmology(
+        cosmology = ag.m.MockCosmology(
             arcsec_per_kpc=1.0,
             kpc_per_arcsec=1.0,
             critical_surface_density=1.0,
@@ -203,7 +200,7 @@ class TestAbstractNFW:
 
     def test__solve_concentration(self):
 
-        cosmology = mock.MockCosmology(
+        cosmology = ag.m.MockCosmology(
             arcsec_per_kpc=1.0,
             kpc_per_arcsec=1.0,
             critical_surface_density=1.0,
@@ -221,7 +218,7 @@ class TestAbstractNFW:
     def test__radius_at_200__different_length_units_include_conversions(self):
         nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
-        cosmology = mock.MockCosmology(arcsec_per_kpc=0.2, kpc_per_arcsec=5.0)
+        cosmology = ag.m.MockCosmology(arcsec_per_kpc=0.2, kpc_per_arcsec=5.0)
 
         concentration = nfw.concentration(
             cosmology=cosmology, redshift_profile=0.5, redshift_source=1.0
@@ -237,7 +234,7 @@ class TestAbstractNFW:
 
         nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
-        cosmology = mock.MockCosmology(
+        cosmology = ag.m.MockCosmology(
             arcsec_per_kpc=1.0,
             kpc_per_arcsec=1.0,
             critical_surface_density=1.0,
@@ -260,7 +257,7 @@ class TestAbstractNFW:
         )
         assert mass_at_200 == pytest.approx(mass_calc, 1.0e-5)
 
-        # cosmology = mock.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0,
+        # cosmology = ag.m.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0,
         #                           cosmic_average_density=1.0)
         #
         # radius_at_200 = nfw.radius_at_200_for_units(unit_length='arcsec', redshift_galaxy=0.5, redshift_source=1.0,
@@ -821,7 +818,7 @@ class TestNFWTruncated:
             centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=1.0
         )
 
-        cosmology = mock.MockCosmology(
+        cosmology = ag.m.MockCosmology(
             arcsec_per_kpc=1.0,
             kpc_per_arcsec=1.0,
             critical_surface_density=1.0,
@@ -837,7 +834,7 @@ class TestNFWTruncated:
         # truncated_nfw = ag.mp.SphNFWTruncated(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0,
         #                                          truncation_radius=1.0)
         #
-        # cosmology = mock.MockCosmology(arcsec_per_kpc=1.0, kpc_per_arcsec=1.0, critical_surface_density=2.0,
+        # cosmology = ag.m.MockCosmology(arcsec_per_kpc=1.0, kpc_per_arcsec=1.0, critical_surface_density=2.0,
         #                           cosmic_average_density=3.0)
         #
         # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,

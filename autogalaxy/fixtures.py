@@ -1,8 +1,7 @@
-import autoarray as aa
-import autogalaxy as ag
 from autoarray.fixtures import *
-from autofit.non_linear.mock.mock_samples import MockSamples
-from autofit.non_linear.mock.mock_search import MockSearch
+
+import autogalaxy as ag
+
 from autogalaxy.plot.mat_wrap.include import Include1D, Include2D
 
 
@@ -13,11 +12,6 @@ def make_masked_imaging_7x7():
     masked_imaging_7x7 = imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
 
     return masked_imaging_7x7.apply_settings(settings=ag.SettingsImaging(sub_size=1))
-
-
-#
-# MODEL #
-#
 
 # PROFILES #
 
@@ -234,7 +228,7 @@ def make_samples_with_result():
 
     plane = ag.Plane(galaxies=galaxies)
 
-    return MockSamples(max_log_likelihood_instance=plane)
+    return ag.m.MockSamples(max_log_likelihood_instance=plane)
 
 
 def make_analysis_imaging_7x7():

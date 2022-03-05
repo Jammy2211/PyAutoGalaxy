@@ -1,10 +1,10 @@
 import math
-
-import autogalaxy as ag
-from autogalaxy import exc
 import numpy as np
 import pytest
 
+import autogalaxy as ag
+
+from autogalaxy import exc
 
 def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
 

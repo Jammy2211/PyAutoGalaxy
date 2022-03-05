@@ -2,14 +2,13 @@ import numpy as np
 import pytest
 
 import autogalaxy as ag
-from autogalaxy.mock.mock import MockMassProfile
 
 
 def test__fit_via_mock_profile(
     dataset_quantity_7x7_array_2d, dataset_quantity_7x7_vector_yx_2d
 ):
 
-    model_object = MockMassProfile(
+    model_object = ag.m.MockMassProfile(
         convergence_2d=ag.Array2D.ones(shape_native=(7, 7), pixel_scales=1.0),
         potential_2d=ag.Array2D.full(
             fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0
@@ -53,7 +52,7 @@ def test__fit_via_mock_profile(
 
 def test__y_x(dataset_quantity_7x7_vector_yx_2d):
 
-    model_object = MockMassProfile(
+    model_object = ag.m.MockMassProfile(
         deflections_yx_2d=ag.VectorYX2D.full(
             fill_value=3.0, shape_native=(7, 7), pixel_scales=1.0
         )
