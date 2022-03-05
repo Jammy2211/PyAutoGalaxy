@@ -132,7 +132,7 @@ def test__subplots_galaxy_quantities__all_are_output(
 
     assert path.join(plot_path, "subplot_image.png") in plot_patch.paths
 
-    galaxy_plotter.subplot_of_mass_profile_list(
+    galaxy_plotter.subplot_of_mass_profiles(
         convergence=True, potential=True, deflections_y=True, deflections_x=True
     )
 

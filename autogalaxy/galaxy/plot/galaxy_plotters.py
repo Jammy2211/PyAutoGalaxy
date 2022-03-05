@@ -423,7 +423,7 @@ class GalaxyPlotter(Plotter):
                 plotter_list=light_profile_plotters, name="image"
             )
 
-    def subplot_of_mass_profile_list(
+    def subplot_of_mass_profiles(
         self,
         convergence: bool = False,
         potential: bool = False,

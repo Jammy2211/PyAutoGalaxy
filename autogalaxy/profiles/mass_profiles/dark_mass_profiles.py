@@ -578,7 +578,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
         ) * (eta_u - r1) / (r2 - r1)
         return kap / (1.0 - (1.0 - axis_ratio ** 2) * u) ** (npow + 0.5)
 
-    def convergence_func(self, grid_radius:float) -> float:
+    def convergence_func(self, grid_radius: float) -> float:
         def integral_y(y, eta):
             return (y + eta) ** (self.inner_slope - 4) * (1 - np.sqrt(1 - y ** 2))
 
@@ -830,7 +830,7 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
         grid_radius = grid_radius + 0j
         return np.real(self.coord_func_m(grid_radius=grid_radius))
 
-    def convergence_func(self, grid_radius:float) -> float:
+    def convergence_func(self, grid_radius: float) -> float:
         grid_radius = ((1.0 / self.scale_radius) * grid_radius) + 0j
         return np.real(2.0 * self.kappa_s * self.coord_func_l(grid_radius=grid_radius))
 
@@ -1129,7 +1129,7 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
 
         return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
 
-    def convergence_func(self, grid_radius:float) -> float:
+    def convergence_func(self, grid_radius: float) -> float:
         grid_radius = (1.0 / self.scale_radius) * grid_radius + 0j
         return np.real(2.0 * self.kappa_s * self.coord_func_g(grid_radius=grid_radius))
 

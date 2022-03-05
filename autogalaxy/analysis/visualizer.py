@@ -5,15 +5,13 @@ from autoconf import conf
 import autoarray as aa
 import autoarray.plot as aplt
 
-from autogalaxy.quantity.fit_quantity import FitQuantity
-from autogalaxy.quantity.plot.fit_quantity_plotters import FitQuantityPlotter
 from autogalaxy.galaxy.plot.hyper_galaxy_plotters import HyperPlotter
 from autogalaxy.plane.plane import Plane
+from autogalaxy.plane.plot.plane_plotters import PlanePlotter
 
 from autogalaxy.plot.mat_wrap.include import Include2D
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
-from autogalaxy.plot.mat_wrap.visuals import Visuals2D
 
 
 def setting(section: str, name: str):
@@ -181,6 +179,97 @@ class Visualizer:
             u_wavelengths=should_plot("uv_wavelengths"),
             v_wavelengths=should_plot("uv_wavelengths"),
         )
+
+    def visualize_plane(
+        self, plane: Plane, grid: aa.type.Grid2DLike, during_analysis: bool
+    ):
+        """
+        Visualizes a `Plane` object.
+
+        Images are output to the `image` folder of the `visualize_path` in a subfolder called `plane`. When
+        used with a non-linear search the `visualize_path` points to the search's results folder and this function
+        visualizes the maximum log likelihood `Plane` inferred by the search so far.
+
+        Visualization includes individual images of attributes of the plane (e.g. its image, convergence, deflection
+        angles) and a subplot of all these attributes on the same figure.
+
+        The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini` under the
+        [plane] header.
+
+        Parameters
+        ----------
+        plane
+            The maximum log likelihood `Plane` of the non-linear search.
+        grid
+            A 2D grid of (y,x) arc-second coordinates used to perform ray-tracing, which is the masked grid tied to
+            the dataset.
+        during_analysis
+            Whether visualization is performed during a non-linear search or once it is completed.
+        """
+
+        def should_plot(name):
+            return plot_setting(section="plane", name=name)
+
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="plane")
+
+        plane_plotter = PlanePlotter(
+            plane=plane, grid=grid, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+        )
+
+        if should_plot("subplot_plane"):
+
+            plane_plotter.subplot()
+
+        if should_plot("subplot_plane_images"):
+
+            plane_plotter.subplot_plane_images()
+
+        plane_plotter.figures_2d(
+            image=should_plot("image"),
+            source_plane=should_plot("source_plane_image"),
+            convergence=should_plot("convergence"),
+            potential=should_plot("potential"),
+            deflections_y=should_plot("deflections"),
+            deflections_x=should_plot("deflections"),
+            magnification=should_plot("magnification"),
+        )
+
+        if not during_analysis:
+
+            if should_plot("all_at_end_png"):
+
+                plane_plotter.figures_2d(
+                    image=True,
+                    source_plane=True,
+                    convergence=True,
+                    potential=True,
+                    deflections_y=True,
+                    deflections_x=True,
+                    magnification=True,
+                )
+
+            if should_plot("all_at_end_fits"):
+
+                fits_mat_plot_2d = self.mat_plot_2d_from(
+                    subfolders=path.join("plane", "fits"), format="fits"
+                )
+
+                plane_plotter = PlanePlotter(
+                    plane=plane,
+                    grid=grid,
+                    mat_plot_2d=fits_mat_plot_2d,
+                    include_2d=self.include_2d,
+                )
+
+                plane_plotter.figures_2d(
+                    image=True,
+                    source_plane=True,
+                    convergence=True,
+                    potential=True,
+                    deflections_y=True,
+                    deflections_x=True,
+                    magnification=True,
+                )
 
     def visualize_inversion(self, inversion: aa.Inversion, during_analysis: bool):
         """

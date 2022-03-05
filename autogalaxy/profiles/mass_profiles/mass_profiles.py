@@ -51,7 +51,7 @@ class MassProfile(EllProfile, OperateDeflections):
     def convergence_2d_from(self, grid):
         raise NotImplementedError
 
-    def convergence_func(self, grid_radius:float) -> float:
+    def convergence_func(self, grid_radius: float) -> float:
         raise NotImplementedError
 
     @aa.grid_dec.grid_1d_to_structure

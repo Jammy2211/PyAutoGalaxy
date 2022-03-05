@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 import autoarray as aa
 import autoarray.plot as aplt
 
@@ -9,6 +11,7 @@ from autogalaxy.plot.mat_wrap.visuals import Visuals2D
 from autogalaxy.plot.mat_wrap.include import Include1D
 from autogalaxy.plot.mat_wrap.include import Include2D
 from autogalaxy.plot.mass_plotter import MassPlotter
+from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
 
 from autogalaxy.plane.plane import Plane
 
@@ -81,6 +84,29 @@ class PlanePlotter(Plotter):
     def get_visuals_2d(self) -> Visuals2D:
         return self.get_2d.via_light_mass_obj_from(
             light_mass_obj=self.plane, grid=self.grid
+        )
+
+    def get_visuals_2d_of_plane(self, plane_index: int) -> aplt.Visuals2D:
+        return self.get_2d.via_tracer_from(
+            tracer=self.tracer, grid=self.grid, plane_index=plane_index
+        )
+
+    def galaxy_plotter_from(self, galaxy_index: int) -> GalaxyPlotter:
+        """
+        Returns an `GalaxyPlotter` corresponding to a `Galaxy` in the `Tracer`.
+
+        Returns
+        -------
+        galaxy_index
+            The index of the galaxy in the `Tracer` used to make the `GalaxyPlotter`.
+        """
+
+        return GalaxyPlotter(
+            galaxy=self.plane.galaxies[galaxy_index],
+            grid=self.grid,
+            mat_plot_2d=self.mat_plot_2d,
+            visuals_2d=self.get_visuals_2d_of_galaxy(galaxy_index=galaxy_index),
+            include_2d=self.include_2d,
         )
 
     def figures_2d(
@@ -179,6 +205,71 @@ class PlanePlotter(Plotter):
                 ),
             )
 
+    def galaxy_indexes_from(self, galaxy_index: Optional[int]) -> List[int]:
+        """
+        Returns a list of all indexes of the galaxys in the fit, which is iterated over in figures that plot
+        individual figures of each galaxy in a tracer.
+
+        Parameters
+        ----------
+        galaxy_index
+            A specific galaxy index which when input means that only a single galaxy index is returned.
+
+        Returns
+        -------
+        list
+            A list of galaxy indexes corresponding to galaxys in the galaxy.
+        """
+        if galaxy_index is None:
+            return list(range(len(self.plane.galaxies)))
+        return [galaxy_index]
+
+    def figures_2d_of_galaxies(
+        self,
+        galaxy_image: bool = False,
+        galaxy_grid: bool = False,
+        galaxy_index: Optional[int] = None,
+    ):
+        """
+        Plots galaxy images for each individual `Galaxy` in the plotter's `Plane` in 2D,  which are computed via the
+        plotter's 2D grid object.
+
+        The API is such that every plottable attribute of the `galaxy` object is an input parameter of type bool of
+        the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        galaxy_image
+            Whether or not to make a 2D plot (via `imshow`) of the image of the galaxy in the soure-galaxy (e.g. its
+            unlensed light).
+        galaxy_grid
+            Whether or not to make a 2D plot (via `scatter`) of the lensed (y,x) coordinates of the galaxy in the 
+            source-galaxy.
+        galaxy_index
+            If input, plots for only a single galaxy based on its index in the tracer are created.
+        """
+        galaxy_indexes = self.galaxy_indexes_from(galaxy_index=galaxy_index)
+
+        for galaxy_index in galaxy_indexes:
+
+            galaxy_plotter = self.galaxy_plotter_from(galaxy_index=galaxy_index)
+
+            if galaxy_image:
+
+                galaxy_plotter.figures_2d(
+                    galaxy_image=True,
+                    title_suffix=f" Of Plane {galaxy_index}",
+                    filename_suffix=f"_of_galaxy_{galaxy_index}",
+                )
+
+            if galaxy_grid:
+
+                galaxy_plotter.figures_2d(
+                    galaxy_grid=True,
+                    title_suffix=f" Of Plane {galaxy_index}",
+                    filename_suffix=f"_of_galaxy_{galaxy_index}",
+                )
+
     def subplot(
         self,
         image: bool = False,
@@ -233,4 +324,16 @@ class PlanePlotter(Plotter):
             magnification=magnification,
             contribution_map=contribution_map,
             auto_labels=aplt.AutoLabels(filename=auto_filename),
+        )
+
+    def subplot_plane(self):
+        """
+        Standard subplot of the attributes of the plotter's `Plane` object.
+        """
+        return self.subplot(
+            image=True,
+            convergence=True,
+            potential=True,
+            deflections_y=True,
+            deflections_x=True,
         )

@@ -1,11 +1,12 @@
 from astropy import cosmology as cosmo
+from typing import Optional
 
 import autofit as af
 import autoarray as aa
 
 from autogalaxy.analysis.analysis import AnalysisDataset
 from autogalaxy.interferometer.model.result import ResultInterferometer
-from autogalaxy.analysis.visualizer import Visualizer
+from autogalaxy.interferometer.model.visualizer import VisualizerInterferometer
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
@@ -199,7 +200,7 @@ class AnalysisInterferometer(AnalysisDataset):
     def fit_interferometer_for_plane(
         self,
         plane: Plane,
-        hyper_background_noise: HyperBackgroundNoise,
+        hyper_background_noise: Optional[HyperBackgroundNoise],
         use_hyper_scalings: bool = True,
     ) -> FitInterferometer:
         """
@@ -275,7 +276,7 @@ class AnalysisInterferometer(AnalysisDataset):
             plane=plane, hyper_background_noise=hyper_background_noise
         )
 
-        visualizer = Visualizer(visualize_path=paths.image_path)
+        visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
         visualizer.visualize_interferometer(interferometer=self.interferometer)
         visualizer.visualize_fit_interferometer(
             fit=fit, during_analysis=during_analysis
@@ -288,7 +289,6 @@ class AnalysisInterferometer(AnalysisDataset):
         visualizer.visualize_hyper_images(
             hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
             hyper_model_image=self.hyper_model_image,
-            plane=plane,
         )
 
         if visualizer.plot_fit_no_hyper:

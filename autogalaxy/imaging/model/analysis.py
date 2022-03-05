@@ -5,7 +5,7 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy.analysis.analysis import AnalysisDataset
-from autogalaxy.analysis.visualizer import Visualizer
+from autogalaxy.imaging.model.visualizer import VisualizerImaging
 from autogalaxy.hyper.hyper_data import HyperImageSky
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.imaging.model.result import ResultImaging
@@ -220,7 +220,7 @@ class AnalysisImaging(AnalysisDataset):
             hyper_background_noise=hyper_background_noise,
         )
 
-        visualizer = Visualizer(visualize_path=paths.image_path)
+        visualizer = VisualizerImaging(visualize_path=paths.image_path)
         visualizer.visualize_imaging(imaging=self.imaging)
         visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)
 
@@ -232,7 +232,6 @@ class AnalysisImaging(AnalysisDataset):
         visualizer.visualize_hyper_images(
             hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
             hyper_model_image=self.hyper_model_image,
-            plane=plane,
         )
 
         if visualizer.plot_fit_no_hyper:

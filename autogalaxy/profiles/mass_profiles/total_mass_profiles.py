@@ -396,7 +396,7 @@ class EllPowerLawCored(MassProfile):
             grid=np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
-    def convergence_func(self, grid_radius:float) -> float:
+    def convergence_func(self, grid_radius: float) -> float:
         return self.einstein_radius_rescaled * (
             self.core_radius ** 2 + grid_radius ** 2
         ) ** (-(self.slope - 1) / 2.0)
@@ -587,7 +587,7 @@ class EllPowerLaw(EllPowerLawCored):
             grid=np.vstack((deflection_y, deflection_x)).T
         )
 
-    def convergence_func(self, grid_radius:float) -> float:
+    def convergence_func(self, grid_radius: float) -> float:
         if grid_radius > 0.0:
             return self.einstein_radius_rescaled * grid_radius ** (-(self.slope - 1))
         return np.inf

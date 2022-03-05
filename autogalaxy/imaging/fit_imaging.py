@@ -1,9 +1,12 @@
 import numpy as np
+from typing import Optional
 
 from autoconf import conf
 import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.hyper.hyper_data import HyperImageSky
+from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.plane.plane import Plane
 
 
@@ -12,8 +15,8 @@ class FitImaging(aa.FitImaging):
         self,
         dataset: aa.Imaging,
         plane: Plane,
-        hyper_image_sky=None,
-        hyper_background_noise=None,
+        hyper_image_sky: Optional[HyperImageSky] = None,
+        hyper_background_noise: Optional[HyperBackgroundNoise] = None,
         use_hyper_scalings: bool = True,
         settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
@@ -27,62 +30,102 @@ class FitImaging(aa.FitImaging):
             The plane of galaxies whose model images are used to fit the imaging data.
         """
 
+        super().__init__(dataset=dataset)
+
         self.plane = plane
 
-        if use_hyper_scalings:
+        self.hyper_image_sky = hyper_image_sky
+        self.hyper_background_noise = hyper_background_noise
 
-            image = hyper_image_from(
-                image=dataset.image, hyper_image_sky=hyper_image_sky
+        self.use_hyper_scalings = use_hyper_scalings
+
+        self.settings_pixelization = settings_pixelization
+        self.settings_inversion = settings_inversion
+
+    @property
+    def data(self):
+        """
+        Returns the imaging data, which may have a hyper scaling performed which rescales the background sky level
+        in order to account for uncertainty in the background sky subtraction.
+        """
+        if self.use_hyper_scalings:
+
+            return hyper_image_from(
+                image=self.dataset.image, hyper_image_sky=self.hyper_image_sky
             )
 
-            noise_map = hyper_noise_map_from(
-                noise_map=dataset.noise_map,
-                plane=plane,
-                hyper_background_noise=hyper_background_noise,
+        return self.dataset.data
+
+    @property
+    def noise_map(self):
+        """
+        Returns the imaging noise-map, which may have a hyper scaling performed which increase the noise in regions of
+        the data that are poorly fitted in order to avoid overfitting.
+        """
+        if self.use_hyper_scalings:
+
+            return hyper_noise_map_from(
+                noise_map=self.dataset.noise_map,
+                plane=self.plane,
+                hyper_background_noise=self.hyper_background_noise,
             )
 
-        else:
+        return self.dataset.noise_map
 
-            image = dataset.image
-            noise_map = dataset.noise_map
-
-        self.blurred_image = self.plane.blurred_image_2d_via_convolver_from(
-            grid=dataset.grid,
-            convolver=dataset.convolver,
-            blurring_grid=dataset.blurring_grid,
+    @property
+    def blurred_image(self):
+        """
+        Returns the image of all light profiles in the fit's plane convolved with the imaging dataset's PSF.
+        """
+        return self.plane.blurred_image_2d_via_convolver_from(
+            grid=self.dataset.grid,
+            convolver=self.dataset.convolver,
+            blurring_grid=self.dataset.blurring_grid,
         )
 
-        self.profile_subtracted_image = image - self.blurred_image
+    @property
+    def profile_subtracted_image(self):
+        """
+        Returns the dataset's image with all blurred light profile images in the fit's plane subtracted.
+        """
+        return self.image - self.blurred_image
 
-        if not plane.has_pixelization:
+    @property
+    def inversion(self):
+        """
+        If the plane has linear objects which are used to fit the data (e.g. a pixelization) this function returns
+        the linear inversion.
 
-            inversion = None
-            model_image = self.blurred_image
+        The image passed to this function is the dataset's image with all light profile images of the plane subtracted.
+        """
+        if self.plane.has_pixelization:
 
-        else:
-
-            inversion = plane.inversion_imaging_from(
-                grid=dataset.grid_inversion,
+            return self.plane.inversion_imaging_from(
+                grid=self.dataset.grid_inversion,
                 image=self.profile_subtracted_image,
-                noise_map=noise_map,
-                convolver=dataset.convolver,
-                w_tilde=dataset.w_tilde,
-                settings_pixelization=settings_pixelization,
-                settings_inversion=settings_inversion,
+                noise_map=self.noise_map,
+                convolver=self.dataset.convolver,
+                w_tilde=self.dataset.w_tilde,
+                settings_pixelization=self.settings_pixelization,
+                settings_inversion=self.settings_inversion,
             )
 
-            model_image = self.blurred_image + inversion.mapped_reconstructed_image
+    @property
+    def model_data(self):
+        """
+        Returns the model-image that is used to fit the data.
 
-        fit = aa.FitData(
-            data=image,
-            noise_map=noise_map,
-            model_data=model_image,
-            mask=dataset.mask,
-            inversion=inversion,
-            use_mask_in_fit=False,
-        )
+        If the plane does not have any linear objects and therefore omits an inversion, the model image is the
+        sum of all light profile images.
 
-        super().__init__(dataset=dataset, fit=fit)
+        If a inversion is included it is the sum of this sum and the inversion's reconstruction of the image.
+        """
+
+        if self.plane.has_pixelization:
+
+            return self.blurred_image + self.inversion.mapped_reconstructed_image
+
+        return self.blurred_image
 
     @property
     def galaxies(self):
