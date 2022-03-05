@@ -4,7 +4,7 @@ import autofit as af
 import autogalaxy as ag
 from autogalaxy.analysis import result as res
 
-from autofit.mock.mock import MockSearch, MockSamples
+from autofit.non_linear.mock.mock_search import MockSearch, MockSamples
 from autogalaxy.mock.mock import MockPixelization, MockRegularization
 
 

@@ -1,7 +1,8 @@
 import autoarray as aa
 import autogalaxy as ag
-from autoarray.mock.fixtures import *
-from autofit.mock.mock import MockSamples, MockSearch
+from autoarray.fixtures import *
+from autofit.non_linear.mock.mock_samples import MockSamples
+from autofit.non_linear.mock.mock_search import MockSearch
 from autogalaxy.plot.mat_wrap.include import Include1D, Include2D
 
 
