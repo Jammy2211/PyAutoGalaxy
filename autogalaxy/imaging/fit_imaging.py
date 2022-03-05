@@ -123,7 +123,7 @@ class FitImaging(aa.FitImaging):
 
         if self.plane.has_pixelization:
 
-            return self.blurred_image + self.inversion.mapped_reconstructed_image
+            return self.blurred_image + self.inversion.mapped_reconstructed_data
 
         return self.blurred_image
 

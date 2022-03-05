@@ -15,7 +15,8 @@ class FitInterferometer(aa.FitInterferometer):
         settings_pixelization=aa.SettingsPixelization(),
         settings_inversion=aa.SettingsInversion(),
     ):
-        """ An  lens fitter, which contains the plane's used to perform the fit and functions to manipulate \
+        """
+        An  lens fitter, which contains the plane's used to perform the fit and functions to manipulate \
         the lens dataset's hyper_galaxies.
 
         Parameters
@@ -24,59 +25,85 @@ class FitInterferometer(aa.FitInterferometer):
             The plane, which describes the ray-tracing and strong lens configuration.
         """
 
-        if use_hyper_scalings:
-
-            if hyper_background_noise is not None:
-                noise_map = hyper_background_noise.hyper_noise_map_complex_from(
-                    noise_map=dataset.noise_map
-                )
-            else:
-                noise_map = dataset.noise_map
-
-        else:
-
-            noise_map = dataset.noise_map
+        super().__init__(dataset=dataset, use_mask_in_fit=False)
 
         self.plane = plane
 
-        self.profile_visibilities = self.plane.visibilities_via_transformer_from(
-            grid=dataset.grid, transformer=dataset.transformer
+        self.hyper_background_noise = hyper_background_noise
+
+        self.use_hyper_scalings = use_hyper_scalings
+
+        self.settings_pixelization = settings_pixelization
+        self.settings_inversion = settings_inversion
+
+    @property
+    def noise_map(self):
+        """
+        Returns the interferometer's noise-map, which may have a hyper scaling performed which increase the noise in
+        regions of the data that are poorly fitted in order to avoid overfitting.
+        """
+        if self.use_hyper_scalings and self.hyper_background_noise is not None:
+
+            return self.hyper_background_noise.hyper_noise_map_complex_from(
+                noise_map=self.dataset.noise_map
+            )
+
+        return self.dataset.noise_map
+
+    @property
+    def profile_visibilities(self):
+        """
+        Returns the visibilities of every light profile in the plane, which are computed by performing a Fourier
+        transform to the sum of light profile images.
+        """
+        return self.plane.visibilities_via_transformer_from(
+            grid=self.dataset.grid, transformer=self.dataset.transformer
         )
 
-        self.profile_subtracted_visibilities = (
-            dataset.visibilities - self.profile_visibilities
-        )
+    @property
+    def profile_subtracted_visibilities(self):
+        """
+        Returns the interferomter dataset's visibilities with all transformed light profile images in the fit's
+        plane subtracted.
+        """
+        return self.visibilities - self.profile_visibilities
 
-        if not plane.has_pixelization:
+    @property
+    def inversion(self):
+        """
+        If the plane has linear objects which are used to fit the data (e.g. a pixelization) this function returns
+        the linear inversion.
 
-            inversion = None
-            model_visibilities = self.profile_visibilities
+        The image passed to this function is the dataset's image with all light profile images of the plane subtracted.
+        """
+        if self.plane.has_pixelization:
 
-        else:
-
-            inversion = plane.inversion_interferometer_from(
-                grid=dataset.grid_inversion,
+            return self.plane.inversion_interferometer_from(
+                grid=self.dataset.grid_inversion,
                 visibilities=self.profile_subtracted_visibilities,
-                noise_map=noise_map,
-                transformer=dataset.transformer,
-                w_tilde=dataset.w_tilde,
-                settings_pixelization=settings_pixelization,
-                settings_inversion=settings_inversion,
+                noise_map=self.noise_map,
+                transformer=self.dataset.transformer,
+                w_tilde=self.dataset.w_tilde,
+                settings_pixelization=self.settings_pixelization,
+                settings_inversion=self.settings_inversion,
             )
 
-            model_visibilities = (
-                self.profile_visibilities + inversion.mapped_reconstructed_data
-            )
+    @property
+    def model_data(self):
+        """
+        Returns the model-image that is used to fit the data.
 
-        fit = aa.FitDataComplex(
-            data=dataset.visibilities,
-            noise_map=noise_map,
-            model_data=model_visibilities,
-            inversion=inversion,
-            use_mask_in_fit=False,
-        )
+        If the plane does not have any linear objects and therefore omits an inversion, the model image is the
+        sum of all light profile images.
 
-        super().__init__(dataset=dataset, fit=fit)
+        If a inversion is included it is the sum of this sum and the inversion's reconstruction of the image.
+        """
+
+        if self.plane.has_pixelization:
+
+            return self.profile_visibilities + self.inversion.mapped_reconstructed_data
+
+        return self.profile_visibilities
 
     @property
     def grid(self):

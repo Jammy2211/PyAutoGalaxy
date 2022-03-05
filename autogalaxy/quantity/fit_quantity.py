@@ -9,7 +9,7 @@ from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
 
 
-class FitQuantity(aa.FitDataset):
+class FitQuantity(aa.FitImaging):
     def __init__(
         self,
         dataset: DatasetQuantity,
@@ -48,25 +48,19 @@ class FitQuantity(aa.FitDataset):
 
         self.light_mass_obj = light_mass_obj
         self.func_str = func_str
+        self.model_data_manual = model_data_manual
 
-        if model_data_manual is None:
+        super().__init__(dataset=dataset, use_mask_in_fit=False)
 
-            func = getattr(light_mass_obj, func_str)
-            model_data = func(grid=dataset.grid)
+    @property
+    def model_data(self):
 
-        else:
+        if self.model_data_manual is None:
 
-            model_data = model_data_manual
+            func = getattr(self.light_mass_obj, self.func_str)
+            return func(grid=self.dataset.grid)
 
-        fit = aa.FitData(
-            data=dataset.data,
-            noise_map=dataset.noise_map,
-            model_data=model_data.binned,
-            mask=dataset.mask,
-            use_mask_in_fit=False,
-        )
-
-        super().__init__(dataset=dataset, fit=fit)
+        return self.model_data_manual
 
     @property
     def y(self) -> "FitQuantity":
@@ -110,7 +104,11 @@ class FitQuantity(aa.FitDataset):
 
     @property
     def mask(self):
-        return self.fit.mask
+        return self.dataset.mask
+
+    @property
+    def inversion(self):
+        return None
 
     @property
     def grid(self):
