@@ -46,7 +46,7 @@ class ImagingAgg:
 
         self.aggregator = aggregator
 
-    def imaging_gen(self, settings_imaging: Optional[aa.SettingsImaging] = None):
+    def imaging_gen_from(self, settings_imaging: Optional[aa.SettingsImaging] = None):
         """
         Returns a generator of `Imaging` objects from an input aggregator, which generates a list of the
         `Imaging` objects for every set of results loaded in the aggregator.

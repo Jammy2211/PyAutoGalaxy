@@ -33,7 +33,7 @@ class Analysis(af.Analysis):
         """
         self.cosmology = cosmology
 
-    def plane_for_instance(self, instance: af.ModelInstance) -> Plane:
+    def plane_via_instance_from(self, instance: af.ModelInstance) -> Plane:
         """
         Create a `Plane` from the galaxies contained in a model instance.
 
@@ -128,7 +128,7 @@ class AnalysisDataset(Analysis):
         self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
         self.hyper_model_image = hyper_model_image
 
-    def hyper_image_sky_for_instance(
+    def hyper_image_sky_via_instance_from(
         self, instance: af.ModelInstance
     ) -> Optional[HyperImageSky]:
         """
@@ -148,7 +148,7 @@ class AnalysisDataset(Analysis):
         if hasattr(instance, "hyper_image_sky"):
             return instance.hyper_image_sky
 
-    def hyper_background_noise_for_instance(
+    def hyper_background_noise_via_instance_from(
         self, instance: af.ModelInstance
     ) -> Optional[HyperBackgroundNoise]:
         """
@@ -168,7 +168,9 @@ class AnalysisDataset(Analysis):
         if hasattr(instance, "hyper_background_noise"):
             return instance.hyper_background_noise
 
-    def associate_hyper_images(self, instance: af.ModelInstance) -> af.ModelInstance:
+    def instance_with_associated_hyper_images_from(
+        self, instance: af.ModelInstance
+    ) -> af.ModelInstance:
         """
         Using the model image and galaxy images that were set up as the hyper dataset, associate the galaxy images
         of that result with the galaxies in this model fit.

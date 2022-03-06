@@ -99,7 +99,7 @@ def test__interferometer_generator_from_aggregator(
     agg.add_directory(directory=result_path)
 
     interferometer_agg = ag.agg.InterferometerAgg(aggregator=agg)
-    interferometer_gen = interferometer_agg.interferometer_gen()
+    interferometer_gen = interferometer_agg.interferometer_gen_from()
 
     for interferometer in interferometer_gen:
         assert (interferometer.visibilities == interferometer_7.visibilities).all()

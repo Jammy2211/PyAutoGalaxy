@@ -1,10 +1,8 @@
 import autofit as af
 import autogalaxy as ag
 
-from autofit.non_linear.mock.mock_result import MockResult as MockResultAF
 
-
-class MockResult(MockResultAF):
+class MockResult(af.m.MockResult):
     def __init__(
         self,
         samples=None,

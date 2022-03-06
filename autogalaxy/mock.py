@@ -1,4 +1,4 @@
-from autofit.mock import  *
+from autofit.mock import *
 from autoarray.mock import *
 
 from autogalaxy.analysis.mock.mock_result import MockResult

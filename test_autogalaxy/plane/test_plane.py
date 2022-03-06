@@ -1550,8 +1550,12 @@ class TestPlane:
 class TestExtractAttribute:
     def test__extract_attribute(self):
 
-        g0 = ag.Galaxy(redshift=0.5, mp_0=ag.m.MockMassProfile(value=0.9, value1=(1.0, 1.0)))
-        g1 = ag.Galaxy(redshift=0.5, mp_0=ag.m.MockMassProfile(value=0.8, value1=(2.0, 2.0)))
+        g0 = ag.Galaxy(
+            redshift=0.5, mp_0=ag.m.MockMassProfile(value=0.9, value1=(1.0, 1.0))
+        )
+        g1 = ag.Galaxy(
+            redshift=0.5, mp_0=ag.m.MockMassProfile(value=0.8, value1=(2.0, 2.0))
+        )
         g2 = ag.Galaxy(
             redshift=0.5,
             mp_0=ag.m.MockMassProfile(value=0.7),
@@ -1583,8 +1587,12 @@ class TestExtractAttribute:
 
     def test__extract_attributes_of_galaxies(self):
 
-        g0 = ag.Galaxy(redshift=0.5, mp_0=ag.m.MockMassProfile(value=0.9, value1=(1.0, 1.0)))
-        g1 = ag.Galaxy(redshift=0.5, mp_0=ag.m.MockMassProfile(value=0.8, value1=(2.0, 2.0)))
+        g0 = ag.Galaxy(
+            redshift=0.5, mp_0=ag.m.MockMassProfile(value=0.9, value1=(1.0, 1.0))
+        )
+        g1 = ag.Galaxy(
+            redshift=0.5, mp_0=ag.m.MockMassProfile(value=0.8, value1=(2.0, 2.0))
+        )
         g2 = ag.Galaxy(
             redshift=0.5,
             mp_0=ag.m.MockMassProfile(value=0.7),

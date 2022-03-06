@@ -9,7 +9,7 @@ directory = path.dirname(path.realpath(__file__))
 
 
 class TestAnalysisDataset:
-    def test__associate_hyper_images(self, masked_imaging_7x7):
+    def test__instance_with_associated_hyper_images_from(self, masked_imaging_7x7):
 
         galaxies = af.ModelInstance()
         galaxies.galaxy = ag.Galaxy(redshift=0.5)
@@ -39,7 +39,9 @@ class TestAnalysisDataset:
             dataset=masked_imaging_7x7, hyper_dataset_result=result
         )
 
-        instance = analysis.associate_hyper_images(instance=instance)
+        instance = analysis.instance_with_associated_hyper_images_from(
+            instance=instance
+        )
 
         assert instance.galaxies.galaxy.hyper_galaxy_image.native == pytest.approx(
             np.ones((3, 3)), 1.0e-4

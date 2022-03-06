@@ -104,18 +104,18 @@ class AnalysisImaging(AnalysisDataset):
             The log likelihood indicating how well this model instance fitted the imaging data.
         """
 
-        self.associate_hyper_images(instance=instance)
+        self.instance_with_associated_hyper_images_from(instance=instance)
 
-        hyper_image_sky = self.hyper_image_sky_for_instance(instance=instance)
+        hyper_image_sky = self.hyper_image_sky_via_instance_from(instance=instance)
 
-        hyper_background_noise = self.hyper_background_noise_for_instance(
+        hyper_background_noise = self.hyper_background_noise_via_instance_from(
             instance=instance
         )
 
-        plane = self.plane_for_instance(instance=instance)
+        plane = self.plane_via_instance_from(instance=instance)
 
         try:
-            fit = self.fit_imaging_for_plane(
+            fit = self.fit_imaging_via_plane_from(
                 plane=plane,
                 hyper_image_sky=hyper_image_sky,
                 hyper_background_noise=hyper_background_noise,
@@ -129,7 +129,7 @@ class AnalysisImaging(AnalysisDataset):
         ) as e:
             raise exc.FitException from e
 
-    def fit_imaging_for_plane(
+    def fit_imaging_via_plane_from(
         self,
         plane: Plane,
         hyper_image_sky: Optional[HyperImageSky],
@@ -207,14 +207,14 @@ class AnalysisImaging(AnalysisDataset):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
-        instance = self.associate_hyper_images(instance=instance)
-        plane = self.plane_for_instance(instance=instance)
-        hyper_image_sky = self.hyper_image_sky_for_instance(instance=instance)
-        hyper_background_noise = self.hyper_background_noise_for_instance(
+        instance = self.instance_with_associated_hyper_images_from(instance=instance)
+        plane = self.plane_via_instance_from(instance=instance)
+        hyper_image_sky = self.hyper_image_sky_via_instance_from(instance=instance)
+        hyper_background_noise = self.hyper_background_noise_via_instance_from(
             instance=instance
         )
 
-        fit = self.fit_imaging_for_plane(
+        fit = self.fit_imaging_via_plane_from(
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
@@ -236,7 +236,7 @@ class AnalysisImaging(AnalysisDataset):
 
         if visualizer.plot_fit_no_hyper:
 
-            fit = self.fit_imaging_for_plane(
+            fit = self.fit_imaging_via_plane_from(
                 plane=plane,
                 hyper_image_sky=None,
                 hyper_background_noise=None,

@@ -138,16 +138,16 @@ class AnalysisInterferometer(AnalysisDataset):
             The log likelihood indicating how well this model instance fitted the interferometer data.
         """
 
-        self.associate_hyper_images(instance=instance)
+        self.instance_with_associated_hyper_images_from(instance=instance)
 
-        hyper_background_noise = self.hyper_background_noise_for_instance(
+        hyper_background_noise = self.hyper_background_noise_via_instance_from(
             instance=instance
         )
 
-        plane = self.plane_for_instance(instance=instance)
+        plane = self.plane_via_instance_from(instance=instance)
 
         try:
-            fit = self.fit_interferometer_for_plane(
+            fit = self.fit_interferometer_via_plane_from(
                 plane=plane, hyper_background_noise=hyper_background_noise
             )
 
@@ -159,7 +159,7 @@ class AnalysisInterferometer(AnalysisDataset):
         ) as e:
             raise exc.FitException from e
 
-    def associate_hyper_visibilities(
+    def instance_with_associated_hyper_visibilities_from(
         self, instance: af.ModelInstance
     ) -> af.ModelInstance:
         """
@@ -197,7 +197,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         return instance
 
-    def fit_interferometer_for_plane(
+    def fit_interferometer_via_plane_from(
         self,
         plane: Plane,
         hyper_background_noise: Optional[HyperBackgroundNoise],
@@ -266,13 +266,13 @@ class AnalysisInterferometer(AnalysisDataset):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
-        self.associate_hyper_images(instance=instance)
-        plane = self.plane_for_instance(instance=instance)
-        hyper_background_noise = self.hyper_background_noise_for_instance(
+        self.instance_with_associated_hyper_images_from(instance=instance)
+        plane = self.plane_via_instance_from(instance=instance)
+        hyper_background_noise = self.hyper_background_noise_via_instance_from(
             instance=instance
         )
 
-        fit = self.fit_interferometer_for_plane(
+        fit = self.fit_interferometer_via_plane_from(
             plane=plane, hyper_background_noise=hyper_background_noise
         )
 
@@ -292,7 +292,7 @@ class AnalysisInterferometer(AnalysisDataset):
         )
 
         if visualizer.plot_fit_no_hyper:
-            fit = self.fit_interferometer_for_plane(
+            fit = self.fit_interferometer_via_plane_from(
                 plane=plane, hyper_background_noise=None, use_hyper_scalings=False
             )
 

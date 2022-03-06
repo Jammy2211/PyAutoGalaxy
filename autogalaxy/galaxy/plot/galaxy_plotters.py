@@ -360,6 +360,8 @@ class GalaxyPlotter(Plotter):
         deflections_x: bool = False,
         magnification: bool = False,
         contribution_map: bool = False,
+        title_suffix: str = "",
+        filename_suffix: str = "",
     ):
         """
         Plots the individual attributes of the plotter's `Galaxy` object in 2D, which are computed via the plotter's 2D
@@ -390,7 +392,9 @@ class GalaxyPlotter(Plotter):
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.image_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
-                auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
+                auto_labels=aplt.AutoLabels(
+                    title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
+                ),
             )
 
         self._mass_plotter.figures_2d(
@@ -399,6 +403,8 @@ class GalaxyPlotter(Plotter):
             deflections_y=deflections_y,
             deflections_x=deflections_x,
             magnification=magnification,
+            title_suffix=title_suffix,
+            filename_suffix=filename_suffix,
         )
 
         if contribution_map:
@@ -407,7 +413,8 @@ class GalaxyPlotter(Plotter):
                 array=self.galaxy.contribution_map,
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
-                    title="Contribution Map", filename="contribution_map_2d"
+                    title=f"Contribution Map{title_suffix}",
+                    filename=f"contribution_map_2d{filename_suffix}",
                 ),
             )
 

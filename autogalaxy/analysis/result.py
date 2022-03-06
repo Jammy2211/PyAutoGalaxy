@@ -58,9 +58,11 @@ class Result(af.Result):
         """
         An instance of a `Plane` corresponding to the maximum log likelihood model inferred by the non-linear search.
         """
-        instance = self.analysis.associate_hyper_images(instance=self.instance)
+        instance = self.analysis.instance_with_associated_hyper_images_from(
+            instance=self.instance
+        )
 
-        return self.analysis.plane_for_instance(instance=instance)
+        return self.analysis.plane_via_instance_from(instance=instance)
 
     @property
     def path_galaxy_tuples(self) -> [(str, Galaxy)]:

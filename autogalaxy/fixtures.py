@@ -13,6 +13,7 @@ def make_masked_imaging_7x7():
 
     return masked_imaging_7x7.apply_settings(settings=ag.SettingsImaging(sub_size=1))
 
+
 # PROFILES #
 
 
@@ -108,6 +109,10 @@ def make_hyper_galaxy():
 
 def make_plane_7x7():
     return ag.Plane(galaxies=[make_gal_x1_lp_x1_mp()])
+
+
+def make_plane_x2_gal_7x7():
+    return ag.Plane(galaxies=[make_gal_x1_lp_x1_mp(), make_gal_x1_lp_x1_mp()])
 
 
 def make_plane_x2_galaxy_inversion_7x7():

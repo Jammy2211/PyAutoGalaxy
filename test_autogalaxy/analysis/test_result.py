@@ -3,6 +3,7 @@ import autogalaxy as ag
 
 from autogalaxy.analysis import result as res
 
+
 class TestResultAbstract:
     def test__result_contains_instance_with_galaxies(
         self, analysis_imaging_7x7, samples_with_result
@@ -38,7 +39,9 @@ class TestResultAbstract:
 
         search = ag.m.MockSearch(
             name="test_search",
-            samples=ag.m.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane),
+            samples=ag.m.MockSamples(
+                max_log_likelihood_instance=max_log_likelihood_plane
+            ),
         )
 
         result = search.fit(model=model, analysis=analysis_imaging_7x7)

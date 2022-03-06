@@ -86,9 +86,9 @@ class PlanePlotter(Plotter):
             light_mass_obj=self.plane, grid=self.grid
         )
 
-    def get_visuals_2d_of_plane(self, plane_index: int) -> aplt.Visuals2D:
-        return self.get_2d.via_tracer_from(
-            tracer=self.tracer, grid=self.grid, plane_index=plane_index
+    def get_visuals_2d_of_galaxy(self, galaxy_index: int) -> aplt.Visuals2D:
+        return self.get_2d.via_plane_from(
+            plane=self.plane, grid=self.grid, galaxy_index=galaxy_index
         )
 
     def galaxy_plotter_from(self, galaxy_index: int) -> GalaxyPlotter:
@@ -225,10 +225,7 @@ class PlanePlotter(Plotter):
         return [galaxy_index]
 
     def figures_2d_of_galaxies(
-        self,
-        galaxy_image: bool = False,
-        galaxy_grid: bool = False,
-        galaxy_index: Optional[int] = None,
+        self, image: bool = False, galaxy_index: Optional[int] = None
     ):
         """
         Plots galaxy images for each individual `Galaxy` in the plotter's `Plane` in 2D,  which are computed via the
@@ -239,12 +236,9 @@ class PlanePlotter(Plotter):
 
         Parameters
         ----------
-        galaxy_image
+        image
             Whether or not to make a 2D plot (via `imshow`) of the image of the galaxy in the soure-galaxy (e.g. its
             unlensed light).
-        galaxy_grid
-            Whether or not to make a 2D plot (via `scatter`) of the lensed (y,x) coordinates of the galaxy in the 
-            source-galaxy.
         galaxy_index
             If input, plots for only a single galaxy based on its index in the tracer are created.
         """
@@ -254,19 +248,11 @@ class PlanePlotter(Plotter):
 
             galaxy_plotter = self.galaxy_plotter_from(galaxy_index=galaxy_index)
 
-            if galaxy_image:
+            if image:
 
                 galaxy_plotter.figures_2d(
-                    galaxy_image=True,
-                    title_suffix=f" Of Plane {galaxy_index}",
-                    filename_suffix=f"_of_galaxy_{galaxy_index}",
-                )
-
-            if galaxy_grid:
-
-                galaxy_plotter.figures_2d(
-                    galaxy_grid=True,
-                    title_suffix=f" Of Plane {galaxy_index}",
+                    image=True,
+                    title_suffix=f" Of Galaxy {galaxy_index}",
                     filename_suffix=f"_of_galaxy_{galaxy_index}",
                 )
 
@@ -337,3 +323,25 @@ class PlanePlotter(Plotter):
             deflections_y=True,
             deflections_x=True,
         )
+
+    def subplot_galaxy_images(self):
+        """
+        Subplot of the image of every galaxy in the plane.
+
+        For example, for a 2 galaxy `Plane`, this creates a subplot with 2 panels, one for each galaxy.
+        """
+        number_subplots = len(self.plane.galaxies)
+
+        self.open_subplot_figure(number_subplots=number_subplots)
+
+        for galaxy_index in range(0, len(self.plane.galaxies)):
+
+            galaxy_plotter = self.galaxy_plotter_from(galaxy_index=galaxy_index)
+            galaxy_plotter.figures_2d(
+                image=True, title_suffix=f" Of Plane {galaxy_index}"
+            )
+
+        self.mat_plot_2d.output.subplot_to_figure(
+            auto_filename=f"subplot_galaxy_images"
+        )
+        self.close_subplot_figure()

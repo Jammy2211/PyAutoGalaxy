@@ -45,15 +45,15 @@ class ResultImaging(ResultDataset):
         An instance of a `FitImaging` corresponding to the maximum log likelihood model inferred by the non-linear
         search.
         """
-        hyper_image_sky = self.analysis.hyper_image_sky_for_instance(
+        hyper_image_sky = self.analysis.hyper_image_sky_via_instance_from(
             instance=self.instance
         )
 
-        hyper_background_noise = self.analysis.hyper_background_noise_for_instance(
+        hyper_background_noise = self.analysis.hyper_background_noise_via_instance_from(
             instance=self.instance
         )
 
-        return self.analysis.fit_imaging_for_plane(
+        return self.analysis.fit_imaging_via_plane_from(
             plane=self.max_log_likelihood_plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,

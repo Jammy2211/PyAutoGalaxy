@@ -408,6 +408,81 @@ class GetVisuals2D(gv.GetVisuals2D):
             + self.via_light_obj_from(light_obj=light_mass_obj, grid=grid)
         )
 
+    def via_plane_from(
+        self, plane: Plane, grid: aa.type.Grid2DLike, galaxy_index: int
+    ) -> Visuals2D:
+        """
+        From a `Plane` get the attributes that can be plotted and returns them in a `Visuals2D` object.
+
+        Only attributes with `True` entries in the `Include` object are extracted.
+
+        From a plane the following attributes can be extracted for plotting:
+
+        - origin: the (y,x) origin of the coordinate system used to plot the light object's quantities in 2D.
+        - border: the border of the mask of the grid used to plot the light object's quantities in 2D.
+        - light profile centres: the (y,x) centre of every `LightProfile` in the object.
+        - mass profile centres: the (y,x) centre of every `MassProfile` in the object.
+        - critical curves: the critical curves of all of the plane's mass profiles combined.
+        - caustics: the caustics of all of the plane's mass profiles combined.
+
+        When plotting a `Plane` it is common for plots to only display quantities corresponding to one galaxy at a time
+        (e.g. the image of each galaxy). Therefore, quantities are only extracted from one plane, specified by the
+        input `galaxy_index`.
+
+        Parameters
+        ----------
+        plane
+            The `Plane` object which has attributes extracted for plotting.
+        grid
+            The 2D grid of (y,x) coordinates used to plot the plane's quantities in 2D.
+        galaxy_index
+            The index of the plane in the plane which is used to extract quantities, as only one plane is plotted
+            at a time.
+
+        Returns
+        -------
+        vis.Visuals2D
+            A collection of attributes that can be plotted by a `Plotter` object.
+        """
+        origin = self.get("origin", value=aa.Grid2DIrregular(grid=[grid.origin]))
+
+        light_profile_centres = self.get(
+            "light_profile_centres",
+            plane.galaxies[galaxy_index].extract_attribute(
+                cls=LightProfile, attr_name="centre"
+            ),
+        )
+
+        mass_profile_centres = self.get(
+            "mass_profile_centres",
+            plane.galaxies[galaxy_index].extract_attribute(
+                cls=MassProfile, attr_name="centre"
+            ),
+        )
+
+        if galaxy_index == 0:
+
+            critical_curves = self.get(
+                "critical_curves",
+                plane.critical_curves_from(grid=grid),
+                "critical_curves",
+            )
+        else:
+            critical_curves = None
+
+        if galaxy_index == 1:
+            caustics = self.get("caustics", plane.caustics_from(grid=grid), "caustics")
+        else:
+            caustics = None
+
+        return self.visuals + self.visuals.__class__(
+            origin=origin,
+            light_profile_centres=light_profile_centres,
+            mass_profile_centres=mass_profile_centres,
+            critical_curves=critical_curves,
+            caustics=caustics,
+        )
+
     def via_fit_imaging_from(self, fit: FitImaging) -> Visuals2D:
         """
         From a `FitImaging` get its attributes that can be plotted and return them in a `Visuals2D` object.

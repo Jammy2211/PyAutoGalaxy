@@ -6,6 +6,7 @@ import autogalaxy as ag
 
 from autogalaxy import exc
 
+
 def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
 
     mass_total = 0.0

@@ -33,7 +33,7 @@ class TestAnalysisImaging:
         instance = model.instance_from_unit_vector([])
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
-        plane = analysis.plane_for_instance(instance=instance)
+        plane = analysis.plane_via_instance_from(instance=instance)
 
         fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
@@ -59,7 +59,7 @@ class TestAnalysisImaging:
         instance = model.instance_from_unit_vector([])
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
-        plane = analysis.plane_for_instance(instance=instance)
+        plane = analysis.plane_via_instance_from(instance=instance)
         fit = ag.FitImaging(
             dataset=masked_imaging_7x7,
             plane=plane,

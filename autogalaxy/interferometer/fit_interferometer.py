@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Dict, Optional
 
 import autoarray as aa
 
@@ -14,6 +15,7 @@ class FitInterferometer(aa.FitInterferometer):
         use_hyper_scalings=True,
         settings_pixelization=aa.SettingsPixelization(),
         settings_inversion=aa.SettingsInversion(),
+        profiling_dict: Optional[Dict] = None,
     ):
         """
         An  lens fitter, which contains the plane's used to perform the fit and functions to manipulate \
@@ -25,7 +27,9 @@ class FitInterferometer(aa.FitInterferometer):
             The plane, which describes the ray-tracing and strong lens configuration.
         """
 
-        super().__init__(dataset=dataset, use_mask_in_fit=False)
+        super().__init__(
+            dataset=dataset, use_mask_in_fit=False, profiling_dict=profiling_dict
+        )
 
         self.plane = plane
 

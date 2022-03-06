@@ -41,6 +41,8 @@ class MassPlotter(Plotter):
         deflections_y: bool = False,
         deflections_x: bool = False,
         magnification: bool = False,
+        title_suffix: str = "",
+        filename_suffix: str = "",
     ):
         """
         Plots the individual attributes of the plotter's mass object in 2D, which are computed via the plotter's 2D
@@ -68,7 +70,8 @@ class MassPlotter(Plotter):
                 array=self.mass_obj.convergence_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
-                    title="Convergence", filename="convergence_2d"
+                    title=f"Convergence{title_suffix}",
+                    filename=f"convergence_2d{filename_suffix}",
                 ),
             )
 
@@ -77,7 +80,10 @@ class MassPlotter(Plotter):
             self.mat_plot_2d.plot_array(
                 array=self.mass_obj.potential_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
-                auto_labels=aplt.AutoLabels(title="Potential", filename="potential_2d"),
+                auto_labels=aplt.AutoLabels(
+                    title=f"Potential{title_suffix}",
+                    filename=f"potential_2d{filename_suffix}",
+                ),
             )
 
         if deflections_y:
@@ -91,7 +97,8 @@ class MassPlotter(Plotter):
                 array=deflections_y,
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
-                    title="Deflections Y", filename="deflections_y_2d"
+                    title=f"Deflections Y{title_suffix}",
+                    filename=f"deflections_y_2d{filename_suffix}",
                 ),
             )
 
@@ -106,7 +113,8 @@ class MassPlotter(Plotter):
                 array=deflections_x,
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
-                    title="deflections X", filename="deflections_x_2d"
+                    title=f"deflections X{title_suffix}",
+                    filename=f"deflections_x_2d{filename_suffix}",
                 ),
             )
 
@@ -116,6 +124,7 @@ class MassPlotter(Plotter):
                 array=self.mass_obj.magnification_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
-                    title="Magnification", filename="magnification_2d"
+                    title=f"Magnification{title_suffix}",
+                    filename=f"magnification_2d{filename_suffix}",
                 ),
             )

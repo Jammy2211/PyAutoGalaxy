@@ -286,6 +286,11 @@ def make_plane_7x7():
     return fixtures.make_plane_7x7()
 
 
+@pytest.fixture(name="plane_x2_gal_7x7")
+def make_plane_x2_gal_7x7():
+    return fixtures.make_plane_x2_gal_7x7()
+
+
 @pytest.fixture(name="hyper_model_image_7x7")
 def make_hyper_model_image_7x7():
     return fixtures.make_hyper_model_image_7x7()

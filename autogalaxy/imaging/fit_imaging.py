@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Optional
+from typing import Dict, Optional
 
 from autoconf import conf
 import autoarray as aa
@@ -20,6 +20,7 @@ class FitImaging(aa.FitImaging):
         use_hyper_scalings: bool = True,
         settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        profiling_dict: Optional[Dict] = None,
     ):
         """ An lens fitter, which contains the plane's used to perform the fit and functions to manipulate \
         the lens dataset's hyper_galaxies.
@@ -30,7 +31,7 @@ class FitImaging(aa.FitImaging):
             The plane of galaxies whose model images are used to fit the imaging data.
         """
 
-        super().__init__(dataset=dataset)
+        super().__init__(dataset=dataset, profiling_dict=profiling_dict)
 
         self.plane = plane
 

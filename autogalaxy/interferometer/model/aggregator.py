@@ -52,7 +52,7 @@ class InterferometerAgg:
 
         self.aggregator = aggregator
 
-    def interferometer_gen(
+    def interferometer_gen_from(
         self,
         real_space_mask: Optional[aa.Mask2D] = None,
         settings_interferometer: Optional[aa.SettingsInterferometer] = None,

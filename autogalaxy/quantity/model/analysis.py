@@ -106,7 +106,7 @@ class AnalysisQuantity(Analysis):
             The fit of the plane to the imaging dataset, which includes the log likelihood.
         """
 
-        plane = self.plane_for_instance(instance=instance)
+        plane = self.plane_via_instance_from(instance=instance)
 
         return FitQuantity(
             dataset=self.dataset, light_mass_obj=plane, func_str=self.func_str
