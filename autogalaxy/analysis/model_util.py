@@ -537,15 +537,15 @@ def stochastic_model_from(
     ----------
     result : af.Result
         The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
-    include_lens_light : bool
+    include_lens_light
         If `True` and the model includes any `LightProfile`'s, these are fitted for in the model.
-    include_pixelization : bool
+    include_pixelization
         If `True` the `VoronoiBrightnessImage` pixelization in the model is fitted for.
-    include_regularization : bool
+    include_regularization
         If `True` the regularization in the model is fitted for.
     subhalo_centre_width
         The `sigma` value of the `GaussianPrior` on the centre of the subhalo, if it is included in the lens model.
-    subhalo_mass_at_200_log_uniform : bool
+    subhalo_mass_at_200_log_uniform
         if `True`, the subhalo mass (if included) does not assume a `GaussianPrior` from the previous fit, but instead
         retains the default `LogUniformPrior`.
 

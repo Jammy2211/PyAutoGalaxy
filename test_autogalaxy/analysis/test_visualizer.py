@@ -2,6 +2,8 @@ import shutil
 from os import path
 import pytest
 
+import autogalaxy as ag
+
 from autoconf import conf
 from autogalaxy.analysis import visualizer as vis
 
@@ -16,6 +18,37 @@ def make_visualizer_plotter_setup():
 @pytest.fixture(autouse=True)
 def push_config(plot_path):
     conf.instance.push(path.join(directory, "config"), output_path=plot_path)
+
+
+def test__visualizes_plane__uses_configs(
+    masked_imaging_7x7, plane_7x7, include_2d_all, plot_path, plot_patch
+):
+
+    if path.exists(plot_path):
+        shutil.rmtree(plot_path)
+
+    visualizer = vis.Visualizer(visualize_path=plot_path)
+
+    visualizer.visualize_plane(
+        plane=plane_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
+    )
+
+    plot_path = path.join(plot_path, "plane")
+
+    assert path.join(plot_path, "subplot_plane.png") in plot_patch.paths
+    assert path.join(plot_path, "subplot_galaxy_images.png") in plot_patch.paths
+    assert path.join(plot_path, "image_2d.png") in plot_patch.paths
+    assert path.join(plot_path, "convergence_2d.png") in plot_patch.paths
+    assert path.join(plot_path, "potential_2d.png") not in plot_patch.paths
+    assert path.join(plot_path, "deflections_y_2d.png") not in plot_patch.paths
+    assert path.join(plot_path, "deflections_x_2d.png") not in plot_patch.paths
+    assert path.join(plot_path, "magnification_2d.png") in plot_patch.paths
+
+    convergence = ag.util.array_2d.numpy_array_2d_via_fits_from(
+        file_path=path.join(plot_path, "fits", "convergence_2d.fits"), hdu=0
+    )
+
+    assert convergence.shape == (5, 5)
 
 
 def test__visualizes_imaging__uses_configs(

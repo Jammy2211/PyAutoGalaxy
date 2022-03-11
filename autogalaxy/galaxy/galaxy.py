@@ -452,7 +452,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             ----------
             radius
                 The radius of the circle to compute the dimensionless mass within.
-            unit_luminosity : str
+            unit_luminosity
                 The unit_label the luminosity is returned in {esp, counts}.
             exposure_time
                 The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
@@ -478,7 +478,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         ----------
         radius : dim.Length
             The radius of the circle to compute the dimensionless mass within.
-        unit_mass : str
+        unit_mass
             The unit_label the mass is returned in {angular, angular}.
         critical_surface_density or None
             The critical surface mass density of the strong lens configuration, which converts mass from angulalr \

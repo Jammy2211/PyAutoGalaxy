@@ -6,6 +6,8 @@ from autoconf import conf
 import autoarray as aa
 import autoarray.plot as aplt
 
+from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
 from autogalaxy.galaxy.plot.hyper_galaxy_plotters import HyperPlotter
 from autogalaxy.plane.plane import Plane
 from autogalaxy.plane.plot.plane_plotters import PlanePlotter
@@ -285,7 +287,52 @@ class Visualizer:
                     magnification=True,
                 )
 
-    # def visualize_galaxies_1d(self, plane: Plane, grid: aa.type.Grid2DLike, during_analysis: bool):
+    def visualize_galaxies_1d(
+        self, galaxies: [List[Galaxy]], grid: aa.type.Grid2DLike, during_analysis: bool
+    ):
+        """
+        Visualizes a list of `Galaxy` objects.
+
+        Images are output to the `image` folder of the `visualize_path` in a subfolder called `galaxies`. When
+        used with a non-linear search the `visualize_path` points to the search's results folder and this function
+        visualizes the maximum log likelihood `Galaxy`'s inferred by the search so far.
+
+        Visualization includes individual images of attributes of each galaxy (e.g. 1D plots of their image,
+        convergence) and a subplot of all these attributes on the same figure.
+
+        The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini` under the
+        [galaxies] header.
+
+        Parameters
+        ----------
+        galaxies
+            A list of the maximum log likelihood `Galaxy`'s of the non-linear search.
+        grid
+            A 2D grid of (y,x) arc-second coordinates used to perform ray-tracing, which is the masked grid tied to
+            the dataset.
+        during_analysis
+            Whether visualization is performed during a non-linear search or once it is completed.
+        """
+
+        def should_plot(name):
+            return plot_setting(section="galaxies", name=name)
+
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="galaxies")
+
+        for galaxy in galaxies:
+
+            galaxy_plotter = GalaxyPlotter(
+                galaxy=galaxy,
+                grid=grid,
+                mat_plot_2d=mat_plot_2d,
+                include_2d=self.include_2d,
+            )
+
+            galaxy_plotter.figures_1d_decomposed(
+                image=should_plot("image"),
+                convergence=should_plot("convergence"),
+                potential=should_plot("potential"),
+            )
 
     def visualize_inversion(self, inversion: aa.Inversion, during_analysis: bool):
         """
