@@ -11,7 +11,7 @@ from autogalaxy.plot.mat_wrap.visuals import Visuals2D
 
 from autogalaxy.util import error_util
 
-from autoarray.structures.two_d.grids.irregular import Grid2DIrregular
+from autoarray.structures.grids.irregular_2d import Grid2DIrregular
 
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile

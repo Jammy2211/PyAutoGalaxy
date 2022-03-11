@@ -73,7 +73,7 @@ class ShearYX2D(aa.VectorYX2D, AbstractShearField):
     of (y,x) coordinates.
 
     The structure of this data structure is described in
-    `autoarray.structures.two_d.vectors.uniform.VectorYX2D`
+    `autoarray.structures.vectors.uniform.VectorYX2D`
 
     This class extends `VectorYX2D` to include methods that are specific to a shear field, typically
     used for weak lensing calculations.
@@ -94,7 +94,7 @@ class ShearYX2DIrregular(aa.VectorYX2DIrregular, AbstractShearField):
     of (y,x) coordinates.
 
     The structure of this data structure is described in
-    `autoarray.structures.two_d.vectors.irregular.VectorYX2DIrregular`
+    `autoarray.structures.vectors.irregular.VectorYX2DIrregular`
 
     This class extends `VectorYX2DIrregular` to include methods that are specific to a shear field, typically
     used for weak lensing calculations.
