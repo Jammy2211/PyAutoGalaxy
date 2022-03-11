@@ -278,6 +278,9 @@ class AnalysisInterferometer(AnalysisDataset):
 
         visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
         visualizer.visualize_interferometer(interferometer=self.interferometer)
+        visualizer.visualize_plane(
+            plane=fit.plane, grid=fit.grid, during_analysis=during_analysis
+        )
         visualizer.visualize_fit_interferometer(
             fit=fit, during_analysis=during_analysis
         )

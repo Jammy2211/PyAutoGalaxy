@@ -1,3 +1,5 @@
+from os import path
+
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.interferometer.plot.fit_interferometer_plotters import (
     FitInterferometerPlotter,
@@ -39,7 +41,7 @@ class VisualizerInterferometer(Visualizer):
         """
 
         def should_plot(name):
-            return plot_setting(section="fit", name=name)
+            return plot_setting(section=["fit", "fit_interferometer"], name=name)
 
         mat_plot_1d = self.mat_plot_1d_from(subfolders=subfolders)
         mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
@@ -66,6 +68,12 @@ class VisualizerInterferometer(Visualizer):
             chi_squared_map_imag=should_plot("chi_squared_map"),
             normalized_residual_map_real=should_plot("normalized_residual_map"),
             normalized_residual_map_imag=should_plot("normalized_residual_map"),
+            dirty_image=should_plot("dirty_image"),
+            dirty_noise_map=should_plot("dirty_noise_map"),
+            dirty_signal_to_noise_map=should_plot("dirty_signal_to_noise_map"),
+            dirty_residual_map=should_plot("residual_map"),
+            dirty_normalized_residual_map=should_plot("normalized_residual_map"),
+            dirty_chi_squared_map=should_plot("chi_squared_map"),
         )
 
         if not during_analysis:
@@ -88,7 +96,7 @@ class VisualizerInterferometer(Visualizer):
             if should_plot("all_at_end_fits"):
 
                 mat_plot_2d = self.mat_plot_2d_from(
-                    subfolders="fit_interferometer/fits", format="fits"
+                    subfolders=path.join("fit_interferometer", "fits"), format="fits"
                 )
 
                 fit_interferometer_plotter = FitInterferometerPlotter(

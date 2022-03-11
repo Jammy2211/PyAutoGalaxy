@@ -3,7 +3,7 @@ from typing import List, Optional
 
 import autoarray as aa
 import autoarray.plot as aplt
-from autoarray.structures.grids.two_d import abstract_grid_2d
+
 
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.plot import abstract_plotters
@@ -89,8 +89,8 @@ class LightProfilePlotter(abstract_plotters.Plotter):
         computed from the light profile. This is performed by aligning a 1D grid with the  major-axis of the light
         profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
 
-        The API is such that every plottable attribute of the `LightProfile` object is an input parameter of type bool of
-        the function, which if switched to `True` means that it is plotted.
+        The API is such that every plottable attribute of the `LightProfile` object is an input parameter of type
+        bool of the function, which if switched to `True` means that it is plotted.
 
         Parameters
         ----------

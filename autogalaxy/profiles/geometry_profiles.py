@@ -3,7 +3,7 @@ from typing import Tuple
 import numpy as np
 
 import autoarray as aa
-from autoarray.structures.grids.two_d.grid_transformed import Grid2DTransformedNumpy
+from autoarray.structures.two_d.grids.transformed import Grid2DTransformedNumpy
 from autogalaxy import convert
 from autoconf.dictable import Dictable
 

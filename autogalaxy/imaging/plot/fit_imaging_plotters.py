@@ -199,10 +199,12 @@ class FitImagingPlotter(Plotter):
             self.figures_2d_of_galaxies(
                 galaxy_index=galaxy_index, subtracted_image=True
             )
-            self.figures_2d_of_galaxies(galaxy_index=galaxy_index)
+            self.figures_2d_of_galaxies(galaxy_index=galaxy_index, model_image=True)
 
             if self.plane.has_pixelization:
-                self.inversion_plotter.figures_2d(reconstruction=True)
+                self.inversion_plotter.figures_2d_of_mapper(
+                    mapper_index=0, reconstruction=True
+                )
 
             self.mat_plot_2d.output.subplot_to_figure(
                 auto_filename=f"subplot_of_galaxy_{galaxy_index}"

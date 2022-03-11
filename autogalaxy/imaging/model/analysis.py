@@ -174,7 +174,7 @@ class AnalysisImaging(AnalysisDataset):
         paths: af.DirectoryPaths,
         instance: af.ModelInstance,
         during_analysis: bool,
-    ) -> None:
+    ):
         """
         Output images of the maximum log likelihood model inferred by the model-fit. This function is called throughout
         the non-linear search at regular intervals, and therefore provides on-the-fly visualization of how well the
@@ -207,8 +207,10 @@ class AnalysisImaging(AnalysisDataset):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
+
         instance = self.instance_with_associated_hyper_images_from(instance=instance)
         plane = self.plane_via_instance_from(instance=instance)
+
         hyper_image_sky = self.hyper_image_sky_via_instance_from(instance=instance)
         hyper_background_noise = self.hyper_background_noise_via_instance_from(
             instance=instance
@@ -223,7 +225,9 @@ class AnalysisImaging(AnalysisDataset):
         visualizer = VisualizerImaging(visualize_path=paths.image_path)
         visualizer.visualize_imaging(imaging=self.imaging)
         visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)
-
+        visualizer.visualize_plane(
+            plane=fit.plane, grid=fit.grid, during_analysis=during_analysis
+        )
         if fit.inversion is not None:
             visualizer.visualize_inversion(
                 inversion=fit.inversion, during_analysis=during_analysis

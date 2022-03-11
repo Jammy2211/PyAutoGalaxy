@@ -163,7 +163,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         return len(self.light_profile_list) > 0
 
     @aa.grid_dec.grid_2d_to_structure
-    def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    def image_2d_from(self, grid: aa.type.Grid2DLike) -> Union[np.ndarray, aa.Array2D]:
         """
         Returns the summed 2D image of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
 

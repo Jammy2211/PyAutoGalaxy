@@ -1,5 +1,6 @@
 import os
 from os import path
+from typing import List, Union
 
 from autoconf import conf
 import autoarray as aa
@@ -14,11 +15,21 @@ from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
 
 
-def setting(section: str, name: str):
-    return conf.instance["visualize"]["plots"][section][name]
+def setting(section: Union[List[str], str], name: str):
+    if isinstance(section, str):
+        return conf.instance["visualize"]["plots"][section][name]
+
+    for sect in reversed(section):
+
+        try:
+            return conf.instance["visualize"]["plots"][sect][name]
+        except KeyError:
+            continue
+
+    return conf.instance["visualize"]["plots"][section[0]][name]
 
 
-def plot_setting(section: str, name: str) -> bool:
+def plot_setting(section: Union[List[str], str], name: str) -> bool:
     return setting(section, name)
 
 
@@ -119,7 +130,7 @@ class Visualizer:
         """
 
         def should_plot(name):
-            return plot_setting(section="dataset", name=name)
+            return plot_setting(section=["dataset", "imaging"], name=name)
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="imaging")
 
@@ -161,7 +172,7 @@ class Visualizer:
         """
 
         def should_plot(name):
-            return plot_setting(section="dataset", name=name)
+            return plot_setting(section=["dataset", "interferometer"], name=name)
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="interferometer")
 
@@ -178,6 +189,12 @@ class Visualizer:
             visibilities=should_plot("data"),
             u_wavelengths=should_plot("uv_wavelengths"),
             v_wavelengths=should_plot("uv_wavelengths"),
+            amplitudes_vs_uv_distances=should_plot("amplitudes_vs_uv_distances"),
+            phases_vs_uv_distances=should_plot("phases_vs_uv_distances"),
+            dirty_image=should_plot("dirty_image"),
+            dirty_noise_map=should_plot("dirty_noise_map"),
+            dirty_signal_to_noise_map=should_plot("dirty_signal_to_noise_map"),
+            dirty_inverse_noise_map=should_plot("dirty_inverse_noise_map"),
         )
 
     def visualize_plane(
@@ -220,13 +237,12 @@ class Visualizer:
 
             plane_plotter.subplot()
 
-        if should_plot("subplot_plane_images"):
+        if should_plot("subplot_galaxy_images"):
 
-            plane_plotter.subplot_plane_images()
+            plane_plotter.subplot_galaxy_images()
 
         plane_plotter.figures_2d(
             image=should_plot("image"),
-            source_plane=should_plot("source_plane_image"),
             convergence=should_plot("convergence"),
             potential=should_plot("potential"),
             deflections_y=should_plot("deflections"),
@@ -240,7 +256,6 @@ class Visualizer:
 
                 plane_plotter.figures_2d(
                     image=True,
-                    source_plane=True,
                     convergence=True,
                     potential=True,
                     deflections_y=True,
@@ -263,13 +278,14 @@ class Visualizer:
 
                 plane_plotter.figures_2d(
                     image=True,
-                    source_plane=True,
                     convergence=True,
                     potential=True,
                     deflections_y=True,
                     deflections_x=True,
                     magnification=True,
                 )
+
+    # def visualize_galaxies_1d(self, plane: Plane, grid: aa.type.Grid2DLike, during_analysis: bool):
 
     def visualize_inversion(self, inversion: aa.Inversion, during_analysis: bool):
         """

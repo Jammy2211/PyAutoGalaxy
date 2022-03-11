@@ -81,6 +81,13 @@ class ResultDataset(Result):
         return self.max_log_likelihood_fit.mask
 
     @property
+    def grid(self) -> aa.Grid2D:
+        """
+        The masked 2D grid used by the dataset in the model-fit.
+        """
+        return self.analysis.dataset.grid
+
+    @property
     def dataset(self) -> Union[aa.Imaging, aa.Interferometer]:
         """
         The dataset that was fitted by the model-fit.

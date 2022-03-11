@@ -4,8 +4,6 @@ from typing import List, Optional
 import autoarray as aa
 import autoarray.plot as aplt
 
-from autoarray.structures.grids.two_d import abstract_grid_2d
-
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mass_plotter import MassPlotter
 from autogalaxy.profiles.mass_profiles import MassProfile
@@ -157,7 +155,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
     def __init__(
         self,
         mass_profile_pdf_list: List[MassProfile],
-        grid: abstract_grid_2d.AbstractGrid2D,
+        grid: aa.Grid2D,
         mat_plot_1d: MatPlot1D = MatPlot1D(),
         visuals_1d: Visuals1D = Visuals1D(),
         include_1d: Include1D = Include1D(),

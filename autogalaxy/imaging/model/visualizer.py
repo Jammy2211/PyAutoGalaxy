@@ -1,3 +1,5 @@
+from os import path
+
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.imaging.plot.fit_imaging_plotters import FitImagingPlotter
 from autogalaxy.analysis.visualizer import Visualizer
@@ -34,7 +36,7 @@ class VisualizerImaging(Visualizer):
         """
 
         def should_plot(name):
-            return plot_setting(section="fit", name=name)
+            return plot_setting(section=["fit", "fit_imaging"], name=name)
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
 
@@ -60,7 +62,7 @@ class VisualizerImaging(Visualizer):
         if should_plot("subplot_fit"):
             fit_imaging_plotter.subplot_fit_imaging()
 
-        if should_plot("subplots_of_galaxies_fits"):
+        if should_plot("subplots_of_galaxies"):
             fit_imaging_plotter.subplots_of_galaxies()
 
         if not during_analysis:
@@ -84,7 +86,7 @@ class VisualizerImaging(Visualizer):
             if should_plot("all_at_end_fits"):
 
                 mat_plot_2d = self.mat_plot_2d_from(
-                    subfolders="fit_imaging/fits", format="fits"
+                    subfolders=path.join("fit_imaging", "fits"), format="fits"
                 )
 
                 fit_imaging_plotter = FitImagingPlotter(

@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.integrate import quad
-from typing import Tuple
+from typing import Tuple, Union
 
 import autoarray as aa
 
@@ -70,7 +70,7 @@ class LightProfile(EllProfile, OperateImage):
         raise NotImplementedError()
 
     @aa.grid_dec.grid_1d_to_structure
-    def image_1d_from(self, grid: aa.type.Grid1D2DLike) -> aa.Array2D:
+    def image_1d_from(self, grid: aa.type.Grid1D2DLike) -> aa.type.Grid1D2DLike:
         """
         Returns the light profile's 1D image from a grid of Cartesian coordinates, which may have been
         transformed using the light profile's geometry.

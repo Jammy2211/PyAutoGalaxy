@@ -185,9 +185,9 @@ class GalaxyPlotter(Plotter):
         image
             Whether or not to make a 1D plot (via `plot`) of the image.
         convergence
-            Whether or not to make a 1D plot (via `imshow`) of the convergence.
+            Whether or not to make a 1D plot (via `plot`) of the convergence.
         potential
-            Whether or not to make a 1D plot (via `imshow`) of the potential.
+            Whether or not to make a 1D plot (via `plot`) of the potential.
         """
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
@@ -419,7 +419,20 @@ class GalaxyPlotter(Plotter):
             )
 
     def subplot_of_light_profiles(self, image: bool = False):
+        """
+        Output a subplot of attributes of every individual light profile in 1D of the `Galaxy` object.
 
+        For example, a 1D plot showing how the image (e.g. luminosity) of each component varies radially outwards.
+
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from the light profile. This is performed by aligning a 1D grid with the  major-axis of the light
+        profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+
+        Parameters
+        ----------
+        image
+            Whether or not to make a 1D subplot (via `plot`) of the image.
+        """
         light_profile_plotters = [
             self.light_profile_plotter_from(light_profile)
             for light_profile in self.galaxy.light_profile_list
@@ -437,7 +450,24 @@ class GalaxyPlotter(Plotter):
         deflections_y: bool = False,
         deflections_x: bool = False,
     ):
+        """
+        Output a subplot of attributes of every individual mass profile in 1D of the `Galaxy` object.
 
+        For example, a 1D plot showing how the convergence of each component varies radially outwards.
+
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from the light profile. This is performed by aligning a 1D grid with the  major-axis of the light
+        profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+
+        Parameters
+        ----------
+        image
+            Whether or not to make a 1D subplot (via `plot`) of the image.
+        convergence
+            Whether or not to make a 1D plot (via `plot`) of the convergence.
+        potential
+            Whether or not to make a 1D plot (via `plot`) of the potential.
+        """
         mass_profile_plotters = [
             self.mass_profile_plotter_from(mass_profile)
             for mass_profile in self.galaxy.mass_profile_list

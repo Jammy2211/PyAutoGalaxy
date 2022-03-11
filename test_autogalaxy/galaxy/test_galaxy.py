@@ -134,14 +134,14 @@ class TestMassProfiles:
 
         gal_convergence = gal_x1_mp.convergence_1d_from(grid=grid)
 
-        assert mp_convergence == gal_convergence
+        assert (mp_convergence == gal_convergence).all()
 
         mp_convergence = mp_0.convergence_1d_from(grid=grid)
         mp_convergence += mp_1.convergence_1d_from(grid=grid)
 
         gal_convergence = gal_x2_mp.convergence_1d_from(grid=grid)
 
-        assert mp_convergence == gal_convergence
+        assert (mp_convergence == gal_convergence).all()
 
         grid = ag.Grid2DIrregular([(1.05, -0.55), (2.05, -0.55)])
 
