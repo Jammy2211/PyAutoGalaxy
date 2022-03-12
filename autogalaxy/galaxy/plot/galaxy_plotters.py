@@ -296,8 +296,9 @@ class GalaxyPlotter(Plotter):
         multi_plotter = aplt.MultiYX1DPlotter(
             plotter_list=plotter_list, legend_labels=legend_labels
         )
+        multi_plotter.plotter_list[0].mat_plot_1d.output = self.mat_plot_1d.output
 
-        if image:
+        if image and self.galaxy.has_light_profile:
 
             change_filename = False
 
@@ -321,7 +322,7 @@ class GalaxyPlotter(Plotter):
             plotter_list=plotter_list, legend_labels=legend_labels
         )
 
-        if convergence:
+        if convergence and self.galaxy.has_mass_profile:
 
             change_filename = False
 
@@ -336,7 +337,7 @@ class GalaxyPlotter(Plotter):
             if change_filename:
                 multi_plotter.plotter_list[0].set_filename(filename=None)
 
-        if potential:
+        if potential and self.galaxy.has_mass_profile:
 
             change_filename = False
 

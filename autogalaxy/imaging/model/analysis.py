@@ -228,6 +228,7 @@ class AnalysisImaging(AnalysisDataset):
         visualizer.visualize_plane(
             plane=fit.plane, grid=fit.grid, during_analysis=during_analysis
         )
+        visualizer.visualize_galaxies_1d(galaxies=fit.plane.galaxies, grid=fit.grid, during_analysis=during_analysis)
         if fit.inversion is not None:
             visualizer.visualize_inversion(
                 inversion=fit.inversion, during_analysis=during_analysis

@@ -51,6 +51,26 @@ def test__visualizes_plane__uses_configs(
     assert convergence.shape == (5, 5)
 
 
+def test__visualizes_galaxies__uses_configs(
+    masked_imaging_7x7, plane_7x7, include_2d_all, plot_path, plot_patch
+):
+
+    if path.exists(plot_path):
+        shutil.rmtree(plot_path)
+
+    visualizer = vis.Visualizer(visualize_path=plot_path)
+
+    visualizer.visualize_galaxies_1d(
+        galaxies=plane_7x7.galaxies, grid=masked_imaging_7x7.grid, during_analysis=False
+    )
+
+    plot_path = path.join(plot_path, "galaxies")
+
+    assert path.join(plot_path, "image_1d_decomposed.png") in plot_patch.paths
+    assert path.join(plot_path, "convergence_1d_decomposed.png") not in plot_patch.paths
+    assert path.join(plot_path, "potential_1d_decomposed.png") in plot_patch.paths
+
+
 def test__visualizes_imaging__uses_configs(
     imaging_7x7, include_2d_all, plot_path, plot_patch
 ):

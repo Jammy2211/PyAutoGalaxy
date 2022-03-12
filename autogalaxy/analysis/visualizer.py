@@ -317,14 +317,14 @@ class Visualizer:
         def should_plot(name):
             return plot_setting(section="galaxies", name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="galaxies")
+        mat_plot_1d = self.mat_plot_1d_from(subfolders="galaxies")
 
         for galaxy in galaxies:
 
             galaxy_plotter = GalaxyPlotter(
                 galaxy=galaxy,
                 grid=grid,
-                mat_plot_2d=mat_plot_2d,
+                mat_plot_1d=mat_plot_1d,
                 include_2d=self.include_2d,
             )
 
