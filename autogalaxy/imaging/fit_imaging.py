@@ -114,7 +114,7 @@ class FitImaging(aa.FitImaging):
                 w_tilde=self.dataset.w_tilde,
                 settings_pixelization=self.settings_pixelization,
                 settings_inversion=self.settings_inversion,
-                preloads=self.preloads
+                preloads=self.preloads,
             )
 
     @property
