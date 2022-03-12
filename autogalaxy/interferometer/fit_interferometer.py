@@ -1,6 +1,8 @@
 import numpy as np
 from typing import Dict, Optional
 
+from autoconf import cached_property
+
 import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
@@ -15,6 +17,7 @@ class FitInterferometer(aa.FitInterferometer):
         use_hyper_scalings=True,
         settings_pixelization=aa.SettingsPixelization(),
         settings_inversion=aa.SettingsInversion(),
+        preloads=aa.Preloads(),
         profiling_dict: Optional[Dict] = None,
     ):
         """
@@ -39,6 +42,8 @@ class FitInterferometer(aa.FitInterferometer):
 
         self.settings_pixelization = settings_pixelization
         self.settings_inversion = settings_inversion
+
+        self.preloads = preloads
 
     @property
     def noise_map(self):
@@ -72,7 +77,7 @@ class FitInterferometer(aa.FitInterferometer):
         """
         return self.visibilities - self.profile_visibilities
 
-    @property
+    @cached_property
     def inversion(self):
         """
         If the plane has linear objects which are used to fit the data (e.g. a pixelization) this function returns
@@ -90,6 +95,7 @@ class FitInterferometer(aa.FitInterferometer):
                 w_tilde=self.dataset.w_tilde,
                 settings_pixelization=self.settings_pixelization,
                 settings_inversion=self.settings_inversion,
+                preloads=self.preloads
             )
 
     @property
