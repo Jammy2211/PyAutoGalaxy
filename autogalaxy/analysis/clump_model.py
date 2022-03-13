@@ -15,6 +15,7 @@ class ClumpModel:
         centres: aa.Grid2DIrregular,
         light_cls: Optional[Type[LightProfile]] = None,
         mass_cls: Optional[Type[MassProfile]] = None,
+        einstein_radius_upper_limit: Optional[float] = None,
     ):
 
         self.redshift = redshift
@@ -23,26 +24,45 @@ class ClumpModel:
         self.light_cls = light_cls
         self.mass_cls = mass_cls
 
+        self.einstein_radius_upper_limit = einstein_radius_upper_limit
+
     @property
     def total_clumps(self):
         return len(self.centres.in_list)
 
     @property
     def light_list(self):
-        if self.light_cls is not None:
-            return [
-                af.Model(self.light_cls, centre=centre)
-                for centre in self.centres.in_list
-            ]
+
+        if self.light_cls is None:
+            return None
+
+        return [
+            af.Model(self.light_cls, centre=centre) for centre in self.centres.in_list
+        ]
 
     @property
     def mass_list(self):
 
-        if self.mass_cls is not None:
-            return [
-                af.Model(self.mass_cls, centre=centre)
-                for centre in self.centres.in_list
-            ]
+        if self.mass_cls is None:
+            return None
+
+        mass_list = []
+
+        for centre in self.centres.in_list:
+
+            mass = af.Model(self.mass_cls, centre=centre)
+
+            if (
+                hasattr(mass, "einstein_radius")
+                and self.einstein_radius_upper_limit is not None
+            ):
+                mass.einstein_radius = af.UniformPrior(
+                    lower_limit=0.0, upper_limit=self.einstein_radius_upper_limit
+                )
+
+            mass_list.append(mass)
+
+        return mass_list
 
     @property
     def clump_dict(self):
