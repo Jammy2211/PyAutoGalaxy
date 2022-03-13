@@ -47,6 +47,8 @@ class Analysis(af.Analysis):
         -------
         An instance of the Plane class that is used to then fit the dataset.
         """
+        if hasattr(instance, "clumps"):
+            return Plane(galaxies=instance.galaxies + instance.clumps)
         return Plane(galaxies=instance.galaxies)
 
 

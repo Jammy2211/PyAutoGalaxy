@@ -65,17 +65,65 @@ class ClumpModel:
         return mass_list
 
     @property
-    def clump_dict(self):
+    def clumps_light_only(self):
 
-        clump_dict = {}
+        clumps_light_only = {}
+
+        for i in range(self.total_clumps):
+
+            light = self.light_list[i] if self.light_cls is not None else None
+
+            clumps_light_only[f"clump_{i}"] = af.Model(
+                Galaxy, redshift=self.redshift, light=light
+            )
+
+        return clumps_light_only
+
+    @property
+    def clumps_mass_only(self):
+
+        clumps_mass_only = {}
+
+        for i in range(self.total_clumps):
+
+            mass = self.mass_list[i] if self.mass_cls is not None else None
+
+            clumps_mass_only[f"clump_{i}"] = af.Model(
+                Galaxy, redshift=self.redshift, mass=mass
+            )
+
+        return clumps_mass_only
+
+    @property
+    def clumps(self):
+
+        clumps = {}
 
         for i in range(self.total_clumps):
 
             light = self.light_list[i] if self.light_cls is not None else None
             mass = self.mass_list[i] if self.mass_cls is not None else None
 
-            clump_dict[f"clump_{i}"] = af.Model(
+            clumps[f"clump_{i}"] = af.Model(
                 Galaxy, redshift=self.redshift, light=light, mass=mass
             )
 
-        return clump_dict
+        return af.Collection(**clumps)
+
+
+class ClumpModelDisabled:
+    def __init__(self):
+
+        pass
+
+    @property
+    def clumps_light_only(self):
+        return {}
+
+    @property
+    def clumps_mass_only(self):
+        return {}
+
+    @property
+    def clumps(self):
+        return {}
