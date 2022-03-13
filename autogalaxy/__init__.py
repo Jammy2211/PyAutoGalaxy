@@ -81,7 +81,7 @@ from . import mock as m
 from .util.shear_field import ShearYX2D
 from .util.shear_field import ShearYX2DIrregular
 
-from .analysis.clump_maker import ClumpMaker
+from .analysis.clump_maker import ClumpModel
 
 from autoconf import conf
 
