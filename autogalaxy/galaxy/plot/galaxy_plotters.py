@@ -29,7 +29,7 @@ class GalaxyPlotter(Plotter):
     def __init__(
         self,
         galaxy: Galaxy,
-        grid: aa.Grid2D,
+        grid: aa.type.Grid1D2DLike,
         mat_plot_1d: MatPlot1D = MatPlot1D(),
         visuals_1d: Visuals1D = Visuals1D(),
         include_1d: Include1D = Include1D(),
@@ -102,7 +102,7 @@ class GalaxyPlotter(Plotter):
         )
 
     def light_profile_plotter_from(
-        self, light_profile: LightProfile
+        self, light_profile: LightProfile, one_d_only: bool = False
     ) -> LightProfilePlotter:
         """
         Returns a `LightProfilePlotter` given an input light profile, which is typically used for plotting the 
@@ -118,21 +118,32 @@ class GalaxyPlotter(Plotter):
         LightProfilePlotter
             An object that plots the light profiles, often used for plotting attributes of the galaxy.
         """
+
+        if not one_d_only:
+
+            return LightProfilePlotter(
+                light_profile=light_profile,
+                grid=self.grid,
+                mat_plot_2d=self.mat_plot_2d,
+                visuals_2d=self.get_2d.via_light_obj_from(
+                    light_obj=light_profile, grid=self.grid
+                ),
+                include_2d=self.include_2d,
+                mat_plot_1d=self.mat_plot_1d,
+                visuals_1d=self.get_1d.via_light_obj_from(light_obj=light_profile),
+                include_1d=self.include_1d,
+            )
+
         return LightProfilePlotter(
             light_profile=light_profile,
             grid=self.grid,
-            mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.get_2d.via_light_obj_from(
-                light_obj=light_profile, grid=self.grid
-            ),
-            include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
             visuals_1d=self.get_1d.via_light_obj_from(light_obj=light_profile),
             include_1d=self.include_1d,
         )
 
     def mass_profile_plotter_from(
-        self, mass_profile: MassProfile
+        self, mass_profile: MassProfile, one_d_only: bool = False
     ) -> MassProfilePlotter:
         """
         Returns a `MassProfilePlotter` given an input mass profile, which is typically used for plotting the individual
@@ -148,20 +159,83 @@ class GalaxyPlotter(Plotter):
         MassProfilePlotter
             An object that plots the mass profiles, often used for plotting attributes of the galaxy.
         """
+
+        if not one_d_only:
+
+            return MassProfilePlotter(
+                mass_profile=mass_profile,
+                grid=self.grid,
+                mat_plot_2d=self.mat_plot_2d,
+                visuals_2d=self.get_2d.via_mass_obj_from(
+                    mass_obj=mass_profile, grid=self.grid
+                ),
+                include_2d=self.include_2d,
+                mat_plot_1d=self.mat_plot_1d,
+                visuals_1d=self.get_1d.via_mass_obj_from(
+                    mass_obj=mass_profile, grid=self.grid
+                ),
+                include_1d=self.include_1d,
+            )
+
         return MassProfilePlotter(
             mass_profile=mass_profile,
             grid=self.grid,
-            mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.get_2d.via_mass_obj_from(
-                mass_obj=mass_profile, grid=self.grid
-            ),
-            include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
             visuals_1d=self.get_1d.via_mass_obj_from(
                 mass_obj=mass_profile, grid=self.grid
             ),
             include_1d=self.include_1d,
         )
+
+    @property
+    def decomposed_light_profile_plotter_list(self):
+
+        plotter_list = []
+
+        for i, light_profile in enumerate(self.galaxy.light_profile_list):
+
+            light_profile_plotter = self.light_profile_plotter_from(
+                light_profile=light_profile, one_d_only=True
+            )
+
+            plotter_list.append(light_profile_plotter)
+
+        radial_projected_shape_slim = max(
+            [plotter.radial_projected_shape_slim for plotter in plotter_list]
+        )
+
+        self.grid.radial_projected_shape_slim = radial_projected_shape_slim
+
+        for plotter in plotter_list:
+
+            plotter.grid.radial_projected_shape_slim = radial_projected_shape_slim
+
+        return [self] + plotter_list
+
+    @property
+    def decomposed_mass_profile_plotter_list(self):
+
+        plotter_list = []
+
+        for i, mass_profile in enumerate(self.galaxy.mass_profile_list):
+
+            mass_profile_plotter = self.mass_profile_plotter_from(
+                mass_profile=mass_profile, one_d_only=True
+            )
+
+            plotter_list.append(mass_profile_plotter)
+
+        radial_projected_shape_slim = max(
+            [plotter.radial_projected_shape_slim for plotter in plotter_list]
+        )
+
+        self.grid.radial_projected_shape_slim = radial_projected_shape_slim
+
+        for plotter in plotter_list:
+
+            plotter.grid.radial_projected_shape_slim = radial_projected_shape_slim
+
+        return [self] + plotter_list
 
     def figures_1d(
         self, image: bool = False, convergence: bool = False, potential: bool = False
@@ -283,74 +357,68 @@ class GalaxyPlotter(Plotter):
         legend_labels
             Manually overrides the labels of the plot's legend.
         """
-        plotter_list = [self]
 
-        for i, light_profile in enumerate(self.galaxy.light_profile_list):
+        if self.galaxy.has_light_profile:
 
-            light_profile_plotter = self.light_profile_plotter_from(
-                light_profile=light_profile
+            multi_plotter = aplt.MultiYX1DPlotter(
+                plotter_list=self.decomposed_light_profile_plotter_list,
+                legend_labels=legend_labels,
+            )
+            multi_plotter.plotter_list[0].mat_plot_1d.output = self.mat_plot_1d.output
+
+            if image:
+
+                change_filename = False
+
+                if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
+                    multi_plotter.plotter_list[0].set_filename(
+                        filename="image_1d_decomposed"
+                    )
+                    change_filename = True
+
+                multi_plotter.figure_1d(func_name="figures_1d", figure_name="image")
+
+                if change_filename:
+                    multi_plotter.plotter_list[0].set_filename(filename=None)
+
+        if self.galaxy.has_mass_profile:
+
+            multi_plotter = aplt.MultiYX1DPlotter(
+                plotter_list=self.decomposed_mass_profile_plotter_list,
+                legend_labels=legend_labels,
             )
 
-            plotter_list.append(light_profile_plotter)
+            if convergence:
 
-        multi_plotter = aplt.MultiYX1DPlotter(
-            plotter_list=plotter_list, legend_labels=legend_labels
-        )
-        multi_plotter.plotter_list[0].mat_plot_1d.output = self.mat_plot_1d.output
+                change_filename = False
 
-        if image and self.galaxy.has_light_profile:
+                if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
+                    multi_plotter.plotter_list[0].set_filename(
+                        filename="convergence_1d_decomposed"
+                    )
+                    change_filename = True
 
-            change_filename = False
-
-            if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
-                multi_plotter.plotter_list[0].set_filename(
-                    filename="image_1d_decomposed"
+                multi_plotter.figure_1d(
+                    func_name="figures_1d", figure_name="convergence"
                 )
-                change_filename = True
 
-            multi_plotter.figure_1d(func_name="figures_1d", figure_name="image")
+                if change_filename:
+                    multi_plotter.plotter_list[0].set_filename(filename=None)
 
-            if change_filename:
-                multi_plotter.plotter_list[0].set_filename(filename=None)
+            if potential:
 
-        plotter_list = [self] + [
-            self.mass_profile_plotter_from(mass_profile=mass_profile)
-            for mass_profile in self.galaxy.mass_profile_list
-        ]
+                change_filename = False
 
-        multi_plotter = aplt.MultiYX1DPlotter(
-            plotter_list=plotter_list, legend_labels=legend_labels
-        )
+                if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
+                    multi_plotter.plotter_list[0].set_filename(
+                        filename="potential_1d_decomposed"
+                    )
+                    change_filename = True
 
-        if convergence and self.galaxy.has_mass_profile:
+                multi_plotter.figure_1d(func_name="figures_1d", figure_name="potential")
 
-            change_filename = False
-
-            if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
-                multi_plotter.plotter_list[0].set_filename(
-                    filename="convergence_1d_decomposed"
-                )
-                change_filename = True
-
-            multi_plotter.figure_1d(func_name="figures_1d", figure_name="convergence")
-
-            if change_filename:
-                multi_plotter.plotter_list[0].set_filename(filename=None)
-
-        if potential and self.galaxy.has_mass_profile:
-
-            change_filename = False
-
-            if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
-                multi_plotter.plotter_list[0].set_filename(
-                    filename="potential_1d_decomposed"
-                )
-                change_filename = True
-
-            multi_plotter.figure_1d(func_name="figures_1d", figure_name="potential")
-
-            if change_filename:
-                multi_plotter.plotter_list[0].set_filename(filename=None)
+                if change_filename:
+                    multi_plotter.plotter_list[0].set_filename(filename=None)
 
     def figures_2d(
         self,

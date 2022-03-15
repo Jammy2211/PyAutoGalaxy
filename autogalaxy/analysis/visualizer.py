@@ -287,7 +287,7 @@ class Visualizer:
                     magnification=True,
                 )
 
-    def visualize_galaxies_1d(
+    def visualize_galaxies(
         self, galaxies: [List[Galaxy]], grid: aa.type.Grid2DLike, during_analysis: bool
     ):
         """

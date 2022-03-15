@@ -281,6 +281,9 @@ class AnalysisInterferometer(AnalysisDataset):
         visualizer.visualize_plane(
             plane=fit.plane, grid=fit.grid, during_analysis=during_analysis
         )
+        visualizer.visualize_galaxies(
+            galaxies=fit.plane.galaxies, grid=fit.grid, during_analysis=during_analysis
+        )
         visualizer.visualize_fit_interferometer(
             fit=fit, during_analysis=during_analysis
         )

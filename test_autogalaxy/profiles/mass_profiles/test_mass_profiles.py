@@ -110,7 +110,7 @@ class Test1DFromGrid:
 
         convergence_1d = sie.convergence_1d_from(grid=grid_1d)
 
-        grid_2d_radial = grid_1d.project_to_radial_grid_2d(angle=sie.angle + 90.0)
+        grid_2d_radial = grid_1d.grid_2d_radial_projected_from(angle=sie.angle + 90.0)
 
         convergence_2d = sie.convergence_2d_from(grid=grid_2d_radial)
 

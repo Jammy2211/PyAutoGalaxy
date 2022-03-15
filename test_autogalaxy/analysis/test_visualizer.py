@@ -60,7 +60,7 @@ def test__visualizes_galaxies__uses_configs(
 
     visualizer = vis.Visualizer(visualize_path=plot_path)
 
-    visualizer.visualize_galaxies_1d(
+    visualizer.visualize_galaxies(
         galaxies=plane_7x7.galaxies, grid=masked_imaging_7x7.grid, during_analysis=False
     )
 

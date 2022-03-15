@@ -84,6 +84,14 @@ class MassProfilePlotter(Plotter):
 
         self.figures_2d = self._mass_plotter.figures_2d
 
+    @property
+    def radial_projected_shape_slim(self):
+        if isinstance(self.grid, aa.Grid1D):
+            return self.grid.sub_shape_slim
+        return self.grid.grid_2d_radial_projected_shape_slim_from(
+            centre=self.mass_profile.centre
+        )
+
     def get_visuals_1d(self) -> Visuals1D:
         return self.get_1d.via_mass_obj_from(mass_obj=self.mass_profile, grid=self.grid)
 

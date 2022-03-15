@@ -132,6 +132,15 @@ def clean_model_of_hyper_images(model):
         del galaxy.hyper_model_image
         del galaxy.hyper_galaxy_image
 
+    if hasattr(model, "clumps"):
+        for clump in model.clumps:
+
+            if hasattr(clump, "hyper_model_image"):
+                del clump.hyper_model_image
+
+            if hasattr(clump, "hyper_galaxy_image"):
+                del clump.hyper_galaxy_image
+
     return model
 
 
@@ -576,6 +585,9 @@ def stochastic_model_from(
     model = clean_model_of_hyper_images(model=model)
 
     model.galaxies.lens.take_attributes(source=result.model.galaxies.lens)
+
+    if hasattr(model, "clumps"):
+        model.clumps = result.model.clumps
 
     if hasattr(model.galaxies, "subhalo"):
         model.galaxies.subhalo.take_attributes(source=result.model.galaxies.subhalo)

@@ -72,6 +72,14 @@ class LightProfilePlotter(abstract_plotters.Plotter):
             visuals_1d=visuals_1d,
         )
 
+    @property
+    def radial_projected_shape_slim(self):
+        if isinstance(self.grid, aa.Grid1D):
+            return self.grid.sub_shape_slim
+        return self.grid.grid_2d_radial_projected_shape_slim_from(
+            centre=self.light_profile.centre
+        )
+
     def get_visuals_1d(self) -> Visuals1D:
         return self.get_1d.via_light_obj_from(light_obj=self.light_profile)
 

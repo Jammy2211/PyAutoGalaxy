@@ -152,6 +152,9 @@ class GetVisuals1D(gv.GetVisuals1D):
 
         - einstein_radius: the einstein radius (e.g. area within critical curve) of the mass object.
 
+        Mass profiles can be too shallow to do lensing and therefore an Einstein radius cannot be computed. This
+        raises a TypeError which is accounted for below.
+
         Parameters
         ----------
         mass_obj
@@ -164,7 +167,10 @@ class GetVisuals1D(gv.GetVisuals1D):
         """
 
         if self.include.einstein_radius:
-            einstein_radius = mass_obj.einstein_radius_from(grid=grid)
+            try:
+                einstein_radius = mass_obj.einstein_radius_from(grid=grid)
+            except (TypeError, AttributeError):
+                einstein_radius = None
         else:
             einstein_radius = None
 
