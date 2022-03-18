@@ -26,6 +26,28 @@ class GeometryProfile(Dictable):
     def transform_grid_from_reference_frame(self, grid):
         raise NotImplemented()
 
+    def radial_projected_shape_slim_from(self, grid: aa.type.Grid1D2DLike) -> int:
+        """
+        To make 1D plots (e.g. `image_1d_from()`) from an input 2D grid, one uses that 2D grid to radially project
+        the coordinates across the profile's major-axis.
+
+        This function computes the distance from the profile centre to the edge of this 2D grid.
+
+        If a 1D grid is input it returns the shape of this grid, as the grid itself defines the radial coordinates.
+
+        Parameters
+        ----------
+        grid
+            A 1D or 2D grid from which a 1D plot of the profile is to be created.
+        """
+
+        if isinstance(grid, aa.Grid1D):
+            return grid.sub_shape_slim
+        elif isinstance(grid, aa.Grid2DIrregular):
+            return grid.slim.shape[0]
+
+        return grid.grid_2d_radial_projected_shape_slim_from(centre=self.centre)
+
     def __repr__(self):
         return "{}\n{}".format(
             self.__class__.__name__,

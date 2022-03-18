@@ -183,7 +183,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
         -----------
         grid
             The grid of (y,x) arc-second coordinates the potential / deflection_stacks are computed on.
-        tabulate_bins : int
+        tabulate_bins
             The number of bins to tabulate the inner integral of this profile.
         """
         eta_min = 1.0e-4
@@ -479,7 +479,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
         ----------
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-        tabulate_bins : int
+        tabulate_bins
             The number of bins to tabulate the inner integral of this profile.
 
         """
@@ -617,7 +617,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
         ----------
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-        tabulate_bins : int
+        tabulate_bins
             The number of bins to tabulate the inner integral of this profile.
 
         """
@@ -1209,7 +1209,7 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
             The minimum radius to fit
         radii_max:
             The maximum radius to fit
-        total_cses : int
+        total_cses
             The number of CSEs used to approximate the input func.
         sample_points: int (should be larger than 'total_cses')
             The number of data points to fit

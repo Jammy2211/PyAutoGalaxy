@@ -425,7 +425,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
             The minimum radius to fit
         radii_max:
             The maximum radius to fit
-        total_cses : int
+        total_cses
             The number of CSEs used to approximate the input func.
         sample_points: int (should be larger than 'total_cses')
             The number of data points to fit
@@ -930,7 +930,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
             The minimum radius to fit
         radii_max:
             The maximum radius to fit
-        total_sies : int
+        total_sies
             The number of SIEs used to approximate the input func.
         sample_points: int (should be larger than 'total_sies')
             The number of data points to fit

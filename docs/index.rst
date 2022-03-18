@@ -1,1 +1,4 @@
-.. include:: ../README.rst
+What is PyAutoGalaxy?
+=====================
+
+Its a secret.

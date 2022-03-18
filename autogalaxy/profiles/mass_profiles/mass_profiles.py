@@ -402,9 +402,9 @@ class MassProfileMGE:
             The function representing the profile that is decomposed into Gaussians.
         normalization
             A normalization factor tyh
-        func_terms : int
+        func_terms
             The number of terms used to approximate the input func.
-        func_gaussians : int
+        func_gaussians
             The number of Gaussians used to represent the input func.
 
         Returns
@@ -686,7 +686,7 @@ class MassProfileCSE(ABC):
             The minimum radius to fit
         radii_max:
             The maximum radius to fit
-        total_cses : int
+        total_cses
             The number of CSEs used to approximate the input func.
         sample_points: int (should be larger than 'total_cses')
             The number of data points to fit

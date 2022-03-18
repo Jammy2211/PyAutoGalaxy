@@ -37,23 +37,6 @@ class TestLightProfiles:
 
         assert lp_image.in_list[0] == gal_image.in_list[0]
 
-        # Test explicitly for a profile with an offset centre and ellipticity, given the 1D to 2D projections are nasty.
-
-        grid = ag.Grid2D.manual_native(
-            [[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0
-        )
-
-        elliptical_lp = ag.lp.EllSersic(
-            centre=(0.5, 1.0), elliptical_comps=(0.2, 0.3), intensity=1.0
-        )
-
-        galaxy = ag.Galaxy(redshift=0.5, mass=elliptical_lp)
-
-        lp_image = elliptical_lp.image_1d_from(grid=grid)
-        gal_lp_image = galaxy.image_1d_from(grid=grid)
-
-        assert (lp_image == gal_lp_image).all()
-
     def test__image_2d_from(self, sub_grid_2d_7x7, lp_0, gal_x1_lp, lp_1, gal_x2_lp):
         galaxy = ag.Galaxy(redshift=0.5)
 

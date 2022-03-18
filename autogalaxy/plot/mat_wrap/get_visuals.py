@@ -216,9 +216,18 @@ class GetVisuals1D(gv.GetVisuals1D):
 
         if self.include.einstein_radius:
 
-            einstein_radius_list = [
-                mass_obj.einstein_radius_from(grid=grid) for mass_obj in mass_obj_list
-            ]
+            einstein_radius_list = []
+
+            for mass_obj in mass_obj_list:
+
+                try:
+                    einstein_radius_list.append(
+                        mass_obj.einstein_radius_from(grid=grid)
+                    )
+                except TypeError:
+                    einstein_radius_list.append(None)
+
+            einstein_radius_list = list(filter(None, einstein_radius_list))
 
             einstein_radius, einstein_radius_errors = error_util.value_median_and_error_region_via_quantile(
                 value_list=einstein_radius_list, low_limit=low_limit

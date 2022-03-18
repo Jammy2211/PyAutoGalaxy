@@ -201,7 +201,7 @@ class AnalysisInterferometer(AnalysisDataset):
         self,
         plane: Plane,
         hyper_background_noise: Optional[HyperBackgroundNoise],
-        use_hyper_scalings: bool = True,
+        use_hyper_scaling: bool = True,
     ) -> FitInterferometer:
         """
         Given a `Plane`, which the analysis constructs from a model instance, create a `FitInterferometer` object.
@@ -215,7 +215,7 @@ class AnalysisInterferometer(AnalysisDataset):
             The plane of galaxies whose model images are used to fit the interferometer data.
         hyper_background_noise
             A model component which scales the background noise level of the data before computing the log likelihood.
-        use_hyper_scalings
+        use_hyper_scaling
             If false, the scaling of the background noise is not performed irrespective of the model components
             themselves.
 
@@ -228,7 +228,7 @@ class AnalysisInterferometer(AnalysisDataset):
             dataset=self.dataset,
             plane=plane,
             hyper_background_noise=hyper_background_noise,
-            use_hyper_scalings=use_hyper_scalings,
+            use_hyper_scaling=use_hyper_scaling,
             settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
         )
@@ -299,7 +299,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         if visualizer.plot_fit_no_hyper:
             fit = self.fit_interferometer_via_plane_from(
-                plane=plane, hyper_background_noise=None, use_hyper_scalings=False
+                plane=plane, hyper_background_noise=None, use_hyper_scaling=False
             )
 
             visualizer.visualize_fit_interferometer(

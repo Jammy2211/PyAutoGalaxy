@@ -200,16 +200,6 @@ class GalaxyPlotter(Plotter):
 
             plotter_list.append(light_profile_plotter)
 
-        radial_projected_shape_slim = max(
-            [plotter.radial_projected_shape_slim for plotter in plotter_list]
-        )
-
-        self.grid.radial_projected_shape_slim = radial_projected_shape_slim
-
-        for plotter in plotter_list:
-
-            plotter.grid.radial_projected_shape_slim = radial_projected_shape_slim
-
         return [self] + plotter_list
 
     @property
@@ -224,16 +214,6 @@ class GalaxyPlotter(Plotter):
             )
 
             plotter_list.append(mass_profile_plotter)
-
-        radial_projected_shape_slim = max(
-            [plotter.radial_projected_shape_slim for plotter in plotter_list]
-        )
-
-        self.grid.radial_projected_shape_slim = radial_projected_shape_slim
-
-        for plotter in plotter_list:
-
-            plotter.grid.radial_projected_shape_slim = radial_projected_shape_slim
 
         return [self] + plotter_list
 
@@ -758,14 +738,13 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
         if image:
 
-            grid_radial = (
-                self.galaxy_pdf_list[0].image_1d_from(grid=self.grid).grid_radial
-            )
-
             image_1d_list = [
-                light_profile.image_1d_from(grid=self.grid)
-                for light_profile in self.galaxy_pdf_list
+                galaxy.image_1d_from(grid=self.grid)
+                for galaxy in self.galaxy_pdf_list
             ]
+
+            min_index = min([image_1d.shape[0] for image_1d in image_1d_list])
+            image_1d_list = [image_1d[0:min_index] for image_1d in image_1d_list]
 
             median_image_1d, errors_image_1d = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=image_1d_list, low_limit=self.low_limit
@@ -780,9 +759,11 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             visuals_1d = visuals_1d_via_light_obj_list + visuals_1d_with_shaded_region
 
+            median_image_1d =  aa.Array1D.manual_slim(array=median_image_1d, pixel_scales=self.grid.pixel_scale)
+
             self.mat_plot_1d.plot_yx(
                 y=median_image_1d,
-                x=grid_radial,
+                x=median_image_1d.grid_radial,
                 visuals_1d=visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Image vs Radius",
@@ -796,14 +777,13 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
         if convergence:
 
-            grid_radial = (
-                self.galaxy_pdf_list[0].convergence_1d_from(grid=self.grid).grid_radial
-            )
-
             convergence_1d_list = [
-                light_profile.convergence_1d_from(grid=self.grid)
-                for light_profile in self.galaxy_pdf_list
+                galaxy.convergence_1d_from(grid=self.grid)
+                for galaxy in self.galaxy_pdf_list
             ]
+
+            min_index = min([convergence_1d.shape[0] for convergence_1d in convergence_1d_list])
+            convergence_1d_list = [convergence_1d[0:min_index] for convergence_1d in convergence_1d_list]
 
             median_convergence_1d, errors_convergence_1d = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=convergence_1d_list, low_limit=self.low_limit
@@ -820,9 +800,11 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 
+            median_convergence_1d =  aa.Array1D.manual_slim(array=median_convergence_1d, pixel_scales=self.grid.pixel_scale)
+
             self.mat_plot_1d.plot_yx(
                 y=median_convergence_1d,
-                x=grid_radial,
+                x=median_convergence_1d.grid_radial,
                 visuals_1d=visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
@@ -836,14 +818,13 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
         if potential:
 
-            grid_radial = (
-                self.galaxy_pdf_list[0].potential_1d_from(grid=self.grid).grid_radial
-            )
-
             potential_1d_list = [
-                light_profile.potential_1d_from(grid=self.grid)
-                for light_profile in self.galaxy_pdf_list
+                galaxy.potential_1d_from(grid=self.grid)
+                for galaxy in self.galaxy_pdf_list
             ]
+
+            min_index = min([potential_1d.shape[0] for potential_1d in potential_1d_list])
+            potential_1d_list = [potential_1d[0:min_index] for potential_1d in potential_1d_list]
 
             median_potential_1d, errors_potential_1d = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
@@ -860,9 +841,11 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 
+            median_potential_1d =  aa.Array1D.manual_slim(array=median_potential_1d, pixel_scales=self.grid.pixel_scale)
+
             self.mat_plot_1d.plot_yx(
                 y=median_potential_1d,
-                x=grid_radial,
+                x=median_potential_1d.grid_radial,
                 visuals_1d=visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",

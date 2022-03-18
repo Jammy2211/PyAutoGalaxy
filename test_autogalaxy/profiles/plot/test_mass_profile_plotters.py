@@ -1,5 +1,6 @@
 from os import path
 
+import autogalaxy as ag
 import autogalaxy.plot as aplt
 import pytest
 
@@ -43,8 +44,10 @@ def test__figures_1d__all_are_output(
 
     plot_patch.paths = []
 
+    mp_offset_centre = ag.mp.SphIsothermal(centre=(5.0, 5.0))
+
     mass_profile_plotter = aplt.MassProfilePDFPlotter(
-        mass_profile_pdf_list=[mp_0, mp_1, mp_0, mp_1, mp_0],
+        mass_profile_pdf_list=[mp_0, mp_1, mp_0, mp_1, mp_0, mp_offset_centre],
         grid=sub_grid_2d_7x7,
         include_1d=include_1d_all,
         mat_plot_1d=mat_plot_1d,

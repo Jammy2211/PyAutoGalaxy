@@ -134,7 +134,7 @@ class AnalysisImaging(AnalysisDataset):
         plane: Plane,
         hyper_image_sky: Optional[HyperImageSky],
         hyper_background_noise: Optional[HyperBackgroundNoise],
-        use_hyper_scalings: bool = True,
+        use_hyper_scaling: bool = True,
     ) -> FitImaging:
         """
         Given a `Plane`, which the analysis constructs from a model instance, create a `FitImaging` object.
@@ -150,7 +150,7 @@ class AnalysisImaging(AnalysisDataset):
             A model component which scales the background sky level of the data before computing the log likelihood.
         hyper_background_noise
             A model component which scales the background noise level of the data before computing the log likelihood.
-        use_hyper_scalings
+        use_hyper_scaling
             If false, the scaling of the background sky and noise are not performed irrespective of the model components
             themselves.
 
@@ -164,7 +164,7 @@ class AnalysisImaging(AnalysisDataset):
             plane=plane,
             hyper_image_sky=hyper_image_sky,
             hyper_background_noise=hyper_background_noise,
-            use_hyper_scalings=use_hyper_scalings,
+            use_hyper_scaling=use_hyper_scaling,
             settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
         )
@@ -247,7 +247,7 @@ class AnalysisImaging(AnalysisDataset):
                 plane=plane,
                 hyper_image_sky=None,
                 hyper_background_noise=None,
-                use_hyper_scalings=False,
+                use_hyper_scaling=False,
             )
 
             visualizer.visualize_fit_imaging(

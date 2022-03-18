@@ -1,5 +1,16 @@
 # MANIFEST.in
-include requirements.txt
-
-recursive-include data *
+exclude .gitignore
+exclude .coverage
+exclude .travis.yml
+exclude docs
+include README.rst
+include setup.cfg
+prune .cache
+prune .git
+prune build
+prune dist
 recursive-include autogalaxy/config *
+recursive-exclude *.egg-info *
+recursive-include tests *
+include requirements.txt
+recursive-include data *

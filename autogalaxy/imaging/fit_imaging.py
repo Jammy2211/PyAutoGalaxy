@@ -19,7 +19,7 @@ class FitImaging(aa.FitImaging):
         plane: Plane,
         hyper_image_sky: Optional[HyperImageSky] = None,
         hyper_background_noise: Optional[HyperBackgroundNoise] = None,
-        use_hyper_scalings: bool = True,
+        use_hyper_scaling: bool = True,
         settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=aa.Preloads(),
@@ -41,7 +41,7 @@ class FitImaging(aa.FitImaging):
         self.hyper_image_sky = hyper_image_sky
         self.hyper_background_noise = hyper_background_noise
 
-        self.use_hyper_scalings = use_hyper_scalings
+        self.use_hyper_scaling = use_hyper_scaling
 
         self.settings_pixelization = settings_pixelization
         self.settings_inversion = settings_inversion
@@ -54,7 +54,7 @@ class FitImaging(aa.FitImaging):
         Returns the imaging data, which may have a hyper scaling performed which rescales the background sky level
         in order to account for uncertainty in the background sky subtraction.
         """
-        if self.use_hyper_scalings:
+        if self.use_hyper_scaling:
 
             return hyper_image_from(
                 image=self.dataset.image, hyper_image_sky=self.hyper_image_sky
@@ -68,7 +68,7 @@ class FitImaging(aa.FitImaging):
         Returns the imaging noise-map, which may have a hyper scaling performed which increase the noise in regions of
         the data that are poorly fitted in order to avoid overfitting.
         """
-        if self.use_hyper_scalings:
+        if self.use_hyper_scaling:
 
             return hyper_noise_map_from(
                 noise_map=self.dataset.noise_map,

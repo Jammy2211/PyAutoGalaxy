@@ -16,3 +16,5 @@ class Plotter(AbstractPlotter):
     @property
     def get_2d(self):
         return GetVisuals2D(visuals=self.visuals_2d, include=self.include_2d)
+
+

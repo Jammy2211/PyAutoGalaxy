@@ -125,7 +125,7 @@ def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
         dataset=interferometer_7,
         plane=plane,
         hyper_background_noise=hyper_background_noise,
-        use_hyper_scalings=False,
+        use_hyper_scaling=False,
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 

@@ -6,7 +6,7 @@ import autoarray.plot as aplt
 
 
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
-from autogalaxy.plot import abstract_plotters
+from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
 from autogalaxy.plot.mat_wrap.visuals import Visuals1D
@@ -16,7 +16,7 @@ from autogalaxy.plot.mat_wrap.include import Include2D
 from autogalaxy.util import error_util
 
 
-class LightProfilePlotter(abstract_plotters.Plotter):
+class LightProfilePlotter(Plotter):
     def __init__(
         self,
         light_profile: LightProfile,
@@ -70,14 +70,6 @@ class LightProfilePlotter(abstract_plotters.Plotter):
             mat_plot_1d=mat_plot_1d,
             include_1d=include_1d,
             visuals_1d=visuals_1d,
-        )
-
-    @property
-    def radial_projected_shape_slim(self):
-        if isinstance(self.grid, aa.Grid1D):
-            return self.grid.sub_shape_slim
-        return self.grid.grid_2d_radial_projected_shape_slim_from(
-            centre=self.light_profile.centre
         )
 
     def get_visuals_1d(self) -> Visuals1D:
@@ -250,14 +242,13 @@ class LightProfilePDFPlotter(LightProfilePlotter):
 
         if image:
 
-            grid_radial = (
-                self.light_profile_pdf_list[0].image_1d_from(grid=self.grid).grid_radial
-            )
-
             image_1d_list = [
                 light_profile.image_1d_from(grid=self.grid)
                 for light_profile in self.light_profile_pdf_list
             ]
+
+            min_index = min([image_1d.shape[0] for image_1d in image_1d_list])
+            image_1d_list = [image_1d[0:min_index] for image_1d in image_1d_list]
 
             median_image_1d, errors_image_1d = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=image_1d_list, low_limit=self.low_limit
@@ -274,7 +265,7 @@ class LightProfilePDFPlotter(LightProfilePlotter):
 
             self.mat_plot_1d.plot_yx(
                 y=median_image_1d,
-                x=grid_radial,
+                x=image_1d_list[0].grid_radial,
                 visuals_1d=visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Image vs Radius",

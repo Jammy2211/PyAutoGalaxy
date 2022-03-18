@@ -4,8 +4,8 @@ from typing import List, Optional
 import autoarray as aa
 import autoarray.plot as aplt
 
-from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mass_plotter import MassPlotter
+from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
@@ -84,14 +84,6 @@ class MassProfilePlotter(Plotter):
 
         self.figures_2d = self._mass_plotter.figures_2d
 
-    @property
-    def radial_projected_shape_slim(self):
-        if isinstance(self.grid, aa.Grid1D):
-            return self.grid.sub_shape_slim
-        return self.grid.grid_2d_radial_projected_shape_slim_from(
-            centre=self.mass_profile.centre
-        )
-
     def get_visuals_1d(self) -> Visuals1D:
         return self.get_1d.via_mass_obj_from(mass_obj=self.mass_profile, grid=self.grid)
 
@@ -124,7 +116,9 @@ class MassProfilePlotter(Plotter):
 
         if convergence:
 
-            convergence_1d = self.mass_profile.convergence_1d_from(grid=self.grid)
+            convergence_1d = self.mass_profile.convergence_1d_from(
+                grid=self.grid
+            )
 
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
@@ -171,7 +165,6 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         visuals_2d: Visuals2D = Visuals2D(),
         include_2d: Include2D = Include2D(),
         sigma: Optional[float] = 3.0,
-        radial_grid_shape_slim: int = 50,
     ):
         """
         Plots the attributes of a list of `MassProfile` objects using the matplotlib methods `plot()` and `imshow()` 
@@ -227,7 +220,6 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         self.mass_profile_pdf_list = mass_profile_pdf_list
         self.sigma = sigma
         self.low_limit = (1 - math.erf(sigma / math.sqrt(2))) / 2
-        self.radial_grid_shape_slim = radial_grid_shape_slim
 
     def figures_1d(self, convergence=False, potential=False):
         """
@@ -259,20 +251,13 @@ class MassProfilePDFPlotter(MassProfilePlotter):
 
         if convergence:
 
-            grid_radial = (
-                self.mass_profile_pdf_list[0]
-                .convergence_1d_from(
-                    grid=self.grid, radial_grid_shape_slim=self.radial_grid_shape_slim
-                )
-                .grid_radial
-            )
-
             convergence_1d_list = [
-                mass_profile.convergence_1d_from(
-                    grid=self.grid, radial_grid_shape_slim=self.radial_grid_shape_slim
-                )
+                mass_profile.convergence_1d_from(grid=self.grid)
                 for mass_profile in self.mass_profile_pdf_list
             ]
+
+            min_index = min([convergence_1d.shape[0] for convergence_1d in convergence_1d_list])
+            convergence_1d_list = [convergence_1d[0:min_index] for convergence_1d in convergence_1d_list]
 
             median_convergence_1d, errors_convergence_1d = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=convergence_1d_list, low_limit=self.low_limit
@@ -291,7 +276,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
 
             self.mat_plot_1d.plot_yx(
                 y=median_convergence_1d,
-                x=grid_radial,
+                x=convergence_1d_list[0].grid_radial,
                 visuals_1d=visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
@@ -305,16 +290,13 @@ class MassProfilePDFPlotter(MassProfilePlotter):
 
         if potential:
 
-            grid_radial = (
-                self.mass_profile_pdf_list[0]
-                .potential_1d_from(grid=self.grid)
-                .grid_radial
-            )
-
             potential_1d_list = [
                 mass_profile.potential_1d_from(grid=self.grid)
                 for mass_profile in self.mass_profile_pdf_list
             ]
+
+            min_index = min([potential_1d.shape[0] for potential_1d in potential_1d_list])
+            potential_1d_list = [potential_1d[0:min_index] for potential_1d in potential_1d_list]
 
             median_potential_1d, errors_potential_1d = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
@@ -333,7 +315,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
 
             self.mat_plot_1d.plot_yx(
                 y=median_potential_1d,
-                x=grid_radial,
+                x=potential_1d_list[0].grid_radial,
                 visuals_1d=visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",

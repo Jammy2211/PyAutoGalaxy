@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Callable, Dict, List, Union
+from typing import Dict, List, Union
 
 import autoarray as aa
 

@@ -162,6 +162,42 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     def has_light_profile(self) -> bool:
         return len(self.light_profile_list) > 0
 
+    def radial_projected_shape_slim_from(self, grid: aa.type.Grid1D2DLike) -> int:
+        """
+        To make 1D plots (e.g. `image_1d_from()`) from an input 2D grid, one uses that 2D grid to radially project
+        the coordinates across the profile's major-axis.
+
+        This function computes the distance from the profile centre to the edge of this 2D grid.
+
+        Because the centres of the galaxy's light and mass profiles can be offset from one another, thsi means the
+        radially grid computed for each profile can have different shapes. Therefore plots using a `Galaxy` object
+        use the biggest radial grid.
+
+        If a 1D grid is input it returns the shape of this grid, as the grid itself defines the radial coordinates.
+
+        Parameters
+        ----------
+        grid
+            A 1D or 2D grid from which a 1D plot of the profile is to be created.
+        """
+        return max(
+            [
+                profile.radial_projected_shape_slim_from(grid=grid)
+                for key, profile in self.profile_dict.items()
+            ]
+        )
+
+    def grid_radial_from(self, grid, centre, angle):
+
+        if isinstance(grid, aa.Grid1D) or isinstance(grid, aa.Grid2DIrregular):
+            return grid
+
+        radial_projected_shape_slim = self.radial_projected_shape_slim_from(grid=grid)
+
+        return grid.grid_2d_radial_projected_from(
+            centre=centre, angle=angle + 90, shape_slim=radial_projected_shape_slim
+        )
+
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(self, grid: aa.type.Grid2DLike) -> Union[np.ndarray, aa.Array2D]:
         """
@@ -224,9 +260,19 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             The 1D (x,) coordinates where values of the image are evaluated.
         """
         if self.has_light_profile:
-            return sum(
-                map(lambda p: p.image_1d_from(grid=grid), self.light_profile_list)
-            )
+
+            image_1d_list = []
+
+            for light_profile in self.light_profile_list:
+
+                grid_radial = self.grid_radial_from(
+                    grid=grid, centre=light_profile.centre, angle=light_profile.angle
+                )
+
+                image_1d_list.append(light_profile.image_1d_from(grid=grid_radial))
+
+            return sum(image_1d_list)
+
         return np.zeros((grid.shape[0],))
 
     @property
@@ -308,9 +354,21 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             The 1D (x,) coordinates where values of the convergence are evaluated.
         """
         if self.has_mass_profile:
-            return sum(
-                map(lambda p: p.convergence_1d_from(grid=grid), self.mass_profile_list)
-            )
+
+            convergence_1d_list = []
+
+            for mass_profile in self.mass_profile_list:
+
+                grid_radial = self.grid_radial_from(
+                    grid=grid, centre=mass_profile.centre, angle=mass_profile.angle
+                )
+
+                convergence_1d_list.append(
+                    mass_profile.convergence_1d_from(grid=grid_radial)
+                )
+
+            return sum(convergence_1d_list)
+
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
@@ -355,9 +413,21 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             The 1D (x,) coordinates where values of the potential are evaluated.
         """
         if self.has_mass_profile:
-            return sum(
-                map(lambda p: p.potential_1d_from(grid=grid), self.mass_profile_list)
-            )
+
+            potential_1d_list = []
+
+            for mass_profile in self.mass_profile_list:
+
+                grid_radial = self.grid_radial_from(
+                    grid=grid, centre=mass_profile.centre, angle=mass_profile.angle
+                )
+
+                potential_1d_list.append(
+                    mass_profile.potential_1d_from(grid=grid_radial)
+                )
+
+            return sum(potential_1d_list)
+
         return np.zeros((grid.shape[0],))
 
     @property

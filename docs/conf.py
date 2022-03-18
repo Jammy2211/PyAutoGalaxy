@@ -12,9 +12,15 @@ import datetime
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+from pyprojroot import here
+
+workspace_path = str(here())
+
+import os
+import sys
+import autogalaxy
+
+sys.path.insert(0, os.path.abspath("."))
 
 # -- Project information -----------------------------------------------------
 
@@ -24,7 +30,7 @@ copyright = "2020, James Nightingale, Richard Hayes"
 author = "James Nightingale, Richard Hayes"
 
 # The full version, including alpha/beta/rc tags
-release = "1.0.16"
+release = "2021.10.14.1"
 master_doc = "index"
 
 
@@ -103,3 +109,10 @@ html_context = {
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+# -- IMAGES --
+
+
+from sphinx.builders.html import StandaloneHTMLBuilder
+
+StandaloneHTMLBuilder.supported_image_types = ["image/gif", "image/png", "image/jpeg"]

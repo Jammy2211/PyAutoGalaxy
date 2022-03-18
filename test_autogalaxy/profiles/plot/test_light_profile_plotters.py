@@ -44,8 +44,10 @@ def test__figures_1d__all_are_output(
 
     plot_patch.paths = []
 
+    lp_offset_centre = ag.lp.SphSersic(centre=(5.0, 5.0))
+
     light_profile_plotter = aplt.LightProfilePDFPlotter(
-        light_profile_pdf_list=[lp_0, lp_1, lp_0, lp_1, lp_0],
+        light_profile_pdf_list=[lp_0, lp_1, lp_0, lp_1, lp_0, lp_offset_centre],
         grid=sub_grid_2d_7x7,
         include_1d=include_1d_all,
         mat_plot_1d=mat_plot_1d,
