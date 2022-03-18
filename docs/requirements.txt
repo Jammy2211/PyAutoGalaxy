@@ -1,4 +1,5 @@
 astropy>=3.0.0
+colossus==1.2.14
 numpydoc>=1.0.0
 matplotlib>=3.0.3
 numpy>=1.18.0
