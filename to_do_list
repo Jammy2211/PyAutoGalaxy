@@ -1,0 +1,32 @@
+
+__Lensing / Profiles Refactored__
+
+lensing.py, Lensing should use defl_func with input. Docs showing how to write own deflection function, and all
+methods availabie via lensing, show for an implemented mass profile, show how to write own.
+
+mass_profile_list
+   stellar
+      stellar_mass_profiles
+      mge
+      cse
+      analytic
+      manual ((e.g. potential, etc, not from lensing module).
+
+  total
+     total_mass_profiles
+     integrate
+     analytic
+     manual ((e.g. potential, etc, not from lensing module).
+
+al.mp.EllIsothermal ( e.g. from total_mass_profiles)
+al.mp.EllSersic
+al._mp_integrate
+al._mp_manual.potential_2d_from_grid
+
+
+__Lensing__
+
+- The calculation of quantites from defleciton angles should work on irregular grids via interpolation by default, with
+an option to overwrite with analytic calculations.
+
+- Extend AstroPy Cosmology with an autolens Cosmology, which will replace cosmology util. Update Chapter 1 tutorial 6.

@@ -525,6 +525,7 @@ def stochastic_model_from(
     include_regularization=False,
     subhalo_centre_width=None,
     subhalo_mass_at_200_log_uniform=True,
+    clean_model : bool = True
 ):
     """
     Make a stochastic model from  the `Result` of a model-fit, where the stochastic model uses the same model
@@ -582,7 +583,8 @@ def stochastic_model_from(
 
     model = result.instance.as_model(model_classes)
 
-    model = clean_model_of_hyper_images(model=model)
+    if clean_model:
+        model = clean_model_of_hyper_images(model=model)
 
     model.galaxies.lens.take_attributes(source=result.model.galaxies.lens)
 
