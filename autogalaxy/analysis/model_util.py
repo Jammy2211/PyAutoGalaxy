@@ -525,7 +525,7 @@ def stochastic_model_from(
     include_regularization=False,
     subhalo_centre_width=None,
     subhalo_mass_at_200_log_uniform=True,
-    clean_model : bool = True
+    clean_model: bool = True,
 ):
     """
     Make a stochastic model from  the `Result` of a model-fit, where the stochastic model uses the same model

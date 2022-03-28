@@ -89,7 +89,7 @@ class SphProfile(GeometryProfile):
 
         Parameters
         -----------
-        grid_thetas : np.ndarray
+        grid_thetas
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
         return np.cos(grid_thetas), np.sin(grid_thetas)
@@ -104,7 +104,7 @@ class SphProfile(GeometryProfile):
         ----------
         grid
             The (y, x) coordinates in the reference frame of the profile.
-        radius : np.ndarray
+        radius
             The circular radius of each coordinate from the profile center.
         """
         grid_thetas = np.arctan2(grid[:, 0], grid[:, 1])
@@ -213,7 +213,7 @@ class EllProfile(SphProfile):
 
         Parameters
         -----------
-        grid_thetas : np.ndarray
+        grid_thetas
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
         theta_coordinate_to_profile = np.add(grid_thetas, -self.phi_radians)

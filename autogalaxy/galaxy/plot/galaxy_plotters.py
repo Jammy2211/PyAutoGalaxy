@@ -739,8 +739,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         if image:
 
             image_1d_list = [
-                galaxy.image_1d_from(grid=self.grid)
-                for galaxy in self.galaxy_pdf_list
+                galaxy.image_1d_from(grid=self.grid) for galaxy in self.galaxy_pdf_list
             ]
 
             min_index = min([image_1d.shape[0] for image_1d in image_1d_list])
@@ -759,7 +758,9 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             visuals_1d = visuals_1d_via_light_obj_list + visuals_1d_with_shaded_region
 
-            median_image_1d =  aa.Array1D.manual_slim(array=median_image_1d, pixel_scales=self.grid.pixel_scale)
+            median_image_1d = aa.Array1D.manual_slim(
+                array=median_image_1d, pixel_scales=self.grid.pixel_scale
+            )
 
             self.mat_plot_1d.plot_yx(
                 y=median_image_1d,
@@ -782,8 +783,12 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 for galaxy in self.galaxy_pdf_list
             ]
 
-            min_index = min([convergence_1d.shape[0] for convergence_1d in convergence_1d_list])
-            convergence_1d_list = [convergence_1d[0:min_index] for convergence_1d in convergence_1d_list]
+            min_index = min(
+                [convergence_1d.shape[0] for convergence_1d in convergence_1d_list]
+            )
+            convergence_1d_list = [
+                convergence_1d[0:min_index] for convergence_1d in convergence_1d_list
+            ]
 
             median_convergence_1d, errors_convergence_1d = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=convergence_1d_list, low_limit=self.low_limit
@@ -800,7 +805,9 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 
-            median_convergence_1d =  aa.Array1D.manual_slim(array=median_convergence_1d, pixel_scales=self.grid.pixel_scale)
+            median_convergence_1d = aa.Array1D.manual_slim(
+                array=median_convergence_1d, pixel_scales=self.grid.pixel_scale
+            )
 
             self.mat_plot_1d.plot_yx(
                 y=median_convergence_1d,
@@ -823,8 +830,12 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 for galaxy in self.galaxy_pdf_list
             ]
 
-            min_index = min([potential_1d.shape[0] for potential_1d in potential_1d_list])
-            potential_1d_list = [potential_1d[0:min_index] for potential_1d in potential_1d_list]
+            min_index = min(
+                [potential_1d.shape[0] for potential_1d in potential_1d_list]
+            )
+            potential_1d_list = [
+                potential_1d[0:min_index] for potential_1d in potential_1d_list
+            ]
 
             median_potential_1d, errors_potential_1d = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
@@ -841,7 +852,9 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 
-            median_potential_1d =  aa.Array1D.manual_slim(array=median_potential_1d, pixel_scales=self.grid.pixel_scale)
+            median_potential_1d = aa.Array1D.manual_slim(
+                array=median_potential_1d, pixel_scales=self.grid.pixel_scale
+            )
 
             self.mat_plot_1d.plot_yx(
                 y=median_potential_1d,

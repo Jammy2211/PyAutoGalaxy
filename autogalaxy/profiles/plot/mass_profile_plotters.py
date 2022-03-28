@@ -116,9 +116,7 @@ class MassProfilePlotter(Plotter):
 
         if convergence:
 
-            convergence_1d = self.mass_profile.convergence_1d_from(
-                grid=self.grid
-            )
+            convergence_1d = self.mass_profile.convergence_1d_from(grid=self.grid)
 
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
@@ -256,8 +254,12 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 for mass_profile in self.mass_profile_pdf_list
             ]
 
-            min_index = min([convergence_1d.shape[0] for convergence_1d in convergence_1d_list])
-            convergence_1d_list = [convergence_1d[0:min_index] for convergence_1d in convergence_1d_list]
+            min_index = min(
+                [convergence_1d.shape[0] for convergence_1d in convergence_1d_list]
+            )
+            convergence_1d_list = [
+                convergence_1d[0:min_index] for convergence_1d in convergence_1d_list
+            ]
 
             median_convergence_1d, errors_convergence_1d = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=convergence_1d_list, low_limit=self.low_limit
@@ -295,8 +297,12 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 for mass_profile in self.mass_profile_pdf_list
             ]
 
-            min_index = min([potential_1d.shape[0] for potential_1d in potential_1d_list])
-            potential_1d_list = [potential_1d[0:min_index] for potential_1d in potential_1d_list]
+            min_index = min(
+                [potential_1d.shape[0] for potential_1d in potential_1d_list]
+            )
+            potential_1d_list = [
+                potential_1d[0:min_index] for potential_1d in potential_1d_list
+            ]
 
             median_potential_1d, errors_potential_1d = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit

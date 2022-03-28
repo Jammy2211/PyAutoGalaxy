@@ -18,7 +18,7 @@ class HyperImageSky:
 
         Parameters
         -----------
-        image : np.ndarray
+        image
             The before scaling (electrons per second).
         """
         return image + self.sky_scale
@@ -43,9 +43,9 @@ class HyperBackgroundNoise:
 
             Parameters
             -----------
-            noise_map : np.ndarray
+            noise_map
                 The noise_maps before scaling (electrons per second).
-            background_noise : np.ndarray
+            background_noise
                 The background noise_maps values (electrons per second).
         """
         return noise_map + self.noise_scale
@@ -56,9 +56,9 @@ class HyperBackgroundNoise:
 
             Parameters
             -----------
-            noise_map : np.ndarray
+            noise_map
                 The noise_maps before scaling (electrons per second).
-            background_noise : np.ndarray
+            background_noise
                 The background noise_maps values (electrons per second).
         """
         return noise_map + (1.0 + 1.0j) * self.noise_scale

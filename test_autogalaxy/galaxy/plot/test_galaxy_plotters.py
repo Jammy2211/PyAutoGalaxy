@@ -101,7 +101,6 @@ def test__figures_1d_decomposed__light_profiles_different_centres_making_offset_
     assert path.join(plot_path, "convergence_1d_decomposed.png") in plot_patch.paths
     assert path.join(plot_path, "potential_1d_decomposed.png") in plot_patch.paths
 
-
     lp_0 = ag.lp.SphSersic(centre=(0.0, 0.0))
     lp_1 = ag.lp.SphSersic(centre=(1.0, 1.0))
 
