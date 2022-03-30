@@ -106,12 +106,17 @@ class FitImaging(aa.FitImaging):
         """
         if self.plane.has_pixelization:
 
+            if self.settings_inversion.use_w_tilde:
+                w_tilde = self.dataset.w_tilde
+            else:
+                w_tilde = None
+
             return self.plane.inversion_imaging_from(
                 grid=self.dataset.grid_inversion,
                 image=self.profile_subtracted_image,
                 noise_map=self.noise_map,
                 convolver=self.dataset.convolver,
-                w_tilde=self.dataset.w_tilde,
+                w_tilde=w_tilde,
                 settings_pixelization=self.settings_pixelization,
                 settings_inversion=self.settings_inversion,
                 preloads=self.preloads,

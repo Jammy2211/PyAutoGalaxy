@@ -216,12 +216,18 @@ def make_fit_imaging_x2_galaxy_inversion_7x7():
 
 
 def make_fit_interferometer_7x7():
-    return ag.FitInterferometer(dataset=make_interferometer_7(), plane=make_plane_7x7())
+    return ag.FitInterferometer(
+        dataset=make_interferometer_7(),
+        plane=make_plane_7x7(),
+        settings_inversion=aa.SettingsInversion(use_w_tilde=False),
+    )
 
 
 def make_fit_interferometer_x2_galaxy_inversion_7x7():
     return ag.FitInterferometer(
-        dataset=make_interferometer_7(), plane=make_plane_x2_galaxy_inversion_7x7()
+        dataset=make_interferometer_7(),
+        plane=make_plane_x2_galaxy_inversion_7x7(),
+        settings_inversion=aa.SettingsInversion(use_w_tilde=False),
     )
 
 
