@@ -11,7 +11,7 @@ from autogalaxy.hyper.hyper_data import HyperImageSky
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.plane.plane import Plane
 
-
+ 
 class FitImaging(aa.FitImaging):
     def __init__(
         self,
