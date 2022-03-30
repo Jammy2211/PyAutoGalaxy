@@ -1046,27 +1046,26 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
 
         """
 
-        try:
-            from pyquad import quad_grid
-        except ImportError:
-            print(
-                "You must install the optional library pyquad to use the deflections_2d_via_integral_from method.\n"
-                "\n"
-                "pip install pyquad"
-            )
-
         def calculate_deflection_component(npow, index):
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= (
-                self.kappa_s
-                * quad_grid(
-                    self.deflection_func,
-                    0.0,
-                    1.0,
-                    grid,
-                    args=(npow, self.axis_ratio, self.scale_radius),
-                )[0]
-            )
+
+            for i in range(grid.shape[0]):
+
+                deflection_grid[i] *= (
+                    self.kappa_s
+                    * quad(
+                        self.deflection_func,
+                        a=0.0,
+                        b=1.0,
+                        args=(
+                            grid[i, 0],
+                            grid[i, 1],
+                            npow,
+                            self.axis_ratio,
+                            self.scale_radius,
+                        ),
+                    )[0]
+                )
 
             return deflection_grid
 

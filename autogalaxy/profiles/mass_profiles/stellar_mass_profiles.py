@@ -1,6 +1,7 @@
 import copy
 import numpy as np
 from scipy.special import wofz
+from scipy.integrate import quad
 from typing import List, Tuple
 
 import autoarray as aa
@@ -111,28 +112,28 @@ class EllGaussian(MassProfile, StellarProfile):
 
         """
 
-        try:
-            from pyquad import quad_grid
-        except ImportError:
-            print(
-                "You must install the optional library pyquad to use the deflections_2d_via_integral_from method.\n"
-                "\n"
-                "pip install pyquad"
-            )
-
         def calculate_deflection_component(npow, index):
+
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= (
-                self.intensity
-                * self.mass_to_light_ratio
-                * quad_grid(
-                    self.deflection_func,
-                    0.0,
-                    1.0,
-                    grid,
-                    args=(npow, self.axis_ratio, self.sigma / np.sqrt(self.axis_ratio)),
-                )[0]
-            )
+
+            for i in range(grid.shape[0]):
+
+                deflection_grid[i] *= (
+                    self.intensity
+                    * self.mass_to_light_ratio
+                    * quad(
+                        self.deflection_func,
+                        a=0.0,
+                        b=1.0,
+                        args=(
+                            grid[i, 0],
+                            grid[i, 1],
+                            npow,
+                            self.axis_ratio,
+                            self.sigma / np.sqrt(self.axis_ratio),
+                        ),
+                    )[0]
+                )
 
             return deflection_grid
 
@@ -521,36 +522,31 @@ class EllSersic(AbstractEllSersic, MassProfileMGE, MassProfileCSE):
 
         """
 
-        try:
-            from pyquad import quad_grid
-        except ImportError:
-            print(
-                "You must install the optional library pyquad to use the deflections_2d_via_integral_from method.\n"
-                "\n"
-                "pip install pyquad"
-            )
-
         def calculate_deflection_component(npow, index):
             sersic_constant = self.sersic_constant
 
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= (
-                self.intensity
-                * self.mass_to_light_ratio
-                * quad_grid(
-                    self.deflection_func,
-                    0.0,
-                    1.0,
-                    grid,
-                    args=(
-                        npow,
-                        self.axis_ratio,
-                        self.sersic_index,
-                        self.effective_radius,
-                        sersic_constant,
-                    ),
-                )[0]
-            )
+
+            for i in range(grid.shape[0]):
+
+                deflection_grid[i] *= (
+                    self.intensity
+                    * self.mass_to_light_ratio
+                    * quad(
+                        self.deflection_func,
+                        a=0.0,
+                        b=1.0,
+                        args=(
+                            grid[i, 0],
+                            grid[i, 1],
+                            npow,
+                            self.axis_ratio,
+                            self.sersic_index,
+                            self.effective_radius,
+                            sersic_constant,
+                        ),
+                    )[0]
+                )
 
             return deflection_grid
 
@@ -805,37 +801,32 @@ class EllSersicRadialGradient(AbstractEllSersic):
 
         """
 
-        try:
-            from pyquad import quad_grid
-        except ImportError:
-            print(
-                "You must install the optional library pyquad to use the deflections_2d_via_integral_from method.\n"
-                "\n"
-                "pip install pyquad"
-            )
-
         def calculate_deflection_component(npow, index):
             sersic_constant = self.sersic_constant
 
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= (
-                self.intensity
-                * self.mass_to_light_ratio
-                * quad_grid(
-                    self.deflection_func,
-                    0.0,
-                    1.0,
-                    grid,
-                    args=(
-                        npow,
-                        self.axis_ratio,
-                        self.sersic_index,
-                        self.effective_radius,
-                        self.mass_to_light_gradient,
-                        sersic_constant,
-                    ),
-                )[0]
-            )
+
+            for i in range(grid.shape[0]):
+
+                deflection_grid[i] *= (
+                    self.intensity
+                    * self.mass_to_light_ratio
+                    * quad(
+                        self.deflection_func,
+                        a=0.0,
+                        b=1.0,
+                        args=(
+                            grid[i, 0],
+                            grid[i, 1],
+                            npow,
+                            self.axis_ratio,
+                            self.sersic_index,
+                            self.effective_radius,
+                            self.mass_to_light_gradient,
+                            sersic_constant,
+                        ),
+                    )[0]
+                )
             return deflection_grid
 
         deflection_y = calculate_deflection_component(1.0, 0)

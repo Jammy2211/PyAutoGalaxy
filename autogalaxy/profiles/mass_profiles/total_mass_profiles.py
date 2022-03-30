@@ -294,7 +294,8 @@ class EllPowerLawCored(MassProfile):
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike):
-        """ Calculate the projected convergence on a grid of (y,x) arc-second coordinates.
+        """
+        Calculate the projected convergence on a grid of (y,x) arc-second coordinates.
 
         The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See \
         *aa.grid_2d_to_structure* for a description of the output.
@@ -363,29 +364,29 @@ class EllPowerLawCored(MassProfile):
 
         """
 
-        try:
-            from pyquad import quad_grid
-        except ImportError:
-            print(
-                "You must install the optional library pyquad to use the deflections_2d_via_integral_from method.\n"
-                "\n"
-                "pip install pyquad"
-            )
-
         def calculate_deflection_component(npow, index):
             einstein_radius_rescaled = self.einstein_radius_rescaled
 
             deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid *= (
-                einstein_radius_rescaled
-                * quad_grid(
-                    self.deflection_func,
-                    0.0,
-                    1.0,
-                    grid,
-                    args=(npow, self.axis_ratio, self.slope, self.core_radius),
-                )[0]
-            )
+
+            for i in range(grid.shape[0]):
+
+                deflection_grid[i] *= (
+                    einstein_radius_rescaled
+                    * quad(
+                        self.deflection_func,
+                        a=0.0,
+                        b=1.0,
+                        args=(
+                            grid[i, 0],
+                            grid[i, 1],
+                            npow,
+                            self.axis_ratio,
+                            self.slope,
+                            self.core_radius,
+                        ),
+                    )[0]
+                )
 
             return deflection_grid
 
