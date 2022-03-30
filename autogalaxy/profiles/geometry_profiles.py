@@ -10,7 +10,8 @@ from autoconf.dictable import Dictable
 
 class GeometryProfile(Dictable):
     def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
-        """An abstract geometry profile, which describes profiles with y and x centre Cartesian coordinates
+        """
+        An abstract geometry profile, which describes profiles with y and x centre Cartesian coordinates
 
         Parameters
         -----------
