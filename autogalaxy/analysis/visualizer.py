@@ -328,11 +328,14 @@ class Visualizer:
                 include_2d=self.include_2d,
             )
 
-            galaxy_plotter.figures_1d_decomposed(
-                image=should_plot("image"),
-                convergence=should_plot("convergence"),
-                potential=should_plot("potential"),
-            )
+            try:
+                galaxy_plotter.figures_1d_decomposed(
+                    image=should_plot("image"),
+                    convergence=should_plot("convergence"),
+                    potential=should_plot("potential"),
+                )
+            except OverflowError:
+                pass
 
     def visualize_inversion(self, inversion: aa.Inversion, during_analysis: bool):
         """
