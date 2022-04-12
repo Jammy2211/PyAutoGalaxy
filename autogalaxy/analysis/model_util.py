@@ -207,7 +207,7 @@ def hyper_noise_model_from(
 
 
 def hyper_inversion_model_from(
-    setup_hyper, result: af.Result, include_hyper_image_sky: bool = False
+    setup_hyper, result: af.Result, include_hyper_image_sky: bool = False, pixelization_overwrite=None, regularization_overwrite=None
 ) -> af.Collection:
     """
     Make a hyper model from the `Result` of a model-fit, where the hyper-model is the maximum log likelihood instance
@@ -245,6 +245,12 @@ def hyper_inversion_model_from(
 
     if not has_pixelization_from(model=model):
         return None
+
+    if pixelization_overwrite:
+        model.galaxies.source.pixelization = af.Model(pixelization_overwrite)
+
+    if regularization_overwrite:
+        model.galaxies.source.regularization = af.Model(regularization_overwrite)
 
     model = clean_model_of_hyper_images(model=model)
 
@@ -305,7 +311,7 @@ def hyper_fit_no_noise(
 
 
 def hyper_fit(
-    setup_hyper, result: af.Result, analysis, include_hyper_image_sky: bool = False
+    setup_hyper, result: af.Result, analysis, include_hyper_image_sky: bool = False, pixelization_overwrite=None, regularization_overwrite=None
 ):
     """
     Perform a hyper-fit, which extends a model-fit with an additional fit which fixes the non-hyper components of the
@@ -376,6 +382,8 @@ def hyper_fit(
         setup_hyper=setup_hyper,
         result=hyper_noise_result,
         include_hyper_image_sky=include_hyper_image_sky,
+        pixelization_overwrite=pixelization_overwrite,
+        regularization_overwrite=regularization_overwrite
     )
 
     if hyper_inversion_model is None:
