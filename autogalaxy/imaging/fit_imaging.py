@@ -225,6 +225,27 @@ class FitImaging(aa.FitImaging):
     def total_mappers(self):
         return 1
 
+    def refit_with_new_preloads(self, preloads, settings_inversion=None):
+
+        profiling_dict = {} if self.profiling_dict is not None else None
+
+        settings_inversion = (
+            self.settings_inversion
+            if settings_inversion is None
+            else settings_inversion
+        )
+
+        return FitImaging(
+            dataset=self.imaging,
+            plane=self.plane,
+            hyper_image_sky=self.hyper_image_sky,
+            hyper_background_noise=self.hyper_background_noise,
+            use_hyper_scaling=self.use_hyper_scaling,
+            settings_pixelization=self.settings_pixelization,
+            settings_inversion=settings_inversion,
+            preloads=preloads,
+            profiling_dict=profiling_dict,
+        )
 
 def hyper_image_from(image, hyper_image_sky):
 

@@ -537,6 +537,8 @@ def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7_no_blur, plane=plane)
 
+    fit.subtracted_images_of_galaxies# This stops a nan from being computed in the assertion, which is weird.
+
     assert fit.subtracted_images_of_galaxies[0].slim[0] == -4.0
     assert fit.subtracted_images_of_galaxies[1].slim[0] == -3.0
     assert fit.subtracted_images_of_galaxies[2].slim[0] == -2.0

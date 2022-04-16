@@ -1,20 +1,27 @@
 from astropy import cosmology as cosmo
 import json
+import logging
 import numpy as np
 from typing import Optional, Union
 from os import path
+import os
 
 from autoconf import conf
 import autofit as af
 import autoarray as aa
 
 from autogalaxy import exc
+from autogalaxy.analysis.maker import FitMaker
+from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.hyper.hyper_data import HyperImageSky
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
 from autogalaxy.analysis.result import ResultDataset
 
+logger = logging.getLogger(__name__)
+
+logger.setLevel(level="INFO")
 
 class Analysis(af.Analysis):
     def __init__(self, cosmology=cosmo.Planck15):
@@ -129,6 +136,81 @@ class AnalysisDataset(Analysis):
 
         self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
         self.hyper_model_image = hyper_model_image
+
+    @property
+    def preloads_cls(self):
+        return Preloads
+
+    def set_preloads(self, paths: af.DirectoryPaths, model: af.Collection):
+        """
+        It is common for the model to have components whose parameters are all fixed, and thus the way that component
+        fits the data does not change. For example, if all parameter associated with the light profiles of galaxies
+        in the model are fixed, the image generated from these galaxies will not change irrespective of the model
+        parameters chosen by the non-linear search.
+
+        Preloading exploits this to speed up the log likelihood function, by inspecting the model and storing in memory
+        quantities that do not change. For the example above, the image of all galaxies would be stored in memory and
+        to perform every fit in the `log_likelihood_funtion`.
+
+        This function sets up all preload quantities, which are described fully in the `preloads` modules. This
+        occurs directly before the non-linear search begins, to ensure the model parameterization is fixed.
+
+        Parameters
+        ----------
+        paths
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization and the pickled objects used by the aggregator output by this function.
+        model
+            The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
+            the imaging data.
+        """
+
+        logger.info(
+            "PRELOADS - Setting up preloads, may take a few minutes for fits using an inversion."
+        )
+
+        os.makedirs(paths.profile_path, exist_ok=True)
+
+        fit_maker = FitMaker(model=model, fit_func=self.fit_func)
+
+        fit_0 = fit_maker.fit_via_model_from(unit_value=0.45)
+        fit_1 = fit_maker.fit_via_model_from(unit_value=0.55)
+
+        if fit_0 is None or fit_1 is None:
+            self.preloads = self.preloads_cls(failed=True)
+        else:
+            self.preloads = self.preloads_cls.setup_all_via_fits(fit_0=fit_0, fit_1=fit_1)
+            try:
+                self.preloads.check_via_fit(fit=fit_0)
+            except (aa.exc.InversionException, exc.InversionException):
+                pass
+
+        self.preloads.output_info_to_summary(file_path=paths.profile_path)
+
+    def modify_after_fit(
+        self, paths: af.DirectoryPaths, model: af.AbstractPriorModel, result: af.Result
+    ) -> "AnalysisDataset":
+        """
+        Call functions that perform tasks after a model-fit is completed, for example ensuring the figure of merit
+        has not changed from previous estimates and resetting preloads.
+
+        Parameters
+        ----------
+        paths
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization and the pickled objects used by the aggregator output by this function.
+        model
+            The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
+            the imaging data.
+        result
+            The result of the model fit that has just been completed.
+        """
+
+        self.output_or_check_figure_of_merit_sanity(paths=paths, result=result)
+        self.preloads.reset_all()
+
+        return self
+
 
     def hyper_image_sky_via_instance_from(
         self, instance: af.ModelInstance
@@ -254,6 +336,41 @@ class AnalysisDataset(Analysis):
                 "hyper_galaxy_image_path_dict", self.hyper_galaxy_image_path_dict
             )
 
+    def check_and_replace_hyper_images(self, paths: af.DirectoryPaths):
+        """
+        Using a the result of a previous model-fit, a hyper-dataset can be set up which adapts aspects of the model
+        (e.g. the pixelization, regularization scheme) to the properties of the dataset being fitted.
+
+        If the model-fit is being resumed from a previous run, this function checks that the model image and galaxy
+        images used to set up the hyper-dataset are identical to those used previously. If they are not, it replaces
+        them with the previous hyper image. This ensures consistency in the log likelihood function.
+
+        Parameters
+        ----------
+        paths
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization and the pickled objects used by the aggregator output by this function.
+        """
+        try:
+            hyper_model_image = paths.load_object("hyper_model_image")
+
+            if np.max(abs(hyper_model_image - self.hyper_model_image)) > 1e-8:
+
+                logger.info(
+                    "ANALYSIS - Hyper image loaded from pickle different to that set in Analysis class."
+                    "Overwriting hyper images with values loaded from pickles."
+                )
+
+                self.hyper_model_image = hyper_model_image
+
+                hyper_galaxy_image_path_dict = paths.load_object(
+                    "hyper_galaxy_image_path_dict"
+                )
+                self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
+
+        except (FileNotFoundError, AttributeError, KeyError, ModuleNotFoundError):
+            pass
+
     def output_or_check_figure_of_merit_sanity(
         self, paths: af.DirectoryPaths, result: af.Result
     ):
@@ -308,3 +425,7 @@ class AnalysisDataset(Analysis):
                         f"Old Figure of Merit = {figure_of_merit_sanity}\n"
                         f"New Figure of Merit = {figure_of_merit}"
                     )
+
+    @property
+    def fit_func(self):
+        raise NotImplementedError

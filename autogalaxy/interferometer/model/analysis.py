@@ -1,10 +1,15 @@
 from astropy import cosmology as cosmo
+import logging
+import numpy as np
 from typing import Optional
 
 import autofit as af
 import autoarray as aa
 
+from autoarray.exc import PixelizationException
+
 from autogalaxy.analysis.analysis import AnalysisDataset
+from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.interferometer.model.result import ResultInterferometer
 from autogalaxy.interferometer.model.visualizer import VisualizerInterferometer
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
@@ -14,6 +19,9 @@ from autogalaxy.plane.plane import Plane
 
 from autogalaxy import exc
 
+logger = logging.getLogger(__name__)
+
+logger.setLevel(level="INFO")
 
 class AnalysisInterferometer(AnalysisDataset):
     def __init__(
@@ -71,6 +79,10 @@ class AnalysisInterferometer(AnalysisDataset):
             self.hyper_galaxy_visibilities_path_dict = None
             self.hyper_model_visibilities = None
 
+    @property
+    def interferometer(self):
+        return self.dataset
+
     def set_hyper_dataset(self, result):
         """
         Using a the result of a previous model-fit, set the hyper-dataset for this analysis. This is used to adapt
@@ -96,68 +108,6 @@ class AnalysisInterferometer(AnalysisDataset):
         self.hyper_galaxy_visibilities_path_dict = (
             result.hyper_galaxy_visibilities_path_dict
         )
-
-    @property
-    def interferometer(self):
-        return self.dataset
-
-    def log_likelihood_function(self, instance: af.ModelInstance) -> float:
-        """
-        Given an instance of the model, where the model parameters are set via a non-linear search, fit the model
-        instance to the interferometer dataset.
-
-        This function returns a log likelihood which is used by the non-linear search to guide the model-fit.
-
-        For this analysis class, this function performs the following steps:
-
-        1) If the analysis has a hyper dataset, associated the model galaxy images of this dataset to the galaxies in
-        the model instance.
-
-        2) Extract attributes which model aspects of the data reductions, like scaling the background background noise.
-
-        3) Extracts all galaxies from the model instance and set up a `Plane`.
-
-        4) Use the `Plane` and other attributes to create a `FitInterferometer` object, which performs steps such as
-        creating model images of every galaxy in the plane, transforming them to the uv-plane via a Fourier transform
-        and computing residuals, a chi-squared statistic and the log likelihood.
-
-        Certain models will fail to fit the dataset and raise an exception. For example if an `Inversion` is used, the
-        linear algebra calculation may be invalid and raise an Exception. In such circumstances the model is discarded
-        and its likelihood value is passed to the non-linear search in a way that it ignores it (for example, using a
-        value of -1.0e99).
-
-        Parameters
-        ----------
-        instance
-            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
-            via a non-linear search).
-
-        Returns
-        -------
-        float
-            The log likelihood indicating how well this model instance fitted the interferometer data.
-        """
-
-        self.instance_with_associated_hyper_images_from(instance=instance)
-
-        hyper_background_noise = self.hyper_background_noise_via_instance_from(
-            instance=instance
-        )
-
-        plane = self.plane_via_instance_from(instance=instance)
-
-        try:
-            fit = self.fit_interferometer_via_plane_from(
-                plane=plane, hyper_background_noise=hyper_background_noise
-            )
-
-            return fit.figure_of_merit
-        except (
-            exc.PixelizationException,
-            exc.InversionException,
-            exc.GridException,
-        ) as e:
-            raise exc.FitException from e
 
     def instance_with_associated_hyper_visibilities_from(
         self, instance: af.ModelInstance
@@ -197,11 +147,145 @@ class AnalysisInterferometer(AnalysisDataset):
 
         return instance
 
+    def modify_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
+        """
+        PyAutoFit calls this function immediately before the non-linear search begins, therefore it can be used to
+        perform tasks using the final model parameterization.
+
+        This function checks that the hyper-dataset is consistent with previous hyper-datasets if the model-fit is
+        being resumed from a previous run, and it visualizes objects which do not change throughout the model fit
+        like the dataset.
+
+        Parameters
+        ----------
+        paths
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization and the pickled objects used by the aggregator output by this function.
+        model
+            The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
+            the imaging data.
+        """
+        self.check_and_replace_hyper_images(paths=paths)
+
+        if not paths.is_complete:
+
+            visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
+
+            visualizer.visualize_interferometer(interferometer=self.interferometer)
+
+            visualizer.visualize_hyper_images(
+                hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
+                hyper_model_image=self.hyper_model_image,
+            )
+
+            logger.info(
+                "PRELOADS - Setting up preloads, may take a few minutes for fits using an inversion."
+            )
+
+            self.set_preloads(paths=paths, model=model)
+
+        return self
+
+    def log_likelihood_function(self, instance: af.ModelInstance) -> float:
+        """
+        Given an instance of the model, where the model parameters are set via a non-linear search, fit the model
+        instance to the interferometer dataset.
+
+        This function returns a log likelihood which is used by the non-linear search to guide the model-fit.
+
+        For this analysis class, this function performs the following steps:
+
+        1) If the analysis has a hyper dataset, associated the model galaxy images of this dataset to the galaxies in
+        the model instance.
+
+        2) Extract attributes which model aspects of the data reductions, like scaling the background background noise.
+
+        3) Extracts all galaxies from the model instance and set up a `Plane`.
+
+        4) Use the `Plane` and other attributes to create a `FitInterferometer` object, which performs steps such as
+        creating model images of every galaxy in the plane, transforming them to the uv-plane via a Fourier transform
+        and computing residuals, a chi-squared statistic and the log likelihood.
+
+        Certain models will fail to fit the dataset and raise an exception. For example if an `Inversion` is used, the
+        linear algebra calculation may be invalid and raise an Exception. In such circumstances the model is discarded
+        and its likelihood value is passed to the non-linear search in a way that it ignores it (for example, using a
+        value of -1.0e99).
+
+        Parameters
+        ----------
+        instance
+            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
+            via a non-linear search).
+
+        Returns
+        -------
+        float
+            The log likelihood indicating how well this model instance fitted the interferometer data.
+        """
+
+        try:
+            return self.fit_interferometer_via_instance_from(
+                instance=instance
+            ).figure_of_merit
+        except (
+            PixelizationException,
+            exc.PixelizationException,
+            exc.InversionException,
+            exc.GridException,
+            ValueError,
+            np.linalg.LinAlgError,
+            OverflowError,
+        ) as e:
+            raise exc.FitException from e
+
+    def fit_interferometer_via_instance_from(
+        self,
+        instance: af.ModelInstance,
+        use_hyper_scaling: bool = True,
+        preload_overwrite: Optional[Preloads] = None,
+    ) -> FitInterferometer:
+        """
+        Given a model instance create a `FitInterferometer` object.
+
+        This function is used in the `log_likelihood_function` to fit the model to the interferometer data and compute
+        the log likelihood.
+
+        Parameters
+        ----------
+        instance
+            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
+            via a non-linear search).
+        use_hyper_scaling
+            If false, the scaling of the background sky and noise are not performed irrespective of the model components
+            themselves.
+        preload_overwrite
+            If a `Preload` object is input this is used instead of the preloads stored as an attribute in the analysis.
+        profiling_dict
+            A dictionary which times functions called to fit the model to data, for profiling.
+
+        Returns
+        -------
+        FitInterferometer
+            The fit of the plane to the interferometer dataset, which includes the log likelihood.
+        """
+        self.instance_with_associated_hyper_images_from(instance=instance)
+
+        hyper_background_noise = self.hyper_background_noise_via_instance_from(
+            instance=instance
+        )
+
+        plane = self.plane_via_instance_from(instance=instance)
+
+        return self.fit_interferometer_via_plane_from(
+                plane=plane, hyper_background_noise=hyper_background_noise, use_hyper_scaling=use_hyper_scaling
+            )
+
     def fit_interferometer_via_plane_from(
         self,
         plane: Plane,
         hyper_background_noise: Optional[HyperBackgroundNoise],
         use_hyper_scaling: bool = True,
+        preload_overwrite: Optional[Preloads] = None,
     ) -> FitInterferometer:
         """
         Given a `Plane`, which the analysis constructs from a model instance, create a `FitInterferometer` object.
@@ -224,6 +308,9 @@ class AnalysisInterferometer(AnalysisDataset):
         FitInterferometer
             The fit of the plane to the interferometer dataset, which includes the log likelihood.
         """
+
+        preloads = self.preloads if preload_overwrite is None else preload_overwrite
+
         return FitInterferometer(
             dataset=self.dataset,
             plane=plane,
@@ -231,7 +318,12 @@ class AnalysisInterferometer(AnalysisDataset):
             use_hyper_scaling=use_hyper_scaling,
             settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
+            preloads=preloads
         )
+
+    @property
+    def fit_func(self):
+        return self.fit_interferometer_via_instance_from
 
     def visualize(self, paths: af.DirectoryPaths, instance, during_analysis):
         """

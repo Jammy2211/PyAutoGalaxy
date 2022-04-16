@@ -1,12 +1,16 @@
 import numpy as np
 
-import autolens as al
+import autoarray as aa
 
+from autogalaxy import exc
 
 class Clicker:
     def __init__(self, image, pixel_scales, search_box_size):
 
         self.image = image
+
+        pixel_scales = aa.util.geometry.convert_pixel_scales_2d(pixel_scales=pixel_scales)
+
         self.pixel_scales = pixel_scales
         self.search_box_size = search_box_size
 
@@ -16,8 +20,8 @@ class Clicker:
 
         if event.dblclick:
 
-            y_arcsec = np.rint(event.ydata / self.pixel_scales) * self.pixel_scales
-            x_arcsec = np.rint(event.xdata / self.pixel_scales) * self.pixel_scales
+            y_arcsec = np.rint(event.ydata / self.pixel_scales[0]) * self.pixel_scales[0]
+            x_arcsec = np.rint(event.xdata / self.pixel_scales[1]) * self.pixel_scales[1]
 
             (y_pixels, x_pixels) = self.image.mask.pixel_coordinates_2d_from(
                 scaled_coordinates_2d=(y_arcsec, x_arcsec)
@@ -40,7 +44,7 @@ class Clicker:
                         x_pixels_max = x
 
             grid_arcsec = self.image.mask.grid_scaled_from(
-                grid_pixels_1d=al.Grid2D.manual_native(
+                grid_pixels_1d=aa.Grid2D.manual_native(
                     grid=[[[y_pixels_max + 0.5, x_pixels_max + 0.5]]],
                     pixel_scales=self.pixel_scales,
                 )

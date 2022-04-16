@@ -1,4 +1,3 @@
-from autoarray.preloads import Preloads
 from autoarray.dataset import preprocess
 from autoarray.dataset.imaging import SettingsImaging
 from autoarray.dataset.imaging import Imaging
@@ -45,6 +44,8 @@ from autoarray.structures.arrays.kernel_2d import Kernel2D
 from autoarray.structures.visibilities import Visibilities
 from autoarray.structures.visibilities import VisibilitiesNoiseMap
 
+from .analysis.maker import FitMaker
+from .analysis.preloads import Preloads
 from .analysis import aggregator as agg
 from . import plot
 from . import util

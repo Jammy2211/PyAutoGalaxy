@@ -50,8 +50,8 @@ class ResultInterferometer(ResultDataset):
             instance=self.instance
         )
 
-        return self.analysis.fit_interferometer_via_tracer_from(
-            plane=self.max_log_likelihood_tracer,
+        return self.analysis.fit_interferometer_via_plane_from(
+            plane=self.max_log_likelihood_plane,
             hyper_background_noise=hyper_background_noise,
         )
 

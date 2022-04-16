@@ -1,10 +1,14 @@
 from astropy import cosmology as cosmo
-from typing import Optional
+import numpy as np
+from typing import Dict, Optional
 
 import autofit as af
 import autoarray as aa
 
+from autoarray.exc import PixelizationException
+
 from autogalaxy.analysis.analysis import AnalysisDataset
+from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.imaging.model.visualizer import VisualizerImaging
 from autogalaxy.hyper.hyper_data import HyperImageSky
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
@@ -66,6 +70,41 @@ class AnalysisImaging(AnalysisDataset):
     def imaging(self):
         return self.dataset
 
+    def modify_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
+        """
+        PyAutoFit calls this function immediately before the non-linear search begins, therefore it can be used to
+        perform tasks using the final model parameterization.
+
+        This function checks that the hyper-dataset is consistent with previous hyper-datasets if the model-fit is
+        being resumed from a previous run, and it visualizes objects which do not change throughout the model fit
+        like the dataset.
+
+        Parameters
+        ----------
+        paths
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization and the pickled objects used by the aggregator output by this function.
+        model
+            The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
+            the imaging data.
+        """
+        self.check_and_replace_hyper_images(paths=paths)
+
+        if not paths.is_complete:
+
+            visualizer = VisualizerImaging(visualize_path=paths.image_path)
+
+            visualizer.visualize_imaging(imaging=self.imaging)
+
+            visualizer.visualize_hyper_images(
+                hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
+                hyper_model_image=self.hyper_model_image,
+            )
+
+            self.set_preloads(paths=paths, model=model)
+
+        return self
+
     def log_likelihood_function(self, instance: af.ModelInstance) -> float:
         """
         Given an instance of the model, where the model parameters are set via a non-linear search, fit the model
@@ -104,6 +143,50 @@ class AnalysisImaging(AnalysisDataset):
             The log likelihood indicating how well this model instance fitted the imaging data.
         """
 
+        try:
+            return self.fit_imaging_via_instance_from(instance=instance).figure_of_merit
+        except (
+            PixelizationException,
+            exc.PixelizationException,
+            exc.InversionException,
+            exc.GridException,
+            ValueError,
+            np.linalg.LinAlgError,
+            OverflowError,
+        ) as e:
+            raise exc.FitException from e
+
+    def fit_imaging_via_instance_from(
+        self,
+        instance: af.ModelInstance,
+        use_hyper_scaling: bool = True,
+        preload_overwrite: Optional[Preloads] = None,
+        profiling_dict: Optional[Dict] = None,
+    ) -> FitImaging:
+        """
+        Given a model instance create a `FitImaging` object.
+
+        This function is used in the `log_likelihood_function` to fit the model to the imaging data and compute the
+        log likelihood.
+
+        Parameters
+        ----------
+        instance
+            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
+            via a non-linear search).
+        use_hyper_scaling
+            If false, the scaling of the background sky and noise are not performed irrespective of the model components
+            themselves.
+        preload_overwrite
+            If a `Preload` object is input this is used instead of the preloads stored as an attribute in the analysis.
+        profiling_dict
+            A dictionary which times functions called to fit the model to data, for profiling.
+
+        Returns
+        -------
+        FitImaging
+            The fit of the plane to the imaging dataset, which includes the log likelihood.
+        """
         self.instance_with_associated_hyper_images_from(instance=instance)
 
         hyper_image_sky = self.hyper_image_sky_via_instance_from(instance=instance)
@@ -114,20 +197,14 @@ class AnalysisImaging(AnalysisDataset):
 
         plane = self.plane_via_instance_from(instance=instance)
 
-        try:
-            fit = self.fit_imaging_via_plane_from(
-                plane=plane,
-                hyper_image_sky=hyper_image_sky,
-                hyper_background_noise=hyper_background_noise,
-            )
-
-            return fit.figure_of_merit
-        except (
-            exc.PixelizationException,
-            exc.InversionException,
-            exc.GridException,
-        ) as e:
-            raise exc.FitException from e
+        return self.fit_imaging_via_plane_from(
+            plane=plane,
+            hyper_image_sky=hyper_image_sky,
+            hyper_background_noise=hyper_background_noise,
+            use_hyper_scaling=use_hyper_scaling,
+            preload_overwrite=preload_overwrite,
+            profiling_dict=profiling_dict,
+        )
 
     def fit_imaging_via_plane_from(
         self,
@@ -135,6 +212,8 @@ class AnalysisImaging(AnalysisDataset):
         hyper_image_sky: Optional[HyperImageSky],
         hyper_background_noise: Optional[HyperBackgroundNoise],
         use_hyper_scaling: bool = True,
+        preload_overwrite: Optional[Preloads] = None,
+        profiling_dict: Optional[Dict] = None,
     ) -> FitImaging:
         """
         Given a `Plane`, which the analysis constructs from a model instance, create a `FitImaging` object.
@@ -153,12 +232,19 @@ class AnalysisImaging(AnalysisDataset):
         use_hyper_scaling
             If false, the scaling of the background sky and noise are not performed irrespective of the model components
             themselves.
+        preload_overwrite
+            If a `Preload` object is input this is used instead of the preloads stored as an attribute in the analysis.
+        profiling_dict
+            A dictionary which times functions called to fit the model to data, for profiling.
 
         Returns
         -------
         FitImaging
             The fit of the plane to the imaging dataset, which includes the log likelihood.
         """
+
+        preloads = self.preloads if preload_overwrite is None else preload_overwrite
+
         return FitImaging(
             dataset=self.dataset,
             plane=plane,
@@ -167,7 +253,13 @@ class AnalysisImaging(AnalysisDataset):
             use_hyper_scaling=use_hyper_scaling,
             settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
+            preloads=preloads,
+            profiling_dict=profiling_dict
         )
+
+    @property
+    def fit_func(self):
+        return self.fit_imaging_via_instance_from
 
     def visualize(
         self,

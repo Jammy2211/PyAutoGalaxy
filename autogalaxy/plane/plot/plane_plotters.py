@@ -208,7 +208,7 @@ class PlanePlotter(Plotter):
     def galaxy_indexes_from(self, galaxy_index: Optional[int]) -> List[int]:
         """
         Returns a list of all indexes of the galaxys in the fit, which is iterated over in figures that plot
-        individual figures of each galaxy in a tracer.
+        individual figures of each galaxy in a plane.
 
         Parameters
         ----------
@@ -240,7 +240,7 @@ class PlanePlotter(Plotter):
             Whether or not to make a 2D plot (via `imshow`) of the image of the galaxy in the soure-galaxy (e.g. its
             unlensed light).
         galaxy_index
-            If input, plots for only a single galaxy based on its index in the tracer are created.
+            If input, plots for only a single galaxy based on its index in the plane are created.
         """
         galaxy_indexes = self.galaxy_indexes_from(galaxy_index=galaxy_index)
 

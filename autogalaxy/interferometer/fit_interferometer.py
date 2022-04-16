@@ -190,3 +190,24 @@ class FitInterferometer(aa.FitInterferometer):
     @property
     def total_mappers(self):
         return 1
+
+    def refit_with_new_preloads(self, preloads, settings_inversion=None):
+
+        if self.profiling_dict is not None:
+            profiling_dict = {}
+        else:
+            profiling_dict = None
+
+        if settings_inversion is None:
+            settings_inversion = self.settings_inversion
+
+        return FitInterferometer(
+            dataset=self.interferometer,
+            plane=self.plane,
+            hyper_background_noise=self.hyper_background_noise,
+            use_hyper_scaling=self.use_hyper_scaling,
+            settings_pixelization=self.settings_pixelization,
+            settings_inversion=settings_inversion,
+            preloads=preloads,
+            profiling_dict=profiling_dict,
+        )
