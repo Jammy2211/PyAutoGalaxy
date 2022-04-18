@@ -430,11 +430,11 @@ def test___blurred_and_model_image_properties(masked_imaging_7x7):
     )
 
     assert g0_blurred_image.native == pytest.approx(
-        fit.model_images_of_galaxies[0].native, 1.0e-4
+        fit.model_images_of_galaxies_list[0].native, 1.0e-4
     )
 
     assert g1_blurred_image.native == pytest.approx(
-        fit.model_images_of_galaxies[1].native, 1.0e-4
+        fit.model_images_of_galaxies_list[1].native, 1.0e-4
     )
 
     unmasked_blurred_image = plane.unmasked_blurred_image_2d_via_psf_from(
@@ -443,17 +443,17 @@ def test___blurred_and_model_image_properties(masked_imaging_7x7):
 
     assert (unmasked_blurred_image == fit.unmasked_blurred_image).all()
 
-    unmasked_blurred_image_of_galaxies = plane.unmasked_blurred_image_2d_list_via_psf_from(
+    unmasked_blurred_image_of_galaxies_list = plane.unmasked_blurred_image_2d_list_via_psf_from(
         grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
     )
 
     assert (
-        unmasked_blurred_image_of_galaxies[0]
-        == fit.unmasked_blurred_image_of_galaxies[0]
+        unmasked_blurred_image_of_galaxies_list[0]
+        == fit.unmasked_blurred_image_of_galaxies_list[0]
     ).all()
     assert (
-        unmasked_blurred_image_of_galaxies[1]
-        == fit.unmasked_blurred_image_of_galaxies[1]
+        unmasked_blurred_image_of_galaxies_list[1]
+        == fit.unmasked_blurred_image_of_galaxies_list[1]
     ).all()
 
     pix = ag.pix.Rectangular(shape=(3, 3))
@@ -474,9 +474,9 @@ def test___blurred_and_model_image_properties(masked_imaging_7x7):
         dataset=masked_imaging_7x7, linear_obj_list=[mapper], regularization_list=[reg]
     )
 
-    assert (fit.model_images_of_galaxies[0].native == np.zeros((7, 7))).all()
+    assert (fit.model_images_of_galaxies_list[0].native == np.zeros((7, 7))).all()
     assert inversion.mapped_reconstructed_image.native == pytest.approx(
-        fit.model_images_of_galaxies[1].native, 1.0e-4
+        fit.model_images_of_galaxies_list[1].native, 1.0e-4
     )
 
     galaxy_light = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
@@ -512,10 +512,10 @@ def test___blurred_and_model_image_properties(masked_imaging_7x7):
     )
 
     assert blurred_image.native == pytest.approx(
-        fit.model_images_of_galaxies[0].native, 1.0e-4
+        fit.model_images_of_galaxies_list[0].native, 1.0e-4
     )
     assert inversion.mapped_reconstructed_image.native == pytest.approx(
-        fit.model_images_of_galaxies[1].native, 1.0e-4
+        fit.model_images_of_galaxies_list[1].native, 1.0e-4
     )
 
 
@@ -537,11 +537,11 @@ def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7_no_blur, plane=plane)
 
-    fit.subtracted_images_of_galaxies# This stops a nan from being computed in the assertion, which is weird.
+    fit.subtracted_images_of_galaxies_list  # This stops a nan from being computed in the assertion, which is weird.
 
-    assert fit.subtracted_images_of_galaxies[0].slim[0] == -4.0
-    assert fit.subtracted_images_of_galaxies[1].slim[0] == -3.0
-    assert fit.subtracted_images_of_galaxies[2].slim[0] == -2.0
+    assert fit.subtracted_images_of_galaxies_list[0].slim[0] == -4.0
+    assert fit.subtracted_images_of_galaxies_list[1].slim[0] == -3.0
+    assert fit.subtracted_images_of_galaxies_list[2].slim[0] == -2.0
 
     g0 = ag.Galaxy(
         redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d=np.ones(1))
@@ -557,6 +557,6 @@ def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7_no_blur, plane=plane)
 
-    assert fit.subtracted_images_of_galaxies[0].slim[0] == -2.0
-    assert fit.subtracted_images_of_galaxies[1].slim[0] == -3.0
-    assert fit.subtracted_images_of_galaxies[2].slim[0] == 0.0
+    assert fit.subtracted_images_of_galaxies_list[0].slim[0] == -2.0
+    assert fit.subtracted_images_of_galaxies_list[1].slim[0] == -3.0
+    assert fit.subtracted_images_of_galaxies_list[2].slim[0] == 0.0

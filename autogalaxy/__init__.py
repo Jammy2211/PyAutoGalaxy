@@ -46,7 +46,7 @@ from autoarray.structures.visibilities import VisibilitiesNoiseMap
 
 from .analysis.maker import FitMaker
 from .analysis.preloads import Preloads
-from .analysis import aggregator as agg
+from . import aggregator as agg
 from . import plot
 from . import util
 from .operate.image import OperateImage

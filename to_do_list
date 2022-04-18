@@ -26,7 +26,7 @@ al._mp_manual.potential_2d_from_grid
 
 __Lensing__
 
-- The calculation of quantites from defleciton angles should work on irregular grids via interpolation by default, with
+- The calculation of quantities from defleciton angles should work on irregular grids via interpolation by default, with
 an option to overwrite with analytic calculations.
 
 - Extend AstroPy Cosmology with an autolens Cosmology, which will replace cosmology util. Update Chapter 1 tutorial 6.

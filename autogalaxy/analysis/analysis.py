@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 logger.setLevel(level="INFO")
 
+
 class Analysis(af.Analysis):
     def __init__(self, cosmology=cosmo.Planck15):
         """
@@ -112,7 +113,7 @@ class AnalysisDataset(Analysis):
         self.settings_pixelization = settings_pixelization or aa.SettingsPixelization()
         self.settings_inversion = settings_inversion or aa.SettingsInversion()
 
-        self.preloads = aa.Preloads()
+        self.preloads = self.preloads_cls()
 
     def set_hyper_dataset(self, result: ResultDataset) -> None:
         """
@@ -140,6 +141,10 @@ class AnalysisDataset(Analysis):
     @property
     def preloads_cls(self):
         return Preloads
+
+    @property
+    def fit_maker_cls(self):
+        return FitMaker
 
     def set_preloads(self, paths: af.DirectoryPaths, model: af.Collection):
         """
@@ -171,7 +176,7 @@ class AnalysisDataset(Analysis):
 
         os.makedirs(paths.profile_path, exist_ok=True)
 
-        fit_maker = FitMaker(model=model, fit_func=self.fit_func)
+        fit_maker = self.fit_maker_cls(model=model, fit_func=self.fit_func)
 
         fit_0 = fit_maker.fit_via_model_from(unit_value=0.45)
         fit_1 = fit_maker.fit_via_model_from(unit_value=0.55)
@@ -179,7 +184,9 @@ class AnalysisDataset(Analysis):
         if fit_0 is None or fit_1 is None:
             self.preloads = self.preloads_cls(failed=True)
         else:
-            self.preloads = self.preloads_cls.setup_all_via_fits(fit_0=fit_0, fit_1=fit_1)
+            self.preloads = self.preloads_cls.setup_all_via_fits(
+                fit_0=fit_0, fit_1=fit_1
+            )
             try:
                 self.preloads.check_via_fit(fit=fit_0)
             except (aa.exc.InversionException, exc.InversionException):
@@ -210,7 +217,6 @@ class AnalysisDataset(Analysis):
         self.preloads.reset_all()
 
         return self
-
 
     def hyper_image_sky_via_instance_from(
         self, instance: af.ModelInstance

@@ -357,6 +357,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             linear_obj_list=linear_obj_list,
             regularization_list=self.regularization_list,
             settings=settings_inversion,
+            preloads=preloads,
             profiling_dict=self.profiling_dict,
         )
 
@@ -384,6 +385,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             linear_obj_list=linear_obj_list,
             regularization_list=self.regularization_list,
             settings=settings_inversion,
+            preloads=preloads,
             profiling_dict=self.profiling_dict,
         )
 

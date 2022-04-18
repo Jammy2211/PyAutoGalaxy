@@ -72,4 +72,4 @@ class ResultImaging(ResultDataset):
         A list of the model image of every galaxy in the maximum log likelihood model, whereas all images are created
         without using a mask.
         """
-        return self.max_log_likelihood_fit.unmasked_blurred_image_of_galaxies
+        return self.max_log_likelihood_fit.unmasked_blurred_image_of_galaxies_list

@@ -6,8 +6,6 @@ import matplotlib.pyplot as plt
 from skimage.transform import rescale
 
 
-
-
 class Scribbler:
     def __init__(self, image, segment_names=None, title="Draw mask", cmap=None):
         """

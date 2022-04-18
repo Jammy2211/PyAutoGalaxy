@@ -4,12 +4,15 @@ import autoarray as aa
 
 from autogalaxy import exc
 
+
 class Clicker:
     def __init__(self, image, pixel_scales, search_box_size):
 
         self.image = image
 
-        pixel_scales = aa.util.geometry.convert_pixel_scales_2d(pixel_scales=pixel_scales)
+        pixel_scales = aa.util.geometry.convert_pixel_scales_2d(
+            pixel_scales=pixel_scales
+        )
 
         self.pixel_scales = pixel_scales
         self.search_box_size = search_box_size
@@ -20,8 +23,12 @@ class Clicker:
 
         if event.dblclick:
 
-            y_arcsec = np.rint(event.ydata / self.pixel_scales[0]) * self.pixel_scales[0]
-            x_arcsec = np.rint(event.xdata / self.pixel_scales[1]) * self.pixel_scales[1]
+            y_arcsec = (
+                np.rint(event.ydata / self.pixel_scales[0]) * self.pixel_scales[0]
+            )
+            x_arcsec = (
+                np.rint(event.xdata / self.pixel_scales[1]) * self.pixel_scales[1]
+            )
 
             (y_pixels, x_pixels) = self.image.mask.pixel_coordinates_2d_from(
                 scaled_coordinates_2d=(y_arcsec, x_arcsec)

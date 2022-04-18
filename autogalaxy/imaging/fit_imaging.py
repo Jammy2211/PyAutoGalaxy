@@ -170,9 +170,9 @@ class FitImaging(aa.FitImaging):
         return galaxy_model_image_dict
 
     @property
-    def model_images_of_galaxies(self):
+    def model_images_of_galaxies_list(self):
 
-        model_images_of_galaxies = self.plane.blurred_image_2d_list_via_psf_from(
+        model_images_of_galaxies_list = self.plane.blurred_image_2d_list_via_psf_from(
             grid=self.grid,
             psf=self.imaging.psf,
             blurring_grid=self.imaging.blurring_grid,
@@ -182,32 +182,32 @@ class FitImaging(aa.FitImaging):
 
             if galaxy.has_pixelization:
 
-                model_images_of_galaxies[
+                model_images_of_galaxies_list[
                     galaxy_index
                 ] += self.inversion.mapped_reconstructed_image
 
-        return model_images_of_galaxies
+        return model_images_of_galaxies_list
 
     @property
-    def subtracted_images_of_galaxies(self):
+    def subtracted_images_of_galaxies_list(self):
 
-        subtracted_images_of_galaxies = []
+        subtracted_images_of_galaxies_list = []
 
-        model_images_of_galaxies = self.model_images_of_galaxies
+        model_images_of_galaxies_list = self.model_images_of_galaxies_list
 
         for galaxy_index in range(len(self.galaxies)):
 
             other_galaxies_model_images = [
                 model_image
-                for i, model_image in enumerate(model_images_of_galaxies)
+                for i, model_image in enumerate(model_images_of_galaxies_list)
                 if i != galaxy_index
             ]
 
             subtracted_image = self.image - sum(other_galaxies_model_images)
 
-            subtracted_images_of_galaxies.append(subtracted_image)
+            subtracted_images_of_galaxies_list.append(subtracted_image)
 
-        return subtracted_images_of_galaxies
+        return subtracted_images_of_galaxies_list
 
     @property
     def unmasked_blurred_image(self):
@@ -216,7 +216,7 @@ class FitImaging(aa.FitImaging):
         )
 
     @property
-    def unmasked_blurred_image_of_galaxies(self):
+    def unmasked_blurred_image_of_galaxies_list(self):
         return self.plane.unmasked_blurred_image_2d_list_via_psf_from(
             grid=self.grid, psf=self.imaging.psf
         )
@@ -246,6 +246,7 @@ class FitImaging(aa.FitImaging):
             preloads=preloads,
             profiling_dict=profiling_dict,
         )
+
 
 def hyper_image_from(image, hyper_image_sky):
 

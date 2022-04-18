@@ -254,7 +254,7 @@ class AnalysisImaging(AnalysisDataset):
             settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
             preloads=preloads,
-            profiling_dict=profiling_dict
+            profiling_dict=profiling_dict,
         )
 
     @property

@@ -143,14 +143,14 @@ class FitImagingPlotter(Plotter):
             if subtracted_image:
 
                 self.mat_plot_2d.cmap.kwargs["vmin"] = np.max(
-                    self.fit.model_images_of_galaxies[galaxy_index]
+                    self.fit.model_images_of_galaxies_list[galaxy_index]
                 )
                 self.mat_plot_2d.cmap.kwargs["vmin"] = np.min(
-                    self.fit.model_images_of_galaxies[galaxy_index]
+                    self.fit.model_images_of_galaxies_list[galaxy_index]
                 )
 
                 self.mat_plot_2d.plot_array(
-                    array=self.fit.subtracted_images_of_galaxies[galaxy_index],
+                    array=self.fit.subtracted_images_of_galaxies_list[galaxy_index],
                     visuals_2d=self.get_visuals_2d(),
                     auto_labels=aplt.AutoLabels(
                         title=f"Subtracted Image of Galaxy {galaxy_index}",
@@ -161,7 +161,7 @@ class FitImagingPlotter(Plotter):
             if model_image:
 
                 self.mat_plot_2d.plot_array(
-                    array=self.fit.model_images_of_galaxies[galaxy_index],
+                    array=self.fit.model_images_of_galaxies_list[galaxy_index],
                     visuals_2d=self.get_visuals_2d(),
                     auto_labels=aplt.AutoLabels(
                         title=f"Model Image of Galaxy {galaxy_index}",

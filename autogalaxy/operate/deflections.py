@@ -57,7 +57,7 @@ class OperateDeflections(Dictable):
     Packages methods which manipulate the 2D deflection angle map returned from the `deflections_yx_2d_from` function
     of a mass object (e.g. a `MassProfile`, `Galaxy`, `Plane`).
 
-    The majority of methods are those which from the 2D deflection angle map compute lensing quantites like a 2D
+    The majority of methods are those which from the 2D deflection angle map compute lensing quantities like a 2D
     shear field, magnification map or the Einstein Radius.
 
     The methods in `CalcLens` are passed to the mass object to provide a concise API.

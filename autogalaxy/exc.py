@@ -10,6 +10,7 @@ class CosmologyException(Exception):
 class GUIException(Exception):
     pass
 
+
 class ProfileException(Exception):
     pass
 

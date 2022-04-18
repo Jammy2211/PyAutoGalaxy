@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 logger.setLevel(level="INFO")
 
+
 class AnalysisInterferometer(AnalysisDataset):
     def __init__(
         self,
@@ -277,8 +278,10 @@ class AnalysisInterferometer(AnalysisDataset):
         plane = self.plane_via_instance_from(instance=instance)
 
         return self.fit_interferometer_via_plane_from(
-                plane=plane, hyper_background_noise=hyper_background_noise, use_hyper_scaling=use_hyper_scaling
-            )
+            plane=plane,
+            hyper_background_noise=hyper_background_noise,
+            use_hyper_scaling=use_hyper_scaling,
+        )
 
     def fit_interferometer_via_plane_from(
         self,
@@ -318,7 +321,7 @@ class AnalysisInterferometer(AnalysisDataset):
             use_hyper_scaling=use_hyper_scaling,
             settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
-            preloads=preloads
+            preloads=preloads,
         )
 
     @property
@@ -380,9 +383,12 @@ class AnalysisInterferometer(AnalysisDataset):
             fit=fit, during_analysis=during_analysis
         )
         if fit.inversion is not None:
-            visualizer.visualize_inversion(
-                inversion=fit.inversion, during_analysis=during_analysis
-            )
+            try:
+                visualizer.visualize_inversion(
+                    inversion=fit.inversion, during_analysis=during_analysis
+                )
+            except IndexError:
+                pass
 
         visualizer.visualize_hyper_images(
             hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,

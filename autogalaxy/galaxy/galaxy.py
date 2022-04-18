@@ -536,7 +536,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             )
 
     def mass_angular_within_circle_from(self, radius: float):
-        """ Integrate the mass profiles's convergence profile to compute the total mass within a circle of \
+        """
+        Integrate the mass profiles's convergence profile to compute the total mass within a circle of \
         specified radius. This is centred on the mass profile.
 
         The following unit_label for mass can be specified and output:

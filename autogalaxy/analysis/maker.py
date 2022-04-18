@@ -103,8 +103,7 @@ class FitMaker:
         conf.instance["general"]["model"]["ignore_prior_limits"] = ignore_prior_limits
 
         fit = self.fit_func(
-            instance=instance,
-            preload_overwrite=self.preloads_cls(use_w_tilde=False),
+            instance=instance, preload_overwrite=self.preloads_cls(use_w_tilde=False)
         )
 
         fit.figure_of_merit
@@ -147,6 +146,7 @@ class FitMaker:
                 return fit
 
             except Exception:
+
                 pass
 
             if i == preload_attempts:
