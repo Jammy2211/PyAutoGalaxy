@@ -321,7 +321,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
             mapper = self.mapper_from(
                 source_grid_slim=grid,
-                source_pixelization_grid=sparse_grid_list,
+                source_pixelization_grid=sparse_grid_list[mapper_index],
                 pixelization=pixelization_list[mapper_index],
                 hyper_galaxy_image=hyper_galaxy_image_list[mapper_index],
                 data_pixelization_grid=sparse_grid_list[mapper_index],

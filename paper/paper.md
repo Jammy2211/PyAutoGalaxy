@@ -1,5 +1,5 @@
 ---
-title: "`PyAutoGalaxy`: Open-Source Galaxy Modeling"
+title: "`PyAutoGalaxy`: Open-Source Multi Wavelength Galaxy Structure & Morphology"
 tags:
   - astronomy
   - Python
@@ -81,9 +81,9 @@ Nearly a century ago, Edwin Hubble famously classified galaxies into three disti
 irregulars. Today, by analysing millions of galaxies with advanced image processing techniques Astronomers have 
 expanded on this picture and revealed the rich diversity of galaxy morphology both in the nearby and distant 
 Universe. `PyAutoGalaxy` is an open-source Python 3.6+ package for analysing the morphologies and structures of large 
-galaxy samples, with core features including fully automated Bayesian model-fitting of galaxy two-dimensional surface 
-brightness profiles, support for imaging and interferometer datasets and comprehensive tools for simulating galaxy 
-images. The software places a focus on **big data** analysis, including support for hierarchical models that 
+multi-wavelength galaxy samples, with core features including fully automated Bayesian model-fitting of galaxy 
+two-dimensional surface brightness profiles, support for imaging and interferometer datasets and comprehensive tools 
+for simulating galaxy images. The software places a focus on **big data** analysis, including support for hierarchical models that 
 simultaneously fit thousands of galaxies, massively parallel model-fitting and an SQLite3 database that allows large 
 suites of modeling results to be loaded, queried and analysed. Accompanying `PyAutoGalaxy` is 
 the [autogalaxy workspace](https://github.com/Jammy2211/autogalaxy_workspace), which includes example scripts, 

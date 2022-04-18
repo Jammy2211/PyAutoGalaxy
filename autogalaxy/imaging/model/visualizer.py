@@ -62,8 +62,8 @@ class VisualizerImaging(Visualizer):
         if should_plot("subplot_fit"):
             fit_imaging_plotter.subplot_fit_imaging()
 
-        if should_plot("subplots_of_galaxies"):
-            fit_imaging_plotter.subplots_of_galaxies()
+        if should_plot("subplot_of_galaxies"):
+            fit_imaging_plotter.subplot_of_galaxies()
 
         if not during_analysis:
 

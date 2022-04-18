@@ -368,10 +368,6 @@ class Visualizer:
             inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        if should_plot("subplot_inversion"):
-            for mapper_index in range(len(inversion.linear_obj_list)):
-                inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
-
         inversion_plotter.figures_2d(
             reconstructed_image=should_plot("reconstructed_image")
         )
@@ -386,6 +382,10 @@ class Visualizer:
             chi_squared_map=should_plot("chi_squared_map"),
             regularization_weights=should_plot("regularization_weights"),
         )
+
+        if should_plot("subplot_inversion"):
+            for mapper_index in range(len(inversion.linear_obj_list)):
+                inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
 
         if not during_analysis:
 

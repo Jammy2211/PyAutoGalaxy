@@ -85,13 +85,13 @@ def test__subplot_of_galaxy(
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
-    fit_imaging_plotter.subplots_of_galaxies()
+    fit_imaging_plotter.subplot_of_galaxies()
     assert path.join(plot_path, "subplot_of_galaxy_0.png") in plot_patch.paths
     assert path.join(plot_path, "subplot_of_galaxy_1.png") in plot_patch.paths
 
     plot_patch.paths = []
 
-    fit_imaging_plotter.subplots_of_galaxies(galaxy_index=0)
+    fit_imaging_plotter.subplot_of_galaxies(galaxy_index=0)
 
     assert path.join(plot_path, "subplot_of_galaxy_0.png") in plot_patch.paths
     assert path.join(plot_path, "subplot_of_galaxy_1.png") not in plot_patch.paths

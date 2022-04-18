@@ -169,7 +169,7 @@ class FitImagingPlotter(Plotter):
                     ),
                 )
 
-    def subplots_of_galaxies(self, galaxy_index: Optional[int] = None):
+    def subplot_of_galaxies(self, galaxy_index: Optional[int] = None):
         """
         Plots images representing each individual `Galaxy` in the plotter's `Plane` in 2D on a subplot, which are
         computed via the plotter's 2D grid object.
