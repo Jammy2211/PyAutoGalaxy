@@ -2,8 +2,8 @@
 
 The ``autogalaxy_workspace`` contains Jupyter notebooks describing the (log) likelihood functions used by **PyAutoGalaxy**.
 
-The notebooks provide a step-by-step guide of how **PyAutoGalaxy** fits strong lens data, with the aim to make
-the analysis clear to readers without background experience in strong lens modeling and make the modeling less
+The notebooks provide a step-by-step guide of how **PyAutoGalaxy** fits galaxy data, with the aim to make
+the analysis clear to readers without background experience in galaxy modeling and make the modeling less
 of a "black box".
 
 We recommend that when writing a paper using **PyAutoGalaxy** the author links to this GitHub repository when describing

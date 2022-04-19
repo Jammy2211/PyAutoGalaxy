@@ -71,7 +71,7 @@ Here is what the image and signal-to-noise map look like in real space:
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/interferometry/dirty_signal_to_noise_map.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/interferometry/dirty_signal_to_noise.png
   :width: 400
   :alt: Alternative text
 
@@ -220,4 +220,4 @@ Wrap-Up
 -------
 
 The ``interferometer`` package of the ``autogalaxy_workspace`` contains numerous example scripts for performing
-interferometer modeling and simulating strong lens interferometer datasets.
+interferometer modeling and simulating galaxy interferometer datasets.

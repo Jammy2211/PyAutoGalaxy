@@ -102,7 +102,7 @@ and `PyNUFFT` [@pynufft].
     be extended for datasets with many galaxies.
     """
     plane = ag.Plane(
-        galaxies=[lens_galaxy, source_galaxy],
+        galaxies=[galaxy],
     )
 
     """
@@ -128,7 +128,7 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
     import os
 
     """
-    Load Imaging data of the strong lens from the dataset folder of the workspace.
+    Load Imaging data of the galaxy from the dataset folder of the workspace.
     """
     imaging = ag.Imaging.from_fits(
         image_path="/path/to/dataset/image.fits",
@@ -221,7 +221,7 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
 
    howtogalaxy/howtogalaxy
    howtogalaxy/chapter_1_introduction
-   howtogalaxy/chapter_2_lens_modeling
+   howtogalaxy/chapter_2_modeling
    howtogalaxy/chapter_3_search_chaining
    howtogalaxy/chapter_4_inversions
    howtogalaxy/chapter_optional

@@ -7,7 +7,7 @@ We can use a ``Plane`` to fit data of a galaxy and quantify its goodness-of-fit 
 *log_likelihood*.
 
 Of course, when observe an image of a galaxy, we have no idea what combination of
-``LightProfile``'s will produce a model-image that looks like the strong lens we observed:
+``LightProfile``'s will produce a model-image that looks like the galaxy we observed:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/image.png
   :width: 400
@@ -157,7 +157,7 @@ plotted.
 Here's what the model-fit of the model which maximizes the log likelihood looks like, providing good residuals and
 low chi-squared values:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/subplot_fit.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/modeling/subplot_fit.png
   :width: 600
   :alt: Alternative text
 

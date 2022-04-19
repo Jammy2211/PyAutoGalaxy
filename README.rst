@@ -93,7 +93,7 @@ representing a disk.
     be extended for datasets with many galaxies.
     """
     plane = ag.Plane(
-        galaxies=[galaxy_galaxy, source_galaxy],
+        galaxies=[galaxy],
     )
 
     """
