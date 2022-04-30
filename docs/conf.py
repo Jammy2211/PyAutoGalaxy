@@ -85,15 +85,15 @@ sphinx_gallery_conf = {
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-# html_theme = "sphinx_rtd_theme"
-# html_last_updated_fmt = "%b %d, %Y"
-# html_title = "PyAutoGalaxy"
-# html_short_title = "PyAutoGalaxy"
-# pygments_style = "default"
-# add_function_parentheses = False
-# html_show_sourcelink = False
-# html_show_sphinx = True
-# html_show_copyright = True
+html_theme = "sphinx_rtd_theme"
+html_last_updated_fmt = "%b %d, %Y"
+html_title = "PyAutoGalaxy"
+html_short_title = "PyAutoGalaxy"
+pygments_style = "default"
+add_function_parentheses = False
+html_show_sourcelink = False
+html_show_sphinx = True
+html_show_copyright = True
 
 html_context = {
     "menu_links_name": "Repository",
