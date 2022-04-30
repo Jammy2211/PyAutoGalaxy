@@ -95,15 +95,15 @@ sphinx_gallery_conf = {
 # html_show_sphinx = True
 # html_show_copyright = True
 
-# html_context = {
-#     "menu_links_name": "Repository",
-#     # Custom variables to enable "Improve this page"" and "Download notebook"
-#     # links
-#     "doc_path": "docs",
-#     "github_project": "pyautogalaxy",
-#     "github_repo": "pyautogalaxy",
-#     "github_version": "development",
-# }
+html_context = {
+    "menu_links_name": "Repository",
+    # Custom variables to enable "Improve this page"" and "Download notebook"
+    # links
+    "doc_path": "docs",
+    "github_project": "pyautogalaxy",
+    "github_repo": "pyautogalaxy",
+    "github_version": "development",
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
