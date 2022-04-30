@@ -25,21 +25,15 @@ authors:
   - name: Shaun Cole
     orcid: 0000-0002-5954-7903
     affiliation: 1
-  - name: Andrea Enia
-    orcid: 0000-0002-0200-2857
-    affiliation: 5
   - name: Jonathan Frawley
     orcid: 0000-0002-9437-7399
-    affiliation: 4    
+    affiliation: 3    
   - name: Carlos S. Frenk
     orcid: 0000-0002-2338-716X
     affiliation: 1  
   - name: Sam Lange
     orcid: 0000-0003-3850-4469
     affiliation: 1   
-  - name: Nan Li
-    orcid: 0000-0001-6800-7389
-    affiliation: 3    
   - name: Ran Li
     orcid: 0000-0003-3899-0612
     affiliation: 2
@@ -48,7 +42,7 @@ authors:
     affiliation: 1
   - name: Mattia Negrello
     orcid: 0000-0002-7925-7663
-    affiliation: 6
+    affiliation: 4
   - name: Andrew Robertson
     orcid: 0000-0002-0086-0524
     affiliation: 1
@@ -57,14 +51,10 @@ affiliations:
     index: 1
   - name: National Astronomical Observatories, Chinese Academy of Sciences, 20A Datun Road, Chaoyang District, Beijing 100012, China
     index: 2
-  - name: Key Laboratory of Space Astronomy and Technology, National Astronomical Observatories, Chinese Academy of Sciences, Beijing 100101, China
-    index: 3
   - name: Advanced Research Computing, Durham University, Durham DH1 3LE
-    index: 4
-  - name: Dipartimento di Fisica e Astronomia, Università degli Studi di Bologna, Via Berti Pichat 6/2, I-40127 Bologna, Italy
-    index: 5
+    index: 3
   - name: School of Physics and Astronomy, Cardiff University, The Parade, Cardiff CF24 3AA, UK
-    index: 6
+    index: 4
 
 date: 30 April 2022
 codeRepository: https://github.com/Jammy2211/PyAutoGalaxy

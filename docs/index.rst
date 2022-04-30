@@ -190,6 +190,7 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
    overview/overview_4_simulate
    overview/overview_5_pixelizations
    overview/overview_6_interferometry
+   overview/overview_7_multi_wavelength
 
 .. toctree::
    :caption: Installation:
