@@ -10,11 +10,11 @@ authors:
   - name: James. W. Nightingale
     orcid: 0000-0002-8987-7401
     affiliation: 1
-  - name: Richard G. Hayes
-    affiliation: 1
   - name: Aristeidis Amvrosiadis
     orcid: 0000-0002-4465-1564
     affiliation: 1 
+  - name: Richard G. Hayes
+    affiliation: 1
   - name: Qiuhan He
     orcid: 0000-0003-3672-9365
     affiliation: 1   
@@ -33,10 +33,7 @@ authors:
     affiliation: 4    
   - name: Carlos S. Frenk
     orcid: 0000-0002-2338-716X
-    affiliation: 1
-  - name: Ashley Kelly
-    orcid: 0000-0003-3850-4469
-    affiliation: 1   
+    affiliation: 1  
   - name: Sam Lange
     orcid: 0000-0003-3850-4469
     affiliation: 1   
@@ -69,7 +66,7 @@ affiliations:
   - name: School of Physics and Astronomy, Cardiff University, The Parade, Cardiff CF24 3AA, UK
     index: 6
 
-date: 26 October 2020
+date: 30 April 2022
 codeRepository: https://github.com/Jammy2211/PyAutoGalaxy
 license: MIT
 bibliography: paper.bib
@@ -83,9 +80,9 @@ expanded on this picture and revealed the rich diversity of galaxy morphology bo
 Universe. `PyAutoGalaxy` is an open-source Python 3.6+ package for analysing the morphologies and structures of large 
 multi-wavelength galaxy samples, with core features including fully automated Bayesian model-fitting of galaxy 
 two-dimensional surface brightness profiles, support for imaging and interferometer datasets and comprehensive tools 
-for simulating galaxy images. The software places a focus on **big data** analysis, including support for hierarchical models that 
-simultaneously fit thousands of galaxies, massively parallel model-fitting and an SQLite3 database that allows large 
-suites of modeling results to be loaded, queried and analysed. Accompanying `PyAutoGalaxy` is 
+for simulating galaxy images. The software places a focus on **big data** analysis, including support for hierarchical 
+models that simultaneously fit thousands of galaxies, massively parallel model-fitting and an SQLite3 database that 
+allows large suites of modeling results to be loaded, queried and analysed. Accompanying `PyAutoGalaxy` is 
 the [autogalaxy workspace](https://github.com/Jammy2211/autogalaxy_workspace), which includes example scripts, 
 datasets and the `HowToGalaxy` lectures in Jupyter notebook format which introduce non-experts to studies of galaxy 
 morphology using `PyAutoGalaxy`. Readers can  try `PyAutoGalaxy` right now by going 
@@ -100,30 +97,29 @@ Using large CCD imaging datasets of galaxies observed at ultraviolet, optical an
 instruments like the Hubble Space Telescope (HST), Astronomers have uncovered the plentiful structures that make up 
 a galaxy (e.g. bars, bulges, disks and rings) and revealed that evolving galaxies transition from disk-like structures 
 to bulge-like elliptical galaxies. At sub-mm and radio wavelengths interferometer datasets from instruments like the 
-Atacama LAM (ALMA) have revealed the integral role that dust plays in forming a galaxy in the distant Universe, early 
-in its lifetime. Studies typically represent a galaxy's light using analytic functions such as the Sersic 
-profile [@Sersic], which quantify the global appearance of most galaxies into one of three groups: (i) bulge-like 
+Atacama Large Millimeter Array (ALMA) have revealed the integral role that dust plays in forming a galaxy in the 
+distant Universe, early in its lifetime. Studies typically represent a galaxy's light using analytic functions such as 
+the Sersic profile [@Sersic], which quantify the global appearance of most galaxies into one of three groups: (i) bulge-like 
 structures which follow a dev Vaucouleurs profile; (ii) disk-like structures which follow an Exponential profile 
 or; (iii) irregular morphologies which are difficult to quantify with symmetric and smooth analytic profiles. Galaxies 
 are often composed of many sub-components which may be a combination of these different structures.
 
-Figure 1 shows example `PyAutoGalaxy` models of three galaxies taken with three different datasets. The top row shows
-a double Sersic fit to HST imaging of a galaxy, where `PyAutoGalaxy` has decomposed its structure into two distinct
-components; a bulge and disk. Instrumental effects like diffraction from the telescope optics are fully accounted for. 
-The middle row shows a `PyAutoGalaxy` fit to ALMA interferometry, where the galaxy's light is fitted directly in the 
-complex uv-plane and Fourier transformed to real-space to show model-fits below. The bottom row shows a fit to an
-irregular galaxy, where a fit using a symmetric Sersic profile is combined with `PyAutoGalaxy`'s non-parametric models
-which successfully separate its smooth bulge component from the irregular spiral-arm structures.
+Figure 1 shows example `PyAutoGalaxy` models of two galaxies taken with two different datasets. The top row shows
+a structural decomposition of HST imaging of a galaxy, where `PyAutoGalaxy` has decomposed the galaxy into two distinct
+parametric components, a bulge and disk, whilst simultaneously using a non-parametric model to represent the galaxy's 
+irregular and asymmetric spiral arms. Instrumental effects like diffraction from the telescope optics are fully accounted 
+for. The bottom row shows a `PyAutoGalaxy` fit to ALMA interferometry, where the galaxy's light is fitted directly in 
+the complex uv-plane and Fourier transformed to real-space to show model-fit.
  
 # Statement of Need
 
 In the next decade, wide field surveys such as Euclid, the Vera Rubin Observatory and Square Kilometer array are 
 poised to observe images of _billions_ of galaxies. Analysing these extremely large galaxy datasets demands 
 advanced Bayesian model-fitting techniques which can scale-up in a fully automated manner. Equally, the James Webb 
-Space Telescope, thirty-meter class ground telescopes and ?radio? will observe galaxies at an
-unprecedented resolution and level of detail. This demands more flexible modeling techniques that can accurately 
-represent the complex irregular structures one such high resolution observations reveal. `PyAutoGalaxy` aims to meet 
-both these needs, by interfacing galaxy model-fitting with the probabilistic programming language `PyAutoFit` to 
+Space Telescope, thirty-meter class ground telescopes and the square kilometer array radio interferometer will observe 
+galaxies at an unprecedented resolution and level of detail. This demands more flexible modeling techniques that can 
+accurately represent the complex irregular structures one such high resolution observations reveal. `PyAutoGalaxy` 
+aims to meet both these needs, by interfacing galaxy model-fitting with the probabilistic programming language `PyAutoFit` to 
 provide Bayesian fitting tools suited to big data analysis alongside image processing tools that represent irregular 
 galaxy structures using non-parametric models.
 
@@ -145,26 +141,27 @@ language `PyAutoFit` (https://github.com/rhayes777/PyAutoFit). `PyAutoFit` allow
 model from `LightProfile` and `Galaxy` objects, customize the model parameterization and fit it to data via a 
 non-linear search (e.g., `dynesty` [@dynesty], `emcee` [@emcee], `PySwarms` [@pyswarms]). By composing a model with 
 `Pixelization` and `Regularization` objects, the galaxy's light is reconstructed using a non-parametric rectangular 
-grid or Voronoi mesh that accounts for irregular galaxy morphologies. 
+grid or Voronoi mesh that accounts for irregular galaxy morphologies. Multiple datasets can be fitted simultaneously,
+using models whose parameters vary across wavelength.
 
 `PyAutoFit`'s graphical modeling framework allows one to simultaneously fit images of thousands of galaxies. Using a 
 technique called expectation propagation, this fits each galaxy dataset one-by-one and combines the results of every 
-fit into a global model using a self consistent Bayesian framework. Automated fits of complex galaxy models is
-possible using `PyAutoFit`'s emprical Bayes framework, which breaks the fitting of a galaxy into a a chained sequence of 
+fit into a global model using a self consistent Bayesian framework. Automated fitting of complex galaxy models is
+possible using `PyAutoFit`'s search chaining, which breaks the fitting of a galaxy into a a chained sequence of 
 non-linear searches. These fits pass information gained about simpler models fitted by earlier searches to subsequent 
 searches, which fit progressively more complex models. By granularizing the model-fitting procedure, automated 
 pipelines that fit complex galaxy models without human intervention can be carefully crafted, with example pipelines 
 found on the [autogalaxy workspace](https://github.com/Jammy2211/autogalaxy_workspace). To ensure the 
-analysis and interpretation of fits to large lens datasets is feasible, `PyAutoFit`'s database tools write lens modeling 
+analysis and interpretation of fits to large galaxy datasets is feasible, `PyAutoFit`'s database tools write modeling 
 results to a relational database which can be queried from hard-disk to a Python script or Jupyter notebook. This uses 
-memory-light `Python` generators, ensuring it is practical fo tens of thousands of galaxies.
+memory-light `Python` generators, ensuring it is practical for results containing tens of thousands of galaxies.
 
-# Workspace and HowToLens Tutorials
+# Workspace and HowToGalaxy Tutorials
 
 `PyAutoGalaxy` is distributed with the [autogalaxy workspace](https://github.com/Jammy2211/autogalaxy_workspace>), which 
 contains example scripts for modeling and simulating galaxies and tutorials on how to preprocess imaging and 
-interferometer datasets before a `PyAutoGalaxy` analysis. Also included are the `HowToGalaxy` tutorials, a five chapter 
-lecture series composed of over 30 Jupyter notebooks aimed at non-experts, introducing them to galaxy morphology 
+interferometer datasets before a `PyAutoGalaxy` analysis. Also included are the `HowToGalaxy` tutorials, a four chapter 
+lecture series composed of over 20 Jupyter notebooks aimed at non-experts, introducing them to galaxy morphology 
 analysis, Bayesian inference and teaching them how to use `PyAutoGalaxy` for scientific study. The lectures 
 are available on our [Binder](https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/HEAD) and may therefore be 
 taken without a local `PyAutoGalaxy` installation.
@@ -183,10 +180,8 @@ taken without a local `PyAutoGalaxy` installation.
 - `NumPy` [@numpy]
 - `PyAutoFit` [@pyautofit]
 - `PyLops` [@PyLops]
-- `PyMultiNest` [@pymultinest] [@multinest]
 - `PyNUFFT` [@pynufft]
 - `pyprojroot` (https://github.com/chendaniely/pyprojroot)
-- `pyquad` [@pyquad]
 - `PySwarms` [@pyswarms]
 - `scikit-image` [@scikit-image]
 - `scikit-learn` [@scikit-learn]
@@ -195,10 +190,13 @@ taken without a local `PyAutoGalaxy` installation.
 # Related Software
 
 - `PyAutoLens` [@Nightingale2021] [@Nightingale2021]
-- `galfit` http://www.physics.rutgers.edu/~keeton/gravlens/manual.pdf
-- `lenstronomy-spinoff` https://github.com/sibirrer/lenstronomy [@Birrer2018a]
-- `galpak2d` https://github.com/jspilker/visilens [@spilker16a]
-- `megamorph`
+- `galfit` https://users.obs.carnegiescience.edu/peng/work/galfit/galfit.html [@Peng2002]
+- `GaLight` https://github.com/sibirrer/lenstronomy [@Ding2021]
+- `GIM2D` http://www.astro.uvic.ca/~simard/GIM2D/
+- `imfit` https://github.com/perwin/imfit
+- `megamorph` https://www.nottingham.ac.uk/astronomy/megamorph/ [@Haussler2013]
+- `ProFit` https://github.com/ICRAR/ProFit [@Robotham2017]
+- `SourceXtractor++` https://github.com/astrorama/SourceXtractorPlusPlus
 
 # Acknowledgements
 
