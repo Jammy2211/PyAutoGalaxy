@@ -1,5 +1,5 @@
-Chapter 1: Strong Lensing
-=========================
+Chapter 1: Galaxies
+===================
 
 In chapter 1, we introduce you to galaxy morphology, structure and the core **PyAutoGalaxy** API.
 
@@ -16,14 +16,14 @@ The chapter contains the following tutorials:
 `Tutorial 2: Profiles <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_1_introduction/tutorial_2_light_profiles.ipynb>`_
 - Analytic profiles representing light distributions.
 
-`Tutorial 3: galaxies <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_1_introduction/tutorial_3_galaxies.ipynb>`_
+`Tutorial 3: Galaxies <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_1_introduction/tutorial_3_galaxies.ipynb>`_
 - Making galaxy objects out of light profiles.
 
-`Tutorial 7: Data <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_1_introduction/tutorial_4_data.ipynb>`_
+`Tutorial 4: Data <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_1_introduction/tutorial_4_data.ipynb>`_
 - Loading and inspecting telescope imaging data of a galaxy.
 
-`Tutorial 8: Fitting <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_1_introduction/tutorial_5_fitting.ipynb>`_
+`Tutorial 5: Fitting <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_1_introduction/tutorial_5_fitting.ipynb>`_
 - Fitting data with a galaxy model.
 
-`Tutorial 9: Summary <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_1_introduction/tutorial_6_summary.ipynb>`_
+`Tutorial 6: Summary <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_1_introduction/tutorial_6_summary.ipynb>`_
 - A summary of the chapter.

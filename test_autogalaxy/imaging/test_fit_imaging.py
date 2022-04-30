@@ -539,9 +539,9 @@ def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
 
     fit.subtracted_images_of_galaxies_list  # This stops a nan from being computed in the assertion, which is weird.
 
-    assert fit.subtracted_images_of_galaxies_list[0].slim[0] == -4.0 or nan
-    assert fit.subtracted_images_of_galaxies_list[1].slim[0] == -3.0 or nan
-    assert fit.subtracted_images_of_galaxies_list[2].slim[0] == -2.0 or nan
+    assert fit.subtracted_images_of_galaxies_list[0].slim[0] == -4.0 or np.nan
+    assert fit.subtracted_images_of_galaxies_list[1].slim[0] == -3.0 or np.nan
+    assert fit.subtracted_images_of_galaxies_list[2].slim[0] == -2.0 or np.nan
 
     g0 = ag.Galaxy(
         redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d=np.ones(1))
@@ -557,6 +557,6 @@ def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7_no_blur, plane=plane)
 
-    assert fit.subtracted_images_of_galaxies_list[0].slim[0] == -2.0 or nan
-    assert fit.subtracted_images_of_galaxies_list[1].slim[0] == -3.0 or nan
-    assert fit.subtracted_images_of_galaxies_list[2].slim[0] == 0.0 or nan
+    assert fit.subtracted_images_of_galaxies_list[0].slim[0] == -2.0 or np.nan
+    assert fit.subtracted_images_of_galaxies_list[1].slim[0] == -3.0 or np.nan
+    assert fit.subtracted_images_of_galaxies_list[2].slim[0] == 0.0 or np.nan

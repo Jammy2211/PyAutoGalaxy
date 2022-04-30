@@ -76,7 +76,7 @@ representing a disk.
     """
     The galaxy also has an elliptical exponential disk
     """
-    disk=ag.lp.EllExponential(
+    disk = ag.lp.EllExponential(
         centre=(0.0, 0.0),
         elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.7, angle=30.0),
         intensity=0.5,

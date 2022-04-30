@@ -211,7 +211,7 @@ To finish, lets create a `Plane` with 2 merging galaxies, where the second galax
             sersic_index=3.5,
             mass_to_light_ratio=0.6,
         ),
-        disk=ag.lmp.EllExponential(
+        disk = ag.lmp.EllExponential(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.1),
             intensity=1.0,

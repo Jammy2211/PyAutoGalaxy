@@ -39,7 +39,7 @@ determined by a fitting procedure.
 .. code-block:: bash
 
     galaxy = af.Model(
-        ag.Galaxy, redshift=0.5, bulge=ag.lp.EllSersic, disk=ag.lp.EllExponential
+        ag.Galaxy, redshift=0.5, bulge=ag.lp.EllSersic, disk = ag.lp.EllExponential
     )
 
 We put the model galaxy above into a `Collection`, which is the model we will fit. Note how we could easily 
@@ -100,7 +100,8 @@ The non-linear search fits the model by guessing many models over and over itera
 give a good fit to the data to guide it where to guess subsequent model. 
 
 An animation of a non-linear search is shown below, although this is for a strong gravitational lens using
-**PyAutoGalaxy**'s child project **PyAutoLens**. Updating the animation for a galaxy is on my to-do list!
+**PyAutoGalaxy**'s child project **PyAutoLens**. Updating the animation for a galaxy is on the **PyAutoGalaxy**
+to-do list!
 
 We can see that initial models give a poor fit to the data but gradually improve (increasing the likelihood) as more
 iterations are performed.
@@ -176,7 +177,7 @@ using any combination of light profiles:
         ag.Galaxy,
         redshift=0.5,
         bulge=ag.lp.EllDevVaucouleurs,
-        disk=ag.lp.EllSersic,
+        disk = ag.lp.EllSersic,
         bar=ag.lp.EllGaussian,
         clump_0=ag.lp.EllEff,
         clump_1=ag.lp.EllEff,
