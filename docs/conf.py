@@ -30,7 +30,7 @@ copyright = "2020, James Nightingale, Richard Hayes"
 author = "James Nightingale, Richard Hayes"
 
 # The full version, including alpha/beta/rc tags
-release = "2021.10.14.1"
+release = "2022.03.18.2"
 master_doc = "index"
 
 
@@ -69,46 +69,46 @@ templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
-sphinx_gallery_conf = {
-    # Remove the "Download all examples" button from the top level gallery
-    "download_all_examples": False,
-    # directory where function granular galleries are stored
-    "backreferences_dir": "api/generated/backreferences",
-    # Modules for which function level galleries are created.
-    "doc_module": "pyautogalaxy",
-    # Insert links to documentation of objects in the examples
-    "reference_url": {"pyautogalaxy": None},
-}
+# sphinx_gallery_conf = {
+#     # Remove the "Download all examples" button from the top level gallery
+#     "download_all_examples": False,
+#     # directory where function granular galleries are stored
+#     "backreferences_dir": "api/generated/backreferences",
+#     # Modules for which function level galleries are created.
+#     "doc_module": "pyautogalaxy",
+#     # Insert links to documentation of objects in the examples
+#     "reference_url": {"pyautogalaxy": None},
+# }
 
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_rtd_theme"
-html_last_updated_fmt = "%b %d, %Y"
-html_title = "PyAutoGalaxy"
-html_short_title = "PyAutoGalaxy"
-pygments_style = "default"
-add_function_parentheses = False
-html_show_sourcelink = False
-html_show_sphinx = True
-html_show_copyright = True
+# html_theme = "sphinx_rtd_theme"
+# html_last_updated_fmt = "%b %d, %Y"
+# html_title = "PyAutoGalaxy"
+# html_short_title = "PyAutoGalaxy"
+# pygments_style = "default"
+# add_function_parentheses = False
+# html_show_sourcelink = False
+# html_show_sphinx = True
+# html_show_copyright = True
 
-html_context = {
-    "menu_links_name": "Repository",
-    # Custom variables to enable "Improve this page"" and "Download notebook"
-    # links
-    "doc_path": "docs",
-    "github_project": "pyautogalaxy",
-    "github_repo": "pyautogalaxy",
-    "github_version": "development",
-}
+# html_context = {
+#     "menu_links_name": "Repository",
+#     # Custom variables to enable "Improve this page"" and "Download notebook"
+#     # links
+#     "doc_path": "docs",
+#     "github_project": "pyautogalaxy",
+#     "github_repo": "pyautogalaxy",
+#     "github_version": "development",
+# }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
+# html_static_path = ["_static"]
 
 # -- IMAGES --
 

@@ -179,4 +179,66 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
     """
     print(result.samples.max_log_likelihood_instance)
 
+.. toctree::
+   :caption: Overview:
+   :maxdepth: 1
+   :hidden:
 
+   overview/overview_1_galaxies
+   overview/overview_2_fitting
+   overview/overview_3_modeling
+   overview/overview_4_simulate
+   overview/overview_5_pixelizations
+   overview/overview_6_interferometry
+   overview/overview_7_multi_wavelength
+
+.. toctree::
+   :caption: Installation:
+   :maxdepth: 1
+   :hidden:
+
+   installation/overview
+   installation/conda
+   installation/pip
+   installation/source
+   installation/troubleshooting
+
+.. toctree::
+   :caption: General:
+   :maxdepth: 1
+   :hidden:
+
+   general/workspace
+   general/configs
+   general/likelihood_function
+   general/citations
+   general/papers
+   general/credits
+
+.. toctree::
+   :caption: Tutorials:
+   :maxdepth: 1
+   :hidden:
+
+   howtogalaxy/howtogalaxy
+   howtogalaxy/chapter_1_introduction
+   howtogalaxy/chapter_2_modeling
+   howtogalaxy/chapter_3_search_chaining
+   howtogalaxy/chapter_4_inversions
+   howtogalaxy/chapter_optional
+
+.. toctree::
+   :caption: API Reference:
+   :maxdepth: 1
+   :hidden:
+
+   api/api
+
+.. toctree::
+   :caption: Advanced:
+   :maxdepth: 1
+   :hidden:
+
+   advanced/database
+   advanced/chaining
+   advanced/graphical
