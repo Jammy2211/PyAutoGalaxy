@@ -1,6 +1,6 @@
 import os
 from os import path
-from typing import List, Union
+from typing import List, Optional, Union
 
 from autoconf import conf
 import autoarray as aa
