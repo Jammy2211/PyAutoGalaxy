@@ -606,7 +606,7 @@ class EllSersicCore(EllSersic):
             The intensity at the break radius.
         gamma
             The logarithmic power-law slope of the inner core profiles
-        alpha :
+        alpha
             Controls the sharpness of the transition between the inner core / outer Sersic profiles.
         """
 
