@@ -69,23 +69,23 @@ templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
-# sphinx_gallery_conf = {
-#     # Remove the "Download all examples" button from the top level gallery
-#     "download_all_examples": False,
-#     # directory where function granular galleries are stored
-#     "backreferences_dir": "api/generated/backreferences",
-#     # Modules for which function level galleries are created.
-#     "doc_module": "pyautogalaxy",
-#     # Insert links to documentation of objects in the examples
-#     "reference_url": {"pyautogalaxy": None},
-# }
+sphinx_gallery_conf = {
+    # Remove the "Download all examples" button from the top level gallery
+    "download_all_examples": False,
+    # directory where function granular galleries are stored
+    "backreferences_dir": "api/generated/backreferences",
+    # Modules for which function level galleries are created.
+    "doc_module": "pyautogalaxy",
+    # Insert links to documentation of objects in the examples
+    "reference_url": {"pyautogalaxy": None},
+}
 
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_rtd_theme"
+# html_theme = "sphinx_rtd_theme"
 html_last_updated_fmt = "%b %d, %Y"
 html_title = "PyAutoGalaxy"
 html_short_title = "PyAutoGalaxy"
