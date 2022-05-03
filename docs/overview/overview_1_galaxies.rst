@@ -1,9 +1,9 @@
 .. _overview_1_lensing:
 
+.. highlight:: default
+
 Galaxies
 ========
-
-.. highlight:: default
 
 Nearly a century ago, Edwin Hubble famously classified galaxies into three distinct groups: ellipticals, spirals and
 irregulars. Today, by analysing millions of galaxies with advanced image processing techniques Astronomers have
