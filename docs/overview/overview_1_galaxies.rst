@@ -1,7 +1,5 @@
 .. _overview_1_lensing:
 
-.. highlight:: default
-
 Galaxies
 ========
 
@@ -15,10 +13,10 @@ galaxy samples.
 
 To use **PyAutoGalaxy** we first import autogalaxy and the plot module.
 
-.. code:: python
+.. code-block:: python
 
-    import autogalaxy as al
-    import autogalaxy.plot as aplt
+   import autogalaxy as al
+   import autogalaxy.plot as aplt
 
 Grids
 -----
@@ -29,11 +27,7 @@ two-dimensional Cartesian grids of (y,x) coordinates.
 Below, we make and plot a uniform Cartesian grid (the ``pixel_scales`` describes the conversion from pixel
 units to arc-seconds):
 
-.. highlight:: default
-
-.. code:: python
-
-    import autogalaxy as ag
+.. code-block:: python
 
     grid = ag.Grid2D.uniform(
         shape_native=(100, 100),
@@ -58,9 +52,7 @@ functions representing a galaxy's light distribution(s).
 For this,  **PyAutoGalaxy** uses `LightProfile` objects, for example the `EllSersic` `LightProfile` object which
 represents a light distribution:
 
-.. highlight:: default
-
-.. code:: python
+.. code-block:: python
 
     sersic_light_profile = al.lp.EllSersic(
         centre=(0.0, 0.0),
