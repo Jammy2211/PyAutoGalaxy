@@ -3,6 +3,9 @@
 Installation with pip
 =====================
 
+Install
+-------
+
 We strongly recommend that you install **PyAutoGalaxy** in a
 `Python virtual environment <https://www.geeksforgeeks.org/python-virtual-environment/>`_, with the link attached
 describing what a virtual environment is and how to create one.
@@ -20,9 +23,6 @@ the installation has clean dependencies):
 
     pip install autogalaxy==2022.05.02.1
 
-If this raises no errors **PyAutoGalaxy** is installed! If there is an error check out
-the `troubleshooting section <https://pyautogalaxy.readthedocs.io/en/latest/installation/troubleshooting.html>`_.
-
 You may get warnings which state something like:
 
 .. code-block:: bash
@@ -32,6 +32,13 @@ You may get warnings which state something like:
 
 If you see these messages, they do not mean that the installation has failed and the instructions below will
 identify clearly if the installation is a success.
+
+If there are no errors (but only the warnings above) **PyAutoGalaxy** is installed!
+
+If there is an error check out the `troubleshooting section <https://pyautogalaxy.readthedocs.io/en/latest/installation/troubleshooting.html>`_.
+
+Workspace
+---------
 
 Next, clone the ``autogalaxy workspace`` (the line ``--depth 1`` clones only the most recent branch on
 the ``autogalaxy_workspace``, reducing the download size):
@@ -47,6 +54,13 @@ Run the ``welcome.py`` script to get started!
 .. code-block:: bash
 
    python3 welcome.py
+
+It should be clear that **PyAutoGalaxy** runs without issue.
+
+If there is an error check out the `troubleshooting section <https://pyautogalaxy.readthedocs.io/en/latest/installation/troubleshooting.html>`_.
+
+Optional
+--------
 
 For interferometer analysis there are two optional dependencies that must be installed via the commands:
 
