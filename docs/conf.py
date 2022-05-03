@@ -22,7 +22,6 @@ import sys
 import autogalaxy
 
 sys.path.insert(0, os.path.abspath("."))
-sys.path.append(os.path.abspath("_themes"))
 
 # -- Project information -----------------------------------------------------
 
@@ -38,16 +37,54 @@ html_theme = "furo"
 
 # -- General configuration ---------------------------------------------------
 
-# Add any Sphinx extension module names here, as strings. They can be
-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
-    "sphinx.ext.napoleon",
     "sphinx.ext.extlinks",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.todo",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
     "numpydoc",
+    # Our custom extension, only meant for Furo's own documentation.
+    "furo.sphinxext",
+    # External stuff
+    "myst_parser",
+    "sphinx_copybutton",
+    "sphinx_design",
+    "sphinx_inline_tabs",
 ]
+templates_path = ["_templates"]
+
+# -- Options for extlinks ----------------------------------------------------
+#
+
+extlinks = {
+    "pypi": ("https://pypi.org/project/%s/", ""),
+}
+
+# -- Options for intersphinx -------------------------------------------------
+#
+
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+    "sphinx": ("https://www.sphinx-doc.org/en/master", None),
+}
+
+# -- Options for TODOs -------------------------------------------------------
+#
+
+todo_include_todos = True
+
+# -- Options for Markdown files ----------------------------------------------
+#
+
+myst_enable_extensions = [
+    "colon_fence",
+    "deflist",
+]
+myst_heading_anchors = 3
 
 ## Generate autodoc stubs with summaries from code
 autosummary_generate = True
@@ -61,9 +98,6 @@ autodoc_default_flags = ["members"]
 numpydoc_show_class_members = False
 numpydoc_show_inherited_class_members = False
 numpydoc_class_members_toctree = False
-
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
