@@ -86,8 +86,10 @@ sphinx_gallery_conf = {
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-extensions = ["sphinxawesome_theme"]
-html_theme = "sphinxawesome_theme"
+# extensions = ["sphinxawesome_theme"]
+# html_theme = "sphinxawesome_theme"
+extensions = ["furo"]
+html_theme = "furo"
 html_permalinks_icon = '<span>#</span>'
 html_last_updated_fmt = "%b %d, %Y"
 html_title = "PyAutoGalaxy"
