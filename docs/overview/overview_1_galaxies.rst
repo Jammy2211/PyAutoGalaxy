@@ -18,6 +18,10 @@ To use **PyAutoGalaxy** we first import autogalaxy and the plot module.
    import autogalaxy as al
    import autogalaxy.plot as aplt
 
+.. code:: python
+
+    print("And with the directive syntax, you can have syntax highlighting.")
+
 Grids
 -----
 
