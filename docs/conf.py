@@ -88,7 +88,7 @@ sphinx_gallery_conf = {
 #
 # extensions = ["sphinxawesome_theme"]
 # html_theme = "sphinxawesome_theme"
-extensions = ["furo"]
+# extensions = ["furo"]
 html_theme = "furo"
 html_permalinks_icon = '<span>#</span>'
 html_last_updated_fmt = "%b %d, %Y"
