@@ -12,6 +12,9 @@ import datetime
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+
+html_theme = "sphinxawesome_theme"
+
 from pyprojroot import here
 
 workspace_path = str(here())
@@ -86,8 +89,6 @@ sphinx_gallery_conf = {
 # a list of builtin themes.
 #
 html_permalinks_icon = '<span>#</span>'
-#html_theme = "sphinxawesome_theme"
-html_theme = "renku"
 html_last_updated_fmt = "%b %d, %Y"
 html_title = "PyAutoGalaxy"
 html_short_title = "PyAutoGalaxy"
