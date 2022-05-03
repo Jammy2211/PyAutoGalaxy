@@ -85,7 +85,7 @@ sphinx_gallery_conf = {
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "bizstyle"
+html_theme = "sphinxawesome-theme"
 html_last_updated_fmt = "%b %d, %Y"
 html_title = "PyAutoGalaxy"
 html_short_title = "PyAutoGalaxy"

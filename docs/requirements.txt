@@ -8,3 +8,4 @@ scikit-learn==0.21.3
 autoconf==2022.05.02.1
 autofit==2022.05.02.1
 autoarray==2022.05.02.1
+sphinxawesome-theme
