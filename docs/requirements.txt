@@ -11,3 +11,4 @@ autofit==2022.05.02.1
 autoarray==2022.05.02.1
 furo
 myst-parser
+sphinx_copybutton
