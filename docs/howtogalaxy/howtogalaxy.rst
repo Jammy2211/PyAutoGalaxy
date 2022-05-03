@@ -1,7 +1,7 @@
 .. _howtogalaxy:
 
 HowToGalaxy Lectures
-==================
+====================
 
 The best way to learn **PyAutoGalaxy** is by going through the **HowToGalaxy** lecture series on the
 `autogalaxy workspace <https://github.com/Jammy2211/autogalaxy_workspace>`_.
