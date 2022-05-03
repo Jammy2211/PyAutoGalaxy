@@ -106,8 +106,8 @@ html_show_sourcelink = False
 html_show_sphinx = True
 html_show_copyright = True
 
-pygments_style = "sphinx"
-pygments_dark_style = "monokai"
+# pygments_style = "sphinx"
+# pygments_dark_style = "monokai"
 add_function_parentheses = False
 
 html_context = {
@@ -129,11 +129,11 @@ html_css_files = ["pied-piper-admonition.css"]
 #     },
 # }
 
-if "READTHEDOCS" in os.environ:
-    html_theme_options["announcement"] = (
-        "This documentation is hosted on Read the Docs only for testing. Please use "
-        "<a href='https://pradyunsg.me/furo/'>the main documentation</a> instead."
-    )
+# if "READTHEDOCS" in os.environ:
+#     html_theme_options["announcement"] = (
+#         "This documentation is hosted on Read the Docs only for testing. Please use "
+#         "<a href='https://pradyunsg.me/furo/'>the main documentation</a> instead."
+#     )
 
 
 from sphinx.builders.html import StandaloneHTMLBuilder
