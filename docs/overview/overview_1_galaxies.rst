@@ -23,17 +23,17 @@ To use **PyAutoGalaxy** we first import autogalaxy and the plot module.
 Grids
 -----
 
-.. highlight:: default
-
 To describe the luminous emission of galaxies, **PyAutoGalaxy** uses `Grid2D` data structures, which are
 two-dimensional Cartesian grids of (y,x) coordinates.
 
 Below, we make and plot a uniform Cartesian grid (the ``pixel_scales`` describes the conversion from pixel
 units to arc-seconds):
 
+.. highlight:: default
+
 .. code:: python
 
-    import autogalaxy as al
+    import autogalaxy as ag
 
     grid = ag.Grid2D.uniform(
         shape_native=(100, 100),
@@ -57,6 +57,8 @@ functions representing a galaxy's light distribution(s).
 
 For this,  **PyAutoGalaxy** uses `LightProfile` objects, for example the `EllSersic` `LightProfile` object which
 represents a light distribution:
+
+.. highlight:: default
 
 .. code:: python
 
