@@ -1,0 +1,50 @@
+[build-system]
+requires = ["sphinx-theme-builder >= 0.2.0a10"]
+build-backend = "sphinx_theme_builder"
+
+[tool.sphinx-theme-builder]
+node-version = "16.13.1"
+additional-compiled-static-assets = [
+  "styles/furo-extensions.css",
+]
+
+[project]
+name = "furo"
+description = "A clean customisable Sphinx documentation theme."
+dynamic = ["version"]
+readme = "README.md"
+
+requires-python = ">=3.6"
+dependencies = [
+  "beautifulsoup4",
+  "sphinx ~= 4.0",
+  "pygments ~= 2.7",
+]
+
+license = { file = "LICENSE"}
+authors = [
+    {name = "Pradyun Gedam", email = "mail@pradyunsg.me"},
+]
+classifiers = [
+  "Framework :: Sphinx",
+  "Framework :: Sphinx :: Theme",
+  "Development Status :: 5 - Production/Stable",
+  "License :: OSI Approved :: MIT License",
+  "Environment :: Web Environment",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.5",
+  "Programming Language :: Python :: 3.6",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Operating System :: OS Independent",
+  "Topic :: Documentation",
+  "Topic :: Software Development :: Documentation",
+]
+
+[project.entry-points]
+"sphinx.html_themes" = {furo = "furo"}
+
+[project.urls]
+GitHub = "https://github.com/pradyunsg/furo"
