@@ -9,3 +9,4 @@ autoconf==2022.05.02.1
 autofit==2022.05.02.1
 autoarray==2022.05.02.1
 sphinxawesome-theme
+renku-sphinx-theme
