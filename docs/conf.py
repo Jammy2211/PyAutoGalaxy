@@ -47,8 +47,6 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "numpydoc",
-    # Our custom extension, only meant for Furo's own documentation.
-    "furo.sphinxext",
     # External stuff
     "myst_parser",
     "sphinx_copybutton",
@@ -104,16 +102,6 @@ numpydoc_class_members_toctree = False
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
-sphinx_gallery_conf = {
-    # Remove the "Download all examples" button from the top level gallery
-    "download_all_examples": False,
-    # directory where function granular galleries are stored
-    "backreferences_dir": "api/generated/backreferences",
-    # Modules for which function level galleries are created.
-    "doc_module": "pyautogalaxy",
-    # Insert links to documentation of objects in the examples
-    "reference_url": {"pyautogalaxy": None},
-}
 
 # -- Options for HTML output -------------------------------------------------
 

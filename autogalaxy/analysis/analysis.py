@@ -374,7 +374,7 @@ class AnalysisDataset(Analysis):
                 )
                 self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
 
-        except (FileNotFoundError, AttributeError, KeyError, ModuleNotFoundError):
+        except (FileNotFoundError, AttributeError, KeyError, ModuleNotFoundError, TypeError):
             pass
 
     def output_or_check_figure_of_merit_sanity(

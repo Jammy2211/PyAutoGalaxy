@@ -88,6 +88,7 @@ class AnalysisImaging(AnalysisDataset):
             The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
             the imaging data.
         """
+
         self.check_and_replace_hyper_images(paths=paths)
 
         if not paths.is_complete:
