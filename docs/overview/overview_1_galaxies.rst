@@ -31,7 +31,14 @@ two-dimensional Cartesian grids of (y,x) coordinates.
 Below, we make and plot a uniform Cartesian grid (the ``pixel_scales`` describes the conversion from pixel
 units to arc-seconds):
 
-.. code-block:: python
+.. code:: python
+
+    import autogalaxy as ag
+
+    """
+    To describe the galaxy emission two-dimensional grids of (y,x) Cartesian
+    coordinates are used.
+    """
 
     grid = ag.Grid2D.uniform(
         shape_native=(100, 100),
@@ -40,6 +47,8 @@ units to arc-seconds):
 
     grid_2d_plotter = aplt.Grid2DPlotter(grid=grid)
     grid_2d_plotter.figure_2d()
+
+    print("And with the directive syntax, you can have syntax highlighting.")
 
 This is what our ``Grid2D`` looks like:
 
