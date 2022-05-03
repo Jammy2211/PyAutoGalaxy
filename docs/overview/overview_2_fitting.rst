@@ -13,7 +13,7 @@ Loading Data
 We we begin by loading a galaxy dataset from .fits files, which is the dataset we will use to
 demonstrate fitting.
 
-.. code-block:: python
+.. code:: python
 
     dataset_name = "light_sersic"
     dataset_path = path.join("dataset", "imaging", dataset_name)
