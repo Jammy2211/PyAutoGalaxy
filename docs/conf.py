@@ -122,4 +122,4 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 
 StandaloneHTMLBuilder.supported_image_types = ["image/gif", "image/png", "image/jpeg"]
 
-html_theme = str("furo")
+html_themes = ["furo"]
