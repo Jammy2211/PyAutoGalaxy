@@ -1,0 +1,87 @@
+[tool.poetry]
+name = "sphinxawesome-theme"
+version = "3.3.0"
+description = "An awesome theme for the Sphinx documentation generator"
+readme = "README.md"
+authors = ["Kai Welke <kai687@pm.me>"]
+homepage = "https://sphinxawesome.xyz"
+documentation = "https://sphinxawesome.xyz"
+repository = "https://github.com/kai687/sphinxawesome-theme"
+license = "MIT"
+classifiers = [
+  'Programming Language :: Python',
+  'Framework :: Sphinx',
+  'Framework :: Sphinx :: Theme',
+  'Topic :: Documentation',
+  'Topic :: Documentation :: Sphinx',
+  'Topic :: Software Development :: Documentation'
+]
+packages = [
+  { include = "sphinxawesome_theme", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+sphinx = ">4"
+importlib_metadata = {version = ">=1.6.1,<5.0.0", python = "<3.8"}
+beautifulsoup4 = "^4.9.1"
+python-dotenv = ">=0.19,<0.21"
+myst-parser = {version = ">=0.16.1,<0.18.0", optional = true}
+sphinx-autobuild = {version = "^2021.3.14", optional = true}
+sphinx-sitemap = { version = "^2.2.0", optional = true}
+sphinxcontrib-programoutput = {version = "^0.17", optional = true}
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.9.2"
+flake8-annotations = "^2.9.0"
+flake8-black = "^0.3.2"
+flake8-bandit = "^3.0.0"
+flake8-bugbear = "^22.4.25"
+flake8-docstrings = "^1.6.0"
+black = "^22.3"
+pre-commit = "^2.18.1"
+pytest = "^7.1"
+pytest-cov = "^3.0"
+mypy = "^0.950"
+coverage = { extras = ["toml"], version = "^6.2" }
+flake8_implicit_str_concat = "^0.3.0"
+pytest-randomly = "^3.10.3"
+isort = "^5.10.0"
+
+[tool.poetry.extras]
+docs = ["myst-parser", "sphinx-autobuild", "sphinx-sitemap", "sphinxcontrib-programoutput"]
+
+[tool.coverage.paths]
+source = ["src"]
+
+[tool.coverage.run]
+branch = true
+source = ["sphinxawesome_theme"]
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.isort]
+multi_line_output = 3
+profile = "black"
+
+[tool.mypy]
+files = ["src/sphinxawesome_theme/*.py", "tests/*.py", "noxfile.py", "docs/*.py"]
+show_error_codes = true
+show_error_context = true
+pretty = true
+strict = true
+show_column_numbers = true
+warn_unreachable = true
+warn_unused_ignores = false
+
+[[tool.mypy.overrides]]
+module = ["pygments.*", "bs4", "dotenv", "sphinxcontrib.serializinghtml"]
+ignore_missing_imports = true
+
+[tool.poetry.plugins."sphinx.html_themes"]
+"sphinxawesome_theme" = "sphinxawesome_theme"
+
+[build-system]
+requires = ["poetry_core"]
+build-backend = "poetry.core.masonry.api"

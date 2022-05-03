@@ -13,8 +13,6 @@ import datetime
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 
-html_theme = "sphinxawesome_theme"
-
 from pyprojroot import here
 
 workspace_path = str(here())
@@ -24,6 +22,7 @@ import sys
 import autogalaxy
 
 sys.path.insert(0, os.path.abspath("."))
+sys.path.append(os.path.abspath("_themes"))
 
 # -- Project information -----------------------------------------------------
 
@@ -69,8 +68,7 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
-
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "_themes"]
 
 sphinx_gallery_conf = {
     # Remove the "Download all examples" button from the top level gallery
@@ -88,6 +86,8 @@ sphinx_gallery_conf = {
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
+extensions = ["sphinxawesome_theme"]
+html_theme = "sphinxawesome_theme"
 html_permalinks_icon = '<span>#</span>'
 html_last_updated_fmt = "%b %d, %Y"
 html_title = "PyAutoGalaxy"
