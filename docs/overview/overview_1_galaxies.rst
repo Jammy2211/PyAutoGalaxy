@@ -15,13 +15,15 @@ galaxy samples.
 
 To use **PyAutoGalaxy** we first import autogalaxy and the plot module.
 
-.. code-block:: python
+.. code:: python
 
    import autogalaxy as al
    import autogalaxy.plot as aplt
 
 Grids
 -----
+
+.. highlight:: default
 
 To describe the luminous emission of galaxies, **PyAutoGalaxy** uses `Grid2D` data structures, which are
 two-dimensional Cartesian grids of (y,x) coordinates.
