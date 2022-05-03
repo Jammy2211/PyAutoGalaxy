@@ -8,20 +8,13 @@ observed at different wavebands (e.g. red, blue, green) and combining imaging an
 
 This enables multi-wavelength galaxy modeling, where the color of the galaxies vary across the datasets.
 
-One can also fit images of the same galaxy at the same wavelength simultaneously, for example analysing images of a
-galaxy before they are combined to a single frame via the multidrizzling data reduction process to remove
-correlated noise in the data.
-
 Multi-wavelength galaxy modeling offers a number of advantages:
 
-- It provides a wealth of additional information to fit the galaxy model, boosting the signal-to-noise of the
- observations.
+ - It provides a wealth of additional information to fit the galaxy model, boosting the signal-to-noise of the observations.
 
-- Instrument systematic effects, for example an uncertain PSF, will impact the model less because they vary across
- each dataset.
+ - Instrument systematic effects, for example an uncertain PSF, will impact the model less because they vary across each dataset.
 
-- It overcomes challenges associated with the deblending the emission of a galaxy with other galaxies in datasets where
- multiple galaxies near one another in the line-of-sight are observed.
+ - It overcomes challenges associated with the deblending the emission of a galaxy with other galaxies in datasets where multiple galaxies near one another in the line-of-sight are observed.
 
 Multi-Wavelength Imaging
 ------------------------
@@ -102,11 +95,9 @@ datasets simultaneously.
 We sum the list of analysis objects to create an overall `CombinedAnalysis` object, which we can use to fit the
 multi-wavelength imaging data, where:
 
- - The log likelihood function of this summed analysis class is the sum of the log likelihood functions of each
- individual analysis objects (e.g. the fit to each separate waveband).
+ - The log likelihood function of this summed analysis class is the sum of the log likelihood functions of each individual analysis objects (e.g. the fit to each separate waveband).
 
- - The summing process ensures that tasks such as outputting results to hard-disk, visualization, etc use a
- structure that separates each analysis and therefore each dataset.
+ - The summing process ensures that tasks such as outputting results to hard-disk, visualization, etc use a structure that separates each analysis and therefore each dataset.
 
 .. code-block:: bash
 
@@ -184,28 +175,28 @@ different intensities.
         )
         galaxy_plotter.subplot_of_light_profiles(image=True)
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/overview/images/multiwavelength/r_tracer.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/overview/images/multiwavelength/r_decomposed_image.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/overview/images/multiwavelength/g_tracer.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/master/docs/overview/images/multiwavelength/g_decomposed_image.png
   :width: 400
   :alt: Alternative text
 
 Wavelength Dependence
 ---------------------
 
-In the example above, a free `intensity` parameter is created for every multi-wavelength dataset. This would add 5+
+In the example above, a free ``intensity`` parameter is created for every multi-wavelength dataset. This would add 5+
 free parameters to the model if we had 5+ datasets, quickly making a complex model parameterization.
 
 We can instead parameterize the intensity of the galaxy light profiles as a user defined function of
-wavelength, for example following a relation `y = (m * x) + c` -> `intensity = (m * wavelength) + c`.
+wavelength, for example following a relation ``y = (m * x) + c`` -> ``intensity = (m * wavelength) + c``.
 
-By using a linear relation `y = mx + c` the free parameters are `m` and `c`, which does not scale with the number
+By using a linear relation ``y = mx + c`` the free parameters are `m` and `c`, which does not scale with the number
 of datasets. For datasets with multi-wavelength images (e.g. 5 or more) this allows us to parameterize the variation
 of parameters across the datasets in a way that does not lead to a very complex parameter space.
 
-Below, we show how one would do this for the `intensity` of a galaxy's bulge, give three wavelengths corresponding
+Below, we show how one would do this for the ``intensity`` of a galaxy's bulge, give three wavelengths corresponding
 to a dataset observed in the g, r and I bands.
 
 .. code-block:: bash
@@ -236,6 +227,9 @@ Same Wavelengths
 ----------------
 
 The above API can fit multiple datasets which are observed at the same wavelength.
+
+For example, this allows the analysis of images of a galaxy before they are combined to a single frame via the
+multidrizzling data reduction process to remove correlated noise in the data.
 
 An example use case might be analysing undithered images (e.g. from HST) before they are combined via the
 multidrizzing process, to remove correlated noise in the data.
