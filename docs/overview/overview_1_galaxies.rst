@@ -50,6 +50,25 @@ units to arc-seconds):
 
     print("And with the directive syntax, you can have syntax highlighting.")
 
+.. sourcecode:: python
+
+    import autogalaxy as ag
+
+    """
+    To describe the galaxy emission two-dimensional grids of (y,x) Cartesian
+    coordinates are used.
+    """
+
+    grid = ag.Grid2D.uniform(
+        shape_native=(100, 100),
+        pixel_scales=0.1,
+    )
+
+    grid_2d_plotter = aplt.Grid2DPlotter(grid=grid)
+    grid_2d_plotter.figure_2d()
+
+    print("And with the directive syntax, you can have syntax highlighting.")
+
 This is what our ``Grid2D`` looks like:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/galaxies/grid_2d.png
