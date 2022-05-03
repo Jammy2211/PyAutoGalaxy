@@ -89,7 +89,7 @@ sphinx_gallery_conf = {
 # extensions = ["sphinxawesome_theme"]
 # html_theme = "sphinxawesome_theme"
 # extensions = ["furo"]
-html_theme = str("furo")
+
 html_permalinks_icon = '<span>#</span>'
 html_last_updated_fmt = "%b %d, %Y"
 html_title = "PyAutoGalaxy"
@@ -121,3 +121,5 @@ html_context = {
 from sphinx.builders.html import StandaloneHTMLBuilder
 
 StandaloneHTMLBuilder.supported_image_types = ["image/gif", "image/png", "image/jpeg"]
+
+html_theme = str("furo")
