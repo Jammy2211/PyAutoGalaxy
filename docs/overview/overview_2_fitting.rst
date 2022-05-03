@@ -55,7 +55,7 @@ To do this we can use a ``Mask2D`` object, which for this example we'll create a
         shape_native=imaging.shape_native, pixel_scales=imaging.pixel_scales, radius=3.0
     )
 
-    imaging = imaging.apply_mask(mask=mask)
+    imaging = imaging.apply_mask(mask=mask_2d)
 
     imaging_plotter = aplt.ImagingPlotter(imaging=imaging)
     imaging_plotter.figures_2d(image=True)

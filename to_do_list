@@ -21,7 +21,7 @@ mass_profile_list
 al.mp.EllIsothermal ( e.g. from total_mass_profiles)
 al.mp.EllSersic
 al._mp_integrate
-al._mp_manual.potential_2d_from_grid
+al._mp_manual.potential_2d_from
 
 
 __Lensing__

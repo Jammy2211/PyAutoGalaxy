@@ -66,7 +66,7 @@ and `PyNUFFT` [@pynufft].
     To describe the galaxy emission two-dimensional grids of (y,x) Cartesian
     coordinates are used.
     """
-    grid = ag.Grid2D.uniform(
+    grid_2d = ag.Grid2D.uniform(
         shape_native=(50, 50),
         pixel_scales=0.05,  # <- Conversion from pixel units to arc-seconds.
     )
@@ -109,7 +109,7 @@ and `PyNUFFT` [@pynufft].
     We can use the Grid2D and Plane to perform many calculations, for example
     plotting the image of the lensed source.
     """
-    plane_plotter = aplt.PlanePlotter(plane=plane, grid=grid)
+    plane_plotter = aplt.PlanePlotter(plane=plane, grid=grid_2d)
     plane_plotter.figures_2d(image=True)
 
 

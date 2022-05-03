@@ -39,7 +39,7 @@ determined by a fitting procedure.
 .. code-block:: python
 
     galaxy = af.Model(
-        ag.Galaxy, redshift=0.5, bulge=ag.lp.EllSersic, disk = ag.lp.EllExponential
+        ag.Galaxy, redshift=0.5, bulge=ag.lp.EllSersic, disk=ag.lp.EllExponential
     )
 
 We put the model galaxy above into a `Collection`, which is the model we will fit. Note how we could easily 

@@ -24,7 +24,7 @@ To fit this image with an ``Inversion``, we first mask the ``Imaging`` object:
       shape_native=imaging.shape_native, pixel_scales=imaging.pixel_scales, radius=3.0
     )
 
-   imaging = imaging.apply_mask(mask=mask)
+   imaging = imaging.apply_mask(mask=mask_2d)
 
 To reconstruct the galaxy using a pixel-grid, we simply pass it the ``Pixelization`` class we want to reconstruct its
 light using.

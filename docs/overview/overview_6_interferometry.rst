@@ -18,7 +18,7 @@ images are computed. It is this image that is mapped to Fourier space to compare
 
 .. code-block:: python
 
-    real_space_mask = ag.Mask2D.circular(
+    real_space_mask_2d = ag.Mask2D.circular(
         shape_native=(400, 400), pixel_scales=0.025, radius=3.0
     )
 
@@ -36,7 +36,7 @@ for an ``Imaging`` object.
         visibilities_path=path.join(dataset_path, "visibilities.fits"),
         noise_map_path=path.join(dataset_path, "noise_map.fits"),
         uv_wavelengths_path=path.join(dataset_path, "uv_wavelengths.fits"),
-        real_space_mask=real_space_mask,
+        real_space_mask=real_space_mask_2d,
     )
 
     interferometer_plotter = aplt.InterferometerPlotter(interferometer=interferometer)
@@ -202,7 +202,7 @@ Gaussian noise to the visibilities:
 
 .. code-block:: python
 
-    real_space_grid = ag.Grid2D.uniform(
+    real_space_grid_2d = ag.Grid2D.uniform(
         shape_native=real_space_mask.shape_native,
         pixel_scales=real_space_mask.pixel_scales
     )
