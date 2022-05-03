@@ -1,5 +1,8 @@
 .. _likelihood_function:
 
+Likelihood Function
+===================
+
 The ``autogalaxy_workspace`` contains Jupyter notebooks describing the (log) likelihood functions used by **PyAutoGalaxy**.
 
 The notebooks provide a step-by-step guide of how **PyAutoGalaxy** fits galaxy data, with the aim to make
