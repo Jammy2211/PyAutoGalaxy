@@ -14,7 +14,7 @@ Hubble Space Telescope goes through to observe a galaxy. This includes accountin
 determine the signal-to-noise of the data, blurring the observed light of the galaxy with the telescope optics
 and accounting for the background sky in the exposure which adds Poisson noise.
 
-.. code-block:: bash
+.. code-block:: python
 
     psf = ag.Kernel2D.from_gaussian(shape_native=(11, 11), sigma=0.1, pixel_scales=0.05)
 
@@ -25,7 +25,7 @@ and accounting for the background sky in the exposure which adds Poisson noise.
 Once we have a simulator, we can use it to create an imaging dataset which consists of an image, noise-map and
 Point Spread Function (PSF) by passing it a plane and grid.
 
-.. code-block:: bash
+.. code-block:: python
 
     imaging = simulator.via_plane_from(plane=plane, grid=grid)
 

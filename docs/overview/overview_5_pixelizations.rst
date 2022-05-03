@@ -18,7 +18,7 @@ Rectangular Example
 
 To fit this image with an ``Inversion``, we first mask the ``Imaging`` object:
 
-.. code-block:: bash
+.. code-block:: python
 
    mask = al.Mask2D.circular(
       shape_native=imaging.shape_native, pixel_scales=imaging.pixel_scales, radius=3.0
@@ -33,7 +33,7 @@ We also pass a ``Regularization`` scheme which applies a smoothness prior on the
 
 Below, we use a ``Rectangular`` pixelization with resolution 50 x 50 and a ``Constant`` regularization scheme:
 
-.. code-block:: bash
+.. code-block:: python
 
     galaxy = ag.Galaxy(
         redshift=1.0,
@@ -45,7 +45,7 @@ Now that our galaxy has a `Pixelization` and `Regularization`, we are able to fi
 same way as before, by simply passing the galaxy to a `Plane` and using this `Plane` to create a `FitImaging`
 object.
 
-.. code-block:: bash
+.. code-block:: python
 
     plane = ag.Plane(galaxies=[galaxy])
 

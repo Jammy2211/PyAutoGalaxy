@@ -24,13 +24,13 @@ For multi-wavelength imaging datasets, we begin by defining the colors of the mu
 For this overview we use only two colors, green (g-band) and red (r-band), but extending this to more datasets
 is straight forward.
 
-.. code-block:: bash
+.. code-block:: python
 
     color_list = ["g", "r"]
 
 pixel_scales_list = [0.08, 0.012]
 
-.. code-block:: bash
+.. code-block:: python
 
     pixel_scales_list = [0.08, 0.012]
 
@@ -38,7 +38,7 @@ Multi-wavelength imaging datasets do not use any new objects or class in **PyAut
 
 We simply use lists of the classes we are now familiar with, for example the `Imaging` class.
 
-.. code-block:: bash
+.. code-block:: python
 
     imaging_list = [
         al.Imaging.from_fits(
@@ -71,7 +71,7 @@ define and use to set up the `Imaging` object that the galaxy model fits.
 For multi-wavelength galaxy modeling, we use the same mask for every dataset whenever possible. This is not absolutely
 necessary, but provides a more reliable analysis.
 
-.. code-block:: bash
+.. code-block:: python
 
     mask_2d_list = [
         al.Mask2D.circular(
@@ -85,7 +85,7 @@ Analysis
 
 We create a list of ``AnalysisImaging`` objects for every dataset.
 
-.. code-block:: bash
+.. code-block:: python
 
     analysis_list = [al.AnalysisImaging(dataset=imaging) for imaging in imaging_list]
 
@@ -99,14 +99,14 @@ multi-wavelength imaging data, where:
 
  - The summing process ensures that tasks such as outputting results to hard-disk, visualization, etc use a structure that separates each analysis and therefore each dataset.
 
-.. code-block:: bash
+.. code-block:: python
 
     analysis = sum(analysis_list)
 
 We can parallelize the likelihood function of these analysis classes, whereby each evaluation is performed on a
 different CPU.
 
-.. code-block:: bash
+.. code-block:: python
 
     analysis.n_cores = 2
 
@@ -116,7 +116,7 @@ Model
 
 We compose an initial galaxy model as per usual.
 
-.. code-block:: bash
+.. code-block:: python
 
     galaxy = af.Model(ag.Galaxy, redshift=0.5, bulge=ag.lp.EllSersic, disk=ag.lp.EllSersic)
 
@@ -133,7 +133,7 @@ parameters in the fit to each image.
 
 We do this using the combined analysis object as follows:
 
-.. code-block:: bash
+.. code-block:: python
 
     analysis = analysis.with_free_parameters(
         *[model.galaxies.galaxy.bulge.intensity, model.galaxies.galaxy.disk.intensity]
@@ -158,7 +158,7 @@ The model-fit is performed as per usual.
 The result object returned by this model-fit is a list of ``Result`` objects, because we used a combined analysis.
 Each result corresponds to each analysis created above and is there the fit to each dataset at each wavelength.
 
-.. code-block:: bash
+.. code-block:: python
 
     search = af.DynestyStatic(name="overview_example_multiwavelength")
     result_list = search.fit(model=model, analysis=analysis)
@@ -166,7 +166,7 @@ Each result corresponds to each analysis created above and is there the fit to e
 Plotting each result's galaxies shows that the bulge and disk appear different in each result, owning to their
 different intensities.
 
-.. code-block:: bash
+.. code-block:: python
 
     for result in result_list:
 
@@ -199,7 +199,7 @@ of parameters across the datasets in a way that does not lead to a very complex 
 Below, we show how one would do this for the ``intensity`` of a galaxy's bulge, give three wavelengths corresponding
 to a dataset observed in the g, r and I bands.
 
-.. code-block:: bash
+.. code-block:: python
 
     wavelength_list = [464, 658, 806]
 

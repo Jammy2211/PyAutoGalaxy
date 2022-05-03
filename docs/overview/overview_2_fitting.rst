@@ -49,7 +49,7 @@ We next mask the data, so that regions where there is no signal (e.g. the edges)
 
 To do this we can use a ``Mask2D`` object, which for this example we'll create as a 3.0" circle.
 
-.. code-block:: bash
+.. code-block:: python
 
     mask_2d = ag.Mask2D.circular(
         shape_native=imaging.shape_native, pixel_scales=imaging.pixel_scales, radius=3.0
@@ -78,7 +78,7 @@ dataset we loaded above.
 
 It therefore produces a plane whose image looks exactly like the dataset.
 
-.. code-block:: bash
+.. code-block:: python
 
     galaxy = ag.Galaxy(
         redshift=0.5,
@@ -99,7 +99,7 @@ The fit performs the necessary tasks to create the `model_image` we fit the data
 image with the `Imaging` Point Spread Function (PSF). We can see this by comparing the plane`s image (which isn't PSF
 convolved) and the fit`s model image (which is).
 
-.. code-block:: bash
+.. code-block:: python
 
     fit = ag.FitImaging(dataset=imaging, plane=plane)
 
@@ -126,7 +126,7 @@ The fit creates the following:
 
 We can plot all three of these quantities
 
-.. code-block:: bash
+.. code-block:: python
 
     fit_imaging_plotter = aplt.FitImagingPlotter(fit=fit)
 
@@ -153,7 +153,7 @@ residuals, normalized residuals and chi-squared are minimized:
 
 The overall quality of the fit is quantified with the `log_likelihood`:
 
-.. code-block:: bash
+.. code-block:: python
 
     print(fit.log_likelihood)
 

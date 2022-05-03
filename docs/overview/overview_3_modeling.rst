@@ -25,7 +25,7 @@ are interested in developing your own software to perform advanced model-fitting
 
 We import it separately to **PyAutoGalaxy**
 
-.. code-block:: bash
+.. code-block:: python
 
     import autofit as af
 
@@ -36,7 +36,7 @@ We compose the model that we fit to the data using a ``Model`` object, which beh
 and ``LightProfile`` used previously, however their parameters are not specified and are instead
 determined by a fitting procedure.
 
-.. code-block:: bash
+.. code-block:: python
 
     galaxy = af.Model(
         ag.Galaxy, redshift=0.5, bulge=ag.lp.EllSersic, disk = ag.lp.EllExponential
@@ -48,7 +48,7 @@ extend this object to compose complex models containing many galaxies.
 The reason we create separate `Collection`'s for the `galaxies` and `model` is so that the `model`
 can be extended to include other components than just galaxies.
 
-.. code-block:: bash
+.. code-block:: python
 
     galaxies = af.Collection(galaxy=galaxy)
     model = af.Collection(galaxies=galaxies)
@@ -69,7 +69,7 @@ bulge and disk) parameters that best-fit our data.
 In this example we use `dynesty` (https://github.com/joshspeagle/dynesty), a nested sampling algorithm that is
 very effective at modeling.
 
-.. code-block:: bash
+.. code-block:: python
 
     search = af.DynestyStatic(name="search_example")
 
@@ -82,7 +82,7 @@ Analysis
 We next create an ``AnalysisImaging`` object, which contains the ``log likelihood function`` that the non-linear
 search calls to fit the lens model to the data.
 
-.. code-block:: bash
+.. code-block:: python
 
     analysis = ag.AnalysisImaging(dataset=imaging)
 
@@ -92,7 +92,7 @@ Model-Fit
 To perform the model-fit we pass the model and analysis to the search's fit method. This will output results (e.g.,
 dynesty samples, model parameters, visualization) to hard-disk.
 
-.. code-block:: bash
+.. code-block:: python
 
     result = search.fit(model=model, analysis=analysis)
 
@@ -122,7 +122,7 @@ The fit above returns a ``Result`` object, which includes lots of information on
 
 Below we print the maximum log likelihood model inferred.
 
-.. code-block:: bash
+.. code-block:: python
 
     print(result.max_log_likelihood_instance.galaxies.galaxy.bulge)
     print(result.max_log_likelihood_instance.galaxies.galaxy.disk)
@@ -133,7 +133,7 @@ parameter samples, log likelihood values and tools to compute the errors on the 
 **PyAutoGalaxy** includes many visualization tools for plotting the results of a non-linear search, for example we can
 make a corner plot of the probability density function (PDF):
 
-.. code-block:: bash
+.. code-block:: python
 
     dynesty_plotter = aplt.DynestyPlotter(samples=result.samples)
     dynesty_plotter.cornerplot()
@@ -147,7 +147,7 @@ Here is an example of how a PDF estimated for a model appears:
 The result also contains the maximum log likelihood ``Plane`` and ``FitImaging`` objects and which can easily be
 plotted.
 
-.. code-block:: bash
+.. code-block:: python
 
     plane_plotter = aplt.PlanePlotter(plane=result.max_log_likelihood_plane, grid=mask.masked_grid)
     plane_plotter.subplot_plane()
@@ -171,7 +171,7 @@ Model Customization
 The ``Model`` can be fully customized, making it simple to parameterize and fit many different models
 using any combination of light profiles:
 
-.. code-block:: bash
+.. code-block:: python
 
     galaxy_model = af.Model(
         ag.Galaxy,

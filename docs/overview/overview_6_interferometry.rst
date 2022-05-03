@@ -16,7 +16,7 @@ To begin, we define a real-space mask. Although interferometer analysis is perfo
 therefore Fourier space, we still need to define the grid of coordinates in real-space from which the galaxy's
 images are computed. It is this image that is mapped to Fourier space to compare to the uv-plane data.
 
-.. code-block:: bash
+.. code-block:: python
 
     real_space_mask = ag.Mask2D.circular(
         shape_native=(400, 400), pixel_scales=0.025, radius=3.0
@@ -28,7 +28,7 @@ Interferometer Data
 We next load an ``Interferometer`` dataset from fits files, which follows the same API that we have seen
 for an ``Imaging`` object.
 
-.. code-block:: bash
+.. code-block:: python
 
     dataset_path = "/path/to/dataset/folder"
 
@@ -60,7 +60,7 @@ We discuss below how **PyAutoGalaxy** can scale up to large visibilities dataset
 
 This can also plot the dataset in real-space, using the fast Fourier transforms described below.
 
-.. code-block:: bash
+.. code-block:: python
 
     interferometer_plotter = aplt.InterferometerPlotter(interferometer=interferometer)
     interferometer_plotter.figures_2d(dirty_image=True, dirty_signal_to_noise_map=True)
@@ -83,7 +83,7 @@ To perform uv-plane modeling, **PyAutoGalaxy** next Fourier transforms this imag
 This operation uses a *Transformer* object, of which there are multiple available in **PyAutoGalaxy**. This includes
 a direct Fourier transform which performs the exact Fourier transformer without approximation.
 
-.. code-block:: bash
+.. code-block:: python
 
     transformer_class = ag.TransformerDFT
 
@@ -94,14 +94,14 @@ For this reason, **PyAutoGalaxy** supports the non-uniform fast fourier transfor
 **PyNUFFT** (https://github.com/jyhmiinlin/pynufft), which is significantly faster, being able too perform a Fourier
 transform of ~10 million in less than a second!
 
-.. code-block:: bash
+.. code-block:: python
 
     transformer_class = ag.TransformerNUFFT
 
 To perform a fit, we follow the same process we did for imaging. We do not need to mask an interferometer dataset,
 but we will apply the settings above:
 
-.. code-block:: bash
+.. code-block:: python
 
     interferometer = interferometer.apply_settings(
         settings=ag.SettingsInterferometer(transformer_class=transformer_class)
@@ -114,7 +114,7 @@ Visualization of the fit can be performed in the uv-plane or in real-space.
 
 Note that the fit is not performed in real-space, but plotting it in real-space is often more informative.
 
-.. code-block:: bash
+.. code-block:: python
 
     fit = ag.FitInterferometer(
         interferometer=interferometer, tracer=tracer
@@ -181,7 +181,7 @@ Whereas we previously used an ``AnalysisImaging`` object, we instead use an ``An
 the model in the correct way for an interferometer dataset. This includes mapping the model from real-space
 to the uv-plane via the Fourier transform discussed above:
 
-.. code-block:: bash
+.. code-block:: python
 
     galaxy = af.Model(ag.Galaxy, redshift=0.5, bulge=ag.lp.EllSersic)
 
@@ -200,7 +200,7 @@ Simulations
 Simulated interferometer datasets can be generated using the ``SimulatorInterferometer`` object, which includes adding
 Gaussian noise to the visibilities:
 
-.. code-block:: bash
+.. code-block:: python
 
     real_space_grid = ag.Grid2D.uniform(
         shape_native=real_space_mask.shape_native,
