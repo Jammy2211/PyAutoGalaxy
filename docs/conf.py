@@ -34,7 +34,7 @@ author = "James Nightingale, Richard Hayes"
 # The full version, including alpha/beta/rc tags
 release = "2022.05.02.1"
 master_doc = "index"
-
+html_theme = "furo"
 
 # -- General configuration ---------------------------------------------------
 
@@ -122,4 +122,3 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 
 StandaloneHTMLBuilder.supported_image_types = ["image/gif", "image/png", "image/jpeg"]
 
-html_themes = ["furo"]
