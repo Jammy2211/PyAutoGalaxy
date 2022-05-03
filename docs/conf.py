@@ -121,13 +121,13 @@ language = "en"
 
 html_static_path = ["_static"]
 html_css_files = ["pied-piper-admonition.css"]
-
-html_theme_options = {
-    "light_css_variables": {
-        "color-brand-primary": "#7C4DFF",
-        "color-brand-content": "#7C4DFF",
-    },
-}
+#
+# html_theme_options = {
+#     "light_css_variables": {
+#         "color-brand-primary": "#7C4DFF",
+#         "color-brand-content": "#7C4DFF",
+#     },
+# }
 
 if "READTHEDOCS" in os.environ:
     html_theme_options["announcement"] = (
