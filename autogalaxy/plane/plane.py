@@ -300,7 +300,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             profiling_dict=self.profiling_dict,
         )
 
-    def linear_obj_list_from(
+    def mapper_list_from(
         self,
         grid,
         settings_pixelization=aa.SettingsPixelization(),
@@ -312,7 +312,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         sparse_grid_list = self.sparse_image_plane_grid_list_from(grid=grid)
 
-        linear_obj_list = []
+        mapper_list = []
 
         pixelization_list = self.pixelization_list
         hyper_galaxy_image_list = self.hyper_galaxies_with_pixelization_image_list
@@ -329,9 +329,9 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
                 preloads=preloads,
             )
 
-            linear_obj_list.append(mapper)
+            mapper_list.append(mapper)
 
-        return linear_obj_list
+        return mapper_list
 
     def inversion_imaging_from(
         self,
@@ -345,7 +345,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         preloads=aa.Preloads(),
     ):
 
-        linear_obj_list = self.linear_obj_list_from(
+        linear_obj_list = self.mapper_list_from(
             grid=grid, settings_pixelization=settings_pixelization, preloads=preloads
         )
 
@@ -373,7 +373,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         preloads=aa.Preloads(),
     ):
 
-        linear_obj_list = self.linear_obj_list_from(
+        linear_obj_list = self.mapper_list_from(
             grid=grid, settings_pixelization=settings_pixelization, preloads=preloads
         )
 

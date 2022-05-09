@@ -219,5 +219,6 @@ Gaussian noise to the visibilities:
 Wrap-Up
 -------
 
-The ``interferometer`` package of the ``autogalaxy_workspace`` contains numerous example scripts for performing
+The `interferometer <https://github.com/Jammy2211/autogalaxy_workspace/tree/release/notebooks/interferometer>`_ package
+of the `autogalaxy_workspace <https://github.com/Jammy2211/autogalaxy_workspace>`_ contains numerous example scripts for performing
 interferometer modeling and simulating galaxy interferometer datasets.

@@ -77,6 +77,7 @@ from .profiles import (
     scaling_relations as sr,
 )
 from .profiles.light_profiles import light_profiles_init as lp_init
+from .profiles.light_profiles import light_profiles_linear as lp_linear
 from .profiles.light_profiles import light_profiles_snr as lp_snr
 from . import convert
 from . import mock as m

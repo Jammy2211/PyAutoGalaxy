@@ -28,11 +28,11 @@ is straight forward.
 
     color_list = ["g", "r"]
 
-pixel_scales_list = [0.08, 0.012]
+pixel_scales_list = [0.08, 0.12]
 
 .. code-block:: python
 
-    pixel_scales_list = [0.08, 0.012]
+    pixel_scales_list = [0.08, 0.12]
 
 Multi-wavelength imaging datasets do not use any new objects or class in **PyAutoGalaxy**.
 
@@ -210,7 +210,7 @@ to a dataset observed in the g, r and I bands.
 
     for wavelength, imaging in zip(wavelength_list, imaging_list):
 
-        bulge_intensity = af.Add(af.Multiply(wavelength, bulge_m), bulge_c)
+        bulge_intensity = (wavelength * bulge_m) + bulge_c
 
         analysis_list.append(
             ag.AnalysisImaging(dataset=imaging).with_model(
@@ -258,3 +258,10 @@ where a galaxy emits ultraviolet to where dust is heated.
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/multiwavelength/g_image.png
   :width: 400
   :alt: Alternative text
+
+Wrap-Up
+-------
+
+The `multi <https://github.com/Jammy2211/autogalaxy_workspace/tree/release/notebooks/multi>`_ package
+of the `autogalaxy_workspace <https://github.com/Jammy2211/autogalaxy_workspace>`_ contains numerous example scripts for performing
+multi-wavelength modeling and simulating galaxies with multiple datasets.
