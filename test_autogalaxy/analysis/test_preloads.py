@@ -51,7 +51,7 @@ def test__info():
         use_w_tilde=False,
         sparse_image_plane_grid_pg_list=None,
         relocated_grid=None,
-        linear_obj_list=None,
+        mapper_list=None,
         operated_mapping_matrix=None,
         curvature_matrix_preload=None,
     )
@@ -91,7 +91,7 @@ def test__info():
         w_tilde=1,
         use_w_tilde=True,
         sparse_image_plane_grid_pg_list=1,
-        linear_obj_list=1,
+        mapper_list=1,
         operated_mapping_matrix=1,
         curvature_matrix_preload=1,
         curvature_matrix=1,
