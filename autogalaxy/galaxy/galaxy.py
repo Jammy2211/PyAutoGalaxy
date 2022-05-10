@@ -167,6 +167,18 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     def has_light_profile(self) -> bool:
         return len(self.light_profile_list) > 0
 
+    @property
+    def light_profile_linear_list(self) -> List[LightProfile]:
+        return [
+            value
+            for value in self.__dict__.values()
+            if is_light_profile(value) and isinstance(value, LightProfileLinear)
+        ]
+
+    @property
+    def has_light_profile_linear(self) -> bool:
+        return len(self.light_profile_linear_list) > 0
+
     def radial_projected_shape_slim_from(self, grid: aa.type.Grid1D2DLike) -> int:
         """
         To make 1D plots (e.g. `image_1d_from()`) from an input 2D grid, one uses that 2D grid to radially project
