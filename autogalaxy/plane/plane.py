@@ -286,7 +286,18 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def regularization_list(self) -> List:
         return [galaxy.regularization for galaxy in self.galaxies_with_pixelization]
 
-    #   def light_profile_linear_list_from(self, source_grid_slim):
+    def light_profile_linear_list_from(self, source_grid_slim):
+
+        if not self.has_light_profile_linear:
+            return None
+
+        light_profile_linear_list = []
+
+        for galaxy in self.galaxies:
+
+            light_profile_linear_list += galaxy.light_profile_linear_list
+
+        return light_profile_linear_list
 
     def mapper_from(
         self,

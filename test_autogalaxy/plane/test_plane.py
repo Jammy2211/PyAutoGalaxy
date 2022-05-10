@@ -281,6 +281,38 @@ class TestAbstractPlane:
 
         assert plane.hyper_galaxies_with_pixelization_image_list == []
 
+    def test__light_profile_linear_list_from(self, lp_0):
+
+        plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
+
+        light_profile_linear_list = plane.light_profile_linear_list_from(
+            source_grid_slim=1
+        )
+
+        assert light_profile_linear_list == None
+
+        lp_linear_0 = ag.lp_linear.LightProfileLinear()
+        lp_linear_1 = ag.lp_linear.LightProfileLinear()
+        lp_linear_2 = ag.lp_linear.LightProfileLinear()
+
+        plane = ag.Plane(
+            galaxies=[
+                ag.Galaxy(
+                    redshift=0.5,
+                    lp_0=lp_0,
+                    light_linear_0=lp_linear_0,
+                    light_linear_1=lp_linear_1,
+                ),
+                ag.Galaxy(redshift=0.5, light_linear=lp_linear_2),
+            ],
+            redshift=None,
+        )
+        light_profile_linear_list = plane.light_profile_linear_list_from(
+            source_grid_slim=1
+        )
+
+        assert light_profile_linear_list == [lp_linear_0, lp_linear_1, lp_linear_2]
+
 
 class TestAbstractPlaneProfiles:
     class TestProfileImage:
