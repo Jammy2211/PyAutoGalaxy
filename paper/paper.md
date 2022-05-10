@@ -90,7 +90,7 @@ to bulge-like elliptical galaxies. At sub-mm and radio wavelengths interferomete
 Atacama Large Millimeter Array (ALMA) have revealed the integral role that dust plays in forming a galaxy in the 
 distant Universe, early in its lifetime. Studies typically represent a galaxy's light using analytic functions such as 
 the Sersic profile [@Sersic], which quantify the global appearance of most galaxies into one of three groups: (i) bulge-like 
-structures which follow a dev Vaucouleurs profile; (ii) disk-like structures which follow an Exponential profile 
+structures which follow a de Vaucouleurs profile; (ii) disk-like structures which follow an exponential profile 
 or; (iii) irregular morphologies which are difficult to quantify with symmetric and smooth analytic profiles. Galaxies 
 are often composed of many sub-components which may be a combination of these different structures.
 
@@ -103,7 +103,7 @@ the complex uv-plane and Fourier transformed to real-space to show model-fit.
  
 # Statement of Need
 
-In the next decade, wide field surveys such as Euclid, the Vera Rubin Observatory and Square Kilometer array are 
+In the next decade, wide field surveys such as Euclid, the Vera Rubin Observatory and Square Kilometer Array are 
 poised to observe images of _billions_ of galaxies. Analysing these extremely large galaxy datasets demands 
 advanced Bayesian model-fitting techniques which can scale-up in a fully automated manner. Equally, the James Webb 
 Space Telescope, thirty-meter class ground telescopes and the square kilometer array radio interferometer will observe 
