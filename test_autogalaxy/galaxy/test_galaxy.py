@@ -82,6 +82,20 @@ class TestLightProfiles:
         assert gal_image.binned[0] == lp_image_0
         assert gal_image.binned[1] == lp_image_1
 
+    def test__image_2d_from__does_not_include_linear_light_profiles(
+        self, sub_grid_2d_7x7, lp_0
+    ):
+
+        lp_linear = ag.lp_linear.EllSersic(effective_radius=2.0, sersic_index=2.0)
+
+        galaxy = ag.Galaxy(redshift=0.5, light_0=lp_0, light_linear=lp_linear)
+
+        lp_image = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
+
+        image = galaxy.image_2d_from(grid=sub_grid_2d_7x7)
+
+        assert (image == lp_image).all()
+
     def test__luminosity_within_circle__two_profile_galaxy__is_sum_of_individual_profiles(
         self, lp_0, lp_1, gal_x2_lp
     ):

@@ -11,6 +11,7 @@ from autoconf.dictable import Dictable
 from autogalaxy import exc
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
+from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.profiles.point_sources import Point
 from autogalaxy.operate.image import OperateImageList
@@ -156,7 +157,11 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     @property
     def light_profile_list(self) -> List[LightProfile]:
-        return [value for value in self.__dict__.values() if is_light_profile(value)]
+        return [
+            value
+            for value in self.__dict__.values()
+            if is_light_profile(value) and not isinstance(value, LightProfileLinear)
+        ]
 
     @property
     def has_light_profile(self) -> bool:

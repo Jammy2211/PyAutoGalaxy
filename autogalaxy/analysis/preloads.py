@@ -122,6 +122,7 @@ class Preloads(aa.Preloads):
         preloads = cls()
 
         if isinstance(fit_0, aa.FitImaging):
+
             preloads.set_w_tilde_imaging(fit_0=fit_0, fit_1=fit_1)
             preloads.set_blurred_image(fit_0=fit_0, fit_1=fit_1)
 

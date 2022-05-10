@@ -6,12 +6,14 @@ import autoarray as aa
 from autogalaxy.profiles.light_profiles import light_profiles as lp
 
 
-class LightProfileLinear(lp.LightProfile, aa.LinearObj):
-    def mapping_matrix_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
-        return self.image_2d_from(grid=grid).slim
+class LightProfileLinear:
+
+    pass
+    # def mapping_matrix_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    #     return self.image_2d_from(grid=grid).slim
 
 
-class EllSersic(lp.AbstractEllSersic, LightProfileLinear):
+class EllSersic(lp.EllSersic, LightProfileLinear):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
