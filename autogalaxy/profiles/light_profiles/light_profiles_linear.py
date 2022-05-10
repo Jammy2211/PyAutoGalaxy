@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Tuple
+from typing import Dict, Optional, Tuple
 
 import autoarray as aa
 
@@ -11,6 +11,19 @@ class LightProfileLinear(lp.LightProfile):
     pass
     # def mapping_matrix_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
     #     return self.image_2d_from(grid=grid).slim
+
+
+class LightProfileLinearObjFunc(aa.LinearObjFunc):
+    def __init__(
+        self,
+        grid: aa.type.Grid1D2DLike,
+        light_profile: LightProfileLinear,
+        profiling_dict: Optional[Dict] = None,
+    ):
+
+        super().__init__(grid=grid, profiling_dict=profiling_dict)
+
+        self.light_profile = light_profile
 
 
 class EllSersic(lp.EllSersic, LightProfileLinear):

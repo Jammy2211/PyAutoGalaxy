@@ -10,6 +10,9 @@ from autoarray.inversion.inversion.factory import inversion_imaging_unpacked_fro
 from autoarray.inversion.inversion.factory import inversion_interferometer_unpacked_from
 from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.profiles.light_profiles.light_profiles_linear import (
+    LightProfileLinearObjFunc,
+)
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
 from autogalaxy.operate.image import OperateImageGalaxies
 from autogalaxy.operate.deflections import OperateDeflections
@@ -286,7 +289,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def regularization_list(self) -> List:
         return [galaxy.regularization for galaxy in self.galaxies_with_pixelization]
 
-    def light_profile_linear_list_from(self, source_grid_slim):
+    def light_profile_linear_func_list_from(self, source_grid_slim):
 
         if not self.has_light_profile_linear:
             return None
@@ -294,8 +297,14 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         light_profile_linear_list = []
 
         for galaxy in self.galaxies:
+            if galaxy.has_light_profile_linear:
+                for light_profile_linear in galaxy.light_profile_linear_list:
 
-            light_profile_linear_list += galaxy.light_profile_linear_list
+                    light_profile_linear_func = LightProfileLinearObjFunc(
+                        grid=source_grid_slim, light_profile=light_profile_linear
+                    )
+
+                    light_profile_linear_list.append(light_profile_linear_func)
 
         return light_profile_linear_list
 
