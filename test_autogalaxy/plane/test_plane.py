@@ -166,6 +166,30 @@ class TestAbstractPlane:
         )
         assert plane.mass_profile_list == [sis_0, sis_1, sis_2, sis_1]
 
+    def test__has_light_profile_linear(self):
+
+        plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
+        assert plane.has_light_profile_linear is False
+
+        plane = ag.Plane(
+            galaxies=[
+                ag.Galaxy(redshift=0.5, light_profile=ag.lp_linear.LightProfileLinear())
+            ],
+            redshift=None,
+        )
+        assert plane.has_light_profile_linear is True
+
+        plane = ag.Plane(
+            galaxies=[
+                ag.Galaxy(
+                    redshift=0.5, light_profile=ag.lp_linear.LightProfileLinear()
+                ),
+                ag.Galaxy(redshift=0.5),
+            ],
+            redshift=None,
+        )
+        assert plane.has_light_profile_linear is True
+
     def test__pixelization_list(self):
         galaxy_pix = ag.Galaxy(
             redshift=0.5,

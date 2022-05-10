@@ -6,7 +6,7 @@ import autoarray as aa
 from autogalaxy.profiles.light_profiles import light_profiles as lp
 
 
-class LightProfileLinear:
+class LightProfileLinear(lp.LightProfile):
 
     pass
     # def mapping_matrix_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
