@@ -94,7 +94,7 @@ structures which follow a de Vaucouleurs profile; (ii) disk-like structures whic
 or; (iii) irregular morphologies which are difficult to quantify with symmetric and smooth analytic profiles. Galaxies 
 are often composed of many sub-components which may be a combination of these different structures.
 
-![Hubble Space Telescope imaging of a spiral galaxy (left column), a parametric fit to its smooth bulge and disk components (middle column) and  anon-parametric fit to its assymetric and irrergular structures like its spiral arms (right column) using `PyAutoGalaxy`.\label{figure:example}](observed.png, parametric.png)
+![Hubble Space Telescope imaging of a spiral galaxy (left column), a parametric fit to its smooth bulge and disk components (middle column) and  anon-parametric fit to its assymetric and irrergular structures like its spiral arms (right column) using `PyAutoGalaxy`.\label{figure:example}](observed.png)[help](parametric.png)
 
 Figure 1 shows example `PyAutoGalaxy` models of two galaxies taken with two different datasets. The top row shows
 a structural decomposition of HST imaging of a galaxy, where `PyAutoGalaxy` has decomposed the galaxy into two distinct
