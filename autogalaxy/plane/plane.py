@@ -290,11 +290,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return [galaxy.regularization for galaxy in self.galaxies_with_pixelization]
 
     def light_profile_linear_func_list_from(
-        self,
-        source_grid_slim,
-        source_blurring_grid_slim,
-        convolver=None,
-        transformer=None,
+        self, source_grid_slim, source_blurring_grid_slim, convolver=None
     ):
 
         if not self.has_light_profile_linear:
@@ -310,7 +306,6 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
                         grid=source_grid_slim,
                         blurring_grid=source_blurring_grid_slim,
                         convolver=convolver,
-                        transformer=transformer,
                         light_profile=light_profile_linear,
                     )
 
@@ -432,12 +427,15 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         )
 
         light_profile_linear_func_list = self.light_profile_linear_func_list_from(
-            source_grid_slim=dataset.grid,
-            source_blurring_grid_slim=None,
-            transformer=dataset.transformer,
+            source_grid_slim=dataset.grid, source_blurring_grid_slim=None
         )
 
         linear_obj_list = mapper_list + light_profile_linear_func_list
+
+        if self.has_light_profile_linear and settings_inversion.use_w_tilde:
+            raise aa.exc.InversionException(
+                "Cannot use linear light profiles with w_tilde on."
+            )
 
         return inversion_interferometer_unpacked_from(
             visibilities=visibilities,

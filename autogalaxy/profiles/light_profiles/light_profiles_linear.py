@@ -18,7 +18,6 @@ class LightProfileLinearObjFunc(aa.LinearObjFunc):
         grid: aa.type.Grid1D2DLike,
         blurring_grid: aa.type.Grid1D2DLike,
         convolver: Optional[aa.Convolver],
-        transformer: Optional[Union[aa.TransformerDFT, aa.TransformerNUFFT]],
         light_profile: LightProfileLinear,
         profiling_dict: Optional[Dict] = None,
     ):
@@ -27,7 +26,6 @@ class LightProfileLinearObjFunc(aa.LinearObjFunc):
 
         self.blurring_grid = blurring_grid
         self.convolver = convolver
-        self.transformer = transformer
         self.light_profile = light_profile
 
     @property
@@ -53,7 +51,9 @@ class LightProfileLinearObjFunc(aa.LinearObjFunc):
         A blurred mapping matrix of dimensions (total_mask_pixels, 1) which overrides the mapping matrix calculations
         performed in the linear equation solvers.
         """
+
         image_2d = self.light_profile.image_2d_from(grid=self.grid)
+
         blurring_image_2d = self.light_profile.image_2d_from(grid=self.blurring_grid)
 
         return self.convolver.convolve_image(

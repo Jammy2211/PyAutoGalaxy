@@ -6,18 +6,20 @@ from autoconf import cached_property
 import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
+from autogalaxy.plane.plane import Plane
 
 
 class FitInterferometer(aa.FitInterferometer):
     def __init__(
         self,
-        dataset,
-        plane,
-        hyper_background_noise=None,
-        use_hyper_scaling=True,
-        settings_pixelization=aa.SettingsPixelization(),
-        settings_inversion=aa.SettingsInversion(),
-        preloads=aa.Preloads(),
+        dataset: aa.Interferometer,
+        plane: Plane,
+        hyper_background_noise: HyperBackgroundNoise = None,
+        use_hyper_scaling: bool = True,
+        settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
+        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        preloads: aa.Preloads = aa.Preloads(),
         profiling_dict: Optional[Dict] = None,
     ):
         """
@@ -85,7 +87,7 @@ class FitInterferometer(aa.FitInterferometer):
 
         The image passed to this function is the dataset's image with all light profile images of the plane subtracted.
         """
-        if self.plane.has_pixelization:
+        if self.plane.has_pixelization or self.plane.has_light_profile_linear:
 
             if self.settings_inversion.use_w_tilde:
                 w_tilde = self.dataset.w_tilde
@@ -113,7 +115,7 @@ class FitInterferometer(aa.FitInterferometer):
         If a inversion is included it is the sum of this sum and the inversion's reconstruction of the image.
         """
 
-        if self.plane.has_pixelization:
+        if self.plane.has_pixelization or self.plane.has_light_profile_linear:
 
             return self.profile_visibilities + self.inversion.mapped_reconstructed_data
 

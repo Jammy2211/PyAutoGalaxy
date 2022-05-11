@@ -978,6 +978,27 @@ class TestAbstractPlaneData:
                 masked_imaging_7x7.image, 1.0e-2
             )
 
+        def test__inversion_interferometer_from__uses_light_profile_linear(
+            self, sub_grid_2d_7x7, interferometer_7
+        ):
+
+            g_linear = ag.Galaxy(redshift=0.5, light_linear=ag.lp_linear.EllSersic())
+
+            plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g_linear])
+
+            inversion = plane.inversion_interferometer_from(
+                dataset=interferometer_7,
+                visibilities=interferometer_7.visibilities,
+                noise_map=interferometer_7.noise_map,
+                w_tilde=None,
+                settings_pixelization=ag.SettingsPixelization(use_border=False),
+                settings_inversion=ag.SettingsInversion(
+                    use_w_tilde=False, use_linear_operators=False
+                ),
+            )
+
+            assert inversion.reconstruction[0] == pytest.approx(0.0012073, 1.0e-2)
+
         def test__inversion_interferometer_from__uses_pixelization_and_regularization(
             self, sub_grid_2d_7x7, interferometer_7
         ):
