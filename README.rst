@@ -31,13 +31,13 @@ galaxy:
 |pic1| |pic2| |pic3|
 
 .. |pic1| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/observed.png
-   :width: 33%
+   :width: 32%
 
 .. |pic2| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/parametric.png
-   :width: 33%
+   :width: 32%
 
 .. |pic3| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/non_parametric.png
-   :width: 33%
+   :width: 32%
 
 **PyAutoGalaxy** also fits interferometer data from observatories such as ALMA:
 
@@ -45,13 +45,13 @@ galaxy:
 |pic4| |pic5| |pic6|
 
 .. |pic4| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/visibilities.png
-   :width: 33%
+   :width: 32%
 
 .. |pic5| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/dirty_image.png
-   :width: 33%
+   :width: 32%
 
 .. |pic6| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/model_dirty_image.png
-   :width: 33%
+   :width: 32%
 
 Getting Started
 ---------------
