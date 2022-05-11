@@ -24,13 +24,34 @@ PyAutoGalaxy: Open-Source Multi Wavelength Galaxy Structure & Morphology
 `HowToGalaxy <https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/howtogalaxy.html>`_
 
 The study of a galaxy's structure and morphology is at the heart of modern day Astrophysical research.
-**PyAutoGalaxy** makes it simple to model galaxies, like this one:
 
-.. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/observed.png
+**PyAutoGalaxy** makes it simple to model galaxies, for example this Hubble Space Telescope imaging of a spiral
+galaxy:
 
-.. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/parametric.png
+|pic1| |pic2| |pic3|
 
-.. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/non_parametric.png
+.. |pic1| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/observed.png
+   :width: 33%
+
+.. |pic2| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/parametric.png
+   :width: 33%
+
+.. |pic3| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/non_parametric.png
+   :width: 33%
+
+**PyAutoGalaxy** also fits interferometer data from observatories such as ALMA:
+
+
+|pic4| |pic5| |pic6|
+
+.. |pic4| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/visibilities.png
+   :width: 33%
+
+.. |pic5| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/dirty_image.png
+   :width: 33%
+
+.. |pic6| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/model_dirty_image.png
+   :width: 33%
 
 Getting Started
 ---------------
