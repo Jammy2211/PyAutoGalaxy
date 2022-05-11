@@ -26,7 +26,11 @@ PyAutoGalaxy: Open-Source Multi Wavelength Galaxy Structure & Morphology
 The study of a galaxy's structure and morphology is at the heart of modern day Astrophysical research.
 **PyAutoGalaxy** makes it simple to model galaxies, like this one:
 
-Missing for now :(
+.. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/observed.png
+
+.. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/parametric.png
+
+.. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/non_parametric.png
 
 Getting Started
 ---------------
