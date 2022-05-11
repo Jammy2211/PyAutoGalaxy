@@ -286,10 +286,10 @@ class TestAbstractPlane:
         plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
         light_profile_linear_func_list = plane.light_profile_linear_func_list_from(
-            source_grid_slim=1
+            source_grid_slim=1, source_blurring_grid_slim=2, convolver=3
         )
 
-        assert light_profile_linear_func_list == None
+        assert light_profile_linear_func_list == []
 
         lp_linear_0 = ag.lp_linear.LightProfileLinear()
         lp_linear_1 = ag.lp_linear.LightProfileLinear()
@@ -308,7 +308,7 @@ class TestAbstractPlane:
             redshift=None,
         )
         light_profile_linear_func_list = plane.light_profile_linear_func_list_from(
-            source_grid_slim=1
+            source_grid_slim=1, source_blurring_grid_slim=2, convolver=3
         )
 
         assert light_profile_linear_func_list[0].light_profile == lp_linear_0
@@ -932,10 +932,29 @@ class TestAbstractPlaneData:
 
             mapper_list = plane.mapper_list_from(grid=sub_grid_2d_7x7)
 
-            assert mapper_list is None
+            assert mapper_list == []
 
     class TestLEq:
-        def test__x1_inversion_imaging_in_plane__performs_inversion_correctly(
+        def test__inversion_imaging_from__uses_light_profile_linear(
+            self, sub_grid_2d_7x7, masked_imaging_7x7
+        ):
+
+            g_linear = ag.Galaxy(redshift=0.5, light_linear=ag.lp_linear.EllSersic())
+
+            plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g_linear])
+
+            inversion = plane.inversion_imaging_from(
+                dataset=masked_imaging_7x7,
+                image=masked_imaging_7x7.image,
+                noise_map=masked_imaging_7x7.noise_map,
+                w_tilde=masked_imaging_7x7.w_tilde,
+                settings_pixelization=ag.SettingsPixelization(use_border=False),
+                settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+            )
+
+            assert inversion.reconstruction[0] == pytest.approx(0.00543437, 1.0e-2)
+
+        def test__inversion_imaging_from__uses_pixelization_and_regularization(
             self, sub_grid_2d_7x7, masked_imaging_7x7
         ):
 
@@ -947,10 +966,9 @@ class TestAbstractPlaneData:
             plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
             inversion = plane.inversion_imaging_from(
-                grid=sub_grid_2d_7x7,
+                dataset=masked_imaging_7x7,
                 image=masked_imaging_7x7.image,
                 noise_map=masked_imaging_7x7.noise_map,
-                convolver=masked_imaging_7x7.convolver,
                 w_tilde=masked_imaging_7x7.w_tilde,
                 settings_pixelization=ag.SettingsPixelization(use_border=False),
                 settings_inversion=ag.SettingsInversion(use_w_tilde=False),
@@ -960,7 +978,7 @@ class TestAbstractPlaneData:
                 masked_imaging_7x7.image, 1.0e-2
             )
 
-        def test__x1_inversion_interferometer_in_plane__performs_inversion_correctly(
+        def test__inversion_interferometer_from__uses_pixelization_and_regularization(
             self, sub_grid_2d_7x7, interferometer_7
         ):
 
@@ -974,10 +992,9 @@ class TestAbstractPlaneData:
             plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
             inversion = plane.inversion_interferometer_from(
-                grid=sub_grid_2d_7x7,
+                dataset=interferometer_7,
                 visibilities=interferometer_7.visibilities,
                 noise_map=interferometer_7.noise_map,
-                transformer=interferometer_7.transformer,
                 w_tilde=None,
                 settings_pixelization=ag.SettingsPixelization(use_border=False),
                 settings_inversion=ag.SettingsInversion(

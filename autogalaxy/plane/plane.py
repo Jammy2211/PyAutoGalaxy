@@ -289,10 +289,16 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def regularization_list(self) -> List:
         return [galaxy.regularization for galaxy in self.galaxies_with_pixelization]
 
-    def light_profile_linear_func_list_from(self, source_grid_slim):
+    def light_profile_linear_func_list_from(
+        self,
+        source_grid_slim,
+        source_blurring_grid_slim,
+        convolver=None,
+        transformer=None,
+    ):
 
         if not self.has_light_profile_linear:
-            return None
+            return []
 
         light_profile_linear_list = []
 
@@ -301,7 +307,11 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
                 for light_profile_linear in galaxy.light_profile_linear_list:
 
                     light_profile_linear_func = LightProfileLinearObjFunc(
-                        grid=source_grid_slim, light_profile=light_profile_linear
+                        grid=source_grid_slim,
+                        blurring_grid=source_blurring_grid_slim,
+                        convolver=convolver,
+                        transformer=transformer,
+                        light_profile=light_profile_linear,
                     )
 
                     light_profile_linear_list.append(light_profile_linear_func)
@@ -337,7 +347,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     ):
 
         if not self.has_pixelization:
-            return None
+            return []
 
         sparse_grid_list = self.sparse_image_plane_grid_list_from(grid=grid)
 
@@ -364,24 +374,38 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
     def inversion_imaging_from(
         self,
-        grid,
-        image,
-        noise_map,
-        convolver,
-        w_tilde,
-        settings_pixelization=aa.SettingsPixelization(),
-        settings_inversion=aa.SettingsInversion(),
-        preloads=aa.Preloads(),
+        dataset: aa.Imaging,
+        image: aa.Array2D,
+        noise_map: aa.Array2D,
+        w_tilde: aa.WTildeImaging,
+        settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
+        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        preloads: aa.Preloads = aa.Preloads(),
     ):
 
-        linear_obj_list = self.mapper_list_from(
-            grid=grid, settings_pixelization=settings_pixelization, preloads=preloads
+        mapper_list = self.mapper_list_from(
+            grid=dataset.grid_inversion,
+            settings_pixelization=settings_pixelization,
+            preloads=preloads,
         )
+
+        light_profile_linear_func_list = self.light_profile_linear_func_list_from(
+            source_grid_slim=dataset.grid,
+            source_blurring_grid_slim=dataset.blurring_grid,
+            convolver=dataset.convolver,
+        )
+
+        linear_obj_list = mapper_list + light_profile_linear_func_list
+
+        if self.has_light_profile_linear and settings_inversion.use_w_tilde:
+            raise aa.exc.InversionException(
+                "Cannot use linear light profiles with w_tilde on."
+            )
 
         return inversion_imaging_unpacked_from(
             image=image,
             noise_map=noise_map,
-            convolver=convolver,
+            convolver=dataset.convolver,
             w_tilde=w_tilde,
             linear_obj_list=linear_obj_list,
             regularization_list=self.regularization_list,
@@ -392,24 +416,33 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
     def inversion_interferometer_from(
         self,
-        grid,
-        visibilities,
-        noise_map,
-        transformer,
+        dataset: aa.Interferometer,
+        visibilities: aa.Visibilities,
+        noise_map: aa.VisibilitiesNoiseMap,
         w_tilde,
-        settings_pixelization=aa.SettingsPixelization(),
-        settings_inversion=aa.SettingsInversion(),
-        preloads=aa.Preloads(),
+        settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
+        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        preloads: aa.Preloads = aa.Preloads(),
     ):
 
-        linear_obj_list = self.mapper_list_from(
-            grid=grid, settings_pixelization=settings_pixelization, preloads=preloads
+        mapper_list = self.mapper_list_from(
+            grid=dataset.grid_inversion,
+            settings_pixelization=settings_pixelization,
+            preloads=preloads,
         )
+
+        light_profile_linear_func_list = self.light_profile_linear_func_list_from(
+            source_grid_slim=dataset.grid,
+            source_blurring_grid_slim=None,
+            transformer=dataset.transformer,
+        )
+
+        linear_obj_list = mapper_list + light_profile_linear_func_list
 
         return inversion_interferometer_unpacked_from(
             visibilities=visibilities,
             noise_map=noise_map,
-            transformer=transformer,
+            transformer=dataset.transformer,
             w_tilde=w_tilde,
             linear_obj_list=linear_obj_list,
             regularization_list=self.regularization_list,

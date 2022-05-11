@@ -1,6 +1,7 @@
 import numpy as np
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union
 
+from autoconf import cached_property
 import autoarray as aa
 
 from autogalaxy.profiles.light_profiles import light_profiles as lp
@@ -9,21 +10,55 @@ from autogalaxy.profiles.light_profiles import light_profiles as lp
 class LightProfileLinear(lp.LightProfile):
 
     pass
-    # def mapping_matrix_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
-    #     return self.image_2d_from(grid=grid).slim
 
 
 class LightProfileLinearObjFunc(aa.LinearObjFunc):
     def __init__(
         self,
         grid: aa.type.Grid1D2DLike,
+        blurring_grid: aa.type.Grid1D2DLike,
+        convolver: Optional[aa.Convolver],
+        transformer: Optional[Union[aa.TransformerDFT, aa.TransformerNUFFT]],
         light_profile: LightProfileLinear,
         profiling_dict: Optional[Dict] = None,
     ):
 
         super().__init__(grid=grid, profiling_dict=profiling_dict)
 
+        self.blurring_grid = blurring_grid
+        self.convolver = convolver
+        self.transformer = transformer
         self.light_profile = light_profile
+
+    @property
+    def mapping_matrix(self) -> np.ndarray:
+        return self.light_profile.image_2d_from(grid=self.grid).binned.slim[:, None]
+
+    @cached_property
+    def blurred_mapping_matrix_override(self) -> Optional[np.ndarray]:
+        """
+        The `LinearEqn` object takes the `mapping_matrix` of each linear object and combines it with the `Convolver`
+        operator to perform a 2D convolution and compute the `blurred_mapping_matrix`.
+
+        If this property is overwritten this operation is not performed, with the `blurred_mapping_matrix` output this
+        property automatically used instead.
+
+        This is used for a linear light profile because the in-built mapping matrix convolution does not account for
+        how light profile images have flux outside the masked region which is blurred into the masked region. This
+        flux is outside the region that defines the `mapping_matrix` and thus this override is required to properly
+        incorporate it.
+
+        Returns
+        -------
+        A blurred mapping matrix of dimensions (total_mask_pixels, 1) which overrides the mapping matrix calculations
+        performed in the linear equation solvers.
+        """
+        image_2d = self.light_profile.image_2d_from(grid=self.grid)
+        blurring_image_2d = self.light_profile.image_2d_from(grid=self.blurring_grid)
+
+        return self.convolver.convolve_image(
+            image=image_2d, blurring_image=blurring_image_2d
+        )[:, None]
 
 
 class EllSersic(lp.EllSersic, LightProfileLinear):
