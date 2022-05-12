@@ -30,7 +30,7 @@ galaxy:
 
 |pic1|
 
-.. |pic1| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/hstcombined.png
+.. |pic1| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/paper/hstcombined.png
 
 **PyAutoGalaxy** also fits interferometer data from observatories such as ALMA:
 
