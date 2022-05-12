@@ -35,16 +35,9 @@ galaxy:
 **PyAutoGalaxy** also fits interferometer data from observatories such as ALMA:
 
 
-|pic4| |pic5| |pic6|
+|pic2|
 
-.. |pic4| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/visibilities.png
-   :width: 32%
-
-.. |pic5| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/dirty_image.png
-   :width: 32%
-
-.. |pic6| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/model_dirty_image.png
-   :width: 32%
+.. |pic2| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/paper/almacombined.png
 
 Getting Started
 ---------------
