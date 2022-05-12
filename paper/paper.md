@@ -138,21 +138,21 @@ using models whose parameters vary across wavelength.
 
 `PyAutoFit`'s graphical modeling framework allows one to simultaneously fit images of thousands of galaxies. Using a 
 technique called expectation propagation, this fits each galaxy dataset one-by-one and combines the results of every 
-fit into a global model using a self consistent Bayesian framework. Automated fitting of complex galaxy models is
+fit into a global model using a self-consistent Bayesian framework. Automated fitting of complex galaxy models is
 possible using `PyAutoFit`'s search chaining, which breaks the fitting of a galaxy into a a chained sequence of 
 non-linear searches. These fits pass information gained about simpler models fitted by earlier searches to subsequent 
 searches, which fit progressively more complex models. By granularizing the model-fitting procedure, automated 
 pipelines that fit complex galaxy models without human intervention can be carefully crafted, with example pipelines 
 found on the [autogalaxy workspace](https://github.com/Jammy2211/autogalaxy_workspace). To ensure the 
 analysis and interpretation of fits to large galaxy datasets is feasible, `PyAutoFit`'s database tools write modeling 
-results to a relational database which can be queried from hard-disk to a Python script or Jupyter notebook. This uses 
+results to a relational database which can be queried from storage drive to a Python script or Jupyter notebook. This uses 
 memory-light `Python` generators, ensuring it is practical for results containing tens of thousands of galaxies.
 
 # Workspace and HowToGalaxy Tutorials
 
 `PyAutoGalaxy` is distributed with the [autogalaxy workspace](https://github.com/Jammy2211/autogalaxy_workspace>), which 
 contains example scripts for modeling and simulating galaxies and tutorials on how to preprocess imaging and 
-interferometer datasets before a `PyAutoGalaxy` analysis. Also included are the `HowToGalaxy` tutorials, a four chapter 
+interferometer datasets before a `PyAutoGalaxy` analysis. Also included are the `HowToGalaxy` tutorials, a four-chapter 
 lecture series composed of over 20 Jupyter notebooks aimed at non-experts, introducing them to galaxy morphology 
 analysis, Bayesian inference and teaching them how to use `PyAutoGalaxy` for scientific study. The lectures 
 are available on our [Binder](https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/HEAD) and may therefore be 
