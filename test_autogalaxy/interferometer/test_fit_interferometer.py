@@ -96,6 +96,43 @@ def test__fit_figure_of_merit(interferometer_7):
     assert fit.figure_of_merit == pytest.approx(-283424.48941, 1.0e-4)
 
 
+def test__fit_figure_of_merit__different_linear_obj_lists_for_inversion(
+    interferometer_7
+):
+
+    g0_linear_light = ag.Galaxy(
+        redshift=0.5, light_profile=ag.lp_linear.EllSersic(sersic_index=1.0)
+    )
+
+    g1_linear_light = ag.Galaxy(
+        redshift=0.5, light_profile=ag.lp_linear.EllSersic(sersic_index=4.0)
+    )
+
+    plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, g1_linear_light])
+
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(
+            use_w_tilde=False, linear_func_only_use_evidence=False
+        ),
+    )
+
+    assert fit.log_likelihood == pytest.approx(-23.44419, 1e-4)
+    assert fit.figure_of_merit == pytest.approx(-23.44419, 1.0e-4)
+
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(
+            use_w_tilde=False, linear_func_only_use_evidence=True
+        ),
+    )
+
+    assert fit.log_likelihood == pytest.approx(-23.44419, 1e-4)
+    assert fit.figure_of_merit == pytest.approx(-23.44419, 1.0e-4)
+
+
 def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
 
     hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)

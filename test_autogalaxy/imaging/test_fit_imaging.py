@@ -144,51 +144,74 @@ def test__noise_map__with_and_without_hyper_background(masked_imaging_7x7_no_blu
 
 def test__fit_figure_of_merit(masked_imaging_7x7):
 
-    g0 = ag.Galaxy(
-        redshift=0.5,
-        light_profile=ag.lp.EllSersic(intensity=1.0),
-        mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
-    )
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
 
-    g1 = ag.Galaxy(redshift=1.0, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
 
-    plane = ag.Plane(redshift=0.75, galaxies=[g0, g1])
+    plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-    assert (fit.image == np.full(fill_value=1.0, shape=(9,))).all()
-    assert (fit.noise_map == np.full(fill_value=2.0, shape=(9,))).all()
     assert fit.log_likelihood == pytest.approx(-75938.05, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-75938.05, 1.0e-4)
 
     pix = ag.pix.Rectangular(shape=(3, 3))
     reg = ag.reg.Constant(coefficient=1.0)
 
-    g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
 
-    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
+    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), galaxy_pix])
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-    assert (fit.image == np.full(fill_value=1.0, shape=(9,))).all()
-    assert (fit.noise_map == np.full(fill_value=2.0, shape=(9,))).all()
     assert fit.log_evidence == pytest.approx(-22.9005, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-22.9005, 1.0e-4)
 
     galaxy_light = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
 
-    pix = ag.pix.Rectangular(shape=(3, 3))
-    reg = ag.reg.Constant(coefficient=1.0)
-    galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
-
-    plane = ag.Plane(redshift=0.75, galaxies=[galaxy_light, galaxy_pix])
+    plane = ag.Plane(redshift=0.5, galaxies=[galaxy_light, galaxy_pix])
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-    assert (fit.image == np.full(fill_value=1.0, shape=(9,))).all()
-    assert (fit.noise_map == np.full(fill_value=2.0, shape=(9,))).all()
     assert fit.log_evidence == pytest.approx(-6840.5851, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-6840.5851, 1.0e-4)
+
+
+def test__fit_figure_of_merit__different_linear_obj_lists_for_inversion(
+    masked_imaging_7x7
+):
+
+    g0_linear_light = ag.Galaxy(
+        redshift=0.5, light_profile=ag.lp_linear.EllSersic(sersic_index=1.0)
+    )
+
+    g1_linear_light = ag.Galaxy(
+        redshift=0.5, light_profile=ag.lp_linear.EllSersic(sersic_index=4.0)
+    )
+
+    plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, g1_linear_light])
+
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(
+            use_w_tilde=False, linear_func_only_use_evidence=False
+        ),
+    )
+
+    assert fit.log_likelihood == pytest.approx(-14.52327, 1e-4)
+    assert fit.figure_of_merit == pytest.approx(-14.52327, 1.0e-4)
+
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(
+            use_w_tilde=False, linear_func_only_use_evidence=True
+        ),
+    )
+
+    assert fit.log_evidence == pytest.approx(-17.8838, 1e-4)
+    assert fit.figure_of_merit == pytest.approx(-17.8838, 1.0e-4)
 
 
 def test__fit_figure_of_merit__include_hyper_methods(masked_imaging_7x7):

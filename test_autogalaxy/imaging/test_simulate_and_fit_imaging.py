@@ -137,10 +137,23 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     fit_linear = ag.FitImaging(
         dataset=masked_imaging,
         plane=plane_linear,
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+        settings_inversion=ag.SettingsInversion(
+            use_w_tilde=False, linear_func_only_use_evidence=False
+        ),
     )
 
     assert fit_linear.inversion.reconstruction == pytest.approx(
         np.array([0.1, 0.2]), 1.0e-4
     )
-    assert fit.log_likelihood == fit_linear.log_likelihood
+    assert fit.log_likelihood == fit_linear.figure_of_merit
+    assert fit_linear.figure_of_merit == pytest.approx(-45.02798, 1.0e-4)
+
+    fit_linear = ag.FitImaging(
+        dataset=masked_imaging,
+        plane=plane_linear,
+        settings_inversion=ag.SettingsInversion(
+            use_w_tilde=False, linear_func_only_use_evidence=True
+        ),
+    )
+
+    assert fit_linear.figure_of_merit == pytest.approx(-52.6466, 1.0e-4)
