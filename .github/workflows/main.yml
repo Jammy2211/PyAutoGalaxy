@@ -3,30 +3,12 @@ name: Run unittests
 on: [push, pull_request]
 
 jobs:
-  paper:
-    runs-on: ubuntu-latest
-    name: Paper Draft
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Build draft PDF
-        uses: openjournals/openjournals-draft-action@master
-        with:
-          journal: joss
-          paper-path: paper/paper.md
-      - name: Upload
-        uses: actions/upload-artifact@v1
-        with:
-          name: paper
-          path: paper.pdf
   unittest:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9, '3.10']  # 3.9 not supported on numba as of 2020-02-11
     steps:
-    - name: Open Journals PDF Generator
-      uses: openjournals/openjournals-draft-action@v.1.0
     - name: Checkout PyAutoConf
       uses: actions/checkout@v2
       with:
