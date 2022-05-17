@@ -763,16 +763,20 @@ title = {{Imfit: A fast, flexible new program for astronomical image fitting}},
 volume = {799},
 year = {2015}
 }
-@article{Vehtari2014a,
-abstract = {A common approach for Bayesian computation with big data is to partition the data into smaller pieces, perform local inference for each piece separately, and finally combine the results to obtain an approximation to the global posterior. Looking at this from the bottom up, one can perform separate analyses on individual sources of data and then combine these in a larger Bayesian model. In either case, the idea of distributed modeling and inference has both conceptual and computational appeal, but from the Bayesian perspective there is no general way of handling the prior distribution: if the prior is included in each separate inference, it will be multiply-counted when the inferences are combined; but if the prior is itself divided into pieces, it may not provide enough regularization for each separate computation, thus eliminating one of the key advantages of Bayesian methods. To resolve this dilemma, we propose expectation propagation (EP) as a general prototype for distributed Bayesian inference. The central idea is to factor the likelihood according to the data partitions, and to iteratively combine each factor with an approximate model of the prior and all other parts of the data, thus producing an overall approximation to the global posterior at convergence. In this paper, we give an introduction to EP and an overview of some recent developments of the method, with particular emphasis on its use in combining inferences from partitioned data. In addition to distributed modeling of large datasets, our unified treatment also includes hierarchical modeling of data with a naturally partitioned structure. The paper describes a general algorithmic framework, rather than a specific algorithm, and presents an example implementation for it.},
+@article{Vehtari2020,
+abstract = {A common divide-and-conquer approach for Bayesian computation with big data is to partition the data, perform local inference for each piece separately, and combine the results to obtain a global posterior approximation. While being conceptually and computationally appealing, this method involves the problematic need to also split the prior for the local inferences; these weakened priors may not provide enough regularization for each separate computation, thus eliminating one of the key advantages of Bayesian methods. To resolve this dilemma while still retaining the generalizability of the underlying local inference method, we apply the idea of expectation propagation (EP) as a framework for distributed Bayesian inference. The central idea is to iteratively update approximations to the local likelihoods given the state of the other approximations and the prior. The present paper has two roles: we review the steps that are needed to keep EP algorithms numerically stable, and we suggest a general approach, inspired by EP, for approaching data partitioning problems in a way that achieves the computational benefits of parallelism while allowing each local update to make use of relevant information from the other sites. In addition, we demonstrate how the method can be applied in a hierarchical context to make use of partitioning of both data and parameters. The paper describes a general algorithmic framework, rather than a specific algorithm, and presents an example implementation for it.},
 archivePrefix = {arXiv},
 arxivId = {1412.4869},
-author = {Vehtari, Aki and Gelman, Andrew and Sivula, Tuomas and Jyl{\"{a}}nki, Pasi and Tran, Dustin and Sahai, Swupnil and Blomstedt, Paul and Cunningham, John P. and Schiminovich, David and Robert, Christian},
+author = {Vehtari, Aki and Gelman, Andrew and Sivula, Tuomas and Jyl{\"{a}}nki, Pasi and Tran, Dustin and Sahai, Swupnil and Blomstedt, Paul and Cunningham, John P. and Schiminovich, David and Robert, Christian P.},
 eprint = {1412.4869},
-file = {:C\:/Users/Jammy/AppData/Local/Mendeley Ltd./Mendeley Desktop/Downloaded/Vehtari et al. - 2020 - Expectation propagation as a way of life A framework for Bayesian inference on partitioned data.pdf:pdf},
+file = {:C\:/Users/Jammy/Documents/Papers/Stats/Vehtair2020EP.pdf:pdf},
+issn = {15337928},
+journal = {Journal of Machine Learning Research},
+keywords = {Bayesian computation,Data partitioning,Expectation propagation,Hierarchical models,Statistical computing},
+pages = {1--53},
 title = {{Expectation propagation as a way of life: A framework for Bayesian inference on partitioned data}},
-url = {http://arxiv.org/abs/1412.4869},
-year = {2014}
+volume = {21},
+year = {2020}
 }
 @article{VanDerWel2012,
 abstract = {We present global structural parameter measurements of 109,533 unique, H{\_}F160W-selected objects from the CANDELS multi-cycle treasury program. Sersic model fits for these objects are produced with GALFIT in all available near-infrared filters (H{\_}F160W, J{\_}F125W and, for a subset, Y{\_}F105W). The parameters of the best-fitting Sersic models (total magnitude, half-light radius, Sersic index, axis ratio, and position angle) are made public, along with newly constructed point spread functions for each field and filter. Random uncertainties in the measured parameters are estimated for each individual object based on a comparison between multiple, independent measurements of the same set of objects. To quantify systematic uncertainties we create a mosaic with simulated galaxy images with a realistic distribution of input parameters and then process and analyze the mosaic in an identical manner as the real data. We find that accurate and precise measurements -- to 10{\%} or better -- of all structural parameters can typically be obtained for galaxies with H{\_}F160W {\textless} 23, with comparable fidelity for basic size and shape measurements for galaxies to H{\_}F160W {\$\sim${}} 24.5.},
@@ -972,4 +976,40 @@ primaryClass = {astro-ph},
 title = {{Dusty star-forming galaxies at high redshift}},
 volume = {541},
 year = {2014}
+}
+@article{Hubble1926,
+abstract = {This contribution gives the results of a statistical investigation of 400 extragalactic nebulae for which Holetschek has determined total visual magnitudes. The list is complete for the brighter nebulae in the northern sky and is representative to 12.5 mag. or fainter. The classification employed is based on the forms of the photographic images. About 3 per cent are irregular, but the remaining nebulae fall into a sequence of type forms characterized by rotational symmetry about dominating nuclei. The sequence is composed of two sections, the elliptical nebulae and the spirals, which merge into each other. Luminosity relations. - The distribution of magnitudes appears to be uniform throughout the sequence. For each type or stage in the sequence, the total magnitudes are related to the logarithms of the maximum diameters by the formula, mT = C - 5 log d, where C varies progressively from type to type, indicating a variation in diameter for a given magnitude or vice versa. By applying corrections to C, the nebulae can be reduced to a standard type and then a single formula expresses the relation for all nebulae from the Magellanic Clouds to the faintest that can be classified. When the minor diameter is used, the value of C is approximately constant throughout the entire sequence. The coefficient of log d corresponds with the inverse-square law, which suggests that the nebulae are all of the same order of absolute luminosity and that apparent magnitudes are measures of distance. This hypothesis is supported by similar results for the nuclear magnitudes and the magnitudes of the brightest stars involved, and by the small range in luminosities among nebulae whose distances are already known. Distances and absolute dimensions. - The mean absolute visual magnitude, as derived from the nebulae whose distances are known, is -15.2. The statistical expression for the distance in parsecs is then log D = 4.04 + 0.2 mT. where mT is the total apparent magnitude. This leads to mean values for absolute dimensions at various stages in the sequence of types. Masses appear to be of the order of 2.6x108 Msun. Distribution and density of space. - To apparent magnitude about 16.7, corresponding to an exposure of one hour on fast plates with the 60-inch reflector, the numbers of nebulae to various limits of total magnitude vary directly with the volumes of space represented by the limits. This indicates an approximately uniform density of space, of the order of one nebula per 1017 cubic parsecs or 1.5x10-31 in C.G.S. units. The corresponding radius of curvature of the finite universe of general relativity is of the order of 2.7x1010 parsecs, or about 600 times the distance at which normal nebulae can be detected with the 100-inch reflector.},
+author = {Hubble, E. P.},
+doi = {10.1086/143018},
+issn = {0004-637X},
+journal = {The Astrophysical Journal},
+month = {dec},
+pages = {321},
+title = {{Extragalactic nebulae.}},
+url = {http://adsabs.harvard.edu/doi/10.1086/143018},
+volume = {64},
+year = {1926}
+}
+@ARTICLE{Dev1948,
+       author = {{de Vaucouleurs}, Gerard},
+        title = "{Recherches sur les Nebuleuses Extragalactiques}",
+      journal = {Annales d'Astrophysique},
+         year = 1948,
+        month = jan,
+       volume = {11},
+        pages = {247},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/1948AnAp...11..247D},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+@article{pyautolens,
+  doi = {10.21105/joss.02825},
+  url = {https://doi.org/10.21105/joss.02825},
+  year = {2021},
+  publisher = {The Open Journal},
+  volume = {6},
+  number = {58},
+  pages = {2825},
+  author = {Nightingale, J. W. and Hayes, R. G. and Ashley Kelly and Aristeidis Amvrosiadis and Amy Etherington and Qiuhan He and Nan Li and XiaoYue Cao and Jonathan Frawley and Shaun Cole and Andrea Enia and Carlos S. Frenk and David R. Harvey and Ran Li and Richard J. Massey and Mattia Negrello and Andrew Robertson},
+  title = {`PyAutoLens`: Open-Source Strong Gravitational Lensing},
+  journal = {J. Open Source Softw.}
 }

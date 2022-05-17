@@ -1,9 +1,9 @@
 .. _overview_5_pixelizations:
 
-Pixelizations
-=============
+Non Parametric Models
+=====================
 
-Pixelizations reconstruct a galaxy's light on a pixel-grid. 
+Non parametric models use a pixelizations reconstruct a galaxy's light on a pixel-grid.
 
 Unlike `LightProfile`'s, they are able to reconstruct the light of non-symmetric and irregular galaxies.
 

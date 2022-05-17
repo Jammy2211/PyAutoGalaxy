@@ -66,11 +66,11 @@ bibliography: paper.bib
 Nearly a century ago, Edwin Hubble famously classified galaxies into three distinct groups: ellipticals, spirals and 
 irregulars [@Hubble1926]. Today, by analysing millions of galaxies with advanced image processing techniques Astronomers have 
 expanded on this picture and revealed the rich diversity of galaxy morphology in both the nearby and distant 
-Universe (e.g. [@Kormendy2015a] [@Vulcani2014] [@VanDerWel2012]). `PyAutoGalaxy` is an open-source Python 3.6+ package 
+Universe [@Kormendy2015a] [@Vulcani2014] [@VanDerWel2012]. `PyAutoGalaxy` is an open-source Python 3.6+ package 
 for analysing the morphologies and structures of large multiwavelength galaxy samples, with core features including 
 fully automated Bayesian model-fitting of galaxy two-dimensional surface brightness profiles, support for imaging and 
 interferometer datasets and comprehensive tools for simulating galaxy images. The software places a focus 
-on **big data** analysis, including support for hierarchical models that simultaneously fit thousands of galaxies, 
+on big data analysis, including support for hierarchical models that simultaneously fit thousands of galaxies, 
 massively parallel model-fitting and an SQLite3 database that allows large suites of modeling results to be loaded, 
 queried and analysed. Accompanying `PyAutoGalaxy` is the [autogalaxy workspace](https://github.com/Jammy2211/autogalaxy_workspace), 
 which includes example scripts, datasets and the `HowToGalaxy` lectures in Jupyter notebook format which introduce 
@@ -84,25 +84,25 @@ features.
 Galaxy morphology studies aim to understand the different luminous structures that galaxies are composed 
 of [@Lackner2012] [@Oh2017]. Using large CCD imaging datasets of galaxies observed at ultraviolet, optical and near-infrared wavelengths from 
 instruments like the Hubble Space Telescope (HST), Astronomers have uncovered the plentiful structures that make up 
-a galaxy (e.g. bars, bulges, disks, rings) [@Graham2013] [@Hodge2019] and revealed that evolving galaxies transition from disk-like structures 
+a galaxy, such as bars, bulges, disks and rings [@Graham2013] [@Hodge2019] and revealed that evolving galaxies transition from disk-like structures 
 to bulge-like elliptical galaxies [@Coenda2017]. At sub-mm and radio wavelengths interferometer datasets from instruments like the 
 Atacama Large Millimeter Array (ALMA) have revealed the integral role that dust plays in forming galaxies in the 
-distant Universe [@Blain2000] [@Casey2014], early in their lifetimes. Studies typically represent a galaxy's light using analytic functions such as 
+distant Universe [@Blain2002] [@Casey2014], early in their lifetimes. Studies typically represent a galaxy's light using analytic functions such as 
 the Sersic profile [@Sersic1968], which quantify the global appearance of most galaxies into one of three groups: (i) bulge-like 
-structures which follow a de Vaucouleurs profile [@devaucouleurs]; (ii) disk-like structures which follow an exponential profile 
+structures which follow a de Vaucouleurs profile [@dDev1948]; (ii) disk-like structures which follow an exponential profile 
 or; (iii) irregular morphologies which are difficult to quantify with symmetric and smooth analytic profiles. Galaxies 
 are often composed of many sub-components which may be a combination of these different structures [@Nightingale2019].
 
-![Hubble Space Telescope imaging of a spiral galaxy (left column), a parametric fit to its smooth bulge and disk components (middle column) and a non-parametric fit to its assymetric and irrergular structures like its spiral arms (right column).\label{figure:example1}](hstcombined.png)
+![Hubble Space Telescope imaging of a spiral galaxy (left column), a parametric fit to its smooth bulge and disk components (middle column) and a non parametric fit to its asymmetric and irregular structures like its spiral arms (right column).\label{figure:example1}](hstcombined.png)
 
 ![Atacama Large Millimeter Array interferometer visibilities data of a high redshift galaxy (left column), its dirty image created in real space via a Fourier transform (middle column) and a parametric fit to its smooth bulge and disk components which is performed directly on the visibility data (right column).\label{figure:example2}](almacombined.png)
 
 Figure 1 shows example `PyAutoGalaxy` models of two galaxies taken with two different datasets. The top row shows
 a structural decomposition of HST imaging of a galaxy, where `PyAutoGalaxy` has decomposed the galaxy into two distinct
-parametric components, a bulge and disk, whilst simultaneously using a non-parametric model to represent the galaxy's 
+parametric components, a bulge and disk, whilst simultaneously using a non parametric model to represent the galaxy's 
 irregular and asymmetric spiral arms. Instrumental effects like diffraction from the telescope optics are fully accounted 
-for. Figure 2 shows a `PyAutoGalaxy` fit to ALMA interferometry, where the galaxy's light is fitted directly in 
-the complex uv-plane and Fourier transformed to real-space to visualize the model image.
+for. Figure 2 shows a `PyAutoGalaxy` fit to ALMA interferometry, where the model galaxy's light is fitted directly in 
+the complex uv-plane and Fourier transformed to real-space for visualization.
  
 # Statement of Need
 
@@ -114,16 +114,16 @@ galaxies at an unprecedented resolution and level of detail. This demands more f
 accurately represent the complex irregular structures such high resolution observations reveal. `PyAutoGalaxy` 
 aims to meet both these needs, by interfacing galaxy model-fitting with the probabilistic programming language `PyAutoFit` to 
 provide Bayesian fitting tools suited to big data analysis alongside image processing tools that represent irregular 
-galaxy structures using non-parametric models.
+galaxy structures using non parametric models.
 
 # Software API and Features
 
 At the heart of the `PyAutoGalaxy` API is the `Galaxy` object, which groups together one or more `LightProfile` objects
 at an input redshift. Passing these objects a `Grid2D` returns an image of the galaxy(s), which can subsequently
 be passed through `Operator` objects to apply a 2D convolution or Fast Fourier Transform and thereby compare 
-the `Galaxy`'s image to an imaging or interferometer dataset. The `inversion` package contains non-parametric 
+the `Galaxy`'s image to an imaging or interferometer dataset. The `inversion` package contains non parametric 
 models which fit a galaxy's light using Bayesian linear matrix algebra. These were originally developed to 
-reconstruct the source galaxies of strong gravitational lenses in `PyAutoGalaxy`'s child project `PyAutoLens` [@Nightingale2015] [@Nightingale2021]. 
+reconstruct the source galaxies of strong gravitational lenses in `PyAutoGalaxy`'s child project `PyAutoLens` [@Nightingale2015] [@pyautolens]. 
 `PyAutoGalaxy` includes a comprehensive visualization library for the analysis of both direct imaging and interferometer 
 datasets and tools for preprocessing data to formats suitable to galaxy model-fitting. The `astropy` cosmology module 
 handles unit conversions and calculations are optimized using the packages `NumPy` [@numpy], `numba` [@numba],
@@ -132,13 +132,13 @@ handles unit conversions and calculations are optimized using the packages `NumP
 To perform model-fitting, `PyAutoGalaxy` adopts the probabilistic programming  
 language `PyAutoFit` (https://github.com/rhayes777/PyAutoFit). `PyAutoFit` allows users to compose a 
 model from `LightProfile` and `Galaxy` objects, customize the model parameterization and fit it to data via a 
-non-linear search (e.g., `dynesty` [@dynesty], `emcee` [@emcee], `PySwarms` [@pyswarms]). By composing a model with 
-`Pixelization` and `Regularization` objects, the galaxy's light is reconstructed using a non-parametric rectangular 
+non-linear search, for example `dynesty` [@dynesty], `emcee` [@emcee] or `PySwarms` [@pyswarms]. By composing a model with 
+`Pixelization` and `Regularization` objects, the galaxy's light is reconstructed using a non parametric rectangular 
 grid that accounts for irregular galaxy morphologies. Multiple images of the same galaxy can be fitted simultaneously,
 using models whose parameters vary across wavelength.
 
 `PyAutoFit`'s graphical modeling framework allows one to fit a hierarchical model to images of thousands of galaxies 
-simultaneously. Using a technique called expectation propagation [@Vehtari2014], this fits each galaxy dataset 
+simultaneously. Using a technique called expectation propagation [@Vehtari2020], this fits each galaxy dataset 
 one-by-one and combines the results of every fit into a global model using a self-consistent Bayesian framework. 
 Automated fitting of complex galaxy models is possible using `PyAutoFit`'s search chaining, which breaks the fitting of 
 a galaxy into a a chained sequence of non-linear searches. These fits pass information gained about simpler models 
@@ -153,7 +153,7 @@ notebook. This uses memory-light `Python` generators, ensuring it is practical f
 
 `PyAutoGalaxy` is distributed with the [autogalaxy workspace](https://github.com/Jammy2211/autogalaxy_workspace>), which 
 contains example scripts for modeling and simulating galaxies and tutorials on how to preprocess imaging and 
-interferometer datasets before a `PyAutoGalaxy` analysis. Also included are the `HowToGalaxy` tutorials, a four-chapter 
+interferometer datasets before a `PyAutoGalaxy` analysis. Also included are the `HowToGalaxy` tutorials, a four chapter 
 lecture series composed of over 20 Jupyter notebooks aimed at non-experts, introducing them to galaxy morphology 
 analysis, Bayesian inference and teaching them how to use `PyAutoGalaxy` for scientific study. The lectures 
 are available on [Binder](https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/HEAD) and may therefore be 
@@ -182,7 +182,7 @@ taken without a local `PyAutoGalaxy` installation.
 
 # Related Software
 
-- `PyAutoLens` [@Nightingale2018] [@Nightingale2021] [@Nightingale2021]
+- `PyAutoLens` [@Nightingale2018] [@pyautolens]
 - `galfit` https://users.obs.carnegiescience.edu/peng/work/galfit/galfit.html [@Peng2002]
 - `GaLight` https://github.com/sibirrer/lenstronomy [@Ding2021]
 - `GIM2D` http://www.astro.uvic.ca/~simard/GIM2D/
