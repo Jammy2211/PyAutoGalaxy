@@ -84,10 +84,10 @@ features.
 Galaxy morphology studies aim to understand the different luminous structures that galaxies are composed 
 of [@Lackner2012] [@Oh2017]. Using large CCD imaging datasets of galaxies observed at ultraviolet, optical and near-infrared wavelengths from 
 instruments like the Hubble Space Telescope (HST), Astronomers have uncovered the plentiful structures that make up 
-a galaxy (e.g. bars, bulges, disks, rings) [@Graham2013] and revealed that evolving galaxies transition from disk-like structures 
+a galaxy (e.g. bars, bulges, disks, rings) [@Graham2013] [@Hodge2019] and revealed that evolving galaxies transition from disk-like structures 
 to bulge-like elliptical galaxies [@Coenda2017]. At sub-mm and radio wavelengths interferometer datasets from instruments like the 
 Atacama Large Millimeter Array (ALMA) have revealed the integral role that dust plays in forming galaxies in the 
-distant Universe, early in their lifetimes. Studies typically represent a galaxy's light using analytic functions such as 
+distant Universe [@Blain2000] [@Casey2014], early in their lifetimes. Studies typically represent a galaxy's light using analytic functions such as 
 the Sersic profile [@Sersic1968], which quantify the global appearance of most galaxies into one of three groups: (i) bulge-like 
 structures which follow a de Vaucouleurs profile [@devaucouleurs]; (ii) disk-like structures which follow an exponential profile 
 or; (iii) irregular morphologies which are difficult to quantify with symmetric and smooth analytic profiles. Galaxies 
