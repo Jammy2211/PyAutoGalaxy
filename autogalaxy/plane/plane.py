@@ -290,7 +290,10 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return [galaxy.regularization for galaxy in self.galaxies_with_pixelization]
 
     def light_profile_linear_func_list_from(
-        self, source_grid_slim, source_blurring_grid_slim, convolver=None
+        self,
+        source_grid_slim,
+        source_blurring_grid_slim,
+        convolver: Optional[aa.Convolver] = None,
     ):
 
         if not self.has_light_profile_linear:
