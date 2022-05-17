@@ -89,7 +89,7 @@ to bulge-like elliptical galaxies [@Coenda2017]. At sub-mm and radio wavelengths
 Atacama Large Millimeter Array (ALMA) have revealed the integral role that dust plays in forming galaxies in the 
 distant Universe [@Blain2002] [@Casey2014], early in their lifetimes. Studies typically represent a galaxy's light using analytic functions such as 
 the Sersic profile [@Sersic1968], which quantify the global appearance of most galaxies into one of three groups: (i) bulge-like 
-structures which follow a de Vaucouleurs profile [@dDev1948]; (ii) disk-like structures which follow an exponential profile 
+structures which follow a de Vaucouleurs profile [@Dev1948]; (ii) disk-like structures which follow an exponential profile 
 or; (iii) irregular morphologies which are difficult to quantify with symmetric and smooth analytic profiles. Galaxies 
 are often composed of many sub-components which may be a combination of these different structures [@Nightingale2019].
 
