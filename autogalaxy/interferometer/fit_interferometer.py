@@ -8,6 +8,7 @@ import autoarray as aa
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.plane.plane import Plane
+from autogalaxy.plane.inversion_maker import InversionMaker
 
 
 class FitInterferometer(aa.FitInterferometer):
@@ -94,7 +95,9 @@ class FitInterferometer(aa.FitInterferometer):
             else:
                 w_tilde = None
 
-            return self.plane.inversion_interferometer_from(
+            inversion_maker = InversionMaker(plane=self.plane)
+
+            return inversion_maker.inversion_interferometer_from(
                 dataset=self.dataset,
                 visibilities=self.profile_subtracted_visibilities,
                 noise_map=self.noise_map,
