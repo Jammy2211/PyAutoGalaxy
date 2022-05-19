@@ -8,6 +8,7 @@ from autoconf.dictable import Dictable
 
 from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.plane.to_inversion import PlaneToInversion
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
 from autogalaxy.operate.image import OperateImageGalaxies
 from autogalaxy.operate.deflections import OperateDeflections
@@ -336,6 +337,10 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
                 contribution_map_list.append(None)
 
         return contribution_map_list
+
+    @property
+    def to_inversion(self):
+        return PlaneToInversion(plane=self)
 
     def extract_attribute(self, cls, attr_name):
         """

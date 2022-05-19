@@ -9,7 +9,7 @@ from autogalaxy.profiles.light_profiles.light_profiles_linear import (
 )
 
 
-class InversionMaker:
+class PlaneToInversion:
     def __init__(self, plane):
 
         self.plane = plane

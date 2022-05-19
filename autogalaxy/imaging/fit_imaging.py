@@ -10,7 +10,7 @@ from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.hyper.hyper_data import HyperImageSky
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.plane.plane import Plane
-from autogalaxy.plane.inversion_maker import InversionMaker
+from autogalaxy.plane.to_inversion import PlaneToInversion
 
 class FitImaging(aa.FitImaging):
     def __init__(
@@ -112,9 +112,9 @@ class FitImaging(aa.FitImaging):
             else:
                 w_tilde = None
 
-            inversion_maker = InversionMaker(plane=self.plane)
+            plane_to_inversion = PlaneToInversion(plane=self.plane)
 
-            return inversion_maker.inversion_imaging_from(
+            return plane_to_inversion.inversion_imaging_from(
                 dataset=self.dataset,
                 image=self.profile_subtracted_image,
                 noise_map=self.noise_map,

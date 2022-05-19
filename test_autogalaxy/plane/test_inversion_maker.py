@@ -8,9 +8,9 @@ def test__light_profile_linear_func_list_from(lp_0):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
-    inversion_maker = ag.InversionMaker(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    light_profile_linear_func_list = inversion_maker.light_profile_linear_func_list_from(
+    light_profile_linear_func_list = plane_to_inversion.light_profile_linear_func_list_from(
         source_grid_slim=1, source_blurring_grid_slim=2, convolver=3
     )
 
@@ -33,9 +33,9 @@ def test__light_profile_linear_func_list_from(lp_0):
         redshift=None,
     )
     
-    inversion_maker = ag.InversionMaker(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane)
     
-    light_profile_linear_func_list = inversion_maker.light_profile_linear_func_list_from(
+    light_profile_linear_func_list = plane_to_inversion.light_profile_linear_func_list_from(
         source_grid_slim=1, source_blurring_grid_slim=2, convolver=3
     )
 
@@ -54,9 +54,9 @@ def test__sparse_image_plane_grid_list_from(sub_grid_2d_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
-    inversion_maker = ag.InversionMaker(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    sparse_grid = inversion_maker.sparse_image_plane_grid_list_from(
+    sparse_grid = plane_to_inversion.sparse_image_plane_grid_list_from(
         grid=sub_grid_2d_7x7
     )
 
@@ -76,9 +76,9 @@ def test__sparse_image_plane_grid_list_from(sub_grid_2d_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
-    inversion_maker = ag.InversionMaker(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    sparse_grid = inversion_maker.sparse_image_plane_grid_list_from(
+    sparse_grid = plane_to_inversion.sparse_image_plane_grid_list_from(
         grid=sub_grid_2d_7x7
     )
 
@@ -90,9 +90,9 @@ def test__sparse_image_plane_grid_list_from(sub_grid_2d_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=0.5)
 
-    inversion_maker = ag.InversionMaker(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    sparse_grid = inversion_maker.sparse_image_plane_grid_list_from(
+    sparse_grid = plane_to_inversion.sparse_image_plane_grid_list_from(
         grid=sub_grid_2d_7x7
     )
 
@@ -112,9 +112,9 @@ def test__mapper_list_from(sub_grid_2d_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_no_pix, galaxy_pix], redshift=0.5)
 
-    inversion_maker = ag.InversionMaker(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    mapper_list = inversion_maker.mapper_list_from(grid=sub_grid_2d_7x7)
+    mapper_list = plane_to_inversion.mapper_list_from(grid=sub_grid_2d_7x7)
 
     assert mapper_list[0] == 1
 
@@ -131,9 +131,9 @@ def test__mapper_list_from(sub_grid_2d_7x7):
         galaxies=[galaxy_no_pix, galaxy_pix, galaxy_no_pix, galaxy_pix_2], redshift=0.5
     )
 
-    inversion_maker = ag.InversionMaker(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    mapper_list = inversion_maker.mapper_list_from(grid=sub_grid_2d_7x7)
+    mapper_list = plane_to_inversion.mapper_list_from(grid=sub_grid_2d_7x7)
 
     assert mapper_list[0] == 1
     assert mapper_list[1] == 2
@@ -142,9 +142,9 @@ def test__mapper_list_from(sub_grid_2d_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=0.5)
 
-    inversion_maker = ag.InversionMaker(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    mapper_list = inversion_maker.mapper_list_from(grid=sub_grid_2d_7x7)
+    mapper_list = plane_to_inversion.mapper_list_from(grid=sub_grid_2d_7x7)
 
     assert mapper_list == []
 
@@ -155,9 +155,9 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g_linear])
 
-    inversion_maker = ag.InversionMaker(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    inversion = inversion_maker.inversion_imaging_from(
+    inversion = plane_to_inversion.inversion_imaging_from(
         dataset=masked_imaging_7x7,
         image=masked_imaging_7x7.image,
         noise_map=masked_imaging_7x7.noise_map,
@@ -175,9 +175,9 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
-    inversion_maker = ag.InversionMaker(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    inversion = inversion_maker.inversion_imaging_from(
+    inversion = plane_to_inversion.inversion_imaging_from(
         dataset=masked_imaging_7x7,
         image=masked_imaging_7x7.image,
         noise_map=masked_imaging_7x7.noise_map,
@@ -197,9 +197,9 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g_linear])
 
-    inversion_maker = ag.InversionMaker(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    inversion = inversion_maker.inversion_interferometer_from(
+    inversion = plane_to_inversion.inversion_interferometer_from(
         dataset=interferometer_7,
         visibilities=interferometer_7.visibilities,
         noise_map=interferometer_7.noise_map,
@@ -221,9 +221,9 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
-    inversion_maker = ag.InversionMaker(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    inversion = inversion_maker.inversion_interferometer_from(
+    inversion = plane_to_inversion.inversion_interferometer_from(
         dataset=interferometer_7,
         visibilities=interferometer_7.visibilities,
         noise_map=interferometer_7.noise_map,
