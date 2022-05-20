@@ -85,6 +85,43 @@ def test__perfect_fit__chi_squared_0():
         shutil.rmtree(file_path)
 
 
+def test__simulate_imaging_data_and_fit__known_likelihood():
+
+    grid = ag.Grid2D.uniform(shape_native=(31, 31), pixel_scales=0.2, sub_size=1)
+
+    psf = ag.Kernel2D.from_gaussian(
+        shape_native=(3, 3), pixel_scales=0.2, sigma=0.75, normalize=True
+    )
+
+    galaxy_0 = ag.Galaxy(
+        redshift=0.5,
+        light=ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1),
+    )
+    galaxy_1 = ag.Galaxy(
+        redshift=1.0,
+        pixelization=ag.pix.Rectangular(shape=(16, 16)),
+        regularization=ag.reg.Constant(coefficient=(1.0)),
+    )
+
+    plane = ag.Plane(
+        galaxies=[galaxy_0, galaxy_1]
+    )
+
+    imaging = ag.SimulatorImaging(exposure_time=300.0, psf=psf, noise_seed=1)
+
+    imaging = imaging.via_plane_from(plane=plane, grid=grid)
+
+    mask = ag.Mask2D.circular(
+        shape_native=imaging.image.shape_native, pixel_scales=0.2, radius=2.0
+    )
+
+    masked_imaging = imaging.apply_mask(mask=mask)
+
+    fit = ag.FitImaging(dataset=masked_imaging, plane=plane)
+
+    assert fit.figure_of_merit == pytest.approx(621.5594864161, 1.0e-2)
+
+
 def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standard_light_profiles():
 
     grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2, sub_size=1)

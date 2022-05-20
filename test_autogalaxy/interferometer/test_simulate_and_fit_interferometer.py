@@ -103,6 +103,51 @@ def test__perfect_fit__chi_squared_0():
     shutil.rmtree(file_path, ignore_errors=True)
 
 
+def test__simulate_interferometer_data_and_fit__known_likelihood():
+
+    mask = ag.Mask2D.circular(
+        radius=3.0, shape_native=(31, 31), pixel_scales=0.2, sub_size=1
+    )
+
+    grid = ag.Grid2D.from_mask(mask=mask)
+
+    galaxy_0 = ag.Galaxy(
+        redshift=0.5,
+        light=ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1),
+        mass=ag.mp.EllIsothermal(centre=(0.1, 0.1), einstein_radius=1.8),
+    )
+    galaxy_1 = ag.Galaxy(
+        redshift=1.0,
+        pixelization=ag.pix.Rectangular(shape=(16, 16)),
+        regularization=ag.reg.Constant(coefficient=(1.0)),
+    )
+
+    plane = ag.Plane(
+        galaxies=[galaxy_0, galaxy_1]
+    )
+
+    simulator = ag.SimulatorInterferometer(
+        uv_wavelengths=np.ones(shape=(7, 2)),
+        transformer_class=ag.TransformerDFT,
+        exposure_time=300.0,
+        noise_seed=1,
+    )
+
+    interferometer = simulator.via_plane_from( plane= plane, grid=grid)
+
+    interferometer = interferometer.apply_settings(
+        settings=ag.SettingsInterferometer(transformer_class=ag.TransformerDFT)
+    )
+
+    fit = ag.FitInterferometer(
+        dataset=interferometer,
+         plane=plane,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+    )
+
+    assert fit.figure_of_merit == pytest.approx(-5.05513095, 1.0e-2)
+
+
 def test__linear_light_profiles_agree_with_standard_light_profiles():
 
     grid = ag.Grid2D.uniform(shape_native=(51, 51), pixel_scales=0.1, sub_size=1)
@@ -135,8 +180,6 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
             grid_class=ag.Grid2D, transformer_class=ag.TransformerDFT, sub_size=1
         )
     )
-
-    plane = ag.Plane(galaxies=[galaxy])
 
     fit = ag.FitInterferometer(
         dataset=interferometer,

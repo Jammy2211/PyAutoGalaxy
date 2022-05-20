@@ -317,7 +317,13 @@ class AnalysisImaging(AnalysisDataset):
 
         visualizer = VisualizerImaging(visualize_path=paths.image_path)
         visualizer.visualize_imaging(imaging=self.imaging)
-        visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)
+        try:
+            visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)
+        except (
+            exc.InversionException,
+            np.linalg.LinAlgError,
+        ):
+            pass
         visualizer.visualize_plane(
             plane=fit.plane, grid=fit.grid, during_analysis=during_analysis
         )
@@ -343,9 +349,15 @@ class AnalysisImaging(AnalysisDataset):
                 use_hyper_scaling=False,
             )
 
-            visualizer.visualize_fit_imaging(
-                fit=fit, during_analysis=during_analysis, subfolders="fit_no_hyper"
-            )
+            try:
+                visualizer.visualize_fit_imaging(
+                    fit=fit, during_analysis=during_analysis, subfolders="fit_no_hyper"
+                )
+            except (
+                exc.InversionException,
+                np.linalg.LinAlgError,
+            ):
+                pass
 
     def make_result(
         self, samples: af.PDFSamples, model: af.Collection, search: af.NonLinearSearch
