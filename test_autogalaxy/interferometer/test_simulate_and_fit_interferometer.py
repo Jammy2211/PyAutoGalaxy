@@ -122,9 +122,7 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
         regularization=ag.reg.Constant(coefficient=(1.0)),
     )
 
-    plane = ag.Plane(
-        galaxies=[galaxy_0, galaxy_1]
-    )
+    plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
     simulator = ag.SimulatorInterferometer(
         uv_wavelengths=np.ones(shape=(7, 2)),
@@ -133,7 +131,7 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
         noise_seed=1,
     )
 
-    interferometer = simulator.via_plane_from( plane= plane, grid=grid)
+    interferometer = simulator.via_plane_from(plane=plane, grid=grid)
 
     interferometer = interferometer.apply_settings(
         settings=ag.SettingsInterferometer(transformer_class=ag.TransformerDFT)
@@ -141,7 +139,7 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
 
     fit = ag.FitInterferometer(
         dataset=interferometer,
-         plane=plane,
+        plane=plane,
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -200,10 +198,12 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
         dataset=interferometer,
         plane=plane_linear,
         settings_pixelization=ag.SettingsPixelization(use_border=False),
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+        settings_inversion=ag.SettingsInversion(
+            use_w_tilde=False, linear_func_only_add_to_curvature_diag=False
+        ),
     )
 
     assert fit_linear.inversion.reconstruction == pytest.approx(
-        np.array([0.1, 0.2]), 1.0e-4
+        np.array([0.1, 0.2]), 1.0e-2
     )
-    assert fit.log_likelihood == fit_linear.log_likelihood
+    assert fit.log_likelihood == pytest.approx(fit_linear.log_likelihood, 1.0e-4)

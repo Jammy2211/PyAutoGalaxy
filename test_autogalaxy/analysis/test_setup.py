@@ -5,9 +5,9 @@ import autogalaxy as ag
 class TestSetupHyper:
     def test__hyper_search(self):
 
-        setup = ag.SetupHyper(search_inversion_cls=None, search_inversion_dict=None)
+        setup = ag.SetupHyper(search_inversion_cls=None, search_pixelized_dict=None)
         assert setup.search_inversion_cls == af.DynestyStatic
-        assert setup.search_inversion_dict == {
+        assert setup.search_pixelized_dict == {
             "nlive": 50,
             "sample": "rstagger",
             "dlogz": 10,
@@ -15,10 +15,10 @@ class TestSetupHyper:
 
         setup = ag.SetupHyper(
             search_inversion_cls=af.DynestyDynamic,
-            search_inversion_dict={"hello": "there"},
+            search_pixelized_dict={"hello": "there"},
         )
         assert setup.search_inversion_cls == af.DynestyDynamic
-        assert setup.search_inversion_dict == {"hello": "there"}
+        assert setup.search_pixelized_dict == {"hello": "there"}
 
         setup = ag.SetupHyper(search_noise_cls=None, search_noise_dict=None)
         assert setup.search_noise_cls == af.DynestyStatic

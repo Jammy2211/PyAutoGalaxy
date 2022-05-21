@@ -126,7 +126,7 @@ class PlaneToInversion:
     ):
 
         mapper_list = self.mapper_list_from(
-            grid=dataset.grid_inversion,
+            grid=dataset.grid_pixelized,
             settings_pixelization=settings_pixelization,
             preloads=preloads,
         )
@@ -168,7 +168,7 @@ class PlaneToInversion:
     ):
 
         mapper_list = self.mapper_list_from(
-            grid=dataset.grid_inversion,
+            grid=dataset.grid_pixelized,
             settings_pixelization=settings_pixelization,
             preloads=preloads,
         )

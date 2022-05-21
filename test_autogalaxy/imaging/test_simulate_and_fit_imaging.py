@@ -94,8 +94,7 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
     )
 
     galaxy_0 = ag.Galaxy(
-        redshift=0.5,
-        light=ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1),
+        redshift=0.5, light=ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1)
     )
     galaxy_1 = ag.Galaxy(
         redshift=1.0,
@@ -103,9 +102,7 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
         regularization=ag.reg.Constant(coefficient=(1.0)),
     )
 
-    plane = ag.Plane(
-        galaxies=[galaxy_0, galaxy_1]
-    )
+    plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
     imaging = ag.SimulatorImaging(exposure_time=300.0, psf=psf, noise_seed=1)
 

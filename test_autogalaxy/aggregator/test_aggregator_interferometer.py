@@ -81,7 +81,7 @@ def test__interferometer_generator_from_aggregator(
         real_space_mask=mask_2d_7x7,
         settings=ag.SettingsInterferometer(
             grid_class=ag.Grid2DIterate,
-            grid_inversion_class=ag.Grid2DIterate,
+            grid_pixelized_class=ag.Grid2DIterate,
             fractional_accuracy=0.5,
             sub_steps=[2],
             transformer_class=ag.TransformerDFT,
@@ -105,7 +105,7 @@ def test__interferometer_generator_from_aggregator(
         assert (interferometer.visibilities == interferometer_7.visibilities).all()
         assert (interferometer.real_space_mask == mask_2d_7x7).all()
         assert isinstance(interferometer.grid, ag.Grid2DIterate)
-        assert isinstance(interferometer.grid_inversion, ag.Grid2DIterate)
+        assert isinstance(interferometer.grid_pixelized, ag.Grid2DIterate)
         assert interferometer.grid.sub_steps == [2]
         assert interferometer.grid.fractional_accuracy == 0.5
         assert isinstance(interferometer.transformer, ag.TransformerDFT)

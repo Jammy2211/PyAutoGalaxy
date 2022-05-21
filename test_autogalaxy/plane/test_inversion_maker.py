@@ -32,9 +32,9 @@ def test__light_profile_linear_func_list_from(lp_0):
         ],
         redshift=None,
     )
-    
+
     plane_to_inversion = ag.PlaneToInversion(plane=plane)
-    
+
     light_profile_linear_func_list = plane_to_inversion.light_profile_linear_func_list_from(
         source_grid_slim=1, source_blurring_grid_slim=2, convolver=3
     )

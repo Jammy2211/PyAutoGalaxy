@@ -71,7 +71,7 @@ def test__imaging_generator_from_aggregator(imaging_7x7, mask_2d_7x7, samples, m
     masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
         settings=ag.SettingsImaging(
             grid_class=ag.Grid2DIterate,
-            grid_inversion_class=ag.Grid2DIterate,
+            grid_pixelized_class=ag.Grid2DIterate,
             fractional_accuracy=0.5,
             sub_steps=[2],
         )
@@ -93,7 +93,7 @@ def test__imaging_generator_from_aggregator(imaging_7x7, mask_2d_7x7, samples, m
     for imaging in imaging_gen:
         assert (imaging.image == masked_imaging_7x7.image).all()
         assert isinstance(imaging.grid, ag.Grid2DIterate)
-        assert isinstance(imaging.grid_inversion, ag.Grid2DIterate)
+        assert isinstance(imaging.grid_pixelized, ag.Grid2DIterate)
         assert imaging.grid.sub_steps == [2]
         assert imaging.grid.fractional_accuracy == 0.5
 

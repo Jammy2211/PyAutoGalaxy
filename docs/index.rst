@@ -237,7 +237,7 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
    howtogalaxy/chapter_1_introduction
    howtogalaxy/chapter_2_modeling
    howtogalaxy/chapter_3_search_chaining
-   howtogalaxy/chapter_4_inversions
+   howtogalaxy/chapter_4_pixelizations
    howtogalaxy/chapter_optional
 
 .. toctree::

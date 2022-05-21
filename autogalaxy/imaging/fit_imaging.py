@@ -12,6 +12,7 @@ from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.plane.plane import Plane
 from autogalaxy.plane.to_inversion import PlaneToInversion
 
+
 class FitImaging(aa.FitImaging):
     def __init__(
         self,
@@ -22,7 +23,7 @@ class FitImaging(aa.FitImaging):
         use_hyper_scaling: bool = True,
         settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
-        preloads:aa.Preloads=aa.Preloads(),
+        preloads: aa.Preloads = aa.Preloads(),
         profiling_dict: Optional[Dict] = None,
     ):
         """ An lens fitter, which contains the plane's used to perform the fit and functions to manipulate \

@@ -155,7 +155,6 @@ class EllDevVaucouleurs(lp.EllDevVaucouleurs, LightProfileLinear):
         )
 
 
-
 class EllGaussian(lp.EllGaussian, LightProfileLinear):
     def __init__(
         self,

@@ -12,7 +12,7 @@ lectures are composed of five chapters
 - **Introduction** - An introduction to galaxy morphology and structure using **PyAutoGalaxy**.
 - **Lens Modeling** - How to model galaxies, including a primer on Bayesian non-linear analysis.
 - **Search Chaining** - How to fit complex lens models using non-linear search chaining.
-- **Inversions** - How to perform pixelized reconstructions of a galaxy.
+- **Pixelizations** - How to perform pixelized reconstructions of a galaxy.
 
 How to Tackle HowToGalaxy
 -------------------------

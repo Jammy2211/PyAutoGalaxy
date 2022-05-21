@@ -319,10 +319,7 @@ class AnalysisImaging(AnalysisDataset):
         visualizer.visualize_imaging(imaging=self.imaging)
         try:
             visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)
-        except (
-            exc.InversionException,
-            np.linalg.LinAlgError,
-        ):
+        except (exc.InversionException, np.linalg.LinAlgError):
             pass
         visualizer.visualize_plane(
             plane=fit.plane, grid=fit.grid, during_analysis=during_analysis
@@ -353,10 +350,7 @@ class AnalysisImaging(AnalysisDataset):
                 visualizer.visualize_fit_imaging(
                     fit=fit, during_analysis=during_analysis, subfolders="fit_no_hyper"
                 )
-            except (
-                exc.InversionException,
-                np.linalg.LinAlgError,
-            ):
+            except (exc.InversionException, np.linalg.LinAlgError):
                 pass
 
     def make_result(
