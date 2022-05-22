@@ -194,24 +194,11 @@ def test__fit_figure_of_merit__different_linear_obj_lists_for_inversion(
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7,
         plane=plane,
-        settings_inversion=ag.SettingsInversion(
-            use_w_tilde=False, linear_func_only_use_evidence=False
-        ),
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.log_likelihood == pytest.approx(-14.52327, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-14.52327, 1.0e-4)
-
-    fit = ag.FitImaging(
-        dataset=masked_imaging_7x7,
-        plane=plane,
-        settings_inversion=ag.SettingsInversion(
-            use_w_tilde=False, linear_func_only_use_evidence=True
-        ),
-    )
-
-    assert fit.log_evidence == pytest.approx(-17.8838, 1e-4)
-    assert fit.figure_of_merit == pytest.approx(-17.8838, 1.0e-4)
 
 
 def test__fit_figure_of_merit__include_hyper_methods(masked_imaging_7x7):

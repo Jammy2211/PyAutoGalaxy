@@ -317,10 +317,8 @@ class AnalysisImaging(AnalysisDataset):
 
         visualizer = VisualizerImaging(visualize_path=paths.image_path)
         visualizer.visualize_imaging(imaging=self.imaging)
-        try:
-            visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)
-        except (exc.InversionException, np.linalg.LinAlgError):
-            pass
+        visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)
+
         visualizer.visualize_plane(
             plane=fit.plane, grid=fit.grid, during_analysis=during_analysis
         )

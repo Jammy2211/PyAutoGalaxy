@@ -200,6 +200,34 @@ using any combination of light profiles:
     """
     galaxy_model.bulge.add_assertion(galaxy_model.disk.effective_radius > 3.0)
 
+Linear Light Profiles
+---------------------
+
+**PyAutoGalaxy** supports 'linear light profiles', where the ``intensity`` parameters of all parametric components are 
+solved via linear algebra every time the model is fitted using a process called an inversion. This inversion always 
+computes ``intensity`` values that give the best fit to the data (e.g. they maximize the likelihood) given the other 
+parameter values of the light profile.
+
+The ``intensity`` parameter of each light profile is therefore not a free parameter in the model-fit, reducing the
+dimensionality of non-linear parameter space by the number of light profiles (in the example below by 3) and removing 
+the degeneracies that occur between the ``intnensity`` and other light profile
+parameters (e.g. ``effective_radius``, ``sersic_index``).
+
+For complex models, linear light profiles are a powerful way to simplify the parameter space to ensure the best-fit
+model is inferred.
+
+.. code-block:: python
+
+    sersic_linear = ag.lp_linear.EllSersic()
+    
+    galaxy_model_linear = af.Model(
+        ag.Galaxy,
+        redshift=0.5,
+        bulge=ag.lp_linear.EllDevVaucouleurs,
+        disk=ag.lp_linear.EllSersic,
+        bar=ag.lp_linear.EllGaussian,
+    )
+
 Wrap-Up
 -------
 

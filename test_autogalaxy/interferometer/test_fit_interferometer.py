@@ -113,24 +113,11 @@ def test__fit_figure_of_merit__different_linear_obj_lists_for_inversion(
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         plane=plane,
-        settings_inversion=ag.SettingsInversion(
-            use_w_tilde=False, linear_func_only_use_evidence=False
-        ),
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.log_likelihood == pytest.approx(-23.44419, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-23.44419, 1.0e-4)
-
-    fit = ag.FitInterferometer(
-        dataset=interferometer_7,
-        plane=plane,
-        settings_inversion=ag.SettingsInversion(
-            use_w_tilde=False, linear_func_only_use_evidence=True
-        ),
-    )
-
-    assert fit.log_evidence == pytest.approx(-30.38623, 1e-4)
-    assert fit.figure_of_merit == pytest.approx(-30.38623, 1.0e-4)
 
 
 def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
