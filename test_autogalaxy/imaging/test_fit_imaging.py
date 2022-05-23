@@ -176,11 +176,6 @@ def test__fit_figure_of_merit(masked_imaging_7x7):
     assert fit.log_evidence == pytest.approx(-6840.5851, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-6840.5851, 1.0e-4)
 
-
-def test__fit_figure_of_merit__different_linear_obj_lists_for_inversion(
-    masked_imaging_7x7
-):
-
     g0_linear_light = ag.Galaxy(
         redshift=0.5, light_profile=ag.lp_linear.EllSersic(sersic_index=1.0)
     )
@@ -199,6 +194,17 @@ def test__fit_figure_of_merit__different_linear_obj_lists_for_inversion(
 
     assert fit.log_likelihood == pytest.approx(-14.52327, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-14.52327, 1.0e-4)
+
+    plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, galaxy_pix])
+
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+    )
+
+    assert fit.log_evidence == pytest.approx(-22.87827302, 1e-4)
+    assert fit.figure_of_merit == pytest.approx(-22.87827302, 1.0e-4)
 
 
 def test__fit_figure_of_merit__include_hyper_methods(masked_imaging_7x7):
