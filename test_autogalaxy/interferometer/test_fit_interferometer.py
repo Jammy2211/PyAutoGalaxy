@@ -108,7 +108,6 @@ def test__fit_figure_of_merit(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         plane=plane,
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.log_likelihood == pytest.approx(-23.44419, 1e-4)
@@ -119,7 +118,6 @@ def test__fit_figure_of_merit(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         plane=plane,
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.log_evidence == pytest.approx(-35.16806296, 1e-4)

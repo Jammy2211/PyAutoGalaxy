@@ -189,7 +189,6 @@ def test__fit_figure_of_merit(masked_imaging_7x7):
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7,
         plane=plane,
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.log_likelihood == pytest.approx(-14.52327, 1e-4)
@@ -200,7 +199,6 @@ def test__fit_figure_of_merit(masked_imaging_7x7):
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7,
         plane=plane,
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.log_evidence == pytest.approx(-22.87827302, 1e-4)
