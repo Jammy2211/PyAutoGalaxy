@@ -16,7 +16,7 @@ def _imaging_from(fit: af.Fit, settings_imaging: Optional[aa.SettingsImaging] = 
 
     Parameters
     ----------
-    fit : ImaginSearchOutput
+    fit
         A PyAutoFit aggregator's SearchOutput object containing the generators of the results of PyAutoGalaxy model-fits.
     """
 
@@ -27,6 +27,12 @@ def _imaging_from(fit: af.Fit, settings_imaging: Optional[aa.SettingsImaging] = 
 
     if not hasattr(settings_imaging, "relative_accuracy"):
         settings_imaging.relative_accuracy = None
+
+    if hasattr(settings_imaging, "sub_size_inversion"):
+        settings_imaging.sub_size_pixelized = settings_imaging.sub_size_inversion
+
+    if hasattr(settings_imaging, "grid_inversion_class"):
+        settings_imaging.grid_pixelized_class = settings_imaging.grid_inversion_class
 
     imaging = aa.Imaging(
         image=data,
@@ -57,7 +63,7 @@ class ImagingAgg:
 
         Parameters
         ----------
-        aggregator : ImaginAggregator
+        aggregator
             A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits."""
 
         func = partial(_imaging_from, settings_imaging=settings_imaging)

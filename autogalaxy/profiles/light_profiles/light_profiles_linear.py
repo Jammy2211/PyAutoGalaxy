@@ -8,8 +8,28 @@ from autogalaxy.profiles.light_profiles import light_profiles as lp
 
 
 class LightProfileLinear(lp.LightProfile):
+    @property
+    def not_linear_cls(self):
+        raise NotImplementedError
 
-    pass
+    def not_linear_instance_from(self, intensity: float) -> lp.LightProfile:
+        """
+        Creates an instance of a linear light profile using its parent normal light profile (e.g. the non linear
+        variant which has an `intensity` parameter).
+
+        The `intensity` value of the profile created is passed into this function and used.
+
+        Parameters
+        ----------
+        intensity
+            Overall intensity normalisation of the not linear light profile that is created (units are dimensionless
+            and derived from the data the light profile's image is compared too, which is expected to be electrons
+            per second).
+        """
+        parameters = vars(self)
+        parameters["intensity"] = intensity
+
+        return self.not_linear_cls(**parameters)
 
 
 class LightProfileLinearObjFunc(aa.LinearObjFunc):
@@ -94,6 +114,10 @@ class EllSersic(lp.EllSersic, LightProfileLinear):
             sersic_index=sersic_index,
         )
 
+    @property
+    def not_linear_cls(self):
+        return lp.EllSersic
+
 
 class EllExponential(lp.EllExponential, LightProfileLinear):
     def __init__(
@@ -123,6 +147,10 @@ class EllExponential(lp.EllExponential, LightProfileLinear):
             intensity=1.0,
             effective_radius=effective_radius,
         )
+
+    @property
+    def not_linear_cls(self):
+        return lp.EllExponential
 
 
 class EllDevVaucouleurs(lp.EllDevVaucouleurs, LightProfileLinear):
@@ -154,6 +182,10 @@ class EllDevVaucouleurs(lp.EllDevVaucouleurs, LightProfileLinear):
             effective_radius=effective_radius,
         )
 
+    @property
+    def not_linear_cls(self):
+        return lp.EllDevVaucouleurs
+
 
 class EllGaussian(lp.EllGaussian, LightProfileLinear):
     def __init__(
@@ -184,3 +216,7 @@ class EllGaussian(lp.EllGaussian, LightProfileLinear):
         super().__init__(
             centre=centre, elliptical_comps=elliptical_comps, intensity=1.0, sigma=sigma
         )
+
+    @property
+    def not_linear_cls(self):
+        return lp.EllGaussian

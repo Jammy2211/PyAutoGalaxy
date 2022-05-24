@@ -276,7 +276,8 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return sum(hyper_noise_maps)
 
     def hyper_noise_map_list_from(self, noise_map) -> List[aa.Array2D]:
-        """For a contribution map and noise-map, use the model hyper_galaxy galaxies to compute a hyper noise-map.
+        """
+        For a contribution map and noise-map, use the model hyper_galaxy galaxies to compute a hyper noise-map.
 
         Parameters
         -----------

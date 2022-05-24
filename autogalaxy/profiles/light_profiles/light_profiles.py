@@ -130,6 +130,9 @@ class LightProfile(EllProfile, OperateImage):
         if hasattr(self, "effective_radius"):
             return self.effective_radius
 
+    def __hash__(self):
+        return id(self)
+
 
 class EllGaussian(LightProfile):
     def __init__(

@@ -168,7 +168,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         return len(self.light_profile_list) > 0
 
     @property
-    def light_profile_linear_list(self) -> List[LightProfile]:
+    def light_profile_linear_list(self) -> List[LightProfileLinear]:
         return [
             value
             for value in self.__dict__.values()

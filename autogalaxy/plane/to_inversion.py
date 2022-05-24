@@ -139,11 +139,6 @@ class PlaneToInversion:
 
         linear_obj_list = mapper_list + light_profile_linear_func_list
 
-        if self.plane.has_light_profile_linear and settings_inversion.use_w_tilde:
-            raise aa.exc.InversionException(
-                "Cannot use linear light profiles with w_tilde on."
-            )
-
         return inversion_imaging_unpacked_from(
             image=image,
             noise_map=noise_map,
@@ -178,11 +173,6 @@ class PlaneToInversion:
         )
 
         linear_obj_list = mapper_list + light_profile_linear_func_list
-
-        if self.plane.has_light_profile_linear and settings_inversion.use_w_tilde:
-            raise aa.exc.InversionException(
-                "Cannot use linear light profiles with w_tilde on."
-            )
 
         return inversion_interferometer_unpacked_from(
             visibilities=visibilities,

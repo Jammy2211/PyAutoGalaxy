@@ -6,6 +6,7 @@ from autoconf import cached_property
 
 import autoarray as aa
 
+from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.hyper.hyper_data import HyperImageSky
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
@@ -98,7 +99,7 @@ class FitImaging(aa.FitImaging):
         return self.image - self.blurred_image
 
     @cached_property
-    def inversion(self):
+    def inversion(self) -> aa.Inversion:
         """
         If the plane has linear objects which are used to fit the data (e.g. a pixelization) this function returns
         the linear inversion.
@@ -223,6 +224,33 @@ class FitImaging(aa.FitImaging):
         return self.plane.unmasked_blurred_image_2d_list_via_psf_from(
             grid=self.grid, psf=self.imaging.psf
         )
+
+    @property
+    def linear_light_profile_intensity_dict(self) -> Dict[LightProfileLinear, float]:
+        """
+        When linear light profiles are used in an inversion, their `intensity` parameter values are solved for via
+        linear algebra.
+
+        These values are contained in the `reconstruction` ndarray of the inversion, however their location in this
+        ndarray depends how the inversion was performed.
+
+        This function returns a dictionary which maps every linear light profile instance to its solved for
+        `intensity` value in the inversion, so that the intensity value of every light profile can computed.
+        """
+        if self.inversion is None:
+            return None
+
+        linear_obj_func_list = self.inversion.linear_obj_func_list
+
+        linear_light_profile_intensity_dict = {}
+
+        for linear_obj_func in linear_obj_func_list:
+
+            linear_light_profile_intensity_dict[
+                linear_obj_func.light_profile
+            ] = self.inversion.reconstruction_dict[linear_obj_func]
+
+        return linear_light_profile_intensity_dict
 
     @property
     def total_mappers(self):

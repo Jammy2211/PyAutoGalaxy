@@ -186,20 +186,14 @@ def test__fit_figure_of_merit(masked_imaging_7x7):
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, g1_linear_light])
 
-    fit = ag.FitImaging(
-        dataset=masked_imaging_7x7,
-        plane=plane,
-    )
+    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
     assert fit.log_likelihood == pytest.approx(-14.52327, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-14.52327, 1.0e-4)
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, galaxy_pix])
 
-    fit = ag.FitImaging(
-        dataset=masked_imaging_7x7,
-        plane=plane,
-    )
+    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
     assert fit.log_evidence == pytest.approx(-22.87827302, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-22.87827302, 1.0e-4)
@@ -574,3 +568,24 @@ def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
     assert fit.subtracted_images_of_galaxies_list[0].slim[0] == -2.0 or np.nan
     assert fit.subtracted_images_of_galaxies_list[1].slim[0] == -3.0 or np.nan
     assert fit.subtracted_images_of_galaxies_list[2].slim[0] == 0.0 or np.nan
+
+
+def test__linear_light_profile_intensity_dict(masked_imaging_7x7):
+
+    linear_light_0 = ag.lp_linear.EllSersic(sersic_index=1.0)
+    linear_light_1 = ag.lp_linear.EllSersic(sersic_index=4.0)
+
+    g0_linear_light = ag.Galaxy(redshift=0.5, light_profile=linear_light_0)
+
+    g1_linear_light = ag.Galaxy(redshift=0.5, light_profile=linear_light_1)
+
+    plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, g1_linear_light])
+
+    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
+
+    assert fit.linear_light_profile_intensity_dict[linear_light_0] == pytest.approx(
+        7.093227476666252, 1.0e-4
+    )
+    assert fit.linear_light_profile_intensity_dict[linear_light_1] == pytest.approx(
+        -0.04694839915145, 1.0e-4
+    )

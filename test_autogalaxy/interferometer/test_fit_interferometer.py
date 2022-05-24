@@ -105,20 +105,14 @@ def test__fit_figure_of_merit(interferometer_7):
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, g1_linear_light])
 
-    fit = ag.FitInterferometer(
-        dataset=interferometer_7,
-        plane=plane,
-    )
+    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
     assert fit.log_likelihood == pytest.approx(-23.44419, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-23.44419, 1.0e-4)
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, galaxy_pix])
 
-    fit = ag.FitInterferometer(
-        dataset=interferometer_7,
-        plane=plane,
-    )
+    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
     assert fit.log_evidence == pytest.approx(-35.16806296, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-35.16806296, 1.0e-4)
