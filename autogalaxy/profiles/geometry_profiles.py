@@ -1,7 +1,7 @@
 from typing import Tuple
 
 import numpy as np
-
+import autofit as af
 import autoarray as aa
 from autoarray.structures.grids.transformed_2d import Grid2DTransformedNumpy
 from autogalaxy import convert
@@ -18,8 +18,19 @@ class GeometryProfile(Dictable):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         """
-
         self.centre = centre
+
+    def __hash__(self):
+        return id(self)
+
+    def __repr__(self):
+        return "{}\n{}".format(
+            self.__class__.__name__,
+            "\n".join(["{}: {}".format(k, v) for k, v in self.__dict__.items()]),
+        )
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
 
     def transform_grid_to_reference_frame(self, grid):
         raise NotImplemented()
@@ -48,15 +59,6 @@ class GeometryProfile(Dictable):
             return grid.slim.shape[0]
 
         return grid.grid_2d_radial_projected_shape_slim_from(centre=self.centre)
-
-    def __repr__(self):
-        return "{}\n{}".format(
-            self.__class__.__name__,
-            "\n".join(["{}: {}".format(k, v) for k, v in self.__dict__.items()]),
-        )
-
-    def __eq__(self, other):
-        return self.__dict__ == other.__dict__
 
 
 class SphProfile(GeometryProfile):

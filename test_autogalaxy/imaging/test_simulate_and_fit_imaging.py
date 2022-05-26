@@ -177,5 +177,11 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     assert fit_linear.inversion.reconstruction == pytest.approx(
         np.array([0.1, 0.2]), 1.0e-4
     )
+    assert fit_linear.linear_light_profile_intensity_dict[
+        galaxy_linear.bulge
+    ] == pytest.approx(0.1, 1.0e-4)
+    assert fit_linear.linear_light_profile_intensity_dict[
+        galaxy_linear.disk
+    ] == pytest.approx(0.2, 1.0e-4)
     assert fit.log_likelihood == fit_linear.figure_of_merit
     assert fit_linear.figure_of_merit == pytest.approx(-45.02798, 1.0e-4)

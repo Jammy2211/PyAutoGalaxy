@@ -5,13 +5,14 @@ from autoconf import cached_property
 
 import autoarray as aa
 
+from autogalaxy.abstract_fit import AbstractFit
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.plane.plane import Plane
 from autogalaxy.plane.to_inversion import PlaneToInversion
 
 
-class FitInterferometer(aa.FitInterferometer):
+class FitInterferometer(aa.FitInterferometer, AbstractFit):
     def __init__(
         self,
         dataset: aa.Interferometer,
@@ -36,6 +37,7 @@ class FitInterferometer(aa.FitInterferometer):
         super().__init__(
             dataset=dataset, use_mask_in_fit=False, profiling_dict=profiling_dict
         )
+        super(AbstractFit).__init__()
 
         self.plane = plane
 
