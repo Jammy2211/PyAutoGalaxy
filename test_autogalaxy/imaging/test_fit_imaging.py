@@ -418,85 +418,29 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
     )
 
 
-def test___model_images_of_galaxies_list(masked_imaging_7x7):
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-
-    plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
-
-    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
-
-    g0_blurred_image = g0.blurred_image_2d_via_convolver_from(
-        grid=masked_imaging_7x7.grid,
-        convolver=masked_imaging_7x7.convolver,
-        blurring_grid=masked_imaging_7x7.blurring_grid,
-    )
-    g1_blurred_image = g1.blurred_image_2d_via_convolver_from(
-        grid=masked_imaging_7x7.grid,
-        convolver=masked_imaging_7x7.convolver,
-        blurring_grid=masked_imaging_7x7.blurring_grid,
-    )
-
-    assert fit.model_images_of_galaxies_list[0] == pytest.approx(
-        g0_blurred_image, 1.0e-4
-    )
-
-    assert fit.model_images_of_galaxies_list[1] == pytest.approx(
-        g1_blurred_image, 1.0e-4
-    )
-
-    pix = ag.pix.Rectangular(shape=(3, 3))
-    reg = ag.reg.Constant(coefficient=1.0)
-
-    g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
-
-    plane = ag.Plane(redshift=0.5, galaxies=[ag.Galaxy(redshift=0.5), g0])
-
-    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
-
-    mapper = pix.mapper_from(
-        source_grid_slim=masked_imaging_7x7.grid,
-        settings=ag.SettingsPixelization(use_border=False),
-    )
-
-    inversion = ag.Inversion(
-        dataset=masked_imaging_7x7, linear_obj_list=[mapper], regularization_list=[reg]
-    )
-
-    assert (fit.model_images_of_galaxies_list[0].native == np.zeros((7, 7))).all()
-    assert fit.model_images_of_galaxies_list[1] == pytest.approx(
-        inversion.mapped_reconstructed_image, 1.0e-4
-    )
+def test__model_images_of_galaxies_list(masked_imaging_7x7):
 
     galaxy_light = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
     galaxy_linear = ag.Galaxy(redshift=0.5, light_profile=ag.lp_linear.EllSersic())
 
-    pix = ag.pix.Rectangular(shape=(3, 3))
-    reg = ag.reg.Constant(coefficient=1.0)
-    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    galaxy_pix = ag.Galaxy(
+        redshift=0.5,
+        pixelization=ag.pix.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=1.0),
+    )
 
     plane = ag.Plane(redshift=0.5, galaxies=[galaxy_light, galaxy_linear, galaxy_pix])
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-    blurred_image = plane.blurred_image_2d_via_convolver_from(
-        grid=masked_imaging_7x7.grid,
-        convolver=masked_imaging_7x7.convolver,
-        blurring_grid=masked_imaging_7x7.blurring_grid,
+    assert fit.model_images_of_galaxies_list[0] == pytest.approx(
+        fit.galaxy_model_image_dict[galaxy_light], 1.0e-4
     )
-
-    assert fit.model_images_of_galaxies_list[0] == pytest.approx(blurred_image, 1.0e-4)
-    assert fit.model_images_of_galaxies_list[1][4] == pytest.approx(
-        -276.72784031, 1.0e-4
+    assert fit.model_images_of_galaxies_list[1] == pytest.approx(
+        fit.galaxy_model_image_dict[galaxy_linear], 1.0e-4
     )
-
-    mapped_reconstructed_image = (
-        fit.inversion.mapped_reconstructed_image - fit.model_images_of_galaxies_list[1]
-    )
-
     assert fit.model_images_of_galaxies_list[2] == pytest.approx(
-        mapped_reconstructed_image, 1.0e-4
+        fit.galaxy_model_image_dict[galaxy_pix], 1.0e-4
     )
 
 

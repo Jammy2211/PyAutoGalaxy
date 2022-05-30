@@ -1,7 +1,7 @@
 import logging
 import numpy as np
 from os import path
-from typing import Optional, List
+from typing import Dict, Optional, List
 
 import autofit as af
 import autoarray as aa
@@ -20,6 +20,7 @@ class Preloads(aa.Preloads):
         sparse_image_plane_grid_pg_list: Optional[List[List[aa.Grid2D]]] = None,
         relocated_grid: Optional[aa.Grid2D] = None,
         mapper_list: Optional[aa.AbstractMapper] = None,
+        mapper_galaxy_dict: Optional[Dict[aa.AbstractMapper, "Galaxy"]] = None,
         operated_mapping_matrix: Optional[np.ndarray] = None,
         curvature_matrix_preload: Optional[np.ndarray] = None,
         curvature_matrix_counts: Optional[np.ndarray] = None,
@@ -97,6 +98,7 @@ class Preloads(aa.Preloads):
             sparse_image_plane_grid_list=sparse_image_plane_grid_list,
         )
 
+        self.mapper_galaxy_dict = mapper_galaxy_dict
         self.blurred_image = blurred_image
         self.failed = failed
 
@@ -127,6 +129,12 @@ class Preloads(aa.Preloads):
             preloads.set_blurred_image(fit_0=fit_0, fit_1=fit_1)
 
         preloads.set_mapper_list(fit_0=fit_0, fit_1=fit_1)
+
+        if preloads.mapper_list is not None:
+            preloads.mapper_galaxy_dict = fit_0.plane.to_inversion.mapper_galaxy_dict_from(
+                grid=fit_0.dataset.grid_inversion
+            )
+
         preloads.set_operated_mapping_matrix_with_preloads(fit_0=fit_0, fit_1=fit_1)
         preloads.set_curvature_matrix(fit_0=fit_0, fit_1=fit_1)
         preloads.set_regularization_matrix_and_term(fit_0=fit_0, fit_1=fit_1)

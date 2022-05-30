@@ -448,3 +448,29 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     assert mapped_reconstructed_visibilities == pytest.approx(
         fit.inversion.mapped_reconstructed_data, 1.0e-4
     )
+
+
+def test__model_visibilities_of_galaxies_list(interferometer_7):
+
+    galaxy_light = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    galaxy_linear = ag.Galaxy(redshift=0.5, light_profile=ag.lp_linear.EllSersic())
+
+    galaxy_pix = ag.Galaxy(
+        redshift=0.5,
+        pixelization=ag.pix.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=1.0),
+    )
+
+    plane = ag.Plane(redshift=0.5, galaxies=[galaxy_light, galaxy_linear, galaxy_pix])
+
+    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
+
+    assert fit.model_visibilities_of_galaxies_list[0] == pytest.approx(
+        fit.galaxy_model_visibilities_dict[galaxy_light], 1.0e-4
+    )
+    assert fit.model_visibilities_of_galaxies_list[1] == pytest.approx(
+        fit.galaxy_model_visibilities_dict[galaxy_linear], 1.0e-4
+    )
+    assert fit.model_visibilities_of_galaxies_list[2] == pytest.approx(
+        fit.galaxy_model_visibilities_dict[galaxy_pix], 1.0e-4
+    )

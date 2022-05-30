@@ -160,21 +160,9 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
 
         return {**galaxy_model_visibilities_dict, **galaxy_linear_obj_data_dict}
 
+    @property
     def model_visibilities_of_galaxies_list(self):
-
-        model_visibilities_of_galaxies_list = self.plane.visibilities_list_via_transformer_from(
-            grid=self.interferometer.grid, transformer=self.interferometer.transformer
-        )
-
-        for (galaxy_index, galaxy) in enumerate(self.galaxies):
-
-            if galaxy.has_pixelization:
-
-                model_visibilities_of_galaxies_list[
-                    galaxy_index
-                ] += self.inversion.mapped_reconstructed_image
-
-        return model_visibilities_of_galaxies_list
+        return list(self.galaxy_model_visibilities_dict.values())
 
     @property
     def total_mappers(self):

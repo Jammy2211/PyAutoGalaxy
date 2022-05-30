@@ -373,12 +373,12 @@ class OperateImageGalaxies(OperateImageList):
 
     def galaxy_image_2d_dict_from(
         self, grid: Union[aa.Grid2D, aa.Grid2DIterate]
-    ) -> Dict:
+    ) -> Dict["Galaxy", aa.Array2D]:
         raise NotImplementedError
 
     def galaxy_blurred_image_2d_dict_via_convolver_from(
         self, grid, convolver, blurring_grid
-    ) -> Dict:
+    ) -> Dict["Galaxy", aa.Array2D]:
         """
         Evaluate the light object's dictionary mapping galaixes to their corresponding 2D images and convolve each
         image with a PSF.
@@ -420,7 +420,9 @@ class OperateImageGalaxies(OperateImageList):
 
         return galaxy_blurred_image_2d_dict
 
-    def galaxy_visibilities_dict_via_transformer_from(self, grid, transformer) -> Dict:
+    def galaxy_visibilities_dict_via_transformer_from(
+        self, grid, transformer
+    ) -> Dict["Galaxy", aa.Visibilities]:
         """
         Evaluate the light object's dictionary mapping galaixes to their corresponding 2D images and transform each
         image to arrays of visibilities using a `autoarray.operators.transformer.Transformer` object and therefore a
