@@ -141,41 +141,24 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
         """
         galaxy_model_image_dict = self.plane.galaxy_image_2d_dict_from(grid=self.grid)
 
-        for path, image in galaxy_model_image_dict.items():
-            galaxy_model_image_dict[path] = image.binned
+        galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
+            use_image=True
+        )
 
-        # TODO : Extend to multiple inversioons across Planes
-
-        for galaxy in self.galaxies:
-
-            if galaxy.has_pixelization:
-
-                galaxy_model_image_dict.update(
-                    {galaxy: self.inversion.mapped_reconstructed_image}
-                )
-
-        return galaxy_model_image_dict
+        return {**galaxy_model_image_dict, **galaxy_linear_obj_image_dict}
 
     @property
     def galaxy_model_visibilities_dict(self) -> {Galaxy: np.ndarray}:
-        """
-        A dictionary associating galaxies with their corresponding model images
-        """
+
         galaxy_model_visibilities_dict = self.plane.galaxy_visibilities_dict_via_transformer_from(
             grid=self.interferometer.grid, transformer=self.interferometer.transformer
         )
 
-        # TODO : Extend to multiple inversioons across Planes
+        galaxy_linear_obj_data_dict = self.galaxy_linear_obj_data_dict_from(
+            use_image=False
+        )
 
-        for galaxy in self.galaxies:
-
-            if galaxy.has_pixelization:
-
-                galaxy_model_visibilities_dict.update(
-                    {galaxy: self.inversion.mapped_reconstructed_data}
-                )
-
-        return galaxy_model_visibilities_dict
+        return {**galaxy_model_visibilities_dict, **galaxy_linear_obj_data_dict}
 
     def model_visibilities_of_galaxies(self):
 

@@ -193,7 +193,7 @@ class PlaneToInversion:
 
         linear_obj_list = list(linear_obj_galaxy_dict.keys())
 
-        return inversion_interferometer_unpacked_from(
+        inversion = inversion_interferometer_unpacked_from(
             visibilities=visibilities,
             noise_map=noise_map,
             transformer=dataset.transformer,
@@ -204,3 +204,7 @@ class PlaneToInversion:
             preloads=preloads,
             profiling_dict=self.plane.profiling_dict,
         )
+
+        inversion.linear_obj_galaxy_dict = linear_obj_galaxy_dict
+
+        return inversion

@@ -158,51 +158,21 @@ class FitImaging(aa.FitImaging, AbstractFit):
         A dictionary associating galaxies with their corresponding model images
         """
 
-        galaxy_model_image_dict = self.plane.galaxy_blurred_image_2d_dict_via_convolver_from(
+        galaxy_blurred_image_2d_dict = self.plane.galaxy_blurred_image_2d_dict_via_convolver_from(
             grid=self.grid,
             convolver=self.imaging.convolver,
             blurring_grid=self.imaging.blurring_grid,
         )
 
-        if self.inversion is None:
-            return galaxy_model_image_dict
+        galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
+            use_image=True
+        )
 
-        for linear_obj in self.inversion.linear_obj_list:
-
-            galaxy = self.inversion.linear_obj_galaxy_dict[linear_obj]
-
-            mapped_reconstructed_data = self.inversion.mapped_reconstructed_data_dict[
-                linear_obj
-            ]
-
-            if galaxy in galaxy_model_image_dict:
-
-                galaxy_model_image_dict[galaxy] += mapped_reconstructed_data
-
-            else:
-
-                galaxy_model_image_dict.update({galaxy: mapped_reconstructed_data})
-
-        return galaxy_model_image_dict
+        return {**galaxy_blurred_image_2d_dict, **galaxy_linear_obj_image_dict}
 
     @property
     def model_images_of_galaxies_list(self):
-
-        model_images_of_galaxies_list = self.plane.blurred_image_2d_list_via_psf_from(
-            grid=self.grid,
-            psf=self.imaging.psf,
-            blurring_grid=self.imaging.blurring_grid,
-        )
-
-        for galaxy_index, galaxy in enumerate(self.galaxies):
-
-            if galaxy.has_pixelization:
-
-                model_images_of_galaxies_list[
-                    galaxy_index
-                ] += self.inversion.mapped_reconstructed_image
-
-        return model_images_of_galaxies_list
+        return list(self.galaxy_model_image_dict.values())
 
     @property
     def subtracted_images_of_galaxies_list(self):
