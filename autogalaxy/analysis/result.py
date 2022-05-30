@@ -15,7 +15,6 @@ class Result(af.Result):
         samples: af.PDFSamples,
         model: af.Collection,
         analysis,
-        search: af.NonLinearSearch,
     ):
         """
         After the non-linear search of a fit to a dataset is complete it creates a `Result` object which includes:
@@ -49,7 +48,7 @@ class Result(af.Result):
         ResultImaging
             The result of fitting the model to the imaging dataset, via a non-linear search.
         """
-        super().__init__(samples=samples, model=model, search=search)
+        super().__init__(samples=samples, model=model)
 
         self.analysis = analysis
 

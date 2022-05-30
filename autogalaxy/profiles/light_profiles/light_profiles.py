@@ -654,6 +654,7 @@ class EllSersicCore(EllSersic):
         grid_radii
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
+
         return np.multiply(
             np.multiply(
                 self.intensity_prime,

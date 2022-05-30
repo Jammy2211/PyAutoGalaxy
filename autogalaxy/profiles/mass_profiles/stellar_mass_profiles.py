@@ -171,6 +171,10 @@ class EllGaussian(MassProfile, StellarProfile):
     def convergence_func(self, grid_radius: float) -> float:
         return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
+    @aa.grid_dec.grid_2d_to_structure
+    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+        return np.zeros(shape=grid.shape[0])
+
     def image_2d_via_radii_from(self, grid_radii: np.ndarray):
         """Calculate the intensity of the Gaussian light profile on a grid of radial coordinates.
 

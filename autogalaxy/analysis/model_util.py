@@ -318,6 +318,7 @@ def hyper_fit(
     setup_hyper,
     result: af.Result,
     analysis,
+    search_previous : af.NonLinearSearch,
     include_hyper_image_sky: bool = False,
     pixelization_overwrite=None,
     regularization_overwrite=None,
@@ -376,10 +377,10 @@ def hyper_fit(
     if hyper_noise_model is not None:
 
         search = setup_hyper.search_noise_cls(
-            path_prefix=result.search.path_prefix_no_unique_tag,
-            name=f"{result.search.paths.name}__hyper_noise",
-            unique_tag=result.search.paths.unique_tag,
-            number_of_cores=result.search.number_of_cores,
+            path_prefix=search_previous.path_prefix_no_unique_tag,
+            name=f"{search_previous.paths.name}__hyper_noise",
+            unique_tag=search_previous.paths.unique_tag,
+            number_of_cores=search_previous.number_of_cores,
             **setup_hyper.search_noise_dict,
         )
 
@@ -409,10 +410,10 @@ def hyper_fit(
         pass
 
     search = setup_hyper.search_inversion_cls(
-        path_prefix=result.search.path_prefix_no_unique_tag,
-        name=f"{result.search.paths.name}__hyper_inversion",
-        unique_tag=result.search.paths.unique_tag,
-        number_of_cores=result.search.number_of_cores,
+        path_prefix=search_previous.path_prefix_no_unique_tag,
+        name=f"{search_previous.paths.name}__hyper_inversion",
+        unique_tag=search_previous.paths.unique_tag,
+        number_of_cores=search_previous.number_of_cores,
         **setup_hyper.search_pixelized_dict,
     )
 
@@ -480,59 +481,6 @@ def hyper_model_from(
                     setattr(galaxy, "hyper_galaxy", af.Model(HyperGalaxy))
 
     return model
-
-
-def hyper_fit_bc(hyper_model: af.Collection, setup_hyper, result: af.Result, analysis):
-    """
-    Perform a hyper-fit, which extends a model-fit with an additional fit which fixes the non-hyper components of the
-    model (e.g., `LightProfile`'s, `MassProfile`) to the `Result`'s maximum likelihood fit. The hyper-fit then treats
-    only the hyper-model components as free parameters, which are any of the following model components:
-
-    1) The `Pixelization` of any `Galaxy` in the model.
-    2) The `Regularization` of any `Galaxy` in the model.
-    3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
-    4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
-    data which are fit poorly.
-
-    The hyper model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
-    `Galaxy` light and mass components.
-
-    Parameters
-    ----------
-    hyper_model : Collection
-        The hyper model used by the hyper-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
-    setup_hyper : SetupHyper
-        The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
-    result : af.Result
-        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
-    analysis : Analysis
-        An analysis class used to fit imaging or interferometer data with a model.
-
-    Returns
-    -------
-    af.Result
-        The result of the hyper model-fit, which has a new attribute `result.hyper` that contains updated parameter
-        values for the hyper-model components for passing to later model-fits.
-    """
-
-    if hyper_model is None:
-        return result
-
-    search = setup_hyper.search_inversion_cls(
-        path_prefix=result.search.path_prefix_no_unique_tag,
-        name=f"{result.search.paths.name}__hyper",
-        unique_tag=result.search.paths.unique_tag,
-        number_of_cores=result.search.number_of_cores,
-        **setup_hyper.search_bc_dict,
-    )
-
-    analysis.set_hyper_dataset(result=result)
-
-    hyper_result = search.fit(model=hyper_model, analysis=analysis)
-
-    result.hyper = hyper_result
-
-    return result
 
 
 def stochastic_model_from(
@@ -630,6 +578,7 @@ def stochastic_fit(
     search_pixelized_dict,
     result,
     analysis,
+    search_previous: af.NonLinearSearch,
     info=None,
     pickle_files=None,
 ):
@@ -664,13 +613,13 @@ def stochastic_fit(
     mean, sigma = norm.fit(result.stochastic_log_likelihoods)
     log_likelihood_cap = mean
 
-    name = f"{result.search.paths.name}__stochastic"
+    name = f"{search_previous.paths.name}__stochastic"
 
     search = search_cls(
-        path_prefix=result.search.path_prefix_no_unique_tag,
+        path_prefix=search_previous.path_prefix_no_unique_tag,
         name=name,
-        unique_tag=result.search.paths.unique_tag,
-        number_of_cores=result.search.number_of_cores,
+        unique_tag=search_previous.paths.unique_tag,
+        number_of_cores=search_previous.number_of_cores,
         **search_pixelized_dict,
     )
 

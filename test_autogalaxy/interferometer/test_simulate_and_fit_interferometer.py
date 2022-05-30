@@ -208,8 +208,8 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
     )
     assert fit_linear.linear_light_profile_intensity_dict[
         galaxy_linear.bulge
-    ] == pytest.approx(0.1, 1.0e-4)
+    ] == pytest.approx(0.1, 1.0e-2)
     assert fit_linear.linear_light_profile_intensity_dict[
         galaxy_linear.disk
-    ] == pytest.approx(0.2, 1.0e-4)
+    ] == pytest.approx(0.2, 1.0e-2)
     assert fit.log_likelihood == pytest.approx(fit_linear.log_likelihood, 1.0e-4)

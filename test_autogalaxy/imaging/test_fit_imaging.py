@@ -357,9 +357,11 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
 
     pix = ag.pix.Rectangular(shape=(3, 3))
     reg = ag.reg.Constant(coefficient=1.0)
-    galaxy_pix = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
 
-    plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2, galaxy_pix])
+    galaxy_pix_0 = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
+    galaxy_pix_1 = ag.Galaxy(redshift=1.0, pixelization=pix, regularization=reg)
+
+    plane = ag.Plane(redshift=0.75, galaxies=[g0, g1, g2, galaxy_pix_0, galaxy_pix_1])
 
     masked_imaging_7x7.image[0] = 3.0
 
@@ -379,10 +381,16 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
     blurred_image = g0_blurred_image + g1_blurred_image
 
     profile_subtracted_image = masked_imaging_7x7.image - blurred_image
-    mapper = pix.mapper_from(
+    mapper_0 = galaxy_pix_0.pixelization.mapper_from(
         source_grid_slim=masked_imaging_7x7.grid,
         settings=ag.SettingsPixelization(use_border=False),
     )
+
+    mapper_1 = galaxy_pix_1.pixelization.mapper_from(
+        source_grid_slim=masked_imaging_7x7.grid,
+        settings=ag.SettingsPixelization(use_border=False),
+    )
+
 
     inversion = ag.InversionImaging(
         image=profile_subtracted_image,
@@ -401,9 +409,13 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
     assert fit.galaxy_model_image_dict[g1].native == pytest.approx(
         g1_blurred_image.native, 1.0e-4
     )
-    assert fit.galaxy_model_image_dict[galaxy_pix].native == pytest.approx(
-        inversion.mapped_reconstructed_image.native, 1.0e-4
+    assert fit.galaxy_model_image_dict[galaxy_pix_0].native == pytest.approx(
+        inversion.mapped_reconstructed_data_dict[mapper_0], 1.0e-4
     )
+
+    mapped_reconstructed_image = fit.galaxy_model_image_dict[galaxy_pix_0].native + fit.galaxy_model_image_dict[galaxy_pix_1].native
+
+    assert mapped_reconstructed_image == pytest.approx(inversion.mapped_reconstructed_image.native, 1.0e-4)
 
     assert fit.model_image.native == pytest.approx(
         fit.galaxy_model_image_dict[g0].native
