@@ -93,22 +93,14 @@ class FitMaker:
         fit
             A fit object where an instance of the model has been fitted to the data.
         """
-        ignore_prior_limits = conf.instance["general"]["model"]["ignore_prior_limits"]
-        conf.instance["general"]["model"]["ignore_prior_limits"] = True
-
         instance = self.model.instance_from_unit_vector(
-            unit_vector=[unit_value] * self.model.prior_count
+            unit_vector=[unit_value] * self.model.prior_count,
+            ignore_prior_limits=True,
         )
 
-        conf.instance["general"]["model"]["ignore_prior_limits"] = ignore_prior_limits
-
-        fit = self.fit_func(
+        return self.fit_func(
             instance=instance, preload_overwrite=self.preloads_cls(use_w_tilde=False)
         )
-
-        fit.figure_of_merit
-
-        return fit
 
     def fit_random_instance_from(self) -> Union[aa.FitImaging, aa.FitInterferometer]:
         """
