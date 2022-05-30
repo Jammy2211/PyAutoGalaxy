@@ -1,14 +1,10 @@
 import logging
-import os
 from typing import Callable, Union
 
-from autoconf import conf
-
-from autofit.exc import PriorLimitException
-
-import autofit as af
 import autoarray as aa
-
+import autofit as af
+from autoconf import conf
+from autofit.exc import PriorLimitException
 from autogalaxy.analysis.preloads import Preloads
 
 logger = logging.getLogger(__name__)
@@ -44,7 +40,7 @@ class FitMaker:
         return Preloads
 
     def fit_via_model_from(
-        self, unit_value: float
+            self, unit_value: float
     ) -> Union[aa.FitImaging, aa.FitInterferometer]:
         """
         Create a fit via the model.
@@ -76,7 +72,7 @@ class FitMaker:
             return self.fit_random_instance_from()
 
     def fit_unit_instance_from(
-        self, unit_value: float
+            self, unit_value: float
     ) -> Union[aa.FitImaging, aa.FitInterferometer]:
         """
         Create a fit via the model using an input `unit_value`, where the `unit_value` defines unit hyper
@@ -93,22 +89,14 @@ class FitMaker:
         fit
             A fit object where an instance of the model has been fitted to the data.
         """
-        ignore_prior_limits = conf.instance["general"]["model"]["ignore_prior_limits"]
-        conf.instance["general"]["model"]["ignore_prior_limits"] = True
-
         instance = self.model.instance_from_unit_vector(
-            unit_vector=[unit_value] * self.model.prior_count
+            unit_vector=[unit_value] * self.model.prior_count,
+            ignore_prior_limits=True,
         )
 
-        conf.instance["general"]["model"]["ignore_prior_limits"] = ignore_prior_limits
-
-        fit = self.fit_func(
+        return self.fit_func(
             instance=instance, preload_overwrite=self.preloads_cls(use_w_tilde=False)
         )
-
-        fit.figure_of_merit
-
-        return fit
 
     def fit_random_instance_from(self) -> Union[aa.FitImaging, aa.FitInterferometer]:
         """
@@ -123,34 +111,18 @@ class FitMaker:
 
         preload_attempts = conf.instance["general"]["analysis"]["preload_attempts"]
 
-        ignore_prior_limits = conf.instance["general"]["model"]["ignore_prior_limits"]
-        conf.instance["general"]["model"]["ignore_prior_limits"] = True
-
         for i in range(preload_attempts):
 
             try:
 
-                instance = self.model.random_instance()
-
-                conf.instance["general"]["model"][
-                    "ignore_prior_limits"
-                ] = ignore_prior_limits
+                instance = self.model.random_instance(ignore_prior_limits=True)
 
                 fit = self.fit_func(
                     instance=instance,
                     preload_overwrite=self.preloads_cls(use_w_tilde=False),
                 )
 
-                fit.figure_of_merit
-
                 return fit
 
-            except Exception:
-
-                pass
-
-            if i == preload_attempts:
-
-                conf.instance["general"]["model"][
-                    "ignore_prior_limits"
-                ] = ignore_prior_limits
+            except Exception as e:
+                logger.exception(e)
