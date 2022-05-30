@@ -40,7 +40,7 @@ class FitMaker:
         return Preloads
 
     def fit_via_model_from(
-            self, unit_value: float
+        self, unit_value: float
     ) -> Union[aa.FitImaging, aa.FitInterferometer]:
         """
         Create a fit via the model.
@@ -72,7 +72,7 @@ class FitMaker:
             return self.fit_random_instance_from()
 
     def fit_unit_instance_from(
-            self, unit_value: float
+        self, unit_value: float
     ) -> Union[aa.FitImaging, aa.FitInterferometer]:
         """
         Create a fit via the model using an input `unit_value`, where the `unit_value` defines unit hyper
@@ -90,8 +90,7 @@ class FitMaker:
             A fit object where an instance of the model has been fitted to the data.
         """
         instance = self.model.instance_from_unit_vector(
-            unit_vector=[unit_value] * self.model.prior_count,
-            ignore_prior_limits=True,
+            unit_vector=[unit_value] * self.model.prior_count, ignore_prior_limits=True
         )
 
         return self.fit_func(

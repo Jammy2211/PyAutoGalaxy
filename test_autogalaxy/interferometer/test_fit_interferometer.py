@@ -285,13 +285,14 @@ def test___galaxy_model_image_dict(interferometer_7):
         settings=ag.SettingsInversion(use_w_tilde=False),
     )
 
-    assert (fit.galaxy_model_image_dict[g0].native == np.zeros((7, 7))).all()
+    assert (fit.galaxy_model_image_dict[g0].native == 0.0 + 0.0j * np.zeros((7,))).all()
 
     assert fit.galaxy_model_image_dict[galaxy_pix_0] == pytest.approx(
         inversion.mapped_reconstructed_image.slim, 1.0e-4
     )
 
     # Linear Light PRofiles + Pixelization + Regularizaiton
+    reg = ag.reg.Constant(coefficient=2.0)
 
     galaxy_pix_1 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
 
@@ -304,14 +305,14 @@ def test___galaxy_model_image_dict(interferometer_7):
     )
 
     assert fit.galaxy_model_image_dict[g0_linear][4] == pytest.approx(
-        -1.65495642e03, 1.0e-4
+        -1.65495642e03, 1.0e-2
     )
     assert fit.galaxy_model_image_dict[g1] == pytest.approx(g1_image, 1.0e-4)
     assert fit.galaxy_model_image_dict[galaxy_pix_0][4] == pytest.approx(
-        -0.00016439460, 1.0e-4
+        -0.000164926, 1.0e-2
     )
     assert fit.galaxy_model_image_dict[galaxy_pix_1][4] == pytest.approx(
-        -0.00016439343, 1.0e-4
+        -0.000153471881, 1.0e-2
     )
 
     mapped_reconstructed_image = (
@@ -327,14 +328,17 @@ def test___galaxy_model_image_dict(interferometer_7):
 
 def test___galaxy_model_visibilities_dict(interferometer_7):
 
-    g0 = ag.Galaxy(
-        redshift=0.5,
-        light_profile=ag.lp.EllSersic(intensity=1.0),
-        mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
-    )
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    # Normal Light Profiles Only
 
-    plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
+    g2 = ag.Galaxy(
+        redshift=0.5,
+        light_profile_0=ag.lp.EllSersic(intensity=1.0),
+        light_profile_1=ag.lp.EllSersic(intensity=2.0),
+    )
+
+    plane = ag.Plane(redshift=0.5, galaxies=[g0, g1, g2])
 
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
@@ -349,26 +353,41 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
         grid=interferometer_7.grid, transformer=interferometer_7.transformer
     )
 
-    assert fit.galaxy_model_visibilities_dict[g0].slim == pytest.approx(
+    assert fit.galaxy_model_visibilities_dict[g0] == pytest.approx(
         g0_visibilities, 1.0e-4
     )
-    assert fit.galaxy_model_visibilities_dict[g1].slim == pytest.approx(
+    assert fit.galaxy_model_visibilities_dict[g1] == pytest.approx(
         g1_visibilities, 1.0e-4
     )
-
-    assert fit.model_visibilities.slim == pytest.approx(
-        fit.galaxy_model_visibilities_dict[g0].slim
-        + fit.galaxy_model_visibilities_dict[g1].slim,
-        1.0e-4,
+    assert fit.galaxy_model_visibilities_dict[g2] == pytest.approx(
+        g0_visibilities + g1_visibilities, 1.0e-4
     )
+
+    # Linear Light Profiles Only
+
+    g0_linear = ag.Galaxy(redshift=0.5, light_profile=ag.lp_linear.EllSersic())
+
+    plane = ag.Plane(redshift=0.5, galaxies=[g0_linear])
+
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+    )
+
+    assert fit.galaxy_model_visibilities_dict[g0_linear][0] == pytest.approx(
+        0.9999355379224923 - 1.6755584672528312e-20j, 1.0e-4
+    )
+
+    # Pixelization + Regularizaiton only
 
     pix = ag.pix.Rectangular(shape=(3, 3))
     reg = ag.reg.Constant(coefficient=1.0)
 
     g0 = ag.Galaxy(redshift=0.5)
-    g1 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    galaxy_pix_0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
 
-    plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
+    plane = ag.Plane(redshift=0.5, galaxies=[g0, galaxy_pix_0])
 
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
@@ -389,21 +408,16 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
     assert (fit.galaxy_model_visibilities_dict[g0] == 0.0 + 0.0j * np.zeros((7,))).all()
 
-    assert fit.galaxy_model_visibilities_dict[g1].slim == pytest.approx(
-        inversion.mapped_reconstructed_data.slim, 1.0e-4
+    assert fit.galaxy_model_visibilities_dict[galaxy_pix_0] == pytest.approx(
+        inversion.mapped_reconstructed_data, 1.0e-4
     )
 
-    assert fit.model_visibilities.slim == pytest.approx(
-        fit.galaxy_model_visibilities_dict[g1].slim, 1.0e-4
-    )
+    # Linear Light PRofiles + Pixelization + Regularizaiton
+    reg = ag.reg.Constant(coefficient=2.0)
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
-    g2 = ag.Galaxy(redshift=0.5)
+    galaxy_pix_1 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
 
-    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
-
-    plane = ag.Plane(redshift=0.5, galaxies=[g0, g1, g2, galaxy_pix])
+    plane = ag.Plane(redshift=0.5, galaxies=[g0_linear, g1, galaxy_pix_0, galaxy_pix_1])
 
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
@@ -411,48 +425,26 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
-    g0_visibilities = g0.visibilities_via_transformer_from(
-        grid=interferometer_7.grid, transformer=interferometer_7.transformer
-    )
-    g1_visibilities = g1.visibilities_via_transformer_from(
-        grid=interferometer_7.grid, transformer=interferometer_7.transformer
+    assert fit.galaxy_model_visibilities_dict[g0_linear][0] == pytest.approx(
+        -1655.3897388539438 + 2.7738811036788807e-17j, 1.0e-4
     )
 
-    profile_visibilities = g0_visibilities + g1_visibilities
-
-    profile_subtracted_visibilities = (
-        interferometer_7.visibilities - profile_visibilities
+    assert fit.galaxy_model_visibilities_dict[g1] == pytest.approx(
+        g1_visibilities, 1.0e-4
     )
-    mapper = pix.mapper_from(
-        source_grid_slim=interferometer_7.grid,
-        settings=ag.SettingsPixelization(use_border=False),
+    assert fit.galaxy_model_visibilities_dict[galaxy_pix_0][0] == pytest.approx(
+        -0.00023567176731092987 + 0.2291185445396378j, 1.0e-4
     )
-
-    inversion = ag.InversionInterferometer(
-        visibilities=profile_subtracted_visibilities,
-        noise_map=interferometer_7.noise_map,
-        transformer=interferometer_7.transformer,
-        w_tilde=None,
-        linear_obj_list=[mapper],
-        regularization_list=[reg],
-        settings=ag.SettingsInversion(use_w_tilde=False),
+    assert fit.galaxy_model_visibilities_dict[galaxy_pix_1][0] == pytest.approx(
+        -0.0002255902723656833 + 0.057279636670966916j, 1.0e-4
     )
 
-    assert (fit.galaxy_model_visibilities_dict[g2] == 0.0 + 0.0j * np.zeros((7,))).all()
-
-    assert fit.galaxy_model_visibilities_dict[g0].slim == pytest.approx(
-        g0_visibilities.slim, 1.0e-4
-    )
-    assert fit.galaxy_model_visibilities_dict[g1].slim == pytest.approx(
-        g1_visibilities.slim, 1.0e-4
-    )
-    assert fit.galaxy_model_visibilities_dict[galaxy_pix].slim == pytest.approx(
-        inversion.mapped_reconstructed_data.slim, 1.0e-4
+    mapped_reconstructed_visibilities = (
+        fit.galaxy_model_visibilities_dict[g0_linear]
+        + fit.galaxy_model_visibilities_dict[galaxy_pix_0]
+        + fit.galaxy_model_visibilities_dict[galaxy_pix_1]
     )
 
-    assert fit.model_visibilities.slim == pytest.approx(
-        fit.galaxy_model_visibilities_dict[g0].slim
-        + fit.galaxy_model_visibilities_dict[g1].slim
-        + inversion.mapped_reconstructed_data.slim,
-        1.0e-4,
+    assert mapped_reconstructed_visibilities == pytest.approx(
+        fit.inversion.mapped_reconstructed_data, 1.0e-4
     )
