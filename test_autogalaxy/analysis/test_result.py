@@ -16,9 +16,7 @@ def test__result_contains_instance_with_galaxies(
     )
 
     result = res.Result(
-        samples=samples_with_result,
-        analysis=analysis_imaging_7x7,
-        model=model,
+        samples=samples_with_result, analysis=analysis_imaging_7x7, model=model
     )
 
     assert isinstance(result.instance.galaxies[0], ag.Galaxy)
@@ -58,7 +56,7 @@ def test__results_include_pixelization__available_as_property(analysis_imaging_7
     samples = ag.m.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
 
     result = res.ResultDataset(
-        samples=samples, analysis=analysis_imaging_7x7, model=None,
+        samples=samples, analysis=analysis_imaging_7x7, model=None
     )
 
     assert isinstance(result.pixelization_list[0], ag.m.MockPixelization)

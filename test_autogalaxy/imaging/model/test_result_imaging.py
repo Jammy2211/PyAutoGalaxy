@@ -12,9 +12,7 @@ class TestResultImaging:
     ):
 
         result = ResultImaging(
-            samples=samples_with_result,
-            analysis=analysis_imaging_7x7,
-            model=None,
+            samples=samples_with_result, analysis=analysis_imaging_7x7, model=None
         )
 
         assert (result.mask == masked_imaging_7x7.mask).all()
@@ -32,7 +30,7 @@ class TestResultImaging:
         samples = ag.m.MockSamples(max_log_likelihood_instance=instance)
 
         result = ResultImaging(
-            samples=samples, analysis=analysis_imaging_7x7, model=None,
+            samples=samples, analysis=analysis_imaging_7x7, model=None
         )
 
         image_dict = result.image_galaxy_dict

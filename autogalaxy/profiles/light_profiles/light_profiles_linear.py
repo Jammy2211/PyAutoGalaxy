@@ -366,6 +366,7 @@ class EllExponentialCore(lp.EllExponentialCore, LightProfileLinear):
     def lp_cls(self):
         return lp.EllExponentialCore
 
+
 class EllGaussian(lp.EllGaussian, LightProfileLinear):
     def __init__(
         self,

@@ -318,7 +318,7 @@ def hyper_fit(
     setup_hyper,
     result: af.Result,
     analysis,
-    search_previous : af.NonLinearSearch,
+    search_previous: af.NonLinearSearch,
     include_hyper_image_sky: bool = False,
     pixelization_overwrite=None,
     regularization_overwrite=None,

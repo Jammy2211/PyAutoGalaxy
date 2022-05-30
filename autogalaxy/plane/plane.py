@@ -248,7 +248,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return list(filter(lambda galaxy: galaxy.has_pixelization, self.galaxies))
 
     @property
-    def hyper_galaxies_with_pixelization_image_list(self) -> List[Galaxy]:
+    def hyper_galaxies_with_pixelization_image_list(self) -> List[aa.Array2D]:
         return [galaxy.hyper_galaxy_image for galaxy in self.galaxies_with_pixelization]
 
     @property

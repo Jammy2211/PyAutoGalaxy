@@ -164,13 +164,24 @@ class FitImaging(aa.FitImaging, AbstractFit):
             blurring_grid=self.imaging.blurring_grid,
         )
 
-        for galaxy in self.galaxies:
+        if self.inversion is None:
+            return galaxy_model_image_dict
 
-            if galaxy.has_pixelization:
+        for linear_obj in self.inversion.linear_obj_list:
 
-                galaxy_model_image_dict.update(
-                    {galaxy: self.inversion.mapped_reconstructed_image}
-                )
+            galaxy = self.inversion.linear_obj_galaxy_dict[linear_obj]
+
+            mapped_reconstructed_data = self.inversion.mapped_reconstructed_data_dict[
+                linear_obj
+            ]
+
+            if galaxy in galaxy_model_image_dict:
+
+                galaxy_model_image_dict[galaxy] += mapped_reconstructed_data
+
+            else:
+
+                galaxy_model_image_dict.update({galaxy: mapped_reconstructed_data})
 
         return galaxy_model_image_dict
 

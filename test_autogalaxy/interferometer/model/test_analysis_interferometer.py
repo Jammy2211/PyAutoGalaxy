@@ -8,6 +8,7 @@ from autogalaxy.interferometer.model.result import ResultInterferometer
 
 directory = path.dirname(path.realpath(__file__))
 
+
 def test__make_result__result_interferometer_is_returned(interferometer_7):
 
     model = af.Collection(galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5)))
@@ -19,6 +20,7 @@ def test__make_result__result_interferometer_is_returned(interferometer_7):
     result = search.fit(model=model, analysis=analysis)
 
     assert isinstance(result, ResultInterferometer)
+
 
 def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
     interferometer_7
@@ -38,6 +40,7 @@ def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
     fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
     assert fit.log_likelihood == fit_figure_of_merit
+
 
 def test__fit_figure_of_merit__includes_hyper_image_and_noise__matches_fit(
     interferometer_7
