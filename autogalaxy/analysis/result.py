@@ -2,6 +2,8 @@ import numpy as np
 from typing import Dict, Union
 
 from autoconf import conf
+from autoconf import cached_property
+
 import autofit as af
 import autoarray as aa
 

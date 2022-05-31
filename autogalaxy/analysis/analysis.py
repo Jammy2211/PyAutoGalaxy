@@ -7,6 +7,7 @@ from os import path
 import os
 
 from autoconf import conf
+
 import autofit as af
 import autoarray as aa
 
@@ -288,6 +289,7 @@ class AnalysisDataset(Analysis):
 
             for galaxy_path, galaxy in instance.path_instance_tuples_for_class(Galaxy):
                 if galaxy_path in self.hyper_galaxy_image_path_dict:
+
                     galaxy.hyper_model_image = self.hyper_model_image
 
                     galaxy.hyper_galaxy_image = self.hyper_galaxy_image_path_dict[
