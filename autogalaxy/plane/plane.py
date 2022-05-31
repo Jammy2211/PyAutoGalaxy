@@ -272,8 +272,8 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return any(list(map(lambda galaxy: galaxy.has_hyper_galaxy, self.galaxies)))
 
     def hyper_noise_map_from(self, noise_map) -> aa.Array2D:
-        hyper_noise_map_list = self.hyper_noise_map_list_from(noise_map=noise_map)
-        return sum(hyper_noise_map_list)
+        hyper_noise_maps = self.hyper_noise_map_list_from(noise_map=noise_map)
+        return sum(hyper_noise_maps)
 
     def hyper_noise_map_list_from(self, noise_map) -> List[aa.Array2D]:
         """
@@ -285,7 +285,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             An arrays describing the RMS standard deviation error in each pixel, preferably in units of electrons per
             second.
         """
-        hyper_noise_map_list = []
+        hyper_noise_maps = []
 
         for galaxy in self.galaxies:
 
@@ -297,7 +297,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
                     hyper_galaxy_image=galaxy.hyper_galaxy_image,
                 )
 
-                hyper_noise_map_list.append(hyper_noise_map_1d)
+                hyper_noise_maps.append(hyper_noise_map_1d)
 
             else:
 
@@ -306,9 +306,9 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
                     mask=noise_map.mask.mask_sub_1,
                 )
 
-                hyper_noise_map_list.append(hyper_noise_map)
+                hyper_noise_maps.append(hyper_noise_map)
 
-        return hyper_noise_map_list
+        return hyper_noise_maps
 
     @property
     def contribution_map(self) -> Optional[aa.Array2D]:
