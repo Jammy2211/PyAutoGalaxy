@@ -1,4 +1,5 @@
 from astropy import cosmology as cosmo
+import copy
 import json
 import logging
 import numpy as np
@@ -283,6 +284,8 @@ class AnalysisDataset(Analysis):
         instance
            The input instance with images associated with galaxies where possible.
         """
+
+        instance = copy.copy(instance)
 
         if self.hyper_galaxy_image_path_dict is not None:
 
