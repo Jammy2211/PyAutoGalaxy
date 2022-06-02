@@ -85,6 +85,7 @@ from . import convert
 from . import mock as m
 from .util.shear_field import ShearYX2D
 from .util.shear_field import ShearYX2DIrregular
+from . import cosmology as cosmo
 
 from .analysis.clump_model import ClumpModel
 

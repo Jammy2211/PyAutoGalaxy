@@ -1,6 +1,7 @@
 from astropy import constants
 import math
 
+from autogalaxy.cosmology.wrap import Planck15
 
 # Mock Cosmology #
 
@@ -13,7 +14,7 @@ class Value:
         return Value(value=self.value)
 
 
-class MockCosmology:
+class MockCosmology(Planck15):
     def __init__(
         self,
         arcsec_per_kpc=0.5,
@@ -21,6 +22,9 @@ class MockCosmology:
         critical_surface_density=2.0,
         cosmic_average_density=2.0,
     ):
+
+        super().__init__()
+
         self.arcsec_per_kpc = arcsec_per_kpc
         self.kpc_per_arcsec = kpc_per_arcsec
         self.critical_surface_density = critical_surface_density

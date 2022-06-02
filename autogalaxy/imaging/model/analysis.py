@@ -1,4 +1,3 @@
-from astropy import cosmology as cosmo
 import numpy as np
 from typing import Dict, Optional
 
@@ -9,6 +8,8 @@ from autoarray.exc import PixelizationException
 
 from autogalaxy.analysis.analysis import AnalysisDataset
 from autogalaxy.analysis.preloads import Preloads
+from autogalaxy.cosmology.lensing import LensingCosmology
+from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.imaging.model.visualizer import VisualizerImaging
 from autogalaxy.hyper.hyper_data import HyperImageSky
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
@@ -24,7 +25,7 @@ class AnalysisImaging(AnalysisDataset):
         self,
         dataset: aa.Imaging,
         hyper_dataset_result: ResultImaging = None,
-        cosmology=cosmo.Planck15,
+        cosmology: LensingCosmology = Planck15(),
         settings_pixelization: aa.SettingsPixelization = None,
         settings_inversion: aa.SettingsInversion = None,
     ):

@@ -1,8 +1,8 @@
-from astropy import cosmology as cosmo
-
 import autofit as af
 
 from autogalaxy.analysis.analysis import Analysis
+from autogalaxy.cosmology.lensing import LensingCosmology
+from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.quantity.model.visualizer import VisualizerQuantity
 from autogalaxy.quantity.dataset_quantity import DatasetQuantity
 from autogalaxy.quantity.model.result import ResultQuantity
@@ -13,7 +13,10 @@ from autogalaxy import exc
 
 class AnalysisQuantity(Analysis):
     def __init__(
-        self, dataset: DatasetQuantity, func_str: str, cosmology=cosmo.Planck15
+        self,
+        dataset: DatasetQuantity,
+        func_str: str,
+        cosmology: LensingCosmology = Planck15(),
     ):
         """
         Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.

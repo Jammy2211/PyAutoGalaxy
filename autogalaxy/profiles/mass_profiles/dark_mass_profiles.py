@@ -17,6 +17,8 @@ from typing import Tuple
 import autoarray as aa
 
 from autogalaxy.profiles.mass_profiles import MassProfile
+from autogalaxy.cosmology.lensing import LensingCosmology
+from autogalaxy.cosmology.wrap import Planck15
 
 from autogalaxy.profiles.mass_profiles.mass_profiles import (
     MassProfileMGE,
@@ -24,7 +26,6 @@ from autogalaxy.profiles.mass_profiles.mass_profiles import (
 )
 
 from autogalaxy import exc
-from autogalaxy.util import cosmology_util
 
 
 def jit_integrand(integrand_function):
@@ -300,18 +301,16 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
         return np.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
 
     def rho_at_scale_radius_solar_mass_per_kpc3(
-        self, redshift_object, redshift_source, cosmology=cosmo.Planck15
+        self, redshift_object, redshift_source, cosmology: LensingCosmology = Planck15()
     ):
         """
         The Cosmic average density is defined at the redshift of the profile."""
 
-        critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-            redshift_0=redshift_object, redshift_1=redshift_source, cosmology=cosmology
+        critical_surface_density = cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+            redshift_0=redshift_object, redshift_1=redshift_source
         )
 
-        kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
-            redshift=redshift_object, cosmology=cosmology
-        )
+        kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object)
 
         return (
             self.kappa_s
@@ -324,7 +323,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
         redshift_object,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology=cosmo.Planck15,
+        cosmology: LensingCosmology = Planck15(),
     ):
 
         if redshift_of_cosmic_average_density == "profile":
@@ -337,8 +336,8 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
                 "string. Must be {local, profile}"
             )
 
-        cosmic_average_density = cosmology_util.cosmic_average_density_solar_mass_per_kpc3_from(
-            redshift=redshift_calc, cosmology=cosmology
+        cosmic_average_density = cosmology.cosmic_average_density_solar_mass_per_kpc3_from(
+            redshift=redshift_calc
         )
 
         rho_scale_radius = self.rho_at_scale_radius_solar_mass_per_kpc3(
@@ -354,7 +353,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
         redshift_profile,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology=cosmo.Planck15,
+        cosmology: LensingCosmology = Planck15(),
     ):
 
         delta_concentration = self.delta_concentration(
@@ -387,7 +386,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
         redshift_object,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology=cosmo.Planck15,
+        cosmology: LensingCosmology = Planck15(),
     ):
 
         concentration = self.concentration(
@@ -404,7 +403,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
         redshift_object,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology=cosmo.Planck15,
+        cosmology: LensingCosmology = Planck15(),
     ):
 
         if redshift_of_cosmic_average_density == "profile":
@@ -417,8 +416,8 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
                 "string. Must be {local, profile}"
             )
 
-        cosmic_average_density = cosmology_util.cosmic_average_density_solar_mass_per_kpc3_from(
-            redshift=redshift_calc, cosmology=cosmology
+        cosmic_average_density = cosmology.cosmic_average_density_solar_mass_per_kpc3_from(
+            redshift=redshift_calc
         )
 
         radius_at_200 = self.radius_at_200(
@@ -428,9 +427,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
             cosmology=cosmology,
         )
 
-        kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
-            redshift=redshift_object, cosmology=cosmology
-        )
+        kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object)
 
         radius_at_200_kpc = radius_at_200 * kpc_per_arcsec
 
@@ -884,7 +881,7 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
         redshift_profile,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology=cosmo.Planck15,
+        cosmology: LensingCosmology = Planck15(),
     ):
         mass_at_200 = self.mass_at_200_solar_masses(
             redshift_object=redshift_profile,
@@ -1489,19 +1486,17 @@ class EllNFWGeneralizedMCRLudlow(EllNFWGeneralized):
 
 def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_source):
 
-    cosmology = cosmo.Planck15
+    cosmology = Planck15()
 
     cosmic_average_density = (
         cosmology.critical_density(redshift_object).to(units.solMass / units.kpc ** 3)
     ).value
 
-    critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-        redshift_0=redshift_object, redshift_1=redshift_source, cosmology=cosmology
+    critical_surface_density = cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+        redshift_0=redshift_object, redshift_1=redshift_source
     )
 
-    kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
-        redshift=redshift_object, cosmology=cosmology
-    )
+    kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object)
 
     radius_at_200 = (
         mass_at_200 / (200.0 * cosmic_average_density * (4.0 * np.pi / 3.0))
@@ -1537,7 +1532,7 @@ def kappa_s_and_scale_radius_for_ludlow(
 
     warnings.filterwarnings("ignore")
 
-    cosmology = cosmo.Planck15
+    cosmology = Planck15()
 
     col_cosmo = col_cosmology.setCosmology("planck15")
     m_input = mass_at_200 * col_cosmo.h
@@ -1551,13 +1546,11 @@ def kappa_s_and_scale_radius_for_ludlow(
         cosmology.critical_density(redshift_object).to(units.solMass / units.kpc ** 3)
     ).value
 
-    critical_surface_density = cosmology_util.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-        redshift_0=redshift_object, redshift_1=redshift_source, cosmology=cosmology
+    critical_surface_density = cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+        redshift_0=redshift_object, redshift_1=redshift_source
     )
 
-    kpc_per_arcsec = cosmology_util.kpc_per_arcsec_from(
-        redshift=redshift_object, cosmology=cosmology
-    )
+    kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object)
 
     radius_at_200 = (
         mass_at_200 / (200.0 * cosmic_average_density * (4.0 * np.pi / 3.0))

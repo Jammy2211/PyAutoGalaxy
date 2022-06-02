@@ -271,7 +271,7 @@ class TestAbstractNFW:
 
     def test__values_of_quantities_for_real_cosmology(self):
 
-        cosmology = cosmo.LambdaCDM(H0=70.0, Om0=0.3, Ode0=0.7)
+        cosmology = ag.cosmo.LambdaCDM(H0=70.0, Om0=0.3, Ode0=0.7)
 
         nfw = ag.mp.SphNFWTruncated(
             kappa_s=0.5, scale_radius=5.0, truncation_radius=10.0
@@ -1196,7 +1196,7 @@ class TestNFW:
 class TestNFWTruncatedMCRDuffy:
     def test__mass_and_concentration_consistent_with_normal_truncated_nfw(self):
 
-        cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
+        cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
         truncated_nfw_mass = ag.mp.SphNFWTruncatedMCRDuffy(
             centre=(1.0, 2.0),
@@ -1252,7 +1252,7 @@ class TestNFWTruncatedMCRLludlow:
         self
     ):
 
-        cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
+        cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
         truncated_nfw_mass = ag.mp.SphNFWTruncatedMCRLudlow(
             centre=(1.0, 2.0),
@@ -1335,7 +1335,7 @@ class TestNFWTruncatedMCRLludlow:
 class TestNFWMCRDuffy:
     def test__mass_and_concentration_consistent_with_normal_nfw(self):
 
-        cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
+        cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
         nfw_mass = ag.mp.SphNFWMCRDuffy(
             centre=(1.0, 2.0),
@@ -1388,7 +1388,7 @@ class TestNFWMCRDuffy:
 class TestNFWMCRLudlow:
     def test__mass_and_concentration_consistent_with_normal_nfw__scatter_0(self):
 
-        cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
+        cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
         nfw_mass = ag.mp.SphNFWMCRLudlow(
             centre=(1.0, 2.0),
@@ -1444,7 +1444,7 @@ class TestNFWMCRLudlow:
 
     def test__same_as_above_but_elliptical(self):
 
-        cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
+        cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
         nfw_mass = ag.mp.EllNFWMCRLudlow(
             centre=(1.0, 2.0),
@@ -1506,7 +1506,7 @@ class TestNFWMCRLudlow:
 
     def test__same_as_above_but_generalized_elliptical(self):
 
-        cosmology = cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
+        cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
         nfw_mass = ag.mp.EllNFWGeneralizedMCRLudlow(
             centre=(1.0, 2.0),

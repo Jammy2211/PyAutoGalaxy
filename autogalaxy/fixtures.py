@@ -125,6 +125,13 @@ def make_plane_x2_galaxy_inversion_7x7():
     return ag.Plane(galaxies=[make_gal_x1_lp(), source_gal_inversion])
 
 
+# COSMOLOGY #
+
+
+def make_planck15():
+    return ag.cosmo.Planck15()
+
+
 # QUANTITY DATASET AND FIT #
 
 

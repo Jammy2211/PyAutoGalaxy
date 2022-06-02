@@ -1,4 +1,3 @@
-from astropy import cosmology as cosmo
 import copy
 import json
 import logging
@@ -14,6 +13,8 @@ import autoarray as aa
 from autogalaxy import exc
 from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
+from autogalaxy.cosmology.lensing import LensingCosmology
+from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.hyper.hyper_data import HyperImageSky
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.galaxy.galaxy import Galaxy
@@ -26,7 +27,7 @@ logger.setLevel(level="INFO")
 
 
 class Analysis(af.Analysis):
-    def __init__(self, cosmology=cosmo.Planck15):
+    def __init__(self, cosmology: LensingCosmology = Planck15):
         """
         Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.
 
@@ -66,7 +67,7 @@ class AnalysisDataset(Analysis):
         self,
         dataset: Union[aa.Imaging, aa.Interferometer],
         hyper_dataset_result: ResultDataset = None,
-        cosmology=cosmo.Planck15,
+        cosmology: LensingCosmology = Planck15(),
         settings_pixelization: aa.SettingsPixelization = None,
         settings_inversion: aa.SettingsInversion = None,
     ):
