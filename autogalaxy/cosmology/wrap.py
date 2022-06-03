@@ -4,18 +4,32 @@ from autogalaxy.cosmology.lensing import LensingCosmology
 
 
 class LambdaCDM(cosmo.LambdaCDM, LensingCosmology):
+    """
+    A wrapper for the astropy `LambdaCDM` cosmology class.
+
+    This can be inherited from when creating cosmologies as a `af.Model` object for model-fitting.
+    """
 
     pass
 
 
 class FlatLambdaCDM(cosmo.FlatLambdaCDM, LensingCosmology):
+    """
+    A wrapper for the astropy `FlatLambdaCDM` cosmology class.
+
+    This can be inherited from when creating cosmologies as a `af.Model` object for model-fitting.
+    """
 
     pass
 
 
 class Planck15(FlatLambdaCDM, LensingCosmology):
     def __init__(self):
+        """
+        A wrapper for the astropy `Planck15` cosmology class.
 
+        This can be inherited from when creating cosmologies as a `af.Model` object for model-fitting.
+        """
         planck15 = cosmo.Planck15
 
         super().__init__(
