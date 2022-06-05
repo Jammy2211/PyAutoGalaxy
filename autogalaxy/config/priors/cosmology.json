@@ -1,0 +1,45 @@
+{
+  "model.Planck15Om0": {
+    "Om0": {
+      "type": "Uniform",
+      "lower_limit": "0.0486",
+      "upper_limit": "1.0",
+      "width_modifier": {
+        "type": "Absolute",
+        "value": 0.3
+      },
+      "gaussian_limits": {
+        "lower": "0.0486",
+        "upper": "1.0"
+      }
+    }
+  },
+  "model.Planck15FlatwCDM": {
+    "Om0": {
+      "type": "Uniform",
+      "lower_limit": "0.0486",
+      "upper_limit": "1.0",
+      "width_modifier": {
+        "type": "Absolute",
+        "value": 0.3
+      },
+      "gaussian_limits": {
+        "lower": "0.0486",
+        "upper": "1.0"
+      }
+    },
+    "w0": {
+      "type": "Uniform",
+      "lower_limit": "-2.0",
+      "upper_limit": "0.0",
+      "width_modifier": {
+        "type": "Absolute",
+        "value": 0.5
+      },
+      "gaussian_limits": {
+        "lower": "-2.0",
+        "upper": "0.0"
+      }
+    }
+  }
+}

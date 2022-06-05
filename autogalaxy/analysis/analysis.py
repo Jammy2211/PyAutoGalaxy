@@ -286,7 +286,7 @@ class AnalysisDataset(Analysis):
            The input instance with images associated with galaxies where possible.
         """
 
-        instance = copy.copy(instance)
+        # instance = copy.copy(instance)
 
         if self.hyper_galaxy_image_path_dict is not None:
 

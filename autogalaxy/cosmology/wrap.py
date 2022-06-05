@@ -23,6 +23,16 @@ class FlatLambdaCDM(cosmo.FlatLambdaCDM, LensingCosmology):
     pass
 
 
+class FlatwCDM(cosmo.FlatwCDM, LensingCosmology):
+    """
+    A wrapper for the astropy `FlatwCDM` cosmology class.
+
+    This can be inherited from when creating cosmologies as a `af.Model` object for model-fitting.
+    """
+
+    pass
+
+
 class Planck15(FlatLambdaCDM, LensingCosmology):
     def __init__(self):
         """
