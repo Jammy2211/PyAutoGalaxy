@@ -9,13 +9,13 @@ from autoarray.inversion.pixelizations.abstract import AbstractPixelization
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 from autoconf.dictable import Dictable
 from autogalaxy import exc
+from autogalaxy.operate.deflections import OperateDeflections
+from autogalaxy.operate.image import OperateImageList
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.profiles.point_sources import Point
-from autogalaxy.operate.image import OperateImageList
-from autogalaxy.operate.deflections import OperateDeflections
 
 
 def is_point_source(obj) -> bool:
