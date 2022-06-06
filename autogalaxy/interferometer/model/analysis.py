@@ -269,7 +269,7 @@ class AnalysisInterferometer(AnalysisDataset):
         FitInterferometer
             The fit of the plane to the interferometer dataset, which includes the log likelihood.
         """
-        self.instance_with_associated_hyper_images_from(instance=instance)
+        instance = self.instance_with_associated_hyper_images_from(instance=instance)
 
         hyper_background_noise = self.hyper_background_noise_via_instance_from(
             instance=instance
@@ -361,7 +361,7 @@ class AnalysisInterferometer(AnalysisDataset):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
-        self.instance_with_associated_hyper_images_from(instance=instance)
+        instance = self.instance_with_associated_hyper_images_from(instance=instance)
         plane = self.plane_via_instance_from(instance=instance)
         hyper_background_noise = self.hyper_background_noise_via_instance_from(
             instance=instance
