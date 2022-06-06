@@ -189,7 +189,7 @@ class AnalysisImaging(AnalysisDataset):
         FitImaging
             The fit of the plane to the imaging dataset, which includes the log likelihood.
         """
-        self.instance_with_associated_hyper_images_from(instance=instance)
+        instance = self.instance_with_associated_hyper_images_from(instance=instance)
 
         hyper_image_sky = self.hyper_image_sky_via_instance_from(instance=instance)
 

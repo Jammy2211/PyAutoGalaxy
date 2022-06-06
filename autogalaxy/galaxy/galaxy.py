@@ -9,13 +9,13 @@ from autoarray.inversion.pixelizations.abstract import AbstractPixelization
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 from autoconf.dictable import Dictable
 from autogalaxy import exc
+from autogalaxy.operate.deflections import OperateDeflections
+from autogalaxy.operate.image import OperateImageList
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.profiles.point_sources import Point
-from autogalaxy.operate.image import OperateImageList
-from autogalaxy.operate.deflections import OperateDeflections
 
 
 def is_point_source(obj) -> bool:
@@ -36,12 +36,12 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     """
 
     def __init__(
-        self,
-        redshift: float,
-        pixelization: Optional[AbstractPixelization] = None,
-        regularization: Optional[AbstractRegularization] = None,
-        hyper_galaxy: Optional["HyperGalaxy"] = None,
-        **kwargs,
+            self,
+            redshift: float,
+            pixelization: Optional[AbstractPixelization] = None,
+            regularization: Optional[AbstractRegularization] = None,
+            hyper_galaxy: Optional["HyperGalaxy"] = None,
+            **kwargs,
     ):
         """
         Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
@@ -597,10 +597,10 @@ class HyperGalaxy:
     _ids = count()
 
     def __init__(
-        self,
-        contribution_factor: float = 0.0,
-        noise_factor: float = 0.0,
-        noise_power: float = 1.0,
+            self,
+            contribution_factor: float = 0.0,
+            noise_factor: float = 0.0,
+            noise_power: float = 1.0,
     ):
         """
         If a `Galaxy` is given a *HyperGalaxy* as an attribute, the noise-map in \
@@ -637,9 +637,9 @@ class HyperGalaxy:
     def __eq__(self, other):
         if isinstance(other, HyperGalaxy):
             return (
-                self.contribution_factor == other.contribution_factor
-                and self.noise_factor == other.noise_factor
-                and self.noise_power == other.noise_power
+                    self.contribution_factor == other.contribution_factor
+                    and self.noise_factor == other.noise_factor
+                    and self.noise_power == other.noise_power
             )
         return False
 
@@ -666,16 +666,19 @@ class HyperGalaxy:
             A model image of the galaxy (from light profiles or an inversion) from a
             previous analysis search.
         """
-        contribution_map = np.divide(
-            hyper_galaxy_image, np.add(hyper_model_image, self.contribution_factor)
-        )
-        return np.divide(contribution_map, np.max(contribution_map))
+        try:
+            contribution_map = np.divide(
+                hyper_galaxy_image, np.add(hyper_model_image, self.contribution_factor)
+            )
+            return np.divide(contribution_map, np.max(contribution_map))
+        except TypeError:
+            raise
 
     def hyper_noise_map_via_hyper_images_from(
-        self,
-        hyper_model_image: aa.Array2D,
-        hyper_galaxy_image: aa.Array2D,
-        noise_map: aa.Array2D,
+            self,
+            hyper_model_image: aa.Array2D,
+            hyper_galaxy_image: aa.Array2D,
+            noise_map: aa.Array2D,
     ) -> aa.Array2D:
         contribution_map = self.contribution_map_from(
             hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
@@ -686,7 +689,7 @@ class HyperGalaxy:
         )
 
     def hyper_noise_map_from(
-        self, noise_map: aa.Array2D, contribution_map: aa.Array2D
+            self, noise_map: aa.Array2D, contribution_map: aa.Array2D
     ) -> aa.Array2D:
         """
         Returns a hyper galaxy hyper_galaxies noise-map from a baseline noise-map.
