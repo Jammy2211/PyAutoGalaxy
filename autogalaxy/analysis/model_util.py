@@ -129,14 +129,14 @@ def clean_model_of_hyper_images(model):
 
     for galaxy in model.galaxies:
 
-        galaxy.hyper_model_image = None
-        galaxy.hyper_galaxy_image = None
+        del galaxy.hyper_model_image
+        del galaxy.hyper_galaxy_image
 
     if hasattr(model, "clumps"):
         for clump in model.clumps:
 
-            clump.hyper_model_image = None
-            clump.hyper_galaxy_image = None
+            del clump.hyper_model_image
+            del clump.hyper_galaxy_image
 
     return model
 
