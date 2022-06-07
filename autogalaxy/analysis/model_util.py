@@ -281,7 +281,7 @@ def hyper_inversion_model_from(
 
 
 def hyper_fit_no_noise(
-    setup_hyper, result: af.Result, analysis, include_hyper_image_sky: bool = False
+    setup_hyper, result: af.Result, analysis, search_previous, include_hyper_image_sky: bool = False
 ):
 
     analysis.set_hyper_dataset(result=result)
@@ -297,10 +297,10 @@ def hyper_fit_no_noise(
         return result
 
     search = setup_hyper.search_inversion_cls(
-        path_prefix=result.search.path_prefix_no_unique_tag,
-        name=f"{result.search.paths.name}__hyper_inversion",
-        unique_tag=result.search.paths.unique_tag,
-        number_of_cores=result.search.number_of_cores,
+        path_prefix=search_previous.path_prefix_no_unique_tag,
+        name=f"{search_previous.paths.name}__hyper_inversion",
+        unique_tag=search_previous.paths.unique_tag,
+        number_of_cores=search_previous.number_of_cores,
         **setup_hyper.search_pixelized_dict,
     )
 
@@ -368,6 +368,7 @@ def hyper_fit(
             setup_hyper=setup_hyper,
             result=result,
             analysis=analysis,
+            search_previous=search_previous,
             include_hyper_image_sky=include_hyper_image_sky,
         )
 

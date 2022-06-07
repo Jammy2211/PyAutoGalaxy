@@ -15,7 +15,7 @@ def test__planck15_Om0(planck15):
         redshift_0=0.1, redshift_1=1.0
     )
 
-    assert critical_surface_density == pytest.approx(critical_surface_density_Om0, 1e-4)
+    assert critical_surface_density - critical_surface_density_Om0 < 1e-4
 
     planck15_Om0 = ag.cosmo.model.Planck15Om0(Om0=0.5)
 
@@ -27,7 +27,7 @@ def test__planck15_Om0(planck15):
         redshift_0=0.1, redshift_1=1.0
     )
 
-    assert critical_surface_density != pytest.approx(critical_surface_density_Om0, 1e-4)
+    assert critical_surface_density - critical_surface_density_Om0 > 10.0
 
 
 def test__planck15_flat_w(planck15):
@@ -42,9 +42,7 @@ def test__planck15_flat_w(planck15):
         redshift_0=0.1, redshift_1=1.0
     )
 
-    assert critical_surface_density == pytest.approx(
-        critical_surface_density_flat_w, 1e-4
-    )
+    assert critical_surface_density - critical_surface_density_flat_w < 1.0e-4
 
     planck15_flat_w = ag.cosmo.model.Planck15FlatwCDM(Om0=0.1)
 
@@ -56,9 +54,7 @@ def test__planck15_flat_w(planck15):
         redshift_0=0.1, redshift_1=1.0
     )
 
-    assert critical_surface_density != pytest.approx(
-        critical_surface_density_flat_w, 1e-2
-    )
+    assert critical_surface_density - critical_surface_density_flat_w > 10.0
 
     planck15_flat_w = ag.cosmo.model.Planck15FlatwCDM(Om0=0.1, w0=-0.5)
 
@@ -70,6 +66,4 @@ def test__planck15_flat_w(planck15):
         redshift_0=0.1, redshift_1=1.0
     )
 
-    assert critical_surface_density != pytest.approx(
-        critical_surface_density_flat_w, 1e-4
-    )
+    assert critical_surface_density - critical_surface_density_flat_w > 10.0
