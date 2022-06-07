@@ -124,4 +124,5 @@ class FitMaker:
                 return fit
 
             except Exception as e:
-                logger.exception(e)
+
+                continue
