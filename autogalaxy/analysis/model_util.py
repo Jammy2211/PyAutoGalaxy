@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.stats import norm
+from typing import ClassVar, Dict, List
 
 import autofit as af
 import autoarray as aa
@@ -281,7 +282,11 @@ def hyper_inversion_model_from(
 
 
 def hyper_fit_no_noise(
-    setup_hyper, result: af.Result, analysis, search_previous, include_hyper_image_sky: bool = False
+    setup_hyper,
+    result: af.Result,
+    analysis,
+    search_previous,
+    include_hyper_image_sky: bool = False,
 ):
 
     analysis.set_hyper_dataset(result=result)
@@ -571,14 +576,14 @@ def stochastic_model_from(
 
 
 def stochastic_fit(
-    stochastic_model,
-    search_cls,
-    search_pixelized_dict,
-    result,
-    analysis,
+    stochastic_model: af.Collection,
+    search_cls: ClassVar[af.NonLinearSearch],
+    search_pixelized_dict: Dict,
+    result: "ResultDataset",
+    analysis: "AnalysisDataset",
     search_previous: af.NonLinearSearch,
-    info=None,
-    pickle_files=None,
+    info: Dict = None,
+    pickle_files: List[str] = None,
 ):
     """
     Perform a stochastic model-fit, which refits a model but introduces a log likelihood cap whereby all model-samples
@@ -608,7 +613,9 @@ def stochastic_fit(
         model components now free parameters.
     """
 
-    mean, sigma = norm.fit(result.stochastic_log_likelihoods)
+    mean, sigma = norm.fit(
+        result.stochastic_log_likelihoods_from(paths=search_previous.paths)
+    )
     log_likelihood_cap = mean
 
     name = f"{search_previous.paths.name}__stochastic"
@@ -632,7 +639,8 @@ def stochastic_fit(
     search.paths.restore()
 
     search.paths.save_object(
-        "stochastic_log_likelihoods", result.stochastic_log_likelihoods
+        "stochastic_log_likelihoods",
+        result.stochastic_log_likelihoods_from(paths=search_previous.paths),
     )
 
     search.paths.zip_remove()
