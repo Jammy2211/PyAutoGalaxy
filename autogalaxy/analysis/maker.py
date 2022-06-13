@@ -93,9 +93,11 @@ class FitMaker:
             unit_vector=[unit_value] * self.model.prior_count, ignore_prior_limits=True
         )
 
-        return self.fit_func(
+        fit = self.fit_func(
             instance=instance, preload_overwrite=self.preloads_cls(use_w_tilde=False)
         )
+        fit.figure_of_merit
+        return fit
 
     def fit_random_instance_from(self) -> Union[aa.FitImaging, aa.FitInterferometer]:
         """
@@ -120,6 +122,8 @@ class FitMaker:
                     instance=instance,
                     preload_overwrite=self.preloads_cls(use_w_tilde=False),
                 )
+
+                fit.figure_of_merit
 
                 return fit
 
