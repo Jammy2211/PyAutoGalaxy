@@ -113,7 +113,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         self.hyper_galaxy = hyper_galaxy
 
     def __hash__(self):
-        return self.id
+        return int(self.id)
 
     def __repr__(self):
         string = "Redshift: {}".format(self.redshift)

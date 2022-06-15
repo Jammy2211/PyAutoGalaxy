@@ -110,9 +110,9 @@ class ExternalShear(MassProfile):
 class InputDeflections(MassProfile):
     def __init__(
         self,
-        deflections_y,
-        deflections_x,
-        image_plane_grid,
+        deflections_y: aa.Array2D,
+        deflections_x: aa.Array2D,
+        image_plane_grid: aa.type.Grid2DLike,
         preload_grid=None,
         preload_blurring_grid=None,
         #      normalization_scale: float = 1.0,
@@ -181,18 +181,26 @@ class InputDeflections(MassProfile):
 
         if self.preload_grid is not None and self.preload_deflections is not None:
 
-            if grid.sub_shape_slim == self.preload_grid.sub_shape_slim:
-                if np.allclose(grid, self.preload_grid, 1e-8):
-                    return self.normalization_scale * self.preload_deflections
+            try:
+                if grid.sub_shape_slim == self.preload_grid.sub_shape_slim:
+                    if np.allclose(grid, self.preload_grid, 1e-8):
+                        return self.normalization_scale * self.preload_deflections
+            except AttributeError:
+                pass
 
         if (
             self.preload_blurring_grid is not None
             and self.preload_blurring_deflections is not None
         ):
 
-            if grid.sub_shape_slim == self.preload_blurring_grid.sub_shape_slim:
-                if np.allclose(grid, self.preload_blurring_grid, 1e-8):
-                    return self.normalization_scale * self.preload_blurring_deflections
+            try:
+                if grid.sub_shape_slim == self.preload_blurring_grid.sub_shape_slim:
+                    if np.allclose(grid, self.preload_blurring_grid, 1e-8):
+                        return (
+                            self.normalization_scale * self.preload_blurring_deflections
+                        )
+            except AttributeError:
+                pass
 
         deflections_y = self.normalization_scale * griddata(
             points=self.image_plane_grid, values=self.deflections_y, xi=grid
