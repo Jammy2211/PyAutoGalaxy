@@ -73,7 +73,7 @@ def test__image_2d_not_operated_from(sub_grid_2d_7x7):
 
     galaxy = ag.Galaxy(redshift=0.5, light=light, light_operated=light_operated)
 
-    image_2d_not_operated = galaxy.image_2d_not_opertated_from(grid=sub_grid_2d_7x7)
+    image_2d_not_operated = galaxy.image_2d_not_operated_from(grid=sub_grid_2d_7x7)
 
     light_image_2d = light.image_2d_from(grid=sub_grid_2d_7x7)
 

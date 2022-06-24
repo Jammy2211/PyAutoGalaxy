@@ -98,13 +98,41 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         """
 
         if self.galaxies:
-            return sum(
-                map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies)
-            )
+            return sum(self.image_2d_list_from(grid=grid))
         return np.zeros((grid.shape[0],))
 
     def image_2d_list_from(self, grid: aa.type.Grid2DLike) -> List[aa.Array2D]:
-        return list(map(lambda galaxy: galaxy.image_2d_from(grid=grid), self.galaxies))
+        return [galaxy.image_2d_from(grid=grid) for galaxy in self.galaxies]
+
+    @aa.grid_dec.grid_2d_to_structure
+    def image_2d_not_operated_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
+        """
+        Returns the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
+        individual images of each galaxy's light profile.
+
+        This function omits light profiles which are parents of the `LightProfileOperated` object, which signifies
+        that the light profile represents emission that has already had the instrument operations (e.g. PSF
+        convolution, a Fourier transform) applied to it.
+
+        The image is calculated on the sub-grid and binned-up to the original grid by taking the mean
+        value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
+
+        If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
+        sub-grid is returned.
+
+        Parameters
+        -----------
+
+        """
+
+        if self.galaxies:
+            return sum(
+                [
+                    galaxy.image_2d_not_operated_from(grid=grid)
+                    for galaxy in self.galaxies
+                ]
+            )
+        return np.zeros((grid.shape[0],))
 
     def galaxy_image_2d_dict_from(
         self, grid: aa.type.Grid2DLike

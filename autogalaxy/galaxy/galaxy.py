@@ -265,7 +265,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         ]
 
     @aa.grid_dec.grid_2d_to_structure
-    def image_2d_not_opertated_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
+    def image_2d_not_operated_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
         """
         Returns the summed 2D image of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
 
