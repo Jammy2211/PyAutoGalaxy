@@ -1,5 +1,4 @@
 import datetime
-from typing import Any, Dict
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -28,7 +27,7 @@ sys.path.insert(0, os.path.abspath("."))
 
 year = datetime.date.today().year
 project = "PyAutoGalaxy"
-copyright = "2020, James Nightingale, Richard Hayes"
+copyright = "2022, James Nightingale, Richard Hayes"
 author = "James Nightingale, Richard Hayes"
 
 # The full version, including alpha/beta/rc tags

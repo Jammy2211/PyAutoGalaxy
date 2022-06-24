@@ -60,6 +60,40 @@ In this example we therefore fit a model where:
 
 The redshifts of the galaxy (z=0.5) is fixed.
 
+Printing the ``info`` attribute of the model shows us this is the model we are fitting, and shows us the free
+parameters and their priors:
+
+.. code-block:: python
+
+    print(model.info)
+
+This gives the following output:
+
+.. code-block:: bash
+
+    galaxies
+        galaxy
+            redshift                                   0.5
+            bulge
+                centre
+                    centre_0                           GaussianPrior, mean = 0.0, sigma = 0.3
+                    centre_1                           GaussianPrior, mean = 0.0, sigma = 0.3
+                elliptical_comps
+                    elliptical_comps_0                 GaussianPrior, mean = 0.0, sigma = 0.5
+                    elliptical_comps_1                 GaussianPrior, mean = 0.0, sigma = 0.5
+                intensity                              LogUniformPrior, lower_limit = 1e-06, upper_limit = 1000000.0
+                effective_radius                       UniformPrior, lower_limit = 0.0, upper_limit = 30.0
+                sersic_index                           UniformPrior, lower_limit = 0.8, upper_limit = 5.0
+            disk
+                centre
+                    centre_0                           GaussianPrior, mean = 0.0, sigma = 0.3
+                    centre_1                           GaussianPrior, mean = 0.0, sigma = 0.3
+                elliptical_comps
+                    elliptical_comps_0                 GaussianPrior, mean = 0.0, sigma = 0.5
+                    elliptical_comps_1                 GaussianPrior, mean = 0.0, sigma = 0.5
+                intensity                              LogUniformPrior, lower_limit = 1e-06, upper_limit = 1000000.0
+                effective_radius                       UniformPrior, lower_limit = 0.0, upper_limit = 30.0
+
 Non-linear Search
 -----------------
 
@@ -120,6 +154,106 @@ by the search so far.
 
 The fit above returns a ``Result`` object, which includes lots of information on the model. 
 
+The ``info`` attribute can be printed to give the results in a readable format:
+
+.. code-block:: python
+
+    print(result_list.info)
+
+This gives the following output:
+
+.. code-block:: bash
+
+    Bayesian Evidence                              4910.81446407
+    Maximum Log Likelihood                         5010.64422962
+    Maximum Log Posterior                          975179.18825227
+    
+    model                                          CollectionPriorModel (N=13)
+        galaxies                                   CollectionPriorModel (N=13)
+            galaxy                                 Galaxy (N=13)
+                bulge                              EllSersic (N=7)
+                disk                               EllExponential (N=6)
+    
+    Maximum Log Likelihood Model:
+    
+    galaxies
+        galaxy
+            bulge
+                centre
+                    centre_0                       -0.002
+                    centre_1                       0.001
+                elliptical_comps
+                    elliptical_comps_0             0.056
+                    elliptical_comps_1             -0.009
+                intensity                          0.757
+                effective_radius                   0.708
+                sersic_index                       3.554
+            disk
+                centre
+                    centre_0                       0.001
+                    centre_1                       -0.004
+                elliptical_comps
+                    elliptical_comps_0             0.155
+                    elliptical_comps_1             0.091
+                intensity                          0.500
+                effective_radius                   1.554
+    
+    
+    Summary (3.0 sigma limits):
+    
+    galaxies
+        galaxy
+            bulge
+                centre
+                    centre_0                       -0.0028 (-0.0051, 0.0005)
+                    centre_1                       0.0014 (-0.0013, 0.0038)
+                elliptical_comps
+                    elliptical_comps_0             0.0542 (0.0411, 0.0641)
+                    elliptical_comps_1             -0.0066 (-0.0189, 0.0078)
+                intensity                          0.5153 (0.3576, 0.7726)
+                effective_radius                   0.8984 (0.7042, 1.1218)
+                sersic_index                       4.0917 (3.5170, 4.6985)
+            disk
+                centre
+                    centre_0                       0.0020 (-0.0062, 0.0095)
+                    centre_1                       -0.0038 (-0.0122, 0.0061)
+                elliptical_comps
+                    elliptical_comps_0             0.1608 (0.1539, 0.1710)
+                    elliptical_comps_1             0.0942 (0.0874, 0.1027)
+                intensity                          0.4912 (0.4657, 0.5121)
+                effective_radius                   1.5250 (1.4828, 1.5636)
+    
+    
+    Summary (1.0 sigma limits):
+    
+    galaxies
+        galaxy
+            bulge
+                centre
+                    centre_0                       -0.0028 (-0.0036, -0.0020)
+                    centre_1                       0.0014 (0.0005, 0.0024)
+                elliptical_comps
+                    elliptical_comps_0             0.0542 (0.0503, 0.0577)
+                    elliptical_comps_1             -0.0066 (-0.0103, -0.0029)
+                intensity                          0.5153 (0.4382, 0.6041)
+                effective_radius                   0.8984 (0.8109, 0.9900)
+                sersic_index                       4.0917 (3.8877, 4.3431)
+            disk
+                centre
+                    centre_0                       0.0020 (-0.0004, 0.0046)
+                    centre_1                       -0.0038 (-0.0068, -0.0009)
+                elliptical_comps
+                    elliptical_comps_0             0.1608 (0.1575, 0.1638)
+                    elliptical_comps_1             0.0942 (0.0916, 0.0967)
+                intensity                          0.4912 (0.4827, 0.4986)
+                effective_radius                   1.5250 (1.5058, 1.5399)
+    
+    instances
+    
+    galaxies
+        galaxy
+            redshift                               0.5
+
 Below we print the maximum log likelihood model inferred.
 
 .. code-block:: python
@@ -162,7 +296,7 @@ low chi-squared values:
   :width: 600
   :alt: Alternative text
 
-The package ``autogalaxy_workspace/notebooks/results`` contains a full description of all information contained
+The package ``autogalaxy_workspace/*/results`` contains a full description of all information contained
 in a ``Result``.
 
 Model Customization
