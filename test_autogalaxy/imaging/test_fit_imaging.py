@@ -516,7 +516,7 @@ def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
     assert fit.subtracted_images_of_galaxies_list[2].slim[0] == 0.0 or np.nan
 
 
-def test__linear_light_profile_intensity_dict(masked_imaging_7x7):
+def test__light_profile_linear__intensity_dict(masked_imaging_7x7):
 
     linear_light_0 = ag.lp_linear.EllSersic(sersic_index=1.0)
     linear_light_1 = ag.lp_linear.EllSersic(sersic_index=4.0)
@@ -535,3 +535,18 @@ def test__linear_light_profile_intensity_dict(masked_imaging_7x7):
     assert fit.linear_light_profile_intensity_dict[linear_light_1] == pytest.approx(
         -0.04694839915145, 1.0e-4
     )
+
+
+# def test__light_profile_no_convolve(masked_imaging_7x7):
+#
+#     g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllGaussian(intensity=1.0))
+#     plane = ag.Plane(redshift=0.5, galaxies=[g0])
+#     fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
+#
+#     g0_no_convolve = ag.Galaxy(
+#         redshift=0.5, light_profile=ag.lp.EllGaussian(intensity=1.0)
+#     )
+#     plane_no_convolve = ag.Plane(redshift=0.5, galaxies=[g0_no_convolve])
+#     fit_no_convolve = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane_no_convolve)
+#
+#     assert fit_no_convolve.log_likelihood != fit.log_likelihood

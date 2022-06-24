@@ -14,6 +14,9 @@ from autogalaxy.operate.image import OperateImageList
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
+from autogalaxy.profiles.light_profiles.light_profiles_operated import (
+    LightProfileOperated,
+)
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.profiles.point_sources import Point
 
@@ -234,9 +237,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             The 2D (y, x) coordinates where values of the image are evaluated.
         """
         if self.has_light_profile:
-            return sum(
-                map(lambda p: p.image_2d_from(grid=grid), self.light_profile_list)
-            )
+            return sum(self.image_2d_list_from(grid=grid))
+
         return np.zeros((grid.shape[0],))
 
     def image_2d_list_from(self, grid: aa.type.Grid2DLike) -> List[aa.Array2D]:
@@ -257,7 +259,44 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         grid
             The 2D (y, x) coordinates where values of the image are evaluated.
         """
-        return list(map(lambda p: p.image_2d_from(grid=grid), self.light_profile_list))
+        return [
+            light_profile.image_2d_from(grid=grid)
+            for light_profile in self.light_profile_list
+        ]
+
+    @aa.grid_dec.grid_2d_to_structure
+    def image_2d_not_opertated_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
+        """
+        Returns the summed 2D image of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
+
+        This function omits light profiles which are parents of the `LightProfileOperated` object, which signifies
+        that the light profile represents emission that has already had the instrument operations (e.g. PSF
+        convolution, a Fourier transform) applied to it.
+
+        If the galaxy has no light profiles, a numpy array of zeros is returned.
+
+        See the `autogalaxy.profiles.light_profiles` package for details of how images are computed from a light
+        profile.
+
+        The decorator `grid_2d_to_structure` converts the output arrays from ndarrays to an `Array2D` data structure
+        using the input `grid`'s attributes.
+
+        Parameters
+        ----------
+        grid
+            The 2D (y, x) coordinates where values of the image are evaluated.
+        """
+        if self.has_light_profile:
+            return sum(
+                [
+                    light_profile.image_2d_from(grid=grid)
+                    if not isinstance(light_profile, LightProfileOperated)
+                    else np.zeros((grid.shape[0],))
+                    for light_profile in self.light_profile_list
+                ]
+            )
+
+        return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_1d_output_structure
     def image_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:

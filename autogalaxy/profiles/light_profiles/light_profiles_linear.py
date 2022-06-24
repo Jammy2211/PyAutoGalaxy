@@ -1,6 +1,6 @@
 import inspect
 import numpy as np
-from typing import Dict, Optional, Tuple, Union
+from typing import Dict, Optional, Tuple
 
 from autoconf import cached_property
 import autoarray as aa

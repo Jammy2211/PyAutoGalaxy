@@ -80,6 +80,7 @@ from .profiles import (
 from .profiles.light_profiles.light_profiles_linear import LightProfileLinearObjFunc
 from .profiles.light_profiles import light_profiles_init as lp_init
 from .profiles.light_profiles import light_profiles_linear as lp_linear
+from .profiles.light_profiles import light_profiles_operated as lp_operated
 from .profiles.light_profiles import light_profiles_snr as lp_snr
 from . import convert
 from . import mock as m
