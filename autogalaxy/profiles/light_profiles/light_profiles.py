@@ -57,6 +57,29 @@ class LightProfile(EllProfile, OperateImage):
         """
         raise NotImplementedError()
 
+    def image_2d_not_operated_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+        """
+        The `LightProfileOperated` objects in the `light_profiles_operated.py` package represent light profiles
+        who have already had instrumental operations applied to them.
+
+        For example, they may already been convolved with imaging dataset's PSF or Fourier transformed by the
+        transformer of an interferometer.
+
+        When the images of an object are used for operation (E.g. in the `LightProfileOperated` object), this function
+        is called in order to create the image from only light profiles that have not already been operated.
+
+        Parameters
+        ----------
+        grid
+
+        Returns
+        -------
+
+        """
+
+
+        return self.image_2d_from(grid=grid)
+
     def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """
         Returns the light profile's 2D image from a 1D grid of coordinates which are the radial distance of each
@@ -206,7 +229,6 @@ class EllGaussian(LightProfile):
         """
 
         return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
-
 
 class SphGaussian(EllGaussian):
     def __init__(

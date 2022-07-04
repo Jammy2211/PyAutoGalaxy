@@ -13,6 +13,7 @@ def test__blurred_image_2d_via_psf_from(
 ):
 
     lp = ag.lp.EllSersic(intensity=1.0)
+    lp_operated = ag.lp_operated.EllGaussian(intensity=1.0)
 
     lp_blurred_image_2d = lp.blurred_image_2d_via_psf_from(
         grid=sub_grid_2d_7x7, blurring_grid=blurring_grid_2d_7x7, psf=psf_3x3
