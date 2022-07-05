@@ -77,7 +77,6 @@ class LightProfile(EllProfile, OperateImage):
 
         """
 
-
         return self.image_2d_from(grid=grid)
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
@@ -229,6 +228,7 @@ class EllGaussian(LightProfile):
         """
 
         return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
+
 
 class SphGaussian(EllGaussian):
     def __init__(
