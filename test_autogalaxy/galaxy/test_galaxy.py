@@ -66,26 +66,29 @@ def test__image_2d_from(sub_grid_2d_7x7, gal_x2_lp):
     assert gal_image.binned[1] == lp_image_1
 
 
-def test__image_2d_not_operated_from(sub_grid_2d_7x7):
+def test__image_2d_from__operated_only_input(sub_grid_2d_7x7):
 
-    light = ag.lp.EllSersic(intensity=1.0)
+    light_not_operated = ag.lp.EllSersic(intensity=1.0)
     light_operated = ag.lp_operated.EllGaussian(intensity=1.0)
 
-    galaxy = ag.Galaxy(redshift=0.5, light=light, light_operated=light_operated)
+    image_2d_not_operated = light_not_operated.image_2d_from(grid=sub_grid_2d_7x7)
+    image_2d_operated = light_operated.image_2d_from(grid=sub_grid_2d_7x7)
 
-    image_2d_not_operated = galaxy.image_2d_not_operated_from(grid=sub_grid_2d_7x7)
+    galaxy = ag.Galaxy(
+        redshift=0.5, light=light_not_operated, light_operated=light_operated
+    )
 
-    light_image_2d = light.image_2d_from(grid=sub_grid_2d_7x7)
+    image_2d = galaxy.image_2d_from(grid=sub_grid_2d_7x7, operated_only=False)
 
-    assert (image_2d_not_operated == light_image_2d).all()
+    assert (image_2d == image_2d_not_operated).all()
 
-    image_2d = galaxy.image_2d_from(grid=sub_grid_2d_7x7)
+    image_2d = galaxy.image_2d_from(grid=sub_grid_2d_7x7, operated_only=True)
 
-    light_operated_image_2d = light_operated.image_2d_from(grid=sub_grid_2d_7x7)
+    assert (image_2d == image_2d_operated).all()
 
-    image_2d_via_light = light_image_2d + light_operated_image_2d
+    image_2d = galaxy.image_2d_from(grid=sub_grid_2d_7x7, operated_only=None)
 
-    assert (image_2d == image_2d_via_light).all()
+    assert (image_2d == image_2d_not_operated + image_2d_operated).all()
 
 
 def test__luminosity_within_circle(lp_0, lp_1, gal_x2_lp):

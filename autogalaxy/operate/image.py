@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 import autoarray as aa
 
@@ -188,7 +188,11 @@ class OperateImageList(OperateImage):
     The methods in `OperateImageList` are inherited by light objects to provide a concise API.
     """
 
-    def image_2d_list_from(self, grid: Union[aa.Grid2D, aa.Grid2DIterate]):
+    def image_2d_list_from(
+        self,
+        grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        operated_only: Optional[bool] = None,
+    ):
         raise NotImplementedError
 
     def blurred_image_2d_list_via_psf_from(
