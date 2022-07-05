@@ -79,16 +79,26 @@ def test__image_2d_from__operated_only_input(sub_grid_2d_7x7):
     )
 
     image_2d = galaxy.image_2d_from(grid=sub_grid_2d_7x7, operated_only=False)
-
     assert (image_2d == image_2d_not_operated).all()
 
     image_2d = galaxy.image_2d_from(grid=sub_grid_2d_7x7, operated_only=True)
-
     assert (image_2d == image_2d_operated).all()
 
     image_2d = galaxy.image_2d_from(grid=sub_grid_2d_7x7, operated_only=None)
-
     assert (image_2d == image_2d_not_operated + image_2d_operated).all()
+
+    image_2d_list = galaxy.image_2d_list_from(grid=sub_grid_2d_7x7, operated_only=False)
+    assert (image_2d_list[0] == image_2d_not_operated).all()
+    assert (image_2d_list[1] == np.zeros((36))).all()
+
+    image_2d_list = galaxy.image_2d_list_from(grid=sub_grid_2d_7x7, operated_only=True)
+    assert (image_2d_list[0] == np.zeros((36))).all()
+    assert (image_2d_list[1] == image_2d_operated).all()
+
+    image_2d_list = galaxy.image_2d_list_from(grid=sub_grid_2d_7x7, operated_only=None)
+    assert (
+        image_2d_list[0] + image_2d_list[1] == image_2d_not_operated + image_2d_operated
+    ).all()
 
 
 def test__luminosity_within_circle(lp_0, lp_1, gal_x2_lp):
