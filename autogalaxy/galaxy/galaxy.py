@@ -219,7 +219,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         )
 
     @aa.grid_dec.grid_2d_to_structure
-    def image_2d_from(self, grid: aa.type.Grid2DLike) -> Union[np.ndarray, aa.Array2D]:
+    def image_2d_from(self, grid: aa.type.Grid2DLike, operated_only:Optional[bool]) -> Union[np.ndarray, aa.Array2D]:
         """
         Returns the summed 2D image of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -237,11 +237,11 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             The 2D (y, x) coordinates where values of the image are evaluated.
         """
         if self.has_light_profile:
-            return sum(self.image_2d_list_from(grid=grid))
+            return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
 
         return np.zeros((grid.shape[0],))
 
-    def image_2d_list_from(self, grid: aa.type.Grid2DLike) -> List[aa.Array2D]:
+    def image_2d_list_from(self, grid: aa.type.Grid2DLike, operated_only:Optional[bool]) -> List[aa.Array2D]:
         """
         Returns a list of the 2D images of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -259,10 +259,17 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         grid
             The 2D (y, x) coordinates where values of the image are evaluated.
         """
+        if operated_only is None:
+            return [
+                light_profile.image_2d_from(grid=grid)
+                for light_profile in self.light_profile_list
+            ]
         return [
-            light_profile.image_2d_from(grid=grid)
-            for light_profile in self.light_profile_list
-        ]
+                    light_profile.image_2d_from(grid=grid)
+                    if light_profile.is_operated is operated_only
+                    else np.zeros((grid.shape[0],))
+                    for light_profile in self.light_profile_list
+                ]
 
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_not_operated_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:

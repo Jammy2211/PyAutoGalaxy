@@ -38,6 +38,10 @@ class LightProfile(EllProfile, OperateImage):
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
         self.intensity = intensity
 
+    @property
+    def is_operated(self):
+        return False
+
     def image_2d_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
         """
         Returns the light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates, which may have been
@@ -229,6 +233,7 @@ class EllGaussian(LightProfile):
         """
 
         return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
+
 
 class SphGaussian(EllGaussian):
     def __init__(
