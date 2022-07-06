@@ -80,6 +80,15 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
                 list(map(lambda galaxy: galaxy.has_light_profile_linear, self.galaxies))
             )
 
+    @property
+    def has_light_profile_operated(self) -> bool:
+        if self.galaxies is not None:
+            return any(
+                list(
+                    map(lambda galaxy: galaxy.has_light_profile_operated, self.galaxies)
+                )
+            )
+
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None

@@ -126,6 +126,27 @@ def test__has_light_profile_linear():
     assert plane.has_light_profile_linear is True
 
 
+def test__has_light_profile_operated():
+
+    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
+    assert plane.has_light_profile_operated is False
+
+    plane = ag.Plane(
+        galaxies=[ag.Galaxy(redshift=0.5, light_profile=ag.lp_operated.EllGaussian())],
+        redshift=None,
+    )
+    assert plane.has_light_profile_operated is True
+
+    plane = ag.Plane(
+        galaxies=[
+            ag.Galaxy(redshift=0.5, light_profile=ag.lp_operated.EllGaussian()),
+            ag.Galaxy(redshift=0.5),
+        ],
+        redshift=None,
+    )
+    assert plane.has_light_profile_operated is True
+
+
 def test__has_pixelization():
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
     assert plane.has_pixelization is False
