@@ -145,7 +145,6 @@ def test__noise_map__with_and_without_hyper_background(masked_imaging_7x7_no_blu
 def test__fit_figure_of_merit(masked_imaging_7x7):
 
     g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-
     g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
@@ -190,6 +189,20 @@ def test__fit_figure_of_merit(masked_imaging_7x7):
 
     assert fit.log_likelihood == pytest.approx(-14.52327, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-14.52327, 1.0e-4)
+
+    g0_operated_light = ag.Galaxy(
+        redshift=0.5, light_profile=ag.lp_operated.EllSersic(intensity=1.0)
+    )
+    g1_operated_light = ag.Galaxy(
+        redshift=0.5, light_profile=ag.lp_operated.EllSersic(intensity=1.0)
+    )
+
+    plane = ag.Plane(redshift=0.5, galaxies=[g0_operated_light, g1_operated_light])
+
+    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
+
+    assert fit.log_likelihood == pytest.approx(-342374.9618, 1e-4)
+    assert fit.figure_of_merit == pytest.approx(-342374.9618, 1.0e-4)
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, galaxy_pix])
 
