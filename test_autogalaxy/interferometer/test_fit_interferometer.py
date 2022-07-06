@@ -346,10 +346,10 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
-    g0_visibilities = g0.visibilities_via_transformer_from(
+    g0_visibilities = g0.visibilities_from(
         grid=interferometer_7.grid, transformer=interferometer_7.transformer
     )
-    g1_visibilities = g1.visibilities_via_transformer_from(
+    g1_visibilities = g1.visibilities_from(
         grid=interferometer_7.grid, transformer=interferometer_7.transformer
     )
 

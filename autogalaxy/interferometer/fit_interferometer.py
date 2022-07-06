@@ -70,7 +70,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
         Returns the visibilities of every light profile in the plane, which are computed by performing a Fourier
         transform to the sum of light profile images.
         """
-        return self.plane.visibilities_via_transformer_from(
+        return self.plane.visibilities_from(
             grid=self.dataset.grid, transformer=self.dataset.transformer
         )
 

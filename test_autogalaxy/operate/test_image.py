@@ -165,7 +165,7 @@ def test__visibilities_from_grid_and_transformer(
     grid_2d_7x7, sub_grid_2d_7x7, transformer_7x7_7
 ):
     lp = ag.lp.EllSersic(intensity=1.0)
-    lp_visibilities = lp.visibilities_via_transformer_from(
+    lp_visibilities = lp.visibilities_from(
         grid=grid_2d_7x7, transformer=transformer_7x7_7
     )
 
@@ -287,7 +287,7 @@ def test__unmasked_blurred_image_2d_list_from():
     )
 
 
-def test__visibilities_list_via_transformer_from(sub_grid_2d_7x7, transformer_7x7_7):
+def test__visibilities_list_from(sub_grid_2d_7x7, transformer_7x7_7):
 
     lp_0 = ag.lp.EllSersic(intensity=1.0)
     lp_1 = ag.lp.EllSersic(intensity=2.0)
@@ -300,7 +300,7 @@ def test__visibilities_list_via_transformer_from(sub_grid_2d_7x7, transformer_7x
 
     gal = ag.Galaxy(redshift=0.5, lp_0=lp_0, lp_1=lp_1)
 
-    visibilities_list = gal.visibilities_list_via_transformer_from(
+    visibilities_list = gal.visibilities_list_from(
         grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
     )
 
@@ -352,7 +352,7 @@ def test__galaxy_visibilities_dict_from_grid_and_transformer(
 
     plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
 
-    visibilities_list = plane.visibilities_list_via_transformer_from(
+    visibilities_list = plane.visibilities_list_from(
         grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
     )
 

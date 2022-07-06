@@ -164,7 +164,7 @@ class OperateImage:
 
         return padded_image_2d + padded_image_2d_operated.binned
 
-    def visibilities_via_transformer_from(
+    def visibilities_from(
         self, grid: Union[aa.Grid2D, aa.Grid2DIterate], transformer: aa.type.Transformer
     ) -> aa.Visibilities:
         """
@@ -315,7 +315,7 @@ class OperateImageList(OperateImage):
 
         return unmasked_blurred_image_list
 
-    def visibilities_list_via_transformer_from(
+    def visibilities_list_from(
         self, grid: Union[aa.Grid2D, aa.Grid2DIterate], transformer: aa.type.Transformer
     ) -> List[aa.Array2D]:
         """
