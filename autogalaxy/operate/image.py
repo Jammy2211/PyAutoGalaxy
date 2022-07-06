@@ -255,19 +255,28 @@ class OperateImageList(OperateImage):
             The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
         """
 
-        image_2d_list = self.image_2d_list_from(grid=grid)
-        blurring_image_2d_list = self.image_2d_list_from(grid=blurring_grid)
+        image_2d_operated_list = self.image_2d_list_from(grid=grid, operated_only=True)
+
+        image_2d_not_operated_list = self.image_2d_list_from(
+            grid=grid, operated_only=False
+        )
+        blurring_image_2d_not_operated_list = self.image_2d_list_from(
+            grid=blurring_grid, operated_only=False
+        )
 
         blurred_image_2d_list = []
 
-        for image_2d, blurring_image_2d in zip(image_2d_list, blurring_image_2d_list):
+        for i in range(len(image_2d_operated_list)):
 
             blurred_image_2d = psf.convolved_array_with_mask_from(
-                array=image_2d.binned.native + blurring_image_2d.binned.native,
+                array=image_2d_not_operated_list[i].binned.native
+                + blurring_image_2d_not_operated_list[i].binned.native,
                 mask=grid.mask,
             )
 
-            blurred_image_2d_list.append(blurred_image_2d)
+            blurred_image_2d_list.append(
+                image_2d_operated_list[i].binned + blurred_image_2d
+            )
 
         return blurred_image_2d_list
 
