@@ -142,14 +142,14 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         A dictionary associated every galaxy in the plane with its corresponding 2D image.
         """
 
-        galaxy_image_dict = dict()
+        galaxy_image_2d_dict = dict()
 
         image_2d_list = self.image_2d_list_from(grid=grid, operated_only=operated_only)
 
         for (galaxy_index, galaxy) in enumerate(self.galaxies):
-            galaxy_image_dict[galaxy] = image_2d_list[galaxy_index]
+            galaxy_image_2d_dict[galaxy] = image_2d_list[galaxy_index]
 
-        return galaxy_image_dict
+        return galaxy_image_2d_dict
 
     def plane_image_2d_from(self, grid: aa.type.Grid2DLike) -> "PlaneImage":
         return plane_util.plane_image_of_galaxies_from(
