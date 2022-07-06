@@ -385,9 +385,10 @@ class EllSersic(AbstractEllSersic, LightProfile):
         )
 
     @aa.grid_dec.grid_2d_to_structure
+    @check_operated_only
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def image_2d_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
+    def image_2d_from(self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None) -> aa.Array2D:
         """
         Returns the Sersic light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -926,9 +927,10 @@ class EllChameleon(LightProfile):
         )
 
     @aa.grid_dec.grid_2d_to_structure
+    @check_operated_only
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    def image_2d_from(self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None) -> np.ndarray:
         """
         Returns the Chameleon light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -1041,9 +1043,10 @@ class EllEff(LightProfile):
         )
 
     @aa.grid_dec.grid_2d_to_structure
+    @check_operated_only
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def image_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    def image_2d_from(self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None) -> np.ndarray:
         """
         Returns the Eff light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
