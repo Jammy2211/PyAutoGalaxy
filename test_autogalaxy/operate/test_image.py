@@ -311,14 +311,15 @@ def test__visibilities_list_from(sub_grid_2d_7x7, transformer_7x7_7):
 def test__galaxy_blurred_image_2d_dict_from(
     sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7x7
 ):
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-    g1 = ag.Galaxy(
-        redshift=0.5,
-        mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
-        light_profile=ag.lp.EllSersic(intensity=2.0),
-    )
 
-    g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
+    lp_0 = ag.lp.EllSersic(intensity=1.0)
+
+    g0 = ag.Galaxy(redshift=0.5, light_profile=lp_0)
+    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
+
+    light_profile_operated = ag.lp_operated.EllGaussian(intensity=3.0)
+
+    g2 = ag.Galaxy(redshift=0.5, light_profile_operated=light_profile_operated)
 
     plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
 
@@ -334,9 +335,22 @@ def test__galaxy_blurred_image_2d_dict_from(
         blurring_grid=blurring_grid_2d_7x7,
     )
 
-    assert (blurred_image_dict[g0].slim == blurred_image_2d_list[1].slim).all()
-    assert (blurred_image_dict[g1].slim == blurred_image_2d_list[0].slim).all()
-    assert (blurred_image_dict[g2].slim == blurred_image_2d_list[2].slim).all()
+    assert (blurred_image_dict[g0] == blurred_image_2d_list[1]).all()
+    assert (blurred_image_dict[g1] == blurred_image_2d_list[0]).all()
+    assert (blurred_image_dict[g2] == blurred_image_2d_list[2]).all()
+
+    image_2d = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
+    blurring_image_2d = lp_0.image_2d_from(grid=blurring_grid_2d_7x7)
+
+    image_2d_convolved = convolver_7x7.convolve_image(
+        image=image_2d, blurring_image=blurring_image_2d
+    )
+
+    assert (blurred_image_dict[g0] == image_2d_convolved).all()
+
+    image_2d_operated = light_profile_operated.image_2d_from(grid=sub_grid_2d_7x7)
+
+    assert (blurred_image_dict[g2] == image_2d_operated.binned).all()
 
 
 def test__galaxy_visibilities_dict_from(sub_grid_2d_7x7, transformer_7x7_7):
