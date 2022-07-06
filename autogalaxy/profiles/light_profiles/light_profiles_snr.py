@@ -101,7 +101,7 @@ class EllGaussian(lp.EllGaussian, LightProfileSNR):
         signal_to_noise_ratio: float = 10.0,
         centre: Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: Tuple[float, float] = (0.0, 0.0),
-        sigma: float = 0.01,
+        sigma: float = 1.0,
     ):
         """
         The elliptical Gaussian light profile.
@@ -131,7 +131,7 @@ class SphGaussian(lp.SphGaussian, LightProfileSNR):
         self,
         signal_to_noise_ratio: float = 10.0,
         centre: Tuple[float, float] = (0.0, 0.0),
-        sigma: float = 0.01,
+        sigma: float = 1.0,
     ):
         """
         The spherical Gaussian light profile.

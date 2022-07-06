@@ -81,58 +81,41 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             )
 
     @aa.grid_dec.grid_2d_to_structure
-    def image_2d_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
+    def image_2d_from(
+        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+    ) -> aa.Array2D:
         """
         Returns the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
         individual images of each galaxy's light profile.
 
-        The image is calculated on the sub-grid and binned-up to the original grid by taking the mean
-        value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
+        If the `operated_only` input is included, the function omits light profiles which are parents of
+        the `LightProfileOperated` object, which signifies that the light profile represents emission that has
+        already had the instrument operations (e.g. PSF convolution, a Fourier transform) applied to it.
 
         If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
         sub-grid is returned.
 
         Parameters
         -----------
-
+        grid
+            The 2D (y, x) coordinates where values of the image are evaluated.
+        operated_only
+            By default, the image is the sum of light profile images (irrespective of whether they have been operatd on
+            or not). If this input is included as a bool, only images which are or are not already operated are summed
+            and returned.
         """
 
         if self.galaxies:
-            return sum(self.image_2d_list_from(grid=grid))
+            return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
         return np.zeros((grid.shape[0],))
 
-    def image_2d_list_from(self, grid: aa.type.Grid2DLike) -> List[aa.Array2D]:
-        return [galaxy.image_2d_from(grid=grid) for galaxy in self.galaxies]
-
-    @aa.grid_dec.grid_2d_to_structure
-    def image_2d_not_operated_from(self, grid: aa.type.Grid2DLike) -> aa.Array2D:
-        """
-        Returns the profile-image plane image of the list of galaxies of the plane's sub-grid, by summing the
-        individual images of each galaxy's light profile.
-
-        This function omits light profiles which are parents of the `LightProfileOperated` object, which signifies
-        that the light profile represents emission that has already had the instrument operations (e.g. PSF
-        convolution, a Fourier transform) applied to it.
-
-        The image is calculated on the sub-grid and binned-up to the original grid by taking the mean
-        value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
-
-        If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
-        sub-grid is returned.
-
-        Parameters
-        -----------
-
-        """
-
-        if self.galaxies:
-            return sum(
-                [
-                    galaxy.image_2d_not_operated_from(grid=grid)
-                    for galaxy in self.galaxies
-                ]
-            )
-        return np.zeros((grid.shape[0],))
+    def image_2d_list_from(
+        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+    ) -> List[aa.Array2D]:
+        return [
+            galaxy.image_2d_from(grid=grid, operated_only=operated_only)
+            for galaxy in self.galaxies
+        ]
 
     def galaxy_image_2d_dict_from(
         self, grid: aa.type.Grid2DLike

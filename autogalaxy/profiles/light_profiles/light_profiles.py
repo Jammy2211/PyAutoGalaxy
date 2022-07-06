@@ -159,7 +159,7 @@ class EllGaussian(LightProfile):
         centre: Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
-        sigma: float = 0.01,
+        sigma: float = 1.0,
     ):
         """
         The elliptical Gaussian light profile.
@@ -235,7 +235,7 @@ class SphGaussian(EllGaussian):
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
-        sigma: float = 0.01,
+        sigma: float = 1.0,
     ):
         """
         The spherical Gaussian light profile.
