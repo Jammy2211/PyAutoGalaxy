@@ -269,9 +269,9 @@ class OperateImageList(OperateImage):
                 convolver=convolver,
             )
 
-            blurred_image_2d_list.append(
-                image_2d_operated_list[i].binned + blurred_image_2d
-            )
+            image_2d_operated = image_2d_operated_list[i].binned
+
+            blurred_image_2d_list.append(image_2d_operated + blurred_image_2d)
 
         return blurred_image_2d_list
 
@@ -371,7 +371,9 @@ class OperateImageGalaxies(OperateImageList):
     """
 
     def galaxy_image_2d_dict_from(
-        self, grid: Union[aa.Grid2D, aa.Grid2DIterate]
+        self,
+        grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        operated_only: Optional[bool] = None,
     ) -> Dict["Galaxy", aa.Array2D]:
         raise NotImplementedError
 
@@ -399,23 +401,36 @@ class OperateImageGalaxies(OperateImageList):
             The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
         """
 
-        galaxy_image_2d_dict = self.galaxy_image_2d_dict_from(grid=grid)
-        galaxy_blurring_image_2d_dict = self.galaxy_image_2d_dict_from(
-            grid=blurring_grid
+        galaxy_image_2d_not_operated_dict = self.galaxy_image_2d_dict_from(
+            grid=grid, operated_only=False
+        )
+        galaxy_blurring_image_2d_not_operated_dict = self.galaxy_image_2d_dict_from(
+            grid=blurring_grid, operated_only=False
+        )
+
+        galaxy_image_2d_operated_dict = self.galaxy_image_2d_dict_from(
+            grid=grid, operated_only=True
         )
 
         galaxy_blurred_image_2d_dict = {}
 
-        for galaxy_key in galaxy_image_2d_dict.keys():
+        for galaxy_key in galaxy_image_2d_not_operated_dict.keys():
 
-            image_2d = galaxy_image_2d_dict[galaxy_key]
-            blurring_image_2d = galaxy_blurring_image_2d_dict[galaxy_key]
+            image_2d_not_operated = galaxy_image_2d_not_operated_dict[galaxy_key]
+            blurring_image_2d_not_operated = galaxy_blurring_image_2d_not_operated_dict[
+                galaxy_key
+            ]
 
             blurred_image_2d = convolver.convolve_image(
-                image=image_2d.binned, blurring_image=blurring_image_2d.binned
+                image=image_2d_not_operated.binned,
+                blurring_image=blurring_image_2d_not_operated.binned,
             )
 
-            galaxy_blurred_image_2d_dict[galaxy_key] = blurred_image_2d
+            image_2d_operated = galaxy_image_2d_operated_dict[galaxy_key].binned
+
+            galaxy_blurred_image_2d_dict[galaxy_key] = (
+                image_2d_operated + blurred_image_2d
+            )
 
         return galaxy_blurred_image_2d_dict
 

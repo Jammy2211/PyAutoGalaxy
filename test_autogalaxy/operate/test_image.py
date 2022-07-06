@@ -339,9 +339,7 @@ def test__galaxy_blurred_image_2d_dict_from(
     assert (blurred_image_dict[g2].slim == blurred_image_2d_list[2].slim).all()
 
 
-def test__galaxy_visibilities_dict_from_grid_and_transformer(
-    sub_grid_2d_7x7, transformer_7x7_7
-):
+def test__galaxy_visibilities_dict_from(sub_grid_2d_7x7, transformer_7x7_7):
     g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
     g1 = ag.Galaxy(
         redshift=0.5,
