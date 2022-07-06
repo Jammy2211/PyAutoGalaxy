@@ -459,7 +459,7 @@ def test___unmasked_blurred_images(masked_imaging_7x7):
 
     assert (fit.unmasked_blurred_image == unmasked_blurred_image).all()
 
-    unmasked_blurred_image_of_galaxies_list = plane.unmasked_blurred_image_2d_list_via_psf_from(
+    unmasked_blurred_image_of_galaxies_list = plane.unmasked_blurred_image_2d_list_from(
         grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
     )
 

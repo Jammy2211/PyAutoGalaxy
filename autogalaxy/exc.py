@@ -23,6 +23,10 @@ class PlaneException(Exception):
     pass
 
 
+class OperateException(Exception):
+    pass
+
+
 class PlottingException(Exception):
     pass
 

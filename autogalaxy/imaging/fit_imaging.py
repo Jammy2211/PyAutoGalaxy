@@ -203,7 +203,7 @@ class FitImaging(aa.FitImaging, AbstractFit):
 
     @property
     def unmasked_blurred_image_of_galaxies_list(self):
-        return self.plane.unmasked_blurred_image_2d_list_via_psf_from(
+        return self.plane.unmasked_blurred_image_2d_list_from(
             grid=self.grid, psf=self.imaging.psf
         )
 

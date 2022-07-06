@@ -3,6 +3,8 @@ from typing import Dict, List, Optional, Union
 
 import autoarray as aa
 
+from autogalaxy import exc
+
 
 class OperateImage:
     """
@@ -228,11 +230,12 @@ class OperateImageList(OperateImage):
     ):
         raise NotImplementedError
 
-    def blurred_image_2d_list_via_psf_from(
+    def blurred_image_2d_list_from(
         self,
         grid: Union[aa.Grid2D, aa.Grid2DIterate],
-        psf,
         blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        psf: Optional[aa.Kernel2D] = None,
+        convolver: aa.Convolver = None,
     ) -> List[aa.Array2D]:
         """
         Evaluate the light object's list of 2D images from a input 2D grid of coordinates and convolve each image with
@@ -268,11 +271,30 @@ class OperateImageList(OperateImage):
 
         for i in range(len(image_2d_operated_list)):
 
-            blurred_image_2d = psf.convolved_array_with_mask_from(
-                array=image_2d_not_operated_list[i].binned.native
-                + blurring_image_2d_not_operated_list[i].binned.native,
-                mask=grid.mask,
-            )
+            image_2d_not_operated = image_2d_not_operated_list[i].binned.native
+            blurring_image_2d_not_operated = blurring_image_2d_not_operated_list[
+                i
+            ].binned.native
+
+            if psf is not None:
+
+                blurred_image_2d = psf.convolved_array_with_mask_from(
+                    array=image_2d_not_operated + blurring_image_2d_not_operated,
+                    mask=grid.mask,
+                )
+
+            elif convolver is not None:
+
+                blurred_image_2d = convolver.convolve_image(
+                    image=image_2d_not_operated,
+                    blurring_image=blurring_image_2d_not_operated,
+                )
+
+            else:
+
+                raise exc.OperateException(
+                    "A PSF or Convolver was not passed to the `blurred_image_2d_list_from()` function."
+                )
 
             blurred_image_2d_list.append(
                 image_2d_operated_list[i].binned + blurred_image_2d
@@ -280,49 +302,7 @@ class OperateImageList(OperateImage):
 
         return blurred_image_2d_list
 
-    def blurred_image_2d_list_via_convolver_from(
-        self,
-        grid: Union[aa.Grid2D, aa.Grid2DIterate],
-        convolver: aa.Convolver,
-        blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
-    ) -> List[aa.Array2D]:
-        """
-        Evaluate the light object's list of 2D images from a input 2D grid of coordinates and convolve each image with
-        a PSF, using a `autoarray.operators.convolver.Convolver` object. The `Convolver` object performs the 2D
-        convolution operations using 1D NumPy arrays without mapping them to 2D, which is more efficient.
-
-        The input 2D grid may be masked, in which case values outside but near the edge of the mask will convolve light
-        into the mask. A blurring grid is therefore required, which contains image pixels on the mask edge whose light
-        is blurred into the light object's image by the PSF.
-
-        The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D
-        array and binned up for convolution. They therefore cannot be `Grid2DIrregular` objects.
-
-        Parameters
-        ----------
-        grid
-            The 2D (y,x) coordinates of the (masked) grid, in its original geometric reference frame.
-        convolver
-            The convolver object used perform PSF convolution on 1D numpy arrays.
-        blurring_grid
-            The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
-        """
-        image_2d_list = self.image_2d_list_from(grid=grid)
-        blurring_image_2d_list = self.image_2d_list_from(grid=blurring_grid)
-
-        blurred_image_2d_list = []
-
-        for image_2d, blurring_image_2d in zip(image_2d_list, blurring_image_2d_list):
-
-            blurred_image_2d = convolver.convolve_image(
-                image=image_2d.binned, blurring_image=blurring_image_2d.binned
-            )
-
-            blurred_image_2d_list.append(blurred_image_2d)
-
-        return blurred_image_2d_list
-
-    def unmasked_blurred_image_2d_list_via_psf_from(
+    def unmasked_blurred_image_2d_list_from(
         self, grid: Union[aa.Grid2D, aa.Grid2DIterate], psf: aa.Kernel2D
     ) -> List[aa.Array2D]:
         """

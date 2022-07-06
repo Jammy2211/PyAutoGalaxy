@@ -221,8 +221,8 @@ def test__visibilities_from_grid_and_transformer(
     assert visibilities == pytest.approx(lp_visibilities, 1.0e-4)
 
 
-def test__blurred_image_2d_list_via_psf_from(
-    sub_grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3
+def test__blurred_image_2d_list_from(
+    sub_grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3, convolver_7x7
 ):
 
     lp_0 = ag.lp.EllGaussian(intensity=1.0)
@@ -238,8 +238,21 @@ def test__blurred_image_2d_list_via_psf_from(
 
     gal = ag.Galaxy(redshift=0.5, lp_0=lp_0, lp_1=lp_1)
 
-    blurred_image_2d_list = gal.blurred_image_2d_list_via_psf_from(
+    blurred_image_2d_list = gal.blurred_image_2d_list_from(
         grid=sub_grid_2d_7x7, blurring_grid=blurring_grid_2d_7x7, psf=psf_3x3
+    )
+
+    assert blurred_image_2d_list[0].native == pytest.approx(
+        lp_0_blurred_image_2d.native, 1.0e-4
+    )
+    assert blurred_image_2d_list[1].native == pytest.approx(
+        lp_1_blurred_image_2d.native, 1.0e-4
+    )
+
+    blurred_image_2d_list = gal.blurred_image_2d_list_from(
+        grid=sub_grid_2d_7x7,
+        blurring_grid=blurring_grid_2d_7x7,
+        convolver=convolver_7x7,
     )
 
     assert blurred_image_2d_list[0].native == pytest.approx(
@@ -255,7 +268,7 @@ def test__blurred_image_2d_list_via_psf_from(
 
     gal = ag.Galaxy(redshift=0.5, lp_0=lp_0, lp_operated=lp_operated)
 
-    blurred_image_2d_list = gal.blurred_image_2d_list_via_psf_from(
+    blurred_image_2d_list = gal.blurred_image_2d_list_from(
         grid=sub_grid_2d_7x7, blurring_grid=blurring_grid_2d_7x7, psf=psf_3x3
     )
 
@@ -266,51 +279,21 @@ def test__blurred_image_2d_list_via_psf_from(
         image_2d_operated.binned.native, 1.0e-4
     )
 
-
-def test__blurred_image_2d_list_via_convolver_from(
-    sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7x7
-):
-
-    lp_0 = ag.lp.EllSersic(intensity=1.0)
-    lp_1 = ag.lp.EllSersic(intensity=2.0)
-
-    lp_0_blurred_image_2d = lp_0.blurred_image_2d_via_convolver_from(
-        grid=sub_grid_2d_7x7,
-        convolver=convolver_7x7,
-        blurring_grid=blurring_grid_2d_7x7,
-    )
-    lp_1_blurred_image_2d = lp_1.blurred_image_2d_via_convolver_from(
-        grid=sub_grid_2d_7x7,
-        convolver=convolver_7x7,
-        blurring_grid=blurring_grid_2d_7x7,
-    )
-
-    gal = ag.Galaxy(redshift=0.5, lp_0=lp_0, lp_1=lp_1)
-
-    blurred_image_2d_list = gal.blurred_image_2d_list_via_convolver_from(
+    blurred_image_2d_list = gal.blurred_image_2d_list_from(
         grid=sub_grid_2d_7x7,
         blurring_grid=blurring_grid_2d_7x7,
         convolver=convolver_7x7,
-    )
-
-    assert lp_0_blurred_image_2d.shape_slim == 9
-    assert blurred_image_2d_list[0].slim == pytest.approx(
-        lp_0_blurred_image_2d.slim, 1.0e-4
-    )
-    assert lp_1_blurred_image_2d.shape_slim == 9
-    assert blurred_image_2d_list[1].slim == pytest.approx(
-        lp_1_blurred_image_2d.slim, 1.0e-4
     )
 
     assert blurred_image_2d_list[0].native == pytest.approx(
         lp_0_blurred_image_2d.native, 1.0e-4
     )
-    assert blurred_image_2d_list[1].native == pytest.approx(
-        lp_1_blurred_image_2d.native, 1.0e-4
+    assert blurred_image_2d_list[1].binned.native == pytest.approx(
+        image_2d_operated.binned.native, 1.0e-4
     )
 
 
-def test__unmasked_blurred_image_2d_list_via_psf_from():
+def test__unmasked_blurred_image_2d_list_from():
     psf = ag.Kernel2D.manual_native(
         array=(np.array([[0.0, 3.0, 0.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0]])),
         pixel_scales=1.0,
@@ -337,7 +320,7 @@ def test__unmasked_blurred_image_2d_list_via_psf_from():
 
     gal = ag.Galaxy(redshift=0.5, lp_0=lp_0, lp_1=lp_1)
 
-    unmasked_blurred_image_2d_list = gal.unmasked_blurred_image_2d_list_via_psf_from(
+    unmasked_blurred_image_2d_list = gal.unmasked_blurred_image_2d_list_from(
         grid=grid, psf=psf
     )
 
@@ -385,7 +368,7 @@ def test__galaxy_blurred_image_2d_dict_via_convolver_from(
 
     plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
 
-    blurred_image_2d_list = plane.blurred_image_2d_list_via_convolver_from(
+    blurred_image_2d_list = plane.blurred_image_2d_list_from(
         grid=sub_grid_2d_7x7,
         convolver=convolver_7x7,
         blurring_grid=blurring_grid_2d_7x7,
