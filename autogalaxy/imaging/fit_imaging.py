@@ -158,7 +158,7 @@ class FitImaging(aa.FitImaging, AbstractFit):
         A dictionary associating galaxies with their corresponding model images
         """
 
-        galaxy_blurred_image_2d_dict = self.plane.galaxy_blurred_image_2d_dict_via_convolver_from(
+        galaxy_blurred_image_2d_dict = self.plane.galaxy_blurred_image_2d_dict_from(
             grid=self.grid,
             convolver=self.imaging.convolver,
             blurring_grid=self.imaging.blurring_grid,

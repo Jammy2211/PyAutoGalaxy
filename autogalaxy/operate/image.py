@@ -375,7 +375,7 @@ class OperateImageGalaxies(OperateImageList):
     ) -> Dict["Galaxy", aa.Array2D]:
         raise NotImplementedError
 
-    def galaxy_blurred_image_2d_dict_via_convolver_from(
+    def galaxy_blurred_image_2d_dict_from(
         self, grid, convolver, blurring_grid
     ) -> Dict["Galaxy", aa.Array2D]:
         """
@@ -419,7 +419,7 @@ class OperateImageGalaxies(OperateImageList):
 
         return galaxy_blurred_image_2d_dict
 
-    def galaxy_visibilities_dict_via_transformer_from(
+    def galaxy_visibilities_dict_from(
         self, grid, transformer
     ) -> Dict["Galaxy", aa.Visibilities]:
         """

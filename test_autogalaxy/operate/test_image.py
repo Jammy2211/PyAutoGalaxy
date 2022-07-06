@@ -308,7 +308,7 @@ def test__visibilities_list_from(sub_grid_2d_7x7, transformer_7x7_7):
     assert (lp_1_visibilities == visibilities_list[1]).all()
 
 
-def test__galaxy_blurred_image_2d_dict_via_convolver_from(
+def test__galaxy_blurred_image_2d_dict_from(
     sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7x7
 ):
     g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
@@ -328,7 +328,7 @@ def test__galaxy_blurred_image_2d_dict_via_convolver_from(
         blurring_grid=blurring_grid_2d_7x7,
     )
 
-    blurred_image_dict = plane.galaxy_blurred_image_2d_dict_via_convolver_from(
+    blurred_image_dict = plane.galaxy_blurred_image_2d_dict_from(
         grid=sub_grid_2d_7x7,
         convolver=convolver_7x7,
         blurring_grid=blurring_grid_2d_7x7,
@@ -356,7 +356,7 @@ def test__galaxy_visibilities_dict_from_grid_and_transformer(
         grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
     )
 
-    visibilities_dict = plane.galaxy_visibilities_dict_via_transformer_from(
+    visibilities_dict = plane.galaxy_visibilities_dict_from(
         grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
     )
 

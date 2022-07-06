@@ -118,7 +118,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         ]
 
     def galaxy_image_2d_dict_from(
-        self, grid: aa.type.Grid2DLike
+        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> {Galaxy: np.ndarray}:
         """
         Returns a dictionary associating every `Galaxy` object in the `Plane` with its corresponding 2D image, using
@@ -144,9 +144,10 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         galaxy_image_dict = dict()
 
-        images_of_galaxies = self.image_2d_list_from(grid=grid)
+        image_2d_list = self.image_2d_list_from(grid=grid, operated_only=operated_only)
+
         for (galaxy_index, galaxy) in enumerate(self.galaxies):
-            galaxy_image_dict[galaxy] = images_of_galaxies[galaxy_index]
+            galaxy_image_dict[galaxy] = image_2d_list[galaxy_index]
 
         return galaxy_image_dict
 

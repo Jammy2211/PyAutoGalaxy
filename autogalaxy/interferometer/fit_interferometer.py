@@ -150,7 +150,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
     @property
     def galaxy_model_visibilities_dict(self) -> {Galaxy: np.ndarray}:
 
-        galaxy_model_visibilities_dict = self.plane.galaxy_visibilities_dict_via_transformer_from(
+        galaxy_model_visibilities_dict = self.plane.galaxy_visibilities_dict_from(
             grid=self.interferometer.grid, transformer=self.interferometer.transformer
         )
 
