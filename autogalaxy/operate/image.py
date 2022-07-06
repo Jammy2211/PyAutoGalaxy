@@ -24,6 +24,10 @@ class OperateImage:
     ) -> aa.Array2D:
         raise NotImplementedError
 
+    @property
+    def has_light_profile_operated(self) -> bool:
+        raise NotImplementedError
+
     def _blurred_image_2d_from(
         self,
         image_2d: aa.Array2D,
@@ -90,11 +94,16 @@ class OperateImage:
             convolver=convolver,
         )
 
-        # TODO : Avoid repeated calculation due to deflection angle slow down.
+        try:
+            has_light_profile_operated = self.has_light_profile_operated
+        except NotImplementedError:
+            has_light_profile_operated = True
 
-        image_2d_operated = self.image_2d_from(grid=grid, operated_only=True)
+        if has_light_profile_operated:
+            image_2d_operated = self.image_2d_from(grid=grid, operated_only=True)
+            return blurred_image_2d + image_2d_operated.binned
 
-        return blurred_image_2d + image_2d_operated.binned
+        return blurred_image_2d
 
     def padded_image_2d_from(self, grid, psf_shape_2d):
         """
