@@ -110,7 +110,7 @@ class OperateImage:
         """
         Evaluate the light object's 2D image from a input 2D grid of padded coordinates, where this padding is
         sufficient to encapsulate all surrounding pixels that will blur light into the original image given the
-        2D shape of the PSF's kernel..
+        2D shape of the PSF's kernel.
 
         Convolving an unmasked 2D image with a PSF requires care, because at the edges of the 2D image the light
         profile values will not be evaluated beyond its edge, even though some of its light will be blurred into these
@@ -154,11 +154,25 @@ class OperateImage:
         """
         padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
 
-        padded_image = self.image_2d_from(grid=padded_grid)
-
-        return padded_grid.mask.unmasked_blurred_array_from(
-            padded_array=padded_image, psf=psf, image_shape=grid.mask.shape
+        padded_image_2d_not_operated = self.image_2d_from(
+            grid=padded_grid, operated_only=False
         )
+
+        padded_image_2d = padded_grid.mask.unmasked_blurred_array_from(
+            padded_array=padded_image_2d_not_operated,
+            psf=psf,
+            image_shape=grid.mask.shape,
+        )
+
+        padded_image_2d_operated = self.image_2d_from(
+            grid=padded_grid, operated_only=True
+        )
+
+        padded_image_2d_operated = padded_grid.mask.trimmed_array_from(
+            padded_array=padded_image_2d_operated, image_shape=grid.mask.shape
+        )
+
+        return padded_image_2d + padded_image_2d_operated.binned
 
     def visibilities_via_transformer_from(
         self, grid: Union[aa.Grid2D, aa.Grid2DIterate], transformer: aa.type.Transformer

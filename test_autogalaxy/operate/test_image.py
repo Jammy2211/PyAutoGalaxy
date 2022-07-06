@@ -162,8 +162,6 @@ def test__unmasked_blurred_image_2d_via_psf_from():
         grid=grid, psf=psf
     )
 
-    print(unmasked_blurred_image_2d)
-
     assert unmasked_blurred_image_2d.native == pytest.approx(
         np.array(
             [
@@ -174,6 +172,39 @@ def test__unmasked_blurred_image_2d_via_psf_from():
         ),
         1.0e-4,
     )
+
+    light_not_operated = ag.lp.EllGaussian(intensity=1.0)
+    light_operated = ag.lp_operated.EllGaussian(intensity=1.0)
+
+    padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
+
+    image_2d_not_operated = light_not_operated.image_2d_from(grid=padded_grid)
+
+    blurred_image_2d_not_operated = padded_grid.mask.unmasked_blurred_array_from(
+        padded_array=image_2d_not_operated, psf=psf, image_shape=grid.mask.shape
+    )
+
+    image_2d_operated = light_operated.image_2d_from(grid=grid)
+
+    image_2d_operated = light_operated.image_2d_from(grid=padded_grid)
+
+    image_2d_operated = padded_grid.mask.unmasked_blurred_array_from(
+        padded_array=image_2d_operated,
+        psf=ag.Kernel2D.no_blur(pixel_scales=1.0),
+        image_shape=grid.mask.shape,
+    )
+
+    image_2d_manual = image_2d_operated + blurred_image_2d_not_operated
+
+    galaxy = ag.Galaxy(
+        redshift=0.5, light=light_not_operated, light_operated=light_operated
+    )
+
+    unmasked_blurred_image_2d = galaxy.unmasked_blurred_image_2d_via_psf_from(
+        grid=grid, psf=psf
+    )
+
+    assert unmasked_blurred_image_2d == pytest.approx(image_2d_manual, 1.0e-4)
 
 
 def test__visibilities_from_grid_and_transformer(
