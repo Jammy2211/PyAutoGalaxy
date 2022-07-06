@@ -304,13 +304,13 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-    g0_blurred_image_2d = g0.blurred_image_2d_via_convolver_from(
+    g0_blurred_image_2d = g0.blurred_image_2d_from(
         grid=masked_imaging_7x7.grid,
         blurring_grid=masked_imaging_7x7.blurring_grid,
         convolver=masked_imaging_7x7.convolver,
     )
 
-    g1_blurred_image_2d = g1.blurred_image_2d_via_convolver_from(
+    g1_blurred_image_2d = g1.blurred_image_2d_from(
         grid=masked_imaging_7x7.grid,
         blurring_grid=masked_imaging_7x7.blurring_grid,
         convolver=masked_imaging_7x7.convolver,
@@ -453,7 +453,7 @@ def test___unmasked_blurred_images(masked_imaging_7x7):
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-    unmasked_blurred_image = plane.unmasked_blurred_image_2d_via_psf_from(
+    unmasked_blurred_image = plane.unmasked_blurred_image_2d_from(
         grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
     )
 

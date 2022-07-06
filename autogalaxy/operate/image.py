@@ -24,11 +24,39 @@ class OperateImage:
     ) -> aa.Array2D:
         raise NotImplementedError
 
-    def blurred_image_2d_via_psf_from(
+    def _blurred_image_2d_from(
+        self,
+        image_2d: aa.Array2D,
+        blurring_image_2d: aa.Array2D,
+        psf: Optional[aa.Kernel2D],
+        convolver: aa.Convolver,
+    ) -> aa.Array2D:
+
+        if psf is not None:
+
+            return psf.convolved_array_with_mask_from(
+                array=image_2d.binned.native + blurring_image_2d.binned.native,
+                mask=image_2d.mask,
+            )
+
+        elif convolver is not None:
+
+            return convolver.convolve_image(
+                image=image_2d, blurring_image=blurring_image_2d
+            )
+
+        else:
+
+            raise exc.OperateException(
+                "A PSF or Convolver was not passed to the `blurred_image_2d_list_from()` function."
+            )
+
+    def blurred_image_2d_from(
         self,
         grid: Union[aa.Grid2D, aa.Grid2DIterate],
-        psf: aa.Kernel2D,
         blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        psf: Optional[aa.Kernel2D] = None,
+        convolver: aa.Convolver = None,
     ) -> aa.Array2D:
         """
         Evaluate the light object's 2D image from a input 2D grid of coordinates and convolve it with a PSF.
@@ -55,58 +83,18 @@ class OperateImage:
             grid=blurring_grid, operated_only=False
         )
 
-        image_2d = psf.convolved_array_with_mask_from(
-            array=image_2d_not_operated.binned.native
-            + blurring_image_2d_not_operated.binned.native,
-            mask=grid.mask,
+        blurred_image_2d = self._blurred_image_2d_from(
+            image_2d=image_2d_not_operated.binned,
+            blurring_image_2d=blurring_image_2d_not_operated.binned,
+            psf=psf,
+            convolver=convolver,
         )
 
         # TODO : Avoid repeated calculation due to deflection angle slow down.
 
         image_2d_operated = self.image_2d_from(grid=grid, operated_only=True)
 
-        return image_2d + image_2d_operated.binned
-
-    def blurred_image_2d_via_convolver_from(
-        self,
-        grid: Union[aa.Grid2D, aa.Grid2DIterate],
-        convolver: aa.Convolver,
-        blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
-    ) -> aa.Array2D:
-        """
-        Evaluate the light object's 2D image from a input 2D grid of coordinates and convolve it with a PSF, using a
-        `autoarray.operators.convolver.Convolver` object. The `Convolver` object performs the 2D convolution operations
-        using 1D NumPy arrays without mapping them to 2D, which is more efficient.
-
-        The input 2D grid may be masked, in which case values outside but near the edge of the mask will convolve light
-        into the mask. A blurring grid is therefore required, which contains image pixels on the mask edge whose light
-        is blurred into the light object's image by the PSF.
-
-        The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D
-        array and binned up for convolution. They therefore cannot be `Grid2DIrregular` objects.
-
-        Parameters
-        ----------
-        grid
-            The 2D (y,x) coordinates of the (masked) grid, in its original geometric reference frame.
-        convolver
-            The convolver object used perform PSF convolution on 1D numpy arrays.
-        blurring_grid
-            The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
-        """
-
-        image_2d_not_operated = self.image_2d_from(grid=grid, operated_only=False)
-        blurring_image_2d_not_operated = self.image_2d_from(
-            grid=blurring_grid, operated_only=False
-        )
-
-        image_2d = convolver.convolve_image(
-            image=image_2d_not_operated.binned,
-            blurring_image=blurring_image_2d_not_operated.binned,
-        )
-
-        image_2d_operated = self.image_2d_from(grid=grid, operated_only=True)
-        return image_2d + image_2d_operated.binned
+        return blurred_image_2d + image_2d_operated.binned
 
     def padded_image_2d_from(self, grid, psf_shape_2d):
         """
@@ -132,7 +120,7 @@ class OperateImage:
 
         return self.image_2d_from(grid=padded_grid)
 
-    def unmasked_blurred_image_2d_via_psf_from(self, grid, psf):
+    def unmasked_blurred_image_2d_from(self, grid, psf):
         """
         Evaluate the light object's 2D image from a input 2D grid of coordinates and convolve it with a PSF, using a
         grid which is not masked.
@@ -271,30 +259,15 @@ class OperateImageList(OperateImage):
 
         for i in range(len(image_2d_operated_list)):
 
-            image_2d_not_operated = image_2d_not_operated_list[i].binned.native
-            blurring_image_2d_not_operated = blurring_image_2d_not_operated_list[
-                i
-            ].binned.native
+            image_2d_not_operated = image_2d_not_operated_list[i]
+            blurring_image_2d_not_operated = blurring_image_2d_not_operated_list[i]
 
-            if psf is not None:
-
-                blurred_image_2d = psf.convolved_array_with_mask_from(
-                    array=image_2d_not_operated + blurring_image_2d_not_operated,
-                    mask=grid.mask,
-                )
-
-            elif convolver is not None:
-
-                blurred_image_2d = convolver.convolve_image(
-                    image=image_2d_not_operated,
-                    blurring_image=blurring_image_2d_not_operated,
-                )
-
-            else:
-
-                raise exc.OperateException(
-                    "A PSF or Convolver was not passed to the `blurred_image_2d_list_from()` function."
-                )
+            blurred_image_2d = self._blurred_image_2d_from(
+                image_2d=image_2d_not_operated,
+                blurring_image_2d=blurring_image_2d_not_operated,
+                psf=psf,
+                convolver=convolver,
+            )
 
             blurred_image_2d_list.append(
                 image_2d_operated_list[i].binned + blurred_image_2d
