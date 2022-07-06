@@ -13,7 +13,6 @@ def test__blurred_image_2d_via_psf_from(
 ):
 
     lp = ag.lp.EllSersic(intensity=1.0)
-    lp_operated = ag.lp_operated.EllGaussian(intensity=1.0)
 
     lp_blurred_image_2d = lp.blurred_image_2d_via_psf_from(
         grid=sub_grid_2d_7x7, blurring_grid=blurring_grid_2d_7x7, psf=psf_3x3
@@ -22,12 +21,30 @@ def test__blurred_image_2d_via_psf_from(
     image_2d = lp.image_2d_from(grid=sub_grid_2d_7x7)
     blurring_image_2d = lp.image_2d_from(grid=blurring_grid_2d_7x7)
 
-    blurred_image_2d = convolver_7x7.convolve_image(
+    blurred_image_2d_manual = convolver_7x7.convolve_image(
         image=image_2d.binned, blurring_image=blurring_image_2d.binned
     )
 
-    assert blurred_image_2d.slim == pytest.approx(lp_blurred_image_2d.slim, 1.0e-4)
-    assert blurred_image_2d.native == pytest.approx(lp_blurred_image_2d.native, 1.0e-4)
+    assert blurred_image_2d_manual.native == pytest.approx(lp_blurred_image_2d.native, 1.0e-4)
+
+    light_not_operated = ag.lp.EllSersic(intensity=1.0)
+    light_operated = ag.lp_operated.EllGaussian(intensity=1.0)
+
+    image_2d_not_operated = light_not_operated.image_2d_from(grid=sub_grid_2d_7x7)
+    blurring_image_2d_not_operated = light_not_operated.image_2d_from(grid=blurring_grid_2d_7x7)
+    image_2d_operated = light_operated.image_2d_from(grid=sub_grid_2d_7x7)
+
+    galaxy = ag.Galaxy(
+        redshift=0.5, light=light_not_operated, light_operated=light_operated
+    )
+
+    blurred_image_2d = galaxy.blurred_image_2d_via_psf_from(grid=sub_grid_2d_7x7, psf=psf_3x3, blurring_grid=blurring_grid_2d_7x7)
+
+    blurred_image_2d_manual_not_operated = convolver_7x7.convolve_image(
+        image=image_2d_not_operated.binned, blurring_image=blurring_image_2d_not_operated.binned
+    )
+
+    assert (blurred_image_2d == pytest.approx(blurred_image_2d_manual_not_operated + image_2d_operated.binned), 1.0e-4)
 
 
 def test__blurred_image_2d_via_convolver_from(

@@ -15,7 +15,7 @@ class OperateImage:
     The methods in `OperateImage` are inherited by light objects to provide a concise API.
     """
 
-    def image_2d_from(self, grid: Union[aa.Grid2D, aa.Grid2DIterate]) -> aa.Array2D:
+    def image_2d_from(self, grid: Union[aa.Grid2D, aa.Grid2DIterate], operated_only: Optional[bool] = None) -> aa.Array2D:
         raise NotImplementedError
 
     def blurred_image_2d_via_psf_from(
@@ -44,13 +44,19 @@ class OperateImage:
             The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
         """
 
-        image_2d = self.image_2d_from(grid=grid)
-        blurring_image_2d = self.image_2d_from(grid=blurring_grid)
+        image_2d_not_operated = self.image_2d_from(grid=grid, operated_only=False)
+        blurring_image_2d_not_operated = self.image_2d_from(grid=blurring_grid, operated_only=False)
 
-        return psf.convolved_array_with_mask_from(
-            array=image_2d.binned.native + blurring_image_2d.binned.native,
+        image_2d = psf.convolved_array_with_mask_from(
+            array=image_2d_not_operated.binned.native + blurring_image_2d_not_operated.binned.native,
             mask=grid.mask,
         )
+
+        # TODO : Avoid repeated calculation due to deflection angle slow down.
+
+        image_2d_operated = self.image_2d_from(grid=grid, operated_only=True)
+
+        return image_2d + image_2d_operated.binned
 
     def blurred_image_2d_via_convolver_from(
         self,
@@ -80,12 +86,15 @@ class OperateImage:
             The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
         """
 
-        image_2d = self.image_2d_from(grid=grid)
-        blurring_image_2d = self.image_2d_from(grid=blurring_grid)
+        image_2d_not_operated = self.image_2d_from(grid=grid, operated_only=False)
+        blurring_image_2d_not_operated = self.image_2d_from(grid=blurring_grid, operated_only=False)
 
-        return convolver.convolve_image(
+        image_2d = convolver.convolve_image(
             image=image_2d.binned, blurring_image=blurring_image_2d.binned
         )
+
+        image_2d_operated = self.image_2d_from(grid=grid, operated_only=True)
+        return image_2d + image_2d_operated
 
     def padded_image_2d_from(self, grid, psf_shape_2d):
         """
