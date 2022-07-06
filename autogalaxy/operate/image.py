@@ -15,7 +15,11 @@ class OperateImage:
     The methods in `OperateImage` are inherited by light objects to provide a concise API.
     """
 
-    def image_2d_from(self, grid: Union[aa.Grid2D, aa.Grid2DIterate], operated_only: Optional[bool] = None) -> aa.Array2D:
+    def image_2d_from(
+        self,
+        grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        operated_only: Optional[bool] = None,
+    ) -> aa.Array2D:
         raise NotImplementedError
 
     def blurred_image_2d_via_psf_from(
@@ -45,10 +49,13 @@ class OperateImage:
         """
 
         image_2d_not_operated = self.image_2d_from(grid=grid, operated_only=False)
-        blurring_image_2d_not_operated = self.image_2d_from(grid=blurring_grid, operated_only=False)
+        blurring_image_2d_not_operated = self.image_2d_from(
+            grid=blurring_grid, operated_only=False
+        )
 
         image_2d = psf.convolved_array_with_mask_from(
-            array=image_2d_not_operated.binned.native + blurring_image_2d_not_operated.binned.native,
+            array=image_2d_not_operated.binned.native
+            + blurring_image_2d_not_operated.binned.native,
             mask=grid.mask,
         )
 
@@ -87,14 +94,17 @@ class OperateImage:
         """
 
         image_2d_not_operated = self.image_2d_from(grid=grid, operated_only=False)
-        blurring_image_2d_not_operated = self.image_2d_from(grid=blurring_grid, operated_only=False)
+        blurring_image_2d_not_operated = self.image_2d_from(
+            grid=blurring_grid, operated_only=False
+        )
 
         image_2d = convolver.convolve_image(
-            image=image_2d.binned, blurring_image=blurring_image_2d.binned
+            image=image_2d_not_operated.binned,
+            blurring_image=blurring_image_2d_not_operated.binned,
         )
 
         image_2d_operated = self.image_2d_from(grid=grid, operated_only=True)
-        return image_2d + image_2d_operated
+        return image_2d + image_2d_operated.binned
 
     def padded_image_2d_from(self, grid, psf_shape_2d):
         """
