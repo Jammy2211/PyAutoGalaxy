@@ -177,7 +177,7 @@
         "sigma": {
             "type": "Uniform",
             "lower_limit": 0.0,
-            "upper_limit": 25.0,
+            "upper_limit": 5.0,
             "width_modifier": {
                 "type": "Relative",
                 "value": 0.5
