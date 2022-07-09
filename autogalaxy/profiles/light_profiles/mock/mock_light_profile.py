@@ -1,8 +1,10 @@
 import numpy as np
+from typing import Optional
 
+from autogalaxy.profiles.light_profiles.light_profile_decorators import (
+    check_operated_only,
+)
 import autogalaxy as ag
-
-# MockProfiles #
 
 
 class MockLightProfile(ag.lp.LightProfile):
@@ -24,7 +26,8 @@ class MockLightProfile(ag.lp.LightProfile):
         self.value = value
         self.value1 = value1
 
-    def image_2d_from(self, grid):
+    @check_operated_only
+    def image_2d_from(self, grid, operated_only: Optional[bool] = None):
 
         if self.image_2d is not None:
             return self.image_2d

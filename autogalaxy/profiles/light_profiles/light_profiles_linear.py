@@ -372,7 +372,7 @@ class EllGaussian(lp.EllGaussian, LightProfileLinear):
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: Tuple[float, float] = (0.0, 0.0),
-        sigma: float = 0.01,
+        sigma: float = 1.0,
     ):
         """
         The elliptical Gaussian light profile.

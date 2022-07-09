@@ -188,7 +188,7 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     assert fit.log_likelihood == fit_linear.figure_of_merit
     assert fit_linear.figure_of_merit == pytest.approx(-45.02798, 1.0e-4)
 
-    galaxy_image = galaxy.blurred_image_2d_via_convolver_from(
+    galaxy_image = galaxy.blurred_image_2d_from(
         grid=masked_imaging.grid,
         convolver=masked_imaging.convolver,
         blurring_grid=masked_imaging.blurring_grid,

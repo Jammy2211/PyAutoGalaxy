@@ -220,7 +220,7 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
         galaxy_image, 1.0e-4
     )
 
-    galaxy_visibilities = galaxy.visibilities_via_transformer_from(
+    galaxy_visibilities = galaxy.visibilities_from(
         grid=interferometer.grid, transformer=interferometer.transformer
     )
 
