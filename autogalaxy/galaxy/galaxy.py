@@ -492,14 +492,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         return np.zeros((grid.shape[0],))
 
     @property
-    def has_pixelization(self) -> bool:
-        return self.pixelization is not None
-
-    @property
-    def has_regularization(self) -> bool:
-        return self.regularization is not None
-
-    @property
     def has_hyper_galaxy(self) -> bool:
         return self.hyper_galaxy is not None
 

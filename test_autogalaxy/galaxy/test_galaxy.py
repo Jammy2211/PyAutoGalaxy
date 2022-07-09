@@ -9,26 +9,6 @@ def test_has_hyper_galaxy():
     assert ag.Galaxy(redshift=0.5, hyper_galaxy=object()).has_hyper_galaxy is True
 
 
-def test_has_pixelization():
-    assert ag.Galaxy(redshift=0.5).has_pixelization is False
-    assert (
-        ag.Galaxy(
-            redshift=0.5, pixelization=object(), regularization=object()
-        ).has_pixelization
-        is True
-    )
-
-
-def test_has_regularization():
-    assert ag.Galaxy(redshift=0.5).has_regularization is False
-    assert (
-        ag.Galaxy(
-            redshift=0.5, pixelization=object(), regularization=object()
-        ).has_regularization
-        is True
-    )
-
-
 
 def test__image_1d_from(sub_grid_1d_7, lp_0, lp_1, gal_x2_lp):
 

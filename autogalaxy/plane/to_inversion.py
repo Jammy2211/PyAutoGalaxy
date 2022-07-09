@@ -46,7 +46,7 @@ class PlaneToInversion:
         self, grid: aa.type.Grid2DLike, settings_pixelization=aa.SettingsPixelization()
     ) -> Optional[List[aa.type.Grid2DLike]]:
 
-        if not self.plane.has_pixelization:
+        if not self.plane.has(cls=aa.pix.Pixelization):
             return None
 
         return [
@@ -89,7 +89,7 @@ class PlaneToInversion:
         preloads=aa.Preloads(),
     ) -> Dict[aa.AbstractMapper, Galaxy]:
 
-        if not self.plane.has_pixelization:
+        if not self.plane.has(cls=aa.pix.Pixelization):
             return {}
 
         sparse_grid_list = self.sparse_image_plane_grid_list_from(grid=grid)

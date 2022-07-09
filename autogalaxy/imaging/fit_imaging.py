@@ -108,9 +108,9 @@ class FitImaging(aa.FitImaging, AbstractFit):
         The image passed to this function is the dataset's image with all light profile images of the plane subtracted.
         """
 
-        if self.plane.has_pixelization or self.plane.has_light_profile_linear:
+        if self.plane.has(cls=aa.pix.Pixelization) or self.plane.has_light_profile_linear:
 
-            if self.plane.has_pixelization and self.settings_inversion.use_w_tilde:
+            if self.plane.has(cls=aa.pix.Pixelization) and self.settings_inversion.use_w_tilde:
                 w_tilde = self.dataset.w_tilde
             else:
                 w_tilde = None
@@ -138,7 +138,7 @@ class FitImaging(aa.FitImaging, AbstractFit):
         If a inversion is included it is the sum of this sum and the inversion's reconstruction of the image.
         """
 
-        if self.plane.has_pixelization or self.plane.has_light_profile_linear:
+        if self.plane.has(cls=aa.pix.Pixelization) or self.plane.has_light_profile_linear:
 
             return self.blurred_image + self.inversion.mapped_reconstructed_data
 

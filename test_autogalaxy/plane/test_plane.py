@@ -126,40 +126,6 @@ def test__has_light_profile_operated():
     assert plane.has_light_profile_operated is True
 
 
-def test__has_pixelization():
-    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
-    assert plane.has_pixelization is False
-
-    galaxy_pix = ag.Galaxy(
-        redshift=0.5,
-        pixelization=AbstractPixelization(),
-        regularization=AbstractRegularization(),
-    )
-
-    plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
-    assert plane.has_pixelization is True
-
-    plane = ag.Plane(galaxies=[galaxy_pix, ag.Galaxy(redshift=0.5)], redshift=None)
-    assert plane.has_pixelization is True
-
-
-def test__has_regularization():
-    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
-    assert plane.has_regularization is False
-
-    galaxy_pix = ag.Galaxy(
-        redshift=0.5,
-        pixelization=AbstractPixelization(),
-        regularization=AbstractRegularization(),
-    )
-
-    plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
-    assert plane.has_regularization is True
-
-    plane = ag.Plane(galaxies=[galaxy_pix, ag.Galaxy(redshift=0.5)], redshift=None)
-    assert plane.has_regularization is True
-
-
 def test__has_hyper_galaxy():
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
     assert plane.has_hyper_galaxy is False
