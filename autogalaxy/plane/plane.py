@@ -1,6 +1,6 @@
 import json
 import numpy as np
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Type
 
 import autoarray as aa
 
@@ -68,28 +68,12 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def galaxy_redshifts(self) -> List[float]:
         return [galaxy.redshift for galaxy in self.galaxies]
 
-    def has(self, cls) -> bool:
+    def has(self, cls: Type) -> bool:
         if self.galaxies is not None:
             return any(
                 list(map(lambda galaxy: galaxy.has(cls=cls), self.galaxies))
             )
         return False
-
-    @property
-    def has_light_profile_linear(self) -> bool:
-        if self.galaxies is not None:
-            return any(
-                list(map(lambda galaxy: galaxy.has_light_profile_linear, self.galaxies))
-            )
-
-    @property
-    def has_light_profile_operated(self) -> bool:
-        if self.galaxies is not None:
-            return any(
-                list(
-                    map(lambda galaxy: galaxy.has_light_profile_operated, self.galaxies)
-                )
-            )
 
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(

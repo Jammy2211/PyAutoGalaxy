@@ -81,51 +81,6 @@ def test__has():
     )
     assert plane.has(cls=ag.lp.LightProfile)is True
 
-
-def test__has_light_profile_linear():
-
-    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
-    assert plane.has_light_profile_linear is False
-
-    plane = ag.Plane(
-        galaxies=[
-            ag.Galaxy(redshift=0.5, light_profile=ag.lp_linear.LightProfileLinear())
-        ],
-        redshift=None,
-    )
-    assert plane.has_light_profile_linear is True
-
-    plane = ag.Plane(
-        galaxies=[
-            ag.Galaxy(redshift=0.5, light_profile=ag.lp_linear.LightProfileLinear()),
-            ag.Galaxy(redshift=0.5),
-        ],
-        redshift=None,
-    )
-    assert plane.has_light_profile_linear is True
-
-
-def test__has_light_profile_operated():
-
-    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
-    assert plane.has_light_profile_operated is False
-
-    plane = ag.Plane(
-        galaxies=[ag.Galaxy(redshift=0.5, light_profile=ag.lp_operated.EllGaussian())],
-        redshift=None,
-    )
-    assert plane.has_light_profile_operated is True
-
-    plane = ag.Plane(
-        galaxies=[
-            ag.Galaxy(redshift=0.5, light_profile=ag.lp_operated.EllGaussian()),
-            ag.Galaxy(redshift=0.5),
-        ],
-        redshift=None,
-    )
-    assert plane.has_light_profile_operated is True
-
-
 def test__has_hyper_galaxy():
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
     assert plane.has_hyper_galaxy is False

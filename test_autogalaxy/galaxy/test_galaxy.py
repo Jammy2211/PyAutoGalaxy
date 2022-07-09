@@ -385,14 +385,12 @@ def test__light_profile_linear_list(lp_0):
     gal = ag.Galaxy(redshift=0.5, light_0=lp_0)
 
     assert gal.light_profile_linear_list == []
-    assert gal.has_light_profile_linear == False
 
     gal = ag.Galaxy(
         redshift=0.5, light_0=lp_0, light_linear_0=lp_linear, light_linear_1=lp_linear
     )
 
     assert gal.light_profile_linear_list == [lp_linear, lp_linear]
-    assert gal.has_light_profile_linear == True
 
 
 def test__light_profile_operated_list(lp_0):
@@ -402,7 +400,6 @@ def test__light_profile_operated_list(lp_0):
     gal = ag.Galaxy(redshift=0.5, light_0=lp_0)
 
     assert gal.light_profile_operated_list == []
-    assert gal.has_light_profile_operated == False
 
     gal = ag.Galaxy(
         redshift=0.5,
@@ -412,7 +409,6 @@ def test__light_profile_operated_list(lp_0):
     )
 
     assert gal.light_profile_operated_list == [lp_operated, lp_operated]
-    assert gal.has_light_profile_operated == True
 
 
 def test__image_2d_from__does_not_include_linear_light_profiles(sub_grid_2d_7x7, lp_0):

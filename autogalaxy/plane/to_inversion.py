@@ -7,6 +7,7 @@ from autoarray.inversion.inversion.factory import inversion_interferometer_unpac
 from autogalaxy.profiles.light_profiles.light_profiles_linear import (
     LightProfileLinearObjFunc,
 )
+from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 from autogalaxy.galaxy.galaxy import Galaxy
 
 
@@ -22,13 +23,13 @@ class PlaneToInversion:
         convolver: Optional[aa.Convolver] = None,
     ) -> Dict[LightProfileLinearObjFunc, Galaxy]:
 
-        if not self.plane.has_light_profile_linear:
+        if not self.plane.has(cls=LightProfileLinear):
             return {}
 
         lp_linear_func_galaxy_dict = {}
 
         for galaxy in self.plane.galaxies:
-            if galaxy.has_light_profile_linear:
+            if galaxy.has(cls=LightProfileLinear):
                 for light_profile_linear in galaxy.light_profile_linear_list:
 
                     lp_linear_func = LightProfileLinearObjFunc(

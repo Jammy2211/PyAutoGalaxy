@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional
 
 import autoarray as aa
 
@@ -22,8 +22,7 @@ class OperateImage:
     ) -> aa.Array2D:
         raise NotImplementedError
 
-    @property
-    def has_light_profile_operated(self) -> bool:
+    def has(self, cls) -> bool:
         raise NotImplementedError
 
     def _blurred_image_2d_from(
@@ -79,6 +78,9 @@ class OperateImage:
         blurring_grid
             The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
         """
+        from autogalaxy.profiles.light_profiles.light_profiles_operated import (
+            LightProfileOperated,
+        )
 
         image_2d_not_operated = self.image_2d_from(grid=grid, operated_only=False)
         blurring_image_2d_not_operated = self.image_2d_from(
@@ -92,12 +94,7 @@ class OperateImage:
             convolver=convolver,
         )
 
-        try:
-            has_light_profile_operated = self.has_light_profile_operated
-        except NotImplementedError:
-            has_light_profile_operated = True
-
-        if has_light_profile_operated:
+        if self.has(cls=LightProfileOperated):
             image_2d_operated = self.image_2d_from(grid=grid, operated_only=True)
             return blurred_image_2d + image_2d_operated.binned
 

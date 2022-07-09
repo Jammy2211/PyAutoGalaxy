@@ -1,7 +1,7 @@
-from typing import Tuple
+from typing import Tuple, Type
 
 import numpy as np
-import autofit as af
+
 import autoarray as aa
 from autoarray.structures.grids.transformed_2d import Grid2DTransformedNumpy
 from autogalaxy import convert
@@ -31,6 +31,15 @@ class GeometryProfile(Dictable):
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
+
+    def has(self, cls: Type) -> bool:
+        """
+        Does this instance have an attribute which is of type cls?
+        """
+        for value in self.__dict__.values():
+            if isinstance(value, cls):
+                return True
+        return False
 
     def transform_grid_to_reference_frame(self, grid):
         raise NotImplemented()

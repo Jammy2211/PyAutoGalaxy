@@ -155,10 +155,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         }
 
     @property
-    def has_only_light_profile_linear(self):
-        return len(self.light_profile_linear_list) == len(self.light_profile_list)
-
-    @property
     def has_profile(self) -> bool:
         return self.has(cls=MassProfile) or self.has(cls=LightProfile)
 
@@ -179,10 +175,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         ]
 
     @property
-    def has_light_profile_linear(self) -> bool:
-        return self.has(cls=LightProfileLinear)
-
-    @property
     def light_profile_operated_list(self) -> List[LightProfileOperated]:
         """
         Returns a list of all of the galaxy light profiles that inherit from the `LightProfileOperated`
@@ -200,10 +192,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             for value in self.__dict__.values()
             if isinstance(value, LightProfileOperated)
         ]
-
-    @property
-    def has_light_profile_operated(self) -> bool:
-        return len(self.light_profile_operated_list) > 0
 
     def radial_projected_shape_slim_from(self, grid: aa.type.Grid1D2DLike) -> int:
         """
