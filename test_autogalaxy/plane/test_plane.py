@@ -412,11 +412,9 @@ def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_
     image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
     image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
 
-    galaxy_0 = ag.Galaxy(
-        redshift=0.5, light=light_not_operated, light_operated=light_operated
-    )
+    galaxy_0 = ag.Galaxy(redshift=0.5, light=lp_0, light_operated=lp_operated_0)
     galaxy_1 = ag.Galaxy(
-        redshift=1.0, light_operated_0=light_operated, light_operated_1=light_operated
+        redshift=1.0, light_operated_0=lp_operated_0, light_operated_1=lp_operated_0
     )
     galaxy_2 = ag.Galaxy(redshift=2.0)
 
@@ -439,11 +437,9 @@ def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_
     image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
     image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
 
-    galaxy_0 = ag.Galaxy(
-        redshift=0.5, light=light_not_operated, light_operated=light_operated
-    )
+    galaxy_0 = ag.Galaxy(redshift=0.5, light=lp_0, light_operated=lp_operated_0)
     galaxy_1 = ag.Galaxy(
-        redshift=1.0, light_operated_0=light_operated, light_operated_1=light_operated
+        redshift=1.0, light_operated_0=lp_operated_0, light_operated_1=lp_operated_0
     )
     galaxy_2 = ag.Galaxy(redshift=2.0)
 
