@@ -19,7 +19,7 @@ class OperateImage:
 
     def image_2d_from(
         self,
-        grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        grid: aa.Grid2D,
         operated_only: Optional[bool] = None,
     ) -> aa.Array2D:
         raise NotImplementedError
@@ -57,8 +57,8 @@ class OperateImage:
 
     def blurred_image_2d_from(
         self,
-        grid: Union[aa.Grid2D, aa.Grid2DIterate],
-        blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        grid: aa.Grid2D,
+        blurring_grid: aa.Grid2D,
         psf: Optional[aa.Kernel2D] = None,
         convolver: aa.Convolver = None,
     ) -> aa.Array2D:
@@ -174,7 +174,7 @@ class OperateImage:
         return padded_image_2d + padded_image_2d_operated.binned
 
     def visibilities_from(
-        self, grid: Union[aa.Grid2D, aa.Grid2DIterate], transformer: aa.type.Transformer
+        self, grid: aa.Grid2D, transformer: aa.type.Transformer
     ) -> aa.Visibilities:
         """
         Evaluate the light object's 2D image from a input 2D grid of coordinates and transform this to an array of
@@ -222,15 +222,15 @@ class OperateImageList(OperateImage):
 
     def image_2d_list_from(
         self,
-        grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        grid: aa.Grid2D,
         operated_only: Optional[bool] = None,
     ):
         raise NotImplementedError
 
     def blurred_image_2d_list_from(
         self,
-        grid: Union[aa.Grid2D, aa.Grid2DIterate],
-        blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        grid: aa.Grid2D,
+        blurring_grid: aa.Grid2D,
         psf: Optional[aa.Kernel2D] = None,
         convolver: aa.Convolver = None,
     ) -> List[aa.Array2D]:
@@ -285,7 +285,7 @@ class OperateImageList(OperateImage):
         return blurred_image_2d_list
 
     def unmasked_blurred_image_2d_list_from(
-        self, grid: Union[aa.Grid2D, aa.Grid2DIterate], psf: aa.Kernel2D
+        self, grid: aa.Grid2D, psf: aa.Kernel2D
     ) -> List[aa.Array2D]:
         """
         Evaluate the light object's list of 2D images from a input 2D grid of coordinates and convolve it with a PSF,
@@ -325,7 +325,7 @@ class OperateImageList(OperateImage):
         return unmasked_blurred_image_list
 
     def visibilities_list_from(
-        self, grid: Union[aa.Grid2D, aa.Grid2DIterate], transformer: aa.type.Transformer
+        self, grid: aa.Grid2D, transformer: aa.type.Transformer
     ) -> List[aa.Array2D]:
         """
         Evaluate the light object's list of 2D image from a input 2D grid of coordinates and transform each image to
@@ -381,7 +381,7 @@ class OperateImageGalaxies(OperateImageList):
 
     def galaxy_image_2d_dict_from(
         self,
-        grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        grid: aa.Grid2D,
         operated_only: Optional[bool] = None,
     ) -> Dict["Galaxy", aa.Array2D]:
         raise NotImplementedError
