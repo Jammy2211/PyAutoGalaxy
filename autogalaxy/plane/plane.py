@@ -72,9 +72,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
     def has(self, cls: Type) -> bool:
         if self.galaxies is not None:
-            return any(
-                list(map(lambda galaxy: galaxy.has(cls=cls), self.galaxies))
-            )
+            return any(list(map(lambda galaxy: galaxy.has(cls=cls), self.galaxies)))
         return False
 
     @aa.grid_dec.grid_2d_to_structure
@@ -244,7 +242,9 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
     @property
     def galaxies_with_pixelization(self) -> List[Galaxy]:
-        return list(filter(lambda galaxy: galaxy.has(cls=aa.pix.Pixelization), self.galaxies))
+        return list(
+            filter(lambda galaxy: galaxy.has(cls=aa.pix.Pixelization), self.galaxies)
+        )
 
     @property
     def hyper_galaxies_with_pixelization_image_list(self) -> List[aa.Array2D]:
@@ -256,7 +256,9 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
     @property
     def galaxies_with_regularization(self) -> List[Galaxy]:
-        return list(filter(lambda galaxy: galaxy.has(cls=aa.reg.Regularization), self.galaxies))
+        return list(
+            filter(lambda galaxy: galaxy.has(cls=aa.reg.Regularization), self.galaxies)
+        )
 
     @property
     def regularization_list(self) -> List:

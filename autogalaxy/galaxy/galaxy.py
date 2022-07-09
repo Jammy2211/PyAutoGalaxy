@@ -21,7 +21,6 @@ from autogalaxy.profiles.light_profiles.light_profiles_operated import (
 from autogalaxy.profiles.mass_profiles import MassProfile
 
 
-
 class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     """
     @DynamicAttrs
@@ -128,7 +127,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
                 self.pixelization == other.pixelization,
                 self.redshift == other.redshift,
                 self.hyper_galaxy == other.hyper_galaxy,
-                self.cls_list_from(cls=LightProfile) == other.cls_list_from(cls=LightProfile),
+                self.cls_list_from(cls=LightProfile)
+                == other.cls_list_from(cls=LightProfile),
                 self.mass_profile_list == other.mass_profile_list,
             )
         )
@@ -139,7 +139,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             **Dictable.dict(self),
         }
 
-    def cls_list_from(self, cls: Type, cls_filtered :Optional[Type] = None) -> List:
+    def cls_list_from(self, cls: Type, cls_filtered: Optional[Type] = None) -> List:
         """
         Returns a list of all of the galaxy light profiles that inherit from the `LightProfileOperated`
         class.
@@ -157,11 +157,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
                 for value in self.__dict__.values()
                 if isinstance(value, cls) and not isinstance(value, cls_filtered)
             ]
-        return [
-            value
-            for value in self.__dict__.values()
-            if isinstance(value, cls)
-        ]
+        return [value for value in self.__dict__.values() if isinstance(value, cls)]
 
     def radial_projected_shape_slim_from(self, grid: aa.type.Grid1D2DLike) -> int:
         """
@@ -227,7 +223,10 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             or not). If this input is included as a bool, only images which are or are not already operated are summed
             and returned.
         """
-        if len(self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear)) > 0:
+        if (
+            len(self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear))
+            > 0
+        ):
             return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
 
         return np.zeros((grid.shape[0],))
@@ -262,7 +261,9 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         return [
             light_profile.image_2d_from(grid=grid, operated_only=operated_only)
-            for light_profile in self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear)
+            for light_profile in self.cls_list_from(
+                cls=LightProfile, cls_filtered=LightProfileLinear
+            )
         ]
 
     @aa.grid_dec.grid_1d_output_structure
@@ -286,7 +287,9 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
             image_1d_list = []
 
-            for light_profile in self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear):
+            for light_profile in self.cls_list_from(
+                cls=LightProfile, cls_filtered=LightProfileLinear
+            ):
 
                 grid_radial = self.grid_radial_from(
                     grid=grid, centre=light_profile.centre, angle=light_profile.angle
@@ -300,7 +303,9 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     @property
     def mass_profile_list(self) -> List[MassProfile]:
-        return [value for value in self.__dict__.values() if isinstance(value, MassProfile)]
+        return [
+            value for value in self.__dict__.values() if isinstance(value, MassProfile)
+        ]
 
     @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
@@ -538,7 +543,9 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             return sum(
                 map(
                     lambda p: p.luminosity_within_circle_from(radius=radius),
-                    self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear),
+                    self.cls_list_from(
+                        cls=LightProfile, cls_filtered=LightProfileLinear
+                    ),
                 )
             )
 

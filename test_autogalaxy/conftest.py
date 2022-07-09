@@ -215,6 +215,7 @@ def make_lp_0():
 def make_lp_1():
     return fixtures.make_lp_1()
 
+
 @pytest.fixture(name="lp_linear_0")
 def make_lp_linear_0():
     return fixtures.make_lp_linear_0()

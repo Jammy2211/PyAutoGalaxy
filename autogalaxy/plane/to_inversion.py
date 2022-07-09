@@ -30,7 +30,9 @@ class PlaneToInversion:
 
         for galaxy in self.plane.galaxies:
             if galaxy.has(cls=LightProfileLinear):
-                for light_profile_linear in galaxy.has(cls=al.lp_linear.LightProfileLinear):
+                for light_profile_linear in galaxy.cls_list_from(
+                    cls=LightProfileLinear
+                ):
 
                     lp_linear_func = LightProfileLinearObjFunc(
                         grid=source_grid_slim,

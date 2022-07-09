@@ -14,6 +14,7 @@ from autogalaxy.plane.plane import Plane
 from autogalaxy.plane.to_inversion import PlaneToInversion
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 
+
 class FitImaging(aa.FitImaging, AbstractFit):
     def __init__(
         self,
@@ -108,9 +109,14 @@ class FitImaging(aa.FitImaging, AbstractFit):
         The image passed to this function is the dataset's image with all light profile images of the plane subtracted.
         """
 
-        if self.plane.has(cls=aa.pix.Pixelization) or self.plane.has(cls=LightProfileLinear):
+        if self.plane.has(cls=aa.pix.Pixelization) or self.plane.has(
+            cls=LightProfileLinear
+        ):
 
-            if self.plane.has(cls=aa.pix.Pixelization) and self.settings_inversion.use_w_tilde:
+            if (
+                self.plane.has(cls=aa.pix.Pixelization)
+                and self.settings_inversion.use_w_tilde
+            ):
                 w_tilde = self.dataset.w_tilde
             else:
                 w_tilde = None
@@ -138,7 +144,9 @@ class FitImaging(aa.FitImaging, AbstractFit):
         If a inversion is included it is the sum of this sum and the inversion's reconstruction of the image.
         """
 
-        if self.plane.has(cls=aa.pix.Pixelization) or self.plane.has(cls=LightProfileLinear):
+        if self.plane.has(cls=aa.pix.Pixelization) or self.plane.has(
+            cls=LightProfileLinear
+        ):
 
             return self.blurred_image + self.inversion.mapped_reconstructed_data
 

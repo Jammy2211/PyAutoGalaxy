@@ -64,7 +64,7 @@ def caustics_via_magnification_via_plane_from(plane, grid):
 def test__has():
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
-    assert plane.has(cls=ag.lp.LightProfile)is False
+    assert plane.has(cls=ag.lp.LightProfile) is False
 
     plane = ag.Plane(
         galaxies=[ag.Galaxy(redshift=0.5, light_profile=ag.lp.LightProfile())],
@@ -79,7 +79,8 @@ def test__has():
         ],
         redshift=None,
     )
-    assert plane.has(cls=ag.lp.LightProfile)is True
+    assert plane.has(cls=ag.lp.LightProfile) is True
+
 
 ### Attribute Lists ###
 

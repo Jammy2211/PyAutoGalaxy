@@ -626,7 +626,9 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         """
         return [
             self.light_profile_pdf_plotter_from(index=index)
-            for index in range(len(self.galaxy_pdf_list[0].cls_list_from(cls=LightProfile)))
+            for index in range(
+                len(self.galaxy_pdf_list[0].cls_list_from(cls=LightProfile))
+            )
         ]
 
     def light_profile_pdf_plotter_from(self, index) -> LightProfilePDFPlotter:
@@ -642,7 +644,8 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             attributes of the galaxy.
         """
         light_profile_pdf_list = [
-            galaxy.cls_list_from(cls=LightProfile)[index] for galaxy in self.galaxy_pdf_list
+            galaxy.cls_list_from(cls=LightProfile)[index]
+            for galaxy in self.galaxy_pdf_list
         ]
 
         return LightProfilePDFPlotter(

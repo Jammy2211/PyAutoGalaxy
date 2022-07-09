@@ -17,7 +17,9 @@ def test__cls_list_from(lp_0, lp_linear_0):
         redshift=0.5, light_linear_0=lp_linear_0, light_linear_1=lp_linear_0
     )
 
-    cls_list = gal.cls_list_from(cls=ag.lp.LightProfile, cls_filtered=ag.lp_linear.LightProfileLinear)
+    cls_list = gal.cls_list_from(
+        cls=ag.lp.LightProfile, cls_filtered=ag.lp_linear.LightProfileLinear
+    )
 
     assert cls_list == []
 
@@ -315,6 +317,7 @@ def test__light_and_mass_profiles__contained_in_light_and_mass_profile_lists(
 
     assert 2 == len(gal_multi_profiles.cls_list_from(cls=ag.lp.LightProfile))
     assert 2 == len(gal_multi_profiles.mass_profile_list)
+
 
 def test__contribution_map_from():
 
