@@ -20,6 +20,7 @@ class GalaxyException(Exception):
     For example if stellar-mass specific calculations are used for a galaxy which does not have a stellar mas
     component.
     """
+
     pass
 
 
@@ -30,6 +31,7 @@ class PlaneException(Exception):
     For example if no galaxies or redshifts are input into a plane, such that the plane does not know its redshift
     relative to other planes.
     """
+
     pass
 
 
@@ -40,6 +42,7 @@ class AnalysisException(Exception):
     For example if the figure of merit of the analysis class's `log_likelihood_function` has changed for a resumed
     run from a previous run.
     """
+
     pass
 
 
@@ -53,6 +56,7 @@ class PixelizationException(af.exc.FitException):
     if this exception is raised during a model-fit in the analysis class's `log_likelihood_function` that model
     is resampled and does not terminate the code.
     """
+
     pass
 
 
@@ -63,4 +67,5 @@ class UnitsException(Exception):
     For example if when constructing a dark matter profile the units and format of the redshifts are input
     incorrectly.
     """
+
     pass

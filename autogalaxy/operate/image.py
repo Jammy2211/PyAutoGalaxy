@@ -18,9 +18,7 @@ class OperateImage:
     """
 
     def image_2d_from(
-        self,
-        grid: aa.Grid2D,
-        operated_only: Optional[bool] = None,
+        self, grid: aa.Grid2D, operated_only: Optional[bool] = None
     ) -> aa.Array2D:
         raise NotImplementedError
 
@@ -220,11 +218,7 @@ class OperateImageList(OperateImage):
     The methods in `OperateImageList` are inherited by light objects to provide a concise API.
     """
 
-    def image_2d_list_from(
-        self,
-        grid: aa.Grid2D,
-        operated_only: Optional[bool] = None,
-    ):
+    def image_2d_list_from(self, grid: aa.Grid2D, operated_only: Optional[bool] = None):
         raise NotImplementedError
 
     def blurred_image_2d_list_from(
@@ -380,9 +374,7 @@ class OperateImageGalaxies(OperateImageList):
     """
 
     def galaxy_image_2d_dict_from(
-        self,
-        grid: aa.Grid2D,
-        operated_only: Optional[bool] = None,
+        self, grid: aa.Grid2D, operated_only: Optional[bool] = None
     ) -> Dict["Galaxy", aa.Array2D]:
         raise NotImplementedError
 

@@ -41,10 +41,6 @@ class LightProfile(EllProfile, OperateImage):
         super().__init__(centre=centre, elliptical_comps=elliptical_comps)
         self.intensity = intensity
 
-    @property
-    def is_operated(self):
-        return False
-
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> aa.Array2D:

@@ -4,8 +4,6 @@ from typing import List, Optional, Union
 
 import autoarray as aa
 
-# from autogalaxy.profiles.light_profiles.light_profiles_operated import LightProfileOperated
-
 
 def check_operated_only(func):
     """
@@ -57,13 +55,17 @@ def check_operated_only(func):
             The 2D image, which is customized depending on whether it has been operated on.
         """
 
+        from autogalaxy.profiles.light_profiles.light_profiles_operated import (
+            LightProfileOperated,
+        )
+
         if operated_only is None:
             return func(obj, grid, operated_only, *args, **kwargs)
         elif operated_only:
-            if obj.is_operated:
+            if isinstance(obj, LightProfileOperated):
                 return func(obj, grid, operated_only, *args, **kwargs)
             return np.zeros((grid.shape[0],))
-        if not obj.is_operated:
+        if not isinstance(obj, LightProfileOperated):
             return func(obj, grid, operated_only, *args, **kwargs)
         return np.zeros((grid.shape[0],))
 

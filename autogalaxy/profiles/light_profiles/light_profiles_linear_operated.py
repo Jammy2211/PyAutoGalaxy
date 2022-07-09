@@ -3,6 +3,5 @@ from autogalaxy.profiles.light_profiles import light_profiles_linear as lp_linea
 
 
 class EllGaussian(lp_linear.EllGaussian, lp_operated.LightProfileOperated):
-    @property
-    def is_operated(self):
-        return True
+
+    pass
