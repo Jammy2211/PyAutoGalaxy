@@ -407,13 +407,10 @@ def test__image_2d_list_from(sub_grid_2d_7x7):
     assert image_of_galaxies[1].binned[1] == lp1_image_pixel_1
 
 
-def test__image_2d_from__operated_only_input(sub_grid_2d_7x7):
+def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
 
-    light_not_operated = ag.lp.EllSersic(intensity=1.0)
-    light_operated = ag.lp_operated.EllGaussian(intensity=1.0)
-
-    image_2d_not_operated = light_not_operated.image_2d_from(grid=sub_grid_2d_7x7)
-    image_2d_operated = light_operated.image_2d_from(grid=sub_grid_2d_7x7)
+    image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
+    image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
 
     galaxy_0 = ag.Galaxy(
         redshift=0.5, light=light_not_operated, light_operated=light_operated
@@ -435,6 +432,22 @@ def test__image_2d_from__operated_only_input(sub_grid_2d_7x7):
     assert image_2d == pytest.approx(
         image_2d_not_operated + 3.0 * image_2d_operated, 1.0e-4
     )
+
+
+def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
+
+    image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
+    image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
+
+    galaxy_0 = ag.Galaxy(
+        redshift=0.5, light=light_not_operated, light_operated=light_operated
+    )
+    galaxy_1 = ag.Galaxy(
+        redshift=1.0, light_operated_0=light_operated, light_operated_1=light_operated
+    )
+    galaxy_2 = ag.Galaxy(redshift=2.0)
+
+    plane = ag.Plane(galaxies=[galaxy_0, galaxy_1, galaxy_2])
 
     image_2d_list = plane.image_2d_list_from(grid=sub_grid_2d_7x7, operated_only=False)
     assert image_2d_list[0] == pytest.approx(image_2d_not_operated, 1.0e-4)
