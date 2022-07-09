@@ -86,7 +86,7 @@ class FitImaging(aa.FitImaging, AbstractFit):
         """
         Returns the image of all light profiles in the fit's plane convolved with the imaging dataset's PSF.
         """
-        return self.plane.blurred_image_2d_via_convolver_from(
+        return self.plane.blurred_image_2d_from(
             grid=self.dataset.grid,
             convolver=self.dataset.convolver,
             blurring_grid=self.dataset.blurring_grid,
@@ -158,7 +158,7 @@ class FitImaging(aa.FitImaging, AbstractFit):
         A dictionary associating galaxies with their corresponding model images
         """
 
-        galaxy_blurred_image_2d_dict = self.plane.galaxy_blurred_image_2d_dict_via_convolver_from(
+        galaxy_blurred_image_2d_dict = self.plane.galaxy_blurred_image_2d_dict_from(
             grid=self.grid,
             convolver=self.imaging.convolver,
             blurring_grid=self.imaging.blurring_grid,
@@ -197,13 +197,13 @@ class FitImaging(aa.FitImaging, AbstractFit):
 
     @property
     def unmasked_blurred_image(self):
-        return self.plane.unmasked_blurred_image_2d_via_psf_from(
+        return self.plane.unmasked_blurred_image_2d_from(
             grid=self.grid, psf=self.imaging.psf
         )
 
     @property
     def unmasked_blurred_image_of_galaxies_list(self):
-        return self.plane.unmasked_blurred_image_2d_list_via_psf_from(
+        return self.plane.unmasked_blurred_image_2d_list_from(
             grid=self.grid, psf=self.imaging.psf
         )
 

@@ -26,7 +26,7 @@ class EllGaussian(MassProfile, StellarProfile):
         centre: Tuple[float, float] = (0.0, 0.0),
         elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
-        sigma: float = 0.01,
+        sigma: float = 1.0,
         mass_to_light_ratio: float = 1.0,
     ):
         """

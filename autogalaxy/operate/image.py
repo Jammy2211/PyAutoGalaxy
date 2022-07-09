@@ -1,7 +1,9 @@
 import numpy as np
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 import autoarray as aa
+
+from autogalaxy import exc
 
 
 class OperateImage:
@@ -15,14 +17,48 @@ class OperateImage:
     The methods in `OperateImage` are inherited by light objects to provide a concise API.
     """
 
-    def image_2d_from(self, grid: Union[aa.Grid2D, aa.Grid2DIterate]) -> aa.Array2D:
+    def image_2d_from(
+        self, grid: aa.Grid2D, operated_only: Optional[bool] = None
+    ) -> aa.Array2D:
         raise NotImplementedError
 
-    def blurred_image_2d_via_psf_from(
+    @property
+    def has_light_profile_operated(self) -> bool:
+        raise NotImplementedError
+
+    def _blurred_image_2d_from(
         self,
-        grid: Union[aa.Grid2D, aa.Grid2DIterate],
-        psf: aa.Kernel2D,
-        blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        image_2d: aa.Array2D,
+        blurring_image_2d: aa.Array2D,
+        psf: Optional[aa.Kernel2D],
+        convolver: aa.Convolver,
+    ) -> aa.Array2D:
+
+        if psf is not None:
+
+            return psf.convolved_array_with_mask_from(
+                array=image_2d.binned.native + blurring_image_2d.binned.native,
+                mask=image_2d.mask,
+            )
+
+        elif convolver is not None:
+
+            return convolver.convolve_image(
+                image=image_2d, blurring_image=blurring_image_2d
+            )
+
+        else:
+
+            raise exc.OperateException(
+                "A PSF or Convolver was not passed to the `blurred_image_2d_list_from()` function."
+            )
+
+    def blurred_image_2d_from(
+        self,
+        grid: aa.Grid2D,
+        blurring_grid: aa.Grid2D,
+        psf: Optional[aa.Kernel2D] = None,
+        convolver: aa.Convolver = None,
     ) -> aa.Array2D:
         """
         Evaluate the light object's 2D image from a input 2D grid of coordinates and convolve it with a PSF.
@@ -44,54 +80,34 @@ class OperateImage:
             The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
         """
 
-        image_2d = self.image_2d_from(grid=grid)
-        blurring_image_2d = self.image_2d_from(grid=blurring_grid)
-
-        return psf.convolved_array_with_mask_from(
-            array=image_2d.binned.native + blurring_image_2d.binned.native,
-            mask=grid.mask,
+        image_2d_not_operated = self.image_2d_from(grid=grid, operated_only=False)
+        blurring_image_2d_not_operated = self.image_2d_from(
+            grid=blurring_grid, operated_only=False
         )
 
-    def blurred_image_2d_via_convolver_from(
-        self,
-        grid: Union[aa.Grid2D, aa.Grid2DIterate],
-        convolver: aa.Convolver,
-        blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
-    ) -> aa.Array2D:
-        """
-        Evaluate the light object's 2D image from a input 2D grid of coordinates and convolve it with a PSF, using a
-        `autoarray.operators.convolver.Convolver` object. The `Convolver` object performs the 2D convolution operations
-        using 1D NumPy arrays without mapping them to 2D, which is more efficient.
-
-        The input 2D grid may be masked, in which case values outside but near the edge of the mask will convolve light
-        into the mask. A blurring grid is therefore required, which contains image pixels on the mask edge whose light
-        is blurred into the light object's image by the PSF.
-
-        The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D
-        array and binned up for convolution. They therefore cannot be `Grid2DIrregular` objects.
-
-        Parameters
-        ----------
-        grid
-            The 2D (y,x) coordinates of the (masked) grid, in its original geometric reference frame.
-        convolver
-            The convolver object used perform PSF convolution on 1D numpy arrays.
-        blurring_grid
-            The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
-        """
-
-        image_2d = self.image_2d_from(grid=grid)
-        blurring_image_2d = self.image_2d_from(grid=blurring_grid)
-
-        return convolver.convolve_image(
-            image=image_2d.binned, blurring_image=blurring_image_2d.binned
+        blurred_image_2d = self._blurred_image_2d_from(
+            image_2d=image_2d_not_operated.binned,
+            blurring_image_2d=blurring_image_2d_not_operated.binned,
+            psf=psf,
+            convolver=convolver,
         )
+
+        try:
+            has_light_profile_operated = self.has_light_profile_operated
+        except NotImplementedError:
+            has_light_profile_operated = True
+
+        if has_light_profile_operated:
+            image_2d_operated = self.image_2d_from(grid=grid, operated_only=True)
+            return blurred_image_2d + image_2d_operated.binned
+
+        return blurred_image_2d
 
     def padded_image_2d_from(self, grid, psf_shape_2d):
         """
         Evaluate the light object's 2D image from a input 2D grid of padded coordinates, where this padding is
         sufficient to encapsulate all surrounding pixels that will blur light into the original image given the
-        2D shape of the PSF's kernel..
+        2D shape of the PSF's kernel.
 
         Convolving an unmasked 2D image with a PSF requires care, because at the edges of the 2D image the light
         profile values will not be evaluated beyond its edge, even though some of its light will be blurred into these
@@ -111,7 +127,7 @@ class OperateImage:
 
         return self.image_2d_from(grid=padded_grid)
 
-    def unmasked_blurred_image_2d_via_psf_from(self, grid, psf):
+    def unmasked_blurred_image_2d_from(self, grid, psf):
         """
         Evaluate the light object's 2D image from a input 2D grid of coordinates and convolve it with a PSF, using a
         grid which is not masked.
@@ -135,14 +151,28 @@ class OperateImage:
         """
         padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
 
-        padded_image = self.image_2d_from(grid=padded_grid)
-
-        return padded_grid.mask.unmasked_blurred_array_from(
-            padded_array=padded_image, psf=psf, image_shape=grid.mask.shape
+        padded_image_2d_not_operated = self.image_2d_from(
+            grid=padded_grid, operated_only=False
         )
 
-    def visibilities_via_transformer_from(
-        self, grid: Union[aa.Grid2D, aa.Grid2DIterate], transformer: aa.type.Transformer
+        padded_image_2d = padded_grid.mask.unmasked_blurred_array_from(
+            padded_array=padded_image_2d_not_operated,
+            psf=psf,
+            image_shape=grid.mask.shape,
+        )
+
+        padded_image_2d_operated = self.image_2d_from(
+            grid=padded_grid, operated_only=True
+        )
+
+        padded_image_2d_operated = padded_grid.mask.trimmed_array_from(
+            padded_array=padded_image_2d_operated, image_shape=grid.mask.shape
+        )
+
+        return padded_image_2d + padded_image_2d_operated.binned
+
+    def visibilities_from(
+        self, grid: aa.Grid2D, transformer: aa.type.Transformer
     ) -> aa.Visibilities:
         """
         Evaluate the light object's 2D image from a input 2D grid of coordinates and transform this to an array of
@@ -188,14 +218,15 @@ class OperateImageList(OperateImage):
     The methods in `OperateImageList` are inherited by light objects to provide a concise API.
     """
 
-    def image_2d_list_from(self, grid: Union[aa.Grid2D, aa.Grid2DIterate]):
+    def image_2d_list_from(self, grid: aa.Grid2D, operated_only: Optional[bool] = None):
         raise NotImplementedError
 
-    def blurred_image_2d_list_via_psf_from(
+    def blurred_image_2d_list_from(
         self,
-        grid: Union[aa.Grid2D, aa.Grid2DIterate],
-        psf,
-        blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
+        grid: aa.Grid2D,
+        blurring_grid: aa.Grid2D,
+        psf: Optional[aa.Kernel2D] = None,
+        convolver: aa.Convolver = None,
     ) -> List[aa.Array2D]:
         """
         Evaluate the light object's list of 2D images from a input 2D grid of coordinates and convolve each image with
@@ -218,66 +249,37 @@ class OperateImageList(OperateImage):
             The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
         """
 
-        image_2d_list = self.image_2d_list_from(grid=grid)
-        blurring_image_2d_list = self.image_2d_list_from(grid=blurring_grid)
+        image_2d_operated_list = self.image_2d_list_from(grid=grid, operated_only=True)
+
+        image_2d_not_operated_list = self.image_2d_list_from(
+            grid=grid, operated_only=False
+        )
+        blurring_image_2d_not_operated_list = self.image_2d_list_from(
+            grid=blurring_grid, operated_only=False
+        )
 
         blurred_image_2d_list = []
 
-        for image_2d, blurring_image_2d in zip(image_2d_list, blurring_image_2d_list):
+        for i in range(len(image_2d_operated_list)):
 
-            blurred_image_2d = psf.convolved_array_with_mask_from(
-                array=image_2d.binned.native + blurring_image_2d.binned.native,
-                mask=grid.mask,
+            image_2d_not_operated = image_2d_not_operated_list[i]
+            blurring_image_2d_not_operated = blurring_image_2d_not_operated_list[i]
+
+            blurred_image_2d = self._blurred_image_2d_from(
+                image_2d=image_2d_not_operated,
+                blurring_image_2d=blurring_image_2d_not_operated,
+                psf=psf,
+                convolver=convolver,
             )
 
-            blurred_image_2d_list.append(blurred_image_2d)
+            image_2d_operated = image_2d_operated_list[i].binned
+
+            blurred_image_2d_list.append(image_2d_operated + blurred_image_2d)
 
         return blurred_image_2d_list
 
-    def blurred_image_2d_list_via_convolver_from(
-        self,
-        grid: Union[aa.Grid2D, aa.Grid2DIterate],
-        convolver: aa.Convolver,
-        blurring_grid: Union[aa.Grid2D, aa.Grid2DIterate],
-    ) -> List[aa.Array2D]:
-        """
-        Evaluate the light object's list of 2D images from a input 2D grid of coordinates and convolve each image with
-        a PSF, using a `autoarray.operators.convolver.Convolver` object. The `Convolver` object performs the 2D
-        convolution operations using 1D NumPy arrays without mapping them to 2D, which is more efficient.
-
-        The input 2D grid may be masked, in which case values outside but near the edge of the mask will convolve light
-        into the mask. A blurring grid is therefore required, which contains image pixels on the mask edge whose light
-        is blurred into the light object's image by the PSF.
-
-        The grid and blurring_grid must be a `Grid2D` objects so the evaluated image can be mapped to a uniform 2D
-        array and binned up for convolution. They therefore cannot be `Grid2DIrregular` objects.
-
-        Parameters
-        ----------
-        grid
-            The 2D (y,x) coordinates of the (masked) grid, in its original geometric reference frame.
-        convolver
-            The convolver object used perform PSF convolution on 1D numpy arrays.
-        blurring_grid
-            The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
-        """
-        image_2d_list = self.image_2d_list_from(grid=grid)
-        blurring_image_2d_list = self.image_2d_list_from(grid=blurring_grid)
-
-        blurred_image_2d_list = []
-
-        for image_2d, blurring_image_2d in zip(image_2d_list, blurring_image_2d_list):
-
-            blurred_image_2d = convolver.convolve_image(
-                image=image_2d.binned, blurring_image=blurring_image_2d.binned
-            )
-
-            blurred_image_2d_list.append(blurred_image_2d)
-
-        return blurred_image_2d_list
-
-    def unmasked_blurred_image_2d_list_via_psf_from(
-        self, grid: Union[aa.Grid2D, aa.Grid2DIterate], psf: aa.Kernel2D
+    def unmasked_blurred_image_2d_list_from(
+        self, grid: aa.Grid2D, psf: aa.Kernel2D
     ) -> List[aa.Array2D]:
         """
         Evaluate the light object's list of 2D images from a input 2D grid of coordinates and convolve it with a PSF,
@@ -316,8 +318,8 @@ class OperateImageList(OperateImage):
 
         return unmasked_blurred_image_list
 
-    def visibilities_list_via_transformer_from(
-        self, grid: Union[aa.Grid2D, aa.Grid2DIterate], transformer: aa.type.Transformer
+    def visibilities_list_from(
+        self, grid: aa.Grid2D, transformer: aa.type.Transformer
     ) -> List[aa.Array2D]:
         """
         Evaluate the light object's list of 2D image from a input 2D grid of coordinates and transform each image to
@@ -372,11 +374,11 @@ class OperateImageGalaxies(OperateImageList):
     """
 
     def galaxy_image_2d_dict_from(
-        self, grid: Union[aa.Grid2D, aa.Grid2DIterate]
+        self, grid: aa.Grid2D, operated_only: Optional[bool] = None
     ) -> Dict["Galaxy", aa.Array2D]:
         raise NotImplementedError
 
-    def galaxy_blurred_image_2d_dict_via_convolver_from(
+    def galaxy_blurred_image_2d_dict_from(
         self, grid, convolver, blurring_grid
     ) -> Dict["Galaxy", aa.Array2D]:
         """
@@ -400,27 +402,40 @@ class OperateImageGalaxies(OperateImageList):
             The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
         """
 
-        galaxy_image_2d_dict = self.galaxy_image_2d_dict_from(grid=grid)
-        galaxy_blurring_image_2d_dict = self.galaxy_image_2d_dict_from(
-            grid=blurring_grid
+        galaxy_image_2d_not_operated_dict = self.galaxy_image_2d_dict_from(
+            grid=grid, operated_only=False
+        )
+        galaxy_blurring_image_2d_not_operated_dict = self.galaxy_image_2d_dict_from(
+            grid=blurring_grid, operated_only=False
+        )
+
+        galaxy_image_2d_operated_dict = self.galaxy_image_2d_dict_from(
+            grid=grid, operated_only=True
         )
 
         galaxy_blurred_image_2d_dict = {}
 
-        for galaxy_key in galaxy_image_2d_dict.keys():
+        for galaxy_key in galaxy_image_2d_not_operated_dict.keys():
 
-            image_2d = galaxy_image_2d_dict[galaxy_key]
-            blurring_image_2d = galaxy_blurring_image_2d_dict[galaxy_key]
+            image_2d_not_operated = galaxy_image_2d_not_operated_dict[galaxy_key]
+            blurring_image_2d_not_operated = galaxy_blurring_image_2d_not_operated_dict[
+                galaxy_key
+            ]
 
             blurred_image_2d = convolver.convolve_image(
-                image=image_2d.binned, blurring_image=blurring_image_2d.binned
+                image=image_2d_not_operated.binned,
+                blurring_image=blurring_image_2d_not_operated.binned,
             )
 
-            galaxy_blurred_image_2d_dict[galaxy_key] = blurred_image_2d
+            image_2d_operated = galaxy_image_2d_operated_dict[galaxy_key].binned
+
+            galaxy_blurred_image_2d_dict[galaxy_key] = (
+                image_2d_operated + blurred_image_2d
+            )
 
         return galaxy_blurred_image_2d_dict
 
-    def galaxy_visibilities_dict_via_transformer_from(
+    def galaxy_visibilities_dict_from(
         self, grid, transformer
     ) -> Dict["Galaxy", aa.Visibilities]:
         """
