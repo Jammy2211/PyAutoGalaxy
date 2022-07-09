@@ -361,7 +361,7 @@ class GalaxyPlotter(Plotter):
                 if change_filename:
                     multi_plotter.plotter_list[0].set_filename(filename=None)
 
-        if self.galaxy.has_mass_profile:
+        if self.galaxy.has(cls=MassProfile):
 
             multi_plotter = aplt.MultiYX1DPlotter(
                 plotter_list=self.decomposed_mass_profile_plotter_list,

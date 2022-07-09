@@ -82,27 +82,6 @@ def test__has():
     assert plane.has(cls=ag.lp.LightProfile)is True
 
 
-def test__has_mass_profile():
-
-    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
-    assert plane.has_mass_profile is False
-
-    plane = ag.Plane(
-        galaxies=[ag.Galaxy(redshift=0.5, mass_profile=ag.mp.MassProfile())],
-        redshift=None,
-    )
-    assert plane.has_mass_profile is True
-
-    plane = ag.Plane(
-        galaxies=[
-            ag.Galaxy(redshift=0.5, mass_profile=ag.mp.MassProfile()),
-            ag.Galaxy(redshift=0.5),
-        ],
-        redshift=None,
-    )
-    assert plane.has_mass_profile is True
-
-
 def test__has_light_profile_linear():
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)

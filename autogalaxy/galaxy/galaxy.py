@@ -160,7 +160,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     @property
     def has_profile(self) -> bool:
-        return self.has_mass_profile or self.has(cls=LightProfile)
+        return self.has(cls=MassProfile) or self.has(cls=LightProfile)
 
     @property
     def light_profile_list(self) -> List[LightProfile]:
@@ -344,10 +344,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     def mass_profile_list(self) -> List[MassProfile]:
         return [value for value in self.__dict__.values() if is_mass_profile(value)]
 
-    @property
-    def has_mass_profile(self) -> bool:
-        return self.has(MassProfile)
-
     @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
@@ -368,7 +364,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         grid
             The 2D (y, x) coordinates where values of the deflection angles are evaluated.
         """
-        if self.has_mass_profile:
+        if self.has(cls=MassProfile):
             return sum(
                 map(
                     lambda p: p.deflections_yx_2d_from(grid=grid),
@@ -395,7 +391,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         grid
             The 2D (y, x) coordinates where values of the convergence are evaluated.
         """
-        if self.has_mass_profile:
+        if self.has(cls=MassProfile):
             return sum(
                 map(lambda p: p.convergence_2d_from(grid=grid), self.mass_profile_list)
             )
@@ -418,7 +414,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         grid
             The 1D (x,) coordinates where values of the convergence are evaluated.
         """
-        if self.has_mass_profile:
+        if self.has(cls=MassProfile):
 
             convergence_1d_list = []
 
@@ -454,7 +450,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         grid
             The 2D (y, x) coordinates where values of the potential are evaluated.
         """
-        if self.has_mass_profile:
+        if self.has(cls=MassProfile):
             return sum(
                 map(lambda p: p.potential_2d_from(grid=grid), self.mass_profile_list)
             )
@@ -477,7 +473,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         grid
             The 1D (x,) coordinates where values of the potential are evaluated.
         """
-        if self.has_mass_profile:
+        if self.has(cls=MassProfile):
 
             potential_1d_list = []
 
@@ -620,7 +616,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             The critical surface mass density of the strong lens configuration, which converts mass from angulalr \
             unit_label to phsical unit_label (e.g. solar masses).
         """
-        if self.has_mass_profile:
+        if self.has(cls=MassProfile):
             return sum(
                 map(
                     lambda p: p.mass_angular_within_circle_from(radius=radius),

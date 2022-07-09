@@ -10,6 +10,7 @@ from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.to_inversion import PlaneToInversion
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
+from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.operate.image import OperateImageGalaxies
 from autogalaxy.operate.deflections import OperateDeflections
 
@@ -168,13 +169,8 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         )
 
     @property
-    def has_mass_profile(self) -> bool:
-        if self.galaxies is not None:
-            return any(list(map(lambda galaxy: galaxy.has_mass_profile, self.galaxies)))
-
-    @property
     def galaxies_with_mass_profile(self) -> List[Galaxy]:
-        return list(filter(lambda galaxy: galaxy.has_mass_profile, self.galaxies))
+        return list(filter(lambda galaxy: galaxy.has(cls=MassProfile), self.galaxies))
 
     @property
     def mass_profile_list(self) -> List:
@@ -189,7 +185,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return [
             galaxy.mass_profile_list
             for galaxy in self.galaxies
-            if galaxy.has_mass_profile
+            if galaxy.has(cls=MassProfile)
         ]
 
     @aa.grid_dec.grid_2d_to_vector_yx

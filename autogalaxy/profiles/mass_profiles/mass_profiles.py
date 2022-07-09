@@ -68,10 +68,6 @@ class MassProfile(EllProfile, OperateDeflections):
     def potential_func(self, u, y, x):
         raise NotImplementedError
 
-    @property
-    def has_mass_profile(self):
-        return True
-
     def mass_integral(self, x):
         return 2 * np.pi * x * self.convergence_func(grid_radius=x)
 
