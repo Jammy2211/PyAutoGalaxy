@@ -398,24 +398,6 @@ def test__extract_attribute():
     assert values.in_list == [1.0, 2.0, 3.0]
 
 
-def test__light_profile_operated_list(lp_0):
-
-    lp_operated = ag.lp_operated.EllGaussian()
-
-    gal = ag.Galaxy(redshift=0.5, light_0=lp_0)
-
-    assert gal.light_profile_operated_list == []
-
-    gal = ag.Galaxy(
-        redshift=0.5,
-        light_0=lp_0,
-        light_operated_0=lp_operated,
-        light_operated_1=lp_operated,
-    )
-
-    assert gal.light_profile_operated_list == [lp_operated, lp_operated]
-
-
 def test__image_2d_from__does_not_include_linear_light_profiles(sub_grid_2d_7x7, lp_0):
 
     lp_linear = ag.lp_linear.EllSersic(effective_radius=2.0, sersic_index=2.0)

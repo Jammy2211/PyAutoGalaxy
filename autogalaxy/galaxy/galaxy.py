@@ -139,29 +139,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             **Dictable.dict(self),
         }
 
-    def cls_list_from(self, cls: Type, cls_filtered = None) -> List:
-        if cls_filtered is not None:
-            return [
-                value
-                for value in self.__dict__.values()
-                if isinstance(value, cls) and not isinstance(value, cls_filtered)
-            ]
-        return [
-            value
-            for value in self.__dict__.values()
-            if isinstance(value, cls)
-        ]
-
-    @property
-    def light_profile_linear_list(self) -> List[LightProfileLinear]:
-        return [
-            value
-            for value in self.__dict__.values()
-            if isinstance(value, LightProfileLinear)
-        ]
-
-    @property
-    def light_profile_operated_list(self) -> List[LightProfileOperated]:
+    def cls_list_from(self, cls: Type, cls_filtered :Optional[Type] = None) -> List:
         """
         Returns a list of all of the galaxy light profiles that inherit from the `LightProfileOperated`
         class.
@@ -173,10 +151,16 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         -------
             The light of light profiles in the galaxy that inherit from the `LightProfileOperated` class.
         """
+        if cls_filtered is not None:
+            return [
+                value
+                for value in self.__dict__.values()
+                if isinstance(value, cls) and not isinstance(value, cls_filtered)
+            ]
         return [
             value
             for value in self.__dict__.values()
-            if isinstance(value, LightProfileOperated)
+            if isinstance(value, cls)
         ]
 
     def radial_projected_shape_slim_from(self, grid: aa.type.Grid1D2DLike) -> int:
