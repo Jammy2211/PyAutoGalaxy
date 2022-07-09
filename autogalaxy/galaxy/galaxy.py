@@ -175,7 +175,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         return [
             value
             for value in self.__dict__.values()
-            if is_light_profile(value) and isinstance(value, LightProfileLinear)
+            if isinstance(value, LightProfileLinear)
         ]
 
     @property
@@ -184,10 +184,21 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     @property
     def light_profile_operated_list(self) -> List[LightProfileOperated]:
+        """
+        Returns a list of all of the galaxy light profiles that inherit from the `LightProfileOperated`
+        class.
+
+        This means the light profiles have already had operated applied to them (e.g. convolution from an imaging
+        datasset's PSF) such that they are omitted from convolution in functions which perform blurring.
+
+        Returns
+        -------
+            The light of light profiles in the galaxy that inherit from the `LightProfileOperated` class.
+        """
         return [
             value
             for value in self.__dict__.values()
-            if is_light_profile(value) and isinstance(value, LightProfileOperated)
+            if isinstance(value, LightProfileOperated)
         ]
 
     @property
