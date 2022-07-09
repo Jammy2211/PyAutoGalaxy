@@ -4,6 +4,10 @@ from autoarray.exc import *
 
 
 class CosmologyException(Exception):
+    """
+    Raises exceptions associated with
+
+    """
     pass
 
 
