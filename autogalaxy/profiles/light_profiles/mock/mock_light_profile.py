@@ -6,8 +6,6 @@ from autogalaxy.profiles.light_profiles.light_profile_decorators import (
 )
 import autogalaxy as ag
 
-# MockProfiles #
-
 
 class MockLightProfile(ag.lp.LightProfile):
     def __init__(
@@ -28,7 +26,6 @@ class MockLightProfile(ag.lp.LightProfile):
         self.value = value
         self.value1 = value1
 
-    #
     @check_operated_only
     def image_2d_from(self, grid, operated_only: Optional[bool] = None):
 
