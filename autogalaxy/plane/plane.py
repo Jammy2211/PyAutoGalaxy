@@ -10,6 +10,7 @@ from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxy import HyperGalaxy
 from autogalaxy.plane.to_inversion import PlaneToInversion
+from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
 from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.operate.image import OperateImageGalaxies
@@ -428,7 +429,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     ):
 
         for galaxy in self.galaxies:
-            for light_profile in galaxy.light_profile_list:
+            for light_profile in galaxy.cls_list_from(cls=LightProfile):
                 if isinstance(light_profile, LightProfileSNR):
                     light_profile.set_intensity_from(
                         grid=grid,

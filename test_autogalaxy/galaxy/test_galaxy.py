@@ -5,6 +5,31 @@ import pytest
 from autogalaxy import exc
 
 
+def test__cls_list_from(lp_0, lp_linear_0):
+
+    gal = ag.Galaxy(redshift=0.5, light_0=lp_0)
+
+    cls_list = gal.cls_list_from(cls=ag.lp.LightProfile)
+
+    assert cls_list == [lp_0]
+
+    gal = ag.Galaxy(
+        redshift=0.5, light_linear_0=lp_linear_0, light_linear_1=lp_linear_0
+    )
+
+    cls_list = gal.cls_list_from(cls=ag.lp.LightProfile, cls_filtered=ag.lp_linear.LightProfileLinear)
+
+    assert cls_list == []
+
+    cls_list = gal.cls_list_from(cls=ag.lp.LightProfile)
+
+    assert cls_list == [lp_linear_0, lp_linear_0]
+
+    cls_list = gal.cls_list_from(cls=ag.lp_linear.LightProfileLinear)
+
+    assert cls_list == [lp_linear_0, lp_linear_0]
+
+
 def test__image_1d_from(sub_grid_1d_7, lp_0, lp_1, gal_x2_lp):
 
     grid = ag.Grid2D.manual_native([[[1.05, -0.55]]], pixel_scales=1.0)
@@ -280,15 +305,15 @@ def test__light_and_mass_profiles__contained_in_light_and_mass_profile_lists(
 ):
     gal_x1_lmp = ag.Galaxy(redshift=0.5, profile=lmp_0)
 
-    assert 1 == len(gal_x1_lmp.light_profile_list)
+    assert 1 == len(gal_x1_lmp.cls_list_from(cls=ag.lp.LightProfile))
     assert 1 == len(gal_x1_lmp.mass_profile_list)
 
     assert gal_x1_lmp.mass_profile_list[0] == lmp_0
-    assert gal_x1_lmp.light_profile_list[0] == lmp_0
+    assert gal_x1_lmp.cls_list_from(cls=ag.lp.LightProfile)[0] == lmp_0
 
     gal_multi_profiles = ag.Galaxy(redshift=0.5, profile=lmp_0, light=lp_0, sie=mp_0)
 
-    assert 2 == len(gal_multi_profiles.light_profile_list)
+    assert 2 == len(gal_multi_profiles.cls_list_from(cls=ag.lp.LightProfile))
     assert 2 == len(gal_multi_profiles.mass_profile_list)
 
 def test__contribution_map_from():
@@ -371,21 +396,6 @@ def test__extract_attribute():
     values = galaxy.extract_attribute(cls=ag.lp.LightProfile, attr_name="value")
 
     assert values.in_list == [1.0, 2.0, 3.0]
-
-
-def test__light_profile_linear_list(lp_0):
-
-    lp_linear = ag.lp_linear.EllSersic(sersic_index=10.0)
-
-    gal = ag.Galaxy(redshift=0.5, light_0=lp_0)
-
-    assert gal.light_profile_linear_list == []
-
-    gal = ag.Galaxy(
-        redshift=0.5, light_0=lp_0, light_linear_0=lp_linear, light_linear_1=lp_linear
-    )
-
-    assert gal.light_profile_linear_list == [lp_linear, lp_linear]
 
 
 def test__light_profile_operated_list(lp_0):

@@ -192,7 +192,7 @@ class GalaxyPlotter(Plotter):
 
         plotter_list = []
 
-        for i, light_profile in enumerate(self.galaxy.light_profile_list):
+        for i, light_profile in enumerate(self.galaxy.cls_list_from(cls=LightProfile)):
 
             light_profile_plotter = self.light_profile_plotter_from(
                 light_profile=light_profile, one_d_only=True
@@ -484,7 +484,7 @@ class GalaxyPlotter(Plotter):
         """
         light_profile_plotters = [
             self.light_profile_plotter_from(light_profile)
-            for light_profile in self.galaxy.light_profile_list
+            for light_profile in self.galaxy.cls_list_from(cls=LightProfile)
         ]
 
         if image:
@@ -626,7 +626,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         """
         return [
             self.light_profile_pdf_plotter_from(index=index)
-            for index in range(len(self.galaxy_pdf_list[0].light_profile_list))
+            for index in range(len(self.galaxy_pdf_list[0].cls_list_from(cls=LightProfile)))
         ]
 
     def light_profile_pdf_plotter_from(self, index) -> LightProfilePDFPlotter:
@@ -642,7 +642,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             attributes of the galaxy.
         """
         light_profile_pdf_list = [
-            galaxy.light_profile_list[index] for galaxy in self.galaxy_pdf_list
+            galaxy.cls_list_from(cls=LightProfile)[index] for galaxy in self.galaxy_pdf_list
         ]
 
         return LightProfilePDFPlotter(

@@ -1,5 +1,5 @@
 from itertools import count
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Type, Union
 
 import numpy as np
 
@@ -19,7 +19,6 @@ from autogalaxy.profiles.light_profiles.light_profiles_operated import (
     LightProfileOperated,
 )
 from autogalaxy.profiles.mass_profiles import MassProfile
-from autogalaxy.profiles.point_sources import Point
 
 
 
@@ -55,10 +54,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             
         Attributes
         ----------
-        light_profile_list
-            A list of the galaxy's light profiles.
-        mass_profile_list
-            A list of the galaxy's mass profiles.
         hyper_model_image
             The best-fit model image to the observed image from a previous analysis
             search. This provides the total light attributed to each image pixel by the
@@ -116,9 +111,9 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             string += "\nRegularization:\n{}".format(str(self.regularization))
         if self.hyper_galaxy:
             string += "\nHyper Galaxy:\n{}".format(str(self.hyper_galaxy))
-        if self.light_profile_list:
+        if self.cls_list_from(cls=LightProfile):
             string += "\nLight Profiles:\n{}".format(
-                "\n".join(map(str, self.light_profile_list))
+                "\n".join(map(str, self.cls_list_from(cls=LightProfile)))
             )
         if self.mass_profile_list:
             string += "\nMass Profiles:\n{}".format(
@@ -133,7 +128,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
                 self.pixelization == other.pixelization,
                 self.redshift == other.redshift,
                 self.hyper_galaxy == other.hyper_galaxy,
-                self.light_profile_list == other.light_profile_list,
+                self.cls_list_from(cls=LightProfile) == other.cls_list_from(cls=LightProfile),
                 self.mass_profile_list == other.mass_profile_list,
             )
         )
@@ -144,12 +139,17 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             **Dictable.dict(self),
         }
 
-    @property
-    def light_profile_list(self) -> List[LightProfile]:
+    def cls_list_from(self, cls: Type, cls_filtered = None) -> List:
+        if cls_filtered is not None:
+            return [
+                value
+                for value in self.__dict__.values()
+                if isinstance(value, cls) and not isinstance(value, cls_filtered)
+            ]
         return [
             value
             for value in self.__dict__.values()
-            if isinstance(value, LightProfile) and not isinstance(value, LightProfileLinear)
+            if isinstance(value, cls)
         ]
 
     @property
@@ -243,7 +243,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             or not). If this input is included as a bool, only images which are or are not already operated are summed
             and returned.
         """
-        if len(self.light_profile_list) > 0:
+        if len(self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear)) > 0:
             return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
 
         return np.zeros((grid.shape[0],))
@@ -278,7 +278,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         return [
             light_profile.image_2d_from(grid=grid, operated_only=operated_only)
-            for light_profile in self.light_profile_list
+            for light_profile in self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear)
         ]
 
     @aa.grid_dec.grid_1d_output_structure
@@ -302,7 +302,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
             image_1d_list = []
 
-            for light_profile in self.light_profile_list:
+            for light_profile in self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear):
 
                 grid_radial = self.grid_radial_from(
                     grid=grid, centre=light_profile.centre, angle=light_profile.angle
@@ -539,22 +539,22 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         Returns the total luminosity of the galaxy's light profiles within a circle of specified radius.
 
-            See *light_profile_list.luminosity_within_circle* for details of how this is performed.
+        See `light_profile.luminosity_within_circle` for details of how this is performed.
 
-            Parameters
-            ----------
-            radius
-                The radius of the circle to compute the dimensionless mass within.
-            unit_luminosity
-                The unit_label the luminosity is returned in {esp, counts}.
-            exposure_time
-                The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
+        Parameters
+        ----------
+        radius
+            The radius of the circle to compute the dimensionless mass within.
+        unit_luminosity
+            The unit_label the luminosity is returned in {esp, counts}.
+        exposure_time
+            The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
         """
         if self.has(cls=LightProfile):
             return sum(
                 map(
                     lambda p: p.luminosity_within_circle_from(radius=radius),
-                    self.light_profile_list,
+                    self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear),
                 )
             )
 

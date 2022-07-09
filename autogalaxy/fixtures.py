@@ -37,6 +37,11 @@ def make_lp_1():
     return ag.lp.SphSersic(intensity=2.0, effective_radius=2.0, sersic_index=2.0)
 
 
+def make_lp_linear_0():
+    # noinspection PyTypeChecker
+    return ag.lp_linear.EllGaussian()
+
+
 def make_lp_operated_0():
     # noinspection PyTypeChecker
     return ag.lp_operated.EllGaussian(intensity=1.0)

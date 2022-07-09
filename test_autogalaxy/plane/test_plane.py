@@ -207,7 +207,7 @@ def test__hyper_galaxy_image_list():
 
 
 def test__image_2d_from(sub_grid_2d_7x7, gal_x1_lp):
-    light_profile = gal_x1_lp.light_profile_list[0]
+    light_profile = gal_x1_lp.cls_list_from(cls=ag.lp.LightProfile)[0]
 
     lp_image = light_profile.image_2d_from(grid=sub_grid_2d_7x7)
 
@@ -263,8 +263,8 @@ def test__image_2d_list_from(sub_grid_2d_7x7):
     g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
     g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
 
-    lp0 = g0.light_profile_list[0]
-    lp1 = g1.light_profile_list[0]
+    lp0 = g0.cls_list_from(cls=ag.lp.LightProfile)[0]
+    lp1 = g1.cls_list_from(cls=ag.lp.LightProfile)[0]
 
     lp0_image = lp0.image_2d_from(grid=sub_grid_2d_7x7)
     lp1_image = lp1.image_2d_from(grid=sub_grid_2d_7x7)
