@@ -22,17 +22,6 @@ from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.profiles.point_sources import Point
 
 
-def is_point_source(obj) -> bool:
-    return isinstance(obj, Point)
-
-
-def is_light_profile(obj) -> bool:
-    return isinstance(obj, LightProfile)
-
-
-def is_mass_profile(obj) -> bool:
-    return isinstance(obj, MassProfile)
-
 
 class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     """
@@ -156,15 +145,11 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         }
 
     @property
-    def has_profile(self) -> bool:
-        return self.has(cls=MassProfile) or self.has(cls=LightProfile)
-
-    @property
     def light_profile_list(self) -> List[LightProfile]:
         return [
             value
             for value in self.__dict__.values()
-            if is_light_profile(value) and not isinstance(value, LightProfileLinear)
+            if isinstance(value, LightProfile) and not isinstance(value, LightProfileLinear)
         ]
 
     @property
@@ -331,7 +316,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     @property
     def mass_profile_list(self) -> List[MassProfile]:
-        return [value for value in self.__dict__.values() if is_mass_profile(value)]
+        return [value for value in self.__dict__.values() if isinstance(value, MassProfile)]
 
     @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
