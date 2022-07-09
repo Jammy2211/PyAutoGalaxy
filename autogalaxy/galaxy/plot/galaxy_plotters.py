@@ -338,7 +338,7 @@ class GalaxyPlotter(Plotter):
             Manually overrides the labels of the plot's legend.
         """
 
-        if self.galaxy.has_light_profile:
+        if self.galaxy.has(cls=LightProfile):
 
             multi_plotter = aplt.MultiYX1DPlotter(
                 plotter_list=self.decomposed_light_profile_plotter_list,

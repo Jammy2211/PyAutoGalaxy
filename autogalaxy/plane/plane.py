@@ -23,7 +23,8 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         redshift: Optional[float] = None,
         profiling_dict: Optional[Dict] = None,
     ):
-        """A plane of galaxies where all galaxies are at the same redshift.
+        """
+        A plane of galaxies where all galaxies are at the same redshift.
 
         Parameters
         -----------
@@ -66,12 +67,12 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def galaxy_redshifts(self) -> List[float]:
         return [galaxy.redshift for galaxy in self.galaxies]
 
-    @property
-    def has_light_profile(self) -> bool:
+    def has(self, cls) -> bool:
         if self.galaxies is not None:
             return any(
-                list(map(lambda galaxy: galaxy.has_light_profile, self.galaxies))
+                list(map(lambda galaxy: galaxy.has(cls=cls), self.galaxies))
             )
+        return False
 
     @property
     def has_light_profile_linear(self) -> bool:
@@ -113,7 +114,6 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             or not). If this input is included as a bool, only images which are or are not already operated are summed
             and returned.
         """
-
         if self.galaxies:
             return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
         return np.zeros((grid.shape[0],))

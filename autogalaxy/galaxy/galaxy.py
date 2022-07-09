@@ -155,8 +155,12 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         }
 
     @property
+    def has_only_light_profile_linear(self):
+        return len(self.light_profile_linear_list) == len(self.light_profile_list)
+
+    @property
     def has_profile(self) -> bool:
-        return self.has_mass_profile or self.has_light_profile
+        return self.has_mass_profile or self.has(cls=LightProfile)
 
     @property
     def light_profile_list(self) -> List[LightProfile]:
@@ -165,10 +169,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             for value in self.__dict__.values()
             if is_light_profile(value) and not isinstance(value, LightProfileLinear)
         ]
-
-    @property
-    def has_light_profile(self) -> bool:
-        return self.has(LightProfile)
 
     @property
     def light_profile_linear_list(self) -> List[LightProfileLinear]:
@@ -180,7 +180,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     @property
     def has_light_profile_linear(self) -> bool:
-        return self.has(LightProfileLinear)
+        return self.has(cls=LightProfileLinear)
 
     @property
     def light_profile_operated_list(self) -> List[LightProfileOperated]:
@@ -269,7 +269,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             or not). If this input is included as a bool, only images which are or are not already operated are summed
             and returned.
         """
-        if self.has_light_profile:
+        if len(self.light_profile_list) > 0:
             return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
 
         return np.zeros((grid.shape[0],))
@@ -324,7 +324,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         grid
             The 1D (x,) coordinates where values of the image are evaluated.
         """
-        if self.has_light_profile:
+        if self.has(cls=LightProfile):
 
             image_1d_list = []
 
@@ -592,7 +592,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             exposure_time
                 The exposure time of the observation, which converts luminosity from electrons per second unit_label to counts.
         """
-        if self.has_light_profile:
+        if self.has(cls=LightProfile):
             return sum(
                 map(
                     lambda p: p.luminosity_within_circle_from(radius=radius),

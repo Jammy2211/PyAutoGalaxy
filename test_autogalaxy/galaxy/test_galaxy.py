@@ -5,36 +5,29 @@ import pytest
 from autogalaxy import exc
 
 
-def test__has_profile():
-    assert ag.Galaxy(redshift=0.5).has_profile is False
-    assert (
-        ag.Galaxy(redshift=0.5, light_profile=ag.lp.LightProfile()).has_profile is True
-    )
-    assert ag.Galaxy(redshift=0.5, mass_profile=ag.mp.MassProfile()).has_profile is True
+def test_has_hyper_galaxy():
+    assert ag.Galaxy(redshift=0.5, hyper_galaxy=object()).has_hyper_galaxy is True
 
 
-def test__has_light_profile():
-    assert ag.Galaxy(redshift=0.5).has_light_profile is False
+def test_has_pixelization():
+    assert ag.Galaxy(redshift=0.5).has_pixelization is False
     assert (
-        ag.Galaxy(redshift=0.5, light_profile=ag.lp.LightProfile()).has_light_profile
+        ag.Galaxy(
+            redshift=0.5, pixelization=object(), regularization=object()
+        ).has_pixelization
         is True
     )
-    assert (
-        ag.Galaxy(redshift=0.5, mass_profile=ag.mp.MassProfile()).has_light_profile
-        is False
-    )
 
 
-def test__has_mass_profile():
-    assert ag.Galaxy(redshift=0.5).has_mass_profile is False
+def test_has_regularization():
+    assert ag.Galaxy(redshift=0.5).has_regularization is False
     assert (
-        ag.Galaxy(redshift=0.5, light_profile=ag.lp.LightProfile()).has_mass_profile
-        is False
-    )
-    assert (
-        ag.Galaxy(redshift=0.5, mass_profile=ag.mp.MassProfile()).has_mass_profile
+        ag.Galaxy(
+            redshift=0.5, pixelization=object(), regularization=object()
+        ).has_regularization
         is True
     )
+
 
 
 def test__image_1d_from(sub_grid_1d_7, lp_0, lp_1, gal_x2_lp):
@@ -323,11 +316,6 @@ def test__light_and_mass_profiles__contained_in_light_and_mass_profile_lists(
     assert 2 == len(gal_multi_profiles.light_profile_list)
     assert 2 == len(gal_multi_profiles.mass_profile_list)
 
-
-def test_has_hyper_galaxy():
-    assert ag.Galaxy(redshift=0.5, hyper_galaxy=object()).has_hyper_galaxy is True
-
-
 def test__contribution_map_from():
 
     hyper_image = np.ones((3,))
@@ -458,26 +446,6 @@ def test__image_2d_from__does_not_include_linear_light_profiles(sub_grid_2d_7x7,
     image = galaxy.image_2d_from(grid=sub_grid_2d_7x7)
 
     assert (image == lp_image).all()
-
-
-def test_has_pixelization():
-    assert ag.Galaxy(redshift=0.5).has_pixelization is False
-    assert (
-        ag.Galaxy(
-            redshift=0.5, pixelization=object(), regularization=object()
-        ).has_pixelization
-        is True
-    )
-
-
-def test_has_regularization():
-    assert ag.Galaxy(redshift=0.5).has_regularization is False
-    assert (
-        ag.Galaxy(
-            redshift=0.5, pixelization=object(), regularization=object()
-        ).has_regularization
-        is True
-    )
 
 
 def test__only_pixelization_raises_error():
