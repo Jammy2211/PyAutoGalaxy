@@ -5,6 +5,7 @@ import numpy as np
 
 import autoarray as aa
 import autofit as af
+
 from autoarray.inversion.pixelizations.abstract import AbstractPixelization
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 from autoconf.dictable import Dictable
@@ -478,10 +479,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             return sum(potential_1d_list)
 
         return np.zeros((grid.shape[0],))
-
-    @property
-    def has_hyper_galaxy(self) -> bool:
-        return self.hyper_galaxy is not None
 
     @property
     def contribution_map(self) -> aa.Array2D:

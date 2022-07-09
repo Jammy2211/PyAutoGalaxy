@@ -8,6 +8,7 @@ from autoconf.dictable import Dictable
 
 from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.galaxy.galaxy import HyperGalaxy
 from autogalaxy.plane.to_inversion import PlaneToInversion
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
 from autogalaxy.profiles.mass_profiles import MassProfile
@@ -260,10 +261,6 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def regularization_list(self) -> List:
         return [galaxy.regularization for galaxy in self.galaxies_with_pixelization]
 
-    @property
-    def has_hyper_galaxy(self) -> bool:
-        return any(list(map(lambda galaxy: galaxy.has_hyper_galaxy, self.galaxies)))
-
     def hyper_noise_map_from(self, noise_map) -> aa.Array2D:
         hyper_noise_maps = self.hyper_noise_map_list_from(noise_map=noise_map)
         return sum(hyper_noise_maps)
@@ -282,7 +279,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         for galaxy in self.galaxies:
 
-            if galaxy.has_hyper_galaxy:
+            if galaxy.has(cls=HyperGalaxy):
 
                 hyper_noise_map_1d = galaxy.hyper_galaxy.hyper_noise_map_via_hyper_images_from(
                     noise_map=noise_map,

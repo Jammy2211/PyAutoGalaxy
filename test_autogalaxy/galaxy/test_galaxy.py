@@ -5,11 +5,6 @@ import pytest
 from autogalaxy import exc
 
 
-def test_has_hyper_galaxy():
-    assert ag.Galaxy(redshift=0.5, hyper_galaxy=object()).has_hyper_galaxy is True
-
-
-
 def test__image_1d_from(sub_grid_1d_7, lp_0, lp_1, gal_x2_lp):
 
     grid = ag.Grid2D.manual_native([[[1.05, -0.55]]], pixel_scales=1.0)

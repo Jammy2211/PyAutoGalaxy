@@ -81,19 +81,6 @@ def test__has():
     )
     assert plane.has(cls=ag.lp.LightProfile)is True
 
-def test__has_hyper_galaxy():
-    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
-    assert plane.has_hyper_galaxy is False
-
-    galaxy = ag.Galaxy(redshift=0.5, hyper_galaxy=ag.HyperGalaxy())
-
-    plane = ag.Plane(galaxies=[galaxy], redshift=None)
-    assert plane.has_hyper_galaxy is True
-
-    plane = ag.Plane(galaxies=[galaxy, ag.Galaxy(redshift=0.5)], redshift=None)
-    assert plane.has_hyper_galaxy is True
-
-
 ### Attribute Lists ###
 
 
