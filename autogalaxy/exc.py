@@ -9,6 +9,7 @@ class ProfileException(Exception):
 
     For example when a mass-profile deflection angle calculation goes wrong due to numerical issues.
     """
+
     pass
 
 
