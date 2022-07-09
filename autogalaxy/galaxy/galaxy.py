@@ -156,7 +156,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     @property
     def has_profile(self) -> bool:
-        return len(self.mass_profile_list) + len(self.light_profile_list) > 0
+        return self.has_mass_profile or self.has_light_profile
 
     @property
     def light_profile_list(self) -> List[LightProfile]:
@@ -168,7 +168,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     @property
     def has_light_profile(self) -> bool:
-        return len(self.light_profile_list) > 0
+        return self.has(LightProfile)
 
     @property
     def light_profile_linear_list(self) -> List[LightProfileLinear]:
@@ -180,7 +180,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     @property
     def has_light_profile_linear(self) -> bool:
-        return len(self.light_profile_linear_list) > 0
+        return self.has(LightProfileLinear)
 
     @property
     def light_profile_operated_list(self) -> List[LightProfileOperated]:
@@ -346,7 +346,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     @property
     def has_mass_profile(self) -> bool:
-        return len(self.mass_profile_list) > 0
+        return self.has(MassProfile)
 
     @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
