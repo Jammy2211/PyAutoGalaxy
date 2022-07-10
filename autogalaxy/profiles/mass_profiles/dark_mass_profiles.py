@@ -4,8 +4,6 @@ from colossus.cosmology import cosmology as col_cosmology
 from colossus.halo.concentration import concentration as col_concentration
 import copy
 import inspect
-from numba import cfunc
-from numba.types import intc, CPointer, float64
 import numpy as np
 from scipy import LowLevelCallable
 from scipy import special
@@ -29,6 +27,9 @@ from autogalaxy import exc
 
 
 def jit_integrand(integrand_function):
+
+    from numba import cfunc
+    from numba.types import intc, CPointer, float64
 
     jitted_function = aa.util.numba.jit(nopython=True, cache=True)(integrand_function)
     no_args = len(inspect.getfullargspec(integrand_function).args)

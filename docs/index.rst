@@ -213,6 +213,7 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
    installation/overview
    installation/conda
    installation/pip
+   installation/numba
    installation/source
    installation/troubleshooting
 
