@@ -145,9 +145,16 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         The optional `cls_filtered` input removes classes of an input instance type.
 
+        For example:
+
+        - If the input is `cls=ag.lp.LightProfile`, a list containing all light profiles in the galaxy is returned.
+
+        - If `cls=ag.lp.LightProfile` and `cls_filtered=ag.lp.LightProfileLinear`, a list of all light profiles
+        excluding those which are linear light profiles will be returned.
+
         Returns
         -------
-            The light of light profiles in the galaxy that inherit from input `cls`.
+            The list of objects in the galaxy that inherit from input `cls`.
         """
         if cls_filtered is not None:
             return [

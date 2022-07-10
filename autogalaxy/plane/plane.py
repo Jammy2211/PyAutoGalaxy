@@ -75,18 +75,25 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return False
 
     def cls_list_from(self, cls:Type) -> List:
-        return [
-            item
-            for obj in self.cls_galaxy_list(cls=cls)
-            for item in obj
-        ]
+        """
+        Returns a list of objects in the plane which are an instance of the input `cls`.
 
-    def cls_galaxy_list(self, cls:Type) -> List:
-        return [
-            galaxy.cls_list_from(cls=cls)
-            for galaxy in self.galaxies
-            if galaxy.has(cls=cls)
-        ]
+        For example:
+
+        - If the input is `cls=ag.lp.LightProfile`, a list containing all light profiles in the plane is returned.
+
+        Returns
+        -------
+            The list of objects in the plane that inherit from input `cls`.
+        """
+        cls_list = []
+
+        for galaxy in self.galaxies:
+            if galaxy.has(cls=cls):
+                for cls_galaxy in galaxy.cls_list_from(cls=cls):
+                    cls_list.append(cls_galaxy)
+
+        return cls_list
 
     def galaxies_with_cls_list_from(self, cls:Type) -> List[Galaxy]:
         return list(
