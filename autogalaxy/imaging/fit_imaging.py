@@ -37,8 +37,10 @@ class FitImaging(aa.FitImaging, AbstractFit):
             The plane of galaxies whose model images are used to fit the imaging data.
         """
 
+
+
         super().__init__(dataset=dataset, profiling_dict=profiling_dict)
-        super(AbstractFit).__init__()
+        AbstractFit.__init__(self=self, model_obj=plane, settings_inversion=settings_inversion)
 
         self.plane = plane
 
@@ -109,17 +111,7 @@ class FitImaging(aa.FitImaging, AbstractFit):
         The image passed to this function is the dataset's image with all light profile images of the plane subtracted.
         """
 
-        if self.plane.has(cls=aa.pix.Pixelization) or self.plane.has(
-            cls=LightProfileLinear
-        ):
-
-            if (
-                self.plane.has(cls=aa.pix.Pixelization)
-                and self.settings_inversion.use_w_tilde
-            ):
-                w_tilde = self.dataset.w_tilde
-            else:
-                w_tilde = None
+        if self.perform_inversion:
 
             plane_to_inversion = PlaneToInversion(plane=self.plane)
 
@@ -127,7 +119,7 @@ class FitImaging(aa.FitImaging, AbstractFit):
                 dataset=self.dataset,
                 image=self.profile_subtracted_image,
                 noise_map=self.noise_map,
-                w_tilde=w_tilde,
+                w_tilde=self.w_tilde,
                 settings_pixelization=self.settings_pixelization,
                 settings_inversion=self.settings_inversion,
                 preloads=self.preloads,
@@ -214,10 +206,6 @@ class FitImaging(aa.FitImaging, AbstractFit):
         return self.plane.unmasked_blurred_image_2d_list_from(
             grid=self.grid, psf=self.imaging.psf
         )
-
-    @property
-    def total_mappers(self):
-        return 1
 
     def refit_with_new_preloads(self, preloads, settings_inversion=None):
 

@@ -1,9 +1,58 @@
 from typing import Dict, Optional
 
+import autoarray as aa
+
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 
 
 class AbstractFit:
+
+    def __init__(self, model_obj, settings_inversion):
+
+        self.model_obj = model_obj
+        self.settings_inversion = settings_inversion
+
+    @property
+    def total_mappers(self):
+
+        # TODO : When we add regularization to basis need to change this to reflect mappers.
+
+        return len(
+            list(filter(None, self.model_obj.cls_list_from(cls=aa.reg.Regularization)))
+        )
+
+    @property
+    def perform_inversion(self) -> bool:
+        """
+        Returns a bool specifying whether this fit object performs an inversion.
+
+        This is based on whether any of the galaxies in the tracer have a `Pixelization` or `LightProfileLinear`
+        object, in which case an inversion is performed.
+
+        Returns
+        -------
+            A bool which is True if an inversion is performed.
+        """
+        if self.model_obj.has(cls=aa.pix.Pixelization) or self.model_obj.has(
+                cls=LightProfileLinear
+        ):
+            return True
+        return False
+
+    @property
+    def w_tilde(self) -> Optional[aa.WTildeImaging]:
+        """
+        Only call the `w_tilde` property of a dataset if the SettingsInversion()` object has `use_w_tilde=True`,
+        to avoid unecessary computation.
+
+        Returns
+        -------
+            The w-tilde matrix if the w-tilde formalism is being used for this inversion.
+        """
+        if self.settings_inversion.use_w_tilde:
+            if self.total_mappers > 0:
+                return self.dataset.w_tilde
+
     @property
     def inversion(self):
         raise NotImplementedError

@@ -38,7 +38,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
         super().__init__(
             dataset=dataset, use_mask_in_fit=False, profiling_dict=profiling_dict
         )
-        super(AbstractFit).__init__()
+        AbstractFit.__init__(self=self, model_obj=plane, settings_inversion=settings_inversion)
 
         self.plane = plane
 
@@ -91,14 +91,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
 
         The image passed to this function is the dataset's image with all light profile images of the plane subtracted.
         """
-        if self.plane.has(cls=aa.pix.Pixelization) or self.plane.has(
-            cls=LightProfileLinear
-        ):
-
-            if self.settings_inversion.use_w_tilde:
-                w_tilde = self.dataset.w_tilde
-            else:
-                w_tilde = None
+        if self.perform_inversion:
 
             plane_to_inversion = PlaneToInversion(plane=self.plane)
 
@@ -106,7 +99,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
                 dataset=self.dataset,
                 visibilities=self.profile_subtracted_visibilities,
                 noise_map=self.noise_map,
-                w_tilde=w_tilde,
+                w_tilde=self.w_tilde,
                 settings_pixelization=self.settings_pixelization,
                 settings_inversion=self.settings_inversion,
                 preloads=self.preloads,
@@ -168,10 +161,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
     @property
     def model_visibilities_of_galaxies_list(self):
         return list(self.galaxy_model_visibilities_dict.values())
-
-    @property
-    def total_mappers(self):
-        return 1
 
     def refit_with_new_preloads(self, preloads, settings_inversion=None):
 
