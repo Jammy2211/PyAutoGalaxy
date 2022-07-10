@@ -1,4 +1,4 @@
-autoconf==2022.06.29.1
+autoconf==2022.07.10.1
 autofit==2022.07.10.1
 autoarray==2022.07.10.1
 astropy>=3.0.0
