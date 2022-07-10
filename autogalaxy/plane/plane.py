@@ -12,7 +12,6 @@ from autogalaxy.galaxy.galaxy import HyperGalaxy
 from autogalaxy.plane.to_inversion import PlaneToInversion
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
-from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.operate.image import OperateImageGalaxies
 from autogalaxy.operate.deflections import OperateDeflections
 
@@ -88,6 +87,11 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             for galaxy in self.galaxies
             if galaxy.has(cls=cls)
         ]
+
+    def galaxies_with_cls_list_from(self, cls:Type) -> List[Galaxy]:
+        return list(
+            filter(lambda galaxy: galaxy.has(cls=aa.pix.Pixelization), self.galaxies)
+        )
 
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(
@@ -166,10 +170,6 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             galaxies=self.galaxies,
         )
 
-    @property
-    def galaxies_with_mass_profile(self) -> List[Galaxy]:
-        return list(filter(lambda galaxy: galaxy.has(cls=MassProfile), self.galaxies))
-
     @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
@@ -239,28 +239,8 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return grid - self.deflections_yx_2d_from(grid=grid)
 
     @property
-    def galaxies_with_pixelization(self) -> List[Galaxy]:
-        return list(
-            filter(lambda galaxy: galaxy.has(cls=aa.pix.Pixelization), self.galaxies)
-        )
-
-    @property
     def hyper_galaxies_with_pixelization_image_list(self) -> List[aa.Array2D]:
-        return [galaxy.hyper_galaxy_image for galaxy in self.galaxies_with_pixelization]
-
-    @property
-    def pixelization_list(self) -> List:
-        return [galaxy.pixelization for galaxy in self.galaxies_with_pixelization]
-
-    @property
-    def galaxies_with_regularization(self) -> List[Galaxy]:
-        return list(
-            filter(lambda galaxy: galaxy.has(cls=aa.reg.Regularization), self.galaxies)
-        )
-
-    @property
-    def regularization_list(self) -> List:
-        return [galaxy.regularization for galaxy in self.galaxies_with_pixelization]
+        return [galaxy.hyper_galaxy_image for galaxy in self.galaxies_with_cls_list_from(cls=aa.pix.Pixelization)]
 
     def hyper_noise_map_from(self, noise_map) -> aa.Array2D:
         hyper_noise_maps = self.hyper_noise_map_list_from(noise_map=noise_map)

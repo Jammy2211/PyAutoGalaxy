@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Dict, Union
+from typing import Dict, List, Type, Union
 
 from autoconf import conf
 import autofit as af
@@ -67,6 +67,13 @@ class Result(af.Result):
 
 
 class ResultDataset(Result):
+
+    def cls_list_from(self, cls:Type) -> List:
+        """
+        A list of all pixelization classes used by the model-fit.
+        """
+        return self.max_log_likelihood_plane.cls_list_from(cls=cls)
+
     @property
     def mask(self) -> aa.Mask2D:
         """
@@ -87,13 +94,6 @@ class ResultDataset(Result):
         The dataset that was fitted by the model-fit.
         """
         return self.max_log_likelihood_fit.dataset
-
-    @property
-    def pixelization_list(self):
-        """
-        A list of all pixelization classes used by the model-fit.
-        """
-        return self.max_log_likelihood_plane.pixelization_list
 
     def image_for_galaxy(self, galaxy: Galaxy) -> np.ndarray:
         """

@@ -59,7 +59,7 @@ class PlaneToInversion:
                 settings=settings_pixelization,
             )
             for pixelization, hyper_galaxy_image in zip(
-                self.plane.pixelization_list,
+                self.plane.cls_list_from(cls=aa.pix.Pixelization),
                 self.plane.hyper_galaxies_with_pixelization_image_list,
             )
         ]
@@ -99,8 +99,8 @@ class PlaneToInversion:
 
         mapper_galaxy_dict = {}
 
-        pixelization_list = self.plane.pixelization_list
-        galaxies_with_pixelization_list = self.plane.galaxies_with_pixelization
+        pixelization_list = self.plane.cls_list_from(cls=aa.pix.Pixelization)
+        galaxies_with_pixelization_list = self.plane.galaxies_with_cls_list_from(cls=aa.pix.Pixelization)
         hyper_galaxy_image_list = self.plane.hyper_galaxies_with_pixelization_image_list
 
         for mapper_index in range(len(sparse_grid_list)):
@@ -167,7 +167,7 @@ class PlaneToInversion:
             convolver=dataset.convolver,
             w_tilde=w_tilde,
             linear_obj_list=linear_obj_list,
-            regularization_list=self.plane.regularization_list,
+            regularization_list=self.plane.cls_list_from(cls=aa.reg.Regularization),
             settings=settings_inversion,
             preloads=preloads,
             profiling_dict=self.plane.profiling_dict,
@@ -202,7 +202,7 @@ class PlaneToInversion:
             transformer=dataset.transformer,
             w_tilde=w_tilde,
             linear_obj_list=linear_obj_list,
-            regularization_list=self.plane.regularization_list,
+            regularization_list=self.plane.cls_list_from(cls=aa.reg.Regularization),
             settings=settings_inversion,
             preloads=preloads,
             profiling_dict=self.plane.profiling_dict,

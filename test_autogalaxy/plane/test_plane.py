@@ -109,8 +109,6 @@ def test__cls_list_from():
     )
     assert plane.cls_list_from(cls=ag.mp.MassProfile) == [sis_0, sis_1, sis_2, sis_1]
 
-
-def test__pixelization_list():
     galaxy_pix = ag.Galaxy(
         redshift=0.5,
         pixelization=ag.m.MockPixelization(mapper=1),
@@ -119,7 +117,7 @@ def test__pixelization_list():
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
 
-    assert plane.pixelization_list[0].mapper == 1
+    assert plane.cls_list_from(cls=ag.pix.Pixelization)[0].mapper == 1
 
     galaxy_pix_0 = ag.Galaxy(
         redshift=0.5,
@@ -134,49 +132,14 @@ def test__pixelization_list():
 
     plane = ag.Plane(galaxies=[galaxy_pix_0, galaxy_pix_1], redshift=None)
 
-    assert plane.pixelization_list[0].mapper == 1
-    assert plane.pixelization_list[1].mapper == 2
+    assert plane.cls_list_from(cls=ag.pix.Pixelization)[0].mapper == 1
+    assert plane.cls_list_from(cls=ag.pix.Pixelization)[1].mapper == 2
 
     galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
     plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=None)
 
-    assert plane.pixelization_list == []
-
-
-def test__regularization_list():
-
-    galaxy_reg = ag.Galaxy(
-        redshift=0.5,
-        pixelization=ag.m.MockPixelization(),
-        regularization=ag.m.MockRegularization(regularization_matrix=1),
-    )
-
-    plane = ag.Plane(galaxies=[galaxy_reg], redshift=None)
-
-    assert plane.regularization_list[0].regularization_matrix == 1
-
-    galaxy_reg_0 = ag.Galaxy(
-        redshift=0.5,
-        pixelization=ag.m.MockPixelization(),
-        regularization=ag.m.MockRegularization(regularization_matrix=1),
-    )
-    galaxy_reg_1 = ag.Galaxy(
-        redshift=0.5,
-        pixelization=ag.m.MockPixelization(),
-        regularization=ag.m.MockRegularization(regularization_matrix=2),
-    )
-
-    plane = ag.Plane(galaxies=[galaxy_reg_0, galaxy_reg_1], redshift=None)
-
-    assert plane.regularization_list[0].regularization_matrix == 1
-    assert plane.regularization_list[1].regularization_matrix == 2
-
-    galaxy_no_pix = ag.Galaxy(redshift=0.5)
-
-    plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=None)
-
-    assert plane.regularization_list == []
+    assert plane.cls_list_from(cls=ag.pix.Pixelization) == []
 
 
 def test__hyper_galaxy_image_list():
@@ -320,7 +283,7 @@ def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_
     )
 
 
-def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
+def test__image_2d_list_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
 
     image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
     image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
