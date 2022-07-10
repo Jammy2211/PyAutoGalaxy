@@ -1,7 +1,4 @@
-from typing import List
-
 from autogalaxy import exc
-from autogalaxy.profiles.mass_profiles import MassProfile
 from autogalaxy.profiles.mass_profiles.dark_mass_profiles import DarkProfile
 from autogalaxy.profiles.mass_profiles.stellar_mass_profiles import StellarProfile
 
@@ -11,40 +8,12 @@ class StellarDarkDecomp:
 
         self.galaxy = galaxy
 
-    @property
-    def mass_profile_list(self) -> List[MassProfile]:
-        return self.galaxy.mass_profile_list
-
-    @property
-    def has_stellar_profile(self) -> bool:
-        return len(self.stellar_profile_list) > 0
-
-    @property
-    def has_dark_profile(self) -> bool:
-        return len(self.dark_profile_list) > 0
-
-    @property
-    def stellar_profile_list(self) -> List:
-        return [
-            profile
-            for profile in self.mass_profile_list
-            if isinstance(profile, StellarProfile)
-        ]
-
-    @property
-    def dark_profile_list(self) -> List:
-        return [
-            profile
-            for profile in self.mass_profile_list
-            if isinstance(profile, DarkProfile)
-        ]
-
     def stellar_mass_angular_within_circle_from(self, radius: float):
-        if self.has_stellar_profile:
+        if self.galaxy.has(cls=StellarProfile):
             return sum(
                 [
                     profile.mass_angular_within_circle_from(radius=radius)
-                    for profile in self.stellar_profile_list
+                    for profile in self.galaxy.cls_list_from(cls=StellarProfile)
                 ]
             )
         else:
@@ -54,11 +23,11 @@ class StellarDarkDecomp:
             )
 
     def dark_mass_angular_within_circle_from(self, radius: float):
-        if self.has_dark_profile:
+        if self.galaxy.has(cls=DarkProfile):
             return sum(
                 [
                     profile.mass_angular_within_circle_from(radius=radius)
-                    for profile in self.dark_profile_list
+                    for profile in self.galaxy.cls_list_from(cls=DarkProfile)
                 ]
             )
         else:

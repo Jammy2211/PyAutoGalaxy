@@ -75,6 +75,20 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             return any(list(map(lambda galaxy: galaxy.has(cls=cls), self.galaxies)))
         return False
 
+    def cls_list_from(self, cls:Type) -> List:
+        return [
+            item
+            for obj in self.cls_galaxy_list(cls=cls)
+            for item in obj
+        ]
+
+    def cls_galaxy_list(self, cls:Type) -> List:
+        return [
+            galaxy.cls_list_from(cls=cls)
+            for galaxy in self.galaxies
+            if galaxy.has(cls=cls)
+        ]
+
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
@@ -155,22 +169,6 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     @property
     def galaxies_with_mass_profile(self) -> List[Galaxy]:
         return list(filter(lambda galaxy: galaxy.has(cls=MassProfile), self.galaxies))
-
-    @property
-    def mass_profile_list(self) -> List:
-        return [
-            item
-            for mass_profile in self.mass_profile_list_of_galaxies
-            for item in mass_profile
-        ]
-
-    @property
-    def mass_profile_list_of_galaxies(self) -> List:
-        return [
-            galaxy.mass_profile_list
-            for galaxy in self.galaxies
-            if galaxy.has(cls=MassProfile)
-        ]
 
     @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure

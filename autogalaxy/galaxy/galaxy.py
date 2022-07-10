@@ -114,9 +114,9 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             string += "\nLight Profiles:\n{}".format(
                 "\n".join(map(str, self.cls_list_from(cls=LightProfile)))
             )
-        if self.mass_profile_list:
+        if self.has(cls=MassProfile):
             string += "\nMass Profiles:\n{}".format(
-                "\n".join(map(str, self.mass_profile_list))
+                "\n".join(map(str, self.cls_list_from(cls=MassProfile)))
             )
         return string
 
@@ -129,7 +129,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
                 self.hyper_galaxy == other.hyper_galaxy,
                 self.cls_list_from(cls=LightProfile)
                 == other.cls_list_from(cls=LightProfile),
-                self.mass_profile_list == other.mass_profile_list,
+                self.cls_list_from(cls=MassProfile) == other.cls_list_from(cls=MassProfile),
             )
         )
 
@@ -141,15 +141,13 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     def cls_list_from(self, cls: Type, cls_filtered: Optional[Type] = None) -> List:
         """
-        Returns a list of all of the galaxy light profiles that inherit from the `LightProfileOperated`
-        class.
+        Returns a list of objects in the galaxy which are an instance of the input `cls`.
 
-        This means the light profiles have already had operated applied to them (e.g. convolution from an imaging
-        datasset's PSF) such that they are omitted from convolution in functions which perform blurring.
+        The optional `cls_filtered` input removes classes of an input instance type.
 
         Returns
         -------
-            The light of light profiles in the galaxy that inherit from the `LightProfileOperated` class.
+            The light of light profiles in the galaxy that inherit from input `cls`.
         """
         if cls_filtered is not None:
             return [
@@ -301,12 +299,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         return np.zeros((grid.shape[0],))
 
-    @property
-    def mass_profile_list(self) -> List[MassProfile]:
-        return [
-            value for value in self.__dict__.values() if isinstance(value, MassProfile)
-        ]
-
     @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
@@ -331,7 +323,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             return sum(
                 map(
                     lambda p: p.deflections_yx_2d_from(grid=grid),
-                    self.mass_profile_list,
+                    self.cls_list_from(cls=MassProfile),
                 )
             )
         return np.zeros((grid.shape[0], 2))
@@ -356,7 +348,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         if self.has(cls=MassProfile):
             return sum(
-                map(lambda p: p.convergence_2d_from(grid=grid), self.mass_profile_list)
+                map(lambda p: p.convergence_2d_from(grid=grid), self.cls_list_from(cls=MassProfile))
             )
         return np.zeros((grid.shape[0],))
 
@@ -381,7 +373,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
             convergence_1d_list = []
 
-            for mass_profile in self.mass_profile_list:
+            for mass_profile in self.cls_list_from(cls=MassProfile):
 
                 grid_radial = self.grid_radial_from(
                     grid=grid, centre=mass_profile.centre, angle=mass_profile.angle
@@ -415,7 +407,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         if self.has(cls=MassProfile):
             return sum(
-                map(lambda p: p.potential_2d_from(grid=grid), self.mass_profile_list)
+                map(lambda p: p.potential_2d_from(grid=grid), self.cls_list_from(cls=MassProfile))
             )
         return np.zeros((grid.shape[0],))
 
@@ -440,7 +432,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
             potential_1d_list = []
 
-            for mass_profile in self.mass_profile_list:
+            for mass_profile in self.cls_list_from(cls=MassProfile):
 
                 grid_radial = self.grid_radial_from(
                     grid=grid, centre=mass_profile.centre, angle=mass_profile.angle
@@ -573,7 +565,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             return sum(
                 map(
                     lambda p: p.mass_angular_within_circle_from(radius=radius),
-                    self.mass_profile_list,
+                    self.cls_list_from(cls=MassProfile),
                 )
             )
         else:

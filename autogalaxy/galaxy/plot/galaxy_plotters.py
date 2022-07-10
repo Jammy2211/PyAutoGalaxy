@@ -207,7 +207,7 @@ class GalaxyPlotter(Plotter):
 
         plotter_list = []
 
-        for i, mass_profile in enumerate(self.galaxy.mass_profile_list):
+        for i, mass_profile in enumerate(self.galaxy.cls_list_from(cls=MassProfile)):
 
             mass_profile_plotter = self.mass_profile_plotter_from(
                 mass_profile=mass_profile, one_d_only=True
@@ -519,7 +519,7 @@ class GalaxyPlotter(Plotter):
         """
         mass_profile_plotters = [
             self.mass_profile_plotter_from(mass_profile)
-            for mass_profile in self.galaxy.mass_profile_list
+            for mass_profile in self.galaxy.cls_list_from(cls=MassProfile)
         ]
 
         if convergence:
@@ -674,7 +674,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         """
         return [
             self.mass_profile_pdf_plotter_from(index=index)
-            for index in range(len(self.galaxy_pdf_list[0].mass_profile_list))
+            for index in range(len(self.galaxy_pdf_list[0].cls_list_from(cls=MassProfile)))
         ]
 
     def mass_profile_pdf_plotter_from(self, index) -> MassProfilePDFPlotter:
@@ -690,7 +690,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             attributes of the galaxy.
         """
         mass_profile_pdf_list = [
-            galaxy.mass_profile_list[index] for galaxy in self.galaxy_pdf_list
+            galaxy.cls_list_from(cls=MassProfile)[index] for galaxy in self.galaxy_pdf_list
         ]
 
         return MassProfilePDFPlotter(

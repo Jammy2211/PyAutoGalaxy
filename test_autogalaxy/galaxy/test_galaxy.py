@@ -285,7 +285,7 @@ def test__no_mass_profile__quantities_returned_as_0s_of_shape_grid(
     assert (deflections.binned.native == np.zeros(shape=(7, 7, 2))).all()
 
 
-def test__mass_within_circle__is_sum_of_individual_mass_profile_list_if_included(
+def test__mass_angular_within_circle_from(
     mp_0, mp_1, gal_x2_mp
 ):
 
@@ -308,15 +308,15 @@ def test__light_and_mass_profiles__contained_in_light_and_mass_profile_lists(
     gal_x1_lmp = ag.Galaxy(redshift=0.5, profile=lmp_0)
 
     assert 1 == len(gal_x1_lmp.cls_list_from(cls=ag.lp.LightProfile))
-    assert 1 == len(gal_x1_lmp.mass_profile_list)
+    assert 1 == len(gal_x1_lmp.cls_list_from(cls=ag.mp.MassProfile))
 
-    assert gal_x1_lmp.mass_profile_list[0] == lmp_0
+    assert gal_x1_lmp.cls_list_from(cls=ag.mp.MassProfile)[0] == lmp_0
     assert gal_x1_lmp.cls_list_from(cls=ag.lp.LightProfile)[0] == lmp_0
 
     gal_multi_profiles = ag.Galaxy(redshift=0.5, profile=lmp_0, light=lp_0, sie=mp_0)
 
     assert 2 == len(gal_multi_profiles.cls_list_from(cls=ag.lp.LightProfile))
-    assert 2 == len(gal_multi_profiles.mass_profile_list)
+    assert 2 == len(gal_multi_profiles.cls_list_from(cls=ag.mp.MassProfile))
 
 
 def test__contribution_map_from():

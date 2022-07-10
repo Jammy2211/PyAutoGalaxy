@@ -85,11 +85,11 @@ def test__has():
 ### Attribute Lists ###
 
 
-def test__mass_profile_list():
+def test__cls_list_from():
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
-    assert plane.mass_profile_list == []
+    assert plane.cls_list_from(cls=ag.mp.MassProfile) == []
 
     sis_0 = ag.mp.SphIsothermal(einstein_radius=1.0)
     sis_1 = ag.mp.SphIsothermal(einstein_radius=2.0)
@@ -98,7 +98,7 @@ def test__mass_profile_list():
     plane = ag.Plane(
         galaxies=[ag.Galaxy(redshift=0.5, mass_profile=sis_0)], redshift=None
     )
-    assert plane.mass_profile_list == [sis_0]
+    assert plane.cls_list_from(cls=ag.mp.MassProfile) == [sis_0]
 
     plane = ag.Plane(
         galaxies=[
@@ -107,7 +107,7 @@ def test__mass_profile_list():
         ],
         redshift=None,
     )
-    assert plane.mass_profile_list == [sis_0, sis_1, sis_2, sis_1]
+    assert plane.cls_list_from(cls=ag.mp.MassProfile) == [sis_0, sis_1, sis_2, sis_1]
 
 
 def test__pixelization_list():
