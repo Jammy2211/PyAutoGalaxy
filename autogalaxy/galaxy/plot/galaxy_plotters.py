@@ -21,7 +21,7 @@ from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePDFPlott
 from autogalaxy.profiles.plot.mass_profile_plotters import MassProfilePlotter
 from autogalaxy.profiles.plot.mass_profile_plotters import MassProfilePDFPlotter
 
-
+from autogalaxy import exc
 from autogalaxy.util import error_util
 
 
@@ -69,6 +69,17 @@ class GalaxyPlotter(Plotter):
         include_2d
             Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 2D plots.
         """
+
+        from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
+
+        if galaxy is not None:
+            if galaxy.has(cls=LightProfileLinear):
+
+                raise exc.raise_linear_light_profile_in_plot(
+                    plotter_type=self.__class__.__name__,
+                    model_obj="Plane"
+                )
+
         super().__init__(
             mat_plot_2d=mat_plot_2d,
             include_2d=include_2d,

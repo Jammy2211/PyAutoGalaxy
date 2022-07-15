@@ -69,3 +69,24 @@ class UnitsException(Exception):
     """
 
     pass
+
+
+def raise_linear_light_profile_in_plot(plotter_type : str, model_obj : str):
+
+    raise ProfileException(
+        f"""
+        A linear light profile (inherits from `LightProfileLinear` class) has 
+        been passed to the `{plotter_type}`.
+
+        Linear light profiles cannot be plotted, because they do not have an
+        intensity value.
+
+        Therefore convert all linear light profiles to normal light profiles. 
+
+        If you are performing modeling and have access to `FitImaging` 
+        or `FitInterferometer` object, a `{model_obj}` where all 
+        linear light are converted to regular light profiles using the
+        solved for intensities is available via the attribute
+        `{model_obj.lower()}_linear_light_profiles_to_light_profiles`.
+        """
+    )

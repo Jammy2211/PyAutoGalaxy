@@ -21,6 +21,7 @@ def test___image_dict(analysis_imaging_7x7):
 
     galaxies = af.ModelInstance()
     galaxies.galaxy = ag.Galaxy(redshift=0.5)
+    galaxies.source = ag.Galaxy(redshift=0.5)
 
     instance = af.ModelInstance()
     instance.galaxies = galaxies

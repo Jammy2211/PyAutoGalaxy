@@ -13,6 +13,7 @@ from autogalaxy.plot.mat_wrap.include import Include2D
 from autogalaxy.plot.mass_plotter import MassPlotter
 from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
 
+from autogalaxy import exc
 from autogalaxy.plane.plane import Plane
 
 
@@ -60,6 +61,16 @@ class PlanePlotter(Plotter):
         include_2d
             Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 2D plots.
         """
+
+        from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
+
+        if plane.has(cls=LightProfileLinear):
+
+            raise exc.raise_linear_light_profile_in_plot(
+                plotter_type=self.__class__.__name__,
+                model_obj="Plane"
+            )
+
         super().__init__(
             mat_plot_2d=mat_plot_2d,
             include_2d=include_2d,

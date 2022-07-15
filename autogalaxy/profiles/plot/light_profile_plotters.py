@@ -13,8 +13,9 @@ from autogalaxy.plot.mat_wrap.visuals import Visuals1D
 from autogalaxy.plot.mat_wrap.visuals import Visuals2D
 from autogalaxy.plot.mat_wrap.include import Include1D
 from autogalaxy.plot.mat_wrap.include import Include2D
-from autogalaxy.util import error_util
 
+from autogalaxy.util import error_util
+from autogalaxy import exc
 
 class LightProfilePlotter(Plotter):
     def __init__(
@@ -60,6 +61,16 @@ class LightProfilePlotter(Plotter):
         include_2d
             Specifies which attributes of the `LightProfile` are extracted and plotted as visuals for 2D plots.
         """
+
+        from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
+
+        if isinstance(light_profile, LightProfileLinear):
+
+            raise exc.raise_linear_light_profile_in_plot(
+                plotter_type=self.__class__.__name__,
+                model_obj="Plane"
+            )
+
         self.light_profile = light_profile
         self.grid = grid
 

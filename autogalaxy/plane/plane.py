@@ -15,6 +15,7 @@ from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSN
 from autogalaxy.operate.image import OperateImageGalaxies
 from autogalaxy.operate.deflections import OperateDeflections
 
+from autogalaxy import exc
 from autogalaxy.util import plane_util
 
 
