@@ -339,6 +339,34 @@ class TestGaussian:
         assert image.shape_native == (2, 2)
 
 
+class TestMoffat:
+    def test__intensity_as_radius__correct_value(self):
+        moffat = ag.lp.EllMoffat(
+            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, alpha=1.0, beta=1.0
+        )
+
+        image = moffat.image_2d_via_radii_from(grid_radii=1.0)
+
+        assert image == pytest.approx(0.5, 1e-4)
+
+        moffat = ag.lp.EllMoffat(
+            centre=(0.0, 0.0), elliptical_comps=(0.2, 0.2), intensity=1.0, alpha=1.8, beta=0.75
+        )
+
+        image = moffat.image_2d_via_radii_from(grid_radii=2.0)
+
+        assert image == pytest.approx(0.6746091, 1e-4)
+
+        moffat = ag.lp.SphMoffat(
+            centre=(0.0, 0.0), intensity=1.0, alpha=1.8, beta=0.75
+        )
+
+        image = moffat.image_2d_via_radii_from(grid_radii=2.0)
+
+        assert image == pytest.approx(0.5471480213, 1e-4)
+
+
+
 class TestSersic:
     def test__image_2d_via_radii_from__correct_value(self):
         sersic = ag.lp.EllSersic(

@@ -2,6 +2,8 @@ from .light_profiles import LightProfile
 from .light_profiles import (
     EllGaussian,
     SphGaussian,
+    EllMoffat,
+    SphMoffat,
     EllSersic,
     SphSersic,
     EllExponential,
