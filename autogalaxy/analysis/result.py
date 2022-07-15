@@ -52,6 +52,7 @@ class Result(af.Result):
         """
         An instance of a `Plane` corresponding to the maximum log likelihood model inferred by the non-linear search.
         """
+
         instance = self.analysis.instance_with_associated_hyper_images_from(
             instance=self.instance
         )

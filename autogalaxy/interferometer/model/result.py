@@ -1,9 +1,8 @@
-import numpy as np
-
 import autoarray as aa
 
 from autogalaxy.analysis.result import ResultDataset
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.plane.plane import Plane
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 
 
@@ -50,9 +49,26 @@ class ResultInterferometer(ResultDataset):
             instance=self.instance
         )
 
+        instance = self.analysis.instance_with_associated_hyper_images_from(
+            instance=self.instance
+        )
+
+        plane = self.analysis.plane_via_instance_from(instance=instance)
+
         return self.analysis.fit_interferometer_via_plane_from(
-            plane=self.max_log_likelihood_plane,
-            hyper_background_noise=hyper_background_noise,
+            plane=plane, hyper_background_noise=hyper_background_noise
+        )
+
+    @property
+    def max_log_likelihood_plane(self) -> Plane:
+        """
+        An instance of a `Plane` corresponding to the maximum log likelihood model inferred by the non-linear search.
+
+        The `Plane` is computed from the `max_log_likelihood_fit`, as this ensures that all linear light profiles
+        are converted to normal light profiles with their `intensity` values updated.
+        """
+        return (
+            self.max_log_likelihood_fit.model_obj_linear_light_profiles_to_light_profiles
         )
 
     @property
