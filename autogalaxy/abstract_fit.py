@@ -136,6 +136,10 @@ class AbstractFit:
         of those inferred via the `Inversion`.
 
         """
+
+        if self.linear_light_profile_intensity_dict is None:
+            return self.model_obj
+
         model_obj = copy.copy(self.model_obj)
 
         for galaxy in model_obj.galaxies:

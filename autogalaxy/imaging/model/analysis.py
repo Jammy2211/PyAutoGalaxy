@@ -318,7 +318,11 @@ class AnalysisImaging(AnalysisDataset):
 
         visualizer = VisualizerImaging(visualize_path=paths.image_path)
         visualizer.visualize_imaging(imaging=self.imaging)
-        visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)
+
+        try:
+            visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)
+        except exc.InversionException:
+            pass
 
         plane = fit.plane_linear_light_profiles_to_light_profiles
 

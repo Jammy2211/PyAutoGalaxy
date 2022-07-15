@@ -383,9 +383,14 @@ class AnalysisInterferometer(AnalysisDataset):
         visualizer.visualize_galaxies(
             galaxies=plane.galaxies, grid=fit.grid, during_analysis=during_analysis
         )
-        visualizer.visualize_fit_interferometer(
-            fit=fit, during_analysis=during_analysis
-        )
+
+        try:
+            visualizer.visualize_fit_interferometer(
+                fit=fit, during_analysis=during_analysis
+            )
+        except exc.InversionException:
+            pass
+
         if fit.inversion is not None:
             try:
                 visualizer.visualize_inversion(
