@@ -2,6 +2,11 @@ from autogalaxy.profiles.light_profiles import light_profiles_operated as lp_ope
 from autogalaxy.profiles.light_profiles import light_profiles_linear as lp_linear
 
 
+class EllSersic(lp_linear.EllSersic, lp_operated.LightProfileOperated):
+
+    pass
+
+
 class EllGaussian(lp_linear.EllGaussian, lp_operated.LightProfileOperated):
 
     pass

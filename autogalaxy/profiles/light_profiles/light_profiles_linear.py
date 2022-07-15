@@ -6,6 +6,10 @@ from autoconf import cached_property
 import autoarray as aa
 import autofit as af
 
+from autogalaxy.profiles.light_profiles.light_profiles_operated import (
+    LightProfileOperated,
+)
+
 from autogalaxy.profiles.light_profiles import light_profiles as lp
 from autogalaxy.profiles import light_and_mass_profiles as lmp
 
@@ -122,6 +126,9 @@ class LightProfileLinearObjFunc(aa.LinearObjFunc):
         A blurred mapping matrix of dimensions (total_mask_pixels, 1) which overrides the mapping matrix calculations
         performed in the linear equation solvers.
         """
+
+        if isinstance(self.light_profile, LightProfileOperated):
+            return self.mapping_matrix
 
         image_2d = self.light_profile.image_2d_from(grid=self.grid)
 

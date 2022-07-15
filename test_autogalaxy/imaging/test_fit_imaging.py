@@ -204,6 +204,22 @@ def test__fit_figure_of_merit(masked_imaging_7x7):
     assert fit.log_likelihood == pytest.approx(-342374.9618, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-342374.9618, 1.0e-4)
 
+    g0_linear_operated_light = ag.Galaxy(
+        redshift=0.5, light_profile=ag.lp_linear_operated.EllSersic(sersic_index=1.0)
+    )
+    g1_linear_operated_light = ag.Galaxy(
+        redshift=0.5, light_profile=ag.lp_linear_operated.EllSersic(sersic_index=4.0)
+    )
+
+    plane = ag.Plane(
+        redshift=0.5, galaxies=[g0_linear_operated_light, g1_linear_operated_light]
+    )
+
+    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
+
+    assert fit.log_likelihood == pytest.approx(-14.7237273, 1e-4)
+    assert fit.figure_of_merit == pytest.approx(-14.7237273, 1.0e-4)
+
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, galaxy_pix])
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
