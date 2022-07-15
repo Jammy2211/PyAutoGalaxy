@@ -374,11 +374,14 @@ class AnalysisInterferometer(AnalysisDataset):
 
         visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
         visualizer.visualize_interferometer(interferometer=self.interferometer)
+
+        plane = fit.plane_linear_light_profiles_to_light_profiles
+
         visualizer.visualize_plane(
-            plane=fit.plane, grid=fit.grid, during_analysis=during_analysis
+            plane=plane, grid=fit.grid, during_analysis=during_analysis
         )
         visualizer.visualize_galaxies(
-            galaxies=fit.plane.galaxies, grid=fit.grid, during_analysis=during_analysis
+            galaxies=plane.galaxies, grid=fit.grid, during_analysis=during_analysis
         )
         visualizer.visualize_fit_interferometer(
             fit=fit, during_analysis=during_analysis
