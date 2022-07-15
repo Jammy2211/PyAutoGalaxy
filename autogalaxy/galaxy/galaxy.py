@@ -129,7 +129,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
                 self.hyper_galaxy == other.hyper_galaxy,
                 self.cls_list_from(cls=LightProfile)
                 == other.cls_list_from(cls=LightProfile),
-                self.cls_list_from(cls=MassProfile) == other.cls_list_from(cls=MassProfile),
+                self.cls_list_from(cls=MassProfile)
+                == other.cls_list_from(cls=MassProfile),
             )
         )
 
@@ -355,7 +356,10 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         if self.has(cls=MassProfile):
             return sum(
-                map(lambda p: p.convergence_2d_from(grid=grid), self.cls_list_from(cls=MassProfile))
+                map(
+                    lambda p: p.convergence_2d_from(grid=grid),
+                    self.cls_list_from(cls=MassProfile),
+                )
             )
         return np.zeros((grid.shape[0],))
 
@@ -414,7 +418,10 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         if self.has(cls=MassProfile):
             return sum(
-                map(lambda p: p.potential_2d_from(grid=grid), self.cls_list_from(cls=MassProfile))
+                map(
+                    lambda p: p.potential_2d_from(grid=grid),
+                    self.cls_list_from(cls=MassProfile),
+                )
             )
         return np.zeros((grid.shape[0],))
 

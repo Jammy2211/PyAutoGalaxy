@@ -550,6 +550,33 @@ def test__light_profile_linear__intensity_dict(masked_imaging_7x7):
     )
 
 
+def test__tracer_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
+
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+
+    g0_linear = ag.Galaxy(
+        redshift=0.5, light_profile=ag.lp_linear.EllSersic(sersic_index=1.0)
+    )
+
+    g1_linear = ag.Galaxy(
+        redshift=1.0, light_profile=ag.lp_linear.EllSersic(sersic_index=4.0)
+    )
+
+    plane = ag.Plane(galaxies=[g0, g0_linear, g1_linear])
+
+    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
+
+    assert fit.galaxies[0].light_profile.intensity == pytest.approx(1.0, 1.0e-4)
+
+    plane = fit.plane_linear_light_profiles_to_light_profiles
+
+    assert plane.galaxies[0].light_profile.intensity == pytest.approx(1.0, 1.0e-4)
+    assert plane.galaxies[1].light_profile.intensity == pytest.approx(7.0932274, 1.0e-4)
+    assert plane.galaxies[2].light_profile.intensity == pytest.approx(
+        -1.04694839, 1.0e-4
+    )
+
+
 # def test__light_profile_no_convolve(masked_imaging_7x7):
 #
 #     g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllGaussian(intensity=1.0))

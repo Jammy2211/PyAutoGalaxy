@@ -82,6 +82,8 @@ def test__stellar_fraction_at_radius(dmp_0, dmp_1, smp_0, smp_1):
         / (dark_mass_0 + dark_mass_1 + stellar_mass_0 + stellar_mass_1),
         1.0e-4,
     )
+
+
 def test__dark_mass_within_galaxy__is_sum_of_individual_profiles(dmp_0, dmp_1):
 
     galaxy = ag.Galaxy(

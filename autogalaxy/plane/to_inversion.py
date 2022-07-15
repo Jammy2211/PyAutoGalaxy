@@ -100,7 +100,9 @@ class PlaneToInversion:
         mapper_galaxy_dict = {}
 
         pixelization_list = self.plane.cls_list_from(cls=aa.pix.Pixelization)
-        galaxies_with_pixelization_list = self.plane.galaxies_with_cls_list_from(cls=aa.pix.Pixelization)
+        galaxies_with_pixelization_list = self.plane.galaxies_with_cls_list_from(
+            cls=aa.pix.Pixelization
+        )
         hyper_galaxy_image_list = self.plane.hyper_galaxies_with_pixelization_image_list
 
         for mapper_index in range(len(sparse_grid_list)):

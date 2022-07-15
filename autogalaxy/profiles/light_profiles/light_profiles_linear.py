@@ -437,7 +437,11 @@ class EllMoffat(lp.EllMoffat, LightProfileLinear):
         """
 
         super().__init__(
-            centre=centre, elliptical_comps=elliptical_comps, intensity=1.0, alpha=alpha, beta=beta
+            centre=centre,
+            elliptical_comps=elliptical_comps,
+            intensity=1.0,
+            alpha=alpha,
+            beta=beta,
         )
 
     @property

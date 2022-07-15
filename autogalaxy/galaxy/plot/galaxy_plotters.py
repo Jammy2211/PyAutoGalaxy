@@ -674,7 +674,9 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         """
         return [
             self.mass_profile_pdf_plotter_from(index=index)
-            for index in range(len(self.galaxy_pdf_list[0].cls_list_from(cls=MassProfile)))
+            for index in range(
+                len(self.galaxy_pdf_list[0].cls_list_from(cls=MassProfile))
+            )
         ]
 
     def mass_profile_pdf_plotter_from(self, index) -> MassProfilePDFPlotter:
@@ -690,7 +692,8 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             attributes of the galaxy.
         """
         mass_profile_pdf_list = [
-            galaxy.cls_list_from(cls=MassProfile)[index] for galaxy in self.galaxy_pdf_list
+            galaxy.cls_list_from(cls=MassProfile)[index]
+            for galaxy in self.galaxy_pdf_list
         ]
 
         return MassProfilePDFPlotter(

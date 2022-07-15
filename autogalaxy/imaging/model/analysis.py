@@ -320,11 +320,13 @@ class AnalysisImaging(AnalysisDataset):
         visualizer.visualize_imaging(imaging=self.imaging)
         visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)
 
+        plane = fit.plane_linear_light_profiles_to_light_profiles
+
         visualizer.visualize_plane(
-            plane=fit.plane, grid=fit.grid, during_analysis=during_analysis
+            plane=plane, grid=fit.grid, during_analysis=during_analysis
         )
         visualizer.visualize_galaxies(
-            galaxies=fit.plane.galaxies, grid=fit.grid, during_analysis=during_analysis
+            galaxies=plane.galaxies, grid=fit.grid, during_analysis=during_analysis
         )
         if fit.inversion is not None:
             visualizer.visualize_inversion(

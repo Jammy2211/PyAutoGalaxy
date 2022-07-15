@@ -37,10 +37,10 @@ class FitImaging(aa.FitImaging, AbstractFit):
             The plane of galaxies whose model images are used to fit the imaging data.
         """
 
-
-
         super().__init__(dataset=dataset, profiling_dict=profiling_dict)
-        AbstractFit.__init__(self=self, model_obj=plane, settings_inversion=settings_inversion)
+        AbstractFit.__init__(
+            self=self, model_obj=plane, settings_inversion=settings_inversion
+        )
 
         self.plane = plane
 
@@ -206,6 +206,10 @@ class FitImaging(aa.FitImaging, AbstractFit):
         return self.plane.unmasked_blurred_image_2d_list_from(
             grid=self.grid, psf=self.imaging.psf
         )
+
+    @property
+    def plane_linear_light_profiles_to_light_profiles(self):
+        return self.model_obj_linear_light_profiles_to_light_profiles
 
     def refit_with_new_preloads(self, preloads, settings_inversion=None):
 

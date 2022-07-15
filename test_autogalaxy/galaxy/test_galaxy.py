@@ -285,9 +285,7 @@ def test__no_mass_profile__quantities_returned_as_0s_of_shape_grid(
     assert (deflections.binned.native == np.zeros(shape=(7, 7, 2))).all()
 
 
-def test__mass_angular_within_circle_from(
-    mp_0, mp_1, gal_x2_mp
-):
+def test__mass_angular_within_circle_from(mp_0, mp_1, gal_x2_mp):
 
     mp_0_mass = mp_0.mass_angular_within_circle_from(radius=0.5)
 

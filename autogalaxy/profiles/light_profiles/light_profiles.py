@@ -299,10 +299,11 @@ class EllMoffat(LightProfile):
         return np.multiply(
             self.intensity,
             np.power(
-                1 + np.square(
+                1
+                + np.square(
                     np.divide(grid_radii, self.alpha / np.sqrt(self.axis_ratio))
                 ),
-                - self.beta
+                -self.beta,
             ),
         )
 
@@ -365,9 +366,7 @@ class SphMoffat(EllMoffat):
             tends to a Gaussian as beta goes to infinity.
         """
 
-        super().__init__(
-            centre=centre, intensity=intensity, alpha=alpha, beta=beta
-        )
+        super().__init__(centre=centre, intensity=intensity, alpha=alpha, beta=beta)
 
 
 class AbstractEllSersic(LightProfile):

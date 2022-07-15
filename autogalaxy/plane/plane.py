@@ -74,7 +74,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             return any(list(map(lambda galaxy: galaxy.has(cls=cls), self.galaxies)))
         return False
 
-    def cls_list_from(self, cls:Type) -> List:
+    def cls_list_from(self, cls: Type) -> List:
         """
         Returns a list of objects in the plane which are an instance of the input `cls`.
 
@@ -95,7 +95,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         return cls_list
 
-    def galaxies_with_cls_list_from(self, cls:Type) -> List[Galaxy]:
+    def galaxies_with_cls_list_from(self, cls: Type) -> List[Galaxy]:
         return list(
             filter(lambda galaxy: galaxy.has(cls=aa.pix.Pixelization), self.galaxies)
         )
@@ -247,7 +247,10 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
     @property
     def hyper_galaxies_with_pixelization_image_list(self) -> List[aa.Array2D]:
-        return [galaxy.hyper_galaxy_image for galaxy in self.galaxies_with_cls_list_from(cls=aa.pix.Pixelization)]
+        return [
+            galaxy.hyper_galaxy_image
+            for galaxy in self.galaxies_with_cls_list_from(cls=aa.pix.Pixelization)
+        ]
 
     def hyper_noise_map_from(self, noise_map) -> aa.Array2D:
         hyper_noise_maps = self.hyper_noise_map_list_from(noise_map=noise_map)

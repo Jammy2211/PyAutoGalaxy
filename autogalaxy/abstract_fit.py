@@ -1,12 +1,13 @@
+import copy
 from typing import Dict, Optional
 
 import autoarray as aa
 
+from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 
 
 class AbstractFit:
-
     def __init__(self, model_obj, settings_inversion):
 
         self.model_obj = model_obj
@@ -34,7 +35,7 @@ class AbstractFit:
             A bool which is True if an inversion is performed.
         """
         if self.model_obj.has(cls=aa.pix.Pixelization) or self.model_obj.has(
-                cls=LightProfileLinear
+            cls=LightProfileLinear
         ):
             return True
         return False
@@ -118,3 +119,31 @@ class AbstractFit:
                 galaxy_linear_obj_image_dict.update({galaxy: mapped_reconstructed})
 
         return galaxy_linear_obj_image_dict
+
+    @property
+    def model_obj_linear_light_profiles_to_light_profiles(self):
+        """
+        The model object may contain linear light profiles, which solve for the `intensity` during the `Inversion`.
+
+        This means they are difficult to visualize, becuase they do not have a valid `intensity` parameter.
+
+        To address this, this property creates a new `model_obj` where all linear light profiles are converted to
+        ordinary light profiles whose `intensity` parameters are set to the results of the Inversion.
+
+        Returns
+        -------
+        A `model_obj` (E.g. `Plane` or `Tracer`) where the light profile intensity values are set to the results
+        of those inferred via the `Inversion`.
+
+        """
+        model_obj = copy.copy(self.model_obj)
+
+        for galaxy in model_obj.galaxies:
+            for light_profile in galaxy.cls_list_from(cls=LightProfile):
+                try:
+                    intensity = self.linear_light_profile_intensity_dict[light_profile]
+                    light_profile.intensity = intensity
+                except KeyError:
+                    pass
+
+        return model_obj

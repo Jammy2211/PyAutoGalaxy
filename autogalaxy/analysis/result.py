@@ -67,8 +67,7 @@ class Result(af.Result):
 
 
 class ResultDataset(Result):
-
-    def cls_list_from(self, cls:Type) -> List:
+    def cls_list_from(self, cls: Type) -> List:
         """
         A list of all pixelization classes used by the model-fit.
         """

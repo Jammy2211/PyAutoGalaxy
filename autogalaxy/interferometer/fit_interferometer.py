@@ -38,7 +38,9 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
         super().__init__(
             dataset=dataset, use_mask_in_fit=False, profiling_dict=profiling_dict
         )
-        AbstractFit.__init__(self=self, model_obj=plane, settings_inversion=settings_inversion)
+        AbstractFit.__init__(
+            self=self, model_obj=plane, settings_inversion=settings_inversion
+        )
 
         self.plane = plane
 
@@ -161,6 +163,10 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
     @property
     def model_visibilities_of_galaxies_list(self):
         return list(self.galaxy_model_visibilities_dict.values())
+
+    @property
+    def plane_linear_light_profiles_to_light_profiles(self):
+        return self.model_obj_linear_light_profiles_to_light_profiles
 
     def refit_with_new_preloads(self, preloads, settings_inversion=None):
 
