@@ -143,11 +143,12 @@ class AbstractFit:
         model_obj = copy.copy(self.model_obj)
 
         for galaxy in model_obj.galaxies:
-            for light_profile in galaxy.cls_list_from(cls=LightProfile):
-                try:
-                    intensity = self.linear_light_profile_intensity_dict[light_profile]
-                    light_profile.intensity = intensity
-                except KeyError:
-                    pass
+            for key, obj in galaxy.__dict__.items():
+                if isinstance(obj, LightProfile):
+                    try:
+                        intensity = self.linear_light_profile_intensity_dict[obj]
+                        galaxy.__dict__[key] = obj.lp_instance_from(intensity=intensity)
+                    except KeyError:
+                        pass
 
         return model_obj

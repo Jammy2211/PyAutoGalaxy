@@ -12,6 +12,10 @@ from autogalaxy.profiles import light_and_mass_profiles as lmp
 
 class LightProfileLinear(lp.LightProfile):
     @property
+    def _intensity(self):
+        return 1.0
+
+    @property
     def lp_cls(self):
         raise NotImplementedError
 
@@ -153,6 +157,7 @@ class EllSersic(lp.EllSersic, LightProfileLinear):
         sersic_index
             Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         """
+
         super().__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,

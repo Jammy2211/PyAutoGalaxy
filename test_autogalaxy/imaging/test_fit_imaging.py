@@ -550,7 +550,7 @@ def test__light_profile_linear__intensity_dict(masked_imaging_7x7):
     )
 
 
-def test__tracer_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
+def test__plane_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
 
     g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
 

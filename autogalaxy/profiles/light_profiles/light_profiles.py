@@ -135,6 +135,10 @@ class LightProfile(EllProfile, OperateImage):
         if hasattr(self, "effective_radius"):
             return self.effective_radius
 
+    @property
+    def _intensity(self):
+        return self.intensity
+
 
 class EllGaussian(LightProfile):
     def __init__(
@@ -181,7 +185,7 @@ class EllGaussian(LightProfile):
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
         return np.multiply(
-            self.intensity,
+            self._intensity,
             np.exp(
                 -0.5
                 * np.square(
@@ -297,7 +301,7 @@ class EllMoffat(LightProfile):
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
         return np.multiply(
-            self.intensity,
+            self._intensity,
             np.power(
                 1
                 + np.square(
@@ -442,7 +446,7 @@ class AbstractEllSersic(LightProfile):
         grid_radii
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
-        return self.intensity * np.exp(
+        return self._intensity * np.exp(
             -self.sersic_constant
             * (((radius / self.effective_radius) ** (1.0 / self.sersic_index)) - 1)
         )
@@ -497,7 +501,7 @@ class EllSersic(AbstractEllSersic, LightProfile):
         """
         np.seterr(all="ignore")
         return np.multiply(
-            self.intensity,
+            self._intensity,
             np.exp(
                 np.multiply(
                     -self.sersic_constant,
@@ -761,6 +765,10 @@ class EllSersicCore(EllSersic):
         self.gamma = gamma
 
     @property
+    def _intensity(self):
+        return self.intensity_break
+
+    @property
     def intensity_prime(self) -> float:
         """
         Overall intensity normalisation in the rescaled cored Sersic light profile.
@@ -769,7 +777,7 @@ class EllSersicCore(EllSersic):
         the light profile's image is compared too, which are expected to be electrons per second.
         """
         return (
-            self.intensity_break
+            self._intensity
             * (2.0 ** (-self.gamma / self.alpha))
             * np.exp(
                 self.sersic_constant
@@ -1033,7 +1041,7 @@ class EllChameleon(LightProfile):
         axis_ratio_factor = (1.0 + self.axis_ratio) ** 2.0
 
         return np.multiply(
-            self.intensity / (1 + self.axis_ratio),
+            self._intensity / (1 + self.axis_ratio),
             np.add(
                 np.divide(
                     1.0,
@@ -1170,7 +1178,7 @@ class EllEff(LightProfile):
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
         np.seterr(all="ignore")
-        return self.intensity * (1 + (grid_radii / self.effective_radius) ** 2) ** (
+        return self._intensity * (1 + (grid_radii / self.effective_radius) ** 2) ** (
             -self.eta
         )
 
