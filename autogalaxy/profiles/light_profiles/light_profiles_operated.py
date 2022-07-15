@@ -11,6 +11,12 @@ class EllGaussian(lp.EllGaussian, LightProfileOperated):
     pass
 
 
+class EllMoffat(lp.EllMoffat, LightProfileOperated):
+
+    pass
+
+
+
 class EllSersic(lp.EllSersic, LightProfileOperated):
 
     pass
