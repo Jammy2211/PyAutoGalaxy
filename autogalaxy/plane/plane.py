@@ -417,6 +417,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         grid: aa.type.Grid2DLike,
         exposure_time: float,
         background_sky_level: float = 0.0,
+        psf: Optional[aa.Kernel2D] = None,
     ):
 
         for galaxy in self.galaxies:
@@ -426,6 +427,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
                         grid=grid,
                         exposure_time=exposure_time,
                         background_sky_level=background_sky_level,
+                        psf=psf,
                     )
 
 

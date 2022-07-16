@@ -66,6 +66,7 @@ class SimulatorImaging(aa.SimulatorImaging):
             grid=grid,
             exposure_time=self.exposure_time,
             background_sky_level=self.background_sky_level,
+            psf=self.psf,
         )
 
         image = plane.padded_image_2d_from(

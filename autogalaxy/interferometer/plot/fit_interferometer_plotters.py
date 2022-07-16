@@ -92,7 +92,7 @@ class FitInterferometerPlotter(Plotter):
 
     @property
     def plane(self) -> Plane:
-        return self.fit.plane
+        return self.fit.plane_linear_light_profiles_to_light_profiles
 
     def plane_plotter_from(self, plane: Plane) -> PlanePlotter:
         """

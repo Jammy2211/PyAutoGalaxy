@@ -53,18 +53,19 @@ class LightProfileSNR:
         grid: aa.type.Grid2DLike,
         exposure_time: float,
         background_sky_level: float = 0.0,
+        psf: Optional[aa.Kernel2D] = None,
     ):
         """
         Set the `intensity` of the light profile as follows:
 
         - Evaluate the image of the light profile on an input grid.
+        - Blur this image with a PSF, if included.
         - Take the value of the brightest pixel.
         - Use an input `exposure_time` and `background_sky` (e.g. from the `SimulatorImaging` object) to determine
         what value of `intensity` gives the desired signal to noise ratio for the image.
 
         The intensity is set using an input grid, meaning that for strong lensing calculations the ray-traced grid
         can be used such that the S/N accounts for the magnification of a source galaxy.
-
 
         Parameters
         ----------
@@ -74,6 +75,9 @@ class LightProfileSNR:
             The exposure time of the simulated imaging.
         background_sky_level
             The level of the background sky of the simulated imaging.
+        psf
+            The psf of the simulated imaging which can change the S/N of the light profile due to spreading out
+            the emission.
         """
         self.intensity = 1.0
         if hasattr(self, "intensity_break"):
@@ -81,14 +85,20 @@ class LightProfileSNR:
 
         background_sky_level_counts = background_sky_level * exposure_time
 
-        brightest_value = np.max(self.image_2d_from(grid=grid))
+        image_2d = self.image_2d_from(grid=grid)
+        if psf is not None:
+            image_2d = psf.convolved_array_from(array=image_2d)
+
+        brightest_value = np.max(image_2d)
 
         def func(intensity_factor):
 
             signal = intensity_factor * brightest_value * exposure_time
             noise = np.sqrt(signal + background_sky_level_counts)
 
-            return signal / noise - self.signal_to_noise_ratio
+            signal_to_noise_ratio = signal / noise
+
+            return signal_to_noise_ratio - self.signal_to_noise_ratio
 
         intensity_factor = root_scalar(func, bracket=[1.0e-8, 1.0e8]).root
 

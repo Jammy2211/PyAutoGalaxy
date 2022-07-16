@@ -85,7 +85,7 @@ class FitImagingPlotter(Plotter):
 
     @property
     def plane(self) -> Plane:
-        return self.fit.plane
+        return self.fit.plane_linear_light_profiles_to_light_profiles
 
     @property
     def galaxy_indices(self) -> List[int]:

@@ -71,7 +71,7 @@ class UnitsException(Exception):
     pass
 
 
-def raise_linear_light_profile_in_plot(plotter_type : str, model_obj : str):
+def raise_linear_light_profile_in_plot(plotter_type: str, model_obj: str):
 
     raise ProfileException(
         f"""
