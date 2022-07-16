@@ -419,7 +419,28 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         background_sky_level: float = 0.0,
         psf: Optional[aa.Kernel2D] = None,
     ):
+        """
+        Iterate over every `LightProfileSNR` in the plane and set their `intensity` values to values which give
+        their input `signal_to_noise_ratio` value, which is performed as follows:
 
+        - Evaluate the image of each light profile on the input grid.
+        - Blur this image with a PSF, if included.
+        - Take the value of the brightest pixel.
+        - Use an input `exposure_time` and `background_sky` (e.g. from the `SimulatorImaging` object) to determine
+        what value of `intensity` gives the desired signal to noise ratio for the image.
+
+        Parameters
+        ----------
+        grid
+            The (y, x) coordinates in the original reference frame of the grid.
+        exposure_time
+            The exposure time of the simulated imaging.
+        background_sky_level
+            The level of the background sky of the simulated imaging.
+        psf
+            The psf of the simulated imaging which can change the S/N of the light profile due to spreading out
+            the emission.
+        """
         for galaxy in self.galaxies:
             for light_profile in galaxy.cls_list_from(cls=LightProfile):
                 if isinstance(light_profile, LightProfileSNR):
