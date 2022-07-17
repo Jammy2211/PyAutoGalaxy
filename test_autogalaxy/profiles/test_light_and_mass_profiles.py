@@ -5,7 +5,7 @@ import pytest
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
-class TestGaussian(object):
+class TestGaussian:
     def test__grid_calculations__same_as_gaussian(self):
 
         gaussian_lp = ag.lmp.EllGaussian(
@@ -76,35 +76,6 @@ class TestSersic:
             == sersic_lmp.deflections_yx_2d_from(grid=grid)
         ).all()
 
-    def test__spherical_and_elliptical_identical(self):
-        elliptical = ag.lmp.EllSersic(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
-            effective_radius=1.0,
-            sersic_index=2.0,
-            mass_to_light_ratio=2.0,
-        )
-        spherical = ag.lmp.SphSersic(
-            centre=(0.0, 0.0),
-            intensity=1.0,
-            effective_radius=1.0,
-            sersic_index=2.0,
-            mass_to_light_ratio=2.0,
-        )
-
-        assert elliptical.image_2d_from(grid=grid) == pytest.approx(
-            spherical.image_2d_from(grid=grid), 1.0e-4
-        )
-        assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
-            spherical.convergence_2d_from(grid=grid), 1.0e-4
-        )
-        # assert (elliptical.potential_2d_from(grid=grid) == spherical.potential_2d_from(grid=grid)).all()
-        np.testing.assert_almost_equal(
-            elliptical.deflections_yx_2d_from(grid=grid),
-            spherical.deflections_yx_2d_from(grid=grid),
-        )
-
 
 class TestExponential:
     def test__grid_calculations__same_as_exponential(self):
@@ -138,30 +109,6 @@ class TestExponential:
             == sersic_lmp.deflections_yx_2d_from(grid=grid)
         ).all()
 
-    def test__spherical_and_elliptical_identical(self):
-        elliptical = ag.lmp.EllExponential(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
-            effective_radius=1.0,
-        )
-        spherical = ag.lmp.SphExponential(
-            centre=(0.0, 0.0), intensity=1.0, effective_radius=1.0
-        )
-
-        assert elliptical.image_2d_from(grid=grid) == pytest.approx(
-            spherical.image_2d_from(grid=grid), 1.0e-4
-        )
-        assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
-            spherical.convergence_2d_from(grid=grid), 1.0e-4
-        )
-        # assert elliptical.potential_2d_from(grid=grid) == spherical.potential_2d_from(grid=grid)
-        np.testing.assert_almost_equal(
-            elliptical.deflections_yx_2d_from(grid=grid),
-            spherical.deflections_yx_2d_from(grid=grid),
-        )
-
-
 class TestDevVaucouleurs:
     def test__grid_calculations__same_as_dev_vaucouleurs(self):
 
@@ -193,29 +140,6 @@ class TestDevVaucouleurs:
             sersic_mp.deflections_yx_2d_from(grid=grid)
             == sersic_lmp.deflections_yx_2d_from(grid=grid)
         ).all()
-
-    def test__spherical_and_elliptical_identical(self):
-        elliptical = ag.lmp.EllDevVaucouleurs(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
-            effective_radius=1.0,
-        )
-        spherical = ag.lmp.SphDevVaucouleurs(
-            centre=(0.0, 0.0), intensity=1.0, effective_radius=1.0
-        )
-
-        assert elliptical.image_2d_from(grid=grid) == pytest.approx(
-            spherical.image_2d_from(grid=grid), 1.0e-4
-        )
-        assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
-            spherical.convergence_2d_from(grid=grid), 1.0e-4
-        )
-        # assert elliptical.potential_2d_from(grid=grid) == spherical.potential_2d_from(grid=grid)
-        np.testing.assert_almost_equal(
-            elliptical.deflections_yx_2d_from(grid=grid),
-            spherical.deflections_yx_2d_from(grid=grid),
-        )
 
 
 class TestSersicRadialGradient:
@@ -255,29 +179,6 @@ class TestSersicRadialGradient:
             sersic_lmp.deflections_yx_2d_from(grid=grid), 1.0e-4
         )
 
-    def test__spherical_and_elliptical_identical(self):
-        elliptical = ag.lmp.EllSersicRadialGradient(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
-            effective_radius=1.0,
-        )
-        spherical = ag.lmp.SphSersicRadialGradient(
-            centre=(0.0, 0.0), intensity=1.0, effective_radius=1.0
-        )
-
-        assert elliptical.image_2d_from(grid=grid) == pytest.approx(
-            spherical.image_2d_from(grid=grid), 1.0e-4
-        )
-        assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
-            spherical.convergence_2d_from(grid=grid), 1.0e-4
-        )
-        # assert elliptical.potential_2d_from(grid=grid) == spherical.potential_2d_from(grid=grid)
-        np.testing.assert_almost_equal(
-            elliptical.deflections_yx_2d_from(grid=grid),
-            spherical.deflections_yx_2d_from(grid=grid),
-        )
-
 
 class TestExponentialRadialGradient:
     def test__grid_calculations__same_as_sersic_radial_gradient(self):
@@ -309,29 +210,6 @@ class TestExponentialRadialGradient:
         #    assert (sersic_mp.potential_2d_from(grid=grid) == sersic_lmp.potential_2d_from(grid=grid)).all()
         assert sersic_mp.deflections_yx_2d_from(grid=grid) == pytest.approx(
             sersic_lmp.deflections_yx_2d_from(grid=grid), 1.0e-4
-        )
-
-    def test__spherical_and_elliptical_identical(self):
-        elliptical = ag.lmp.EllExponentialRadialGradient(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
-            effective_radius=1.0,
-        )
-        spherical = ag.lmp.SphExponentialRadialGradient(
-            centre=(0.0, 0.0), intensity=1.0, effective_radius=1.0
-        )
-
-        assert elliptical.image_2d_from(grid=grid) == pytest.approx(
-            spherical.image_2d_from(grid=grid), 1.0e-4
-        )
-        assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
-            spherical.convergence_2d_from(grid=grid), 1.0e-4
-        )
-        # assert elliptical.potential_2d_from(grid=grid) == spherical.potential_2d_from(grid=grid)
-        np.testing.assert_almost_equal(
-            elliptical.deflections_yx_2d_from(grid=grid),
-            spherical.deflections_yx_2d_from(grid=grid),
         )
 
 
@@ -366,34 +244,6 @@ class TestSersicCore:
             sersic_mp.deflections_yx_2d_from(grid=grid)
             == sersic_lmp.deflections_yx_2d_from(grid=grid)
         ).all()
-
-    def test__spherical_and_elliptical_identical(self):
-
-        elliptical = ag.lmp.EllSersicCore(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            effective_radius=1.0,
-            sersic_index=2.0,
-            mass_to_light_ratio=2.0,
-        )
-        spherical = ag.lmp.SphSersicCore(
-            centre=(0.0, 0.0),
-            effective_radius=1.0,
-            sersic_index=2.0,
-            mass_to_light_ratio=2.0,
-        )
-
-        assert elliptical.image_2d_from(grid=grid) == pytest.approx(
-            spherical.image_2d_from(grid=grid), 1.0e-4
-        )
-        assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
-            spherical.convergence_2d_from(grid=grid), 1.0e-4
-        )
-        # assert (elliptical.potential_2d_from(grid=grid) == spherical.potential_2d_from(grid=grid)).all()
-        np.testing.assert_almost_equal(
-            elliptical.deflections_yx_2d_from(grid=grid),
-            spherical.deflections_yx_2d_from(grid=grid),
-        )
 
 
 class TestChameleon:
@@ -433,32 +283,3 @@ class TestChameleon:
             chameleon_mp.deflections_yx_2d_from(grid=grid)
             == chameleon_lmp.deflections_yx_2d_from(grid=grid)
         ).all()
-
-    def test__spherical_and_elliptical_identical(self):
-        elliptical = ag.lmp.EllChameleon(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
-            core_radius_0=0.1,
-            core_radius_1=0.3,
-            mass_to_light_ratio=2.0,
-        )
-        spherical = ag.lmp.SphChameleon(
-            centre=(0.0, 0.0),
-            intensity=1.0,
-            core_radius_0=0.1,
-            core_radius_1=0.3,
-            mass_to_light_ratio=2.0,
-        )
-
-        assert elliptical.image_2d_from(grid=grid) == pytest.approx(
-            spherical.image_2d_from(grid=grid), 1.0e-4
-        )
-        assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
-            spherical.convergence_2d_from(grid=grid), 1.0e4
-        )
-        # assert (elliptical.potential_2d_from(grid=grid) == spherical.potential_2d_from(grid=grid)).all()
-        np.testing.assert_almost_equal(
-            elliptical.deflections_yx_2d_from(grid=grid),
-            spherical.deflections_yx_2d_from(grid=grid),
-        )
