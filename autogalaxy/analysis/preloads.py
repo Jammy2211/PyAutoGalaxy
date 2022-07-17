@@ -79,8 +79,7 @@ class Preloads(aa.Preloads):
 
         Returns
         -------
-        Preloads
-            The preloads object used to skip certain calculations in the log likelihood function.
+        The preloads object used to skip certain calculations in the log likelihood function.
         """
         super().__init__(
             w_tilde=w_tilde,

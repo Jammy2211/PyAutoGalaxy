@@ -71,6 +71,19 @@ class UnitsException(Exception):
     pass
 
 
+def raise_linear_light_profile_in_unmasked():
+
+    raise FitException(
+        """
+        You cannot compute the unmasked image from a fit which contains linear 
+        light profiles or a pixelization, and therefore uses an inversion.
+        
+        This is because the inversion can only be performed within the masked
+        region.
+        """
+    )
+
+
 def raise_linear_light_profile_in_plot(plotter_type: str, model_obj: str):
 
     raise ProfileException(

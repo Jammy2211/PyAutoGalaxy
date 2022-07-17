@@ -8,14 +8,31 @@ from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfil
 
 
 class AbstractFit:
-    def __init__(self, model_obj, settings_inversion):
+    def __init__(self, model_obj, settings_inversion: aa.SettingsInversion):
+        """
+        An abstract fit object which fits to datasets (e.g. imaging, interferometer) inherit from.
 
+        This object primarily inspects the `model_obj` (e.g. a plane object PyAutoGalaxy or tracer in PyAutoLens)
+        and determines the properties used for the fit by inspecting the galaxies / light profiles in this object.
+
+        Parameters
+        ----------
+        model_obj
+            The object which contains the model components (e.g. light profiles, galaxies, etc) which are used to
+            create the model-data that fits the data. In PyAutoGalaxy this is a `Plane` and PyAutoLens it is a `Tracer`.
+        settings_inversion
+            Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
+        """
         self.model_obj = model_obj
         self.settings_inversion = settings_inversion
 
     @property
-    def total_mappers(self):
+    def total_mappers(self) -> int:
+        """
+        The total number of `Mapper` objects used by the inversion in this fit.
 
+        A mapper is created for each galaxy with a pixelization / regularization object.
+        """
         # TODO : When we add regularization to basis need to change this to reflect mappers.
 
         return len(
@@ -27,7 +44,7 @@ class AbstractFit:
         """
         Returns a bool specifying whether this fit object performs an inversion.
 
-        This is based on whether any of the galaxies in the tracer have a `Pixelization` or `LightProfileLinear`
+        This is based on whether any of the galaxies in the `model_obj` have a `Pixelization` or `LightProfileLinear`
         object, in which case an inversion is performed.
 
         Returns
@@ -43,19 +60,19 @@ class AbstractFit:
     @property
     def w_tilde(self) -> Optional[aa.WTildeImaging]:
         """
-        Only call the `w_tilde` property of a dataset if the SettingsInversion()` object has `use_w_tilde=True`,
-        to avoid unecessary computation.
+        Only call the `w_tilde` property of a dataset used to perform efficient linear algebra calcualtions if
+        the SettingsInversion()` object has `use_w_tilde=True`, to avoid unnecessary computation.
 
         Returns
         -------
-            The w-tilde matrix if the w-tilde formalism is being used for this inversion.
+        The w-tilde matrix if the w-tilde formalism is being used for this inversion.
         """
         if self.settings_inversion.use_w_tilde:
             if self.total_mappers > 0:
                 return self.dataset.w_tilde
 
     @property
-    def inversion(self):
+    def inversion(self) -> Optional[aa.Inversion]:
         raise NotImplementedError
 
     @property
@@ -87,8 +104,35 @@ class AbstractFit:
 
         return linear_light_profile_intensity_dict
 
-    def galaxy_linear_obj_data_dict_from(self, use_image: bool = False):
+    def galaxy_linear_obj_data_dict_from(
+        self, use_image: bool = False
+    ) -> Dict["Galaxy", aa.Array2D]:
+        """
+        Returns a dictionary mapping every galaxy containing a linear
+        object (e.g. a linear light profile / pixelization) in the `model_obj` to the `model_data` of its linear
+        objects.
 
+        The `model_data` is the `reconstructed_data` solved for in the inversion`.
+
+        This is used to create the overall `galaxy_model_image_dict`, which maps every galaxy to its
+        overall `model_data` (e.g. including the `model_data` of orindary light profiles too).
+
+        If `use_image=False`, the `reconstructed_data` of the inversion (e.g. an image for imaging data,
+        visibilities for  interferometer data) is input in the dictionary.
+
+        if `use_image=True`, the `reconstructed_image` of the inversion (e.g. the image for imaging data, the
+        real-space image for interferometer data) is input in the dictionary.
+
+        Parameters
+        ----------
+        use_image
+            Whether to put the reconstructed data or images in the dictionary.
+
+        Returns
+        -------
+        The dictionary mapping all galaxies with linear objects to the model data / images of those linear objects
+        reconstructed by the inversion.
+        """
         if self.inversion is None:
             return {}
 
@@ -125,7 +169,7 @@ class AbstractFit:
         """
         The model object may contain linear light profiles, which solve for the `intensity` during the `Inversion`.
 
-        This means they are difficult to visualize, becuase they do not have a valid `intensity` parameter.
+        This means they are difficult to visualize, because they do not have a valid `intensity` parameter.
 
         To address this, this property creates a new `model_obj` where all linear light profiles are converted to
         ordinary light profiles whose `intensity` parameters are set to the results of the Inversion.
@@ -134,7 +178,6 @@ class AbstractFit:
         -------
         A `model_obj` (E.g. `Plane` or `Tracer`) where the light profile intensity values are set to the results
         of those inferred via the `Inversion`.
-
         """
 
         if self.linear_light_profile_intensity_dict is None:

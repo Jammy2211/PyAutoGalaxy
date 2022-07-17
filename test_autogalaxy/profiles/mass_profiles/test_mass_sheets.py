@@ -8,7 +8,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestMassSheet:
-
     def test__deflections_yx_2d_from(self):
         mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
@@ -191,7 +190,6 @@ class TestMassSheet:
 
 
 class TestExternalShear:
-
     def test__deflections_yx_2d_from(self):
 
         shear = ag.mp.ExternalShear(elliptical_comps=(0.1, 0.0))

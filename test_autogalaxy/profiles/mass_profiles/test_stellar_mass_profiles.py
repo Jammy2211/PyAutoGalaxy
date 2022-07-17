@@ -590,7 +590,6 @@ class TestSersic:
         assert ell_convergence_2d == pytest.approx(sph_convergence_2d, 1.0e-4)
 
 
-
 class TestExponential:
     def test__deflections_yx_2d_from(self):
 
@@ -819,7 +818,6 @@ class TestExponential:
         assert ell_convergence_2d == pytest.approx(sph_convergence_2d, 1.0e-4)
 
 
-
 class TestDevVaucouleurs:
     def test__deflections_yx_2d_from(self):
 
@@ -1025,7 +1023,6 @@ class TestDevVaucouleurs:
         assert ell_convergence_2d == pytest.approx(sph_convergence_2d, 1.0e-4)
 
 
-
 class TestSersicMassRadialGradient:
     def test__deflections_via_integral_from(self):
         sersic = ag.mp.EllSersicRadialGradient(
@@ -1167,7 +1164,6 @@ class TestSersicMassRadialGradient:
 
         ell_deflections_yx_2d == pytest.approx(sph_deflections_yx_2d, 1.0e-4)
 
-
     def test__convergence_2d_from(self):
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1/0.6)**-1.0 = 0.6
         sersic = ag.mp.EllSersicRadialGradient(
@@ -1262,7 +1258,6 @@ class TestSersicMassRadialGradient:
         sph_convergence_2d = spherical.convergence_2d_from(grid=grid)
 
         assert ell_convergence_2d == pytest.approx(sph_convergence_2d, 1.0e-4)
-
 
     def test__compare_to_sersic(self):
         sersic = ag.mp.EllSersicRadialGradient(
@@ -1511,7 +1506,6 @@ class TestSersicCore:
         sph_convergence_2d = spherical.convergence_2d_from(grid=grid)
 
         assert ell_convergence_2d == pytest.approx(sph_convergence_2d, 1.0e-4)
-
 
     def test__convergence_2d_via_mge_from(self):
 

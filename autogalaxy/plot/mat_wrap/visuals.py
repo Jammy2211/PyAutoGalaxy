@@ -9,17 +9,27 @@ import autoarray.plot as aplt
 class Visuals1D(aplt.Visuals1D):
     def __init__(
         self,
+        origin: Optional[aa.Grid1D] = None,
+        mask: Optional[aa.Mask1D] = None,
+        points: Optional[aa.Grid1D] = None,
+        vertical_line: Optional[float] = None,
+        shaded_region: Optional[
+            Union[List[List], List[aa.Array1D], List[np.ndarray]]
+        ] = None,
         half_light_radius: Optional[float] = None,
         half_light_radius_errors: Optional[List[float]] = None,
         einstein_radius: Optional[float] = None,
         einstein_radius_errors: Optional[List[float]] = None,
         model_fluxes: Optional[aa.Grid1D] = None,
-        shaded_region: Optional[
-            Union[List[List], List[aa.Array1D], List[np.ndarray]]
-        ] = None,
     ):
 
-        super().__init__(shaded_region=shaded_region)
+        super().__init__(
+            origin=origin,
+            mask=mask,
+            points=points,
+            vertical_line=vertical_line,
+            shaded_region=shaded_region,
+        )
 
         self.half_light_radius = half_light_radius
         self.half_light_radius_errors = half_light_radius_errors
