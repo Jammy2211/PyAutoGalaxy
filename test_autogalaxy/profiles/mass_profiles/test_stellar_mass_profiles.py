@@ -7,43 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 class TestEllGaussian:
-    def test__convergence_2d_from(self):
-        gaussian = ag.mp.EllGaussian(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
-            sigma=1.0,
-            mass_to_light_ratio=1.0,
-        )
-
-        convergence = gaussian.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert convergence == pytest.approx(0.60653, 1e-2)
-
-        gaussian = ag.mp.EllGaussian(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
-            sigma=1.0,
-            mass_to_light_ratio=2.0,
-        )
-
-        convergence = gaussian.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert convergence == pytest.approx(2.0 * 0.60653, 1e-2)
-
-        gaussian = ag.mp.EllGaussian(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.333333),
-            intensity=2.0,
-            sigma=3.0,
-            mass_to_light_ratio=4.0,
-        )
-
-        convergence = gaussian.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert convergence == pytest.approx(7.88965, 1e-2)
-
     def test__deflections_2d_via_analytic_from(self):
 
         gaussian = ag.mp.EllGaussian(
@@ -187,6 +150,43 @@ class TestEllGaussian:
 
         assert (deflections == deflections_via_integral).all()
 
+    def test__convergence_2d_from(self):
+        gaussian = ag.mp.EllGaussian(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.0),
+            intensity=1.0,
+            sigma=1.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        convergence = gaussian.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+
+        assert convergence == pytest.approx(0.60653, 1e-2)
+
+        gaussian = ag.mp.EllGaussian(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.0),
+            intensity=1.0,
+            sigma=1.0,
+            mass_to_light_ratio=2.0,
+        )
+
+        convergence = gaussian.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+
+        assert convergence == pytest.approx(2.0 * 0.60653, 1e-2)
+
+        gaussian = ag.mp.EllGaussian(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.333333),
+            intensity=2.0,
+            sigma=3.0,
+            mass_to_light_ratio=4.0,
+        )
+
+        convergence = gaussian.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+
+        assert convergence == pytest.approx(7.88965, 1e-2)
+
     def test__intensity_and_convergence_match_for_mass_light_ratio_1(self):
 
         gaussian_light_profile = ag.lp.EllGaussian(
@@ -208,8 +208,6 @@ class TestEllGaussian:
         convergence = gaussian_mass_profile.convergence_2d_from(
             grid=np.array([[1.0, 0.0]])
         )
-
-        print(intensity, convergence)
 
         assert (intensity == convergence).all()
 
@@ -396,6 +394,28 @@ class TestSersic:
 
         assert (deflections == deflections_via_integral).all()
 
+        elliptical = ag.mp.EllSersic(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=4.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        spherical = ag.mp.SphSersic(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=4.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        np.testing.assert_almost_equal(
+            elliptical.deflections_2d_via_integral_from(grid=grid),
+            spherical.deflections_2d_via_integral_from(grid=grid),
+        )
+
     def test__convergence_2d_via_mge_from(self):
         sersic = ag.mp.EllSersic(
             centre=(0.0, 0.0),
@@ -547,53 +567,6 @@ class TestSersic:
 
         assert convergence == pytest.approx(5.38066670129, 1e-3)
 
-    def test__geometry_movements(self):
-        sersic_0 = ag.mp.EllSersic(centre=(0.0, 0.0))
-        sersic_1 = ag.mp.EllSersic(centre=(1.0, 1.0))
-
-        convergence_0 = sersic_0.convergence_2d_from(grid=np.array([[1.0, 1.0]]))
-
-        convergence_1 = sersic_1.convergence_2d_from(grid=np.array([[0.0, 0.0]]))
-
-        assert convergence_0 == pytest.approx(convergence_1, 1.0e-6)
-
-        deflections_0 = sersic_0.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
-        deflections_1 = sersic_1.deflections_yx_2d_from(grid=np.array([[0.0, 0.0]]))
-
-        assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-4)
-        assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-4)
-
-        sersic_0 = ag.mp.EllSersic(centre=(0.0, 0.0))
-        sersic_1 = ag.mp.EllSersic(centre=(0.0, 0.0))
-
-        convergence_0 = sersic_0.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
-
-        convergence_1 = sersic_1.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert convergence_0 == convergence_1
-
-        deflections_0 = sersic_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = sersic_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
-        assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
-
-        sersic_0 = ag.mp.EllSersic(centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111))
-        sersic_1 = ag.mp.EllSersic(centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111))
-
-        convergence_0 = sersic_0.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
-
-        convergence_1 = sersic_1.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert convergence_0 == convergence_1
-
-        deflections_0 = sersic_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = sersic_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
-        assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
-
-    def test__spherical_and_elliptical_identical(self):
         elliptical = ag.mp.EllSersic(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
@@ -615,14 +588,29 @@ class TestSersic:
             elliptical.convergence_2d_from(grid=grid)
             == spherical.convergence_2d_from(grid=grid)
         ).all()
-        # assert elliptical.potential_2d_from(grid=grid) == spherical.potential_2d_from(grid=grid)
-        np.testing.assert_almost_equal(
-            elliptical.deflections_2d_via_integral_from(grid=grid),
-            spherical.deflections_2d_via_integral_from(grid=grid),
-        )
 
 
 class TestExponential:
+    def test__deflections_yx_2d_from(self):
+
+        gaussian = ag.mp.EllExponential()
+
+        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_via_cse = gaussian.deflections_2d_via_cse_from(
+            grid=np.array([[1.0, 0.0]])
+        )
+
+        assert (deflections == deflections_via_cse).all()
+
+        gaussian = ag.mp.SphExponential()
+
+        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_via_cse = gaussian.deflections_2d_via_cse_from(
+            grid=np.array([[1.0, 0.0]])
+        )
+
+        assert (deflections == deflections_via_cse).all()
+
     def test__deflections_2d_via_integral_from(self):
         exponential = ag.mp.EllExponential(
             centre=(-0.4, -0.2),
@@ -688,26 +676,6 @@ class TestExponential:
         )
 
         assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
-
-    def test__deflections_yx_2d_from(self):
-
-        gaussian = ag.mp.EllExponential()
-
-        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_via_cse = gaussian.deflections_2d_via_cse_from(
-            grid=np.array([[1.0, 0.0]])
-        )
-
-        assert (deflections == deflections_via_cse).all()
-
-        gaussian = ag.mp.SphExponential()
-
-        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_via_cse = gaussian.deflections_2d_via_cse_from(
-            grid=np.array([[1.0, 0.0]])
-        )
-
-        assert (deflections == deflections_via_cse).all()
 
     def test__convergence_2d_via_mge_from(self):
         exponential = ag.mp.EllExponential(
@@ -829,7 +797,6 @@ class TestExponential:
 
         assert convergence == pytest.approx(4.8566, 1e-3)
 
-    def test__spherical_and_elliptical_identical(self):
         elliptical = ag.mp.EllExponential(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
@@ -852,6 +819,26 @@ class TestExponential:
 
 
 class TestDevVaucouleurs:
+    def test__deflections_yx_2d_from(self):
+
+        gaussian = ag.mp.EllDevVaucouleurs()
+
+        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_via_cse = gaussian.deflections_2d_via_cse_from(
+            grid=np.array([[1.0, 0.0]])
+        )
+
+        assert (deflections == deflections_via_cse).all()
+
+        gaussian = ag.mp.SphDevVaucouleurs()
+
+        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+        deflections_via_cse = gaussian.deflections_2d_via_cse_from(
+            grid=np.array([[1.0, 0.0]])
+        )
+
+        assert (deflections == deflections_via_cse).all()
+
     def test__deflections_via_integral_from(self):
         dev = ag.mp.EllDevVaucouleurs(
             centre=(0.4, 0.2),
@@ -902,26 +889,6 @@ class TestDevVaucouleurs:
         )
 
         assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
-
-    def test__deflections_yx_2d_from(self):
-
-        gaussian = ag.mp.EllDevVaucouleurs()
-
-        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_via_cse = gaussian.deflections_2d_via_cse_from(
-            grid=np.array([[1.0, 0.0]])
-        )
-
-        assert (deflections == deflections_via_cse).all()
-
-        gaussian = ag.mp.SphDevVaucouleurs()
-
-        deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_via_cse = gaussian.deflections_2d_via_cse_from(
-            grid=np.array([[1.0, 0.0]])
-        )
-
-        assert (deflections == deflections_via_cse).all()
 
     def test__convergence_2d_via_mge_from(self):
         dev = ag.mp.EllDevVaucouleurs(
@@ -1035,7 +1002,6 @@ class TestDevVaucouleurs:
 
         assert convergence == pytest.approx(0.351797, 1e-3)
 
-    def test__spherical_and_elliptical_identical(self):
         elliptical = ag.mp.EllDevVaucouleurs(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
@@ -1174,6 +1140,30 @@ class TestSersicMassRadialGradient:
 
         assert (deflections == deflections_via_integral).all()
 
+        elliptical = ag.mp.EllSersicRadialGradient(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=4.0,
+            mass_to_light_ratio=1.0,
+            mass_to_light_gradient=1.0,
+        )
+
+        spherical = ag.mp.EllSersicRadialGradient(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=4.0,
+            mass_to_light_ratio=1.0,
+            mass_to_light_gradient=1.0,
+        )
+
+        assert (
+            elliptical.deflections_yx_2d_from(grid=grid)
+            == spherical.deflections_yx_2d_from(grid=grid)
+        ).all()
+
     def test__convergence_2d_from(self):
         # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1/0.6)**-1.0 = 0.6
         sersic = ag.mp.EllSersicRadialGradient(
@@ -1244,6 +1234,30 @@ class TestSersicMassRadialGradient:
         convergence = sersic.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
 
         assert convergence == pytest.approx(2.836879 * 5.38066670129, abs=2e-01)
+
+        elliptical = ag.mp.EllSersicRadialGradient(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=4.0,
+            mass_to_light_ratio=1.0,
+            mass_to_light_gradient=1.0,
+        )
+
+        spherical = ag.mp.EllSersicRadialGradient(
+            centre=(0.0, 0.0),
+            intensity=1.0,
+            effective_radius=1.0,
+            sersic_index=4.0,
+            mass_to_light_ratio=1.0,
+            mass_to_light_gradient=1.0,
+        )
+
+        assert (
+            elliptical.convergence_2d_from(grid=grid)
+            == spherical.convergence_2d_from(grid=grid)
+        ).all()
 
     def test__compare_to_sersic(self):
         sersic = ag.mp.EllSersicRadialGradient(
@@ -1342,36 +1356,6 @@ class TestSersicMassRadialGradient:
         )
         assert sersic_deflections[0, 1] == pytest.approx(0.79374, 1e-3)
 
-    def test__spherical_and_elliptical_identical(self):
-        elliptical = ag.mp.EllSersicRadialGradient(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
-            effective_radius=1.0,
-            sersic_index=4.0,
-            mass_to_light_ratio=1.0,
-            mass_to_light_gradient=1.0,
-        )
-
-        spherical = ag.mp.EllSersicRadialGradient(
-            centre=(0.0, 0.0),
-            intensity=1.0,
-            effective_radius=1.0,
-            sersic_index=4.0,
-            mass_to_light_ratio=1.0,
-            mass_to_light_gradient=1.0,
-        )
-
-        assert (
-            elliptical.convergence_2d_from(grid=grid)
-            == spherical.convergence_2d_from(grid=grid)
-        ).all()
-        # assert elliptical.potential_2d_from(grid=grid) == spherical.potential_2d_from(grid=grid)
-        assert (
-            elliptical.deflections_yx_2d_from(grid=grid)
-            == spherical.deflections_yx_2d_from(grid=grid)
-        ).all()
-
 
 class TestSersicCore:
     def test__deflections_2d_via_mge_from(self):
@@ -1451,6 +1435,26 @@ class TestSersicCore:
 
         assert (deflections == deflections_via_integral).all()
 
+        elliptical = ag.mp.EllSersicCore(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.0),
+            effective_radius=1.0,
+            sersic_index=4.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        spherical = ag.mp.EllSersicCore(
+            centre=(0.0, 0.0),
+            effective_radius=1.0,
+            sersic_index=4.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        np.testing.assert_almost_equal(
+            elliptical.deflections_2d_via_integral_from(grid=grid),
+            spherical.deflections_2d_via_integral_from(grid=grid),
+        )
+
     def test__convergence_2d_from(self):
 
         core_sersic = ag.mp.EllSersicCore(
@@ -1483,89 +1487,6 @@ class TestSersicCore:
 
         assert convergence == pytest.approx(0.2, 1e-3)
 
-    def test__convergence_2d_via_mge_from(self):
-
-        core_sersic = ag.mp.EllSersicCore(
-            elliptical_comps=(0.2, 0.4),
-            effective_radius=5.0,
-            sersic_index=4.0,
-            radius_break=0.01,
-            intensity_break=0.1,
-            gamma=1.0,
-            alpha=1.0,
-            mass_to_light_ratio=1.0,
-        )
-
-        convergence = core_sersic.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
-        convergence_via_mge = core_sersic.convergence_2d_via_mge_from(
-            grid=np.array([[0.0, 1.0]])
-        )
-
-        assert convergence == pytest.approx(convergence_via_mge, 1e-3)
-
-    def test__change_geometry(self):
-
-        sersic_0 = ag.mp.EllSersicCore(centre=(0.0, 0.0))
-        sersic_1 = ag.mp.EllSersicCore(centre=(1.0, 1.0))
-
-        convergence_0 = sersic_0.convergence_2d_from(grid=np.array([[1.0, 1.0]]))
-
-        convergence_1 = sersic_1.convergence_2d_from(grid=np.array([[0.0, 0.0]]))
-
-        assert convergence_0 == convergence_1
-
-        deflections_0 = sersic_0.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
-        deflections_1 = sersic_1.deflections_yx_2d_from(grid=np.array([[0.0, 0.0]]))
-
-        assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-4)
-        assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-4)
-
-        sersic_0 = ag.mp.EllSersicCore(centre=(0.0, 0.0))
-        sersic_1 = ag.mp.EllSersicCore(centre=(0.0, 0.0))
-
-        convergence_0 = sersic_0.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
-
-        convergence_1 = sersic_1.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert convergence_0 == convergence_1
-
-        sersic_0 = ag.mp.EllSersicCore(centre=(0.0, 0.0))
-        sersic_1 = ag.mp.EllSersicCore(centre=(0.0, 0.0))
-
-        deflections_0 = sersic_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = sersic_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
-        assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
-
-        sersic_0 = ag.mp.EllSersicCore(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
-        )
-        sersic_1 = ag.mp.EllSersicCore(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
-        )
-
-        convergence_0 = sersic_0.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
-
-        convergence_1 = sersic_1.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert convergence_0 == convergence_1
-
-        sersic_0 = ag.mp.EllSersicCore(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
-        )
-        sersic_1 = ag.mp.EllSersicCore(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
-        )
-
-        deflections_0 = sersic_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = sersic_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
-        assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
-
-    def test__spherical_and_elliptical_identical(self):
-
         elliptical = ag.mp.EllSersicCore(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
@@ -1585,45 +1506,26 @@ class TestSersicCore:
             elliptical.convergence_2d_from(grid=grid)
             == spherical.convergence_2d_from(grid=grid)
         ).all()
-        # assert elliptical.potential_2d_from(grid=grid) == spherical.potential_2d_from(grid=grid)
-        np.testing.assert_almost_equal(
-            elliptical.deflections_2d_via_integral_from(grid=grid),
-            spherical.deflections_2d_via_integral_from(grid=grid),
+
+    def test__convergence_2d_via_mge_from(self):
+
+        core_sersic = ag.mp.EllSersicCore(
+            elliptical_comps=(0.2, 0.4),
+            effective_radius=5.0,
+            sersic_index=4.0,
+            radius_break=0.01,
+            intensity_break=0.1,
+            gamma=1.0,
+            alpha=1.0,
+            mass_to_light_ratio=1.0,
         )
 
-    def test__outputs_are_autoarrays(self):
+        convergence = core_sersic.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+        convergence_via_mge = core_sersic.convergence_2d_via_mge_from(
+            grid=np.array([[0.0, 1.0]])
+        )
 
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        sersic = ag.mp.EllSersicCore()
-
-        convergence = sersic.convergence_2d_from(grid=grid)
-
-        assert convergence.shape_native == (2, 2)
-
-        # potential = sersic.potential_2d_from(
-        #     grid=grid)
-        #
-        # assert potential.shape == (2, 2)
-
-        deflections = sersic.deflections_2d_via_integral_from(grid=grid)
-
-        assert deflections.shape_native == (2, 2)
-
-        sersic = ag.mp.EllSersicCore()
-
-        convergence = sersic.convergence_2d_from(grid=grid)
-
-        assert convergence.shape_native == (2, 2)
-
-        # potential = sersic.potential_2d_from(
-        #     grid=grid)
-        #
-        # assert potential.shape == (2, 2)
-
-        deflections = sersic.deflections_2d_via_integral_from(grid=grid)
-
-        assert deflections.shape_native == (2, 2)
+        assert convergence == pytest.approx(convergence_via_mge, 1e-3)
 
 
 class TestChameleon:
@@ -1664,6 +1566,24 @@ class TestChameleon:
 
         assert (deflections == deflections_via_integral).all()
 
+    def test__spherical_and_elliptical_identical(self):
+
+        elliptical = ag.mp.EllChameleon(
+            centre=(0.0, 0.0),
+            elliptical_comps=(0.0, 0.0),
+            intensity=1.0,
+            mass_to_light_ratio=1.0,
+        )
+
+        spherical = ag.mp.SphChameleon(
+            centre=(0.0, 0.0), intensity=1.0, mass_to_light_ratio=1.0
+        )
+
+        np.testing.assert_almost_equal(
+            elliptical.deflections_yx_2d_from(grid=grid),
+            spherical.deflections_yx_2d_from(grid=grid),
+        )
+
     def test__convergence_2d_from(self):
 
         chameleon = ag.mp.EllChameleon(
@@ -1690,75 +1610,6 @@ class TestChameleon:
 
         assert convergence == pytest.approx(0.007814, 1e-3)
 
-    def test__change_geometry(self):
-        chameleon_0 = ag.mp.EllChameleon(
-            centre=(0.0, 0.0), intensity=3.0, core_radius_0=0.2, core_radius_1=0.4
-        )
-        chameleon_1 = ag.mp.EllChameleon(
-            centre=(1.0, 1.0), intensity=3.0, core_radius_0=0.2, core_radius_1=0.4
-        )
-
-        convergence_0 = chameleon_0.convergence_2d_from(grid=np.array([[1.0, 1.0]]))
-
-        convergence_1 = chameleon_1.convergence_2d_from(grid=np.array([[0.0, 0.0]]))
-
-        assert convergence_0 == pytest.approx(convergence_1, 1.0e-6)
-
-        deflections_0 = chameleon_0.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
-        deflections_1 = chameleon_1.deflections_yx_2d_from(grid=np.array([[0.0, 0.0]]))
-
-        assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-4)
-        assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-4)
-
-        chameleon_0 = ag.mp.EllChameleon(
-            centre=(0.0, 0.0), intensity=3.0, core_radius_0=0.2, core_radius_1=0.4
-        )
-        chameleon_1 = ag.mp.EllChameleon(
-            centre=(0.0, 0.0), intensity=3.0, core_radius_0=0.2, core_radius_1=0.4
-        )
-
-        convergence_0 = chameleon_0.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
-
-        convergence_1 = chameleon_1.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
-
-        chameleon_0 = ag.mp.EllChameleon(centre=(0.0, 0.0))
-        chameleon_1 = ag.mp.EllChameleon(centre=(0.0, 0.0))
-
-        deflections_0 = chameleon_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = chameleon_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
-        assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
-
-        chameleon_0 = ag.mp.EllChameleon(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
-        )
-        chameleon_1 = ag.mp.EllChameleon(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
-        )
-
-        convergence_0 = chameleon_0.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
-        convergence_1 = chameleon_1.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert convergence_0 == pytest.approx(convergence_1, 1.0e-4)
-
-        chameleon_0 = ag.mp.EllChameleon(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
-        )
-        chameleon_1 = ag.mp.EllChameleon(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
-        )
-
-        deflections_0 = chameleon_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = chameleon_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
-        assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
-
-    def test__spherical_and_elliptical_identical(self):
-
         elliptical = ag.mp.EllChameleon(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
@@ -1772,9 +1623,4 @@ class TestChameleon:
 
         assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
             spherical.convergence_2d_from(grid=grid), 1.0e-4
-        )
-
-        np.testing.assert_almost_equal(
-            elliptical.deflections_yx_2d_from(grid=grid),
-            spherical.deflections_yx_2d_from(grid=grid),
         )
