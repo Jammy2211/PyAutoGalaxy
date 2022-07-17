@@ -180,40 +180,8 @@ class TestDecorators:
 
 
 class TestGaussian:
-    def test__intensity_as_radius__correct_value(self):
-        gaussian = ag.lp.EllGaussian(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
-        )
 
-        image = gaussian.image_2d_via_radii_from(grid_radii=1.0)
-
-        assert image == pytest.approx(0.60653, 1e-2)
-
-        gaussian = ag.lp.EllGaussian(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=2.0, sigma=1.0
-        )
-
-        image = gaussian.image_2d_via_radii_from(grid_radii=1.0)
-
-        assert image == pytest.approx(2.0 * 0.60653, 1e-2)
-
-        gaussian = ag.lp.EllGaussian(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
-        )
-
-        image = gaussian.image_2d_via_radii_from(grid_radii=1.0)
-
-        assert image == pytest.approx(0.882496, 1e-2)
-
-        gaussian = ag.lp.EllGaussian(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
-        )
-
-        image = gaussian.image_2d_via_radii_from(grid_radii=3.0)
-
-        assert image == pytest.approx(0.32465, 1e-2)
-
-    def test__image_2d_from__same_values_as_above(self):
+    def test__image_2d_from(self):
         gaussian = ag.lp.EllGaussian(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
         )
@@ -246,73 +214,6 @@ class TestGaussian:
 
         assert image == pytest.approx(0.3246, 1e-2)
 
-    def test__image_2d_from__change_geometry(self):
-        gaussian = ag.lp.EllGaussian(
-            centre=(1.0, 1.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
-        )
-        image = gaussian.image_2d_from(grid=np.array([[1.0, 0.0]]))
-        assert image == pytest.approx(0.60653, 1e-2)
-
-        gaussian = ag.lp.EllGaussian(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.333333),
-            intensity=1.0,
-            sigma=1.0,
-        )
-
-        image = gaussian.image_2d_from(grid=np.array([[1.0, 0.0]]))
-
-        assert image == pytest.approx(0.60653, 1e-2)
-
-        gaussian_0 = ag.lp.EllGaussian(
-            centre=(-3.0, -0.0),
-            elliptical_comps=(0.0, 0.333333),
-            intensity=1.0,
-            sigma=1.0,
-        )
-
-        gaussian_1 = ag.lp.EllGaussian(
-            centre=(3.0, 0.0),
-            elliptical_comps=(0.0, 0.333333),
-            intensity=1.0,
-            sigma=1.0,
-        )
-
-        image_0 = gaussian_0.image_2d_from(
-            grid=np.array([[0.0, 0.0], [0.0, 1.0], [0.0, -1.0]])
-        )
-
-        image_1 = gaussian_1.image_2d_from(
-            grid=np.array([[0.0, 0.0], [0.0, 1.0], [0.0, -1.0]])
-        )
-
-        assert image_0 == pytest.approx(image_1, 1e-4)
-
-        gaussian_0 = ag.lp.EllGaussian(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.333333),
-            intensity=1.0,
-            sigma=1.0,
-        )
-
-        gaussian_1 = ag.lp.EllGaussian(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.333333),
-            intensity=1.0,
-            sigma=1.0,
-        )
-
-        image_0 = gaussian_0.image_2d_from(
-            grid=np.array([[0.0, 0.0], [0.0, 1.0], [0.0, -1.0]])
-        )
-
-        image_1 = gaussian_1.image_2d_from(
-            grid=np.array([[0.0, 0.0], [0.0, -1.0], [0.0, 1.0]])
-        )
-
-        assert image_0 == pytest.approx(image_1, 1e-4)
-
-    def test__spherical_and_elliptical_match(self):
         elliptical = ag.lp.EllGaussian(
             elliptical_comps=(0.0, 0.0), intensity=3.0, sigma=2.0
         )
@@ -321,26 +222,11 @@ class TestGaussian:
         image_elliptical = elliptical.image_2d_from(grid=grid)
         image_spherical = spherical.image_2d_from(grid=grid)
 
-        assert (image_elliptical == image_spherical).all()
-
-    def test__output_image_is_array(self):
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        gaussian = ag.lp.EllGaussian()
-
-        image = gaussian.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
-
-        gaussian = ag.lp.SphGaussian()
-
-        image = gaussian.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
+        assert image_elliptical == pytest.approx(image_spherical, 1.0e-4)
 
 
 class TestMoffat:
-    def test__intensity_as_radius__correct_value(self):
+    def test__image_2d_from(self):
         moffat = ag.lp.EllMoffat(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
@@ -349,7 +235,7 @@ class TestMoffat:
             beta=1.0,
         )
 
-        image = moffat.image_2d_via_radii_from(grid_radii=1.0)
+        image = moffat.image_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert image == pytest.approx(0.5, 1e-4)
 
@@ -361,19 +247,19 @@ class TestMoffat:
             beta=0.75,
         )
 
-        image = moffat.image_2d_via_radii_from(grid_radii=2.0)
+        image = moffat.image_2d_from(grid=np.array([[0.0, 2.0]]))
 
-        assert image == pytest.approx(0.6746091, 1e-4)
+        assert image == pytest.approx(0.7340746, 1e-4)
 
         moffat = ag.lp.SphMoffat(centre=(0.0, 0.0), intensity=1.0, alpha=1.8, beta=0.75)
 
-        image = moffat.image_2d_via_radii_from(grid_radii=2.0)
+        image = moffat.image_2d_from(grid=np.array([[0.0, 2.0]]))
 
         assert image == pytest.approx(0.5471480213, 1e-4)
 
 
 class TestSersic:
-    def test__image_2d_via_radii_from__correct_value(self):
+    def test__image_2d_from(self):
         sersic = ag.lp.EllSersic(
             elliptical_comps=(0.0, 0.0),
             intensity=1.0,
@@ -381,7 +267,7 @@ class TestSersic:
             sersic_index=4.0,
         )
 
-        image = sersic.image_2d_via_radii_from(grid_radii=1.0)
+        image = sersic.image_2d_from(grid=np.array([[1.0, 0.0]]))
 
         assert image == pytest.approx(0.351797, 1e-3)
 
@@ -393,11 +279,10 @@ class TestSersic:
         )
         # 3.0 * exp(-3.67206544592 * (1,5/2.0) ** (1.0 / 2.0)) - 1) = 0.351797
 
-        image = sersic.image_2d_via_radii_from(grid_radii=1.5)
+        image = sersic.image_2d_from(grid=np.array([[1.5, 0.0]]))
 
         assert image == pytest.approx(4.90657319276, 1e-3)
 
-    def test__image_2d_from__correct_values_for_input_parameters(self):
         sersic = ag.lp.EllSersic(
             elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
@@ -409,28 +294,6 @@ class TestSersic:
 
         assert image == pytest.approx(5.38066670129, 1e-3)
 
-    def test__image_2d_from__change_geometry(self):
-        sersic_0 = ag.lp.EllSersic(
-            elliptical_comps=(0.0, 0.333333),
-            intensity=3.0,
-            effective_radius=2.0,
-            sersic_index=2.0,
-        )
-
-        sersic_1 = ag.lp.EllSersic(
-            elliptical_comps=(0.0, -0.333333),
-            intensity=3.0,
-            effective_radius=2.0,
-            sersic_index=2.0,
-        )
-
-        image_0 = sersic_0.image_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        image_1 = sersic_1.image_2d_from(grid=np.array([[1.0, 0.0]]))
-
-        assert (image_0 == image_1).all()
-
-    def test__spherical_and_elliptical_match(self):
         elliptical = ag.lp.EllSersic(
             elliptical_comps=(0.0, 0.0),
             intensity=3.0,
@@ -448,41 +311,10 @@ class TestSersic:
 
         assert image_elliptical == pytest.approx(image_spherical, 1.0e-4)
 
-    def test__output_image_is_autoarray(self):
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        sersic = ag.lp.EllSersic()
-
-        image = sersic.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
-
-        sersic = ag.lp.SphSersic()
-
-        image = sersic.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
-
 
 class TestExponential:
-    def test__image_2d_via_radii_from__correct_value(self):
-        exponential = ag.lp.EllExponential(
-            elliptical_comps=(0.0, 0.0), intensity=1.0, effective_radius=0.6
-        )
 
-        image = exponential.image_2d_via_radii_from(grid_radii=1.0)
-
-        assert image == pytest.approx(0.3266, 1e-3)
-
-        exponential = ag.lp.EllExponential(
-            elliptical_comps=(0.0, 0.0), intensity=3.0, effective_radius=2.0
-        )
-
-        image = exponential.image_2d_via_radii_from(grid_radii=1.5)
-
-        assert image == pytest.approx(4.5640, 1e-3)
-
-    def test__image_2d_from__correct_values(self):
+    def test__image_2d_from(self):
         exponential = ag.lp.EllExponential(
             elliptical_comps=(0.0, 0.333333), intensity=3.0, effective_radius=2.0
         )
@@ -511,22 +343,6 @@ class TestExponential:
 
         assert value == pytest.approx(2.0 * 4.8566, 1e-3)
 
-    def test__image_2d_from__change_geometry(self):
-        exponential_0 = ag.lp.EllExponential(
-            elliptical_comps=(0.0, 0.333333), intensity=3.0, effective_radius=2.0
-        )
-
-        exponential_1 = ag.lp.EllExponential(
-            elliptical_comps=(0.0, -0.333333), intensity=3.0, effective_radius=2.0
-        )
-
-        image_0 = exponential_0.image_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        image_1 = exponential_1.image_2d_from(grid=np.array([[1.0, 0.0]]))
-
-        assert (image_0 == image_1).all()
-
-    def test__spherical_and_elliptical_match(self):
         elliptical = ag.lp.EllExponential(
             elliptical_comps=(0.0, 0.0), intensity=3.0, effective_radius=2.0
         )
@@ -538,41 +354,10 @@ class TestExponential:
 
         assert image_elliptical == pytest.approx(image_spherical, 1.0e-4)
 
-    def test__output_image_is_autoarray(self):
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        exponential = ag.lp.EllExponential()
-
-        image = exponential.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
-
-        exponential = ag.lp.SphExponential()
-
-        image = exponential.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
-
 
 class TestDevVaucouleurs:
-    def test__image_2d_via_radii_from__correct_value(self):
-        dev_vaucouleurs = ag.lp.EllDevVaucouleurs(
-            elliptical_comps=(0.0, 0.0), intensity=1.0, effective_radius=0.6
-        )
 
-        image = dev_vaucouleurs.image_2d_via_radii_from(grid_radii=1.0)
-
-        assert image == pytest.approx(0.3518, 1e-3)
-
-        dev_vaucouleurs = ag.lp.EllDevVaucouleurs(
-            elliptical_comps=(0.0, 0.0), intensity=3.0, effective_radius=2.0
-        )
-
-        image = dev_vaucouleurs.image_2d_via_radii_from(grid_radii=1.5)
-
-        assert image == pytest.approx(5.1081, 1e-3)
-
-    def test__image_2d_from__correct_values(self):
+    def test__image_2d_from(self):
         dev_vaucouleurs = ag.lp.EllDevVaucouleurs(
             elliptical_comps=(0.0, 0.333333), intensity=3.0, effective_radius=2.0
         )
@@ -601,22 +386,6 @@ class TestDevVaucouleurs:
 
         assert value == pytest.approx(2.0 * 7.4455, 1e-3)
 
-    def test__image_2d_from__change_geometry(self):
-        dev_vaucouleurs_0 = ag.lp.EllDevVaucouleurs(
-            elliptical_comps=(0.0, 0.333333), intensity=3.0, effective_radius=2.0
-        )
-
-        dev_vaucouleurs_1 = ag.lp.EllDevVaucouleurs(
-            elliptical_comps=(0.0, -0.333333), intensity=3.0, effective_radius=2.0
-        )
-
-        image_0 = dev_vaucouleurs_0.image_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        image_1 = dev_vaucouleurs_1.image_2d_from(grid=np.array([[1.0, 0.0]]))
-
-        assert image_0 == image_1
-
-    def test__spherical_and_elliptical_match(self):
         elliptical = ag.lp.EllDevVaucouleurs(
             elliptical_comps=(0.0, 0.0), intensity=3.0, effective_radius=2.0
         )
@@ -629,24 +398,9 @@ class TestDevVaucouleurs:
 
         assert image_elliptical == pytest.approx(image_spherical, 1.0e-4)
 
-    def test__output_image_is_autoarray(self):
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        dev_vaucouleurs = ag.lp.EllDevVaucouleurs()
-
-        image = dev_vaucouleurs.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
-
-        dev_vaucouleurs = ag.lp.SphDevVaucouleurs()
-
-        image = dev_vaucouleurs.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
-
 
 class TestSersicCore:
-    def test__image_2d_via_radii_from__correct_value(self):
+    def test__image_2d_from(self):
 
         core_sersic = ag.lp.EllSersicCore(
             elliptical_comps=(0.0, 0.333333),
@@ -658,11 +412,9 @@ class TestSersicCore:
             alpha=1.0,
         )
 
-        image = core_sersic.image_2d_via_radii_from(0.01)
+        image = core_sersic.image_2d_from(grid=np.array([[0.0, 0.1]]))
 
-        assert image == 0.1
-
-    def test__spherical_and_elliptical_match(self):
+        assert image == pytest.approx(0.0255173, 1.0e-4)
 
         elliptical = ag.lp.EllSersicCore(
             elliptical_comps=(0.0, 0.0),
@@ -687,27 +439,12 @@ class TestSersicCore:
 
         image_spherical = spherical.image_2d_from(grid=grid)
 
-        assert (image_elliptical == image_spherical).all()
-
-    def test__output_image_is_autoarray(self):
-
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        core_sersic = ag.lp.EllSersicCore()
-
-        image = core_sersic.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
-
-        core_sersic = ag.lp.SphSersicCore()
-
-        image = core_sersic.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
+        assert image_elliptical == pytest.approx(image_spherical, 1.0e-4)
 
 
 class TestChameleon:
-    def test__image_2d_via_radii_from__correct_value(self):
+    def test__image_2d_from(self):
+
         chameleon = ag.lp.EllChameleon(
             elliptical_comps=(0.0, 0.0),
             intensity=1.0,
@@ -715,7 +452,7 @@ class TestChameleon:
             core_radius_1=0.3,
         )
 
-        image = chameleon.image_2d_via_radii_from(grid_radii=1.0)
+        image = chameleon.image_2d_from(grid=np.array([[0.0, 1.0]]))
 
         assert image == pytest.approx(0.018605, 1e-3)
 
@@ -727,11 +464,10 @@ class TestChameleon:
         )
         # 3.0 * exp(-3.67206544592 * (1,5/2.0) ** (1.0 / 2.0)) - 1) = 0.351797
 
-        image = chameleon.image_2d_via_radii_from(grid_radii=1.5)
+        image = chameleon.image_2d_from(grid=np.array([[0.0, 1.5]]))
 
-        assert image == pytest.approx(0.07816, 1e-3)
+        assert image == pytest.approx(0.0078149, 1e-3)
 
-    def test__image_2d_from__correct_values_for_input_parameters(self):
         chameleon = ag.lp.EllChameleon(
             elliptical_comps=(0.0, 0.333333),
             intensity=3.0,
@@ -743,28 +479,6 @@ class TestChameleon:
 
         assert image == pytest.approx(0.024993, 1e-3)
 
-    def test__image_2d_from__change_geometry(self):
-        chameleon_0 = ag.lp.EllChameleon(
-            elliptical_comps=(0.0, 0.333333),
-            intensity=3.0,
-            core_radius_0=0.2,
-            core_radius_1=0.4,
-        )
-
-        chameleon_1 = ag.lp.EllChameleon(
-            elliptical_comps=(0.0, -0.333333),
-            intensity=3.0,
-            core_radius_0=0.2,
-            core_radius_1=0.4,
-        )
-
-        image_0 = chameleon_0.image_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        image_1 = chameleon_1.image_2d_from(grid=np.array([[1.0, 0.0]]))
-
-        assert (image_0 == image_1).all()
-
-    def _test__spherical_and_elliptical_match(self):
         elliptical = ag.lp.EllChameleon(
             elliptical_comps=(0.0, 0.0),
             intensity=3.0,
@@ -780,73 +494,12 @@ class TestChameleon:
 
         image_spherical = spherical.image_2d_from(grid=grid)
 
-        assert (image_elliptical == image_spherical).all()
-
-    def test__output_image_is_autoarray(self):
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        chameleon = ag.lp.EllChameleon()
-
-        image = chameleon.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
-
-        chameleon = ag.lp.SphChameleon()
-
-        image = chameleon.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
+        assert image_elliptical == pytest.approx(image_spherical, 1.0e-4)
 
 
 class TestEff:
-    def test__image_2d_via_radii_from__correct_value(self):
 
-        eff = ag.lp.EllEff(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
-            effective_radius=1.0,
-        )
-
-        image = eff.image_2d_via_radii_from(grid_radii=1.0)
-
-        assert image == pytest.approx(0.35355, 1e-2)
-
-        eff = ag.lp.EllEff(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=2.0,
-            effective_radius=1.0,
-        )
-
-        image = eff.image_2d_via_radii_from(grid_radii=1.0)
-
-        assert image == pytest.approx(2.0 * 0.35355, 1e-2)
-
-        eff = ag.lp.EllEff(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
-            effective_radius=2.0,
-        )
-
-        image = eff.image_2d_via_radii_from(grid_radii=1.0)
-
-        assert image == pytest.approx(0.71554, 1e-2)
-
-        eff = ag.lp.EllEff(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
-            effective_radius=2.0,
-            eta=2.0,
-        )
-
-        image = eff.image_2d_via_radii_from(grid_radii=3.0)
-
-        assert image == pytest.approx(0.09467, 1e-2)
-
-    def test__image_2d_from__same_values_as_above(self):
+    def test__image_2d_from(self):
         eff = ag.lp.EllEff(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.0),
@@ -891,76 +544,6 @@ class TestEff:
 
         assert image == pytest.approx(0.17067, 1e-2)
 
-    def test__image_2d_from__change_geometry(self):
-        eff = ag.lp.EllEff(
-            centre=(1.0, 1.0),
-            elliptical_comps=(0.0, 0.0),
-            intensity=1.0,
-            effective_radius=1.0,
-        )
-        image = eff.image_2d_from(grid=np.array([[1.0, 0.0]]))
-        assert image == pytest.approx(0.35355, 1e-2)
-
-        eff = ag.lp.EllEff(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.333333),
-            intensity=1.0,
-            effective_radius=1.0,
-        )
-
-        image = eff.image_2d_from(grid=np.array([[1.0, 0.0]]))
-
-        assert image == pytest.approx(0.1924, 1e-2)
-
-        eff_0 = ag.lp.EllEff(
-            centre=(-3.0, -0.0),
-            elliptical_comps=(0.0, 0.333333),
-            intensity=1.0,
-            effective_radius=1.0,
-        )
-
-        eff_1 = ag.lp.EllEff(
-            centre=(3.0, 0.0),
-            elliptical_comps=(0.0, 0.333333),
-            intensity=1.0,
-            effective_radius=1.0,
-        )
-
-        image_0 = eff_0.image_2d_from(
-            grid=np.array([[0.0, 0.0], [0.0, 1.0], [0.0, -1.0]])
-        )
-
-        image_1 = eff_1.image_2d_from(
-            grid=np.array([[0.0, 0.0], [0.0, 1.0], [0.0, -1.0]])
-        )
-
-        assert image_0 == pytest.approx(image_1, 1e-4)
-
-        eff_0 = ag.lp.EllEff(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.333333),
-            intensity=1.0,
-            effective_radius=1.0,
-        )
-
-        eff_1 = ag.lp.EllEff(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.333333),
-            intensity=1.0,
-            effective_radius=1.0,
-        )
-
-        image_0 = eff_0.image_2d_from(
-            grid=np.array([[0.0, 0.0], [0.0, 1.0], [0.0, -1.0]])
-        )
-
-        image_1 = eff_1.image_2d_from(
-            grid=np.array([[0.0, 0.0], [0.0, -1.0], [0.0, 1.0]])
-        )
-
-        assert image_0 == pytest.approx(image_1, 1e-4)
-
-    def test__spherical_and_elliptical_match(self):
         elliptical = ag.lp.EllEff(
             elliptical_comps=(0.0, 0.0), intensity=3.0, effective_radius=2.0
         )
@@ -970,21 +553,6 @@ class TestEff:
         image_spherical = spherical.image_2d_from(grid=grid)
 
         assert image_elliptical == pytest.approx(image_spherical, 1.0e-4)
-
-    def test__output_image_is_array(self):
-        grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
-
-        eff = ag.lp.EllEff()
-
-        image = eff.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
-
-        eff = ag.lp.SphEff()
-
-        image = eff.image_2d_from(grid=grid)
-
-        assert image.shape_native == (2, 2)
 
     def test__half_light_radius(self):
 
