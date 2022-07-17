@@ -500,7 +500,7 @@ class TestNFWGeneralized:
             grid=np.array([[1.0, 0.0]])
         )
 
-        assert (deflections == deflections_via_mge).all()
+        assert deflections == pytest.approx(deflections_via_mge, 1.0e-4)
 
         gnfw = ag.mp.SphNFWGeneralized()
 
@@ -509,7 +509,7 @@ class TestNFWGeneralized:
             grid=np.array([[1.0, 0.0]])
         )
 
-        assert (deflections == deflections_via_mge).all()
+        assert deflections == pytest.approx(deflections_via_mge, 1.0e-4)
 
         elliptical = ag.mp.EllNFWGeneralized(
             centre=(0.1, 0.2),
@@ -946,7 +946,7 @@ class TestNFW:
             grid=np.array([[1.0, 0.0]])
         )
 
-        assert (deflections == deflections_via_integral).all()
+        assert deflections == pytest.approx(deflections_via_integral, 1.0e-4)
 
     def test__convergence_2d_via_mge_from(self):
 
