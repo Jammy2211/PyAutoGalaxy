@@ -35,6 +35,11 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
             The plane, which describes the ray-tracing and strong lens configuration.
         """
 
+        try:
+            from autoarray.inversion.inversion import inversion_util_secret
+        except ModuleNotFoundError:
+            settings_inversion.use_w_tilde = False
+
         super().__init__(
             dataset=dataset, use_mask_in_fit=False, profiling_dict=profiling_dict
         )
