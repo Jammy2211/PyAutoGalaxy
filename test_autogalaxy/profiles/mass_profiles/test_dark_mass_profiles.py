@@ -371,7 +371,7 @@ class TestAbstractNFW:
 
 
 class TestNFWGeneralized:
-    def test__deflections_via_integral_from(self):
+    def test__deflections_2d_via_integral_from(self):
 
         gnfw = ag.mp.SphNFWGeneralized(
             centre=(0.0, 0.0), kappa_s=1.0, inner_slope=0.5, scale_radius=8.0
@@ -511,6 +511,21 @@ class TestNFWGeneralized:
 
         assert (deflections == deflections_via_mge).all()
 
+        elliptical = ag.mp.EllNFWGeneralized(
+            centre=(0.1, 0.2),
+            elliptical_comps=(0.0, 0.0),
+            kappa_s=2.0,
+            inner_slope=1.5,
+            scale_radius=3.0,
+        )
+        spherical = ag.mp.SphNFWGeneralized(
+            centre=(0.1, 0.2), kappa_s=2.0, inner_slope=1.5, scale_radius=3.0
+        )
+
+        assert elliptical.deflections_yx_2d_from(grid) == pytest.approx(
+            spherical.deflections_yx_2d_from(grid), 1e-4
+        )
+
     def test__convergence_2d_via_mge_from(self):
 
         gnfw = ag.mp.SphNFWGeneralized(
@@ -565,6 +580,21 @@ class TestNFWGeneralized:
 
         assert convergence == pytest.approx(0.30840, 1e-2)
 
+        elliptical = ag.mp.EllNFWGeneralized(
+            centre=(0.1, 0.2),
+            elliptical_comps=(0.0, 0.0),
+            kappa_s=2.0,
+            inner_slope=1.5,
+            scale_radius=3.0,
+        )
+        spherical = ag.mp.SphNFWGeneralized(
+            centre=(0.1, 0.2), kappa_s=2.0, inner_slope=1.5, scale_radius=3.0
+        )
+
+        assert elliptical.potential_2d_from(grid) == pytest.approx(
+            spherical.potential_2d_from(grid), 1e-4
+        )
+
     def test__potential_2d_from(self):
 
         gnfw = ag.mp.SphNFWGeneralized(
@@ -596,85 +626,20 @@ class TestNFWGeneralized:
             2.4718, 1e-4
         )
 
-    def test__change_geometry(self):
-
-        gnfw_0 = ag.mp.SphNFWGeneralized(centre=(0.0, 0.0))
-        gnfw_1 = ag.mp.SphNFWGeneralized(centre=(1.0, 1.0))
-
-        convergence_0 = gnfw_0.convergence_2d_from(grid=np.array([[1.0, 1.0]]))
-        convergence_1 = gnfw_1.convergence_2d_from(grid=np.array([[0.0, 0.0]]))
-
-        assert convergence_0 == convergence_1
-
-        potential_0 = gnfw_0.potential_2d_from(grid=np.array([[1.0, 1.0]]))
-        potential_1 = gnfw_1.potential_2d_from(grid=np.array([[0.0, 0.0]]))
-
-        assert potential_0 == potential_1
-
-        deflections_0 = gnfw_0.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
-        deflections_1 = gnfw_1.deflections_yx_2d_from(grid=np.array([[0.0, 0.0]]))
-
-        assert deflections_0[0, 0] == pytest.approx(-deflections_1[0, 0], 1e-5)
-        assert deflections_0[0, 1] == pytest.approx(-deflections_1[0, 1], 1e-5)
-
-        gnfw_0 = ag.mp.SphNFWGeneralized(centre=(0.0, 0.0))
-        gnfw_1 = ag.mp.SphNFWGeneralized(centre=(0.0, 0.0))
-
-        convergence_0 = gnfw_0.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
-        convergence_1 = gnfw_1.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert convergence_0 == convergence_1
-
-        potential_0 = gnfw_0.potential_2d_from(grid=np.array([[1.0, 0.0]]))
-        potential_1 = gnfw_1.potential_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert potential_0 == potential_1
-
-        deflections_0 = gnfw_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = gnfw_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
-        assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
-
-        gnfw_0 = ag.mp.EllNFWGeneralized(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
-        )
-        gnfw_1 = ag.mp.EllNFWGeneralized(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
-        )
-
-        assert gnfw_0.convergence_2d_from(
-            grid=np.array([[1.0, 0.0]])
-        ) == gnfw_1.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        gnfw_0 = ag.mp.EllNFWGeneralized(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, 0.111111)
-        )
-        gnfw_1 = ag.mp.EllNFWGeneralized(
-            centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111)
-        )
-        assert gnfw_0.potential_2d_from(
-            grid=np.array([[1.0, 0.0]])
-        ) == gnfw_1.potential_2d_from(grid=np.array([[0.0, 1.0]]))
-
-        gnfw_0 = ag.mp.EllNFWGeneralized(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.111111),
-            kappa_s=1.0,
+        elliptical = ag.mp.EllNFWGeneralized(
+            centre=(0.1, 0.2),
+            elliptical_comps=(0.0, 0.0),
+            kappa_s=2.0,
             inner_slope=1.5,
-            scale_radius=1.0,
+            scale_radius=3.0,
         )
-        gnfw_1 = ag.mp.EllNFWGeneralized(
-            centre=(0.0, 0.0),
-            elliptical_comps=(0.0, -0.111111),
-            kappa_s=1.0,
-            inner_slope=1.5,
-            scale_radius=1.0,
+        spherical = ag.mp.SphNFWGeneralized(
+            centre=(0.1, 0.2), kappa_s=2.0, inner_slope=1.5, scale_radius=3.0
         )
-        deflections_0 = gnfw_0.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
-        deflections_1 = gnfw_1.deflections_yx_2d_from(grid=np.array([[0.0, 1.0]]))
-        assert deflections_0[0, 0] == pytest.approx(deflections_1[0, 1], 1e-4)
-        assert deflections_0[0, 1] == pytest.approx(deflections_1[0, 0], 1e-4)
+
+        assert elliptical.convergence_2d_from(grid) == pytest.approx(
+            spherical.convergence_2d_from(grid), 1e-4
+        )
 
     def test__compare_to_nfw(self):
 
@@ -704,30 +669,6 @@ class TestNFWGeneralized:
         )
         assert nfw.potential_2d_from(grid) == pytest.approx(
             gnfw.potential_2d_from(grid), 1e-3
-        )
-
-    def test__spherical_and_elliptical_match(self):
-
-        elliptical = ag.mp.EllNFWGeneralized(
-            centre=(0.1, 0.2),
-            elliptical_comps=(0.0, 0.0),
-            kappa_s=2.0,
-            inner_slope=1.5,
-            scale_radius=3.0,
-        )
-        spherical = ag.mp.SphNFWGeneralized(
-            centre=(0.1, 0.2), kappa_s=2.0, inner_slope=1.5, scale_radius=3.0
-        )
-
-        assert elliptical.deflections_yx_2d_from(grid) == pytest.approx(
-            spherical.deflections_yx_2d_from(grid), 1e-4
-        )
-
-        assert elliptical.convergence_2d_from(grid) == pytest.approx(
-            spherical.convergence_2d_from(grid), 1e-4
-        )
-        assert elliptical.potential_2d_from(grid) == pytest.approx(
-            spherical.potential_2d_from(grid), 1e-4
         )
 
 
@@ -1155,8 +1096,6 @@ class TestNFW:
 
         assert potential == pytest.approx(0.05380, 1e-3)
 
-    def test__spherical_and_elliptical_are_same(self):
-
         nfw_spherical = ag.mp.SphNFW(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
         nfw_elliptical = ag.mp.EllNFW(
             centre=(0.3, 0.2),
@@ -1170,24 +1109,6 @@ class TestNFW:
         )
         potential_elliptical = nfw_elliptical.potential_2d_from(
             grid=np.array([[0.1875, 0.1625]])
-        )
-
-        assert potential_spherical == pytest.approx(potential_elliptical, 1e-3)
-
-        potential_spherical = nfw_spherical.potential_2d_from(
-            grid=np.array([[50.0, 50.0]])
-        )
-        potential_elliptical = nfw_elliptical.potential_2d_from(
-            grid=np.array([[50.0, 50.0]])
-        )
-
-        assert potential_spherical == pytest.approx(potential_elliptical, 1e-3)
-
-        potential_spherical = nfw_spherical.potential_2d_from(
-            grid=np.array([[-50.0, -50.0]])
-        )
-        potential_elliptical = nfw_elliptical.potential_2d_from(
-            grid=np.array([[-50.0, -50.0]])
         )
 
         assert potential_spherical == pytest.approx(potential_elliptical, 1e-3)
