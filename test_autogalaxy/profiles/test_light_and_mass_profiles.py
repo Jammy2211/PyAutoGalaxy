@@ -109,6 +109,7 @@ class TestExponential:
             == sersic_lmp.deflections_yx_2d_from(grid=grid)
         ).all()
 
+
 class TestDevVaucouleurs:
     def test__grid_calculations__same_as_dev_vaucouleurs(self):
 

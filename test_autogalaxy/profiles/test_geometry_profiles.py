@@ -49,6 +49,7 @@ def test__cos_and_sin_from_x():
     assert cos_phi == pytest.approx(0.707, 1e-3)
     assert sin_phi == pytest.approx(0.707, 1e-3)
 
+
 def test__grid_to_eccentric_radii():
     elliptical_profile = geometry_profiles.EllProfile(elliptical_comps=(0.0, 0.0))
 
@@ -77,6 +78,7 @@ def test__grid_to_eccentric_radii():
     )
 
     assert eccentric_radius == pytest.approx(1.58113, 1e-3)
+
 
 def test__spherical__transform_to_reference_frame__coordinate_shifts_using_centre():
 
@@ -113,6 +115,7 @@ def test__spherical__transform_to_reference_frame__coordinate_shifts_using_centr
 
     assert (grid1 == grid2).all()
 
+
 def test__spherical__transform_to_and_from_reference_frame():
 
     spherical_profile = geometry_profiles.SphProfile(centre=(0.0, 0.0))
@@ -127,15 +130,14 @@ def test__spherical__transform_to_and_from_reference_frame():
 
     grid_original = np.array([[5.2221, 2.6565]])
 
-    grid_spherical = spherical_profile.transform_grid_to_reference_frame(
-        grid_original
-    )
+    grid_spherical = spherical_profile.transform_grid_to_reference_frame(grid_original)
 
     transformed_grid = spherical_profile.transform_grid_from_reference_frame(
         grid_spherical
     )
 
     assert transformed_grid == pytest.approx(grid_original, 1e-5)
+
 
 def test__elliptical__transform_grid_to_and_from_reference_frame():
 
@@ -190,6 +192,7 @@ def test__elliptical__transform_grid_to_and_from_reference_frame():
     )
 
     assert transformed_grid == pytest.approx(grid_original, 1e-5)
+
 
 def test__elliptical__transform_grids_with_mapped_centres():
     elliptical_profile1 = geometry_profiles.EllProfile(

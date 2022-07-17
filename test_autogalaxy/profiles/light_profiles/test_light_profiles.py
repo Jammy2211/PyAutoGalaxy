@@ -180,7 +180,6 @@ class TestDecorators:
 
 
 class TestGaussian:
-
     def test__image_2d_from(self):
         gaussian = ag.lp.EllGaussian(
             centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
@@ -313,7 +312,6 @@ class TestSersic:
 
 
 class TestExponential:
-
     def test__image_2d_from(self):
         exponential = ag.lp.EllExponential(
             elliptical_comps=(0.0, 0.333333), intensity=3.0, effective_radius=2.0
@@ -356,7 +354,6 @@ class TestExponential:
 
 
 class TestDevVaucouleurs:
-
     def test__image_2d_from(self):
         dev_vaucouleurs = ag.lp.EllDevVaucouleurs(
             elliptical_comps=(0.0, 0.333333), intensity=3.0, effective_radius=2.0
@@ -498,7 +495,6 @@ class TestChameleon:
 
 
 class TestEff:
-
     def test__image_2d_from(self):
         eff = ag.lp.EllEff(
             centre=(0.0, 0.0),
