@@ -37,7 +37,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
 
         try:
             from autoarray.inversion.inversion import inversion_util_secret
-        except ModuleNotFoundError:
+        except ImportError:
             settings_inversion.use_w_tilde = False
 
         super().__init__(
