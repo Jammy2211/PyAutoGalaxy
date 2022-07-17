@@ -87,7 +87,7 @@ class LightProfileLinear(lp.LightProfile):
         return af.Model(self.lmp_cls, **parameters_dict)
 
 
-class LightProfileLinearObjFunc(aa.LinearObjFunc):
+class LightProfileLinearObjFunc(aa.LinearObjFuncList):
     def __init__(
         self,
         grid: aa.type.Grid1D2DLike,

@@ -80,7 +80,8 @@ class SimulatorImaging(aa.SimulatorImaging):
         )
 
     def via_galaxies_from(self, galaxies, grid, name=None):
-        """Simulate imaging data for this data, as follows:
+        """
+        Simulate imaging data for this data, as follows:
 
         1)  Setup the image-plane grid of the Imaging arrays, which defines the coordinates used for the ray-tracing.
 
@@ -93,7 +94,8 @@ class SimulatorImaging(aa.SimulatorImaging):
         4) Plot the image using Matplotlib, if the plot_imaging bool is True.
 
         5) Output the dataset to .fits format if a dataset_path and data_name are specified. Otherwise, return the simulated \
-           imaging data instance."""
+           imaging data instance.
+           """
 
         plane = Plane(
             redshift=float(np.mean([galaxy.redshift for galaxy in galaxies])),
