@@ -56,7 +56,6 @@ with the software and determine if it is the right software for you.
 If you decide that **PyAutoGalaxy** is the right software, then I recommend you commit the time to getting a
 successful numba install working, with more information provided `at this readthedocs page <https://pyautogalaxy.readthedocs.io/en/latest/installation/numba.html>`_
 
-
 Workspace
 ---------
 
