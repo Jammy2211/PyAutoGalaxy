@@ -108,12 +108,12 @@ class LightProfileLinearObjFunc(aa.LinearObjFuncList):
         return self.light_profile.image_2d_from(grid=self.grid).binned.slim[:, None]
 
     @cached_property
-    def blurred_mapping_matrix_override(self) -> Optional[np.ndarray]:
+    def operated_mapping_matrix_override(self) -> Optional[np.ndarray]:
         """
         The `LinearEqn` object takes the `mapping_matrix` of each linear object and combines it with the `Convolver`
-        operator to perform a 2D convolution and compute the `blurred_mapping_matrix`.
+        operator to perform a 2D convolution and compute the `operated_mapping_matrix`.
 
-        If this property is overwritten this operation is not performed, with the `blurred_mapping_matrix` output this
+        If this property is overwritten this operation is not performed, with the `operated_mapping_matrix` output this
         property automatically used instead.
 
         This is used for a linear light profile because the in-built mapping matrix convolution does not account for

@@ -199,7 +199,7 @@ class Preloads(aa.Preloads):
         self.sparse_image_plane_grid_pg_list = None
         self.relocated_grid = None
         self.mapper = None
-        self.blurred_mapping_matrix = None
+        self.operated_mapping_matrix = None
         self.curvature_matrix_preload = None
         self.curvature_matrix_counts = None
         self.curvature_matrix = None
