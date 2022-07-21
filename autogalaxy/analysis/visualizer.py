@@ -384,7 +384,10 @@ class Visualizer:
         )
 
         if should_plot("subplot_inversion"):
-            for mapper_index in range(len(inversion.mapper_list)):
+
+            mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
+
+            for mapper_index in range(len(mapper_list)):
                 inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
 
         if not during_analysis:

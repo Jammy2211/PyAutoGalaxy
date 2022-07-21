@@ -92,7 +92,7 @@ class AbstractFit:
         if self.inversion is None:
             return None
 
-        linear_obj_func_list = self.inversion.linear_obj_func_list
+        linear_obj_func_list = self.inversion.cls_list_from(cls=aa.LinearObjFuncList)
 
         linear_light_profile_intensity_dict = {}
 

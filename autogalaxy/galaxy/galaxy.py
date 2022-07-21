@@ -157,7 +157,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             The list of objects in the galaxy that inherit from input `cls`.
         """
         return aa.util.misc.cls_list_from(
-            dict_values=self.__dict__.values(), cls=cls, cls_filtered=cls_filtered
+            values=self.__dict__.values(), cls=cls, cls_filtered=cls_filtered
         )
 
     def radial_projected_shape_slim_from(self, grid: aa.type.Grid1D2DLike) -> int:
