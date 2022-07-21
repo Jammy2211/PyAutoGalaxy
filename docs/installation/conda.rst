@@ -15,14 +15,14 @@ First, update conda:
 
     conda update -n base -c defaults conda
 
-First, create a conda environment (we name this ``autogalaxy`` to signify it is for the **PyAutoGalaxy** install):
+Next, create a conda environment (we name this ``autogalaxy`` to signify it is for the **PyAutoGalaxy** install):
 
 The command below creates this environment with some of the bigger package requirements, the rest will be installed
-with **PyAutoFit** via pip:
+via pip:
 
 .. code-block:: bash
 
-    conda create -n autogalaxy numba astropy scikit-image scikit-learn scipy
+    conda create -n autogalaxy astropy scikit-image scikit-learn scipy
 
 Activate the conda environment (you will have to do this every time you want to run **PyAutoGalaxy**):
 
