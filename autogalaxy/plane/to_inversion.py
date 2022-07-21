@@ -144,6 +144,23 @@ class PlaneToInversion:
 
         return {**lp_linear_func_galaxy_dict, **mapper_galaxy_dict}
 
+    def regularization_list_from(
+        self, linear_obj_galaxy_dict, linear_obj_list
+    ) -> List[aa.reg.Regularization]:
+
+        regularization_list = []
+
+        for linear_obj in linear_obj_list:
+
+            galaxy = linear_obj_galaxy_dict[linear_obj]
+
+            if galaxy.has(cls=aa.reg.Regularization):
+                regularization_list.append(galaxy.regularization)
+            else:
+                regularization_list.append(None)
+
+        return regularization_list
+
     def inversion_imaging_from(
         self,
         dataset: aa.Imaging,
@@ -163,13 +180,18 @@ class PlaneToInversion:
 
         linear_obj_list = list(linear_obj_galaxy_dict.keys())
 
+        regularization_list = self.regularization_list_from(
+            linear_obj_galaxy_dict=linear_obj_galaxy_dict,
+            linear_obj_list=linear_obj_list,
+        )
+
         inversion = inversion_imaging_unpacked_from(
             image=image,
             noise_map=noise_map,
             convolver=dataset.convolver,
             w_tilde=w_tilde,
             linear_obj_list=linear_obj_list,
-            regularization_list=self.plane.cls_list_from(cls=aa.reg.Regularization),
+            regularization_list=regularization_list,
             settings=settings_inversion,
             preloads=preloads,
             profiling_dict=self.plane.profiling_dict,
@@ -198,13 +220,18 @@ class PlaneToInversion:
 
         linear_obj_list = list(linear_obj_galaxy_dict.keys())
 
+        regularization_list = self.regularization_list_from(
+            linear_obj_galaxy_dict=linear_obj_galaxy_dict,
+            linear_obj_list=linear_obj_list,
+        )
+
         inversion = inversion_interferometer_unpacked_from(
             visibilities=visibilities,
             noise_map=noise_map,
             transformer=dataset.transformer,
             w_tilde=w_tilde,
             linear_obj_list=linear_obj_list,
-            regularization_list=self.plane.cls_list_from(cls=aa.reg.Regularization),
+            regularization_list=regularization_list,
             settings=settings_inversion,
             preloads=preloads,
             profiling_dict=self.plane.profiling_dict,

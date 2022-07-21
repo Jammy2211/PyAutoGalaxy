@@ -1,7 +1,6 @@
 from itertools import count
-from typing import Dict, List, Optional, Type, Union
-
 import numpy as np
+from typing import Dict, List, Optional, Type, Union
 
 import autoarray as aa
 import autofit as af
@@ -15,9 +14,6 @@ from autogalaxy.operate.image import OperateImageList
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
-from autogalaxy.profiles.light_profiles.light_profiles_operated import (
-    LightProfileOperated,
-)
 from autogalaxy.profiles.mass_profiles import MassProfile
 
 
@@ -92,10 +88,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             raise exc.GalaxyException(
                 "If the galaxy has a pixelization, it must also have a regularization."
             )
-        if pixelization is None and regularization is not None:
-            raise exc.GalaxyException(
-                "If the galaxy has a regularization, it must also have a pixelization."
-            )
 
         self.hyper_galaxy = hyper_galaxy
 
@@ -153,17 +145,20 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         - If `cls=ag.lp.LightProfile` and `cls_filtered=ag.lp.LightProfileLinear`, a list of all light profiles
         excluding those which are linear light profiles will be returned.
 
+        Parameters
+        ----------
+        cls
+            The type of class that a list of instances of this class in the galaxy are returned for.
+        cls_filtered
+            A class type which is filtered and removed from the class list.
+
         Returns
         -------
             The list of objects in the galaxy that inherit from input `cls`.
         """
-        if cls_filtered is not None:
-            return [
-                value
-                for value in self.__dict__.values()
-                if isinstance(value, cls) and not isinstance(value, cls_filtered)
-            ]
-        return [value for value in self.__dict__.values() if isinstance(value, cls)]
+        return aa.util.misc.cls_list_from(
+            dict_values=self.__dict__.values(), cls=cls, cls_filtered=cls_filtered
+        )
 
     def radial_projected_shape_slim_from(self, grid: aa.type.Grid1D2DLike) -> int:
         """

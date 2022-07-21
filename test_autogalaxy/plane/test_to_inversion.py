@@ -164,6 +164,42 @@ def test__mapper_galaxy_dict_from(sub_grid_2d_7x7):
     assert mapper_galaxy_dict == {}
 
 
+def test__regularization_galaxy_dict_from(masked_imaging_7x7):
+
+    regularization_0 = ag.reg.Constant(coefficient=1.0)
+    regularization_1 = ag.reg.ConstantSplit(coefficient=2.0)
+
+    galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp_linear.EllGaussian())
+    galaxy_1 = ag.Galaxy(
+        redshift=0.5,
+        pixelization=ag.pix.Rectangular(shape=(10, 10)),
+        regularization=regularization_0,
+    )
+    galaxy_2 = ag.Galaxy(
+        redshift=0.5, light=ag.lp_linear.EllGaussian(), regularization=regularization_1
+    )
+
+    plane = ag.Plane(galaxies=[galaxy_0, galaxy_1, galaxy_2])
+
+    plane_to_inversion = ag.PlaneToInversion(plane=plane)
+
+    linear_obj_galaxy_dict = plane_to_inversion.linear_obj_galaxy_dict_from(
+        dataset=masked_imaging_7x7
+    )
+
+    linear_obj_list = list(linear_obj_galaxy_dict.keys())
+
+    regularization_list = plane_to_inversion.regularization_list_from(
+        linear_obj_galaxy_dict=linear_obj_galaxy_dict, linear_obj_list=linear_obj_list
+    )
+
+    print(regularization_list)
+
+    assert regularization_list[0] == None
+    assert regularization_list[1] == regularization_1
+    assert regularization_list[2] == regularization_0
+
+
 def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
 
     g_linear = ag.Galaxy(redshift=0.5, light_linear=ag.lp_linear.EllSersic())
