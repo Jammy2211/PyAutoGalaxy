@@ -1,6 +1,6 @@
 import inspect
 import numpy as np
-from typing import Dict, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from autoconf import cached_property
 import autoarray as aa
@@ -87,13 +87,13 @@ class LightProfileLinear(lp.LightProfile):
         return af.Model(self.lmp_cls, **parameters_dict)
 
 
-class LightProfileLinearObjFunc(aa.LinearObjFuncList):
+class LightProfileLinearObjFunc(aa.AbstractLinearObjFuncList):
     def __init__(
         self,
         grid: aa.type.Grid1D2DLike,
         blurring_grid: aa.type.Grid1D2DLike,
         convolver: Optional[aa.Convolver],
-        light_profile: LightProfileLinear,
+        light_profile_list: List[LightProfileLinear],
         profiling_dict: Optional[Dict] = None,
     ):
 
@@ -101,11 +101,19 @@ class LightProfileLinearObjFunc(aa.LinearObjFuncList):
 
         self.blurring_grid = blurring_grid
         self.convolver = convolver
-        self.light_profile = light_profile
+        self.light_profile_list = light_profile_list
+
+    @property
+    def pixels(self):
+        return len(self.light_profile_list)
 
     @property
     def mapping_matrix(self) -> np.ndarray:
-        return self.light_profile.image_2d_from(grid=self.grid).binned.slim[:, None]
+        return (
+            self.light_profile_list[0]
+            .image_2d_from(grid=self.grid)
+            .binned.slim[:, None]
+        )
 
     @cached_property
     def operated_mapping_matrix_override(self) -> Optional[np.ndarray]:
@@ -127,12 +135,14 @@ class LightProfileLinearObjFunc(aa.LinearObjFuncList):
         performed in the linear equation solvers.
         """
 
-        if isinstance(self.light_profile, LightProfileOperated):
+        if isinstance(self.light_profile_list[0], LightProfileOperated):
             return self.mapping_matrix
 
-        image_2d = self.light_profile.image_2d_from(grid=self.grid)
+        image_2d = self.light_profile_list[0].image_2d_from(grid=self.grid)
 
-        blurring_image_2d = self.light_profile.image_2d_from(grid=self.blurring_grid)
+        blurring_image_2d = self.light_profile_list[0].image_2d_from(
+            grid=self.blurring_grid
+        )
 
         return self.convolver.convolve_image(
             image=image_2d, blurring_image=blurring_image_2d

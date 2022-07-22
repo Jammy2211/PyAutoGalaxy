@@ -38,7 +38,7 @@ class PlaneToInversion:
                         grid=source_grid_slim,
                         blurring_grid=source_blurring_grid_slim,
                         convolver=convolver,
-                        light_profile=light_profile_linear,
+                        light_profile_list=[light_profile_linear],
                     )
 
                     lp_linear_func_galaxy_dict[lp_linear_func] = galaxy
