@@ -5,8 +5,6 @@ from typing import Dict, List, Optional, Type, Union
 import autoarray as aa
 import autofit as af
 
-from autoarray.inversion.pixelizations.abstract import AbstractPixelization
-from autoarray.inversion.regularization.abstract import AbstractRegularization
 from autoconf.dictable import Dictable
 from autogalaxy import exc
 from autogalaxy.operate.deflections import OperateDeflections
@@ -25,8 +23,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     def __init__(
         self,
         redshift: float,
-        pixelization: Optional[AbstractPixelization] = None,
-        regularization: Optional[AbstractRegularization] = None,
+        pixelization: Optional[aa.AbstractPixelization] = None,
+        regularization: Optional[aa.AbstractRegularization] = None,
         hyper_galaxy: Optional["HyperGalaxy"] = None,
         **kwargs,
     ):
