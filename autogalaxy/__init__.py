@@ -78,7 +78,7 @@ from .profiles import (
     scaling_relations as sr,
 )
 from .profiles.light_profiles import basis as lp_basis
-from .profiles.light_profiles.light_profiles_linear import LightProfileLinearObjFunc
+from .profiles.light_profiles.light_profiles_linear import LightProfileLinearObjFuncList
 from .profiles.light_profiles import light_profiles_init as lp_init
 from .profiles.light_profiles import light_profiles_linear as lp_linear
 from .profiles.light_profiles import light_profiles_operated as lp_operated

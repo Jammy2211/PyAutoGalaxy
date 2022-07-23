@@ -87,7 +87,7 @@ class LightProfileLinear(lp.LightProfile):
         return af.Model(self.lmp_cls, **parameters_dict)
 
 
-class LightProfileLinearObjFunc(aa.AbstractLinearObjFuncList):
+class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
     def __init__(
         self,
         grid: aa.type.Grid1D2DLike,
@@ -109,11 +109,16 @@ class LightProfileLinearObjFunc(aa.AbstractLinearObjFuncList):
 
     @property
     def mapping_matrix(self) -> np.ndarray:
-        return (
-            self.light_profile_list[0]
-            .image_2d_from(grid=self.grid)
-            .binned.slim[:, None]
-        )
+
+        mapping_matrix = np.zeros(shape=(self.grid.mask.pixels_in_mask, self.pixels))
+
+        for pixel, light_profile in enumerate(self.light_profile_list):
+
+            image_2d = light_profile.image_2d_from(grid=self.grid).binned.slim
+
+            mapping_matrix[:, pixel] = image_2d
+
+        return mapping_matrix
 
     @cached_property
     def operated_mapping_matrix_override(self) -> Optional[np.ndarray]:
@@ -138,15 +143,23 @@ class LightProfileLinearObjFunc(aa.AbstractLinearObjFuncList):
         if isinstance(self.light_profile_list[0], LightProfileOperated):
             return self.mapping_matrix
 
-        image_2d = self.light_profile_list[0].image_2d_from(grid=self.grid)
-
-        blurring_image_2d = self.light_profile_list[0].image_2d_from(
-            grid=self.blurring_grid
+        operated_mapping_matrix = np.zeros(
+            shape=(self.grid.mask.pixels_in_mask, self.pixels)
         )
 
-        return self.convolver.convolve_image(
-            image=image_2d, blurring_image=blurring_image_2d
-        )[:, None]
+        for pixel, light_profile in enumerate(self.light_profile_list):
+
+            image_2d = light_profile.image_2d_from(grid=self.grid)
+
+            blurring_image_2d = light_profile.image_2d_from(grid=self.blurring_grid)
+
+            blurred_image_2d = self.convolver.convolve_image(
+                image=image_2d, blurring_image=blurring_image_2d
+            )
+
+            operated_mapping_matrix[:, pixel] = blurred_image_2d
+
+        return operated_mapping_matrix
 
 
 class EllSersic(lp.EllSersic, LightProfileLinear):

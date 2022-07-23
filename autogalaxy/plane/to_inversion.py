@@ -5,7 +5,7 @@ import autoarray as aa
 from autoarray.inversion.inversion.factory import inversion_imaging_unpacked_from
 from autoarray.inversion.inversion.factory import inversion_interferometer_unpacked_from
 from autogalaxy.profiles.light_profiles.light_profiles_linear import (
-    LightProfileLinearObjFunc,
+    LightProfileLinearObjFuncList,
 )
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 from autogalaxy.galaxy.galaxy import Galaxy
@@ -21,7 +21,7 @@ class PlaneToInversion:
         source_grid_slim: aa.type.Grid2DLike,
         source_blurring_grid_slim: Optional[aa.type.Grid2DLike],
         convolver: Optional[aa.Convolver] = None,
-    ) -> Dict[LightProfileLinearObjFunc, Galaxy]:
+    ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
 
         if not self.plane.has(cls=LightProfileLinear):
             return {}
@@ -34,7 +34,7 @@ class PlaneToInversion:
                     cls=LightProfileLinear
                 ):
 
-                    lp_linear_func = LightProfileLinearObjFunc(
+                    lp_linear_func = LightProfileLinearObjFuncList(
                         grid=source_grid_slim,
                         blurring_grid=source_blurring_grid_slim,
                         convolver=convolver,
@@ -128,7 +128,7 @@ class PlaneToInversion:
         dataset: Union[aa.Imaging, aa.Interferometer],
         settings_pixelization=aa.SettingsPixelization(),
         preloads=aa.Preloads(),
-    ) -> Dict[Union[LightProfileLinearObjFunc, aa.AbstractMapper], Galaxy]:
+    ) -> Dict[Union[LightProfileLinearObjFuncList, aa.AbstractMapper], Galaxy]:
 
         lp_linear_func_galaxy_dict = self.lp_linear_func_galaxy_dict_from(
             source_grid_slim=dataset.grid,
