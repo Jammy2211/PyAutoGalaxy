@@ -131,15 +131,7 @@ class Preloads(aa.Preloads):
 
         if preloads.mapper_list is not None:
 
-            from autogalaxy.plane.to_inversion import PlaneToInversion
-
-            plane_to_inversion = PlaneToInversion(
-                source_grid_slim=fit_0.dataset.grid_pixelized
-            )
-
-            preloads.mapper_galaxy_dict = plane_to_inversion.mapper_galaxy_dict_from(
-                grid=fit_0.dataset.grid_pixelized
-            )
+            preloads.mapper_galaxy_dict = fit_0.plane_to_inversion.mapper_galaxy_dict_from()
 
         preloads.set_operated_mapping_matrix_with_preloads(fit_0=fit_0, fit_1=fit_1)
         preloads.set_curvature_matrix(fit_0=fit_0, fit_1=fit_1)

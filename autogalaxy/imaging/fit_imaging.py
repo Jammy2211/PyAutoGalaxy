@@ -147,6 +147,16 @@ class FitImaging(aa.FitImaging, AbstractFit):
         """
         return self.image - self.blurred_image
 
+    @property
+    def plane_to_inversion(self) -> PlaneToInversion:
+        return PlaneToInversion(
+            plane=self.plane,
+            grid=self.imaging.grid,
+            blurring_grid=self.imaging.blurring_grid,
+            convolver=self.imaging.convolver,
+            grid_pixelized=self.imaging.grid_pixelized,
+        )
+
     @cached_property
     def inversion(self) -> Optional[aa.AbstractInversion]:
         """
@@ -160,15 +170,7 @@ class FitImaging(aa.FitImaging, AbstractFit):
 
         if self.perform_inversion:
 
-            plane_to_inversion = PlaneToInversion(
-                plane=self.plane,
-                source_grid_slim=self.imaging.grid,
-                source_grid_pixelized_slim=self.imaging.grid_pixelized,
-                source_blurring_grid_slim=self.imaging.blurring_grid,
-                convolver=self.imaging.convolver,
-            )
-
-            return plane_to_inversion.inversion_imaging_from(
+            return self.plane_to_inversion.inversion_imaging_from(
                 dataset=self.dataset,
                 image=self.profile_subtracted_image,
                 noise_map=self.noise_map,

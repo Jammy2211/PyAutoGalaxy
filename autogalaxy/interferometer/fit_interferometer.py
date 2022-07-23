@@ -130,6 +130,15 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
         """
         return self.visibilities - self.profile_visibilities
 
+    @property
+    def plane_to_inversion(self) -> PlaneToInversion:
+        return PlaneToInversion(
+            plane=self.plane,
+            grid=self.dataset.grid,
+            blurring_grid=self.dataset.blurring_grid,
+            grid_pixelized=self.dataset.grid_pixelized,
+        )
+
     @cached_property
     def inversion(self) -> Optional[aa.AbstractInversion]:
         """
@@ -142,15 +151,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
         """
         if self.perform_inversion:
 
-            plane_to_inversion = PlaneToInversion(
-                plane=self.plane,
-                source_grid_slim=self.dataset.grid,
-                source_blurring_grid_slim=self.dataset.blurring_grid,
-                source_grid_pixelized_slim=self.dataset.grid_pixelized,
-                convolver=self.dataset.convolver,
-            )
-
-            return plane_to_inversion.inversion_interferometer_from(
+            return self.plane_to_inversion.inversion_interferometer_from(
                 dataset=self.dataset,
                 visibilities=self.profile_subtracted_visibilities,
                 noise_map=self.noise_map,

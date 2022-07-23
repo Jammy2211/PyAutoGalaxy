@@ -18,17 +18,17 @@ class PlaneToInversion:
     def __init__(
         self,
         plane: "Plane",
-        source_grid_slim: Optional[aa.type.Grid2DLike] = None,
-        source_blurring_grid_slim: Optional[aa.type.Grid2DLike] = None,
-        source_grid_pixelized_slim: Optional[aa.type.Grid2DLike] = None,
+        grid: Optional[aa.type.Grid2DLike] = None,
+        blurring_grid: Optional[aa.type.Grid2DLike] = None,
         convolver: Optional[aa.Convolver] = None,
+        grid_pixelized: Optional[aa.type.Grid2DLike] = None,
     ):
 
         self.plane = plane
-        self.source_grid_slim = source_grid_slim
-        self.source_blurring_grid_slim = source_blurring_grid_slim
-        self.source_grid_pixelized_slim = source_grid_pixelized_slim
+        self.grid = grid
+        self.blurring_grid = blurring_grid
         self.convolver = convolver
+        self.grid_pixelized = grid_pixelized
 
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type
@@ -56,8 +56,8 @@ class PlaneToInversion:
                     if len(light_profile_list) > 0:
 
                         lp_linear_func = LightProfileLinearObjFuncList(
-                            grid=self.source_grid_slim,
-                            blurring_grid=self.source_blurring_grid_slim,
+                            grid=self.grid,
+                            blurring_grid=self.blurring_grid,
                             convolver=self.convolver,
                             light_profile_list=light_profile_list,
                         )
@@ -92,7 +92,7 @@ class PlaneToInversion:
 
         return [
             pixelization.data_pixelization_grid_from(
-                data_grid_slim=self.source_grid_pixelized_slim,
+                data_grid_slim=self.grid_pixelized,
                 hyper_image=hyper_galaxy_image,
                 settings=settings_pixelization,
             )
@@ -113,7 +113,7 @@ class PlaneToInversion:
     ) -> aa.AbstractMapper:
 
         return pixelization.mapper_from(
-            source_grid_slim=self.source_grid_pixelized_slim,
+            source_grid_slim=self.grid_pixelized,
             source_pixelization_grid=source_pixelization_grid,
             data_pixelization_grid=data_pixelization_grid,
             hyper_image=hyper_galaxy_image,
@@ -123,9 +123,7 @@ class PlaneToInversion:
         )
 
     def mapper_galaxy_dict_from(
-        self,
-        settings_pixelization=aa.SettingsPixelization(),
-        preloads=aa.Preloads(),
+        self, settings_pixelization=aa.SettingsPixelization(), preloads=aa.Preloads()
     ) -> Dict[aa.AbstractMapper, Galaxy]:
 
         if not self.plane.has(cls=aa.pix.Pixelization):
@@ -168,8 +166,7 @@ class PlaneToInversion:
         lp_linear_func_galaxy_dict = self.lp_linear_func_list_galaxy_dict_from()
 
         mapper_galaxy_dict = self.mapper_galaxy_dict_from(
-            settings_pixelization=settings_pixelization,
-            preloads=preloads,
+            settings_pixelization=settings_pixelization, preloads=preloads
         )
 
         return {**lp_linear_func_galaxy_dict, **mapper_galaxy_dict}
