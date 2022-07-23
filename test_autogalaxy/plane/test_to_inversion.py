@@ -11,10 +11,7 @@ def test__lp_linear_func_list_galaxy_dict_from(lp_0):
     plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
     lp_linear_func_galaxy_dict = plane_to_inversion.lp_linear_func_list_galaxy_dict_from(
-        cls=ag.lp_linear.LightProfileLinear,
-        source_grid_slim=1,
-        source_blurring_grid_slim=2,
-        convolver=3,
+        source_grid_slim=1, source_blurring_grid_slim=2, convolver=3
     )
 
     assert lp_linear_func_galaxy_dict == {}
@@ -34,10 +31,7 @@ def test__lp_linear_func_list_galaxy_dict_from(lp_0):
     plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
     lp_linear_func_galaxy_dict = plane_to_inversion.lp_linear_func_list_galaxy_dict_from(
-        cls=ag.lp_linear.LightProfileLinear,
-        source_grid_slim=1,
-        source_blurring_grid_slim=2,
-        convolver=3,
+        source_grid_slim=1, source_blurring_grid_slim=2, convolver=3
     )
 
     lp_linear_func_list = list(lp_linear_func_galaxy_dict.keys())
@@ -59,18 +53,17 @@ def test__lp_linear_func_list_galaxy_dict_from(lp_0):
     plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
     lp_linear_func_galaxy_dict = plane_to_inversion.lp_linear_func_list_galaxy_dict_from(
-        cls=ag.lp_basis.Basis,
-        source_grid_slim=1,
-        source_blurring_grid_slim=2,
-        convolver=3,
+        source_grid_slim=1, source_blurring_grid_slim=2, convolver=3
     )
 
     lp_linear_func_list = list(lp_linear_func_galaxy_dict.keys())
 
-    assert lp_linear_func_galaxy_dict[lp_linear_func_list[0]] == galaxy_0
+    assert lp_linear_func_galaxy_dict[lp_linear_func_list[0]] == galaxy_1
+    assert lp_linear_func_galaxy_dict[lp_linear_func_list[1]] == galaxy_0
 
-    assert lp_linear_func_list[0].light_profile_list[0] == lp_linear_0
-    assert lp_linear_func_list[0].light_profile_list[1] == lp_linear_1
+    assert lp_linear_func_list[0].light_profile_list[0] == lp_linear_2
+    assert lp_linear_func_list[1].light_profile_list[0] == lp_linear_0
+    assert lp_linear_func_list[1].light_profile_list[1] == lp_linear_1
 
 
 def test__sparse_image_plane_grid_list_from(sub_grid_2d_7x7):

@@ -11,8 +11,8 @@ from autogalaxy.profiles.light_profiles.light_profiles_linear import (
 
 def test__mapping_matrix_from(sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7x7):
 
-    lp_0 = ag.lp.EllSersic(intensity=1.0)
-    lp_1 = ag.lp.EllSersic(intensity=2.0)
+    lp_0 = ag.lp_linear.EllSersic(effective_radius=1.0)
+    lp_1 = ag.lp_linear.EllSersic(effective_radius=2.0)
 
     lp_linear_obj_func_list = LightProfileLinearObjFuncList(
         grid=sub_grid_2d_7x7,

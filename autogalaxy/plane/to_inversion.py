@@ -11,13 +11,15 @@ from autogalaxy.profiles.light_profiles.basis import Basis
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 from autogalaxy.galaxy.galaxy import Galaxy
 
+from autogalaxy import exc
+
 
 class PlaneToInversion:
     def __init__(self, plane: "Plane"):
 
         self.plane = plane
 
-    def lp_linear_func_list_galaxy_dict_from(
+    def cls_light_profile_func_list_galaxy_dict_from(
         self,
         cls: Type,
         source_grid_slim: aa.type.Grid2DLike,
@@ -25,7 +27,7 @@ class PlaneToInversion:
         convolver: Optional[aa.Convolver] = None,
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
 
-        if not self.plane.has(cls=LightProfileLinear):
+        if not self.plane.has(cls=cls):
             return {}
 
         lp_linear_func_galaxy_dict = {}
@@ -34,21 +36,54 @@ class PlaneToInversion:
             if galaxy.has(cls=cls):
                 for light_profile in galaxy.cls_list_from(cls=cls):
 
-                    if isinstance(light_profile, Basis):
-                        light_profile_list = light_profile.light_profile_list
-                    else:
+                    if isinstance(light_profile, LightProfileLinear):
                         light_profile_list = [light_profile]
+                    else:
+                        light_profile_list = light_profile.light_profile_list
+                        light_profile_list = [
+                            light_profile
+                            for light_profile in light_profile_list
+                            if isinstance(light_profile, LightProfileLinear)
+                        ]
 
-                    lp_linear_func = LightProfileLinearObjFuncList(
-                        grid=source_grid_slim,
-                        blurring_grid=source_blurring_grid_slim,
-                        convolver=convolver,
-                        light_profile_list=light_profile_list,
-                    )
+                    if len(light_profile_list) > 0:
 
-                    lp_linear_func_galaxy_dict[lp_linear_func] = galaxy
+                        lp_linear_func = LightProfileLinearObjFuncList(
+                            grid=source_grid_slim,
+                            blurring_grid=source_blurring_grid_slim,
+                            convolver=convolver,
+                            light_profile_list=light_profile_list,
+                        )
+
+                        lp_linear_func_galaxy_dict[lp_linear_func] = galaxy
 
         return lp_linear_func_galaxy_dict
+
+    def lp_linear_func_list_galaxy_dict_from(
+        self,
+        source_grid_slim: aa.type.Grid2DLike,
+        source_blurring_grid_slim: Optional[aa.type.Grid2DLike],
+        convolver: Optional[aa.Convolver] = None,
+    ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
+
+        lp_linear_light_profile_func_list_galaxy_dict = self.cls_light_profile_func_list_galaxy_dict_from(
+            cls=LightProfileLinear,
+            source_grid_slim=source_grid_slim,
+            source_blurring_grid_slim=source_blurring_grid_slim,
+            convolver=convolver,
+        )
+
+        lp_basis_func_list_galaxy_dict = self.cls_light_profile_func_list_galaxy_dict_from(
+            cls=Basis,
+            source_grid_slim=source_grid_slim,
+            source_blurring_grid_slim=source_blurring_grid_slim,
+            convolver=convolver,
+        )
+
+        return {
+            **lp_linear_light_profile_func_list_galaxy_dict,
+            **lp_basis_func_list_galaxy_dict,
+        }
 
     def sparse_image_plane_grid_list_from(
         self, grid: aa.type.Grid2DLike, settings_pixelization=aa.SettingsPixelization()
