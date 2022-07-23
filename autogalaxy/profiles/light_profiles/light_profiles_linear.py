@@ -96,6 +96,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         blurring_grid: aa.type.Grid1D2DLike,
         convolver: Optional[aa.Convolver],
         light_profile_list: List[LightProfileLinear],
+        regularization=aa.reg.Regularization,
         profiling_dict: Optional[Dict] = None,
     ):
 
@@ -117,6 +118,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         self.blurring_grid = blurring_grid
         self.convolver = convolver
         self.light_profile_list = light_profile_list
+        self.regularization = regularization
 
     @property
     def pixels(self):

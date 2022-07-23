@@ -167,7 +167,7 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
     assert mapper_galaxy_dict == {}
 
 
-def test__regularization_galaxy_dict_from(masked_imaging_7x7):
+def test__regularization_list(masked_imaging_7x7):
 
     regularization_0 = ag.reg.Constant(coefficient=1.0)
     regularization_1 = ag.reg.ConstantSplit(coefficient=2.0)
@@ -190,6 +190,24 @@ def test__regularization_galaxy_dict_from(masked_imaging_7x7):
 
     assert regularization_list[0] == None
     assert regularization_list[1] == regularization_1
+    assert regularization_list[2] == regularization_0
+
+    regularization_2 = ag.reg.Constant(coefficient=3.0)
+
+    basis = ag.lp_basis.Basis(
+        light_profile_list=[ag.lp_linear.EllGaussian()], regularization=regularization_2
+    )
+
+    galaxy_3 = ag.Galaxy(redshift=0.5, bulge=basis)
+
+    plane = ag.Plane(galaxies=[galaxy_0, galaxy_1, galaxy_3])
+
+    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+
+    regularization_list = plane_to_inversion.regularization_list
+
+    assert regularization_list[0] == None
+    assert regularization_list[1] == regularization_2
     assert regularization_list[2] == regularization_0
 
 

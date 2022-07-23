@@ -214,6 +214,23 @@ def test__fit_figure_of_merit(masked_imaging_7x7):
     assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-14.52327, 1.0e-4)
 
+    basis = ag.lp_basis.Basis(
+        light_profile_list=[
+            ag.lp_linear.EllSersic(sersic_index=1.0),
+            ag.lp_linear.EllSersic(sersic_index=4.0),
+        ],
+        regularization=ag.reg.Constant(coefficient=1.0),
+    )
+
+    g0 = ag.Galaxy(redshift=0.5, bulge=basis)
+
+    plane = ag.Plane(redshift=0.5, galaxies=[g0])
+
+    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
+
+    assert fit.perform_inversion is True
+    assert fit.figure_of_merit == pytest.approx(-29.21448984, 1.0e-4)
+
     g0_operated_light = ag.Galaxy(
         redshift=0.5, bulge=ag.lp_operated.EllSersic(intensity=1.0)
     )
