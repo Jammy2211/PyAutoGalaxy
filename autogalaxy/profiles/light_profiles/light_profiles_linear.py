@@ -13,6 +13,8 @@ from autogalaxy.profiles.light_profiles.light_profiles_operated import (
 from autogalaxy.profiles.light_profiles import light_profiles as lp
 from autogalaxy.profiles import light_and_mass_profiles as lmp
 
+from autogalaxy import exc
+
 
 class LightProfileLinear(lp.LightProfile):
     @property
@@ -96,6 +98,19 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         light_profile_list: List[LightProfileLinear],
         profiling_dict: Optional[Dict] = None,
     ):
+
+        for light_profile in light_profile_list:
+
+            if not isinstance(light_profile, LightProfileLinear):
+
+                raise exc.ProfileException(
+                    """
+                    A light profile that is not a LightProfileLinear object has been input into the
+                    LightProfileLinearObjFuncList object.
+                    
+                    Only children of the LightProfileLinear class can be used in a linear inversion.
+                    """
+                )
 
         super().__init__(grid=grid, profiling_dict=profiling_dict)
 

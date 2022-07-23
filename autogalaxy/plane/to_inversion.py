@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Type, Union
 
 import autoarray as aa
 
@@ -7,6 +7,7 @@ from autoarray.inversion.inversion.factory import inversion_interferometer_unpac
 from autogalaxy.profiles.light_profiles.light_profiles_linear import (
     LightProfileLinearObjFuncList,
 )
+from autogalaxy.profiles.light_profiles.basis import Basis
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 from autogalaxy.galaxy.galaxy import Galaxy
 
@@ -16,8 +17,9 @@ class PlaneToInversion:
 
         self.plane = plane
 
-    def lp_linear_func_galaxy_dict_from(
+    def lp_linear_func_list_galaxy_dict_from(
         self,
+        cls: Type,
         source_grid_slim: aa.type.Grid2DLike,
         source_blurring_grid_slim: Optional[aa.type.Grid2DLike],
         convolver: Optional[aa.Convolver] = None,
@@ -29,16 +31,19 @@ class PlaneToInversion:
         lp_linear_func_galaxy_dict = {}
 
         for galaxy in self.plane.galaxies:
-            if galaxy.has(cls=LightProfileLinear):
-                for light_profile_linear in galaxy.cls_list_from(
-                    cls=LightProfileLinear
-                ):
+            if galaxy.has(cls=cls):
+                for light_profile in galaxy.cls_list_from(cls=cls):
+
+                    if isinstance(light_profile, Basis):
+                        light_profile_list = light_profile.light_profile_list
+                    else:
+                        light_profile_list = [light_profile]
 
                     lp_linear_func = LightProfileLinearObjFuncList(
                         grid=source_grid_slim,
                         blurring_grid=source_blurring_grid_slim,
                         convolver=convolver,
-                        light_profile_list=[light_profile_linear],
+                        light_profile_list=light_profile_list,
                     )
 
                     lp_linear_func_galaxy_dict[lp_linear_func] = galaxy
@@ -130,7 +135,7 @@ class PlaneToInversion:
         preloads=aa.Preloads(),
     ) -> Dict[Union[LightProfileLinearObjFuncList, aa.AbstractMapper], Galaxy]:
 
-        lp_linear_func_galaxy_dict = self.lp_linear_func_galaxy_dict_from(
+        lp_linear_func_galaxy_dict = self.lp_linear_func_list_galaxy_dict_from(
             source_grid_slim=dataset.grid,
             source_blurring_grid_slim=dataset.blurring_grid,
             convolver=dataset.convolver,
