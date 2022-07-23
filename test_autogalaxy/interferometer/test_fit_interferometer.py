@@ -44,15 +44,28 @@ def test__noise_map__with_and_without_hyper_background(interferometer_7):
 
 def test__fit_figure_of_merit(interferometer_7):
 
-    g0 = ag.Galaxy(
-        redshift=0.5,
-        light_profile=ag.lp.EllSersic(intensity=1.0),
-        mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
-    )
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
 
     g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
+
+    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
+
+    assert (fit.noise_map.slim == np.full(fill_value=2.0 + 2.0j, shape=(7,))).all()
+    assert fit.log_likelihood == pytest.approx(-2398107.3849, 1e-4)
+    assert fit.figure_of_merit == pytest.approx(-2398107.3849, 1.0e-4)
+
+    basis = ag.lp_basis.Basis(
+        light_profile_list=[
+            ag.lp.EllSersic(intensity=1.0),
+            ag.lp.EllSersic(intensity=1.0),
+        ]
+    )
+
+    g0 = ag.Galaxy(redshift=0.5, bulge=basis)
+
+    plane = ag.Plane(redshift=0.5, galaxies=[g0])
 
     fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
@@ -122,11 +135,7 @@ def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
 
     hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-    g0 = ag.Galaxy(
-        redshift=0.5,
-        light_profile=ag.lp.EllSersic(intensity=1.0),
-        mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
-    )
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
 
     g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
 
