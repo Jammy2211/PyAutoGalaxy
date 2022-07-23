@@ -26,11 +26,14 @@ class Basis(lp.LightProfile):
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> aa.Array2D:
 
-        return sum(
-            [
-                light_profile.image_2d_from(grid=grid, operated_only=operated_only)
-                if not isinstance(light_profile, lp_linear.LightProfileLinear)
-                else np.zeros((grid.shape[0],))
-                for light_profile in self.light_profile_list
-            ]
-        )
+        return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
+
+    def image_2d_list_from(
+        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+    ) -> List[aa.Array2D]:
+        return [
+            light_profile.image_2d_from(grid=grid, operated_only=operated_only)
+            if not isinstance(light_profile, lp_linear.LightProfileLinear)
+            else np.zeros((grid.shape[0],))
+            for light_profile in self.light_profile_list
+        ]
