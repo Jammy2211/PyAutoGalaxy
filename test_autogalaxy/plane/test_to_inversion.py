@@ -4,15 +4,13 @@ import pytest
 import autogalaxy as ag
 
 
-def test__lp_linear_func_list_galaxy_dict_from(lp_0, masked_imaging_7x7):
+def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    lp_linear_func_galaxy_dict = (
-        plane_to_inversion.lp_linear_func_list_galaxy_dict_from()
-    )
+    lp_linear_func_galaxy_dict = plane_to_inversion.lp_linear_func_list_galaxy_dict
 
     assert lp_linear_func_galaxy_dict == {}
 
@@ -30,9 +28,7 @@ def test__lp_linear_func_list_galaxy_dict_from(lp_0, masked_imaging_7x7):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    lp_linear_func_galaxy_dict = (
-        plane_to_inversion.lp_linear_func_list_galaxy_dict_from()
-    )
+    lp_linear_func_galaxy_dict = plane_to_inversion.lp_linear_func_list_galaxy_dict
 
     lp_linear_func_list = list(lp_linear_func_galaxy_dict.keys())
 
@@ -52,9 +48,7 @@ def test__lp_linear_func_list_galaxy_dict_from(lp_0, masked_imaging_7x7):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    lp_linear_func_galaxy_dict = (
-        plane_to_inversion.lp_linear_func_list_galaxy_dict_from()
-    )
+    lp_linear_func_galaxy_dict = plane_to_inversion.lp_linear_func_list_galaxy_dict
 
     lp_linear_func_list = list(lp_linear_func_galaxy_dict.keys())
 
@@ -66,7 +60,7 @@ def test__lp_linear_func_list_galaxy_dict_from(lp_0, masked_imaging_7x7):
     assert lp_linear_func_list[1].light_profile_list[1] == lp_linear_1
 
 
-def test__sparse_image_plane_grid_list_from(masked_imaging_7x7):
+def test__sparse_image_plane_grid_list(masked_imaging_7x7):
 
     galaxy_pix = ag.Galaxy(
         redshift=0.5,
@@ -78,7 +72,7 @@ def test__sparse_image_plane_grid_list_from(masked_imaging_7x7):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    sparse_grid = plane_to_inversion.sparse_image_plane_grid_list_from()
+    sparse_grid = plane_to_inversion.sparse_image_plane_grid_list
 
     assert (sparse_grid == np.array([[1.0, 1.0]])).all()
 
@@ -98,7 +92,7 @@ def test__sparse_image_plane_grid_list_from(masked_imaging_7x7):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    sparse_grid = plane_to_inversion.sparse_image_plane_grid_list_from()
+    sparse_grid = plane_to_inversion.sparse_image_plane_grid_list
 
     assert (sparse_grid == np.array([[2.0, 2.0]])).all()
 
@@ -110,12 +104,12 @@ def test__sparse_image_plane_grid_list_from(masked_imaging_7x7):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    sparse_grid = plane_to_inversion.sparse_image_plane_grid_list_from()
+    sparse_grid = plane_to_inversion.sparse_image_plane_grid_list
 
     assert sparse_grid is None
 
 
-def test__mapper_galaxy_dict_from(masked_imaging_7x7):
+def test__mapper_galaxy_dict(masked_imaging_7x7):
 
     galaxy_pix = ag.Galaxy(
         redshift=0.5,
@@ -130,7 +124,7 @@ def test__mapper_galaxy_dict_from(masked_imaging_7x7):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    mapper_galaxy_dict = plane_to_inversion.mapper_galaxy_dict_from()
+    mapper_galaxy_dict = plane_to_inversion.mapper_galaxy_dict
 
     mapper_list = list(mapper_galaxy_dict.keys())
 
@@ -152,7 +146,7 @@ def test__mapper_galaxy_dict_from(masked_imaging_7x7):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    mapper_galaxy_dict = plane_to_inversion.mapper_galaxy_dict_from()
+    mapper_galaxy_dict = plane_to_inversion.mapper_galaxy_dict
 
     mapper_list = list(mapper_galaxy_dict.keys())
 
@@ -168,7 +162,7 @@ def test__mapper_galaxy_dict_from(masked_imaging_7x7):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    mapper_galaxy_dict = plane_to_inversion.mapper_galaxy_dict_from()
+    mapper_galaxy_dict = plane_to_inversion.mapper_galaxy_dict
 
     assert mapper_galaxy_dict == {}
 
@@ -192,13 +186,7 @@ def test__regularization_galaxy_dict_from(masked_imaging_7x7):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    linear_obj_galaxy_dict = plane_to_inversion.linear_obj_galaxy_dict_from()
-
-    linear_obj_list = list(linear_obj_galaxy_dict.keys())
-
-    regularization_list = plane_to_inversion.regularization_list_from(
-        linear_obj_galaxy_dict=linear_obj_galaxy_dict, linear_obj_list=linear_obj_list
-    )
+    regularization_list = plane_to_inversion.regularization_list
 
     assert regularization_list[0] == None
     assert regularization_list[1] == regularization_1
@@ -221,7 +209,7 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
-    inversion = plane_to_inversion.inversion_from()
+    inversion = plane_to_inversion.inversion
 
     assert inversion.reconstruction[0] == pytest.approx(0.00543437, 1.0e-2)
 
@@ -242,7 +230,7 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
-    inversion = plane_to_inversion.inversion_from()
+    inversion = plane_to_inversion.inversion
 
     assert inversion.mapped_reconstructed_image == pytest.approx(
         masked_imaging_7x7.image, 1.0e-2
@@ -267,7 +255,7 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
         ),
     )
 
-    inversion = plane_to_inversion.inversion_from()
+    inversion = plane_to_inversion.inversion
 
     assert inversion.reconstruction[0] == pytest.approx(0.0012073, 1.0e-2)
 
@@ -292,7 +280,7 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
         ),
     )
 
-    inversion = plane_to_inversion.inversion_from()
+    inversion = plane_to_inversion.inversion
 
     assert inversion.mapped_reconstructed_data.real == pytest.approx(
         interferometer_7.visibilities.real, 1.0e-2
