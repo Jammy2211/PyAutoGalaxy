@@ -134,9 +134,13 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
     def plane_to_inversion(self) -> PlaneToInversion:
         return PlaneToInversion(
             plane=self.plane,
-            grid=self.dataset.grid,
-            blurring_grid=self.dataset.blurring_grid,
-            grid_pixelized=self.dataset.grid_pixelized,
+            dataset=self.dataset,
+            data=self.profile_subtracted_visibilities,
+            noise_map=self.noise_map,
+            w_tilde=self.w_tilde,
+            settings_pixelization=self.settings_pixelization,
+            settings_inversion=self.settings_inversion,
+            preloads=self.preloads,
         )
 
     @cached_property
@@ -151,15 +155,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
         """
         if self.perform_inversion:
 
-            return self.plane_to_inversion.inversion_interferometer_from(
-                dataset=self.dataset,
-                visibilities=self.profile_subtracted_visibilities,
-                noise_map=self.noise_map,
-                w_tilde=self.w_tilde,
-                settings_pixelization=self.settings_pixelization,
-                settings_inversion=self.settings_inversion,
-                preloads=self.preloads,
-            )
+            return self.plane_to_inversion.inversion_from()
 
     @property
     def model_data(self) -> aa.Visibilities:

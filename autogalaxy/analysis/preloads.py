@@ -131,7 +131,9 @@ class Preloads(aa.Preloads):
 
         if preloads.mapper_list is not None:
 
-            preloads.mapper_galaxy_dict = fit_0.plane_to_inversion.mapper_galaxy_dict_from()
+            preloads.mapper_galaxy_dict = (
+                fit_0.plane_to_inversion.mapper_galaxy_dict_from()
+            )
 
         preloads.set_operated_mapping_matrix_with_preloads(fit_0=fit_0, fit_1=fit_1)
         preloads.set_curvature_matrix(fit_0=fit_0, fit_1=fit_1)

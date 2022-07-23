@@ -151,10 +151,13 @@ class FitImaging(aa.FitImaging, AbstractFit):
     def plane_to_inversion(self) -> PlaneToInversion:
         return PlaneToInversion(
             plane=self.plane,
-            grid=self.imaging.grid,
-            blurring_grid=self.imaging.blurring_grid,
-            convolver=self.imaging.convolver,
-            grid_pixelized=self.imaging.grid_pixelized,
+            dataset=self.dataset,
+            data=self.profile_subtracted_image,
+            noise_map=self.noise_map,
+            w_tilde=self.w_tilde,
+            settings_pixelization=self.settings_pixelization,
+            settings_inversion=self.settings_inversion,
+            preloads=self.preloads,
         )
 
     @cached_property
@@ -170,15 +173,7 @@ class FitImaging(aa.FitImaging, AbstractFit):
 
         if self.perform_inversion:
 
-            return self.plane_to_inversion.inversion_imaging_from(
-                dataset=self.dataset,
-                image=self.profile_subtracted_image,
-                noise_map=self.noise_map,
-                w_tilde=self.w_tilde,
-                settings_pixelization=self.settings_pixelization,
-                settings_inversion=self.settings_inversion,
-                preloads=self.preloads,
-            )
+            return self.plane_to_inversion.inversion_from()
 
     @property
     def model_data(self) -> aa.Array2D:
