@@ -3,7 +3,6 @@ from typing import Dict, Optional
 
 import autoarray as aa
 
-from autogalaxy.profiles.light_profiles.basis import Basis
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 
@@ -37,7 +36,7 @@ class AbstractFit:
         # TODO : When we add regularization to basis need to change this to reflect mappers.
 
         return len(
-            list(filter(None, self.model_obj.cls_list_from(cls=aa.reg.Regularization)))
+            list(filter(None, self.model_obj.cls_list_from(cls=aa.pix.Pixelization)))
         )
 
     @property
@@ -52,18 +51,7 @@ class AbstractFit:
         -------
             A bool which is True if an inversion is performed.
         """
-        if self.model_obj.has(cls=aa.pix.Pixelization) or self.model_obj.has(
-            cls=LightProfileLinear
-        ):
-            return True
-        elif self.model_obj.has(cls=Basis):
-            basis_list = self.model_obj.cls_list_from(cls=Basis)
-            for basis in basis_list:
-                for light_profile in basis.light_profile_list:
-                    if isinstance(light_profile, LightProfileLinear):
-                        return True
-
-        return False
+        return self.model_obj.perform_inversion
 
     @property
     def w_tilde(self) -> Optional[aa.WTildeImaging]:

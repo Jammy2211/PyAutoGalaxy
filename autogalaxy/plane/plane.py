@@ -9,7 +9,9 @@ from autoconf.dictable import Dictable
 from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxy import HyperGalaxy
+from autogalaxy.profiles.light_profiles.basis import Basis
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
+from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
 from autogalaxy.operate.image import OperateImageGalaxies
 from autogalaxy.operate.deflections import OperateDeflections
@@ -319,6 +321,29 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
                 contribution_map_list.append(None)
 
         return contribution_map_list
+
+    @property
+    def perform_inversion(self) -> bool:
+        """
+        Returns a bool specifying whether this fit object performs an inversion.
+
+        This is based on whether any of the galaxies in the `model_obj` have a `Pixelization` or `LightProfileLinear`
+        object, in which case an inversion is performed.
+
+        Returns
+        -------
+            A bool which is True if an inversion is performed.
+        """
+        if self.has(cls=aa.pix.Pixelization) or self.has(cls=LightProfileLinear):
+            return True
+        elif self.has(cls=Basis):
+            basis_list = self.cls_list_from(cls=Basis)
+            for basis in basis_list:
+                for light_profile in basis.light_profile_list:
+                    if isinstance(light_profile, LightProfileLinear):
+                        return True
+
+        return False
 
     def extract_attribute(self, cls, attr_name):
         """
