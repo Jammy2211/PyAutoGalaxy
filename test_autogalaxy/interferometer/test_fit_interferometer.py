@@ -48,8 +48,7 @@ def test__fit_figure_of_merit(interferometer_7):
 
     fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-    assert (fit.noise_map.slim == np.full(fill_value=2.0 + 2.0j, shape=(7,))).all()
-    assert fit.log_likelihood == pytest.approx(-2398107.3849, 1e-4)
+    assert fit.perform_inversion is False
     assert fit.figure_of_merit == pytest.approx(-2398107.3849, 1.0e-4)
 
     basis = ag.lp_basis.Basis(
@@ -65,8 +64,7 @@ def test__fit_figure_of_merit(interferometer_7):
 
     fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-    assert (fit.noise_map.slim == np.full(fill_value=2.0 + 2.0j, shape=(7,))).all()
-    assert fit.log_likelihood == pytest.approx(-2398107.3849, 1e-4)
+    assert fit.perform_inversion is False
     assert fit.figure_of_merit == pytest.approx(-2398107.3849, 1.0e-4)
 
     pix = ag.pix.Rectangular(shape=(3, 3))
@@ -82,8 +80,7 @@ def test__fit_figure_of_merit(interferometer_7):
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
-    assert (fit.noise_map.slim == np.full(fill_value=2.0 + 2.0j, shape=(7,))).all()
-    assert fit.log_evidence == pytest.approx(-66.90612, 1e-4)
+    assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-66.90612, 1.0e-4)
 
     galaxy_light = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
@@ -100,8 +97,7 @@ def test__fit_figure_of_merit(interferometer_7):
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
-    assert (fit.noise_map.slim == np.full(fill_value=2.0 + 2.0j, shape=(7,))).all()
-    assert fit.log_evidence == pytest.approx(-283424.48941, 1e-4)
+    assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-283424.48941, 1.0e-4)
 
     g0_linear_light = ag.Galaxy(
@@ -116,7 +112,21 @@ def test__fit_figure_of_merit(interferometer_7):
 
     fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-    assert fit.log_likelihood == pytest.approx(-23.44419, 1e-4)
+    assert fit.perform_inversion is True
+    assert fit.figure_of_merit == pytest.approx(-23.44419, 1.0e-4)
+
+    basis = ag.lp_basis.Basis(
+        light_profile_list=[
+            ag.lp_linear.EllSersic(sersic_index=1.0),
+            ag.lp_linear.EllSersic(sersic_index=4.0),
+        ]
+    )
+
+    plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, g1_linear_light])
+
+    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
+
+    assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-23.44419, 1.0e-4)
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, galaxy_pix])

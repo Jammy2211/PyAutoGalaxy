@@ -56,8 +56,12 @@ class AbstractFit:
             cls=LightProfileLinear
         ):
             return True
-        # if self.model_obj.has(cls=Basis):
-        #     basis_list = self.cls
+        elif self.model_obj.has(cls=Basis):
+            basis_list = self.model_obj.cls_list_from(cls=Basis)
+            for basis in basis_list:
+                for light_profile in basis.light_profile_list:
+                    if isinstance(light_profile, LightProfileLinear):
+                        return True
 
         return False
 
