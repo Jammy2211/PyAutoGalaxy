@@ -6,9 +6,7 @@ import autogalaxy as ag
 
 def test__model_visibilities(interferometer_7):
 
-    g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d=np.ones(2))
-    )
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.m.MockLightProfile(image_2d=np.ones(2)))
     plane = ag.Plane(galaxies=[g0])
 
     fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
@@ -21,9 +19,7 @@ def test__model_visibilities(interferometer_7):
 
 def test__noise_map__with_and_without_hyper_background(interferometer_7):
 
-    g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d=np.ones(2))
-    )
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.m.MockLightProfile(image_2d=np.ones(2)))
     plane = ag.Plane(galaxies=[g0])
 
     fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
@@ -44,9 +40,9 @@ def test__noise_map__with_and_without_hyper_background(interferometer_7):
 
 def test__fit_figure_of_merit(interferometer_7):
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
@@ -90,7 +86,7 @@ def test__fit_figure_of_merit(interferometer_7):
     assert fit.log_evidence == pytest.approx(-66.90612, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-66.90612, 1.0e-4)
 
-    galaxy_light = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    galaxy_light = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
     pix = ag.pix.Rectangular(shape=(3, 3))
     reg = ag.reg.Constant(coefficient=1.0)
@@ -109,11 +105,11 @@ def test__fit_figure_of_merit(interferometer_7):
     assert fit.figure_of_merit == pytest.approx(-283424.48941, 1.0e-4)
 
     g0_linear_light = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp_linear.EllSersic(sersic_index=1.0)
+        redshift=0.5, bulge=ag.lp_linear.EllSersic(sersic_index=1.0)
     )
 
     g1_linear_light = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp_linear.EllSersic(sersic_index=4.0)
+        redshift=0.5, bulge=ag.lp_linear.EllSersic(sersic_index=4.0)
     )
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, g1_linear_light])
@@ -135,9 +131,9 @@ def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
 
     hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
@@ -180,7 +176,7 @@ def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
     assert fit.log_evidence == pytest.approx(-68.63380, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-68.63380, 1.0e-4)
 
-    galaxy_light = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    galaxy_light = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
     pix = ag.pix.Rectangular(shape=(3, 3))
     reg = ag.reg.Constant(coefficient=1.0)
@@ -228,8 +224,8 @@ def test___galaxy_model_image_dict(interferometer_7):
 
     # Normal Light Profiles Only
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=2.0))
     g2 = ag.Galaxy(
         redshift=0.5,
         light_profile_0=ag.lp.EllSersic(intensity=1.0),
@@ -253,7 +249,7 @@ def test___galaxy_model_image_dict(interferometer_7):
 
     # Linear Light Profiles Only
 
-    g0_linear = ag.Galaxy(redshift=0.5, light_profile=ag.lp_linear.EllSersic())
+    g0_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.EllSersic())
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear])
 
@@ -339,8 +335,8 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
     # Normal Light Profiles Only
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=2.0))
     g2 = ag.Galaxy(
         redshift=0.5,
         light_profile_0=ag.lp.EllSersic(intensity=1.0),
@@ -374,7 +370,7 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
     # Linear Light Profiles Only
 
-    g0_linear = ag.Galaxy(redshift=0.5, light_profile=ag.lp_linear.EllSersic())
+    g0_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.EllSersic())
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear])
 
@@ -461,8 +457,8 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
 def test__model_visibilities_of_galaxies_list(interferometer_7):
 
-    galaxy_light = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-    galaxy_linear = ag.Galaxy(redshift=0.5, light_profile=ag.lp_linear.EllSersic())
+    galaxy_light = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
+    galaxy_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.EllSersic())
 
     galaxy_pix = ag.Galaxy(
         redshift=0.5,

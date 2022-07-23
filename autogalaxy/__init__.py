@@ -68,6 +68,7 @@ from .galaxy.stellar_dark_decomp import StellarDarkDecomp
 from .hyper import hyper_data
 from .analysis.setup import SetupHyper
 from .plane.plane import Plane
+from .plane.to_inversion import AbstractToInversion
 from .plane.to_inversion import PlaneToInversion
 from .profiles.geometry_profiles import EllProfile
 from .profiles import (

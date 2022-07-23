@@ -10,9 +10,7 @@ def test__model_image__with_and_without_psf_blurring(
 
     g0 = ag.Galaxy(
         redshift=0.5,
-        light_profile=ag.m.MockLightProfile(
-            image_2d_value=1.0, image_2d_first_value=2.0
-        ),
+        bulge=ag.m.MockLightProfile(image_2d_value=1.0, image_2d_first_value=2.0),
     )
     plane = ag.Plane(galaxies=[g0])
 
@@ -33,9 +31,7 @@ def test__model_image__with_and_without_psf_blurring(
 
 def test__noise_map__with_and_without_hyper_galaxy(masked_imaging_7x7_no_blur):
 
-    g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d_value=1.0)
-    )
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.m.MockLightProfile(image_2d_value=1.0))
 
     plane = ag.Plane(galaxies=[g0])
 
@@ -49,7 +45,7 @@ def test__noise_map__with_and_without_hyper_galaxy(masked_imaging_7x7_no_blur):
 
     g0 = ag.Galaxy(
         redshift=0.5,
-        light_profile=ag.m.MockLightProfile(image_2d_value=1.0),
+        bulge=ag.m.MockLightProfile(image_2d_value=1.0),
         hyper_galaxy=ag.HyperGalaxy(
             contribution_factor=1.0, noise_factor=1.0, noise_power=1.0
         ),
@@ -74,7 +70,7 @@ def test__noise_map__with_hyper_galaxy_reaches_upper_limit(masked_imaging_7x7_no
 
     g0 = ag.Galaxy(
         redshift=0.5,
-        light_profile=ag.m.MockLightProfile(image_2d_value=1.0),
+        bulge=ag.m.MockLightProfile(image_2d_value=1.0),
         hyper_galaxy=ag.HyperGalaxy(
             contribution_factor=1.0, noise_factor=1.0e9, noise_power=1.0
         ),
@@ -95,9 +91,7 @@ def test__noise_map__with_hyper_galaxy_reaches_upper_limit(masked_imaging_7x7_no
 
 def test__image__with_and_without_hyper_background_sky(masked_imaging_7x7_no_blur):
 
-    g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d_value=1.0)
-    )
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.m.MockLightProfile(image_2d_value=1.0))
 
     plane = ag.Plane(galaxies=[g0])
 
@@ -117,9 +111,7 @@ def test__image__with_and_without_hyper_background_sky(masked_imaging_7x7_no_blu
 
 def test__noise_map__with_and_without_hyper_background(masked_imaging_7x7_no_blur):
 
-    g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d_value=1.0)
-    )
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.m.MockLightProfile(image_2d_value=1.0))
     plane = ag.Plane(galaxies=[g0])
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7_no_blur, plane=plane)
@@ -144,8 +136,8 @@ def test__noise_map__with_and_without_hyper_background(masked_imaging_7x7_no_blu
 
 def test__fit_figure_of_merit(masked_imaging_7x7):
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
@@ -160,7 +152,7 @@ def test__fit_figure_of_merit(masked_imaging_7x7):
         ]
     )
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=basis)
+    g0 = ag.Galaxy(redshift=0.5, bulge=basis)
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0])
 
@@ -179,7 +171,7 @@ def test__fit_figure_of_merit(masked_imaging_7x7):
 
     assert fit.figure_of_merit == pytest.approx(-22.9005, 1.0e-4)
 
-    galaxy_light = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    galaxy_light = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
     plane = ag.Plane(redshift=0.5, galaxies=[galaxy_light, galaxy_pix])
 
@@ -188,11 +180,11 @@ def test__fit_figure_of_merit(masked_imaging_7x7):
     assert fit.figure_of_merit == pytest.approx(-6840.5851, 1.0e-4)
 
     g0_linear_light = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp_linear.EllSersic(sersic_index=1.0)
+        redshift=0.5, bulge=ag.lp_linear.EllSersic(sersic_index=1.0)
     )
 
     g1_linear_light = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp_linear.EllSersic(sersic_index=4.0)
+        redshift=0.5, bulge=ag.lp_linear.EllSersic(sersic_index=4.0)
     )
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, g1_linear_light])
@@ -202,10 +194,10 @@ def test__fit_figure_of_merit(masked_imaging_7x7):
     assert fit.figure_of_merit == pytest.approx(-14.52327, 1.0e-4)
 
     g0_operated_light = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp_operated.EllSersic(intensity=1.0)
+        redshift=0.5, bulge=ag.lp_operated.EllSersic(intensity=1.0)
     )
     g1_operated_light = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp_operated.EllSersic(intensity=1.0)
+        redshift=0.5, bulge=ag.lp_operated.EllSersic(intensity=1.0)
     )
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_operated_light, g1_operated_light])
@@ -215,10 +207,10 @@ def test__fit_figure_of_merit(masked_imaging_7x7):
     assert fit.figure_of_merit == pytest.approx(-342374.9618, 1.0e-4)
 
     g0_linear_operated_light = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp_linear_operated.EllSersic(sersic_index=1.0)
+        redshift=0.5, bulge=ag.lp_linear_operated.EllSersic(sersic_index=1.0)
     )
     g1_linear_operated_light = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp_linear_operated.EllSersic(sersic_index=4.0)
+        redshift=0.5, bulge=ag.lp_linear_operated.EllSersic(sersic_index=4.0)
     )
 
     plane = ag.Plane(
@@ -247,13 +239,13 @@ def test__fit_figure_of_merit__include_hyper_methods(masked_imaging_7x7):
 
     g0 = ag.Galaxy(
         redshift=0.5,
-        light_profile=ag.lp.EllSersic(intensity=1.0),
+        bulge=ag.lp.EllSersic(intensity=1.0),
         hyper_galaxy=hyper_galaxy,
         hyper_model_image=np.ones(9),
         hyper_galaxy_image=np.ones(9),
         hyper_minimum_value=0.0,
     )
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
@@ -297,7 +289,7 @@ def test__fit_figure_of_merit__include_hyper_methods(masked_imaging_7x7):
 
     galaxy_light = ag.Galaxy(
         redshift=0.5,
-        light_profile=ag.lp.EllSersic(intensity=1.0),
+        bulge=ag.lp.EllSersic(intensity=1.0),
         hyper_galaxy=hyper_galaxy,
         hyper_model_image=np.ones(9),
         hyper_galaxy_image=np.ones(9),
@@ -325,8 +317,8 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
 
     # Normal Light Profiles Only
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=2.0))
     g2 = ag.Galaxy(
         redshift=0.5,
         light_profile_0=ag.lp.EllSersic(intensity=1.0),
@@ -366,7 +358,7 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
 
     # Linear Light Profiles only
 
-    g0_linear = ag.Galaxy(redshift=0.5, light_profile=ag.lp_linear.EllSersic())
+    g0_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.EllSersic())
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear, g3])
 
@@ -406,8 +398,8 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
 
     # Linear Light PRofiles + Pixelization + Regularizaiton
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-    g1_linear = ag.Galaxy(redshift=0.5, light_profile=ag.lp_linear.EllSersic())
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
+    g1_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.EllSersic())
 
     pix = ag.pix.Rectangular(shape=(3, 3))
     reg = ag.reg.Constant(coefficient=1.0)
@@ -454,8 +446,8 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
 
 def test__model_images_of_galaxies_list(masked_imaging_7x7):
 
-    galaxy_light = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-    galaxy_linear = ag.Galaxy(redshift=0.5, light_profile=ag.lp_linear.EllSersic())
+    galaxy_light = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
+    galaxy_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.EllSersic())
 
     galaxy_pix = ag.Galaxy(
         redshift=0.5,
@@ -479,9 +471,9 @@ def test__model_images_of_galaxies_list(masked_imaging_7x7):
 
 
 def test___unmasked_blurred_images(masked_imaging_7x7):
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
@@ -509,17 +501,11 @@ def test___unmasked_blurred_images(masked_imaging_7x7):
 
 def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
 
-    g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d=np.ones(1))
-    )
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.m.MockLightProfile(image_2d=np.ones(1)))
 
-    g1 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d=2.0 * np.ones(1))
-    )
+    g1 = ag.Galaxy(redshift=0.5, bulge=ag.m.MockLightProfile(image_2d=2.0 * np.ones(1)))
 
-    g2 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d=3.0 * np.ones(1))
-    )
+    g2 = ag.Galaxy(redshift=0.5, bulge=ag.m.MockLightProfile(image_2d=3.0 * np.ones(1)))
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0, g1, g2])
 
@@ -531,15 +517,11 @@ def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
     assert fit.subtracted_images_of_galaxies_list[1].slim[0] == -3.0 or np.nan
     assert fit.subtracted_images_of_galaxies_list[2].slim[0] == -2.0 or np.nan
 
-    g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d=np.ones(1))
-    )
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.m.MockLightProfile(image_2d=np.ones(1)))
 
     g1 = ag.Galaxy(redshift=0.5)
 
-    g2 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.m.MockLightProfile(image_2d=3.0 * np.ones(1))
-    )
+    g2 = ag.Galaxy(redshift=0.5, bulge=ag.m.MockLightProfile(image_2d=3.0 * np.ones(1)))
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0, g1, g2])
 
@@ -555,9 +537,9 @@ def test__light_profile_linear__intensity_dict(masked_imaging_7x7):
     linear_light_0 = ag.lp_linear.EllSersic(sersic_index=1.0)
     linear_light_1 = ag.lp_linear.EllSersic(sersic_index=4.0)
 
-    g0_linear_light = ag.Galaxy(redshift=0.5, light_profile=linear_light_0)
+    g0_linear_light = ag.Galaxy(redshift=0.5, bulge=linear_light_0)
 
-    g1_linear_light = ag.Galaxy(redshift=0.5, light_profile=linear_light_1)
+    g1_linear_light = ag.Galaxy(redshift=0.5, bulge=linear_light_1)
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, g1_linear_light])
 
@@ -573,39 +555,33 @@ def test__light_profile_linear__intensity_dict(masked_imaging_7x7):
 
 def test__plane_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
-    g0_linear = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp_linear.EllSersic(sersic_index=1.0)
-    )
+    g0_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.EllSersic(sersic_index=1.0))
 
-    g1_linear = ag.Galaxy(
-        redshift=1.0, light_profile=ag.lp_linear.EllSersic(sersic_index=4.0)
-    )
+    g1_linear = ag.Galaxy(redshift=1.0, bulge=ag.lp_linear.EllSersic(sersic_index=4.0))
 
     plane = ag.Plane(galaxies=[g0, g0_linear, g1_linear])
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-    assert fit.galaxies[0].light_profile.intensity == pytest.approx(1.0, 1.0e-4)
+    assert fit.galaxies[0].bulge.intensity == pytest.approx(1.0, 1.0e-4)
 
     plane = fit.plane_linear_light_profiles_to_light_profiles
 
-    assert plane.galaxies[0].light_profile.intensity == pytest.approx(1.0, 1.0e-4)
-    assert plane.galaxies[1].light_profile.intensity == pytest.approx(7.0932274, 1.0e-4)
-    assert plane.galaxies[2].light_profile.intensity == pytest.approx(
-        -1.04694839, 1.0e-4
-    )
+    assert plane.galaxies[0].bulge.intensity == pytest.approx(1.0, 1.0e-4)
+    assert plane.galaxies[1].bulge.intensity == pytest.approx(7.0932274, 1.0e-4)
+    assert plane.galaxies[2].bulge.intensity == pytest.approx(-1.04694839, 1.0e-4)
 
 
 # def test__light_profile_no_convolve(masked_imaging_7x7):
 #
-#     g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllGaussian(intensity=1.0))
+#     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllGaussian(intensity=1.0))
 #     plane = ag.Plane(redshift=0.5, galaxies=[g0])
 #     fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 #
 #     g0_no_convolve = ag.Galaxy(
-#         redshift=0.5, light_profile=ag.lp.EllGaussian(intensity=1.0)
+#         redshift=0.5, bulge=ag.lp.EllGaussian(intensity=1.0)
 #     )
 #     plane_no_convolve = ag.Plane(redshift=0.5, galaxies=[g0_no_convolve])
 #     fit_no_convolve = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane_no_convolve)

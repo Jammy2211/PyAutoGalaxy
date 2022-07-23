@@ -13,7 +13,56 @@ from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfil
 from autogalaxy.galaxy.galaxy import Galaxy
 
 
-class PlaneToInversion:
+class AbstractToInversion:
+    def cls_light_profile_func_list_galaxy_dict_from(
+        self, cls: Type
+    ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
+        raise NotImplementedError
+
+    @cached_property
+    def lp_linear_func_list_galaxy_dict(
+        self,
+    ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
+
+        raise NotImplementedError
+
+    @cached_property
+    def mapper_galaxy_dict(self):
+        raise NotImplementedError
+
+    @cached_property
+    def linear_obj_galaxy_dict(
+        self,
+    ) -> Dict[Union[LightProfileLinearObjFuncList, aa.AbstractMapper], Galaxy]:
+
+        lp_linear_func_galaxy_dict = self.lp_linear_func_list_galaxy_dict
+
+        mapper_galaxy_dict = self.mapper_galaxy_dict
+
+        return {**lp_linear_func_galaxy_dict, **mapper_galaxy_dict}
+
+    @cached_property
+    def linear_obj_list(self) -> List[aa.LinearObj]:
+        return list(self.linear_obj_galaxy_dict.keys())
+
+    @cached_property
+    def regularization_list(self,) -> List[aa.reg.Regularization]:
+
+        regularization_list = []
+
+        for linear_obj in self.linear_obj_list:
+
+            galaxy = self.linear_obj_galaxy_dict[linear_obj]
+
+            if galaxy.has(cls=aa.reg.Regularization):
+                regularization_list.append(galaxy.regularization)
+            else:
+                regularization_list.append(None)
+
+        return regularization_list
+
+
+class PlaneToInversion(AbstractToInversion):
     def __init__(
         self,
         plane: "Plane",
@@ -152,7 +201,7 @@ class PlaneToInversion:
         )
 
     @cached_property
-    def mapper_galaxy_dict(self,) -> Dict[aa.AbstractMapper, Galaxy]:
+    def mapper_galaxy_dict(self) -> Dict[aa.AbstractMapper, Galaxy]:
 
         if not self.plane.has(cls=aa.pix.Pixelization):
             return {}
@@ -181,37 +230,6 @@ class PlaneToInversion:
             mapper_galaxy_dict[mapper] = galaxy
 
         return mapper_galaxy_dict
-
-    @cached_property
-    def linear_obj_galaxy_dict(
-        self,
-    ) -> Dict[Union[LightProfileLinearObjFuncList, aa.AbstractMapper], Galaxy]:
-
-        lp_linear_func_galaxy_dict = self.lp_linear_func_list_galaxy_dict
-
-        mapper_galaxy_dict = self.mapper_galaxy_dict
-
-        return {**lp_linear_func_galaxy_dict, **mapper_galaxy_dict}
-
-    @cached_property
-    def linear_obj_list(self) -> List[aa.LinearObj]:
-        return list(self.linear_obj_galaxy_dict.keys())
-
-    @cached_property
-    def regularization_list(self,) -> List[aa.reg.Regularization]:
-
-        regularization_list = []
-
-        for linear_obj in self.linear_obj_list:
-
-            galaxy = self.linear_obj_galaxy_dict[linear_obj]
-
-            if galaxy.has(cls=aa.reg.Regularization):
-                regularization_list.append(galaxy.regularization)
-            else:
-                regularization_list.append(None)
-
-        return regularization_list
 
     @property
     def inversion(self) -> aa.AbstractInversion:

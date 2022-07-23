@@ -3,6 +3,7 @@ from typing import Dict, Optional
 
 import autoarray as aa
 
+from autogalaxy.profiles.light_profiles.basis import Basis
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 
@@ -55,6 +56,9 @@ class AbstractFit:
             cls=LightProfileLinear
         ):
             return True
+        # if self.model_obj.has(cls=Basis):
+        #     basis_list = self.cls
+
         return False
 
     @property
