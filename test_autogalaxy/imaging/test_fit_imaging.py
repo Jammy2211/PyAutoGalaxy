@@ -576,6 +576,42 @@ def test__light_profile_linear__intensity_dict(masked_imaging_7x7):
         -0.04694839915145, 1.0e-4
     )
 
+    basis = ag.lp_basis.Basis(light_profile_list=[linear_light_0, linear_light_1])
+
+    g_basis = ag.Galaxy(redshift=0.5, bulge=basis)
+
+    plane = ag.Plane(redshift=0.5, galaxies=[g_basis])
+
+    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
+
+    assert fit.linear_light_profile_intensity_dict[linear_light_0] == pytest.approx(
+        7.093227476666252, 1.0e-4
+    )
+    assert fit.linear_light_profile_intensity_dict[linear_light_1] == pytest.approx(
+        -0.04694839915145, 1.0e-4
+    )
+
+    linear_light_2 = ag.lp_linear.EllSersic(sersic_index=2.0)
+    linear_light_3 = ag.lp_linear.EllSersic(sersic_index=3.0)
+
+    basis = ag.lp_basis.Basis(light_profile_list=[linear_light_2, linear_light_3])
+
+    g_basis = ag.Galaxy(redshift=0.5, bulge=basis)
+
+    plane = ag.Plane(redshift=0.5, galaxies=[g0_linear_light, g_basis])
+
+    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
+
+    assert fit.linear_light_profile_intensity_dict[linear_light_0] == pytest.approx(
+        -21.77759470, 1.0e-4
+    )
+    assert fit.linear_light_profile_intensity_dict[linear_light_2] == pytest.approx(
+        29.3935231947, 1.0e-4
+    )
+    assert fit.linear_light_profile_intensity_dict[linear_light_3] == pytest.approx(
+        -4.77469646, 1.0e-4
+    )
+
 
 def test__plane_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
 

@@ -85,6 +85,7 @@ class AbstractFit:
         This function returns a dictionary which maps every linear light profile instance to its solved for
         `intensity` value in the inversion, so that the intensity value of every light profile can be accessed.
         """
+
         if self.inversion is None:
             return None
 
