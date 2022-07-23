@@ -160,7 +160,13 @@ class FitImaging(aa.FitImaging, AbstractFit):
 
         if self.perform_inversion:
 
-            plane_to_inversion = PlaneToInversion(plane=self.plane)
+            plane_to_inversion = PlaneToInversion(
+                plane=self.plane,
+                source_grid_slim=self.imaging.grid,
+                source_grid_pixelized_slim=self.imaging.grid_pixelized,
+                source_blurring_grid_slim=self.imaging.blurring_grid,
+                convolver=self.imaging.convolver,
+            )
 
             return plane_to_inversion.inversion_imaging_from(
                 dataset=self.dataset,

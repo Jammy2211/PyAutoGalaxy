@@ -10,8 +10,8 @@ def test__lp_linear_func_list_galaxy_dict_from(lp_0):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    lp_linear_func_galaxy_dict = plane_to_inversion.lp_linear_func_list_galaxy_dict_from(
-        source_grid_slim=1, source_blurring_grid_slim=2, convolver=3
+    lp_linear_func_galaxy_dict = (
+        plane_to_inversion.lp_linear_func_list_galaxy_dict_from()
     )
 
     assert lp_linear_func_galaxy_dict == {}
@@ -30,8 +30,8 @@ def test__lp_linear_func_list_galaxy_dict_from(lp_0):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    lp_linear_func_galaxy_dict = plane_to_inversion.lp_linear_func_list_galaxy_dict_from(
-        source_grid_slim=1, source_blurring_grid_slim=2, convolver=3
+    lp_linear_func_galaxy_dict = (
+        plane_to_inversion.lp_linear_func_list_galaxy_dict_from()
     )
 
     lp_linear_func_list = list(lp_linear_func_galaxy_dict.keys())
@@ -52,8 +52,8 @@ def test__lp_linear_func_list_galaxy_dict_from(lp_0):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane)
 
-    lp_linear_func_galaxy_dict = plane_to_inversion.lp_linear_func_list_galaxy_dict_from(
-        source_grid_slim=1, source_blurring_grid_slim=2, convolver=3
+    lp_linear_func_galaxy_dict = (
+        plane_to_inversion.lp_linear_func_list_galaxy_dict_from()
     )
 
     lp_linear_func_list = list(lp_linear_func_galaxy_dict.keys())
@@ -76,10 +76,9 @@ def test__sparse_image_plane_grid_list_from(sub_grid_2d_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane, source_grid_pixelized_slim=sub_grid_2d_7x7)
 
     sparse_grid = plane_to_inversion.sparse_image_plane_grid_list_from(
-        grid=sub_grid_2d_7x7
     )
 
     assert (sparse_grid == np.array([[1.0, 1.0]])).all()
@@ -98,10 +97,9 @@ def test__sparse_image_plane_grid_list_from(sub_grid_2d_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane, source_grid_pixelized_slim=sub_grid_2d_7x7)
 
     sparse_grid = plane_to_inversion.sparse_image_plane_grid_list_from(
-        grid=sub_grid_2d_7x7
     )
 
     assert (sparse_grid == np.array([[2.0, 2.0]])).all()
@@ -112,10 +110,9 @@ def test__sparse_image_plane_grid_list_from(sub_grid_2d_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=0.5)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane, source_grid_pixelized_slim=sub_grid_2d_7x7)
 
     sparse_grid = plane_to_inversion.sparse_image_plane_grid_list_from(
-        grid=sub_grid_2d_7x7
     )
 
     assert sparse_grid is None
@@ -134,10 +131,9 @@ def test__mapper_galaxy_dict_from(sub_grid_2d_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_no_pix, galaxy_pix], redshift=0.5)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane, source_grid_pixelized_slim=sub_grid_2d_7x7)
 
     mapper_galaxy_dict = plane_to_inversion.mapper_galaxy_dict_from(
-        grid=sub_grid_2d_7x7
     )
 
     mapper_list = list(mapper_galaxy_dict.keys())
@@ -158,10 +154,9 @@ def test__mapper_galaxy_dict_from(sub_grid_2d_7x7):
         galaxies=[galaxy_no_pix, galaxy_pix, galaxy_no_pix, galaxy_pix_2], redshift=0.5
     )
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane, source_grid_pixelized_slim=sub_grid_2d_7x7)
 
     mapper_galaxy_dict = plane_to_inversion.mapper_galaxy_dict_from(
-        grid=sub_grid_2d_7x7
     )
 
     mapper_list = list(mapper_galaxy_dict.keys())
@@ -176,10 +171,9 @@ def test__mapper_galaxy_dict_from(sub_grid_2d_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=0.5)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(plane=plane, source_grid_pixelized_slim=sub_grid_2d_7x7)
 
     mapper_galaxy_dict = plane_to_inversion.mapper_galaxy_dict_from(
-        grid=sub_grid_2d_7x7
     )
 
     assert mapper_galaxy_dict == {}
@@ -202,7 +196,9 @@ def test__regularization_galaxy_dict_from(masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1, galaxy_2])
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(
+        plane=plane, source_grid_slim=masked_imaging_7x7.grid, source_grid_pixelized_slim=masked_imaging_7x7.grid_pixelized,
+    )
 
     linear_obj_galaxy_dict = plane_to_inversion.linear_obj_galaxy_dict_from(
         dataset=masked_imaging_7x7
@@ -213,8 +209,6 @@ def test__regularization_galaxy_dict_from(masked_imaging_7x7):
     regularization_list = plane_to_inversion.regularization_list_from(
         linear_obj_galaxy_dict=linear_obj_galaxy_dict, linear_obj_list=linear_obj_list
     )
-
-    print(regularization_list)
 
     assert regularization_list[0] == None
     assert regularization_list[1] == regularization_1
@@ -227,7 +221,12 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g_linear])
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(
+        plane=plane,
+        source_grid_slim=masked_imaging_7x7.grid,
+        source_blurring_grid_slim=masked_imaging_7x7.blurring_grid,
+        convolver=masked_imaging_7x7.convolver, source_grid_pixelized_slim=masked_imaging_7x7.grid_pixelized,
+    )
 
     inversion = plane_to_inversion.inversion_imaging_from(
         dataset=masked_imaging_7x7,
@@ -247,7 +246,12 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(
+        plane=plane,
+        source_grid_slim=masked_imaging_7x7.grid,
+        source_blurring_grid_slim=masked_imaging_7x7.blurring_grid,
+        convolver=masked_imaging_7x7.convolver, source_grid_pixelized_slim=masked_imaging_7x7.grid_pixelized,
+    )
 
     inversion = plane_to_inversion.inversion_imaging_from(
         dataset=masked_imaging_7x7,
@@ -269,7 +273,9 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g_linear])
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(
+        plane=plane, source_grid_slim=interferometer_7.grid, source_grid_pixelized_slim=interferometer_7.grid_pixelized
+    )
 
     inversion = plane_to_inversion.inversion_interferometer_from(
         dataset=interferometer_7,
@@ -293,7 +299,9 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane)
+    plane_to_inversion = ag.PlaneToInversion(
+        plane=plane, source_grid_slim=interferometer_7.grid, source_grid_pixelized_slim=interferometer_7.grid_pixelized
+    )
 
     inversion = plane_to_inversion.inversion_interferometer_from(
         dataset=interferometer_7,

@@ -142,7 +142,13 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
         """
         if self.perform_inversion:
 
-            plane_to_inversion = PlaneToInversion(plane=self.plane)
+            plane_to_inversion = PlaneToInversion(
+                plane=self.plane,
+                source_grid_slim=self.dataset.grid,
+                source_blurring_grid_slim=self.dataset.blurring_grid,
+                source_grid_pixelized_slim=self.dataset.grid_pixelized,
+                convolver=self.dataset.convolver,
+            )
 
             return plane_to_inversion.inversion_interferometer_from(
                 dataset=self.dataset,
