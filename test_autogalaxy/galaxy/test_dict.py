@@ -1,7 +1,7 @@
 import pytest
 
 import autogalaxy as ag
-from autoarray.inversion.mesh.voronoi import Voronoi
+from autoarray.inversion.pixelization.mesh.voronoi import Voronoi
 from autoarray.inversion.regularization import AdaptiveBrightness
 from autoconf.dictable import Dictable
 

@@ -4,7 +4,7 @@ from skimage import measure
 
 import autogalaxy as ag
 
-from autoarray.inversion.mesh.abstract import AbstractMesh
+from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 
 from autogalaxy import exc

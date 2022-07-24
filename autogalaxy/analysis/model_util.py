@@ -6,7 +6,7 @@ from typing import ClassVar, Dict, List
 import autofit as af
 import autoarray as aa
 
-from autoarray.inversion.mesh.abstract import AbstractMesh
+from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 
 from autogalaxy.galaxy.galaxy import HyperGalaxy
@@ -129,9 +129,9 @@ def set_upper_limit_of_pixelization_pixels_prior(
                         if pixels_in_mask < pixelization.pixels.upper_limit:
 
                             if (
-                                pixelization.cls is aa.pix.DelaunayBrightnessImage
-                                or aa.pix.VoronoiBrightnessImage
-                                or aa.pix.VoronoiNNBrightnessImage
+                                pixelization.cls is aa.mesh.DelaunayBrightnessImage
+                                or aa.mesh.VoronoiBrightnessImage
+                                or aa.mesh.VoronoiNNBrightnessImage
                             ):
 
                                 lower_limit = pixelization.pixels.lower_limit

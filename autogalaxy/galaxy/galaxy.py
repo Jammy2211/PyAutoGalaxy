@@ -23,8 +23,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     def __init__(
         self,
         redshift: float,
-        pixelization: Optional[aa.AbstractMesh] = None,
-        regularization: Optional[aa.AbstractRegularization] = None,
+        pixelization: Optional[aa.Pixelization] = None,
         hyper_galaxy: Optional["HyperGalaxy"] = None,
         **kwargs,
     ):
@@ -40,10 +39,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             The redshift of the galaxy.
         pixelization
             The pixelization of the galaxy used to reconstruct an observed image using an inversion.
-        regularization : inversion.Regularization
-            The regularization of the pixel-grid used to reconstruct an observed using an inversion.
-        hyper_galaxy
-            The hyper_galaxies-parameters of the hyper_galaxies-galaxy, which is used for performing a hyper_galaxies-analysis on the noise-map.
             
         Attributes
         ----------
@@ -80,13 +75,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             setattr(self, name, val)
 
         self.pixelization = pixelization
-        self.regularization = regularization
-
-        if pixelization is not None and regularization is None:
-            raise exc.GalaxyException(
-                "If the galaxy has a pixelization, it must also have a regularization."
-            )
-
         self.hyper_galaxy = hyper_galaxy
 
     def __hash__(self):
@@ -94,20 +82,23 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     def __repr__(self):
         string = "Redshift: {}".format(self.redshift)
+
         if self.pixelization:
             string += "\nPixelization:\n{}".format(str(self.pixelization))
-        if self.regularization:
-            string += "\nRegularization:\n{}".format(str(self.regularization))
+
         if self.hyper_galaxy:
             string += "\nHyper Galaxy:\n{}".format(str(self.hyper_galaxy))
+
         if self.cls_list_from(cls=LightProfile):
             string += "\nLight Profiles:\n{}".format(
                 "\n".join(map(str, self.cls_list_from(cls=LightProfile)))
             )
+
         if self.has(cls=MassProfile):
             string += "\nMass Profiles:\n{}".format(
                 "\n".join(map(str, self.cls_list_from(cls=MassProfile)))
             )
+
         return string
 
     def __eq__(self, other):
