@@ -128,7 +128,7 @@ def make_plane_x2_gal_7x7():
 def make_plane_x2_galaxy_inversion_7x7():
     source_gal_inversion = ag.Galaxy(
         redshift=1.0,
-        pixelization=ag.pix.Rectangular(),
+        pixelization=ag.mesh.Rectangular(),
         regularization=ag.reg.Constant(),
     )
 

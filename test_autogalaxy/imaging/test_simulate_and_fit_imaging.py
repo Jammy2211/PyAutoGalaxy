@@ -100,7 +100,7 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
     )
     galaxy_1 = ag.Galaxy(
         redshift=1.0,
-        pixelization=ag.pix.Rectangular(shape=(16, 16)),
+        pixelization=ag.mesh.Rectangular(shape=(16, 16)),
         regularization=ag.reg.Constant(coefficient=(1.0)),
     )
 

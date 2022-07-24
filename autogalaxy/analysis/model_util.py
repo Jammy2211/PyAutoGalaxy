@@ -6,7 +6,7 @@ from typing import ClassVar, Dict, List
 import autofit as af
 import autoarray as aa
 
-from autoarray.inversion.pixelizations.abstract import AbstractPixelization
+from autoarray.inversion.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 
 from autogalaxy.galaxy.galaxy import HyperGalaxy
@@ -34,7 +34,7 @@ def isinstance_or_prior(obj, cls):
     return False
 
 
-def pixelization_from(model: af.Collection) -> AbstractPixelization:
+def pixelization_from(model: af.Collection) -> AbstractMesh:
     """
     For a model containing one or more galaxies, inspect its attributes and return the `pixelization` of a galaxy
     provided one galaxy has a pixelization, otherwise it returns none. There cannot be more than one `Pixelization` in
@@ -54,7 +54,7 @@ def pixelization_from(model: af.Collection) -> AbstractPixelization:
 
     Returns
     -------
-    aa.pix.Pixelization or None:
+    aa.mesh.Mesh or None:
         The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
     """
 
@@ -86,7 +86,7 @@ def has_pixelization_from(model: af.Collection) -> bool:
 
     Returns
     -------
-    aa.pix.Pixelization or None:
+    aa.mesh.Mesh or None:
         The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
     """
     pixelization = pixelization_from(model=model)
@@ -277,7 +277,7 @@ def hyper_inversion_model_from(
     if setup_hyper is None:
         return None
 
-    model = result.instance.as_model((AbstractPixelization, AbstractRegularization))
+    model = result.instance.as_model((AbstractMesh, AbstractRegularization))
 
     if not has_pixelization_from(model=model):
         return None
@@ -489,7 +489,7 @@ def hyper_model_from(
         model components now free parameters.
     """
 
-    model = result.instance.as_model((AbstractPixelization, AbstractRegularization))
+    model = result.instance.as_model((AbstractMesh, AbstractRegularization))
 
     model = clean_model_of_hyper_images(model=model)
 
@@ -578,7 +578,7 @@ def stochastic_model_from(
         model_classes.append(LightProfile)
 
     if include_pixelization:
-        model_classes.append(AbstractPixelization)
+        model_classes.append(AbstractMesh)
 
     if include_regularization:
         model_classes.append(AbstractRegularization)

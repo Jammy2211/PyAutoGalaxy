@@ -76,7 +76,7 @@ def test__perfect_fit__chi_squared_0():
 
     assert fit.chi_squared == pytest.approx(0.0)
 
-    pix = ag.pix.Rectangular(shape=(7, 7))
+    pix = ag.mesh.Rectangular(shape=(7, 7))
 
     reg = ag.reg.Constant(coefficient=0.0001)
 
@@ -118,7 +118,7 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
     )
     galaxy_1 = ag.Galaxy(
         redshift=1.0,
-        pixelization=ag.pix.Rectangular(shape=(16, 16)),
+        pixelization=ag.mesh.Rectangular(shape=(16, 16)),
         regularization=ag.reg.Constant(coefficient=(1.0)),
     )
 

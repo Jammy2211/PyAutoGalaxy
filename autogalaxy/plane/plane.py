@@ -99,7 +99,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
     def galaxies_with_cls_list_from(self, cls: Type) -> List[Galaxy]:
         return list(
-            filter(lambda galaxy: galaxy.has(cls=aa.pix.Pixelization), self.galaxies)
+            filter(lambda galaxy: galaxy.has(cls=aa.mesh.Mesh), self.galaxies)
         )
 
     @aa.grid_dec.grid_2d_to_structure
@@ -251,7 +251,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def hyper_galaxies_with_pixelization_image_list(self) -> List[aa.Array2D]:
         return [
             galaxy.hyper_galaxy_image
-            for galaxy in self.galaxies_with_cls_list_from(cls=aa.pix.Pixelization)
+            for galaxy in self.galaxies_with_cls_list_from(cls=aa.mesh.Mesh)
         ]
 
     def hyper_noise_map_from(self, noise_map) -> aa.Array2D:
@@ -334,7 +334,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         -------
             A bool which is True if an inversion is performed.
         """
-        if self.has(cls=aa.pix.Pixelization) or self.has(cls=LightProfileLinear):
+        if self.has(cls=aa.mesh.Mesh) or self.has(cls=LightProfileLinear):
             return True
         elif self.has(cls=Basis):
             basis_list = self.cls_list_from(cls=Basis)

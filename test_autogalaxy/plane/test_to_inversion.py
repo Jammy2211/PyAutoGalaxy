@@ -64,7 +64,7 @@ def test__sparse_image_plane_grid_list(masked_imaging_7x7):
 
     galaxy_pix = ag.Galaxy(
         redshift=0.5,
-        pixelization=ag.m.MockPixelization(data_pixelization_grid=[[1.0, 1.0]]),
+        pixelization=ag.m.MockPixelization(data_mesh_grid=[[1.0, 1.0]]),
         regularization=ag.m.MockRegularization(),
     )
 
@@ -82,7 +82,7 @@ def test__sparse_image_plane_grid_list(masked_imaging_7x7):
     galaxy_pix = ag.Galaxy(
         redshift=0.5,
         pixelization=ag.m.MockPixelization(
-            data_pixelization_grid=np.array([[1.0, 1.0]])
+            data_mesh_grid=np.array([[1.0, 1.0]])
         ),
         regularization=ag.m.MockRegularization(),
         hyper_galaxy_image=2,
@@ -114,7 +114,7 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
     galaxy_pix = ag.Galaxy(
         redshift=0.5,
         pixelization=ag.m.MockPixelization(
-            mapper=1, data_pixelization_grid=masked_imaging_7x7.grid_pixelized
+            mapper=1, data_mesh_grid=masked_imaging_7x7.grid_pixelized
         ),
         regularization=ag.m.MockRegularization(),
     )
@@ -134,7 +134,7 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
     galaxy_pix_2 = ag.Galaxy(
         redshift=0.5,
         pixelization=ag.m.MockPixelization(
-            mapper=2, data_pixelization_grid=masked_imaging_7x7.grid_pixelized
+            mapper=2, data_mesh_grid=masked_imaging_7x7.grid_pixelized
         ),
         regularization=ag.m.MockRegularization(),
     )
@@ -175,7 +175,7 @@ def test__regularization_list(masked_imaging_7x7):
     galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp_linear.EllGaussian())
     galaxy_1 = ag.Galaxy(
         redshift=0.5,
-        pixelization=ag.pix.Rectangular(shape=(10, 10)),
+        pixelization=ag.mesh.Rectangular(shape=(10, 10)),
         regularization=regularization_0,
     )
     galaxy_2 = ag.Galaxy(
@@ -231,7 +231,7 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
 
     assert inversion.reconstruction[0] == pytest.approx(0.00543437, 1.0e-2)
 
-    pix = ag.pix.Rectangular(shape=(3, 3))
+    pix = ag.mesh.Rectangular(shape=(3, 3))
     reg = ag.reg.Constant(coefficient=0.0)
 
     g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
@@ -279,7 +279,7 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
 
     interferometer_7.data = ag.Visibilities.ones(shape_slim=(7,))
 
-    pix = ag.pix.Rectangular(shape=(7, 7))
+    pix = ag.mesh.Rectangular(shape=(7, 7))
     reg = ag.reg.Constant(coefficient=0.0)
 
     g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)

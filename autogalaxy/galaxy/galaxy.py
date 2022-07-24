@@ -23,7 +23,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     def __init__(
         self,
         redshift: float,
-        pixelization: Optional[aa.AbstractPixelization] = None,
+        pixelization: Optional[aa.AbstractMesh] = None,
         regularization: Optional[aa.AbstractRegularization] = None,
         hyper_galaxy: Optional["HyperGalaxy"] = None,
         **kwargs,
@@ -38,7 +38,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         ----------
         redshift
             The redshift of the galaxy.
-        pixelization : inversion.Pixelization
+        pixelization
             The pixelization of the galaxy used to reconstruct an observed image using an inversion.
         regularization : inversion.Regularization
             The regularization of the pixel-grid used to reconstruct an observed using an inversion.

@@ -76,7 +76,7 @@ def test__modify_before_fit__kmeans_pixelization_upper_limit_ajusted_based_on_ma
     masked_imaging_7x7
 ):
 
-    pixelization = af.Model(ag.pix.DelaunayBrightnessImage)
+    pixelization = af.Model(ag.mesh.DelaunayBrightnessImage)
 
     pixelization.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
 

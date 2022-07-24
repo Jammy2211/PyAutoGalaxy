@@ -415,7 +415,7 @@ def test__image_2d_from__does_not_include_linear_light_profiles(sub_grid_2d_7x7,
 
 def test__only_pixelization_raises_error():
     with pytest.raises(exc.GalaxyException):
-        ag.Galaxy(redshift=0.5, pixelization=ag.pix.Rectangular())
+        ag.Galaxy(redshift=0.5, pixelization=ag.mesh.Rectangular())
 
 
 def test__light_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric_results():

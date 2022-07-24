@@ -177,7 +177,7 @@ class PlaneToInversion(AbstractToInversion):
     @cached_property
     def sparse_image_plane_grid_list(self,) -> Optional[List[aa.type.Grid2DLike]]:
 
-        if not self.plane.has(cls=aa.pix.Pixelization):
+        if not self.plane.has(cls=aa.mesh.Mesh):
             return None
 
         return [
@@ -187,23 +187,23 @@ class PlaneToInversion(AbstractToInversion):
                 settings=self.settings_pixelization,
             )
             for pixelization, hyper_galaxy_image in zip(
-                self.plane.cls_list_from(cls=aa.pix.Pixelization),
+                self.plane.cls_list_from(cls=aa.mesh.Mesh),
                 self.plane.hyper_galaxies_with_pixelization_image_list,
             )
         ]
 
     def mapper_from(
         self,
-        source_pixelization_grid: aa.type.Grid2DLike,
-        pixelization: aa.AbstractPixelization,
+        source_mesh_grid: aa.type.Grid2DLike,
+        pixelization: aa.AbstractMesh,
         hyper_galaxy_image: aa.Array2D,
-        data_pixelization_grid: aa.Grid2D = None,
+        data_mesh_grid: aa.Grid2D = None,
     ) -> aa.AbstractMapper:
 
         return pixelization.mapper_from(
             source_grid_slim=self.grid_pixelized,
-            source_pixelization_grid=source_pixelization_grid,
-            data_pixelization_grid=data_pixelization_grid,
+            source_mesh_grid=source_mesh_grid,
+            data_mesh_grid=data_mesh_grid,
             hyper_image=hyper_galaxy_image,
             settings=self.settings_pixelization,
             preloads=self.preloads,
@@ -213,26 +213,26 @@ class PlaneToInversion(AbstractToInversion):
     @cached_property
     def mapper_galaxy_dict(self) -> Dict[aa.AbstractMapper, Galaxy]:
 
-        if not self.plane.has(cls=aa.pix.Pixelization):
+        if not self.plane.has(cls=aa.mesh.Mesh):
             return {}
 
         sparse_grid_list = self.sparse_image_plane_grid_list
 
         mapper_galaxy_dict = {}
 
-        pixelization_list = self.plane.cls_list_from(cls=aa.pix.Pixelization)
+        pixelization_list = self.plane.cls_list_from(cls=aa.mesh.Mesh)
         galaxies_with_pixelization_list = self.plane.galaxies_with_cls_list_from(
-            cls=aa.pix.Pixelization
+            cls=aa.mesh.Mesh
         )
         hyper_galaxy_image_list = self.plane.hyper_galaxies_with_pixelization_image_list
 
         for mapper_index in range(len(sparse_grid_list)):
 
             mapper = self.mapper_from(
-                source_pixelization_grid=sparse_grid_list[mapper_index],
+                source_mesh_grid=sparse_grid_list[mapper_index],
                 pixelization=pixelization_list[mapper_index],
                 hyper_galaxy_image=hyper_galaxy_image_list[mapper_index],
-                data_pixelization_grid=sparse_grid_list[mapper_index],
+                data_mesh_grid=sparse_grid_list[mapper_index],
             )
 
             galaxy = galaxies_with_pixelization_list[mapper_index]

@@ -17,7 +17,7 @@ def test__pixelization_from_model():
     galaxies = af.Collection(
         galaxy=ag.Galaxy(
             redshift=0.5,
-            pixelization=ag.pix.Rectangular(),
+            pixelization=ag.mesh.Rectangular(),
             regularization=ag.reg.Constant(),
         )
     )
@@ -26,13 +26,13 @@ def test__pixelization_from_model():
         model=af.Collection(galaxies=galaxies)
     )
 
-    assert isinstance(pixelization, ag.pix.Rectangular)
+    assert isinstance(pixelization, ag.mesh.Rectangular)
 
     galaxies = af.Collection(
         galaxy=af.Model(
             ag.Galaxy,
             redshift=0.5,
-            pixelization=ag.pix.Rectangular,
+            pixelization=ag.mesh.Rectangular,
             regularization=ag.reg.Constant,
         )
     )
@@ -41,12 +41,12 @@ def test__pixelization_from_model():
         model=af.Collection(galaxies=galaxies)
     )
 
-    assert type(pixelization) == type(ag.pix.Rectangular)
+    assert type(pixelization) == type(ag.mesh.Rectangular)
 
 
 def test__set_upper_limit_of_pixelization_pixels_prior():
 
-    pixelization = af.Model(ag.pix.DelaunayBrightnessImage)
+    pixelization = af.Model(ag.mesh.DelaunayBrightnessImage)
 
     pixelization.pixels = af.UniformPrior(lower_limit=5.0, upper_limit=10.0)
 
@@ -91,7 +91,7 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
         3, 1.0e-4
     )
 
-    pixelization = af.Model(ag.pix.VoronoiBrightnessImage)
+    pixelization = af.Model(ag.mesh.VoronoiBrightnessImage)
 
     pixelization.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
 
@@ -118,7 +118,7 @@ def test__hyper_model_noise_from():
             galaxy=af.Model(
                 ag.Galaxy,
                 redshift=0.5,
-                pixelization=ag.pix.Rectangular,
+                pixelization=ag.mesh.Rectangular,
                 regularization=ag.reg.Constant,
             ),
             galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllSersic),
@@ -148,7 +148,7 @@ def test__hyper_model_noise_from():
         include_hyper_image_sky=True,
     )
 
-    assert model.galaxies.galaxy.pixelization.cls is ag.pix.Rectangular
+    assert model.galaxies.galaxy.pixelization.cls is ag.mesh.Rectangular
     assert model.galaxies.galaxy.regularization.cls is ag.reg.Constant
 
     assert model.galaxies.galaxy.pixelization.prior_count == 0
@@ -240,7 +240,7 @@ def test__hyper_model_inversion_from():
             galaxy=af.Model(
                 ag.Galaxy,
                 redshift=0.5,
-                pixelization=ag.pix.Rectangular,
+                pixelization=ag.mesh.Rectangular,
                 regularization=ag.reg.Constant,
             ),
             galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllSersic),
@@ -258,7 +258,7 @@ def test__hyper_model_inversion_from():
     assert isinstance(model.galaxies.galaxy.pixelization, af.Model)
     assert isinstance(model.galaxies.galaxy.regularization, af.Model)
 
-    assert model.galaxies.galaxy.pixelization.cls is ag.pix.Rectangular
+    assert model.galaxies.galaxy.pixelization.cls is ag.mesh.Rectangular
     assert model.galaxies.galaxy.regularization.cls is ag.reg.Constant
     assert model.galaxies.galaxy_1.bulge.intensity == pytest.approx(1.0, 1.0e-4)
 
@@ -312,7 +312,7 @@ def test__hyper_model_inversion_from__adds_hyper_galaxies():
                 ag.Galaxy,
                 redshift=1.0,
                 bulge=ag.lp.EllSersic,
-                pixelization=ag.pix.Rectangular,
+                pixelization=ag.mesh.Rectangular,
                 regularization=ag.reg.Constant,
             ),
         )
@@ -385,7 +385,7 @@ def test__stochastic_model_from():
             source=af.Model(
                 ag.Galaxy,
                 redshift=1.0,
-                pixelization=ag.pix.VoronoiBrightnessImage(),
+                pixelization=ag.mesh.VoronoiBrightnessImage(),
                 regularization=ag.reg.AdaptiveBrightness(),
             ),
         )

@@ -162,7 +162,7 @@ def test__fit_figure_of_merit(masked_imaging_7x7):
     assert fit.perform_inversion is False
     assert fit.figure_of_merit == pytest.approx(-75938.05, 1.0e-4)
 
-    pix = ag.pix.Rectangular(shape=(3, 3))
+    pix = ag.mesh.Rectangular(shape=(3, 3))
     reg = ag.reg.Constant(coefficient=1.0)
 
     galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
@@ -301,7 +301,7 @@ def test__fit_figure_of_merit__include_hyper_methods(masked_imaging_7x7):
     assert (fit.noise_map == np.full(fill_value=5.0, shape=(9,))).all()
     assert fit.figure_of_merit == pytest.approx(-12104.68, 1.0e-4)
 
-    pix = ag.pix.Rectangular(shape=(3, 3))
+    pix = ag.mesh.Rectangular(shape=(3, 3))
     reg = ag.reg.Constant(coefficient=1.0)
 
     g0 = ag.Galaxy(
@@ -416,7 +416,7 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
 
     # Pixelization + Regularizaiton only
 
-    pix = ag.pix.Rectangular(shape=(3, 3))
+    pix = ag.mesh.Rectangular(shape=(3, 3))
     reg = ag.reg.Constant(coefficient=1.0)
 
     g0 = ag.Galaxy(redshift=0.5)
@@ -442,7 +442,7 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
     g1_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.EllSersic())
 
-    pix = ag.pix.Rectangular(shape=(3, 3))
+    pix = ag.mesh.Rectangular(shape=(3, 3))
     reg = ag.reg.Constant(coefficient=1.0)
 
     galaxy_pix_0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
@@ -492,7 +492,7 @@ def test__model_images_of_galaxies_list(masked_imaging_7x7):
 
     galaxy_pix = ag.Galaxy(
         redshift=0.5,
-        pixelization=ag.pix.Rectangular(shape=(3, 3)),
+        pixelization=ag.mesh.Rectangular(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 

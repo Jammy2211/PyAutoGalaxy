@@ -36,7 +36,7 @@ class AbstractFit:
         # TODO : When we add regularization to basis need to change this to reflect mappers.
 
         return len(
-            list(filter(None, self.model_obj.cls_list_from(cls=aa.pix.Pixelization)))
+            list(filter(None, self.model_obj.cls_list_from(cls=aa.mesh.Mesh)))
         )
 
     @property

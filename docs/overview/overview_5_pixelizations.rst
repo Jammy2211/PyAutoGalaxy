@@ -37,7 +37,7 @@ Below, we use a ``Rectangular`` pixelization with resolution 50 x 50 and a ``Con
 
     galaxy = ag.Galaxy(
         redshift=1.0,
-        pixelization=ag.pix.Rectangular(shape=(50, 50)),
+        pixelization=ag.mesh.Rectangular(shape=(50, 50)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
