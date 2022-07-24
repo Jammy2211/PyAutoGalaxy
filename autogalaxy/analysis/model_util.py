@@ -90,7 +90,7 @@ def has_pixelization_from(model: af.Collection) -> bool:
 
 
 def set_upper_limit_of_pixelization_pixels_prior(
-    hyper_model: af.Collection, result: af.Result
+    model: af.Collection, pixels_in_mask: int
 ):
     """
     If the pixelization being fitted in the hyper-model fit is a `VoronoiBrightnessImage` pixelization, this function
@@ -100,30 +100,37 @@ def set_upper_limit_of_pixelization_pixels_prior(
 
     Parameters
     ----------
-    hyper_model : Collection
+    model : Collection
         The hyper model used by the hyper-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
     result
         The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
     """
 
-    if hasattr(hyper_model, "galaxies"):
+    if hasattr(model, "galaxies"):
 
-        pixels_in_mask = result.analysis.dataset.mask.pixels_in_mask
+        for galaxy in model.galaxies:
 
-        if pixels_in_mask < hyper_model.galaxies.source.pixelization.pixels.upper_limit:
+            try:
 
-            if (
-                hyper_model.galaxies.source.pixelization.cls
-                is aa.pix.VoronoiBrightnessImage
-            ):
+                pixelization = getattr(galaxy, "pixelization")
 
-                lower_limit = (
-                    hyper_model.galaxies.source.pixelization.pixels.lower_limit
-                )
+                if pixels_in_mask < pixelization.pixels.upper_limit:
 
-                hyper_model.galaxies.source.pixelization.pixels = af.UniformPrior(
-                    lower_limit=lower_limit, upper_limit=pixels_in_mask
-                )
+                    if (
+                        pixelization.cls is aa.pix.DelaunayBrightnessImage
+                        or aa.pix.VoronoiBrightnessImage
+                        or aa.pix.VoronoiNNBrightnessImage
+                    ):
+
+                        lower_limit = pixelization.pixels.lower_limit
+
+                        pixelization.pixels = af.UniformPrior(
+                            lower_limit=lower_limit, upper_limit=pixels_in_mask
+                        )
+
+            except AttributeError:
+
+                pass
 
 
 def clean_model_of_hyper_images(model):
@@ -407,7 +414,7 @@ def hyper_fit(
 
     try:
         set_upper_limit_of_pixelization_pixels_prior(
-            hyper_model=hyper_inversion_model, result=result
+            model=hyper_inversion_model, result=result
         )
     except AttributeError:
         pass
