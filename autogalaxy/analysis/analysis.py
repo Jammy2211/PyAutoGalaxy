@@ -1,4 +1,3 @@
-import copy
 import json
 import logging
 import numpy as np
@@ -20,6 +19,8 @@ from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
 from autogalaxy.analysis.result import ResultDataset
+
+from autogalaxy.analysis import model_util
 
 logger = logging.getLogger(__name__)
 
@@ -113,6 +114,33 @@ class AnalysisDataset(Analysis):
         self.settings_inversion = settings_inversion or aa.SettingsInversion()
 
         self.preloads = self.preloads_cls()
+
+    def modify_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
+        """
+        PyAutoFit calls this function immediately before the non-linear search begins, therefore it can be used to
+        perform tasks using the final model parameterization.
+
+        This function:
+
+        - Checks if the model has a pixelization which uses a KMeans clustering algorithm (e.g. DelaunayBrightnessImage,
+        VoronoiBrightnessImage) and makes sure that the upper limit on the prior on its `pixels` is below the number
+        pixels in the mask. If it is not, the `pixels` prior upper limit is reduced.
+
+        Parameters
+        ----------
+        paths
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization and the pickled objects used by the aggregator output by this function.
+        model
+            The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
+            the imaging data.
+        """
+
+        self.check_and_replace_hyper_images(paths=paths)
+
+        model_util.set_upper_limit_of_pixelization_pixels_prior(
+            model=model, pixels_in_mask=self.dataset.mask.pixels_in_mask
+        )
 
     def set_hyper_dataset(self, result: ResultDataset) -> None:
         """
