@@ -78,7 +78,7 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
 
     pixelization = af.Model(ag.pix.DelaunayBrightnessImage)
 
-    pixelization.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=10.0)
+    pixelization.pixels = af.UniformPrior(lower_limit=5.0, upper_limit=10.0)
 
     galaxies = af.Collection(
         source=ag.Galaxy(
@@ -92,6 +92,9 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
         model=model, pixels_in_mask=12
     )
 
+    assert model.galaxies.source.pixelization.pixels.lower_limit == pytest.approx(
+        5, 1.0e-4
+    )
     assert model.galaxies.source.pixelization.pixels.upper_limit == pytest.approx(
         10, 1.0e-4
     )
@@ -100,8 +103,22 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
         model=model, pixels_in_mask=8
     )
 
+    assert model.galaxies.source.pixelization.pixels.lower_limit == pytest.approx(
+        5, 1.0e-4
+    )
     assert model.galaxies.source.pixelization.pixels.upper_limit == pytest.approx(
         8, 1.0e-4
+    )
+
+    ag.util.model.set_upper_limit_of_pixelization_pixels_prior(
+        model=model, pixels_in_mask=3
+    )
+
+    assert model.galaxies.source.pixelization.pixels.lower_limit == pytest.approx(
+        2, 1.0e-4
+    )
+    assert model.galaxies.source.pixelization.pixels.upper_limit == pytest.approx(
+        3, 1.0e-4
     )
 
     pixelization = af.Model(ag.pix.VoronoiBrightnessImage)

@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 from scipy.stats import norm
 from typing import ClassVar, Dict, List
@@ -13,6 +14,10 @@ from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
 
 from autogalaxy import exc
+
+logger = logging.getLogger(__name__)
+
+logger.setLevel(level="INFO")
 
 
 def isprior(obj):
@@ -111,8 +116,11 @@ def set_upper_limit_of_pixelization_pixels_prior(
         for galaxy in model.galaxies:
 
             try:
-
                 pixelization = getattr(galaxy, "pixelization")
+            except AttributeError:
+                pixelization = None
+
+            if pixelization is not None:
 
                 if pixels_in_mask < pixelization.pixels.upper_limit:
 
@@ -124,13 +132,30 @@ def set_upper_limit_of_pixelization_pixels_prior(
 
                         lower_limit = pixelization.pixels.lower_limit
 
+                        log_str = """
+                                MODIFY BEFORE FIT -  The upper limit of a pixelization's pixel parameter UniformPrior
+                                was great than the number of pixels in the mask, which is not allowed.
+                                
+                                It has automatically been reduced to the number of pixels in the mask.
+                                """
+
+                        if lower_limit > pixels_in_mask:
+
+                            lower_limit = pixels_in_mask - 1
+
+                            logger.info(
+                                log_str
+                                + """
+                                The lower_limit was also above the number of pixels in the mask, and has been reduced
+                                to the number of pixels in the mask minus 1.
+                                """
+                            )
+                        else:
+                            logger.info(log_str)
+
                         pixelization.pixels = af.UniformPrior(
                             lower_limit=lower_limit, upper_limit=pixels_in_mask
                         )
-
-            except AttributeError:
-
-                pass
 
 
 def clean_model_of_hyper_images(model):
