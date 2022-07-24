@@ -67,10 +67,12 @@ def test__fit_figure_of_merit(interferometer_7):
     assert fit.perform_inversion is False
     assert fit.figure_of_merit == pytest.approx(-2398107.3849, 1.0e-4)
 
-    pix = ag.mesh.Rectangular(shape=(3, 3))
-    reg = ag.reg.Constant(coefficient=0.01)
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=0.01),
+    )
 
-    g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    g0 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
@@ -85,9 +87,12 @@ def test__fit_figure_of_merit(interferometer_7):
 
     galaxy_light = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
-    pix = ag.mesh.Rectangular(shape=(3, 3))
-    reg = ag.reg.Constant(coefficient=1.0)
-    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=1.0),
+    )
+
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(redshift=0.5, galaxies=[galaxy_light, galaxy_pix])
 
@@ -168,10 +173,12 @@ def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
 
     assert fit.noise_map == pytest.approx(interferometer_7.noise_map, 1.0e-4)
 
-    pix = ag.mesh.Rectangular(shape=(3, 3))
-    reg = ag.reg.Constant(coefficient=0.01)
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=0.01),
+    )
 
-    g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    g0 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
@@ -188,9 +195,12 @@ def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
 
     galaxy_light = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
 
-    pix = ag.mesh.Rectangular(shape=(3, 3))
-    reg = ag.reg.Constant(coefficient=1.0)
-    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=1.0),
+    )
+
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(redshift=0.5, galaxies=[galaxy_light, galaxy_pix])
 
@@ -210,10 +220,12 @@ def test___fit_figure_of_merit__different_settings(
     interferometer_7, interferometer_7_lop
 ):
 
-    pix = ag.mesh.Rectangular(shape=(3, 3))
-    reg = ag.reg.Constant(coefficient=0.01)
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=0.01),
+    )
 
-    g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    g0 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
@@ -275,11 +287,13 @@ def test___galaxy_model_image_dict(interferometer_7):
 
     # Pixelization + Regularizaiton only
 
-    pix = ag.mesh.Rectangular(shape=(3, 3))
-    reg = ag.reg.Constant(coefficient=1.0)
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=1.0),
+    )
 
     g0 = ag.Galaxy(redshift=0.5)
-    galaxy_pix_0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    galaxy_pix_0 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0, galaxy_pix_0])
 
@@ -289,14 +303,17 @@ def test___galaxy_model_image_dict(interferometer_7):
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
-    mapper = pix.mapper_from(
+    mapper_grids = pixelization.mesh.mapper_grids_from(
         source_grid_slim=interferometer_7.grid, source_mesh_grid=None
+    )
+
+    mapper = ag.Mapper(
+        mapper_grids=mapper_grids, regularization=pixelization.regularization
     )
 
     inversion = ag.Inversion(
         dataset=interferometer_7,
         linear_obj_list=[mapper],
-        regularization_list=[reg],
         settings=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -307,9 +324,13 @@ def test___galaxy_model_image_dict(interferometer_7):
     )
 
     # Linear Light PRofiles + Pixelization + Regularizaiton
-    reg = ag.reg.Constant(coefficient=2.0)
 
-    galaxy_pix_1 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=2.0),
+    )
+
+    galaxy_pix_1 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear, g1, galaxy_pix_0, galaxy_pix_1])
 
@@ -396,11 +417,13 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
     # Pixelization + Regularizaiton only
 
-    pix = ag.mesh.Rectangular(shape=(3, 3))
-    reg = ag.reg.Constant(coefficient=1.0)
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=1.0),
+    )
 
     g0 = ag.Galaxy(redshift=0.5)
-    galaxy_pix_0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    galaxy_pix_0 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0, galaxy_pix_0])
 
@@ -410,14 +433,17 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
-    mapper = pix.mapper_from(
+    mapper_grids = pixelization.mesh.mapper_grids_from(
         source_grid_slim=interferometer_7.grid, source_mesh_grid=None
+    )
+
+    mapper = ag.Mapper(
+        mapper_grids=mapper_grids, regularization=pixelization.regularization
     )
 
     inversion = ag.Inversion(
         dataset=interferometer_7,
         linear_obj_list=[mapper],
-        regularization_list=[reg],
         settings=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -428,9 +454,12 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     )
 
     # Linear Light PRofiles + Pixelization + Regularizaiton
-    reg = ag.reg.Constant(coefficient=2.0)
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=2.0),
+    )
 
-    galaxy_pix_1 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    galaxy_pix_1 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0_linear, g1, galaxy_pix_0, galaxy_pix_1])
 
@@ -470,11 +499,12 @@ def test__model_visibilities_of_galaxies_list(interferometer_7):
     galaxy_light = ag.Galaxy(redshift=0.5, bulge=ag.lp.EllSersic(intensity=1.0))
     galaxy_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.EllSersic())
 
-    galaxy_pix = ag.Galaxy(
-        redshift=0.5,
-        pixelization=ag.mesh.Rectangular(shape=(3, 3)),
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
+
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(redshift=0.5, galaxies=[galaxy_light, galaxy_linear, galaxy_pix])
 

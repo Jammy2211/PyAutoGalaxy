@@ -106,7 +106,7 @@ def test__sparse_image_plane_grid_list(masked_imaging_7x7):
 
 def test__mapper_galaxy_dict(masked_imaging_7x7):
 
-    mesh = ag.m.MockMesh(data_mesh_grid=masked_imaging_7x7.grid_pixelized)
+    mesh = ag.mesh.Rectangular(shape=(3, 3))
 
     pixelization = ag.m.MockPixelization(mapper=1, mesh=mesh)
 
@@ -121,9 +121,10 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
 
     mapper_list = list(mapper_galaxy_dict.keys())
 
-    assert mapper_list[0] == 1
+    assert mapper_list[0].pixels == 9
     assert mapper_galaxy_dict[mapper_list[0]] == galaxy_pix
 
+    mesh = ag.mesh.Rectangular(shape=(4, 3))
     pixelization = ag.m.MockPixelization(mapper=2, mesh=mesh)
 
     galaxy_pix_2 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
@@ -139,8 +140,8 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
 
     mapper_list = list(mapper_galaxy_dict.keys())
 
-    assert mapper_list[0] == 1
-    assert mapper_list[1] == 2
+    assert mapper_list[0].pixels == 9
+    assert mapper_list[1].pixels == 12
 
     assert mapper_galaxy_dict[mapper_list[0]] == galaxy_pix
     assert mapper_galaxy_dict[mapper_list[1]] == galaxy_pix_2
@@ -165,7 +166,7 @@ def test__regularization_list(masked_imaging_7x7):
         mesh=ag.mesh.Rectangular(shape=(10, 10)), regularization=regularization_0
     )
     pixelization_1 = ag.m.MockPixelization(
-        mesh=ag.m.MockMesh(), regularization=regularization_1
+        mesh=ag.mesh.Rectangular(shape=(8, 8)), regularization=regularization_1
     )
 
     galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp_linear.EllGaussian())
@@ -181,8 +182,9 @@ def test__regularization_list(masked_imaging_7x7):
     regularization_list = plane_to_inversion.regularization_list
 
     assert regularization_list[0] == None
-    assert regularization_list[1] == regularization_1
+    assert regularization_list[1] == None
     assert regularization_list[2] == regularization_0
+    assert regularization_list[3] == regularization_1
 
     regularization_2 = ag.reg.Constant(coefficient=3.0)
 

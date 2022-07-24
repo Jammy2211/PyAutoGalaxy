@@ -47,27 +47,8 @@ class AbstractToInversion:
         return list(self.linear_obj_galaxy_dict.keys())
 
     @cached_property
-    def regularization_list(self,) -> List[aa.reg.Regularization]:
-
-        regularization_list = []
-
-        for linear_obj in self.linear_obj_list:
-
-            regularization = None
-
-            galaxy = self.linear_obj_galaxy_dict[linear_obj]
-
-            if hasattr(linear_obj, "regularization"):
-                if linear_obj.regularization is not None:
-                    regularization = linear_obj.regularization
-
-            if regularization is None:
-                if galaxy.has(cls=aa.reg.Regularization):
-                    regularization = galaxy.regularization
-
-            regularization_list.append(regularization)
-
-        return regularization_list
+    def regularization_list(self) -> List[aa.AbstractRegularization]:
+        return [linear_obj.regularization for linear_obj in self.linear_obj_list]
 
 
 class PlaneToInversion(AbstractToInversion):
@@ -133,7 +114,6 @@ class PlaneToInversion(AbstractToInversion):
 
                     if isinstance(light_profile, LightProfileLinear):
                         light_profile_list = [light_profile]
-                        regularization = None
                     else:
                         light_profile_list = light_profile.light_profile_list
                         light_profile_list = [
@@ -141,7 +121,6 @@ class PlaneToInversion(AbstractToInversion):
                             for light_profile in light_profile_list
                             if isinstance(light_profile, LightProfileLinear)
                         ]
-                        regularization = light_profile.regularization
 
                     if len(light_profile_list) > 0:
 
@@ -150,7 +129,7 @@ class PlaneToInversion(AbstractToInversion):
                             blurring_grid=self.blurring_grid,
                             convolver=self.dataset.convolver,
                             light_profile_list=light_profile_list,
-                            regularization=regularization,
+                            regularization=light_profile.regularization,
                         )
 
                         lp_linear_func_galaxy_dict[lp_linear_func] = galaxy
@@ -255,7 +234,6 @@ class PlaneToInversion(AbstractToInversion):
             noise_map=self.noise_map,
             w_tilde=self.w_tilde,
             linear_obj_list=self.linear_obj_list,
-            regularization_list=self.regularization_list,
             settings=self.settings_inversion,
             preloads=self.preloads,
             profiling_dict=self.plane.profiling_dict,

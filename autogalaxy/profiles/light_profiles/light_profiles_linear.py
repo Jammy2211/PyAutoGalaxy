@@ -18,6 +18,10 @@ from autogalaxy import exc
 
 class LightProfileLinear(lp.LightProfile):
     @property
+    def regularization(self):
+        return None
+
+    @property
     def _intensity(self):
         return 1.0
 
@@ -113,12 +117,13 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
                     """
                 )
 
-        super().__init__(grid=grid, profiling_dict=profiling_dict)
+        super().__init__(
+            grid=grid, regularization=regularization, profiling_dict=profiling_dict
+        )
 
         self.blurring_grid = blurring_grid
         self.convolver = convolver
         self.light_profile_list = light_profile_list
-        self.regularization = regularization
 
     @property
     def pixels(self):
