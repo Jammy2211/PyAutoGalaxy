@@ -122,40 +122,42 @@ def set_upper_limit_of_pixelization_pixels_prior(
 
             if pixelization is not None:
 
-                if pixels_in_mask < pixelization.pixels.upper_limit:
+                if hasattr(pixelization, "pixels"):
 
-                    if (
-                        pixelization.cls is aa.pix.DelaunayBrightnessImage
-                        or aa.pix.VoronoiBrightnessImage
-                        or aa.pix.VoronoiNNBrightnessImage
-                    ):
+                    if pixels_in_mask < pixelization.pixels.upper_limit:
 
-                        lower_limit = pixelization.pixels.lower_limit
+                        if (
+                            pixelization.cls is aa.pix.DelaunayBrightnessImage
+                            or aa.pix.VoronoiBrightnessImage
+                            or aa.pix.VoronoiNNBrightnessImage
+                        ):
 
-                        log_str = """
-                                MODIFY BEFORE FIT -  The upper limit of a pixelization's pixel parameter UniformPrior
-                                was great than the number of pixels in the mask, which is not allowed.
-                                
-                                It has automatically been reduced to the number of pixels in the mask.
-                                """
+                            lower_limit = pixelization.pixels.lower_limit
 
-                        if lower_limit > pixels_in_mask:
+                            log_str = """
+                                    MODIFY BEFORE FIT -  The upper limit of a pixelization's pixel parameter UniformPrior
+                                    was great than the number of pixels in the mask, which is not allowed.
+                                    
+                                    It has automatically been reduced to the number of pixels in the mask.
+                                    """
 
-                            lower_limit = pixels_in_mask - 1
+                            if lower_limit > pixels_in_mask:
 
-                            logger.info(
-                                log_str
-                                + """
-                                The lower_limit was also above the number of pixels in the mask, and has been reduced
-                                to the number of pixels in the mask minus 1.
-                                """
+                                lower_limit = pixels_in_mask - 1
+
+                                logger.info(
+                                    log_str
+                                    + """
+                                    The lower_limit was also above the number of pixels in the mask, and has been reduced
+                                    to the number of pixels in the mask minus 1.
+                                    """
+                                )
+                            else:
+                                logger.info(log_str)
+
+                            pixelization.pixels = af.UniformPrior(
+                                lower_limit=lower_limit, upper_limit=pixels_in_mask
                             )
-                        else:
-                            logger.info(log_str)
-
-                        pixelization.pixels = af.UniformPrior(
-                            lower_limit=lower_limit, upper_limit=pixels_in_mask
-                        )
 
 
 def clean_model_of_hyper_images(model):
