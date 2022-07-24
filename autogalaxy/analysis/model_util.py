@@ -142,13 +142,13 @@ def set_upper_limit_of_pixelization_pixels_prior(
 
                                 if lower_limit > pixels_in_mask:
 
-                                    lower_limit = pixels_in_mask - 1
+                                    lower_limit = pixels_in_mask - 10
 
                                     logger.info(
                                         log_str +
                                         "MODIFY BEFORE FIT - The pixelization's pixel UniformPrior lower_limit was "
                                         "also above the number of pixels in the mask, and has been reduced"
-                                        "to the number of pixels in the mask minus 1."
+                                        "to the number of pixels in the mask minus 10."
                                     )
                                 else:
                                     logger.info(log_str)
