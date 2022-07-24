@@ -111,7 +111,7 @@ def test__cls_list_from():
 
     galaxy_pix = ag.Galaxy(
         redshift=0.5,
-        pixelization=ag.m.MockPixelization(mapper=1),
+        pixelization=ag.m.MockMesh(mapper=1),
         regularization=ag.m.MockRegularization(),
     )
 
@@ -121,12 +121,12 @@ def test__cls_list_from():
 
     galaxy_pix_0 = ag.Galaxy(
         redshift=0.5,
-        pixelization=ag.m.MockPixelization(mapper=1),
+        pixelization=ag.m.MockMesh(mapper=1),
         regularization=ag.m.MockRegularization(),
     )
     galaxy_pix_1 = ag.Galaxy(
         redshift=0.5,
-        pixelization=ag.m.MockPixelization(mapper=2),
+        pixelization=ag.m.MockMesh(mapper=2),
         regularization=ag.m.MockRegularization(),
     )
 

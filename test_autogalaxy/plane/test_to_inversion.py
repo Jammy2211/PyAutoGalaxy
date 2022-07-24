@@ -62,29 +62,29 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
 
 def test__sparse_image_plane_grid_list(masked_imaging_7x7):
 
+    pixelization = ag.m.MockPixelization(
+        mesh=ag.m.MockMesh(data_mesh_grid=np.array([1.0, 1.0]))
+    )
+
     galaxy_pix = ag.Galaxy(
         redshift=0.5,
-        pixelization=ag.m.MockPixelization(data_mesh_grid=[[1.0, 1.0]]),
-        regularization=ag.m.MockRegularization(),
+        pixelization=pixelization
     )
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    sparse_grid = plane_to_inversion.sparse_image_plane_grid_list
+    sparse_image_plane_grid_list = plane_to_inversion.sparse_image_plane_grid_list
 
-    assert (sparse_grid == np.array([[1.0, 1.0]])).all()
+    assert (sparse_image_plane_grid_list == np.array([[1.0, 1.0]])).all()
 
     # In the ag.m.MockPixelization class the grid is returned if hyper image=None, and grid*hyper image is
     # returned otherwise.
 
     galaxy_pix = ag.Galaxy(
         redshift=0.5,
-        pixelization=ag.m.MockPixelization(
-            data_mesh_grid=np.array([[1.0, 1.0]])
-        ),
-        regularization=ag.m.MockRegularization(),
+        pixelization=pixelization,
         hyper_galaxy_image=2,
     )
 
@@ -92,9 +92,9 @@ def test__sparse_image_plane_grid_list(masked_imaging_7x7):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    sparse_grid = plane_to_inversion.sparse_image_plane_grid_list
+    sparse_image_plane_grid_list = plane_to_inversion.sparse_image_plane_grid_list
 
-    assert (sparse_grid == np.array([[2.0, 2.0]])).all()
+    assert (sparse_image_plane_grid_list == np.array([[2.0, 2.0]])).all()
 
     # No Galalxies
 
@@ -104,9 +104,9 @@ def test__sparse_image_plane_grid_list(masked_imaging_7x7):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    sparse_grid = plane_to_inversion.sparse_image_plane_grid_list
+    sparse_image_plane_grid_list = plane_to_inversion.sparse_image_plane_grid_list
 
-    assert sparse_grid is None
+    assert sparse_image_plane_grid_list is None
 
 
 def test__mapper_galaxy_dict(masked_imaging_7x7):

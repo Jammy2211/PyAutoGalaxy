@@ -47,7 +47,7 @@ def test__max_log_likelihood_plane_available_as_result(analysis_imaging_7x7):
 def test__results_include_pixelization__available_as_property(analysis_imaging_7x7):
     source = ag.Galaxy(
         redshift=1.0,
-        pixelization=ag.m.MockPixelization(mapper=1),
+        pixelization=ag.m.MockMesh(mapper=1),
         regularization=ag.m.MockRegularization(),
     )
 
@@ -60,6 +60,6 @@ def test__results_include_pixelization__available_as_property(analysis_imaging_7
     )
 
     assert isinstance(
-        result.cls_list_from(cls=ag.mesh.Mesh)[0], ag.m.MockPixelization
+        result.cls_list_from(cls=ag.mesh.Mesh)[0], ag.m.MockMesh
     )
     assert result.cls_list_from(cls=ag.mesh.Mesh)[0].mapper == 1

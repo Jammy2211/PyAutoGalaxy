@@ -1,5 +1,5 @@
 {
-    "aa.m.MockPixelization": {
+    "aa.m.MockMesh": {
         "number_clusters": {
             "type": "Uniform",
             "lower_limit": 1.0,
