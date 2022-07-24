@@ -90,7 +90,7 @@ class AnalysisImaging(AnalysisDataset):
             the imaging data.
         """
 
-        self.check_and_replace_hyper_images(paths=paths)
+        super().modify_before_fit(paths=paths, model=model)
 
         if not paths.is_complete:
 

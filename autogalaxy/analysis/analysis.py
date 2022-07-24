@@ -137,11 +137,11 @@ class AnalysisDataset(Analysis):
             the imaging data.
         """
 
-        model_util.set_upper_limit_of_pixelization_pixels_prior()
-
-        self.raise_exceptions(model=model)
-
         self.check_and_replace_hyper_images(paths=paths)
+
+        model_util.set_upper_limit_of_pixelization_pixels_prior(
+            model=model, pixels_in_mask=self.dataset.mask.pixels_in_mask
+        )
 
     def set_hyper_dataset(self, result: ResultDataset) -> None:
         """

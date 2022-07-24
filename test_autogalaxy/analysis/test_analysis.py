@@ -70,3 +70,28 @@ def test__instance_with_associated_hyper_images_from(masked_imaging_7x7):
     assert instance.galaxies.source.hyper_model_image.native == pytest.approx(
         3.0 * np.ones((3, 3)), 1.0e-4
     )
+
+
+def test__modify_before_fit__kmeans_pixelization_upper_limit_ajusted_based_on_mask(
+    masked_imaging_7x7
+):
+
+    pixelization = af.Model(ag.pix.DelaunayBrightnessImage)
+
+    pixelization.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
+
+    galaxies = af.Collection(
+        source=ag.Galaxy(
+            redshift=0.5, pixelization=pixelization, regularization=ag.reg.Constant
+        )
+    )
+
+    model = af.Collection(galaxies=galaxies)
+
+    analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
+
+    analysis.modify_before_fit(paths=af.DirectoryPaths(), model=model)
+
+    assert model.galaxies.source.pixelization.pixels.upper_limit == pytest.approx(
+        9, 1.0e-4
+    )
