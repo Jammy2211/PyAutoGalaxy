@@ -15,6 +15,8 @@ from autoarray.inversion.inversion.factory import (
 from autoarray.inversion.inversion.factory import (
     inversion_interferometer_unpacked_from as InversionInterferometer,
 )
+from autoarray.inversion.pixelization.pixelization import Pixelization
+from autoarray.inversion.pixelization.mappers.mapper_grids import MapperGrids
 from autoarray.inversion.pixelization.mappers.factory import mapper_from as Mapper
 from autoarray.inversion.pixelization.settings import SettingsPixelization
 from autoarray.mask.mask_1d import Mask1D

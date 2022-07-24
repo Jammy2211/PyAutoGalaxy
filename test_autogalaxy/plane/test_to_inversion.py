@@ -161,14 +161,17 @@ def test__regularization_list(masked_imaging_7x7):
     regularization_0 = ag.reg.Constant(coefficient=1.0)
     regularization_1 = ag.reg.ConstantSplit(coefficient=2.0)
 
-    galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp_linear.EllGaussian())
-    galaxy_1 = ag.Galaxy(
-        redshift=0.5,
-        pixelization=ag.mesh.Rectangular(shape=(10, 10)),
-        regularization=regularization_0,
+    pixelization_0 = ag.m.MockPixelization(
+        mesh=ag.mesh.Rectangular(shape=(10, 10)), regularization=regularization_0
     )
+    pixelization_1 = ag.m.MockPixelization(
+        mesh=ag.m.MockMesh(), regularization=regularization_1
+    )
+
+    galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp_linear.EllGaussian())
+    galaxy_1 = ag.Galaxy(redshift=0.5, pixelization=pixelization_0)
     galaxy_2 = ag.Galaxy(
-        redshift=0.5, light=ag.lp_linear.EllGaussian(), regularization=regularization_1
+        redshift=0.5, light=ag.lp_linear.EllGaussian(), pixelization=pixelization_1
     )
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1, galaxy_2])
@@ -220,10 +223,12 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
 
     assert inversion.reconstruction[0] == pytest.approx(0.00543437, 1.0e-2)
 
-    pix = ag.mesh.Rectangular(shape=(3, 3))
-    reg = ag.reg.Constant(coefficient=0.0)
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=0.0),
+    )
 
-    g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    g0 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
@@ -268,10 +273,12 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
 
     interferometer_7.data = ag.Visibilities.ones(shape_slim=(7,))
 
-    pix = ag.mesh.Rectangular(shape=(7, 7))
-    reg = ag.reg.Constant(coefficient=0.0)
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(7, 7)),
+        regularization=ag.reg.Constant(coefficient=0.0),
+    )
 
-    g0 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    g0 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 

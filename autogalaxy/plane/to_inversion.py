@@ -4,6 +4,7 @@ from autoconf import cached_property
 
 import autoarray as aa
 
+from autoarray.inversion.pixelization.mappers.factory import mapper_from
 from autoarray.inversion.inversion.factory import inversion_unpacked_from
 from autogalaxy.profiles.light_profiles.light_profiles_linear import (
     LightProfileLinearObjFuncList,
@@ -175,15 +176,15 @@ class PlaneToInversion(AbstractToInversion):
         }
 
     @cached_property
-    def sparse_image_plane_grid_list(self,) -> Optional[List[aa.type.Grid2DLike]]:
+    def sparse_image_plane_grid_list(self,) -> Optional[List[aa.Grid2DSparse]]:
 
         if not self.plane.has(cls=aa.Pixelization):
             return None
 
         return [
-            pixelization.mesh.data_pixelization_grid_from(
+            pixelization.mesh.data_mesh_grid_from(
                 data_grid_slim=self.grid_pixelized,
-                hyper_image=hyper_galaxy_image,
+                hyper_data=hyper_galaxy_image,
                 settings=self.settings_pixelization,
             )
             for pixelization, hyper_galaxy_image in zip(
@@ -194,21 +195,24 @@ class PlaneToInversion(AbstractToInversion):
 
     def mapper_from(
         self,
-        source_mesh_grid: aa.type.Grid2DLike,
-        pixelization: aa.AbstractMesh,
+        mesh: aa.AbstractMesh,
+        regularization: aa.AbstractRegularization,
+        source_mesh_grid: aa.Grid2DSparse,
         hyper_galaxy_image: aa.Array2D,
-        data_mesh_grid: aa.Grid2D = None,
+        data_mesh_grid: aa.Grid2DSparse = None,
     ) -> aa.AbstractMapper:
 
-        return pixelization.mapper_from(
+        mapper_grids = mesh.mapper_grids_from(
             source_grid_slim=self.grid_pixelized,
             source_mesh_grid=source_mesh_grid,
             data_mesh_grid=data_mesh_grid,
-            hyper_image=hyper_galaxy_image,
+            hyper_data=hyper_galaxy_image,
             settings=self.settings_pixelization,
             preloads=self.preloads,
             profiling_dict=self.plane.profiling_dict,
         )
+
+        return mapper_from(mapper_grids=mapper_grids, regularization=regularization)
 
     @cached_property
     def mapper_galaxy_dict(self) -> Dict[aa.AbstractMapper, Galaxy]:
@@ -229,8 +233,9 @@ class PlaneToInversion(AbstractToInversion):
         for mapper_index in range(len(sparse_grid_list)):
 
             mapper = self.mapper_from(
+                mesh=pixelization_list[mapper_index].mesh,
+                regularization=pixelization_list[mapper_index].regularization,
                 source_mesh_grid=sparse_grid_list[mapper_index],
-                pixelization=pixelization_list[mapper_index],
                 hyper_galaxy_image=hyper_galaxy_image_list[mapper_index],
                 data_mesh_grid=sparse_grid_list[mapper_index],
             )

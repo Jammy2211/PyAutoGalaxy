@@ -285,6 +285,6 @@ def make_include_2d_all():
         critical_curves=False,
         caustics=False,
         multiple_images=False,
-        mapper_source_pixelization_grid=True,
-        mapper_data_pixelization_grid=True,
+        mapper_source_mesh_grid=True,
+        mapper_data_mesh_grid=True,
     )
