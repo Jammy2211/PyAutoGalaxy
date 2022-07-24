@@ -66,10 +66,7 @@ def test__sparse_image_plane_grid_list(masked_imaging_7x7):
         mesh=ag.m.MockMesh(data_mesh_grid=np.array([1.0, 1.0]))
     )
 
-    galaxy_pix = ag.Galaxy(
-        redshift=0.5,
-        pixelization=pixelization
-    )
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
@@ -83,9 +80,7 @@ def test__sparse_image_plane_grid_list(masked_imaging_7x7):
     # returned otherwise.
 
     galaxy_pix = ag.Galaxy(
-        redshift=0.5,
-        pixelization=pixelization,
-        hyper_galaxy_image=2,
+        redshift=0.5, pixelization=pixelization, hyper_galaxy_image=2
     )
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
@@ -111,13 +106,11 @@ def test__sparse_image_plane_grid_list(masked_imaging_7x7):
 
 def test__mapper_galaxy_dict(masked_imaging_7x7):
 
-    galaxy_pix = ag.Galaxy(
-        redshift=0.5,
-        pixelization=ag.m.MockPixelization(
-            mapper=1, data_mesh_grid=masked_imaging_7x7.grid_pixelized
-        ),
-        regularization=ag.m.MockRegularization(),
-    )
+    mesh = ag.m.MockMesh(data_mesh_grid=masked_imaging_7x7.grid_pixelized)
+
+    pixelization = ag.m.MockPixelization(mapper=1, mesh=mesh)
+
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
     galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
     plane = ag.Plane(galaxies=[galaxy_no_pix, galaxy_pix], redshift=0.5)
@@ -131,13 +124,9 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
     assert mapper_list[0] == 1
     assert mapper_galaxy_dict[mapper_list[0]] == galaxy_pix
 
-    galaxy_pix_2 = ag.Galaxy(
-        redshift=0.5,
-        pixelization=ag.m.MockPixelization(
-            mapper=2, data_mesh_grid=masked_imaging_7x7.grid_pixelized
-        ),
-        regularization=ag.m.MockRegularization(),
-    )
+    pixelization = ag.m.MockPixelization(mapper=2, mesh=mesh)
+
+    galaxy_pix_2 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
     galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
     plane = ag.Plane(

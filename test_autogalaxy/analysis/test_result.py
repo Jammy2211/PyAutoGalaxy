@@ -59,7 +59,5 @@ def test__results_include_pixelization__available_as_property(analysis_imaging_7
         samples=samples, analysis=analysis_imaging_7x7, model=None
     )
 
-    assert isinstance(
-        result.cls_list_from(cls=ag.mesh.Mesh)[0], ag.m.MockMesh
-    )
+    assert isinstance(result.cls_list_from(cls=ag.mesh.Mesh)[0], ag.m.MockMesh)
     assert result.cls_list_from(cls=ag.mesh.Mesh)[0].mapper == 1

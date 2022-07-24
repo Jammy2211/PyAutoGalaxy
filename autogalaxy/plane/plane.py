@@ -98,9 +98,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return cls_list
 
     def galaxies_with_cls_list_from(self, cls: Type) -> List[Galaxy]:
-        return list(
-            filter(lambda galaxy: galaxy.has(cls=cls), self.galaxies)
-        )
+        return list(filter(lambda galaxy: galaxy.has(cls=cls), self.galaxies))
 
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(
