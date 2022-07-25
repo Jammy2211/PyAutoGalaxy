@@ -102,14 +102,14 @@ def set_upper_limit_of_pixelization_pixels_prior(
     model: af.Collection, pixels_in_mask: int
 ):
     """
-    If the pixelization being fitted in the hyper-model fit is a `VoronoiBrightnessImage` pixelization, this function
-    sets the upper limit of its `pixels` prior to the number of data points in the mask.
+    If the mesh(es) of pixelizations being fitted in the hyper-model fit is a `VoronoiBrightnessImage` pixelization,
+    this function sets the upper limit of its `pixels` prior to the number of data points in the mask.
 
     This ensures the KMeans algorithm does not raise an exception due to having fewer data points than source pixels.
 
     Parameters
     ----------
-    model : Collection
+    model
         The hyper model used by the hyper-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
     result
         The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
