@@ -111,6 +111,14 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             )
         )
 
+    @property
+    def profile_dict(self) -> Dict:
+        return {
+            key: value
+            for key, value in self.__dict__.items()
+            if isinstance(value, GeometryProfile)
+        }
+
     def dict(self) -> Dict:
         return {
             **{name: profile.dict() for name, profile in self.profile_dict.items()},
@@ -566,14 +574,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             raise exc.GalaxyException(
                 "You cannot perform a mass-based calculation on a galaxy which does not have a mass-profile"
             )
-
-    @property
-    def profile_dict(self) -> Dict:
-        return {
-            key: value
-            for key, value in self.__dict__.items()
-            if isinstance(value, GeometryProfile)
-        }
 
 
 class HyperGalaxy:
