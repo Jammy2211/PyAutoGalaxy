@@ -21,11 +21,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     """
 
     def __init__(
-        self,
-        redshift: float,
-        pixelization: Optional[aa.Pixelization] = None,
-        hyper_galaxy: Optional["HyperGalaxy"] = None,
-        **kwargs,
+        self, redshift: float, hyper_galaxy: Optional["HyperGalaxy"] = None, **kwargs
     ):
         """
         Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
@@ -74,7 +70,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
             setattr(self, name, val)
 
-        self.pixelization = pixelization
         self.hyper_galaxy = hyper_galaxy
 
     def __hash__(self):
@@ -83,13 +78,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     def __repr__(self):
         string = "Redshift: {}".format(self.redshift)
 
-        if self.pixelization:
-            string += "\nPixelization:\n{}".format(str(self.pixelization))
-
-        if self.hyper_galaxy:
-            string += "\nHyper Galaxy:\n{}".format(str(self.hyper_galaxy))
-
-        if self.cls_list_from(cls=LightProfile):
+        if self.has(cls=LightProfile):
             string += "\nLight Profiles:\n{}".format(
                 "\n".join(map(str, self.cls_list_from(cls=LightProfile)))
             )
@@ -99,19 +88,26 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
                 "\n".join(map(str, self.cls_list_from(cls=MassProfile)))
             )
 
+        if self.has(cls=aa.Pixelization):
+            string += "\nPixelization:\n{}".format(str(self.pixelization))
+
+        if self.hyper_galaxy:
+            string += "\nHyper Galaxy:\n{}".format(str(self.hyper_galaxy))
+
         return string
 
     def __eq__(self, other):
         return all(
             (
                 isinstance(other, Galaxy),
-                self.pixelization == other.pixelization,
                 self.redshift == other.redshift,
-                self.hyper_galaxy == other.hyper_galaxy,
                 self.cls_list_from(cls=LightProfile)
                 == other.cls_list_from(cls=LightProfile),
                 self.cls_list_from(cls=MassProfile)
                 == other.cls_list_from(cls=MassProfile),
+                self.cls_list_from(cls=aa.Pixelization)
+                == other.cls_list_from(cls=aa.Pixelization),
+                self.hyper_galaxy == other.hyper_galaxy,
             )
         )
 

@@ -1,7 +1,7 @@
 import logging
 import numpy as np
 from scipy.stats import norm
-from typing import ClassVar, Dict, List
+from typing import ClassVar, Dict, List, Optional
 
 import autofit as af
 import autoarray as aa
@@ -34,37 +34,42 @@ def isinstance_or_prior(obj, cls):
     return False
 
 
-def pixelization_from(model: af.Collection) -> AbstractMesh:
+def mesh_list_from(model: af.Collection) -> Optional[List[AbstractMesh]]:
     """
-    For a model containing one or more galaxies, inspect its attributes and return the `pixelization` of a galaxy
-    provided one galaxy has a pixelization, otherwise it returns none. There cannot be more than one `Pixelization` in
-    a model.
+    For a model containing one or more galaxies, inspect its attributes and return the `mesh` of a `pixelization` of a
+    galaxy provided one galaxy has a pixelization, otherwise it returns none. There cannot be more than
+    one `Pixelization` in a model.
     
     This function expects that the input model is a `Collection` where the first model-component has the
     name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
     standard API for creating a model in PyAutoGalaxy.
 
-    The result of `pixelization_from` is used by the preloading to determine whether certain parts of a
+    The result of `mesh_from` is used by the preloading to determine whether certain parts of a
     calculation can be cached before the non-linear search begins for efficiency.
 
     Parameters
     ----------
-    model : af.Collection
+    model
         Contains the `galaxies` in the model that will be fitted via the non-linear search.
 
     Returns
     -------
-    aa.mesh.Mesh or None:
-        The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
+    The `mesh` of a galaxy, provided one galaxy has a `mesh`.
     """
 
+    model = model.instance_from_prior_medians()
+
+    mesh_list = []
+
     for galaxy in model.galaxies:
-        if hasattr(galaxy, "pixelization"):
-            if galaxy.pixelization is not None:
-                if isinstance(galaxy.pixelization, af.Model):
-                    return galaxy.pixelization.cls
-                else:
-                    return galaxy.pixelization
+
+        pixelization_list = galaxy.cls_list_from(cls=aa.Pixelization)
+
+        for pixelization in pixelization_list:
+            if pixelization is not None:
+                mesh_list.append(pixelization.mesh)
+
+    return mesh_list
 
 
 def has_pixelization_from(model: af.Collection) -> bool:
@@ -89,7 +94,7 @@ def has_pixelization_from(model: af.Collection) -> bool:
     aa.mesh.Mesh or None:
         The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
     """
-    pixelization = pixelization_from(model=model)
+    pixelization = mesh_list_from(model=model)
 
     return pixelization is not None
 
