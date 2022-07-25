@@ -125,7 +125,7 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
     assert mapper_galaxy_dict[mapper_list[0]] == galaxy_pix
 
     mesh = ag.mesh.Rectangular(shape=(4, 3))
-    pixelization = ag.m.MockPixelization(mapper=2, mesh=mesh)
+    pixelization = ag.m.MockPixelization(mesh=mesh)
 
     galaxy_pix_2 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
     galaxy_no_pix = ag.Galaxy(redshift=0.5)
