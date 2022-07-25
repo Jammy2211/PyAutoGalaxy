@@ -69,6 +69,16 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
         10, 1.0e-4
     )
 
+    mesh = af.Model(ag.mesh.DelaunayBrightnessImage)
+    mesh.pixels = af.UniformPrior(lower_limit=5.0, upper_limit=10.0)
+    pixelization = af.Model(ag.Pixelization, mesh=mesh)
+    galaxies = af.Collection(source=ag.Galaxy(redshift=0.5, pixelization=pixelization))
+    model = af.Collection(galaxies=galaxies)
+
+    ag.util.model.set_upper_limit_of_pixelization_pixels_prior(
+        model=model, pixels_in_mask=12
+    )
+
     ag.util.model.set_upper_limit_of_pixelization_pixels_prior(
         model=model, pixels_in_mask=8
     )

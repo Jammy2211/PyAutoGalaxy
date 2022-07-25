@@ -131,8 +131,11 @@ def set_upper_limit_of_pixelization_pixels_prior(
         for key, value in galaxy.__dict__.items():
 
             if isinstance(value, aa.Pixelization):
-
                 key_list.append(key)
+
+            elif isinstance(value, af.Model):
+                if type(value.cls) == type(aa.Pixelization):
+                    key_list.append(key)
 
         galaxy_key_list_dict[galaxy] = key_list
 
