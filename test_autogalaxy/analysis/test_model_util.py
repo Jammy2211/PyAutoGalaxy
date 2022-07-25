@@ -48,13 +48,15 @@ def test__mesh_list_from_model():
 
 def test__set_upper_limit_of_pixelization_pixels_prior():
 
-    pixelization = af.Model(ag.mesh.DelaunayBrightnessImage)
+    mesh = af.Model(ag.mesh.DelaunayBrightnessImage)
 
-    pixelization.pixels = af.UniformPrior(lower_limit=5.0, upper_limit=10.0)
+    mesh.pixels = af.UniformPrior(lower_limit=5.0, upper_limit=10.0)
+
+    pixelization = ag.Pixelization(mesh=mesh)
 
     galaxies = af.Collection(
         source=ag.Galaxy(
-            redshift=0.5, pixelization=pixelization, regularization=ag.reg.Constant
+            redshift=0.5, pixelization=pixelization
         )
     )
 
@@ -64,10 +66,10 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
         model=model, pixels_in_mask=12
     )
 
-    assert model.galaxies.source.pixelization.pixels.lower_limit == pytest.approx(
+    assert model.galaxies.source.pixelization.mesh.pixels.lower_limit == pytest.approx(
         5, 1.0e-4
     )
-    assert model.galaxies.source.pixelization.pixels.upper_limit == pytest.approx(
+    assert model.galaxies.source.pixelization.mesh.pixels.upper_limit == pytest.approx(
         10, 1.0e-4
     )
 
@@ -75,10 +77,10 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
         model=model, pixels_in_mask=8
     )
 
-    assert model.galaxies.source.pixelization.pixels.lower_limit == pytest.approx(
+    assert model.galaxies.source.pixelization.mesh.pixels.lower_limit == pytest.approx(
         5, 1.0e-4
     )
-    assert model.galaxies.source.pixelization.pixels.upper_limit == pytest.approx(
+    assert model.galaxies.source.pixelization.mesh.pixels.upper_limit == pytest.approx(
         8, 1.0e-4
     )
 
@@ -86,20 +88,24 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
         model=model, pixels_in_mask=3
     )
 
-    assert model.galaxies.source.pixelization.pixels.lower_limit == pytest.approx(
+    assert model.galaxies.source.pixelization.mesh.pixels.lower_limit == pytest.approx(
         -7, 1.0e-4
     )
-    assert model.galaxies.source.pixelization.pixels.upper_limit == pytest.approx(
+    assert model.galaxies.source.pixelization.mesh.pixels.upper_limit == pytest.approx(
         3, 1.0e-4
     )
 
-    pixelization = af.Model(ag.mesh.VoronoiBrightnessImage)
+    mesh_0 = af.Model(ag.mesh.VoronoiBrightnessImage)
+    mesh_0.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
+    pixelization_0 = ag.Pixelization(mesh=mesh_0)
 
-    pixelization.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
+    mesh_1 = af.Model(ag.mesh.DelaunayBrightnessImage)
+    mesh_1.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=4.0)
+    pixelization_1 = ag.Pixelization(mesh=mesh_1)
 
     galaxies = af.Collection(
         source=ag.Galaxy(
-            redshift=0.5, pixelization=pixelization, regularization=ag.reg.Constant
+            redshift=0.5, pixelization_0=pixelization_0, pixelization_1=pixelization_1
         )
     )
 
@@ -109,10 +115,13 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
         model=model, pixels_in_mask=6
     )
 
-    assert model.galaxies.source.pixelization.pixels.upper_limit == pytest.approx(
+    assert model.galaxies.source.pixelization_0.mesh.pixels.upper_limit == pytest.approx(
         6, 1.0e-4
     )
 
+    assert model.galaxies.source.pixelization_1.mesh.pixels.upper_limit == pytest.approx(
+        4, 1.0e-4
+    )
 
 def test__hyper_model_noise_from():
     model = af.Collection(

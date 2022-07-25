@@ -36,9 +36,8 @@ def isinstance_or_prior(obj, cls):
 
 def mesh_list_from(model: af.Collection) -> Optional[List[AbstractMesh]]:
     """
-    For a model containing one or more galaxies, inspect its attributes and return the `mesh` of a `pixelization` of a
-    galaxy provided one galaxy has a pixelization, otherwise it returns none. There cannot be more than
-    one `Pixelization` in a model.
+    For a model containing one or more galaxies, inspect its attributes and return the list of `mesh`'s of each
+    `pixelization` of all galaxies. If no galaxy has pixelization an empty list is returned.
     
     This function expects that the input model is a `Collection` where the first model-component has the
     name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
@@ -57,11 +56,11 @@ def mesh_list_from(model: af.Collection) -> Optional[List[AbstractMesh]]:
     The `mesh` of a galaxy, provided one galaxy has a `mesh`.
     """
 
-    model = model.instance_from_prior_medians()
+    instance = model.instance_from_prior_medians()
 
     mesh_list = []
 
-    for galaxy in model.galaxies:
+    for galaxy in instance.galaxies:
 
         pixelization_list = galaxy.cls_list_from(cls=aa.Pixelization)
 
@@ -94,9 +93,9 @@ def has_pixelization_from(model: af.Collection) -> bool:
     aa.mesh.Mesh or None:
         The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
     """
-    pixelization = mesh_list_from(model=model)
+    mesh_list = mesh_list_from(model=model)
 
-    return pixelization is not None
+    return len(mesh_list) > 0
 
 
 def set_upper_limit_of_pixelization_pixels_prior(
@@ -116,33 +115,55 @@ def set_upper_limit_of_pixelization_pixels_prior(
         The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
     """
 
-    if hasattr(model, "galaxies"):
+    # TODO : I'm sorry Rich
 
-        for galaxy in model.galaxies:
+    if not hasattr(model, "galaxies"):
+        return
 
-            try:
-                pixelization = getattr(galaxy, "pixelization")
-            except AttributeError:
-                pixelization = None
+    instance = model.instance_from_prior_medians()
+
+    galaxy_key_list_dict = {}
+
+    for galaxy in instance.galaxies:
+
+        key_list = []
+
+        for key, value in galaxy.__dict__.items():
+
+            if isinstance(value, aa.Pixelization):
+
+                key_list.append(key)
+
+        galaxy_key_list_dict[galaxy] = key_list
+
+    for galaxy in model.galaxies:
+
+        key_list = galaxy_key_list_dict[galaxy]
+
+        for key in key_list:
+
+            pixelization = getattr(galaxy, key)
 
             if pixelization is not None:
 
-                if hasattr(pixelization, "pixels"):
+                mesh = pixelization.mesh
 
-                    if hasattr(pixelization.pixels, "upper_limit"):
+                if hasattr(mesh, "pixels"):
 
-                        if pixels_in_mask < pixelization.pixels.upper_limit:
+                    if hasattr(mesh.pixels, "upper_limit"):
+
+                        if pixels_in_mask < mesh.pixels.upper_limit:
 
                             if (
-                                pixelization.cls is aa.mesh.DelaunayBrightnessImage
+                                mesh.cls is aa.mesh.DelaunayBrightnessImage
                                 or aa.mesh.VoronoiBrightnessImage
                                 or aa.mesh.VoronoiNNBrightnessImage
                             ):
 
-                                lower_limit = pixelization.pixels.lower_limit
+                                lower_limit = mesh.pixels.lower_limit
 
                                 log_str = (
-                                    "MODIFY BEFORE FIT -  A pixelization's pixel UniformPrior upper limit"
+                                    "MODIFY BEFORE FIT -  A pixelization mesh's pixel UniformPrior upper limit"
                                     "was greater than the number of pixels in the mask. It has been "
                                     "reduced to the number of pixels in the mask.\,"
                                 )
@@ -153,14 +174,14 @@ def set_upper_limit_of_pixelization_pixels_prior(
 
                                     logger.info(
                                         log_str
-                                        + "MODIFY BEFORE FIT - The pixelization's pixel UniformPrior lower_limit was "
+                                        + "MODIFY BEFORE FIT - The pixelization's mesh's pixel UniformPrior lower_limit was "
                                         "also above the number of pixels in the mask, and has been reduced"
                                         "to the number of pixels in the mask minus 10."
                                     )
                                 else:
                                     logger.info(log_str)
 
-                                pixelization.pixels = af.UniformPrior(
+                                mesh.pixels = af.UniformPrior(
                                     lower_limit=lower_limit, upper_limit=pixels_in_mask
                                 )
 
