@@ -141,7 +141,7 @@ def set_upper_limit_of_pixelization_pixels_prior(
 
     for galaxy in model.galaxies:
 
-       if galaxy in galaxy_key_list_dict:
+        if galaxy in galaxy_key_list_dict:
 
             key_list = galaxy_key_list_dict[galaxy]
 
@@ -187,7 +187,8 @@ def set_upper_limit_of_pixelization_pixels_prior(
                                         logger.info(log_str)
 
                                     mesh.pixels = af.UniformPrior(
-                                        lower_limit=lower_limit, upper_limit=pixels_in_mask
+                                        lower_limit=lower_limit,
+                                        upper_limit=pixels_in_mask,
                                     )
 
 
