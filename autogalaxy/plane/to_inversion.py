@@ -61,7 +61,7 @@ class PlaneToInversion(AbstractToInversion):
         w_tilde: Optional[Union[aa.WTildeImaging, aa.WTildeInterferometer]] = None,
         grid: Optional[aa.type.Grid2DLike] = None,
         blurring_grid: Optional[aa.type.Grid2DLike] = None,
-        grid_pixelized: Optional[aa.type.Grid2DLike] = None,
+        grid_pixelizaiton: Optional[aa.type.Grid2DLike] = None,
         settings_pixelization=aa.SettingsPixelization(),
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=aa.Preloads(),
@@ -87,12 +87,12 @@ class PlaneToInversion(AbstractToInversion):
         else:
             self.blurring_grid = None
 
-        if grid_pixelized is not None:
-            self.grid_pixelized = grid_pixelized
+        if grid_pixelizaiton is not None:
+            self.grid_pixelizaiton = grid_pixelizaiton
         elif dataset is not None:
-            self.grid_pixelized = dataset.grid_pixelized
+            self.grid_pixelizaiton = dataset.grid_pixelizaiton
         else:
-            self.grid_pixelized = None
+            self.grid_pixelizaiton = None
 
         self.settings_pixelization = settings_pixelization
         self.settings_inversion = settings_inversion
@@ -162,7 +162,7 @@ class PlaneToInversion(AbstractToInversion):
 
         return [
             pixelization.mesh.data_mesh_grid_from(
-                data_grid_slim=self.grid_pixelized,
+                data_grid_slim=self.grid_pixelizaiton,
                 hyper_data=hyper_galaxy_image,
                 settings=self.settings_pixelization,
             )
@@ -182,7 +182,7 @@ class PlaneToInversion(AbstractToInversion):
     ) -> aa.AbstractMapper:
 
         mapper_grids = mesh.mapper_grids_from(
-            source_grid_slim=self.grid_pixelized,
+            source_grid_slim=self.grid_pixelizaiton,
             source_mesh_grid=source_mesh_grid,
             data_mesh_grid=data_mesh_grid,
             hyper_data=hyper_galaxy_image,

@@ -372,7 +372,7 @@ def hyper_fit_no_noise(
         name=f"{search_previous.paths.name}__hyper_inversion",
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
-        **setup_hyper.search_pixelized_dict,
+        **setup_hyper.search_pixelization_dict,
     )
 
     hyper_inversion_result = search.fit(model=hyper_model_inversion, analysis=analysis)
@@ -483,7 +483,7 @@ def hyper_fit(
         name=f"{search_previous.paths.name}__hyper_inversion",
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
-        **setup_hyper.search_pixelized_dict,
+        **setup_hyper.search_pixelization_dict,
     )
 
     hyper_inversion_result = search.fit(model=hyper_inversion_model, analysis=analysis)
@@ -644,7 +644,7 @@ def stochastic_model_from(
 def stochastic_fit(
     stochastic_model: af.Collection,
     search_cls: ClassVar[af.NonLinearSearch],
-    search_pixelized_dict: Dict,
+    search_pixelization_dict: Dict,
     result: "ResultDataset",
     analysis: "AnalysisDataset",
     search_previous: af.NonLinearSearch,
@@ -691,7 +691,7 @@ def stochastic_fit(
         name=name,
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
-        **search_pixelized_dict,
+        **search_pixelization_dict,
     )
 
     stochastic_result = search.fit(
