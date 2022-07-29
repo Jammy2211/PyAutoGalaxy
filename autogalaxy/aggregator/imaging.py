@@ -32,7 +32,7 @@ def _imaging_from(fit: af.Fit, settings_imaging: Optional[aa.SettingsImaging] = 
         settings_imaging.sub_size_pixelization = settings_imaging.sub_size_inversion
 
     if hasattr(settings_imaging, "grid_inversion_class"):
-        settings_imaging.grid_pixelizaiton_class = settings_imaging.grid_inversion_class
+        settings_imaging.grid_pixelization_class = settings_imaging.grid_inversion_class
 
     imaging = aa.Imaging(
         image=data,

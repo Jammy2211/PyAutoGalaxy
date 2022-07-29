@@ -41,7 +41,7 @@ Below, we use a ``Rectangular`` pixelization with resolution 50 x 50 and a ``Con
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
-Now that our galaxy has a `Pixelization` and `Regularization`, we are able to fit the data using it in the
+Now that our galaxy has a `Pixelization`, we are able to fit the data using it in the
 same way as before, by simply passing the galaxy to a `Plane` and using this `Plane` to create a `FitImaging`
 object.
 

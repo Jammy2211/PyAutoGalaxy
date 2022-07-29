@@ -133,13 +133,19 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
 
 
 def test__hyper_model_noise_from():
+
+    pixelization = af.Model(
+        ag.Pixelization,
+        mesh=ag.mesh.Rectangular,
+                regularization=ag.reg.Constant,
+    )
+
     model = af.Collection(
         galaxies=af.Collection(
             galaxy=af.Model(
                 ag.Galaxy,
                 redshift=0.5,
-                pixelization=ag.mesh.Rectangular,
-                regularization=ag.reg.Constant,
+                pixelization=pixelization
             ),
             galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllSersic),
         )
@@ -168,11 +174,11 @@ def test__hyper_model_noise_from():
         include_hyper_image_sky=True,
     )
 
-    assert model.galaxies.galaxy.pixelization.cls is ag.mesh.Rectangular
-    assert model.galaxies.galaxy.regularization.cls is ag.reg.Constant
+    assert model.galaxies.galaxy.pixelization.mesh.cls is ag.mesh.Rectangular
+    assert model.galaxies.galaxy.pixelization.regularization.cls is ag.reg.Constant
 
     assert model.galaxies.galaxy.pixelization.prior_count == 0
-    assert model.galaxies.galaxy.regularization.prior_count == 0
+    assert model.galaxies.galaxy.pixelization.regularization.prior_count == 0
 
     assert model.galaxies.galaxy_1.bulge.intensity == pytest.approx(1.0, 1.0e-4)
 
