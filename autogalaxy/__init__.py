@@ -7,7 +7,7 @@ from autoarray.instruments import acs
 from autoarray.instruments import euclid
 from autoarray.inversion.pixelization import mesh
 from autoarray.inversion import regularization as reg
-from autoarray.inversion.mappers.abstract import AbstractMapper
+from autoarray.inversion.pixelization.mappers.abstract import AbstractMapper
 from autoarray.inversion.inversion.settings import SettingsInversion
 from autoarray.inversion.inversion.factory import inversion_from as Inversion
 from autoarray.inversion.inversion.factory import (
