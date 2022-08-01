@@ -5,7 +5,7 @@ from autoarray.dataset.interferometer import Interferometer
 from autoarray.dataset.interferometer import SettingsInterferometer
 from autoarray.instruments import acs
 from autoarray.instruments import euclid
-from autoarray.inversion import pixelizations as pix
+from autoarray.inversion.pixelization import mesh
 from autoarray.inversion import regularization as reg
 from autoarray.inversion.inversion.settings import SettingsInversion
 from autoarray.inversion.inversion.factory import inversion_from as Inversion
@@ -15,8 +15,10 @@ from autoarray.inversion.inversion.factory import (
 from autoarray.inversion.inversion.factory import (
     inversion_interferometer_unpacked_from as InversionInterferometer,
 )
-from autoarray.inversion.mappers.factory import mapper_from as Mapper
-from autoarray.inversion.pixelizations.settings import SettingsPixelization
+from autoarray.inversion.pixelization.pixelization import Pixelization
+from autoarray.inversion.pixelization.mappers.mapper_grids import MapperGrids
+from autoarray.inversion.pixelization.mappers.factory import mapper_from as Mapper
+from autoarray.inversion.pixelization.settings import SettingsPixelization
 from autoarray.mask.mask_1d import Mask1D
 from autoarray.mask.mask_2d import Mask2D
 from autoarray.operators.convolver import Convolver
@@ -34,8 +36,9 @@ from autoarray.structures.grids.sparse_2d import Grid2DSparse
 from autoarray.structures.grids.iterate_2d import Grid2DIterate
 from autoarray.structures.grids.irregular_2d import Grid2DIrregular
 from autoarray.structures.grids.irregular_2d import Grid2DIrregularUniform
-from autoarray.structures.grids.grid_2d_pixelization import Grid2DRectangular
-from autoarray.structures.grids.grid_2d_pixelization import Grid2DVoronoi
+from autoarray.structures.mesh.rectangular_2d import Mesh2DRectangular
+from autoarray.structures.mesh.voronoi_2d import Mesh2DVoronoi
+from autoarray.structures.mesh.delaunay_2d import Mesh2DDelaunay
 from autoarray.structures.vectors.uniform import VectorYX2D
 from autoarray.structures.vectors.irregular import VectorYX2DIrregular
 from autoarray.layout.region import Region1D
@@ -68,6 +71,7 @@ from .galaxy.stellar_dark_decomp import StellarDarkDecomp
 from .hyper import hyper_data
 from .analysis.setup import SetupHyper
 from .plane.plane import Plane
+from .plane.to_inversion import AbstractToInversion
 from .plane.to_inversion import PlaneToInversion
 from .profiles.geometry_profiles import EllProfile
 from .profiles import (
@@ -77,7 +81,8 @@ from .profiles import (
     light_and_mass_profiles as lmp,
     scaling_relations as sr,
 )
-from .profiles.light_profiles.light_profiles_linear import LightProfileLinearObjFunc
+from .profiles.light_profiles import basis as lp_basis
+from .profiles.light_profiles.light_profiles_linear import LightProfileLinearObjFuncList
 from .profiles.light_profiles import light_profiles_init as lp_init
 from .profiles.light_profiles import light_profiles_linear as lp_linear
 from .profiles.light_profiles import light_profiles_operated as lp_operated

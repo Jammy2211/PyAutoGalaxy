@@ -2,6 +2,7 @@ from collections import OrderedDict
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 
 from skimage.transform import rescale
 

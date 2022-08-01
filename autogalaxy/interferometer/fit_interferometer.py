@@ -130,8 +130,21 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
         """
         return self.visibilities - self.profile_visibilities
 
+    @property
+    def plane_to_inversion(self) -> PlaneToInversion:
+        return PlaneToInversion(
+            plane=self.plane,
+            dataset=self.dataset,
+            data=self.profile_subtracted_visibilities,
+            noise_map=self.noise_map,
+            w_tilde=self.w_tilde,
+            settings_pixelization=self.settings_pixelization,
+            settings_inversion=self.settings_inversion,
+            preloads=self.preloads,
+        )
+
     @cached_property
-    def inversion(self) -> Optional[aa.Inversion]:
+    def inversion(self) -> Optional[aa.AbstractInversion]:
         """
         If the plane has linear objects which are used to fit the data (e.g. a linear light profile / pixelization)
         this function returns a linear inversion, where the flux values of these objects (e.g. the `intensity`
@@ -142,17 +155,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
         """
         if self.perform_inversion:
 
-            plane_to_inversion = PlaneToInversion(plane=self.plane)
-
-            return plane_to_inversion.inversion_interferometer_from(
-                dataset=self.dataset,
-                visibilities=self.profile_subtracted_visibilities,
-                noise_map=self.noise_map,
-                w_tilde=self.w_tilde,
-                settings_pixelization=self.settings_pixelization,
-                settings_inversion=self.settings_inversion,
-                preloads=self.preloads,
-            )
+            return self.plane_to_inversion.inversion
 
     @property
     def model_data(self) -> aa.Visibilities:
@@ -165,9 +168,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFit):
         If a inversion is included it is the sum of these visibilities and the inversion's reconstructed visibilities.
         """
 
-        if self.plane.has(cls=aa.pix.Pixelization) or self.plane.has(
-            cls=LightProfileLinear
-        ):
+        if self.perform_inversion:
 
             return self.profile_visibilities + self.inversion.mapped_reconstructed_data
 

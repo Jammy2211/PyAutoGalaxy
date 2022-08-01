@@ -31,12 +31,12 @@ class AbstractFit:
         """
         The total number of `Mapper` objects used by the inversion in this fit.
 
-        A mapper is created for each galaxy with a pixelization / regularization object.
+        A mapper is created for each galaxy with a pixelization object.
         """
         # TODO : When we add regularization to basis need to change this to reflect mappers.
 
         return len(
-            list(filter(None, self.model_obj.cls_list_from(cls=aa.reg.Regularization)))
+            list(filter(None, self.model_obj.cls_list_from(cls=aa.Pixelization)))
         )
 
     @property
@@ -51,11 +51,7 @@ class AbstractFit:
         -------
             A bool which is True if an inversion is performed.
         """
-        if self.model_obj.has(cls=aa.pix.Pixelization) or self.model_obj.has(
-            cls=LightProfileLinear
-        ):
-            return True
-        return False
+        return self.model_obj.perform_inversion
 
     @property
     def w_tilde(self) -> Optional[aa.WTildeImaging]:
@@ -89,18 +85,25 @@ class AbstractFit:
         This function returns a dictionary which maps every linear light profile instance to its solved for
         `intensity` value in the inversion, so that the intensity value of every light profile can be accessed.
         """
+
         if self.inversion is None:
             return None
 
-        linear_obj_func_list = self.inversion.linear_obj_func_list
+        linear_obj_func_list = self.inversion.cls_list_from(
+            cls=aa.AbstractLinearObjFuncList
+        )
 
         linear_light_profile_intensity_dict = {}
 
         for linear_obj_func in linear_obj_func_list:
 
-            linear_light_profile_intensity_dict[linear_obj_func.light_profile] = float(
-                self.inversion.reconstruction_dict[linear_obj_func]
-            )
+            reconstruction = self.inversion.reconstruction_dict[linear_obj_func]
+
+            for i, light_profile in enumerate(linear_obj_func.light_profile_list):
+
+                linear_light_profile_intensity_dict[light_profile] = float(
+                    reconstruction[i]
+                )
 
         return linear_light_profile_intensity_dict
 

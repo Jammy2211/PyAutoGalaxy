@@ -1,120 +1,222 @@
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Type, Union
+
+from autoconf import cached_property
 
 import autoarray as aa
 
-from autoarray.inversion.inversion.factory import inversion_imaging_unpacked_from
-from autoarray.inversion.inversion.factory import inversion_interferometer_unpacked_from
+from autoarray.inversion.pixelization.mappers.factory import mapper_from
+from autoarray.inversion.inversion.factory import inversion_unpacked_from
 from autogalaxy.profiles.light_profiles.light_profiles_linear import (
-    LightProfileLinearObjFunc,
+    LightProfileLinearObjFuncList,
 )
+from autogalaxy.profiles.light_profiles.basis import Basis
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 from autogalaxy.galaxy.galaxy import Galaxy
 
 
-class PlaneToInversion:
-    def __init__(self, plane: "Plane"):
+class AbstractToInversion:
+    def cls_light_profile_func_list_galaxy_dict_from(
+        self, cls: Type
+    ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
+        raise NotImplementedError
+
+    @cached_property
+    def lp_linear_func_list_galaxy_dict(
+        self,
+    ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
+
+        raise NotImplementedError
+
+    @cached_property
+    def mapper_galaxy_dict(self):
+        raise NotImplementedError
+
+    @cached_property
+    def linear_obj_galaxy_dict(
+        self,
+    ) -> Dict[Union[LightProfileLinearObjFuncList, aa.AbstractMapper], Galaxy]:
+
+        lp_linear_func_galaxy_dict = self.lp_linear_func_list_galaxy_dict
+
+        mapper_galaxy_dict = self.mapper_galaxy_dict
+
+        return {**lp_linear_func_galaxy_dict, **mapper_galaxy_dict}
+
+    @cached_property
+    def linear_obj_list(self) -> List[aa.LinearObj]:
+        return list(self.linear_obj_galaxy_dict.keys())
+
+    @cached_property
+    def regularization_list(self) -> List[aa.AbstractRegularization]:
+        return [linear_obj.regularization for linear_obj in self.linear_obj_list]
+
+
+class PlaneToInversion(AbstractToInversion):
+    def __init__(
+        self,
+        plane: "Plane",
+        dataset: Optional[Union[aa.Imaging, aa.Interferometer]] = None,
+        data: Optional[Union[aa.Array2D, aa.Visibilities]] = None,
+        noise_map: Optional[Union[aa.Array2D, aa.VisibilitiesNoiseMap]] = None,
+        w_tilde: Optional[Union[aa.WTildeImaging, aa.WTildeInterferometer]] = None,
+        grid: Optional[aa.type.Grid2DLike] = None,
+        blurring_grid: Optional[aa.type.Grid2DLike] = None,
+        grid_pixelization: Optional[aa.type.Grid2DLike] = None,
+        settings_pixelization=aa.SettingsPixelization(),
+        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        preloads=aa.Preloads(),
+    ):
 
         self.plane = plane
+        self.dataset = dataset
+        self.data = data
+        self.noise_map = noise_map
+        self.w_tilde = w_tilde
 
-    def lp_linear_func_galaxy_dict_from(
-        self,
-        source_grid_slim: aa.type.Grid2DLike,
-        source_blurring_grid_slim: Optional[aa.type.Grid2DLike],
-        convolver: Optional[aa.Convolver] = None,
-    ) -> Dict[LightProfileLinearObjFunc, Galaxy]:
+        if grid is not None:
+            self.grid = grid
+        elif dataset is not None:
+            self.grid = dataset.grid
+        else:
+            self.grid = None
 
-        if not self.plane.has(cls=LightProfileLinear):
+        if blurring_grid is not None:
+            self.blurring_grid = blurring_grid
+        elif dataset is not None:
+            self.blurring_grid = dataset.blurring_grid
+        else:
+            self.blurring_grid = None
+
+        if grid_pixelization is not None:
+            self.grid_pixelization = grid_pixelization
+        elif dataset is not None:
+            self.grid_pixelization = dataset.grid_pixelization
+        else:
+            self.grid_pixelization = None
+
+        self.settings_pixelization = settings_pixelization
+        self.settings_inversion = settings_inversion
+
+        self.preloads = preloads
+
+    def cls_light_profile_func_list_galaxy_dict_from(
+        self, cls: Type
+    ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
+
+        if not self.plane.has(cls=cls):
             return {}
 
         lp_linear_func_galaxy_dict = {}
 
         for galaxy in self.plane.galaxies:
-            if galaxy.has(cls=LightProfileLinear):
-                for light_profile_linear in galaxy.cls_list_from(
-                    cls=LightProfileLinear
-                ):
+            if galaxy.has(cls=cls):
+                for light_profile in galaxy.cls_list_from(cls=cls):
 
-                    lp_linear_func = LightProfileLinearObjFunc(
-                        grid=source_grid_slim,
-                        blurring_grid=source_blurring_grid_slim,
-                        convolver=convolver,
-                        light_profile=light_profile_linear,
-                    )
+                    if isinstance(light_profile, LightProfileLinear):
+                        light_profile_list = [light_profile]
+                    else:
+                        light_profile_list = light_profile.light_profile_list
+                        light_profile_list = [
+                            light_profile
+                            for light_profile in light_profile_list
+                            if isinstance(light_profile, LightProfileLinear)
+                        ]
 
-                    lp_linear_func_galaxy_dict[lp_linear_func] = galaxy
+                    if len(light_profile_list) > 0:
+
+                        lp_linear_func = LightProfileLinearObjFuncList(
+                            grid=self.grid,
+                            blurring_grid=self.blurring_grid,
+                            convolver=self.dataset.convolver,
+                            light_profile_list=light_profile_list,
+                            regularization=light_profile.regularization,
+                        )
+
+                        lp_linear_func_galaxy_dict[lp_linear_func] = galaxy
 
         return lp_linear_func_galaxy_dict
 
-    def sparse_image_plane_grid_list_from(
-        self, grid: aa.type.Grid2DLike, settings_pixelization=aa.SettingsPixelization()
-    ) -> Optional[List[aa.type.Grid2DLike]]:
+    @cached_property
+    def lp_linear_func_list_galaxy_dict(
+        self,
+    ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
 
-        if not self.plane.has(cls=aa.pix.Pixelization):
+        lp_linear_light_profile_func_list_galaxy_dict = self.cls_light_profile_func_list_galaxy_dict_from(
+            cls=LightProfileLinear
+        )
+
+        lp_basis_func_list_galaxy_dict = self.cls_light_profile_func_list_galaxy_dict_from(
+            cls=Basis
+        )
+
+        return {
+            **lp_linear_light_profile_func_list_galaxy_dict,
+            **lp_basis_func_list_galaxy_dict,
+        }
+
+    @cached_property
+    def sparse_image_plane_grid_list(self,) -> Optional[List[aa.Grid2DSparse]]:
+
+        if not self.plane.has(cls=aa.Pixelization):
             return None
 
         return [
-            pixelization.data_pixelization_grid_from(
-                data_grid_slim=grid,
-                hyper_image=hyper_galaxy_image,
-                settings=settings_pixelization,
+            pixelization.mesh.data_mesh_grid_from(
+                data_grid_slim=self.grid_pixelization,
+                hyper_data=hyper_galaxy_image,
+                settings=self.settings_pixelization,
             )
             for pixelization, hyper_galaxy_image in zip(
-                self.plane.cls_list_from(cls=aa.pix.Pixelization),
+                self.plane.cls_list_from(cls=aa.Pixelization),
                 self.plane.hyper_galaxies_with_pixelization_image_list,
             )
         ]
 
     def mapper_from(
         self,
-        source_grid_slim: aa.type.Grid2DLike,
-        source_pixelization_grid: aa.type.Grid2DLike,
-        pixelization: aa.AbstractPixelization,
+        mesh: aa.AbstractMesh,
+        regularization: aa.AbstractRegularization,
+        source_mesh_grid: aa.Grid2DSparse,
         hyper_galaxy_image: aa.Array2D,
-        data_pixelization_grid: aa.Grid2D = None,
-        settings_pixelization=aa.SettingsPixelization(),
-        preloads=aa.Preloads(),
+        data_mesh_grid: aa.Grid2DSparse = None,
     ) -> aa.AbstractMapper:
 
-        return pixelization.mapper_from(
-            source_grid_slim=source_grid_slim,
-            source_pixelization_grid=source_pixelization_grid,
-            data_pixelization_grid=data_pixelization_grid,
-            hyper_image=hyper_galaxy_image,
-            settings=settings_pixelization,
-            preloads=preloads,
+        mapper_grids = mesh.mapper_grids_from(
+            source_grid_slim=self.grid_pixelization,
+            source_mesh_grid=source_mesh_grid,
+            data_mesh_grid=data_mesh_grid,
+            hyper_data=hyper_galaxy_image,
+            settings=self.settings_pixelization,
+            preloads=self.preloads,
             profiling_dict=self.plane.profiling_dict,
         )
 
-    def mapper_galaxy_dict_from(
-        self,
-        grid: aa.Grid2D,
-        settings_pixelization=aa.SettingsPixelization(),
-        preloads=aa.Preloads(),
-    ) -> Dict[aa.AbstractMapper, Galaxy]:
+        return mapper_from(mapper_grids=mapper_grids, regularization=regularization)
 
-        if not self.plane.has(cls=aa.pix.Pixelization):
+    @cached_property
+    def mapper_galaxy_dict(self) -> Dict[aa.AbstractMapper, Galaxy]:
+
+        if not self.plane.has(cls=aa.Pixelization):
             return {}
 
-        sparse_grid_list = self.sparse_image_plane_grid_list_from(grid=grid)
+        sparse_grid_list = self.sparse_image_plane_grid_list
 
         mapper_galaxy_dict = {}
 
-        pixelization_list = self.plane.cls_list_from(cls=aa.pix.Pixelization)
+        pixelization_list = self.plane.cls_list_from(cls=aa.Pixelization)
         galaxies_with_pixelization_list = self.plane.galaxies_with_cls_list_from(
-            cls=aa.pix.Pixelization
+            cls=aa.Pixelization
         )
         hyper_galaxy_image_list = self.plane.hyper_galaxies_with_pixelization_image_list
 
         for mapper_index in range(len(sparse_grid_list)):
 
             mapper = self.mapper_from(
-                source_grid_slim=grid,
-                source_pixelization_grid=sparse_grid_list[mapper_index],
-                pixelization=pixelization_list[mapper_index],
+                mesh=pixelization_list[mapper_index].mesh,
+                regularization=pixelization_list[mapper_index].regularization,
+                source_mesh_grid=sparse_grid_list[mapper_index],
                 hyper_galaxy_image=hyper_galaxy_image_list[mapper_index],
-                data_pixelization_grid=sparse_grid_list[mapper_index],
-                settings_pixelization=settings_pixelization,
-                preloads=preloads,
+                data_mesh_grid=sparse_grid_list[mapper_index],
             )
 
             galaxy = galaxies_with_pixelization_list[mapper_index]
@@ -123,93 +225,20 @@ class PlaneToInversion:
 
         return mapper_galaxy_dict
 
-    def linear_obj_galaxy_dict_from(
-        self,
-        dataset: Union[aa.Imaging, aa.Interferometer],
-        settings_pixelization=aa.SettingsPixelization(),
-        preloads=aa.Preloads(),
-    ) -> Dict[Union[LightProfileLinearObjFunc, aa.AbstractMapper], Galaxy]:
+    @property
+    def inversion(self) -> aa.AbstractInversion:
 
-        lp_linear_func_galaxy_dict = self.lp_linear_func_galaxy_dict_from(
-            source_grid_slim=dataset.grid,
-            source_blurring_grid_slim=dataset.blurring_grid,
-            convolver=dataset.convolver,
-        )
-
-        mapper_galaxy_dict = self.mapper_galaxy_dict_from(
-            grid=dataset.grid_pixelized,
-            settings_pixelization=settings_pixelization,
-            preloads=preloads,
-        )
-
-        return {**lp_linear_func_galaxy_dict, **mapper_galaxy_dict}
-
-    def inversion_imaging_from(
-        self,
-        dataset: aa.Imaging,
-        image: aa.Array2D,
-        noise_map: aa.Array2D,
-        w_tilde: aa.WTildeImaging,
-        settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
-        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
-        preloads: aa.Preloads = aa.Preloads(),
-    ):
-
-        linear_obj_galaxy_dict = self.linear_obj_galaxy_dict_from(
-            dataset=dataset,
-            settings_pixelization=settings_pixelization,
-            preloads=preloads,
-        )
-
-        linear_obj_list = list(linear_obj_galaxy_dict.keys())
-
-        inversion = inversion_imaging_unpacked_from(
-            image=image,
-            noise_map=noise_map,
-            convolver=dataset.convolver,
-            w_tilde=w_tilde,
-            linear_obj_list=linear_obj_list,
-            regularization_list=self.plane.cls_list_from(cls=aa.reg.Regularization),
-            settings=settings_inversion,
-            preloads=preloads,
+        inversion = inversion_unpacked_from(
+            dataset=self.dataset,
+            data=self.data,
+            noise_map=self.noise_map,
+            w_tilde=self.w_tilde,
+            linear_obj_list=self.linear_obj_list,
+            settings=self.settings_inversion,
+            preloads=self.preloads,
             profiling_dict=self.plane.profiling_dict,
         )
 
-        inversion.linear_obj_galaxy_dict = linear_obj_galaxy_dict
-
-        return inversion
-
-    def inversion_interferometer_from(
-        self,
-        dataset: aa.Interferometer,
-        visibilities: aa.Visibilities,
-        noise_map: aa.VisibilitiesNoiseMap,
-        w_tilde,
-        settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
-        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
-        preloads: aa.Preloads = aa.Preloads(),
-    ):
-
-        linear_obj_galaxy_dict = self.linear_obj_galaxy_dict_from(
-            dataset=dataset,
-            settings_pixelization=settings_pixelization,
-            preloads=preloads,
-        )
-
-        linear_obj_list = list(linear_obj_galaxy_dict.keys())
-
-        inversion = inversion_interferometer_unpacked_from(
-            visibilities=visibilities,
-            noise_map=noise_map,
-            transformer=dataset.transformer,
-            w_tilde=w_tilde,
-            linear_obj_list=linear_obj_list,
-            regularization_list=self.plane.cls_list_from(cls=aa.reg.Regularization),
-            settings=settings_inversion,
-            preloads=preloads,
-            profiling_dict=self.plane.profiling_dict,
-        )
-
-        inversion.linear_obj_galaxy_dict = linear_obj_galaxy_dict
+        inversion.linear_obj_galaxy_dict = self.linear_obj_galaxy_dict
 
         return inversion

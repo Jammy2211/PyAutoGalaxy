@@ -1,6 +1,6 @@
 import inspect
 import numpy as np
-from typing import Dict, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from autoconf import cached_property
 import autoarray as aa
@@ -13,8 +13,14 @@ from autogalaxy.profiles.light_profiles.light_profiles_operated import (
 from autogalaxy.profiles.light_profiles import light_profiles as lp
 from autogalaxy.profiles import light_and_mass_profiles as lmp
 
+from autogalaxy import exc
+
 
 class LightProfileLinear(lp.LightProfile):
+    @property
+    def regularization(self):
+        return None
+
     @property
     def _intensity(self):
         return 1.0
@@ -87,33 +93,62 @@ class LightProfileLinear(lp.LightProfile):
         return af.Model(self.lmp_cls, **parameters_dict)
 
 
-class LightProfileLinearObjFunc(aa.LinearObjFunc):
+class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
     def __init__(
         self,
         grid: aa.type.Grid1D2DLike,
         blurring_grid: aa.type.Grid1D2DLike,
         convolver: Optional[aa.Convolver],
-        light_profile: LightProfileLinear,
+        light_profile_list: List[LightProfileLinear],
+        regularization=aa.reg.Regularization,
         profiling_dict: Optional[Dict] = None,
     ):
 
-        super().__init__(grid=grid, profiling_dict=profiling_dict)
+        for light_profile in light_profile_list:
+
+            if not isinstance(light_profile, LightProfileLinear):
+
+                raise exc.ProfileException(
+                    """
+                    A light profile that is not a LightProfileLinear object has been input into the
+                    LightProfileLinearObjFuncList object.
+                    
+                    Only children of the LightProfileLinear class can be used in a linear inversion.
+                    """
+                )
+
+        super().__init__(
+            grid=grid, regularization=regularization, profiling_dict=profiling_dict
+        )
 
         self.blurring_grid = blurring_grid
         self.convolver = convolver
-        self.light_profile = light_profile
+        self.light_profile_list = light_profile_list
+
+    @property
+    def pixels(self):
+        return len(self.light_profile_list)
 
     @property
     def mapping_matrix(self) -> np.ndarray:
-        return self.light_profile.image_2d_from(grid=self.grid).binned.slim[:, None]
+
+        mapping_matrix = np.zeros(shape=(self.grid.mask.pixels_in_mask, self.pixels))
+
+        for pixel, light_profile in enumerate(self.light_profile_list):
+
+            image_2d = light_profile.image_2d_from(grid=self.grid).binned.slim
+
+            mapping_matrix[:, pixel] = image_2d
+
+        return mapping_matrix
 
     @cached_property
-    def blurred_mapping_matrix_override(self) -> Optional[np.ndarray]:
+    def operated_mapping_matrix_override(self) -> Optional[np.ndarray]:
         """
         The `LinearEqn` object takes the `mapping_matrix` of each linear object and combines it with the `Convolver`
-        operator to perform a 2D convolution and compute the `blurred_mapping_matrix`.
+        operator to perform a 2D convolution and compute the `operated_mapping_matrix`.
 
-        If this property is overwritten this operation is not performed, with the `blurred_mapping_matrix` output this
+        If this property is overwritten this operation is not performed, with the `operated_mapping_matrix` output this
         property automatically used instead.
 
         This is used for a linear light profile because the in-built mapping matrix convolution does not account for
@@ -127,16 +162,26 @@ class LightProfileLinearObjFunc(aa.LinearObjFunc):
         performed in the linear equation solvers.
         """
 
-        if isinstance(self.light_profile, LightProfileOperated):
+        if isinstance(self.light_profile_list[0], LightProfileOperated):
             return self.mapping_matrix
 
-        image_2d = self.light_profile.image_2d_from(grid=self.grid)
+        operated_mapping_matrix = np.zeros(
+            shape=(self.grid.mask.pixels_in_mask, self.pixels)
+        )
 
-        blurring_image_2d = self.light_profile.image_2d_from(grid=self.blurring_grid)
+        for pixel, light_profile in enumerate(self.light_profile_list):
 
-        return self.convolver.convolve_image(
-            image=image_2d, blurring_image=blurring_image_2d
-        )[:, None]
+            image_2d = light_profile.image_2d_from(grid=self.grid)
+
+            blurring_image_2d = light_profile.image_2d_from(grid=self.blurring_grid)
+
+            blurred_image_2d = self.convolver.convolve_image(
+                image=image_2d, blurring_image=blurring_image_2d
+            )
+
+            operated_mapping_matrix[:, pixel] = blurred_image_2d
+
+        return operated_mapping_matrix
 
 
 class EllSersic(lp.EllSersic, LightProfileLinear):

@@ -15,7 +15,7 @@ class SetupHyper:
         search_inversion_cls: Optional[af.NonLinearSearch] = None,
         search_noise_cls: Optional[af.NonLinearSearch] = None,
         search_bc_cls: Optional[af.NonLinearSearch] = None,
-        search_pixelized_dict: Optional[dict] = None,
+        search_pixelization_dict: Optional[dict] = None,
         search_noise_dict: Optional[dict] = None,
         search_bc_dict: Optional[dict] = None,
     ):
@@ -39,7 +39,7 @@ class SetupHyper:
             noise-map's background component in the model.
         search_inversion_cls
             The non-linear search used by every hyper model-fit search.
-        search_pixelized_dict
+        search_pixelization_dict
             The dictionary of search options for the hyper inversion model-fit searches.
         search_noise_dict
             The dictionary of search options for the hyper noise model-fit searches.
@@ -50,7 +50,7 @@ class SetupHyper:
         self.hyper_galaxy_names = None
 
         self.search_inversion_cls = search_inversion_cls or af.DynestyStatic
-        self.search_pixelized_dict = search_pixelized_dict or {
+        self.search_pixelization_dict = search_pixelization_dict or {
             "nlive": 50,
             "sample": "rstagger",
             "dlogz": 10,

@@ -372,8 +372,8 @@ class Visualizer:
             reconstructed_image=should_plot("reconstructed_image")
         )
 
-        inversion_plotter.figures_2d_of_mapper(
-            mapper_index=0,
+        inversion_plotter.figures_2d_of_pixelization(
+            pixelization_index=0,
             reconstructed_image=should_plot("reconstructed_image"),
             reconstruction=should_plot("reconstruction"),
             errors=should_plot("errors"),
@@ -384,7 +384,10 @@ class Visualizer:
         )
 
         if should_plot("subplot_inversion"):
-            for mapper_index in range(len(inversion.mapper_list)):
+
+            mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
+
+            for mapper_index in range(len(mapper_list)):
                 inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
 
         if not during_analysis:
@@ -393,8 +396,8 @@ class Visualizer:
 
                 inversion_plotter.figures_2d(reconstructed_image=True)
 
-                inversion_plotter.figures_2d_of_mapper(
-                    mapper_index=0,
+                inversion_plotter.figures_2d_of_pixelization(
+                    pixelization_index=0,
                     reconstructed_image=True,
                     reconstruction=True,
                     errors=True,
