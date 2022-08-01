@@ -1,6 +1,6 @@
 import json
 import numpy as np
-from typing import Dict, List, Optional, Type
+from typing import Dict, List, Optional, Tuple, Type
 
 import autoarray as aa
 
@@ -9,8 +9,9 @@ from autoconf.dictable import Dictable
 from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxy import HyperGalaxy
-from autogalaxy.plane.to_inversion import PlaneToInversion
+from autogalaxy.profiles.light_profiles.basis import Basis
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
+from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 from autogalaxy.profiles.light_profiles.light_profiles_snr import LightProfileSNR
 from autogalaxy.operate.image import OperateImageGalaxies
 from autogalaxy.operate.deflections import OperateDeflections
@@ -70,7 +71,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def galaxy_redshifts(self) -> List[float]:
         return [galaxy.redshift for galaxy in self.galaxies]
 
-    def has(self, cls: Type) -> bool:
+    def has(self, cls: Tuple[Type]) -> bool:
         if self.galaxies is not None:
             return any(list(map(lambda galaxy: galaxy.has(cls=cls), self.galaxies)))
         return False
@@ -97,9 +98,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return cls_list
 
     def galaxies_with_cls_list_from(self, cls: Type) -> List[Galaxy]:
-        return list(
-            filter(lambda galaxy: galaxy.has(cls=aa.pix.Pixelization), self.galaxies)
-        )
+        return list(filter(lambda galaxy: galaxy.has(cls=cls), self.galaxies))
 
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(
@@ -250,7 +249,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def hyper_galaxies_with_pixelization_image_list(self) -> List[aa.Array2D]:
         return [
             galaxy.hyper_galaxy_image
-            for galaxy in self.galaxies_with_cls_list_from(cls=aa.pix.Pixelization)
+            for galaxy in self.galaxies_with_cls_list_from(cls=aa.Pixelization)
         ]
 
     def hyper_noise_map_from(self, noise_map) -> aa.Array2D:
@@ -322,8 +321,27 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return contribution_map_list
 
     @property
-    def to_inversion(self):
-        return PlaneToInversion(plane=self)
+    def perform_inversion(self) -> bool:
+        """
+        Returns a bool specifying whether this fit object performs an inversion.
+
+        This is based on whether any of the galaxies in the `model_obj` have a `Pixelization` or `LightProfileLinear`
+        object, in which case an inversion is performed.
+
+        Returns
+        -------
+            A bool which is True if an inversion is performed.
+        """
+        if self.has(cls=(aa.Pixelization, LightProfileLinear)):
+            return True
+        elif self.has(cls=Basis):
+            basis_list = self.cls_list_from(cls=Basis)
+            for basis in basis_list:
+                for light_profile in basis.light_profile_list:
+                    if isinstance(light_profile, LightProfileLinear):
+                        return True
+
+        return False
 
     def extract_attribute(self, cls, attr_name):
         """

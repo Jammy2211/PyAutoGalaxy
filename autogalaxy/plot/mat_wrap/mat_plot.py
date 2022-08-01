@@ -163,7 +163,7 @@ class MatPlot2D(aplt.MatPlot2D):
         border_scatter: Optional[aplt.BorderScatter] = None,
         positions_scatter: Optional[aplt.PositionsScatter] = None,
         index_scatter: Optional[aplt.IndexScatter] = None,
-        pixelization_grid_scatter: Optional[aplt.PixelizationGridScatter] = None,
+        mesh_grid_scatter: Optional[aplt.MeshGridScatter] = None,
         light_profile_centres_scatter: Optional[w.LightProfileCentresScatter] = None,
         mass_profile_centres_scatter: Optional[w.MassProfileCentresScatter] = None,
         multiple_images_scatter: Optional[w.MultipleImagesScatter] = None,
@@ -247,7 +247,7 @@ class MatPlot2D(aplt.MatPlot2D):
           Scatters specific (y,x) coordinates input as a `Grid2DIrregular` object over the figure.
         index_scatter
           Scatters specific coordinates of an input `Grid2D` based on input values of the `Grid2D`'s 1D or 2D indexes.
-        pixelization_grid_scatter
+        mesh_grid_scatter
           Scatters the `PixelizationGrid` of a `Pixelization` object.
         light_profile_centres_scatter
           Scatters the (y,x) centres of all `LightProfile`'s in the plotted object (e.g. a `Tracer`).
@@ -295,7 +295,7 @@ class MatPlot2D(aplt.MatPlot2D):
             grid_scatter=grid_scatter,
             positions_scatter=positions_scatter,
             index_scatter=index_scatter,
-            pixelization_grid_scatter=pixelization_grid_scatter,
+            mesh_grid_scatter=mesh_grid_scatter,
             vector_yx_quiver=vector_yx_quiver,
             patch_overlay=patch_overlay,
             array_overlay=array_overlay,

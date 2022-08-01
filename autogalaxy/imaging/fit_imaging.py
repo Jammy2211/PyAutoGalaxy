@@ -147,8 +147,21 @@ class FitImaging(aa.FitImaging, AbstractFit):
         """
         return self.image - self.blurred_image
 
+    @property
+    def plane_to_inversion(self) -> PlaneToInversion:
+        return PlaneToInversion(
+            plane=self.plane,
+            dataset=self.dataset,
+            data=self.profile_subtracted_image,
+            noise_map=self.noise_map,
+            w_tilde=self.w_tilde,
+            settings_pixelization=self.settings_pixelization,
+            settings_inversion=self.settings_inversion,
+            preloads=self.preloads,
+        )
+
     @cached_property
-    def inversion(self) -> Optional[aa.Inversion]:
+    def inversion(self) -> Optional[aa.AbstractInversion]:
         """
         If the plane has linear objects which are used to fit the data (e.g. a linear light profile / pixelization)
         this function returns a linear inversion, where the flux values of these objects (e.g. the `intensity`
@@ -159,18 +172,7 @@ class FitImaging(aa.FitImaging, AbstractFit):
         """
 
         if self.perform_inversion:
-
-            plane_to_inversion = PlaneToInversion(plane=self.plane)
-
-            return plane_to_inversion.inversion_imaging_from(
-                dataset=self.dataset,
-                image=self.profile_subtracted_image,
-                noise_map=self.noise_map,
-                w_tilde=self.w_tilde,
-                settings_pixelization=self.settings_pixelization,
-                settings_inversion=self.settings_inversion,
-                preloads=self.preloads,
-            )
+            return self.plane_to_inversion.inversion
 
     @property
     def model_data(self) -> aa.Array2D:
@@ -183,9 +185,7 @@ class FitImaging(aa.FitImaging, AbstractFit):
         If a inversion is included it is the sum of this image and the inversion's reconstruction of the image.
         """
 
-        if self.plane.has(cls=aa.pix.Pixelization) or self.plane.has(
-            cls=LightProfileLinear
-        ):
+        if self.perform_inversion:
 
             return self.blurred_image + self.inversion.mapped_reconstructed_data
 

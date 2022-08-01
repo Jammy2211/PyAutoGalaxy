@@ -36,10 +36,7 @@ class GeometryProfile(Dictable):
         """
         Does this instance have an attribute which is of type cls?
         """
-        for value in self.__dict__.values():
-            if isinstance(value, cls):
-                return True
-        return False
+        return aa.util.misc.has(values=self.__dict__.values(), cls=cls)
 
     def transform_grid_to_reference_frame(self, grid):
         raise NotImplemented()

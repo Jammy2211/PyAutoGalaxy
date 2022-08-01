@@ -4,7 +4,7 @@ from skimage import measure
 
 import autogalaxy as ag
 
-from autoarray.inversion.pixelizations.abstract import AbstractPixelization
+from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 
 from autogalaxy import exc
@@ -109,54 +109,43 @@ def test__cls_list_from():
     )
     assert plane.cls_list_from(cls=ag.mp.MassProfile) == [sis_0, sis_1, sis_2, sis_1]
 
-    galaxy_pix = ag.Galaxy(
-        redshift=0.5,
-        pixelization=ag.m.MockPixelization(mapper=1),
-        regularization=ag.m.MockRegularization(),
-    )
+    pixelization = ag.m.MockPixelization(mapper=1)
+
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
 
-    assert plane.cls_list_from(cls=ag.pix.Pixelization)[0].mapper == 1
+    assert plane.cls_list_from(cls=ag.Pixelization)[0].mapper == 1
 
-    galaxy_pix_0 = ag.Galaxy(
-        redshift=0.5,
-        pixelization=ag.m.MockPixelization(mapper=1),
-        regularization=ag.m.MockRegularization(),
-    )
-    galaxy_pix_1 = ag.Galaxy(
-        redshift=0.5,
-        pixelization=ag.m.MockPixelization(mapper=2),
-        regularization=ag.m.MockRegularization(),
-    )
+    galaxy_pix_0 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
+
+    pixelization = ag.m.MockPixelization(mapper=2)
+
+    galaxy_pix_1 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(galaxies=[galaxy_pix_0, galaxy_pix_1], redshift=None)
 
-    assert plane.cls_list_from(cls=ag.pix.Pixelization)[0].mapper == 1
-    assert plane.cls_list_from(cls=ag.pix.Pixelization)[1].mapper == 2
+    assert plane.cls_list_from(cls=ag.Pixelization)[0].mapper == 1
+    assert plane.cls_list_from(cls=ag.Pixelization)[1].mapper == 2
 
     galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
     plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=None)
 
-    assert plane.cls_list_from(cls=ag.pix.Pixelization) == []
+    assert plane.cls_list_from(cls=ag.Pixelization) == []
 
 
 def test__hyper_galaxy_image_list():
-    galaxy_pix = ag.Galaxy(
-        redshift=0.5,
-        pixelization=AbstractPixelization(),
-        regularization=AbstractRegularization(),
-    )
+
+    pixelization = ag.Pixelization(mesh=AbstractMesh())
+
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=None)
     assert plane.hyper_galaxies_with_pixelization_image_list[0] is None
 
     galaxy_pix = ag.Galaxy(
-        redshift=0.5,
-        pixelization=AbstractPixelization(),
-        regularization=AbstractRegularization(),
-        hyper_galaxy_image=1,
+        redshift=0.5, pixelization=pixelization, hyper_galaxy_image=1
     )
 
     plane = ag.Plane(galaxies=[galaxy_pix, ag.Galaxy(redshift=0.5)], redshift=None)

@@ -149,11 +149,11 @@ class FitInterferometerPlotter(Plotter):
 
             mapper_index = 0
 
-            self.inversion_plotter.figures_2d_of_mapper(
-                mapper_index=mapper_index, reconstructed_image=True
+            self.inversion_plotter.figures_2d_of_pixelization(
+                pixelization_index=mapper_index, reconstructed_image=True
             )
-            self.inversion_plotter.figures_2d_of_mapper(
-                mapper_index=mapper_index, reconstruction=True
+            self.inversion_plotter.figures_2d_of_pixelization(
+                pixelization_index=mapper_index, reconstruction=True
             )
 
             self.mat_plot_2d.output.subplot_to_figure(

@@ -1,12 +1,12 @@
 import logging
 import numpy as np
 from scipy.stats import norm
-from typing import ClassVar, Dict, List
+from typing import ClassVar, Dict, List, Optional
 
 import autofit as af
 import autoarray as aa
 
-from autoarray.inversion.pixelizations.abstract import AbstractPixelization
+from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 
 from autogalaxy.galaxy.galaxy import HyperGalaxy
@@ -34,37 +34,41 @@ def isinstance_or_prior(obj, cls):
     return False
 
 
-def pixelization_from(model: af.Collection) -> AbstractPixelization:
+def mesh_list_from(model: af.Collection) -> Optional[List[AbstractMesh]]:
     """
-    For a model containing one or more galaxies, inspect its attributes and return the `pixelization` of a galaxy
-    provided one galaxy has a pixelization, otherwise it returns none. There cannot be more than one `Pixelization` in
-    a model.
+    For a model containing one or more galaxies, inspect its attributes and return the list of `mesh`'s of each
+    `pixelization` of all galaxies. If no galaxy has pixelization an empty list is returned.
     
     This function expects that the input model is a `Collection` where the first model-component has the
     name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
     standard API for creating a model in PyAutoGalaxy.
 
-    The result of `pixelization_from` is used by the preloading to determine whether certain parts of a
+    The result of `mesh_from` is used by the preloading to determine whether certain parts of a
     calculation can be cached before the non-linear search begins for efficiency.
 
     Parameters
     ----------
-    model : af.Collection
+    model
         Contains the `galaxies` in the model that will be fitted via the non-linear search.
 
     Returns
     -------
-    aa.pix.Pixelization or None:
-        The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
+    The `mesh` of a galaxy, provided one galaxy has a `mesh`.
     """
 
-    for galaxy in model.galaxies:
-        if hasattr(galaxy, "pixelization"):
-            if galaxy.pixelization is not None:
-                if isinstance(galaxy.pixelization, af.Model):
-                    return galaxy.pixelization.cls
-                else:
-                    return galaxy.pixelization
+    instance = model.instance_from_prior_medians()
+
+    mesh_list = []
+
+    for galaxy in instance.galaxies:
+
+        pixelization_list = galaxy.cls_list_from(cls=aa.Pixelization)
+
+        for pixelization in pixelization_list:
+            if pixelization is not None:
+                mesh_list.append(pixelization.mesh)
+
+    return mesh_list
 
 
 def has_pixelization_from(model: af.Collection) -> bool:
@@ -86,76 +90,115 @@ def has_pixelization_from(model: af.Collection) -> bool:
 
     Returns
     -------
-    aa.pix.Pixelization or None:
+    aa.mesh.Mesh or None:
         The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
     """
-    pixelization = pixelization_from(model=model)
+    mesh_list = mesh_list_from(model=model)
 
-    return pixelization is not None
+    return len(mesh_list) > 0
 
 
 def set_upper_limit_of_pixelization_pixels_prior(
-    model: af.Collection, pixels_in_mask: int
+    model: af.Collection,
+    pixels_in_mask: int,
+    lower_limit_no_pixels_below_mask: int = 10,
 ):
     """
-    If the pixelization being fitted in the hyper-model fit is a `VoronoiBrightnessImage` pixelization, this function
-    sets the upper limit of its `pixels` prior to the number of data points in the mask.
+    If the mesh(es) of pixelizations being fitted in the hyper-model fit is a `VoronoiBrightnessImage` pixelization,
+    this function sets the upper limit of its `pixels` prior to the number of data points in the mask.
 
     This ensures the KMeans algorithm does not raise an exception due to having fewer data points than source pixels.
 
     Parameters
     ----------
-    model : Collection
+    model
         The hyper model used by the hyper-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
-    result
-        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
+    pixels_in_mask
+        The number of pixels in the mask, which are used to set the upper and lower limits of the priors on the
+        number of pixels in the pixelization.
+    lower_limit_no_pixels_below_mask
+        If the prior lower limit on the pixelization's number of pixels is above the number of pixels in the mask,
+        the number of pixels in the mask below which the lower limit is set.
     """
 
-    if hasattr(model, "galaxies"):
+    # TODO : I'm sorry Rich
 
-        for galaxy in model.galaxies:
+    if not hasattr(model, "galaxies"):
+        return
 
-            try:
-                pixelization = getattr(galaxy, "pixelization")
-            except AttributeError:
-                pixelization = None
+    instance = model.instance_from_prior_medians()
 
-            if pixelization is not None:
+    galaxy_key_list_dict = {}
 
-                if hasattr(pixelization, "pixels"):
+    for galaxy in instance.galaxies:
 
-                    if hasattr(pixelization.pixels, "upper_limit"):
+        key_list = []
 
-                        if pixels_in_mask < pixelization.pixels.upper_limit:
+        for key, value in galaxy.__dict__.items():
 
-                            if (
-                                pixelization.cls is aa.pix.DelaunayBrightnessImage
-                                or aa.pix.VoronoiBrightnessImage
-                                or aa.pix.VoronoiNNBrightnessImage
-                            ):
+            if isinstance(value, aa.Pixelization):
+                key_list.append(key)
 
-                                lower_limit = pixelization.pixels.lower_limit
+            elif isinstance(value, af.Model):
+                if type(value.cls) == type(aa.Pixelization):
+                    key_list.append(key)
 
-                                log_str = "MODIFY BEFORE FIT -  A pixelization's pixel UniformPrior upper limit" \
-                                          "was greater than the number of pixels in the mask. It has been " \
-                                          "reduced to the number of pixels in the mask.\,"
+        galaxy_key_list_dict[galaxy] = key_list
 
-                                if lower_limit > pixels_in_mask:
+    for galaxy in model.galaxies:
 
-                                    lower_limit = pixels_in_mask - 10
+        if galaxy in galaxy_key_list_dict:
 
-                                    logger.info(
-                                        log_str +
-                                        "MODIFY BEFORE FIT - The pixelization's pixel UniformPrior lower_limit was "
-                                        "also above the number of pixels in the mask, and has been reduced"
-                                        "to the number of pixels in the mask minus 10."
+            key_list = galaxy_key_list_dict[galaxy]
+
+            for key in key_list:
+
+                pixelization = getattr(galaxy, key)
+
+                if pixelization is not None:
+
+                    mesh = pixelization.mesh
+
+                    if hasattr(mesh, "pixels"):
+
+                        if hasattr(mesh.pixels, "upper_limit"):
+
+                            if pixels_in_mask < mesh.pixels.upper_limit:
+
+                                if (
+                                    mesh.cls is aa.mesh.DelaunayBrightnessImage
+                                    or aa.mesh.VoronoiBrightnessImage
+                                    or aa.mesh.VoronoiNNBrightnessImage
+                                ):
+
+                                    lower_limit = mesh.pixels.lower_limit
+
+                                    log_str = (
+                                        "MODIFY BEFORE FIT -  A pixelization mesh's pixel UniformPrior upper limit"
+                                        "was greater than the number of pixels in the mask. It has been "
+                                        "reduced to the number of pixels in the mask.\,"
                                     )
-                                else:
-                                    logger.info(log_str)
 
-                                pixelization.pixels = af.UniformPrior(
-                                    lower_limit=lower_limit, upper_limit=pixels_in_mask
-                                )
+                                    if lower_limit > pixels_in_mask:
+
+                                        lower_limit = (
+                                            pixels_in_mask
+                                            - lower_limit_no_pixels_below_mask
+                                        )
+
+                                        logger.info(
+                                            log_str
+                                            + "MODIFY BEFORE FIT - The pixelization's mesh's pixel UniformPrior lower_limit was "
+                                            "also above the number of pixels in the mask, and has been reduced"
+                                            "to the number of pixels in the mask minus 10."
+                                        )
+                                    else:
+                                        logger.info(log_str)
+
+                                    mesh.pixels = af.UniformPrior(
+                                        lower_limit=lower_limit,
+                                        upper_limit=pixels_in_mask,
+                                    )
 
 
 def clean_model_of_hyper_images(model):
@@ -275,7 +318,7 @@ def hyper_inversion_model_from(
     if setup_hyper is None:
         return None
 
-    model = result.instance.as_model((AbstractPixelization, AbstractRegularization))
+    model = result.instance.as_model((AbstractMesh, AbstractRegularization))
 
     if not has_pixelization_from(model=model):
         return None
@@ -338,7 +381,7 @@ def hyper_fit_no_noise(
         name=f"{search_previous.paths.name}__hyper_inversion",
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
-        **setup_hyper.search_pixelized_dict,
+        **setup_hyper.search_pixelization_dict,
     )
 
     hyper_inversion_result = search.fit(model=hyper_model_inversion, analysis=analysis)
@@ -439,7 +482,7 @@ def hyper_fit(
 
     try:
         set_upper_limit_of_pixelization_pixels_prior(
-            model=hyper_inversion_model, result=result
+            model=hyper_inversion_model, pixels_in_mask=result.mask.pixels_in_mask
         )
     except AttributeError:
         pass
@@ -449,7 +492,7 @@ def hyper_fit(
         name=f"{search_previous.paths.name}__hyper_inversion",
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
-        **setup_hyper.search_pixelized_dict,
+        **setup_hyper.search_pixelization_dict,
     )
 
     hyper_inversion_result = search.fit(model=hyper_inversion_model, analysis=analysis)
@@ -487,7 +530,7 @@ def hyper_model_from(
         model components now free parameters.
     """
 
-    model = result.instance.as_model((AbstractPixelization, AbstractRegularization))
+    model = result.instance.as_model((AbstractMesh, AbstractRegularization))
 
     model = clean_model_of_hyper_images(model=model)
 
@@ -576,7 +619,7 @@ def stochastic_model_from(
         model_classes.append(LightProfile)
 
     if include_pixelization:
-        model_classes.append(AbstractPixelization)
+        model_classes.append(AbstractMesh)
 
     if include_regularization:
         model_classes.append(AbstractRegularization)
@@ -610,7 +653,7 @@ def stochastic_model_from(
 def stochastic_fit(
     stochastic_model: af.Collection,
     search_cls: ClassVar[af.NonLinearSearch],
-    search_pixelized_dict: Dict,
+    search_pixelization_dict: Dict,
     result: "ResultDataset",
     analysis: "AnalysisDataset",
     search_previous: af.NonLinearSearch,
@@ -657,7 +700,7 @@ def stochastic_fit(
         name=name,
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
-        **search_pixelized_dict,
+        **search_pixelization_dict,
     )
 
     stochastic_result = search.fit(
