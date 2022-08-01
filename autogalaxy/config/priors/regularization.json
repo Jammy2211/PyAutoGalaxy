@@ -1,4 +1,19 @@
 {
+    "zeroth.Zeroth": {
+        "coefficient": {
+            "type": "LogUniform",
+            "lower_limit": 1e-06,
+            "upper_limit": 1000000.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
+            }
+        }
+    },
     "constant.Constant": {
         "coefficient": {
             "type": "LogUniform",
@@ -55,7 +70,7 @@
             }
         }
     },
-    "constant.ConstantSplit": {
+    "constant_split.ConstantSplit": {
         "coefficient": {
             "type": "LogUniform",
             "lower_limit": 1e-06,
@@ -70,7 +85,7 @@
             }
         }
     },
-    "adaptive_brightness.AdaptiveBrightnessSplit": {
+    "adaptive_brightness_split.AdaptiveBrightnessSplit": {
         "inner_coefficient": {
             "type": "LogUniform",
             "lower_limit": 1e-06,
