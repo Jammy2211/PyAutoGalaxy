@@ -99,7 +99,9 @@ def has_pixelization_from(model: af.Collection) -> bool:
 
 
 def set_upper_limit_of_pixelization_pixels_prior(
-    model: af.Collection, pixels_in_mask: int
+    model: af.Collection,
+    pixels_in_mask: int,
+    lower_limit_no_pixels_below_mask: int = 10,
 ):
     """
     If the mesh(es) of pixelizations being fitted in the hyper-model fit is a `VoronoiBrightnessImage` pixelization,
@@ -111,8 +113,12 @@ def set_upper_limit_of_pixelization_pixels_prior(
     ----------
     model
         The hyper model used by the hyper-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
-    result
-        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
+    pixels_in_mask
+        The number of pixels in the mask, which are used to set the upper and lower limits of the priors on the
+        number of pixels in the pixelization.
+    lower_limit_no_pixels_below_mask
+        If the prior lower limit on the pixelization's number of pixels is above the number of pixels in the mask,
+        the number of pixels in the mask below which the lower limit is set.
     """
 
     # TODO : I'm sorry Rich
@@ -175,7 +181,10 @@ def set_upper_limit_of_pixelization_pixels_prior(
 
                                     if lower_limit > pixels_in_mask:
 
-                                        lower_limit = pixels_in_mask - 10
+                                        lower_limit = (
+                                            pixels_in_mask
+                                            - lower_limit_no_pixels_below_mask
+                                        )
 
                                         logger.info(
                                             log_str
@@ -473,7 +482,7 @@ def hyper_fit(
 
     try:
         set_upper_limit_of_pixelization_pixels_prior(
-            model=hyper_inversion_model, result=result
+            model=hyper_inversion_model, pixels_in_mask=result.mask.pixels_in_mask
         )
     except AttributeError:
         pass

@@ -362,6 +362,105 @@ model is inferred.
         bar=ag.lp_linear.EllGaussian,
     )
 
+Basis Functions
+---------------
+
+A natural extension of linear light profiles are basis functions, which group many linear light profiles together in
+order to capture complex and irregular structures in a galaxy's emission.
+
+Using a clever model parameterization a basis can be composed which corresponds to just N = 5-10 parameters, making
+model-fitting efficient and robust.
+
+Below, we compose a basis of 10 Gaussians which all share the same `centre` and `elliptical_comps`. Their `sigma`
+values are set via the relation `y = a + (log10(i+1) + b)`, where `i` is the  Gaussian index and `a` and `b` are free
+parameters.
+
+Because `a` and `b` are free parameters (as opposed to `sigma` which can assume many values), we are able to
+compose and fit `Basis` objects which can capture very complex light distributions with just N = 5-10 non-linear
+parameters!
+
+.. code-block:: python
+
+    bulge_a = af.UniformPrior(lower_limit=0.0, upper_limit=0.2)
+    bulge_b = af.UniformPrior(lower_limit=0.0, upper_limit=10.0)
+
+    gaussians_bulge = af.Collection(af.Model(ag.lp_linear.EllGaussian) for _ in range(10))
+
+    for i, gaussian in enumerate(gaussians_bulge):
+
+        gaussian.centre = gaussians_bulge[0].centre
+        gaussian.elliptical_comps = gaussians_bulge[0].elliptical_comps
+        gaussian.sigma = bulge_a + (bulge_b * np.log10(i+1))
+
+    bulge = af.Model(
+        ag.lp_basis.Basis, light_profile_list=gaussians_bulge,
+    )
+
+The bulge's ``info`` attribute describes the basis model composition:
+
+.. code-block:: python
+
+    print(bulge.info)
+
+Below is a snippet of the model, showing that different Gaussians are in the model parameterization:
+
+.. code-block:: bash
+
+    Total Free Parameters = 6
+
+    model                                                                           Basis (N=6)
+        light_profile_list                                                          CollectionPriorModel (N=6)
+            0                                                                       EllGaussian (N=6)
+                sigma                                                               SumPrior (N=2)
+                    other                                                           MultiplePrior (N=1)
+            1                                                                       EllGaussian (N=6)
+                sigma                                                               SumPrior (N=2)
+                    other                                                           MultiplePrior (N=1)
+            2                                                                       EllGaussian (N=6)
+            ...
+            trimmed for conciseness
+            ...
+
+
+    light_profile_list
+        0
+            centre
+                centre_0                                                            GaussianPrior, mean = 0.0, sigma = 0.3
+                centre_1                                                            GaussianPrior, mean = 0.0, sigma = 0.3
+            elliptical_comps
+                elliptical_comps_0                                                  GaussianPrior, mean = 0.0, sigma = 0.3
+                elliptical_comps_1                                                  GaussianPrior, mean = 0.0, sigma = 0.3
+            sigma
+                bulge_a                                                             UniformPrior, lower_limit = 0.0, upper_limit = 0.2
+                other
+                    bulge_b                                                         UniformPrior, lower_limit = 0.0, upper_limit = 10.0
+                    other                                                           0.0
+        1
+            centre
+                centre_0                                                            GaussianPrior, mean = 0.0, sigma = 0.3
+                centre_1                                                            GaussianPrior, mean = 0.0, sigma = 0.3
+            elliptical_comps
+                elliptical_comps_0                                                  GaussianPrior, mean = 0.0, sigma = 0.3
+                elliptical_comps_1                                                  GaussianPrior, mean = 0.0, sigma = 0.3
+            sigma
+                bulge_a                                                             UniformPrior, lower_limit = 0.0, upper_limit = 0.2
+                other
+                    bulge_b                                                         UniformPrior, lower_limit = 0.0, upper_limit = 10.0
+                    other                                                           0.3010299956639812
+        2
+        ...
+        trimmed for conciseness
+        ...
+
+**PyAutoGalaxy** can also apply Bayesian regularization to Basis functions, which smooths the linear light profiles
+(e.g. the Gaussians) in order to prevent over-fitting noise.
+
+.. code-block:: python
+
+    bulge = af.Model(
+        al.lp_basis.Basis, light_profile_list=gaussians_lens, regularization=al.reg.Constant
+    )
+
 Wrap-Up
 -------
 

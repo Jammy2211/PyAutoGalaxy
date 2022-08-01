@@ -26,8 +26,8 @@ To fit this image with an ``Inversion``, we first mask the ``Imaging`` object:
 
    imaging = imaging.apply_mask(mask=mask_2d)
 
-To reconstruct the galaxy using a pixel-grid, we simply pass it the ``Pixelization`` class we want to reconstruct its
-light using.
+To reconstruct the galaxy on a pixel-grid, called a mesh, we simply pass it the ``Mesh`` class we want to reconstruct its
+light on.
 
 We also pass a ``Regularization`` scheme which applies a smoothness prior on the source reconstruction.
 
@@ -35,11 +35,12 @@ Below, we use a ``Rectangular`` pixelization with resolution 50 x 50 and a ``Con
 
 .. code-block:: python
 
-    galaxy = ag.Galaxy(
-        redshift=1.0,
-        pixelization=ag.mesh.Rectangular(shape=(50, 50)),
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(50, 50)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
+
+    galaxy = ag.Galaxy(redshift=1.0, pixelization=pixelization)
 
 Now that our galaxy has a `Pixelization`, we are able to fit the data using it in the
 same way as before, by simply passing the galaxy to a `Plane` and using this `Plane` to create a `FitImaging`
