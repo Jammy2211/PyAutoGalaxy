@@ -21,12 +21,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     """
 
     def __init__(
-        self,
-        redshift: float,
-        pixelization: Optional[aa.AbstractPixelization] = None,
-        regularization: Optional[aa.AbstractRegularization] = None,
-        hyper_galaxy: Optional["HyperGalaxy"] = None,
-        **kwargs,
+        self, redshift: float, hyper_galaxy: Optional["HyperGalaxy"] = None, **kwargs
     ):
         """
         Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
@@ -38,12 +33,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         ----------
         redshift
             The redshift of the galaxy.
-        pixelization : inversion.Pixelization
+        pixelization
             The pixelization of the galaxy used to reconstruct an observed image using an inversion.
-        regularization : inversion.Regularization
-            The regularization of the pixel-grid used to reconstruct an observed using an inversion.
-        hyper_galaxy
-            The hyper_galaxies-parameters of the hyper_galaxies-galaxy, which is used for performing a hyper_galaxies-analysis on the noise-map.
             
         Attributes
         ----------
@@ -79,14 +70,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
             setattr(self, name, val)
 
-        self.pixelization = pixelization
-        self.regularization = regularization
-
-        if pixelization is not None and regularization is None:
-            raise exc.GalaxyException(
-                "If the galaxy has a pixelization, it must also have a regularization."
-            )
-
         self.hyper_galaxy = hyper_galaxy
 
     def __hash__(self):
@@ -94,35 +77,47 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     def __repr__(self):
         string = "Redshift: {}".format(self.redshift)
-        if self.pixelization:
-            string += "\nPixelization:\n{}".format(str(self.pixelization))
-        if self.regularization:
-            string += "\nRegularization:\n{}".format(str(self.regularization))
-        if self.hyper_galaxy:
-            string += "\nHyper Galaxy:\n{}".format(str(self.hyper_galaxy))
-        if self.cls_list_from(cls=LightProfile):
+
+        if self.has(cls=LightProfile):
             string += "\nLight Profiles:\n{}".format(
                 "\n".join(map(str, self.cls_list_from(cls=LightProfile)))
             )
+
         if self.has(cls=MassProfile):
             string += "\nMass Profiles:\n{}".format(
                 "\n".join(map(str, self.cls_list_from(cls=MassProfile)))
             )
+
+        if self.has(cls=aa.Pixelization):
+            string += "\nPixelization:\n{}".format(str(self.pixelization))
+
+        if self.hyper_galaxy:
+            string += "\nHyper Galaxy:\n{}".format(str(self.hyper_galaxy))
+
         return string
 
     def __eq__(self, other):
         return all(
             (
                 isinstance(other, Galaxy),
-                self.pixelization == other.pixelization,
                 self.redshift == other.redshift,
-                self.hyper_galaxy == other.hyper_galaxy,
                 self.cls_list_from(cls=LightProfile)
                 == other.cls_list_from(cls=LightProfile),
                 self.cls_list_from(cls=MassProfile)
                 == other.cls_list_from(cls=MassProfile),
+                self.cls_list_from(cls=aa.Pixelization)
+                == other.cls_list_from(cls=aa.Pixelization),
+                self.hyper_galaxy == other.hyper_galaxy,
             )
         )
+
+    @property
+    def profile_dict(self) -> Dict:
+        return {
+            key: value
+            for key, value in self.__dict__.items()
+            if isinstance(value, GeometryProfile)
+        }
 
     def dict(self) -> Dict:
         return {
@@ -579,14 +574,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             raise exc.GalaxyException(
                 "You cannot perform a mass-based calculation on a galaxy which does not have a mass-profile"
             )
-
-    @property
-    def profile_dict(self) -> Dict:
-        return {
-            key: value
-            for key, value in self.__dict__.items()
-            if isinstance(value, GeometryProfile)
-        }
 
 
 class HyperGalaxy:

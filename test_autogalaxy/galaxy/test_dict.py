@@ -1,7 +1,7 @@
 import pytest
 
 import autogalaxy as ag
-from autoarray.inversion.pixelizations.voronoi import Voronoi
+from autoarray.inversion.pixelization.mesh.voronoi import Voronoi
 from autoarray.inversion.regularization import AdaptiveBrightness
 from autoconf.dictable import Dictable
 
@@ -15,30 +15,32 @@ def make_trivial_galaxy():
 def make_trivial_galaxy_dict():
     return {
         "hyper_galaxy": None,
-        "pixelization": None,
         "redshift": 1.0,
-        "regularization": None,
         "type": "autogalaxy.galaxy.galaxy.Galaxy",
     }
 
 
-class TestTrivial:
-    def test_dict(self, trivial_galaxy, trivial_galaxy_dict):
-        assert trivial_galaxy.dict() == trivial_galaxy_dict
+def test__trivial_dict(trivial_galaxy, trivial_galaxy_dict):
 
-    def test_from_dict(self, trivial_galaxy, trivial_galaxy_dict):
-        assert Dictable.from_dict(trivial_galaxy_dict) == trivial_galaxy
+    assert trivial_galaxy.dict() == trivial_galaxy_dict
 
 
-@pytest.fixture(name="ization_galaxy")
-def make_ization_galaxy():
+def test_trivial__from_dict(trivial_galaxy, trivial_galaxy_dict):
+    assert Dictable.from_dict(trivial_galaxy_dict) == trivial_galaxy
+
+
+@pytest.fixture(name="pixelization_galaxy")
+def make_pixelization_galaxy():
     return ag.Galaxy(
-        redshift=1.0, pixelization=Voronoi(), regularization=AdaptiveBrightness()
+        redshift=1.0,
+        pixelization=ag.Pixelization(
+            mesh=Voronoi(), regularization=AdaptiveBrightness()
+        ),
     )
 
 
-@pytest.fixture(name="ization_galaxy_dict")
-def make_ization_galaxy_dict():
+@pytest.fixture(name="pixelization_galaxy_dict")
+def make_pixelization_galaxy_dict():
     return {
         "hyper_galaxy": None,
         "pixelization": {"type": "autoarray.inversion.pixelizations.voronoi.Voronoi"},
@@ -53,13 +55,17 @@ def make_ization_galaxy_dict():
     }
 
 
-class TestIzations:
-    def test_dict(self, ization_galaxy, ization_galaxy_dict):
-        assert ization_galaxy.dict() == ization_galaxy_dict
+# TODO : Rich fix these to work with Pixelization objects (e.g. contained of mesh and regularization)
 
-    def test_from_dict(self, ization_galaxy, ization_galaxy_dict):
-        galaxy = Dictable.from_dict(ization_galaxy_dict)
-        assert galaxy == ization_galaxy
+
+def test__with_pixelization__dict(pixelization_galaxy, pixelization_galaxy_dict):
+
+    assert pixelization_galaxy.dict() == pixelization_galaxy_dict
+
+
+def test__with_pixelization__from_dict(pixelization_galaxy, pixelization_galaxy_dict):
+    galaxy = Dictable.from_dict(pixelization_galaxy_dict)
+    assert galaxy == pixelization_galaxy
 
 
 def test_pixelization_equality():
@@ -93,16 +99,14 @@ def make_profiles_galaxy_dict():
             "mass_to_light_ratio": 1.0,
             "type": "autogalaxy.profiles.mass_profiles.stellar_mass_profiles.EllDevVaucouleurs",
         },
-        "pixelization": None,
         "redshift": 2.0,
-        "regularization": None,
         "type": "autogalaxy.galaxy.galaxy.Galaxy",
     }
 
 
-class TestProfiles:
-    def test_dict(self, profiles_galaxy, profiles_galaxy_dict):
-        assert profiles_galaxy.dict() == profiles_galaxy_dict
+def test__profiles_galaxy__dict(profiles_galaxy, profiles_galaxy_dict):
+    assert profiles_galaxy.dict() == profiles_galaxy_dict
 
-    def test_from_dict(self, profiles_galaxy, profiles_galaxy_dict):
-        assert Dictable.from_dict(profiles_galaxy_dict) == profiles_galaxy
+
+def test__profiles_galaxy__from_dict(profiles_galaxy, profiles_galaxy_dict):
+    assert Dictable.from_dict(profiles_galaxy_dict) == profiles_galaxy

@@ -31,12 +31,12 @@ class AbstractFit:
         """
         The total number of `Mapper` objects used by the inversion in this fit.
 
-        A mapper is created for each galaxy with a pixelization / regularization object.
+        A mapper is created for each galaxy with a pixelization object.
         """
         # TODO : When we add regularization to basis need to change this to reflect mappers.
 
         return len(
-            list(filter(None, self.model_obj.cls_list_from(cls=aa.pix.Pixelization)))
+            list(filter(None, self.model_obj.cls_list_from(cls=aa.Pixelization)))
         )
 
     @property

@@ -4,6 +4,7 @@ from autoconf import cached_property
 
 import autoarray as aa
 
+from autoarray.inversion.pixelization.mappers.factory import mapper_from
 from autoarray.inversion.inversion.factory import inversion_unpacked_from
 from autogalaxy.profiles.light_profiles.light_profiles_linear import (
     LightProfileLinearObjFuncList,
@@ -46,27 +47,8 @@ class AbstractToInversion:
         return list(self.linear_obj_galaxy_dict.keys())
 
     @cached_property
-    def regularization_list(self,) -> List[aa.reg.Regularization]:
-
-        regularization_list = []
-
-        for linear_obj in self.linear_obj_list:
-
-            regularization = None
-
-            galaxy = self.linear_obj_galaxy_dict[linear_obj]
-
-            if hasattr(linear_obj, "regularization"):
-                if linear_obj.regularization is not None:
-                    regularization = linear_obj.regularization
-
-            if regularization is None:
-                if galaxy.has(cls=aa.reg.Regularization):
-                    regularization = galaxy.regularization
-
-            regularization_list.append(regularization)
-
-        return regularization_list
+    def regularization_list(self) -> List[aa.AbstractRegularization]:
+        return [linear_obj.regularization for linear_obj in self.linear_obj_list]
 
 
 class PlaneToInversion(AbstractToInversion):
@@ -79,7 +61,7 @@ class PlaneToInversion(AbstractToInversion):
         w_tilde: Optional[Union[aa.WTildeImaging, aa.WTildeInterferometer]] = None,
         grid: Optional[aa.type.Grid2DLike] = None,
         blurring_grid: Optional[aa.type.Grid2DLike] = None,
-        grid_pixelized: Optional[aa.type.Grid2DLike] = None,
+        grid_pixelization: Optional[aa.type.Grid2DLike] = None,
         settings_pixelization=aa.SettingsPixelization(),
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=aa.Preloads(),
@@ -105,12 +87,12 @@ class PlaneToInversion(AbstractToInversion):
         else:
             self.blurring_grid = None
 
-        if grid_pixelized is not None:
-            self.grid_pixelized = grid_pixelized
+        if grid_pixelization is not None:
+            self.grid_pixelization = grid_pixelization
         elif dataset is not None:
-            self.grid_pixelized = dataset.grid_pixelized
+            self.grid_pixelization = dataset.grid_pixelization
         else:
-            self.grid_pixelized = None
+            self.grid_pixelization = None
 
         self.settings_pixelization = settings_pixelization
         self.settings_inversion = settings_inversion
@@ -132,7 +114,6 @@ class PlaneToInversion(AbstractToInversion):
 
                     if isinstance(light_profile, LightProfileLinear):
                         light_profile_list = [light_profile]
-                        regularization = None
                     else:
                         light_profile_list = light_profile.light_profile_list
                         light_profile_list = [
@@ -140,7 +121,6 @@ class PlaneToInversion(AbstractToInversion):
                             for light_profile in light_profile_list
                             if isinstance(light_profile, LightProfileLinear)
                         ]
-                        regularization = light_profile.regularization
 
                     if len(light_profile_list) > 0:
 
@@ -149,7 +129,7 @@ class PlaneToInversion(AbstractToInversion):
                             blurring_grid=self.blurring_grid,
                             convolver=self.dataset.convolver,
                             light_profile_list=light_profile_list,
-                            regularization=regularization,
+                            regularization=light_profile.regularization,
                         )
 
                         lp_linear_func_galaxy_dict[lp_linear_func] = galaxy
@@ -175,64 +155,68 @@ class PlaneToInversion(AbstractToInversion):
         }
 
     @cached_property
-    def sparse_image_plane_grid_list(self,) -> Optional[List[aa.type.Grid2DLike]]:
+    def sparse_image_plane_grid_list(self,) -> Optional[List[aa.Grid2DSparse]]:
 
-        if not self.plane.has(cls=aa.pix.Pixelization):
+        if not self.plane.has(cls=aa.Pixelization):
             return None
 
         return [
-            pixelization.data_pixelization_grid_from(
-                data_grid_slim=self.grid_pixelized,
-                hyper_image=hyper_galaxy_image,
+            pixelization.mesh.data_mesh_grid_from(
+                data_grid_slim=self.grid_pixelization,
+                hyper_data=hyper_galaxy_image,
                 settings=self.settings_pixelization,
             )
             for pixelization, hyper_galaxy_image in zip(
-                self.plane.cls_list_from(cls=aa.pix.Pixelization),
+                self.plane.cls_list_from(cls=aa.Pixelization),
                 self.plane.hyper_galaxies_with_pixelization_image_list,
             )
         ]
 
     def mapper_from(
         self,
-        source_pixelization_grid: aa.type.Grid2DLike,
-        pixelization: aa.AbstractPixelization,
+        mesh: aa.AbstractMesh,
+        regularization: aa.AbstractRegularization,
+        source_mesh_grid: aa.Grid2DSparse,
         hyper_galaxy_image: aa.Array2D,
-        data_pixelization_grid: aa.Grid2D = None,
+        data_mesh_grid: aa.Grid2DSparse = None,
     ) -> aa.AbstractMapper:
 
-        return pixelization.mapper_from(
-            source_grid_slim=self.grid_pixelized,
-            source_pixelization_grid=source_pixelization_grid,
-            data_pixelization_grid=data_pixelization_grid,
-            hyper_image=hyper_galaxy_image,
+        mapper_grids = mesh.mapper_grids_from(
+            source_grid_slim=self.grid_pixelization,
+            source_mesh_grid=source_mesh_grid,
+            data_mesh_grid=data_mesh_grid,
+            hyper_data=hyper_galaxy_image,
             settings=self.settings_pixelization,
             preloads=self.preloads,
             profiling_dict=self.plane.profiling_dict,
         )
 
+        return mapper_from(mapper_grids=mapper_grids, regularization=regularization)
+
     @cached_property
     def mapper_galaxy_dict(self) -> Dict[aa.AbstractMapper, Galaxy]:
 
-        if not self.plane.has(cls=aa.pix.Pixelization):
+        if not self.plane.has(cls=aa.Pixelization):
             return {}
 
         sparse_grid_list = self.sparse_image_plane_grid_list
 
         mapper_galaxy_dict = {}
 
-        pixelization_list = self.plane.cls_list_from(cls=aa.pix.Pixelization)
+        pixelization_list = self.plane.cls_list_from(cls=aa.Pixelization)
         galaxies_with_pixelization_list = self.plane.galaxies_with_cls_list_from(
-            cls=aa.pix.Pixelization
+            cls=aa.Pixelization
         )
         hyper_galaxy_image_list = self.plane.hyper_galaxies_with_pixelization_image_list
 
         for mapper_index in range(len(sparse_grid_list)):
 
             mapper = self.mapper_from(
-                source_pixelization_grid=sparse_grid_list[mapper_index],
-                pixelization=pixelization_list[mapper_index],
+                mesh=pixelization_list[mapper_index].mesh,
+                regularization=pixelization_list[mapper_index].regularization,
+                source_mesh_grid=sparse_grid_list[mapper_index],
                 hyper_galaxy_image=hyper_galaxy_image_list[mapper_index],
-                data_pixelization_grid=sparse_grid_list[mapper_index],
+                data_mesh_grid=sparse_grid_list[mapper_index],
             )
 
             galaxy = galaxies_with_pixelization_list[mapper_index]
@@ -250,7 +234,6 @@ class PlaneToInversion(AbstractToInversion):
             noise_map=self.noise_map,
             w_tilde=self.w_tilde,
             linear_obj_list=self.linear_obj_list,
-            regularization_list=self.regularization_list,
             settings=self.settings_inversion,
             preloads=self.preloads,
             profiling_dict=self.plane.profiling_dict,

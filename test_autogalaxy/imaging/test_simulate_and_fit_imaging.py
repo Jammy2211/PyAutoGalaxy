@@ -98,11 +98,13 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
         bulge=ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1),
         disk=ag.lp.EllSersic(centre=(0.2, 0.2), intensity=0.2),
     )
-    galaxy_1 = ag.Galaxy(
-        redshift=1.0,
-        pixelization=ag.pix.Rectangular(shape=(16, 16)),
+
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(16, 16)),
         regularization=ag.reg.Constant(coefficient=(1.0)),
     )
+
+    galaxy_1 = ag.Galaxy(redshift=1.0, pixelization=pixelization)
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 

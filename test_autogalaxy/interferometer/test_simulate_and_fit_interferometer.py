@@ -76,15 +76,16 @@ def test__perfect_fit__chi_squared_0():
 
     assert fit.chi_squared == pytest.approx(0.0)
 
-    pix = ag.pix.Rectangular(shape=(7, 7))
-
-    reg = ag.reg.Constant(coefficient=0.0001)
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(7, 7)),
+        regularization=ag.reg.Constant(coefficient=0.0001),
+    )
 
     galaxy_0 = ag.Galaxy(
         redshift=0.5, light=ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1)
     )
 
-    galaxy_1 = ag.Galaxy(redshift=0.5, pixelization=pix, regularization=reg)
+    galaxy_1 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
@@ -116,11 +117,13 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
         light=ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1),
         mass=ag.mp.EllIsothermal(centre=(0.1, 0.1), einstein_radius=1.8),
     )
-    galaxy_1 = ag.Galaxy(
-        redshift=1.0,
-        pixelization=ag.pix.Rectangular(shape=(16, 16)),
+
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(16, 16)),
         regularization=ag.reg.Constant(coefficient=(1.0)),
     )
+
+    galaxy_1 = ag.Galaxy(redshift=1.0, pixelization=pixelization)
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
