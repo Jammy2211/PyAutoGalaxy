@@ -73,19 +73,25 @@ class PlaneToInversion(AbstractToInversion):
         self.noise_map = noise_map
         self.w_tilde = w_tilde
 
-        try:
-            self.grid = grid or dataset.grid
-        except AttributeError:
+        if grid is not None:
+            self.grid = grid
+        elif dataset is not None:
+            self.grid = dataset.grid
+        else:
             self.grid = None
 
-        try:
-            self.blurring_grid = blurring_grid or dataset.blurring_grid
-        except AttributeError:
+        if blurring_grid is not None:
+            self.blurring_grid = blurring_grid
+        elif dataset is not None:
+            self.blurring_grid = dataset.blurring_grid
+        else:
             self.blurring_grid = None
 
-        try:
-            self.grid_pixelization = grid_pixelization or dataset.grid_pixelization
-        except AttributeError:
+        if grid_pixelization is not None:
+            self.grid_pixelization = grid_pixelization
+        elif dataset is not None:
+            self.grid_pixelization = dataset.grid_pixelization
+        else:
             self.grid_pixelization = None
 
         self.settings_pixelization = settings_pixelization
