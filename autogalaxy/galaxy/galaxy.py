@@ -21,7 +21,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     """
 
     def __init__(
-        self, redshift: float, hyper_galaxy: Optional["HyperGalaxy"] = None, **kwargs
+        self, redshift: float, hyper_galaxy: Optional["HyperGalaxy"] = None, pixelization = None, **kwargs
     ):
         """
         Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
@@ -51,6 +51,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         self.hyper_model_image = None
         self.hyper_galaxy_image = None
+
+        self.pixelization = pixelization
 
         for name, val in kwargs.items():
 
@@ -97,19 +99,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         return string
 
     def __eq__(self, other):
-        return all(
-            (
-                isinstance(other, Galaxy),
-                self.redshift == other.redshift,
-                self.cls_list_from(cls=LightProfile)
-                == other.cls_list_from(cls=LightProfile),
-                self.cls_list_from(cls=MassProfile)
-                == other.cls_list_from(cls=MassProfile),
-                self.cls_list_from(cls=aa.Pixelization)
-                == other.cls_list_from(cls=aa.Pixelization),
-                self.hyper_galaxy == other.hyper_galaxy,
-            )
-        )
+        return self.dict() == other.dict()
 
     @property
     def profile_dict(self) -> Dict:

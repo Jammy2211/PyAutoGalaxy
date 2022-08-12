@@ -21,7 +21,6 @@ def make_trivial_galaxy_dict():
 
 
 def test__trivial_dict(trivial_galaxy, trivial_galaxy_dict):
-
     assert trivial_galaxy.dict() == trivial_galaxy_dict
 
 
@@ -42,16 +41,19 @@ def make_pixelization_galaxy():
 @pytest.fixture(name="pixelization_galaxy_dict")
 def make_pixelization_galaxy_dict():
     return {
-        "hyper_galaxy": None,
-        "pixelization": {"type": "autoarray.inversion.pixelizations.voronoi.Voronoi"},
-        "redshift": 1.0,
-        "regularization": {
-            "inner_coefficient": 1.0,
-            "outer_coefficient": 1.0,
-            "signal_scale": 1.0,
-            "type": "autoarray.inversion.regularization.adaptive_brightness.AdaptiveBrightness",
+        'hyper_galaxy': None,
+        'pixelization': {
+            'mesh': {'type': 'autoarray.inversion.pixelization.mesh.voronoi.Voronoi'},
+            'regularization': {
+                'inner_coefficient': 1.0,
+                'outer_coefficient': 1.0,
+                'signal_scale': 1.0,
+                'type': 'autoarray.inversion.regularization.adaptive_brightness.AdaptiveBrightness'
+            },
+            'type': 'autoarray.inversion.pixelization.pixelization.Pixelization'
         },
-        "type": "autogalaxy.galaxy.galaxy.Galaxy",
+        'redshift': 1.0,
+        'type': 'autogalaxy.galaxy.galaxy.Galaxy'
     }
 
 
@@ -59,7 +61,6 @@ def make_pixelization_galaxy_dict():
 
 
 def test__with_pixelization__dict(pixelization_galaxy, pixelization_galaxy_dict):
-
     assert pixelization_galaxy.dict() == pixelization_galaxy_dict
 
 
