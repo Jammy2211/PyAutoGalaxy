@@ -14,11 +14,6 @@ def make_visualizer_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
-@pytest.fixture(autouse=True)
-def push_config(plot_path):
-    conf.instance.push(path.join(directory, "config"), output_path=plot_path)
-
-
 def test__visualizes_fit_imaging__uses_configs(
     masked_imaging_7x7,
     fit_imaging_x2_galaxy_inversion_7x7,

@@ -14,11 +14,6 @@ def make_visualizer_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
-@pytest.fixture(autouse=True)
-def push_config(plot_path):
-    conf.instance.push(path.join(directory, "config"), output_path=plot_path)
-
-
 class TestVisualizer:
     def test__visualizes_fit_quantity__uses_configs(
         self,

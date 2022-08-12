@@ -12,11 +12,6 @@ def make_visualizer_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
-@pytest.fixture(autouse=True)
-def push_config(plot_path):
-    conf.instance.push(path.join(directory, "config"), output_path=plot_path)
-
-
 def test__visualizes_fit_interferometer__uses_configs(
     interferometer_7,
     fit_interferometer_x2_galaxy_inversion_7x7,
