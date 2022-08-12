@@ -1,10 +1,11 @@
 from itertools import count
-import numpy as np
 from typing import Dict, List, Optional, Type, Union
+
+import numpy as np
 
 import autoarray as aa
 import autofit as af
-
+from autoarray.inversion.pixelization.pixelization import Pixelization
 from autoconf.dictable import Dictable
 from autogalaxy import exc
 from autogalaxy.operate.deflections import OperateDeflections
@@ -21,7 +22,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     """
 
     def __init__(
-        self, redshift: float, hyper_galaxy: Optional["HyperGalaxy"] = None, pixelization = None, **kwargs
+            self, redshift: float, hyper_galaxy: Optional["HyperGalaxy"] = None, **kwargs
     ):
         """
         Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
@@ -51,8 +52,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         self.hyper_model_image = None
         self.hyper_galaxy_image = None
-
-        self.pixelization = pixelization
 
         for name, val in kwargs.items():
 
@@ -181,7 +180,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+            self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> Union[np.ndarray, aa.Array2D]:
         """
         Returns the summed 2D image of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
@@ -208,15 +207,15 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             and returned.
         """
         if (
-            len(self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear))
-            > 0
+                len(self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear))
+                > 0
         ):
             return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
 
         return np.zeros((grid.shape[0],))
 
     def image_2d_list_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+            self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> List[aa.Array2D]:
         """
         Returns a list of the 2D images of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
@@ -272,7 +271,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             image_1d_list = []
 
             for light_profile in self.cls_list_from(
-                cls=LightProfile, cls_filtered=LightProfileLinear
+                    cls=LightProfile, cls_filtered=LightProfileLinear
             ):
 
                 grid_radial = self.grid_radial_from(
@@ -570,10 +569,10 @@ class HyperGalaxy:
     _ids = count()
 
     def __init__(
-        self,
-        contribution_factor: float = 0.0,
-        noise_factor: float = 0.0,
-        noise_power: float = 1.0,
+            self,
+            contribution_factor: float = 0.0,
+            noise_factor: float = 0.0,
+            noise_power: float = 1.0,
     ):
         """
         If a `Galaxy` is given a *HyperGalaxy* as an attribute, the noise-map in \
@@ -610,9 +609,9 @@ class HyperGalaxy:
     def __eq__(self, other):
         if isinstance(other, HyperGalaxy):
             return (
-                self.contribution_factor == other.contribution_factor
-                and self.noise_factor == other.noise_factor
-                and self.noise_power == other.noise_power
+                    self.contribution_factor == other.contribution_factor
+                    and self.noise_factor == other.noise_factor
+                    and self.noise_power == other.noise_power
             )
         return False
 
@@ -648,10 +647,10 @@ class HyperGalaxy:
             raise
 
     def hyper_noise_map_via_hyper_images_from(
-        self,
-        hyper_model_image: aa.Array2D,
-        hyper_galaxy_image: aa.Array2D,
-        noise_map: aa.Array2D,
+            self,
+            hyper_model_image: aa.Array2D,
+            hyper_galaxy_image: aa.Array2D,
+            noise_map: aa.Array2D,
     ) -> aa.Array2D:
         contribution_map = self.contribution_map_from(
             hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
@@ -662,7 +661,7 @@ class HyperGalaxy:
         )
 
     def hyper_noise_map_from(
-        self, noise_map: aa.Array2D, contribution_map: aa.Array2D
+            self, noise_map: aa.Array2D, contribution_map: aa.Array2D
     ) -> aa.Array2D:
         """
         Returns a hyper galaxy hyper_galaxies noise-map from a baseline noise-map.
@@ -678,6 +677,13 @@ class HyperGalaxy:
                 The galaxy contribution map.
         """
         return self.noise_factor * (noise_map * contribution_map) ** self.noise_power
+
+
+class PixelizationGalaxy(Galaxy):
+    def __init__(self, redshift: float, hyper_galaxy: Optional["HyperGalaxy"] = None,
+                 pixelization: Optional[Pixelization] = None, **kwargs):
+        super().__init__(redshift, hyper_galaxy=hyper_galaxy, **kwargs)
+        self.pixelization = pixelization
 
 
 class Redshift(float):

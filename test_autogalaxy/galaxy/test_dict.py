@@ -30,7 +30,7 @@ def test_trivial__from_dict(trivial_galaxy, trivial_galaxy_dict):
 
 @pytest.fixture(name="pixelization_galaxy")
 def make_pixelization_galaxy():
-    return ag.Galaxy(
+    return ag.PixelizationGalaxy(
         redshift=1.0,
         pixelization=ag.Pixelization(
             mesh=Voronoi(), regularization=AdaptiveBrightness()
@@ -53,7 +53,7 @@ def make_pixelization_galaxy_dict():
             'type': 'autoarray.inversion.pixelization.pixelization.Pixelization'
         },
         'redshift': 1.0,
-        'type': 'autogalaxy.galaxy.galaxy.Galaxy'
+        'type': 'autogalaxy.galaxy.galaxy.PixelizationGalaxy'
     }
 
 
