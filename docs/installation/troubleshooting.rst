@@ -61,7 +61,7 @@ Support
 -------
 
 If you are still having issues with installation, please raise an issue on the
-`autogalaxy_workspace issues page <https://github.com/Jammy2211/autogalaxy_workspace/issues>`_ with a description of the
+`PyAutoGalaxy issues page <https://github.com/Jammy2211/PyAutoGalaxy/issues>`_ with a description of the
 problem and your system setup (operating system, Python version, etc.).
 
 Current Working Directory
