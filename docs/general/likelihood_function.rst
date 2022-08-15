@@ -15,7 +15,3 @@ their likelihood function.
 Links to every notebook are provided at the GitHub repository linked to below. We recommend authors link to this
 GitHub repository (as opposed to direct links to each) because the URLs to notebooks on the ``autogalaxy_workspace``
 may change after papers are published.
-
-By linking to this repository a permanent URL is provided.
-
-https://github.com/Jammy2211/autogalaxy_likelihood_function
