@@ -1,6 +1,7 @@
+import os
 from codecs import open
-from os.path import abspath, dirname, join
 from os import environ
+from os.path import abspath, dirname, join
 
 from setuptools import find_packages, setup
 
@@ -53,7 +54,8 @@ setup(
         "Programming Language :: Python :: 3.9",
     ],
     keywords="cli",
-    packages=find_packages(exclude=["docs", "test_autogalaxy", "test_autogalaxy*"]) + config_packages('autogalaxy/config'),
+    packages=find_packages(exclude=["docs", "test_autogalaxy", "test_autogalaxy*"]) + config_packages(
+        'autogalaxy/config'),
     install_requires=requirements,
     setup_requires=["pytest-runner"],
     tests_require=["pytest"],
