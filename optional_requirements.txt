@@ -1,1 +1,2 @@
+numba
 pylops>=1.10.0
