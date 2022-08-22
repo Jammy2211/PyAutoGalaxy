@@ -1,2 +1,3 @@
+pynufft==2020.2.7
 numba
 pylops>=1.10.0
