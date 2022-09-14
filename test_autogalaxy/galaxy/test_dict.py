@@ -41,19 +41,19 @@ def make_pixelization_galaxy():
 @pytest.fixture(name="pixelization_galaxy_dict")
 def make_pixelization_galaxy_dict():
     return {
-        'hyper_galaxy': None,
-        'pixelization': {
-            'mesh': {'type': 'autoarray.inversion.pixelization.mesh.voronoi.Voronoi'},
-            'regularization': {
-                'inner_coefficient': 1.0,
-                'outer_coefficient': 1.0,
-                'signal_scale': 1.0,
-                'type': 'autoarray.inversion.regularization.adaptive_brightness.AdaptiveBrightness'
+        "hyper_galaxy": None,
+        "pixelization": {
+            "mesh": {"type": "autoarray.inversion.pixelization.mesh.voronoi.Voronoi"},
+            "regularization": {
+                "inner_coefficient": 1.0,
+                "outer_coefficient": 1.0,
+                "signal_scale": 1.0,
+                "type": "autoarray.inversion.regularization.adaptive_brightness.AdaptiveBrightness",
             },
-            'type': 'autoarray.inversion.pixelization.pixelization.Pixelization'
+            "type": "autoarray.inversion.pixelization.pixelization.Pixelization",
         },
-        'redshift': 1.0,
-        'type': 'autogalaxy.galaxy.galaxy.PixelizationGalaxy'
+        "redshift": 1.0,
+        "type": "autogalaxy.galaxy.galaxy.PixelizationGalaxy",
     }
 
 

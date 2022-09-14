@@ -22,7 +22,7 @@ def config_packages(directory):
     paths = [directory.replace("/", ".")]
     for (path, directories, filenames) in os.walk(directory):
         for directory in directories:
-            paths.append(f'{path}/{directory}'.replace("/", "."))
+            paths.append(f"{path}/{directory}".replace("/", "."))
     return paths
 
 
@@ -54,8 +54,8 @@ setup(
         "Programming Language :: Python :: 3.9",
     ],
     keywords="cli",
-    packages=find_packages(exclude=["docs", "test_autogalaxy", "test_autogalaxy*"]) + config_packages(
-        'autogalaxy/config'),
+    packages=find_packages(exclude=["docs", "test_autogalaxy", "test_autogalaxy*"])
+    + config_packages("autogalaxy/config"),
     install_requires=requirements,
     setup_requires=["pytest-runner"],
     tests_require=["pytest"],
