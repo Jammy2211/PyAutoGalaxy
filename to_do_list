@@ -1,7 +1,11 @@
+__Refactor__
+
+- Split up all light / mass profiles.
+
 
 __Lensing / Profiles Refactored__
 
-lensing.py, Lensing should use defl_func with input. Docs showing how to write own deflection function, and all
+- lensing.py, Lensing should use defl_func with input. Docs showing how to write own deflection function, and all
 methods availabie via lensing, show for an implemented mass profile, show how to write own.
 
 mass_profile_list
@@ -28,7 +32,5 @@ __Lensing__
 
 - The calculation of quantities from defleciton angles should work on irregular grids via interpolation by default, with
 an option to overwrite with analytic calculations.
-
-- Extend AstroPy Cosmology with an autolens Cosmology, which will replace cosmology util. Update Chapter 1 tutorial 6.
 
 
