@@ -43,7 +43,7 @@ def make_pixelization_galaxy():
 def make_pixelization_galaxy_dict():
     return {
         "hyper_galaxy": None,
-        "pixelization": {"type": "autoarray.inversion.pixelizations.voronoi.Voronoi"},
+        "pixelization": {"type": "autoarray.inversion.pixelization.mesh.voronoi.Voronoi"},
         "redshift": 1.0,
         "regularization": {
             "inner_coefficient": 1.0,
@@ -59,6 +59,10 @@ def make_pixelization_galaxy_dict():
 
 
 def test__with_pixelization__dict(pixelization_galaxy, pixelization_galaxy_dict):
+
+    print(pixelization_galaxy_dict)
+
+    print(pixelization_galaxy.dict())
 
     assert pixelization_galaxy.dict() == pixelization_galaxy_dict
 
