@@ -61,14 +61,6 @@ def make_pixelization_galaxy_dict():
 
 
 def test__with_pixelization__dict(pixelization_galaxy, pixelization_galaxy_dict):
-<<<<<<< HEAD
-=======
-
-    print(pixelization_galaxy_dict)
-
-    print(pixelization_galaxy.dict())
-
->>>>>>> feature/inversion_docs
     assert pixelization_galaxy.dict() == pixelization_galaxy_dict
 
 
