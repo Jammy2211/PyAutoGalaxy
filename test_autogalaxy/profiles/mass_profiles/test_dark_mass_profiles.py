@@ -1221,7 +1221,7 @@ class TestNFWTruncatedMCRLludlow:
         assert truncated_nfw_mass.inner_slope == 1.0
         assert isinstance(truncated_nfw_mass.inner_slope, float)
 
-        assert truncated_nfw_mass.scale_radius == pytest.approx(0.21164, 1.0e-4)
+        assert truncated_nfw_mass.scale_radius == pytest.approx(0.21157, 1.0e-4)
         assert truncated_nfw_mass.truncation_radius == pytest.approx(33.7134116, 1.0e-4)
 
     def test__scatter_is_nonzero(self):
@@ -1236,7 +1236,7 @@ class TestNFWTruncatedMCRLludlow:
 
         # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
-        assert truncated_nfw_mass.scale_radius == pytest.approx(0.14983, 1.0e-4)
+        assert truncated_nfw_mass.scale_radius == pytest.approx(0.14978, 1.0e-4)
         assert truncated_nfw_mass.truncation_radius == pytest.approx(33.7134116, 1.0e-4)
 
         truncated_nfw_mass = ag.mp.SphNFWTruncatedMCRScatterLudlow(
@@ -1249,7 +1249,7 @@ class TestNFWTruncatedMCRLludlow:
 
         # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
-        assert truncated_nfw_mass.scale_radius == pytest.approx(0.29895, 1.0e-4)
+        assert truncated_nfw_mass.scale_radius == pytest.approx(0.29886, 1.0e-4)
         assert truncated_nfw_mass.truncation_radius == pytest.approx(33.7134116, 1.0e-4)
 
 
@@ -1356,7 +1356,7 @@ class TestNFWMCRLudlow:
         assert nfw_mass.inner_slope == 1.0
         assert isinstance(nfw_mass.inner_slope, float)
 
-        assert nfw_mass.scale_radius == pytest.approx(0.21164, 1.0e-4)
+        assert nfw_mass.scale_radius == pytest.approx(0.21157, 1.0e-4)
 
         deflections_ludlow = nfw_mass.deflections_yx_2d_from(grid=grid)
         deflections = nfw_kappa_s.deflections_yx_2d_from(grid=grid)
@@ -1418,7 +1418,7 @@ class TestNFWMCRLudlow:
         assert nfw_mass.inner_slope == 1.0
         assert isinstance(nfw_mass.inner_slope, float)
 
-        assert nfw_mass.scale_radius == pytest.approx(0.21164, 1.0e-4)
+        assert nfw_mass.scale_radius == pytest.approx(0.211578, 1.0e-4)
 
         deflections_ludlow = nfw_mass.deflections_yx_2d_from(grid=grid)
         deflections = nfw_kappa_s.deflections_yx_2d_from(grid=grid)
@@ -1482,7 +1482,7 @@ class TestNFWMCRLudlow:
         assert nfw_mass.inner_slope == 2.0
         assert isinstance(nfw_mass.inner_slope, float)
 
-        assert nfw_mass.scale_radius == pytest.approx(0.21164, 1.0e-4)
+        assert nfw_mass.scale_radius == pytest.approx(0.21157, 1.0e-4)
 
         deflections_ludlow = nfw_mass.deflections_yx_2d_from(grid=grid)
         deflections = nfw_kappa_s.deflections_yx_2d_from(grid=grid)
@@ -1500,7 +1500,7 @@ class TestNFWMCRLudlow:
 
         # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
-        assert nfw.scale_radius == pytest.approx(0.14983, 1.0e-4)
+        assert nfw.scale_radius == pytest.approx(0.14978, 1.0e-4)
 
         nfw = ag.mp.SphNFWMCRScatterLudlow(
             mass_at_200=1.0e9,
@@ -1511,7 +1511,7 @@ class TestNFWMCRLudlow:
 
         # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
-        assert nfw.scale_radius == pytest.approx(0.29895, 1.0e-4)
+        assert nfw.scale_radius == pytest.approx(0.29886, 1.0e-4)
 
         nfw_ell = ag.mp.EllNFWMCRScatterLudlow(
             elliptical_comps=(0.5, 0.5),
@@ -1524,7 +1524,7 @@ class TestNFWMCRLudlow:
         # We uare using the EllNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
         assert nfw_ell.elliptical_comps == (0.5, 0.5)
-        assert nfw_ell.scale_radius == pytest.approx(0.14983, 1.0e-4)
+        assert nfw_ell.scale_radius == pytest.approx(0.14978, 1.0e-4)
 
         nfw_ell = ag.mp.EllNFWMCRScatterLudlow(
             elliptical_comps=(0.5, 0.5),
@@ -1537,7 +1537,7 @@ class TestNFWMCRLudlow:
         # We uare using the EllNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
         assert nfw_ell.elliptical_comps == (0.5, 0.5)
-        assert nfw_ell.scale_radius == pytest.approx(0.29895, 1.0e-4)
+        assert nfw_ell.scale_radius == pytest.approx(0.29886, 1.0e-4)
 
         deflections_sph = nfw.deflections_yx_2d_from(grid=grid)
         deflections_ell = nfw_ell.deflections_yx_2d_from(grid=grid)
