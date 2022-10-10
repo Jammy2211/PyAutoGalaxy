@@ -104,9 +104,9 @@ Light Profiles
 Inversions
 ----------
 
-.. currentmodule:: autoarray.inversion.pixelizations
+.. currentmodule:: autoarray.inversion.pixelization.mesh
 
-**Pixelizations:**
+**Mesh:**
 
 .. autosummary::
    :toctree: generated/
@@ -121,7 +121,7 @@ Inversions
 
 .. currentmodule:: autoarray.inversion.regularization
 
-**Regularizations:**
+**Regularization:**
 
 .. autosummary::
    :toctree: generated/
@@ -133,7 +133,7 @@ Inversions
 
 .. currentmodule:: autogalaxy
 
-**LEqs:**
+**Mapper:**
 
 .. autosummary::
    :toctree: generated/
@@ -151,6 +151,10 @@ Inversions
 -----
 Plots
 -----
+
+Example scripts illustrating all plotting objects are provided in the `plot` module of the `autogalaxy_workspace`:
+
+https://github.com/Jammy2211/autogalaxy_workspace/tree/release/notebooks/plot
 
 .. currentmodule:: autogalaxy.plot
 

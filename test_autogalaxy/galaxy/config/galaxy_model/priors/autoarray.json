@@ -1,5 +1,5 @@
 {
-    "inversion.pixelizations.VoronoiBrightnessImage": {
+    "inversion.pixelization.VoronoiBrightnessImage": {
         "weight_power": {
             "type": "Uniform",
             "lower_limit": 0.0,
