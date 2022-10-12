@@ -46,8 +46,8 @@ class Scribbler:
         self.figure.canvas.mpl_connect("button_release_event", self.on_mouse_up)
 
         # brush
-        self.brush_radius = int(image.shape[0] * 0.05)
-        self.min_radius = 1
+        self.brush_radius = int(image.shape[0] * 0.01)
+        self.min_radius = 2
         self.radius_increment = int(image.shape[0] * 0.01)
         self.brush_color = "b"
         self.brush = None
