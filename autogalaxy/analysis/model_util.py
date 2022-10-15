@@ -56,7 +56,7 @@ def mesh_list_from(model: af.Collection) -> Optional[List[AbstractMesh]]:
     The `mesh` of a galaxy, provided one galaxy has a `mesh`.
     """
 
-    instance = model.instance_from_prior_medians()
+    instance = model.instance_from_prior_medians(ignore_prior_limits=True)
 
     mesh_list = []
 
