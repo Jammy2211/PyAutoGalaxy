@@ -17,6 +17,7 @@ from autoarray.inversion.inversion.factory import (
     inversion_interferometer_unpacked_from as InversionInterferometer,
 )  # noqa
 from autoarray.inversion.pixelization.pixelization import Pixelization  # noqa
+from autoarray.inversion.pixelization.mappers.abstract import AbstractMapper
 from autoarray.inversion.pixelization.mappers.mapper_grids import MapperGrids  # noqa
 from autoarray.inversion.pixelization.mappers.factory import (
     mapper_from as Mapper,
