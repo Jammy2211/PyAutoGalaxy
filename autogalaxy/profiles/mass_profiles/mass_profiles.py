@@ -105,8 +105,8 @@ class MassProfile(EllProfile, OperateDeflections):
         outer_annuli_radius
             The radius of the outer annulus inside of which the density is estimated.
         """
-        annuli_area = (np.pi * outer_annuli_radius ** 2.0) - (
-            np.pi * inner_annuli_radius ** 2.0
+        annuli_area = (np.pi * outer_annuli_radius**2.0) - (
+            np.pi * inner_annuli_radius**2.0
         )
 
         outer_mass = self.mass_angular_within_circle_from(radius=outer_annuli_radius)
@@ -131,7 +131,7 @@ class MassProfile(EllProfile, OperateDeflections):
 
             return (
                 self.mass_angular_within_circle_from(radius=radius)
-                - np.pi * radius ** 2.0
+                - np.pi * radius**2.0
             )
 
         return self.ellipticity_rescale * root_scalar(func, bracket=[1e-4, 1e4]).root
@@ -322,7 +322,7 @@ class MassProfileMGE:
 
         output_grid_final = np.zeros(grid.shape[0], dtype="complex128")
 
-        q2 = axis_ratio ** 2.0
+        q2 = axis_ratio**2.0
 
         scale_factor = axis_ratio / (sigmas[0] * np.sqrt(2.0 * (1.0 - q2)))
 
@@ -334,7 +334,7 @@ class MassProfileMGE:
         z = xs + 1j * ys
         zq = axis_ratio * xs + 1j * ys / axis_ratio
 
-        expv = -(xs ** 2.0) * (1.0 - q2) - ys ** 2.0 * (1.0 / q2 - 1.0)
+        expv = -(xs**2.0) * (1.0 - q2) - ys**2.0 * (1.0 / q2 - 1.0)
 
         for i in range(len(sigmas)):
 
@@ -368,7 +368,7 @@ class MassProfileMGE:
         kesi_list = np.zeros(int(2 * p + 1))
         kesi_list[0] = 0.5
         kesi_list[1 : p + 1] = 1.0
-        kesi_list[int(2 * p)] = 1.0 / 2.0 ** p
+        kesi_list[int(2 * p)] = 1.0 / 2.0**p
 
         for i in np.arange(1, p, 1):
             kesi_list[2 * p - i] = kesi_list[2 * p - i + 1] + 2 ** (-p) * comb(p, i)
@@ -475,7 +475,7 @@ class MassProfileMGE:
             grid=grid, amps=amps, sigmas=sigmas, axis_ratio=axis_ratio
         )
 
-        angle *= np.sqrt((2.0 * np.pi) / (1.0 - axis_ratio ** 2.0))
+        angle *= np.sqrt((2.0 * np.pi) / (1.0 - axis_ratio**2.0))
 
         return self.rotate_grid_from_reference_frame(
             np.vstack((-angle.imag, angle.real)).T
@@ -504,8 +504,8 @@ def w_f_approx(z):
 
     wz = np.empty_like(z)
 
-    z_imag2 = z.imag ** 2
-    abs_z2 = z.real ** 2 + z_imag2
+    z_imag2 = z.imag**2
+    abs_z2 = z.real**2 + z_imag2
 
     reg1 = abs_z2 >= 38000.0
     if np.any(reg1):
@@ -599,7 +599,7 @@ def psi_from(grid, axis_ratio, core_radius):
     return np.sqrt(
         np.add(
             np.multiply(
-                axis_ratio ** 2.0, np.add(np.square(grid[:, 1]), core_radius ** 2.0)
+                axis_ratio**2.0, np.add(np.square(grid[:, 1]), core_radius**2.0)
             ),
             np.square(grid[:, 0]),
         )
@@ -623,7 +623,7 @@ class MassProfileCSE(ABC):
             The core radius of the cored steep ellisoid used for this decomposition.
 
         """
-        return 1.0 / (2.0 * (core_radius ** 2.0 + grid_radii ** 2.0) ** (1.5))
+        return 1.0 / (2.0 * (core_radius**2.0 + grid_radii**2.0) ** (1.5))
 
     @staticmethod
     def deflections_via_cse_from(
@@ -644,7 +644,7 @@ class MassProfileCSE(ABC):
         ----------
         """
         # phi = np.sqrt(q**2.0 * (s**2.0 + gridx2) + gridy2)
-        phi = np.sqrt(axis_ratio_squared * core_radius ** 2.0 + term1)
+        phi = np.sqrt(axis_ratio_squared * core_radius**2.0 + term1)
         # Psi = (phi + s)**2.0 + (1 - q * q) * gridx2
         Psi = (phi + core_radius) ** 2.0 + term2
         bottom = core_radius * phi * Psi
@@ -761,11 +761,11 @@ class MassProfileCSE(ABC):
 
         amplitude_list, core_radius_list = self.decompose_convergence_via_cse()
         q = self.axis_ratio
-        q2 = q ** 2.0
+        q2 = q**2.0
         grid_y = grid[:, 0]
         grid_x = grid[:, 1]
-        gridx2 = grid_x ** 2.0
-        gridy2 = grid_y ** 2.0
+        gridx2 = grid_x**2.0
+        gridy2 = grid_y**2.0
         term1 = q2 * gridx2 + gridy2
         term2 = (1.0 - q2) * gridx2
         term3 = q * grid_x

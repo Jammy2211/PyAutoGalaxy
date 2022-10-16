@@ -28,7 +28,7 @@ def test__fit_via_mock_profile(
 
     assert fit_quantity.chi_squared == pytest.approx(0.0, 1.0e-4)
     assert fit_quantity.log_likelihood == pytest.approx(
-        -0.5 * 49.0 * np.log(2 * np.pi * 2.0 ** 2.0), 1.0e-4
+        -0.5 * 49.0 * np.log(2 * np.pi * 2.0**2.0), 1.0e-4
     )
 
     fit_quantity = ag.FitQuantity(

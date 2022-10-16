@@ -31,16 +31,16 @@ class LightProfilePlotter(Plotter):
         include_2d: Include2D = Include2D(),
     ):
         """
-        Plots the attributes of `LightProfile` objects using the matplotlib methods `plot()` and `imshow()` and many 
+        Plots the attributes of `LightProfile` objects using the matplotlib methods `plot()` and `imshow()` and many
         other matplotlib functions which customize the plot's appearance.
 
-        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default, 
-        the settings passed to every matplotlib function called are those specified in 
-        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to 
+        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default,
+        the settings passed to every matplotlib function called are those specified in
+        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to
         customize the figure's appearance.
 
-        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be 
-        extracted from the `LightProfile` and plotted via the visuals object, if the corresponding entry is `True` in 
+        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
+        extracted from the `LightProfile` and plotted via the visuals object, if the corresponding entry is `True` in
         the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
 
         Parameters
@@ -135,7 +135,7 @@ class LightProfilePlotter(Plotter):
 
     def figures_2d(self, image: bool = False):
         """
-        Plots the individual attributes of the plotter's `LightProfile` object in 2D, which are computed via the 
+        Plots the individual attributes of the plotter's `LightProfile` object in 2D, which are computed via the
         plotter's 2D grid object.
 
         The API is such that every plottable attribute of the `LightProfile` object is an input parameter of type bool of
@@ -172,8 +172,8 @@ class LightProfilePDFPlotter(LightProfilePlotter):
         Plots the attributes of a list of `LightProfile` objects using the matplotlib methods `plot()` and `imshow()`
         and many other matplotlib functions which customize the plot's appearance.
 
-        Figures plotted by this object average over a list light profiles to computed the average value of each 
-        attribute with errors, where the 1D regions within the errors are plotted as a shaded region to show the range 
+        Figures plotted by this object average over a list light profiles to computed the average value of each
+        attribute with errors, where the 1D regions within the errors are plotted as a shaded region to show the range
         of plausible models. Therefore, the input list of galaxies is expected to represent the probability density
         function of an inferred model-fit.
 
@@ -225,18 +225,18 @@ class LightProfilePDFPlotter(LightProfilePlotter):
 
     def figures_1d(self, image: bool = False):
         """
-        Plots the individual attributes of the plotter's list of ` LightProfile` object in 1D, which are computed via 
+        Plots the individual attributes of the plotter's list of ` LightProfile` object in 1D, which are computed via
         the plotter's grid object.
 
-        This averages over a list light profiles to compute the average value of each attribute with errors, where the 
-        1D regions within the errors are plotted as a shaded region to show the range of plausible models. Therefore, 
+        This averages over a list light profiles to compute the average value of each attribute with errors, where the
+        1D regions within the errors are plotted as a shaded region to show the range of plausible models. Therefore,
         the input list of galaxies is expected to represent the probability density function of an inferred model-fit.
 
         If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
         computed from each light profile. This is performed by aligning a 1D grid with the major-axis of
         each light profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
 
-        The API is such that every plottable attribute of the `LightProfile` object is an input parameter of type bool 
+        The API is such that every plottable attribute of the `LightProfile` object is an input parameter of type bool
         of the function, which if switched to `True` means that it is plotted.
 
         Parameters
@@ -263,7 +263,10 @@ class LightProfilePDFPlotter(LightProfilePlotter):
             min_index = min([image_1d.shape[0] for image_1d in image_1d_list])
             image_1d_list = [image_1d[0:min_index] for image_1d in image_1d_list]
 
-            median_image_1d, errors_image_1d = error_util.profile_1d_median_and_error_region_via_quantile(
+            (
+                median_image_1d,
+                errors_image_1d,
+            ) = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=image_1d_list, low_limit=self.low_limit
             )
 

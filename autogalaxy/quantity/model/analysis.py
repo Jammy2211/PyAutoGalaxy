@@ -34,7 +34,7 @@ class AnalysisQuantity(Analysis):
         objects that is called to create the model quantity. For example, if `func_str="convergence_2d_from"`, the
         convergence is computed from each model `Plane`.
 
-        This class stores the settings used to perform the model-fit for certain components of the model (e.g. the 
+        This class stores the settings used to perform the model-fit for certain components of the model (e.g. the
         Cosmology used for the analysis).
 
         Parameters
@@ -68,7 +68,7 @@ class AnalysisQuantity(Analysis):
         of the quantity and computing residuals, a chi-squared statistic and the log likelihood.
 
         Certain models will fail to fit the dataset and raise an exception. For example if extreme values of the model
-        create numerical infinities. In such circumstances the model is discarded and its likelihood value is passed to 
+        create numerical infinities. In such circumstances the model is discarded and its likelihood value is passed to
         the non-linear search in a way that it ignores it (for example, using a value of -1.0e99).
 
         Parameters

@@ -80,12 +80,12 @@ def luminosity_from_radius_and_profile(radius, profile):
 
     return (
         profile.intensity
-        * profile.effective_radius ** 2
+        * profile.effective_radius**2
         * 2
         * math.pi
         * profile.sersic_index
         * (
-            (math.e ** profile.sersic_constant)
+            (math.e**profile.sersic_constant)
             / (profile.sersic_constant ** (2 * profile.sersic_index))
         )
         * scipy.special.gamma(2 * profile.sersic_index)

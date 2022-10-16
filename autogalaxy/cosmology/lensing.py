@@ -80,10 +80,8 @@ class LensingCosmology(cosmo.FLRW):
         redshift_1
             Redshift from which the angular diameter distance to the other redshift is calculated.
         """
-        angular_diameter_distance_between_redshifts_kpc = self.angular_diameter_distance_z1z2(
-            redshift_0, redshift_1
-        ).to(
-            "kpc"
+        angular_diameter_distance_between_redshifts_kpc = (
+            self.angular_diameter_distance_z1z2(redshift_0, redshift_1).to("kpc")
         )
 
         return angular_diameter_distance_between_redshifts_kpc.value
@@ -107,7 +105,7 @@ class LensingCosmology(cosmo.FLRW):
 
         kpc_per_arcsec = self.kpc_per_arcsec_from(redshift=redshift)
 
-        return cosmic_average_density_kpc * kpc_per_arcsec ** 3.0
+        return cosmic_average_density_kpc * kpc_per_arcsec**3.0
 
     def cosmic_average_density_solar_mass_per_kpc3_from(self, redshift: float) -> float:
         """
@@ -140,11 +138,11 @@ class LensingCosmology(cosmo.FLRW):
         D_s = angular_diameter_distance_of_source_redshift_to_earth
         D_ls = angular_diameter_distance_of_lens_redshift_to_source_redshift
         D_l = angular_diameter_distance_of_lens_redshift_to_earth
- 
+
         This function returns the critical surface density in units of solar masses, which are convenient units for
         converting the inferred masses of a lens model from angular units (e.g. dimensionless units inferred from
         data in arcseconds) to solar masses.
- 
+
         Parameters
         ----------
         redshift_0
@@ -154,13 +152,15 @@ class LensingCosmology(cosmo.FLRW):
             The redshift of the second strong lens galaxy (E.g. the lens galaxy) for which the critical surface
             density is calculated.
         """
-        critical_surface_density_kpc = self.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-            redshift_0=redshift_0, redshift_1=redshift_1
+        critical_surface_density_kpc = (
+            self.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+                redshift_0=redshift_0, redshift_1=redshift_1
+            )
         )
 
         kpc_per_arcsec = self.kpc_per_arcsec_from(redshift=redshift_0)
 
-        return critical_surface_density_kpc * kpc_per_arcsec ** 2.0
+        return critical_surface_density_kpc * kpc_per_arcsec**2.0
 
     def critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
         self, redshift_0: float, redshift_1: float
@@ -176,8 +176,8 @@ class LensingCosmology(cosmo.FLRW):
         D_ls = Angular diameter distance of lens redshift to source redshift
         D_l = Angular diameter distance of lens redshift to earth
 
-        This function returns the critical surface density in units of solar masses / kpc^2, which are convenient 
-        units for converting the inferred masses of a lens model from angular units (e.g. dimensionless units inferred 
+        This function returns the critical surface density in units of solar masses / kpc^2, which are convenient
+        units for converting the inferred masses of a lens model from angular units (e.g. dimensionless units inferred
         from data in arcseconds) to solar masses.
 
         Parameters
@@ -193,16 +193,18 @@ class LensingCosmology(cosmo.FLRW):
             4 * math.pi * constants.G.to("kpc3 / (solMass s2)")
         )
 
-        angular_diameter_distance_of_redshift_0_to_earth_kpc = self.angular_diameter_distance_to_earth_in_kpc_from(
-            redshift=redshift_0
+        angular_diameter_distance_of_redshift_0_to_earth_kpc = (
+            self.angular_diameter_distance_to_earth_in_kpc_from(redshift=redshift_0)
         )
 
-        angular_diameter_distance_of_redshift_1_to_earth_kpc = self.angular_diameter_distance_to_earth_in_kpc_from(
-            redshift=redshift_1
+        angular_diameter_distance_of_redshift_1_to_earth_kpc = (
+            self.angular_diameter_distance_to_earth_in_kpc_from(redshift=redshift_1)
         )
 
-        angular_diameter_distance_between_redshifts_kpc = self.angular_diameter_distance_between_redshifts_in_kpc_from(
-            redshift_0=redshift_0, redshift_1=redshift_1
+        angular_diameter_distance_between_redshifts_kpc = (
+            self.angular_diameter_distance_between_redshifts_in_kpc_from(
+                redshift_0=redshift_0, redshift_1=redshift_1
+            )
         )
 
         return (
@@ -220,12 +222,12 @@ class LensingCosmology(cosmo.FLRW):
         """
         For strong lens systems with more than 2 planes, the deflection angles between different planes must be scaled
         by the angular diameter distances between the planes in order to properly perform multi-plane ray-tracing.
-        
+
         For a system with a first lens galaxy l0 at `redshift_0`, second lens galaxy l1 at `redshift_1` and final
         source galaxy at `redshift_final` this scaling factor is given by:
-        
+
         (D_l0l1 * D_s) / (D_l1* D_l1s)
-        
+
         The critical surface density for lensing, often written as $\sigma_{cr}$, is given by:
 
         critical_surface_density = (c^2 * D_s) / (4 * pi * G * D_ls * D_l)
@@ -300,16 +302,18 @@ class LensingCosmology(cosmo.FLRW):
         """
         const = constants.c.to("kpc / s")
 
-        angular_diameter_distance_to_redshift_0_kpc = self.angular_diameter_distance_to_earth_in_kpc_from(
-            redshift=redshift_1
+        angular_diameter_distance_to_redshift_0_kpc = (
+            self.angular_diameter_distance_to_earth_in_kpc_from(redshift=redshift_1)
         )
 
-        angular_diameter_distance_to_redshift_1_kpc = self.angular_diameter_distance_to_earth_in_kpc_from(
-            redshift=redshift_1
+        angular_diameter_distance_to_redshift_1_kpc = (
+            self.angular_diameter_distance_to_earth_in_kpc_from(redshift=redshift_1)
         )
 
-        angular_diameter_distance_between_redshifts_kpc = self.angular_diameter_distance_between_redshifts_in_kpc_from(
-            redshift_0=redshift_0, redshift_1=redshift_1
+        angular_diameter_distance_between_redshifts_kpc = (
+            self.angular_diameter_distance_between_redshifts_in_kpc_from(
+                redshift_0=redshift_0, redshift_1=redshift_1
+            )
         )
 
         kpc_per_arcsec = self.kpc_per_arcsec_from(redshift=redshift_0)

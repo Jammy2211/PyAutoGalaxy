@@ -172,21 +172,21 @@ class MatPlot2D(aplt.MatPlot2D):
     ):
         """
         Visualizes data structures (e.g an `Array2D`, `Grid2D`, `VectorField`, etc.) using Matplotlib.
-        
-        The `Plotter` is passed objects from the `mat_wrap` package which wrap matplotlib plot functions and 
-        customize the appearance of the plots of the data structure. If the values of these matplotlib wrapper 
-        objects are not manually specified, they assume the default values provided in 
+
+        The `Plotter` is passed objects from the `mat_wrap` package which wrap matplotlib plot functions and
+        customize the appearance of the plots of the data structure. If the values of these matplotlib wrapper
+        objects are not manually specified, they assume the default values provided in
         the `config.visualize.mat_*` `.ini` config files.
-        
+
         The following data structures can be plotted using the following matplotlib functions:
-        
+
         - `Array2D`:, using `plt.imshow`.
         - `Grid2D`: using `plt.scatter`.
         - `Line`: using `plt.plot`, `plt.semilogy`, `plt.loglog` or `plt.scatter`.
         - `VectorField`: using `plt.quiver`.
         - `RectangularMapper`: using `plt.imshow`.
         - `MapperVoronoiNoInterp`: using `plt.fill`.
-        
+
         Parameters
         ----------
         units
@@ -197,7 +197,7 @@ class MatPlot2D(aplt.MatPlot2D):
         axis
             Sets the extent of the figure axis via `plt.axis` and allows for a manual axis range.
         cmap
-          Customizes the colormap of the plot and its normalization via matplotlib `colors` objects such 
+          Customizes the colormap of the plot and its normalization via matplotlib `colors` objects such
           as `colors.Normalize` and `colors.LogNorm`.
         colorbar
             Plots the colorbar of the plot via `plt.colorbar` and customizes its tick labels and values using method
@@ -213,7 +213,7 @@ class MatPlot2D(aplt.MatPlot2D):
           Sets the xticks of the plot, including scaling them to new units depending on the `Units` object, via
           `plt.xticks`.
         title
-          Sets the figure title and customizes its appearance using `plt.title`.        
+          Sets the figure title and customizes its appearance using `plt.title`.
         ylabel
           Sets the figure ylabel and customizes its appearance using `plt.ylabel`.
         xlabel

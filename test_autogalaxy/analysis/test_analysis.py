@@ -73,7 +73,7 @@ def test__instance_with_associated_hyper_images_from(masked_imaging_7x7):
 
 
 def test__modify_before_fit__kmeans_pixelization_upper_limit_ajusted_based_on_mask(
-    masked_imaging_7x7
+    masked_imaging_7x7,
 ):
 
     mesh = af.Model(ag.mesh.DelaunayBrightnessImage)

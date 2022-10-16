@@ -22,7 +22,7 @@ def test__make_result__result_imaging_is_returned(masked_imaging_7x7):
 
 
 def test__figure_of_merit__matches_correct_fit_given_galaxy_profiles(
-    masked_imaging_7x7
+    masked_imaging_7x7,
 ):
     galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=0.1))
 
@@ -41,7 +41,7 @@ def test__figure_of_merit__matches_correct_fit_given_galaxy_profiles(
 
 
 def test__figure_of_merit__includes_hyper_image_and_noise__matches_fit(
-    masked_imaging_7x7
+    masked_imaging_7x7,
 ):
 
     hyper_image_sky = ag.hyper_data.HyperImageSky(sky_scale=1.0)

@@ -23,14 +23,16 @@ def test__arcsec_to_kpc_conversion(planck15):
 
 def test__angular_diameter_distances(planck15):
 
-    angular_diameter_distance_to_earth_kpc = planck15.angular_diameter_distance_to_earth_in_kpc_from(
-        redshift=0.1
+    angular_diameter_distance_to_earth_kpc = (
+        planck15.angular_diameter_distance_to_earth_in_kpc_from(redshift=0.1)
     )
 
     assert angular_diameter_distance_to_earth_kpc == pytest.approx(392840, 1e-5)
 
-    angular_diameter_distance_between_redshifts_kpc = planck15.angular_diameter_distance_between_redshifts_in_kpc_from(
-        redshift_0=0.1, redshift_1=1.0
+    angular_diameter_distance_between_redshifts_kpc = (
+        planck15.angular_diameter_distance_between_redshifts_in_kpc_from(
+            redshift_0=0.1, redshift_1=1.0
+        )
     )
 
     assert angular_diameter_distance_between_redshifts_kpc == pytest.approx(
@@ -59,8 +61,10 @@ def test__critical_surface_mass_densities(planck15):
 
     assert critical_surface_density == pytest.approx(17593241668, 1e-2)
 
-    critical_surface_density = planck15.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-        redshift_0=0.1, redshift_1=1.0
+    critical_surface_density = (
+        planck15.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+            redshift_0=0.1, redshift_1=1.0
+        )
     )
 
     assert critical_surface_density == pytest.approx(4.85e9, 1e-2)

@@ -73,7 +73,7 @@ class AbstractFit:
 
     @property
     def linear_light_profile_intensity_dict(
-        self
+        self,
     ) -> Optional[Dict[LightProfileLinear, float]]:
         """
         When linear light profiles are used in an inversion, their `intensity` parameter values are solved for via

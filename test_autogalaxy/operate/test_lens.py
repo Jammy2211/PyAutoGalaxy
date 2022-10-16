@@ -136,8 +136,8 @@ def test__critical_curves_from__tangential():
     )
 
     assert np.mean(
-        x_critical_tangential ** 2 + y_critical_tangential ** 2
-    ) == pytest.approx(sis.einstein_radius ** 2, 5e-1)
+        x_critical_tangential**2 + y_critical_tangential**2
+    ) == pytest.approx(sis.einstein_radius**2, 5e-1)
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
@@ -232,8 +232,8 @@ def test__caustics_from__radial():
 
     x_caustic_radial, y_caustic_radial = (caustic_radial[:, 1], caustic_radial[:, 0])
 
-    assert np.mean(x_caustic_radial ** 2 + y_caustic_radial ** 2) == pytest.approx(
-        sis.einstein_radius ** 2, 5e-1
+    assert np.mean(x_caustic_radial**2 + y_caustic_radial**2) == pytest.approx(
+        sis.einstein_radius**2, 5e-1
     )
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
@@ -269,10 +269,10 @@ def test__area_within_tangential_critical_curve_from():
 
     sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    area_calc = np.pi * sis.einstein_radius ** 2
+    area_calc = np.pi * sis.einstein_radius**2
 
-    area_within_tangential_critical_curve = sis.area_within_tangential_critical_curve_from(
-        grid=grid
+    area_within_tangential_critical_curve = (
+        sis.area_within_tangential_critical_curve_from(grid=grid)
     )
 
     assert area_within_tangential_critical_curve == pytest.approx(area_calc, 1e-1)
@@ -305,7 +305,7 @@ def test__einstein_mass_from():
 
     einstein_mass = sis.einstein_mass_angular_from(grid=grid)
 
-    assert einstein_mass == pytest.approx(np.pi * 2.0 ** 2.0, 1e-1)
+    assert einstein_mass == pytest.approx(np.pi * 2.0**2.0, 1e-1)
 
 
 def test__magnification_2d_from__compare_eigen_values_and_determinant():
@@ -363,7 +363,7 @@ def test__magnification_2d_from__compare_determinant_and_convergence_and_shear()
     shear = sie.shear_yx_2d_via_jacobian_from(grid=grid)
 
     magnification_via_convergence_and_shear = 1 / (
-        (1 - convergence) ** 2 - shear.magnitudes ** 2
+        (1 - convergence) ** 2 - shear.magnitudes**2
     )
 
     mean_error = np.mean(
@@ -381,7 +381,7 @@ def test__magnification_2d_from__compare_determinant_and_convergence_and_shear()
     shear = sie.shear_yx_2d_via_jacobian_from(grid=grid)
 
     magnification_via_convergence_and_shear = 1 / (
-        (1 - convergence) ** 2 - shear.magnitudes ** 2
+        (1 - convergence) ** 2 - shear.magnitudes**2
     )
 
     mean_error = np.mean(

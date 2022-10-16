@@ -52,7 +52,7 @@ class SetupHyper:
         self.search_inversion_cls = search_inversion_cls or af.DynestyStatic
         self.search_pixelization_dict = search_pixelization_dict or {
             "nlive": 50,
-            "sample": "rstagger",
+            "sample": "rwalk",
             "dlogz": 10,
         }
 
@@ -62,7 +62,7 @@ class SetupHyper:
         self.search_bc_cls = search_bc_cls or af.DynestyStatic
         self.search_bc_dict = search_bc_dict or {
             "nlive": 50,
-            "sample": "rstagger",
+            "sample": "rwalk",
             "dlogz": 10,
         }
 

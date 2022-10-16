@@ -44,7 +44,7 @@ class GetVisuals1D(gv.GetVisuals1D):
 
     def via_light_obj_from(self, light_obj: Union[LightProfile, Galaxy]) -> Visuals1D:
         """
-        From an object with light profiles (e.g. a `LightProfile`, `Galaxy`) get its attributes that can be plotted 
+        From an object with light profiles (e.g. a `LightProfile`, `Galaxy`) get its attributes that can be plotted
         and return them  in a `Visuals1D` object.
 
         Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted
@@ -77,13 +77,13 @@ class GetVisuals1D(gv.GetVisuals1D):
         self, light_obj_list: Union[List[LightProfile], List[Galaxy]], low_limit: float
     ) -> Visuals1D:
         """
-        From a list of objects with light profiles (e.g. a `LightProfile`, `Galaxy`) get its attributes that can be 
+        From a list of objects with light profiles (e.g. a `LightProfile`, `Galaxy`) get its attributes that can be
         plotted and return them  in a `Visuals1D` object.
 
         Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted
         for plotting.
-        
-        This function iterates over all light objects in the list and averages over each attribute's values to estimate 
+
+        This function iterates over all light objects in the list and averages over each attribute's values to estimate
         the mean value of the attribute and its error, both of which can then be plotted. This is typically used
         to plot 1D errors on a quantity that are estimated via a Probability Density Function.
 
@@ -119,7 +119,10 @@ class GetVisuals1D(gv.GetVisuals1D):
 
             else:
 
-                half_light_radius, half_light_radius_errors = error_util.value_median_and_error_region_via_quantile(
+                (
+                    half_light_radius,
+                    half_light_radius_errors,
+                ) = error_util.value_median_and_error_region_via_quantile(
                     value_list=half_light_radius_list, low_limit=low_limit
                 )
 
@@ -142,7 +145,7 @@ class GetVisuals1D(gv.GetVisuals1D):
         self, mass_obj: Union[MassProfile, Galaxy], grid: aa.type.Grid2DLike
     ) -> Visuals1D:
         """
-        From an object with mass profiles (e.g. a `MassProfile`, `Galaxy`) get its attributes that can be plotted 
+        From an object with mass profiles (e.g. a `MassProfile`, `Galaxy`) get its attributes that can be plotted
         and return them  in a `Visuals1D` object.
 
         Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted
@@ -185,13 +188,13 @@ class GetVisuals1D(gv.GetVisuals1D):
         low_limit: float,
     ) -> Visuals1D:
         """
-        From a list of objects with mass profiles (e.g. a `MassProfile`, `Galaxy`) get its attributes that can be 
+        From a list of objects with mass profiles (e.g. a `MassProfile`, `Galaxy`) get its attributes that can be
         plotted and return them  in a `Visuals1D` object.
 
         Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted
         for plotting.
 
-        This function iterates over all mass objects in the list and averages over each attribute's values to estimate 
+        This function iterates over all mass objects in the list and averages over each attribute's values to estimate
         the mean value of the attribute and its error, both of which can then be plotted. This is typically used
         to plot 1D errors on a quantity that are estimated via a Probability Density Function.
 
@@ -229,7 +232,10 @@ class GetVisuals1D(gv.GetVisuals1D):
 
             einstein_radius_list = list(filter(None, einstein_radius_list))
 
-            einstein_radius, einstein_radius_errors = error_util.value_median_and_error_region_via_quantile(
+            (
+                einstein_radius,
+                einstein_radius_errors,
+            ) = error_util.value_median_and_error_region_via_quantile(
                 value_list=einstein_radius_list, low_limit=low_limit
             )
 
@@ -275,7 +281,7 @@ class GetVisuals2D(gv.GetVisuals2D):
         self, light_obj: Union[LightProfile, Galaxy, Plane], grid
     ) -> Visuals2D:
         """
-        From an object with light profiles (e.g. a `LightProfile`, `Galaxy`, `Plane`) get its attributes that can be 
+        From an object with light profiles (e.g. a `LightProfile`, `Galaxy`, `Plane`) get its attributes that can be
         plotted and return them  in a `Visuals2D` object.
 
         Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted
@@ -326,7 +332,7 @@ class GetVisuals2D(gv.GetVisuals2D):
         self, mass_obj: Union[MassProfile, Galaxy, Plane], grid: aa.type.Grid2DLike
     ) -> Visuals2D:
         """
-        From an object with mass profiles (e.g. a `MassProfile`, `Galaxy`, `Plane`) get its attributes that can be 
+        From an object with mass profiles (e.g. a `MassProfile`, `Galaxy`, `Plane`) get its attributes that can be
         plotted and return them  in a `Visuals2D` object.
 
         Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted

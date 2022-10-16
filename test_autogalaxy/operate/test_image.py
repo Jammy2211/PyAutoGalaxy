@@ -71,7 +71,7 @@ def test__blurred_image_2d_from(
 
 
 def test__x1_plane__padded_image__compare_to_galaxy_images_using_padded_grid_stack(
-    sub_grid_2d_7x7
+    sub_grid_2d_7x7,
 ):
     padded_grid = sub_grid_2d_7x7.padded_grid_from(kernel_shape_native=(3, 3))
 

@@ -30,16 +30,16 @@ class PlanePlotter(Plotter):
         include_2d: Include2D = Include2D(),
     ):
         """
-        Plots the attributes of `Plane` objects using the matplotlib methods `plot()` and `imshow()` and many 
+        Plots the attributes of `Plane` objects using the matplotlib methods `plot()` and `imshow()` and many
         other matplotlib functions which customize the plot's appearance.
 
-        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default, 
-        the settings passed to every matplotlib function called are those specified in 
-        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to 
+        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default,
+        the settings passed to every matplotlib function called are those specified in
+        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to
         customize the figure's appearance.
 
-        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be 
-        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in 
+        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
+        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in
         the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
 
         Parameters
@@ -282,7 +282,7 @@ class PlanePlotter(Plotter):
         auto_filename: str = "subplot_plane",
     ):
         """
-        Plots the individual attributes of the plotter's `Plane` object in 2D on a subplot, which are computed via the 
+        Plots the individual attributes of the plotter's `Plane` object in 2D on a subplot, which are computed via the
         plotter's 2D grid object.
 
         The API is such that every plottable attribute of the `Plane` object is an input parameter of type bool of

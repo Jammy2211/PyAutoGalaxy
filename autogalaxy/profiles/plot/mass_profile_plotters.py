@@ -30,16 +30,16 @@ class MassProfilePlotter(Plotter):
         include_2d: Include2D = Include2D(),
     ):
         """
-        Plots the attributes of `MassProfile` objects using the matplotlib methods `plot()` and `imshow()` and many 
+        Plots the attributes of `MassProfile` objects using the matplotlib methods `plot()` and `imshow()` and many
         other matplotlib functions which customize the plot's appearance.
 
-        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default, 
-        the settings passed to every matplotlib function called are those specified in 
-        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to 
+        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default,
+        the settings passed to every matplotlib function called are those specified in
+        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to
         customize the figure's appearance.
 
-        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be 
-        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in 
+        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
+        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in
         the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
 
         Parameters
@@ -92,11 +92,11 @@ class MassProfilePlotter(Plotter):
 
     def figures_1d(self, convergence: bool = False, potential: bool = False):
         """
-        Plots the individual attributes of the plotter's `MassProfile` object in 1D, which are computed via the 
-        plotter's grid object. 
+        Plots the individual attributes of the plotter's `MassProfile` object in 1D, which are computed via the
+        plotter's grid object.
 
-        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is 
-        computed from the mass profile. This is performed by aligning a 1D grid with the  major-axis of the mass 
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from the mass profile. This is performed by aligning a 1D grid with the  major-axis of the mass
         profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
 
         The API is such that every plottable attribute of the  `MassProfile` object is an input parameter of type
@@ -165,7 +165,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         sigma: Optional[float] = 3.0,
     ):
         """
-        Plots the attributes of a list of `MassProfile` objects using the matplotlib methods `plot()` and `imshow()` 
+        Plots the attributes of a list of `MassProfile` objects using the matplotlib methods `plot()` and `imshow()`
         and many other matplotlib functions which customize the plot's appearance.
 
         Figures plotted by this object average over a list mass profiles to computed the average value of each attribute
@@ -173,13 +173,13 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         plausible models. Therefore, the input list of galaxies is expected to represent the probability density
         function of an inferred model-fit.
 
-        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default, 
-        the settings passed to every matplotlib function called are those specified in 
-        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to 
+        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default,
+        the settings passed to every matplotlib function called are those specified in
+        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to
         customize the figure's appearance.
 
-        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be 
-        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in 
+        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
+        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in
         the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
 
         Parameters
@@ -201,8 +201,8 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         include_2d
             Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 2D plots.
         sigma
-            The confidence interval in terms of a sigma value at which the errors are computed (e.g. a value of 
-            sigma=3.0 uses confidence intevals at ~0.01 and 0.99 the PDF).            
+            The confidence interval in terms of a sigma value at which the errors are computed (e.g. a value of
+            sigma=3.0 uses confidence intevals at ~0.01 and 0.99 the PDF).
         """
         super().__init__(
             mass_profile=None,
@@ -261,7 +261,10 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 convergence_1d[0:min_index] for convergence_1d in convergence_1d_list
             ]
 
-            median_convergence_1d, errors_convergence_1d = error_util.profile_1d_median_and_error_region_via_quantile(
+            (
+                median_convergence_1d,
+                errors_convergence_1d,
+            ) = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=convergence_1d_list, low_limit=self.low_limit
             )
 
@@ -304,7 +307,10 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 potential_1d[0:min_index] for potential_1d in potential_1d_list
             ]
 
-            median_potential_1d, errors_potential_1d = error_util.profile_1d_median_and_error_region_via_quantile(
+            (
+                median_potential_1d,
+                errors_potential_1d,
+            ) = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
             )
 

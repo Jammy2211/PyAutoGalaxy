@@ -50,7 +50,7 @@ class PointMass(MassProfile):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         grid_radii = self.grid_to_grid_radii(grid=grid)
         return self.grid_to_grid_cartesian(
-            grid=grid, radius=self.einstein_radius ** 2 / grid_radii
+            grid=grid, radius=self.einstein_radius**2 / grid_radii
         )
 
     @property
@@ -100,11 +100,11 @@ class EllPowerLawBroken(MassProfile):
         # Normalisation (eq. 5)
         if self.nu < 1:
             self.kB = (2 - self.inner_slope) / (
-                (2 * self.nu ** 2)
+                (2 * self.nu**2)
                 * (1 + self.dt * (self.nu ** (self.outer_slope - 2) - 1))
             )
         else:
-            self.kB = (2 - self.inner_slope) / (2 * self.nu ** 2)
+            self.kB = (2 - self.inner_slope) / (2 * self.nu**2)
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
@@ -149,7 +149,7 @@ class EllPowerLawBroken(MassProfile):
         factors = (
             2
             * self.kB
-            * (self.break_radius ** 2)
+            * (self.break_radius**2)
             / (self.axis_ratio * z * (2 - self.inner_slope))
         )
 
@@ -198,7 +198,7 @@ class EllPowerLawBroken(MassProfile):
         """
 
         # u from eq. 25
-        q_ = (1 - q ** 2) / (q ** 2)
+        q_ = (1 - q**2) / (q**2)
         u = 0.5 * (1 - np.sqrt(1 - q_ * (r / z) ** 2))
 
         # First coefficient
@@ -208,7 +208,7 @@ class EllPowerLawBroken(MassProfile):
         F = np.zeros_like(z, dtype="complex64")
 
         for n in range(max_terms):
-            F += a_n * (u ** n)
+            F += a_n * (u**n)
             a_n *= ((2 * n) + 4 - (2 * t)) / ((2 * n) + 4 - t)
 
         return F
@@ -399,27 +399,27 @@ class EllPowerLawCored(MassProfile):
 
     def convergence_func(self, grid_radius: float) -> float:
         return self.einstein_radius_rescaled * (
-            self.core_radius ** 2 + grid_radius ** 2
+            self.core_radius**2 + grid_radius**2
         ) ** (-(self.slope - 1) / 2.0)
 
     @staticmethod
     def potential_func(u, y, x, axis_ratio, slope, core_radius):
-        eta = np.sqrt((u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u)))))
+        eta = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
         return (
             (eta / u)
             * ((3.0 - slope) * eta) ** -1.0
             * (
-                (core_radius ** 2.0 + eta ** 2.0) ** ((3.0 - slope) / 2.0)
+                (core_radius**2.0 + eta**2.0) ** ((3.0 - slope) / 2.0)
                 - core_radius ** (3 - slope)
             )
-            / ((1 - (1 - axis_ratio ** 2) * u) ** 0.5)
+            / ((1 - (1 - axis_ratio**2) * u) ** 0.5)
         )
 
     @staticmethod
     def deflection_func(u, y, x, npow, axis_ratio, slope, core_radius):
-        eta_u = np.sqrt((u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u)))))
-        return (core_radius ** 2 + eta_u ** 2) ** (-(slope - 1) / 2.0) / (
-            (1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5)
+        eta_u = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
+        return (core_radius**2 + eta_u**2) ** (-(slope - 1) / 2.0) / (
+            (1 - (1 - axis_ratio**2) * u) ** (npow + 0.5)
         )
 
     @property
@@ -487,7 +487,7 @@ class SphPowerLawCored(EllPowerLawCored):
             np.divide(
                 np.add(
                     np.power(
-                        np.add(self.core_radius ** 2, np.square(eta)),
+                        np.add(self.core_radius**2, np.square(eta)),
                         (3.0 - self.slope) / 2.0,
                     ),
                     -self.core_radius ** (3 - self.slope),
@@ -552,7 +552,7 @@ class EllPowerLaw(EllPowerLawCored):
 
         slope = self.slope - 1.0
         einstein_radius = (
-            2.0 / (self.axis_ratio ** -0.5 + self.axis_ratio ** 0.5)
+            2.0 / (self.axis_ratio**-0.5 + self.axis_ratio**0.5)
         ) * self.einstein_radius
 
         factor = np.divide(1.0 - self.axis_ratio, 1.0 + self.axis_ratio)
@@ -561,7 +561,7 @@ class EllPowerLaw(EllPowerLawCored):
             grid[:, 0], np.multiply(self.axis_ratio, grid[:, 1])
         )  # Note, this angle is not the position angle
         R = np.sqrt(
-            np.add(np.multiply(self.axis_ratio ** 2, grid[:, 1] ** 2), grid[:, 0] ** 2)
+            np.add(np.multiply(self.axis_ratio**2, grid[:, 1] ** 2), grid[:, 0] ** 2)
         )
         z = np.add(
             np.multiply(np.cos(angle), 1 + 0j), np.multiply(np.sin(angle), 0 + 1j)
@@ -573,7 +573,7 @@ class EllPowerLaw(EllPowerLawCored):
             / (1.0 + self.axis_ratio)
             * (b / R) ** (slope - 1.0)
             * z
-            * special.hyp2f1(1.0, 0.5 * slope, 2.0 - 0.5 * slope, -factor * z ** 2)
+            * special.hyp2f1(1.0, 0.5 * slope, 2.0 - 0.5 * slope, -factor * z**2)
         )
 
         deflection_y = complex_angle.imag
@@ -595,12 +595,12 @@ class EllPowerLaw(EllPowerLawCored):
 
     @staticmethod
     def potential_func(u, y, x, axis_ratio, slope, core_radius):
-        eta_u = np.sqrt((u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u)))))
+        eta_u = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
         return (
             (eta_u / u)
             * ((3.0 - slope) * eta_u) ** -1.0
             * eta_u ** (3.0 - slope)
-            / ((1 - (1 - axis_ratio ** 2) * u) ** 0.5)
+            / ((1 - (1 - axis_ratio**2) * u) ** 0.5)
         )
 
 
@@ -765,16 +765,16 @@ class EllIsothermal(EllPowerLaw):
             2.0
             * self.einstein_radius_rescaled
             * self.axis_ratio
-            / np.sqrt(1 - self.axis_ratio ** 2)
+            / np.sqrt(1 - self.axis_ratio**2)
         )
 
         psi = psi_from(grid=grid, axis_ratio=self.axis_ratio, core_radius=0.0)
 
         deflection_y = np.arctanh(
-            np.divide(np.multiply(np.sqrt(1 - self.axis_ratio ** 2), grid[:, 0]), psi)
+            np.divide(np.multiply(np.sqrt(1 - self.axis_ratio**2), grid[:, 0]), psi)
         )
         deflection_x = np.arctan(
-            np.divide(np.multiply(np.sqrt(1 - self.axis_ratio ** 2), grid[:, 1]), psi)
+            np.divide(np.multiply(np.sqrt(1 - self.axis_ratio**2), grid[:, 1]), psi)
         )
         return self.rotate_grid_from_reference_frame(
             grid=np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)

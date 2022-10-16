@@ -604,7 +604,7 @@ def test__hyper_noise_map_list_from():
 
     assert (hyper_noise_map_list[0].slim == np.array([0.0, 2.0, 3.0])).all()
     assert hyper_noise_map_list[1].slim == pytest.approx(
-        np.array([0.73468, (2.0 * 0.75) ** 2.0, 3.0 ** 2.0]), 1.0e-4
+        np.array([0.73468, (2.0 * 0.75) ** 2.0, 3.0**2.0]), 1.0e-4
     )
 
     noise_map = ag.Array2D.manual_native(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)

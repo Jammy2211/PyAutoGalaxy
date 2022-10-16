@@ -141,12 +141,12 @@ class PlaneToInversion(AbstractToInversion):
         self,
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
 
-        lp_linear_light_profile_func_list_galaxy_dict = self.cls_light_profile_func_list_galaxy_dict_from(
-            cls=LightProfileLinear
+        lp_linear_light_profile_func_list_galaxy_dict = (
+            self.cls_light_profile_func_list_galaxy_dict_from(cls=LightProfileLinear)
         )
 
-        lp_basis_func_list_galaxy_dict = self.cls_light_profile_func_list_galaxy_dict_from(
-            cls=Basis
+        lp_basis_func_list_galaxy_dict = (
+            self.cls_light_profile_func_list_galaxy_dict_from(cls=Basis)
         )
 
         return {
@@ -155,7 +155,9 @@ class PlaneToInversion(AbstractToInversion):
         }
 
     @cached_property
-    def sparse_image_plane_grid_list(self,) -> Optional[List[aa.Grid2DSparse]]:
+    def sparse_image_plane_grid_list(
+        self,
+    ) -> Optional[List[aa.Grid2DSparse]]:
 
         if not self.plane.has(cls=aa.Pixelization):
             return None

@@ -172,7 +172,7 @@ class Scribbler:
         if not center[0] or not center[1]:
             return
         xx, yy = np.mgrid[: self.im.shape[0], : self.im.shape[1]]
-        circle_mask = (xx - center[1]) ** 2 + (yy - center[0]) ** 2 <= radius ** 2
+        circle_mask = (xx - center[1]) ** 2 + (yy - center[0]) ** 2 <= radius**2
         mask[circle_mask] = 1
 
     def circles_to_mask(self, centers, radii):

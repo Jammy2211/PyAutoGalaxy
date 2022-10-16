@@ -272,10 +272,12 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
             if galaxy.has(cls=HyperGalaxy):
 
-                hyper_noise_map_1d = galaxy.hyper_galaxy.hyper_noise_map_via_hyper_images_from(
-                    noise_map=noise_map,
-                    hyper_model_image=galaxy.hyper_model_image,
-                    hyper_galaxy_image=galaxy.hyper_galaxy_image,
+                hyper_noise_map_1d = (
+                    galaxy.hyper_galaxy.hyper_noise_map_via_hyper_images_from(
+                        noise_map=noise_map,
+                        hyper_model_image=galaxy.hyper_model_image,
+                        hyper_galaxy_image=galaxy.hyper_galaxy_image,
+                    )
                 )
 
                 hyper_noise_maps.append(hyper_noise_map_1d)

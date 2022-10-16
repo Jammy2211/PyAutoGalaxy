@@ -334,7 +334,7 @@ class EllProfile(SphProfile):
                 u
                 * (
                     (coordinates[1] ** 2)
-                    + (coordinates[0] ** 2 / (1 - (1 - self.axis_ratio ** 2) * u))
+                    + (coordinates[0] ** 2 / (1 - (1 - self.axis_ratio**2) * u))
                 )
             )
         )

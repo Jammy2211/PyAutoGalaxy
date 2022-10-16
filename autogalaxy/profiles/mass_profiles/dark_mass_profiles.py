@@ -337,8 +337,10 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
                 "string. Must be {local, profile}"
             )
 
-        cosmic_average_density = cosmology.cosmic_average_density_solar_mass_per_kpc3_from(
-            redshift=redshift_calc
+        cosmic_average_density = (
+            cosmology.cosmic_average_density_solar_mass_per_kpc3_from(
+                redshift=redshift_calc
+            )
         )
 
         rho_scale_radius = self.rho_at_scale_radius_solar_mass_per_kpc3(
@@ -417,8 +419,10 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
                 "string. Must be {local, profile}"
             )
 
-        cosmic_average_density = cosmology.cosmic_average_density_solar_mass_per_kpc3_from(
-            redshift=redshift_calc
+        cosmic_average_density = (
+            cosmology.cosmic_average_density_solar_mass_per_kpc3_from(
+                redshift=redshift_calc
+            )
         )
 
         radius_at_200 = self.radius_at_200(
@@ -436,7 +440,7 @@ class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
             200.0
             * ((4.0 / 3.0) * np.pi)
             * cosmic_average_density
-            * (radius_at_200_kpc ** 3.0)
+            * (radius_at_200_kpc**3.0)
         )
 
     @property
@@ -566,19 +570,19 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
         surface_density_integral,
     ):
 
-        eta_u = np.sqrt((u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u)))))
+        eta_u = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
         bin_size = (maximum_log_eta - minimum_log_eta) / (tabulate_bins - 1)
         i = 1 + int((np.log10(eta_u) - minimum_log_eta) / bin_size)
         r1 = 10.0 ** (minimum_log_eta + (i - 1) * bin_size)
-        r2 = r1 * 10.0 ** bin_size
+        r2 = r1 * 10.0**bin_size
         kap = surface_density_integral[i] + (
             surface_density_integral[i + 1] - surface_density_integral[i]
         ) * (eta_u - r1) / (r2 - r1)
-        return kap / (1.0 - (1.0 - axis_ratio ** 2) * u) ** (npow + 0.5)
+        return kap / (1.0 - (1.0 - axis_ratio**2) * u) ** (npow + 0.5)
 
     def convergence_func(self, grid_radius: float) -> float:
         def integral_y(y, eta):
-            return (y + eta) ** (self.inner_slope - 4) * (1 - np.sqrt(1 - y ** 2))
+            return (y + eta) ** (self.inner_slope - 4) * (1 - np.sqrt(1 - y**2))
 
         grid_radius = (1.0 / self.scale_radius) * grid_radius
 
@@ -623,7 +627,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
         @jit_integrand
         def deflection_integrand(x, kappa_radius, scale_radius, inner_slope):
             return (x + kappa_radius / scale_radius) ** (inner_slope - 3) * (
-                (1 - np.sqrt(1 - x ** 2)) / x
+                (1 - np.sqrt(1 - x**2)) / x
             )
 
         (
@@ -693,15 +697,15 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
         tabulate_bins,
         potential_integral,
     ):
-        eta_u = np.sqrt((u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u)))))
+        eta_u = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
         bin_size = (maximum_log_eta - minimum_log_eta) / (tabulate_bins - 1)
         i = 1 + int((np.log10(eta_u) - minimum_log_eta) / bin_size)
         r1 = 10.0 ** (minimum_log_eta + (i - 1) * bin_size)
-        r2 = r1 * 10.0 ** bin_size
+        r2 = r1 * 10.0**bin_size
         angle = potential_integral[i] + (
             potential_integral[i + 1] - potential_integral[i]
         ) * (eta_u - r1) / (r2 - r1)
-        return eta_u * (angle / u) / (1.0 - (1.0 - axis_ratio ** 2) * u) ** 0.5
+        return eta_u * (angle / u) / (1.0 - (1.0 - axis_ratio**2) * u) ** 0.5
 
 
 class SphNFWGeneralized(EllNFWGeneralized):
@@ -763,7 +767,7 @@ class SphNFWGeneralized(EllNFWGeneralized):
 
     @staticmethod
     def deflection_integrand(y, eta, inner_slope):
-        return (y + eta) ** (inner_slope - 3) * ((1 - np.sqrt(1 - y ** 2)) / y)
+        return (y + eta) ** (inner_slope - 3) * ((1 - np.sqrt(1 - y**2)) / y)
 
     def deflection_func_sph(self, eta):
         integral_y_2 = quad(
@@ -850,14 +854,14 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
         g_r = self.coord_func_g(grid_radius=grid_radius)
         k_r = self.coord_func_k(grid_radius=grid_radius)
 
-        return np.divide(self.tau ** 2.0, (self.tau ** 2.0 + 1.0) ** 2.0) * (
-            ((self.tau ** 2.0 + 1.0) * g_r)
+        return np.divide(self.tau**2.0, (self.tau**2.0 + 1.0) ** 2.0) * (
+            ((self.tau**2.0 + 1.0) * g_r)
             + (2 * f_r)
-            - (np.pi / (np.sqrt(self.tau ** 2.0 + grid_radius ** 2.0)))
+            - (np.pi / (np.sqrt(self.tau**2.0 + grid_radius**2.0)))
             + (
                 (
-                    (self.tau ** 2.0 - 1.0)
-                    / (self.tau * (np.sqrt(self.tau ** 2.0 + grid_radius ** 2.0)))
+                    (self.tau**2.0 - 1.0)
+                    / (self.tau * (np.sqrt(self.tau**2.0 + grid_radius**2.0)))
                 )
                 * k_r
             )
@@ -867,13 +871,13 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
         f_r = self.coord_func_f(grid_radius=grid_radius)
         k_r = self.coord_func_k(grid_radius=grid_radius)
 
-        return (self.tau ** 2.0 / (self.tau ** 2.0 + 1.0) ** 2.0) * (
-            ((self.tau ** 2.0 + 2.0 * grid_radius ** 2.0 - 1.0) * f_r)
+        return (self.tau**2.0 / (self.tau**2.0 + 1.0) ** 2.0) * (
+            ((self.tau**2.0 + 2.0 * grid_radius**2.0 - 1.0) * f_r)
             + (np.pi * self.tau)
-            + ((self.tau ** 2.0 - 1.0) * np.log(self.tau))
+            + ((self.tau**2.0 - 1.0) * np.log(self.tau))
             + (
-                np.sqrt(grid_radius ** 2.0 + self.tau ** 2.0)
-                * (((self.tau ** 2.0 - 1.0) / self.tau) * k_r - np.pi)
+                np.sqrt(grid_radius**2.0 + self.tau**2.0)
+                * (((self.tau**2.0 - 1.0) / self.tau) * k_r - np.pi)
             )
         )
 
@@ -893,11 +897,11 @@ class SphNFWTruncated(AbstractEllNFWGeneralized):
 
         return (
             mass_at_200
-            * (self.tau ** 2.0 / (self.tau ** 2.0 + 1.0) ** 2.0)
+            * (self.tau**2.0 / (self.tau**2.0 + 1.0) ** 2.0)
             * (
-                ((self.tau ** 2.0 - 1) * np.log(self.tau))
+                ((self.tau**2.0 - 1) * np.log(self.tau))
                 + (self.tau * np.pi)
-                - (self.tau ** 2.0 + 1)
+                - (self.tau**2.0 + 1)
             )
         )
 
@@ -1083,16 +1087,16 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
     @staticmethod
     def deflection_func(u, y, x, npow, axis_ratio, scale_radius):
         eta_u = (1.0 / scale_radius) * np.sqrt(
-            (u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u))))
+            (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
         )
 
         if eta_u > 1:
-            eta_u_2 = (1.0 / np.sqrt(eta_u ** 2 - 1)) * np.arctan(
-                np.sqrt(eta_u ** 2 - 1)
+            eta_u_2 = (1.0 / np.sqrt(eta_u**2 - 1)) * np.arctan(
+                np.sqrt(eta_u**2 - 1)
             )
         elif eta_u < 1:
-            eta_u_2 = (1.0 / np.sqrt(1 - eta_u ** 2)) * np.arctanh(
-                np.sqrt(1 - eta_u ** 2)
+            eta_u_2 = (1.0 / np.sqrt(1 - eta_u**2)) * np.arctanh(
+                np.sqrt(1 - eta_u**2)
             )
         else:
             eta_u_2 = 1
@@ -1100,8 +1104,8 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
         return (
             2.0
             * (1 - eta_u_2)
-            / (eta_u ** 2 - 1)
-            / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
+            / (eta_u**2 - 1)
+            / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
         )
 
     @aa.grid_dec.grid_2d_to_structure
@@ -1167,16 +1171,16 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
     @staticmethod
     def potential_func(u, y, x, axis_ratio, kappa_s, scale_radius):
         eta_u = (1.0 / scale_radius) * np.sqrt(
-            (u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u))))
+            (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
         )
 
         if eta_u > 1:
-            eta_u_2 = (1.0 / np.sqrt(eta_u ** 2 - 1)) * np.arctan(
-                np.sqrt(eta_u ** 2 - 1)
+            eta_u_2 = (1.0 / np.sqrt(eta_u**2 - 1)) * np.arctan(
+                np.sqrt(eta_u**2 - 1)
             )
         elif eta_u < 1:
-            eta_u_2 = (1.0 / np.sqrt(1 - eta_u ** 2)) * np.arctanh(
-                np.sqrt(1 - eta_u ** 2)
+            eta_u_2 = (1.0 / np.sqrt(1 - eta_u**2)) * np.arctanh(
+                np.sqrt(1 - eta_u**2)
             )
         else:
             eta_u_2 = 1
@@ -1188,7 +1192,7 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
             * (axis_ratio / 2.0)
             * (eta_u / u)
             * ((np.log(eta_u / 2.0) + eta_u_2) / eta_u)
-            / ((1 - (1 - axis_ratio ** 2) * u) ** 0.5)
+            / ((1 - (1 - axis_ratio**2) * u) ** 0.5)
         )
 
     def decompose_convergence_via_cse(self, total_cses=30, sample_points=60):
@@ -1237,9 +1241,9 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
     @staticmethod
     def coord_func(r):
         if r > 1:
-            return (1.0 / np.sqrt(r ** 2 - 1)) * np.arctan(np.sqrt(r ** 2 - 1))
+            return (1.0 / np.sqrt(r**2 - 1)) * np.arctan(np.sqrt(r**2 - 1))
         elif r < 1:
-            return (1.0 / np.sqrt(1 - r ** 2)) * np.arctanh(np.sqrt(1 - r ** 2))
+            return (1.0 / np.sqrt(1 - r**2)) * np.arctanh(np.sqrt(1 - r**2))
         elif r == 1:
             return 1
 
@@ -1322,7 +1326,7 @@ class SphNFW(EllNFW):
 
     @staticmethod
     def potential_func_sph(eta):
-        return ((np.log(eta / 2.0)) ** 2) - (np.arctanh(np.sqrt(1 - eta ** 2))) ** 2
+        return ((np.log(eta / 2.0)) ** 2) - (np.arctanh(np.sqrt(1 - eta**2))) ** 2
 
 
 class SphNFWMCRDuffy(SphNFW):
@@ -1490,11 +1494,13 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
     cosmology = Planck15()
 
     cosmic_average_density = (
-        cosmology.critical_density(redshift_object).to(units.solMass / units.kpc ** 3)
+        cosmology.critical_density(redshift_object).to(units.solMass / units.kpc**3)
     ).value
 
-    critical_surface_density = cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-        redshift_0=redshift_object, redshift_1=redshift_source
+    critical_surface_density = (
+        cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+            redshift_0=redshift_object, redshift_1=redshift_source
+        )
     )
 
     kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object)
@@ -1514,7 +1520,7 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
         200.0
         / 3.0
         * (
-            concentration ** 3
+            concentration**3
             / (np.log(1.0 + concentration) - concentration / (1.0 + concentration))
         )
     )  # rho_c
@@ -1544,11 +1550,13 @@ def kappa_s_and_scale_radius_for_ludlow(
     concentration = 10.0 ** (np.log10(concentration) + scatter_sigma * 0.15)
 
     cosmic_average_density = (
-        cosmology.critical_density(redshift_object).to(units.solMass / units.kpc ** 3)
+        cosmology.critical_density(redshift_object).to(units.solMass / units.kpc**3)
     ).value
 
-    critical_surface_density = cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-        redshift_0=redshift_object, redshift_1=redshift_source
+    critical_surface_density = (
+        cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+            redshift_0=redshift_object, redshift_1=redshift_source
+        )
     )
 
     kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object)
@@ -1563,7 +1571,7 @@ def kappa_s_and_scale_radius_for_ludlow(
         200.0
         / 3.0
         * (
-            concentration ** 3
+            concentration**3
             / (np.log(1.0 + concentration) - concentration / (1.0 + concentration))
         )
     )  # rho_c

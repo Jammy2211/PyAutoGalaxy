@@ -117,7 +117,7 @@ class GalaxyPlotter(Plotter):
         self, light_profile: LightProfile, one_d_only: bool = False
     ) -> LightProfilePlotter:
         """
-        Returns a `LightProfilePlotter` given an input light profile, which is typically used for plotting the 
+        Returns a `LightProfilePlotter` given an input light profile, which is typically used for plotting the
         individual light profiles of the plotter's `Galaxy` (e.g. in the function `figures_1d_decomposed`).
 
         Parameters
@@ -572,8 +572,8 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         Plots the attributes of a list of `GalaxyProfile` objects using the matplotlib methods `plot()` and `imshow()`
         and many other matplotlib functions which customize the plot's appearance.
 
-        Figures plotted by this object average over a list galaxy profiles to computed the average value of each 
-        attribute with errors, where the 1D regions within the errors are plotted as a shaded region to show the range 
+        Figures plotted by this object average over a list galaxy profiles to computed the average value of each
+        attribute with errors, where the 1D regions within the errors are plotted as a shaded region to show the range
         of plausible models. Therefore, the input list of galaxies is expected to represent the probability density
         function of an inferred model-fit.
 
@@ -627,13 +627,13 @@ class GalaxyPDFPlotter(GalaxyPlotter):
     def light_profile_pdf_plotter_list(self) -> List[LightProfilePDFPlotter]:
         """
         Returns a list of `LightProfilePDFPlotter` objects from the list of galaxies in this object. These are
-        typically used for plotting the individual average value plus errors of the light profiles of the 
+        typically used for plotting the individual average value plus errors of the light profiles of the
         plotter's `Galaxy` (e.g. in the function `figures_1d_decomposed`).
 
         Returns
         -------
         List[LightProfilePDFPlotter]
-            An object that plots the average value and errors of a list of light profiles, often used for plotting 
+            An object that plots the average value and errors of a list of light profiles, often used for plotting
             attributes of the galaxy.
         """
         return [
@@ -652,7 +652,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         Returns
         -------
         LightProfilePDFPlotter
-            An object that plots the average value and errors of a list of light profiles, often used for plotting 
+            An object that plots the average value and errors of a list of light profiles, often used for plotting
             attributes of the galaxy.
         """
         light_profile_pdf_list = [
@@ -675,13 +675,13 @@ class GalaxyPDFPlotter(GalaxyPlotter):
     def mass_profile_pdf_plotter_list(self) -> List[MassProfilePDFPlotter]:
         """
         Returns a list of `MassProfilePDFPlotter` objects from the list of galaxies in this object. These are
-        typically used for plotting the individual average value plus errors of the mass profiles of the 
+        typically used for plotting the individual average value plus errors of the mass profiles of the
         plotter's `Galaxy` (e.g. in the function `figures_1d_decomposed`).
 
         Returns
         -------
         List[MassProfilePDFPlotter]
-            An object that plots the average value and errors of a list of mass profiles, often used for plotting 
+            An object that plots the average value and errors of a list of mass profiles, often used for plotting
             attributes of the galaxy.
         """
         return [
@@ -700,7 +700,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         Returns
         -------
         MassProfilePDFPlotter
-            An object that plots the average value and errors of a list of mass profiles, often used for plotting 
+            An object that plots the average value and errors of a list of mass profiles, often used for plotting
             attributes of the galaxy.
         """
         mass_profile_pdf_list = [
@@ -763,7 +763,10 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             min_index = min([image_1d.shape[0] for image_1d in image_1d_list])
             image_1d_list = [image_1d[0:min_index] for image_1d in image_1d_list]
 
-            median_image_1d, errors_image_1d = error_util.profile_1d_median_and_error_region_via_quantile(
+            (
+                median_image_1d,
+                errors_image_1d,
+            ) = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=image_1d_list, low_limit=self.low_limit
             )
 
@@ -808,7 +811,10 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 convergence_1d[0:min_index] for convergence_1d in convergence_1d_list
             ]
 
-            median_convergence_1d, errors_convergence_1d = error_util.profile_1d_median_and_error_region_via_quantile(
+            (
+                median_convergence_1d,
+                errors_convergence_1d,
+            ) = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=convergence_1d_list, low_limit=self.low_limit
             )
 
@@ -855,7 +861,10 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 potential_1d[0:min_index] for potential_1d in potential_1d_list
             ]
 
-            median_potential_1d, errors_potential_1d = error_util.profile_1d_median_and_error_region_via_quantile(
+            (
+                median_potential_1d,
+                errors_potential_1d,
+            ) = error_util.profile_1d_median_and_error_region_via_quantile(
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
             )
 

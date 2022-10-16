@@ -9,7 +9,7 @@ class TestSetupHyper:
         assert setup.search_inversion_cls == af.DynestyStatic
         assert setup.search_pixelization_dict == {
             "nlive": 50,
-            "sample": "rstagger",
+            "sample": "rwalk",
             "dlogz": 10,
         }
 

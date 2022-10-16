@@ -57,13 +57,13 @@ def test__grid_to_eccentric_radii():
         grid=np.array([[1.0, 1.0]])
     )
 
-    assert eccentric_radius == pytest.approx(2.0 ** 0.5, 1e-3)
+    assert eccentric_radius == pytest.approx(2.0**0.5, 1e-3)
 
     eccentric_radius = elliptical_profile.grid_to_eccentric_radii(
         grid=np.array([[1.0, 1.0]])
     )
 
-    assert eccentric_radius == pytest.approx(2.0 ** 0.5, 1e-3)
+    assert eccentric_radius == pytest.approx(2.0**0.5, 1e-3)
 
     # eccentric_radius = sqrt(axis_ratio) * sqrt(  x**2 +   (y**2 / axis_ratio**2))
     # eccentric_radius =        sqrt(0.5) * sqrt(1.0**2 + (1.0**2 /        0.5**2))

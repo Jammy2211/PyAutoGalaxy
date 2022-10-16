@@ -253,7 +253,7 @@ class TestAbstractNFW:
             200.0
             * ((4.0 / 3.0) * np.pi)
             * cosmology.cosmic_average_density
-            * (radius_at_200 ** 3.0)
+            * (radius_at_200**3.0)
         )
         assert mass_at_200 == pytest.approx(mass_calc, 1.0e-5)
 
@@ -807,7 +807,9 @@ class TestNFWTruncated:
         #
         # assert mass_at_truncation_radius == pytest.approx(0.00033636625, 1.0e-4)
 
-    def test__compare_nfw_and_truncated_nfw_with_large_truncation_radius(self,):
+    def test__compare_nfw_and_truncated_nfw_with_large_truncation_radius(
+        self,
+    ):
 
         truncated_nfw = ag.mp.SphNFWTruncated(
             centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0, truncation_radius=50000.0
@@ -1170,7 +1172,7 @@ class TestNFWTruncatedMCRDuffy:
 
 class TestNFWTruncatedMCRLludlow:
     def test__mass_and_concentration_consistent_with_normal_truncated_nfw__scatter_0(
-        self
+        self,
     ):
 
         cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)

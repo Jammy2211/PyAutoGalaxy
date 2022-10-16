@@ -18,24 +18,24 @@ class ClumpModel:
         einstein_radius_upper_limit: Optional[float] = None,
     ):
         """
-        The clump API allows creates model components which model the light and mass of galaxies that are nearby the 
-        main galaxy(s) of interest. 
-        
+        The clump API allows creates model components which model the light and mass of galaxies that are nearby the
+        main galaxy(s) of interest.
+
         The `ClumpModel` object handles the creation of these model components to streamline model composition with
         multiple clumps.
-        
+
         Every galaxy which is modeled as a clump has its centre input into this object which is fixed to this value
         for model-fitting. All clumps are created as model `Galaxy` objects with a shard input redshift.
-        
+
         The light and mass profiles of the clumps are input via the `light_cls` and `mass_cls` inputs. If either is
         omitted the clumps are not assigned a light or mass model.
-        
+
         Parameters
         ----------
         redshift
             The redshift value of all clumps, which is likely the same as the main galaxy redshift.
         centres
-            The centre of every clump in the model, whose light and mass profile centres are fixed to this value 
+            The centre of every clump in the model, whose light and mass profile centres are fixed to this value
             throughout the model-fit.
         light_cls
             The light profile given too all clumps; if omitted all clumps have no light profile.
@@ -60,7 +60,7 @@ class ClumpModel:
     @property
     def light_list(self) -> Optional[List[af.Model]]:
         """
-        Returns a list of every clump's light model, where the centre of that light model is fixed to its corresponding 
+        Returns a list of every clump's light model, where the centre of that light model is fixed to its corresponding
         input clump's centre.
         """
         if self.light_cls is None:
@@ -73,7 +73,7 @@ class ClumpModel:
     @property
     def mass_list(self) -> Optional[List[af.Model]]:
         """
-        Returns a list of every clump's mass model, where the centre of that mass model is fixed to its corresponding 
+        Returns a list of every clump's mass model, where the centre of that mass model is fixed to its corresponding
         input clump's centre.
         """
         if self.mass_cls is None:

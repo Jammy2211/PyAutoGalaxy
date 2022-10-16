@@ -34,11 +34,11 @@ def isinstance_or_prior(obj, cls):
     return False
 
 
-def mesh_list_from(model: af.Collection) -> Optional[List[AbstractMesh]]:
+def mesh_list_from(model: af.Collection) -> List[AbstractMesh]:
     """
     For a model containing one or more galaxies, inspect its attributes and return the list of `mesh`'s of each
     `pixelization` of all galaxies. If no galaxy has pixelization an empty list is returned.
-    
+
     This function expects that the input model is a `Collection` where the first model-component has the
     name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
     standard API for creating a model in PyAutoGalaxy.

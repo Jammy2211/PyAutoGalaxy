@@ -15,7 +15,7 @@ def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
     ys = np.linspace(-radius * 1.5, radius * 1.5, 40)
 
     edge = xs[1] - xs[0]
-    area = edge ** 2
+    area = edge**2
 
     for x in xs:
         for y in ys:
@@ -141,8 +141,8 @@ def test__density_between_circular_annuli():
         inner_annuli_radius=inner_annuli_radius, outer_annuli_radius=outer_annuli_radius
     )
 
-    annuli_area = (np.pi * outer_annuli_radius ** 2.0) - (
-        np.pi * inner_annuli_radius ** 2.0
+    annuli_area = (np.pi * outer_annuli_radius**2.0) - (
+        np.pi * inner_annuli_radius**2.0
     )
 
     assert (outer_mass - inner_mass) / annuli_area == pytest.approx(
@@ -159,7 +159,7 @@ def test__density_between_circular_annuli():
         inner_annuli_radius=1.0, outer_annuli_radius=2.0
     )
 
-    annuli_area = (np.pi * 2.0 ** 2.0) - (np.pi * 1.0 ** 2.0)
+    annuli_area = (np.pi * 2.0**2.0) - (np.pi * 1.0**2.0)
 
     assert (outer_mass - inner_mass) / annuli_area == pytest.approx(
         density_between_annuli, 1e-4
@@ -301,8 +301,8 @@ def test__einstein_radius_via_normalization_from():
         mass_to_light_ratio=1.0,
     )
 
-    einstein_radius_via_normalization_from = sersic.einstein_radius_via_normalization_from(
-        normalization=1.0
+    einstein_radius_via_normalization_from = (
+        sersic.einstein_radius_via_normalization_from(normalization=1.0)
     )
     einstein_radius_from_profile = sersic.average_convergence_of_1_radius
 
@@ -310,20 +310,20 @@ def test__einstein_radius_via_normalization_from():
         einstein_radius_from_profile, 1.0e-4
     )
 
-    einstein_radius_via_normalization_from = sersic.einstein_radius_via_normalization_from(
-        normalization=0.1
+    einstein_radius_via_normalization_from = (
+        sersic.einstein_radius_via_normalization_from(normalization=0.1)
     )
 
     assert einstein_radius_via_normalization_from == pytest.approx(0.381544, 1.0e-2)
 
-    einstein_radius_via_normalization_from = sersic.einstein_radius_via_normalization_from(
-        normalization=1e-4
+    einstein_radius_via_normalization_from = (
+        sersic.einstein_radius_via_normalization_from(normalization=1e-4)
     )
 
     assert einstein_radius_via_normalization_from == None
 
-    einstein_radius_via_normalization_from = sersic.einstein_radius_via_normalization_from(
-        normalization=1e9
+    einstein_radius_via_normalization_from = (
+        sersic.einstein_radius_via_normalization_from(normalization=1e9)
     )
 
     assert einstein_radius_via_normalization_from == None

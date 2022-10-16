@@ -431,9 +431,9 @@ class AbstractEllSersic(LightProfile):
             (2 * self.sersic_index)
             - (1.0 / 3.0)
             + (4.0 / (405.0 * self.sersic_index))
-            + (46.0 / (25515.0 * self.sersic_index ** 2))
-            + (131.0 / (1148175.0 * self.sersic_index ** 3))
-            - (2194697.0 / (30690717750.0 * self.sersic_index ** 4))
+            + (46.0 / (25515.0 * self.sersic_index**2))
+            + (131.0 / (1148175.0 * self.sersic_index**3))
+            - (2194697.0 / (30690717750.0 * self.sersic_index**4))
         )
 
     def image_2d_via_radii_from(self, radius: np.ndarray) -> np.ndarray:
@@ -819,9 +819,9 @@ class EllSersicCore(EllSersic):
                             np.divide(
                                 np.add(
                                     np.power(grid_radii, self.alpha),
-                                    (self.radius_break ** self.alpha),
+                                    (self.radius_break**self.alpha),
                                 ),
-                                (self.effective_radius ** self.alpha),
+                                (self.effective_radius**self.alpha),
                             ),
                             (1.0 / (self.alpha * self.sersic_index)),
                         )
@@ -1048,7 +1048,7 @@ class EllChameleon(LightProfile):
                     np.sqrt(
                         np.add(
                             np.square(grid_radii),
-                            (4.0 * self.core_radius_0 ** 2.0) / axis_ratio_factor,
+                            (4.0 * self.core_radius_0**2.0) / axis_ratio_factor,
                         )
                     ),
                 ),
@@ -1057,7 +1057,7 @@ class EllChameleon(LightProfile):
                     np.sqrt(
                         np.add(
                             np.square(grid_radii),
-                            (4.0 * self.core_radius_1 ** 2.0) / axis_ratio_factor,
+                            (4.0 * self.core_radius_1**2.0) / axis_ratio_factor,
                         )
                     ),
                 ),

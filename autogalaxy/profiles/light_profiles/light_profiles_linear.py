@@ -132,7 +132,9 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
     @property
     def mapping_matrix(self) -> np.ndarray:
 
-        mapping_matrix = np.zeros(shape=(self.grid.mask.pixels_in_mask, self.parameters))
+        mapping_matrix = np.zeros(
+            shape=(self.grid.mask.pixels_in_mask, self.parameters)
+        )
 
         for pixel, light_profile in enumerate(self.light_profile_list):
 

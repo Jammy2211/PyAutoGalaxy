@@ -86,7 +86,7 @@ class EllGaussian(MassProfile, StellarProfile):
             self.mass_to_light_ratio
             * self.intensity
             * self.sigma
-            * np.sqrt((2 * np.pi) / (1.0 - self.axis_ratio ** 2.0))
+            * np.sqrt((2 * np.pi) / (1.0 - self.axis_ratio**2.0))
             * self.zeta_from(grid=grid)
         )
 
@@ -147,11 +147,11 @@ class EllGaussian(MassProfile, StellarProfile):
     @staticmethod
     def deflection_func(u, y, x, npow, axis_ratio, sigma):
         eta_u = np.sqrt(axis_ratio) * np.sqrt(
-            (u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u))))
+            (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
         )
 
         return np.exp(-0.5 * np.square(np.divide(eta_u, sigma))) / (
-            (1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5)
+            (1 - (1 - axis_ratio**2) * u) ** (npow + 0.5)
         )
 
     @aa.grid_dec.grid_2d_to_structure
@@ -201,7 +201,7 @@ class EllGaussian(MassProfile, StellarProfile):
         return axis_ratio if axis_ratio < 0.9999 else 0.9999
 
     def zeta_from(self, grid: aa.type.Grid2DLike):
-        q2 = self.axis_ratio ** 2.0
+        q2 = self.axis_ratio**2.0
         ind_pos_y = grid[:, 0] >= 0
         shape_grid = np.shape(grid)
         output_grid = np.zeros((shape_grid[0]), dtype=np.complex128)
@@ -214,7 +214,7 @@ class EllGaussian(MassProfile, StellarProfile):
 
         output_grid[ind_pos_y] = -1j * (
             wofz(xs_0 + 1j * ys_0)
-            - np.exp(-(xs_0 ** 2.0) * (1.0 - q2) - ys_0 * ys_0 * (1.0 / q2 - 1.0))
+            - np.exp(-(xs_0**2.0) * (1.0 - q2) - ys_0 * ys_0 * (1.0 / q2 - 1.0))
             * wofz(self.axis_ratio * xs_0 + 1j * ys_0 / self.axis_ratio)
         )
 
@@ -222,7 +222,7 @@ class EllGaussian(MassProfile, StellarProfile):
             -1j
             * (
                 wofz(xs_1 + 1j * ys_1)
-                - np.exp(-(xs_1 ** 2.0) * (1.0 - q2) - ys_1 * ys_1 * (1.0 / q2 - 1.0))
+                - np.exp(-(xs_1**2.0) * (1.0 - q2) - ys_1 * ys_1 * (1.0 / q2 - 1.0))
                 * wofz(self.axis_ratio * xs_1 + 1j * ys_1 / self.axis_ratio)
             )
         )
@@ -416,7 +416,9 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
             func=sersic_2d, radii_min=radii_min, radii_max=radii_max
         )
 
-    def decompose_convergence_via_cse(self,) -> Tuple[List, List]:
+    def decompose_convergence_via_cse(
+        self,
+    ) -> Tuple[List, List]:
         """
         Decompose the convergence of the Sersic profile into cored steep elliptical (cse) profiles.
 
@@ -450,8 +452,8 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
         )
 
         scaled_effective_radius = self.effective_radius / np.sqrt(self.axis_ratio)
-        radii_min = scaled_effective_radius / 10.0 ** lower_dex
-        radii_max = scaled_effective_radius * 10.0 ** upper_dex
+        radii_min = scaled_effective_radius / 10.0**lower_dex
+        radii_max = scaled_effective_radius * 10.0**upper_dex
 
         def sersic_2d(r):
             return (
@@ -483,9 +485,9 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
             (2 * self.sersic_index)
             - (1.0 / 3.0)
             + (4.0 / (405.0 * self.sersic_index))
-            + (46.0 / (25515.0 * self.sersic_index ** 2))
-            + (131.0 / (1148175.0 * self.sersic_index ** 3))
-            - (2194697.0 / (30690717750.0 * self.sersic_index ** 4))
+            + (46.0 / (25515.0 * self.sersic_index**2))
+            + (131.0 / (1148175.0 * self.sersic_index**3))
+            - (2194697.0 / (30690717750.0 * self.sersic_index**4))
         )
 
     @property
@@ -566,13 +568,13 @@ class EllSersic(AbstractEllSersic, MassProfileMGE, MassProfileCSE):
         u, y, x, npow, axis_ratio, sersic_index, effective_radius, sersic_constant
     ):
         eta_u = np.sqrt(axis_ratio) * np.sqrt(
-            (u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u))))
+            (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
         )
 
         return np.exp(
             -sersic_constant
             * (((eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
-        ) / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
+        ) / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
 
 
 class SphSersic(EllSersic):
@@ -853,7 +855,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
         sersic_constant,
     ):
         eta_u = np.sqrt(axis_ratio) * np.sqrt(
-            (u * ((x ** 2) + (y ** 2 / (1 - (1 - axis_ratio ** 2) * u))))
+            (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
         )
 
         return (
@@ -862,7 +864,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
                 -sersic_constant
                 * (((eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
             )
-            / ((1 - (1 - axis_ratio ** 2) * u) ** (npow + 0.5))
+            / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
         )
 
     @aa.grid_dec.grid_2d_to_structure
@@ -945,8 +947,8 @@ class EllSersicRadialGradient(AbstractEllSersic):
         )
 
         scaled_effective_radius = self.effective_radius / np.sqrt(self.axis_ratio)
-        radii_min = scaled_effective_radius / 10.0 ** lower_dex
-        radii_max = scaled_effective_radius * 10.0 ** upper_dex
+        radii_min = scaled_effective_radius / 10.0**lower_dex
+        radii_max = scaled_effective_radius * 10.0**upper_dex
 
         def sersic_radial_gradient_2D(r):
             return (
@@ -1098,9 +1100,9 @@ class EllSersicCore(EllSersic):
                             np.divide(
                                 np.add(
                                     np.power(grid_radii, self.alpha),
-                                    (self.radius_break ** self.alpha),
+                                    (self.radius_break**self.alpha),
                                 ),
-                                (self.effective_radius ** self.alpha),
+                                (self.effective_radius**self.alpha),
                             ),
                             (1.0 / (self.alpha * self.sersic_index)),
                         )
@@ -1123,8 +1125,8 @@ class EllSersicCore(EllSersic):
                 * np.exp(
                     -self.sersic_constant
                     * (
-                        (r ** self.alpha + self.radius_break ** self.alpha)
-                        / self.effective_radius ** self.alpha
+                        (r**self.alpha + self.radius_break**self.alpha)
+                        / self.effective_radius**self.alpha
                     )
                     ** (1.0 / (self.sersic_index * self.alpha))
                 )
@@ -1268,14 +1270,14 @@ class EllChameleon(MassProfile, StellarProfile):
             * self.intensity
             / (1 + self.axis_ratio)
             * self.axis_ratio
-            / np.sqrt(1.0 - self.axis_ratio ** 2.0)
+            / np.sqrt(1.0 - self.axis_ratio**2.0)
         )
 
         core_radius_0 = np.sqrt(
-            (4.0 * self.core_radius_0 ** 2.0) / (1.0 + self.axis_ratio) ** 2
+            (4.0 * self.core_radius_0**2.0) / (1.0 + self.axis_ratio) ** 2
         )
         core_radius_1 = np.sqrt(
-            (4.0 * self.core_radius_1 ** 2.0) / (1.0 + self.axis_ratio) ** 2
+            (4.0 * self.core_radius_1**2.0) / (1.0 + self.axis_ratio) ** 2
         )
 
         psi0 = psi_from(
@@ -1287,28 +1289,28 @@ class EllChameleon(MassProfile, StellarProfile):
 
         deflection_y0 = np.arctanh(
             np.divide(
-                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 0]),
-                np.add(psi0, self.axis_ratio ** 2.0 * core_radius_0),
+                np.multiply(np.sqrt(1.0 - self.axis_ratio**2.0), grid[:, 0]),
+                np.add(psi0, self.axis_ratio**2.0 * core_radius_0),
             )
         )
 
         deflection_x0 = np.arctan(
             np.divide(
-                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 1]),
+                np.multiply(np.sqrt(1.0 - self.axis_ratio**2.0), grid[:, 1]),
                 np.add(psi0, core_radius_0),
             )
         )
 
         deflection_y1 = np.arctanh(
             np.divide(
-                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 0]),
-                np.add(psi1, self.axis_ratio ** 2.0 * core_radius_1),
+                np.multiply(np.sqrt(1.0 - self.axis_ratio**2.0), grid[:, 0]),
+                np.add(psi1, self.axis_ratio**2.0 * core_radius_1),
             )
         )
 
         deflection_x1 = np.arctan(
             np.divide(
-                np.multiply(np.sqrt(1.0 - self.axis_ratio ** 2.0), grid[:, 1]),
+                np.multiply(np.sqrt(1.0 - self.axis_ratio**2.0), grid[:, 1]),
                 np.add(psi1, core_radius_1),
             )
         )
@@ -1358,7 +1360,7 @@ class EllChameleon(MassProfile, StellarProfile):
                     np.sqrt(
                         np.add(
                             np.square(grid_radii),
-                            (4.0 * self.core_radius_0 ** 2.0) / axis_ratio_factor,
+                            (4.0 * self.core_radius_0**2.0) / axis_ratio_factor,
                         )
                     ),
                 ),
@@ -1367,7 +1369,7 @@ class EllChameleon(MassProfile, StellarProfile):
                     np.sqrt(
                         np.add(
                             np.square(grid_radii),
-                            (4.0 * self.core_radius_1 ** 2.0) / axis_ratio_factor,
+                            (4.0 * self.core_radius_1**2.0) / axis_ratio_factor,
                         )
                     ),
                 ),
