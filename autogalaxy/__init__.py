@@ -3,8 +3,6 @@ from autoarray.dataset.imaging import SettingsImaging  # noqa
 from autoarray.dataset.imaging import Imaging  # noqa
 from autoarray.dataset.interferometer import Interferometer  # noqa
 from autoarray.dataset.interferometer import SettingsInterferometer  # noqa
-from autoarray.instruments import acs  # noqa
-from autoarray.instruments import euclid  # noqa
 from autoarray.inversion.pixelization import mesh  # noqa
 from autoarray.inversion import regularization as reg  # noqa
 from autoarray.inversion.pixelization.mappers.abstract import AbstractMapper  # noqa
