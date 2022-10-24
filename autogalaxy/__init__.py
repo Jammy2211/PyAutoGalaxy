@@ -1,6 +1,6 @@
 from autoarray.dataset import preprocess  # noqa
-from autoarray.dataset.imaging import SettingsImaging  # noqa
-from autoarray.dataset.imaging import Imaging  # noqa
+from autoarray.dataset.imaging.settings import SettingsImaging  # noqa
+from autoarray.dataset.imaging.imaging import Imaging  # noqa
 from autoarray.dataset.interferometer import Interferometer  # noqa
 from autoarray.dataset.interferometer import SettingsInterferometer  # noqa
 from autoarray.inversion.pixelization import mesh  # noqa
