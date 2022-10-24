@@ -13,7 +13,7 @@ from autogalaxy.util import error_util
 
 from autoarray.structures.grids.irregular_2d import Grid2DIrregular
 
-from autogalaxy.imaging.fit_imaging import FitImaging
+from autogalaxy.imaging.fit.fit_imaging import FitImaging
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy

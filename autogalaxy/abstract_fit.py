@@ -7,7 +7,7 @@ from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 
 
-class AbstractFit:
+class AbstractFitInversion:
     def __init__(self, model_obj, settings_inversion: aa.SettingsInversion):
         """
         An abstract fit object which fits to datasets (e.g. imaging, interferometer) inherit from.

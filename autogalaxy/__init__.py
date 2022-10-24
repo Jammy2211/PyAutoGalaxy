@@ -59,7 +59,7 @@ from .operate.image import OperateImageList
 from .operate.image import OperateImageGalaxies
 from .operate.deflections import OperateDeflections
 from .gui.scribbler import Scribbler
-from .imaging.fit_imaging import FitImaging
+from .imaging.fit.fit_imaging import FitImaging
 from .imaging.model.analysis import AnalysisImaging
 from .imaging.imaging import SimulatorImaging
 from .interferometer.interferometer import SimulatorInterferometer

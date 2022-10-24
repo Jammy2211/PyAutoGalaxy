@@ -1,6 +1,6 @@
 from os import path
 
-from autogalaxy.imaging.fit_imaging import FitImaging
+from autogalaxy.imaging.fit.fit_imaging import FitImaging
 from autogalaxy.imaging.plot.fit_imaging_plotters import FitImagingPlotter
 from autogalaxy.analysis.visualizer import Visualizer
 
