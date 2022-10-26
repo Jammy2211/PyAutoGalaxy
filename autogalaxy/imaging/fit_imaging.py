@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 from autoconf import conf
 from autoconf import cached_property
@@ -8,15 +8,15 @@ import autoarray as aa
 
 from autogalaxy.abstract_fit import AbstractFitInversion
 from autogalaxy.analysis.preloads import Preloads
-from autogalaxy.imaging.fit.abstract import AbstractFitImaging
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.hyper.hyper_data import HyperImageSky
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.plane.plane import Plane
 from autogalaxy.plane.to_inversion import PlaneToInversion
+from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 
 
-class FitImaging(AbstractFitImaging, AbstractFitInversion):
+class FitImaging(aa.FitImaging, AbstractFitInversion):
     def __init__(
         self,
         dataset: aa.Imaging,
@@ -79,10 +79,11 @@ class FitImaging(AbstractFitImaging, AbstractFitInversion):
             decorator take to run.
         """
 
+        self.plane = plane
+        self.preloads = preloads
+
         super().__init__(
             dataset=dataset,
-            plane=plane,
-            preloads=preloads,
             profiling_dict=profiling_dict,
         )
         AbstractFitInversion.__init__(
@@ -96,6 +97,14 @@ class FitImaging(AbstractFitImaging, AbstractFitInversion):
 
         self.settings_pixelization = settings_pixelization
         self.settings_inversion = settings_inversion
+
+    @property
+    def galaxies(self) -> List[Galaxy]:
+        return self.plane.galaxies
+
+    @property
+    def grid(self) -> aa.type.Grid2DLike:
+        return self.imaging.grid
 
     @property
     def data(self) -> aa.Array2D:
@@ -126,6 +135,37 @@ class FitImaging(AbstractFitImaging, AbstractFitInversion):
             )
 
         return self.dataset.noise_map
+
+    @property
+    def blurred_image(self) -> aa.Array2D:
+        """
+        Returns the image of the light profiles of all galaxies in the fit's plane, convolved with the
+        imaging dataset's PSF.
+        """
+        return self.plane.blurred_image_2d_from(
+            grid=self.dataset.grid,
+            convolver=self.dataset.convolver,
+            blurring_grid=self.dataset.blurring_grid,
+        )
+
+    @property
+    def profile_subtracted_image(self) -> aa.Array2D:
+        """
+        Returns the dataset's image data with all blurred light profile images in the fit's plane subtracted.
+        """
+        return self.image - self.blurred_image
+
+    @property
+    def model_data(self) -> aa.Array2D:
+        """
+        Returns the model-image that is used to fit the data.
+
+        If the plane does not have any linear objects and therefore omits an inversion, the model data is the
+        sum of all light profile images blurred with the PSF.
+
+        If a inversion is included it is the sum of this image and the inversion's reconstruction of the image.
+        """
+        return self.blurred_image
 
     @property
     def plane_to_inversion(self) -> PlaneToInversion:
@@ -197,6 +237,73 @@ class FitImaging(AbstractFitImaging, AbstractFitInversion):
         )
 
         return {**galaxy_blurred_image_2d_dict, **galaxy_linear_obj_image_dict}
+
+    @property
+    def model_images_of_galaxies_list(self) -> List:
+        """
+        A list of the model images of each galaxy in the plane.
+        """
+        return list(self.galaxy_model_image_dict.values())
+
+    @property
+    def subtracted_images_of_galaxies_list(self) -> List[aa.Array2D]:
+        """
+        A list of the subtracted image of every galaxy.
+
+        A subtracted image of a galaxy is the data where all other galaxy images are subtracted from it, therefore
+        showing how a galaxy appears in the data in the absence of all other galaxies.
+
+        This is used to visualize the contribution of each galaxy in the data.
+        """
+
+        subtracted_images_of_galaxies_list = []
+
+        model_images_of_galaxies_list = self.model_images_of_galaxies_list
+
+        for galaxy_index in range(len(self.galaxies)):
+
+            other_galaxies_model_images = [
+                model_image
+                for i, model_image in enumerate(model_images_of_galaxies_list)
+                if i != galaxy_index
+            ]
+
+            subtracted_image = self.image - sum(other_galaxies_model_images)
+
+            subtracted_images_of_galaxies_list.append(subtracted_image)
+
+        return subtracted_images_of_galaxies_list
+
+    @property
+    def unmasked_blurred_image(self) -> aa.Array2D:
+        """
+        The blurred image of the overall fit that would be evaluated without a mask being used.
+
+        Linear objects are tied to the mask defined to used to perform the fit, therefore their unmasked blurred
+        image cannot be computed.
+        """
+        if self.plane.has(cls=LightProfileLinear):
+            exc.raise_linear_light_profile_in_unmasked()
+
+        return self.plane.unmasked_blurred_image_2d_from(
+            grid=self.grid, psf=self.imaging.psf
+        )
+
+    @property
+    def unmasked_blurred_image_of_galaxies_list(self) -> List[aa.Array2D]:
+        """
+        The blurred image of every galaxy int he plane used in this fit, that would be evaluated without a mask being
+        used.
+
+        Linear objects are tied to the mask defined to used to perform the fit, therefore their unmasked blurred
+        image cannot be computed.
+        """
+        if self.plane.has(cls=LightProfileLinear):
+            exc.raise_linear_light_profile_in_unmasked()
+
+        return self.plane.unmasked_blurred_image_2d_list_from(
+            grid=self.grid, psf=self.imaging.psf
+        )
 
     @property
     def plane_linear_light_profiles_to_light_profiles(self) -> Plane:

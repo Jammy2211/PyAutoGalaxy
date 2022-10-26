@@ -38,7 +38,7 @@ def _fit_imaging_from(
         The fit to the imaging dataset computed via an instance of galaxies.
     """
 
-    from autogalaxy.imaging.fit.fit_imaging import FitImaging
+    from autogalaxy.imaging.fit_imaging import FitImaging
 
     imaging = _imaging_from(fit=fit, settings_imaging=settings_imaging)
 

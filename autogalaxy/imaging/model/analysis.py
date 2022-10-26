@@ -14,7 +14,7 @@ from autogalaxy.imaging.model.visualizer import VisualizerImaging
 from autogalaxy.hyper.hyper_data import HyperImageSky
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.imaging.model.result import ResultImaging
-from autogalaxy.imaging.fit.fit_imaging import FitImaging
+from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.plane.plane import Plane
 
 from autogalaxy import exc

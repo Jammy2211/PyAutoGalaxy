@@ -51,6 +51,7 @@ class AbstractFitInversion:
         -------
             A bool which is True if an inversion is performed.
         """
+
         return self.model_obj.perform_inversion
 
     @property

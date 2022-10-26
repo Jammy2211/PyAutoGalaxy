@@ -4,7 +4,7 @@ import autoarray as aa
 
 from autogalaxy.analysis.result import ResultDataset
 from autogalaxy.plane.plane import Plane
-from autogalaxy.imaging.fit.fit_imaging import FitImaging
+from autogalaxy.imaging.fit_imaging import FitImaging
 
 
 class ResultImaging(ResultDataset):

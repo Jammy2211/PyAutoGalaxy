@@ -12,9 +12,47 @@ from autogalaxy.profiles.light_profiles.light_profiles_linear import (
 from autogalaxy.profiles.light_profiles.basis import Basis
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.analysis.preloads import Preloads
 
 
 class AbstractToInversion:
+    def __init__(
+        self,
+        dataset: Optional[Union[aa.Imaging, aa.Interferometer]] = None,
+        data: Optional[Union[aa.Array2D, aa.Visibilities]] = None,
+        noise_map: Optional[Union[aa.Array2D, aa.VisibilitiesNoiseMap]] = None,
+        w_tilde: Optional[Union[aa.WTildeImaging, aa.WTildeInterferometer]] = None,
+        settings_pixelization=aa.SettingsPixelization(),
+        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        preloads=Preloads(),
+        profiling_dict: Optional[Dict] = None,
+    ):
+
+        print(dataset.noise_covariance_matrix)
+
+        if dataset.noise_covariance_matrix is not None:
+
+            raise aa.exc.InversionException(
+                """
+                You cannot perform an inversion (e.g. use a linear light profile or pixelization) 
+                if the dataset has a `noise_covariance_matrix`.
+                
+                This is because the linear algebra implementation is only valid under the assumption 
+                of independent gaussian noise.
+                """
+            )
+
+        self.dataset = dataset
+        self.data = data
+        self.noise_map = noise_map
+        self.w_tilde = w_tilde
+
+        self.settings_pixelization = settings_pixelization
+        self.settings_inversion = settings_inversion
+
+        self.preloads = preloads
+        self.profiling_dict = profiling_dict
+
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
@@ -65,13 +103,21 @@ class PlaneToInversion(AbstractToInversion):
         settings_pixelization=aa.SettingsPixelization(),
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=aa.Preloads(),
+        profiling_dict: Optional[Dict] = None,
     ):
 
         self.plane = plane
-        self.dataset = dataset
-        self.data = data
-        self.noise_map = noise_map
-        self.w_tilde = w_tilde
+
+        super().__init__(
+            dataset=dataset,
+            data=data,
+            noise_map=noise_map,
+            w_tilde=w_tilde,
+            settings_pixelization=settings_pixelization,
+            settings_inversion=settings_inversion,
+            preloads=preloads,
+            profiling_dict=profiling_dict,
+        )
 
         if grid is not None:
             self.grid = grid
@@ -93,11 +139,6 @@ class PlaneToInversion(AbstractToInversion):
             self.grid_pixelization = dataset.grid_pixelization
         else:
             self.grid_pixelization = None
-
-        self.settings_pixelization = settings_pixelization
-        self.settings_inversion = settings_inversion
-
-        self.preloads = preloads
 
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type

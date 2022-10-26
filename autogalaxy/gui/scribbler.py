@@ -47,7 +47,7 @@ class Scribbler:
 
         # brush
         self.brush_radius = int(image.shape[0] * 0.01)
-        self.min_radius = 2
+        self.min_radius = 4
         self.radius_increment = int(image.shape[0] * 0.01)
         self.brush_color = "b"
         self.brush = None

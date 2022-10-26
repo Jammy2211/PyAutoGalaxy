@@ -52,6 +52,7 @@ from autoarray.structures.visibilities import VisibilitiesNoiseMap  # noqa
 from .analysis.maker import FitMaker
 from .analysis.preloads import Preloads
 from . import aggregator as agg
+from . import exc
 from . import plot
 from . import util
 from .operate.image import OperateImage
@@ -59,7 +60,7 @@ from .operate.image import OperateImageList
 from .operate.image import OperateImageGalaxies
 from .operate.deflections import OperateDeflections
 from .gui.scribbler import Scribbler
-from .imaging.fit.fit_imaging import FitImaging
+from .imaging.fit_imaging import FitImaging
 from .imaging.model.analysis import AnalysisImaging
 from .imaging.imaging import SimulatorImaging
 from .interferometer.interferometer import SimulatorInterferometer

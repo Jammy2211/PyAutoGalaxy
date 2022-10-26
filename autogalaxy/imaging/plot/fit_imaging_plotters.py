@@ -7,7 +7,7 @@ import autoarray.plot as aplt
 from autoarray.fit.plot.fit_imaging_plotters import FitImagingPlotterMeta
 
 from autogalaxy.plane.plane import Plane
-from autogalaxy.imaging.fit.fit_imaging import FitImaging
+from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
 from autogalaxy.plot.mat_wrap.visuals import Visuals2D
