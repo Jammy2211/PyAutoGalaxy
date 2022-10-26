@@ -28,19 +28,19 @@ class AbstractToInversion:
         profiling_dict: Optional[Dict] = None,
     ):
 
-        print(dataset.noise_covariance_matrix)
+        if dataset is not None:
 
-        if dataset.noise_covariance_matrix is not None:
+            if dataset.noise_covariance_matrix is not None:
 
-            raise aa.exc.InversionException(
-                """
-                You cannot perform an inversion (e.g. use a linear light profile or pixelization) 
-                if the dataset has a `noise_covariance_matrix`.
-                
-                This is because the linear algebra implementation is only valid under the assumption 
-                of independent gaussian noise.
-                """
-            )
+                raise aa.exc.InversionException(
+                    """
+                    You cannot perform an inversion (e.g. use a linear light profile or pixelization) 
+                    if the dataset has a `noise_covariance_matrix`.
+                    
+                    This is because the linear algebra implementation is only valid under the assumption 
+                    of independent gaussian noise.
+                    """
+                )
 
         self.dataset = dataset
         self.data = data
