@@ -301,3 +301,11 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
     assert inversion.mapped_reconstructed_data.real == pytest.approx(
         interferometer_7.visibilities.real, 1.0e-2
     )
+
+
+def test__raises_exception_if_noise_covariance_input(masked_imaging_covariance_7x7):
+
+    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
+
+    with pytest.raises(ag.exc.InversionException):
+        ag.PlaneToInversion(plane=plane, dataset=masked_imaging_covariance_7x7)

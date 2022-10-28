@@ -6,7 +6,7 @@ from autoconf import cached_property
 
 import autoarray as aa
 
-from autogalaxy.abstract_fit import AbstractFit
+from autogalaxy.abstract_fit import AbstractFitInversion
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.hyper.hyper_data import HyperImageSky
@@ -15,10 +15,8 @@ from autogalaxy.plane.plane import Plane
 from autogalaxy.plane.to_inversion import PlaneToInversion
 from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
 
-from autogalaxy import exc
 
-
-class FitImaging(aa.FitImaging, AbstractFit):
+class FitImaging(aa.FitImaging, AbstractFitInversion):
     def __init__(
         self,
         dataset: aa.Imaging,
@@ -81,12 +79,16 @@ class FitImaging(aa.FitImaging, AbstractFit):
             decorator take to run.
         """
 
-        super().__init__(dataset=dataset, profiling_dict=profiling_dict)
-        AbstractFit.__init__(
+        self.plane = plane
+        self.preloads = preloads
+
+        super().__init__(
+            dataset=dataset,
+            profiling_dict=profiling_dict,
+        )
+        AbstractFitInversion.__init__(
             self=self, model_obj=plane, settings_inversion=settings_inversion
         )
-
-        self.plane = plane
 
         self.hyper_image_sky = hyper_image_sky
         self.hyper_background_noise = hyper_background_noise
@@ -96,7 +98,13 @@ class FitImaging(aa.FitImaging, AbstractFit):
         self.settings_pixelization = settings_pixelization
         self.settings_inversion = settings_inversion
 
-        self.preloads = preloads
+    @property
+    def galaxies(self) -> List[Galaxy]:
+        return self.plane.galaxies
+
+    @property
+    def grid(self) -> aa.type.Grid2DLike:
+        return self.imaging.grid
 
     @property
     def data(self) -> aa.Array2D:
@@ -148,6 +156,18 @@ class FitImaging(aa.FitImaging, AbstractFit):
         return self.image - self.blurred_image
 
     @property
+    def model_data(self) -> aa.Array2D:
+        """
+        Returns the model-image that is used to fit the data.
+
+        If the plane does not have any linear objects and therefore omits an inversion, the model data is the
+        sum of all light profile images blurred with the PSF.
+
+        If a inversion is included it is the sum of this image and the inversion's reconstruction of the image.
+        """
+        return self.blurred_image
+
+    @property
     def plane_to_inversion(self) -> PlaneToInversion:
         return PlaneToInversion(
             plane=self.plane,
@@ -190,14 +210,6 @@ class FitImaging(aa.FitImaging, AbstractFit):
             return self.blurred_image + self.inversion.mapped_reconstructed_data
 
         return self.blurred_image
-
-    @property
-    def galaxies(self) -> List[Galaxy]:
-        return self.plane.galaxies
-
-    @property
-    def grid(self) -> aa.type.Grid2DLike:
-        return self.imaging.grid
 
     @property
     def galaxy_model_image_dict(self) -> Dict[Galaxy, np.ndarray]:
