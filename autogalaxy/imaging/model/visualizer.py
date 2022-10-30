@@ -50,8 +50,8 @@ class VisualizerImaging(Visualizer):
             signal_to_noise_map=should_plot("signal_to_noise_map"),
             model_image=should_plot("model_data"),
             residual_map=should_plot("residual_map"),
-            chi_squared_map=should_plot("chi_squared_map"),
             normalized_residual_map=should_plot("normalized_residual_map"),
+            chi_squared_map=should_plot("chi_squared_map"),
         )
 
         fit_imaging_plotter.figures_2d_of_galaxies(

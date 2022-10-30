@@ -25,6 +25,7 @@ class FitInterferometerPlotter(Plotter):
         mat_plot_2d: MatPlot2D = MatPlot2D(),
         visuals_2d: Visuals2D = Visuals2D(),
         include_2d: Include2D = Include2D(),
+        residuals_symmetric_cmap: bool = True
     ):
         """
         Plots the attributes of `FitInterferometer` objects using the matplotlib method `imshow()` and many
@@ -55,6 +56,9 @@ class FitInterferometerPlotter(Plotter):
             Contains 2D visuals that can be overlaid on 2D plots.
         include_2d
             Specifies which attributes of the `FitInterferometer` are extracted and plotted as visuals for 2D plots.
+        residuals_symmetric_cmap
+            If true, the `residual_map` and `normalized_residual_map` are plotted with a symmetric color map such
+            that `abs(vmin) = abs(vmax)`.
         """
         super().__init__(
             mat_plot_1d=mat_plot_1d,
@@ -76,6 +80,7 @@ class FitInterferometerPlotter(Plotter):
             mat_plot_2d=self.mat_plot_2d,
             include_2d=self.include_2d,
             visuals_2d=self.visuals_2d,
+            residuals_symmetric_cmap=residuals_symmetric_cmap
         )
 
         self.figures_2d = self._fit_interferometer_meta_plotter.figures_2d
