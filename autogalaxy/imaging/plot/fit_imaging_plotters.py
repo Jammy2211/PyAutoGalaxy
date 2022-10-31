@@ -113,9 +113,9 @@ class FitImagingPlotter(Plotter):
 
     def figures_2d_of_galaxies(
         self,
+        galaxy_index: Optional[int] = None,
         subtracted_image: bool = False,
         model_image: bool = False,
-        galaxy_index: Optional[int] = None,
     ):
         """
         Plots images representing each individual `Galaxy` in the plotter's `Plane` in 2D, which are computed via the

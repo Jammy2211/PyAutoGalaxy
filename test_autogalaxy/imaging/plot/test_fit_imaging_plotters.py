@@ -63,14 +63,14 @@ def test__figures_of_galaxies(
 
     plot_patch.paths = []
 
-    fit_imaging_plotter.figures_2d_of_galaxies(subtracted_image=True, galaxy_index=0)
+    fit_imaging_plotter.figures_2d_of_galaxies(galaxy_index=0, subtracted_image=True)
 
     assert path.join(plot_path, "subtracted_image_of_galaxy_0.png") in plot_patch.paths
     assert (
         path.join(plot_path, "subtracted_image_of_galaxy_1.png") not in plot_patch.paths
     )
 
-    fit_imaging_plotter.figures_2d_of_galaxies(model_image=True, galaxy_index=1)
+    fit_imaging_plotter.figures_2d_of_galaxies(galaxy_index=1, model_image=True)
 
     assert path.join(plot_path, "model_image_of_galaxy_0.png") not in plot_patch.paths
     assert path.join(plot_path, "model_image_of_galaxy_1.png") in plot_patch.paths
