@@ -1,8 +1,7 @@
 from autoarray.fixtures import *
 
 import autogalaxy as ag
-
-from autogalaxy.plot.mat_wrap.include import Include1D, Include2D
+import autogalaxy.plot as aplt
 
 
 def make_masked_imaging_7x7():
@@ -280,11 +279,11 @@ def make_analysis_interferometer_7():
 
 
 def make_include_1d_all():
-    return Include1D(half_light_radius=True)
+    return aplt.Include1D(half_light_radius=True)
 
 
 def make_include_2d_all():
-    return Include2D(
+    return aplt.Include2D(
         origin=True,
         mask=True,
         border=True,

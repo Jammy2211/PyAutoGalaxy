@@ -2,7 +2,7 @@ from autogalaxy.quantity.fit_quantity import FitQuantity
 from autogalaxy.quantity.plot.fit_quantity_plotters import FitQuantityPlotter
 from autogalaxy.analysis.visualizer import Visualizer
 from autogalaxy.analysis.visualizer import plot_setting
-from autogalaxy.plot.mat_wrap.visuals import Visuals2D
+from autogalaxy.plot.visuals.two_d import Visuals2D
 
 
 class VisualizerQuantity(Visualizer):

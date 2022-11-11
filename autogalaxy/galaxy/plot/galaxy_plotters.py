@@ -5,12 +5,12 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.plot.abstract_plotters import Plotter
-from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
-from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
-from autogalaxy.plot.mat_wrap.visuals import Visuals1D
-from autogalaxy.plot.mat_wrap.visuals import Visuals2D
-from autogalaxy.plot.mat_wrap.include import Include1D
-from autogalaxy.plot.mat_wrap.include import Include2D
+from autogalaxy.plot.mat_plot.one_d import MatPlot1D
+from autogalaxy.plot.mat_plot.two_d import MatPlot2D
+from autogalaxy.plot.visuals.one_d import Visuals1D
+from autogalaxy.plot.visuals.two_d import Visuals2D
+from autogalaxy.plot.include.one_d import Include1D
+from autogalaxy.plot.include.two_d import Include2D
 from autogalaxy.plot.mass_plotter import MassPlotter
 
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
