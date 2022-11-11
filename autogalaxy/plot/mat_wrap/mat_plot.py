@@ -1,7 +1,7 @@
 from typing import Optional
 
 import autoarray.plot as aplt
-from autogalaxy.plot.mat_wrap import wrap as w
+from autogalaxy.plot import wrap as w
 
 
 class MatPlot1D(aplt.MatPlot1D):

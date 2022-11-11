@@ -5,7 +5,7 @@ from autofit.non_linear.mcmc.emcee.plotter import EmceePlotter
 from autofit.non_linear.mcmc.zeus.plotter import ZeusPlotter
 from autofit.non_linear.optimize.pyswarms.plotter import PySwarmsPlotter
 
-from autoarray.plot.wrap.wrap_base import (
+from autoarray.plot.wrap.base import (
     Units,
     Figure,
     Axis,
@@ -22,8 +22,8 @@ from autoarray.plot.wrap.wrap_base import (
     Legend,
     Output,
 )
-from autoarray.plot.wrap.wrap_1d import YXPlot, FillBetween
-from autoarray.plot.wrap.wrap_2d import (
+from autoarray.plot.wrap.one_d import YXPlot, FillBetween
+from autoarray.plot.wrap.two_d import (
     ArrayOverlay,
     GridScatter,
     GridPlot,
@@ -56,7 +56,7 @@ from autoarray.plot.multi_plotters import MultiYX1DPlotter
 
 from autoarray.plot.mat_wrap.mat_plot import AutoLabels
 
-from autogalaxy.plot.mat_wrap.wrap import (
+from autogalaxy.plot.wrap import (
     HalfLightRadiusAXVLine,
     EinsteinRadiusAXVLine,
     ModelFluxesYXScatter,
