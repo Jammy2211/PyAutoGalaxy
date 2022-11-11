@@ -101,13 +101,13 @@ class MatPlot1D(aplt.MatPlot1D):
         )
 
         self.half_light_radius_axvline = (
-            half_light_radius_axvline or w.HalfLightRadiusAXVLine()
+            half_light_radius_axvline or w.HalfLightRadiusAXVLine(is_default=True)
         )
         self.einstein_radius_axvline = (
-            einstein_radius_axvline or w.EinsteinRadiusAXVLine()
+            einstein_radius_axvline or w.EinsteinRadiusAXVLine(is_default=True)
         )
         self.model_fluxes_yx_scatter = (
-            model_fluxes_yx_scatter or w.ModelFluxesYXScatter()
+            model_fluxes_yx_scatter or w.ModelFluxesYXScatter(is_default=True)
         )
 
     def set_for_multi_plot(self, is_for_multi_plot: bool, color: str):
@@ -262,16 +262,16 @@ class MatPlot2D(aplt.MatPlot2D):
         """
 
         self.light_profile_centres_scatter = (
-            light_profile_centres_scatter or w.LightProfileCentresScatter()
+            light_profile_centres_scatter or w.LightProfileCentresScatter(is_default=True)
         )
         self.mass_profile_centres_scatter = (
-            mass_profile_centres_scatter or w.MassProfileCentresScatter()
+            mass_profile_centres_scatter or w.MassProfileCentresScatter(is_default=True)
         )
         self.multiple_images_scatter = (
-            multiple_images_scatter or w.MultipleImagesScatter()
+            multiple_images_scatter or w.MultipleImagesScatter(is_default=True)
         )
-        self.critical_curves_plot = critical_curves_plot or w.CriticalCurvesPlot()
-        self.caustics_plot = caustics_plot or w.CausticsPlot()
+        self.critical_curves_plot = critical_curves_plot or w.CriticalCurvesPlot(is_default=True)
+        self.caustics_plot = caustics_plot or w.CausticsPlot(is_default=True)
 
         super().__init__(
             units=units,
