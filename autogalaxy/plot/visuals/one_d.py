@@ -12,9 +12,7 @@ class Visuals1D(aplt.Visuals1D):
         mask: Optional[aa.Mask1D] = None,
         points: Optional[aa.Grid1D] = None,
         vertical_line: Optional[float] = None,
-        shaded_region: Optional[
-            Union[List[List], List[aa.Array1D], List[np.ndarray]]
-        ] = None,
+        shaded_region: Optional[List[Union[List, aa.Array1D, np.ndarray]]] = None,
         half_light_radius: Optional[float] = None,
         half_light_radius_errors: Optional[List[float]] = None,
         einstein_radius: Optional[float] = None,
