@@ -9,9 +9,9 @@ from autoarray.fit.plot.fit_imaging_plotters import FitImagingPlotterMeta
 from autogalaxy.plane.plane import Plane
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.plot.abstract_plotters import Plotter
-from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
-from autogalaxy.plot.mat_wrap.visuals import Visuals2D
-from autogalaxy.plot.mat_wrap.include import Include2D
+from autogalaxy.plot.mat_plot.two_d import MatPlot2D
+from autogalaxy.plot.visuals.two_d import Visuals2D
+from autogalaxy.plot.include.two_d import Include2D
 
 
 class FitImagingPlotter(Plotter):

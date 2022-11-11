@@ -4,8 +4,8 @@ import pytest
 import autogalaxy as ag
 import autogalaxy.plot as aplt
 
-from autogalaxy.plot.mat_wrap.get_visuals import GetVisuals1D
-from autogalaxy.plot.mat_wrap.get_visuals import GetVisuals2D
+from autogalaxy.plot.get_visuals.one_d import GetVisuals1D
+from autogalaxy.plot.get_visuals.two_d import GetVisuals2D
 
 directory = path.dirname(path.realpath(__file__))
 

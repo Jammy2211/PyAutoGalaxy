@@ -5,9 +5,9 @@ import autoarray.plot as aplt
 
 from autogalaxy.operate.deflections import OperateDeflections
 
-from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
-from autogalaxy.plot.mat_wrap.visuals import Visuals2D
-from autogalaxy.plot.mat_wrap.include import Include2D
+from autogalaxy.plot.mat_plot.two_d import MatPlot2D
+from autogalaxy.plot.visuals.two_d import Visuals2D
+from autogalaxy.plot.include.two_d import Include2D
 
 from autogalaxy.plot.abstract_plotters import Plotter
 
