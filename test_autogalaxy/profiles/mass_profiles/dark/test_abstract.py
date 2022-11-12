@@ -3,9 +3,6 @@ import pytest
 
 import autogalaxy as ag
 
-grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
-
-
 def test__coord_function_f__from():
 
     truncated_nfw = ag.mp.SphNFWTruncated(

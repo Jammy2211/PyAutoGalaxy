@@ -1,29 +1,11 @@
-from astropy import cosmology as cosmo
-from astropy import units
-from colossus.cosmology import cosmology as col_cosmology
-from colossus.halo.concentration import concentration as col_concentration
-import copy
-import inspect
 import numpy as np
-from scipy import LowLevelCallable
-from scipy import special
-from scipy.integrate import quad
-from scipy.optimize import fsolve
-import warnings
 from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.mass_profiles.dark.abstract import DarkProfile
-from autogalaxy.profiles.mass_profiles.abstract.abstract import MassProfile
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
-
-from autogalaxy.profiles.mass_profiles.abstract.cse import MassProfileCSE
-from autogalaxy.profiles.mass_profiles.abstract.mge import MassProfileMGE
-
-from autogalaxy import exc
-
+from autogalaxy.profiles.mass_profiles.dark.abstract import AbstractEllNFWGeneralized
 
 class SphNFWTruncated(AbstractEllNFWGeneralized):
     def __init__(

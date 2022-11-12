@@ -1,5 +1,5 @@
-from .mass_profiles import MassProfile
-from .total_mass_profiles import (
+from .abstract.abstract import MassProfile
+from .total import (
     PointMass,
     EllPowerLawCored,
     SphPowerLawCored,
@@ -10,10 +10,9 @@ from .total_mass_profiles import (
     EllPowerLaw,
     SphPowerLaw,
     EllIsothermal,
-    EllIsothermalInitialize,
     SphIsothermal,
 )
-from .dark_mass_profiles import (
+from .dark import (
     EllNFWGeneralized,
     SphNFWGeneralized,
     SphNFWTruncated,
@@ -29,7 +28,7 @@ from .dark_mass_profiles import (
     EllNFWMCRLudlow,
     EllNFWGeneralizedMCRLudlow,
 )
-from .stellar_mass_profiles import (
+from .stellar import (
     EllGaussian,
     EllSersic,
     SphSersic,
@@ -44,4 +43,4 @@ from .stellar_mass_profiles import (
     EllChameleon,
     SphChameleon,
 )
-from .mass_sheets import ExternalShear, MassSheet, InputDeflections
+from .sheets import ExternalShear, MassSheet, InputDeflections
