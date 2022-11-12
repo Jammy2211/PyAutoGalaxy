@@ -1,9 +1,8 @@
 import numpy as np
-from typing import Optional, Tuple
+from typing import Optional
 
 import autoarray as aa
 
-from autogalaxy.profiles.light_profiles import light_profiles as lp
 from scipy.optimize import root_scalar
 
 

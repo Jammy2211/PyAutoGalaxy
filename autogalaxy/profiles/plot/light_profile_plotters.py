@@ -63,7 +63,7 @@ class LightProfilePlotter(Plotter):
             Specifies which attributes of the `LightProfile` are extracted and plotted as visuals for 2D plots.
         """
 
-        from autogalaxy.profiles.light_profiles.light_profiles_linear import (
+        from autogalaxy.profiles.light_profiles.linear import (
             LightProfileLinear,
         )
 

@@ -1,14 +1,6 @@
-import numpy as np
-from scipy.integrate import quad
-from typing import Optional, Tuple, Union
+from typing import Tuple
 
-import autoarray as aa
-
-from autogalaxy.profiles.light_profiles.light_profile_decorators import (
-    check_operated_only,
-)
-from autogalaxy.operate.image import OperateImage
-from autogalaxy.profiles.geometry_profiles import EllProfile
+from autogalaxy.profiles.light_profiles.base.sersic_core import EllSersicCore
 
 
 class EllExponentialCore(EllSersicCore):

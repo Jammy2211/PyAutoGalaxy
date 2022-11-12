@@ -4,7 +4,7 @@ from typing import Dict, Optional
 import autoarray as aa
 
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
-from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
+from autogalaxy.profiles.light_profiles.linear import LightProfileLinear
 
 
 class AbstractFitInversion:

@@ -1,4 +1,4 @@
-from autogalaxy.profiles.light_profiles import light_profiles as lp
+from autogalaxy.profiles.light_profiles import base as lp
 
 
 class EllGaussian(lp.EllGaussian, LightProfileOperated):

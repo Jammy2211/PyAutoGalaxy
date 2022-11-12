@@ -6,11 +6,11 @@ import autoarray as aa
 
 from autoarray.inversion.pixelization.mappers.factory import mapper_from
 from autoarray.inversion.inversion.factory import inversion_unpacked_from
-from autogalaxy.profiles.light_profiles.light_profiles_linear import (
+from autogalaxy.profiles.light_profiles.linear import (
     LightProfileLinearObjFuncList,
 )
 from autogalaxy.profiles.light_profiles.basis import Basis
-from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
+from autogalaxy.profiles.light_profiles.linear import LightProfileLinear
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.analysis.preloads import Preloads
 

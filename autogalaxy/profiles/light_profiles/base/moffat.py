@@ -1,14 +1,12 @@
 import numpy as np
-from scipy.integrate import quad
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.light_profiles.light_profile_decorators import (
+from autogalaxy.profiles.light_profiles.base.abstract import LightProfile
+from autogalaxy.profiles.light_profiles.decorators import (
     check_operated_only,
 )
-from autogalaxy.operate.image import OperateImage
-from autogalaxy.profiles.geometry_profiles import EllProfile
 
 
 class EllMoffat(LightProfile):

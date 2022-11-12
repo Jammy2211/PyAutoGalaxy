@@ -3,7 +3,7 @@ from typing import Optional
 
 import autoarray as aa
 
-from autogalaxy.profiles.light_profiles.light_profile_decorators import (
+from autogalaxy.profiles.light_profiles.decorators import (
     check_operated_only,
 )
 import autogalaxy as ag

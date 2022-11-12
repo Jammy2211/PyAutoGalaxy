@@ -1,19 +1,9 @@
-import inspect
-import numpy as np
-from typing import Dict, List, Optional, Tuple
+from typing import Tuple
 
-from autoconf import cached_property
-import autoarray as aa
-import autofit as af
+from autogalaxy.profiles.light_profiles.linear.abstract import LightProfileLinear
 
-from autogalaxy.profiles.light_profiles.light_profiles_operated import (
-    LightProfileOperated,
-)
-
-from autogalaxy.profiles.light_profiles import light_profiles as lp
+from autogalaxy.profiles.light_profiles import base as lp
 from autogalaxy.profiles import light_and_mass_profiles as lmp
-
-from autogalaxy import exc
 
 
 class EllGaussian(lp.EllGaussian, LightProfileLinear):

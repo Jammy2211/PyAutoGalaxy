@@ -1,11 +1,7 @@
-import numpy as np
-from typing import Optional, Tuple
+from typing import Tuple
 
-import autoarray as aa
-
-from autogalaxy.profiles.snr.abstract import LightProfileSNR
-from autogalaxy.profiles.light_profiles import light_profiles as lp
-from scipy.optimize import root_scalar
+from autogalaxy.profiles.light_profiles.snr.abstract import LightProfileSNR
+from autogalaxy.profiles.light_profiles import base as lp
 
 
 class EllSersic(lp.EllSersic, LightProfileSNR):

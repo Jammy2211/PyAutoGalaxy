@@ -1,6 +1,6 @@
 import numpy as np
 from functools import wraps
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import autoarray as aa
 
@@ -55,7 +55,7 @@ def check_operated_only(func):
             The 2D image, which is customized depending on whether it has been operated on.
         """
 
-        from autogalaxy.profiles.light_profiles.light_profiles_operated import (
+        from autogalaxy.profiles.light_profiles.operated import (
             LightProfileOperated,
         )
 

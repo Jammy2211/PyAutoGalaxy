@@ -1,22 +1,22 @@
 import inspect
 import numpy as np
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 from autoconf import cached_property
 import autoarray as aa
 import autofit as af
 
-from autogalaxy.profiles.light_profiles.light_profiles_operated import (
+from autogalaxy.profiles.light_profiles.operated.abstract import (
     LightProfileOperated,
 )
 
-from autogalaxy.profiles.light_profiles import light_profiles as lp
+from autogalaxy.profiles.light_profiles.base.abstract import LightProfile
 from autogalaxy.profiles import light_and_mass_profiles as lmp
 
 from autogalaxy import exc
 
 
-class LightProfileLinear(lp.LightProfile):
+class LightProfileLinear(LightProfile):
     @property
     def regularization(self):
         return None
@@ -56,7 +56,7 @@ class LightProfileLinear(lp.LightProfile):
 
         return parameters_dict
 
-    def lp_instance_from(self, intensity: float) -> lp.LightProfile:
+    def lp_instance_from(self, intensity: float) -> LightProfile:
         """
         Creates an instance of a linear light profile using its parent normal light profile (e.g. the non linear
         variant which has an `intensity` parameter).

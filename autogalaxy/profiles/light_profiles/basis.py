@@ -3,8 +3,8 @@ from typing import List, Optional
 
 import autoarray as aa
 
-from autogalaxy.profiles.light_profiles import light_profiles as lp
-from autogalaxy.profiles.light_profiles import light_profiles_linear as lp_linear
+from autogalaxy.profiles.light_profiles import base as lp
+from autogalaxy.profiles.light_profiles import linear as lp_linear
 
 
 class Basis(lp.LightProfile):

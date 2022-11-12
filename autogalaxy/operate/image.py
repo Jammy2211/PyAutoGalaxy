@@ -78,7 +78,7 @@ class OperateImage:
         blurring_grid
             The 2D (y,x) coordinates neighboring the (masked) grid whose light is blurred into the image.
         """
-        from autogalaxy.profiles.light_profiles.light_profiles_operated import (
+        from autogalaxy.profiles.light_profiles.operated import (
             LightProfileOperated,
         )
 
