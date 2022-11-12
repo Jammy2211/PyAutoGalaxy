@@ -90,7 +90,6 @@ def cse_settings_from(
     return upper_dex, lower_dex, total_cses, sample_points
 
 
-
 class EllSersicRadialGradient(AbstractEllSersic):
     def __init__(
         self,
