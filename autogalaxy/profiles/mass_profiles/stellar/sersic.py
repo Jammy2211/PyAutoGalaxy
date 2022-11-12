@@ -1,0 +1,394 @@
+import copy
+import numpy as np
+from scipy.special import wofz
+from scipy.integrate import quad
+from typing import List, Tuple
+
+import autoarray as aa
+
+from autogalaxy.profiles.mass_profiles.abstract.abstract import MassProfile
+from autogalaxy.profiles.mass_profiles.abstract.mge import (
+    MassProfileMGE,
+)
+from autogalaxy.profiles.mass_profiles.abstract.cse import (
+    MassProfileCSE,
+)
+from autogalaxy.profiles.mass_profiles.stellar.abstract import StellarProfile
+
+from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
+
+
+class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile):
+    def __init__(
+        self,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        sersic_index: float = 0.6,
+        mass_to_light_ratio: float = 1.0,
+    ):
+        """
+        The Sersic mass profile, the mass profiles of the light profiles that are used to fit and subtract the lens \
+        model_galaxy's light.
+
+        Parameters
+        ----------
+        centre
+            The (y,x) arc-second coordinates of the profile centre.
+        elliptical_comps
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
+        intensity
+            Overall flux intensity normalisation in the light profiles (electrons per second).
+        effective_radius
+            The radius containing half the light of this profile.
+        sersic_index
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
+        mass_to_light_ratio
+            The mass-to-light ratio of the light profiles
+        """
+        super(AbstractEllSersic, self).__init__(
+            centre=centre, elliptical_comps=elliptical_comps
+        )
+        super(MassProfile, self).__init__(
+            centre=centre, elliptical_comps=elliptical_comps
+        )
+        super(MassProfileMGE, self).__init__()
+        super(MassProfileCSE, self).__init__()
+        self.mass_to_light_ratio = mass_to_light_ratio
+        self.intensity = intensity
+        self.effective_radius = effective_radius
+        self.sersic_index = sersic_index
+
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+        return self.deflections_2d_via_cse_from(grid=grid)
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the projected 2D deflection angles from a grid of (y,x) arc second coordinates, by computing and
+        summing the convergence of each individual cse used to decompose the mass profile.
+
+        The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
+        profile (e.g. `decompose_convergence_via_cse`) is using equation (12) of
+        Oguri 2021 (https://arxiv.org/abs/2106.11464).
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
+        return self._deflections_2d_via_mge_from(
+            grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
+        )
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the projected 2D deflection angles from a grid of (y,x) arc second coordinates, by computing and
+        summing the convergence of each individual cse used to decompose the mass profile.
+
+        The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
+        profile (e.g. `decompose_convergence_via_cse`) is using equation (12) of
+        Oguri 2021 (https://arxiv.org/abs/2106.11464).
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
+        return self._deflections_2d_via_cse_from(grid=grid)
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
+        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+
+        """
+        return self.convergence_func(self.grid_to_eccentric_radii(grid))
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the projected convergence at a given set of arc-second gridded coordinates.
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+
+        """
+
+        eccentric_radii = self.grid_to_eccentric_radii(grid=grid)
+
+        return self._convergence_2d_via_mge_from(grid_radii=eccentric_radii)
+
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the projected 2D convergence from a grid of (y,x) arc second coordinates, by computing and summing
+        the convergence of each individual cse used to decompose the mass profile.
+
+        The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
+        profile (e.g. `decompose_convergence_via_cse`) is using equation (12) of
+        Oguri 2021 (https://arxiv.org/abs/2106.11464).
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
+
+        elliptical_radii = self.grid_to_elliptical_radii(grid=grid)
+
+        return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
+
+    def convergence_func(self, grid_radius: float) -> float:
+        return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
+
+    @aa.grid_dec.grid_2d_to_structure
+    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+        return np.zeros(shape=grid.shape[0])
+
+    def image_2d_via_radii_from(self, radius: np.ndarray):
+        """
+        Returns the intensity of the profile at a given radius.
+
+            Parameters
+            ----------
+            radius
+                The distance from the centre of the profile.
+        """
+        return self.intensity * np.exp(
+            -self.sersic_constant
+            * (((radius / self.effective_radius) ** (1.0 / self.sersic_index)) - 1)
+        )
+
+    def decompose_convergence_via_mge(self) -> Tuple[List, List]:
+        radii_min = self.effective_radius / 100.0
+        radii_max = self.effective_radius * 20.0
+
+        def sersic_2d(r):
+            return (
+                self.mass_to_light_ratio
+                * self.intensity
+                * np.exp(
+                    -self.sersic_constant
+                    * (((r / self.effective_radius) ** (1.0 / self.sersic_index)) - 1.0)
+                )
+            )
+
+        return self._decompose_convergence_via_mge(
+            func=sersic_2d, radii_min=radii_min, radii_max=radii_max
+        )
+
+    def decompose_convergence_via_cse(
+        self,
+    ) -> Tuple[List, List]:
+        """
+        Decompose the convergence of the Sersic profile into cored steep elliptical (cse) profiles.
+
+        This decomposition uses the standard 2d profile of a Sersic mass profile.
+
+        Parameters
+        ----------
+        func
+            The function representing the profile that is decomposed into CSEs.
+        radii_min:
+            The minimum radius to fit
+        radii_max:
+            The maximum radius to fit
+        total_cses
+            The number of CSEs used to approximate the input func.
+        sample_points: int (should be larger than 'total_cses')
+            The number of data points to fit
+
+        Returns
+        -------
+        Tuple[List, List]
+            A list of amplitudes and core radii of every cored steep elliptical (cse) the mass profile is decomposed
+            into.
+        """
+
+        upper_dex, lower_dex, total_cses, sample_points = cse_settings_from(
+            effective_radius=self.effective_radius,
+            sersic_index=self.sersic_index,
+            sersic_constant=self.sersic_constant,
+            mass_to_light_gradient=0.0,
+        )
+
+        scaled_effective_radius = self.effective_radius / np.sqrt(self.axis_ratio)
+        radii_min = scaled_effective_radius / 10.0**lower_dex
+        radii_max = scaled_effective_radius * 10.0**upper_dex
+
+        def sersic_2d(r):
+            return (
+                self.mass_to_light_ratio
+                * self.intensity
+                * np.exp(
+                    -self.sersic_constant
+                    * (
+                        ((r / scaled_effective_radius) ** (1.0 / self.sersic_index))
+                        - 1.0
+                    )
+                )
+            )
+
+        return self._decompose_convergence_via_cse_from(
+            func=sersic_2d,
+            radii_min=radii_min,
+            radii_max=radii_max,
+            total_cses=total_cses,
+            sample_points=sample_points,
+        )
+
+    @property
+    def sersic_constant(self):
+        """A parameter derived from Sersic index which ensures that effective radius contains 50% of the profile's
+        total integrated light.
+        """
+        return (
+            (2 * self.sersic_index)
+            - (1.0 / 3.0)
+            + (4.0 / (405.0 * self.sersic_index))
+            + (46.0 / (25515.0 * self.sersic_index**2))
+            + (131.0 / (1148175.0 * self.sersic_index**3))
+            - (2194697.0 / (30690717750.0 * self.sersic_index**4))
+        )
+
+    @property
+    def ellipticity_rescale(self):
+        return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
+
+    @property
+    def elliptical_effective_radius(self):
+        """
+        The effective_radius of a Sersic light profile is defined as the circular effective radius. This is the \
+        radius within which a circular aperture contains half the profiles's total integrated light. For elliptical \
+        systems, this won't robustly capture the light profile's elliptical shape.
+
+        The elliptical effective radius instead describes the major-axis radius of the ellipse containing \
+        half the light, and may be more appropriate for highly flattened systems like disk galaxies.
+        """
+        return self.effective_radius / np.sqrt(self.axis_ratio)
+
+    def with_new_normalization(self, normalization):
+
+        mass_profile = copy.copy(self)
+        mass_profile.mass_to_light_ratio = normalization
+        return mass_profile
+
+
+class EllSersic(AbstractEllSersic, MassProfileMGE, MassProfileCSE):
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike):
+        """
+        Calculate the deflection angles at a given set of arc-second gridded coordinates.
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+
+        """
+
+        def calculate_deflection_component(npow, index):
+            sersic_constant = self.sersic_constant
+
+            deflection_grid = self.axis_ratio * grid[:, index]
+
+            for i in range(grid.shape[0]):
+
+                deflection_grid[i] *= (
+                    self.intensity
+                    * self.mass_to_light_ratio
+                    * quad(
+                        self.deflection_func,
+                        a=0.0,
+                        b=1.0,
+                        args=(
+                            grid[i, 0],
+                            grid[i, 1],
+                            npow,
+                            self.axis_ratio,
+                            self.sersic_index,
+                            self.effective_radius,
+                            sersic_constant,
+                        ),
+                    )[0]
+                )
+
+            return deflection_grid
+
+        deflection_y = calculate_deflection_component(1.0, 0)
+        deflection_x = calculate_deflection_component(0.0, 1)
+
+        return self.rotate_grid_from_reference_frame(
+            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
+        )
+
+    @staticmethod
+    def deflection_func(
+        u, y, x, npow, axis_ratio, sersic_index, effective_radius, sersic_constant
+    ):
+        eta_u = np.sqrt(axis_ratio) * np.sqrt(
+            (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
+        )
+
+        return np.exp(
+            -sersic_constant
+            * (((eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
+        ) / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
+
+
+class SphSersic(EllSersic):
+    def __init__(
+        self,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        effective_radius: float = 0.6,
+        sersic_index: float = 0.6,
+        mass_to_light_ratio: float = 1.0,
+    ):
+        """
+        The Sersic mass profile, the mass profiles of the light profiles that are used to fit and subtract the lens
+        model_galaxy's light.
+
+        Parameters
+        ----------
+        centre
+            The (y,x) arc-second coordinates of the profile centre
+        intensity
+            Overall flux intensity normalisation in the light profiles (electrons per second)
+        effective_radius
+            The circular radius containing half the light of this profile.
+        sersic_index
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
+        mass_to_light_ratio
+            The mass-to-light ratio of the light profile.
+        """
+        super().__init__(
+            centre=centre,
+            elliptical_comps=(0.0, 0.0),
+            intensity=intensity,
+            effective_radius=effective_radius,
+            sersic_index=sersic_index,
+            mass_to_light_ratio=mass_to_light_ratio,
+        )
