@@ -5,6 +5,7 @@ import autogalaxy as ag
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
+
 def test__coord_function_f__from():
 
     truncated_nfw = ag.mp.SphNFWTruncated(
@@ -29,6 +30,7 @@ def test__coord_function_f__from():
 
     assert (coord_f == np.array([1.0, 1.0])).all()
 
+
 def test__coord_function_g__from():
     truncated_nfw = ag.mp.SphNFWTruncated(
         centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
@@ -50,9 +52,8 @@ def test__coord_function_g__from():
 
     coord_g = truncated_nfw.coord_func_g(grid_radius=np.array([1.0, 1.0]))
 
-    assert coord_g == pytest.approx(
-        np.real(np.array([1.0 / 3.0, 1.0 / 3.0])), 1.0e-4
-    )
+    assert coord_g == pytest.approx(np.real(np.array([1.0 / 3.0, 1.0 / 3.0])), 1.0e-4)
+
 
 def test__coord_function_h__from():
 
@@ -63,6 +64,7 @@ def test__coord_function_h__from():
     coord_h = truncated_nfw.coord_func_h(grid_radius=np.array([0.5, 3.0]))
 
     assert coord_h == pytest.approx(np.array([0.134395, 0.840674]), 1.0e-4)
+
 
 def test__coord_function_k__from():
 
@@ -81,6 +83,7 @@ def test__coord_function_k__from():
     coord_k = truncated_nfw.coord_func_k(grid_radius=np.array([2.0, 3.0]))
 
     assert coord_k == pytest.approx(np.array([-0.19869011, -0.1329414]), 1.0e-4)
+
 
 def test__coord_function_l__from():
 
@@ -108,6 +111,7 @@ def test__coord_function_l__from():
 
     assert coord_l == pytest.approx(np.array([0.00044044, 0.00044044]), 1.0e-4)
 
+
 def test__coord_function_m__from():
 
     truncated_nfw = ag.mp.SphNFWTruncated(
@@ -133,6 +137,7 @@ def test__coord_function_m__from():
     coord_m = truncated_nfw.coord_func_m(grid_radius=np.array([3.0, 3.0]))
 
     assert coord_m == pytest.approx(np.array([0.06946888, 0.06946888]), 1.0e-4)
+
 
 def test__rho_at_scale_radius__unit_conversions():
 
@@ -168,6 +173,7 @@ def test__rho_at_scale_radius__unit_conversions():
     )
     assert rho == pytest.approx(0.25 / 4.0, 1e-3)
 
+
 def test__delta_concentration_value_in_default_units():
     nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
@@ -195,6 +201,7 @@ def test__delta_concentration_value_in_default_units():
     )
     assert delta_concentration == pytest.approx(0.25, 1e-3)
 
+
 def test__solve_concentration():
 
     cosmology = ag.m.MockCosmology(
@@ -212,6 +219,7 @@ def test__solve_concentration():
 
     assert concentration == pytest.approx(0.0074263, 1.0e-4)
 
+
 def test__radius_at_200__different_length_units_include_conversions():
     nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
@@ -226,6 +234,7 @@ def test__radius_at_200__different_length_units_include_conversions():
     )
 
     assert radius_200 == concentration * 1.0
+
 
 def test__mass_at_200__unit_conversions_work():
 
@@ -266,13 +275,12 @@ def test__mass_at_200__unit_conversions_work():
     # mass_calc = 200.0 * ((4.0 / 3.0) * np.pi) * cosmology.cosmic_average_density * (radius_at_200 ** 3.0)
     # assert mass_at_200 == pytest.approx(mass_calc, 1.0e-5)
 
+
 def test__values_of_quantities_for_real_cosmology():
 
     cosmology = ag.cosmo.LambdaCDM(H0=70.0, Om0=0.3, Ode0=0.7)
 
-    nfw = ag.mp.SphNFWTruncated(
-        kappa_s=0.5, scale_radius=5.0, truncation_radius=10.0
-    )
+    nfw = ag.mp.SphNFWTruncated(kappa_s=0.5, scale_radius=5.0, truncation_radius=10.0)
 
     rho = nfw.rho_at_scale_radius_solar_mass_per_kpc3(
         redshift_object=0.6, redshift_source=2.5, cosmology=cosmology

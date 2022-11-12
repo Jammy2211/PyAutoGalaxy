@@ -27,7 +27,6 @@ from autogalaxy.profiles.mass_profiles.mass_profiles import (
 from autogalaxy import exc
 
 
-
 class EllNFWGeneralizedMCRLudlow(EllNFWGeneralized):
     def __init__(
         self,
@@ -57,4 +56,3 @@ class EllNFWGeneralizedMCRLudlow(EllNFWGeneralized):
             inner_slope=inner_slope,
             scale_radius=scale_radius,
         )
-

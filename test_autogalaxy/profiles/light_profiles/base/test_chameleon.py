@@ -8,6 +8,7 @@ import autogalaxy as ag
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
+
 def test__image_2d_from():
 
     chameleon = ag.lp.EllChameleon(
@@ -51,9 +52,7 @@ def test__image_2d_from():
         core_radius_1=0.4,
     )
 
-    spherical = ag.lp.SphChameleon(
-        intensity=3.0, core_radius_0=0.2, core_radius_1=0.4
-    )
+    spherical = ag.lp.SphChameleon(intensity=3.0, core_radius_0=0.2, core_radius_1=0.4)
 
     image_elliptical = elliptical.image_2d_from(grid=grid)
 

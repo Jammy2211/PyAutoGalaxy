@@ -43,4 +43,3 @@ class MassSheet(MassProfile):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         grid_radii = self.grid_to_grid_radii(grid=grid)
         return self.grid_to_grid_cartesian(grid=grid, radius=self.kappa * grid_radii)
-

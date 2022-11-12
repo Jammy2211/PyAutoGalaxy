@@ -204,4 +204,3 @@ class SphSersicCore(EllSersicCore):
         self.intensity_break = intensity_break
         self.alpha = alpha
         self.gamma = gamma
-

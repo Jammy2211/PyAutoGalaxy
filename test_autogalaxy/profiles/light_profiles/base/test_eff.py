@@ -64,6 +64,7 @@ def test__image_2d_from():
 
     assert image_elliptical == pytest.approx(image_spherical, 1.0e-4)
 
+
 def test__half_light_radius():
 
     eff = ag.lp.EllEff(effective_radius=2.0, eta=4.0)

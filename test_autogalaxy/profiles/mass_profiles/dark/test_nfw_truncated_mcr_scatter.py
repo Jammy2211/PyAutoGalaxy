@@ -5,6 +5,7 @@ import autogalaxy as ag
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
+
 def test__scatter_is_nonzero():
 
     truncated_nfw_mass = ag.mp.SphNFWTruncatedMCRScatterLudlow(

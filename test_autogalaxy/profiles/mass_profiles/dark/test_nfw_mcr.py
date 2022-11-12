@@ -5,6 +5,7 @@ import autogalaxy as ag
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
+
 def test__mass_and_concentration_consistent_with_normal_nfw():
 
     cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
@@ -55,6 +56,7 @@ def test__mass_and_concentration_consistent_with_normal_nfw():
     assert isinstance(nfw_mass.inner_slope, float)
 
     assert nfw_mass.scale_radius == pytest.approx(0.273382, 1.0e-4)
+
 
 def test__mass_and_concentration_consistent_with_normal_nfw__scatter_0():
 
@@ -111,6 +113,7 @@ def test__mass_and_concentration_consistent_with_normal_nfw__scatter_0():
     deflections = nfw_kappa_s.deflections_yx_2d_from(grid=grid)
 
     assert (deflections_ludlow == deflections).all()
+
 
 def test__same_as_above_but_elliptical():
 
@@ -173,6 +176,7 @@ def test__same_as_above_but_elliptical():
     deflections = nfw_kappa_s.deflections_yx_2d_from(grid=grid)
 
     assert (deflections_ludlow == deflections).all()
+
 
 def test__same_as_above_but_generalized_elliptical():
 
@@ -237,4 +241,3 @@ def test__same_as_above_but_generalized_elliptical():
     deflections = nfw_kappa_s.deflections_yx_2d_from(grid=grid)
 
     assert (deflections_ludlow == deflections).all()
-

@@ -51,9 +51,7 @@ def test__image_2d_from():
         sersic_index=2.0,
     )
 
-    spherical = ag.lp.SphSersic(
-        intensity=3.0, effective_radius=2.0, sersic_index=2.0
-    )
+    spherical = ag.lp.SphSersic(intensity=3.0, effective_radius=2.0, sersic_index=2.0)
 
     image_elliptical = elliptical.image_2d_from(grid=grid)
 

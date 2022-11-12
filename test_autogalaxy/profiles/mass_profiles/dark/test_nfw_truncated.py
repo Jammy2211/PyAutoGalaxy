@@ -56,6 +56,7 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 0] == pytest.approx(2.1702661386, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
 
+
 def test__convergence_2d_from():
 
     truncated_nfw = ag.mp.SphNFWTruncated(
@@ -85,6 +86,7 @@ def test__convergence_2d_from():
     convergence = truncated_nfw.convergence_2d_from(grid=np.array([[2.0, 0.0]]))
 
     assert convergence == pytest.approx(1.51047026, 1.0e-4)
+
 
 def test__mass_at_truncation_radius():
 
@@ -140,6 +142,7 @@ def test__mass_at_truncation_radius():
     #
     # assert mass_at_truncation_radius == pytest.approx(0.00033636625, 1.0e-4)
 
+
 def test__compare_nfw_and_truncated_nfw_with_large_truncation_radius():
 
     truncated_nfw = ag.mp.SphNFWTruncated(
@@ -165,4 +168,3 @@ def test__compare_nfw_and_truncated_nfw_with_large_truncation_radius():
     )
 
     assert truncated_nfw_deflections == pytest.approx(nfw_deflections, 1.0e-4)
-

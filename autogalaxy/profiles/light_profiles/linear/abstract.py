@@ -95,13 +95,13 @@ class LightProfileLinear(lp.LightProfile):
 
 class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
     def __init__(
-            self,
-            grid: aa.type.Grid1D2DLike,
-            blurring_grid: aa.type.Grid1D2DLike,
-            convolver: Optional[aa.Convolver],
-            light_profile_list: List[LightProfileLinear],
-            regularization=aa.reg.Regularization,
-            profiling_dict: Optional[Dict] = None,
+        self,
+        grid: aa.type.Grid1D2DLike,
+        blurring_grid: aa.type.Grid1D2DLike,
+        convolver: Optional[aa.Convolver],
+        light_profile_list: List[LightProfileLinear],
+        regularization=aa.reg.Regularization,
+        profiling_dict: Optional[Dict] = None,
     ):
 
         for light_profile in light_profile_list:

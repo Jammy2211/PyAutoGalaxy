@@ -358,4 +358,3 @@ class SphNFW(EllNFW):
     @staticmethod
     def potential_func_sph(eta):
         return ((np.log(eta / 2.0)) ** 2) - (np.arctanh(np.sqrt(1 - eta**2))) ** 2
-

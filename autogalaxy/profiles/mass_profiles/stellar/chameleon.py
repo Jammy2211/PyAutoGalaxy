@@ -242,4 +242,3 @@ class SphChameleon(EllChameleon):
             core_radius_1=core_radius_1,
             mass_to_light_ratio=mass_to_light_ratio,
         )
-

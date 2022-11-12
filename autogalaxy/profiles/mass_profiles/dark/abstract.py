@@ -22,6 +22,7 @@ from autogalaxy.profiles.mass_profiles.abstract.cse import (
 
 from autogalaxy import exc
 
+
 def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_source):
 
     cosmology = Planck15()

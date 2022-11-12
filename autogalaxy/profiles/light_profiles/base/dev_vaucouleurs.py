@@ -11,7 +11,6 @@ from autogalaxy.operate.image import OperateImage
 from autogalaxy.profiles.geometry_profiles import EllProfile
 
 
-
 class EllDevVaucouleurs(EllSersic):
     def __init__(
         self,

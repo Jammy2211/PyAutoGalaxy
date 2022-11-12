@@ -352,4 +352,3 @@ class SphSersicRadialGradient(EllSersicRadialGradient):
             mass_to_light_ratio=mass_to_light_ratio,
             mass_to_light_gradient=mass_to_light_gradient,
         )
-

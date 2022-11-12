@@ -8,6 +8,7 @@ import autogalaxy as ag
 
 grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
+
 def test__image_2d_from():
     exponential = ag.lp.EllExponential(
         elliptical_comps=(0.0, 0.333333), intensity=3.0, effective_radius=2.0

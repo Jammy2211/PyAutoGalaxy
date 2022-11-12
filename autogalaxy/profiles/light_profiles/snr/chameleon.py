@@ -7,6 +7,7 @@ from autogalaxy.profiles.snr.abstract import LightProfileSNR
 from autogalaxy.profiles.light_profiles import light_profiles as lp
 from scipy.optimize import root_scalar
 
+
 class EllChameleon(lp.EllChameleon, LightProfileSNR):
     def __init__(
         self,

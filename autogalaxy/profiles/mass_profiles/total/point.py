@@ -8,6 +8,7 @@ import autoarray as aa
 
 from autogalaxy.profiles.abstract.abstract import MassProfile
 
+
 class PointMass(MassProfile):
     def __init__(
         self, centre: Tuple[float, float] = (0.0, 0.0), einstein_radius: float = 1.0

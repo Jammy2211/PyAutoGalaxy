@@ -98,4 +98,3 @@ class SphNFWMCRLudlow(SphNFWMCRScatterLudlow):
             redshift_object=redshift_object,
             redshift_source=redshift_source,
         )
-

@@ -26,6 +26,7 @@ from autogalaxy.profiles.mass_profiles.mass_profiles import (
 
 from autogalaxy import exc
 
+
 def jit_integrand(integrand_function):
 
     from numba import cfunc

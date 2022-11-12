@@ -81,4 +81,3 @@ class EllNFWMCRScatterLudlow(EllNFW):
             kappa_s=kappa_s,
             scale_radius=scale_radius,
         )
-

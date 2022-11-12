@@ -111,4 +111,3 @@ def test__ludlow__mass_and_concentration_consistent_with_normal_truncated_nfw__s
 
     assert truncated_nfw_mass.scale_radius == pytest.approx(0.21157, 1.0e-4)
     assert truncated_nfw_mass.truncation_radius == pytest.approx(33.7134116, 1.0e-4)
-

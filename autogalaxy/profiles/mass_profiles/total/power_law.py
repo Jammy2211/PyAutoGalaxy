@@ -8,6 +8,7 @@ import autoarray as aa
 
 from autogalaxy.profiles.abstract.abstract import MassProfile
 
+
 class EllPowerLaw(EllPowerLawCored):
     def __init__(
         self,
