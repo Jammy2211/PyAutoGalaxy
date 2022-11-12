@@ -1,6 +1,5 @@
 from autogalaxy.profiles.light_profiles import light_profiles as lp
 
-
-class EllSersic(lp.EllSersic):
+class EllGaussian(lp.EllGaussian, LightProfileOperated):
 
     pass
