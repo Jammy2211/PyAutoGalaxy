@@ -1,10 +1,7 @@
-from abc import ABC, abstractmethod
 import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
-from scipy.special import wofz, comb
-from scipy.linalg import lstsq
-from typing import Callable, List, Optional, Tuple
+from typing import Tuple
 
 import autoarray as aa
 

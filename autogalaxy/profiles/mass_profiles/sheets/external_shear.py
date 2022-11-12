@@ -1,13 +1,11 @@
 import numpy as np
-from scipy.interpolate import griddata
 from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.mass_profiles.base.abstract import MassProfile
+from autogalaxy.profiles.mass_profiles.abstract.abstract import MassProfile
 
 from autogalaxy import convert
-from autogalaxy import exc
 
 
 class ExternalShear(MassProfile):

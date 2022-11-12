@@ -1,21 +1,6 @@
-import copy
-import numpy as np
-from scipy.special import wofz
-from scipy.integrate import quad
-from typing import List, Tuple
+from typing import Tuple
 
-import autoarray as aa
-
-from autogalaxy.profiles.mass_profiles.abstract.abstract import MassProfile
-from autogalaxy.profiles.mass_profiles.abstract.mge import (
-    MassProfileMGE,
-)
-from autogalaxy.profiles.mass_profiles.abstract.cse import (
-    MassProfileCSE,
-)
-from autogalaxy.profiles.mass_profiles.stellar.abstract import StellarProfile
-
-from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
+from autogalaxy.profiles.mass_profiles.stellar.sersic import EllSersic
 
 
 class EllExponential(EllSersic):

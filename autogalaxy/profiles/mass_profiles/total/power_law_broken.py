@@ -6,7 +6,7 @@ from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.abstract.abstract import MassProfile
+from autogalaxy.profiles.mass_profiles.abstract.abstract import MassProfile
 
 
 class EllPowerLawBroken(MassProfile):

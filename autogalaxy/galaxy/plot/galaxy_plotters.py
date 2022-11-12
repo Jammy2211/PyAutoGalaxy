@@ -14,7 +14,7 @@ from autogalaxy.plot.include.two_d import Include2D
 from autogalaxy.plot.mass_plotter import MassPlotter
 
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
-from autogalaxy.profiles.mass_profiles import MassProfile
+from autogalaxy.profiles.mass_profiles.abstract.abstract import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePDFPlotter

@@ -1,12 +1,10 @@
-import copy
 import numpy as np
-from scipy.integrate import quad
 from scipy import special
 from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.abstract.abstract import MassProfile
+from autogalaxy.profiles.mass_profiles.total.power_law_cored import EllPowerLawCored
 
 
 class EllPowerLaw(EllPowerLawCored):

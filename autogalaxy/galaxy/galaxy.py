@@ -13,7 +13,7 @@ from autogalaxy.operate.image import OperateImageList
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.light_profiles.linear import LightProfileLinear
-from autogalaxy.profiles.mass_profiles import MassProfile
+from autogalaxy.profiles.mass_profiles.abstract.abstract import MassProfile
 
 
 class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):

@@ -1,93 +1,12 @@
-import copy
 import numpy as np
-from scipy.special import wofz
 from scipy.integrate import quad
 from typing import List, Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.mass_profiles.abstract.abstract import MassProfile
-from autogalaxy.profiles.mass_profiles.abstract.mge import (
-    MassProfileMGE,
-)
-from autogalaxy.profiles.mass_profiles.abstract.cse import (
-    MassProfileCSE,
-)
-from autogalaxy.profiles.mass_profiles.stellar.abstract import StellarProfile
+from autogalaxy.profiles.mass_profiles.stellar.sersic import AbstractEllSersic
 
-from autogalaxy.profiles.mass_profiles.mass_profiles import psi_from
-
-
-def cse_settings_from(
-    effective_radius, sersic_index, sersic_constant, mass_to_light_gradient
-):
-
-    if mass_to_light_gradient > 0.5:
-
-        if effective_radius > 0.2:
-
-            lower_dex = 6.0
-            upper_dex = np.min(
-                [np.log10((18.0 / sersic_constant) ** sersic_index), 1.1]
-            )
-
-            if sersic_index <= 1.2:
-                total_cses = 50
-                sample_points = 80
-            elif sersic_index > 3.8:
-                total_cses = 40
-                sample_points = 50
-                lower_dex = 6.5
-            else:
-                total_cses = 30
-                sample_points = 50
-
-        else:
-            if sersic_index <= 1.2:
-                upper_dex = 1.0
-                total_cses = 50
-                sample_points = 80
-                lower_dex = 4.5
-
-            elif sersic_index > 3.8:
-                total_cses = 40
-                sample_points = 50
-                lower_dex = 6.0
-                upper_dex = 1.5
-            else:
-                upper_dex = 1.1
-                lower_dex = 6.0
-                total_cses = 30
-                sample_points = 50
-    else:
-
-        upper_dex = np.min(
-            [
-                np.log10((23.0 / sersic_constant) ** sersic_index),
-                0.85 - np.log10(effective_radius),
-            ]
-        )
-
-        if (sersic_index <= 0.9) and (sersic_index > 0.8):
-            total_cses = 50
-            sample_points = 80
-            upper_dex = np.log10((18.0 / sersic_constant) ** sersic_index)
-            lower_dex = 4.3 + np.log10(effective_radius)
-        elif sersic_index <= 0.8:
-            total_cses = 50
-            sample_points = 80
-            upper_dex = np.log10((16.0 / sersic_constant) ** sersic_index)
-            lower_dex = 4.0 + np.log10(effective_radius)
-        elif sersic_index > 3.8:
-            total_cses = 40
-            sample_points = 50
-            lower_dex = 4.5 + np.log10(effective_radius)
-        else:
-            lower_dex = 3.5 + np.log10(effective_radius)
-            total_cses = 30
-            sample_points = 50
-
-    return upper_dex, lower_dex, total_cses, sample_points
+from autogalaxy.profiles.mass_profiles.stellar.sersic import cse_settings_from
 
 
 class EllSersicRadialGradient(AbstractEllSersic):

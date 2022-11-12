@@ -15,14 +15,12 @@ from typing import Tuple
 import autoarray as aa
 
 from autogalaxy.profiles.mass_profiles.dark.abstract import DarkProfile
-from autogalaxy.profiles.mass_profiles import MassProfile
+from autogalaxy.profiles.mass_profiles.abstract.abstract import MassProfile
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
 
-from autogalaxy.profiles.mass_profiles.mass_profiles import (
-    MassProfileMGE,
-    MassProfileCSE,
-)
+from autogalaxy.profiles.mass_profiles.abstract.cse import MassProfileCSE
+from autogalaxy.profiles.mass_profiles.abstract.mge import MassProfileMGE
 
 from autogalaxy import exc
 
