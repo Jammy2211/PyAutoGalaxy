@@ -4,8 +4,8 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
-from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfile
+from autogalaxy.profiles.light_profiles.base.abstract import LightProfile
+from autogalaxy.profiles.mass_profiles.abstract.abstract import MassProfile
 
 
 class ClumpModel:

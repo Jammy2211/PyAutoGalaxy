@@ -7,6 +7,8 @@ from typing import Tuple
 
 import autoarray as aa
 
+from autogalaxy.profiles.mass_profiles.dark.abstract import AbstractEllNFWGeneralized
+
 
 def jit_integrand(integrand_function):
 

@@ -1,6 +1,7 @@
 from typing import Tuple
 
 from autogalaxy.profiles.mass_profiles.total.power_law_cored import EllPowerLawCored
+from autogalaxy.profiles.mass_profiles.total.power_law_cored import SphPowerLawCored
 
 
 class EllIsothermalCored(EllPowerLawCored):

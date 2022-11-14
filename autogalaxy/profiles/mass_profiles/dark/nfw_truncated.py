@@ -7,6 +7,7 @@ from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.profiles.mass_profiles.dark.abstract import AbstractEllNFWGeneralized
 
+
 class SphNFWTruncated(AbstractEllNFWGeneralized):
     def __init__(
         self,

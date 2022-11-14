@@ -3,6 +3,7 @@ import pytest
 
 import autogalaxy as ag
 
+
 def test__coord_function_f__from():
 
     truncated_nfw = ag.mp.SphNFWTruncated(

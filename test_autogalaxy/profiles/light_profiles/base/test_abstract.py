@@ -31,9 +31,7 @@ def test__luminosity_within_centre__compare_to_gridded_calculations():
 
     sersic = ag.lp.SphSersic(intensity=3.0, effective_radius=2.0, sersic_index=2.0)
 
-    luminosity_analytic = luminosity_from_radius_and_profile(
-        radius=0.5, profile=sersic
-    )
+    luminosity_analytic = luminosity_from_radius_and_profile(radius=0.5, profile=sersic)
 
     luminosity_integral = sersic.luminosity_within_circle_from(radius=0.5)
 
@@ -45,7 +43,7 @@ def test__luminosity_within_centre__compare_to_gridded_calculations():
 
     assert luminosity_grid == pytest.approx(luminosity_integral, 0.02)
 
-`
+
 def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities():
 
     grid_2d = ag.Grid2D.uniform(shape_native=(5, 5), pixel_scales=1.0)
@@ -89,9 +87,7 @@ def test__decorators__grid_iterate_in__iterates_grid_correctly():
         pixel_scales=(1.0, 1.0),
     )
 
-    grid = ag.Grid2DIterate.from_mask(
-        mask=mask, fractional_accuracy=1.0, sub_steps=[2]
-    )
+    grid = ag.Grid2DIterate.from_mask(mask=mask, fractional_accuracy=1.0, sub_steps=[2])
 
     light_profile = ag.lp.EllSersic(intensity=1.0)
 

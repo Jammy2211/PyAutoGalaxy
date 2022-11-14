@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from autogalaxy.profiles import light_profiles as lp
+from autogalaxy.profiles.light_profiles import base as lp
 from autogalaxy.profiles import mass_profiles as mp
 
 """

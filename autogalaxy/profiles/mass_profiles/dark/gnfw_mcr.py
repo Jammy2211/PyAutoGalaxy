@@ -2,6 +2,7 @@ from typing import Tuple
 
 from autogalaxy.profiles.mass_profiles.dark.gnfw import EllNFWGeneralized
 
+from autogalaxy.profiles.mass_profiles.dark import mcr_util
 
 class EllNFWGeneralizedMCRLudlow(EllNFWGeneralized):
     def __init__(
@@ -18,7 +19,7 @@ class EllNFWGeneralizedMCRLudlow(EllNFWGeneralized):
         self.redshift_object = redshift_object
         self.redshift_source = redshift_source
 
-        kappa_s, scale_radius, radius_at_200 = kappa_s_and_scale_radius_for_ludlow(
+        kappa_s, scale_radius, radius_at_200 = mcr_util.kappa_s_and_scale_radius_for_ludlow(
             mass_at_200=mass_at_200,
             scatter_sigma=0.0,
             redshift_object=redshift_object,
