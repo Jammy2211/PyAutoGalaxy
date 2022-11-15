@@ -3,8 +3,8 @@ import numpy as np
 from typing import List, Optional, Union
 
 import autoarray as aa
-from autoarray.dataset.abstract_dataset import AbstractSettingsDataset
-from autoarray.dataset.abstract_dataset import AbstractDataset
+from autoarray.dataset.abstract.settings import AbstractSettingsDataset
+from autoarray.dataset.abstract.dataset import AbstractDataset
 
 logger = logging.getLogger(__name__)
 

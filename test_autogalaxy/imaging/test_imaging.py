@@ -39,7 +39,7 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
     psf_path = path.join(fits_path, "psf.fits")
 
     create_fits(fits_path=image_path, array=[[1.0, 0.0], [0.0, 0.0]])
-    create_fits(fits_path=noise_map_path, array=[[2.0, 0.0], [0.0, 0.0]])
+    create_fits(fits_path=noise_map_path, array=[[2.0, 1.0], [1.0, 1.0]])
     create_fits(fits_path=psf_path, array=[[1.0, 1.0], [0.0, 0.0]])
 
     imaging = ag.Imaging.from_fits(
@@ -50,7 +50,7 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
     )
 
     assert (imaging.image.native == np.array([[0.0, 0.0], [1.0, 0.0]])).all()
-    assert (imaging.noise_map.native == np.array([[0.0, 0.0], [2.0, 0.0]])).all()
+    assert (imaging.noise_map.native == np.array([[1.0, 1.0], [2.0, 1.0]])).all()
     assert (imaging.psf.native == np.array([[0.0, 0.0], [0.5, 0.5]])).all()
 
     imaging.output_to_fits(
@@ -66,7 +66,7 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
 
     hdu_list = fits.open(noise_map_path)
     noise_map = np.array(hdu_list[0].data).astype("float64")
-    assert (noise_map == np.array([[2.0, 0.0], [0.0, 0.0]])).all()
+    assert (noise_map == np.array([[2.0, 1.0], [1.0, 1.0]])).all()
 
     hdu_list = fits.open(psf_path)
     psf = np.array(hdu_list[0].data).astype("float64")

@@ -1,7 +1,7 @@
 import logging
 import numpy as np
 from scipy.stats import norm
-from typing import ClassVar, Dict, List, Optional
+from typing import ClassVar, Dict, List
 
 import autofit as af
 import autoarray as aa
@@ -9,7 +9,6 @@ import autoarray as aa
 from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 
-from autogalaxy.galaxy.galaxy import HyperGalaxy
 from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
 from autogalaxy.profiles.mass_profiles import MassProfile
 
@@ -248,6 +247,8 @@ def hyper_noise_model_from(
         The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
         model components now free parameters.
     """
+
+    from autogalaxy.galaxy.galaxy import HyperGalaxy
 
     if setup_hyper is None:
         return None
@@ -529,6 +530,8 @@ def hyper_model_from(
         The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
         model components now free parameters.
     """
+
+    from autogalaxy.galaxy.galaxy import HyperGalaxy
 
     model = result.instance.as_model((AbstractMesh, AbstractRegularization))
 

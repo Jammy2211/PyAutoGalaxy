@@ -1,18 +1,21 @@
-from autoarray.plot.wrap.wrap_base import set_backend
+from autoarray.plot.wrap.base.abstract import set_backend
 
 set_backend()
 
 from autoarray.plot.abstract_plotters import AbstractPlotter
 
-from autogalaxy.plot.mat_wrap.get_visuals import GetVisuals1D
-from autogalaxy.plot.mat_wrap.get_visuals import GetVisuals2D
-
 
 class Plotter(AbstractPlotter):
     @property
     def get_1d(self):
+
+        from autogalaxy.plot.get_visuals.one_d import GetVisuals1D
+
         return GetVisuals1D(visuals=self.visuals_1d, include=self.include_1d)
 
     @property
     def get_2d(self):
+
+        from autogalaxy.plot.get_visuals.two_d import GetVisuals2D
+
         return GetVisuals2D(visuals=self.visuals_2d, include=self.include_2d)

@@ -23,6 +23,7 @@ def _imaging_from(fit: af.Fit, settings_imaging: Optional[aa.SettingsImaging] = 
     data = fit.value(name="data")
     noise_map = fit.value(name="noise_map")
     psf = fit.value(name="psf")
+
     settings_imaging = settings_imaging or fit.value(name="settings_dataset")
 
     if not hasattr(settings_imaging, "relative_accuracy"):

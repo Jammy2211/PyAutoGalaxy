@@ -135,6 +135,9 @@ class LightProfile(EllProfile, OperateImage):
         if hasattr(self, "effective_radius"):
             return self.effective_radius
 
+    def lp_instance_from(self, intensity: float) -> "LightProfile":
+        raise NotImplementedError
+
     @property
     def _intensity(self):
         return self.intensity

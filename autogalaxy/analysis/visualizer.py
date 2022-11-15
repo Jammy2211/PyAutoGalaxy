@@ -12,9 +12,9 @@ from autogalaxy.galaxy.plot.hyper_galaxy_plotters import HyperPlotter
 from autogalaxy.plane.plane import Plane
 from autogalaxy.plane.plot.plane_plotters import PlanePlotter
 
-from autogalaxy.plot.mat_wrap.include import Include2D
-from autogalaxy.plot.mat_wrap.mat_plot import MatPlot1D
-from autogalaxy.plot.mat_wrap.mat_plot import MatPlot2D
+from autogalaxy.plot.include.two_d import Include2D
+from autogalaxy.plot.mat_plot.one_d import MatPlot1D
+from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 
 
 def setting(section: Union[List[str], str], name: str):

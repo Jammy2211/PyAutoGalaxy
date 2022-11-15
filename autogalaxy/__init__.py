@@ -1,8 +1,8 @@
 from autoarray.dataset import preprocess  # noqa
 from autoarray.dataset.imaging.settings import SettingsImaging  # noqa
 from autoarray.dataset.imaging.imaging import Imaging  # noqa
-from autoarray.dataset.interferometer import Interferometer  # noqa
-from autoarray.dataset.interferometer import SettingsInterferometer  # noqa
+from autoarray.dataset.interferometer.interferometer import Interferometer  # noqa
+from autoarray.dataset.interferometer.settings import SettingsInterferometer  # noqa
 from autoarray.inversion.pixelization import mesh  # noqa
 from autoarray.inversion import regularization as reg  # noqa
 from autoarray.inversion.pixelization.mappers.abstract import AbstractMapper  # noqa
