@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from autogalaxy.profiles.light.base.sersic_core import EllSersicCore
+from autogalaxy.profiles.light.standard.sersic_core import EllSersicCore
 
 
 class EllExponentialCore(EllSersicCore):

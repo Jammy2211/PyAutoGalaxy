@@ -10,9 +10,9 @@ from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxy import HyperGalaxy
 from autogalaxy.profiles.light.basis import Basis
-from autogalaxy.profiles.light.base.abstract import LightProfile
+from autogalaxy.profiles.light.standard.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
-from autogalaxy.profiles.light.snr.abstract import LightProfileSNR
+from autogalaxy.profiles.light.snr import LightProfileSNR
 from autogalaxy.operate.image import OperateImageGalaxies
 from autogalaxy.operate.deflections import OperateDeflections
 

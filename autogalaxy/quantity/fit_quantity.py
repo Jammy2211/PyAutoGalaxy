@@ -3,7 +3,7 @@ from typing import Optional, Union
 import autoarray as aa
 
 from autogalaxy.quantity.dataset_quantity import DatasetQuantity
-from autogalaxy.profiles.light.base.abstract import LightProfile
+from autogalaxy.profiles.light.standard.abstract import LightProfile
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane

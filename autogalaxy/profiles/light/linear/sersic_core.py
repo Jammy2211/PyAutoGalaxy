@@ -3,7 +3,7 @@ from typing import Dict, Tuple
 
 from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 
-from autogalaxy.profiles.light import base as lp
+from autogalaxy.profiles.light import standard as lp
 
 
 class EllSersicCore(lp.EllSersicCore, LightProfileLinear):

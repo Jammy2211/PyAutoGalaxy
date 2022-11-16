@@ -9,7 +9,7 @@ import autoarray as aa
 from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 
-from autogalaxy.profiles.light.base.abstract import LightProfile
+from autogalaxy.profiles.light.standard.abstract import LightProfile
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 from autogalaxy import exc

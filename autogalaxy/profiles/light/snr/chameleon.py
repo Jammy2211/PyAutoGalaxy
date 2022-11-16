@@ -2,7 +2,7 @@ from typing import Tuple
 
 from autogalaxy.profiles.light.snr.abstract import LightProfileSNR
 
-from autogalaxy.profiles.light import base as lp
+from autogalaxy.profiles.light import standard as lp
 
 
 class EllChameleon(lp.EllChameleon, LightProfileSNR):

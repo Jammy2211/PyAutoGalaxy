@@ -10,7 +10,7 @@ from autogalaxy.profiles.light.operated.abstract import (
     LightProfileOperated,
 )
 
-from autogalaxy.profiles.light.base.abstract import LightProfile
+from autogalaxy.profiles.light.standard.abstract import LightProfile
 from autogalaxy.profiles import light_and_mass_profiles as lmp
 
 from autogalaxy import exc

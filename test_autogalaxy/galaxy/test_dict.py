@@ -90,7 +90,7 @@ def make_profiles_galaxy_dict():
             "core_radius_1": 0.05,
             "elliptical_comps": (0.0, 0.0),
             "intensity": 0.1,
-            "type": "autogalaxy.profiles.light.base.chameleon.EllChameleon",
+            "type": "autogalaxy.profiles.light.standard.chameleon.EllChameleon",
         },
         "mass": {
             "centre": (0.0, 0.0),

@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Tuple
 
-from autogalaxy.profiles.light.base.sersic import EllSersic
+from autogalaxy.profiles.light.standard.sersic import EllSersic
 
 
 class EllSersicCore(EllSersic):
