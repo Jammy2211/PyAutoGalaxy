@@ -533,7 +533,7 @@
                 "upper": "inf"
             }
         },
-        "intensity_break": {
+        "intensity": {
             "type": "LogUniform",
             "lower_limit": 1e-05,
             "upper_limit": 1000.0,
@@ -673,7 +673,7 @@
                 "upper": "inf"
             }
         },
-        "intensity_break": {
+        "intensity": {
             "type": "LogUniform",
             "lower_limit": 1e-05,
             "upper_limit": 1000.0,
@@ -770,7 +770,7 @@
                 "upper": "inf"
             }
         },
-        "intensity_break": {
+        "intensity": {
             "type": "LogUniform",
             "lower_limit": 1e-05,
             "upper_limit": 1000.0,
@@ -897,7 +897,7 @@
                 "upper": "inf"
             }
         },
-        "intensity_break": {
+        "intensity": {
             "type": "LogUniform",
             "lower_limit": 1e-05,
             "upper_limit": 1000.0,

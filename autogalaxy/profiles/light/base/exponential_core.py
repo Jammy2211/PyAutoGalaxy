@@ -10,7 +10,7 @@ class EllExponentialCore(EllSersicCore):
         elliptical_comps: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         radius_break: float = 0.01,
-        intensity_break: float = 0.05,
+        intensity: float = 0.05,
         gamma: float = 0.25,
         alpha: float = 3.0,
     ):
@@ -32,7 +32,7 @@ class EllExponentialCore(EllSersicCore):
             Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
-        intensity_break
+        intensity
             The intensity at the break radius.
         gamma
             The logarithmic power-law slope of the inner core profiles
@@ -43,7 +43,7 @@ class EllExponentialCore(EllSersicCore):
         super().__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
-            intensity_break=intensity_break,
+            intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=1.0,
             radius_break=radius_break,
@@ -58,7 +58,7 @@ class SphExponentialCore(EllExponentialCore):
         centre: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         radius_break: float = 0.01,
-        intensity_break: float = 0.05,
+        intensity: float = 0.05,
         gamma: float = 0.25,
         alpha: float = 3.0,
     ):
@@ -75,7 +75,7 @@ class SphExponentialCore(EllExponentialCore):
             The circular radius containing half the light of this profile.
         radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
-        intensity_break
+        intensity
             The intensity at the break radius.
         gamma
             The logarithmic power-law slope of the inner core profiles
@@ -88,12 +88,12 @@ class SphExponentialCore(EllExponentialCore):
             elliptical_comps=(0.0, 0.0),
             effective_radius=effective_radius,
             radius_break=radius_break,
-            intensity_break=intensity_break,
+            intensity=intensity,
             gamma=gamma,
             alpha=alpha,
         )
 
         self.radius_break = radius_break
-        self.intensity_break = intensity_break
+        self.intensity = intensity
         self.alpha = alpha
         self.gamma = gamma

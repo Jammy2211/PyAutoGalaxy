@@ -429,6 +429,7 @@ def test__stochastic_model_from():
     model = ag.util.model.stochastic_model_from(result=result, include_lens_light=True)
 
     assert isinstance(model.galaxies.lens.mass.centre, af.TuplePrior)
+    print(model.galaxies.lens.light.intensity)
     assert isinstance(model.galaxies.lens.light.intensity, af.LogUniformPrior)
     assert isinstance(model.galaxies.source.pixelization.mesh.pixels, int)
     assert isinstance(

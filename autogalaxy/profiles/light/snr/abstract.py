@@ -79,8 +79,8 @@ class LightProfileSNR:
             the emission.
         """
         self.intensity = 1.0
-        if hasattr(self, "intensity_break"):
-            self.intensity_break = 1.0
+        if hasattr(self, "intensity"):
+            self.intensity = 1.0
 
         background_sky_level_counts = background_sky_level * exposure_time
 
@@ -102,5 +102,5 @@ class LightProfileSNR:
         intensity_factor = root_scalar(func, bracket=[1.0e-8, 1.0e8]).root
 
         self.intensity *= intensity_factor
-        if hasattr(self, "intensity_break"):
-            self.intensity_break *= intensity_factor
+        if hasattr(self, "intensity"):
+            self.intensity *= intensity_factor

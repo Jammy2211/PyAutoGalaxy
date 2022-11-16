@@ -8,7 +8,15 @@ from skimage.transform import rescale
 
 
 class Scribbler:
-    def __init__(self, image, segment_names=None, title="Draw mask", cmap=None, brush_width=0.02, backend='TkAgg'):
+    def __init__(
+        self,
+        image,
+        segment_names=None,
+        title="Draw mask",
+        cmap=None,
+        brush_width=0.02,
+        backend="TkAgg",
+    ):
         """
 
         This Scribbler tool is used for drawing custom masks and noise-maps via a GUI to images, see the other scripts in
@@ -17,8 +25,8 @@ class Scribbler:
         This script is Adapted from https://gist.github.com/brikeats/4f63f867fd8ea0f196c78e9b835150ab
         """
 
-
         import matplotlib.pyplot as plt
+
         matplotlib.use(backend)
         self.im = image
 

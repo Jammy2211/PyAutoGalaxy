@@ -16,7 +16,7 @@ def test__image_2d_from():
         effective_radius=5.0,
         sersic_index=4.0,
         radius_break=0.01,
-        intensity_break=0.1,
+        intensity=0.1,
         gamma=1.0,
         alpha=1.0,
     )
@@ -30,7 +30,7 @@ def test__image_2d_from():
         effective_radius=5.0,
         sersic_index=4.0,
         radius_break=0.01,
-        intensity_break=0.1,
+        intensity=0.1,
         gamma=1.0,
         alpha=1.0,
     )
@@ -39,7 +39,7 @@ def test__image_2d_from():
         effective_radius=5.0,
         sersic_index=4.0,
         radius_break=0.01,
-        intensity_break=0.1,
+        intensity=0.1,
         gamma=1.0,
         alpha=1.0,
     )

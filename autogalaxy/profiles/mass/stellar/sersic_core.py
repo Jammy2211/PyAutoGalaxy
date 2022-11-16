@@ -14,7 +14,7 @@ class EllSersicCore(EllSersic):
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
         radius_break: float = 0.01,
-        intensity_break: float = 0.05,
+        intensity: float = 0.05,
         gamma: float = 0.25,
         alpha: float = 3.0,
         mass_to_light_ratio: float = 1.0,
@@ -38,7 +38,7 @@ class EllSersicCore(EllSersic):
             Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
-        intensity_break
+        intensity
             The intensity at the break radius.
         gamma
             The logarithmic power-law slope of the inner core profiles
@@ -49,14 +49,14 @@ class EllSersicCore(EllSersic):
         super().__init__(
             centre=centre,
             elliptical_comps=elliptical_comps,
-            intensity=intensity_break,
+            intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
             mass_to_light_ratio=mass_to_light_ratio,
         )
 
         self.radius_break = radius_break
-        self.intensity_break = intensity_break
+        self.intensity = intensity
         self.alpha = alpha
         self.gamma = gamma
 
@@ -131,7 +131,7 @@ class EllSersicCore(EllSersic):
     def intensity_prime(self):
         """Overall intensity normalisation in the rescaled Core-Sersic light profiles (electrons per second)"""
         return (
-            self.intensity_break
+            self.intensity
             * (2.0 ** (-self.gamma / self.alpha))
             * np.exp(
                 self.sersic_constant
@@ -151,7 +151,7 @@ class SphSersicCore(EllSersicCore):
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
         radius_break: float = 0.01,
-        intensity_break: float = 0.05,
+        intensity: float = 0.05,
         gamma: float = 0.25,
         alpha: float = 3.0,
     ):
@@ -171,7 +171,7 @@ class SphSersicCore(EllSersicCore):
             Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
-        intensity_break
+        intensity
             The intensity at the break radius.
         gamma
             The logarithmic power-law slope of the inner core profiles
@@ -184,11 +184,11 @@ class SphSersicCore(EllSersicCore):
             effective_radius=effective_radius,
             sersic_index=sersic_index,
             radius_break=radius_break,
-            intensity_break=intensity_break,
+            intensity=intensity,
             gamma=gamma,
             alpha=alpha,
         )
         self.radius_break = radius_break
-        self.intensity_break = intensity_break
+        self.intensity = intensity
         self.alpha = alpha
         self.gamma = gamma

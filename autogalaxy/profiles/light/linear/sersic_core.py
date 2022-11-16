@@ -74,6 +74,6 @@ class EllSersicCore(lp.EllSersicCore, LightProfileLinear):
         args.remove("self")
 
         parameters_dict = {key: parameters_dict[key] for key in args}
-        parameters_dict["intensity_break"] = intensity
+        parameters_dict["intensity"] = intensity
 
         return parameters_dict

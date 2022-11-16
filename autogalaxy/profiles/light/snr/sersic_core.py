@@ -13,7 +13,7 @@ class EllSersicCore(lp.EllSersicCore, LightProfileSNR):
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
         radius_break: float = 0.01,
-        intensity_break: float = 0.05,
+        intensity: float = 0.05,
         gamma: float = 0.25,
         alpha: float = 3.0,
     ):
@@ -38,7 +38,7 @@ class EllSersicCore(lp.EllSersicCore, LightProfileSNR):
             Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         radius_break
             The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
-        intensity_break
+        intensity
             The intensity at the break radius.
         gamma
             The logarithmic power-law slope of the inner core profiles
@@ -51,11 +51,11 @@ class EllSersicCore(lp.EllSersicCore, LightProfileSNR):
             effective_radius=effective_radius,
             sersic_index=sersic_index,
             radius_break=radius_break,
-            intensity_break=0.0,
+            intensity=0.0,
             alpha=alpha,
             gamma=gamma,
         )
 
-        self.intensity = self.intensity_break
+        self.intensity = self.intensity
 
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)

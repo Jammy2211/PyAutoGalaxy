@@ -90,7 +90,7 @@ def make_profiles_galaxy_dict():
             "core_radius_1": 0.05,
             "elliptical_comps": (0.0, 0.0),
             "intensity": 0.1,
-            "type": "autogalaxy.profiles.light.light_profiles.EllChameleon",
+            "type": "autogalaxy.profiles.light.base.chameleon.EllChameleon",
         },
         "mass": {
             "centre": (0.0, 0.0),
@@ -98,7 +98,7 @@ def make_profiles_galaxy_dict():
             "elliptical_comps": (0.0, 0.0),
             "intensity": 0.1,
             "mass_to_light_ratio": 1.0,
-            "type": "autogalaxy.profiles.mass.stellar_mass_profiles.EllDevVaucouleurs",
+            "type": "autogalaxy.profiles.mass.stellar.dev_vaucouleurs.EllDevVaucouleurs",
         },
         "redshift": 2.0,
         "type": "autogalaxy.galaxy.galaxy.Galaxy",
